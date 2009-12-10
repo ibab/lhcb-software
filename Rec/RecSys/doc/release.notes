@@ -8,6 +8,8 @@ Purpose: LHCb reconstruction packages.
 </PRE><H1><A NAME=v7r12>2009-12-10 RecSys v7r12</A></H1><PRE>
 This version uses Gaudi v21r6 and LHCb v28r5
 
+- added SpecialData switch "earlyData"
+
 - Packages updated: Rich/RichRecTools v1r16, Tf/PatAlgorithms v3r27,
                     Tr/TrackExtrapolators v2r24p1, Tr/TrackFitter v2r43,
                     Velo/VeloRecMonitors v2r5, Tf/TsaAlgorithms v3r14p3,

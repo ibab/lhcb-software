@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.19 2009-11-22 15:11:23 smenzeme Exp $"
+__version__ = "$Id: Configuration.py,v 1.20 2009-12-10 19:04:32 smenzeme Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -37,7 +37,7 @@ class RecSysConf(LHCbConfigurableUser):
     ## Default reconstruction sequence for field-off data
     DefaultSubDetsFieldOff = DefaultTrackingSubdets+["CALO","RICH","MUON","PROTO"]
     ## List of known special data processing options
-    KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas" ]
+    KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas", "earlyData" ]
     
     ## Steering options
     __slots__ = {
@@ -72,6 +72,8 @@ class RecSysConf(LHCbConfigurableUser):
         if "Vertex" in recoSeq:
             from Configurables import PatPVOffline, TrackV0Finder
             pvAlg = PatPVOffline()
+            if "earlyData" in self.getProp("SpecialData"):
+                importOptions("$PATPVROOT/options/PVLoose.py")
             GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
             if self.getProp( "OutputType" ).upper() == "RDST":
                 # Velo tracks not copied to Rec/Track/Best for RDST 
