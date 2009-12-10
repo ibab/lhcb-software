@@ -1,4 +1,4 @@
-// $Id: TrackV0Finder.cpp,v 1.13 2009-11-11 12:47:10 cattanem Exp $
+// $Id: TrackV0Finder.cpp,v 1.14 2009-12-10 11:13:18 wouter Exp $
 // Include files 
 
 
@@ -44,7 +44,6 @@ protected:
   
   bool hasV0Topology(LHCb::TwoProngVertex& vertex,
 		     const LHCb::RecVertices& pvs) const ;
-  bool overlap( const LHCb::Track& rhs, const LHCb::Track& lhs) const ;
 private:
   std::string m_trackInputListName; // Input Tracks container location
   std::string m_pvContainerName;
@@ -58,6 +57,7 @@ private:
   const LHCb::ParticleProperty* m_lambdaProperty ;
   const LHCb::ParticleProperty* m_pionProperty ;
   const LHCb::ParticleProperty* m_protonProperty ;
+  unsigned int m_maxNumCommonHits ;
   double m_zmin ;
   double m_zmax ;
   double m_distanceCutUpstream ;
@@ -144,14 +144,17 @@ TrackV0Finder::TrackV0Finder( const std::string& name,
   declareProperty( "LambdaMassCut", m_lambdamasscut) ;
   declareProperty( "UseExtrapolator", m_useExtrapolator) ;
   declareProperty( "ExcludePVTracks", m_excludePVTracks) ;
+  declareProperty( "MaxNumCommonHits", m_maxNumCommonHits = 0 ) ;
+  declareProperty( "MinDeltaZ", m_deltaZCut) ;
   declareProperty( "MinDecayLengthSignificance",m_minDecayLengthSignificance) ;
   declareProperty( "MaxChi2V0Vertex", m_maxChi2V0Vertex) ;
   declareProperty( "MaxChi2PVConstraint", m_maxChi2PVConstraint ) ;
-  //declareProperty( "RejectUpstreamHits", m_rejectUpstreamHits ) ;
+  declareProperty( "RejectUpstreamHits", m_rejectUpstreamHits ) ;
   declareProperty( "AddExtraInfo", m_addExtraInfo ) ;
   declareProperty( "Interpolator", m_interpolator ) ;
   declareProperty( "Extrapolator", m_extrapolator ) ;
-
+  declareProperty( "MaxDistanceLong", m_distanceCutLong ) ;
+  declareProperty( "MaxDistanceUpstream", m_distanceCutLong ) ;
 }
 //=============================================================================
 // Destructor
@@ -221,21 +224,14 @@ inline bool inAnyVertex( const LHCb::Track& track,
 StatusCode TrackV0Finder::execute() 
 {
   // Get the primary vertices. Locate the one that's most downstream.
-  const LHCb::RecVertices* pvcontainer(0) ;
-  try {
-    if(exist<LHCb::RecVertices>( m_pvContainerName ))
-      pvcontainer = get<LHCb::RecVertices>( m_pvContainerName ) ;
-  } catch (const GaudiException & exp) {
-    warning() << "caught exception when asking for primary vertices! " << exp << endmsg ;
-  }
+  const LHCb::RecVertices* pvcontainer = get<LHCb::RecVertices>( m_pvContainerName ) ;
+  if( pvcontainer->empty() ) 
+    return Warning("No primary verticesfound. Skip V0 search",StatusCode::SUCCESS,0) ;
 
-  double zprimary(0) ;
-  if( pvcontainer && !pvcontainer->empty() ) {
-    zprimary = -9999 ;
-    for( LHCb::RecVertices::const_iterator ipv = pvcontainer->begin() ; 
-         ipv != pvcontainer->end(); ++ipv ) 
-      zprimary = std::max(zprimary, (*ipv)->position().z()) ;
-  }
+  double zprimary = -9999 ;
+  for( LHCb::RecVertices::const_iterator ipv = pvcontainer->begin() ; 
+       ipv != pvcontainer->end(); ++ipv ) 
+    zprimary = std::max(zprimary, (*ipv)->position().z()) ;
   
   // Get the Tracks
   const LHCb::Tracks* tracks = get<LHCb::Tracks>( m_trackInputListName );
@@ -281,8 +277,9 @@ StatusCode TrackV0Finder::execute()
   for( TrackContainer::iterator ipos = postracks.begin() ;
        ipos != postracks.end(); ++ipos) 
     for( TrackContainer::iterator ineg = negtracks.begin() ;
-         ineg != negtracks.end(); ++ineg) 
-      if( !overlap(**ipos,**ineg) ) {
+         ineg != negtracks.end(); ++ineg)
+      if( (*ipos)->nCommonLhcbIDs(**ineg) <= m_maxNumCommonHits ) {
+
 	const LHCb::TrackTraj& postraj = postrajs[std::distance(postracks.begin(),ipos)] ;
 	const LHCb::TrackTraj& negtraj = negtrajs[std::distance(negtracks.begin(),ineg)] ;
 	
@@ -307,6 +304,7 @@ StatusCode TrackV0Finder::execute()
 	  if( (distance < m_distanceCutLong ||
 	       (distance < m_distanceCutUpstream && !isVeloCombi)) &&
 	      zprimary + m_deltaZCut < z && z< m_zmax ) {
+
 	    // now make an invariant mass cut
 	    Gaudi::XYZVector mompos = postraj.momentum(mupos) ;
 	    Gaudi::XYZVector momneg = negtraj.momentum(muneg) ;
@@ -403,23 +401,6 @@ StatusCode TrackV0Finder::execute()
   
   counter("numselected") += v0container->size() ;
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-// Check of two tracks do not have two much overlap to be combined as V0
-//=============================================================================
-
-bool TrackV0Finder::overlap( const LHCb::Track& trackA,
-			     const LHCb::Track& trackB ) const
-{
-  // for now, just look at common ancestors
-  bool rc = false ;
-  for( SmartRefVector<LHCb::Track>::const_iterator iancA = trackA.ancestors().begin() ;
-       iancA != trackA.ancestors().end() && !rc; ++iancA) 
-    for( SmartRefVector<LHCb::Track>::const_iterator iancB = trackB.ancestors().begin() ;
-	 iancB != trackB.ancestors().end() && !rc; ++iancB) 
-      rc = *iancA == *iancB ;
-  return rc ;
 }
 
 
@@ -533,9 +514,10 @@ TrackV0Finder::hasV0Topology(LHCb::TwoProngVertex& vertex,
   // * V0 candidates that point to a PV but with too small decay length
 
   bool isFromPV = false ;
-  double chi2(m_maxChi2PVConstraint+1),decaylength(0),decaylengtherr(1) ;
+  double chi2(0),decaylength(0),decaylengtherr(1) ;
 
   if(pvs.size()>0) {
+    // first find the best fitting primary vertex
     const Gaudi::XYZPoint& pos = vertex.position() ;
     Gaudi::SymMatrix7x7 cov7x7  = vertex.covMatrix7x7(0,0) ;
     Gaudi::LorentzVector p4     = vertex.momentum(0,0) ;
@@ -555,11 +537,10 @@ TrackV0Finder::hasV0Topology(LHCb::TwoProngVertex& vertex,
 	  tmpdecaylength / tmpdecaylengtherr < m_minDecayLengthSignificance ) ;
     }
   }
-  // select this one if it is not compatible with any PV, but still points to a PV:
   if(m_addExtraInfo) {
     vertex.addInfo( 1000, chi2 ) ;
     vertex.addInfo( 1001, decaylength/decaylengtherr ) ;
   }
-  
+  // select this one if it is not compatible with any PV, but still points to a PV:  
   return !isFromPV && chi2 < m_maxChi2PVConstraint ;
 }
