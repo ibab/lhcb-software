@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.79 2009-12-09 07:22:10 albrecht Exp $
+! $Id: release.notes,v 1.80 2009-12-10 00:48:12 gligorov Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
 
+! 2009-12-10 - V. Gligorov
+ - python/Hlt1Lines/Hlt1HadronVeloOpenLines : added new lines for use
+   with an open Velo; they do the full "offline" 3D Velo reconstruction
+   and PV finding 
 
 ! 2009-12-09 - Johannes Albrecht
  - fix syntax error introduced in the last commit
