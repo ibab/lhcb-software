@@ -90,5 +90,7 @@ else
     echo "                            slc4_ia32_gcc34";
     echo "                            slc4_amd64_gcc34_dbg";
     echo "                            slc4_amd64_gcc34";
+    echo "                            x86_64-slc5-gcc43-opt";
+    echo "                            x86_64-slc5-gcc43-dbg";
     echo "                            ....";
 fi;
