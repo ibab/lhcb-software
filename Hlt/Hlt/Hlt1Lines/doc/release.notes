@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.81 2009-12-11 09:50:13 pkoppenb Exp $
+! $Id: release.notes,v 1.82 2009-12-11 10:09:26 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -21,11 +21,11 @@
 ! 2009-12-08 - Johannes Albrecht
  - configure monitoring histograms in Hlt1MuonLines.py
 
-!========================== Hlt1Lines v1r10 2009-12-03 ===================
-
 ! 2009-12-07 - Yasmine Amhis. 
   - Require the 'LumiTrigger' in the Hlt1NoBiasLine.
   - Use only the L0DU Hadron channel in Hlt1MiniBiasLine. 
+
+!========================== Hlt1Lines v1r10 2009-12-03 ===================
 
 ! 2009-12-03 - Antonio Perez-Calero
  - corrected bug in Hlt1MuonLines.py (undid Gerhard changes of 11-11!)
