@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.93 2009-12-03 13:54:06 albrecht Exp $
+$Id: release.notes,v 1.94 2009-12-11 11:04:29 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -9,6 +9,7 @@ $Id: release.notes,v 1.93 2009-12-03 13:54:06 albrecht Exp $
 !
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2Lines v2r1 2009-12-11 ===================
 ! 2009-12-03 - Johannes Albrecht
  - add first version of Hlt2ExpressLines which includes some alignment lines
 
