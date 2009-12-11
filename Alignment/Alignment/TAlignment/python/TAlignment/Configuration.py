@@ -248,8 +248,8 @@ class TAlignment( LHCbConfigurableUser ):
         # Different sequencers depending on whether we use pat or not
         mainSeq.Members.append( self.filterSeq(    self.getProp( "OutputLevel" ) ) )
         mainSeq.Members.append( self.fitSeq(       self.getProp( "OutputLevel" ) ) )
-        mainSeq.Members.append( self.alignmentSeq( self.getProp( "OutputLevel" ) ) )
         mainSeq.Members.append( self.monitorSeq() )
+        mainSeq.Members.append( self.alignmentSeq( self.getProp( "OutputLevel" ) ) )
         if self.getProp( "NumIterations" ) > 1 :
             mainSeq.Members.append( self.postMonitorSeq() )
             
