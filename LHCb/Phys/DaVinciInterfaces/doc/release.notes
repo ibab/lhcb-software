@@ -4,8 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+!===================== DaVinciInterfaces v1r3p1 2009-12-11 ===================
 ! 2009-12-01 - Patrick Koppenburg
- - Add description of chi in IDistancecalculator
+ - Add doxygen description of chi in IDistanceCalculator
 
 !===================== DaVinciInterfaces v1r3 2009-11-13 =====================
 ! 2009-11-10 - Juan Palacios
