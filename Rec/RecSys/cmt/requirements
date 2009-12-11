@@ -53,14 +53,14 @@ use PatFitParams         v4r0    Tr   # Olivier Callot
 use TrackAssociators     v2r7    Tr   # Eduardo Rodrigues, Edwin Bos
 use TrackCheckers        v4r10   Tr   # Eduardo Rodrigues
 use TrackExtrapolators   v2r24p1 Tr   # Eduardo Rodrigues
-use TrackFitEvent        v4r2    Tr   # Eduardo Rodrigues
+use TrackFitEvent        v4r3    Tr   # Eduardo Rodrigues
 use TrackFitter          v2r43   Tr   # Eduardo Rodrigues
 use TrackIdealPR         v2r19   Tr   # Eduardo Rodrigues
 use TrackMCTools         v2r24   Tr   # Eduardo Rodrigues
-use TrackMonitors        v1r17   Tr   # Wouter Hulsbergen, Stephanie Menzemer
+use TrackMonitors        v1r18   Tr   # Wouter Hulsbergen, Stephanie Menzemer
 use TrackProjectors      v2r26   Tr   # Wouter Hulsbergen
 use TrackTools           v3r24   Tr   # Eduardo Rodrigues
-use TrackUtils           v1r31   Tr   # Eduardo Rodrigues
+use TrackUtils           v1r32   Tr   # Eduardo Rodrigues
 
 # Tf packages: Track Pattern Recognition
 use TfTools              v1r8    Tf   # Stephanie Hansmann-Menzemer
