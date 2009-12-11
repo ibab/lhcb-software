@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.24 2009-10-14 19:56:02 wouter Exp $
+// $Id: AlignmentElement.cpp,v 1.25 2009-12-11 12:07:46 wouter Exp $
 // Include files
 
 // from STD
@@ -42,18 +42,14 @@ AlignmentElement::AlignmentElement(const DetectorElement* element,
 				   bool useLocalFrame)
   : m_name(stripElementName(element->name())),
     m_basename(element->name()),
-    m_elements(1u,element),
     m_index(index),
     m_activeParOffset(-1),
     m_dofMask(dofMask),
     m_useLocalFrame(useLocalFrame)
 {
-  m_name = description() ;
-  validDetectorElement(m_elements.front());
-  initAlignmentFrame();
-  for( ElementContainer::const_iterator ielem = m_elements.begin();
-       ielem != m_elements.end(); ++ielem) 
-    addToElementsInTree( *ielem, m_elementsInTree ) ;
+  //m_name = description() ;
+  std::vector<const DetectorElement*> elements(1u,element) ;
+  addElements( elements ) ;
 }
 
 AlignmentElement::AlignmentElement(const std::string& aname,
@@ -61,24 +57,38 @@ AlignmentElement::AlignmentElement(const std::string& aname,
                                    const unsigned int index, 
                                    const std::vector<bool>& dofMask,
 				   bool useLocalFrame)
-  : m_name(stripElementName(aname)),
-    m_elements(elements),
+  : m_name(aname),
     m_index(index),
     m_activeParOffset(-1),
     m_dofMask(dofMask),
     m_useLocalFrame(useLocalFrame)
 {
-  std::for_each(m_elements.begin(), m_elements.end(),
-                boost::lambda::bind(&AlignmentElement::validDetectorElement, this, boost::lambda::_1));
-  
   size_t pos = aname.find_first_of("(.*") ;
   m_basename = pos == std::string::npos ? aname : aname.substr(0,pos) ;
-  
-  initAlignmentFrame();
-  
-  for( ElementContainer::const_iterator ielem = m_elements.begin();
-       ielem != m_elements.end(); ++ielem) 
+  addElements(elements) ;
+}
+
+void AlignmentElement::addElements( const std::vector<const DetectorElement*>& elements )
+{
+  std::for_each(elements.begin(), elements.end(),
+                boost::lambda::bind(&AlignmentElement::validDetectorElement, this, boost::lambda::_1));
+  for( ElementContainer::const_iterator ielem = elements.begin();
+       ielem != elements.end(); ++ielem) 
     addToElementsInTree( *ielem, m_elementsInTree ) ;
+  std::sort( m_elementsInTree.begin(), m_elementsInTree.end() ) ;
+  m_elements.insert(m_elements.end(), elements.begin(), elements.end()) ;
+  initAlignmentFrame();
+
+  // loop over all elements in tree and find the largest name they have in common
+  m_basename = m_elements.front()->name() ;
+  for( ElementContainer::const_iterator ielem =  m_elements.begin() ;
+       ielem != m_elements.end(); ++ielem ) {
+    size_t ipos(0) ;
+    std::string thisname = (*ielem)->name() ;
+    while( ipos < m_basename.size() && ipos < thisname.size() &&
+	   m_basename[ipos] == thisname[ipos] ) ++ipos ;
+    if( ipos < m_basename.size() ) m_basename.resize(ipos) ;
+  }
 }
 
 void AlignmentElement::addToElementsInTree( const IDetectorElement* const ielement,
@@ -277,6 +287,7 @@ std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
   lhs << std::left << std::setw(80u) << std::setfill('*') << "" << std::endl;
   lhs << "* Alignable: " << name() << "\n" 
       << "* Element  : " << description() << std::endl
+      << "* Basename : " << basename() << std::endl
       << "* Index    : " << index() << "\n"
       << "* dPosXYZ  : " << Gaudi::XYZPoint(t[0], t[1], t[2]) << "\n"
       << "* dRotXYZ  : " << Gaudi::XYZPoint(r[0], r[1], r[2]) << "\n"

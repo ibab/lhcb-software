@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.18 2009-10-14 19:56:02 wouter Exp $
+// $Id: AlignmentElement.h,v 1.19 2009-12-11 12:07:46 wouter Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -189,6 +189,10 @@ public:
 
   /** Is daughter or granddaughter ... */
   bool isOffspring( const AlignmentElement& dau) const ;
+
+
+  /** add more detector elements to this alignable */
+  void addElements( const std::vector<const DetectorElement*>& elements ) ;
 
 private:
   static std::string stripElementName(const std::string& name) ;
