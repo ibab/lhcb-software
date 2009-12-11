@@ -1,5 +1,5 @@
 package LbcomSys
-version v7r10
+version v7r11
 
 branches doc cmt
 
@@ -22,13 +22,13 @@ use L0Calo            v10r2   L0        # Olivier Deschamps, Patrick Robbe
 use L0DU              v9r0    L0        # Olivier Deschamps   
 use L0Muon            v8r5p3  L0        # Andrei Tsarogorodtsev, Julien Cogan
 use L0MuonMonitor     v1r5    L0        # Julien Cogan
-use PuVeto            v7r3p1  L0        # Marko Zupan
+use PuVeto            v7r4    L0        # Serena Oggero
 
 # Muon
 use MuonAssociators   v3r2    Muon      # Alessia Satta
 
 # Outer tracker
-use OTAssociators     v4r3    OT        # Jan Amoraal
+use OTAssociators     v4r4    OT        # Alexandr Kozlinskiy
 use OTMonitor         v3r1    OT        # Wouter Hulsbergen
 
 # Rich
@@ -46,7 +46,7 @@ use STAlgorithms      v3r10   ST        # Jeroen van Tilburg, Matt Needham
 use STAssociators     v1r6    ST        # Jeroen van Tilburg, Matt Needham
 use STCheckers        v2r14   ST        # Jeroen van Tilburg, Matt Needham
 use STDAQ             v3r20   ST        # Jeroen van Tilburg, Matt Needham
-use STMonitors        v2r2    ST        # Mark Tobin
+use STMonitors        v2r3    ST        # Mark Tobin
 use STTools           v3r14   ST        # Jeroen van Tilburg, Matt Needham
 
 # Velo
