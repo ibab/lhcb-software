@@ -1,7 +1,8 @@
 2009-12-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/Tools.py: make cmtconfig and version optional in
-	genProjectSetup.
+	* python/LbConfiguration/Tools.py: 
+	- make cmtconfig and version optional in genProjectSetup.
+	- added the treatment of the v* version in genProjectSetup.
 	* python/LbConfiguration/LbLogin.py: removed unused function for the cache generation.
 
 2009-11-27  Marco Clemencic  <Marco.Clemencic@cern.ch>

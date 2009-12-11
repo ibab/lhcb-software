@@ -126,7 +126,7 @@ def genProjectSetup(output_file, project, version=None, cmtconfig=None,
     if setup_project_extra_args :
         setuprojargs += setup_project_extra_args
     setuprojargs.append(project)
-    if version :
+    if version and version != "v*":
         setuprojargs.append(version)
     log.debug("Running SetupProject %s" % " ".join(setuprojargs))
     SetupProject().main(setuprojargs)
