@@ -4,6 +4,10 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+!========================== VeloPixDet v1r3 2009-12-11 =======================
+! 2009-12-11 - Marco Cattaneo
+ - Remove obsolete file VeloPixDet_dll.cpp
+
 ! 2009-12-03 - Victor Coco
  - new bugs found and corrected in DeVeloPixSquareType (x and y inversion since the
  2009-11-26 changes). 
