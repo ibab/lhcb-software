@@ -171,12 +171,14 @@ namespace Al
   const Al::TrackResiduals* TrackResidualTool::compute(const LHCb::Track& track) const
   {
     debug() << "In TrackResidualTool::Compute" << endreq ;
-
+    
     // Call one iteration with the smoother gain if necessary
     if( track.fitHistory() != LHCb::Track::StdKalman ) {
-      Warning("Track was fitted with bi-directional fit. Will refit with standard kalman on the fly.",
-	      StatusCode::SUCCESS,0).ignore() ;
-      m_kalmanFilter->fit( const_cast<LHCb::Track&>(track) ) ;
+      StatusCode sc = m_kalmanFilter->fit( const_cast<LHCb::Track&>(track) ) ;
+      if( sc.isFailure() ) {
+	Warning("Track refit failed.",StatusCode::SUCCESS,0).ignore() ;
+	return 0 ;
+      }
     }
     
     // ingredients
