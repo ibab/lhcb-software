@@ -3,10 +3,11 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
+
+!============================= PatPV v3r11 2009-12-11 =========================
 ! 2009-12-10 - Stephanie Hansmann-Menzemer
   - change debug output level accidently slipped into PVLoose.py
 
-!============================= PatPV v3r11 2009-12-10 =========================
 ! 2009-12-08 - Mariusz Witek
  - PVLoose.py - options to run PV reconstruction with relaxed cuts
 
