@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.5 2009-12-01 09:24:57 cattanem Exp $
+! $Id: release.notes,v 1.6 2009-12-11 11:13:27 wouter Exp $
 ! Package     : AlignKernel
 ! Responsible : Adlene Hicheur en Wouter Hulsbergen
 !-------------------------------------------------------------------------------
+
+! 2009-12-11 Wouter Hulsbergen
+ - added data member to keep track of number of tracks intersecting alignable
 
 ! 2009-12-01 Marco Cattaneo
  - In requirements: do not overwrite lapack_linkopts set by LCG_Interfaces 

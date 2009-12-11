@@ -4,6 +4,7 @@
   <class name = "AlVec" />
   <class name = "Al::Equations" />
   <class name = "Al::ElementData" />
+  <class name = "Al::OffDiagonalData" />
   <class name = "ROOT::Math::SMatrix<double,6,5,ROOT::Math::MatRepStd<double,6,5> >" />
   <class name = "ROOT::Math::MatRepStd<double,6,5>" />
   <class name = "ROOT::Math::SMatrix<double,6,3,ROOT::Math::MatRepStd<double,6,3> >" />
@@ -11,4 +12,5 @@
   <!-- class name = "ROOT::Math::SMatrix<double,6,6,ROOT::Math::MatRepStd<double,6,6> >" /-->
   <!-- class name = "ROOT::Math::MatRepStd<double,6,6>" /-->
   <class name = "std::map<size_t, ROOT::Math::SMatrix<double,6,6,ROOT::Math::MatRepStd<double,6,6> > >" />
+  <class name = "std::map<size_t, Al::OffDiagonalData>" />
 </lcgdict>

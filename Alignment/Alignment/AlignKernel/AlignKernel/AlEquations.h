@@ -13,10 +13,37 @@
   
 namespace Al
 {
+  class OffDiagonalData
+  {
+  private:
+    Gaudi::Matrix6x6 m_matrix ;
+    size_t m_numTracks ;
+    size_t m_numHits ;
+  public:
+    OffDiagonalData() : m_matrix(), m_numTracks(0), m_numHits(0) {}
+    Gaudi::Matrix6x6& matrix() { return m_matrix ; }
+    const Gaudi::Matrix6x6& matrix() const { return m_matrix ; }
+    void addTrack() { ++m_numTracks ; }
+    size_t numTracks() const { return m_numTracks ; }
+    size_t numHits() const { return m_numHits ; }
+    template<class T>
+    void add( const T& m) {
+      m_matrix += m ;
+      ++m_numHits ;
+    }
+    OffDiagonalData& operator +=( const OffDiagonalData& rhs )
+    {
+      m_matrix += rhs.m_matrix ;
+      m_numTracks += rhs.m_numTracks ;
+      m_numHits += rhs.m_numHits ;
+      return *this ;
+    }
+  } ;
+
   class ElementData
   {
   public:
-    typedef std::map<size_t, Gaudi::Matrix6x6> OffdiagonalContainer ;
+    typedef std::map<size_t, OffDiagonalData> OffDiagonalContainer ;
     typedef ROOT::Math::SMatrix<double,6,5> TrackDerivatives ;
     typedef ROOT::Math::SMatrix<double,6,3> VertexDerivatives ;
     
@@ -25,7 +52,7 @@ namespace Al
     void transform( const Gaudi::Matrix6x6& jacobian ) ;
     const Gaudi::Vector6& dChi2DAlpha() const { return m_dChi2DAlpha ; }
     const Gaudi::SymMatrix6x6& d2Chi2DAlpha2() const { return m_d2Chi2DAlpha2 ; }
-    const OffdiagonalContainer& d2Chi2DAlphaDBeta() const { return m_d2Chi2DAlphaDBeta ; }
+    const OffDiagonalContainer& d2Chi2DAlphaDBeta() const { return m_d2Chi2DAlphaDBeta ; }
     const TrackDerivatives& dStateDAlpha() const { return m_dStateDAlpha ; }
     const VertexDerivatives& dVertexDAlpha() const { return m_dVertexDAlpha ; }
 
@@ -34,19 +61,22 @@ namespace Al
     double weightR() const { return m_weightR ; }
     size_t numHits() const { return m_numHits ; }
     size_t numOutliers() const { return m_numOutliers ; }
+    size_t numTracks() const { return m_numTracks ; }
     void addHitSummary(double V, double R) {
       m_numHits += 1 ;
       m_weightV += 1/V ;
       m_weightR += R/(V*V) ;
     }
+    void addTrack() { ++m_numTracks ; }
 
     Gaudi::Vector6       m_dChi2DAlpha ;      // (half) 1st derivative
     Gaudi::SymMatrix6x6  m_d2Chi2DAlpha2;     // (half) 2nd derivative diagonal ('this-module')
-    OffdiagonalContainer m_d2Chi2DAlphaDBeta; // (half) 2nd derivative off-diagonal ('module-to-module')
+    OffDiagonalContainer m_d2Chi2DAlphaDBeta; // (half) 2nd derivative off-diagonal ('module-to-module')
     TrackDerivatives     m_dStateDAlpha ;     // derivative of track parameter to alpha
     VertexDerivatives    m_dVertexDAlpha ;    // derivative of vertex position to alpha
     size_t               m_numHits ;
     size_t               m_numOutliers ;
+    size_t               m_numTracks ;
     double               m_weightV ; // sum V^{-1}          --> weight of 1st derivative
     double               m_weightR ; // sum V^{-1} R V^{-1} --> weight of 2nd derivative
   } ;

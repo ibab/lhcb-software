@@ -27,6 +27,7 @@ namespace Al
 	  << data.m_dVertexDAlpha
 	  << data.m_numHits
 	  << data.m_numOutliers
+	  << data.m_numTracks
 	  << data.m_weightV 
 	  << data.m_weightR ;
     return file ;
@@ -42,13 +43,14 @@ namespace Al
       	  >> data.m_dVertexDAlpha
 	  >> data.m_numHits
 	  >> data.m_numOutliers
+	  >> data.m_numTracks
 	  >> data.m_weightV 
 	  >> data.m_weightR ;
     return file ;
   }
 
   ElementData::ElementData()
-    : m_numHits(0), m_numOutliers(0), m_weightV(0), m_weightR(0) 
+    : m_numHits(0), m_numOutliers(0), m_numTracks(0), m_weightV(0), m_weightR(0) 
   {}
   
   void ElementData::add( const ElementData& rhs ) 
@@ -57,13 +59,14 @@ namespace Al
     m_d2Chi2DAlpha2 += rhs.m_d2Chi2DAlpha2 ;
     m_numHits += rhs.m_numHits ;
     m_numOutliers += rhs.m_numOutliers ;
+    m_numTracks += rhs.m_numTracks ;
     m_weightV += rhs.m_weightV ;
     m_weightR += rhs.m_weightR ;
     m_dStateDAlpha += rhs.m_dStateDAlpha ;
     m_dVertexDAlpha += rhs.m_dVertexDAlpha ;
-    for( OffdiagonalContainer::const_iterator rhsit = rhs.m_d2Chi2DAlphaDBeta.begin() ;
+    for( OffDiagonalContainer::const_iterator rhsit = rhs.m_d2Chi2DAlphaDBeta.begin() ;
 	 rhsit != rhs.m_d2Chi2DAlphaDBeta.end() ; ++ rhsit) {
-      OffdiagonalContainer::iterator it = m_d2Chi2DAlphaDBeta.find(rhsit->first) ;
+      OffDiagonalContainer::iterator it = m_d2Chi2DAlphaDBeta.find(rhsit->first) ;
       if( it==m_d2Chi2DAlphaDBeta.end() ) 
 	m_d2Chi2DAlphaDBeta.insert( *rhsit ) ;
       else
@@ -79,9 +82,9 @@ namespace Al
     m_dStateDAlpha = jacobian * tmp.m_dStateDAlpha ;
     m_dVertexDAlpha = jacobian * tmp.m_dVertexDAlpha ;
     m_d2Chi2DAlphaDBeta.clear() ;
-    for( OffdiagonalContainer::const_iterator it = tmp.m_d2Chi2DAlphaDBeta.begin() ;
+    for( OffDiagonalContainer::const_iterator it = tmp.m_d2Chi2DAlphaDBeta.begin() ;
 	 it != tmp.m_d2Chi2DAlphaDBeta.end() ; ++ it)
-      m_d2Chi2DAlphaDBeta[it->first] = jacobian * it->second ;
+      m_d2Chi2DAlphaDBeta[it->first].matrix() = jacobian * it->second.matrix() ;
   }
   
   Equations::Equations(size_t nElem)
