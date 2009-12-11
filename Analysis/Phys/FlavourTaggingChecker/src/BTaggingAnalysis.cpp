@@ -310,20 +310,24 @@ StatusCode BTaggingAnalysis::execute() {
   MCParticles::const_iterator imc;
   double maxBP = -1;
   for ( imc = mcpart->begin(); imc != mcpart->end(); imc++ ) {
-    if( (*imc) != BS ) 
-      if((*imc)->particleID().hasBottom()) {
-        bool close2BS = false;
-        if(BS) if(fabs((*imc)->originVertex()->position().z() 
-                       - BS->originVertex()->position().z()) /Gaudi::Units::mm < 1.0)
-          close2BS = true;
+    if( !(*imc)->particleID().hasBottom() ) continue;
+    if( (*imc) == BS) continue;
+    int aid  = (*imc)->particleID().abspid();
+    if( aid==511 || aid==521 || aid==531 || aid==541
+        || (aid>5000 && aid<5599) ) {
+      bool close2BS = false;
+      if(BS) if(fabs((*imc)->originVertex()->position().z() 
+                     - BS->originVertex()->position().z()) 
+                /Gaudi::Units::mm < 1.0)
+        close2BS = true;
 	
-        if( close2BS || (!BS) ) {
-          if( maxBP < (*imc)->momentum().P() ) {
-            maxBP = (*imc)->momentum().P();
-            BO = (*imc);
-          }
+      if( close2BS || (!BS) ) {
+        if( maxBP < (*imc)->momentum().P() ) {
+          maxBP = (*imc)->momentum().P();
+          BO = (*imc);
         }
       }
+    }
   }
 
   if(BS) {
@@ -343,7 +347,6 @@ StatusCode BTaggingAnalysis::execute() {
   //debug()<<"SIGNAL B:"<<endreq; m_debug -> printTree(BS);
   //debug()<<"OPPOSITE B (TAGGING B):"<<endreq; m_debug -> printTree(BO);
 
-
   //-------------------- OFFICIAL TAG of the Event --------------------
   bool foundb = false;
   ProtoParticle::ConstVector partsInSV;
@@ -351,9 +354,8 @@ StatusCode BTaggingAnalysis::execute() {
   FlavourTag* theTag = new FlavourTag;
   if (exist<FlavourTags>(m_TagLocation)){//there is already something in TES
     tags = get<FlavourTags>(m_TagLocation);
-    if(tags->size()>1) 
-      info()<<"FlavourTag objects in TES:"<<tags->size()
-            <<"  Search for the highest pT B.."<<endreq;
+    if(tags->size()>1) info()<<"FlavourTag objects in TES:"<<tags->size()
+			     <<"  Search for the highest pT B.."<<endreq;
     FlavourTags::const_iterator ti;
     for( ti=tags->begin(); ti!=tags->end(); ti++ ) {
       if((*ti)->taggedB() == AXBS) {
@@ -366,6 +368,7 @@ StatusCode BTaggingAnalysis::execute() {
   } 
 
   if(!foundb ){
+    info()<<"Will tag the B hypo now."<<endreq;
     StatusCode sc = flavourTagging()->tag( *theTag, AXBS );
     if (!sc) {
       err() <<"Tagging Tool returned error."<< endreq;
@@ -378,12 +381,12 @@ StatusCode BTaggingAnalysis::execute() {
       debug()<<"Inserted tags into "<<m_TagLocation<<endreq;
     }
   }
-  tuple -> column ("Tag", theTag->decision());
-  tuple -> column ("Omega", theTag->omega());
-  tuple -> column ("TagCat", theTag->category());
-  tuple -> column ("TagOS", theTag->decisionOS());
+  tuple -> column ("Tag",     theTag->decision());
+  tuple -> column ("Omega",   theTag->omega());
+  tuple -> column ("TagCat",  theTag->category());
+  tuple -> column ("TagOS",   theTag->decisionOS());
   tuple -> column ("OmegaOS", theTag->omegaOS());
-  tuple -> column ("TagCatOS", theTag->categoryOS());
+  tuple -> column ("TagCatOS",theTag->categoryOS());
 
   long TrueTag = 0;
   if(BS) TrueTag = BS->particleID().pid()>0 ? 1 : -1; 
@@ -557,7 +560,7 @@ StatusCode BTaggingAnalysis::execute() {
   std::vector<float> pID, pP, pPt, pphi, pch, pip, piperr, 
     pipPU, pipC, pipChi2, pipPUC, pipPUChi2;
   std::vector<float> ptrtyp, plcs, ptsal, pdistPhi, pveloch, pEOverP, 
-    pPIDe, pPIDm, pPIDk, pPIDp,pPIDfl, pRichPID;
+    pPIDe, pPIDm, pPIDk, pPIDp,pPIDfl;
   std::vector<float> pMCID, pMCP, pMCPt, pMCphi, pMCz, 
     pmothID, pancID, pbFlag, pxFlag, pvFlag;
 
@@ -588,7 +591,6 @@ StatusCode BTaggingAnalysis::execute() {
     double IP, IPerr;
     if(!(axp->particleID().hasBottom())) m_util->calcIP(axp, RecVert, IP, IPerr);
     if(!IPerr) continue;                                      //preselection cut
-    //calculate signed IP wrt SecondaryVertex
     //calculate min IP wrt all pileup vtxs 
     double IPPU = 10000;
     double ipval, iperr, IPc=-1, IPchi2=-1;
@@ -659,22 +661,12 @@ StatusCode BTaggingAnalysis::execute() {
     if( proto->info(ProtoParticle::RichPIDStatus, 0) ) PIDfl +=  1;
     pPIDfl.push_back(PIDfl);
     
-    long richPID = 0;
-    const RichPID * rpid = proto->richPID ();
-    if ( rpid ) { 
-      if ( rpid->kaonHypoAboveThres()) richPID += 1000;
-      if ( rpid->usedRich2Gas() )      richPID +=  100;
-      if ( rpid->usedRich1Gas() )      richPID +=   10;
-      if ( rpid->usedAerogel() )       richPID +=    1;
-    }
-    pRichPID.push_back(richPID);
-
     // secondary vertex flag
     int vFlag = 0;
     ProtoParticle::ConstVector::iterator prkp;
     for(prkp = partsInSV.begin(); prkp != partsInSV.end(); prkp++) {
       if( axp->proto() == (*prkp) ) {
-        vFlag = 1; 
+        vFlag = 1;
         break;
       }
     }
@@ -685,10 +677,11 @@ StatusCode BTaggingAnalysis::execute() {
       debug() << " --- trtyp="<<trtyp<<" ID="<<ID<<" P="<<P<<" Pt="<<Pt <<endreq;
       debug() << " deta="<<deta << " dphi="<<dphi << " dQ="<<dQ <<endreq;
       debug() << " IPsig="<<fabs(IP/IPerr) << " IPPU="<<IPPU <<endreq;
-      debug() << " sigPhi="<<distphi<< " lcs " << lcs << endreq;
-      debug()<< " mNSH="<<muonNSH<< " vFlag="<<vFlag<<endreq;
+      //debug() << " sigPhi="<<distphi<< " lcs " << lcs << endreq;
+      //debug()<< " mNSH="<<muonNSH<< " vFlag="<<vFlag<<endreq;
       if(vFlag) debug() << "Found to be in VTX "<<endreq;
     }
+
 
     //store MC info 
     long MCID  = 0;
@@ -787,7 +780,6 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> farray ("PIDk", pPIDk, "N", 200);
   tuple -> farray ("PIDp", pPIDp, "N", 200);
   tuple -> farray ("PIDfl", pPIDfl, "N", 200);
-  tuple -> farray ("RichPID", pRichPID, "N", 200);
   tuple -> farray ("MCID", pMCID, "N", 200);
   tuple -> farray ("MCP", pMCP, "N", 200);
   tuple -> farray ("MCPt", pMCPt, "N", 200);
