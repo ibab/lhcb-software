@@ -14,7 +14,25 @@ This version uses Gaudi v21r6 and LHCb v28r5
                     Tr/TrackExtrapolators v2r24p1, Tr/TrackFitter v2r43,
                     Velo/VeloRecMonitors v2r5, Tf/TsaAlgorithms v3r14p3,
                     Tf/TrackSys v4r29, Tr/PatPV v3r11, Rec/GlobalReco v6r30,
-                    Tf/TrackMatching v2r25
+                    Tf/TrackMatching v2r25, Tr/TrackFitEvent v4r3,
+										Tr/TrackMonitors v1r18, Tr/TrackUtils v1r32,
+										Calo/CaloMoniDst v4r2, Rich/RichRecSys v3r23
+
+- In Tr/TrackFitEvent v4r3:
+		. Minor improvements in functionality
+		. bugfix: removed default constructors for measurement classes
+
+- In Tr/TrackMonitors v1r18:
+		. Added histograms to trackmonitor
+
+- In Tr/TrackUtils v1r32:
+		. Small modifications in TrackV0Finder
+
+- In Calo/CaloMoniDst v4r2:
+		.	Minor changes in monitoring histograms
+
+- In Rich/RichRecSys v3r23:
+		. Extend python Configurable for Track Creator
 
 - In Rich/RichRecTools v1r16:
 		. Minor changes,
@@ -25,6 +43,7 @@ This version uses Gaudi v21r6 and LHCb v28r5
 		. bugfix and loosened tuning for early data
 			Added options file PatDownstream.py. 
 			PatDownstream: fixes division by zero
+		. make PatDownstream.py use RecSys SpecialData switch "earlyData"
 
 - In Tr/TrackExtrapolators v2r24p1:
 		. Minor fixes to warnings and unchecked codes
@@ -37,10 +56,11 @@ This version uses Gaudi v21r6 and LHCb v28r5
 		. Minor changes to monitors and options
 
 - In Tf/TsaAlgorithms v3r14p3:
-		.	
+		.	added SpecialData "earlyData" for 450 GeV, low rate, with poorer alignment
 
 - In Tf/TrackSys v4r29:
-		. 
+		. changed TrackEffChecker for Downstream tracks in PatChecking.py
+		. added SpecialData "earlyData" for 450 GeV, low rate, with poorer alignment
 
 - In Tr/PatPV v3r11:
 		. PVLoose.py - options to run PV reconstruction with relaxed cuts
@@ -49,7 +69,7 @@ This version uses Gaudi v21r6 and LHCb v28r5
 		. Downgrade some INFO messages to debug.
 
 - In Tf/TrackMatching v2r25:
-		. 
+		. added SpecialData "earlyData" for 450 GeV, low rate, with poorer alignment
 
 </PRE><H1><A NAME=v7r11>2009-12-03 RecSys v7r11</A></H1><PRE>
 This version uses Gaudi v21r6 and LHCb v28r4
