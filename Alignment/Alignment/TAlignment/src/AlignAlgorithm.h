@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.36 2009-07-06 14:52:08 wouter Exp $
+// $Id: AlignAlgorithm.h,v 1.37 2009-12-11 12:31:22 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -133,6 +133,8 @@ private:
   ToolHandle<Al::IVertexResidualTool>  m_vertexresidualtool ;
   ToolHandle<Al::IAlignUpdateTool>  m_updatetool ;
   ToolHandle<ITrackSelector> m_vertextrackselector ;
+  std::string                       m_alignSummaryDataSvc ;
+  std::string                       m_alignSummaryLocation ;
 
   Al::Equations*                    m_equations;                     ///< Equations to solve
   bool                              m_correlation ;                  ///< Do we take into account correlations between residuals?

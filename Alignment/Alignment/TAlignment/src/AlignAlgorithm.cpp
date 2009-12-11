@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.58 2009-10-14 19:52:58 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.59 2009-12-11 12:31:22 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -90,6 +90,12 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
   declareProperty("VertexResidualTool",m_vertexresidualtool) ;
   declareProperty("MaxTracksPerVertex",m_maxTracksPerVertex = 8 ) ;
   declareProperty("MinTracksPerVertex",m_minTracksPerVertex = 2 ) ;
+
+  declareProperty("AlignSummaryDataSvc", m_alignSummaryDataSvc = "DetectorDataSvc" ) ;
+  //"HistogramDataSvc" ) ;
+  declareProperty("AlignSummaryLocation", m_alignSummaryLocation = "AlignDerivativeData") ;
+  
+
 }
 
 AlignAlgorithm::~AlignAlgorithm() {}
@@ -141,8 +147,8 @@ StatusCode AlignAlgorithm::initialize() {
   }
   
   LHCb::AlignSummaryData* m_summaryData = new LHCb::AlignSummaryData(elements.size()) ;
-  IDataProviderSvc* detsvc = detSvc() ;
-  sc = detsvc->registerObject("AlignDerivativeData",m_summaryData) ;
+  IDataProviderSvc* datasvc = svc<IDataProviderSvc>(m_alignSummaryDataSvc,true) ;
+  sc = datasvc->registerObject(m_alignSummaryLocation,m_summaryData) ;
   if( !sc.isSuccess() ) {
     error() << "cannot register object. statuscode = "
             << sc << endreq ;
@@ -424,10 +430,10 @@ bool AlignAlgorithm::accumulate( const Al::Residuals& residuals )
 	  double c = ihch->val / (residuals.residual(ihch->row).V()*residuals.residual(ihch->col).V()) ;
 	  if( rowindex < colindex ) {
 	    Al::ElementData& elementdata = m_equations->element(rowindex) ;
-	    elementdata.m_d2Chi2DAlphaDBeta[colindex] -= c * Transpose(rowderiv) * colderiv ;
+	    elementdata.m_d2Chi2DAlphaDBeta[colindex].add( -c * Transpose(rowderiv) * colderiv) ;
 	  } else if (rowindex > colindex) {
 	    Al::ElementData& elementdata = m_equations->element(colindex) ;
-	    elementdata.m_d2Chi2DAlphaDBeta[rowindex] -= c * Transpose(colderiv) * rowderiv ;
+	    elementdata.m_d2Chi2DAlphaDBeta[rowindex].add( -c * Transpose(colderiv) * rowderiv) ;
 	  } else if(rowindex == colindex ) {
 	    Al::ElementData& elementdata = m_equations->element(rowindex) ;
 	    // make sure to symmetrize: add diagonal elements in both orders.
@@ -472,6 +478,19 @@ bool AlignAlgorithm::accumulate( const Al::Residuals& residuals )
       
       // keep some information about the tracks that we have seen
       m_equations->addChi2Summary( residuals.chi2(), residuals.nDoF(), residuals.nExternalHits() ) ;
+
+      std::vector<size_t> elementsOnTrack( residuals.residuals().size() ) ;
+      for(size_t i=0; i< residuals.residuals().size(); ++i)
+	elementsOnTrack[i] = residuals.residuals()[i].element().index() ;
+      std::sort( elementsOnTrack.begin(),  elementsOnTrack.end() ) ;
+      std::vector<size_t>::const_iterator newend = std::unique(elementsOnTrack.begin(),elementsOnTrack.end()) ;
+      for( std::vector<size_t>::const_iterator icol = elementsOnTrack.begin();
+	   icol != newend; ++icol) {
+	m_equations->element(*icol).addTrack() ;
+	for( std::vector<size_t>::const_iterator irow= elementsOnTrack.begin();
+	     irow != icol; ++irow) 
+	  m_equations->element(*irow).m_d2Chi2DAlphaDBeta[*icol].addTrack() ;
+      }
     }
   }
   return accept ;
