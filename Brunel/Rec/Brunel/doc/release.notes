@@ -3,7 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
- - Add earlyData switch to 2009-BeamGas.py and 2009-Collisions.py (Stephanie Hansmann-Menzemer)
+</PRE><H1><A NAME=v35r11>2009-12-14 Brunel v35r11</A></H1><PRE>
+ - Changes to example options
+   . Add earlyData switch to 2009-BeamGas.py and 2009-Collisions.py
+     (Needs AppConfig v3r28)
 
  - Changes to tests
    . brunelmdfrdst test now processes 2009 collisions data file. Tests both the
