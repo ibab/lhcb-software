@@ -1,9 +1,13 @@
-# $Id: release.notes,v 1.173 2009-12-05 14:39:20 dgolubko Exp $
+# $Id: release.notes,v 1.174 2009-12-11 13:39:28 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+!===================== Det/DetCond v12r8 2009-12-11 ==========================
+! 2009-12-11 - Marco Cattaneo
+ - Remove obsolete file DetCond_dll.cpp
 
 ! 2009-12-05 - Dmitry GOLUBKOV
  - python/DetCond/HistoCond.py: new python module to decorate the Condition
