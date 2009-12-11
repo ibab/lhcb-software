@@ -6,6 +6,10 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+!========================= MDF v3r22 2009-12-13 ==============================
+! 2009-12-13  Markus Frank
+ - Fix bug in 64 bit I/O routines handling large files (> 2GB)
+
 !========================= MDF v3r21 2009-11-13 ==============================
 ! 2009-11-13  Markus Frank
  - Fix bug in MEP decoding. Get correct upper 16 bits of L0 event ID.

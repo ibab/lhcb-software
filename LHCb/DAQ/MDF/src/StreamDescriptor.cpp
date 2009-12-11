@@ -1,4 +1,4 @@
-// $Id: StreamDescriptor.cpp,v 1.19 2008-10-28 12:34:36 cattanem Exp $
+// $Id: StreamDescriptor.cpp,v 1.20 2009-12-11 14:50:53 frankb Exp $
 //====================================================================
 //  OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -70,7 +70,6 @@ namespace Networking {
 #include "GaudiKernel/System.h"
 namespace FileIO {
   using ::close;
-  using ::open;
   using ::read;
   using ::write;
   using ::lseek64;
@@ -78,6 +77,13 @@ namespace FileIO {
 typedef LHCb::StreamDescriptor::Access Access;
 
 namespace {
+  int file_open(const char* fn, int f1, int f2=0) {
+#ifdef _WIN32
+    return ::open(fn,f1,f2);
+#else
+    return ::open64(fn,f1,f2);
+#endif
+  }
   int file_read(const Access& con, void* buff, int len)  {
     int tmp = 0;
     char* p = (char*)buff;
@@ -335,7 +341,7 @@ Access LHCb::StreamDescriptor::connect(const std::string& specs)  {
       if ( !proto.empty() )  {
   result.type = ::toupper(proto[0]); 
   if ( result.type == 'F' ) {
-    result.ioDesc     = FileIO::open(file.c_str(), O_WRONLY|O_BINARY|O_CREAT, S_IRWXU|S_IRWXG );
+    result.ioDesc     = file_open(file.c_str(), O_WRONLY|O_BINARY|O_CREAT, S_IRWXU|S_IRWXG );
     result.m_write    = file_write;
     result.m_read     = file_read;
     result.m_seek     = file_seek;
@@ -394,7 +400,7 @@ Access LHCb::StreamDescriptor::bind(const std::string& specs)  {
       if ( !proto.empty() )  {
   result.type = ::toupper(proto[0]); 
   if ( result.type == 'F' ) {
-    result.ioDesc  = FileIO::open(file.c_str(), O_RDONLY|O_BINARY );
+    result.ioDesc  = file_open(file.c_str(), O_RDONLY|O_BINARY );
     result.m_write = file_write;
     result.m_read  = file_read;
     result.m_seek  = file_seek;
