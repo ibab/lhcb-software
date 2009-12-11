@@ -5,7 +5,7 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v28r4>2009-11-30 LHCbSys v28r4</A></H1><PRE>
+</PRE><H1><A NAME=v28r5>2009-12-14 LHCbSys v28r5</A></H1><PRE>
 This version uses Gaudi v21r6 and LCG_57a
 
 - Packages modified: CaloUtils v8r10, DDDB v1r26, DetCond v12r8, DetDesc v18r18,
