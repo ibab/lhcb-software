@@ -16,7 +16,7 @@ This version uses Gaudi v21r6 and LHCb v28r5
                     Tf/TrackSys v4r29, Tr/PatPV v3r11, Rec/GlobalReco v6r30,
                     Tf/TrackMatching v2r25, Tr/TrackFitEvent v4r3,
 										Tr/TrackMonitors v1r18, Tr/TrackUtils v1r32,
-										Calo/CaloMoniDst v4r2, Rich/RichRecSys v3r23
+										Calo/CaloMoniDst v4r2, Rich/RichRecSys v3r24
 
 - In Tr/TrackFitEvent v4r3:
 		. Minor improvements in functionality
@@ -31,8 +31,9 @@ This version uses Gaudi v21r6 and LHCb v28r5
 - In Calo/CaloMoniDst v4r2:
 		.	Minor changes in monitoring histograms
 
-- In Rich/RichRecSys v3r23:
+- In Rich/RichRecSys v3r24:
 		. Extend python Configurable for Track Creator
+		. In TrackCreator.py, adapt cuts for "earlyData".
 
 - In Rich/RichRecTools v1r16:
 		. Minor changes,
@@ -71,9 +72,6 @@ This version uses Gaudi v21r6 and LHCb v28r5
 
 - In Tf/TrackMatching v2r25:
 		. added SpecialData "earlyData" for 450 GeV, low rate, with poorer alignment
-- In Rich/RichRecSys v3r24:
-		. In TrackCreator.py, adapt cuts for "earlyData".
-
 </PRE><H1><A NAME=v7r11>2009-12-03 RecSys v7r11</A></H1><PRE>
 This version uses Gaudi v21r6 and LHCb v28r4
 
