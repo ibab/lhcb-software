@@ -3,6 +3,11 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2009-11-22 - Wouter Hulsbergen
+ - bug fix in element sorting: relevant when having redundant parameters (mothers + daughters)
+ - added more TT alignables
+ - alequations now keeps track of unmber of tracks (also in overlaps)
+
 </PRE><H1><A NAME=v4r5>2009-11-23 TAlignment v4r5</A></H1><PRE>
 ! 2009-11-23 Johan Blouw
  - release v4r5 for Alignment v4r4
