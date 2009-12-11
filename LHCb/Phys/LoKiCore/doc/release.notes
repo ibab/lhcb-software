@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.168 2009-12-06 18:20:56 ibelyaev Exp $ 
+! $Id: release.notes,v 1.169 2009-12-11 14:15:16 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,6 +15,7 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! =========================== LoKiCore v9r8 2009-12-11 ========================
 ! 2009-12-06 - Vanya Belyaev
 
   - add generic "prescalers"   ( see task #12978)
