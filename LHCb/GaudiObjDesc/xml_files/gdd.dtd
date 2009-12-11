@@ -35,7 +35,8 @@
         virtual           (TRUE | FALSE)                   "TRUE"
         allocator         (DEFAULT | NO | BOOST | BOOST2 | DEBUG )  "DEFAULT"    
         defaultconstructor (TRUE | FALSE)                  "TRUE"
->       
+        defaultdestructor  (TRUE | FALSE)                  "TRUE">
+       
 <!ELEMENT desc (#PCDATA)>
 <!ATTLIST desc
         xml:space        (default | preserve)              #FIXED "preserve"

@@ -253,7 +253,7 @@ class genClasses(genSrcUtils.genSrcUtils):
     if godClass.has_key('destructor'):                                          # there is a destructor defined
       dest = godClass['destructor'][0]
       s += self.genDestructor(godClass, dest,clname)
-    elif not clname:                                                             # no destructor defined let's
+    elif not clname and godClass['attrs']['defaultdestructor'] == 'TRUE' :      # no destructor defined let's
       virt = 'virtual'
       if godClass['attrs']['virtual'] == 'FALSE' : virt = ''
       s += '  /// Default Destructor\n'

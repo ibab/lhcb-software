@@ -4,6 +4,12 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+! 2009-12-11 - Stefan
+- Adding new <class> attribute "defaultdestructor". The default value for it is
+  set to "TRUE". Setting it to "FALSE" will disable the generation of a default
+  destructor also in the case no other destructor was defined, which was the 
+  case before.
+
 !======================== GaudiObjDesc v11r9 2009-12-11 ======================
 ! 2009-12-03 - Stefan Roiser
 - Adding a new <class> attribute "defaultconstructor". The default for this 
