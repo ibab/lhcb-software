@@ -8,6 +8,117 @@
 </PRE><H1><A NAME=v28r4>2009-11-30 LHCbSys v28r4</A></H1><PRE>
 This version uses Gaudi v21r6 and LCG_57a
 
+- Packages modified: CaloUtils v8r10, DDDB v1r26, DetCond v12r8, DetDesc v18r18,
+    DetDescCnv v4r11, Magnet v5r6, RichDet v13r2, VeloPixDet v1r3, MDF v3r22,
+    DigiEvent v2r14, GaudiConf v13r2, GaudiObjDesc v11r9, LHCbAlgs v2r31p1,
+    LHCbKernel v11r10, DaVinciInterfaces v1r3p1, LoKiArrayFunctors v8r7,
+    LoKiCore v9r8, LoKiNumbers v8r3p2, LoKiPhys v8r12, LoKiPhysMC v8r6,
+    CondDBUI v3r0 
+
+- In CaloUtils v8r10
+  . CellID.py: bug fix in python decorator for std::set-container 
+  . In CaloTrackTool.h: Fix trivial untested StatusCode, 
+                        Downgrade Errors to Warnings
+  . Calo2Dview::getUnit(): protect against non string unit (bug or feature in
+    HistoID::literalID())
+  . Remove obsolete files CaloUtils/dirHbookName.h, CaloUtils/histoHbookName.h 
+  . New helper python decorator classes
+
+- In MDF v3r22
+  . Fix bug in 64 bit I/O routines handling large files (> 2GB)
+
+- In DDDB v1r26
+  . Changed default tag for 2009 data:
+    o head-20091120         for DDDB (same as before)
+    o head-20091211         for LHCBCOND
+    o sim-20091112-vc-md100 for SIMCOND (same as before)
+
+- In DetCond v12r8
+  . Remove obsolete file DetCond_dll.cpp
+  . python/DetCond/HistoCond.py: new python module to decorate the Condition
+    object with functions which extract the histograms from the parameters and to
+    define functions which convert histograms to Condition parameter xml strings.
+
+- In DetDesc v18r18
+  . Fix bug #60276: SolidPolycone does not define a correct bounding box
+  . DetDesc/HistoParam.h: introduce namespace DetDesc::Params
+  . DetDesc/src/Lib/HistoParam.cpp: change printout from histogram conditions
+                                    to histogram parameters
+  . Add interface functions DetDesc::Params::paramAsHisto1D and paramAsHisto2D
+	  to extract 1d and 2d histogram parameters from a Condition, new files:
+	  DetDesc/ParamAsHisto.h, src/Lib/ParamAsHisto.cpp
+
+- In DetDescCnv v4r11
+  . XmlBaseConditionCnv.cpp: add converter for Histo1D and Histo2D parameters
+  . XmlGenericCnv.cpp: fix a missprint in releasing of a temporary string
+
+- In Magnet v5r6
+  . Add implementation of new ILHCbMagneticFieldSvc::polarity() member to 
+    MagneticFieldSvc and MultipleMagneticFieldSvc.
+
+- In RichDet v13r2
+  . new (single) condition for the temperature and pressure of the Gas Radiators
+
+- In VeloPixDet v1r3
+  . Remove obsolete file VeloPixDet_dll.cpp
+  . New bugs corrected in DeVeloPixSquareType (x and y inversion since previous 
+    changes). 
+
+- In DigiEvent v2r14
+  . Fix small bug in STCluster::contain method.
+  . Add VeloPixDigit.xml, VeloPixCluster.xml and VeloPixLiteCluster.xml objects
+    used by pixel Velo algorithms 
+
+- In GaudiConf v13r2
+  . Fix bug #60648: DigiConf was not packing MCHits in case of "Extended" output,
+    so could not be used with Gauss < v38r0, where hits on .sim are not packed
+
+- In GaudiObjDesc v11r9
+  . Adding a new <class> attribute "defaultconstructor". The default for this 
+    attribute is "TRUE". If set to "FALSE" no default constructor for this class 
+    will be generated. Must be "TRUE" for persistent classes
+
+- In LHCbAlgs v2r31p1
+  . Fix trivial untested StatusCode in MemoryTool.cpp
+
+- In LHCbKernel v11r10
+  . Add polarity() to ILHCbMagnetSvc interface
+  . Add IReferenceRate interface 
+
+- In DaVinciInterfaces v1r3p1
+  . Add doxygen description of chi in IDistanceCalculator
+
+- In LoKiArrayFunctors v8r7
+  . Add helper functions to evaluate functors for daughter particles, 
+    which maximizes/minimizes the value of another functor
+
+- In LoKiCore v9r8
+  . add generic "prescalers"   ( see task #12978)
+  . add comparison with vectors of doubles/ints 
+  . add a sequencing of nodes
+  . fix a bug in "pre-cooking" of decay descriptor before parsing.
+  . fix a bug for "range" functions 
+
+- In LoKiNumbers v8r3p2
+  . Add scalers (see task #12978)
+  . add example for scalers/prescalers 
+  . python/LoKiNumbers/test.py: fix the example of usage of in_range function 
+
+- In LoKiPhys v8r12
+  . LoKi/Photons.h, src/Photons.cpp: add new functions for analysis photon
+    candidates for the first data 
+
+- In LoKiPhysMC v8r6
+  . MCMatcher: automatically insert 'Relations/' into the path for relation table
+    if original path does not work
+  . Minor fix with the default arguments for MCMatcher functors 
+
+- In CondDBUI v3r0 
+  . Migration of CondDBBrowser to Qt4 (see details in release.notes)
+
+</PRE><H1><A NAME=v28r4>2009-11-30 LHCbSys v28r4</A></H1><PRE>
+This version uses Gaudi v21r6 and LCG_57a
+
 - Packages modified: CaloDAQ v4r16, CaloInterfaces v7r17, CaloUtils v8r9,
     DDDB v1r25, DetDesc v18r17, DetDescChecks v5r0, DetDescSvc v2r4,
     Magnet v5r5, VeloPixDet v1r2, EventPacker v2r1, MCEvent v2r16,
