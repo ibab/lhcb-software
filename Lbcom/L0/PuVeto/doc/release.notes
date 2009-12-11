@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.55 2009-12-10 16:34:54 serena Exp $
+! $Id: release.notes,v 1.56 2009-12-11 15:15:33 cattanem Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Serena Oggero
 !-------------------------------------------------------------------------
 
+!======================== PuVeto v7r4 2009-12-11 =========================
 ! 2009-12-10 - Serena Oggero
  - PuVetoAlgo fixed (uint32_t changed in unsigned int, get rid of some 
    multiple histo bookings). All printouts are also now in debug() mode
