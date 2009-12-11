@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.24 2009-02-24 21:11:07 wouter Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.25 2009-12-11 12:14:26 wouter Exp $
 // Include files
 
 //from STL
@@ -184,10 +184,15 @@ StatusCode GetElementsToBeAligned::initialize() {
       dofMask.at(Rx) = true; dofMask.at(Ry) = true; dofMask.at(Rz) = true;
     }
     
-    /// Loop over elements and create AlignmentElements
-    if (groupElems) 
-      alignelements.push_back(new AlignmentElement(groupname,
-						   detelements, index++, dofMask,m_useLocalFrame));
+    // Loop over elements and create AlignmentElements
+    if (groupElems) {
+      // first check that there isn't already a group with this name. if there is, add the elements.
+      NonConstElements::iterator ielem = alignelements.begin() ;
+      while( ielem != alignelements.end() && (*ielem)->name() != groupname) ++ielem ;
+      if( ielem != alignelements.end() ) (*ielem)->addElements( detelements ) ;
+      else alignelements.push_back(new AlignmentElement(groupname,
+							detelements, index++, dofMask,m_useLocalFrame));
+    }
     else
       for(std::vector<const DetectorElement*>::iterator ielem = detelements.begin() ;
 	  ielem != detelements.end(); ++ielem)
