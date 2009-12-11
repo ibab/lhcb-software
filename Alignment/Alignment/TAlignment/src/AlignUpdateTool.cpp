@@ -7,6 +7,7 @@
 #include "AlignmentInterfaces/IAlignSolvTool.h"
 #include "IAlignConstraintTool.h"
 #include "AIDA/IProfile1D.h"
+#include "AIDA/IHistogram2D.h"
 #include "GaudiUtils/Aida2ROOT.h"
 #include "boost/lexical_cast.hpp"
 
@@ -215,7 +216,7 @@ namespace Al
     for (Elements::reverse_iterator ielem = sortedelements.rbegin(); 
 	 sortedelements.rend() != ielem ; ++ielem) 
       if( !(*ielem)->daughters().empty() ) {
-	info() << "Accumulating daughter data for element: "
+	debug() << "Accumulating daughter data for element: "
 	       << (*ielem)->name() << endreq ;
 	// Important note: we accumulate the correlations first inside
 	// the parent element. If that means that the correlation gets
@@ -246,7 +247,7 @@ namespace Al
 	  elementdata.add( transformeddaudata ) ;
 
 	  // 3. add the correlation with the daughter
-	  elementdata.m_d2Chi2DAlphaDBeta[ (*idau)->index() ] += totalJacobian * daudata.d2Chi2DAlpha2() ;
+	  elementdata.m_d2Chi2DAlphaDBeta[ (*idau)->index() ].matrix() += totalJacobian * daudata.d2Chi2DAlpha2() ;
 
 	  // save the jacobian for when we treat correlations
 	  daughterToMotherJacobians.push_back( totalJacobian ) ;
@@ -260,19 +261,23 @@ namespace Al
 	for( Al::Equations::ElementContainer::const_iterator jdata = equations.elements().begin() ;
 	     jdata != equations.elements().end(); ++jdata, ++leftindex)
 	  if( leftindex != (*ielem)->index() ) { // skip the mother itself
-	    for( Al::ElementData::OffdiagonalContainer::const_iterator jelem = jdata->d2Chi2DAlphaDBeta().begin() ;
+	    for( Al::ElementData::OffDiagonalContainer::const_iterator jelem = jdata->d2Chi2DAlphaDBeta().begin() ;
 		 jelem != jdata->d2Chi2DAlphaDBeta().end(); ++jelem) {
 	      size_t rightindex = jelem->first ;
-	      assert(rightindex != (*ielem)->index()) ;
+	      if( rightindex == (*ielem)->index() ) {
+		error() << "Very serious ordering problem: "
+			<< (*ielem)->index() << " " << leftindex << " " << rightindex << endreq ;
+		assert(rightindex != (*ielem)->index()) ;
+	      }
 	      int leftdaughter  = daughterIndices[leftindex] ;
 	      int rightdaughter = daughterIndices[rightindex] ;
 	      if( leftdaughter>=0 ) {
-		elementdata.m_d2Chi2DAlphaDBeta[ rightindex ] +=
-		  daughterToMotherJacobians[ leftdaughter ] * jelem->second ;
+		elementdata.m_d2Chi2DAlphaDBeta[ rightindex ].matrix() +=
+		  daughterToMotherJacobians[ leftdaughter ] * jelem->second.matrix() ;
 	      }
 	      if( rightdaughter>=0 ) {
-		elementdata.m_d2Chi2DAlphaDBeta[ leftindex ] +=
-		  daughterToMotherJacobians[ rightdaughter ] * ROOT::Math::Transpose( jelem->second ) ;
+		elementdata.m_d2Chi2DAlphaDBeta[ leftindex ].matrix() +=
+		  daughterToMotherJacobians[ rightdaughter ] * ROOT::Math::Transpose( jelem->second.matrix() ) ;
 	      }
 	      // the elements where both are daughters need to be treated seperately
  	      if( leftdaughter>=0 && rightdaughter>=0) {
@@ -281,7 +286,7 @@ namespace Al
 		// hidden because we only keep lowerdiagonal. We
 		// therefore symmetrize it as follows:
 		Gaudi::Matrix6x6 tmpasym = 
-		  daughterToMotherJacobians[ leftdaughter ] * jelem->second *
+		  daughterToMotherJacobians[ leftdaughter ] * jelem->second.matrix() *
 		  ROOT::Math::Transpose( daughterToMotherJacobians[ rightdaughter ] ) ;
 		Gaudi::SymMatrix6x6 tmpsym ;
 		ROOT::Math::AssignSym::Evaluate(tmpsym, tmpasym + ROOT::Math::Transpose(tmpasym)) ;
@@ -291,14 +296,14 @@ namespace Al
 	  }
 	
 	// now swap any element that we added with wrongly ordered index.
-	Al::ElementData::OffdiagonalContainer keepelements ;	
-	for( Al::ElementData::OffdiagonalContainer::const_iterator jelem = elementdata.d2Chi2DAlphaDBeta().begin() ;
+	Al::ElementData::OffDiagonalContainer keepelements ;	
+	for( Al::ElementData::OffDiagonalContainer::const_iterator jelem = elementdata.d2Chi2DAlphaDBeta().begin() ;
 	     jelem != elementdata.d2Chi2DAlphaDBeta().end(); ++jelem)
 	  if( jelem->first < (*ielem)->index() ) {
 	    //std::cout << "found wrongly ordered element: "
 	    // << (*ielem)->index() << " " << jelem->first << std::endl ;
-	    equations.element( jelem->first ).m_d2Chi2DAlphaDBeta[ (*ielem)->index() ] +=
-	      ROOT::Math::Transpose(jelem->second) ;
+	    equations.element( jelem->first ).m_d2Chi2DAlphaDBeta[ (*ielem)->index() ].matrix() +=
+	      ROOT::Math::Transpose(jelem->second.matrix()) ;
 	  } else if( jelem->first == (*ielem)->index() ) {
 	    error() << "VERY serious problem in addDaughterData. This still needs some development." 
 		    << jelem->first << " " << (*ielem)->index() << endreq ;
@@ -366,9 +371,9 @@ namespace Al
 	   ieq != equations.elements().end(); ++ieq,++index) {
 	debug() << "\n==> V["<< index <<"] = "    << ieq->dChi2DAlpha() << endmsg ;
 	debug() << "\n==> M["<< index << ',' << index <<"] = "    << ieq->d2Chi2DAlpha2() << endmsg ;
-	for( Al::ElementData::OffdiagonalContainer::const_iterator jeq = ieq->d2Chi2DAlphaDBeta().begin() ;
+	for( Al::ElementData::OffDiagonalContainer::const_iterator jeq = ieq->d2Chi2DAlphaDBeta().begin() ;
 	     jeq != ieq->d2Chi2DAlphaDBeta().end() ; ++jeq) 
-	  debug() << "==> M["<<index<<","<<jeq->first<<"] = "      << jeq->second << endmsg;
+	  debug() << "==> M["<<index<<","<<jeq->first<<"] = " << jeq->second.matrix() << endmsg;
       }
     }
     
@@ -407,7 +412,7 @@ namespace Al
 	  }
 
 	// second derivative. fill only non-zero terms
-	for( Al::ElementData::OffdiagonalContainer::const_iterator im = ieq->d2Chi2DAlphaDBeta().begin() ;
+	for( Al::ElementData::OffDiagonalContainer::const_iterator im = ieq->d2Chi2DAlphaDBeta().begin() ;
 	     im != ieq->d2Chi2DAlphaDBeta().end(); ++im ) {
 	  // guaranteed: index < jndex .. that's how we fill it. furthermore, row==i, col==j
 	  if( !(index< im->first) ) {
@@ -420,14 +425,14 @@ namespace Al
 	      for(unsigned jpar=0; jpar<Derivatives::kCols; ++jpar) 
 		if( 0<= ( jactive = jelem.activeParIndex(jpar) ) ) {
 		  assert(jactive > iactive  ) ;
-		  halfD2Chi2dX2.fast(jactive,iactive) = im->second(ipar,jpar) ;
+		  halfD2Chi2dX2.fast(jactive,iactive) = im->second.matrix()(ipar,jpar) ;
 		}
 	}
       }
       
       // add the constraints
-      size_t numConstraints = m_constrainttool->addConstraints(elements,equations,halfDChi2dX,halfD2Chi2dX2) ;
       size_t numChisqConstraints = m_chisqconstrainttool->addConstraints(elements,equations,halfDChi2dX,halfD2Chi2dX2) ;
+      size_t numConstraints = m_constrainttool->addConstraints(elements,equations,halfDChi2dX,halfD2Chi2dX2) ;
       
       logmessage << "Number of alignables with insufficient statistics: " << numExcluded << std::endl
 		 << "Number of lagrange constraints: "                    << numConstraints << std::endl
@@ -475,20 +480,25 @@ namespace Al
 	  const Al::ElementData& elemdata = equations.element(iElem) ;
 	  logmessage << "Alignable: " << (*it)->name() << std::endl
 		     << "Global position: " << (*it)->centerOfGravity() << std::endl
-		     << "Number of hits/outliers seen: " << elemdata.numHits() << " "
+		     << "Number of tracks/hits/outliers seen: " 
+		     << elemdata.numTracks() << " "
+		     << elemdata.numHits() << " "
 		     << elemdata.numOutliers() << std::endl ;
 	  int offset = (*it)->activeParOffset() ;
 	  if( offset < 0 ) {
 	    logmessage << "Not enough hits for alignment. Skipping update." << std::endl ;
 	  } else {
 	    AlParameters delta( solution, covmatrix, halfD2Chi2dX2, (*it)->dofMask(), offset ) ;
-	    AlParameters refdelta = (*it)->currentActiveTotalDelta() ;
+	    AlParameters reftotaldelta = (*it)->currentActiveTotalDelta() ;
+	    AlParameters refdelta = (*it)->currentActiveDelta() ;
 	    //logmessage << delta ;
 	    for(unsigned int iactive = 0u; iactive < delta.dim(); ++iactive) 
 	      logmessage << std::setiosflags(std::ios_base::left)
-			 << std::setw(6)  << delta.activeParName(iactive) << " :" 
-			 << " cur= " << std::setw(12) << refdelta.parameters()[iactive]
-			 << " delta= " << std::setw(12) << delta.parameters()[iactive] << " +/- "
+			 << std::setprecision(4)
+			 << std::setw(3)  << delta.activeParName(iactive) << " :" 
+			 << " curtot= " << std::setw(12) << reftotaldelta.parameters()[iactive]
+			 << " cur= "    << std::setw(12) << refdelta.parameters()[iactive]
+			 << " delta= "  << std::setw(12) << delta.parameters()[iactive] << " +/- "
 			 << std::setw(12) << AlParameters::signedSqrt(delta.covariance()[iactive][iactive]) 
 			 << " gcc= " << delta.globalCorrelationCoefficient(iactive) << std::endl ;
 	    double contributionToCoordinateError = delta.measurementCoordinateSigma( elemdata.weightR() ) ;
@@ -562,6 +572,22 @@ namespace Al
     }
     info() << endmsg;
     m_logMessage << logmessage.str() ;
+    
+    if( iteration == 0 ) {
+      // fill a big 2D matrix with the number of hits
+      size_t num = equations.elements().size() ;
+      AIDA::IHistogram2D* h2 = book2D("HitMatrix","number of tracks per element",
+				      -0.5,num-0.5,num,-0.5,num-0.5) ;
+      size_t index(0) ;
+      for( Al::Equations::ElementContainer::const_iterator ieq = equations.elements().begin() ;
+	   ieq != equations.elements().end(); ++ieq,++index) {
+	h2->fill(double(index),double(index), ieq->numTracks()) ;
+	for( Al::ElementData::OffDiagonalContainer::const_iterator 
+	       jeq = ieq->d2Chi2DAlphaDBeta().begin() ;
+             jeq != ieq->d2Chi2DAlphaDBeta().end() ; ++jeq)
+	  h2->fill(double(index),double(jeq->first),jeq->second.numTracks()) ;
+      }
+    }
     return sc ;
   }
     
