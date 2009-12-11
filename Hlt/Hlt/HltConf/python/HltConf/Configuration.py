@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.136 2009-12-09 21:49:10 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.137 2009-12-11 13:23:36 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -221,6 +221,13 @@ class HltConf(LHCbConfigurableUser):
         """
         Assigned numbers configuration
         """
+
+        def updateDict( d, id, entries ) :
+             # pick up first unused entry after 'id'
+             for i in entries :
+                 while id in d.values() : id = id + 1
+                 d.update({ i : id } )
+
         ### TODO: use the computed indices available from the lines...
         ### TODO: what about shared selections??? (which appear with multiple indices!)
         ###       but which have names not prefixed by the line name
@@ -228,14 +235,11 @@ class HltConf(LHCbConfigurableUser):
         from HltLine.HltLine     import hlt1Selections
         missing = [ i for i in sorted(set(hlt1Selections()['All']) - set(HltANNSvc().Hlt1SelectionID.keys())) if not i.startswith('TES:') ]
         missingDecisions  = [ i for i in missing if i.endswith('Decision') ]
-        extraDecisions = dict(zip( missingDecisions , range( 1000,  1000 + len(missingDecisions) ) ))
-        HltANNSvc().Hlt1SelectionID.update( extraDecisions )
-
+        updateDict( HltANNSvc().Hlt1SelectionID, 1000, missingDecisions )
         missingSelections = [ i for i in missing if not i.endswith('Decision') ]
-        extraSelections = dict(zip( missingSelections , range(11000, 11000 + len(missingSelections) ) ))
-        HltANNSvc().Hlt1SelectionID.update( extraSelections )
-        log.info( '# added ' + str(len(missingSelections)) + ' selections to HltANNSvc' )
-        log.info( '# added ' + str(len(missingDecisions))  +  ' decisions to HltANNSvc' )
+        updateDict( HltANNSvc().Hlt1SelectionID, 11000, missingSelections )
+        log.warning( '# added ' + str(len(missingSelections)) + ' selections to HltANNSvc' )
+        log.warning( '# added ' + str(len(missingDecisions))  +  ' decisions to HltANNSvc' )
 
         if False :
             from HltLine.HltLine     import hlt1Lines

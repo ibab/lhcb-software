@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.381 2009-12-11 11:07:34 pkoppenb Exp $ 
+! $Id: release.notes,v 1.382 2009-12-11 13:23:35 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-12-11 - Gerhard Raven
+ - protect autogenerating of ids from overwriting existing ids
 
 !========================== HltConf v6r1 2009-12-11 ===================
 ! 2009-12-10 - V. Gligorov
