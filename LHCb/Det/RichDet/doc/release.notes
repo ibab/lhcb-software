@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v13r2 2009-12-11 ===========================
 ! 2009-12-10 - Antonis Papanestis
  - new (single) condition for the temperature and pressure of the 
    Gas Radiators
