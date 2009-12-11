@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.412 2009-12-10 08:32:58 cattanem Exp $ 
+! $Id: release.notes,v 1.413 2009-12-11 13:40:29 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v18r18 2009-12-11 =============================
 ! 2009-12-10 - Marco Cattaneo for Brett Viren
  - Fix bug #60276: SolidPolycone does not define a correct bounding box
 
