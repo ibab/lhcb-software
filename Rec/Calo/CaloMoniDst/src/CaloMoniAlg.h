@@ -82,7 +82,7 @@ public:
     fill(h1[unit], m_count , 1);
     if( m_splitSides ){
       for(unsigned int i = 0;i < 2 ;++i){
-        std::string side = 0 ? "C-side" : "A-side";
+        std::string side = (i==0) ? "C-side" : "A-side";
         if( m_scount[i] == 0 )continue;
         GaudiAlg::HistoID id(side + "/"+unit);
         fill(h1[id], m_scount[i] , 1);
@@ -108,9 +108,8 @@ public:
 
 
     if( m_splitSides){
-
       for(unsigned int i = 0;i <2 ;++i){
-        std::string side = 0 ? "C-side" : "A-side";
+        std::string side = (i==0) ? "C-side" : "A-side";
         GaudiAlg::HistoID id(side + "/" + hid);
         std::string tit = titl + " (" + side + ")";
         h1[id] = book1D( id, tit, low, high, bins );
@@ -140,7 +139,7 @@ public:
     if(!doHisto(hid))return;
     if( m_splitSides ){
       for(unsigned int i = 0;i <2 ;++i){
-        std::string side = 0 ? "C-side" : "A-side";
+        std::string side = (i==0) ? "C-side" : "A-side";
         GaudiAlg::HistoID id(side + "/" + hid);
         std::string tit = titl + " (" + side + ")";
         h2[id] = book2D( id, tit, lowx, highx, binsx, lowy, highy, binsy );
