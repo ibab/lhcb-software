@@ -4,6 +4,8 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v4r3 2009-12-11 ====================
+! 2009-12-07 Wouter Hulsbergen
  - removed default constructors for measurement classes
  - added class Chisquare to hold chisquare plus dof
  - added functionality to KalmanFitResult to compute segment/match chisquares
