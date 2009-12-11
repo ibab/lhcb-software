@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltSettings v1r4 2009-12-03 ===================
+! 2009-12-10 - Sophie Redford
+ - strip EndSequence from Debug_10000Vis_1000L0_Velo_Hlt1_Oct09.py
+
 ! 2009-12-03 - Gerhard Raven
  - follow rename Hlt1PhotonFromEleXXX to Hlt1PhotonXXXFromEle
 
