@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.80 2009-12-10 00:48:12 gligorov Exp $
-! -----------------------------------------------------------------------------
+! $Id: release.notes,v 1.81 2009-12-11 09:50:13 pkoppenb Exp $
+!-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
-! -----------------------------------------------------------------------------
+!-----------------------------------------------------------------------------
+!
+! This is the development branch (HEAD). Changes in here will not be taken
+! for the production. Commit them AS WELL in branch production200912. 
+!
+!-----------------------------------------------------------------------------
 
 ! 2009-12-10 - V. Gligorov
  - python/Hlt1Lines/Hlt1HadronVeloOpenLines : added new lines for use
