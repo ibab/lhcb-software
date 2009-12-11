@@ -4,6 +4,7 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+!====================== Magnet v5r6 2009-12-11 ===============================
 ! 2009-12-10 - Marco Cattaneo
  - Add implementation of new ILHCbMagneticFieldSvc::polarity() member to 
    MagneticFieldSvc and MultipleMagneticFieldSvc. Note that in latter, the 
