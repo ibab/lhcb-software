@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2009-12-11 - Marco Cattaneo
+ - In TrackCreator.py, adapt cuts for "earlyData". These are the same cuts as in
+   AppConfig/options/Brunel/richLooseTrackCuts.py
+
 !====================== RichRecSys v3r23 2009-12-07 ==========================
 ! 2009-12-06 - Christopher Rob Jones
  - Extend python Configurable for Track Creator to allow track selection

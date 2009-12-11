@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: TrackCreator.py,v 1.10 2009-12-06 14:27:21 jonrob Exp $"
+__version__ = "$Id: TrackCreator.py,v 1.11 2009-12-11 13:43:08 cattanem Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration  import *
@@ -64,7 +64,11 @@ class RichTrackCreatorConfig(RichConfigurableUser):
         trackCr.addTool( RichTools().trackSelector(trselname), name=trselname )
 
         # Track Selector Cuts
-        #trackCr.TrackSelector.OutputLevel = 1
+        if "earlyData" in self.getProp("SpecialData") and 0 == len(self.getProp("TrackCuts")):
+            cuts = { "Chi2Cut"    : [0,100],
+                     "Likelihood" : [-999999,999999] }
+            self.setProp("TrackCuts",cuts)
+
         trackCr.TrackSelector.TrackAlgs = self.getProp("TrackTypes")
         cuts = self.getProp("TrackCuts")
         for name,cut in cuts.iteritems() :
