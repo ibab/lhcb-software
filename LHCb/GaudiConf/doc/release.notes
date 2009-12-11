@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.193 2009-11-26 21:11:39 cattanem Exp $
+! $Id: release.notes,v 1.194 2009-12-11 07:48:33 cattanem Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
+
+! 2009-12-11 - Marco Cattaneo
+ - Fix bug #60648: DigiConf was not packing MCHits in case of "Extended" output,
+   so could not be used with Gauss < v38r0, where hits on .sim are not packed
 
 !======================== GaudiConf v13r1 2009-11-26 ========================
 ! 2009-11-26 - Marco Cattano for Thomas Ruf for Ricardo Gomez

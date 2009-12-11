@@ -1,7 +1,7 @@
 """
 Configurable for Boole output
 """
-__version__ = "$Id: DigiConf.py,v 1.10 2009-11-26 10:47:45 cattanem Exp $"
+__version__ = "$Id: DigiConf.py,v 1.11 2009-12-11 07:48:33 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -180,6 +180,9 @@ class DigiConf(LHCbConfigurableUser):
                 taeNext -= 1
 
         if dType == "Extended":
+
+            # Enable packing of MCHits in main event (for old data)
+            SimConf().PackingSequencers[''] =  self.getProp("PackSequencer")
             
             # Add the sub detector MCHits
             SimConf().addSubDetSimInfo(writer)
