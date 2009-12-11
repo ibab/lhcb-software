@@ -29,7 +29,7 @@ DLL_flag = 1  #0=old; 1=DLL new;
 ## Use arrival probability as weight to IsMuon/IsMuonLoose and Dist
 Weight_flag = False
 
-PreSelMomentum = 3000.
+PreSelMomentum = 1000.
 
 ##IsMuon parameters
 ## MuonID momentum cut ranges (MeV/c)
@@ -38,6 +38,7 @@ MomentumCuts = [ 6000. , 10000. ]
 ## MuonID FOI parameters
 
 FOIfactor = 1.2
+useTtrack = True
 
 print "# MuonID WARNING: FOI tuning not ready for DATA=%s,VERSION=%s. Loading FOIfactor=%f" %(DATA,VERSION,FOIfactor)
 XFOIParameter1 = [5.5, 4.0, 3.3, 2.8,

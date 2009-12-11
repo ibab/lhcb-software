@@ -2,6 +2,14 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !-----------------------------------------------------------------------------
 
+!======================== MuonID v7r4p1 2009-12-11 ===========================
+! 2009-12-11 - Alessio Sarti
+ - Implemented the use of Ttrecks for first muonID data. Muon_2009_def.py has
+   the Ttrack enabled and also a lowered p threshold (1 GeV instead of 3)
+   - src/MuonIDAlg.{cpp,h} : added Ttracks
+   - python/MuonID/ Configurables and *_def.py files added to initialize useTtracks
+   - Muon_2009_def.py now has useTtracks = true and p cut = 1 GeV
+
 !======================== MuonID v7r4 2009-11-29 ===========================
 ! 2009-11-17 - Alessio Sarti
  - Replaced 'step' integral with numerical integration (faster, more reliable)

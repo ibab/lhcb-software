@@ -222,6 +222,7 @@ class ConfiguredMuonIDs():
     mymuid.YFOIParameter2 = self.info.YFOIParameter2
     mymuid.YFOIParameter3 = self.info.YFOIParameter3
     mymuid.FOIfactor = self.info.FOIfactor
+    mymuid.useTtrack = self.info.useTtrack
       
     mymuid.distMuon= self.info.distMuon
     mymuid.distPion= self.info.distPion

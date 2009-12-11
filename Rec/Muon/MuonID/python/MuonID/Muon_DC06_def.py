@@ -36,6 +36,7 @@ MomentumCuts = [ 6000. , 10000. ]
 ## MuonID FOI parameters
 
 FOIfactor = 1.
+useTtrack = False
 
 XFOIParameter1 = [5.5, 4.0, 3.3, 2.8,
                   5.2, 3.6, 2.4, 2.4,

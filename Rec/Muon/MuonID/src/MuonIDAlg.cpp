@@ -92,6 +92,7 @@ MuonIDAlg::MuonIDAlg( const std::string& name,
   // Source of track to ID
   declareProperty("TrackLocation",
                   m_TracksPath = LHCb::TrackLocation::Default);
+  declareProperty("useTtrack", m_useTtrack = kFALSE);
 
   // Destination of MuonPID
   declareProperty("MuonIDLocation",
@@ -134,7 +135,6 @@ MuonIDAlg::MuonIDAlg( const std::string& name,
   declareProperty("AllMuonTracks", m_DoAllMuonTracks = false);
   //declare which quantity you want to get stored
   declareProperty("myMuIDTool",m_myMuIDTool="Chi2MuIDTool");
-
 
   //flag to introduce weights in IsMuon/IsMuonLoose:
   declareProperty("Weight_flag",m_weightFlag = false);
@@ -415,7 +415,8 @@ StatusCode MuonIDAlg::execute() {
     // in the clone killed output we want only
     // unique && (matched || forward || downstream)
     if(!(*iTrack)->checkFlag(LHCb::Track::Clone)  &&
-       ((*iTrack)->checkType(LHCb::Track::Long) ||
+       ((*iTrack)->checkType(LHCb::Track::Long) || 
+	((*iTrack)->checkType(LHCb::Track::Ttrack) && m_useTtrack) ||
         (*iTrack)->checkType(LHCb::Track::Downstream))){
       
       // do the track extrapolations
