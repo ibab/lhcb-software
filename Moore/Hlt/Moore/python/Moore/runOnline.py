@@ -18,14 +18,14 @@ def start() :
        Moore().Simulation = True
        Moore().DDDBtag   = 'MC09-20090602'
        Moore().CondDBtag = 'sim-20090402-vc-md100'
-       Moore().UseSnapshotOnline = True
+       Moore().UseDBSnapshot = True
        Moore().EnableRunChangeHandler = False
        Moore().TimeOutThreshold = 10000
     else :
        Moore().Simulation = False
        Moore().CondDBtag = 'head-20091112'
        Moore().DDDBtag   = 'head-20091112'
-       Moore().UseSnapshotOnline = True
+       Moore().UseDBSnapshot = True
        Moore().EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough' ] )
        Moore().EnableTimeOutCatcher = False
 

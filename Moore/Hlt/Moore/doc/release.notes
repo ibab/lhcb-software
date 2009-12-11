@@ -2,6 +2,10 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2009-12-11 - Gerhard Raven
+ - add options RequireRoutingBits and VetoRoutingBits
+ - clean up DB snapshot handling
+
 !========================== Moore v8r3 2009-11-23 ===================
 ! 2009-11-23 - Gerhard Raven
  - for now, disable timeout catcher for LHCb partition

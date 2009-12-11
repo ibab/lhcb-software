@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.98 2009-11-23 20:41:05 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.99 2009-12-11 19:09:45 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -68,17 +68,20 @@ class Moore(LHCbConfigurableUser):
         , "EnableTimer" :       True
         , 'EnableRunChangeHandler' : False
         , 'EnableAcceptIfSlow' : True
-        , 'WriterRequires' : []
+        , 'WriterRequires' : [ 'Hlt1Global' ]
         , "Verbose" :           True # whether or not to print Hlt sequence
         , "ThresholdSettings" : ''
         , 'RequireL0ForEndSequence'     : False
         , 'SkipHltRawBankOnRejectedEvents' : True
         , 'HistogrammingLevel' : 'Line'
-        , "RunOnline" : False
-        , "UseSnapshotOnline" : True
+        , "RunOnline"         : False
+        , "UseDBSnapshot"     : True
+        , "DBSnapshotDirectory" : "/group/online/hlt/conditions"
         , 'EnableTimeOutCatcher' : True
         , 'TimeOutThreshold'  : 10000  # milliseconds before giving up, and directing event to time out stream
         , 'TimeOutBits'       : 0x200
+        , 'RequireRoutingBits' : [] # to require not lumi exclusive, set to [ 0x0, 0x4, 0x0 ]
+        , 'VetoRoutingBits'    : []
         }   
                 
 
@@ -148,21 +151,21 @@ class Moore(LHCbConfigurableUser):
             tmoCatcher = OnlineEnv.timeoutAlg(self.getProp('TimeOutThreshold'),True)
             tmoCatcher.OutputLevel = 2
             evtMerger.TimeoutBits = self.getProp('TimeOutBits')
-	    #ExceptionSvc().Catch = 'NONE'
+            #ExceptionSvc().Catch = 'NONE'
             ApplicationMgr().TopAlg.append(tmoCatcher)
 
         # define the send sequence
-        SendSequence =  GaudiSequencer('SendSequence')
-        SendSequence.OutputLevel = OnlineEnv.OutputLevel
-        from Configurables import HltLine
-        SendSequence.Members = [ HltLine('Hlt1Global'), evtMerger ]
-        ApplicationMgr().TopAlg.append(SendSequence)
+        writer =  GaudiSequencer('SendSequence')
+        writer.OutputLevel = OnlineEnv.OutputLevel
+        writer.Members = self.getProp('WriterRequires') + [ evtMerger ]
+        ApplicationMgr().TopAlg.append( writer )
+        #ApplicationMgr().OutStream.append( writer )
 
         #ToolSvc.SequencerTimerTool.OutputLevel = @OnlineEnv.OutputLevel;          
         from Configurables import AuditorSvc
         AuditorSvc().Auditors = []
         self._configureOnlineMessageSvc()
-        if self.getProp('UseSnapshotOnline') : self._configureOnlineDB()
+        if self.getProp('UseDBSnapshot') : self._configureDBSnapshot()
 
     def _configureOnlineMessageSvc(self):
         # setup the message service
@@ -181,20 +184,17 @@ class Moore(LHCbConfigurableUser):
         import OnlineEnv
         msg.OutputLevel = OnlineEnv.OutputLevel
         msg.doPrintAlways = False
-        #msg.setError += ['LoKiSvc'];
 
 
 
-    def _configureOnlineDB(self):
-        ### TODO: make sure there is a FEST specific snapshot...
-
-        tag = { "DDDB":     self.getProp('DDDBtag')   # "head-20090112",
-              , "LHCBCOND": self.getProp('CondDBtag') # "head-20090112" 
+    def _configureDBSnapshot(self):
+        tag = { "DDDB":     self.getProp('DDDBtag')
+              , "LHCBCOND": self.getProp('CondDBtag')
               , "SIMCOND" : self.getProp('CondDBtag') 
               , "ONLINE"  : 'fake'
               }
 
-        baseloc = "/group/online/hlt/conditions"
+        baseloc = self.getProp( "DBSnapshotDirectory" )
 
         from Configurables import CondDB
         conddb = CondDB()
@@ -237,6 +237,8 @@ class Moore(LHCbConfigurableUser):
         if len(files)==0 or 'DST' in [ _ext(f) for f in files ] :
             importOptions('$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts')
         if 'RAW' in [ _ext(f) for f in files ] :
+            #  veto lumi events..
+            #ApplicationMgr().EvtSel.REQ1 = "EvType=2;TriggerMask=0x0,0x4,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0"
             EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
         self._configureDataOnDemand()
         if files : EventSelector().Input = [ _datafmt(f) for f in files ]
@@ -257,7 +259,7 @@ class Moore(LHCbConfigurableUser):
             importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
             from Configurables import InputCopyStream
             writer = InputCopyStream("InputCopyStream")
-            if self.getProp('WriterRequires') : writer.RequireAlgs = self.getProp('WriterRequires')
+            writer.RequireAlgs = self.getProp('WriterRequires')
             writer.Output = "DATAFILE='PFN:%s' TYP='POOL_ROOTTREE' OPT='REC'" % fname
         if not writer : raise NameError('unsupported filetype for file "%s"'%fname)
         ApplicationMgr().OutStream.append( writer )
@@ -337,6 +339,9 @@ class Moore(LHCbConfigurableUser):
         ApplicationMgr().TopAlg = DecodeODIN.members() + [ gen.getFullName() ] + ApplicationMgr().TopAlg
 
     def _l0(self) :
+        #from Configurables import L0DUFromRawAlg
+        #L0DUFromRawAlg().ProcessorDataOnTES = False
+
         if ( self.getProp("DataType") == 'DC06' and not self.getProp("L0") ):
             log.warning("It is mandatory to rerun the L0 emulation on DC06 data to get the HLT to work correctly")
             log.warning("Will set ReplaceL0BanksWithEmulated = True")
@@ -442,3 +447,12 @@ class Moore(LHCbConfigurableUser):
             if self.getProp("generateConfig") : self._generateConfig()
             self._configureInput()
             self._configureOutput()
+            if self.getProp('RequireRoutingBits') or self.getProp('VetoRoutingBits') :
+                from Configurables import HltRoutingBitsFilter
+                filter = HltRoutingBitsFilter( "PhysFilter" )
+                if self.getProp('RequireRoutingBits') : filter.RequireMask = self.getProp('RequireRoutingBits')
+                if self.getProp('VetoRoutingBits') : filter.VetoMask = self.getProp('VetoRoutingBits') 
+                topalgs = ApplicationMgr().TopAlg
+                wrapper = GaudiSequencer('HltWrapper',Members = [ filter ] + topalgs)
+                ApplicationMgr().TopAlg = [ wrapper ]
+
