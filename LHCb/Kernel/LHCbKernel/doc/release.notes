@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v11r10 2009-12-11 =======================
 ! 2009-12-10 - Marco Cattaneo
  - Add polarity() to ILHCbMagnetSvc interface
 
