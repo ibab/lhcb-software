@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.h,v 1.9 2009-12-04 20:48:06 gpassal Exp $
+// $Id: MuonNNetRec.h,v 1.10 2009-12-11 11:18:48 svecchi Exp $
 #ifndef MUONNNETREC_H 
 #define MUONNNETREC_H 1
 
@@ -38,9 +38,20 @@ public:
   virtual void handle ( const Incident& incident );   
 
   //------------------
-  virtual const std::vector<MuonHit*>* trackhits();
+  virtual inline const std::vector<MuonHit*>* trackhits()  {
+    m_recDone = false;
+    m_hitsDone = false;    
+    m_tooManyHits = false;    
+    m_recOK=false;    
+    muonHitFind();
+    return (const std::vector<MuonHit*>*) (&m_trackhits);    
+  }
+
+
   virtual inline const std::vector<MuonTrack*>* tracks()   {
-    if(!m_recDone) muonNNetMon();
+    if(!m_recDone) muonHitFind();
+    if( m_recDone && m_recOK && !m_tooManyHits ) muonNNetMon();
+    else debug()<< " No track reconstruction is possible: Hit reconstruction failed "<<endmsg;
     return (const std::vector<MuonTrack*>*) (&m_tracks);
   }
   virtual inline const std::vector<MuonNeuron*>* useneurons()   {
@@ -64,8 +75,10 @@ public:
     MuonTrackRec::IsPhysics = AssumePhysics;
     if(AssumePhysics) MuonTrackRec::IsCosmic = false;
   }
-  virtual void setSeedStation(int seedS){seedS=seedS;}
-  virtual void setSkipStation(int skipS){skipS=skipS;}
+  virtual void setSeedStation(int seedS){}
+  virtual void setSkipStation(int skipS){
+    m_skipStation=skipS;
+  }
   virtual StatusCode copyToLHCbTracks();
 
 private:
@@ -77,6 +90,7 @@ private:
 
   DeMuonDetector* m_muonDetector;
   bool m_recDone;
+  bool m_hitsDone;
   bool m_recOK;
   bool m_tooManyHits;
   bool m_forceResetDAQ;
@@ -84,10 +98,12 @@ private:
   std::vector< MuonNeuron* > m_useneurons;
   std::vector< MuonNeuron* > m_allneurons;
   std::vector< MuonTrack* > m_tracks;
+  std::vector<MuonHit*> m_trackhits;
 
   void clear();
 
   StatusCode muonNNetMon();
+  StatusCode muonHitFind();
   StatusCode trackFit();
 
    // algorithm timing monitor
