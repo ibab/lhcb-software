@@ -4,7 +4,7 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
-
+!======================= STMonitors v2r3 2009-12-11 ==========================
 ! 2009-12-06 - Jeroen van Tilburg and Mark Tobin
  - STPulseMonitor, STClusterMonitor, STTAEClusterMonitor: Made the selection of a bunchID a list of bunchIDs.
  - Added cut on ADC values of clusters when filling sampling plots.
