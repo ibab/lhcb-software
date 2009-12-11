@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.cpp,v 1.24 2009-12-02 10:32:35 apuignav Exp $
+// $Id: DimRPCFileReader.cpp,v 1.25 2009-12-11 16:01:42 apuignav Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -71,7 +71,7 @@ StatusCode DimRPCFileReader::initialize()   {
 
   m_command = new Command();
   std::stringstream outstream;
-  outstream << "ds6:statusi1es7:commands4:idles6:paramsdeee";
+  outstream << "ds6:statusi1es7:commands4:idles6:paramsdee";
   outstream >> m_idle;
   m_reply = m_idle;
 
