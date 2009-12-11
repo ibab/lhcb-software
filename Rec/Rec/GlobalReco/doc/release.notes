@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2009-12-11 - Marco Cattaneo
+ - In Configurable, adapt cuts for "earlyData". These are the same cuts as in
+   AppConfig/options/Brunel/allTracksProtoP.py
+
 !========================== GlobalReco v6r30 2009-12-10 ======================
 ! 2009-12-08 - Christopher Rob Jones
  - Downgrade some INFO messages to debug.

@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.9 2009-11-04 17:50:13 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.10 2009-12-11 13:44:00 cattanem Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -66,6 +66,12 @@ class GlobalRecoConf(LHCbConfigurableUser):
                                     DelegatingTrackSelector )
         cseq = GaudiSequencer("ChargedProtoParticles")
         seq.Members += [cseq]
+
+        # Adapt cuts for early data. N.B. this should be changed to allow overriding of options
+        if "earlyData" in self.getProp("SpecialData"):
+          self.setProp("TrackTypes", [ "Long","Upstream","Downstream","Ttrack","Velo","VeloR" ])
+          self.setProp("TrackCuts", { })
+        
         # Make Charged ProtoParticles
         charged = ChargedProtoParticleMaker("ChargedProtoPMaker")
         charged.addTool( DelegatingTrackSelector, name="TrackSelector" )
