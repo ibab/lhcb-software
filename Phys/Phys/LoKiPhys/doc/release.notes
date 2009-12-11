@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.122 2009-11-28 19:29:45 ibelyaev Exp $ 
+! $Id: release.notes,v 1.123 2009-12-11 14:17:25 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! ========================== LoKiPhys v8r12 2009-12-11 ========================
 ! 2009-11-28 - Vanya Belyaev
 
  - LoKi/Photons.h, src/Photons.cpp
@@ -16,7 +17,6 @@
 
     version increment to v8r12 
  
-
 ! ========================== LoKiPhys v8r11 2009-11-22 ========================
 ! 2009-11-19 - Marco Clemencic
  - Fixed a problem with the generation of the documentation (LaTeX error)
