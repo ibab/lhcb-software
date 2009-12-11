@@ -4,6 +4,7 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+!========================== DigiEvent v2r15 2009-12-11 =======================
 ! 2009-12-04 - Victor Coco
  - fix some windows warning in VeloPixLiteCluster
 
@@ -21,7 +22,6 @@ should be: 0x1234LL instead of 0x1234L otherwise underlying enum type is long
 
 ! 2009-11-28 - Victor Coco
  - add some paranthesis in VeloPixLiteCluster because of warning with gcc43
-
 
 !========================== DigiEvent v2r14 2009-11-27 =======================
 ! 2009-11-27 - Marcin Kucharczyk
