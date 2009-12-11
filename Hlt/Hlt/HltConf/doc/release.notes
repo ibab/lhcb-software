@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.382 2009-12-11 13:23:35 graven Exp $ 
+! $Id: release.notes,v 1.383 2009-12-11 20:00:56 gligorov Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-12-11 - V. Gligorov
+ - Add a bunch of decisions and selections to HltInit which
+   had been left to autogenerate and sort the HltInit file a bit
+   by ID number.
 
 ! 2009-12-11 - Gerhard Raven
  - protect autogenerating of ids from overwriting existing ids
