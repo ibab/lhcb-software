@@ -31,8 +31,15 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
   declareProperty( "PionSame_dQ_cut", m_dQcut_pionS   = 3.0 *GeV);
   declareProperty( "PionSame_dQ_extra_cut", m_dQcut_extra_pionS = 1.5 *GeV);
   declareProperty( "Pion_ghost_cut", m_ghost_cut = -25.0);
-  declareProperty( "PionSame_PIDNoK_cut",m_PionSame_PIDNoK_cut= 3.0);
-  declareProperty( "PionSame_PIDNoP_cut",m_PionSame_PIDNoP_cut= 10.0);
+
+
+  declareProperty( "PionSame_PIDNoK_cut", m_PionSame_PIDNoK_cut = 3.0);
+  declareProperty( "PionSame_PIDNoP_cut", m_PionSame_PIDNoP_cut = 10.0);
+
+  declareProperty( "Inverse_PID_m_cut", m_Inverse_PID_m_cut = 0.0);
+  declareProperty( "Inverse_PID_e_cut", m_Inverse_PID_e_cut = 4.0);
+  declareProperty( "Inverse_PID_k_cut", m_Inverse_PID_k_cut = 1.0);
+  declareProperty( "Inverse_PID_kp_cut",m_Inverse_PID_kp_cut = -1.0);
 
   declareProperty( "AverageOmega",    m_AverageOmega  = 0.41 );
 
@@ -76,39 +83,11 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   Particle::ConstVector::const_iterator ipart, jpart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
 
-    if( (*ipart)->particleID().abspid() != 211 ) continue;
-
     double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_pionS )  continue;
     double P  = (*ipart)->p();
     if( P  < m_P_cut_pionS )  continue;
 
-    const ProtoParticle* proto = (*ipart)->proto();
-
-    int myID=211;
-    double PIDm= proto->info( ProtoParticle::CombDLLmu, -1000.0 );
-    double PIDe= proto->info( ProtoParticle::CombDLLe,  -1000.0 );
-    double PIDk= proto->info( ProtoParticle::CombDLLk,  -1000.0 );
-    double PIDp= proto->info( ProtoParticle::CombDLLp,  -1000.0 );
-    int iflag_m = false;
-    if( proto->muonPID() ) if(proto->muonPID()->IsMuon()) iflag_m=true;
-    bool iflag_e = proto->info(ProtoParticle::InAccEcal, false);
-    bool iflag_k = proto->info(ProtoParticle::RichPIDStatus, false);
-    float PID_m_cut  = 0.0;
-    float PID_e_cut  = 5.0;
-    float PID_k_cut  = 8.0, PID_kp_cut = -1.0;
-    if( iflag_e && PIDe>PID_e_cut ) myID = 11;
-	  if( iflag_k && PIDk>PID_k_cut &&  PIDk-PIDp>PID_kp_cut) myID = 321;
-	  if( iflag_m && PIDm>PID_m_cut ) myID = 13 ;
-    if(myID != 211 ) continue;
-
-    bool pidpass=false;
-    if( PIDk==0 ) pidpass=true;
-    if( PIDk!=0 ) if(PIDk < m_PionSame_PIDNoK_cut &&
-                     PIDp < m_PionSame_PIDNoP_cut) pidpass=true;
-    if(!pidpass) continue;
-
-    //calculate signed IP wrt RecVert
     double IP, IPerr;
     m_util->calcIP(*ipart, RecVert, IP, IPerr);
     if(!IPerr) continue;
@@ -118,6 +97,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double dQ = (ptotB+(*ipart)->momentum()).M() - B0mass;
     if(dQ > m_dQcut_pionS ) continue;
 
+    const ProtoParticle* proto = (*ipart)->proto();
     const Track* track = proto->track();
     double lcs = track->chi2PerDoF();
     if( lcs > m_lcs_cut ) continue;
@@ -125,6 +105,32 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
     double tsa = track->likelihood();
     if(tsa < m_ghost_cut) continue;
+
+    int myID=211;
+    double PIDm= proto->info( ProtoParticle::CombDLLmu, -1000.0 );
+    double PIDe= proto->info( ProtoParticle::CombDLLe,  -1000.0 );
+    double PIDk= proto->info( ProtoParticle::CombDLLk,  -1000.0 );
+    double PIDp= proto->info( ProtoParticle::CombDLLp,  -1000.0 );
+
+    //PID cuts to select the pion
+    if( (*ipart)->particleID().abspid() != 211 ) continue;
+    bool pidpass=false;
+    if( PIDk==0 ) pidpass=true;
+    if( PIDk!=0 ) if(PIDk < m_PionSame_PIDNoK_cut &&
+                     PIDp < m_PionSame_PIDNoP_cut) pidpass=true;
+    if(!pidpass) continue;
+
+    //PID cuts to kill other used species
+    int iflag_m = false;
+    if( proto->muonPID() ) if(proto->muonPID()->IsMuon()) iflag_m=true;
+    bool iflag_e = proto->info(ProtoParticle::InAccEcal, false);
+    bool iflag_k = proto->info(ProtoParticle::RichPIDStatus, false);
+    if( iflag_e && PIDe > m_Inverse_PID_e_cut ) myID = 11;
+    if( iflag_k && PIDk > m_Inverse_PID_k_cut
+	&&  PIDk-PIDp > m_Inverse_PID_kp_cut) myID = 321;
+    if( iflag_m && PIDm > m_Inverse_PID_m_cut ) myID = 13 ;
+    if(myID != 211 ) continue;
+
 
     ncand++;
     

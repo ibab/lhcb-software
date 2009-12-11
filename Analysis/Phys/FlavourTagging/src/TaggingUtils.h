@@ -41,6 +41,8 @@ public:
 		     const LHCb::RecVertex::ConstVector& ,
 		     double& , double& );
   int countTracks( LHCb::Particle::ConstVector& );
+  bool isinTree( const LHCb::Particle*, 
+                 std::vector<const LHCb::Particle*>& , double& );
   //-------------------------------------------------------------
 
 private:

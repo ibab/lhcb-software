@@ -137,6 +137,36 @@ int TaggingUtils::countTracks( Particle::ConstVector& vtags ) {
   }
   return nr;
 }
+//============================================================================
+bool TaggingUtils::isinTree(const Particle* axp, Particle::ConstVector& sons, 
+                            double& dist_phi){
+  double p_axp  = axp->p();
+  double pt_axp = axp->pt();
+  double phi_axp= axp->momentum().phi();
+  dist_phi=1000.;
+
+  for( Particle::ConstVector::iterator ip = sons.begin(); 
+       ip != sons.end(); ip++ ){
+
+    double dphi = fabs(phi_axp-(*ip)->momentum().phi()); 
+    if(dphi>3.1416) dphi=6.283-dphi;
+    dist_phi= std::min(dist_phi, dphi);
+
+    if( (    fabs(p_axp -(*ip)->p()) < 0.1 
+             && fabs(pt_axp-(*ip)->pt())< 0.01 
+             && fabs(phi_axp-(*ip)->momentum().phi())< 0.1 )
+        || axp->proto()==(*ip)->proto() ) {
+      if (msgLevel(MSG::VERBOSE)) 
+        verbose() << "isinTree part: " << axp->particleID().pid() 
+                  << " with p="<<p_axp/Gaudi::Units::GeV 
+                  << " pt="<<pt_axp/Gaudi::Units::GeV 
+                  << " proto_axp,ip="<<axp->proto()<<" "<<(*ip)->proto()<<endreq;
+      return true;
+    }
+  }
+  return false;
+}
+
 //====================================================================
 StatusCode TaggingUtils::finalize() { return StatusCode::SUCCESS; }
 

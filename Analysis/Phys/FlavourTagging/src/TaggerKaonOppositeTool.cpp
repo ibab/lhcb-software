@@ -22,13 +22,13 @@ TaggerKaonOppositeTool::TaggerKaonOppositeTool( const std::string& type,
 
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName", m_NeuralNetName   = "NNetTool_MLP" );
-  declareProperty( "Kaon_Pt_cut",   m_Pt_cut_kaon        = 0.6 *GeV );
+  declareProperty( "Kaon_Pt_cut",   m_Pt_cut_kaon        = 0.4 *GeV );
   declareProperty( "Kaon_P_cut",    m_P_cut_kaon         = 4.0 *GeV );
   declareProperty( "Kaon_IPs_cut",  m_IPs_cut_kaon       = 3.8 );
   declareProperty( "Kaon_IP_cut",   m_IP_cut_kaon        = 1.5 );
 
-  declareProperty( "Kaon_LongTrack_LCS_cut",    m_lcs_kl = 1.6 );
-  declareProperty( "Kaon_upstreamTrack_LCS_cut",m_lcs_ku = 1.6 );
+  declareProperty( "Kaon_LongTrack_LCS_cut",    m_lcs_kl = 2.5 );
+  declareProperty( "Kaon_upstreamTrack_LCS_cut",m_lcs_ku = 2.0 );
 
   declareProperty( "Kaon_PIDkp_extracut", m_PIDkp_extracut= -1.0 );
   declareProperty( "Kaon_ghost_cut",      m_ghost_cut     =-14.0 );
@@ -131,7 +131,6 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
     NNinputs.at(2) = ikaon->p()/GeV;
     NNinputs.at(3) = ikaon->pt()/GeV;
     NNinputs.at(4) = IP/IPerr;
-//    NNinputs.at(8) = m_util->getNvtx();
     NNinputs.at(8) = allVtx.size();
     NNinputs.at(9) = ncand;
 

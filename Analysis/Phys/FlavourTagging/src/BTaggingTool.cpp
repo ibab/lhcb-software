@@ -140,7 +140,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
     for(iv=verts->begin(); iv!=verts->end(); iv++){
       double ip, iperr;
       m_util->calcIP(AXB, *iv, ip, iperr);
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Vertex IP="<< ip <<" iperr="<<iperr<<endreq;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Vertex IP/s="<<ip/iperr<<endreq;
       if(iperr) if( fabs(ip/iperr) < kdmin ) {
         kdmin = fabs(ip/iperr);
         RecVert = (*iv);
@@ -181,7 +181,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
       if( (*ip)->proto()->track()->type() > 4 )   continue; 
       if( (*ip)->p()/GeV  > 200 ) continue;
       if( (*ip)->pt()/GeV >  10 ) continue;
-      if( isinTree( *ip, axdaugh, distphi ) )  continue ;//exclude signal
+      if( m_util->isinTree( *ip, axdaugh, distphi ) ) continue ;//exclude signal
       if( distphi < m_distphi_cut ) continue;
       verbose() <<" DISTPHI="<<distphi<<endreq;
 
@@ -198,12 +198,12 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
       ////////////////////////////////
 
       if (msgLevel(MSG::DEBUG)) 
-	debug() <<"part ID="<<(*ip)->particleID().pid()
-		<<" p="<<(*ip)->p()/GeV
-		<<" PIDm="<<(*ip)->proto()->info( ProtoParticle::CombDLLmu, 0)
-		<<" PIDe="<<(*ip)->proto()->info( ProtoParticle::CombDLLe, 0)
-		<<" PIDk="<<(*ip)->proto()->info( ProtoParticle::CombDLLk, 0)
-		<<endreq;
+        debug() <<"part ID="<<(*ip)->particleID().pid()
+                <<" p="<<(*ip)->p()/GeV
+                <<" PIDm="<<(*ip)->proto()->info( ProtoParticle::CombDLLmu, 0)
+                <<" PIDe="<<(*ip)->proto()->info( ProtoParticle::CombDLLe, 0)
+                <<" PIDk="<<(*ip)->proto()->info( ProtoParticle::CombDLLk, 0)
+                <<endreq;
     }
   } else {
     //tagger candidate list is already provided, it is the user responsibility
@@ -308,32 +308,3 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
 StatusCode BTaggingTool::finalize() { return StatusCode::SUCCESS; }
 
 
-//============================================================================
-bool BTaggingTool::isinTree(const Particle* axp, Particle::ConstVector& sons, 
-                            double& dist_phi){
-  double p_axp  = axp->p();
-  double pt_axp = axp->pt();
-  double phi_axp= axp->momentum().phi();
-  dist_phi=1000.;
-
-  for( Particle::ConstVector::iterator ip = sons.begin(); 
-       ip != sons.end(); ip++ ){
-
-    double dphi = fabs(phi_axp-(*ip)->momentum().phi()); 
-    if(dphi>3.1416) dphi=6.283-dphi;
-    dist_phi= std::min(dist_phi, dphi);
-
-    if( (    fabs(p_axp -(*ip)->p()) < 0.1 
-             && fabs(pt_axp-(*ip)->pt())< 0.01 
-             && fabs(phi_axp-(*ip)->momentum().phi())< 0.1 )
-        || axp->proto()==(*ip)->proto() ) {
-      if (msgLevel(MSG::VERBOSE)) 
-        verbose() << "excluding signal part: " << axp->particleID().pid() 
-                  << " with p="<<p_axp/Gaudi::Units::GeV 
-                  << " pt="<<pt_axp/Gaudi::Units::GeV 
-                  << " proto_axp,ip="<<axp->proto()<<" "<<(*ip)->proto()<<endreq;
-      return true;
-    }
-  }
-  return false;
-}

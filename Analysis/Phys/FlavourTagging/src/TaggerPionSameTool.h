@@ -1,4 +1,4 @@
-// $Id: TaggerPionSameTool.h,v 1.8 2008-06-10 19:01:00 musy Exp $
+// $Id: TaggerPionSameTool.h,v 1.9 2009-12-11 15:15:05 musy Exp $
 #ifndef USER_TAGGERPIONSAMETOOL_H 
 #define USER_TAGGERPIONSAMETOOL_H 1
 
@@ -59,6 +59,11 @@ private:
   double m_ghost_cut;
   double m_PionSame_PIDNoK_cut;
   double m_PionSame_PIDNoP_cut;
+
+  double m_Inverse_PID_m_cut;
+  double m_Inverse_PID_e_cut;
+  double m_Inverse_PID_k_cut;
+  double m_Inverse_PID_kp_cut;
 
 };
 //===============================================================//

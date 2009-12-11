@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: BTaggingTool.py,v 1.8 2009-11-30 22:42:50 musy Exp $
+# $Id: BTaggingTool.py,v 1.9 2009-12-11 15:15:05 musy Exp $
 #
 # Tagging options
 #
@@ -9,7 +9,6 @@ from GaudiConf.Configuration import *
 
 from Configurables import CombinedParticleMaker, ProtoParticleMUONFilter, ProtoParticleCALOFilter, ProtoParticleRICHFilter, FilterDesktop
 
-kName = "TaggingKaons"
 mName = "TaggingMuons"
 eName = "TaggingElectrons"
 pName = "TaggingPions"
@@ -24,24 +23,17 @@ taggerElectrons.Particle = 'Electron'
 taggerElectrons.addTool(ProtoParticleCALOFilter, name="Electron")
 taggerElectrons.Electron.Selection = [ "RequiresDet='CALO' CombDLL(e-pi)>'4.0'" ]
 
-taggerKaons = CombinedParticleMaker(kName)
-taggerKaons.Particle = 'Kaon'
-taggerKaons.addTool(ProtoParticleRICHFilter, name= "Kaon")
-taggerKaons.Kaon.Selection= [ "RequiresDet='RICH' CombDLL(k-pi)>'-1.0' CombDLL(k-p)>'-1.0'"]
-
 taggerPions = CombinedParticleMaker(pName)
 taggerPions.Particle = 'Pion'
 
 tagName = 'TaggingParticles'
 taggingParticles = FilterDesktop(tagName)
-taggingParticles.InputLocations = [ kName, eName, mName, pName ]
+taggingParticles.InputLocations = [ eName, mName, pName ]
 taggingParticles.Code = "(P>2.0*GeV)"    
 
 hat = '/Event/Phys/'
 
 dod = DataOnDemandSvc()
-dod.AlgMap.update( { hat + kName + '/Particles' : 'CombinedParticleMaker/'+kName ,
-                     hat + kName + '/Vertices'  : 'CombinedParticleMaker/'+kName } )
 dod.AlgMap.update( { hat + mName + '/Particles' : 'CombinedParticleMaker/'+mName ,
                      hat + mName + '/Vertices'  : 'CombinedParticleMaker/'+mName } )
 dod.AlgMap.update( { hat + eName + '/Particles' : 'CombinedParticleMaker/'+eName ,

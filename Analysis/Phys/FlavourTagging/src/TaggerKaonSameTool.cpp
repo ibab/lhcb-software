@@ -30,10 +30,10 @@ TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
   declareProperty( "KaonSame_dQ_cut", m_dQcut_kaonS  = 1.6 *GeV);
   declareProperty( "KaonS_LCS_cut",   m_lcs_cut      = 2.0 );
 
-  declareProperty( "KaonSPID_kpS_cut", m_KaonSPID_kS_cut    = -1.0 );
-  declareProperty( "KaonSPID_extracut", m_KaonSPID_extracut = 5.0 );
+  declareProperty( "KaonSPID_kS_cut",  m_KaonSPID_kS_cut   =  1.0 );
+  declareProperty( "KaonSPID_kpS_cut", m_KaonSPID_kpS_cut  = -1.0 );
 
-  declareProperty( "AverageOmega",    m_AverageOmega = 0.356 );
+  declareProperty( "AverageOmega",    m_AverageOmega = 0.33 );
 
   m_nnet = 0;
   m_util = 0;
@@ -76,15 +76,21 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
   Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
-    if( (*ipart)->particleID().abspid() != 321 ) continue;
 
+    if(! (*ipart)->proto()->info(ProtoParticle::InAccEcal, false) ) continue;
     double pidk=(*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 );
-    if(pidk==0) continue;
-    if(pidk < m_KaonSPID_extracut) continue;
-    if(pidk - (*ipart)->proto()->info( ProtoParticle::CombDLLp, -1000.0 ) 
-       < m_KaonSPID_kS_cut ) continue;
+    double pidp=(*ipart)->proto()->info( ProtoParticle::CombDLLp, -1000.0 ); 
 
-    debug()<<"candidate kaonS p="<<(*ipart)->p()<<endreq;
+    debug()<<(*ipart)->particleID().abspid()<<" candidate kaonS p="<<(*ipart)->p()/GeV
+	   <<"  PIDk="<<pidk<<"  PIDp="<<pidp <<endreq;
+
+    if(pidk==0) continue;
+    if(pidk < m_KaonSPID_kS_cut ) continue;
+    if(pidk - pidp < m_KaonSPID_kpS_cut ) continue;
+
+
+    debug()<<"           candidate accepted"<<(*ipart)->p()/GeV <<endreq;
+
 
     double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_kaonS )  continue;
@@ -106,7 +112,11 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if(dphi>3.1416) dphi=6.2832-dphi;
     if(dphi > m_phicut_kaonS) continue;
 
-    double dQ    = (ptotB+(*ipart)->momentum()).M() - ptotB.M();
+    Gaudi::LorentzVector pm  = (*ipart)->momentum();
+    double E = sqrt(pm.P() * pm.P()+ 493.677*MeV * 493.677*MeV);
+    Gaudi::LorentzVector pmK ( pm.Px(),pm.Py(),pm.Pz(), E);
+
+    double dQ    = (ptotB+pmK).M() - ptotB.M();
 
     debug()<<"kS dQ="<<dQ<<"  "<<((ptotB+(*ipart)->momentum()).M())
 	   <<"  "<< ptotB.M()<<endreq;

@@ -23,10 +23,10 @@ TaggerElectronTool::TaggerElectronTool( const std::string& type,
 
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_MLP" );
-  declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele = 1.1 * GeV );
+  declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele = 1.2 * GeV );
   declareProperty( "Ele_P_cut",    m_P_cut_ele  = 0.0 * GeV );
-  declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele= 2.0 );
-  declareProperty( "Ele_ghost_cut",m_ghost_cut_ele= -20.0 );
+  declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele= 3.0 );
+  declareProperty( "Ele_ghost_cut",m_ghost_cut_ele= -999.0 );
   declareProperty( "VeloChargeMin",m_VeloChMin  = 0.0 );
   declareProperty( "VeloChargeMax",m_VeloChMax  = 1.3 );
   declareProperty( "EoverP",       m_EoverP     = 0.85 );

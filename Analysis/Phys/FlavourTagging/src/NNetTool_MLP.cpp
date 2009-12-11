@@ -28,17 +28,17 @@ NNetTool_MLP::NNetTool_MLP( const std::string& type,
   GaudiTool ( type, name, parent ) { 
   declareInterface<INNetTool>(this);
 
-  declareProperty( "P0_mu_scale", m_P0mu =  9.715387e-01);
+  declareProperty( "P0_mu_scale", m_P0mu =  9.715387e-01); //MC09
   declareProperty( "P1_mu_scale", m_P1mu = -9.635686e-01);
   declareProperty( "P0_e_scale",  m_P0e  =  9.205908e-01);
   declareProperty( "P1_e_scale",  m_P1e  = -8.862215e-01);
   declareProperty( "P0_k_scale",  m_P0k  =  1.015971);
   declareProperty( "P1_k_scale",  m_P1k  = -1.021638);
-  declareProperty( "P0_ks_scale", m_P0ks =  9.703380e-01);
-  declareProperty( "P1_ks_scale", m_P1ks = -9.567222e-01);
+  declareProperty( "P0_ks_scale", m_P0ks =  9.205908e-01);
+  declareProperty( "P1_ks_scale", m_P1ks = -8.862215e-01);
   declareProperty( "P0_ps_scale", m_P0ps =  1.147873);
   declareProperty( "P1_ps_scale", m_P1ps = -1.241866);
-    
+
 }
 NNetTool_MLP::~NNetTool_MLP(){}
 StatusCode NNetTool_MLP::initialize() { return StatusCode::SUCCESS; }

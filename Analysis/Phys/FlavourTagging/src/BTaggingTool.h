@@ -1,4 +1,4 @@
-// $Id: BTaggingTool.h,v 1.19 2009-07-29 09:39:39 jpalac Exp $
+// $Id: BTaggingTool.h,v 1.20 2009-12-11 15:15:05 musy Exp $
 #ifndef USER_BTAGGINGTOOL_H 
 #define USER_BTAGGINGTOOL_H 1
 
@@ -55,8 +55,6 @@ public:
                   LHCb::Particle::ConstVector& ); 
 
 private:
-  bool isinTree( const LHCb::Particle*, 
-                 std::vector<const LHCb::Particle*>& , double& );
 
   IGeomDispCalculator *m_Geom;
   ITaggingUtils* m_util;
