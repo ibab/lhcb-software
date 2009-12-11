@@ -66,10 +66,13 @@ This version uses Gaudi v21r6 and LHCb v28r5
 		. PVLoose.py - options to run PV reconstruction with relaxed cuts
 
 - In Rec/GlobalReco v6r30:
+		. In Configurable, adapt cuts for "earlyData".
 		. Downgrade some INFO messages to debug.
 
 - In Tf/TrackMatching v2r25:
 		. added SpecialData "earlyData" for 450 GeV, low rate, with poorer alignment
+- In Rich/RichRecSys v3r24:
+		. In TrackCreator.py, adapt cuts for "earlyData".
 
 </PRE><H1><A NAME=v7r11>2009-12-03 RecSys v7r11</A></H1><PRE>
 This version uses Gaudi v21r6 and LHCb v28r4
