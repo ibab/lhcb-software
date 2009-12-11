@@ -1,0 +1,2 @@
+CaloProtoPMon.Members    += { "CaloProtoElectronMonitor/EcalProtoElectronMon"};             
+

@@ -1,4 +1,4 @@
-// $Id: CaloHypoMonitor.cpp,v 1.11 2009-04-24 13:44:08 cattanem Exp $
+// $Id: CaloHypoMonitor.cpp,v 1.12 2009-12-11 17:07:40 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -156,6 +156,8 @@ StatusCode CaloHypoMonitor::execute(){
       SmartRef<LHCb::CaloCluster> cluster= *((*hypo)->clusters().begin());
       id = (*cluster).seed();      
     }
+
+
     count(id);
     hFill1(id, "2", e  );
     hFill1(id, "3", et );

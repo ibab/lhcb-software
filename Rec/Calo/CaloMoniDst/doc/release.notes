@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.63 2009-12-11 08:34:26 rlambert Exp $ 
+! $Id: release.notes,v 1.64 2009-12-11 17:07:40 odescham Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+
+! 2009-12-11 - Olivier Deschamps 
+ - CaloMoniAlg : remove verbose line
+
+
 
 !========================== CaloMoniDst v4r2 2009-12-11 =======================
 ! 2009-12-01 - Olivier Deschamps 

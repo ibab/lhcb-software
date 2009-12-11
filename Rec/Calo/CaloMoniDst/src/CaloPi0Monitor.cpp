@@ -1,6 +1,6 @@
-// $Id: CaloPi0Monitor.cpp,v 1.11 2009-09-14 13:23:53 odescham Exp $
+// $Id: CaloPi0Monitor.cpp,v 1.12 2009-12-11 17:07:40 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -40,6 +40,8 @@ public:
     hBook1( "4", "pi0 Mass   " + inputData()       , m_massMin  , m_massMax , m_massBin );
     hBook1( "5", "gg combinatorial background" + inputData()       , m_massMin  , m_massMax , m_massBin );
     hBook1( "6", "bkg-substracted pi0 mass   " + inputData()       , m_massMin  , m_massMax , m_massBin );
+    hBook1( "7", "pi0 mass  for |y|-gamma > " + Gaudi::Utils::toString(m_yCut) + " "  
+            + inputData()  , m_massMin  , m_massMax , m_massBin );
     m_calo = getDet<DeCalorimeter>(DeCalorimeterLocation::Ecal);
     // get tool
     m_toSpd = tool<ICaloHypo2Calo> ( "CaloHypo2Calo", "CaloHypo2Spd" , this );
@@ -58,6 +60,7 @@ protected:
     declareProperty( "PhotonPtFilter"   , m_ptPhoton = 250 * Gaudi::Units::MeV );
     declareProperty( "IsolationFilter"  , m_isol = 4 );
     declareProperty( "AllowConverted"   , m_conv = false);
+    declareProperty( "RejectedYBand"    , m_yCut = 300);
     m_multMax = 150;
     m_massFilterMin = m_massMin;
     m_massFilterMax = m_massMax;
@@ -78,6 +81,7 @@ private:
   DeCalorimeter* m_calo;
   ICaloHypo2Calo* m_toSpd ;   
   bool m_conv;
+  double m_yCut;
 };
 
 
@@ -169,6 +173,9 @@ StatusCode CaloPi0Monitor::execute()
       double isolSym = (cSize > 0) ?  vecSym.Rho() / cSize : 0;
 
 
+      double y1 = m_calo->cellCenter(id1).Y();
+      double y2 = m_calo->cellCenter(id2).Y();
+      
 
       if( isPi0 && isol > m_isol){
         count(id);
@@ -176,6 +183,7 @@ StatusCode CaloPi0Monitor::execute()
         hFill1(id, "3", pi0.pt()  );
         hFill1(id, "4", pi0.mass());      
         hFill1(id, "6", pi0.mass(), 1.);      
+        if( abs(y1) > m_yCut && abs(y2) > m_yCut )hFill1("7",pi0.mass(), 1.);
       }
       if( isBkg && isolSym > m_isol){ 
         hFill1(id, "5", bkg.mass());      

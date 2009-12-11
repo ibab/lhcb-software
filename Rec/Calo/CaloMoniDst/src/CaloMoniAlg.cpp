@@ -1,4 +1,4 @@
-// $Id: CaloMoniAlg.cpp,v 1.9 2009-11-30 20:38:32 odescham Exp $
+// $Id: CaloMoniAlg.cpp,v 1.10 2009-12-11 17:07:40 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -69,6 +69,7 @@ CaloMoniAlg::CaloMoniAlg( const std::string& name,
   declareProperty( "listOfAreas"         , m_areas); // list of areas to be split
   declareProperty ("SaturationBin1D"       , m_sat = true);
   declareProperty ("SaturationBin2D"       , m_sat2D = false);
+  declareProperty ("SplitSides"           , m_splitSides = false);
 
   m_removeHisto.clear();
   m_histoList.clear();
@@ -82,6 +83,7 @@ CaloMoniAlg::CaloMoniAlg( const std::string& name,
   // Areas
   m_nAreas = 1 << (CaloCellCode::BitsArea +1);
   m_mcount.reserve(m_nAreas);
+  m_scount.reserve(2);
   m_areas.push_back("Outer");
   m_areas.push_back("Middle");
   m_areas.push_back("Inner");  
@@ -111,6 +113,12 @@ StatusCode CaloMoniAlg::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by Calo2Dview
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+
+
+  if( m_split && m_splitSides ){
+    warning() << "Cannot split simultaneously the calo sides and areas, so far - Area splitting wins" << endmsg;
+    m_splitSides=false;
+  }  
 
   return StatusCode::SUCCESS;
 }
