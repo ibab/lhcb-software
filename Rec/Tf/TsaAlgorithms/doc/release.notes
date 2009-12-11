@@ -3,7 +3,8 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
-! 2009-12-10 Stephanie Hansmann-Menzemer
+
+!======================= TsaAlgorithms v3r14p3 2009-12-11====================! 2009-12-10 Stephanie Hansmann-Menzemer
  - move headTuning options to RecSys specialData "earlyData"
 
 ! 2009-12-09 M Needham
