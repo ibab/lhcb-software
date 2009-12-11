@@ -4,6 +4,7 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiNumbers v8r3p2 2009-12-11 =====================
 ! 2009-12-06 - Vanya Belyaev
 
   see task #12978
@@ -31,7 +32,6 @@
 
  - cmt/requirements 
      version increment to v8r3p2 
-
 
 !========================== LoKiNumbers v8r3p1 2009-11-22 =====================
 ! 2009-11-21 - Vanya Belyaev
