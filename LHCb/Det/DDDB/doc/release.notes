@@ -4,6 +4,12 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2009-12-11 - Illya Shapoval
+ - Changed default tag for 2009 data:
+   . head-20091120         for DDDB (same as before)
+   . head-20091211         for LHCBCOND
+   . sim-20091112-vc-md100 for SIMCOND (same as before)
+
 !========================== DDDB v1r25 2009-11-27 ============================
 ! 2009-11-27 - Illya Shapoval
  - Changed default tag for 2009 data:
