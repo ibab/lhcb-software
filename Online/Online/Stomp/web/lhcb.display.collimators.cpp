@@ -26,16 +26,17 @@ var Collimators = function(msg)   {
   table.appendChild(table.body);
 
   table.LHC_header = function() {
-    var tr, tab = document.createElement('table');
-    var tb = document.createElement('tbody');
-
-    tab.style.width = tb.style.width = '100%';
-    tab.className = tb.className  = 'MonitorBigHeaderBLUE';
+    var tab = document.createElement('table');
+    var tb  = document.createElement('tbody');
+    var tr  = document.createElement('tr');
 
     this.lhcFillNumber = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.FillNumber',null,null);
     this.lhcBeamMode = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.BeamMode','Text-Left',null);
 
-    tb.appendChild(tr=document.createElement('tr'));
+    tab.style.width = tb.style.width = '100%';
+    tab.className = tb.className  = 'MonitorBigHeaderBLUE';
+
+    tb.appendChild(tr);
     tr.appendChild(Cell('LHC Fill',null,null));    
     tr.appendChild(this.lhcFillNumber);
     tr.appendChild(Cell('Beam status:',null,'Text-Right'));    
@@ -50,36 +51,51 @@ var Collimators = function(msg)   {
      Build collimator and TED table
   */
   table.LHC_collimators = function() {
-
-    var base, cell, tb, td, tr, tab = document.createElement('table');
-    tb = document.createElement('tbody');
+    var base, cell, td, tr, tab = document.createElement('table');
+    var tb = document.createElement('tbody');
 
     tab.className   = tb.className = 'MonitorData';
     tab.style.width = tb.style.width = '100%';
     base = 'lbWeb.LHCCOM/LHC.LHC.Machine.CollimatorPositions.';
     this.TCLIB_6L8_B2 = new Object();
-    this.TCLIB_6L8_B2.lvdt_gap_downstream   = StyledItem(base+'TCLIB_6L8_B2.lvdt_gap_downstream',  'MonitorTableDataLeft', '%8.3f mm');
-    this.TCLIB_6L8_B2.lvdt_gap_upstream     = StyledItem(base+'TCLIB_6L8_B2.lvdt_gap_upstream',    'MonitorTableDataRight','%8.3f mm');
-    this.TCLIB_6L8_B2.lvdt_left_downstream  = StyledItem(base+'TCLIB_6L8_B2.lvdt_left_downstream', 'MonitorTableDataLeft', '%8.3f mm');
-    this.TCLIB_6L8_B2.lvdt_left_upstream    = StyledItem(base+'TCLIB_6L8_B2.lvdt_left_upstream',   'MonitorTableDataRight','%8.3f mm');
-    this.TCLIB_6L8_B2.lvdt_right_downstream = StyledItem(base+'TCLIB_6L8_B2.lvdt_right_downstream','MonitorTableDataLeft', '%8.3f mm');
-    this.TCLIB_6L8_B2.lvdt_right_upstream   = StyledItem(base+'TCLIB_6L8_B2.lvdt_right_upstream',  'MonitorTableDataRight','%8.3f mm');
+    this.TCLIB_6L8_B2.lvdt_gap_downstream   = StyledItem(base+'TCLIB_6L8_B2.lvdt_gap_downstream',  'MonitorTableDataLeft', '%8.2f mm');
+    this.TCLIB_6L8_B2.lvdt_gap_upstream     = StyledItem(base+'TCLIB_6L8_B2.lvdt_gap_upstream',    'MonitorTableDataRight','%8.2f mm');
+    this.TCLIB_6L8_B2.lvdt_left_downstream  = StyledItem(base+'TCLIB_6L8_B2.lvdt_left_downstream', 'MonitorTableDataLeft', '%8.2f mm');
+    this.TCLIB_6L8_B2.lvdt_left_upstream    = StyledItem(base+'TCLIB_6L8_B2.lvdt_left_upstream',   'MonitorTableDataRight','%8.2f mm');
+    this.TCLIB_6L8_B2.lvdt_right_downstream = StyledItem(base+'TCLIB_6L8_B2.lvdt_right_downstream','MonitorTableDataLeft', '%8.2f mm');
+    this.TCLIB_6L8_B2.lvdt_right_upstream   = StyledItem(base+'TCLIB_6L8_B2.lvdt_right_upstream',  'MonitorTableDataRight','%8.2f mm');
 
     this.TCTH_4L8_B1 = new Object();
-    this.TCTH_4L8_B1.lvdt_gap_downstream   = StyledItem(base+'TCTH_4L8_B1.lvdt_gap_downstream',    'MonitorTableDataLeft', '%8.3f mm');
-    this.TCTH_4L8_B1.lvdt_gap_upstream     = StyledItem(base+'TCTH_4L8_B1.lvdt_gap_upstream',      'MonitorTableDataRight','%8.3f mm');
-    this.TCTH_4L8_B1.lvdt_left_downstream  = StyledItem(base+'TCTH_4L8_B1.lvdt_left_downstream',   'MonitorTableDataLeft', '%8.3f mm');
-    this.TCTH_4L8_B1.lvdt_left_upstream    = StyledItem(base+'TCTH_4L8_B1.lvdt_left_upstream',     'MonitorTableDataRight','%8.3f mm');
-    this.TCTH_4L8_B1.lvdt_right_downstream = StyledItem(base+'TCTH_4L8_B1.lvdt_right_downstream',  'MonitorTableDataLeft', '%8.3f mm');
-    this.TCTH_4L8_B1.lvdt_right_upstream   = StyledItem(base+'TCTH_4L8_B1.lvdt_right_upstream',    'MonitorTableDataRight','%8.3f mm');
+    this.TCTH_4L8_B1.lvdt_gap_downstream   = StyledItem(base+'TCTH_4L8_B1.lvdt_gap_downstream',    'MonitorTableDataLeft', '%8.2f mm');
+    this.TCTH_4L8_B1.lvdt_gap_upstream     = StyledItem(base+'TCTH_4L8_B1.lvdt_gap_upstream',      'MonitorTableDataRight','%8.2f mm');
+    this.TCTH_4L8_B1.lvdt_left_downstream  = StyledItem(base+'TCTH_4L8_B1.lvdt_left_downstream',   'MonitorTableDataLeft', '%8.2f mm');
+    this.TCTH_4L8_B1.lvdt_left_upstream    = StyledItem(base+'TCTH_4L8_B1.lvdt_left_upstream',     'MonitorTableDataRight','%8.2f mm');
+    this.TCTH_4L8_B1.lvdt_right_downstream = StyledItem(base+'TCTH_4L8_B1.lvdt_right_downstream',  'MonitorTableDataLeft', '%8.2f mm');
+    this.TCTH_4L8_B1.lvdt_right_upstream   = StyledItem(base+'TCTH_4L8_B1.lvdt_right_upstream',    'MonitorTableDataRight','%8.2f mm');
 
     this.TCTH_4R8_B2 = new Object();
-    this.TCTH_4R8_B2.lvdt_gap_downstream   = StyledItem(base+'TCTH_4R8_B2.lvdt_gap_downstream',    'MonitorTableDataLeft', '%8.3f mm');
-    this.TCTH_4R8_B2.lvdt_gap_upstream     = StyledItem(base+'TCTH_4R8_B2.lvdt_gap_upstream',      'MonitorTableDataRight','%8.3f mm');
-    this.TCTH_4R8_B2.lvdt_left_downstream  = StyledItem(base+'TCTH_4R8_B2.lvdt_left_downstream',   'MonitorTableDataLeft', '%8.3f mm');
-    this.TCTH_4R8_B2.lvdt_left_upstream    = StyledItem(base+'TCTH_4R8_B2.lvdt_left_upstream',     'MonitorTableDataRight','%8.3f mm');
-    this.TCTH_4R8_B2.lvdt_right_downstream = StyledItem(base+'TCTH_4R8_B2.lvdt_right_downstream',  'MonitorTableDataLeft', '%8.3f mm');
-    this.TCTH_4R8_B2.lvdt_right_upstream   = StyledItem(base+'TCTH_4R8_B2.lvdt_right_upstream',    'MonitorTableDataRight','%8.3f mm');
+    this.TCTH_4R8_B2.lvdt_gap_downstream   = StyledItem(base+'TCTH_4R8_B2.lvdt_gap_downstream',    'MonitorTableDataLeft', '%8.2f mm');
+    this.TCTH_4R8_B2.lvdt_gap_upstream     = StyledItem(base+'TCTH_4R8_B2.lvdt_gap_upstream',      'MonitorTableDataRight','%8.2f mm');
+    this.TCTH_4R8_B2.lvdt_left_downstream  = StyledItem(base+'TCTH_4R8_B2.lvdt_left_downstream',   'MonitorTableDataLeft', '%8.2f mm');
+    this.TCTH_4R8_B2.lvdt_left_upstream    = StyledItem(base+'TCTH_4R8_B2.lvdt_left_upstream',     'MonitorTableDataRight','%8.2f mm');
+    this.TCTH_4R8_B2.lvdt_right_downstream = StyledItem(base+'TCTH_4R8_B2.lvdt_right_downstream',  'MonitorTableDataLeft', '%8.2f mm');
+    this.TCTH_4R8_B2.lvdt_right_upstream   = StyledItem(base+'TCTH_4R8_B2.lvdt_right_upstream',    'MonitorTableDataRight','%8.2f mm');
+
+    this.TCTVB_4L8 = new Object();
+    this.TCTVB_4L8.lvdt_gap_downstream   = StyledItem(base+'TCTVB_4L8.lvdt_gap_downstream',    'MonitorTableDataLeft', '%8.2f mm');
+    this.TCTVB_4L8.lvdt_gap_upstream     = StyledItem(base+'TCTVB_4L8.lvdt_gap_upstream',      'MonitorTableDataRight','%8.2f mm');
+    this.TCTVB_4L8.lvdt_left_downstream  = StyledItem(base+'TCTVB_4L8.lvdt_left_downstream',   'MonitorTableDataLeft', '%8.2f mm');
+    this.TCTVB_4L8.lvdt_left_upstream    = StyledItem(base+'TCTVB_4L8.lvdt_left_upstream',     'MonitorTableDataRight','%8.2f mm');
+    this.TCTVB_4L8.lvdt_right_downstream = StyledItem(base+'TCTVB_4L8.lvdt_right_downstream',  'MonitorTableDataLeft', '%8.2f mm');
+    this.TCTVB_4L8.lvdt_right_upstream   = StyledItem(base+'TCTVB_4L8.lvdt_right_upstream',    'MonitorTableDataRight','%8.2f mm');
+
+    this.TCTVB_4R8 = new Object();
+    this.TCTVB_4R8.lvdt_gap_downstream   = StyledItem(base+'TCTVB_4R8.lvdt_gap_downstream',    'MonitorTableDataLeft', '%8.2f mm');
+    this.TCTVB_4R8.lvdt_gap_upstream     = StyledItem(base+'TCTVB_4R8.lvdt_gap_upstream',      'MonitorTableDataRight','%8.2f mm');
+    this.TCTVB_4R8.lvdt_left_downstream  = StyledItem(base+'TCTVB_4R8.lvdt_left_downstream',   'MonitorTableDataLeft', '%8.2f mm');
+    this.TCTVB_4R8.lvdt_left_upstream    = StyledItem(base+'TCTVB_4R8.lvdt_left_upstream',     'MonitorTableDataRight','%8.2f mm');
+    this.TCTVB_4R8.lvdt_right_downstream = StyledItem(base+'TCTVB_4R8.lvdt_right_downstream',  'MonitorTableDataLeft', '%8.2f mm');
+    this.TCTVB_4R8.lvdt_right_upstream   = StyledItem(base+'TCTVB_4R8.lvdt_right_upstream',    'MonitorTableDataRight','%8.2f mm');
 
     this.TDI_4R8 = new Object();
     this.TDI_4R8.lvdt_gap_downstream   = StyledItem(base+'TDI_4R8.lvdt_gap_downstream',            'MonitorTableDataLeft', '%8.2f mm');
@@ -141,53 +157,77 @@ var Collimators = function(msg)   {
     tr.appendChild(cell=Cell('Down&nbsp;&#60;&#151;RIGHT&#151;&#62;&nbsp;Up',2,'MonitorDataHeaderCenter'));
     cell.style.width='25%';
 
-    tr = document.createElement('tr');    
+    tr = document.createElement('tr');
     this.collbody.appendChild(tr);
     tr.appendChild(Cell('TCLIB_6L8_B2',1,'MonitorDataHeader'));
     tr.appendChild(this.TCLIB_6L8_B2.lvdt_left_downstream);
     tr.appendChild(this.TCLIB_6L8_B2.lvdt_left_upstream);
-    tr.appendChild(cell=Cell('&nbsp',1,null));
+    tr.appendChild(Cell('&nbsp',1,null));
     tr.appendChild(this.TCLIB_6L8_B2.lvdt_gap_downstream);
     tr.appendChild(this.TCLIB_6L8_B2.lvdt_gap_upstream);
-    tr.appendChild(cell=Cell('&nbsp',1,null));
+    tr.appendChild(Cell('&nbsp',1,null));
     tr.appendChild(this.TCLIB_6L8_B2.lvdt_right_downstream);
     tr.appendChild(this.TCLIB_6L8_B2.lvdt_right_upstream);
 
-    tr = document.createElement('tr');    
+    tr = document.createElement('tr');
     this.collbody.appendChild(tr);
     tr.appendChild(Cell('TCTH_4L8_B1',1,'MonitorDataHeader'));
     tr.appendChild(this.TCTH_4L8_B1.lvdt_left_downstream);
     tr.appendChild(this.TCTH_4L8_B1.lvdt_left_upstream);
-    tr.appendChild(cell=Cell('&nbsp',1,null));
+    tr.appendChild(Cell('&nbsp',1,null));
     tr.appendChild(this.TCTH_4L8_B1.lvdt_gap_downstream);
     tr.appendChild(this.TCTH_4L8_B1.lvdt_gap_upstream);
-    tr.appendChild(cell=Cell('&nbsp',1,null));
+    tr.appendChild(Cell('&nbsp',1,null));
     tr.appendChild(this.TCTH_4L8_B1.lvdt_right_downstream);
     tr.appendChild(this.TCTH_4L8_B1.lvdt_right_upstream);
 
-    tr = document.createElement('tr');    
+    tr = document.createElement('tr');
+    this.collbody.appendChild(tr);
+    tr.appendChild(Cell('TCTVB_4L8',1,'MonitorDataHeader'));
+    tr.appendChild(this.TCTVB_4L8.lvdt_left_downstream);
+    tr.appendChild(this.TCTVB_4L8.lvdt_left_upstream);
+    tr.appendChild(Cell('&nbsp',1,null));
+    tr.appendChild(this.TCTVB_4L8.lvdt_gap_downstream);
+    tr.appendChild(this.TCTVB_4L8.lvdt_gap_upstream);
+    tr.appendChild(Cell('&nbsp',1,null));
+    tr.appendChild(this.TCTVB_4L8.lvdt_right_downstream);
+    tr.appendChild(this.TCTVB_4L8.lvdt_right_upstream);
+
+    tr = document.createElement('tr');
     this.collbody.appendChild(tr);
     tr.appendChild(Cell('TCTH_4R8_B2',1,'MonitorDataHeader'));
     tr.appendChild(this.TCTH_4R8_B2.lvdt_left_downstream);
     tr.appendChild(this.TCTH_4R8_B2.lvdt_left_upstream);
-    tr.appendChild(cell=Cell('&nbsp',1,null));
+    tr.appendChild(Cell('&nbsp',1,null));
     tr.appendChild(this.TCTH_4R8_B2.lvdt_gap_downstream);
     tr.appendChild(this.TCTH_4R8_B2.lvdt_gap_upstream);
-    tr.appendChild(cell=Cell('&nbsp',1,null));
+    tr.appendChild(Cell('&nbsp',1,null));
     tr.appendChild(this.TCTH_4R8_B2.lvdt_right_downstream);
     tr.appendChild(this.TCTH_4R8_B2.lvdt_right_upstream);
 
-    tr = document.createElement('tr');    
+    tr = document.createElement('tr');
     this.collbody.appendChild(tr);
     tr.appendChild(Cell('TDI_4R8',1,'MonitorDataHeader'));
     tr.appendChild(this.TDI_4R8.lvdt_left_downstream);
     tr.appendChild(this.TDI_4R8.lvdt_left_upstream);
-    tr.appendChild(cell=Cell('&nbsp',1,null));
+    tr.appendChild(Cell('&nbsp',1,null));
     tr.appendChild(this.TDI_4R8.lvdt_gap_downstream);
     tr.appendChild(this.TDI_4R8.lvdt_gap_upstream);
-    tr.appendChild(cell=Cell('&nbsp',1,null));
+    tr.appendChild(Cell('&nbsp',1,null));
     tr.appendChild(this.TDI_4R8.lvdt_right_downstream);
     tr.appendChild(this.TDI_4R8.lvdt_right_upstream);
+
+    tr = document.createElement('tr');
+    this.collbody.appendChild(tr);
+    tr.appendChild(Cell('TCTVB_4R8',1,'MonitorDataHeader'));
+    tr.appendChild(this.TCTVB_4R8.lvdt_left_downstream);
+    tr.appendChild(this.TCTVB_4R8.lvdt_left_upstream);
+    tr.appendChild(Cell('&nbsp',1,null));
+    tr.appendChild(this.TCTVB_4R8.lvdt_gap_downstream);
+    tr.appendChild(this.TCTVB_4R8.lvdt_gap_upstream);
+    tr.appendChild(Cell('&nbsp',1,null));
+    tr.appendChild(this.TCTVB_4R8.lvdt_right_downstream);
+    tr.appendChild(this.TCTVB_4R8.lvdt_right_upstream);
 
     this.colltab.appendChild(this.collbody);
     td.appendChild(this.colltab);
@@ -271,6 +311,20 @@ var Collimators = function(msg)   {
     this.subscribeItem(this.TDI_4R8.lvdt_left_upstream);
     this.subscribeItem(this.TDI_4R8.lvdt_right_downstream);
     this.subscribeItem(this.TDI_4R8.lvdt_right_upstream);
+
+    this.subscribeItem(this.TCTVB_4L8.lvdt_gap_downstream);
+    this.subscribeItem(this.TCTVB_4L8.lvdt_gap_upstream);
+    this.subscribeItem(this.TCTVB_4L8.lvdt_left_downstream);
+    this.subscribeItem(this.TCTVB_4L8.lvdt_left_upstream);
+    this.subscribeItem(this.TCTVB_4L8.lvdt_right_downstream);
+    this.subscribeItem(this.TCTVB_4L8.lvdt_right_upstream);
+
+    this.subscribeItem(this.TCTVB_4R8.lvdt_gap_downstream);
+    this.subscribeItem(this.TCTVB_4R8.lvdt_gap_upstream);
+    this.subscribeItem(this.TCTVB_4R8.lvdt_left_downstream);
+    this.subscribeItem(this.TCTVB_4R8.lvdt_left_upstream);
+    this.subscribeItem(this.TCTVB_4R8.lvdt_right_downstream);
+    this.subscribeItem(this.TCTVB_4R8.lvdt_right_upstream);
 
     this.subscribeItem(this.TEDTI2);
     this.subscribeItem(this.TEDTI8);

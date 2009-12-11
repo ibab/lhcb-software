@@ -64,6 +64,8 @@ var Page1 = function(msg, sys)   {
     var d = new Date();
 
     tab.className = tb.className = 'MonitorPage';
+    tab.style.fontSize = '90%';
+
     this.heading = document.createElement('tr');
     var cell = Cell(lhcb_online_picture()+'&nbsp;'+this.system+' Page1',1,'MonitorBigHeader');
     cell.style.textAlign = 'left';
@@ -84,9 +86,11 @@ var Page1 = function(msg, sys)   {
     
     td = document.createElement('td');
     td.appendChild(this.LHC_header=lhcb.widgets.LHC_header());
+    td.style.width = '50%';
     tr.appendChild(td);
     
     td = document.createElement('td');
+    td.style.height = '100%';
     td.appendChild(this.LHCb_header=lhcb.widgets.Det_Run_header(this.system,this.logger));
     tr.appendChild(td);
     

@@ -34,8 +34,7 @@ var MagnetStatus = function(msg)   {
     tb = document.createElement('tbody');
 
     tab.width = '100%';
-    tab.className = 'MonitorData';
-    tb.className = 'MonitorData';
+    tab.className = tb.className = 'MonitorPage';
 
     tr = document.createElement('tr');
     tr.appendChild(c=Cell('Magnet Status:',null,'MonitorDataHeaderRED'));
@@ -47,30 +46,39 @@ var MagnetStatus = function(msg)   {
     this.magnetField.style.borderColor = '#000000';
     this.magnetField.style.borderWidth = 1;
     this.magnetField.conversion = function(data) {
-      if ( data>0.5 ) {
+      if ( data>0.85 ) {
 	this.style.backgroundColor = 'lightgreen';
 	return '<font size="+2">ON</font>';
       }
-      this.style.backgroundColor = 'yellow';
-      return '<font size="+2">OFF</font>';
+      else if ( data<0.15 ) {
+	this.style.backgroundColor = 'yellow';
+	return '<font size="+2">OFF</font>';
+      }
+      this.style.backgroundColor = 'orange';
+      return '<font size="+2">RAMP</font>';
     }
     tr.appendChild(this.magnetField);
-    tr.appendChild(c=Cell('<font size="+2">Polarity</font>',null,'Text-Center'));
+    tr.appendChild(c=Cell('<font size="+2">Polarity:</font>',null,'Text-Center'));
     c.style.width='15%';
     this.magnetPolarity = StyledItem('lbWeb.LbMagnet.Polarity','Text-Center',null);//'Polarity:%d');
     this.magnetPolarity.conversion = function(data) {
+      var x = document.getElementById('polarity_arrow');
       if ( data>0 ) {
+	x.src = _fileBase+'/Images/Down.png';
 	return '<font size="+3">+</font>';
       }
+      x.src = _fileBase+'/Images/Up.png';
       return '<font size="+3">-</font>';
     }
-    this.magnetPolarity.style.width='10%';
+    this.magnetPolarity.style.width='5%';
     this.magnetPolarity.style.textAlign='left';
     tr.appendChild(this.magnetPolarity);
-    this.magnetCurrent = StyledItem('lbWeb.LbMagnet.Current',null,'Current: %7.3f A');
+    tr.appendChild(c=Cell('<img id="polarity_arrow" src="'+_fileBase+'/Images/LHCb/Magnet.jpg" height="90%" width="80"/>',null,'Text-Left'));
+    c.style.width = '10%';
+    this.magnetCurrent = StyledItem('lbWeb.LbMagnet.Current',null,'Current: %7.0f A');
     this.magnetCurrent.style.width='20%';
     tr.appendChild(this.magnetCurrent);
-    this.magnetCurrentSet = StyledItem('lbWeb.LbMagnet.SetCurrent',null,'Set: %7.3f A');
+    this.magnetCurrentSet = StyledItem('lbWeb.LbMagnet.SetCurrent',null,'Set: %7.0f A');
     this.magnetCurrentSet.style.width='20%';
     tr.appendChild(this.magnetCurrentSet);
     tb.appendChild(tr);
@@ -83,8 +91,7 @@ var MagnetStatus = function(msg)   {
     tb = document.createElement('tbody');
 
     tab.style.width = tb.style.width = '100%';
-    tab.className = 'MonitorData';
-    tb.className = 'MonitorData';
+    tab.className = tb.className = 'MonitorPage';
 
     this.magnetTemp0   = StyledItem('lbWeb.LbMagnet.BSensor0.Temp','Text-Center','%7.2f &#186;C');
     this.magnetField0  = StyledItem('lbWeb.LbMagnet.BSensor0.Babs','Text-Center','%7.4f');
@@ -172,6 +179,107 @@ var MagnetStatus = function(msg)   {
     return tab;
   }
 
+  table.addPlot = function(row, dsc, url) {
+    var c = Cell(dsc,null,'DisplayButton');
+    row.appendChild(c);
+    //c.style.width = '6%';
+    c.img = this.img;
+    c.url = url;
+    c.onclick = function() { 
+      this.img.currentPlot = this.url;
+      this.img.setAttribute('src',this.img.currentPlot + '?' + (new Date()).getTime());  
+    }
+    return c;
+  }
+
+  table.hidePlots = function() {
+    var x=document.getElementById('magnet_plot_table');
+    x.parentNode.removeChild(x);
+    x.table.showPlots();
+  }
+
+  table.showPlots = function() {
+    var x = document.getElementById('magnet_plots');
+    var c, tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+    var trh = document.createElement('tr');
+
+    tab.style.width = tb.style.width = '100%';
+    tab.id    = 'magnet_plot_table';
+    tab.table = this;
+    trh.appendChild(c=Cell('Show plots',null,'DisplayButton'));
+    c.style.fontWeight = 'bold';
+    c.style.border = 'solid';
+    c.style.width = '15%';
+    c.style.borderWidth = '1px';
+    c.style.borderColor = '#000000';
+    c.onclick = function() {
+      var x = document.getElementById('magnet_plots');
+      x.innerHTML = '';
+      x.appendChild(x.table.Magnet_plots());
+    }
+    trh.appendChild(c=Cell('',null,null));
+    tb.appendChild(trh);
+    tab.appendChild(tb);
+    x.appendChild(tab);
+    return tab;
+  }
+
+  table.Magnet_plots = function() {
+    var field, c, tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+    var trh = document.createElement('tr');
+    var trp = document.createElement('tr');
+    var plot = document.createElement('td');
+    var url = 'http://lbmagnet.cern.ch/data/plots/highres/';
+    this.img  = document.createElement('img');
+
+    tab.style.width = tb.style.width = '100%';
+    tab.className = tb.className = 'MonitorPage';
+    tab.id    = 'magnet_plot_table';
+    tab.table = this;
+
+    trh.appendChild(Cell('Probes:',null,'DisplayButton'));
+    this.addPlot(trh,'Temp 0',  url+'probe0-temp.png');
+    this.addPlot(trh,'Field 0', url+'probe0-field.png');
+    this.addPlot(trh,'Temp 1',  url+'probe1-temp.png');
+    this.addPlot(trh,'Field 1', url+'probe1-field.png');
+    this.addPlot(trh,'Temp 2',  url+'probe2-temp.png');
+    this.addPlot(trh,'Field 2', url+'probe2-field.png');
+    this.addPlot(trh,'Temp 3',  url+'probe3-temp.png');
+    this.addPlot(trh,'Field 3', url+'probe3-field.png');
+    tb.appendChild(trh);
+
+    trh = document.createElement('tr');
+    trh.appendChild(Cell('Global:',null,'DisplayButton'));
+    this.addPlot(trh,'Cooling',     url+'coolingWater.png');
+    this.addPlot(trh,'Current',     url+'current.png');
+    this.addPlot(trh,'Voltages',    url+'voltages.png');
+    field=this.addPlot(trh,'Field', url+'average-field-small.png');
+    trh.appendChild(c=Cell('',4,null));
+    tb.appendChild(trh);
+
+    this.img.setAttribute('id','magnet_plot_1');
+    this.img.setAttribute('width','100%');
+    plot.appendChild(this.img);
+    plot.colSpan = 9;
+    trp.appendChild(plot);
+
+    tb.appendChild(trp);
+
+    trh = document.createElement('tr');
+    trh.appendChild(c=Cell('Hide plots',null,'DisplayButton'));
+    c.onclick = this.hidePlots;
+    c.table = this;
+    trh.appendChild(c=Cell('',8,null));
+    tb.appendChild(trh);
+
+
+    tab.appendChild(tb);
+    field.onclick();
+    return tab;
+  }
+
 
   table.subscribeItem = function(item) {
     this.provider.subscribe(item.name,item);
@@ -202,13 +310,6 @@ var MagnetStatus = function(msg)   {
     this.subscribeItem(this.magnetTemp1);
     this.subscribeItem(this.magnetTemp2);
     this.subscribeItem(this.magnetTemp3);
-
-    /*
-    this.subscribeItem(this.);
-    this.subscribeItem(this.);
-    this.subscribeItem(this.);
-    this.subscribeItem(this.);
-    */
   }
 
   table.build = function() {
@@ -217,6 +318,8 @@ var MagnetStatus = function(msg)   {
     var t1, tb1, tr1, td1, d = new Date();
 
     tab.width = tb.width  = '100%';
+    tab.className = tb.className = 'MonitorPage';
+
     this.heading = document.createElement('tr');
     var cell = Cell('<IMG src="'+_fileBase+'/Images/LHCb/Magnet.jpg" width="100"></IMG>&nbsp;LHCb Magnet Status',1,'MonitorBigHeader');
     cell.style.textAlign = 'left';
@@ -246,6 +349,13 @@ var MagnetStatus = function(msg)   {
     td.colSpan = 3;
     tb.appendChild(tr);
 
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(td=document.createElement('td'));
+    td.id = 'magnet_plots';
+    td.table = this;
+    td.colSpan = 3;
+    tb.appendChild(tr);
+
     // Finally add suggestions text
     tr = document.createElement('tr');
     tr.appendChild(Cell('',null,null));
@@ -254,6 +364,16 @@ var MagnetStatus = function(msg)   {
 
     tab.appendChild(tb);
     this.display.appendChild(tab);
+    this.showPlots();
+
+    this.plot_timer = function() {
+      var x = document.getElementById('magnet_plot_1');
+      // alert('Update plot....'+x);
+      if ( x ) {
+	x.setAttribute('src',x.currentPlot+ '?' + (new Date()).getTime());
+      }
+    }
+    setInterval(this.plot_timer,150000);
     return this;
   }
 

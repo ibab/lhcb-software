@@ -21,14 +21,14 @@ if ( !lhcb.widgets ) {
     tb.appendChild(tr);
   
     td = document.createElement('td');
-    td.innerHTML = 'LHC Fill';
+    td.innerHTML = 'LHC&nbsp;Fill';
     tr.appendChild(td);
   
     tab.lhcFillNumber = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.FillNumber',null,null);
     tr.appendChild(tab.lhcFillNumber);
   
     td = document.createElement('td');
-    td.innerHTML = 'is in state:';
+    td.innerHTML = 'is&nbsp;in&nbsp;state:';
     tr.appendChild(td);
   
     tab.lhcBeamMode = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.BeamMode',null,null);
@@ -62,22 +62,24 @@ if ( !lhcb.widgets ) {
    * @version 1.0
    */
   lhcb.widgets.LHC_summary = function() {
+    var c, tr, tab = document.createElement('table');
+    var tb = document.createElement('tbody');
 
-    var tb, td, tr, tab = document.createElement('table');
-    tb = document.createElement('tbody');
-
-    tab.className = 'MonitorData';
-    tb.className  = 'MonitorData';
+    tab.className = tb.className  = 'MonitorPage';
     tab.width     = '100%';
     tab.height    = '120px';
 
-    tab.energy        = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Energy',null,"%7.1f GeV");
-    //tab.BeamMode      = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.BeamMode',null,null);
-    tab.intensity1    = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Intensity.Beam1.totalIntensity',null,"%9.2e");
-    tab.intensity2    = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Intensity.Beam2.totalIntensity',null,"%9.2e");
-    tab.lifetime1     = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Intensity.Beam1.primitiveLifetime',null,"%7.2f");
-    tab.lifetime2     = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Intensity.Beam2.primitiveLifetime',null,"%7.2f");
-    tab.avgLumi       = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Beam.Luminosity.LuminosityAverage',null,"%9.2e");
+    tab.energy       = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Energy',null,"%7.1f GeV");
+    //tab.intensity1   = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Intensity.Beam1.totalIntensity',null,"%9.2e");
+    //tab.intensity2   = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Intensity.Beam2.totalIntensity',null,"%9.2e");
+    //tab.lifetime1    = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Intensity.Beam1.primitiveLifetime',null,"%7.2f");
+    //tab.lifetime2    = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Intensity.Beam2.primitiveLifetime',null,"%7.2f");
+    tab.intensity1    = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.IntensityPerBunch.Beam1.averageBeamIntensity',null,'%9.2e');
+    tab.intensity2    = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.IntensityPerBunch.Beam2.averageBeamIntensity',null,'%9.2e');
+    tab.lifetime1     = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.IntensityPerBunch.Beam1.bestLifetime',null,'%7.2f h');
+    tab.lifetime2     = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.IntensityPerBunch.Beam2.bestLifetime',null,'%7.2f h');
+
+    tab.avgLumi      = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Beam.Luminosity.LuminosityAverage',null,"%9.2e");
     tab.LHCbDump     = StyledItem('lbWeb.LHCCOM/LHC.LHC.Handshake.LHC_BEAMDUMP',null,null);
     tab.LHCbAdjust   = StyledItem('lbWeb.LHCCOM/LHC.LHC.Handshake.LHC_ADJUST',null,null);
     tab.LHCbInject   = StyledItem('lbWeb.LHCCOM/LHC.LHC.Handshake.LHC_INJECTION',null,null);
@@ -90,7 +92,8 @@ if ( !lhcb.widgets ) {
 
     tr = document.createElement('tr');
     tb.appendChild(tr);
-    tr.appendChild(Cell('Energy:',null,'MonitorDataHeader'));
+    tr.appendChild(c=Cell('Energy:',null,'MonitorDataHeader'));
+    c.style.width = '30%';
     tr.appendChild(tab.energy);
     tr.appendChild(Cell('Avg.Luminosity:',null,'MonitorDataHeader'));
     tr.appendChild(tab.avgLumi);
@@ -102,24 +105,24 @@ if ( !lhcb.widgets ) {
     tb.appendChild(tr);
     tr.appendChild(Cell('Intensity [e]:',null,'MonitorDataHeader'));
     tr.appendChild(tab.intensity1);
-    tr.appendChild(Cell('&lt;1 Beam 2&gt;',null,null));
+    tr.appendChild(Cell('&lt;1 Beam 2&gt;',null,'Text-Center'));
     tr.appendChild(tab.intensity2);
 
     tr = document.createElement('tr');
     tb.appendChild(tr);
     tr.appendChild(Cell('Lifetime [h]:',null,'MonitorDataHeader'));
     tr.appendChild(tab.lifetime1);
-    tr.appendChild(Cell('&lt;1 Beam 2&gt;',null,null));
+    tr.appendChild(Cell('&lt;1 Beam 2&gt;',null,'Text-Center'));
     tr.appendChild(tab.lifetime2);
 
     tr = document.createElement('tr');
     tb.appendChild(tr);
-    td = Cell('Handshakes:',null,'MonitorDataHeader');
-    td.rowSpan = 2;
-    tr.appendChild(td);
-    tr.appendChild(Cell('Dump',null,null));
-    tr.appendChild(Cell('Adjust',null,null));
-    tr.appendChild(Cell('Injection',null,null));
+    c = Cell('Handshakes:',null,'MonitorDataHeader');
+    c.rowSpan = 2;
+    tr.appendChild(c);
+    tr.appendChild(Cell('Dump',null,'MonitorDataHeader'));
+    tr.appendChild(Cell('Adjust',null,'MonitorDataHeader'));
+    tr.appendChild(Cell('Injection',null,'MonitorDataHeader'));
 
     tr = document.createElement('tr');
     tb.appendChild(tr);
@@ -169,23 +172,24 @@ if ( !lhcb.widgets ) {
      +-----------------------------------------
   */
   lhcb.widgets.LHC_operator_comments = function() {
-    var tb, td, tr, tab = document.createElement('table');
+    var tb, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
 
     tab.width  = '100%';
-    tab.height = '100%';
-    tb.height  = '100%';
-    tab.className = 'MonitorData';
-    tb.className = 'MonitorData';
+    tab.height = tb.height  = '100%';
+    tab.className = tb.className = 'MonitorPage';
     
-    tab.comments   = StyledItem('lbWeb.Background.lhcComments',null,null);
-
+    tab.comments   = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.Page1Comment',null,null);
+    tab.comments.style.fontWeight = 'normal';
     tr = document.createElement('tr');
     tb.appendChild(tr);
     tr.appendChild(Cell('LHC operator comments:',null,'MonitorDataHeader'));
     tr = document.createElement('tr');
     tb.appendChild(tr);
     tr.appendChild(tab.comments);
+    tab.comments.conversion = function(data) {
+      return data.replace(/\n/g,'<BR>');
+    }
     tab.comments.height = '60px';
 
     tab.appendChild(tb);
@@ -215,8 +219,8 @@ if ( !lhcb.widgets ) {
     var tb, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
 
-    tab.className = 'MonitorData';
-    tb.className = 'MonitorData';
+    tab.className = 'MonitorPage';
+    tb.className = 'MonitorPage';
     tab.width = '100%';
 
     tab.comments   = StyledItem('lbWeb.shiftComments',null,null);
@@ -250,17 +254,17 @@ if ( !lhcb.widgets ) {
    * @version 1.0
    */
   lhcb.widgets.Det_Run_header = function(sys,logger) {
-    var tb, td, tr, tab = document.createElement('table');
-    tb = document.createElement('tbody');
+    var tab = document.createElement('table');
+    var tb  = document.createElement('tbody');
+    var tr  = document.createElement('tr');
+    var td  = document.createElement('td');
 
-    tab.width = '100%';
-    tab.className = 'MonitorSubHeader';
-    tb.className = 'MonitorSubHeader';
+    tab.style.width = tb.style.width = '100%';
+    tab.style.height = tb.style.height = '100%';
+    tab.className = tb.className = 'MonitorSubHeader';
 
-    tr = document.createElement('tr');
     tb.appendChild(tr);
 
-    td = document.createElement('td');
     td.innerHTML = 'Run';
     tr.appendChild(td);
     
@@ -286,7 +290,6 @@ if ( !lhcb.widgets ) {
       provider.subscribe(this.runState.name,this.runState);
       return this;
     }
-
     return tab;
   }
 
@@ -312,9 +315,8 @@ if ( !lhcb.widgets ) {
     var tb, td, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
 
-    tab.className  = 'MonitorData';
+    tab.className  = tb.className = 'MonitorPage';
     tab.width      = '100%';
-    tb.className   = 'MonitorData';
     tb.cellSpacing = 0;
     tb.cellPadding = 0;
 
@@ -354,6 +356,11 @@ if ( !lhcb.widgets ) {
     tr.appendChild(tab.magnetField);
     tr.appendChild(Cell('Polarity:',1,'MonitorDataHeader'));
     tr.appendChild(tab.magnetPolarity);
+    tab.magnetPolarity.conversion = function(data) {
+      if ( data>0 )
+	return '+&nbsp;(Down)';
+      return '-&nbsp;(Up)';
+    }
 
     // Background status
     tr = document.createElement('tr');
