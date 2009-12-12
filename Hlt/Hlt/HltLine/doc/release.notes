@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.56 2009-12-11 11:08:10 pkoppenb Exp $
+! $Id: release.notes,v 1.57 2009-12-12 16:23:40 gligorov Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2009-12-12 - V. Gligorov
+ - python/HltLine/HltReco.py : fix Savannah bug #60543.
 
 !========================== HltLine v2r0p1 2009-12-11 ===================
 ! 2009-12-10 - V. Gligorov

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.15 2009-12-10 00:44:59 gligorov Exp $
+# $Id: HltReco.py,v 1.16 2009-12-12 16:22:05 gligorov Exp $
 # =============================================================================
 ## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -144,7 +144,7 @@ recoPV3D =  PatPV3D('HltRecoPV3D' )
 recoPV3D.addTool( PVOfflineTool, name = 'PVOfflineTool' )
 recoPV3D.PVOfflineTool.InputTracks = [ recoVelo.OutputTracksName ]
 
-recoPV3DOpen =  PatPV3D('HltRecoPV3D' )
+recoPV3DOpen =  PatPV3D('HltRecoPV3DOpen' )
 PV3DOpenTool = PVOfflineTool('PVOfflineTool') 
 PV3DOpenTool.InputTracks = [recoVeloOpenOutput  ]
 recoPV3DOpen.addTool( PV3DOpenTool )
