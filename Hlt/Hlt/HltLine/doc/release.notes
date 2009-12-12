@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.57 2009-12-12 16:23:40 gligorov Exp $
+! $Id: release.notes,v 1.58 2009-12-12 16:28:53 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================== HltLine v2r0p1 2009-12-11 ===================
 ! 2009-12-12 - V. Gligorov
  - python/HltLine/HltReco.py : fix Savannah bug #60543.
 
-!========================== HltLine v2r0p1 2009-12-11 ===================
 ! 2009-12-10 - V. Gligorov
  - python/HltLine/HltReco.py : add objects for doing the full 3D Velo tracking and PV 
    reconstruction in the case of an open Velo.
