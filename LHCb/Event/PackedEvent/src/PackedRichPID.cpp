@@ -1,4 +1,4 @@
-// $Id: PackedRichPID.cpp,v 1.6 2009-11-11 10:07:44 jonrob Exp $
+// $Id: PackedRichPID.cpp,v 1.7 2009-12-12 12:17:20 jonrob Exp $
 
 // local
 #include "Event/PackedRichPID.h"
@@ -24,12 +24,11 @@ void RichPIDPacker::pack( const DataVector & pids,
       ppids.data().push_back( PackedData() );
       PackedData & ppid = ppids.data().back();
       ppid.pidResultCode = (int)pid.pidResultCode();
-      ppid.llValues.reserve(pid.particleLLValues().size());
-      for ( std::vector<float>::const_iterator iLL = pid.particleLLValues().begin();
-            iLL != pid.particleLLValues().end(); ++iLL )
-      {
-        ppid.llValues.push_back( m_pack.deltaLL(*iLL) );
-      }
+      ppid.dllEl = m_pack.deltaLL( pid.particleDeltaLL(Rich::Electron) );
+      ppid.dllMu = m_pack.deltaLL( pid.particleDeltaLL(Rich::Muon)     );
+      ppid.dllPi = m_pack.deltaLL( pid.particleDeltaLL(Rich::Pion)     );
+      ppid.dllKa = m_pack.deltaLL( pid.particleDeltaLL(Rich::Kaon)     );
+      ppid.dllPr = m_pack.deltaLL( pid.particleDeltaLL(Rich::Proton)   );
       if ( NULL != pid.track() )
       {
         ppid.track = m_pack.reference( &ppids,
@@ -61,14 +60,11 @@ void RichPIDPacker::unpack( const PackedDataVector & ppids,
       pids.add( pid );
       // Fill data from packed object
       pid->setPidResultCode( ppid.pidResultCode );
-      std::vector<float> dlls;
-      dlls.reserve(ppid.llValues.size());
-      for ( std::vector<int>::const_iterator iLL = ppid.llValues.begin();
-            iLL != ppid.llValues.end(); ++iLL )
-      {
-        dlls.push_back( (float)m_pack.deltaLL(*iLL) );
-      }
-      pid->setParticleLLValues(dlls);
+      pid->setParticleDeltaLL( Rich::Electron, (float)m_pack.deltaLL(ppid.dllEl) );
+      pid->setParticleDeltaLL( Rich::Muon,     (float)m_pack.deltaLL(ppid.dllMu) );
+      pid->setParticleDeltaLL( Rich::Pion,     (float)m_pack.deltaLL(ppid.dllPi) );
+      pid->setParticleDeltaLL( Rich::Kaon,     (float)m_pack.deltaLL(ppid.dllKa) );
+      pid->setParticleDeltaLL( Rich::Proton,   (float)m_pack.deltaLL(ppid.dllPr) );
       if ( -1 != ppid.track )
       {
         int hintID(0), key(0);

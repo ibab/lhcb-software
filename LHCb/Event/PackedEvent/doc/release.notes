@@ -4,6 +4,9 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2009-12-12 - Chris Jones
+ - Replace std::vector<int> with plain ints in PackedRichPID
+
 !======================= PackedEvent v3r7 2009-11-13 =========================
 ! 2009-11-10 - Chris Jones
  - Update Muon and Rich PID packers to pack DLLs to integers

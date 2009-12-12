@@ -1,4 +1,4 @@
-// $Id: PackedRichPID.h,v 1.3 2009-11-10 10:24:09 jonrob Exp $
+// $Id: PackedRichPID.h,v 1.4 2009-12-12 12:17:20 jonrob Exp $
 #ifndef EVENT_PACKEDRICHPID_H
 #define EVENT_PACKEDRICHPID_H 1
 
@@ -36,7 +36,7 @@ namespace LHCb
     {}
 
     int pidResultCode;
-    std::vector<int> llValues;
+    int dllEl,dllMu,dllPi,dllKa,dllPr;
     int track;
 
   };
