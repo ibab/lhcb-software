@@ -1,4 +1,4 @@
-// $Id: PackTrack.cpp,v 1.13 2009-11-07 12:20:39 jonrob Exp $
+// $Id: PackTrack.cpp,v 1.14 2009-12-12 15:37:20 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -94,6 +94,9 @@ StatusCode PackTrack::execute() {
 
   // Clear the registry address of the unpacked container, to prevent reloading
   tracks->registry()->setAddress( 0 );
+
+  // Summary of the size of the PackTracks container
+  counter("# PackedTracks") += out->end() - out->begin();
 
   return StatusCode::SUCCESS;
 }

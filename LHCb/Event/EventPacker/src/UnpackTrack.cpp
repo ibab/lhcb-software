@@ -1,4 +1,4 @@
-// $Id: UnpackTrack.cpp,v 1.14 2009-11-10 07:26:04 ocallot Exp $
+// $Id: UnpackTrack.cpp,v 1.15 2009-12-12 15:37:20 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -106,6 +106,9 @@ StatusCode UnpackTrack::execute() {
       track->eraseInfo( 102 );
     }
   }
+
+  counter("# UnpackedTracks") += newTracks->size();
+
   return StatusCode::SUCCESS;
 }
 

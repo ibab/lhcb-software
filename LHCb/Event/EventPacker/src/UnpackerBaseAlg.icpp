@@ -93,6 +93,9 @@ StatusCode Unpack<PACKER>::execute()
 
     } // input OK
 
+    // Count packed output
+    counter("# UnPackedData") += data->size();
+
   } // output OK
 
   return StatusCode::SUCCESS;
