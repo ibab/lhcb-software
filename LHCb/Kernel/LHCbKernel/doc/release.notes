@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-12-12 - Wouter Hulsbergen
+ - Bug fix in OTChannelID::uniqueSequentialModule (Herve Terrier)
+
 !===================== LHCbKernel v11r10 2009-12-11 =======================
 ! 2009-12-10 - Marco Cattaneo
  - Add polarity() to ILHCbMagnetSvc interface
