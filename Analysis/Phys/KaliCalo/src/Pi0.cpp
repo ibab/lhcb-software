@@ -1,4 +1,4 @@
-// $Id: Pi0.cpp,v 1.4 2009-12-01 00:13:16 apuignav Exp $
+// $Id: Pi0.cpp,v 1.5 2009-12-12 16:10:25 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -42,7 +42,7 @@ namespace Kali
   public:
     // ========================================================================
     /// the proper initialzation
-    virtual StatusCode initialze  () ;             // the proper tinitialzation
+    virtual StatusCode initialize () ;             // the proper tinitialzation
     /// the main 'execution' method 
     virtual StatusCode analyse    () ;          //  the main 'execution' method 
     // ========================================================================
@@ -76,10 +76,16 @@ namespace Kali
     /// the assignement operator is disabled 
     Pi0& operator=( const Pi0& ) ;      // the assignement operator is disabled 
     /// fill tuple method
-    void fillTuple ( const Tuple& ,
-                     const Gaudi::LorentzVector& , const Gaudi::LorentzVector& ,
-                     const Gaudi::LorentzVector& , double , double ,
-                     const LHCb::CaloCellID& , const LHCb::CaloCellID& , int ) ;
+    void fillTuple 
+    ( const Tuple& ,
+      const Gaudi::LorentzVector& , 
+      const Gaudi::LorentzVector& ,
+      const Gaudi::LorentzVector& , 
+      const double , 
+      const double ,
+      const LHCb::CaloCellID& , 
+      const LHCb::CaloCellID& , 
+      const int    ) ;
     // ========================================================================
   public:
     // ========================================================================
@@ -111,12 +117,16 @@ void Kali::Pi0::mirrorHandler ( Property& /* p */ )
 // ============================================================================
 // tuple fill helper function 
 // ============================================================================
-void Kali::Pi0::fillTuple ( const Tuple& tuple ,
-                            const Gaudi::LorentzVector&  p1 , const Gaudi::LorentzVector& p2 ,
-                            const Gaudi::LorentzVector& p12 ,
-                            double prs1e                    , double prs2e ,
-                            const LHCb::CaloCellID& cell1   , const LHCb::CaloCellID& cell2 , 
-                            int bkg )
+void Kali::Pi0::fillTuple
+( const Tuple&                tuple ,
+  const Gaudi::LorentzVector& p1    , 
+  const Gaudi::LorentzVector& p2    ,
+  const Gaudi::LorentzVector& p12   ,
+  const double                prs1e , 
+  const double                prs2e ,
+  const LHCb::CaloCellID&     cell1 , 
+  const LHCb::CaloCellID&     cell2 , 
+  const int                   bkg   )
 {
     using namespace Gaudi::Units ;
     
@@ -153,7 +163,7 @@ void Kali::Pi0::fillTuple ( const Tuple& tuple ,
 // ============================================================================
 // the proper initialization
 // ============================================================================
-StatusCode Kali::Pi0::initialze  ()                 // the proper initialzation
+StatusCode Kali::Pi0::initialize  ()                // the proper initialzation
 {
   StatusCode sc = LoKi::Algo::initialize();
   if ( sc.isFailure() ) { return sc ; }
