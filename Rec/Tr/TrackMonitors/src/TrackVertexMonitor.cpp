@@ -229,10 +229,12 @@ StatusCode TrackVertexMonitor::execute()
     // chisquare
     plot( pv->chi2() / pv->nDoF(), "PV chisquare per dof",0,20) ;
     // position
-    plot( pv->position().x(), "PV x position",-m_rpvmax,m_rpvmax) ;
-    plot( pv->position().y(), "PV y position",-m_rpvmax,m_rpvmax) ;
-    plot( pv->position().z(), "PV z position", m_zpvmin,m_zpvmax) ;
- 
+    if(fabs(pv->position().x()) > 0.00001 and fabs(pv->position().y()) > 0.00001 ){   // crap hack for vertices at exactly 0
+            plot( pv->position().x(), "PV x position",-m_rpvmax,m_rpvmax) ;
+            plot( pv->position().y(), "PV y position",-m_rpvmax,m_rpvmax) ;
+            plot( pv->position().z(), "PV z position", m_zpvmin,m_zpvmax) ;
+    }
+
     if( fabs( pv->position().y() ) < m_rpvmax ) 
       profile1D( pv->position().z(), pv->position().y(),"PV y versus z",m_zpvmin,m_zpvmax,m_nprbins) ;
     if( fabs( pv->position().x() ) < m_rpvmax ) 

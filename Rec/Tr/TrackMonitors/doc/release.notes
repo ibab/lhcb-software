@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-12-12 - Karol Hennessy
+ - Modified TrackVertexMonitor such that it doesn't plot vertices at 
+   exactly zero in pvx and pvy plots
+
 !========================== TrackMonitors v1r18 2009-12-11 ==================
 ! 2009-12-07 - Wouter Hulsbergen
  - Added histograms to trackmmonitor: z-closest to beamline, match-chisquare etc
@@ -15,17 +19,17 @@
 !============================ TrackMonitors v1r17 2009-11-29 ==================
 ! 2009-11-30 - Rob Lambert
  - OTTrackMonitor:
-		Exchanged Assert statements for Exceptions, to avoid string manipulation
-		Unless there's a problem.
+      Exchanged Assert statements for Exceptions, to avoid string manipulation
+      Unless there's a problem.
 
 ! 2009-11-29 - Rob Lambert
  - OTTrackMonitor:
-		Moved pointer checking into assert statements for the event model elements
+      Moved pointer checking into assert statements for the event model elements
 
 ! 2009-11-27 - Rob Lambert
  - OTTrackMonitor, bug 59675
-	 Try to protect against unprotected pointer dereferences,
-	 may help in the future.
+    Try to protect against unprotected pointer dereferences,
+    may help in the future.
 
 !============================ TrackMonitors v1r16 2009-11-22 ==================
 ! 2009-11-22 - Wouter Hulsbergen
@@ -77,7 +81,7 @@
 
 ! 2009-10-15 J Luisier
  - Add a new option in STEfficiency, to allow spill over studies and removed
-	 useless option
+    useless option
 
 ! 2009-10-12 Wouter Hulsbergen
  - fixed unchecked statuscode in OTHitEfficiencyMonitor
