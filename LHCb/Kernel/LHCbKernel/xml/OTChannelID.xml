@@ -114,7 +114,7 @@
               name  = "sequentialUniqueModule"
               const = "TRUE"
               desc  = "Returns a module id in range [0,431]">
-         <code> return sequentialUniqueQuarter()*9 + module() ;</code>
+         <code> return sequentialUniqueQuarter()*9 + module() - 1 ;</code>
       </method> 
 
       <method type  = "unsigned int"
