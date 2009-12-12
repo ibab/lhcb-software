@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.383 2009-12-11 20:00:56 gligorov Exp $ 
+! $Id: release.notes,v 1.384 2009-12-12 12:09:37 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v6r1 2009-12-11 ===================
 ! 2009-12-11 - V. Gligorov
  - Add a bunch of decisions and selections to HltInit which
    had been left to autogenerate and sort the HltInit file a bit
@@ -13,7 +14,6 @@
 ! 2009-12-11 - Gerhard Raven
  - protect autogenerating of ids from overwriting existing ids
 
-!========================== HltConf v6r1 2009-12-11 ===================
 ! 2009-12-10 - V. Gligorov
  - options/HltInit.py : add selections for using 3D primary vertices
    in the hlt1 lines
