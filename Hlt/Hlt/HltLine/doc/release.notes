@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.59 2009-12-13 10:55:15 pkoppenb Exp $
+! $Id: release.notes,v 1.60 2009-12-13 12:09:10 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
@@ -6,6 +6,10 @@
 ! -----------------------------------------------------------------------------
 
 !========================== HltLine v2r0p1 2009-12-11 ===================
+! 2009-12-13 - Gerhard Raven
+ - update Hlt2Line hlt filter to HLT_PASS_RE('Hlt1(?!ODIN)(?!Lumi).*Decision')
+   to avoid interference with Hlt2 requires L0... (pass-through Hlt1)
+
 ! 2009-12-13 - Patrick Koppenburg
  -  python/HltLine/HltReco.py : fix velo reco
 
