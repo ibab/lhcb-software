@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.43 2009-10-10 18:33:38 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.44 2009-12-13 21:42:36 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -36,6 +36,7 @@ class RichRecQCConf(RichConfigurableUser):
        ,"AlignmentMonitoring"       : True
        ,"HPDIFBMonitoring"          : True
        ,"PidMomentumRanges": [ [2,100], [2,10], [10,70], [70,100] ]
+       ,"MinTrackBeta" : [ 0.9999, 0.9999, 0.9999 ]
        ,"PidTrackTypes":  [ ["Forward","Match"] ]
        ,"RecoTrackTypes": [ ["Forward","Match"],
                             ["Forward"],["Match"],["KsTrack"],["VeloTT"],["Seed"] ]
@@ -314,7 +315,7 @@ class RichRecQCConf(RichConfigurableUser):
             mon.HistoPrint = False
 
             # cuts
-            if trackType == ["All"] : mon.MinBeta = [ 0.0, 0.0, 0.0 ]
+            mon.MinBeta = self.getProp("MinTrackBeta")
 
             # Add to sequence
             sequence.Members += [mon]

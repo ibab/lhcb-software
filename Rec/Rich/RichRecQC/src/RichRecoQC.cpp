@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.51 2009-10-02 13:04:44 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.52 2009-12-13 21:42:36 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -50,9 +50,11 @@ RecoQC::RecoQC( const std::string& name,
   declareProperty( "ChThetaRecHistoLimitMin",
                    m_ckThetaMin = boost::assign::list_of(0.1)(0.03)(0.01) );
   declareProperty( "ChThetaRecHistoLimitMax",
-                   m_ckThetaMax = boost::assign::list_of(0.3)(0.08)(0.05) );
+                   m_ckThetaMax = boost::assign::list_of(0.3)(0.065)(0.036) );
   declareProperty( "CKResHistoRange",
                    m_ckResRange = boost::assign::list_of(0.012)(0.006)(0.004) );
+
+  setProperty( "NBins2DHistos", 100 );
 }
 
 // Destructor
@@ -112,6 +114,27 @@ StatusCode RecoQC::prebookHistograms()
     richHisto1D( *rad,
                  "totalPhotonsIsolated","Photon Yield : Isolated Tracks",
                  -0.5, 50.5, 51 );
+    richHisto2D( *rad,
+                 "photonCkThetaVP","Photon Cherenkov Theta V Momentum",
+                 log10(m_trSelector->minPCut()+1), log10(m_trSelector->maxPCut()), nBins2D(),
+                 m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins2D() );
+    richHisto2D( *rad,
+                 "trackAvgCkThetaVP","Track Avg. Cherenkov Theta V Momentum",
+                 log10(m_trSelector->minPCut()+1), log10(m_trSelector->maxPCut()), nBins2D(),
+                 m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins2D() );
+    richHisto2D( *rad,
+                 "isoTrackAvgCkThetaVP","Track Avg. Cherenkov Theta V Momentum : Isolated Tracks",
+                 log10(m_trSelector->minPCut()+1), log10(m_trSelector->maxPCut()), nBins2D(),
+                 m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins2D() );
+    richHisto2D( *rad,
+                 "trackStereoCkThetaVP","Track Stereo Refit Cherenkov Theta V Momentum",
+                 log10(m_trSelector->minPCut()+1), log10(m_trSelector->maxPCut()), nBins2D(),
+                 m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins2D() );
+    richHisto2D( *rad,
+                 "isoTrackStereoCkThetaVP",
+                 "Track Stereo Refit Cherenkov Theta V Momentum : Isolated Tracks",
+                 log10(m_trSelector->minPCut()+1), log10(m_trSelector->maxPCut()), nBins2D(),
+                 m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins2D() );
   }
 
   return StatusCode::SUCCESS;
@@ -158,6 +181,7 @@ StatusCode RecoQC::execute()
 
     // segment momentum
     const double pTot = std::sqrt(segment->trackSegment().bestMomentum().Mag2());
+    const double ptotLogGeV = std::log10(pTot/Gaudi::Units::GeV);
 
     double thetaExpTrue(0.0), resExpTrue(0.0);
     Rich::ParticleIDType mcType = Rich::Pion; // If MC not available, assume pion
@@ -195,16 +219,18 @@ StatusCode RecoQC::execute()
       if ( fitR.status == IStereoFitter::Result::Succeeded )
       {
         richHisto1D(rad,"ckResAllStereoRefit")->fill(fitR.thcFit-thetaExpTrue);
+        richHisto2D(rad,"trackStereoCkThetaVP")->fill(ptotLogGeV,fitR.thcFit);
         if ( isolated )
         {
           richHisto1D(rad,"ckResAllStereoRefitIsolated")->fill(fitR.thcFit-thetaExpTrue);
+          richHisto2D(rad,"isoTrackStereoCkThetaVP")->fill(ptotLogGeV,fitR.thcFit);
         }
       }
     }
 
     // loop over photons for this segment
     unsigned int truePhotons(0);
-    double avRecTrueTheta(0);
+    double avRecTrueTheta(0), avRecTheta(0);
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " -> Found " << segment->richRecPhotons().size() << " photons" << endmsg;
     for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = segment->richRecPhotons().begin();
@@ -214,12 +240,14 @@ StatusCode RecoQC::execute()
 
       // reconstructed theta
       const double thetaRec = photon->geomPhoton().CherenkovTheta();
+      avRecTheta += thetaRec;
       // reconstructed phi
       const double phiRec   = photon->geomPhoton().CherenkovPhi();
 
       richHisto1D(rad,"thetaRec")->fill(thetaRec);
       richHisto1D(rad,"phiRec")->fill(phiRec);
       richHisto1D(rad,"ckResAll")->fill(thetaRec-thetaExpTrue);
+      richHisto2D(rad,"photonCkThetaVP")->fill(ptotLogGeV,thetaRec);
 
       // isolated segment ?
       if ( isolated )
@@ -262,11 +290,20 @@ StatusCode RecoQC::execute()
       richHisto1D(rad,"totalPhotonsIsolated")->fill(segment->richRecPhotons().size());
     }
 
+    if ( !segment->richRecPhotons().empty() )
+      avRecTheta /= (double)segment->richRecPhotons().size();
+
+    richHisto2D(rad,"trackAvgCkThetaVP")->fill(ptotLogGeV,avRecTheta);
+    if ( isolated )
+    {
+      richHisto2D(rad,"isoTrackAvgCkThetaVP")->fill(ptotLogGeV,avRecTheta);
+    }
+
     // number of true photons
     if ( truePhotons > 0 )
     {
       richHisto1D( rad, "nCKphots", "True # p.e.s",
-                   -0.5, 50, 51 ) -> fill( truePhotons );
+                   -0.5, 50.5, 51 ) -> fill( truePhotons );
       richProfile1D( rad, "nCKphotsVcktheta", "True # p.e.s Versus CK theta",
                      m_ckThetaMin[rad], m_ckThetaMax[rad],
                      nBins1D() ) -> fill( avRecTrueTheta/(double)truePhotons, truePhotons );
