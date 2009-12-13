@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.17 2009-12-13 10:55:15 pkoppenb Exp $
+# $Id: HltReco.py,v 1.18 2009-12-13 21:32:41 gligorov Exp $
 # =============================================================================
 ## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -253,7 +253,7 @@ recoSeq = GaudiSequencer('HltRecoSequence', MeasureTime = True
 
 importOptions('$HLTCONFROOT/options/TsaTool.opts')
 
-# from Configurables import DecodeVeloRawBuffer
+from Configurables import DecodeVeloRawBuffer
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 #Forward1 = bindMembers( None, [ DecodeVELO, patVeloR, recoVelo, recoForward ] )
@@ -264,8 +264,8 @@ RZVelo   = bindMembers( None, [ DecodeVELO, patVeloR, prepareRZVelo ] )
 #PV2D     = bindMembers( None, [ patVeloR, patPV2D, preparePV2D ] )
 #RZVelo   = bindMembers( None, [ patVeloR, prepareRZVelo ] )
 Velo     = bindMembers( None, [                  RZVelo , reco1Velo ] )
-VeloOpen = bindMembers( None, [ DecodeVELO, recoVeloOpen, prepareVeloOpen ] )
-PV3DOpen = bindMembers( None, [ DecodeVELO, recoVeloOpen, prepareVeloOpen, recoPV3DOpen, preparePV3DOpen ] )
+VeloOpen = bindMembers( None, [ DecodeVeloRawBuffer(), recoVeloOpen, prepareVeloOpen ] )
+PV3DOpen = bindMembers( None, [ DecodeVeloRawBuffer(), recoVeloOpen, prepareVeloOpen, recoPV3DOpen, preparePV3DOpen ] )
 Forward  = bindMembers( None, [                                Velo,  recoFwd ] )
 
 # warning: Seed is _not_ selfcontained, and relies on Forward having run...

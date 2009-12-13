@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.60 2009-12-13 12:09:10 graven Exp $
+! $Id: release.notes,v 1.61 2009-12-13 21:32:31 gligorov Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2009-12-13 - V. Gligorov
+ -  python/HltLine/HltReco.py : revert change to velo reco. Note that using
+    DecodeRawVeloBuffer() is broken with DC06 so any lines using this functionality
+    must be prescaled to zero by default so as not to break the nightlies.
 
 !========================== HltLine v2r0p1 2009-12-11 ===================
 ! 2009-12-13 - Gerhard Raven
