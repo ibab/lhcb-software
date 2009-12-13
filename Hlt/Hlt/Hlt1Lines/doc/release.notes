@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.82 2009-12-11 10:09:26 pkoppenb Exp $
+! $Id: release.notes,v 1.83 2009-12-13 21:35:09 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -9,6 +9,11 @@
 ! for the production. Commit them AS WELL in branch production200912. 
 !
 !-----------------------------------------------------------------------------
+
+! 2009-12-10 - V. Gligorov
+ - python/Hlt1Lines/Hlt1HadronVeloOpenLines : prescale to zero by default
+   as these are broken with DC06.
+ - python/Hlt1Lines/Hlt1HadronViaTLines : set default output level to fatal.
 
 ! 2009-12-10 - V. Gligorov
  - python/Hlt1Lines/Hlt1HadronVeloOpenLines : added new lines for use

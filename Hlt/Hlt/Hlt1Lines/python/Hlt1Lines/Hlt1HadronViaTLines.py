@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -86,7 +86,7 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
                                                                                                             tools = [],
                                                                                                             zMagnet = 0.,
                                                                                                             MinMomentum = 10000.,
-                                                                                                            OutputLevel = 1
+                                                                                                            OutputLevel = 6
                                                                                                           )
       												    ],
                                                                                             debugMode = False,
@@ -94,15 +94,15 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
 											    nSigmaY = 2,
 											    nSigmaTx = 1,
 											    nSigmaTy = 2,
-											    OutputLevel = 1	
+											    OutputLevel = 6	
                                                                                           )
                                                                                     ],
-									    trackingTool='PatConfirmTool', particleType = 1, OutputLevel = 1
+									    trackingTool='PatConfirmTool', particleType = 1, OutputLevel = 6
                                                                            )
-                                                                      ], OutputLevel = 1
+                                                                      ], OutputLevel = 6
                                                                )
                                                           ],
-                                                  RecoName = 'THadronConf', OutputLevel = 1 
+                                                  RecoName = 'THadronConf', OutputLevel = 6 
                                                 )
             '''print 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
             print 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
