@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.58 2009-12-12 16:28:53 pkoppenb Exp $
+! $Id: release.notes,v 1.59 2009-12-13 10:55:15 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 !========================== HltLine v2r0p1 2009-12-11 ===================
+! 2009-12-13 - Patrick Koppenburg
+ -  python/HltLine/HltReco.py : fix velo reco
+
 ! 2009-12-12 - V. Gligorov
  - python/HltLine/HltReco.py : fix Savannah bug #60543.
 
