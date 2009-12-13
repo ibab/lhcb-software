@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.24 2009-12-12 16:10:25 ibelyaev Exp $ 
+! $Id: release.notes,v 1.25 2009-12-13 01:10:05 dsavrina Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.24 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.25 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
+
+! 2009-12-12 - Dasha Savrina
+
+- changed the files for (pi0 -> gamma gamma) N-tuple processing
 
 ! 2009-12-12 - Vanya Belyaev
 

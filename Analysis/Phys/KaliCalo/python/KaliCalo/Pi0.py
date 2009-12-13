@@ -1,50 +1,62 @@
-#!/usr/bin/env
-# =============================================================================
-## @file KaliCalo/Pi0.py
-#  Example of script for iterative (pi0 -> gamma gamma) Ecal calibration
-#  @author Vanya BELYAEV Ivan.Belayev@nikhef.nl
-#  @date 2009-10-31
+#!/usr/bin/env python
 # =============================================================================
 """
-Example of script for iterative ( pi0 -> gamma gamma) Ecal calibration
+A script for iterative (pi0->gamma gamma) ECAL calibration (primary iterations)
+
+Run:
+> python Pi0.py
+
+niter is the desired number of iterations (10 by default)
+alam   is the dictionary of the calibration coefficients, cell IDs are used as
+       the dictionary keys
+pi0mas is the dictionary of the pi0 mass histograms, cell IDs are used as the
+       dictionary keys
 """
 # =============================================================================
-__author__  =  "Vanya BELYAEV Ivan.Belayev@nikhef.nl"
-__version__ =  "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
-# =============================================================================
+from ROOT import TFile, TH1F
 
-import ROOT
+# ========================== some nessesary variables =========================
+niter=10                               # number of iterations
+alam = {}                              # dictionary of the calibration coefficients
+pi0mass={}                             # dictionary of the pi0 mass histograms
+Nbad=0                                 # number of cells with too few statistics
 
-c1 = ROOT.TCanvas('canvas','canvas',600,500)
+from Pi0FillHistos import MyPySelector
+from Pi0HistoFit import HiFit
 
-from   GaudiPython.Bindings import gbl as cpp
-import GaudiPython.HistoUtils
+# =============================== opening a file ==============================
+#== opening a file
+fil=TFile("KaliPi0_Tuples.root")
 
-from   KaliCalo.Pi0FillHistos import processFile as process 
-from   KaliCalo.Pi0FillHistos import cell0
-from   KaliCalo.Pi0HistoFit   import fitPi0Histo
+#== extracting a tree
+Bamboo=fil.Get("KaliPi0/Pi0-Tuple")
 
-LHCb = cpp.LHCb
-AIDA = cpp.AIDA
+# =========================== starting the iterations =========================
+for i in range(niter):
+    print '='*20, "iteration number", i, '='*20
 
-# =============================================================================
-if '__main__' == __name__ :
-    print __doc__
-    print __author__
-    print __version__
+    # sending the correction coefficients to the selector
+    MyPySelector().CoefGet(alam, pi0mass)
 
-    calibr = {}
-    histos = {}
+    # processing the tree to fill the histograms
+    Bamboo.Process("TPySelector","Pi0FillHistos")
 
-    result = process ( 'KaliPi0_Tuples.root' , calibr , histos )
+    # getting the mass histograms
+    pi0mass,alam=MyPySelector().HiReturn()
 
-    histos = result[1] 
-    if histos.has_key ( cell0 ) : 
-        histo = histos[cell0]
-        print fitPi0Histo ( histo , 0.050 , 0.220 )
-        if hasattr ( histo , 'dump' ) : print histo.dump(40,20,True) 
-        histo.Draw()
-        
+    # fitting the histograms and getting a dictionary of the fit coefficients
+    alam=HiFit(pi0mass,alam)
+
+f = open('Coefficients.txt','w')
+print >> f, alam
+
+for j in alam.keys():
+    if(alam[j]==1.0): Nbad+=1
+
+print "Cells calibrated", len(alam) - Nbad
+print Nbad, "cells have too few events for calibration"
+print "The others have no events at all"
+
 # =============================================================================
 # The END 
 # =============================================================================

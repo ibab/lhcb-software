@@ -1,203 +1,90 @@
 #!/usr/bin/env python
 # =============================================================================
-## @file KaliCalo/Pi0HistoFit.py
-#  the helper module which allows the fit of the histogfram with pi0-mass
-#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-#  @date 2009-10-05
-# =============================================================================
 """
-The helper module which allows the fit of the histogfram with pi0-mass
+A module for fitting the histograms with pi0-mass
 """
 # =============================================================================
-__all__ = (
-    'fitPi0Histo' ,
-    )
-# =============================================================================
-__author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
-__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $'
-# =============================================================================
-import  ROOT 
-from    math import exp
-import  GaudiPython.HistoUtils
-from    GaudiPython.Bindings   import gbl as cpp
-import  LHCbMath.Types 
+from ROOT import TH1F, TF1
+from math import sqrt, pi
+from array import array
 
-Gaudi  = cpp.Gaudi
-
-# =============================================================================
-## @class Pi0FitFun
-#  Simple class to represent the shape of pi0-mass distribution
-#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-#  @date 2009-10-05
-class Pi0FitFun ( object ) :
-    """    
-    Simple class to represent the shape of pi0-mass distribution
+def HiFit(FilledHistos, alam):
     """
-    def __init__ ( self ) :
-        
-        from math import sqrt,pi
-        self.norm = 0.001/sqrt(2.0*pi)   ## the trivial normalization 
-        self.x0   = 0.5*(0.250-0.050)    ## the normalization point
-    
-    def __call__ ( self , x , par ) :
-        """
-        The major method for function evaluation
-        """
-        mass = par[1] 
-        dm  = x[0] - mass 
-        dm2 = dm*dm
-        sigma  = par[2]
-        sigma2 = sigma*sigma
-        number = par[0]*self.norm/sigma 
-        signal = number*exp(-0.5*dm2/sigma2)
-        
-        dm1    = x[0] - self.x0 
-        backgr = par[3]*(1.0+dm1*(par[4]+ dm1*(par[5]+dm1*par[6])))
-        
-        return signal + backgr
-
-    
-pi0FitFun = ROOT.TF1('pi0Fit', Pi0FitFun() , 0.05 , 0.20 , 7 )
-pi0FitFun.SetParNames  (
-    "Signal"     ,
-    "Mass"       ,
-    "Sigma"      ,
-    "Background" ,
-    "Slope"      ,
-    "Curvature"  ,
-    "ThirdOrder"
-    )  
-
-# =============================================================================
-## fit pi0-histogram 
-#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-#  @date 2009-10-05
-def fitPi0Histo ( histo , low = None , high = None ) :
+    Module for running over all the histograms and calculation of the
+    improved correction coefficients. Returnes a dictionary of the
+    coefficients.
     """
-    Perform the fit of diphoton mass distribution and return
-    tuple with number of event in signal peak and the position of mass-peak
+    # loop over all the cells
+    for i in alam.keys():
+        # fitting and calculating the new correction coefficient
+        alam[i]=alam[i]*0.135/FitProcess(FilledHistos[i])
+    return alam
 
-    >>> histo = ...
-    >>> num,mass = fitPi0Histo ( histo )
-    
+def FitProcess(histo):
     """
-    ## ROOT versus AIDA ?
-    if not hasattr ( histo , 'Fit' ) or not hasattr ( histo , 'GetEntries' ) :
-        if hasattr ( histo , 'toROOT' ) : 
-            _root = histo.toROOT() 
-            return fitPi0Histo ( _root , low , high )
+    A module for performing a fit of the histogram and return the pi0 mass
+    Fit function is a sum of the Gauss and the second order polinom. Gauss mean
+    value is returned as the "pi0 mass".
+    """
+    #== extracting the histogram parameters
+    left=histo.GetXaxis().GetXmin()        # left limit
+    right=histo.GetXaxis().GetXmax()       # right limit
+    binwidth = histo.GetBinWidth(1)        # width of the bin
+
+    #== true pi0 peak parameters
+    trueMass = 0.135                       # initial gauss mean
+    trueSigm = 0.0094                      # initial gauss sigma
+    norm     = 1.0/(sqrt(2.0*pi)*trueSigm) # gauss constant
+
+    #== check if there are enough events in the histogram
+    if(histo.GetEntries()<=(right-left)/binwidth):
+        print "Bad fit, returned coefficient = 1"
+        return trueMass
+
+    #== array of the fit parameters
+    npar     = 12                          # number of fit parameters
+    par      = array("d",npar*[0.0])       # par[0-5] are fit parameters
+                                           # par[6-11] are the errors of fit parameters
+
+    #== fit parameters bounds
+    massmin = 0.120                        # min mean value
+    massmax = 0.150                        # max mean value
+    sigmmin = 0.005                        # min sigma value
+    sigmmax = 0.015                        # max sigma value
+
+    #== gauss fit limits
+    gaussleft  = trueMass-2*trueSigm       # (mean+/-2sigma)
+    gaussright = trueMass+2*trueSigm 
+
+    #== the functions
+    polinom = TF1("polinom","1.0+[1]*(x-[0])+[2]*(x-[0])*(x-[0])") # 2nd order polinom
+    gauss = TF1("gauss","[0]*exp(-0.5*((x-[1])**2)/([2]**2))")     # gauss function
+    fitfunc = TF1("fitfunc","gauss+polinom")                       # sum of the gauss and the polinom
+    gauss.SetParameter(1,trueMass)
+    gauss.SetParameter(2,trueSigm)
     
-    if 0 == histo.GetEntries() :
-        print 'No fit: Empty histogram'
-        return ( 0.0 , 0.135 )        ## RETURN 
+    #== fitting
+    histo.Fit("gauss","Q","",gaussleft,gaussright)
+    parGaus=gauss.GetParameters()
 
-    fitFun = pi0FitFun
+    histo.Fit("polinom","Q","",left,right)
+    parPol=polinom.GetParameters()
+
+    #== setting the parameters of the total fit function
+    par[0],par[1],par[2]=parGaus[0],parGaus[1],parGaus[2]
+    par[3],par[4],par[5]=parPol[0],parPol[1],parPol[2]
+
+    fitfunc.SetParameters(par)
+    fitfunc.SetParLimits(1,massmin,massmax)
+    fitfunc.SetParLimits(2,sigmmin,sigmmax)
     
-    fitFun.SetParameter ( 0 , 0.14 / 1.5 * histo.GetEntries() )
-    
-    axis  = histo.GetXaxis()
-    nbins = axis.GetNbins()
+    #== fitting
+    histo.Fit("fitfunc","Q")
 
-    if not low or not high :
-        low  = axis.GetXmin()
-        high = axis.GetXmax()
+    #== getting the fit parameters and their errors
+    for i in range(npar/2):
+        par[i]=fitfunc.GetParameter(i)   # parameters
+        par[i+6]=fitfunc.GetParError(i)  # errors
 
-    ilow  = axis.FindBin ( low )
-    if 0     >= ilow :
-        ilow  = 1
-        low   = axis.GetXmin()
-        
-    ihigh = axis.FindBin ( high )
-    if nbins < ihigh :
-        ihigh = nbins
-        high  = axis.GetXmax()
-
-    ## the final adjustment 
-    if ihigh <= ilow :
-        ilow  = 1
-        ihigh = nbins
-        low   = axis.GetXmin()
-        high  = axis.GetXmax() 
-                
-    first = histo.GetBinContent( ilow  )
-    last  = histo.GetBinContent( ihigh )
-    size  = high - low  
-    level = 0.5 * ( first + last )
-
-    print ilow, ihigh, low, high
-    
-    if 0 == level :
-        print 'No FIT, Level = 0 '
-        return ( 0.0 , 135 )       ## RETURN 
-    
-    slope = 0.5 * ( last  - first ) / size / level 
-    
-    fitFun.SetParameter ( 3 , level )   ## intial guess for background level
-    fitFun.SetParameter ( 4 , slope )   ## guess for bakcground slope 
-    
-    fitFun.FixParameter ( 1 , 0.135 ) 
-    fitFun.FixParameter ( 2 , 0.012 ) 
-    fitFun.FixParameter ( 5 , 0.0   )  # fix the curvature  
-    fitFun.FixParameter ( 6 , 0.0   )  # fix the 3rd order parameter
-
-    histo.Fit( fitFun , '0Q' , '' , low , high )
-        
-    fitFun.ReleaseParameter ( 1 )
-    histo.Fit( fitFun , '0Q' , '' , low , high )
-        
-    fitFun.ReleaseParameter ( 5 )
-    histo.Fit( fitFun , '0Q' , '' , low , high )
-
-    fitFun.FixParameter ( 5 , fitFun.GetParameters()[5] ) 
-    fitFun.ReleaseParameter ( 2 )
-    histo.Fit( fitFun , '0Q' , '' , low , high )
-
-    fitFun.FixParameter ( 2 , fitFun.GetParameters()[2] ) 
-
-    if 500 < histo.GetEntries() :
-        fitFun.ReleaseParameter ( 6 )
-        histo.Fit( fitFun , '0Q' , '' , low , high )
-    else :
-        fitFun.FixParameter ( 6 , 0.0   )  # fix the 3rd order parameter
-
-    fitFun.FixParameter ( 6 , fitFun.GetParameters()[6] )
-    
-    fitFun.ReleaseParameter ( 2 )
-    histo.Fit( fitFun , '0Q' , '' , low , high )
-    fitFun.FixParameter ( 2 , fitFun.GetParameters()[2] ) 
-
-    fitFun.ReleaseParameter ( 5 )
-    histo.Fit( fitFun , '0Q' , '' , low , high )
-    fitFun.FixParameter ( 5 , fitFun.GetParameters()[5] ) 
-
-    fitFun.ReleaseParameter ( 2 )
-    histo.Fit( fitFun , '0Q' , '' , low , high )
-
-    fitFun.ReleaseParameter ( 5 )
-    histo.Fit( fitFun , '0Q' , '' , low , high )
-
-    ## the final fit 
-    histo.Fit( fitFun , '' , '' , low , high )
-        
-
-    par0 = Gaudi.Math.ValueWithError (
-        fitFun.GetParameter(0) ,
-        fitFun.GetParError (0) * fitFun.GetParError (0) )    
-    par1 = Gaudi.Math.ValueWithError (
-        fitFun.GetParameter(1) ,
-        fitFun.GetParError (1) * fitFun.GetParError (1) )
-                                   
-    return (par0,par1)
-
-
-
-    
-# =============================================================================
-if '__main__' == __name__ :
-    print __doc__
-    print __author__ 
-    print __version__ 
-    
-# =============================================================================
-# The END 
-# =============================================================================
+    #== return the gauss mean value and it's error
+    return par[1]

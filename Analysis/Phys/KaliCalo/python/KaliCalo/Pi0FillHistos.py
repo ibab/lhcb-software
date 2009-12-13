@@ -1,246 +1,116 @@
 #!/usr/bin/env python
 # =============================================================================
-## @file KaliCalo/Pi0FillHistos.py
-#  The helper module (ROOT Selector) which fills the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-#  @date 2009-10-05
-# =============================================================================
 """
-The helper module (ROOT Selector) which fills the histograms 
+A module for creating and filling the histograms
 """
 # =============================================================================
-__all__ = (
-    'Pi0Histos'    , ## T-Selector to fill the ihstograms 
-    'processTree'  , ## process one tree
-    'processFile'  , ## process one file 
-    'processFiles'   ## process the list of files   
-    )
-# =============================================================================
-__author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
-__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $'
-# =============================================================================
-import ROOT 
-import copy 
-from   math                      import sqrt 
-from   GaudiPython.Bindings      import gbl  as cpp
-from   GaudiKernel.SystemOfUnits import GeV
+from ROOT import TPySelector, TH1F
+from math import sqrt
 
-## namesapce LHCb 
-LHCb = cpp.LHCb
-LHCb.CaloCellID.__str__  = LHCb.CaloCellID.toString 
-LHCb.CaloCellID.__repr__ = LHCb.CaloCellID.toString 
+# ========================== some global variables =========================
+#== histograms and coefficients
+FilledHistos={}                        # array of the pi0mass histograms
+alam = {}                              # array of the calibration coefficients
 
-CaloCellID = LHCb.CaloCellID 
-
-cell0 = LHCb.CaloCellID( 2 , 0 , 0 , 0 )
-
-# =============================================================================
-## use Wim Lavrijsen's trick: 
-selector = '$KALICALOROOT/root/TPySelectorFix.C+' 
-if 0 > ROOT.gROOT.LoadMacro ( selector ) : 
-    raise RunTimeError, "Unable to LoadMacro '%s'" % selector  
-
-
-# =============================================================================
-## @class Pi0Histos
-#  The basic class ("TPySelector") to fill the pi0-histograms for Kali
-#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-#  @date 2009-10-05
-# =============================================================================
-class Pi0Histos ( ROOT.TPySelectorFix ) :
+# ========================== starting of the selector =========================
+class MyPySelector( TPySelector ):
     """
-    The basic class (TPySelector) to fill the histograms for Kali
+    ROOT selector for filling the histograms
     """
-    
-    ## constructor
-    #  @param calibr  map of calibration/correction coefficients
-    #  @param histos  map of histograms
-    def __init__ ( self          ,
-                   calibr        ,
-                   histos        ,
-                   debug  = 1000 ) :
+    def Begin( self ):
+        print 'py: beginning'
+
+    def SlaveBegin( self, tree ):
+        print 'py: slave beginning'
+
+    #== a function for getting the values of calibration coefficients
+    def CoefGet(self, coef, FilledHistos):
         """
+        Gets the current coefficient values and deletes the histograms
+        created during the previous iteration
         """
-        ROOT.TPySelectorFix.__init__ ( self , None , self )
-        self.calibr = calibr
-        self.histos = histos
-        self.debug  = debug 
-        print 'I am Pi0FillHistos::__init__', self.checkHistos() 
+        for i in FilledHistos.keys():
+            del FilledHistos[i]
+        alam=coef
 
-    def Begin          ( self ) :
-        print 'I am Pi0FillHistos::Begin', self.checkHistos() 
-        
-    def SlaveBegin     ( self , tree ) :
-        print 'I am Pi0FillHistos::SlaveBegin', self.checkHistos()
-        
-    def Terminate      ( self ) :
-        print 'I am Pi0FillHistos::Terminate', self.checkHistos() 
-        
-    def SlaveTerminate ( self ) :
-        print 'I am Pi0FillHistos::SlaveTerminate', self.checkHistos() 
-
-    ## the major method 
-    def Process ( self , entry ) :
-        if self.GetEntry ( entry ) <= 0 : return 0
-
-        tree  = self.fChain
-        if 0 != tree.bkg : return 1                   ## RETURN
-        
-        
-        cell1 = CaloCellID(tree.ind1)
-        cell2 = CaloCellID(tree.ind2)
-        cell1.setCalo ( 2 ) 
-        cell2.setCalo ( 2 )
-
-        # get the global histogram (for checks&monitoring
-        h0   = self.histos.get ( cell0 , None ) 
-        if not h0 : h0 = self.bookHisto ( cell0 )
-
-        # get the histogram for the first photon/cell 
-        h1   = self.histos.get ( cell1 , None ) 
-        if not h1 : h1 = self.bookHisto ( cell1 ) 
-            
-        # get the histogram for the second photon/cell 
-        h2   = self.histos.get ( cell2 , None )         
-        if not h2 : h2 = self.bookHisto ( cell2 ) 
-
-        # calibration coefficient for the first cell 
-        lam1 = self.calibr.get ( cell1 , 1.0 )
-        
-        # calibration coefficient for the second cell 
-        lam2 = self.calibr.get ( cell2 , 1.0 )
-
-        # calculate the corrected mass 
-        mass = tree.m12 * sqrt ( lam1 * lam2 )
-
-        h0 . Fill ( mass ) 
-        h1 . Fill ( mass )
-        h2 . Fill ( mass )
-        
-        if 0 == entry % self.debug  :
-            print ' Processing ',   \
-                  entry ,           \
-                  cell1 ,           \
-                  cell2 ,           \
-                  h0.GetEntries() , \
-                  h1.GetEntries() , \
-                  h2.GetEntries() , \
-                  self.checkHistos () 
-            
-        
-        return True 
-
-    ## Book the histogram and insert it into the dictionary 
-    def bookHisto ( self , cell ) :
+# ============================== Processing tree ==============================
+    def Process( self, entry ):
         """
-        Book the thistogram an dinsert it into the dictionry 
+        Fills the histograms from a tree
         """
-        h = ROOT.TH1D ( 'h'                  + str ( cell.index() ) , 
-                        'pi0 mass for cell ' + cell.toString()      ,
-                        125 , 0 , .250 )
-        
-        self.histos [ cell ] = h 
-        return h
-    
-    ## get the histograms 
-    def getHistos ( self ) :
-        """
-        Get the histograms 
-        """
-        return copy.deepcopy ( self.histos )
+        #== for more convenience
+        bamboo=self.fChain
 
-    ## get the calibration constants 
-    def getCalibr ( self ) :
-        """
-        Get the calibration constants 
-        """
-        return copy.deepcopy ( self.calibr )
+        #== getting the next entry from the tree
+        bamboo.GetEntry( entry )
 
-    def checkHistos ( self , histos = None ) :
+        #== printout
+        if((entry%1000)==0):
+            print 'py: processing', entry
+
+        #== cell (category) number
+        ic1=bamboo.ind1
+        ic2=bamboo.ind2
+
+        #== creating the histograms and correction coefficients for the cell
+        alam[ic1],FilledHistos[ic1] = HiCreate(alam,FilledHistos,ic1)
+        alam[ic2],FilledHistos[ic2] = HiCreate(alam,FilledHistos,ic2)
+
+        #== caculating the corrected mass
+        corrMass = bamboo.m12*sqrt(alam[ic1]*alam[ic2])
+
+        #== cuts
+        MassCut=(corrMass>0.05)and(corrMass<0.2) # pi0 mass limits
+        CellCut = (ic1 != ic2)                   # the two photons should not
+                                                 # hit the same cell
+
+        #== loop over all the hit cells
+        for k in alam.keys():
+            #== checking if at least one of the photons hits the current
+            #== cell category and applying pt and prs cuts to it
+            cut1=(ic1==k)
+            cut2=(ic2==k)
+
+            #== filling the histograms
+            if (CellCut and MassCut and (cut1 or cut2)):
+                FilledHistos[k].Fill(corrMass)   # for the corresponding cell
+
+        #== return true
+        return 1
+
+
+    def SlaveTerminate( self ):
+        print 'py: slave terminating'
+
+    def Terminate( self ):
+        print 'py: Terminate'
+
+# =========== Return the histograms and coefficients (called from Pi0.py) =====
+    # return the filled histograms
+    def HiReturn( self ):
         """
-        check the histos
+        Returnes the filled histograms and calibration coefficients to Pi0.py
         """
-        if not histos : histos = self.histos
-        mn =  1.e+30
-        mx = -1.e+30
-        ok = 0 
-        for key in histos :
-            h = histos [ key ] 
-            if not h : continue
-            ok += 1
-            mn  = min ( mn , h.GetEntries() )
-            mx  = max ( mx , h.GetEntries() )
-        return ( len(histos) , ok , mn , mx )
-    
-# =============================================================================
-## process the filling of the histograms for one tree/chain
-#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-#  @date 2009-10-31
-def processTree ( tree        ,      ## the tree/chain
-                  calibr = {} ,      ## the calibration coefficients 
-                  histos = {} ) :    ## the histograms 
+        return FilledHistos,alam
+
+# ==== Function for adding a histogram and a coefficient to the dictionary ====
+def HiCreate(alam, FilledHistos, index):
     """
-    Process the filling of histogram for one tree/chain
-
-    >>> tree   =  ... ## get the tree/chain  
-    >>> calib  =  ... ## get the calibration/correction coefficients
-    >>> histos =  ... ## the histograms
-
-    >>> result = processTree ( tree , calbr , histos )
-    
+    Fills the arrays of calibration coefficients and histograms
+    in case of the first iteration
     """
+    #== histogram parameters
+    nbins = 100                            # number of bins
+    left  = 0.05                           # left mass limit
+    right = 0.2                            # right mass limit
 
-    ## create the TSeelctor
-    selector = Pi0Histos ( calibr , histos )
-    ## process the tree 
-    tree.Process ( selector )
-    ## get the results from selector
-    calibr = selector.getCalibr()
-    histos = selector.getHistos() 
-    return ( calibr , histos )
+    #== filling the arrays of calibration coefficients and histograms
+    #== in case of the first iteration
+    if not alam.has_key(index):
+        alam[index]=1.
 
-# =============================================================================
-## process the file
-#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-#  @date 2009-10-31
-def processFile ( file         ,       ## the file name 
-                  calibr = {}  ,       ## calibration coefficients 
-                  histos = {}  ) :     ## the histograms 
-
-    file = ROOT.TFile ( file )
-    tree = file.Get('KaliPi0/Pi0-Tuple')
-    return processTree ( tree , calibr , histos )
-
-# =============================================================================
-## the dispatcher:   list of files, file, tree
-#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-#  @date 2009-10-31
-def process   ( objects ,
-                calibr  ,
-                histos  ) :
-    """
-    """
-    if list is type ( objects ) :
-        for obj in objects :
-            result = process ( obj , calibr , histos )
-            calibr = copy.deepcopy ( result[0] )
-            histos = copy.deepcopy ( result[1] )
-        return ( calibr , histos )
+    if not FilledHistos.has_key(index):
+        FilledHistos[index] = TH1F("FH%i" % index,"pi0mass, cell%i" % index,nbins,left,right)
     
-    if str is type ( objects )  :
-        file = objects 
-        return processFile ( file , calibr , histos )
-    
-    tree = objects 
-    return processTree ( tree , cialbr , histos )
-        
-# =============================================================================
-if '__main__' == __name__ :
-    print __doc__
-    print __author__
-    print __version__
-
-    
-# =============================================================================
-# The END 
-# =============================================================================
+    return alam[index],FilledHistos[index]
+### EOF
