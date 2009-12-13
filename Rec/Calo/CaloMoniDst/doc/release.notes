@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.64 2009-12-11 17:07:40 odescham Exp $ 
+! $Id: release.notes,v 1.65 2009-12-13 12:42:10 odescham Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
@@ -6,9 +6,13 @@
 ! -----------------------------------------------------------------------------
 
 
+! 2009-12-11 - Olivier Deschamps
+ - CaloProtoElectronMonitor : make use of proto->info(PrsE) instead of CaloHypo2Calo tool.
+
 ! 2009-12-11 - Olivier Deschamps 
  - CaloMoniAlg : remove verbose line
-
+ - new algorithm CaloProtoElectronMonitor
+ - CaloPi0Monitor : add pi0 mass peak with Y-selection of clusters.
 
 
 !========================== CaloMoniDst v4r2 2009-12-11 =======================

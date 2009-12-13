@@ -1,4 +1,4 @@
-// $Id: CaloProtoElectronMonitor.h,v 1.1 2009-12-11 17:07:40 odescham Exp $
+// $Id: CaloProtoElectronMonitor.h,v 1.2 2009-12-13 12:42:11 odescham Exp $
 #ifndef CALOPROTOELECTRONMONITOR_H 
 #define CALOPROTOELECTRONMONITOR_H 1
 
@@ -7,7 +7,7 @@
 #include "CaloMoniAlg.h"
 #include "Event/ProtoParticle.h"
 #include "CaloUtils/ICaloElectron.h"
-#include "CaloInterfaces/ICaloHypo2Calo.h"
+#include "TrackInterfaces/ITrackExtrapolator.h"
 
 /** @class CaloProtoElectronMonitor CaloProtoElectronMonitor.h
  *  
@@ -26,15 +26,21 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
+
+  ITrackExtrapolator* extrapolator(){return m_extrapolator;};
+
 protected:
 
 private:
 
+  ITrackExtrapolator*  m_extrapolator;
   ICaloElectron* m_caloElectron;
-  ICaloHypo2Calo* m_toPrs ;   
   double m_eOpMin;
   double m_eOpMax;
   int m_eOpBin;
   double m_prsCut;
+  bool m_pairing;
+  std::string m_extrapolatorType;
+  
 };
 #endif // CALOPROTOELECTRONMONITOR_H

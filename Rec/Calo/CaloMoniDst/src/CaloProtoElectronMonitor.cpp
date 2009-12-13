@@ -1,10 +1,10 @@
-// $Id: CaloProtoElectronMonitor.cpp,v 1.1 2009-12-11 17:07:40 odescham Exp $
+// $Id: CaloProtoElectronMonitor.cpp,v 1.2 2009-12-13 12:42:11 odescham Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-
 #include  "CaloUtils/CaloMomentum.h"
+#include "TrackInterfaces/ITrackExtrapolator.h"
 // local
 #include "CaloProtoElectronMonitor.h"
 
@@ -26,13 +26,21 @@ CaloProtoElectronMonitor::CaloProtoElectronMonitor( const std::string& name,
   : CaloMoniAlg ( name , pSvcLocator )
 {
 
-  declareProperty("HistoEoPMin" , m_eOpMin = 0.);
-  declareProperty("HistoEoPMax" , m_eOpMax = 3.);
-  declareProperty("HistoEoPBin" , m_eOpBin = 100);
-  declareProperty("PrsCut"      , m_prsCut = 50.* Gaudi::Units::MeV);
-  setInputData( LHCb::ProtoParticleLocation::Charged );
+  declareProperty("HistoEoPMin" , m_eOpMin = 0.); 
+  declareProperty("HistoEoPMax" , m_eOpMax = 3.); 
+  declareProperty("HistoEoPBin" , m_eOpBin = 100); 
+  declareProperty("PrsCut"      , m_prsCut = 50.* Gaudi::Units::MeV);  
+  declareProperty("ElectronPairing", m_pairing = false );
+  declareProperty ( "ExtrapolatorType" , m_extrapolatorType = "TrackRungeKuttaExtrapolator" ) ;
 
+  setInputData( LHCb::ProtoParticleLocation::Charged ); 
+
+  m_massFilterMax = 100;
   m_multMax = 100;
+  m_massMin = 0;
+  m_massMax = 5000;
+  m_massBin = 500;  
+
 }
 //=============================================================================
 // Destructor
@@ -50,10 +58,9 @@ StatusCode CaloProtoElectronMonitor::initialize() {
 
 
   // get tools
-  m_caloElectron = tool<ICaloElectron>("CaloElectron", this);
-  m_toPrs = tool<ICaloHypo2Calo> ( "CaloHypo2Calo", "CaloHypo2Prs" , this );
-  m_toPrs->setCalos( "Ecal" ,"Prs");
- 
+  m_caloElectron = tool<ICaloElectron>("CaloElectron", this); 
+  m_extrapolator = tool<ITrackExtrapolator>( m_extrapolatorType,"Extrapolator",this );
+
   // histograms 
   hBook1(  "1", "# of CaloElectron protoP   " + inputData(),  m_multMin   ,    m_multMax   , m_multBin  );
   hBook1(  "2", "CaloElectron protoP Energy   " + inputData(),  m_energyMin ,    m_energyMax , m_energyBin );
@@ -64,7 +71,12 @@ StatusCode CaloProtoElectronMonitor::initialize() {
            + inputData(),m_xMin,m_xMax, m_xBin, m_yMin, m_yMax, m_yBin);
   hBook1(  "6", "e/p  " + inputData(),  m_eOpMin ,    m_eOpMax , m_eOpBin );
   hBook1(  "7", "Eprs  " + inputData(),  0. , 300. , m_energyBin );
-  
+  if( m_pairing ){    
+    hBook1(  "8", "m(track pair)  " + inputData()  ,  m_massMin   , m_massMax  ,  m_massBin );
+    hBook1(  "9", "m(clust pair)  " + inputData()  ,  m_massMin   , m_massMax  ,  m_massBin );
+    hBook1(  "10", "e/p for M(ee) < " + Gaudi::Utils::toString(m_massFilterMax)
+             + inputData(),  m_eOpMin ,    m_eOpMax , m_eOpBin );
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -97,7 +109,7 @@ StatusCode CaloProtoElectronMonitor::execute() {
     const double et= momentum.pt();
     if(e    < m_eFilter)continue;
     if(et   < m_etFilter)continue;
-    double ePrs = m_toPrs->energy ( *hypo , "Prs"  );
+    double ePrs = proto->info(LHCb::ProtoParticle::CaloPrsE, 0.);
     if( m_prsCut > 0 &&  ePrs < m_prsCut )continue;
     LHCb::CaloCellID id = LHCb::CaloCellID();
     if ( hypo->clusters().size() > 0 ){
@@ -116,6 +128,63 @@ StatusCode CaloProtoElectronMonitor::execute() {
     }
     hFill1(id, "6", eOp );
     hFill1(id, "7", ePrs );
+
+
+    // perform electron pairing
+    if( !m_pairing)continue;
+    for( LHCb::ProtoParticles::const_iterator pp = p+1 ; protos->end () != pp ; ++pp ){
+      const LHCb::ProtoParticle* proto2 = *pp;
+      if( !m_caloElectron->set(proto2))continue;;
+      LHCb::CaloHypo* hypo2 = m_caloElectron->electron();
+      if ( NULL == hypo2 ) continue;
+      if( hypo == hypo2 )continue;
+      LHCb::CaloMomentum momentum2( hypo2 );
+
+      // filtering proto2
+      const double e2 = momentum2.e();
+      const double et2 = momentum2.pt();
+      if(e2   < m_eFilter)continue;
+      if(et2   < m_etFilter)continue;
+      double ePrs2 = proto2->info(LHCb::ProtoParticle::CaloPrsE, 0.);
+      if( m_prsCut > 0 &&  ePrs2 < m_prsCut )continue;
+
+
+
+      LHCb::CaloMomentum momentumSum( hypo );
+      momentumSum.addCaloPosition( hypo2 );
+      double caloM = momentumSum.mass();      
+      const LHCb::Track*  t1 = proto->track();
+      const LHCb::Track*  t2 = proto2->track();
+
+      if( NULL == t1 || NULL == t2)continue;
+      if( -1 != t1->charge()*t2->charge())continue;
+      LHCb::State st1 = t1->firstState();
+      LHCb::State st2 = t2->firstState();
+
+      if( NULL == extrapolator() ){
+        Warning("No extrapolator defined");
+        continue;
+      }
+      StatusCode sc = extrapolator()->propagate(st1, 0.);
+      if(sc.isFailure())Warning("Propagation 1 failed").ignore();
+      sc = extrapolator()->propagate(st2, 0.);
+      if(sc.isFailure())Warning("Propagation 2 failed").ignore();
+      Gaudi::XYZVector p1 = st1.momentum();
+      Gaudi::XYZVector p2 = st2.momentum();
+      double m2  = p1.R()*p2.R();
+      m2 -= p1.X()*p2.X();
+      m2 -= p1.Y()*p2.Y();
+      m2 -= p1.Z()*p2.Z();
+      m2 *= 2;
+      double m = (m2>0) ? sqrt(m2) : 0;
+      hFill1(id, "8", m );
+      hFill1(id, "9", caloM );
+      if( m2 < m_massFilterMax ){
+        hFill1(id, "10", eOp );
+        double eOp2 = m_caloElectron->eOverP();
+        hFill1(id, "10", eOp2 );
+      }
+    } 
   }
   fillCounters("1");
   return StatusCode::SUCCESS;

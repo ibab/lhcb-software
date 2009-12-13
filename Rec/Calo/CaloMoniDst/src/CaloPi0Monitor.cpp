@@ -1,6 +1,6 @@
-// $Id: CaloPi0Monitor.cpp,v 1.12 2009-12-11 17:07:40 odescham Exp $
+// $Id: CaloPi0Monitor.cpp,v 1.13 2009-12-13 12:42:11 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -46,6 +46,12 @@ public:
     // get tool
     m_toSpd = tool<ICaloHypo2Calo> ( "CaloHypo2Calo", "CaloHypo2Spd" , this );
     m_toSpd->setCalos( "Ecal" ,"Spd");
+
+    // set mass window to histo range
+    m_massFilterMin = m_massMin;
+    m_massFilterMax = m_massMax;
+
+
     return StatusCode::SUCCESS;
   }
   virtual StatusCode execute();
@@ -62,8 +68,6 @@ protected:
     declareProperty( "AllowConverted"   , m_conv = false);
     declareProperty( "RejectedYBand"    , m_yCut = 300);
     m_multMax = 150;
-    m_massFilterMin = m_massMin;
-    m_massFilterMax = m_massMax;
     addToInputs( LHCb::CaloHypoLocation::Photons );
   }
   /// destructor (virtual and protected)
@@ -183,7 +187,7 @@ StatusCode CaloPi0Monitor::execute()
         hFill1(id, "3", pi0.pt()  );
         hFill1(id, "4", pi0.mass());      
         hFill1(id, "6", pi0.mass(), 1.);      
-        if( abs(y1) > m_yCut && abs(y2) > m_yCut )hFill1("7",pi0.mass(), 1.);
+        if( fabs(y1) > m_yCut && fabs(y2) > m_yCut )hFill1("7",pi0.mass(), 1.);
       }
       if( isBkg && isolSym > m_isol){ 
         hFill1(id, "5", bkg.mass());      
