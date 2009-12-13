@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.248 2009-10-16 14:12:29 cattanem Exp $
+! $Id: release.notes,v 1.249 2009-12-13 22:00:03 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2009-12-13 - Chris Jones
+ - Extend histogram base class with methods for 2D histograms.
 
 !====================== RichKernel v7r28 2009-10-16 ====================
 ! 2009-10-12 - Christopher Rob Jones

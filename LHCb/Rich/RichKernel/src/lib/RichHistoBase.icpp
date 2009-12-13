@@ -5,7 +5,7 @@
  *  Implementation file for RICH base class : Rich::HistoBase
  *
  *  CVS Log :-
- *  $Id: RichHistoBase.icpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
+ *  $Id: RichHistoBase.icpp,v 1.2 2009-12-13 22:00:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2009-07-27
@@ -116,6 +116,36 @@ Rich::HistoBase<PBASE>::richHisto1D( const Rich::RadiatorType rad,
 }
 
 template <class PBASE>
+AIDA::IHistogram2D *
+Rich::HistoBase<PBASE>::richHisto2D( const Rich::RadiatorType  rad,
+                                     const std::string &        id,
+                                     const std::string &     title,
+                                     const double             lowX,
+                                     const double            highX,
+                                     const unsigned long     binsX,
+                                     const double             lowY,
+                                     const double            highY,
+                                     const unsigned long     binsY )
+{
+  // Already been booked ?
+  AIDA::IHistogram2D *& h = (m_rad2dhmaps[rad])[id];
+  if ( !h )
+  {
+    // Rich Histo ID
+    const RichHistoID hid;
+
+    // Book the histo
+    h = PBASE::book2D( hid(rad,id), 
+                       Rich::text(rad)+" "+title,
+                       lowX, highX, binsX,
+                       lowY, highY, binsY );
+  }
+
+  // return the histo
+  return h;
+}
+
+template <class PBASE>
 AIDA::IProfile1D *
 Rich::HistoBase<PBASE>::richProfile1D( const Rich::RadiatorType rad,
                                        const std::string &       id,
@@ -170,6 +200,36 @@ Rich::HistoBase<PBASE>::richHisto1D( const Rich::DetectorType rich,
 }
 
 template <class PBASE>
+AIDA::IHistogram2D *
+Rich::HistoBase<PBASE>::richHisto2D( const Rich::DetectorType rich,
+                                     const std::string &        id,
+                                     const std::string &     title,
+                                     const double             lowX,
+                                     const double            highX,
+                                     const unsigned long     binsX,
+                                     const double             lowY,
+                                     const double            highY,
+                                     const unsigned long     binsY )
+{
+  // Already been booked ?
+  AIDA::IHistogram2D *& h = (m_rich2dhmaps[rich])[id];
+  if ( !h )
+  {
+    // Rich Histo ID
+    const RichHistoID hid;
+
+    // Book the histo
+    h = PBASE::book2D( hid(rich,id),
+                       Rich::text(rich)+" "+title,
+                       lowX, highX, binsX,
+                       lowY, highY, binsY );
+  }
+
+  // return the histo
+  return h;
+}
+
+template <class PBASE>
 AIDA::IProfile1D *
 Rich::HistoBase<PBASE>::richProfile1D( const Rich::DetectorType rich,
                                        const std::string &       id,
@@ -212,6 +272,31 @@ Rich::HistoBase<PBASE>::richHisto1D( const std::string &       id,
     // Book the histo
     h = PBASE::book1D( id, title,
                        low, high, bins );
+  }
+
+  // return the histo
+  return h;
+}
+
+template <class PBASE>
+AIDA::IHistogram2D *
+Rich::HistoBase<PBASE>::richHisto2D( const std::string &        id,
+                                     const std::string &     title,
+                                     const double             lowX,
+                                     const double            highX,
+                                     const unsigned long     binsX,
+                                     const double             lowY,
+                                     const double            highY,
+                                     const unsigned long     binsY )
+{
+  // Already been booked ?
+  AIDA::IHistogram2D *& h = m_2dhmap[id];
+  if ( !h )
+  {
+    // Book the histo
+    h = PBASE::book2D( id, title,
+                       lowX, highX, binsX,
+                       lowY, highY, binsY );
   }
 
   // return the histo
