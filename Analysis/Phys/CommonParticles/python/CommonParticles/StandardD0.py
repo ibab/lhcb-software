@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StandardD0.py,v 1.1 2009-02-18 15:29:29 pkoppenb Exp $ 
+# $Id: StandardD0.py,v 1.2 2009-12-14 11:45:32 poluekt Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StandardD0.py
 #  configuration file for 'Standard D0' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard D0'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 
 _locations = {} 
@@ -20,6 +20,9 @@ from CommonParticles.StdLooseD02KsHH import *
 _locations.update ( locations )
 
 from CommonParticles.StdLooseD02HH import *
+_locations.update ( locations )
+
+from CommonParticles.StdVeryLooseD02HH import *
 _locations.update ( locations )
 
 # redefine the locations 
