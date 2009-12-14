@@ -1,4 +1,4 @@
-// $Id: HltTFilter.icpp,v 1.25 2009-11-09 17:32:17 aperezca Exp $
+// $Id: HltTFilter.icpp,v 1.26 2009-12-14 21:26:45 pkoppenb Exp $
 // Include files
 
 #include "EParser.h"
@@ -114,7 +114,7 @@ bool HltTFilter<T>::addTFilterData(const std::string& descriptor) {
           << " counterCandidates  " << ptf->counterCandidates
           << " histovalues " << ptf->histovalues
           << " histobest " << ptf->histobest
-          << endreq;
+          << " make histos: " << produceHistos() << endreq;
   m_tfilters.push_back(ptf);
   return ok;  
 }
@@ -124,7 +124,7 @@ template <class T>
 StatusCode HltTFilter<T>::execute() {
   
   StatusCode sc= StatusCode::SUCCESS;
-  debug() << "==> Execute" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
   
   const Hlt::TSelection<T>* in  = m_selections.template input<1>();
   Hlt::TSelection<T>* out = m_selections.output();
@@ -132,7 +132,7 @@ StatusCode HltTFilter<T>::execute() {
 
   // check size of the input container
   if (in->empty()) {
-    debug() << " No input data " << in->id() << endreq;    
+   if (msgLevel(MSG::DEBUG))  debug() << " No input data " << in->id() << endreq;    
     return sc;
   }
 
@@ -175,8 +175,10 @@ StatusCode HltTFilter<T>::execute() {
         debug() << endreq; 
         debug() << " best " << val << endreq;
       }
-      BOOST_FOREACH(const double& x,vals  ) fill(filter->histovalues,x,1.);
-      fill(filter->histobest,val,1.);
+      if (produceHistos()){
+        BOOST_FOREACH(const double& x,vals  ) fill(filter->histovalues,x,1.);
+        fill(filter->histobest,val,1.);
+      }
     }
 
     // filter 
@@ -199,7 +201,7 @@ StatusCode HltTFilter<T>::execute() {
 
 template <class T>
 StatusCode HltTFilter<T>::finalize() {
-  debug() << "==> Finalize" << endmsg;
+  debug() << "==> Finalize HltTFilter" << endmsg;
   for_each(m_tfilters.begin(),m_tfilters.end(), boost::lambda::delete_ptr());
   m_tfilters.clear();
   return  HltAlgorithm::finalize();  

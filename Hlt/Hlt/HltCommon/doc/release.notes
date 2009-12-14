@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-12-14 - Patrick Koppenburg
+ - Protect debug(). Initialize pointers
+ - v5r16
+
 !========================== HltCommon v5r15 2009-12-03 ===================
 ! 2009-12-02 - Johannes Albrecht
   - HltFunctionFactories.cpp, HltFunctions.h: added Vertex z and transverse position filter 	
