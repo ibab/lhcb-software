@@ -4,10 +4,12 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
 </PRE><H1><A NAME=v20r0>2009-12-07 Boole v20r0</A></H1></PRE>
+ - Change the structure of Configuration.py according to the needs of upgrade
+
+ - Add VeloPixAlgorithms and VeloPixAssociators to requirements
+
  - Changes to Configurable:
    . Change Boole().VeloTell1Processing default to True
-
- - Add VeloPixAlgorithms and VeloPixAssociators to requirements 
 
 </PRE><H1><A NAME=v19r9>2009-11-26 Boole v19r9</A></H1></PRE>
  - Changes to Configurable:
