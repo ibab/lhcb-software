@@ -4,6 +4,9 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2009-12-14 - Marco Cattaneo
+ - Fix untested StatusCode in LSAdaptPVFitter.cpp
+
 !============================= PatPV v3r11 2009-12-11 =========================
 ! 2009-12-10 - Stephanie Hansmann-Menzemer
   - change debug output level accidently slipped into PVLoose.py

@@ -1,4 +1,4 @@
-// $Id: LSAdaptPVFitter.cpp,v 1.8 2008-12-06 19:44:48 witekma Exp $
+// $Id: LSAdaptPVFitter.cpp,v 1.9 2009-12-14 13:26:56 cattanem Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -68,15 +68,13 @@ StatusCode LSAdaptPVFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
                                       std::vector<const LHCb::Track*>& rTracks, 
                                       LHCb::RecVertex& vtx)
 {
-  StatusCode sc = StatusCode::SUCCESS;
   m_pvTracks.clear();
   PVVertex pvVertex;
   std::vector<const LHCb::Track*>::iterator itr;
   for(itr = rTracks.begin(); itr != rTracks.end(); itr++) {    
     const LHCb::Track* track = *itr;
     if ( !(track->hasVelo()) ) continue;
-    sc = addTrackForPV(track, m_pvTracks, seedPoint.z());
-    if(!sc.isSuccess()) continue;
+    addTrackForPV(track, m_pvTracks, seedPoint.z()).ignore();
   }
   initVertex(m_pvTracks,pvVertex,seedPoint);
   // Initial track cleaning
