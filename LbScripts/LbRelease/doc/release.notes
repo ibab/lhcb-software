@@ -1,6 +1,9 @@
 2009-12-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/GetPack.py: added the LHCb SVN repository
+	* python/LbRelease/rcs.py: added code to get the status code of the call
+	to svn and cvs, with the possibility of use it to retry the call. Fixed
+	a problem in the discovery of packages.
 
 2009-11-25  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 

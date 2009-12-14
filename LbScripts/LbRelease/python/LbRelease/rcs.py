@@ -9,14 +9,32 @@ _use_shell = sys.platform.startswith("win")
 _call_command_log = logging.getLogger("_call_command")
 def _call_command(cmd, *args, **kwargs):
     """
-    Simple wrapper to execute a command and return standard output and standard error.
+    Simple wrapper to execute a command and return standard output, standard error and return code.
     """
     d = {"stdout": PIPE, "stderr": PIPE, "shell": _use_shell}
     d.update(kwargs)
     cmd = [cmd] + list(args)
     _call_command_log.debug("Execute command: %r %r", " ".join(cmd), kwargs)
     proc = apply(Popen, (cmd,), d)
-    return proc.communicate()
+    out, err = proc.communicate()
+    return (out, err, proc.returncode)
+
+class _retry_command(object):
+    """Small wrapper to add a 're-try' feature to _call_command."""
+    def __init__(self, command, check, retries = 3, sleeptime = 30):
+        self._command = command
+        self._check = check
+        self._retries = retries
+        self._sleeptime = sleeptime
+    def __call__(self, *args, **kwargs):
+        from time import sleep
+        retries = self._retries
+        retval = apply(self._command, args, kwargs)
+        while (not self._check(retval)) and (retries > 0):
+            retval = apply(self._command, args, kwargs)
+            retries -= 1
+            sleep(self._sleeptime)
+        return retval
 
 class RCSError(RuntimeError):
     """
@@ -191,6 +209,7 @@ class RevisionControlSystem(object):
             open(vers_file, "w").write(version + "\n")
 
 _cvs = lambda *args, **kwargs: apply(_call_command, ("cvs",) + args, kwargs)
+_cvs_retry = _retry_command(_cvs, lambda r: r[2] == 0)
 class CVS(RevisionControlSystem):
     """
     CVS implementation of RevisionControlSystem.
@@ -232,7 +251,7 @@ class CVS(RevisionControlSystem):
         Get the list of modules in the repository and separate them in projects
         and packages.
         """
-        out, _err = _cvs("-d", self.repository, "checkout", "-s")
+        out, _err, _retcode = _cvs("-d", self.repository, "checkout", "-s")
         modules = [ l.split()
                     for l in out.splitlines()
                     if not l.startswith(" ") ]
@@ -287,7 +306,7 @@ class CVS(RevisionControlSystem):
         if isProject:
             file_to_check = self.__project_version_check_file__
 
-        out, _err = _cvs("-d", self.repository, "rlog", module_dir + file_to_check)
+        out, _err, _retcode = _cvs("-d", self.repository, "rlog", module_dir + file_to_check)
         # extract the list of tags
         tags = []
         outl = out.splitlines()
@@ -353,6 +372,7 @@ def splitlines(text):
              if l and l[0] != "#" ]
 
 _svn = lambda *args, **kwargs: apply(_call_command, ("svn",) + args, kwargs)
+_svn_retry = _retry_command(_svn, lambda r: r[2] == 0)
 class SubversionCmd(RevisionControlSystem):
     """
     SVN implementation of RevisionControlSystem.
@@ -405,7 +425,7 @@ class SubversionCmd(RevisionControlSystem):
         while "//" in path:
             path = path.replace("//", "/")
         if path not in self._ls_cache:
-            out, _err = _svn("ls", "/".join([self.repository, path]))
+            out, _err, _retcode = _svn("ls", "/".join([self.repository, path]))
             # @TODO add error-checking
             self._ls_cache[path] = out.splitlines()
         return self._ls_cache[path]
@@ -476,7 +496,7 @@ class SubversionCmd(RevisionControlSystem):
             path = "/".join([self.repository, path])
         else:
             path = self.repository
-        out, _err = _svn("propget", property, path)
+        out, _err, _retcode = _svn("propget", property, path)
         return out
 
     @property
@@ -559,7 +579,7 @@ class SubversionCmd(RevisionControlSystem):
                            for h in self._ls("/".join([p,"trunk"]))
                            if h.endswith("/") and h not in modules ]:
                     for m in self._find("/".join([p,"trunk",h]), "cmt/requirements", levels = 1):
-                        modules[m] = p
+                        modules[h + m] = p
                 # look in the tags directories for dismissed packages
                 # FIXME: branches not supported
                 #for d in ["tags", "branches"]:
