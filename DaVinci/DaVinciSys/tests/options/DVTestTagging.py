@@ -19,17 +19,18 @@ from Configurables import GaudiSequencer
 # Flavour tagging. 
 #
 importOptions( "$FLAVOURTAGGINGOPTS/BTaggingTool.py" )
+location = "/Event/Strip/Phys/StripBu2eeK"
 
 from Configurables import BTagging, BTaggingChecker
 
 tag = BTagging("BTagging")
-tag.InputLocations = [ "/Event/Sel/Phys/Bu2LLK" ]
+tag.InputLocations = [ location ]
 # tag.OutputLevel = 1
 
 # Flavour tagging Checker:
 tagcheck = BTaggingChecker("BTaggingChecker")
-tagcheck.InputLocations = [ "Sel09Bu2LLK" ]
-tagcheck.TagsLocation = "/Event/Sel/Phys/Bu2LLK/FlavourTags"
+tagcheck.InputLocations = [ location ]
+tagcheck.TagsLocation = location+"/FlavourTags"
 
 MessageSvc().Format = "% F%40W%S%7W%R%T %0W%M"
 ########################################################################
@@ -44,7 +45,7 @@ DaVinci().DataType = "MC09"
 DaVinci().Simulation    = True
 # DaVinci().MainOptions = "$DAVINCISYSROOT/tests/options/Do09selBu2LLK.py"
 from Configurables import StoreExplorerAlg, PrintDecayTree
-PrintDecayTree().InputLocations = [ "/Event/Sel/Phys/Bu2LLK"  ] 
+PrintDecayTree().InputLocations = [ location ] 
 DaVinci().MoniSequence = [   PrintDecayTree()
                             #, StoreExplorerAlg() ] #
                             ,tag
@@ -56,7 +57,7 @@ DaVinci().MoniSequence = [   PrintDecayTree()
 #
 # example data file
 #
-DaVinci().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/p/pkoppenb/MC09-Bu2eeK/Bu2LLK-1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+DaVinci().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/p/pkoppenb/MC09-Bu2eeK/Sel.Belectron-440-0.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 
-MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
+MessageSvc().Format = "% F%40W%S%7W%R%T %0W%M"
 

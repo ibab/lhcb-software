@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt-DC06-None.py,v 1.2 2009-12-14 16:52:28 pkoppenb Exp $
+# $Id: DVTestHlt-DC06-None-NoH.py,v 1.1 2009-12-14 16:52:28 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -25,7 +25,7 @@ DaVinci().PrintFreq  = 1                     # Print frequency
 DaVinci().DataType = "DC06"                    # Default is "DC06"
 DaVinci().Simulation   = True
 DaVinci().MoniSequence = [ moni ] 
-DaVinci().HistogramFile = "Test.root"
+# DaVinci().HistogramFile = "Test.root"
 ########################################################################
 #
 # HLT
