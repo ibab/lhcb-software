@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.16 2009-12-09 09:55:48 mneedham Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.17 2009-12-14 13:33:58 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -261,7 +261,7 @@ StatusCode TrackMatchVeloSeed::matchTracks( VeloCandidates& veloTracks,
       const double yV = (*iTrack2)->yAtT();
       const double chi2T = (gsl_pow_2(yV - yT)*cyRes) + (gsl_pow_2(tyT - trackVector2[3])*ctyRes);
 
-      plot(chi2T, "chiT" ,  0., 1000., 100);
+      // plot(chi2T, "chiT" ,  0., 1000., 100);
       if (chi2T > m_chi2TCut ) continue;
 
       const double pt2 = (gsl_pow_2(trackVector2[2]*momentum) + 
@@ -301,7 +301,7 @@ StatusCode TrackMatchVeloSeed::matchTracks( VeloCandidates& veloTracks,
       aTrack -> addToAncestors( (*ipair)->seedTrack() );
       aTrack->addInfo(LHCb::Track::MatchChi2, (*ipair)->chi2());
       matches -> add( aTrack ) ;
-      plot( (*ipair)->chi2(), "chi2Match", 0., 1000, 100);
+      // plot( (*ipair)->chi2(), "chi2Match", 0., 1000, 100);
     }
   } // loop matches
   if( m_writeNNVariables == true){
@@ -573,7 +573,7 @@ void TrackMatchVeloSeed::createVeloCandidates(LHCb::Tracks* tracks, VeloCandidat
 bool TrackMatchVeloSeed::goodSeed(const LHCb::Track* aTrack) const{
 
   // remove tracks with bad chi
-  plot(aTrack->chi2PerDoF(),"chi2",  0., 100., 200);
+  // plot(aTrack->chi2PerDoF(),"chi2",  0., 100., 200);
   if (aTrack->chi2PerDoF() > m_chi2SeedCut ) return false;
   
   // check if after outlier removal there are at least two x and two 
@@ -628,7 +628,7 @@ bool TrackMatchVeloSeed::goodSeed(const LHCb::Track* aTrack) const{
       return false;
   }
 
-  plot(aTrack->info(Track::TsaLikelihood, -9999.), "likelihood", -50., 0 );
+  //plot(aTrack->info(Track::TsaLikelihood, -9999.), "likelihood", -50., 0 );
 
   // remove seeds with bad likelihood
   if (aTrack->info(Track::TsaLikelihood, -9999.) < m_likCut ) return false;
