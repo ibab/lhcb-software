@@ -1,5 +1,6 @@
 2009-12-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/genProjectSetup: added default empty extra args.
 	* scripts/generateLogin: use genProjectSetup for the cache generation.
 	* python/LbConfiguration/Tools.py: changed the order of the argument passed to
 	SetupProject. Removed the default "--no-user-area" of the genProjectSetup function.
