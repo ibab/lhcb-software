@@ -1,3 +1,8 @@
+2009-12-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: added the "--no-user-area" for the setup script
+	generation.
+
 2009-11-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: passed the debug argument to the generation of

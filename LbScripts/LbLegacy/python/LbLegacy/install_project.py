@@ -1505,7 +1505,7 @@ def genSetupScript(pname, pversion, cmtconfig, scriptfile):
     log.debug("Using genProjectSetup from %s" % genprojsetup)
     if os.path.exists(genprojsetup) :
         from LbConfiguration.Tools import genProjectSetup
-        extra_args = []
+        extra_args = ["--no-user-area"]
         if debug_flag :
             extra_args.append("--debug")
         genProjectSetup(scriptfile, pname, pversion, cmtconfig, 
