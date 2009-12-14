@@ -1,3 +1,8 @@
+2009-12-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Tools.py: changed the order of the argument passed to
+	SetupProject. Removed the default "--no-user-area" of the genProjectSetup function.
+
 2009-12-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Tools.py: 

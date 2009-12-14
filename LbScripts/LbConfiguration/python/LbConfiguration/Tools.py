@@ -122,12 +122,11 @@ def genProjectSetup(output_file, project, version=None, cmtconfig=None,
     setuprojargs = []
     setuprojargs.append("--shell=%s" % shell)
     setuprojargs.append("--output=%s" % output_file)
-    setuprojargs.append("--no-user-area")
-    if setup_project_extra_args :
-        setuprojargs += setup_project_extra_args
     setuprojargs.append(project)
     if version and version != "v*":
         setuprojargs.append(version)
+    if setup_project_extra_args :
+        setuprojargs += setup_project_extra_args
     log.debug("Running SetupProject %s" % " ".join(setuprojargs))
     SetupProject().main(setuprojargs)
     if os.path.exists(output_file) :
