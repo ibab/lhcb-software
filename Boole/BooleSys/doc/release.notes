@@ -11,6 +11,9 @@ This version uses projects Gaudi v21r6, LHCb v28r4, Lbcom v7r10
 Version for post-MC09 developments. Output needs Brunel v35r8 or later
 Needs SQLDDDB v5r4 or later with tags including calo-20090508 or later
 
+ - Add new packages for VeloPix:
+   . VeloPixAlgorithms and VeloPixAssociators
+
  - Changes to configuration:
    . Change Boole().VeloTell1Processing default to True
 

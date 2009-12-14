@@ -33,6 +33,10 @@ use RichReadout         v2r12p1 Rich  # Chris Jones
 # Silicon Tracker
 use STDigiAlgorithms    v1r7    ST    # Matt Needham
 
+# VeloPix
+use VeloPixAlgorithms    v1r0   VeloPix  # Marcin Kucharczyk
+use VeloPixAssociators   v1r0   VeloPix  # Marcin Kucharczyk
+
 # Packages from other projects updated temporarily in this release
 use OTAssociators v4r4 OT
 
