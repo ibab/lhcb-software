@@ -727,11 +727,11 @@ MEPErrorAdder::setupSubs() {
 	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
 
 	//MDF, from HLT
-    	sprintf(temp,"%s%.2i_DiskWR_1/Runable/SND_0/BytesOut",m_listenerDnsNode.c_str(),i+1);
+    	sprintf(temp,"%s%.2i_DiskWR_1/SND_0/BytesOut",m_listenerDnsNode.c_str(),i+1);
 	m_subsSentOct[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
-     	sprintf(temp,"%s%.2i_DiskWR_1/Runable/SND_0/EventsOut",m_listenerDnsNode.c_str(),i+1);
+     	sprintf(temp,"%s%.2i_DiskWR_1/SND_0/EventsOut",m_listenerDnsNode.c_str(),i+1);
 	m_subsSentEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
-     	sprintf(temp,"%s%.2i_DiskWR_1/Runable/SND_0/ErrorsOut",m_listenerDnsNode.c_str(),i+1);
+     	sprintf(temp,"%s%.2i_DiskWR_1/SND_0/ErrorsOut",m_listenerDnsNode.c_str(),i+1);
 	m_subsSentEvtErr[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
      
 	sprintf(temp,"%s%.2i_MEPRx_1/Runable/srcName",m_listenerDnsNode.c_str(),i+1);
