@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.14 2009-11-11 13:13:54 marcocle Exp $
+# $Id: GetPack.py,v 1.15 2009-12-14 17:45:19 marcocle Exp $
 
 from LbUtils.Script import Script
 from LbConfiguration import createProjectMakefile
@@ -90,6 +90,8 @@ __repositories__ = { "gaudi": { "ssh":       SVNReposInfo("svn+ssh", "svn.cern.c
                                 "kserver":   CVSReposInfo("kserver", "isscvs.cern.ch", "/local/reps/lhcb"),
                                 "ssh":       CVSReposInfo("ext", "isscvs.cern.ch", "/local/reps/lhcb"),
                                 "anonymous": CVSReposInfo("pserver", "isscvs.cern.ch", "/local/reps/lhcb", "anonymous") },
+                     "lbsvn": { "ssh":       SVNReposInfo("svn+ssh", "svn.cern.ch", "/reps/lhcb"),
+                                "anonymous": SVNReposInfo("http", "svnweb.cern.ch", "/guest/lhcb") },
                      "dirac": { "ssh":       SVNReposInfo("svn+ssh", "svn.cern.ch", "/reps/dirac"),
                                 "anonymous": SVNReposInfo("http", "svnweb.cern.ch", "/guest/dirac") },
                      }
@@ -107,7 +109,7 @@ class Skip:
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.14 2009-11-11 13:13:54 marcocle Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.15 2009-12-14 17:45:19 marcocle Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]"

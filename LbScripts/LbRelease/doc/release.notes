@@ -1,3 +1,7 @@
+2009-12-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/GetPack.py: added the LHCb SVN repository
+
 2009-11-25  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies/functions.py: added Package_failure_policy
