@@ -7,4 +7,5 @@ preprocessor = LHCbPreprocessor + \
   LineSkipper(["AfterMagnetRegion/"]) + \
   LineSkipper(["MagnetRegion/"]) +\
   LineSkipper(["BeforeMagnetRegion/"]) +\
-  LineSkipper(["DownstreamRegion"])
+  LineSkipper(["DownstreamRegion"]) +\
+  LineSkipper(["MD5 sum:"])
