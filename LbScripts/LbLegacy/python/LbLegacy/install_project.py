@@ -1364,7 +1364,7 @@ def readString(filename,string):
 #
 #  remove a project,version from the install area ==========================
 #
-def removeProject(project,pvers):
+def removeProject(project, pvers):
     log = logging.getLogger()
     log.info('%s %s '% (project, pvers))
 
@@ -1385,7 +1385,7 @@ def removeProject(project,pvers):
         flist = os.listdir(this_html_dir)
         for file in flist:
             if file.find(VERSION+'.') != -1 or file.find(VERSION+'_') != -1 :
-                os.remove(os.path.join(this_html_dir,file))
+                os.remove(os.path.join(this_html_dir, file))
                 log.info('remove %s' % os.path.join(this_html_dir, file))
 
         flist = os.listdir(this_targz_dir)
@@ -1508,7 +1508,7 @@ def genSetupScript(pname, pversion, cmtconfig, scriptfile):
         extra_args = ["--no-user-area"]
         if debug_flag :
             extra_args.append("--debug")
-        genProjectSetup(scriptfile, pname, pversion, cmtconfig, 
+        genProjectSetup(scriptfile, pname, pversion, cmtconfig,
                         usedshell, extra_args)
     else :
         log.error("%s doesn't exist" % genprojsetup)
