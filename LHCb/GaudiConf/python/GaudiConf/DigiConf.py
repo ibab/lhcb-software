@@ -1,7 +1,7 @@
 """
 Configurable for Boole output
 """
-__version__ = "$Id: DigiConf.py,v 1.11 2009-12-11 07:48:33 cattanem Exp $"
+__version__ = "$Id: DigiConf.py,v 1.12 2009-12-14 13:21:27 marcin Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -24,6 +24,7 @@ class DigiConf(LHCbConfigurableUser):
        , "EnablePack"     : True
        , "EnableUnpack"   : True
        , "PackSequencer"  : None
+       , "Detectors"      : ['Velo','TT','IT','OT','Rich','Tr','Calo','Muon','L0']
          }
 
     _propertyDocDct = { 
@@ -35,6 +36,7 @@ class DigiConf(LHCbConfigurableUser):
        ,'EnablePack'    : """ Turn on/off packing of the DIGI data (where appropriate/available) """
        ,'EnableUnpack'  : """ Configure the SIM unpacking via the Data On Demand Service """
        ,'PackSequencer' : """ Sequencer in which to run the packing algorithms """
+       ,'Detectors'     : """ Active subdetectors """
        }
 
     __used_configurables__ = [ SimConf ]
@@ -95,29 +97,43 @@ class DigiConf(LHCbConfigurableUser):
 
     def addMCParticleLinks( self, writer ):
         
-        writer.ItemList += [ 
-            # Links to MCParticles
-            "/Event/Link/Trig/L0/Calo#1"
-            , "/Event/Link/Trig/L0/FullCalo#1"
-            , "/Event/Link/Raw/Velo/Clusters#1"
-            , "/Event/Link/Raw/TT/Clusters#1"
-            , "/Event/Link/Raw/IT/Clusters#1"
-            , "/Event/Link/Raw/OT/Times#1"
-            , "/Event/Link/Raw/Ecal/Digits#1"
-            , "/Event/Link/Raw/Hcal/Digits#1"
-            , "/Event/Link/Raw/Muon/Digits#1"
-            , "/Event/MC/TrackInfo#1"
-            ]
+        # Links to MCParticles
+        dets = self.getProp("Detectors")
+        if 'Velo' in dets :
+                    writer.ItemList += ["/Event/Link/Raw/Velo/Clusters#1"]
+        if 'VeloPix' in dets :
+                    writer.ItemList += ["/Event/Link/VeloPix/Clusters2MCParticles#1"]
+        if 'L0' in dets :
+                    writer.ItemList += ["/Event/Link/Trig/L0/Calo#1"]
+                    writer.ItemList += ["/Event/Link/Trig/L0/FullCalo#1"]
+        if 'TT' in dets :
+                    writer.ItemList += ["/Event/Link/Raw/TT/Clusters#1"]
+        if 'IT' in dets :
+                    writer.ItemList += ["/Event/Link/Raw/IT/Clusters#1"]
+        if 'OT' in dets :
+                    writer.ItemList += ["/Event/Link/Raw/OT/Times#1"]
+        if 'Calo' in dets :
+                    writer.ItemList += ["/Event/Link/Raw/Ecal/Digits#1"]
+                    writer.ItemList += ["/Event/Link/Raw/Hcal/Digits#1"]
+        if 'Muon' in dets :
+                    writer.ItemList += ["/Event/Link/Raw/Muon/Digits#1"]
+        if 'Tr' in dets :
+                    writer.ItemList += ["/Event/MC/TrackInfo#1"]
 
     def addMCHitLinks( self, writer ):
 
-        writer.ItemList += [ 
-            # Links to MCHits
-            "/Event/Link/Raw/Velo/Clusters2MCHits#1"
-            , "/Event/Link/Raw/TT/Clusters2MCHits#1"
-            , "/Event/Link/Raw/IT/Clusters2MCHits#1"
-            , "/Event/Link/Raw/OT/Times2MCHits#1"
-            ]
+        # Links to MCHits
+        dets = self.getProp("Detectors")
+        if 'Velo' in dets :
+                    writer.ItemList += ["/Event/Link/Raw/Velo/Clusters2MCHits#1"]
+        if 'VeloPix' in dets :
+                    writer.ItemList += ["/Event/Link/VeloPix/Clusters2MCHits#1"]
+        if 'TT' in dets :
+                    writer.ItemList += ["/Event/Link/Raw/TT/Clusters2MCHits#1"]
+        if 'IT' in dets :
+                    writer.ItemList += ["/Event/Link/Raw/IT/Clusters2MCHits#1"]
+        if 'OT' in dets :
+                    writer.ItemList += ["/Event/Link/Raw/OT/Times2MCHits#1"]
 
     def _defineOutputData( self, dType, writer ):
         """
