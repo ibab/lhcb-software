@@ -14,6 +14,9 @@ Purpose: LHCb reconstruction program
 
  - Changes to references to reflect changes in Brunel v35r11 output:
    . Added more histograms to TrackMonitor (TrackMonitors v1r18)
+   . TrackV0Finder now skips V0 search if PV not reconstructed (TrackUtils v1r32)
+   . Downstream track efficiency now checked also if Velo open (TrackSys v4r29)
+   . Histograms added to TrackMatchVeloSeed (TrackMatching v2r25p1)
 
 </PRE><H1><A NAME=v35r10p1>2009-12-07 Brunel v35r10p1</A></H1><PRE>
  - Changes to example options
