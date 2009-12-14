@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-12-14 - Anton Poluektov
+ - Strippingb2DMuX line modified to use StdVeryLoose selections
+
 ! 2009-12-09 - Patrick Koppenburg
  - Added Bu->eeK and Bu->mumuK selections
    . Added to StreamBmuon (mumu case)
