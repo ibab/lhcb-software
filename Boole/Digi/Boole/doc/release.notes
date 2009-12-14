@@ -7,6 +7,8 @@ Purpose: LHCb Digitization program
  - Changes to Configurable:
    . Change Boole().VeloTell1Processing default to True
 
+ - Add VeloPixAlgorithms and VeloPixAssociators to requirements 
+
 </PRE><H1><A NAME=v19r9>2009-11-26 Boole v19r9</A></H1></PRE>
  - Changes to Configurable:
    . Follow changes in DigiConf (GaudiConf v13r1)
