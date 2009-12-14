@@ -1,4 +1,4 @@
-// $Id: LoKiFastJetMaker.h,v 1.1 2007-12-10 15:38:23 ibelyaev Exp $
+// $Id: LoKiFastJetMaker.h,v 1.2 2009-12-14 12:34:33 cocov Exp $
 // ============================================================================
 #ifndef LOKIFASTJETMAKER_H 
 #define LOKIFASTJETMAKER_H 1
@@ -125,7 +125,7 @@ namespace LoKi
       //
       , m_sort         ( 2   )
       // 
-      , m_strat        ( 1   )
+      , m_strat        (  0  )
       // 
       , m_combinerName ( "MomentumCombiner"  )
       , m_combiner     ( 0   )
@@ -141,7 +141,7 @@ namespace LoKi
       declareProperty 
         ( "Type"           , 
           m_type           , 
-          "The type of the algorithm [0:kt,1:Cambridge,default:kt]") ;
+          "The type of the algorithm [0:kt,1:Cambridge,2:anti-kt,default:kt]") ;
       declareProperty 
         ( "Recombination"  , 
           m_recom          , 
@@ -176,6 +176,11 @@ namespace LoKi
       {
       case fastjet::kt_algorithm        : break ;
       case fastjet::cambridge_algorithm : break ;
+      case fastjet::antikt_algorithm : break ;
+      case fastjet::genkt_algorithm : break ;
+      case fastjet::cambridge_for_passive_algorithm : break ;
+      case fastjet::genkt_for_passive_algorithm : break ;
+      case fastjet::plugin_algorithm : break ;
       default:
         return Error ( "Invalid JetFinder-algorithm is specified") ;
       }

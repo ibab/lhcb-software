@@ -1,4 +1,4 @@
-// $Id: LoKiJetMakerAlg.cpp,v 1.4 2008-06-26 13:21:57 ibelyaev Exp $
+// $Id: LoKiJetMakerAlg.cpp,v 1.5 2009-12-14 12:34:33 cocov Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -10,6 +10,7 @@
 // ============================================================================
 #include "LoKi/Algo.h"
 #include "LoKi/ParticleCuts.h"
+#include "stdint.h"
 // ============================================================================
 // DaVinci Kernel 
 // ============================================================================
@@ -115,11 +116,11 @@ StatusCode LoKi::JetMaker::analyse   ()
   IJetMaker::Jets jets ;
   
   if ( 0 == m_maker ) 
-  { m_maker = tool<IJetMaker> ( m_makerName , this ) ; }
+  { m_maker = tool<IJetMaker> ( m_makerName ,m_makerName, this ) ; }
   
   // make the jets 
   StatusCode sc = m_maker->makeJets ( all.begin () , all.end   () , jets  ) ;
-  
+
   if ( sc.isFailure() ) { return Error ( "Error from jet maker" , sc ) ; }
   
   // save all jets

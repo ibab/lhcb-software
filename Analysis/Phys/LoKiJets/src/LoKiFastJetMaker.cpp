@@ -1,4 +1,4 @@
-// $Id: LoKiFastJetMaker.cpp,v 1.1 2007-12-10 15:38:23 ibelyaev Exp $
+// $Id: LoKiFastJetMaker.cpp,v 1.2 2009-12-14 12:34:33 cocov Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -13,6 +13,10 @@
 // fastjet
 // ============================================================================
 #include "fastjet/ClusterSequence.hh"
+#include "fastjet/config.h"
+//#include "fastjet/SISConePlugin.hh"
+
+
 // ============================================================================
 /** @file 
  *  Implementation file for class  LoKi::FastJetMaker
@@ -34,6 +38,7 @@ StatusCode LoKi::FastJetMaker::initialize ()
   if ( sc.isFailure() ) { return sc ; }
   //
   svc<LoKi::ILoKiSvc>( "LoKiSvc" , true ) ;
+
   //
   return StatusCode::SUCCESS ;
 } 
@@ -54,10 +59,21 @@ fastjet::JetDefinition LoKi::FastJetMaker::prepare
     jets.push_back ( makeJet( p , to_user_index ( ip - input.begin() ) ) ) ;
   }
   
+  //  if(m_type == fastjet::plugin_algorithm)
+  //  {
+  //     fastjet::JetDefinition::Plugin * plugin;
+  //     double overlap_threshold = 0.5;
+  //     plugin = new fastjet::SISConePlugin (m_r, overlap_threshold);
+  //     fastjet::JetDefinition jet_def(plugin);
+  //     delete plugin;
+  //     return jet_def ;
+  
+  //}
+  //else{
+  
   fastjet::JetFinder           finder   = (fastjet::JetFinder)           m_type  ;
   fastjet::RecombinationScheme scheme   = (fastjet::RecombinationScheme) m_recom ;
   fastjet::Strategy            strategy = (fastjet::Strategy)            m_strat ;
-  
   fastjet::JetDefinition jet_def
     ( finder   , 
       m_r      , 
@@ -74,6 +90,9 @@ fastjet::JetDefinition LoKi::FastJetMaker::prepare
   }
   
   return jet_def ;
+  //  }
+  
+  
 }
 // ===========================================================================
 // find the jets 
@@ -84,31 +103,40 @@ StatusCode LoKi::FastJetMaker::makeJets
   
   StatusCode sc = check() ;
   if ( sc.isFailure() ) { return Error ( "Invalid configuration of fastjet" ) ; }
-  
+
   // input container of "particles"
   Jets_ inputs ;
+  // prepare the input dat and define the jets
   
-  // prepare the input dat and define the jets 
-  fastjet::JetDefinition jetDef = prepare ( input_ , inputs ) ;
-  
+  fastjet::JetDefinition jetDef = prepare ( input_ , inputs ) ;  
+
+  if (inputs.size() == 0){
+    IJetMaker::Jets output;
+    output.reserve( 0 ) ;
+    jets_ = output ;
+    if ( statPrint() || msgLevel ( MSG::DEBUG ) ) 
+    {counter ( "#jets" ) += output.size() ; }
+    return StatusCode::SUCCESS ;
+  }
   // Jets found 
   Jets_ jets ;
   
-  fastjet::ClusterSequence clusters ( inputs , jetDef ) ;
+  
+  fastjet::ClusterSequence* clusters = new fastjet::ClusterSequence( inputs , jetDef ) ;
   
   switch ( m_sort ) 
   {
   case 3 : 
-    jets = sorted_by_rapidity ( clusters.inclusive_jets ( m_ptmin ) ) ;
+    jets = sorted_by_rapidity ( clusters->inclusive_jets ( m_ptmin ) ) ;
     break ;
   case 2 : 
-    jets = sorted_by_pt       ( clusters.inclusive_jets ( m_ptmin ) ) ;
+    jets = sorted_by_pt       ( clusters->inclusive_jets ( m_ptmin ) ) ;
     break ;
   case 1 : 
-    jets = sorted_by_E        ( clusters.inclusive_jets ( m_ptmin ) ) ;
+    jets = sorted_by_E        ( clusters->inclusive_jets ( m_ptmin ) ) ;
     break ;
   default : 
-    jets = sorted_by_pt       ( clusters.inclusive_jets ( m_ptmin ) ) ;
+    jets = sorted_by_pt       ( clusters->inclusive_jets ( m_ptmin ) ) ;
     break ;
   }
   
@@ -127,7 +155,7 @@ StatusCode LoKi::FastJetMaker::makeJets
   for ( Jets_::iterator ijet = jets.begin() ; jets.end() != ijet ; ++ijet ) 
   {
     const Jet& jet = *ijet ;
-    const Constituents& constituents = clusters.constituents ( jet ) ;
+    const Constituents& constituents = clusters->constituents ( jet ) ;
     if ( constituents.empty() ) { Warning ( "Jet is 'empty'!" ) ; }
     
     LHCb::Particle              pJet ;
@@ -148,7 +176,7 @@ StatusCode LoKi::FastJetMaker::makeJets
       { Warning ( "Invalid index for a constituent!" ) ; continue ; } // CONTINUE 
       // get the appropriate particle:
       const LHCb::Particle* p = input_[index] ;
-      // add the particle into the vertex 
+      // add the particle into the vertex
       daughters.push_back ( p ) ;
     }
     if ( daughters.empty() ) 
@@ -173,10 +201,14 @@ StatusCode LoKi::FastJetMaker::makeJets
     output.push_back ( pJet.clone() ) ;
   }  
   
+
   if ( statPrint() || msgLevel ( MSG::DEBUG ) ) 
   { counter ( "#jets" ) += output.size() ; }
   
   jets_ = output ;
+
+
+  delete clusters ;
   
   return StatusCode::SUCCESS ;
 }

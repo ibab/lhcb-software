@@ -1,4 +1,4 @@
-// $Id: LoKiJetParticleMaker.cpp,v 1.4 2008-06-26 13:21:57 ibelyaev Exp $
+// $Id: LoKiJetParticleMaker.cpp,v 1.5 2009-12-14 12:34:33 cocov Exp $
 // ============================================================================
 // include files  
 // ============================================================================
@@ -62,7 +62,7 @@ namespace LoKi
       const std::string& name   , 
       const IInterface*  parent ) 
       : GaudiTool      (  type , name , parent ) 
-      , m_jetMakerName ( "LoKi::KtKetMaker" )
+      , m_jetMakerName ( "LoKi::FastJetMaker" )
       , m_jetMaker     ( 0 )
     {
       declareInterface<IParticleMaker> ( this ) ;

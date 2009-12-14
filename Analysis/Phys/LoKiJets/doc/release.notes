@@ -1,11 +1,23 @@
-! $Id: release.notes,v 1.15 2008-11-09 14:31:03 ibelyaev Exp $ 
+! $Id: release.notes,v 1.16 2009-12-14 12:34:32 cocov Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.15 $ 
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.16 $ 
 ! -----------------------------------------------------------------------------
-! Package     : Tools/LoKiJets
-! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
-! Purpose     : Jet finding algorithm (KtJet) embedded into LoKi 
+! Package     : Phys/LoKiJets
+! Responsible : Victor Coco victor.coco@cern.ch
+! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
+
+! 2009-12-14 - Victor Coco
+ - add some python configuration for jet making + some simple option file.
+   Not definitive, just as starting point
+ - add all the needed classes to relate jets at the different level of simulation.
+   In the end they might go in a LoKiJetsMCTools package (except the Jets2Jets tool)
+ - Clean a bit, remove warning, remove completly Kt jet maker
+ - Update few things like the nominal way of calling StdJets on demand
+ 
+
+
+!================== LoKiJets v4r1 
 
 ! 2008-11-09 - Vanya BELYAEV
  - remove options directory with all opts-files 
@@ -202,6 +214,9 @@ Please credit this data as "generated using 'SLOCCount' by David A. Wheeler."
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.15  2008/11/09 14:31:03  ibelyaev
+!  remove options and add configurations
+!
 ! Revision 1.14  2008/06/26 13:21:57  ibelyaev
 !  KtJet is declared to be obsolete, to be remoeved soon
 !
