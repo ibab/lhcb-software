@@ -809,7 +809,7 @@ StatusCode MEPInjector::getEvent(int nbEv) {
 
 /** Read banks from msg queue, and store each banks in the future MEP.
  */
-StatusCode MEPInjector::readEvent() {
+StatusCode MEPInjector::processEvent(char *curEvt, unsigned int curEvtSize) {
     static int icalled = 0;
     icalled++;
 
@@ -820,20 +820,13 @@ StatusCode MEPInjector::readEvent() {
     int tell1id = 0;
     int len = 0;
 
-    /// Get an event. 
-    StatusCode sc = getEvent(nbEv); 
-    if(sc.isRecoverable()) {
-        msgLog << MSG::INFO << WHERE << "End of injection : exiting readEvent" << endmsg;
-        return StatusCode::RECOVERABLE;
-    } 
 
-    if(sc.isSuccess() && m_InjState == RUNNING) {
-        int bytesRead = MDFHDRSZ;
+        unsigned int bytesRead = MDFHDRSZ;
         
         int nbBks=0;
 
-        while(bytesRead<m_CurEventSize) { 
-            RawBank *hdr = (RawBank*) (m_CurEvent+bytesRead);
+        while(bytesRead<curEvtSize) { 
+            RawBank *hdr = (RawBank*) (curEvt+bytesRead);
             bytesRead+=hdr->totalSize();
  
             /// Check bank integrity.
@@ -842,7 +835,7 @@ StatusCode MEPInjector::readEvent() {
                 return StatusCode::FAILURE;  
 	    }
             ++nbBks; 
-             
+            
             /// Merge tape and TFC bank contents according to what was defined. 
             if(hdr->type() == RawBank::ODIN && !m_AutoMode) {
                 if(m_OdinMEP->size() == 0) {
@@ -998,7 +991,7 @@ StatusCode MEPInjector::readEvent() {
             memcpy(ccur, hdr, len); 
 	}//end for all banks of the event
         if(m_Debug) { 
-            msgLog << MSG::INFO << WHERE << "Event " << m_TotEvtsRead <<" read:" << bytesRead << "/" << m_CurEventSize << endmsg;
+            msgLog << MSG::INFO << WHERE << "Event " << m_TotEvtsRead <<" read:" << bytesRead << "/" << curEvtSize << endmsg;
             msgLog << MSG::INFO << WHERE << nbBks << " banks read in the event" << endmsg;
         }
  
@@ -1006,10 +999,6 @@ StatusCode MEPInjector::readEvent() {
             nbEv=0;
         }
 
-    } //end if get event success
-    else
-        return StatusCode::FAILURE; 
-    msgLog << MSG::DEBUG << WHERE << endmsg;
     return StatusCode::SUCCESS;
 }
 
@@ -1137,7 +1126,7 @@ StatusCode MEPInjector::injectorProcessing() {
         }
         /// Make all MEPs and send them.
         sc = readThenSend();
-        
+
     }
 
     msgLog << MSG::DEBUG << WHERE << endmsg;
@@ -1156,125 +1145,175 @@ StatusCode MEPInjector::readThenSend() {
     static unsigned int nbEv = 1;	// Used in Odin Mode to read the L0Id of the good bank    // Used to count nb event read
     MEPEvent *me = NULL;
 
-    /// Read an event.
-    sc = readEvent();
-    if (sc.isRecoverable()) {  // End of the job
-        msgLog << MSG::INFO<< "End of injection : Exiting readThenSend"<<endmsg; 
+
+    /// Get an event. 
+    sc = getEvent(nbEv); 
+    if(sc.isRecoverable()) {
+        msgLog << MSG::INFO << WHERE << "End of injection : exiting readEvent" << endmsg;
         return StatusCode::RECOVERABLE;
     }
     if (sc.isFailure()) {
-	msgLog << MSG::ERROR << WHERE << " Reading an event from the buffer managers" << endmsg;
+        msgLog << MSG::ERROR << WHERE << " Reading an event from the buffer managers" << endmsg;
         return StatusCode::FAILURE;
-    }
+    } 
+
+    unsigned int baseOffset=0;
+    RawBank *hdr = (RawBank*) (m_CurEvent+MDFHDRSZ);
+
+    m_TAELens.clear();
+
+    if(hdr!= NULL && hdr->type() == RawBank::TAEHeader) {
+        int nBlocks = hdr->size()/sizeof(int)/3;  // The TAE bank is a vector of triplets
+        int *block=(int *)hdr;
+        block+=2; //skip TAE bank header
   
-    finalSent = true;
- 
-    /// If we have reached packing factor.
-    if (nbEv == m_PackingFactor ) {
-	nbEv = 1;
+        baseOffset+=hdr->totalSize(); //Skip the TAE bank
 
-        /// Send Odin MEP and announce a new availability to the Online TFC.
-        finalSent = false;
-	if (!m_AutoMode) {
+        unsigned int lenSum = 0;
 
-            u_int32_t addrFrom = m_BitOdinIPAddr + ((32<<24)&0xff000000); 
-            msgLog << MSG::DEBUG<<__FUNCTION__<<"MEP SIZE : " << m_OdinMEP->size() << endmsg;
-
-	    sc = sendMEP(addrFrom, m_OdinMEP);
-            if(sc.isFailure()) {
-                ERRMSG(msgLog, "Could not send Odin MEP");
-                return StatusCode::FAILURE;
-            }
-            ++m_TotOdinMEPTx;
-
-            sc = sendMEPReq(&m_InjReq);             
-            if (sc.isFailure()) {
-                ERRMSG(msgLog, " MEP Request Send");
-            }
-
-	}
-
-        /// Send all MEPs. 
-        for(std::map<unsigned long, MEPEvent *>::iterator iteTell1ID = m_MapTell1MEPs.begin(); iteTell1ID != m_MapTell1MEPs.end(); ++iteTell1ID) {
-            me = iteTell1ID->second;
-	    if(me != NULL) {
-                sc = sendMEP(iteTell1ID->first, me);
-   	        if (sc.isFailure()) {
-	  	    ERRMSG(msgLog, " sendMEP error for Tell1 IP " + iteTell1ID->first);
-                    return StatusCode::FAILURE;
-                }
-	    }
-            else
-                ERRMSG(msgLog, "NULL MEP pointer, not send : " + MEPRxSys::dotted_addr(iteTell1ID->first));
-	} // end for
-
-        m_TotEvtsSent += m_PackingFactor;
-        if(++m_DatagramID == 0) ++m_DatagramID;
-
-/*
-        if(clock_gettime(CLOCK_REALTIME, &m_RTCurTime)) {
-            ERRMSG(msgLog, "clock_gettime failed");
-            return StatusCode::FAILURE;
-        }
-        m_RTTotElapsedTime = (m_RTCurTime.tv_sec - m_RTInitTime.tv_sec) * 1000 + (m_RTCurTime.tv_nsec - m_RTInitTime.tv_nsec)/1000000 ;
-*/  
-        gettimeofday(&m_CurTime, NULL); 
-        m_TotElapsedTime = (m_CurTime.tv_sec - m_InitTime.tv_sec)*1000 + (m_CurTime.tv_usec - m_InitTime.tv_usec)/1000 ;
-
-  
-	if (!m_AutoMode) {
-
-            m_gotOdin = false;
-            m_gotHLT = false;
-            // Get information from Odin and HLT
-            StatusCode sc; 
-            sc = getHLTInfo();
-            if(sc.isRecoverable()) {
-                msgLog << MSG::DEBUG << WHERE << "Could not get a HLT destination" << endmsg;
-                return sc;
-            }
-
-            if(sc.isFailure()) {
-                ERRMSG(msgLog, " Selecting a HLT");
-                return StatusCode::FAILURE;
-            }
-            m_gotHLT = true;
-
-            sc = getOdinInfo();
-            if(sc.isRecoverable()) {
-                msgLog << MSG::DEBUG << WHERE << "Could not get a TFC information" << endmsg;
-                return sc;
-            }
-
-            if(sc.isFailure()) {
-                ERRMSG(msgLog, " Copying data from Odin MEP");
+        // Check TAE bank integrity and get useful information
+        for ( int nbl = 0; nBlocks -1 > nbl; ++nbl ) {
+            int nBx = *block++;
+            int off = *block++;
+            int len = *block++;
+    
+            if(off != lenSum) {
+                msgLog << MSG::ERROR << WHERE << " Severe error in TAE bank" << endmsg;
+                msgLog << MSG::ERROR << "nBx=" << nBx <<", off=" << off << ", len="<<len<<",lenSum="<<lenSum<<endmsg;
                 return StatusCode::FAILURE;
             } 
-            m_gotOdin = true;
-
-	} else {
-	    // The IP datagram ID is set to the least significant 15 bits of the first 
-	    // event ID of the MEP, which are the least significant 15 bits of the 
-	    // MEP event id   
-	    // If we are in ODIN mode, this Id should be given by ODIN, 
-	    // else we increment  it each time, starting from a job option valu
-	    m_L0ID += m_PackingFactor;
-	    m_EvtID = 0x0000ffff & m_L0ID;
-	} // end if(!m_AutoMode)  
-
-    } else {  //Packing factor not reached
-	if (m_AutoMode)
-	    ++m_EvtID;
-	else {
-            MEPFragment *mepfrag = (MEPFragment *) ( ((char *) m_OdinMEP) + MEPEVENTOFFSET +
-                                   IPHDRSZ + MEPHDRSZ + nbEv * ODFRAGSZ);
-            m_EvtID = mepfrag->eventID();
-            msgLog << MSG::DEBUG << WHERE << "EvtID read from Frag Header (and used) : " << m_EvtID << endmsg;
+            lenSum+=len;
+     
+            m_TAELens.push_back(len);
         }
-	++nbEv;
+    }
+    else m_TAELens.push_back(m_CurEventSize);
 
+    for (std::vector<unsigned int>::iterator ite=m_TAELens.begin(); ite != m_TAELens.end(); ++ite) {
+         
+        /// Read an event.
+        sc = processEvent(m_CurEvent + baseOffset, *ite);
+        if (sc.isRecoverable()) {  // End of the job
+            msgLog << MSG::INFO<< "End of injection : Exiting readThenSend"<<endmsg; 
+            return StatusCode::RECOVERABLE;
+        }
+        if (sc.isFailure()) {
+    	msgLog << MSG::ERROR << WHERE << " Processing an event" << endmsg;
+            return StatusCode::FAILURE;
+        }
+      
+        baseOffset+=*ite;
+
+        finalSent = true;
  
-    }//end if(packing_factor)
+        /// If we have reached packing factor.
+        if (nbEv == m_PackingFactor ) {
+      	    nbEv = 1;
+    
+            /// Send Odin MEP and announce a new availability to the Online TFC.
+            finalSent = false;
+      	    if (!m_AutoMode) {
+    
+                u_int32_t addrFrom = m_BitOdinIPAddr + ((32<<24)&0xff000000); 
+                msgLog << MSG::DEBUG<<__FUNCTION__<<"MEP SIZE : " << m_OdinMEP->size() << endmsg;
+    
+      	        sc = sendMEP(addrFrom, m_OdinMEP);
+                if(sc.isFailure()) {
+                    ERRMSG(msgLog, "Could not send Odin MEP");
+                    return StatusCode::FAILURE;
+                }
+                ++m_TotOdinMEPTx;
+    
+                sc = sendMEPReq(&m_InjReq);             
+                if (sc.isFailure()) {
+                    ERRMSG(msgLog, " MEP Request Send");
+                }
+    
+    	    }
+    
+            /// Send all MEPs. 
+            for(std::map<unsigned long, MEPEvent *>::iterator iteTell1ID = m_MapTell1MEPs.begin(); iteTell1ID != m_MapTell1MEPs.end(); ++iteTell1ID) {
+                me = iteTell1ID->second;
+    	        if(me != NULL) {
+                    sc = sendMEP(iteTell1ID->first, me);
+       	            if (sc.isFailure()) {
+                        msgLog << MSG::ERROR << WHERE << " sendMEP error for Tell1 IP " << iteTell1ID->first << endmsg;
+                        return StatusCode::FAILURE;
+                    }
+    	        }
+                else
+                    ERRMSG(msgLog, "NULL MEP pointer, not send : " + MEPRxSys::dotted_addr(iteTell1ID->first));
+            } // end for
+    
+            m_TotEvtsSent += m_PackingFactor;
+            if(++m_DatagramID == 0) ++m_DatagramID;
+    
+    /*
+            if(clock_gettime(CLOCK_REALTIME, &m_RTCurTime)) {
+                ERRMSG(msgLog, "clock_gettime failed");
+                return StatusCode::FAILURE;
+            }
+            m_RTTotElapsedTime = (m_RTCurTime.tv_sec - m_RTInitTime.tv_sec) * 1000 + (m_RTCurTime.tv_nsec - m_RTInitTime.tv_nsec)/1000000 ;
+    */  
+            gettimeofday(&m_CurTime, NULL); 
+            m_TotElapsedTime = (m_CurTime.tv_sec - m_InitTime.tv_sec)*1000 + (m_CurTime.tv_usec - m_InitTime.tv_usec)/1000 ;
+    
+      
+    	if (!m_AutoMode) {
+    
+                m_gotOdin = false;
+                m_gotHLT = false;
+                // Get information from Odin and HLT
+                StatusCode sc; 
+                sc = getHLTInfo();
+                if(sc.isRecoverable()) {
+                    msgLog << MSG::DEBUG << WHERE << "Could not get a HLT destination" << endmsg;
+                    return sc;
+                }
+    
+                if(sc.isFailure()) {
+                    ERRMSG(msgLog, " Selecting a HLT");
+                    return StatusCode::FAILURE;
+                }
+                m_gotHLT = true;
+    
+                sc = getOdinInfo();
+                if(sc.isRecoverable()) {
+                    msgLog << MSG::DEBUG << WHERE << "Could not get a TFC information" << endmsg;
+                    return sc;
+                }
+    
+                if(sc.isFailure()) {
+                    ERRMSG(msgLog, " Copying data from Odin MEP");
+                    return StatusCode::FAILURE;
+                } 
+                m_gotOdin = true;
+    
+    	} else {
+    	    // The IP datagram ID is set to the least significant 15 bits of the first 
+    	    // event ID of the MEP, which are the least significant 15 bits of the 
+    	    // MEP event id   
+    	    // If we are in ODIN mode, this Id should be given by ODIN, 
+    	    // else we increment  it each time, starting from a job option valu
+    	    m_L0ID += m_PackingFactor;
+    	    m_EvtID = 0x0000ffff & m_L0ID;
+    	} // end if(!m_AutoMode)  
+    
+        } else {  //Packing factor not reached
+    	if (m_AutoMode)
+    	    ++m_EvtID;
+    	else {
+                MEPFragment *mepfrag = (MEPFragment *) ( ((char *) m_OdinMEP) + MEPEVENTOFFSET +
+                                       IPHDRSZ + MEPHDRSZ + nbEv * ODFRAGSZ);
+                m_EvtID = mepfrag->eventID();
+                msgLog << MSG::DEBUG << WHERE << "EvtID read from Frag Header (and used) : " << m_EvtID << endmsg;
+            }
+    	++nbEv;
+    
+     
+        }//end if(packing_factor)
+
+    }//end for TAE offsets
 
     msgLog << MSG::DEBUG << WHERE << endmsg;
 

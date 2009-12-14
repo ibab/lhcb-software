@@ -107,6 +107,8 @@ namespace LHCb {
     char m_CurEvent[TWOMB]; /* Buffer to store one event */
     int  m_CurEventSize;    /* Size of the event         */ 
 
+    std::vector<unsigned int> m_TAELens; /* TAE length of each event */
+
     int  m_CreditsFD;       /* DEBUG : File descriptor where to write HLT credits information */
  
     bool m_gotHLT;          /* Tells that a MEP Request was consumed for injection processing */
@@ -258,7 +260,7 @@ namespace LHCb {
     StatusCode receiveOdinMEP(char *bufMEP, int *len);
 
     /// Read an event from the MDF transient store and split fragments correctly
-    StatusCode readEvent();
+    StatusCode processEvent(char *curEvt, unsigned int len);
 
     /// Identify the Tell1 ID from the type and the source of the bank
     in_addr_t getTell1IP(int type, int src);   
