@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.cpp,v 1.25 2009-12-11 16:01:42 apuignav Exp $
+// $Id: DimRPCFileReader.cpp,v 1.26 2009-12-14 10:49:54 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -165,6 +165,8 @@ void DimRPCFileReader::handleCommand(const char* address, int /* size */){
     am->stop();
     prp->setProperty("Input","FILE=file://"+c.file);
     prp->setProperty("GUID",c.guid);
+    error("Input: FILE=file://"+c.file);
+    error("GUID:"+c.guid);
 
     es->reinitialize();
     am->start();

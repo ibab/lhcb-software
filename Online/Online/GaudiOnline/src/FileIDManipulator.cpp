@@ -97,8 +97,9 @@ StatusCode FIDManipulator::updateDstAddress(const FileIdInfo* info) {
     *dataPt++ = info->ip1;
     *dataPt++ = RAWDATA_StorageType;
     char* charPt = (char*)dataPt;
-    strcpy( charPt, info->par0() );
-    charPt += info->l0;
+    // Need to copy here the GUID, not the address parameter, since this might be a PFN
+    strcpy( charPt, info->guid() );
+    charPt += info->l2;
     strcpy( charPt, info->par1() );
     charPt += info->l1;
     strcpy( charPt, "DAQ/RawEvent" );
