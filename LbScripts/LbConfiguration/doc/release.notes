@@ -1,5 +1,7 @@
 2009-12-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbConfiguration/Version.py: New file. Handling of the LHCb version scheme(s).
+	* tests/VersionTest.py: New file. Tests for the Version.py module
 	* scripts/genProjectSetup: added default empty extra args.
 	* scripts/generateLogin: use genProjectSetup for the cache generation.
 	* python/LbConfiguration/Tools.py: changed the order of the argument passed to
