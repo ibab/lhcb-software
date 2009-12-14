@@ -19,6 +19,7 @@ if os.path.isdir(_py_dir) :
 from LbConfiguration.LbLogin import getLoginCacheName, getLbLoginEnv
 from LbConfiguration.SetupProject import SetupProject
 from LbConfiguration.Platform import binary_list, binary_opt_list, getBinaryOpt
+from LbConfiguration.Tools import genProjectSetup
 from optparse import OptionParser
 
 def fixNative(filename):
@@ -202,22 +203,19 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
     for var in env.keys() :
         os.environ[var] = env[var]
     
-    os.environ["CMTCONFIG"] = "slc4_ia32_gcc34"
     setupprojargs = []
     setupprojargs.append("--silent")
     if not building :
         setupprojargs.append("--no-user-area")
     setupprojargs.append("--disable-CASTOR")
-    setupprojargs.append("--output=%s" % cachefilename)
-    setupprojargs.append("--shell=%s" % shell)
-    setupprojargs.append("LbScripts")
-    if version and version != "v*" :
-        setupprojargs.append(version)
     if not withoutpython :
         setupprojargs.append("--runtime-project")            
         setupprojargs.append("LCGCMT")
         setupprojargs.append("Python")
-    SetupProject().main(setupprojargs)
+    genProjectSetup(cachefilename, "LbScripts", version, cmtconfig="slc4_ia32_gcc34",
+                    shell=shell, setup_project_extra_args=setupprojargs, 
+                    strip_path=True)
+
     if os.path.exists(cachefilename) :
         fixNative(cachefilename)
         vartoremove = ["CMTCONFIG", "ROOTSYS", "SITEROOT"]
