@@ -115,6 +115,9 @@ def get_tar_files(packages_versions,binary_dir):
                     str = 'tar --extract --ungzip --file '+file+' '+key_value+'/share/PDFsets/cteq6l.LHpdf'+' '+key_value+'/share/PDFsets/cteq6ll.LHpdf'
                     rc = os.system(str)
                     if rc != 0 :
+                        str = 'tar --extract --ungzip --file '+file+' '+key_value+'/share/lhapdf/PDFsets/cteq6l.LHpdf'+' '+key_value+'/share/lhapdg/PDFsets/cteq6ll.LHpdf'
+                        rc = os.system(str)
+                    if rc != 0 :
                         os.remove(file)
                         file = file.replace(binary_dir, "share")
                         if os.path.exists(os.path.join(MCGen_tar_dir,file)):

@@ -1,5 +1,6 @@
 2009-12-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/mkMCGentar: fixed new location of lhapdf.
 	* python/LbLegacy/install_project.py: added the "--no-user-area" for the setup script
 	generation.
 
