@@ -1,16 +1,16 @@
-! $Id: release.notes,v 1.63 2009-12-14 21:12:25 graven Exp $
+! $Id: release.notes,v 1.64 2009-12-14 21:12:49 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================== HltLine v2r0p1 2009-12-14 ===================
 ! 2009-12-14 - Gerhard Raven
  - fix Hlt2Line filter properly -- should have been HLT_PASS_RE('Hlt1(?!L0)(?!Lumi).*Decision')
    as an Hlt1ODIN line is used as passthrough in case Hlt2 requires only L0...
    (maybe we should use Hlt1L0Any instead???)
 
-!========================== HltLine v2r0p1 2009-12-13 ===================
 ! 2009-12-13 - V. Gligorov
  -  python/HltLine/HltReco.py : revert change to velo reco. Note that using
     DecodeRawVeloBuffer() is broken with DC06 so any lines using this functionality
