@@ -46,22 +46,17 @@ DaVinci().HltThresholdSettings = 'Physics_320Vis_300L0_10Hlt1_Aug09'
 #
 DaVinci().DataType = "2009"                   # Default is "MC09"
 DaVinci().UserAlgorithms = [ dstWriter.sequence() ]
-DaVinci().EvtMax = -1
+DaVinci().EvtMax = 10000
 ##############################################################################
 #
 # Real Data
 #
-DaVinci().Input = [
-    # 6/12 Collision data
-    "   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/data/2009/DST/00005705/0000/00005705_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/data/2009/DST/00005705/0000/00005705_00000006_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/data/2009/DST/00005705/0000/00005705_00000008_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "   DATAFILE='PFN:/castor/cern.ch/grid/lhcb/data/2009/DST/00005705/0000/00005705_00000011_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
+DaVinci().Input   = [
+"   DATAFILE='PFN:/castor/cern.ch/user/s/smenzeme/DATA2009/run63683-63690_RecoStatus20091210.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"   DATAFILE='PFN:/castor/cern.ch/user/p/pkoppenb/DATA2009/run63445-63497_RecoStatus20091210.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+] 
 ##############################################################################
-#
-# There's no field (temporary hack)
-#
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
-from Configurables import CondDB
-CondDB(UseOracle = True)
+#from Configurables import CondDB
+#CondDB(UseOracle = True)
