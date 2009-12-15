@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: KaliPi0.py,v 1.7 2009-11-30 17:24:11 ibelyaev Exp $ 
+# $Id: KaliPi0.py,v 1.8 2009-12-15 11:27:15 apuignav Exp $ 
 # =============================================================================
 ## @file  KaliCalo/KaliCaloPi0.py
 #  The basic configuration to (re)run Ecal pi0-calibration
@@ -31,11 +31,12 @@ Or even:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $"
 # =============================================================================
 ## the basic import
 from Gaudi.Configuration    import *
-from KaliCalo.Configuration import  KaliPi0Conf
+from KaliCalo.Configuration import  KaliPi0Conf as KaliPi0Conf
+#from KaliCalo.Configuration import  MyKaliPi0Conf as KaliPi0Conf
 
 from CommonParticles.StandardElectrons import StdLooseElectrons as SLE 
 
@@ -44,7 +45,7 @@ kali = KaliPi0Conf (
     FirstPass = True  ,
     UseTracks = True  ,
     Mirror    = True   
-    #, UseSpd    = False 
+    , UseSpd    = True 
     ## examle of the second pass
     # FirstPass  = False  ,
     # UseSpd     = False  , 
@@ -197,7 +198,7 @@ if '__main__' == __name__ :
     #evtSel.open('KaliPi0.fmDST')
     #evtSel.open('out3')
     
-    gaudi.run(10000)
+    gaudi.run(500000)
 
     import GaudiPython.GaudiAlgs
     import GaudiPython.HistoUtils

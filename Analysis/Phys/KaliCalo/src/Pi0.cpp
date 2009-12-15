@@ -1,4 +1,4 @@
-// $Id: Pi0.cpp,v 1.5 2009-12-12 16:10:25 ibelyaev Exp $
+// $Id: Pi0.cpp,v 1.6 2009-12-15 11:27:15 apuignav Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -20,6 +20,10 @@
 // ============================================================================
 #include "LoKi/Algo.h"
 #include "LoKi/ParticleCuts.h"
+// ============================================================================
+// ICaloDigits4TrackTool
+// ============================================================================
+#include "CaloInterfaces/ICaloDigits4Track.h"
 // ============================================================================
 // Local 
 // ============================================================================
@@ -82,10 +86,13 @@ namespace Kali
       const Gaudi::LorentzVector& ,
       const Gaudi::LorentzVector& , 
       const double , 
+      const double , 
+      const double , 
       const double ,
       const LHCb::CaloCellID& , 
       const LHCb::CaloCellID& , 
       const int    ) ;
+    double caloEnergy4Photon( const Gaudi::LorentzVector&  p ) ;
     // ========================================================================
   public:
     // ========================================================================
@@ -96,6 +103,7 @@ namespace Kali
     // ========================================================================
     /// use Albert's trick? 
     bool  m_mirror ;                                     // use Albert's trick? 
+    ICaloDigits4Track*  m_spdDigitsTool ;
     // ========================================================================
   } ;
   // ==========================================================================
@@ -124,6 +132,8 @@ void Kali::Pi0::fillTuple
   const Gaudi::LorentzVector& p12   ,
   const double                prs1e , 
   const double                prs2e ,
+  const double                spd1e , 
+  const double                spd2e ,
   const LHCb::CaloCellID&     cell1 , 
   const LHCb::CaloCellID&     cell2 , 
   const int                   bkg   )
@@ -141,6 +151,9 @@ void Kali::Pi0::fillTuple
     
     tuple -> column ( "prs1" , prs1e ) ;
     tuple -> column ( "prs2" , prs2e ) ;
+    
+    tuple -> column ( "spd1" , (int) (spd1e/3.2) ) ;
+    tuple -> column ( "spd2" , (int) (spd2e/3.2) ) ;
     
     tuple -> column ( "ind1" , cell1.index() ) ;
     tuple -> column ( "ind2" , cell2.index() ) ;
@@ -161,6 +174,24 @@ void Kali::Pi0::fillTuple
     tuple -> write () ;
 }
 // ============================================================================
+// Photon CaloDigitEnergy
+// ============================================================================
+double Kali::Pi0::caloEnergy4Photon( const Gaudi::LorentzVector&  p )
+{
+  typedef std::set<const LHCb::CaloDigit*> SET ;
+  SET digits ;
+  Gaudi::XYZPoint point( 0 , 0 , 0 ) ;
+  Gaudi::XYZVector vector = p.Vect() ;
+  typedef Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector> LINE ;
+  LINE line( point , vector ) ;
+  m_spdDigitsTool->collect ( line , digits );
+  double e = 0.0 ;
+  for ( SET::const_iterator digit = digits.begin() ; digits.end() != digit ; digit++ ){
+    e += (*digit)->e() ;
+  } 
+  return e ;
+}
+// ============================================================================
 // the proper initialization
 // ============================================================================
 StatusCode Kali::Pi0::initialize  ()                // the proper initialzation
@@ -172,6 +203,10 @@ StatusCode Kali::Pi0::initialize  ()                // the proper initialzation
   { Warning ( "Albert's trick for background evaluation is   activated!", StatusCode::SUCCESS ) ; }
   else 
   { Warning ( "Albert's trick for background evaluation is deactivated!", StatusCode::SUCCESS ) ; }  
+  //
+  m_spdDigitsTool = tool<ICaloDigits4Track>( "SpdEnergyForTrack" , this ) ; // Load tool for SPD
+  sc = Gaudi::Utils::setProperty ( m_spdDigitsTool , "AddNeighbours" , 1 ) ;
+  if ( sc.isFailure() ) { return sc ; }
   //
   return StatusCode::SUCCESS ;
 }
@@ -220,10 +255,12 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     
     // trick with "mirror-background" by Albert Puig
     // invert the first photon :
+    const Gaudi::LorentzVector mom1 = g1->momentum() ;
+    const Gaudi::LorentzVector mom2 = g2->momentum() ;
     Gaudi::LorentzVector p1 = g1->momentum() ;
     p1.SetPx ( -p1.Px() ) ;
     p1.SetPy ( -p1.Py() ) ;
-    const Gaudi::LorentzVector fake = ( p1 + g2->momentum() ) ;
+    const Gaudi::LorentzVector fake = ( p1 + mom2 ) ;
 
     const bool good    =             ( m12      < 250 * MeV && p12.Pt()  > 800 * MeV ) ;
     bool       goodBkg = m_mirror && ( fake.M() < 250 * MeV && fake.Pt() > 800 * MeV ) ;
@@ -253,6 +290,9 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
       std::swap ( prs1e , prs2e ) ; 
     }
         
+    const double spd1e3x3 = caloEnergy4Photon( mom1 ) ;
+    const double spd2e3x3 = caloEnergy4Photon( mom2 ) ;
+    
     const LHCb::CaloCellID cell1 = cellID( g1 ) ;
     const LHCb::CaloCellID cell2 = cellID( g2 ) ;    
     
@@ -260,11 +300,11 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     
     if  ( good ) 
     { 
-      fillTuple( tuple , g1->momentum() , g2->momentum() , p12 , prs1e , prs2e , cell1 , cell2 , 0 ) ;
+      fillTuple( tuple , mom1 , mom2 , p12 , prs1e , prs2e , spd1e3x3 , spd2e3x3 , cell1 , cell2 , 0 ) ;
     }
     if ( goodBkg ) 
     {
-      fillTuple( tuple , g1->momentum() , g2->momentum() , fake , prs1e , prs2e , cell1 , cell2 , 1 ) ;
+      fillTuple( tuple , mom1 , mom2 , fake , prs1e , prs2e , spd1e3x3 , spd2e3x3 , cell1 , cell2 , 1 ) ;
     }
 
     // finally save good photons: 
