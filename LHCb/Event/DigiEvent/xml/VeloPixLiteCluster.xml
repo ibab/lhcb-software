@@ -42,6 +42,12 @@
        argList='VeloPixChannelID &amp; chan,  unsigned int ToT , std::pair&lt;double,double&gt; fracPix, bool longPix'>
        <code>
 
+ m_channelIDMask=(ulonglong)0xfffffffLL;
+ m_clustToTMask=(ulonglong)0x70000000LL;
+ m_longPixMask=(ulonglong)0x80000000LL;
+ m_interPixelFractionXMask=(ulonglong)0x700000000LL;
+ m_interPixelFractionYMask=(ulonglong)0x3800000000LL;
+
  unsigned int tFracX = (LHCb::Math::round(fracPix.first * (1 &lt;&lt;( interPixelFractionYBits-interPixelFractionXBits))));
  unsigned int tFracY = (LHCb::Math::round(fracPix.second *(1 &lt;&lt; (interPixelFractionYBits-interPixelFractionXBits))));
  unsigned int tlongPix;
@@ -61,6 +67,11 @@
        argList='VeloPixChannelID &amp; chan ,unsigned int ToT,
                 std::pair&lt;unsigned int,unsigned int&gt; fracPixel, bool longPix'>
        <code>
+ m_channelIDMask=(ulonglong)0xfffffffLL;
+ m_clustToTMask=(ulonglong)0x70000000LL;
+ m_longPixMask=(ulonglong)0x80000000LL;
+ m_interPixelFractionXMask=(ulonglong)0x700000000LL;
+ m_interPixelFractionYMask=(ulonglong)0x3800000000LL;
 
  unsigned int tlongPix;
  longPix == true  ? tlongPix = 1:   tlongPix= 0;
@@ -119,7 +130,7 @@ return  double(fractionUnitsX())/double((1 &lt;&lt;( interPixelFractionYBits-int
       desc="clustToT of the cluster"
       const="TRUE">
      <code>
-return (unsigned int)((m_liteCluster &amp;clustToTMask ) &gt;&gt; clustToTBits );
+return (unsigned int)((m_liteCluster &amp;m_clustToTMask ) &gt;&gt; clustToTBits );
      </code>
      </method>
 
@@ -141,7 +152,7 @@ return  double(fractionUnitsY())/double((1 &lt;&lt;( interPixelFractionYBits-int
       desc="is it an long pixel"
       const="TRUE">
      <code>
-  return (((m_liteCluster &amp; longPixMask) &gt;&gt; longPixBits) == 1);
+  return (((m_liteCluster &amp; m_longPixMask) &gt;&gt; longPixBits) == 1);
      </code>
      </method>
 
@@ -153,7 +164,7 @@ return  double(fractionUnitsY())/double((1 &lt;&lt;( interPixelFractionYBits-int
       const="TRUE"
       >
       <code> 
-std::pair&lt;unsigned int,unsigned int&gt; fracUnit ((unsigned int)((m_liteCluster &amp; interPixelFractionXMask) &gt;&gt; interPixelFractionXBits),(unsigned int)((m_liteCluster &amp; interPixelFractionYMask) &gt;&gt; interPixelFractionYBits)); 
+std::pair&lt;unsigned int,unsigned int&gt; fracUnit ((unsigned int)((m_liteCluster &amp; m_interPixelFractionXMask) &gt;&gt; interPixelFractionXBits),(unsigned int)((m_liteCluster &amp; m_interPixelFractionYMask) &gt;&gt; interPixelFractionYBits)); 
 return fracUnit;
      </code>
      </method>
@@ -167,7 +178,7 @@ return fracUnit;
       >
       <code> 
 
-return (unsigned int)((m_liteCluster &amp; interPixelFractionXMask) &gt;&gt; interPixelFractionXBits);
+return (unsigned int)((m_liteCluster &amp; m_interPixelFractionXMask) &gt;&gt; interPixelFractionXBits);
      </code>
      </method>
 
@@ -180,7 +191,7 @@ return (unsigned int)((m_liteCluster &amp; interPixelFractionXMask) &gt;&gt; int
       >
       <code> 
 
-return (unsigned int)((m_liteCluster &amp; interPixelFractionYMask) &gt;&gt; interPixelFractionYBits);
+return (unsigned int)((m_liteCluster &amp; m_interPixelFractionYMask) &gt;&gt; interPixelFractionYBits);
      </code>
      </method>
 
@@ -191,7 +202,7 @@ return (unsigned int)((m_liteCluster &amp; interPixelFractionYMask) &gt;&gt; int
       desc="The Channel"
       const="TRUE"
       >
-      <code> return VeloPixChannelID((unsigned int)((m_liteCluster &amp; channelIDMask) &gt;&gt; channelIDBits)); 
+      <code> return VeloPixChannelID((unsigned int)((m_liteCluster &amp; m_channelIDMask) &gt;&gt; channelIDBits)); 
      </code>
      </method>
 
@@ -201,18 +212,16 @@ return (unsigned int)((m_liteCluster &amp; interPixelFractionYMask) &gt;&gt; int
      <enum name='liteClusterBits' desc='position of the first bit of a given field'>
        <enumval name = 'channelIDBits' value = '0' desc='the channelID field 1st bit position'/>
        <enumval name = 'clustToTBits' value = '28' desc='the clustToT field 1st bit position'/>
-       <enumval name = 'longPixBits' value = '31' desc='the longPixMask field 1st bit position'/>
-       <enumval name = 'interPixelFractionXBits' value = '32' desc='the interPixelFractionXMask field 1st bit position'/>
-       <enumval name = 'interPixelFractionYBits' value = '35' desc='the interPixelFractionYMask field 1st bit position'/>
-     </enum>    
+       <enumval name = 'longPixBits' value = '31' desc='the longPix field 1st bit position'/>
+       <enumval name = 'interPixelFractionXBits' value = '32' desc='the interPixelFractionX field 1st bit position'/>
+       <enumval name = 'interPixelFractionYBits' value = '35' desc='the interPixelFractionY field 1st bit position'/>
+     </enum>  
 
-     <enum name='liteClusterMask' desc='the given field mask'>
-       <enumval name = 'channelIDMask' value = '0xfffffffLL' desc='the channelID field mask'/>
-       <enumval name = 'clustToTMask' value = '0x70000000LL' desc='the clustToTMask field mask'/>
-       <enumval name = 'longPixMask' value = '0x80000000LL' desc='the longPixMask field mask'/>
-       <enumval name = 'interPixelFractionXMask' value = '0x700000000LL' desc='the interPixelFractionXMask field mask'/>
-       <enumval name = 'interPixelFractionYMask' value = '0x3800000000LL' desc='the interPixelFractionYMask field mask'/>
-     </enum>        
+     <attribute type='ulonglong' name='channelIDMask' setMeth="FALSE" getMeth="FALSE" desc='the channelID field mask'/>
+     <attribute type='ulonglong' name='clustToTMask' setMeth="FALSE" getMeth="FALSE" desc='the clustToTMask field mask'/>
+     <attribute type='ulonglong' name='longPixMask' setMeth="FALSE" getMeth="FALSE" desc='the longPixMask field mask'/>
+     <attribute type='ulonglong' name='interPixelFractionXMask' setMeth="FALSE" getMeth="FALSE" desc='the interPixelFractionXMask field mask'/>
+     <attribute type='ulonglong' name='interPixelFractionYMask' setMeth="FALSE" getMeth="FALSE" desc='the interPixelFractionYMask field mask'/>
 
   </class>
 </package>

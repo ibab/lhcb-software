@@ -4,6 +4,10 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2009-12-15 - Victor Coco
+ - modify masks (from enum to single member) in VeloPixLiteCluster since 64bits
+   enum are not supported by win32_vc7
+
 !========================== DigiEvent v2r14 2009-12-11 =======================
 ! 2009-12-04 - Victor Coco
  - fix some windows warning in VeloPixLiteCluster
