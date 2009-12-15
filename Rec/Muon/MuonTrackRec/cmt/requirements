@@ -4,7 +4,7 @@
 # =============================================================================
 
 package MuonTrackRec
-version v2r5
+version v2r6
 
 
 # ================ structure =========================================
@@ -23,6 +23,9 @@ use GaudiAlg     v*
 #
 use MCEvent     v*      Event
 use LinkerEvent v*      Event
+
+use TrackTools  v*      Tr
+use Magnet      v*      Det
 
 use TrackTools  v*      Tr
 use Magnet      v*      Det

@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.cpp,v 1.18 2009-12-11 11:18:43 svecchi Exp $
+// $Id: MuonNNetRec.cpp,v 1.19 2009-12-15 19:17:51 ggiacomo Exp $
 
 #include <list>
 
@@ -97,8 +97,8 @@ void MuonNNetRec::clear() {
   m_tracks.clear() ;  // clear the array of pointers to MuonTrack's
   m_allneurons.clear();  // clear the array of pointers to all MuonNeuron's
   m_useneurons.clear();  // clear the array of pointers to used MuonNeuron's
-  //m_recDone = m_recOK = false;
-  //m_tooManyHits = false;
+  m_recDone = m_recOK = false;
+  m_tooManyHits = false;
 }
 
 //=============================================================================
@@ -183,20 +183,15 @@ StatusCode MuonNNetRec::finalize ()
 }
 
 //=============================================================================
-// Main reconstruction steering routine HIT finding
+// Main reconstruction routine
 //=============================================================================
 
-StatusCode MuonNNetRec::muonHitFind(){
+StatusCode MuonNNetRec::muonNNetMon(){  
 
-  // don't do the decoding if already done
+
   if( m_recDone == true ) {
     return StatusCode::SUCCESS;
   }
-
-  debug()<<"running MuonNNetRec::muonHitFind"<<endmsg;
-  debug()<<"log bits: recdone, hitsdone "
-         <<m_recDone<<" "
-         <<m_hitsDone<<" "<<endmsg;
 
   // call decoding and pad reconstruction
   const std::vector<MuonLogHit*> *myhits = m_decTool->hits();
@@ -210,17 +205,17 @@ StatusCode MuonNNetRec::muonHitFind(){
   m_timer->start( m_timeinitNet );
   
   // call clustering algorithm
-  if(!m_hitsDone){    
-    m_trackhits = *(m_clusterTool->clusters(coords));
-    m_hitsDone = true;
-  }
+  const std::vector<MuonHit*>* trackhits = m_clusterTool->clusters(coords);
+
+  debug()<<"\n running MuonNNetMon"<<endmsg;
+  clear();
   m_recDone = true;
   
   // preliminary cuts based on hits number in each station
   std::vector<MuonHit*>::const_iterator iCoord;
   int hit_per_station[5]= {0,0,0,0,0};
   // check on maximum number of hit combinations giving a neuron
-  for (iCoord = m_trackhits.begin(); iCoord != m_trackhits.end();iCoord++ ){
+  for (iCoord = trackhits->begin(); iCoord != trackhits->end();iCoord++ ){
     hit_per_station[(*iCoord)->station()]++;
   }  
 
@@ -239,37 +234,17 @@ StatusCode MuonNNetRec::muonHitFind(){
   }
   if (nFiringS <= m_firing_cut || (maxFiringS-minFiringS) < m_span_cut) {
     debug() << "not enough firing stations to get tracks" << endmsg;
-    m_recOK = false;
+    m_recOK = true;
     return StatusCode::SUCCESS;
   }
 
   if(ncomb > m_maxNeurons) {
     m_tooManyHits=true;
-    m_recOK = false;
     info() << "Too many hits to proceed with cosmic track finding" << endmsg;
     return StatusCode::SUCCESS;
   }
- 
-  m_recOK = true;
-  m_tooManyHits = false;
 
-  return StatusCode::SUCCESS;
-  
-}
 
-//=============================================================================
-// Main reconstruction steering routine TRACK finding
-//=============================================================================
-StatusCode MuonNNetRec::muonNNetMon(){  
-  if(!(m_recOK && !m_tooManyHits && m_recDone )) {
-    debug()<<" Cannot run MuonNNetRec::muonNNetMon: Hit reconstruction Failed "<<endmsg;
-  }
-  else{
-    debug()<<" Running MuonNNetRec::muonNNetMon "<<endmsg;
-  }
-
-  clear();  // reset the Track and the neuron vectors
-  
   // starts the NNet reconstruction
 
   // here starts the double loop over hits to build the neurons
@@ -279,20 +254,20 @@ StatusCode MuonNNetRec::muonNNetMon(){
   // 
   // if holes are allowed (default) max neuron length is 2 else 1
   int neuronLength = m_allowHoles ? 2 : 1;
-  debug()<<"MAX NEURON LENGTH FOR THIS JOB IS: "<<neuronLength<<" Skipping Station "<<m_skipStation<<endmsg;
+  debug()<<"MAX NEURON LENGTH FOR THIS JOB IS: "<<neuronLength<<endmsg;
   
   std::list< MuonNeuron* > neurons;
   int Nneurons = 0;
   std::vector<MuonHit*>::const_iterator ihT,ihH; 
   MuonHit *head, *tail;
-  for(ihT = m_trackhits.begin(); ihT != m_trackhits.end() ; ihT++){
+  for(ihT = trackhits->begin(); ihT != trackhits->end() ; ihT++){
     
     // skip a station for efficiency studies
     int stT = (*ihT)->station();
     if (stT == m_skipStation) continue;
     
     int tID = (*ihT)->hitID(); // tail ID
-    for(ihH = ihT+1 ;ihH != m_trackhits.end() ; ihH++){
+    for(ihH = ihT+1 ;ihH != trackhits->end() ; ihH++){
       
       // skip a station for efficiency studies
       int stH = (*ihH)->station();
@@ -551,7 +526,7 @@ StatusCode MuonNNetRec::muonNNetMon(){
       if(m_XTalk) {
         //	info()<< " before "<<muonTrack->getHits().size() <<" hits to the track"<<endmsg;
         
-        StatusCode sct = muonTrack->AddXTalk( &m_trackhits, m_XtalkRadius);
+        StatusCode sct = muonTrack->AddXTalk( trackhits, m_XtalkRadius);
         
         //	info()<< " After "<<muonTrack->getHits().size() <<" hits to the track"<<endmsg;
         
@@ -614,6 +589,13 @@ StatusCode MuonNNetRec::trackFit( )
   return StatusCode::SUCCESS;
 }
 
+
+const std::vector<MuonHit*>* MuonNNetRec::trackhits()   {
+  if(!m_recDone) muonNNetMon();
+  return m_clusterTool->clusters(m_padTool->pads());
+}
+
+
 StatusCode MuonNNetRec::copyToLHCbTracks()
 {
   
@@ -631,28 +613,29 @@ StatusCode MuonNNetRec::copyToLHCbTracks()
   put( tracks, m_trackOutputLoc );
 
   for ( MTracks::const_iterator t = mTracks->begin(), tEnd = mTracks->end(); t != tEnd; ++t ) {
-
     /// New track
     Track* track = new Track();
     /// Get the hits
     MHits hits   = (*t)->getHits();
-    /// create a state from first hit
-    LHCb::State state( StateVector( *( hits.front() ), 
-                                    Gaudi::XYZVector( (*t)->sx(), (*t)->sy(), 1.0 ),
-                                     1 / 10000. ) );
+    
+    // create a state at the Z of the first hit
+    Gaudi::XYZPoint trackPos((*t)->bx() + (*t)->sx() * hits.front()->Z(),
+                             (*t)->by() + (*t)->sy() * hits.front()->Z(),
+                             hits.front()->Z());
+    LHCb::State state( StateVector( trackPos,
+                                    Gaudi::XYZVector( (*t)->sx(), (*t)->sy(), 1.0 )));
 
     double qOverP, sigmaQOverP;
     if(m_Bfield){
       m_fCalcMomentum->calculate(&state, qOverP, sigmaQOverP);
       state.setQOverP(qOverP);
+      
+      // fill momentum variables for MuonTrack
+      (*t)->setP(state.p());
+      (*t)->setPt(state.pt());
+      (*t)->setqOverP(state.qOverP());
+      (*t)->setMomentum(state.momentum());
     }
-
-
-    // fill momentum variables for MuonTrack
-    (*t)->setP(state.p());
-    (*t)->setPt(state.pt());
-    (*t)->setqOverP(state.qOverP());
-    (*t)->setMomentum(state.momentum());
     
 
     //
@@ -669,7 +652,7 @@ StatusCode MuonNNetRec::copyToLHCbTracks()
     debug() << "Muon state = " << state << endmsg;
     track->addToStates( state );
     
-    debug()<< " CopyNNETTracks "<<(*t)->getHits().size() <<" Muonits to the track and "<<endmsg;
+    debug()<< " NNet Track has "<<(*t)->getHits().size() <<" Muonhits"<<endmsg;
     int ntile=0;    
     for ( MHits::const_iterator h = hits.begin(); h != hits.end(); ++h ){
       const MTileIDs Tiles = (*h)->getLogPadTiles();

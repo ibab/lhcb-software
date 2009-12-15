@@ -8,6 +8,9 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+! 2009-12-15 - v2r6 - GG
+ - bug fix in copyToLHCbTracks()
+
 ! 2009-12-04 - v2r5 - GP
   - new methods in MuonTrack to set/get the momentum of the tracks
 	 * setP(),setPt(),setqOverP(),setMomentum()

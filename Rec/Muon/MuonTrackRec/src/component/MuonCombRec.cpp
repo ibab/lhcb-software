@@ -1,4 +1,4 @@
-// $Id: MuonCombRec.cpp,v 1.9 2009-12-10 17:07:14 svecchi Exp $
+// $Id: MuonCombRec.cpp,v 1.10 2009-12-15 19:17:51 ggiacomo Exp $
 // Include files 
 #include <fstream>
 
@@ -325,17 +325,17 @@ StatusCode MuonCombRec::initialize() {
 };
 
 //=============================================================================
-// Main reconstruction steering routine HIT finding
+// Main reconstruction steering routine
 //=============================================================================
 
-StatusCode MuonCombRec::muonHitFind() {
+StatusCode MuonCombRec::muonTrackFind() {
   
-  // don't do the decoding if already done
+  // don't do the track reconstruction if already done
   if( m_recDone == true ) {
     return StatusCode::SUCCESS;
   }
 
-  debug()<<"running MuonCombRec::muonHitFind"<<endmsg;
+  debug()<<"running MuonCombRec::muonTrackFind"<<endmsg;
   debug()<<"log bits: recdone, hitsdone, sortdone "
          <<m_recDone<<" "
          <<m_hitsDone<<" "
@@ -364,7 +364,7 @@ StatusCode MuonCombRec::muonHitFind() {
     m_hitsDone = true;
   }
 
-  // clear the containers to protect from memory leak
+  // clear the containers
   clear();
 
   // At this stage the minimal requirements (hits and pads) are present
@@ -380,39 +380,19 @@ StatusCode MuonCombRec::muonHitFind() {
     }
     m_sortDone = true; // sorted MuonHit array successfully filled
   }
-  return StatusCode::SUCCESS;  
-}
-
-//=============================================================================
-// Main reconstruction steering routine TRACK finding
-//=============================================================================
-StatusCode MuonCombRec::muonTrackFind() {
-
-  debug()<< " Running the MuonCombRec::muonTrackFind "<<endmsg;
-
-  std::vector<MuonTrack*>::iterator it;
-  // reset the tracks if any
-  for(it=m_tracks.begin() ; it !=m_tracks.end() ; it++)
-    delete (*it);         // delete all the allocated MuonTrack's
-  m_tracks.clear() ;      // clear the array of pointers to MuonTrack's
   
   //find the tracks of muon candidates
   StatusCode sm = muonSearch();
   if (sm.isFailure()) {
     err()<<"error in muon reconstruction"<<endmsg;
     return StatusCode::FAILURE;
-  } else {    
-    debug()<<" Found "<<m_tracks.size()<<" tracks "<<endmsg;
   }
-  
-  if(m_tracks.size() == 0 ) return StatusCode::SUCCESS;
-  
+
   // the minimal tasks i.e. filling of hit and track containers are OK
   m_recOK = true;
 
   //defines a clone if two traks share pads on M2,M3,M4 
   if (m_cloneKiller) {
-    debug()<<" run CloneKiller "<<endmsg;
     StatusCode sd = cloneKiller();
     if (sd.isFailure()) {
       err()<<"error detectClone"<<endmsg;
@@ -422,7 +402,6 @@ StatusCode MuonCombRec::muonTrackFind() {
   
  //defines a clone if two traks share pads on M2,M3
   if (m_strongCloneKiller){
-    debug()<<" run strongCloneKiller "<<endmsg;
     StatusCode sk = strongCloneKiller();
     if (sk.isFailure()) {
       err()<<"error in clone killer"<<endmsg;
@@ -431,7 +410,6 @@ StatusCode MuonCombRec::muonTrackFind() {
   }
   // start track fitting
   
-  debug()<<" Fit the track with a straight line "<<endmsg;
   StatusCode scf = trackFit();
   if(!scf) {
     warning()<<"WARNING: problem in track fitting"<<endmsg;
@@ -697,7 +675,6 @@ StatusCode MuonCombRec::muonSearch() {
       seedRegion[is]=bestCandidate[is]->region();
     }
 
-
     if( !matchingFound ) continue; // no matching in at least 1 station, go to the next seed
 
     std::vector< std::vector<MuonHit*> >::iterator im;
@@ -709,18 +686,13 @@ StatusCode MuonCombRec::muonSearch() {
         muonTrack->insert(id, (*ih));
       }
     }
-    
     // store the best candidate array
     muonTrack->setBestCandidate(bestCandidate);
     m_tracks.push_back(muonTrack);
 
     debug()<<"++ This seed has been processed, go to the next one ++"<<endmsg;
     
-    debug()<< " Best candidate information ";
-    for (int is=0; is<5; is++) debug() << is <<" "<<bestCandidate[is]<<" --- ";
-    debug()<<endmsg;
   }
-  
   
   debug()<<"number of muon Tracks "<<m_tracks.size()<<endreq;
 
@@ -1018,7 +990,7 @@ StatusCode MuonCombRec::copyToLHCbTracks()
   
   
   const MTracks* mTracks = tracks();
-  if(mTracks == NULL || mTracks->size() == 0) {    
+  if(mTracks == NULL) {    
     err()<<"No track found! Can not copy anything !";
     return StatusCode::FAILURE;
   }
@@ -1032,11 +1004,26 @@ StatusCode MuonCombRec::copyToLHCbTracks()
     Track* track = new Track();
     /// Get the hits
     MHits hits   = (*t)->getHits();
-    /// create a state from first hit
-    LHCb::State state( StateVector( *( hits.front() ), 
-                                    Gaudi::XYZVector( (*t)->sx(), (*t)->sy(), 1.0 ),
-                                     1 / 10000. ) );
+    // create a state at the Z of the first hit
+    Gaudi::XYZPoint trackPos((*t)->bx() + (*t)->sx() * hits.front()->Z(),
+                             (*t)->by() + (*t)->sy() * hits.front()->Z(),
+                             hits.front()->Z());
+    LHCb::State state( StateVector( trackPos,
+                                    Gaudi::XYZVector( (*t)->sx(), (*t)->sy(), 1.0 )));
+    
+    double qOverP, sigmaQOverP;
+    if(m_Bfield){
+      m_fCalcMomentum->calculate(&state, qOverP, sigmaQOverP);
+      state.setQOverP(qOverP);
 
+      // fill momentum variables for MuonTrack
+      (*t)->setP(state.p());
+      (*t)->setPt(state.pt());
+      (*t)->setqOverP(state.qOverP());
+      (*t)->setMomentum(state.momentum());
+    }    
+
+    //
     state.setLocation( State::Muon );
     Gaudi::TrackSymMatrix seedCov;
     seedCov(0,0) = (*t)->errbx()*(*t)->errbx();
@@ -1046,34 +1033,26 @@ StatusCode MuonCombRec::copyToLHCbTracks()
     seedCov(4,4) = 0.0001;
     state.setCovariance(seedCov);
 
-    double qOverP, sigmaQOverP;
-    if(m_Bfield){
-      m_fCalcMomentum->calculate(&state, qOverP, sigmaQOverP);
-      state.setQOverP(qOverP);
-    }
-
-
     /// add state to new track
     debug() << "Muon state = " << state << endmsg;
     track->addToStates( state );
-    debug()<< " track slopes "<<track->slopes()<< " and momentum "<<track->p()<<" "<<track->charge()<<endmsg;
-
     
-    debug()<< " MuonTracks has "<<(*t)->getHits().size() <<" Muonits "<<endmsg;
+    debug()<< " CombRec Track has "<<(*t)->getHits().size() <<" Muonhits"<<endmsg;
     int ntile=0;    
     for ( MHits::const_iterator h = hits.begin(); h != hits.end(); ++h ){
       const MTileIDs Tiles = (*h)->getLogPadTiles();
-      debug()<< " -- Muon Hits has "<< (*h)->getLogPadTiles().size()<<" tiles in station "<< (*h)->station() <<endmsg;
+      debug()<< " Muon Hits has "<< (*h)->getLogPadTiles().size()<<" tiles in station "<< (*h)->station() <<endmsg;
       for (MTileIDs::const_iterator it = Tiles.begin(); it!= Tiles.end(); ++it){
-        debug()<<" -- -- Tile info ====== "<< LHCbID(**it)<<endmsg;
+        debug()<<" Tile info ====== "<< LHCbID(**it)<<endmsg;
         track->addToLhcbIDs( LHCbID( **it ) );
         ntile++;        
       }
     }
     debug()<< " in total "<<ntile<<" tiles"<<endmsg;
     
-    track->setPatRecStatus( Track::PatRecIDs );
-    track->setType( Track::Muon );
+    /// Sort of done Pat ;)
+        track->setPatRecStatus( Track::PatRecIDs );
+        track->setType( Track::Muon );
 
     tracks->insert( track );
   }
