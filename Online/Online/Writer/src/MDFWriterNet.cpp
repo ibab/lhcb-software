@@ -449,17 +449,17 @@ void MDFWriterNet::closeFile(File *currFile)
              currFile->getBytesWritten(),
              currFile->getEvents(),
              currFile->getPhysEvents());
-//  *m_log << MSG::INFO << " Command: " << header.cmd << " "
-//         << "Filename: "   << header.file_name << " "
-//	 << "RunNumber: "  << header.run_no << " "
-//         << "Adler32: "    << header.data.stop_data.adler32_sum << " "
-//         << "MD5: "        << header.data.stop_data.md5_sum << " "
-//         << "Seq Nr: "     << header.data.chunk_data.seq_num << " "
-//         << "Size: "       << header.data.stop_data.size << " "
-//         << "Events: "     << header.data.stop_data.events << " "
-//         << "Phys:  "      << header.data.stop_data.physEvents << " " 
-//         << "Command size is: " << sizeof(header)
-//         << endmsg;
+  *m_log << MSG::INFO << " Command: " << header.cmd << " "
+         << "Filename: "   << header.file_name << " "
+	 << "RunNumber: "  << header.run_no << " "
+         << "Adler32: "    << header.data.stop_data.adler32_sum << " "
+         << "MD5: "        << header.data.stop_data.md5_sum << " "
+         << "Seq Nr: "     << header.data.chunk_data.seq_num << " "
+         << "Size: "       << header.data.stop_data.size << " "
+         << "Events: "     << header.data.stop_data.events << " "
+         << "Phys:  "      << header.data.stop_data.physEvents << " " 
+         << "Command size is: " << sizeof(header)
+         << endmsg;
   m_srvConnection->sendCommand(&header);
   
   // log closing of file
@@ -633,7 +633,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
   }
  
   // after every MB send statistics
-  if (m_mq_available && totalBytesWritten % 1048576 <= 1000) {
+  if (m_mq_available && totalBytesWritten % 1048576 < len) {
       size_t msg_size = snprintf(NULL, 0, "log%c%i%c%s%c%s%zu%c%s%u%c%s%u",  
       DELIMITER, getpid(), 
       DELIMITER, m_currFile->getMonitor()->m_name,
@@ -793,7 +793,16 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
                           cmd->data.stop_data.size,
                           cmd->data.stop_data.events,
                           cmd->data.stop_data.physEvents);
-    *m_log << MSG::INFO << "Confirmed file " << cmd->file_name << endmsg;
+    *m_log << MSG::INFO << "Confirmed file " << cmd->file_name 
+         << "RunNumber: "  << cmd->run_no << " "
+         << "Adler32: "    << cmd->data.stop_data.adler32_sum << " "
+         << "MD5: "        << cmd->data.stop_data.md5_sum << " "
+         << "Seq Nr: "     << cmd->data.chunk_data.seq_num << " "
+         << "Size: "       << cmd->data.stop_data.size << " "
+         << "Events: "     << cmd->data.stop_data.events << " "
+         << "Phys:  "      << cmd->data.stop_data.physEvents << " "
+         << endmsg;
+
   } catch(std::exception& rte) {
     char md5buf[33];
     unsigned char *md5sum = cmd->data.stop_data.md5_sum;
