@@ -2,7 +2,7 @@ package RootCnv
 author Markus Frank
 version v0r1
 
-branches  cmt doc src 
+branches  cmt dict src
 
 use GaudiKernel v*
 use ROOT        v* LCG_Interfaces
