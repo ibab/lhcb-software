@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-12-15 - Patrick Robbe
+ - Configuration.py: fix the name of the generator monitoring sequence 
+   which was not attached to the main sequence.
+
 !========================= Gauss v38r0p1 2009-11-25 ==========================
 ! 2009-12-03 - Victor Coco
  - Modified the Configuration.py in order that VeloPix can be used (add
