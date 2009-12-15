@@ -1,4 +1,4 @@
-// $Id: RootDataConnection.cpp,v 1.1 2009-12-15 15:37:25 frankb Exp $
+// $Id: RootDataConnection.cpp,v 1.2 2009-12-15 19:28:11 frankb Exp $
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/DataObject.h"
@@ -31,6 +31,7 @@ RootDataConnection::RootDataConnection(const IInterface* owner, const std::strin
   }
   m_age = 0;
   m_file = 0;
+  m_dbBranch=m_cntBranch=m_lnkBranch=m_pathBranch=0;
 }
 
 /// Standard destructor      
@@ -39,7 +40,73 @@ RootDataConnection::~RootDataConnection()   {
 
 StatusCode RootDataConnection::connectRead()  {
   m_file = TFile::Open(m_pfn.c_str());
-  return 0==m_file ? StatusCode::FAILURE : StatusCode::SUCCESS;
+  if ( m_file && !m_file->IsZombie() )   {
+    return readRefs();
+  }
+  return StatusCode::FAILURE;
+}
+
+StatusCode RootDataConnection::readRefs() {
+  TTree* t = (TTree*)m_file->Get("Event");
+  if ( !t ) {
+    TDirectory::TContext ctxt(m_file);
+    t = new TTree("Event","Root Event data");
+    m_dbBranch = t->Branch("Databases",0,"C");
+    m_cntBranch = t->Branch("Containers",0,"C");
+    m_lnkBranch = t->Branch("Links",0,"C");
+    m_pathBranch = t->Branch("Paths",0,"C");
+  }
+  else {
+    size_t i,n;
+    char text[2048];
+    m_dbBranch = t->GetBranch("Databases");
+    m_cntBranch = t->GetBranch("Containers");
+    m_lnkBranch = t->GetBranch("Links");
+    m_pathBranch = t->GetBranch("Paths");    
+    m_dbBranch->SetAddress(text);
+    for(i=0, n=m_dbBranch->GetEntries(); i<n; ++i) {
+      if ( m_dbBranch->GetEntry(i)>0 ) m_dbs.push_back(text);
+    }
+    m_cntBranch->SetAddress(text);
+    for(i=0, n=m_cntBranch->GetEntries(); i<n; ++i) {
+      if ( m_cntBranch->GetEntry(i)>0 ) m_conts.push_back(text);
+    }
+    m_lnkBranch->SetAddress(text);
+    for(i=0, n=m_lnkBranch->GetEntries(); i<n; ++i) {
+      if ( m_lnkBranch->GetEntry(i)>0 ) m_links.push_back(text);
+    }
+    m_pathBranch->SetAddress(text);
+    for(i=0, n=m_pathBranch->GetEntries(); i<n; ++i) {
+      if ( m_pathBranch->GetEntry(i)>0 ) m_paths.push_back(text);
+    }
+  }
+  return StatusCode::SUCCESS;
+}
+
+StatusCode RootDataConnection::saveRefs() {
+  StatusCode sc = StatusCode::SUCCESS;
+  if ( m_dbBranch && m_cntBranch && m_lnkBranch && m_pathBranch ) {
+    if ( isWritable() ) {
+      size_t i,n;
+      for(i=m_dbBranch->GetEntries(), n=m_dbs.size(); i<n; ++i) {
+	m_dbBranch->SetAddress((char*)m_dbs[i].c_str());
+	if ( m_dbBranch->Fill() <= 1) sc = StatusCode::FAILURE;
+      }
+      for(i=m_cntBranch->GetEntries(), n=m_conts.size(); i<n; ++i) {
+	m_cntBranch->SetAddress((char*)m_conts[i].c_str());
+	if ( m_cntBranch->Fill()<=1 ) sc = StatusCode::FAILURE;
+      }
+      for(i=m_lnkBranch->GetEntries(), n=m_links.size(); i<n; ++i) {
+	m_lnkBranch->SetAddress((char*)m_links[i].c_str());
+	if ( m_lnkBranch->Fill()<=1 ) sc = StatusCode::FAILURE;
+      }
+      for(i=m_pathBranch->GetEntries(), n=m_paths.size(); i<n; ++i) {
+	m_pathBranch->SetAddress((char*)m_paths[i].c_str());
+	if ( m_pathBranch->Fill()<=1 ) sc = StatusCode::FAILURE;
+      }
+    }
+  }
+  return sc;
 }
 
 StatusCode RootDataConnection::connectWrite(IoType typ)  {
@@ -54,6 +121,9 @@ StatusCode RootDataConnection::connectWrite(IoType typ)  {
   case UPDATE:
     resetAge();
     m_file = TFile::Open(m_pfn.c_str(),"UPDATE","Root event data");
+    if ( m_file && !m_file->IsZombie() )  {
+      return readRefs();
+    }
     break;
   default:
     m_file = 0;
@@ -69,8 +139,9 @@ StatusCode RootDataConnection::read(void* const data, size_t len)  {
     if ( size_t(m_file->GetBytesRead())+len > size_t(m_file->GetSize()) ) {
       return StatusCode::FAILURE;
     }
-    if ( m_file->ReadBuffer((char*)data,len)==0 )
+    if ( m_file->ReadBuffer((char*)data,len)==0 ) {
       return StatusCode::SUCCESS;
+    }
   }
   return StatusCode::FAILURE;
 }
@@ -108,7 +179,12 @@ long long int RootDataConnection::seek(long long int offset, int how)  {
 
 StatusCode RootDataConnection::disconnect()    {
   if ( m_file ) {
-    if ( !m_file->IsZombie() ) m_file->Close();
+    if ( !m_file->IsZombie() )   {
+      if ( m_file->IsWritable() ) {
+	saveRefs().ignore();
+      }
+      m_file->Close();
+    }
     delete m_file;
     m_file = 0;
   }
@@ -136,44 +212,47 @@ TBranch* RootDataConnection::getBranch(TClass* cl, CSTR n) {
 }
 
 int RootDataConnection::makePath(const std::string& p) {
+  int cnt = 0;
   StringMap::iterator ip;
-  for(ip=m_paths.begin();ip!=m_paths.end();++ip)
-    if( (*ip).second == p ) break;
+  for(ip=m_paths.begin();ip!=m_paths.end();++ip,++cnt)
+    if( (*ip) == p ) return cnt;
 
-  if ( ip == m_paths.end() ) {
-    ip = m_paths.insert(make_pair(m_paths.size(),p)).first;
-  }
-  return (*ip).first;
+  m_paths.push_back(p);
+  return m_paths.size()-1;
 }
 
 void RootDataConnection::makeRef(IRegistry* pR, RootRef& ref) {
+  int cdb=0, ccnt=0, clnk=0;
   StringMap::iterator idb, icnt, ilnk;
   IOpaqueAddress* pA = pR->address();
   const string& name = pR->name();
   const string& db = pA->par()[0];
   const string& cnt = pA->par()[1];
 
-  for(idb=m_dbs.begin();idb!=m_dbs.end();++idb)
-    if( (*idb).second == db ) break;
+  for(idb=m_dbs.begin(); idb!=m_dbs.end();++idb,++cdb)
+    if( (*idb) == db ) break;
 
-  for(icnt=m_conts.begin();icnt!=m_conts.end();++icnt)
-    if( (*icnt).second == cnt ) break;
+  for(icnt=m_conts.begin(); icnt!=m_conts.end();++icnt,++ccnt)
+    if( (*icnt) == cnt ) break;
 
-  for(ilnk=m_links.begin();ilnk!=m_links.end();++ilnk)
-    if( (*ilnk).second == name ) break;
+  for(ilnk=m_links.begin(); ilnk!=m_links.end();++ilnk,++clnk)
+    if( (*ilnk) == name ) break;
 
   if ( idb == m_dbs.end() ) {
-    idb = m_dbs.insert(make_pair(m_dbs.size(),pA->par()[0])).first;
+    cdb = m_dbs.size();
+    m_dbs.push_back(pA->par()[0]);
   }
   if ( icnt == m_conts.end() ) {
-    icnt = m_conts.insert(make_pair(m_conts.size(),pA->par()[1])).first;
+    ccnt = m_conts.size();
+    m_conts.push_back(pA->par()[1]);
   }
   if ( ilnk == m_links.end() ) {
-    ilnk = m_links.insert(make_pair(m_links.size(),name)).first;
+    clnk = m_links.size();
+    m_links.push_back(name);
   }
-  ref.dbase     = (*idb).first;
-  ref.container = (*icnt).first;
-  ref.link      = (*ilnk).first;
+  ref.dbase     = cdb;
+  ref.container = ccnt;
+  ref.link      = clnk;
   ref.clid      = pA->clID();
   ref.svc       = pA->svcType();
 }
@@ -181,21 +260,17 @@ void RootDataConnection::makeRef(IRegistry* pR, RootRef& ref) {
 static string s_empty;
 
 const std::string& RootDataConnection::getPath(int which) {
-  StringMap::iterator ipaths = m_paths.find(which);
-  return ipaths==m_paths.end() ? s_empty : (*ipaths).second;
+  return (which>0)&&(size_t(which)<m_paths.size()) ? *(m_paths.begin()+which) : s_empty;
 }
 
 const std::string& RootDataConnection::getDb(int which) {
-  StringMap::iterator idb  = m_dbs.find(which);
-  return idb==m_dbs.end() ? s_empty : (*idb).second;
+  return (which>0)&&(size_t(which)<m_dbs.size()) ? *(m_dbs.begin()+which) : s_empty;
 }
 
 const std::string& RootDataConnection::getCont(int which) {
-  StringMap::iterator icnt = m_conts.find(which);
-  return icnt==m_conts.end() ? s_empty : (*icnt).second;
+  return (which>0)&&(size_t(which)<m_conts.size()) ? *(m_conts.begin()+which) : s_empty;
 }
 
 const std::string& RootDataConnection::getLink(int which) {
-  StringMap::iterator ilnk = m_links.find(which);
-  return ilnk==m_links.end() ? s_empty : (*ilnk).second;
+  return (which>0)&&(size_t(which)<m_links.size()) ? *(m_links.begin()+which) : s_empty;
 }

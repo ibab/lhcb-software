@@ -1,4 +1,4 @@
-// $Id: RootDataConnection.h,v 1.1 2009-12-15 15:37:25 frankb Exp $
+// $Id: RootDataConnection.h,v 1.2 2009-12-15 19:28:11 frankb Exp $
 #ifndef GAUDIROOT_ROOTDATACONNECTION_H
 #define GAUDIROOT_ROOTDATACONNECTION_H
 
@@ -7,8 +7,8 @@
 #include <string>
 #include <map>
 
+#include "TFile.h"
 // Forward declarations
-class TFile;
 class TClass;
 class TBranch;
 class DataObject;
@@ -30,13 +30,15 @@ namespace Gaudi  {
   class RootDataConnection : virtual public Gaudi::IDataConnection  {
   protected:
     /// Type definition for string maps
-    typedef std::map<int,std::string> StringMap;
+    typedef std::vector<std::string> StringMap;
     TFile*     m_file;
     StringMap  m_dbs;
     StringMap  m_conts;
     StringMap  m_links;
     StringMap  m_paths;
-
+    struct DataSection {
+    };
+    TBranch *m_dbBranch, *m_cntBranch, *m_lnkBranch, *m_pathBranch;
   public:
     /// Standard constructor
     RootDataConnection(const IInterface* own, const std::string& nam);
@@ -46,6 +48,8 @@ namespace Gaudi  {
     TFile* file() const                     {     return m_file;      }
     /// Check if connected to data source
     virtual bool isConnected() const        {     return m_file != 0; }
+    /// Is the file writable?
+    bool isWritable() const {  return m_file != 0 && m_file->IsWritable(); }
     /// Open data stream in read mode
     virtual StatusCode connectRead();
     /// Open data stream in write mode
@@ -58,6 +62,10 @@ namespace Gaudi  {
     virtual StatusCode write(const void* data, int len);
     /// Seek on the file described by ioDesc. Arguments as in ::seek()
     virtual long long int seek(long long int where, int origin);
+
+    StatusCode readRefs();
+    StatusCode saveRefs();
+
     /// Access data branch by name
     TBranch* getBranch(const std::string& n);
     TBranch* getBranch(TClass* cl, const std::string& n);
