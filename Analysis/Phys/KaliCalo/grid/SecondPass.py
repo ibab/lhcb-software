@@ -34,7 +34,7 @@ def getFmDSTLFNs(jobID):
 if __name__=='__main__':
   usage = "usage: ganga %prog [options]"
   parser = OptionParser(usage=usage)
-  parser.add_option("-n", "--name", action="store", type="string", dest="name", default="fmDSTFirstPass", help="name of the job")
+  parser.add_option("-n", "--name", action="store", type="string", dest="name", default="fmDSTSecondPass", help="name of the job")
   parser.add_option("-j", "--jobid", action="store", type="int", dest="jobid", default=-1, help="jobID to take the input data from")
   parser.add_option("-s", "--submit", action="store_true", dest="submit", default=False, help="submit job after creating it")
   (options, args) = parser.parse_args()
