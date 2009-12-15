@@ -484,6 +484,11 @@ namespace Al
 		     << elemdata.numTracks() << " "
 		     << elemdata.numHits() << " "
 		     << elemdata.numOutliers() << std::endl ;
+	  logmessage << "Local-to-global diagonal: " ;
+	  for(int i=0; i<6; ++i)
+	    logmessage << std::setprecision(3) << (*it)->jacobian()(i,i) << " " ;
+	  logmessage << std::endl ;
+	  
 	  int offset = (*it)->activeParOffset() ;
 	  if( offset < 0 ) {
 	    logmessage << "Not enough hits for alignment. Skipping update." << std::endl ;
