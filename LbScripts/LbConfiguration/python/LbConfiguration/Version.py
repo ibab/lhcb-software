@@ -1,5 +1,5 @@
 """ LHCb version style definition and massaging """
-# $Id: Version.py,v 1.1 2009-12-14 19:53:48 hmdegaud Exp $
+# $Id: Version.py,v 1.2 2009-12-15 17:11:38 hmdegaud Exp $
 
 import re
 
@@ -25,11 +25,12 @@ class NotAVersion(Exception):
     pass
 
 class CoreVersion:
+    version_style = re.compile("%s$" % _txt_version_style)
     def __init__(self, vname):
         self._vname = vname
         self._version = None
         self._patchversion = False
-        m = version_style.match(self._vname)
+        m = self.version_style.match(self._vname)
         if m :
             a, b, c = m.groups()
             if a is None or b is None :
