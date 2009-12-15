@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.80 2009-12-10 08:27:06 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.81 2009-12-15 15:17:39 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -15,34 +15,34 @@ class DaVinci(LHCbConfigurableUser) :
     
     __slots__ = {
         # Application Configuration : sent to LHCbApp and Gaudi
-         "EvtMax"             :  -1           # Number of events to analyse
-       , "SkipEvents"         :   0           # Number of events to skip at beginning for file
-       , "PrintFreq"          : 100           # The frequency at which to print event numbers
-       , "DataType"           : 'MC09'        # Data type, can be ['DC06','2008','2009', 'MC09'] Forwarded to PhysConf
-       , "Simulation"         : True          # set to True to use SimCond. Forwarded to PhysConf
-       , "DDDBtag"            : "default"     # Tag for DDDB. Default as set in DDDBConf for DataType
-       , "CondDBtag"          : "default"     # Tag for CondDB. Default as set in DDDBConf for DataType
+         "EvtMax"             :  -1             # Number of events to analyse
+       , "SkipEvents"         :   0             # Number of events to skip at beginning for file
+       , "PrintFreq"          : 100             # The frequency at which to print event numbers
+       , "DataType"           : 'MC09'          # Data type, can be ['DC06','2008','2009', 'MC09'] Forwarded to PhysConf
+       , "Simulation"         : True            # set to True to use SimCond. Forwarded to PhysConf
+       , "DDDBtag"            : "default"       # Tag for DDDB. Default as set in DDDBConf for DataType
+       , "CondDBtag"          : "default"       # Tag for CondDB. Default as set in DDDBConf for DataType
          # Input
-       , "Input"              : []            # Input data. Can also be passed as a second option file.
+       , "Input"              : []              # Input data. Can also be passed as a second option file.
          # Output
-       , "HistogramFile"      : ""            # Write name of output Histogram file
-       , "TupleFile"          : ""            # Write name of output Tuple file
-       , "ETCFile"            : ""            # Name of ETC file
+       , "HistogramFile"      : "DaVinci.root"  # Name of output Histogram file (set to "" to get no output) 
+       , "TupleFile"          : ""              # Name of output Tuple file
+       , "ETCFile"            : ""              # Name of output ETC file
          # Monitoring
-       , "MoniSequence"       : []            # Add your monitors here
+       , "MoniSequence"       : []              # Add your monitors here
          # DaVinci Options
-       , "MainOptions"        : ""            # Main option file to execute
-       , "UserAlgorithms"     : []            # User algorithms to run.
-       , "RedoMCLinks"        : False         # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
-       , "InputType"          : "DST"         # or "DIGI" or "ETC" or "RDST" or "DST or "MDST". Nothing means the input type is compatible with being a DST. 
+       , "MainOptions"        : ""              # Main option file to execute
+       , "UserAlgorithms"     : []              # User algorithms to run.
+       , "RedoMCLinks"        : False           # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
+       , "InputType"          : "DST"           # or "DIGI" or "ETC" or "RDST" or "DST or "MDST". Nothing means the input type is compatible with being a DST. 
          # Trigger running
-       , "L0"                 : False         # Run L0.
-       , "Hlt"                : False         # Run Hlt
-       , "ReplaceL0BanksWithEmulated" : False # Re-run L0 
-       , "HltUserAlgorithms"  : [ ]           # put here user algorithms to add
-       , "Hlt2Requires"       : 'L0+Hlt1'     # Say what Hlt2 requires
-       , "HltThresholdSettings" : ''          # Use some special threshold settings, eg. 'Miriam_20090430' or 'FEST'
-       , 'EnableUnpack' : None  ## Explicitly enable/disable unpacking for input data (if specified) 
+       , "L0"                 : False           # Run L0.
+       , "Hlt"                : False           # Run Hlt
+       , "ReplaceL0BanksWithEmulated" : False   # Re-run L0 
+       , "HltUserAlgorithms"  : [ ]             # put here user algorithms to add
+       , "Hlt2Requires"       : 'L0+Hlt1'       # Say what Hlt2 requires
+       , "HltThresholdSettings" : ''            # Use some special threshold settings, eg. 'Miriam_20090430' or 'FEST'
+       , 'EnableUnpack' : None                  # Explicitly enable/disable unpacking for input data (if specified) 
        }
 
     _propertyDocDct = {  
@@ -298,15 +298,15 @@ class DaVinci(LHCbConfigurableUser) :
         output files
         """
         ApplicationMgr().HistogramPersistency = "ROOT"
-        if ( self.getProp("HistogramFile") != "" ):
+        if ( self.isPropertySet('HistogramFile') and self.getProp("HistogramFile") != "" ):
             HistogramPersistencySvc().OutputFile = self.getProp("HistogramFile")
-        if ( self.getProp("TupleFile") != "" ):
+        if ( self.isPropertySet('TupleFile') and self.getProp("TupleFile") != "" ):
             tupleFile = self.getProp("TupleFile")
             ApplicationMgr().ExtSvc +=  [ NTupleSvc() ]
             tuple = "FILE1 DATAFILE='"+tupleFile+"' TYP='ROOT' OPT='NEW'"
             NTupleSvc().Output = [ tuple ]
             NTupleSvc().OutputLevel = 1 
-        if ( self.getProp("ETCFile") != "" ):
+        if ( self.isPropertySet('ETCFile') and self.getProp("ETCFile") != "" ):
             self.etc(self.getProp("ETCFile"))
 ################################################################################
 # ETC
