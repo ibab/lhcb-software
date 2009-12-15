@@ -36,18 +36,21 @@ if __name__=='__main__':
   parser = OptionParser(usage=usage)
   parser.add_option("-n", "--name", action="store", type="string", dest="name", default="fmDSTSecondPass", help="name of the job")
   parser.add_option("-j", "--jobid", action="store", type="int", dest="jobid", default=-1, help="jobID to take the input data from")
+  parser.add_option("-f", "--fmDST", action="store_true", dest="fmDST", default=False, help="keep the fmDST in the outputdata")
   parser.add_option("-s", "--submit", action="store_true", dest="submit", default=False, help="submit job after creating it")
   (options, args) = parser.parse_args()
   
   print "Creating job with name %s" %options.name
   gridProxy.renew()
-  if not options.jobid in jobs.ids:
+  if not options.jobid in jobs.ids():
     print "Job %s is unknown" %options.jobid
     sys.exit()
 
   j = createJob(options.name)
   j.inputdata = LHCbDataset(getFmDSTLFNs(jobID))
   j.application.extraopts = "kali.FirstPass = False"
+  if options.fmDST:
+    j.outputdata.files.append('KaliPi0.fmDST')
   if options.submit:
     j.submit()
 
