@@ -1,0 +1,114 @@
+#!/usr/bin/env python
+# $Id: webRemoveRelease,v 1.1 2009-12-15 15:57:23 hmdegaud Exp $
+""" This scripts removes the links of a release in the $LHCBDOC directory"""
+
+from LbUtils.Script import Script
+from LbUtils.CVS import CVS2Version
+
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.1 $")
+__author__ = "hmd"
+
+from LbConfiguration.Version import sortVersions, version_style
+import shutil
+import sys
+import os
+import re
+from stat import *
+
+
+def removeRelease(projectname, projectversion, branch=None):
+    
+    lhcbreleases = os.environ["LHCBRELEASES"]
+    
+    projectname = sys.argv[1]
+    projectversion = sys.argv[2]
+    lhcbsitelocation = ""
+    branch = ""
+    if len(sys.argv) > 3:
+    #  lhcbsitelocation = sys.argv[3]
+        branch = sys.argv[3]
+    if lhcbsitelocation != "" and lhcbsitelocation.endswith("/") == 0:
+        lhcbsitelocation = lhcbsitelocation + "/"
+    else:
+        lhcbsitelocation = lhcbsitelocation;
+    lhcbsitelocation = lhcbsitelocation + projectname.lower() + "/"
+    
+    print
+    print " -- Project " + projectname.lower() + " " + projectversion.lower() + "--"
+    
+    # recreate latest links
+    
+    # try to find branch for this version and remove it from branch and recreate latest link
+    
+    for dir in os.listdir(lhcbsitelocation + "releases"):
+        if version_style.match(dir) == None:
+            try:
+                ln = len(os.listdir(lhcbsitelocation + "releases/" + dir))
+                try:
+                    os.remove(lhcbsitelocation + "releases/" + dir + "/" + projectversion)
+                    if ln <= 3:
+                        shutil.rmtree(lhcbsitelocation + "releases/" + dir)
+                    else:
+                        try:
+                            os.remove(lhcbsitelocation + "releases/" + dir + "/latest")
+                        except os.error, err:
+                            err
+    
+                        versions = sortVersions(os.listdir(os.path.join(lhcbsitelocation, "releases", dir)), safe=True)
+                        versions.reverse()
+                        os.symlink(versions[0], lhcbsitelocation + "releases/" + dir + "/latest")
+                except os.error, err:
+                    err
+            except os.error, err:
+                err
+    
+    # if remove from branch - exit
+    
+    if branch != "":
+        print " :: Release " + projectversion + " removed from branch " + branch + "."
+        print
+        raise SystemExit
+    
+    # if no - remove version and recreate latest link
+    
+    shutil.rmtree(lhcbsitelocation + "releases/" + projectversion)
+    
+    try:
+        os.remove(lhcbsitelocation + "releases/latest")
+    except os.error, err:
+        err
+    
+    versions = sortVersions(os.listdir(os.path.join(lhcbsitelocation, "releases")), safe=True)
+    versions.reverse()
+    os.symlink(versions[0], lhcbsitelocation + "releases/latest")
+    
+    print " :: Release " + projectversion + " removed."
+    print
+
+
+
+class WebRemoveReleaseScript(Script):
+    _version = __version__
+    _description = __doc__
+    def defineOpts(self):
+        parser = self.parser
+    def main(self):
+        opts = self.options
+        args = self.args
+        if len(args) < 2 :
+            raise SystemExit
+        else :
+            projectname = args[0]
+            projectversion = args[1]
+        branch = None
+        if len(args) > 2 :
+            branch = args[2]
+        removeRelease(projectname, projectversion, branch)
+        return 0
+
+
+if __name__ == '__main__':
+    s = WebRemoveReleaseScript(usage="%prog [options] projectname projectversion [branch]")
+    s.run()
+
+

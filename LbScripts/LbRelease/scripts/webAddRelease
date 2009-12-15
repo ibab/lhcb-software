@@ -1,0 +1,227 @@
+#!/usr/bin/env python
+# $Id: webAddRelease,v 1.1 2009-12-15 15:57:23 hmdegaud Exp $
+""" This scripts adds the needed links for a new release in the $LHCBDOC directory """
+
+from LbUtils.Script import Script
+from LbUtils.CVS import CVS2Version
+
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.1 $")
+__author__ = "hmd"
+
+from LbConfiguration.Version import sortVersions, version_style
+import logging
+import os
+import re
+from stat import *
+
+def addRelease(projectversion, projectname, branch=None):
+    log = logging.getLogger()
+
+    lhcbreleases = os.environ["LHCBRELEASES"]
+    
+    lhcbsitelocation = os.path.join(os.environ["LHCBDOC"], projectname.lower())
+        
+    print
+    print " -------------------------- Project " + projectname.lower() + " " + projectversion.lower() + " --------------------------"
+    
+    projectdir = lhcbreleases
+    
+    # obtain path to project location and checking for errors (existing of the project, version and SysPackage)
+    
+    syspkgdir = ""
+    projectroot = ""
+    relprojectdir = ""
+    relsyspkgdir = ""
+    error = "Project " + projectname.upper() + " does not exist!"
+    for dir in os.listdir(projectdir):
+        if dir.lower() == projectname.lower():
+            projectdir = os.path.join(projectdir, dir)
+            projectroot = projectdir
+            error = "Project version " + projectversion + " does not exist!"
+    for dir in os.listdir(projectdir):
+        if dir.lower() == (projectname + "_" + projectversion).lower():
+            projectdir = os.path.join(projectdir, dir)
+            relprojectdir = dir + "/"
+            relsyspkgdir = dir + "/"
+            error = "System package missing!"
+    for dir in os.listdir(projectdir):
+        if dir.lower() == (projectname + "sys").lower():
+            syspkgdir = os.path.join(projectdir, dir)
+            relsyspkgdir = relsyspkgdir + dir + "/"
+            if not os.path.exists(os.path.join(syspkgdir, "cmt")) :
+                syspkgdir = os.path.join(projectdir, dir, projectversion)
+                relsyspkgdir = relsyspkgdir + dir + "/" + projectversion + "/"
+            error = ""
+    if error != "":
+        print "ERROR:", error
+        raise SystemExit
+    
+    # remove all files in releases/[version] except file description.html
+    
+    try:
+        for filename in os.listdir(os.path.join(lhcbsitelocation, "releases", projectversion)):
+            if filename != "description.html":
+                os.remove(os.path.join(lhcbsitelocation, "releases", projectversion, filename))
+    except os.error, err:
+        err
+    
+    # recreate projectroot link
+    
+    try:
+        os.remove(os.path.join(lhcbsitelocation, "projectroot") )
+    except os.error, err:
+        err
+    try:
+        os.symlink(projectroot, os.path.join(lhcbsitelocation, "projectroot"))
+    except os.error, err:
+        err
+    
+    # create links in releases/[version]
+    
+    print "LINKS:"
+    try:
+        os.mkdir(os.path.join(lhcbsitelocation, "releases"))
+        os.symlink("../scripts/releases.php", os.path.join(lhcbsitelocation, "releases", "index.php"))
+    except os.error, err:
+        err
+    
+    try:
+        try:
+            os.mkdir(os.path.join(lhcbsitelocation, "releases", projectversion))
+        except os.error, err:
+            err
+        os.symlink("../../scripts/release.php", os.path.join(lhcbsitelocation, "releases", projectversion, "index.php"))
+        print "  index.php -> " + "../../scripts/release.php"
+        os.symlink("../../scripts/release.notes_wrapper.php", os.path.join(lhcbsitelocation, "releases", projectversion, "release.notes.php"))
+        print "  release.notes.php -> " + "../../scripts/release.notes_wrapper.php"
+        os.symlink("../../scripts/requirements_wrapper.php", os.path.join(lhcbsitelocation, "releases", projectversion, "requirements.php"))
+        print "  requirements.php -> " + "../../scripts/requirements_wrapper.php"
+    except os.error, err:
+        err
+    
+    try:
+        os.symlink("../../projectroot/" + relsyspkgdir + "doc/html", os.path.join(lhcbsitelocation, "releases", projectversion, "doxygen"))
+        print "  doxygen -> " + "../../projectroot/" + relsyspkgdir + "doc/html"
+        os.symlink("../../projectroot/" + relsyspkgdir + "cmt/requirements", os.path.join(lhcbsitelocation, "releases", projectversion, "requirements"))
+        print "  requirements -> " + "../../projectroot/" + relsyspkgdir + "cmt/requirements"
+        for filename in os.listdir(syspkgdir + "doc"):
+            if filename.find("release") != -1 and filename.find("notes") != -1:
+                os.symlink("../../projectroot/" + relsyspkgdir + "doc/" + filename, os.path.join(lhcbsitelocation, "releases", projectversion, "release.notes"))
+                print "  release.notes -> " + "../../projectroot/" + relsyspkgdir + "doc/" + filename
+                break
+        if os.path.isfile(os.path.join(projectdir, "description.html")):
+            os.symlink("../../projectroot/" + relprojectdir + "description.html", os.path.join(lhcbsitelocation, "releases", projectversion, "description.html"))
+            print "  description.html -> ../../projectroot/" + relprojectdir + "description.html"
+    except os.error, err:
+        err
+    
+    try:
+        for filename in os.listdir(syspkgdir + "doc"):
+            if filename.find("release") != -1 and filename.find( "notes") != -1:
+                try:
+                    os.symlink("../../projectroot/" + relsyspkgdir + "doc/" + filename, os.path.join(lhcbsitelocation, "releases", projectversion, filename))
+                    print "  " + filename + " -> " + "../../projectroot/" + relsyspkgdir + "doc/" + filename
+                except os.error, err:
+                    err
+    except os.error, err:
+        err
+    
+    # create packages structure for current version of project
+    
+    print "PACKAGES:"
+    try:
+        os.mkdir(os.path.join(lhcbsitelocation, "packages"))
+        os.symlink("../scripts/packages.php", os.path.join(lhcbsitelocation, "packages", "index.php"))
+        os.symlink("../scripts/package.php", os.path.join(lhcbsitelocation, "packages", "package.php"))
+    except os.error, err:
+        err
+    for pkg1 in os.listdir(projectdir):
+        if S_ISDIR(os.stat(os.path.join(projectdir, pkg1))[ST_MODE]):
+            for pkg2 in os.listdir(os.path.join(projectdir,pkg1)):
+                if (version_style.match(pkg2) != None or os.path.isfile(os.path.join(projectdir, pkg1, "cmt", "version.cmt"))) and pkg1.lower() != (projectname + "sys").lower():
+                    try:
+                        os.mkdir(os.path.join(lhcbsitelocation, "packages", pkg1));
+                    except os.error, err:
+                        err
+                    print "  " + pkg1
+                else:
+                    if S_ISDIR(os.stat(os.path.join(projectdir, pkg1, pkg2))[ST_MODE]):
+                        pkg2listdir = os.listdir(os.path.join(projectdir, pkg1, pkg2))
+                        if len(pkg2listdir) > 0:
+                            if version_style.match(pkg2listdir[0]) != None or os.path.isfile( os.path.join(projectdir, pkg1, pkg2, "cmt", "version.cmt") ):
+                                try:
+                                    os.mkdir(os.path.join(lhcbsitelocation, "packages", pkg1))
+                                except os.error, err:
+                                    err
+                                try:
+                                    os.mkdir(os.path.join(lhcbsitelocation, "packages", pkg1, pkg2))
+                                except os.error, err:
+                                    err
+                                print "  " + pkg1 + "/" + pkg2
+    
+    # create latest link in releases directory
+    
+    try:
+        os.remove(os.path.join(lhcbsitelocation, "releases","latest"))
+    except os.error, err:
+        err
+
+    versions = sortVersions(os.listdir(os.path.join(lhcbsitelocation, "releases")), safe=True)
+    versions.reverse()
+    
+    try:
+        os.remove(os.path.join(lhcbsitelocation, "releases", "latest"))
+    except os.error, err:
+        err
+    os.symlink(versions[0], os.path.join(lhcbsitelocation, "releases", "latest"))
+    
+    # if branch is specified create latest link in releases/[branch] directory
+    
+    if branch != "":
+        try:
+            os.mkdir(os.path.join(lhcbsitelocation, "releases", branch))
+            os.symlink("../../scripts/releases.php", os.path.join(lhcbsitelocation, "releases", branch, "index.php"))
+        except os.error, err:
+            err
+        try:
+            os.symlink("../" + projectversion, os.path.join(lhcbsitelocation, "releases", branch, projectversion))
+        except os.error, err:
+            err
+    
+        versions = []
+        versions = sortVersions(os.listdir(os.path.join(lhcbsitelocation, "releases", branch)), safe=True)
+        versions.reverse()
+        try:
+            os.remove(os.path.join(lhcbsitelocation, "releases", branch, "latest"))
+        except os.error, err:
+            err
+        os.symlink(versions[0], os.path.join(lhcbsitelocation, "releases", branch, "latest"))
+    
+    print " -------------------------- Release " + projectversion + " added. ---------------------------"
+
+
+class WebAddReleaseScript(Script):
+    _version = __version__
+    _description = __doc__
+    def defineOpts(self):
+        parser = self.parser
+    def main(self):
+        opts = self.options
+        args = self.args
+        if len(args) < 2 :
+            raise SystemExit
+        else :
+            projectname = args[0]
+            projectversion = args[1]
+        branch = None
+        if len(args) > 2 :
+            branch = args[2]
+        
+        addRelease(projectname, projectversion, branch)
+        
+        return 0
+
+
+if __name__ == '__main__':
+    s = WebAddReleaseScript(usage="%prog [options] projectname projectversion [branch]")
+    s.run()

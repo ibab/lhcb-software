@@ -16,3 +16,6 @@ apply_pattern source_shell_alias script=BrunelBench
 
 apply_pattern python_alias script=getpack
 apply_pattern python_alias script=genXMLCatalog
+apply_pattern python_alias script=webAddRelease
+apply_pattern python_alias script=webRemoveRelease
+apply_pattern python_alias script=webArchiveRelease

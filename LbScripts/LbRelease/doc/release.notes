@@ -1,3 +1,9 @@
+2009-12-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/webArchiveRelease: added draft version of archive.py
+	* scripts/webRemoveRelease: added draft version of remrel.py
+	* scripts/webAddRelease: added draft version of addrel.py
+
 2009-12-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/GetPack.py: added the LHCb SVN repository

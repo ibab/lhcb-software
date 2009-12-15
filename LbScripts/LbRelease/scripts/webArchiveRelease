@@ -1,0 +1,66 @@
+#!/usr/bin/env python
+# $Id: webArchiveRelease,v 1.1 2009-12-15 15:57:23 hmdegaud Exp $
+""" Don't forget the description of this script """
+
+from LbUtils.Script import Script
+from LbUtils.CVS import CVS2Version
+
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.1 $")
+__author__ = "gcorti"
+
+import sys, os, time, stat, shutil
+
+
+def archiveRelease(project, version):    
+    print 'Making archive documentation for', project, version
+    
+    docDir = os.path.join(os.environ['LHCBDOC'],project,'releases')
+    relDir = os.path.join(docDir,version)
+    arcDir = os.path.join(docDir,'archive',version)
+    print docDir
+    print relDir
+    print arcDir
+    
+    arcVers = os.listdir(os.path.join(docDir,'archive'))
+    if version in arcVers:
+        message = 'Archive directory already exists '+arcDir+' - Check it - STOP'
+        raise Exception(message)
+    
+    message = 'Create archive directory '+arcDir
+    print message
+    os.mkdir(arcDir)
+    
+    print 'Copying description file'
+    shutil.copyfile(os.path.join(relDir,'description.html'),os.path.join(arcDir,'description.html'))
+    
+    arcDate = time.strftime("%Y-%m-%d",time.localtime())
+    dateFile = file(os.path.join(arcDir,'arcdate.txt'),'w')
+    dateFile.write(arcDate+'\n')
+    dateFile.close()
+    
+    relFile = os.path.join(relDir,'release.notes')
+    relDate = time.strftime("%Y-%m-%d",time.localtime(os.stat(relFile)[stat.ST_MTIME]))
+    relFile = file(os.path.join(arcDir,'reldate.txt'),'w')
+    relFile.write(relDate+'\n')
+    relFile.close()
+
+
+class WebArchiveReleaseScript(Script):
+    _version = __version__
+    _description = __doc__
+    def defineOpts(self):
+        parser = self.parser
+    def main(self):
+        opts = self.options
+        args = self.args
+        if len(args) < 2 :
+            raise SystemExit
+        else :
+            projectname = args[0]
+            projectversion = args[1]
+        archiveRelease(projecname, projectversion)
+        return 0
+
+if __name__ == '__main__':
+    s = WebArchiveReleaseScript(usage="%prog [options]")
+    s.run()
