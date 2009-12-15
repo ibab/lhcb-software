@@ -322,6 +322,27 @@ MEPErrorAdder::ReceiveSingleService(DimInfo * curr, DimInfo * subs, int64_t &rVa
 
 }
 
+/** Help-function for receiving single counters, 32bit! 
+ * (DiskWR)
+ *
+ *  return false if not the correct service, otherwise get data and return true
+ */
+bool
+MEPErrorAdder::ReceiveSingleService_32(DimInfo * curr, DimInfo * subs, int64_t &rValue, int64_t &sValue) {
+
+  // Return false if not the correct service
+  if (curr != subs) return false;
+
+  int32_t data = *((int32_t*) curr->getData());
+  int64_t diff = data - rValue;	//Value to add/subtract
+  
+  rValue = data;	// saved value
+  sValue += diff;	// Change value
+
+  return true;
+
+}
+
 /** DimInfoHandler function
  */
 void
@@ -361,10 +382,16 @@ MEPErrorAdder::infoHandler() {
     if (ReceiveSingleService(curr,m_subsNumMEPRecvTimeouts[i], m_rNumMEPRecvTimeouts[i], m_numMEPRecvTimeouts)) break;    
     if (ReceiveSingleService(curr,m_subsNotReqPkt[i], m_rNotReqPkt[i], m_notReqPkt)) break;    
     if (ReceiveSingleService(curr,m_subsTotWrongPartID[i], m_rTotWrongPartID[i], m_totWrongPartID)) break;    
-  
-    if (ReceiveSingleService(curr,m_subsSentEvt[i], m_rSentEvt[i], m_sentEvt)) break;
-    if (ReceiveSingleService(curr,m_subsSentOct[i], m_rSentOct[i], m_sentOct)) break;
-    if (ReceiveSingleService(curr,m_subsSentEvtErr[i], m_rSentEvtErr[i], m_sentEvtErr)) break;
+ 
+    if (m_sumPartition) { 
+        if (ReceiveSingleService(curr,m_subsSentEvt[i], m_rSentEvt[i], m_sentEvt)) break;
+        if (ReceiveSingleService(curr,m_subsSentOct[i], m_rSentOct[i], m_sentOct)) break;
+        if (ReceiveSingleService(curr,m_subsSentEvtErr[i], m_rSentEvtErr[i], m_sentEvtErr)) break;
+    } else {
+        if (ReceiveSingleService_32(curr,m_subsSentEvt[i], m_rSentEvt[i], m_sentEvt)) break;
+        if (ReceiveSingleService_32(curr,m_subsSentOct[i], m_rSentOct[i], m_sentOct)) break;
+        if (ReceiveSingleService_32(curr,m_subsSentEvtErr[i], m_rSentEvtErr[i], m_sentEvtErr)) break;         
+    }
 
     if (curr == m_subsSrcName[i]) {
 	//Receiving source names
