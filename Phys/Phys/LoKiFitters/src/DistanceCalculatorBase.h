@@ -1,4 +1,4 @@
-// $Id: DistanceCalculatorBase.h,v 1.5 2009-05-16 12:28:12 ibelyaev Exp $
+// $Id: DistanceCalculatorBase.h,v 1.6 2009-12-15 15:24:26 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKIFITTERS_DISTANCECALCULATORBASE_H 
 #define LOKIFITTERS_DISTANCECALCULATORBASE_H 1
@@ -132,7 +132,7 @@ namespace LoKi
     /* evalute the "projected" distance 
      * 
      *  \f$s=\frac{\left(\vec{\mathbf{v}}\vec{\mathbf{p}}
-     *     \right)}{\left|\vec{\mathbf{p}}\right|}\f,$
+     *     \right)}{\left|\vec{\mathbf{p}}\right|}\f$
      *  where vector \f$\vec{\mathbf{v}}\f$ is a vector from 
      *  the primary to the secondary vertex: 
      *    \f$\vec{\mathbf{v}}=\vec{\mathbf{x}}_{d}-\vec{\mathbf{x}}_{pv}\f$,

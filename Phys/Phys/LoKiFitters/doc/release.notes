@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.21 2009-09-24 11:48:33 jpalac Exp $ 
+! $Id: release.notes,v 1.22 2009-12-15 15:24:26 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiFitters
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
+
+
+! 2009-12-15 - Vanya BELYAEV 
+
+ - DistanceCalculaterBase.h 
+
+     fix LaTeX error for Doxygen documentation 
+
+ - cmt/requirements 
+ 
+     version increment to v2r2p1
+
 
 !========================== LoKiFitters v2r2 2009-09-24 ===================
 
