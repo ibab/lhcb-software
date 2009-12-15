@@ -6,6 +6,28 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v7r11>2009-12-15 LbcomSys v7r11</A></H1><PRE>
+This version uses Gaudi v21r6 and LHCb v28r5
+
+- Packages modified: PuVeto v7r4, OTAssociators v4r4, STMonitors v2r3
+
+- In PuVeto v7r4
+  . PuVetoAlg "decoding part" re-written, to deal with the current PU bank 
+    (LHCb::RawBank::L0PU) format
+
+- In OTAssociators v4r4
+  . Change property AcceptTime in OTMCDepositLinker to 9 ns (3 sigma).
+
+- In STMonitors v2r3
+  . STPulseMonitor, STClusterMonitor, STTAEClusterMonitor:
+    Made the selection of a bunchID a list of bunchIDs.
+  . Added cut on ADC values of clusters when filling sampling plots.
+  . STNZSMonitor: add possibility to include time/date in noise histogram titles
+  . STTAEClusterMonitor: fix the y range of the profile histograms to match that
+                         of the 2D histograms
+  . STErrorMonitor: changed number of bins in fraction ports histogram
+  . STPulseMonitor: Added possibility to loop over NZS data.
+
 </PRE><H1><A NAME=v7r10>2009-11-27 LbcomSys v7r10</A></H1><PRE>
 This version uses Gaudi v21r6 and LHCb v28r4
 
