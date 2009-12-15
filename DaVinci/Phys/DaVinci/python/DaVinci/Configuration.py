@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.81 2009-12-15 15:17:39 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.82 2009-12-15 16:19:43 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -176,15 +176,16 @@ class DaVinci(LHCbConfigurableUser) :
                 from Hlt1Lines.Hlt1CommissioningLines import Hlt1CommissioningLinesConf
                 Hlt1CommissioningLinesConf().Prescale.update( { 'Hlt1ODINPhysics'  : 1. } )
             else : raise AttributeError, 'Hlt2 can require L0 or Hlt1'
-                
-#            HltConf().Hlt2Requires =  self.getProp("Hlt2Requires")                             ## enable if you want Hlt2 irrespective of Hlt1
-# @todo : FIXME
-            from Configurables import GaudiSequencer
-            hltSeq = GaudiSequencer("Hlt")
-            ApplicationMgr().TopAlg += [ hltSeq ]  # catch the Hlt sequence to make sur it's run first
+
+            from Configurables import GaudiSequencer, HltRoutingBitsFilter
+            physFilter = HltRoutingBitsFilter( "PhysFilter", RequireMask = [ 0x0, 0x4, 0x0 ] )  # make sure lumi events are ignored
+            hltDVSeq = GaudiSequencer("RunHltInDaVinci")  # 
+            hltSeq = GaudiSequencer("Hlt")         # catch the Hlt sequence to make sur it's run first
+            hltDVSeq.Members = [ physFilter, hltSeq ]
+            ApplicationMgr().TopAlg += [ hltDVSeq ]  
             log.info("Will run Hlt")
-            log.info( HltConf() ) 
-        
+            log.info( HltConf() )
+            
         
 ################################################################################
 # L0 setup

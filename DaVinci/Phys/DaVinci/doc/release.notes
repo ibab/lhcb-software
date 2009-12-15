@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.393 2009-12-15 15:17:39 pkoppenb Exp $
+! $Id: release.notes,v 1.394 2009-12-15 16:19:43 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -11,6 +11,7 @@
 
 ! 2009-12-15 - Patrick Koppenburg
  - Always make a histogram file (patch to bug #60623)
+ - Protect against lumi events (fixes bug #58933)
 
 ! 2009-12-10 - Patrick Koppenburg
  - Fixed documentation problem (HltRequires = '') : bug #60425
