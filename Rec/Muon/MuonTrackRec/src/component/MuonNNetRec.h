@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.h,v 1.10 2009-12-11 11:18:48 svecchi Exp $
+// $Id: MuonNNetRec.h,v 1.11 2009-12-15 11:02:40 ggiacomo Exp $
 #ifndef MUONNNETREC_H 
 #define MUONNNETREC_H 1
 
@@ -75,7 +75,7 @@ public:
     MuonTrackRec::IsPhysics = AssumePhysics;
     if(AssumePhysics) MuonTrackRec::IsCosmic = false;
   }
-  virtual void setSeedStation(int seedS){}
+  virtual void setSeedStation(int seedS){seedS=seedS;}
   virtual void setSkipStation(int skipS){
     m_skipStation=skipS;
   }
