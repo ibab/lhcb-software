@@ -8,13 +8,14 @@
 """Send a job to run over fmDST."""
 
 import sys
+import os
 from optparse import OptionParser
 
 # Hack
 sys.path.append('.')
 from JobTemplate import createJob
 
-def getFmDSTLFNs(jobID):
+def getFmDSTLFNs(job):
   """Generate a list of the LFNs of the fmDST Output Data of the given job.
   
   @param jobID: jobID to get the fmDSTs from
@@ -23,12 +24,12 @@ def getFmDSTLFNs(jobID):
   @return: list of strings
   
   """
-  jold = jobs(jobId)
   fmDSTList = []
-  for i in range(len(jold.subjobs)):
-      for f in jold.subjobs(i).backend.getOutputDataLFNs():
-          if os.path.splitext(f) == '.fmDST':
-              fmDSTList.append('LFN:%s' %f)
+  subjobs = job.subjobs.select(status='completed')
+  for subjob in subjobs:
+      for output in subjob.backend.getOutputDataLFNs():
+          if os.path.splitext(output.name)[1] == '.fmDST':
+              fmDSTList.append('LFN:%s' %output.name)
   return fmDSTList
   
 if __name__=='__main__':
@@ -47,7 +48,8 @@ if __name__=='__main__':
     sys.exit()
 
   j = createJob(options.name)
-  j.inputdata = LHCbDataset(getFmDSTLFNs(jobID))
+  oldjob = jobs(jobID)
+  j.inputdata = LHCbDataset(oldjob)
   j.application.extraopts = "kali.FirstPass = False"
   if options.fmDST:
     j.outputdata.files.append('KaliPi0.fmDST')
