@@ -1,4 +1,4 @@
-// $Id: Pi0.cpp,v 1.6 2009-12-15 11:27:15 apuignav Exp $
+// $Id: Pi0.cpp,v 1.7 2009-12-15 11:42:51 apuignav Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -167,7 +167,6 @@ void Kali::Pi0::fillTuple
       mom2.SetX ( -mom2.X () ) ;
       mom2.SetY ( -mom2.Y () ) ;
     }
-
     double cosPhi = mom1.Dot ( mom2 ) / ( mom1.R () * mom2.R () ) ;
     tuple -> column ( "cosPhi" , cosPhi ) ;
  
