@@ -1,7 +1,7 @@
 """
 High level configuration tools for Gauss
 """
-__version__ = "$Id: Configuration.py,v 1.23 2009-12-03 16:42:56 cocov Exp $"
+__version__ = "$Id: Configuration.py,v 1.24 2009-12-15 15:53:15 robbep Exp $"
 __author__  = "Gloria Corti <Gloria.Corti@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -344,7 +344,7 @@ class Gauss(LHCbConfigurableUser):
         # Monitors for the generator:
         for slot in SpillOverSlots:
 
-            genSequence = GaudiSequencer("GeneratorSlot" + slot )
+            genSequence = GaudiSequencer("GeneratorSlot" + self.slotName(slot) + "Seq" )
             genMoniSeq = GaudiSequencer("GenMonitor" + slot )
             genSequence.Members += [ genMoniSeq ]  
 
