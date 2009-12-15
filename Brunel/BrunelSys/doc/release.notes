@@ -3,6 +3,57 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v35r11>2009-12-16 Brunel v35r11</A></H1><PRE>
+This version uses projects Gaudi v21r6, LHCb v28r5, Lbcom v7r11, Rec v7r12
+ and SQLDDDB v5r17, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
+
+This is a production version for 2009 data reprocessing
+Output requires DaVinci v24r5p1 or later
+
+- New tuning
+  . Add Brunel().SpecialData = ["earlyData"] switch to include all special
+    tunings for 2009 data reprocessing
+    (AppConfig v3r28, RecSys v7r12, TrackSys v4r29))
+  . New tuning for "earlyData" introduced for DownStream (PatAlgorithms v3r27)
+    Seed(TsaAlgorithms v3r14p3) and Match (TrackMatching v2r25) tracks.
+  . Looser cuts for "earlyData" in Rich (RichRecSys v3r24) and Global PID
+    (GlobalReco v6r30) track selection
+  . Relaxed PV cuts for "earlyData" (PatPV v3r11, RecSys v7r12)
+  . Changed default tag for 2009 data: head-20091211 for LHCBCOND, new OT drift
+    time calibration (DDDB v1r26, SQLDDDB v5r17)
+  . New ONLINE snapshots: online conditions can be obtained from SQLDDDB for all
+    data taken until early morning on 20091215. Also includes fixes for all
+    magnet polarity issues in early data (SQLDDDB v5r17)
+  . Add polarity() to ILHCbMagnetSvc (LHCbKernel v11r10, Magnet v5r6). Needed by
+    certain pattern recognition algorithms to pick up correct magnetic field
+    parameterization
+  . TrackV0Finder now skips V0 search if PV not reconstructed (TrackUtils v1r32)
+
+- Bug fixes
+  . Fix bug in 64 bit I/O routines handling large files. Was preventing to read
+    mdf files > 2GB on 32 bit architecture (MDF v3r22)
+  . Fix bug #60276: SolidPolycone does not define a correct bounding box
+    (DetDesc v18r18)
+  . XmlGenericCnv.cpp: fix a tiny memory leak releasing of a temporary string
+    (DetDescCnv v4r11)
+  . Fix trivial untested StatusCode in MemoryTool.cpp (LHCbAlgs v2r31p1)
+  . Removed default constructors for measurement classes (TrackFitEvent v4r3)
+  . PatDownstream: fixes division by zero (PatAlgorithms v3r27)
+  . Minor fixes to warnings and unchecked codes (TrackExtrapolators v2r24p1)
+  . In a track refit, count outliers before removing (TrackFitter v2r43)
+
+- Changes to monitoring:
+  . Added more histograms to TrackMonitor (TrackMonitors v1r18)
+  . Downstream track efficiency now checked also if Velo open (TrackSys v4r29)
+  .	Minor changes in monitoring histograms (CaloMoniDst v4r2)
+
+- Changes to example options
+  . Add earlyData switch to 2009-BeamGas.py and 2009-Collisions.py
+
+- Changes to tests
+  . brunelmdfrdst test now processes 2009 collisions data file. Tests both the
+    2009 data processing and the mdf pack type
+
 </PRE><H1><A NAME=v35r10p1>2009-12-07 Brunel v35r10p1</A></H1><PRE>
 This version uses projects Gaudi v21r6, LHCb v28r4, Lbcom v7r10, Rec v7r10
  and SQLDDDB v5r16, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
