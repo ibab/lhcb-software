@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # ============================================================================
-# @file FirstPass.py
+# @file GetNTuples.py
 # @author Albert Puig Navarro (Albert.Puig@cern.ch)
 # @date 2009-XII-15
 # ============================================================================
@@ -40,6 +40,7 @@ if __name__=='__main__':
     print usage
     sys.exit()
   list = getTupleLFNs(jobs(options.jobid))
+  print "Writing ntuple LFNs to %s" %args[0]
   f = open(args[0], 'w')
   for line in list:
     f.write(line + '\n')
