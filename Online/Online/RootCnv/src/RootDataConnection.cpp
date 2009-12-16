@@ -1,4 +1,4 @@
-// $Id: RootDataConnection.cpp,v 1.2 2009-12-15 19:28:11 frankb Exp $
+// $Id: RootDataConnection.cpp,v 1.3 2009-12-16 10:42:57 frankb Exp $
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/DataObject.h"
@@ -57,7 +57,8 @@ StatusCode RootDataConnection::readRefs() {
     m_pathBranch = t->Branch("Paths",0,"C");
   }
   else {
-    size_t i,n;
+    size_t i;
+    Long64_t n;
     char text[2048];
     m_dbBranch = t->GetBranch("Databases");
     m_cntBranch = t->GetBranch("Containers");
@@ -87,7 +88,8 @@ StatusCode RootDataConnection::saveRefs() {
   StatusCode sc = StatusCode::SUCCESS;
   if ( m_dbBranch && m_cntBranch && m_lnkBranch && m_pathBranch ) {
     if ( isWritable() ) {
-      size_t i,n;
+      size_t i;
+      Long64_t n;
       for(i=m_dbBranch->GetEntries(), n=m_dbs.size(); i<n; ++i) {
 	m_dbBranch->SetAddress((char*)m_dbs[i].c_str());
 	if ( m_dbBranch->Fill() <= 1) sc = StatusCode::FAILURE;
