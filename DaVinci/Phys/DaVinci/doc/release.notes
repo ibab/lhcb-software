@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.395 2009-12-16 10:51:03 pkoppenb Exp $
+! $Id: release.notes,v 1.396 2009-12-16 12:40:02 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,8 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+!========================== DaVinci v24r7 2009-12-16 =======================
 
 ! 2009-12-16 - Patrick Koppenburg
  - Added sample of real data
