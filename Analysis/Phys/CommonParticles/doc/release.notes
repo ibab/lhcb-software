@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.159 2009-12-14 11:45:32 poluekt Exp $
+!$Id: release.notes,v 1.160 2009-12-16 11:10:31 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -8,8 +8,7 @@
 !
 !-----------------------------------------------------------------------------
 
-! 2009-12-14 - Anton Poluektov
- - Added StdVeryLooseD0HH, StdVeryLooseDplus and StdVeryLooseLambdac by Liming Zhang. 
+!========================= CommonParticles v6r3 2009-11-16 ===================
 
 ! 2009-12-09 - Patrick Koppenburg
  - New StdLooseDiElectron, a copy of the StdLooseDiMuon
