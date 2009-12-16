@@ -12,7 +12,7 @@
 from Configurables import MCDecayTreeTuple
 mcTuple = MCDecayTreeTuple("MCTuple")
 mcTuple.Decay = "[KS0 -> ^pi+ ^pi- {, gamma}{, gamma}]cc"
-mcTuple.ToolList = [ "MCTupleToolMCTruth", "TupleToolEventInfo", "MCTupleToolReconstructed", "MCTupleToolAngles"  ]
+mcTuple.ToolList = [ "MCTupleToolKinematic", "TupleToolEventInfo", "MCTupleToolReconstructed", "MCTupleToolAngles"  ]
 #mcTuple.OutputLevel = 1
 ########################################################################
 #

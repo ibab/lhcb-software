@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-12-16 - Patrick Koppenburg
+ - Remove obsolete options
+
 !========================== DaVinciMonitors v1r6 2009-11-30 ==================
 
 ! 2009-11-30 - Juan PALACIOS
