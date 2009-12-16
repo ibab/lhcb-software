@@ -1,8 +1,9 @@
-// $Id: TrackFilterAlg.cpp,v 1.13 2009-01-21 16:24:20 wouter Exp $
+// $Id: TrackFilterAlg.cpp,v 1.14 2009-12-16 15:20:39 svecchi Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartIF.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // from BOOST
 #include <boost/assign/list_of.hpp>
@@ -16,12 +17,14 @@
 // Implementation file for class : TrackFilterAlg
 //
 // 2007-07-11 : Jan Amoraal
+// 2009-12-15 : Stefania Vecchi - add filter for muons
 //-----------------------------------------------------------------------------
 
 using namespace LHCb;
 using namespace boost;
 using namespace boost::lambda;
 using namespace boost::assign;
+using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( TrackFilterAlg );
@@ -30,8 +33,7 @@ DECLARE_ALGORITHM_FACTORY( TrackFilterAlg );
 // Standard constructor, initializes variables
 //=============================================================================
 TrackFilterAlg::TrackFilterAlg( const std::string& name,
-				ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ),
+                                ISvcLocator* pSvcLocator): GaudiAlgorithm ( name , pSvcLocator ),
     m_tracksInputContainer(""),
     m_tracksOutputContainer(""),
     m_trackType(""),
@@ -40,26 +42,27 @@ TrackFilterAlg::TrackFilterAlg( const std::string& name,
 {
   /// Map strings to track types
   m_stringToTrackTypeMap = map_list_of("Velo"      , Track::Velo      )
-                                      ("VeloR"     , Track::VeloR     )
-                                      ("Long"      , Track::Long      )
-                                      ("Upstream"  , Track::Upstream  )
-                                      ("Downstream", Track::Downstream)
-                                      ("Ttrack"    , Track::Ttrack    )
-                                      ("Muon"      , Track::Muon      );
+    ("VeloR"     , Track::VeloR     )
+    ("Long"      , Track::Long      )
+    ("Upstream"  , Track::Upstream  )
+    ("Downstream", Track::Downstream)
+    ("Ttrack"    , Track::Ttrack    )
+    ("Muon"      , Track::Muon      );
 
   /// And vice versa. I whish we had Boost::BiMap
   m_trackTypeToStringMap = map_list_of(Track::Velo      , "Velo"      )
-                                      (Track::VeloR     , "VeloR"     )
-                                      (Track::Long      , "Long"      )
-                                      (Track::Upstream  , "Upstream"  )
-                                      (Track::Downstream, "Downstream")
-                                      (Track::Ttrack    , "Ttrack"    )
-                                      (Track::Muon      , "Muon"      );
+    (Track::VeloR     , "VeloR"     )
+    (Track::Long      , "Long"      )
+    (Track::Upstream  , "Upstream"  )
+    (Track::Downstream, "Downstream")
+    (Track::Ttrack    , "Ttrack"    )
+    (Track::Muon      , "Muon"      );
 
   m_lhcbDetChecks = map_list_of("Velo", boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isVelo,_1)))
-                               ("TT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isTT  ,_1)))
-                               ("IT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isIT  ,_1)))
-                               ("OT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isOT  ,_1)));
+    ("TT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isTT  ,_1)))
+    ("IT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isIT  ,_1)))
+    ("OT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isOT  ,_1)));
+    ("Muon", boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isMuon  ,_1)));
 
   declareProperty("TracksInputContainer"     , m_tracksInputContainer  = TrackLocation::Default    );
   declareProperty("TracksOutputContainer"    , m_tracksOutputContainer = "Alignment/FilteredTracks");
@@ -68,6 +71,15 @@ TrackFilterAlg::TrackFilterAlg( const std::string& name,
   declareProperty("StripUnwantedDetectorHits", m_strip                 = false                     );
   declareProperty("KeepDetectorHits"         , m_detector              = "OT"                      );
   declareProperty("MinNHits"                 , m_nMinHits              = 0u                        );
+  declareProperty("Extrapolator"             , m_nExtrapolator         = "TrackLinearExtrapolator" );
+
+  declareProperty("MuonFilter"               , m_muonFilter            = false                     );
+  declareProperty("MuonPcut"                 , m_pcut                  = 0.* GeV                   );
+  declareProperty("inCaloAcceptance"         , m_calo                  = false                     );
+  declareProperty("noOverlap"                , m_noOverlap             = false                     );
+  declareProperty("minHitStation"            , m_nStation              = 2                         );
+  declareProperty("MuonChisquareCut"         , m_muonChisquareCut      = 0.                        );
+
 
 }
 
@@ -93,6 +105,17 @@ StatusCode TrackFilterAlg::initialize() {
 
   m_elementsToBeAligned = tool<IGetElementsToBeAligned>("GetElementsToBeAligned", this);
   if (!m_elementsToBeAligned) return Error("==> Failed to retrieve detector selector tool!", StatusCode::FAILURE);
+
+  m_extrapolator   = tool<ITrackExtrapolator>(   m_nExtrapolator  , "Extrapolator"  , this );  
+  info()
+    << " " << endmsg
+    << "=========== " << name() << " Settings ============"
+    << endmsg
+    << "  Tracks input container   : " << m_tracksInputContainer  << endmsg
+    << "  Tracks output container  : " << m_tracksOutputContainer << endmsg
+    << "=================================================="
+    << endmsg
+    << " " << endmsg;
   
   return StatusCode::SUCCESS;
 }
@@ -111,8 +134,8 @@ StatusCode TrackFilterAlg::execute() {
 }
 
 //=============================================================================
-
 void TrackFilterAlg::filterTrack(LHCb::Track* track, LHCb::Tracks* outputContainer) {
+  //=============================================================================
   if ((track->checkType(m_stringToTrackTypeMap[m_trackType])) && (m_trackSelector->accept(*track))) {
     /// Clone track. It's mine
     std::auto_ptr<Track> clonedTrack( track->cloneWithKey() );
@@ -148,18 +171,93 @@ void TrackFilterAlg::filterTrack(LHCb::Track* track, LHCb::Tracks* outputContain
 
     if ( nHits >= m_nMinHits )  {
       if (printDebug()) {
-        debug() << "Found track of type " << m_trackTypeToStringMap[track->type()] << " with a chi2/dof: " << track->chi2() << " / " << track->nDoF() 
-                << " and " << nHits << " hits of type " << m_detector << endmsg;
+        debug() << "Found track of type " << m_trackTypeToStringMap[track->type()] << " with a chi2/dof: " << 
+          track->chi2() << " / " << track->nDoF() << 
+          " and " << nHits << " hits of type " << m_detector << endmsg;
       }
-                          /// It's yours              
       outputContainer->add(clonedTrack.release());
     }
   }
 }
 
+//=============================================================================
+void TrackFilterAlg::filterMuonTrack(LHCb::Track* track, LHCb::Tracks* outputContainer) {
+//=============================================================================
+  bool select=true;  
+  if (m_pcut && track->p() < m_pcut ) {
+    debug()<< " Discard the track due to the low momentum"<<track->p()<<endmsg;    
+    select=false;        //select high momentum tracks
+  }
+  
+  bool ASide = false;
+  bool CSide = false;
+  int MA[5] = {0,0,0,0,0}; 
+  int MC[5] = {0,0,0,0,0};
+  
+  const std::vector<LHCb::LHCbID>& ids = track->lhcbIDs();
+  for( std::vector<LHCb::LHCbID>::const_iterator id = lhcbids.begin() ;
+       id != lhcbids.end(); ++id) {
+    if( id->isMuon() ) {
+      int iS = id->muonID().station();
+      int iQ = id->muonID().quarter();
+      if ( iQ < 2 ) MA[iS]=1;   // A-side
+      else MC[iS]=1;
+    }
+  }    
+  
+  int MAside = MA[0]+MA[1]+MA[2]+MA[3]+MA[4];
+  int MCside = MC[0]+MC[1]+MC[2]+MC[3]+MC[4];      
+  
+  if ( MAside != 0 && MCside == 0) ASide = true;
+  else if ( MAside == 0 && MCside != 0 ) CSide = true;
+  
+  if( MAside + MCside < m_nStation ) {
+    debug()<< " Discard the track due to the low number of hit station "<<MAside+MCside<<endmsg;    
+    select = false;  /// requirese at least some hits somewhere
+  }
+  
+  if( m_noOverlap && 
+     !(( ASide || CSide) && (MAside > m_nStation ||  MCside > m_nStation)) ) {
+    debug()<< " Discard the track since overlaps hit station Cside "<< MCside<<" Aside "<<MAside<<endmsg;    
+    select = false;
+  }
+  
+  if(m_calo){      
+    State refState = track->closestState(13000);
+    StatusCode sc = m_extrapolator->propagate( refState , 12750 );      
+    if ( fabs( refState.x() ) > 3900 && fabs( refState.y() ) > 3150 ) {
+      debug()<< " Discard the track since falls off the CALO acceptance x"<< 
+        fabs( refState.x() )<<" y "<< refState.y()<<endmsg;
+      select = false; //out the calo acceptance
+    }
+    
+  }
+  
+
+  if ( m_muonChisquareCut > 0 && track->chi2PerDoF() > m_muonChisquareCut) {
+    debug()<< " Discard the track due to the chisquare "<<track->chi2PerDoF()<<endmsg;
+    select = false;
+	}
+  
+  if(select) {         
+    debug()<<" Track selected "<<endmsg;
+    std::auto_ptr<Track> clonedTrack( track->cloneWithKey() );
+    LHCBIDS ids = clonedTrack->lhcbIDs();
+    outputContainer->add(clonedTrack.release()); 
+  }
+  debug() << "outputContainer.size " << outputContainer->size() << endmsg;
+} 
+
+
+
+//=============================================================================
 void TrackFilterAlg::filterTracks(const Tracks* tracks) {
+//=============================================================================
   Tracks* output = new Tracks();
-  for_each(tracks->begin(), tracks->end(), bind(&TrackFilterAlg::filterTrack, this, _1, output));
+  if(!m_muonFilter ) for_each(tracks->begin(), tracks->end(), 
+                              bind(&TrackFilterAlg::filterTrack, this, _1, output));
+  else if(m_muonFilter ) for_each(tracks->begin(), tracks->end(), 
+                                  bind(&TrackFilterAlg::filterMuonTrack, this, _1, output));
   /// put filtered track container in TES
   put(output, m_tracksOutputContainer);
 }

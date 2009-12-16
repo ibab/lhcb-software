@@ -1,4 +1,4 @@
-// $Id: TrackFilterAlg.h,v 1.7 2009-01-21 16:24:20 wouter Exp $
+// $Id: TrackFilterAlg.h,v 1.8 2009-12-16 15:21:25 svecchi Exp $
 #ifndef TALIGNMENT_TRACKFILTERALG_H 
 #define TALIGNMENT_TRACKFILTERALG_H 1
 
@@ -17,11 +17,15 @@
 // from TrackEvent
 #include "Event/Track.h"
 
+
 // from AlignmentInterfaces
 #include "TrackInterfaces/ITrackSelector.h"
 
 #include "IGetElementsToBeAligned.h"
 #include "AlignmentElement.h"
+
+// from TrackInterfaces
+#include "TrackInterfaces/ITrackExtrapolator.h"
 
 // from BOOST
 #include "boost/function.hpp"
@@ -32,7 +36,6 @@
  *  @author Jan Amoraal
  *  @date   2007-07-11
  */
-
 class TrackFilterAlg : public GaudiAlgorithm {
 
 public: 
@@ -59,7 +62,10 @@ private:
   void filterTracks(const LHCb::Tracks* tracks);
 
   void filterTrack(LHCb::Track* track, LHCb::Tracks* outputContainer);
+  void filterMuonTrack(LHCb::Track* track, LHCb::Tracks* outputContainer);
   
+  ITrackExtrapolator*                       m_extrapolator         ;
+  std::string                               m_nExtrapolator        ;
   std::string                               m_tracksInputContainer;  ///< Tracks input container
   std::string                               m_tracksOutputContainer; ///< Tracks output container
   std::string                               m_trackType;             ///< Type of tracks to filter
@@ -72,6 +78,14 @@ private:
   LHCbDetChecks                             m_lhcbDetChecks;         ///< Map LHCb id det checks methods  
   ITrackSelector*                           m_trackSelector;         ///< Pointer to track selector tool for alignment
   IGetElementsToBeAligned*                  m_elementsToBeAligned;
+  bool                                      m_muonFilter;
+  bool                                      m_calo;
+  bool                                      m_noOverlap;
+  double                                    m_pcut; 
+  double                                    m_muonChisquareCut;
+  int                                       m_nStation;
+  
+
 };
 
 #endif // TALIGNMENT_TRACKFILTERALG_H
