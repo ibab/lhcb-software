@@ -3,6 +3,17 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v3r14>2009-12-16 Analysis v3r14 </A></H1><PRE>
+
+ - Based on LHCb v28r5, and Gaudi v21r6
+
+ - Highlights:
+   * Flavour tagging tuned for MC09 simulaiton.
+   * Add di-electron to CommonParticles
+   * Add Bu->eeK stripping line.
+   * Add bunch crossing ID to TupleEventInfo
+   * Various bug-fixes.
+
 </PRE><H1><A NAME=v3r13>2009-11-22 Analysis v3r13 </A></H1><PRE>
 
  - Based on patch release LHCb v28r4, and Gaudi v21r6
