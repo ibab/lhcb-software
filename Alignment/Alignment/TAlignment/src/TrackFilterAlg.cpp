@@ -1,4 +1,4 @@
-// $Id: TrackFilterAlg.cpp,v 1.15 2009-12-16 16:03:34 svecchi Exp $
+// $Id: TrackFilterAlg.cpp,v 1.16 2009-12-16 18:16:21 svecchi Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -136,6 +136,8 @@ StatusCode TrackFilterAlg::execute() {
 //=============================================================================
 void TrackFilterAlg::filterTrack(LHCb::Track* track, LHCb::Tracks* outputContainer) {
   //=============================================================================
+  debug()<<" filtering tracks with filterTrack "<<endmsg;
+  
   if ((track->checkType(m_stringToTrackTypeMap[m_trackType])) && (m_trackSelector->accept(*track))) {
     /// Clone track. It's mine
     std::auto_ptr<Track> clonedTrack( track->cloneWithKey() );
@@ -183,6 +185,8 @@ void TrackFilterAlg::filterTrack(LHCb::Track* track, LHCb::Tracks* outputContain
 //=============================================================================
 void TrackFilterAlg::filterMuonTrack(LHCb::Track* track, LHCb::Tracks* outputContainer) {
 //=============================================================================
+  debug()<<" filtering with filterMuonTrack"<<endmsg;
+  
   bool select=true;  
   if (m_pcut && track->p() < m_pcut ) {
     debug()<< " Discard the track due to the low momentum"<<track->p()<<endmsg;    
@@ -259,5 +263,6 @@ void TrackFilterAlg::filterTracks(const Tracks* tracks) {
   else if(m_muonFilter ) for_each(tracks->begin(), tracks->end(), 
                                   bind(&TrackFilterAlg::filterMuonTrack, this, _1, output));
   /// put filtered track container in TES
+  debug()<<" going to save the filtered tracks in the "<<m_tracksOutputContainer<<" container "<<endmsg;
   put(output, m_tracksOutputContainer);
 }
