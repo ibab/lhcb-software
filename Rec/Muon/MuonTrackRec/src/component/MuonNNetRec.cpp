@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.cpp,v 1.20 2009-12-15 19:20:12 ggiacomo Exp $
+// $Id: MuonNNetRec.cpp,v 1.21 2009-12-16 12:07:10 ggiacomo Exp $
 
 #include <list>
 
@@ -598,6 +598,10 @@ const std::vector<MuonHit*>* MuonNNetRec::trackhits()   {
 
 StatusCode MuonNNetRec::copyToLHCbTracks()
 {
+  if (exist<LHCb::Tracks>(m_trackOutputLoc)) {
+    //already called with this output location, exit
+    return StatusCode::SUCCESS;
+  }
   
   typedef std::vector< MuonTrack* > MTracks;
   typedef std::vector< MuonHit*   > MHits  ;
@@ -610,7 +614,6 @@ StatusCode MuonNNetRec::copyToLHCbTracks()
   }
 
   Tracks* tracks = new Tracks();
-  put( tracks, m_trackOutputLoc );
 
   for ( MTracks::const_iterator t = mTracks->begin(), tEnd = mTracks->end(); t != tEnd; ++t ) {
     /// New track
@@ -671,6 +674,7 @@ StatusCode MuonNNetRec::copyToLHCbTracks()
 
     tracks->insert( track );
   }
+  put( tracks, m_trackOutputLoc );
 
   return StatusCode::SUCCESS;
 }

@@ -1,4 +1,4 @@
-// $Id: MuonTrack.cpp,v 1.7 2009-11-28 10:37:47 ggiacomo Exp $
+// $Id: MuonTrack.cpp,v 1.8 2009-12-16 12:07:10 ggiacomo Exp $
 #define MUONTRACKRECNMSPC
 #include "MuonTrackRec/MuonTrack.h"
 #include "MuonTrackRec/MuonLogPad.h"
@@ -28,7 +28,9 @@ MuonTrack::MuonTrack() : m_chi2x(-1.), m_chi2y(-1.),
                          m_errsy(-1.), m_errby(-1.), m_covbsy(-1.),
                          m_t0(-1.), m_sigmat(-1.), 
                          m_speed(0.), m_sigmaspeed(0.), 
-                         m_speedFitted(false) {}
+                         m_speedFitted(false), 
+                         m_trackP(0.), m_trackPt(0.),
+                         m_trackqOverP(0.), m_trackMomentum(0.,0.,0.) {}
 //=============================================================================
 // Destructor
 //=============================================================================

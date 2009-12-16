@@ -1,4 +1,4 @@
-// $Id: MuonCombRec.cpp,v 1.10 2009-12-15 19:17:51 ggiacomo Exp $
+// $Id: MuonCombRec.cpp,v 1.11 2009-12-16 12:07:10 ggiacomo Exp $
 // Include files 
 #include <fstream>
 
@@ -984,6 +984,11 @@ StatusCode MuonCombRec::sortMuonHits()
 StatusCode MuonCombRec::copyToLHCbTracks()
 {
   
+  if (exist<LHCb::Tracks>(m_trackOutputLoc)) {
+    //already called with this output location, exit
+    return StatusCode::SUCCESS;
+  }
+
   typedef std::vector< MuonTrack* > MTracks;
   typedef std::vector< MuonHit*   > MHits  ;
   typedef std::vector<LHCb::MuonTileID*> MTileIDs;
@@ -996,7 +1001,6 @@ StatusCode MuonCombRec::copyToLHCbTracks()
   }
 
   Tracks* tracks = new Tracks();
-  put( tracks, m_trackOutputLoc );
 
   for ( MTracks::const_iterator t = mTracks->begin(), tEnd = mTracks->end(); t != tEnd; ++t ) {
 
@@ -1056,6 +1060,9 @@ StatusCode MuonCombRec::copyToLHCbTracks()
 
     tracks->insert( track );
   }
+  debug()<< " copying container to TES"<<endmsg;
+  put( tracks, m_trackOutputLoc );
+
 
   return StatusCode::SUCCESS;
 }
