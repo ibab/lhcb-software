@@ -1,4 +1,4 @@
-// $Id: RichRingMasterAlg.cpp,v 1.6 2009-06-15 09:08:28 seaso Exp $
+// $Id: RichRingMasterAlg.cpp,v 1.7 2009-12-16 13:42:49 seaso Exp $
 // Include files
 
 // from Gaudi
@@ -76,7 +76,14 @@ StatusCode RichRingMasterAlg::execute()
   
     sc = sc && saveRingsInTES();
   }
+  if(m_storeNtupRadius) {
+
+    debug()<<" Now store info in ntuple "<<endmsg;
+    sc = sc && StoreRingInfoInNtup();
+
+  }
   
+
   return sc;
 }
 
@@ -141,12 +148,12 @@ StatusCode RichRingMasterAlg::FindRingsWithTracks()
 
   } // end loop over radiators
 
-  if(m_storeNtupRadius) {
+  //  if(m_storeNtupRadius) {
 
-    debug()<<" Now store info in ntuple "<<endmsg;
-    sc = sc && StoreRingInfoInNtup();
+  //    debug()<<" Now store info in ntuple "<<endmsg;
+  //  sc = sc && StoreRingInfoInNtup();
 
-  }
+  //  }
 
   return sc;
 }
@@ -255,17 +262,30 @@ StatusCode RichRingMasterAlg::StoreRingInfoInNtup()
     VD tkX; tkX.clear(); tkX.reserve(200);
     VD tkY; tkY.clear(); tkY.reserve(200);
     VD tkRadius; tkRadius.clear(); tkRadius.reserve(200);
+    VD tkNumHitsInRing;tkNumHitsInRing.clear();tkNumHitsInRing.reserve(200);
+    
+    
     VD tkMom; tkMom.clear(); tkMom.reserve(200);
+    VD tkMass; tkMass.clear();
+    tkMass.reserve(200);
+    
+    
     for(int itk=tkMM[0]; itk< (tkMM [1]) ; ++itk){
       double aRadius =  rt()->RRslt()->TrackFoundMeanRadiusValue(itk,irad);
       double aRecMom =  rt()->tgD()-> TrackRecMomValue(itk,irad);
       double atkX= rt()->tgD()->TrackXcInpValue(itk,irad);
       double atkY= rt()->tgD()->TrackYcInpValue(itk,irad);
+      double aReconMass = rt()->RRslt()->TrackSegReconMassValue(itk, irad);
+      double aNumHitsInRing = rt()->RRslt()->TrackFoundMRNumHitsValue(itk,irad);
+      
       tkX.push_back(atkX);
       tkY.push_back(atkY);
       tkRadius.push_back(aRadius);
       tkMom.push_back(aRecMom);
-
+      tkMass.push_back(aReconMass);
+      tkNumHitsInRing.push_back(aNumHitsInRing);
+      
+      
     }
 
     std::vector<double> htX; htX.clear(); htX.reserve(maxNumHit);
@@ -285,8 +305,11 @@ StatusCode RichRingMasterAlg::StoreRingInfoInNtup()
     m_RingTuple->farray("TkYHit",tkY,"tkXLength",maxNumTk);
     m_RingTuple->farray("RecRadius",tkRadius,"tkRadiusLength", maxNumTk);
     m_RingTuple->farray("RecMom",tkMom,"tkMomLength",maxNumTk);
+    m_RingTuple->farray("RecMass",tkMass,"tkMassLength",maxNumTk);  
+    m_RingTuple ->farray("NumHitsInRing",tkNumHitsInRing,"tkNumHitsInRingLength",maxNumTk);
     m_RingTuple ->farray("XHitCoord",htX,"XLength",maxNumHit);
     m_RingTuple ->farray("YHitCoord",htY,"YLength",maxNumHit);
+    
     sc=m_RingTuple ->write();
   }
 

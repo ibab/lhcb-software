@@ -1,4 +1,4 @@
-// $Id: RichRingReconParam.cpp,v 1.5 2009-09-01 17:15:14 seaso Exp $
+// $Id: RichRingReconParam.cpp,v 1.6 2009-12-16 13:42:49 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -50,6 +50,7 @@ RichRingReconParam::RichRingReconParam( const std::string& type,
   declareProperty("MinTrackMomForSelectionInAerogel", m_MinTrackMomentumSelectInAerogel =15000.0);
   declareProperty("MinTrackMomForSelectionInRich1Gas", m_MinTrackMomentumSelectInRich1Gas =30000.0);
   declareProperty("MinTrackMomForSelectionInRich2Gas", m_MinTrackMomentumSelectInRich2Gas =50000.0);
+  declareProperty("ActivateWithoutTrackMomentumInfo", m_ActivateWithoutTrackMomentumInfo=false);
   
 
   //  declareProperty("WriteOutAuxiliaryDebugHisto", m_WriteOutAuxiliaryDebugHisto=false);

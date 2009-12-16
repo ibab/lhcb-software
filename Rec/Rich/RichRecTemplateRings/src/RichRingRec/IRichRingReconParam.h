@@ -1,4 +1,4 @@
-// $Id: IRichRingReconParam.h,v 1.4 2009-09-01 17:15:14 seaso Exp $
+// $Id: IRichRingReconParam.h,v 1.5 2009-12-16 13:42:49 seaso Exp $
 #ifndef RICHRINGREC_IRICHRINGRECONPARAM_H
 #define RICHRINGREC_IRICHRINGRECONPARAM_H 1
 
@@ -48,6 +48,7 @@ namespace Rich
         virtual double MinTrackMomentumSelectInAerogel() =0;
         virtual double MinTrackMomentumSelectInRich1Gas() =0;
         virtual double MinTrackMomentumSelectInRich2Gas() =0;
+        virtual bool ActivateWithoutTrackMomentumInfo() =0;
         
 
         //  virtual bool WriteOutAuxiliaryDebugHisto()=0;

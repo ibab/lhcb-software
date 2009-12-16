@@ -1,4 +1,4 @@
-// $Id: RichTargetDataConfigAlg.cpp,v 1.7 2009-10-07 09:50:10 seaso Exp $
+// $Id: RichTargetDataConfigAlg.cpp,v 1.8 2009-12-16 13:42:49 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -133,7 +133,8 @@ StatusCode RichTargetDataConfigAlg::AcquireTargetTrackInfo()
   
   int aNumtk=-1;
   int aNumMaxTk= (int) richSegments()->size();
-
+  debug()<<" Number of input segments in this event = "<<aNumMaxTk<<endmsg;
+  
     VC t0h; VD m0h; t0h.reserve(aNumMaxTk); m0h.reserve(aNumMaxTk);
     VC t1h; VD m1h; t1h.reserve(aNumMaxTk); m1h.reserve(aNumMaxTk);
     VC t2h; VD m2h; t2h.reserve(aNumMaxTk); m2h.reserve(aNumMaxTk);
@@ -156,10 +157,15 @@ StatusCode RichTargetDataConfigAlg::AcquireTargetTrackInfo()
 
     if( !((pdPoint.x() ==0.0) && ( pdPoint.y() == 0.0 )) ) {  // avoid unphysical track coord.
       const LHCb::RichTrackSegment & tkSeg = segment->trackSegment();
-      double tkMomz = tkSeg.bestMomentum().z();
       const Rich::RadiatorType rad = tkSeg.radiator();   // which radiator
-      double tkTotMom = pow( (tkSeg.bestMomentum().Mag2()), 0.5);     // track reconstructed momentum
 
+      double tkMomz=40000.0; // use a dummy positive value to start with.
+      double tkTotMom=60000.0; // use a dummy value to start with.
+      if( ! (rt()->RParam()->ActivateWithoutTrackMomentumInfo() ) ) {
+         tkMomz = tkSeg.bestMomentum().z();
+         tkTotMom = pow( (tkSeg.bestMomentum().Mag2()), 0.5);     // track reconstructed momentum
+      }
+      
       if(tkMomz >0.0 ) { // avoid tracks going backwards
        aNumtk++;
 

@@ -1,4 +1,4 @@
-// $Id: RichRingRecMass.cpp,v 1.4 2009-07-30 11:22:55 jonrob Exp $
+// $Id: RichRingRecMass.cpp,v 1.5 2009-12-16 13:42:49 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -124,7 +124,7 @@ StatusCode  RichRingRecMass::bestReconstructedMassForRichTrack(VI SegmentIndex, 
    }
    
    if(aRadSelectedLight== -1 &&  aRadSelectedHeavy == -1 ) {     
-     warning()<<" RichRingRecMass: No best mass found for richrectracknum segments  "
+     verbose()<<" RichRingRecMass: No best mass found for richrectracknum segments  "
            << currentTrackIndex<< "   "<< SegmentIndex<< endmsg;   }
    
    RRslt()->StoreSelectedTrackIndex(aTkSegIndexInRadiator, currentTrackIndex);

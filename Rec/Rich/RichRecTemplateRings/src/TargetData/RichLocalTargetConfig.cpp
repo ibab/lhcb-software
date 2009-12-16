@@ -1,4 +1,4 @@
-// $Id: RichLocalTargetConfig.cpp,v 1.3 2009-07-30 11:22:55 jonrob Exp $
+// $Id: RichLocalTargetConfig.cpp,v 1.4 2009-12-16 13:42:49 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -49,10 +49,12 @@ StatusCode  RichLocalTargetConfig::InitTargetConfigParam()
   m_rMinNominalR2gHighP=30.0;
   
   m_rMinNominalR1gLowP=20.0;
+  //m_rMinNominalR1gLowP=10.0;
   
   m_rMinNominalR1gHighP=20.0;
   
-  m_rMinNominalAgel=100.0;
+    m_rMinNominalAgel=100.0;
+  //m_rMinNominalAgel=50.0;
   
   m_rMin_Shift=2.0;
 

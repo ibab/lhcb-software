@@ -1,4 +1,4 @@
-// $Id: RichRingReconParam.h,v 1.4 2009-09-01 17:15:14 seaso Exp $
+// $Id: RichRingReconParam.h,v 1.5 2009-12-16 13:42:49 seaso Exp $
 #ifndef RICHRINGRECONPARAM_H
 #define RICHRINGRECONPARAM_H 1
 
@@ -58,7 +58,10 @@ namespace Rich
         double MinTrackMomentumSelectInRich1Gas(){return m_MinTrackMomentumSelectInRich1Gas;}
         
         double MinTrackMomentumSelectInRich2Gas(){return m_MinTrackMomentumSelectInRich2Gas;}
+        bool ActivateWithoutTrackMomentumInfo() {return m_ActivateWithoutTrackMomentumInfo; 
+        }
         
+
 
         StatusCode  initialize();
 
@@ -91,8 +94,9 @@ namespace Rich
         double m_MinTrackMomentumSelectInAerogel;
         double m_MinTrackMomentumSelectInRich1Gas;
         double m_MinTrackMomentumSelectInRich2Gas;
+                
+        bool m_ActivateWithoutTrackMomentumInfo;
         
-
 
 
       };
