@@ -5,7 +5,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-!===================== StrippingSelections v1r12 2009-12-16 ===================
+! 2009-12-14 - Anton Poluektov
+ - StrippingBu2hhh line modified (1e3 rejection), and the new StrippingBu2hhh_1e4 
+   line (1e4 rejection) submitted by Alvaro Neto
+
+! 2009-12-14 - Anton Poluektov
+ - Strippingb2DMuX line modified to use StdVeryLoose selections (Liming Zhang)
 
 ! 2009-12-09 - Patrick Koppenburg
  - Added Bu->eeK and Bu->mumuK selections
