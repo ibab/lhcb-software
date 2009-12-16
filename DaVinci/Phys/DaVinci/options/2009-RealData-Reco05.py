@@ -2,7 +2,8 @@
 #-- Contains event types : 
 #--   90000000 - 57 files - 3676685 events - 85.07 GBytes
 
-from Gaudi.Configuration import * 
+from Gaudi.Configuration import *
+from Configurables import DaVinci
 
 DaVinci().DataType = "2009"                   # Default is "MC09"
 EventSelector().Input   = [
