@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.158 2009-12-11 15:15:05 musy Exp $
+! $Id: release.notes,v 1.159 2009-12-16 11:17:52 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!========================== FlavourTagging v10r0 2009-12-16 ==================
 
 ! 2009-12-11 - Marco Musy
   - NNet changed for MC09 nu=1 tuning, src/NNetTool_MLP.cpp polynomials updated
