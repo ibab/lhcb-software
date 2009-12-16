@@ -1,3 +1,12 @@
+#!/usr/bin/env python
+# ============================================================================
+# @file GetLFNs.py
+# @author Albert Puig Navarro (Albert.Puig@cern.ch)
+# @date 2009-XII-16
+# ============================================================================
+"""Get OutputData LFN of a Ganga Job matching a certain regular expression and
+write them into a file"""
+
 import sys
 import os
 import re
@@ -29,6 +38,7 @@ def getLFNs(job, regex):
   return lfnList
   
 if __name__=='__main__':  
+  # Warning: Can only be used using ganga!
   usage = "usage: ganga %prog [options] output"
   parser = OptionParser(usage=usage)
   parser.add_option("-j", "--jobid", action="store", type="int", dest="jobid", default=-1, help="jobID to take the output data from")
@@ -47,3 +57,6 @@ if __name__=='__main__':
   for line in list:
     f.write(line + '\n')
   f.close()
+
+# EOF
+  
