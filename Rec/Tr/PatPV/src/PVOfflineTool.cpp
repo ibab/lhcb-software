@@ -1,4 +1,4 @@
-// $Id: PVOfflineTool.cpp,v 1.5 2008-11-17 15:17:26 witekma Exp $
+// $Id: PVOfflineTool.cpp,v 1.6 2009-12-16 11:51:52 witekma Exp $
 // Include files:
 // from Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
@@ -20,9 +20,7 @@ PVOfflineTool::PVOfflineTool(const std::string& type,
                              const IInterface* parent)
   : GaudiTool(type,name,parent) {
   declareInterface<IPVOfflineTool>(this);
-  declareProperty("UseVelo",       m_useVelo       = true);
-  declareProperty("UseLong",       m_useLong       = true); 
-  declareProperty("UseUpstream",   m_useUpstream   = true);
+  declareProperty("RequireVelo",   m_requireVelo   = true);
   declareProperty("SaveSeedsAsPV", m_saveSeedsAsPV = false);
   declareProperty("InputTracks",   m_inputTracks);
   declareProperty("PVFitterName",  m_pvFitterName = "LSAdaptPVFitter");
@@ -238,10 +236,17 @@ void PVOfflineTool::readTracks(std::vector<const LHCb::Track*>& rtracks)
         stracks->end() != istrack; istrack++) {
       const LHCb::Track* str = (*istrack);
       if ( str->hasVelo() ) {
-	rtracks.push_back(*istrack);
+     	  rtracks.push_back(*istrack);
+      } else if ( ! m_requireVelo ) {
+        rtracks.push_back(*istrack);
       }
     }
   }
+  
+  if(msgLevel(MSG::DEBUG)) {
+    debug() << "readTracks: " << rtracks.size() << endmsg;
+  }
+  
 }
 
 //=============================================================================

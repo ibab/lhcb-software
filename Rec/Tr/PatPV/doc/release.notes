@@ -4,6 +4,13 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2009-12-16 - Mariusz Witek
+ - modifications to reconstruct loose PV without requirement of VELO segment
+ - added SimplePVFitter and SimplePVSeedTool
+ - modified PVOfflineTool 
+ - saveguard for MinTracks in PV for LSAdaptFitter 
+ - modified PVLoose.py options for Collision09
+
 ! 2009-12-14 - Marco Cattaneo
  - Fix untested StatusCode in LSAdaptPVFitter.cpp
 

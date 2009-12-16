@@ -1,4 +1,4 @@
-// $Id: PVOfflineTool.h,v 1.5 2008-11-17 15:17:26 witekma Exp $
+// $Id: PVOfflineTool.h,v 1.6 2009-12-16 11:51:52 witekma Exp $
 #ifndef PVOFFLINETOOL_H 
 #define PVOFFLINETOOL_H 1
 // Include files:
@@ -52,9 +52,7 @@ public:
 
 
 private:
-  bool m_useVelo;       // Option to use VELO tracks in vtx finding
-  bool m_useLong;       // Option to use LONG tracks in vtx finding
-  bool m_useUpstream;   // Option to use Upstream tracks in vtx finding
+  bool m_requireVelo;   // Option to use tracks with VELO segment only
   bool m_saveSeedsAsPV; // Save seeds as PVs (for monitoring)
   std::string m_outputVertices;
   // Tools

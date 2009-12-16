@@ -1,22 +1,21 @@
 # loose quality conditions for PV vertex (for Collisions09)
 from Configurables import PatPVOffline
-from Configurables import LSAdaptPVFitter, PVOfflineTool, PVSeedTool
+from Configurables import PVOfflineTool, SimplePVSeedTool, SimplePVFitter
 
-loosePVSeedTool = PVSeedTool("PVSeedTool")
-looseLSAdaptPVFitter = LSAdaptPVFitter("LSAdaptPVFitter")
+loosePVSeedTool = SimplePVSeedTool("SimplePVSeedTool")
+looseLSAdaptPVFitter = SimplePVFitter("SimplePVFitter")
+looseLSAdaptPVFitter.MinTracks = 3
 
 loosePVOfflineTool = PVOfflineTool("PVOfflineTool")
+loosePVOfflineTool.RequireVelo = False
+loosePVOfflineTool.PVFitterName = "SimplePVFitter"
+loosePVOfflineTool.PVSeedingName = "SimplePVSeedTool"
 
-looseLSAdaptPVFitter.MinTracks = 2
-loosePVSeedTool.minClusterMult = 2
-loosePVSeedTool.minCloseTracksInCluster = 2
-loosePVSeedTool.ratioSig2HighMult = 1
-loosePVSeedTool.ratioSig2LowMult =1
 
-loosePVOfflineTool.addTool(loosePVSeedTool, "PVSeedTool")
-loosePVOfflineTool.addTool(looseLSAdaptPVFitter, "LSAdaptPVFitter")
+loosePVOfflineTool.addTool(loosePVSeedTool, "SimplePVSeedTool")
+loosePVOfflineTool.addTool(looseLSAdaptPVFitter, "SimplePVFitter")
 
 loosePVOffline = PatPVOffline("PatPVOffline")
 loosePVOffline.addTool(loosePVOfflineTool, "PVOfflineTool")
 
-#loosePVOffline.OutputLevel = 4
+#loosePVOffline.OutputLevel = 2
