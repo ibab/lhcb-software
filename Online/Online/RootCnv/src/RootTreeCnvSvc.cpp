@@ -1,4 +1,4 @@
-// $Id: RootTreeCnvSvc.cpp,v 1.1 2009-12-15 15:37:25 frankb Exp $
+// $Id: RootTreeCnvSvc.cpp,v 1.2 2009-12-16 16:43:47 frankb Exp $
 //====================================================================
 //	RootTreeCnvSvc implementation
 //--------------------------------------------------------------------
@@ -32,9 +32,8 @@
 
 // ROOT include files
 #include "TROOT.h"
-#include "TBranch.h"
 #include "TClass.h"
-#include "TInterpreter.h"
+#include "TBranch.h"
 
 using namespace std;
 using namespace Gaudi;
@@ -45,11 +44,10 @@ DECLARE_SERVICE_FACTORY(RootTreeCnvSvc);
 #define S_OK   StatusCode::SUCCESS
 #define S_FAIL StatusCode::FAILURE
 namespace Gaudi {
+  bool patchStreamers(MsgStream& log);
   void popCurrentDataObject();
   void pushCurrentDataObject(DataObject** pobjAddr);
 }
-
-//namespace GaudiPoolDb  {  bool patchStreamers(MsgStream& s); }
 
 namespace {
     /// Release a pointer
@@ -105,29 +103,35 @@ StatusCode RootTreeCnvSvc::error(CSTR msg)  {
 /// Initialize the Db data persistency service
 StatusCode RootTreeCnvSvc::initialize()  {
   StatusCode status = ConversionSvc::initialize();
-  MsgStream log(messageService(), name());
+  MsgStream log(msgSvc(), name());
   if ( !status.isSuccess() ) {
-    log << MSG::ERROR << "Failed to initialize ConversionSvc base class." << endmsg;
-    return status;
+    return error("Failed to initialize ConversionSvc base class.");
   }
   if( !(status=service("IODataManager", m_ioMgr)).isSuccess() ) {
-    log << MSG::ERROR
-        << "Unable to localize interface from service:IODataManager" << endmsg;
-    return status;
+    return error("Unable to localize interface from service:IODataManager");
   }
   if( !(status=service("IncidentSvc", m_incidentSvc)).isSuccess() ) {
-    log << MSG::ERROR
-        << "Unable to localize interface from service:IncidentSvc" << endmsg;
-    return status;
+    return error("Unable to localize interface from service:IncidentSvc");
   }
-  //GaudiPoolDb::patchStreamers(log);
+  DataObject data_obj;
+  Gaudi::patchStreamers(log);
+  m_classDO = getClass(&data_obj);
+  if ( 0 == m_classDO ) {
+    return error("Unable to load class description for DataObject");    
+  }
+  string cname = System::typeinfoName(typeid(ObjectRefs));
+  m_classRefs = gROOT->GetClass(cname.c_str());
+  if ( 0 == m_classRefs ) {
+    return error("Unable to load class description for ObjectRefs");
+  }
+  gDebug = 2;
   return S_OK;
 }
 
 /// Finalize the Db data persistency service
 StatusCode RootTreeCnvSvc::finalize()    {
-  MsgStream log(messageService(), name());
   if ( m_ioMgr )  {
+    MsgStream log(msgSvc(), name());
     if ( ::toupper(m_shareFiles[0]) != 'Y' )  {
       IIODataManager::Connections cons = m_ioMgr->connections(this);
       for(IIODataManager::Connections::iterator i=cons.begin(); i != cons.end(); ++i)  {
@@ -163,8 +167,6 @@ void RootTreeCnvSvc::loadConverter(DataObject* pObject) {
     log << MSG::DEBUG << "Trying to 'Autoload' dictionary for class " << cname << endmsg;
     TClass* cl = s_classesNames[cname];
     if ( 0 == cl ) {
-      gInterpreter->EnableAutoLoading();
-      gInterpreter->AutoLoad( cname.c_str());
       cl = gROOT->GetClass(cname.c_str());
       if ( cl ) {
 	s_classesNames[cname] = cl;
@@ -174,9 +176,13 @@ void RootTreeCnvSvc::loadConverter(DataObject* pObject) {
   }
 }  
 
-static TClass* getClass(DataObject* pObject) {
+TClass* RootTreeCnvSvc::getClass(DataObject* pObject) {
   map<CLID, TClass*>::iterator i=s_classesClids.find(pObject->clID());
   if ( i != s_classesClids.end() ) return (*i).second;
+  loadConverter(pObject);
+  i=s_classesClids.find(pObject->clID());
+  if ( i != s_classesClids.end() ) return (*i).second;
+
   string cname = System::typeinfoName(typeid(*pObject));
   throw runtime_error("Unknown ROOT class for object:"+cname);
   return 0;

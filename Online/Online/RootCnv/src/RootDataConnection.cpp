@@ -1,4 +1,4 @@
-// $Id: RootDataConnection.cpp,v 1.3 2009-12-16 10:42:57 frankb Exp $
+// $Id: RootDataConnection.cpp,v 1.4 2009-12-16 16:43:47 frankb Exp $
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/DataObject.h"
@@ -207,8 +207,10 @@ TBranch* RootDataConnection::getBranch(TClass* cl, CSTR n) {
   }
   TBranch* b = t->GetBranch(n.c_str());
   if ( !b && m_file->IsWritable() ) {
-    void* ptr = 0;
+    void* ptr = cl->New();
     b = t->Branch(n.c_str(),cl->GetName(),ptr);
+    delete (DataObject*)ptr;
+    b->SetAddress(0);
   }
   return b;
 }

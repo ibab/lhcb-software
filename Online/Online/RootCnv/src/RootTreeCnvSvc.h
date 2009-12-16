@@ -1,4 +1,4 @@
-// $Id: RootTreeCnvSvc.h,v 1.1 2009-12-15 15:37:25 frankb Exp $
+// $Id: RootTreeCnvSvc.h,v 1.2 2009-12-16 16:43:47 frankb Exp $
 //====================================================================
 //	RootTreeCnvSvc definition
 //--------------------------------------------------------------------
@@ -7,7 +7,7 @@
 //====================================================================
 #ifndef GAUDIROOT_GAUDIROOTCNVSVC_H
 #define GAUDIROOT_GAUDIROOTCNVSVC_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootTreeCnvSvc.h,v 1.1 2009-12-15 15:37:25 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootTreeCnvSvc.h,v 1.2 2009-12-16 16:43:47 frankb Exp $
 
 // Framework include files
 #include "GaudiKernel/ConversionSvc.h"
@@ -56,6 +56,9 @@ namespace Gaudi {
 
     TClass*                     m_classRefs;
     TClass*                     m_classDO;
+
+    TClass* getClass(DataObject* pObject);
+
   public:
     /// Standard constructor
     RootTreeCnvSvc(const std::string& name, ISvcLocator* svc);

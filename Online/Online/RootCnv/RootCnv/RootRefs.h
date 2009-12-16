@@ -5,6 +5,8 @@ namespace Gaudi {
   public:
     int      dbase,container,link,clid,entry;
     unsigned char svc;
+    RootRef() {}
+    virtual ~RootRef() {}
   };
   class ObjectRefs {
   public:
@@ -17,5 +19,6 @@ namespace Gaudi {
       refs = r.refs; 
       return *this;
     }
+    virtual ~ObjectRefs() {}
   };
 }
