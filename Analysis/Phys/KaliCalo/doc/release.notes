@@ -1,11 +1,23 @@
-! $Id: release.notes,v 1.26 2009-12-16 11:21:45 jpalac Exp $ 
+! $Id: release.notes,v 1.27 2009-12-16 16:48:08 apuignav Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.26 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.27 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
+
+! 2009-12-15 - Albert Puig
+
+- changed energy units to MeV
+
+- changed PrintFreq to 10000 in KaliPi0.py
+
+- added property to make creating of monitoring histograms optional
+
+- added SPD information in Tuple
+
+- added 'grid' folder
 
 !========================== KaliCalo v3r1 2009-12-16 ==========================
 

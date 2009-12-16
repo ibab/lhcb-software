@@ -1,4 +1,4 @@
-// $Id: Pi0.cpp,v 1.7 2009-12-15 11:42:51 apuignav Exp $
+// $Id: Pi0.cpp,v 1.8 2009-12-16 16:48:08 apuignav Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -61,12 +61,18 @@ namespace Kali
       : LoKi::Algo ( name , pSvc ) 
         //
       , m_mirror ( false )
+      , m_histograms ( false )
     {
       declareProperty 
         ( "Mirror" , 
           m_mirror , 
           "Flag to activate Albert's trick with backroung estimation" )
         -> declareUpdateHandler ( &Kali::Pi0::mirrorHandler , this ) ;
+      declareProperty 
+        ( "Histograms" , 
+          m_histograms , 
+          "Flag to activate monitoring histograms creation" )
+        -> declareUpdateHandler ( &Kali::Pi0::histogramsHandler , this ) ;
     }
     /// virtual & protected destructor 
     virtual ~Pi0() {}
@@ -98,12 +104,20 @@ namespace Kali
     // ========================================================================
     /// update handler for 'Mirror' property
     void mirrorHandler ( Property& p ) ; // update handler for 'Mirror' property
+    /// update handler for 'Histograms' property
+    void histogramsHandler ( Property& p ) ; // update handler for 'Histograms' property
     // ========================================================================
   private:
     // ========================================================================
-    /// use Albert's trick? 
     bool  m_mirror ;                                     // use Albert's trick? 
+    bool  m_histograms ;                                 // produce moni histos
+    // Tool for retrieving SPD digits info
     ICaloDigits4Track*  m_spdDigitsTool ;
+    // Monitoring histograms
+    AIDA::IHistogram1D* h1 ;
+    AIDA::IHistogram1D* h2 ;
+    AIDA::IHistogram1D* h3 ;
+    AIDA::IHistogram1D* h4 ;
     // ========================================================================
   } ;
   // ==========================================================================
@@ -120,6 +134,20 @@ void Kali::Pi0::mirrorHandler ( Property& /* p */ )
   { Warning ( "Albert's trick for background evaluation is   activated!", StatusCode::SUCCESS ) ; }
   else 
   { Warning ( "Albert's trick for background evaluation is deactivated!", StatusCode::SUCCESS ) ; }  
+  //
+}
+// ============================================================================
+// update handler for 'Histos' property
+// ============================================================================
+void Kali::Pi0::histogramsHandler ( Property& /* p */ ) 
+{
+  // no action if not initialized yet:
+  if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
+  //
+  if ( m_histograms ) 
+  { Warning ( "Producing monitoring histograms is   activated", StatusCode::SUCCESS ) ; }
+  else 
+  { Warning ( "Producing monitoring histograms is deactivated!", StatusCode::SUCCESS ) ; }  
   //
 }
 // ============================================================================
@@ -141,13 +169,13 @@ void Kali::Pi0::fillTuple
     using namespace Gaudi::Units ;
     
     // fill N-tuple
-    tuple -> column ( "p0"   , p1 + p2  / GeV ) ;
-    tuple -> column ( "g1"   , p1       / GeV ) ;
-    tuple -> column ( "g2"   , p2       / GeV ) ;
+    tuple -> column ( "p0"   , p1 + p2  / MeV ) ;
+    tuple -> column ( "g1"   , p1       / MeV ) ;
+    tuple -> column ( "g2"   , p2       / MeV ) ;
     
-    tuple -> column ( "pt"   , p12.Pt() / GeV ) ;
-    tuple -> column ( "pt1"  , p1.Pt()  / GeV ) ;
-    tuple -> column ( "pt2"  , p2.Pt()  / GeV ) ;
+    tuple -> column ( "pt"   , p12.Pt() / MeV ) ;
+    tuple -> column ( "pt1"  , p1.Pt()  / MeV ) ;
+    tuple -> column ( "pt2"  , p2.Pt()  / MeV ) ;
     
     tuple -> column ( "prs1" , prs1e ) ;
     tuple -> column ( "prs2" , prs2e ) ;
@@ -158,7 +186,7 @@ void Kali::Pi0::fillTuple
     tuple -> column ( "ind1" , cell1.index() ) ;
     tuple -> column ( "ind2" , cell2.index() ) ;
     
-    tuple -> column ( "m12"  , p12.M()  / GeV ) ;
+    tuple -> column ( "m12"  , p12.M()  / MeV ) ;
     tuple -> column ( "bkg"  , bkg , 0 , 2    ) ;
     
     Gaudi::XYZVector mom1 = p1.Vect () ;
@@ -203,6 +231,11 @@ StatusCode Kali::Pi0::initialize  ()                // the proper initialzation
   else 
   { Warning ( "Albert's trick for background evaluation is deactivated!", StatusCode::SUCCESS ) ; }  
   //
+  if ( m_histograms ) 
+  { Warning ( "Producing monitoring histograms is   activated", StatusCode::SUCCESS ) ; }
+  else 
+  { Warning ( "Producing monitoring histograms is deactivated!", StatusCode::SUCCESS ) ; }  
+  //
   m_spdDigitsTool = tool<ICaloDigits4Track>( "SpdEnergyForTrack" , this ) ; // Load tool for SPD
   sc = Gaudi::Utils::setProperty ( m_spdDigitsTool , "AddNeighbours" , 1 ) ;
   if ( sc.isFailure() ) { return sc ; }
@@ -232,10 +265,13 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
   typedef std::set<const LHCb::CaloDigit*> SET ;
   SET digits ;
   
-  AIDA::IHistogram1D* h1 = book ( "mpi0-0"       , 0 , 0.250 , 250 ) ;
-  AIDA::IHistogram1D* h2 = book ( "mpi0-1-pt"    , 0 , 0.250 , 250 ) ;
-  AIDA::IHistogram1D* h3 = book ( "mpi0-2-spd-1" , 0 , 0.250 , 250 ) ;
-  AIDA::IHistogram1D* h4 = book ( "mpi0-3-spd-2" , 0 , 0.250 , 250 ) ;
+  if ( m_histograms )
+  {
+    h1 = book ( "mpi0-0"       , 0 , 0.250 , 250 ) ;
+    h2 = book ( "mpi0-1-pt"    , 0 , 0.250 , 250 ) ;
+    h3 = book ( "mpi0-2-spd-1" , 0 , 0.250 , 250 ) ;
+    h4 = book ( "mpi0-3-spd-2" , 0 , 0.250 , 250 ) ;
+  }
 
   typedef std::set<const LHCb::Particle*> Photons ;
   Photons                                 photons ;
@@ -264,24 +300,24 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     const bool good    =             ( m12      < 250 * MeV && p12.Pt()  > 800 * MeV ) ;
     bool       goodBkg = m_mirror && ( fake.M() < 250 * MeV && fake.Pt() > 800 * MeV ) ;
     
-    if ( 0 != h1 && good ) { h1 -> fill ( m12 / GeV ) ; }
+    if ( m_histograms && 0 != h1 && good ) { h1 -> fill ( m12 / MeV ) ; }
     
     if ( (!good)  && (!goodBkg) ) { continue ; }   // CONTINUE!!!
     
-    if ( 0 != h2 && good ) { h2 -> fill ( m12 / GeV ) ; }
+    if ( m_histograms && 0 != h2 && good ) { h2 -> fill ( m12 / MeV ) ; }
     
-    double spd1e = seedEnergyFrom ( g1 , spd ) / GeV ;
+    double spd1e = seedEnergyFrom ( g1 , spd ) / MeV ;
     
     if ( 0 < spd1e ) { continue ; }
-    if ( 0 != h3 && good ) { h3 -> fill ( m12 / GeV ) ; }
+    if ( m_histograms && 0 != h3 && good ) { h3 -> fill ( m12 / MeV ) ; }
     
-    double spd2e = seedEnergyFrom ( g2 , spd ) / GeV ;
+    double spd2e = seedEnergyFrom ( g2 , spd ) / MeV ;
     if ( 0 < spd2e ) { continue ; }
     
-    if ( 0 != h4 && good ) { h4 -> fill ( m12 / GeV ) ; }
+    if ( m_histograms && 0 != h4 && good ) { h4 -> fill ( m12 / MeV ) ; }
     
-    double prs1e = energyFrom ( g1 , prs ) / GeV ;
-    double prs2e = energyFrom ( g2 , prs ) / GeV ;
+    double prs1e = energyFrom ( g1 , prs ) / MeV ;
+    double prs2e = energyFrom ( g2 , prs ) / MeV ;
     
     if ( prs1e > prs2e ) 
     {

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: KaliPi0.py,v 1.9 2009-12-15 11:38:17 apuignav Exp $ 
+# $Id: KaliPi0.py,v 1.10 2009-12-16 16:48:08 apuignav Exp $ 
 # =============================================================================
 ## @file  KaliCalo/KaliCaloPi0.py
 #  The basic configuration to (re)run Ecal pi0-calibration
@@ -31,7 +31,7 @@ Or even:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $"
 # =============================================================================
 ## the basic import
 from Gaudi.Configuration    import *
@@ -43,7 +43,8 @@ kali = KaliPi0Conf (
     ## example of the first pass 
     FirstPass = True  ,
     UseTracks = True  ,
-    Mirror    = True   
+    Mirror    = True  ,  
+    PrintFreq = 10000
     #, UseSpd    = False 
     ## examle of the second pass
     # FirstPass  = False  ,
@@ -52,7 +53,6 @@ kali = KaliPi0Conf (
     # DestroyList = [ 'KaliPi0' , 'StdLooseElectrons' ] ,
     # OtherAlgs   = [ SLE ] ,
     )
-
 
 ## temporary solve the problem with atexit/__del__ for AppMgr 
 def _KaliAtExit_ () :

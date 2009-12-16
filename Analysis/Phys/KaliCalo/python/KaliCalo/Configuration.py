@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Configuration.py,v 1.9 2009-12-15 11:38:17 apuignav Exp $
+# $Id: Configuration.py,v 1.10 2009-12-16 16:48:08 apuignav Exp $
 # =============================================================================
 # @file  KaliCalo/Configuration.py
 # The basic configuration for Calorimeetr Calibrations 
@@ -36,7 +36,7 @@ The usage is fairly trivial:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $"
 # =============================================================================
 # the only one  "vizible" symbol 
 __all__  = (
@@ -125,6 +125,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         , 'Coefficients'        : {}    ## The map of (mis)calibration coefficients
         , 'OtherAlgs'           : []    ## List of "other" algorithms to be run, e.g. electorn calibration
         , 'Mirror'              : False ## Use Albert's trick for combinatorial background evaluation
+        , 'Histograms'          : False ## Create monitoring histograms
         ## CaloReco Flags:
         , 'UseTracks'           : True  ## Use Tracks for the first pass ?
         , 'UseSpd'              : True  ## Use Spd as neutrality criteria ?
@@ -140,6 +141,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         , 'Simulation'          : True   ## Simulation              (DaVinci) 
         , 'MeasureTime'         : True   ## Measure the time for sequencers
         , 'OutputLevel'         : INFO   ## The global output level
+        , 'PrintFreq'           : 100    ## The print frequency
         }
     ## documentation lines 
     _propertyDocDct = {
@@ -150,6 +152,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         , 'Coefficients'        : """ The map of (mis)calibration coefficients """
         , 'OtherAlgs'           : """ The list of 'other' algorithm to run, e.g. electron calibration """
         , 'Mirror'              : """ Use Albert's trick for combinatorial background evaluation """ 
+        , 'Histograms'          : """ Activate monitoring histograms creation """
         ## CaloReco flags 
         , 'UseTracks'           : """ Use Tracks for the first pass ? """
         , 'UseSpd'              : """ Use Spd as neutrality criteria ? """
@@ -277,12 +280,17 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             NTuplePrint    = True                          ,
             InputLocations = [ 'StdLooseAllPhotons' ]      ,
             OutputLevel    = self.getProp( 'OutputLevel' ) ,
-            Mirror         = self.getProp( 'Mirror'      ) 
+            Mirror         = self.getProp( 'Mirror'      ) , 
+            Histograms     = self.getProp( 'Histograms'  )
             )
         if self.getProp('Mirror' ) :
             _log.warning("KaliPi0: Albert's trick is   activated") 
         else :
             _log.warning("KaliPi0: Albert's trick is deactivated") 
+        if self.getProp('Histograms' ) :
+            _log.warning("KaliPi0: Monitoring histograms are   activated") 
+        else :
+            _log.warning("KaliPi0: Monitoring histograms are deactivated") 
             
         kali.addTool ( PhysDesktop )
         desktop = kali.PhysDesktop
@@ -444,6 +452,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             Simulation     = self.getProp ('Simulation' ) ,
             EvtMax         = self.getProp ('EvtMax'     ) ,
             Hlt            = self.getProp ('Hlt'        ) ,
+            PrintFreq      = self.getProp ('PrintFreq'  ) ,
             EnableUnpack   = unPack 
             ) 
 
@@ -453,15 +462,15 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         
         ApplicationMgr( OutStream = [ fmDST ] )     
             
-        ## 8. The configuration of NTuples & Histograms   
+        ## 8. The configuration of NTuples & Monitoring Histograms   
         from Gaudi.Configuration import NTupleSvc, HistogramPersistencySvc
         output = NTupleSvc().Output
         
         NTupleSvc ().Output += [
             "KALIPI0 DATAFILE='%s' TYPE='ROOT' OPT='NEW'" % self.getProp('NTuple')
             ]
-        
-        HistogramPersistencySvc ( OutputFile = self.getProp('Histos') ) 
+        if ( self.getProp('Histograms') ): 
+          HistogramPersistencySvc ( OutputFile = self.getProp('Histos') ) 
 
 
 # =============================================================================
