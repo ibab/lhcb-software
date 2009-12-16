@@ -1,4 +1,4 @@
-// $Id: TrackFilterAlg.cpp,v 1.14 2009-12-16 15:20:39 svecchi Exp $
+// $Id: TrackFilterAlg.cpp,v 1.15 2009-12-16 16:03:34 svecchi Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -194,7 +194,7 @@ void TrackFilterAlg::filterMuonTrack(LHCb::Track* track, LHCb::Tracks* outputCon
   int MA[5] = {0,0,0,0,0}; 
   int MC[5] = {0,0,0,0,0};
   
-  const std::vector<LHCb::LHCbID>& ids = track->lhcbIDs();
+  const std::vector<LHCb::LHCbID>& lhcbids = track->lhcbIDs();
   for( std::vector<LHCb::LHCbID>::const_iterator id = lhcbids.begin() ;
        id != lhcbids.end(); ++id) {
     if( id->isMuon() ) {
