@@ -1,0 +1,19 @@
+ApplicationMgr.OutStream  += { "OutputStream/RootDst"};
+ApplicationMgr.TopAlg      = { "WriteAlg", "ReadAlg" };
+MessageSvc.OutputLevel     = 1;
+EventSelector.PrintFreq    = 1;
+
+ApplicationMgr.EvtMax      = 1000;
+ApplicationMgr.EvtSel      = "NONE"; // do not use any event input
+ApplicationMgr.HistogramPersistency = "NONE";
+RootDst.ItemList           = { "/Event#999" } ;
+RootDst.Output             = "DATAFILE='PFN:ROOTIO.dst' SVC='RootTreeCnvSvc' OPT='RECREATE'";
+FileCatalog.Catalogs       = { "xmlcatalog_file:test.xml" } ;
+ApplicationMgr.ExtSvc     += { "Gaudi::MultiFileCatalog/FileCatalog", 
+                               "Gaudi::IODataManager/IODataManager",
+                              "PoolDbCacheSvc/PoolDbCacheSvc",
+                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",
+                               "Gaudi::RootTreeCnvSvc/RootTreeCnvSvc"};
+EventPersistencySvc.CnvServices += { "RootTreeCnvSvc" };
+EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" }; 
+PoolRootEvtCnvSvc.DbType         = "POOL_ROOT";
