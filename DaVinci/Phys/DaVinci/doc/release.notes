@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.394 2009-12-15 16:19:43 pkoppenb Exp $
+! $Id: release.notes,v 1.395 2009-12-16 10:51:03 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-12-16 - Patrick Koppenburg
+ - Added sample of real data
 
 ! 2009-12-15 - Patrick Koppenburg
  - Always make a histogram file (patch to bug #60623)
