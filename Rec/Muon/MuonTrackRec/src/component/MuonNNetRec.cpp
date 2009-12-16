@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.cpp,v 1.21 2009-12-16 12:07:10 ggiacomo Exp $
+// $Id: MuonNNetRec.cpp,v 1.22 2009-12-16 16:24:16 ggiacomo Exp $
 
 #include <list>
 
@@ -626,7 +626,7 @@ StatusCode MuonNNetRec::copyToLHCbTracks()
                              (*t)->by() + (*t)->sy() * hits.front()->Z(),
                              hits.front()->Z());
     LHCb::State state( StateVector( trackPos,
-                                    Gaudi::XYZVector( (*t)->sx(), (*t)->sy(), 1.0 )));
+                                    Gaudi::XYZVector( (*t)->sx(), (*t)->sy(), 1.0 ),1./10000.) );
 
     double qOverP, sigmaQOverP;
     if(m_Bfield){
