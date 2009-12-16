@@ -2,6 +2,9 @@
 Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
+! 2009-12-15 - Stefania Vecchi
+ - added functionalities to TrackFilterAlg to select Muon Tracks
+ - added MakeMuonTrack.cpp (h) make an LHCb track of a given MuonTrack (in substitution of CopyNNetTrack)
 
 ! 2009-11-22 - Wouter Hulsbergen
  - bug fix in element sorting: relevant when having redundant parameters (mothers + daughters)
