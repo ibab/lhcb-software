@@ -3,11 +3,17 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Changes to Configurable:
+   . Change structure and names of sub-detector sequences in the process phases,
+     to allow usage with Upgrade detector
+
+ - Changes to requirements:
+   . Add VeloPixAlgorithms and VeloPixAssociators
+
+ - Changes to references to reflect changes in Boole v20r0 output:
+   . Follow changes in sequence names
+
 </PRE><H1><A NAME=v20r0>2009-12-07 Boole v20r0</A></H1></PRE>
- - Change the structure of Configuration.py according to the needs of upgrade
-
- - Add VeloPixAlgorithms and VeloPixAssociators to requirements
-
  - Changes to Configurable:
    . Change Boole().VeloTell1Processing default to True
 
