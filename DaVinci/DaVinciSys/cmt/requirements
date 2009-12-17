@@ -8,6 +8,7 @@ branches doc cmt
 #=======================================================
 use  DaVinci                 	v24r7   Phys
 #  
+use  PatPV   v3r11p1 Tr
 # Declare this as a container package
 apply_pattern container_package
 
