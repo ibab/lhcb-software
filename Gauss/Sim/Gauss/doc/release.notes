@@ -4,6 +4,7 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v38r1 2009-12-17 ============================
 ! 2009-12-17 - Silvia Miglioranzi
  - Modified Configuration.py to include in the Velo simulation the:
    - Velo/DownstreamPipeSections
