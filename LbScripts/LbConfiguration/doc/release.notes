@@ -1,7 +1,8 @@
 2009-12-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: use of the LbUtils.Path module. Factored out
-	multi path functions.
+	* python/LbConfiguration/LbLogin.py: 
+	- use of the LbUtils.Path module. Factored out multi path functions.
+	- fixed detection of gcc in case of multiple chained MYSITEROOT locations.
 
 2009-12-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

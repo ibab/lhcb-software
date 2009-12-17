@@ -61,7 +61,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.65 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.66 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -674,11 +674,10 @@ class LbLoginScript(Script):
                 platform = "x86_64"
             if platform == "ia32" :
                 platform = "i686"
-            if "gcc" in os.listdir(ev["LCG_external_area"]) :
-                log.debug("Getting gcc main location")
-                gccmainloc = os.path.join(ev["LCG_external_area"], "gcc")
-                for v in os.listdir(gccmainloc) :
-                    gccversloc = os.path.join(gccmainloc, v)
+            log.debug("Getting gcc main location")
+            for d in multiPathGet(ev["LCG_external_area"], "gcc", alloccurences=True) :
+                for v in os.listdir(d) :
+                    gccversloc = os.path.join(d, v)
                     for p in os.listdir(gccversloc) :
                         if p.find(os.sep+"%s-%s" % (binary, platform)+os.sep) != -1 :
                             compilers.append(os.path.join(gccversloc, p))
