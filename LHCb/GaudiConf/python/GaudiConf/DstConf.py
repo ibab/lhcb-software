@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.33 2009-11-26 10:47:45 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.34 2009-12-17 15:16:11 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -31,6 +31,7 @@ class DstConf(LHCbConfigurableUser):
        , "Writer"         : "DstWriter"
        , "OutputName"     : ""
        , "SpilloverPaths" : [ "Prev", "PrevPrev", "Next" ]
+       , "DataType"       : ""
          }
 
     _propertyDocDct = { 
@@ -44,6 +45,7 @@ class DstConf(LHCbConfigurableUser):
        ,'Writer'        : """ Name of OutputStream writing the DST """
        ,'OutputName'    : """ Name of the output file, for MDF writing """
        ,'SpilloverPaths': """ Paths to write to XDST if available on input file """
+       ,'DataType'      : """ Flag for backward compatibility with old data """
        }
 
     __used_configurables__ = [
@@ -382,9 +384,9 @@ class DstConf(LHCbConfigurableUser):
         if dType not in self.KnownDstTypes:
             raise TypeError( "Unknown DstType '%s'"%dType )
 
-        # Propagate SpilloverPaths to DigiConf and to SimConf via DigiConf
-        self.setOtherProps(DigiConf(),["SpilloverPaths"])
-        DigiConf().setOtherProps(SimConf(),["SpilloverPaths"])
+        # Propagate SpilloverPaths and DataType to DigiConf and to SimConf via DigiConf
+        self.setOtherProps(DigiConf(),["SpilloverPaths","DataType"])
+        DigiConf().setOtherProps(SimConf(),["SpilloverPaths","DataType"])
 
         pType = self.getProp( "PackType" ).upper()
         if pType not in self.KnownPackTypes:

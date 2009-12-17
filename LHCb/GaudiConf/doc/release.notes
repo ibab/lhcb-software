@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.197 2009-12-17 09:15:00 cattanem Exp $
+! $Id: release.notes,v 1.198 2009-12-17 15:16:11 cattanem Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
+
+! 2009-12-17 - Marco Cattaneo
+ - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
+   SimConf does not add spillover Gen info to output file. Fixes bug 60636   
 
 ! 2009-12-14 - Marcin Kucharczyk
  - Change the structure of DigiConf.py according to the requirements of upgrade

@@ -1,7 +1,7 @@
 """
 Configurable for Boole output
 """
-__version__ = "$Id: DigiConf.py,v 1.12 2009-12-14 13:21:27 marcin Exp $"
+__version__ = "$Id: DigiConf.py,v 1.13 2009-12-17 15:16:11 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -25,6 +25,7 @@ class DigiConf(LHCbConfigurableUser):
        , "EnableUnpack"   : True
        , "PackSequencer"  : None
        , "Detectors"      : ['Velo','TT','IT','OT','Rich','Tr','Calo','Muon','L0']
+       , "DataType"       : ""
          }
 
     _propertyDocDct = { 
@@ -37,6 +38,7 @@ class DigiConf(LHCbConfigurableUser):
        ,'EnableUnpack'  : """ Configure the SIM unpacking via the Data On Demand Service """
        ,'PackSequencer' : """ Sequencer in which to run the packing algorithms """
        ,'Detectors'     : """ Active subdetectors """
+       ,'DataType'      : """ Flag for backward compatibility with old data """
        }
 
     __used_configurables__ = [ SimConf ]
@@ -233,7 +235,7 @@ class DigiConf(LHCbConfigurableUser):
 
     def __apply_configuration__(self):
         GaudiKernel.ProcessJobOptions.PrintOn()
-        self.setOtherProps(SimConf(),["SpilloverPaths","EnableUnpack","EnablePack"])
+        self.setOtherProps(SimConf(),["SpilloverPaths","EnableUnpack","EnablePack","DataType"])
         self._doWrite()
         if self.getProp("EnableUnpack") : self._doUnpacking()
         GaudiKernel.ProcessJobOptions.PrintOff()

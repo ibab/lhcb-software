@@ -1,7 +1,7 @@
 """
 Configurable for Gauss output
 """
-__version__ = "$Id: SimConf.py,v 1.6 2009-11-11 16:58:24 cattanem Exp $"
+__version__ = "$Id: SimConf.py,v 1.7 2009-12-17 15:16:11 cattanem Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 __all__ = [
@@ -23,6 +23,7 @@ class SimConf(LHCbConfigurableUser) :
         ,"DataUnpackingSeq"  : None # If set, the data unpacking will be run explicitly in the given sequence
         ,"Detectors"         : ['Velo','PuVeto','TT','IT','OT','Rich','Muon','Spd','Prs','Ecal','Hcal'] # Active sub-detectors
         ,"PackingSequencers" : { } # The packing sequence to fill for each spillover event
+        ,"DataType"          : "" # Flag for backward compatibility with old data
         }
 
     def allEventLocations(self):
@@ -230,7 +231,8 @@ class SimConf(LHCbConfigurableUser) :
             list = []
 
             if "Generator" in self.getProp("Phases") :
-                list += [ self.tapeLocation( slot, 'Gen', 'Header' ) ]
+                if self.getProp("DataType") != 'DC06' or slot == '':
+                    list += [ self.tapeLocation( slot, 'Gen', 'Header' ) ]
 
             if "Simulation" in self.getProp("Phases") :
                 list += [ self.tapeLocation( slot, 'MC', 'Header' ) ]
@@ -253,9 +255,10 @@ class SimConf(LHCbConfigurableUser) :
                 generatorList = [ self.tapeLocation( slot, 'Gen', 'Collisions' ),
                                   self.tapeLocation( slot, 'Gen', 'HepMCEvents' ) ]
 
-                # main event is manditory, spillover events optional.
+                # main event is mandatory, spillover events optional.
                 if slot != '':
-                    tape.OptItemList += generatorList
+                    if self.getProp("DataType") != 'DC06':
+                        tape.OptItemList += generatorList
                 else:
                     tape.ItemList    += generatorList
 
