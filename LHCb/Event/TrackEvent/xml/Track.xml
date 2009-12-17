@@ -196,7 +196,14 @@
    <typedef 
      type = "SharedObjectsContainer&lt;LHCb::Track&gt;"
      def  = "Selection"
-     desc = "Needed for access with SharedObjectContainer"
+     desc = "For defining SharedObjectContainer"
+     access = "PUBLIC"
+     />
+      
+   <typedef 
+     type = "Gaudi::Range_&lt;ConstVector&gt;"
+     def  = "Range"
+     desc = "For accessing a list of tracks which is either a SharedObjectContainer, a KeyedContainer or a ConstVector"
      access = "PUBLIC"
      />
       
