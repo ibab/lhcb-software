@@ -51,10 +51,7 @@ DaVinci().EvtMax = 10000
 #
 # Real Data
 #
-DaVinci().Input   = [
-"   DATAFILE='PFN:/castor/cern.ch/user/s/smenzeme/DATA2009/run63683-63690_RecoStatus20091210.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"   DATAFILE='PFN:/castor/cern.ch/user/p/pkoppenb/DATA2009/run63445-63497_RecoStatus20091210.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-] 
+importOptions( "$DAVINCIROOT/options/2009-RealData-Reco05.py" )
 ##############################################################################
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
