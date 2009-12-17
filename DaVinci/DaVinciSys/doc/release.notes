@@ -3,6 +3,20 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v24r7>2009-12-04 DaVinci v24r7. Release for 2009 collisions and beam data. </A></H1><PRE>
+
+Based on Phys v8r14, Analysis v3r14, Rec v7r12, HLT v8r1, Lbcom v7r11, LHCb v28r5, Gaudi v21r6
+
+ * Quick release for 2009 beam and collisions data.
+
+ * Highlights:
+   * Re-tuned PV finder
+   * Flavour tagging tuned for MC09 simulaiton.
+   * Add di-electron to CommonParticles
+   * Bu->eeK stripping line.
+   * Bunch crossing ID available in TupleEventInfo
+   * Various bug-fixes.
+
 </PRE><H1><A NAME=v24r6>2009-12-04 DaVinci v24r6. Release for (almost) first collisions. </A></H1><PRE>
 
 Based on Phys v8r13, Analysis v3r14, Rec v7r11, HLT v8r0, Lbcom v7r10, LHCb v28r4, Gaudi v21r6
