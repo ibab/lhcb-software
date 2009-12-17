@@ -1,12 +1,10 @@
-! $Id: release.notes,v 1.196 2009-12-14 13:24:39 marcin Exp $
+! $Id: release.notes,v 1.197 2009-12-17 09:15:00 cattanem Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
-!======================== GaudiConf v13r2 2009-12-14 ========================
 ! 2009-12-14 - Marcin Kucharczyk
- - Change the structure of DigiConf.py according to the 
- - requirements of upgrade
+ - Change the structure of DigiConf.py according to the requirements of upgrade
 
 !======================== GaudiConf v13r2 2009-12-11 ========================
 ! 2009-12-11 - Marco Cattaneo
