@@ -1,11 +1,9 @@
-#-- GAUDI jobOptions generated on Wed Dec 16 11:46:12 2009
+#-- GAUDI jobOptions generated on Thu Dec 17 18:21:45 2009
 #-- Contains event types : 
 #--   90000000 - 57 files - 3676685 events - 85.07 GBytes
 
-from Gaudi.Configuration import *
-from Configurables import DaVinci
+from Gaudi.Configuration import * 
 
-DaVinci().DataType = "2009"                   # Default is "MC09"
 EventSelector().Input   = [
 "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005727/0000/00005727_00000001_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
 "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005727/0000/00005727_00000002_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
@@ -64,4 +62,6 @@ EventSelector().Input   = [
 "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005727/0000/00005727_00000055_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
 "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005727/0000/00005727_00000056_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
 "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005727/0000/00005727_00000057_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"]
-FileCatalog().Catalogs = [ 'xmlcatalog_file:Reco05.xml' ]
+from Configurables import DaVinci
+
+DaVinci().DataType = "2009"                   # Default is "MC09"
