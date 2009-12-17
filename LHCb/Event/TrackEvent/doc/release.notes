@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2009-12-17 - Wouter Hulsbergen
+ - Added typedef for gaudi::range in Track
+
 !======================= TrackEvent v5r2 2009-11-13 ==========================
 ! 2009-11-13 - Wouter Hulsbergen
  - 'Solve' compilation problem on windows.
