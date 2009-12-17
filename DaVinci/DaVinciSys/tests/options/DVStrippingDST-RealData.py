@@ -51,7 +51,7 @@ DaVinci().EvtMax = 10000
 #
 # Real Data
 #
-importOptions( "$DAVINCIROOT/options/2009-RealData-Reco05.py" )
+importOptions( "$DAVINCIROOT/options/2009-RealData-Reco06.py" )
 ##############################################################################
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
