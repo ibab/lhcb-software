@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.109 2009-11-12 19:51:07 rlambert Exp $"
+__version__ = "$Id: Configuration.py,v 1.110 2009-12-17 15:20:10 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -436,6 +436,7 @@ class Brunel(LHCbConfigurableUser):
                 GaudiSequencer("OutputDSTSeq").Members += [PackMCVertex()]
                 DstConf().SimType = "Minimal"
             DstConf().OutputName = self.outputName()
+            self.setOtherProps(DstConf(),["DataType"])
 
     def outputName(self):
         """
