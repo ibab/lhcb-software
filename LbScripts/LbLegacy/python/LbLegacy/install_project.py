@@ -257,7 +257,6 @@ lhcb_dir    = None
 html_dir    = None
 bootscripts_dir = None
 targz_dir   = None
-system_dir  = None
 tmp_dir     = None
 
 # global creation mask
@@ -1127,7 +1126,6 @@ def getProjectTar(tar_list, already_present_list=None):
 
     this_lcg_dir = lcg_dir.split(os.pathsep)[0]
     this_contrib_dir = contrib_dir.split(os.pathsep)[0]
-    this_system_dir = system_dir.split(os.pathsep)[0]
     this_lhcb_dir = lhcb_dir.split(os.pathsep)[0]
     this_targz_dir = targz_dir.split(os.pathsep)[0]
 
@@ -1147,9 +1145,8 @@ def getProjectTar(tar_list, already_present_list=None):
                     os.chdir(this_contrib_dir)
                 exist_flag = getFile(url_dist+'source/',file)
             elif tar_list[file] == "system":
-                checkWriteAccess(this_system_dir)
-                os.chdir(this_system_dir)
-                exist_flag = getFile(url_dist+'system/',file)
+                log.info("Obsolete package %s will not be installed. The Compat project is replacing it" % file )
+                exist_flag = True
             else:
                 checkWriteAccess(this_lhcb_dir)
                 os.chdir(this_lhcb_dir)
@@ -1336,19 +1333,32 @@ def cleanBootScripts():
 #  list available versions ==============================================================================
 #
 def listVersions(pname):
+    
+    from LbConfiguration.Version import sortStrings
+    
     log = logging.getLogger()
     log.debug('listVersions for %s ' % pname)
 
     PROJECT = pname.upper()
     webpage = urlopen(url_dist+'/'+PROJECT)
     weblines = webpage.readlines()
+    plist = []
     for webline in weblines:
         if webline.find('href="'+PROJECT) != -1:
             href = webline.index('href=')
             quote1 = webline[href:].index('"')
             quote2 = webline[href+quote1+1:].index('"')
-            log.info(webline[href+quote1+1:href+quote1+1+quote2])
+            filename = webline[href+quote1+1:href+quote1+1+quote2]
+            if filename.find(".md5") == -1 :
+                plist.append(filename) 
+                log.info(filename)
+    for l in sortStrings(plist, safe=True) :
+        log.info(filename)
     atexit.register(urlcleanup)
+
+def getProjectVersions(project, cmtconfig=None):
+    if not cmtconfig :
+        cmtconfig = os.environ.get("CMTCONFIG", None)
 
 #
 #  read a string from a file ==============================================

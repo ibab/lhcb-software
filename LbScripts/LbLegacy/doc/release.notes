@@ -1,5 +1,8 @@
 2009-12-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbLegacy/install_project.py: removed the download of the system tarball. It is 
+	replaced by the Compat project.
+	* tests/InstallProjectTest.py: new file for the unit testing of install_project.py.
 	* scripts/mkproject: added the build of "all_groups" by default. This will enable the build of the
 	tests as well.
 
