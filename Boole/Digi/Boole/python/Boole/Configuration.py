@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.63 2009-12-14 14:25:32 marcin Exp $"
+__version__ = "$Id: Configuration.py,v 1.64 2009-12-17 08:54:32 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -105,7 +105,9 @@ class Boole(LHCbConfigurableUser):
         self.setOtherProp(DigiConf(),"EnablePack")
         SimConf().setProp("EnableUnpack",self.getProp("EnablePack"))
         detListSim = []
-        if 'Velo'    in self.getProp('DetectorDigi')['VELO'] : detListSim += ['Velo']
+        if 'Velo'    in self.getProp('DetectorDigi')['VELO'] :
+            detListSim += ['Velo']
+            detListSim += ['PuVeto'] # Add also PU Veto hits
         if 'VeloPix' in self.getProp('DetectorDigi')['VELO'] : detListSim += ['VeloPix']
         if 'TT'      in self.getProp('DetectorDigi')['TT']   : detListSim += ['TT']
         if 'IT'      in self.getProp('DetectorDigi')['IT']   : detListSim += ['IT']
