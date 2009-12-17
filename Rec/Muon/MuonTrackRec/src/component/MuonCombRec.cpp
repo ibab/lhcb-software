@@ -1,4 +1,4 @@
-// $Id: MuonCombRec.cpp,v 1.12 2009-12-16 16:24:16 ggiacomo Exp $
+// $Id: MuonCombRec.cpp,v 1.13 2009-12-17 14:55:22 ggiacomo Exp $
 // Include files 
 #include <fstream>
 
@@ -14,6 +14,7 @@
 #include "Event/Track.h"
 #include "Event/StateVector.h"
 #include "Event/State.h"
+#include "Kernel/IBIntegrator.h"
 
 #include "MuonTrackRec/MuonLogHit.h"
 #include "MuonTrackRec/MuonLogPad.h"
@@ -305,6 +306,7 @@ StatusCode MuonCombRec::initialize() {
 
   //calculate the transverse momentum  
   m_fCalcMomentum = tool<ITrackMomentumEstimate>("TrackPtKick");
+  m_bIntegrator = tool<IBIntegrator>( "BIntegrator" );
   debug() << "In init, PTKick from geometry " << endreq;
 
 
@@ -1020,11 +1022,27 @@ StatusCode MuonCombRec::copyToLHCbTracks()
       m_fCalcMomentum->calculate(&state, qOverP, sigmaQOverP);
       state.setQOverP(qOverP);
 
-      // fill momentum variables for MuonTrack
+      // fill momentum variables (at primary Vx) for MuonTrack
+      Gaudi::XYZPoint  begin( 0., 0., 0. );
+      Gaudi::XYZPoint  end( state.x(), state.y(), state.z() );
+      Gaudi::XYZVector bdl;
+      double zCenter;
+      StatusCode sc = m_bIntegrator -> calculateBdlAndCenter(begin, end, state.tx(), 
+                                                             state.ty(), zCenter, bdl );
+      if (sc.isFailure()){
+         return Warning("Failed to integrate field", StatusCode::FAILURE, 1);
+       }
+      double xCenter = state.x() + state.tx() * ( zCenter - state.z() );
+      double tx_vtx   = xCenter / zCenter;
+      double pz_vtx =  state.p() * sqrt(1- tx_vtx*tx_vtx - state.ty()*state.ty() );
+      Gaudi::XYZVector momentum_vtx( tx_vtx * pz_vtx,
+                                     state.ty()* pz_vtx,
+                                     pz_vtx);
+
       (*t)->setP(state.p());
-      (*t)->setPt(state.pt());
+      (*t)->setPt(sqrt(momentum_vtx.X()*momentum_vtx.X() + momentum_vtx.Y()*momentum_vtx.Y()));
       (*t)->setqOverP(state.qOverP());
-      (*t)->setMomentum(state.momentum());
+      (*t)->setMomentum(momentum_vtx);
     }    
 
     //

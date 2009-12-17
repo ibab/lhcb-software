@@ -1,4 +1,4 @@
-// $Id: MuonCombRec.h,v 1.5 2009-12-15 19:17:51 ggiacomo Exp $
+// $Id: MuonCombRec.h,v 1.6 2009-12-17 14:55:22 ggiacomo Exp $
 #ifndef COMPONENT_MUONCOMBREC_H 
 #define COMPONENT_MUONCOMBREC_H 1
 
@@ -17,7 +17,7 @@ class IMuonPadRec;
 class IMuonClusterRec;
 class ISequencerTimerTool;
 class ITrackMomentumEstimate;
-
+class IBIntegrator;
 
 /** @class MuonCombRec MuonCombRec.h component/MuonCombRec.h
  *  
@@ -111,6 +111,7 @@ private:
   IMuonClusterRec* m_clusterTool;
 
   ITrackMomentumEstimate* m_fCalcMomentum; // momentum tool
+  IBIntegrator* m_bIntegrator; // magnetic field tool
 
   //  IMuonFastPosTool* m_posTool;
   DeMuonDetector* m_muonDetector;
