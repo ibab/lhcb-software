@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-from LbConfiguration.Version import CoreVersion, NotAVersion, sortVersions
+from LbConfiguration.Version import CoreVersion, NotAVersion
+from LbConfiguration.Version import sortVersions, extractVersion, sortStrings
 
 import unittest
 
@@ -33,6 +34,7 @@ class VersionTestCase(unittest.TestCase):
         self.assertRaises(NotAVersion, CoreVersion, "v1r")
         self.assertRaises(NotAVersion, CoreVersion, "1r1")
         self.assertRaises(NotAVersion, CoreVersion, "v1r1p0l")
+        self.assertRaises(NotAVersion, CoreVersion, None)
 
     def testString(self):
         v1 = "v1r0"
@@ -59,6 +61,24 @@ class VersionTestCase(unittest.TestCase):
         vlist = ["v1r0","v1r1","v0r","v2r0","v1r0p1","v1r0p0"]
         self.assertRaises(NotAVersion, sortVersions, vlist)
         self.assertTrue(sortVersions(vlist, safe=True) == ["v1r0", "v1r0p0", "v1r0p1", "v1r1", "v2r0"])
+    
+        vlist = ["v1r0","v1r1","v0r","v2r0",None,"v1r0p0"]
+        self.assertRaises(NotAVersion, sortVersions, vlist)
+        self.assertTrue(sortVersions(vlist, safe=True) == ["v1r0", "v1r0p0", "v1r1", "v2r0"])
+
+    def testExtract(self):
+        v1 = "wwe/GAUDI_v1r2.tar.gz"
+        self.assertEqual(extractVersion(v1).name(), "v1r2")
+        vlist = ["v1r0", "ddv2r0", "GAUDI_v0r0", v1, "blah"]
+        vlistextr = [extractVersion(x) for x in vlist]
+
+
+    def testStringSort(self):
+        v1 = "wwe/GAUDI_v1r2.tar.gz"
+        vlist = ["v1r0", "ddv2r0", "GAUDI_v0r0", v1, "blah"]
+        self.assertRaises(AttributeError, sortStrings, vlist)
+        self.assertEqual(sortStrings(vlist, safe=True), 
+                                     ["GAUDI_v0r0", "v1r0", "wwe/GAUDI_v1r2.tar.gz", "ddv2r0"])
 
         
 if __name__ == '__main__':

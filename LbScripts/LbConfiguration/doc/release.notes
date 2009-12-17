@@ -1,8 +1,11 @@
 2009-12-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbConfiguration/Version.py: added the function sortStrings that sorts a list of
+	strings that contains a version.
 	* python/LbConfiguration/LbLogin.py: 
 	- use of the LbUtils.Path module. Factored out multi path functions.
 	- fixed detection of gcc in case of multiple chained MYSITEROOT locations.
+	- removed the usage of the system tarball. It is replaced by the Compat project.
 
 2009-12-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

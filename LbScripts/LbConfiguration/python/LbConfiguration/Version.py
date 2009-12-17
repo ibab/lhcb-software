@@ -1,5 +1,5 @@
 """ LHCb version style definition and massaging """
-# $Id: Version.py,v 1.2 2009-12-15 17:11:38 hmdegaud Exp $
+# $Id: Version.py,v 1.3 2009-12-17 20:28:17 hmdegaud Exp $
 
 import re
 
@@ -30,7 +30,10 @@ class CoreVersion:
         self._vname = vname
         self._version = None
         self._patchversion = False
-        m = self.version_style.match(self._vname)
+        try :
+            m = self.version_style.match(self._vname)
+        except TypeError:
+            raise NotAVersion
         if m :
             a, b, c = m.groups()
             if a is None or b is None :
@@ -67,5 +70,21 @@ def sortVersions(versionlist, versiontype=CoreVersion, safe=False):
                 continue
             vlist.append(v)
     vlist.sort()
-    sorted_list = [ x.name() for x in vlist]
-    return sorted_list
+    return [ x.name() for x in vlist]
+
+def extractVersion(strname, versiontype=CoreVersion):
+    result = None
+    m = version_style.search(strname)
+    if m :
+        result = versiontype(m.group())
+    return result
+
+
+def sortStrings(strlist, versiontype=CoreVersion, safe=False):
+    versionlist = [ (extractVersion(s, versiontype=versiontype), s) for s in strlist ]
+    if safe :
+        versionlist = [ t for t in versionlist if t[0]]
+    versionlist.sort()
+    return [ x[1] for x in versionlist ]
+        
+    

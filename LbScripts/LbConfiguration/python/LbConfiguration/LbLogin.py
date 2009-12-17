@@ -61,7 +61,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.66 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.67 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -935,16 +935,6 @@ class LbLoginScript(Script):
     
             SetupProject().main(setupprojargs)
     
-    def setupSystem(self):
-        log  = logging.getLogger()
-        opts = self.options
-        ev   = self._env
-        if opts.mysiteroot and sys.platform != "win32":
-            libdir = os.path.join(opts.mysiteroot, ev["CMTOPT"])
-            ldlist = ev["LD_LIBRARY_PATH"].split(os.pathsep)
-            ldlist.append(libdir)
-            log.debug("Appending %s to the LD_LIBRARY_PATH" % libdir)
-            ev["LD_LIBRARY_PATH"] = os.pathsep.join(ldlist)
     
     def copyEnv(self):
         retenv = dict(self._env.env)
@@ -970,7 +960,6 @@ class LbLoginScript(Script):
 
         self.setCMTConfig(debug)
         self.setCMTPath()
-        self.setupSystem()
 
         # return a copy otherwise the environment gets restored
         # at the destruction of the instance
