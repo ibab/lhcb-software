@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.77 2009-12-07 21:49:53 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.78 2009-12-17 10:46:19 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -477,10 +477,24 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
     A = thisNodeC * Transpose( F ) * invNextNodeC;
        
     // smooth covariance  matrix
+#ifdef COMMONEXPRESSION
     TrackSymMatrix covUpDate = 
       Similarity<double,TrackMatrix::kRows,TrackMatrix::kCols>
       (A ,  nextNodeSmoothedC - nextNodeC );
     thisNodeC += covUpDate;
+#else
+    // The expression above is unstable since you effectively subtract
+    // matrices. I found an expression in which you only add things
+    // up. The expression is:
+    //   C = A ( SmoothedCnext + Q + Q  Finv^T Cfiltered Finv Q ) A^T  
+    // It is of course much slower ... but we don't care about that now.
+    const TrackSymMatrix& Q = nextNode.noiseMatrix() ;
+    TrackSymMatrix FCFinv = Similarity(F,thisNodeC) ; // is also nextNodeC - Q
+    FCFinv.InvertChol() ;
+    TrackSymMatrix QFCFQ = Similarity(Q,FCFinv) ;
+    TrackSymMatrix sum = nextNodeSmoothedC + Q + QFCFQ ;
+    thisNodeC = Similarity(A, sum ) ;
+#endif
   } else {
     // if there is no noise, the gain matrix is just the inverse of
     // the transport matrix
@@ -501,7 +515,11 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
   if ( !isPositiveMatrix(thisNodeC) ) {
     std::ostringstream mess;
     mess << "Non-positive cov. matrix in smoother for z = "
-         << thisNode.z() << std::endl
+         << thisNode.z() << " "
+	 << nextNode.z() << " " 
+	 << thisNode.type() << " "
+	 << nextNode.type() << " "
+	 << std::endl
          << " thisNodeC = " << thisNodeC << std::endl
          << " noise = " << nextNode.noiseMatrix() << std::endl ;
     Warning("Problems in smoothing",StatusCode::FAILURE,0).ignore();
