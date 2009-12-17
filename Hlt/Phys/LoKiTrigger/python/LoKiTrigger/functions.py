@@ -200,6 +200,13 @@ TrVELOR       = equal_to ( TrTYPE , LHCb.Track.VeloR )
 ## @see LoKi::Cuts::TrZERO
 TrZERO        = LoKi.Constant( _T , 'double' ) ( 0.0 )
 
+## @see LoKi::Cuts::TrIDC
+TrIDC = LoKi.Tracks.CountIDs
+## @see LoKi::Cuts::TrOTIDC
+TrOTIDC = LoKi.Tracks.CountOTIDs
+
+
+
 # 
 ## @see LoKi::Cuts::TTrDA
 TTrDA         = LoKi.Tracks.DeltaAngle () 

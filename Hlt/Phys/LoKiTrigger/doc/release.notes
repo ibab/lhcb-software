@@ -1,10 +1,31 @@
-! $Id: release.notes,v 1.54 2009-10-17 17:21:49 graven Exp $
+! $Id: release.notes,v 1.55 2009-12-17 20:18:37 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2009-12-17 - Vanya BELYAEV
+
+ - add new symbols for Wouter Hulsbergen :
+
+    TrIDC : count LHCbIDs in track, that satisfy certain criteria
+
+          " ( 3 <  TrIDC( 'isVelo' ) ) & ( TrIDs ( 'isOT') > 15 ) " 
+
+    TrOTIDC: count OTChannelIDs in track that satisfy certain criteria:
+
+         " TrOTIDC( 'layer' , 3 ) > 0 "  count layer #3
+
+         " TrOTIDC( 'layer' , 1 , 3  ) > 0 "  count layers in range [1,3] 
+
+         " TrOTIDC( 'layer' , uints( [1, 2, 3, 4, 8] )   ) > 0 "  count layers from list
+
+
+  - cmt/requirements 
+
+       version increment to v9r7 
+ 
 !========================== LoKiTrigger v9r6 2009-10-17 ===================
 ! 2009-10-08 - Patrick Koppenburg
  - Remove FC2 from functions following Gerhard's changes of 10-05.

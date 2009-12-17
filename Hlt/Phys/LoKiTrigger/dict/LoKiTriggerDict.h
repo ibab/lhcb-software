@@ -1,4 +1,4 @@
-// $Id: LoKiTriggerDict.h,v 1.16 2009-04-01 12:36:09 ibelyaev Exp $
+// $Id: LoKiTriggerDict.h,v 1.17 2009-12-17 20:18:37 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -32,6 +32,8 @@
 // ============================================================================
 #include "LoKi/Hlt1Functions.h"
 #include "LoKi/Hlt1Wrappers.h"
+// ============================================================================
+#include "LoKi/TrackIDs.h"
 // ============================================================================
 namespace LoKi 
 {
