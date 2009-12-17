@@ -4,6 +4,8 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+!============================= PatPV v3r11p1 2009-12-16 ======================
+
 ! 2009-12-16 - Mariusz Witek
  - modifications to reconstruct loose PV without requirement of VELO segment
  - added SimplePVFitter and SimplePVSeedTool
