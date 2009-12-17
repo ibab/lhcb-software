@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-12-17 - Silvia Miglioranzi
+ - Modified Configuration.py to include in the Velo simulation the:
+   - Velo/DownstreamPipeSections
+   - Velo/UpstreamPipeSections.
+
 ! 2009-12-15 - Patrick Robbe
  - Configuration.py: fix the name of the generator monitoring sequence 
    which was not attached to the main sequence.
