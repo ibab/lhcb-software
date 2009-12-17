@@ -59,7 +59,7 @@ StatusCode Pack<PACKER>::execute()
 
     // Pointer to packed data
     typename PACKER::PackedDataVector * pdata = NULL;
-    if ( inputOK || ( !inputOK && m_alwaysOutput ) )
+    if ( inputOK || m_alwaysOutput )
     {
       // make new output data
       pdata = new typename PACKER::PackedDataVector();
@@ -100,7 +100,8 @@ StatusCode Pack<PACKER>::execute()
     } // input OK
 
     // Count packed output
-    counter("# PackedData") += pdata->data().size();
+    if ( inputOK || m_alwaysOutput )
+      counter("# PackedData") += pdata->data().size();
 
   } // output OK
 

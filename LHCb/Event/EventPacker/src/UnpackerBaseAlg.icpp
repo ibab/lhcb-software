@@ -59,7 +59,7 @@ StatusCode Unpack<PACKER>::execute()
 
     // Pointer to packed data
     typename PACKER::DataVector * data = NULL;
-    if ( inputOK || ( !inputOK && m_alwaysOutput ) )
+    if ( inputOK || m_alwaysOutput )
     {
       // make new output data
       data = new typename PACKER::DataVector();
@@ -94,7 +94,8 @@ StatusCode Unpack<PACKER>::execute()
     } // input OK
 
     // Count packed output
-    counter("# UnPackedData") += data->size();
+    if ( inputOK || m_alwaysOutput )
+      counter("# UnPackedData") += data->size();
 
   } // output OK
 

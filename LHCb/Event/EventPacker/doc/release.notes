@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2009-12-17 - Marco Cattaneo
+ - Fix uninitialised pointer introduced in previous commit
+
 ! 2009-12-04 - Christopher Rob Jones
  - Add support for packed RichPIDs and MuonPIDs to the MDF Writer and Reader.
 
