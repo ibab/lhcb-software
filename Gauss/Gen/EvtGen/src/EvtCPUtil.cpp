@@ -37,6 +37,7 @@
 #include <assert.h>
 using std::endl;
 
+bool EvtCPUtil::_enableFlip = false ;
 
 //added two functions for finding the fraction of B0 tags for decays into 
 //both CP eigenstates and non-CP eigenstates -- NK, Jan. 27th, 1998
@@ -122,7 +123,7 @@ void EvtCPUtil::fractB0nonCP(EvtComplex Af, EvtComplex Abarf,
   return;  
 } 
 
-void EvtCPUtil::OtherB( EvtParticle *p,double &t, EvtId &otherb, double probB0){
+/*void EvtCPUtil::OtherB( EvtParticle *p,double &t, EvtId &otherb, double probB0){
 
   //Can not call this recursively!!!
   static int entryCount=0;
@@ -261,10 +262,93 @@ void EvtCPUtil::OtherB( EvtParticle *p,double &t, EvtId &otherb, double probB0){
   
   entryCount--;
   return ;
+}*/
+
+// ========================================================================
+bool EvtCPUtil::isBsMixed ( EvtParticle * p )
+{
+  if ( ! ( p->getParent() ) ) return false ;
+
+  static EvtId BS0=EvtPDL::getId("B_s0");
+  static EvtId BSB=EvtPDL::getId("anti-B_s0");
+
+  if ( ( p->getId() != BS0 ) && ( p->getId() != BSB ) ) return false ;
+
+  if ( ( p->getParent()->getId() == BS0 ) ||
+       ( p->getParent()->getId() == BSB ) ) return true ;
+
+  return false ;
 }
 
+// ========================================================================
+bool EvtCPUtil::isB0Mixed ( EvtParticle * p )
+{
+  if ( ! ( p->getParent() ) ) return false ;
 
+  static EvtId B0 =EvtPDL::getId("B0");
+  static EvtId B0B=EvtPDL::getId("anti-B0");
 
+  if ( ( p->getId() != B0 ) && ( p->getId() != B0B ) ) return false ;
+
+  if ( ( p->getParent()->getId() == B0 ) ||
+       ( p->getParent()->getId() == B0B ) ) return true ;
+
+  return false ;
+}
+//============================================================================
+// Return the tag of the event (ie the anti-flavour of the produced 
+// B meson). Flip the flavour of the event with probB probability
+//============================================================================
+void EvtCPUtil::OtherB( EvtParticle * p ,
+                                  double & t ,
+                                  EvtId & otherb ,
+                                  double probB )
+{
+  static EvtId B0  = EvtPDL::getId( "B0" ) ;
+  static EvtId B0B = EvtPDL::getId( "anti-B0" ) ;
+
+  //std::cout<<"New routine running"<<endl;
+  //if(p->getId() == B0 || p->getId() == B0B) 
+  //added by liming Zhang
+  enableFlip();
+  if ( ( isB0Mixed( p ) ) || ( isBsMixed( p ) ) ) {
+    p->getParent()->setLifetime() ;
+    t = p->getParent()->getLifetime() ;
+  }
+  else {
+    p->setLifetime() ;
+    t = p->getLifetime() ;
+  }
+
+  if ( flipIsEnabled() ) {
+    //std::cout << " liming << flipIsEnabled " << std::endl;
+    // Flip the flavour of the particle with probability probB
+    bool isFlipped = ( EvtRandom::Flat( 0. , 1. ) < probB ) ;
+
+    if ( isFlipped ) {
+      if ( ( isB0Mixed( p ) ) || ( isBsMixed( p ) ) ) {
+        p->getParent()
+          ->setId( EvtPDL::chargeConj( p->getParent()->getId() ) ) ;
+        p->setId( EvtPDL::chargeConj( p->getId() ) ) ;
+      }
+      else {
+        p->setId( EvtPDL::chargeConj( p->getId() ) ) ;
+      }
+    }
+  }
+
+  if ( ( isB0Mixed( p ) ) || ( isBsMixed( p ) ) ) {
+    // if B has mixed, tag flavour is charge conjugate of parent of B-meson
+    otherb = EvtPDL::chargeConj( p->getParent()->getId() ) ;
+  }
+  else {
+    // else it is opposite flavour than this B hadron
+    otherb = EvtPDL::chargeConj( p->getId() ) ;
+  }
+
+  return ;
+}
+//============================================================================
 void EvtCPUtil::OtherB( EvtParticle *p,double &t, EvtId &otherb){
 
 
@@ -449,4 +533,8 @@ double EvtCPUtil::getDeltaM(const EvtId id){
   double dM = atof(EvtSymTable::get(parmName,ierr).c_str());
   return dM;
 }
+
+bool EvtCPUtil::flipIsEnabled() { return _enableFlip ; }
+void EvtCPUtil::enableFlip() { _enableFlip = true ; }
+void EvtCPUtil::disableFlip() { _enableFlip = false ; }
 

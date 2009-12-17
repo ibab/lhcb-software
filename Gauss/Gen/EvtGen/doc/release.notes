@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-12-17 - Mark Whitehead
+ - CPV Fix moved from EvtIncoherentMixing.cpp to EvtCPUtil.cpp so
+   calls to the 4 paramater EvtCPUtil::OtherB from all decay models 
+   can be tested.     
+
 ! 2009-11-27 - Mark Whitehead
  - Fix to EvtIncoherentMixing.cpp for slc5: <stdlib.h> included.
 

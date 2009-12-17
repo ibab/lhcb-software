@@ -38,6 +38,17 @@ public:
 			   double deltam, double beta, int flip, 
 			   double &fract);
 
+  // Mark Whitehead 7/12/2009
+  // Add required lines from EvtIncoherentMixing.hh to fix CPV
+
+  // Functions to check if a B has mixed (comes from a B)
+  static bool isB0Mixed( EvtParticle * ) ;
+  static bool isBsMixed( EvtParticle * ) ;
+
+  static bool flipIsEnabled() ;
+  static void enableFlip() ;
+  static void disableFlip() ;
+
   static void OtherB(EvtParticle *p, double &t, EvtId &otherb);
 
   static void OtherB(EvtParticle *p, double &t, EvtId &otherb, double probB0);
@@ -50,6 +61,9 @@ public:
   static double getDeltaGamma(const EvtId id);
   static double getDeltaM(const EvtId id);
 
+private:
+
+  static bool _enableFlip ;
 };
 
 
