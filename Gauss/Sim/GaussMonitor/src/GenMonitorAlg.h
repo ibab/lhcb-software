@@ -1,4 +1,4 @@
-// $Id: GenMonitorAlg.h,v 1.6 2008-05-07 09:54:20 gcorti Exp $
+// $Id: GenMonitorAlg.h,v 1.7 2009-12-17 19:29:19 gcorti Exp $
 #ifndef GAUSSMONITOR_GENMONITORALG_H 
 #define GAUSSMONITOR_GENMONITORALG_H 1
 
@@ -11,6 +11,7 @@
 
 // from AIDA
 #include "AIDA/IHistogram1D.h"
+#include "AIDA/IHistogram2D.h"
 
 /** @class GenMonitorAlg GenMonitorAlg.h Algorithms/GenMonitorAlg.h
  *  
@@ -63,6 +64,8 @@ private:
   AIDA::IHistogram1D* m_hProtoLTime;
   AIDA::IHistogram1D* m_hStableEta;
   AIDA::IHistogram1D* m_hStablePt;
+  AIDA::IHistogram2D* m_hPrimXvsZ;
+  AIDA::IHistogram2D* m_hPrimYvsZ;
 
 };
 #endif // GAUSSMONITOR_GENMONITORALG_H
