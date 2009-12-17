@@ -672,6 +672,30 @@ def ints ( arg1 , *args ) :
     return vct 
 
 # =============================================================================
+## construct std::vector<unsigned int> from the arguments 
+def uints ( arg1 , *args ) :
+    """
+    Construct the std::vector<unsigned int> from the arguments
+    
+    >>> v1 = uints ( 1 )
+    >>> v2 = uints ( 1 , 1 , 10  )
+    >>> v3 = uints ( [ 1 , 2 , 3 ] )
+    
+    """
+    from LoKiCore.decorators import std
+    _vt = std.vector('unsigned int')
+    vct = _vt () 
+    if 0 != len( args ) :
+        vct.push_back ( arg1 )
+        for a in args : vct.push_back ( a )
+        return vct
+    if list == type( arg1 )  :
+        for a in arg1 : vct.push_back ( a )
+        return vct
+    vct.push_back ( arg1 )
+    return vct 
+
+# =============================================================================
 ## Create the predicate which efficiently checks the equality of the
 #   function to some predefined value. Logically it is just 'operator==',
 #    but it should be more efficient 

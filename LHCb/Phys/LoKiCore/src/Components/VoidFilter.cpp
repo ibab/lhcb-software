@@ -1,4 +1,4 @@
-// $Id: VoidFilter.cpp,v 1.2 2009-03-24 17:35:15 ibelyaev Exp $
+// $Id: VoidFilter.cpp,v 1.3 2009-12-17 22:33:42 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,7 +29,10 @@ namespace LoKi
   public:
     // ========================================================================
     /// the main method: execute 
-    virtual StatusCode execute () ;
+    virtual StatusCode execute  () ;
+    // ========================================================================
+    /// proper finalization 
+    virtual StatusCode finalize () ;
     // ========================================================================
   public:
     // ========================================================================
@@ -114,6 +117,17 @@ StatusCode LoKi::VoidFilter::execute () // the main method: execute
   return StatusCode::SUCCESS ;
 }  
 // ============================================================================
+// proper finalization 
+// ============================================================================
+StatusCode LoKi::VoidFilter::finalize () 
+{
+  // reset the functor 
+  m_cut = LoKi::BasicFunctors<void>::BooleanConstant ( false )  ;
+  set_code_updated  ( true ) ;
+  // finalize the base 
+  return LoKi::FilterAlg::finalize () ;
+}
+// ========================================================================
 /// the factory (needed for instantiation)
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LoKi,VoidFilter)
 // ============================================================================

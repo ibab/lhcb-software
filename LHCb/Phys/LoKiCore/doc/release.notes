@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.169 2009-12-11 14:15:16 cattanem Exp $ 
+! $Id: release.notes,v 1.170 2009-12-17 22:33:41 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,25 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2009-12-17 - Vanya BELYAEV
+
+ - python/LoKiCore/functions.py
+
+    add helper function uints to create std::vector<unsigned int>
+
+ - LoKi/FilterAlg.h
+ 
+    enabel access to "updated" flags to allow 
+    the proper reset of functors at finalization
+
+ - src/Components/VoidFilter.cpp
+
+     add proper finalization method with resetting of functor
+
+ - cmt/requirements
+
+     version increment to v9r9 
 
 ! =========================== LoKiCore v9r8 2009-12-11 ========================
 ! 2009-12-06 - Vanya Belyaev

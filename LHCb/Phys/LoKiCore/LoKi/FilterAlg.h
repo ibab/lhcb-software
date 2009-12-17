@@ -1,4 +1,4 @@
-// $Id: FilterAlg.h,v 1.5 2009-11-11 15:02:15 cattanem Exp $
+// $Id: FilterAlg.h,v 1.6 2009-12-17 22:33:41 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FILTERALG_H 
 #define LOKI_FILTERALG_H 1
@@ -170,6 +170,15 @@ namespace LoKi
       //
       return sc ;
     }
+    /// =======================================================================
+  protected:
+    // ========================================================================
+    void set_code_updated      ( const bool value ) 
+    { m_code_updated      = value ; }
+    void set_factory_updated   ( const bool value )
+    { m_factory_updated   = value ; }
+    void set_preambulo_updated ( const bool value )
+    { m_preambulo_updated = value ; }
     /// =======================================================================
   private:
     // ========================================================================
