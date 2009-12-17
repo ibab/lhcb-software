@@ -5,6 +5,7 @@
 import sys
 import os
 
+#============================================================================
 # bootstraping the location of the file
 try:
     _this_file = __file__
@@ -41,6 +42,8 @@ sys.path.insert(0, _py_dir)
 
 # needed for the cache use
 _scripts_dir = os.path.join(_base_dir, "scripts")
+#============================================================================
+
 
 from SetupProject import SetupProject
 
@@ -51,13 +54,14 @@ from LbConfiguration.External import CMT_version
 from LbUtils.Script import Script
 from LbUtils.Env import Environment, Aliases
 from LbUtils.CVS import CVS2Version
+from LbUtils.Path import multiPathGet, multiPathGetFirst, multiPathJoin
 from tempfile import mkstemp
 from optparse import OptionValueError
 import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.64 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.65 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -78,19 +82,6 @@ def getLbLoginEnv(optionlist = None):
     s.parseOpts(optionlist)
 
     return s.setEnv()[0]
-
-def _multiPathJoin(path, subdir):
-    pathlist = []
-    for d in path.split(os.pathsep) :
-        pathlist.append(os.path.join(d,subdir))
-    return os.pathsep.join(pathlist)
-
-def _multiPathGet(path, subdir):
-    for d in path.split(os.pathsep) :
-        sd = os.path.join(d, subdir)
-        if os.path.exists(sd) :
-            break
-    return sd
 
 def _check_output_options_cb(option, opt_str, value, parser):
     if opt_str == "--mktemp":
@@ -511,7 +502,7 @@ class LbLoginScript(Script):
             ev["CONTRIBDIR"] = os.path.join(ev["SITEROOT"], "sw", "contrib")
         else :
             if ev.has_key("SITEROOT") :
-                ev["CONTRIBDIR"] = _multiPathJoin(ev["SITEROOT"], "contrib")            
+                ev["CONTRIBDIR"] = multiPathJoin(ev["SITEROOT"], "contrib")            
 
         if opts.cmtvers == "v1r20p20090520" :
             ev["CMTSTRUCTURINGSTYLE"] = "without_version_directory"
@@ -525,7 +516,7 @@ class LbLoginScript(Script):
         
         if ev.has_key("CONTRIBDIR") :
             ev["CMT_DIR"] = ev["CONTRIBDIR"]
-            ev["CMTROOT"] = _multiPathGet(ev["CMT_DIR"], os.path.join("CMT", opts.cmtvers))
+            ev["CMTROOT"] = multiPathGetFirst(ev["CMT_DIR"], os.path.join("CMT", opts.cmtvers))
         if not os.path.isdir(ev["CMTROOT"]) :
             log.error("Directory %s doesn't exist" % ev["CMTROOT"])
             ev["CMTROOT"] = self._currentcmtroot
@@ -545,9 +536,9 @@ class LbLoginScript(Script):
                 ev["LHCB_USERLOGS"] =  os.path.join(ev["LHCBHOME"], "log", "users")
                 ev["DIM_release_area"] = ev["CONTRIBDIR"]
                 ev["XMLRPC_release_area"] = ev["CONTRIBDIR"]
-                ev["LCG_release_area"] = _multiPathJoin(opts.mysiteroot, os.path.join("lcg" ,"external"))
-                ev["LCG_external_area"] = _multiPathJoin(opts.mysiteroot, os.path.join("lcg" ,"external"))
-                ev["LHCBRELEASES"] = _multiPathJoin(opts.mysiteroot, "lhcb")
+                ev["LCG_release_area"] = multiPathJoin(opts.mysiteroot, os.path.join("lcg" ,"external"))
+                ev["LCG_external_area"] = multiPathJoin(opts.mysiteroot, os.path.join("lcg" ,"external"))
+                ev["LHCBRELEASES"] = multiPathJoin(opts.mysiteroot, "lhcb")
                 ev["GAUDISOFT"] = ev["LHCBRELEASES"]
                 ev["LHCBPROJECTPATH"] = os.pathsep.join([ev["LHCBRELEASES"],ev["LCG_release_area"]])
                 if opts.nightlies_dir :
