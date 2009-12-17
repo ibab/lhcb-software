@@ -1,4 +1,4 @@
-// $Id: GiGa.cpp,v 1.17 2008-11-28 15:09:05 robbep Exp $ 
+// $Id: GiGa.cpp,v 1.18 2009-12-17 11:00:12 marcocle Exp $ 
 #define GIGA_GIGASVC_CPP 1 
 
 // Include files 
@@ -347,37 +347,49 @@ StatusCode GiGa::initialize()
 StatusCode GiGa::finalize()
 {  
   Print("Finalization" , MSG::DEBUG , StatusCode::SUCCESS );
-  
-  if( 0 != m_visManager && 0 != toolSvc() ) 
-  { toolSvc() -> releaseTool ( m_visManager ) ; } 
-  m_visManager = 0 ;
-  if( 0 != m_uiSession  && 0 != toolSvc() ) 
-  { toolSvc() -> releaseTool ( m_uiSession  ) ; } 
-  m_uiSession  = 0 ; 
-  
-  if( 0 != m_GiGaRunAction  && 0 != toolSvc()  )
-  { toolSvc() -> releaseTool ( m_GiGaRunAction   ) ; } 
-  m_GiGaRunAction    = 0 ; 
-  
-  if( 0 != m_GiGaEventAction && 0 != toolSvc() )
-  { toolSvc() -> releaseTool ( m_GiGaEventAction ) ; } 
-  m_GiGaEventAction  = 0 ; 
-  
-  if( 0 != m_GiGaStepAction  )
-  { toolSvc() -> releaseTool ( m_GiGaStepAction ) ; } 
-  m_GiGaStepAction   = 0 ; 
-  
-  if( 0 != m_GiGaTrackAction && 0 != toolSvc() )
-  { toolSvc() -> releaseTool( m_GiGaTrackAction ) ; } 
-  m_GiGaTrackAction  = 0 ; 
-  
-  if( 0 != m_GiGaStackAction && 0 != toolSvc() )
-  { toolSvc() -> releaseTool( m_GiGaStackAction ) ; } 
-  m_GiGaStackAction  = 0 ; 
-  
-  if( 0 != m_GiGaPhysList    )
-  { toolSvc() -> releaseTool( m_GiGaPhysList ) ; } 
-  m_GiGaPhysList     = 0 ; 
+
+  if (0 != toolSvc() && \
+      SmartIF<IService>(toolSvc())->FSMState() >= Gaudi::StateMachine::INITIALIZED) {
+    if(0 != m_visManager) {
+      toolSvc()->releaseTool(m_visManager);
+    }
+    m_visManager = 0;
+
+    if(0 != m_uiSession) {
+      toolSvc()->releaseTool(m_uiSession);
+    }
+    m_uiSession = 0; 
+    
+    if(0 != m_GiGaRunAction) {
+      toolSvc()->releaseTool(m_GiGaRunAction);
+    }
+    m_GiGaRunAction = 0; 
+    
+    if(0 != m_GiGaEventAction) {
+      toolSvc()->releaseTool(m_GiGaEventAction);
+    }
+    m_GiGaEventAction = 0;
+    
+    if(0 != m_GiGaStepAction) {
+      toolSvc()->releaseTool(m_GiGaStepAction);
+    }
+    m_GiGaStepAction = 0;
+
+    if (0 != m_GiGaTrackAction) {
+      toolSvc()->releaseTool(m_GiGaTrackAction);
+    }
+    m_GiGaTrackAction = 0;
+    
+    if (0 != m_GiGaStackAction) {
+      toolSvc()->releaseTool(m_GiGaStackAction);
+    }
+    m_GiGaStackAction = 0;
+    
+    if (0 != m_GiGaPhysList) {
+      toolSvc()->releaseTool(m_GiGaPhysList);
+    }
+    m_GiGaPhysList = 0;
+  }
   
   // error printout 
   if( 0 != m_errors     .size() || 
