@@ -1,3 +1,7 @@
+2009-12-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Path.py: new module to handle path variable manipulations.
+
 2009-11-24  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/__init__.py: protected the imports which do not work in version of python
