@@ -1,5 +1,5 @@
-# --> Including file '/build/cattanem/Brunel_v35r11/BrunelSys/tests/options/testBrunel.py'
-# <-- End of file '/build/cattanem/Brunel_v35r11/BrunelSys/tests/options/testBrunel.py'
+# --> Including file '/build/cattanem/Brunel_HEAD/BrunelSys/tests/options/testBrunel.py'
+# <-- End of file '/build/cattanem/Brunel_HEAD/BrunelSys/tests/options/testBrunel.py'
 # applying configuration of Brunel
 # /***** User Brunel/Brunel **************************************************************************
 # |-DatasetName     = 'Brunel'
@@ -57,7 +57,7 @@
 # |-MoniSequence = None
 # |-CheckEnabled = True  (default: False)
 # \----- (End of User RecMoniConf/RecMoniConf) -------------------------------------------------------
-# DstWriter.ItemList=['/Event/Rec/Header#1', '/Event/Rec/Status#1', '/Event/pRec/Track/Best#1', '/Event/pRec/Rich/PIDs#1', '/Event/pRec/Muon/MuonPID#1', '/Event/pRec/Calo/Electrons#1', '/Event/pRec/Calo/Photons#1', '/Event/pRec/Calo/MergedPi0s#1', '/Event/pRec/Calo/SplitPhotons#1', '/Event/pRec/ProtoP/Charged#1', '/Event/pRec/ProtoP/Neutrals#1', '/Event/pRec/Vertex/Primary#1', '/Event/pRec/Vertex/V0#1', '/Event/pRec/Track/Muon#1', '/Event/DAQ/RawEvent#1', '/Event/Gen/Header#1', '/Event/MC/Header#1', '/Event/pSim/MCVertices#1', '/Event/Link/Rec/Track/Best#1', '/Event/Gen/Collisions#1', '/Event/Gen/HepMCEvents#1', '/Event/pSim/MCParticles#1', '/Event/MC/DigiHeader#1', '/Event/pSim/Rich/DigitSummaries#1', '/Event/MC/Muon/DigitsInfo#1', '/Event/Link/Trig/L0/Calo#1', '/Event/Link/Trig/L0/FullCalo#1', '/Event/Link/Raw/Velo/Clusters#1', '/Event/Link/Raw/TT/Clusters#1', '/Event/Link/Raw/IT/Clusters#1', '/Event/Link/Raw/OT/Times#1', '/Event/Link/Raw/Ecal/Digits#1', '/Event/Link/Raw/Hcal/Digits#1', '/Event/Link/Raw/Muon/Digits#1', '/Event/MC/TrackInfo#1']
+# DstWriter.ItemList=['/Event/Rec/Header#1', '/Event/Rec/Status#1', '/Event/pRec/Track/Best#1', '/Event/pRec/Rich/PIDs#1', '/Event/pRec/Muon/MuonPID#1', '/Event/pRec/Calo/Electrons#1', '/Event/pRec/Calo/Photons#1', '/Event/pRec/Calo/MergedPi0s#1', '/Event/pRec/Calo/SplitPhotons#1', '/Event/pRec/ProtoP/Charged#1', '/Event/pRec/ProtoP/Neutrals#1', '/Event/pRec/Vertex/Primary#1', '/Event/pRec/Vertex/V0#1', '/Event/pRec/Track/Muon#1', '/Event/DAQ/RawEvent#1', '/Event/Gen/Header#1', '/Event/MC/Header#1', '/Event/pSim/MCVertices#1', '/Event/Link/Rec/Track/Best#1', '/Event/Gen/Collisions#1', '/Event/Gen/HepMCEvents#1', '/Event/pSim/MCParticles#1', '/Event/MC/DigiHeader#1', '/Event/pSim/Rich/DigitSummaries#1', '/Event/MC/Muon/DigitsInfo#1', '/Event/Link/Raw/Velo/Clusters#1', '/Event/Link/Trig/L0/Calo#1', '/Event/Link/Trig/L0/FullCalo#1', '/Event/Link/Raw/TT/Clusters#1', '/Event/Link/Raw/IT/Clusters#1', '/Event/Link/Raw/OT/Times#1', '/Event/Link/Raw/Ecal/Digits#1', '/Event/Link/Raw/Hcal/Digits#1', '/Event/Link/Raw/Muon/Digits#1', '/Event/MC/TrackInfo#1']
 # DstWriter.OptItemList=['/Event/Phys/Selections#1', '/Event/Prev/Gen/Header#1', '/Event/Prev/MC/Header#1', '/Event/PrevPrev/Gen/Header#1', '/Event/PrevPrev/MC/Header#1', '/Event/Next/Gen/Header#1', '/Event/Next/MC/Header#1', '/Event/Prev/Gen/Collisions#1', '/Event/Prev/Gen/HepMCEvents#1', '/Event/PrevPrev/Gen/Collisions#1', '/Event/PrevPrev/Gen/HepMCEvents#1', '/Event/Next/Gen/Collisions#1', '/Event/Next/Gen/HepMCEvents#1']
 # WARNING: Property 'EnableUnpack' is set in both 'DigiConf' and 'SimConf', using 'DigiConf.EnableUnpack'
 # WARNING: Property 'EnablePack' is set in both 'DigiConf' and 'SimConf', using 'DigiConf.EnablePack'
@@ -70,7 +70,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v35r11
-                                          running on lxbuild156.cern.ch on Tue Dec 15 08:17:56 2009
+                                          running on lxbuild156.cern.ch on Thu Dec 17 11:14:07 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -83,7 +83,7 @@ EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEv
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.85 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.86 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 BrunelSequencer      INFO Member list: ProcessPhase/Init, GaudiSequencer/PhysicsSeq, ProcessPhase/Output, with context 'Offline'
@@ -912,32 +912,32 @@ RiCKResLong          INFO ======================================================
 RiCKResLong          INFO  Track Selection : [Forward, Match]
 RiCKResLong          INFO                  : [999.99, 999.99, 999.99] > beta > [0.9999, 0.9999, 0.9999]
 RiCKResLong          INFO ==============================================================================
-RiCKResLong       SUCCESS Booked 27 Histogram(s) : 1D=27
+RiCKResLong       SUCCESS Booked 42 Histogram(s) : 1D=27 2D=15
 RiCKResForward       INFO ==============================================================================
 RiCKResForward       INFO  Track Selection : [Forward]
 RiCKResForward       INFO                  : [999.99, 999.99, 999.99] > beta > [0.9999, 0.9999, 0.9999]
 RiCKResForward       INFO ==============================================================================
-RiCKResForward    SUCCESS Booked 27 Histogram(s) : 1D=27
+RiCKResForward    SUCCESS Booked 42 Histogram(s) : 1D=27 2D=15
 RiCKResMatch         INFO ==============================================================================
 RiCKResMatch         INFO  Track Selection : [Match]
 RiCKResMatch         INFO                  : [999.99, 999.99, 999.99] > beta > [0.9999, 0.9999, 0.9999]
 RiCKResMatch         INFO ==============================================================================
-RiCKResMatch      SUCCESS Booked 27 Histogram(s) : 1D=27
+RiCKResMatch      SUCCESS Booked 42 Histogram(s) : 1D=27 2D=15
 RiCKResKsTrack       INFO ==============================================================================
 RiCKResKsTrack       INFO  Track Selection : [KsTrack]
 RiCKResKsTrack       INFO                  : [999.99, 999.99, 999.99] > beta > [0.9999, 0.9999, 0.9999]
 RiCKResKsTrack       INFO ==============================================================================
-RiCKResKsTrack    SUCCESS Booked 27 Histogram(s) : 1D=27
+RiCKResKsTrack    SUCCESS Booked 42 Histogram(s) : 1D=27 2D=15
 RiCKResVeloTT        INFO ==============================================================================
 RiCKResVeloTT        INFO  Track Selection : [VeloTT]
 RiCKResVeloTT        INFO                  : [999.99, 999.99, 999.99] > beta > [0.9999, 0.9999, 0.9999]
 RiCKResVeloTT        INFO ==============================================================================
-RiCKResVeloTT     SUCCESS Booked 27 Histogram(s) : 1D=27
+RiCKResVeloTT     SUCCESS Booked 42 Histogram(s) : 1D=27 2D=15
 RiCKResSeed          INFO ==============================================================================
 RiCKResSeed          INFO  Track Selection : [Seed]
 RiCKResSeed          INFO                  : [999.99, 999.99, 999.99] > beta > [0.9999, 0.9999, 0.9999]
 RiCKResSeed          INFO ==============================================================================
-RiCKResSeed       SUCCESS Booked 27 Histogram(s) : 1D=27
+RiCKResSeed       SUCCESS Booked 42 Histogram(s) : 1D=27 2D=15
 RiPIDMonLong2To100WARNING NO ENTRIES -> PID table skipped ...
 RiPIDMonLong2To10 WARNING NO ENTRIES -> PID table skipped ...
 RiPIDMonLong10To70WARNING NO ENTRIES -> PID table skipped ...
@@ -994,7 +994,6 @@ MuonPIDChecker       INFO  Ghosts     :   ( -1.00 +- -1.00)     :   (  3.21 +-  
 MuonPIDChecker       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   (  8.25 +-  0.02)     :   (  3.79 +-  0.01)
 MuonPIDChecker       INFO ----------------------------------------------------------------------------
 FSRWriter            INFO Set up File Summary Record
-IODataManager        INFO Referring to dataset Brunel.dst by its file ID:CA2C0617-4AE9-DE11-851E-001E4F3E5979
 RootDBase.open    SUCCESS Brunel.dst File version:52400
 FSRWriter            INFO Events output: 1
 DstWriter            INFO Events output: 0
@@ -1016,7 +1015,7 @@ ToolSvc.Offline...SUCCESS  #WARNINGS   = 1        Message = 'No pixels produced'
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.85 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.86 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1343,8 +1342,7 @@ TimingAuditor.T...   INFO  DstWriter                    |     0.000 |     0.000 
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/0(Alg/Node/Total).
 RootDBase.close     ERROR Failed to modify file: Brunel.dst Errno=2 No such file or directory
-FileRecordCnvSvc     INFO Disconnected data IO:CA2C0617-4AE9-DE11-851E-001E4F3E5979[Brunel.dst]
-XMLCatalog           INFO File 'test_catalog.xml' does not exist. New file created.
+FileRecordCnvSvc     INFO Disconnected data IO:449C45CB-77C5-DE11-8C33-001E4F3E5979[Brunel.dst]
 StatusCodeSvc        INFO listing all unchecked return codes:
 StatusCodeSvc        INFO
 Num | Function                       | Source Library
