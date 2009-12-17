@@ -1,7 +1,6 @@
-
 __author__ = 'Patrick Koppenburg'
 __date__ = '08/12/2009'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 """
 B->llK selections for B->eeK versus B->MuMuK
@@ -74,7 +73,7 @@ class StrippingBu2LLKConf(LHCbConfigurableUser):
         # B -> J/psi K
         #
         StripBu2MuMuK = CombineParticles("StripBu2MuMuK")
-        StripBu2MuMuK.InputLocations = [ "StdLooseDiMuon", "StdLooseKaon" ]
+        StripBu2MuMuK.InputLocations = [ "StdLooseDiMuon", "StdLooseKaons" ]
         StripBu2MuMuK.DecayDescriptor = "[ B+ -> J/psi(1S) K+ ]cc" 
         StripBu2MuMuK.DaughtersCuts = { "J/psi(1S)" : llcut , "K+" : kaoncut }
         StripBu2MuMuK.CombinationCut = combcut

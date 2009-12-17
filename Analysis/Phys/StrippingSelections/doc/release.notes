@@ -1,9 +1,12 @@
-Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
+Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingSelections
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2009-12-17 - Patrick Koppenburg
+ - StrippingBu2LLK : fix typo in MuMuK Line
 
 ! 2009-12-14 - Anton Poluektov
  - StrippingBu2hhh line modified (1e3 rejection), and the new StrippingBu2hhh_1e4 
@@ -12,6 +15,7 @@
 ! 2009-12-14 - Anton Poluektov
  - Strippingb2DMuX line modified to use StdVeryLoose selections (Liming Zhang)
 
+!===================== StrippingSelections v1r12 2009-12-16 ===================
 ! 2009-12-09 - Patrick Koppenburg
  - Added Bu->eeK and Bu->mumuK selections
    . Added to StreamBmuon (mumu case)
