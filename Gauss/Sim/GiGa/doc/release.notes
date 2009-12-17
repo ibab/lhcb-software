@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.132 2009-12-17 11:00:12 marcocle Exp $
+! $Id: release.notes,v 1.133 2009-12-17 17:36:53 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GiGa
 ! Responsible : Gloria CORTI, Vanya BELYAEV
@@ -6,6 +6,7 @@
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
 
+!======================= GiGa v19r6 2009-12-17 ===============================
 ! 2009-12-17 - Marco Clemencic
  - Modified GiGa::finalize() to avoid segmentation faults when called after
    the finalization of the ToolSvc (fix to bug #60331).
