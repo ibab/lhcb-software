@@ -3,7 +3,7 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.11 2009-11-22 21:41:33 wouter Exp $"
+__version__ = "$Id: Configuration.py,v 1.12 2009-12-17 08:30:27 wouter Exp $"
 __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
 from Gaudi.Configuration  import *
@@ -73,8 +73,12 @@ class Escher(LHCbConfigurableUser):
             self.setProp( "Simulation", True )
 
         # Delegate handling to LHCbApp configurable
-        self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","UseOracle","Simulation"])
-
+        self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","Simulation"])
+        # specify the use of the oracle database
+        if self.getProp("UseOracle"):
+            from Configurables import CondDB
+            CondDB(UseOracle = True)
+        
     def defineEvents(self):
         # Delegate handling to LHCbApp configurable
         self.setOtherProps(LHCbApp(),["EvtMax","SkipEvents"])
@@ -283,7 +287,9 @@ class Escher(LHCbConfigurableUser):
         GaudiKernel.ProcessJobOptions.PrintOff()
         GaudiKernel.ProcessJobOptions.PrintOn()
         log.info("Initializing sequences!")
-        self.setOtherProps(RecSysConf(),["SpecialData","RecoSequence","Context","OutputType"])
+        self.setOtherProps(RecSysConf(),["SpecialData","Context","OutputType"])
+        if self.isPropertySet("RecoSequence") :
+            self.setOtherProp(RecSysConf(),"RecoSequence")
         # there is a bug in setOtherProps, so we cannot use it to set the MoniSequence.
         self.setOtherProps(RecMoniConf(),["Context","OutputType"])
         RecMoniConf().MoniSequence = self.getProp("MoniSequence")
