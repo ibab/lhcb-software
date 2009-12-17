@@ -388,7 +388,12 @@ def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=Tr
             ncores = getNumberOfCores()
             if ncores > 1 :
                 nproc = int(ncores * core_factor)
-                str += " -j -l %s " % nproc
+                str += " -j %s -l %s" % (ncores, nproc)
+        str += " && cmt make"
+        if parallel_mode:
+            if ncores > 1 :
+                str += " -j %s -l %s" % (ncores, nproc)
+        str += " all_groups"
         log.info(' str= %s '%(str))
         rc,output = commands.getstatusoutput(str)
         print output
@@ -421,8 +426,12 @@ def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=Tr
                         ncores = getNumberOfCores()
                         if ncores > 1 :
                             nproc = int(ncores * core_factor)
-                            cmd += " -j -l %s " % nproc
-                            
+                            cmd += " -j %s -l %s " % (ncores, nproc)
+                    cmd += "&& cmt make CMTEXTRATAGS=%s" % ",".join(extraexelist[other])
+                    if parallel_mode :
+                        if ncores > 1 :
+                            cmd += " -j %s -l %s " % (ncores, nproc)
+                    cmd += " all_groups"
                     rc = os.system(cmd)
 
         log.info('end of compilation in optimize mode ')
@@ -441,7 +450,12 @@ def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=Tr
             ncores = getNumberOfCores()
             if ncores > 1 :
                 nproc = int(ncores * core_factor)
-                str += " -j -l %s " % nproc
+                str += " -j %s -l %s " % (ncores, nproc)
+        str += " && cmt make"
+        if parallel_mode :
+            if ncores > 1 :
+                str += " -j %s -l %s " % (ncores, nproc)
+        str += " all_groups"
 
         rc,output = commands.getstatusoutput(str)
         os.environ['CMTCONFIG'] = CMTCONFIG
