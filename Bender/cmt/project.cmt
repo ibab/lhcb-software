@@ -1,6 +1,6 @@
 project BENDER
 
-use DAVINCI	DAVINCI_v24r6
+use DAVINCI	DAVINCI_v24r7
 
 build_strategy	with_installarea
 setup_strategy	root
