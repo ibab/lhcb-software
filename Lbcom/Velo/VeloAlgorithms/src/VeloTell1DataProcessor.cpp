@@ -1,4 +1,4 @@
-// $Id: VeloTell1DataProcessor.cpp,v 1.2 2009-10-24 13:48:23 szumlat Exp $
+// $Id: VeloTell1DataProcessor.cpp,v 1.3 2009-12-18 08:12:33 szumlat Exp $
 // Include files
 // from STL
 #include <vector>
@@ -121,7 +121,7 @@ StatusCode VeloTell1DataProcessor::getData()
   return ( StatusCode::SUCCESS );
 }
 //=============================================================================
-StatusCode VeloTell1DataProcessor::writeDataForSensors()
+void VeloTell1DataProcessor::writeDataForSensors()
 {
   if(m_isDebug) debug()<< " ==> writeDataForSensors() " <<endmsg;
   //
@@ -168,7 +168,7 @@ StatusCode VeloTell1DataProcessor::writeDataForSensors()
     iT--;
   }
   //
-  return ( StatusCode::SUCCESS );
+  return;
 }
 //=============================================================================
 void VeloTell1DataProcessor::writeOutput()

@@ -1,4 +1,4 @@
-// $Id: VeloSimTell1ClusterMaker.h,v 1.2 2009-10-24 13:48:23 szumlat Exp $
+// $Id: VeloSimTell1ClusterMaker.h,v 1.3 2009-12-18 08:12:33 szumlat Exp $
 #ifndef VELOSIMTELL1CLUSTERMAKER_H 
 #define VELOSIMTELL1CLUSTERMAKER_H 1
 
@@ -77,13 +77,15 @@ protected:
   void addADCToList(int chan, int cluSize);
   StatusCode veloClusterization(int firstStripInBlock);
   void flushMemory();
-  StatusCode fillAndWriteRawEvent();
+  void fillAndWriteRawEvent();
   StatusCode storeBank();
   StatusCode createRawEvent();
   StatusCode validationRun();
   void prepareEngineForValidation();
   StatusCode createAndConfigureEngines();
   StatusCode i_cacheConditions();
+  void addEngineInStaticMode(unsigned int tell1, const DeVeloSensor* sens);
+  void addEngineInDynamicMode(unsigned int tell1);
 
 private:
 
@@ -112,6 +114,7 @@ private:
   unsigned int m_bankBodySize;
   bool m_printInfo;
   bool m_validationRun;
+  bool m_isDebug;
   std::map<unsigned int, SimTell1ZSProcessEngine*> m_zsEngines;
   VeloTELL1::TELL1ClusterVec m_clusters;
   VeloTELL1::CLUSTER_MEMORY m_clustersMem;  /// list of created clusters

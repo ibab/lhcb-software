@@ -1,4 +1,4 @@
-// $Id: VeloSimTell1ClusterMaker.cpp,v 1.3 2009-10-24 13:48:23 szumlat Exp $
+// $Id: VeloSimTell1ClusterMaker.cpp,v 1.4 2009-12-18 08:12:33 szumlat Exp $
 // Include files 
 
 // from Gaudi
@@ -46,6 +46,7 @@ VeloSimTell1ClusterMaker::VeloSimTell1ClusterMaker( const std::string& name,
   m_sumThresholdMap ( ),
   m_boundaryStripMap ( ),
   m_eventNumber ( 0 ),
+  m_sensors ( ),
   m_zsEngines ( ),
   m_clusters ( ),
   m_clustersMem ( )
@@ -101,7 +102,7 @@ StatusCode VeloSimTell1ClusterMaker::initialize() {
     if(mgrSvcStatus.isFailure()){
       return ( Error("Failed first UMS update", mgrSvcStatus) );
     }
-  }else if(m_dbConfig==VeloTELL1::STATIC&&!m_validationRun){
+  }else if((m_dbConfig==VeloTELL1::STATIC)&&(!m_validationRun)){
     // initialize maps with static values
     ThresholdsVec tempHit(2304, m_hitThresholdValue);
     m_hitThresholds=tempHit;
@@ -118,6 +119,7 @@ StatusCode VeloSimTell1ClusterMaker::initialize() {
     // depending on engine type - this is only the issue for static
     // configuration, in the case of dynamic config this will be 
     // dealt with automatically
+    m_isDebug=msgLevel(MSG::DEBUG);
   }  
   //
   return StatusCode::SUCCESS;
@@ -127,13 +129,13 @@ StatusCode VeloSimTell1ClusterMaker::initialize() {
 //=============================================================================
 StatusCode VeloSimTell1ClusterMaker::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if(m_isDebug) debug() << "==> Execute" << endmsg;
   ++m_eventNumber;
   //
   if(m_validationRun){
     StatusCode initStatus =  INIT();
     if ( !initStatus ) {
-      debug() << "Unable to initialize.  NZS data missing?" << endmsg;
+      if(m_isDebug) debug() << "Unable to initialize.  NZS data missing?" << endmsg;
       return StatusCode::SUCCESS;
     } 
     prepareEngineForValidation();
@@ -148,7 +150,7 @@ StatusCode VeloSimTell1ClusterMaker::execute() {
     if(!isInitialized()){
       StatusCode initStatus =  INIT();
       if ( !initStatus ) {
-        debug() << "Unable to initialize.  NZS data missing?" << endmsg;
+        if(m_isDebug) debug() << "Unable to initialize.  NZS data missing?" << endmsg;
         return StatusCode::SUCCESS;
       } 
       engineStatus=createAndConfigureEngines();
@@ -189,7 +191,7 @@ StatusCode VeloSimTell1ClusterMaker::execute() {
 //=============================================================================
 StatusCode VeloSimTell1ClusterMaker::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if(m_isDebug) debug() << "==> Finalize" << endmsg;
   // must be called after all other actions
   std::map<unsigned int, SimTell1ZSProcessEngine*>::iterator zsIt;
   zsIt=m_zsEngines.begin();
@@ -202,7 +204,7 @@ StatusCode VeloSimTell1ClusterMaker::finalize() {
 //=============================================================================
 StatusCode VeloSimTell1ClusterMaker::createRawEvent()
 {
-  debug()<< " createRawEvent() " <<endmsg;
+  if(m_isDebug) debug()<< " createRawEvent() " <<endmsg;
   // create raw event - that is the output of the algorithm 
   if(exist<LHCb::RawEvent>(m_rawEventLoc)){
     m_rawEvent=get<LHCb::RawEvent>(m_rawEventLoc);
@@ -210,7 +212,7 @@ StatusCode VeloSimTell1ClusterMaker::createRawEvent()
     // create RawEvent structure
     m_rawEvent=new LHCb::RawEvent();
     eventSvc()->registerObject(m_rawEventLoc, m_rawEvent);
-    debug()<< " registered RawEvent " <<endmsg;
+    if(m_isDebug) debug()<< " registered RawEvent " <<endmsg;
   }
   //
   return ( StatusCode::SUCCESS );
@@ -218,31 +220,9 @@ StatusCode VeloSimTell1ClusterMaker::createRawEvent()
 //=============================================================================
 StatusCode VeloSimTell1ClusterMaker::runClusterMaker()
 {
-  debug()<< " ==> runClusterMaker() " <<endmsg;
+  if(m_isDebug) debug()<< " ==> runClusterMaker() " <<endmsg;
   //
   LHCb::VeloTELL1Datas::iterator sensIt=inputData()->begin();
-  //// loop over all sensors
-  //info()<< " Size of input container: " << inputData()->size() <<endmsg;
-  //
-  //for( ; sensIt!=inputData()->end(); ++sensIt){
-  //  const unsigned int tell1=static_cast<unsigned int>((*sensIt)->key());
-  //  const DeVeloSensor* sens=deVelo()->sensorByTell1Id(tell1);
-  //  // check if the sensor pointer is valid
-  //  if(sens==0){
-  //    Error(" ==> No match between TELL1 and sensor found! ");
-  //    Error(" ==> Check your XML/DB conditions file! ");
-  //    return ( StatusCode::FAILURE );
-  //  }
-  //  unsigned int sensNb=sens->sensorNumber();
-  //  info()<< " the sensor number: " << sensNb << " for TELL1 number: "
-  //        << tell1 <<endmsg;
-  //  if(sens->isReadOut()){
-  //    // cache the current read-out sensor number
-  //    if(m_eventNumber==(convergenceLimit()+1)){
-  //      info()<< " added TELL1 number: " << tell1 << " to cache." << endmsg;
-  //    }
-  //  }
-  //}
 
   //sensIt=inputData()->begin();
   for( ; sensIt!=inputData()->end(); ++sensIt){
@@ -255,13 +235,14 @@ StatusCode VeloSimTell1ClusterMaker::runClusterMaker()
       return ( StatusCode::FAILURE );
     }
     unsigned int sensNb=sens->sensorNumber();
-    debug()<< " the sensor number: " << sensNb << " for TELL1 number: "
-      << tell1 <<endmsg;
+    if(m_isDebug) debug() << " the sensor number: " << sensNb 
+                          << " for TELL1 number: " << tell1 <<endmsg;
     if(sens->isReadOut()){
       // cache the current read-out sensor number
-      if(m_eventNumber==(convergenceLimit()+1)){
+      if(m_eventNumber>=convergenceLimit()){
         m_sensors.push_back(tell1); 
-        debug()<< " added TELL1 number: " << tell1 << " to cache." << endmsg;
+        if(m_isDebug) debug()<< " added TELL1 number: " << tell1
+                             << " to cache." << endmsg;
       }
     }
     m_clusters.clear();
@@ -270,12 +251,16 @@ StatusCode VeloSimTell1ClusterMaker::runClusterMaker()
     // input data for clusterization
     if(sens->isReadOut()){
       VeloTELL1::sdataVec data=(*sensIt)->data();
-      if( (sens->isR() || sens->isPileUp()) && (m_dbConfig==VeloTELL1::STATIC) ){
-        // processing R sensor set start strip sequence for R
-        m_zsEngines[tell1]->setBoundaryStrips(m_boundaryStripsR);
-      }else if( sens->isPhi() && (m_dbConfig==VeloTELL1::STATIC) ){
-        // processing Phi sensor
-        m_zsEngines[tell1]->setBoundaryStrips(m_boundaryStripsPhi);
+      // --> check if there is any additional data source
+      if(m_zsEngines.find(tell1)==m_zsEngines.end()){
+        if(m_isDebug)
+          debug()<< " --> found additional data source, will add processing engine "
+              <<endmsg;
+        if(m_dbConfig==VeloTELL1::STATIC){
+          this->addEngineInStaticMode(tell1, sens);
+        }else if(m_dbConfig==VeloTELL1::DYNAMIC){
+          this->addEngineInDynamicMode(tell1);
+        }
       }
       m_zsEngines[tell1]->setInData(data);
       m_zsEngines[tell1]->setOutClusters(m_clusters);
@@ -292,23 +277,24 @@ StatusCode VeloSimTell1ClusterMaker::runClusterMaker()
 //=============================================================================
 void VeloSimTell1ClusterMaker::flushMemory()
 {
-  debug()<< " ==> flushMemory() " <<endmsg;
+  if(m_isDebug) debug()<< " ==> flushMemory() " <<endmsg;
   //
   m_clustersMem.clear();
   m_adcsMem.clear();
+  m_sensors.clear();
 }
 //=============================================================================
-StatusCode VeloSimTell1ClusterMaker::fillAndWriteRawEvent()
+void VeloSimTell1ClusterMaker::fillAndWriteRawEvent()
 {
-  debug()<< " ==> fillAndWriteRawEvent() " <<endmsg;
+  if(m_isDebug) debug()<< " ==> fillAndWriteRawEvent() " <<endmsg;
   //
   // coding of the RawBank bank body: header word, clusters and adcs
   // create one RawBank per sensor, to do so loop over container
   // with sensor numbers, use const_iterator - see Kernel/DecodeCore.h
   unsigned int rawBankCnt=0;
   cdatIt IT=m_sensors.begin();
-  debug()<< " size of sens vec: " << m_sensors.size() <<endmsg;
-  debug()<< " first sens: " << (*IT) <<endmsg;
+  if(m_isDebug) debug()<< " size of sens vec: " << m_sensors.size() <<endmsg;
+  if(m_isDebug) debug()<< " first sens: " << (*IT) <<endmsg;
   for( ; IT!=m_sensors.end(); ++IT){
     // clear bank body for next bank
     m_bankBody.clear();
@@ -401,7 +387,8 @@ StatusCode VeloSimTell1ClusterMaker::fillAndWriteRawEvent()
         // write first full word (4 adcs per word)
         if(word<fullWords){
           for(int adcCnt=0; adcCnt<ADCS_PER_WORD; ++adcCnt){
-            debug()<< " adc: " << adcs[ADCS_PER_WORD*word+adcCnt] <<endmsg;
+            if(m_isDebug) debug()<< " adc: " 
+                                 << adcs[ADCS_PER_WORD*word+adcCnt] <<endmsg;
             tempBuffWord=adcs[ADCS_PER_WORD*word+adcCnt];
             tempBuffWord<<=(adcCnt*ADC_SHIFT);
             if(m_printInfo) bitReader<VeloTELL1::u_int32_t>(tempBuffWord);
@@ -432,7 +419,7 @@ StatusCode VeloSimTell1ClusterMaker::fillAndWriteRawEvent()
        paddingSpace*sizeof(VeloTELL1::u_int8_t):0);
     // some checks
     for(unsigned int i=0; i<m_bankBody.size(); ++i){
-      debug()<< " m_bankBody[" << i << "]=" << m_bankBody[i] <<endmsg;
+      if(m_isDebug) debug()<< " m_bankBody[" << i << "]=" << m_bankBody[i] <<endmsg;
     }
     // store raw bank
     LHCb::RawBank* aBank=
@@ -443,7 +430,7 @@ StatusCode VeloSimTell1ClusterMaker::fillAndWriteRawEvent()
     rawBankCnt++;
   }
   //
-  return ( StatusCode::SUCCESS );
+  return;
 }
 //=============================================================================
 StatusCode VeloSimTell1ClusterMaker::validationRun()
@@ -454,7 +441,7 @@ StatusCode VeloSimTell1ClusterMaker::validationRun()
   readDataFromFile("d_lcms_sub_test.txt", localInput);
   // validate actual clu maker code
   m_sensors.push_back(25);
-  debug()<< " m_sensors: " << m_sensors.size() <<endmsg;
+  if(m_isDebug) debug()<< " m_sensors: " << m_sensors.size() <<endmsg;
   m_zsEngines[0]->setInData(localInput);
   TELL1ClusterVec locClusters;
   m_zsEngines[0]->setOutClusters(locClusters);
@@ -484,7 +471,7 @@ void VeloSimTell1ClusterMaker::prepareEngineForValidation()
 //=============================================================================
 StatusCode VeloSimTell1ClusterMaker::createAndConfigureEngines()
 {
-  debug()<< " ==> prepareEngine() "<<endmsg;
+  if(m_isDebug) debug()<< " ==> prepareEngine() "<<endmsg;
   // pedestal engine
   VeloTELL1::AListPair idList=this->getSrcIdList();
   VeloTELL1::ucIT iT=idList.first;
@@ -495,23 +482,21 @@ StatusCode VeloSimTell1ClusterMaker::createAndConfigureEngines()
     if(m_dbConfig==VeloTELL1::STATIC){
       info()<< " --> Creating static config for Cluster Maker! " <<endmsg;
       for( ; iT!=idList.second; ++iT){
-        m_zsEngines[*iT]=new SimTell1ZSProcessEngine();
-        m_zsEngines[*iT]->setProcessEnable(m_zsEnableMap[0]);
-        m_zsEngines[*iT]->setHitThresholds(m_hitThresholdMap[0]);
-        m_zsEngines[*iT]->setLowThresholds(m_lowThresholdMap[0]);
-        m_zsEngines[*iT]->setSumThresholds(m_sumThresholdMap[0]);
+        const DeVeloSensor* sens=deVelo()->sensorByTell1Id(*iT);
+        if(m_isDebug) debug()<< " sensor from srcIdList: " << (*iT) <<endmsg;
+        // check if the sensor pointer is valid
+        if(sens==0){
+          Error(" ==> No match between TELL1 and sensor found! ");
+          Error(" ==> Check your XML/DB conditions file! ");
+          return ( StatusCode::FAILURE );
+        }
+        this->addEngineInStaticMode(*iT, sens);
       }
     }else if(m_dbConfig==VeloTELL1::DYNAMIC){
       // all parameters are already cached - use them to config engines
       info()<< " --> Creating dynamic config for Cluster Maker! " <<endmsg;
       for( ; iT!=idList.second; ++iT){
-        // pedestal processing objects
-        m_zsEngines[*iT]=new SimTell1ZSProcessEngine();
-        m_zsEngines[*iT]->setProcessEnable(m_zsEnableMap[*iT]);
-        m_zsEngines[*iT]->setHitThresholds(m_hitThresholdMap[*iT]);
-        m_zsEngines[*iT]->setLowThresholds(m_lowThresholdMap[*iT]);
-        m_zsEngines[*iT]->setSumThresholds(m_sumThresholdMap[*iT]);
-        m_zsEngines[*iT]->setBoundaryStrips(m_boundaryStripMap[*iT]);
+        this->addEngineInDynamicMode(*iT);
       }
     }else{
       return ( Error(" ==> Unknown configuration mode! ") );
@@ -522,7 +507,7 @@ StatusCode VeloSimTell1ClusterMaker::createAndConfigureEngines()
 //=============================================================================
 StatusCode VeloSimTell1ClusterMaker::i_cacheConditions()
 {
-  debug()<< " ==> i_cacheCondition() " <<endmsg;
+  if(m_isDebug) debug()<< " ==> i_cacheCondition() " <<endmsg;
   VeloTELL1::AListPair iniList=getSrcIdList();
   if(iniList.first==iniList.second){
     return ( Error(" --> No Tell1 List cached!", StatusCode::FAILURE) );
@@ -569,5 +554,41 @@ StatusCode VeloSimTell1ClusterMaker::i_cacheConditions()
   }
   //
   return ( StatusCode::SUCCESS );
+}
+//=============================================================================
+void VeloSimTell1ClusterMaker::addEngineInStaticMode(unsigned int tell1,
+                                                     const DeVeloSensor* sens)
+{
+  if(m_isDebug) debug()<< " --> addEngineInStaticMode() " <<endmsg;
+  //
+  m_zsEngines[tell1]=new SimTell1ZSProcessEngine();
+  m_zsEngines[tell1]->setProcessEnable(m_zsEnableMap[0]);
+  m_zsEngines[tell1]->setHitThresholds(m_hitThresholdMap[0]);
+  m_zsEngines[tell1]->setLowThresholds(m_lowThresholdMap[0]);
+  m_zsEngines[tell1]->setSumThresholds(m_sumThresholdMap[0]);
+  if(sens->isR()||sens->isPileUp()){
+    // processing R sensor set start strip sequence for R
+    m_zsEngines[tell1]->setBoundaryStrips(m_boundaryStripsR);
+  }else if(sens->isPhi()){
+    // processing Phi sensor
+    m_zsEngines[tell1]->setBoundaryStrips(m_boundaryStripsPhi);
+  }
+  //
+  return;
+}
+//=============================================================================
+void VeloSimTell1ClusterMaker::addEngineInDynamicMode(unsigned int tell1)
+{
+  if(m_isDebug) debug()<< " --> addEngineInDynamicMode() " <<endmsg;
+  //
+  // pedestal processing objects
+  m_zsEngines[tell1]=new SimTell1ZSProcessEngine();
+  m_zsEngines[tell1]->setProcessEnable(m_zsEnableMap[tell1]);
+  m_zsEngines[tell1]->setHitThresholds(m_hitThresholdMap[tell1]);
+  m_zsEngines[tell1]->setLowThresholds(m_lowThresholdMap[tell1]);
+  m_zsEngines[tell1]->setSumThresholds(m_sumThresholdMap[tell1]);
+  m_zsEngines[tell1]->setBoundaryStrips(m_boundaryStripMap[tell1]);
+  //
+  return;
 }
 //--

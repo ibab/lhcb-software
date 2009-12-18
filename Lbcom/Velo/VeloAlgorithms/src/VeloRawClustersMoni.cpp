@@ -1,4 +1,4 @@
-// $Id: VeloRawClustersMoni.cpp,v 1.9 2008-05-19 13:46:39 dhcroft Exp $
+// $Id: VeloRawClustersMoni.cpp,v 1.10 2009-12-18 08:12:33 szumlat Exp $
 
 // Include files 
 
@@ -38,7 +38,8 @@ VeloRawClustersMoni::VeloRawClustersMoni( const std::string& name,
     m_nFourStr ( 0. ),
     m_nClusS ( 0. ),
     m_nClusN ( 0. ),
-    m_nClusO ( 0. )
+    m_nClusO ( 0. ),
+    m_associationFailure ( 0. )
 { }
 //=============================================================================
 // Destructor
@@ -140,6 +141,12 @@ StatusCode VeloRawClustersMoni::finalize() {
     info()<< "| 4 strip clusters/event:     "
           << m_nFourStr << " (" << (m_nFourStr/all)*100 << "%)"
           <<endmsg;
+    info()<< "------------------------------------------------------" <<endmsg;
+    info()<< "              - Association failure -                 " <<endmsg;
+    info()<< "------------------------------------------------------" <<endmsg;
+    info().precision(6);
+    info()<< " Relative number of un-associated clusters: "
+          << (m_associationFailure/(all*m_numberOfEvents))*100 << " % " <<endmsg;
   }else{
     info()<< "| ==> No VeloClusters found! " <<endmsg;
   }
@@ -363,9 +370,17 @@ StatusCode VeloRawClustersMoni::clusterType(LHCb::VeloCluster* clu,
   for(int iStrip=0; iStrip<strips; iStrip++){
     LHCb::MCVeloFE* anFE=m_VeloFEs->object(channels[iStrip]);
     if(anFE==0){
-      error()<< " ==> Not found FE object for given cluster with channel:" 
+      debug()<< " ==> Not found FE object for given cluster with channel:" 
              << channels[iStrip].strip() << ", " 
-             << channels[iStrip].sensor() <<endmsg;
+             << channels[iStrip].sensor() <<endmsg; 
+      LHCb::VeloChannelID cch=clu->channelID();
+      debug()<< " -> cluster description: "
+            << " size: " << (clu->size())
+            << " ADC total: " << (clu->totalCharge())
+            << " centre strip: " << cch.strip()
+            <<endmsg;
+      ++m_associationFailure;
+      return ( StatusCode::SUCCESS );
     }else{
       if(iStrip==0) myFE=anFE;
       if(anFE->charge()>myFE->charge()) myFE=anFE;

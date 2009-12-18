@@ -1,4 +1,4 @@
-// $Id: SimTell1Engine.h,v 1.1 2009-08-10 08:48:01 szumlat Exp $
+// $Id: SimTell1Engine.h,v 1.2 2009-12-18 08:12:33 szumlat Exp $
 #ifndef SIMTELL1ENGINE_H 
 #define SIMTELL1ENGINE_H 1
 
@@ -25,9 +25,7 @@ public:
   size_t linkMaskSize() const { return m_linkMaskSize; }
   void setProcessEnable(const int inValue) { m_processEnable=inValue; }
   int processEnable() const { return m_processEnable; }
-  void setInData(const VeloTELL1::EngineVec& inVec) { 
-    m_inData=&inVec;
-  }
+  void setInData(const VeloTELL1::EngineVec& inVec);
   const VeloTELL1::EngineVec& inData()  { return *m_inData; }
   VeloTELL1::EngineVec& outData() { return m_outData; }
 

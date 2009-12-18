@@ -1,4 +1,4 @@
-// $Id: SimTell1Engine.cpp,v 1.1 2009-08-10 08:48:01 szumlat Exp $
+// $Id: SimTell1Engine.cpp,v 1.2 2009-12-18 08:12:33 szumlat Exp $
 // Include files
 
 // local
@@ -25,4 +25,8 @@ SimTell1Engine::SimTell1Engine(  ):
 // Destructor
 //=============================================================================
 SimTell1Engine::~SimTell1Engine() {}
+//
+void SimTell1Engine::setInData(const VeloTELL1::EngineVec& inVec) { 
+    m_inData=&inVec;
+}
 //--

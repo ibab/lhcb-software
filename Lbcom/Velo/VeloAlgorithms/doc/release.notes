@@ -1,6 +1,25 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
+! 2009-12-17 - Tomasz Szumlak
+ - change signatures of two methods from:  
+
+   StatusCode VeloSimTell1ClusterMaker::fillAndWriteRawEvent()
+   StatusCode VeloTell1DataProcessor::writeForSenors()
+
+   to
+
+   void VeloSimTell1ClusterMaker::fillAndWriteRawEvent()
+   void VeloTell1DataProcessor::writeForSenors()
+
+ - implement two new methods for adding ZS processing engines
+   void addEngineInStaticMode(unsigned int tell1, const DeVeloSensor* sens)
+   void addEngineInDynamicMode(unsigned int tell1)  
+
+ - add extra layer of protection against missing NZS data streams
+   the number of the current data streams are checked on event by
+   event basis now, new processing engines are added if necessary 
+
 !===================== VeloAlgorithms v5r0 2009-10-24 ====================
 ! 2009-10-24 - Tomasz Szumlak
  - modification in VeloTell1DataProcessor algorithm, add new methods

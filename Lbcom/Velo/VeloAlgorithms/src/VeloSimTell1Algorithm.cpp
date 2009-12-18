@@ -1,4 +1,4 @@
-// $Id: VeloSimTell1Algorithm.cpp,v 1.2 2009-10-24 13:48:23 szumlat Exp $
+// $Id: VeloSimTell1Algorithm.cpp,v 1.3 2009-12-18 08:12:33 szumlat Exp $
 // Include files 
 
 // from Gaudi
@@ -50,6 +50,7 @@ VeloSimTell1Algorithm::VeloSimTell1Algorithm( const std::string& name,
     m_isInitialized ( false )
 {
   declareProperty("ForceEnable", m_forceEnable=false);
+  declareProperty("ConvLimit", m_convergenceLimit=0);
 }
 //=============================================================================
 // Destructor

@@ -1,4 +1,4 @@
-// $Id: VeloRawClustersMoni.h,v 1.1 2006-05-08 14:11:49 szumlat Exp $
+// $Id: VeloRawClustersMoni.h,v 1.2 2009-12-18 08:12:33 szumlat Exp $
 #ifndef VELORAWCLUSTERSMONI_H 
 #define VELORAWCLUSTERSMONI_H 1
 
@@ -54,6 +54,7 @@ private:
   double m_nClusS;
   double m_nClusN;
   double m_nClusO;
+  double m_associationFailure;
 
 };
 #endif // VELORAWCLUSTERSMONI_H

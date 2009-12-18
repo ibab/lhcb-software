@@ -1,4 +1,4 @@
-// $Id: VeloTell1DataProcessor.h,v 1.2 2009-10-24 13:48:23 szumlat Exp $
+// $Id: VeloTell1DataProcessor.h,v 1.3 2009-12-18 08:12:33 szumlat Exp $
 #ifndef VELOTELL1DATAPROCESSOR_H 
 #define VELOTELL1DATAPROCESSOR_H 1
 
@@ -56,7 +56,7 @@ protected:
   virtual BOUNDARIES findBoundary(const unsigned int proc,
                                          const TOPO_CONT& cont);
   StatusCode getData();
-  StatusCode writeDataForSensors();
+  void writeDataForSensors();
   void writeOutput();
 
 private:
