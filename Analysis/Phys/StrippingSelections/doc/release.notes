@@ -6,6 +6,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! -----------------------------------------------------------------------------
 
 ! 2009-12-18 - Anton Poluektov
+ - Modified StrippingBd2JpsiKS selection (Fernando Rodrigues). 
+   Now defines two lines, with KS->LL and KS->DD. 
+   StrippingBd2JpsiKSBiased became obsolete and is removed. 
+
+! 2009-12-18 - Anton Poluektov
  - added StrippingPass - the pass-through lines (all events and all non-lumi events) 
    with configurable prescales. Both are in MinBias stream. 
 

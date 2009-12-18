@@ -1,65 +1,91 @@
-# $Id: StrippingBd2JpsiKS.py,v 1.2 2009-11-22 14:38:23 gcowan Exp $
+# $Id: StrippingBd2JpsiKS.py,v 1.3 2009-12-18 16:47:42 poluekt Exp $
 
-__author__ = 'Greig Cowan'
-__date__ = '20/05/2009'
-__version__ = '$Revision: 1.2 $'
+__author__ = 'Fernando Rodrigues'
+__date__ = '16/12/2009'
+__version__ = '$Revision: 1.3 $'
 
 '''
-Bd->JpsiKS stripping selection using LoKi::Hybrid and python
-configurables. PV refitting is done. Based on roadmap selection
-with loose PID cuts.
+Bd->JpsiKS stripping selection re-tuned to eh MC09 data,
+using LoKi::Hybrid and python configurables. PV refitting is done. 
+Note1: This stripping is use to the biased and unbiased offline selection.
+Note2: Two lines: "line1" related to KSLL and "line2" related to KSDD.
 '''
+
+__all__ = ('name', 'Bd_KSLL', 'Bd_KSDD', 'seqLL', 'seqDD')
 
 from Gaudi.Configuration import *
-from StrippingConf.StrippingLine import StrippingLine, StrippingMember
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
-import GaudiKernel.SystemOfUnits as Units
+from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from Configurables import LoKi__Hybrid__PlotTool as PlotTool
+#import GaudiKernel.SystemOfUnits as Units
+
+name = "Bd2JpsiKS"
+
+##################
+# J/Psi -> mu mu #
+##################
+_stdJPsi2MuMu = DataOnDemand("stdLooseDiMuon", Location = "Phys/StdLooseDiMuon")
 
 ################
 # KS long long #
 ################
-KSLLForBd2Jpsi2MuMuKS = FilterDesktop("StripKSLLForBd2Jpsi2MuMuKS")
-KSLLForBd2Jpsi2MuMuKS.InputLocations = ["StdLooseKsLL"]
-KSLLForBd2Jpsi2MuMuKS.Code = "  (MINTREE( ('pi+'==ABSID), P) >2.*GeV)"\
-                             "& (MINTREE( ('pi+'==ABSID), MIPCHI2DV(PRIMARY)) >9.)"\
-                             "& (MAXTREE( ('pi+'==ABSID), TRCHI2DOF) <10.)"\
-                             "& (VFASPF(VCHI2/VDOF)<10.)"\
-                             "& (ADMASS('KS0') < 80.0*MeV)"
+_stdKSLL = DataOnDemand("stdLooseKsLL", Location = "Phys/StdLooseKsLL")
 
 ############################
 # KS downstream downstream #
 ############################
-KSDDForBd2Jpsi2MuMuKS = FilterDesktop("StripKSDDForBd2Jpsi2MuMuKS")
-KSDDForBd2Jpsi2MuMuKS.InputLocations = ["StdLooseKsDD"]
-KSDDForBd2Jpsi2MuMuKS.Code = "  (MINTREE( ('pi+'==ABSID), P) >2.*GeV)"\
-                             "& (MINTREE( ('pi+'==ABSID), MIPCHI2DV(PRIMARY)) >4.)"\
-                             "& (MAXTREE( ('pi+'==ABSID), TRCHI2DOF) <20.)"\
-                             "& (VFASPF(VCHI2/VDOF)<20.)"\
-                             "& (ADMASS('KS0') < 100.0*MeV)"
+_stdKSDD = DataOnDemand("stdLooseKsDD", Location = "Phys/StdLooseKsDD")
 
-################
-# Bd -> JpsiKS #
-################
-Bd2JpsiKS = CombineParticles("StripBd2JpsiKS")
-Bd2JpsiKS.DecayDescriptor = "B0 -> J/psi(1S) KS0"
-Bd2JpsiKS.InputLocations = ["StripKSLLForBd2Jpsi2MuMuKS",
-                            "StripKSDDForBd2Jpsi2MuMuKS",
-                            "StdLTUnbiasedJpsi2MuMu"]
+##############################
+# Bd -> JpsiKS,KSLL (Biased) #
+##############################
+_Bd_KSLL = CombineParticles("BLL_" + name,
+                            DecayDescriptor = "[B0 -> J/psi(1S) KS0]cc",
+                            CombinationCut = "ADAMASS('B0') < 500.*MeV",
+                            MotherCut = "ALL",
+                            ReFitPVs = True)
+_Bd_KSLL.addTool( OfflineVertexFitter() )
+_Bd_KSLL.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+_Bd_KSLL.OfflineVertexFitter.useResonanceVertex = False
+Bd_KSLL = Selection ("SelBLL"+name,
+                     Algorithm = _Bd_KSLL,
+                     RequiredSelections = [_stdJPsi2MuMu, _stdKSLL])
 
-Bd2JpsiKS.addTool( OfflineVertexFitter() )
-Bd2JpsiKS.VertexFitters.update( { "" : "OfflineVertexFitter"} )
-Bd2JpsiKS.OfflineVertexFitter.useResonanceVertex = False
-Bd2JpsiKS.ReFitPVs = True
+##############################
+# Bd -> JpsiKS,KSDD (Biased) #
+##############################
+_Bd_KSDD = CombineParticles("BDD_"+ name,
+                            DecayDescriptor = "[B0 -> J/psi(1S) KS0]cc",
+                            CombinationCut = "ADAMASS('B0') < 500.*MeV",
+                            MotherCut = "ALL",
+                            ReFitPVs = True)
+_Bd_KSDD.addTool( OfflineVertexFitter() )
+_Bd_KSDD.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+_Bd_KSDD.OfflineVertexFitter.useResonanceVertex = False
+Bd_KSDD = Selection ("SelBDD"+name,
+                     Algorithm = _Bd_KSDD,
+                     RequiredSelections = [_stdJPsi2MuMu, _stdKSDD])
 
-Bd2JpsiKS.DaughtersCuts = {'KS0' : 'PT>1.*GeV',
-                           'J/psi(1S)' : 'PT>1.*GeV'}
-Bd2JpsiKS.CombinationCut = "ADAMASS('B0') < 300.*MeV"
-Bd2JpsiKS.MotherCut = "(VFASPF(VCHI2/VDOF) < 15.) & (BPVIPCHI2() < 25.)"
+##############################
+# build the Sel Sequence     #
+##############################
+seqLL = SelectionSequence("SeqLL"+name, 
+                          TopSelection = Bd_KSLL)
+seqDD = SelectionSequence("SeqDD"+name, 
+                          TopSelection = Bd_KSDD)
+
+
+from StrippingConf.StrippingLine import StrippingLine, StrippingMember
 
 ############################################
 # Create StrippingLine with this selection #
 ############################################
-line = StrippingLine('Bd2JpsiKSLine'
+line1 = StrippingLine(name+'_KSLL_Line'
                , prescale = 1
-               , algos = [KSLLForBd2Jpsi2MuMuKS, KSDDForBd2Jpsi2MuMuKS, Bd2JpsiKS]
-               )
+               , algos = [seqLL]
+               , postscale = 1)
+
+line2 = StrippingLine(name+'_KSDD_Line'
+               , prescale = 1
+               , algos = [seqDD]
+               , postscale = 1)

@@ -11,7 +11,6 @@ from StrippingSelections import StrippingBs2JpsiPhi
 from StrippingSelections import StrippingBs2JpsiPhiDetached
 from StrippingSelections import StrippingBs2JpsiPhiPrescaled
 from StrippingSelections import StrippingBd2JpsiKS
-from StrippingSelections import StrippingBd2JpsiKSBiased
 from StrippingSelections import StrippingBd2JpsiKstar
 from StrippingSelections import StrippingBd2JpsiKstarDetached
 from StrippingSelections import StrippingBd2JpsiKstarDetachedR
@@ -28,8 +27,8 @@ stream.appendLines( [
 		        StrippingBs2JpsiPhi.line,  
 		        StrippingBs2JpsiPhiPrescaled.line,  
 			StrippingBs2JpsiPhiDetached.line, 
-		        StrippingBd2JpsiKS.line,  
-		        StrippingBd2JpsiKSBiased.line,  
+		        StrippingBd2JpsiKS.line1,  
+		        StrippingBd2JpsiKS.line2,  
 		        StrippingBd2JpsiKstar.line,  
 		        StrippingBd2JpsiKstarDetached.line,  
 		        StrippingBd2JpsiKstarDetachedR.line,  
