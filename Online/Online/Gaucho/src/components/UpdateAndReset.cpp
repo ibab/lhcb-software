@@ -25,6 +25,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IHistogramSvc.h"
+
 #include "AIDA/IHistogram.h"
 #include "AIDA/IProfile1D.h"
 #include "TFile.h"
@@ -101,6 +102,8 @@ StatusCode UpdateAndReset::initialize() {
     msg << MSG::FATAL << "Unable to locate the IGauchoMonitorSvc interface." << endreq;
     return StatusCode::FAILURE;
   }
+  // to make the ODIN object. doesn't work.
+  //updMgrSvc();
   
   serviceParts = Misc::splitString(m_utgid, "_");
   
@@ -133,8 +136,6 @@ StatusCode UpdateAndReset::initialize() {
   if (sc.isFailure()) msg << MSG::FATAL << "Unable to locate the HistogramDataService" << endreq;
   else msg << MSG::DEBUG << "Found the HistogramDataService" << endreq;
   
-  
-
   if (0 == m_desiredDeltaTCycle){
 //    msg << MSG::WARNING << "Your algorithm is using the UpdateAndReset algrithm which update and reset data every desiredDeltaTCycle seconds. You didn't fill the desiredDeltaTCycle option in your options file, then we will consider 10 seconds as default." << endreq;
     m_desiredDeltaTCycle = 20;
@@ -156,7 +157,7 @@ StatusCode UpdateAndReset::initialize() {
 
   m_timeStart = GauchoTimer::currentTime();
 
-  m_runNumber = currentRunNumber().first.first;
+ // m_runNumber = currentRunNumber().first.first;
   m_triggerConfigurationKey = currentTCK();
   m_cycleNumber = currentCycleNumber(m_timeStart).first;
   m_timeFirstEvInRun = m_timeStart;
@@ -208,7 +209,8 @@ StatusCode UpdateAndReset::execute() {
 
   if (0 == m_disableChekInExecute){
     m_triggerConfigurationKey = currentTCK();
-    m_runNumber = currentRunNumber().first.first;
+    // if we do this, it will get called twice, and no update will be made!
+   // m_runNumber = currentRunNumber().first.first;
     verifyAndProcessRunChange();
     verifyAndProcessCycleChange(false);
   }
@@ -219,6 +221,8 @@ StatusCode UpdateAndReset::execute() {
     m_firstExecute = false;
     DimTimer::start(m_timerCycle);
     m_firstCycleNumber = currentCycleNumber(GauchoTimer::currentTime()).first;
+    //only do this for the first event, so we have a runnumber
+    m_runNumber = currentRunNumber().first.first;
 //    msg << MSG::INFO << "Trigger Configuration Key " << m_triggerConfigurationKey << endreq;
   }
   return StatusCode::SUCCESS;
@@ -242,11 +246,11 @@ void UpdateAndReset::verifyAndProcessCycleChange(bool isFromTimerHandler) {
 void UpdateAndReset::verifyAndProcessRunChange() { // this method can not be called from TimerHandler
   std::pair<std::pair<int, ulonglong>, bool> runNumber = currentRunNumber(); // if this is too late, we can not avoid two process calling it.
   MsgStream msg(msgSvc(), name());
-//  msg << MSG::DEBUG << " runnumber " << runNumber.first.first << " gps time " << runNumber.first.second << " runNumber.second " << runNumber.second << endreq;
+  msg << MSG::DEBUG<< " runnumber " << runNumber.first.first << " gps time " << runNumber.first.second << " runNumber.second " << runNumber.second << endreq;
   if (!runNumber.second) return;// false means that the runNumber wasn't changed
   if (s_statusNoUpdated != m_runStatus) return; // We update if the runStatus is different of ProcessingUpdate and Updated
 
-//  msg << MSG::INFO << " The Run Number has changed then we UpdateAll and reset Histograms " << runNumber.first.first << endreq;
+  msg << MSG::DEBUG << " The Run Number has changed then we UpdateAll and reset Histograms " << runNumber.first.first << endreq;
   m_runStatus = s_statusProcessingUpdate;
   //don't update the first time
   if (runNumber.first.first!=0) updateData(true, false); //1er param true means that the update was called because the runNumber changed and 2d false means no TimerHandler
@@ -291,34 +295,84 @@ std::pair<std::pair<int, ulonglong>, bool> UpdateAndReset::currentRunNumber() {
 //------------------------------------------------------------------------------
   MsgStream msg( msgSvc(), name() );
   int runNumber=0;
-  ulonglong gpsTime = GauchoTimer::currentTime();
+  gpstime = GauchoTimer::currentTime();
   bool changed = false;
 
   //msg << MSG::DEBUG<< "Reading ODIN Bank. " <<endreq;
 
   if (0 == m_disableReadOdin) {
-    if (exist<LHCb::ODIN> ( LHCb::ODINLocation::Default)) {
-//      msg << MSG::DEBUG<< "ODIN Bank exist. " <<endreq;
+    //odin object only exists if we read the conditions db!!
+    /*
+    if (!exist<LHCb::ODIN> ( LHCb::ODINLocation::Default)) {
+       msg << MSG::INFO<< "Cannot get ODIN object. " << endreq;	        
+    }
+    else {  
       LHCb::ODIN* odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
-//      msg << MSG::DEBUG<< "Getting RunNumber. " <<endreq;
       runNumber = odin->runNumber();
       gpsTime = odin->gpsTime();
- //     msg << MSG::DEBUG<< "runNumber from ODIN is. " <<endreq;
+      msg << MSG::INFO<< "runNumber from ODIN is. " << runNumber << endreq;  
+    } 
+    */
+    //so get the odin bank (should stay at nr 16!) from the raw event
+    char ctck[62];
+    char crunnumber[62];
+    char cgpstime[128];
+    if( exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default ) ) {
+       m_rawEvt= get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+       LHCb::RawBank::BankType i = LHCb::RawBank::BankType(16);
+       std::string bname = LHCb::RawBank::typeName(i);       
+       std::string::size_type odinfound=bname.find("ODIN",0);
+
+       if (odinfound!=std::string::npos) {
+          const std::vector<LHCb::RawBank*>& b =m_rawEvt->banks(i);
+          if ( b.size() > 0 )  {
+            std::vector<LHCb::RawBank*>::const_iterator itB;
+            int k = 0;
+            for( itB = b.begin(); itB != b.end(); itB++ ) {
+               if ( ((k++)%4) == 0 ) info() << endmsg << "  " ;
+               const LHCb::RawBank* r = *itB;
+	       int l=0;
+               for(const int* p=r->begin<int>(); p != r->end<int>(); ++p)  {
+	         l++;
+	         int n;
+		 if (l==1) {
+		    n=sprintf(crunnumber, "%i", *p);	 
+		 }
+		 if (l==6) {
+		    n=sprintf(cgpstime, "%u", *p);
+		 }
+	         if (l==10) {
+	            n=sprintf(ctck, "%x", *p);
+	         }  
+              } 		 
+           }
+        }
+      }
+      else {
+         msg << MSG::DEBUG << "ODIN bank not found at location '" << rootInTES() << LHCb::RawEventLocation::Default << endreq;;      
+      }
+      tck=atoi(ctck);
+      runNumber=atoi(crunnumber);
+      gpstime=atoi(cgpstime);
+    //  msg << MSG::INFO  << "runnumber " << runNumber << " ctck " << ctck << " tck " << tck << " cgpstime " <<
+    //  cgpstime << " gpstime " << gpstime << endmsg;
+
     }
-    else
+
+    else  
     {
-      msg << MSG::DEBUG<< "ODIN Bank doesn't exist. " <<endreq;	
-    }
+       msg << MSG::DEBUG << "rawEvent not found at location '" << rootInTES() << LHCb::RawEventLocation::Default << endreq;
+    }	
   }
-  else {
+  else {       
 //    msg << MSG::DEBUG<< "===============> Reading Odin bank is disabled. Then runNumber = 0 and gpsTime = currentTime" <<endreq;
   }
-
   if ((m_runNumber != runNumber) && (m_runNumber !=0)) {
      changed = true;
-  }   
+  }  
+  msg << MSG::DEBUG << "old runnumber " << m_runNumber << " new runnumber " << runNumber << " changed " << changed << endreq; 
   m_runNumber = runNumber;
-  std::pair<int, ulonglong> runNumberGpsTime = std::pair<int, ulonglong>(runNumber, gpsTime);
+  std::pair<int, ulonglong> runNumberGpsTime = std::pair<int, ulonglong>(runNumber, gpstime);
   
   // return std::pair<int, bool>(runNumber,changed);
   return std::pair<std::pair<int, ulonglong>, bool>(runNumberGpsTime, changed);
@@ -333,14 +387,15 @@ unsigned int UpdateAndReset::currentTCK() {
   //msg << MSG::DEBUG<< "Reading ODIN Bank. " <<endreq;
 
   if (0 == m_disableReadOdin) {
-    if (exist<LHCb::ODIN> ( LHCb::ODINLocation::Default)) {
+    /*if (exist<LHCb::ODIN> ( LHCb::ODINLocation::Default)) {
       LHCb::ODIN* odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
       triggerConfigurationKey = odin->triggerConfigurationKey();
     }
     else
     {
       msg << MSG::DEBUG<< "ODIN Bank doesn't exist. " <<endreq;	
-    }
+    }*/
+    triggerConfigurationKey=tck;
   }
   else {
   }
@@ -355,11 +410,11 @@ ulonglong UpdateAndReset::gpsTime() {
 //  msg << MSG::DEBUG<< "Reading ODIN Bank. " <<endreq;
 
   if (0 == m_disableReadOdin) {
-    if (exist<LHCb::ODIN> ( LHCb::ODINLocation::Default)) {
- //     msg << MSG::DEBUG<< " Congratulations, you can read the ODIN Bank. " << endreq;
+/*    if (exist<LHCb::ODIN> ( LHCb::ODINLocation::Default)) {
       LHCb::ODIN* odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
       return odin->gpsTime();
-    }
+    }*/
+    return gpstime;
   }
 //  else msg << MSG::DEBUG<< "===============> Reading Odin bank is disabled. " <<endreq;
 
@@ -368,9 +423,9 @@ ulonglong UpdateAndReset::gpsTime() {
 
   int cycleNumber = (int)currentTime/(m_desiredDeltaTCycle*1000000);
 
-  ulonglong gpsTime = ((ulonglong)cycleNumber)*((ulonglong) m_desiredDeltaTCycle*1000000);
+  gpstime = ((ulonglong)cycleNumber)*((ulonglong) m_desiredDeltaTCycle*1000000);
 
-  return gpsTime;
+  return gpstime;
 }
 
 std::pair<int, bool> UpdateAndReset::currentCycleNumber(ulonglong currentTime) {
@@ -404,9 +459,8 @@ void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler
   MsgStream msg( msgSvc(), name() );
   ulonglong currentTime = GauchoTimer::currentTime();
 //  msg << MSG::DEBUG << "**********************************************************************" << endreq;
-//  msg << MSG::DEBUG << "************Updating data " << (currentTime - m_timeStart) << " microseconds after start **********" << endreq;
-//  msg << MSG::DEBUG << "m_runNumber        = " << m_runNumber << endreq;
-//  msg << MSG::DEBUG << "m_cycleNumber      = " << m_cycleNumber << endreq;
+  msg << MSG::INFO << "************Updating data " << (currentTime - m_timeStart) << " microseconds after start **********" << endreq;  msg << MSG::DEBUG << "m_runNumber        = " << m_runNumber << endreq;
+  msg << MSG::INFO << "m_cycleNumber      = " << m_cycleNumber << endreq;
 //  msg << MSG::DEBUG << "m_timeFirstEvInRun      = " << m_timeFirstEvInRun << endreq;
 //  msg << MSG::DEBUG << "m_offsetTimeFirstEvInRun      = " << m_offsetTimeFirstEvInRun << endreq;
   m_deltaTCycle = (double)currentTime - (double)m_timeLastEvInCycle;
@@ -424,14 +478,14 @@ void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler
   
 //  msg << MSG::DEBUG << "m_gpsTimeLastEvInCycle  = " << m_gpsTimeLastEvInCycle << endreq;
 //  msg << MSG::DEBUG << "m_offsetGpsTimeLastEvInCycle  = " << m_offsetGpsTimeLastEvInCycle << endreq;
-//  msg << MSG::DEBUG << "TimeLastEvent error = " << (m_timeLastEvInCycle - m_gpsTimeLastEvInCycle) << " microseconds runnumberchanged " << isRunNumberChanged << " disablupdatedata " << m_disableUpdateData << endreq;
+  msg << MSG::INFO << "TimeLastEvent error = " << (m_timeLastEvInCycle - m_gpsTimeLastEvInCycle) << " microseconds runnumberchanged " << isRunNumberChanged << " disablupdatedata " << m_disableUpdateData << endreq;
  
   if (isRunNumberChanged) {
     if (0 == m_disableUpdateData) m_pGauchoMonitorSvc->updateAll(true); //the first parameter is the endOfRun flag
  //   else msg << MSG::DEBUG << "===============> Data was not updated because the UpdateData process is disabled." << endreq;
     if (0 == m_disableResetHistos) {
       if ( 1 == m_saveHistograms ) {
-//         msg << MSG::DEBUG << "==============> SAVING HISTOS BECAUSE FAST RUN CHANGE<=======================" << endreq;
+         msg << MSG::INFO << "==============> SAVING HISTOS BECAUSE FAST RUN CHANGE<=======================" << endreq;
          manageTESHistos(false, true, true, true);
       }
       else manageTESHistos(false, true, false, true);
@@ -465,7 +519,7 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
   IRegistry* object = rootObject();
   int level = 0;
   std::vector<std::string> idList;
-  msg << MSG::DEBUG << "managing histos list " << list << " reset " << reset << " save " << save << " endofrun " << isFromEndOfRun << endreq;
+  msg << MSG::INFO << "managing histos list " << list << " reset " << reset << " save " << save << " endofrun " << isFromEndOfRun << endreq;
   TFile *f=0;
   m_infoFileStatus = "......this is the file name were we will save histograms...........";
   char timestr[64];
@@ -547,7 +601,7 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
   std::vector<IRegistry*> leaves;
   std::vector<IRegistry*>::const_iterator  it;
   try {
-     // msg << MSG::DEBUG << "Looking for histos in object " << object->identifier() << ", level  " << level << endreq;
+     msg << MSG::INFO << "Looking for histos in object " << object->identifier() << ", level  " << level << endreq;
      SmartIF<IDataManagerSvc> dataManagerSvc(m_histogramSvc);
      if (!dataManagerSvc) {
 //       msg << MSG::WARNING << "    Unable to go to the transient store. " << endreq;
@@ -578,11 +632,16 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
            TH1* hRoot = (TH1*) Gaudi::Utils::Aida2ROOT::aida2root(histogram);
            std::vector<std::string> HistoFullName = Misc::splitString(hRoot->GetName(), "/");
 	   hRoot->Write( HistoFullName[HistoFullName.size()-1].c_str() );
-          // msg << MSG::DEBUG << ", saving name=" << hRoot->GetName() << " directory="
-          //  << (hRoot->GetDirectory() ? hRoot->GetDirectory()->GetName() : "none") <<endreq;
+           msg << MSG::INFO << ", saving name=" << hRoot->GetName() << " directory="
+            << (hRoot->GetDirectory() ? hRoot->GetDirectory()->GetName() : "none") <<endreq;
+	  // should we reset on the root level?
+	  // if (reset) hRoot->Reset();
          }
         // msg << MSG::DEBUG << "Resetting histogram" << endreq;
-         if (reset) histogram->reset();
+         if (reset) {
+	    msg << MSG::INFO << "Resetting histogram" << endreq;
+	    histogram->reset();
+	    }
          idList.push_back(id);
          continue;
        }
@@ -592,8 +651,13 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
            TProfile* hRoot = (TProfile*) Gaudi::Utils::Aida2ROOT::aida2root(profile);
            std::vector<std::string> HistoFullName = Misc::splitString(hRoot->GetName(), "/");
 	   hRoot->Write( HistoFullName[HistoFullName.size()-1].c_str() );
+	   //should we reset at the root level?
+	   //if (reset) hRoot->Reset();
          }
-         if (reset) profile->reset();
+         if (reset){
+	 msg << MSG::INFO << "Resetting profile" << endreq;
+	    profile->reset();
+	    }
          idList.push_back(id);
          continue;
        }

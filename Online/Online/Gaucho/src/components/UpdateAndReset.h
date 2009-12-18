@@ -2,8 +2,6 @@
 #define GAUCHO_UPDATEANDRESET_H 1
 
 // Include files
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/Property.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
@@ -11,6 +9,7 @@
 #include "dis.hxx"
 #include <map>
 #include <sstream>
+#include "Event/RawEvent.h"
 
 static const std::string s_statusNoUpdated("NO_UPDATED");
 static const std::string s_statusProcessingUpdate("PROCESSINGUPDATE");
@@ -55,13 +54,17 @@ private:
   
   IGauchoMonitorSvc* m_pGauchoMonitorSvc; ///< Online Gaucho Monitoring Service
   IHistogramSvc* m_histogramSvc;
-
-    
+  LHCb::RawEvent* m_rawEvt;
+  std::vector<std::string> m_bankNames;
+  std::vector<LHCb::RawBank::BankType> m_bankTypes;
+  
   int m_desiredDeltaTCycle;// integer because dimTimer can only accept seconds
   
   // MonRate information
   int m_runNumber;  
   unsigned int m_triggerConfigurationKey;
+  unsigned int tck;
+  ulonglong gpstime;
   int m_cycleNumber;
   int m_firstCycleNumber;
   ulonglong m_timeStart;
