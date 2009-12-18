@@ -561,8 +561,7 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
 		      dir->cd(HistoFullName[i].c_str());		       
 		  }    
 		  else { 
-		      if (dir=f->GetDirectory(HistoFullName[i].c_str())) {}		         
-		      else {
+		      if (!(dir=f->GetDirectory(HistoFullName[i].c_str()))) {
 		//      msg << MSG::DEBUG << "Making directory HistoFullName[" << i << "]= " << HistoFullName[i].c_str() <<endreq; 		      
 		      dir=f->mkdir(HistoFullName[i].c_str(),TString::Format("subdir %02d",i));
 		      }

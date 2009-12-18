@@ -15,6 +15,11 @@ ProcessMgr::ProcessMgr(std::string serviceOwner, IMessageSvc* msgSvc, Interactor
   m_publishRates = false;
   m_fileName = "Waiting for command to save histograms............."; 
   m_runNumber = 0;
+  m_dimInfoServices = 0;
+  m_dimInfoServers = 0;
+  m_serviceMap = 0;
+  m_dimTimerProcess = 0;
+  m_runNbSvc = 0;
 }
 
 ProcessMgr::~ProcessMgr() {
