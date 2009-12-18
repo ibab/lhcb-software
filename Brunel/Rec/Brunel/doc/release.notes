@@ -6,6 +6,9 @@ Purpose: LHCb reconstruction program
  - Changes to Configurable:
    . Pass DataType DstConf (who propagates it to SimConf). Fixes bug 60636
 
+ - Changes to tests:
+   . Use correct magnet polarity in mdfrdst test
+
  - Changes to references to reflect changes in Brunel v35r12 output:
    . New counters in DST packer algorithms (EventPacker v2r2)
    . New RichCKRes 2D plots
