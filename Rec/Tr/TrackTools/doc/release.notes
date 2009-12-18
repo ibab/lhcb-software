@@ -4,6 +4,14 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================== TrackTools v3r24p1 2009-12-18 ======================
+! 2009-12-18 Stefania Vecchi
+ - changes in the MuonMeasurementProvider::addToMeasurements
+	 setting MuonProvider.clusterize = True it is possible to make 2 
+	 measurements for each "cluster" of LHCbIDs 
+   The default is MuonProvider.clusterize = False (backward compatible)
+   in this case the tool makes 2 measurement for each LHCbIDs
+
 !======================== TrackTools v3r24 2009-11-24 ========================
 ! 2009-11-24 Stephanie Hansmann-Menzemer
  - set b field off momentum from 1 GeV to 100 GeV
