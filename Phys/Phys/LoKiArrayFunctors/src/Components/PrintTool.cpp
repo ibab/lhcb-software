@@ -1,4 +1,4 @@
-// $Id: PrintTool.cpp,v 1.5 2009-11-20 16:06:15 ibelyaev Exp $
+// $Id: PrintTool.cpp,v 1.6 2009-12-18 09:42:18 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -75,6 +75,16 @@ namespace LoKi
         if ( sc.isFailure() ) { return sc ; }           // RETURN 
         //
         return initTable() ;
+      }
+      /** finalize the tool
+       *  @see IAlgTool
+       *  @return status code 
+       */
+      virtual StatusCode finalize  () 
+      {
+        // reset all functors:
+        m_funcs.clear() ;
+        return GaudiTool::finalize () ;
       }
       // ======================================================================
     protected:

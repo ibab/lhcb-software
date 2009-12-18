@@ -1,4 +1,4 @@
-// $Id: HybridParticleArrayFilter.cpp,v 1.3 2009-11-20 16:06:14 ibelyaev Exp $
+// $Id: HybridParticleArrayFilter.cpp,v 1.4 2009-12-18 09:42:18 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -91,6 +91,14 @@ namespace LoKi
         //
         return initVar() ;
       }
+      /// finalize the tool
+      virtual StatusCode finalize() 
+      {
+        // reset the functor
+        m_cut = LoKi::Constant<const LHCb::Particle*,bool>( false ) ;
+        // finalize the base:
+        return GaudiTool::finalize () ;
+      }
       // ======================================================================
     protected:
       // ======================================================================
@@ -144,9 +152,9 @@ namespace LoKi
           ( &LoKi::Hybrid::ParticleArrayFilter::propHandler , this ) ;
         //
         declareProperty 
-          ( "Factory" , 
-            m_factory , 
-            "Type/Name for C++/Python Hybrid Factory" ) ->
+          ( "Preambulo" , 
+            m_preambulo , 
+            "Preambulo to be used for Bender/Python script" ) ->
           declareUpdateHandler 
           ( &LoKi::Hybrid::ParticleArrayFilter::propHandler , this ) ;
         //

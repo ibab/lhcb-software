@@ -1,4 +1,4 @@
-// $Id: HybridFilterParticles.cpp,v 1.3 2009-11-20 16:06:14 ibelyaev Exp $
+// $Id: HybridFilterParticles.cpp,v 1.4 2009-12-18 09:42:18 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -57,6 +57,14 @@ namespace LoKi
       // ======================================================================
       /// intialize the tool 
       virtual StatusCode initialize () ;      
+      // finalize the tool (reset functor)
+      virtual StatusCode finalize () 
+      {
+        // reset functor 
+        m_cut = LoKi::Constant<LoKi::ATypes::Combination,bool>( false ) ;
+        // finalize the base 
+        return GaudiTool::finalize () ;
+      }
       // ======================================================================
     protected:
       // ======================================================================

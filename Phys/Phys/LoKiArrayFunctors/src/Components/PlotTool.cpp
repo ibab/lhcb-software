@@ -1,4 +1,4 @@
-// $Id: PlotTool.cpp,v 1.4 2009-11-21 17:29:04 ibelyaev Exp $
+// $Id: PlotTool.cpp,v 1.5 2009-12-18 09:42:18 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -126,6 +126,15 @@ namespace LoKi
         { return Error ( "Something wrong in the configurtaion!") ; }
         //
         return StatusCode::SUCCESS ;
+      }
+      // ======================================================================
+      /// finalize: reset functors
+      virtual StatusCode finalize() 
+      {
+        /// reset all functors
+        m_histos.clear() ;
+        /// finalize the base
+        return GaudiHistoTool::finalize () ;        
       }
       // ======================================================================
     public:

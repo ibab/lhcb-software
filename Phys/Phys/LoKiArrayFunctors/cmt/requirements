@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.22 2009-11-30 11:17:38 ibelyaev Exp $ 
+# $Id: requirements,v 1.23 2009-12-18 09:42:18 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2007-06-08
 # Maintainer : Vanya BELYAEV
 # ============================================================================
 package           LoKiArrayFunctors
-version           v8r7
+version           v8r8
 
 # ============================================================================
 branches          cmt doc src dict python LoKi 

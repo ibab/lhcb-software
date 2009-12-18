@@ -1,4 +1,4 @@
-// $Id: HybridTool.cpp,v 1.4 2009-11-17 12:41:41 ibelyaev Exp $
+// $Id: HybridTool.cpp,v 1.5 2009-12-18 09:42:18 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -63,6 +63,16 @@ namespace LoKi
       virtual StatusCode initialize () ;
       /// finalization   of the tool 
       virtual StatusCode finalize  () ;
+      // ======================================================================
+      /// the update handler
+      void propHandler ( Property& p  )  
+      {
+        //
+        if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
+        //
+        info () << "Property is updated: " << p << endmsg ;
+        //
+      }
       // ======================================================================
     public:
       // ======================================================================
@@ -554,9 +564,24 @@ LoKi::Hybrid::Tool::Tool
   m_modules.push_back ( "LoKiCore.functions"           ) ;
   m_modules.push_back ( "LoKiCore.math"                ) ;
   //
-  declareProperty ( "Modules" , m_modules , "Python modules to be imported" ) ;
-  declareProperty ( "Actor"   , m_actor   , "The processing engine"         ) ;
-  declareProperty ( "Lines"   , m_lines   , "Additional python lines"       ) ;
+  declareProperty 
+    ( "Modules" , 
+      m_modules , 
+      "Python modules to be imported" ) 
+    -> declareUpdateHandler 
+    ( &LoKi::Hybrid::Tool::propHandler , this ) ;
+  declareProperty 
+    ( "Actor"   , 
+      m_actor   , 
+      "The processing engine"         ) 
+    -> declareUpdateHandler 
+    ( &LoKi::Hybrid::Tool::propHandler , this ) ;
+  declareProperty 
+    ( "Lines"   , 
+      m_lines   , 
+      "Additional python lines to be used in Bender/Pythoni script" ) 
+    -> declareUpdateHandler 
+    ( &LoKi::Hybrid::Tool::propHandler , this ) ;
   //
 } 
 // ============================================================================

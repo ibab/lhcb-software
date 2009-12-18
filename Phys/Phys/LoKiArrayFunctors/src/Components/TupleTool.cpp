@@ -1,4 +1,4 @@
-// $Id: TupleTool.cpp,v 1.4 2009-11-20 16:06:15 ibelyaev Exp $
+// $Id: TupleTool.cpp,v 1.5 2009-12-18 09:42:18 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -102,6 +102,15 @@ namespace LoKi
         svc<IService> ( "LoKiSvc" , true ) ;
         //
         return initVariables () ;
+      }
+      // ======================================================================
+      /// finalization of the tool 
+      virtual StatusCode finalize () 
+      {
+        // reset all functors:
+        m_items.clear() ;
+        // finalize the base 
+        return GaudiTool::finalize () ;
       }
       // ======================================================================
     protected:

@@ -1,4 +1,4 @@
-// $Id: HybridFilterCriterion.cpp,v 1.4 2009-11-20 16:06:14 ibelyaev Exp $
+// $Id: HybridFilterCriterion.cpp,v 1.5 2009-12-18 09:42:18 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -70,6 +70,14 @@ namespace LoKi
         if ( sc.isFailure() ) { return sc ; }                        // RETURN 
         //
         return initVar () ;
+      }
+      /// finalize the tool
+      virtual StatusCode finalize () 
+      {
+        // reset the functor 
+        m_cut = LoKi::Constant<const LHCb::Particle*,bool>( false ) ;
+        // finalize the base:
+        return GaudiTool::finalize () ;
       }
       // ======================================================================
     protected:
