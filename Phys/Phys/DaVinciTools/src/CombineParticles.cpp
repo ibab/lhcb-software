@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.36 2009-11-21 18:11:29 ibelyaev Exp $
+// $Id: CombineParticles.cpp,v 1.37 2009-12-18 10:30:36 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -1286,7 +1286,15 @@ StatusCode CombineParticles::updateHistos ()
 StatusCode CombineParticles::finalize   ()           //  standard  finalization 
 {
   m_incSvc = 0 ;
-  /// finalize the base class
+  // reset functors:
+  m_acut               = _ABOOL ( true  ) ;
+  m_cut                = _PBOOL ( false ) ;
+  m_cuts.clear() ;
+  m_combinationMonitor = _CBOOL ( false ) ;
+  m_motherMonitor      = _CBOOL ( false ) ;
+  m_to_be_updated1     = true ;
+
+  // finalize the base class
   return DVAlgorithm::finalize () ;                 // finalize the base class 
 }
 // ============================================================================

@@ -1,8 +1,19 @@
-! $Id: release.notes,v 1.493 2009-11-30 14:09:10 jpalac Exp $
+! $Id: release.notes,v 1.494 2009-12-18 10:30:36 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-12-18 - Vanya BELYAEV
+ - CombineParticles & FilterDesktop 
+
+    reset all functors in finalization... (may be vital in the case of 
+     highly nontrivial functors)
+
+ - cmt/requirements 
+
+     version increment to v19r7 
+
 
 !========================== DaVinciTools v19r6 2009-11-30 ===================
 

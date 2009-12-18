@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.8 2009-11-20 09:35:55 ibelyaev Exp $
+// $Id: FilterDesktop.cpp,v 1.9 2009-12-18 10:30:36 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -149,7 +149,18 @@ public:
     return StatusCode::SUCCESS ;
   }  
   /// the most interesting method 
-  virtual StatusCode execute    () ;           // the most interesting method 
+  virtual StatusCode execute    () ;           // the most interesting method
+  // finalize /reset functors 
+  virtual StatusCode finalize   ()
+  {
+    // reset functors
+    m_cut         = _PBOOL ( false ) ;
+    m_preMonitor  = _CBOOL ( false ) ;
+    m_postMonitor = _CBOOL ( false ) ;
+    m_to_be_updated1 = true ;
+    // finalize the base
+    return DVAlgorithm::finalize () ;
+  }
   // ==========================================================================
 protected:
   // ==========================================================================
@@ -195,6 +206,9 @@ protected:
     , m_cloneFinalStates ( false ) 
     , m_cloneDaughters   ( false ) 
     , m_cloneTree        ( false )
+      // update?
+    , m_to_be_updated1   ( true ) 
+    , m_to_be_updated2   ( true ) 
   {
     // the factory 
     declareProperty 
