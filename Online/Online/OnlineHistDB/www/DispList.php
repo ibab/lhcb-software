@@ -1,8 +1,3 @@
-<HTML>
- <HEAD>
- <LINK REL=STYLESHEET TYPE="text/css" HREF="styles_screen.css">
-</HEAD>
-<body class=listing>
 <?
 $debug=0;
 include 'util.php';
@@ -13,7 +8,13 @@ if (!$conn) {
   print htmlentities($e['message']);
   exit;
 }
-
+?>
+<HTML>
+ <HEAD>
+ <LINK REL=STYLESHEET TYPE="text/css" HREF="styles_screen.css">
+</HEAD>
+<body class=listing>
+<?
 $settitle=$_POST["TASKNAME"]."/".$_POST["HSALGO"]."/".$_POST["HSTITLE"];
 $stid = OCIParse($conn,"select HID,SUBTITLE,DISPLAY from HISTOGRAM where HSET='".$_POST["hsid"]."' order by IHS");
 OCIExecute($stid);

@@ -1,8 +1,3 @@
-<HTML>
- <HEAD>
- <LINK REL=STYLESHEET TYPE="text/css" HREF="styles_screen.css">
-</HEAD>
-<body class=listing>
 <?
 $debug=0;
 include 'util.php';
@@ -17,7 +12,13 @@ if (!$conn) {
 $settitle=$_POST["TASKNAME"]."/".$_POST["HSALGO"]."/".$_POST["HSTITLE"];
 $stid = OCIParse($conn,"select HID,SUBTITLE from HISTOGRAM where HSET='".$_POST["hsid"]."' order by IHS");
 OCIExecute($stid);
-
+?>
+<HTML>
+ <HEAD>
+ <LINK REL=STYLESHEET TYPE="text/css" HREF="styles_screen.css">
+</HEAD>
+<body class=listing>
+  <?
 echo "<center><H2> Parameters of Automatic Analysis ".
      " for <a href=Histogram.php?hsid=".$_POST["hsid"].">Histogram set ".$_POST["hsid"]."</a>:<br>$settitle </H2>\n";
 echo "<table border=1 cellpadding=8>";

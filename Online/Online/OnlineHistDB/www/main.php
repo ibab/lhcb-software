@@ -1,7 +1,5 @@
-
 <?
 include 'util.php';
-
 $conn=HistDBconnect();
 if (!$conn) {
   $e = ocierror();

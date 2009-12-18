@@ -1,11 +1,7 @@
-<HTML>
- <HEAD>
-<LINK REL=STYLESHEET TYPE="text/css" HREF="styles_screen.css">
- </HEAD>
-<body>
 <?php 
-include 'util.php'; include 'dbforms.php'; 
+include 'util.php'; 
 $conn=HistDBconnect(1);
+include 'dbforms.php'; 
 $act = $canwrite ? 'Display/Update' : '';
 
 $doid=$_GET["doid"];
@@ -13,6 +9,11 @@ $hid=$_GET["hid"];
 $page=fromGet($_GET["page"]);
 $instance=$_GET["instance"];
 ?>
+<HTML>
+ <HEAD>
+<LINK REL=STYLESHEET TYPE="text/css" HREF="styles_screen.css">
+ </HEAD>
+<body>
 <H2 ALIGN="CENTER"><?php echo $act ?> Default Display Options for histogram <?php echo $hid ?> <br>in Page <?php echo $page ?></H2><hr>
 
 <?php

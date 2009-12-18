@@ -1,10 +1,15 @@
+<?php
+include '../util.php';
+$conn=HistDBconnect(1);
+include '../dbforms.php'; 
+?>
 <HTML>
  <HEAD>
 <LINK REL=STYLESHEET TYPE="text/css" HREF="../styles_screen.css">
  </HEAD>
 <body>
 <?php 
-include '../util.php'; include '../dbforms.php'; 
+
 $taskname=$_POST["TASKNAME"];
 
 function update_task($taskname,$conn) {

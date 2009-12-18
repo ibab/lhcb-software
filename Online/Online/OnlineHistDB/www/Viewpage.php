@@ -1,11 +1,7 @@
-<HTML>
- <HEAD>
- <LINK REL=STYLESHEET TYPE="text/css" HREF="styles_screen.css">
-</HEAD>
-<body class=listing>
 <?
-$debug=0;
 include 'util.php';
+$conn=HistDBconnect(1);
+$debug=0;
 
 function showhisto_display($hid,$doid,$instance)
 {
@@ -194,11 +190,13 @@ function show_pagefolder($sel='') {
   }
   ocifreestatement($stid);
 }
-
-
-
-$conn=HistDBconnect(1);
-
+?>
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET TYPE="text/css" HREF="styles_screen.css">
+  </HEAD>
+<body class=listing>
+  <?
 if (array_key_exists("page",$_GET)) {
   $page=fromGet($_GET["page"]);
   if ($page != "new__" && (!array_key_exists("Edit",$_POST)) ) {

@@ -1,4 +1,3 @@
-<HTML>
 <?
 include 'util.php';
 include 'dbforms.php';

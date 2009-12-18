@@ -1,14 +1,15 @@
-
+<?
+include 'util.php';
+$conn=HistDBconnect(1);
+include 'dbforms.php';
+?>
 <HTML>
  <HEAD>
  <LINK REL=STYLESHEET TYPE="text/css" HREF="styles_screen.css">
 </HEAD>
 <body class=listing>
-<?
-include 'util.php';
-include 'dbforms.php';
+  <?
 echo "<center><H2> Definition of \"Analysis\" Histogram </H2>";
-$conn=HistDBconnect(1);
 if (array_key_exists("Alg",$_POST)) {
   // specify input histograms (or set) and parameters
   $alg=$_POST["Alg"];

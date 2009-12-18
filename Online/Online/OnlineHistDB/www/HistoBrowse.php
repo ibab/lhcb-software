@@ -1,5 +1,6 @@
 <?
 include 'util.php';
+$conn=HistDBconnect();
 $query=0;
 $items=array();
 if (isset($_GET["bytask"])) {
@@ -35,7 +36,6 @@ if (isset($_GET["byfeature"])) {
 }
 
 if ($query) {
-  $conn=HistDBconnect();
   if($conn) {
     $i=0;
     $stid = OCIParse($conn,$query);

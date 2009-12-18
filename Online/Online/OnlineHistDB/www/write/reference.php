@@ -1,11 +1,12 @@
+<?
+include '../util.php';$conn=HistDBconnect(1);
+?>
 <HTML>
  <HEAD>
- <LINK REL=STYLESHEET TYPE="text/css" HREF="styles_screen.css">
-</HEAD>
-<body class=listing>
-<?
-include '../util.php';
-
+<LINK REL=STYLESHEET TYPE="text/css" HREF="../styles_screen.css">
+ </HEAD>
+<body>
+<?php 
 
 if ($_POST["DoUpload"]) {
   $task=$_POST["TASK"];
@@ -15,7 +16,6 @@ if ($_POST["DoUpload"]) {
   $file = "${Reference_home}/${ref}";
   
   // get task's histogram list
-  $conn=HistDBconnect(1);
   $query="select TITLE||SUBTITSTRING(SUBTITLE) from VIEWHISTOGRAM where TASK='${task}'";
   $stid = OCIParse($conn,$query);
   OCIExecute($stid);

@@ -1,11 +1,13 @@
+<?php 
+include '../util.php'; include '../dbforms.php'; 
+$conn=HistDBconnect();
+?>
 <HTML>
  <HEAD>
 <LINK REL=STYLESHEET TYPE="text/css" HREF="../styles_screen.css">
  </HEAD>
 <body>
 <?php 
-include '../util.php'; include '../dbforms.php'; 
-$conn=HistDBconnect();
 if (!$conn) {
   $e = ocierror();
   print htmlentities($e['message']);

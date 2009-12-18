@@ -1,4 +1,4 @@
-<?include 'util.php';  setcookie("user"); setcookie("password");?>
+<?include 'util.php';  setcookie("login");?>
 <HTML>
  <HEAD>
   <LINK REL=STYLESHEET TYPE="text/css" HREF="styles_screen.css">

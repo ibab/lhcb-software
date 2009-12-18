@@ -1,15 +1,12 @@
-<HEAD>
-<meta http-equiv="no-cache">
-<meta http-equiv="refresh" content="500; URL=<?php echo "$_SERVER[PHP_SELF]"; ?>">
-  <LINK REL=STYLESHEET TYPE="text/css" HREF="styles_screen.css">
-</HEAD>
-<BODY>
 <?
 include 'util.php';
-if (isset($_COOKIE["user"])) {
+if (isset($_COOKIE["login"])) {
+  if ($_COOKIE["login"] == md5($_SESSION["user"] .$_SESSION["password"] . $_SESSION["histdb"] .$_SESSION['REMOTE_ADDR']."lhcbsalt")){
+    $user=$_SESSION["user"];
+  }
   $conn=HistDBconnect();
   if($conn) {
-    echo "connected as <span class=\"connected_name\">". $_COOKIE["user"]."</span> ".
+    echo "connected as <span class=\"connected_name\">". $user."</span> ".
       ($canwrite ? "" : " <B>(READ-ONLY)</B>").
       "<br><a href=logout.php target=_parent> Logout </a><br><hr>\n";
   // get tasks, subsystems, pages
@@ -31,6 +28,12 @@ if (isset($_COOKIE["user"])) {
   //$allsubsys=implode("_%_",$subsys);
   //$allpage=implode("_%_",$page);
 ?>
+<HEAD>
+<meta http-equiv="no-cache">
+<meta http-equiv="refresh" content="500; URL=<?php echo "$_SERVER[PHP_SELF]"; ?>">
+  <LINK REL=STYLESHEET TYPE="text/css" HREF="styles_screen.css">
+</HEAD>
+<BODY>
 <h4> Search Histogram</h4> 
 <form action="HistogramList.php" METHOD="POST" target="mymain">
 title contains <input type="Text" name="searchstring" size=10> <br>

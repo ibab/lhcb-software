@@ -1,11 +1,14 @@
+<?
+ // this scripts shows a list of histogram sets matching different kinds of queries
+include 'util.php';
+$conn=HistDBconnect();
+?>
 <HTML>
  <HEAD>
  <LINK REL=STYLESHEET TYPE="text/css" HREF="styles_screen.css">
 </HEAD>
 <body class=listing>
 <?
- // this scripts shows a list of histogram sets matching different kinds of queries
-include 'util.php';
 $maxresults=50;
 $debug=0;
 
@@ -13,7 +16,6 @@ $debug=0;
 $first= (array_key_exists("first",$_GET) ? $_GET["first"] : 1); 
 
 
-$conn=HistDBconnect();
 if (!$conn) {
   $e = ocierror();
   print htmlentities($e['message']);

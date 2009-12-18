@@ -1,11 +1,13 @@
+<?php 
+include '../util.php';
+$conn=HistDBconnect(1);
+?>
 <HTML>
  <HEAD>
 <LINK REL=STYLESHEET TYPE="text/css" HREF="../styles_screen.css">
  </HEAD>
 <body>
 <?php 
-include '../util.php';
-$conn=HistDBconnect(1);
 $nin=$_POST["nin"];
 $np=$_POST["np"];
 $mypars=array();

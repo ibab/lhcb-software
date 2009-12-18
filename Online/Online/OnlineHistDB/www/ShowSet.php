@@ -1,12 +1,14 @@
+<?
+include 'util.php';
+$id=$_GET["id"];
+$conn=HistDBconnect();
+?>
 <HTML>
  <HEAD>
  <LINK REL=STYLESHEET TYPE="text/css" HREF="styles_screen.css">
 </HEAD>
 <body class=listing>
 <?
-include 'util.php';
-$id=$_GET["id"];
-$conn=HistDBconnect();
 if (!$conn) {
   $e = ocierror();
   print htmlentities($e['message']);

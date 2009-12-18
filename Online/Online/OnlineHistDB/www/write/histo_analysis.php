@@ -1,11 +1,13 @@
+<?php 
+include '../util.php'; include '../dbforms.php'; 
+$conn=HistDBconnect();
+?>
 <HTML>
  <HEAD>
 <LINK REL=STYLESHEET TYPE="text/css" HREF="../styles_screen.css">
  </HEAD>
 <body>
 <?php 
-include '../util.php'; include '../dbforms.php'; 
-$conn=HistDBconnect();
 if (!$conn) {
   $e = ocierror();
   print htmlentities($e['message']);
@@ -50,7 +52,7 @@ function update_histo_analysis() {
     $gAna=1;
   }
   else { // just update settings for this single histogram
-    $command= "update ANASETTINGS set VWARNINGS=$warnings,VALARMS=$alarms,VINPUTPARS=$inputs where ANA=$aid and HISTO='$id'";
+    $command= "update ANASETTINGS set WARNINGS=$warnings,ALARMS=$alarms,INPUTPARS=$inputs where ANA=$aid and HISTO='$id'";
     $gAna=0; $out=1;
   }  
 

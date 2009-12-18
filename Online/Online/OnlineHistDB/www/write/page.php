@@ -1,11 +1,13 @@
+<?php 
+include '../util.php';
+$conn=HistDBconnect(1);
+?>
 <HTML>
  <HEAD>
 <LINK REL=STYLESHEET TYPE="text/css" HREF="../styles_screen.css">
  </HEAD>
 <body>
 <?php 
-include '../util.php';
-$conn=HistDBconnect(1);
 $folder= ($_POST["NEWFOLDER"]) ? $_POST["NEWFOLDER"] : $_POST["FOLDER"];
 $page=RemoveSpaces($_POST["SHORTPAGENAME"]);
 $newpagename="$folder/$page";

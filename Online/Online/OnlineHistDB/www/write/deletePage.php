@@ -1,10 +1,13 @@
+<?
+ include '../util.php';
+$conn=HistDBconnect(1);
+?>
 <HTML>
  <HEAD>
  <LINK REL=STYLESHEET TYPE="text/css" HREF="styles_screen.css">
-</HEAD><?
- include '../util.php';
+</HEAD>
+<?
  if ($_POST["Confirm"]) {
-   $conn=HistDBconnect(1);
    $page=$_POST["PAGETODELETE"];
    
    $command="begin :out := OnlineHistDB.DeletePage('${page}'); end;";$stid = OCIParse($conn,$command);

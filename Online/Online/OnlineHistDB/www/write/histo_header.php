@@ -1,12 +1,13 @@
+<?php 
+include '../util.php'; include '../dbforms.php'; 
+$conn=HistDBconnect(1);
+?>
 <HTML>
  <HEAD>
 <LINK REL=STYLESHEET TYPE="text/css" HREF="../styles_screen.css">
  </HEAD>
 <body>
 <?php 
-include '../util.php'; include '../dbforms.php'; 
-$conn=HistDBconnect(1);
-
 function update_histo_header() {
   global $conn;
 

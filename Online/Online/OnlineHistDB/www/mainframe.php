@@ -1,7 +1,18 @@
-<? if(isset($_POST["DBLogin"])) {
-  setcookie("user",strtoupper($_POST["user"]),time()+30000);
-  setcookie("password",$_POST["password"],time()+30000);
-  setcookie("histdb",$_POST["database"],time()+30000);
+<? 
+  session_start();
+  if(isset($_POST["DBLogin"])) {
+  $_SESSION["user"] = strtoupper($_POST["user"]);
+  $_SESSION["password"] = $_POST["password"];
+  $_SESSION["histdb"] = $_POST["database"];
+
+  $cookie = md5 (
+    $_SESSION["user"] .
+    $_SESSION["password"] .
+    $_SESSION["histdb"] .
+    $_SESSION['REMOTE_ADDR'] .
+    "lhcbsalt"
+ );
+  setcookie("login",$cookie);
 }
 include 'util.php';
 ?>
