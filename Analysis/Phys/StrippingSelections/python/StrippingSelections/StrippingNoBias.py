@@ -19,27 +19,31 @@ for i in [ 'LoKiTrigger.decorators' ] :
 #The following 4 lines use Random trigger decoded with the ODIN
 #-----------------------------------------------------------------
 RandomBeam1Line  = StrippingLine( "RandomBeam1Line"
-				  , ODIN = 'ODIN_BXTYP == LHCb.ODIN.Beam1'
+				  #, ODIN = '(ODIN_BXTYP == LHCb.ODIN.Beam1 ) '
+                                  , ODIN = '(ODIN_BXTYP == LHCb.ODIN.Beam1 ) & (ODIN_TRGTYP == LHCb.ODIN.LumiTrigger) '
                                   , checkPV = False
                                   , prescale = 1
                                   , postscale = 1)
 
 #-----------------------------------------------------------------
 RandomBeam2Line  = StrippingLine( "RandomBeam2Line"
-                                   , ODIN =  'ODIN_BXTYP == LHCb.ODIN.Beam2'
+                                  # , ODIN =  '(ODIN_BXTYP == LHCb.ODIN.Beam2)'
+				  , ODIN = '(ODIN_BXTYP == LHCb.ODIN.Beam2 ) & (ODIN_TRGTYP == LHCb.ODIN.LumiTrigger) '
                                   , checkPV = False
                                   , prescale =1
                                   , postscale = 1)
 
 #-----------------------------------------------------------------
 RandomNoBeamLine  = StrippingLine("RandomNoBeamLine"
-				   , ODIN = 'ODIN_BXTYP == LHCb.ODIN.NoBeam'
+				  # , ODIN = '(ODIN_BXTYP == LHCb.ODIN.NoBeam) '
+				  , ODIN = '(ODIN_BXTYP == LHCb.ODIN.NoBeam ) & (ODIN_TRGTYP == LHCb.ODIN.LumiTrigger) '	
                                   , checkPV = False
 				  , prescale =1
                                   , postscale = 1)
 #-----------------------------------------------------------------
 RandomBeamCrossingLine  = StrippingLine ("RandomBeamCrossingLine"
-					  ,ODIN = 'ODIN_BXTYP == LHCb.ODIN.BeamCrossing'
+					 # ,ODIN = ' (ODIN_BXTYP == LHCb.ODIN.BeamCrossing)'
+				         , ODIN = '(ODIN_BXTYP == LHCb.ODIN.BeamCrossing) & (ODIN_TRGTYP == LHCb.ODIN.LumiTrigger) ' 		
                                          , checkPV = False
                                          , prescale =1
                                          , postscale = 1)

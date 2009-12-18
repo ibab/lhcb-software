@@ -16,7 +16,8 @@ for i in [ 'LoKiTrigger.decorators' ] :
 #----------------------------------------------------------------------
 #Here we require at least one  reconstructed best track in the event 
 
-TrackFilter = VoidFilter('TrackFilter', Code = "TrSOURCE('Rec/Track/Best') >>(TrSIZE > 0 ) ")
+
+TrackFilter = VoidFilter('TrackFilter', Code = "TrSOURCE('Rec/Track/Best') >>(TrSIZE )>1 ")
 
 #Tracking information line
 TrackLine = StrippingLine( "TrackLine" 
@@ -34,17 +35,10 @@ VertexLine = StrippingLine( "VertexLine"
                                          , prescale = 1
                                          , postscale = 1 )
 
-
-#----------------------------------------------------------------------
-TrackingRequirementLine = StrippingLine ( "TrackingRequirementLine" 
-					, prescale = 1 
-					, algos = [ TrackFilter , VertexFilter ]
-					, postscale =1 
-					, checkPV = False )
 #----------------------------------------------------------------------
 L0MinBiasLine = StrippingLine( "L0MinBiasLine" 
                                 , L0DU = "L0_CHANNEL('CALO')"
-			       , checkPV = False
+                               , checkPV = False
                                , prescale = 1
                                , postscale = 1)
 

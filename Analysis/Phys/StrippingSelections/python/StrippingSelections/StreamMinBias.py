@@ -11,12 +11,11 @@ from StrippingSelections import StrippingMiniBias
 from StrippingSelections import StrippingNoBias 
 from StrippingSelections.StrippingPass import StrippingPassConf
 
-stream = StrippingStream("MinBias")
+stream = StrippingStream("MiniBias")
 
-stream.appendLines( [ StrippingMiniBias.TrackingRequirementLine, 
+stream.appendLines( [ StrippingMiniBias.TrackLine,
+		      StrippingMiniBias.VertexLine, 
                       StrippingMiniBias.L0MinBiasLine , 
-                      StrippingMiniBias.TrackLine , 
-                      StrippingMiniBias.VertexLine , 
                       StrippingNoBias.RandomBeam1Line,
                       StrippingNoBias.RandomBeam2Line,
                       StrippingNoBias.RandomNoBeamLine,
