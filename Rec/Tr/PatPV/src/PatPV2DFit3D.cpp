@@ -1,9 +1,11 @@
-// $Id: PatPV2DFit3D.cpp,v 1.2 2009-12-03 08:49:06 pmorawsk Exp $
+// $Id: PatPV2DFit3D.cpp,v 1.3 2009-12-18 19:37:37 graven Exp $
 // Include files
 
 // from Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
+
 
 // from gsl
 #include "gsl/gsl_math.h"
@@ -55,29 +57,19 @@ StatusCode PatPV2DFit3D::initialize() {
   debug() << "==> Initialize" << endmsg;
 
 
-  //== Get Velo detector element, to get the R sector angle
-  DeVelo* velo = getDet<DeVelo>( DeVeloLocation::Default );
-
-  std::vector<double> dum( 8, 0. );
-  m_phiOfSector = dum;  // make it 8 words..
-
-  //== First R sensor
-  std::vector<DeVeloRType*>::const_iterator sensorRIt = velo->rSensorsBegin();
-
-  for (unsigned int izone = 0; izone<4; izone++) {
-    m_phiOfSector[izone] = 0.5*((*sensorRIt)->phiMinZone(izone)
-                                + (*sensorRIt)->phiMaxZone(izone) );
-    m_phiOfSector[izone+4] = m_phiOfSector[izone] + M_PI;
-  };
-  Gaudi::XYZPoint localZero(0.,0.,0.);
-  for (int iSens = 0; iSens < 2; iSens++){
-    int sensNo = iSens*40;
-    m_boxOffsetLeft[iSens]  = velo->rSensor(sensNo  )->veloHalfBoxToGlobal(localZero) - localZero;
-    m_boxOffsetRight[iSens] = velo->rSensor(sensNo+1)->veloHalfBoxToGlobal(localZero) - localZero;
-    m_zLeft[iSens]  = velo->rSensor(sensNo  )->z();
-    m_zRight[iSens] = velo->rSensor(sensNo+1)->z();
-  }
   addTracks(100);
+
+  // subscribe to the updatemanagersvc with a dependency on the magnetic field svc
+  IUpdateManagerSvc* updMgrSvc = svc<IUpdateManagerSvc>("UpdateManagerSvc", true);
+  DeVelo* velo = getDet<DeVelo>( DeVeloLocation::Default );
+  updMgrSvc->registerCondition( this,velo,&PatPV2DFit3D::updateVelo);
+  // initialize with the current conditions
+  if (!updMgrSvc->update(this)) {
+    err() << "error when requesting update from UpdateManagerSvc" << endmsg;
+    return  StatusCode::FAILURE;
+  }
+
+
 
   // Access PVSeedTool
   m_pvSeedTool = tool<IPVSeeding>( "PVSeedTool", this );
@@ -260,3 +252,33 @@ StatusCode PatPV2DFit3D::finalize() {
 }
 
 //=============================================================================
+
+StatusCode PatPV2DFit3D::updateVelo() {
+
+  debug() << "updating Velo position" << endmsg;
+
+  //== Get Velo detector element, to get the R sector angle
+  DeVelo* velo = getDet<DeVelo>( DeVeloLocation::Default );
+
+  std::vector<double> dum( 8, 0. );
+  m_phiOfSector = dum;  // make it 8 words..
+
+  //== First R sensor
+  std::vector<DeVeloRType*>::const_iterator sensorRIt = velo->rSensorsBegin();
+
+  for (unsigned int izone = 0; izone<4; izone++) {
+    m_phiOfSector[izone] = 0.5*((*sensorRIt)->phiMinZone(izone)
+                                + (*sensorRIt)->phiMaxZone(izone) );
+    m_phiOfSector[izone+4] = m_phiOfSector[izone] + M_PI;
+  };
+  Gaudi::XYZPoint localZero(0.,0.,0.);
+  for (int iSens = 0; iSens < 2; iSens++){
+    int sensNo = iSens*40;
+    m_boxOffsetLeft[iSens]  = velo->rSensor(sensNo  )->veloHalfBoxToGlobal(localZero) - localZero;
+    m_boxOffsetRight[iSens] = velo->rSensor(sensNo+1)->veloHalfBoxToGlobal(localZero) - localZero;
+    m_zLeft[iSens]  = velo->rSensor(sensNo  )->z();
+    m_zRight[iSens] = velo->rSensor(sensNo+1)->z();
+    debug()<< "offset" << sensNo << " " << m_boxOffsetLeft[iSens] << " " << m_boxOffsetRight[iSens] << endmsg;
+  }
+  return StatusCode::SUCCESS;
+}

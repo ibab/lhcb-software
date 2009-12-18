@@ -4,6 +4,10 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+
+! 2009-12-18 - Gerhard Raven
+ - register for updates of Velo position in PatPV2DFit3D
+
 !============================= PatPV v3r11p1 2009-12-16 ======================
 
 ! 2009-12-16 - Mariusz Witek

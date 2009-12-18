@@ -1,4 +1,4 @@
-// $Id: PatPV2DFit3D.h,v 1.3 2009-12-03 12:21:21 pkoppenb Exp $
+// $Id: PatPV2DFit3D.h,v 1.4 2009-12-18 19:37:37 graven Exp $
 #ifndef PATPV2DFIT3D_H
 #define PATPV2DFIT3D_H 1
 
@@ -29,9 +29,10 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
+private:
 
   void addTracks(int n);
+  StatusCode updateVelo();
 
 private:
   // steering parameters for PV reconstruction
