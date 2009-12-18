@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-12-18 - Anton Poluektov
+ - added StrippingPass - the pass-through lines (all events and all non-lumi events) 
+   with configurable prescales. Both are in MinBias stream. 
+
 ! 2009-12-17 - Patrick Koppenburg
  - StrippingBu2LLK : fix typo in MuMuK Line
 
