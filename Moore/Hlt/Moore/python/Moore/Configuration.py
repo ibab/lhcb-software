@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.99 2009-12-11 19:09:45 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.100 2009-12-18 10:23:28 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -337,6 +337,32 @@ class Moore(LHCbConfigurableUser):
         # make sure gen is the very first Top algorithm...
         from HltLine.HltDecodeRaw import DecodeODIN
         ApplicationMgr().TopAlg = DecodeODIN.members() + [ gen.getFullName() ] + ApplicationMgr().TopAlg
+        def genConfigAction() :
+            def gather( c, overrule ) :
+                    def check(config,prop,value) :
+                        return prop in config.getDefaultProperties() and hasattr(config,prop) and getattr(config,prop) == value 
+                    def addOverrule(config,rule):
+                        if c.name() not in overrule.keys() :
+                           overrule[c.name()] = []     
+                        if rule not in overrule[c.name()] :
+                           overrule[c.name()] += [ rule ]
+
+                    if check(c,'HistoProduce',False) :
+                        addOverrule(c,'HistoProduce:@OnlineEnv.Monitor@False')
+                    if check(c,'Enable',False) :
+                        addOverrule(c,'OutputLevel:3')
+                    for p in [ 'Members','Filter0','Filter1' ] :
+                        if not hasattr(c,p) : continue
+                        x = getattr(c,p)
+                        if list is not type(x) : x = [ x ]
+                        for i in x : gather(i,overrule) 
+            from Configurables import HltGenConfig,GaudiSequencer
+            HltGenConfig().Overrule = { 'Hlt1ODINTechnicalPreScaler' : [ 'AcceptFraction:@OnlineEnv.AcceptRate@0' ] }
+            gather( GaudiSequencer('Hlt'), HltGenConfig().Overrule )
+            print HltGenConfig()
+
+        from Gaudi.Configuration import appendPostConfigAction
+        appendPostConfigAction( genConfigAction )
 
     def _l0(self) :
         #from Configurables import L0DUFromRawAlg

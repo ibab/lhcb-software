@@ -2,6 +2,11 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+!========================== Moore v8r4 2009-12-18 ===================
+! 2009-12-18 - Gerhard Raven
+ - move genConfig overrule setup from options/generateConfig.py into Configuration.py,
+   remove generateConfig.py
+
 ! 2009-12-11 - Gerhard Raven
  - add options RequireRoutingBits and VetoRoutingBits
  - clean up DB snapshot handling
