@@ -23,9 +23,6 @@ class StrippingPassConf(LHCbConfigurableUser):
     
 	props = self.getProps()
 
-	print "PassLine props:"
-	print props
-
 	from StrippingConf.StrippingLine import StrippingLine
 	return StrippingLine( "PassLine" , checkPV = False 
                                      , prescale = props['PassPrescale'] )
@@ -39,9 +36,6 @@ class StrippingPassConf(LHCbConfigurableUser):
 
 	props = self.getProps()
 	
-	print "PhysLine props:"
-	print props
-
 	from StrippingConf.StrippingLine import StrippingLine
 	return StrippingLine( "PhysLine" , checkPV = False
 				     , prescale = props['PhysPrescale']

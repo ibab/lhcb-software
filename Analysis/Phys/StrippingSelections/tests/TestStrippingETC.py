@@ -6,15 +6,20 @@
 #
 
 from Gaudi.Configuration import *
-from StrippingConf.Configuration import StrippingConf
-
-from StrippingSelections.Streams import allStreams
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 #
 # Stripping job configuration
 #
+
+from StrippingSelections.StrippingPass import StrippingPassConf
+
+StrippingPassConf().PassPrescale = 0.1
+StrippingPassConf().PhysPrescale = 0.1
+
+from StrippingSelections.Streams import allStreams
+from StrippingConf.Configuration import StrippingConf
 
 sc = StrippingConf( Streams = allStreams )
 
@@ -33,7 +38,7 @@ from Configurables import DaVinci
 
 DaVinci().appendToMainSequence( [ sc.sequence() ] )   # Append the stripping selection sequence to DaVinci
 DaVinci().appendToMainSequence( [ tag ] )             # Append the TagCreator to DaVinci
-DaVinci().EvtMax = 5000                        # Number of events
+DaVinci().EvtMax = 100                        # Number of events
 DaVinci().ETCFile = "etc.root"                 # ETC file name
 
 #importOptions("$STRIPPINGSELECTIONSROOT/tests/2008-InclBJpsiMuMu.py")     # Data file
