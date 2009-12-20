@@ -1,4 +1,4 @@
- // $Id: MuonMeasurementProvider.cpp,v 1.9 2009-12-18 22:04:25 svecchi Exp $
+ // $Id: MuonMeasurementProvider.cpp,v 1.10 2009-12-20 09:52:55 svecchi Exp $
 
 /** @class MuonMeasurementProvider MuonMeasurementProvider.cpp
  *
@@ -278,7 +278,7 @@ void MuonMeasurementProvider::recomputePos(std::vector<double> data,
   double sum=0.,sum2=0.;
   std::vector<double>::iterator ip,previp;
   double step=0;
-  int i,j;
+  unsigned int i,j;
   for (i=0 ; i < data.size(); ++i) {   
     step=error[i];
     bool prendila=true;
@@ -314,7 +314,7 @@ void MuonMeasurementProvider::recomputePos(
                                            ) const {
   int np=0;
   double sum=0.,sum2=0.;
-  int i,j;
+  unsigned int i,j;
   
   double step_z=70; //mm chamber dimension
   double step_x =0;
