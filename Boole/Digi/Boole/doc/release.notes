@@ -10,8 +10,10 @@ Purpose: LHCb Digitization program
  - Changes to requirements:
    . Add VeloPixAlgorithms and VeloPixAssociators
 
- - Changes to references to reflect changes in Boole v20r0 output:
+ - Changes to references to reflect changes in Boole v20r1 output:
    . Follow changes in sequence names
+   . Fix to untested StatusCodes (VeloAlgorithms v5r1)
+   . Monitoring of failed associations (VeloAlgorithms v5r1)
 
 </PRE><H1><A NAME=v20r0>2009-12-07 Boole v20r0</A></H1></PRE>
  - Changes to Configurable:
