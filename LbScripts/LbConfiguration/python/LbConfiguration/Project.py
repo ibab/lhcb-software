@@ -1,6 +1,9 @@
 """ general configuration for projects """
 #@PydevCodeAnalysisIgnore
 
+from LbConfiguration.Platform import binary_list
+
+import logging
 import sys
 import os
 
@@ -171,6 +174,33 @@ def getProject(projectname):
         return pj
     else:
         raise ProjectConfException, "No such project configuration"
+
+def getTarBallName(projectname, version, cmtconfig=None):
+    """ contruct the tarball name from the components """
+    filename = None
+    log = logging.getLogger()
+    proj = projectname.upper()
+    if proj in [x.upper() for x in project_names] :
+        if cmtconfig :
+            if cmtconfig in binary_list :
+                filename = "%s_%s_%s_%s.tar.gz" % (proj, proj, version, cmtconfig)
+            else :
+                log.error("the CMTCONFIG value %s is not known" % cmtconfig)
+        else :
+            filename = "%s_%s_%s.tar.gz" % (proj, proj, version)
+    else :
+        log.error("%s is not a known project" % projectname)
+    if filename :
+        log.debug("The tarball name is %s" % filename)
+    return filename
+
+
+def getInfoFromTarBall(filename):
+    """ Extract the project name, the version and the cmtconfig from the filename """
+    projectname = None
+    version = None
+    cmtconfig = None
+    return (projectname, version, cmtconfig)
 
 # create static instance of the project configuration with the correct name
 for _pn in project_names:

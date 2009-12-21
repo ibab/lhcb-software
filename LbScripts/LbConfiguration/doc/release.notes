@@ -1,3 +1,7 @@
+2009-12-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* tests/ProjectTest.py: added test case for the tarball name scheme.
+
 2009-12-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Version.py: added the function sortStrings that sorts a list of
