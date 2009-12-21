@@ -177,6 +177,13 @@
               ss &lt;&lt; " z " &lt;&lt; v.position().z();
               ss &lt;&lt; " chi2 " &lt;&lt; v.chi2();
               ss &lt;&lt; " ndf " &lt;&lt; v.nDoF();
+              const Gaudi::SymMatrix3x3 &amp; cov = v.covMatrix();   
+              ss &lt;&lt; " cov xx " &lt;&lt; cov[0][0];
+              ss &lt;&lt; " yy " &lt;&lt; cov[1][1];
+              ss &lt;&lt; " zz " &lt;&lt; cov[2][2];
+              ss &lt;&lt; " xy " &lt;&lt; cov[0][1];
+              ss &lt;&lt; " xz " &lt;&lt; cov[0][2];
+              ss &lt;&lt; " yz " &lt;&lt; cov[1][2];
               ss &lt;&lt; std::endl;
 	      }	      
           }
