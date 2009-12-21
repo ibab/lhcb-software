@@ -1,5 +1,5 @@
 """ LHCb version style definition and massaging """
-# $Id: Version.py,v 1.3 2009-12-17 20:28:17 hmdegaud Exp $
+# $Id: Version.py,v 1.4 2009-12-21 16:29:10 hmdegaud Exp $
 
 import re
 
@@ -58,7 +58,7 @@ class CoreVersion:
         return self._version
 
 
-def sortVersions(versionlist, versiontype=CoreVersion, safe=False):
+def sortVersions(versionlist, versiontype=CoreVersion, safe=False, reverse=False):
     if not safe :
         vlist = [ versiontype(x) for x in versionlist ]
     else :
@@ -70,6 +70,8 @@ def sortVersions(versionlist, versiontype=CoreVersion, safe=False):
                 continue
             vlist.append(v)
     vlist.sort()
+    if reverse :
+        vlist.reverse()
     return [ x.name() for x in vlist]
 
 def extractVersion(strname, versiontype=CoreVersion):
@@ -80,11 +82,13 @@ def extractVersion(strname, versiontype=CoreVersion):
     return result
 
 
-def sortStrings(strlist, versiontype=CoreVersion, safe=False):
+def sortStrings(strlist, versiontype=CoreVersion, safe=False, reverse=False):
     versionlist = [ (extractVersion(s, versiontype=versiontype), s) for s in strlist ]
     if safe :
         versionlist = [ t for t in versionlist if t[0]]
     versionlist.sort()
+    if reverse :
+        versionlist.reverse()
     return [ x[1] for x in versionlist ]
         
     

@@ -65,6 +65,7 @@ class VersionTestCase(unittest.TestCase):
         vlist = ["v1r0","v1r1","v0r","v2r0",None,"v1r0p0"]
         self.assertRaises(NotAVersion, sortVersions, vlist)
         self.assertTrue(sortVersions(vlist, safe=True) == ["v1r0", "v1r0p0", "v1r1", "v2r0"])
+        self.assertTrue(sortVersions(vlist, safe=True, reverse=True) == ["v2r0", "v1r1", "v1r0p0", "v1r0"])
 
     def testExtract(self):
         v1 = "wwe/GAUDI_v1r2.tar.gz"
@@ -79,6 +80,8 @@ class VersionTestCase(unittest.TestCase):
         self.assertRaises(AttributeError, sortStrings, vlist)
         self.assertEqual(sortStrings(vlist, safe=True), 
                                      ["GAUDI_v0r0", "v1r0", "wwe/GAUDI_v1r2.tar.gz", "ddv2r0"])
+        self.assertEqual(sortStrings(vlist, safe=True, reverse=True), 
+                                     ["ddv2r0", "wwe/GAUDI_v1r2.tar.gz", "v1r0", "GAUDI_v0r0"])
 
         
 if __name__ == '__main__':
