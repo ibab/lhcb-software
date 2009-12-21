@@ -68,6 +68,7 @@ class ProjectConf(ProjectBaseConf):
         self._applicationpackage = projectname
         self._extraexe = {}
         self._basename = ""
+        self._tarballname = "_".join([self.NAME(), self.NAME()])
         self.enableSetenvAlias()
         self.enableSetupAlias()
     def setCMTExtraTags(self, taglist):
@@ -148,6 +149,20 @@ class ProjectConf(ProjectBaseConf):
     def ExtraExe(self):
         """ return the list of extra executable used for the build """
         return self._extraexe
+    def tarBallName(self, version=None, cmtconfig=None, full=False):
+        log = logging.getLogger()
+        tbname = self._tarballname
+        if version :
+            tbname += "_%s" % version
+            if cmtconfig :
+                tbname += "_%s" % cmtconfig
+                if cmtconfig not in binary_list :
+                    log.error("the CMTCONFIG value %s is not known" % cmtconfig)
+            if full :
+                tbname += ".tar.gz"
+
+        return tbname
+    
     def __str__(self):
         """ return string representation for printing """
         rep = super(ProjectConf, self).__str__()
@@ -162,7 +177,7 @@ class ProjectConf(ProjectBaseConf):
 project_list = []
 for _proj in project_names:
     project_list.append(ProjectConf(_proj))
-del _proj
+del _proj#IGNORE:W0631
 
 def getProject(projectname):
     """ return the static instance of the project configuration by name """
@@ -175,21 +190,15 @@ def getProject(projectname):
     else:
         raise ProjectConfException, "No such project configuration"
 
+def getProjectList():
+    return project_list
+
 def getTarBallName(projectname, version, cmtconfig=None):
     """ contruct the tarball name from the components """
     filename = None
     log = logging.getLogger()
-    proj = projectname.upper()
-    if proj in [x.upper() for x in project_names] :
-        if cmtconfig :
-            if cmtconfig in binary_list :
-                filename = "%s_%s_%s_%s.tar.gz" % (proj, proj, version, cmtconfig)
-            else :
-                log.error("the CMTCONFIG value %s is not known" % cmtconfig)
-        else :
-            filename = "%s_%s_%s.tar.gz" % (proj, proj, version)
-    else :
-        log.error("%s is not a known project" % projectname)
+    proj = getProject(projectname)
+    filename = proj.tarBallName(version, cmtconfig, full=True)
     if filename :
         log.debug("The tarball name is %s" % filename)
     return filename
@@ -205,7 +214,7 @@ def getInfoFromTarBall(filename):
 # create static instance of the project configuration with the correct name
 for _pn in project_names:
     setattr(sys.modules[__name__], _pn, getProject(_pn))
-del _pn
+del _pn#IGNORE:W0631
 
 # ------------------------------------------------------------------------------------
 

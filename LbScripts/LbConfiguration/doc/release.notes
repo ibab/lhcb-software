@@ -1,5 +1,7 @@
 2009-12-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbConfiguration/External.py: added external_projects and lcg_projects.
+	* python/LbConfiguration/Project.py: added the tarball name as a method of ProjectConf.
 	* python/LbConfiguration/Package.py: New file. New module which contains
 	the data package configurations.
 	* tests/PackageTest.py: New file. Test file for Package.py
