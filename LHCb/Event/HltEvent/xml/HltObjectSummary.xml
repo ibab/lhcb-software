@@ -159,7 +159,7 @@
         <code>
           std::vector&lt;std::string&gt; names;
           Info::const_iterator it = m_numericalInfo.begin();
-          while ( it != m_numericalInfo.end()) names.push_back((it++)->first);
+          while ( it != m_numericalInfo.end()) names.push_back((it++)-&gt;first);
           return names;
         </code>
       </method>
@@ -173,7 +173,7 @@
           std::vector&lt;std::string&gt; names;
           Info nif = numericalInfoFlattened();
           Info::const_iterator it = nif.begin();
-          while ( it != nif.end()) names.push_back((it++)->first);
+          while ( it != nif.end()) names.push_back((it++)-&gt;first);
           return names;
         </code>
       </method>
@@ -193,19 +193,19 @@
 
          ss &lt;&lt; " numericalInfo : { ";
 	 for( Info::const_iterator i=numericalInfo().begin();i!=numericalInfo().end();++i){
-	     ss &lt;&lt; i->first &lt;&lt; ":" &lt;&lt; i->second &lt;&lt; " , ";
+	     ss &lt;&lt; i-&gt;first &lt;&lt; ":" &lt;&lt; i-&gt;second &lt;&lt; " , ";
          }
          ss &lt;&lt; " } ";
 
          ss &lt;&lt; " substructure : { ";
 	 for( SmartRefVector &lt; LHCb::HltObjectSummary &gt;::const_iterator j=substructure().begin();j!=substructure().end();++j){
-	     ss &lt;&lt;  (*j)->index() &lt;&lt; ":" &lt;&lt; (*j)->summarizedObjectCLID() &lt;&lt; " , ";
+	     ss &lt;&lt;  (*j)-&gt;index() &lt;&lt; ":" &lt;&lt; (*j)-&gt;summarizedObjectCLID() &lt;&lt; " , ";
          }
          ss &lt;&lt; " } ";
 
          ss &lt;&lt; " lhcbIDs : { ";
 	 for( std::vector &lt; LHCb::LHCbID  &gt;::const_iterator k=lhcbIDs().begin();k!=lhcbIDs().end();++k){
-	     ss &lt;&lt;  k->lhcbID() &lt;&lt; " , ";
+	     ss &lt;&lt;  k-&gt;lhcbID() &lt;&lt; " , ";
          }
          ss &lt;&lt; " } ";
 
@@ -236,6 +236,7 @@
       <import name='GaudiKernel/VectorMap' />
       <import name='Event/HltObjectSummary' />
       <import name='vector' std='TRUE' />
+      <import name='boost/format.hpp' />
 
       <typedef
         type   = 'GaudiUtils::VectorMap&lt; std::string, LHCb::HltObjectSummary &gt;'
@@ -261,7 +262,7 @@
         <code>
     Container::const_iterator rep = m_selReports.find(selectionName);
     if( rep==m_selReports.end() )return ((const LHCb::HltObjectSummary*)(0));
-    return &amp;(rep->second);
+    return &amp;(rep-&gt;second);
         </code>
       </method>
 
@@ -288,7 +289,7 @@
         <code>
     std::vector&lt;std::string&gt; names;
     Container::const_iterator it = m_selReports.begin();
-    while ( it != m_selReports.end()) names.push_back((it++)->first);
+    while ( it != m_selReports.end()) names.push_back((it++)-&gt;first);
     return names;
         </code>
       </method>
@@ -355,6 +356,114 @@
         </code>
       </method>
 
+      <!-- utility to search for all selections to which given summarized candidate belongs to -->
+
+      <method 
+         name='selectedAsCandidateBy'
+         type='std::vector &lt; std::string &gt;'
+         argList = 'const LHCb::HltObjectSummary* selectedCandidate'
+         desc='returns names of all selections in the report to which the given summarized candidate belongs to (must be among top level objects of the selection)'
+         const = 'TRUE' >
+        <code>
+     std::vector &lt; std::string &gt; selNamesV;
+     for( HltSelReports::Container::const_iterator i=m_selReports.begin();i!=m_selReports.end();++i){
+        const SmartRefVector&lt;LHCb::HltObjectSummary&gt; &amp; candidates = i-&gt;second.substructure(); 
+        for( SmartRefVector&lt;LHCb::HltObjectSummary&gt;::const_iterator iObj = candidates.begin();
+                       iObj != candidates.end(); ++iObj ){
+          if( iObj-&gt;target() == selectedCandidate ){             
+	    selNamesV.push_back( i-&gt;first );
+            break;
+          }
+        }          
+     }
+     return selNamesV;
+        </code>
+      </method>
+
+
+      <!-- name of primary vertex selection associated with given trigger selection -->
+
+      <method 
+         name='pvSelectionName'
+         type='std::string'
+         argList = 'const std::string selectionName'
+         desc='returns name of Primary Vertex selection used in cuts employed for given trigger selection name ("" if none or not saved)'
+         const = 'TRUE' >
+        <code>
+    const LHCb::HltObjectSummary* summaryOfSelection = selReport(selectionName);
+    if( !summaryOfSelection )return std::string("");
+    const HltObjectSummary::Info &amp; nInfo = summaryOfSelection-&gt;numericalInfo();
+    for( HltObjectSummary::Info::const_iterator i=nInfo.begin();i!=nInfo.end();++i){
+         const std::string &amp; nInfoKey = i-&gt;first;
+         if( nInfoKey.substr(0,3) == "10#" ){
+	     return nInfoKey.substr(3);
+         }
+    }	     
+    return std::string("");
+        </code>
+      </method>
+       
+      <!-- key of primary vertex (in PV container) used in selection of the given summarized object -->
+
+      <method 
+         name='pvKey'
+         type='int'
+         argList = 'const std::string selectionName, const LHCb::HltObjectSummary* selectedCandidate'
+         desc='returns key of the Primary Vertex in its container used in selection of the given summarized candidate (=-3 illegal selection,=-2 illegal candi.=-1 if none or not saved)'
+         const = 'TRUE' >
+        <code>    
+    const LHCb::HltObjectSummary* summaryOfSelection = selReport(selectionName);
+    if( !summaryOfSelection )return int(-3);
+    // make sure that the candidate in fact in this selection
+    const SmartRefVector&lt;LHCb::HltObjectSummary&gt; &amp; candidates = summaryOfSelection-&gt;substructure(); 
+    int iKey(0);
+    for( SmartRefVector&lt;LHCb::HltObjectSummary&gt;::const_iterator iObj = candidates.begin();
+                       iObj != candidates.end(); ++iObj,++iKey ){
+         if( iObj-&gt;target() == selectedCandidate ){             
+             const HltObjectSummary::Info &amp; nInfo = summaryOfSelection-&gt;numericalInfo();
+             for( HltObjectSummary::Info::const_iterator i=nInfo.begin();i!=nInfo.end();++i){
+                const std::string &amp; nInfoKey = i-&gt;first;
+                if( nInfoKey.substr(0,3) == "10#" ){
+	            std::string pvSelectionName = nInfoKey.substr(3);
+                    // now unpack the key	     	     
+                    int j = iKey / 4;
+                    int inj = iKey -j*4;
+                    std::stringstream ss;
+                    ss &lt;&lt; "11#" &lt;&lt; boost::format("%1$=08X") % j;
+		    if( nInfo.find( ss.str() )!= nInfo.end() ){
+                        union IntFloat { unsigned int mInt; float mFloat; };
+                        IntFloat a; 
+			a.mFloat = nInfo( ss.str() );
+                        unsigned int pWord = a.mInt;
+                        return int( ( (pWord &gt;&gt; inj*8 ) &amp; 255 ) );
+                    }
+                    return int(0); // that means all keys were ==0
+                }
+             }
+             return int(-1);
+         }
+    }
+    return int(-2);
+        </code>
+      </method>
+       
+      <!-- name of primary vertex selection and PV key used in selection of the given summarized object -->
+
+      <method 
+         name='pvSelectionNameAndKey'
+         type='std::pair&lt; std::string, int &gt;'
+         argList = 'const LHCb::HltObjectSummary* selectedCandidate'
+         desc='returns name of PV selection and PV key used in selection of the given summarized candidate. Goes via 1st candidate selection found. ("",-1 if none).'
+         const = 'TRUE' >
+        <code>    
+   std::vector&lt;std::string&gt; selectedBy = selectedAsCandidateBy(selectedCandidate);
+   if( selectedBy.size() ){
+      return std::pair&lt;std::string,int&gt;( pvSelectionName(selectedBy[0]),pvKey(selectedBy[0],selectedCandidate) );
+   }
+   return std::pair&lt;std::string,int&gt;( "",-1 );
+        </code>
+      </method>
+
       <!-- readable printout -->
 
       <method
@@ -368,8 +477,8 @@
           ss &lt;&lt; " HltSelReports : { "  &lt;&lt; std::endl;
           for(Container::const_iterator i=m_selReports.begin();
                                         i!=m_selReports.end(); ++i){
-           ss &lt;&lt; " selectionName :	" &lt;&lt; i->first
-              &lt;&lt; " HltObjectSummary :	" &lt;&lt; i->second 
+           ss &lt;&lt; " selectionName :	" &lt;&lt; i-&gt;first
+              &lt;&lt; " HltObjectSummary :	" &lt;&lt; i-&gt;second 
               &lt;&lt; std::endl;
           }
           ss &lt;&lt; " }" &lt;&lt; std::endl;
