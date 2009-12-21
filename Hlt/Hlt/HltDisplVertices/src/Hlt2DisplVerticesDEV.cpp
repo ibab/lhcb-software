@@ -54,11 +54,12 @@ Hlt2DisplVerticesDEV::Hlt2DisplVerticesDEV(const std::string& name,
   declareProperty("InputDisplacedVertices", m_InputDisplVertices = 
                   "Rec/Vertices/Hlt2RV");
   declareProperty("MinNbTracks", m_MinNbtrks = 0 );
-  declareProperty("RMin", m_RMin = 0.4 );
-  declareProperty("MinMass1", m_MinMass1 = 9*GeV );
-  declareProperty("MinMass2", m_MinMass2 = 4*GeV );
-  declareProperty("MinSumpt1", m_MinSumpt1 = 9*GeV );
-  declareProperty("MinSumpt2", m_MinSumpt2 = 4*GeV );
+  declareProperty("RMin1", m_RMin1 = 0.5 );
+  declareProperty("RMin2", m_RMin2 = 0.3 );
+  declareProperty("MinMass1", m_MinMass1 = 6.5*GeV );
+  declareProperty("MinMass2", m_MinMass2 = 2*GeV );
+  declareProperty("MinSumpt1", m_MinSumpt1 = 6*GeV );
+  declareProperty("MinSumpt2", m_MinSumpt2 = 2*GeV );
   declareProperty("RemVtxFromDet", m_RemVtxFromDet = 1*mm  );
 }
 
@@ -81,32 +82,36 @@ StatusCode Hlt2DisplVerticesDEV::initialize() {
     debug() << "No backward tracks"<< endmsg;
     debug() << "the upstream RV will be disguarded"<< endmsg;
     debug() << "Min number of tracks           "<< m_MinNbtrks << endmsg;
-    debug() << "Min radial displacement        "<< m_RMin <<" mm";
-    if( m_RCutMethod == "LocalVeloFrame" )
-      debug() << ", computed with respect to (0,0,z) in the local Velo frame" 
-	      << endmsg; 
-    else if( m_RCutMethod == "FromUpstreamPV" ){
-      debug() << ", computed with respect to the upstream PV" << endmsg;
-    } else if( m_RCutMethod == "FromUpstreamPV3D" ){
-      debug() << ", computed with respect to the upstream PV from PatPV3D" 
-	      << endmsg;
-    } else if( m_RCutMethod == "CorrFromUpstreamPV" ){
-      debug() << ", computed with respect to the upstream PV"
-	      <<" Take the position of the associated 2D RV, if any."<< endmsg;
-    } else {
-      debug() << ", computed with respect to (0,0,z) in the global LHCb frame" 
-	      << endmsg;
-    }
     debug() << "For single prey hunting :"<< endmsg;
+    debug() << "Min radial displacement        "<< m_RMin1 <<" mm"<< endmsg;
     debug() << "Min reconstructed mass         "<< m_MinMass1/GeV 
 	    <<" GeV"<< endmsg;
     debug() << "Min sum of all daughter tracks "<< m_MinSumpt1/GeV 
 	    <<" GeV"<< endmsg;
     debug() << "For double prey hunting :"<< endmsg;
+    debug() << "Min radial displacement        "<< m_RMin2 <<" mm"<< endmsg;
     debug() << "Min reconstructed mass         "<< m_MinMass2/GeV 
 	    <<" GeV"<< endmsg;
     debug() << "Min sum of all daughter tracks "<< m_MinSumpt2/GeV
 	    <<" GeV"<< endmsg;
+    debug()<< "The radial displacement is ";
+    if( m_RCutMethod == "LocalVeloFrame" )
+      debug() << "computed with respect to (0,0,z) in the local Velo frame." 
+	      << endmsg; 
+    else if( m_RCutMethod == "FromUpstreamPV" ){
+      debug() << "computed with respect to the upstream PV of PV3D." << endmsg;
+    } else if( m_RCutMethod == "FromUpstreamPVOpt" ){
+      debug() << "computed with respect to the upstream rec vertex." 
+	      << endmsg;
+    } else if( m_RCutMethod == "CorrFromUpstreamPV" ){
+      debug() << "computed with respect to the upstream PV"
+	      <<" Take the position of the associated 2D RV, if any."<< endmsg;
+    } else {
+      debug() << "computed with respect to (0,0,z) in the global LHCb frame" 
+	      << endmsg;
+      debug()<< "THIS OPTION SHOULD NOT BE USED ON REAL DATA !!" 
+             << endmsg;
+    }
     debug() << "------------------------------------"<< endmsg;
   }
 
@@ -128,6 +133,13 @@ StatusCode Hlt2DisplVerticesDEV::initialize() {
              <<"This is non-sense !"<< endmsg;
     return StatusCode::FAILURE;
   }
+  if( m_RMin2 > m_RMin1 ){
+    warning()<<"RMin2 set to a bigger value than RMin1 : "	
+             << m_RMin2 <<"<"<< m_RMin1 
+             <<"This is non-sense !"<< endmsg;
+    return StatusCode::FAILURE;
+  }
+
 
   //Get the pion mass
   const ParticleProperty* Ppion = ppSvc()->find( "pi+" );
@@ -259,8 +271,8 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
 
     double R;
     if( m_RCutMethod == "FromUpstreamPV" || 
-	m_RCutMethod == "FromUpstreamPV3D" ||
-	m_RCutMethod == "CorrFromUpstreamPV3D" ){
+        m_RCutMethod == "FromUpstreamPVOpt" ||
+        m_RCutMethod == "CorrFromUpstreamPV" ){
       R = (RV->position() - UpPV).rho();
     } else {
       R = Pos.rho();
@@ -298,9 +310,11 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
 
 
     //Criterias
-    if( !InDet && R >= m_RMin ){
-      if( Ms.back() >= m_MinMass1 && sumpt >= m_MinSumpt1 ) Sel1++;
-      if( Ms.back() >= m_MinMass2 && sumpt >= m_MinSumpt2 ) Sel2++;
+    if( !InDet ){
+      if( R >= m_RMin1 && Ms.back() >= m_MinMass1 && sumpt >= m_MinSumpt1 ) 
+        Sel1++;
+      if( R >= m_RMin2 && Ms.back() >= m_MinMass2 && sumpt >= m_MinSumpt2 ) 
+        Sel2++;
     }
   }    
 

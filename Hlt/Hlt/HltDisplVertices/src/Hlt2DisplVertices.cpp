@@ -41,11 +41,12 @@ Hlt2DisplVertices::Hlt2DisplVertices(const std::string& name,
                   "Hlt/Vertices/Hlt2RV");
   declareProperty("RCutMethod", m_RCutMethod = "FromUpstreamPV" );
   declareProperty("MinNbTracks", m_MinNbtrks = 0 );
-  declareProperty("RMin", m_RMin = 0.4 );
-  declareProperty("MinMass1", m_MinMass1 = 9*GeV );
-  declareProperty("MinMass2", m_MinMass2 = 4*GeV );
-  declareProperty("MinSumpt1", m_MinSumpt1 = 9*GeV );
-  declareProperty("MinSumpt2", m_MinSumpt2 = 4*GeV );
+  declareProperty("RMin1", m_RMin1 = 0.5 );
+  declareProperty("RMin2", m_RMin2 = 0.3 );
+  declareProperty("MinMass1", m_MinMass1 = 6.5*GeV );
+  declareProperty("MinMass2", m_MinMass2 = 2*GeV );
+  declareProperty("MinSumpt1", m_MinSumpt1 = 6*GeV );
+  declareProperty("MinSumpt2", m_MinSumpt2 = 2*GeV );
   declareProperty("RemVtxFromDet", m_RemVtxFromDet = 1*mm  );
 }
 
@@ -63,37 +64,36 @@ StatusCode Hlt2DisplVertices::initialize() {
   if (!sc) return sc;
 
   if(msgLevel(MSG::DEBUG)){
-    debug() << "==> Initialize" << endmsg;
-    debug() << "---------------- CUTS on RecVertex --------------"<< endmsg;
-    debug() << "No backward tracks"<< endmsg;
-    debug() << "the upstream RV will be disguarded"<< endmsg;
-    debug() << "Min number of tracks           "<< m_MinNbtrks << endmsg;
-    debug() << "Min radial displacement        "<< m_RMin <<" mm";
-    if( m_RCutMethod == "LocalVeloFrame" )
-      debug() << ", computed with respect to (0,0,z) in the local Velo frame" 
-	      << endmsg; 
-    else if( m_RCutMethod == "FromUpstreamPV" ){
-      debug() << ", computed with respect to the upstream PV" << endmsg;
-    } else if( m_RCutMethod == "FromUpstreamPV3D" ){
-      debug() << ", computed with respect to the upstream PV from PatPV3D" 
-	      << endmsg;
-    } else if( m_RCutMethod == "CorrFromUpstreamPV" ){
-      debug() << ", computed with respect to the upstream 2D PV." 
-	      <<" Take the position of the associated 2D RV, if any."<< endmsg;
-    } else {
-      debug() << ", computed with respect to (0,0,z) in the global LHCb frame" 
-	      << endmsg;
-    }
+    debug()<< "==> Initialize" << endmsg;
+    debug()<< "---------------- CUTS on RecVertex --------------"<< endmsg;
+    debug()<< "No backward tracks"<< endmsg;
+    debug()<< "the upstream RV will be disguarded"<< endmsg;
+    debug()<< "Min number of tracks           "<< m_MinNbtrks << endmsg;
     debug() << "For single prey hunting :"<< endmsg;
+    debug() << "Min radial displacement        "<< m_RMin1 <<" mm"<< endmsg;
     debug() << "Min reconstructed mass         "<< m_MinMass1/GeV 
 	    <<" GeV"<< endmsg;
     debug() << "Min sum of all daughter tracks "<< m_MinSumpt1/GeV 
 	    <<" GeV"<< endmsg;
     debug() << "For double prey hunting :"<< endmsg;
+    debug() << "Min radial displacement        "<< m_RMin2 <<" mm"<< endmsg;
     debug() << "Min reconstructed mass         "<< m_MinMass2/GeV 
 	    <<" GeV"<< endmsg;
     debug() << "Min sum of all daughter tracks "<< m_MinSumpt2/GeV
 	    <<" GeV"<< endmsg;
+    debug()<< "The radial displacement is ";
+    if( m_RCutMethod == "FromUpstreamPV" ){
+      debug()<< "computed with respect to the upstream PV of PV3D." 
+             << endmsg;
+    } else if( m_RCutMethod == "FromUpstreamPVOpt" ){
+      debug()<< "computed with respect to the upstream rec vertex." 
+             << endmsg;
+    } else {
+      debug()<< "computed with respect to (0,0,z) in the global LHCb frame" 
+             << endmsg;
+      debug()<< "THIS OPTION SHOULD NOT BE USED ON REAL DATA !!" 
+             << endmsg;
+    }
     debug() << "------------------------------------"<< endmsg;
   }
 
@@ -110,8 +110,14 @@ StatusCode Hlt2DisplVertices::initialize() {
 
   //Sanity checks
   if( m_MinMass2 > m_MinMass1 ){
-    warning()<<"MinMass2 set to a value smaller than MinMass1 : "	
+    warning()<<"MinMass2 set to a bigger value than MinMass1 : "	
              << m_MinMass2 <<"<"<< m_MinMass1 
+             <<"This is non-sense !"<< endmsg;
+    return StatusCode::FAILURE;
+  }
+  if( m_RMin2 > m_RMin1 ){
+    warning()<<"RMin2 set to a bigger value than RMin1 : "	
+             << m_RMin2 <<"<"<< m_RMin1 
              <<"This is non-sense !"<< endmsg;
     return StatusCode::FAILURE;
   }
@@ -119,25 +125,6 @@ StatusCode Hlt2DisplVertices::initialize() {
   //Get the pion mass
   const ParticleProperty* Ppion = ppSvc()->find( "pi+" );
   m_piMass = Ppion->mass();
-
-  //get the Velo geometry
-  if( m_RCutMethod == "LocalVeloFrame" ){
-    string velo = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/Velo";
-    const IDetectorElement* lefthalv = getDet<IDetectorElement>( velo+"Left" );
-    const IDetectorElement* righthalv = 
-      getDet<IDetectorElement>( velo + "Right" );
-    const IGeometryInfo* halfgeominfo = lefthalv->geometry();
-    //check that Velo is closed
-    Gaudi::XYZPoint localorigin(0,0,0);
-    Gaudi::XYZPoint leftcenter = lefthalv->geometry()->toGlobal(localorigin);
-    Gaudi::XYZPoint rightcenter = righthalv->geometry()->toGlobal(localorigin);
-    if( abs(leftcenter.x() - rightcenter.x())> 0.1 *Gaudi::Units::mm ) {
-      info() << "Velo not closed, work in global frame" << endmsg;
-     m_RCutMethod == "";
-    }
-    //matrix to transform to local velo frame
-    m_toVeloFrame = halfgeominfo->toLocalMatrix() ;
-  }
 
   return StatusCode::SUCCESS;
 };
@@ -170,12 +157,11 @@ StatusCode Hlt2DisplVertices::execute() {
 
   //Retrieve the RecVertex from PV official reconstruction
   RecVertex::ConstVector PVs;
-  if( m_RCutMethod=="FromUpstreamPV" || m_RCutMethod=="CorrFromUpstreamPV" ){
+  if( m_RCutMethod=="FromUpstreamPV" ){
     const RecVertex::Container * PVc = desktop()-> primaryVertices();
     int size = PVc->size();
     if(msgLevel(MSG::DEBUG))
       debug()<<"Retrieved "<< size <<" primary vertices" << endmsg;
-    plot( size, "NbPV", 0, 6);
     if( PVc->empty() ) return StatusCode::SUCCESS;
     for( RecVertex::Container::const_iterator i = PVc->begin(); 
          i != PVc->end(); ++i ){
@@ -193,10 +179,10 @@ StatusCode Hlt2DisplVertices::execute() {
   //Let's loop on the RecVertex
   RecVertices::const_iterator iRV = RVs->begin(); 
   Gaudi::XYZPoint UpPV;
-  if( m_RCutMethod=="FromUpstreamPV" || m_RCutMethod=="CorrFromUpstreamPV" ){
+  if( m_RCutMethod=="FromUpstreamPV" ){
     UpPV = (*PVs.begin())->position();
     if(msgLevel(MSG::DEBUG))
-      debug() <<"Upstream 2D RV position "<< UpPV << endmsg;
+      debug() <<"Upstream PV position "<< UpPV << endmsg;
   } else {
     UpPV = (*iRV)->position();
   }
@@ -208,7 +194,7 @@ StatusCode Hlt2DisplVertices::execute() {
     if(msgLevel(MSG::DEBUG)) 
       debug()<<"Rec Vertex position "<< RV->position() << endmsg;
 
-    if( ( m_RCutMethod == "FromUpstreamPV"  || m_RCutMethod=="CorrFromUpstreamPV" ) && RV->position().z() < UpPV.z() ){
+    if( ( m_RCutMethod == "FromUpstreamPV" ) && RV->position().z() < UpPV.z() ){
       if(msgLevel(MSG::DEBUG))
 	debug() <<"RV z position comes before the upstream 2D RV," 
 		<<" not considered !"<< endmsg;
@@ -217,16 +203,12 @@ StatusCode Hlt2DisplVertices::execute() {
 
     //Check if RV is radially displaced
     double R;
-    if( m_RCutMethod == "CorrFromUpstreamPV3D" || 
-        m_RCutMethod == "FromUpstreamPV3D" ||
-        m_RCutMethod == "FromUpstreamPV" ){
+    if( m_RCutMethod == "FromUpstreamPV" || 
+        m_RCutMethod == "FromUpstreamPVOpt" ){
       R = (RV->position() - UpPV).rho();
-    } else if( m_RCutMethod == "LocalVeloFrame" ){
-      Gaudi::XYZPoint localPV = m_toVeloFrame * RV->position();
-      R = localPV.rho();
     } else { R = RV->position().rho(); }
     
-    if( R < m_RMin ){
+    if( R < m_RMin2 ){
       if(msgLevel(MSG::DEBUG))
         debug() <<"RV has an insufficent radial displacement !"<< endmsg;
       continue;
@@ -237,15 +219,6 @@ StatusCode Hlt2DisplVertices::execute() {
       if(msgLevel(MSG::DEBUG))
         debug() <<"RV has a backward track, not considered !"<< endmsg;
       continue;
-    }
-
-    //Eventually correct the position of 3D RV with associated 2D ones.
-    if( m_RCutMethod == "CorrFromUpstreamPV" && 
-        ( GetCorrPosition( RV, PVs ) - UpPV).rho() < m_RMin ){
-      if(msgLevel(MSG::DEBUG))
-        debug() <<"Corr RV has an insufficent radial displacement !"<< endmsg;
-      continue;
-
     }
 
     //Retrieve Particles corresponding to vertices
@@ -270,7 +243,7 @@ StatusCode Hlt2DisplVertices::execute() {
 
     //Criterias
     if( !InDet ){
-      if( mass >= m_MinMass1 && sumpt >= m_MinSumpt1 ) Sel1++;
+      if( R > m_RMin1 && mass >= m_MinMass1 && sumpt >= m_MinSumpt1 ) Sel1++;
       Sel2++;
     }
   }    
@@ -389,63 +362,6 @@ void Hlt2DisplVertices::Kinematics( Particle::ConstVector & Parts,
   mass = mom.M();
 }
 
-//============================================================================
-// If can find an associated 2D RV return the 2D RV  
-//============================================================================
-Gaudi::XYZPoint Hlt2DisplVertices::GetCorrPosition( const RecVertex* RV, 
-						        RecVertex::ConstVector & PVs ){
-
-  /// sort the 2D with ascending dZ : begin with 2DRV closest in z.
-  SortPVdz.refz = RV->position().z();
-  sort( PVs.begin(), PVs.end(), SortPVdz);
-
-  //look if I can find an associated 2D RV to this one
-  int com = 0;
-
-  //Let's put in a vector all VeloR ancestors of our 3D RV
-  vector<const Track*> RVolds;
-  for( SmartRefVector<Track>::const_iterator it = RV->tracks().begin(); 
-       it != RV->tracks().end(); ++it ){
-    if( (*it)->ancestors().empty() ) continue;
-    SmartRefVector<Track>::const_iterator ioldtk=(*it)->ancestors().begin();
-    RVolds.push_back( ioldtk->target() );
-  }
-  vector<const Track*>::const_iterator tbeg = RVolds.begin();
-  vector<const Track*>::const_iterator tend = RVolds.end();
-  vector<const Track*>::const_iterator tRV;
-
-
-  //loop on PVs
-  for( RecVertex::ConstVector::const_iterator iRV = PVs.begin(); 
-       iRV != PVs.end(); ++iRV ){
-    com = 0;
-
-    //loop on the 2D RV's tracks
-    for( SmartRefVector<Track>::const_iterator it = 
-	   (*iRV)->tracks().begin(); it != (*iRV)->tracks().end(); ++it ){
-
-      //Check if track is in the 3D RV
-      tRV = tbeg;
-      while( tRV != tend ){
-	if( (*tRV) == it->target() ){
-	  ++com;
-	  break;
-	}
-	++tRV;
-      }
-      if( com > 3 ){
-	if(msgLevel(MSG::DEBUG)) 
-	  debug()<<"3D RV position "<< RV->position() 
-		 <<" has been associated with 2D RV position "
-		 << (*iRV)->position() << endmsg;
-	return (*iRV)->position();
-      }
-    }
-  }
-  
-  return RV->position();
-}
-
 //=============================================================================
 //  Loop on the daughter track to see if there is a backward track
 //=============================================================================
@@ -487,7 +403,6 @@ bool Hlt2DisplVertices::RemVtxFromDet( const RecVertex* RV ){
       return false; 
     } 
     int size = path.size();
-    plot( size, "NbofDetV", 0, 5 );
     if(msgLevel(MSG::DEBUG))
       debug()<<"Found "<< size <<" physical volumes related to point "
              << RV->position() <<endmsg;
@@ -525,7 +440,6 @@ bool Hlt2DisplVertices::RemVtxFromDet( const RecVertex* RV ){
     double radlength = m_transSvc->distanceInRadUnits
       ( start, end, 1e-35, dum, m_lhcbGeo );
 
-    plot( radlength, "RVRadLength", 0, 0.01);
     if(msgLevel(MSG::DEBUG)){
       debug()<<"Radiation length from "<< start <<" to "
              << end <<" : "<< radlength 

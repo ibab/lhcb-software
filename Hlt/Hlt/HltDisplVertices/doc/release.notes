@@ -4,11 +4,15 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
-!========================== HltDisplVertices v1r3 2009-11-30 ===================
+
+! 2009-Dec-21 - Neal Gauvin
+ - Remove explicit use of the Velo geometry and obsolete options
+
+!========================== HltDisplVertices v1r3 2009-11-30 ==================
 ! 2009-Nov-26 - Neal Gauvin
  - Retrieve PVs from the desktop + fix details
 
-!========================== HltDisplVertices v1r2 2009-11-15 ===================
+!========================== HltDisplVertices v1r2 2009-11-15 ==================
 ! 2009-Nov-15 - Gerhard Raven
  - fix one more compiler warning
 
@@ -22,11 +26,11 @@
 - add RCutMethod method, see Hlt2DisplVertices.h 
   I propose to update the version to v2r0
 
-!========================== HltDisplVertices v1r1p1 2009-10-17 =================
+!========================== HltDisplVertices v1r1p1 2009-10-17 ================
 ! 2009-10-17 - Gerhard Raven
  - add .cvsignore in cmt directory
 
-!========================== HltDisplVertices v1r1 2009-07-29 ===================
+!========================== HltDisplVertices v1r1 2009-07-29 ==================
 ! 2009-07-29 - Neal Gauvin (Gueissaz)
  - Fix for windows
 

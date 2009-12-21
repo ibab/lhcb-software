@@ -94,7 +94,8 @@ private:
   bool m_Save;  // save info in tuples
   bool m_DefMom; // work with default pion when no long tracks
   int m_MinNbtrks;     //min number of daughters tracks in a RecVertex
-  double m_RMin;          //min radial displacement 
+  double m_RMin1;          //min radial displacement 
+  double m_RMin2;          //min radial displacement 
   double m_MinMass1;       //min reconstructed mass
   double m_MinMass2;       //min reconstructed mass
   double m_MinSumpt1;      //min sum of all daughters track
