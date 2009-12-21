@@ -1,8 +1,12 @@
 !-----------------------------------------------------------------------------
 ! Package     : Event/HltEvent
-! Responsible : Jose A. Hernando
+! Responsible : Tomasz Skwarnicki
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
+
+! 2009-12-21 - Tomasz Skwarnicki
+ - new access methods in HltSelReports to deal with PV info
+ - print cov matrix in HltVertexReport printout 
 
 !======================== HltEvent v8r19 2009-11-13 ==========================
 ! 2009-11-13 - Marco Cattaneo

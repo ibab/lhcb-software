@@ -1,9 +1,9 @@
 #============================================================================
 # Created    : 2005-02-10
-# Maintainer : Jose Hernando
+# Maintainer : Tomasz Skwarnicki
 #============================================================================
 package           HltEvent
-version           v8r19
+version           v9r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
