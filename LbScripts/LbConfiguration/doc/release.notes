@@ -1,5 +1,8 @@
 2009-12-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbConfiguration/Package.py: New file. New module which contains
+	the data package configurations.
+	* tests/PackageTest.py: New file. Test file for Package.py
 	* python/LbConfiguration/Version.py: added reverse version sorting.
 	* tests/ProjectTest.py: added test case for the tarball name scheme.
 
