@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-----------------------------------------------------------------------------
 
+! 2009-12-21 - Tomasz Skwarnicki
+ - add selected-by and PV info to verbose printout in HltSelReportsDecoder
+
 !========================== HltDAQ v1r2 2009-11-27 ===========================
 ! 2009-11-26 - Tomasz Skwarnicki
  - HltVertexReportsWriter,Decoder: save covariance matrix in HltVertexReports 

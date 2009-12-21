@@ -1,4 +1,4 @@
-// $Id: HltSelReportsDecoder.cpp,v 1.2 2009-11-26 13:06:07 tskwarni Exp $
+// $Id: HltSelReportsDecoder.cpp,v 1.3 2009-12-21 19:14:56 tskwarni Exp $
 // Include files 
 #include "boost/format.hpp"
 
@@ -571,9 +571,21 @@ StatusCode HltSelReportsDecoder::execute() {
     for( HltObjectSummary::Container::const_iterator ppHos=objectSummaries->begin();
          ppHos!=objectSummaries->end();++ppHos){
       const HltObjectSummary* pHos=*ppHos;    
-      verbose() << " key " << pHos->index() << *pHos << endmsg;    
+      verbose() << " key " << pHos->index();
+      std::vector<std::string> selby = outputSummary->selectedAsCandidateBy(pHos);
+      if( selby.size() ){
+        verbose() << " selectedAsCandidateBy= ";       
+        for( std::vector<std::string>::const_iterator i=selby.begin();i!=selby.end();++i){
+          verbose() << *i << " ";
+        }
+        std::pair<std::string,int> pvInfo = outputSummary->pvSelectionNameAndKey(pHos);
+        if( pvInfo.second > -1 ){
+          verbose() << " pvSelectionName= " << pvInfo.first << " pvKey= " << pvInfo.second << " ";
+        }
+      }     
+      verbose() << *pHos << endmsg;    
     }
-   
+    
   }
 
  return StatusCode::SUCCESS;
