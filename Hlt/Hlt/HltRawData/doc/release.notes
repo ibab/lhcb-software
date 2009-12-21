@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.51 2009-12-02 11:00:46 pkoppenb Exp $
+!$Id: release.notes,v 1.52 2009-12-21 19:04:23 tskwarni Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+! 2009-12-21 - Tomasz Skwarnicki
+ - fix bug in saving PV keys in HltSelReportsMaker; add PVs to verbose printout
 
 !========================== HltRawData v2r2 2009-11-30 ===================
 ! 2009-12-01 - Tomasz Skwarnicki
