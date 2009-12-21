@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.94 2009-12-11 11:04:29 pkoppenb Exp $
+$Id: release.notes,v 1.95 2009-12-21 10:58:17 ngueissa Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,9 @@ $Id: release.notes,v 1.94 2009-12-11 11:04:29 pkoppenb Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2009-12-21 - neal Gauvin
+ - update slots of Hlt2DisplVerticesLines according to update of HltDisplVertices
 
 !========================== Hlt2Lines v2r1 2009-12-11 ===================
 ! 2009-12-03 - Johannes Albrecht

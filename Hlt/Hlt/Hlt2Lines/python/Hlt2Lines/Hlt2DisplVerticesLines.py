@@ -36,11 +36,12 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
     
     __slots__ = {  "MinNbTracks"   : 0
                 ,  "RCutMethod"    : "FromUpstreamPV"
-                ,  "RMin"          : 0.4 * units.mm
-                ,  "MinMass1"      : 9*units.GeV
-                ,  "MinMass2"      : 4*units.GeV
-                ,  "MinSumpt1"      : 9.*units.GeV
-                ,  "MinSumpt2"      : 4.*units.GeV
+                ,  "RMin1"         : 0.5 * units.mm
+                ,  "RMin2"         : 0.3 * units.mm
+                ,  "MinMass1"      : 6.5*units.GeV
+                ,  "MinMass2"      : 2*units.GeV
+                ,  "MinSumpt1"     : 6.*units.GeV
+                ,  "MinSumpt2"     : 2.*units.GeV
                 ,  "RemVtxFromDet" : 1*units.mm
                 }
     
@@ -51,6 +52,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltANNSvc
         from Configurables import PatPV3D, PVOfflineTool, PVSeed3DTool, LSAdaptPV3DFitter, Hlt2DisplVertices, Hlt2DisplVerticesDEV
         from Hlt2SharedParticles.BasicParticles import NoCutsPions
+        from HltLine.HltReco import PV3D
         
         # Run PatPV3D
         Hlt2PatPV3D = PatPV3D("Hlt2DisplVerticesV3D")
@@ -71,7 +73,8 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2LineDisplVertices.InputDisplacedVertices = Hlt2PatPV3D.OutputVerticesName 
         Hlt2LineDisplVertices.MinNbTracks = self.getProp('MinNbTracks')
         Hlt2LineDisplVertices.RCutMethod = self.getProp('RCutMethod')
-        Hlt2LineDisplVertices.RMin = self.getProp('RMin')
+        Hlt2LineDisplVertices.RMin1 = self.getProp('RMin1')
+        Hlt2LineDisplVertices.RMin2 = self.getProp('RMin2')
         Hlt2LineDisplVertices.MinMass1 = self.getProp('MinMass1')
         Hlt2LineDisplVertices.MinMass2 = self.getProp('MinMass2')
         Hlt2LineDisplVertices.MinSumpt1 = self.getProp('MinSumpt1')
@@ -79,10 +82,17 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2LineDisplVertices.RemVtxFromDet = self.getProp('RemVtxFromDet')
         
         # Define the Hlt2 Line
-        line = Hlt2Line('DisplVertices'
-                        , prescale = self.prescale
-                        , algos = [ Hlt2PatPV3D, NoCutsPions, Hlt2LineDisplVertices]
-                        , postscale = self.postscale
-                        )
+        if( self.getProp('RCutMethod') == "FromUpstreamPV" ):
+            line = Hlt2Line('DisplVertices'
+                            , prescale = self.prescale
+                            , algos = [ PV3D, Hlt2PatPV3D, NoCutsPions, Hlt2LineDisplVertices]
+                            , postscale = self.postscale
+                            )
+        else :
+           line = Hlt2Line('DisplVertices'
+                            , prescale = self.prescale
+                            , algos = [ Hlt2PatPV3D, NoCutsPions, Hlt2LineDisplVertices]
+                            , postscale = self.postscale
+                            ) 
         
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesDecision" : 50280 } )
