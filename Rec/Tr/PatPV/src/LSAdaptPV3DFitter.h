@@ -1,4 +1,4 @@
-// $Id: LSAdaptPV3DFitter.h,v 1.3 2009-12-03 08:49:06 pmorawsk Exp $
+// $Id: LSAdaptPV3DFitter.h,v 1.4 2009-12-22 12:38:26 graven Exp $
 #ifndef LSADAPTPVFITTER_H
 #define LSADAPTPVFITTER_H 1
 // from Gaudi
@@ -12,8 +12,6 @@
 #include "Event/Track.h"
 #include "Event/State.h"
 #include "Event/RecVertex.h"
-// DeVelo
-#include "VeloDet/DeVelo.h"
 
 class LSAdaptPV3DFitter : public GaudiTool, virtual public IPVFitter {
 
@@ -40,7 +38,6 @@ private:
   double  m_x0MS;         // X0 (tunable) of MS to add for extrapolation of
                           // track parameters to PV
   double m_scatCons;      // calculated from m_x0MS
-  DeVelo* m_velo;
   PVTracks m_pvTracks;
 
   // Add track for PV

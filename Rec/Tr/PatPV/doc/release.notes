@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 
+! 2009-12-22 - Gerhard Raven
+ - remove unused reference to DeVelo
+
 ! 2009-12-18 - Gerhard Raven
  - register for updates of Velo position in PatPV2DFit3D
 

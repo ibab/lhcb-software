@@ -1,4 +1,4 @@
-// $Id: LSAdaptPV3DFitter.cpp,v 1.5 2009-12-03 08:49:06 pmorawsk Exp $
+// $Id: LSAdaptPV3DFitter.cpp,v 1.6 2009-12-22 12:38:26 graven Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -44,8 +44,6 @@ StatusCode LSAdaptPV3DFitter::initialize()
   double X0 = m_x0MS;
   m_scatCons = (13.6*sqrt(X0)*(1.+0.038*log(X0))) / ( 0.400 * Gaudi::Units::GeV );
 
-  //== Get Velo detector element, to get the R sector angle
-  m_velo = getDet<DeVelo>( DeVeloLocation::Default );
   return StatusCode::SUCCESS;
 }
 
