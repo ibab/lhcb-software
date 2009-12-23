@@ -4,6 +4,9 @@
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
 
+! 2009-12-23 - Gerhard Raven
+ - move #include around to facilitate HltBase/stringKey -> GaudiKernel/StringKey migration
+
 !========================== HltMuon v3r5p2 2009-11-21 ===================
 ! 2009-11-18 - Dmitry Golubkov
  - HltMuonRec.cpp: small bugfix in the muon station counting

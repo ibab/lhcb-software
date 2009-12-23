@@ -3,7 +3,7 @@
 # Maintainer : Mariusz Witek
 #============================================================================
 package           HltEcalAlley
-version           v2r3
+version           v2r3p1
 
 # Structure, i.e. directories to process. 
 #============================================================================

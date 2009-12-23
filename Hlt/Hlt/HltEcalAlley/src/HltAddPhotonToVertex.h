@@ -1,11 +1,11 @@
-// $Id: HltAddPhotonToVertex.h,v 1.2 2008-07-31 11:55:52 graven Exp $
+// $Id: HltAddPhotonToVertex.h,v 1.3 2009-12-23 10:55:22 graven Exp $
 #ifndef HLTADDPHOTONTOVERTEX_H 
 #define HLTADDPHOTONTOVERTEX_H 1
 
 // Include files
 // from Gaudi
-#include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltSelectionContainer.h"
+#include "HltBase/HltAlgorithm.h"
 
 /** @class HltAddPhotonToVertex HltAddPhotonToVertex.h
  *  

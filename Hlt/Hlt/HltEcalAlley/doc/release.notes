@@ -4,6 +4,9 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+! 2009-12-23 - Gerhard Raven
+ - move #include around to facilitate HltBase/stringKey -> GaudiKernel/StringKey migration ||
+
 !========================== HltEcalAlley v2r3 2009-12-03 ===================
 ! 2009-12-01 - Mariusz Witek
  - partial Calo decoding switched back
