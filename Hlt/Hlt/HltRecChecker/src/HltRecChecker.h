@@ -1,10 +1,10 @@
-// $Id: HltRecChecker.h,v 1.5 2008-07-30 13:38:48 graven Exp $
+// $Id: HltRecChecker.h,v 1.6 2009-12-23 15:03:36 graven Exp $
 #ifndef HLTRECCHECKER_H 
 #define HLTRECCHECKER_H 1
 
 // Include files
-#include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltSelectionContainer.h"
+#include "HltBase/HltAlgorithm.h"
 #include "Event/MCParticle.h"
 
 /** @class HltRecChecker HltRecChecker.h

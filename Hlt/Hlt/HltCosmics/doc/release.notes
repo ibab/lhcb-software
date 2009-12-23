@@ -3,6 +3,9 @@
 ! Responsible : Stephan Nies 
 ! Purpose     : Cosmic run specific algorithms and tools
 !----------------------------------------------------------------------------
+! 2009-12-23 - Gerhard Raven
+ - move #include around to facilitate HltBase/stringKey -> GaudiKernel/StringKey migration 
+
 
 !========================== HltCosmics v1r0p1 2009-10-17 =================
 ! 2009-10-17 - Gerhard Raven

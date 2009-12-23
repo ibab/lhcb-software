@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.42 2009-11-13 11:51:55 pkoppenb Exp $
+!$Id: release.notes,v 1.43 2009-12-23 15:05:58 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltL0MuonConf
 ! Responsible : Alessia Satta
 ! Purpose     : Matching of Muon object (L0 or Muon segment) to T station
 !-----------------------------------------------------------------------------
+
+! 2009-12-23 - Gerhard Raven
+ - move #include around to facilitate HltBase/stringKey -> GaudiKernel/StringKey migration 
 
 !========================== HltL0MuonConf v3r7p1 2009-11-13 ===================
 ! 2009-10-29 - Patrick Koppenburg

@@ -1,10 +1,10 @@
-// $Id: HltCosmicsOT.h,v 1.1.1.1 2009-09-08 16:12:28 snies Exp $
+// $Id: HltCosmicsOT.h,v 1.2 2009-12-23 15:07:41 graven Exp $
 #ifndef INCLUDE_HLTCOSMICSOT_H
 #define INCLUDE_HLTCOSMICSOT_H 1
 
 #include <string>
 
-//#include "GaudiAlg/GaudiAlgorithm.h"
+#include "HltBase/HltSelectionContainer.h"
 #include "HltBase/HltAlgorithm.h"
 #include "OTDAQ/IOTRawBankDecoder.h"
 
@@ -27,13 +27,9 @@
  */
 
 
-//class HltCosmicsOT : public GaudiAlgorithm {
-
-#include "HltBase/HltSelectionContainer.h"
-
 class HltCosmicsOT : public HltAlgorithm {
 
-    public:
+public:
 
 	/// Standard Constructor
 	HltCosmicsOT(const std::string& name, ISvcLocator* pSvcLocator);
@@ -44,11 +40,10 @@ class HltCosmicsOT : public HltAlgorithm {
 	virtual StatusCode    execute(); ///< Algorithm event execution
 	virtual StatusCode   finalize(); ///< Algorithm finalize
 
-    protected:
 
 
-    private:
-        Hlt::SelectionContainer0 m_selections;
+private:
+    Hlt::SelectionContainer0 m_selections;
 
 	/// decoder so that we can ask quickly if there were any hits
 	IOTRawBankDecoder* m_otdecoder;

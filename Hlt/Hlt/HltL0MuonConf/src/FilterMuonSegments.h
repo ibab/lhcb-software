@@ -1,11 +1,11 @@
-// $Id: FilterMuonSegments.h,v 1.4 2008-12-19 17:34:24 graven Exp $
+// $Id: FilterMuonSegments.h,v 1.5 2009-12-23 15:05:58 graven Exp $
 #ifndef FILTERMUONSEGMENTS_H 
 #define FILTERMUONSEGMENTS_H 1
 
 // Include files
 // from Gaudi
-#include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltSelectionContainer.h"
+#include "HltBase/HltAlgorithm.h"
 
 /** @class FilterMuonSegments FilterMuonSegments.h
  *  

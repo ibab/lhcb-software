@@ -3,6 +3,8 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
+! 2009-12-23 - G. Raven
+ - move #include around to facilitate HltBase/stringKey -> GaudiKernel/StringKey migration
 
 !========================== HltRecChecker v1r11p1 2009-10-28 ===================
 ! 2009-10-25 - G. Raven

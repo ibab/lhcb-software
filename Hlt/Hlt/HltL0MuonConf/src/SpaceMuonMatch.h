@@ -1,11 +1,11 @@
-// $Id: SpaceMuonMatch.h,v 1.7 2008-07-30 13:42:04 graven Exp $
+// $Id: SpaceMuonMatch.h,v 1.8 2009-12-23 15:05:58 graven Exp $
 #ifndef SPACEMUONMATCH_H 
 #define SPACEMUONMATCH_H 1
 
 // Include files
 // from Gaudi
-#include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltSelectionContainer.h"
+#include "HltBase/HltAlgorithm.h"
 #include "HltBase/IMatchTVeloTracks.h"
 
 /** @class SpaceMuonMatch SpaceMuonMatch.h
