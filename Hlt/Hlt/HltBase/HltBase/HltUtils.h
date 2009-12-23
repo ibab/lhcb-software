@@ -107,7 +107,7 @@ namespace HltUtils
   double VertexMaxPT(const LHCb::RecVertex& vertex);
 
   inline double matchIDsFraction(const LHCb::Track& tref, 
-                          const LHCb::Track& track) {
+                                 const LHCb::Track& track) {
       return (tref.lhcbIDs().empty()) ? 0. :
                  double(tref.nCommonLhcbIDs( track) )/
                  double(tref.lhcbIDs().size());
@@ -121,8 +121,9 @@ namespace HltUtils
     return (matchIDsFraction(treference,track) > 0.70);    
   }
   
+
   inline double closestDistanceMod(const LHCb::Track& track1,
-                            const LHCb::Track& track2) {
+                                   const LHCb::Track& track2) {
     return closestDistance(track1,track2).R();
   } 
 
@@ -133,8 +134,6 @@ namespace HltUtils
   double vertexMatchIDsFraction(const LHCb::RecVertex& vreference, 
                                 const LHCb::RecVertex& vertex);
   
-  double IPError(const LHCb::Track& track);
-
   //------------------------------------------------------------
 
   //! compute the impact parameter vector
@@ -153,11 +152,6 @@ namespace HltUtils
       Gaudi::XYZVector ip = impactParameterVector(vertex,point,direction);
       return (ip.z() < 0) ? -ip.R() : ip.R();
     }
-  
-
-  //! old parameterization of Pt error
-  double impactParameterError(double pt);
-  
   
   //------------------------------------------------------------
   

@@ -21,11 +21,13 @@ void Hlt::VertexCreator::operator() (const LHCb::Track& track1,
 double HltUtils::rImpactParameter(const RecVertex& vertex, 
                                   const Track& track)
 {
+  //WARNING: this does not hold for a generic track, only for 2D tracks...
+  //question: how does one recognize such a track???
   const State& state = track.firstState();
   double rt  = state.x();
   double phi = state.y();
-  double tr  = state.tx();
   double zt  = state.z();
+  double tr  = state.tx();
   
   const XYZPoint& p = vertex.position();
   double xv = p.x();
@@ -45,20 +47,6 @@ double HltUtils::rImpactParameter(const RecVertex& vertex,
   return (ZZ<0)? -rIP : rIP;
 }
 
-double HltUtils::IPError(const Track& track)
-{
-  
-  double invPt = 1. / track.firstState().pt();
-  
-  // units in mm
-  double m_p0 =  0.0214;
-  double m_p1 = -0.000801;
-  double m_p2 =  0.0108;
-  double m_p3 = -0.00122;
-  double m_p4 =  0.0000547;
-  
-  return  m_p0 + invPt*(m_p1 + invPt*(m_p2 + invPt*(m_p3 +invPt*m_p4)));
-}
 
 XYZVector HltUtils::closestDistance(const Track& track1, 
                                     const Track& track2) {
@@ -69,8 +57,7 @@ XYZVector HltUtils::closestDistance(const Track& track1,
   bool ok = Gaudi::Math::closestPoints( Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>(state1.position(),state1.slopes())
                                       , Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>(state2.position(),state2.slopes())
                                       , pos1, pos2);
-  if (!ok) return XYZVector(0.,0.,1.e6);
-  return pos1 - pos2;
+  return ok ? (pos1 - pos2) : XYZVector(0.,0.,1.e6);
 }
 
 XYZPoint HltUtils::closestPoint(const Track& track1, 
@@ -88,16 +75,6 @@ XYZPoint HltUtils::closestPoint(const Track& track1,
                   0.5*(pos1.z()+pos2.z()));
 }
 
-double HltUtils::impactParameterError(double pt0) 
-{
-  double pt = fabs(pt0);  
-
-  double  Constant  = 0.0539;
-  double  LogFactor = 90.41;
-  double  LogOffset = -0.655;
-  double  Exponent  = -1.498;
-  return Constant +(LogFactor*(log(pt)+LogOffset))*(pow(pt,Exponent));
-}
 
 
 double HltUtils::vertexMatchIDsFraction(const LHCb::RecVertex& vref,
