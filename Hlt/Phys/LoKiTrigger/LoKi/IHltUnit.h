@@ -1,4 +1,4 @@
-// $Id: IHltUnit.h,v 1.7 2009-12-23 11:40:18 graven Exp $
+// $Id: IHltUnit.h,v 1.8 2009-12-23 17:59:50 graven Exp $
 // ============================================================================
 #ifndef LOKI_IHLTUNIT_H 
 #define LOKI_IHLTUNIT_H 1
@@ -168,7 +168,7 @@ LoKi::IHltUnit::declareOutput
 ( const LoKi::IHltUnit::Key&    key    , 
   const LoKi::IHltUnit::Client& client ) const 
 {
-  Hlt::TSelection<T>* selection = new Hlt::TSelection<T>( stringKey(key.str()) ) ; //@ TODO: fix after stringKey -> StringKey migration
+  Hlt::TSelection<T>* selection = new Hlt::TSelection<T>( key ) ;
   StatusCode sc = this->registerOutput ( selection , client ) ;
   if ( sc.isSuccess() ) { return selection ; }                    // RETURN 
   delete selection ;

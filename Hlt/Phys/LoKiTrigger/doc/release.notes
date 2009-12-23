@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.57 2009-12-23 11:40:18 graven Exp $
+! $Id: release.notes,v 1.58 2009-12-23 17:59:50 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
@@ -10,8 +10,7 @@
    dependencies. 
  - migrate from HltBase/stringKey to GaudiKernel/StringKey
  - updates to L0Muon to track conversion to reproduce old results
- - add a few 'shims' to deal with incomplete stringKey -> StringKey 
-   migration in HltBase; @TODO: remove once migration done
+ - migrate from HltBase/stringKey to GaudiKernel/StringKey
 
 ! 2009-12-17 - Vanya BELYAEV
 

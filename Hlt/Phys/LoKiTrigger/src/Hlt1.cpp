@@ -1,4 +1,4 @@
-// $Id: Hlt1.cpp,v 1.7 2009-12-23 11:40:18 graven Exp $
+// $Id: Hlt1.cpp,v 1.8 2009-12-23 17:59:50 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -25,7 +25,7 @@ LoKi::Hlt1::TrSelection::TrSelection
   , m_selection ( selection )
 {
   Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::Track>* points to NULL!" ) ;
-  m_selName = m_selection->id().str() ; //@ TODO: fix me after stringKey -> StringKey migration
+  m_selName = m_selection->id() ;
 }
 // ============================================================================
 // constructor from the selection 
@@ -38,7 +38,7 @@ LoKi::Hlt1::TrSelection::TrSelection
   Assert ( 0 != sel , "Hlt::Selection* point to NULL!" ) ;
   m_selection = LoKi::Hlt1::Utils::cast<LHCb::Track> ( sel ) ;
   Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::Track>* points to NULL!" ) ;
-  m_selName = m_selection->id().str() ; //@ TODO: fix me after stringKey -> StringKey migration
+  m_selName = m_selection->id() ;
 }
 // ============================================================================
 // constructor from the selection 
@@ -121,7 +121,7 @@ LoKi::Hlt1::RvSelection::RvSelection
   , m_selection ( selection )
 {
   Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::RecVertex>* points to NULL!" ) ;
-  m_selName = m_selection->id().str() ; //@ TODO: fix me after stringKey -> StringKey migration
+  m_selName = m_selection->id() ;
 }
 // ============================================================================
 // constructor from the selection 
@@ -134,7 +134,7 @@ LoKi::Hlt1::RvSelection::RvSelection
   Assert ( 0 != sel , "Hlt::Selection* point to NULL!" ) ;
   m_selection = LoKi::Hlt1::Utils::cast<LHCb::RecVertex> ( sel ) ;
   Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::RecVertex>* points to NULL!" ) ;
-  m_selName = m_selection->id().str() ; //@ TODO: fix me after stringKey -> StringKey migration
+  m_selName = m_selection->id() ; 
 }
 // ============================================================================
 // constructor from the selection 
