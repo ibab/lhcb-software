@@ -1,4 +1,4 @@
-// $Id: VxMaker.cpp,v 1.2 2008-11-13 22:11:03 ibelyaev Exp $
+// $Id: VxMaker.cpp,v 1.3 2009-12-23 10:37:35 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -139,7 +139,7 @@ LoKi::Hlt1::VxMaker::VxMaker
 // ============================================================================
 LoKi::Hlt1::VxMaker::VxMaker
 ( const LoKi::Hlt1::VxMaker::TrSource& trk     , 
-  const stringKey&                     key     ) 
+  const Gaudi::StringKey&              key     ) 
   : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
   , m_track1 ( trk ) 
   , m_track2 ( trk ) 
@@ -158,7 +158,7 @@ LoKi::Hlt1::VxMaker::VxMaker
 // ============================================================================
 LoKi::Hlt1::VxMaker::VxMaker
 ( const LoKi::Hlt1::VxMaker::TrSource& trk     , 
-  const stringKey&                     key     ,
+  const Gaudi::StringKey&              key     ,
   const LoKi::Types::RVCuts&           cuts4rv ) 
   : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
   , m_track1 ( trk ) 
@@ -178,7 +178,7 @@ LoKi::Hlt1::VxMaker::VxMaker
 // ============================================================================
 LoKi::Hlt1::VxMaker::VxMaker
 ( const LoKi::Hlt1::VxMaker::TrSource& trk     , 
-  const stringKey&                     key     ,
+  const Gaudi::StringKey&              key     ,
   const LoKi::Types::TTrCuts&          cuts2tr ) 
   : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
   , m_track1 ( trk ) 
@@ -198,7 +198,7 @@ LoKi::Hlt1::VxMaker::VxMaker
 // ============================================================================
 LoKi::Hlt1::VxMaker::VxMaker
 ( const LoKi::Hlt1::VxMaker::TrSource& trk     , 
-  const stringKey&                     key     ,
+  const Gaudi::StringKey&              key     ,
   const LoKi::Types::TTrCuts&          cuts2tr ,
   const LoKi::Types::RVCuts&           cuts4rv ) 
   : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
@@ -219,7 +219,7 @@ LoKi::Hlt1::VxMaker::VxMaker
 // ============================================================================
 LoKi::Hlt1::VxMaker::VxMaker
 ( const LoKi::Hlt1::VxMaker::TrSource& trk     , 
-  const stringKey&                     key     ,
+  const Gaudi::StringKey&              key     ,
   const LoKi::Types::RVCuts&           cuts4rv ,
   const LoKi::Types::TTrCuts&          cuts2tr )
   : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 

@@ -1,4 +1,4 @@
-// $Id: IHltUnit.h,v 1.5 2009-07-12 15:59:10 ibelyaev Exp $
+// $Id: IHltUnit.h,v 1.6 2009-12-23 10:37:34 graven Exp $
 // ============================================================================
 #ifndef LOKI_IHLTUNIT_H 
 #define LOKI_IHLTUNIT_H 1
@@ -13,10 +13,10 @@
 // ============================================================================
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/IAlgorithm.h"
+#include "GaudiKernel/StringKey.h"
 // ============================================================================
 // HltBase 
 // ============================================================================
-#include "HltBase/stringKey.h"
 #include "HltBase/HltSelection.h"
 // ============================================================================
 class DataObject ;
@@ -45,7 +45,7 @@ namespace LoKi
     /// the actual type of functor 
     typedef LoKi::AuxFunBase Client ;             // the actual type of functor 
     /// the actual type of Key
-    typedef stringKey        Key    ;       // the actual type of selection key 
+    typedef Gaudi::StringKey Key    ;       // the actual type of selection key 
     // ========================================================================
   public:
     // ========================================================================

@@ -1,4 +1,4 @@
-// $Id: Hlt1.h,v 1.4 2009-07-15 16:31:47 ibelyaev Exp $
+// $Id: Hlt1.h,v 1.5 2009-12-23 10:37:34 graven Exp $
 // ============================================================================
 #ifndef LOKI_HLT1_H 
 #define LOKI_HLT1_H 1
@@ -74,7 +74,7 @@ namespace LoKi
       // ======================================================================
       /// the selection itself 
       const Hlt::TSelection<LHCb::Track>* m_selection ;
-      stringKey                           m_selName   ;
+      Gaudi::StringKey                    m_selName   ;
       // ======================================================================
     };
     // ========================================================================
@@ -109,8 +109,8 @@ namespace LoKi
       const Hlt::TSelection<LHCb::Track>* selection () const 
       { return m_selection ; }
       /// get the selection name 
-      const std::string& selName () const { return m_selName.str() ; }
-      const stringKey& output    () const { return m_selName       ; }
+      const std::string&      selName() const { return m_selName.str() ; }
+      const Gaudi::StringKey& output () const { return m_selName       ; }
       // ======================================================================
     private:
       // ======================================================================
@@ -121,7 +121,7 @@ namespace LoKi
       // ======================================================================
       /// the selection itself 
       Hlt::TSelection<LHCb::Track>* m_selection ;
-      stringKey                     m_selName   ;
+      Gaudi::StringKey              m_selName   ;
       // ======================================================================
     };
     // ========================================================================
@@ -171,7 +171,7 @@ namespace LoKi
       // ======================================================================
       /// the selection itself 
       const Hlt::TSelection<LHCb::RecVertex>* m_selection ;
-      stringKey                               m_selName   ;
+      Gaudi::StringKey                        m_selName   ;
       // ======================================================================
     };
     // ========================================================================
@@ -206,8 +206,8 @@ namespace LoKi
       const Hlt::TSelection<LHCb::RecVertex>* selection () const 
       { return m_selection ; }
       /// get the selection name 
-      const std::string& selName   () const { return m_selName.str(); }
-      const stringKey&   output    () const { return m_selName      ; }
+      const std::string&     selName() const { return m_selName.str(); }
+      const Gaudi::StringKey& output() const { return m_selName      ; }
       // ======================================================================
     private:
       // ======================================================================
@@ -218,7 +218,7 @@ namespace LoKi
       // ======================================================================
       /// the selection itself 
       Hlt::TSelection<LHCb::RecVertex>* m_selection ;
-      stringKey                         m_selName   ;
+      Gaudi::StringKey                  m_selName   ;
       // ======================================================================
     };
     // ========================================================================

@@ -1,4 +1,4 @@
-// $Id: L0Muon2Track.cpp,v 1.4 2009-03-28 13:58:48 ibelyaev Exp $
+// $Id: L0Muon2Track.cpp,v 1.5 2009-12-23 10:37:35 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -31,8 +31,8 @@ namespace Hlt
    *  Simple class which converts L0Muon candidates into "tracks" using 
    *  the special tool by Johannes albrecht 
    *  @see IMuonSeedTrack
-   *  The actual lines are stollen from 
-   *     Gerhard "The Great" Raven & Jose Angel Hernando  Morata
+   *  The actual lines are stolen from 
+   *     Gerhard Raven & Jose Angel Hernando  Morata
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2000-03-19
    */
@@ -120,7 +120,7 @@ namespace Hlt
           "The type/name of muon track maker tool (IMuonSeedTool)" ) ;
       //
       m_l0data_names.push_back (   "Muon1(Pt)" ) ;
-      m_l0data_names.push_back ( "DiMuon1(Pt)" ) ;
+      m_l0data_names.push_back (  "DiMuon(Pt)" ) ;
       declareProperty 
         ( "L0DataNames"  , 
           m_l0data_names , 
@@ -180,45 +180,64 @@ StatusCode Hlt::L0Muon2Track::execute  ()
   
   // create the container of muons/tracks and register it in TES 
   LHCb::Track::Container* muons = new LHCb::Track::Container() ;
-  put ( muons , "Hlt/Track/" + m_selection -> id () );
+  put ( muons , "Hlt/Track/" + m_selection -> id ().str() );
   
   using namespace Hlt::L0Utils ;
   
-  L0MuonCut cut ( m_L0Channel ) ;  
-  
-  if ( "AllMuon" != m_L0Channel ) 
-  {
+  L0MuonCut cut ( m_L0Channel );  
+
+  bool noMuon  = false;
+  if ( "AllMuon" != m_L0Channel ) {
     const LHCb::L0DUReport* l0 = get<LHCb::L0DUReport>( m_L0DULocation );
+    //@TODO: Cache, depending on L0 TCK
+    //@TODO: what about L0 dimuon trigger? Can we represent it by cuts on single muons?????????
     L0MuonCuts cuts ;
     StatusCode sc = Hlt::L0Utils::getL0Cuts 
       ( l0 , m_L0Channel , m_l0data_names , cuts ) ;
     Assert ( sc.isSuccess  () , "Unable to extract the proper L0MuonCuts" , sc ) ;
-    Assert ( 1 == cuts.size() , "Invalid size of L0 data!"  ) ;
-    cut = cuts.front() ;
+    noMuon = ( cuts.size() != 1 );
+    if (!noMuon) cut = cuts.front() ;
   }
+
+  if (!noMuon) {
   
-  // loop over input data 
-  for ( L0Muons::const_iterator il0 = l0muons->begin() ; 
-        l0muons->end() != il0 ; ++il0  )
-  {
-    const LHCb::L0MuonCandidate* l0muon = *il0 ;
-    // check the cut:
-    if ( !cut ( l0muon )        ) { continue ; }                     // CONTINUE 
-    // clone ?
-    if ( checkClone ( *l0muon ) ) { continue ; }                     // CONTINUE 
-    // create the track 
-    std::auto_ptr<LHCb::Track> track( new LHCb::Track() );
-    StatusCode sc = m_maker->makeTrack(*l0muon,*track);
-    if ( sc.isFailure() ) 
-    { return Error ( "Error from IMuonSeedTool" , sc ); }              // RETURN 
-    // push into containers :
-    m_selection -> push_back ( track.get()     ) ;
-    muons       -> insert    ( track.release() ) ;
+      // loop over input data 
+      for ( L0Muons::const_iterator il0 = l0muons->begin() ; 
+            l0muons->end() != il0 ; ++il0  )
+      {
+        const LHCb::L0MuonCandidate* l0muon = *il0 ;
+        debug() << "l0pt " << l0muon->pt() << " l0encodedPt " << l0muon->encodedPt()<< endmsg;
+        // check the cut:
+        if ( !cut ( l0muon )        ) { continue ; }                     // CONTINUE 
+        debug() << "l0pt " << l0muon->pt() << " l0encodedPt " << l0muon->encodedPt()<< " accept " << endmsg;
+        // clone ?
+        if ( checkClone ( *l0muon ) ) { 
+            debug() << "is clone " << endmsg;
+            continue ; 
+        }                     // CONTINUE 
+        // create the track 
+        std::auto_ptr<LHCb::Track> track( new LHCb::Track() );
+        StatusCode sc = m_maker->makeTrack(*l0muon,*track);
+        if ( sc.isFailure() ) 
+        { return Error ( "Error from IMuonSeedTool" , sc ); }              // RETURN 
+        // push into containers :
+        m_selection -> push_back ( track.get()     ) ;
+        muons       -> insert    ( track.release() ) ;
+      }
+  } else {
+
+    Warning( " L0 channel " + m_L0Channel + " does not use any known type of l0MuonCandidate?? -- no candidates converted!" , 
+             StatusCode::SUCCESS, 1 ).ignore();
+  }
+  if (msgLevel(MSG::DEBUG)) {
+     debug() << "# Input: " << l0muons->size() 
+             << " -> # Output: " << m_selection->size() << endreq;
   }
   
   counter ( "#input"  ) +=  l0muons     -> size  () ;
   counter ( "#output" ) +=  m_selection -> size  () ;
   counter ( "#accept" ) += !m_selection -> empty () ;
+  m_selection -> setDecision( !m_selection->empty() );
   
   setFilterPassed ( !m_selection->empty() ) ;
   

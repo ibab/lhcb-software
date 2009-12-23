@@ -1,9 +1,13 @@
-// $Id: LoKiTriggerDict.h,v 1.17 2009-12-17 20:18:37 ibelyaev Exp $
+// $Id: LoKiTriggerDict.h,v 1.18 2009-12-23 10:37:35 graven Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
 // ============================================================================
 // Include files
+// ============================================================================
+#include "HltBase/IHltRegister.h"
+#include "HltBase/IHltData.h"
+#include "HltBase/IHltInspector.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -25,10 +29,6 @@
 #include "LoKi/TrMatch.h"
 #include "LoKi/VxMaker.h"
 #include "LoKi/VxUpgrade.h"
-// ============================================================================
-#include "LoKi/IHltRegister.h"
-#include "LoKi/IHltData.h"
-#include "LoKi/IHltInspector.h"
 // ============================================================================
 #include "LoKi/Hlt1Functions.h"
 #include "LoKi/Hlt1Wrappers.h"

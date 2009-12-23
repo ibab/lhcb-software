@@ -1,4 +1,4 @@
-// $Id: HltUnit.cpp,v 1.7 2009-07-15 16:31:47 ibelyaev Exp $
+// $Id: HltUnit.cpp,v 1.8 2009-12-23 10:37:35 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -78,7 +78,7 @@ StatusCode LoKi::HltUnit::registerOutput
   StatusCode sc = regSvc()->registerOutput ( selection , this ) ;
   if ( sc.isFailure() ) 
   { return Error ( "Unable to register OUTPUT selection '" + 
-                   selection->id() + "'" , sc ) ; }
+                   selection->id().str()+ "'" , sc ) ; }
   //
   // register as "output" selection 
   m_out.insert ( selection->id () , selection ) ; 
@@ -98,10 +98,10 @@ const Hlt::Selection* LoKi::HltUnit::declareInput
   // use the registration service 
   StatusCode sc = regSvc()->registerInput ( key , this ) ;
   Assert ( sc.isSuccess () , 
-           "Unable to register  INPUT selection '" + key + "'" ) ; 
+           "Unable to register  INPUT selection '" + key.str() + "'" ) ; 
   // get the selection for the service 
   const Hlt::Selection* sel = hltSvc()->selection ( key , this ) ;
-  Assert ( 0 != sel , "Unable to locate the selection '" + key + "'" ) ;
+  Assert ( 0 != sel , "Unable to locate the selection '" + key.str() + "'" ) ;
   //
   m_in.insert ( key , sel ) ;
   return sel ;
@@ -119,7 +119,7 @@ const Hlt::Selection* LoKi::HltUnit::selection
 {
   IMap::const_iterator ifind = m_in.find ( key ) ;
   Assert ( m_in.end() != ifind , 
-           "Unable to get LOCAL INPUT selection '" + key + "'" ) ;
+           "Unable to get LOCAL INPUT selection '" + key.str() + "'" ) ;
   return ifind->second ;
 }
 // ============================================================================
@@ -133,7 +133,7 @@ const Hlt::Selection* LoKi::HltUnit::selection ( const Key& key ) const
   Warning ("Anonymous access to the selection!") ;
   IMap::const_iterator ifind = m_in.find ( key ) ;
   Assert ( m_in.end() != ifind , 
-           "Unable to get LOCAL INPUT selection '" + key + "'" ) ;
+           "Unable to get LOCAL INPUT selection '" + key.str() + "'" ) ;
   return ifind->second ;
 }
 // ============================================================================
@@ -244,7 +244,7 @@ StatusCode LoKi::HltUnit::execute ()
   { iout->second->clean() ; }
   
   /// OPTIONAL: Some decorative monitoring 
-  typedef std::map<stringKey,size_t> Sizes  ;
+  typedef std::map<Gaudi::StringKey,size_t> Sizes  ;
   Sizes map ;
   
   // get the status of all selections 
@@ -265,7 +265,7 @@ StatusCode LoKi::HltUnit::execute ()
   
   /// Monitor output selections  (*ALWAYS*)
   for ( OMap::const_iterator iout = m_out.begin() ; m_out.end() != iout ; ++iout ) 
-  { counter ( "# " + iout->first ) += iout->second->size() ; }
+  { counter ( "# " + iout->first.str() ) += iout->second->size() ; }
   
   // DECORATION? monitoring
   if ( monitor() ) // the output selections are *ALWAYS* monitored   
@@ -311,7 +311,7 @@ StatusCode LoKi::HltUnit::registerTESInput
   StatusCode sc = regSvc()->registerTESInput ( location , this ) ;
   if ( sc.isFailure() ) 
   { return Error ( "Unable to register INPUT TES location '" + 
-                   location + "'" , sc ) ; }
+                   location.str() + "'" , sc ) ; }
   //
   LVct::const_iterator ifind = 
     std::find ( m_tes.begin() , m_tes.end() , location ) ;

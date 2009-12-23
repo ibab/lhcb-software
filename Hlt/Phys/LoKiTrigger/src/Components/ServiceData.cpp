@@ -1,4 +1,4 @@
-// $Id: ServiceData.cpp,v 1.2 2009-07-12 15:59:11 ibelyaev Exp $
+// $Id: ServiceData.cpp,v 1.3 2009-12-23 10:37:35 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -61,7 +61,7 @@ const Hlt::Selection* Hlt::Service::selection
     {
       if ( m_pedantic || m_spy || msgLevel ( MSG::DEBUG ) ) 
       { Warning ( "Unknown selection '" 
-                  + key + "', return NULL for anonymous consumer" , 
+                  + key.str() + "', return NULL for anonymous consumer" , 
                   Selection_Unknown_Selection ) ; }
       return 0 ;                                                      // RETURN 
     }
@@ -88,7 +88,7 @@ const Hlt::Selection* Hlt::Service::selection
   if ( ins.end() == isel ) 
   {
     if ( m_pedantic || m_spy || msgLevel ( MSG::DEBUG ) ) 
-    { Warning ( "Unknown selection '" + key + 
+    { Warning ( "Unknown selection '" + key.str() + 
                 "', return NULL for consumer '" 
                 + consumer->name() + "'" , 
                 Selection_Unknown_Selection ) ; }

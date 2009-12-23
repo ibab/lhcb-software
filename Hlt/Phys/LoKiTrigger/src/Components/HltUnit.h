@@ -1,4 +1,4 @@
-// $Id: HltUnit.h,v 1.9 2009-07-15 16:31:47 ibelyaev Exp $
+// $Id: HltUnit.h,v 1.10 2009-12-23 10:37:35 graven Exp $
 // ============================================================================
 #ifndef LOKI_HLTUNIT_H 
 #define LOKI_HLTUNIT_H 1
@@ -21,9 +21,9 @@
 #include "LoKi/ILoKiSvc.h"
 #include "LoKi/CoreTypes.h"
 // ============================================================================
-#include "LoKi/IHltRegister.h"
-#include "LoKi/IHltData.h"
-#include "LoKi/IHltInspector.h"
+#include "HltBase/IHltRegister.h"
+#include "HltBase/IHltData.h"
+#include "HltBase/IHltInspector.h"
 // ============================================================================
 namespace LoKi 
 {

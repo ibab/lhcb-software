@@ -1,4 +1,4 @@
-// $Id: LTTools.cpp,v 1.7 2009-05-14 08:06:30 ibelyaev Exp $
+// $Id: LTTools.cpp,v 1.8 2009-12-23 10:37:35 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -63,7 +63,7 @@ IAlgorithm* LoKi::Hlt1::Utils::getAlg ( const LoKi::AuxFunBase& base )
 // get the selection by key 
 // ==========================================================================
 const Hlt::Selection* LoKi::Hlt1::Utils::getSelection
-( const stringKey&        key  ,
+( const Gaudi::StringKey& key  ,
   const LoKi::AuxFunBase& base )
 {
   SmartIF<LoKi::IHltUnit> unit ( getAlg ( base ) ) ;

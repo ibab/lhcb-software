@@ -1,4 +1,4 @@
-// $Id: TrUpgrade.h,v 1.3 2008-11-14 12:56:03 ibelyaev Exp $
+// $Id: TrUpgrade.h,v 1.4 2009-12-23 10:37:34 graven Exp $
 // ============================================================================
 #ifndef LOKI_TRUPGRADE_H 
 #define LOKI_TRUPGRADE_H 1
@@ -72,7 +72,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// output selection 
-      const stringKey&   output  () const { return m_sink.output  () ; }
+      const Gaudi::StringKey&   output  () const { return m_sink.output  () ; }
       const std::string& selName () const { return m_sink.selName () ; }
       // ======================================================================      
     private:

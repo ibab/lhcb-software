@@ -1,4 +1,4 @@
-// $Id: LTTools.h,v 1.5 2009-03-19 13:16:12 ibelyaev Exp $
+// $Id: LTTools.h,v 1.6 2009-12-23 10:37:35 graven Exp $
 // ============================================================================
 #ifndef LTTOOLS_H 
 #define LTTOOLS_H 1
@@ -21,8 +21,8 @@
 // LoKi
 // ============================================================================
 #include "LoKi/IHltUnit.h"
-#include "LoKi/IHltRegister.h"
-#include "LoKi/IHltData.h"
+#include "HltBase/IHltRegister.h"
+#include "HltBase/IHltData.h"
 // ============================================================================
 // forward decalrations 
 // ============================================================================
@@ -76,7 +76,7 @@ namespace LoKi
       // ======================================================================
       /// get the selection by key 
       const Hlt::Selection* getSelection
-      ( const stringKey&        key  ,
+      ( const Gaudi::StringKey& key  ,
         const LoKi::AuxFunBase& base ) ;
       // ======================================================================
       template <class TYPE>
@@ -97,7 +97,7 @@ namespace LoKi
       /// get the concrete selection by key 
       template <class TYPE>
       const Hlt::TSelection<TYPE>* getTSelection
-      ( const stringKey&        key  ,
+      ( const Gaudi::StringKey& key  ,
         const LoKi::AuxFunBase& base )
       {
         const Hlt::Selection* sel = getSelection ( key , base ) ;

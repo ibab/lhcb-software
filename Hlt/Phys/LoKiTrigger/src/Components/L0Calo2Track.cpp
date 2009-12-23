@@ -1,4 +1,4 @@
-// $Id: L0Calo2Track.cpp,v 1.2 2009-03-28 13:58:48 ibelyaev Exp $
+// $Id: L0Calo2Track.cpp,v 1.3 2009-12-23 10:37:35 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -10,6 +10,7 @@
 // ============================================================================
 #include "Event/L0CaloCandidate.h"
 #include "Event/L0DUReport.h"
+#include "Event/State.h"
 // ============================================================================
 // HltBase 
 // ============================================================================
@@ -27,8 +28,8 @@ namespace Hlt
    *  Simple class which converts L0Calo candidates into "tracks" using 
    *  the special tool
    *  @see ICaloSeedTrack
-   *  The actual lines are stollen from 
-   *     Gerhard "The Great" Raven & Jose Angel Hernando  Morata
+   *  The actual lines are stolen from 
+   *     Gerhard Raven & Jose Angel Hernando  Morata
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2000-03-23
    */
@@ -286,7 +287,7 @@ StatusCode Hlt::L0Calo2Track::execute  ()
   
   // create the container of tracks and register it in TES 
   LHCb::Track::Container* tracks = new LHCb::Track::Container() ;
-  put ( tracks , "Hlt/Track/" + m_selection -> id () );
+  put ( tracks , "Hlt/Track/" + m_selection -> id ().str() );
   
   using namespace Hlt::L0Utils ;
   
@@ -340,6 +341,7 @@ StatusCode Hlt::L0Calo2Track::execute  ()
   counter( "#input"  ) +=  l0calos     -> size  ();
   counter( "#output" ) +=  m_selection -> size  ();
   counter( "#accept" ) += !m_selection -> empty ();
+  m_selection -> setDecision( !m_selection->empty() );
   
   setFilterPassed ( ! m_selection -> empty() ) ;
 
@@ -384,19 +386,16 @@ StatusCode Hlt::L0Calo2Track::makeTrack
   {   return m_maker->makeTrack ( calo , track ) ; }
   
   // Get energy and position of L0 calo candidate:
-  double x      = calo.position().x();
-  double y      = calo.position().y();
-  double z      = calo.position().z();
-  double ex     = calo.posTol()*(4./sqrt(12.0));
-  double ey     = ex;
-  double et     = calo.et();
+  double ex = calo.posTol()*(4./sqrt(12.0));
+  double e  = fabs(calo.et())*calo.position().R()/calo.position().Rho();
   
-  double sintheta = sqrt(x*x + y*y)/(sqrt(x*x + y*y + z*z));
-  double e = fabs(et)/sintheta;
-  
-  LHCb::State state;
-  state.setLocation(LHCb::State::MidHCal);
-  state.setState(x,y,z,ex,ey,1./e); // ??? slopeX = ex, slopY = ey ???
+   // ??? slopeX = ex, slopeY = ey ???
+   // This is only true for 'tracks' originating from L0Calo candidates
+   // (and there is no way to recognize one of these -- you just 'have
+   // to know'; Good luck! )
+  LHCb::State state( Gaudi::TrackVector(calo.position().x(),calo.position().y(),ex,ex,1./e)
+                   , calo.position().z()
+                   , LHCb::State::MidHCal);
   track.addToStates(state);
   
   return StatusCode::SUCCESS ;

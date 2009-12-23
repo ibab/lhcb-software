@@ -1,4 +1,4 @@
-// $Id: ServiceRegister.cpp,v 1.5 2009-07-29 11:07:48 pkoppenb Exp $
+// $Id: ServiceRegister.cpp,v 1.6 2009-12-23 10:37:35 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -99,12 +99,12 @@ StatusCode Hlt::Service::registerOutput
   { // check for the double registration 
     if      ( inMap ( selection -> id() ) ) 
     { return Error ( "registerOutput: the selection with ID '" 
-                     + selection->id() + 
+                     + selection->id().str() + 
                      "' is already registered (1) " ,
                      Register_Double_Registration ) ; }                // RETURN
     else if ( inMap ( selection  ) ) 
     { return Error ( "registerOutput: the selection '" 
-                     + selection->id() +
+                     + selection->id().str() +
                      "' is already registered (2) " ,
                      Register_Double_Registration ) ; }              // RETURN
   }
@@ -156,7 +156,7 @@ StatusCode Hlt::Service::registerInput
   // check the existence of the selection:
   if ( !inMap ( selection ) ) 
   { return Error ( "registerInput: the selection '" 
-                   + selection + "' is unknown " ,
+                   + selection.str() + "' is unknown " ,
                    Register_Unknown_Selection ) ; }             // RETURN
   // ==========================================================================
 //   { // check that it is not in the list of own output selection 
@@ -181,7 +181,7 @@ StatusCode Hlt::Service::registerInput
     SelMap::iterator i = iin->second.find ( selection ) ;
     if ( iin->second.end() != i ) 
     { Warning ( "registerInput: the input selection '" 
-                + selection + 
+                + selection.str() + 
                 "' is already input selection " ,
                 Register_Double_Registration ) ; }
     else 
@@ -233,7 +233,7 @@ StatusCode Hlt::Service::registerTESInput
   TESLocs::const_iterator iin = intes->second.find ( location ) ;
   if ( intes->second.end() != iin )
   { Warning ( "registerTESInput: the input location '" 
-              + location + 
+              + location.str() + 
               "' is already input location " ,
               Register_Double_Registration ) ; }
   else 

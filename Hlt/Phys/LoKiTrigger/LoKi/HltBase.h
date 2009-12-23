@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.2 2009-03-24 17:33:26 ibelyaev Exp $
+// $Id: HltBase.h,v 1.3 2009-12-23 10:37:34 graven Exp $
 // ============================================================================
 #ifndef LOKI_HLTBASE_H 
 #define LOKI_HLTBASE_H 1
@@ -19,8 +19,8 @@
 // ============================================================================
 // LoKi 
 // ============================================================================
-#include "LoKi/IHltRegister.h"
-#include "LoKi/IHltData.h"
+#include "HltBase/IHltRegister.h"
+#include "HltBase/IHltData.h"
 // ============================================================================
 namespace Hlt 
 {

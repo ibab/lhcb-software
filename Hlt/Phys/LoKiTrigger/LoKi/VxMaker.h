@@ -1,4 +1,4 @@
-// $Id: VxMaker.h,v 1.2 2008-11-13 22:11:03 ibelyaev Exp $
+// $Id: VxMaker.h,v 1.3 2009-12-23 10:37:34 graven Exp $
 // ============================================================================
 #ifndef LOKI_VXMAKER_H 
 #define LOKI_VXMAKER_H 1
@@ -75,23 +75,23 @@ namespace LoKi
       // ======================================================================
       /// constructor from one track source 
       VxMaker ( const TrSource&             trk     , 
-                const stringKey&            key     ) ;
+                const Gaudi::StringKey&     key     ) ;
       /// constructor from one track source 
       VxMaker ( const TrSource&             trk     , 
-                const stringKey&            key     ,
+                const Gaudi::StringKey&     key     ,
                 const LoKi::Types::RVCuts&  cuts4rv ) ;
       /// constructor from one track source 
       VxMaker ( const TrSource&             trk     , 
-                const stringKey&            key     ,
+                const Gaudi::StringKey&     key     ,
                 const LoKi::Types::TTrCuts& cuts2tr ) ;
       /// constructor from one track source 
       VxMaker ( const TrSource&             trk     , 
-                const stringKey&            key     , 
+                const Gaudi::StringKey&     key     , 
                 const LoKi::Types::RVCuts&  cuts4rv ,
                 const LoKi::Types::TTrCuts& cuts2tr ) ;
       /// constructor from one track source 
       VxMaker ( const TrSource&             trk     , 
-                const stringKey&            key     , 
+                const Gaudi::StringKey&     key     , 
                 const LoKi::Types::TTrCuts& cuts2tr ,
                 const LoKi::Types::RVCuts&  cuts4rv ) ;
       // ======================================================================

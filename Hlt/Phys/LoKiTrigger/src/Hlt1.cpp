@@ -1,4 +1,4 @@
-// $Id: Hlt1.cpp,v 1.5 2009-07-15 16:31:47 ibelyaev Exp $
+// $Id: Hlt1.cpp,v 1.6 2009-12-23 10:37:35 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -242,7 +242,7 @@ LoKi::Hlt1::TrTESInput::TrTESInput
   m_unit = _unit ;
   // register TESInput input location 
   StatusCode sc = m_unit->registerTESInput ( m_key , *this ) ;
-  Assert ( sc.isSuccess() , "Unable to registerTESInputInput" ) ;
+  Assert ( sc.isSuccess() , "Unable to registerTESInput" ) ;
   //
 }
 // ============================================================================
@@ -261,7 +261,7 @@ LoKi::Hlt1::TrTESInput::TrTESInput
   m_unit = _unit ;
   // register TESInput input location 
   StatusCode sc = m_unit->registerTESInput ( m_key , *this ) ;
-  Assert ( sc.isSuccess() , "Unable to registerTESInputInput" ) ;
+  Assert ( sc.isSuccess() , "Unable to registerTESInput" ) ;
   //
 }
 // ============================================================================

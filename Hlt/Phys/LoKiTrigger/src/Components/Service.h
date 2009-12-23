@@ -1,4 +1,4 @@
-// $Id: Service.h,v 1.5 2009-07-12 15:59:11 ibelyaev Exp $
+// $Id: Service.h,v 1.6 2009-12-23 10:37:35 graven Exp $
 // ============================================================================
 #ifndef LOKITRIGGER_SERVICE_H 
 #define LOKITRIGGER_SERVICE_H 1 
@@ -24,9 +24,9 @@
 // LoKi 
 // ============================================================================
 #include "LoKi/ILoKiSvc.h"
-#include "LoKi/IHltRegister.h"
-#include "LoKi/IHltData.h"
-#include "LoKi/IHltInspector.h"
+#include "HltBase/IHltRegister.h"
+#include "HltBase/IHltData.h"
+#include "HltBase/IHltInspector.h"
 // ============================================================================
 // LoKi 
 // ============================================================================
