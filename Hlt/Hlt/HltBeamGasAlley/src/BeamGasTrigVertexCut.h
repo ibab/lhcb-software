@@ -2,8 +2,8 @@
 #ifndef INCLUDE_BEAMGASTRIGVERTEXCUT_H
 #define INCLUDE_BEAMGASTRIGVERTEXCUT_H 1
 
-#include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltSelectionContainer.h"
+#include "HltBase/HltAlgorithm.h"
 
 class BeamGasTrigVertexCut : public HltAlgorithm {
 
