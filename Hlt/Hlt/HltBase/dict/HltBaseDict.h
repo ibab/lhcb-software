@@ -20,9 +20,6 @@
 #include "HltBase/IHltData.h"
 #include "HltBase/IHltInspector.h"
 #include "HltBase/HltSelection.h"
-#include "HltBase/IHltRegister.h"
-#include "HltBase/IHltData.h"
-#include "HltBase/IHltInspector.h"
 
 #include "GaudiAlg/ISequencerTimerTool.h"
 
