@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.51 2009-11-30 09:53:51 pkoppenb Exp $
+#$Id: requirements,v 1.52 2009-12-23 10:26:44 graven Exp $
 #============================================================================
 # Created    : 2005-11-15
 # Maintainer : Gerhard Raven
@@ -19,6 +19,7 @@ use TrackEvent          v*    Event
 use RecEvent            v*    Event
 use LHCbMath            v*    Kernel
 use HltInterfaces       v*    Kernel
+use LoKiCore        v*    Phys 
 
 use DetDesc             v*    Det
 
