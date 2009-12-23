@@ -12,7 +12,6 @@
   <class name = "IConfigTreeEditor" />
   <class name = "IPropertyConfigSvc" />
   <class name = "IHltDataSvc" />
-  <class name = "stringKey" />
   <class name = "PropertyConfig" />
   <class name = "ConfigTreeNode" />
   <class name = "ConfigTreeNodeAlias" />

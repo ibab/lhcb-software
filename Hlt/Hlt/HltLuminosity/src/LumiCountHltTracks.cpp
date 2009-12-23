@@ -1,4 +1,4 @@
-// $Id: LumiCountHltTracks.cpp,v 1.9 2009-09-30 07:24:56 graven Exp $
+// $Id: LumiCountHltTracks.cpp,v 1.10 2009-12-23 17:59:49 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -33,7 +33,7 @@ LumiCountHltTracks::LumiCountHltTracks( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : HltBaseAlg ( name , pSvcLocator )
 {
-  declareProperty( "InputSelection" ,      m_InputSelectionName.property());
+  declareProperty( "InputSelection" ,      m_InputSelectionName);
   declareProperty( "CounterName"    ,      m_CounterName);
   declareProperty( "OutputContainer",      m_OutputContainerName = LHCb::HltLumiSummaryLocation::Default );
 

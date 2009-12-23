@@ -1,12 +1,13 @@
-// $Id: HltSelection.h,v 1.14 2009-05-30 12:14:28 graven Exp $
+// $Id: HltSelection.h,v 1.15 2009-12-23 17:59:47 graven Exp $
 #ifndef HLTBASE_HLTSELECTION_H 
 #define HLTBASE_HLTSELECTION_H 1
 
 #include <vector>
 #include <boost/utility.hpp>
+#include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/StringKey.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/ContainedObject.h"
-#include "HltBase/stringKey.h"
 
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
@@ -20,11 +21,11 @@ namespace Hlt
 
   class Selection : public ContainedObject, public DataObject, private boost::noncopyable {
   public:
-    Selection(const stringKey& id) : m_id(id), m_decision(false), m_processed(false), m_error(false) {}
+    Selection(const Gaudi::StringKey& id) : m_id(id), m_decision(false), m_processed(false), m_error(false) {}
     virtual ~Selection() {}
 
-    const stringKey& id() const {return m_id;}
-    const std::vector<stringKey>& inputSelectionsIDs() const {return m_inputSelectionsIDs;}    
+    const Gaudi::StringKey& id() const {return m_id;}
+    const std::vector<Gaudi::StringKey>& inputSelectionsIDs() const {return m_inputSelectionsIDs;}    
     
     template <typename I> // I is assumed to be iterator over a range of Selection*
     void addInputSelectionIDs(I i, I end) {
@@ -57,8 +58,8 @@ namespace Hlt
 
   private:
 
-    std::vector<stringKey> m_inputSelectionsIDs;
-    stringKey m_id;
+    std::vector<Gaudi::StringKey> m_inputSelectionsIDs;
+    Gaudi::StringKey m_id;
     bool m_decision;  // accept / reject
     bool m_processed; // did we actually set the decision?
     bool m_error;     // did an error occur during processing?
@@ -70,7 +71,7 @@ namespace Hlt
     typedef T                                     candidate_type;
     typedef std::vector<T*>                       container_type;
 
-    TSelection(const stringKey& id) : Selection(id) {}
+    TSelection(const Gaudi::StringKey& id) : Selection(id) {}
     virtual ~TSelection() ;
 
     CLID classID() const { return T::classID(); }

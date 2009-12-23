@@ -1,12 +1,14 @@
-// $Id: LumiCountHltTracks.h,v 1.2 2008-08-20 08:47:25 graven Exp $
+// $Id: LumiCountHltTracks.h,v 1.3 2009-12-23 17:59:49 graven Exp $
 #ifndef LUMICOUNTHLTTRACKS_H 
 #define LUMICOUNTHLTTRACKS_H 1
 
 // Include files
 // from Gaudi
+#include <vector>
+#include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/StringKey.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
 #include "HltBase/HltBaseAlg.h"
-#include "HltBase/stringKey.h"
 
 /** @class LumiCountHltTracks LumiCountHltTracks.h
  *  
@@ -28,7 +30,7 @@ public:
 
 protected:
   
-  stringKey   m_InputSelectionName;
+  Gaudi::StringKey   m_InputSelectionName;
   std::string m_CounterName;
   int m_Counter;
 

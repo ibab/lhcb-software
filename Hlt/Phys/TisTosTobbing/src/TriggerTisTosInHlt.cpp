@@ -1,8 +1,11 @@
-// $Id: TriggerTisTosInHlt.cpp,v 1.1 2009-10-22 20:53:23 tskwarni Exp $
+// $Id: TriggerTisTosInHlt.cpp,v 1.2 2009-12-23 17:59:51 graven Exp $
 // Include files 
 #include <algorithm>
+#include <vector>
 
 // from Gaudi
+#include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/StringKey.h"
 #include "GaudiKernel/ToolFactory.h" 
 
 // local
@@ -13,7 +16,6 @@
 #include "Event/HltDecReports.h"
 #include "Event/HltSelReports.h"
 
-#include "HltBase/stringKey.h"
 #include "HltBase/IHltDataSvc.h"
 
 using namespace LHCb;
@@ -85,8 +87,8 @@ void TriggerTisTosInHlt::getTriggerNames()
   }
 
   if( m_allowIntermediateSelections ){    
-    std::vector<stringKey> selIDs = m_hltDataSvc->selectionKeys();
-    for( std::vector<stringKey>::const_iterator i =
+    std::vector<Gaudi::StringKey> selIDs = m_hltDataSvc->selectionKeys();
+    for( std::vector<Gaudi::StringKey>::const_iterator i =
           selIDs.begin(); i!=selIDs.end(); ++i) {
       std::string name=i->str();      
       if( find( m_triggerNames.begin(), m_triggerNames.end(), name )

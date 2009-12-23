@@ -5,6 +5,8 @@
 !-----------------------------------------------------------------------------
 ! 2009-12-23 - G. Raven
  - move #include around to facilitate HltBase/stringKey -> GaudiKernel/StringKey migration
+ - migrate from HltBase/stringKey to GaudiKernel/StringKey
+
 
 !========================== HltRecChecker v1r11p1 2009-10-28 ===================
 ! 2009-10-25 - G. Raven

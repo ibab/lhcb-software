@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2009-12-23 - Gerhard Raven
+ - migrate from HltBase/stringKey to GaudiKernel/StringKey
+
 !========================== HltLuminosity v2r13 2009-11-30 ===================
 ! 2009-11-26 - Jaap Panman
  - suppress warning messages when containers do not exist (LumiCountTracks

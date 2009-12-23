@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.58 2009-11-16 08:45:00 pkoppenb Exp $
+// $Id: HltAlgorithm.cpp,v 1.59 2009-12-23 17:59:49 graven Exp $
 // Include files 
 
 #include "Event/Particle.h"
@@ -196,11 +196,11 @@ public:
     bool operator()(const Hlt::Selection* i) { return  i->id() == m_id; }
     bool operator()(const Hlt::Selection& i) { return  i.id() == m_id; }
 private:
-    stringKey m_id;
+    Gaudi::StringKey m_id;
 };
 
 
-const Hlt::Selection& HltAlgorithm::retrieveSelection(const stringKey& selname) {
+const Hlt::Selection& HltAlgorithm::retrieveSelection(const Gaudi::StringKey& selname) {
     Assert(!selname.empty()," retrieveSelection() no selection name");
     if (msgLevel(MSG::DEBUG)) debug() << " retrieveSelection " << selname << endreq;
     const Hlt::Selection* sel = dataSvc().selection(selname,this);

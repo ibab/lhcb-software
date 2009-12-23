@@ -14,8 +14,8 @@
 // ============================================================================
 // forward declarations 
 // ============================================================================
-class stringKey  ;
 class IAlgorithm ;
+namespace Gaudi { class StringKey  ; }
 namespace Hlt { class Selection ; }
 // ============================================================================
 class IHltDataSvc : virtual public INamedInterface 
@@ -31,20 +31,20 @@ public:
   virtual StatusCode addSelection ( Hlt::Selection*   sel             ,
                                     const IAlgorithm* parent          , 
                                     const bool        fromTES = false ) = 0 ;
-  virtual bool hasSelection ( const stringKey& id ) const = 0;
+  virtual bool hasSelection ( const Gaudi::StringKey& id ) const = 0;
   //@TODO: should only have const access to requested input...
-  virtual const  Hlt::Selection* selection ( const stringKey&  id     , 
+  virtual const  Hlt::Selection* selection ( const Gaudi::StringKey&  id     , 
                                              const IAlgorithm* parent ) =0 ;
   //@TODO: make typesafe, i.e. allow getting of derived classes 
   //template <typename T>
-  //Hlt::TSelection<T>& selection( const stringKey& id, const IAlgorithm* parent) {
+  //Hlt::TSelection<T>& selection( const Gaudi::StringKey& id, const IAlgorithm* parent) {
       //Hlt::Selection* sel = selection(id,parent);
       //return sel->template down_cast<T>();
   //}
   // 
-  virtual std::vector<stringKey> selectionKeys() const = 0;
+  virtual std::vector<Gaudi::StringKey> selectionKeys() const = 0;
   // 
-  virtual StatusCode inputUsedBy(const stringKey& key, std::vector<std::string>& inserter) const =0;
+  virtual StatusCode inputUsedBy(const Gaudi::StringKey& key, std::vector<std::string>& inserter) const =0;
   // ==========================================================================
 public:
   // ============================================================================

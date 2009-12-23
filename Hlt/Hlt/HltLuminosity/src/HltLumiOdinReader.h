@@ -1,4 +1,4 @@
-// $Id: HltLumiOdinReader.h,v 1.2 2008-08-01 08:13:21 graven Exp $
+// $Id: HltLumiOdinReader.h,v 1.3 2009-12-23 17:59:49 graven Exp $
 #ifndef HLTLUMIODINREADER_H 
 #define HLTLUMIODINREADER_H 1
 
@@ -6,8 +6,8 @@
 // from Gaudi
 
 
-#include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltSelectionContainer.h"
+#include "HltBase/HltAlgorithm.h"
 
 /** @class HltLumiOdinReader HltLumiOdinReader.h
  *  

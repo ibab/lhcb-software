@@ -1,11 +1,9 @@
-// $Id: HltRecCheckGhosts.h,v 1.3 2009-06-02 19:48:17 gligorov Exp $
+// $Id: HltRecCheckGhosts.h,v 1.4 2009-12-23 17:59:50 graven Exp $
 #ifndef HLTRECCHECKGHOSTS_H 
 #define HLTRECCHECKGHOSTS_H 1
 
 // Include files
-//#include "HltBase/HltAlgorithm.h"
-//#include "HltBase/HltSelectionContainer.h"
-
+#include "GaudiKernel/StringKey.h"
 #include "MCInterfaces/ITrackGhostClassification.h"
 #include "MCInterfaces/ILHCbIDsToMCParticles.h"
 #include "Event/GhostTrackInfo.h"
@@ -84,7 +82,7 @@ private:
 
   IVeloExpectation* m_veloExpectation;
 
-  std::string m_inputTrackSelection; 
+  Gaudi::StringKey m_inputTrackSelection; 
 
   std::vector<int> m_nEvent;
   std::vector<int> m_nRun;

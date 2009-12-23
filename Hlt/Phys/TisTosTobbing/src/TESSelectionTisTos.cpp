@@ -1,8 +1,11 @@
-// $Id: TESSelectionTisTos.cpp,v 1.1 2009-12-05 00:51:31 tskwarni Exp $
+// $Id: TESSelectionTisTos.cpp,v 1.2 2009-12-23 17:59:50 graven Exp $
 // Include files 
 #include <algorithm>
+#include <vector>
 
 // from Gaudi    
+#include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/StringKey.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 
@@ -16,7 +19,6 @@
 
 #include "Kernel/CaloCellCode.h"
 
-#include "HltBase/stringKey.h"
 #include "HltBase/HltSelection.h"
 #include "HltBase/IHltDataSvc.h"
 

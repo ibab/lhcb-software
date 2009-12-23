@@ -1,12 +1,14 @@
-// $Id: HltVertexReportsMaker.cpp,v 1.10 2009-12-01 22:53:40 tskwarni Exp $
+// $Id: HltVertexReportsMaker.cpp,v 1.11 2009-12-23 17:59:50 graven Exp $
 // Include files 
 
 // from Gaudi
+#include <vector>
+#include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/StringKey.h"
 #include "GaudiKernel/AlgFactory.h" 
 
 #include "Event/RecVertex.h"
 
-#include "HltBase/stringKey.h"
 #include "HltBase/HltSelection.h"
 
 // local
@@ -72,13 +74,13 @@ StatusCode HltVertexReportsMaker::initialize() {
   selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt2.begin(),hlt2.end() );
 
   // get trigger selection names 
-  std::vector<stringKey> hltDataSvcKeys = m_hltDataSvc->selectionKeys();
+  std::vector<Gaudi::StringKey> hltDataSvcKeys = m_hltDataSvc->selectionKeys();
 
   // loop over selections given in the input list
   for( std::vector<std::string>::const_iterator is=m_vertexSelections.value().begin();
        is!=m_vertexSelections.value().end();++is){
      const std::string selName(*is);  
-     const stringKey nameKey(*is);
+     const Gaudi::StringKey nameKey(*is);
      if( find( hltDataSvcKeys.begin(), hltDataSvcKeys.end(), nameKey ) != hltDataSvcKeys.end() ){
        
        // find int selection id (to make sure it is saveable)
@@ -148,7 +150,7 @@ StatusCode HltVertexReportsMaker::execute() {
   for( std::vector<std::string>::const_iterator is=m_selectionNames.begin();
        is!=m_selectionNames.end();++is ){
      const std::string selName(*is);     
-     const stringKey name(*is);
+     const Gaudi::StringKey name(*is);
 
      // prevent duplicate selections
      if( outputSummary->hasSelectionName( selName ) )continue;

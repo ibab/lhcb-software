@@ -30,12 +30,12 @@ public:
                             const IAlgorithm* parent         ,
                             const bool        useTES = false ) ;
   
-  bool hasSelection(const stringKey& id) const;
+  bool hasSelection(const Gaudi::StringKey& id) const;
   
-  const Hlt::Selection* selection ( const stringKey&  id, const IAlgorithm* parent ) ;
+  const Hlt::Selection* selection ( const Gaudi::StringKey&  id, const IAlgorithm* parent ) ;
   
-  std::vector<stringKey> selectionKeys() const;
-  StatusCode inputUsedBy(const stringKey& key, std::vector<std::string>& inserter) const;
+  std::vector<Gaudi::StringKey> selectionKeys() const;
+  StatusCode inputUsedBy(const Gaudi::StringKey& key, std::vector<std::string>& inserter) const;
   
   void handle(const Incident&);
 private:
@@ -57,7 +57,7 @@ private:
   mutable IDataProviderSvc* m_evtSvc;
   mutable IANNSvc*          m_annSvc;
   
-  std::map<stringKey,Hlt::Selection*> m_mapselections;
+  std::map<Gaudi::StringKey,Hlt::Selection*> m_mapselections;
   std::vector<Hlt::Selection*>        m_ownedSelections; //owner of HltSelection
   
   std::vector< std::pair<const IAlgorithm*, const Hlt::Selection*> >            m_parents;

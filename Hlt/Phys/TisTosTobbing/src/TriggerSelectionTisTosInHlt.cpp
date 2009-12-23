@@ -1,8 +1,11 @@
-// $Id: TriggerSelectionTisTosInHlt.cpp,v 1.4 2009-12-05 00:51:31 tskwarni Exp $
+// $Id: TriggerSelectionTisTosInHlt.cpp,v 1.5 2009-12-23 17:59:50 graven Exp $
 // Include files 
 #include <algorithm>
+#include <vector>
 
 // from Gaudi    
+#include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/StringKey.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 
@@ -16,7 +19,6 @@
 
 #include "Kernel/CaloCellCode.h"
 
-#include "HltBase/stringKey.h"
 #include "HltBase/HltSelection.h"
 #include "HltBase/IHltDataSvc.h"
 
@@ -835,7 +837,7 @@ void TriggerSelectionTisTosInHlt::selectionTisTos( const std::string & selection
     }    
   }
    
-  const stringKey name(selectionName);
+  const Gaudi::StringKey name(selectionName);
 
   union FakePtr { IAlgorithm* mAlg; GaudiTool* mTool; };
   FakePtr a; a.mTool = this;
@@ -962,7 +964,7 @@ std::vector<const LHCb::HltObjectSummary*> TriggerSelectionTisTosInHlt::hltSelec
     }      
   }  
 
-  const stringKey name(selectionName);
+  const Gaudi::StringKey name(selectionName);
 
   union FakePtr { IAlgorithm* mAlg; GaudiTool* mTool; };
   FakePtr a; a.mTool = this;

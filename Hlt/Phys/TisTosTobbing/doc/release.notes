@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.52 2009-12-11 11:10:26 pkoppenb Exp $
+! $Id: release.notes,v 1.53 2009-12-23 17:59:50 graven Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
+
+
+! 2009-12-23 - Gerhard Raven
+ - migrate from HltBase/stringKey to GaudiKernel/StringKey
 
 !========================== TisTosTobbing v4r0 2009-12-11 ===================
 ! 2009-12-05 - Tomasz Skwarnicki

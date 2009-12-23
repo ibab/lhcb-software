@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.52 2009-12-21 19:04:23 tskwarni Exp $
+!$Id: release.notes,v 1.53 2009-12-23 17:59:50 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+! 2009-12-23 - Gerhard Raven
+ - migrate from HltBase/stringKey to GaudiKernel/StringKey
+ - temporarily do 'cvs update -j 1.16 -j 1.15 HltSelReportsMaker.cpp'
+   to move these changes 'ahead' of the changes below...
 
 ! 2009-12-21 - Tomasz Skwarnicki
  - fix bug in saving PV keys in HltSelReportsMaker; add PVs to verbose printout

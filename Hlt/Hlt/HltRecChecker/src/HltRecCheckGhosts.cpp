@@ -1,11 +1,10 @@
-// $Id: HltRecCheckGhosts.cpp,v 1.10 2009-10-25 20:38:45 graven Exp $
+// $Id: HltRecCheckGhosts.cpp,v 1.11 2009-12-23 17:59:50 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "boost/foreach.hpp"
-#include "HltBase/stringKey.h"
 #include "HltBase/HltSelection.h"
 
 // local
@@ -33,7 +32,7 @@ HltRecCheckGhosts::HltRecCheckGhosts( const std::string& name,
   , m_veloExpectation(0)
   
 {
-  declareProperty("inputTrackSelection", m_inputTrackSelection = "") ;
+  declareProperty("inputTrackSelection", m_inputTrackSelection) ;
   declareProperty("purityCut", m_purityCut = 0.7) ;
 }
 //=========================================================================================================
@@ -123,7 +122,7 @@ StatusCode HltRecCheckGhosts::execute() {
 
   debug() << "About to retrieve the selection" << endmsg;
 
-  const Hlt::Selection* s = m_dataSvc->selection(stringKey(m_inputTrackSelection),this);
+  const Hlt::Selection* s = m_dataSvc->selection(m_inputTrackSelection,this);
 
   if (s == NULL) return StatusCode::SUCCESS;
 

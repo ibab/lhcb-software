@@ -150,7 +150,7 @@ HltDataSvc::addSelection ( Hlt::Selection*   sel               ,
     error() << " attempt by " << parent->name() << " to register an unnamed selection... " << endmsg;
     return StatusCode::FAILURE;
   }
-  typedef std::map<stringKey,Hlt::Selection*>::iterator iter_t;
+  typedef std::map<Gaudi::StringKey,Hlt::Selection*>::iterator iter_t;
   std::pair<iter_t,iter_t> p = m_mapselections.equal_range(sel->id());
   if (p.first!=p.second) {
     error() << " attempt by " << parent->name() << " to register selection " << sel->id() << " which has already been registered" << endmsg;
@@ -179,13 +179,13 @@ HltDataSvc::addSelection ( Hlt::Selection*   sel               ,
 }
 
 bool 
-HltDataSvc::hasSelection(const stringKey& id) const {   
+HltDataSvc::hasSelection(const Gaudi::StringKey& id) const {   
   return (m_mapselections.find(id) != m_mapselections.end());
 }
 
 
 const Hlt::Selection*
-HltDataSvc::selection ( const stringKey&  id     , 
+HltDataSvc::selection ( const Gaudi::StringKey&  id     , 
                         const IAlgorithm* parent ) 
 {
   //@TODO: record dependency of parent on id
@@ -195,24 +195,24 @@ HltDataSvc::selection ( const stringKey&  id     ,
   if (std::find_if(m_parents.begin(),m_parents.end(), cmpFirst(parent))!=m_parents.end()) {
     throw GaudiException( " parent requests additional input after declaring output!",parent->name()+":"+id.str(),StatusCode::FAILURE);
   }
-  std::map<stringKey,Hlt::Selection*>::const_iterator i = m_mapselections.find(id);
+  std::map<Gaudi::StringKey,Hlt::Selection*>::const_iterator i = m_mapselections.find(id);
   return i != m_mapselections.end() ? i->second : (Hlt::Selection*) 0 ;
 }
 
-std::vector<stringKey> 
+std::vector<Gaudi::StringKey> 
 HltDataSvc::selectionKeys() const
 {
-  std::vector<stringKey> keys; keys.reserve(m_mapselections.size());
-  for (std::map<stringKey,Hlt::Selection*>::const_iterator i = m_mapselections.begin();
+  std::vector<Gaudi::StringKey> keys; keys.reserve(m_mapselections.size());
+  for (std::map<Gaudi::StringKey,Hlt::Selection*>::const_iterator i = m_mapselections.begin();
        i!=m_mapselections.end();++i)  keys.push_back(i->first);
   return keys;
 }
 
 StatusCode 
-HltDataSvc::inputUsedBy(const stringKey& key, std::vector<std::string>& inserter) const {
-  std::map<stringKey,Hlt::Selection*>::const_iterator sel = m_mapselections.find(key);
+HltDataSvc::inputUsedBy(const Gaudi::StringKey& key, std::vector<std::string>& inserter) const {
+  std::map<Gaudi::StringKey,Hlt::Selection*>::const_iterator sel = m_mapselections.find(key);
   if (sel == m_mapselections.end()) return StatusCode::FAILURE;
-  std::vector<stringKey>::const_iterator i=sel->second->inputSelectionsIDs().begin();
+  std::vector<Gaudi::StringKey>::const_iterator i=sel->second->inputSelectionsIDs().begin();
   while (i!=sel->second->inputSelectionsIDs().end()) inserter.push_back( *i++ );
   return StatusCode::SUCCESS;
 }
@@ -232,7 +232,7 @@ void HltDataSvc::handle( const Incident& i) {
           m_producers[ selName ] = i->first->name();
           debug() << " producer[ " << selName << " ] = " << i->first->name()  << endmsg;
           
-          std::vector<stringKey>::const_iterator d= i->second->inputSelectionsIDs().begin();
+          std::vector<Gaudi::StringKey>::const_iterator d= i->second->inputSelectionsIDs().begin();
           std::vector<std::string>& deps = m_dependencies[ selName ];
           while (d!=i->second->inputSelectionsIDs().end()) deps.push_back( *d++ );
 
@@ -246,7 +246,7 @@ void HltDataSvc::handle( const Incident& i) {
 
         m_beginEventCalled = true;
       }
-      for ( std::map<stringKey,Hlt::Selection*>::iterator i  = m_mapselections.begin();
+      for ( std::map<Gaudi::StringKey,Hlt::Selection*>::iterator i  = m_mapselections.begin();
             i != m_mapselections.end(); ++i) {
         i->second->clean(); // invalidates all selections, resets decision to 'no', i.e. reject
       }

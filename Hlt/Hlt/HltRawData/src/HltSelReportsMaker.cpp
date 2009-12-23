@@ -1,10 +1,12 @@
-// $Id: HltSelReportsMaker.cpp,v 1.16 2009-12-21 19:04:23 tskwarni Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.17 2009-12-23 17:59:50 graven Exp $
 // #define DEBUGCODE
 // Include files 
 #include "boost/algorithm/string/replace.hpp"
 #include "boost/format.hpp"
 
 // from Gaudi
+#include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/StringKey.h"
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IRegistry.h"
@@ -21,7 +23,6 @@
 
 //#include "Kernel/CaloCellCode.h"
 
-#include "HltBase/stringKey.h"
 #include "HltBase/HltSelection.h"
 #include "HltBase/IHltDataSvc.h"
 // local
@@ -154,8 +155,8 @@ StatusCode HltSelReportsMaker::initialize() {
   m_maxCand.clear();
   m_maxCandDebug.clear();
 
-  for( std::vector<stringKey>::const_iterator is=m_selectionIDs.begin();is!=m_selectionIDs.end();++is){
-     const stringKey name(*is);
+  for( std::vector<Gaudi::StringKey>::const_iterator is=m_selectionIDs.begin();is!=m_selectionIDs.end();++is){
+     const Gaudi::StringKey name(*is);
      const std::string selName(name.str()); 
      int intSelID(0);
      for( std::vector<IANNSvc::minor_value_type>::const_iterator si=hlt1.begin();
@@ -230,7 +231,7 @@ StatusCode HltSelReportsMaker::execute() {
 #ifdef DEBUGCODE
   if ( msgLevel(MSG::VERBOSE) ){
     verbose() <<" Selection Names Found =" ;
-    for( std::vector<stringKey>::const_iterator i=selectionIDs.begin();i!=selectionIDs.end();++i){
+    for( std::vector<Gaudi::StringKey>::const_iterator i=selectionIDs.begin();i!=selectionIDs.end();++i){
       verbose() << i->str() << " ";
     }
     verbose() << endmsg;
@@ -246,8 +247,8 @@ StatusCode HltSelReportsMaker::execute() {
  
   // loop over selection summaries in HltSummary
   int i(0);
-  for( std::vector<stringKey>::const_iterator is=m_selectionIDs.begin();is!=m_selectionIDs.end();++is,++i){
-     const stringKey name(*is);
+  for( std::vector<Gaudi::StringKey>::const_iterator is=m_selectionIDs.begin();is!=m_selectionIDs.end();++is,++i){
+     const Gaudi::StringKey name(*is);
      const std::string selName(name.str()); 
 
      // see if marked for persistency
@@ -348,7 +349,7 @@ StatusCode HltSelReportsMaker::execute() {
     //    info() << " Selection " << is->second << " rank " << is->first << endmsg;
     
      const std::string selName(is->second.first);     
-     const stringKey name(selName);
+     const Gaudi::StringKey name(selName);
      const int i=is->second.second;
 
      std::vector<ContainedObject*> candidates;
@@ -488,7 +489,7 @@ StatusCode HltSelReportsMaker::execute() {
                            packedPVKeys.push_back( iWord );
                            iWord = 0;
                          }
-                         iWord |= ( key << ((nPackedPVKeys-1)*8) ) ;
+                         iWord |= ( key >> ( nPackedPVKeys-1) );
                          keyFound = true;                     
                        }
                      }
@@ -727,19 +728,7 @@ StatusCode HltSelReportsMaker::execute() {
    for( HltObjectSummary::Container::const_iterator ppHos=m_objectSummaries->begin();
         ppHos!=m_objectSummaries->end();++ppHos){
      const HltObjectSummary* pHos=*ppHos;    
-     verbose() << " key " << pHos->index();
-     std::vector<std::string> selby = outputSummary->selectedAsCandidateBy(pHos);
-     if( selby.size() ){
-       verbose() << " selectedAsCandidateBy=";       
-       for( std::vector<std::string>::const_iterator i=selby.begin();i!=selby.end();++i){
-         verbose()  << *i << " ";
-       }
-       std::pair<std::string,int> pvInfo = outputSummary->pvSelectionNameAndKey(pHos);
-       if( pvInfo.second > -1 ){
-         verbose() << " pvSelectionName= " << pvInfo.first << " pvKey= " << pvInfo.second << " ";
-       }
-     }     
-     verbose() << *pHos << endmsg;    
+     verbose() << " key " << pHos->index() << *pHos << endmsg;    
    }
    
   }

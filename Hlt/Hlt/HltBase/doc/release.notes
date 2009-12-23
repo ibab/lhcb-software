@@ -9,6 +9,7 @@
  - remove unused impact parameter error parameterization
  - move IHlt{Data,Register,Inspector} from LoKiTrigger to here to avoid
    circular dependency
+ - remove stringKey, migrate to  Gaudi::StringKey instead
 
 !========================== HltBase v7r1 2009-11-30 ===================
 ! 2009-11-26 - Antonio Perez-Calero

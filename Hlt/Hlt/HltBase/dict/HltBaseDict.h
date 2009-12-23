@@ -12,12 +12,14 @@
 #include "HltBase/IConfigTreeEditor.h"
 #include "HltBase/ConfigTreeNodeAlias.h"
 #include "HltBase/ConfigTreeNode.h"
-#include "HltBase/stringKey.h"
 #include "HltBase/PropertyConfig.h"
 #include "HltBase/IPropertyConfigSvc.h"
 #include "HltBase/IConfigAccessSvc.h"
 #include "HltBase/IHltDataSvc.h"
 #include "HltBase/HltSelection.h"
+#include "HltBase/IHltRegister.h"
+#include "HltBase/IHltData.h"
+#include "HltBase/IHltInspector.h"
 
 #include "GaudiAlg/ISequencerTimerTool.h"
 

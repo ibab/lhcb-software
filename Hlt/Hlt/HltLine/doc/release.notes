@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.64 2009-12-14 21:12:49 graven Exp $
+! $Id: release.notes,v 1.65 2009-12-23 17:59:49 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2009-12-23 - Gerhard Raven
+ - migrate from HltBase/stringKey to GaudiKernel/StringKey
 
 !========================== HltLine v2r0p1 2009-12-14 ===================
 ! 2009-12-14 - Gerhard Raven

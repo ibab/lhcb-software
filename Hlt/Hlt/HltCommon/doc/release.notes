@@ -7,6 +7,7 @@
 ! 2009-12-23 - Gerhard Raven
  - fix double increment of counter in HltL0MuonCandidates
  - move #include around to facilitate HltBase/stringKey -> GaudiKernel/StringKey migration
+ - migrate from HltBase/stringKey to GaudiKernel/StringKey
 
 ! 2009-12-14 - Patrick Koppenburg
  - Protect debug(). Initialize pointers

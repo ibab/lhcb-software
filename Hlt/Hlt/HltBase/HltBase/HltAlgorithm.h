@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.42 2009-11-26 22:44:11 aperezca Exp $
+// $Id: HltAlgorithm.h,v 1.43 2009-12-23 17:59:47 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -41,11 +41,11 @@ public:
 
   //@TODO: move the {retrieve,register}{,T}Selection into IHltDataSvc...
   // retrieve a selection
-  const Hlt::Selection& retrieveSelection(const stringKey& selname);
+  const Hlt::Selection& retrieveSelection(const Gaudi::StringKey& selname);
 
   // retrieve a selection with candidates of type T (e.g. Track)
   template <class T>
-  const Hlt::TSelection<T>& retrieveTSelection(const stringKey& key) {
+  const Hlt::TSelection<T>& retrieveTSelection(const Gaudi::StringKey& key) {
         const Hlt::TSelection<T> *sel = (key.str().substr(0,4) == "TES:")  ?
                                   this->registerTESSelection<T>(key) :
                                   retrieveSelection(key).template down_cast<T>();
@@ -54,7 +54,7 @@ public:
   }
 
   // register an output selection of no candidates
-  Hlt::Selection& registerSelection(const stringKey& key) {
+  Hlt::Selection& registerSelection(const Gaudi::StringKey& key) {
         Hlt::Selection* tsel = new Hlt::Selection(key);
         setOutputSelection(tsel);
         return *tsel;
@@ -62,7 +62,7 @@ public:
 
   // register an output selection with candidates of T type (e.g. Track)
   template <typename T>
-  Hlt::TSelection<T>& registerTSelection(const stringKey& key) {
+  Hlt::TSelection<T>& registerTSelection(const Gaudi::StringKey& key) {
         Hlt::TSelection<T>* tsel = new Hlt::TSelection<T>(key);
         setOutputSelection(tsel);
         return *tsel;
@@ -95,7 +95,7 @@ private:
   StatusCode sysExecute();
 
   template <typename T> 
-  const Hlt::TSelection<T>* registerTESSelection(const stringKey& key) {
+  const Hlt::TSelection<T>* registerTESSelection(const Gaudi::StringKey& key) {
        // must ALWAYS add a callback to our stack for this 
        if (!dataSvc().hasSelection(key) 
            && dataSvc().addSelection( new Hlt::TSelection<T>(key), this, true).isFailure()) {
@@ -131,7 +131,7 @@ private:
   Hlt::Selection* m_outputSelection;
 
   // map of id of selection and histogram to monitor input candidate
-  std::map<stringKey,AIDA::IHistogram1D*> m_inputHistos;
+  std::map<Gaudi::StringKey,AIDA::IHistogram1D*> m_inputHistos;
   
   // map of the output selection candidates
   AIDA::IHistogram1D* m_outputHisto;

@@ -1,9 +1,11 @@
-// $Id: HltSelectionContainer.h,v 1.5 2009-10-25 21:07:10 graven Exp $
+// $Id: HltSelectionContainer.h,v 1.6 2009-12-23 17:59:47 graven Exp $
 #ifndef HLTBASE_HLTSELECTIONCONTAINER_H 
 #define HLTBASE_HLTSELECTIONCONTAINER_H 1
+#include <vector>
+#include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/StringKey.h"
 #include "HltBase/HltSelection.h"
 #include "HltBase/HltAlgorithm.h"
-#include "HltBase/stringKey.h"
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/GaudiException.h"
 #include "boost/lexical_cast.hpp"
@@ -46,16 +48,16 @@ namespace Hlt {
         template <typename Candidate> struct data_ {
                 typedef Hlt::TSelection<Candidate> selection_type;
                 typedef Candidate                  candidate_type;
-                selection_type*             selection;
-                stringKey                   property;
+                selection_type*                    selection;
+                Gaudi::StringKey                   property;
                 data_() : selection(0) {}
         };
 
         template <typename Candidate> struct cdata_ {
                 typedef const Hlt::TSelection<Candidate> selection_type;
                 typedef Candidate                        candidate_type;
-                selection_type*             selection;
-                stringKey                   property;
+                selection_type*                          selection;
+                Gaudi::StringKey                         property;
                 cdata_() : selection(0) {}
         };
 
@@ -85,20 +87,16 @@ namespace Hlt {
             template <typename U> void operator()(U& t) {
                 std::string def = m_defs[m_counter];
                 if (m_counter==0) {
-                    StringProperty x(def.empty() ? m_alg.name() : def );
-                    t.property.updateHandler( x ); // set default output name...
-                    m_alg.declareProperty( "OutputSelection",t.property.property() );
+                    t.property = Gaudi::StringKey( def.empty() ? m_alg.name() : def ); // set default output name...
+                    m_alg.declareProperty( "OutputSelection",t.property );
                 } else {
                     std::string prop( "InputSelection" );
                     if (N>2) prop += boost::lexical_cast<std::string>(m_counter);
                     if (!def.empty()) {
-                        StringProperty x( def );
-                        t.property.updateHandler( x ); // set default input name...
+                        t.property = Gaudi::StringKey(def);// set default input name...
                     }
                     m_alg.declareProperty( prop,
-                                           t.property.property() ); //TODO: add callback, locked as soon as corresponding TSelection* is non-zero...
-                                                                    //WARNING: stringKey already _has_ a callback...
-                                                                    //TODO: add help entry
+                                           t.property ); //TODO: add help entry
                 }
                 ++m_counter;
             }
@@ -215,14 +213,13 @@ namespace Hlt {
     public:
         SelectionContainer0(HltAlgorithm& owner) : m_output(0), m_owner(owner) {}
         void declareProperties() { 
-            StringProperty x(m_owner.name());
-            m_property.updateHandler( x ); // set default output name to the instance name of the algorithm
-            m_owner.declareProperty("OutputSelection",m_property.property()); 
+            m_property = Gaudi::StringKey( m_owner.name() ); // set default output name to the instance name of the algorithm
+            m_owner.declareProperty("OutputSelection",m_property); 
         }
         void registerSelection() { m_output = &m_owner.registerSelection(m_property) ; }
         Selection* output() { return m_output; }
     private:
-        stringKey   m_property;
+        Gaudi::StringKey   m_property;
         Selection*  m_output;
         HltAlgorithm& m_owner;
     };

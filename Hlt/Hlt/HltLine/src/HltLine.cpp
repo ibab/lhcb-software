@@ -1,8 +1,9 @@
-// $Id: HltLine.cpp,v 1.13 2009-11-26 22:39:47 aperezca Exp $
+// $Id: HltLine.cpp,v 1.14 2009-12-23 17:59:49 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
 #include <cmath>
+#include <vector>
 // ============================================================================
 // Boost
 // ============================================================================
@@ -19,6 +20,8 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
+#include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/StringKey.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/ListItem.h"
@@ -33,7 +36,6 @@
 // ============================================================================
 // HLT
 // ============================================================================
-#include "HltBase/stringKey.h"
 #include "HltBase/HltSelection.h"
 #include "HltBase/HltHistogramUtilities.h"
 using namespace Hlt::HistogramUtilities;
@@ -236,7 +238,7 @@ StatusCode HltLine::initialize() {
   //== now pick up (if exists) the selection created by the 'decision stage'
   //   if it exists, then it was just created during the above 'initialize' of 
   //   the stages...
-  stringKey key(m_decision);
+  Gaudi::StringKey key(m_decision);
   m_selection = dataSvc().selection(key,this);
   
   //== pick up (recursively!) our sub algorithms and their depth count

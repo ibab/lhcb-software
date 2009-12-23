@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.h,v 1.9 2009-11-26 13:08:48 tskwarni Exp $
+// $Id: HltSelReportsMaker.h,v 1.10 2009-12-23 17:59:50 graven Exp $
 #ifndef HLTSELREPORTSMAKER_H 
 #define HLTSELREPORTSMAKER_H 1
 
@@ -127,7 +127,7 @@ private:
 
 
   // get trigger selection names 
-  std::vector<stringKey> m_selectionIDs;
+  std::vector<Gaudi::StringKey> m_selectionIDs;
   std::vector< int > m_selectionIntIDs;
   std::vector< int > m_maxCand;
   std::vector< int > m_maxCandDebug;
