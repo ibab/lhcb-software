@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-12-22 - Anton Poluektov
+ - Removed StreamMinBias.py (replaced by StreamMiniBias.py)
+ - Added StrippingDstarD02PipiMuMuPiMuKPiKmu.py (Walter Bonivento)
+
 ! 2009-12-19  Yasmine Amhis
  - Add StreamMiniBias.py 
  - Update StrippingNoBias.py (use lumi trigger), StrippingMiniBias.py (separate

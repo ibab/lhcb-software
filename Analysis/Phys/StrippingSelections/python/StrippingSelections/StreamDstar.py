@@ -13,6 +13,7 @@ from StrippingSelections import StrippingDstarD2KShh
 from StrippingSelections import StrippingDstarD2KShhRobust
 from StrippingSelections import StrippingBsDsMuNu
 from StrippingSelections import Strippingb2DMuX
+from StrippingSelections import StrippingDstarD02PipiMuMuPiMuKPiKmu
 
 stream = StrippingStream("Dstar")
 stream.appendLines( [ 
@@ -44,5 +45,7 @@ stream.appendLines( [
 		        StrippingDstarD2KShhRobust.line12, 
 		        StrippingBsDsMuNu.line, 
 			Strippingb2DMuX.line, 
-			Strippingb2DMuX.line1
+			Strippingb2DMuX.line1, 
+			StrippingDstarD02PipiMuMuPiMuKPiKmu.lineDstarWithD02MuMu, 
+			StrippingDstarD02PipiMuMuPiMuKPiKmu.lineDstarWithD0PiPiForDstarWithD02MuMu
 		    ] )

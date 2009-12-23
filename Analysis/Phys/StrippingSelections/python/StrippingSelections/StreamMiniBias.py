@@ -11,6 +11,8 @@ from StrippingSelections import StrippingMiniBias
 
 from StrippingSelections import StrippingNoBias 
 
+from StrippingSelections.StrippingPass import StrippingPassConf
+
 stream = StrippingStream("MiniBias")
 
 stream.appendLines( [ StrippingMiniBias.TrackLine,
@@ -19,6 +21,6 @@ stream.appendLines( [ StrippingMiniBias.TrackLine,
                       StrippingNoBias.RandomBeam1Line,
                       StrippingNoBias.RandomBeam2Line,
                       StrippingNoBias.RandomNoBeamLine,
-                      StrippingNoBias.RandomBeamCrossingLine  ])
-
-
+                      StrippingNoBias.RandomBeamCrossingLine,
+                      StrippingPassConf().passLine(),
+                      StrippingPassConf().physLine() ])
