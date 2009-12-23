@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.161 2009-12-16 11:11:13 jpalac Exp $
+!$Id: release.notes,v 1.162 2009-12-23 12:28:07 poluekt Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -7,6 +7,9 @@
 ! When adding a Particle make sure it is appended to one of the Standard* files
 !
 !-----------------------------------------------------------------------------
+
+! 2009-12-23 - Anton Poluektov
+ - Added StdVeryLooseDstarWithD2HH (Marta Calvi)
 
 ! 2009-12-14 - Anton Poluektov
  - Added StdVeryLooseD0HH, StdVeryLooseDplus and StdVeryLooseLambdac by Liming Zhang. 
