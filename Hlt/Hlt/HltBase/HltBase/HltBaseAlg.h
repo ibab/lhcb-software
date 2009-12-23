@@ -1,11 +1,11 @@
-// $Id: HltBaseAlg.h,v 1.8 2008-05-03 09:21:12 graven Exp $
+// $Id: HltBaseAlg.h,v 1.9 2009-12-23 10:29:49 graven Exp $
 #ifndef HLTBASE_HLTBASEALG_H 
 #define HLTBASE_HLTBASEALG_H 1
 
 // Include files
 
-#include "GaudiAlg/GaudiHistoAlg.h"
 #include "HltBase/HltBase.h"
+#include "GaudiAlg/GaudiHistoAlg.h"
 
 /** @class HltBaseAlg 
  *  @author Hugo Ruiz Perez
