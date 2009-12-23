@@ -1,4 +1,4 @@
-// $Id: TrackIDs.cpp,v 1.1 2009-12-17 20:18:37 ibelyaev Exp $
+// $Id: TrackIDs.cpp,v 1.2 2009-12-23 11:40:18 graven Exp $
 // ===========================================================================
 // Include files 
 // ===========================================================================
@@ -128,9 +128,9 @@ LoKi::Tracks::CountOTIDs::CountOTIDs
   const unsigned int            i   ) 
   : LoKi::BasicFunctors<LHCb::Track>::Function ()
   , m_pmf   ( pmf   ) 
+  , m_uints ( 1 , i )
   , m_imin  ( boost::integer_traits<unsigned int>::const_max ) 
   , m_imax  ( boost::integer_traits<unsigned int>::const_min ) 
-  , m_uints ( 1 , i )
   , m_nick  (       )
 {
   

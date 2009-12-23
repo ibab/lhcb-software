@@ -1,4 +1,4 @@
-// $Id: HltUnit.cpp,v 1.8 2009-12-23 10:37:35 graven Exp $
+// $Id: HltUnit.cpp,v 1.9 2009-12-23 11:40:18 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -81,7 +81,7 @@ StatusCode LoKi::HltUnit::registerOutput
                    selection->id().str()+ "'" , sc ) ; }
   //
   // register as "output" selection 
-  m_out.insert ( selection->id () , selection ) ; 
+  m_out.insert ( selection->id ().str() , selection ) ;  //@TODO: remove once stringKey -> StringKey migration complete
   //
   return StatusCode::SUCCESS ;
 }

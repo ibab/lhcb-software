@@ -1,4 +1,4 @@
-// $Id: ServiceRegister.cpp,v 1.6 2009-12-23 10:37:35 graven Exp $
+// $Id: ServiceRegister.cpp,v 1.7 2009-12-23 11:40:18 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -97,7 +97,7 @@ StatusCode Hlt::Service::registerOutput
                    Register_Invalid_Lock              ) ;  }          // RETURN
   // ==========================================================================
   { // check for the double registration 
-    if      ( inMap ( selection -> id() ) ) 
+    if      ( inMap ( selection -> id().str() ) )  // @TODO remove once stringKey -> StringKey migration complete
     { return Error ( "registerOutput: the selection with ID '" 
                      + selection->id().str() + 
                      "' is already registered (1) " ,
@@ -118,10 +118,10 @@ StatusCode Hlt::Service::registerOutput
   }
   // insert it! 
   SelMap sels = ifind->second ;
-  sels.insert ( selection -> id() , selection ) ;
+  sels.insert ( selection -> id().str() , selection ) ; //@TODO: remove once stringKey -> StringKey migration complete
   m_outputs.update ( producer , sels ) ;
   // register it also in global map:
-  m_selections.insert ( selection -> id () , selection ) ;
+  m_selections.insert ( selection -> id ().str() , selection ) ; //@TODO remove once stringKey -> StringKey migration complete
   //
   debug() << "Register OUTPUT" 
           << " selection '" << std::string( selection -> id () ) << "'" 
