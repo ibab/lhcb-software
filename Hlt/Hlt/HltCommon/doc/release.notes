@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-12-23 - Gerhard Raven
+ - fix double increment of counter in HltL0MuonCandidates
+
 ! 2009-12-14 - Patrick Koppenburg
  - Protect debug(). Initialize pointers
  - v5r16

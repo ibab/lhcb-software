@@ -1,4 +1,4 @@
-// $Id: HltL0MuonCandidates.cpp,v 1.14 2009-11-04 21:56:17 graven Exp $
+// $Id: HltL0MuonCandidates.cpp,v 1.15 2009-12-23 16:12:36 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -63,9 +63,7 @@ StatusCode HltL0MuonCandidates::initialize() {
   
   m_maker = tool<IMuonSeedTool>("MuonSeedTool");
   // make sure counters exist
-  counter("#accept");
   counter("#input");
-  counter("#candidates accepted");
   //declareInfo("#accept",counter("#accept"),std::string("Events accepted by ") + name());
   //declareInfo("#input",&counter("#input"),std::string("Candidates seen by ") + name());
   //declareInfo("#candidates accepted",&counter("#candidates accepted"),std::string("Candidates accepted by ") + name());
@@ -128,7 +126,7 @@ StatusCode HltL0MuonCandidates::execute() {
     bool pass = ( cuts.empty() || ( l0muon->encodedPt() > cuts[0] ) );
     if (!pass)  continue;
 
-    debug() << "l0pt " << l0muon->pt()<< endmsg;
+    debug() << "l0pt " << l0muon->pt() << " l0encodedPt " << l0muon->encodedPt()<< endmsg;
     if (checkClone(l0muon)) {
         debug() << "is clone " << endmsg;
         continue;
@@ -146,8 +144,6 @@ StatusCode HltL0MuonCandidates::execute() {
   if (!m_selection.output()->empty()) fill(m_ptMax,ptMax,1.);
 
   counter("#input")  +=  m_selection.input<1>()->size();
-  counter("#accept") += !m_selection.output()->empty();
-  counter("#candidates accepted") +=  m_selection.output()->size();
 
   if (msgLevel(MSG::DEBUG)) {
      debug() << "# Input: " << m_selection.input<1>()->size() 
