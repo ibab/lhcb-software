@@ -1,11 +1,11 @@
-// $Id: HltL0CaloCandidates.h,v 1.4 2009-01-07 15:33:46 graven Exp $
+// $Id: HltL0CaloCandidates.h,v 1.5 2009-12-23 16:14:31 graven Exp $
 #ifndef HLTCOMMON_HLTLOCALOPREPARE_H 
 #define HLTCOMMON_HLTL0CALOPREPARE_H 1
 
 // Include files
 // from Gaudi
-#include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltSelectionContainer.h"
+#include "HltBase/HltAlgorithm.h"
 #include "HltBase/ICaloSeedTool.h"
 #include "GaudiKernel/Property.h"
 

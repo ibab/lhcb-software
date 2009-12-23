@@ -1,11 +1,11 @@
-// $Id: HltL0MuonCandidates.h,v 1.3 2009-01-07 12:21:40 graven Exp $
+// $Id: HltL0MuonCandidates.h,v 1.4 2009-12-23 16:14:31 graven Exp $
 #ifndef HLTCOMMON_HLTL0MUONPREPARE_H 
 #define HLTCOMMON_HLTL0MUONPREPARE_H 1
 
 // Include files
 // from Gaudi
-#include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltSelectionContainer.h"
+#include "HltBase/HltAlgorithm.h"
 #include "HltBase/IMuonSeedTool.h"
 #include "Event/L0MuonCandidate.h"
 

@@ -1,11 +1,11 @@
-// $Id: HltSelectTracksForSwimming.h,v 1.2 2008-07-30 13:37:32 graven Exp $
+// $Id: HltSelectTracksForSwimming.h,v 1.3 2009-12-23 16:14:31 graven Exp $
 #ifndef HLTSELECTTRACKSFORSWIMMING_H 
 #define HLTSELECTTRACKSFORSWIMMING_H 1
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltSelectionContainer.h"
+#include "HltBase/HltAlgorithm.h"
 #include "Event/Particle.h"
 
 /** @class HltSelectTracksForSwimming HltSelectTracksForSwimming.h 

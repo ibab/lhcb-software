@@ -1,11 +1,11 @@
-// $Id: HltCopySelection.h,v 1.1 2009-03-31 11:37:17 graven Exp $
+// $Id: HltCopySelection.h,v 1.2 2009-12-23 16:14:31 graven Exp $
 #ifndef HLTCOMMON_HLTCOPYSELECTION_H 
 #define HLTCOMMON_HLTCOPYSELECTION_H 1
 
 // Include files
 // from Gaudi
-#include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltSelectionContainer.h"
+#include "HltBase/HltAlgorithm.h"
 
 /** @class HltCopySelection HltCopySelection.h
  *  

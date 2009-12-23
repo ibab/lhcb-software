@@ -1,11 +1,11 @@
-// $Id: HltVertexMaker.h,v 1.15 2009-10-08 15:38:18 graven Exp $
+// $Id: HltVertexMaker.h,v 1.16 2009-12-23 16:14:31 graven Exp $
 #ifndef HLTVERTEXMAKER_H 
 #define HLTVERTEXMAKER_H 1
 
 // Include files
 // from Gaudi
-#include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltSelectionContainer.h"
+#include "HltBase/HltAlgorithm.h"
 #include "HltBase/IBiFunctionFactory.h"
 #include "HltFunctions.h"
 #include <utility>

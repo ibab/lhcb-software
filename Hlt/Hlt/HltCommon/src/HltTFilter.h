@@ -1,11 +1,11 @@
-// $Id: HltTFilter.h,v 1.14 2009-12-14 21:26:45 pkoppenb Exp $
+// $Id: HltTFilter.h,v 1.15 2009-12-23 16:14:31 graven Exp $
 #ifndef HLTCOMMON_HLTTFILTER_H 
 #define HLTCOMMON_HLTTFILTER_H 1
 
 // Include files
 // from Gaudi
-#include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltSelectionContainer.h"
+#include "HltBase/HltAlgorithm.h"
 #include "HltBase/IFunctionFactory.h"
 
 /** @class HltTrackFilter HltTrackFilter.h
