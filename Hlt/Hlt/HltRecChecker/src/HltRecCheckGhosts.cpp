@@ -1,10 +1,12 @@
-// $Id: HltRecCheckGhosts.cpp,v 1.11 2009-12-23 17:59:50 graven Exp $
+// $Id: HltRecCheckGhosts.cpp,v 1.12 2009-12-24 14:13:20 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "boost/foreach.hpp"
+#include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/StringKey.h"
 #include "HltBase/HltSelection.h"
 
 // local
@@ -23,6 +25,8 @@ DECLARE_ALGORITHM_FACTORY( HltRecCheckGhosts );
 HltRecCheckGhosts::HltRecCheckGhosts( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator ) 
+  , m_hltSvc(0)
+  , m_regSvc(0)
   , m_ghostToolLong(0)
   , m_ghostToolVelo(0)
   , m_ghostToolVeloR(0)
@@ -32,7 +36,7 @@ HltRecCheckGhosts::HltRecCheckGhosts( const std::string& name,
   , m_veloExpectation(0)
   
 {
-  declareProperty("inputTrackSelection", m_inputTrackSelection) ;
+  declareProperty("inputTrackSelection", m_inputTrackSelection ) ;
   declareProperty("purityCut", m_purityCut = 0.7) ;
 }
 //=========================================================================================================
@@ -43,7 +47,9 @@ StatusCode HltRecCheckGhosts::initialize() {
 
   StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
 
-  m_dataSvc = svc<IHltDataSvc>("HltDataSvc",true);
+  m_regSvc = svc<Hlt::IRegister> ( "Hlt::Service" , true ) ;
+  sc = m_regSvc->registerInput(m_inputTrackSelection,this);
+  m_hltSvc = svc<Hlt::IData> ( "Hlt::Service" , true ) ;
 
   m_ghostToolLong       = tool<ITrackGhostClassification>("LongGhostClassification",this);
   m_ghostToolVelo       = tool<ITrackGhostClassification>("VeloGhostClassification",this);
@@ -122,7 +128,7 @@ StatusCode HltRecCheckGhosts::execute() {
 
   debug() << "About to retrieve the selection" << endmsg;
 
-  const Hlt::Selection* s = m_dataSvc->selection(m_inputTrackSelection,this);
+  const Hlt::Selection* s = m_hltSvc->selection(m_inputTrackSelection,this);
 
   if (s == NULL) return StatusCode::SUCCESS;
 

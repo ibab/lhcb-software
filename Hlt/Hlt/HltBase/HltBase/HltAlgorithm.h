@@ -1,11 +1,11 @@
-// $Id: HltAlgorithm.h,v 1.43 2009-12-23 17:59:47 graven Exp $
+// $Id: HltAlgorithm.h,v 1.44 2009-12-24 14:13:19 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
 // Include files
 #include "HltBase/HltBaseAlg.h"
 #include "HltBase/HltSelection.h"
-#include <boost/type_traits/remove_const.hpp>
+#include "boost/utility.hpp"
 
 /** @class HltAlgorithm 
  *  
@@ -35,11 +35,11 @@ public:
 
   // driver of the initialize()
   virtual StatusCode sysInitialize();
+  virtual StatusCode sysFinalize();
 
   // restart algorithm
   virtual StatusCode restart  ();
 
-  //@TODO: move the {retrieve,register}{,T}Selection into IHltDataSvc...
   // retrieve a selection
   const Hlt::Selection& retrieveSelection(const Gaudi::StringKey& selname);
 
@@ -47,7 +47,7 @@ public:
   template <class T>
   const Hlt::TSelection<T>& retrieveTSelection(const Gaudi::StringKey& key) {
         const Hlt::TSelection<T> *sel = (key.str().substr(0,4) == "TES:")  ?
-                                  this->registerTESSelection<T>(key) :
+                                  this->registerTESSelection<T>(Gaudi::StringKey(key.str().substr(4))) :
                                   retrieveSelection(key).template down_cast<T>();
         if (sel==0) throw GaudiException("Failed to down_cast Selection",key.str(),StatusCode::FAILURE);
         return *sel;
@@ -97,16 +97,14 @@ private:
   template <typename T> 
   const Hlt::TSelection<T>* registerTESSelection(const Gaudi::StringKey& key) {
        // must ALWAYS add a callback to our stack for this 
-       if (!dataSvc().hasSelection(key) 
-           && dataSvc().addSelection( new Hlt::TSelection<T>(key), this, true).isFailure()) {
+       StatusCode sc = regSvc()->registerTESInput(key,this);
+       if (sc.isFailure()) {
             throw GaudiException("Failed to register TES Selection",key.str(),StatusCode::FAILURE);
        }
-       const Hlt::TSelection<T>* selection = retrieveSelection(key).template down_cast<T>();
-       if (selection==0) {
-            throw GaudiException("Failed to retrieve TES-backed Selection",key.str(),StatusCode::FAILURE);
-       }
-       m_callbacks.push_back( new HltAlgorithm::TESSelectionCallBack<const Hlt::TSelection<T> >( *selection,*this ) ); 
-       return selection;
+       typedef HltAlgorithm::TESSelectionCallBack<Hlt::TSelection<T> > cb_t;
+       cb_t *cb = new cb_t(key,*this);
+       m_callbacks.push_back( cb );
+       return cb->selection();
   }
 
   // must inputs be valid?
@@ -143,25 +141,26 @@ private:
   };
 
   template<typename T>
-  class TESSelectionCallBack : public CallBack {
+  class TESSelectionCallBack : boost::noncopyable, public CallBack {
   public:
-      TESSelectionCallBack(T &selection,HltAlgorithm &parent) : 
-        m_selection(const_cast<typename boost::remove_const<T>::type&>(selection)),m_parent(parent) { //antonio
-        assert(m_selection.id().str().substr(0,4)=="TES:");
-      }
+      TESSelectionCallBack(const Gaudi::StringKey& key,HltAlgorithm &parent) 
+       : m_selection(new T(key)),m_parent(parent) 
+      { }
+      ~TESSelectionCallBack() { delete m_selection; }
+      const T *selection() const { return m_selection; }
       StatusCode execute() {
         typedef typename T::candidate_type::Container  container_type;
         // TODO: does not work, as fullTESLocation is private...
         //container_type *obj = SmartDataPtr<container_type>( m_parent.evtSvc(), m_parent.fullTESLocation( m_selection.id().str().substr(4), true ) );
         // if (obj==0) { }
-        container_type *obj = m_parent.get<container_type>( m_parent.evtSvc(), m_selection.id().str().substr(4) );
-        m_selection.clean(); //TODO: check if/why this is needed??
-        m_selection.insert(m_selection.end(),obj->begin(),obj->end());
-        m_selection.setDecision( !m_selection.empty() ); // force it processed...
+        container_type *obj = m_parent.get<container_type>( m_parent.evtSvc(), m_selection->id().str() );
+        m_selection->clean(); //TODO: check if/why this is needed??
+        m_selection->insert(m_selection->end(),obj->begin(),obj->end());
+        m_selection->setDecision( !m_selection->empty() ); // force it processed...
         return StatusCode::SUCCESS;
       }
   private:
-      typename boost::remove_const<T>::type&            m_selection;
+      T*  m_selection;
       HltAlgorithm& m_parent;
   };
 

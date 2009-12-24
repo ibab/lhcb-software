@@ -1,4 +1,4 @@
-// $Id: LumiCountHltTracks.cpp,v 1.10 2009-12-23 17:59:49 graven Exp $
+// $Id: LumiCountHltTracks.cpp,v 1.11 2009-12-24 14:13:20 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -47,8 +47,19 @@ LumiCountHltTracks::~LumiCountHltTracks() {}
 //=============================================================================
 StatusCode LumiCountHltTracks::initialize() {
 
+  Hlt::IRegister::Lock lock(regSvc(),this);
   StatusCode sc = HltBaseAlg::initialize();
   if (sc.isFailure()) return sc;
+  sc = regSvc()->registerInput(m_InputSelectionName, this);
+  if (sc.isFailure()) {
+      error() << " could not register " << m_InputSelectionName << endmsg;
+      return sc;
+  }
+  m_input = hltSvc()->selection(m_InputSelectionName, this);
+  if (m_input == 0) {
+      error() << " could not obtain " << m_InputSelectionName << endmsg;
+      return StatusCode::FAILURE;
+  }
 
   debug() <<  "InputSelection: " << boost::format("%20s")%m_InputSelectionName  << " "
          <<     "CounterName: " << boost::format("%20s")%m_CounterName         << " "
@@ -75,7 +86,7 @@ StatusCode LumiCountHltTracks::initialize() {
 StatusCode LumiCountHltTracks::execute() {
 
   // load the track objects
-  int nCounter =  dataSvc().selection(m_InputSelectionName, this)->size();
+  int nCounter =  m_input->size(); //TODO: only do this at initialize, and cache...
   debug() << "There are " << nCounter << " tracks in " << m_InputSelectionName <<  endreq ;
 
   // get container

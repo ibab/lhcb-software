@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.59 2009-12-23 17:59:49 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.60 2009-12-24 14:13:20 graven Exp $
 // Include files 
 
 #include "Event/Particle.h"
@@ -57,13 +57,23 @@ HltAlgorithm::~HltAlgorithm()
 
 
 StatusCode HltAlgorithm::sysInitialize() {
+  // Bypass the initialization if the algorithm
+  // has already been initialized.
+  if ( Gaudi::StateMachine::INITIALIZED <= FSMState() ) return StatusCode::SUCCESS;
   // set up context such that tools can grab the algorithm...
   // kind of non-local, but kind of better (much more 
   // lightweight and less invasive) than the alternative.
   // Note that while GaudiAlgorithm registers the context svc
   // in sysExectute, it doesn't do so in sysInitialize...
   Gaudi::Utils::AlgContext sentry( contextSvc(), this );
+  Hlt::IRegister::Lock lock(regSvc(),this);
   return HltBaseAlg::sysInitialize();
+}
+
+StatusCode HltAlgorithm::sysFinalize() {
+  BOOST_FOREACH( CallBack* i, m_callbacks ) delete i ; 
+  m_callbacks.clear();
+  return HltBaseAlg::sysFinalize();
 }
 
 
@@ -203,10 +213,16 @@ private:
 const Hlt::Selection& HltAlgorithm::retrieveSelection(const Gaudi::StringKey& selname) {
     Assert(!selname.empty()," retrieveSelection() no selection name");
     if (msgLevel(MSG::DEBUG)) debug() << " retrieveSelection " << selname << endreq;
-    const Hlt::Selection* sel = dataSvc().selection(selname,this);
+    StatusCode sc = regSvc()->registerInput(selname,this);
+    if (sc.isFailure()) {
+      error() << " failed to register input " << selname << endreq;
+      Assert(0," retrieveSelection, failed to register input!");
+        
+    }
+    const Hlt::Selection* sel = hltSvc()->selection(selname,this);
     if (sel == 0 ) {
-      error() << " unknown selection " << selname << endreq;
-      Assert(0," retrieveSelection, unknown selection!");
+      error() << " failed to retrieve input " << selname << endreq;
+      Assert(0," retrieveSelection, failed to retrieve input!");
     }
     if (std::find_if(m_inputSelections.begin(),
                      m_inputSelections.end(), 
@@ -228,8 +244,7 @@ void HltAlgorithm::setOutputSelection(Hlt::Selection* sel) {
     m_outputSelection = sel;
     sel->addInputSelectionIDs( m_inputSelections.begin(), m_inputSelections.end() );
     if (msgLevel(MSG::DEBUG)) debug() << " Output selection " << sel->id() << endreq;
-    StatusCode sc = dataSvc().addSelection(sel,this,false);
-    if (sc.isFailure()) {
+    if (regSvc()->registerOutput(sel,this).isFailure()) {
        throw GaudiException("Failed to add Selection",sel->id().str(),StatusCode::FAILURE);
     }
     if (produceHistos()) m_outputHisto = initializeHisto(sel->id().str());

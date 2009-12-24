@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.25 2009-11-26 13:43:28 albrecht Exp $
+// $Id: HltBase.icpp,v 1.26 2009-12-24 14:13:19 graven Exp $
 // Include files
 
 
@@ -17,8 +17,10 @@
 template <class EBASE>
 void HltBase<EBASE>::hltBaseConstructor() {
   EBASE::declareProperty("HistoDescriptor", m_histoDescriptor);
-  m_dataSvc = 0;
   m_hltANNSvc = 0;
+  m_regSvc =0;
+  m_hltSvc =0;
+
 }
 
 template <class EBASE>
@@ -70,14 +72,24 @@ AIDA::IHistogram1D* HltBase<EBASE>::initializeHisto(const std::string& title,
   return EBASE::book(hd);
 };
 
+// ============================================================================
+// accessor to Hlt Registration Service 
+// ============================================================================
 template <class EBASE>
-IHltDataSvc& HltBase<EBASE>::dataSvc() const {
-  // see eg. http://womble.decadentplace.org.uk/c++/template-faq.html#disambiguation
-  // for an explanation why the keyword 'template' must be inserted to get this to compile...
-  if (m_dataSvc == 0)  m_dataSvc = EBASE::template svc<IHltDataSvc>("HltDataSvc",true);
-  return *m_dataSvc;
+Hlt::IRegister* HltBase<EBASE>::regSvc() const 
+{
+  if ( 0 == m_regSvc ) m_regSvc = EBASE::template svc<Hlt::IRegister> ( "Hlt::Service" , true ) ;
+  return m_regSvc ;
 }
-
+// ============================================================================
+// accessor to Hlt Data Service 
+// ============================================================================
+template <class EBASE>
+Hlt::IData* HltBase<EBASE>::hltSvc() const 
+{
+  if ( 0 == m_hltSvc ) m_hltSvc = EBASE::template svc<Hlt::IData> ( "Hlt::Service" , true ) ;
+  return m_hltSvc ;
+}
 
 template <class EBASE>
 IANNSvc& HltBase<EBASE>::annSvc() const {

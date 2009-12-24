@@ -1,12 +1,22 @@
-// $Id: HltBase.h,v 1.24 2009-10-07 09:03:46 graven Exp $
+// $Id: HltBase.h,v 1.25 2009-12-24 14:13:19 graven Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
 // Include files
-
-#include "GaudiAlg/GaudiHistoAlg.h"
+#include <vector>
+#include <map>
+#include <string>
+#include <iostream>
+#include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/StringKey.h"
+#include "GaudiKernel/HistoDef.h"
+namespace Gaudi { namespace Utils { inline std::ostream& operator<<( std::ostream& o , const Gaudi::Histo1DDef& histo ) { return histo.fillStream(o);};}}
+#include "GaudiKernel/Property.h"
+#include "GaudiKernel/VectorMap.h"
+#include "GaudiKernel/MsgStream.h"
 #include "Kernel/IANNSvc.h"
-#include "HltBase/IHltDataSvc.h"
+#include "HltBase/IHltRegister.h"
+#include "HltBase/IHltData.h"
 
 /** @class HltBase
  *  
@@ -19,7 +29,6 @@
  *       Counters 
  *
  *  Options
- *       HltDataLocation 
  *       HistogramDescriptor 
  *
  *  @author Hugo Ruiz Perez
@@ -30,6 +39,8 @@ namespace LHCb {
   class Track;
   class RecVertex;
 }
+
+class ISvcLocator;
 
 template <class BASE>
 class HltBase : public BASE {
@@ -58,7 +69,7 @@ protected:
   // print info of this container
   template <class CONT>
   void printInfo(const std::string& title, const CONT& cont) {
-    BASE::info() << title << cont.size() << endreq;
+    BASE::info() << title << cont.size() << endmsg;
     typedef typename CONT::const_iterator iter;
     for (iter it = cont.begin(); it != cont.end(); ++it)
       printInfo(title,*(*it));  
@@ -74,8 +85,9 @@ protected:
   void printInfo(const std::string& title,
                  const GaudiUtils::VectorMap<int,double>& info);
 
-  IHltDataSvc& dataSvc() const;
   IANNSvc&     annSvc() const;
+  Hlt::IRegister* regSvc() const ;
+  Hlt::IData* hltSvc() const ;
 
 
   // returns the ID of the extraInfo by name
@@ -91,8 +103,11 @@ private:
   // Property to book histogram from options
   SimpleProperty< std::map<std::string, Gaudi::Histo1DDef> > m_histoDescriptor;
 
-  // hlt data provided service
-  mutable IHltDataSvc* m_dataSvc;
+  // hlt data provider service
+  mutable Hlt::IData* m_hltSvc;
+  //
+  // hlt data registration service
+  mutable Hlt::IRegister* m_regSvc;
 
   // assigned names and numbers service...
   mutable IANNSvc *m_hltANNSvc;

@@ -1,4 +1,4 @@
-// $Id: HltRecCheckGhosts.h,v 1.4 2009-12-23 17:59:50 graven Exp $
+// $Id: HltRecCheckGhosts.h,v 1.5 2009-12-24 14:13:20 graven Exp $
 #ifndef HLTRECCHECKGHOSTS_H 
 #define HLTRECCHECKGHOSTS_H 1
 
@@ -19,7 +19,8 @@
 #include "Event/State.h"
 
 #include "GaudiAlg/GaudiTupleAlg.h"
-#include "HltBase/HltBase.h"
+#include "HltBase/IHltRegister.h"
+#include "HltBase/IHltData.h"
 
 #include "Event/ODIN.h"
 
@@ -57,10 +58,15 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
+  //
+  // hlt data provider service
+  mutable Hlt::IData* m_hltSvc;
+  //
+  // hlt data registration service
+  mutable Hlt::IRegister* m_regSvc;
 
   typedef std::vector<LHCb::LHCbID> LHCbIDs;
 
-  IHltDataSvc* m_dataSvc;
   ILHCbIDsToMCParticles* m_linkTool;
  
   double m_purityCut;

@@ -5,6 +5,10 @@
 !----------------------------------------------------------------------------
 
 
+! 2009-12-24 - Gerhard Raven
+ - migrate from IHltDataSvc to Hlt::IDataSvc and Hlt::IRegisterSvc
+ - bump version to v8r0
+
 ! 2009-12-23 - Gerhard Raven
  - remove unused impact parameter error parameterization
  - move IHlt{Data,Register,Inspector} from LoKiTrigger to here to avoid

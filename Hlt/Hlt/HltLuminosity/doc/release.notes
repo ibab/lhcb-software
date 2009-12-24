@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2009-12-24 - Gerhard Raven
+ - migrate from IHltDataSvc to Hlt::IDataSvc  and Hlt::IRegisterSvc
+
 ! 2009-12-23 - Gerhard Raven
  - migrate from HltBase/stringKey to GaudiKernel/StringKey
 

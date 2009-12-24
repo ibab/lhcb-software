@@ -1,4 +1,4 @@
-// $Id: HltSelectionContainer.h,v 1.6 2009-12-23 17:59:47 graven Exp $
+// $Id: HltSelectionContainer.h,v 1.7 2009-12-24 14:13:19 graven Exp $
 #ifndef HLTBASE_HLTSELECTIONCONTAINER_H 
 #define HLTBASE_HLTSELECTIONCONTAINER_H 1
 #include <vector>
@@ -92,11 +92,10 @@ namespace Hlt {
                 } else {
                     std::string prop( "InputSelection" );
                     if (N>2) prop += boost::lexical_cast<std::string>(m_counter);
-                    if (!def.empty()) {
-                        t.property = Gaudi::StringKey(def);// set default input name...
-                    }
+                    if (!def.empty()) t.property= Gaudi::StringKey(def); // set default input name...
                     m_alg.declareProperty( prop,
-                                           t.property ); //TODO: add help entry
+                                           t.property ); //TODO: add callback, locked as soon as corresponding TSelection* is non-zero...
+                                                         //TODO: add help entry
                 }
                 ++m_counter;
             }

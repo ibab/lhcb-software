@@ -3,6 +3,10 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
+
+! 2009-12-24 - G.Raven
+ - migrate from HltDataSvc to Hlt::IDataSvc & Hlt::IRegisterSvc
+
 ! 2009-12-23 - G. Raven
  - move #include around to facilitate HltBase/stringKey -> GaudiKernel/StringKey migration
  - migrate from HltBase/stringKey to GaudiKernel/StringKey

@@ -1,4 +1,4 @@
-// $Id: LumiCountHltTracks.h,v 1.3 2009-12-23 17:59:49 graven Exp $
+// $Id: LumiCountHltTracks.h,v 1.4 2009-12-24 14:13:20 graven Exp $
 #ifndef LUMICOUNTHLTTRACKS_H 
 #define LUMICOUNTHLTTRACKS_H 1
 
@@ -8,6 +8,7 @@
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/StringKey.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
+#include "GaudiKernel/StringKey.h"
 #include "HltBase/HltBaseAlg.h"
 
 /** @class LumiCountHltTracks LumiCountHltTracks.h
@@ -30,6 +31,7 @@ public:
 
 protected:
   
+  const Hlt::Selection* m_input;
   Gaudi::StringKey   m_InputSelectionName;
   std::string m_CounterName;
   int m_Counter;
