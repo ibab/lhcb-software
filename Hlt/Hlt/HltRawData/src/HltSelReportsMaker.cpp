@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.cpp,v 1.19 2009-12-24 14:09:51 graven Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.20 2009-12-24 14:11:09 graven Exp $
 // #define DEBUGCODE
 // Include files 
 #include "boost/algorithm/string/replace.hpp"
@@ -488,7 +488,7 @@ StatusCode HltSelReportsMaker::execute() {
                            packedPVKeys.push_back( iWord );
                            iWord = 0;
                          }
-                         iWord |= ( key >> ( nPackedPVKeys-1) );
+                         iWord |= ( key << ((nPackedPVKeys-1)*8) ) ;
                          keyFound = true;                     
                        }
                      }
@@ -727,7 +727,19 @@ StatusCode HltSelReportsMaker::execute() {
    for( HltObjectSummary::Container::const_iterator ppHos=m_objectSummaries->begin();
         ppHos!=m_objectSummaries->end();++ppHos){
      const HltObjectSummary* pHos=*ppHos;    
-     verbose() << " key " << pHos->index() << *pHos << endmsg;    
+     verbose() << " key " << pHos->index();
+     std::vector<std::string> selby = outputSummary->selectedAsCandidateBy(pHos);
+     if( selby.size() ){
+       verbose() << " selectedAsCandidateBy=";       
+       for( std::vector<std::string>::const_iterator i=selby.begin();i!=selby.end();++i){
+         verbose()  << *i << " ";
+       }
+       std::pair<std::string,int> pvInfo = outputSummary->pvSelectionNameAndKey(pHos);
+       if( pvInfo.second > -1 ){
+         verbose() << " pvSelectionName= " << pvInfo.first << " pvKey= " << pvInfo.second << " ";
+       }
+     }     
+     verbose() << *pHos << endmsg;    
    }
    
   }

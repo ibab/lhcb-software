@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.55 2009-12-24 14:09:51 graven Exp $
+!$Id: release.notes,v 1.56 2009-12-24 14:11:09 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
@@ -8,6 +8,7 @@
 ! 2009-12-24 - Gerhard Raven
  - temporarily do 'cvs update -j 1.18 -j 1.17 src/HltSelReportsMaker.cpp'
  - remove unneeded inclusion of IHltDataSvc.h
+ - and redo 'cvs update -j 1.17 -j 1.18 src/HltSelReportsMaker.cpp'
 
 ! 2009-12-23 - Gerhard Raven
  - migrate from HltBase/stringKey to GaudiKernel/StringKey
