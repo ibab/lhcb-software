@@ -1,11 +1,13 @@
-// $Id: HltLine.h,v 1.9 2009-11-26 22:39:48 aperezca Exp $
+// $Id: HltLine.h,v 1.10 2009-12-24 16:38:16 graven Exp $
 #ifndef HLTLINE_H
 #define HLTLINE_H 1
 
 // Include files
 // from Gaudi
 #include "Kernel/IANNSvc.h"
-#include "HltBase/IHltDataSvc.h"
+#include "HltBase/IHltData.h"
+#include "HltBase/IHltRegister.h"
+#include "HltBase/IHltInspector.h"
 #include "HltBase/HltAlgorithm.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
@@ -129,7 +131,9 @@ private:
 
   Algorithm* getSubAlgorithm(const std::string& name);
   IANNSvc&     annSvc() const;
-  IHltDataSvc& dataSvc() const;
+  Hlt::IData& dataSvc() const;
+  Hlt::IInspector& inspectionSvc() const;
+  Hlt::IRegister& regSvc() const;
   
   /** Private copy, assignment operator. This is not allowed **/
   HltLine( const HltLine& a );
@@ -146,7 +150,9 @@ private:
   AIDA::IHistogram1D *m_stepHisto;
   AIDA::IProfile1D *m_candHisto;  //antonio
   mutable IANNSvc *m_hltANNSvc;
-  mutable IHltDataSvc *m_hltDataSvc;
+  mutable Hlt::IData* m_hltSvc;
+  mutable Hlt::IInspector* m_inspectionSvc;
+  mutable Hlt::IRegister* m_regSvc;
   StatEntity *m_acceptCounter;
   StatEntity *m_errorCounter;
   StatEntity *m_slowCounter;

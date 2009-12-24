@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.14 2009-12-23 17:59:49 graven Exp $
+// $Id: HltLine.cpp,v 1.15 2009-12-24 16:38:16 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -142,12 +142,29 @@ IANNSvc& HltLine::annSvc() const {
   return *m_hltANNSvc;
 }
 
-IHltDataSvc& HltLine::dataSvc() const {
-  if (m_hltDataSvc == 0) {
-    StatusCode sc = serviceLocator()->service("HltDataSvc", m_hltDataSvc);
-    Assert( sc.isSuccess() && m_hltDataSvc != 0, " no HltDataSvc??");
+Hlt::IData& HltLine::dataSvc() const {
+  if (m_hltSvc == 0) {
+    StatusCode sc = serviceLocator()->service("Hlt::Service", m_hltSvc);
+    Assert( sc.isSuccess() && m_hltSvc != 0, " no Hlt::Service??");
   }
-  return *m_hltDataSvc;
+  return *m_hltSvc;
+}
+
+Hlt::IInspector& HltLine::inspectionSvc() const {
+  if (m_inspectionSvc == 0) {
+    StatusCode sc = serviceLocator()->service("Hlt::Service", m_inspectionSvc);
+    Assert( sc.isSuccess() && m_inspectionSvc != 0, " no Hlt::Service??");
+  }
+  return *m_inspectionSvc;
+}
+
+
+Hlt::IRegister& HltLine::regSvc() const {
+  if (m_regSvc == 0) {
+    StatusCode sc = serviceLocator()->service("Hlt::Service", m_regSvc);
+    Assert( sc.isSuccess() && m_regSvc != 0, " no Hlt::Service??");
+  }
+  return *m_regSvc;
 }
 //=============================================================================
 // Standard constructor, initializes variables
@@ -162,7 +179,9 @@ HltLine::HltLine( const std::string& name,
   , m_timeHisto(0)
   , m_stepHisto(0)
   , m_hltANNSvc(0)
-  , m_hltDataSvc(0)
+  , m_hltSvc(0)
+  , m_inspectionSvc(0)
+  , m_regSvc(0)
   , m_acceptCounter(0)
   , m_errorCounter(0)
   , m_slowCounter(0)
@@ -239,7 +258,10 @@ StatusCode HltLine::initialize() {
   //   if it exists, then it was just created during the above 'initialize' of 
   //   the stages...
   Gaudi::StringKey key(m_decision);
-  m_selection = dataSvc().selection(key,this);
+  if ( inspectionSvc().hasSelection( key )  ) {
+    Hlt::IRegister::Lock lock(&regSvc(),this); lock->registerInput(key,this);
+    m_selection = dataSvc().selection(key,this);
+  }
   
   //== pick up (recursively!) our sub algorithms and their depth count
   //   so we can figure out in detail where we stalled...
