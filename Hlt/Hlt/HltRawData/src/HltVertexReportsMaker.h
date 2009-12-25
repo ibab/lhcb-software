@@ -1,4 +1,4 @@
-// $Id: HltVertexReportsMaker.h,v 1.5 2009-12-01 22:53:41 tskwarni Exp $
+// $Id: HltVertexReportsMaker.h,v 1.6 2009-12-25 19:22:14 graven Exp $
 #ifndef HLTVERTEXREPORTSMAKER_H 
 #define HLTVERTEXREPORTSMAKER_H 1
 
@@ -7,9 +7,12 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "Event/HltVertexReports.h"
 #include "Kernel/IANNSvc.h"
-#include "HltBase/IHltDataSvc.h"
 #include "Kernel/IOnOffline.h"
+#include "HltBase/IHltRegister.h"
+#include "HltBase/IHltData.h"
+#include "HltBase/IHltInspector.h"
 
+namespace LHCb { class HltVertexReports; };
 
 /** @class HltvertexReportsMaker HltvertexReportsMaker.h
  *  
@@ -31,22 +34,29 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
 
 private:
+  template <typename ITER>
+  StatusCode HltVertexReportsMaker::saveCandidates(const std::string& selName, ITER begin, ITER end, LHCb::HltVertexReports* output) const ;
+
+
 
   // ----------------------- data members 
 
   /// location of output Hlt Summary
-  StringProperty m_outputHltVertexReportsLocation;
+  std::string  m_outputHltVertexReportsLocation;
 
   /// location of output Hlt Summary
-  StringArrayProperty m_vertexSelections;
+  std::vector<Gaudi::StringKey>  m_vertexSelections;
 
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;  
-  IHltDataSvc* m_hltDataSvc;  
+  Hlt::IData* m_hltSvc;
+  Hlt::IRegister* m_regSvc;
+  Hlt::IInspector* m_inspectionSvc;;
+
   IOnOffline* m_onOfflineTool;
 
-  std::vector< std::string > m_selectionNames;
-  std::string m_tesPath;  
+  std::vector<const Hlt::Selection*> m_selections;
+  std::vector<std::pair<std::string,std::string> >           m_tesSelections;
 
 };
 

@@ -1,8 +1,11 @@
-// $Id: HltVertexReportsMaker.cpp,v 1.11 2009-12-23 17:59:50 graven Exp $
+// $Id: HltVertexReportsMaker.cpp,v 1.12 2009-12-25 19:22:14 graven Exp $
 // Include files 
+#include <vector>
+#include <utility>
+#include "boost/foreach.hpp"
+
 
 // from Gaudi
-#include <vector>
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/StringKey.h"
 #include "GaudiKernel/AlgFactory.h" 
@@ -31,10 +34,12 @@ DECLARE_ALGORITHM_FACTORY( HltVertexReportsMaker );
 // Standard constructor, initializes variables
 //=============================================================================
 HltVertexReportsMaker::HltVertexReportsMaker( const std::string& name,
-                                                      ISvcLocator* pSvcLocator)
+                                              ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_hltANNSvc(0) 
-  , m_hltDataSvc(0)
+  , m_hltSvc(0)
+  , m_regSvc(0)
+  , m_inspectionSvc(0)
   , m_onOfflineTool(0)
 {
 
@@ -60,157 +65,78 @@ StatusCode HltVertexReportsMaker::initialize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   m_hltANNSvc = svc<IANNSvc>("HltANNSvc");
-  m_hltDataSvc = svc<IHltDataSvc>("HltDataSvc");
+  m_hltSvc = svc<Hlt::IData> ( "Hlt::Service" , true ) ;
+  m_regSvc = svc<Hlt::IRegister> ( "Hlt::Service" , true ) ;
+  m_inspectionSvc = svc<Hlt::IInspector> ( "Hlt::Service" , true ) ;
 
   m_onOfflineTool = tool<IOnOffline>("OnOfflineTool", this);
 
-  m_selectionNames.clear();  
+  m_selections.clear();  
 
  // get string-to-int selection ID map
-  std::vector<IANNSvc::minor_value_type> selectionNameToIntMap;  
-  std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items("Hlt1SelectionID"); // new style
-  selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt1.begin(),hlt1.end() );
-  std::vector<IANNSvc::minor_value_type> hlt2 = m_hltANNSvc->items("Hlt2SelectionID");
-  selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt2.begin(),hlt2.end() );
-
-  // get trigger selection names 
-  std::vector<Gaudi::StringKey> hltDataSvcKeys = m_hltDataSvc->selectionKeys();
+  typedef std::map<IANNSvc::minor_key_type,IANNSvc::minor_mapped_type> map_t;
+  map_t selectionNameToIntMap;
+  BOOST_FOREACH( const IANNSvc::minor_value_type& p, m_hltANNSvc->items("Hlt1SelectionID") ) {
+      selectionNameToIntMap.insert( p );
+  }
+  BOOST_FOREACH( const IANNSvc::minor_value_type& p, m_hltANNSvc->items("Hlt2SelectionID") ) {
+      selectionNameToIntMap.insert( p );
+  }
 
   // loop over selections given in the input list
-  for( std::vector<std::string>::const_iterator is=m_vertexSelections.value().begin();
-       is!=m_vertexSelections.value().end();++is){
-     const std::string selName(*is);  
-     const Gaudi::StringKey nameKey(*is);
-     if( find( hltDataSvcKeys.begin(), hltDataSvcKeys.end(), nameKey ) != hltDataSvcKeys.end() ){
-       
-       // find int selection id (to make sure it is saveable)
-       int intSelID(0);   
-       for( std::vector<IANNSvc::minor_value_type>::const_iterator si=selectionNameToIntMap.begin();
-            si!=selectionNameToIntMap.end();++si){
-         if( si->first == selName ){
-           intSelID=si->second;
-           break;
-         }
-       }
-       if( !intSelID ){
-         Warning( " selectionName="+selName+ " not found in HltANNSvc. Skipped. ",StatusCode::SUCCESS, 20 );
-         continue;
-       }
-
-       m_selectionNames.push_back(*is);
-       
+  Hlt::IRegister::Lock lock(m_regSvc,this);
+  for( std::vector<Gaudi::StringKey>::const_iterator is=m_vertexSelections.begin();
+       is!=m_vertexSelections.end();++is){
+     // find int selection id (to make sure it is saveable)
+     map_t::const_iterator im = selectionNameToIntMap.find( *is );
+     if (im == selectionNameToIntMap.end() ) {
+       Warning( " selectionName="+is->str()+ " not found in HltANNSvc. Skipped. ",StatusCode::SUCCESS, 20 );
+       continue;
+     } 
+     lock->registerInput(*is,this);
+     const Hlt::Selection *s = m_hltSvc->selection(*is,this);
+     if (s==0) {
+       Warning( " selectionName="+is->str()+ " not present in Hlt::IDataSvc. Skipped. ",StatusCode::SUCCESS, 20 );
+       continue;
      }
+     m_selections.push_back(s);
   }
   
   // add Hlt2 vertex location from OnOfflineTool (also get TES path from this)
   const std::string& hlt2PVLocation = m_onOfflineTool->primaryVertexLocation() ;
   std::size_t found = hlt2PVLocation.find_last_of("/");
-  std::string pvSelectionName;  
-  if( found != std::string::npos ){
-    pvSelectionName = hlt2PVLocation.substr(found+1);
-    m_tesPath=hlt2PVLocation.substr(0,found+1);
-  } else {
-    pvSelectionName = hlt2PVLocation;
-    m_tesPath="";  
-  }
+  std::string pvSelectionName = ( found != std::string::npos ) 
+                              ? hlt2PVLocation.substr(found+1)
+                              : hlt2PVLocation;
   // int selection id
-  int intSelID(0);   
-  for( std::vector<IANNSvc::minor_value_type>::const_iterator si=selectionNameToIntMap.begin();
-       si!=selectionNameToIntMap.end();++si){
-    if( si->first == pvSelectionName ){
-      intSelID=si->second;
-      break;
-    }
-  }
-  if( !intSelID ){
-    Warning( " selectionName="+pvSelectionName+ " not found in HltANNSvc. Skipped. ",StatusCode::SUCCESS, 20 );
+  map_t::const_iterator im = selectionNameToIntMap.find( pvSelectionName );
+  if (im == selectionNameToIntMap.end() ) {
+     Warning( " selectionName="+pvSelectionName+ " not found in HltANNSvc. Skipped. ",StatusCode::SUCCESS, 10 );
   } else {
-    m_selectionNames.push_back(pvSelectionName);
+    m_tesSelections.push_back(std::make_pair(pvSelectionName,hlt2PVLocation));
   }
-  
-  
 
   return StatusCode::SUCCESS;
 }
 
-
-
-//=============================================================================
-// Main execution
-//=============================================================================
-StatusCode HltVertexReportsMaker::execute() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-
-  // create output container for vertex selections keyed with string and put it on TES
-  HltVertexReports* outputSummary = new HltVertexReports();
-  put( outputSummary, m_outputHltVertexReportsLocation );
-
-  // loop over selection names
-  for( std::vector<std::string>::const_iterator is=m_selectionNames.begin();
-       is!=m_selectionNames.end();++is ){
-     const std::string selName(*is);     
-     const Gaudi::StringKey name(*is);
-
-     // prevent duplicate selections
-     if( outputSummary->hasSelectionName( selName ) )continue;
-
-     std::vector<const ContainedObject*> candidates;
-
-     // try dataSvc first
-     const Hlt::Selection* sel = m_hltDataSvc->selection(name,this);
-     if ( sel ) {
-
-
-       // unsuccessful selections can't save candidates
-       if( !sel->decision() )continue;
-
-       if (sel->classID() != LHCb::RecVertex::classID()) {
-         Error(" Selection name "+selName+" did not select vertices. ",StatusCode::SUCCESS, 5 );
-         continue;
-       }
-       
-       const Hlt::VertexSelection& tsel = dynamic_cast<const Hlt::VertexSelection&>(*sel);      
-       // number of candidates
-       int noc = tsel.size();
-       // empty selections have nothing to save
-       if( !noc )continue;
-
-       for (Hlt::VertexSelection::const_iterator it = tsel.begin(); it != tsel.end(); ++it) {
-         candidates.push_back( (const ContainedObject*)(*it) );
-       }
-       
-     } else {
-
-       // now try TES location
-       const std::string location = m_tesPath + selName;       
-       if ( exist<LHCb::RecVertices>(location)){
-
-         LHCb::RecVertices* pvs = get<LHCb::RecVertices>(location);
-         for( LHCb::RecVertices::const_iterator iVtx = pvs->begin(); iVtx != pvs->end(); ++iVtx ){           
-           candidates.push_back( (const ContainedObject*)(*iVtx) );           
-         }
-         
-       }
-       
-     }
-     
-     if( ! candidates.size() )continue;
-
+template <typename ITER>
+StatusCode HltVertexReportsMaker::saveCandidates(const std::string& selName, 
+                                                 ITER ic, ITER end,
+                                                 LHCb::HltVertexReports* outputSummary) const 
+{
      // save selection ---------------------------
-
      SmartRefVector<VertexBase> pVtxs;
     
      // create output container for vertices and put it on TES
      VertexBase::Container* verticesOutput = new VertexBase::Container();
-     put( verticesOutput, m_outputHltVertexReportsLocation.value() + "/" + selName  );
+     put( verticesOutput, m_outputHltVertexReportsLocation + "/" + selName  );
 
-     for (std::vector<const ContainedObject*>::const_iterator ic = candidates.begin();
-             ic != candidates.end(); ++ic) {
-       const RecVertex* candi = dynamic_cast<const RecVertex*>(*ic);
-       if( !candi )continue;
-       const VertexBase* vbase = dynamic_cast<const VertexBase*>(candi);
-       if( !vbase )continue;
+     while ( ic!=end ) {
+       const VertexBase* vbase = dynamic_cast<const VertexBase*>(*ic);
+       if( vbase == 0 ) { 
+           Warning( " dynamic cast failed for ="+selName+". Skipped. ",StatusCode::SUCCESS, 10 );
+           continue;
+       }
        // need to clone it to put into its new container, also use precision of the storage banks
        VertexBase* pVtx = new VertexBase();
        Gaudi::XYZPoint position( double(float(vbase->position().x())),
@@ -231,16 +157,56 @@ StatusCode HltVertexReportsMaker::execute() {
        pVtx->setCovMatrix(cov);       
        verticesOutput->insert(pVtx);
        pVtxs.push_back( SmartRef<VertexBase>( pVtx ) );
+       ++ic;
      }
 
      // insert selection into the container
-     if( outputSummary->insert(selName,pVtxs) == StatusCode::FAILURE ){
-       Warning(" Failed to add Hlt vertex selection name " + selName
-               + " to its container ",StatusCode::SUCCESS, 20 );
-    }    
+     if( outputSummary->insert(selName,pVtxs).isFailure() ) {
+      return Warning(" Failed to add Hlt vertex selection name " + selName
+                     + " to its container ",StatusCode::SUCCESS, 10 );
+    } else {
+        return StatusCode::SUCCESS;
+    }
+}
 
+//=============================================================================
+// Main execution
+//=============================================================================
+StatusCode HltVertexReportsMaker::execute() {
+
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+
+  // create output container for vertex selections keyed with string and put it on TES
+  HltVertexReports* outputSummary = new HltVertexReports();
+  put( outputSummary, m_outputHltVertexReportsLocation );
+
+  // loop over selections
+  BOOST_FOREACH( const Hlt::Selection* is, m_selections) {
+     // prevent duplicate selections
+     if( outputSummary->hasSelectionName( is->id().str() ) )continue;
+
+     // unsuccessful selections can't save candidates
+     if( !is->decision() )continue;
+
+     if (is->classID() != LHCb::RecVertex::classID()) {
+       Error(" Selection name "+is->id().str()+" did not select vertices. ",StatusCode::SUCCESS, 5 );
+       continue;
+     }
+     const Hlt::VertexSelection& tsel = dynamic_cast<const Hlt::VertexSelection&>(*is);      
+     // empty selections have nothing to save
+     if( tsel.empty() )continue;
+     saveCandidates(is->id().str(),tsel.begin(),tsel.end(),outputSummary).ignore();
+   }
+ 
+   // now try TES location
+   typedef std::pair<std::string,std::string> pair_t;
+   BOOST_FOREACH(const pair_t& p, m_tesSelections ) {
+       if (!exist<LHCb::RecVertices>(p.second)) continue;
+       LHCb::RecVertices* pvs = get<LHCb::RecVertices>(p.second);
+       if( pvs->empty() )continue;
+       saveCandidates(p.first,pvs->begin(),pvs->end(),outputSummary).ignore();
   }
-  
+
   if ( msgLevel(MSG::VERBOSE) ){
     verbose() << " ======= HltVertexReports size= " << outputSummary->size() << endmsg;
     verbose() << *outputSummary << endmsg;
