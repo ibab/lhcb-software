@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.57 2009-12-25 19:22:13 graven Exp $
+!$Id: release.notes,v 1.58 2009-12-25 22:14:40 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
@@ -7,6 +7,16 @@
 
 ! 2009-12-25 - Gerhard Raven
  - migrate HltVertexReportsMaker to Hlt::I{Data,Register,Inspector}
+ - migrate HltSelReportsWriter to Hlt::I{Data,Register,Inspector}
+   note: rawbank content is slightly different as the code did
+   not uniquely specify the order in which decisions with the 
+   same length of their name where stored. Now, in case two
+   decision names have the same length, they will be stored
+   in lexicographic order, and hence the result is no longer
+   dependent on the order returned from the DataSvc.
+ - include Tomasz' bug fix from 12-21 at the HEAD,
+   but add #ifdef around the verbose printout which requires
+   next version of LHCb
 
 ! 2009-12-24 - Gerhard Raven
  - temporarily do 'cvs update -j 1.18 -j 1.17 src/HltSelReportsMaker.cpp'

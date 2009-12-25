@@ -1,8 +1,10 @@
-// $Id: HltSelReportsMaker.cpp,v 1.20 2009-12-24 14:11:09 graven Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.21 2009-12-25 22:14:40 graven Exp $
 // #define DEBUGCODE
 // Include files 
 #include "boost/algorithm/string/replace.hpp"
 #include "boost/format.hpp"
+#include "boost/foreach.hpp"
+#include "boost/lexical_cast.hpp"
 
 // from Gaudi
 #include "GaudiKernel/StatusCode.h"
@@ -33,12 +35,10 @@ using namespace LHCb;
 
 
 namespace {
-    // FUN =  int (HltSelReportsMaker::*)(const T*) const
-    template <typename T,typename FUN> bool dispatch(const ContainedObject* obj,HltSelReportsMaker* parent, FUN fun, int& rank) {
-        const T* c = dynamic_cast<const T*>(obj);
-        bool ret = (c!=0);
-        if (ret) rank = (parent->*fun)(c);
-        return ret;
+    template <typename E> ContainedObject* getFirst(const Hlt::Selection* sel ) {
+        if ( sel->classID() != E::classID() ) return 0;
+        const Hlt::TSelection<E>& tsel = dynamic_cast<const Hlt::TSelection<E>&>(*sel);
+        return *tsel.begin();
     }
 }
 
@@ -59,7 +59,9 @@ HltSelReportsMaker::HltSelReportsMaker( const std::string& name,
                                                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_hltANNSvc (0)
-  , m_hltDataSvc(0)
+  , m_hltSvc(0)
+  , m_regSvc(0)
+  , m_inspectionSvc(0)
 {
 
   declareProperty("OutputHltSelReportsLocation",
@@ -135,48 +137,53 @@ StatusCode HltSelReportsMaker::initialize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   m_hltANNSvc = svc<IANNSvc>("HltANNSvc");
-  m_hltDataSvc = svc<IHltDataSvc>("HltDataSvc");
+  m_hltSvc = svc<Hlt::IData> ( "Hlt::Service" , true ) ;
+  m_regSvc = svc<Hlt::IRegister> ( "Hlt::Service" , true ) ;
+  m_inspectionSvc = svc<Hlt::IInspector> ( "Hlt::Service" , true ) ;
 
   if (!m_debugIncidentName.empty() ) {
     svc<IIncidentSvc>("IncidentSvc")->addListener(this,m_debugIncidentName);
   }
 
 
-  // seup string-to-int selection ID map (vector)
-  std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items("Hlt1SelectionID");
-  std::vector<IANNSvc::minor_value_type> hlt2 = m_hltANNSvc->items("Hlt2SelectionID");
+ // get string-to-int selection ID map
+  typedef std::map<IANNSvc::minor_key_type,IANNSvc::minor_mapped_type> map_t;
+  map_t selectionNameToIntMap;
+  BOOST_FOREACH( const IANNSvc::minor_value_type& p, m_hltANNSvc->items("Hlt1SelectionID") ) {
+      selectionNameToIntMap.insert( p );
+  }
+  BOOST_FOREACH( const IANNSvc::minor_value_type& p, m_hltANNSvc->items("Hlt2SelectionID") ) {
+      selectionNameToIntMap.insert( p );
+  }
  
-  // get trigger selection names 
-  m_selectionIDs = m_hltDataSvc->selectionKeys();
-
   // initialize maps
-  m_selectionIntIDs.clear();
-  m_maxCand.clear();
-  m_maxCandDebug.clear();
+  m_selectionInfo.clear();
 
-  for( std::vector<Gaudi::StringKey>::const_iterator is=m_selectionIDs.begin();is!=m_selectionIDs.end();++is){
-     const Gaudi::StringKey name(*is);
-     const std::string selName(name.str()); 
-     int intSelID(0);
-     for( std::vector<IANNSvc::minor_value_type>::const_iterator si=hlt1.begin();
-          si!=hlt1.end();++si){
-       if( si->first == selName ){
-         intSelID=si->second;
-         break;
-       }
+  // get trigger selection names 
+  Hlt::IInspector::KeyList selectionIDs;
+  m_inspectionSvc->selections( selectionIDs );
+  Hlt::IRegister::Lock lock(m_regSvc,this);
+  for ( Hlt::IInspector::KeyList::const_iterator is = selectionIDs.begin(); is!=selectionIDs.end();++is) {
+     struct selectionInfo info;
+     info.id = *is;
+     if (lock->registerInput(info.id,this).isFailure()) {
+       Warning( " selectionName="+*is+" could not register as input. Skipped. " , StatusCode::SUCCESS, 10 );
+       continue;
      }
-     if( !intSelID ){
-       for( std::vector<IANNSvc::minor_value_type>::const_iterator si=hlt2.begin();
-            si!=hlt2.end();++si){
-         if( si->first == selName ){
-           intSelID=si->second;
-           break;
-         }
-       }
+     map_t::const_iterator im = selectionNameToIntMap.find( *is );
+     if( im==selectionNameToIntMap.end() ){
+       Warning( " selectionName="+*is+" not found in HltANNSvc. Skipped. " , StatusCode::SUCCESS, 10 );
+       continue;
      }
-     m_selectionIntIDs.push_back(intSelID);
-     m_debugMode = false; m_maxCand.push_back( maximumNumberOfCandidatesToStore( selName ) );
-     m_debugMode = true;  m_maxCandDebug.push_back( maximumNumberOfCandidatesToStore( selName ) );
+     info.intId =  im->second ;
+     info.selection = m_hltSvc->selection(info.id,this);
+     if (info.selection==0) {
+       Warning( " selectionName="+*is+" not found in HltDataSvc. Skipped. " , StatusCode::SUCCESS, 10 );
+       continue;
+     }
+     m_debugMode = true;  info.maxCandDebug = maximumNumberOfCandidatesToStore( *is );
+     m_debugMode = false; info.maxCand      = maximumNumberOfCandidatesToStore( *is );
+     m_selectionInfo.push_back(info);
 
   }
 
@@ -244,176 +251,142 @@ StatusCode HltSelReportsMaker::execute() {
 
   std::vector< RankedSelection > sortedSelections;
  
-  // loop over selection summaries in HltSummary
-  int i(0);
-  for( std::vector<Gaudi::StringKey>::const_iterator is=m_selectionIDs.begin();is!=m_selectionIDs.end();++is,++i){
-     const Gaudi::StringKey name(*is);
-     const std::string selName(name.str()); 
+  // loop over selection summaries
+  for( std::vector<selectionInfo>::const_iterator is=m_selectionInfo.begin();is!=m_selectionInfo.end();++is){
+     const std::string selName(is->id.str()); 
 
      // see if marked for persistency
-     //     int maxCandidates = maximumNumberOfCandidatesToStore( selName );      
-     int maxCandidates = m_debugMode ? m_maxCandDebug[i] :  m_maxCand[i];
-
+     int maxCandidates = m_debugMode ? is->maxCandDebug :  is->maxCand;
      if( !maxCandidates )continue;
 
      // find first candidate for ranking
-     ContainedObject* candidate(0);
-     
-     // try dataSvc first
-     const Hlt::Selection* sel = m_hltDataSvc->selection(name,this);
-     if ( sel != 0 ) {
+     const Hlt::Selection* sel = is->selection;
 
 #ifdef DEBUGCODE
-        if ( msgLevel(MSG::VERBOSE) ){
-          verbose() << " Selection " << name.str() <<  " found in dataSvc decison=" << sel->decision() << endmsg;          
-        }
+     if ( msgLevel(MSG::VERBOSE) ){
+       verbose() << " Selection " << selname <<  " found in dataSvc decison=" << sel->decision() << endmsg;          
+     }
 #endif
-       // unsuccessful selections can't save candidates
-       if( !sel->decision() )continue;
+     // unsuccessful selections can't save candidates
+     if( !sel->decision() )continue;
+     
+     ContainedObject*  candidate = getFirst<LHCb::Track>(sel);
+     if (candidate==0) candidate = getFirst<LHCb::RecVertex>(sel);
+     if (candidate==0) candidate = getFirst<LHCb::Particle>(sel);
+     if (candidate==0) candidate = getFirst<LHCb::CaloCluster>(sel);
+     if (candidate==0) {
        
-       if( sel->classID() == LHCb::Track::classID() ) {
-
-         const Hlt::TrackSelection& tsel = dynamic_cast<const Hlt::TrackSelection&>(*sel);   
-         if( tsel.begin()!=tsel.end() ){
-           candidate = (ContainedObject*)(*(tsel.begin()));
-         }
-
-       } else if( sel->classID() == LHCb::RecVertex::classID() ) {
-
-         const Hlt::VertexSelection& tsel = dynamic_cast<const Hlt::VertexSelection&>(*sel);   
-         if( tsel.begin()!=tsel.end() ){
-           candidate = (ContainedObject*)(*(tsel.begin()));
-         }
-
-       } else if( sel->classID() == LHCb::Particle::classID() ) {
-
-         const Hlt::TSelection<LHCb::Particle>& psel = dynamic_cast<const Hlt::TSelection<LHCb::Particle>&>(*sel);   
-         if( psel.begin()!=psel.end() ){
-           candidate = (ContainedObject*)(*(psel.begin()));
-         }
-
-       } else {
-         
-         if( sel->classID()==1 )continue; // skip selections of selections for now
-         
-         std::ostringstream mess;
-         mess << " Unsupported data type CLID=" <<  sel->classID() << " - skip selection ID=" +selName;
-         Warning( mess.str(),StatusCode::SUCCESS, 10 );
-         continue;
-         
-       }
+       if( sel->classID()==1 )continue; // skip selections of selections for now
        
-     } 
+       std::ostringstream mess;
+       mess << " Unsupported data type CLID=" <<  sel->classID() << " - skip selection ID=" +selName;
+       Warning( mess.str(),StatusCode::SUCCESS, 10 );
+       continue;
+       
+     }
 
      // empty selections have nothing to save
      if( !candidate )continue;
        
 #ifdef DEBUGCODE
         if ( msgLevel(MSG::VERBOSE) ){
-          verbose() << "Selection " << name.str() <<  " has candidates " << endmsg;
+          verbose() << "Selection " << selName <<  " has candidates " << endmsg;
         } 
 #endif
 
     // save selection ---------------------------
-
-     // int selection id
-     int intSelID = m_selectionIntIDs[i];
-     if( !intSelID ){
-       Warning( " selectionName="+selName+" not found in HltANNSvc. Skipped. " , StatusCode::SUCCESS, 10 );
-       continue;
-     }
  
      setPresentInfoLevel( selName );
 
      // classify according to first candidate
-     int rank(0);
+     int rnk(0);
      // go through all cases of supported candidates
-     if (  !dispatch<Track>    (candidate,this, &HltSelReportsMaker::rankTrack,       rank)
-        && !dispatch<RecVertex>(candidate,this, &HltSelReportsMaker::rankRecVertex,   rank)
-        && !dispatch<Particle> (candidate,this, &HltSelReportsMaker::rankParticle,    rank)
-        && !dispatch<CaloCluster> (candidate,this, &HltSelReportsMaker::rankCaloCluster, rank) )
-         Warning( " Unsupported data type among candidates - skip selection ID=" 
-                          +selName,StatusCode::SUCCESS, 10 );
+     if (  !rank<Track>       (candidate, rnk)
+        && !rank<RecVertex>   (candidate, rnk)
+        && !rank<Particle>    (candidate, rnk)
+        && !rank<CaloCluster> (candidate, rnk) )
+         Warning( " Unsupported data type among candidates, CLID= " + boost::lexical_cast<std::string>(sel->classID()) + " - skip selection ID=" 
+                          +selName,StatusCode::SUCCESS, 2 );
 
-     stringint selNameInt(selName,i);
-     sortedSelections.push_back( RankedSelection(rank,selNameInt) );     
+     sortedSelections.push_back( std::make_pair(rnk, *is ));
   }
   
   if( 0==sortedSelections.size() )return StatusCode::SUCCESS;
 
   std::sort( sortedSelections.begin(), sortedSelections.end(), rankSelLess() );
 
+#ifdef DEBUGCODE
+  if (msgLevel(MSG::VERBOSE)) {
+  for( std::vector<RankedSelection>::const_iterator is=sortedSelections.begin(); is!=sortedSelections.end(); ++is ){
+      verbose() << is-sortedSelections.begin() << " Selection " << is->second.id << " rank " << is->first << endmsg;
+  }
+  }
+#endif
+
+
   // loop over ranked selection summaries in HltSummary
   for( std::vector<RankedSelection>::const_iterator is=sortedSelections.begin(); is!=sortedSelections.end(); ++is ){
-    //    info() << " Selection " << is->second << " rank " << is->first << endmsg;
+     //info() << " Selection " << is->second.id << " rank " << is->first << endmsg;
     
-     const std::string selName(is->second.first);     
-     const Gaudi::StringKey name(selName);
-     const int i=is->second.second;
-
-     std::vector<ContainedObject*> candidates;
-     
-     // try dataSvc first
-     const Hlt::Selection* sel = m_hltDataSvc->selection(name,this);
-     if ( sel != 0 ) {
-
-
-       // unsuccessful selections can't save candidates
-       if( !sel->decision() )continue;
-       
-       if( sel->classID() == LHCb::Track::classID() ) {
-         
-         const Hlt::TrackSelection& tsel = dynamic_cast<const Hlt::TrackSelection&>(*sel);   
-         for (Hlt::TrackSelection::const_iterator it = tsel.begin(); it != tsel.end(); ++it) {
-           candidates.push_back( (ContainedObject*)(*it) );
-         }
-
-       } else if( sel->classID() == LHCb::RecVertex::classID() ) {
-
-         const Hlt::VertexSelection& tsel = dynamic_cast<const Hlt::VertexSelection&>(*sel);   
-         for (Hlt::VertexSelection::const_iterator it = tsel.begin(); it != tsel.end(); ++it) {
-           candidates.push_back( (ContainedObject*)(*it) );
-         }
-
-       } else if( sel->classID() == LHCb::Particle::classID() ) {
-
-         const Hlt::TSelection<LHCb::Particle>& psel = dynamic_cast<const Hlt::TSelection<LHCb::Particle>&>(*sel);   
-         for (Hlt::TSelection<LHCb::Particle>::const_iterator it = psel.begin(); it != psel.end(); ++it) {
-          candidates.push_back( (ContainedObject*)(*it) );
-         }
-
-       } else {
-         
-         Warning( " Unsupported data type  - skip selection ID=" 
-                  +selName,StatusCode::SUCCESS, 10 );
-         continue;
-         
-       }
-       
-     }
-
-     // trim number of candidates if too large
-     int noc = candidates.size();
-     // int maxCandidates = maximumNumberOfCandidatesToStore( selName );      
-     int maxCandidates = m_debugMode ? m_maxCandDebug[i] :  m_maxCand[i];
-     noc = (noc>maxCandidates)?maxCandidates:noc;
-
+     const Gaudi::StringKey name(is->second.id);
+     const std::string selName(name.str());     
      // don't bother if duplicate selection 
      if( outputSummary->hasSelectionName(selName) ){
          Warning( " duplicate selection ignored selectionName=" + selName,StatusCode::SUCCESS, 10 );
          continue;        
      }
 
+     std::vector<ContainedObject*> candidates;
+     
+     const Hlt::Selection* sel = is->second.selection;
+
+     // unsuccessful selections can't save candidates
+     if( !sel->decision() )continue;
+     
+     if( sel->classID() == LHCb::Track::classID() ) {
+       
+       const Hlt::TrackSelection& tsel = dynamic_cast<const Hlt::TrackSelection&>(*sel);   
+       for (Hlt::TrackSelection::const_iterator it = tsel.begin(); it != tsel.end(); ++it) {
+         candidates.push_back( *it );
+       }
+
+     } else if( sel->classID() == LHCb::RecVertex::classID() ) {
+
+       const Hlt::VertexSelection& tsel = dynamic_cast<const Hlt::VertexSelection&>(*sel);   
+       for (Hlt::VertexSelection::const_iterator it = tsel.begin(); it != tsel.end(); ++it) {
+         candidates.push_back( *it );
+       }
+
+     } else if( sel->classID() == LHCb::Particle::classID() ) {
+
+       const Hlt::TSelection<LHCb::Particle>& psel = dynamic_cast<const Hlt::TSelection<LHCb::Particle>&>(*sel);   
+       for (Hlt::TSelection<LHCb::Particle>::const_iterator it = psel.begin(); it != psel.end(); ++it) {
+        candidates.push_back( *it );
+       }
+
+     } else {
+       
+       Warning( " Unsupported data type  - skip selection ID=" 
+                +selName,StatusCode::SUCCESS, 10 );
+       continue;
+       
+     }
+       
+
+     // trim number of candidates if too large
+     int noc = candidates.size();
+     int maxCandidates = m_debugMode ? is->second.maxCandDebug :  is->second.maxCand;
+     noc = (noc>maxCandidates)?maxCandidates:noc;
+
+
      // save selection ---------------------------
 
-     // int selection id
-     int intSelID = m_selectionIntIDs[i];
 
      HltObjectSummary selSumOut;    
      selSumOut.setSummarizedObjectCLID( 1 ); // use special CLID for selection summaries (lowest number for sorting to the end)
      
      // integer selection id 
-     selSumOut.addToInfo("0#SelectionID",float(intSelID));
+     selSumOut.addToInfo("0#SelectionID",float(is->second.intId));
     
      setPresentInfoLevel( selName );
   
@@ -430,27 +403,22 @@ StatusCode HltSelReportsMaker::execute() {
      for (std::vector<ContainedObject*>::const_iterator ic = candidates.begin();
           ic != candidates.end(); ++ic) {
 
+
        ++nocc;
        if( nocc>noc )break;
 
        const HltObjectSummary* hos(0);
        // go through all cases of supported candidates
-       Track* candi = dynamic_cast<Track*>(*ic);
-       if( candi ){
-         hos = storeTrack( candi );
-       } else {
-         RecVertex* candi = dynamic_cast<RecVertex*>(*ic);
-         if( candi ){
-           hos = storeRecVertex( candi );
-         } else {
-           Particle* candi = dynamic_cast<Particle*>(*ic);
-           if( candi ){
-             hos = storeParticle( candi );
-
+       hos = store<LHCb::Track>(*ic);
+       if (hos==0) hos = store<LHCb::RecVertex>(*ic);
+       if (hos==0) {
+           hos = store<LHCb::Particle>(*ic);
+           if (hos!=0) {//TODO: move into store_<Particle> ??? Oops, this shares info amongst candidates...
+                        //      that bit needs to be moved out of this loop, and 'bound' into the relevant store_...
              if( kStandardInfoLevel &  m_presentInfoLevelSelection & m_presentInfoLevel ){ 
                if( pvSelectionName != "_" ){
                  bool keyFound = false;             
-                 const DataObject* container = candi->parent();
+                 const DataObject* container = (*ic)->parent();
                  if( container ){
                    IRegistry* registry = container->registry() ;
                    if( registry ){
@@ -462,7 +430,7 @@ StatusCode HltSelReportsMaker::execute() {
                        }
                      }
                      if( table ){                     
-                       Particle2Vertex::Table::Range rels= table->relations( candi );
+                       Particle2Vertex::Table::Range rels= table->relations( dynamic_cast<const LHCb::Particle*>(*ic) );
                        if( rels.size() ){
                          const VertexBase* pv = (rels[0]).to();
                          if(  !(pvSelectionName.length()) ){
@@ -503,18 +471,14 @@ StatusCode HltSelReportsMaker::execute() {
                }
              }
              
-           } else { 
-             CaloCluster* candi = dynamic_cast<CaloCluster*>(*ic);
-             if( candi ){
-               hos = storeCaloCluster( candi );
-             } else { 
+           } 
+        }
+        if (hos==0) hos = store<LHCb::CaloCluster>(*ic);
+        if (hos==0) {
                Warning(" Unsupported data type in Hlt Trigger Summary - skip remaining candidates too, selection ID=" 
                        +selName,StatusCode::SUCCESS, 10 );
                break;       
-             }
-           }
-         }
-       }
+        }
        if( !hos ){
          Warning(" Could not store supported candidate - skip remaining candidates too ",StatusCode::SUCCESS, 10 );
          break;
@@ -688,9 +652,7 @@ StatusCode HltSelReportsMaker::execute() {
                  // must also check its decision in HltDecReports since it might have been killed by postscale
                  if( decReports ){
                    const HltDecReport* decReport = decReports->decReport(selName);
-                   if( decReport ){
-                     if( !(decReport->decision()) )break;
-                   }
+                   if( decReport && !(decReport->decision()) )break;
                  }                 
                  selSumOut.addToSubstructure( (const SmartRef<HltObjectSummary>)(*pObj) );
                  break;                     
@@ -710,8 +672,7 @@ StatusCode HltSelReportsMaker::execute() {
        if( outputSummary->insert("Hlt2Global",selSumOut) == StatusCode::FAILURE ){
          Error( "  Failed to add Hlt selection name Hlt2Global to its container ", StatusCode::SUCCESS, 10 );
        } 
-       HltObjectSummary* hos= new HltObjectSummary(  selSumOut );    
-       m_objectSummaries->push_back(hos);
+       m_objectSummaries->push_back( new HltObjectSummary( selSumOut ) );    
        
        
      }
@@ -728,6 +689,7 @@ StatusCode HltSelReportsMaker::execute() {
         ppHos!=m_objectSummaries->end();++ppHos){
      const HltObjectSummary* pHos=*ppHos;    
      verbose() << " key " << pHos->index();
+#ifdef LHCBv26r6ORLATER
      std::vector<std::string> selby = outputSummary->selectedAsCandidateBy(pHos);
      if( selby.size() ){
        verbose() << " selectedAsCandidateBy=";       
@@ -739,6 +701,7 @@ StatusCode HltSelReportsMaker::execute() {
          verbose() << " pvSelectionName= " << pvInfo.first << " pvKey= " << pvInfo.second << " ";
        }
      }     
+#endif
      verbose() << *pHos << endmsg;    
    }
    
@@ -750,7 +713,7 @@ StatusCode HltSelReportsMaker::execute() {
 // -------------------------------------
 // store Track in HltObjectSummary store
 // -------------------------------------
-const LHCb::HltObjectSummary* HltSelReportsMaker::storeTrack(const LHCb::Track* object)
+const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Track* object)
 {
   if( !object )return (HltObjectSummary*)(0);  
   for( HltObjectSummarys::const_iterator ppHos=m_objectSummaries->begin();
@@ -855,7 +818,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::storeTrack(const LHCb::Track* 
 // -------------------------------------
 // store RecVertex in HltObjectSummary store
 // -------------------------------------
-const LHCb::HltObjectSummary* HltSelReportsMaker::storeRecVertex(const LHCb::RecVertex* object)
+const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::RecVertex* object)
 {  
   if( !object )return (HltObjectSummary*)(0);  
   for( HltObjectSummarys::const_iterator ppHos=m_objectSummaries->begin();
@@ -878,8 +841,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::storeRecVertex(const LHCb::Rec
   SmartRefVector<LHCb::HltObjectSummary> thisSubstructure;  
   const SmartRefVector<LHCb::Track> & tracks = object->tracks();
   for( SmartRefVector<LHCb::Track>::const_iterator it = tracks.begin();it != tracks.end(); ++it) {
-    const Track* track = *it;    
-    thisSubstructure.push_back( storeTrack(track) );
+    thisSubstructure.push_back( store_( *it) );
   }
   SmartRefVector<LHCb::HltObjectSummary>::const_iterator rbegin1=thisSubstructure.end(); --rbegin1;
   SmartRefVector<LHCb::HltObjectSummary>::const_iterator rend1=thisSubstructure.begin(); --rend1;        
@@ -964,7 +926,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::storeRecVertex(const LHCb::Rec
 // -------------------------------------------
 // store CaloCluster in HltObjectSummary store
 // -------------------------------------------
-const LHCb::HltObjectSummary* HltSelReportsMaker::storeCaloCluster(const LHCb::CaloCluster* object)
+const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::CaloCluster* object)
 {
   if( !object )return (HltObjectSummary*)(0);  
   for( HltObjectSummarys::const_iterator ppHos=m_objectSummaries->begin();
@@ -991,7 +953,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::storeCaloCluster(const LHCb::C
 // ----------------------------------------
 // store Particle in HltObjectSummary store
 // ----------------------------------------
-const LHCb::HltObjectSummary* HltSelReportsMaker::storeParticle(const LHCb::Particle* object)
+const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle* object)
 {  
   if( !object )return (HltObjectSummary*)(0);  
   for( HltObjectSummarys::const_iterator ppHos=m_objectSummaries->begin();
@@ -1015,7 +977,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::storeParticle(const LHCb::Part
   if( daughters.size() >0 ){    
     for( std::vector<const LHCb::Particle*>::const_iterator p = daughters.begin(); 
          p!=daughters.end(); ++p){
-      hos->addToSubstructure( storeParticle( *p ) );
+      hos->addToSubstructure( store_( *p ) );
     }
   } else {
     // particles with no daughters have substructure via ProtoParticle 
@@ -1027,7 +989,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::storeParticle(const LHCb::Part
       const Track* track=pp->track();
       if( track ){
         // charged track particle
-        hos->addToSubstructure( storeTrack( track ) );
+        hos->addToSubstructure( store_( track ) );
         // if muon add muon stub too        
         const LHCb::MuonPID* muid = pp->muonPID();
         if( muid!=0 && object->particleID().abspid()==13 ){
@@ -1043,7 +1005,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::storeParticle(const LHCb::Part
             if( m_HLTmuonTracks ){          
               const Track* muStub= m_HLTmuonTracks->object(track->key());     
               if( muStub ){
-                hos->addToSubstructure( storeTrack( muStub ) );
+                hos->addToSubstructure( store_( muStub ) );
               }
             }
           }
@@ -1057,16 +1019,16 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::storeParticle(const LHCb::Part
           if( LHCb::CaloHypo::Photon == hypo->hypothesis() ){
             // Photon
             const CaloCluster* cluster = *(hypo->clusters().begin());          
-            hos->addToSubstructure( storeCaloCluster( cluster ) );
+            hos->addToSubstructure( store_( cluster ) );
           } else if (  LHCb::CaloHypo::Pi0Merged == hypo->hypothesis() ){
             // Split Photons
             const SmartRefVector<LHCb::CaloHypo>& hypos = hypo->hypos();
             const LHCb::CaloHypo* g1 = *(hypos.begin() );
             const CaloCluster* cluster1 = *(g1->clusters().begin());
-            hos->addToSubstructure( storeCaloCluster( cluster1 ) );
+            hos->addToSubstructure( store_( cluster1 ) );
             const LHCb::CaloHypo* g2 = *(hypos.begin()+1 );
             const CaloCluster* cluster2 = *(g2->clusters().begin());
-            hos->addToSubstructure( storeCaloCluster( cluster2 ) );
+            hos->addToSubstructure( store_( cluster2 ) );
           }        
         }
       }
@@ -1167,7 +1129,7 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary* h
         infoPersistent.insert( "5#Particle.slopes.x", float( candi->slopes().x() ) );
         infoPersistent.insert( "6#Particle.slopes.y", float( candi->slopes().y() ) );
         double p = candi->p();
-        if( p < 1E-9 )p=1E-9;        
+        if( p < 1E-9 )p=1E-9;        // Note: p is _not_ signed for a Particle. Charge is part of pid...
         infoPersistent.insert( "7#Particle.1/p", float( 1.0/p ) );
       }      
     }
@@ -1190,48 +1152,44 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary* h
   return infoPersistent;
 }
 
-int HltSelReportsMaker::rankTrack(const LHCb::Track* object) const
+int HltSelReportsMaker::rank_(const LHCb::Track* object) const
 {
   if( !object )return 0;
-  HltObjectSummary* hos = new HltObjectSummary();
-  hos->setSummarizedObjectCLID( object->clID() );
-  hos->setSummarizedObject(object);  
-  int rank=100*rankLHCbIDs( object->lhcbIDs() ) +  infoToSave( hos ).size();
-  delete hos;  
+  HltObjectSummary hos;
+  hos.setSummarizedObjectCLID( object->clID() );
+  hos.setSummarizedObject(object);  
+  int rank=100*rankLHCbIDs( object->lhcbIDs() ) +  infoToSave( &hos ).size();
   return rank;
 }
 
-int HltSelReportsMaker::rankCaloCluster(const LHCb::CaloCluster* object) const
+int HltSelReportsMaker::rank_(const LHCb::CaloCluster* object) const
 {
   if( !object )return 0;
-  HltObjectSummary* hos = new HltObjectSummary();
-  hos->setSummarizedObjectCLID( object->clID() );
-  hos->setSummarizedObject(object);  
+  HltObjectSummary hos;
+  hos.setSummarizedObjectCLID( object->clID() );
+  hos.setSummarizedObject(object);  
   std::vector<LHCbID> clusterSeed; clusterSeed.push_back(object->seed()); 
-  int rank=100*rankLHCbIDs( clusterSeed ) +  infoToSave( hos ).size();
-  delete hos;  
+  int rank=100*rankLHCbIDs( clusterSeed ) +  infoToSave( &hos ).size();
   return rank;
 }
 
-int HltSelReportsMaker::rankRecVertex(const LHCb::RecVertex* object) const
+int HltSelReportsMaker::rank_(const LHCb::RecVertex* object) const
 {
   if( !object )return 0;
-  HltObjectSummary* hos = new HltObjectSummary();
-  hos->setSummarizedObjectCLID( object->clID() );
-  hos->setSummarizedObject(object);  
-  int rank=10000 +  infoToSave( hos ).size();
-  delete hos;  
+  HltObjectSummary hos;
+  hos.setSummarizedObjectCLID( object->clID() );
+  hos.setSummarizedObject(object);  
+  int rank=10000 +  infoToSave( &hos ).size();
   return rank;
 }
 
-int HltSelReportsMaker::rankParticle(const LHCb::Particle* object) const
+int HltSelReportsMaker::rank_(const LHCb::Particle* object) const
 {
   if( !object )return 0;
-  HltObjectSummary* hos = new HltObjectSummary();
-  hos->setSummarizedObjectCLID( object->clID() );
-  hos->setSummarizedObject(object);  
-  int rank=100000 +  infoToSave( hos ).size();
-  delete hos;  
+  HltObjectSummary  hos;
+  hos.setSummarizedObjectCLID( object->clID() );
+  hos.setSummarizedObject(object);  
+  int rank=100000 +  infoToSave( &hos ).size();
   return rank;
 }
 
@@ -1271,16 +1229,13 @@ unsigned int HltSelReportsMaker::maximumNumberOfCandidatesToStore( const std::st
     const SelectionSetting & maxCandidatesDebug =  m_maxCandidatesDebug.value();    
     for( SelectionSetting::const_iterator i=maxCandidatesDebug.begin();
          i!=maxCandidatesDebug.end(); ++i){
-      if( selName == i->first ){
-        return i->second;
-      }
+      if( selName == i->first ) return i->second;
     }
     
     // not set specifically for this selection ; use default
-    if( selName.find("Decision")!=std::string::npos ){
-      return m_maxCandidatesDecisionDebug;
-    }
-    return m_maxCandidatesNonDecisionDebug;
+    return ( selName.find("Decision")!=std::string::npos ) ?
+              m_maxCandidatesDecisionDebug :
+              m_maxCandidatesNonDecisionDebug;
 
   } else {
     
@@ -1290,17 +1245,13 @@ unsigned int HltSelReportsMaker::maximumNumberOfCandidatesToStore( const std::st
     const SelectionSetting & maxCandidates =  m_maxCandidates.value();    
     for( SelectionSetting::const_iterator i=maxCandidates.begin();
          i!=maxCandidates.end(); ++i){
-      if( selName == i->first ){
-        return i->second;
-      }
+      if( selName == i->first ) return i->second;
     }
     
     // not set specifically for this selection ; use default
-    if( selName.find("Decision")!=std::string::npos ){
-      return m_maxCandidatesDecision;
-    }
-    return m_maxCandidatesNonDecision;
-    
+    return ( selName.find("Decision")!=std::string::npos ) ?
+              m_maxCandidatesDecision :
+              m_maxCandidatesNonDecision;
   }
 
 }
@@ -1371,17 +1322,23 @@ void HltSelReportsMaker::setPresentInfoLevel( const std::string & selName )
 bool HltSelReportsMaker::rankSelLess::operator()( const HltSelReportsMaker::RankedSelection & elem1, 
                                                   const HltSelReportsMaker::RankedSelection & elem2) const
 {  
+    using namespace std;
     if( elem1.first < elem2.first )return true;
     if( elem1.first > elem2.first )return false;
     // equal ranks; now use selection name; decisions come last
-    if( elem1.second.first.find("Decision")!=std::string::npos ){
-      if( elem2.second.first.find("Decision")!=std::string::npos ){
-        return (elem1.second.first.length()<elem2.second.first.length());
+
+    if( elem1.second.id.str().find("Decision")!=std::string::npos ){
+      if( elem2.second.id.str().find("Decision")!=std::string::npos ){
+        size_t l1 = elem1.second.id.str().length();
+        size_t l2 = elem2.second.id.str().length();
+        return (l1!=l2) ? (l1 < l2) : (elem1.second.id.str() < elem2.second.id.str()) ;
       }
       return false;
     } 
-    if( elem2.second.first.find("Decision")!=std::string::npos ){
+    if( elem2.second.id.str().find("Decision")!=std::string::npos ){
       return true;
     } 
-    return (elem1.second.first.length()<elem2.second.first.length());
+    size_t l1 = elem1.second.id.str().length();
+    size_t l2 = elem2.second.id.str().length();
+    return (l1!=l2) ? (l1 < l2) : ( elem1.second.id.str() < elem2.second.id.str() );
 }

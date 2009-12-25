@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.h,v 1.10 2009-12-23 17:59:50 graven Exp $
+// $Id: HltSelReportsMaker.h,v 1.11 2009-12-25 22:14:41 graven Exp $
 #ifndef HLTSELREPORTSMAKER_H 
 #define HLTSELREPORTSMAKER_H 1
 
@@ -13,7 +13,9 @@
 
 
 #include "Kernel/IANNSvc.h"
-#include "HltBase/IHltDataSvc.h"
+#include "HltBase/IHltRegister.h"
+#include "HltBase/IHltData.h"
+#include "HltBase/IHltInspector.h"
 
 namespace LHCb {
   class CaloCluster;  
@@ -62,38 +64,41 @@ private:
   
 
   /// store Track in HltObjectSummary store
-  const LHCb::HltObjectSummary* storeTrack(const LHCb::Track* object);
+  const LHCb::HltObjectSummary* store_(const LHCb::Track* object);
   /// store RecVertex in HltObjectSummary store
-  const LHCb::HltObjectSummary* storeRecVertex(const LHCb::RecVertex* object);
+  const LHCb::HltObjectSummary* store_(const LHCb::RecVertex* object);
   /// store Particle in HltObjectSummary store
-  const LHCb::HltObjectSummary* storeParticle(const LHCb::Particle* object);
+  const LHCb::HltObjectSummary* store_(const LHCb::Particle* object);
   /// store CaloCluster in HltObjectSummary store
-  const LHCb::HltObjectSummary* storeCaloCluster(const LHCb::CaloCluster* object);
+  const LHCb::HltObjectSummary* store_(const LHCb::CaloCluster* object);
+
+  template <typename T> const LHCb::HltObjectSummary* store(const ContainedObject* obj) {
+      const T* t = dynamic_cast<const T*>(obj);
+      if (t==0) return 0;
+      return store_(t);
+  }
   
 
-  /// for ranking selections
-  typedef std::pair<std::string, int> stringint;
-  typedef std::pair<int, stringint > RankedSelection;
 
   /// rank Track for selection rank
-  int rankTrack(const LHCb::Track* object) const;
+  int rank_(const LHCb::Track* object) const;
   /// rank RecVertex 
-  int rankRecVertex(const LHCb::RecVertex* object) const;
+  int rank_(const LHCb::RecVertex* object) const;
   /// rank Particle 
-  int rankParticle(const LHCb::Particle* object) const;
+  int rank_(const LHCb::Particle* object) const;
   /// rank CaloCluster 
-  int rankCaloCluster(const LHCb::CaloCluster* object) const;
+  int rank_(const LHCb::CaloCluster* object) const;
+
+  template <typename T> bool rank(const ContainedObject* obj, int& rnk) {
+      const T* c = dynamic_cast<const T*>(obj);
+      bool ret = (c!=0);
+      if (ret) rnk = rank_(c);
+      return ret;
+  }
   
   /// rank LHCbIDs for selection rank
   int rankLHCbIDs( const std::vector<LHCb::LHCbID> & lhcbIDs ) const;
   
-   //static bool rankSelLess( const RankedSelection & elem1, const RankedSelection & elem2);
-   /// for sorting ranked selections
-  class  rankSelLess {
-   public:
-    bool operator() (const RankedSelection & elem1, const RankedSelection & elem2 ) const;
-   };
-
 
   /// for trimming output size and disabling output all together (if 0)
   unsigned int maximumNumberOfCandidatesToStore( const std::string & selectionName ) const;  
@@ -120,17 +125,32 @@ private:
 
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;  
-  IHltDataSvc* m_hltDataSvc;  
+  Hlt::IData* m_hltSvc;
+  Hlt::IRegister* m_regSvc;
+  Hlt::IInspector* m_inspectionSvc;;
 
   // from info id to its name
   GaudiUtils::VectorMap< int, std::string > m_infoIntToName;
 
+  // get trigger selection names //  -- amalgamate into vector<struct>
+  struct selectionInfo { 
+      const Hlt::Selection* selection;
+      Gaudi::StringKey id;
+      int intId;
+      int maxCand;
+      int maxCandDebug;
+  };
+  std::vector< selectionInfo> m_selectionInfo;
+     
+  /// for ranking selections
+  typedef std::pair<int, selectionInfo > RankedSelection;
+   //static bool rankSelLess( const RankedSelection & elem1, const RankedSelection & elem2);
+   /// for sorting ranked selections
+  class  rankSelLess {
+   public:
+    bool operator() (const RankedSelection & elem1, const RankedSelection & elem2 ) const;
+   };
 
-  // get trigger selection names 
-  std::vector<Gaudi::StringKey> m_selectionIDs;
-  std::vector< int > m_selectionIntIDs;
-  std::vector< int > m_maxCand;
-  std::vector< int > m_maxCandDebug;
 
   /// for setting per selection properties
   typedef std::map<std::string,int> SelectionSetting;
