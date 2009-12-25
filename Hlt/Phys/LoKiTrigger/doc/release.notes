@@ -1,9 +1,20 @@
-! $Id: release.notes,v 1.58 2009-12-23 17:59:50 graven Exp $
+! $Id: release.notes,v 1.59 2009-12-25 22:00:56 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+! 2009-12-25 - Gerhard Raven
+ - remove (hopefully temporarily!) LoKi/TrackIDs.h from dictionary -- 
+   it seems responsible for crashes like
+   Warning in <TEnvRec::ChangeValue>: duplicate entry <Library.vector<unsigned-int>=vector.dll> for level 0; ignored
+#13 0x0000002aa243bda9 in (anonymous namespace)::(anonymous namespace)::Dictionaries::Dictionaries ()
+      from /user/graven/cmtuser-reference/HLT/HLT_v8r1/InstallArea/slc4_amd64_gcc34/lib/libLoKiTriggerDict.so
+#14 0x0000002aa23fa2e8 in global constructors keyed to _ZNK4LoKi8Functors5EmptyIPN4LHCb5TrackEE10fillStreamERSo ()
+         from /user/graven/cmtuser-reference/HLT/HLT_v8r1/InstallArea/slc4_amd64_gcc34/lib/libLoKiTriggerDict.so
+#15 0x0000002aa2477816 in __do_global_ctors_aux () from /user/graven/cmtuser-reference/HLT/HLT_v8r1/InstallArea/slc4_amd64_gcc34/lib/libLoKiTriggerDict.so
+
 
 ! 2009-12-23 - Gerhard Raven
  - move IHlt{Data,Register,Inspector}.h to HltBase to avoid circular
