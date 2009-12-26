@@ -4,6 +4,8 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiAlg/GaudiTupleAlg.h"
+#include "GaudiAlg/GaudiTupleTool.h"
 #include "GaudiKernel/MsgStream.h"
 
 // from Alignment
@@ -14,8 +16,11 @@
  *
  *  @author Sebastien Viret
  *  @date   2005-07-29
+ *  modifications by
+ *  @author Marc Deissenroth
+ *  @date   2007-11-14
  */
-class Millepede : public GaudiTool, virtual public IMillepede {
+class Millepede : public GaudiTupleTool, virtual public IMillepede {
 public: 
   /// Standard constructor
   Millepede( const std::string& type, 
@@ -26,6 +31,7 @@ public:
 
   /// Initialization
   virtual StatusCode initialize();
+  virtual StatusCode finalize();
 
   virtual StatusCode InitMille(bool DOF[], double Sigm[], int nglo
 			       , int nloc, double startfact, int nstd 
@@ -47,10 +53,10 @@ public:
 
 // Max. dimensions
 
-  static const int mglobl		= 400; // Max. number of global parameters
-  static const int mlocal		= 20;  // Max. number of local parameters
-  static const int mcs			= 10;  // Max. number of constraint equations
-  static const int mgl			= 410; // mglobl+mlocal
+  static const int mglobl		= 2000; // Max. number of global parameters
+  static const int mlocal		= 50;  // Max. number of local parameters
+  static const int mcs			= 50;  // Max. number of constraint equations
+  static const int mgl			= 2050; // mglobl+mlocal
 
   static const int nonlin_param		= 1000000; // For non-linear terms treatment
                                                    // See how it works in EquLoc() and MakeGlobalFit() 
@@ -80,6 +86,9 @@ public:
   double corrm[mglobl][mglobl];
   double adercs[mcs][mglobl];
 
+  double m_glmat[mgl][mgl];  //MD
+  double m_glmatinv[mgl][mgl];  //MD
+
 
 // Vectors and useful variables
 
@@ -103,6 +112,7 @@ public:
 
   int store_row_size;
 
+  int m_NofDOFs;
   int m_track_number;
   double m_residual_cut_init;
   double m_residual_cut;

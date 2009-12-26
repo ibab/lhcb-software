@@ -25,12 +25,11 @@ DECLARE_TOOL_FACTORY( Millepede );
 Millepede::Millepede( const std::string& type,
                       const std::string& name,
                       const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTupleTool ( type, name , parent )
   //Default cuts for the Alignment
 {
   declareProperty("Iteration"  , m_iteration);
   declareProperty("ModuleFixed" , m_fixed);
-  
   declareInterface<IMillepede>(this);
 }
 //=============================================================================
@@ -43,7 +42,7 @@ Millepede::~Millepede() {};
 StatusCode Millepede::initialize()
 {
   
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = GaudiTupleTool::initialize();
   if (sc.isFailure())
   {
     return Error("Failed to initialize", sc);
@@ -259,12 +258,11 @@ StatusCode Millepede::ParGlo(int index, double param)
  
 StatusCode Millepede::ParSig(int index, double sigma)
 {
-  if (index>=nagb) {
-    error() << "index ( " << index << " ) >= nagb( " << nagb << " )!" << endreq;
-    return StatusCode::FAILURE;
-  } else {
-    psigm[index] = sigma;
-  }
+  if (index>=nagb) 
+    {return StatusCode::FAILURE;}
+  else
+    {psigm[index] = sigma;}
+  always() << "--> Parsig " << index << " value " << psigm[index] << endreq;
   return StatusCode::SUCCESS;
 }
 
@@ -460,13 +458,13 @@ StatusCode Millepede::EquLoc(double dergb[], double derlc[], double dernl[], dou
 -----------------------------------------------------------
 */
  
-StatusCode Millepede::ZerLoc(double dergb[], double derlc[], double dernl[], double dernl_i[])
+StatusCode Millepede::ZerLoc(double dergb[], double derlc[],double dernl[], double dernl_i[]) 
 {
   for(int i=0; i<nalc; i++) {derlc[i] = 0.0;}
   for(int i=0; i<nagb; i++) {dergb[i] = 0.0;}
   for(int i=0; i<nagb; i++) {dernl[i] = 0.0;}
   for(int i=0; i<nagb; i++) {dernl_i[i] = 0.0;}
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -971,20 +969,19 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
 
     nf = 0; // First look at the fixed global params
     
-    for (i=0; i<nagb; i++) {
-      // JB modifed the comparison from <= to ==.
-      // That way, in case psigm[i] < 0, mpede could ignore this psigm.
-      if (psigm[i] == 0.0) {  // fixed global param
+    for (i=0; i<nagb; i++)
+    {
+      if (psigm[i] <= 0.0)   // fixed global param
+      {
 	nf++;
-	for (j=0; j<nagb; j++) {
+
+	for (j=0; j<nagb; j++)
+	{
 	  cgmat[i][j] = 0.0;  // Reset row and column
 	  cgmat[j][i] = 0.0;
 	}			
-      } else if (psigm[i] > 0.0) {
-        cgmat[i][i] += 1.0/(psigm[i]*psigm[i]);
-      } else {
-        debug() << "Ignoring ParSig!" << endreq;
       }
+      else if (psigm[i] > 0.0) {cgmat[i][i] += 1.0/(psigm[i]*psigm[i]);}
     }
         
     nvar = nagb;  // Current number of equations	
@@ -1012,12 +1009,19 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
     // Intended to compute the final global chisquare
 
 
-    if (itert > 1) {
-      for (j=0; j<nagb; j++) {
+    if (itert > 1)
+    {
+      for (j=0; j<nagb; j++)
+      {
+
 	debug() << "Psigm       = " << std::setprecision(5) << psigm[j] << endmsg;
+
 	debug() << "diag. value : " << j << " = " << std::setprecision(5) << cgmat[j][j] << endmsg;
-	for (i=0; i<nagb; i++) {
-	  if (fabs(psigm[i]) > 0.0) {
+
+	for (i=0; i<nagb; i++)
+	{
+	  if (psigm[i] > 0.0)
+	  {
 	    final_cor += step[j]*cgmat[j][i]*step[i]; 
 	    if (i == j) final_cor -= step[i]*step[i]/(psigm[i]*psigm[i]);
 	  }
@@ -1547,9 +1551,9 @@ StatusCode Millepede::PrtGlo()
   info() << "   Result of fit for global parameters" << endmsg;
   info() << "   ===================================" << endmsg;
   info() << "    I       initial       final       differ   " 
-	 << "     lastcor        Error       gcor" << endmsg;
+         << "     lastcor        Error       gcor" << endmsg;
   info() << "-----------------------------------------" 
-	 << "------------------------------------------" << endmsg;
+         << "------------------------------------------" << endmsg;
 	
   for (int i=0; i<nagb; i++)
   {
@@ -1568,10 +1572,11 @@ StatusCode Millepede::PrtGlo()
       info() << std::setprecision(6) << std::fixed;
       gcor = sqrt(fabs(1.0-1.0/(cgmat[i][i]*diag[i])));
       info() << std::setw(4) << i << "  / " << std::setw(10) << pparm[i] 
-	     << "  / " << std::setw(10) << pparm[i]+ dparm[i] 
-	     << "  / " << std::setw(13) << dparm[i] 
-	     << "  / " << std::setw(13) << bgvec[i] << "  / " << std::setw(10) 
-	     << std::setprecision(5) << err << "  / " << std::setw(10) << gcor << endmsg;
+             << "  / " << std::setw(10) << pparm[i]+ dparm[i] 
+             << "  / " << std::setw(13) << dparm[i] 
+             << "  / " << std::setw(13) << bgvec[i] 
+             << "  / " << std::setw(10) << std::setprecision(5) << err 
+             << "  / " << std::setw(10) << gcor << endmsg;
     }
     else
     {
@@ -1583,6 +1588,14 @@ StatusCode Millepede::PrtGlo()
 	     << "  / " << std::setw(10) << "OFF" << endmsg;
     }
   }
+
+
+  for (int i=0; i<nagb; i++)
+  {
+    debug() << " i=" << i << "  sqrt(fabs(cgmat[i][i]))=" <<  sqrt(fabs(cgmat[i][i]))
+           << " diag = " << diag[i] <<endreq;
+  }
+  
   return StatusCode::SUCCESS;
 }
 
@@ -1601,17 +1614,17 @@ double Millepede::chindl(int n, int nd)
   int m;
   double sn[3]        =	{0.47523, 1.690140, 2.782170};
   double table[3][30] = {{1.0000, 1.1479, 1.1753, 1.1798, 1.1775, 1.1730, 1.1680, 1.1630,
-			  1.1581, 1.1536, 1.1493, 1.1454, 1.1417, 1.1383, 1.1351, 1.1321,
-			  1.1293, 1.1266, 1.1242, 1.1218, 1.1196, 1.1175, 1.1155, 1.1136,
-			  1.1119, 1.1101, 1.1085, 1.1070, 1.1055, 1.1040},
-			 {4.0000, 3.0900, 2.6750, 2.4290, 2.2628, 2.1415, 2.0481, 1.9736,
-			  1.9124, 1.8610, 1.8171, 1.7791, 1.7457, 1.7161, 1.6897, 1.6658,
-			  1.6442, 1.6246, 1.6065, 1.5899, 1.5745, 1.5603, 1.5470, 1.5346,
-			  1.5230, 1.5120, 1.5017, 1.4920, 1.4829, 1.4742},
-			 {9.0000, 5.9146, 4.7184, 4.0628, 3.6410, 3.3436, 3.1209, 2.9468,
-			  2.8063, 2.6902, 2.5922, 2.5082, 2.4352, 2.3711, 2.3143, 2.2635,
-			  2.2178, 2.1764, 2.1386, 2.1040, 2.0722, 2.0428, 2.0155, 1.9901,
-			  1.9665, 1.9443, 1.9235, 1.9040, 1.8855, 1.8681}};
+                          1.1581, 1.1536, 1.1493, 1.1454, 1.1417, 1.1383, 1.1351, 1.1321,
+                          1.1293, 1.1266, 1.1242, 1.1218, 1.1196, 1.1175, 1.1155, 1.1136,
+                          1.1119, 1.1101, 1.1085, 1.1070, 1.1055, 1.1040},
+                         {4.0000, 3.0900, 2.6750, 2.4290, 2.2628, 2.1415, 2.0481, 1.9736,
+                          1.9124, 1.8610, 1.8171, 1.7791, 1.7457, 1.7161, 1.6897, 1.6658,
+                          1.6442, 1.6246, 1.6065, 1.5899, 1.5745, 1.5603, 1.5470, 1.5346,
+                          1.5230, 1.5120, 1.5017, 1.4920, 1.4829, 1.4742},
+                         {9.0000, 5.9146, 4.7184, 4.0628, 3.6410, 3.3436, 3.1209, 2.9468,
+                          2.8063, 2.6902, 2.5922, 2.5082, 2.4352, 2.3711, 2.3143, 2.2635,
+                          2.2178, 2.1764, 2.1386, 2.1040, 2.0722, 2.0428, 2.0155, 1.9901,
+                          1.9665, 1.9443, 1.9235, 1.9040, 1.8855, 1.8681}};
 
   if (nd < 1)
   {
@@ -1644,4 +1657,15 @@ StatusCode Millepede::GetAlignmentConstants(double par[])
   }
 
   return StatusCode::SUCCESS;
+}
+StatusCode Millepede::finalize()
+{
+  StatusCode sc = GaudiTupleTool::finalize();
+  if (sc.isFailure())
+    {
+      return Error("Failed to finalize", sc);
+    }
+  else sc = true;
+  return sc;
+  
 }

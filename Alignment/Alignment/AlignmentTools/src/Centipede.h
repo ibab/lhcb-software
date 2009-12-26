@@ -4,6 +4,8 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiAlg/GaudiTupleTool.h"
+#include "GaudiAlg/GaudiTupleAlg.h"
 #include "GaudiKernel/MsgStream.h"
 
 // from Alignment
@@ -31,57 +33,59 @@ class Centipede : public Millepede, virtual public ICentipede {
 
   // Standard constructor
   Centipede ( const std::string& type, 
-	      const std::string& name,
-	      const IInterface* parent);
+              const std::string& name,
+              const IInterface* parent);
 
 
   virtual ~Centipede(); 
 
-  // Standard constructor
-
-  virtual StatusCode InitMille( std::vector<bool> &DOF, 
-				int nglo, 
-				int nloc, 
-				double startfac, 
-				int nstd, 
-				double res_cut, 
-				double res_cut_init );
-
-
+/*   virtual StatusCode initialize(); */
+//  virtual StatusCode finalize(); 
+  
+  int  SpmInvGlobal(double v[][mgl], double b[], const int n); //MD
+  int  SpmInv(double v[][mlocal], double b[], int n);//MD
+  
+  virtual StatusCode InitMille( int nglo, 
+                                int nloc, 
+                                double startfac, 
+                                int nstd, 
+                                double res_cut, 
+                                double res_cut_init );
   virtual StatusCode EquLoc ( std::vector<double> &dergb,
-			      std::vector<double> &derlc,
-			      const double &rmeas, 
-			      double sigma);
-
+                              std::vector<double> &derlc,
+                              const double &rmeas, 
+                              double sigma);
   virtual StatusCode ZerLoc( std::vector<double> &dergb,
-			     std::vector<double> &derlc );
-			  
-  virtual StatusCode FitLoc(int n, 
-			    std::vector<double> &track_params, 
-			    int single_fit, 
-			    std::vector<double> &estimated_para, 
-			    // double &chi2, 
-			    double &res );
-
+                             std::vector<double> &derlc );
+	virtual StatusCode FitLoc(int n, 
+                            int locrank,
+                            std::vector< std::vector< double> >  locVec,
+                            std::vector<double> &track_params, 
+                            int single_fit, 
+                            std::vector<double> &estimated_para, 
+                            double &chi2, 
+                            double &res ,
+                            unsigned int itera);
   virtual StatusCode MakeGlobalFit( std::vector<double> &, 
-				    std::vector<double> &,
-				    std::vector<double> & );
-
-  virtual void CheckLChi2( const double &,
-                           const int &,
-                           const int &,
-                           const double &,
-                           const double &,
-                                 bool & );
-
-
-
+                                    std::vector<double> &);
+  virtual StatusCode ConstF(std::vector<double> dercs, double rhs);
   virtual void VectortoArray( const std::vector<double> &, double * );
   virtual void ArraytoVector( const double *, std::vector<double> & );
+
+  virtual void CheckLChi2(double , int, int, double , double  , bool & );
+  
+
  private:
 
+  bool DEBUGGLOBAL;
+  bool DEBUGLOCAL;
+
   double *m_derGB, *m_derLC;
-  double *dernl, *dernl_i;
+  double *m_dernl, *m_dernl_i;
+
+  double test;
+
+  
 };
 #endif // ALIGNMENTTOOLS_CENTIPEDE_H
 
