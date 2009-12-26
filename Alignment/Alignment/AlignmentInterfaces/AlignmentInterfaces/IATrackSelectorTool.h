@@ -3,43 +3,33 @@
 
 #include "GaudiKernel/IAlgTool.h"
 
-/* @class IATrackSelectorTool IATrackSelectorTool 
- * Interface to a track selector tool for
- * the alignment framework
- * @author : Johan Blouw, Physikalisches Institut, Heidelberg
-*/
+//*************************************
+// Interface to a track selector tool for
+// the alignment framework
+// Created by: Johan Blouw, Physikalisches Institut, Heidelberg
+// modified 17.10.2007 by M.Deissenroth
+//******************************
 
-static const InterfaceID 
-IID_IATrackSelectorTool("IATrackSelector",0,0);
+static const InterfaceID IID_IATrackSelectorTool("IATrackSelector",1,0);
 
-namespace LHCb {
-	class Track;
-};
+namespace LHCb {class Track;};
 
 class IATrackSelectorTool : virtual public IAlgTool {
 public:
 
   // Retrieve interface ID
-  static const InterfaceID & interfaceID() {
-    return IID_IATrackSelectorTool; 
-  }
+  static const InterfaceID & interfaceID() { return IID_IATrackSelectorTool;   }
 
-  virtual StatusCode initialize() = 0;
-
-  /** Accepts a track when it fullfills certain criteria set via options by user
-   * @input: LHCb::Track
-   * @return: bool
-  */
+  // Accept a track when it fullfills certain criteria
   virtual bool accept( const LHCb::Track& aTrack ) const = 0;
 
-  /** divide tracks in three classes (Through IT stations, through OT stations, crossing from one to the other
-   * @input: LHCb::Track, number of OT hits (nOTHits), number IThits (nITHits)
-   * @return: integer which is used as identifier for the track-container to store the track
-   *
-  */
-  virtual int traversesIT( LHCb::Track& aTrack, 
-			   int& nOTHits, 
-			   int& nITHits ) const = 0;
+  // divide tracks in three classes (Through IT stations, through OT stations, crossing from one to the other
+  virtual void countTHits( const LHCb::Track& aTrack, 
+                           int& nOTHits, 
+                           int& nITHits ,
+                           int& nTTHits) const = 0;
+ protected:
 
+ private:
 };
 #endif	  // ATRACKSELECTORTOOL_H 

@@ -3,6 +3,11 @@ Package : AlignmentInterfaces
 Package Coordinator : Johan Blouw
 Purpose :  Collection of interfaces needed for the T-station alignment
 
+
+! 2009/12/27 - Johan Blouw
+- small changes to IDerivatives, IATrackSelector, ICentipede and ITAConfigTool
+  to accomodate M. Deissenroth's m'pede style alignment implementation.
+
 </PRE><H1><A NAME=v3r0>2009-07-06 AlignmentInterfaces v3r0 </A></H1><PRE>
 
 ! 2009/07/06 - Wouter Hulsbergen
