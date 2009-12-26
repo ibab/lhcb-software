@@ -3,7 +3,7 @@ from Configurables import ( TAConfig, Derivatives, ATrackSelector, WriteAlignmen
 TAConfig().MillepedeTool = "Centipede"
 TAConfig().DerivativeTool = "Derivatives"
 TAConfig().MeasurementProvider = "MuonMeasurementProvider"
-TAConfig().nTrackModelParameters = 4
+TAConfig().nTrackModelParameters = 5
 TAConfig().Degrees_of_Freedom = []
 TAConfig().Constraint_Equations = []
 TAConfig().Chi_sq_factor = 10.0

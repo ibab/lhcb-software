@@ -1,56 +1,88 @@
-from Configurables import ( TAConfig, Derivatives, AlignTrTools, Centipede, MuonMeasurementProvider )
+#MD from Configurables import ( TAConfig, Derivatives, AlignTrTools, Centipede, MuonMeasurementProvider )
+from Configurables import ( TAConfig, Derivatives, AlignTrTools, Centipede)
 import AlignTrTools.Configuration
 
+########################################################
 #tac = AlignTrTools.Configuration.AligTrTools()
 TAConfig().addTool(Centipede)
 TAConfig().MillepedeTool = "Centipede"
-#art = AlignTrTools.Configuration.AlignTrTools()
-#art.Tools = ["Derivatives"]
-#art.__apply_configuration__()
-TAConfig().DerivativeTool = "Derivatives"
-TAConfig().MeasurementProvider = "MuonMeasurementProvider"
-TAConfig().nTrackModelParameters = 4
-TAConfig().Degrees_of_Freedom = [1,0,0,0,0,0]
-TAConfig().Constraint_Equations = []
-TAConfig().Chi_sq_factor = 10.0
-TAConfig().chi2_scale = 10000.0
-TAConfig().n_f_stdev = 10.0
-TAConfig().residual_cut = 20.0
-TAConfig().initial_residual_cut = 10.0
-TAConfig().n_l_stdev = 10
-TAConfig().Velo_left_modules = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-TAConfig().Velo_right_modules = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-TAConfig().PenaltyTerms = [30.0,30.0,30.0,30.0,30.0,30.0]
-TAConfig().Fix_alignable_objects = True
-TAConfig().Constrain_IT = []
-TAConfig().Constrain_OT = []
-TAConfig().Constrain_VeLo = []
-TAConfig().Constrain_Muon = []
-TAConfig().Constrain_TT = []
+art = AlignTrTools.Configuration.AlignTrTools()
+art.Tools = ["Derivatives"]
+art.__apply_configuration__()
 
-TAConfig().OT_system = False
-TAConfig().OT_station = False
-TAConfig().OT_layer = True
-TAConfig().OT_quadrant = False
-TAConfig().OT_module = False
-
-TAConfig().IT_system = False
-TAConfig().IT_station = False
-TAConfig().IT_box = False
-TAConfig().IT_layer = False
-TAConfig().IT_ladder = False
-
-TAConfig().MUON_system = False
-TAConfig().MUON_stations = False
-TAConfig().MUON_chambers = False
-
-TAConfig().TT_system = False
-TAConfig().TT_station = False
-TAConfig().TT_layer = False
-
-TAConfig().IT_alignment_condition_location = ""
-TAConfig().TT_alignment_condition_location = ""
-TAConfig().OT_alignment_condition_location = ""
-TAConfig().OutputLevel = 3
-
+TAConfig().OutputLevel = 4
 TAConfig().properties()
+
+
+####### below from MD ############
+
+TAConfig().OutputLevel = 3;
+TAConfig().Velo_left_modules  = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+TAConfig().Velo_right_modules = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+
+TAConfig().PenaltyTerms       = [100000.0,300000.0,300000.0,300000.0,30000.0,30000.0]
+TAConfig().Degrees_of_Freedom = [1,0,1,1,1,1];
+TAConfig().nTrackModelParameters = 5; #4;
+#//TAConfig().Fix_alignable_objects = true;
+TAConfig().Constrain_OT = [
+    
+    "X_S1_L1_Q0_M0",
+    "X_S1_L2_Q0_M0",
+    "X_S3_L1_Q0_M0",
+    "X_S3_L2_Q0_M0",
+        
+    "Z_S1_L1_Q0_M0",
+    "Z_S1_L2_Q0_M0",
+    "Z_S3_L1_Q0_M0",
+    "Z_S3_L2_Q0_M0",
+    
+    "A_S1_L1_Q0_M0",
+    "A_S1_L2_Q0_M0",
+    "A_S3_L1_Q0_M0",
+    "A_S3_L2_Q0_M0",
+
+    "B_S1_L1_Q0_M0",
+    "B_S1_L2_Q0_M0",
+    "B_S3_L1_Q0_M0",
+    "B_S3_L2_Q0_M0",
+    
+    "C_S1_L1_Q0_M0",
+    "C_S1_L2_Q0_M0",
+    "C_S3_L1_Q0_M0",
+    "C_S3_L2_Q0_M0"
+    
+    ]
+
+#TAConfig().MillepedeTool        = "Centipede";
+TAConfig().Chi_sq_factor        = 10.0;   #startfctr in Centipede/Millepede-->x*3sigma of chi2/ndf function
+TAConfig().initial_residual_cut = 100.0;  #1st outlier rejection
+TAConfig().n_l_stdev            = 3.0; 
+TAConfig().myChi2Scale          = -1;    # value = -1 : no chi2 cut
+#TAConfig().minChi2              = 10;    # value = -1 : no chi2 cut
+TAConfig().myOutlier            = 10; #4;
+#TAConfig().ConstrainMovement    = ["X=0.06"];    
+
+TAConfig().residual_cut         = 116.0; #not used...
+TAConfig().DerivativeTool       = "Derivatives";
+
+#TAConfig().CutonTrackSlope      = 1; # 0 - no slope cut, +-1 - cut up/downstream tracks
+
+#TAConfig().Centipede.OutputLevel = 3;
+#Centipede.Iteration = false;// inherited from Viret's Millepede, not used by OT
+#Centipede.ModuleFixed = -2; // inherited from Viret's Millepede, not used by OT
+
+# Outer Tracker
+TAConfig().OT_system   = False;
+TAConfig().OT_layer    = False;
+TAConfig().OT_halflayer= True;
+TAConfig().OT_quadrant = False;
+TAConfig().OT_module   = False;
+# Inner Tracker
+TAConfig().IT_system = False;
+TAConfig().IT_layer = False;
+TAConfig().IT_box = False;
+TAConfig().IT_ladder = False;
+# TT
+TAConfig().TT_system = False;
+TAConfig().TT_station = False;
+TAConfig().TT_layer = False;

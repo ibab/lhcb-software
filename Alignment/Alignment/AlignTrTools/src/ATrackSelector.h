@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : ATrackSelector
  *
  *  CVS Log :-
- *  $Id: ATrackSelector.h,v 1.4 2008-05-15 15:27:58 jblouw Exp $
+ *  $Id: ATrackSelector.h,v 1.5 2009-12-26 23:23:48 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   31/09/2006
@@ -57,26 +57,30 @@ class ATrackSelector : public GaudiTool,
    int traversesIT( LHCb::Track & aTrack, 
 		    int& nOThits, 
 		    int& nIThits ) const;
-     
- private:
-     
-  //Interfaces:
-  IATrackSelectorTool* m_trackselector;
-  ITrackCaloMatch *m_trackenergy;
 
-     
-     
-  double m_minChi2Cut; ///< Min chi^2 cut
-  double m_minPCut;    ///< Min p cut
-  double m_minPtCut;   ///< Min pt cut
-  double m_energyMinCut; ///< Min energy cut
+    void countTHits( const LHCb::Track & aTrack,
+                     int& nOThits,
+                     int& nIThits,
+                     int& nTThits) const;
     
-  int m_charge; ///< select particles with certain charge only
 
-  double m_maxChi2Cut; ///< Max chi^2 cut
-  double m_maxPCut;    ///< Max p cut
-  double m_maxPtCut;   ///< Max pt cut
-  double m_maxHitCut;  ///< Max hit cut
+private:
+    //Interfaces:
+    IATrackSelectorTool* m_trackselector;    
+    ITrackCaloMatch *m_trackenergy;    
+
+    double m_minChi2Cut; ///< Min chi^2 cut
+    double m_minPCut;    ///< Min p cut
+    double m_minPtCut;    ///< Min pt cut
+    int m_charge;    ///< select particles with certain charge only
+    double m_maxChi2Cut;    ///< Max chi^2 cut
+    double m_maxPCut;    ///< Max p cut
+    double m_maxPtCut;    ///< Max pt cut
+    double m_minITHitCut;    ///< Min hit cut
+    double m_minOTHitCut;    ///< Min hit cut
+    double m_minTTHitCut;    ///< Min hit cut
+    double m_energyMinCut;    ///< Min energy cut
+
 
   /// Track types to accept
   typedef std::vector<std::string> TrackTypes;
