@@ -3,7 +3,7 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.12 2009-12-17 08:30:27 wouter Exp $"
+__version__ = "$Id: Configuration.py,v 1.13 2009-12-26 23:09:47 jblouw Exp $"
 __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
 from Gaudi.Configuration  import *
@@ -55,6 +55,7 @@ class Escher(LHCbConfigurableUser):
        , "AlignSequence"	: []
        , "Kalman" 		: False    # run the kalman filter type alignment
        , "Millepede"		: False    # run the Millepede type alignment
+       , "skipBigCluster"       : False    # used for cosmic alignment, removes OT cluster > 2 hits
        , "OutputLevel" 		: 3        # 
        , "Incident"     	:  ""      # for Millepede style alignment, there are two incident handles: GlobalMPedeFit and Converged
                                            # for Kalman style alignment, there is a handle: UpdateConstants.
@@ -151,6 +152,7 @@ class Escher(LHCbConfigurableUser):
                
                ProcessPhase("Align").DetectorList += ["OT"]
                ta = TAlignment()
+               ta.skipBigCluster = self.getProp("skipBigCluster")
                ta.Method = "Millepede"
  	       ta.TrackLocation = self.getProp("TrackContainer")
 	       ta.Detectors =  self.getProp("Detectors")
@@ -193,7 +195,7 @@ class Escher(LHCbConfigurableUser):
             ReadStripETC("TagReader").CollectionName = "TagCreator"
             IODataManager().AgeLimit += 1
 
-        if inputType not in [ "DIGI", "DST" ]:
+        if inputType in [ "MDF", "RDST", "ETC" ]:
             # In case raw data resides in MDF file
             EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
 
@@ -287,11 +289,13 @@ class Escher(LHCbConfigurableUser):
         GaudiKernel.ProcessJobOptions.PrintOff()
         GaudiKernel.ProcessJobOptions.PrintOn()
         log.info("Initializing sequences!")
-        self.setOtherProps(RecSysConf(),["SpecialData","Context","OutputType"])
+        self.setOtherProps(RecSysConf(),["SpecialData","Context",
+                                         "OutputType","DataType"])
+
         if self.isPropertySet("RecoSequence") :
             self.setOtherProp(RecSysConf(),"RecoSequence")
         # there is a bug in setOtherProps, so we cannot use it to set the MoniSequence.
-        self.setOtherProps(RecMoniConf(),["Context","OutputType"])
+        self.setOtherProps(RecMoniConf(),["Context","DataType"])
         RecMoniConf().MoniSequence = self.getProp("MoniSequence")
         self.setOtherProps(TAlignment(),["DatasetName"])
         

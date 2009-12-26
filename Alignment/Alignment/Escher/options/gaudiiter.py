@@ -96,7 +96,7 @@ for i in range( opts.numiter ) :
     # fire incident for update
     from GaudiPython import gbl
     incSvc = appMgr.service( 'IncidentSvc', 'IIncidentSvc' )
-    updateConstants = gbl.Incident( 'Alignment', 'UpdateConstants' )
+    updateConstants = gbl.Incident( 'Alignment', 'GlobalMPedeFit' )
     incSvc.fireIncident( updateConstants )
 
 #exit the appmgr for finalize

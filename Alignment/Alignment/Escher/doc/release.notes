@@ -4,6 +4,14 @@ Package Coordinator : Johan Blouw
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+
+! 2009-12-26 Johan Blouw
+ - added a python script to run over 2009 collision data.
+ - and one script to configure m'pede style OT alignment using
+   2009 collistion data.
+ - small change to the  configurable, to allow for cosmic alignment
+   w/ m'pede, where OT cluster > 2 are removed from the tracks.
+
 </PRE><H1><A NAME=v4r4>2009-11-23 Escher v4r4</A></H1><PRE>
 ! 2009-11-23 Johan Blouw
  - release v4r4 for Alignemnt release v4r4

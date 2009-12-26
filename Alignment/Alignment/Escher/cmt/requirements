@@ -3,45 +3,42 @@ version v4r4
 
 branches doc cmt job options
 
-#-- CMT and GaudiPolicy
-use GaudiPolicy v*
-
-#-- External libraries now taken from LCG, version defined by GaudiEnv
-use RELAX v* LCG_Interfaces          -no_auto_imports
-
-#-- Gaudi libraries (from GAUDI_v18r10)
-use GaudiKernel		v*
-use GaudiSvc 		v*        -no_auto_imports
-use GaudiAlg 		v*         -no_auto_imports
-use GaudiAud 	        v*         -no_auto_imports
-use GaudiGSL		v*         -no_auto_imports
-use GaudiPoolDb	        v*         -no_auto_imports
-use RootHistCnv         v*         -no_auto_imports
-use processing          v*      LCG_Interfaces
-
-#-- Database
-# Comment the line with SQLDDDB and uncomment
-# the 2 lines below to enable reading the xml versions of the dbase
-# Note that in the options file (v200601.opts) some changes are needed as well.
-#use SQLDDDB 		v*	Det  -no_auto_imports
-#use XmlDDDB             v*	Det  -no_auto_imports
-#use XmlConditions       v*	Det  -no_auto_imports
-use DDDB               v*    Det            -no_auto_imports
-use ParamFiles         v*                 -no_auto_imports
-use FieldMap           v*                 -no_auto_imports
+# Packages needed to compile and link the application
+use GaudiConf          v*                   -no_auto_imports
+use GaudiKernel        v*
 
 # Packages needed to resolve external dependencies at run time
 use Python             v*    LCG_Interfaces -no_auto_imports
 use HepMC              v*    LCG_Interfaces -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v21r11)
-use LHCbSys             v*        -no_auto_imports
+#-- Database
+use DDDB               v*    Det            -no_auto_imports
+use ParamFiles         v8r1                 -no_auto_imports
+use FieldMap           v5r*                 -no_auto_imports
+use AppConfig          v3r*                 -no_auto_imports
+
+
+# The rest are needed only to set up environment variables for job options
+# and to give a cmt broadcast dependency for user checked out component packages
+
+use Gaudi              v*                   -no_auto_imports
+use GaudiPoolDb        v*                   -no_auto_imports
+
+# From LHCbSys
+use EventPacker        v*    Event          -no_auto_imports
+use LHCbAlgs           v*    Kernel         -no_auto_imports
+use SimComponents      v*    Sim            -no_auto_imports
+use XmlTools           v*    Tools          -no_auto_imports
+use CaloDetXmlCnv      v*    Det            -no_auto_imports
+use DetDescSvc         v*    Det            -no_auto_imports
+use Magnet             v*    Det            -no_auto_imports
+use MDF                v*    DAQ            -no_auto_imports
 
 #-- Lbcom packages (from LBCOM_v5r8)
 use LbcomSys            v*       -no_auto_imports
 
 #-- Rec packages (from REC_v3r13)
-use RecSys              v*         -no_auto_imports
+use RecSys		v*         -no_auto_imports
 
 #-- Alignment packages
 use AlignmentInterfaces	v*    Alignment -no_auto_imports

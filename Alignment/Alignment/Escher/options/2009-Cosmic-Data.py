@@ -45,21 +45,15 @@ TrackSys().SpecialData += ['fieldOff','cosmics']
 # wouter's dsts
 Escher().InputType = 'DST'
 data = [
-    '58739','58744',
-    '59051','59052',
-    '59054','59075',
-    '59077','59081',
-    '59088','59092',
-    '59093','59096',
-    '59097','59195',
-    '59198','59306',
-    '59307','59565',
-    '59568'
+'run34120',
+'run31225',
+'run31557',
+'run34083'
     ]
 
 EventSelector().Input = []
 for d in data:
-    name = "DATAFILE='PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run" + d + ".dst' TYP='POOL_ROOTTREE' OPT='READ'" 
+    name = "DATAFILE='file:/data/data/" + d + ".dst' TYP='POOL_ROOTTREE' OPT='READ'" 
     EventSelector().Input.append( name )
 
 
