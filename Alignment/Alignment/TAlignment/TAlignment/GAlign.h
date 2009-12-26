@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment algorithm: TAlignment
  *
  *  CVS Log :-
- *  $Id: GAlign.h,v 1.4 2008-05-23 16:29:21 jblouw Exp $
+ *  $Id: GAlign.h,v 1.5 2009-12-26 23:29:35 jblouw Exp $
  *
  *  @author J. Blouw  Johan.Blouw@cern.ch
  *  @date   30/12/2007
@@ -21,6 +21,9 @@
 // Interfaces
 #include "AlignmentInterfaces/ITAConfigTool.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
+#include "AlignmentInterfaces/IATrackSelectorTool.h"
+#include "TrackInterfaces/ITrackExtrapolator.h"
+#include "AlignmentInterfaces/IDerivatives.h"
 
 // GaudiKernel
 #include "GaudiKernel/HashMap.h"
@@ -31,6 +34,17 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiAlg/GaudiTupleAlg.h"
 #include "GaudiAlg/Tuple.h"
+// Tracking
+#include "TrackInterfaces/ITrajectoryProvider.h"
+#include "TrackInterfaces/ITrackExtrapolator.h"
+// Poca 
+#include "Kernel/ITrajPoca.h"
+// Magnetic field service 
+#include "GaudiKernel/IMagneticFieldSvc.h"
+#include "OTDet/DeOTDetector.h"
+// geometry
+#include "DetDesc/IDetectorElement.h"
+
 
 using namespace std;
 
@@ -56,6 +70,7 @@ public:
 
   // access to member variable (from python)
   bool Converged();
+  bool writeParameters();
 
   // Tool initialization
   virtual StatusCode initialize();
@@ -70,15 +85,13 @@ public:
   StatusCode queryInterface( const InterfaceID &, void ** );
   void handle(const Incident& incident);
 
-  /** Returns 
-   *
-   *  @param aTrack Reference to the Track to test
-   *
-   *  @return Gaudi::XYZVector, which is the distance of closest approach.
-   *          Note that this vector does not necessarily lie in the detector plane!
-   */
+  //int InvMatrix(double v[][4], double vec[],int n);
+  //void ZeroMatrVec( double v[][4], double vec[]);
+  void VectortoArray(const std::vector<double>& , double[] );
   
-
+  void MatrixToVector(double* mat,int dim1, int dim2,std::vector< std::vector<double> >& ,int);
+  void LagMultRef();
+  
   bool m_converged;
   std::vector<double> m_align;
   std::vector<double> m_align_err;
@@ -86,45 +99,60 @@ public:
   // Interfaces:
   ITAConfigTool *m_taConfig;
   IMeasurementProvider *m_measProvider;
+  ITrajPoca *m_trpoca;
+  IMagneticFieldSvc *m_bField;
+  ITrackExtrapolator* m_extrapolator;
+  IATrackSelectorTool* m_trackselection;    
+
   // 
   string m_AlignConfTool;
   string m_inputcontainer;
   std::vector<std::string> m_detectors;
   int m_nGlPars; // Number of alignment parameters
-  bool velo_detector, tt_detector, it_detector, ot_detector, muon_detector;
+  bool velo_detector, tt_detector, it_detector, ot_detector;
   int m_evtsPerRun;
   int m_MaxIterations;
-  int m_iterationsMin;
   bool m_ForceIterations;
   int m_iterations;
-  double m_chi2, m_chi2B4;
-  unsigned int m_Tdof;
-  int m_ntr, m_ntrB4;
-  int m_ntrack_pars;
-  int tr_cnt;
-  bool nfalse, ntrue;
   Gaudi::XYZVector m_res;
   std::vector<double> m_pull;
   std::vector<double> m_estimated;
-  inline void add( std::vector<double> &c, std::vector<double> a, std::vector<double> b) {
-    std::vector<double>::iterator t;
-    std::vector<double>::iterator s;
-    std::vector<double>::iterator end;
-    if ( a.end() <= b.end() ) {
-       c.resize( a.size() );
-    } else {
-       c.resize( b.size() );
-    }
-    info() << "a.size = " << a.size() << " b.size = " << b.size() << " c.size = " << c.size() << endreq;
-    std::vector<double>::iterator r = c.begin();
-    for( t = a.begin(), 
-         s = b.begin(), 
-         r = c.begin(); t < a.end(); t++, s++, r++ ) {
-       info() << "r = " << *r << " t = " << *t << " s = " << *s << endreq;
-       *r = *t+*s;
-    }
-  }
-
+  std::vector<double> m_new_par;
+  std::vector<double> m_prev_par;
+  std::vector<double> m_gaRes; //track residual from GAlign
+  int m_tr_cnt;  
+  std::vector<Gaudi::Transform3D> m_otmap;
+  
+  int m_meas_cnt;
+  std::vector<double> misalInput_X;
+  std::vector<double> misalInput_Y;
+  std::vector<double> misalInput_Z;
+  std::vector<double> misalInput_A;
+  std::vector<double> misalInput_B;
+  std::vector<double> misalInput_C;
+  
+  std::vector<double> m_layZ;
+  double m_zmean;  
+  double m_sigZmean;
+  double m_chi2;
+  double m_chi2rej;
+  double m_newScale;
+  double m_outlier;
+  bool   m_out;
+  bool   m_badXval;
+  bool   m_fitconv;
+  double m_resMax;
+  int    m_locrank;
+  bool   m_skipBigCluster;
+  int    m_slopeCut;
+  int    m_acceptedTr;
+  int    m_badCluster;
+  int    m_nNotConv;
+  int    m_totalTracks;
+  int    m_RejectbySelector;
+  int    m_nEvents;
+  std::vector<double> m_hitRnk;
+  
 };
 
 

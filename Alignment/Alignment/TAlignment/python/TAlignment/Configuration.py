@@ -49,6 +49,7 @@ class TAlignment( LHCbConfigurableUser ):
         , "OTTopLevelElement"            : "/dd/Structure/LHCb/AfterMagnetRegion/T/OT"
         , "MuonTopLevelElement"          : "/dd/Structure/LHCb/DownstreamRegion/Muon"
         , "Precision"                    : 16                          # Set precision for conditions
+        , "skipBigCluster"               : True                        # if cluster found with >= 2 hits, whole track is rejected
         , "OutputLevel"                  : INFO                        # Output level
         , "LogFile"                      : "alignlog.txt"              # log file for kalman type alignment
         , "Incident"                     : ""                          # name of handle to be executed on incident by incident server
@@ -80,6 +81,8 @@ class TAlignment( LHCbConfigurableUser ):
             if len( self.getProp("TrackLocation") ) == 0 :
                 raise RuntimeError("ERROR: no track container defined!")
             ga.InputContainer = self.getProp("TrackLocation")
+            ga.skipBigCluster = self.getProp("skipBigCluster")
+
             if len( ga.Detectors ) == 0:
                 ga.Detectors = self.getProp("Detectors")
 		
