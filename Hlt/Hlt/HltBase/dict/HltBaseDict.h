@@ -15,7 +15,6 @@
 #include "HltBase/PropertyConfig.h"
 #include "HltBase/IPropertyConfigSvc.h"
 #include "HltBase/IConfigAccessSvc.h"
-#include "HltBase/IHltDataSvc.h"
 #include "HltBase/IHltRegister.h"
 #include "HltBase/IHltData.h"
 #include "HltBase/IHltInspector.h"

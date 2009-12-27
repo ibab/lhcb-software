@@ -5,6 +5,9 @@
 !----------------------------------------------------------------------------
 
 
+! 2009-12-27 - Gerhard Raven
+ - remove IHltDataSvc
+
 ! 2009-12-24 - Gerhard Raven
  - migrate from IHltDataSvc to Hlt::IDataSvc and Hlt::IRegisterSvc
  - bump version to v8r0
