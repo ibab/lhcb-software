@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.28 2009-12-27 11:49:32 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.29 2009-12-27 17:46:28 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -72,14 +72,14 @@ TAConfig::TAConfig( const std::string& type,
                     const std::string& name,
                     const IInterface* parent ):
   GaudiTupleTool ( type, name  ,parent ),
+  m_zmean_ot(0),  
+  m_Sigzmean_ot(0),
   m_n_dof( 0 ),
+  m_tolerance(1e-4),
   velo_detector(false),
   tt_detector(false),
   it_detector(false),
   ot_detector(false),
-  m_tolerance(1e-4),
-  m_zmean_ot(0),  
-  m_Sigzmean_ot(0),
   m_cntfix(0),
   m_stereoAngle(0),
   m_nAlignObj(1){
@@ -317,8 +317,8 @@ StatusCode TAConfig::ConstrainLagrangeMultOT(){
   // 1st we have to get the sigma of the z positions;
   // with that we can calculate the shearing terms
 
-  int meanRight = 0;
-  int meanLeft  = 0;;
+  double meanRight = 0;
+  double meanLeft  = 0;;
   double meanRightZ[24];
   double meanLeftZ[24];
   double mstereo[24];
@@ -1095,7 +1095,7 @@ StatusCode TAConfig::ConfigMillepede() {
   int nlocal      = m_ntrack_pars;
   for ( int i = 0; i < m_ntrack_pars; i++ )
     m_derLC.push_back(0.0);
-  for ( unsigned int i = 0; i < num_objects; i++ )
+  for ( int i = 0; i < num_objects; i++ )
     m_derGB.push_back(0.0);
   //  for (int j = 0; j < 6; j++) {m_DOF[j] = m_dof[j];}   // What are the parameters to align ?
   //  for (int j = 0; j < 9; j++) {m_CONSTRAINT[j] = m_sigma[j];}
@@ -1556,8 +1556,7 @@ StatusCode TAConfig::FillMatrix( int rank,
   
   return StatusCode::SUCCESS;
 }
-StatusCode TAConfig::CalcResidual( const LHCb::Track* track, 
-                                   const LHCb::LHCbID &id, 
+StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id, 
                                    int rank, // do we realy need the rank ?
                                    struct Point &meas,
                                    double &weight,
@@ -2784,7 +2783,7 @@ void TAConfig::VectortoArray(const std::vector<double> &the_vector, double the_a
 
 void TAConfig::ArraytoVector( const double the_array[], std::vector<double> &the_vector , int ent) {
   the_vector.resize(ent,0.);
-  for(unsigned i=0; i< ent;++i){
+  for(int i=0; i< ent;++i){
     the_vector[i] = the_array[i] ;
   }
 }
@@ -3148,7 +3147,8 @@ void TAConfig::CheckLChi2(const double &chi2, const int &trsize,const int &nmes,
 
 
 StatusCode TAConfig::NewMeasurement(double & meas, const int rank,
-                                    const struct Point pred, const double zpos,
+                                    const struct Point pred, 
+//				    const double zpos,
                                     const double stereo_angle)
 {
 
@@ -3219,7 +3219,7 @@ StatusCode TAConfig::ConstrainMovements(){
   int  cnt       = 0;
   double vdof[6] = {0.,0.,0.,0.,0.,0.};//constrain value per parameter (dof)
   int size       = m_OTConstrainMove.size();
-  for (unsigned int i=0; i < size; i++){
+  for (int i=0; i < size; i++){
     info()<< "--> Constrain Movements string = " << m_OTConstrainMove[i] << endreq;
     //interpret every string
     std::string str_fix = m_OTConstrainMove[i];
