@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-12-27 - Gerhard Raven
+ - remove HltDataSvc
+
 ! 2009-12-23 - Gerhard Raven
  - fix double increment of counter in HltL0MuonCandidates
  - move #include around to facilitate HltBase/stringKey -> GaudiKernel/StringKey migration
