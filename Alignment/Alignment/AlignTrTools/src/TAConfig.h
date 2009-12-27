@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.h,v 1.19 2009-12-26 23:23:48 jblouw Exp $
+ *  $Id: TAConfig.h,v 1.20 2009-12-27 11:49:32 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -169,7 +169,7 @@ public:
                             unsigned int itera,
                             int locrank) {
      
-    StatusCode sc = m_Centipede->FitLoc(tr_cnt, locrank,locVec,trpar, single_fit , estimated, chi2, residual, itera);
+    StatusCode sc = m_Centipede->FitLoc(tr_cnt, locrank,locVec,trpar, single_fit , estimated, chi2, residual);
     if ( sc.isFailure() ){
       debug() << "Local Fit rejected: Millepede local fit returns " << sc.getCode() << endreq;
       return StatusCode::FAILURE;

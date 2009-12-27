@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.27 2009-12-26 23:23:48 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.28 2009-12-27 11:49:32 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -289,7 +289,7 @@ StatusCode TAConfig::CacheDetElements() {
   }
 
   //zero out the vector
-  for(unsigned i=0;i<NumAlignPars();i++)
+  for(int i=0;i<NumAlignPars();i++)
   {
     m_prevAlipar.push_back(0.);
   }
@@ -1190,7 +1190,7 @@ StatusCode TAConfig::ConfMatrix( double rmeas,
   m_derLC.resize( m_ntrack_pars ,0.);
   Gaudi::XYZVector origin( trpar.at(0), trpar.at(2), 0.0);
   Gaudi::XYZVector slopes( trpar.at(1), trpar.at(3), 0.0);
-  m_derivatives->SetLocal( m_derLC, rank, zpos , stereo_angle ,origin, slopes);    
+  m_derivatives->SetLocal( m_derLC, zpos , stereo_angle);    
   
   debug() << "---> CONFMAT: m_derLC[0] = " << m_derLC[0] <<endreq
           << "---> CONFMAT: m_derLC[1] = " << m_derLC[1] <<endreq
@@ -1262,7 +1262,7 @@ StatusCode TAConfig::ConfMatrixP( double rmeas,
   m_derLC.resize( m_ntrack_pars ,0.);
   Gaudi::XYZVector origin( trpar.at(0), trpar.at(2), 0.0);
   Gaudi::XYZVector slopes( trpar.at(1), trpar.at(3), 0.0);
-  m_derivatives->SetLocal( m_derLC, rank, zpos , stereo_angle ,origin, slopes);    
+  m_derivatives->SetLocal( m_derLC, zpos , stereo_angle );    
   
   debug() << "---> CONFMAT: m_derLC[0] = " << m_derLC[0] <<endreq
           << "---> CONFMAT: m_derLC[1] = " << m_derLC[1] <<endreq
@@ -1538,8 +1538,8 @@ StatusCode TAConfig::FillMatrix( int rank,
   Gaudi::XYZVector origin( trt.at(0), trt.at(2), 0.0);
   Gaudi::XYZVector slopes( trt.at(1), trt.at(3), 0.0);
   //set derivatives
-  m_derivatives->SetLocal( m_derLC, rank, zpos, stereo_angle , origin, slopes);
-  m_derivatives->SetGlobal( slopes, origin, pred, m_derGB, rank, zpos, stereo_angle );
+  m_derivatives->SetLocal( m_derLC, zpos, stereo_angle );
+  m_derivatives->SetGlobal( slopes, origin, pred, m_derGB, rank, stereo_angle );
 
   debug() << " --> FILLMATRIX after SetGlobal : derGB.size = " << m_derGB.size() << " rank = " << rank << endreq
           << "     track parameter at z = "<< zpos<<" : "<< endreq;
@@ -3172,7 +3172,7 @@ StatusCode TAConfig::NewMeasurement(double & meas, const int rank,
 
   Gaudi::XYZVector origin( trt.at(0), trt.at(2), 0.0);
   Gaudi::XYZVector slopes( trt.at(1), trt.at(3), 0.0);
-  m_derivatives->SetGlobal( slopes, origin, pred, m_derGB, rank, zpos, stereo_angle );
+  m_derivatives->SetGlobal( slopes, origin, pred, m_derGB, rank, stereo_angle );
   int cnt = 0;
   if(m_dof[0]){
     //info() << " ---> meas before ="<< meas << endreq;

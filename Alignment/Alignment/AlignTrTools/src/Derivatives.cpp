@@ -56,7 +56,7 @@ StatusCode Derivatives::SetGlobal( const Gaudi::XYZVector &slope, const
                                    const struct Point predic, // prediction of hit x,y
                                    std::vector<double> &m_derGB, // vector containing global derivatives
                                    const int &station, // detector element number in list
-                                   const double &z,  // z-position of this det. element
+//                                   const double &z,  // z-position of this det. element
                                    const double &sta ) { // stereo-angle of this det element
 
   double tx = slope.x();
@@ -124,14 +124,15 @@ StatusCode Derivatives::SetGlobal( const Gaudi::XYZVector &slope, const
 }
 
 StatusCode Derivatives::SetLocal( std::vector<double> &m_derLC,
-                                  const int &rank,
+//                                  const int &rank,
                                   const double &z,
-                                  const double &stereo_angle,
-                                  const Gaudi::XYZVector orig,
-                                  const Gaudi::XYZVector slope) 
+                                  const double &stereo_angle
+//                                  const Gaudi::XYZVector orig,
+//                                  const Gaudi::XYZVector slope
+				) 
  
 {
-  double tilt = 0.003601; 
+//  double tilt = 0.003601; 
 
  if(m_tr_pars ==4 ){
      m_derLC[0] =  cos( stereo_angle );

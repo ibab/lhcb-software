@@ -35,10 +35,19 @@ virtual ~Derivatives(); ///< Destructor
 
   StatusCode SetGlobal( const Gaudi::XYZVector &, const Gaudi::XYZVector &,
                         const struct Point,
-                        std::vector<double> &, const int &, const double &, const double & );
+                        std::vector<double> &, 
+			const int &, 
+//			const double &, 
+			const double & 
+			);
 
-  StatusCode SetLocal( std::vector<double> &, const int &, const double &,
-                       const double & , const Gaudi::XYZVector, const Gaudi::XYZVector );
+  StatusCode SetLocal( std::vector<double> &, 
+//			const int &, 
+			const double &,
+                        const double &  
+//			const Gaudi::XYZVector, 
+//			const Gaudi::XYZVector
+			);
 
 
 
