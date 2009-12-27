@@ -19,6 +19,8 @@ use AIDA                v*  LCG_Interfaces
 use HltEvent            v*  Event
 
 use HltBase             v*  Hlt
+# our python uses various instances defined in HltCommon...
+use HltCommon           v*  Hlt
 
 
 #============================================================================
