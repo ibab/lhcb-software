@@ -604,8 +604,7 @@ StatusCode Centipede::FitLoc( int n,
                               int single_fit,
                               std::vector<double> &estimated,
                               double &chi2,
-                              double &res ,
-                              unsigned int itera) //nof iterations 
+                              double &res ) 
 {
   // Few initializations
   int i, j, k, ik, ij, ist, nderlc, ndergl, ndf;
@@ -1321,7 +1320,7 @@ void Centipede::ArraytoVector( const double the_array[], std::vector<double> &th
 void Centipede::CheckLChi2(double chi2, int tsize, int nm, double cfactrb, double nsdtdevb , bool & flag ) {
 
   int nndf=nm-tsize;
-  int nsdtdev=nsdtdevb;
+  int nsdtdev=(int) nsdtdevb;
   //info()<<"nsdtdev=" << nsdtdev << " ndf=" << nndf << " cfactr=" << cfactrb <<endreq;
   double cutval = Millepede::chindl(nsdtdev,nndf)*cfactrb;
   

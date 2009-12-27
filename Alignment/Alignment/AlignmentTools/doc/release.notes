@@ -5,6 +5,9 @@ Purpose : provides a c++ translation of Volker Blobel's Millepede algorithm.
 
 
 ! 2009-12-27 Johan Blouw
+ - removed unnecessary variables from Centipede.
+
+! 2009-12-27 Johan Blouw
  - small changes to Centipede, to accomodate M. Deissenroth's implementation
    of millepede alignment of OT.
 
