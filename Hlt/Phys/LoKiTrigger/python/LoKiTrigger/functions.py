@@ -201,9 +201,9 @@ TrVELOR       = equal_to ( TrTYPE , LHCb.Track.VeloR )
 TrZERO        = LoKi.Constant( _T , 'double' ) ( 0.0 )
 
 ## @see LoKi::Cuts::TrIDC
-#TrIDC = LoKi.Tracks.CountIDs
+TrIDC = LoKi.Tracks.CountIDs
 ## @see LoKi::Cuts::TrOTIDC
-#TrOTIDC = LoKi.Tracks.CountOTIDs
+TrOTIDC = LoKi.Tracks.CountOTIDs
 
 
 

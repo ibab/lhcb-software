@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.60 2009-12-27 10:07:42 graven Exp $
+! $Id: release.notes,v 1.61 2009-12-27 19:10:25 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
@@ -8,6 +8,12 @@
 ! 2009-12-27 - Gerhard Raven
  - also comment out TrIDC and TrOTIDC definitions, as otherwise the 
    import fails because of the change below...
+
+ - found workaround for this bug which only happens if POOL is loaded:
+   remove the typedef for std::vector<unsigned int>, and use the type
+   explicityly... put back LoKi/TrackIDs in dictionary, and add TrIDC and
+   TrOTIDC definitions... 
+   see https://savannah.cern.ch/bugs/index.php?60968 for more information
 
 
 ! 2009-12-25 - Gerhard Raven

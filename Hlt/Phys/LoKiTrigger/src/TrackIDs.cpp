@@ -1,4 +1,4 @@
-// $Id: TrackIDs.cpp,v 1.2 2009-12-23 11:40:18 graven Exp $
+// $Id: TrackIDs.cpp,v 1.3 2009-12-27 19:10:26 graven Exp $
 // ===========================================================================
 // Include files 
 // ===========================================================================
@@ -159,7 +159,7 @@ LoKi::Tracks::CountOTIDs::CountOTIDs
 // ============================================================================
 LoKi::Tracks::CountOTIDs::CountOTIDs
 ( LoKi::Tracks::CountOTIDs::PMF          pmf , 
-  const LoKi::Tracks::CountOTIDs::UInts& i   ) 
+  const std::vector<unsigned int>& i   ) 
   : LoKi::BasicFunctors<LHCb::Track>::Function ()
   , m_pmf   ( pmf   ) 
   , m_uints ( i     )
@@ -233,7 +233,7 @@ LoKi::Tracks::CountOTIDs::CountOTIDs
 // ============================================================================
 LoKi::Tracks::CountOTIDs::CountOTIDs
 ( const std::string&                   nick , 
-  const LoKi::Tracks::CountOTIDs::UInts& i    ) 
+  const std::vector<unsigned int>& i    ) 
   : LoKi::BasicFunctors<LHCb::Track>::Function ()
   , m_pmf   ( 0     ) 
   , m_uints ( i     )

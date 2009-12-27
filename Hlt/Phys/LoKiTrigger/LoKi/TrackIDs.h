@@ -1,4 +1,4 @@
-// $Id: TrackIDs.h,v 1.1 2009-12-17 20:18:37 ibelyaev Exp $
+// $Id: TrackIDs.h,v 1.2 2009-12-27 19:10:25 graven Exp $
 // ============================================================================
 #ifndef LOKI_TRACKIDS_H 
 #define LOKI_TRACKIDS_H 1
@@ -83,17 +83,18 @@ namespace LoKi
       // ======================================================================
       // the actual type of pointer to member function
       typedef unsigned int (LHCb::OTChannelID::*PMF)() const ;
-      // ======================================================================
-    protected:
-      // ======================================================================
-      typedef std::vector<unsigned int>                UInts ;
+
+      // Uncomment the next line, and get a bad crash from Reflex...
+      // in the global c'tor invoked when libLoKiTrigger.so is loaded.
+      // BUT only if someother shared lib is loaded first...
+      //typedef std::vector<unsigned int> UInts;
       // ======================================================================
     public:
       // ======================================================================
       /// constructor from pointer to member function 
       CountOTIDs ( PMF fun , const unsigned int i ) ;
       /// constructor from pointer to member function & list  
-      CountOTIDs ( PMF fun , const UInts&       i ) ;
+      CountOTIDs ( PMF fun , const std::vector<unsigned int>& i ) ;
       /// constructor from pointer to member function & range 
       CountOTIDs ( PMF                fun , 
                    const unsigned int imin , 
@@ -101,7 +102,7 @@ namespace LoKi
       /// constructor from pointer to member function name  
       CountOTIDs ( const std::string& name , const unsigned int i ) ;
       /// constructor from pointer to member function name  & list 
-      CountOTIDs ( const std::string& name , const UInts&       i  ) ;
+      CountOTIDs ( const std::string& name , const std::vector<unsigned int>& i  ) ;
       /// constructor from pointer to member function name  & range
       CountOTIDs ( const std::string& nick , 
                    const unsigned int imin , 
@@ -125,7 +126,7 @@ namespace LoKi
       /// the pointer to member function 
       PMF  m_pmf ;                            // the pointer to member function
       /// the list of values 
-      UInts   m_uints ;                             //       the list of values 
+      std::vector<unsigned int>   m_uints ;  //       the list of values 
       /// the low edge 
       unsigned int m_imin ;                           // the low edge 
       /// the high edge 
