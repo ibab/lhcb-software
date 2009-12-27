@@ -49,8 +49,7 @@ class ICentipede : virtual public IMillepede {
                               int single_fit,
                               std::vector<double> &estimated_para,
                               double &summ,
-                              double &res,
-                              unsigned int itera) = 0;
+                              double &res ) = 0;
   virtual StatusCode MakeGlobalFit( std::vector<double> &,
                                     std::vector<double> &) = 0;
   virtual StatusCode ConstF(std::vector<double> dercs, double rhs) = 0 ;

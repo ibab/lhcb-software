@@ -5,6 +5,9 @@ Purpose :  Collection of interfaces needed for the T-station alignment
 
 
 ! 2009/12/27 - Johan Blouw
+- removed unnecessary variables from ICentipede
+
+! 2009/12/27 - Johan Blouw
 - small changes to IDerivatives, IATrackSelector, ICentipede and ITAConfigTool
   to accomodate M. Deissenroth's m'pede style alignment implementation.
 
