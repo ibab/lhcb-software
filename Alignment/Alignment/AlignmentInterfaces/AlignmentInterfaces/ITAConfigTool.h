@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : ITAConfigTool
  *
  *  CVS Log :-
- *  $Id: ITAConfigTool.h,v 1.11 2009-12-26 23:17:32 jblouw Exp $
+ *  $Id: ITAConfigTool.h,v 1.12 2009-12-27 17:25:22 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -51,8 +51,7 @@ class ITAConfigTool : virtual public IAlgTool {
   }
 
   virtual StatusCode Initialize( std::vector<std::string> & ) = 0;
-  virtual StatusCode CalcResidual( const LHCb::Track* ,
-                                   const LHCb::LHCbID &,
+  virtual StatusCode CalcResidual( const LHCb::LHCbID &,
                                    int ,
                                    struct Point  &,
                                    double &,
@@ -111,7 +110,7 @@ class ITAConfigTool : virtual public IAlgTool {
                                     std::vector<double> &,
                                     double &,
                                     double &,
-                                    unsigned int,
+//                                    unsigned int,
                                     int) = 0;
 
   //write xml
@@ -162,7 +161,7 @@ class ITAConfigTool : virtual public IAlgTool {
   virtual double GetChi2Scale()   = 0;
   virtual double GetMinChi2()     = 0;
   virtual double GetOutlierMax()  = 0;
-  virtual StatusCode NewMeasurement(double &, const int  ,const struct Point, double ,
+  virtual StatusCode NewMeasurement(double &, const int  ,const struct Point, 
                             double )=0;
   virtual std::map<std::string, int> GetCMap() = 0;  
   virtual std::multimap<int, std::pair<double, double> > GetRnkZAngleMap() = 0;

@@ -32,10 +32,18 @@ public:
   virtual StatusCode SetGlobal( const Gaudi::XYZVector &, /// slope of track 
                                 const Gaudi::XYZVector &, /// origin of track 
                                 const struct Point,
-                                std::vector<double> &, const int &, const double &, const double & ) = 0;
+                                std::vector<double> &, 
+				const int &, 
+//				const double &, 
+				const double & ) = 0;
   
-  virtual StatusCode SetLocal( std::vector<double> &, const int &, const double &, const double & ,
-                               const Gaudi::XYZVector, const Gaudi::XYZVector ) = 0;
+  virtual StatusCode SetLocal( std::vector<double> &, 
+//				const int &, 
+				const double &, 
+				const double & 
+//                                const Gaudi::XYZVector, 
+//				const Gaudi::XYZVector 
+				) = 0;
 
   virtual double GetGlobalDerivative_X() = 0;
   virtual double GetGlobalDerivative_Y() = 0;

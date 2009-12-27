@@ -6,6 +6,7 @@ Purpose :  Collection of interfaces needed for the T-station alignment
 
 ! 2009/12/27 - Johan Blouw
 - removed unnecessary variables from ICentipede
+- and ITAConfigTool
 
 ! 2009/12/27 - Johan Blouw
 - small changes to IDerivatives, IATrackSelector, ICentipede and ITAConfigTool
