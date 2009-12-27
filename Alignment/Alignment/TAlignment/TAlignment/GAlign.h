@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment algorithm: TAlignment
  *
  *  CVS Log :-
- *  $Id: GAlign.h,v 1.5 2009-12-26 23:29:35 jblouw Exp $
+ *  $Id: GAlign.h,v 1.6 2009-12-27 14:27:21 jblouw Exp $
  *
  *  @author J. Blouw  Johan.Blouw@cern.ch
  *  @date   30/12/2007
@@ -89,7 +89,7 @@ public:
   //void ZeroMatrVec( double v[][4], double vec[]);
   void VectortoArray(const std::vector<double>& , double[] );
   
-  void MatrixToVector(double* mat,int dim1, int dim2,std::vector< std::vector<double> >& ,int);
+  void MatrixToVector(double* mat,int dim1, int dim2,std::vector< std::vector<double> >& );
   void LagMultRef();
   
   bool m_converged;

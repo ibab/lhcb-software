@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.17 2009-12-26 23:29:36 jblouw Exp $
+ *  $Id: GAlign.cpp,v 1.18 2009-12-27 14:27:21 jblouw Exp $
  *
  *  @author J.Blouw Johan.Blouw@cern.ch
  *  @date   30/12/2005
@@ -79,6 +79,8 @@ GAlign::GAlign( const std::string& name,
   m_iterations(0),
   m_tr_cnt(0),
   m_meas_cnt(0),
+  m_zmean(0),
+  m_sigZmean(0),
   m_chi2(0.0),
   m_chi2rej(0.0),
   m_newScale(100000),
@@ -87,8 +89,6 @@ GAlign::GAlign( const std::string& name,
   m_badXval(false),
   m_fitconv(false),
   m_resMax(100),
-  m_zmean(0),
-  m_sigZmean(0),
   m_locrank(0),
   m_skipBigCluster(false),
   m_acceptedTr(0),
@@ -284,7 +284,7 @@ bool GAlign::Converged() {
   debug() <<setw(12)<< "station"<<setw(12) <<"newPar" <<setw(12)<<"prevPar"<<setw(12)<<"sumPar"<<setw(12)<<"errPar" <<endreq;
   std::vector<double> stations( params,0);
   //count params that fullfill conv criteria
-  for ( int station = 0 ; station < params;station++){
+  for ( unsigned int station = 0 ; station < params;station++){
     double ratio = fabs(m_align[station] / m_prev_par[station]);//relative change of alignment parameter
     debug() <<setw(12)<< station << setw(12) << m_align[station] << setw(12) <<m_prev_par[station]
             <<setw(12)<< m_new_par[station]  << setw(12) <<m_align_err[station] << endreq;
@@ -1091,7 +1091,7 @@ StatusCode GAlign::execute() {
         for(int cl=0; cl < m_taConfig->NumAlignPars(); cl++){
             cluster[cl] = 0;
         }
-        int rank = 0;
+//        int rank = 0;
         // position in c-matrix for a detector element
         double meanZ=0.;
         double sumZ =0.;
@@ -1206,7 +1206,7 @@ StatusCode GAlign::execute() {
         std::vector<unsigned int> tlayer; 
         std::vector<unsigned int> tstation; 
 
-        for(int kk=0;kk<10;kk++){
+        for(unsigned int kk=0;kk<10;kk++){
           unsigned int itTrdelta = 3; // after iteration 'itTrdelta' calculate change of track params
           unsigned int converged = 0;
           debug() <<"1: -----------------------------------------------------------"<<endreq;            
@@ -1702,21 +1702,21 @@ StatusCode GAlign::execute() {
         std::vector< std::vector<double> > locVec;
         if(Tparam==4){
           debug() << "--> final params in matrix form"  <<endreq;
-          for(unsigned h=0;h<Tparam;h++)
+          for(int h=0;h<Tparam;h++)
             debug() << h <<" "<<  trParV[h] <<" +- "<<sqrt(locMat[h][h]) <<endreq;
-          MatrixToVector(&locMat[0][0],Tparam,Tparam,locVec,Tparam);
+          MatrixToVector(&locMat[0][0],Tparam,Tparam,locVec);
           debug() << "--> final params in vector form"  <<endreq;
-          for(unsigned h=0;h<Tparam;h++)
+          for(int h=0;h<Tparam;h++)
             debug() << h <<" "<<  trParV[h] <<" +- "<<sqrt(locVec[h][h]) <<endreq;
             
         }
         if(Tparam==5){
           debug() << "--> final params in matrix form"  <<endreq;
-          for(unsigned h=0;h<Tparam;h++)
+          for(int h=0;h<Tparam;h++)
             debug() << h <<" "<<  trParV[h] <<" +- "<<sqrt(locMatP[h][h]) <<endreq;
-          MatrixToVector(&locMatP[0][0],Tparam,Tparam,locVec,Tparam);
+          MatrixToVector(&locMatP[0][0],Tparam,Tparam,locVec);
           debug() << "--> final params in vector form"  <<endreq;
-          for(unsigned h=0;h<Tparam;h++)
+          for(int h=0;h<Tparam;h++)
             debug() << h <<" "<<  trParV[h] <<" +- "<<sqrt(locVec[h][h]) <<endreq;
         }
         
@@ -1733,8 +1733,8 @@ StatusCode GAlign::execute() {
           double Z_position   = 0.;
           double stereo_angle = 0.0;
           double refZ         = 0.;
-          double guess        = 0.;
-          double dzdy         = 0.0036;
+//          double guess        = 0.;
+//          double dzdy         = 0.0036;
           struct Point meas; meas.x=0; meas.y=0;
           struct Point localPos; localPos.x=0; localPos.y = 0;
           bool flagL =true;
@@ -1962,7 +1962,7 @@ StatusCode GAlign::GloFit() {
   // and save new geometry information in memory
   m_taConfig->PrintParameters(m_align,m_iterations);
   
-  int cnt = 0;
+//  int cnt = 0;
   std::vector<bool> dofs                  = m_taConfig->NumDOF();
   std::map<std::string, int> cap          = m_taConfig->GetCMap();
   std::map<std::string,int>::iterator maI = cap.begin();
@@ -2133,7 +2133,7 @@ void GAlign::VectortoArray(const std::vector<double> &the_vector, double the_arr
     counter++;
   }
 }
-void GAlign::MatrixToVector(double* mat,int dim1, int dim2 ,std::vector< std::vector<double> > &vec,int n)
+void GAlign::MatrixToVector(double* mat,int dim1, int dim2 ,std::vector< std::vector<double> > &vec)
 {
 
   for(int i=0;i<dim1;i++){
@@ -2174,14 +2174,14 @@ void GAlign::LagMultRef()
   double sigZmean             = 0.;
   
   info() << " mean_z = "<<mean_z<<endreq;
-  for(unsigned int i=0;i<m_nGlPars;++i){
+  for(int i=0;i<m_nGlPars;++i){
     info() << " i = " << i << " " << detel_z.at(i)<< " stereo "<< stereo.at(i) << endreq;
     sigZmean += (detel_z.at(i)-mean_z)*(detel_z.at(i)-mean_z);
   }
   sigZmean /= m_nGlPars;
   info() << " sigZmean = " << sigZmean << endreq;
   
-  for(unsigned int i=0;i<m_nGlPars;++i){
+  for(int i=0;i<m_nGlPars;++i){
     //Cside
     if(i%2==0){
       meanOffX_c  += misalInput_X.at(i)*cos(stereo.at(i));
@@ -2228,7 +2228,7 @@ void GAlign::LagMultRef()
         << " meanoffY = " << meanOffY_a << " shearOffY = " << shearOffY_a <<endreq;
   info() << "calculate LM offset for : "<<endreq;
   //new input parameter
-  for(unsigned int i=0;i<m_nGlPars;++i){
+  for(int i=0;i<m_nGlPars;++i){
 
     if(m_nGlPars >12){
       //Cside
