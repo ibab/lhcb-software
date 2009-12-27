@@ -1,4 +1,4 @@
-// $Id: TriggerTisTosInHlt.cpp,v 1.2 2009-12-23 17:59:51 graven Exp $
+// $Id: TriggerTisTosInHlt.cpp,v 1.3 2009-12-27 13:19:52 graven Exp $
 // Include files 
 #include <algorithm>
 #include <vector>
@@ -16,7 +16,6 @@
 #include "Event/HltDecReports.h"
 #include "Event/HltSelReports.h"
 
-#include "HltBase/IHltDataSvc.h"
 
 using namespace LHCb;
 
@@ -38,6 +37,7 @@ TriggerTisTosInHlt::TriggerTisTosInHlt( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
   : TriggerSelectionTisTosInHlt ( type, name , parent )
+  , m_inspector(0)
 {
   declareInterface<ITriggerTisTos>(this);
 
@@ -58,6 +58,8 @@ StatusCode TriggerTisTosInHlt::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
+
+  m_inspector = svc<Hlt::IInspector>("Hlt::Service",true);
 
   setOfflineInput();
   setTriggerInput();
@@ -87,13 +89,13 @@ void TriggerTisTosInHlt::getTriggerNames()
   }
 
   if( m_allowIntermediateSelections ){    
-    std::vector<Gaudi::StringKey> selIDs = m_hltDataSvc->selectionKeys();
-    for( std::vector<Gaudi::StringKey>::const_iterator i =
+    Hlt::IInspector::KeyList selIDs;
+    m_inspector->selections(selIDs);
+    for( Hlt::IInspector::KeyList::const_iterator i =
           selIDs.begin(); i!=selIDs.end(); ++i) {
-      std::string name=i->str();      
-      if( find( m_triggerNames.begin(), m_triggerNames.end(), name )
+      if( find( m_triggerNames.begin(), m_triggerNames.end(), *i )
           == m_triggerNames.end() ){
-        m_triggerNames.push_back(name);
+        m_triggerNames.push_back(*i);
       }
     }
   }

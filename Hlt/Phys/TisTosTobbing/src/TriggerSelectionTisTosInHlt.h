@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTosInHlt.h,v 1.1 2009-10-22 20:53:23 tskwarni Exp $
+// $Id: TriggerSelectionTisTosInHlt.h,v 1.2 2009-12-27 13:19:52 graven Exp $
 #ifndef TRIGGERSELECTIONTISTOSINHLT_H 
 #define TRIGGERSELECTIONTISTOSINHLT_H 1
 
@@ -6,6 +6,8 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/ITriggerSelectionTisTos.h"            // Interface
+#include "HltBase/IHltData.h"
+#include "HltBase/IHltRegister.h"
 
 #include "CaloInterfaces/ITrack2Calo.h"
 
@@ -20,7 +22,6 @@
 namespace LHCb {
   class HltDecReports;
 };
-#include "HltBase/IHltDataSvc.h"
 
 /** @class TriggerSelectionTisTosInHlt TriggerSelectionTisTosInHlt.h
  *  
@@ -188,7 +189,8 @@ protected:
   /// Hlt summary reports
   LHCb::HltDecReports* m_hltDecReports;
   /// HltDataSvc
-  IHltDataSvc*   m_hltDataSvc;
+  Hlt::IData*   m_hltDataSvc;
+  Hlt::IRegister*   m_hltRegSvc;;
  
   
   bool m_newEvent;

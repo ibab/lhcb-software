@@ -1,4 +1,4 @@
-// $Id: TriggerTisTosInHlt.h,v 1.1 2009-10-22 20:53:23 tskwarni Exp $
+// $Id: TriggerTisTosInHlt.h,v 1.2 2009-12-27 13:19:52 graven Exp $
 #ifndef TRIGGERTISTOSINHLT_H 
 #define TRIGGERTISTOSINHLT_H 1
 
@@ -6,6 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/ITriggerTisTos.h"            // Interface
+#include "HltBase/IHltInspector.h"
 
 #include "TriggerSelectionTisTosInHlt.h"
 
@@ -54,12 +55,6 @@ public:
   
 private:
 
-  /// if true then warning about empty trigger inputs are printed
-  bool m_trigInputWarn;
-  /// flag to allow TisTossing intermediate trigger selections (i.e. non-decision like)
-  bool m_allowIntermediateSelections;
-  
-
   /// obtain all known trigger names
   void getTriggerNames();
 
@@ -71,5 +66,12 @@ private:
   /// all known trigger names 
   std::vector< std::string > m_triggerNames;
 
+  /// Inspector 
+  Hlt::IInspector *m_inspector;
+
+  /// if true then warning about empty trigger inputs are printed
+  bool m_trigInputWarn;
+  /// flag to allow TisTossing intermediate trigger selections (i.e. non-decision like)
+  bool m_allowIntermediateSelections;
 };
 #endif // TRIGGERTISTOSINHLT_H

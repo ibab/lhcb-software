@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTosInHlt.cpp,v 1.5 2009-12-23 17:59:50 graven Exp $
+// $Id: TriggerSelectionTisTosInHlt.cpp,v 1.6 2009-12-27 13:19:52 graven Exp $
 // Include files 
 #include <algorithm>
 #include <vector>
@@ -20,7 +20,6 @@
 #include "Kernel/CaloCellCode.h"
 
 #include "HltBase/HltSelection.h"
-#include "HltBase/IHltDataSvc.h"
 
 using namespace LHCb;
 
@@ -43,6 +42,7 @@ TriggerSelectionTisTosInHlt::TriggerSelectionTisTosInHlt( const std::string& typ
   : GaudiTool ( type, name , parent )
   , m_hltDecReports(0)
   , m_hltDataSvc(0)
+  , m_hltRegSvc(0)
   , m_track2calo(0)
   , m_hcalDeCal(0)
   , m_ecalDeCal(0)
@@ -114,7 +114,8 @@ StatusCode TriggerSelectionTisTosInHlt::initialize() {
   incidentSvc->release();
 
   m_track2calo = tool<ITrack2Calo>( "Track2Calo","Track2Calo",this);
-  m_hltDataSvc = svc<IHltDataSvc>("HltDataSvc");
+  m_hltDataSvc = svc<Hlt::IData>("Hlt::Service",true);
+  m_hltRegSvc = svc<Hlt::IRegister>("Hlt::Service",true);
 
   m_newEvent =true;
    
@@ -839,8 +840,10 @@ void TriggerSelectionTisTosInHlt::selectionTisTos( const std::string & selection
    
   const Gaudi::StringKey name(selectionName);
 
+  //TODO: grab algorithm from contex service instead...
   union FakePtr { IAlgorithm* mAlg; GaudiTool* mTool; };
   FakePtr a; a.mTool = this;
+  Hlt::IRegister::Lock lock(m_hltRegSvc,a.mAlg); lock->registerInput(name,a.mAlg);
   const Hlt::Selection* sel = m_hltDataSvc->selection(name,a.mAlg);
   if( !sel ){ storeInCache(selectionName,decision,tis,tos); return;}
   //if ( msgLevel(MSG::VERBOSE) ){
@@ -883,10 +886,8 @@ void TriggerSelectionTisTosInHlt::selectionTisTos( const std::string & selection
       }
 
     } else {
-
-      std::vector<std::string> dependencies;
-      StatusCode sc = m_hltDataSvc->inputUsedBy( name, dependencies );
-      if (sc.isSuccess()) {
+      std::vector<std::string> dependencies( sel->inputSelectionsIDs().begin(), sel->inputSelectionsIDs().end());
+      if (!dependencies.empty()) {
         selectionTisTos( dependencies, decision, tis, tos, kSelectionOR );
       } else {
         // @TODO: warning: hltDataSvc doesn't know about selInput...
@@ -964,11 +965,11 @@ std::vector<const LHCb::HltObjectSummary*> TriggerSelectionTisTosInHlt::hltSelec
     }      
   }  
 
-  const Gaudi::StringKey name(selectionName);
 
   union FakePtr { IAlgorithm* mAlg; GaudiTool* mTool; };
   FakePtr a; a.mTool = this;
-  const Hlt::Selection* sel = m_hltDataSvc->selection(name,a.mAlg);
+  Hlt::IRegister::Lock lock(m_hltRegSvc,a.mAlg); lock->registerInput(selectionName,a.mAlg);
+  const Hlt::Selection* sel = m_hltDataSvc->selection(selectionName,a.mAlg);
   if( !sel )return matchedObjectSummaries;
   if( !(sel->size()) )return matchedObjectSummaries;
 
@@ -988,9 +989,7 @@ std::vector<const LHCb::HltObjectSummary*> TriggerSelectionTisTosInHlt::hltSelec
              ppHos!=m_objectSummaries->end();++ppHos){
           HltObjectSummary* pHos(*ppHos);    
           if( pHos->summarizedObjectCLID() == object->clID() ){
-            if( pHos->summarizedObject() == object ){
-              hos = pHos;
-            }
+            if( pHos->summarizedObject() == object ) hos = pHos;
           }
         }
         if( !hos ){          

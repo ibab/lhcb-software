@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.53 2009-12-23 17:59:50 graven Exp $
+! $Id: release.notes,v 1.54 2009-12-27 13:19:51 graven Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+
+! 2009-12-27 - Gerhard Raven
+ - migrate from IHltDataSvc to Hlt::I{Data,Register}
 
 ! 2009-12-23 - Gerhard Raven
  - migrate from HltBase/stringKey to GaudiKernel/StringKey

@@ -1,4 +1,4 @@
-// $Id: TESTisTos.cpp,v 1.2 2009-12-23 17:59:50 graven Exp $
+// $Id: TESTisTos.cpp,v 1.3 2009-12-27 13:19:52 graven Exp $
 // Include files 
 #include <algorithm>
 #include <vector>
@@ -19,7 +19,6 @@
 #include "Event/HltDecReports.h"
 #include "Event/HltSelReports.h"
 
-#include "HltBase/IHltDataSvc.h"
 
 using namespace LHCb;
 
