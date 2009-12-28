@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2009-12-28 - Wouter Hulsbergen
+ - Protect TrajPoca against piecewisetraj returning '0' for distToErr
+
 !======================== LHCbAlgs v2r31p1 2009-12-11 ========================
 ! 2009-12-07 - Marco Cattaneo
  - Fix trivial untested StatusCode in MemoryTool.cpp
