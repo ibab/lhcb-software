@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.58 2009-12-25 22:14:40 graven Exp $
+!$Id: release.notes,v 1.59 2009-12-28 10:38:27 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+! 2009-12-28 - Gerhard Raven
+ - fix gcc43 error
 
 ! 2009-12-25 - Gerhard Raven
  - migrate HltVertexReportsMaker to Hlt::I{Data,Register,Inspector}

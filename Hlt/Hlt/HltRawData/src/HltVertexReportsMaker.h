@@ -1,4 +1,4 @@
-// $Id: HltVertexReportsMaker.h,v 1.6 2009-12-25 19:22:14 graven Exp $
+// $Id: HltVertexReportsMaker.h,v 1.7 2009-12-28 10:38:27 graven Exp $
 #ifndef HLTVERTEXREPORTSMAKER_H 
 #define HLTVERTEXREPORTSMAKER_H 1
 
@@ -35,7 +35,7 @@ public:
 
 private:
   template <typename ITER>
-  StatusCode HltVertexReportsMaker::saveCandidates(const std::string& selName, ITER begin, ITER end, LHCb::HltVertexReports* output) const ;
+  StatusCode saveCandidates(const std::string& selName, ITER begin, ITER end, LHCb::HltVertexReports* output) const ;
 
 
 
