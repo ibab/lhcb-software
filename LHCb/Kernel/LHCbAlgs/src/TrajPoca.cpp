@@ -1,4 +1,4 @@
-// $Id: TrajPoca.cpp,v 1.10 2009-02-11 16:27:14 cattanem Exp $
+// $Id: TrajPoca.cpp,v 1.11 2009-12-28 21:27:49 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -83,12 +83,12 @@ StatusCode TrajPoca::minimize( const LHCb::Trajectory& traj1,
     double distToErr1 = traj1.distTo1stError( prevflt1, precision, pathDir1 );
     double distToErr2 = traj2.distTo1stError( prevflt2, precision, pathDir2 );
     // converged if very small steps
-    finished = ( fabs( step1 ) < distToErr1 && fabs( step2 ) < distToErr2 );
+    finished = ( std::abs( step1 ) < distToErr1 && std::abs( step2 ) < distToErr2 );
     
     // we have to catch some problematic cases
     if( !finished && istep > 2 && delta > prevdelta ) {
       // we can get stuck if a flt range is restricted
-      if( (restrictRange1 && fabs(step1) > 1.0e-10) || (restrictRange2 && fabs(step2) > 1e-10) ) {
+      if( (restrictRange1 && std::abs(step1) > 1.0e-10) || (restrictRange2 && std::abs(step2) > 1e-10) ) {
         if( ++nStuck > m_maxnStuck ) {
           // downgrade to a point poca
           Gaudi::XYZVector dist = Gaudi::XYZVector( 0., 0., 0. );
@@ -122,6 +122,7 @@ StatusCode TrajPoca::minimize( const LHCb::Trajectory& traj1,
             debug() << "Minimization bailed out of oscillation." << endmsg;
           }
           status = StatusCode::SUCCESS; // "Oscillating poca"
+	  Warning( "Minimization bailed out of oscillation.", status, maxWarnings ).ignore();
           finished = true;
         }
         else {
@@ -217,27 +218,27 @@ StatusCode TrajPoca::stepTowardPoca( const LHCb::Trajectory& traj1,
   // allow. The tolerance is set by 'deltadoca', the expected
   // improvement in the doca. We bound this by tolerance from below
   // and maxExtrapTolerance from above.
-  double deltadoca = sqrt( fabs(ua * df1) + fabs(ub * df2) ) ; // fabs only because of machine precision issues.
+  double deltadoca = std::sqrt( std::abs(ua * df1) + std::abs(ub * df2) ) ; // std::abs only because of machine precision issues.
   double extraptolerance = std::min(std::max(deltadoca,tolerance),m_maxExtrapTolerance) ;
   const double smudge = 1.01; // Factor to push just over border of piecewise traj (essential!)
   double distToErr1 = smudge * traj1.distTo2ndError( mu1, extraptolerance, pathDir1 );
   double distToErr2 = smudge * traj2.distTo2ndError( mu2, extraptolerance, pathDir2 );
 
   // Factor to push just over border of piecewise traj (essential!)
-  if( fabs( df1 ) > distToErr1 ) {
+  if( std::abs( df1 ) > distToErr1 && distToErr1 > 0 ) {
     // choose solution for which df1 steps just over border
     df1 = distToErr1 * pathDir1;
     // now recalculate df2, given df1:
     df2 = ( ub - df1 * cab ) / cbb;
   }
 
-  if( fabs( df2 ) > distToErr2 ) {
+  if( std::abs( df2 ) > distToErr2 && distToErr2 > 0 ) {
     // choose solution for which df2 steps just over border
     df2 = distToErr2 * pathDir2;
     // now recalculate df1, given df2:
     df1 = ( ua - df2 * cab ) / cbb;
     // if still not okay,
-    if( fabs( df1 ) > distToErr1 ) {
+    if( std::abs( df1 ) > distToErr1 ) {
       df1 = distToErr1 * pathDir1;
     }
   }
@@ -251,7 +252,7 @@ StatusCode TrajPoca::stepTowardPoca( const LHCb::Trajectory& traj1,
   if( restrictRange2 ) restrictToRange(mu2, traj2) ;
   
   // another check for parallel trajectories
-  if( fabs( mu1 ) > m_maxDist && fabs( mu2 ) > m_maxDist ) {
+  if( std::abs( mu1 ) > m_maxDist && std::abs( mu2 ) > m_maxDist ) {
     if( msgLevel( MSG::DEBUG ) ) {
       debug() << "Stepped further than MaxDist." << endmsg;    
     }
