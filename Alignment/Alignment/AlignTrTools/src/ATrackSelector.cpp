@@ -4,7 +4,7 @@
  *  Implementation file for T-station alignment tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: ATrackSelector.cpp,v 1.5 2009-12-26 23:23:48 jblouw Exp $
+ *  $Id: ATrackSelector.cpp,v 1.6 2009-12-28 12:01:32 jblouw Exp $
  *
  *  @author J. Blouw  Johan.Blouw@cern.ch
  *  @date   31/09/2006
@@ -38,7 +38,7 @@ ATrackSelector::ATrackSelector( const std::string& type,
   declareProperty( "MinPCut",    m_minPCut         = 0.0 ); // in GeV
   declareProperty( "MinPtCut",   m_minPtCut        = 0.0 ); // in GeV
   declareProperty( "MinChi2Cut", m_minChi2Cut      = 0.0 );
-  declareProperty( "Charge",     m_charge          = 0.0 ); // charge of particle selection
+  declareProperty( "Charge",     m_charge          = 0 ); // charge of particle selection
   declareProperty( "MaxPCut",    m_maxPCut         = boost::numeric::bounds<double>::highest() ); // in GeV
   declareProperty( "MaxPtCut",   m_maxPtCut        = boost::numeric::bounds<double>::highest() ); // in GeV
   declareProperty( "MaxChi2Cut", m_maxChi2Cut      = boost::numeric::bounds<double>::highest() );
