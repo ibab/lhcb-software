@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.18 2009-12-27 14:27:21 jblouw Exp $
+ *  $Id: GAlign.cpp,v 1.19 2009-12-28 11:30:17 jblouw Exp $
  *
  *  @author J.Blouw Johan.Blouw@cern.ch
  *  @date   30/12/2005
@@ -1120,7 +1120,7 @@ StatusCode GAlign::execute() {
           }
           
           debug()<<" GET MEANZ GET MEANZ GET MEANZ GET MEANZ "<<endreq;
-          sc=m_taConfig->CalcResidual(atrack, id, rank,  meas,weight,
+          sc=m_taConfig->CalcResidual(id, rank,  meas,weight,
                                       flagL ,Z_position, stereo_angle,refZ,localPos);
           if ( sc.isFailure() ){
             debug() << "Failure to calculate residual... will continue!" << endreq;
@@ -1299,7 +1299,7 @@ StatusCode GAlign::execute() {
             
             
                         
-            sc=m_taConfig->CalcResidual(atrack, id, rank,  meas,weight,
+            sc=m_taConfig->CalcResidual(id, rank,  meas,weight,
                                         flagL ,Z_position, stereo_angle,refZ, localPos);
             if ( sc.isFailure() ){
               debug() << "Failure in calculating residual!" << endreq;
@@ -1756,7 +1756,7 @@ StatusCode GAlign::execute() {
                    <<" y0=" << trParV[2] << " ty= "   << trParV[3] <<  endreq;
           
           m_taConfig->SetMeanZ(meanZ);
-          sc=m_taConfig->CalcResidual(atrack, id, rank,  meas, weight,
+          sc=m_taConfig->CalcResidual(id, rank,  meas, weight,
                                       flagL,Z_position, stereo_angle, refZ,localPos);
           if ( sc.isFailure() )
             continue;
@@ -1801,7 +1801,7 @@ StatusCode GAlign::execute() {
         double residual = -99999.9;
         
         StatusCode locfit = m_taConfig->LocalTrackFit(m_tr_cnt,locVec,trParV,0,m_estimated, 
-                                                      chi2, residual, m_iterations,m_locrank);
+                                                      chi2, residual, m_locrank);
         if ( locfit != StatusCode::SUCCESS ) {
           info() << "Track rejected , not used for filling the global matrix !" << endreq;
         }

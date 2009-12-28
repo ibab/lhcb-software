@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2009-12-28 Johan Blouw
+ - fixed mismatch between calls to ITAConfig interface...
+
 ! 2009-12-27 Johan Blouw
  - replaced GAlign by M. Deissenroth's implementation of the millepede style alignment
 
