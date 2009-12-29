@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.385 2009-12-29 13:39:13 graven Exp $ 
+! $Id: release.notes,v 1.386 2009-12-29 14:44:55 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -8,6 +8,7 @@
 ! 2009-12-29 - G. Raven
  - flag 1 out of every 100 accepted 'physics events' for the express stream, and,
    in addition, any Hlt2UnbiasedJpsi that is seen..
+ - remove unused units.opts
 
 !========================== HltConf v6r1 2009-12-11 ===================
 ! 2009-12-11 - V. Gligorov

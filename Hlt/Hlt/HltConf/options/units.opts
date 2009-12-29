@@ -1,5 +1,0 @@
-// stub for opt->py
-// Allow units to be used in jobOptions
-#pragma print on
-#units "$STDOPTS/units.opts"
-
