@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.h,v 1.21 2009-12-27 17:46:39 jblouw Exp $
+ *  $Id: TAConfig.h,v 1.22 2009-12-29 13:49:21 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -84,7 +84,7 @@ public:
   StatusCode finalize();
 
 
-  StatusCode TAConfig::ConfMatrix( double rmeasI, 
+  StatusCode ConfMatrix( double rmeasI, 
                                    double wght,
                                    unsigned int rank, 
                                    const double,
@@ -100,7 +100,7 @@ public:
                  double [], 
                  const int & ); 
 
-  StatusCode TAConfig::ConfMatrixP( double rmeasI, 
+  StatusCode ConfMatrixP( double rmeasI, 
                                     double wght,
                                     unsigned int rank, 
                                     const double,
@@ -213,7 +213,7 @@ public:
    * MD  getMPTrackPoints                       *
    * get the track information of Millepede     *
    *********************************************/
-  std::vector< std::vector<double> > TAConfig::getMPHits(){
+  std::vector< std::vector<double> > getMPHits(){
     return m_trackpoints;
   };
   /*********************************************
@@ -221,16 +221,16 @@ public:
    * clear the track information of Millepede     *
    * for the next track                         *
    *********************************************/
-  void TAConfig::clearMPHits(){
+  void clearMPHits(){
     m_trackpoints.clear();
   };
   /*****************************
    *  MD get detMap            *
    *****************************/
-  std::vector<Gaudi::Transform3D> TAConfig::GetDetMap(){
+  std::vector<Gaudi::Transform3D> GetDetMap(){
     return m_DETmap;
   };
-  DetectorElement* TAConfig::GetDetEl(){
+  DetectorElement* GetDetEl(){
     return m_deot;
   };
   void CheckLChi2(const double &, const int &,const int &, bool &,double );
@@ -458,8 +458,8 @@ public:
 	  //MD all new Florin stuff
 	  void SetTrackPar(const std::vector<double>);
 	  StatusCode SetAlignmentPar(const std::vector<double> & );
-	  void TAConfig::MakeAlignParVec() ;
-	  void TAConfig::MakeTrackParVec() ;
+	  void MakeAlignParVec() ;
+	  void MakeTrackParVec() ;
 
 	  unsigned int m_cntfix;
 	  

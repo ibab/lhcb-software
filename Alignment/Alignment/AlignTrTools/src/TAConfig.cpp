@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.29 2009-12-27 17:46:28 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.30 2009-12-29 13:49:21 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -3329,7 +3329,7 @@ StatusCode TAConfig::ConstrainMovements(){
     }
     if(m_dof[5]){
       if(vdof[5] != 0.){
-        info() << "--> C call ParSig["<<i+cnt*m_nAlignObj<<"] = "<<vdof[50]<<endreq;
+        info() << "--> C call ParSig["<<i+cnt*m_nAlignObj<<"] = "<<vdof[5]<<endreq;
         m_Centipede->ParSig(i+cnt*m_nAlignObj,vdof[5]);     
       }
     }
