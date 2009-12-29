@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.384 2009-12-12 12:09:37 pkoppenb Exp $ 
+! $Id: release.notes,v 1.385 2009-12-29 13:39:13 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-12-29 - G. Raven
+ - flag 1 out of every 100 accepted 'physics events' for the express stream, and,
+   in addition, any Hlt2UnbiasedJpsi that is seen..
 
 !========================== HltConf v6r1 2009-12-11 ===================
 ! 2009-12-11 - V. Gligorov
