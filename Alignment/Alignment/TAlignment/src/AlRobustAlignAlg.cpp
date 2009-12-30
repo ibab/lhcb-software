@@ -25,6 +25,8 @@
 #include "LHCbMath/GeomFun.h"
 #include "LHCbMath/Line.h"
 
+#include <boost/foreach.hpp>
+
 namespace Al {
   class Equations;
   class Residuals ;
@@ -43,6 +45,8 @@ struct ElementHistos
 {
   IHistogram1D* resh1 ;
   IHistogram1D* resfineh1 ;
+  IHistogram1D* hotresh1 ;
+  IHistogram1D* hotresfineh1 ;
   IHistogram1D* respullh1 ;
 } ;
 
@@ -67,7 +71,11 @@ private:
   bool printVerbose() const {return msgLevel(MSG::VERBOSE);};
   ElementHistos* findElement(const DetectorElement& elem) ;
   template<class HitContainer>
-  size_t accumulate( const HitContainer& hits, const LHCb::State& refstate) ;
+  size_t accumulate( const HitContainer& hits, 
+		     const LHCb::State& refstate,
+		     const LHCb::Track& track) ;
+  const DetectorElement& element (const Tf::STHit& hit) ;
+  const DetectorElement& element (const Tf::OTHit& hit) ;
 private:
   std::vector<ElementHistos*> m_histos ;
 
@@ -133,9 +141,29 @@ StatusCode AlRobustAlignAlg::finalize()
 // Main execution
 //=============================================================================
 
+
+// template<class HitContainer>
+// class DetConvertor
+// {
+//   const DetectorElement& element (const typename HitContainer::value_type& hit) ;
+// } ;
+
+const DetectorElement&
+AlRobustAlignAlg::element(const Tf::STHit& hit)
+{
+  return hit.sector() ;
+}
+
+const DetectorElement&
+AlRobustAlignAlg::element(const Tf::OTHit& hit)
+{
+  return hit.module() ;
+}
+
 template<class HitContainer>
 size_t AlRobustAlignAlg::accumulate( const HitContainer& hits,
-				   const LHCb::State& refstate)
+				     const LHCb::State& refstate,
+				     const LHCb::Track& track)
 {
   size_t numcompatible(0) ;   
   Gaudi::XYZPointF trkpoint(refstate.x(),refstate.y(),refstate.z()) ;
@@ -153,11 +181,15 @@ size_t AlRobustAlignAlg::accumulate( const HitContainer& hits,
       Gaudi::XYZVectorF delta = hitpoint-trkpoint ;
       double distance = delta.Dot(projectiondir) ;
       if ( std::abs(distance) < m_maxDistance ) {
-	ElementHistos* histos = findElement( (*ihit)->sector() ) ;
+	ElementHistos* histos = findElement(element(**ihit)) ;
 	if (histos) {
 	  int sign = (*ihit)->yBegin() < (*ihit)->yEnd() ? 1 : -1 ;
 	  histos->resh1->fill( sign * distance ) ;
 	  histos->resfineh1->fill( sign * distance ) ;
+	  if(track.isOnTrack( (**ihit).lhcbID() ) ) {
+	    histos->hotresh1->fill( sign * distance ) ;
+	    histos->hotresfineh1->fill( sign * distance ) ;
+	  }
 	}
       }
       ++numcompatible ; 
@@ -169,29 +201,29 @@ size_t AlRobustAlignAlg::accumulate( const HitContainer& hits,
 StatusCode AlRobustAlignAlg::execute() 
 {
   // Get tracks.
-  const LHCb::Tracks* tracks = get<LHCb::Tracks>(m_trackLocation);
+  LHCb::Track::Range tracks = get<LHCb::Track::Range>(m_trackLocation);
 
   // Get the TT hits
   Tf::STHitRange tthits = m_tthitcreator->hits() ;
   Tf::STHitRange ithits = m_ithitcreator->hits() ;
+  Tf::OTHitRange othits = m_othitcreator->hits() ;
   
   debug() << "Number of hits in TT, IT: "
 	  << tthits.size() << " " << ithits.size() << endreq ;
 
   // now loop over all tracks, create a line from the last state, loop
   // over all hits, etc
-  
-  for( LHCb::Tracks::const_iterator itrk = tracks->begin() ;
-       itrk != tracks->end() ; ++itrk ) {
-    const LHCb::Track* track = *itrk ;
+  BOOST_FOREACH( const LHCb::Track* track, tracks) {
     if( track->nStates() > 0 ) {
       //
       const LHCb::State* laststate = track->states().back() ;
       // create a 'line' object
       // now do the combinatorics
-      size_t numcompatibleTT = accumulate( tthits, *laststate ) ;
-      size_t numcompatibleIT = accumulate( ithits, *laststate ) ;
-      debug() << "Number of compatible hits TT, IT: " << numcompatibleTT << " " << numcompatibleIT << endreq ;
+      size_t numcompatibleTT = accumulate( tthits, *laststate,*track ) ;
+      size_t numcompatibleIT = accumulate( ithits, *laststate,*track ) ;
+      size_t numcompatibleOT = accumulate( othits, *laststate,*track ) ;
+      debug() << "Number of compatible hits TT, IT: " << numcompatibleTT << " " << numcompatibleIT << " "
+	      << numcompatibleOT << endreq ;
     } else {
       warning() << "Track has no states" << endreq ;
     }
@@ -215,6 +247,10 @@ AlRobustAlignAlg::findElement(const DetectorElement& elem)
       rc->resh1 = book1D(dirname + "resh1", 
 			 "Residual for " + alignelem->name(),-m_maxDistance,m_maxDistance, 100);
       rc->resfineh1 = book1D(dirname + "resfineh1", 
+			     "Residual for " + alignelem->name(),-m_maxFineDistance,m_maxFineDistance, 100);
+      rc->hotresh1 = book1D(dirname + "hotresh1", 
+			    "Residual for " + alignelem->name(),-m_maxDistance,m_maxDistance, 100);
+      rc->hotresfineh1 = book1D(dirname + "hotresfineh1", 
 			     "Residual for " + alignelem->name(),-m_maxFineDistance,m_maxFineDistance, 100);
     }
   }
