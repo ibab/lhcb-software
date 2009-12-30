@@ -28,8 +28,8 @@
 
       <constructor
 	desc     = "constructor"
-	argList  = "size_t size" 
-	initList = "m_equations(size)">
+	argList  = "size_t size, Gaudi::Time time" 
+	initList = "m_equations(size,time)">
       </constructor>
 
       <attribute 
