@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.6 2009-12-11 11:13:27 wouter Exp $
+! $Id: release.notes,v 1.7 2009-12-30 05:14:20 wouter Exp $
 ! Package     : AlignKernel
 ! Responsible : Adlene Hicheur en Wouter Hulsbergen
 !-------------------------------------------------------------------------------
+
+! 2009-12-30 Wouter Hulsbergen
+ - added data member to hold time at initializing geometry
 
 ! 2009-12-11 Wouter Hulsbergen
  - added data member to keep track of number of tracks intersecting alignable

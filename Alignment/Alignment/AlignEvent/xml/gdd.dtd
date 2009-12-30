@@ -34,6 +34,7 @@
         serializers       (TRUE | FALSE)                   "TRUE"    
         virtual           (TRUE | FALSE)                   "TRUE"
         allocator         (DEFAULT | NO | BOOST | BOOST2 | DEBUG )  "DEFAULT"    
+        defaultconstructor (TRUE | FALSE)                  "TRUE"
 >       
 <!ELEMENT desc (#PCDATA)>
 <!ATTLIST desc
