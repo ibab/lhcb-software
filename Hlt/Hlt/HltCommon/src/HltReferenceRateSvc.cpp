@@ -2,16 +2,16 @@
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "HltBase/IHltReferenceClockSvc.h"
+#include "Kernel/IReferenceRate.h"
 
-class HltReferenceClockSvc : public Service,
-			     virtual public IHltReferenceClockSvc,
+class HltReferenceRateSvc : public Service,
+			     virtual public IReferenceRate,
 			     virtual public IIncidentListener
   
 {
 public:
-  HltReferenceClockSvc(const std::string& name, ISvcLocator* pSvcLocator);
-  virtual ~HltReferenceClockSvc( ) ;
+  HltReferenceRateSvc(const std::string& name, ISvcLocator* pSvcLocator);
+  virtual ~HltReferenceRateSvc( ) ;
 
   /** Query interfaces (\see{IInterface})
       @param riid       ID of Interface to be retrieved
@@ -51,26 +51,26 @@ private:
 #include "GaudiKernel/SmartDataPtr.h"
 #include "Event/ODIN.h"
 
-DECLARE_SERVICE_FACTORY( HltReferenceClockSvc );
+DECLARE_SERVICE_FACTORY( HltReferenceRateSvc );
 
 
 //=============================================================================
 // IInterface implementation
 //=============================================================================
-StatusCode HltReferenceClockSvc::queryInterface(const InterfaceID& riid, void** ppvUnknown){
-  if ( IHltReferenceClockSvc::interfaceID().versionMatch(riid) ) {
-    *ppvUnknown = (IHltReferenceClockSvc*)this;
+StatusCode HltReferenceRateSvc::queryInterface(const InterfaceID& riid, void** ppvUnknown){
+  if ( IReferenceRate::interfaceID().versionMatch(riid) ) {
+    *ppvUnknown = (IReferenceRate*)this;
     addRef();
     return StatusCode::SUCCESS;
   }
   return Service::queryInterface(riid,ppvUnknown);
 }
 
-HltReferenceClockSvc::~HltReferenceClockSvc()
+HltReferenceRateSvc::~HltReferenceRateSvc()
 {
 }
 
-HltReferenceClockSvc::HltReferenceClockSvc( const std::string& name, 
+HltReferenceRateSvc::HltReferenceRateSvc( const std::string& name, 
 					  ISvcLocator* pSvcLocator) 
   : Service ( name , pSvcLocator ),
     m_triggerType(-1),
@@ -82,14 +82,14 @@ HltReferenceClockSvc::HltReferenceClockSvc( const std::string& name,
 		  /*LHCb::ODIN::RandomTrigger*/) ;
 }
 
-MsgStream& HltReferenceClockSvc::msg(MSG::Level level) const {
+MsgStream& HltReferenceRateSvc::msg(MSG::Level level) const {
   if (m_msg.get()==0) m_msg.reset( new MsgStream( msgSvc(), name() ));
   *m_msg << level;
   return *m_msg;
 }
 
 StatusCode
-HltReferenceClockSvc::initialize()
+HltReferenceRateSvc::initialize()
 {
   StatusCode sc = Service::initialize() ;
   if (!service( "EventDataSvc", m_evtSvc).isSuccess()) return StatusCode::FAILURE;
@@ -103,7 +103,7 @@ HltReferenceClockSvc::initialize()
   return sc ;
 }
 
-void HltReferenceClockSvc::handle ( const Incident& incident )
+void HltReferenceRateSvc::handle ( const Incident& incident )
 {
   if ( IncidentType::BeginEvent == incident.type() ) {
     if( m_triggerType >= 0 ) {
@@ -113,9 +113,8 @@ void HltReferenceClockSvc::handle ( const Incident& incident )
         error() << " Could not locate ODIN... " << endmsg;
         m_incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
       } else {
-	m_tick += 
-	  int(odin->triggerType()) == m_triggerType &&
-	  odin->bunchCrossingType() == LHCb::ODIN::BeamCrossing ? 1 : 0 ;
+        if ( int(odin->triggerType()) == m_triggerType &&
+	         odin->bunchCrossingType() == LHCb::ODIN::BeamCrossing  ) ++m_tick;
       }
     } else {
       m_tick += 1 ;

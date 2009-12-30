@@ -6,6 +6,7 @@
 
 ! 2009-12-30 - Gerhard Raven
  - remove unused HltFunctionFactory
+ - rename HltReferenceClockSvc into HltReferenceRateSvc
 
 ! 2009-12-27 - Gerhard Raven
  - remove HltDataSvc

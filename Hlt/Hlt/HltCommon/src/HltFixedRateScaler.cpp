@@ -1,7 +1,7 @@
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/IRndmEngine.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "HltBase/IHltReferenceClockSvc.h"
+#include "Kernel/IReferenceRate.h"
 
 class HltFixedRateScaler : public GaudiAlgorithm
 {
@@ -12,7 +12,7 @@ public:
   StatusCode initialize() ;
   StatusCode execute() ;
 private:
-  const IHltReferenceClockSvc* m_referenceClockSvc ;
+  const IReferenceRate* m_referenceClockSvc ;
   const IRndmEngine* m_random ;
   double m_outputRate ;
   int m_intervalType ;
