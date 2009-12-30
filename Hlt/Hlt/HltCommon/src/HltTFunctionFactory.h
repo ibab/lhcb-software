@@ -1,4 +1,4 @@
-// $Id: HltTFunctionFactory.h,v 1.10 2009-10-25 21:04:36 graven Exp $
+// $Id: HltTFunctionFactory.h,v 1.11 2009-12-30 10:04:15 graven Exp $
 #ifndef HLTTFUNCTIONFACTORY_H 
 #define HLTTFUNCTIONFACTORY_H 1
 
@@ -8,6 +8,7 @@
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/bind.hpp"
 #include "boost/lambda/construct.hpp"
+#include "boost/utility.hpp"
 
 using boost::lambda::new_ptr;
 using boost::lambda::constructor;
@@ -33,13 +34,14 @@ namespace Hlt {
     typedef typename zen::function<T> TFunction;
     virtual TFunction* create(const std::string& name, HltAlgorithm*) = 0;
     virtual ~IFunctionCreator() { }
+    //virtual const Gaudi::Histo1DDef& histo1DDef() const = 0;
   };  
 
 
  
 
   template <typename T,typename Constructor>
-  class FunctionCreator_: public IFunctionCreator<T> {
+  class FunctionCreator_: public IFunctionCreator<T>, boost::noncopyable {
   public:
 
     FunctionCreator_(const Constructor& constructor, GaudiTool* mbase)
@@ -55,9 +57,6 @@ namespace Hlt {
     };
 
   private:
-    // Copy c'tor NOT implemented... avoid compiler generated one..
-    FunctionCreator_(const FunctionCreator_<T,Constructor>&) ;
-
     Constructor m_constructor; 
     GaudiTool* m_base;
   };
@@ -68,7 +67,7 @@ namespace Hlt {
 
 
   template <class T1, class T2Selection, typename COMPARATOR,typename Constructor> 
-  class TFunctionCreator_ : public IFunctionCreator<T1> {
+  class TFunctionCreator_ : public IFunctionCreator<T1>, boost::noncopyable {
   public:
     typedef typename zen::function<T1> TFunction;
     typedef typename boost::remove_pointer<typename T2Selection::value_type>::type T2;
@@ -98,9 +97,6 @@ namespace Hlt {
       return fun;
     }
   private:
-    // Copy c'tor NOT implemented... avoid compiler generated one..
-    TFunctionCreator_(const TFunctionCreator_<T1,T2Selection,COMPARATOR,Constructor>& rhs);
-
     Constructor m_constructor;
     bool m_binderKey;
   };  
@@ -126,6 +122,7 @@ public:
 
   zen::function<T>* function(const std::string& funtionname);
   zen::filter<T>*   filter  (const std::string& filtername);
+  // Gaudi::Histo1DDef histogramDefinition(const std::string& functionName);
 
   virtual StatusCode initialize();
 
@@ -148,16 +145,9 @@ protected:
     declare(name, Hlt::FunctionCreator<T>(bind(new_ptr<FUNCTION>(),id) ,this));  
   }
   template <typename INTERFACE>
-  void declare(const std::string& name, const std::string& toolname, bool delay=true) {
+  void declare(const std::string& name, const std::string& toolname) {
     typedef Hlt::FunctionTool<T,INTERFACE> FUNCTION;
-    if (delay) {
-       debug()<< " delaying tool creation: " << this->name()<< "." << toolname << endmsg;
-       declare(name, Hlt::FunctionCreator<T>(bind(new_ptr<FUNCTION>(),toolname,this) ,this));
-    } else {
-       debug()<< " creating tool: " << this->name()<< "." << toolname << endmsg;
-       INTERFACE* it = tool<INTERFACE>(toolname,this);
-       declare(name, Hlt::FunctionCreator<T>(bind(new_ptr<FUNCTION>(),it) ,this));
-    }
+    declare(name, Hlt::FunctionCreator<T>(bind(new_ptr<FUNCTION>(),toolname,this) ,this));
   }
   
   
