@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.25 2009-12-11 12:14:26 wouter Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.26 2009-12-30 05:26:25 wouter Exp $
 // Include files
 
 //from STL
@@ -9,6 +9,8 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
+#include "GaudiKernel/IDetDataSvc.h"
 
 // from TrackEvent
 #include "Event/Measurement.h"
@@ -60,6 +62,17 @@ StatusCode GetElementsToBeAligned::initialize() {
   if (sc.isFailure()) return Error("Failed to initialize tool!", sc);
 
   if ( m_elemsToBeAligned.empty() ) return Error( "Please specify which elements to align!", StatusCode::FAILURE );
+
+  info() << "Use local frame = " << m_useLocalFrame << endreq ;
+
+  /// Get the svc that holds condition=data constants
+  IDetDataSvc* detDataSvc(0) ;
+  sc = service("DetectorDataSvc",detDataSvc, true);
+  if ( sc.isFailure() ) {
+    error() << "Could not retrieve DetectorDataSvc" << endmsg ;
+    return sc;
+  }
+  m_initTime = detDataSvc->eventTime() ;
 
   /// Get pointer to detector svc
   IDataProviderSvc* detectorSvc = 0;

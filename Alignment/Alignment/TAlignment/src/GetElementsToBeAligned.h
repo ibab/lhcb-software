@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.h,v 1.13 2009-12-11 12:12:22 wouter Exp $
+// $Id: GetElementsToBeAligned.h,v 1.14 2009-12-30 05:26:25 wouter Exp $
 #ifndef GETELEMENTSTOBEALIGNED_H
 #define GETELEMENTSTOBEALIGNED_H 1
 
@@ -61,7 +61,9 @@ public:
 
   // Find the list of elements corresponding to a path (which can ba rehulare expression)
   StatusCode findElements(const std::string& path, 
-			  std::vector<const AlignmentElement*>& alignelements) const ;
+			  std::vector<const AlignmentElement*>& alignelements) const ; 
+  // return the time with which the geometry was initialized
+  Gaudi::Time initTime() const { return m_initTime ; }
 private:
   enum e_DoFs {Tx, Ty, Tz, Rx, Ry, Rz};
   
@@ -112,6 +114,7 @@ private:
   mutable IGetElementsToBeAligned::Elements                         m_elements;    ///< Flat vector of alignment elements
   typedef std::map<const DetectorElement*, const AlignmentElement*> ElementMap;
   ElementMap                                                        m_elementMap;       ///< Map of detector elements to alignment element
+  Gaudi::Time m_initTime ;
 };
 
 #endif // GETELEMENTSTOBEALIGNED_H

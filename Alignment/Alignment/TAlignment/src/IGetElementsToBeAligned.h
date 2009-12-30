@@ -1,4 +1,4 @@
-// $Id: IGetElementsToBeAligned.h,v 1.9 2009-01-21 16:23:16 wouter Exp $
+// $Id: IGetElementsToBeAligned.h,v 1.10 2009-12-30 05:26:25 wouter Exp $
 #ifndef IGETELEMENTSTOBEALIGNED_H 
 #define IGETELEMENTSTOBEALIGNED_H 1
 
@@ -33,6 +33,10 @@ namespace LHCb {
   class Measurement ;
 }
 
+namespace Gaudi {
+  class Time ;
+}
+
 class IGetElementsToBeAligned : virtual public IAlgTool {
 
  public:
@@ -57,5 +61,6 @@ class IGetElementsToBeAligned : virtual public IAlgTool {
   virtual StatusCode findElements(const std::string& path, 
 				  std::vector<const AlignmentElement*>& alignelements) const = 0 ;
 
+  virtual Gaudi::Time initTime() const = 0 ;
 };
 #endif // IGETELEMENTSTOBEALIGNED_H
