@@ -328,6 +328,16 @@ namespace Al
       return sc ;
     }
     
+    // Check that the geometry used for getting the derivatives
+    // matches the actual geometry. for now, we'll abort if this is
+    // not ok. In the furture we could 'reinitialize' the geometry and
+    // elements.
+    if( m_elementProvider->initTime() != equations.initTime() ) {
+      error() << "Time of geometry does not match time of equations: "
+	      << m_elementProvider->initTime().ns() << " " << equations.initTime().ns() << endmsg ;
+      return StatusCode::FAILURE ;
+    }
+
     info() << "\n";
     info() << "==> iteration " << iteration << " : Initial alignment conditions  : [";
     const Elements& elements = m_elementProvider->elements() ;
@@ -344,8 +354,12 @@ namespace Al
     logmessage << "********************* ALIGNMENT LOG ************************" << std::endl
 	       << "Iteration: " << iteration << std::endl
 	       << "Total number of events: " << equations.numEvents() << std::endl 
-	       << "Time of first event [ns]: " << equations.firstTime().ns() << " --> " << equations.firstTime().format(true,"%F %r") << std::endl
-	       << "Time of last event [ns] : " << equations.lastTime().ns() << " --> " << equations.lastTime().format(true,"%F %r") << std::endl
+	       << "Time of first event [ns]: " << equations.firstTime().ns() 
+	       << " --> " << equations.firstTime().format(true,"%F %r") << std::endl
+	       << "Time of last event [ns] : " << equations.lastTime().ns() 
+	       << " --> " << equations.lastTime().format(true,"%F %r") << std::endl
+	       << "Time at initialize [ns] : " << equations.initTime().ns() 
+	       << " --> " << equations.initTime().format(true,"%F %r") << std::endl
       //<< "Total number of tracks: " << m_nTracks << std::endl
       //<< "Number of covariance calculation failures: " << m_covFailure << std::endl
 	       << "Used " << equations.numVertices() << " vertices for alignment" << std::endl
