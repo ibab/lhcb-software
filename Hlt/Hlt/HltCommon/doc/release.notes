@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-12-30 - Gerhard Raven
+ - remove unused HltFunctionFactory
+
 ! 2009-12-27 - Gerhard Raven
  - remove HltDataSvc
 
