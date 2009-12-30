@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.59 2009-12-11 12:31:22 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.60 2009-12-30 05:30:15 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -146,7 +146,7 @@ StatusCode AlignAlgorithm::initialize() {
     }
   }
   
-  LHCb::AlignSummaryData* m_summaryData = new LHCb::AlignSummaryData(elements.size()) ;
+  LHCb::AlignSummaryData* m_summaryData = new LHCb::AlignSummaryData(elements.size(),m_align->initTime()) ;
   IDataProviderSvc* datasvc = svc<IDataProviderSvc>(m_alignSummaryDataSvc,true) ;
   sc = datasvc->registerObject(m_alignSummaryLocation,m_summaryData) ;
   if( !sc.isSuccess() ) {
@@ -212,13 +212,13 @@ StatusCode AlignAlgorithm::execute() {
   if(m_resetHistos) resetHistos() ;
 
   // Get tracks. Copy them into a vector, because that's what we need for dealing with vertices.
-  const Tracks* tracks = get<Tracks>(m_tracksLocation);
-  if (printVerbose()) verbose() << "Number of tracks in container " + m_tracksLocation + ": " << tracks->size() << endmsg;
-  m_nTracks += tracks->size() ;
+  LHCb::Track::Range tracks = get<LHCb::Track::Range>(m_tracksLocation);
+  if (printVerbose()) verbose() << "Number of tracks in container " + m_tracksLocation + ": " << tracks.size() << endmsg;
+  m_nTracks += tracks.size() ;
 
   // First just copy the tracks
   std::vector<const LHCb::Track*> selectedtracks ;
-  for( Tracks::const_iterator iTrack = tracks->begin(), iTrackEnd = tracks->end(); iTrack != iTrackEnd; ++iTrack) 
+  for(  LHCb::Track::Range::const_iterator iTrack = tracks.begin() ; iTrack != tracks.end() ; ++iTrack)
     // just a sanity check
     if( (*iTrack)->fitStatus()==LHCb::Track::Fitted &&
 	(*iTrack)->nDoF() > 0 &&
