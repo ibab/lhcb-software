@@ -2,24 +2,15 @@
 #include "AlignKernel/AlFileIO.h"
 
 #include <sstream>
-namespace Al
-{  
-  std::ostream& Equations::fillStream(std::ostream& os) const
-  {
-    std::stringstream stream ;
-    stream << "NumEvents = " << numEvents() << std::endl ;
-    return os << stream.str() ;
-  }
-}
-
 #include <fstream>
+#include <iostream>
 
 namespace Al
 {   
-  using namespace FileIO ;
 
   std::ostream& operator<<(std::ostream& file, const Al::ElementData& data)
   {
+    using namespace FileIO ;
     file  << data.m_dChi2DAlpha 
 	  << data.m_d2Chi2DAlpha2
 	  << data.m_d2Chi2DAlphaDBeta
@@ -36,6 +27,7 @@ namespace Al
   inline
   std::ifstream& operator>>(std::ifstream& file, Al::ElementData& data)
   {
+    using namespace FileIO ;
     file  >> data.m_dChi2DAlpha 
 	  >> data.m_d2Chi2DAlpha2
 	  >> data.m_d2Chi2DAlphaDBeta
@@ -87,7 +79,7 @@ namespace Al
       m_d2Chi2DAlphaDBeta[it->first].matrix() = jacobian * it->second.matrix() ;
   }
   
-  Equations::Equations(size_t nElem)
+  Equations::Equations(size_t nElem, Gaudi::Time initTime)
     : m_elements(nElem),
       m_numEvents(0u),
       m_numTracks(0u),
@@ -99,7 +91,8 @@ namespace Al
       m_totalVertexChiSquare(0.0), 
       m_totalVertexNumDofs(0u),
       m_firstTime(Gaudi::Time::max()),
-      m_lastTime(Gaudi::Time::epoch())
+      m_lastTime(Gaudi::Time::epoch()),
+      m_initTime(initTime)
   {
     assert( nElem == m_elements.size() ) ;
   }
@@ -124,6 +117,7 @@ namespace Al
 
   void Equations::writeToBuffer(std::ostream& buffer) const
   {
+    using namespace FileIO ;
     buffer << m_elements
 	   << m_numEvents
 	   << m_numTracks
@@ -135,11 +129,13 @@ namespace Al
 	   << m_totalVertexChiSquare
 	   << m_totalVertexNumDofs 
 	   << m_firstTime
-	   << m_lastTime ;
+	   << m_lastTime
+	   << m_initTime ;
   }
 
   void Equations::readFromBuffer(std::istream& buffer)
   {
+    using namespace FileIO ;
     buffer >> m_elements
 	   >> m_numEvents
 	   >> m_numTracks
@@ -151,7 +147,8 @@ namespace Al
 	   >> m_totalVertexChiSquare
 	   >> m_totalVertexNumDofs 
 	   >> m_firstTime
-	   >> m_lastTime ;
+	   >> m_lastTime
+	   >> m_initTime ;
   }
 
   void Equations::writeToFile(const char* filename) const 
@@ -189,6 +186,15 @@ namespace Al
     m_totalVertexNumDofs    += rhs.m_totalVertexNumDofs ;
     if( m_firstTime.ns() > rhs.m_firstTime.ns() ) m_firstTime = rhs.m_firstTime ;
     if( m_lastTime.ns()  < rhs.m_lastTime.ns()  ) m_lastTime  = rhs.m_lastTime ;
+    if( m_initTime != Gaudi::Time(Gaudi::Time::epoch()) ) {
+      if( m_initTime != rhs.m_initTime ) {
+	std::cout << "Equations::add: adding up Equations with different initTime. Asserting."
+		  << std::endl ;
+	assert(0) ;
+      }
+    } else {
+      m_initTime = rhs.m_initTime ;
+    }
   }
   
   size_t Equations::numHits() const
@@ -198,6 +204,13 @@ namespace Al
 	 it != m_elements.end(); ++it )
       rc += it->m_numHits ;
     return rc ;
+  }
+
+  std::ostream& Equations::fillStream(std::ostream& os) const
+  {
+    std::stringstream stream ;
+    stream << "NumEvents = " << numEvents() << std::endl ;
+    return os << stream.str() ;
   }
 
 }

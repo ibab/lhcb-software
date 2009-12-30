@@ -84,7 +84,7 @@ namespace Al
   class Equations {
   public:
     typedef std::vector<ElementData> ElementContainer  ;
-    Equations(size_t nElem=0) ;
+    Equations(size_t nElem=0, Gaudi::Time time = Gaudi::Time::epoch()) ;
     void clear() ;
     size_t nElem() const { return m_elements.size() ; }
     ElementData& element(size_t i) { return m_elements[i] ; }
@@ -119,6 +119,7 @@ namespace Al
     size_t numEvents() const { return m_numEvents ; }
     Gaudi::Time firstTime() const { return m_firstTime ; }
     Gaudi::Time lastTime() const { return m_lastTime ; }
+    Gaudi::Time initTime() const { return m_initTime ; }
     size_t numHits() const ;
     double totalChiSquare() const { return m_totalChiSquare ; }
     size_t totalNumDofs() const { return m_totalNumDofs ; }
@@ -150,6 +151,7 @@ namespace Al
     size_t           m_totalVertexNumDofs ;
     Gaudi::Time      m_firstTime ;
     Gaudi::Time      m_lastTime ;
+    Gaudi::Time      m_initTime ;
   };
   
 } ;
