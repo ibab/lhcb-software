@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-12-31 - Gerhard Raven
+ - make HltReferenceRateSvc use a predicate for ODIN to
+   determine whether to update tick counter.
+
 ! 2009-12-30 - Gerhard Raven
  - remove unused HltFunctionFactory
  - rename HltReferenceClockSvc into HltReferenceRateSvc

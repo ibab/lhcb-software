@@ -1,12 +1,18 @@
+#include <limits>
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/GaudiException.h"
 #include "Kernel/IReferenceRate.h"
+#include "LoKi/IHltFactory.h"
+#include "boost/algorithm/string/join.hpp"
+
 
 class HltReferenceRateSvc : public Service,
-			     virtual public IReferenceRate,
-			     virtual public IIncidentListener
+                    virtual public IReferenceRate,
+                    virtual public IIncidentListener
   
 {
 public:
@@ -22,6 +28,9 @@ public:
   /// Initialize Service
   StatusCode initialize();
 
+  /// Finalize  Service
+  StatusCode finalize();
+
   /// Handle BeginEvent incident.
   void handle(const Incident&);
 
@@ -35,13 +44,27 @@ private:
   MsgStream& info() const { return msg(MSG::INFO); }
   MsgStream& error() const { return msg(MSG::ERROR); }
   MsgStream& msg(MSG::Level level) const ;
+
+  StatusCode decode();
+  void updatePredicate( Property& /* p */ );
+  void updatePreambulo ( Property& /* p */ );
+
+  bool updateRequired() const { return m_predicate_updated || m_preambulo_updated; }
+
 private:
-  int               m_triggerType ;
-  double            m_rate ;
-  mutable size_t    m_tick ;
   mutable std::auto_ptr<MsgStream> m_msg ;
   IIncidentSvc      *m_incidentSvc ;
   IDataProviderSvc  *m_evtSvc;
+  IToolSvc          *m_toolSvc;
+  LoKi::Types::ODIN_Cut* m_predicate;
+  std::vector<std::string> m_preambulo_ ;             // the preambulo itself
+  std::string m_preambulo ;                           // the preambulo itself
+  std::string m_predicateDesc;
+  std::string m_location;
+  double            m_rate ;
+  mutable size_t    m_tick ;
+  bool m_predicate_updated;
+  bool m_preambulo_updated;
 };
 
 /************************************************************************/
@@ -71,15 +94,24 @@ HltReferenceRateSvc::~HltReferenceRateSvc()
 }
 
 HltReferenceRateSvc::HltReferenceRateSvc( const std::string& name, 
-					  ISvcLocator* pSvcLocator) 
-  : Service ( name , pSvcLocator ),
-    m_triggerType(-1),
-    m_rate(0),
-    m_tick(0)
+                                          ISvcLocator* pSvcLocator) 
+  : Service ( name , pSvcLocator )
+  , m_incidentSvc(0)
+  , m_evtSvc(0)
+  , m_toolSvc(0)
+  , m_predicate(0)
+  , m_rate(0)
+  , m_tick(0)
+  , m_predicate_updated(false)
+  , m_preambulo_updated(false)
 {
-  declareProperty("ODINTriggerRate", m_rate = 2000/*Gaudi::Units::Hz*/ ) ;
-  declareProperty("ODINTriggerType", m_triggerType = -1
-		  /*LHCb::ODIN::RandomTrigger*/) ;
+    // by default, we assume 50(beam-beam)+10(beam1)+10(beam2)+10(empty) Hz of lumi triggers
+  declareProperty("ReferenceRate", m_rate = 80/*Gaudi::Units::Hz*/ ) ;
+  declareProperty("ODINLocation", m_location = LHCb::ODINLocation::Default);
+  declareProperty("ODINPredicate", m_predicateDesc = "ODIN_TRGTYP == LHCb.ODIN.LumiTrigger") 
+                 -> declareUpdateHandler( & HltReferenceRateSvc::updatePredicate, this );
+  declareProperty("Preambulo", m_preambulo_)
+                 ->declareUpdateHandler(&HltReferenceRateSvc::updatePreambulo , this);
 }
 
 MsgStream& HltReferenceRateSvc::msg(MSG::Level level) const {
@@ -88,36 +120,114 @@ MsgStream& HltReferenceRateSvc::msg(MSG::Level level) const {
   return *m_msg;
 }
 
+StatusCode HltReferenceRateSvc::decode() {
+    delete m_predicate;
+    m_predicate = 0;
+    LoKi::Types::ODIN_Cut cut( LoKi::BasicFunctors<const LHCb::ODIN*>::BooleanConstant( false ) );
+    if (!m_predicateDesc.empty()) { 
+        LoKi::Hybrid::IHltFactory* _factory(0);
+        StatusCode sc = m_toolSvc->retrieveTool("LoKi::Hybrid::HltFactory",_factory,this) ;
+        if (sc.isFailure()) return sc;
+        sc = _factory->get( m_predicateDesc, cut, m_preambulo );
+        m_toolSvc->releaseTool(_factory) ;
+        if (sc.isFailure()) return sc;
+    }
+    m_predicate = cut.clone();
+    m_predicate_updated = false ;
+    m_preambulo_updated = false ;
+    info() << "Reference rate for predicate " <<  *m_predicate <<  " is set to " << m_rate << endreq ;
+    return StatusCode::SUCCESS;
+}
+
 StatusCode
 HltReferenceRateSvc::initialize()
 {
   StatusCode sc = Service::initialize() ;
-  if (!service( "EventDataSvc", m_evtSvc).isSuccess()) return StatusCode::FAILURE;
-  if( sc.isSuccess() ) {
-    info() << "Reference rate is: " << m_rate << endreq ;
-    m_tick = 0 ;
-    if (!service( "IncidentSvc", m_incidentSvc).isSuccess()) 
-      return StatusCode::FAILURE;
-    m_incidentSvc->addListener(this,IncidentType::BeginEvent) ;
-  }
-  return sc ;
+  if( !sc.isSuccess() ) return sc;
+  sc = service("ToolSvc",m_toolSvc);
+  if( !sc.isSuccess() ) return sc;
+  sc = service("EventDataSvc",m_evtSvc);
+  if( !sc.isSuccess() ) return sc;
+  sc = service( "IncidentSvc", m_incidentSvc);
+  if( !sc.isSuccess() ) return sc;
+  // insert at low priority, so that ODIN is available when we get invoked..
+  long prio = std::numeric_limits<long>::min();
+  m_incidentSvc->addListener(this,IncidentType::BeginEvent, prio ) ;
+
+  sc = decode();
+  if( !sc.isSuccess() ) return sc;
+
+  m_tick = 0 ;
+
+  return sc;
+}
+
+StatusCode
+HltReferenceRateSvc::finalize()
+{
+  info() << "got " << m_tick << " ticks, with assumed rate of " << m_rate << endmsg; 
+  StatusCode sc = Service::finalize() ;
+  m_toolSvc->release();
+  m_evtSvc->release();
+  m_incidentSvc->release();
+
+  return sc;
 }
 
 void HltReferenceRateSvc::handle ( const Incident& incident )
 {
-  if ( IncidentType::BeginEvent == incident.type() ) {
-    if( m_triggerType >= 0 ) {
-      // get the ODIN bank
-      SmartDataPtr<LHCb::ODIN> odin( m_evtSvc , LHCb::ODINLocation::Default );
-      if (!odin) {
-        error() << " Could not locate ODIN... " << endmsg;
+  if ( IncidentType::BeginEvent != incident.type() ) return;
+  if (updateRequired() ) {
+       StatusCode sc = decode();
+       if (sc.isFailure()) throw GaudiException( "Error from HltReferenceRateSvc::decode()","HltReferenceRateSvc failure" , sc ) ;
+  }
+  if ( m_predicate == 0 ) {
+      ++m_tick;
+      return;
+  }
+  // get the ODIN bank
+  SmartDataPtr<LHCb::ODIN> odin( m_evtSvc , m_location );
+  if (!odin) {
+        error() << " Could not obtain ODIN...  requesting AbortEvent" << endmsg;
         m_incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
-      } else {
-        if ( int(odin->triggerType()) == m_triggerType &&
-	         odin->bunchCrossingType() == LHCb::ODIN::BeamCrossing  ) ++m_tick;
-      }
-    } else {
-      m_tick += 1 ;
-    }
+        return;
+  } 
+  if ( (*m_predicate)(odin) ) { 
+      ++m_tick;
+    // debug() << " Tick... " << m_tick << " @ ODIN GPS time " << odin->eventTime().format(true,"%F %T") << " " << odin->eventTime().nanoformat(6,6)<< endmsg;
+    //@ TODO: fill a counter with the GPS timeinterval between ticks...
   }
 }
+
+//=============================================================================
+// update handlers
+//=============================================================================
+void HltReferenceRateSvc::updatePredicate ( Property& /* p */ )    
+{
+  /// mark as "to-be-updated"
+  m_predicate_updated = true ;
+  // no action if not yet initialized
+  if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
+  // postpone the action
+  if ( !m_preambulo_updated ) { return ; }
+  // perform the actual immediate decoding
+  StatusCode sc = decode  () ;
+  if (sc.isFailure()) throw GaudiException( "Error from HltReferenceRateSvc::decode()","HltReferenceRateSvc failure" , sc ) ;
+}
+
+void HltReferenceRateSvc::updatePreambulo ( Property& /* p */ )
+{
+  // concatenate the preambulo:
+  m_preambulo = boost::algorithm::join( m_preambulo_ , "\n" );
+  /// mark as "to-be-updated"
+  m_preambulo_updated = true ;
+  // no further action if not yet initialized
+  if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
+  // postpone the action
+  if ( !m_predicate_updated ) { return ; }
+
+  // perform the actual immediate decoding
+  StatusCode sc = decode  () ;
+  if (sc.isFailure()) throw GaudiException( "Error from HltReferenceRateSvc::decode()","HltReferenceRateSvc failure" , sc ) ;
+}
+
