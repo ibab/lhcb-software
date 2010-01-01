@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.7 2009-12-30 05:14:20 wouter Exp $
+! $Id: release.notes,v 1.8 2010-01-01 05:00:48 wouter Exp $
 ! Package     : AlignKernel
 ! Responsible : Adlene Hicheur en Wouter Hulsbergen
 !-------------------------------------------------------------------------------
+
+! 2009-01-01 Wouter Hulsbergen
+ - update dict to suppress genreflex warning
 
 ! 2009-12-30 Wouter Hulsbergen
  - added data member to hold time at initializing geometry
