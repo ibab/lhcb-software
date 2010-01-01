@@ -1,9 +1,38 @@
-! $Id: release.notes,v 1.61 2009-12-27 19:10:25 graven Exp $
+! $Id: release.notes,v 1.62 2010-01-01 15:27:10 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+! 2010-01-01 - Vanya BELYAEV
+ - add new symbols for Wouterl Hulsbergen 
+     a.  TrSTIDC  ( count STChannelIDs ) 
+     b.  TrVELOIDC (count VeloChannelIDs):
+
+  For usage see $LOKITRIGGERROOT/python/LoKiTrigger/tests.py :
+
+    track = LHCb.Track()
+
+    f1  = TrIDC     (   'isVelo'   )
+    
+    f2  = TrOTIDC   (   'module',1 )
+    f3  = TrOTIDC   ( 1,'module',5 )
+    f4  = TrOTIDC   ( 'module', uints( 1, 2, 3, 4, 5 ) )
+    
+    f5  = TrSTIDC   (   'sector',1 )
+    f6  = TrSTIDC   ( 1,'sector',5 )
+    f7  = TrSTIDC   ( 'sector', uints( 1, 2, 3, 4, 5 ) )
+
+    f8  = TrVELOIDC (   'sensor',1 )
+    f9  = TrVELOIDC ( 1,'sensor',5 )
+    f10 = TrVELOIDC ( 'sensor', uints( 1, 2, 3, 4, 5 ) )
+    f11 = TrVELOIDC ( 'pileUp' ) 
+
+    for f in ( f1 , f2, f3, f4, f5, f6, f7, f8, f9, f10, f11 ) :
+        print f , f(track)
+    
+  
 
 ! 2009-12-27 - Gerhard Raven
  - also comment out TrIDC and TrOTIDC definitions, as otherwise the 

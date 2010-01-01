@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py,v 1.4 2008-11-22 17:21:57 ibelyaev Exp $
+# $Id: tests.py,v 1.5 2010-01-01 15:27:10 ibelyaev Exp $
 # =============================================================================
 ## @file   LoKiTrigger/tests.py
 #  The simple test script for Phys/LoKiTrigger package
@@ -21,7 +21,7 @@ The basic tests for LoKiTrigger package
 """
 # =============================================================================
 __author__   = "Vanya BELYAEV  Ivan.Belyaev@nikhef.nl"
-__version__  = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.4 $ "
+__version__  = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.5 $ "
 # =============================================================================
 
 ## needed since there is no autoloading of Tracking dictionaries:
@@ -115,6 +115,32 @@ def test1() :
     print ' v>>min_element(TrP)               : %s'%(v>>min_element(TrP))
     print ' v>>max_element(TrP)               : %s'%(v>>max_element(TrP))
 
+def test2() :
+    """
+    Test #3 
+    """
+
+    track = LHCb.Track()
+
+    f1  = TrIDC     (   'isVelo'   )
+    
+    f2  = TrOTIDC   (   'module',1 )
+    f3  = TrOTIDC   ( 1,'module',5 )
+    f4  = TrOTIDC   ( 'module', uints( 1, 2, 3, 4, 5 ) )
+    
+    f5  = TrSTIDC   (   'sector',1 )
+    f6  = TrSTIDC   ( 1,'sector',5 )
+    f7  = TrSTIDC   ( 'sector', uints( 1, 2, 3, 4, 5 ) )
+
+    f8  = TrVELOIDC (   'sensor',1 )
+    f9  = TrVELOIDC ( 1,'sensor',5 )
+    f10 = TrVELOIDC ( 'sensor', uints( 1, 2, 3, 4, 5 ) )
+    f11 = TrVELOIDC ( 'pileUp' ) 
+
+    for f in ( f1 , f2, f3, f4, f5, f6, f7, f8, f9, f10, f11 ) :
+        print f , f(track)
+    
+    
 # =============================================================================
 ## Perform all known tests
 def testAll() :
@@ -123,6 +149,7 @@ def testAll() :
     """
     test0()
     test1()
+    test2()
 
 
 # =============================================================================
