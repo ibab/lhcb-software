@@ -1,4 +1,4 @@
-// $Id: OTCalibrationAlg.cpp,v 1.3 2009-10-09 10:35:59 wouter Exp $
+// $Id: OTCalibrationAlg.cpp,v 1.4 2010-01-02 22:15:24 wouter Exp $
 // Include files
 
 // local
@@ -181,8 +181,8 @@ StatusCode OTCalibrationAlg::execute()
 	  //track->hasVelo() &&
 	  track->hasT() 
 	  //&&
-	  //fabs(track->firstState().p()) > 5*Gaudi::Units::GeV &&
-	  //fabs(track->firstState().stateVector()(0)) < 10*Gaudi::Units::m 
+	  //std::abs(track->firstState().p()) > 5*Gaudi::Units::GeV &&
+	  //std::abs(track->firstState().stateVector()(0)) < 10*Gaudi::Units::m 
 	  ) {
 	accumulate( *track) ;
       }
@@ -228,9 +228,9 @@ void OTCalibrationAlg::accumulate(const LHCb::Track& track)
     double normchisq = 
       hit.isOutlier() ? track.chi2()/track.nDoF() : ( track.chi2() - hit.chisq()) / (track.nDoF()-1)  ;
     
-    if( fabs( hit.trkDistance() )  < m_maxDistance&&
-	//fabs( hit.residual() )     < m_maxResidual && // don't use residual cut. use timresidual instead.
-	//fabs( hit.timeResidual() ) < m_maxTimeResidual && 
+    if( std::abs( hit.trkDistance() )  < m_maxDistance&&
+	//std::abs( hit.residual() )     < m_maxResidual && // don't use residual cut. use timresidual instead.
+	//std::abs( hit.timeResidual() ) < m_maxTimeResidual && 
 	//hit.trkVariance()>0 &&
 	//std::sqrt( hit.trkVariance() ) < m_maxDistanceError &&
 	hit.residualScaleFactor() > 0.5 &&
@@ -256,7 +256,7 @@ void OTCalibrationAlg::accumulate(const LHCb::Track& track)
       m_distErrPr->Fill( hit.uniqueModule(), std::sqrt( hit.trkVariance() ) )  ;
       if( hit.residualScaleFactor() > 0.8 && normchisq < 4 &&
 	  !hit.isOutlier() ) 
-	m_ttodcalibh2->Fill(fabs(hit.trkDistance()),hit.driftTime()) ;
+	m_ttodcalibh2->Fill(std::abs(hit.trkDistance()),hit.driftTime()) ;
     }
     
     static TH2* tmph2(0) ;
@@ -340,7 +340,7 @@ namespace {
       sumw   += c ;
       sumx2w += c*x*x ;
     }
-    double rawrms = sqrt( sumx2w /  sumw ) ;
+    double rawrms = std::sqrt( sumx2w /  sumw ) ;
     
     // start from that rms
     sumw = sumx2w = 0 ;
@@ -354,9 +354,9 @@ namespace {
       double newsumw   = sumw + c ;
       double newsumx2w = sumx2w + c*x*x ;
       if(sumw>0 && ibin>minbin) {
-	double newrms    = sqrt(  newsumx2w / newsumw ) ;
+	double newrms    = std::sqrt(  newsumx2w / newsumw ) ;
 	if( 3 * newrms < up ) {
-	  double drms = newrms - sqrt(  sumx2w / sumw ) ;
+	  double drms = newrms - std::sqrt(  sumx2w / sumw ) ;
 	  double frac = (3*drms)/h1pos.GetXaxis()->GetBinWidth(ibin) ;
 	  //std::cout << frac << " " << drms << std::endl ;
 	  xtrunc = (up - (1-frac)*h1pos.GetXaxis()->GetBinWidth(ibin))/3  ;

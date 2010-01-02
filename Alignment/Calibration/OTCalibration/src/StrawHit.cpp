@@ -75,7 +75,7 @@ namespace OTCal
     
     m_hitcov      = fitnode->errMeasure2() ;
     m_trkcov      = m_residualcov - m_hitcov; // note: this could be [ns]!
-    m_trkDriftTime = rtrelation.drifttime( fabs( m_trkdistance ) ) ;
+    m_trkDriftTime = rtrelation.drifttime( std::abs( m_trkdistance ) ) ;
     if( m_trkcov < 0 ) {
       std::cout << "PROBLEM: " << isOutlier() << " " << m_residualcov << " " << m_hitcov << std::endl ;
     }
@@ -186,7 +186,7 @@ namespace OTCal
 //     // How do we now know that this distanc eis correct? At least,
 //     // we'll once need to take the difference between state and straw.
 
-//     m_trkDriftTime = rtrelation.drifttime( fabs( m_trkdistance ) ) ;
+//     m_trkDriftTime = rtrelation.drifttime( std::abs( m_trkdistance ) ) ;
 
 //     double rawtime = otmeas->calibratedTime() + otmeas->module().strawT0(  m_straw ) ;
 //     m_t0estimate = rawtime -  otmeas->deltaTimeOfFlight() - otmeas->propagationTimeFromY(yref) - m_trkDriftTime ;

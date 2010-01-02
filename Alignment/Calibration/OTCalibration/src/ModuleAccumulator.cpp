@@ -71,14 +71,14 @@ namespace OTCal {
     m_timeh1->Fill(hit.driftTime()) ;
     m_resh1->Fill(hit.residual()) ;
     m_timeresh1->Fill(hit.timeResidual() ) ;
-    m_trkerrh1->Fill(sqrt(hit.trkVariance())) ;
+    m_trkerrh1->Fill(std::sqrt(hit.trkVariance())) ;
     m_respullh1->Fill(hit.residualPull()) ;
     m_timevsdistanceh2->Fill(hit.trkDistance(),hit.driftTime()) ;
-    m_ttodcalibh2->Fill(fabs(hit.trkDistance()),hit.driftTime()) ;
+    m_ttodcalibh2->Fill(std::abs(hit.trkDistance()),hit.driftTime()) ;
     m_trkdisth1->Fill(hit.trkDistance()) ;
     m_timeresvsdistanceh2->Fill(hit.trkDistance(),hit.residualScaleFactor() * hit.timeResidual()) ;
     m_resvsdistanceh2->Fill(hit.trkDistance(),hit.residualScaleFactor() * hit.residual()) ;
-    m_resvstimeh2->Fill(hit.driftTime(),fabs(hit.residualScaleFactor() * hit.residual())) ;
+    m_resvstimeh2->Fill(hit.driftTime(),std::abs(hit.residualScaleFactor() * hit.residual())) ;
   }
   
 }
