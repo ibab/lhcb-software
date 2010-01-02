@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.386 2009-12-29 14:44:55 graven Exp $ 
+! $Id: release.notes,v 1.387 2010-01-02 13:03:34 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-01-02 - G. Raven
+ - add an example of a rate-limited express stream predicate.
+   Note: this requires that HltReferenceRateSvc is added to the ExtSvc
+   list of the appmgr to avoid a chicken-and-egg problem.
 
 ! 2009-12-29 - G. Raven
  - flag 1 out of every 100 accepted 'physics events' for the express stream, and,

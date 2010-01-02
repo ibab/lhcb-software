@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.138 2009-12-29 13:39:13 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.139 2010-01-02 13:03:35 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -163,12 +163,14 @@ class HltConf(LHCbConfigurableUser):
         # 64-91: reserved for Hlt2
 
         ### NOTE: any change in the _meaning_ of any of the following needs to be 
-        ###       communicated with online, to insure the events are still properly
-        ###       routed!!! (this goes esp. for [32,36]!!!)
-        ### NOTE: current only usage:
-        ### NOTE: bit 36 -> express stream
+        ###       communicated (at least!) with online, to insure the events are 
+        ###       still properly routed!!! (this goes esp. for [32,36]!!!)
+        ### NOTE: current usage:
+        ###       bit 46 -> 'physics triggers'
+        ###       bit 37 -> subscrided to be Hlt monitoring
+        ###       bit 36 -> express stream
         ###       bit 35 -> subscribed to by Velo closing monitoring
-        ###       bit 34 -> count number of 'physics events'
+        ###       bit 34 -> count number of 'non-lumi-exlusive events'
         ###       bit 33 -> lumi stream
         ###       bit 32 -> full stream (actually, not used for that, but it could be ;-)
         routingBits = { 32 : "HLT_PASS('Hlt1Global')"
@@ -176,6 +178,7 @@ class HltConf(LHCbConfigurableUser):
                       , 34 : "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global
                       , 35 : "HLT_PASS_SUBSTR('Hlt1Velo')"  
                       , 36 : "scale(HLT_PASS_RE('Hlt1(?!Lumi).*Decision'), SKIP(100)) | HLT_PASS('Hlt2UnbiasedJPsiDecision')" # for now, flag one out of every 100 'physics events' for express stream
+                      #, 36 : "scale(HLT_PASS_RE('Hlt1(?!Lumi).*Decision'), RATE(100)) | HLT_PASS('Hlt2UnbiasedJPsiDecision')" # for now, flag one out of every 100 'physics events' for express stream
                       , 37 : "HLT_PASS('Hlt1ODINPhysicsDecision')"
                       , 38 : "HLT_PASS('Hlt1ODINTechnicalDecision')"
                       , 39 : "HLT_PASS_SUBSTR('Hlt1L0')"
@@ -194,11 +197,21 @@ class HltConf(LHCbConfigurableUser):
 
         ## and record the settings in the ANN service
         HltANNSvc().RoutingBits = dict( [ (v,k) for k,v in routingBits.iteritems() ] )
+        from Configurables import HltReferenceRateSvc
+        rsvc = HltReferenceRateSvc( ReferenceRate = 80
+                                  , ODINPredicate = '( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger )'
+                                  )
+        # add explicitly as ExtSvc to avoid being triggered from within HltRoutingBitsWriter's decode,
+        # which implies we start to decode the above ODINPredicate at the time one of HltRoutingBitsWriter's 
+        # predicates is being decoded -- the hybrid factory doesn't like going recursive!
+        ApplicationMgr().ExtSvc.append( rsvc ) 
         # LoKi::Hybrid::HltFactory is what RoutingBitsWriter uses as predicate factory..
         # make sure 'strings' is known... 
         # make sure 'RATE,SCALE and SKIP' are known...
         from Configurables import LoKi__Hybrid__HltFactory as HltFactory
         HltFactory('ToolSvc.LoKi::Hybrid::HltFactory').Modules += [ 'LoKiCore.functions', 'LoKiNumbers.sources' ]
+        #  forward compatibility: HltFactory will become private for HltRoutingBitsWriter...
+        HltFactory('HltRoutingBitsWriter.LoKi::Hybrid::HltFactory').Modules += [ 'LoKiCore.functions', 'LoKiNumbers.sources' ]
         # and, last but not least, tell the writer what it should write..
         from Configurables import HltRoutingBitsWriter
         HltRoutingBitsWriter().RoutingBits = routingBits
