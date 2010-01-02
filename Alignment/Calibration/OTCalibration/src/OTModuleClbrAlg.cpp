@@ -386,8 +386,8 @@ StatusCode OTModuleClbrAlg::fitTRSimple()
     double entries = histDriftTimeVsDist->GetBinContent(nx, ny);
     if(entries == 0) continue;
 
-    double xerr = 0.2 / sqrt(entries);
-    double yerr = 2.7 / sqrt(entries);
+    double xerr = 0.2 / std::sqrt(entries);
+    double yerr = 2.7 / std::sqrt(entries);
 
     graphDriftTimeVsDist.SetPoint(graphDriftTimeVsDist.GetN(), x, y);
     graphDriftTimeVsDist.SetPointError(graphDriftTimeVsDist.GetN() - 1, xerr, yerr);
@@ -420,7 +420,7 @@ TH2D* histTVsR = 0;
 
 void fMinuit(int&, double*, double& result, double* par, int)
 {
-  static const double sqrt2pi = sqrt(2.0 * 3.1415927);
+  static const double sqrt2pi = std::sqrt(2.0 * 3.1415927);
 
   static const double rmax = 2.45;
   static const double rmax2 = rmax * rmax;
@@ -451,7 +451,7 @@ void fMinuit(int&, double*, double& result, double* par, int)
       double r_ = dr_ * (2 * i + 1) - rmax;
       r_ += offsets[m] * dr_;
 
-      ipr_ += weights[m] * ( 1.0 - exp( - 2.0 * rho * sqrt(rmax2 - r_ * r_) ) );
+      ipr_ += weights[m] * ( 1.0 - exp( - 2.0 * rho * std::sqrt(rmax2 - r_ * r_) ) );
     }
     ipr_ *= dr_;
   }
@@ -475,7 +475,7 @@ void fMinuit(int&, double*, double& result, double* par, int)
 
         double r0_ = fabs(r_) / rmax;
 
-        double pr0 = 1.0 - exp( - 2.0 * rho * sqrt(rmax2 - r_ * r_) );
+        double pr0 = 1.0 - exp( - 2.0 * rho * std::sqrt(rmax2 - r_ * r_) );
 
         double sigmaR = sigmaRA * (1.0 - r0_) + sigmaRB * r0_;
         double pr = exp( -0.5 * pow((r - r_) / sigmaR, 2) ) / sigmaR;
