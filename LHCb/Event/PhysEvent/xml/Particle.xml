@@ -26,13 +26,32 @@
       <import name="GaudiKernel/Vector4DTypes.h"/>
       <import name="GaudiKernel/GenericMatrixTypes.h"/>
       <import name="GaudiKernel/SymmetricMatrixTypes.h"/>
+      <import name="GaudiKernel/Range"/>
+      <import name="GaudiKernel/SharedObjectsContainer"/>
       <import name="Kernel/ParticleID"/>
+
+
       <typedef
         type="GaudiUtils::VectorMap&lt;int,double&gt;"
         def="ExtraInfo"
         desc="Vector of information for combined PIDs"
         access="PUBLIC"
         />
+      
+      <typedef
+	  type   = "SharedObjectsContainer&lt;LHCb::Particle&gt;"
+	  def    = "Selection"
+	  desc   = "The container type for shared particles (without ownership)"
+	  access = "PUBLIC"
+	  />
+
+      <typedef
+	  type   = "Gaudi::Range_&lt;ConstVector&gt;"
+	  def    = "Range"
+	  desc   = "For uniform access to containers in TES (KeyedContainer,SharedContainer) "
+	  access = "PUBLIC"
+	  />
+
       <location
         name="User"
         place="Phys/User/Particles"
