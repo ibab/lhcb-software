@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.110 2009-12-17 15:20:10 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.111 2010-01-03 17:01:00 panmanj Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -47,6 +47,7 @@ class Brunel(LHCbConfigurableUser):
        ,"OutputType"      : "DST"
        ,"PackType"        : "TES"
        ,"WriteFSR"        : True 
+       ,"WriteLumi"       : False 
        ,"Histograms"      : "Default"
        ,"OutputLevel"     : INFO 
        ,"NoWarnings"      : False 
@@ -78,6 +79,7 @@ class Brunel(LHCbConfigurableUser):
        ,'OutputType'   : """ Type of output file. Can be one of self.KnownOutputTypes (default 'DST') """
        ,'PackType'     : """ Type of packing for the output file. Can be one of ['TES','MDF','NONE'] (default 'TES') """
        ,'WriteFSR'     : """ Flags whether to write out an FSR """
+       ,'WriteLumi'    : """ Flags whether to write out Lumi-only events to DST """
        ,'Histograms'   : """ Type of histograms. Can be one of self.KnownHistograms """
        ,'OutputLevel'  : """ The printout level to use (default INFO) """
        ,'NoWarnings'   : """ OBSOLETE, kept for Dirac compatibility. Please use ProductionMode """
@@ -364,7 +366,7 @@ class Brunel(LHCbConfigurableUser):
             # event output
             dstWriter = OutputStream( writerName )
             dstWriter.AcceptAlgs += ["Reco"] # Write only if Rec phase completed
-            if handleLumi:
+            if handleLumi and self.getProp( "WriteLumi" ):
                 dstWriter.AcceptAlgs += ["LumiSeq"] # Write also if Lumi sequence completed
             # Set a default output file name if not already defined in the user job options
             if not dstWriter.isPropertySet( "Output" ):
