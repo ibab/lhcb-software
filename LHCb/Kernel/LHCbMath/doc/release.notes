@@ -6,6 +6,36 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2010-01-02 - Vanya BELYAEV 
+
+ - LHCbMath/LHCbMath.h
+
+     Equal_To : 
+
+        a. use "Lomont"-compare for floating point numbers (from GaudiKernel) 
+           instead of "Knuth/GSL"-compare
+
+        b. "Precision" parameter now is  unisgned short/int instead of float/double.
+           The constructor from floating-point precision is PRIVATE now, 
+           thus compiler error will be generated 
+
+        c. add explicit specializations for std::vector<double> and 
+             std::vector<float>
+
+      equal_to_int , equal_to_uint:
+
+           use "Lomont"-compare for floating point numbers (from GaudiKernel) 
+           instead of "Knuth/GSL"-compare
+      
+      knuth_equal_to_double: 
+ 
+           backup old "Knuth/GSL" comparison criteria for floatring pooint numbers 
+
+ - cmt/requirements
+ 
+       version increment to v3r15 
+
+
 !========================= LHCbMath v3r14 2009-11-13 =========================
 ! 2009-10-23 - Vanya Belyaev
 

@@ -1,4 +1,4 @@
-// $Id: TestRound.cpp,v 1.1 2009-10-23 13:51:05 ibelyaev Exp $
+// $Id: TestRound.cpp,v 1.2 2010-01-03 08:41:17 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -38,14 +38,13 @@ namespace
   inline int roundOld ( const double x )  
   {
     int i;
-    LHCb::Math::Equal_To<double> equal_to(LHCb::Math::lowTolerance);
     if (x >= 0.0) {
       i = int(x + 0.5);
-      if (equal_to(x + 0.5, double(i)) && i & 1) --i;
+      if (LHCb::Math::knuth_equal_to_double(x + 0.5, double(i)) && i & 1) --i;
     }
     else {
       i = int(x - 0.5);
-      if (equal_to(x - 0.5 , double(i)) && i & 1) ++i;
+      if (LHCb::Math::knuth_equal_to_double(x - 0.5 , double(i)) && i & 1) ++i;
       
     }
     return i;

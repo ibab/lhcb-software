@@ -1,4 +1,4 @@
-// $Id: LHCbMath.cpp,v 1.1 2008-04-03 11:26:18 cattanem Exp $
+// $Id: LHCbMath.cpp,v 1.2 2010-01-03 08:41:17 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -28,7 +28,7 @@
  *  @date 2007-11-27
  */
 // ============================================================================
-bool LHCb::Math::equal_to_double
+bool LHCb::Math::knuth_equal_to_double
 ( const double value1  , 
   const double value2  , 
   const double epsilon ) 

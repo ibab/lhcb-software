@@ -1,11 +1,11 @@
-// $Id: LHCbMath.h,v 1.9 2009-10-23 13:51:04 ibelyaev Exp $ 
+// $Id: LHCbMath.h,v 1.10 2010-01-03 08:41:17 ibelyaev Exp $ 
 // ============================================================================
 /** @file
  *
  *  Collection of math related functions for general use in LHCb
  *
  *  CVS Log :-
- *  $Id: LHCbMath.h,v 1.9 2009-10-23 13:51:04 ibelyaev Exp $
+ *  $Id: LHCbMath.h,v 1.10 2010-01-03 08:41:17 ibelyaev Exp $
  *
  *  @author Juan PALACIOS
  *  @date   2005-11-21
@@ -21,6 +21,11 @@
 #include <cmath>
 #include <algorithm>
 #include <functional>
+#include <vector>
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Lomont.h"
 // ============================================================================
 // Boost 
 // ============================================================================
@@ -43,6 +48,38 @@ namespace LHCb
     static const double looseTolerance = 1e-5;
     static const double     sqrt_12 = 3.4641016151377546; // sqrt(12.)
     static const double inv_sqrt_12 = 0.2886751345948129; // 1./sqrt(12.)
+    // ========================================================================
+    /** @var mULPS_float
+     *  "tolerance" parameter for "Lomont"-compare of floating point numbers.
+     *  It corresponds to relative ("Knuth/GLS") tolerance of about ~6*10^-6
+     *  for values in excess of 10^-37.
+     *
+     *  @see Gaudi::Math::lomont_compare_float 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2010-01-02
+     */
+    const unsigned short mULPS_float = 100 ;
+    // ========================================================================
+    /** @var mULPS_float_low
+     *  "Low-tolerance" parameter for "Lomont"-compare of floating point numbers.
+     *  It corresponds to relative ("Knuth/GLS") tolerance of about ~6*10^-5
+     *  for values in excess of 10^-37.
+     *
+     *  @see Gaudi::Math::lomont_compare_float 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2010-01-02
+     */
+    const unsigned short mULPS_float_low = 1000 ;
+    // =========================================================================
+    /** @var mULPS_double
+     *  "tolerance" parameter for "Lomont"-compare of floating point numbers.
+     *  It corresponds to relative ("Knuth/GLS") tolerance of about ~6*10^-13
+     *  for values in excess of 10^-304.
+     *  @see Gaudi::Math::lomont_compare_double
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2010-01-02
+     */
+    const unsigned int mULPS_double = 1000 ;
     // ========================================================================
     /** @struct abs_less 
      *  comparison by absolute value 
@@ -95,22 +132,38 @@ namespace LHCb
     template <class TYPE> 
     inline TYPE absMax ( TYPE v1 , TYPE v2 ) 
     { return std::max ( std::fabs ( v1 ) , std::fabs ( v2 ) ) ; }
-
     // ========================================================================
     /** compare two double numbers with relative precision 'epsilon'
      *
      *  Essentially it is a wrapper to gsl_fcmp function from GSL library
      *  See D.E.Knuth, "Seminumerical Algorithms", section 4.2.2
      *
-     *  @todo one needs to use the "fast" IEEE-based algorithm
-     *
+     *  @param value1  (INPUT) the first value 
+     *  @param value2  (INPUT) the second value 
+     *  @param epsilon (INPUT) the (relative) precision 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-11-27
      */
-    bool equal_to_double
+    GAUDI_API
+    bool knuth_equal_to_double
     ( const double value1           ,
       const double value2           ,
       const double epsilon = 1.0e-6 ) ;
+    // ========================================================================
+    /** compare two double numbers with precision 'mULPS'
+     *  @param value1 (INPUT) the first value 
+     *  @param value2 (INPUT) the second value 
+     *  @param mULPS  (INPUT) the precision 
+     *  @see Gaudi::Math::lomont_compare_double 
+     *  @see LHCb::Math::mULPS_double 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-11-27
+     */
+    inline bool equal_to_double
+    ( const double value1                      ,
+      const double value2                      ,
+      const unsigned int mULPS = mULPS_double  ) 
+    { return Gaudi::Math::lomont_compare_double ( value1 , value2 , mULPS ) ; }
     // ========================================================================
     /** @struct Equal_To
      *  helper structure for comparison of floating values
@@ -121,8 +174,6 @@ namespace LHCb
     struct Equal_To : public std::binary_function<TYPE,TYPE,bool>
     {
       typedef typename boost::call_traits<const TYPE>::param_type T ;
-      /// constructor
-      Equal_To ( T /* v */ ) {}
       /// comparison
       inline bool operator() ( T v1 , T v2 ) const
       {
@@ -139,57 +190,191 @@ namespace LHCb
     template <class TYPE>
     struct Equal_To<TYPE&>: public Equal_To<TYPE>{} ;
     // ========================================================================
-    /// explicit specialization for doubles
+    /** explicit specialization for doubles
+     *  @see LHCb::Math::mULPS_double 
+     */
     template <>
     struct Equal_To<double>
     {
+    public:
+      // ======================================================================
       /// constructor
-      Equal_To ( const double eps = 1.0e-6 ) : m_eps ( eps ) {}
+      Equal_To ( const unsigned int eps = mULPS_double ) : m_cmp ( eps ) {}
       /// comparison:
       inline bool operator() ( const double v1 , const double v2 ) const
-      {
-        return equal_to_double ( v1 , v2 , m_eps ) ;
-      }
+      { return m_cmp ( v1 , v2 ) ; }
+      // ======================================================================
     private :
-      /// the precision 
-      double m_eps ;  // the precision 
+      // ======================================================================
+      Equal_To ( const double /* eps */ ) ;
+      // ======================================================================
+    private :
+      // ======================================================================
+      /// evaluator 
+      Gaudi::Math::Lomont<double> m_cmp ;                      // the evalautor 
+      // ======================================================================
     };
     // ========================================================================
-    /// explicit specialization for long doubles
+    /** explicit specialization for long doubles
+     *  @see LHCb::Math::mULPS_double 
+     */
     template <>
     struct Equal_To<long double>
     {
+    public:
+      // ======================================================================
       /// constructor
-      Equal_To ( const long double eps = 1.0e-6 ) : m_eps ( eps ) {}
+      Equal_To ( const unsigned int eps = mULPS_double ) : m_cmp ( eps ) {}
       /// comparison:
-      inline bool operator() ( const long double v1 ,
-                               const long double v2 ) const
-      {
-        return equal_to_double
-          ( static_cast<double> ( v1    ) ,
-            static_cast<double> ( v2    ) ,
-            static_cast<double> ( m_eps ) ) ;
+      inline bool operator() 
+      ( const long double v1 ,
+        const long double v2 ) const
+      { 
+        return  m_cmp ( static_cast<double> ( v1 ) , 
+                        static_cast<double> ( v2 ) ) ; 
       }
+      // ======================================================================
     private :
-      /// the precision 
-      long double m_eps ; // the precision 
+      // ======================================================================
+      /// constructor
+      Equal_To ( const long double /* eps */ ) ;
+      // ======================================================================
+    private :
+      // ======================================================================
+      /// the evaluator 
+      Equal_To<double> m_cmp ;                                 // the evaluator 
+      // ======================================================================
     };
     // ========================================================================
-    /// explicit specialization for floats
+    /** explicit specialization for floats
+     *  @see LHCb::Math::mULPS_float
+     *  @see Gaudi::Math::Lomont
+     *  @see Gaudi::Math::Lomont<float>
+     */
     template <>
     struct Equal_To<float>
     {
-      /// constructor
-      Equal_To ( const float eps = 1.0e-6 ) : m_eps ( eps ) {}
+    public:
+      // ======================================================================
+      /** constructor
+       *  @see LHCb::Math::mULPS_float
+       */
+      Equal_To ( const unsigned short eps =  mULPS_float ) : m_cmp ( eps ) {}
       /// comparison:
       inline bool operator() ( const float v1 , const float v2 ) const
-      {
-        return equal_to_double ( v1 , v2 , m_eps ) ;
-      }
+      { return m_cmp( v1 , v2 ) ; }
+      // ======================================================================
+    private:
+      // ======================================================================      
+      /// constructor
+      Equal_To ( const float /* eps */ ) ;
+      // ======================================================================
     private :
-      /// the precision 
-      float m_eps ; // the precision 
+      // ======================================================================
+      /// the evaluator 
+      Gaudi::Math::Lomont<float> m_cmp ;                       // the evaluator
+      // ======================================================================
     } ;
+    // ========================================================================
+    /** specialisation for vectors 
+     *  @see LHCb::Math::mULPS_float
+     *  @see Gaudi::Math::Lomont
+     *  @see Gaudi::Math::Lomont<float>
+     */
+    template <>
+    struct Equal_To<std::vector<float> > 
+    {
+    public:
+      // ======================================================================
+      /** constructor
+       *  @see LHCb::Math::mULPS_float
+       */
+      Equal_To ( const unsigned short eps  = mULPS_float ) : m_cmp ( eps ) {}
+      /// comparison:
+      inline bool operator() ( const std::vector<float>& v1 , 
+                               const std::vector<float>& v2 ) const
+      {
+        return v1.size() == v2.size() && 
+          std::equal ( v1.begin () , v1.end () , v2.begin () , m_cmp ) ;
+      }      
+      // ======================================================================
+    private:
+      // ======================================================================
+      Equal_To<float> m_cmp ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** specialisation for vectors 
+     *  @see LHCb::Math::mULPS_double
+     *  @see Gaudi::Math::Lomont
+     *  @see Gaudi::Math::Lomont<double>
+     */
+    template <>
+    struct Equal_To<std::vector<double> > 
+    {
+    public:
+      // ======================================================================
+      /** constructor
+       *  @see LHCb::Math::mULPS_double
+       */
+      Equal_To ( const unsigned int eps  = mULPS_double ) : m_cmp ( eps ) {}
+      // ======================================================================
+      /// comparison:
+      inline bool operator() ( const std::vector<double>& v1 , 
+                               const std::vector<double>& v2 ) const
+      {
+        return v1.size() == v2.size() && 
+          std::equal ( v1.begin () , v1.end () , v2.begin () , m_cmp ) ;
+      }      
+      /// comparison:
+      inline bool operator() ( const std::vector<double>& v1 , 
+                               const std::vector<float>&  v2 ) const
+      {
+        return v1.size() == v2.size() && 
+          std::equal ( v1.begin () , v1.end () , v2.begin () , m_cmp ) ;
+      }      
+      /// comparison:
+      inline bool operator() ( const std::vector<double>& v1 , 
+                               const std::vector<int>&    v2 ) const
+      {
+        return v1.size() == v2.size() && 
+          std::equal ( v1.begin () , v1.end () , v2.begin () , m_cmp ) ;
+      }      
+      /// comparison:
+      inline bool operator() ( const std::vector<double>&       v1 , 
+                               const std::vector<unsigned int>& v2 ) const
+      {
+        return v1.size() == v2.size() && 
+          std::equal ( v1.begin () , v1.end () , v2.begin () , m_cmp ) ;
+      }      
+      /// comparison:
+      inline bool operator() ( const std::vector<float>&  v1 , 
+                               const std::vector<double>& v2 ) const
+      {
+        return v1.size() == v2.size() && 
+          std::equal ( v1.begin () , v1.end () , v2.begin () , m_cmp ) ;
+      }      
+      /// comparison:
+      inline bool operator() ( const std::vector<int>&    v1 , 
+                               const std::vector<double>& v2 ) const
+      {
+        return v1.size() == v2.size() && 
+          std::equal ( v1.begin () , v1.end () , v2.begin () , m_cmp ) ;
+      }      
+      /// comparison:
+      inline bool operator() ( const std::vector<unsigned int>& v1 , 
+                               const std::vector<double>&       v2 ) const
+      {
+        return v1.size() == v2.size() && 
+          std::equal ( v1.begin () , v1.end () , v2.begin () , m_cmp ) ;
+      }      
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the evaluator 
+      Equal_To<double> m_cmp ;                                 // the evaluator 
+      // ======================================================================
+    } ;  
     // ========================================================================
     /** round to nearest integer, rounds half integers to nearest even integer 
      *  It is just a simple wrapper around boost::numeric::converter 
@@ -222,93 +407,76 @@ namespace LHCb
     /** check if the double value is actually equal to the integer value  
      *  @param val value to be compared with the integer 
      *  @param ref the reference integer number 
-     *  @param eps1 the absolute precision
-     *  @param eps2 the relative precision
+     *  @param mULPS the precision 
+     *  @see Gaudi::Math::lomont_compare_double 
+     *  @see LHCb::Math::mULPS_double
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-17
      */        
     inline bool equal_to_int 
-    ( const double val          , 
-      const int    ref          , 
-      const double eps1 = 1.e-6 , 
-      const double eps2 = 0.5e-3 / boost::integer_traits<int>::const_max )
+    ( const double       val                  , 
+      const int          ref                  , 
+      const unsigned int mULPS = mULPS_double ) 
     {
-      BOOST_STATIC_ASSERT(boost::integer_traits<int>::is_specialized ) ;
-      // 1) try the straightforward comparison 
-      if ( val == ref                 ) { return true ; } // RETURN 
-      // 2) check the limits 
-      if ( val > boost::integer_traits<int>::const_max || 
-           val < boost::integer_traits<int>::const_min ) { return false ; }
-      // 3) compare the doubles 
-      if ( std::fabs ( val - ref ) <= eps1 ) { return true  ; }
-      // 3') compare the doubles  
-      LHCb::Math::Equal_To<double> cmp ( eps2 ) ;
-      return cmp ( val , ref ) ;
+      const double tmp = ref ;
+      return Gaudi::Math::lomont_compare_double ( val , tmp , mULPS ) ;
     }
     // ========================================================================
     /** check if the double value is actually equal to the integer value  
      *  @param ref the reference integer  number 
      *  @param val value to be compared with the integer 
-     *  @param eps1 the absolute precision
-     *  @param eps2 the relative precision
+     *  @param mULPS the precision 
+     *  @see Gaudi::Math::lomont_compare_double 
+     *  @see LHCb::Math::mULPS_double
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-17
      */        
     inline bool equal_to_int 
-    ( const int    ref          , 
-      const double val          , 
-      const double eps1 = 1.e-6 , 
-      const double eps2 = 0.5e-3 / boost::integer_traits<int>::const_max ) 
+    ( const int          ref                  , 
+      const double       val                  , 
+      const unsigned int mULPS = mULPS_double ) 
     { 
-      BOOST_STATIC_ASSERT(boost::integer_traits<int>::is_specialized ) ;
-      return equal_to_int ( val , ref , eps1 , eps2 ) ; 
+      return equal_to_int ( val , ref , mULPS ) ; 
     }
     // ========================================================================
     /** check if the double value is actually equal to the unsigned integer value  
      *  @param val value to be compared with the unsigned integer 
      *  @param ref the reference unsigned integer number 
-     *  @param eps1 the absolute precision
-     *  @param eps2 the relative precision
+     *  @param mULPS the precision 
+     *  @see Gaudi::Math::lomont_compare_double 
+     *  @see LHCb::Math::mULPS_double
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-17
      */        
     inline bool equal_to_uint 
-    ( const double       val         , 
-      const unsigned int ref         , 
-      const double eps1 = 1.e-6      , 
-      const double eps2 = 1.e-3 / boost::integer_traits<unsigned int>::const_max )
+    ( const double       val                  , 
+      const unsigned int ref                  , 
+      const unsigned int mULPS = mULPS_double ) 
     {
-      BOOST_STATIC_ASSERT(boost::integer_traits<unsigned int>::is_specialized ) ;
-      // 1) straightforward comparison 
-      if ( val == ref ) { return true ; }                             // RETURN 
-      // check the limits 
-      if ( val > boost::integer_traits<unsigned int>::const_max || 
-           val < boost::integer_traits<unsigned int>::const_min ) { return false ; }
-      // 3) compare the doubles 
-      if ( std::fabs ( val - ref ) <= eps1 ) { return true  ; }
-      // 3') compare the doubles  
-      LHCb::Math::Equal_To<double> cmp ( eps2 ) ;
-      return cmp ( val , ref ) ;
+      const double tmp = ref ;
+      return Gaudi::Math::lomont_compare_double ( val , tmp , mULPS ) ;
     }
     // ========================================================================
     /** check if the double value is actually equal to the integer value  
      *  @param val value to be compared with the unsigned integer 
      *  @param ref the reference unsigned integer number 
-     *  @param eps1 the absolute precision
-     *  @param eps2 the relative precision
+     *  @param mULPS the precision 
+     *  @see Gaudi::Math::lomont_compare_double 
+     *  @see LHCb::Math::mULPS_double
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-17
      */        
     inline bool equal_to_uint 
-    ( const unsigned int ref          , 
-      const double       val          ,
-      const double       eps1 = 1.e-6 , 
-      const double       eps2 = 1.e-3 / boost::integer_traits<unsigned int>::const_max )
-    { return equal_to_uint ( val , ref , eps1 , eps2 ) ; }
+    ( const unsigned int ref                  , 
+      const double       val                  ,
+      const unsigned int mULPS = mULPS_double ) 
+    {
+      return equal_to_uint ( val , ref , mULPS ) ; 
+    }
     // ========================================================================
-  } // end of namespace LHcb::Math 
+  } //                                              end of namespace LHCb::Math 
   // ==========================================================================
-} // end of namespace LHCb 
+} //                                                      end of namespace LHCb 
 // ============================================================================
 // The END 
 // ============================================================================
