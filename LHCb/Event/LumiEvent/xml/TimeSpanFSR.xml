@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Jaap Panman -->
+<!--- Created : 2009-12-31 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='LumiEvent'>
+
+
+<!-- TimeSpanFSR Class -->
+
+    <class
+      name="TimeSpanFSR"
+      author="Jaap Panman"
+      desc="Class to store time span of an input file in FSR"
+      keyedContTypeDef="TRUE"
+      id="13504"
+      serializers="TRUE"
+      >
+<!--
+      <base name='DataObject'/>
+-->
+      <base name="KeyedObject&lt;int&gt;"/>
+      &KeyedObject;
+
+
+
+      <location name="Default"   
+		place="/FileRecords/TimeSpanFSR"/>
+      
+      <attribute
+        desc="Earliest time found on a file"
+        name="earliest"
+        type="ulonglong"
+        init="0"
+       />
+
+      <attribute
+        desc="Latest time found on a file"
+        name="latest"
+        type="ulonglong"
+        init="0"
+       />
+
+      <method
+	type = "void"
+	name = "addTime"
+	desc = "add a time and store the earliest/latest times">
+	<arg type = "ulonglong" name = "present"/> 
+	<code>
+	  if ( m_earliest > 0 ) {
+             m_earliest = std::min(present, m_earliest);
+          } else {
+             m_earliest = present;
+          }
+          m_latest = std::max(present, m_latest);
+	</code>
+      </method>
+
+      <method
+        desc="Addition operator"
+        name="operator+="
+        type="LHCb::TimeSpanFSR&amp;"
+	>
+	<arg name="rhs" type="ulonglong" const="TRUE"/>   
+        <code>   
+          addTime (rhs);
+          return *this;
+        </code>
+      </method> 
+
+
+      <!-- readable printout -->
+      <method
+        name='fillStream'
+        type='std::ostream&amp;'
+        argList='std::ostream&amp; s'
+        desc='readable printout'
+        const='TRUE' >
+        <code>
+
+    std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
+    ss &lt;&lt; "{ "
+       &lt;&lt; " earliest : " &lt;&lt;  m_earliest  
+       &lt;&lt; " - latest : " &lt;&lt;  m_latest  
+       &lt;&lt; " }"; 
+
+    return ss;
+        </code>
+      </method>
+
+    </class>
+
+  </package>
+
+
+</gdd>

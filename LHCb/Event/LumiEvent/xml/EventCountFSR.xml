@@ -54,6 +54,27 @@
         init="LHCb::EventCountFSR::UNCHECKED"
        />
 
+
+      <!-- readable printout -->
+      <method
+        name='fillStream'
+        type='std::ostream&amp;'
+        argList='std::ostream&amp; s'
+        desc='readable printout'
+        const='TRUE' >
+        <code>
+
+    std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
+    ss &lt;&lt; "{ "
+       &lt;&lt; " input : " &lt;&lt;  m_input  
+       &lt;&lt; " output : " &lt;&lt;  m_output  
+       &lt;&lt; " statusFlag : " &lt;&lt;  m_statusFlag  
+       &lt;&lt; " }"; 
+
+    return ss;
+        </code>
+      </method>
+
     </class>
 
   </package>

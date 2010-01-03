@@ -4,6 +4,10 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+! 2009-12-29 - Jaap Panman
+ - add TimeSpanFSR: keeps earliest/latest event time on a raw file
+   EventCountFSR: add pretty print 
+
 !======================== LumiEvent v2r3 2009-11-13 ==========================
 ! 2009-11-13 - Marco Cattaneo
  - Remove hack for Gaudi v21r1 to link dictionary on windows from requirements
