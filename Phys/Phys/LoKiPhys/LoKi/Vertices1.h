@@ -1,4 +1,4 @@
-// $Id: Vertices1.h,v 1.14 2009-03-11 17:24:13 ibelyaev Exp $
+// $Id: Vertices1.h,v 1.15 2010-01-03 08:55:09 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTICES1_H 
 #define LOKI_VERTICES1_H 1
@@ -418,8 +418,8 @@ namespace LoKi
       { return m_keeper.begin () ; }
       LoKi::Keeper<LHCb::VertexBase>::const_iterator end   () const 
       { return m_keeper.end   () ; }      
-      bool empty () const { return m_keeper.empty () ; }
-      bool size  () const { return m_keeper.size  () ; }
+      bool   empty () const { return m_keeper.empty () ; }
+      size_t size  () const { return m_keeper.size  () ; }
       // ======================================================================      
     protected:
       // ======================================================================      
@@ -570,8 +570,8 @@ namespace LoKi
       { return m_keeper.begin () ; }
       LoKi::Keeper<LHCb::VertexBase>::const_iterator end   () const 
       { return m_keeper.end   () ; }      
-      bool empty () const { return m_keeper.empty () ; }
-      bool size  () const { return m_keeper.size  () ; }
+      bool   empty () const { return m_keeper.empty () ; }
+      size_t size  () const { return m_keeper.size  () ; }
       // ======================================================================      
     protected:
       // ======================================================================      

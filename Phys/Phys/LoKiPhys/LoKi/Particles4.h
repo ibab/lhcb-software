@@ -1,4 +1,4 @@
-// $Id: Particles4.h,v 1.12 2008-11-02 20:13:32 ibelyaev Exp $
+// $Id: Particles4.h,v 1.13 2010-01-03 08:55:09 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES4_H 
 #define LOKI_PARTICLES4_H 1
@@ -364,6 +364,7 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       /// the actual evaluator 
       result_type mip ( argument p ) const ;
+      // ======================================================================
     public:
       // ======================================================================
       const LoKi::Keeper<LHCb::VertexBase>& keeper  () const { return m_keeper ; }
@@ -373,8 +374,8 @@ namespace LoKi
       { return m_keeper.begin () ; }
       LoKi::Keeper<LHCb::VertexBase>::const_iterator end   () const 
       { return m_keeper.end   () ; }      
-      bool empty () const { return m_keeper.empty () ; }
-      bool size  () const { return m_keeper.size  () ; }
+      bool   empty () const { return m_keeper.empty () ; }
+      size_t size  () const { return m_keeper.size  () ; }
       // ======================================================================
     protected:
       // ======================================================================
@@ -588,8 +589,8 @@ namespace LoKi
       { return m_keeper.begin () ; }
       LoKi::Keeper<LHCb::VertexBase>::const_iterator end   () const 
       { return m_keeper.end   () ; }      
-      bool empty () const { return m_keeper.empty () ; }
-      bool size  () const { return m_keeper.size  () ; }
+      bool   empty () const { return m_keeper.empty () ; }
+      size_t size  () const { return m_keeper.size  () ; }
       // ======================================================================
     protected:
       // ======================================================================

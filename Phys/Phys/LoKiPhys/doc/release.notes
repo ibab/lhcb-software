@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.123 2009-12-11 14:17:25 cattanem Exp $ 
+! $Id: release.notes,v 1.124 2010-01-03 08:55:09 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-01-03 - Vanya Belyaev 
+
+ - LoKi/Vertices1.h
+   LoKi/Particles4.h
+
+      fix compiler warnings 
+
+ - cmt/requirements 
+
+    version increment to v8r12p1 
+
 
 ! ========================== LoKiPhys v8r12 2009-12-11 ========================
 ! 2009-11-28 - Vanya Belyaev
