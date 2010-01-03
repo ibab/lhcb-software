@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.170 2009-12-17 22:33:41 ibelyaev Exp $ 
+! $Id: release.notes,v 1.171 2010-01-03 08:47:09 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,6 +15,17 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! 2010-01-03 - Vanya Belyaev
+
+ - Primitives/VoidPrimitives: 
+ 
+     1. make use of new (Lomont) comparsions of ploating point numbers 
+     2. remove all EqualToInt, EqualToUInt functors... (not needed anymore) 
+
+ - cmt/requirements
+
+     version increment to v9r10 
+ 
 ! 2009-12-17 - Vanya BELYAEV
 
  - python/LoKiCore/functions.py
