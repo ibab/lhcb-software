@@ -1,4 +1,4 @@
-// $Id: NodesPIDs.h,v 1.3 2009-05-22 17:00:51 ibelyaev Exp $
+// $Id: NodesPIDs.h,v 1.4 2010-01-04 16:43:48 ibelyaev Exp $
 // ============================================================================
 #ifndef PARTPROP_NODESPID_H 
 #define PARTPROP_NODESPID_H 1
@@ -592,11 +592,14 @@ namespace Decays
       /// the default constructor is disabled 
       CTau() ;                           // the default constructor is disabled
       // ======================================================================      
-    protected:
+    public:
       // ======================================================================
       typedef std::vector<LHCb::ParticleID>                              PIDs ;
       const PIDs& accepted () const { return m_accepted ; }
       const PIDs& rejected () const { return m_rejected ; }      
+      // ======================================================================      
+    protected:
+      // ======================================================================
       void addToAccepted ( const LHCb::ParticleID& pid ) const ;
       void addToRejected ( const LHCb::ParticleID& pid ) const ;      
       // ======================================================================

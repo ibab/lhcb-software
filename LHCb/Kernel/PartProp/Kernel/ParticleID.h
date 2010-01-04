@@ -1,4 +1,4 @@
-// $Id: ParticleID.h,v 1.4 2009-03-09 17:27:45 ibelyaev Exp $ 
+// $Id: ParticleID.h,v 1.5 2010-01-04 16:43:48 ibelyaev Exp $ 
 // ============================================================================
 #ifndef LHCbKernel_ParticleID_H
 #define LHCbKernel_ParticleID_H 1
@@ -210,7 +210,7 @@ namespace LHCb
                                     LHCb::ParticleID::Quark    q ) 
   { return LHCb::ParticleID::printQuark ( q , s ) ; }
   // ==========================================================================
-} // namespace LHCb;
+} //                                                      end of namespace LHCb
 // ============================================================================
 #endif ///LHCbKernel_ParticleID_H
 // ============================================================================

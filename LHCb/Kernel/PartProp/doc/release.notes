@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.36 2010-01-03 11:54:05 ibelyaev Exp $ 
+! $Id: release.notes,v 1.37 2010-01-04 16:43:48 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
+
+! 2010-01-04 - Vanya BELYAEV
+ 
+  -  add printAsTable function for std::vector<LHCb::ParticleID>
+
+ - cmt/requirements 
+
+    version increment to v1r6 
 
 ! 2010-01-03 - Vanya BELYAEV
 

@@ -1,4 +1,4 @@
-// $Id: ParticleProperty.h,v 1.3 2009-04-17 13:12:47 cattanem Exp $
+// $Id: ParticleProperty.h,v 1.4 2010-01-04 16:43:48 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBKERNEL_PARTICLEPROPERTY_H
 #define LHCBKERNEL_PARTICLEPROPERTY_H 1
@@ -401,6 +401,43 @@ namespace LHCb
     ( const std::vector<const LHCb::ParticleProperty*>& particles    ,
       MsgStream&                                        stream       , 
       const LHCb::IParticlePropertySvc*                 service  = 0 ) ;
+    // ========================================================================
+    /** print properties in a form of the table 
+     *  @param particles (INPUT) list of particles 
+     *  @param stream    (UPDATE) the stream 
+     *  @param service   (INPUT) pointer to particle property service 
+     *  @return the stream 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date  2010-01-04
+     */
+    std::ostream& printAsTable
+    ( const std::vector<LHCb::ParticleID>& particles    ,
+      std::ostream&                        stream       , 
+      const LHCb::IParticlePropertySvc*    service  = 0 ) ;
+    // ========================================================================
+    /** print properties in a form of the table 
+     *  @param particles (INPUT) list of particles 
+     *  @param service   (INPUT) pointer to particle property service 
+     *  @return string-representation
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date  2010-01-04
+     */    
+    std::string printAsTable
+    ( const std::vector<LHCb::ParticleID>& particles    ,
+      const LHCb::IParticlePropertySvc*    service  = 0 ) ;
+    // ========================================================================
+    /** print properties in a form of the table 
+     *  @param particles (INPUT) list of particles 
+     *  @param stream    (UPDATE) the stream 
+     *  @param service   (INPUT) pointer to particle property service 
+     *  @return the stream 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date  2010-01-04
+     */
+    MsgStream&    printAsTable
+    ( const std::vector<LHCb::ParticleID>& particles    ,
+      MsgStream&                           stream       , 
+      const LHCb::IParticlePropertySvc*    service  = 0 ) ;
     // ========================================================================
   } // end of namespace LHCb::ParticleProperties
   // ==========================================================================
