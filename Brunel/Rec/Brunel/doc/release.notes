@@ -4,9 +4,9 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
  - Changes to Configurable: 
-   . Do not write NanoEvents to DST by default (task 12940)
-
- - Changes to Configurable:
+   . Do not write NanoEvents to DST by default (task 12940). Can be
+     switched on by setting Brunel().WriteLumi = True
+   . If not writing NanoEvents, do not run dummy DST packers 
    . Pass DataType DstConf (who propagates it to SimConf). Fixes bug 60636
 
  - Changes to tests:

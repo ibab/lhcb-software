@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.111 2010-01-03 17:01:00 panmanj Exp $"
+__version__ = "$Id: Configuration.py,v 1.112 2010-01-04 10:43:55 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -235,11 +235,10 @@ class Brunel(LHCbConfigurableUser):
             lumiFilter = HltRoutingBitsFilter( "LumiFilter", RequireMask = [ 0x0, 0x2, 0x0 ] )
             lumiSeq.Members += [ lumiFilter, physFilter ]
             lumiSeq.ModeOR = True
-            # Call DST packing algorithms if physics sequence not called
+            # Sequence to be executed if physics sequence not called (nano events)
             notPhysSeq = GaudiSequencer("NotPhysicsSeq")
             notPhysSeq.ModeOR = True
-            dummyPackerSeq = GaudiSequencer("PackDST")
-            notPhysSeq.Members = [ physFilter, dummyPackerSeq ]
+            notPhysSeq.Members = [ physFilter ]
 
             brunelSeq.Members += [ lumiSeq, notPhysSeq ]
 
@@ -425,7 +424,9 @@ class Brunel(LHCbConfigurableUser):
                 DstConf().AlwaysCreate  = True
                 GaudiSequencer("OutputDSTSeq").Members += [ packSeq ]
                 # Run the packers also on Lumi only events to write empty containers
-#                GaudiSequencer("DummyPackerSeq").Members += [ packSeq ]
+                if handleLumi and self.getProp( "WriteLumi" ):
+                    notPhysSeq = GaudiSequencer("NotPhysicsSeq")
+                    notPhysSeq.Members += [ packSeq ]
 
             # Define the file content
             DstConf().Writer     = writerName
