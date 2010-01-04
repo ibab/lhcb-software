@@ -46,13 +46,13 @@
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-HistoProduce      = False
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0xfde6890>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0xa1d8e0>  (default: None)
 # |-InputType         = 'DST'  (default: 'MDF')
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # applying configuration of DDDBConf
-# WARNING: Using default tag head-20091007 for partition DDDB
-# WARNING: Using default tag head-20090902 for partition LHCBCOND
-# WARNING: Using default tag sim-20090902-vc-md100 for partition SIMCOND
+# WARNING: Using default tag head-20091120 for partition DDDB
+# WARNING: Using default tag head-20091211 for partition LHCBCOND
+# WARNING: Using default tag sim-20091112-vc-md100 for partition SIMCOND
 # /***** User DDDBConf/DDDBConf **********************************************************************
 # |-DataType   = '2009'
 # |-DbRoot     = 'conddb:/lhcb.xml'
@@ -75,8 +75,8 @@
 ApplicationMgr      DEBUG Getting my own properties
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v35r8
-                                          running on lxbuild135.cern.ch on Tue Nov 17 09:18:16 2009
+                                                   Welcome to Brunel version v35r11
+                                          running on lxbuild156.cern.ch on Mon Jan  4 12:19:02 2010
 ====================================================================================================================================
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service EvtDataSvc/EventDataSvc
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service DetDataSvc/DetectorDataSvc
@@ -241,7 +241,7 @@ RndmGenSvc.Engine   DEBUG Service base class initialized successfully
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.93 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.85 times the speed of a 2.8 GHz Xeon.
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 EventAccount        DEBUG Initialize base class GaudiCommon<Algorithm>
@@ -534,47 +534,47 @@ EventAccount        DEBUG Property update for OutputLevel : new value = 1
 createODIN          DEBUG Property update for OutputLevel : new value = 1
 TouchLumiFSR        DEBUG Property update for OutputLevel : new value = 1
 RootDBase.open    SUCCESS 56721-100ev.dst File version:52400
-PoolRootTreeEvt...   INFO Records token:[DB=DC80A748-DCD2-DE11-BC86-001E4F3D8360][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=0000001C-00000000]
+PoolRootTreeEvt...   INFO Records token:[DB=324C6EEC-9EE8-DE11-9355-001E4F3E5979][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=0000001C-00000000]
 IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [FILE_OPEN_READ]
-FileRecordDataSvc   DEBUG Request to load record for file DC80A748-DCD2-DE11-BC86-001E4F3D8360
-FileRecordDataSvc VERBOSE Requested object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360
+FileRecordDataSvc   DEBUG Request to load record for file 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+FileRecordDataSvc VERBOSE Requested object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979
 FileRecordPersi...VERBOSE ServiceLocatorHelper::service: found service FileRecordCnvSvc
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
 PoolDbBaseCnv       DEBUG Created object shape for class:DataObject
 PoolDbBaseCnv       DEBUG {ID=00000001-0000-0000-0000-000000000000}{CL=DataObject}{NCOL=3}{CNT=0}{COL={{NAME=DataObject}{CLASS=DataObject}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Links}{CLASS=LinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Refs}{CLASS=PoolDbLinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}
-FileRecordDataSvc VERBOSE Object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360 created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360
-FileRecordDataSvc VERBOSE Object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360 successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360
-FileRecordDataSvc VERBOSE Requested object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRNoBeam
+FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979 created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979
+FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979 successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979
+FileRecordDataSvc VERBOSE Requested object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam
 PoolDbBaseCnv       DEBUG Created object shape for class:KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >
 PoolDbBaseCnv       DEBUG {ID=000634BD-0000-0000-0000-000000000000}{CL=KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{NCOL=3}{CNT=0}{COL={{NAME=KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{CLASS=KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Links}{CLASS=LinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Refs}{CLASS=PoolDbLinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}
-FileRecordDataSvc VERBOSE Object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRNoBeam created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRNoBeam
-FileRecordDataSvc VERBOSE Object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRNoBeam successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRNoBeam
-FileRecordDataSvc VERBOSE Requested object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeamCrossing
-FileRecordDataSvc VERBOSE Object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeamCrossing created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeamCrossing
-FileRecordDataSvc VERBOSE Object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeamCrossing successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeamCrossing
-FileRecordDataSvc VERBOSE Requested object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam1
-FileRecordDataSvc VERBOSE Object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam1 created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam1
-FileRecordDataSvc VERBOSE Object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam1 successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam1
-FileRecordDataSvc VERBOSE Requested object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam2
-FileRecordDataSvc VERBOSE Object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam2 created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam2
-FileRecordDataSvc VERBOSE Object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam2 successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam2
-FileRecordDataSvc VERBOSE Requested object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/EventCountFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam
+FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam
+FileRecordDataSvc VERBOSE Requested object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing
+FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing
+FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing
+FileRecordDataSvc VERBOSE Requested object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1
+FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1 created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1
+FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1 successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1
+FileRecordDataSvc VERBOSE Requested object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2
+FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2 created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2
+FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2 successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2
+FileRecordDataSvc VERBOSE Requested object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/EventCountFSR
 PoolDbBaseCnv       DEBUG Created object shape for class:LHCb::EventCountFSR
 PoolDbBaseCnv       DEBUG {ID=000034BF-0000-0000-0000-000000000000}{CL=LHCb::EventCountFSR}{NCOL=3}{CNT=0}{COL={{NAME=EventCountFSR}{CLASS=LHCb::EventCountFSR}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Links}{CLASS=LinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Refs}{CLASS=PoolDbLinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}
-FileRecordDataSvc VERBOSE Object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/EventCountFSR created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/EventCountFSR
-FileRecordDataSvc VERBOSE Object /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/EventCountFSR successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/EventCountFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/EventCountFSR created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/EventCountFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/EventCountFSR successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/EventCountFSR
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventDataSvc      VERBOSE Requested object /Event
 PoolDbBaseCnv       DEBUG Created object shape for class:DataObject
@@ -614,40 +614,40 @@ TouchLumiFSR      VERBOSE ServiceLocatorHelper::service: found service EventData
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR        DEBUG ==> Explore: /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360 for /LumiFSR
-TouchLumiFSR      VERBOSE address: /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRNoBeam
-TouchLumiFSR      VERBOSE address: /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeamCrossing
-TouchLumiFSR      VERBOSE address: /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam1
-TouchLumiFSR      VERBOSE address: /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam2
-TouchLumiFSR        DEBUG using the container: /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeamCrossing
-TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeamCrossing
-TouchLumiFSR      VERBOSE /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeamCrossing found
-TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeamCrossing'
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR        DEBUG ==> Explore: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979 for /LumiFSR
+TouchLumiFSR      VERBOSE address: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam
+TouchLumiFSR      VERBOSE address: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing
+TouchLumiFSR      VERBOSE address: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1
+TouchLumiFSR      VERBOSE address: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2
+TouchLumiFSR        DEBUG using the container: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing
+TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing
+TouchLumiFSR      VERBOSE /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing'
 TouchLumiFSR        DEBUG addPrimary   : {  runs : 56721  files : rfio:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/56721/056721_0000000001.raw  info (key/incr/integral) :  }
-TouchLumiFSR      VERBOSE constructed address/FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeamCrossing
-TouchLumiFSR      VERBOSE constructed address/FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRNoBeam
-TouchLumiFSR        DEBUG using the container: /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRNoBeam
-TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRNoBeam
-TouchLumiFSR      VERBOSE /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRNoBeam found
-TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRNoBeam'
+TouchLumiFSR      VERBOSE constructed address/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing
+TouchLumiFSR      VERBOSE constructed address/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam
+TouchLumiFSR        DEBUG using the container: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam
+TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam
+TouchLumiFSR      VERBOSE /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam'
 TouchLumiFSR        DEBUG addNormalized: {  runs : 56721  files : rfio:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/56721/056721_0000000001.raw  info (key/incr/integral) :  }
-TouchLumiFSR      VERBOSE constructed address/FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam1
-TouchLumiFSR        DEBUG using the container: /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam1
-TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam1
-TouchLumiFSR      VERBOSE /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam1 found
-TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam1'
+TouchLumiFSR      VERBOSE constructed address/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1
+TouchLumiFSR        DEBUG using the container: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1
+TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1
+TouchLumiFSR      VERBOSE /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1 found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1'
 TouchLumiFSR        DEBUG addNormalized: {  runs : 56721  files : rfio:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/56721/056721_0000000001.raw  info (key/incr/integral) :  }
-TouchLumiFSR      VERBOSE constructed address/FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam2
-TouchLumiFSR        DEBUG using the container: /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam2
-TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam2
-TouchLumiFSR      VERBOSE /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam2 found
-TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/LumiFSRBeam2'
+TouchLumiFSR      VERBOSE constructed address/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2
+TouchLumiFSR        DEBUG using the container: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2
+TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2
+TouchLumiFSR      VERBOSE /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2 found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2'
 TouchLumiFSR        DEBUG addNormalized: {  runs : 56721  files : rfio:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/56721/056721_0000000001.raw  info (key/incr/integral) :  }
 TouchLumiFSR         INFO Result for this file: {  runs : 56721  files : rfio:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/56721/056721_0000000001.raw  info (key/incr/integral) :  }
-TouchLumiFSR        DEBUG ==> Explore: /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360 for /EventCountFSR
-TouchLumiFSR      VERBOSE address: /FileRecords/DC80A748-DCD2-DE11-BC86-001E4F3D8360/EventCountFSR
+TouchLumiFSR        DEBUG ==> Explore: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979 for /EventCountFSR
+TouchLumiFSR      VERBOSE address: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/EventCountFSR
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -678,8 +678,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -710,8 +710,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -742,8 +742,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -774,8 +774,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -806,8 +806,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -838,8 +838,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -870,8 +870,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -902,8 +902,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -934,8 +934,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 11. Record number within stream 1: 11
 EventDataSvc      VERBOSE Requested object /Event
@@ -967,8 +967,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -999,8 +999,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1031,8 +1031,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1063,8 +1063,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1095,8 +1095,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1127,8 +1127,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1159,8 +1159,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1191,8 +1191,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1223,8 +1223,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1255,8 +1255,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 21. Record number within stream 1: 21
 EventDataSvc      VERBOSE Requested object /Event
@@ -1288,8 +1288,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1320,8 +1320,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1352,8 +1352,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1384,8 +1384,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1416,8 +1416,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1448,8 +1448,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1480,8 +1480,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1512,8 +1512,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1544,8 +1544,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1576,8 +1576,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 31. Record number within stream 1: 31
 EventDataSvc      VERBOSE Requested object /Event
@@ -1609,8 +1609,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1641,8 +1641,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1673,8 +1673,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1705,8 +1705,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1737,8 +1737,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1769,8 +1769,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1801,8 +1801,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1833,8 +1833,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1865,8 +1865,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1897,8 +1897,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 41. Record number within stream 1: 41
 EventDataSvc      VERBOSE Requested object /Event
@@ -1930,8 +1930,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1962,8 +1962,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1994,8 +1994,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2026,8 +2026,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2058,8 +2058,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2090,8 +2090,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2122,8 +2122,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2154,8 +2154,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2186,8 +2186,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2218,42 +2218,10 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 51. Record number within stream 1: 51
-EventDataSvc      VERBOSE Requested object /Event
-EventDataSvc      VERBOSE Object /Event created
-EventDataSvc      VERBOSE Filling object /Event
-EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-LumiSequence        DEBUG ==> Execute
-createODIN          DEBUG ==> Execute
-EventDataSvc      VERBOSE Requested object /Event/DAQ
-EventDataSvc      VERBOSE Object /Event/DAQ created
-EventDataSvc      VERBOSE Filling object /Event/DAQ
-EventDataSvc      VERBOSE Object /Event/DAQ successfully loaded
-ToolSvc.OdinTim...  DEBUG Getting RawEvent
-EventDataSvc      VERBOSE Requested object /Event/pRec
-EventDataSvc      VERBOSE Object /Event/pRec created
-EventDataSvc      VERBOSE Filling object /Event/pRec
-EventDataSvc      VERBOSE Object /Event/pRec successfully loaded
-EventDataSvc      VERBOSE Requested object /Event/DAQ/RawEvent
-EventDataSvc      VERBOSE Object /Event/DAQ/RawEvent created
-EventDataSvc      VERBOSE Filling object /Event/DAQ/RawEvent
-EventDataSvc      VERBOSE Object /Event/DAQ/RawEvent successfully loaded
-ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is registered in TS at address 'DAQ/ODIN'
-ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464124608
-TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
@@ -2283,8 +2251,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2315,8 +2283,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2347,8 +2315,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2379,8 +2347,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2411,8 +2379,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2443,8 +2411,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2475,8 +2443,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2507,8 +2475,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2539,10 +2507,9 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
-EventSelector     SUCCESS Reading Event record 61. Record number within stream 1: 61
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
@@ -2572,9 +2539,10 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
+EventSelector     SUCCESS Reading Event record 61. Record number within stream 1: 61
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
@@ -2604,8 +2572,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2636,8 +2604,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2668,40 +2636,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
-EventDataSvc      VERBOSE Requested object /Event
-EventDataSvc      VERBOSE Object /Event created
-EventDataSvc      VERBOSE Filling object /Event
-EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-LumiSequence        DEBUG ==> Execute
-createODIN          DEBUG ==> Execute
-EventDataSvc      VERBOSE Requested object /Event/DAQ
-EventDataSvc      VERBOSE Object /Event/DAQ created
-EventDataSvc      VERBOSE Filling object /Event/DAQ
-EventDataSvc      VERBOSE Object /Event/DAQ successfully loaded
-ToolSvc.OdinTim...  DEBUG Getting RawEvent
-EventDataSvc      VERBOSE Requested object /Event/pRec
-EventDataSvc      VERBOSE Object /Event/pRec created
-EventDataSvc      VERBOSE Filling object /Event/pRec
-EventDataSvc      VERBOSE Object /Event/pRec successfully loaded
-EventDataSvc      VERBOSE Requested object /Event/DAQ/RawEvent
-EventDataSvc      VERBOSE Object /Event/DAQ/RawEvent created
-EventDataSvc      VERBOSE Filling object /Event/DAQ/RawEvent
-EventDataSvc      VERBOSE Object /Event/DAQ/RawEvent successfully loaded
-ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is registered in TS at address 'DAQ/ODIN'
-ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464116608
-TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2732,8 +2668,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2764,8 +2700,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2796,8 +2732,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2828,8 +2764,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2860,10 +2796,9 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
-EventSelector     SUCCESS Reading Event record 71. Record number within stream 1: 71
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
@@ -2893,8 +2828,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2925,9 +2860,10 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
+EventSelector     SUCCESS Reading Event record 71. Record number within stream 1: 71
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
@@ -2957,8 +2893,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -2989,8 +2925,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3021,8 +2957,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3053,8 +2989,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3085,8 +3021,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3117,8 +3053,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3149,8 +3085,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3181,10 +3117,9 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
-EventSelector     SUCCESS Reading Event record 81. Record number within stream 1: 81
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
@@ -3214,8 +3149,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3246,9 +3181,10 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
+EventSelector     SUCCESS Reading Event record 81. Record number within stream 1: 81
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
@@ -3278,8 +3214,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3310,8 +3246,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3342,8 +3278,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3374,8 +3310,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3406,8 +3342,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3438,8 +3374,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3470,8 +3406,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3502,10 +3438,9 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
-EventSelector     SUCCESS Reading Event record 91. Record number within stream 1: 91
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
@@ -3535,8 +3470,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3567,41 +3502,10 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
-EventDataSvc      VERBOSE Requested object /Event
-EventDataSvc      VERBOSE Object /Event created
-EventDataSvc      VERBOSE Filling object /Event
-EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
-IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-LumiSequence        DEBUG ==> Execute
-createODIN          DEBUG ==> Execute
-EventDataSvc      VERBOSE Requested object /Event/DAQ
-EventDataSvc      VERBOSE Object /Event/DAQ created
-EventDataSvc      VERBOSE Filling object /Event/DAQ
-EventDataSvc      VERBOSE Object /Event/DAQ successfully loaded
-ToolSvc.OdinTim...  DEBUG Getting RawEvent
-EventDataSvc      VERBOSE Requested object /Event/pRec
-EventDataSvc      VERBOSE Object /Event/pRec created
-EventDataSvc      VERBOSE Filling object /Event/pRec
-EventDataSvc      VERBOSE Object /Event/pRec successfully loaded
-EventDataSvc      VERBOSE Requested object /Event/DAQ/RawEvent
-EventDataSvc      VERBOSE Object /Event/DAQ/RawEvent created
-EventDataSvc      VERBOSE Filling object /Event/DAQ/RawEvent
-EventDataSvc      VERBOSE Object /Event/DAQ/RawEvent successfully loaded
-ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-ToolSvc.OdinTim...  DEBUG ODINDecodeTool:: The object of type 'LHCb::ODIN' is registered in TS at address 'DAQ/ODIN'
-ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-ToolSvc.OdinTim...  DEBUG GPS Time = 1252422464350464
-TouchLumiFSR        DEBUG ==> Execute
-TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
-TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
+EventSelector     SUCCESS Reading Event record 91. Record number within stream 1: 91
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
@@ -3631,8 +3535,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3663,8 +3567,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3695,8 +3599,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3727,8 +3631,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3759,8 +3663,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3791,8 +3695,8 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3823,15 +3727,16 @@ TouchLumiFSR        DEBUG ==> Execute
 TouchLumiFSR        DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 TouchLumiFSR      VERBOSE ODIN RunNumber: 56721
 TouchLumiFSR        DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'DAQ/RawEvent'
-TouchLumiFSR      VERBOSE RunInfo record from Event: DC80A748-DCD2-DE11-BC86-001E4F3D8360
-TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: DC80A748-DCD2-DE11-BC86-001E4F3D8360
+TouchLumiFSR      VERBOSE RunInfo record from Event: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+TouchLumiFSR      VERBOSE ODIN RunNumber: 56721 with RunInfo record: 324C6EEC-9EE8-DE11-9355-001E4F3E5979
+IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
+EventLoopMgr         INFO No more events in event selection
 LumiSequence        DEBUG Property update for OutputLevel : new value = 1
 LumiSequence        DEBUG ==> endRun
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 createODIN          DEBUG Property update for OutputLevel : new value = 1
 TouchLumiFSR        DEBUG Property update for OutputLevel : new value = 1
 ServiceManager      DEBUG Stopping service EventLoopMgr
-IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 ServiceManager      DEBUG Stopping service AlgContextSvc
 ServiceManager      DEBUG Stopping service HistogramDataSvc
 ServiceManager      DEBUG Stopping service HistogramPersistencySvc
@@ -3866,15 +3771,9 @@ ApplicationMgr       INFO Application Manager Stopped successfully
 ServiceManager      DEBUG Finalizing service EventLoopMgr
 EventAccount        DEBUG ==> Finalize
 EventAccount        DEBUG number of output files seen: 0
-EventAccount        DEBUG FSR: { output :	0
-input :	100
-statusFlag :	UNRELIABLE
- }
+EventAccount        DEBUG FSR: {  input : 97 output : 0 statusFlag : UNRELIABLE }
 EventAccount        DEBUG The object of type 'LHCb::EventCountFSR*' has been retrieved from TS at address '/FileRecords/EventCountFSR'
-EventAccount        DEBUG READ FSR: { output :	0
-input :	100
-statusFlag :	UNRELIABLE
- }
+EventAccount        DEBUG READ FSR: {  input : 97 output : 0 statusFlag : UNRELIABLE }
 EventAccount        DEBUG Finalize base class GaudiAlgorithm
 EventAccount        DEBUG Tools to release :
 EventAccount        DEBUG Services to release : AlgContextSvc FileRecordDataSvc IncidentSvc
@@ -3888,7 +3787,7 @@ createODIN          DEBUG Services to release : AlgContextSvc
 createODIN          DEBUG Releasing service 'AlgContextSvc'
 TouchLumiFSR        DEBUG ==> Finalize
 TouchLumiFSR         INFO number of files seen: 1
-TouchLumiFSR         INFO number of events seen: 100
+TouchLumiFSR         INFO number of events seen: 97
 TouchLumiFSR         INFO integrated normalization: {  runs : 56721  files : rfio:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/56721/056721_0000000001.raw  info (key/incr/integral) :  }
 TouchLumiFSR        DEBUG Finalize base class GaudiAlgorithm
 TouchLumiFSR        DEBUG Tools to release : ToolSvc.LumiIntegrator
@@ -3937,13 +3836,13 @@ ToolSvc.OdinTim...  DEBUG Releasing service 'EventDataSvc'
 ToolSvc.OdinTim...  DEBUG Releasing service 'IncidentSvc'
 ToolSvc             DEBUG   Performing finalization of ToolSvc.SequencerTimerTool (refCount 1)
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.93 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.85 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiSequence                  |     1.240 |     1.246 |    0.503       9.2 |     100 |     0.125 |
-ToolSvc.Sequenc...   INFO   EventAccount                |     0.000 |     0.003 |    0.002       0.0 |     100 |     0.000 |
-ToolSvc.Sequenc...   INFO   createODIN                  |     1.080 |     1.141 |    0.427       7.7 |     100 |     0.114 |
-ToolSvc.Sequenc...   INFO   TouchLumiFSR                |     0.130 |     0.086 |    0.053       1.5 |     100 |     0.009 |
+ToolSvc.Sequenc...   INFO LumiSequence                  |     1.330 |    12.955 |    0.859     300.7 |      97 |     1.257 |
+ToolSvc.Sequenc...   INFO   EventAccount                |     0.000 |     0.003 |    0.002       0.0 |      97 |     0.000 |
+ToolSvc.Sequenc...   INFO   createODIN                  |     1.216 |    12.249 |    0.779     300.6 |      97 |     1.188 |
+ToolSvc.Sequenc...   INFO   TouchLumiFSR                |     0.093 |     0.686 |    0.063      58.7 |      97 |     0.067 |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...  DEBUG  ==> Finalize the base class GaudiTool
 ToolSvc.Sequenc...  DEBUG Tools to release :
@@ -3971,7 +3870,7 @@ ServiceManager      DEBUG Finalizing service AppMgrRunable
 ServiceManager      DEBUG Finalizing service FileRecordCnvSvc
 FileRecordCnvSvc    DEBUG POOL conversion service finalized FileRecordCnvSvc successfully
 ServiceManager      DEBUG Finalizing service PoolRootTreeEvtCnvSvc
-PoolRootTreeEvt...   INFO Disconnected data IO:DC80A748-DCD2-DE11-BC86-001E4F3D8360[56721-100ev.dst]
+PoolRootTreeEvt...   INFO Disconnected data IO:324C6EEC-9EE8-DE11-9355-001E4F3E5979[56721-100ev.dst]
 PoolRootTreeEvt...  DEBUG POOL conversion service finalized PoolRootTreeEvtCnvSvc successfully
 ServiceManager      DEBUG Finalizing service PoolRootKeyEvtCnvSvc
 PoolRootKeyEvtC...  DEBUG POOL conversion service finalized PoolRootKeyEvtCnvSvc successfully
