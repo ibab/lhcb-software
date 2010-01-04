@@ -3,6 +3,11 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+
+! 2009-01-04 Wouter Hulsbergen
+ - extended functionalityof chisquare constraints
+ - added 'SurveyConstraints.py'
+
 ! 2009-12-30 Wouter Hulsbergen
  - added 'initTime' to Al::Equations; added tests to make time of accumulate and update match
  - access tracks as Range
