@@ -35,11 +35,12 @@ namespace Al
   private:
     struct ConstraintDefinition
     {
-      ConstraintDefinition( std::string apat, size_t adof, double anerror )
-	: pattern( apat), dof(adof), error(anerror) {}
+      ConstraintDefinition( std::string apat, size_t adof, double anerror, double avalue=0 )
+	: pattern( apat), dof(adof), error(anerror), value(avalue) {}
       std::string pattern ;
       size_t dof ;
       double error ;
+      double value ;
     } ;
     typedef std::vector<ConstraintDefinition> ConstraintContainer ;
   private:
@@ -64,7 +65,6 @@ namespace Al
   {
   }
 
-
   static std::string removechars(const std::string& s,
 				 const std::string& chars)
   {
@@ -87,39 +87,75 @@ namespace Al
     return rc ;
   }
   
+  static std::string replacestring(const std::string& s,
+				   const std::string& in,
+				   const std::string& out)
+  {
+    std::string::size_type pos = 0;
+    std::string rc = s ;
+    while (pos != std::string::npos){
+      pos = rc.find(in,pos);
+      if (pos != std::string::npos) rc.replace(pos,in.size(),out);
+    }
+    return rc ;
+  }
+  
   StatusCode AlignChisqConstraintTool::initialize()
   {
     // check that constraints exist
     StatusCode sc = GaudiTool::initialize() ;
     
-    m_elementtool = tool<IGetElementsToBeAligned>("GetElementsToBeAligned");
-    info() << "Number of constraints = " << m_constraintNames.size() << endreq ;
-
     if( sc.isSuccess() ) {
       
+      m_elementtool = tool<IGetElementsToBeAligned>("GetElementsToBeAligned");
+      info() << "Number of constraints = " << m_constraintNames.size() << endreq ;
+
       for( std::vector<std::string>::const_iterator ic = m_constraintNames.begin() ;
-	   ic != m_constraintNames.end(); ++ic ) {
+	   ic != m_constraintNames.end() && sc.isSuccess() ; ++ic ) {
 	info() << "Constraint: " << *ic << endreq ;
 	// tokenize
 	std::vector<std::string> tokens = tokenize(*ic,":") ;
 	if( tokens.size() != 3 ) {
 	  error() << "constraint has wrong number of tokens: " << *ic << endreq ;
+	  sc = StatusCode::FAILURE ;
 	} else {
+
 	  std::string pattern = removechars(tokens[0]," ,") ;
-	  std::string dofstr = removechars(tokens[1]," ,") ;
-	  std::string errstr = removechars(tokens[2]," ,") ;
+
 	  static const std::vector<std::string> dofnames = 
 	    boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz") ;
+	  std::string dofstr = removechars(tokens[1]," ,") ;
 	  size_t dof = std::distance( dofnames.begin(), std::find(dofnames.begin(),dofnames.end(),dofstr)) ;
+
 	  if( dof < dofnames.size() ) {
-	    double err = boost::lexical_cast<double>(errstr) ;
-	    m_constraints.push_back( ConstraintDefinition( pattern, dof, err ) );
+	    // just repace +/- with a space, because that is what we'll use to tokenize 
+	    // (we cannot tokenize with +/-!)
+	    std::string errstr = replacestring(tokens[2], "+/-", " ") ;
+	    std::vector<std::string> valuetokens = tokenize(errstr," ") ;
+	    double err(0), val(0) ;
+	    // if only single token, then this is just the error
+	    if( valuetokens.size() == 1 )
+	      err = boost::lexical_cast<double>(valuetokens[0]) ;
+	    else if( valuetokens.size() == 2 ) {
+	      val = boost::lexical_cast<double>(valuetokens[0]) ;
+	      err = boost::lexical_cast<double>(valuetokens[1]) ;
+	    } else {
+	      error() << "constraint value has wrong number of tokens: " << *ic << endreq ;
+	      sc = StatusCode::FAILURE ;
+	    }
+	    
 	    // report the number of matching constraints:
 	    IGetElementsToBeAligned::Elements elements ;
 	    m_elementtool->findElements( pattern, elements ) ;
-	    info() << "Constraint for " << dofnames[dof] << " with error " << err << " for "
-		   << elements.size() << " elements matching pattern \""
-		   << pattern << "\"" << endreq ;
+	    if( elements.empty() ) {
+	      info() << "ignoring constraint with no matching elements: " << *ic << endreq ;
+	    } else {
+	      m_constraints.push_back( ConstraintDefinition( pattern, dof, err, val ) );
+	      info() << "Constraint for " << dofnames[dof] 
+		     << " with value " << val << " +/- " << err 
+		     << " for " << elements.size() << " elements matching pattern \""
+		     << pattern << "\"" << endreq ;
+	    }
 	  } else {
 	    error() << "Unknown dof: " << dof << endreq ;
 	    sc = StatusCode::FAILURE ;
@@ -134,9 +170,12 @@ namespace Al
 						  const Al::Equations& /*equations*/,
 						  AlVec& halfDChi2DAlpha, AlSymMat& halfD2Chi2DAlpha2) const
   {
-    size_t numconstraints(0) ;
+    size_t totalnumconstraints(0) ;
+    double totalchisq(0) ;
     for( ConstraintContainer::const_iterator ic = m_constraints.begin() ;
 	 ic != m_constraints.end(); ++ic ) {
+      double chisq(0) ;
+      size_t numconstraints(0) ;
       IGetElementsToBeAligned::Elements elements ;
       m_elementtool->findElements( ic->pattern, elements ) ;
       for( IGetElementsToBeAligned::Elements::const_iterator ielem = elements.begin() ;
@@ -147,15 +186,21 @@ namespace Al
 	  // constrain.
 	  AlParameters currentdelta = (*ielem)->currentActiveDelta() ;
 	  double weight = 1/( ic->error * ic->error ) ;
-	  double residual = -currentdelta.parameters()(ic->dof) ;
+	  double residual = ic->value - currentdelta.parameters()(ic->dof) ;
 	  halfDChi2DAlpha(ipar) += weight * residual; 
 	  halfD2Chi2DAlpha2.fast(ipar,ipar) += weight ;
 	  ++numconstraints ;
+	  chisq += weight * residual * residual ;
 	}
       }
+      if( numconstraints>0 )
+	info() << "Constraint " << ic->pattern << " " << ic->dof << " chi2/dof: "
+	       << chisq << " / " <<  numconstraints << endreq ;
+      totalnumconstraints += numconstraints ;
+      totalchisq += chisq ;
     }
-    info() << "Added " << numconstraints << " chisquare constraints." << endreq ;
-    return numconstraints ;
+    info() << "Added " << totalnumconstraints << " chisquare constraints." << endreq ;
+    return totalnumconstraints ;
   }  
   
   void AlignChisqConstraintTool::printConstraints(const AlVec& parameters, const AlSymMat& /*covariance*/,
@@ -175,7 +220,7 @@ namespace Al
 	  // constrain.
 	  AlParameters currentdelta = (*ielem)->currentActiveDelta() ;
 	  double weight = 1/( ic->error * ic->error ) ;
-	  double residual = -parameters(ipar)-currentdelta.parameters()(ic->dof) ; // sign????
+	  double residual = ic->value-parameters(ipar)-currentdelta.parameters()(ic->dof) ; // sign????
 	  chisquare += residual*residual*weight ;
 	  ++numconstraints ; 
 	}
