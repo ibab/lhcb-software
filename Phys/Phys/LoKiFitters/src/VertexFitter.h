@@ -1,4 +1,4 @@
-// $Id: VertexFitter.h,v 1.4 2009-08-19 15:53:43 ibelyaev Exp $
+// $Id: VertexFitter.h,v 1.5 2010-01-04 16:50:56 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKIFITTERS_VERTEXFITTER_H 
 #define LOKIFITTERS_VERTEXFITTER_H 1
@@ -26,6 +26,9 @@
 // ============================================================================
 #include "Kernel/IVertexFit.h"
 #include "Kernel/IParticleTransporter.h"
+#include "Kernel/IParticlePropertySvc.h"
+// ============================================================================
+#include "Kernel/NodesPIDs.h"
 // ============================================================================
 // LHCbMath
 // ============================================================================
@@ -171,21 +174,26 @@ namespace LoKi
     : public          GaudiTool 
     , public virtual IVertexFit 
   {
-    // the friend factory for instantiation 
+    // ========================================================================
+    /// the friend factory for instantiation 
     friend class ToolFactory<VertexFitter> ;
+    // ========================================================================
   public:
     // ========================================================================
+    /// error codes
     enum {
+      // ======================================================================
       /// Invalid Particle 
-      InvalidParticle         = 701 , // Invalid Particle 
+      InvalidParticle         = 701 ,                       // Invalid Particle 
       /// Invalid Data
-      InvalidData             = 702 , // Invalid Data 
+      InvalidData             = 702 ,                       //     Invalid Data 
       /// Error in Matrix Inversion 
-      ErrorInMatrixInversion  = 703 , // Error in Matrix Inversion
+      ErrorInMatrixInversion  = 703 ,             //  Error in Matrix Inversion
       /// No Convergency
-      NoConvergency           = 710 , // No Convergency is detected 
+      NoConvergency           = 710 ,             // No Convergency is detected 
       /// Not Implemented Yet 
-      NotImplemented          = 720   // not yet implemented 
+      NotImplemented          = 720               //        not yet implemented 
+      // ======================================================================
     } ;
     // ========================================================================
   protected:
@@ -433,13 +441,9 @@ namespace LoKi
   public:
     // ========================================================================
     /// the standard initialization of the tool 
-    virtual StatusCode initialize() 
-    {
-      StatusCode sc = GaudiTool::initialize() ;
-      if ( sc.isFailure() ) { return sc ; }
-      svc<IService>( "LoKiSvc" , true ) ;
-      return StatusCode::SUCCESS ;
-    }
+    virtual StatusCode initialize () ; // the standard initialization of the tool 
+    /// the standard finalization of the tool 
+    virtual StatusCode finalize   () ; // the standard finalization of the tool 
     // ========================================================================
   protected:
     // ========================================================================
@@ -447,39 +451,17 @@ namespace LoKi
     VertexFitter 
     ( const std::string& type   , 
       const std::string& name   , 
-      const IInterface*  parent ) 
-      : GaudiTool ( type , name , parent )
-      //
-      , m_nIterMaxI       ( 10 ) ///< maximal number of iteration for vertex fit
-      , m_nIterMaxII      (  5 ) ///< maximal number of iteration for "add" 
-      , m_nIterMaxIII     (  5 ) ///< maximal number of iteration for "remove"    
-      , m_DistanceMax     ( 1.0 * Gaudi::Units::micrometer ) 
-      , m_DistanceChi2    ( 1.0 * Gaudi::Units::perCent    ) 
-      , m_transporterName ( "ParticleTransporter:PUBLIC")  
-      , m_transporter     ( 0 )
-      , m_seedZmin        ( -1.5 * Gaudi::Units::meter      ) 
-      , m_seedZmax        (  3.0 * Gaudi::Units::meter      ) 
-      , m_seedRho         ( 50.0 * Gaudi::Units::centimeter )
-    {
-      // declare all interfaces
-      declareInterface <IVertexFit>        ( this ) ;
-      declareInterface <IParticleCombiner> ( this ) ;
-      declareInterface <IParticleReFitter> ( this ) ;
-      declareProperty ( "MaxIterations"    , m_nIterMaxI   ) ;
-      declareProperty ( "MaxIterForAdd"    , m_nIterMaxII  ) ;
-      declareProperty ( "MaxIterForRemove" , m_nIterMaxIII ) ;
-      declareProperty ( "SeedZmin"         , m_seedZmin    ) ;
-      declareProperty ( "SeedZmax"         , m_seedZmax    ) ;
-      declareProperty ( "SeedRho"          , m_seedRho     ) ;
-      declareProperty ( "Transporter"      , m_transporterName );
-    } 
-    // virtual & protected destrcutor
-    virtual ~VertexFitter() {} ///< virtual & protected destrcutor
+      const IInterface*  parent ) ;
+    /// virtual & protected destrcutor
+    virtual ~VertexFitter() {}                // virtual & protected destructor
     // ========================================================================
   private:
     // ========================================================================
-    VertexFitter() ; // the default constructor is disabled 
-    VertexFitter( const VertexFitter& );// copy is disabled 
+    /// the default constructor is disabled 
+    VertexFitter () ;                    // the default constructor is disabled 
+    /// copiy constructoir is disabled 
+    VertexFitter ( const VertexFitter& ) ; // copy is disabled 
+    /// assignement operator is disabled 
     VertexFitter& operator=( const VertexFitter& ); // disabled 
     // ========================================================================
   protected:
@@ -521,21 +503,24 @@ namespace LoKi
       return m_transporter ;
     } 
     // ========================================================================
+    /// get the particle type 
+    LoKi::KalmanFilter::ParticleType particleType ( const LHCb::Particle* p ) const ;
+    // ========================================================================
   private:
     // ========================================================================
-    // maximal number of iterations for the vertex fit 
-    unsigned short m_nIterMaxI    ; ///< maximal number of iteration for vertex fit 
-    // maximal number of iterations for "add" 
-    unsigned short m_nIterMaxII   ; ///< maximal number of iteration for "add" 
-    // maximal number of iterations for "remove" 
-    unsigned short m_nIterMaxIII  ; ///< maximal number of iteration for "remove" 
-    // distance (stop-iteration criterion)
-    double         m_DistanceMax  ; ///< distance (stop-iteration criterion)
-    // chi2 distance (stop iteration criterion)
-    double         m_DistanceChi2 ; ///< chi2 distance (stop iteration criterion)
-    // propagator/extrapolator/transporter name
+    /// maximal number of iterations for the vertex fit 
+    unsigned short m_nIterMaxI    ; // maximal number of iteration for vertex fit 
+    /// maximal number of iterations for "add" 
+    unsigned short m_nIterMaxII   ; // maximal number of iteration for "add" 
+    /// maximal number of iterations for "remove" 
+    unsigned short m_nIterMaxIII  ; // maximal number of iteration for "remove" 
+    /// distance (stop-iteration criterion)
+    double         m_DistanceMax  ; // distance (stop-iteration criterion)
+    /// chi2 distance (stop iteration criterion)
+    double         m_DistanceChi2 ; // chi2 distance (stop iteration criterion)
+    /// propagator/extrapolator/transporter name
     std::string                        m_transporterName ;
-    // the transporter itself
+    /// the transporter itself
     mutable IParticleTransporter*      m_transporter     ;
     /// fiducial volume for valid seed/vertex 
     double                             m_seedZmin        ;
@@ -553,8 +538,20 @@ namespace LoKi
     mutable Gaudi::Matrix4x4           m_cmom1    ;
     mutable Gaudi::Matrix4x3           m_mpcov    ;
     // ========================================================================
+  private:
+    // ========================================================================
+    /// particle property service 
+    mutable const LHCb::IParticlePropertySvc* m_ppSvc      ;
+    /// Gamma-like particles 
+    mutable Decays::Nodes::Pid                m_gammaLike  ;
+    /// Long-lived particles 
+    mutable Decays::Nodes::LongLived_         m_longLived  ;
+    /// Short-lived particles 
+    mutable Decays::Nodes::ShortLived_        m_shortLived ;
+    // ========================================================================
   } ;
-} // end of namespace LoKi
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END
 // ============================================================================

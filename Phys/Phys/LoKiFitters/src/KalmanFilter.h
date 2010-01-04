@@ -1,4 +1,4 @@
-// $Id: KalmanFilter.h,v 1.3 2009-05-16 15:53:19 ibelyaev Exp $
+// $Id: KalmanFilter.h,v 1.4 2010-01-04 16:50:56 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKIFITTERS_KALMANFILTER_H 
 #define LOKIFITTERS_KALMANFILTER_H 1
@@ -152,8 +152,10 @@ namespace LoKi
    */
   namespace KalmanFilter
   {
-    /// error codes from thevariosu routines 
+    // ========================================================================
+    /// error codes from various routines 
     enum {
+      // ======================================================================
       /// Error in Matrix Inversion (I)
       ErrorInMatrixInversion1      = 403 ,  // Error in Matrix Inversion
       /// Error in Matrix Inversion (II)
@@ -164,6 +166,25 @@ namespace LoKi
       ErrorInMatrixInversion4      = 406 ,  // Error in Matrix Inversion
       /// Error from Particle Transporter 
       ErrorFromParticleTransporter = 410    // Error form particle transporter 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @enum ParticleType 
+     *  the particle types for Kalman Filter-based vertex fitter
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-01-04
+     */
+    enum ParticleType {
+      // ======================================================================
+      /// Unknown/unspecified particle type 
+      UnspecifiedParticle = 0 ,            // Unknown/unspecified particle type 
+      /// Short-lived (verticing) particles
+      ShortLivedParticle      ,                  //        Short-lived particle
+      /// Long-lived/stable particle
+      LongLivedParticle       ,                  //  Long-lived/stable particle
+      /// Photon-like 
+      GammaLikeParticle                          //        Photon-like particle 
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class Entry
@@ -176,6 +197,8 @@ namespace LoKi
     class Entry 
     {
     public:
+      // ======================================================================
+      ParticleType          m_type ; // the particle type 
       /// pointer to the original particle 
       const LHCb::Particle* m_p0   ; // pointer to the original particle 
       /// the properly extrapolated (local) particle 
@@ -206,6 +229,7 @@ namespace LoKi
       Gaudi::Matrix4x3                  m_e    ; // covariance matrix for (x,q)
       /// \f$F=WB^{T}GA\f$
       Gaudi::Matrix4x3                  m_f    ; // auxillary matrix F 
+      // ======================================================================
     } ;
     // ========================================================================
     /// the actual type of the container of entries 
@@ -227,8 +251,8 @@ namespace LoKi
     // ========================================================================
     /** Load the particle into "entry" representation"
      *
-     *  Essentially it includes also the proper tarnsformation of the 
-     *  covariance matrix of the particle 
+     *  Essentially it includes also the proper transformation 
+     *  of the covariance matrix of the particle 
      *
      *  @param  particle (input)  the particle to be added 
      *  @param  entry    (output) the resulting entry 
@@ -236,6 +260,22 @@ namespace LoKi
      *  @date 2008-03-06
      */
     StatusCode loadAsFlying
+    ( const LHCb::Particle&      particle , 
+      LoKi::KalmanFilter::Entry& entry    ) ;
+    // ========================================================================
+    /** Load the particle into "entry" representation"
+     *
+     *  Essentially it includes also the proper tarnsformation 
+     *  of the covariance matrix of the particle 
+     *
+     *  @attention It is not implemented properly yet! 
+     *
+     *  @param  particle (input)  the particle to be added 
+     *  @param  entry    (output) the resulting entry 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2010-01-04
+     */
+    StatusCode loadAsGamma
     ( const LHCb::Particle&      particle , 
       LoKi::KalmanFilter::Entry& entry    ) ;
     // ========================================================================

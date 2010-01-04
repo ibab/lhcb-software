@@ -1,9 +1,23 @@
-! $Id: release.notes,v 1.23 2009-12-16 10:38:52 jpalac Exp $ 
+! $Id: release.notes,v 1.24 2010-01-04 16:50:56 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiFitters
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
+
+! 2010-01-04 - Vanya BELYAEV
+
+ - KalmanFilter & VertexFitter 
+
+   prepare veretx fitter to treat properly long-lived/short-lived 
+   and gamma-like particles.
+
+   It is not yet ready, but th emajor igredient (particle classsification) 
+   is in place.
+
+ - cmt/requirements
+
+      version increment to v2r3 
 
 !========================== LoKiFitters v2r2p1 2009-12-16 =================
 

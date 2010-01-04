@@ -1,4 +1,4 @@
-// $Id: KalmanFilter.cpp,v 1.3 2009-05-16 15:53:19 ibelyaev Exp $
+// $Id: KalmanFilter.cpp,v 1.4 2010-01-04 16:50:56 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -82,19 +82,24 @@ namespace
   }
   // ==========================================================================
   /** "update" the entry and get the valid "gain" matrix
+   *  
+   *   @todo KalmanFilter::_update, add the treatment of Gamma-like particles 
+   *
    *   @param entry     the entry to be updated 
    *   @param asFlying  treat the particle as "flying-particle"
    *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *   @date 2008-03-06
    */
-  StatusCode _update ( LoKi::KalmanFilter::Entry& entry            , 
-                       const bool                 asFlying = false )
+  StatusCode _update ( LoKi::KalmanFilter::Entry&       entry , 
+                       LoKi::KalmanFilter::ParticleType type  ) 
   {
     // make the proper projection (if required) 
-    if ( asFlying ) { _project_Z_ ( entry ) ; }
+    if ( LoKi::KalmanFilter::LongLivedParticle == type ) { _project_Z_ ( entry ) ; }
     //
     const Gaudi::SymMatrix3x3& _pmcov = entry.m_p.posCovMatrix() ;
-    if ( asFlying || 
+    //
+    if ( LoKi::KalmanFilter::LongLivedParticle == type  
+         || 
          _pmcov ( 2 , 2 ) < 0.25 * ( _pmcov ( 0 , 0 ) + _pmcov ( 1 , 1 ) ) )
     {
       Gaudi::SymMatrix2x2 cixy ;
@@ -117,8 +122,10 @@ namespace
       entry.m_vxi ( 1 , 2 ) = -1 * cslope ( 1 ) ;
       entry.m_vxi ( 2 , 2 ) = ROOT::Math::Similarity ( slopes , cixy ) ;
       //
+      // REDEFINE THE PARTICLE TYPE 
+      entry.m_type = LoKi::KalmanFilter::LongLivedParticle ;
     }
-    else
+    else // ShortLived Particle 
     {
       // the regular particle:
       entry.m_vxi = _pmcov ;
@@ -140,10 +147,11 @@ StatusCode LoKi::KalmanFilter::load
 ( const LHCb::Particle&      particle , 
   LoKi::KalmanFilter::Entry& entry    ) 
 { 
-  entry.m_p0 = &particle ;
-  entry.m_p  =  particle ;
+  entry.m_type = LoKi::KalmanFilter::UnspecifiedParticle ;
+  entry.m_p0   = &particle ;
+  entry.m_p    =  particle ;
   //
-  return _update ( entry ) ;
+  return _update ( entry , entry.m_type ) ;
 }
 // ============================================================================
 // Load the particle into "entry" representation"
@@ -152,10 +160,24 @@ StatusCode LoKi::KalmanFilter::loadAsFlying
 ( const LHCb::Particle&      particle , 
   LoKi::KalmanFilter::Entry& entry    ) 
 { 
-  entry.m_p0 = &particle ;
-  entry.m_p  =  particle ;
+  entry.m_type = LoKi::KalmanFilter::LongLivedParticle ;
+  entry.m_p0   = &particle ;
+  entry.m_p    =  particle ;
   //
-  return _update ( entry , true ) ;
+  return _update ( entry , entry.m_type ) ;
+}
+// ============================================================================
+// Load the particle into "entry" representation"
+// ============================================================================
+StatusCode LoKi::KalmanFilter::loadAsGamma
+( const LHCb::Particle&      particle , 
+  LoKi::KalmanFilter::Entry& entry    ) 
+{ 
+  entry.m_type = LoKi::KalmanFilter::GammaLikeParticle ;
+  entry.m_p0   = &particle ;
+  entry.m_p    =  particle ;
+  //
+  return _update ( entry , entry.m_type ) ;
 }
 // ============================================================================
 // transport the particle and update the entry
@@ -171,7 +193,7 @@ StatusCode LoKi::KalmanFilter::transport
   StatusCode sc = tool -> transport ( entry.m_p0 , newZ , entry.m_p ) ;
   if ( sc.isFailure() ) { entry.m_p = *entry.m_p0 ; }   
   //
-  return _update ( entry ) ;
+  return _update ( entry , entry.m_type ) ;
 }
 // ============================================================================
 // make one step of Kalman filter 

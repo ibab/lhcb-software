@@ -1,4 +1,4 @@
-// $Id: VertexFitter.cpp,v 1.6 2009-08-19 15:53:43 ibelyaev Exp $
+// $Id: VertexFitter.cpp,v 1.7 2010-01-04 16:50:56 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -23,6 +23,8 @@
 // ============================================================================
 #include "Kernel/IVertexFit.h"
 #include "Kernel/IParticleTransporter.h"
+#include "Kernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
 // ============================================================================
 // LHCbMath
 // ============================================================================
@@ -41,6 +43,7 @@
 /// anonymous namespace to hide few technical constants
 namespace 
 {
+  // ==========================================================================
   const double s_scale   = Gaudi::Units::perCent           ;
   const double s_scale2  = s_scale  * s_scale              ;
   const double s_small   = 0.1 * Gaudi::Units::micrometer  ;
@@ -49,6 +52,7 @@ namespace
   const double s_middle2 = s_middle * s_middle             ;
   const double s_large   = 10  * Gaudi::Units::centimeter  ;
   const double s_large2  = s_large  * s_large              ; 
+  // ==========================================================================
 }
 // ============================================================================
 // load the data from the daughter particles into the internal structures 
@@ -78,9 +82,23 @@ StatusCode LoKi::VertexFitter::_load
 {
   if ( 0 == particle ) 
   { return Error ( "_load(): invalid particle" , InvalidParticle ) ; } // RETURN 
-  return LoKi::KalmanFilter::load ( *particle , entry ) ;
+  //
+  switch ( particleType ( particle ) ) 
+  {
+    //
+  case LoKi::KalmanFilter::LongLivedParticle : 
+    return LoKi::KalmanFilter::loadAsFlying ( *particle  , entry ) ; // RETURN 
+    //
+  case LoKi::KalmanFilter::GammaLikeParticle : 
+    return LoKi::KalmanFilter::loadAsGamma  ( *particle  , entry ) ; // RETURN 
+    //
+  default:
+    return LoKi::KalmanFilter::load         ( *particle  , entry ) ; // RETURN 
+  }
+  //
+  return LoKi::KalmanFilter::load ( *particle  , entry ) ;  
 }
-// ============================================================================/
+// ============================================================================
 // add one particle at the end of the queue
 // ============================================================================
 StatusCode LoKi::VertexFitter::_add 
@@ -448,6 +466,112 @@ StatusCode LoKi::VertexFitter::remove
   //   StatusCode sc  = _iterate ( m_nIterMaxIII , x ) ;
   
   return StatusCode::SUCCESS ;
+}
+// ============================================================================
+// standard constructor 
+// ============================================================================
+LoKi::VertexFitter::VertexFitter 
+( const std::string& type   , 
+  const std::string& name   , 
+  const IInterface*  parent ) 
+  : GaudiTool ( type , name , parent )
+    //
+  , m_nIterMaxI       ( 10 ) ///< maximal number of iteration for vertex fit
+  , m_nIterMaxII      (  5 ) ///< maximal number of iteration for "add" 
+  , m_nIterMaxIII     (  5 ) ///< maximal number of iteration for "remove"    
+  , m_DistanceMax     ( 1.0 * Gaudi::Units::micrometer ) 
+  , m_DistanceChi2    ( 1.0 * Gaudi::Units::perCent    ) 
+  , m_transporterName ( "ParticleTransporter:PUBLIC")  
+  , m_transporter     ( 0 )
+  , m_seedZmin        ( -1.5 * Gaudi::Units::meter      ) 
+  , m_seedZmax        (  3.0 * Gaudi::Units::meter      ) 
+  , m_seedRho         ( 50.0 * Gaudi::Units::centimeter )
+    //
+  , m_ppSvc      ( 0       ) 
+  , m_longLived  (         ) 
+  , m_shortLived (         ) 
+  , m_gammaLike  ( "gamma" )
+    //
+{
+  // declare all interfaces
+  declareInterface <IVertexFit>        ( this ) ;
+  declareInterface <IParticleCombiner> ( this ) ;
+  declareInterface <IParticleReFitter> ( this ) ;
+  declareProperty ( "MaxIterations"    , m_nIterMaxI   ) ;
+  declareProperty ( "MaxIterForAdd"    , m_nIterMaxII  ) ;
+  declareProperty ( "MaxIterForRemove" , m_nIterMaxIII ) ;
+  declareProperty ( "SeedZmin"         , m_seedZmin    ) ;
+  declareProperty ( "SeedZmax"         , m_seedZmax    ) ;
+  declareProperty ( "SeedRho"          , m_seedRho     ) ;
+  declareProperty ( "Transporter"      , m_transporterName );
+} 
+// ============================================================================
+// the standard initialization of the tool 
+// ============================================================================
+StatusCode LoKi::VertexFitter::initialize() 
+{
+  StatusCode sc = GaudiTool::initialize() ;
+  if ( sc.isFailure() ) { return sc ; }
+  svc<IService>( "LoKiSvc" , true ) ;
+  
+  // get particle property service 
+  m_ppSvc = svc<LHCb::IParticlePropertySvc> ( "LHCb::PareticlePpropertySvc" , true );
+  // validate  
+  sc = m_longLived.validate ( m_ppSvc ) ;
+  if ( sc.isFailure() ) 
+  { return Error ( "Unable to validate Long-Lived particles"  , sc ); }
+  sc = m_shortLived.validate ( m_ppSvc ) ;
+  if ( sc.isFailure() ) 
+  { return Error ( "Unable to validate Short-Lived particles" , sc ); }
+  sc = m_gammaLike.validate ( m_ppSvc ) ;
+  if ( sc.isFailure() ) 
+  { return Error ( "Unable to validate Short-Lived particles" , sc ); }
+  //
+  return StatusCode::SUCCESS ;
+}
+// ========================================================================
+// the standard finalization of the tool 
+// ========================================================================
+StatusCode LoKi::VertexFitter::finalize() 
+{
+  // reset particle property service & functors 
+  if ( msgLevel ( MSG::DEBUG ) ) 
+  {
+    MsgStream& log = debug () ;
+    log << "Short-Lived Particles accepted: " << std::endl ;
+    LHCb::ParticleProperties::printAsTable ( m_shortLived.accepted () , log , m_ppSvc ) ;
+    log << endmsg ;
+    log << "Long-Lived  Particles accepted: " << std::endl ;
+    LHCb::ParticleProperties::printAsTable ( m_longLived .accepted () , log , m_ppSvc ) ;
+    log << endmsg ;
+    log << "Gamma-like decays : " << std::endl ;
+    log << m_gammaLike ;
+    log << endmsg ;
+  }
+  // 
+  m_ppSvc = 0 ;
+  m_shortLived . setService ( m_ppSvc ) ;
+  m_longLived  . setService ( m_ppSvc ) ;
+  //
+  return GaudiTool::finalize () ;
+}
+// ============================================================================
+// get the particle type 
+// ============================================================================
+LoKi::KalmanFilter::ParticleType 
+LoKi::VertexFitter::particleType ( const LHCb::Particle* p ) const 
+{
+  //
+  if      ( 0 == p ) 
+  { return LoKi::KalmanFilter::UnspecifiedParticle ; }  // RETURN 
+  else if ( m_gammaLike  ( p->particleID () ) )
+  { return LoKi::KalmanFilter::GammaLikeParticle   ; }  // RETURN 
+  else if ( m_longLived  ( p->particleID () ) ) 
+  { return LoKi::KalmanFilter::LongLivedParticle   ; }  // RETURN 
+  else if ( m_shortLived ( p->particleID () ) )
+  { return LoKi::KalmanFilter::LongLivedParticle   ; }  // RETURN 
+  //
+  return LoKi::KalmanFilter::UnspecifiedParticle ;
 }
 // ============================================================================
 /// the factory needed for instantiation
