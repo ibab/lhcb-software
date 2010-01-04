@@ -35,23 +35,21 @@ class LumiAlgsConf(LHCbConfigurableUser):
        ,"DataType"      : "2008"     # Data type, can be ['DC06','2008','MC09','2009']
        ,"InputType"     : "MDF"      # Data type, can be ['MDF','DST']. Different sequencer made.
        ,"ForceFullSequence" : False  # re-write the FSR independent of the InputType
-       ,"SetFSRStatus" : ""        # overwrite the event FSR status to something ['UNRELIABLE', 'ERROR','VERIFIED']
+       ,"SetFSRStatus"  : ""         # overwrite the event FSR status to something ['UNRELIABLE', 'ERROR','VERIFIED']
        ,"LumiSequencer" : None       # The sequencer to add the Lumi Accounting to - essential input
-       ,"BXTypes"       : [ 'NoBeam', 'BeamCrossing','Beam1','Beam2'] # bunch crossing types 
-       ,"HistoProduce"  : False
-       ,"OutputLevel"   : WARNING
+       ,"BXTypes"       : [ 'NoBeam', 'BeamCrossing','Beam1','Beam2'] # bunch crossing types
+       ,"OutputLevel"   : INFO       
         }
 
     _propertyDocDct = {
-       "Context"   : """ The context within which to run """
+        "Context"       : """ The context within which to run """
        ,"DataType"      : "Data type, can be ['DC06','2008','MC09','2009']"
        ,"InputType"     : "Input Data type, can be ['MDF','DST']"
        ,"ForceFullSequence" : "False, re-write the FSR independent of the InputType"
-       ,"SetFSRStatus" : "overwrite the event FSR status to something ['UNRELIABLE', 'ERROR','VERIFIED']"
+       ,"SetFSRStatus"  : "overwrite the event FSR status to something ['UNRELIABLE', 'ERROR','VERIFIED']"
        ,"LumiSequencer" : "The sequencer to add the Lumi Accounting to - essential input"
        ,"BXTypes"       : "bunch crossing types [ 'NoBeam', 'BeamCrossing','Beam1','Beam2'] "
-       ,"HistoProduce"  : "No idea, Jaap should say something here"
-       ,"OutputLevel"   : "What to print to screen, default only WARNING"
+       ,"OutputLevel"   : "printed output"
        }
     
     ## Helper functions
@@ -64,15 +62,15 @@ class LumiAlgsConf(LHCbConfigurableUser):
         crossings = self.getProp("BXTypes")
         BXMembers = []
         for i in crossings:
-            #the logic here is definately wrong!!
+            # the logic here is definately wrong!! -- why??
             seqMembers=[]
             seqMembers.append( ODINFilter ( 'Filter'+i,
                                             Code = ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.'+i+' ) ' ))
             decoder = HltLumiSummaryDecoder('LumiDecode'+i)
             seqMembers.append( decoder )
             accounting = LumiAccounting('LumiCount'+i,
-                                        OutputDataContainer = "/FileRecords/LumiFSR"+i)
-            accounting.OutputLevel = self.getProp("OutputLevel")
+                                        OutputDataContainer = "/FileRecords/LumiFSR"+i,
+                                        OutputLevel = self.getProp("OutputLevel") )
             seqMembers.append( accounting )
             
             BXMembers.append( GaudiSequencer('Lumi'+i+'Seq', 
@@ -80,7 +78,6 @@ class LumiAlgsConf(LHCbConfigurableUser):
                                              ModeOR = False,
                                              ShortCircuit = True,
                                              MeasureTime = True,
-                                             OutputLevel = self.getProp("OutputLevel")
                                              ))
             if self.getProp('InputType') == 'DST':
                     decoder.OutputContainerName='LumiSummaries'
@@ -88,11 +85,30 @@ class LumiAlgsConf(LHCbConfigurableUser):
         
         return BXMembers
     
+    def fillTimeSpanFSR(self):
+        '''fill the time span FSR, return a sequence'''
+        from Configurables import ( TimeAccounting,
+                                    GaudiSequencer )
+        from Configurables import LoKi__ODINFilter  as ODINFilter
+        # Create sub-sequence
+        seqMembers=[]
+        seqMembers.append( ODINFilter ( 'TimeSpanFilter',
+                                        Code = ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) ' ))
+        accounting = TimeAccounting('TimeSpanAccounting', OutputLevel = self.getProp("OutputLevel") )
+        seqMembers.append( accounting )
+        seq =  GaudiSequencer('TimeSpanSeq', 
+                              Members = seqMembers,
+                              ModeOR = False,
+                              ShortCircuit = True,
+                              MeasureTime = True,
+                              )
+        
+        return [seq]
+    
     def fillEventFSR(self,status=""):
         '''fill the EventAccounting'''
         from Configurables import (EventAccounting, GaudiSequencer)
-        accounting = EventAccounting('EventAccount')
-        accounting.OutputLevel = self.getProp("OutputLevel")
+        accounting = EventAccounting('EventAccount', OutputLevel = self.getProp("OutputLevel") )
         if status is not None and status != "":
             accounting.DefaultStatus=status
             accounting.OverrideStatus=True
@@ -100,13 +116,10 @@ class LumiAlgsConf(LHCbConfigurableUser):
     
     def touchFSR(self):
         '''make sure the FSR is touched and readable'''
-        #from Configurables import (LumiFileReader)
-        #readingFSR=LumiFileReader("TouchLumiFSR")
         from Configurables import createODIN
         odin=createODIN()
         from Configurables import (LumiIntegrateFSR)
-        readingFSR=LumiIntegrateFSR("TouchLumiFSR")
-        readingFSR.OutputLevel = self.getProp("OutputLevel")
+        readingFSR=LumiIntegrateFSR("TouchLumiFSR", OutputLevel = self.getProp("OutputLevel") )
         return [ odin, readingFSR]
     
     ## Apply the configuration to the given sequence
@@ -138,6 +151,10 @@ class LumiAlgsConf(LHCbConfigurableUser):
                 #by definition, all raw files are verified
                 status='VERIFIED'
         
+            #create the TimeSpan FSR
+            TimeSpanMembers=self.fillTimeSpanFSR()
+            sequence.Members += TimeSpanMembers
+        
         #create the Event FSR
         EvMembers=self.fillEventFSR(status)
 
@@ -152,6 +169,5 @@ class LumiAlgsConf(LHCbConfigurableUser):
         sequence.MeasureTime = True
         sequence.ModeOR = True
         sequence.ShortCircuit = False
-        sequence.OutputLevel = self.getProp("OutputLevel")
         sequence.IgnoreFilterPassed = True
         

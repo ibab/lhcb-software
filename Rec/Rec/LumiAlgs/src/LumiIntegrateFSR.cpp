@@ -1,4 +1,4 @@
-// $Id: LumiIntegrateFSR.cpp,v 1.4 2009-11-11 16:52:57 panmanj Exp $
+// $Id: LumiIntegrateFSR.cpp,v 1.5 2010-01-04 16:31:22 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -11,6 +11,7 @@
 #include "Event/RawEvent.h"
 #include "Event/ODIN.h"
 #include "Event/LumiFSR.h"
+#include "Event/TimeSpanFSR.h"
 #include "Event/LumiIntegral.h"
 #include "Event/LumiCounters.h"
 
@@ -38,13 +39,14 @@ LumiIntegrateFSR::LumiIntegrateFSR( const std::string& name,
   // need to get the registry
   declareProperty( "RawEventLocation"   , m_rawEventLocation = LHCb::RawEventLocation::Default );
   // expect the data to be written at LHCb::LumiFSRLocation::Default
-  declareProperty( "FileRecordLocation" , m_FileRecordName  = "/FileRecords"  );
-  declareProperty( "FSRName"            , m_FSRName        = "/LumiFSR"     );
-  declareProperty( "EventCountFSRName"            , m_EventCountFSRName        = "/EventCountFSR");
-  declareProperty( "PrimaryBXType"      , m_PrimaryBXType  = "BeamCrossing" );
+  declareProperty( "FileRecordLocation" , m_FileRecordName    = "/FileRecords"  );
+  declareProperty( "FSRName"            , m_FSRName           = "/LumiFSR"     );
+  declareProperty( "EventCountFSRName"  , m_EventCountFSRName = "/EventCountFSR");
+  declareProperty( "TimeSpanFSRName"    , m_TimeSpanFSRName   = "/TimeSpanFSR");
+  declareProperty( "PrimaryBXType"      , m_PrimaryBXType     = "BeamCrossing" );
   declareProperty( "AddBXTypes"         , m_addBXTypes ) ;
   declareProperty( "SubtractBXTypes"    , m_subtractBXTypes ) ;
-  declareProperty( "IntegratorToolName" , m_ToolName       = "LumiIntegrator" );
+  declareProperty( "IntegratorToolName" , m_ToolName          = "LumiIntegrator" );
   
 }
 //=============================================================================
@@ -166,9 +168,14 @@ void LumiIntegrateFSR::add_file() {
     if ( a->find(m_FSRName + m_PrimaryBXType) != std::string::npos ) {
       // a primary BX is found
       primaryFileRecordAddress = (*a);   
+      // search for the TimeSpanFSR 
+      std::string timeSpanRecordAddress(primaryFileRecordAddress);
+      timeSpanRecordAddress.replace( timeSpanRecordAddress.find(m_PrimaryBXType), m_PrimaryBXType.size(), "" );
+      timeSpanRecordAddress.replace( timeSpanRecordAddress.find(m_FSRName), m_FSRName.size(), m_TimeSpanFSRName );
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << "constructed time span address" << timeSpanRecordAddress << endmsg; 
       // initialize with the primary BX
       LHCb::LumiIntegral* result = new LHCb::LumiIntegral();
-      add_fsr(result, primaryFileRecordAddress, 0);
+      add_fsr(result, primaryFileRecordAddress, 0, timeSpanRecordAddress);
       // get the background to be subtracted/added
       std::string fileRecordAddress("undefined");
       // get all FSR objects - this is anyway needed to instantiate them on the TDS
@@ -182,8 +189,10 @@ void LumiIntegrateFSR::add_file() {
           factor = 1.;
         if ( m_subtractBXTypes.end() != find( m_subtractBXTypes.begin(), m_subtractBXTypes.end(), (*bx) ) ) 
           factor = -1.;
-        if ( factor != 0) add_fsr(result, fileRecordAddress, factor);
+        if ( factor != 0) add_fsr(result, fileRecordAddress, factor, timeSpanRecordAddress);
       }
+      
+
       // use tool to integrate the background subtracted result for the whole job
       if ( m_integratorTool->integrate( (*result) ) == StatusCode::FAILURE ) {
       	warning() << "fail to integrate fsr using tool" << endmsg; 
@@ -200,6 +209,14 @@ void LumiIntegrateFSR::add_file() {
   	if ( msgLevel(MSG::VERBOSE) ) verbose() << "address: " << (*iAddr) << endmsg;
   }  
   //in the future I'll need to calculate/check something here...
+
+  
+  //touch all TimeSpanFSRs (independently of the LumiFSRs)
+  std::vector< std::string > tsAddresses = navigate(fileRecordRoot, m_TimeSpanFSRName);
+  for(std::vector< std::string >::iterator iAddr = tsAddresses.begin() ; 
+  	  iAddr != tsAddresses.end() ; ++iAddr ){
+  	if ( msgLevel(MSG::VERBOSE) ) verbose() << "ts address: " << (*iAddr) << endmsg;
+  }  
 }
 
 //=============================================================================
@@ -253,7 +270,11 @@ std::string LumiIntegrateFSR::fileID() {
 }
 
 //=============================================================================
-void LumiIntegrateFSR::add_fsr(LHCb::LumiIntegral* result, std::string fileRecordAddress, float factor) {
+void LumiIntegrateFSR::add_fsr(LHCb::LumiIntegral* result, 
+			       std::string fileRecordAddress, 
+			       float factor,
+			       std::string timeSpanRecordAddress
+			       ) {
   // add or subtract this crossing type
   if ( msgLevel(MSG::DEBUG) ) debug() << "using the container: " << fileRecordAddress << endmsg;
   if ( msgLevel(MSG::DEBUG) ) {
@@ -267,7 +288,24 @@ void LumiIntegrateFSR::add_fsr(LHCb::LumiIntegral* result, std::string fileRecor
     }
   }
 
-  // read FSR 
+  // read TimeSpanFSR to prepare DB access 
+  if ( !exist<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress) ) {
+    if ( msgLevel(MSG::WARNING) ) warning() << timeSpanRecordAddress << " not found" << endmsg ;
+  } else {
+    if ( msgLevel(MSG::DEBUG) ) verbose() << timeSpanRecordAddress << " found" << endmsg ;
+    LHCb::TimeSpanFSRs* timeSpanFSRs = get<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress);
+    // look at all TimeSpanFSRs (normally only one)
+    LHCb::TimeSpanFSRs::iterator tsfsr;
+    for ( tsfsr = timeSpanFSRs->begin(); tsfsr != timeSpanFSRs->end(); tsfsr++ ) {
+      if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << "READ TimeSpanFSR: " << *(*tsfsr) << endmsg;
+      ulonglong t0 = (*tsfsr)->earliest();
+      ulonglong t1 = (*tsfsr)->latest();
+      if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << "interval: " << t0 << "-" << t1 << endmsg;
+    }
+    // the TimeSpanFSRs have now been read - something sensible should be done to access DB now and apply calibration
+  }
+
+  // read LumiFSR 
   if ( !exist<LHCb::LumiFSRs>(m_fileRecordSvc, fileRecordAddress) ) {
     if ( msgLevel(MSG::WARNING) ) warning() << fileRecordAddress << " not found" << endmsg ;
   } else {

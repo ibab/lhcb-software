@@ -4,6 +4,12 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2009-12-29 - Jaap Panman
+ - Configuration: added support for TimeSpanFSR
+   LumiIntegrateFSR: add usage of TimeSpanFSR
+   TimeAccounting: new, creates TimeSpanFSR
+   DumpFSR: new: wlaks the FSR tree for each new input file and print content
+
 !========================== LumiAlgs v3r1 2009-11-20 =========================
 ! 2009-11-18 - Jaap Panman
  - fix to LumiWriterConf, LumiReaderConf to make unit test work in Rec environment
