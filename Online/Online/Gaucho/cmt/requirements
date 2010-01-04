@@ -10,6 +10,7 @@ use DIM v* Online
 use GaudiAlg v*  
 use Boost v* LCG_Interfaces
 use ROOT v* LCG_Interfaces
+use DAQEvent v* Event
 
 use OnlineKernel v* Online
 
