@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdVeryLooseDstarWithD2HH.py,v 1.1 2009-12-23 12:28:07 poluekt Exp $ 
+# $Id: StdVeryLooseDstarWithD2HH.py,v 1.2 2010-01-05 10:46:54 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdVeryLooseDstarWithD02HH.py
 #  configuration file for 'Standard VeryLoose Dstar WithD02HH' 
@@ -12,7 +12,7 @@ Configuration file for 'Standard VeryLoose Dstar WithD02HH'
 """
 __author__  = "Marta Calvi"
 __date__ = '10/12/2009'
-__version__ = "version $Revision: 1.1 $"
+__version__ = "version $Revision: 1.2 $"
 
 # =============================================================================
 __all__ = (
@@ -36,7 +36,7 @@ StdVeryLooseDstarWithD02KPi.DecayDescriptor = "[D*(2010)+ -> pi+ D0]cc"
 
 StdVeryLooseDstarWithD02KPi.CombinationCut = "(ADAMASS('D*(2010)+')<50*MeV) & (APT>1250*MeV)"
 StdVeryLooseDstarWithD02KPi.MotherCut = "(VFASPF(VCHI2/VDOF)<25) & (M-MAXTREE('D0'==ABSID,M)<165.5)"
-StdVeryLooseDstarWithD02KPi.DaughtersCuts = { "pi+" : "TRCHI2DOF<10) & (PT>110*MeV) & (MIPDV(PRIMARY)>0.04*mm)"}
+StdVeryLooseDstarWithD02KPi.DaughtersCuts = { "pi+" : "(TRCHI2DOF<10) & (PT>110*MeV) & (MIPDV(PRIMARY)>0.04*mm)"}
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdVeryLooseDstarWithD02KPi )
