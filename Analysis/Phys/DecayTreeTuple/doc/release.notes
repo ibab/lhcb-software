@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2010-01-05 - V. Gligorov
+ - TupleToolTrigger : use the ANNDispatchSvc to retreive the Hlt selection
+   IDs to names mapping.
+
 !========================== DecayTreeTuple v2r9 2009-12-16 ==================
 
 ! 2009-12-08 - V. Gligorov

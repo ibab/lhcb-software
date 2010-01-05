@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.cpp,v 1.16 2009-11-06 13:25:53 pkoppenb Exp $
+// $Id: TupleToolTrigger.cpp,v 1.17 2010-01-05 13:49:44 gligorov Exp $
 // Include files
 
 // from Gaudi
@@ -40,7 +40,7 @@ TupleToolTrigger::TupleToolTrigger( const std::string& type,
   declareProperty( "FillL0", m_fillL0=true, "Fill L0" );
   declareProperty( "FillHlt", m_fillHlt=true, "Fill Hlt" );
   declareProperty( "AllIntermediateSteps", m_allSteps=false, "Fill also intermediate steps" );
-  declareProperty( "FillGlobal", m_fillGlobal = false, "Fill Hlt1Global and Hlt2Global" );
+  declareProperty( "FillGlobal", m_fillGlobal = true, "Fill Hlt1Global and Hlt2Global" );
   for ( unsigned int i = 32 ; i < 96 ; i++){
     m_routingBits.push_back(i);
   }
@@ -110,7 +110,7 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & 
     }
     if ( individual) {
       unsigned int nsel = 0 ;
-      std::vector<std::string> names = svc<IANNSvc>("HltANNSvc")->keys(level+"SelectionID");
+      std::vector<std::string> names = svc<IANNSvc>("ANNDispatchSvc")->keys(level+"SelectionID");
       for ( std::vector<std::string>::const_iterator n = names.begin() ; n!= names.end() ; ++n){
         bool found = false ;
         // individual Hlt trigger lines
