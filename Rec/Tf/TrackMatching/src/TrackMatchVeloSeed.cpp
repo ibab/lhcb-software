@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.17 2009-12-14 13:33:58 mneedham Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.18 2010-01-05 09:54:00 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -503,8 +503,9 @@ double TrackMatchVeloSeed::determineZ( const Track* track )
 
 void TrackMatchVeloSeed::createVeloCandidates(LHCb::Tracks* tracks, VeloCandidates& candidates) {
 
-  LHCb::Tracks* fwdTracks = get<LHCb::Tracks>( LHCb::TrackLocation::Forward );
-
+  LHCb::Track::Range fwdTracks ;
+  if(m_discardUsedVelo) fwdTracks = get<LHCb::Track::Range>( LHCb::TrackLocation::Forward );
+  
   for (Tracks::iterator iterTrack = tracks->begin(); iterTrack != tracks->end(); ++iterTrack) {
     
     Track* aTrack = *iterTrack;
@@ -512,8 +513,8 @@ void TrackMatchVeloSeed::createVeloCandidates(LHCb::Tracks* tracks, VeloCandidat
     // Check on Velo tracks used in PatForward tracks
     bool veloUsed = false;
     if (m_discardUsedVelo) {
-      for ( LHCb::Tracks::const_iterator itTF = fwdTracks->begin();
-            fwdTracks->end() != itTF; itTF++ ) {
+      for ( LHCb::Track::Range::const_iterator itTF = fwdTracks.begin();
+            fwdTracks.end() != itTF; ++itTF ) {
         // check for good PatFwd tracks
         // from PatForward fit
         if ((*itTF)->fitStatus() == LHCb::Track::Fitted) {
