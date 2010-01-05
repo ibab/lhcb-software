@@ -1,5 +1,5 @@
 ########################################################################
-# $Id: DVTutorial_4.py,v 1.5 2009-10-02 14:10:19 jpalac Exp $
+# $Id: DVTutorial_4.py,v 1.6 2010-01-05 16:36:42 jdickens Exp $
 #
 # Options for exercise 4
 #
@@ -21,7 +21,7 @@ seq = SeqBs2JpsiPhi.sequence()
 #
 from Configurables import DaVinci
 DaVinci().HistogramFile = "DVHistos_4.root"    # Histogram file
-DaVinci().EvtMax = -1                          # Number of events
+DaVinci().EvtMax = 1000                          # Number of events
 DaVinci().DataType = "2008"                    # Default is "MC09"
 DaVinci().Simulation   = True                  # It's MC
 #

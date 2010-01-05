@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.12 2008-12-22 18:08:36 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.13 2010-01-05 16:36:42 jdickens Exp $
 // Include files 
 
 // from Gaudi
@@ -103,7 +103,7 @@ StatusCode TutorialAlgorithm::makeJpsi(const LHCb::Particle::ConstVector& muons)
       // vertex 
       LHCb::Vertex MuMuVertex;
       LHCb::Particle Jpsi(m_jPsiID);
-      StatusCode scFit = vertexFitter()->fit(*(*imp),*(*imm),Jpsi,MuMuVertex);
+      StatusCode scFit = vertexFitter()->fit(MuMuVertex, *(*imp), *(*imm), Jpsi);
       if (!scFit) {
         Warning("Fit error").ignore();
         continue;

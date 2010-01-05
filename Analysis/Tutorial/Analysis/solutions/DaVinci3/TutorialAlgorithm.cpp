@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.12 2008-12-22 18:08:37 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.13 2010-01-05 16:36:42 jdickens Exp $
 // Include files 
 
 // from Gaudi
@@ -105,7 +105,7 @@ StatusCode TutorialAlgorithm::makeMother(const LHCb::Particle::ConstVector& daug
       LHCb::Vertex DaDaVertex;
       LHCb::Particle Mother(m_motherID);
       
-      StatusCode scFit = vertexFitter()->fit(*(*imp),*(*imm),Mother,DaDaVertex);
+      StatusCode scFit = vertexFitter()->fit(DaDaVertex, *(*imp), *(*imm), Mother);
       if (!scFit) {
         Warning("Fit error",StatusCode::SUCCESS,1).ignore();
         continue;
