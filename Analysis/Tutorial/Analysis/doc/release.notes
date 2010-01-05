@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.88 2009-10-28 14:27:54 jpalac Exp $
+!$Id: release.notes,v 1.89 2010-01-05 11:53:09 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Tutorial/Analysis
 ! Responsible : P. Koppenburg
@@ -8,6 +8,10 @@
 !   See https://twiki.cern.ch/twiki/bin/view/LHCb/DaVinciTutorial
 !
 !-----------------------------------------------------------------------------
+
+! 2010-01-05 - Patrick Koppenburg
+ - Remove 2008 MC Bs->J/spiPhi data, add MC09 version.
+ - v8r3p2
 
 !========================== Analysis v8r3p1 2009-10-28 ===============
 
