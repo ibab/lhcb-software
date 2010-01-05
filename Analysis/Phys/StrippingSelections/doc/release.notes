@@ -5,6 +5,14 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-01-05 - Patrick Spradlin
+ - Replaced StrippingDstarNoPID.py with StrippingDstarPromptWithD02HH.py.
+   The former was installed for RICH PID calibration, the latter will be used
+   both for RICH PID calibration and for charm physics.
+   - Removed StrippingDstarNoPID.py
+   + Added StrippingDstarPromptWithD02HH.py
+   . Modified StreamDstar.py to remove the old line and add the new lines.
+
 ! 2009-12-22 - Anton Poluektov
  - Removed StreamMinBias.py (replaced by StreamMiniBias.py)
  - Added StrippingDstarD02PipiMuMuPiMuKPiKmu.py (Walter Bonivento)

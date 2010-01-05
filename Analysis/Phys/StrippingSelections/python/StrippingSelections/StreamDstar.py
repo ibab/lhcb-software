@@ -7,7 +7,6 @@
 from Gaudi.Configuration import *
 from StrippingConf.StrippingStream import StrippingStream
 
-from StrippingSelections import StrippingDstarNoPID
 from StrippingSelections import StrippingBd2DstarMuNu
 from StrippingSelections import StrippingDstarD2KShh
 from StrippingSelections import StrippingDstarD2KShhRobust
@@ -15,9 +14,10 @@ from StrippingSelections import StrippingBsDsMuNu
 from StrippingSelections import Strippingb2DMuX
 from StrippingSelections import StrippingDstarD02PipiMuMuPiMuKPiKmu
 
+from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
+
 stream = StrippingStream("Dstar")
 stream.appendLines( [ 
-		        StrippingDstarNoPID.line, 
 		        StrippingBd2DstarMuNu.line, 
 		        StrippingDstarD2KShh.line1,
 		        StrippingDstarD2KShh.line2,
@@ -49,3 +49,4 @@ stream.appendLines( [
 			StrippingDstarD02PipiMuMuPiMuKPiKmu.lineDstarWithD02MuMu, 
 			StrippingDstarD02PipiMuMuPiMuKPiKmu.lineDstarWithD0PiPiForDstarWithD02MuMu
 		    ] )
+stream.appendLines( StrippingDstarPromptWithD02HHConf().lines() )
