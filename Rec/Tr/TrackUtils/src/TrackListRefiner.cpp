@@ -1,4 +1,4 @@
-// $Id: TrackListRefiner.cpp,v 1.1 2010-01-05 11:11:16 wouter Exp $
+// $Id: TrackListRefiner.cpp,v 1.2 2010-01-05 11:43:41 wouter Exp $
 
 
 /** @class TrackListRefiner TrackListRefiner.h
@@ -44,7 +44,7 @@ DECLARE_ALGORITHM_FACTORY( TrackListRefiner );
 TrackListRefiner::TrackListRefiner(const std::string& name,
                        ISvcLocator* pSvcLocator):
   GaudiAlgorithm(name, pSvcLocator),
-  m_selector("None",this)
+  m_selector("",this)
 {
   // constructor
   declareProperty( "inputLocation",  m_inputLocation ) ;

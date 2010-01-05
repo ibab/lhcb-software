@@ -1,4 +1,4 @@
-// $Id: TrackContainerCopy.cpp,v 1.5 2010-01-05 11:30:13 wouter Exp $
+// $Id: TrackContainerCopy.cpp,v 1.6 2010-01-05 11:43:41 wouter Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -18,7 +18,7 @@ DECLARE_ALGORITHM_FACTORY( TrackContainerCopy );
 TrackContainerCopy::TrackContainerCopy(const std::string& name,
                        ISvcLocator* pSvcLocator):
   GaudiAlgorithm(name, pSvcLocator),
-  m_selector("None",this)
+  m_selector("",this)
 {
   // constructor
   declareProperty( "inputLocation",  m_inputLocation  = TrackLocation::Velo );
