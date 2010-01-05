@@ -5,7 +5,7 @@ Purpose	: collection of alignment algorithms
 
 
 ! 2009-01-04 Wouter Hulsbergen
- - extended functionalityof chisquare constraints
+ - extended functionality of chisquare constraints
  - added 'SurveyConstraints.py'
 
 ! 2009-12-30 Wouter Hulsbergen
