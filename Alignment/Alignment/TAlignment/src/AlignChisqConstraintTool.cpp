@@ -184,7 +184,7 @@ namespace Al
 	if( ipar>=0 ) {
 	  // get the current difference with nominal. this is what we
 	  // constrain.
-	  AlParameters currentdelta = (*ielem)->currentActiveDelta() ;
+	  AlParameters currentdelta = (*ielem)->currentDelta() ;
 	  double weight = 1/( ic->error * ic->error ) ;
 	  double residual = ic->value - currentdelta.parameters()(ic->dof) ;
 	  halfDChi2DAlpha(ipar) += weight * residual; 
@@ -218,7 +218,7 @@ namespace Al
 	if( ipar>=0 ) {
 	  // get the current difference with nominal. this is what we
 	  // constrain.
-	  AlParameters currentdelta = (*ielem)->currentActiveDelta() ;
+	  AlParameters currentdelta = (*ielem)->currentDelta() ;
 	  double weight = 1/( ic->error * ic->error ) ;
 	  double residual = ic->value-parameters(ipar)-currentdelta.parameters()(ic->dof) ; // sign????
 	  chisquare += residual*residual*weight ;
