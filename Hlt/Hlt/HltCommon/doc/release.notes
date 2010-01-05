@@ -4,6 +4,13 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-01-05 - V. Gligorov
+ - fix the ANNDispatchSvc.cpp so that it works regardless of the type of
+   input data. The TCK is now retreived from the HLT DecReports, and if
+   a null TCK is retrieved (meaning that the HLT was run from DaVinci and
+   not Moore) then the Dispatch service delegates its work to the regular
+   HltANN Service.
+
 ! 2009-12-31 - Gerhard Raven
  - make HltReferenceRateSvc use a predicate for ODIN to
    determine whether to update tick counter.

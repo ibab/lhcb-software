@@ -8,7 +8,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h" 
 
-#include "Event/ODIN.h"
+#include "Event/HltDecReports.h"
 
 #include "TCKrep.h"
 
@@ -139,31 +139,39 @@ void ANNDispatchSvc::handle(const Incident& /*incident*/) {
 
 void ANNDispatchSvc::faultHandler() const {
 
-    SmartDataPtr<LHCb::ODIN> odin( m_evtSvc , LHCb::ODINLocation::Default );
-    if (!odin) {
-        error() << " Could not locate ODIN... " << endmsg;
-        m_incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
-        return;
+    //Get the Hlt DecReports
+    SmartDataPtr<LHCb::HltDecReports> decReports(m_evtSvc, LHCb::HltDecReportsLocation::Default );
+    //Get the TCK from the DecReports
+    unsigned int TCK = decReports->configuredTCK();  
+    if (TCK == 0) {
+      // if there is no TCK, do not dispatch
+      m_uptodate = true;
+      m_currentTCK = TCK;
+      return;
     }
-    unsigned int TCK = odin->triggerConfigurationKey();
     if (TCK!=m_currentTCK || !m_currentDigest.valid()) {
         TCKrep tck(TCK); tck.normalize();
         ConfigTreeNodeAlias::alias_type alias( std::string("TCK/") +  tck.str()  );
         // grab properties of child from config database...
         const ConfigTreeNode* tree = m_propertyConfigSvc->resolveConfigTreeNode(alias);
-        PropertyConfig::digest_type child = m_propertyConfigSvc->findInTree(tree->digest(), m_instanceName);
-        if (!m_currentDigest.valid() || m_currentDigest!=child) {
-            const PropertyConfig *config = m_propertyConfigSvc->resolvePropertyConfig(child);
-            assert(config!=0);
-            // if ( config==0 ) return StatusCode::FAILURE;
-            // push properties to child
-            SmartIF<IProperty> iProp(m_child);
-            for (PropertyConfig::Properties::const_iterator i =  config->properties().begin();i!= config->properties().end(); ++i ) {
-                iProp->setProperty( i->first, i->second  );
-            }
-            m_currentDigest = child;
-            // do not reinit for ANNSvc derived instances, as they have a proper updateHandler...
-            // StatusCode sc = m_child->reinitialize();
+        if (!tree) {
+          //If we could not resolve the (non-zero) TCK we have a problem
+          error() << "Obtained TCK " << TCK << " from the Hlt DecReports which could not be resolved" << endmsg;
+        } else { 
+          PropertyConfig::digest_type child = m_propertyConfigSvc->findInTree(tree->digest(), m_instanceName);
+          if (!m_currentDigest.valid() || m_currentDigest!=child) {
+              const PropertyConfig *config = m_propertyConfigSvc->resolvePropertyConfig(child);
+              assert(config!=0);
+              // if ( config==0 ) return StatusCode::FAILURE;
+              // push properties to child
+              SmartIF<IProperty> iProp(m_child);
+              for (PropertyConfig::Properties::const_iterator i =  config->properties().begin();i!= config->properties().end(); ++i ) {
+                  iProp->setProperty( i->first, i->second  );
+              }
+              m_currentDigest = child;
+              // do not reinit for ANNSvc derived instances, as they have a proper updateHandler...
+              // StatusCode sc = m_child->reinitialize();
+          }
         }
     }
     m_uptodate = true;
