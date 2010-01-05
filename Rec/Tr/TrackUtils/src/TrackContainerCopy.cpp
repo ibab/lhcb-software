@@ -1,4 +1,4 @@
-// $Id: TrackContainerCopy.cpp,v 1.4 2008-12-02 14:46:38 wouter Exp $
+// $Id: TrackContainerCopy.cpp,v 1.5 2010-01-05 11:30:13 wouter Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -8,6 +8,9 @@
 
 #include "TrackContainerCopy.h"
 #include "TrackInterfaces/ITrackSelector.h"
+
+#include <boost/foreach.hpp>
+
 using namespace LHCb;
 
 DECLARE_ALGORITHM_FACTORY( TrackContainerCopy );
@@ -15,13 +18,13 @@ DECLARE_ALGORITHM_FACTORY( TrackContainerCopy );
 TrackContainerCopy::TrackContainerCopy(const std::string& name,
                        ISvcLocator* pSvcLocator):
   GaudiAlgorithm(name, pSvcLocator),
-  m_selector(0)
+  m_selector("None",this)
 {
   // constructor
   declareProperty( "inputLocation",  m_inputLocation  = TrackLocation::Velo );
   declareProperty( "outputLocation", m_outputLocation = TrackLocation::Default );
   declareProperty( "copyFailures",   m_copyFailures   = false );
-  declareProperty( "selectorName", m_selectorName = "TrackSelector");
+  declareProperty( "Selector", m_selector );
 }
 
 TrackContainerCopy::~TrackContainerCopy()
@@ -38,24 +41,32 @@ StatusCode TrackContainerCopy::initialize()
      return Error("Failed to initialize");
   }
 
-  // da selector --- by default takes all tracks
-  if(  m_selectorName != "" && m_selectorName != "None" ) 
-    m_selector = tool<ITrackSelector>(m_selectorName, "Selector", this);
+  // retrieve the selector if it is set
+  if ( !m_selector.empty() ) {
+    sc = m_selector.retrieve() ;
+    if(sc.isFailure())
+      error() << "Failed to retrieve selector." << endmsg ;
+  }
+  
+  return sc ;
+}
 
-  return StatusCode::SUCCESS;
+StatusCode TrackContainerCopy::finalize()
+{
+  if( ! m_selector.empty() ) m_selector.release().ignore() ;
+  return GaudiAlgorithm::finalize() ;
 }
 
 StatusCode TrackContainerCopy::execute(){
 
-  Tracks* inCont = get<Tracks>(m_inputLocation);
+  LHCb::Track::Range inCont = get<LHCb::Track::Range>(m_inputLocation);
   Tracks* outCont = getOrCreate<Tracks,Tracks>(m_outputLocation);
-
   // loop 
   size_t naccepted(0) ;
-  for (Tracks::const_iterator iterT = inCont->begin(); iterT != inCont->end(); ++iterT) {
-    if ( ( !(*iterT)->checkFlag(Track::Invalid) || m_copyFailures ) &&
-	 ( !m_selector || m_selector->accept(**iterT) ) ) {
-      Track* aTrack = (*iterT)->clone();
+  BOOST_FOREACH( const LHCb::Track* track, inCont ) {
+    if ( ( !track->checkFlag(Track::Invalid) || m_copyFailures ) &&
+	 (m_selector.empty() || m_selector->accept(*track)) ) {
+      Track* aTrack = track->clone();
       outCont->insert(aTrack); 
       ++naccepted ;
     } // selected
