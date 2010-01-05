@@ -1,4 +1,4 @@
-// $Id: TrackListFilter.cpp,v 1.1 2008-10-20 10:46:39 wouter Exp $
+// $Id: TrackListFilter.cpp,v 1.2 2010-01-05 11:13:39 wouter Exp $
 
 
 /** @class TrackListFilter TrackListFilter.h
@@ -49,14 +49,7 @@ TrackListFilter::~TrackListFilter()
 
 StatusCode TrackListFilter::execute()
 {
-  const LHCb::Tracks* tracks = get<LHCb::Tracks>(m_inputLocation);
-  StatusCode sc = StatusCode::SUCCESS;
-  if( tracks==0 ) {
-    error() << "no track list at location: "
-	    << m_inputLocation << endreq ;
-    sc = StatusCode::FAILURE ;
-  } else {
-    setFilterPassed( tracks->empty() ? false : true ) ;
-  }
-  return sc ;
-};
+  LHCb::Track::Range tracks = get<LHCb::Track::Range>(m_inputLocation);
+  setFilterPassed( tracks.empty() ? false : true ) ;
+  return  StatusCode::SUCCESS ;
+}
