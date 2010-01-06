@@ -1,10 +1,11 @@
-// $Id: L0ConfExtrapolator.cpp,v 1.10 2009-10-29 09:04:25 pkoppenb Exp $
+// $Id: L0ConfExtrapolator.cpp,v 1.11 2010-01-06 07:45:39 albrecht Exp $
 // Include files 
 
 #include <cmath>
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 //Event
 #include "Event/StateParameters.h"
@@ -39,6 +40,7 @@ L0ConfExtrapolator::L0ConfExtrapolator( const std::string& type,
   , m_magFieldSvc(0)
   , m_fieldOff(false)
   , zEndT3(9315.0)
+  , m_BscaleFactor(0)
 {
   declareInterface<IL0ConfExtrapolator>(this);
 
@@ -77,15 +79,31 @@ StatusCode L0ConfExtrapolator::initialize()
     return sc;
   }
 
- m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
-
- if( fabs(m_magFieldSvc->scaleFactor()) < 0.1 ) {
-    info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()
-          <<" %, below 10% of nominal field! \n Use options for no field!"<<endmsg;
-    m_fieldOff=true;
-  }
+  // subscribe to the updatemanagersvc with a dependency on the magnetic field svc
+  IUpdateManagerSvc* m_updMgrSvc = svc<IUpdateManagerSvc>("UpdateManagerSvc", true);
+  m_magFieldSvc = svc<ILHCbMagnetSvc>("MagneticFieldSvc", true);
+  m_updMgrSvc->registerCondition( this,m_magFieldSvc,&L0ConfExtrapolator::updateField) ;
   
-  return sc;
+  // initialize with the current conditions
+  return m_updMgrSvc->update(this) ;
+}
+
+StatusCode L0ConfExtrapolator::updateField()
+{
+  if(msgLevel(MSG::INFO)) 
+    info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()<<endmsg;
+
+  m_BscaleFactor = m_magFieldSvc->scaleFactor();
+  m_fieldOff=false;
+  if( fabs(m_magFieldSvc->scaleFactor()) < 0.1 ) {
+    m_fieldOff=true;
+    if(msgLevel(MSG::INFO)) {
+      info()<<" magnetic field is below 10% of nominal field! \n Use options for no field!"<<endmsg;
+      info()<<"Tool configured for no B field!"<<endmsg;
+      info()<<"Position and slope is set correctly, covariance and momemtum _not_!"<<endmsg;
+    }
+  }
+  return StatusCode::SUCCESS ;
 }
 
 //=============================================================================
@@ -233,6 +251,11 @@ FwdHypothesis L0ConfExtrapolator::getFwdHypothesis( const LHCb::Track& veloTrack
                         m_zRef);
   
                     
+}
+
+double L0ConfExtrapolator::getBScale()
+{
+  return m_BscaleFactor;
 }
 
 /*

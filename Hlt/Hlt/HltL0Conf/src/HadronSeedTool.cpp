@@ -1,10 +1,11 @@
-// $Id: HadronSeedTool.cpp,v 1.11 2009-10-29 09:04:24 pkoppenb Exp $
+// $Id: HadronSeedTool.cpp,v 1.12 2010-01-06 07:43:24 albrecht Exp $
 // Include files 
 
 #include <cmath>
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // from Event
 #include "Event/L0CaloCandidate.h"
@@ -111,19 +112,32 @@ StatusCode HadronSeedTool::initialize()
     return StatusCode::FAILURE;
   }
 
-  m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
+ // subscribe to the updatemanagersvc with a dependency on the magnetic field svc
+  IUpdateManagerSvc* m_updMgrSvc = svc<IUpdateManagerSvc>("UpdateManagerSvc", true);
+  m_magFieldSvc = svc<ILHCbMagnetSvc>("MagneticFieldSvc", true);
+  m_updMgrSvc->registerCondition( this,m_magFieldSvc,&HadronSeedTool::updateField) ;
   
-  if( fabs(m_magFieldSvc->scaleFactor()) < 0.1 ) {
-    info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()
-          <<" %, below 10% of nominal field! \n Use options for no field!"<<endmsg;
-    m_fieldOff=true;
-    warning()<<"Tool configured for no B field!"<<endmsg;
-    warning()<<"Position and slope is set correctly, covariance and momemtum _not_!"<<endmsg;
-  }
-  
-  return StatusCode::SUCCESS;
+  // initialize with the current conditions
+  return m_updMgrSvc->update(this) ;
 }
 
+
+StatusCode HadronSeedTool::updateField()
+{
+  if(msgLevel(MSG::INFO)) 
+    info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()<<endmsg;
+  
+  m_fieldOff=false;
+  if( fabs(m_magFieldSvc->scaleFactor()) < 0.1 ) {
+    m_fieldOff=true;    
+    if(msgLevel(MSG::INFO)) {
+      info()<<" magnetic field is below 10% of nominal field! \n Use options for no field!"<<endmsg;
+      info()<<"Tool configured for no B field!"<<endmsg;
+      info()<<"Position and slope is set correctly, covariance and momemtum _not_!"<<endmsg;
+    }
+  }
+  return StatusCode::SUCCESS ;
+}
 
 StatusCode HadronSeedTool::makeTrack(const LHCb::L0CaloCandidate& hadL0Cand,
                                      LHCb::Track& seedTrack )

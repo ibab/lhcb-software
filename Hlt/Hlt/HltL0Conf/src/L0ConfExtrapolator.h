@@ -1,4 +1,4 @@
-// $Id: L0ConfExtrapolator.h,v 1.6 2009-10-08 21:03:54 graven Exp $
+// $Id: L0ConfExtrapolator.h,v 1.7 2010-01-06 07:45:36 albrecht Exp $
 #ifndef L0CONFEXTRAPOLATOR_H 
 #define L0CONFEXTRAPOLATOR_H 1
 
@@ -52,11 +52,17 @@ public:
                LHCb::State& statePosAtT, LHCb::State& stateNegAtT ) const;
   
   int getCaloRegion( double stateX, double stateY, double stateZ ) const;
+
+  virtual StatusCode updateField() ;
+
+  double getBScale();
+
 protected:
 
 private:
   ILHCbMagnetSvc*  m_magFieldSvc;
   bool m_fieldOff;
+  double m_BscaleFactor;
   
   //for getParabolaHypothesis
   double m_curvFactor;

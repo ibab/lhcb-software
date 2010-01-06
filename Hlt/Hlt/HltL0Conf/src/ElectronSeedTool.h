@@ -43,8 +43,9 @@ public:
   virtual StatusCode makeTrack( const LHCb::L0CaloCandidate& eL0Cand,
                                 LHCb::Track& seedTrack );
   
-
-private:
+  virtual StatusCode updateField() ;
+  
+ private:
 
   void clearElectronVariables(){
     //clear electron variables

@@ -1,4 +1,4 @@
-// $Id: HadronSeedTool.h,v 1.4 2008-08-29 14:27:47 albrecht Exp $
+// $Id: HadronSeedTool.h,v 1.5 2010-01-06 07:43:05 albrecht Exp $
 #ifndef HADRONSEEDTOOL_H 
 #define HADRONSEEDTOOL_H 1
 
@@ -49,7 +49,8 @@ public:
   virtual StatusCode makeTrack( const LHCb::L0CaloCandidate& hadL0Cand,
                                 LHCb::Track& seedTrack );
   
-
+  virtual StatusCode updateField() ;
+  
 protected:
 
 private:

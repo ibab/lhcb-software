@@ -2,6 +2,7 @@
 
 // // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // from Event
 #include "Event/CaloDigit.h"
@@ -96,18 +97,33 @@ StatusCode ElectronSeedTool::initialize()
     return StatusCode::FAILURE;
   }
 
-  m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
+  // subscribe to the updatemanagersvc with a dependency on the magnetic field svc
+  IUpdateManagerSvc* m_updMgrSvc = svc<IUpdateManagerSvc>("UpdateManagerSvc", true);
+  m_magFieldSvc = svc<ILHCbMagnetSvc>("MagneticFieldSvc", true);
+  m_updMgrSvc->registerCondition( this,m_magFieldSvc,&ElectronSeedTool::updateField) ;
   
-  if( fabs(m_magFieldSvc->scaleFactor()) < 0.1 ) {
-    info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()
-          <<" %, below 10% of nominal field! \n Use options for no field!"<<endmsg;
-    m_fieldOff=true;
-    warning()<<"Tool configured for no B field!"<<endmsg;
-    warning()<<"Position and slope is set correctly, covariance and momemtum _not_!"<<endmsg;
-  }
-  
-  return StatusCode::SUCCESS;
+  // initialize with the current conditions
+  return m_updMgrSvc->update(this) ;
 }
+
+StatusCode ElectronSeedTool::updateField()
+{
+  if(msgLevel(MSG::INFO)) 
+    info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()<<endmsg;
+  
+  m_fieldOff=false;
+  if( fabs(m_magFieldSvc->scaleFactor()) < 0.1 ) {
+    m_fieldOff=true;
+    if(msgLevel(MSG::INFO)) {
+      info()<<" magnetic field is below 10% of nominal field! \n Use options for no field!"<<endmsg;
+      info()<<"Tool configured for no B field!"<<endmsg;
+      info()<<"Position and slope is set correctly, covariance and momemtum _not_!"<<endmsg;
+    }
+  }
+  return StatusCode::SUCCESS ;
+}
+
+
 
 StatusCode ElectronSeedTool::makeTrack( const LHCb::L0CaloCandidate& eL0Cand,
                                         LHCb::Track& seedTrack  )

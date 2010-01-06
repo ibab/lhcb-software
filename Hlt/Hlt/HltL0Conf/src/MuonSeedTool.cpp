@@ -1,8 +1,9 @@
-// $Id: MuonSeedTool.cpp,v 1.15 2009-12-10 15:18:04 albrecht Exp $
+// $Id: MuonSeedTool.cpp,v 1.16 2010-01-06 07:44:15 albrecht Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // from Event
 #include "Event/State.h"
@@ -16,6 +17,7 @@
 
 //boost
 #include <boost/assign/list_of.hpp>
+
 
 using namespace LHCb;
 
@@ -37,10 +39,11 @@ MuonSeedTool::MuonSeedTool( const std::string& type,
                             const IInterface* parent )
   : GaudiTool ( type, name , parent ),
     m_fieldOff(false)
-  , m_iPosTool(0)
-  , m_magFieldSvc(0)
-  , m_momentumTool(0)
-  , m_DataStore(0)
+    , m_iPosTool(0)
+    , m_magFieldSvc(0)
+    , m_momentumTool(0)
+    , m_DataStore(0)
+    ,m_recalculateP(0)
 {
   declareInterface<IMuonSeedTool>(this);
 
@@ -59,7 +62,7 @@ MuonSeedTool::MuonSeedTool( const std::string& type,
   declareProperty("sigmaY2NoM1", m_sigmaY2NoM1 = boost::assign::list_of(81.)(529.)(1936.)(2209.) );
   declareProperty("sigmaTx2NoM1", m_sigmaTx2NoM1 = boost::assign::list_of(16.e-6)(64.e-6)(225e-6)(529.e-6) );
   declareProperty("sigmaTy2NoM1", m_sigmaTy2NoM1 = boost::assign::list_of(16.e-6)(49.e-6)(64e-6)(100.e-6) );
-
+  declareProperty("recalculateP", m_recalculateP = false );
 }
 //=============================================================================
 // Destructor
@@ -91,17 +94,30 @@ StatusCode MuonSeedTool::initialize()
     return StatusCode::FAILURE;
   }
   
-  m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
+  // subscribe to the updatemanagersvc with a dependency on the magnetic field svc
+  IUpdateManagerSvc* m_updMgrSvc = svc<IUpdateManagerSvc>("UpdateManagerSvc", true);
+  m_magFieldSvc = svc<ILHCbMagnetSvc>("MagneticFieldSvc", true);
+  m_updMgrSvc->registerCondition( this,m_magFieldSvc,&MuonSeedTool::updateField) ;
+  
+  // initialize with the current conditions
+  return m_updMgrSvc->update(this) ;
+}
 
+StatusCode MuonSeedTool::updateField()
+{
+  if(msgLevel(MSG::INFO)) 
+    info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()<<endmsg;
+  
+  m_fieldOff=false;
   if( fabs(m_magFieldSvc->scaleFactor()) < 0.1 ) {
-    info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()
-          <<" %, below 10% of nominal field! \n Use options for no field!"<<endmsg;
     m_fieldOff=true;
-    info()<<"Tool configured for no B field!"<<endmsg;
-    info()<<"Position and slope is set correctly, covariance and momemtum _not_!"<<endmsg;
+    if(msgLevel(MSG::INFO)) {
+      info()<<" magnetic field is below 10% of nominal field! \n Use options for no field!"<<endmsg;
+      info()<<"Tool configured for no B field!"<<endmsg;
+      info()<<"Position and slope is set correctly, covariance and momemtum _not_!"<<endmsg;
+    }
   }
- 
-  return StatusCode::SUCCESS;
+  return StatusCode::SUCCESS ;
 }
 
 
@@ -177,13 +193,17 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::Track& inputTrack,
   if(m_fieldOff) dxdz   = xM2 / double(zM2);
 
   seedState.setState( xM2 , yM2 , zM2 , dxdz , dydz , 0 );
-  double qOverP = 0;
+  double qOverP = inputTrack.firstState().qOverP();
   double sigmaQOverP = 0;
-  //NOTE: B=0 --> p will be 1 GeV with huge errors
-  sc = m_momentumTool->calculate(&seedState ,qOverP, sigmaQOverP , false );
-  if( sc.isFailure() ) {
+
+  if( m_recalculateP) {
+    //NOTE: B=0 --> p will be 1 GeV with huge errors
+    sc = m_momentumTool->calculate(&seedState ,qOverP, sigmaQOverP , false );
+    if( sc.isFailure() ) {
     Warning( "MomentumEstimate tool  failed, but still adding State" );
+    }
   }
+  
   seedState.setQOverP( qOverP );
   seedState.setErrQOverP2( sigmaQOverP*sigmaQOverP );
 
@@ -195,8 +215,10 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::Track& inputTrack,
   stateCov(4,4) = 8.41e-6;
   
   seedState.setCovariance(stateCov);
+  outputTrack.addInfo(777,muonRegion);
+  
 
-  // add to states
+  //add to states
   outputTrack.addToStates( seedState );
   return StatusCode::SUCCESS;
 }
@@ -336,6 +358,9 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
   if( m_debugMode ){
     m_DataStore->region.push_back( regionL0Cand );
   }
+  
+  outputTrack.addInfo(777,regionL0Cand);
+  
      
   // add to states
   outputTrack.addToStates(seedState);

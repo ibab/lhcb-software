@@ -1,4 +1,4 @@
-// $Id: MuonSeedTool.h,v 1.6 2009-04-30 13:34:09 asatta Exp $
+// $Id: MuonSeedTool.h,v 1.7 2010-01-06 07:43:42 albrecht Exp $
 #ifndef MUONSEEDTOOL_H 
 #define MUONSEEDTOOL_H 1
 
@@ -6,7 +6,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/ILHCbMagnetSvc.h"
-
 #include "TrackInterfaces/ITrackMomentumEstimate.h"
 
 // Interface
@@ -40,7 +39,8 @@ public:
   virtual StatusCode makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
                                 LHCb::Track& seedTrack );
 
-
+  virtual StatusCode updateField() ;
+  
 private:
 
   bool m_debugMode, m_useM1, m_fieldOff;
@@ -64,6 +64,6 @@ private:
   //debug information
   L0ConfDataStore* m_DataStore;
 
-
+  bool m_recalculateP;
 };
 #endif // MUONSEEDTOOL_H
