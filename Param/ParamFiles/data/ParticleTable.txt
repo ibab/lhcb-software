@@ -5,7 +5,7 @@
 # 
 PARTICLE
 #
-#                IDGEANT      IDHEP  CHARGE          MASS       TLIFE            EVTGENNAME    PYTHIAID    MAXWIDTH
+#                    GEANTID    PDGID  CHARGE       MASS       TLIFE            EVTGENNAME    PYTHIAID    MAXWIDTH
 #
  gamma                 1          22  0.0   0.000000e+000   1.000000e+016                    gamma          22   0.000000e+000
  e+                    2         -11  1.0   5.109989e-004   1.000000e+016                       e+         -11   0.000000e+000
@@ -885,5 +885,6 @@ PARTICLE
  Si30[0.0]           968  1030014000 30.0        0.000000   0.000000e+000                  unknown           0   0.000000e+000
  Fe57[0.0]           969  1057026000 57.0        0.000000   0.000000e+000                  unknown           0   0.000000e+000
  Pb204[0.0]          970  1204082000 204.        0.000000   0.000000e+000                  unknown           0   0.000000e+000
+ Intermediate        971   -99000000  0.0        0.000000   0.000000e+000                  unknown           0   0.000000e+000
 #
 END PARTICLE 

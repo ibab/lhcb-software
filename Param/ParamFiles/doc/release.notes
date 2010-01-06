@@ -6,6 +6,11 @@
                 this package is not backed up in CVS
 !-----------------------------------------------------------------------------
 
+!======================== ParamFiles v4r2 2006-04-12 =====================
+! 2006-04-12 - Florence RANJARD for G.Corti
+ - add Intermediate particle with ID -99000000 to simulate a dummy particle
+   during G4 tracking
+
 !======================== ParamFiles v4r1 2006-03-07 ======================
 ! 2006-03-07 - Marco Cattaneo for Julien Cogan
  - New version of L0MuonKernel.xml
