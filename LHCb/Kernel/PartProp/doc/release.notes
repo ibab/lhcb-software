@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.37 2010-01-04 16:43:48 ibelyaev Exp $ 
+! $Id: release.notes,v 1.38 2010-01-06 09:24:23 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
+
+! 2010-01-06 - Vanya Belyaev
+
+ - rename printAsTable functions with return valeu std::ostream& to printAsTable_
+   ( see bug #59009) and to remoev them form dictionaries 
+
 
 ! 2010-01-04 - Vanya BELYAEV
  

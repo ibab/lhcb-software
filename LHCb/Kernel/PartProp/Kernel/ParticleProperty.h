@@ -1,4 +1,4 @@
-// $Id: ParticleProperty.h,v 1.4 2010-01-04 16:43:48 ibelyaev Exp $
+// $Id: ParticleProperty.h,v 1.5 2010-01-06 09:24:23 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBKERNEL_PARTICLEPROPERTY_H
 #define LHCBKERNEL_PARTICLEPROPERTY_H 1
@@ -270,7 +270,7 @@ namespace LHCb
      *
      *  // print the leptons:
      *  std::cout << "LEPTONS" << std::endl ;
-     *  LHCb::ParticleProperties::printAsTable ( leptons , std::cout , svc ) ;
+     *  LHCb::ParticleProperties::printAsTable_ ( leptons , std::cout , svc ) ;
      *
      *  @endcode
      *
@@ -283,7 +283,7 @@ namespace LHCb
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date  2008-08-03
      */        
-    std::ostream& printAsTable
+    std::ostream& printAsTable_
     ( const std::vector<const LHCb::ParticleProperty*>& particles    ,
       std::ostream&                                     stream       , 
       const LHCb::IParticlePropertySvc*                 service  = 0 ) ;
@@ -410,7 +410,7 @@ namespace LHCb
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date  2010-01-04
      */
-    std::ostream& printAsTable
+    std::ostream& printAsTable_
     ( const std::vector<LHCb::ParticleID>& particles    ,
       std::ostream&                        stream       , 
       const LHCb::IParticlePropertySvc*    service  = 0 ) ;

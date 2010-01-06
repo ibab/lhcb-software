@@ -1,7 +1,7 @@
 <!-- 
-     * $Id: PartProp.xml,v 1.7 2009-06-02 16:45:36 ibelyaev Exp $ 
+     * $Id: PartProp.xml,v 1.8 2010-01-06 09:24:23 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.8 $ 
      * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for 
@@ -13,6 +13,7 @@
 
 <lcgdict>
   
+
   <class name = "LHCb::ParticleID"                />
   <class name = "LHCb::ParticleProperty"          />
   <class name = "LHCb::IParticlePropertySvc"      />
@@ -27,7 +28,13 @@
   <enum name = "LHCb::ParticleID::Location" />
 
   
-  <function pattern = "LHCb::ParticleProperties::*"   />
+  <function name = "LHCb::ParticleProperties::printAsTable"   />
+  <function name = "LHCb::ParticleProperties::particle"       />
+  <function name = "LHCb::ParticleProperties::particleID"     />
+  <function name = "LHCb::ParticleProperties::byPythiaID"     />
+  <function name = "LHCb::ParticleProperties::byEvtGenName"   />
+  <function name = "LHCb::ParticleProperties::allProperties"  />
+  <function name = "LHCb::ParticleProperties::index"          />
 
   <class name = "Decays::Symbols"/>
 

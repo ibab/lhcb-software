@@ -1,4 +1,4 @@
-// $Id: ParticleProperty.cpp,v 1.3 2010-01-04 16:43:48 ibelyaev Exp $
+// $Id: ParticleProperty.cpp,v 1.4 2010-01-06 09:24:23 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -188,7 +188,7 @@ void LHCb::ParticleProperty::setAntiParticle
  *  @date  2008-08-03
  */
 // ============================================================================
-std::ostream& LHCb::ParticleProperties::printAsTable
+std::ostream& LHCb::ParticleProperties::printAsTable_
 ( const std::vector<const LHCb::ParticleProperty*>& particles ,
   std::ostream&                                     stream    ,
   const LHCb::IParticlePropertySvc*                 service   )
@@ -338,7 +338,7 @@ std::string LHCb::ParticleProperties::printAsTable
   const LHCb::IParticlePropertySvc*                 service   )
 {
   std::ostringstream s ;
-  printAsTable ( particles , s , service ) ;
+  printAsTable_ ( particles , s , service ) ;
   return s.str() ;
 }
 // ========================================================================
@@ -358,7 +358,7 @@ LHCb::ParticleProperties::printAsTable
   const LHCb::IParticlePropertySvc*                 service   )
 {
   if ( stream.isActive() )
-  { printAsTable ( particles , stream.stream() , service ) ; }
+  { printAsTable_ ( particles , stream.stream() , service ) ; }
   return stream ;
 }
 // ============================================================================
@@ -370,11 +370,12 @@ LHCb::ParticleProperties::printAsTable
  *  @date  2008-08-03
  */
 // ============================================================================
-std::ostream& Gaudi::Utils::toStream
+std::ostream& 
+Gaudi::Utils::toStream
 ( const std::vector<const LHCb::ParticleProperty*>& particles ,
   std::ostream&                                     stream    )
 { 
-  return LHCb::ParticleProperties::printAsTable ( particles, stream ) ; 
+  return LHCb::ParticleProperties::printAsTable_ ( particles , stream ) ; 
 }
 // ============================================================================
 /* print properties in a form of the table 
@@ -387,7 +388,7 @@ std::ostream& Gaudi::Utils::toStream
  */
 // ============================================================================
 std::ostream&
-LHCb::ParticleProperties::printAsTable 
+LHCb::ParticleProperties::printAsTable_ 
 ( const std::vector<LHCb::ParticleID>& particles ,
   std::ostream&                        stream    , 
   const LHCb::IParticlePropertySvc*    service   ) 
@@ -405,7 +406,7 @@ LHCb::ParticleProperties::printAsTable
     if ( 0 == pp ) { continue ; }
     props.push_back ( pp ) ;
   }
-  return printAsTable ( props , stream , service ) ;
+  return printAsTable_ ( props , stream , service ) ;
 }
 // ============================================================================
 /* print properties in a form of the table 
@@ -424,7 +425,7 @@ LHCb::ParticleProperties::printAsTable
   const LHCb::IParticlePropertySvc*    service    ) 
 {
   if ( stream.isActive() )
-  { printAsTable ( particles , stream.stream() , service ) ; }
+  { printAsTable_ ( particles , stream.stream() , service ) ; }
   return stream ;
 }
 // ============================================================================
@@ -442,7 +443,7 @@ LHCb::ParticleProperties::printAsTable
   const LHCb::IParticlePropertySvc*    service   ) 
 {
   std::ostringstream s ;
-  printAsTable ( particles , s , service ) ;
+  printAsTable_ ( particles , s , service ) ;
   return s.str() ;
 }
 // ============================================================================
