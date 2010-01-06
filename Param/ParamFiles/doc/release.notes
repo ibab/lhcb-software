@@ -6,6 +6,11 @@
                 this package is not backed up in CVS
 !-----------------------------------------------------------------------------
 
+!======================= ParamFiles v7r2 2008-07-18 ==========================
+! 2008-07-18 - Marco Cattaneo for Julien Cogan
+ - New version of L0MuonKernel.xml (backward compatible):
+   Full L0Muon configuration compatible with L0Muon processor V2
+
 !======================= ParamFiles v7r1 2008-01-18 ==========================
 ! 2008-01-18 - Marco Cattaneo for Adrian Perieanu
  - Add MVAnalysis_m_CFMlpANN.weights.txt, MVAnalysis_pf_CFMlpANN.weights.txt,
