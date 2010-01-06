@@ -1,4 +1,4 @@
-// $Id: STEfficiency.h,v 1.4 2009-10-15 08:57:49 jluisier Exp $
+// $Id: STEfficiency.h,v 1.5 2010-01-06 14:44:48 jluisier Exp $
 #ifndef STEFFICIENCY_H 
 #define STEFFICIENCY_H 1
 
@@ -46,6 +46,8 @@ private:
   bool foundHitInLayer( const ISTClusterCollector::Hits& hits,
 			 const unsigned int testlayer,
 			 const double resCut  ) const;
+
+  std::string formatNumber( const double& nbr, const unsigned int& digits = 2u ) const;
 
   std::string m_collectorName, m_trackSelectorName;
    /**
@@ -122,6 +124,28 @@ private:
    * value is "". SHould be used to study spill over.
    */
   std::string m_collectorPrefix;
+
+  /**
+   * Size of a bin, derived from the spacial cuts given in option
+   */
+  double m_binSize;
+
+  /**
+   * Number of bins, derived from the spacial cuts given in option
+   */
+  unsigned int m_binNumber;
+
+  /**
+   * Minimum number of expected hits in order to compute an efficiency
+   * Default value is 100.
+   */
+  unsigned int m_minExpected;
+
+  /**
+   * List of wanted track types that will be used to compute efficiency.
+   * Default is only Long (type 3)
+   */
+  std::vector< unsigned int > m_wantedTypes;
 
 };
 #endif // STEFFICIENCY_H

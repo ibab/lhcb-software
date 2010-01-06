@@ -1,4 +1,4 @@
-// $Id: STEfficiency.cpp,v 1.6 2009-10-15 08:57:49 jluisier Exp $
+// $Id: STEfficiency.cpp,v 1.7 2010-01-06 14:44:48 jluisier Exp $
 // Include files 
 
 // from Gaudi
@@ -33,14 +33,16 @@
 
 #include "LoKi/select.h"
 
-
+#include <sstream>
 
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
+#include <boost/assign/list_of.hpp>
 
 using namespace LHCb;
 using namespace ST;
 using namespace AIDA;
+using namespace boost::assign;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : STEfficiency
@@ -59,7 +61,8 @@ STEfficiency::STEfficiency( const std::string& name,
 			      ISvcLocator* pSvcLocator)
   : TrackMonitorBase ( name , pSvcLocator ),
     m_totalExpected(0u),
-    m_totalFound(0u)
+    m_totalFound(0u),
+    m_binSize( 10000. )
 {
   declareProperty("DetType"         , m_detType =  "IT" );
   declareProperty("ExpectedHitsTool", m_expectedHitsTool = "ITHitExpectation");
@@ -72,6 +75,8 @@ STEfficiency::STEfficiency( const std::string& name,
   declareProperty("StereoLayerCut"  , m_stereoCut = 0.700 );
   declareProperty("ChargeCut"       , m_chargeCut = 0.);
   declareProperty("CollectorPrefix" , m_collectorPrefix = "");
+  declareProperty("MinExpectedNbr"  , m_minExpected = 100 );
+  declareProperty("WantedTypes"     , m_wantedTypes = list_of( 3 ) );
 
   m_spacialCut.push_back( 500 * Gaudi::Units::um );
   m_spacialCut.push_back( 700 * Gaudi::Units::um );
@@ -129,14 +134,29 @@ StatusCode STEfficiency::initialize()
 
   } // iterS
 
-  for (unsigned int iCut=0 ; iCut < m_NbrOfCuts; ++iCut){
+  unsigned int iCut;
+
+  for (iCut = 0; iCut < m_NbrOfCuts; ++iCut)
+    {
       if ( fabs( m_xCut - m_spacialCut[iCut] ) < .005 )
 	m_whichCut[0] = iCut;
       else if ( fabs( m_stereoCut -  m_spacialCut[iCut]) < .005 )
 	m_whichCut[1] = iCut;
   } // loop cuts
 
+  for(iCut = 1; iCut < m_NbrOfCuts; iCut++)
+    {
+      m_binSize = std::min( m_binSize,
+			    m_spacialCut[ iCut ] - m_spacialCut[ iCut - 1 ] );
+    }
 
+  m_binSize = std::min( m_binSize, .01 );
+  m_binSize = std::max( m_binSize, .01 );
+
+  m_binNumber = static_cast<unsigned int>( (m_spacialCut.back() -
+					    m_spacialCut.front()) / m_binSize );
+  m_binNumber++;
+  
   return StatusCode::SUCCESS;
 }
 
@@ -157,6 +177,9 @@ StatusCode STEfficiency::execute()
 
   Category type;
   std::vector<LHCb::LHCbID> itHits;
+
+  std::vector< unsigned int >::const_iterator typeBegin( m_wantedTypes.begin() ),
+    typeEnd( m_wantedTypes.end() );
   
   // Loop on tracks
   for (It = Begin; It != End; It++) {
@@ -166,6 +189,13 @@ StatusCode STEfficiency::execute()
       expectedLayers.clear();
       itHits.clear();
       output.clear();
+
+      plot( static_cast<unsigned int>((*It) -> type()),
+	    "TrackType", "Track type", -.5, 9.5, 10 );
+
+      if ( find( typeBegin, typeEnd,
+		 static_cast<unsigned int>((*It) -> type()) ) == typeEnd )
+	continue;
 
       // collect the expected hits
       m_expectedHits -> collect( **It, expectedHits );
@@ -230,6 +260,15 @@ StatusCode STEfficiency::execute()
   return StatusCode::SUCCESS;
 }
 
+/**
+ * Checks whether there is a hit in the given sector.
+ *
+ * @param hits list of clusters.
+ * @param testsector uniqueID of the wanted sector
+ * @param resCut window size
+ *
+ * @return \e true if yes.
+ */
 bool STEfficiency::foundHitInSector( const ISTClusterCollector::Hits& hits, 
 				      const unsigned int testsector,
 				      const double resCut  ) const
@@ -237,23 +276,33 @@ bool STEfficiency::foundHitInSector( const ISTClusterCollector::Hits& hits,
   bool found = false;
 
   BOOST_FOREACH(ISTClusterCollector::Hit aHit, hits){
-    if (aHit.cluster->channelID().uniqueSector() == testsector && fabs(aHit.residual) < resCut) {
-       const DeSTSector* sector = m_tracker -> findSector( aHit.cluster -> channelID() );
-       const unsigned int beetle = sector -> beetle( aHit.cluster -> channelID());
-       const double sigToNoise = aHit.cluster -> totalCharge() / sector->beetleNoise(beetle);
-       if ( sigToNoise < m_chargeCut ) {
-         continue;
-       }
-       else {
-         found = true;
-         break;
-       }
-    }
+    if (aHit.cluster->channelID().uniqueSector() == testsector && fabs(aHit.residual) < resCut)
+      {
+	const DeSTSector* sector = m_tracker -> findSector( aHit.cluster -> channelID() );
+	const unsigned int beetle = sector -> beetle( aHit.cluster -> channelID());
+	const double sigToNoise = aHit.cluster -> totalCharge() / sector->beetleNoise(beetle);
+	if ( sigToNoise < m_chargeCut )
+	  {
+	    continue;
+	  }
+	else {
+	  found = true;
+	  break;
+	}
+      }
   } // forach
   
   return found;
 }
-
+/**
+ * Checks whether there is a hit in the given layer.
+ *
+ * @param hits list of clusters.
+ * @param testlayer uniqueID of the wanted layer
+ * @param resCut window size
+ *
+ * @return \e true if yes.
+ */
 bool STEfficiency::foundHitInLayer( const ISTClusterCollector::Hits& hits, 
 				     const unsigned int testlayer,
 				     const double resCut  ) const
@@ -301,97 +350,124 @@ StatusCode STEfficiency::finalize()
   double nExpected, nFound, err;
   double eff  = 999.0;
 
-  ITDetectorPlot prop( "EffciencyPlot", "EfficiencyPlot" );
+  ITDetectorPlot prop( "EfficiencyPlot", "Efficiency Plot" );
 
-  IHistogram2D* histo = book2D( prop.name() , prop.title(), prop.minBinX(), prop.maxBinX(),
-				prop.nBinX(), prop.minBinY(), prop.maxBinY(), prop.nBinY());
+  IHistogram2D* histo = book2D( prop.name() , prop.title(),
+				prop.minBinX(), prop.maxBinX(), prop.nBinX(),
+				prop.minBinY(), prop.maxBinY(), prop.nBinY());
 
-
-  for (; iterS != m_nameMapSector.end(); ++iterS ) {
-
+  for (; iterS != m_nameMapSector.end(); ++iterS )
+    {
       channelID = iterS -> second -> elementID();
       nick   = iterS -> second -> nickname();
       iterS->second->isStereo() == true ? presentCut = m_whichCut[1]: presentCut = m_whichCut[0] ;
       
-      if (m_detType == "IT"){
-        root = ITNames().UniqueBoxToString(channelID);
-      } 
+      if (m_detType == "IT")
+	root = ITNames().UniqueBoxToString(channelID);
 
       // how many were expected ?
       nExpected = m_expectedSector[ iterS -> first ];
       
-      if (nExpected > 1) {
-	  for (i = 0; i < m_NbrOfCuts; ++i) {       
+      if (nExpected > 1)
+	{
+	  profile1D(-10., nExpected, root + "/Eff_" + nick,
+		    "Efficiency vs cut",
+		    m_spacialCut.front() - m_binSize / 2.,
+		    m_spacialCut.back() + m_binSize / 2.,
+		    m_binNumber);
+	  for (i = 0; i < m_NbrOfCuts; ++i)
+	    {
 	      nFound = m_foundSector[i][iterS->first]; 
 	      eff = 100 * nFound / nExpected;
 	      err = sqrt( eff * (100. - eff) / nExpected );
 	      profile1D(m_spacialCut[i], eff, root + "/Eff_" + nick,
-			"Efficiency vs cut", 0., m_spacialCut.back(),
-			static_cast<unsigned int>(1000 * m_spacialCut.back()));
-	      if ( i == presentCut ) {
+			"Efficiency vs cut",
+			m_spacialCut.front() - m_binSize / 2.,
+			m_spacialCut.back() + m_binSize / 2.,
+			m_binNumber);
+	      if ( i == presentCut )
+		{
 		  verbose() << nick << ' ' << eff
 			    << " +/- " << err << " (found " << nFound
 			    << " for cut " << m_spacialCut[i] << ")" << endmsg;
-	       
+		  
   		  ST::ITDetectorPlot::Bins theBins = prop.toBins(channelID); 
-		  histo -> fill( theBins.xBin, theBins.yBin, eff );
-                  plot(eff,"sector eff", "sector eff", 0., 100., 200);
-	      }
-	  } // i
-      } //nExpected
+		  if ( nExpected > m_minExpected )
+		    {
+		      histo -> fill( theBins.xBin, theBins.yBin, eff );
+		      plot(eff,"sectorEff", "sector eff", 0., 100., 200);
+		    }
+		  else
+		    histo -> fill( theBins.xBin, theBins.yBin, 102. );
+		}
+	    } // i
+	} //nExpected
     } // iterS
-
+  
   for (iterS = m_nameMapLayer.begin(); iterS != m_nameMapLayer.end(); ++iterS )
     {
       channelID = iterS -> second -> elementID();
       iterS->second->isStereo() == true ? presentCut = m_whichCut[1]: presentCut = m_whichCut[0] ;
-      if (m_detType == "IT") {
-        nick  = ITNames().UniqueLayerToString(channelID);
-      }
-
+      if (m_detType == "IT")
+	{
+	  nick  = ITNames().UniqueLayerToString(channelID);
+	}
+      
       root = "Layers";
-
+      
       // how many were expected ?
       nExpected = m_expectedLayer[ iterS -> first ];
       
-      if (nExpected > 1) {
-	for (i = 0; i < m_NbrOfCuts; ++i)
-	  {
-	    nFound = m_foundLayer[i][iterS->first]; 
-	    eff = 100 * nFound/nExpected;
-	    err = sqrt( eff * (100. - eff) / nExpected );
-	    profile1D(m_spacialCut[i], eff, root + "/Eff_" + nick,
-		      "Efficiency vs cut", 0., m_spacialCut.back(),
-		      static_cast<unsigned int>(1000 * m_spacialCut.back()));
-	    if ( i == presentCut )
-	      {
-                plot(eff, "layer eff", "layer eff", 0., 100, 200);
-		info() << std::setw(11) << std::left << nick << ' ' 
-		       << std::setw(4) << std::right << nFound
-		       << " found hits" << " (" << std::setw(4) << std::right
-		       << nExpected << " expected ones), cut = "
-		       << m_spacialCut[i] << ' '
-		       << /*setprecision(2) <<*/ eff << " +/- " << err
-		        << endmsg;
-                
-	      }
-	  } // i
-      } // nExpected
+      if (nExpected > 1)
+	{
+	  profile1D(-10., nExpected, root + "/Eff_" + nick,
+		    "Efficiency vs cut",
+		    m_spacialCut.front() - m_binSize / 2.,
+		    m_spacialCut.back() + m_binSize / 2.,
+		    m_binNumber);
+	  for (i = 0; i < m_NbrOfCuts; ++i)
+	    {
+	      nFound = m_foundLayer[i][iterS->first]; 
+	      eff = 100 * nFound/nExpected;
+	      err = sqrt( eff * (100. - eff) / nExpected );
+	      profile1D(m_spacialCut[i], eff, root + "/Eff_" + nick,
+			"Efficiency vs cut",
+			m_spacialCut.front() - m_binSize / 2.,
+			m_spacialCut.back() + m_binSize / 2.,
+			m_binNumber);
+	      if ( i == presentCut )
+		{
+		  plot(eff, "layerEff", "layer eff", 0., 100, 200);
+		  info() << std::setw(11) << std::left << nick << ' ' 
+			 << std::setw(4) << std::right << nFound
+			 << " found hits" << " (" << std::setw(4) << std::right
+			 << nExpected << " expected ones), cut = "
+			 << formatNumber( m_spacialCut[i], 1u )
+			 << ' ' << std::setw(6) << formatNumber( eff )
+			 << " +/- "
+			 << std::setw(5) << formatNumber( err )
+			 << endmsg;
+		}
+	    } // i
+	} // nExpected
     } // iterS
-      
+  
   // total efficency
-  double teff = 999;
-  if (m_totalExpected != 0u) teff = 100 * m_totalFound/m_totalExpected;
-  double terror = sqrt( eff * (100. - eff) / m_totalExpected );
-  info() << "Total Eff " << teff <<  " +/- " << terror << endmsg; 
+  double teff = 999.;
+  if (m_totalExpected != 0u) teff = 100. * static_cast<double>(m_totalFound)/static_cast<double>(m_totalExpected);
+  double terror = sqrt( teff * (100. - teff) / m_totalExpected );
+  info() << "Total Eff " << formatNumber( teff ) <<  " +/- "
+	 << formatNumber( terror ) << endmsg;
   
   std::string layerEff = "layer eff";
   AIDA::IHistogram1D* layerHisto = histo1D(layerEff);
-  info() << "Layer Eff: " << layerHisto->mean() << " rms " << layerHisto->rms() << endmsg;  
+  info() << "Layer Eff: " << formatNumber( layerHisto->mean() ) << " rms "
+	 << formatNumber( layerHisto->rms() ) << endmsg;  
 
   std::string sectorEff = "sector eff";
   IHistogram1D* sectorHisto = histo1D(sectorEff);
-  info() << "sector Eff: " << sectorHisto->mean() << " rms " << sectorHisto->rms() << endmsg;  
+  info() << "sector Eff: " << formatNumber( sectorHisto->mean() ) << " rms "
+	 << formatNumber( sectorHisto->rms() ) << endmsg;  
 
   return TrackMonitorBase::finalize();  // must be called after all other actions
 }
@@ -412,6 +488,25 @@ void STEfficiency::filterNameList(std::vector<unsigned int>& vec)
 {
   std::sort( vec.begin(), vec.end() );
   std::unique( vec.begin(), vec.end() );
+}
+
+/**
+ * Stupid function that allows to print the number with 2 decimals,
+ * since using std::setprecision and std::fixed directly in the info()
+ * screws everythings up.
+ *
+ * @param nbr number (double) to print
+ * @param digits number of wanted decimal (2 is the default)
+ *
+ * @return a string with the correct number of decimals.
+ */
+std::string STEfficiency::formatNumber(const double& nbr,
+				       const unsigned int& digits ) const
+{
+  std::stringstream ss;
+  ss.setf(std::ios::fixed, std::ios::floatfield);
+  ss << std::setprecision( digits ) << nbr;
+  return ss.str();
 }
 
 //=============================================================================
