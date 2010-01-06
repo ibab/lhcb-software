@@ -3,6 +3,11 @@
 ! Responsible : Marcin Kucharczyk
 !--------------------------------------------------------------------------
 
+!================= VeloPixAlgorithms v0r0 2010-01-06 ======================
+! 2010-01-06 Marcin Kucharczyk
+ - Update the name of FastClusterContainer in VeloPixClusterCreator 
+ - according to the change in VeloPixLiteCluster.h
+
 !================= VeloPixAlgorithms v0r0 2009-12-08 ======================
 ! 2009-12-08 Marcin Kucharczyk
  - Fix: loading now baryCenterChID instead of central one to liteCluster 
