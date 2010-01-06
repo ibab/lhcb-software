@@ -8,7 +8,7 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-CountParticles                                              SUCCESS Number of counters : 29
+CountParticles                                              SUCCESS Number of counters : 30
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  |*"#accept"                                       |      1000 |       1000 |(  100.000 +- 0.100000 )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0)
