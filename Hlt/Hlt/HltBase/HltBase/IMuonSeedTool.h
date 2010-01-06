@@ -1,4 +1,4 @@
-// $Id: IMuonSeedTool.h,v 1.4 2010-01-06 07:29:40 albrecht Exp $
+// $Id: IMuonSeedTool.h,v 1.5 2010-01-06 08:46:51 albrecht Exp $
 #ifndef IMUONSEEDTOOL_H 
 #define IMUONSEEDTOOL_H 1
 
@@ -51,13 +51,6 @@ public:
   virtual StatusCode makeTrack( const LHCb::Track& inputTrack,
                                 LHCb::Track& seedTrack ) = 0; 
 
-  /*
-   *  function to update the field according to 
-   *  the conditions of this run
-   *  will be called by the UpdateManagerService
-   */
-  virtual StatusCode updateField()=0;
   
-
 };
 #endif // IMUONSEEDTOOL_H
