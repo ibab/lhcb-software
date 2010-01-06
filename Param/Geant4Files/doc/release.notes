@@ -4,6 +4,12 @@
 ! Purpose     : Hold link to Geant4 data files
 !-----------------------------------------------------------------------------
 
+!======================== Geant4Files v91r0 2008-06-30 =======================
+! 2008-06-29 - Gloria CORTI
+ - Adapt soft links to data file for Geant4 9.1:
+   . New versions for G4NDL (3.11 -> 3.12) and G4EMLOW (4.3 -> 5.1)
+   . New soft link to G4ABLA (3.0)
+
 !======================== Geant4Files v90r0 2008-06-09 =======================
 ! 2008-06-25 - Gloria CORTI
  - Change links to use filenames with version to skip one indirection and
