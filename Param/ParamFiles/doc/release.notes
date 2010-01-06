@@ -6,6 +6,11 @@
                 this package is not backed up in CVS
 !-----------------------------------------------------------------------------
 
+!======================= ParamFiles v7r1 2008-01-18 ==========================
+! 2008-01-18 - Marco Cattaneo for Adrian Perieanu
+ - Add MVAnalysis_m_CFMlpANN.weights.txt, MVAnalysis_pf_CFMlpANN.weights.txt,
+   weights file for TMVA in Tr/NNTools ghost classification avalysis
+
 !======================= ParamFiles v7r0 2007-09-21 ==========================
 ! 2007-09-21 - Marco Cattaneo
  - Remove obsolete files CaloPIDs_DC06_v1.root, CaloPIDs.root
