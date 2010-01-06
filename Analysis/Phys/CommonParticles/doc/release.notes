@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.163 2010-01-05 10:46:54 pkoppenb Exp $
+!$Id: release.notes,v 1.164 2010-01-06 11:04:11 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -7,6 +7,9 @@
 ! When adding a Particle make sure it is appended to one of the Standard* files
 !
 !-----------------------------------------------------------------------------
+
+! 2010-01-06 - Patrick Koppenburg
+ - Added StdLooseResolvedEta (completes task #13084)
 
 ! 2010-01-05 - Patrick Koppenburg
  - Correct buggy StdVeryLooseDstarWithD2HH
