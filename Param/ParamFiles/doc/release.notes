@@ -1,0 +1,149 @@
+!-----------------------------------------------------------------------------
+! Package     : ParamFiles
+! Responsible : Florence RANJARD
+! Purpose     : distribution of parametrization  data files used during 
+                simulation and digitization
+                this package is not backed up in CVS
+!-----------------------------------------------------------------------------
+
+!======================== ParamFiles v4r1 2006-03-07 ======================
+! 2006-03-07 - Marco Cattaneo for Julien Cogan
+ - New version of L0MuonKernel.xml
+
+! 2006-02-16 - Florence RANJARD for Patrick Robbe
+ - update of ParticleTable.txt, ParticleTable,mH=120GeV.txt and mH=140.txt
+   to update mass and width of B** and add eta_c(2S) particle for EvtGen
+
+!========================= ParamFiles v4r0 2005-12-19 ====================
+! 2005-12-19 - Marco Cattaneo for Julien Cogan
+ - Replace l0mConf-v3r0dev7-Q*.xml by L0MuonKernel.xml, used by new L0Muon
+   simulation, starting from LHCb v19r4
+
+!========================= ParamFiles v3r13 2005-08-17 ===================
+! 2005-08-17 - Gloria Corti
+ - add gausscalo.root the root translation of gausscalo.hbook
+
+!========================== ParamFiles v3r12 2005-06-13 ==================
+! 2005-06-13 - Patrick Robbe
+ - add ParticleTable,mH=120GeV.txt and ParticleTable,mH=140GeV.txt for Higgs 
+   mass 120 GeV and 140 GeV.
+
+!========================== ParamFiles v3r11 2005-03-01 ==================
+! 2005-03-01 - Patrick Robbe
+ - add ion definitions to make them known in Geant4.
+
+!========================== ParamFiles v3r10 2005-02-07 ================
+! 2005-02-07 - Florence Ranjard
+ - remove obsolete files - beam.cdf, particle, PythiaStablePart.cdf, evt.pdl
+                           EvtDecayParticles.config, PythiaStablePart.config
+                           mjit1, mubc1, mubg1, tprs1, tspd1
+
+! 2005-02-07 - Marco Cattaneo
+ - Add h2root translations of MuonBackground parameterization histograms 
+   (muonflat-gauss.root and muonlow-gauss.root). Corresponding .hbook files
+   are obsolete, should be removed at next major release
+
+!========================== ParamFiles v3r9 2005-01-04 =================
+! 2005-01-04 - Patrick Robbe
+ - increase H_10 mass from 110GeV to 115GeV
+
+!=========================== ParamFiles v3r8 2004-07-13 ===============
+              this version is not backward compatible
+              should be used with Boole version >= v6
+
+! 2004-07-13 - Marco Cattaneo
+ - new version of l0mConf-*.xml trigger simulation files from Luisanna Tocco
+
+!=========================== ParamFiles v3r7 2004-05-03 ===============
+! 2004-05-03 - Florence RANJARD
+ - new ParticleTable.txt to add ion names for Geant4.
+ - remove RichHPD_sicb_incident_track.data no longer used
+
+!========================== ParamFiles v3r6 2004-04-26 =================
+! 2004-04-26 - Patrick Robbe
+ - new ParticleTable.txt to cure bug found in Gauss_478_35_3, 480_34_3,
+   and 478_123_3
+
+!=========================== ParamFiles v3r5 2004-04-14 ===============
+! 2004-04-14 - Alessia Satta
+ - remove muon*v262r0.hbook
+ - add muon*_gauss.hbook
+
+!============================ ParamFiles v3r4 2004-03-10 ===============
+! 2004-03-10 - Patrick Robbe
+ - ParticleTable.txt - use PDG 2004 values for B0,B+,B_s,B_c,Lambda_b
+   lifetimes.
+
+! 2004-03-09 - Luisanna Tocco
+ - add 4 xml files used by the L0 Muon Trigger processor simulation  which
+   describe the configuration of optical links and data flow
+
+!============================ ParamFiles v3r3 2004-03-05 ===============
+! 2004-03-05 - Patrick Robbe
+ - new evt.pdl and ParticleTable.txt
+
+!============================ ParamFiles v3r2 2004-02-16 ================
+! 2004-02-16 - Ivan Belyaev
+ - add CaloPIDs.hbook and CaloPIDs.root 
+
+!============================ ParamFiles v3r1 2004-02-06 ==================
+! 2004-02-06 - Patrick Robbe
+ - new particle.cdf to update D_s1+ and D_s0*+ mass according to BaBar and 
+   Belle discovery
+
+!============================= ParamFiles v3r0 2004-01-14 ==================
+! 2004-01-14 - Florence RANJARD for Patrick Robbe
+ - new evt.pdl modified version by CDF  to add new particles
+
+!============================= ParamFiles v2r2 2004-01-08 ==================
+! 2004-01-08 - Florence RANJARD for Patrick Robbe
+ - new evt.pdl to adjust PDG codes to pythia codes.
+
+!============================= ParamFiles v2r1 2003-10-10 ==================
+! 2003-10-10 - Florence RANJARD for Patrick Robbe
+ - new evt.pdl, EvtDecayParticles.config,  PythiaStablePart.config
+   needed by EvtGen v4r0
+
+! 2003-10-01 - Florence RANJARD
+ - move Bkg* files to PARAM/LHCBkg package
+ - add beam.cdf from SICB/dbase/cdf
+ - add RichHPD_sicb_incident_track.data from Rich/RichReadout/options
+
+!============================ ParamFiles v2r0 2003-09-12 ====================
+! 2003-09-12 - Florence RANJARD
+ - replace particle.cdf with the one from dbase, adding nu_mu, anti_nu_mu
+   and anti_nu_e
+
+!============================= ParamFiles v1r2 2003-08-18 ==================
+! 2003-08-18 - Florence RANJARD
+ - rename data/PythiaStablePart.cdf as data/PythiaStablePart.config
+ - add data/EvtDecayParticles.config from Gen/GeneratorModules/ConfigFiles
+
+!============================= ParamFiles v1r1 2003-08-13 ===================
+! 2003-08-13 - Florence Ranjard
+ - add data/particle.cdf from Sim/Gauss/data
+ - add data/PythiaStablePart.cdf from Sim/Gauss/data
+
+!============================== HbookFiles v1r0 2003-07-08 ===================
+! 2003-07-08 - Florence RANJARD
+ - the following files have been renamed to be sure that their file name 
+has less than 80 characters (maximum allowed by SICBMC)
+the path of these files should NOT have more that 72 characters
+
+mubg_v233r2_gcmb_v5.hbook -> mubg1
+mubg_v233r2_gc_v5.hbook ---> mubc1
+muon_jitter_v2.hbook ------> mjit1
+spd_timing_v1.hbook -------> tspd1
+prs_timing_v1.hbook -------> tprs1
+
+if new version of these files are produced : the serial number must be 
+increased.
+
+- Bkg_r1_b10.m.d, Bkg_r2_b10.m.d, Bkg_r1_b10.m.d.d are read by SICBMC 
+
+- flat-spillo-2.hbook, mubg1.hbook are read by Brunel
+
+- gausscalo.hbook is read by Gauss
+
+!=============================================================================
+
