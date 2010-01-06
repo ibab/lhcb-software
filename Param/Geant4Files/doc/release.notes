@@ -1,8 +1,13 @@
 !-----------------------------------------------------------------------------
 ! Package     : PARAM/Geant4Files
-! Responsible : Gloria CORTI
+! Responsible : Gloria CORTI, Silvia MIGLIORANZI
 ! Purpose     : Hold link to Geant4 data files
 !-----------------------------------------------------------------------------
+
+!======================== Geant4Files v92r0 2009-11-03 =======================
+! 2009-11-03 - Gloria CORTI
+ - Adapt soft links to data file for Geant4 9.2:
+   . New versions for G4NDL (3.12 -> 3.13) and G4EMLOW (5.1 -> 6.2)
 
 !======================== Geant4Files v91r0 2008-06-30 =======================
 ! 2008-06-29 - Gloria CORTI

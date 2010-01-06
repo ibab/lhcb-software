@@ -3,7 +3,7 @@
 # Maintainer : Gloria CORTI
 #============================================================================
 package           Geant4Files
-version           v91r0
+version           v92r0
 
 # Structure 
 #============================================================================
@@ -17,9 +17,9 @@ set G4LEVELGAMMADATA  "$(G4DATA)/PhotonEvaporation2.0"
 
 set G4RADIOACTIVEDATA "$(G4DATA)/RadioactiveDecay3.2"
 
-set G4LEDATA          "$(G4DATA)/G4EMLOW5.1"
+set G4LEDATA          "$(G4DATA)/G4EMLOW6.2"
 
-set G4NEUTRONHPDATA   "$(G4DATA)/G4NDL3.12"
+set G4NEUTRONHPDATA   "$(G4DATA)/G4NDL3.13"
 
 set G4ABLADATA        "$(G4DATA)/G4ABLA3.0"
 
