@@ -6,6 +6,13 @@
                 this package is not backed up in CVS
 !-----------------------------------------------------------------------------
 
+!======================= ParamFiles v8r0 2008-11-14 ==========================
+! 2008-11-14 - Marco Cattaneo
+ - Remove ParticleTable.txt & ParticleTableWithCorrectPDGId.txt, now in condDb
+
+! 2008-11-14 - Julien Cogan
+ - Update L0MuonKernel.xml, to fix a bug in the description of the L0Muon input
+
 !======================= ParamFiles v7r3 2008-09-22 ==========================
 ! 2008-09-22 - Marco Cattaneo for Julien Cogan
  - New version of L0MuonKernel.xml (backward compatible bug fix)
