@@ -3,7 +3,10 @@
 ! Responsible : Johannes Albrecht
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
-
+! 2010-01-06 - Johannes Albrecht
+ - ElectronSeedTool, MuonSeedTool, HadronSeedTool, L0ConfExtrapolator:
+   update B field with update manager service
+ - L0ConfirmWithT: adapt to the above changes
 
 ! 2009-12-10 - Johannes Albrecht
  - MuonSeedTool: change warnings and err to debug, make more robust against 
