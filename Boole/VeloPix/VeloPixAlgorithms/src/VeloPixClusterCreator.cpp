@@ -1,4 +1,4 @@
-// $Id: VeloPixClusterCreator.cpp,v 1.2 2009-12-08 17:19:19 marcin Exp $
+// $Id: VeloPixClusterCreator.cpp,v 1.3 2010-01-06 14:08:46 marcin Exp $
 // Include files:
 // STL
 #include <string>
@@ -85,8 +85,8 @@ StatusCode VeloPixClusterCreator::execute() {
   VeloPixDigits* digitCont = get<VeloPixDigits>(m_inputLocation);
   // Clusterization
   VeloPixClusters* clusterCont = new VeloPixClusters();
-  VeloPixLiteCluster::FastContainer* clusterLiteCont =
-                      new VeloPixLiteCluster::FastContainer();
+  VeloPixLiteCluster::VeloPixLiteClusters* clusterLiteCont =
+                      new VeloPixLiteCluster::VeloPixLiteClusters();
   put(clusterCont,m_outputLocation);
   put(clusterLiteCont,m_outputLocationLite);
   StatusCode sc = createClusters(digitCont,clusterCont,clusterLiteCont);
@@ -102,8 +102,8 @@ StatusCode VeloPixClusterCreator::execute() {
 // Create VeloPixClusters
 //============================================================================
 StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
-                         VeloPixClusters* clusterCont,
-                         VeloPixLiteCluster::FastContainer* clusterLiteCont)
+           VeloPixClusters* clusterCont,
+           VeloPixLiteCluster::VeloPixLiteClusters* clusterLiteCont)
 {
   // Sort VeloPixDigits by totValue
   std::stable_sort(digitCont->begin(),digitCont->end(),

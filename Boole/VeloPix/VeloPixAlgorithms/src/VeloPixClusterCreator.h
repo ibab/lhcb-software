@@ -1,4 +1,4 @@
-#// $Id: VeloPixClusterCreator.h,v 1.1.1.1 2009-12-04 14:16:52 marcin Exp $
+#// $Id: VeloPixClusterCreator.h,v 1.2 2010-01-06 14:08:46 marcin Exp $
 #ifndef VELOPIXCLUSTERCREATOR_H
 #define VELOPIXCLUSTERCREATOR_H 1
 // Include files
@@ -49,8 +49,8 @@ protected:
 private:
 
   StatusCode createClusters(LHCb::VeloPixDigits* digitCont,
-                   LHCb::VeloPixClusters* clusterCont,
-                   LHCb::VeloPixLiteCluster::FastContainer* clusterLiteCont);
+             LHCb::VeloPixClusters* clusterCont,
+             LHCb::VeloPixLiteCluster::VeloPixLiteClusters* clusterLiteCont);
   void baryCenter(std::vector<pixDigit> activePixels,
                   LHCb::VeloPixChannelID& baryCenterChID,
                   std::pair<double,double>& xyFraction,
