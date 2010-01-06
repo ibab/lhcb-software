@@ -1,4 +1,4 @@
-// $Id: MuonSeedTool.h,v 1.7 2010-01-06 07:43:42 albrecht Exp $
+// $Id: MuonSeedTool.h,v 1.8 2010-01-06 08:50:38 albrecht Exp $
 #ifndef MUONSEEDTOOL_H 
 #define MUONSEEDTOOL_H 1
 
@@ -39,7 +39,7 @@ public:
   virtual StatusCode makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
                                 LHCb::Track& seedTrack );
 
-  virtual StatusCode updateField() ;
+  StatusCode updateField() ;
   
 private:
 

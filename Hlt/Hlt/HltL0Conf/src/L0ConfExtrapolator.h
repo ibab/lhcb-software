@@ -1,4 +1,4 @@
-// $Id: L0ConfExtrapolator.h,v 1.7 2010-01-06 07:45:36 albrecht Exp $
+// $Id: L0ConfExtrapolator.h,v 1.8 2010-01-06 08:50:25 albrecht Exp $
 #ifndef L0CONFEXTRAPOLATOR_H 
 #define L0CONFEXTRAPOLATOR_H 1
 
@@ -53,7 +53,7 @@ public:
   
   int getCaloRegion( double stateX, double stateY, double stateZ ) const;
 
-  virtual StatusCode updateField() ;
+  StatusCode updateField() ;
 
   double getBScale();
 

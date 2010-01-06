@@ -43,7 +43,7 @@ public:
   virtual StatusCode makeTrack( const LHCb::L0CaloCandidate& eL0Cand,
                                 LHCb::Track& seedTrack );
   
-  virtual StatusCode updateField() ;
+  StatusCode updateField() ;
   
  private:
 
