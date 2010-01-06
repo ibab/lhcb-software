@@ -1,0 +1,18 @@
+!-----------------------------------------------------------------------------
+! Package     : BcVegPyData
+! Responsible : Jibo He
+! Purpose     : Provides the grade data required by BcVegPy
+!-----------------------------------------------------------------------------
+
+!======================== BcVegPyData v2r0 2009-10-05 ========================
+! 2009-09-30 - Jibo He
+ - Tagged as v2r0 to distinguish from v1r0 which is not in CVS.
+
+! 2009-09-29 - Jibo He
+ - Grade data generated with Gauss v37r4, using Cteq6LL (10042) and 
+   the leading order running alpha_s, MSTU(111)=MSTP(2)=1
+   14 TeV: $APPCONFIGOPTS/Gauss/MC09-b7TeV-md100-nu0,7-25ns.py
+   10 TeV: $APPCONFIGOPTS/Gauss/MC09-b5TeV-md100.py
+    7 TeV: by changing the beam energy in MC09-b5TeV-md100.py to 3.5 GeV   
+
+!=============================================================================
