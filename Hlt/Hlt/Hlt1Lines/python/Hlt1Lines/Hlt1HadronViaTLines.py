@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -73,7 +73,7 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
  
             #Define the tool which actually makes the forward tracks
             #from the L0 confirmed objects
-            Hlt1HadronViaTSingleTUTConf = Member ( 'TU', 
+            Hlt1HadronViaTTUTConf = Member ( 'TU', 
                                                   'TConf',  
                                                   tools = [Tool(type = HltTrackUpgradeTool, 
                                                                 name = 'HltTrackUpgradeTool',
@@ -82,50 +82,21 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
                                                                             tools = [ Tool( type = PatConfirmTool, 
 											    name = 'PatConfirmTool',
                										    tools = [ Tool( type = PatSeedingTool,
-                                                                                                            name = 'PatSeedingTool',
-                                                                                                            tools = [],
-                                                                                                            zMagnet = 0.,
-                                                                                                            MinMomentum = 10000.,
-                                                                                                            OutputLevel = 6
+                                                                                                            name = 'PatSeedingTool'
                                                                                                           )
-      												    ],
-                                                                                            debugMode = False,
-											    nSigmaX = 1,
-											    nSigmaY = 2,
-											    nSigmaTx = 1,
-											    nSigmaTy = 2,
-											    OutputLevel = 6	
+      												    ]
                                                                                           )
                                                                                     ],
-									    trackingTool='PatConfirmTool', particleType = 1, OutputLevel = 6
+									    trackingTool='PatConfirmTool'
                                                                            )
-                                                                      ], OutputLevel = 6
+                                                                      ]
                                                                )
                                                           ],
-                                                  RecoName = 'THadronConf', OutputLevel = 6 
+                                                  RecoName = 'THadronConf' 
                                                 )
-            '''print 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-            print 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-            print Hlt1HadronViaTSingleTUTConf.Name
-            print Hlt1HadronViaTSingleTUTConf.Type
-            print Hlt1HadronViaTSingleTUTConf.Tools[0].Name
-            print Hlt1HadronViaTSingleTUTConf.Tools[0].Type
-            print Hlt1HadronViaTSingleTUTConf.Tools[0].Tools[0].Name
-            print Hlt1HadronViaTSingleTUTConf.Tools[0].Tools[0].Type
-            print Hlt1HadronViaTSingleTUTConf.Tools[0].Tools[0].Tools[0].Name
-            print Hlt1HadronViaTSingleTUTConf.Tools[0].Tools[0].Tools[0].Type
-            print Hlt1HadronViaTSingleTUTConf.Tools[0].Tools[0].Tools[0].Args
-            print Hlt1HadronViaTSingleTUTConf.Tools[0].Tools[0].Tools[1].Name
-            print Hlt1HadronViaTSingleTUTConf.Tools[0].Tools[0].Tools[1].Type
-            print Hlt1HadronViaTSingleTUTConf.Tools[0].Tools[0].Tools[1].Args
-            print Hlt1HadronViaTSingleTUTConf.Tools[0].Tools[0].Args
-            print Hlt1HadronViaTSingleTUTConf.Tools[0].Args
-            print Hlt1HadronViaTSingleTUTConf.Args
-            print 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-            print 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'''
 
             conf += [ DecodeIT, DecodeTT
-                    , Hlt1HadronViaTSingleTUTConf
+                    , Hlt1HadronViaTTUTConf
                     , Member ( 'TF' , 'TConf'
                            , FilterDescriptor = ['ptAtOrigin,>,'+PTCut]
                              )
