@@ -1,0 +1,18 @@
+! $Id: release.notes,v 1.16 2006/09/05 12:36:47 karl Exp $
+!----------------------------------------------------------------------------
+! Package     : PARAM/MCatNLOData
+! Responsible : Karl Harrison <harrison@hep.phy.cam.ac.uk>
+! Purpose     : Provides results files from MC@NLO integration step
+!----------------------------------------------------------------------------
+
+!======================== MCatNLO v1r1 ===========================
+! 2005-11-29 - Karl Harrison
+ - Error in Gen/LbHerwig v3r0, v3r1, v3r2 means that results files of
+   MCatNLO v1r0 are incorrect
+   This release of MCatNLO contains results files corresponding to
+   default settings of Gen/LbHerwig v3r3
+!======================== MCatNLO v1r0 ===========================
+! 2005-09-05 - Karl Harrison
+ - First release, with results files corresponding to default settings
+   for Gen/LbHerwig v3r0
+
