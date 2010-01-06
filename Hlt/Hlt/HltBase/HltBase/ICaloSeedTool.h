@@ -1,4 +1,4 @@
-// $Id: ICaloSeedTool.h,v 1.2 2009-10-10 16:03:24 graven Exp $
+// $Id: ICaloSeedTool.h,v 1.3 2010-01-06 07:29:48 albrecht Exp $
 #ifndef HLTBASE_ICALOSEEDTOOL_H 
 #define HLTBASE_ICALOSEEDTOOL_H 1
 
@@ -32,6 +32,13 @@ public:
 
   virtual StatusCode makeTrack( const LHCb::L0CaloCandidate& eL0Cand , 
                                 LHCb::Track& seedTrack ) = 0;
+  
+  /*
+   *  function to update the field according to 
+   *  the conditions of this run
+   *  will be called by the UpdateManagerService
+   */
+  virtual StatusCode updateField()=0;
 
 };
 #endif // HLTBASE_ICALOSEEDTOOL_H

@@ -1,4 +1,4 @@
-// $Id: IL0ConfExtrapolator.h,v 1.2 2009-10-08 21:02:52 graven Exp $
+// $Id: IL0ConfExtrapolator.h,v 1.3 2010-01-06 07:30:08 albrecht Exp $
 #ifndef IL0CONFEXTRAPOLATOR_H 
 #define IL0CONFEXTRAPOLATOR_H 1
 
@@ -73,6 +73,16 @@ public:
   //0: ECal IP, 1: ECal MP, 2: ECal OP
   //3: HCal IP, 4: HCal OP
   virtual int getCaloRegion( double stateX, double stateY, double stateZ ) const = 0;
+ 
+  /*
+   *  function to update the field according to 
+   *  the conditions of this run
+   *  will be called by the UpdateManagerService
+   */
+  virtual StatusCode updateField()=0;
+  
+  virtual double getBScale()=0;  
+
 protected:
  
 private:
