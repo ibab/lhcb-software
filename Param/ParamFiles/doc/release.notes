@@ -6,6 +6,16 @@
                 this package is not backed up in CVS
 !-----------------------------------------------------------------------------
 
+!======================= ParamFiles v4r5 2006-10-11 ======================
+! 2006-10-11 - Gloria Corti
+ - New ParticleTable*.txt
+   . Add some nucleus not yet known but known to G4. 
+
+!======================= ParamFiles v4r4 2006-08-30 ======================
+! 2006-08-30 - Gloria CORTI
+ - New ParticleTable*.txt
+   . Add some more nucleus not yet know
+
 ! 2006-06-13 - Florence RANJARD for Patrick ROBBE
  - New ParticleTable*.txt
    . Make some more particles known to EvtGen 
