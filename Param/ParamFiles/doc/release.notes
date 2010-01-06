@@ -6,6 +6,10 @@
                 this package is not backed up in CVS
 !-----------------------------------------------------------------------------
 
+!======================= ParamFiles v7r3 2008-09-22 ==========================
+! 2008-09-22 - Marco Cattaneo for Julien Cogan
+ - New version of L0MuonKernel.xml (backward compatible bug fix)
+
 !======================= ParamFiles v7r2 2008-07-18 ==========================
 ! 2008-07-18 - Marco Cattaneo for Julien Cogan
  - New version of L0MuonKernel.xml (backward compatible):
