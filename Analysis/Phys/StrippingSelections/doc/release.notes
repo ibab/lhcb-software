@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-01-06 - Patrick Koppenburg
+ - Removed default tracking cuts from line StrippingDstarD02PipiMuMuPiMuKPiKmu
+   . See bug report #61127
+
 ! 2010-01-05 - Patrick Spradlin
  - Replaced StrippingDstarNoPID.py with StrippingDstarPromptWithD02HH.py.
    The former was installed for RICH PID calibration, the latter will be used

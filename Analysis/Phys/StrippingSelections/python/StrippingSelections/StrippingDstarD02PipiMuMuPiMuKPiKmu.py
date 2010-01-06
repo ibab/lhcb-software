@@ -1,24 +1,23 @@
-# $Id: StrippingDstarD02PipiMuMuPiMuKPiKmu.py,v 1.1 2009-12-23 11:56:40 poluekt Exp $
+# $Id: StrippingDstarD02PipiMuMuPiMuKPiKmu.py,v 1.2 2010-01-06 13:36:23 pkoppenb Exp $
 
 __author__ = ['Walter Bonivento', 'Francesco Dettori']
 __date__ = '14 December 2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
-Analysis selections for D*+ -> pi+ D0(-> mu mu').
+Analysis selections for D*+ -> pi+ D0(-> mu mu).
 This implementation with the Selection python tools was composed in imitation
 of Bs2JpsiPhi.py revision 1.4.
 '''
 __all__ = ('name', 'SelD0MuMu','SelD0PiPi'
-           'SelDstarWithD02Mu','SelDstarWithD0PiPiForDstarWithD02MuMu',\
-           'SeqDstarWithD02MuMu', 'SeqDstarWithD0PiPiForDstarWithD02MuMu',\
+           'SelDstarWithD02Mu','SelDstarWithD0PiPiForDstarWithD02MuMu',
+           'SeqDstarWithD02MuMu', 'SeqDstarWithD0PiPiForDstarWithD02MuMu',
            'lineDstarWithD0PiPiForDstarWithD02MuMu','lineDstarWithD0PiMuForDstarWithD02MuMu')
 
 from Gaudi.Configuration import *
 from Configurables import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine, bindMembers, StrippingMember
-from CommonParticles.Utils import DefaultTrackingCuts
 name = "DstarWithD02MuMu"
 
 ## Make sure the input particles are declared.  They should already be
@@ -36,7 +35,6 @@ _stdLooseD02PiPi = DataOnDemand("stdLooseD02PiPi", Location = "Phys/StdLooseD02P
 _stdLooseMuons = DataOnDemand("stdLooseMuons", Location = "Phys/StdLooseMuons")
 _stdLoosePions = DataOnDemand("stdLooseMuons", Location = "Phys/StdLoosePions")
 _stdLooseUpPions = DataOnDemand('SelStdLooseUpPions',Location='Phys/StdNoPIDsUpPions')
-DefaultTrackingCuts().Types = ["Long","Upstream"]
 
 ## make the D0 out of 2 muons
 _D0MuMu = CombineParticles('D0MuMu')
