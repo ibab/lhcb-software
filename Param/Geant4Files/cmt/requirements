@@ -1,0 +1,14 @@
+package           Geant4Files
+version           v71r0
+
+branches cmt data
+
+include_path none
+
+#-- Set data file address
+
+set G4LEVELGAMMADATA  "$(GEANT4FILESROOT)/data"
+
+#-- Set NeutronCrossSections file for low-energy Neutron background
+
+set NeutronHPCrossSections $(GEANT4FILESROOT)/data/G4NDL
