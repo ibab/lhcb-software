@@ -1,10 +1,18 @@
 !-----------------------------------------------------------------------------
 ! Package     : ParamFiles
-! Responsible : Florence RANJARD
+! Responsible : Gloria Corti, Marco Cattaneo
 ! Purpose     : distribution of parametrization  data files used during 
                 simulation and digitization
                 this package is not backed up in CVS
 !-----------------------------------------------------------------------------
+
+!======================= ParamFiles v7r0 2007-09-21 ==========================
+! 2007-09-21 - Marco Cattaneo
+ - Remove obsolete files CaloPIDs_DC06_v1.root, CaloPIDs.root
+
+! 2007-09-10 - Marco Cattaneo for Julien Cogan
+ - Replace L0MuonKernel.xml with new version needed by ProcessorKernel v5r* and
+   L0MuonKernel v7r*. Incompatible with previous releases
 
 !======================= ParamFiles v6r1 2006-05-29 ======================
 ! 2007-05-29 - Marco Cattaneo for Victor Egorychev
