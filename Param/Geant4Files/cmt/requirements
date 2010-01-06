@@ -1,14 +1,25 @@
+#============================================================================
+# Created    : 2003
+# Maintainer : Gloria CORTI
+#============================================================================
 package           Geant4Files
-version           v82r0
+version           v90r0
 
-branches cmt data
+# Structure 
+#============================================================================
+branches          cmt doc data
 
-include_path none
+include_path      none
 
 #-- Set data file address
+set G4DATA            "$(GEANT4FILESROOT)/data"
+set G4LEVELGAMMADATA  "$(G4DATA)/PhotonEvaporation2.0"
 
-set G4LEVELGAMMADATA  "$(GEANT4FILESROOT)/data/PhotonEvaporation"
+set G4RADIOACTIVEDATA "$(G4DATA)/RadioactiveDecay3.2"
 
-#-- Set NeutronCrossSections file for low-energy Neutron background
+set G4LEDATA  "$(G4DATA)/G4EMLOW4.3"
 
-set NeutronHPCrossSections $(GEANT4FILESROOT)/data/G4NDL
+set G4NEUTRONHPDATA "$(G4DATA)/G4NDL3.11"
+
+
+

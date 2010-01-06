@@ -1,0 +1,25 @@
+!-----------------------------------------------------------------------------
+! Package     : PARAM/Geant4Files
+! Responsible : Gloria CORTI
+! Purpose     : Hold link to Geant4 data files
+!-----------------------------------------------------------------------------
+
+!======================== Geant4Files v90r0 2008-06-09 =======================
+! 2008-06-25 - Gloria CORTI
+ - Change links to use filenames with version to skip one indirection and
+   set environment variables directly to them.
+   Introduce G4DATA environment variable similarly to what done by Geant4 
+   installation procedure. 
+   Adapt links to data files for Geant4 9.0.
+   Change environment to be used for NeutronHP cross sections following
+   change in Geant4 9.0 ( see their release notes:
+   http://geant4.web.cern.ch/geant4/support/ReleaseNotes4.9.0.html )
+
+! 2008-06-09 - Gloria CORTI
+ - Keep link to /afs/cern.ch/sw/geant4[/releases/share/data], because do not
+   need to change package unless files change, while in 
+   /afs/cern.ch/sw/lcg/external/geant4 pacakge is recreated.
+ - Add link to G4ELASTIC and G4EMLOW to be able to use those processes/physics
+   list if necessary.
+
+!=============================================================================
