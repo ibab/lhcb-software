@@ -6,6 +6,10 @@
                 this package is not backed up in CVS
 !-----------------------------------------------------------------------------
 
+!======================= ParamFiles v8r1 2009-03-11 ==========================
+! 2008-11-14 - Marco Cattaneo for Victor Egorychev
+ - Add CaloPIDs_DC09_v1.root, PIDs pdf for DC09
+
 !======================= ParamFiles v8r0 2008-11-14 ==========================
 ! 2008-11-14 - Marco Cattaneo
  - Remove ParticleTable.txt & ParticleTableWithCorrectPDGId.txt, now in condDb
