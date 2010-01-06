@@ -6,6 +6,11 @@
                 this package is not backed up in CVS
 !-----------------------------------------------------------------------------
 
+!======================= ParamFiles v6r0 2006-03-27 ======================
+! 2007-03-27 - Gloria Corti
+ - Remove obsolete ParticleTable,mH=120GeV.txt and ParticleTable,mH=140GeV.txt
+ - Introduce new ParticleTableWithCorrectPDGId.txt for post-DC06
+
 !======================= ParamFiles v5r0 2006-11-06 ======================
 ! 2006-11-06 - Marco Cattaneo
  - Remove obsolete gausscalo.hbook
