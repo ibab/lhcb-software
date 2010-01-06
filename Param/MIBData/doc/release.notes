@@ -1,0 +1,108 @@
+!-----------------------------------------------------------------------------
+! Package     : GAUSS_v25r10/MIBData
+! Responsible : Gloria CORTI
+! Purpose     : Hold source file of input for LbMIB package 
+!-----------------------------------------------------------------------------
+
+! 2009-11-02 - Magnus LIENG
+ - Removed (old) data files related to CollimatorSource. They are available at
+   /castor/cern.ch/lhcb/background/LHC/2006_Collimators and 
+   /castor/cern.ch/lhcb/background/LHC/2008_BeamGas in text format. Use 
+   $LBMIBROOT/scripts/makeRootFileFromOldFormat.py to translate to format
+   readable by TimeCorrSource in order to simulate.
+   
+ - Added data files for TimeCorrSource (New estimates).
+   7TeV betatron cleaning inefficiency. Losses originating from TCTs.
+   See http://www.hep.manchester.ac.uk/u/robert/LHC_backgrounds/bg.htm
+   Name format:
+   ir8.<side>.<tct-type>.<halo-type>.<shield-type>.<losses on tct>.IRPLANE.root
+   Interface planes: 
+     Beam 1: -1.0 m
+     Beam 2: 19.9 m
+   
+   For normalization we assume 30h betatron cleaning beam life time (Beam with 
+   3e14 p). Total loss: 3e14/(30*60*60) = 2.78e9 p/s. When using TimeCorrSource
+   remember to set time of file correctly for the used file.
+     
+
+ - Beam 1, horizontal halo, TCTH, full shield
+   loss on TCTH: 918/5e6*2.78e9 = 5.1e5 p/s
+   time of file: (30*918)/5.1e5 = 0.054 s
+   . ir8.left.tcth.h.s.30x918.IRPLANE.root
+
+ - Beam 1, vertical halo, TCTH, full shield
+   loss on TCTH: 180/5e6*2.78e9 = 1.0e5 p/s
+   time of file: (30*918)/1.0e5 = 0.054 s
+   . ir8.left.tcth.v.s.30x180.IRPLANE.root
+
+ - Beam 1, vertical halo, TCTV, full shield, full orbit
+   loss on TCTV: 4631/5e6*2.78e9 = 2.6e6 p/s
+   time of file: (14*4600)/2.6e6 = 0.025 s
+   . ir8.left.tctv.v.s.fullorbit.14x4600.IRPLANE.root
+
+ - Beam 1, vertical halo, TCTV, full shield, half orbit
+   loss on TCTV: 4631/5e6*2.78e9 = 2.6e6 p/s
+   time of file: (14*4600)/2.6e6 = 0.025 s
+   . ir8.left.tctv.v.s.halforbit.14x4600.IRPLANE.root
+
+ - Beam 1, vertical halo, TCTV, full shield, quarter orbit
+   loss on TCTV: 4631/5e6*2.78e9 = 2.6e6 p/s
+   time of file: (14*4600)/2.6e6 = 0.025 s
+   . ir8.left.tctv.v.s.quarterorbit.14x4600.IRPLANE.root
+
+ - Beam 1, vertical halo, TCTV, full shield, total orbit
+   loss on TCTV: 4631/5e6*2.78e9 = 2.6e6 p/s
+   time of file: (14*4600)/2.6e6 = 0.025 s
+   . ir8.left.tctv.v.s.totalorbit.14x4600.IRPLANE.root
+
+ - Beam 2, horizontal halo, TCTH, full shield
+   loss on TCTH: 153/5e6*2.78e9 = 8.5e4 p/s
+   time of file: (40*153)/8.5e4 = 0.072 s
+   . ir8.right.tcth.h.s.40x153.IRPLANE.root
+
+ - Beam 2, vertical halo, TCTV, full shield, full orbit
+   loss on TCTV: 32/5e6*2.78e9 = 1.8e4 p/s
+   time of file: (98*32)/5.1e5 = 0.176 s
+   . ir8.right.tctv.v.s.fullorbit.98x32.IRPLANE.root
+
+ - Beam 2, vertical halo, TCTV, full shield, half orbit
+   loss on TCTV: 32/5e6*2.78e9 = 1.8e4 p/s
+   time of file: (98*32)/5.1e5 = 0.167 s
+   . ir8.right.tctv.v.s.halforbit.93x32.IRPLANE.root
+
+ - Beam 2, vertical halo, TCTV, full shield, quarter orbit
+   loss on TCTV: 32/5e6*2.78e9 = 1.8e4 p/s
+   time of file: (99*32)/5.1e5 = 0.178 s
+   . ir8.right.tctv.v.s.quarterorbit.99x32.IRPLANE.root
+
+ - Beam 2, vertical halo, TCTV, full shield, total orbit
+   loss on TCTV: 32/5e6*2.78e9 = 1.8e4 p/s
+   time of file: (99*32)/5.1e5 = 0.178 s
+   . ir8.right.tctv.v.s.totalorbit.99x32.IRPLANE.root
+
+!========================== MIBData v2r0 2008-06-09 ==========================
+
+! 2008-06-09 - Gloria CORTI for Magnus LIENG
+ - Fixed binary data format to be compatible with both 32 and 64bit platforms
+   for staged_shield TCT halo. In this version do not put in full shield
+   that is still available for 32-bit in v1r0
+ - Introduce files for beam gas in arc and LSS for both beam 1 and beam 2,
+   separately for muons and hadrons for beta*=10m
+
+!========================== MIBData v1r0 2008-06-09 ==========================
+
+! 2007-05-16 - Gloria CORTI
+ - Source files for input for Machine Induced Background. 
+   They provide source of particles arriving at the LHCb cavenr at -1m from 
+   IP8 as produced from proton halo impinging on the Tertiary collimators
+   in IR8. The files have been produced for beam1 on TCTV. and TCTH.
+   Separate files are provided for muons and hadrons arriving at the cavern
+   and separately for the horizontal and vertical collimators. 
+   The files here are binary produced on slc3 32-bit machine and identical
+   in format to the original ASCII files from which they have been produced.
+   They have been produced from the ascii files provided by Vadim Talanov
+   with the algorithm in Gen/LbMIB appropriately configured.
+   The format of the source files and reference presentations can be found 
+   at http://cern.ch/lhcb-background/Machine/CollimatorSources.html
+
+!=============================================================================
