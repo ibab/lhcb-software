@@ -1,4 +1,4 @@
-// $Id: Pi0.cpp,v 1.8 2009-12-16 16:48:08 apuignav Exp $
+// $Id: Pi0.cpp,v 1.9 2010-01-06 00:26:39 apuignav Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -24,6 +24,10 @@
 // ICaloDigits4TrackTool
 // ============================================================================
 #include "CaloInterfaces/ICaloDigits4Track.h"
+// ============================================================================
+// DeCalorimeter
+// ============================================================================
+#include "CaloDet/DeCalorimeter.h"
 // ============================================================================
 // Local 
 // ============================================================================
@@ -97,6 +101,8 @@ namespace Kali
       const double ,
       const LHCb::CaloCellID& , 
       const LHCb::CaloCellID& , 
+      const Gaudi::XYZPoint& ,
+      const Gaudi::XYZPoint& ,
       const int    ) ;
     double caloEnergy4Photon( const Gaudi::LorentzVector&  p ) ;
     // ========================================================================
@@ -113,6 +119,8 @@ namespace Kali
     bool  m_histograms ;                                 // produce moni histos
     // Tool for retrieving SPD digits info
     ICaloDigits4Track*  m_spdDigitsTool ;
+    // DeCalorimeter object for ECAL
+    DeCalorimeter*  m_ecal ;
     // Monitoring histograms
     AIDA::IHistogram1D* h1 ;
     AIDA::IHistogram1D* h2 ;
@@ -154,17 +162,19 @@ void Kali::Pi0::histogramsHandler ( Property& /* p */ )
 // tuple fill helper function 
 // ============================================================================
 void Kali::Pi0::fillTuple
-( const Tuple&                tuple ,
-  const Gaudi::LorentzVector& p1    , 
-  const Gaudi::LorentzVector& p2    ,
-  const Gaudi::LorentzVector& p12   ,
-  const double                prs1e , 
-  const double                prs2e ,
-  const double                spd1e , 
-  const double                spd2e ,
-  const LHCb::CaloCellID&     cell1 , 
-  const LHCb::CaloCellID&     cell2 , 
-  const int                   bkg   )
+( const Tuple&                tuple  ,
+  const Gaudi::LorentzVector& p1     , 
+  const Gaudi::LorentzVector& p2     ,
+  const Gaudi::LorentzVector& p12    ,
+  const double                prs1e  , 
+  const double                prs2e  ,
+  const double                spd1e  , 
+  const double                spd2e  ,
+  const LHCb::CaloCellID&     cell1  , 
+  const LHCb::CaloCellID&     cell2  , 
+  const Gaudi::XYZPoint&      point1 ,
+  const Gaudi::XYZPoint&      point2 ,
+  const int                   bkg    )
 {
     using namespace Gaudi::Units ;
     
@@ -189,14 +199,20 @@ void Kali::Pi0::fillTuple
     tuple -> column ( "m12"  , p12.M()  / MeV ) ;
     tuple -> column ( "bkg"  , bkg , 0 , 2    ) ;
     
-    Gaudi::XYZVector mom1 = p1.Vect () ;
-    Gaudi::XYZVector mom2 = p2.Vect () ;
-    if ( 1 == bkg ) {
-      mom2.SetX ( -mom2.X () ) ;
-      mom2.SetY ( -mom2.Y () ) ;
-    }
-    double cosPhi = mom1.Dot ( mom2 ) / ( mom1.R () * mom2.R () ) ;
-    tuple -> column ( "cosPhi" , cosPhi ) ;
+    Gaudi::XYZVector vec = point2 - point1 ;
+    double cSize = m_ecal->cellSize( cell1 ) ;
+    if( m_ecal->cellSize( cell2 ) >  cSize ) cSize = m_ecal->cellSize( cell2 ) ;
+    double dist = (cSize > 0) ? vec.Rho() / cSize : 0 ;
+    tuple -> column ( "dist" , dist ) ;
+
+    //Gaudi::XYZVector mom1 = p1.Vect () ;
+    //Gaudi::XYZVector mom2 = p2.Vect () ;
+    //if ( 1 == bkg ) {
+    //  mom2.SetX ( -mom2.X () ) ;
+    //  mom2.SetY ( -mom2.Y () ) ;
+    //}
+    //double cosPhi = mom1.Dot ( mom2 ) / ( mom1.R () * mom2.R () ) ;
+    //tuple -> column ( "cosPhi" , cosPhi ) ;
  
     tuple -> write () ;
 }
@@ -239,6 +255,8 @@ StatusCode Kali::Pi0::initialize  ()                // the proper initialzation
   m_spdDigitsTool = tool<ICaloDigits4Track>( "SpdEnergyForTrack" , this ) ; // Load tool for SPD
   sc = Gaudi::Utils::setProperty ( m_spdDigitsTool , "AddNeighbours" , 1 ) ;
   if ( sc.isFailure() ) { return sc ; }
+  //
+  m_ecal = getDet<DeCalorimeter>(DeCalorimeterLocation::Ecal);
   //
   return StatusCode::SUCCESS ;
 }
@@ -297,8 +315,8 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     p1.SetPy ( -p1.Py() ) ;
     const Gaudi::LorentzVector fake = ( p1 + mom2 ) ;
 
-    const bool good    =             ( m12      < 250 * MeV && p12.Pt()  > 800 * MeV ) ;
-    bool       goodBkg = m_mirror && ( fake.M() < 250 * MeV && fake.Pt() > 800 * MeV ) ;
+    const bool good    =             ( m12      < 350 * MeV && p12.Pt()  > 800 * MeV ) ;
+    bool       goodBkg = m_mirror && ( fake.M() < 350 * MeV && fake.Pt() > 800 * MeV ) ;
     
     if ( m_histograms && 0 != h1 && good ) { h1 -> fill ( m12 / MeV ) ; }
     
@@ -324,6 +342,10 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
       std::swap ( g1    , g2    ) ;
       std::swap ( prs1e , prs2e ) ; 
     }
+
+    const LHCb::CaloHypo* hypo1 = g1->proto()->calo()[0] ;
+    const LHCb::CaloHypo* hypo2 = g2->proto()->calo()[0] ;
+    Gaudi::XYZPoint point1( hypo1->position()->x() , hypo1->position()->y() , hypo1->position()->z() );
         
     const double spd1e3x3 = caloEnergy4Photon( mom1 ) ;
     const double spd2e3x3 = caloEnergy4Photon( mom2 ) ;
@@ -332,18 +354,18 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     const LHCb::CaloCellID cell2 = cellID( g2 ) ;    
     
     // fill N-tuples
-    
     if  ( good ) 
     { 
-      fillTuple( tuple , mom1 , mom2 , p12 , prs1e , prs2e , spd1e3x3 , spd2e3x3 , cell1 , cell2 , 0 ) ;
+      Gaudi::XYZPoint point2( hypo2->position()->x() , hypo2->position()->y() , hypo2->position()->z() );
+      fillTuple( tuple , mom1 , mom2 , p12 , prs1e , prs2e , spd1e3x3 , spd2e3x3 , cell1 , cell2 , point1 , point2 , 0 ) ;
     }
     if ( goodBkg ) 
     {
-      fillTuple( tuple , mom1 , mom2 , fake , prs1e , prs2e , spd1e3x3 , spd2e3x3 , cell1 , cell2 , 1 ) ;
+      Gaudi::XYZPoint point2Sym( -hypo2->position()->x() , -hypo2->position()->y() , hypo2->position()->z() );
+      fillTuple( tuple , mom1 , mom2 , fake , prs1e , prs2e , spd1e3x3 , spd2e3x3 , cell1 , cell2 , point1 , point2Sym , 1 ) ;
     }
 
     // finally save good photons: 
-
     photons.insert  ( g1 ) ;
     photons.insert  ( g2 ) ;
     //

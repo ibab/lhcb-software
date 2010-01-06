@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.27 2009-12-16 16:48:08 apuignav Exp $ 
+! $Id: release.notes,v 1.28 2010-01-06 00:27:58 apuignav Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.27 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.28 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
+
+! 2010-01-06 - Albert Puig
+
+- replaced "cosPhi" variable by distance between photons in cell units
 
 ! 2009-12-15 - Albert Puig
 
