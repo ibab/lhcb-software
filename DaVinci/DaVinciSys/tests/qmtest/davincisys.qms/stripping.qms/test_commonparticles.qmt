@@ -8,10 +8,9 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-ApplicationMgr                                                 INFO Application Manager Stopped successfully
-DaVinciInit                                                 SUCCESS ==================================================================
-DaVinciInit                                                 SUCCESS 1000 events processed
-DaVinciInit                                                 SUCCESS ==================================================================
+CountParticles                                              SUCCESS Number of counters : 29
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ |*"#accept"                                       |      1000 |       1000 |(  100.000 +- 0.100000 )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
 </extension>
