@@ -1,0 +1,6 @@
+project PARAM
+
+build_strategy without_install_area
+setup_strategy root
+structure_strategy with_version_directory
+
