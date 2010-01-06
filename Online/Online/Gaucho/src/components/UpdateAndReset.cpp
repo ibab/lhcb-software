@@ -257,6 +257,9 @@ void UpdateAndReset::verifyAndProcessRunChange() { // this method can not be cal
   m_runStatus = s_statusUpdated;
   retrieveRunNumber(runNumber.first.first, runNumber.first.second);
   m_triggerConfigurationKey=currentTCK();
+  //stop and restart the DimTimer
+  DimTimer::stop();
+  DimTimer::start(m_timerCycle);
 }
 
 //------------------------------------------------------------------------------
