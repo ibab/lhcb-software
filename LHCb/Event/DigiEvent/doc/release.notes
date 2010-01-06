@@ -4,9 +4,14 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2010-01-06 - Victor Coco
+ - VeloPixLiteCluster :hard code masks since putting them as member increase
+   the class sizeof (48 instead of 8 as ulonglong). Enum would solve the 
+   problem but have win32 inconvienient (see previously)--> hardcoded
+
 ! 2009-12-15 - Victor Coco
- - modify masks (from enum to single member) in VeloPixLiteCluster since 64bits
-   enum are not supported by win32_vc7
+ - VeloPixLiteCluster : modify masks (from enum to single member) in
+   VeloPixLiteCluster since 64bits enum are not supported by win32_vc7
 
 !========================== DigiEvent v2r14 2009-12-11 =======================
 ! 2009-12-04 - Victor Coco
