@@ -6,6 +6,20 @@
                 this package is not backed up in CVS
 !-----------------------------------------------------------------------------
 
+!======================= ParamFiles v5r0 2006-11-06 ======================
+! 2006-11-06 - Marco Cattaneo
+ - Remove obsolete gausscalo.hbook
+
+! 2006-11-06 - Marco Cattaneo for Victor Egorychev
+ - Add CaloPID calibration for DC06 (CaloPIDs_DC06_v1.root)
+ - Remove .hbook version of old caloPID calibration
+
+! 2006-11-06 - Marco Cattaneo for Emanuele Santovetti
+ - Add new Geant4 parameterisations of Muon background
+   (muonflat-G4.root, muonlow-G4.root)
+ - Rename old parameterisations (muonflat-GCALOR.root, muonlow-GCALOR.root)
+ - Remove .hbook versions of old muon background parameterisations
+
 !======================= ParamFiles v4r5 2006-10-11 ======================
 ! 2006-10-11 - Gloria Corti
  - New ParticleTable*.txt
