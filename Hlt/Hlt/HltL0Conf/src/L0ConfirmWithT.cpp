@@ -1,4 +1,4 @@
-// $Id: L0ConfirmWithT.cpp,v 1.15 2009-10-29 09:04:25 pkoppenb Exp $
+// $Id: L0ConfirmWithT.cpp,v 1.16 2010-01-06 07:48:43 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -27,10 +27,8 @@ DECLARE_TOOL_FACTORY( L0ConfirmWithT );
 L0ConfirmWithT::L0ConfirmWithT( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : GaudiTool ( type, name , parent )
-    , m_fieldOff(false)
-  , m_l0ConfExtrapolator(0)
-  , m_magFieldSvc(0)
+  : GaudiTool ( type, name , parent ),
+  m_l0ConfExtrapolator(0)
   , m_TrackConfirmTool(0)
   , m_DataStore(0)
 {
@@ -73,14 +71,6 @@ StatusCode L0ConfirmWithT::initialize()
   m_l0ConfExtrapolator = tool<IL0ConfExtrapolator>("L0ConfExtrapolator");
 
   debug() << "Selected particle type " << m_particleType << endmsg;
-
-  m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
-  
-  if( fabs(m_magFieldSvc->scaleFactor()) < 0.1 ) {
-    info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()
-          <<" %, below 10% of nominal field! \n Use options for no field!"<<endmsg;
-    m_fieldOff=true;
-  }
 
   return sc;
 }
@@ -159,21 +149,21 @@ std::vector<LHCb::LHCbID> L0ConfirmWithT::lhcbIDsInView(const LHCb::Track& seed)
 StatusCode L0ConfirmWithT::prepareStates( const LHCb::Track& seed, LHCb::State* seedStates, int& nStates )
 {
   switch (m_particleType) {
-	  case Muon:
-		  m_l0ConfExtrapolator->muon2T( seed , seedStates[0] );
-		  break;
-	  case Hadron:
-		  m_l0ConfExtrapolator->hcal2T( seed , seedStates[0] , seedStates[1] );
-      if( m_fieldOff == false )	++nStates;
-		  break;
-	  case Electron:
-		  m_l0ConfExtrapolator->ecal2T( seed , seedStates[0] , seedStates[1] );
-		  if( m_fieldOff == false ) ++nStates;
-		  break;
-	  default:
-		  // Unknown particle type, complain
-      error()<<"unknown particle type, return.."<<endmsg;
-      return StatusCode::FAILURE;
+  case Muon:
+    m_l0ConfExtrapolator->muon2T( seed , seedStates[0] );
+    break;
+  case Hadron:
+    m_l0ConfExtrapolator->hcal2T( seed , seedStates[0] , seedStates[1] );
+    if( fabs(m_l0ConfExtrapolator->getBScale() ) > 0.1 ) ++nStates;
+    break;
+  case Electron:
+    m_l0ConfExtrapolator->ecal2T( seed , seedStates[0] , seedStates[1] );
+    if( fabs(m_l0ConfExtrapolator->getBScale() ) > 0.1 ) ++nStates;
+    break;
+  default:
+    // Unknown particle type, complain
+    error()<<"unknown particle type, return.."<<endmsg;
+    return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS; 
 }

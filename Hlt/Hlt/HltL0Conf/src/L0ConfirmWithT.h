@@ -1,11 +1,10 @@
-// $Id: L0ConfirmWithT.h,v 1.6 2008-08-29 14:31:25 albrecht Exp $
+// $Id: L0ConfirmWithT.h,v 1.7 2010-01-06 07:47:59 albrecht Exp $
 #ifndef L0CONFIRMWITHT_H 
 #define L0CONFIRMWITHT_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "Kernel/ILHCbMagnetSvc.h"
 
 #include "TrackInterfaces/ITracksFromTrack.h"            // Interface
 #include "HltBase/ITrackView.h"
@@ -56,11 +55,10 @@ private:
   StatusCode prepareStates( const LHCb::Track& seed, LHCb::State* seedStates, int& nStates );
   
 
-  bool m_debugMode, m_fieldOff;
+  bool m_debugMode;
   
   IL0ConfExtrapolator* m_l0ConfExtrapolator;
-  ILHCbMagnetSvc*  m_magFieldSvc;
-
+  
   ITrackConfirmTool* m_TrackConfirmTool;
   std::string m_trackingTool;
 
@@ -74,6 +72,6 @@ private:
   ParticleType m_particleType;
   // temporary particle type - verified to be valid in initialize
   int m_particleTypeTMP;
-
+  
 };
 #endif // L0CONFIRMWITHT_H
