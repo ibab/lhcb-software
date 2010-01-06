@@ -6,6 +6,10 @@
                 this package is not backed up in CVS
 !-----------------------------------------------------------------------------
 
+!======================= ParamFiles v6r1 2006-05-29 ======================
+! 2007-05-29 - Marco Cattaneo for Victor Egorychev
+ - Add new CaloPID calibration for DC06 (CaloPIDs_DC06_v2.root)
+
 !======================= ParamFiles v6r0 2006-03-27 ======================
 ! 2007-03-27 - Gloria Corti
  - Remove obsolete ParticleTable,mH=120GeV.txt and ParticleTable,mH=140GeV.txt
