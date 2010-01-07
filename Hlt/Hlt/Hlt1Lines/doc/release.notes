@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.84 2010-01-06 15:04:45 gligorov Exp $
+! $Id: release.notes,v 1.85 2010-01-07 09:08:54 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -9,6 +9,10 @@
 ! for the production. Commit them AS WELL in branch production200912. 
 !
 !-----------------------------------------------------------------------------
+
+! 2010-01-07 - V. Gligorov
+ - python/Hlt1Lines/Hlt1HadronViaTLines : configure correctly from the python 
+ - options : remove directory as no longer needed 
 
 ! 2010-01-06 - V. Gligorov
  - python/Hlt1Lines/Hlt1HadronViaTLines : clean up and leave configuration to
