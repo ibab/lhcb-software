@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.86 2010-01-07 10:17:45 albrecht Exp $
+! $Id: release.notes,v 1.87 2010-01-07 13:27:26 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -9,6 +9,9 @@
 ! for the production. Commit them AS WELL in branch production200912. 
 !
 !-----------------------------------------------------------------------------
+! 2010-01-07 - G. Raven   
+ - protect Hlt1HadronViaTLines against missing L0 channels
+
 ! 2010-01-07 - J. Albrecht
  - Hlt1MuonLines: add slots for TConf and velo T match
 

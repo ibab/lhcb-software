@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -175,20 +175,22 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
                 ]
             return dih
         
-        # Single Hadron Line
-        #-----------------------------------
-        Line ( 'SingleHadronViaT'
-               , prescale = self.prescale
-               , postscale = self.postscale
-               , L0DU  = "L0_CHANNEL('"+_cut("L0Channel")+"')"
-               , algos = confirmation()+singlehadron()
-               )
+        from Hlt1Lines.HltL0Candidates import L0Channels
+        if self.getProp('L0Channel') in L0Channels() :
+            # Single Hadron Line
+            #-----------------------------------
+            Line ( 'SingleHadronViaT'
+                   , prescale = self.prescale
+                   , postscale = self.postscale
+                   , L0DU  = "L0_CHANNEL('"+_cut("L0Channel")+"')"
+                   , algos = confirmation()+singlehadron()
+                   )
 
-        # DiHadron Line
-        #-----------------------------------
-        Line ('DiHadronViaT'
-              , prescale = self.prescale
-              , postscale = self.postscale
-              , L0DU  = "L0_CHANNEL('"+_cut("L0Channel")+"')"
-              , algos =  confirmation()+companion()+dihadron()
-              )
+            # DiHadron Line
+            #-----------------------------------
+            Line ('DiHadronViaT'
+                  , prescale = self.prescale
+                  , postscale = self.postscale
+                  , L0DU  = "L0_CHANNEL('"+_cut("L0Channel")+"')"
+                  , algos =  confirmation()+companion()+dihadron()
+                  )
