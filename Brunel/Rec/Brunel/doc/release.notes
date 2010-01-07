@@ -6,7 +6,8 @@ Purpose: LHCb reconstruction program
  - Changes to Configurable: 
    . Do not write NanoEvents to DST by default (task 12940). Can be
      switched on by setting Brunel().WriteLumi = True
-   . If not writing NanoEvents, do not run dummy DST packers 
+   . If not writing NanoEvents, do not run dummy DST packers
+   . LumiFSR creation done only if input are MDF events
    . Pass DataType DstConf (who propagates it to SimConf). Fixes bug 60636
 
  - Changes to tests:
@@ -16,6 +17,7 @@ Purpose: LHCb reconstruction program
    . New counters in DST packer algorithms (EventPacker v2r2)
    . New RichCKRes 2D plots
    . Production of TimeSpanAccounting FSR
+   . Fix to GaudiPoolDB to enable file sharing in FileRecordCnvSvc
 
 </PRE><H1><A NAME=v35r11>2009-12-15 Brunel v35r11</A></H1><PRE>
  - Changes to example options

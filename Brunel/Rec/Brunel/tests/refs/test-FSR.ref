@@ -1,5 +1,5 @@
 # --> Including file '/build/cattanem/Brunel_HEAD/Rec/Brunel/tests/options/test-FSR.py'
-# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r6/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb3/Thu/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
 # EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
@@ -13,14 +13,14 @@
 # ApplicationMgr.ExtSvc                += { "PoolDbCnvSvc/FileRecordCnvSvc" };
 # FileRecordPersistencySvc.CnvServices += { "FileRecordCnvSvc" };
 # FileRecordCnvSvc.DbType               = "POOL_ROOTTREE";
-# FileRecordCnvSvc.ShareFiles           = true;
+# FileRecordCnvSvc.ShareFiles           = "YES";
 # FileRecordDataSvc.ForceLeaves         = true;
 # FileRecordDataSvc.EnableFaultHandler  = true;
 # FileRecordDataSvc.RootCLID            =    1;
 # PoolRootEvtCnvSvc.EnableIncident      =    1;
 # PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
 # PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
-# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r6/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb3/Thu/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # <-- End of file '/build/cattanem/Brunel_HEAD/Rec/Brunel/tests/options/test-FSR.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
@@ -41,12 +41,11 @@
 # |-ForceFullSequence = False
 # |-DataType          = '2009'  (default: '2008')
 # |-SetFSRStatus      = ''
-# |-OutputLevel       = 1  (default: 4)
+# |-OutputLevel       = 1  (default: 3)
 # |-BXTypes           = ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2']
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
-# |-HistoProduce      = False
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0xa1d8e0>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0xa1d650>  (default: None)
 # |-InputType         = 'DST'  (default: 'MDF')
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # applying configuration of DDDBConf
@@ -76,7 +75,7 @@ ApplicationMgr      DEBUG Getting my own properties
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v35r11
-                                          running on lxbuild156.cern.ch on Mon Jan  4 12:19:02 2010
+                                          running on lxbuild156.cern.ch on Thu Jan  7 16:24:51 2010
 ====================================================================================================================================
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service EvtDataSvc/EventDataSvc
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service DetDataSvc/DetectorDataSvc
@@ -241,7 +240,7 @@ RndmGenSvc.Engine   DEBUG Service base class initialized successfully
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.85 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.86 times the speed of a 2.8 GHz Xeon.
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 EventAccount        DEBUG Initialize base class GaudiCommon<Algorithm>
@@ -400,11 +399,12 @@ TouchLumiFSR        DEBUG Property update for OutputLevel : new value = 1
 TouchLumiFSR        DEBUG Property update for OutputLevel : new value = 1
 TouchLumiFSR        DEBUG Initialize base class GaudiCommon<Algorithm>
 TouchLumiFSR        DEBUG could not locate CounterSummarySvc, no counter summary will be made
-TouchLumiFSR        DEBUG List of ALL properties of LumiIntegrateFSR/TouchLumiFSR  #properties = 41
+TouchLumiFSR        DEBUG List of ALL properties of LumiIntegrateFSR/TouchLumiFSR  #properties = 42
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'IntegratorToolName':LumiIntegrator
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'SubtractBXTypes':[  ]
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'AddBXTypes':[  ]
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'PrimaryBXType':BeamCrossing
+TouchLumiFSR        DEBUG Property ['Name': Value] =  'TimeSpanFSRName':/TimeSpanFSR
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'EventCountFSRName':/EventCountFSR
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'FSRName':/LumiFSR
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'FileRecordLocation':/FileRecords
@@ -568,6 +568,13 @@ FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E59
 FileRecordDataSvc VERBOSE Filling object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2
 FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2 successfully loaded
 FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2
+FileRecordDataSvc VERBOSE Requested object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR
+PoolDbBaseCnv       DEBUG Created object shape for class:KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >
+PoolDbBaseCnv       DEBUG {ID=000634C0-0000-0000-0000-000000000000}{CL=KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{NCOL=3}{CNT=0}{COL={{NAME=KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{CLASS=KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Links}{CLASS=LinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Refs}{CLASS=PoolDbLinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}
+FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR
 FileRecordDataSvc VERBOSE Requested object /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/EventCountFSR
 PoolDbBaseCnv       DEBUG Created object shape for class:LHCb::EventCountFSR
 PoolDbBaseCnv       DEBUG {ID=000034BF-0000-0000-0000-000000000000}{CL=LHCb::EventCountFSR}{NCOL=3}{CNT=0}{COL={{NAME=EventCountFSR}{CLASS=LHCb::EventCountFSR}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Links}{CLASS=LinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Refs}{CLASS=PoolDbLinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}
@@ -621,8 +628,13 @@ TouchLumiFSR      VERBOSE address: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E
 TouchLumiFSR      VERBOSE address: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing
 TouchLumiFSR      VERBOSE address: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1
 TouchLumiFSR      VERBOSE address: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2
+TouchLumiFSR      VERBOSE constructed time span address/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR
 TouchLumiFSR        DEBUG using the container: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing
 TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing
+TouchLumiFSR      VERBOSE /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR'
+TouchLumiFSR        DEBUG /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
+TouchLumiFSR        DEBUG /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSRinterval: 1252422464006336-1252422464350464
 TouchLumiFSR      VERBOSE /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing found
 TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeamCrossing'
 TouchLumiFSR        DEBUG addPrimary   : {  runs : 56721  files : rfio:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/56721/056721_0000000001.raw  info (key/incr/integral) :  }
@@ -630,24 +642,38 @@ TouchLumiFSR      VERBOSE constructed address/FileRecords/324C6EEC-9EE8-DE11-935
 TouchLumiFSR      VERBOSE constructed address/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam
 TouchLumiFSR        DEBUG using the container: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam
 TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam
+TouchLumiFSR      VERBOSE /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR'
+TouchLumiFSR        DEBUG /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
+TouchLumiFSR        DEBUG /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSRinterval: 1252422464006336-1252422464350464
 TouchLumiFSR      VERBOSE /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam found
 TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRNoBeam'
 TouchLumiFSR        DEBUG addNormalized: {  runs : 56721  files : rfio:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/56721/056721_0000000001.raw  info (key/incr/integral) :  }
 TouchLumiFSR      VERBOSE constructed address/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1
 TouchLumiFSR        DEBUG using the container: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1
 TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1
+TouchLumiFSR      VERBOSE /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR'
+TouchLumiFSR        DEBUG /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
+TouchLumiFSR        DEBUG /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSRinterval: 1252422464006336-1252422464350464
 TouchLumiFSR      VERBOSE /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1 found
 TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam1'
 TouchLumiFSR        DEBUG addNormalized: {  runs : 56721  files : rfio:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/56721/056721_0000000001.raw  info (key/incr/integral) :  }
 TouchLumiFSR      VERBOSE constructed address/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2
 TouchLumiFSR        DEBUG using the container: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2
 TouchLumiFSR      VERBOSE retrieveObject: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2
+TouchLumiFSR      VERBOSE /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR found
+TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR'
+TouchLumiFSR        DEBUG /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSRREAD TimeSpanFSR: {  earliest : 1252422464006336 - latest : 1252422464350464 }
+TouchLumiFSR        DEBUG /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSRinterval: 1252422464006336-1252422464350464
 TouchLumiFSR      VERBOSE /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2 found
 TouchLumiFSR        DEBUG The object of type 'KeyedContainer<LHCb::LumiFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/LumiFSRBeam2'
 TouchLumiFSR        DEBUG addNormalized: {  runs : 56721  files : rfio:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/56721/056721_0000000001.raw  info (key/incr/integral) :  }
 TouchLumiFSR         INFO Result for this file: {  runs : 56721  files : rfio:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/56721/056721_0000000001.raw  info (key/incr/integral) :  }
 TouchLumiFSR        DEBUG ==> Explore: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979 for /EventCountFSR
 TouchLumiFSR      VERBOSE address: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/EventCountFSR
+TouchLumiFSR        DEBUG ==> Explore: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979 for /TimeSpanFSR
+TouchLumiFSR      VERBOSE ts address: /FileRecords/324C6EEC-9EE8-DE11-9355-001E4F3E5979/TimeSpanFSR
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -3836,13 +3862,13 @@ ToolSvc.OdinTim...  DEBUG Releasing service 'EventDataSvc'
 ToolSvc.OdinTim...  DEBUG Releasing service 'IncidentSvc'
 ToolSvc             DEBUG   Performing finalization of ToolSvc.SequencerTimerTool (refCount 1)
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.85 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.86 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiSequence                  |     1.330 |    12.955 |    0.859     300.7 |      97 |     1.257 |
+ToolSvc.Sequenc...   INFO LumiSequence                  |     1.134 |     2.441 |    0.759      48.1 |      97 |     0.237 |
 ToolSvc.Sequenc...   INFO   EventAccount                |     0.000 |     0.003 |    0.002       0.0 |      97 |     0.000 |
-ToolSvc.Sequenc...   INFO   createODIN                  |     1.216 |    12.249 |    0.779     300.6 |      97 |     1.188 |
-ToolSvc.Sequenc...   INFO   TouchLumiFSR                |     0.093 |     0.686 |    0.063      58.7 |      97 |     0.067 |
+ToolSvc.Sequenc...   INFO   createODIN                  |     1.041 |     2.009 |    0.679      15.4 |      97 |     0.195 |
+ToolSvc.Sequenc...   INFO   TouchLumiFSR                |     0.072 |     0.414 |    0.064      32.6 |      97 |     0.040 |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...  DEBUG  ==> Finalize the base class GaudiTool
 ToolSvc.Sequenc...  DEBUG Tools to release :
@@ -3868,6 +3894,7 @@ ServiceManager      DEBUG Finalizing service DetectorPersistencySvc
 ServiceManager      DEBUG Finalizing service IncidentSvc
 ServiceManager      DEBUG Finalizing service AppMgrRunable
 ServiceManager      DEBUG Finalizing service FileRecordCnvSvc
+FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
 FileRecordCnvSvc    DEBUG POOL conversion service finalized FileRecordCnvSvc successfully
 ServiceManager      DEBUG Finalizing service PoolRootTreeEvtCnvSvc
 PoolRootTreeEvt...   INFO Disconnected data IO:324C6EEC-9EE8-DE11-9355-001E4F3E5979[56721-100ev.dst]

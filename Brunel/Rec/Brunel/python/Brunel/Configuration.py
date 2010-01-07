@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.112 2010-01-04 10:43:55 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.113 2010-01-07 16:49:15 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -216,18 +216,18 @@ class Brunel(LHCbConfigurableUser):
         ApplicationMgr().TopAlg += [ brunelSeq ]
         brunelSeq.Members += [ "ProcessPhase/Init" ]
         physicsSeq = GaudiSequencer( "PhysicsSeq" )
-
-        #treatment of the FSR
-        lumiSeq = GaudiSequencer("LumiSeq")
-        if self.getProp("WriteFSR") and self.getProp("InputType") in ['MDF','DST']:
-            self.setOtherProps(LumiAlgsConf(),["Context","DataType","InputType"])
-            lumiCounters = GaudiSequencer("LumiCounters")
-            lumiSeq.Members += [ lumiCounters ]
-            LumiAlgsConf().LumiSequencer = lumiCounters
-                                                                            
         
         # Treatment of luminosity events
         if handleLumi:
+            lumiSeq = GaudiSequencer("LumiSeq")
+
+            # Prepare the FSR
+            if self.getProp("WriteFSR"):
+                self.setOtherProps(LumiAlgsConf(),["Context","DataType","InputType"])
+                lumiCounters = GaudiSequencer("LumiCounters")
+                lumiSeq.Members += [ lumiCounters ]
+                LumiAlgsConf().LumiSequencer = lumiCounters
+
             # Filter out Lumi only triggers from further processing, but still write to output
             from Configurables import HltRoutingBitsFilter
             physFilter = HltRoutingBitsFilter( "PhysFilter", RequireMask = [ 0x0, 0x4, 0x0 ] )
@@ -235,6 +235,7 @@ class Brunel(LHCbConfigurableUser):
             lumiFilter = HltRoutingBitsFilter( "LumiFilter", RequireMask = [ 0x0, 0x2, 0x0 ] )
             lumiSeq.Members += [ lumiFilter, physFilter ]
             lumiSeq.ModeOR = True
+
             # Sequence to be executed if physics sequence not called (nano events)
             notPhysSeq = GaudiSequencer("NotPhysicsSeq")
             notPhysSeq.ModeOR = True
