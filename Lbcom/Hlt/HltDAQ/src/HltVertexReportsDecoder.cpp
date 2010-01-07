@@ -1,4 +1,4 @@
-// $Id: HltVertexReportsDecoder.cpp,v 1.2 2009-11-26 13:06:07 tskwarni Exp $
+// $Id: HltVertexReportsDecoder.cpp,v 1.3 2010-01-07 14:54:58 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -55,7 +55,7 @@ StatusCode HltVertexReportsDecoder::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  m_hltANNSvc = svc<IANNSvc>("HltANNSvc");
+  m_hltANNSvc = svc<IANNSvc>("ANNDispatchSvc");
 
   return StatusCode::SUCCESS;
 }

@@ -1,4 +1,4 @@
-// $Id: HltSelReportsDecoder.cpp,v 1.3 2009-12-21 19:14:56 tskwarni Exp $
+// $Id: HltSelReportsDecoder.cpp,v 1.4 2010-01-07 14:54:35 gligorov Exp $
 // Include files 
 #include "boost/format.hpp"
 
@@ -69,7 +69,7 @@ StatusCode HltSelReportsDecoder::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  m_hltANNSvc = svc<IANNSvc>("HltANNSvc");
+  m_hltANNSvc = svc<IANNSvc>("ANNDispatchSvc");
 
   return StatusCode::SUCCESS;
 }

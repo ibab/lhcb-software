@@ -1,4 +1,4 @@
-// $Id: HltRawDataMonitor.cpp,v 1.1.1.1 2009-06-24 15:38:52 tskwarni Exp $
+// $Id: HltRawDataMonitor.cpp,v 1.2 2010-01-07 14:54:48 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -76,7 +76,7 @@ StatusCode HltRawDataMonitor::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
   
-  m_hltANNSvc                = svc<IANNSvc>("HltANNSvc");
+  m_hltANNSvc                = svc<IANNSvc>("ANNDispatchSvc");
 
   m_bankSize                 = book(100, "Size of HltSelReports Raw Bank (kB)", 0., 5., 500); 
   m_hitSize                  = book(200, "Size of hits sub-bank in HltSelReports (kB)", 0., 5., 500);

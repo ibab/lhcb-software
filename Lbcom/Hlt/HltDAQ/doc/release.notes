@@ -4,6 +4,13 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-----------------------------------------------------------------------------
 
+! 2010-01-07 - V. Gligorov
+ - src/HltDecReportsDecoder.cpp
+   src/HltSelReportsDecoder.cpp
+   src/HltVertexReportsDecoder.cpp
+   src/HltRawDataMonitor.cpp
+   : update algorithms to use the dispatching ANN service.
+
 ! 2009-12-21 - Tomasz Skwarnicki
  - add selected-by and PV info to verbose printout in HltSelReportsDecoder
 

@@ -1,4 +1,4 @@
-// $Id: HltDecReportsDecoder.cpp,v 1.1.1.1 2009-06-24 15:38:52 tskwarni Exp $
+// $Id: HltDecReportsDecoder.cpp,v 1.2 2010-01-07 14:54:41 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -92,7 +92,7 @@ StatusCode HltDecReportsDecoder::initialize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
 
-  m_hltANNSvc = svc<IANNSvc>("HltANNSvc");
+  m_hltANNSvc = svc<IANNSvc>("ANNDispatchSvc");
 
 
   return StatusCode::SUCCESS;
@@ -153,12 +153,11 @@ StatusCode HltDecReportsDecoder::execute() {
   // TODO: only need to do this once per TCK...
   std::vector<IANNSvc::minor_value_type> selectionNameToIntMap;  
 
-  std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items("Hlt1SelectionID"); 
+  std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items("Hlt1SelectionID");
   selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt1.begin(),hlt1.end() );
 
   std::vector<IANNSvc::minor_value_type> hlt2 = m_hltANNSvc->items("Hlt2SelectionID");
   selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt2.begin(),hlt2.end() );
-
   // ---------------- loop over decisions in the bank body; insert them into the output container
 
   switch ( hltdecreportsRawBank->version() ) {
