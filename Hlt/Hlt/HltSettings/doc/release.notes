@@ -3,6 +3,8 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All triggre threshold settings
 !-----------------------------------------------------------------------------
+! 2010-01-07 - Gerhard Raven
+ - add Physics_MinBiasL0_PassThroughHlt_09Dec09
 
 !========================== HltSettings v1r5 2009-12-11 ===================
 ! 2009-12-11 - Sophie Redford
