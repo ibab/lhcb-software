@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.387 2010-01-02 13:03:34 graven Exp $ 
+! $Id: release.notes,v 1.388 2010-01-07 10:46:29 albrecht Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2010-01-07 - J. Albrecht
+ - remove obsolete TsaTool.opts
 
 ! 2010-01-02 - G. Raven
  - add an example of a rate-limited express stream predicate.
