@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -74,26 +74,34 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
             #Define the tool which actually makes the forward tracks
             #from the L0 confirmed objects
             Hlt1HadronViaTTUTConf = Member ( 'TU', 
-                                                  'TConf',  
-                                                  tools = [Tool(type = HltTrackUpgradeTool, 
-                                                                name = 'HltTrackUpgradeTool',
-                                                                tools=[Tool(type = L0ConfirmWithT, 
-									    name='L0ConfirmWithT',
-                                                                            tools = [ Tool( type = PatConfirmTool, 
-											    name = 'PatConfirmTool',
-               										    tools = [ Tool( type = PatSeedingTool,
-                                                                                                            name = 'PatSeedingTool'
-                                                                                                          )
-      												    ]
-                                                                                          )
-                                                                                    ],
-									    trackingTool='PatConfirmTool'
-                                                                           )
-                                                                      ]
-                                                               )
-                                                          ],
-                                                  RecoName = 'THadronConf' 
-                                                )
+                                               'TConf',  
+                                               tools = [Tool(type = HltTrackUpgradeTool, 
+                                                             name = 'HltTrackUpgradeTool',
+                                                             tools=[Tool(type = L0ConfirmWithT, 
+					      				 name='THadronConf',
+                                                                         tools = [ Tool( type = PatConfirmTool, 
+											 name = 'PatConfirmTool',
+               										 tools = [ Tool( type = PatSeedingTool,
+                                                                                                         name = 'PatSeedingTool',
+                                                                                                         zMagnet = 0
+                                                                                                       )
+      												 ],
+                                                                                         nSigmaX = 10,
+                                                                                         nSigmaY = 10,
+                                                                                         nSigmaTx = 10,
+                                                                                         nSigmaTy = 10,
+                                                                                         restrictSearch = False,
+                                                                                         debugMode = False 
+                                                                                       )
+                                                                                 ],
+                                                                         particleType = 1,
+									 trackingTool='PatConfirmTool'
+                                                                        )
+                                                                   ]
+                                                            )
+                                                       ],
+                                               RecoName = 'THadronConf' 
+                                           )
 
             conf += [ DecodeIT, DecodeTT
                     , Hlt1HadronViaTTUTConf
