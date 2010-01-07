@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.397 2009-12-17 17:23:39 pkoppenb Exp $
+! $Id: release.notes,v 1.398 2010-01-07 08:18:23 panmanj Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,11 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-12-29 - Jaap Panman
+ - Configuration: 
+   copy FSR to ETC by default (task 13170)
+   activate luminosioty integration (task 13172)
 
 ! 2009-12-17 - Patrick Koppenburg
  - Replaced Reco05 data by Reco06

@@ -1,14 +1,15 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.82 2009-12-15 16:19:43 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.83 2010-01-07 08:18:23 panmanj Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
 from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf,
-                            HltConf, DstConf, CaloDstUnPackConf, L0Conf )
+                            HltConf, DstConf, CaloDstUnPackConf, L0Conf, LumiAlgsConf )
+from LumiAlgs.LumiIntegratorConf import LumiIntegratorConf
 import GaudiKernel.ProcessJobOptions
 
 class DaVinci(LHCbConfigurableUser) :
@@ -28,6 +29,7 @@ class DaVinci(LHCbConfigurableUser) :
        , "HistogramFile"      : "DaVinci.root"  # Name of output Histogram file (set to "" to get no output) 
        , "TupleFile"          : ""              # Name of output Tuple file
        , "ETCFile"            : ""              # Name of output ETC file
+       , "WriteFSR"           : True            # Flags whether to write out an FSR
          # Monitoring
        , "MoniSequence"       : []              # Add your monitors here
          # DaVinci Options
@@ -38,6 +40,7 @@ class DaVinci(LHCbConfigurableUser) :
          # Trigger running
        , "L0"                 : False           # Run L0.
        , "Hlt"                : False           # Run Hlt
+       , "Lumi"               : True            # Run event count and Lumi accounting (should normally be True)
        , "ReplaceL0BanksWithEmulated" : False   # Re-run L0 
        , "HltUserAlgorithms"  : [ ]             # put here user algorithms to add
        , "Hlt2Requires"       : 'L0+Hlt1'       # Say what Hlt2 requires
@@ -58,11 +61,13 @@ class DaVinci(LHCbConfigurableUser) :
        , "HistogramFile"      : """ Write name of output Histogram file """
        , "TupleFile"          : """ Write name of output Tuple file """
        , "ETCFile"            : """ Write name of output ETC file."""
+       , 'WriteFSR'           : """ Flags whether to write out an FSR """
        , "MainOptions"        : """ Main option file to execute """
        , "UserAlgorithms"     : """ User algorithms to run. """
        , "RedoMCLinks"        : """ On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. """
        , "InputType"          : """ 'DST' or 'DIGI' or 'ETC' or 'RDST' or 'DST' or 'MDST'. Nothing means the input type is compatible with being a DST.  """
        , "L0"                 : """ Re-Run L0 """
+       , "Lumi"               : """ Run event count and Lumi accounting (should normally be True) """
        , "ReplaceL0BanksWithEmulated" : """ Re-run L0 and replace all data with emulation  """
        , "HltUserAlgorithms"  : """ Put here user algorithms to add to Hlt """
        , "Hlt2Requires"       : """ Definition of what Hlt2 requires to run. Default is 'L0+Hlt1' (equivalent to 'Hlt1').
@@ -79,6 +84,8 @@ class DaVinci(LHCbConfigurableUser) :
         DstConf           ,
         CaloDstUnPackConf ,
         L0Conf            ,
+        LumiAlgsConf      ,
+        LumiIntegratorConf,
         LHCbApp           ]
 
     ## Known monitoring sequences run by default
@@ -147,6 +154,12 @@ class DaVinci(LHCbConfigurableUser) :
         di.MemoryTool.HistoSize = 5000
         init.Members += [ DaVinciInit() ]
         init.IgnoreFilterPassed = True
+
+        # luminosity
+        log.info("Creating Lumi Algorithms")
+        lumi = self.lumi()
+        init.Members += lumi
+        
         # Phys
         inputType = self.getProp( "InputType" ).upper()
         if (( inputType != "MDF" ) & (inputType != "DIGI")) :
@@ -157,6 +170,28 @@ class DaVinci(LHCbConfigurableUser) :
             analysisinit = AnalysisConf().initSequence()
             init.Members += [ analysisinit ]
 
+
+################################################################################
+# Lumi setup
+#
+    def lumi(self):
+        """
+        read FSR and accumulate event and luminosity data
+        calculate normalization - toolname:
+        """
+        seq = []
+        self.setOtherProps(LumiAlgsConf(),["DataType","InputType"])
+        # add touch-and-count sequence
+        lumiSeq = GaudiSequencer("LumiSeq")
+        LumiAlgsConf().LumiSequencer = lumiSeq
+        seq += [ lumiSeq ]
+        # add integrator for normalization
+        self.setOtherProps(LumiIntegratorConf(),["InputType"])
+        lumiInt = GaudiSequencer("IntegratorSeq")
+        LumiIntegratorConf().LumiSequencer = lumiInt
+        seq += [ lumiInt ]
+        return seq
+        
 ################################################################################
 # HLT setup
 #
@@ -308,7 +343,10 @@ class DaVinci(LHCbConfigurableUser) :
             NTupleSvc().Output = [ tuple ]
             NTupleSvc().OutputLevel = 1 
         if ( self.isPropertySet('ETCFile') and self.getProp("ETCFile") != "" ):
+            if ( self.getProp("WriteFSR") ):
+                self.fsr(self.getProp("ETCFile"))
             self.etc(self.getProp("ETCFile"))
+
 ################################################################################
 # ETC
 #
@@ -334,6 +372,35 @@ class DaVinci(LHCbConfigurableUser) :
         seq = Sequencer("SeqWriteTag")
         ApplicationMgr().OutStream += [ tagW ]
 
+################################################################################
+# FSR
+#
+    def fsr(self, fsrFile):
+        """
+        write out the FSR
+        """
+
+        # TES setup
+        FileRecordDataSvc().ForceLeaves         = True
+        FileRecordDataSvc().RootCLID            = 1
+        FileRecordDataSvc().PersistencySvc      = "PersistencySvc/FileRecordPersistencySvc"
+
+        # Persistency service setup
+        ApplicationMgr().ExtSvc += [ PoolDbCnvSvc("FileRecordCnvSvc",
+                                                  DbType = "POOL_ROOTTREE",
+                                                  ShareFiles = "YES" )
+                                     ]
+        # Output stream
+        FSRWriter = RecordStream( "FileRecords",
+                                  ItemList         = [ "/FileRecords#999" ],
+                                  EvtDataSvc       = "FileRecordDataSvc",
+                                  Output           = "DATAFILE='"+fsrFile+"' TYP='POOL_ROOTTREE'",
+                                  )
+
+        # Write the FSRs to the same file as the events
+        ApplicationMgr().OutStream += [ FSRWriter ]
+        
+        
 ################################################################################
 # Main sequence
 #
