@@ -8,7 +8,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h" 
 
-#include "Event/HltDecReports.h"
+#include "Event/RawEvent.h"
 
 #include "TCKrep.h"
 
@@ -140,23 +140,61 @@ void ANNDispatchSvc::handle(const Incident& /*incident*/) {
 void ANNDispatchSvc::faultHandler() const {
 
     //Get the Hlt DecReports
-    SmartDataPtr<LHCb::HltDecReports> decReports(m_evtSvc, LHCb::HltDecReportsLocation::Default );
+    //SmartDataPtr<LHCb::HltDecReports> decReports(m_evtSvc, LHCb::HltDecReportsLocation::Default );
     //Get the TCK from the DecReports
-    unsigned int TCK = decReports->configuredTCK();  
+    //unsigned int TCK = decReports->configuredTCK();  
+    
+    //Decode the raw event to get the TCK from the raw Hlt DecReports
+    unsigned int TCK = 0;
+    SmartDataPtr<LHCb::RawEvent> rawEvent(m_evtSvc, LHCb::RawEventLocation::Default); 
+    if (!rawEvent) {
+      verbose() << " No RawEvent found! We will get ANN info from HltInit instead." << endmsg;
+      m_uptodate = true;
+      m_currentTCK = TCK;
+      return;    
+    }
+    //Now we get the TCK only from the raw event
+    const std::vector<RawBank*> hltdecreportsRawBanks = rawEvent->banks( RawBank::HltDecReports );
+    if( hltdecreportsRawBanks.size() == 0) {
+      verbose() << " No HltDecReports RawBank in RawEvent. We will get ANN info from HltInit instead." << endmsg;
+      m_uptodate = true;
+      m_currentTCK = TCK;
+      return; 
+    } else {
+      const RawBank* hltdecreportsRawBank = hltdecreportsRawBanks.front();
+      if (!hltdecreportsRawBank) {
+        verbose() << "Corrupted HltDecReport in the RawBank, we will get ANN info from HltInit instead" << endmsg; 
+        m_uptodate = true;
+        m_currentTCK = TCK;
+        return; 
+      } else {
+        const unsigned int *content = hltdecreportsRawBank->begin<unsigned int>();
+        // version 0 has only decreps, version 1 has TCK, taskID, then decreps...
+        if (hltdecreportsRawBank->version() > 0 ) {
+          TCK = *content++ ;
+        }
+      }
+    }
     if (TCK == 0) {
       // if there is no TCK, do not dispatch
+      verbose() << "No TCK was found in the RawBank, we will get ANN info from HltInit instead" << endmsg;
       m_uptodate = true;
       m_currentTCK = TCK;
       return;
     }
     if (TCK!=m_currentTCK || !m_currentDigest.valid()) {
+        verbose() << "Entering this loop" << endmsg;
         TCKrep tck(TCK); tck.normalize();
         ConfigTreeNodeAlias::alias_type alias( std::string("TCK/") +  tck.str()  );
         // grab properties of child from config database...
         const ConfigTreeNode* tree = m_propertyConfigSvc->resolveConfigTreeNode(alias);
         if (!tree) {
           //If we could not resolve the (non-zero) TCK we have a problem
-          error() << "Obtained TCK " << TCK << " from the Hlt DecReports which could not be resolved" << endmsg;
+          verbose() << "Obtained TCK " << TCK << 
+                       " from the Hlt DecReports which could not be resolved. We will get ANN info from HltInit instead." << endmsg;
+          m_uptodate = true;
+          m_currentTCK = TCK;
+          return;
         } else { 
           PropertyConfig::digest_type child = m_propertyConfigSvc->findInTree(tree->digest(), m_instanceName);
           if (!m_currentDigest.valid() || m_currentDigest!=child) {
@@ -166,7 +204,7 @@ void ANNDispatchSvc::faultHandler() const {
               // push properties to child
               SmartIF<IProperty> iProp(m_child);
               for (PropertyConfig::Properties::const_iterator i =  config->properties().begin();i!= config->properties().end(); ++i ) {
-                  iProp->setProperty( i->first, i->second  );
+                iProp->setProperty( i->first, i->second  );
               }
               m_currentDigest = child;
               // do not reinit for ANNSvc derived instances, as they have a proper updateHandler...

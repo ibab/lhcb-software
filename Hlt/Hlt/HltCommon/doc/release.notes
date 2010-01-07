@@ -4,8 +4,13 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-01-07 - V. Gligorov
+ - src/ANNDispatchSvc.cpp : the dispatch service now gets the TCK directly from
+   raw, without relying on the DecReportsDecoder, thus removing a circular dependency
+   between these two pieces of code.
+
 ! 2010-01-05 - V. Gligorov
- - fix the ANNDispatchSvc.cpp so that it works regardless of the type of
+ - src/ANNDispatchSvc.cpp : fix the ANNDispatchSvc to work regardless of the type of
    input data. The TCK is now retreived from the HLT DecReports, and if
    a null TCK is retrieved (meaning that the HLT was run from DaVinci and
    not Moore) then the Dispatch service delegates its work to the regular
