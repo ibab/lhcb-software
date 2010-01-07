@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.67 2009-12-27 10:09:40 graven Exp $
+! $Id: release.notes,v 1.68 2010-01-07 10:36:08 albrecht Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
-
+! 2009-01-07 - Johannes Albrecht
+ - remove inclusion of obsolete TsaTool.opts
 
 ! 2009-12-27 - Gerhard Raven
  - add HltCommon to the requirements to avoid warnings in the nightly build
