@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2010-01-07 - Markus Frank
+ - Fix bug in RawEvent.h, which prevented the removal of banks for MDF files.
+
 !================ DAQEvent v8r2 2009-11-13 ===================================
 ! 2009-11-06 - Marco Clemencic
  - Modified ODIN.xml with the new trigger types valid since version 6 of the bank

@@ -1,4 +1,4 @@
-// $Id: RawEvent.cpp,v 1.14 2008-10-28 12:21:48 cattanem Exp $
+// $Id: RawEvent.cpp,v 1.15 2010-01-07 10:25:17 frankb Exp $
 #include "Event/RawEvent.h"
 #include <cstring> // for memcpy with gcc 4.3
 
@@ -102,11 +102,10 @@ bool LHCb::RawEvent::removeBank(RawBank* bank)  {
         // First remove bank from persistent array.
         for(std::vector<Bank>::iterator k=m_banks.begin(); k!=m_banks.end(); ++k)  {
           Bank& b = *k;
-          if ( !b.ownsMemory() ) continue;
           if ( !(bank == (RawBank*)b.buffer()) ) continue;
           // The bank is owned by RawEvent: delete the allocated buffer
           // to prevent memory leak when reading data from a ROOT file...
-          if ( b.buffer() ) delete [] b.buffer();
+          if ( b.ownsMemory() && b.buffer() ) delete [] b.buffer();
           m_banks.erase(k);
           break;
         }
