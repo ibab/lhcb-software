@@ -1,5 +1,5 @@
-# --> Including file '/build/nightlies/lhcb3/Thu/LHCb/LHCB_HEAD/Ex/IOExample/tests/options/UnpackDst.py'
-# --> Including file '/build/nightlies/lhcb3/Thu/Gaudi/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/UnpackDst.py'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb3/Thu/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
 # EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
@@ -13,20 +13,49 @@
 # ApplicationMgr.ExtSvc                += { "PoolDbCnvSvc/FileRecordCnvSvc" };
 # FileRecordPersistencySvc.CnvServices += { "FileRecordCnvSvc" };
 # FileRecordCnvSvc.DbType               = "POOL_ROOTTREE";
-# FileRecordCnvSvc.ShareFiles           = true;
+# FileRecordCnvSvc.ShareFiles           = "YES";
 # FileRecordDataSvc.ForceLeaves         = true;
 # FileRecordDataSvc.EnableFaultHandler  = true;
 # FileRecordDataSvc.RootCLID            =    1;
 # PoolRootEvtCnvSvc.EnableIncident      =    1;
 # PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
 # PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
-# <-- End of file '/build/nightlies/lhcb3/Thu/Gaudi/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
-# <-- End of file '/build/nightlies/lhcb3/Thu/LHCb/LHCB_HEAD/Ex/IOExample/tests/options/UnpackDst.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb3/Thu/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# <-- End of file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/UnpackDst.py'
 # applying configuration of DstConf
+# /***** User DstConf/DstConf ************************************************************************
+# |-OutputName          = ''
+# |-SimType             = 'None'
+# |-PackType            = 'TES'
+# |-EnablePackingChecks = False
+# |-DstType             = 'NONE'
+# |-DataType            = ''
+# |-Writer              = 'DstWriter'
+# |-PackSequencer       = None
+# |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next']  (default: ['Prev', 'PrevPrev', 'Next'])
+# |-EnableUnpack        = True  (default: False)
+# |-AlwaysCreate        = False
+# \----- (End of User DstConf/DstConf) ---------------------------------------------------------------
+# /***** User DstConf/DstConf ************************************************************************
+# |-OutputName          = ''
+# |-SimType             = 'None'
+# |-PackType            = 'TES'
+# |-EnablePackingChecks = False
+# |-DstType             = 'NONE'
+# |-DataType            = ''
+# |-Writer              = 'DstWriter'
+# |-PackSequencer       = None
+# |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next']  (default: ['Prev', 'PrevPrev', 'Next'])
+# |-EnableUnpack        = True  (default: False)
+# |-AlwaysCreate        = False
+# \----- (End of User DstConf/DstConf) ---------------------------------------------------------------
+# skipping configuration of CaloDstPackConf
+# applying configuration of DigiConf
+# No Writer defined for DIGI
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.4 $
-                                          running on lxbuild135.cern.ch on Thu Sep  3 05:30:44 2009
+                                                   Welcome to ApplicationMgr $Revision: 1.5 $
+                                          running on lxbuild156.cern.ch on Thu Jan  7 14:06:41 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
@@ -1294,12 +1323,16 @@ DumpTracks          DEBUG *** Track ***
 
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 ApplicationMgr       INFO Application Manager Stopped successfully
+UnpackTrack       SUCCESS Number of counters : 1
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "# UnpackedTracks"                              |         5 |        516 |     103.20 |     56.715 |      52.000 |      207.00 |
 DumpTracks          DEBUG Finalize base class GaudiAlgorithm
 DumpTracks          DEBUG Tools to release :
 DumpTracks          DEBUG Services to release : AlgContextSvc
 DumpTracks          DEBUG Releasing service 'AlgContextSvc'
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
+FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
 PoolRootTreeEvt...   INFO Disconnected data IO:54DB7558-C7E7-DD11-A3A6-0030487C5E0E[castor:/castor/cern.ch/user/c/cattanem/Brunel/v34r1p1/11144101-100ev-20090112.dst]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

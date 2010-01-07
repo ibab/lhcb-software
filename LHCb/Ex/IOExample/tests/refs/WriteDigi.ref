@@ -3,7 +3,7 @@
 # ApplicationMgr.EvtMax = 5;
 # EventSelector.PrintFreq = 1;
 # ApplicationMgr.OutStream += {"InputCopyStream/InputCopyStream"};
-# --> Including file '/afs/cern.ch/sw/lcg/app/nightlies/dev/Wed/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb3/Thu/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
 # EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
@@ -17,14 +17,14 @@
 # ApplicationMgr.ExtSvc                += { "PoolDbCnvSvc/FileRecordCnvSvc" };
 # FileRecordPersistencySvc.CnvServices += { "FileRecordCnvSvc" };
 # FileRecordCnvSvc.DbType               = "POOL_ROOTTREE";
-# FileRecordCnvSvc.ShareFiles           = true;
+# FileRecordCnvSvc.ShareFiles           = "YES";
 # FileRecordDataSvc.ForceLeaves         = true;
 # FileRecordDataSvc.EnableFaultHandler  = true;
 # FileRecordDataSvc.RootCLID            =    1;
 # PoolRootEvtCnvSvc.EnableIncident      =    1;
 # PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
 # PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
-# <-- End of file '/afs/cern.ch/sw/lcg/app/nightlies/dev/Wed/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb3/Thu/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # --> Including file '/build/cattanem/Brunel_HEAD/Ex/IOExample/options/PoolDigi.opts'
 # EventSelector.Input = {  "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Boole/v19r2/30000000-100ev-20090407-MC09.digi' TYP='POOL_ROOT' OPT='READ'"};
 # InputCopyStream.Output = "DATAFILE='PFN:PoolDigi.root' TYP='POOL_ROOTTREE' OPT='REC'";
@@ -33,8 +33,8 @@
 # <-- End of file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/WriteDigi.opts'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.7 $
-                                          running on lxbuild135.cern.ch on Wed Oct 14 17:34:40 2009
+                                                   Welcome to ApplicationMgr $Revision: 1.8 $
+                                          running on lxbuild156.cern.ch on Thu Jan  7 14:05:48 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Successfully loaded modules : HepMCBack
 ApplicationMgr       INFO Application Manager Configured successfully
@@ -51,8 +51,8 @@ RootDBase.open    SUCCESS rfio:/castor/cern.ch/user/c/cattanem/Boole/v19r2/30000
 RootDBase.open    SUCCESS rfio:/castor/cern.ch/user/c/cattanem/Boole/v19r2/30000000-100ev-20090407-MC09.digi File version:52200
 PoolRootEvtCnvSvc    INFO No Records /FileRecords present in:D499FBE3-4762-DE11-B281-00304879EE40
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-IODataManager        INFO Referring to dataset PoolDigi.root by its file ID:BE3E9480-D7B8-DE11-9A63-001E4F3D8360
-RootDBase.open    SUCCESS PoolDigi.root File version:52200
+IODataManager        INFO Referring to dataset PoolDigi.root by its file ID:06B23F67-8DFB-DE11-998A-001E4F3E5979
+RootDBase.open    SUCCESS PoolDigi.root File version:52400
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
@@ -61,7 +61,9 @@ ApplicationMgr       INFO Application Manager Stopped successfully
 InputCopyStream      INFO Events output: 5
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
-PoolRootTreeEvt...   INFO Disconnected data IO:BE3E9480-D7B8-DE11-9A63-001E4F3D8360[PoolDigi.root]
+FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
+PoolRootTreeEvt...   INFO Disconnected data IO:06B23F67-8DFB-DE11-998A-001E4F3E5979[PoolDigi.root]
 PoolRootEvtCnvSvc    INFO Disconnected data IO:D499FBE3-4762-DE11-B281-00304879EE40[rfio:/castor/cern.ch/user/c/cattanem/Boole/v19r2/30000000-100ev-20090407-MC09.digi]
+XMLCatalog           INFO File 'test_catalog.xml' does not exist. New file created.
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

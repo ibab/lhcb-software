@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.51 2009-10-16 13:17:05 cattanem Exp $
+! $Id: release.notes,v 1.52 2010-01-07 13:15:36 cattanem Exp $
 ! Package: IOExample
 ! Package Manager: M.Frank
 ! Purpose: Demonstrate how to write and read back event data using POOL I/O.
 !-------------------------------------------------------------------------------
+
+! 2010-01-07 - Marco Cattaneo
+ - Update QMTest references for fix to file sharing in GaudiPoolDB options,
+   in Gaudi v12r7
 
 !====================== IOExample v3r3 2009-10-16 ==============================
 ! 2009-10-14 - Marco Cattaneo
