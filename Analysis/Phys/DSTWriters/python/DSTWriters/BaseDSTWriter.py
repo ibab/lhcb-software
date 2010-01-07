@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: BaseDSTWriter.py,v 1.1.1.1 2009-11-30 16:37:19 jpalac Exp $"
+__version__ = "$Id: BaseDSTWriter.py,v 1.2 2010-01-07 08:19:34 panmanj Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -17,12 +17,14 @@ class BaseDSTWriter(ConfigurableUser) :
         "OutputFileSuffix"           : "Sel"
         , "SelectionSequences"       : []
         , "ExtraItems"               : []
+        , "WriteFSR"                 : True
         }
 
     _propertyDocDct = {  
         "OutputFileSuffix"             : """Add to name of output DST file. Default 'Sel'"""
         , "SelectionSequences" : """ Name of SelectionSequence that defines the selection"""
         , "ExtraItems"         : """ Extra TES locations to be written. Default: []"""
+        , "WriteFSR"           : """ Flags whether to write out an FSR """
         }
 
     def sequence(self) :
@@ -34,6 +36,9 @@ class BaseDSTWriter(ConfigurableUser) :
 
     def streamName(self, name) :
         return 'OStream' + name
+
+    def fsrStreamName(self, name) :
+        return 'FileRecordStream' + name
 
     def outputStreamType(self) :
         from Configurables import InputCopyStream
@@ -56,7 +61,7 @@ class BaseDSTWriter(ConfigurableUser) :
     def outputFileName(self, name) :
         if name == "" : name = 'Output'
         dstName = self.getProp('OutputFileSuffix')+name+self.fileExtension()
-        return "DATAFILE='" + dstName + "' TYP='POOL_ROOTTREE' OPT='REC'"
+        return "DATAFILE='" + dstName + "' TYP='POOL_ROOTTREE' OPT='REC' "
     
     def _initOutputStreams(self, name) :
         stream = self.outputStreamType()( self.streamName(name) )
@@ -66,11 +71,43 @@ class BaseDSTWriter(ConfigurableUser) :
         
     def outputStream(self, name) :
         return self.outputStreamType()( self.streamName(name) )
+        
+    def fsrOutputStream(self, name) :
+        """
+        write out the FSR
+        """
+        fsrStreamName = self.fsrStreamName(name)
+        dstName = self.getProp('OutputFileSuffix')+name+self.fileExtension()
+        # TES setup - no harm to repeat this for each stream
+        FileRecordDataSvc().ForceLeaves         = True
+        FileRecordDataSvc().RootCLID            = 1
+        FileRecordDataSvc().PersistencySvc      = "PersistencySvc/FileRecordPersistencySvc"
+
+        # Persistency service setup -TODO: only once!
+        ApplicationMgr().ExtSvc += [ PoolDbCnvSvc("FileRecordCnvSvc",
+                                                  DbType = "POOL_ROOTTREE",
+                                                  ShareFiles = "YES" )
+                                     ]
+        # Output stream to the same file
+        FSRWriter = RecordStream( fsrStreamName,
+                                  ItemList         = [ "/FileRecords#999" ],
+                                  EvtDataSvc       = "FileRecordDataSvc",
+                                  Output           = "DATAFILE='"+dstName+"' TYP='POOL_ROOTTREE'  OPT='REC'",
+                                  )
+
+        # Write the FSRs to the same file as the events
+        return FSRWriter 
 
     def extendSequence(self, sel) :
         return []
     
     def addOutputStream(self, seq) :
+        # FSR stram first - TODO: fragile: needs an event to write the FSR!
+        if self.getProp('WriteFSR'):
+            fsrStream = self.fsrOutputStream(seq.name())
+            if fsrStream != None :
+                seq.Members = [ fsrStream ] + seq.Members
+        # event data stream
         outStream = self.outputStream(seq.name())
         if outStream != None :
             seq.Members += [self.outputStream(seq.name())]
@@ -81,7 +118,8 @@ class BaseDSTWriter(ConfigurableUser) :
         """
         log.info("Configuring BaseDSTWriter")
         for sel in self.selectionSequences() :
-            seq = GaudiSequencer("."+sel.name(), Members = [sel.sequence()])
+            seq = GaudiSequencer("."+sel.name(), Members = [sel.sequence()],
+                                 MeasureTime=True)
             self._initOutputStreams(seq.name())
             seq.Members += self.extendSequence(sel)
             self.addOutputStream(seq)

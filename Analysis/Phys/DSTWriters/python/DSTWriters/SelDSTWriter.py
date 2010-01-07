@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: SelDSTWriter.py,v 1.2 2009-11-30 17:00:06 jpalac Exp $"
+__version__ = "$Id: SelDSTWriter.py,v 1.3 2010-01-07 08:19:34 panmanj Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -22,6 +22,7 @@ class SelDSTWriter(MicroDSTWriter) :
                   "CopyProtoParticles" : False,
                   "CopyBTags"          : False,
                   "CopyPVRelations"    : {"Particle2VertexRelations":False},
+                  "WriteFSR"           : True,
                   "OutputPrefix"       : "Sel"
                   }
 
@@ -30,6 +31,7 @@ class SelDSTWriter(MicroDSTWriter) :
                        "CopyRecHeader" : """Copy RecHeader bank into /Event/OutputPrefix """,
                        "CopyPVs" : """ Copy primary vertices bank into /Event/OutputPrefix. Default: False. """,
                        "CopyBTags" : """ Copy FlavourTags bank into /Event/OutputPrefix. Default: False. """,
+                       "WriteFSR"  : """ Flags whether to write out an FSR """,
                        "OutputPrefix" : """ Prefix of TES location of candidates output: /Event/OutputPrefix/xxxx. Default 'Sel'."""}
 
     def outputStreamType(self) :

@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.1 2009-11-30 16:59:10 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.2 2010-01-07 08:19:34 panmanj Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -20,6 +20,7 @@ class MicroDSTWriter(BaseDSTWriter) :
                   , "CopyL0DUReport"       : False
                   , "CopyHltDecReports"    : False
                   , "CopyMCTruth"          : False
+                  , "WriteFSR"             : True
                   , "OutputPrefix"         : "MicroDST"
                   }
 
@@ -32,6 +33,7 @@ class MicroDSTWriter(BaseDSTWriter) :
                           , "CopyHltDecReports"    : """ """
                           , "CopyRelatedPVs"       : """ """
                           , "CopyMCTruth"          : """ """
+                          , "WriteFSR"             : """ Flags whether to write out an FSR """
                           , "OutputPrefix"         : """ TES location of output. Default: /Event/MicroDST."""
                           }
 
