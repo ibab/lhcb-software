@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.18 2009-12-13 21:32:41 gligorov Exp $
+# $Id: HltReco.py,v 1.19 2010-01-07 10:35:11 albrecht Exp $
 # =============================================================================
 ## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -250,8 +250,6 @@ hlt1RecoRZVeloTracksSequence = GaudiSequencer( 'Hlt1RecoRZVeloTracksSequence' , 
 
 recoSeq = GaudiSequencer('HltRecoSequence', MeasureTime = True
                         , Members = [ trackRecoSequence ] )
-
-importOptions('$HLTCONFROOT/options/TsaTool.opts')
 
 from Configurables import DecodeVeloRawBuffer
 
