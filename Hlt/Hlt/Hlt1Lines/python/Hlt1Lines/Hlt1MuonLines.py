@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1MuonLines.py,v 1.8 2009-12-09 07:18:09 albrecht Exp $
+# $Id: Hlt1MuonLines.py,v 1.9 2010-01-07 10:13:01 albrecht Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
 # =============================================================================
 
 
@@ -35,7 +35,12 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
         ,'L0DiMuon'                 :"DiMuon"
         ,'L0AllMuon_PtCut'          :   80.
         ,'L0MuonNoPV_PtCut'         :  800.
+        ,'Muon_TConfNSigmaX'        :    5.
+        ,'Muon_TConfNSigmaY'        :    5.
+        ,'Muon_TConfNSigmaTx'       :    5.
+        ,'Muon_TConfNSigmaTy'       :    5.
         ,'Muon_DeltaPCut'           :    0.
+        ,'Muon_3DVeloTMatchCut'     :    6.
         ,'Muon_VeloTMatchCut'       :  200.
         ,'Muon_ShareCut'            :    0.5
         ,'Muon_FitChiCut'           :   50.
@@ -93,9 +98,20 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
 
         ### Matching Confirmed T Tracks with VELO
         from Configurables import PatMatchTool
+        from Configurables import HltTrackUpgradeTool, L0ConfirmWithT, PatConfirmTool
         from HltLine.HltDecodeRaw import DecodeIT, DecodeTT, DecodeVELO
         TMatchV = [ DecodeIT
                     , Member ('TU', 'TConf' , RecoName = 'TMuonConf'
+                              ,tools = [ Tool( HltTrackUpgradeTool,
+                                               tools = [ Tool( L0ConfirmWithT, 'TMuonConf'
+                                                               ,  particleType = 0
+                                                               ,tools = [ Tool( PatConfirmTool,
+                                                                                nSigmaX=self.getProp('Muon_TConfNSigmaX'),
+                                                                                nSigmaY=self.getProp('Muon_TConfNSigmaY'),
+                                                                                nSigmaTx=self.getProp('Muon_TConfNSigmaTx'),
+                                                                                nSigmaTy=self.getProp('Muon_TConfNSigmaTy'),
+                                                                                restrictSearch = False) ]
+                                                               ) ] ) ] 
                               , HistoDescriptor = { 'TMuonConfQuality': ( 'Seed track chi2',0.,20.,100) ,
                                                     'TMuonConfQualityBest': ( 'Seed track chi2 Best',0.,20.,100)} )
                     , Member ('TF', 'DeltaP' 
@@ -116,7 +132,8 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                               , InputSelection1 = '%TUVelo'
                               , InputSelection2 = '%TFDeltaP'
                               , MatchName = 'VeloT'
-                              , tools = [ Tool( PatMatchTool, maxMatchChi2 = 6 )]
+                              , tools = [ Tool( PatMatchTool, maxMatchChi2 = self.getProp( 'Muon_3DVeloTMatchCut') ) ]
+                              #,OutputLevel=2
                               , HistoDescriptor = { 'chi2_PatMatch': ( 'Match 3dVelo-T (PatMatch)',0.,10.,100),
                                                     'chi2_PatMatchBest': ( 'Match 3dVelo-T (PatMatch) Best',0.,10.,100) }           
                               ) 
