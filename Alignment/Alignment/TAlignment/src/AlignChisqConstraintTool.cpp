@@ -120,8 +120,6 @@ namespace Al
 	  sc = StatusCode::FAILURE ;
 	} else {
 
-	  std::string pattern = removechars(tokens[0]," ,") ;
-
 	  static const std::vector<std::string> dofnames = 
 	    boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz") ;
 	  std::string dofstr = removechars(tokens[1]," ,") ;
@@ -146,9 +144,10 @@ namespace Al
 	    
 	    // report the number of matching constraints:
 	    IGetElementsToBeAligned::Elements elements ;
+	    std::string pattern = removechars(tokens[0]," ") ;
 	    m_elementtool->findElements( pattern, elements ) ;
 	    if( elements.empty() ) {
-	      info() << "ignoring constraint with no matching elements: " << *ic << endreq ;
+	      info() << "ignoring constraint with no matching elements: pattern = \'" << pattern << "\'" << endreq ;
 	    } else {
 	      m_constraints.push_back( ConstraintDefinition( pattern, dof, err, val ) );
 	      info() << "Constraint for " << dofnames[dof] 
