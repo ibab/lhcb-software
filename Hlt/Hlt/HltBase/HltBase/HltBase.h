@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.25 2009-12-24 14:13:19 graven Exp $
+// $Id: HltBase.h,v 1.26 2010-01-07 14:02:53 graven Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
@@ -61,7 +61,6 @@ public:
   
 protected:
   // initialize Histo 
-  AIDA::IHistogram1D* book(const std::string& name);
   AIDA::IHistogram1D* initializeHisto(const std::string& name,
                               double min = 0., double max = 100., 
                               int nBins = 100 );

@@ -3,7 +3,11 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
-! 2010-01-06 - Johanens Albrecht
+! 2010-01-07 - Gerhard Raven
+ - extend histogram utilities to profile histograms
+ - remove unused 'book' call in HltAlgorithm
+
+! 2010-01-06 - Johannes Albrecht
  - remove updateFiled function again .. not necessary 
  - IL0ConfExtrapolator, ICaloSeedTool, IMuuonSeedTool:
    add public function to update the B field with the 

@@ -1,4 +1,4 @@
-// $Id: IL0ConfExtrapolator.h,v 1.4 2010-01-06 08:47:16 albrecht Exp $
+// $Id: IL0ConfExtrapolator.h,v 1.5 2010-01-07 14:02:53 graven Exp $
 #ifndef IL0CONFEXTRAPOLATOR_H 
 #define IL0CONFEXTRAPOLATOR_H 1
 
@@ -75,10 +75,6 @@ public:
   virtual int getCaloRegion( double stateX, double stateY, double stateZ ) const = 0;
  
   virtual double getBScale()=0;  
-
-protected:
- 
-private:
 
 };
 #endif // IL0CONFEXTRAPOLATOR_H

@@ -53,7 +53,7 @@ private:
     property_type   m_property;
     k2v_type        m_map;
     v2k_type        m_invmap;
-    const ANNSvc*         m_parent;
+    const ANNSvc*   m_parent;
 };
 
 

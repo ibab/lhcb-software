@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.26 2009-12-24 14:13:19 graven Exp $
+// $Id: HltBase.icpp,v 1.27 2010-01-07 14:02:53 graven Exp $
 // Include files
 
 
@@ -45,17 +45,6 @@ StatusCode HltBase<EBASE>::initialize() {
 }
 
 
-template <class EBASE>
-AIDA::IHistogram1D* HltBase<EBASE>::book(const std::string& title) {
-  AIDA::IHistogram1D* histo = 0;
-  if (!EBASE::produceHistos()) return histo;
-
-  const std::map<std::string,Gaudi::Histo1DDef>& values = m_histoDescriptor.value();
-  std::map<std::string,Gaudi::Histo1DDef>::const_iterator i = 
-        values.find(title);
-  return EBASE::book(  (i!=values.end()) ? i->second 
-                                         : Gaudi::Histo1DDef(title,0.,100.,100) );
-};
 
 template <class EBASE>
 AIDA::IHistogram1D* HltBase<EBASE>::initializeHisto(const std::string& title,
