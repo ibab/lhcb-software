@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.46 2009-11-06 16:09:48 panmanj Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.47 2010-01-07 14:15:34 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -14,12 +14,14 @@
 // AIDA
 // ============================================================================
 #include "AIDA/IHistogram1D.h"
+#include "AIDA/IProfile1D.h"
 #include "AIDA/IAxis.h"
 
 // ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/IIncidentSvc.h"
 // ============================================================================
 // GaudiUtils
 // ============================================================================
@@ -64,16 +66,18 @@ DECLARE_ALGORITHM_FACTORY( HltGlobalMonitor );
 HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : HltBaseAlg ( name , pSvcLocator )
-    , m_gpstimesec(0), m_time(0), m_virtmem(0), m_events(0)
+  , m_startClock(0)
+  , m_startEvent(0)
+  , m_currentTime(0), m_gpstimesec(0), m_virtmem(0), m_events(0), m_lastL0TCK(0)
 {
   declareProperty("ODIN",              m_ODINLocation = LHCb::ODINLocation::Default);
   declareProperty("L0DUReport",        m_L0DUReportLocation = LHCb::L0DUReportLocation::Default);
   declareProperty("HltDecReports",     m_HltDecReportsLocation = LHCb::HltDecReportsLocation::Default);
   declareProperty("Hlt1Decisions",     m_Hlt1Lines );
-  declareProperty("ScanEvents",        m_scanevents = 200 );
+  declareProperty("ScanEvents",        m_scanevents = 1 );
   declareProperty("TotalMemory",       m_totalmem   = 3000 );
-  declareProperty("TimeSize",          m_timeSize = 100 );
-  declareProperty("TimeInterval",      m_timeInterval = 1 );
+  declareProperty("TimeSize",          m_timeSize = 120 );   // number of minutes of history (half an hour)
+  declareProperty("TimeInterval",      m_timeInterval = 1 ); // binwidth in minutes 
   declareProperty("DecToGroup",        m_DecToGroup);
   declareProperty("GroupLabels",       m_GroupLabels);
 }
@@ -88,7 +92,11 @@ HltGlobalMonitor::~HltGlobalMonitor() {};
 StatusCode HltGlobalMonitor::initialize() {
   StatusCode sc = HltBaseAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  m_gpstimesec=0;
+  m_startClock = System::currentTime( System::microSec );
   
+
   m_L0Input         = book1D("L0 channel",-0.5,18.5,19);
   // this code may break when the enums are no longer directly exposing the hardware
   m_odin            = book1D("ODIN trigger type",  "ODIN trigger Type ",-0.5, 7.5, 8);
@@ -140,22 +148,18 @@ StatusCode HltGlobalMonitor::initialize() {
   }
 
 
-  m_hltVirtinTime  = book1D("Virtual memory per event",   -m_timeSize*m_timeInterval, 0, m_timeSize );
-  setAxisLabels( m_hltVirtinTime, "time", "memory[MB]");
+  m_hltVirtTime  = bookProfile1D("Virtual memory",   0,m_timeSize,int(m_timeSize/m_timeInterval+0.5));
+  setAxisLabels( m_hltVirtTime, "time since start of run [min]", "memory[MB]");
 
-  m_hltVirtMem    = book1D("Virtual Memory",   -0.5, (double)m_totalmem, m_totalmem);
-  setAxisLabels( m_hltVirtMem, "memory[MB]", "");
+  m_hltEventsTime  = bookProfile1D("average time per event", 0,m_timeSize,int(m_timeSize/m_timeInterval+0.5));
+  setAxisLabels( m_hltEventsTime, "time since start of run [min]", "average time/event [ms]");
 
-  m_hltEventsTime  = book1D("time per event", -m_timeSize*m_timeInterval, 0, m_timeSize );
-  setAxisLabels( m_hltEventsTime, "time", "time/event[min]");
-
-  m_hltTime  = book1D("time per event dist", -1000.0, 1000.0, 2000 );
-  setAxisLabels( m_hltTime, "time/event", "events");
+  m_hltTime  = book1D("time per event ", -1, 4 );
+  setAxisLabels( m_hltTime, "log10(time/event/ms)", "events");
 
   declareInfo("COUNTER_TO_RATE[virtmem]", m_virtmem, "Virtual memory");
-  declareInfo("COUNTER_TO_RATE[elapsed time]", (double)m_time, "Elapsed time");
+  declareInfo("COUNTER_TO_RATE[elapsed time]", m_currentTime, "Elapsed time");
   
-  m_gpstimesec=0;
 
   declareInfo("COUNTER_TO_RATE[L0Accept]",counter("L0Accept"),"L0Accept");
   declareInfo("COUNTER_TO_RATE[GpsTimeoflast]",m_gpstimesec,"Gps time of last event");
@@ -165,8 +169,24 @@ StatusCode HltGlobalMonitor::initialize() {
     declareInfo("COUNTER_TO_RATE["+m_GroupLabels.at(i)+"]", *m_alley.back(),m_GroupLabels.at(i)+" Alley");
   }
 
+  // register for incidents...
+  IIncidentSvc* incidentSvc = svc<IIncidentSvc>( "IncidentSvc" );
+  // insert at high priority, so we also time what happens during BeginEvent incidents...
+  long priority = std::numeric_limits<long>::max();
+  incidentSvc->addListener(this,IncidentType::BeginEvent, priority ) ;
+  incidentSvc->addListener(this,IncidentType::BeginRun, 0 ) ;
+
+  // start by kicking ourselves in action -- just in case we don't get one otherwise...
+  this->handle(Incident(name(), IncidentType::BeginRun ));
+
   return StatusCode::SUCCESS;
 };
+
+void HltGlobalMonitor::handle ( const Incident& incident ) {
+  m_startEvent = System::currentTime( System::microSec );
+  if (m_startClock == 0 || incident.type() == IncidentType::BeginRun) m_startClock = m_startEvent;
+  m_currentTime = double(m_startEvent-m_startClock)/1000000 ;  // seconds
+}
 
 //=============================================================================
 // Main execution
@@ -196,9 +216,9 @@ void HltGlobalMonitor::monitorODIN(const LHCb::ODIN* odin,
   if (odin == 0 ) return;
   unsigned long long gpstime=odin->gpsTime();
   if (msgLevel(MSG::DEBUG)) debug() << "gps time" << gpstime << endreq;
-  m_gpstimesec=int(gpstime/1000000-904262401);
-  counter("ODIN::Random")    += (odin->triggerType()==ODIN::LumiTrigger);
-  counter("ODIN::NotRandom") += (odin->triggerType()!=ODIN::LumiTrigger);
+  m_gpstimesec=int(gpstime/1000000-904262401); //@TODO: is this still OK with ODIN v6?
+  counter("ODIN::Lumi")    += (odin->triggerType()==ODIN::LumiTrigger);
+  counter("ODIN::NotLumi") += (odin->triggerType()!=ODIN::LumiTrigger);
   fill(m_odin, odin->triggerType(), 1.);
   if ( hlt == 0 ) return;
 
@@ -217,25 +237,19 @@ void HltGlobalMonitor::monitorL0DU(const LHCb::ODIN*,
   if (!l0du->decision()) return;
 
   LHCb::L0DUChannel::Map channels = l0du->configuration()->channels();
-  std::vector<std::pair<std::string, int> > repsL;
-  
   for(LHCb::L0DUChannel::Map::iterator i = channels.begin();i!=channels.end();++i){
-    bool acc = l0du->channelDecision( i->second->id() );
-    
-    repsL.push_back(std::make_pair( i->first, i->second->id()));
-    fill( m_L0Input  , i->second->id(), acc );
+      fill( m_L0Input, i->second->id(), l0du->channelDecision( i->second->id() ) );
   }
-  
-  //TODO: only do this _once_... if the L0TCK changes...
-  if ( 0 != m_L0Input ) {
-        std::vector< std::pair<unsigned, std::string> > labels;
-        for ( unsigned ibin = 0; ibin < repsL.size() ; ++ibin ) {
-          debug() << "ibin = " << ibin << " repsL[ibin].first = " << repsL[ibin].first <<
-            " repsL[ibin].second = " << repsL[ibin].second << endreq;
-          labels.push_back(std::make_pair( repsL[ibin].second , repsL[ibin].first));
-        }
-        setBinLabels( m_L0Input, labels );
-   }
+
+  unsigned int L0TCK = l0du->tck();
+  if (L0TCK != m_lastL0TCK && m_L0Input!=0) {
+      std::vector< std::pair<unsigned, std::string> > labels;
+      for(LHCb::L0DUChannel::Map::iterator i = channels.begin();i!=channels.end();++i){
+        labels.push_back(std::make_pair( i->second->id(), i->first ));
+      }
+      setBinLabels( m_L0Input, labels );
+      m_lastL0TCK = L0TCK;
+  }
 };
 
 void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
@@ -258,81 +272,59 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
     reps.push_back( std::make_pair( *i, report ) );
     if (report && report->decision()){
       ++nAcc;
-      ++nAccAlley[m_DecToGroup.find(*i)->second];//klo
+      ++nAccAlley[m_DecToGroup.find(*i)->second];
     }
   }
 
   for (unsigned i=0; i<m_GroupLabels.size();i++) {
     *m_alley[i] += ( nAccAlley[i] > 0 );
-  }
-
-
-  fill( m_hltNAcc, nAcc, 1.0);  //by how many lines did 1 event get accepted?
- 
-  for (size_t i = 0; i<reps.size();++i) {
-    fill( m_hltInclusive, i, reps[i].second->decision());
-    //info() << "second try labels line" << i << "name = " << reps[i].first << endreq;
-    if (!reps[i].second->decision()) continue;
-    if (nAcc==1) fill( m_hltExclusive, i, reps[i].second->decision() );
-    for (size_t j = 0; j<reps.size(); ++j) {
-      fill(m_hltCorrelations,i,j,reps[j].second->decision());
-    }
-  }
-
-  // m_DecToGroup is a mapping of a Decision to the BinNumber
-  // of the Group it should be accounted for
-  // Together with the BinLabels this is configured
-  // in HLTConf/Configuration.py
-  
-  /*
-  COMMENTED OUT BY KLAUS
-  m_DecToGroupType::iterator end   = m_DecToGroup.end();
-  m_DecToGroupType::iterator found = m_DecToGroup.end();
-  for(size_t j = 0; j < reps.size(); ++j) {
-    found = m_DecToGroup.find(reps[j].first);
-    if (found != end) {
-      fill(m_hlt1alley, found->second, reps[j].second->decision());
-    }
-  }
-  */
-  //klo1
-  for (unsigned i=0; i<m_GroupLabels.size();i++) {
     fill(m_hlt1alley,i,(nAccAlley[i]>0));
   }
-  //klo2
+
+  fill( m_hltNAcc, nAcc, 1.0);  //by how many lines did the current event get accepted?
+ 
+  for (size_t i = 0; i<reps.size();++i) {
+    bool accept = reps[i].second->decision();
+    fill( m_hltInclusive, i, accept);
+    if (!accept) continue;
+    if (nAcc==1) fill( m_hltExclusive, i, accept );
+    for (size_t j = 0; j<reps.size(); ++j) fill(m_hltCorrelations,i,j,accept);
+  }
+
 }
 
 
 
 void HltGlobalMonitor::monitorMemory() {
 
-  //should this also come in the configuration.py?
-
-  m_time     = ellapsedTime(System::Min, System::Times);
+  double elapsedTime = double(System::currentTime( System::microSec ) - m_startEvent);
+  double t = log10(elapsedTime)-3; // convert to log(time/ms)
+  fill( m_hltTime, t ,1.0); 
+  storeTrend(m_hltEventsTime, elapsedTime/1000 );
   m_virtmem  = virtualMemory(System::MByte, System::Memory);
-  
-  storeTrend(m_hltVirtinTime,m_virtmem);
+  storeTrend(m_hltVirtTime, double(m_virtmem));
 
-  fill(m_hltVirtMem, m_virtmem, 1);
-
-  if(counter("#events").nEntries() >0){
-    fill(m_hltTime, (double)m_time/(double)(counter("#events").nEntries()), 1);    
-    storeTrend(m_hltEventsTime, (double)m_time/(double)(counter("#events").nEntries()));
-
-  }
  
 }
 
 //=============================================================================
-void HltGlobalMonitor::storeTrend(AIDA::IHistogram1D* theHist, double Value) 
+void HltGlobalMonitor::storeTrend(AIDA::IProfile1D* h, double Value) 
 {
-  const AIDA::IAxis & axis = theHist->axis();
-  long bins = axis.bins();
-  for ( long i = 0; i < bins; ++i ) {
-    double binValue = theHist->binHeight(i);
-    double nextValue = ( i < bins - 1 ) ? theHist->binHeight(i+1)
-                                        : Value;
-    double x = 0.5*(axis.binUpperEdge(i)+axis.binLowerEdge(i));
-    theHist->fill(x, nextValue - binValue);
+#ifdef TODO_IMPLEMENT_SHIFT_USING_AIDA2ROOT_ON_A_PROFILE_HISTOGRAM
+  double offset = m_currentTime - m_trendLHSEdge;
+  if ( offset > ... ) {
+      const AIDA::IAxis & axis = h->axis();
+      long bins = axis.bins();
+      for ( long i = 0; i < bins; ++i ) {
+        double binValue = h->binHeight(i);
+        double nextValue = ( i < bins - 1 ) ? h->binHeight(i+1)
+                                            : Value;
+        double x = 0.5*(axis.binUpperEdge(i)+axis.binLowerEdge(i));
+        h->fill(x, nextValue - binValue);
+      }
+       update m_trendLHSEdge
+       shift bins to left
   }
+#endif
+  h->fill(m_currentTime/60, Value); // go from seconds -> minutes
 }

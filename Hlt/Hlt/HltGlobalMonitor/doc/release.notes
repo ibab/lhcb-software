@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.54 2009-11-13 11:54:37 pkoppenb Exp $
+!$Id: release.notes,v 1.55 2010-01-07 14:15:34 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
-
+! 2010-01-07 - Gerhard Raven
+ - change the CPU time & virt memory trend plots to be profile histograms
+ - some optimizations
 
 !========================== HltGlobalMonitor v2r7 2009-11-13 ===================
 ! 2009-11-06 - Jaap Panman

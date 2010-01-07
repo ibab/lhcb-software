@@ -5,6 +5,7 @@
 #include "Event/L0DUReport.h"
 #include "Event/HltDecReports.h"
 
+#include "GaudiKernel/IIncidentListener.h"
 #include "HltBase/HltBaseAlg.h"
 
 /** @class HltGlobalMonitor HltGlobalMonitor.h
@@ -17,7 +18,8 @@
  *  @date   2003-03-06
  */
 
-class HltGlobalMonitor : public HltBaseAlg {
+class HltGlobalMonitor : public HltBaseAlg 
+               , virtual public IIncidentListener {
 public: 
   /// Standard constructor
   HltGlobalMonitor( const std::string& name, ISvcLocator* pSvcLocator );
@@ -26,13 +28,14 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
+  void handle(const Incident&);
 
 private:
   void monitorODIN(const LHCb::ODIN*,const LHCb::L0DUReport*,const LHCb::HltDecReports*);
   void monitorL0DU(const LHCb::ODIN*,const LHCb::L0DUReport*,const LHCb::HltDecReports*);
   void monitorHLT (const LHCb::ODIN*,const LHCb::L0DUReport*,const LHCb::HltDecReports*);
   void monitorMemory();
-  void storeTrend(AIDA::IHistogram1D*H, double);
+  void storeTrend(AIDA::IProfile1D*, double);
   
 
   std::string m_ODINLocation;
@@ -44,25 +47,28 @@ private:
   typedef std::vector< std::string >  m_GroupLabelsType;
   m_GroupLabelsType m_GroupLabels;
   
+  longlong m_startClock; // in microseconds
+  longlong m_startEvent; // in microseconds
+  double   m_currentTime; // seconds since start of clock
   int m_gpstimesec;
-  longlong m_time;
   int m_time_ref;
   int m_scanevents;
   int m_totaltime;
   int m_totalmem;
-  int m_timeSize;
-  int m_timeInterval;
+  double m_timeSize;
+  double m_timeInterval;
   long m_virtmem; 
   int m_events;
 
   template <typename T> T* fetch(const std::string& location) {
        T* t =  this->exist<T>( location ) ?  this->get<T>( location ) 
-                                           :  (T*)0;
+                                          :  (T*)0;
        if (t == 0 && this->msgLevel(MSG::WARNING) ) Warning( " could not retrieve "  + location,StatusCode::SUCCESS,10) ;
        return t;
-    };
+  };
 
 
+  unsigned int m_lastL0TCK;
   AIDA::IHistogram1D* m_odin;
   AIDA::IHistogram1D* m_L0Input;
   AIDA::IHistogram1D* m_L0Hlt1Accept;
@@ -72,10 +78,9 @@ private:
   AIDA::IHistogram1D* m_hltNAcc;
   AIDA::IHistogram1D* m_hltInclusive;
   AIDA::IHistogram1D* m_hltExclusive;
-  AIDA::IHistogram1D* m_hltVirtMem;
-  AIDA::IHistogram1D* m_hltVirtinTime;
+  AIDA::IProfile1D* m_hltVirtTime;
   AIDA::IHistogram1D* m_hltTime;
-  AIDA::IHistogram1D* m_hltEventsTime;
+  AIDA::IProfile1D* m_hltEventsTime;
 
   AIDA::IHistogram2D* m_hltCorrelations;
 };
