@@ -4,7 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
-! 2009-01-06 J Luisier
+! 2010-01-07 J Luisier
+ - Reactivation of OTTimeMonitor, disabled by mistake.
+
+! 2010-01-06 J Luisier
  - Added a minimum number of needed tracks in a sector in order to plot the
    efficiency on the 2D plot (100 tracks min by default).
  - Added a track type selection (takes Long by default).  
