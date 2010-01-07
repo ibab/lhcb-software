@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.85 2010-01-07 09:08:54 gligorov Exp $
+! $Id: release.notes,v 1.86 2010-01-07 10:17:45 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -9,6 +9,8 @@
 ! for the production. Commit them AS WELL in branch production200912. 
 !
 !-----------------------------------------------------------------------------
+! 2010-01-07 - J. Albrecht
+ - Hlt1MuonLines: add slots for TConf and velo T match
 
 ! 2010-01-07 - V. Gligorov
  - python/Hlt1Lines/Hlt1HadronViaTLines : configure correctly from the python 
