@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.5 2009-11-11 22:17:23 graven Exp $
+# $Id: HltL0Candidates.py,v 1.6 2010-01-07 15:39:18 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -87,7 +87,7 @@ def _calo( channel ) :
     return x
 
 def _converter( channel ) :
-    _conv = _muon if channel.find('Muon') != -1 else _calo
+    _conv = _muon if channel.upper().find('MUON') != -1 else _calo
     return _conv(channel)
 
 global _dict,_l0Channels
