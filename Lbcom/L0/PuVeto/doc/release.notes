@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.56 2009-12-11 15:15:33 cattanem Exp $
+! $Id: release.notes,v 1.57 2010-01-07 17:35:03 serena Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Serena Oggero
 !-------------------------------------------------------------------------
+
+! 2010-01-07 - Serena Oggero
+ - put a safe check in PuVetoAlg no to (even) create any histo by default
 
 !======================== PuVeto v7r4 2009-12-11 =========================
 ! 2009-12-10 - Serena Oggero
