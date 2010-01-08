@@ -1,4 +1,4 @@
-// $Id: 3DTransformationFunctions.cpp,v 1.6 2009-11-13 10:07:31 wouter Exp $
+// $Id: 3DTransformationFunctions.cpp,v 1.7 2010-01-08 16:13:19 wouter Exp $
 // Include files 
 
 
@@ -32,21 +32,37 @@ void getZYXTransformParameters(const Gaudi::Transform3D& CDM,
                                const std::vector<double>& pivotParams) 
 {
 
-  ROOT::Math::RotationZYX newRot = CDM.Rotation<ROOT::Math::RotationZYX>();
+  // This is the definition of the transform: (See the routine above).
+  //
+  //   A_tot    =   A_trans  * A_pivot  * A_rot * A_pivot^-1
+  //
+  // Note that 'A_trans' and 'A_pivot' are transforms that contain
+  // only a translation, while A_rot applies exclusively a
+  // rotation. We now need to compute A_trans and A_rot for given
+  // A_tot and A_pivot.
 
-  const ROOT::Math::Translation3D newTrans = CDM.Translation();
+  // Extracting the rotation is simple: Since there is only a single
+  // rotation and translations do not change rotations, it must be
+  // equal to the rotation part of the total transform:
+  const ROOT::Math::RotationZYX newRot = CDM.Rotation<ROOT::Math::RotationZYX>();
 
+  // To compute A_trans we now first create a pivot point transform
   const ROOT::Math::Translation3D pivotTrans = 
     ROOT::Math::Translation3D( pivotParams.begin(), pivotParams.end()    );
   
+  // we then create ' A_pivot * A_rot * A_pivot^-1 ', so the term on
+  // the right hand side in the equation above. (If you are worried
+  // about precision, it would be better to compute directly its
+  // inverse, because that is what we need below.)
+  const ROOT::Math::Transform3D pivotRot = pivotTrans * newRot * pivotTrans.Inverse() ;
 
-  const Gaudi::Transform3D newRotPart = 
-    pivotTrans.Inverse() * newRot * pivotTrans;
-
-  newRot = newRotPart.Rotation<ROOT::Math::RotationZYX>();
-
+  // we then construct A_trans by multiplying A_tot on the right side
+  // with the inverse of this thing. note that the result should not
+  // have a rotation part anymore: it should be exclusively translation.
+  const ROOT::Math::Translation3D newTrans = (CDM * pivotRot.Inverse()).Translation() ;
+  
+  // finally we extract the 6 parameters
   newRot.GetComponents(rotationParams[2], rotationParams[1], rotationParams[0]);
-
   newTrans.GetComponents( translationParams.begin(), translationParams.end() );
   
 }
