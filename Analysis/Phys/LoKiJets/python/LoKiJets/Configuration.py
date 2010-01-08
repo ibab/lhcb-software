@@ -1,24 +1,38 @@
-
 ## @package LoKiJets
 #  Base configurables for the jet reconstruction and energy correction
 #  @author Victor Coco  (Victor.Coco@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.1 2009-12-14 12:34:32 cocov Exp $"
+__version__ = "$Id: Configuration.py,v 1.2 2010-01-08 13:12:42 cocov Exp $"
 __author__  = "Victor Coco <Victor.Coco@cern.ch>"
 
 from LHCbKernel.Configuration import *
 
-from Configurables            import ( LoKi__ParticleMaker ,LoKi__HepMCParticleMaker ,ZPlusJetHepMCSelector )
-from Configurables            import ( MCParticleMaker )
 from Configurables            import ( LoKi__JetMaker ,LoKi__FastJetMaker )
-from CommonParticles.Utils    import *
 
-__all__   = (
-    'JetMaker_Configuration'     ,
-    'ParticleMaker_Configuration' 
-    )
+__all__   = ( 'updateDoD',
+              'JetMaker_Configuration'
+              )
 
+# local storage of data-on-demand actions 
+_particles = {}
+
+# =============================================================================
+# Update Data-On-Demand Service 
+def updateDoD ( alg , hat = 'Phys/' ) :
+    """
+    Update Data-On-Demand service
+    """
+    _parts = { hat+alg.name() : alg } 
+    _particles.update ( _parts ) 
+    
+    dod = DataOnDemandSvc()
+    dod.AlgMap.update(
+        { hat + alg.name() + '/Particles' : alg.getFullName() , 
+          hat + alg.name() + '/Vertices'  : alg.getFullName() }
+        )
+    return _parts 
+    
 # ----------------------------------------------------------------------------------
 
 # @class JetMaker_Configuration
@@ -99,235 +113,14 @@ class JetMaker_Configuration(LHCbConfigurableUser):
         else : 
             raise RuntimeError("ERROR : the "+jetmaker+" jet algorithm is not available yet")
         setattr(tool,'RParameter',self.getProp('RParameter'))
-
-
-    ## Set the slots to prefined values 
-    def Predefined_Conf(self , name ):
-        if name == 'AntiKt':
-            """
-            Configuration to get the quarks and gluons comming from q in pp->Z+q
-            """
-            self.setProp('From' , 'HepMC' )
-            self.setProp('OutputContainer' , 'StdPartons' )
-            ToolConfDict =  {'PartonicMode': True
-                             ,'Particles' : ['g','u','d','s','c','b']
-                             ,'From' : ['u','d','s','c','b']
-                             ,'UseSelector' : True
-                             ,'MotherSelectorName' : 'ZPlusJetHepMCSelector'
-                             ,'OutputTable' : 'Relations/Phys/StdPartons2HepMC'}
-            self.setProp( 'ToolConf'  , ToolConfDict )
-            self.setProp( 'InAcceptance' , False )
-             
         
         
     ## Apply the configuration to the given sequence
     def applyConf(self):
-        algorithm , tool = self.setupParticleMaker(self.getProp('OutputContainer') )
-        self.ConfigParticleMaker(tool,self.getProp('ToolConf'))
+        algorithm , tool = self.setupJetMaker(self.getProp('OutputContainer') )
+        self.ConfigJetMaker(tool,self.getProp('ToolConf'))
         locations = updateDoD (algorithm)
 
 
 # ----------------------------------------------------------------------------------
-
-## @class  ParticleMaker_Configuration
-#  Configurable for the particle makers implementing the IParticleMaker interface
-#  @author Victor Coco  (Victor.Coco@cern.ch)
-#  @date   2009.10.29
-class ParticleMaker_Configuration(LHCbConfigurableUser):
-    ## Options
-    __slots__ = { 
-        'Predefined'        : ''
-        ,'From' : 'HepMC'
-        ,'OutputContainer'  :  'StdHepMC'
-        ,'ToolConf'  :  {'PartonicMode': False
-                         ,'Particles' : ['gamma','pi+','e+','p+','K+','mu+','pi+']
-                         ,'UseSelector' : False
-                         ,'OutputTable' : 'Relations/Phys/StdHepMC2HepMC'}
-        ,'InAcceptance'     : False
-        }
-    _propertyDocDct = {
-        'Predefined'     : """ Call a predefined configuration [''(default),'Partons_Zjet','HepMCRef_Zjet',...]""",
-        'From'           : """ From which type of info does the LHCb::Particle are made ['HepMC,'MC']""" ,
-        'OutputContainer': """ Name of the output container ex: to find it in the tes at /Event/Phys/StdHepMCPart, name is StdHepMCPart""" ,
-        'ToolConf': """ A dictionnary containing the configuratyion of the tool with the following format: {'Proterty1':Value1,...,'ProtertyN':ValueN} """,
-        'InAcceptance'   : """ Tells if the acceptance cut should be applied"""
-        }
-
-    ## Choose the particle maker
-    def setupParticleMaker(self , name ):
-        ## set the algorithm
-        algorithm = LoKi__ParticleMaker ( name )
-        ## string for particle maker name
-        particle_maker = ''
-        ## set the proper particle maker tool
-        if self.getProp('From') == 'HepMC':
-             particle_maker = 'LoKi__HepMCParticleMaker'
-             algorithm.ParticleMaker = particle_maker
-             algorithm.addTool ( LoKi__HepMCParticleMaker )
-                     
-        elif self.getProp('From') == 'MC':
-             particle_maker = 'MCParticleMaker'
-             algorithm.ParticleMaker = particle_maker
-             algorithm.addTool ( MCParticleMaker )
-        
-        else :
-            raise RuntimeError("ERROR : no ParticleMaker have been implemented to make LHCb::Particle from "+self.getProp('From'))
-        
-        ## getback the tool for later configuration
-        tool = getattr ( algorithm , particle_maker )
-        return algorithm , tool
-
-    ## Configure the particle maker
-    def ConfigParticleMaker(self ,  tool , dict_config ):
-        if not self.getProp('InAcceptance') and self.getProp('From') == 'HepMC' :
-            ## set the acceptance cut to null
-            dict_config['MinPtGamma'] = 0.
-            dict_config['MinThetaGamma'] = 0.
-            dict_config['MaxThetaXGamma'] = 10.
-            dict_config['MaxThetaYGamma'] = 10.
-            dict_config['MinPCharged'] = 0.
-            dict_config['MinPtCharged'] = 0.
-            dict_config['MinThetaCharged'] = 0.
-            dict_config['MaxThetaCharged'] = 10.
-            dict_config['MaxZProduction'] = 0.
-            dict_config['MaxRhoProduction'] = 0.
-            dict_config['MinZend'] = 1000000000.
-        for slot in dict_config.keys():
-            setattr(tool,slot,dict_config[slot])
-        
-            
-
-        ## Set the slots to prefined values 
-    def Predefined_Conf(self , name ):
-        if name == 'Partons_Zjet':
-            """
-            Configuration to get the quarks and gluons comming from q in pp->Z+q
-            """
-            self.setProp('From' , 'HepMC' )
-            self.setProp('OutputContainer' , 'StdPartons' )
-            ToolConfDict =  {'PartonicMode': True
-                             ,'Particles' : ['g','u','d','s','c','b']
-                             ,'From' : ['u','d','s','c','b']
-                             ,'UseSelector' : True
-                             ,'MotherSelectorName' : 'ZPlusJetHepMCSelector'
-                             ,'OutputTable' : 'Relations/Phys/StdPartons2HepMC'}
-            self.setProp( 'ToolConf'  , ToolConfDict )
-            self.setProp( 'InAcceptance' , False )
-
-
-        if name == 'HepMCRef_Zjet':
-            """
-            Configuration to get all stable particles comming from q in pp->Z+q
-            """
-            self.setProp('From' , 'HepMC' )
-            self.setProp('OutputContainer', 'StdHepMCRef' )
-            ToolConfDict =  { 'Particles' : ["gamma","e+","mu+","pi+","K+","nu","p+","nu_mu","nu_tau","n0", "KL0"]
-                              ,'From' : ['u','d','s','c','b']
-                              ,'UseSelector' : True
-                              ,'MotherSelectorName' : 'ZPlusJetHepMCSelector'
-                              ,'OutputTable' : 'Relations/Phys/StdHepMCRef2HepMC'}
-            self.setProp( 'ToolConf', ToolConfDict ) 
-            self.setProp( 'InAcceptance', False )
-
-        if name == 'HepMC_Zjet':
-            """
-            Configuration to get all stable particles, except neutrinos, comming from q in pp->Z+q
-            """
-            self.setProp('From' , 'HepMC' )
-            self.setProp('OutputContainer' , 'StdHepMC' )
-            ToolConfDict =  { 'Particles' : ["gamma","e+","mu+","pi+","K+","p+","n0", "KL0"]
-                              ,'From' : []
-                              ,'UseSelector' : False
-                              ,'OutputTable' : 'Relations/Phys/StdHepMC2HepMC'}
-            self.setProp( 'ToolConf' , ToolConfDict )
-            self.setProp( 'InAcceptance' , False )
-
-        if name == 'HepMCAcc_Zjet':
-            """
-            Configuration to get all stable particles, except neutrinos, comming from q in pp->Z+q
-            """
-            self.setProp('From' , 'HepMC' )
-            self.setProp('OutputContainer' , 'StdHepMCAcc' )
-            ToolConfDict =  { 'Particles' : ["gamma","e+","mu+","pi+","K+","p+","n0", "KL0"]
-                              ,'From' : []
-                              ,'UseSelector' : False
-                              ,'OutputTable' : 'Relations/Phys/StdHepMCAcc2HepMC'}
-            self.setProp( 'ToolConf' , ToolConfDict )
-            self.setProp( 'InAcceptance' , True )
-            
-        if name == 'Partons_HidValley':
-            """
-            Configuration to get the quarks and gluons comming from q in pp->Z+q
-            """
-            self.setProp('From' , 'HepMC' )
-            self.setProp('OutputContainer' , 'StdPartons' )
-            ToolConfDict =  {'PartonicMode': True
-                             ,'Particles' : ['g','u','d','s','c','b']
-                             ,'From' : ['H_30']
-                             ,'UseSelector' : False
-                             ,'OutputTable' : 'Relations/Phys/StdPartons2HepMC'}
-            self.setProp( 'ToolConf'  , ToolConfDict )
-            self.setProp( 'InAcceptance' , False )
-             
-             
-        if name == 'HepMCRef_HidValley':
-            """
-            Configuration to get all stable particles comming from q in pp->Z+q
-            """
-            self.setProp('From' , 'HepMC' )
-            self.setProp('OutputContainer', 'StdHepMCRef' )
-            ToolConfDict =  { 'Particles' : ["gamma","e+","mu+","pi+","K+","nu","p+","nu_mu","nu_tau","n0", "KL0"]
-                              ,'From' : ['H_30']
-                              ,'UseSelector' : False
-                              ,'OutputTable' : 'Relations/Phys/StdHepMCRef2HepMC'}
-            self.setProp( 'ToolConf', ToolConfDict ) 
-            self.setProp( 'InAcceptance', False )
-
-        if name == 'HepMC_HidValley':
-            """
-            Configuration to get all stable particles comming from q in pp->Z+q
-            """
-            self.setProp('From' , 'HepMC' )
-            self.setProp('OutputContainer', 'StdHepMC' )
-            ToolConfDict =  { 'Particles' : ["gamma","e+","mu+","pi+","K+","p+","n0", "KL0"]
-                              ,'From' : []
-                              ,'UseSelector' : False
-                              ,'OutputTable' : 'Relations/Phys/StdHepMC2HepMC'}
-            self.setProp( 'ToolConf', ToolConfDict ) 
-            self.setProp( 'InAcceptance', False )
-
-        if name == 'HepMCAcc_HidValley':
-            """
-            Configuration to get all stable particles comming from q in pp->Z+q
-            """
-            self.setProp('From' , 'HepMC' )
-            self.setProp('OutputContainer', 'StdHepMCAcc' )
-            ToolConfDict =  { 'Particles' : ["gamma","e+","mu+","pi+","K+","p+","n0", "KL0"]
-                              ,'From' : []
-                              ,'UseSelector' : False
-                              ,'OutputTable' : 'Relations/Phys/StdHepMCAcc2HepMC'}
-            self.setProp( 'ToolConf', ToolConfDict ) 
-            self.setProp( 'InAcceptance', True ) 
-             
-
-        if name == 'StdMCReconstructible_HidValley':
-            """
-            Configuration to get all reconstructible mc particles comming from Hidden Valley
-            Suited to get what a jet should be with the real acceptance, if the detector was perfect
-            """
-            self.setProp('From' , 'MC' )
-            self.setProp('OutputContainer', 'StdMCReconstructible' )
-            ToolConfDict =  { 'ParticleNames' : ["gamma","e+","e-","mu+","mu-","pi+","pi-","K+","K-","p+","p-","n0","KL0"]
-                              ,'SmearParticle' : False
-                              ,'OnlyReconstructible' : True
-                              ,'OutputTable' : 'Relations/Phys/StdMCReconstructible2MC'}
-            self.setProp( 'ToolConf', ToolConfDict ) 
-
-            
-    ## Apply the configuration to the given sequence
-    def applyConf(self):
-        if self.getProp('Predefined') != '' : self.Predefined_Conf(self.getProp('Predefined'))
-        algorithm , tool = self.setupParticleMaker(self.getProp('OutputContainer') )
-        self.ConfigParticleMaker(tool,self.getProp('ToolConf'))
-        locations = updateDoD (algorithm)
 
