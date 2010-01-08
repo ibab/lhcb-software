@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.88 2010-01-07 15:39:17 graven Exp $
+! $Id: release.notes,v 1.89 2010-01-08 12:49:23 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -9,6 +9,11 @@
 ! for the production. Commit them AS WELL in branch production200912. 
 !
 !-----------------------------------------------------------------------------
+
+! 2010-01-08 - V. Gligorov
+ - add python/Hlt1Lines/Hlt1HadronForSwimmingLines.py : the hadron lines modified to
+   allow measuring the lifetime acceptance ia the swimming mehod
+
 ! 2010-01-07 - G. Raven   
  - protect Hlt1HadronViaTLines against missing L0 channels
  - deal with the L0MUON channel (all upper case) as used in december 2009
