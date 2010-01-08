@@ -7,6 +7,7 @@
 # |-SkipEvents      = 0
 # |-ProductionMode  = False
 # |-PackType        = 'TES'
+# |-WriteLumi       = False
 # |-DDDBtag         = 'default'  (default: '')
 # |-WithMC          = True  (default: False)
 # |-MainSequence    = ['ProcessPhase/Reco', 'ProcessPhase/Moni', 'ProcessPhase/MCLinks', 'ProcessPhase/Check']
@@ -70,9 +71,11 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v35r11
-                                          running on lxbuild156.cern.ch on Thu Dec 17 11:14:07 2009
+                                          running on lxbuild156.cern.ch on Fri Jan  8 08:28:30 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
+# WARNING: : Class  not in database
+# ERROR: CopyVelo.Selector: Configurable  is not a ConfigurableAlgTool
 StatusCodeSvc        INFO initialize
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
 ToolSvc.CondDBE...   INFO Initializing...
@@ -1341,13 +1344,7 @@ TimingAuditor.T...   INFO  FSRWriter                    |     0.000 |     0.000 
 TimingAuditor.T...   INFO  DstWriter                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/0(Alg/Node/Total).
+FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
 RootDBase.close     ERROR Failed to modify file: Brunel.dst Errno=2 No such file or directory
-FileRecordCnvSvc     INFO Disconnected data IO:449C45CB-77C5-DE11-8C33-001E4F3E5979[Brunel.dst]
-StatusCodeSvc        INFO listing all unchecked return codes:
-StatusCodeSvc        INFO
-Num | Function                       | Source Library
-----+--------------------------------+------------------------------------------
-  1 | EventLoopMgr::nextEvent(int)   | libGaudiSvc.so
-
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
