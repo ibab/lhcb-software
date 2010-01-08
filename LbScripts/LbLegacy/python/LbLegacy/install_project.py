@@ -1,223 +1,7 @@
 #!/usr/bin/env python
 """
   Script to install a project where you are
-  050426 - remove broadcast cmt config , add build vsnet on Win32
-  050428 - extract tarinfo if it does not exist
-  050502 - introduce system/
-  050509 - replace system/ with $CMTCONFIG/
-  050509 - use os.system('tar blabla') instead of tarfile if python version < 234
-  050511 - replace Visualc with VisualC in cmtbin in Win32
-  050511 - if not given take the CMT version from ExtCMT  in the line 'CMT/v'
-  050520 - add Online/GaudiOnline in the application list
-  050525 - download script tar file instead of individual scripts
-  050526 - binary, when required, is $CMTCONFIG
-  050527 - print the script version with the help
-  050615 - download DIM on contrib as OpenScientist
-  050616 - add MOORE and EULER applications, remove Online application
-  050708 - check CMTCONFIG, ask for confirmation if CMTCONFIG not part of lhcb_binary
-            - add -r or --remove argument to remove a project
-                  python install_project.py -p DaVinci -v12r4 -r
-              will remove all files and directories referencing DaVinci v12r4
-            - remove unreadable tar file and exit
-            - add -l or --list argument to list all project versions available on the repository
-                  python install_project.py -p DaVinci -l
-              will list all DaVinci/version tar files available on the web
-            - write a log file in $MYSITEROOT/log/install.log
-
- 050718 - fix remove for LCGCMT
- 050826 - run LbInstallArea on Linux to update SoftLinks
- 050829 - untar GENSER below lcg/external
- 050912 - print the script version number
- 050919 - use commands.getstatusoutput instead of os.system to print the output in sequence
- 050920 - set Lbcom, Rec, Phys, Geant4_release_area in setLHCbEnv
- 050921 - add Examples in application_list for Gaudi, LHCb and Bender
-             get the list of examples with versions to configure and build library links
- 050922 - if untar is successful remove targz file, replace it with a dummy file
-             cmt config packages under DBASE and PARAM
- 050927 - replace string.replace with file.replace in getFile
- 050930 - add installPackage function ( stuart Patersson) to be called by DIRAC
- 050930 - restore os.system on win32 because the commands module is Unix only
- 051004 - fix 2 'if <string>.find' which were not tested
- 051012 - avoid to extract symlinks on win32
- 051108 - replace targz files with a dummy one, correction introduced in 050922 and then lost
-           - set CMTBIN in getCMT
-           - set CMTSITE, SITEROOT, LD_LIBRARY_PATH  in setLHCbEnv to allow compilation to work
-
- 060124 - add a retry if a download does not work
-           - set sys.exit('with a message') instead of sys.exit(integer)
- 060301 - execute a SealPluginRefresh
- 060306 - remove install_package function which is no longer necessary
- 060313 - in pool-refresh return if gaudipath is not set
- 060315 - OpenScientist has nolonger InstallArea
- 060327 - remove packages in DBASE or PARAM
- 060502 - remove GENSER as LCGCMT
- 060517 - add some printout in exec_cmt_library_links
- 060523 - on Linux platforms download CMT_<version>_Linux.tar.gz
- 060601 - on Linux use 'uname -p' to set cmtbin in getCMT
- 060614 - add XmlConditions in data_files
- 060619 - -b assumes $CMTCONFIG
-             --binary=<something> set os.environ['CMTCONFIG']=<something>
-             introduce slc3_ia32_gcc323_dbg as possible binary
-             run pool_refresh only on Linux for non debug binary
- 060621 - if -m do_config is given execute at end of installation on all LHCb projects
-             > cmt br cmt config
-             > cmt br cmt build library_links
- 060622 - introduce full_flag to download source, binary, binary_dbg in one go
- 060626 - Bender application is Phys/Bender
- 060628 - replace uname -p with uname -m in getCMT to set CMTBIN
- 060629 - add VETRA project
- 060704 - VETRA has no application yet
- 060712 - global variable make was not set : replace it with string 'make'
- 060814 = fix exec_cmt_library_links : there was an extra space in checking the bradcast variable
- 060829 - do not check existence of InstallArea for DIM as for OpenScientist, LCGCMT and GENSER
- 060830 - set CMTPATHPROJECT when cmtvers >= 18
-             do not configure packEnv if it does not exist
-             do not build library_links if no binary directory in packSys
- 060911 - do not use tarfile module from python 2.4.3 on linux
- 060925 - print Python version in the logfile
- 061013 - add slc4_ia32_gcc34, slc4_ia32_gcc34_dbg
- 061106 - download install_project.py as latest_install_project.py.
-             check the version, exit if old version
- 061115 - protect all print statments with if debug_flag == 1, set default debug_flag = 0
- 061116 - print the python version and the time
- 061127 - fix lhcb_binary (put slc4_ia32_gcc34_dbg before slc4_ia32_gcc34)
- 061128 - import LHCb_config - using getFile
-             check definition of logfile before using it in getFile because
-             getFile(url_dist,'LHCb_config.py') is called in the main program before setting
-             logfile in runInstall
- 061204 - use cmtvers instead of cmtversion in cmt_config
- 061212 - set here when entering a function which makes a chdir and chdir(here) before return
-             set make = 'nmake /f nmake' on win32
-             if python_version < 25 : python_version = python_version * 10
- 061222 - remove the pool_refresh function to solve the problem of local installation of a given package with the SHARED installtion of POOL
- 070126 - several fixes for introduction of CMTPROJECTPATH usage
-             use applications_other_executables in exec_cmt_library_links
- 070205 - remove os.system(LbInstallArea, keep getstatusoutput to avoid /bin/ls  printout
- 070307 - prepare for MCGenerators tar file , for SQLDDDB tar file
- 070313 - add a binary directory if not yet there in ext_lhcb project to distinguish different platforms
- 070320 - fix getFile in case of ext_lhcb project
- 070321 - create DBASE and PARAM when lhcb is created
- 070328 - on Linux call LbInstallArea in compile_project if do_config and InstallArea/$CMTCONFIG exist
- 070329 - fix mistype in handling of MCGenerators
- 070403 - delete CMTPROJECTPATH if it exists when PackEnv is used
- 070418 - add some sys.exit('blabla') in untarFile
-           - sys.exit if MYSITEROOT is not identical to os.getcwd()
- 070420 - use the binary flag in getScripts to choose the right script tar file
-           - do not set make_flag to do_config by default if binary contains 'win32'
- 070511 - raise exception if we can not delete file
- 070709 - Ugly hack to avoid the building of library links for already present projects
- 070809 - added the md5 checks of the tar balls and the customization of the retries
- 070810 - added message in the logfile in case of md5 check failure
- 071004 - fixed a couple of bugs occuring when the download (or md5sum check) fails
- 071204 - caught exception and remove tar file if the tar command fails
- 071211 - added the total removal of the project if its tar ball fails to untar
- 080108 - fixed the import of the ExtractError class from the tarfile module
- 080115 - always pass the binary value to the LbInstallArea script
- 080211 - moved the exception catching for the tar file expansion
- 080407 - added the automatic download of the Grid software
- 080424 - excluded the 2.4.4 version from the usable python tarfile module
- 080429 - fixed stupid typo for the previous change
- 080429 - added case insensitive checks for MYSITEROOT on windows
- 080429 - removed the download of the grid tar balls on windows and slc3
- 080429 - fixed configure step for LCGGrid
- 080430 - fixed logic for the slc3 exclusion of LHCbGrid
- 080709 - fixed unix permissions after the untar of the file
- 080813 - implemented the support for multiple mysiteroot
- 080820 - added the permissions for writing to the group and other according to the umask
- 080820 - moved to the use of the 'tar' command only. Except for windows
- 080822 - changed the error message reported by chmod. Now using the full path
- 080825 - added check to the removall of the path. It should exist.
- 080825 - added the read permissions if the mask allows them.
- 080826 - refine fixing of the permissions: only for the exact installed tar balls.
- 080827 - added the '--touch' option to the tar command.
- 080901 - added the global check for the installation of a project.
- 080902 - Fixed permissions on the DBASE/cmt and PARAM/cmt directories.
- 080903 - Fixed permissions after cmt configure.
- 080903 - removed the '-no-same-permissions' option of the tar command. Should fix problem with untarring
-          in the same directory already existing files installed by a different account.
- 080903 - Fixed the global umask at the start of the script.
- 080907 - implemented untarring in a temporary local directory.
- 080908 - added '-s', '--setup-script' options to generate the setup of the top installed project.
- 080908 - fixed windows temporary directory name.
- 080909 - added the '--silent' option to the call to SetupProject.
- 080916 - refactoring of the output messages using the python logging facility.
- 080916 - use the function name in the logger only if we have python 2.5.
- 080916 - fix the destination directory creation after untarring in the tmp directory.
- 080917 - change the permissions of the newly created base directories.
- 080922 - Fixed problem in the recusive function to move the file from the directory where
-          the untarring has happened.
-        - Fix link problem in the removeAll function (Vladimir Romanovskiy)
-        - added the read/write permissions after untarring on windows too.
-        - fixed mistake in the previous change. Have to use the absolute path in the os.walk function
- 080924 - fixed typo in compile_project
- 081008 - enforces the removal of the reference md5sum file whenever a new one is downloaded
- 081009 - fixed issues with project without versioned-directory for the packages
- 081009 - fixed careless removal of the CVS directory from the list
- 081010 - faked version modification to force the pickup of the latest changes from 081009
- 081013 - Fixed configuration of standalone data packages.
- 081015 - Fixed the removal of data packages. Corrected the setup of Boole v12r10
- 081016 - Fixed the removal of packages if it is a patched version (vXrYpZ).
- 081017 - Fixed the global configure step. A separate installation is now done for LbScripts
- 081022 - added full support for multiple mysiteroot. added the --check option.
- 081029 - moved to LbScripts v1r8
- 081031 - moved to LbScripts v1r9
- 081104 - Creates relative links to LbLogin instead of absolute ones. It fixes problem with the
-          synchronisation of the CERNVM server.
- 081202 - added the fixing of the windows attributes in the changePermissions function
- 081203 - fixed the attributes tuning for the files
- 081205 - moved to LbScripts v1r11
- 081209 - Changed to default behavior. Now only appends soft. There is a new option --overwrite to
-          force the overwriting
- 081216 - computes the CMTDEB variable on the fly
- 081217 - Fixed trailing '/' at the end of the MYSITEROOT components
- 090107 - fixed the installation of the LbLogin.bat script on windows
- 090119 - fixed the removal of the .html file if the project is not available
- 090120 - moved to the version v1r13 for LbScripts
- 090120 - always install the LbScripts project locally if it is not present
- 090210 - moved to LbScripts v2r4
- 090216 - suppressed the call to LbInstallArea. added the delayed call to generateLogin
- 090218 - moved to LbScripts v2r5
- 090302 - fixed creation of intermediate in shutil.copytree which was not working in python 2.4
-        - fixed getCMTPath which was not returning a tuple some cases
- 090303 - removed obsolete putenv calls
-        - put some checks on the parent directory whenever using shutil.move
- 090311 - moved to LbScripts v2r6. Prevent the generation and usage of the cache
- 090317 - moved to LbScripts v2r7
- 090324 - removed every obsolete and uneeded features (config, compile, library links etc)
-        - fixed the python version calculation with sys.version_info
-        - refactored the name of the functions to comply with the convention
-        - implemented the path stripping for the generation of the project setup script
- 090325 - factored out the lbscripts version.
-        - call LbLogin before generating the setup script
- 090401 - fixed small hickup in the installation of a local data package.
- 090406 - removed the obsolete string module
-        - moved to LbScripts v3r1
- 090414 - moved to use the LbScript tarball for bootstrapping.
-        - Use the LbLegacy.LHCb_config for the old settings.
-        - moved version of LbScripts to be used to be the current one (v3r2).
- 090421 - comment the full_flag setting in win32 section.
-        - put the import statement for LHCb_config.
- 090513 - Added the support for slc5
-        - removed the usage of the old scripts.tar.gz for the bootstrapping.
- 090515 - Moving to LbScripts v4r0
- 090526 - Reenabled the fixProjectLinks procedure to cure the link target starting with "/afs"
- 090602 - Added AppConfig and L0TCK to the removal process.
- 090602 - Moved to LbScripts v4r1
- 090618 - fixed bootstrap order for the removal mode.
- 090709 - Don't try to create a log file in check-mode.
- 090804 - Moved the Compat project verson to v1r2
- 090819 - use absolute patch for the local distribution.htm file
-        - put security around the usage of fixLinks. 
- 090821 - implemented retry loop for the software retrieval.
- 090916 - Added the --nofixperm option to prevent the fixing of the permissions. This
-          could improve the installation time on windows 
- 091013 - Added the support for the LCGGanga tarball.
- 091015 - fixed the --check option. It must not create any file.
- 091026 - fixed the exception handling in the retrieve function
- 091105 - stripped off the hat for the data package if there is one.
- 091118 - Moved the Compat project verson to v1r3
- 091123 - Moved to LbScripts v4r4
- 091124 - Fixed the log level passed to SetupProject
+  Please have a look at the documentation in the release.notes
 """
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil
@@ -230,10 +14,10 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from shutil import rmtree
 
-script_version = '091124'
+script_version = '100108'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
-lbscripts_version = "v4r4"
+lbscripts_version = "v4r4p1"
 compat_version = "v1r5"
 #-----------------------------------------------------------------------------------
 
@@ -744,14 +528,14 @@ def getCMT(version=0):
 #
 #  download a file from the web site in targz_dir =================================
 #
-def getFile(url,file):
+def getFile(url, file):
     log = logging.getLogger()
     log.debug('%s/%s ' % (url, file))
 
     if file.find('.tar.gz') != -1:
         filetype = 'x-gzip'
         this_targz_dir = targz_dir.split(os.pathsep)[0]
-        dest = os.path.join(this_targz_dir,file)
+        dest = os.path.join(this_targz_dir, file)
         if url.find('scripts') != -1 or url.find('system') != -1:
             if os.path.exists(dest) :
                 try:

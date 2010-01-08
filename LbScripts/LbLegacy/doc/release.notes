@@ -4,7 +4,8 @@
 	- removed completely the usage of LbLegacy.LHCb_config
 	- skip the creation of the base directories in the local MYSITEROOT if 
 	there is no write access 
-	
+	- removed useless documentation.
+	- moved to LbScripts v4r4p1
 
 2009-12-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
