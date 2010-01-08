@@ -1,4 +1,4 @@
-// $Id: Particles12.cpp,v 1.10 2009-09-26 13:49:09 ibelyaev Exp $
+// $Id: Particles12.cpp,v 1.11 2010-01-08 15:10:06 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -298,6 +298,55 @@ LoKi::Particles::IsMuonLoose::fillStream ( std::ostream& s ) const
 // ============================================================================
 
 
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Particles::InMuonAcceptance::~InMuonAcceptance() {}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::InMuonAcceptance*
+LoKi::Particles::InMuonAcceptance::clone() const 
+{ return new LoKi::Particles::InMuonAcceptance(*this); }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::InMuonAcceptance::result_type
+LoKi::Particles::InMuonAcceptance::operator()
+  ( LoKi::Particles::InMuonAcceptance::argument p ) const 
+{
+  //
+  if ( 0 == p ) 
+  {
+    Error ( " Invalid Particle, return 'false'" ) ;
+    return false ;                                    // RETURN 
+  }
+  // 
+  const LHCb::ProtoParticle* pp = p->proto() ;
+  //
+  if ( 0 == pp ) 
+  {
+    Error ( " Invalid ProtoParticle, return 'false'" ) ;
+    return false ;                                   // RETURN 
+  }
+  //
+  const LHCb::MuonPID* mPID = pp->muonPID() ;
+  //
+  if ( 0 == mPID ) 
+  {
+    Error ( " Invalid MuonPID, return 'false'" ) ;
+    return false ;                                   // RETURN 
+  }
+  //
+  return mPID -> InAcceptance () ;                  // RETURN   
+}
+// ============================================================================
+//  OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::InMuonAcceptance::fillStream ( std::ostream& s ) const 
+{ return s << "INMUON" ; }
+// ============================================================================
 
 
 // ============================================================================

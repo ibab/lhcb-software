@@ -178,19 +178,21 @@ CHI2MM    = LoKi.Particles.DeltaMeasuredMassChi2
 ## @see LoKi::Cuts::CHI2MMASS
 CHI2MMASS = CHI2MM
 ## @see LoKi::Cuts::CL  
-CL       = LoKi.Particles.ConfidenceLevel  () 
+CL       = LoKi.Particles.ConfidenceLevel   () 
 ## @see LoKi::Cuts::WEIGHT
-WEIGHT   = LoKi.Particles.Weight           () 
+WEIGHT   = LoKi.Particles.Weight            () 
 ## @see LoKi::Cuts::ISBASIC 
-ISBASIC  = LoKi.Particles.IsBasic          () 
+ISBASIC  = LoKi.Particles.IsBasic           () 
 ## @see LoKi::Cuts::ISMUON
-ISMUON   = LoKi.Particles.IsMuon           ()
+ISMUON   = LoKi.Particles.IsMuon            ()
 ## @see LoKi::Cuts::ISMUONLOOSE
-ISMUONLOOSE = LoKi.Particles.IsMuonLoose   ()
+ISMUONLOOSE = LoKi.Particles.IsMuonLoose    ()
 ## @see LoKi::Cuts::ISLOOSEMUON
-ISLOOSEMUON = LoKi.Particles.IsMuonLoose   ()
+ISLOOSEMUON = LoKi.Particles.IsMuonLoose    ()
+## @see LoKi::Cuts::INMUON
+INMUON   = LoKi.Particles.InMuonAcceptance  ()
 ## @see LoKi::Cuts::NDAUGS  
-NDAUGS   = LoKi.Particles.NumberOfDaughters() 
+NDAUGS   = LoKi.Particles.NumberOfDaughters () 
 ## @see LoKi::Cuts::HASINFO
 HASINFO  = LoKi.Particles.HasInfo
 ## @see LoKi::Cuts::INFO

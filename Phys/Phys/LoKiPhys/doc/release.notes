@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.125 2010-01-08 15:10:06 ibelyaev Exp $ 
+! $Id: release.notes,v 1.126 2010-01-08 15:12:02 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
@@ -14,6 +14,10 @@
       to check :is in muon acceptance" condition using LHCb::MuonPID::InAcceptance
 
       Many thanks to Gaia LANFRANCI for kind help!   
+
+ - cmt/requirements 
+
+    version increment to v8r13
 
 ! 2010-01-03 - Vanya Belyaev 
 
