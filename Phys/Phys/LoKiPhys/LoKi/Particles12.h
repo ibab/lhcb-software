@@ -1,4 +1,4 @@
-// $Id: Particles12.h,v 1.9 2009-09-26 13:49:08 ibelyaev Exp $
+// $Id: Particles12.h,v 1.10 2010-01-08 15:10:06 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES12_H 
 #define LOKI_PARTICLES12_H 1
@@ -257,6 +257,30 @@ namespace LoKi
       virtual ~IsMuonLoose() {} ;
       /// MANDATORY: clone method ("virtual constructor")
       virtual  IsMuonLoose* clone() const { return new IsMuonLoose(*this); }
+      /// MANDATORY: the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class InMuonAcceptance
+     *  Simple functor that checks if the particle is in muon acceptance
+     *  @thanks Gaia Lanfranchi for kind help!
+     *  @see LHcb::MuonPID::InAcceptance 
+     *  @see LoKi::Cuts::INMUON
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2010-01-08
+     */
+    class InMuonAcceptance
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~InMuonAcceptance () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  InMuonAcceptance* clone () const ;
       /// MANDATORY: the only one essential method 
       result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 

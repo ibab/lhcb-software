@@ -1,4 +1,4 @@
-// $Id: ParticleCuts.h,v 1.39 2009-11-19 17:45:34 marcocle Exp $
+// $Id: ParticleCuts.h,v 1.40 2010-01-08 15:10:06 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -2368,6 +2368,28 @@ namespace LoKi
      */
     typedef LoKi::Particles::InGeneration                        INGENERATION ;
     // ========================================================================    
+    /** @var INMUON
+     *  The simple evaluator of LHCb::MuonPID::InAcceptance
+     *  
+     *  @code 
+     *
+     *  const LHCb::Particle* p = ... ;
+     * 
+     *  bool muon = INMUON ( p ) ;
+     *
+     *  @endcode 
+     *     
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::MuonPID 
+     *  @see LHCb::MuonPID::InAcceptance 
+     *  @see LoKi::Particles::InMuonAcceptance
+     *  
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2010-01-08
+     */
+    const LoKi::Particles::InMuonAcceptance                            INMUON ;
+    // ========================================================================
     /** @typedef INTES 
      *
      *  Simple predicate to check if the particle is 

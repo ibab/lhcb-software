@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.124 2010-01-03 08:55:09 ibelyaev Exp $ 
+! $Id: release.notes,v 1.125 2010-01-08 15:10:06 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-01-08 - Vanya Belyaev
+
+ - LoKi/Particles12.h
+   src/Particles12.cpp
+   
+      add new functor LoKi::Particles::InMuonAcceptance, symbol: INMUON 
+      to check :is in muon acceptance" condition using LHCb::MuonPID::InAcceptance
+
+      Many thanks to Gaia LANFRANCI for kind help!   
 
 ! 2010-01-03 - Vanya Belyaev 
 
