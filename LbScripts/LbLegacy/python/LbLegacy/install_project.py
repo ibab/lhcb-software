@@ -1339,6 +1339,8 @@ def createBaseDirs(pname, pversion):
     global bootscripts_dir, targz_dir, system_dir, tmp_dir
 
 
+    log = logging.getLogger()
+
     # removes the trailing "/" at the end of the path
     if os.environ.has_key("MYSITEROOT") :
         path_list = []
@@ -1347,24 +1349,22 @@ def createBaseDirs(pname, pversion):
                 p = p[:-1]
             path_list.append(p)
         os.environ["MYSITEROOT"] = os.pathsep.join(path_list)
-
-    if os.environ.has_key('MYSITEROOT') :
         if os.environ['MYSITEROOT'].find(os.pathsep) != -1 :
             multiple_mysiteroot = True
-
-    if os.environ.has_key('MYSITEROOT') == 1:
-        mypath = os.path.realpath(os.environ['MYSITEROOT'])
+        mypath = os.path.realpath(os.environ['MYSITEROOT'].split(os.pathsep)[0])
         thispwd = os.path.realpath(os.getcwd())
         if sys.platform == 'win32' :
-            if mypath.split(os.pathsep)[0].upper() != thispwd.upper() :
-                sys.exit('please set MYSITEROOT == $PWD:$MYSITEROOT before running the python script \n')
+            if mypath.upper() != thispwd.upper() :
+                log.warning("Using the directory %s for installation" % mypath)
+                os.chdir(mypath)
         else:
-            if mypath.split(os.pathsep)[0] != thispwd :
-                sys.exit('please set MYSITEROOT == $PWD:$MYSITEROOT before running the python script \n')
+            if mypath != thispwd :
+                log.warning("Using the directory %s for installation" % mypath)
+                os.chdir(mypath)
 
     else:
         #print 'please set $MYSITEROOT before running the python script'
-        sys.exit('please set $MYSITEROOT before running the python script \n')
+        sys.exit('please set $MYSITEROOT == $INSTALLDIR:$MYSITEROOT before running the python script \n')
 
     if os.environ.has_key('CMTCONFIG') == 0:
         #print ' please set $CMTCONFIG before running the python script'

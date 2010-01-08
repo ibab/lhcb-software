@@ -6,6 +6,7 @@
 	there is no write access 
 	- removed useless documentation.
 	- moved to LbScripts v4r4p1
+	- removed the need to run the script from the install location
 
 2009-12-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
