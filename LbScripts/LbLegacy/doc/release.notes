@@ -1,3 +1,7 @@
+2010-01-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: removed completely the usage of LbLegacy.LHCb_config
+
 2009-12-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: removed the download of the system tarball. It is 

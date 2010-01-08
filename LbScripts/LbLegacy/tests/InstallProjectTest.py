@@ -1,4 +1,7 @@
+from LbLegacy.install_project import getProjectVersions, listVersions, getVersionList
+from pprint import pprint
 import unittest
+
 
 class InstallProjectTestCase(unittest.TestCase):
     
@@ -9,7 +12,7 @@ class InstallProjectTestCase(unittest.TestCase):
         unittest.TestCase.tearDown(self)
         
     def testVersionsList(self):
-        pass
+        pprint(getVersionList("DBASE"))
         
 if __name__ == '__main__':
     unittest.main()

@@ -234,7 +234,7 @@ script_version = '091124'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v4r4"
-compat_version = "v1r3"
+compat_version = "v1r5"
 #-----------------------------------------------------------------------------------
 
 # url from which to get files
@@ -761,7 +761,7 @@ def getFile(url,file):
             for f in file_base :
                 if bin != '':
         # download binary tar file if InstallArea is not there
-                    if pack_ver[0] in LbLegacy.LHCb_config.ext_lhcb:
+                    if pack_ver[0] in LbConfiguration.External.external_projects :
                         f = os.path.join(f,bin)
                     else:
                         f = os.path.join(f,'InstallArea',bin)
@@ -983,11 +983,12 @@ def getProjectList(name,version,binary=' '):
     log.debug('get list of projects to install %s %s %s' % (name, version, binary))
     here = os.getcwd()
 
-    import LbLegacy.LHCb_config
     import LbConfiguration.Platform
+    import LbConfiguration.Package
 
-    if LbLegacy.LHCb_config.data_files.has_key(name) == 1:
-        tar_file = LbLegacy.LHCb_config.data_files[name]+'_'+version
+    if name in LbConfiguration.Package.package_names :
+        p = LbConfiguration.Package.getPackage(name)
+        tar_file = p.tarBallName(version)
     else:
         tar_file = name.upper()+'_'+name.upper()
         if version != 0 :
@@ -1164,7 +1165,7 @@ def getProjectTar(tar_list, already_present_list=None):
                     removeAll(pack_ver[3])
                     log.info('Cleaning up %s' % pack_ver[3])
                     sys.exit("getProjectTar: Exiting ...")
-                if pack_ver[0] in LbLegacy.LHCb_config.ext_lhcb:
+                if pack_ver[0] in LbConfiguration.External.external_projects:
                     # if it is a ext_lhcb project
                     # create a ext_lhcb project/vers/binary directory
                     # to remember which binary tar file has been untar
@@ -1332,12 +1333,11 @@ def cleanBootScripts():
 #
 #  list available versions ==============================================================================
 #
-def listVersions(pname):
-    
+def getVersionList(pname):
     from LbConfiguration.Version import sortStrings
     
     log = logging.getLogger()
-    log.debug('listVersions for %s ' % pname)
+    log.debug('Browsing versions for %s ' % pname)
 
     PROJECT = pname.upper()
     webpage = urlopen(url_dist+'/'+PROJECT)
@@ -1352,13 +1352,17 @@ def listVersions(pname):
             if filename.find(".md5") == -1 :
                 plist.append(filename) 
                 log.info(filename)
-    for l in sortStrings(plist, safe=True) :
-        log.info(filename)
     atexit.register(urlcleanup)
+    return sortStrings(plist, safe=True)
 
-def getProjectVersions(project, cmtconfig=None):
-    if not cmtconfig :
-        cmtconfig = os.environ.get("CMTCONFIG", None)
+def listVersions(pname):
+    log = logging.getLogger()
+    for l in getVersionList(pname) :
+        log.info(l)
+
+def getProjectVersions(project, cmt_config=None):
+    if not cmt_config :
+        cmt_config = os.environ.get("CMTCONFIG", None)
 
 #
 #  read a string from a file ==============================================
@@ -1385,10 +1389,11 @@ def removeProject(project, pvers):
     this_log_dir = log_dir.split(os.pathsep)[0]
     this_contrib_dir = contrib_dir.split(os.pathsep)[0]
 
-    import LbLegacy.LHCb_config
+    import LbConfiguration.Project
 
     PROJECT = project.upper()
-    if LbLegacy.LHCb_config.lhcb_projects.has_key(PROJECT):
+
+    if PROJECT in [ p.NAME() for p in LbConfiguration.Project.project_list ] :
         head = this_lhcb_dir
         VERSION = PROJECT+'_'+pvers
 
@@ -1528,6 +1533,12 @@ def genSetupScript(pname, pversion, cmtconfig, scriptfile):
 #  create base directories #################################################
 #
 
+def _multiPathJoin(path, subdir):
+    pathlist = []
+    for d in path.split(os.pathsep) :
+        pathlist.append(os.path.join(d,subdir))
+    return os.pathsep.join(pathlist)
+
 def createBaseDirs(pname, pversion):
     global multiple_mysiteroot
     global cmtconfig
@@ -1568,39 +1579,18 @@ def createBaseDirs(pname, pversion):
 
     cmtconfig = os.environ['CMTCONFIG']
 
-    log_dir = []
-    contrib_dir = []
-    lcg_dir = []
-    lhcb_dir = []
-    html_dir = []
-    bootscripts_dir = []
-    targz_dir = []
-    system_dir = []
-    tmp_dir = []
-    for p in mypath.split(os.pathsep) :
-        log_dir.append(os.path.join(p,'log'))
-        contrib_dir.append(os.path.join(p,'contrib'))
-        lcg_dir.append(os.path.join(p, 'lcg', 'external'))
-        lhcb_dir.append(os.path.join(p,'lhcb'))
-        html_dir.append(os.path.join(p,'html'))
-        bootscripts_dir.append(os.path.join(p,'bootscripts'))
-        targz_dir.append(os.path.join(p,'targz'))
-        system_dir.append(os.path.join(p,cmtconfig))
-        if sys.platform != "win32" :
-            tmp_dir.append(os.path.join(p,"tmp", os.environ["USER"]))
-        else :
-            tmp_dir.append(os.path.join(p,"tmp"))
-
-    log_dir= os.pathsep.join(log_dir)
-    contrib_dir = os.pathsep.join(contrib_dir)
-    lcg_dir = os.pathsep.join(lcg_dir)
-    lhcb_dir = os.pathsep.join(lhcb_dir)
-    html_dir = os.pathsep.join(html_dir)
-    bootscripts_dir = os.pathsep.join(bootscripts_dir)
-    targz_dir = os.pathsep.join(targz_dir)
-    system_dir = os.pathsep.join(system_dir)
-    tmp_dir = os.pathsep.join(tmp_dir)
-
+    log_dir = _multiPathJoin(mypath, "log")
+    contrib_dir = _multiPathJoin(mypath, "contrib")
+    lcg_dir = _multiPathJoin(mypath, os.path.join("lcg", "external"))
+    lhcb_dir = _multiPathJoin(mypath, "lhcb")
+    html_dir = _multiPathJoin(mypath, "html")
+    bootscripts_dir = _multiPathJoin(mypath, "bootscripts")
+    targz_dir = _multiPathJoin(mypath, "targz")
+    system_dir = _multiPathJoin(mypath, cmtconfig)
+    if sys.platform != "win32" :
+        tmp_dir = _multiPathJoin(mypath, os.path.join("tmp", os.environ["USER"]))
+    else :
+        tmp_dir = _multiPathJoin(mypath, "tmp")
 
     logname = os.path.join(log_dir.split(os.pathsep)[0], pname+'_'+pversion+'.log')
 
@@ -1648,23 +1638,18 @@ def runInstall(pname,pversion,binary=''):
     log.info('cmt version = %s, make_flag= %s, full_flag= %s, list_flag= %s, remove_flag= %s ' % (cmtversion, make_flag, full_flag, list_flag, remove_flag))
 
 
-
-
-    log.info(' +++++++ start install_project.py version= %s ' % script_version)
-    log.info('cmt version =%s, make_flag= %s, debug_flag= %s, list_flag= %s, remove_flag= %s' % (cmtversion, make_flag, debug_flag, list_flag, remove_flag))
-
 # cleanup the cache at exit
     urlcleanup()
     atexit.register(urlcleanup)
+
+
+# start the project installation
+    getBootScripts()
 
 # if list_flag is set: give the list of available versions for this project
     if list_flag :
         listVersions(pname)
         sys.exit()
-
-# start the project installation
-    getBootScripts()
-
 
 # if remove flag is set then correspondind tar files and directories will
 # be removed
