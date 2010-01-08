@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.413 2009-12-11 13:40:29 cattanem Exp $ 
+! $Id: release.notes,v 1.414 2010-01-08 16:17:35 wouter Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2010-01-08 - Wouter Hulsbergen 
+- Fix bug in 3DTransofmrationFunctions: getZYXTransformParameters was
+  not correctly dealing with the pivot point. (It was essentially ignoring it.) 
+  This affects the TT alignment.
 
 !====================== DetDesc v18r18 2009-12-11 =============================
 ! 2009-12-10 - Marco Cattaneo for Brett Viren
