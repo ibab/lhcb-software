@@ -600,57 +600,64 @@ def createDir(here , logname):
 
     this_log_dir = log_dir.split(os.pathsep)[0]
 
-
-    if not os.path.isdir(this_log_dir):
-        os.mkdir(this_log_dir)
-    else:
-        if os.path.exists(os.path.join(this_log_dir,logname+'_old')):
-            os.remove(logname+'_old')
-        if os.path.exists(logname):
-            os.rename(logname,logname+'_old')
-
-    this_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
-    log.info(" =========== Python %s %s " % (txt_python_version, this_time) )
-    for dirnm in subdir:
-        if os.path.isdir(os.path.join(here, dirnm)):
-            log.debug('%s exists in %s '%(dirnm, here))
+    good = False
+    if checkWriteAccess(here) :
+        good = True
+        if not os.path.isdir(this_log_dir):
+            os.mkdir(this_log_dir)
         else:
-            os.mkdir(dirnm)
-            log.info('%s is created in %s '%(dirnm, here))
-            if dirnm == 'lcg':
-                os.mkdir(os.path.join(dirnm, 'external'))
-                log.info('%s is created in %s ' % (os.path.join(dirnm, 'external'), here))
-            if dirnm == 'lhcb':
-                if multiple_mysiteroot :
-                    found_dbase = False
-                    found_param = False
-                    for b in lhcb_dir.split(os.pathsep)[1:] :
-                        if os.path.isdir(os.path.join(b, 'DBASE')) :
-                            found_dbase = True
-                        if os.path.isdir(os.path.join(b, 'PARAM')) :
-                            found_param = True
-                    if not found_dbase :
+            if os.path.exists(os.path.join(this_log_dir,logname+'_old')):
+                os.remove(logname+'_old')
+            if os.path.exists(logname):
+                os.rename(logname,logname+'_old')
+    
+        this_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
+        log.info(" =========== Python %s %s " % (txt_python_version, this_time) )
+        for dirnm in subdir:
+            if os.path.isdir(os.path.join(here, dirnm)):
+                log.debug('%s exists in %s '%(dirnm, here))
+            else:
+                os.mkdir(dirnm)
+                log.info('%s is created in %s '%(dirnm, here))
+                if dirnm == 'lcg':
+                    os.mkdir(os.path.join(dirnm, 'external'))
+                    log.info('%s is created in %s ' % (os.path.join(dirnm, 'external'), here))
+                if dirnm == 'lhcb':
+                    if multiple_mysiteroot :
+                        found_dbase = False
+                        found_param = False
+                        for b in lhcb_dir.split(os.pathsep)[1:] :
+                            if os.path.isdir(os.path.join(b, 'DBASE')) :
+                                found_dbase = True
+                            if os.path.isdir(os.path.join(b, 'PARAM')) :
+                                found_param = True
+                        if not found_dbase :
+                            os.mkdir(os.path.join(dirnm, 'DBASE'))
+                        if not found_param :
+                            os.mkdir(os.path.join(dirnm,'PARAM'))
+                        if found_dbase or found_param :
+                            os.mkdir(os.path.join(dirnm, 'EXTRAPACKAGES'))
+                            os.mkdir(os.path.join(dirnm, 'EXTRAPACKAGES', 'cmt'))
+                            f = open(os.path.join(dirnm, 'EXTRAPACKAGES', 'cmt', 'project.cmt'), "w")
+                            f.write("project EXTRAPACKAGES \n\n")
+                            f.close()
+                    else :
                         os.mkdir(os.path.join(dirnm, 'DBASE'))
-                    if not found_param :
-                        os.mkdir(os.path.join(dirnm,'PARAM'))
-                    if found_dbase or found_param :
-                        os.mkdir(os.path.join(dirnm, 'EXTRAPACKAGES'))
-                        os.mkdir(os.path.join(dirnm, 'EXTRAPACKAGES', 'cmt'))
-                        f = open(os.path.join(dirnm, 'EXTRAPACKAGES', 'cmt', 'project.cmt'), "w")
-                        f.write("project EXTRAPACKAGES \n\n")
-                        f.close()
-                else :
-                    os.mkdir(os.path.join(dirnm, 'DBASE'))
-                    os.mkdir(os.path.join(dirnm, 'PARAM'))
-            if fix_perm :
-                changePermissions(dirnm, recursive=True)
-        if dirnm == "tmp" :
-            createTmpDirectory()
-    if os.path.isdir(os.path.join(here, cmtconfig)):
-        log.info('%s exists in %s '%(cmtconfig, here))
-    else:
-        os.mkdir(cmtconfig)
-        log.info('%s is created in %s '%(cmtconfig,here))
+                        os.mkdir(os.path.join(dirnm, 'PARAM'))
+                if fix_perm :
+                    changePermissions(dirnm, recursive=True)
+            if dirnm == "tmp" :
+                createTmpDirectory()
+        if os.path.isdir(os.path.join(here, cmtconfig)):
+            log.info('%s exists in %s '%(cmtconfig, here))
+        else:
+            os.mkdir(cmtconfig)
+            log.info('%s is created in %s '%(cmtconfig,here))
+    else :
+        log.warning("Cannot write in %s" % here)
+        good = False
+        
+    return good
 
 #
 #  install CMT if not there ===============================================
@@ -1065,11 +1072,13 @@ def getProjectList(name,version,binary=' '):
 def isInstalled(file):
     installed = False
     if not overwrite_mode :
+        # special case: the LbScripts project has to be installed locally anyway
         if file.find("LbScripts") != -1 or file.find("LBSCRIPTS") != -1 :
             installedfilename = os.path.join(log_dir.split(os.pathsep)[0],file.replace(".tar.gz", ".installed"))
             if os.path.exists(installedfilename) :
                 installed = True
         else :
+            # regular case: the project can be installed in different locations
             for ld in log_dir.split(os.pathsep) :
                 installedfilename = os.path.join(ld,file.replace(".tar.gz", ".installed"))
                 if os.path.exists(installedfilename) :
@@ -1595,10 +1604,13 @@ def createBaseDirs(pname, pversion):
     logname = os.path.join(log_dir.split(os.pathsep)[0], pname+'_'+pversion+'.log')
 
     if not check_only :
-        logname = os.path.join(log_dir.split(os.pathsep)[0], pname+'_'+pversion+'.log')
-        createDir(mypath.split(os.pathsep)[0], logname)
+        done = createDir(mypath.split(os.pathsep)[0], logname)
     else :
+        done = False
+        
+    if not done :
         logname = None
+
     return logname
 
 # install main logging script
