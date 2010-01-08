@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.113 2010-01-07 16:49:15 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.114 2010-01-08 12:03:32 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -63,6 +63,7 @@ class Brunel(LHCbConfigurableUser):
        ,"Monitors"        : []
        ,"SpecialData"     : []
        ,"Context"         : "Offline"
+       ,"RawBanksToKill"  : None
         }
 
 
@@ -95,6 +96,7 @@ class Brunel(LHCbConfigurableUser):
        ,'Monitors'     : """ List of monitors to execute, see self.KnownMonitors. Default none """
        ,'SpecialData'  : """ Various special data processing options. See RecSys.KnownSpecialData for all options """
        ,'Context'      : """ The context within which to run (default 'Offline') """
+       ,'RawBanksToKill':""" Raw banks to remove from RawEvent before processing. Removed also from DST copy of RawEvent """
        }
 
     KnownInputTypes  = [ "MDF",  "DST", "RDST", "XDST", "DIGI", "ETC" ]
@@ -280,11 +282,22 @@ class Brunel(LHCbConfigurableUser):
         recInit.addTool( MemoryTool(), name = "BrunelMemory" )
         recInit.BrunelMemory.HistoTopDir = "Brunel/"
         recInit.BrunelMemory.HistoDir    = "MemoryTool"
+
         # count events
         from Configurables import EventCountHisto
         evtC = EventCountHisto("BrunelEventCount")
         evtC.HistoTopDir = "Brunel/"
         GaudiSequencer("InitBrunelSeq").Members += [ evtC ]
+
+        # kill some RAW banks
+        from Configurables import bankKiller
+        bkKill = bankKiller("BrunelBankKiller")
+        if self.isPropertySet( "RawBanksToKill" ):
+            bkKill.BankTypes = self.getProp( "RawBanksToKill" )
+        else:
+            if "2009" == self.getProp("DataType"):
+                bkKill.BankTypes = ["VeloFull", "L0PUFull"]
+        GaudiSequencer("InitBrunelSeq").Members += [ bkKill ]
         
         # Do not print event number at every event (done already by BrunelInit)
         EventSelector().PrintFreq = -1

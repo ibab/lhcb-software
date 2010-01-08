@@ -9,9 +9,16 @@ Purpose: LHCb reconstruction program
    . If not writing NanoEvents, do not run dummy DST packers
    . LumiFSR creation done only if input are MDF events
    . Pass DataType DstConf (who propagates it to SimConf). Fixes bug 60636
+   . New option RawBanksToKill: removes banks from RawEvent so they are not
+     seen by the reconstruction and not copied to DST. Default is empty list,
+     except if DataType is "2009", when ["VeloFull", "L0PUFull"] are removed.
 
  - Changes to tests:
    . Use correct magnet polarity in mdfrdst test
+
+ - Changes to example options
+   . 2009-Collisions.py no longer sets Brunel().UseOracle, no longer needed for
+     the 2009 data.
 
  - Changes to references to reflect changes in Brunel v35r12 output:
    . New counters in DST packer algorithms (EventPacker v2r2)
