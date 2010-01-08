@@ -49,8 +49,8 @@ PuVetoAlg::PuVetoAlg( const std::string& name,
   declareProperty( "Binning"            , m_binFile         );
   
   declareProperty("RawEventLocation", m_rawEventLoc=LHCb::RawEventLocation::Default);
-  declareProperty("OutputFileName", m_OutputFileName = "PUVetoAlg.root" );
-  declareProperty("MakePlots", m_enablePlots = false );
+  //declareProperty("OutputFileName", m_OutputFileName = "PUVetoAlg.root" );
+  //declareProperty("MakePlots", m_enablePlots = false );
 }
 
 //=============================================================================
@@ -187,7 +187,9 @@ StatusCode PuVetoAlg::initialize() {
   // if (msgLevel(MSG::DEBUG)) debug() << "Peak high threshold: " << m_highThreshold << endreq;
   //if (msgLevel(MSG::DEBUG)) debug() << "Peak high thr. position: " << m_highPosition << endreq;
   //if (msgLevel(MSG::DEBUG)) debug() << "Peak position cut: " << m_secondPosition << endreq;
-  if ( m_enablePlots ){
+  
+  
+ /* if ( m_enablePlots ){
     m_OutputFile = new TFile(m_OutputFileName.c_str(), "RECREATE");
     m_OutputFile->cd();
     m_PUvertex1Pos = new TH1D("PrimaryVerticesPos", "PrimaryVerticesPos", 300, -200., 100.);
@@ -196,6 +198,7 @@ StatusCode PuVetoAlg::initialize() {
     m_PUvertex2Height = new TH1D("SecondaryVerticesHeight", "SecondaryVerticesHeight", 100, 0., 100.);
     m_multiplicity = new TH1D("Multiplicity", "Multiplicity", 512, 0., 512.);
   }
+  */
   return StatusCode::SUCCESS;
 }
   
@@ -283,11 +286,13 @@ StatusCode PuVetoAlg::execute() {
   
   char name[80];
   char title[80];
+  /*
   if ( m_enablePlots){
     sprintf(name, "PU vertices-evt%d", m_evtNum);
     sprintf(title,"PU vertices-evt%d", m_evtNum);
     m_PUvertices = new TH1D(name, title, 85, 0., 85.);
   }
+  */
   fillHisto( m_PUhitmap );
 
   unsigned short int height1,sum1;
@@ -298,6 +303,7 @@ StatusCode PuVetoAlg::execute() {
   sum1 = 0; // sum1 is no longer returned/computed still present as a dummy for testing
   pos1 = findPeak1( height1, bin1);
   
+  /*
   if ( m_enablePlots){
     m_multiplicity->Fill(m_totMult);  
     m_OutputFile->cd();
@@ -310,6 +316,7 @@ StatusCode PuVetoAlg::execute() {
     //if ( pos1 != -999 ) m_PUvertices->Write(); 
     if ( pos1 != -999 &&  m_totMult > 30 ) m_PUvertices->Write();
   }
+  */
   if (msgLevel(MSG::DEBUG)) debug() << " Peak1 : Max " << height1 << " at z= " << pos1 
           << " integral " << sum1 << " bin " << bin1 << endreq;
 
@@ -324,12 +331,14 @@ StatusCode PuVetoAlg::execute() {
   pos2 = findPeak2(height2,sum2,bin2);
   if (msgLevel(MSG::DEBUG)) debug() << " 2nd Max " << height2 << " at z= " << pos2
           << " integral " << sum2 << " bin " << bin2 << endreq;
+  /*
   if ( m_enablePlots){  
     if ( pos2 != -999 ){  
       m_PUvertex2Pos->Fill(pos2);
       m_PUvertex2Height->Fill(height2);
     }
   }
+  */
   
   // Now take the decision
   // note: LODU makes its own decision based on sum2
@@ -388,7 +397,8 @@ StatusCode PuVetoAlg::execute() {
 //=============================================================================
 StatusCode PuVetoAlg::finalize() 
 {
-  if ( msgLevel(MSG::INFO) ) if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
+  /*
   if ( m_enablePlots ){
     m_PUvertex1Pos->Write( );
     m_PUvertex2Pos->Write( );
@@ -397,7 +407,7 @@ StatusCode PuVetoAlg::finalize()
     m_multiplicity->Write( );
     m_OutputFile->Close();
   }
-
+  */
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
@@ -438,7 +448,7 @@ void PuVetoAlg::fillHisto (unsigned int hp[4][16]) {
             unsigned ib=(((pib<<5)|bib)%128);
             short int bin = m_binMatrix[i][ia][ib]; // association between hits combination and bin
             if (bin > -1) m_hist[bin]++;
-	    if (bin > -1 && m_enablePlots ) m_PUvertices->Fill( bin );
+	    /*if (bin > -1 && m_enablePlots ) m_PUvertices->Fill( bin );*/
           }
         }
       }
