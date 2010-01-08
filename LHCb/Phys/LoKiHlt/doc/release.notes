@@ -1,9 +1,31 @@
-! $Id: release.notes,v 1.23 2009-10-16 14:06:56 cattanem Exp $ 
+! $Id: release.notes,v 1.24 2010-01-08 13:30:47 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiHlt
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
+
+! 2010-01-08 - Vanya Belyaev
+
+ - see task #13263
+
+   1. implement functor L0_VALID, that checks validity of L0DUReport pointer
+      and validity of underlying L0DURport objects using L0DUReport::valid method.
+
+   2. Add property "CheckValidity" for L0Filter. 
+      The default value is "true", thus for invalid L0DURport object 
+      the functors are not invoked, error message issued and 
+      and "setfilterPass(false)" is set.
+
+     Thus *IF* one needs e.g. select event (for debug purposed) 
+      with invalid L0DUReport only:
+ 
+       L0Filter.CheckValidity =  False 
+       L0Filter.Code          = "~L0_VALID"
+  
+ - cmt/requirements
+
+     version increment to v2r5 
 
 !========================== LoKiHlt v2r4 2009-10-16 ==========================
 ! 2009-10-12 - Marco Cattaneo

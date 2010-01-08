@@ -1,4 +1,4 @@
-// $Id: L0Filter.cpp,v 1.2 2009-05-20 08:57:40 ibelyaev Exp $
+// $Id: L0Filter.cpp,v 1.3 2010-01-08 13:30:47 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -65,16 +65,23 @@ namespace LoKi
     ( const std::string& name , // the algorithm instance name 
       ISvcLocator*       pSvc ) // pointer to the service locator
       : LoKi::FilterAlg ( name , pSvc ) 
-      // the functor itself
+    // the functor itself
       , m_cut ( LoKi::BasicFunctors<const LHCb::L0DUReport*>::BooleanConstant( false ) ) 
-      // TES location of LHCb::L0DUReport object
-      , m_location ( LHCb::L0DUReportLocation::Default ) 
+    // TES location of LHCb::L0DUReport object
+      , m_location ( LHCb::L0DUReportLocation::Default )
+    // check the validity of L0DUReport 
+      , m_check    ( true )
     {
       //
       declareProperty 
         ( "Location" , 
           m_location , 
           "TES location of LHCb::L0DUReport object" ) ;    
+      //
+      declareProperty 
+        ( "CheckValidity" , 
+          m_check         , 
+          "Check validity of LHCb::L0DUReport object before using the functor" ) ;    
       //
       StatusCode sc = setProperty ( "Code" , "L0_NONE" ) ;
       Assert ( sc.isSuccess () , "Unable (re)set property 'Code'"    , sc ) ;
@@ -100,6 +107,8 @@ namespace LoKi
     LoKi::Types::L0_Cut    m_cut ;                        // the functor itself 
     /// TES location of LHCb::L0DUReport object 
     std::string m_location ;         // TES location of LHCb::L0DUReport object 
+    /// check the validity of L0DUReport
+    bool        m_check    ;                // check the validity of L0DUReport
     // ========================================================================
   };
   // ==========================================================================
@@ -115,10 +124,20 @@ StatusCode LoKi::L0Filter::execute () // the main method: execute
   }
   // get LHCb::L0DUReport from TES 
   const LHCb::L0DUReport* l0 = get<LHCb::L0DUReport> ( m_location ) ;
-  // 
-  // use the functor 
-  // 
-  const bool result = m_cut ( l0 ) ;
+  //
+  bool result = false ;
+  //
+  if ( m_check && !l0->valid() ) 
+  {
+    static const StatusCode ok = StatusCode ( StatusCode::SUCCESS , true ) ;
+    Error ( "LHCb::L0DUReportObject is invalid, return 'false'", ok ).ignore() ;
+    result = false ;
+  }
+  else 
+  {
+    /// use the functor 
+    result = m_cut ( l0 ) ;   /// use the functor 
+  }
   //
   // some statistics
   counter ("#passed" ) += result ;

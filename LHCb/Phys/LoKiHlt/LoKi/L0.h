@@ -1,4 +1,4 @@
-// $Id: L0.h,v 1.4 2009-06-17 14:37:25 ibelyaev Exp $
+// $Id: L0.h,v 1.5 2010-01-08 13:30:47 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_L0_H 
 #define LOKI_L0_H 1
@@ -22,12 +22,44 @@ namespace LoKi
   // ==========================================================================
   /** @namespace LoKi::L0 
    *  The namespace to keep all L0-related LoKi functors 
+   *
+   *  @attention All functors, but L0_VALID, 
+   *    throws the exception for zero pointer to L0DUReport Objects 
+   *
    *  @see LHCb::L0DUReport 
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2008-09-19
    */      
   namespace L0 
   {
+    // ========================================================================
+    /** @class Valid 
+     *  Simple functor to check the validity of L0DUReport object.
+     *  Unlike other functors is also accept the zero pointer.
+     *  
+     *  @see LHCb::L0DUReport 
+     *  @see LHCb::L0DUReport::valid 
+     *  @see LoKi::Cuts::L0_VALID 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2010-01-08
+     */
+    class Valid
+      : public LoKi::BasicFunctors<const LHCb::L0DUReport*>::Predicate
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~Valid() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Valid* clone () const ;
+      // ======================================================================
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    };
     // ========================================================================
     /** @class SumEt 
      *  @see LHCb::L0DUReport 
@@ -50,8 +82,7 @@ namespace LoKi
       virtual  SumEt* clone () const { return new SumEt ( *this ) ; }
       // ======================================================================
       /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const 
-      { return a->sumEt ( m_bx ) ; }
+      virtual result_type operator() ( argument a ) const ;
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================
@@ -82,8 +113,7 @@ namespace LoKi
       /// MANDATORY: clone method ("virtual constructor")
       virtual  DataValue* clone() const { return new DataValue ( *this ) ; }
       /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const 
-      { return a -> dataValue ( name () ) ; }
+      virtual result_type operator() ( argument a ) const  ;
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================
@@ -122,8 +152,7 @@ namespace LoKi
       /// MANDATORY: clone method ("virtual constructor")
       virtual  DataDigit* clone() const { return new DataDigit ( *this ) ; }
       /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const 
-      { return a -> dataDigit ( name () ) ; }
+      virtual result_type operator() ( argument a ) const ;
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================
@@ -152,8 +181,7 @@ namespace LoKi
       virtual  SumDecision* clone () const 
       { return new SumDecision ( *this ) ; }
       /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const 
-      { return a -> decisionFromSummary () ; }
+      virtual result_type operator() ( argument a ) const ;
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================      
@@ -177,8 +205,7 @@ namespace LoKi
       virtual  Decision* clone () const 
       { return new Decision ( *this ) ; }
       /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const 
-      { return a -> decision () ; }
+      virtual result_type operator() ( argument a ) const ;
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================      
@@ -202,8 +229,7 @@ namespace LoKi
       virtual  ForceBit* clone () const 
       { return new ForceBit ( *this ) ; }
       /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const 
-      { return a -> forceBit () ; }
+      virtual result_type operator() ( argument a ) const ;
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================      
@@ -226,8 +252,7 @@ namespace LoKi
       /// MANDATORY: clone method ('virtual constructor') 
       virtual  Tck* clone () const { return new Tck ( *this ) ; }
       /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const 
-      { return a -> tck () ; }
+      virtual result_type operator() ( argument a ) const ;
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================      
@@ -251,8 +276,7 @@ namespace LoKi
       virtual  TimingBit* clone () const 
       { return new TimingBit ( *this ) ; }
       /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const 
-      { return a -> timingTriggerBit () ; }
+      virtual result_type operator() ( argument a ) const ;
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================      

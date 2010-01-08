@@ -1,4 +1,4 @@
-// $Id: L0Cuts.h,v 1.1.1.1 2008-09-21 14:41:20 ibelyaev Exp $
+// $Id: L0Cuts.h,v 1.2 2010-01-08 13:30:47 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_L0CUTS_H 
 #define LOKI_L0CUTS_H 1
@@ -326,9 +326,34 @@ namespace LoKi
      */
     typedef LoKi::L0::TriggerDecision                              L0_TRIGGER ;
     // ========================================================================
-  } // end of namespace LoKi::Cuts
+    /** @var L0_VALID 
+     *  Tricial functor to check th wvalidity of L0DUReport object.
+     *  Unlike all other L0-functors, is also accepts zero pointer.
+     *  It acts according the rule:
+     *  @code 
+     *     return 0 != l0 && l0->valid() 
+     *  @endcode 
+     *   
+     *  @code 
+     *
+     *    const LHCb::L0DUReport* l0 = ... ;
+     *
+     *    const bool valid = L0_VALID ( l0 ) ;
+     *
+     *  @code 
+     *  
+     *  @see LoKi::L0::Valid 
+     *  @see LHCb::L0DUReport 
+     *  @see LHCb::L0DUReport::valid 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2010-01-08
+     */
+    const LoKi::L0::Valid                                            L0_VALID ;
+    // ========================================================================
+  } //                                              end of namespace LoKi::Cuts
   // ==========================================================================
-} // end of namespace LoKi 
+} //                                                      end of namespace LoKi 
 // ============================================================================
 // The END 
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: L0.cpp,v 1.3 2009-06-17 14:37:25 ibelyaev Exp $
+// $Id: L0.cpp,v 1.4 2010-01-08 13:30:47 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -16,6 +16,28 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@niklhef.nl 
  */
 // ============================================================================
+// MANDATOY: vitual destructor 
+// ============================================================================
+LoKi::L0::Valid::~Valid() {}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::L0::Valid* LoKi::L0::Valid::clone() const 
+{ return new LoKi::L0::Valid  (*this) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::L0::Valid::result_type 
+LoKi::L0::Valid::operator() 
+  ( LoKi::L0::Valid::argument a ) const { return 0 != a && a->valid() ; }
+// ============================================================================ 
+// OPTIONAL: the nice printout 
+// ============================================================================ 
+std::ostream& LoKi::L0::Valid::fillStream ( std::ostream& s ) const 
+{ return s << "L0_VALID" ; }
+// ============================================================================
+                      
+// ============================================================================
 // constructor from bx-id L
 // ============================================================================
 LoKi::L0::SumEt::SumEt
@@ -32,6 +54,15 @@ std::ostream& LoKi::L0::SumEt::fillStream ( std::ostream& s ) const
   return s << "L0_SUMET(" << m_bx << ")" ;
 }
 // ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::L0::SumEt::result_type 
+LoKi::L0::SumEt::operator() 
+  ( LoKi::L0::SumEt::argument a ) const 
+{ 
+  Assert ( 0 != a , "L0DUReport* point to NULL!" ) ;
+  return a->sumEt ( m_bx ) ; 
+}
 
 // ============================================================================
 // constructor from data name 
@@ -47,7 +78,15 @@ LoKi::L0::DataValue::DataValue
 std::ostream& LoKi::L0::DataValue::fillStream ( std::ostream& s ) const 
 { return s << "L0_DATA('" << name () << "')" ; }
 // ============================================================================
-
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::L0::DataValue::result_type 
+LoKi::L0::DataValue::operator() 
+  ( LoKi::L0::DataValue::argument a ) const 
+{ 
+  Assert ( 0 != a , "L0DUReport* point to NULL!" ) ;
+  return a -> dataValue ( name () ) ; 
+}
 
 // ============================================================================
 // constructor from data name 
@@ -62,7 +101,68 @@ LoKi::L0::DataDigit::DataDigit
 std::ostream& LoKi::L0::DataDigit::fillStream ( std::ostream& s ) const 
 { return s << "L0_DIGIT('" << name () << "')" ; }
 // ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::L0::DataDigit::result_type 
+LoKi::L0::DataDigit::operator() 
+  ( LoKi::L0::DataDigit::argument a ) const 
+{ 
+  Assert ( 0 != a , "L0DUReport* point to NULL!" ) ;
+  return a -> dataDigit ( name () ) ; 
+}
 
+
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::L0::SumDecision::result_type 
+LoKi::L0::SumDecision::operator() 
+  ( LoKi::L0::SumDecision::argument a ) const 
+{ 
+  Assert ( 0 != a , "L0DUReport* point to NULL!" ) ;
+  return a -> decisionFromSummary () ; 
+}
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::L0::Decision::result_type 
+LoKi::L0::Decision::operator() 
+  ( LoKi::L0::Decision::argument a ) const 
+{ 
+  Assert ( 0 != a , "L0DUReport* point to NULL!" ) ;
+  return a -> decision () ; 
+}
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::L0::ForceBit::result_type 
+LoKi::L0::ForceBit::operator() 
+  ( LoKi::L0::ForceBit::argument a ) const 
+{ 
+  Assert ( 0 != a , "L0DUReport* point to NULL!" ) ;
+  return a -> forceBit () ; 
+}
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::L0::Tck::result_type 
+LoKi::L0::Tck::operator() 
+  ( LoKi::L0::Tck::argument a ) const 
+{ 
+  Assert ( 0 != a , "L0DUReport* point to NULL!" ) ;
+  return a -> tck () ; 
+}
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::L0::TimingBit::result_type 
+LoKi::L0::TimingBit::operator() 
+  ( LoKi::L0::TimingBit::argument a ) const 
+{ 
+  Assert ( 0 != a , "L0DUReport* point to NULL!" ) ;
+  return a -> timingTriggerBit  () ; 
+}
+// ============================================================================
 
 
 // ============================================================================
