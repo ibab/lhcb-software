@@ -1,4 +1,4 @@
-// $Id: HltSelectTracksForSwimming.cpp,v 1.6 2008-12-29 16:36:13 graven Exp $
+// $Id: HltSelectTracksForSwimming.cpp,v 1.7 2010-01-08 12:40:31 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -26,7 +26,7 @@ HltSelectTracksForSwimming::HltSelectTracksForSwimming( const std::string& name,
   : HltAlgorithm ( name , pSvcLocator )
   , m_selections(*this)
 {
-  declareProperty( "ParticlesName" , m_particlesName = "");
+  declareProperty("OfflineTrackIDs", m_offlineTrackIDs=boost::assign::list_of((unsigned int) 0)); 
   m_selections.declareProperties();
 }
 
@@ -54,18 +54,6 @@ StatusCode HltSelectTracksForSwimming::initialize() {
 //=============================================================================
 StatusCode HltSelectTracksForSwimming::execute() {
 
-  StatusCode sc = HltAlgorithm::execute(); // must be executed first
-
-  //Check if particles exist
-  if (!exist<Particles>(m_particlesName)) return sc;
-
-  Particles* pars = get<Particles>(m_particlesName);
-  if (msgLevel(MSG::DEBUG)) {
-    if (pars == 0) verbose() << " no particles found! " << endmsg;
-    else verbose() << " particles found " << pars->size() << endmsg;
-  }  
-  if (pars == 0) return sc;
-  
   m_selections.output()->clean();
 
   //Lets see what we just did, for debug
@@ -77,14 +65,10 @@ StatusCode HltSelectTracksForSwimming::execute() {
         BOOST_FOREACH( LHCb::Track* iT, *m_selections.input<1>()) {
                 verbose() << iT << endmsg;
         }
-        debug() << "Printing out the B tracks" << endmsg;
-        BOOST_FOREACH( LHCb::Track* iT, *m_selections.input<2>()) {
-                debug() << iT << endmsg;
-        }
 
   }
   //Filter the tracks
-  sc = filter_Tracks();
+  StatusCode sc = filter_Tracks();
 
   if (msgLevel(MSG::DEBUG)) {
         debug() << "About to print out a mountain of crap" << endmsg;
@@ -95,11 +79,8 @@ StatusCode HltSelectTracksForSwimming::execute() {
   }
   
   int ncan = m_selections.output()->size();
-  //candidateFound(ncan);
   
   debug() << " candidates found " << ncan << endmsg;
-  if (msgLevel(MSG::DEBUG))
-    printInfo(" tracks from particles ",*m_selections.output());
   
   return sc;
   
@@ -115,30 +96,37 @@ StatusCode HltSelectTracksForSwimming::filter_Tracks(){
         verbose() << "Outputing the current trigger track" << endmsg;
         verbose() << iT << endmsg;
         bool trackmatchfound = false;
-        BOOST_FOREACH (LHCb::Track *iTT, *m_selections.input<2>() ) {
-                verbose() << "Outputing the current B track" << endmsg;
-                verbose() << iTT << endmsg;
-                if (tracksMatchInVelo(iT,iTT)) {
-                        trackmatchfound = true;
-                        verbose() << "The tracks are a match!" << endmsg;
-                        break;
-                } else verbose() << "No match found... better luck next time!" << endmsg;
+	//Make a dummy vector
+	std::vector<unsigned int> oneTrackIDs;
+	oneTrackIDs.clear();
+        for( std::vector<unsigned int>::const_iterator iTT=m_offlineTrackIDs.begin();
+                                                       iTT!=m_offlineTrackIDs.end();
+                                                       ++iTT)
+        {
+                if (*iTT == 0) {
+                	if (tracksMatchInVelo(iT,oneTrackIDs)) {
+                        	trackmatchfound = true;
+                        	verbose() << "The tracks are a match!" << endmsg;
+                        	break;
+                	} else verbose() << "No match found... better luck next time!" << endmsg;
+			oneTrackIDs.clear();
+		} else oneTrackIDs.push_back(*iTT);
         }
         if (trackmatchfound) m_selections.output()->push_back(iT);
   }
   return StatusCode::SUCCESS;
 }
 //=============================================================================
-bool HltSelectTracksForSwimming::tracksMatchInVelo(LHCb::Track* t1, LHCb::Track* t2){
+bool HltSelectTracksForSwimming::tracksMatchInVelo(LHCb::Track* t1, std::vector<unsigned int> ids2){
 //Match the trigger and offline tracks on VELO hits only
+//The offline track is passed as a vector of LHCbIDs
 
   verbose() << "Comparing hits in VELO..." << endmsg;
 
   int totalnumberofhits = 0; //Set up the counters
   int numberofmatchedhits = 0;
 
-  const std::vector<LHCbID>& ids1 = t1->lhcbIDs(); //Get the LHCbIDs of the tracks
-  const std::vector<LHCbID>& ids2 = t2->lhcbIDs();
+  const std::vector<LHCbID>& ids1 = t1->lhcbIDs(); //Get the LHCbIDs of the track
 
   for( std::vector<LHCbID>::const_iterator id=ids1.begin();id!=ids1.end();++id){
 
@@ -146,12 +134,12 @@ bool HltSelectTracksForSwimming::tracksMatchInVelo(LHCb::Track* t1, LHCb::Track*
 
         if (!(*id).isVelo()) continue; //If it is not a VELO hit, ignore it
         ++totalnumberofhits;
-        for( std::vector<LHCbID>::const_iterator id2=ids2.begin();id2!=ids2.end();++id2){
+        for( std::vector<unsigned int>::const_iterator id2=ids2.begin();id2!=ids2.end();++id2){
 
                 //verbose() << "The current hit on Track 2 is " << *id2 << endmsg;
 
-                if (!(*id2).isVelo()) continue; //If it is not a VELO hit, ignore it
-                if (*id == *id2) {
+		//It is critical that we only pass Velo hits to the tool
+                if ((*id).lhcbID() == *id2) {
                         //verbose() << "And they match! Praise the Lord!" << endmsg;
                         ++numberofmatchedhits;
                         break;

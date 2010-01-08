@@ -1,4 +1,4 @@
-// $Id: HltSelectTracksForSwimming.h,v 1.3 2009-12-23 16:14:31 graven Exp $
+// $Id: HltSelectTracksForSwimming.h,v 1.4 2010-01-08 12:40:31 gligorov Exp $
 #ifndef HLTSELECTTRACKSFORSWIMMING_H 
 #define HLTSELECTTRACKSFORSWIMMING_H 1
 
@@ -30,17 +30,10 @@ public:
 protected:
 
   StatusCode filter_Tracks();
-  bool tracksMatchInVelo(LHCb::Track*,LHCb::Track*);
+  bool tracksMatchInVelo(LHCb::Track*,std::vector<unsigned int>);
 
-  Hlt::SelectionContainer3<LHCb::Track,LHCb::Track,LHCb::Track> m_selections;
-  //The location of the B
-  std::string m_particlesName;
-
-
-  Gaudi::XYZVector m_bDirection; //The direction in which to swim
-  Gaudi::XYZPoint m_bVertexPosition; //The starting point for the swimming
-  double m_swimmingDistance; //How far to move the primary vertex. The sign is determined as positive if moving in the direction of the B momentum
-
+  Hlt::SelectionContainer2<LHCb::Track,LHCb::Track> m_selections;
+  std::vector<unsigned int>  m_offlineTrackIDs;
 };
 
 #endif // HLTSELECTTRACKSFORSWIMMING_H

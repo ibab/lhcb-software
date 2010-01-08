@@ -1,4 +1,4 @@
-// $Id: HltMoveVerticesForSwimming.cpp,v 1.7 2008-12-29 16:36:13 graven Exp $
+// $Id: HltMoveVerticesForSwimming.cpp,v 1.8 2010-01-08 12:40:24 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -28,8 +28,14 @@ HltMoveVerticesForSwimming::HltMoveVerticesForSwimming( const std::string& name,
   , m_selections(*this)
 {
   declareProperty("Blifetime", m_bLifetime = -999999.0);
-  declareProperty("SwimmingDistance", m_swimmingDistance = 0.0);
-  declareProperty("ParticlesName" , m_particlesName = "");
+  declareProperty("SwimmingDistance", m_swimmingDistance = 1.0);
+  declareProperty("bMomentum_X" , m_bMom_X = 0.098);
+  declareProperty("bMomentum_Y" , m_bMom_Y = 0.098);
+  declareProperty("bMomentum_Z" , m_bMom_Z = 0.98);
+  declareProperty("bVertex_X" , m_bVert_X = 0.1);
+  declareProperty("bVertex_Y" , m_bVert_Y = 0.1);
+  declareProperty("bVertex_Z" , m_bVert_Z = 1.0);
+  declareProperty("bMass",m_bMass = 5279.);
 
   m_selections.declareProperties();
 }
@@ -58,19 +64,8 @@ StatusCode HltMoveVerticesForSwimming::initialize() {
 //=============================================================================
 StatusCode HltMoveVerticesForSwimming::execute() {
 
-  StatusCode sc = HltAlgorithm::execute(); // must be executed first
-  if (sc.isFailure()) return sc;
+  StatusCode sc = StatusCode::SUCCESS;
 
-  //Check if particles exist
-  if (!exist<Particles>(m_particlesName)) return sc;
-
-  Particles* pars = get<Particles>(m_particlesName);
-  if (msgLevel(MSG::DEBUG)) {
-    if (pars == 0) verbose() << " no particles found! " << endmsg;
-    else verbose() << " particles found " << pars->size() << endmsg;
-  }  
-  if (pars == 0) return sc;
-  
   m_selections.output()->clean(); //TODO: is this really needed?
 
   //Lets see what we just did, for debug
@@ -82,12 +77,12 @@ StatusCode HltMoveVerticesForSwimming::execute() {
   }
 
   //Swim the primary vertices
-  m_bDirection = (*(pars->begin()))->slopes().Unit();
-  m_bVertexPosition = (*(pars->begin()))->endVertex()->position();
-  m_bMass = (*(pars->begin()))->measuredMass();
-  m_bMom = (*(pars->begin()))->p();
-  //FIXME: why is the next line commented out???
-  //sc = move_PVs();
+  m_bVertexPosition.SetX(m_bVert_X);
+  m_bVertexPosition.SetY(m_bVert_Y);
+  m_bVertexPosition.SetZ(m_bVert_Z);
+  m_bDirection.SetX(m_bMom_X);
+  m_bDirection.SetY(m_bMom_Y);
+  m_bDirection.SetZ(m_bMom_Z); 
 
   debug() << "The B direction is" << endmsg;
   debug() << "X slope = " << m_bDirection.X() << endmsg;
@@ -101,7 +96,7 @@ StatusCode HltMoveVerticesForSwimming::execute() {
 
   debug() << "The swimming distance is " << m_swimmingDistance << endmsg;
 
-  m_bLifetime = get_B_lifetime();
+  m_bLifetime = move_PVs();
   
   int ncan = m_selections.output()->size();
   debug() << " candidates found " << ncan << endmsg;
@@ -109,35 +104,7 @@ StatusCode HltMoveVerticesForSwimming::execute() {
   
 }
 //=============================================================================
-StatusCode HltMoveVerticesForSwimming::move_PVs(){
-//Swim the PVs in the required direction
-
-  Gaudi::XYZPoint newVertPos; //The new position of the vertices we swim
-
-  debug() << "Beginning to move vertices for swimming" << endmsg;
-
-  BOOST_FOREACH( LHCb::RecVertex *vertex, *m_selections.input<1>()) {
-
-        debug() << "The primary vertex is at " << vertex << endmsg;
-        debug() << "With X coordinate " << vertex->position().X() << endmsg;
-        debug() << "With Y coordinate " << vertex->position().Y() << endmsg;
-        debug() << "With Z coordinate " << vertex->position().Z() << endmsg;
-
-        newVertPos = vertex->position() + m_swimmingDistance*m_bDirection;
-        //newVertPos = m_bVertexPosition - m_swimmingDistance*m_bDirection;
-
-        debug() << "The new vertex" << endmsg;
-        debug() << "With X coordinate " << newVertPos.X() << endmsg;
-        debug() << "With Y coordinate " << newVertPos.Y() << endmsg;
-        debug() << "With Z coordinate " << newVertPos.Z() << endmsg;
-
-        vertex->setPosition(newVertPos); //@TODO / @FIXME: we should NOT change the input vertex!!!
-        m_selections.output()->push_back( const_cast<LHCb::RecVertex*>(vertex));
-  }
-  return StatusCode::SUCCESS;
-}
-//=============================================================================
-double HltMoveVerticesForSwimming::get_B_lifetime(){
+double HltMoveVerticesForSwimming::move_PVs(){
 //Get the B lifetime. The "correct" PV is defined as the one
 //with the larger absolute cos(theta) the the B. 
 
@@ -179,6 +146,8 @@ double HltMoveVerticesForSwimming::get_B_lifetime(){
   debug() << "With Z coordinate " << bestVertex->position().Z() << endmsg;
 
   m_selections.output()->push_back( const_cast<LHCb::RecVertex*>(bestVertex));
+
+  double m_bMom = sqrt(pow(m_bMom_X,2) + pow(m_bMom_Y,2) + pow(m_bMom_Z,2)); 
 
   templifetime = 1000.*m_bMass*sqrt(	(m_bVertexPosition - 
 		       			 bestVertex->position()

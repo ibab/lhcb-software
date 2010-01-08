@@ -4,6 +4,14 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+- 2010-01-08 - V. Gligorov
+ - src/HltMoveVerticesForSwimming.{cpp,h}
+   src/HltSelectTracksForSwimming.{cpp,h}
+   : modify algorithms to work in the new trigger framework, and remove their dependency
+     on a container of offline selected signal candidates -- all information needed for the
+     swimming which is external to the trigger sequence is now passed as algorithm
+     properties.
+
 ! 2010-01-07 - V. Gligorov
  - src/ANNDispatchSvc.cpp : the dispatch service now gets the TCK directly from
    raw, without relying on the DecReportsDecoder, thus removing a circular dependency
