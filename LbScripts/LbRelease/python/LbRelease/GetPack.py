@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.15 2009-12-14 17:45:19 marcocle Exp $
+# $Id: GetPack.py,v 1.16 2010-01-08 15:41:06 marcocle Exp $
 
 from LbUtils.Script import Script
 from LbConfiguration import createProjectMakefile
@@ -106,10 +106,237 @@ class Quit:
 class Skip:
     pass
 
+# Helper function to select one element of a list.
+# It uses curses if available.
+# @todo: needs improvements and clean up
+try:
+    import curses
+    ## Class to display a scrollable list with a selected element
+    class ListBox(object):
+        def __init__(self, data, ypos, xpos, ysize, xsize,
+                     initsel = 0):
+            self.data = data
+            self._count = len(data)
+            self.ypos = ypos
+            self.xpos = xpos
+            self.ysize = ysize
+            self.xsize = xsize
+            # The pad has to be higher than the length of the list
+            # otherwise we get an error trying to write to the bottom-left char
+            self._pad = curses.newpad(self._count + 1, self.xsize)
+            self.selection = initsel
+            self.offset = 0
+            self._draw()
+        
+        def _maxwidth(self):
+            if self.ysize < (self._count-1):
+                return self.xsize - 1
+            else:
+                return self.xsize
+        
+        def _draw(self):
+            self._pad.erase()
+            maxwidth = self._maxwidth()
+            for i in range(self._count):
+                self._pad.addnstr(i, 0, self.data[i], maxwidth)
+            self._highlight(self.selection)
+            
+        def _highlight(self, idx, highlighted = True):
+            maxwidth = self._maxwidth()
+            if highlighted:
+                self._pad.addnstr(idx, 0, self.data[idx], maxwidth, curses.A_REVERSE)
+            else:
+                self._pad.addnstr(idx, 0, self.data[idx], maxwidth)
+            
+        def refresh(self):
+            # ensure selection is visible
+            if self.selection < self.offset:
+                self.offset = self.selection
+            elif self.selection > (self.offset + self.ysize):
+                self.offset = self.selection - self.ysize
+            
+            pad = self._pad
+            if self.ysize < (self._count-1):
+                # update scroll bar
+                top    = self.offset
+                bottom = self.offset + self.ysize
+                right  = self.xsize - 1
+                pad.addch(top, right, curses.ACS_UARROW)
+                pad.addch(bottom, right, curses.ACS_DARROW)
+                pad.vline(top + 1, right,
+                          curses.ACS_CKBOARD, bottom - top - 1)
+                cursor = int(round((bottom - top - 2) *
+                                   float(self.selection) / (self._count-1)))
+                pad.addch(top + cursor + 1, right, curses.ACS_BLOCK)
+            
+            # paint
+            pad.refresh(self.offset, 0,
+                        self.ypos, self.xpos,
+                        self.ypos + min(self.ysize, self._count),
+                        self.xpos + self.xsize)
+            
+        def moveByLines(self, offset):
+            self._highlight(self.selection, False)
+            self.selection += offset
+            if self.selection < 0 :
+                self.selection = 0
+            elif self.selection > (self._count - 1):
+                self.selection = self._count - 1
+            self._highlight(self.selection)
+        def moveByPages(self, poffset):
+            # self.moveByLines(poffset * (self.ysize+1))
+            self.moveByLines(poffset * (self.ysize))
+        def resize(self, ysize, xsize):
+            self.ysize = ysize
+            if self.ysize > (self.selection - self.offset):
+                self.offset = max(0, self.selection - self.ysize)
+            if xsize != self.xsize:
+                # we need to re-create the pad
+                self.xsize = xsize
+                self._pad = curses.newpad(self._count + 1, self.xsize)
+            self.moveByLines(0)
+            self._draw()
+    
+    ## Class to display a sort of selection dialog using curses
+    class Dialog(object):
+        def __init__(self, screen, message, data):
+            self.scr = screen
+            self.min_y, self.min_x = 0, 0
+            self.max_y, self.max_x = self.scr.getmaxyx()
+    
+            self.message = message
+            self.listbox = ListBox(data,
+                                   self.min_y + 3, self.min_x + 1,
+                                   self.max_y - 7, self.max_x - 2)
+            
+            curses.curs_set(0)
+            self._draw()
+    
+        def _draw(self):
+            self.scr.addnstr(1, 1, self.message, self.max_x - 1)
+            self.scr.box()
+            self.scr.hline(2, 1, curses.ACS_HLINE, self.max_x-2)
+            self.scr.hline(self.max_y - 3, 1, curses.ACS_HLINE, self.max_x-2)
+            self.scr.addnstr(self.max_y - 2, 1,
+                             "Use arrows, pgup, pgdown to move, Enter to select, 'q' to quit.",
+                             self.max_x - 2)
+            self.scr.refresh()
+            self.listbox.refresh()
+            
+        def resize(self):
+            self.min_y, self.min_x = 0, 0
+            self.max_y, self.max_x = self.scr.getmaxyx()
+            self.scr.erase()
+            self.listbox.resize(self.max_y - 7, self.max_x - 2)
+        
+        def run(self):
+            while True:
+                try:
+                    key = self.scr.getkey()
+                except curses.error:
+                    key = None
+                if key == "KEY_UP":
+                    self.listbox.moveByLines(-1)
+                elif key == "KEY_DOWN":
+                    self.listbox.moveByLines(1)
+                elif key in ["KEY_PPAGE", 'p', 'P']:
+                    self.listbox.moveByPages(-1)
+                elif key in ["KEY_NPAGE", 'n', 'N']:
+                    self.listbox.moveByPages(1)
+                elif key == "\n":
+                    return self.listbox.selection
+                elif key == "KEY_RESIZE":
+                    self.resize()
+                elif key in ["q", "Q"]:
+                    break
+                self._draw()
+            return None
+    
+    ## Display a dialog with the passed message and return the index of the
+    #  element selected in the list.
+    #  (the argument 'bars' is used only by the fall-back version)
+    def selectFromList(message, lst, bars = False):
+        def run_dialog(screen):
+            curses.use_default_colors()
+            dialog = Dialog(screen, message, lst)
+            return dialog.run()
+        ans = curses.wrapper(run_dialog)
+        if ans is None:
+            raise Quit
+        return ans
+
+except ImportError:
+    ## Fallback version in case curses is not available
+    def selectFromList(message, lst, bars = False):
+        page_size = 30
+        count = len(lst)
+        page = 0
+        pages = count/page_size + 1
+
+        default_ans = None
+        idx = -1
+        while idx < 0:
+            # display current page
+            if bars:
+                print '-' * 80
+            print message
+            if bars:
+                print '-' * 80
+            for ln in range(page*page_size, min((page+1)*page_size, count)):
+                print "%3d - %s" % (ln, lst[ln])
+            # prepare the question (with default answer)
+            question = "Please enter your choice (0-%d, " % (count-1)
+            if page < pages - 1:
+                question += "(n)ext, "
+            if page > 0:
+                question += "(p)revious, "
+            if not default_ans:
+                default_ans = 'q'
+                if page < pages - 1:
+                    default_ans = 'n'
+                elif page > 0:
+                    default_ans = 'p'
+            question += "(q)uit) [%s]: " % default_ans
+
+            ans = None
+            while ans is None:
+                sys.stdout.write(question)
+                ans = sys.stdin.readline().strip().lower()
+                if ans == "":
+                    ans = default_ans
+                if ans in ['n', 'next']:
+                    page += 1
+                    default_ans = ans
+                    if page >= pages:
+                        page = pages - 1
+                    if page == pages - 1:
+                        default_ans = 'p'
+                elif ans in ['p', 'prev', 'previous']:
+                    page -= 1
+                    default_ans = ans
+                    if page < 0:
+                        page = 0
+                    if page == 0:
+                        default_ans = 'n'
+                elif ans in [ 'q', 'quit' ]:
+                    raise Quit
+                else:
+                    try:
+                        ans = int(ans)
+                    except:
+                        ans = -1
+                    if ans < 0 or ans >= count:
+                        print "Invalid selection '%s'" % ans
+                        ans = None
+                    else:
+                        idx = ans
+        return idx
+
+
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.15 2009-12-14 17:45:19 marcocle Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.16 2010-01-08 15:41:06 marcocle Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]"
@@ -188,67 +415,6 @@ class GetPack(Script):
         if "GETPACK_USER" in os.environ:
             self.parser.set_defaults(user = os.environ["GETPACK_USER"])
 
-    def _listChoice(self, message, lst):
-        page_size = 30
-        count = len(lst)
-        page = 0
-        pages = count/page_size + 1
-
-        default_ans = None
-        idx = -1
-        while idx < 0:
-            # display current page
-            print message
-            for ln in range(page*page_size, min((page+1)*page_size, count)):
-                print "%3d - %s" % (ln, lst[ln])
-            # prepare the question (with default answer)
-            question = "Please enter your choice (0-%d, " % (count-1)
-            if page < pages - 1:
-                question += "(n)ext, "
-            if page > 0:
-                question += "(p)revious, "
-            if not default_ans:
-                default_ans = 'q'
-                if page < pages - 1:
-                    default_ans = 'n'
-                elif page > 0:
-                    default_ans = 'p'
-            question += "(q)uit) [%s]: " % default_ans
-
-            ans = None
-            while ans is None:
-                sys.stdout.write(question)
-                ans = sys.stdin.readline().strip().lower()
-                if ans == "":
-                    ans = default_ans
-                if ans in ['n', 'next']:
-                    page += 1
-                    default_ans = ans
-                    if page >= pages:
-                        page = pages - 1
-                    if page == pages - 1:
-                        default_ans = 'p'
-                elif ans in ['p', 'prev', 'previous']:
-                    page -= 1
-                    default_ans = ans
-                    if page < 0:
-                        page = 0
-                    if page == 0:
-                        default_ans = 'n'
-                elif ans in [ 'q', 'quit' ]:
-                    raise Quit
-                else:
-                    try:
-                        ans = int(ans)
-                    except:
-                        ans = -1
-                    if ans < 0 or ans >= count:
-                        print "Invalid selection '%s'" % ans
-                        ans = None
-                    else:
-                        idx = ans
-        return idx
-
     def _askVersion(self, versions):
         if self.options.batch:
             # never ask for a version in batch mode
@@ -258,6 +424,7 @@ class GetPack(Script):
         while not ans:
             sys.stdout.write("Select a version (%s, (h)ead, (q)uit [%s]): "%
                              (", ".join(versions),default))
+            sys.stdout.flush()
             ans = sys.stdin.readline().strip()
             if ans == '':
                 ans = default
@@ -292,8 +459,8 @@ class GetPack(Script):
             lst = []
             for k in reps:
                 lst.append('%s (%s)' % (k, self.repositories[k]))
-            idx = self._listChoice("Package '%s' in more than one repository, choose the repository." % package,
-                                   lst)
+            idx = selectFromList("Package '%s' in more than one repository, choose the repository." % package,
+                                 lst)
         else:
             idx = 0
         rep = self.repositories[reps[idx]]
@@ -344,8 +511,7 @@ class GetPack(Script):
             lst = []
             for k in reps:
                 lst.append('%s (%s)' % (k, self.repositories[k]))
-            idx = self._listChoice("Project '%s' in more than one repository, choose the repository." % project,
-                                   lst)
+            idx = selectFromList("Project '%s' in more than one repository, choose the repository." % project, lst)
         else:
             idx = 0
         rep = self.repositories[reps[idx]]
@@ -549,10 +715,7 @@ class GetPack(Script):
         # select package
         keys = self.packages.keys()
         keys.sort()
-        message = """--------------------------------------------------------------------------------
-Select the package
---------------------------------------------------------------------------------"""
-        idx = self._listChoice(message, keys)
+        idx = selectFromList("Select the package", keys, bars = True)
         return keys[idx]
 
     def askProject(self):
@@ -562,10 +725,7 @@ Select the package
         # select package
         keys = self.projects.keys()
         keys.sort()
-        message = """--------------------------------------------------------------------------------
-Select the project
---------------------------------------------------------------------------------"""
-        idx = self._listChoice(message, keys)
+        idx = selectFromList("Select the project", keys, bars = True)
         return keys[idx]
 
     def _getNeededPackages(self, pkgdir):
