@@ -32,8 +32,8 @@ class LumiAlgsConf(LHCbConfigurableUser):
     ## Steering options
     __slots__ = {
         "Context"       : "Offline"  # The context within which to run
-       ,"DataType"      : "2008"     # Data type, can be ['DC06','2008','MC09','2009']
-       ,"InputType"     : "MDF"      # Data type, can be ['MDF','DST']. Different sequencer made.
+       ,"DataType"      : "2009"     # Data type, can be ['DC06','2008','MC09','2009']
+       ,"InputType"     : "MDF"      # Data type, can be ['MDF','DST','RDST','MDST','ETC','DIGI']. Different sequencer made.
        ,"ForceFullSequence" : False  # re-write the FSR independent of the InputType
        ,"SetFSRStatus"  : ""         # overwrite the event FSR status to something ['UNRELIABLE', 'ERROR','VERIFIED']
        ,"LumiSequencer" : None       # The sequencer to add the Lumi Accounting to - essential input
@@ -44,7 +44,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
     _propertyDocDct = {
         "Context"       : """ The context within which to run """
        ,"DataType"      : "Data type, can be ['DC06','2008','MC09','2009']"
-       ,"InputType"     : "Input Data type, can be ['MDF','DST']"
+       ,"InputType"     : "Input Data type, can be ['MDF','DST','RDST','MDST','ETC','DIGI']"
        ,"ForceFullSequence" : "False, re-write the FSR independent of the InputType"
        ,"SetFSRStatus"  : "overwrite the event FSR status to something ['UNRELIABLE', 'ERROR','VERIFIED']"
        ,"LumiSequencer" : "The sequencer to add the Lumi Accounting to - essential input"
@@ -62,7 +62,6 @@ class LumiAlgsConf(LHCbConfigurableUser):
         crossings = self.getProp("BXTypes")
         BXMembers = []
         for i in crossings:
-            # the logic here is definately wrong!! -- why??
             seqMembers=[]
             seqMembers.append( ODINFilter ( 'Filter'+i,
                                             Code = ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.'+i+' ) ' ))
@@ -134,7 +133,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
         
         # Check input data type
         inputType = self.getProp("InputType")
-        if inputType not in ['MDF','DST']:
+        if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST", "MDST" ]:
             raise RuntimeError("ERROR : Unknown input type " + str(inputType))
         
         forced=self.getProp("ForceFullSequence")
