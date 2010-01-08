@@ -3,6 +3,10 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All triggre threshold settings
 !-----------------------------------------------------------------------------
+
+! 2010-01-08 - V. Gligorov
+ - add Swimming_320Vis_300L0_Hadron_Hlt1_Oct09 
+
 ! 2010-01-07 - Gerhard Raven
  - add Physics_MinBiasL0_PassThroughHlt_09Dec09
 
