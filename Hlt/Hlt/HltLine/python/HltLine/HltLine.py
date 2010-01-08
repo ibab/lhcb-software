@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.23 2009-12-14 21:12:25 graven Exp $ 
+# $Id: HltLine.py,v 1.24 2010-01-08 12:35:30 gligorov Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.23 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.24 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -88,7 +88,9 @@ from Configurables import HltTrackFilter    as TrackFilter
 from Configurables import HltVertexMaker1   as VertexMaker1 
 from Configurables import HltVertexMaker2   as VertexMaker2 
 from Configurables import HltVertexFilter   as VertexFilter 
-from Configurables import HltVertexUpgrade  as VertexUpgrade 
+from Configurables import HltVertexUpgrade  as VertexUpgrade
+from Configurables import HltMoveVerticesForSwimming as MoveVerticesForSwimming  
+from Configurables import HltSelectTracksForSwimming as SelectTracksForSwimming
 from Configurables import HltL0MuonCandidates    as L0MuonCandidates 
 from Configurables import HltL0CaloCandidates    as L0CaloCandidates 
 from Configurables import HltVertexToTracks      as VertexToTracks 
@@ -318,6 +320,8 @@ _types_ = { TrackUpgrade  : 'TU'
           , L0CaloCandidates : 'L0Calo'
           , L0MuonCandidates : 'L0Muon'
           , AddPhotonToVertex : 'AddPhotonToVertex'
+          , MoveVerticesForSwimming : 'MoveVerticesForSwimming'
+          , SelectTracksForSwimming : 'SelectTracksForSwimming'   
           } 
 
 ## protected attributes 

@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.68 2010-01-07 10:36:08 albrecht Exp $
+! $Id: release.notes,v 1.69 2010-01-08 12:35:41 gligorov Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+! 2009-01-08 - V. Gligorov
+ - python/HltLine.py : add MoveVerticesForSwimming and SelectTracksForSwimming
+   to the list of allowed Hlt1Members
+
 ! 2009-01-07 - Johannes Albrecht
  - remove inclusion of obsolete TsaTool.opts
 
