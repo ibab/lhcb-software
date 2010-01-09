@@ -1,4 +1,4 @@
-// $Id: PatTTMagnetTool.cpp,v 1.6 2009-10-30 13:20:50 wouter Exp $
+// $Id: PatTTMagnetTool.cpp,v 1.7 2010-01-09 12:46:27 witekma Exp $
 
 // Include files
 
@@ -64,18 +64,29 @@ StatusCode PatTTMagnetTool::initialize ( ) {
   // == Get the ST Detector Element
   m_STDet = getDet<DeSTDetector>( DeSTDetLocation::TT );
 
-  m_zCenterTT = 0.;
+  // m_zCenterTT is a normalization plane which should be close to middle of TT.
+  // It is used to normalize dx deflection at different TT layers.
+  // No need to update with small TT movement up to +- 5 cm. 
+  m_zCenterTT = 2484.6;
 
+  double zCenterTT = 0.;
+  
   m_zLayers.clear();
-    // warning layers not in order of increasing z
   for ( std::vector<DeSTLayer*>::const_iterator itL = m_STDet->layers().begin();
           m_STDet->layers().end() != itL; ++itL ) {
      double zlay = (*(*itL)->sectors().begin())->globalCentre().Z(); 
      m_zLayers.push_back(zlay); 
-     m_zCenterTT += zlay;
+     zCenterTT += zlay;
   }   
 
-  m_zCenterTT /= m_zLayers.size();
+  zCenterTT /= m_zLayers.size();
+  if (fabs( m_zCenterTT - zCenterTT ) > 50. ) {
+    warning() << "Calculated center of TT station far away from nominal value: " 
+              << zCenterTT << " wrt nominal " << m_zCenterTT << endmsg;
+    warning() << " Calculated value taken: " << zCenterTT << endmsg;
+    m_zCenterTT = zCenterTT;
+  }
+  // warning layers not in order of increasing z
   std::sort(m_zLayers.begin(),m_zLayers.end());
   
   // subscribe to the updatemanagersvc with a dependency on the magnetic field svc

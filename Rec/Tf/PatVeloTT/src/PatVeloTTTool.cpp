@@ -1,4 +1,4 @@
-// $Id: PatVeloTTTool.cpp,v 1.10 2009-04-05 09:03:33 smenzeme Exp $
+// $Id: PatVeloTTTool.cpp,v 1.11 2010-01-09 12:46:27 witekma Exp $
 // Include files
 
 // from Gaudi
@@ -72,9 +72,12 @@ StatusCode PatVeloTTTool::initialize ( ) {
 
   m_PatTTMagnetTool = tool<PatTTMagnetTool>( "PatTTMagnetTool","PatTTMagnetTool");
 
+  // m_zMidTT is a position of normalization plane which should to be close to z middle of TT ( +- 5 cm ).
+  // Cashed once in PatVeloTTTool at initialization. No need to update with small TT movement.
   m_zMidTT    = m_PatTTMagnetTool->zMidTT();
-  m_zMidField = m_PatTTMagnetTool->zMidField();
-  m_distToMomentum = m_PatTTMagnetTool->averageDist2mom();
+  //  zMidField and distToMomentum isproperly recalculated in PatTTMagnetTool when B field changes
+  double zMidField = m_PatTTMagnetTool->zMidField();
+  double distToMomentum = m_PatTTMagnetTool->averageDist2mom();
 
   debug()       << " MaxXSize           = " << m_maxXSize         << " mm"  << endmsg;
   debug()       << " MaxYSize           = " << m_maxYSize         << " mm"  << endmsg;
@@ -83,8 +86,8 @@ StatusCode PatVeloTTTool::initialize ( ) {
   debug()       << " centralHoleSize    = " << m_centralHoleSize  << " mm"  << endmsg;
   debug()       << " minMomentum        = " << m_minMomentum      << " MeV" << endmsg;
   debug()       << " maxPseudoChi2      = " << m_maxPseudoChi2    << "   "  << endmsg;
-  debug()       << " distToMomentum     = " << m_distToMomentum             << endmsg;
-  debug()       << " zMidField          = " << m_zMidField        << " mm"  << endmsg;
+  debug()       << " distToMomentum     = " << distToMomentum               << endmsg;
+  debug()       << " zMidField          = " << zMidField          << " mm"  << endmsg;
   debug()       << " xTolerance         = " << m_xTol             << " mm"  << endmsg;
   debug()       << " xTolSlope          = " << m_xTolSlope        << " mm"  << endmsg;
   debug()       << " yTolerance         = " << m_yTol             << " mm"  << endmsg;
@@ -135,7 +138,8 @@ void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTra
 
   if(m_debug) debug() << "Entering getCandidates" << endmsg;
 
-  double maxTol = fabs(1. / ( m_distToMomentum * m_minMomentum ));
+  double distToMomentum = m_PatTTMagnetTool->averageDist2mom();
+  double maxTol = fabs(1. / ( distToMomentum * m_minMomentum ));
 
 
 
@@ -308,6 +312,8 @@ void PatVeloTTTool::saveCandidate(PatTTHits& theClusters,PatVTTTrack& candidate)
   double distTotSquare = 0.;
   int maskFiredLayers = 0;
 
+  double distToMomentum = m_PatTTMagnetTool->averageDist2mom();
+
   std::vector<double> normFact;
   double dyDz = candidate.slopeY();
   m_PatTTMagnetTool->dxNormFactorsTT( dyDz,  normFact);
@@ -351,7 +357,7 @@ void PatVeloTTTool::saveCandidate(PatTTHits& theClusters,PatVTTTrack& candidate)
   double VarDist = (distSquare - (dist*dist));
   candidate.setDxVar(VarDist);
 
-  double qop = m_distToMomentum * dist ;
+  double qop = distToMomentum * dist ;
   candidate.setQOverP(qop);
 
   if(m_debug) debug() << " -> Dx: " << candidate.Dx() << " , DxVar: " << candidate.DxVar() << endmsg;
@@ -696,6 +702,7 @@ void PatVeloTTTool::prepareOutputTracks( std::vector<PatVTTTrack>& vttTracks,
 
   if(m_debug) debug() << "Entering prepareOutputTracks" << endmsg;
 
+  double zMidField = m_PatTTMagnetTool->zMidField();
 
   std::vector<PatVTTTrack>::iterator ivttTrB;
   for(ivttTrB = vttTracks.begin(); ivttTrB != vttTracks.end(); ++ivttTrB){
@@ -743,7 +750,7 @@ void PatVeloTTTool::prepareOutputTracks( std::vector<PatVTTTrack>& vttTracks,
     temp.setState( cand.xAtZ( m_zMidTT ) + dist,
                    cand.yAtZ( m_zMidTT ),
                    m_zMidTT,
-                   tx + dist/(m_zMidTT - m_zMidField),
+                   tx + dist/(m_zMidTT - zMidField),
                    ty,
                    qop );
 

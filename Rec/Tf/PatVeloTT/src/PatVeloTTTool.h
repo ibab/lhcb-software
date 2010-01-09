@@ -1,4 +1,4 @@
-// $Id: PatVeloTTTool.h,v 1.7 2009-03-11 15:30:53 smenzeme Exp $
+// $Id: PatVeloTTTool.h,v 1.8 2010-01-09 12:46:27 witekma Exp $
 #ifndef PATVELOTTTOOL_H
 #define PATVELOTTTOOL_H 1
 
@@ -70,8 +70,6 @@ static const InterfaceID IID_PatVeloTTTool ( "PatVeloTTTool", 1, 0 );
     double m_minMomentum;
     double m_maxPseudoChi2;
     int m_maxSolutionsPerTrack;
-    double m_distToMomentum;
-    double m_zMidField;
     double m_xTol;
     double m_xTolSlope;
     double m_yTol;
