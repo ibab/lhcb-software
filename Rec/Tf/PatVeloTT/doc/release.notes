@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2010-01-09 - Mariusz Witek
+- Fix bug in PatVeloTTTool. B field dependent parameters taken from
+  PatTTMagnetTool at initialization. Now retrived by function call
+  from PatTTMagnetTool which updates properly with B field change. 
+
 !========================== PatVeloTT v3r9 2009-11-13 ======================
 ! 2009-11-13 - Rob Lambert
  - Tag v3r9
