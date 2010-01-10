@@ -54,7 +54,7 @@ if __name__=='__main__':
   oldjob = jobs(jobID)
   outputData = getLFNs(oldjob, "fmDST")
   j.inputdata = LHCbDataset(outputData)
-  j.application.extraopts = "kali.FirstPass=False;"
+  j.application.extraopts = "kali.PrintFreq=100000;kali.FirstPass=False;"
   if options.coef:
     f = open(options.coef)
     coef = {}

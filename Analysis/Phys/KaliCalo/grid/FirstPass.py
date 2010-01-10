@@ -36,6 +36,7 @@ if __name__=='__main__':
       paths.append(os.path.abspath(os.path.expandvars(arg)))
     j.application.optsfile.extend(paths)
   j.outputdata.files.append('KaliPi0.fmDST')
+  j.application.extraopts = "kali.PrintFreq=100000;"
   if options.submit:
     j.submit()
     print "Your JobID is %s" %j.id
