@@ -171,7 +171,10 @@ class ProjectConf(ProjectBaseConf):
         """ disable the binary nature of the project """
         self._hasbinary = False
     def hasBinary(self):
+        """ Access function for the binary nature """
         return self._hasbinary
+    
+
     
     def __str__(self):
         """ return string representation for printing """
