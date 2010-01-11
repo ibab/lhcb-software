@@ -438,7 +438,7 @@ def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=Tr
         os.chdir(rel_dir)
 
 # ======================= action: compilation in debug mode ====================================
-    if debug :
+    if debug and projconf.hasBinary():
         log.info( 'compile in debug mode' )
         os.chdir(os.path.join(rel_dir, maindir, packSys, 'cmt'))
         log.info('%s compile in debug %s mode %s %s \n' % (day, os.environ['CMTDEB'], packSys, pversion))
@@ -480,10 +480,11 @@ def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=Tr
         str = 'mkLHCbtar -p '+pname+' -v '+pversion
         rc = os.system(str)
         log.info( 'tar source rc = %s' % rc )
-        rc = os.system(str+' -b '+CMTCONFIG)
-        log.info( 'tar %s rc= %s '%(CMTCONFIG,rc))
-        rc = os.system(str+' -b '+ CMTDEB)
-        log.info( 'tar %s rc= %s '%(CMTDEB,rc) )
+        if projconf.hasBinary() :
+            rc = os.system(str+' -b '+CMTCONFIG)
+            log.info( 'tar %s rc= %s '%(CMTCONFIG,rc))
+            rc = os.system(str+' -b '+ CMTDEB)
+            log.info( 'tar %s rc= %s '%(CMTDEB,rc) )
 
 # ======================= action: run glimpse index ==========================================
     if glimpse :
