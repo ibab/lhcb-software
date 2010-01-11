@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.54 2009-12-27 13:19:51 graven Exp $
+! $Id: release.notes,v 1.55 2010-01-11 14:15:39 graven Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+!========================== TisTosTobbing v4r1 2010-01-11 ===================
 
 ! 2009-12-27 - Gerhard Raven
  - migrate from IHltDataSvc to Hlt::I{Data,Register}
