@@ -4,8 +4,9 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+!========================== HltEcalAlley v2r3p1 2010-01-11 ===================
 ! 2009-12-23 - Gerhard Raven
- - move #include around to facilitate HltBase/stringKey -> GaudiKernel/StringKey migration ||
+ - move #include around to facilitate HltBase/stringKey -> GaudiKernel/StringKey migration
 
 !========================== HltEcalAlley v2r3 2009-12-03 ===================
 ! 2009-12-01 - Mariusz Witek
