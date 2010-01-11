@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.390 2010-01-11 12:44:16 pkoppenb Exp $ 
+! $Id: release.notes,v 1.391 2010-01-11 14:48:15 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-01-11 - Gerhard Raven
+ - tweak express stream definiton
 
 ! 2010-01-11 - Patrick Koppenburg
  - Hlt2.py : Cure bugs #61215 (Proto relations) and #54581 (calo relations)
