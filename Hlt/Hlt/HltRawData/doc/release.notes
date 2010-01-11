@@ -1,10 +1,11 @@
-!$Id: release.notes,v 1.59 2009-12-28 10:38:27 graven Exp $
+!$Id: release.notes,v 1.60 2010-01-11 13:53:40 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+!========================== HltRawData v2r3 2010-01-11 ===================
 ! 2009-12-28 - Gerhard Raven
  - fix gcc43 error
 
