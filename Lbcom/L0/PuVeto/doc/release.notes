@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.58 2010-01-08 17:00:29 serena Exp $
+! $Id: release.notes,v 1.59 2010-01-11 08:57:47 serena Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Serena Oggero
 !-------------------------------------------------------------------------
+
+! 2010-01-11 - Serena Oggero
+ - from PuVetoAlg, removed unused variables
 
 ! 2010-01-08 - Serena Oggero
  - temporary removed all PuVetoAlg histos not needed for the trigger itself

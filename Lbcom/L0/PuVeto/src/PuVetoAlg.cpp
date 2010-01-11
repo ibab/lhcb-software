@@ -284,9 +284,10 @@ StatusCode PuVetoAlg::execute() {
   // now evaluate PU trigger variables...  
   measureMult( m_PUhitmap );
   
+  /*
   char name[80];
   char title[80];
-  /*
+  
   if ( m_enablePlots){
     sprintf(name, "PU vertices-evt%d", m_evtNum);
     sprintf(title,"PU vertices-evt%d", m_evtNum);
