@@ -1,9 +1,9 @@
-## @package Brunel
+# @package Brunel
 #  High level configuration tools for Brunel
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.114 2010-01-08 12:03:32 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.115 2010-01-11 17:50:47 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -292,10 +292,11 @@ class Brunel(LHCbConfigurableUser):
         # kill some RAW banks
         from Configurables import bankKiller
         bkKill = bankKiller("BrunelBankKiller")
+        bkKill.OutputLevel = FATAL
         if self.isPropertySet( "RawBanksToKill" ):
             bkKill.BankTypes = self.getProp( "RawBanksToKill" )
         else:
-            if "2009" == self.getProp("DataType"):
+            if ("2009" == self.getProp("DataType")) and (inputType in ["MDF","ETC","RDST"]):
                 bkKill.BankTypes = ["VeloFull", "L0PUFull"]
         GaudiSequencer("InitBrunelSeq").Members += [ bkKill ]
         
