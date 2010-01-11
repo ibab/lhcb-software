@@ -4,6 +4,7 @@
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
 
+!========================== HltMuon v3r5p3 2010-01-11 ===================
 ! 2009-12-23 - Gerhard Raven
  - move #include around to facilitate HltBase/stringKey -> GaudiKernel/StringKey migration
 
