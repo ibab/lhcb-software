@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -56,7 +56,7 @@ class Hlt1HadronForSwimmingLinesConf(HltLinesConfigurableUser) :
                 , 'SoftHadMain_ETCut'       : 2500. 
                 , 'SoftHadMain_PTCut'       : 1500.
                 , 'SoftHadDi_IPCut'         : 0.1
-                , 'Prescale'                : { 'Hlt1SoftDiHadron' : 0 }
+                , 'Prescale'                : { 'Hlt1SoftDiHadronForSwimming' : 0 }
                 }
     
     def __apply_configuration__(self) : 
@@ -72,7 +72,7 @@ class Hlt1HadronForSwimmingLinesConf(HltLinesConfigurableUser) :
         # confirmed track
         #------------------------
         def confirmation(type=""):
-            prefix = 'HadronConfirmation'+type
+            prefix = 'HadronForSwimmingConfirmation'+type
             from Hlt1Lines.HltL0Candidates import convertL0Candidates
             L0Channel = self.getProp("L0Channel")
             # get the L0 candidates (all or L0)
