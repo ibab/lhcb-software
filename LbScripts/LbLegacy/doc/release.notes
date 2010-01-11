@@ -1,6 +1,8 @@
 2010-01-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: cleaned up a lot of messages.
+	* python/LbLegacy/install_project.py: 
+	- cleaned up a lot of messages.
+	- added the explicit listing of data packages.
 
 2010-01-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

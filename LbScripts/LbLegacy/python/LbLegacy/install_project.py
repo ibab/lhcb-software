@@ -1124,11 +1124,20 @@ def cleanBootScripts():
 #
 def getVersionList(pname):
     from LbConfiguration.Version import sortStrings
+    from LbConfiguration.Package import package_names, getPackage
+
+    datapackage = False
     
     log = logging.getLogger()
     log.debug('Browsing versions for %s ' % pname)
 
-    PROJECT = pname.upper()
+    if pname.upper() in [ x.upper() for x in package_names] :
+        p = getPackage(pname)
+        PROJECT = p.project().upper()
+        datapackage = True
+    else :
+        PROJECT = pname.upper()
+        
     webpage = urlopen(url_dist+'/'+PROJECT)
     weblines = webpage.readlines()
     plist = []
@@ -1139,8 +1148,12 @@ def getVersionList(pname):
             quote2 = webline[href+quote1+1:].index('"')
             filename = webline[href+quote1+1:href+quote1+1+quote2]
             if filename.find(".md5") == -1 :
-                plist.append(filename) 
-                log.info(filename)
+                if datapackage and filename.find(pname) == -1:
+                    continue
+                else :
+                    plist.append(filename) 
+                    log.info(filename)
+                
     atexit.register(urlcleanup)
     return sortStrings(plist, safe=True)
 

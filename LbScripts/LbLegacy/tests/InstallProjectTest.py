@@ -12,7 +12,7 @@ class InstallProjectTestCase(unittest.TestCase):
         unittest.TestCase.tearDown(self)
         
     def testVersionsList(self):
-        pprint(getVersionList("DBASE"))
+        pprint(getVersionList("DecFiles"))
         
 if __name__ == '__main__':
     unittest.main()
