@@ -3,6 +3,7 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+!========================== HltBase v8r0 2010-01-11 ===================
 ! 2010-01-07 - Gerhard Raven
  - extend histogram utilities to profile histograms
  - remove unused 'book' call in HltAlgorithm
