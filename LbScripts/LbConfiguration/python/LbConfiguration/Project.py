@@ -167,7 +167,7 @@ class ProjectConf(ProjectBaseConf):
     def enableHasBinary(self):
         """ enable binary nature of the project """
         self._hasbinary = True
-    def disableSetenvAlias(self):
+    def disableHasBinary(self):
         """ disable the binary nature of the project """
         self._hasbinary = False
     def hasBinary(self):
