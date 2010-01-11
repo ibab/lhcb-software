@@ -1,4 +1,4 @@
-// $Id: L0CaloCompare.h,v 1.5 2009-10-29 10:51:48 robbep Exp $
+// $Id: L0CaloCompare.h,v 1.6 2010-01-11 11:00:28 robbep Exp $
 #ifndef L0CALOCOMPARE_H 
 #define L0CALOCOMPARE_H 1
 
@@ -27,6 +27,9 @@ public:
 protected:
   
 private:
+  /// Prints name of candidate
+  std::string candidateTypeName( int type ) const ;
+
   bool m_fullMonitoring ;
 
   IHistogram1D*            m_histSpdMult_Comp ; 

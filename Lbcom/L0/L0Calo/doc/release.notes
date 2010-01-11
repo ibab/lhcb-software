@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.146 2009-11-27 17:14:20 cattanem Exp $
+! $Id: release.notes,v 1.147 2010-01-11 11:00:28 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
+
+! 2010-01-11 - Patrick Robbe
+ - L0CaloCompare.cpp: add print out of candidate type to ease debugging
 
 !========================= L0Calo v10r2 2009-11-27 ========================
 ! 2009-11-27 - Patrick Robbe

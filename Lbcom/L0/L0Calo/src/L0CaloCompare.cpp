@@ -1,4 +1,4 @@
-// $Id: L0CaloCompare.cpp,v 1.12 2009-11-24 17:42:27 robbep Exp $
+// $Id: L0CaloCompare.cpp,v 1.13 2010-01-11 11:00:28 robbep Exp $
 
 // local
 #include "L0CaloCompare.h"
@@ -115,7 +115,7 @@ StatusCode L0CaloCompare::execute() {
     LHCb::ODIN * odin = get< LHCb::ODIN >( LHCb::ODINLocation::Default ) ;
     if ( 0 != odin ) bcId = odin -> bunchId() ;
   }
-
+  
   if ( std::binary_search( m_idles.begin() , m_idles.end() , bcId ) ) 
     return StatusCode::SUCCESS ;
 
@@ -285,7 +285,8 @@ StatusCode L0CaloCompare::execute() {
                   m_mapAllTitle[ type ] ) ;
       iterMap = mapRef[ type ].find( rawId ) ; 
       if ( iterMap == mapRef[ type ].end() ) {
-        debug() << "          Ele L0cand not found ! " << endreq ; 
+        debug() << "          " << candidateTypeName( type ) 
+                << " L0cand not found ! " << endreq ; 
         fillCalo2D( m_mapCompareName[ type ] , caloCell , 1. , 
                     m_mapCompareTitle[ type ] ) ;
       } else {
@@ -392,3 +393,16 @@ StatusCode L0CaloCompare::execute() {
   return StatusCode::SUCCESS; 
 }
 //============================================================================
+// Prints string to describe type
+//============================================================================
+std::string L0CaloCompare::candidateTypeName( int type ) const {
+  switch( type ) {
+  case L0DUBase::CaloType::Electron: return "Ele" ; break ;
+  case L0DUBase::CaloType::Photon: return "Pho" ; break ;
+  case L0DUBase::CaloType::Pi0Local: return "Pil" ; break ;
+  case L0DUBase::CaloType::Pi0Global: return "Pig" ; break ;
+  case L0DUBase::CaloType::Hadron: return "Had" ; break ;
+  default: break ;
+  }
+  return "Unknown" ;
+}
