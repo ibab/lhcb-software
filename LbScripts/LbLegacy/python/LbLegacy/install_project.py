@@ -395,8 +395,6 @@ def createDir(here , logname):
             if os.path.exists(logname):
                 os.rename(logname,logname+'_old')
     
-        this_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
-        log.info(" =========== Python %s %s " % (txt_python_version, this_time) )
         for dirnm in subdir:
             if os.path.isdir(os.path.join(here, dirnm)):
                 log.debug('%s exists in %s '%(dirnm, here))
@@ -671,10 +669,9 @@ def checkMD5(url, filenm, dest):
     isok = False
     log.info("Checking %s tar ball consistency ..." % filenm)
     refmd5 = getReferenceMD5(url, filenm, dest)
-    if debug_flag :
-        log.info("   reference md5 sum is: %s" % refmd5)
+    log.debug("   reference md5 sum is: %s" % refmd5)
     compmd5 = calculateMD5(os.path.join(dest,filenm))
-    log.info("       local md5 sum is: %s" % compmd5)
+    log.debug("       local md5 sum is: %s" % compmd5)
     if refmd5 == compmd5 :
         isok = True
     return isok
@@ -1055,7 +1052,6 @@ def getProjectTar(tar_list, already_present_list=None):
 # Autoupdate myself
 def getMySelf():
     log = logging.getLogger()
-    log.info("script version : %s" % script_version)
     new_install = 'latest_install_project.py'
     if os.path.exists("latest_install_project.py") :
         os.remove("latest_install_project.py")
@@ -1428,8 +1424,6 @@ def runInstall(pname,pversion,binary=''):
     log = logging.getLogger()
 
 # print action list
-    start_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
-    log.info('++++++++++++++++++++++%s  python %s starts install_project.py - version no %s' % (start_time, txt_python_version, script_version) )
     log.info("%s %s %s" % (pname, pversion, binary))
     log.info('cmt version = %s, make_flag= %s, full_flag= %s, list_flag= %s, remove_flag= %s ' % (cmtversion, make_flag, full_flag, list_flag, remove_flag))
 
@@ -1457,8 +1451,6 @@ def runInstall(pname,pversion,binary=''):
     checkBinaryName(binary)
 
     getCMT(cmtversion)
-
-    setLHCbEnv()
 
     if not check_only :
         if pname != 'LbScripts' :
@@ -1518,55 +1510,7 @@ def runInstall(pname,pversion,binary=''):
         os.chdir(os.environ["MYSITEROOT"].split(os.pathsep)[0])
         genSetupScript(pname, pversion, cmtconfig, setup_script)
 
-    end_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
-    log.info( '+++++++++++++++++++++++ %s end install_project.py -version no %s' % (end_time, script_version))
 
-
-#
-# set lhcb environment ====================================================
-#
-def setLHCbEnv():
-    log = logging.getLogger()
-    log.debug('set necessary environment variables')
-
-    strcmd = getSourceCmd() + ' '+os.path.join(os.environ['CMTROOT'],'mgr','setup.' + getScriptExt() )
-    log.debug('str= %s ' % strcmd)
-    if sys.platform == 'win32':
-        os.system(strcmd)
-    else:
-        output = commands.getstatusoutput(strcmd)[1]
-        log.debug(output)
-
-    if os.environ.has_key('LD_LIBRARY_PATH') == 1:
-        ldlibrarypath = os.environ['LD_LIBRARY_PATH']
-    else:
-        ldlibrarypath = ''
-
-
-    mysiteroot = os.environ['MYSITEROOT'].split(os.pathsep)[0]
-    cmtsite = 'LOCAL'
-
-    os.environ['CMTSITE']             = cmtsite
-    os.environ['SITEROOT']            = mysiteroot
-    os.environ['Gaudi_release_area']  = lhcb_dir
-    os.environ['LHCb_release_area']   = lhcb_dir
-    os.environ['Lbcom_release_area']  = lhcb_dir
-    os.environ['LHCbGrid_release_area']  = lhcb_dir
-    os.environ['Geant4_release_area'] = lhcb_dir
-    os.environ['Rec_release_area']    = lhcb_dir
-    os.environ['Phys_release_area']   = lhcb_dir
-    os.environ['LCG_release_area']    = lcg_dir
-    os.environ['OSC_release_area']    = contrib_dir
-    os.environ['LD_LIBRARY_PATH']     = ldlibrarypath
-
-    log.debug('   LD_LIBRARY_PATH=%s' % os.getenv('LD_LIBRARY_PATH'))
-    log.debug('   CMTSITE=%s' % os.getenv('CMTSITE'))
-    log.debug('   SITEROOT= %s' % os.getenv('SITEROOT'))
-    log.debug('   Gaudi_release_area= %s' % os.getenv('Gaudi_release_area'))
-    log.debug('   LHCb_release_area= %s ' % os.getenv('LHCb_release_area'))
-    log.debug('   Geant4, Rec, Phys, Lbcom_release_area are set to LHCb_release_area')
-    log.debug('   LCG_release_area= %s ' % os.getenv('LCG_release_area'))
-    log.debug('   PATH= %s ' % os.getenv('PATH'))
 
 #
 #  unpack tar.gz file =====================================================
@@ -1916,6 +1860,12 @@ def main():
         console.setLevel(logging.INFO)
     thelog.addHandler(console)
 
+    start_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
+
+#    thelog.info('++++++++++++++++++++++%s  python %s starts install_project.py - version no %s' % (start_time, txt_python_version, script_version) )
+    thelog.info((' %s  python %s starts install_project.py - version no %s ' % (start_time, txt_python_version, script_version)).center(120, '+') )
+
+
     if not check_only and fix_perm:
         changePermissions('install_project.py', recursive=False)
 
@@ -1936,6 +1886,11 @@ def main():
         thelog.addHandler(filehandler)
 
     runInstall(pname, pversion, binary)
+
+    end_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
+#    thelog.info( '+++++++++++++++++++++++ %s end install_project.py -version no %s' % (end_time, script_version))
+    thelog.info( (' %s end install_project.py -version no %s ' % (end_time, script_version)).center(120, '+'))
+
 
 if __name__ == "__main__":
     main()
