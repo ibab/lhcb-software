@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.198 2009-12-17 15:16:11 cattanem Exp $
+! $Id: release.notes,v 1.199 2010-01-11 17:52:38 cattanem Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
+
+! 2010-01-11 - Marco Cattaneo for Marco Clemencic
+ - Make QMTest exclusion for changes path to CondDB files more robust
 
 ! 2009-12-17 - Marco Cattaneo
  - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
