@@ -83,7 +83,7 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
         boost::regex l0("Hlt1L0.*Decision");
         boost::regex hlt1("Hlt1.*Decision");
         boost::regex hlt2("Hlt2.*Decision");
-        std::vector<std::string> vs = svc<IANNSvc>("HltANNSvc")->keys("Hlt1SelectionID");
+        std::vector<std::string> vs = svc<IANNSvc>("ANNDispatchSvc")->keys("Hlt1SelectionID");
         for( std::vector< std::string >::const_iterator s=vs.begin();s != vs.end();++s){
           if( boost::regex_match( *s, l0 ) ) {
             m_l0.push_back(*s);
@@ -92,7 +92,7 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
             m_hlt1.push_back(*s);
           }
         }
-        vs = svc<IANNSvc>("HltANNSvc")->keys("Hlt2SelectionID");
+        vs = svc<IANNSvc>("ANNDispatchSvc")->keys("Hlt2SelectionID");
         for( std::vector< std::string >::const_iterator s=vs.begin();s != vs.end();++s){
           if( boost::regex_match( *s,  hlt2 ) ) {
             m_hlt2.push_back(*s);
