@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.cpp,v 1.22 2009-03-17 13:34:17 wouter Exp $
+// $Id: AlignmentCondition.cpp,v 1.23 2010-01-11 15:57:16 wouter Exp $
 // Include files
 #include <algorithm>
 
@@ -74,6 +74,16 @@ AlignmentCondition::setOffNominalTransformation( const std::vector<double>& tran
 {
   loadParams(translation, rotation, pivot);
   return makeMatrices();
+}
+//=============================================================================
+void AlignmentCondition::setPivotPoint( const Gaudi::XYZPoint& point )
+{
+  std::vector<double> pivotvec(3) ;
+  pivotvec[0] = point.x() ;
+  pivotvec[1] = point.y() ;
+  pivotvec[2] = point.z() ;
+  this->addParam(m_pivotString, pivotvec );
+  updateParams(m_matrixInv) ;
 }
 //=============================================================================
 StatusCode AlignmentCondition::makeMatrices() 

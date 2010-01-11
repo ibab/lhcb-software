@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.414 2010-01-08 16:17:35 wouter Exp $ 
+! $Id: release.notes,v 1.415 2010-01-11 15:57:16 wouter Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2010-01-11 - Wouter Hulsbergen 
+- Added method to set pivot point to AlignmentCondition
 
 ! 2010-01-08 - Wouter Hulsbergen 
 - Fix bug in 3DTransofmrationFunctions: getZYXTransformParameters was

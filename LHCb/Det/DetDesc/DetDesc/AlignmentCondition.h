@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.h,v 1.18 2009-03-17 13:34:16 wouter Exp $
+// $Id: AlignmentCondition.h,v 1.19 2010-01-11 15:57:16 wouter Exp $
 #ifndef DETDESC_ALIGNMENTCONDITION_H 
 #define DETDESC_ALIGNMENTCONDITION_H 1
 
@@ -75,6 +75,14 @@ public:
                                           const std::vector<double>& rotation,
                                           const std::vector<double>& pivot);
 
+  /**
+   * Set the pivot point. Update pivot point used when writing
+   * conditions to xml. We actually don't use 'non-trivial' pivot
+   * points anymore.
+   * @param pivot       pivot point
+   */
+  void setPivotPoint( const Gaudi::XYZPoint& pivot ) ;
+  
   std::ostream &fillStream(std::ostream &s) const;
   
 protected:
