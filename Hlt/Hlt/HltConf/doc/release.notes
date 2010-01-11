@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.389 2010-01-08 12:45:34 gligorov Exp $ 
+! $Id: release.notes,v 1.390 2010-01-11 12:44:16 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-01-11 - Patrick Koppenburg
+ - Hlt2.py : Cure bugs #61215 (Proto relations) and #54581 (calo relations)
 
 ! 2010-01-08 - V. Gligorov
  - python/HltConf/Hlt1.py : Add Hlt1HadronForSwimmingLines  

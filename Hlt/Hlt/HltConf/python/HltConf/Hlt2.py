@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.42 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.43 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -87,6 +87,20 @@ class Hlt2Conf(LHCbConfigurableUser):
       
 ###################################################################################
 #
+# MC
+#
+    def withMC(self):
+        """
+        MC options for DaVinci 
+        """
+        # @todo : make that configurable
+        importOptions( "$HLTCONFROOT/options/HltTrackAssociator.py" )
+        from Configurables import CaloClusterMCTruth, ChargedPP2MC
+        DataOnDemandSvc().AlgMap['/Event/Relations/Hlt/ProtoP/Charged' ] = ChargedPP2MC()
+        DataOnDemandSvc().AlgMap['/Event/Relations/Hlt/Calo/Clusters' ] = CaloClusterMCTruth("CaloClusterMCTruthForHlt", Context = 'Hlt')
+        
+###################################################################################
+#
 # Main configuration
 #
     def __apply_configuration__(self):
@@ -96,9 +110,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         Hlt2 = Sequence("Hlt2", Context = 'HLT',ModeOR=True,ShortCircuit=False) 
         if Hlt2 not in Sequence("Hlt").Members : Sequence("Hlt").Members += [ Hlt2 ]
         # reco
-        if self.getProp('WithMC'):
-            # @todo : make that configurable
-            importOptions( "$HLTCONFROOT/options/HltTrackAssociator.py" )
+        if self.getProp('WithMC'): self.withMC()
         # set Hlt2 PID
         self.configurePID()
         # lines
