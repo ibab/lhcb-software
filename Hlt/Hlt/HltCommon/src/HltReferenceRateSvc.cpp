@@ -62,6 +62,7 @@ private:
   std::string m_predicateDesc;
   std::string m_location;
   double            m_rate ;
+  ulonglong         m_first,m_last;
   mutable size_t    m_tick ;
   bool m_predicate_updated;
   bool m_preambulo_updated;
@@ -101,6 +102,8 @@ HltReferenceRateSvc::HltReferenceRateSvc( const std::string& name,
   , m_toolSvc(0)
   , m_predicate(0)
   , m_rate(0)
+  , m_first( ~ulonglong(0) )
+  , m_last(0)
   , m_tick(0)
   , m_predicate_updated(false)
   , m_preambulo_updated(false)
@@ -165,18 +168,25 @@ HltReferenceRateSvc::initialize()
 StatusCode
 HltReferenceRateSvc::finalize()
 {
-  info() << "got " << m_tick << " ticks, with assumed rate of " << m_rate << endmsg; 
+  Gaudi::Time first(  m_first*1000) ;
+  Gaudi::Time last( m_last*1000);
+  Gaudi::TimeSpan interval( last-first) ;
+  info() << "Got " << m_tick << " ticks " 
+         << " in "<<  interval.seconds() << " s."
+         << " during [ " << first.format(true,"%F %T") << "," << last.format(true,"%F %T")  << endmsg;
+  if (interval.seconds()>0) {
+      info() << "This corresponds to an average rate of " << m_tick/interval.seconds() << " Hz."
+             << ", compared to an assumed 'set' rate of " << m_rate << endmsg;
+  }
   StatusCode sc = Service::finalize() ;
   m_toolSvc->release();
   m_evtSvc->release();
   m_incidentSvc->release();
-
   return sc;
 }
 
-void HltReferenceRateSvc::handle ( const Incident& incident )
+void HltReferenceRateSvc::handle ( const Incident& /*incident*/ )
 {
-  if ( IncidentType::BeginEvent != incident.type() ) return;
   if (updateRequired() ) {
        StatusCode sc = decode();
        if (sc.isFailure()) throw GaudiException( "Error from HltReferenceRateSvc::decode()","HltReferenceRateSvc failure" , sc ) ;
@@ -192,11 +202,10 @@ void HltReferenceRateSvc::handle ( const Incident& incident )
         m_incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
         return;
   } 
-  if ( (*m_predicate)(odin) ) { 
-      ++m_tick;
-    // debug() << " Tick... " << m_tick << " @ ODIN GPS time " << odin->eventTime().format(true,"%F %T") << " " << odin->eventTime().nanoformat(6,6)<< endmsg;
-    //@ TODO: fill a counter with the GPS timeinterval between ticks...
-  }
+  if ( (*m_predicate)(odin) ) ++m_tick;
+  ulonglong gps = odin->gpsTime();
+  if ( gps < m_first ) m_first = gps;
+  if ( gps > m_last  ) m_last = gps;
 }
 
 //=============================================================================

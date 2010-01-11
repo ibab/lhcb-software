@@ -4,7 +4,11 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
-- 2010-01-08 - V. Gligorov
+!========================== HltCommon v5r16 2009-12-03 ===================
+! 2010-01-11 - Gerhard Raven
+ - add some info printout in HltReferenceRateSvc 
+
+! 2010-01-08 - V. Gligorov
  - src/HltMoveVerticesForSwimming.{cpp,h}
    src/HltSelectTracksForSwimming.{cpp,h}
    : modify algorithms to work in the new trigger framework, and remove their dependency
