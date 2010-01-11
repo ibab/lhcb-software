@@ -1,3 +1,8 @@
+2010-01-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Project.py: added the binary nature to the project conf
+	class. Typically this is disabled for the LbScripts and Curie projects.
+
 2009-12-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/External.py: added external_projects and lcg_projects.

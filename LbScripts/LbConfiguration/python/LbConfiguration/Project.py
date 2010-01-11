@@ -69,6 +69,7 @@ class ProjectConf(ProjectBaseConf):
         self._extraexe = {}
         self._basename = ""
         self._tarballname = "_".join([self.NAME(), self.NAME()])
+        self._hasbinary = True
         self.enableSetenvAlias()
         self.enableSetupAlias()
     def setCMTExtraTags(self, taglist):
@@ -162,6 +163,15 @@ class ProjectConf(ProjectBaseConf):
                 tbname += ".tar.gz"
 
         return tbname
+
+    def enableHasBinary(self):
+        """ enable binary nature of the project """
+        self._hasbinary = True
+    def disableSetenvAlias(self):
+        """ disable the binary nature of the project """
+        self._hasbinary = False
+    def hasBinary(self):
+        return self._hasbinary
     
     def __str__(self):
         """ return string representation for printing """
@@ -244,6 +254,7 @@ Brunel.setFullSize(700000)#IGNORE:E0602
 
 # Curie
 Curie.setFullSize(50000)#IGNORE:E0602
+Curie.disableHasBinary()#IGNORE:E0602
 
 # DaVinci
 DaVinci.setApplicationPackage("Phys/DaVinci")#IGNORE:E0602
@@ -302,6 +313,7 @@ Lbcom.setFullSize(1500000)#IGNORE:E0602
 # LbScripts
 LbScripts.setAFSVolumeName("LB")#IGNORE:E0602
 LbScripts.setFullSize(10000)#IGNORE:E0602
+LbScripts.disableHasBinary()#IGNORE:E0602
 
 # LHCb
 LHCb.setApplicationPackage("Ex")#IGNORE:E0602
