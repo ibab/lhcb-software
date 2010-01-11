@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.61 2009-10-28 15:00:21 jluisier Exp $
+// $Id: DeSTSector.cpp,v 1.62 2010-01-11 14:54:27 wouter Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -601,11 +601,10 @@ std::auto_ptr<LHCb::Trajectory> DeSTSector::createTraj(const unsigned int strip,
 
 StatusCode DeSTSector::cacheInfo()
 {
+  std::auto_ptr<LHCb::Trajectory> firstTraj = createTraj(m_firstStrip,0);
 
-  std::auto_ptr<LHCb::Trajectory> firstTraj = createTraj(m_firstStrip,-0.5);
-  std::auto_ptr<LHCb::Trajectory> lastTraj = createTraj(nStrip(),0.5);
-
-  // get the start point
+  // get the start and end point. for piecewise trajectories, we
+  // effectively make an approximation by a straight line.
   const Gaudi::XYZPoint g1 = firstTraj->beginPoint();
   const Gaudi::XYZPoint g2 = firstTraj->endPoint();
 
