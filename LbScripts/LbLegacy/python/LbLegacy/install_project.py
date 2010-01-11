@@ -18,7 +18,7 @@ script_version = '100108'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v4r4p1"
-compat_version = "v1r5"
+compat_version = None
 #-----------------------------------------------------------------------------------
 
 # url from which to get files
@@ -63,7 +63,7 @@ grid_version = 0
 debug_flag = False
 list_flag = False
 remove_flag = False
-make_flag = ' '
+make_flag = None
 md5_check = True
 nb_retries = 3
 check_only = False
@@ -548,7 +548,7 @@ def getFile(url, file):
             bin = pack_ver[2]
             file_base = pack_ver[4]
             for f in file_base :
-                if bin != '':
+                if bin :
         # download binary tar file if InstallArea is not there
                     if pack_ver[0] in LbConfiguration.External.external_projects :
                         f = os.path.join(f,bin)
@@ -712,10 +712,10 @@ def getPackVer(file):
                     ffile = file[:file.find('.tar.gz')]
                 break
             else:
-                bin = ''
+                bin = None
                 ffile = file[:file.find('.tar.gz')]
     else :
-        bin = ''
+        bin = None
         ffile = file[:file.find('.tar.gz')]
     packver = ffile.split('_')
     vers = packver[-1]
@@ -725,7 +725,7 @@ def getPackVer(file):
     file_base = []
     if bin + ".tar.gz" == file :
         name = ffile
-        vers = ''
+        vers = None
         file_path = os.path.join(os.environ["MYSITEROOT"].split(os.pathsep)[0], name)
     for bd in base_dir :
         if bin + ".tar.gz" == file :
@@ -766,7 +766,7 @@ def getPackVer(file):
 #
 #  get the project_list =====================================================
 #
-def getProjectList(name,version,binary=' '):
+def getProjectList(name,version,binary=None):
     log = logging.getLogger()
     log.debug('get list of projects to install %s %s %s' % (name, version, binary))
     here = os.getcwd()
@@ -781,7 +781,8 @@ def getProjectList(name,version,binary=' '):
         tar_file = name.upper()+'_'+name.upper()
         if version != 0 :
             tar_file = tar_file + '_' + version
-        if binary != ' ': tar_file = tar_file+'_'+binary
+        if binary: 
+            tar_file = tar_file+'_'+binary
 
     this_html_dir = html_dir.split(os.pathsep)[0]
 
@@ -867,10 +868,10 @@ def isInstalled(file):
                     break
     return installed
 
-def setInstalled(file):
+def setInstalled(filenm):
     this_log_dir = log_dir.split(os.pathsep)[0]
 
-    installedfilename = os.path.join(this_log_dir,file.replace(".tar.gz", ".installed"))
+    installedfilename = os.path.join(this_log_dir,filenm.replace(".tar.gz", ".installed"))
 
     if os.path.exists(installedfilename) :
         os.remove(installedfilename)
@@ -879,10 +880,10 @@ def setInstalled(file):
     f.write("Done\n")
     f.close()
 
-def delInstalled(file):
+def delInstalled(filenm):
     this_log_dir = log_dir.split(os.pathsep)[0]
 
-    installedfilename = os.path.join(this_log_dir,file.replace(".tar.gz", ".installed"))
+    installedfilename = os.path.join(this_log_dir,filenm.replace(".tar.gz", ".installed"))
     os.remove(installedfilename)
 
 # check installed project
@@ -972,7 +973,7 @@ def getProjectTar(tar_list, already_present_list=None):
 
                 if os.getcwd() == this_lhcb_dir :
                     # if binary is requested and InstallArea does not exist : set it
-                    if pack_ver[2] != '':
+                    if pack_ver[2] :
                         os.chdir(os.path.join(this_lhcb_dir,pack_ver[0],pack_ver[0]+'_'+pack_ver[1]))
                         if not os.path.exists(os.path.join('InstallArea',pack_ver[2])):
                             log.debug('mkdir InstallArea')
@@ -1058,7 +1059,9 @@ def getMySelf():
     getFile(url_dist,'install_project.py')
     if fix_perm :
         changePermissions('latest_install_project.py', recursive=False)
-    latest_version = os.popen("python %s --version" % new_install).read()[:-1]
+    latest_line = readString(new_install,'script_version')
+    latest_version = latest_line.split("'")[1]
+#    latest_version = os.popen("python %s --version" % new_install).read()[:-1]
     if script_version < latest_version :
         log.warning("You are running an old version of this script - latest version: %s" % latest_version)
         log.warning("Restarting with the latest one")
@@ -1121,7 +1124,7 @@ def cleanBootScripts():
 #
 #  list available versions ==============================================================================
 #
-def getVersionList(pname):
+def getVersionList(pname, ver=None):
     from LbConfiguration.Version import sortStrings
     from LbConfiguration.Package import package_names, getPackage
 
@@ -1149,6 +1152,10 @@ def getVersionList(pname):
             if filename.find(".md5") == -1 :
                 if datapackage and filename.find(pname) == -1:
                     continue
+                elif ver :
+                    if filename.find(ver+".") != -1 :
+                        plist.append(filename) 
+                        log.info(filename)
                 else :
                     plist.append(filename) 
                     log.info(filename)
@@ -1156,18 +1163,73 @@ def getVersionList(pname):
     atexit.register(urlcleanup)
     return sortStrings(plist, safe=True)
 
-def listVersions(pname):
+def listVersions(pname, ver=None):
     log = logging.getLogger()
-    for l in getVersionList(pname) :
+    for l in getVersionList(pname, ver) :
         log.info(l)
 
+def doesVersionExist(vlist, pname, version, cmt_config=None):
+    from LbConfiguration.Package import package_names, getPackage
+    from LbConfiguration.Project import project_names, getProject
+
+    exist = False
+    
+    isproj = False
+        
+    if pname in package_names :
+        p = getPackage(pname)
+    elif pname in project_names:
+        p = getProject(pname)
+        isproj = True
+    
+    for l in vlist :
+        if not cmt_config :
+            if p.tarBallName(version, full=True) == l :
+                exist = True
+                break
+        else :
+            if isproj and p.tarBallName(version, cmtconfig, full=True) == l :
+                exist = True
+                break
+    return exist
+    
 def getProjectVersions(pname, cmt_config=None):
     from LbConfiguration.Package import package_names
-    if pname in package_names :
-        pass
+    from LbConfiguration.Project import project_names
+    from LbConfiguration.Version import extractVersion
+
+    isproj = False
+    ispack = False
     
-    if not cmt_config :
-        cmt_config = os.environ.get("CMTCONFIG", None)
+    version_list = []
+    
+    if pname in package_names :
+        ispack = True
+    elif pname in project_names:
+        isproj = True
+
+    
+    vlist = getVersionList(pname)
+    for l in vlist :
+        toappend = False
+        v = extractVersion(l).name()
+        if ispack and doesVersionExist(vlist, pname, v):
+            toappend = True
+        if isproj :
+            if not cmt_config and doesVersionExist(vlist, pname, v):
+                toappend = True
+            elif cmt_config :
+                if doesVersionExist(vlist, pname, v) and doesVersionExist(vlist, pname, v, cmt_config) :
+                    toappend = True
+        if toappend :
+            if v not in version_list :
+                version_list.append(v)
+
+    return version_list
+
+def getLatestVersion(pname, cmt_config=None):
+    vlist = getProjectVersions(pname, cmt_config)
+    return vlist[-1]
 
 #
 #  read a string from a file ==============================================
@@ -1436,7 +1498,7 @@ def installLoginScripts():
 #
 #  install one project #################################################
 #
-def runInstall(pname,pversion,binary=''):
+def runInstall(pname,pversion,binary=None):
     log = logging.getLogger()
 
 # print action list
@@ -1460,13 +1522,22 @@ def runInstall(pname,pversion,binary=''):
 # if remove flag is set then correspondind tar files and directories will
 # be removed
     if remove_flag :
-        removeProject(pname,pversion)
+        if pversion :
+            removeProject(pname,pversion)
+        else : 
+            log.error("A version of %s must be specified for the removal" % pname)
         sys.exit()
 
 # check binary name
     checkBinaryName(binary)
 
     getCMT(cmtversion)
+
+    if not pversion:
+        if binary:
+            pversion = getLatestVersion(pname, binary)
+        else :
+            pversion = getLatestVersion(pname)
 
     if not check_only :
         if pname != 'LbScripts' :
@@ -1479,8 +1550,12 @@ def runInstall(pname,pversion,binary=''):
         project_list.update(grid_project_list)
         html_list += grid_html_list
 
-    if pname != 'Compat' and sys.platform != "win32" :
-        compat_project_list, compat_html_list = getProjectList('Compat', compat_version)
+    if pname != 'Compat' :
+        if not compat_version:
+            new_compat_version = getLatestVersion("Compat")
+        else :
+            new_compat_version = compat_version
+        compat_project_list, compat_html_list = getProjectList('Compat', new_compat_version)
         project_list.update(compat_project_list)
         html_list += compat_html_list
 
@@ -1489,7 +1564,7 @@ def runInstall(pname,pversion,binary=''):
 
     getProjectTar(project_list)
 
-    if binary != ' ':
+    if binary:
         from LbConfiguration.Platform import isBinaryDbg, getBinaryOpt, getBinaryDbg
         binary_dbg = getBinaryDbg(binary)
         binary_opt = binary
@@ -1501,7 +1576,11 @@ def runInstall(pname,pversion,binary=''):
             grid_project_list, grid_html_list = getProjectList('LHCbGrid', grid_version, binary_opt)
             project_list.update(grid_project_list)
             html_list += grid_html_list
-        if pname != 'Compat' and sys.platform != "win32" :
+        if pname != 'Compat' :
+            if not compat_version:
+                new_compat_version = getLatestVersion("Compat", binary_opt)
+            else :
+                new_compat_version = compat_version
             compat_project_list, compat_html_list = getProjectList('Compat', compat_version, binary_opt)
             project_list.update(compat_project_list)
             html_list += compat_html_list
@@ -1764,7 +1843,7 @@ def untarFile(file):
 def checkBinaryName(binary):
     global make_flag
     import LbConfiguration.Platform
-    if binary != ' ':
+    if binary:
         for b in LbConfiguration.Platform.binary_list:
             if b == binary:
                 os.environ['CMTCONFIG'] = binary
@@ -1773,7 +1852,7 @@ def checkBinaryName(binary):
                     os.environ['CMTDEB'] = LbConfiguration.Platform.getBinaryDbg(binary)
                 # if a win32 binary is installed from a non win32 platform then do not cmt config
                 if sys.platform != 'win32' and binary.find('win32') != 'win32':
-                    make_flag = ' '
+                    make_flag = None
                 break
         else:
             print ' this binary %s is not part of LHCb distribution '% binary
@@ -1796,9 +1875,9 @@ def main():
     global setup_script, check_only, overwrite_mode
     global _retry_time, fix_perm
 # get arguments
-    pname =' '
-    pversion = ' '
-    binary = ' '
+    pname = None
+    pversion = None
+    binary = None
 
     arguments = sys.argv[1:]
     if len(sys.argv) == 1:
@@ -1807,7 +1886,7 @@ def main():
     try:
         keys, values = getopt.getopt(arguments,'hdflrbp:v:c:ng:s:',
             ['help','debug','full','list','remove','binary=',
-             'project=','version=','cmtversion=','nocheck',
+             'project=','cmtversion=','nocheck',
              'retry=','grid=','setup-script=','check', 'overwrite',
              'compatversion=', 'retrytime=', 'nofixperm', 'version'])
 
@@ -1833,7 +1912,7 @@ def main():
             cmtversion = value
         if key == '--compatversion':
             compat_version = value
-        if key in ( '-v', '--version'):
+        if key in ( '-v'):
             pversion = value
         if key in ('-p', '--project'):
             pname = value
@@ -1887,10 +1966,6 @@ def main():
 
     if not check_only and fix_perm:
         changePermissions('install_project.py', recursive=False)
-
-# check pversion
-    if pversion == ' ' and pname != 'LHCbGrid':
-        list_flag = True
 
     initRandSeed()
     lognm = createBaseDirs(pname, pversion)

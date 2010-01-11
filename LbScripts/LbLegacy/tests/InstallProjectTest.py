@@ -1,5 +1,5 @@
 from LbLegacy.install_project import getProjectVersions, listVersions, getVersionList
-from LbLegacy.install_project import getFile, script_version
+from LbLegacy.install_project import getFile, script_version, getLatestVersion
 from pprint import pprint
 import unittest
 import os
@@ -18,6 +18,12 @@ class InstallProjectTestCase(unittest.TestCase):
         
     def testVersionsList(self):
         pprint(getVersionList("DecFiles"))
+        self.assertEqual(getVersionList("DecFiles", "v20r0")[0],"DBASE_Gen_DecFiles_v20r0.tar.gz")
+
+    def testGetProjectVersions(self):
+        pprint(getProjectVersions("LbScripts"))
+        print getLatestVersion("Compat")
+
         
     def testSelfVersion(self):
         new_install = os.path.join(os.environ["LBLEGACYROOT"], 
