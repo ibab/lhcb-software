@@ -3,6 +3,7 @@
 ! Responsible : Plamen Hopchev
 ! Purpose     : Decision algorithms for the two HLT beam-gas alleys
 !-----------------------------------------------------------------------------
+!========================== HltBeamGasAlley v2r2p3 2010-01-11 =================
 ! 2009-12-23 Gerhard Raven
  - move #include around to facilitate HltBase/stringKey -> GaudiKernel/StringKey migration 
 
