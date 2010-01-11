@@ -1,5 +1,6 @@
 <lcgdict>
   <class name="Gaudi::RootRef"/>
   <class name="Gaudi::ObjectRefs"/>
+  <class name="Gaudi::RootNTupleDescriptor"/>
   <class name="std::vector<Gaudi::RootRef>"/>
 </lcgdict>

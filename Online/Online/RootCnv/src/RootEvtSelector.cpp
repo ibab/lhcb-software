@@ -1,132 +1,306 @@
-#if 0
-// $Id: RootEvtSelector.cpp,v 1.1 2009-12-15 15:37:25 frankb Exp $
+// $Id: RootEvtSelector.cpp,v 1.2 2010-01-11 17:13:39 frankb Exp $
 //====================================================================
-//	SerializeSelector.cpp
+//	RootSelector.cpp
 //--------------------------------------------------------------------
 //
-//	Package    : Serialize
+//	Package    : RootCnv
 //
 //	Author     : M.Frank
-//	Author		 : A. Puig
 //====================================================================
 
 // Include files
-#include "MDF/MDFIO.h"
-#include "MDF/MDFHeader.h"
-#include "MDF/RawDataAddress.h"
-#include "MDF/RawDataSelector.h"
-#include "GaudiSerialize/SerializeCnvSvc.h"
+#include "RootEvtSelector.h"
+#include <vector>
+class TBranch;
 
-/*
- *  LHCb namespace declaration
- */
-namespace LHCb  {
-
-  /** @class SerializeContext
-  *
-  *  @author  M.Frank
-  *  @version 1.0
-  */
-  class SerializeContext : public RawDataSelector::LoopContext, protected MDFIO {
-    StreamBuffer              m_buff;
-    StreamDescriptor::Access  m_accessDsc;
+namespace Gaudi {
+  /** @class RootContext
+   *
+   *  @author  M.Frank
+   *  @version 1.0
+   */
+  class RootContext : public IEvtSelector::Context {
+  public:
+    typedef std::vector<std::string> Files;
+  private:
+    const RootEvtSelector*        m_sel;
+    Files                         m_files;
+    Files::const_iterator         m_fiter;
+    long                          m_entry;
+    TBranch*                      m_branch;
   public:
     /// Standard constructor
-    SerializeContext(const RawDataSelector* sel,bool ignoreChcksum) 
-    : RawDataSelector::LoopContext(sel),MDFIO(MDFIO::MDF_RECORDS,sel->name())
-    { setIgnoreChecksum(ignoreChcksum);                        }
-    /// Standard destructor 
-    virtual ~SerializeContext()                                    { }
-    /// Allocate buffer space for reading data
-    std::pair<char*,int> getDataSpace(void* const /* ioDesc */, size_t len)  {
-      m_buff.reserve(len);
-      return std::pair<char*,int>(m_buff.data(),m_buff.size());
-    }
-    /// Read raw byte buffer from input stream
-    StatusCode readBuffer(void* const ioDesc, void* const data, size_t len)  {
-      StreamDescriptor::Access* ent = (StreamDescriptor::Access*)ioDesc;
-      if ( ent && ent->ioDesc > 0 ) {
-        if ( StreamDescriptor::read(*ent,data,len) )  {
-          return StatusCode::SUCCESS;
-        }
-      }
-      return StatusCode::FAILURE;
-    }
-    /// Receive event and update communication structure
-    virtual StatusCode receiveData(IMessageSvc* msg)  {
-      m_fileOffset = StreamDescriptor::seek(m_accessDsc,0,SEEK_CUR);
-      setupMDFIO(msg,0);
-      m_data = readBanks(&m_accessDsc, 0 == m_fileOffset);
-      if ( m_data.second > 0 )  {
-        return StatusCode::SUCCESS;
-      }
-      return StatusCode::FAILURE;
-    }
-    /// Receive event and update communication structure
-    virtual StatusCode skipEvents(IMessageSvc* msg, int numEvt)  {
-      StatusCode sc = StatusCode::SUCCESS;
-      setupMDFIO(msg,0);
-      for(int i=0; i<numEvt; ++i)  {
-        sc = skipRecord();
-        if ( !sc.isSuccess() ) break;
-      }
-      return sc;
-    }
-    StatusCode skipRecord()  {
-      MDFHeader h;
-      StatusCode sc = readBuffer(&m_accessDsc, &h, 3*sizeof(int));
-      if ( sc.isSuccess() )  {
-        int len = h.recordSize()-3*sizeof(int);
-        m_fileOffset = StreamDescriptor::seek(m_accessDsc,len,SEEK_CUR);
-        if ( m_fileOffset == -1 ) sc = StatusCode::FAILURE;
-      }
-      return sc;
-    }
-  };
-
-  /** @class SerializeSelector
-    */
-  class SerializeSelector : public RawDataSelector  {
-  protected:
-    /// Flags to ignore checksum
-    std::string m_ignoreChecksum;
-
-  public:
-    /** Create a new event loop context
-      * @param[in,out] refpCtxt   Reference to pointer to store the context
-      * 
-      * @return StatusCode indicating success or failure
-      */
-    virtual StatusCode createContext(Context*& refpCtxt) const {
-      char c = m_ignoreChecksum[0];
-      refpCtxt = new SerializeContext(this,c=='y'||c=='Y');
-      return StatusCode::SUCCESS;
-    }
-    /// Service Constructor
-    SerializeSelector( const std::string& nam, ISvcLocator* svcloc )
-    : RawDataSelector( nam, svcloc)  {
-      declareProperty("IgnoreChecksum",m_ignoreChecksum="NO");
-    }
+    RootContext(const RootEvtSelector* s) : m_sel(s), m_entry(-1), m_branch(0){}
     /// Standard destructor
-    virtual ~SerializeSelector()  {}
-    StatusCode createAddress(const Context& ctxt, IOpaqueAddress*& pAddr) const {
-      const LoopContext* pctxt = dynamic_cast<const LoopContext*>(&ctxt);
-      if ( pctxt )   {
-	if ( pctxt->data().second > 0 )  {
-	  RawDataAddress* pA = new RawDataAddress(SERIALIZE_StorageType,m_rootCLID,pctxt->specs(),"0",0,0);
-	  pA->setType(RawDataAddress::DATA_TYPE);
-	  pA->setFileOffset(pctxt->offset());
-	  pA->setData(pctxt->data());
-	  pAddr = pA;
-	  return StatusCode::SUCCESS;
-	}
-      }
-      pAddr = 0;
-      return StatusCode::FAILURE;
+    virtual ~RootContext()                           {                        }
+    const Files& files() const                       { return m_files;        }
+    void setFiles(const Files& f)                    { 
+      m_files = f; 
+      m_fiter=m_files.begin();
     }
+    virtual void* identifier() const                 { return (void*)m_sel;   }
+    Files::const_iterator fileIterator() const       { return m_fiter;        }
+    void setFileIterator(Files::const_iterator i)    { m_fiter = i;           }
+    long entry() const                               { return m_entry;        }
+    void setEntry(long e)                            { m_entry = e;           }
+    TBranch* branch() const                          { return m_branch;       }
+    void setBranch(TBranch* b)                       { m_branch = b;          }
   };
 }
 
+#include "GaudiKernel/ClassID.h"
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/SvcFactory.h"
+#include "GaudiKernel/Tokenizer.h"
+#include "GaudiKernel/GenericAddress.h"
+#include "GaudiKernel/IDataManagerSvc.h"
+#include "GaudiKernel/ISvcLocator.h"
+#include "RootCnvSvc.h"
+#include "RootDataConnection.h"
+#include "TBranch.h"
+
+using namespace Gaudi;
+using namespace std;
+
+
+RootEvtSelector::RootEvtSelector(const string& name,ISvcLocator* svcloc )
+: base_class(name, svcloc), m_rootCLID(CLID_NULL)
+{
+  declareProperty("DbType",  m_cnvSvcName="RootCnvSvc");
+}
+
+StatusCode RootEvtSelector::error(const string& msg) const   {
+  MsgStream log(msgSvc(), name());
+  log << MSG::ERROR << msg << endmsg;
+  return StatusCode::FAILURE;
+}
+
+/// IService implementation: Db event selector override
+StatusCode RootEvtSelector::initialize()    {
+  // Initialize base class
+  StatusCode status = Service::initialize();
+  if ( !status.isSuccess() ) {
+    return error("Error initializing base class Service!");
+  }
+  // Retrieve conversion service handling event iteration
+  SmartIF<IConversionSvc> cnv(serviceLocator()->service(m_cnvSvcName));
+  m_dbMgr = dynamic_cast<RootCnvSvc*>(cnv.get());
+  if( !m_dbMgr ) {
+    return error("Unable to localize service:"+m_cnvSvcName);
+  }
+  m_dbMgr->addRef();
+  // Get DataSvc
+  SmartIF<IDataManagerSvc> eds(serviceLocator()->service("EventDataSvc"));
+  if( !eds.isValid() ) {
+    return error("Unable to localize service EventDataSvc");
+  }
+  m_rootCLID = eds->rootCLID();
+  m_rootName = eds->rootName();
+  MsgStream log(msgSvc(), name());
+  log << MSG::DEBUG << "Selection root:" << m_rootName << " CLID:" << m_rootCLID << endmsg;
+  return status;
+}
+
+/// IService implementation: Service finalization
+StatusCode RootEvtSelector::finalize()    {
+  // Initialize base class
+  if ( m_dbMgr ) m_dbMgr->release();
+  m_dbMgr = 0; // release
+  return Service::finalize();
+}
+
+StatusCode RootEvtSelector::createContext(Context*& refpCtxt) const  {
+  refpCtxt = new RootContext(this);
+  return StatusCode::SUCCESS;
+}
+
+/// Access last item in the iteration
+StatusCode RootEvtSelector::last(Context& /*refContext*/) const  {
+  return StatusCode::FAILURE;
+}
+
+StatusCode RootEvtSelector::next(Context& ctxt) const  {
+  RootContext* pCtxt = dynamic_cast<RootContext*>(&ctxt);
+  if ( pCtxt ) {
+    TBranch* b = pCtxt->branch();
+    if ( !b ) {
+      RootContext::Files::const_iterator fileit = pCtxt->fileIterator();
+      pCtxt->setBranch(0);
+      pCtxt->setEntry(-1);
+      if ( fileit != pCtxt->files().end() ) {
+	RootDataConnection* con=0;
+        string input = *fileit;
+	StatusCode sc=m_dbMgr->connectDatabase(input,IDataConnection::READ,&con);
+	if ( sc.isSuccess() ) {
+	  b = con->getBranch(m_dbMgr->section(),m_rootName);
+	  if ( b ) {
+	    pCtxt->setBranch(b);
+	    return next(ctxt);
+	  }
+	}
+	m_dbMgr->disconnect(input).ignore();
+	pCtxt->setFileIterator(++fileit);
+	return next(ctxt);
+      }
+      return StatusCode::FAILURE;
+    }
+    long ent = pCtxt->entry();
+    Long64_t nent = b->GetEntries();
+    if ( nent > (ent+1) ) {
+      pCtxt->setEntry(++ent);
+      return StatusCode::SUCCESS;
+    }
+    RootContext::Files::const_iterator fit = pCtxt->fileIterator();
+    pCtxt->setFileIterator(++fit);
+    pCtxt->setEntry(-1);
+    pCtxt->setBranch(0);
+    return next(ctxt);
+  }
+  return StatusCode::FAILURE;
+}
+
+StatusCode RootEvtSelector::next(Context& ctxt,int jump) const  {
+  if ( jump > 0 ) {
+    for ( int i = 0; i < jump; ++i ) {
+      StatusCode status = next(ctxt);
+      if ( !status.isSuccess() ) {
+        return status;
+      }
+    }
+    return StatusCode::SUCCESS;
+  }
+  return StatusCode::FAILURE;
+}
+
+StatusCode RootEvtSelector::previous(Context& /* ctxt */) const   {
+  return error("EventSelector Iterator, operator -- not supported ");
+}
+
+StatusCode RootEvtSelector::previous(Context& ctxt, int jump) const  {
+  if ( jump > 0 ) {
+    for ( int i = 0; i < jump; ++i ) {
+      StatusCode status = previous(ctxt);
+      if ( !status.isSuccess() ) {
+        return status;
+      }
+    }
+    return StatusCode::SUCCESS;
+  }
+  return StatusCode::FAILURE;
+}
+
+StatusCode RootEvtSelector::rewind(Context& ctxt) const   {
+  RootContext* pCtxt = dynamic_cast<RootContext*>(&ctxt);
+  if ( pCtxt ) {
+    RootContext::Files::const_iterator fileit = pCtxt->fileIterator();
+    if ( fileit != pCtxt->files().end() ) {
+      string input = *fileit;
+      m_dbMgr->disconnect(input).ignore();
+    }
+    pCtxt->setEntry(-1);
+    pCtxt->setBranch(0);
+    pCtxt->setFileIterator(pCtxt->files().begin());
+    return StatusCode::SUCCESS;
+  }
+  return StatusCode::FAILURE;
+}
+
+StatusCode
+RootEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr) const  {
+  const RootContext* pctxt = dynamic_cast<const RootContext*>(&ctxt);
+  if ( pctxt ) {
+    long ent = pctxt->entry();
+    if ( ent >= 0 )  {
+      RootContext::Files::const_iterator fileit = pctxt->fileIterator();
+      if ( fileit != pctxt->files().end() ) {
+	const std::string par[2] = {*fileit, m_rootName};
+	const unsigned long ipar[2] = {0,ent};
+	return m_dbMgr->createAddress(ROOT_StorageType,m_rootCLID,&par[0],&ipar[0],pAddr);
+      }
+    }
+  }
+  pAddr = 0;
+  return StatusCode::FAILURE;
+}
+
+StatusCode RootEvtSelector::releaseContext(Context*& ctxt) const   {
+  RootContext* pCtxt = dynamic_cast<RootContext*>(ctxt);
+  if ( pCtxt ) {
+    delete pCtxt;
+    return StatusCode::SUCCESS;
+  }
+  return StatusCode::FAILURE;
+}
+
+StatusCode
+RootEvtSelector::resetCriteria(const string& criteria, Context& context)  const
+{
+  MsgStream log(msgSvc(), name());
+  RootContext* ctxt = dynamic_cast<RootContext*>(&context);
+  string db, typ, item, sel, stmt, aut, addr;
+  if ( ctxt )  {
+    if ( criteria.substr(0,5) == "FILE " )  {
+      // The format for the criteria is:
+      //        FILE  filename1, filename2 ...
+      db = criteria.substr(5);
+    }
+    else  {
+      Tokenizer tok(true);
+      tok.analyse(criteria," ","","","=","'","'");
+      for(Tokenizer::Items::iterator i=tok.items().begin(); i!=tok.items().end();i++) {
+        string tmp = (*i).tag().substr(0,3);
+        if(tmp=="DAT")  {
+          db = (*i).value();
+        }
+        if(tmp=="OPT")   {
+          if((*i).value() != "REA")   {
+            log << MSG::ERROR << "Option:\"" << (*i).value() << "\" not valid" << endmsg;
+            return StatusCode::FAILURE;
+          }
+        }
+        if (tmp=="TYP") {
+          typ = (*i).value();
+        }
+        if(tmp=="ADD")  {
+          item = (*i).value();
+        }
+        if(tmp=="SEL")  {
+          sel = (*i).value();
+        }
+        if(tmp=="FUN")  {
+          stmt = (*i).value();
+        }
+        if(tmp=="AUT")  {
+          aut = (*i).value();
+        }
+        if(tmp=="COL")  {
+          addr = (*i).value();
+        }
+      }
+    }
+    // It's now time to parse the criteria for the event selection
+    // The format for the criteria is:
+    //        FILE  filename1, filename2 ...
+    //        JOBID number1-number2, number3, ...
+    RootContext::Files files;
+    string rest = db;
+    files.clear();
+    while(true)  {
+      int ipos = rest.find_first_not_of(" ,");
+      if (ipos == -1 ) break;
+      rest = rest.substr(ipos,string::npos);// remove blanks before
+      int lpos  = rest.find_first_of(" ,");       // locate next blank
+      files.push_back(rest.substr(0,lpos )); // insert in list
+      if (lpos == -1 ) break;
+      rest = rest.substr(lpos,string::npos);// get the rest
+    }
+    ctxt->setFiles(files);
+    ctxt->setFileIterator(ctxt->files().begin());
+    return StatusCode::SUCCESS;
+  }
+  return error("Invalid iteration context.");
+}
+
+
 #include "GaudiKernel/DeclareFactoryEntries.h"
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,SerializeSelector);
-#endif
+DECLARE_NAMESPACE_SERVICE_FACTORY(Gaudi,RootEvtSelector);

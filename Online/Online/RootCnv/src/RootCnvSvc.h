@@ -1,13 +1,13 @@
-// $Id: RootTreeCnvSvc.h,v 1.2 2009-12-16 16:43:47 frankb Exp $
+// $Id: RootCnvSvc.h,v 1.1 2010-01-11 17:14:49 frankb Exp $
 //====================================================================
-//	RootTreeCnvSvc definition
+//	RootCnvSvc definition
 //--------------------------------------------------------------------
 //
 //	Author     : M.Frank
 //====================================================================
 #ifndef GAUDIROOT_GAUDIROOTCNVSVC_H
 #define GAUDIROOT_GAUDIROOTCNVSVC_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootTreeCnvSvc.h,v 1.2 2009-12-16 16:43:47 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootCnvSvc.h,v 1.1 2010-01-11 17:14:49 frankb Exp $
 
 // Framework include files
 #include "GaudiKernel/ConversionSvc.h"
@@ -20,23 +20,23 @@ class IIncidentSvc;
 class TClass;
 
 namespace Gaudi {
-  class IIODataManagerSvc;
+  class IIODataManager;
   class IDataConnection;
   class RootDataConnection;
 }
 
 namespace Gaudi {
-  /** @class RootTreeCnvSvc RootTreeCnvSvc.h src/RootTreeCnvSvc.h
+  /** @class RootCnvSvc RootCnvSvc.h src/RootCnvSvc.h
    *
    * Description:
    * 
-   * RootTreeCnvSvc class implementation definition.
+   * RootCnvSvc class implementation definition.
    *
    *  @author  Markus Frank
    *  @version 1.0
    *  @date    20/12/2009
    */
-  class RootTreeCnvSvc : public ConversionSvc  {
+  class RootCnvSvc : public ConversionSvc  {
   protected:
     typedef std::vector<DataObject*> Objects;
     /// Services needed for proper operation: Data Manager
@@ -51,20 +51,22 @@ namespace Gaudi {
     bool                        m_incidentEnabled;
     /// Share files ? If set to YES, files will not be closed on finalize
     std::string                 m_shareFiles;
+    std::string                 m_section;
     /// Objects to be saved to data file
     Objects                     m_objects;
 
     TClass*                     m_classRefs;
     TClass*                     m_classDO;
+    int                         m_refTypes;
 
     TClass* getClass(DataObject* pObject);
 
   public:
     /// Standard constructor
-    RootTreeCnvSvc(const std::string& name, ISvcLocator* svc);
+    RootCnvSvc(const std::string& name, ISvcLocator* svc);
 
     /// Standard destructor
-    virtual ~RootTreeCnvSvc() {}
+    virtual ~RootCnvSvc() {}
 
     /// Update state of the service
     virtual StatusCode updateServiceState(IOpaqueAddress* /* pAddress */) 
@@ -87,6 +89,8 @@ namespace Gaudi {
     StatusCode connectDatabase(const std::string& dataset, int mode, RootDataConnection** con);
 
   public:
+    const std::string& section() const { return m_section; }
+
     /// ConversionSvc overload: initialize Db service
     virtual StatusCode initialize();
 
@@ -151,16 +155,16 @@ namespace Gaudi {
 				      IOpaqueAddress*&     refpAddress);
   
     /// Mark an object for write given an object reference
-    virtual StatusCode createRep(DataObject* pObj, IOpaqueAddress*& refpAddr);
+    virtual StatusCode i__createRep(DataObject* pObj, IOpaqueAddress*& refpAddr);
 
     /// Resolve the references of the converted object.
-    virtual StatusCode fillRepRefs(IOpaqueAddress* pAddress,DataObject* pObject);
+    virtual StatusCode i__fillRepRefs(IOpaqueAddress* pAddress,DataObject* pObject);
 
     /// Read existing object. Open transaction in read mode if not active
-    virtual StatusCode createObj(IOpaqueAddress* pA, DataObject*& refpObj);
+    virtual StatusCode i__createObj(IOpaqueAddress* pA, DataObject*& refpObj);
 
     /// Resolve the references of the created transient object.
-    virtual StatusCode fillObjRefs(IOpaqueAddress* pAddress, DataObject* pObject);
+    virtual StatusCode i__fillObjRefs(IOpaqueAddress* pAddress, DataObject* pObject);
 
   };
 }

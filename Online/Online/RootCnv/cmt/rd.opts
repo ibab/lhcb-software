@@ -1,44 +1,15 @@
-// $Id: rd.opts,v 1.1 2009-12-16 17:20:42 frankb Exp $ 
-// ============================================================================
-/////////////////////////////////////////////////////////////////////
-// Read a DST, distinguishing between events and file summary records
-/////////////////////////////////////////////////////////////////////
-
-ApplicationMgr.TopAlg = { "GaudiSequencer/EventAlgs", 
-                          "GaudiSequencer/FSRAlgs" };
-EventAlgs.Members = { "ReadAlg" };
-EventAlgs.VetoObjects = {"FSR"};
-ReadAlg.OutputLevel  = 1;
-
-FSRAlgs.Members = { "ReadTES" };
-FSRAlgs.RequireObjects = {"FSR"};
-ReadTES.Locations = {"FSR"};
-
+ApplicationMgr.TopAlg      = { "ReadAlg" };
+ReadAlg.OutputLevel        = 1;
 ApplicationMgr.HistogramPersistency = "NONE";
-// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 ApplicationMgr.EvtMax      = -1;
 EventSelector.OutputLevel  = 2;
+MessageSvc.OutputLevel = 3;
 EventSelector.PrintFreq    = 50;
 EventSelector.FirstEvent   = 1;
-//--------------------------------------------------------------
-//
-//  Setup for ROOT I/O System
-//
-#include "GaudiPoolDbRoot.opts"
-PoolDbCacheSvc.OutputLevel = 4;
-ChronoStatSvc.OutputLevel = 4;
-ToolSvc.SequencerTimerTool.OutputLevel = 4;
-//--------------------------------------------------------------
-// Input File
-//--------------------------------------------------------------
-EventSelector.Input  = { "DATAFILE='PFN:POOLIO.dst'  TYP='POOL_ROOT' OPT='READ'" };
-EventSelector.Input += { "DATAFILE='PFN:POOLIO.mdst' TYP='POOL_ROOT' OPT='READ'" };
-
-FileCatalog.Catalogs += { "xmlcatalog_file:POOLIO.xml" } ;
-
-ApplicationMgr.ExtSvc += { "FileRecordDataSvc" };
-FileRecordDataSvc.IncidentName = "NEW_FILE_RECORD";
-ReadAlg.IncidentName = @FileRecordDataSvc.IncidentName;
-// ============================================================================
-// The END 
-// ============================================================================
+EventSelector.Input        = {"DATAFILE='PFN:data.root' SVC='Gaudi::RootEvtSelector' TYP='RootCnvSvc'"};
+FileCatalog.Catalogs       = { "xmlcatalog_file:test.xml" } ;
+EventPersistencySvc.CnvServices = { "RootCnvSvc" };
+ApplicationMgr.ExtSvc      = { "Gaudi::MultiFileCatalog/FileCatalog", 
+                               "Gaudi::IODataManager/IODataManager",
+                               "Gaudi::RootCnvSvc/RootCnvSvc"
+			     };

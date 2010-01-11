@@ -1,4 +1,4 @@
-// $Id: IOHandler.cpp,v 1.1 2009-12-16 17:20:42 frankb Exp $
+// $Id: IOHandler.cpp,v 1.2 2010-01-11 17:13:39 frankb Exp $
 //====================================================================
 //
 //	Package    : System (The POOL project)
@@ -54,12 +54,6 @@ public:
 namespace ROOT { namespace Cintex  {
   bool IsTypeOf(Type& typ, const std::string& base_name);
 }}
-
-namespace pool  {
-  const std::string typeName(const std::type_info& typ);
-}
-
-
 static const DataObject* last_link_object = 0;
 static int               last_link_hint = -1;
 
@@ -70,16 +64,17 @@ void resetLastLink() {
 
 using Gaudi::getCurrentDataObject;
 
-void pushCurrentDataObject(DataObject** pobjAddr) {
-  Gaudi::pushCurrentDataObject(pobjAddr);
-  resetLastLink();
-}
+namespace GaudiRoot {
+  void pushCurrentDataObject(DataObject** pobjAddr) {
+    Gaudi::pushCurrentDataObject(pobjAddr);
+    resetLastLink();
+  }
 
-void popCurrentDataObject() {
-  Gaudi::popCurrentDataObject();
-  resetLastLink();
+  void popCurrentDataObject() {
+    Gaudi::popCurrentDataObject();
+    resetLastLink();
+  }
 }
-
 
 template <class T>
 void IOHandler<T>::operator()(TBuffer &b, void *obj)  {
@@ -232,14 +227,15 @@ template <class T> static bool makeStreamer(MsgStream& log)  {
   return false;
 }
 
-namespace Gaudi  {
+namespace GaudiRoot  {
   bool patchStreamers(MsgStream& s)  {
     static bool first = true;
     if ( first ) {
       first = false;
       gSystem->Load("libCintex");
-      //gInterpreter->EnableAutoLoading();
-      //gInterpreter->AutoLoad(cname.c_str());
+      gROOT->ProcessLine("#include <vector>");
+      gInterpreter->EnableAutoLoading();
+      gInterpreter->AutoLoad("DataObject");
       gROOT->ProcessLine("Cintex::Cintex::Enable()");    
 
       bool b2 = makeStreamer<SmartRefBase>(s);

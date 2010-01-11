@@ -1,15 +1,15 @@
-// $Id: RootConverter.h,v 1.1 2009-12-15 15:37:25 frankb Exp $
+// $Id: RootConverter.h,v 1.2 2010-01-11 17:13:39 frankb Exp $
 //====================================================================
 //	RootBaseCnv definition
 //
 //	Author     : M.Frank
 //====================================================================
-#ifndef GaudiRoot_RootConverter_H
-#define GaudiRoot_RootConverter_H
+#ifndef RootCnv_RootConverter_H
+#define RootCnv_RootConverter_H
 
 // Framework include files
 #include "GaudiKernel/Converter.h"
-#include "RootTreeCnvSvc.h"
+#include "RootCnvSvc.h"
 
 namespace Gaudi {
 
@@ -30,7 +30,7 @@ namespace Gaudi {
   class RootConverter : public Converter   {
   protected:
     /// Services needed for proper operation
-    RootTreeCnvSvc* m_dbMgr;
+    RootCnvSvc* m_dbMgr;
 
   public:
 
@@ -41,7 +41,7 @@ namespace Gaudi {
      *
      * @return Reference to RootConverter object
      */
-    RootConverter(long typ, const CLID& clid, ISvcLocator* svc, RootTreeCnvSvc* mgr)
+    RootConverter(long typ, const CLID& clid, ISvcLocator* svc, RootCnvSvc* mgr)
       : Converter(typ, clid, svc), m_dbMgr(mgr) {}
 
       /// Standard Destructor
@@ -58,12 +58,12 @@ namespace Gaudi {
        * @return Status code indicating success or failure.
        */
       virtual StatusCode createObj(IOpaqueAddress* pAddr, DataObject*& refpObj) {
-	return m_dbMgr->createObj(pAddr, refpObj);
+	return m_dbMgr->i__createObj(pAddr, refpObj);
       }
 
       /// Resolve the references of the created transient object.
       virtual StatusCode fillObjRefs(IOpaqueAddress* pAddr, DataObject* pObj) {
-	return m_dbMgr->fillObjRefs(pAddr, pObj);
+	return m_dbMgr->i__fillObjRefs(pAddr, pObj);
       }
 
       /** Converter overrides: Convert the transient object to the 
@@ -75,15 +75,15 @@ namespace Gaudi {
        * @return Status code indicating success or failure.
        */
       virtual StatusCode createRep(DataObject* pObj, IOpaqueAddress*& refpAddr) {
-	return m_dbMgr->createRep(pObj, refpAddr);
+	return m_dbMgr->i__createRep(pObj, refpAddr);
       }
 
       /// Resolve the references of the created transient object.
       virtual StatusCode fillRepRefs(IOpaqueAddress* pAddr, DataObject* pObj) {
-	return m_dbMgr->fillRepRefs(pAddr, pObj);
+	return m_dbMgr->i__fillRepRefs(pAddr, pObj);
       }
 
   };
 }
 
-#endif    // GaudiRoot_RootConverter_H
+#endif    // RootCnv_RootConverter_H

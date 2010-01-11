@@ -1,4 +1,4 @@
-// $Id: RootDataConnection.h,v 1.2 2009-12-15 19:28:11 frankb Exp $
+// $Id: RootDataConnection.h,v 1.3 2010-01-11 17:13:39 frankb Exp $
 #ifndef GAUDIROOT_ROOTDATACONNECTION_H
 #define GAUDIROOT_ROOTDATACONNECTION_H
 
@@ -9,6 +9,7 @@
 
 #include "TFile.h"
 // Forward declarations
+class TTree;
 class TClass;
 class TBranch;
 class DataObject;
@@ -36,8 +37,11 @@ namespace Gaudi  {
     StringMap  m_conts;
     StringMap  m_links;
     StringMap  m_paths;
-    struct DataSection {
-    };
+    std::string m_empty;
+
+    typedef std::map<std::string,TTree*> Sections;
+    Sections m_sections;
+    TTree   *m_refs;
     TBranch *m_dbBranch, *m_cntBranch, *m_lnkBranch, *m_pathBranch;
   public:
     /// Standard constructor
@@ -57,24 +61,38 @@ namespace Gaudi  {
     /// Release data stream
     virtual StatusCode disconnect();
     /// Read root byte buffer from input stream
-    virtual StatusCode read(void* const data, size_t len);
+    virtual StatusCode read(void* const, size_t)   { return StatusCode::FAILURE; }
     /// Write root byte buffer to output stream
-    virtual StatusCode write(const void* data, int len);
+    virtual StatusCode write(const void*, int)     { return StatusCode::FAILURE; }
     /// Seek on the file described by ioDesc. Arguments as in ::seek()
-    virtual long long int seek(long long int where, int origin);
+    virtual long long int seek(long long int, int) { return -1; }
 
     StatusCode readRefs();
     StatusCode saveRefs();
 
+    TTree* getSection(const std::string& sect, bool create=false);
+
     /// Access data branch by name
-    TBranch* getBranch(const std::string& n);
-    TBranch* getBranch(TClass* cl, const std::string& n);
+    TBranch* getBranch(const std::string& sect,const std::string& n);
+    TBranch* getBranch(const std::string& sect, const std::string& n, TClass* cl);
     void makeRef(IRegistry* pA, RootRef& ref);
     int makePath(const std::string& p);
-    const std::string& getPath(int which);
-    const std::string& getDb(int which);
-    const std::string& getCont(int which);
-    const std::string& getLink(int which);
+
+    const std::string& getPath(int which) const {
+      return (which>=0)&&(size_t(which)<m_paths.size()) ? *(m_paths.begin()+which) : m_empty;
+    }
+    
+    const std::string& getDb(int which) const {
+      return (which>=0)&&(size_t(which)<m_dbs.size()) ? *(m_dbs.begin()+which) : m_empty;
+    }
+    
+    const std::string& getCont(int which) const {
+      return (which>=0)&&(size_t(which)<m_conts.size()) ? *(m_conts.begin()+which) : m_empty;
+    }
+    
+    const std::string& getLink(int which) const {
+      return (which>=0)&&(size_t(which)<m_links.size()) ? *(m_links.begin()+which) : m_empty;
+    }
   };
 }         // End namespace Gaudi
 #endif    // GAUDIROOT_ROOTDATACONNECTION_H

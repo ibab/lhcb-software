@@ -5,7 +5,6 @@ version v0r1
 branches  cmt dict src
 
 use GaudiKernel v*
-use GaudiPoolDb v*
 use ROOT        v* LCG_Interfaces
 
 #===========================================================================
@@ -23,4 +22,7 @@ apply_pattern component_library library=RootCnv
 private
 use GaudiExamples v*
 set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
+macro_append cppflags " -O0 "
 
+macro_append ROOT_linkopts " -lCintex -lRIO -lMathCore " target-winxp " libCintex.lib libRIO.lib libMathCore.lib "
+macro_append ROOT_cppflags '' target-winxp '-FI"$(ROOTSYS)/include/w32pragma.h"'

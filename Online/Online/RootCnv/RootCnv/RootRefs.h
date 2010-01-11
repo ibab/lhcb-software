@@ -1,15 +1,34 @@
 #include <string>
+#include <vector>
 
 namespace Gaudi {
-  class RootRef {
-  public:
+  struct RootRef {
     int      dbase,container,link,clid,entry;
     unsigned char svc;
-    RootRef() {}
-    virtual ~RootRef() {}
+
+    RootRef() 
+      : dbase(0),container(0),link(0),clid(0),entry(-1), svc(0) 
+    {
+    }
+
+    RootRef(const RootRef& c) 
+      : dbase(c.dbase),container(c.container),link(c.link),clid(c.clid),entry(c.entry), svc(c.svc) 
+    {
+    }
+
+    RootRef& operator=(const RootRef& c)  {
+      dbase     = c.dbase;
+      container = c.container;
+      link      = c.link;
+      clid      = c.clid;
+      entry     = c.entry;
+      svc       = c.svc;
+      return *this;
+    }
   };
-  class ObjectRefs {
-  public:
+
+
+  struct ObjectRefs {
     std::vector<int>       links;
     std::vector<RootRef>   refs;
     ObjectRefs() {}
@@ -19,6 +38,8 @@ namespace Gaudi {
       refs = r.refs; 
       return *this;
     }
-    virtual ~ObjectRefs() {}
+    ~ObjectRefs() {}
   };
+
+
 }
