@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.90 2010-01-11 12:42:24 gligorov Exp $
+! $Id: release.notes,v 1.91 2010-01-11 14:24:13 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -10,6 +10,7 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v2r0 2010-01-11 ===================
 ! 2010-01-11 - V. Gligorov
  - python/Hlt1Lines/Hlt1HadronForSwimmingLines.py : fix naming clash with Hlt1HadronLines
 
