@@ -1,4 +1,4 @@
-// $Id: bankKiller.cpp,v 1.7 2009-04-14 12:12:35 cattanem Exp $
+// $Id: bankKiller.cpp,v 1.8 2010-01-11 17:01:42 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -47,14 +47,14 @@ StatusCode bankKiller::initialize() {
     
     for(std::vector< std::string >::iterator ityp = m_bankTypes.begin() ; 
 	ityp!= m_bankTypes.end() ; ++ ityp ){
-      info() << "bankKiller : all banks of type '" << *ityp << "' will be kept." <<endmsg;
+      always() << "bankKiller : all banks of type '" << *ityp << "' will be kept." <<endmsg;
     }
   } else {
     if(m_bankTypes.size() == 0)warning() << "bankKiller : nothing to be removed " << endmsg;
     
     for(std::vector< std::string >::iterator ityp = m_bankTypes.begin() ; 
 	ityp!= m_bankTypes.end() ; ++ ityp ){
-      info() << "bankKiller : all banks of type '" << *ityp << "' will be removed." <<endmsg;
+      always() << "bankKiller : all banks of type '" << *ityp << "' will be removed." <<endmsg;
     }
   }
 
