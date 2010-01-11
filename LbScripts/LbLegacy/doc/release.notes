@@ -1,5 +1,6 @@
 2010-01-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/mkLHCbtar: removed the usage of LHCb_config
 	* scripts/mkproject: removed the build of binary tarballs if the project has no
 	binary nature.
 	* python/LbLegacy/install_project.py: 

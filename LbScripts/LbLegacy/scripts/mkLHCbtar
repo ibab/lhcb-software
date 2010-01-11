@@ -38,7 +38,7 @@ from LbConfiguration.Platform import isBinaryDbg, getBinaryOpt
 
 script_version = '091013'
 
-from LbLegacy.LHCb_config import data_files
+from LbConfiguration.Package import package_names, getPackage
 
 LHCBTAR = os.getenv('LHCBTAR')
 HTMLDIR = os.path.join(LHCBTAR,'html')
@@ -171,8 +171,8 @@ def make_tar(pname, pversion, binary=''):
 # data files ( XmlDDDB, DecFiles, ParamFiles,...)
 # ===================================================================
 #
-    if data_files.has_key(pname):
-        tar_status = data_files_tar(pname,pversion)
+    if pname in package_names :
+        tar_status = data_files_tar(pname, pversion)
         return tar_status
 
 #
@@ -442,7 +442,8 @@ def make_tar(pname, pversion, binary=''):
 def data_files_tar(pname, pversion):
     global TARSRC
     
-    prefix = data_files[pname]
+    p = getPackage(pname)
+    prefix = p.project().upper()
     maindir = os.path.join(prefix.replace('_',os.sep),pversion)
     packver = prefix+'_'+pversion
 
