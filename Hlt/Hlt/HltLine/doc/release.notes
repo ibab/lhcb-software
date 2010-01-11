@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.69 2010-01-08 12:35:41 gligorov Exp $
+! $Id: release.notes,v 1.70 2010-01-11 13:48:47 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+!========================== HltLine v2r1 2010-01-11 ===================
 ! 2009-01-08 - V. Gligorov
  - python/HltLine.py : add MoveVerticesForSwimming and SelectTracksForSwimming
    to the list of allowed Hlt1Members
