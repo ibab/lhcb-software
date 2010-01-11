@@ -1,10 +1,10 @@
-// $Id: PatPV2DFit3D.h,v 1.4 2009-12-18 19:37:37 graven Exp $
+// $Id: PatPV2DFit3D.h,v 1.5 2010-01-11 10:10:48 witekma Exp $
 #ifndef PATPV2DFIT3D_H
 #define PATPV2DFIT3D_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/GaudiHistoAlg.h"
 #include "IPVSeeding.h"
 
 #include "Event/Track.h"
@@ -18,7 +18,7 @@
  *  @author Olivier Callot
  *  @date   2005-06-22
  */
-class PatPV2DFit3D : public GaudiAlgorithm {
+class PatPV2DFit3D : public GaudiHistoAlg {
 public:
   /// Standard constructor
   PatPV2DFit3D( const std::string& name, ISvcLocator* pSvcLocator );

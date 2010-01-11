@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 
+! 2010-01-11 - Mariusz Witek
+ - make PatPV2DFit3D as GaudiHistoAlg and add histograms for PV monitoring
+
 ! 2009-12-22 - Gerhard Raven
  - remove unused reference to DeVelo
 

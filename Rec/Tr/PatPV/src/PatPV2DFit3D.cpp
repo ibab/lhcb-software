@@ -1,4 +1,4 @@
-// $Id: PatPV2DFit3D.cpp,v 1.3 2009-12-18 19:37:37 graven Exp $
+// $Id: PatPV2DFit3D.cpp,v 1.4 2010-01-11 10:10:48 witekma Exp $
 // Include files
 
 // from Gaudi
@@ -30,7 +30,7 @@ DECLARE_ALGORITHM_FACTORY( PatPV2DFit3D );
 //=============================================================================
 PatPV2DFit3D::PatPV2DFit3D( const std::string& name,
                   ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiHistoAlg ( name , pSvcLocator )
 {
   declareProperty( "maxNumPv"        , m_maxNumPv      = 10             );
   declareProperty( "maxIter"         , m_maxIter       =  3             );
@@ -51,8 +51,8 @@ PatPV2DFit3D::~PatPV2DFit3D() {};
 // Initialization
 //=============================================================================
 StatusCode PatPV2DFit3D::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiHistoAlg
 
   debug() << "==> Initialize" << endmsg;
 
@@ -219,6 +219,17 @@ StatusCode PatPV2DFit3D::execute() {
      }
   }
 
+  if( produceHistos() ){
+     for(std::vector<LHCb::RecVertex>::iterator iv = rvts.begin(); iv != rvts.end(); iv++) {
+       double xv = iv->position().x();
+       double yv = iv->position().y();
+       double zv = iv->position().z();
+       double rv = std::sqrt(xv*xv+yv*yv);
+       plot1D(zv,"PV2DFit3DVertexZPosition", -200,200,200);
+       plot1D(rv,"PV2DFit3DVertexTransversePosition", 0,1,200);       
+     }
+  }
+
   setFilterPassed(!rvts.empty());
 
   return StatusCode::SUCCESS;
@@ -248,7 +259,7 @@ StatusCode PatPV2DFit3D::finalize() {
   }
   debug() << "==> Finalize" << endmsg;
 
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  return GaudiHistoAlg::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
