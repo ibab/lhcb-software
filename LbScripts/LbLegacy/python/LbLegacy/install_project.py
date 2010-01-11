@@ -1058,8 +1058,7 @@ def getMySelf():
     getFile(url_dist,'install_project.py')
     if fix_perm :
         changePermissions('latest_install_project.py', recursive=False)
-    latest_line = readString(new_install,'script_version')
-    latest_version = latest_line.split("'")[1]
+    latest_version = os.popen("python %s --version" % new_install).read()[:-1]
     if script_version < latest_version :
         log.warning("You are running an old version of this script - latest version: %s" % latest_version)
         log.warning("Restarting with the latest one")
@@ -1162,7 +1161,11 @@ def listVersions(pname):
     for l in getVersionList(pname) :
         log.info(l)
 
-def getProjectVersions(project, cmt_config=None):
+def getProjectVersions(pname, cmt_config=None):
+    from LbConfiguration.Package import package_names
+    if pname in package_names :
+        pass
+    
     if not cmt_config :
         cmt_config = os.environ.get("CMTCONFIG", None)
 
@@ -1806,13 +1809,16 @@ def main():
             ['help','debug','full','list','remove','binary=',
              'project=','version=','cmtversion=','nocheck',
              'retry=','grid=','setup-script=','check', 'overwrite',
-             'compatversion=', 'retrytime=', 'nofixperm'])
+             'compatversion=', 'retrytime=', 'nofixperm', 'version'])
 
     except getopt.GetoptError:
         help()
         sys.exit()
 
     for key,value in keys:
+        if key in ('--version'):
+            print script_version
+            sys.exit()
         if key in ('-d', '--debug'):
             debug_flag = True
         if key in ('-f', '--full'):

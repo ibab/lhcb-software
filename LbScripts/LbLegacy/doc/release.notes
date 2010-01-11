@@ -6,6 +6,7 @@
 	* python/LbLegacy/install_project.py: 
 	- cleaned up a lot of messages.
 	- added the explicit listing of data packages.
+	- fixed the detection of the latest version of the script.
 
 2010-01-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
