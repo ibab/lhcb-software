@@ -4,6 +4,7 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+!========================== HltLuminosity v2r14 2010-01-11 ===================
 ! 2009-12-24 - Gerhard Raven
  - migrate from IHltDataSvc to Hlt::IDataSvc  and Hlt::IRegisterSvc
 
