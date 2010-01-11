@@ -5,6 +5,15 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v8r2>2010-01-11 HltSys v8r2</A></H1><PRE>
+ - migrate IHltDataSvc -> Hlt::IDataSvc, HltBase/stringKey -> GaudiKernel/StringKey
+ - added functionality in routing bits defintions: can now rate-limit and
+   pick up fractions of decisions.
+ - update cached values of B-field, velo position when needed
+ - monitoring updates
+ - add dispatching ANN service 
+    
+
 </PRE><H1><A NAME=v8r1>2009-12-11 HltSys v8r1</A></H1><PRE>
  Production release on  v28r5 with minor changes
  - Major update of TisTosTobbing
