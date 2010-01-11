@@ -476,9 +476,9 @@ def getHlt1Decisions( id , cas = ConfigAccessSvc() ) :
 
 
 def printConfigurations( info ) :
-    print 'hello world'
-    for i in info.itervalues() : print i.info
-    print 'goodbye world'
+    #print 'hello world'
+    #for i in info.itervalues() : print i.info
+    #print 'goodbye world'
     for release in sorted(set( [ i['release'] for i in info.itervalues()  ] )) : 
         print release
         confInRelease = [ i for i in info.itervalues() if i['release']==release ]

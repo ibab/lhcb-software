@@ -5,6 +5,10 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+!========================== TCKUtils v1r5p2 2010-01-11 ===================
+! 2010-01-11 - Gerhard Raven
+ - fix spurious printout
+
 !========================== TCKUtils v1r5p1 2009-11-05 ===================
 ! 2009-11-05 - Gerhard Raven
  - fix printing of configurations without TCK
