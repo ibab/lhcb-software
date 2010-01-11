@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.47 2010-01-07 14:15:34 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.48 2010-01-11 13:43:25 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -301,6 +301,8 @@ void HltGlobalMonitor::monitorMemory() {
   double t = log10(elapsedTime)-3; // convert to log(time/ms)
   fill( m_hltTime, t ,1.0); 
   storeTrend(m_hltEventsTime, elapsedTime/1000 );
+
+  //TODO: only need to do this once 'per bin'  interval...
   m_virtmem  = virtualMemory(System::MByte, System::Memory);
   storeTrend(m_hltVirtTime, double(m_virtmem));
 
