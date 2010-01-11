@@ -2,6 +2,7 @@ project HLT
 
 use LHCB  LHCB_v28r5
 
+container      HltSys
 build_strategy with_installarea
 setup_strategy root
 
