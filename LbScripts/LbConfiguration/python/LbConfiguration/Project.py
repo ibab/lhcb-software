@@ -9,12 +9,12 @@ import os
 
 # ------------------------------------------------------------------------------------
 # list of original project names
-project_names = ["Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" , 
+project_names = ["Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" ,
                  "Gauss", "Phys", "Analysis", "Hlt", "Alignment", "Moore",
                  "Online", "Euler", "Geant4", "DaVinci", "Bender", "Orwell",
-                 "Panoramix", "LbScripts", "Dirac", "LHCbGrid", "Panoptes", 
+                 "Panoramix", "LbScripts", "Dirac", "LHCbGrid", "Panoptes",
                  "Curie", "Vetra", "Compat", "VanDerMeer", "Ganga",
-                 "LHCbDIRAC", "Integration" ]
+                 "LHCbDirac", "Integration" ]
 
 # ------------------------------------------------------------------------------------
 
@@ -45,7 +45,7 @@ class ProjectBaseConf(object):
     def __str__(self):
         """ return string representation for printing """
         rep = ""
-        if self._name: 
+        if self._name:
             rep += "Name\t\t\t: %s\n" % self._name
         if self._release_area :
             rep += "Release Area\t\t: %s\n" % self._release_area
@@ -173,9 +173,9 @@ class ProjectConf(ProjectBaseConf):
     def hasBinary(self):
         """ Access function for the binary nature """
         return self._hasbinary
-    
 
-    
+
+
     def __str__(self):
         """ return string representation for printing """
         rep = super(ProjectConf, self).__str__()

@@ -1,4 +1,4 @@
-""" 
+"""
  061213 - add HidValley and Hijing in Gauss_other_executables
  070111 - HLT application name is Hlt/HltApp
  070306 - remove AcerData
@@ -58,21 +58,21 @@ lhcb_projects = {'GAUDI':'Gaudi',
                    'DIRAC':'Dirac',
                    'LHCBGRID':'LHCbGrid',
                    'VANDERMEER': 'VanDerMeer',
-                   'LHCBDIRAC': 'LHCbDIRAC',
+                   'LHCBDIRAC': 'LHCbDirac',
                    'INTEGRATION': 'Integration'}
 
-applications = {'GAUSS':'Sim/Gauss', 
-                'BOOLE':'Digi/Boole', 
+applications = {'GAUSS':'Sim/Gauss',
+                'BOOLE':'Digi/Boole',
                 'BRUNEL':'Rec/Brunel',
-                'DAVINCI':'Phys/DaVinci', 
+                'DAVINCI':'Phys/DaVinci',
                 'MOORE':'Hlt/Moore',
-                'EULER':'Trg/Euler', 
-                'ALIGNMENT':'Alignment/Escher', 
-                'ORWELL':'Calib/Orwell', 
-                'PANOPTES': 'Rich/Panoptes', 
-                'PANORAMIX':'Vis/Panoramix', 
-                'BENDER':'Phys/Bender', 
-                'LHCB':'Ex/', 
+                'EULER':'Trg/Euler',
+                'ALIGNMENT':'Alignment/Escher',
+                'ORWELL':'Calib/Orwell',
+                'PANOPTES': 'Rich/Panoptes',
+                'PANORAMIX':'Vis/Panoramix',
+                'BENDER':'Phys/Bender',
+                'LHCB':'Ex/',
                 'GAUDI':'GaudiExamples'}
 
 lhcb_binary = ['slc4_ia32_gcc34_dbg','slc4_ia32_gcc34',
@@ -84,37 +84,37 @@ lhcb_binary = ['slc4_ia32_gcc34_dbg','slc4_ia32_gcc34',
                'win32_vc71_dbg','win32_vc71',
                'osx104_ia32_gcc401_dbg','osx104_ia32_gcc401']
 
-lhcb_vol_size = {'GAUDI':'3000000', 
-                 'LHCB' :'8000000', 
-                 'REC'  :'6000000', 
-                 'HLT'  :'2500000', 
-                 'PHYS' :'2000000', 
-                 'LBCOM':'1500000', 
+lhcb_vol_size = {'GAUDI':'3000000',
+                 'LHCB' :'8000000',
+                 'REC'  :'6000000',
+                 'HLT'  :'2500000',
+                 'PHYS' :'2000000',
+                 'LBCOM':'1500000',
                  'ALIGNMENT':'800000',
-                 'MOORE':'700000', 
-                 'EULER':'6000', 
-                 'BRUNEL':'700000', 
-                 'GAUSS' :'700000', 
+                 'MOORE':'700000',
+                 'EULER':'6000',
+                 'BRUNEL':'700000',
+                 'GAUSS' :'700000',
                  'GEANT4':'2000000',
-                 'BOOLE' :'1500000', 
-                 'DAVINCI':'800000', 
-                 'BENDER':'500000', 
-                 'ANALYSIS':'2000000', 
-                 'ORWELL':'50000', 
-                 'CURIE':'50000', 
+                 'BOOLE' :'1500000',
+                 'DAVINCI':'800000',
+                 'BENDER':'500000',
+                 'ANALYSIS':'2000000',
+                 'ORWELL':'50000',
+                 'CURIE':'50000',
                  'PANOPTES' : '50000',
-                 'PANORAMIX':'1000000', 
-                 'ONLINE':'1500000', 
-                 'DIRAC':'500000', 
+                 'PANORAMIX':'1000000',
+                 'ONLINE':'1500000',
+                 'DIRAC':'500000',
                  'LHCbGrid': '50000',
                  'VanDerMeer': '50000',
-                 'LHCbDIRAC': '50000',
-                 'Integration': '50000'} 
+                 'LHCbDirac': '50000',
+                 'Integration': '50000'}
 
 lhcb_base_name = {'GAUDI' : 'LCGCMT',
                     'LHCB'  : 'GAUDI',
                     'BENDER': 'DAVINCI',
                     'GEANT4': 'GAUDI'   }
-                    
+
 
 applications_other_executables = {'GAUSS':'BcVegPy,Herwig,HidValley,Hijing'}
