@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.67 2009-11-11 08:57:44 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.68 2010-01-12 17:51:27 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -332,7 +332,8 @@ void DVAlgorithm::loadPVs() {
     m_PVs=0;
     if (msgLevel(MSG::VERBOSE)) {
       verbose() << "PV loading disabled. No PVs used in event";
-    } 
+    }
+    return;
   }
   
 
