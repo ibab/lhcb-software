@@ -183,8 +183,8 @@ StatusCode TrackCaloMatchMonitor::execute()
       cluster.pos.setZ( m_geometricZ ) ;
   }
 
-  const LHCb::Tracks* trackcontainer = get<LHCb::Tracks>( m_trackLocation ) ;
-  BOOST_FOREACH( const LHCb::Track* track, *trackcontainer) 
+  LHCb::Track::Range trackcontainer = get<LHCb::Track::Range>( m_trackLocation ) ;
+  BOOST_FOREACH( const LHCb::Track* track, trackcontainer) 
     if( !m_requireTHits || track->hasT() ) {
       const LHCb::State* state = &(track->closestState(m_geometricZ)) ;
       BOOST_FOREACH( const MyCaloPosition& cluster, calopositions) {

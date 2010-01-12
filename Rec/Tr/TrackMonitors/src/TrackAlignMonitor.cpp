@@ -211,10 +211,10 @@ StatusCode TrackAlignMonitor::finalize()
 StatusCode TrackAlignMonitor::execute()
 { 
   // make a list of calo positions, depending on the subsystem use clusters or cells
-  const LHCb::Tracks* trackcontainer = get<LHCb::Tracks>( m_trackLocation ) ;
+  LHCb::Track::Range tracks = get<LHCb::Track::Range>( m_trackLocation ) ;
 
   //fix by RWL to get rid of stupid nightly warnings about bracketing. 16/11/2009
-  BOOST_FOREACH( const LHCb::Track* track, *trackcontainer) {
+  BOOST_FOREACH( const LHCb::Track* track, tracks) {
     if( ( (track->hasT() && track->hasVelo() ) ||
 	  track->checkFlag(LHCb::Track::Backward))  &&
 	(track->chi2PerDoF()< m_maxTrackChi2PerDoF)

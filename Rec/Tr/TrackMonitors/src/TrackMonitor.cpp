@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.23 2009-12-07 22:34:34 wouter Exp $
+// $Id: TrackMonitor.cpp,v 1.24 2010-01-12 09:34:05 wouter Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -79,21 +79,18 @@ StatusCode TrackMonitor::execute()
 {
   
   // get the input data
-  if (!exist<LHCb::Tracks>(inputContainer())) 
-    return Warning( inputContainer()+" not found", StatusCode::SUCCESS, 0);
-  LHCb::Tracks* tracks = get<LHCb::Tracks>(inputContainer());
+  LHCb::Track::Range tracks = get<LHCb::Track::Range>(inputContainer());
 
   std::map<std::string, unsigned int> tMap;
   std::string type = "";
 
   // # number of tracks
-  plot(tracks->size(),1, "# tracks", 0., 500., 50);
-  plot(tracks->size(),"TrackMultiplicityFine", "# tracks", -0.5, 50.5, 51);
+  plot(tracks.size(),1, "# tracks", 0., 500., 50);
+  plot(tracks.size(),"TrackMultiplicityFine", "# tracks", -0.5, 50.5, 51);
   
   // histograms per track
-  LHCb::Tracks::const_iterator iterT = tracks->begin();
-  
-  for (; iterT != tracks->end(); ++iterT){
+  LHCb::Track::Range::const_iterator iterT = tracks.begin();
+  for (; iterT != tracks.end(); ++iterT){
     if (/*selector((*iterT)->type())->accept(**iterT) ==*/ true){
       type = all() ;
       if( splitByType() ) {
@@ -110,7 +107,7 @@ StatusCode TrackMonitor::execute()
   } // iterT
 
   // fill counters....
-  counter("#Tracks") += tracks->size();
+  counter("#Tracks") += tracks.size();
   for (std::map<std::string,unsigned int>::const_iterator iterS = tMap.begin();
        iterS != tMap.end(); ++iterS){
     counter("#"+iterS->first) += iterS->second;

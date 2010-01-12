@@ -205,21 +205,21 @@ StatusCode OTHitEfficiencyMonitor::execute()
       m_moduleHitMap[ uniqueModule( ihit->channel() ) ].hashit[  ihit->channel().straw()-1 ] = ihit->channel() ;
     
     // now loop over the tracks
-    const LHCb::Tracks* tracks = get<LHCb::Tracks>( m_trackLocation ) ;
-    for( LHCb::Tracks::const_iterator itr = tracks->begin() ;
-	 itr != tracks->end(); ++itr) 
-      if( (*itr)->fitStatus() == LHCb::Track::Fitted && (*itr)->nDoF()>1 &&
-	  (*itr)->chi2PerDoF() < m_maxChi2PerDoF ) {
+    LHCb::Track::Range tracks = get<LHCb::Track::Range>(m_trackLocation) ;
+    BOOST_FOREACH(const LHCb::Track* track, tracks) {
+      if( track->fitStatus() == LHCb::Track::Fitted && track->nDoF()>1 &&
+	  track->chi2PerDoF() < m_maxChi2PerDoF ) {
 	// count the number
 	size_t sumn(0) ;
-	LHCb::Track::ConstNodeRange nodes = (*itr)->nodes() ;
+	LHCb::Track::ConstNodeRange nodes = track->nodes() ;
 	for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
 	     inode != nodes.end(); ++inode ) 
 	  if( (*inode)->type() == LHCb::Node::HitOnTrack
 	      && (*inode)->measurement().type() == LHCb::Measurement::OT ) ++sumn ;
 	if( sumn >= m_minOTHitsPerTrack ) 
-	  fillEfficiency(**itr) ;
+	  fillEfficiency(*track) ;
       }
+    }
   }
   return sc ;
 }
