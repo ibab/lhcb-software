@@ -1,43 +1,18 @@
-## $Id: Hlt2TopologicalLines.py,v 1.25 2010-01-12 15:49:26 spradlin Exp $
+## $Id: Hlt2CharmLines.py,v 1.1 2010-01-12 15:49:26 spradlin Exp $
 __author__  = 'Patrick Spradlin'
 __date__    = '$Date: 2010-01-12 15:49:26 $'
-__version__ = '$Revision: 1.25 $'
+__version__ = '$Revision: 1.1 $'
 
-###
-#
-# This is the 'umbrella' file for the topological trigger. 
-# It should hopefully improve readability since the topological
-# trigger is made up of several different selections (2,3,4-body),
-# which can be run before and after the track fit. 
-#
-# The naming convention is:
-#
-# Hlt2TopoNBody: the N-body (N=2,3,4) selection before any track fit
-#
-# Hlt2TopoNBodySA : the decision of the N-body (N=2,3,4) selection
-#                      before any track fit which is prescaled in order
-#                       to provide a low rate calibration stream.
-#
-# Hlt2TopoTFNBody : the CombineParticles instance of the N-body (N=2,3,4)
-#                      selection after the track fit. These files do not
-#                      define any Hlt2Lines they just define the selections
-#                      which can then be added to the sequence later.
-#
-# Hlt2TopoTFNBodySA: the N-body (N=2,3,4) selection after the track fit,
-#                       which runs irrespective of the result of any other
-#                       Hlt2 selections.
-#
-#
-# Hlt2TopoTFNBodyReqMYes: the N-body (N=2,3,4) selection after the track
-#                             fit, which only runs if the M-Body selection
-#                             before the track fit (Hlt2LineTopoMBody) has
-#                             passed (M=2,3,4).
-#
-## 
+"""
+## ######################################################################
+## Defines a configurable to define and configure Hlt2 lines for selecting
+## hadronic decays of charm hadrons.
+## ######################################################################
+"""
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
-class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
+class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
 
     # steering variables
     #------------------------
@@ -60,32 +35,26 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                 , 'ComTFPairMaxDocaUL'      : 1          # in mm
                 , 'ComTFTrkMaxPtLL'         : 1500       # in MeV
                 , 'ComTFVtxPVDispChi2LL'    : 100        # unitless
-                , 'RobustPointingUL'        : 0.20       # unitless
+                , 'RobustPointingUL'        : 0.10       # unitless
                 , 'TFPointUL'               : 0.10       # unitless
-                , 'Prescale'                : {'Hlt2TopoTF2BodySA' : 0.001
-                                               , 'Hlt2TopoTF3BodySA' : 0.001
-                                               , 'Hlt2TopoTF4BodySA' : 0.001
+                , 'Prescale'                : {'Hlt2CharmTF2BodyWideMass' : 0.05
+                                               , 'Hlt2CharmTF3BodyWideMass' : 0.05
+                                               , 'Hlt2CharmTF4BodyWideMass' : 0.05
                                               }
-                , 'Postscale'               : {'Hlt2Topo2BodySA' : 0.02
-                                               , 'Hlt2Topo3BodySA' : 0.001
-                                               , 'Hlt2Topo4BodySA' : 0.001
+                , 'Postscale'               : {'Hlt2Charm2BodySA' : 0.002
+                                               , 'Hlt2Charm3BodySA' : 0.0005
+                                               , 'Hlt2Charm4BodySA' : 0.0005
                                               }
                 # The HltANNSvc ID numbers for each line should be configurable.
-                , 'HltANNSvcID'  : {'Hlt2Topo2BodySADecision'         : 50700
-                                   , 'Hlt2Topo3BodySADecision'        : 50710
-                                   , 'Hlt2Topo4BodySADecision'        : 50720
-                                   , 'Hlt2TopoTF2BodySADecision'      : 50730
-                                   , 'Hlt2TopoTF3BodySADecision'      : 50770
-                                   , 'Hlt2TopoTF4BodySADecision'      : 50810
-                                   , 'Hlt2TopoTF2BodyReq2YesDecision' : 50740
-                                   , 'Hlt2TopoTF2BodyReq3YesDecision' : 50750
-                                   , 'Hlt2TopoTF2BodyReq4YesDecision' : 50760
-                                   , 'Hlt2TopoTF3BodyReq2YesDecision' : 50780
-                                   , 'Hlt2TopoTF3BodyReq3YesDecision' : 50790
-                                   , 'Hlt2TopoTF3BodyReq4YesDecision' : 50800
-                                   , 'Hlt2TopoTF4BodyReq2YesDecision' : 50820
-                                   , 'Hlt2TopoTF4BodyReq3YesDecision' : 50830
-                                   , 'Hlt2TopoTF4BodyReq4YesDecision' : 50840
+                , 'HltANNSvcID'  : {'Hlt2Charm2BodySADecision'   : 50850
+                                   , 'Hlt2CharmTF2BodySignalDecision' : 50880
+                                   , 'Hlt2CharmTF2BodyWideMassDecision' : 50890
+                                   , 'Hlt2Charm3BodySADecision'   : 50860
+                                   , 'Hlt2CharmTF3BodySignalDecision' : 50910
+                                   , 'Hlt2CharmTF3BodyWideMassDecision' : 50920
+                                   , 'Hlt2Charm4BodySADecision'   : 50870
+                                   , 'Hlt2CharmTF4BodySignalDecision' : 50950
+                                   , 'Hlt2CharmTF4BodyWideMassDecision' : 50960
                                    }
                   }
 
@@ -120,7 +89,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     def robustCombine(self, name, inputSeq, decayDesc, extracuts = None) : # {
         """
         # Function to configure common particle combinations used by the
-        #   robust stages of the topological lines.  It lashes the new
+        #   robust stages of the charm lines.  It lashes the new
         #   CombineParticles to a bindMembers with its antecedents.
         # Its arguments:
         #     name      : string name
@@ -152,7 +121,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         if extracuts and extracuts.has_key('MotherCut') :
             parentcuts = parentcuts  + '&' + extracuts['MotherCut']
 
-        combineTopoNBody = Hlt2Member( CombineParticles
+        combineNBody = Hlt2Member( CombineParticles
                                        , 'Combine'
                                        , DecayDescriptors = decayDesc
                                        , InputLocations = inputSeq
@@ -160,31 +129,31 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                        , MotherCut = parentcuts
                                      )
 
-        topoNBody = bindMembers( name, inputSeq + [ combineTopoNBody ] )
-        return topoNBody
+        charmNBody = bindMembers( name, inputSeq + [ combineNBody ] )
+        return charmNBody
     # }
 
 
     def robustFilter(self, name, inputSeq, extracode = None) : # {
         """
-        # Function to configure a filter for the robust stages of the
-        #   topological.  It lashes the new FilterDesktop to a bindMembers
-        #   with its antecedents.
-        # The argument inputSeq should be a list of bindMember sequences that
+        # Function to configure a robust filter for the charm.
+        #   It lashes the new FilterDesktop to a bindMembers with its
+        #   antecedents.
+        # The argument inputSeq should be a bindMember sequences that
         #   produces the particles to filter.
         """
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
 
-        # Build a cut string from the configuration variables.
-        codestr = "(M > 4*GeV) & (BPVTRGPOINTINGWPT< %(RobustPointingUL)s )" % self.getProps()
+        codestr = "(M>1700*MeV) & (M<2100*MeV) & (BPVTRGPOINTINGWPT< %(RobustPointingUL)s )" % self.getProps()
         if extracode :
           codestr = codestr + '&' + extracode
         filter = Hlt2Member( FilterDesktop
-                             , 'RobustFilter'
-                             , InputLocations = inputSeq
-                             , Code = codestr
+                            , 'CharmRobustFilter'
+                            , InputLocations = inputSeq
+                            , Code = codestr
                            )
+
         filterSeq = bindMembers( name, inputSeq + [ filter ] )
         return filterSeq
     # }
@@ -193,7 +162,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     def tfCombine(self, name, inputSeq, decayDesc, extracuts = None) : # {
         """
         # Function to configure post-track-fit particle combinations
-        #   used by the topological lines.  It lashes the new
+        #   used by the charm lines.  It lashes the new
         #   CombineParticles to a bindMembers with its antecedents.
         # Its arguments:
         #     name      : string name
@@ -224,7 +193,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         if extracuts and extracuts.has_key('MotherCut') :
             parentcuts = parentcuts  + '&' + extracuts['MotherCut']
 
-        combineTopoNBody = Hlt2Member( CombineParticles
+        combineNBody = Hlt2Member( CombineParticles
                                        , 'Combine'
                                        , DecayDescriptors = decayDesc
                                        , InputLocations = inputSeq
@@ -232,14 +201,14 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                        , MotherCut = parentcuts
                                      )
 
-        topoNBody = bindMembers( name, inputSeq + [ combineTopoNBody ] )
-        return topoNBody
+        charmNBody = bindMembers( name, inputSeq + [ combineNBody ] )
+        return charmNBody
     # }
 
 
     def tfFilter(self, name, inputSeq, extracode = None) : # {
         """
-        # Function to configure a post-track-fit filter for the topological.
+        # Function to configure a post-track-fit filter for the charm.
         #   It lashes the new FilterDesktop to a bindMembers with its
         #   antecedents.
         # The argument inputSeq should be a list of bindMember sequences that
@@ -248,14 +217,15 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
 
-        codestr = "(BPVTRGPOINTINGWPT< %(TFPointUL)s ) & (M>4*GeV)" % self.getProps()
+        codestr = "(BPVTRGPOINTINGWPT< %(TFPointUL)s )" % self.getProps()
         if extracode :
           codestr = codestr + '&' + extracode
         filter = Hlt2Member( FilterDesktop
-                             , 'TFFilter'
-                             , InputLocations = inputSeq
-                             , Code = codestr
+                            , 'TFFilter'
+                            , InputLocations = inputSeq
+                            , Code = codestr
                            )
+
         filterSeq = bindMembers( name, inputSeq + [ filter ] )
         return filterSeq
     # }
@@ -283,10 +253,10 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
         from Configurables import Hlt2PID
         tracks = Hlt2PID().hlt2Tracking()
-        Hlt2KillTooManyTopoIPAlg = VoidFilter('Hlt2KillTooManyTopoIPAlg'
+        Hlt2KillTooManyCharmIPAlg = VoidFilter('Hlt2KillTooManyCharmIPAlg'
                                               , Code = "TrSOURCE('Hlt/Track/Forward') >> (TrSIZE < %(ComRobGEC)s )" % self.getProps()
                                               )
-        Hlt2KillTooManyTopoIP = bindMembers( None, [ tracks, Hlt2KillTooManyTopoIPAlg ] )
+        Hlt2KillTooManyCharmIP = bindMembers( None, [ tracks, Hlt2KillTooManyCharmIPAlg ] )
         ###################################################################
         # Construct a combined sequence for the input particles to the robust
         #   stage.
@@ -312,9 +282,9 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                             , Code = daugcuts
                            )
         if self.getProp('ComRobUseGEC') :
-            lclInputParticles = bindMembers( 'TopoInputParticles', [ Hlt2KillTooManyTopoIP, orInput, filter ] )
+            lclInputParticles = bindMembers( 'CharmInputParticles', [ Hlt2KillTooManyCharmIP, orInput, filter ] )
         else :
-            lclInputParticles = bindMembers( 'TopoInputParticles', [ orInput, filter ] )
+            lclInputParticles = bindMembers( 'CharmInputParticles', [ orInput, filter ] )
 
 
 
@@ -339,7 +309,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                             , InputLocations = ['Hlt2TFPionsForTopo', 'Hlt2TFKaonsForTopo']
                             , Code = incuts
                            )
-        lclTFInputParticles = bindMembers('TopoTFIn', [ GaudiSequencer('SeqHlt2TFParticlesForTopo'), filter ])
+        lclTFInputParticles = bindMembers('CharmTFIn', [ GaudiSequencer('SeqHlt2TFParticlesForTopo'), filter ])
 
 
 
@@ -350,7 +320,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
         # CombineParticles for the robust 2-body combinations.
         ###################################################################
-        topo2Body = self.robustCombine(  name = 'TmpTopo2Body'
+        charm2Body = self.robustCombine(  name = 'Charm2Body'
                                   , inputSeq = [ lclInputParticles ]
                                   , decayDesc = ["K*(892)0 -> pi+ pi+", "K*(892)0 -> pi+ pi-", "K*(892)0 -> pi- pi-", "K*(892)0 -> K+ K+", "K*(892)0 -> K+ K-", "K*(892)0 -> K- K-", "K*(892)0 -> K+ pi-", "K*(892)0 -> pi+ K-", "K*(892)0 -> K+ pi+", "K*(892)0 -> K- pi-"]
                                   , extracuts = { 'CombinationCut' : "(AMINDOCA('LoKi::TrgDistanceCalculator')< %(ComRobPairMinDocaUL)s )" % self.getProps() }
@@ -358,40 +328,10 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
         # CombineParticles for the robust 3-body combinations.
         ###################################################################
-        topo3Body = self.robustCombine(  name = 'TmpTopo3Body'
-                                  , inputSeq = [ lclInputParticles, topo2Body ]
+        charm3Body = self.robustCombine(  name = 'Charm3Body'
+                                  , inputSeq = [ lclInputParticles, charm2Body ]
                                   , decayDesc = ["D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-"])
 
-        # CombineParticles for the robust 4-body combinations.
-        # Unlike the 3-body and 4-body, apply a mass lower limit.
-        ###################################################################
-        # There seems to be a lot of CPUT consumed in managing the large number
-        #   of 4-body candidates.  The list needs to be as small as possible.
-        topo4Body = self.robustCombine(  name = 'Topo4Body'
-                                  , inputSeq = [lclInputParticles, topo3Body ]
-                                  , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
-                                  , extracuts = { 'CombinationCut' : '(AM>4*GeV)'
-                                                , 'MotherCut'      : "(BPVTRGPOINTINGWPT< %(RobustPointingUL)s )" % self.getProps() }
-                                  )
-
-
-        ###################################################################
-        # Create full decision sequences for the robust stages of the
-        #   topological trigger.
-        # These will only be used in topological trigger lines.
-        ###################################################################
-
-        # Construct a bindMember for the topological robust 2-body decision
-        ###################################################################
-        robust2BodySeq = self.robustFilter('RobustTopo2Body', [topo2Body])
-
-        # Construct a bindMember for the topological robust 3-body decision
-        ###################################################################
-        robust3BodySeq = self.robustFilter('RobustTopo3Body', [topo3Body])
-
-        # Construct a bindMember for the topological robust 4-body decision
-        ###################################################################
-        robust4BodySeq = self.robustFilter('RobustTopo4Body', [topo4Body])
 
 
         ###################################################################
@@ -401,7 +341,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
         # post-track-fit 2-body combinations
         ###################################################################
-        topoTF2Body = self.tfCombine(  name = 'TmpTopoTF2Body'
+        charmTF2Body = self.tfCombine(  name = 'CharmTF2Body'
                                 , inputSeq = [ lclTFInputParticles ]
                                 , decayDesc = ["K*(892)0 -> pi+ pi+", "K*(892)0 -> pi+ pi-", "K*(892)0 -> pi- pi-", "K*(892)0 -> K+ K+", "K*(892)0 -> K+ K-", "K*(892)0 -> K- K-", "K*(892)0 -> K+ pi-","K*(892)0 -> pi+ K-", "K*(892)0 -> K+ pi+", "K*(892)0 -> K- pi-"]
                                 , extracuts = { 'CombinationCut' : "(AMINDOCA('LoKi::TrgDistanceCalculator')< %(ComTFPairMinDocaUL)s )" % self.getProps() }
@@ -409,89 +349,140 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
         # post-track-fit 3-body combinations
         ###################################################################
-        topoTF3Body = self.tfCombine(  name = 'TmpTopoTF3Body'
-                                , inputSeq = [ lclTFInputParticles, topoTF2Body ]
+        charmTF3Body = self.tfCombine(  name = 'CharmTF3Body'
+                                , inputSeq = [ lclTFInputParticles, charmTF2Body ]
                                 , decayDesc = ["D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-"]
                                )
 
-        # post-track-fit 4-body combinations
-        # Unlike the 3-body and 4-body, apply a mass lower limit.
+
+
+        ##
+        #
+        # Charm lines
+        #
+        ##
         ###################################################################
-        topoTF4Body = self.tfCombine(  name = 'TopoTF4Body'
-                                , inputSeq = [ lclTFInputParticles, topoTF3Body ]
-                                , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
-                                , extracuts = { 'CombinationCut' : '(AM>4*GeV)'
-                                              , 'MotherCut'      : "(BPVTRGPOINTINGWPT< %(TFPointUL)s)" % self.getProps()
-                                              }
-                               )
+        # Construct a bindMember for the charm robust 2-body decision
+        ###################################################################
+        charmRobust2BodySeq = self.robustFilter('CharmRobust2Body', [charm2Body], extracode = '(SUMQ==0)')
+
+        # Construct a bindMember for the charm robust 3-body decision
+        ###################################################################
+        charmRobust3BodySeq = self.robustFilter('CharmRobust3Body', [charm3Body], extracode = '((SUMQ==1) | (SUMQ == -1))')
+
+        # Construct a bindMember for the charm robust 4-body decision
+        # CombineParticles for the 4-body combinations.
+        ###################################################################
+        charmRob4Body = self.robustCombine(  name = 'CharmRobust4Body'
+                                  , inputSeq = [lclInputParticles, charm3Body ]
+                                  , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
+                                  , extracuts = {'CombinationCut' : '(AM>1700*MeV) & (AM<2100*MeV)'
+                                                , 'MotherCut'     : "(SUMQ == 0) & (BPVTRGPOINTINGWPT< %(RobustPointingUL)s )" % self.getProps()
+                                                }
+                                  )
+        charmRobust4BodySeq = self.robustFilter('CharmRobust4Body', [charmRob4Body])
+
+
+        # Map charm robust sequences to monitoring line names
+        ###################################################################
+        charmRobustNBodySeq = {  'Charm2BodySA' : charmRobust2BodySeq
+                               , 'Charm3BodySA' : charmRobust3BodySeq
+                               , 'Charm4BodySA' : charmRobust4BodySeq
+                              }
 
 
         ###################################################################
-        # Create full decision sequences for the post-track-fit stages of the
-        #   topological trigger.
-        # These will only be used in topological trigger lines.
-        ###################################################################
-
-        # Construct a bindMember for the topological post-TF 2-body decision
-        ###################################################################
-        tf2BodySeq = self.tfFilter('PostTFTopo2Body', [topoTF2Body])
-
-        # Construct a bindMember for the topological post-TF 3-body decision
-        ###################################################################
-        tf3BodySeq = self.tfFilter('PostTFTopo3Body', [topoTF3Body])
-
-        # Construct a bindMember for the topological post-TF 4-body decision
-        ###################################################################
-        tf4BodySeq = self.tfFilter('PostTFTopo4Body', [topoTF4Body])
-
-
-        ###################################################################
-        # Map Robust sequences to partial line names
-        ###################################################################
-        robustNBodySeq = {  'Topo2Body' : robust2BodySeq
-                          , 'Topo3Body' : robust3BodySeq
-                          , 'Topo4Body' : robust4BodySeq
-                         }
-        # Same sequenes, different names.
-        robustNReqSeq = {  'Req2Yes' : robust2BodySeq
-                         , 'Req3Yes' : robust3BodySeq
-                         , 'Req4Yes' : robust4BodySeq
-                        }
-
-        # Map Post-track-fit sequences to partial line names
-        ###################################################################
-        tfNBodySeq = {  'TopoTF2Body' : tf2BodySeq
-                      , 'TopoTF3Body' : tf3BodySeq
-                      , 'TopoTF4Body' : tf4BodySeq
-                     }
-
-
-        ###################################################################
-        # 'Factory' for standalone monitoring lines for the robust topological. 
+        # 'Factory' for standalone monitoring lines for the robust stage of
+        #   the charm trigger. 
         # Heavily post-scaled.
         ###################################################################
-        for robSeq in robustNBodySeq.keys() :
-            lineName = robSeq + 'SA'
-            self.makeLine(lineName, algos = [robustNBodySeq[robSeq]])
+        for charmSeq in charmRobustNBodySeq.keys() :
+            self.makeLine(charmSeq, algos = [charmRobustNBodySeq[charmSeq]] )
 
 
+        ##
+        #
+        # Define the main charm lines
+        #
+        ##
         ###################################################################
-        # 'Factory' for standalone monitoring lines for the post-TF topological.
-        # Heavily pre-scaled.
+        # Main 2-body charm post-track-fit sequence and line.
         ###################################################################
-        for tfSeq in tfNBodySeq.keys() :
-            lineName = tfSeq + 'SA'
-            self.makeLine(lineName, algos = [tfNBodySeq[tfSeq]] )
+        charmTF2BodySeq = self.tfFilter('CharmPostTF2Body'
+                                     , [charmTF2Body]
+                                     , extracode = '(M>1839*MeV) & (M<1889*MeV) & (SUMQ == 0)')
+
+        self.makeLine('CharmTF2BodySignal'
+                 , algos = [ charmRobust2BodySeq, charmTF2BodySeq ])
 
 
+        # Main 3-body charm post-track-fit sequence and line.
         ###################################################################
-        # 'Factory' for main topological lines
+        charmTF3BodySeq = self.tfFilter('CharmPostTF3Body'
+                                     , [charmTF3Body]
+                                     , extracode = '(((M>1844*MeV) & (M<1894*MeV)) | ((M>1943*MeV) & (M<1993*MeV)) & ((SUMQ == -1) |(SUMQ == 1)))')
+
+        self.makeLine('CharmTF3BodySignal'
+                 , algos = [ charmRobust3BodySeq, charmTF3BodySeq ])
+
+
+        # Main 4-body charm post-track-fit sequence and line.
         ###################################################################
-        for tfSeq in tfNBodySeq.keys() :
-            for robSeq in robustNReqSeq.keys() :
-                lineName = tfSeq + robSeq
-                self.makeLine(lineName, algos = [ robustNReqSeq[robSeq], tfNBodySeq[tfSeq] ])
+        charmTF4Body = self.tfCombine(  name = 'CharmTF4Body'
+                                , inputSeq = [ lclTFInputParticles, charmTF3Body ]
+                                , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
+                                , extracuts = { 'CombinationCut' : '(AM>1839*MeV) & (AM<1889*MeV)'
+                                              , 'MotherCut' : '(SUMQ==0) & (BPVTRGPOINTINGWPT< %(TFPointUL)s )' % self.getProps()
+                                              }
+                                 )
+        charmTF4BodySeq = self.tfFilter('CharmPostTF4Body'
+                                     , [charmTF4Body]
+                                     , extracode = '(M>1839*MeV) & (M<1889*MeV)')
+
+        self.makeLine('CharmTF4BodySignal'
+                 , algos = [ charmRobust4BodySeq, charmTF4BodySeq])
 
 
+
+        ##
+        #
+        # Define additional charm lines for mass sidebands.  Heavily prescaled.
+        #
+        ##
+        # Line for 2-body charm mass sidebands.  Heavily pre-scaled.
+        ###################################################################
+        charmTF2BodySBSeq = self.tfFilter('CharmPostTF2BodyWideMass'
+                                     , [charmTF2Body]
+                                     , extracode = '(M>1700*MeV) & (M<2100*MeV)')
+
+        self.makeLine('CharmTF2BodyWideMass'
+                 , algos = [ charmRobust2BodySeq, charmTF2BodySBSeq ])
+
+
+        # Line for 3-body charm mass sidebands.  Heavily pre-scaled.
+        ###################################################################
+        charmTF3BodySBSeq = self.tfFilter('CharmPostTF3BodyWideMass'
+                                     , [charmTF3Body]
+                                     , extracode = '(M>1700*MeV) & (M<2100*MeV)')
+
+        self.makeLine('CharmTF3BodyWideMass'
+                 , algos = [ charmRobust3BodySeq, charmTF3BodySBSeq ])
+
+
+        # Line for 4-body charm mass sidebands.  Heavily pre-scaled.
+        ###################################################################
+        charmTF4BodySB = self.tfCombine(  name = 'CharmWMTF4Body'
+                                , inputSeq = [ lclTFInputParticles, charmTF3Body ]
+                                , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
+                                , extracuts = { 'CombinationCut' : '(AM>1700*MeV) & (AM<2100*MeV)' 
+                                              , 'MotherCut' : '(BPVTRGPOINTINGWPT< %(TFPointUL)s )' % self.getProps()
+                                              }
+                                 )
+        charmTF4BodySBSeq = self.tfFilter('CharmPostTF4BodyWideMass'
+                                     , [charmTF4BodySB]
+                                     , extracode = '(M>1700*MeV) & (M<2100*MeV)')
+
+        self.makeLine('CharmTF4BodyWideMass'
+                 , algos = [ charmRobust4BodySeq, charmTF4BodySBSeq])
 
 
