@@ -1,4 +1,5 @@
 <lcgdict>
+  <class name="DeRichBase"                />
   <class name="DeRich1"                   />
   <class name="DeRich2"                   />
   <class name="DeRichAerogelRadiator"     />

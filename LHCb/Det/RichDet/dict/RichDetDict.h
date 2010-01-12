@@ -1,8 +1,9 @@
-// $Id: RichDetDict.h,v 1.1 2007-04-23 16:21:56 cattanem Exp $
+// $Id: RichDetDict.h,v 1.2 2010-01-12 13:36:17 papanest Exp $
 // ============================================================================
 #ifndef RICHDET_DETDICT_H 
 #define RICHDET_DETDICT_H 1
 
+#include "RichDet/DeRichBase.h"
 #include "RichDet/DeRich1.h"
 #include "RichDet/DeRich2.h"
 #include "RichDet/DeRichAerogelRadiator.h"
