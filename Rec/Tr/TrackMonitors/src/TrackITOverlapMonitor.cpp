@@ -13,9 +13,6 @@
 // from TrackEvent
 #include "Event/Track.h"
 #include "Event/Node.h"
-#include "Event/TrackFitResult.h"
-#include "Event/FitNode.h"
-#include "Event/STMeasurement.h"
 
 // AIDA
 #include "AIDA/IHistogram1D.h"
@@ -163,163 +160,81 @@ int TrackITOverlapMonitor::trackType( const LHCb::Track& track) const
 }
 
 
-size_t TrackITOverlapMonitor::accumulate( const LHCb::Track& track )
-{
-  size_t numcompatible(0) ;
-  int tracktype = trackType(track) ;
-  if( tracktype>=0 ) {
-    LHCb::TrackTraj trackraj(track) ;
-    for(size_t istation=0; istation<3; ++istation) {
-      for(size_t ilayer=0; ilayer<4; ++ilayer) {
-	for(size_t iregion=0; iregion<4;++iregion) {
-	  const Tf::IITHitCreator::STRegion* region = 
-	    m_ithitcreator->region( istation,ilayer,iregion ) ;
-	  double regionz = 0.5*(region->zmin() + region->zmax() ) ;
-	  LHCb::StateVector refstate = trackraj.stateVector( regionz ) ;
-	  Gaudi::XYZPointF trkpoint(refstate.x(),refstate.y(),refstate.z()) ;
-	  Gaudi::XYZVectorF trkdir(refstate.tx(),refstate.ty(),1) ;
-	  BOOST_FOREACH( const Tf::STHit* hit, region->hits() ) {
-	    double ytrk = refstate.y() + ( hit->zMid() - refstate.z() ) * refstate.ty() ;
-	    if( hit->isYCompatible(ytrk,20) ) {
-	      // Juan still has something odd here, so I'll just compute it myself then ...
-	      //double distance = Gaudi::Math::distance( trkline, **ihit ) ;
-	      Gaudi::XYZPointF hitpoint = hit->beginPoint() ;
-	      Gaudi::XYZVectorF hitdir = hit->direction() ;
-	      Gaudi::XYZVectorF projectiondir = hitdir.Cross( trkdir ).Unit() ;
-	      Gaudi::XYZVectorF delta = hitpoint-trkpoint ;
-	      double distance = delta.Dot(projectiondir) ;
-	      if ( std::abs(distance) < m_maxDistance ) {
-		LHCb::STChannelID stid = hit->lhcbID().stID() ;
-		DeltaHistogrammer* histos = getHistogrammer( stid.station()-1,
-							     stid.detRegion()-1,
-							     tracktype ) ;
-		// unbias if necessary
-		bool isOnTrack = track.isOnTrack( hit->lhcbID() ) ;
-		if( isOnTrack ) {
-		  // find the corresponding node
-		  const LHCb::Node* node(0) ;
-		  for( LHCb::TrackFitResult::NodeContainer::const_iterator
-			 inode = track.fitResult()->nodes().begin(); 
-		       node==0 && inode != track.fitResult()->nodes().end(); ++inode)
-		    if( (*inode)->type() == LHCb::Node::HitOnTrack &&
-			(*inode)->measurement().lhcbID() ==  hit->lhcbID() ) 
-		      node = *inode ;
-		  if(node) {
-		    const LHCb::FitNode* fitnode = dynamic_cast<const LHCb::FitNode*>(node) ;
-		    const LHCb::STMeasurement* stmeas =  dynamic_cast<const LHCb::STMeasurement*>(&(node->measurement())) ;
-		    distance *=  node->errMeasure2() / node->errResidual2() ;
-		    if( false && tracktype == 4 && stmeas) {
-		      std::cout << "*************************************" << std::endl ;
-		      std::cout << "dist/res: " << distance << " "
-				<< fitnode->unbiasedResidual() << std::endl ;
-		      std::cout << "refstate: " << refstate << std::endl ;
-		      std::cout << "nodestate: " << node->state().z() << " " << node->state().stateVector() << std::endl ;
-		      std::cout << "dx: " << refstate.x() + refstate.tx() * ( node->state().z() - refstate.z() ) - node->state().x() << std::endl ;
-		      std::cout << "dy: " << refstate.y() + refstate.ty() * ( node->state().z() - refstate.z() ) - node->state().y() << std::endl ;
-		      
-		      Gaudi::XYZPointF hitbegin =  hitpoint + hitdir * hit->yBegin() ;
-		      std::cout << "hit: " << hitbegin << " " << hitdir << std::endl ;
-		      Gaudi::XYZPoint trajbegin = node->measurement().trajectory().beginPoint() ;
-		      std::cout << "meas: " << trajbegin << " "
-				<< node->measurement().trajectory().endPoint() << " "
-				<< std::endl ;
-		      
-		      Gaudi::XYZPointF begin = hitpoint + node->measurement().trajectory().beginPoint().y() * hitdir ;
-		      std::cout << "coor diff: " 
-				<< begin.x() - trajbegin.x() << "," 
-				<< begin.y() - trajbegin.y() << ","
-				<< begin.z() - trajbegin.z() << std::endl ;
-		      
-		      std::cout << "hit strip: "
-				<< hit->cluster().channelID().strip() << " "
-				<< hit->cluster().interStripFraction() << std::endl ;
-		      std::cout << "meas strip: "
-				<< stmeas->cluster()->channelID().strip() << " "
-				<< stmeas->cluster()->interStripFraction() << std::endl ;
-		      const DeSTSector& sector = hit->sector() ;
-		      int strip  = hit->cluster().channelID().strip() ;
-		      double offset = hit->cluster().interStripFraction() ;
-		      double dxdy, dzdy, xAtYEq0, zAtYEq0, ybegin, yend ;
-
-		      // let's update the cache explicitely
-		      //(const_cast<DeSTSector&>(sector)).cacheInfo() ;
-		      sector.trajectory(strip,offset,dxdy,dzdy,xAtYEq0,zAtYEq0,ybegin,yend) ;
-		      std::cout << "from fast traj: (" << xAtYEq0+ybegin*dxdy << ","
-				<< ybegin << "," <<  zAtYEq0+ybegin*dzdy << std::endl ;
-		      std::auto_ptr<LHCb::Trajectory> newtraj = sector.trajectory(stid,offset) ;
-		      std::cout << "newtraj begin: " << newtraj->beginPoint() << std::endl ;
-		    }
-		  }
-		}
-		int sign = hit->yBegin() < hit->yEnd() ? 1 : -1 ;
-		histos->resh1->fill( sign * distance ) ;
-		if( isOnTrack ) histos->hotresh1->fill( sign * distance ) ;
-	      }
-	    }
-	    ++numcompatible ; 
-	  }
-	}
-      }
-    }
-  }
-  return numcompatible ;
-}
-
-size_t TrackITOverlapMonitor::accumulate( const Tf::STHitRange& hits,
-                                          const LHCb::State& refstate,
-                                          const LHCb::Track& track)
-{
-  size_t numcompatible(0) ;   
-  Gaudi::XYZPointF trkpoint(refstate.x(),refstate.y(),refstate.z()) ;
-  Gaudi::XYZVectorF trkdir(refstate.tx(),refstate.ty(),1) ;
-  //Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector> trkline( refstate.position(), refstate.slopes() ) ;
-  int tracktype = trackType(track) ;
-  if( tracktype>=0 ) {
-    for( Tf::STHitRange::const_iterator ihit = hits.begin() ; ihit != hits.end(); ++ihit) {
-      const Tf::STHit* hit = *ihit ;
-      double ytrk = refstate.y() + ( hit->zMid() - refstate.z() ) * refstate.ty() ;
-      if( hit->isYCompatible(ytrk,20) ) {
-	// Juan still has something odd here, so I'll just compute it myself then ...
-	//double distance = Gaudi::Math::distance( trkline, **ihit ) ;
-	Gaudi::XYZPointF hitpoint = hit->beginPoint() ;
-	Gaudi::XYZVectorF hitdir = hit->direction() ;
-	Gaudi::XYZVectorF projectiondir = hitdir.Cross( trkdir ).Unit() ;
-	Gaudi::XYZVectorF delta = hitpoint-trkpoint ;
-	double distance = delta.Dot(projectiondir) ;
-	if ( std::abs(distance) < m_maxDistance ) {
-	  LHCb::STChannelID stid = hit->lhcbID().stID() ;
-	  DeltaHistogrammer* histos = getHistogrammer( stid.station()-1,
-						       stid.detRegion()-1,
-						       tracktype ) ;
-	  int sign = hit->yBegin() < hit->yEnd() ? 1 : -1 ;
-	  histos->resh1->fill( sign * distance ) ;
-	  if(track.isOnTrack( hit->lhcbID() ) )
-	    histos->hotresh1->fill( sign * distance ) ;
-	}
-      }
-      ++numcompatible ; 
-    }
-  }
-  return numcompatible ;
-}
-
 StatusCode TrackITOverlapMonitor::execute() 
 {
   // Get tracks.
   LHCb::Track::Range tracks = get<LHCb::Track::Range>(m_trackLocation);
-
-  // Get the TT hits
-  Tf::STHitRange ithits = m_ithitcreator->hits() ;
-
-  // now loop over all tracks, create a line from the last state, loop
-  // over all hits, etc
+  
+  // loop over all tracks
   BOOST_FOREACH( const LHCb::Track* track, tracks) {
-    if( track->nStates() > 0 ) {
-      accumulate( *track ) ;
-    } else {
-      warning() << "Track has no states" << endreq ;
+
+    // get the track type.
+    int tracktype = trackType(*track) ;
+
+    // only process tracks that are classified.
+    if( tracktype>=0 ) {
+
+      // create a tracktraj
+      LHCb::TrackTraj tracktraj(*track) ;
+
+      // get the nodes for later use
+      LHCb::Track::ConstNodeRange nodes = track->nodes() ;
+
+      // loop over all regions
+      for(size_t istation=0; istation<3; ++istation)
+	for(size_t ilayer=0; ilayer<4; ++ilayer)
+	  for(size_t iregion=0; iregion<4;++iregion) {
+
+	    const Tf::IITHitCreator::STRegion* region = 
+	      m_ithitcreator->region( istation,ilayer,iregion ) ;
+	    // here we could significantly speed up things by first
+	    // testing that the track goes through the region.
+
+	    // create a reference state for this region using the tracktraj
+	    double regionz = 0.5*(region->zmin() + region->zmax() ) ;
+	    LHCb::StateVector refstate = tracktraj.stateVector( regionz ) ;
+	    Gaudi::XYZPointF trkpoint(refstate.x(),refstate.y(),refstate.z()) ;
+	    Gaudi::XYZVectorF trkdir(refstate.tx(),refstate.ty(),1) ;
+	    
+	    // now loop over all hits
+	    BOOST_FOREACH( const Tf::STHit* hit, region->hits() ) {
+	      double ytrk = refstate.y() + ( hit->zMid() - refstate.z() ) * refstate.ty() ;
+	      // this window is a bit large
+	      if( hit->isYCompatible(ytrk,20) ) {
+		// Juan still has something odd here, so I'll just compute it myself then ...
+		//double distance = Gaudi::Math::distance( trkline, **ihit ) ;
+		Gaudi::XYZPointF hitpoint = hit->beginPoint() ;
+		Gaudi::XYZVectorF hitdir = hit->direction() ;
+		Gaudi::XYZVectorF projectiondir = hitdir.Cross( trkdir ).Unit() ;
+		Gaudi::XYZVectorF delta = hitpoint-trkpoint ;
+		double distance = delta.Dot(projectiondir) ;
+		if ( std::abs(distance) < m_maxDistance ) {
+		  LHCb::STChannelID stid = hit->lhcbID().stID() ;
+		  DeltaHistogrammer* histos = getHistogrammer( stid.station()-1,
+							       stid.detRegion()-1,
+							       tracktype ) ;
+		  // unbias if necessary
+		  bool isOnTrack = track->isOnTrack( hit->lhcbID() ) ;
+		  if( isOnTrack ) {
+		    // find the corresponding node and unbias the distance
+		    for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin(); 
+			 inode != nodes.end(); ++inode)
+		      if( (*inode)->type() == LHCb::Node::HitOnTrack &&
+			  (*inode)->measurement().lhcbID() ==  hit->lhcbID() ) {
+			distance *=  (*inode)->errMeasure2() / (*inode)->errResidual2() ;
+			break ;
+		      }
+		  }
+		  // make sure all contributions get the same
+		  // sign. (some IT layers are rotated)
+		  int sign = hit->yBegin() < hit->yEnd() ? 1 : -1 ;
+		  histos->resh1->fill( sign * distance ) ;
+		  if( isOnTrack ) histos->hotresh1->fill( sign * distance ) ;
+		}
+	      }
+	    }
+	  }
     }
   }
-  
   return StatusCode::SUCCESS ;
 }
