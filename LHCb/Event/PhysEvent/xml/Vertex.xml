@@ -17,6 +17,8 @@
       id="802"
       >
       <import name="Event/VertexBase.h"/>
+      <import name="GaudiKernel/Range"/>
+      <import name="GaudiKernel/SharedObjectsContainer"/>
       <import name="Particle" soft="TRUE"/>
 
       <typedef
@@ -25,6 +27,20 @@
         desc="User information"
         access="PUBLIC"
 	/>
+
+      <typedef
+	  type   = "SharedObjectsContainer&lt;LHCb::Vertex&gt;"
+	  def    = "Selection"
+	  desc   = "The container type for shared vertices (without ownership)"
+	  access = "PUBLIC"
+	  />
+
+      <typedef
+	  type   = "Gaudi::Range_&lt;ConstVector&gt;"
+	  def    = "Range"
+	  desc   = "For uniform access to containers in TES (KeyedContainer,SharedContainer) "
+	  access = "PUBLIC"
+	  />
 
       <enum
         desc="Describe how the vertex was made (NEED MORE)"

@@ -1,7 +1,16 @@
-! $Id: release.notes,v 1.149 2010-01-03 11:02:02 ibelyaev Exp $
+! $Id: release.notes,v 1.150 2010-01-12 17:35:46 jpalac Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
+
+! 2010-01-12 - Juan PALACIOS
+ - xml/Vertex.h
+    add typedefs:
+
+      1. Selection  for container of shared particles (wihtout ownership)
+      2. Range      for uniform access to underlying containers of particles 
+                    ( KeyedContainer or SharedContainer ) 
+
 
 ! 2010-01-03 - Vanya BELYAEV
  - xml/Particle.h
