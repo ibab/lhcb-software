@@ -1002,6 +1002,10 @@ class CondDBPayloadFieldModel(QAbstractListModel):
         if self._fields:
             return self._fields[self._selected]
         return None
+    
+    ## Return the list of all field names
+    def getFieldNames(self):
+        return self._fields
 
 ## List of supported COOL storage types
 __cool_storage_types__ = [

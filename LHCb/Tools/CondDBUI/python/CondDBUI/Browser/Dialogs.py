@@ -400,7 +400,6 @@ class AddConditionDialog(QDialog, Ui_AddConditionDialog):
                                                 nodeType = CondDBNodesListModel.FOLDER)
         self.fieldsModel = CondDBPayloadFieldModel(self.db, parent = self)
         self.conditionsStack = AddConditionsStackModel(parent = self)
-        self.buffer = {}
         self._externalEditor = externalEditor # to be passed to the edit dialog
         # Prepare the GUI.
         self.setupUi(self)
@@ -413,6 +412,10 @@ class AddConditionDialog(QDialog, Ui_AddConditionDialog):
         self.since.setToNow()
         self.since.setMaxEnabled(False)
         self.channel.setText("0")
+        # prepare the buffer
+        self.buffer = {}
+        for f in self.fieldsModel.getFieldNames():
+            self.buffer[f] = ""
         # Bind signals and slots
         QObject.connect(self.folder, SIGNAL("currentIndexChanged(QString)"),
                         self.fieldsModel.setPath)

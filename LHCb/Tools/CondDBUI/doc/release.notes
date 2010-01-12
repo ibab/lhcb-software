@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.139 2009-12-11 14:19:49 cattanem Exp $
+! $Id: release.notes,v 1.140 2010-01-12 17:50:38 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2010-01-12 - Marco Clemencic
+ - Fixed a minor bug in CondDBBrowser: it was not possible to add conditions to
+   empty folders.
 
 !===================== Tools/CondDBUI v3r0 2009-12-11 =========================
 ! 2009-12-08 - Marco Clemencic
