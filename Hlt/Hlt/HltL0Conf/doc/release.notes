@@ -3,7 +3,7 @@
 ! Responsible : Johannes Albrecht
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
-!========================== HltL0Conf v2r13 2010-01-11 ===================
+!========================== HltL0Conf v2r13 2010-01-12 ===================
 ! 2010-01-12 - Johannes Albrecht
  - MuonSeedTool: switch p calculation of seed per default on
 
