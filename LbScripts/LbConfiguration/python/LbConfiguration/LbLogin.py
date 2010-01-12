@@ -49,7 +49,7 @@ from SetupProject import SetupProject
 
 from LbConfiguration.Platform import getBinaryDbg, getConfig
 from LbConfiguration.Platform import getCompiler, getPlatformType, getArchitecture
-from LbConfiguration.Platform import isBinaryDbg
+from LbConfiguration.Platform import isBinaryDbg, NativeMachine
 from LbConfiguration.External import CMT_version
 from LbUtils.Script import Script
 from LbUtils.Env import Environment, Aliases
@@ -61,7 +61,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.67 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.68 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -410,28 +410,11 @@ class LbLoginScript(Script):
 #-----------------------------------------------------------------------------------
 # Core CMT business
 
-    def getNativeBin(self):
-        log = logging.getLogger()
-        if sys.platform != "win32" :
-            ev = self._env
-            if ev.has_key("UNAME") :
-                m1 = ev["UNAME"]
-            else :
-                m1 = os.popen("uname").read()[:-1]
-            if m1 in ["Linux", "LynxOS", "Darwin"] :
-                m2 = os.popen("uname -m").read()[:-1].strip()
-                natbin = "%s-%s" % (m1, m2)
-            elif m1.startswith("CYGWIN") :
-                natbin = m1
-        else : 
-            natbin = "VisualC"
-        log.debug("Native binary is %s" % natbin)        
-        return natbin
-
     def setCMTBin(self):
         log = logging.getLogger()
         ev = self._env
-        ev["CMTBIN"] = self.getNativeBin()
+        m = NativeMachine()
+        ev["CMTBIN"] = m.CMTSystem() 
         log.debug("CMTBIN is set to %s" % ev["CMTBIN"])
         
     def hasCommand(self, cmd):
@@ -446,7 +429,7 @@ class LbLoginScript(Script):
         log = logging.getLogger()
         ev = self._env
         if sys.platform != "win32" :
-            system = self.getNativeBin()
+            system = ev["CMTBIN"]
         else :
             if ev.has_key("CMTCONFIG") :
                 system = ev["CMTCONFIG"]

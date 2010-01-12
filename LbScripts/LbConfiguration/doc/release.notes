@@ -1,3 +1,8 @@
+2010-01-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Platform.py: implemented the native machine detection
+	base.
+
 2010-01-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Project.py: added the binary nature to the project conf

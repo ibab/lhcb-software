@@ -1,5 +1,7 @@
 """ General LHCb platform configuration """
 
+import sys
+import platform
 
 # CMTCONFIG extraction
 
@@ -127,9 +129,63 @@ binary_dbg_list = [ getBinaryDbg(x) for x in binary_opt_list ]
 
 binary_list = binary_opt_list + binary_dbg_list
 
-# Native platform guessing
-
-
-
 # supported shells
 supported_shells = ["csh","sh","bat"]
+
+
+# Native platform guessing
+
+def getNativeOSFlavour():
+    pass
+
+def getNativeOSVersion():
+    pass
+class NativeMachine:
+    def __init__(self):
+        self._arch = None
+        self._ostype = None
+        self._machine = None
+        self._osflavor = None
+        self._osversion = None
+        if sys.platform == "win32" :
+            self._arch = "32"
+            self._ostype = "Windows"
+            self._machine = "i686"
+        elif sys.platform == "win64" :
+            self._arch = "64"
+            self._ostype = "Windows"
+            self._machine = "x86_64"
+        else :
+            sysinfo = platform.uname()
+            self._ostype = sysinfo[0]
+            self._machine = sysinfo[4]
+            if self._ostype in ["Linux", "LynxOS", "Darwin"] :
+                if self._machine == "x86_64" :
+                    self._arch = "64"
+                else :
+                    self._arch = "32"
+    def arch(self):
+        """ returns 32 or 64 """
+        return self._arch
+    def OSType(self):
+        """ returns Linux, Darwin, Windows """
+        return self._ostype
+    def machine(self):
+        """ returns i386, i486, i686 """
+        return self._machine
+    def system(self):
+        """ return Linux-i386, Windows-x86_64 ... """
+        return "%s-%s" % (self._ostype, self._machine)
+    def CMTSystem(self):
+        cmtsystem = None
+        if self._ostype == "Windows" :
+            cmtsystem = "VisualC"
+        elif self._ostype == "Darwin" :
+            cmtsystem = "Darwin-i386"
+        else :
+            if self._machine in ["i386", "i486", "i586"] :
+                cmtsystem = "%s-i386" % self._ostype
+            else :
+                cmtsystem = "%s-%s" % (self._ostype, self._machine)
+        return cmtsystem
+
