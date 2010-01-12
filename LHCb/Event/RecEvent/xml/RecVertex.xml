@@ -18,10 +18,26 @@
       id = "10030"
       >
 
+      <import name="GaudiKernel/Range"/>
+      <import name="GaudiKernel/SharedObjectsContainer"/>
       <import name="Event/Track.h"/>
       <import name = "Event/VertexBase.h"/>
       <base name = "VertexBase"/>
       &KeyedObject;
+
+      <typedef
+	  type   = "SharedObjectsContainer&lt;LHCb::RecVertex&gt;"
+	  def    = "Selection"
+	  desc   = "Container type for shared PVs (without ownership)"
+	  access = "PUBLIC"
+	  />
+
+      <typedef
+	  type   = "Gaudi::Range_&lt;ConstVector&gt;"
+	  def    = "Range"
+	  desc   = "For uniform access to containers in TES (KeyedContainer,SharedContainer) "
+	  access = "PUBLIC"
+	  />
 
       <location name="Velo2D"    place="Hlt/Vertex/PV2D"     />
       <location name="Velo3D"    place="Hlt/Vertex/PV3D"     />
