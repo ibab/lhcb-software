@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -56,7 +56,7 @@ class Hlt1HadronForSwimmingLinesConf(HltLinesConfigurableUser) :
                 , 'SoftHadMain_ETCut'       : 2500. 
                 , 'SoftHadMain_PTCut'       : 1500.
                 , 'SoftHadDi_IPCut'         : 0.1
-                , 'Prescale'                : { 'Hlt1SoftDiHadronForSwimming' : 0 }
+                #, 'Prescale'                : { 'Hlt1SoftDiHadronForSwimming' : 0 }
                 }
     
     def __apply_configuration__(self) : 
@@ -259,9 +259,9 @@ class Hlt1HadronForSwimmingLinesConf(HltLinesConfigurableUser) :
 
         # Soft DiHadron Line
         #-----------------------------------
-        Line('SoftDiHadronForSwimming'
-             , prescale = self.prescale
-             , postscale = self.postscale
-             , L0DU = "L0_DECISION"
-             , algos = [confirmation('Soft')]+companion('Soft')+dihadron('Soft')+vafterburn('Soft')
-             )
+        #Line('SoftDiHadronForSwimming'
+        #    , prescale = self.prescale
+        #     , postscale = self.postscale
+        #     , L0DU = "L0_DECISION"
+        #     , algos = [confirmation('Soft')]+companion('Soft')+dihadron('Soft')+vafterburn('Soft')
+        #     )
