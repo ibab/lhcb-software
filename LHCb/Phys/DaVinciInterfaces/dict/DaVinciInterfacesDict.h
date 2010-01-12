@@ -1,4 +1,4 @@
-// $Id: DaVinciInterfacesDict.h,v 1.5 2009-11-10 12:54:14 cocov Exp $
+// $Id: DaVinciInterfacesDict.h,v 1.6 2010-01-12 10:32:13 jpalac Exp $
 #ifndef DICT_DAVINCIINTERFACESDICT_H 
 #define DICT_DAVINCIINTERFACESDICT_H 1
 
@@ -25,6 +25,7 @@
 #include "Kernel/IDecodeSimpleDecayString.h"
 #include "Kernel/IDirectionFit.h"
 #include "Kernel/IDistanceCalculator.h"
+#include "Kernel/IDVAlgorithm.h"
 #include "Kernel/IEventTupleTool.h"
 #include "Kernel/IFilterCriteriaTESTool.h"
 #include "Kernel/IFilterCriterion.h"
