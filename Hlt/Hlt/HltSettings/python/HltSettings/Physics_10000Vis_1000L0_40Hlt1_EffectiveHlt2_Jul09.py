@@ -23,6 +23,7 @@ class Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09( Physics_10000Vis_1000L
         from Hlt2Lines.Hlt2TopologicalLines  import Hlt2TopologicalLinesConf
         from Hlt2Lines.Hlt2InclusivePhiLines import Hlt2InclusivePhiLinesConf
         from Hlt2Lines.Hlt2B2XGammaLines import Hlt2B2XGammaLinesConf
+        from Hlt2Lines.Hlt2CharmLines        import Hlt2CharmLinesConf
     
         # Hlt thresholds
         # pick up inherited thresholds, and update them...
@@ -71,9 +72,14 @@ class Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09( Physics_10000Vis_1000L
                                                  , 'ComRobTrkMaxPtLL' : 1600
                                                  , 'ComTFVtxPVDispChi2LL' : 67
                                                  , 'RobustPointingUL' : 0.284
-                                                 , 'TFPointUL' : 0.163
-                                                 , 'CharmRobustPointUL' : 0.032
-                                                 , 'CharmTFPointUL' : 0.032  }
+                                                 , 'TFPointUL' : 0.163 }
+                   , Hlt2CharmLinesConf       : {  'ComRobAllTrkPtLL' : 850
+                                                 , 'ComRobAllTrkPVIPLL' : 0.12
+                                                 , 'ComRobPairMinDocaUL' : 0.50
+                                                 , 'ComRobTrkMaxPtLL' : 1600
+                                                 , 'ComTFVtxPVDispChi2LL' : 67
+                                                 , 'RobustPointingUL' : 0.032
+                                                 , 'TFPointUL' : 0.032  }
                    })
         return d 
 ######################################################################################################
@@ -102,15 +108,15 @@ class Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09( Physics_10000Vis_1000L
 ##
 ## charm : whole list
 ##
-        list.extend( [ 'Hlt2Topo3BodyCharmSA',
-                       'Hlt2Topo2BodyCharmSA',
-                       'Hlt2Topo4BodyCharmSA',
-                       'Hlt2TopoTF2BodyCharmSignal',
-                       'Hlt2TopoTF3BodyCharmSignal',
-                       'Hlt2TopoTF4BodyCharmSignal',
-                       'Hlt2TopoTF2BodyCharmWideMass',
-                       'Hlt2TopoTF3BodyCharmWideMass',
-                       'Hlt2TopoTF4BodyCharmWideMass',
+        list.extend( [ 'Hlt2Charm3BodySA',
+                       'Hlt2Charm2BodySA',
+                       'Hlt2Charm4BodySA',
+                       'Hlt2CharmTF2BodySignal',
+                       'Hlt2CharmTF3BodySignal',
+                       'Hlt2CharmTF4BodySignal',
+                       'Hlt2CharmTF2BodyWideMass',
+                       'Hlt2CharmTF3BodyWideMass',
+                       'Hlt2CharmTF4BodyWideMass',
                        'Hlt2DX3BodyCopKsDD',
                        'Hlt2DX3BodyCopNoKs' ] )
 ##

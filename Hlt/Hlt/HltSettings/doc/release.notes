@@ -1,8 +1,17 @@
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltSettings
 ! Responsible : Patrick Koppenburg, Gerhard Raven
-! Purpose     : All triggre threshold settings
+! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+
+! 2010-01-12 - Patrick Spradlin
+ - Updates related to separation of charm and topological lines in
+   Hlt/Hlt2Lines.
+   . Depends on Hlt/Hlt2Lines tag spradlin_2010Jan12.
+   . Physics_10000Vis_1000L0_40Hlt1_*Hlt2_Jul09.py:
+     Modified so that the charm lines get correctly configured under their
+     new configurable, Hlt2CharmLinesConf (they were formerly configured
+     through the Hlt2TopologicalLinesConf configurable).
 
 !========================== HltSettings v1r6 2010-01-11 ===================
 ! 2010-01-08 - V. Gligorov
