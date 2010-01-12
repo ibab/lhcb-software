@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.392 2010-01-11 14:49:10 graven Exp $ 
+! $Id: release.notes,v 1.393 2010-01-12 16:04:14 spradlin Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-01-12 - Patrick Spradlin
+ - Updates related to separation of charm and topological lines in
+   Hlt/Hlt2Lines.
+   . Depends on Hlt/Hlt2Lines tag spradlin_2010Jan12.
+   . Hlt2.py: Added new configurable Hlt2CharmLinesConf to the list of imports
+     and to the list of Hlt2Conf.__used_configurables__
 
 !========================== HltConf v6r2 2010-01-11 ===================
 ! 2010-01-11 - Gerhard Raven

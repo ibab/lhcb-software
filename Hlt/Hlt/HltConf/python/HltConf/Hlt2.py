@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.43 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.44 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -21,6 +21,7 @@ from Hlt2Lines.Hlt2TopologicalLines     import Hlt2TopologicalLinesConf
 from Hlt2Lines.Hlt2B2XGammaLines        import Hlt2B2XGammaLinesConf
 from Hlt2Lines.Hlt2B2HHLines            import Hlt2B2HHLinesConf
 from Hlt2Lines.Hlt2B2LLXLines           import Hlt2B2LLXLinesConf
+from Hlt2Lines.Hlt2CharmLines           import Hlt2CharmLinesConf
 from Hlt2Lines.Hlt2DisplVerticesLines   import Hlt2DisplVerticesLinesConf
 from Hlt2Lines.Hlt2CommissioningLines   import Hlt2CommissioningLinesConf
 from Hlt2Lines.Hlt2ExpressLines         import Hlt2ExpressLinesConf
@@ -34,6 +35,7 @@ class Hlt2Conf(LHCbConfigurableUser):
     __used_configurables__ = [ Hlt2PID
                              , Hlt2TopologicalLinesConf
                              , Hlt2B2DXLinesConf 
+                             , Hlt2CharmLinesConf
                              , Hlt2InclusiveDiMuonLinesConf
                              , Hlt2InclusiveMuonLinesConf 
                              , Hlt2InclusivePhiLinesConf 
