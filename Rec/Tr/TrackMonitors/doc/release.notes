@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-01-12 Wouter Hulsbergen
+ - Added TrackITOverlapMonitor
+ - Modified (most) algorithms to access tracks by Range
+
 ! 2010-01-07 J Luisier
  - Reactivation of OTTimeMonitor, disabled by mistake.
 
