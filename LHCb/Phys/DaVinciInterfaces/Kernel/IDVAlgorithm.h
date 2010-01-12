@@ -1,4 +1,4 @@
-// $Id: IDVAlgorithm.h,v 1.2 2010-01-12 10:37:13 jpalac Exp $
+// $Id: IDVAlgorithm.h,v 1.3 2010-01-12 10:38:47 jpalac Exp $
 #ifndef KERNEL_IDVALGORITHM_H 
 #define KERNEL_IDVALGORITHM_H 1
 
@@ -25,6 +25,8 @@ class GaudiAlgorithm;
 
 /** @class IDVAlgorithm Kernel/IDVAlgorithm.h
  *  
+ *  Abstract interface containing some of the more useful methods currently
+ *  in DVAlgorithm and IPhysDesktop.
  *
  *  @author Juan PALACIOS
  *  @date   2010-01-12
