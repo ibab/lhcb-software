@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py,v 1.5 2010-01-01 15:27:10 ibelyaev Exp $
+# $Id: tests.py,v 1.6 2010-01-12 07:39:56 graven Exp $
 # =============================================================================
 ## @file   LoKiTrigger/tests.py
 #  The simple test script for Phys/LoKiTrigger package
@@ -21,7 +21,7 @@ The basic tests for LoKiTrigger package
 """
 # =============================================================================
 __author__   = "Vanya BELYAEV  Ivan.Belyaev@nikhef.nl"
-__version__  = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.5 $ "
+__version__  = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.6 $ "
 # =============================================================================
 
 ## needed since there is no autoloading of Tracking dictionaries:
@@ -119,6 +119,11 @@ def test2() :
     """
     Test #3 
     """
+
+    def uints(*args) :
+        x = GaudiPython.gbl.std.vector('unsigned int')()
+        for a in args : x.push_back(a)
+        return x
 
     track = LHCb.Track()
 

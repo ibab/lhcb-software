@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.63 2010-01-11 14:14:48 graven Exp $
+! $Id: release.notes,v 1.64 2010-01-12 07:39:56 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 !========================== LoKiTrigger v9r7 2010-01-11 ===================
+! 2010-01-12 - Gerhard Raven
+ - fix failing qmtest, move tag
+
 ! 2010-01-01 - Vanya BELYAEV
  - add new symbols for Wouterl Hulsbergen 
      a.  TrSTIDC  ( count STChannelIDs ) 
