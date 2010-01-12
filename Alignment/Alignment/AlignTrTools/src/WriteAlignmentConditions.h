@@ -1,4 +1,4 @@
-// $Id: WriteAlignmentConditions.h,v 1.7 2009-08-31 12:23:45 mneedham Exp $
+// $Id: WriteAlignmentConditions.h,v 1.8 2010-01-12 12:09:19 wouter Exp $
 #ifndef WriteAlignmentConditions_H
 #define WriteAlignmentConditions_H 1
 
@@ -63,7 +63,7 @@ private:
   std::string m_author;
   std::string m_desc;
   std::string m_tag;
-
+  bool m_removePivot ;
 };
 
 

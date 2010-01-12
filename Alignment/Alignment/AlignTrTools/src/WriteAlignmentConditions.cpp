@@ -1,4 +1,4 @@
-// $Id: WriteAlignmentConditions.cpp,v 1.8 2009-08-31 12:23:45 mneedham Exp $
+// $Id: WriteAlignmentConditions.cpp,v 1.9 2010-01-12 12:09:19 wouter Exp $
 
 // std
 #include <fcntl.h>
@@ -42,7 +42,7 @@ WriteAlignmentConditions::WriteAlignmentConditions( const std::string& name,
   declareProperty("author", m_author = "Joe Bloggs");
   declareProperty("tag", m_tag = "Unknown");
   declareProperty("desc", m_desc = "blahblah");
-
+  declareProperty("RemovePivotPoint", m_removePivot = true ) ;
 }
 
 WriteAlignmentConditions::~WriteAlignmentConditions()
@@ -71,7 +71,7 @@ StatusCode WriteAlignmentConditions::initialize() {
 void WriteAlignmentConditions::children(DetectorElement* parent, std::ofstream& out, unsigned int depth)
 {
   if (parent != 0){
-    const Condition* aCon = parent->geometry()->alignmentCondition();
+    const AlignmentCondition* aCon = parent->geometry()->alignmentCondition();
     if ( aCon ) {
       bool wanted = false;
       for ( unsigned int i = 0; i < m_depths.size(); i++ ) { // check if current depth is wanted for output
@@ -79,7 +79,18 @@ void WriteAlignmentConditions::children(DetectorElement* parent, std::ofstream& 
       }
       if ( 0 == m_depths.size() ) wanted = true; // in case of empty list print all levels
       if ( wanted ) {
+	// if we want to remove the pivot point, first set it to zero
+	bool removePivot = m_removePivot && aCon->exists("pivotXYZ") ;
+	if( removePivot ) (const_cast<AlignmentCondition*>(aCon))->setPivotPoint( Gaudi::XYZPoint() ) ; 
+	// now get the condition as a single string
         std::string temp = strip(aCon->toXml("", false, m_precision));
+	// now remove the pivot point from the output string
+	if( removePivot ) {
+	  static const std::string stringToRemove = "<paramVector name=\"pivotXYZ\" type=\"double\">0 0 0</paramVector>" ;
+	  size_t pos = temp.find( stringToRemove ) ;
+	  if( pos != std::string::npos )
+	    temp.replace( pos, stringToRemove.size(), "") ;
+	}
         replaceChars(temp);
         out << temp << std::endl;
       }
