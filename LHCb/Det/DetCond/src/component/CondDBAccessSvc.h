@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.38 2009-05-27 14:15:57 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.39 2010-01-12 19:06:28 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -243,6 +243,22 @@ private:
   /// store using XML persistency format (enabled by default).
   bool m_xmlDirectMapping;
 
+  /// Path in the condition database (not in the transient store) to be used as
+  /// heart-beat marker.
+  /// The latest update of the condition specified give information about when
+  /// the replica was last updated: We cannot guarantee that the database is more
+  /// "up to date" then the "since" field of the latest object in the heart-beat
+  /// condition.
+  std::string m_heartBeatCondition;
+
+  /// Latest know update of the database ("since" field of the latest heart-beat condition).
+  /// Initialized to 0, if no heart-beat condition is requested, it is set to
+  /// cool::ValidityKeyMax, otherwise, during the first access to the DB, the
+  /// object vaild until VAlidityKeyMax is retrieved and its "since" field is
+  /// recorded in this variable.
+  /// When disconnected from the database, it is reset to 0 to force a re-check.
+  cool::ValidityKey m_latestHeartBeat;
+
   // ----------------------------------------------
   // ---------- Private Member Functions ----------
   // ----------------------------------------------
@@ -293,6 +309,12 @@ private:
                             const std::string &tagName,
                             std::set<std::string> &reserved);
 
+
+  /// Return the value of m_latestHeartBeat.
+  /// The value is retrieved from the database when requested the first time
+  /// in the RUNNING state.
+  const cool::ValidityKey &i_latestHeartBeat();
+  
   /// Allow SvcFactory to instantiate the service.
   friend class SvcFactory<CondDBAccessSvc>;
 
@@ -377,6 +399,9 @@ private:
               << m_owner->m_connectionTimeOut.total_seconds()
               << "s (will reconnect if needed)"<< endmsg;
               m_owner->database()->closeDatabase();
+              // reset the latest heart beat because it may be different the next time
+              // we connect to the DB
+              if (!m_owner->m_heartBeatCondition.empty()) m_owner->m_latestHeartBeat = 0;
             }
 
             // schedule the next check for now + dt (seems a good estimate)

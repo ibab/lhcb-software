@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.55 2009-05-27 14:15:57 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.56 2010-01-12 19:06:28 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -65,6 +65,7 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   Service(name,svcloc),
   m_coolConfSvc(0),
   m_rndmSvc(0),
+  m_latestHeartBeat(0),
   m_timeOutCheckerThread(0)
 {
 
@@ -85,6 +86,7 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   declareProperty("EnableXMLDirectMapping", m_xmlDirectMapping = true,
                   "Allow direct mapping from CondDB structure to"
                   " transient store.");
+  declareProperty("HeartBeatCondition", m_heartBeatCondition = "");
 }
 
 //=============================================================================
@@ -175,7 +177,11 @@ StatusCode CondDBAccessSvc::initialize(){
     log << MSG::FATAL << "Cannot use direct XML mapping without cache (YET)" << endmsg;
     return StatusCode::FAILURE;
   }
-
+  
+  if (!m_heartBeatCondition.empty()) {
+    log << MSG::DEBUG << "Using heart beat condition \"" << m_heartBeatCondition << '"' << endmsg;
+  }
+  
   return sc;
 }
 
@@ -774,6 +780,7 @@ StatusCode CondDBAccessSvc::i_getObjectFromDB(const std::string &path, const coo
                                               std::string &descr, cool::ValidityKey &since, cool::ValidityKey &until,
                                               bool use_numeric_chid, cool::ChannelId channel, const std::string &channelstr){
   try {
+
     bool existsFolderSet = false;
     {
       DataBaseOperationLock dbLock(this);
@@ -856,6 +863,15 @@ StatusCode CondDBAccessSvc::i_getObject(const std::string &path, const Gaudi::Ti
 
   cool::ValidityKey vk_when = timeToValKey(when);
   cool::ValidityKey vk_since = 0, vk_until = 0;
+  
+  // This is not in i_getObjectFromDB because I need to ensure that m_latestHeartBeat
+  // is correctly set even when using the cache.
+  if (vk_when >= i_latestHeartBeat()) {
+    MsgStream log(msgSvc(), name());
+    log << MSG::ERROR << "Database not up-to-date. Latest known update is at "
+        << valKeyToTime(i_latestHeartBeat()) << ", event time is " << when << endmsg;
+    return StatusCode::FAILURE;
+  }
 
   if (m_useCache) {
 
@@ -872,7 +888,13 @@ StatusCode CondDBAccessSvc::i_getObject(const std::string &path, const Gaudi::Ti
 
       if ( m_cache->get(path,vk_when,channel,vk_since,vk_until,descr,data) ) {
         since = valKeyToTime(vk_since);
-        until = valKeyToTime(vk_until);
+        /// Artificially cutting the end of validity of the retrieved object to
+        /// the latest know heart beat guarantees that we will have to go back
+        /// to the database when the event time exceeds it.
+        /// Note that we are not calling i_latestHeartBeat() on purpose:
+        /// it returns +inf if called during initialize, but it sets
+        /// correctly the variable m_latestHeartBeat.
+        until = valKeyToTime(std::min(vk_until, m_latestHeartBeat));
         return StatusCode::SUCCESS;
       }
     }
@@ -888,8 +910,52 @@ StatusCode CondDBAccessSvc::i_getObject(const std::string &path, const Gaudi::Ti
   StatusCode sc = i_getObjectFromDB(path,vk_when,data,descr,vk_since,vk_until,use_numeric_chid,channel,channelstr);
   since = valKeyToTime(vk_since);
   until = valKeyToTime(vk_until);
+  /// Artificially cutting the end of validity of the retrieved object to
+  /// the latest know heart beat guarantees that we will have to go back
+  /// to the database when the event time exceeds it.
+  /// Note that we are not calling i_latestHeartBeat() on purpose:
+  /// it returns +inf if called during initialize, but it sets
+  /// correctly the variable m_latestHeartBeat.
+  until = valKeyToTime(std::min(vk_until, m_latestHeartBeat));
   return sc;
 }
+
+const cool::ValidityKey& CondDBAccessSvc::i_latestHeartBeat()
+{
+  if (m_latestHeartBeat == 0) {
+    if (m_heartBeatCondition.empty() ||
+        m_noDB) { // it doesn't make sense to ask for a heart beat if we do not use the DB
+      // no heart beat condition: the database is always valid
+      m_latestHeartBeat = cool::ValidityKeyMax;
+    } else {
+      if (m_outputLevel <= MSG::DEBUG) {
+        MsgStream log(msgSvc(),name());
+        log << MSG::DEBUG << "Retrieving heart beat condition \"" << m_heartBeatCondition << '"' << endmsg;
+      }
+      // we do not use the normal functions to retrieve the object because
+      // we want to by-pass the cache
+      {
+        DataBaseOperationLock dbLock(this);
+        cool::IFolderPtr folder = database()->getFolder(m_heartBeatCondition);
+        cool::IObjectPtr obj = folder->findObject(cool::ValidityKeyMax-1, 0);
+        m_latestHeartBeat = obj->since();
+      }
+      if (m_outputLevel <= MSG::DEBUG) {
+        MsgStream log(msgSvc(),name());
+        log << MSG::DEBUG << "Latest heart beat at " << m_latestHeartBeat << endmsg;
+      }
+    }
+  }
+  if (FSMState() != Gaudi::StateMachine::RUNNING) {
+    // Temporarily consider the database valid if not running
+    // (e.g. during initialize).
+    // Note that the retrieve is done (and muts be done) anyway,
+    // because it is needed by i_getObject().
+    return cool::ValidityKeyMax;
+  }
+  return m_latestHeartBeat;
+}
+
 
 //=========================================================================
 //

@@ -1,4 +1,4 @@
-// $Id: TestConditionAlg.cpp,v 1.1 2008-06-27 17:00:41 marcocle Exp $
+// $Id: TestConditionAlg.cpp,v 1.2 2010-01-12 19:06:27 marcocle Exp $
 
 // Include files
 #include "GaudiKernel/Map.h"
@@ -31,9 +31,14 @@ public:
 protected:
 
 private:
-  
+  void i_dump();
+
   /// Names of the conditions to print
   std::vector<std::string> m_condPaths;
+
+  /// Flag to decide if the conditions have to be loaded also during the
+  /// initialize step.
+  bool m_loadAtInit;
   
   /// Container of the conditions to print
   GaudiUtils::Map<std::string,Condition*> m_conditions;
@@ -53,8 +58,10 @@ TestConditionAlg::TestConditionAlg( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty("Conditions",m_condPaths,
+  declareProperty("Conditions", m_condPaths,
       "list of paths to conditions in the detector transient store");
+  declareProperty("LoadDuringInitialize", m_loadAtInit = false,
+      "load the requested conditions already duting the initialization");
 }
 //=============================================================================
 // Destructor
@@ -75,6 +82,14 @@ StatusCode TestConditionAlg::initialize() {
     registerCondition<TestConditionAlg>(*path,m_conditions[*path],NULL);
   }
   
+  if (m_loadAtInit) {
+    StatusCode sc = updMgrSvc()->update(this);
+    info() << "Conditions loaded at initialize" << endmsg;
+    if (sc.isSuccess()){
+      i_dump();
+    }
+    else return sc;
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -84,13 +99,8 @@ StatusCode TestConditionAlg::initialize() {
 StatusCode TestConditionAlg::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-  info() << "Requested Conditions:\n";
-  GaudiUtils::Map<std::string,Condition*>::iterator it;
-  for (it = m_conditions.begin(); it != m_conditions.end(); ++it) {
-    info() << "--- " << it->first << "\n" << *(it->second) << "\n";
-  }
-  info() << endmsg;
-  
+  i_dump();
+
   return StatusCode::SUCCESS;
 }
 
@@ -106,6 +116,19 @@ StatusCode TestConditionAlg::finalize() {
   m_condPaths.clear();
   
   return GaudiAlgorithm::finalize();  // must be called after all other actions
+}
+
+//=============================================================================
+//  Print the conditions
+//=============================================================================
+void TestConditionAlg::i_dump() 
+{
+  info() << "Requested Conditions:\n";
+  GaudiUtils::Map<std::string,Condition*>::iterator it;
+  for (it = m_conditions.begin(); it != m_conditions.end(); ++it) {
+    info() << "--- " << it->first << "\n" << *(it->second) << "\n";
+  }
+  info() << endmsg;  
 }
 
 //=============================================================================

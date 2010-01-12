@@ -1,9 +1,34 @@
-# $Id: release.notes,v 1.174 2009-12-11 13:39:28 cattanem Exp $
+# $Id: release.notes,v 1.175 2010-01-12 19:06:27 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2010-01-12 - Marco Clemencic
+ - Completed task #13270: Block access to conditions in ONLINE partition if
+                          validity interval is not closed
+   - Modified CondDBAccessSvc to accept a new property (HeartBeatCondition). The
+     property specified the path in the database to be used as heart beat, i.e.
+     the partition is considered not up-to-date if the latest update of that
+     condition is less recent than the event time being processed.
+     Since the test is done only when actually accessing the CondDBAccessSvc,
+     to ensure that we get there when the event exceeds the validity of the
+     database, the returned validities are artificially cut at the latest heart
+     beat.
+   - Modified the ConfigurableUser CondDB to set the HeartBeatCondition for the
+     Online partition and snapshots (can be disabled with the property
+     IgnoreHeartBeat).
+   - Removed the OnlineDBValidatorSvc because it is not needed anymore.
+   - Adapted the TestCondition algorithm to test the new feature and added the
+     relative test.
+   NOTE: In the special case when there are conditions with initial validity
+   	 after the latest heart beat, there may be problem during the initialize
+   	 if exposed validity (artificially cut) is checked (the UpdateManagerSvc
+   	 and the DetectorDataSvc are not doing it).
+ - Added the properties "DisableLFC" and "Online" to the ConfigurableUser CondDB
+   to be able to ignore the LFC when using Oracle and enable special
+   configuration for the Online environment (Oracle).
 
 !===================== Det/DetCond v12r8 2009-12-11 ==========================
 ! 2009-12-11 - Marco Cattaneo

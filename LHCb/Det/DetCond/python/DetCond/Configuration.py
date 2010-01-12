@@ -1,7 +1,7 @@
 """
 High level configuration tools for Conditions Database.
 """
-__version__ = "$Id: Configuration.py,v 1.13 2009-06-03 15:55:23 marcocle Exp $"
+__version__ = "$Id: Configuration.py,v 1.14 2010-01-12 19:06:28 marcocle Exp $"
 __author__  = "Marco Clemencic <Marco.Clemencic@cern.ch>"
 
 from Gaudi.Configuration import allConfigurables, ConfigurableUser, importOptions, getConfigurable, log
@@ -11,7 +11,8 @@ from Configurables import ( CondDBAccessSvc,
                             CondDBTimeSwitchSvc, 
                             CondDBCnvSvc,
                             CondDBSQLiteCopyAccSvc,
-                            CondDBLogger )
+                            CondDBLogger,
+                            COOLConfSvc )
 
 import os, re
 
@@ -28,7 +29,11 @@ class CondDB(ConfigurableUser):
                   "Overrides"   : [], 
                   "PartitionConnectionString": {},
                   "SQLiteLocalCopiesDir": "",
-                  "OverwriteSQLiteLocalCopy": False  }
+                  "OverwriteSQLiteLocalCopy": False,
+                  "DisableLFC"  : False,
+                  "Online"      : False,
+                  "IgnoreHeartBeat": False,
+                  }
     _propertyDocDct = { 
                        'Tags' : """ Dictionary of tags (partition:tag) to use for the COOL databases """,
                        'Simulation' : """ Boolean flag to select the simulation or real-data configuration """,
@@ -39,6 +44,9 @@ class CondDB(ConfigurableUser):
                        'PartitionConnectionString' : """ Dictionary with alternative connection strings for the CondDB partitions """,
                        'SQLiteLocalCopiesDir' : """ The directory where to copy the SQLite files before accessing them """,
                        'OverwriteSQLiteLocalCopy' : """ When using SQLite local copies, overwrite existing files """,
+                       'DisableLFC' : """ Do not use LFC lookup even if we are connecting to Oracle """,
+                       'Online' : """ Flag to activate configuration options specific for the Online environment """,
+                       'IgnoreHeartBeat' : """ Do not set the HeartBeatCondition for the Online partition """,
                        }
     LAYER = 0
     ALTERNATIVE = 1
@@ -229,6 +237,13 @@ class CondDB(ConfigurableUser):
         """
         if self.getProp("UseOracle"):
             importOptions("$SQLDDDBROOT/options/SQLDDDB-Oracle.py")
+            if self.getProp("DisableLFC"):
+                COOLConfSvc(UseLFCReplicaSvc = False)
+            if self.getProp("Online"):
+                COOLConfSvc(UseLFCReplicaSvc = False)
+                CORAL_XML_DIR = "/group/online/condb_viewer"
+                ApplicationMgr().Environment["CORAL_AUTH_PATH"] = CORAL_XML_DIR
+                ApplicationMgr().Environment["CORAL_DBLOOKUP_PATH"] = CORAL_XML_DIR
         else:   
             importOptions("$SQLDDDBROOT/options/SQLDDDB.py")
         
@@ -257,6 +272,15 @@ class CondDB(ConfigurableUser):
             log.warning("Cannot override the connection strings of the partitions %r", conns.keys()) 
         if tags:
             log.warning("Cannot set the tag for partitions %r", tags.keys()) 
+        
+        if not self.getProp("IgnoreHeartBeat"):
+            if isinstance(partition["ONLINE"], CondDBAccessSvc):
+                partition["ONLINE"].HeartBeatCondition = "/Conditions/Online/LHCb/Tick"
+            elif isinstance(partition["ONLINE"], CondDBTimeSwitchSvc):
+                for span in partition["ONLINE"].Readers:
+                    span = allConfigurables[eval(span.split(':')[0]).split("/")[1]]
+                    if isinstance(span, CondDBAccessSvc):
+                        span.HeartBeatCondition = "/Conditions/Online/LHCb/Tick"
         
         if not self.getProp("Simulation"):
             # Standard configurations
