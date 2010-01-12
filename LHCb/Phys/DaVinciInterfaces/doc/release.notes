@@ -4,6 +4,13 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-01-12 - Juan PALACIOS
+ - Add Kernel/IDVAlgorithm.h
+  . IInterface exporting a few useful methods from DVAlgorithm.
+ - dict/DaVinciInterfaces[.h, .xml]
+  . Add IDVAlgorithm dictionaries.
+ - Increase version to v1r4
+
 !===================== DaVinciInterfaces v1r3p1 2009-12-11 ===================
 ! 2009-12-01 - Patrick Koppenburg
  - Add doxygen description of chi in IDistanceCalculator
