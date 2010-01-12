@@ -1,10 +1,25 @@
-! $Id: release.notes,v 1.39 2009-12-07 18:00:44 ibelyaev Exp $
+! $Id: release.notes,v 1.40 2010-01-12 10:58:34 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : collection of examples to run Bender - 
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
+
+
+! ====================== Ex/BenderExample v12r7p1 2010-01-12 ==================
+
+! 2010-01-12 - Vanya Belyaev
+
+ - fix many examples 
+
+   add many RealXXX exmaples, 
+   use Juan fiels as input 
+
+  cmt/requirements 
+
+    version increment to v12r7p1 
+
 
 ! ====================== Ex/BenderExample v12r6   2009-12-07 ==================
 

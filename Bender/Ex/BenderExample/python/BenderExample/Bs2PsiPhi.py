@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PsiPhi.py,v 1.9 2009-11-16 16:00:36 ibelyaev Exp $ 
+# $Id: Bs2PsiPhi.py,v 1.10 2010-01-12 10:58:34 ibelyaev Exp $ 
 # =============================================================================
 ## The simple Bender-based example for Bs-> Jpsi phi selection
 #
@@ -27,7 +27,7 @@ The simple Bender-based example for Bs-> Jpsi phi selection
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ "
 # =============================================================================
 ## import everything from bender 
 from Bender.All                import *
@@ -207,8 +207,9 @@ def configure ( **args ) :
     from Configurables import NTupleSvc, HistogramPersistencySvc, DaVinci, EventSelector
     
     daVinci = DaVinci (
-        DataType   = 'DC06'      , # default  
-        Simulation = True        )
+        DataType   = 'MC09'      , # default  
+        Simulation = True
+        )
     
     HistogramPersistencySvc ( OutputFile = 'Bs2PsiPhi_Histos.root' ) 
     NTupleSvc ( Output = [ "PsiPhi DATAFILE='Bs2PsiPhi_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
@@ -216,12 +217,16 @@ def configure ( **args ) :
     EventSelector ( 
         PrintFreq = 100 ,
         Input = [
-        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/Bs2PsiPhi.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        #,"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi_1.dst' TYP='POOL_ROOTTREE' OPT='READ'", 
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2PsiPhi_3.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-        ]
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000514_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000515_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000516_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000517_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000518_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000519_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000520_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000521_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000522_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000523_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"]
         )
     ## get the actual application manager (create if needed)
     gaudi = appMgr()
@@ -259,7 +264,7 @@ if __name__ == '__main__' :
     configure()
 
     ## run the job
-    run(1000)
+    run(5000)
 
 
 # =============================================================================

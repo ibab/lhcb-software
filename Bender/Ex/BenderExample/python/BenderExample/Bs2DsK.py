@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2DsK.py,v 1.4 2009-11-16 16:00:36 ibelyaev Exp $ 
+# $Id: Bs2DsK.py,v 1.5 2010-01-12 10:58:34 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/Bs2DsK.py
 #  The simple Bender-based example: find recontructed Bs -> BsK candidates 
@@ -28,7 +28,7 @@ The simple Bender-based example: find recontructed Bs -> BsK candidates
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -44,13 +44,6 @@ class Bs2DsK(AlgoMC) :
     """
     find recontructed Bs -> Ds K candidates 
     """
-    ## standard constructor
-    def __init__ ( self , name = 'Bs2DsK' , **kwargs ) :
-        """
-        Standard constructor
-        """ 
-        return AlgoMC.__init__ ( self , name , **kwargs )
-    
     ## standard method for analyses
     def analyse( self ) :
         """
@@ -143,24 +136,25 @@ def configure ( **args ) :
     from Configurables import DaVinci, HistogramPersistencySvc , EventSelector 
     
     daVinci = DaVinci (
-        DataType   = 'DC06'  , 
-        Simulation = True    )
+        DataType   = 'MC09'  , 
+        Simulation = True
+        )
     
     HistogramPersistencySvc ( OutputFile = 'Bs2DsK_Histos.root' ) 
     
     EventSelector (
         Input = [
-        # Bs -> Ds K 
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-        ,"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-        ,"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_3.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-        ,"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_4.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-##         # Bs -> Ds pi 
-##         ,"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-##         ,"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-##         ,"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_3.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-##         ,"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_4.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-        ]
+        # Bs -> Ds K
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000103_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000104_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000105_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000106_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000107_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000108_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000109_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000110_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000111_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005055/0000/00005055_00000112_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"]
     )
     
     gaudi = appMgr() 
@@ -173,9 +167,9 @@ def configure ( **args ) :
         ## print histos 
         HistoPrint     = True , 
         ## define the input particles:
-        InputLocations = [ 'StdTightKaons' ,
-                           'StdTightPions' ,
-                           'StdNoPIDsKaons']
+        InputLocations = [ 'StdTightKaons'  ,
+                           'StdTightPions'  ,
+                           'StdNoPIDsKaons' ]
         )
     
     ## gaudi.addAlgorithm ( alg ) 
@@ -203,7 +197,6 @@ if __name__ == '__main__' :
     ## run the job
     run(1000)
 
-    gaudi=appMgr()
 
 # =============================================================================
 # The END 

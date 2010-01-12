@@ -1,7 +1,24 @@
 #!/user/bin/env python
 # ============================================================================
 ## @file BenderExample/RealMip_Tuples.py
-#  Helepr script to visualize "mip"-histograms
+#
+#  Helper script to visualize "mip"-histograms
+#
+#  This file is a part of 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
+#  <b>"Python-based Interactive Environment for Smart and Friendly 
+#   Physics Analysis"</b>
+#
+#  The package has been designed with the kind help from
+#  Pere MATO and Andrey TSAREGORODTSEV. 
+#  And it is based on the 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
+#  "C++ ToolKit for Smart and Friendly Physics Analysis"
+#
+#  By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#  "No Vanya's lines are allowed in LHCb/Gaudi software."
+#
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2009-12-01
 # =============================================================================

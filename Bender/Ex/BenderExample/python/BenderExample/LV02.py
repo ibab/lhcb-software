@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: LV02.py,v 1.4 2009-11-16 16:00:36 ibelyaev Exp $ 
+# $Id: LV02.py,v 1.5 2010-01-12 10:58:34 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/LV02.py
 # The simple Bender-based example:
@@ -30,7 +30,7 @@ show 'Bs -> Ds pi' to 'Bs -> Ds K' reflection
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -189,14 +189,12 @@ def configure ( **args ) :
     EventSelector (
         PrintFreq = 100 , 
         Input = [
-        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/Bs2DsK_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        #"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_1.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_1.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_2.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_3.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_4.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_5.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/Bs2DsK_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        #"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsPi_1.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsPi_1.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsPi_2.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsPi_3.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsPi_4.dst'    TYP='POOL_ROOTTREE' OPT='READ'",

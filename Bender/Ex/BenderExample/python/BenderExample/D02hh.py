@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: D02hh.py,v 1.4 2009-11-16 16:00:36 ibelyaev Exp $
+# $Id: D02hh.py,v 1.5 2010-01-12 10:58:34 ibelyaev Exp $
 # =============================================================================
 ## @file BenderExample/D02hh.py
 #  The simple Bender-based example: find recontructed D0 -> hh candidates 
@@ -28,7 +28,7 @@ The simple Bender-based example: find recontructed D0 -> hh candidates
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ "
 # =============================================================================
 ## import everything from bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -118,10 +118,10 @@ def configure ( **args ) :
     EventSelector (
         PrintFreq = 100 ,
         Input = [
-        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/D02hh_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        #"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02hh_1.dst' TYP='POOL_ROOTTREE' OPT='READ'", 
+        #"DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/D02hh_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02hh_1.dst' TYP='POOL_ROOTTREE' OPT='READ'", 
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02hh_2.dst' TYP='POOL_ROOTTREE' OPT='READ'", 
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02hh_3.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02hh_3.dst' TYP='POOL_ROOTTREE' OPT='READ'"
         ]
         )
     

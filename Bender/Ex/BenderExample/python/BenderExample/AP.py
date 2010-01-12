@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: AP.py,v 1.2 2009-11-16 16:00:36 ibelyaev Exp $ 
+# $Id: AP.py,v 1.3 2010-01-12 10:58:34 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/AP.py
-# The simple Bender-based example:
-# show " L0 <-> K0S " reflection
+#
+# The simple Bender-based example: show " L0 <-> K0S " reflection
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
@@ -25,11 +25,13 @@
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 """
+
 The simple Bender-based example: show ' L0 <-> K0S ' reflection
+
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -160,26 +162,27 @@ def configure ( **args ) :
     from Configurables import DaVinci, HistogramPersistencySvc,EventSelector, NTupleSvc
     
     daVinci = DaVinci (
-        DataType   = 'DC06' , 
-        Simulation = True   ) 
+        DataType   = 'MC09' , 
+        Simulation = True
+        ) 
     
-    HistogramPersistencySvc ( OutputFile = 'AP_Histos.root' ) 
+    HistogramPersistencySvc ( OutputFile = 'AP_Histos.root' )
     
     EventSelector (
         PrintFreq = 100 , 
         Input = [
-        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/Bs2DsK_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        #"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_1.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_2.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_3.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_4.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_5.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/Bs2DsK_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        #"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsPi_1.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsPi_2.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsPi_3.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsPi_4.dst'    TYP='POOL_ROOTTREE' OPT='READ'",
-        ]
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005329/0000/00005329_00000001_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005329/0000/00005329_00000002_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005329/0000/00005329_00000003_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005329/0000/00005329_00000004_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005329/0000/00005329_00000005_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005329/0000/00005329_00000006_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005341/0000/00005341_00000001_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005341/0000/00005341_00000002_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005341/0000/00005341_00000003_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005341/0000/00005341_00000004_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005341/0000/00005341_00000005_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005341/0000/00005341_00000006_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"]
         )
     NTupleSvc ( Output = [ "AP DATAFILE='AP_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
     
@@ -215,11 +218,10 @@ if __name__ == '__main__' :
 
     ## configure the job:
     configure()
-
-    ## run the job
-    run(500)
     
-
+    ## run the job
+    run(10000)
+    
 # =============================================================================
 # The END 
 # =============================================================================

@@ -1,9 +1,26 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: GammaForThomas.py,v 1.5 2009-11-16 16:00:36 ibelyaev Exp $ 
+# $Id: GammaForThomas.py,v 1.6 2010-01-12 10:58:34 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/GammaForThomas.py
+#
 #  Simple module to test/verify MC-association for the photons
+#
+#  This file is a part of 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
+#  <b>"Python-based Interactive Environment for Smart and Friendly 
+#   Physics Analysis"</b>
+#
+#  The package has been designed with the kind help from
+#  Pere MATO and Andrey TSAREGORODTSEV. 
+#  And it is based on the 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
+#  "C++ ToolKit for Smart and Friendly Physics Analysis"
+#
+#  By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#  "No Vanya's lines are allowed in LHCb/Gaudi software."
+#
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2009-02-10
 # =============================================================================
@@ -12,7 +29,7 @@ Simple module to test/verify MC-association for the photons
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $"
 # =============================================================================
 from Bender.MainMC import * 
 import GaudiKernel.SystemOfUnits as Units

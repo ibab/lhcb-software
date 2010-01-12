@@ -1,9 +1,25 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RealMip.py,v 1.1 2009-12-01 12:49:24 ibelyaev Exp $
+# $Id: RealMip.py,v 1.2 2010-01-12 10:58:34 ibelyaev Exp $
 # =============================================================================
-# @file BenderExampel/RealMio.py
+# @file BenderExample/RealMip.py
+#
 # An attempt to find mip on real data 
+#  This file is a part of 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
+#  <b>"Python-based Interactive Environment for Smart and Friendly 
+#   Physics Analysis"</b>
+#
+#  The package has been designed with the kind help from
+#  Pere MATO and Andrey TSAREGORODTSEV. 
+#  And it is based on the 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
+#  "C++ ToolKit for Smart and Friendly Physics Analysis"
+#
+#  By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#  "No Vanya's lines are allowed in LHCb/Gaudi software."
+#
 # @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # @date 2009-11-25
 # ============================================================================
@@ -14,7 +30,7 @@ An attempt to find mip on real data
 """
 # ============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # ============================================================================
 ## import all needed stuff:
 import ROOT                           ## needed to produce/visualize the histograms
@@ -192,11 +208,12 @@ def configure ( datafiles ) :
         EvtMax        = -1     ,             ## all events in the input files 
         HistogramFile = 'RealMip_Histos.root' 
         )
-    
-    EventSelector (
-        PrintFreq = 100       , 
-        Input     = datafiles 
-        )
+
+    if datafiles : 
+        EventSelector (
+            PrintFreq = 100       , 
+            Input     = datafiles 
+            )
     
     FileCatalog (
         Catalogs = [ 'xmlcatalog_file:RealDataRec2.xml' ]
@@ -244,34 +261,14 @@ if '__main__' == __name__ :
     print __author__
     print __version__
     
-    input   = [
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005648/0000/00005648_00000002_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005648/0000/00005648_00000004_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005648/0000/00005648_00000005_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005648/0000/00005648_00000006_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005648/0000/00005648_00000007_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005648/0000/00005648_00000008_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005648/0000/00005648_00000009_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005648/0000/00005648_00000010_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005648/0000/00005648_00000011_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005648/0000/00005648_00000012_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005648/0000/00005648_00000013_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005649/0000/00005649_00000002_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005649/0000/00005649_00000003_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005650/0000/00005650_00000001_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005650/0000/00005650_00000003_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005650/0000/00005650_00000004_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005650/0000/00005650_00000005_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005650/0000/00005650_00000006_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005651/0000/00005651_00000001_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005652/0000/00005652_00000001_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005653/0000/00005653_00000001_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"
-        ]
-
-    configure ( input )
+    configure ( [] )
 
     gaudi = appMgr()
-
+    
+    evtsel = gaudi.evtSel()
+    
+    from BenderExample.JuanFiles2009 import files
+    
     run ( -1 )
 
     import GaudiPython.HistoUtils

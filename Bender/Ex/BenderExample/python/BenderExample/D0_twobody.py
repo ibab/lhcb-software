@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: D0_twobody.py,v 1.3 2009-11-16 16:00:36 ibelyaev Exp $ 
+# $Id: D0_twobody.py,v 1.4 2010-01-12 10:58:34 ibelyaev Exp $ 
 # =============================================================================
-## @file BenedrExample/D0_twobody.py
+## @file BenderExample/D0_twobody.py
 #  The simple Bender-based example: find recontructed D0 -> hh candidates 
 #
 #  This file is a part of 
@@ -28,7 +28,7 @@ The simple Bender-based example: find recontructed D0 -> hh candidates
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ "
 # =============================================================================
 ## import everything from bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -269,13 +269,20 @@ def configure ( **args ) :
     EventSelector (
         PrintFreq = 100 , 
         Input = [ 
-        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/D02hh_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/D02mumu_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        #"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02hh_1.dst'   TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02hh_1.dst'   TYP='POOL_ROOTTREE' OPT='READ'",
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02hh_2.dst'   TYP='POOL_ROOTTREE' OPT='READ'",
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02hh_3.dst'   TYP='POOL_ROOTTREE' OPT='READ'",
-        #"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02mumu_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02mumu_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02mumu_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02mumu_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        ## files with Meike's selection:
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911371/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911372/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911375/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911377/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911379/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911380/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911382/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911383/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'"        
         ]
         )
     
@@ -316,7 +323,7 @@ if __name__ == '__main__' :
     configure()
 
     ## run the job
-    run(1000)
+    run(5000)
     
 # =============================================================================
 # The END 

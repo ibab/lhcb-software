@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RealPi0.py,v 1.2 2009-12-07 18:00:44 ibelyaev Exp $
+# $Id: RealPi0.py,v 1.3 2010-01-12 10:58:34 ibelyaev Exp $
 # =============================================================================
 # @file BenderExampele/RealPi0.py
 # Attempt to recontruct pi0 on real data 
@@ -14,7 +14,7 @@ Attempt to recontruct pi0 on real data
 """
 # ============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # ============================================================================
 ## import all needed stuff:
 import ROOT                           ## needed to produce/visualize the histograms
@@ -227,17 +227,10 @@ if '__main__' == __name__ :
 
     evtSel = gaudi.evtsel()
 
-    ## 'New' data 
-    
-    mask = '/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/COLLISION09/%d/0%d_0000000001.raw'
-    runs = (
-        63441 , 63445 , 63446 , 63450 ,
-        63451 , 63452 , 63453 , 63454 , 63455 , 63456 , 63458 , 63461 ,
-        63462 , 63464 , 63466 , 63468 , 63470 , 63472 , 63475 , 63479 ,
-        63480 , 63481 , 63493 , 63494 , 63495 , 63496 , 63497  
-        )
 
-    evtSel.open( [ mask % (r,r) for r in runs ] )
+    from BenderExample.JuanFiles2009 import files
+    
+    evtSel.open( files )
     
     run ( -1 )
 

@@ -28,7 +28,7 @@ The simple Bender-based example: find recontructed D0 -> mumu candidates
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -114,9 +114,18 @@ def configure ( **args ) :
     EventSelector (
         PrintFreq = 100 , 
         Input = [
-        "DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/D02mumu_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-        #"DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02mumu_1.dst' TYP='POOL_ROOTTREE' OPT='READ'", 
-        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02mumu_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+        #"DATAFILE='PFN:/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/D02mumu_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02mumu_1.dst' TYP='POOL_ROOTTREE' OPT='READ'", 
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/D02mumu_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        ## files with Meike's selection:
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911371/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911372/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911375/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911377/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911379/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911380/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911382/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/5911/5911383/D02MuMu_MDW.dst' TYP='POOL_ROOTTREE' OPT='READ'"
         ]
         )
     
@@ -150,7 +159,7 @@ if __name__ == '__main__' :
     configure()
 
     ## run the job
-    run(1000)
+    run(5000)
     
 
 # =============================================================================
