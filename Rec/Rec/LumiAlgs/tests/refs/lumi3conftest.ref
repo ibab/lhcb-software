@@ -1,5 +1,5 @@
-# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_HEAD/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
-# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_HEAD/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
+# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/Rec_HEAD/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
+# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/Rec_HEAD/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
 # |-DataType    = '2009'
@@ -16,13 +16,13 @@
 # applying configuration of LumiAlgsConf
 # /***** User LumiAlgsConf/LumiAlgsConf **************************************************************
 # |-ForceFullSequence = False
-# |-DataType          = '2008'
+# |-DataType          = '2009'
 # |-SetFSRStatus      = ''
 # |-OutputLevel       = 1  (default: 3)
 # |-BXTypes           = ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2']
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x978bd0>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x78d4d0>  (default: None)
 # |-InputType         = 'MDF'
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # skipping configuration of XMLSummary
@@ -51,8 +51,8 @@
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v35r8
-                                          running on lxplus253.cern.ch on Fri Jan  8 12:34:40 2010
+                                                   Welcome to ApplicationMgr $Revision: 1.4 $
+                                          running on lxplus253.cern.ch on Tue Jan 12 23:19:17 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -64,7 +64,7 @@ LumiSequence         INFO OR Member list: GaudiSequencer/LumiNoBeamSeq, GaudiSeq
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.84 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.85 times the speed of a 2.8 GHz Xeon.
 LumiNoBeamSeq        INFO Member list: LoKi::ODINFilter/FilterNoBeam, HltLumiSummaryDecoder/LumiDecodeNoBeam, LumiAccounting/LumiCountNoBeam
 LoKiSvc           SUCCESS
 
@@ -92,16 +92,15 @@ Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome 
 FilterNoBeam         INFO Requested code: ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.NoBeam ) ' -> Decoded functor :'(( ODIN_TRGTYP == 2 )&( ODIN_BXTYP == 0 ))'
 LumiCountNoBeam     DEBUG Property update for OutputLevel : new value = 1
 LumiCountNoBeam     DEBUG Property update for OutputLevel : new value = 1
+LumiCountNoBeam   VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
 LumiCountNoBeam     DEBUG Initialize base class GaudiCommon<Algorithm>
 LumiCountNoBeam     DEBUG could not locate CounterSummarySvc, no counter summary will be made
-LumiCountNoBeam     DEBUG List of ALL properties of LumiAccounting/LumiCountNoBeam  #properties = 36
+LumiCountNoBeam     DEBUG List of ALL properties of LumiAccounting/LumiCountNoBeam  #properties = 35
 LumiCountNoBeam     DEBUG Property ['Name': Value] =  'OutputDataContainer':/FileRecords/LumiFSRNoBeam
 LumiCountNoBeam     DEBUG Property ['Name': Value] =  'InputDataContainer':Hlt/LumiSummary
 LumiCountNoBeam     DEBUG Property ['Name': Value] =  'RawEventLocation':DAQ/RawEvent
 LumiCountNoBeam     DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
 LumiCountNoBeam     DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
-LumiCountNoBeam     DEBUG Property ['Name': Value] =  'RegisterForContextService':True
-LumiCountNoBeam     DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
 LumiCountNoBeam     DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
 LumiCountNoBeam     DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
 LumiCountNoBeam     DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
@@ -116,6 +115,7 @@ LumiCountNoBeam     DEBUG Property ['Name': Value] =  'TypePrint':True
 LumiCountNoBeam     DEBUG Property ['Name': Value] =  'StatPrint':True
 LumiCountNoBeam     DEBUG Property ['Name': Value] =  'PropertiesPrint':False
 LumiCountNoBeam     DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+LumiCountNoBeam     DEBUG Property ['Name': Value] =  'RegisterForContextService':True
 LumiCountNoBeam     DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
 LumiCountNoBeam     DEBUG Property ['Name': Value] =  'AuditStop':False
 LumiCountNoBeam     DEBUG Property ['Name': Value] =  'AuditStart':False
@@ -137,16 +137,15 @@ LumiBeamCrossin...   INFO Member list: LoKi::ODINFilter/FilterBeamCrossing, HltL
 FilterBeamCrossing   INFO Requested code: ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing ) ' -> Decoded functor :'(( ODIN_TRGTYP == 2 )&( ODIN_BXTYP == 3 ))'
 LumiCountBeamCr...  DEBUG Property update for OutputLevel : new value = 1
 LumiCountBeamCr...  DEBUG Property update for OutputLevel : new value = 1
+LumiCountBeamCr...VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
 LumiCountBeamCr...  DEBUG Initialize base class GaudiCommon<Algorithm>
 LumiCountBeamCr...  DEBUG could not locate CounterSummarySvc, no counter summary will be made
-LumiCountBeamCr...  DEBUG List of ALL properties of LumiAccounting/LumiCountBeamCrossing  #properties = 36
+LumiCountBeamCr...  DEBUG List of ALL properties of LumiAccounting/LumiCountBeamCrossing  #properties = 35
 LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'OutputDataContainer':/FileRecords/LumiFSRBeamCrossing
 LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'InputDataContainer':Hlt/LumiSummary
 LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'RawEventLocation':DAQ/RawEvent
 LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
 LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
-LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'RegisterForContextService':True
-LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
 LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
 LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
 LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
@@ -161,6 +160,7 @@ LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'TypePrint':True
 LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'StatPrint':True
 LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'PropertiesPrint':False
 LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'RegisterForContextService':True
 LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
 LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'AuditStop':False
 LumiCountBeamCr...  DEBUG Property ['Name': Value] =  'AuditStart':False
@@ -182,16 +182,15 @@ LumiBeam1Seq         INFO Member list: LoKi::ODINFilter/FilterBeam1, HltLumiSumm
 FilterBeam1          INFO Requested code: ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.Beam1 ) ' -> Decoded functor :'(( ODIN_TRGTYP == 2 )&( ODIN_BXTYP == 1 ))'
 LumiCountBeam1      DEBUG Property update for OutputLevel : new value = 1
 LumiCountBeam1      DEBUG Property update for OutputLevel : new value = 1
+LumiCountBeam1    VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
 LumiCountBeam1      DEBUG Initialize base class GaudiCommon<Algorithm>
 LumiCountBeam1      DEBUG could not locate CounterSummarySvc, no counter summary will be made
-LumiCountBeam1      DEBUG List of ALL properties of LumiAccounting/LumiCountBeam1  #properties = 36
+LumiCountBeam1      DEBUG List of ALL properties of LumiAccounting/LumiCountBeam1  #properties = 35
 LumiCountBeam1      DEBUG Property ['Name': Value] =  'OutputDataContainer':/FileRecords/LumiFSRBeam1
 LumiCountBeam1      DEBUG Property ['Name': Value] =  'InputDataContainer':Hlt/LumiSummary
 LumiCountBeam1      DEBUG Property ['Name': Value] =  'RawEventLocation':DAQ/RawEvent
 LumiCountBeam1      DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
 LumiCountBeam1      DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
-LumiCountBeam1      DEBUG Property ['Name': Value] =  'RegisterForContextService':True
-LumiCountBeam1      DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
 LumiCountBeam1      DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
 LumiCountBeam1      DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
 LumiCountBeam1      DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
@@ -206,6 +205,7 @@ LumiCountBeam1      DEBUG Property ['Name': Value] =  'TypePrint':True
 LumiCountBeam1      DEBUG Property ['Name': Value] =  'StatPrint':True
 LumiCountBeam1      DEBUG Property ['Name': Value] =  'PropertiesPrint':False
 LumiCountBeam1      DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+LumiCountBeam1      DEBUG Property ['Name': Value] =  'RegisterForContextService':True
 LumiCountBeam1      DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
 LumiCountBeam1      DEBUG Property ['Name': Value] =  'AuditStop':False
 LumiCountBeam1      DEBUG Property ['Name': Value] =  'AuditStart':False
@@ -227,16 +227,15 @@ LumiBeam2Seq         INFO Member list: LoKi::ODINFilter/FilterBeam2, HltLumiSumm
 FilterBeam2          INFO Requested code: ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.Beam2 ) ' -> Decoded functor :'(( ODIN_TRGTYP == 2 )&( ODIN_BXTYP == 2 ))'
 LumiCountBeam2      DEBUG Property update for OutputLevel : new value = 1
 LumiCountBeam2      DEBUG Property update for OutputLevel : new value = 1
+LumiCountBeam2    VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
 LumiCountBeam2      DEBUG Initialize base class GaudiCommon<Algorithm>
 LumiCountBeam2      DEBUG could not locate CounterSummarySvc, no counter summary will be made
-LumiCountBeam2      DEBUG List of ALL properties of LumiAccounting/LumiCountBeam2  #properties = 36
+LumiCountBeam2      DEBUG List of ALL properties of LumiAccounting/LumiCountBeam2  #properties = 35
 LumiCountBeam2      DEBUG Property ['Name': Value] =  'OutputDataContainer':/FileRecords/LumiFSRBeam2
 LumiCountBeam2      DEBUG Property ['Name': Value] =  'InputDataContainer':Hlt/LumiSummary
 LumiCountBeam2      DEBUG Property ['Name': Value] =  'RawEventLocation':DAQ/RawEvent
 LumiCountBeam2      DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
 LumiCountBeam2      DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
-LumiCountBeam2      DEBUG Property ['Name': Value] =  'RegisterForContextService':True
-LumiCountBeam2      DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
 LumiCountBeam2      DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
 LumiCountBeam2      DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
 LumiCountBeam2      DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
@@ -251,6 +250,7 @@ LumiCountBeam2      DEBUG Property ['Name': Value] =  'TypePrint':True
 LumiCountBeam2      DEBUG Property ['Name': Value] =  'StatPrint':True
 LumiCountBeam2      DEBUG Property ['Name': Value] =  'PropertiesPrint':False
 LumiCountBeam2      DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+LumiCountBeam2      DEBUG Property ['Name': Value] =  'RegisterForContextService':True
 LumiCountBeam2      DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
 LumiCountBeam2      DEBUG Property ['Name': Value] =  'AuditStop':False
 LumiCountBeam2      DEBUG Property ['Name': Value] =  'AuditStart':False
@@ -272,15 +272,14 @@ TimeSpanSeq          INFO Member list: LoKi::ODINFilter/TimeSpanFilter, TimeAcco
 TimeSpanFilter       INFO Requested code: ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) ' -> Decoded functor :'( ODIN_TRGTYP == 2 )'
 TimeSpanAccounting  DEBUG Property update for OutputLevel : new value = 1
 TimeSpanAccounting  DEBUG Property update for OutputLevel : new value = 1
+TimeSpanAccountingVERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
 TimeSpanAccounting  DEBUG Initialize base class GaudiCommon<Algorithm>
 TimeSpanAccounting  DEBUG could not locate CounterSummarySvc, no counter summary will be made
-TimeSpanAccounting  DEBUG List of ALL properties of TimeAccounting/TimeSpanAccounting  #properties = 35
+TimeSpanAccounting  DEBUG List of ALL properties of TimeAccounting/TimeSpanAccounting  #properties = 34
 TimeSpanAccounting  DEBUG Property ['Name': Value] =  'OutputDataContainer':/FileRecords/TimeSpanFSR
 TimeSpanAccounting  DEBUG Property ['Name': Value] =  'RawEventLocation':DAQ/RawEvent
 TimeSpanAccounting  DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
 TimeSpanAccounting  DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
-TimeSpanAccounting  DEBUG Property ['Name': Value] =  'RegisterForContextService':True
-TimeSpanAccounting  DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
 TimeSpanAccounting  DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
 TimeSpanAccounting  DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
 TimeSpanAccounting  DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
@@ -295,6 +294,7 @@ TimeSpanAccounting  DEBUG Property ['Name': Value] =  'TypePrint':True
 TimeSpanAccounting  DEBUG Property ['Name': Value] =  'StatPrint':True
 TimeSpanAccounting  DEBUG Property ['Name': Value] =  'PropertiesPrint':False
 TimeSpanAccounting  DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+TimeSpanAccounting  DEBUG Property ['Name': Value] =  'RegisterForContextService':True
 TimeSpanAccounting  DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
 TimeSpanAccounting  DEBUG Property ['Name': Value] =  'AuditStop':False
 TimeSpanAccounting  DEBUG Property ['Name': Value] =  'AuditStart':False
@@ -314,16 +314,15 @@ TimeSpanAccounting  DEBUG ==> Initialize
 TimeSpanAccounting  DEBUG TimeAccounting:: The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >' is registered in TS at address '/FileRecords/TimeSpanFSR'
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
+EventAccount      VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
 EventAccount        DEBUG Initialize base class GaudiCommon<Algorithm>
 EventAccount        DEBUG could not locate CounterSummarySvc, no counter summary will be made
-EventAccount        DEBUG List of ALL properties of EventAccounting/EventAccount  #properties = 36
+EventAccount        DEBUG List of ALL properties of EventAccounting/EventAccount  #properties = 35
 EventAccount        DEBUG Property ['Name': Value] =  'DefaultStatus':VERIFIED
 EventAccount        DEBUG Property ['Name': Value] =  'OverrideStatus':True
 EventAccount        DEBUG Property ['Name': Value] =  'OutputDataContainer':/FileRecords/EventCountFSR
 EventAccount        DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
 EventAccount        DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
-EventAccount        DEBUG Property ['Name': Value] =  'RegisterForContextService':True
-EventAccount        DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
 EventAccount        DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
 EventAccount        DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
 EventAccount        DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
@@ -338,6 +337,7 @@ EventAccount        DEBUG Property ['Name': Value] =  'TypePrint':True
 EventAccount        DEBUG Property ['Name': Value] =  'StatPrint':True
 EventAccount        DEBUG Property ['Name': Value] =  'PropertiesPrint':False
 EventAccount        DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+EventAccount        DEBUG Property ['Name': Value] =  'RegisterForContextService':True
 EventAccount        DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
 EventAccount        DEBUG Property ['Name': Value] =  'AuditStop':False
 EventAccount        DEBUG Property ['Name': Value] =  'AuditStart':False
@@ -451,7 +451,7 @@ Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye
 
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.84 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.85 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...   INFO LumiSequence                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |

@@ -1,13 +1,13 @@
-# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_HEAD/Rec/LumiAlgs/job/LumiWriter.py'
-# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_HEAD/Rec/LumiAlgs/job/LumiWriter.py'
+# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/Rec_HEAD/Rec/LumiAlgs/job/LumiWriter.py'
+# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/Rec_HEAD/Rec/LumiAlgs/job/LumiWriter.py'
 # applying configuration of LumiWriterConf
 # WARNING: Using default tag head-20091120 for partition DDDB
 # WARNING: Using default tag head-20091211 for partition LHCBCOND
 # WARNING: Using default tag sim-20091112-vc-md100 for partition SIMCOND
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v35r8
-                                          running on lxplus253.cern.ch on Fri Jan  8 14:11:22 2010
+                                                   Welcome to ApplicationMgr $Revision: 1.2 $
+                                          running on lxplus253.cern.ch on Tue Jan 12 22:45:24 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -19,7 +19,7 @@ LumiSeq              INFO Member list: GaudiSequencer/writeLumiSeq
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.85 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.84 times the speed of a 2.8 GHz Xeon.
 writeLumiSeq         INFO Member list: createODIN, LoKi::ODINFilter/OdinTriggerTypes, bankKiller/KillAll, FileIdBankWriter, LHCb::MDFWriter/MDFWriter
 LoKiSvc           SUCCESS
 
@@ -45,9 +45,9 @@ Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome 
 
 
 OdinTriggerTypes     INFO Requested code: ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) ' -> Decoded functor :'( ODIN_TRGTYP == 2 )'
-KillAll              INFO bankKiller : all banks of type 'ODIN' will be kept.
-KillAll              INFO bankKiller : all banks of type 'HltLumiSummary' will be kept.
-KillAll              INFO bankKiller : all banks of type 'DAQ' will be kept.
+KillAll           SUCCESS bankKiller : all banks of type 'ODIN' will be kept.
+KillAll           SUCCESS bankKiller : all banks of type 'HltLumiSummary' will be kept.
+KillAll           SUCCESS bankKiller : all banks of type 'DAQ' will be kept.
 EventPersistenc...   INFO  'CnvServices':[ 'LHCb::RawDataCnvSvc' ]
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:   DATAFILE='LFN:/lhcb/data/2009/RAW/FULL/LHCb/COLLISION09/63688/063688_0000000001.raw' SVC='LHCb::MDFSelector'
 HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
@@ -88,15 +88,15 @@ Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye
 
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.85 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.84 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO writeLumiSeq                  |     0.261 |     0.530 |    0.094     277.2 |    1000 |     0.530 |
-ToolSvc.Sequenc...   INFO   createODIN                  |     0.048 |     0.046 |    0.040       0.8 |    1000 |     0.046 |
-ToolSvc.Sequenc...   INFO   OdinTriggerTypes            |     0.002 |     0.006 |    0.005       0.1 |    1000 |     0.006 |
-ToolSvc.Sequenc...   INFO   KillAll                     |     0.076 |     0.085 |    0.081       0.3 |     932 |     0.079 |
-ToolSvc.Sequenc...   INFO   FileIdBankWriter            |     0.012 |     0.008 |    0.007       0.2 |     932 |     0.008 |
-ToolSvc.Sequenc...   INFO   MDFWriter                   |     0.129 |     0.413 |    0.109     277.1 |     932 |     0.385 |
+ToolSvc.Sequenc...   INFO writeLumiSeq                  |     0.267 |     0.282 |    0.102      17.9 |    1000 |     0.282 |
+ToolSvc.Sequenc...   INFO   createODIN                  |     0.054 |     0.056 |    0.048       0.9 |    1000 |     0.056 |
+ToolSvc.Sequenc...   INFO   OdinTriggerTypes            |     0.002 |     0.007 |    0.005       0.1 |    1000 |     0.007 |
+ToolSvc.Sequenc...   INFO   KillAll                     |     0.093 |     0.086 |    0.082       0.4 |     932 |     0.080 |
+ToolSvc.Sequenc...   INFO   FileIdBankWriter            |     0.004 |     0.008 |    0.007       0.2 |     932 |     0.008 |
+ToolSvc.Sequenc...   INFO   MDFWriter                   |     0.112 |     0.135 |    0.109      17.2 |     932 |     0.126 |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

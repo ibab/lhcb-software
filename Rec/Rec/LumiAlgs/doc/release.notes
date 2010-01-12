@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-01-12 - Jaap Panman
+ - qmtests: add MyCatalog to qmtest directory (caused tests to fail)
+            update expected output refs to reflect changes in dependencies
+
 ! 2010-01-08 - Jaap Panman
  - LumiAlgsConf: fix list of input types
  - qmtests: make 1 and 2 more strict (compare output)
