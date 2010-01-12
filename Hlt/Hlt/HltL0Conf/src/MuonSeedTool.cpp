@@ -1,4 +1,4 @@
-// $Id: MuonSeedTool.cpp,v 1.16 2010-01-06 07:44:15 albrecht Exp $
+// $Id: MuonSeedTool.cpp,v 1.17 2010-01-12 12:57:16 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -62,7 +62,7 @@ MuonSeedTool::MuonSeedTool( const std::string& type,
   declareProperty("sigmaY2NoM1", m_sigmaY2NoM1 = boost::assign::list_of(81.)(529.)(1936.)(2209.) );
   declareProperty("sigmaTx2NoM1", m_sigmaTx2NoM1 = boost::assign::list_of(16.e-6)(64.e-6)(225e-6)(529.e-6) );
   declareProperty("sigmaTy2NoM1", m_sigmaTy2NoM1 = boost::assign::list_of(16.e-6)(49.e-6)(64e-6)(100.e-6) );
-  declareProperty("recalculateP", m_recalculateP = false );
+  declareProperty("recalculateP", m_recalculateP = true );
 }
 //=============================================================================
 // Destructor
@@ -93,7 +93,7 @@ StatusCode MuonSeedTool::initialize()
     error()<<"Size of search winow vectors is not valid, check you options!"<<endmsg;
     return StatusCode::FAILURE;
   }
-  
+
   // subscribe to the updatemanagersvc with a dependency on the magnetic field svc
   IUpdateManagerSvc* m_updMgrSvc = svc<IUpdateManagerSvc>("UpdateManagerSvc", true);
   m_magFieldSvc = svc<ILHCbMagnetSvc>("MagneticFieldSvc", true);
