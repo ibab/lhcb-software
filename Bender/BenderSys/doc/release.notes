@@ -1,5 +1,5 @@
 <PRE>
-! $Id: release.notes,v 1.31 2009-12-18 10:49:18 ibelyaev Exp $ 
+! $Id: release.notes,v 1.32 2010-01-12 11:12:34 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : BenderSys
 ! Responsible : Vanya BELYAEV  vanya@nikhef.nl
@@ -8,12 +8,22 @@
 </PRE>
 
 <H1>
-<A NAME=v12r6>2009-12-18 Bender v12r7 based on the DaVinci v24r7 </A>
+<A NAME=v12r7p1>2010-01-12 Bender v12r7p1 based on the DaVinci v24r7 </A>
+</H1>	
+
+<PRE>		
+The version based on DaVinci v24r7. Essentially it is identical to v12r7, 
+but exmaples have been fixed and many "reald-data" exampels has been added and/or updated 
+</PRE>
+
+<H1>
+<A NAME=v12r7>2009-12-18 Bender v12r7 based on the DaVinci v24r7 </A>
 </H1>	
 
 <PRE>		
 The version based on DaVinci v24r7 
 </PRE>
+
 
 <H1>
 <A NAME=v12r6>2009-12-07 Bender v12r6 based on the DaVinci v24r6 </A>
