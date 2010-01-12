@@ -1,11 +1,16 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.50 2009-11-27 12:26:15 cattanem Exp $ 
+! $Id: release.notes,v 1.51 2010-01-12 19:09:49 marcocle Exp $ 
 ! ------------------------------------------------------------------------------
 ! Package     : Det/DetDescChecks
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! Purpose     : Collection of useful components for checking of 
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
+
+! 2010-01-12 - Marco Clemencic
+                 --- Requires Det/DetCond >= v12r9 ---
+ - Modified options/LoadDDDB.py to ignore the Online partition heart beat during
+   the tests.
 
 !======================= DetDescChecks v5r0 2009-11-27 =========================
 ! 2009-11-16 - Marco Cattaneo
