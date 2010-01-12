@@ -3,17 +3,23 @@
 #define OTMONITOR_OTTIMECLASSIFICATION_H 1
 
 // STD
-#include <map>
 #include <string>
+#include <vector>
+#include <map>
 
 // Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 
+#include "GaudiKernel/ToolHandle.h"
+#include "OTDAQ/IOTRawBankDecoder.h"
+
 // Forward declarations
-namespace LHCb{
- class OTTime;
+namespace LHCb
+{
  class MCHit;
 };
+
+class DeOTDetector;
 
 /** @class OTTimeClassification OTTimeClassification.h
  *
@@ -23,14 +29,13 @@ namespace LHCb{
  *  @date   21/4/2001
  */
 
-class OTTimeClassification : public GaudiHistoAlg {
-
+class OTTimeClassification: public GaudiHistoAlg
+{
 public:
-  
-  /// constructer
-  OTTimeClassification(const std::string& name, ISvcLocator *svcloc );
+  /// constructor
+  OTTimeClassification(const std::string& name, ISvcLocator *pSvcLocator);
 
-  /// destructer
+  /// destructor
   virtual ~OTTimeClassification();
 
   /// initialize
@@ -41,36 +46,18 @@ public:
 
   /// finalize
   StatusCode finalize();
-
 private:
-  ///Some handy typedefs
-  typedef std::map<std::string, unsigned int>::const_iterator InfoIter;
+  void fillInfo(const std::vector<LHCb::MCHit*>& hits);
+  std::string findSpill(const LHCb::MCHit* hit) const;
 
-  void fillInfo(const std::vector<LHCb::MCHit*>& hits) const;
-  std::string  findSpill(const LHCb::MCHit* aHit) const;
-  
-  unsigned int tCount() const;
+  ToolHandle<IOTRawBankDecoder> m_decoder;
+  DeOTDetector* m_tracker;
 
-  std::vector<std::string> m_spillVector;  // short names of spills
+  std::vector<std::string> m_spillVector; // short names of spills
   std::vector<std::string> m_spillNames; // full name of spills
-     
-  std::string m_asctLocation;
-  std::string m_timesLocation;
-  std::string m_hitLocation; 
 
-  mutable std::map<std::string, unsigned int> m_infoMap;
+  std::map<std::string, unsigned int> m_infoMap;
+  typedef std::map<std::string, unsigned int>::const_iterator InfoIter;
 };
 
 #endif // OTMONITOR_OTTIMECLASSIFICATION_H
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,12 +1,16 @@
-// $Id: OTTimeChecker.h,v 1.7 2008-12-10 06:58:25 cattanem Exp $
+// $Id: OTTimeChecker.h,v 1.8 2010-01-12 14:13:11 akozlins Exp $
 #ifndef OTMONITOR_OTTIMECHECKER_H
 #define OTMONITOR_OTTIMECHECKER_H 1
 
 // STL
+#include <string>
 #include <vector>
 
 // Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
+#include "GaudiKernel/ToolHandle.h"
+
+#include "OTDAQ/IOTRawBankDecoder.h"
 
 // LHCb
 #include "Event/MCParticle.h"
@@ -27,11 +31,8 @@
  *  @date   22-06-2002
  */
 
-// forward declarations
-class IOTrtRelation;
-class DeOTDetector;
-
-namespace AIDA 
+// Forward declarations
+namespace AIDA
 {
   class IHistogram1D;
 }
@@ -39,16 +40,16 @@ namespace AIDA
 namespace LHCb
 {
   class MCHit;
-  class OTTime;
+  class OTLiteTime;
 }
 
-class OTTimeChecker : public GaudiHistoAlg {
+class DeOTDetector;
 
+class OTTimeChecker: public GaudiHistoAlg
+{
 public:
-
   /// constructor
-  OTTimeChecker(const std::string& name, 
-                   ISvcLocator *svcloc );
+  OTTimeChecker(const std::string& name, ISvcLocator *svcloc );
 
   /// destructor
   virtual ~OTTimeChecker();
@@ -58,35 +59,43 @@ public:
 
   /// execute
   StatusCode execute();
-
 private:
  
   /// book the histograms
   void initHistograms();
 
   /// fill the resolution histograms
-  void fillResolutionHistos( LHCb::OTTime* time,
-                             const LHCb::MCHit* aHit );
+  void fillResolutionHistos( const LHCb::OTLiteTime* time, const LHCb::MCHit* hit );
 
   /// Struct for storing the time multiplicity of a MCHit
-  struct HitMultiplicity{int mult ; const LHCb::MCHit* mcHit; };
+  struct HitMultiplicity
+  {
+    int mult;
+    const LHCb::MCHit* mcHit;
+  };
 
   /// typedef for a vector of HitMultiplicities
   typedef std::vector<HitMultiplicity> HitMultVec;
 
   /// Struct for storing the time multiplicity of a MCParticle
-  struct PartMultiplicity{int mult ; const LHCb::MCParticle* mcParticle; };
+  struct PartMultiplicity
+  {
+    int mult;
+    const LHCb::MCParticle* mcParticle;
+  };
 
   /// typedef for a vector of PartMultiplicities
   typedef std::vector<PartMultiplicity> PartMultVec;
 
   /// Return my particle code
-  unsigned int myParticleCode(const LHCb::MCParticle* aMCPart) const;
+  unsigned int myParticleCode(const LHCb::MCParticle* mcParticle) const;
 
-  DeOTDetector* m_tracker;               ///< pointer to geometry
-  /// flag to cut on momentum used for resolution plot 
+  ToolHandle<IOTRawBankDecoder> m_decoder;
+  DeOTDetector* m_tracker; ///< pointer to geometry
+
+  /// flag to cut on momentum used for resolution plot
   bool m_doMomentumCut;
-  double m_momentumCut;                  ///< value of momentum cut
+  double m_momentumCut; ///< value of momentum cut
 
   /// histograms
   AIDA::IHistogram1D* m_effHisto;       ///< Overall efficiency of the times
@@ -100,22 +109,19 @@ private:
   AIDA::IHistogram1D* m_momentumHisto;  ///< Momentum distribution (GeV)
   AIDA::IHistogram1D* m_nParticlesHisto;///< Number of MCParticles making times
   AIDA::IHistogram1D* m_partMultHisto;  ///< Number of times per MCParticle
-
 };
 
-inline unsigned int OTTimeChecker::myParticleCode(const LHCb::MCParticle* aMCPart) const {
-  /// electron
-  if ((aMCPart->particleID()).abspid() == 11 ) return 1u;
-  /// muon
-  if ((aMCPart->particleID()).abspid() == 13 ) return 2u;
-  /// pion
-  if ((aMCPart->particleID()).abspid() == 211 ) return 3u;
-  /// kaon
-  if ((aMCPart->particleID()).abspid() == 321 ) return 4u;
-  /// proton
-  if ((aMCPart->particleID()).abspid() == 2212 ) return 5u;
-  /// other
-  return 6u;
+inline unsigned int OTTimeChecker::myParticleCode(const LHCb::MCParticle* mcParticle) const
+{
+  switch(mcParticle->particleID().abspid())
+  {
+  case 11: return 1;
+  case 13: return 2;
+  case 211: return 3;
+  case 321: return 4;
+  case 2212: return 5;
+  default: return 6;
+  }
 }
 
 #endif // OTMONITOR_OTTIMECHECKER_H

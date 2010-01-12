@@ -2,6 +2,9 @@
 ! Package manager : Wouter Hulsbergen
 !---------------------------------------------------------------------------
 
+! 2010-01-12 - Alexandr Kozlinskiy
+ - Update OTTimeChecker and OTTimeClassification to use OTLiteTime's
+
 !==================== OTMonitor v3r1 2009-11-25 ============================
 ! 2009-11-25 - Marco Cattaneo
  - Remove obsolete "occupancy in T1 layer 1 versus x coordinate" histogram from
