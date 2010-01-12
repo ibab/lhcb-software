@@ -60,14 +60,21 @@ def copyLocal(sourceDir, targetDir):
         if files:
             path = (root+os.sep).replace(sourceDir, '')
             files = [x for x in files if x[-4:] != '.pyc' and x[-4:] != '.pyo']
-            filesString = ' '.join(files)
-            cwd = os.getcwd()
-            commandLinux = 'mkdir -p '+ targetDir + path +' && cd '+ sourceDir + path +' && tar cf - '+filesString+' | (cd '+targetDir+path+'. ; tar xf -) && cd -'
-            commandWindows = '(if not exist '+targetDir + path+' mkdir '+ targetDir + path +')'+' '.join([' & ( if not exist '+targetDir+path+x+' copy '+sourceDir + path +x+' '+targetDir+path+' > NUL )' for x in files]) + ' & (cd '+cwd+')'
-            if systemType == 'windows':
-                Lock(commandWindows,str(os.getpid()), commandLinux, splitCommand='&')
+            if len(' '.join(files)) > 30720: # to be on the safe side: 30K limit (Win: 32K, Red Hat 128K)
+                maxFilesPerCopyCmd = 200 # files
+                listOfLists = [files[i:i+maxFilesPerCopyCmd] for i in range(0, len(files), maxFilesPerCopyCmd)]
             else:
-                Lock(commandLinux,str(os.getpid()), commandLinux)
+                listOfLists = [files[:]]
+            for gFiles in listOfLists:
+                files = gFiles[:]
+                filesString = ' '.join(files)
+                cwd = os.getcwd()
+                commandLinux = 'mkdir -p '+ targetDir + path +' && cd '+ sourceDir + path +' && tar cf - '+filesString+' | (cd '+targetDir+path+'. ; tar xf -) && cd -'
+                commandWindows = '(if not exist '+targetDir + path+' mkdir '+ targetDir + path +')'+' '.join([' & ( if not exist '+targetDir+path+x+' copy '+sourceDir + path +x+' '+targetDir+path+' > NUL )' for x in files]) + ' & (cd '+cwd+')'
+                if systemType == 'windows':
+                    Lock(commandWindows,str(os.getpid()), commandLinux, splitCommand='&')
+                else:
+                    Lock(commandLinux,str(os.getpid()), commandLinux)
 
 def copySsh(sourceHost, sourceDir, targetDir):
     """ tar-pipe copying by SSH with locking from <sourceHost>:<sourceDir> to <targetDir>. Target directory is created if necessary. Procedure must be used on the target host. <sourceHost> must be accessible by SSH without password.
@@ -565,11 +572,15 @@ def docs(slotName, projectName):
         time.sleep(2)
         configuration.system('echo "Doxygen start: '+ time.strftime('%c', time.localtime()) +'"')
         os.chdir(generatePath(slot, project, 'TAG', projectName))
-        if projectName.upper() == 'GAUDI': containerName = 'GaudiRelease'
-        else: containerName =  projectNamesDict[projectName.upper()] + 'Sys'
-        configuration.system('make container=%s docs > ./docs.log' % containerName)
+        configuration.system('make docs > ./docs.log')
         configuration.system('echo "' + '*'*80 + '"')
         configuration.system('echo "Doxygen finished: '+ time.strftime('%c', time.localtime()) +'"')
+        releasePath = slot.releaseDir()
+        if os.path.exists(os.path.join(slot.buildDir(), projectName.upper(), project.getTag(), 'InstallArea', 'doc')) and releasePath != None:
+            configuration.system('echo "' + '*'*80 + '"')
+            configuration.system('echo "Copying documentation to AFS started: '+ time.strftime('%c', time.localtime()) +'"')
+            copyLocal(os.path.join(slot.buildDir(), projectName.upper(), project.getTag(), 'InstallArea', 'doc'), os.path.join(releasePath, projectName.upper(), project.getTag(), 'InstallArea', 'doc'))
+            configuration.system('echo "Copying documentation to AFS finished: '+ time.strftime('%c', time.localtime()) +'"')
 
 def make(slotName, projectName, minusj, minusl):
     """ make(slotName, projectName, minusj, minusl)
@@ -595,7 +606,6 @@ def make(slotName, projectName, minusj, minusl):
         os.chdir(generatePath(slot, project, 'TAG', projectName))
         logFileToBeRemoved = file(os.sep.join(['logs', os.environ.get('CMTCONFIG', '')])+'.log', 'w')
         logFileToBeRemoved.close()
-    
     changeEnvVariables()
 
     os.chdir(generatePath(slot, project, 'SYSPACKAGECMT', projectName))

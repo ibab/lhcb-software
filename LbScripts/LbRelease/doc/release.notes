@@ -1,3 +1,8 @@
+2010-12-12  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/Nightlies/functions.py: copyLocal improved to fix
+	bug when tar file list is too long; copying documentation to AFS added
+
 2010-01-08  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/GetPack.py: added a curses-based dialog to select
@@ -7,7 +12,7 @@
 
 	* scripts/webArchiveRelease: added draft version of archive.py
 	* scripts/webRemoveRelease: added draft version of remrel.py
-	* scripts/webAddRelease: 
+	* scripts/webAddRelease:
 	  - added draft version of addrel.py
 	  - added the possibility to have custom LHCBRELEASE and LHCBDOC
 
