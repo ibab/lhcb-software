@@ -269,9 +269,9 @@ Dirac.disableSetenvAlias()#IGNORE:E0602
 Dirac.setFullSize(500000)#IGNORE:E0602
 
 # LHCbDirac
-LHCbDIRAC.disableSetenvAlias()#IGNORE:E0602
-LHCbDIRAC.setFullSize(500000)#IGNORE:E0602
-LHCbDIRAC.setAFSVolumeName("LBDIRAC")#IGNORE:E0602
+LHCbDirac.disableSetenvAlias()#IGNORE:E0602
+LHCbDirac.setFullSize(500000)#IGNORE:E0602
+LHCbDirac.setAFSVolumeName("LBDIRAC")#IGNORE:E0602
 
 
 # Euler
