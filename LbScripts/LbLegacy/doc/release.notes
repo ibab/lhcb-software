@@ -1,3 +1,8 @@
+2010-01-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: downloads the optimized version of the 
+	Compat project in any case.
+
 2010-01-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLHCbtar: removed the usage of LHCb_config

@@ -1571,6 +1571,9 @@ def runInstall(pname,pversion,binary=None):
         if isBinaryDbg(binary) :
             binary_dbg = binary
             binary_opt = getBinaryOpt(binary)
+        if pname == 'Compat' and isBinaryDbg(binary) :
+            log.warning("Cannot install debug version of Compat - Switching to optimized")
+            binary = binary_opt
         project_list, html_list = getProjectList(pname, pversion, binary)
         if pname != 'LHCbGrid' and sys.platform != "win32" and cmtconfig.find("slc3")!=-1 and cmtconfig.find("sl3") != -1 :
             grid_project_list, grid_html_list = getProjectList('LHCbGrid', grid_version, binary_opt)
@@ -1960,7 +1963,6 @@ def main():
 
     start_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
 
-#    thelog.info('++++++++++++++++++++++%s  python %s starts install_project.py - version no %s' % (start_time, txt_python_version, script_version) )
     thelog.info((' %s  python %s starts install_project.py - version no %s ' % (start_time, txt_python_version, script_version)).center(120, '+') )
 
 
@@ -1982,7 +1984,6 @@ def main():
     runInstall(pname, pversion, binary)
 
     end_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
-#    thelog.info( '+++++++++++++++++++++++ %s end install_project.py -version no %s' % (end_time, script_version))
     thelog.info( (' %s end install_project.py -version no %s ' % (end_time, script_version)).center(120, '+'))
 
 
