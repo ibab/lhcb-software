@@ -78,7 +78,6 @@ StatusCode OTTimeClassification::initialize()
 
 StatusCode OTTimeClassification::execute()
 {
-  info() << "OTTimeClassification::execute()" << endmsg;
   // linker
   LinkedTo<MCHit> link(evtSvc(), msgSvc(), OTTimeLocation::Default + "2MCHits");
   if(link.notFound()) Error( "Failed to find OT MCHits linker table", StatusCode::FAILURE );
