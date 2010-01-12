@@ -1,4 +1,4 @@
-# $Id: Hlt2B2JpsiXLines.py,v 1.11 2009-11-27 12:46:09 pkoppenb Exp $
+# $Id: Hlt2B2JpsiXLines.py,v 1.12 2010-01-12 08:43:39 dvaneijk Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -81,7 +81,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                  )
         
         # Make the Bs
-        BsCuts = "(ADMASS('B_s0')<300*MeV) & (BPVLTFITCHI2()<14) & (VFASPF(VCHI2)<20)"
+        BsCuts = "(ADMASS('B_s0')<300*MeV) & (BPVLTFITCHI2()<36) & (VFASPF(VCHI2)<100)"
         BsCombine = Hlt2Member( CombineParticles
                                 , "BsCombine"
                                 , DecayDescriptor = "[B_s0 -> J/psi(1S) phi(1020)]cc"

@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.96 2010-01-11 13:35:42 graven Exp $
+$Id: release.notes,v 1.97 2010-01-12 08:43:39 dvaneijk Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,9 @@ $Id: release.notes,v 1.96 2010-01-11 13:35:42 graven Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2010-01-12 - Daan Van Eijk
+ - Minor modification in cuts in JpsiPhiPrescaledAndDetachedLines in Hlt2B2JpsiXLines.py 
 
 !========================== Hlt2Lines v2r2 2010-01-11 ===================
 ! 2009-12-21 - neal Gauvin
