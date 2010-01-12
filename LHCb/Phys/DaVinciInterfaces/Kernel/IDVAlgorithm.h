@@ -1,4 +1,4 @@
-// $Id: IDVAlgorithm.h,v 1.3 2010-01-12 10:38:47 jpalac Exp $
+// $Id: IDVAlgorithm.h,v 1.4 2010-01-12 10:42:29 jpalac Exp $
 #ifndef KERNEL_IDVALGORITHM_H 
 #define KERNEL_IDVALGORITHM_H 1
 
@@ -11,7 +11,7 @@
 
 // from LHCb
 #include <Event/Particle.h>
-#include <Event/Vertex.h>
+#include <Event/RecVertex.h>
 
 // IAlgTool forward declarations
 
@@ -44,11 +44,11 @@ public:
    **/  
   virtual const GaudiAlgorithm* gaudiAlg() const = 0;
 
-  virtual const IDistanceCalculator* distanceCalculator() const = 0;
+  virtual const IDistanceCalculator* distanceCalculator(const string& name = "") const = 0;
 
-  virtual const ILifetimeFitter* lifetimeFitter() const = 0;
+  virtual const ILifetimeFitter* lifetimeFitter(const string& name = "") const = 0;
   
-  virtual const IVertexFit* vertexFitter() const = 0;
+  virtual const IVertexFit* vertexFitter(const string& name = "") const = 0;
 
   /**
    *
@@ -56,13 +56,14 @@ public:
    *
    **/  
   virtual const LHCb::Particle::ConstVector& particles() const = 0;
+
   /**
    *
-   * Return a container of local LHCb::Vertex*, containing LHCb::Particle's
-   * decay vertices
+   * Return a container of LHCb::RecVertex*, containing primary 
+   * vertices.
    *
    **/
-  virtual const LHCb::Vertex::ConstVector& vertices() const = 0;
+  virtual const LHCb::RecVertex::Container* primaryVertices() const = 0;
   
   /**
    *
