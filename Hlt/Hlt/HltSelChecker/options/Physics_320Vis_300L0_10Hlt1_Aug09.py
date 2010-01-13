@@ -5,4 +5,4 @@
  #  @date 2009-07-20
  #
 from Configurables import DaVinci
-DaVinci().HltThresholdSettings = 'Charm_320Vis_300L0_10Hlt1_Aug09'  # just an example
+DaVinci().HltThresholdSettings = 'Physics_320Vis_300L0_10Hlt1_Aug09'  # just an example

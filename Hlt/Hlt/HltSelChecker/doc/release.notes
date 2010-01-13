@@ -19,6 +19,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-01-13 - Patrick Koppenburg
+ - Rename Charm_320Vis into Physics_320Vis...
+ - v10r3
+
 !========================== HltSelChecker v10r2 2009-12-03 ===================
 ! 2009-12-03 - Patrick Koppenburg
  - Remove protection against (crashing) PV writing in Psi2S test
