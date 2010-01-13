@@ -1,0 +1,20 @@
+#============================================================================
+# Created    : 2010-01-13
+# Maintainer : Marco Cattaneo
+#============================================================================
+package           DAQMonitors
+version           v1r0
+
+branches          cmt doc src
+
+use DAQEvent v* Event
+use GaudiAlg v*
+
+include_path      none
+
+macro_append ROOT_linkopts " -lHist " \
+                     WIN32 " libHist.lib "
+
+library          DAQMonitors    ../src/*.cpp 
+apply_pattern    component_library library=DAQMonitors
+
