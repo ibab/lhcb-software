@@ -1,10 +1,9 @@
 package DAQEvent
-version v8r2
+version v9r0
 
 use GaudiKernel v*
-branches cmt doc Event src tests xml
+branches cmt doc Event src xml
 private
-  use GaudiAlg     v*      -no_auto_imports
   use GaudiObjDesc v*      -no_auto_imports  
 end_private
 
@@ -12,8 +11,6 @@ end_private
 #============================================================================
 apply_pattern god_headers files=../xml/*.xml
 apply_pattern install_more_includes more=Event
-
-
 
 # ==================== Produce LCG dictionary ===============================
 macro DAQEventGen_dependencies DAQEventObj2Doth
@@ -26,20 +23,4 @@ apply_pattern     reflex_dictionary                            \
 # ==================== linker library =======================================
 macro DAQEventLib_dependencies DAQEventObj2Doth
 library DAQEventLib     *.cpp 
-
-# ==================== component libraries ==================================
-library DAQEvent  component/*.cpp -import=GaudiAlg 
-
-# ==================== Standard patterns (order is important!) ==============
-apply_pattern component_library library=DAQEvent 
 apply_pattern linker_library    library=DAQEventLib
-
-macro_append ROOT_linkopts " -lHist " \
-                     WIN32 " libHist.lib "\
-                                
-
-# Set up the test application with packages needed at run time
-private
-  use GaudiSvc    v*      -no_auto_imports
-  apply_pattern QMTest
-end_private

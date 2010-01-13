@@ -4,6 +4,11 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2010-01-13 - Marco Cattaneo
+ - Major strip down of package. Component library and tests removed, split
+   between new DAQ/DAQUtils (including helpers) and DAQ/DAQMonitors packages
+   See Savannah task 13031
+
 ! 2010-01-11 - Marco Cattaneo
  - Change bankKiller to always() print banks to remove at initialize(), allows
    to keep this message while suppressing warnings and errors about missing
