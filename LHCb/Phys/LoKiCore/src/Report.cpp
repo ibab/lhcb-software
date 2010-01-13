@@ -1,4 +1,4 @@
-// $Id: Report.cpp,v 1.7 2008-10-19 16:11:40 ibelyaev Exp $
+// $Id: Report.cpp,v 1.8 2010-01-13 11:04:17 ibelyaev Exp $
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -87,7 +87,7 @@ void LoKi::Report::Exception
   const StatusCode&      sc  ) 
 { 
   sc.ignore() ; 
-  LoKi::ErrorReport::instance().Exception( msg , exc , sc ).ignore() ; 
+  LoKi::ErrorReport::instance().Exception( msg , exc , sc ) ; 
 }  
 // ============================================================================
 /*  Create and (re)-throw the exception  
@@ -105,7 +105,7 @@ void LoKi::Report::Exception
   const StatusCode&      sc  ) 
 { 
   sc.ignore() ;
-  LoKi::ErrorReport::instance().Exception( msg , exc , sc ).ignore() ; 
+  LoKi::ErrorReport::instance().Exception( msg , exc , sc ) ; 
 } 
 // ============================================================================
 /*  Create and throw the exception  
@@ -121,14 +121,14 @@ void LoKi::Report::Exception
   const StatusCode&  sc  ) 
 { 
   sc.ignore() ;
-  LoKi::ErrorReport::instance().Exception( msg , sc ).ignore() ; 
+  LoKi::ErrorReport::instance().Exception( msg , sc ) ; 
 }                                                                   
 // ============================================================================
 //  make a report 
 // ============================================================================
 void LoKi::Report::report      () 
 { 
-  LoKi::ErrorReport::instance().report().ignore()  ; 
+  LoKi::ErrorReport::instance().report() ; 
 }  
 // ============================================================================
 

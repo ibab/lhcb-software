@@ -1,4 +1,4 @@
-// $Id: ErrorReport.cpp,v 1.8 2010-01-13 08:18:07 cattanem Exp $
+// $Id: ErrorReport.cpp,v 1.9 2010-01-13 11:04:17 ibelyaev Exp $
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -203,55 +203,49 @@ StatusCode LoKi::ErrorReport::Print
 // ============================================================================
 // Create and (re)-throw the exception
 // ============================================================================
-StatusCode LoKi::ErrorReport::Exception
+void       LoKi::ErrorReport::Exception
 ( const std::string    & msg ,
   const GaudiException & exc ,
   const StatusCode&      sc  ) const
 {
   sc.ignore() ;
-  if ( 0 != m_reporter ) 
-  {  m_reporter->Exception ( msg , exc , sc ); return sc; } 
+  if ( 0 != m_reporter ) { m_reporter->Exception ( msg , exc , sc ) ; return ; } 
   // increase local counter of exceptions
   ++m_exceptions[ msg ];
   Print ( "Exception (re)throw: " + msg 
           + " : tag/message='" + exc.tag() + 
           "'/'" + exc.message() + "'" , sc , MSG::FATAL );
   throw  LoKi::Exception( "LoKi::" + msg , sc, exc);
-  return  sc ;
 }
 // ============================================================================
 // Create and (re)-throw the exception
 // ============================================================================
-StatusCode LoKi::ErrorReport::Exception
+void       LoKi::ErrorReport::Exception
 ( const std::string    & msg ,
   const std::exception & exc ,
   const StatusCode&      sc  ) const
 {
   sc.ignore() ;
-  if ( 0 != m_reporter ) 
-  {  m_reporter->Exception ( msg , exc , sc ); return sc; } 
+  if ( 0 != m_reporter ) { m_reporter->Exception ( msg , exc , sc ) ; return ; } 
   // increase local counter of exceptions
   ++m_exceptions[ msg ];
   Print ( "Exception (re)throw: " + msg 
           + " : what='" + exc.what() + "'" , sc , MSG::FATAL );
   throw  LoKi::Exception( "LoKi::" + msg + " (re)throw:" + exc.what() , sc );
-  return  sc ;
 }
 // ============================================================================
 // Create and throw the exception
 // ============================================================================
-StatusCode LoKi::ErrorReport::Exception
+void       LoKi::ErrorReport::Exception
 ( const std::string    & msg ,
   const StatusCode&      sc  ) const
 {
   sc.ignore() ;
-  if ( 0 != m_reporter ) 
-  {  m_reporter->Exception ( msg , sc ); return sc; }  
+  if ( 0 != m_reporter ) { m_reporter->Exception ( msg , sc ) ; return ; }  
   // increase local counter of exceptions
   ++m_exceptions[ msg ];
   Print ( "Exception throw: " + msg , sc , MSG::FATAL );
   throw LoKi::Exception(  msg , sc );
-  return  sc ;
 }
 // ============================================================================
 // The END 

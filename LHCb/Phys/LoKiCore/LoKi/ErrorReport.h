@@ -1,4 +1,4 @@
-// $Id: ErrorReport.h,v 1.10 2008-10-19 16:11:40 ibelyaev Exp $
+// $Id: ErrorReport.h,v 1.11 2010-01-13 11:04:17 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ERRORREPORT_H 
 #define LOKI_ERRORREPORT_H 1
@@ -103,15 +103,14 @@ namespace LoKi
      *  @param ok           condition which should be "true"
      *  @param message      message to be associated with the exception 
      *  @param sc           status code to be returned (artificial) 
-     *  @return             status code        
      */ 
-    inline StatusCode Assert 
+    inline void       Assert 
     ( const bool         ok                     , 
       const std::string& message = ""           , 
       const StatusCode&  sc      = 
       StatusCode ( StatusCode::FAILURE , true ) ) const 
     {
-      return ( ok ? StatusCode::SUCCESS : Exception( message , sc ) ) ;
+      if  ( !ok ) { Exception( message , sc ) ; }
     } 
     // ========================================================================
     /** Create and (re)-throw the exception  
@@ -120,9 +119,8 @@ namespace LoKi
      *  @param msg    exception message 
      *  @param exc    (previous) exception of type GaudiException
      *  @param sc     status code  
-     *  @return       status code (fictive) 
      */
-    StatusCode Exception 
+    void       Exception 
     ( const std::string    & msg                        ,  
       const GaudiException & exc                        , 
       const StatusCode&      sc  = 
@@ -134,9 +132,8 @@ namespace LoKi
      *  @param msg    exception message 
      *  @param exc    (previous) exception of type std::exception
      *  @param sc     status code  
-     *  @return       status code (fictive) 
      */
-    StatusCode Exception 
+    void       Exception 
     ( const std::string    & msg                        ,  
       const std::exception & exc                        , 
       const StatusCode&      sc  = 
@@ -147,9 +144,8 @@ namespace LoKi
      *  @exception GaudiException always!
      *  @param msg    exception message 
      *  @param sc     status code  
-     *  @return       status code (fictive) 
      */
-    StatusCode Exception 
+    void       Exception 
     ( const std::string& msg = "no message"        ,  
       const StatusCode&  sc  = 
       StatusCode ( StatusCode::FAILURE , true ) ) const ;
@@ -178,9 +174,9 @@ namespace LoKi
     //
     const LoKi::IReporter* m_reporter ;    
     // ========================================================================
-  };
+  } ;
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

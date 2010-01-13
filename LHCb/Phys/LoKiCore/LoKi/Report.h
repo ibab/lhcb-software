@@ -1,4 +1,4 @@
-// $Id: Report.h,v 1.9 2008-10-19 16:11:40 ibelyaev Exp $
+// $Id: Report.h,v 1.10 2010-01-13 11:04:17 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_REPORT_H 
 #define LOKI_REPORT_H 1
@@ -86,7 +86,8 @@ namespace LoKi
       const StatusCode&  sc      = 
       StatusCode ( StatusCode::FAILURE , true ) ) 
     {
-      if ( !ok) { Exception( message , sc ) ; } ; sc.ignore() ;
+      sc.ignore() ;
+      if ( !ok) { Exception ( message , sc ) ; } 
     }
     // ========================================================================
     /** Create and (re)-throw the exception  
