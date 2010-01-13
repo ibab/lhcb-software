@@ -1,4 +1,4 @@
-// $Id: HltCorrelations.cpp,v 1.5 2009-11-23 13:33:47 pkoppenb Exp $
+// $Id: HltCorrelations.cpp,v 1.6 2010-01-13 13:11:32 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -63,7 +63,7 @@ StatusCode HltCorrelations::initialize() {
   algos.push_back("L0");
 
   // trigger bits
-  if ( m_firstBit > m_lastBit ) return Exception("Inconsistent bit range");
+  if ( m_firstBit > m_lastBit ) Exception("Inconsistent bit range");
   
   for ( unsigned int i = m_firstBit ; i<=m_lastBit ; i++){
     algos.push_back(bitX(i));

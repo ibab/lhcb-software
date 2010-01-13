@@ -19,6 +19,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-01-13 - Marco Cattaneo
+ - Follow Gaudi fix #61116: GaudiCommon::Exception now returns void
+
 ! 2010-01-13 - Patrick Koppenburg
  - Rename Charm_320Vis into Physics_320Vis...
  - v10r3
