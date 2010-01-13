@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2010-01-13 - Marco Cattaneo
+ - Add dependency on DAQUtils, new location of BankWriter.h helper
+
 !=============================== STDAQ v3r20 2009-11-13 ======================
 ! 2009-11-05 M Needham
  - Fix warning about unchecked StatusCode
