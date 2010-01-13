@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.496 2010-01-13 14:36:04 graven Exp $
+! $Id: release.notes,v 1.497 2010-01-13 16:02:17 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-01-13 - Patrick Koppenburg
+ - task #12929: 
+   . Remove some obsolete tools: ContextTool, DecodeSimpleDecayString,
+   . Modify GeomDispCalculator : now always returns StatusCode failure  
+     -> replace with IDistanceCalculator
+ - v20r0
+
 ! 2010-01-13 - Gerhard Raven
  - Changes to Physdesktop to allow lazy evaluation of PVs
  . WARNING: this goes together with a change in DVAlgorithm, i.e. in Phys/DaVinciKernel

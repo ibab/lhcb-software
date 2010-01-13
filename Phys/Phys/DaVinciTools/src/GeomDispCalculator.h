@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.h,v 1.14 2008-07-10 15:03:24 pkoppenb Exp $
+// $Id: GeomDispCalculator.h,v 1.15 2010-01-13 16:02:17 pkoppenb Exp $
 #ifndef GEOMDISPCALCULATOR_H
 #define GEOMDISPCALCULATOR_H 1
 
@@ -51,33 +51,33 @@ public:
   StatusCode calcImpactPar( const LHCb::Particle& particle,
                             const LHCb::VertexBase& vertex, 
                             double& impactParameter, 
-                            double& impactParameterError ) const;
+                            double& impactParameterError ) const { return printFailure() ; };
 
   StatusCode calcImpactPar( const LHCb::Particle& particle,
                             const LHCb::VertexBase& vertex, 
                             double& impactParameter, 
                             double& impactParameterError,
                             Gaudi::XYZVector& ipVector, 
-                            Gaudi::SymMatrix9x9& errMatrix ) const;
+                            Gaudi::SymMatrix9x9& errMatrix ) const { return printFailure() ; };
 
   StatusCode calcImpactPar( const LHCb::Particle& particle,
                             const LHCb::VertexBase& vertex, 
                             double& impactParameter, 
                             double& impactParameterError,
                             Gaudi::XYZVector& ipVector, 
-                            Gaudi::XYZVector& errVector ) const;
+                            Gaudi::XYZVector& errVector ) const { return printFailure() ; };
 
   StatusCode calcImpactPar( const LHCb::Particle& particle,
                             const Gaudi::XYZPoint& point, 
                             double& ip , 
-                            double& impactParameterError ) const;
+                            double& impactParameterError ) const { return printFailure() ; };
 
   StatusCode calcImpactPar( const LHCb::Particle& particle,
                             const Gaudi::XYZPoint& point, 
                             double& ip , 
                             double& impactParameterError,
                             Gaudi::XYZVector& ipVector, 
-                            Gaudi::SymMatrix9x9& errMatrix ) const;
+                            Gaudi::SymMatrix9x9& errMatrix ) const { return printFailure() ; };
 
   StatusCode calcImpactPar(const LHCb::Particle& transParticle,
                            const Gaudi::XYZPoint& pos,
@@ -85,53 +85,38 @@ public:
                            double& impactParameter, 
                            double& impactParameterError,
                            Gaudi::XYZVector& ipVector, 
-                           Gaudi::SymMatrix9x9& errMatrix ) const;
+                           Gaudi::SymMatrix9x9& errMatrix ) const { return printFailure() ; };
   
   StatusCode calcCloseAppr( const LHCb::Particle& particle0,       
                             const LHCb::Particle& particle1, 
                             double& distance, 
-                            double& distanceError ) const;
+                            double& distanceError ) const { return printFailure() ; };
 
   StatusCode calcVertexDis( const LHCb::VertexBase& vertex0,
                             const LHCb::VertexBase& vertex1, 
                             double& distance, 
-                            double& distanceError ) const;
+                            double& distanceError ) const { return printFailure() ; };
 
   StatusCode calcSignedFlightDistance( const LHCb::VertexBase& vertex,
                                        const LHCb::Particle& particle, 
                                        double& distance, 
-                                       double& distanceError) const;
+                                       double& distanceError) const { return printFailure() ; };
   
   StatusCode calcProjectedFlightDistance( const LHCb::VertexBase& vertex,
                                           const LHCb::Particle& particle, 
                                           double& distance, 
-                                          double& distanceError) const;
+                                          double& distanceError) const { return printFailure() ; };
   
 private:
 
-  double calcErrComponent(const Gaudi::XYZVector& vProj,
-                          const LHCb::Particle& particle,
-                          const LHCb::VertexBase& vertex,
-                          const Gaudi::SymMatrix9x9 errMtx) const;
-  
-  Gaudi::Vector9 totalDeriv(const LHCb::Particle& particle,
-                            const Gaudi::XYZVector& displ) const;
-
-  void calcErrorMatrix(const LHCb::Particle& particle,
-                       const Gaudi::SymMatrix3x3& vtxErr, 
-                       Gaudi::SymMatrix9x9& errMatrix) const;
-
-
-  void calcDerivVectors(const Gaudi::Math::XYZLine& part0,
-                        const Gaudi::Math::XYZLine& part1,
-                        Gaudi::XYZVector& u,
-                        Gaudi::XYZVector& u1,
-                        Gaudi::XYZVector& u2) const;
+  StatusCode  printFailure(){ 
+    fatal() << "The GeomDispCalculator is obsolete. Please change your code to use IDistanceCalculator.h" 
+            << endmsg ;
+    return StatusCode::FAILURE ;
+  }  
   
 
 private:
-  IParticleTransporter* m_pTransporter;  ///< Reference to ParticleTransporter
-  std::string m_transporterType;        ///< Type of transporter to use      
 
 };
 
