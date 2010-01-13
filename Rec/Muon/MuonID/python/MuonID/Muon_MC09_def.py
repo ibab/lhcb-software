@@ -36,7 +36,6 @@ MomentumCuts = [ 6000. , 10000. ]
 ## MuonID FOI parameters
 
 FOIfactor = 1.2
-useTtrack = False
 
 print "# MuonID WARNING: FOI tuning not ready for DATA=%s,VERSION=%s. Loading FOIfactor=%f" %(DATA,VERSION,FOIfactor)
 XFOIParameter1 = [5.5, 4.0, 3.3, 2.8,

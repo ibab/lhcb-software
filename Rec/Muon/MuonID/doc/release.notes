@@ -2,6 +2,13 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !-----------------------------------------------------------------------------
 
+!======================== MuonID v7r5 2010-01-13 ===========================
+! 2010-01-13 - Alessio Sarti
+ - Moved the Ttrack and preselMomentum for first data directly into the
+   ConfiguredMuonIDs package trough the 'earlyData' flag.
+   The Muon*def* packages now are unchanged (reverted back to v4r7).
+
+
 !======================== MuonID v7r4p1 2009-12-11 ===========================
 ! 2009-12-11 - Alessio Sarti
  - Implemented the use of Ttrecks for first muonID data. Muon_2009_def.py has
