@@ -4,5 +4,5 @@ ApplicationMgr.ExtSvc += { "TagCollectionSvc/EvtTupleSvc" };
 ReadAlg.OutputLevel        = 4;
 Writer.OutputLevel         = 4;
 Writer.NumMcTracks         = 1;
-EventSelector.Input        = {"DATAFILE='PFN:data/ROOTIO.dst' SVC='Gaudi::RootEvtSelector' TYP='RootCnvSvc' OPT='UPDATE'"};
+EventSelector.Input        = {"DATAFILE='PFN:data/ROOTIO.dst' SVC='Gaudi::RootEvtSelector'"};
 EvtTupleSvc.Output = {"EvtColl DATAFILE='PFN:data/ROOTIO.tags' OPT='RECREATE' SVC='Gaudi::RootCnvSvc'" };

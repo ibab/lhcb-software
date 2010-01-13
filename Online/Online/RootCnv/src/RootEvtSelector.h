@@ -1,4 +1,4 @@
-// $Id: RootEvtSelector.h,v 1.1 2010-01-11 17:14:49 frankb Exp $
+// $Id: RootEvtSelector.h,v 1.2 2010-01-13 19:08:56 frankb Exp $
 //====================================================================
 //	RootTreeEvtSelector.h
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootEvtSelector.h,v 1.1 2010-01-11 17:14:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootEvtSelector.h,v 1.2 2010-01-13 19:08:56 frankb Exp $
 
 #ifndef ROOT_ROOTEVTSELECTOR_H
 #define ROOT_ROOTEVTSELECTOR_H 1
@@ -122,11 +122,12 @@ namespace Gaudi {
     virtual StatusCode resetCriteria(const std::string& cr,Context& c)const;
   protected:
     // Data Members
-    std::string                     m_cnvSvcName;
     mutable RootCnvSvc*             m_dbMgr;
     CLID                            m_rootCLID;
+    std::string                     m_cnvSvcName;
     std::string                     m_rootName;
     std::string                     m_criteria;
+    std::string                     m_dummy;
   };
 }
 #endif  // ROOT_ROOTEVTSELECTOR_H

@@ -1,20 +1,11 @@
+#include "$ROOTCNVROOT/options/Setup.opts"
 ApplicationMgr.OutStream  += { "OutputStream/RootDst"};
 ApplicationMgr.TopAlg      = { "WriteAlg", "ReadAlg" };
-MessageSvc.OutputLevel     = 3;
 EventSelector.PrintFreq    = 1;
-ApplicationMgr.EvtMax      = 10000;
 ApplicationMgr.EvtSel      = "NONE"; // do not use any event input
-ApplicationMgr.HistogramPersistency = "NONE";
 RootDst.ItemList           = { "/Event#999" } ;
 RootDst.Output             = "DATAFILE='PFN:data/ROOTIO.dst' SVC='RootCnvSvc' OPT='RECREATE'";
 RootDst.Output             = "DATAFILE='PFN:castor:/castor/cern.ch/user/f/frankb/data/ROOTIO.dst' SVC='RootCnvSvc' OPT='RECREATE'";
-FileCatalog.Catalogs       = { "xmlcatalog_file:test.xml" } ;
-ApplicationMgr.ExtSvc     += { "Gaudi::MultiFileCatalog/FileCatalog", 
-                               "Gaudi::IODataManager/IODataManager",
-                               "Gaudi::RootCnvSvc/RootCnvSvc"};
-EventPersistencySvc.CnvServices += { "RootCnvSvc" };
-
-ApplicationMgr.AuditAlgorithms = True ;
-ApplicationMgr.ExtSvc += { "AuditorSvc"} ;
-AuditorSvc.Auditors   += { "ChronoAuditor" };
 ApplicationMgr.EvtMax      = 100000;
+RootDst.Output             = "DATAFILE='PFN:data/ROOTIO_2.dst' SVC='RootCnvSvc' OPT='RECREATE'";
+ApplicationMgr.EvtMax      = 600;

@@ -1,4 +1,4 @@
-// $Id: RootEvtSelector.cpp,v 1.3 2010-01-13 18:34:21 frankb Exp $
+// $Id: RootEvtSelector.cpp,v 1.4 2010-01-13 19:08:56 frankb Exp $
 //====================================================================
 //	RootSelector.cpp
 //--------------------------------------------------------------------
@@ -65,7 +65,8 @@ using namespace std;
 RootEvtSelector::RootEvtSelector(const string& name,ISvcLocator* svcloc )
 : base_class(name, svcloc), m_rootCLID(CLID_NULL)
 {
-  declareProperty("DbType",  m_cnvSvcName="RootCnvSvc");
+  m_cnvSvcName = "RootCnvSvc";
+  declareProperty("DbType",  m_dummy);
 }
 
 StatusCode RootEvtSelector::error(const string& msg) const   {
@@ -214,7 +215,7 @@ RootEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr) cons
       if ( fileit != pctxt->files().end() ) {
 	const std::string par[2] = {*fileit, m_rootName};
 	const unsigned long ipar[2] = {0,ent};
-	return m_dbMgr->createAddress(ROOT_StorageType,m_rootCLID,&par[0],&ipar[0],pAddr);
+	return m_dbMgr->createAddress(m_dbMgr->repSvcType(),m_rootCLID,&par[0],&ipar[0],pAddr);
       }
     }
   }
