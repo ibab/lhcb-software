@@ -12,12 +12,13 @@ __all__ = (
 
 import re
 from copy import deepcopy 
+from GaudiConf.Configuration import *
 from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable
 from Configurables import DeterministicPrescaler as Scaler
 from Configurables import LoKi__L0Filter    as L0Filter
 from Configurables import LoKi__HDRFilter   as HDRFilter
 from Configurables import LoKi__ODINFilter  as ODINFilter
-
+from Configurables import HltCopySelection_LHCb__Particle_ as HltCopyParticleSelection
 
 ## Convention: the name of 'Filter' algorithm inside StrippingLine
 def filterName   ( line , level = 'Stripping') :
@@ -53,6 +54,10 @@ def l0entryName    ( line, level = 'StrippingLine' ) :
 def hltentryName    ( line, level = 'Stripping' ) :
     """ Convention: the name of 'HLTFilter' algorithm inside StrippingLine """
     return '%s%sHltFilter'   % (level,line)
+
+def decisionName   ( line, level = 'Hlt1' ) :
+    """Convention: the name of 'Decision' algorithm inside StrippingLine"""
+    return level + '%sDecision'   % line if line != 'Global' else level+'Global'
 
 _protected_ = ( 'IgnoreFilterPassed' , 'Members' , 'ModeOR', 'DecisionName', 'Prescale','Postscale','Filter1' )
 
@@ -106,8 +111,10 @@ class bindMembers (object) :
             if hasattr ( alg , 'OutputLocation' ) :
                 self._outputloc = alg.OutputLocation 
         else :
-            self._outputsel = alg.name()
-            self._outputloc = "Phys/"+alg.name()
+            self._outputsel = None
+            self._outputloc = None
+#            self._outputsel = alg.name()
+#            self._outputloc = "Phys/"+alg.name()
 
     def _default_handler_( self, line, alg ) :
         # if not known, blindly copy -- not much else we can do
@@ -222,8 +229,9 @@ class StrippingMember ( object ) :
         _input = []
         for i in  self.InputLocations :
             if type(i) is bindMembers : i = i.outputLocation() 
-            if i[0] == '%' : i = 'Stripping' + line + i[1:]
-            _input += [ i ]
+            if i : 
+        	if i[0] == '%' : i = 'Stripping' + line + i[1:]
+        	_input += [ i ]
         return _input
 
 
@@ -377,14 +385,37 @@ class StrippingLine(object):
         if ODIN : mdict.update( { 'ODIN' : ODINFilter ( odinentryName( line ) , Code = self._ODIN )  } )
         if L0DU : mdict.update( { 'L0DU' : L0Filter   ( l0entryName  ( line ) , Code = self._L0DU )  } )
         if HLT  : mdict.update( { 'HLT'  : HDRFilter  ( hltentryName ( line ) , Code = self._HLT  ) } )
+
         if _members : 
-            mdict.update( { 'Filter' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = _members ) } )
-        # final cloning of all parameters:
+            last = _members[-1]
+            while hasattr(last,'Members') : 
+                last = getattr(last,'Members')[-1]
+
+            members = _members
+
+            ## TODO: check if 'last' is a FilterDesktop, CombineParticles, or something else...
+#            needsCopy = [ 'CombineParticles', 'FilterDesktop', 'Hlt2DisplVertices' ]
+#            knownLastMembers = needsCopy + [ 'HltCopySelection<LHCb::Track>' ]
+#            if last.getType() not in knownLastMembers :
+#              log.warning( 'last item in line ' + self.name() + ' is ' + last.getName() + ' with type ' + last.getType() )
+#            if last.getType() in needsCopy :
+
+
+	    if self.outputLocation() : 
+        	members += [ HltCopyParticleSelection( decisionName( line, 'Stripping')
+                                                     , InputSelection = 'TES:/Event/Strip/%s/Particles'%self.outputLocation()
+                                                     , OutputSelection = decisionName(line, 'Stripping')) ]
+
+            mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = members ) })
+        
+        mdict.update( { 'HltDecReportsLocation' : 'Strip/Phys/DecReports' } )
+        
         __mdict = deepcopy ( mdict ) 
-        from Configurables import StrippingAlg
-        self._configurable = StrippingAlg ( self.name() , **__mdict )
-        print '# created Stripping Line configurable for', name, '\n'
+        from Configurables import HltLine
+        self._configurable = HltLine ( self.name() , **__mdict )
+        print '# created HltLine configurable for', name, '\n'
         print self._configurable
+        return self._configurable
 
 
     def subname   ( self ) :
@@ -396,7 +427,7 @@ class StrippingLine(object):
         return 'Stripping%s' % self._name
     ## the actual type of Stripping Line 
     def type      ( self ) :
-        """ The actual type of Hlt Line """
+        """ The actual type of StrippingLine Line """
         return StrippingLine
 
     ## Get the underlying 'Configurable'
@@ -417,8 +448,8 @@ class StrippingLine(object):
         >>> selection = line.outputSelection()
         
         """
-        if not self._outputsel :
-            raise AttributeError, "The line %s does not define valid outputSelection " % self.subname()
+#        if not self._outputsel :
+#            raise AttributeError, "The line %s does not define valid outputSelection " % self.subname()
         return self._outputsel
 
     def outputLocation ( self ) :
@@ -429,8 +460,8 @@ class StrippingLine(object):
         >>> selection = line.outputLocation()
         
         """
-        if not self._outputloc :
-            raise AttributeError, "The line %s does not define valid output " % self.subname()
+#        if not self._outputloc :
+#            raise AttributeError, "The line %s does not define valid output " % self.subname()
         return self._outputloc
 
     def clone ( self , name , **args ) :

@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.33 2009-11-19 15:40:49 jpalac Exp $
+!$Id: release.notes,v 1.34 2010-01-13 18:30:41 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-01-13
+ - StrippingLine.py - Modified to use HltLine and HltDecReport
 
 !========================== StrippingConf v1r8 2009-11-19 ===================
 

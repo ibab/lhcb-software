@@ -11,7 +11,7 @@ __author__  = "Anton Poluektov <A.O.Poluektov@warwick.ac.uk>"
 from os import environ
 from pprint import *
 from Gaudi.Configuration import *
-from Configurables import StrippingAlg
+from Configurables import HltLine
 from StrippingStream import StrippingStream
 from StrippingLine import StrippingLine
 
@@ -232,7 +232,7 @@ def __enroll__ ( self       ,   ## the object
     if hasattr ( self , 'Members' ) :
         for _m in getattr(self,'Members') : line += __enroll__ ( _m , level + 1 , lst ) 
 
-    if type(self) is StrippingAlg :
+    if type(self) is HltLine :
         for i in [ 'Prescale','ODIN','L0DU','HLT','Filter','Postscale' ] :
             if hasattr(self,i) : line += __enroll__( getattr(self,i), level + 1, lst )
 
@@ -244,6 +244,6 @@ def __enroll__ ( self       ,   ## the object
 
     return line
 
-for conf in [StrippingAlg, StrippingStream, StrippingConf] :
+for conf in [ HltLine, StrippingStream, StrippingConf] :
     if conf :
         conf.__str__ = __enroll__ 
