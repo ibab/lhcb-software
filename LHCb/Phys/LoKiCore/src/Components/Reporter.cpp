@@ -1,4 +1,4 @@
-// $Id: Reporter.cpp,v 1.12 2009-03-22 17:55:24 ibelyaev Exp $
+// $Id: Reporter.cpp,v 1.13 2010-01-13 10:52:32 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -57,42 +57,42 @@ namespace LoKi
     ( const std::string& msg , 
       const StatusCode   st  = StatusCode ( StatusCode::FAILURE , true )  ,
       const size_t       mx  = 10                  ) const 
-    {  return GaudiTool::Error   ( msg , st , mx ) ; }
+    { return GaudiTool::Error   ( msg , st , mx ) ; }
     //
     virtual StatusCode Warning   
     ( const std::string& msg , 
       const StatusCode   st  = StatusCode ( StatusCode::FAILURE , true ) ,
       const size_t       mx  = 10                  ) const 
-    {  return GaudiTool::Warning ( msg , st , mx ) ; }
+    { return GaudiTool::Warning ( msg , st , mx ) ; }
     //
     virtual StatusCode Print     
     ( const std::string& msg , 
       const StatusCode   st  = StatusCode ( StatusCode::SUCCESS , true ) ,
       const MSG::Level   lev = MSG::INFO           ) const 
-    {  return GaudiTool::Print ( msg , st , lev ) ; }
+    { return GaudiTool::Print ( msg , st , lev ) ; }
     //
-    virtual StatusCode Assert 
+    virtual void       Assert 
     ( const bool         ok                            , 
       const std::string& message = ""                  , 
       const StatusCode   sc      = StatusCode ( StatusCode::FAILURE , true ) ) const 
-    {  return GaudiTool::Assert ( ok , message , sc ) ; }
+    { GaudiTool::Assert ( ok , message , sc ) ; }
     //
-    virtual StatusCode Exception 
+    virtual void       Exception 
     ( const std::string    & msg                        ,  
       const GaudiException & exc                        , 
       const StatusCode       sc  = StatusCode ( StatusCode::FAILURE , true ) ) const 
-    {  return GaudiTool::Exception ( msg , exc , sc ) ; }
+    { GaudiTool::Exception ( msg , exc , sc ) ; }
     //
-    virtual StatusCode Exception 
+    virtual void       Exception 
     ( const std::string    & msg                        ,  
       const std::exception & exc                        , 
       const StatusCode       sc  = StatusCode ( StatusCode::FAILURE , true ) ) const 
-    {  return GaudiTool::Exception ( msg , exc , sc ) ; }
+    { GaudiTool::Exception ( msg , exc , sc ) ; }
     //
-    virtual StatusCode Exception 
+    virtual void       Exception 
     ( const std::string& msg = "no message"        ,  
       const StatusCode   sc  = StatusCode ( StatusCode::FAILURE , true ) ) const 
-    {  return GaudiTool::Exception ( msg      , sc ) ; }
+    { GaudiTool::Exception ( msg      , sc ) ; }
     //
     // ========================================================================
   public:
