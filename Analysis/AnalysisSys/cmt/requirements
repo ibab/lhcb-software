@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.154 2010-01-06 12:29:38 jpalac Exp $
+# $Id: requirements,v 1.155 2010-01-13 15:18:52 pkoppenb Exp $
 package AnalysisSys
 version v3r14
 
@@ -14,7 +14,6 @@ use  DSTWriters                 v1r0     Phys   # Juan Palacios
 #===================================================================
 use  CommonParticles            v6r3     Phys   # Patrick Koppenburg, WGs
 use  FlavourTagging             v10r0    Phys   # Marco Musy
-use  DaVinciFilter              v7r3     Phys   # Patrick Koppenburg - deprecated
 
 use  DaVinciMonitors            v1r6     Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r3     Rich   # Chris Jones
