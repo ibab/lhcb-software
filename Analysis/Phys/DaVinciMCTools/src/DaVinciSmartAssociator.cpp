@@ -1,4 +1,4 @@
-// $Id: DaVinciSmartAssociator.cpp,v 1.15 2009-11-27 07:42:26 odescham Exp $
+// $Id: DaVinciSmartAssociator.cpp,v 1.16 2010-01-13 13:05:02 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -55,7 +55,7 @@ DaVinciSmartAssociator::relatedMCPsImpl(const LHCb::Particle* particle,
 
   Particle2MCParticle::ToVector associatedParts;
 
-  if (!particle) Exception("The smart associator was asked to associate a NULL particle, exiting.").ignore();
+  if (!particle) Exception("The smart associator was asked to associate a NULL particle, exiting.");
 
   //Now we get the association result based on the particle type
 
@@ -88,7 +88,7 @@ DaVinciSmartAssociator::relatedMCPsImpl(const LHCb::Particle* particle,
                                           << endmsg;
     if ( 0!=m_bkg ) {
       associatedParts.push_back(MCAssociation(m_bkg->origin(particle), 1.)); 
-    } else Exception("The BackCat tool could not be found, exiting.").ignore();
+    } else Exception("The BackCat tool could not be found, exiting.");
     if (msgLevel(MSG::VERBOSE)) verbose() << "Associated a composite particle with pid = " 
                                           << particle->particleID().pid() 
                                           << endmsg;

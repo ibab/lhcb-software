@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.59 2009-11-27 07:42:26 odescham Exp $
+// $Id: BackgroundCategory.cpp,v 1.60 2010-01-13 13:05:02 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -74,13 +74,13 @@ IBackgroundCategory::categories BackgroundCategory::category(const LHCb::Particl
 
   //Check if the tool was actually given a particle to categorise
   if (!reconstructed_mother) {
-    Exception("Given nothing to classify. Bye!").ignore();
+    Exception("Given nothing to classify. Bye!");
   }
   //Initialize the value of  the common mother to zero  
   m_commonMother = 0;
 
   if (m_smartAssociator == NULL) {
-    Exception("Something failed when making the associators. Bye!").ignore();
+    Exception("Something failed when making the associators. Bye!");
   }
 
   //Some debug information at VERBOSE level
@@ -237,7 +237,7 @@ const DaughterAndPartnerVector BackgroundCategory::getDaughtersAndPartners( cons
 //of 'hidden' method. 
 {
   if ( NULL==reconstructed_mother){
-    Exception("Got NULL pointer").ignore();
+    Exception("Got NULL pointer");
   }
 
   DaughterAndPartnerVector::const_iterator iP;
@@ -270,7 +270,7 @@ const LHCb::MCParticle* BackgroundCategory::origin(const LHCb::Particle* reconst
 //PID as your composite particle!
 {
   if ( NULL==reconstructed_mother){
-    Exception("Got NULL pointer").ignore();
+    Exception("Got NULL pointer");
   }
   
   int backcategory = category(reconstructed_mother);
@@ -339,7 +339,7 @@ int BackgroundCategory::topologycheck(const LHCb::MCParticle* topmother)
   //here though, but the Cat is often betrayed by other pieces of code...
   SmartRefVector<LHCb::MCVertex> motherEndVertices = topmother->endVertices();
   if (motherEndVertices.size() ==0) 
-    Exception("The Cat found a common MC mother but it has no daughters, please report this as a bug.").ignore();
+    Exception("The Cat found a common MC mother but it has no daughters, please report this as a bug.");
   //Assuming all went well...
   SmartRefVector<LHCb::MCVertex>::const_iterator iV = motherEndVertices.begin();
 
@@ -459,7 +459,7 @@ MCParticleVector BackgroundCategory::create_finalstatedaughterarray_for_mcmother
   //here though, but the Cat is often betrayed by other pieces of code...
   SmartRefVector<LHCb::MCVertex> motherEndVertices = topmother->endVertices();
   if (motherEndVertices.size() ==0)
-    Exception("The Cat found a common MC mother but it has no daughters, please report this as a bug.").ignore();
+    Exception("The Cat found a common MC mother but it has no daughters, please report this as a bug.");
   //Assuming all went well...
   SmartRefVector<LHCb::MCVertex>::const_iterator iV = motherEndVertices.begin(); 
 
@@ -567,10 +567,10 @@ const LHCb::MCParticle* BackgroundCategory::get_lowest_common_mother(MCParticleV
     //begin looked at; we will then check if this can be the lowest common
     //mother of the whole tree. 
     if (tempmother) tempmother = tempmother->mother();
-    else Exception("Something went wrong in the MCParticle tree, please report the bug.").ignore(); //shouldn't happen!
+    else Exception("Something went wrong in the MCParticle tree, please report the bug."); //shouldn't happen!
 
     if (!tempmother) 
-      Exception("Something went wrong in the MCParticle tree, please report the bug.").ignore(); //shouldn't happen!
+      Exception("Something went wrong in the MCParticle tree, please report the bug."); //shouldn't happen!
 
     if (msgLevel(MSG::VERBOSE)) verbose() << "The current candidate for a common mother is " 
                                           << tempmother 
@@ -584,7 +584,7 @@ const LHCb::MCParticle* BackgroundCategory::get_lowest_common_mother(MCParticleV
       
       carryon = true;
       if (!(*iMCP)) 
-        Exception("The Cat is trying to find an MC mother for a ghost, please report the bug.").ignore(); //shouldn't happen!
+        Exception("The Cat is trying to find an MC mother for a ghost, please report the bug."); //shouldn't happen!
       if (msgLevel(MSG::VERBOSE)) verbose() << "Looping on MCParticle " 
                                             << (*iMCP) 
                                             << " and PID " 
@@ -659,7 +659,7 @@ const LHCb::MCParticle* BackgroundCategory::get_lowest_common_mother(MCParticleV
                                               << endmsg; 
       }
       ++iMCP; ++iPP;
-    } else Exception("Your reconstructed particle had a null daughter, please report the bug.").ignore(); //something went wrong 
+    } else Exception("Your reconstructed particle had a null daughter, please report the bug."); //something went wrong 
 
   }while(iMCP != mc_particles_linked_to_decay.end() &&
          iPP != particles_in_decay.end()
@@ -821,7 +821,7 @@ bool BackgroundCategory::doAllFinalStateParticlesHaveACommonMother(MCParticleVec
     //m_commonMother = tempmother;
 
     if (!m_commonMother) 
-      Exception("Something has gone wrong when looking for the lowest common mother, please report the bug.").ignore(); 
+      Exception("Something has gone wrong when looking for the lowest common mother, please report the bug."); 
 
     if (msgLevel(MSG::VERBOSE)) verbose() << "Found common mother " 
                                           << m_commonMother->particleID().pid() 
@@ -852,7 +852,7 @@ bool BackgroundCategory::isTheDecayFullyReconstructed(MCParticleVector mc_partic
   int neutrinosFound = 0;
   MCParticleVector finalstateproducts = create_finalstatedaughterarray_for_mcmother(m_commonMother);
   MCParticleVector::const_iterator iPP = finalstateproducts.begin();
-  if (finalstateproducts.empty() ) Exception("Condition B : No final states, please report the bug.").ignore();
+  if (finalstateproducts.empty() ) Exception("Condition B : No final states, please report the bug.");
   MCParticleVector::const_iterator iP = mc_particles_linked_to_decay.begin();
 
   //Because of the special case of the merged pi0, the only non stable particle made without any
@@ -1238,7 +1238,7 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
     if( (*iP)->isBasicParticle() && m_calo2MC->isPureNeutralCalo( *iP ) ){ // pure neutral calorimetric particle
       //if(  m_calo2MC->isPureNeutralCalo( *iP ) ){ // pure neutral calorimetric particle
       if(NULL == m_calo2MC)
-        Exception("Something failed when making the calo->MC associators. Bye!").ignore();
+        Exception("Something failed when making the calo->MC associators. Bye!");
       // associating neutral is done here :
       const LHCb::MCParticle* mcp = m_calo2MC->from(*iP)->findMCOrBest( (*iP)->particleID() , m_caloWeight );
       verbose() << "Neutral Calo MC associated : PID = " << mcp->particleID().pid() 

@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.282 2009-12-05 20:28:02 gligorov Exp $
+! $Id: release.notes,v 1.283 2010-01-13 13:05:02 cattanem Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2010-01-13 - Marco Cattaneo
+ - Follow Gaudi fix #61116: GaudiCommon::Exception now returns void
 
 ! 2009-12-05 - V. Gligorov
  - src/Particle2BackgroundCategoryRelationsAlg.{cpp,h}
