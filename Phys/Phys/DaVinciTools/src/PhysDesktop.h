@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.47 2009-11-16 15:53:21 jpalac Exp $
+// $Id: PhysDesktop.h,v 1.48 2010-01-13 14:36:06 graven Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -14,9 +14,9 @@
 // from DaVinci
 #include "Kernel/IPhysDesktop.h"
 #include "Kernel/DaVinciFun.h"
-//#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DVAlgorithm.h"
 // Forward declarations
-class DVAlgorithm;
+//class DVAlgorithm;
 class IDataProviderSvc;
 //class IOnOffline;
 
@@ -264,7 +264,9 @@ private:
   
   inline bool usingP2PV() const 
   {
-    return m_usingP2PV;
+    // pick up parent's useP2PV() property...
+    return m_dva->useP2PV();
+    //return m_usingP2PV;
   }
 
 public:
@@ -273,9 +275,9 @@ public:
     m_writeP2PV = writeP2PV;
   }
 
-  virtual void setUsingP2PV(const bool& usingP2PV) 
+  virtual void setUsingP2PV(const bool& /*usingP2PV*/) 
   {
-    m_usingP2PV = usingP2PV;
+      always() << " please do not call setUsingP2PV -- obsolete " << endmsg;
   }  
 
 private: // data
