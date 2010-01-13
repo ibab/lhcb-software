@@ -482,7 +482,7 @@ StatusCode CaloPhotonChecker::execute()
      }
      
      LHCb::CaloHypo    *hypo = *iter;
-     if ( 0 == hypo ) return Exception( "*CaloHypo* points to NULL" );
+     if ( 0 == hypo ) Exception( "*CaloHypo* points to NULL" );
      LHCb::CaloMomentum momentum( hypo );
 
      m_nCandidats++;
@@ -497,23 +497,19 @@ StatusCode CaloPhotonChecker::execute()
      }
      
      const SmartRef<LHCb::CaloCluster> cluster=hypo->clusters().front();
-     if ( 0 == cluster )
-       { continue; return Exception( " *CaloCluster* points to NULL " ); }
+     if ( 0 == cluster ) Exception( " *CaloCluster* points to NULL " );
 
      std::vector<LHCb::CaloClusterEntry> entries = cluster->entries();
-     if( cluster->entries().empty() )
-     { return Exception( " *CaloCluster* empty " );}
+     if( cluster->entries().empty() ) Exception( " *CaloCluster* empty " );
      
      LHCb::CaloCluster::Entries::const_iterator iseed =
        LHCb::ClusterFunctors::locateDigit( cluster->entries().begin() ,
                                            cluster->entries().end  () ,
                                            LHCb::CaloDigitStatus::SeedCell  ) ;
-     if( iseed == cluster->entries().end() )
-     { return Exception( " *SeedCell* not found ");}
+     if( iseed == cluster->entries().end() ) Exception( " *SeedCell* not found ");
      
      const LHCb::CaloDigit* seed = iseed->digit();
-     if( 0 == seed )
-     { return Exception( " SeedCell *Digit* points to NULL! ");}
+     if( 0 == seed ) Exception( " SeedCell *Digit* points to NULL! ");
 
      
 // Energy

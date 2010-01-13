@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.65 2009-12-13 12:42:10 odescham Exp $ 
+! $Id: release.notes,v 1.66 2010-01-13 12:44:17 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+! 2010-01-13 - Marco Cattaneo
+ - Follow Gaudi fix #61116: GaudiCommon::Exception now returns void
 
 ! 2009-12-11 - Olivier Deschamps
  - CaloProtoElectronMonitor : make use of proto->info(PrsE) instead of CaloHypo2Calo tool.
