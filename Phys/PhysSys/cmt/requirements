@@ -1,6 +1,6 @@
-#$Id: requirements,v 1.208 2009-12-16 10:39:29 jpalac Exp $
+#$Id: requirements,v 1.209 2010-01-13 16:04:24 pkoppenb Exp $
 package PhysSys
-version v8r14
+version v9r0
 
 branches doc cmt
 
@@ -16,6 +16,11 @@ use  VertexFit			v6r1     Phys   # Yuehong Xie
 use  LoKiFitters                v2r2p1   Phys   # Vanya Belyaev
 use  DecayTreeFitter            v1r6     Phys   # Wouter Hulsbergen
 use  PhysDict                   v4r1     Phys   # Juan Palacios
+
+use HltLine                     v2r1     Hlt    # Gerhard Raven
+use HltBase                     v8r0     Hlt    # DO NOT RELEASE PHYS WITH THIS IN !!!!
+use HltInterfaces               v3r0     Kernel # Gerhard Raven
+
 # Declare this as a container package
 apply_pattern container_package
 
