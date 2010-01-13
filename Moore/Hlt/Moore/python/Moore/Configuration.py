@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.100 2009-12-18 10:23:28 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.101 2010-01-13 14:51:12 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -55,7 +55,7 @@ class Moore(LHCbConfigurableUser):
         , "ReplaceL0BanksWithEmulated" : False # rerun L0
         , "CheckOdin"  :       False  # use TCK from ODIN
         , "InitialTCK" :'0x00012009'  # which configuration to use during initialize
-        , "prefetchConfigDir" :'MOORE_v8r2'  # which configurations to prefetch.
+        , "prefetchConfigDir" :'MOORE_v8r5'  # which configurations to prefetch.
         , "generateConfig" :   False # whether or not to generate a configuration
         , "configLabel" :      ''    # label for generated configuration
         , "configAlgorithms" : ['Hlt']    # which algorithms to configure (automatically including their children!)...
@@ -82,6 +82,8 @@ class Moore(LHCbConfigurableUser):
         , 'TimeOutBits'       : 0x200
         , 'RequireRoutingBits' : [] # to require not lumi exclusive, set to [ 0x0, 0x4, 0x0 ]
         , 'VetoRoutingBits'    : []
+        , 'ReferenceRate' : -1  # rate of ReferencePredicate returning 'True'
+        , 'ReferencePredicate' : '' # the source of the ReferenceRate
         }   
                 
 
@@ -166,6 +168,14 @@ class Moore(LHCbConfigurableUser):
         AuditorSvc().Auditors = []
         self._configureOnlineMessageSvc()
         if self.getProp('UseDBSnapshot') : self._configureDBSnapshot()
+
+        if self.getProp('ReferenceRate') > 0 :
+            from Configurables import HltReferenceRateSvc
+            rsvc = HltReferenceRateSvc( ReferenceRate = self.getProp('ReferenceRate')
+                                      , ODINPredicate = self.getProp('ReferencePredicate')
+                                      )
+            ApplicationMgr().ExtSvc.append( rsvc ) 
+
 
     def _configureOnlineMessageSvc(self):
         # setup the message service

@@ -29,7 +29,17 @@ def start() :
        Moore().EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough' ] )
        Moore().EnableTimeOutCatcher = False
 
-    
+    ### pick up requested DB tag 
+    if hasattr(OnlineEnv,'CondDBTag') and OnlineEnv.CondDBTag :
+        Moore().CondDBtag = OnlineEnv.CondDBTag
+        Moore().DDDBtag   = OnlineEnv.CondDBTag
+        Moore().UseDBSnapshot = True
+
+    ### pick up lumi trigger rate
+    if hasattr(OnlineEnv,'LumiTrigger') and OnlineEnv.LumiTrigger :
+        Moore().ReferenceRate = sum(OnlineEnv.LumiPars)*1000 # go from KHz to Hz
+        Moore().ReferencePredicate = '( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger )'
+
     # Forward all attributes of 'OnlineEnv' to the job options service...
     from GaudiKernel.Proxy.Configurable import ConfigurableGeneric
     c = ConfigurableGeneric("OnlineEnv")
