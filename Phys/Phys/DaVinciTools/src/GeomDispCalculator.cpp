@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.25 2010-01-13 16:02:17 pkoppenb Exp $
+// $Id: GeomDispCalculator.cpp,v 1.26 2010-01-13 16:17:25 pkoppenb Exp $
 
 // Include files
 
@@ -6,9 +6,7 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "Kernel/IParticleTransporter.h"
 
-// From LHCb
-
-
+// From LHC
 #include "LHCbMath/GeomFun.h"
 // from Event
 #include "Event/Particle.h"
@@ -40,14 +38,11 @@ GeomDispCalculator::GeomDispCalculator(const std::string& type,
                                        const std::string& name, 
                                        const IInterface* parent) 
   : 
-  GaudiTool( type, name, parent),
-  m_pTransporter(0),
-  m_transporterType("ParticleTransporter:PUBLIC")
+  GaudiTool( type, name, parent)
 {
 
   declareInterface<IGeomDispCalculator>(this);
 
-  declareProperty("Transporter", m_transporterType);
 }
 //==================================================================
 // Initialize

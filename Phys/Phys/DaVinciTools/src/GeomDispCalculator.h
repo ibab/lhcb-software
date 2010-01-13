@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.h,v 1.15 2010-01-13 16:02:17 pkoppenb Exp $
+// $Id: GeomDispCalculator.h,v 1.16 2010-01-13 16:17:25 pkoppenb Exp $
 #ifndef GEOMDISPCALCULATOR_H
 #define GEOMDISPCALCULATOR_H 1
 
@@ -109,7 +109,7 @@ public:
   
 private:
 
-  StatusCode  printFailure(){ 
+  StatusCode  printFailure() const { 
     fatal() << "The GeomDispCalculator is obsolete. Please change your code to use IDistanceCalculator.h" 
             << endmsg ;
     return StatusCode::FAILURE ;
