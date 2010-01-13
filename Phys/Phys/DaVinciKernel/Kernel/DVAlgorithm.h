@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.46 2009-11-10 10:41:38 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.47 2010-01-13 14:33:46 graven Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -166,6 +166,7 @@ public:
    **/
   inline const LHCb::RecVertex::Container* primaryVertices() const
   {
+    if (m_PVs==0) loadPVs();
     return m_PVs;
   }
 
@@ -532,7 +533,7 @@ private:
   StatusCode loadTools() ;
 
   /// Load the primart vertices from 
-  void loadPVs();
+  void loadPVs() const;
 
   /// Method to create SelResult container
   StatusCode fillSelResult() ;
@@ -642,19 +643,22 @@ private:
 
   inline bool multiPV() const 
   {
-    return m_multiPV;
+    const LHCb::RecVertices* pvs = this->primaryVertices();
+    return 0!=pvs ? pvs->size() > 1 : false;
+    //return m_multiPV;
   }
   
   inline bool refitPVs() const 
   {
     return m_refitPVs;
   }
-  
 
+public:
   inline bool useP2PV() const 
   {
     return m_refitPVs ? true : ( !multiPV() ? false : m_useP2PV );
   }
+
   
 private:
   /// Decay description (Property)
@@ -698,7 +702,7 @@ private:
   /// User-defined Particle->PV relations locations
   std::vector<std::string> m_p2PVInputLocations ;
   /// Pointer to event's RecVertices
-  LHCb::RecVertex::Container* m_PVs;
+  mutable LHCb::RecVertex::Container* m_PVs;
   /// TES location of input PVs.
   std::string m_PVLocation;
   /// Don't use PVs

@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.68 2010-01-12 17:51:27 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.69 2010-01-13 14:33:46 graven Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -326,7 +326,7 @@ StatusCode DVAlgorithm::loadTools()
 // ============================================================================
 // Load PVs
 // ============================================================================
-void DVAlgorithm::loadPVs() {
+void DVAlgorithm::loadPVs() const {
 
   if (m_noPVs) {
     m_PVs=0;
@@ -366,18 +366,12 @@ StatusCode DVAlgorithm::sysExecute ()
 
   DaVinci::Guards::CleanDesktopGuard desktopGuard(desktop());
 
-  this->loadPVs();
+  m_PVs = 0;
 
   StatusCode sc = desktop()->getEventInput();
   if ( sc.isFailure()) 
   { return Error (  "Not able to fill PhysDesktop" , sc ) ; }
   
-  const LHCb::RecVertices* pvs = this->primaryVertices();
-  
-  m_multiPV = 0!=pvs ? pvs->size() > 1 : false;
-
-  desktop()->setUsingP2PV(this->useP2PV());
-
   // execute the algorithm 
   sc = this->Algorithm::sysExecute();
   if ( sc.isFailure() ) return sc;

@@ -1,8 +1,14 @@
-!$Id: release.notes,v 1.334 2010-01-12 17:51:38 jpalac Exp $
+!$Id: release.notes,v 1.335 2010-01-13 14:33:46 graven Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+ - src/Lib/DVAlgorithm.cpp
+  . Lazy evalution of anything PV related.
+  WARNING: this change needs to go together with a change in Phys/DaVinciTools
+  to avoid breaking P2PV relations under certain circumstances
+  . Increase version to v8r4
 
 ! 2010-01-12 - Juan PALACIOS
  - src/Lib/DVAlgorithm.cpp
