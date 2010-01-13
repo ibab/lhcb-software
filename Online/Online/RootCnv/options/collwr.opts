@@ -1,20 +1,8 @@
+#include "$ROOTCNVROOT/options/Setup.opts"
 ApplicationMgr.TopAlg = { "EvtCollectionWrite/Writer" };
+ApplicationMgr.ExtSvc += { "TagCollectionSvc/EvtTupleSvc" };
 ReadAlg.OutputLevel        = 4;
 Writer.OutputLevel         = 4;
 Writer.NumMcTracks         = 1;
-EventSelector.PrintFreq    = 250;
-ApplicationMgr.EvtMax      = -1;
-ApplicationMgr.Histogrampersistency = "NONE";
 EventSelector.Input        = {"DATAFILE='PFN:data/ROOTIO.dst' SVC='Gaudi::RootEvtSelector' TYP='RootCnvSvc' OPT='UPDATE'"};
-FileCatalog.Catalogs       = { "xmlcatalog_file:test.xml" } ;
-EventPersistencySvc.CnvServices = { "RootCnvSvc" };
-ApplicationMgr.ExtSvc      = { "Gaudi::MultiFileCatalog/FileCatalog", 
-                               "Gaudi::IODataManager/IODataManager",
-                               "Gaudi::RootCnvSvc/RootCnvSvc"
-			     };
-ApplicationMgr.ExtSvc += { "TagCollectionSvc/EvtTupleSvc" };
 EvtTupleSvc.Output = {"EvtColl DATAFILE='PFN:data/ROOTIO.tags' OPT='RECREATE' SVC='Gaudi::RootCnvSvc'" };
-MessageSvc.OutputLevel = 3;
-ApplicationMgr.AuditAlgorithms = True ;
-ApplicationMgr.ExtSvc += { "AuditorSvc"} ;
-AuditorSvc.Auditors   += { "ChronoAuditor" };
