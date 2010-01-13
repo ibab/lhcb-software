@@ -1,5 +1,5 @@
 package MuonDAQ
-version v4r6p1
+version v4r7
 
 # ================ structure ===========================================
 branches src Event MuonDAQ cmt doc
@@ -8,6 +8,7 @@ branches src Event MuonDAQ cmt doc
 use MuonKernel  v*    Muon
 use MuonDet     v*    Det
 use DigiEvent   v*    Event	
+use DAQUtils    v*    DAQ
 use DAQEvent    v*    Event
 use RecEvent    v*    Event
 use GaudiAlg    v*

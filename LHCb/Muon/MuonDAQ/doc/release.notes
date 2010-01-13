@@ -4,6 +4,9 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-01-13 - Marco Cattaneo
+ - Add dependency on DAQUtils, new location of BankWriter.h helper
+
 !========================== MuonDAQ v4r6p1 2009-06-02 ========================
 ! 2009-06-02 - Marco Cattaneo
  - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
