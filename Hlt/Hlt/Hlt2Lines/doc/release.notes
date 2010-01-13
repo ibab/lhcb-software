@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.98 2010-01-12 15:49:26 spradlin Exp $
+$Id: release.notes,v 1.99 2010-01-13 09:57:29 spradlin Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,16 @@ $Id: release.notes,v 1.98 2010-01-12 15:49:26 spradlin Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2010-01-13 - Patrick Spradlin
+  https://savannah.cern.ch/bugs/?59641
+ - Hlt2TopologicalLines.py
+   Reorganized the sequencing to remove the logical OR dependence on input
+   kaons and pions.  This was achieved by making the 2-body reconstruction
+   depend only on kaons rather than on the OR of kaons and pions.
+   Dependence on pions enters at the 3-body reconstruction, and there it is
+   introduced as an element in an ordinary sequencer.  Explicit dependence
+   on PV3D has also been introduced prior to IP cuts on the input particles.
 
 ! 2010-01-12 - Patrick Spradlin
  - Separation of charm lines and topological lines.

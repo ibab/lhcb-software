@@ -1,7 +1,7 @@
-## $Id: Hlt2TopologicalLines.py,v 1.25 2010-01-12 15:49:26 spradlin Exp $
+## $Id: Hlt2TopologicalLines.py,v 1.26 2010-01-13 09:57:29 spradlin Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-01-12 15:49:26 $'
-__version__ = '$Revision: 1.25 $'
+__date__    = '$Date: 2010-01-13 09:57:29 $'
+__version__ = '$Revision: 1.26 $'
 
 ###
 #
@@ -108,10 +108,19 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         Wrapper for line construction that also registers it to the HltANNSvc.
         """
         from HltLine.HltLine import Hlt2Line
+
+        lclAlgos = []
+        ## Prepend a filter on the number of tracks, if required.
+        if self.getProp('ComRobUseGEC') : # {
+            Hlt2TopoKillTooManyInTrk = self.seqGEC()
+            lclAlgos = [ Hlt2TopoKillTooManyInTrk ]
+        # }
+        lclAlgos.extend(algos)
+
         line = Hlt2Line(lineName
                         , prescale = self.prescale
                         , postscale = self.postscale
-                        , algos = algos
+                        , algos = lclAlgos
                        )
         self.updateHltANNSvc(lineName)
     # }
@@ -261,74 +270,78 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def __apply_configuration__(self) :
-        from HltLine.HltLine import Hlt2Member
-        from HltLine.HltLine import bindMembers
-        from Configurables import FilterDesktop,CombineParticles
-        from Hlt2SharedParticles.GoodParticles import GoodPions, GoodKaons
-        from Hlt2SharedParticles.TopoTFInputParticles import TopoTFInputParticles
-
-
-        ###################################################################
-        # Start with a GEC on all events with more than 120 tracks
+    def seqGEC(self) : # {
+        """
+        # Defines a Global Event Cut (mild badness) on all events with more
+        # than a configurable upper limit of tracks.
         #  
         # This is a temporary fix only and will be removed once proper
         # GEC lines are implemented
-        ###################################################################
+        """
         from Configurables import LoKi__VoidFilter as VoidFilter
         from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+        from HltLine.HltLine import bindMembers
+
         modules =  CoreFactory('CoreFactory').Modules
         for i in [ 'LoKiTrigger.decorators' ] :
             if i not in modules : modules.append(i)
 
-        from Configurables import Hlt2PID
-        tracks = Hlt2PID().hlt2Tracking()
-        Hlt2KillTooManyTopoIPAlg = VoidFilter('Hlt2KillTooManyTopoIPAlg'
+        from HltLine.HltReco import HltRecoSequence
+
+        Hlt2TopoKillTooManyInTrkAlg = VoidFilter('Hlt2TopoKillTooManyInTrkAlg'
                                               , Code = "TrSOURCE('Hlt/Track/Forward') >> (TrSIZE < %(ComRobGEC)s )" % self.getProps()
                                               )
-        Hlt2KillTooManyTopoIP = bindMembers( None, [ tracks, Hlt2KillTooManyTopoIPAlg ] )
-        ###################################################################
-        # Construct a combined sequence for the input particles to the robust
-        #   stage.
-        ###################################################################
-        encasePions = GaudiSequencer('Hlt2SharedTopo2Body_Pions'
-                         , Members =  GoodPions.members()
-                         )
-        encaseKaons = GaudiSequencer('Hlt2SharedTopo2Body_Kaons'
-                         , Members =  GoodKaons.members()
-                         )
-        orInput = GaudiSequencer('Hlt2SharedTopo2Body_PionsORKaons'
-                         , Members =  [ encasePions, encaseKaons ]
-                         , ModeOR = True
-                         , ShortCircuit = False
-                         )
+        Hlt2TopoKillTooManyInTrk = bindMembers( None, [ HltRecoSequence, Hlt2TopoKillTooManyInTrkAlg ] )
+
+        return Hlt2TopoKillTooManyInTrk
+    # }
+
+
+    def robInPartFilter(self, name, inputSeq) : # {
+        """
+        # Function to configure a filter for the input particles of the
+        #   robust stages of the topological.  It lashes the new FilterDesktop
+        #   to a bindMembers with its antecedents.
+        # The argument inputSeq should be a list of bindMember sequences that
+        #   produces the particles to filter.
+        """
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop, CombineParticles
+        from HltLine.HltReco import PV3D
 
         daugcuts = """(PT> %(ComRobAllTrkPtLL)s *MeV)
                       & (P> %(ComRobAllTrkPLL)s *MeV)
                       & (MIPDV(PRIMARY)> %(ComRobAllTrkPVIPLL)s )""" % self.getProps()
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
-                            , InputLocations = [GoodPions, GoodKaons]
+                            , InputLocations = inputSeq
                             , Code = daugcuts
                            )
-        if self.getProp('ComRobUseGEC') :
-            lclInputParticles = bindMembers( 'TopoInputParticles', [ Hlt2KillTooManyTopoIP, orInput, filter ] )
-        else :
-            lclInputParticles = bindMembers( 'TopoInputParticles', [ orInput, filter ] )
+
+        ## Require the PV3D reconstruction before our cut on IP.
+        filterSeq = bindMembers( name, [ PV3D ] + inputSeq + [ filter ] )
+
+        return filterSeq
+    # }
 
 
+    def tfInPartFilter(self, name, inputContainers) : # {
+        """
+        # Function to configure a filter for the input particles of the
+        #   robust stages of the topological.  It lashes the new FilterDesktop
+        #   to a bindMembers with its antecedents.
+        # The argument inputContainer should be a list of input container names.
+        #   When the track fitting sequences are worked out, it should be
+        #   replaced with a bindMember sequences that produces the particles
+        #   to filter.
+        """
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop, CombineParticles
+        from HltLine.HltReco import PV3D
 
-        ###################################################################
-        # Now absorb the post-track fit shared particles into this configurable
-        # This largely repeats the work of the robust on a different set
-        #   of input particles.
-        ###################################################################
-        # import options for the track fit
         importOptions("$HLTCONFROOT/options/Hlt2TrackFitForTopo.py")
+        tfRecoSeq = GaudiSequencer('SeqHlt2TFParticlesForTopo')
 
-        ###################################################################
-        # Filter for the post-track-fit input particles
-        ###################################################################
         incuts = """(PT> %(ComTFAllTrkPtLL)s *MeV)
                     & (P> %(ComTFAllTrkPLL)s *MeV)
                     & (MIPCHI2DV(PRIMARY)> %(ComTFAllTrkPVIPChi2LL)s )
@@ -336,39 +349,51 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
-                            , InputLocations = ['Hlt2TFPionsForTopo', 'Hlt2TFKaonsForTopo']
+                            , InputLocations = inputContainers
                             , Code = incuts
                            )
-        lclTFInputParticles = bindMembers('TopoTFIn', [ GaudiSequencer('SeqHlt2TFParticlesForTopo'), filter ])
+
+        ## Require the PV3D reconstruction before our cut on IP.
+        filterSeq = bindMembers( name, [ PV3D, tfRecoSeq, filter ] )
+
+        return filterSeq
+    # }
 
 
+    def __apply_configuration__(self) :
+        ###################################################################
+        ## Filter the input particles.
+        ###################################################################
+        from Hlt2SharedParticles.GoodParticles import GoodPions, GoodKaons
+        lclRobInputKaons = self.robInPartFilter('TopoInputKaons', [ GoodKaons ])
+        lclRobInputPions = self.robInPartFilter('TopoInputPions', [ GoodPions ])
 
 
         ###################################################################
-        # Create sequences for the shared combinatorics of the robust stages.
+        ## CombineParticles for the robust 2-body combinations.
+        ## Create only the heaviest KK combinations.  We only need to know
+        ##   if the heaviest mass hypothesis for a set of tracks passes our
+        ##   mass lower limit.
         ###################################################################
-
-        # CombineParticles for the robust 2-body combinations.
-        ###################################################################
-        topo2Body = self.robustCombine(  name = 'TmpTopo2Body'
-                                  , inputSeq = [ lclInputParticles ]
-                                  , decayDesc = ["K*(892)0 -> pi+ pi+", "K*(892)0 -> pi+ pi-", "K*(892)0 -> pi- pi-", "K*(892)0 -> K+ K+", "K*(892)0 -> K+ K-", "K*(892)0 -> K- K-", "K*(892)0 -> K+ pi-", "K*(892)0 -> pi+ K-", "K*(892)0 -> K+ pi+", "K*(892)0 -> K- pi-"]
+        topo2Body = self.robustCombine(  name = 'Topo2Body'
+                                  , inputSeq = [ lclRobInputKaons ]
+                                  , decayDesc = ["K*(892)0 -> K+ K+", "K*(892)0 -> K+ K-", "K*(892)0 -> K- K-"]
                                   , extracuts = { 'CombinationCut' : "(AMINDOCA('LoKi::TrgDistanceCalculator')< %(ComRobPairMinDocaUL)s )" % self.getProps() }
                                   )
 
-        # CombineParticles for the robust 3-body combinations.
+        ## CombineParticles for the robust 3-body combinations.
         ###################################################################
-        topo3Body = self.robustCombine(  name = 'TmpTopo3Body'
-                                  , inputSeq = [ lclInputParticles, topo2Body ]
+        topo3Body = self.robustCombine(  name = 'Topo3Body'
+                                  , inputSeq = [ lclRobInputPions, topo2Body ]
                                   , decayDesc = ["D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-"])
 
-        # CombineParticles for the robust 4-body combinations.
-        # Unlike the 3-body and 4-body, apply a mass lower limit.
+        ## CombineParticles for the robust 4-body combinations.
+        ## Unlike the 3-body and 4-body, apply a mass lower limit.
         ###################################################################
-        # There seems to be a lot of CPUT consumed in managing the large number
-        #   of 4-body candidates.  The list needs to be as small as possible.
+        ## There seems to be a lot of CPUT consumed in managing the large number
+        ##   of 4-body candidates.  The list needs to be as small as possible.
         topo4Body = self.robustCombine(  name = 'Topo4Body'
-                                  , inputSeq = [lclInputParticles, topo3Body ]
+                                  , inputSeq = [lclRobInputPions, topo3Body ]
                                   , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
                                   , extracuts = { 'CombinationCut' : '(AM>4*GeV)'
                                                 , 'MotherCut'      : "(BPVTRGPOINTINGWPT< %(RobustPointingUL)s )" % self.getProps() }
@@ -394,23 +419,27 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         robust4BodySeq = self.robustFilter('RobustTopo4Body', [topo4Body])
 
 
+
         ###################################################################
-        # Create sequences for the shared combinatorics of the post-track-fit
-        #   stages.
+        ## Filter post-track fit input particles.
         ###################################################################
+        #from Hlt2SharedParticles.TFBasicParticles import TFKaons, TFPions
+        importOptions("$HLTCONFROOT/options/Hlt2TrackFitForTopo.py")
+        lclTFInputKaons = self.tfInPartFilter('TopoTFInputKaons', [ 'Hlt2TFKaonsForTopo'] )
+        lclTFInputPions = self.tfInPartFilter('TopoTFInputPions', [ 'Hlt2TFPionsForTopo' ] )
 
         # post-track-fit 2-body combinations
         ###################################################################
-        topoTF2Body = self.tfCombine(  name = 'TmpTopoTF2Body'
-                                , inputSeq = [ lclTFInputParticles ]
-                                , decayDesc = ["K*(892)0 -> pi+ pi+", "K*(892)0 -> pi+ pi-", "K*(892)0 -> pi- pi-", "K*(892)0 -> K+ K+", "K*(892)0 -> K+ K-", "K*(892)0 -> K- K-", "K*(892)0 -> K+ pi-","K*(892)0 -> pi+ K-", "K*(892)0 -> K+ pi+", "K*(892)0 -> K- pi-"]
+        topoTF2Body = self.tfCombine(  name = 'TopoTF2Body'
+                                , inputSeq = [ lclTFInputKaons ]
+                                , decayDesc = ["K*(892)0 -> K+ K+", "K*(892)0 -> K+ K-", "K*(892)0 -> K- K-"]
                                 , extracuts = { 'CombinationCut' : "(AMINDOCA('LoKi::TrgDistanceCalculator')< %(ComTFPairMinDocaUL)s )" % self.getProps() }
                                )
 
         # post-track-fit 3-body combinations
         ###################################################################
-        topoTF3Body = self.tfCombine(  name = 'TmpTopoTF3Body'
-                                , inputSeq = [ lclTFInputParticles, topoTF2Body ]
+        topoTF3Body = self.tfCombine(  name = 'TopoTF3Body'
+                                , inputSeq = [ lclTFInputPions, topoTF2Body ]
                                 , decayDesc = ["D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-"]
                                )
 
@@ -418,7 +447,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         # Unlike the 3-body and 4-body, apply a mass lower limit.
         ###################################################################
         topoTF4Body = self.tfCombine(  name = 'TopoTF4Body'
-                                , inputSeq = [ lclTFInputParticles, topoTF3Body ]
+                                , inputSeq = [ lclTFInputPions, topoTF3Body ]
                                 , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
                                 , extracuts = { 'CombinationCut' : '(AM>4*GeV)'
                                               , 'MotherCut'      : "(BPVTRGPOINTINGWPT< %(TFPointUL)s)" % self.getProps()
