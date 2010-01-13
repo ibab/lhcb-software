@@ -14,6 +14,9 @@ use Associators       v3r7    Associators # Matt Needham
 use CaloAssociators   v6r10   Calo      # Olivier Deschamps
 use CaloTools         v5r14   Calo      # Olivier Deschamps
 
+# DAQ
+use DAQMonitors       v1r0    DAQ       # Olivier Deschamps. In SVN
+
 # HLT
 use HltDAQ            v1r2    Hlt       # Tomasz Skwarnicki
 
