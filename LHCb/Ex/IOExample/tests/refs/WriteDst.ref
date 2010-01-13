@@ -5,7 +5,7 @@
 # ApplicationMgr.TopAlg = { "DumpTracks" };
 # DumpTracks.OutputLevel = 2;
 # ApplicationMgr.OutStream += {"InputCopyStream/InputCopyStream"};
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb3/Thu/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb3/Tue/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
 # EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
@@ -26,7 +26,7 @@
 # PoolRootEvtCnvSvc.EnableIncident      =    1;
 # PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
 # PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb3/Thu/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb3/Tue/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # --> Including file '/build/cattanem/Brunel_HEAD/Ex/IOExample/options/PoolDst.opts'
 # EventSelector.Input   = {  "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"};
 # InputCopyStream.Output = "DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='REC'";
@@ -35,8 +35,8 @@
 # <-- End of file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/WriteDst.opts'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.10 $
-                                          running on lxbuild156.cern.ch on Thu Jan  7 14:06:03 2010
+                                                   Welcome to ApplicationMgr $Revision: 1.11 $
+                                          running on lxbuild156.cern.ch on Wed Jan 13 11:15:57 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Successfully loaded modules : HepMCBack
 ApplicationMgr       INFO Application Manager Configured successfully
@@ -44,13 +44,11 @@ DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 DumpTracks          DEBUG Initialize base class GaudiCommon<Algorithm>
 DumpTracks          DEBUG could not locate CounterSummarySvc, no counter summary will be made
-DumpTracks          DEBUG List of ALL properties of DumpTracks/DumpTracks  #properties = 35
+DumpTracks          DEBUG List of ALL properties of DumpTracks/DumpTracks  #properties = 34
 DumpTracks          DEBUG Property ['Name': Value] =  'TracksLocation':Rec/Track/Best
 DumpTracks          DEBUG Property ['Name': Value] =  'NumberOfObjectsToPrint':5
 DumpTracks          DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
 DumpTracks          DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
-DumpTracks          DEBUG Property ['Name': Value] =  'RegisterForContextService':True
-DumpTracks          DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
 DumpTracks          DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
 DumpTracks          DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
 DumpTracks          DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
@@ -65,6 +63,7 @@ DumpTracks          DEBUG Property ['Name': Value] =  'TypePrint':True
 DumpTracks          DEBUG Property ['Name': Value] =  'StatPrint':True
 DumpTracks          DEBUG Property ['Name': Value] =  'PropertiesPrint':False
 DumpTracks          DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+DumpTracks          DEBUG Property ['Name': Value] =  'RegisterForContextService':True
 DumpTracks          DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
 DumpTracks          DEBUG Property ['Name': Value] =  'AuditStop':False
 DumpTracks          DEBUG Property ['Name': Value] =  'AuditStart':False
@@ -281,7 +280,6 @@ DumpTracks          DEBUG *** Track ***
    1.93804e-06-1.76318e-06-5.40157e-10-1.63494e-09 4.09036e-09 ]
 
 
-IODataManager        INFO Referring to dataset PoolDst.root by its file ID:F637D574-8DFB-DE11-AA2A-001E4F3E5979
 RootDBase.open    SUCCESS PoolDst.root File version:52400
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
@@ -1039,8 +1037,7 @@ DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 ApplicationMgr       INFO Application Manager Stopped successfully
 DumpTracks          DEBUG Finalize base class GaudiAlgorithm
 DumpTracks          DEBUG Tools to release :
-DumpTracks          DEBUG Services to release : AlgContextSvc
-DumpTracks          DEBUG Releasing service 'AlgContextSvc'
+DumpTracks          DEBUG Services to release :
 InputCopyStream      INFO Events output: 5
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
