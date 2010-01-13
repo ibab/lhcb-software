@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : DAQ/DAQUtils
+! Responsible : Marco Cattaneo
+! Purpose     : Various utilities for manipulating RawEvent
+!-----------------------------------------------------------------------------
+
+! 2010-01-13 - Marco Cattaneo
+ - Initial version, migrated from Event/DAQEvent/src/components v8r2

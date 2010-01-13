@@ -1,0 +1,20 @@
+package DAQUtils
+version v1r0
+
+branches cmt doc Event src tests
+
+use GaudiKernel v*
+use GaudiAlg    v*
+use DAQEvent    v* Event
+
+apply_pattern install_more_includes more=Event
+
+library DAQUtils *.cpp
+apply_pattern component_library library=DAQUtils 
+
+# Set up the test application with packages needed at run time
+private
+  use GaudiSvc    v*      -no_auto_imports
+  use RELAX       v*  LCG_Interfaces
+  apply_pattern QMTest
+end_private
