@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: D0_twobody.py,v 1.4 2010-01-12 10:58:34 ibelyaev Exp $ 
+# $Id: D0_twobody.py,v 1.5 2010-01-13 10:22:32 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/D0_twobody.py
 #  The simple Bender-based example: find recontructed D0 -> hh candidates 
@@ -28,7 +28,7 @@ The simple Bender-based example: find recontructed D0 -> hh candidates
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ "
 # =============================================================================
 ## import everything from bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -323,7 +323,7 @@ if __name__ == '__main__' :
     configure()
 
     ## run the job
-    run(5000)
+    run(500)
     
 # =============================================================================
 # The END 
