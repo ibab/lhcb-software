@@ -1,6 +1,9 @@
 ! package DAQ/Tell1Kernel
 ! package manager: C.Parkes, T.Szumlak
 !-------------------------------------------------------------------------
+! 2010-01-13 - Anne Keune
+ - changed STTell1Core.h adding more header corrections
+
 !====================== Tell1Kernel v1r9 2009-10-24 ======================
 ! 2009-10-24 - Tomasz Szumlak
  - add various definitions needed for the Tell1 line in Boole

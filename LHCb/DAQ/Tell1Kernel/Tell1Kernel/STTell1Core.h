@@ -1,4 +1,4 @@
-// $Id: STTell1Core.h,v 1.3 2008-06-26 07:20:15 akeune Exp $
+// $Id: STTell1Core.h,v 1.4 2010-01-13 13:09:23 akeune Exp $
 #ifndef STTELL1CORE_H 
 #define STTELL1CORE_H 1
 
@@ -30,7 +30,8 @@ namespace STTELL1{
     SECTORS=48,
     ALINKS=96,
     PP_MAX_CLUSTERS=255,
-    HEADER_CORRECTIONS=4,
+    HEADER_CORRECTIONS=8,
+    STRIPS_TO_CORRECT=6,
     HEADER_THRESHOLDS=2
   };
 
@@ -82,7 +83,7 @@ namespace STTELL1{
   typedef std::vector<u_int32_t> HeaderThresholdVec;
   typedef std::map<unsigned int,HeaderThresholdVec> HeaderThresholdMap;
   typedef std::vector<u_int32_t>::iterator HeaderThresholdIT;
-  typedef int HeaderCorrection [ALINKS][HEADER_CORRECTIONS];
+  typedef int HeaderCorrection [ALINKS][STRIPS_TO_CORRECT][HEADER_CORRECTIONS];
   typedef std::vector<int> HeaderCorrectionVec;
   typedef std::map<unsigned int,HeaderCorrectionVec> HeaderCorrectionMap;
   
