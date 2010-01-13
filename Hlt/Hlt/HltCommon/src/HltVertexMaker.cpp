@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.36 2009-10-08 15:38:18 graven Exp $
+// $Id: HltVertexMaker.cpp,v 1.37 2010-01-13 13:28:53 cattanem Exp $
 // Include files 
 
 
@@ -112,13 +112,13 @@ StatusCode HltVertexMaker<Selections>::initialize() {
     double x0 = -1.e6;
     double xf =  1.e6;
     bool ok = EParser::parseFilter(filtername,funname,mode,x0,xf);
-    Assert(ok," initialize() not able to parse filtername "+filtername).ignore();
+    Assert(ok," initialize() not able to parse filtername "+filtername);
     
     m_filterNames.push_back(funname);
 
     int id = hltInfoID(funname);
     Hlt::TrackBiFunction* fun = factory->function(funname);
-    Assert( 0 !=  fun,  " initialize() function no created"+funname).ignore();
+    Assert( 0 !=  fun,  " initialize() function no created"+funname);
     m_functions.push_back(fun);
     m_filterIDs.push_back(id);
 
@@ -127,7 +127,7 @@ StatusCode HltVertexMaker<Selections>::initialize() {
                           (mode == ">") ? (Hlt::Filter*)new zen::greater<double>(x0) : 
                                           (Hlt::Filter*)new zen::in_range<double>(x0,xf) );
 
-    Assert( 0 !=  fil,  " initialize() filter no created"+filtername).ignore();
+    Assert( 0 !=  fil,  " initialize() filter no created"+filtername);
     m_filters.push_back(fil);
     
     m_tcounters.push_back(0);   
