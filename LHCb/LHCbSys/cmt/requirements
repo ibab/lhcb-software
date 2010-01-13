@@ -13,6 +13,7 @@ use CaloInterfaces        v7r17   Calo    # Olivier Deschamps
 use CaloKernel            v6r1    Calo    # Olivier Deschamps
 use CaloUtils             v8r10   Calo    # Olivier Deschamps
 
+use DAQUtils              v1r0    DAQ     # Marco Cattaneo. In SVN
 use MDF                   v3r22   DAQ     # Markus Frank
 use Tell1Kernel           v1r9    DAQ     # Tomasz Szumlak
 
