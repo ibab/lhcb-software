@@ -25,6 +25,7 @@ Purpose: LHCb reconstruction program
    . New RichCKRes 2D plots
    . Production of TimeSpanAccounting FSR
    . Fix to GaudiPoolDB to enable file sharing in FileRecordCnvSvc
+   . Fix DeSTSector::cacheInfo (STDet v4r16)
 
 </PRE><H1><A NAME=v35r11>2009-12-15 Brunel v35r11</A></H1><PRE>
  - Changes to example options
