@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.171 2010-01-03 08:47:09 ibelyaev Exp $ 
+! $Id: release.notes,v 1.172 2010-01-13 08:18:06 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2010-01-13 - Marco Cattaneo
+ - Remove test on GaudiCommon::Exception return code, to follow Gaudi fix #61116
 
 ! 2010-01-03 - Vanya Belyaev
 

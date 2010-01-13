@@ -1,4 +1,4 @@
-// $Id: Base.cpp,v 1.4 2007-07-23 17:07:43 ibelyaev Exp $
+// $Id: Base.cpp,v 1.5 2010-01-13 08:18:07 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -196,7 +196,7 @@ void LoKi::Base::Exception
 {
   sc.ignore() ;
   if ( m_reporter.validPointer() ) 
-  { m_reporter->   Exception ( msg , exc , sc ).ignore() ; }
+  { m_reporter->   Exception ( msg , exc , sc ); }
   else 
   { LoKi::Report:: Exception ( type() + "/" + name() + ": " + msg , exc , sc ) ; }
 } 
@@ -216,7 +216,7 @@ void LoKi::Base::Exception
 {
   sc.ignore() ;
   if ( m_reporter.validPointer() ) 
-  { m_reporter->   Exception ( msg , exc , sc ).ignore() ; }
+  { m_reporter->   Exception ( msg , exc , sc ); }
   else 
   { LoKi::Report:: Exception ( type() + "/" + name() + ": " + msg , exc , sc ) ; }
 } 
@@ -234,7 +234,7 @@ void LoKi::Base::Exception
 {
   sc.ignore() ;
   if ( m_reporter.validPointer() ) 
-  { m_reporter->   Exception ( msg , sc ).ignore() ; }
+  { m_reporter->   Exception ( msg , sc ); }
   else 
   { LoKi::Report:: Exception ( type() + "/" + name() + ": " + msg , sc ) ; }
 } 

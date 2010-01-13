@@ -1,4 +1,4 @@
-// $Id: ErrorReport.cpp,v 1.7 2008-11-29 13:25:00 ibelyaev Exp $
+// $Id: ErrorReport.cpp,v 1.8 2010-01-13 08:18:07 cattanem Exp $
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -210,7 +210,7 @@ StatusCode LoKi::ErrorReport::Exception
 {
   sc.ignore() ;
   if ( 0 != m_reporter ) 
-  {  return m_reporter->Exception ( msg , exc , sc ) ; } 
+  {  m_reporter->Exception ( msg , exc , sc ); return sc; } 
   // increase local counter of exceptions
   ++m_exceptions[ msg ];
   Print ( "Exception (re)throw: " + msg 
@@ -229,7 +229,7 @@ StatusCode LoKi::ErrorReport::Exception
 {
   sc.ignore() ;
   if ( 0 != m_reporter ) 
-  {  return m_reporter->Exception ( msg , exc , sc ) ; } 
+  {  m_reporter->Exception ( msg , exc , sc ); return sc; } 
   // increase local counter of exceptions
   ++m_exceptions[ msg ];
   Print ( "Exception (re)throw: " + msg 
@@ -246,7 +246,7 @@ StatusCode LoKi::ErrorReport::Exception
 {
   sc.ignore() ;
   if ( 0 != m_reporter ) 
-  {  return m_reporter->Exception ( msg , sc ) ; }  
+  {  m_reporter->Exception ( msg , sc ); return sc; }  
   // increase local counter of exceptions
   ++m_exceptions[ msg ];
   Print ( "Exception throw: " + msg , sc , MSG::FATAL );
