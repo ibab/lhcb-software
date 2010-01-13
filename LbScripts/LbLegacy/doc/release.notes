@@ -1,3 +1,8 @@
+2010-01-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkLCGCMTtar: fixed the creation of the LCG tarball for the LHCbDirac 
+	project.
+
 2010-01-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: downloads the optimized version of the 

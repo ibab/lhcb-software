@@ -100,6 +100,8 @@ def get_base_project(native_version):
     NAME = native_version.split('_')[0]
     version = native_version.split('_')[1]
     Name = NAME.lower().capitalize()
+    if Name == "Lhcbdirac" :
+        Name == "LHCbDirac"
     if NAME == 'LCGCMT': Name = 'LCG'
     if NAME == 'LHCBGRID' : Name = 'LHCbGrid'
     NameSys = Name+'Sys'

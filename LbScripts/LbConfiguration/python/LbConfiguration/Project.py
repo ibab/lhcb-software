@@ -217,13 +217,6 @@ def getTarBallName(projectname, version, cmtconfig=None):
     return filename
 
 
-def getInfoFromTarBall(filename):
-    """ Extract the project name, the version and the cmtconfig from the filename """
-    projectname = None
-    version = None
-    cmtconfig = None
-    return (projectname, version, cmtconfig)
-
 # create static instance of the project configuration with the correct name
 for _pn in project_names:
     setattr(sys.modules[__name__], _pn, getProject(_pn))
