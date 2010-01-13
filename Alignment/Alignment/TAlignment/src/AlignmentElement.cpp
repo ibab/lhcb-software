@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.25 2009-12-11 12:07:46 wouter Exp $
+// $Id: AlignmentElement.cpp,v 1.26 2010-01-13 10:28:35 wouter Exp $
 // Include files
 
 // from STD
@@ -18,6 +18,7 @@
 #include "DetDesc/3DTransformationFunctions.h"
 #include "DetDesc/GlobalToLocalDelta.h"
 #include "DetDesc/AlignmentCondition.h"
+#include "GaudiKernel/IDataProviderSvc.h"
 
 // from BOOST
 #include "boost/regex.hpp"
@@ -77,8 +78,7 @@ void AlignmentElement::addElements( const std::vector<const DetectorElement*>& e
     addToElementsInTree( *ielem, m_elementsInTree ) ;
   std::sort( m_elementsInTree.begin(), m_elementsInTree.end() ) ;
   m_elements.insert(m_elements.end(), elements.begin(), elements.end()) ;
-  initAlignmentFrame();
-
+ 
   // loop over all elements in tree and find the largest name they have in common
   m_basename = m_elements.front()->name() ;
   for( ElementContainer::const_iterator ielem =  m_elements.begin() ;
@@ -89,6 +89,9 @@ void AlignmentElement::addElements( const std::vector<const DetectorElement*>& e
 	   m_basename[ipos] == thisname[ipos] ) ++ipos ;
     if( ipos < m_basename.size() ) m_basename.resize(ipos) ;
   }
+
+  // initialize the frame and jacobian
+  initAlignmentFrame();
 }
 
 void AlignmentElement::addToElementsInTree( const IDetectorElement* const ielement,
@@ -136,7 +139,35 @@ void AlignmentElement::initAlignmentFrame() {
   // something special for Velo modules. For all other modules the
   // alignment frame is still just a translation to the cog.
   if( m_useLocalFrame ) {
-    m_alignmentFrame = m_elements.front()->geometry()->toGlobalMatrix() ;
+    if( m_elements.size() == 1 )
+      // if there is only only element, takes its frame
+      m_alignmentFrame = m_elements.front()->geometry()->toGlobalMatrix() ;
+    else {
+      // if there is more than one element, we'll use the center of
+      // gravity for the translation, and the 'parent' frame for the
+      // rotation. (think about OT modules.)
+
+      // identify the parent name from the base name
+      size_t ipos = m_basename.find_last_of('/') ;
+      std::string parentpath = 
+	ipos == std::string::npos ? m_basename : m_basename.substr(0,ipos ) ;
+      //std::cout << "PARENT NAME IS: " << parentpath << std::endl ;
+      // now we can get that parent from the datasvc:
+      IDataProviderSvc* detsvc = DetDesc::services()->detSvc();
+      DataObject* dataobj(0) ;
+      detsvc->retrieveObject(parentpath, dataobj).ignore() ;
+      const IDetectorElement* parentelement = dynamic_cast<const IDetectorElement*>(dataobj) ;
+      if( parentelement ) {
+	ROOT::Math::Rotation3D  rotation =  parentelement->geometry()->toGlobalMatrix().Rotation() ;
+	m_alignmentFrame = Gaudi::Transform3D(averageR) * rotation ;
+	//std::cout << "rotation of PARENT: " << rotation << std::endl ;
+	//std::cout << "rotation of first daughter: " 
+	//	  << m_elements.front()->geometry()->toGlobalMatrix().Rotation() << std::endl ; 
+      } else {
+	//std::cout << "FAILED TO RETRIEVE PARENT! " << std::endl ;
+	m_alignmentFrame = Gaudi::Transform3D(averageR) ;
+      }
+    }
   } else {
     m_alignmentFrame = Gaudi::Transform3D(averageR) ;
   }
@@ -217,8 +248,12 @@ AlParameters AlignmentElement::currentActiveTotalDelta() const
 }
 
 AlParameters AlignmentElement::currentDelta() const {
+  return currentDelta( alignmentFrame() ) ;
+}
+
+AlParameters AlignmentElement::currentDelta(const Gaudi::Transform3D& frame) const {
   double par[6] = {0,0,0,0,0,0} ;
-  Gaudi::Transform3D alignmentFrameInv = alignmentFrame().Inverse() ;
+  Gaudi::Transform3D frameInv = frame.Inverse() ;
   for (ElemIter ielem = m_elements.begin(); ielem != m_elements.end(); ++ielem) {
     // here I want just the _local_ delta.
     const Gaudi::Transform3D& localDelta   = ((*ielem)->geometry())->ownToOffNominalMatrix() ;
@@ -231,7 +266,7 @@ AlParameters AlignmentElement::currentDelta() const {
     // which could be shorter written like this (really!)
     Gaudi::Transform3D localDeltaInGlobal = global * localDelta * global.Inverse() ;
     // now transform it into the alignment frame
-    Gaudi::Transform3D alignDeltaMatrix = alignmentFrameInv * localDeltaInGlobal * alignmentFrame();
+    Gaudi::Transform3D alignDeltaMatrix = frameInv * localDeltaInGlobal * frame;
     std::vector<double> translations(3,0.0), rotations(3,0.0);
     DetDesc::getZYXTransformParameters(alignDeltaMatrix, translations, rotations);//, it->pivot());
     for(size_t i=0; i<3; ++i) {
@@ -291,7 +326,7 @@ std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
       << "* Index    : " << index() << "\n"
       << "* dPosXYZ  : " << Gaudi::XYZPoint(t[0], t[1], t[2]) << "\n"
       << "* dRotXYZ  : " << Gaudi::XYZPoint(r[0], r[1], r[2]) << "\n"
-      << "* PivotXYZ : " << centerOfGravity() << "\n"
+      << "* CogXYZ   : " << centerOfGravity() << "\n"
       << "* DoFs     : ";
   for (DofMask::const_iterator j = m_dofMask.begin(), jEnd = m_dofMask.end(); j != jEnd; ++j) {
     if ((*j)) lhs << dofs.at(std::distance(m_dofMask.begin(), j)) + " ";

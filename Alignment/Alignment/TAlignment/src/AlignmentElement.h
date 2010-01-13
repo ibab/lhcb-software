@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.19 2009-12-11 12:07:46 wouter Exp $
+// $Id: AlignmentElement.h,v 1.20 2010-01-13 10:28:35 wouter Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -155,11 +155,14 @@ public:
   /** return the current delta (active parameters only) */
   AlParameters currentActiveTotalDelta() const ;
 
-  /** return the current delta */
+  /** return the current delta (in the alignment frame) */
   AlParameters currentDelta() const ;
 
   /** return the current delta (active parameters only) */
   AlParameters currentActiveDelta() const ;
+
+  /** returns the current delta in an arbitrary frame */
+  AlParameters currentDelta( const Gaudi::Transform3D& frame ) const ;
 
   /** set the active par index offset. if negative, this is a deselected element */
   void setActiveParOffset( int offset ) const { m_activeParOffset = offset ; }
