@@ -1,4 +1,4 @@
-// $Id: CaloSingleGammaTool.cpp,v 1.4 2009-05-15 12:53:38 cattanem Exp $
+// $Id: CaloSingleGammaTool.cpp,v 1.5 2010-01-13 12:57:52 cattanem Exp $
 // ===========================================================================
 // Include files
 // GaudiKernel
@@ -113,27 +113,23 @@ double CaloSingleGammaTool::likelihood(const LHCb::CaloHypo* hypo )  const
 
   double lhood=0.;
 
-  if( 0 == hypo ) 
-    { return Exception( " const CaloHypo* points to NULL! " );}
+  if( 0 == hypo ) Exception( " const CaloHypo* points to NULL! " );
 
   if( hypo->clusters().size() ==1 ) {
     
     const SmartRef<LHCb::CaloCluster> cluster=*(hypo->clusters()).begin();
     
-    if( cluster->entries().empty() ) 
-    { return Exception( " Corresponding CaloCluster is empty! " );}
+    if( cluster->entries().empty() ) Exception( " Corresponding CaloCluster is empty! " );
     
     LHCb::CaloCluster::Entries::const_iterator iseed = 
       LHCb::ClusterFunctors::
       locateDigit( cluster->entries().begin() ,  
                    cluster->entries().end  () ,  
                    LHCb::CaloDigitStatus::SeedCell  ) ;
-    if( cluster->entries().end() == iseed ) 
-    { return Exception( " The Seed Cell is not found! ");}
+    if( cluster->entries().end() == iseed ) Exception( " The Seed Cell is not found! ");
     ///
     const LHCb::CaloDigit* seed = iseed->digit();
-    if( 0 == seed ) 
-    { return Exception( " The Seed Digit points to NULL! ");}
+    if( 0 == seed ) Exception( " The Seed Digit points to NULL! ");
     //
     
     const LHCb::CaloPosition *pos = hypo->position() ;
