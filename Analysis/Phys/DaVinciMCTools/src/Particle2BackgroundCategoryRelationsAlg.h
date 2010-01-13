@@ -6,7 +6,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "Kernel/IBackgroundCategory.h"          // Interface
 #include "Relations/Relations.h"
-#include "Kernel/IPhysDesktop.h"
+#include "Event/Particle.h"
 
 /** @class Particle2BackgroundCategoryRelationsAlg Particle2BackgroundCategoryRelationsAlg.h
  *  
