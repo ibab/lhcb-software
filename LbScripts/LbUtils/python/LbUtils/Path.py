@@ -1,4 +1,4 @@
-# $Id: Path.py,v 1.1 2009-12-17 14:29:51 hmdegaud Exp $
+# $Id: Path.py,v 1.2 2010-01-13 12:51:36 marcocle Exp $
 """ module for path walk utilities """
 
 import logging
@@ -35,9 +35,9 @@ class Path(object):
         return self._sublevel
     def varName(self):
         return self._varname
-    @classmethod
     def setVarName(cls, varname):
         cls._varname = varname
+    setVarName = classmethod(setVarName)
 
 class ExePath(Path):
     _varname = "PATH"

@@ -1,3 +1,7 @@
+2010-01-13  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbUtils/Path.py: removed method decorator to be compatible with Python 2.3 
+
 2009-12-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/Path.py: new module to handle path variable manipulations.
