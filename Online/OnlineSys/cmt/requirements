@@ -1,5 +1,5 @@
 package OnlineSys
-version v4r32
+version v4r35
 
 branches cmt doc
  
@@ -27,12 +27,12 @@ use GaudiOnline       v2r37    Online
 use GaudiSerialize    v0r7     Online
 use GaudiUPI          v1r12    Online
 #use Hugin            v1r6     Online
-use HPDMonitor        v1r6     Online
+#Obsolete: use HPDMonitor        v1r6     Online
 use HistDBPython      v1r5     Online
 use InsertDB          v1r5     Online
 use MBMDump           v1r14    Online
 use OMAlib            v2r11    Online
-#use OnlineDummyReader v1r4     Online
+#Obsolete: use OnlineDummyReader v1r4     Online
 use OnlineHistDB      v6r1     Online
 use OnlineBase        v1r2     Online
 use OnlineKernel      v2r1     Online
