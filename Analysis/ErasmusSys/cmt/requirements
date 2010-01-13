@@ -1,0 +1,20 @@
+#============================================================================
+# Created    : 2009-12-03
+# Maintainer : Diego Martinez
+#============================================================================
+package           ErasmusSys
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use  P2VV       v2r0         PhysFit    # Juan PALACIOS, Tristan DUPREE
+use  P2VVPython v1r2         PhysFit    # Juan PALACIOS, Tristan DUPREE
+use  BsMuMuPy   v1r0         Phys       # Jose A. Hernando 
+
+
