@@ -1,3 +1,7 @@
+2010-01-13  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: fixed compatibility with Python 2.3
+
 2010-01-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Platform.py: implemented the native machine detection

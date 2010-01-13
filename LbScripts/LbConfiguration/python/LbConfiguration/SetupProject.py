@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # pylint: disable-msg=E1103,W0141
-_cvs_id = "$Id: SetupProject.py,v 1.22 2009-11-27 18:48:14 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.23 2010-01-13 13:56:19 marcocle Exp $"
 
 import os, sys, re, time
 from xml.sax import parse, ContentHandler
@@ -11,7 +11,7 @@ from tempfile import mkdtemp, mkstemp
 
 from LbConfiguration import createProjectMakefile
 from LbUtils.CVS import CVS2Version
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.22 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.23 $")
 
 # subprocess is available since Python 2.4, but LbUtils guarantees that we can
 # import it also in Python 2.3
@@ -1544,7 +1544,9 @@ class SetupProject:
         if args is None:
             args = sys.argv[1:]
         # initialize the logger (print on standard error)
-        logging.basicConfig(stream = sys.stderr, format = "%(message)s")
+        log_handler = logging.StreamHandler(sys.stderr)
+        log_handler.setFormatter(logging.Formatter("%(message)s"))
+        logging.getLogger().addHandler(log_handler)
         # Initialization from arguments
         rc = self.prepare(args)
         if rc or self.list_versions: # No need to go on if --list-versions or error
