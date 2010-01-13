@@ -1,4 +1,4 @@
-// $Id: RootCnvSvc.cpp,v 1.1 2010-01-11 17:14:49 frankb Exp $
+// $Id: RootCnvSvc.cpp,v 1.2 2010-01-13 18:34:21 frankb Exp $
 //====================================================================
 //	RootCnvSvc implementation
 //--------------------------------------------------------------------
@@ -20,12 +20,12 @@
 #include "GaudiKernel/KeyedContainer.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/Incident.h"
-#include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiUtils/IIODataManager.h"
 #include "RootCnv/RootRefs.h"
 #include "RootCnvSvc.h"
+#include "RootAddress.h"
 #include "RootConverter.h"
 #include "RootDatabaseCnv.h"
 #include "RootDirectoryCnv.h"
@@ -298,12 +298,12 @@ StatusCode RootCnvSvc::disconnect(CSTR dataset)  {
 
 /// IAddressCreator implementation: Address creation
 StatusCode RootCnvSvc::createAddress(long  typ,
-					 const CLID& clid,
-					 const string* par, 
-					 const unsigned long* ip,
-					 IOpaqueAddress*& refpAddress) 
+				     const CLID& clid,
+				     const string* par, 
+				     const unsigned long* ip,
+				     IOpaqueAddress*& refpAddress) 
 {
-  refpAddress = new GenericAddress(typ,clid,par[0],par[1],ip[0],ip[1]);
+  refpAddress = new RootAddress(typ,clid,par[0],par[1],ip[0],ip[1]);
   return S_OK;
 }
 
@@ -311,23 +311,22 @@ StatusCode RootCnvSvc::createAddress(long  typ,
 StatusCode RootCnvSvc::i__createRep(DataObject* pObj, IOpaqueAddress*& refpAddr)  {
   refpAddr = 0;
   if ( pObj ) {
-    CLID clid = pObj->clID();
-    IRegistry* pR = pObj->registry();
-    string loc = pR->identifier();
-    TClass* cl = (pObj->clID() == CLID_DataObject) ? m_classDO : getClass(pObj);
-    TBranch* b = m_current->getBranch(m_section, loc, cl);
+    CLID       clid = pObj->clID();
+    IRegistry* pR   = pObj->registry();
+    string     p[2] = { m_current->fid(), pR->identifier()};
+    TClass*    cl   = (pObj->clID() == CLID_DataObject) ? m_classDO : getClass(pObj);
+    TBranch*   b    = m_current->getBranch(m_section, p[1], cl);
     if ( b ) {
-      int p1 = b->GetEntries();
       b->SetAddress(&pObj);
       DataObjectPush push(pObj);
       int nb = b->Fill();
       if ( nb > 1 || (pObj->clID() == CLID_DataObject && nb==1) ) {
-	refpAddr = new GenericAddress(ROOT_StorageType,clid,m_current->fid(),loc,0,p1);
-	return S_OK;
+	unsigned long ip[2] = {0,b->GetEntries()-1};
+	return createAddress(repSvcType(),clid,p,ip,refpAddr);
       }
-      return error("Failed to write object data for:"+loc);
+      return error("Failed to write object data for:"+p[1]);
     }
-    return error("Failed to access branch for:"+loc);
+    return error("Failed to access branch for:"+p[1]);
   }
   return error("markWrite> Current Database is invalid!");
 }

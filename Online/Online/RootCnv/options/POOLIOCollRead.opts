@@ -1,0 +1,25 @@
+// Define the other standard DLLs and services
+ApplicationMgr.ExtSvc = { "TagCollectionSvc/EvtTupleSvc" };
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel     = 3;
+EventSelector.PrintFreq    = 100;
+//--------------------------------------------------------------
+//  Setup for ROOT I/O System
+//--------------------------------------------------------------
+#include "GaudiPoolDbRoot.opts"
+//--------------------------------------------------------------
+// Input File. For example the output of the EvtCollectionWrite example
+//--------------------------------------------------------------
+ApplicationMgr.EvtMax       = -1 ;
+ApplicationMgr.Histogrampersistency = "NONE";
+EventSelector.Input = {
+  "COLLECTION='Dir1/Dir2/Dir3/Collection' DATAFILE='PFN:POOLIO.tags' TYP='POOL_ROOT' SEL='(Ntrack>15)' FUN='Gaudi::Examples::EvtCollectionSelector'"
+};
+
+ApplicationMgr.TopAlg      = { "ReadAlg"};
+
+FileCatalog.Catalogs += { "xmlcatalog_file:POOLIO.xml" } ;
+
+// ============================================================================
+// The END 
+// ============================================================================

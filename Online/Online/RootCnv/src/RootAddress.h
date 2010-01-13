@@ -1,50 +1,56 @@
-// $Id: RootAddress.h,v 1.1 2010-01-11 17:15:59 frankb Exp $
+// $Id: RootAddress.h,v 1.2 2010-01-13 18:34:21 frankb Exp $
 //====================================================================
-//	RootTreeAddress.h
+//	RootAddress.h
 //--------------------------------------------------------------------
 //
 //	Author     : M.Frank
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootAddress.h,v 1.1 2010-01-11 17:15:59 frankb Exp $
-#ifndef ROOT_RootTreeAddress_H
-#define ROOT_RootTreeAddress_H
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootAddress.h,v 1.2 2010-01-13 18:34:21 frankb Exp $
+#ifndef ROOTCNV_RootAddress_H
+#define ROOTCNV_RootAddress_H
 
 // Framework include files
 #include "GaudiKernel/GenericAddress.h"
+#include "RootSelect.h"
 
-class TBranch;
+class TTree;
 
-/** @class RootTreeAddress RootTreeAddress.h GaudiRootTree/RootTreeAddress.h
-  *
-  * Description:
-  *
-  * Definition of a transient link which is capable of locating
-  * an object in the persistent storage.
-  *
-  * @author  M.Frank
-  * @version 1.0
-  */
-class RootTreeAddress : virtual public GenericAddress {
-protected:
-  /// TBranch object
-  TBranch* m_branch;
+namespace Gaudi {
 
-public:
-  /// Full constructor
-  RootTreeAddress( long svc,
-		   const CLID& clid,
-		   const std::string& p1="", 
-		   const std::string& p2="",
-		   unsigned long ip1=0,
-		   unsigned long ip2=0)
-    : GenericAddress(svc,clid,p1,p2,ip1,ip2), m_branch(0)    {}
+  class RootDataConnection;
 
+  /** @class RootAddress RootAddress.h GaudiRoot/RootAddress.h
+   *
+   * Description:
+   *
+   * Definition of a transient link which is capable of locating
+   * an object in the persistent storage.
+   *
+   * @author  M.Frank
+   * @version 1.0
+   */
+  class RootAddress : virtual public GenericAddress {
+  protected:
+  public:
+    RootSelect*         select;
+    RootDataConnection* connection;
+    TTree*              section;
+  public:
+    /// Full constructor
+    RootAddress( long svc,
+		 const CLID& clid,
+		 const std::string& p1="", 
+		 const std::string& p2="",
+		 unsigned long ip1=0,
+		 unsigned long ip2=0)
+      : GenericAddress(svc,clid,p1,p2,ip1,ip2), select(0), connection(0), section(0)    {}
+  
     /// Standard Destructor
-    virtual ~RootTreeAddress() {
+    virtual ~RootAddress() {
+      if ( select ) delete select;
+      select = 0;
     }
-    /// Access to TBranch object containing object data
-    TBranch* buffer() const                  { return m_branch;     }
-    /// Set buffer containing object data
-    void setBuffer(TBranch* b)               {  m_branch = b;       }
-};
-#endif // ROOT_RootTreeAddress_H
+  };
+}
+
+#endif // ROOTCNV_RootAddress_H

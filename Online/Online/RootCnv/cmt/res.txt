@@ -1,0 +1,59 @@
+POOLIO Example
+===============
+100000 events
+
+
+Write: POOL 100000 events  SEQUENTIAL LocalDisk: /tmp
+*****Chrono*****     INFO ****************************************************************************************************
+*****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
+*****Chrono*****     INFO ****************************************************************************************************
+ReadAlg:execute      INFO Time User   : Tot=0.711  [s] Ave/Min/Max= 7.11(+-   84)/    0/1e+03 [us] #=100000
+WriteAlg:execute     INFO Time User   : Tot= 20.4  [s] Ave/Min/Max=  204(+-  403)/    0/1e+03 [us] #=100000
+RootDst:execute      INFO Time User   : Tot=  219  [s] Ave/Min/Max= 2.19(+- 2.43)/    0/  225 [ms] #=100000
+ChronoStatSvc        INFO Time User   : Tot=  245  [s]                                             #=  1
+
+Write: POOL 100000 events  SEQUENTIAL CASTOR castor:/castor/cern.ch/user/f/frankb/data
+ReadAlg:execute      INFO Time User   : Tot=0.746  [s] Ave/Min/Max= 7.46(+-   86)/    0/1e+03 [us] #=100000
+WriteAlg:execute     INFO Time User   : Tot= 22.8  [s] Ave/Min/Max=  228(+-  419)/    0/2e+03 [us] #=100000
+RootDst:execute      INFO Time User   : Tot=  240  [s] Ave/Min/Max=  2.4(+-    3)/    0/  533 [ms] #=100000
+
+ReadAlg:execute      INFO Time User   : Tot=0.852  [s] Ave/Min/Max= 8.52(+- 91.9)/    0/1e+03 [us] #=100000
+WriteAlg:execute     INFO Time User   : Tot= 24.5  [s] Ave/Min/Max=  245(+-  430)/    0/2e+03 [us] #=100000
+RootDst:execute      INFO Time User   : Tot=  248  [s] Ave/Min/Max= 2.48(+- 3.02)/    0/  487 [ms] #=100000
+
+Write: ROOT 100000 events  SEQUENTIAL  LocalDisk: /tmp
+ReadAlg:execute      INFO Time User   : Tot=0.678  [s] Ave/Min/Max= 6.78(+-   82)/    0/1e+03 [us] #=100000
+WriteAlg:execute     INFO Time User   : Tot= 20.6  [s] Ave/Min/Max=  206(+-  405)/    0/1e+03 [us] #=100000
+RootDst:execute      INFO Time User   : Tot=  213  [s] Ave/Min/Max= 2.13(+- 1.43)/    0/  148 [ms] #=100000
+
+Write: ROOT 100000 events  SEQUENTIAL CASTOR castor:/castor/cern.ch/user/f/frankb/data
+ReadAlg:execute      INFO Time User   : Tot=0.768  [s] Ave/Min/Max= 7.68(+- 87.3)/    0/1e+03 [us] #=100000
+WriteAlg:execute     INFO Time User   : Tot= 22.9  [s] Ave/Min/Max=  229(+-  420)/    0/2e+03 [us] #=100000
+RootDst:execute      INFO Time User   : Tot=  224  [s] Ave/Min/Max= 2.24(+- 1.82)/    0/  369 [ms] #=100000
+
+
+Read: POOL 100000 events  SEQUENTIAL  LocalDisk: /tmp
+ReadAlg:execute      INFO Time User   : Tot=  117  [s] Ave/Min/Max= 1.17(+-0.857)/    0/   63 [ms] #=100000
+
+Read: POOL 100000 events  SEQUENTIAL CASTOR castor:/castor/cern.ch/user/f/frankb/data
+ReadAlg:execute      INFO Time User   : Tot=   94  [s] Ave/Min/Max= 1.18(+-0.929)/    0/   78 [ms] #=79901  READ ERROR!!!!
+ReadAlg:execute      INFO Time User   : Tot=  119  [s] Ave/Min/Max= 1.19(+- 0.92)/    0/   72 [ms] #=100000
+
+Read: ROOT 100000 events  SEQUENTIAL  LocalDisk: /tmp
+ReadAlg:execute      INFO Time User   : Tot=  119  [s] Ave/Min/Max= 1.19(+-0.849)/    0/   18 [ms] #=100000
+
+Read: READ 100000 events  SEQUENTIAL CASTOR castor:/castor/cern.ch/user/f/frankb/data
+ReadAlg:execute      INFO Time User   : Tot=  129  [s] Ave/Min/Max= 1.29(+-0.969)/    0/   21 [ms] #=100000
+
+CollWrite: POOL 100000 events  SEQUENTIAL  LocalDisk: /tmp
+Writer:execute       INFO Time User   : Tot=  118  [s] Ave/Min/Max= 1.18(+-0.814)/    0/   45 [ms] #=100000
+
+CollWrite: ROOT 100000 events  SEQUENTIAL  LocalDisk: /tmp
+Writer:execute       INFO Time User   : Tot=  127  [s] Ave/Min/Max= 1.27(+-0.893)/    0/   13 [ms] #=100000
+
+CollRead: ROOT 100000 events  SEQUENTIAL  LocalDisk: /tmp
+ReadAlg:execute      INFO Time User   : Tot= 20.5  [s] Ave/Min/Max= 2.28(+-0.942)/    0/   23 [ms] #=8999
+ReadAlg:execute      INFO Time User   : Tot= 86.7  [s] Ave/Min/Max= 1.77(+-0.809)/    0/   23 [ms] #=48919
+ReadAlg:execute      INFO Time User   : Tot=  118  [s] Ave/Min/Max= 1.33(+-0.833)/    0/   21 [ms] #=89063
+
+

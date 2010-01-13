@@ -1,15 +1,19 @@
 ApplicationMgr.TopAlg      = { "ReadAlg" };
-ReadAlg.OutputLevel        = 1;
+ReadAlg.OutputLevel        = 4;
 ApplicationMgr.HistogramPersistency = "NONE";
 ApplicationMgr.EvtMax      = -1;
 EventSelector.OutputLevel  = 2;
-MessageSvc.OutputLevel = 3;
-EventSelector.PrintFreq    = 50;
+MessageSvc.OutputLevel     = 3;
+EventSelector.PrintFreq    = 500;
 EventSelector.FirstEvent   = 1;
-EventSelector.Input        = {"DATAFILE='PFN:data.root' SVC='Gaudi::RootEvtSelector' TYP='RootCnvSvc'"};
+EventSelector.Input        = {"DATAFILE='PFN:data/ROOTIO.dst' SVC='Gaudi::RootEvtSelector' TYP='RootCnvSvc'"};
+EventSelector.Input        = {"DATAFILE='PFN:castor:/castor/cern.ch/user/f/frankb/data/ROOTIO.dst' SVC='Gaudi::RootEvtSelector' TYP='RootCnvSvc'"};
 FileCatalog.Catalogs       = { "xmlcatalog_file:test.xml" } ;
 EventPersistencySvc.CnvServices = { "RootCnvSvc" };
 ApplicationMgr.ExtSvc      = { "Gaudi::MultiFileCatalog/FileCatalog", 
                                "Gaudi::IODataManager/IODataManager",
                                "Gaudi::RootCnvSvc/RootCnvSvc"
 			     };
+ApplicationMgr.AuditAlgorithms = True ;
+ApplicationMgr.ExtSvc += { "AuditorSvc"} ;
+AuditorSvc.Auditors   += { "ChronoAuditor" };

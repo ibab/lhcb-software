@@ -1,4 +1,4 @@
-// $Id: RootEvtSelector.cpp,v 1.2 2010-01-11 17:13:39 frankb Exp $
+// $Id: RootEvtSelector.cpp,v 1.3 2010-01-13 18:34:21 frankb Exp $
 //====================================================================
 //	RootSelector.cpp
 //--------------------------------------------------------------------
@@ -52,7 +52,6 @@ namespace Gaudi {
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/Tokenizer.h"
-#include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "RootCnvSvc.h"

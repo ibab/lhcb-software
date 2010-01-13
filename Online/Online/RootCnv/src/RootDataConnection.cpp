@@ -1,4 +1,4 @@
-// $Id: RootDataConnection.cpp,v 1.5 2010-01-11 17:13:39 frankb Exp $
+// $Id: RootDataConnection.cpp,v 1.6 2010-01-13 18:34:21 frankb Exp $
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/DataObject.h"
@@ -17,6 +17,7 @@ using namespace std;
 typedef const string& CSTR;
 
 static string s_empty;
+static int _print = 0;
 
 /// Standard constructor
 RootDataConnection::RootDataConnection(const IInterface* owner, const string& fname)
@@ -39,9 +40,9 @@ RootDataConnection::~RootDataConnection()   {
 StatusCode RootDataConnection::connectRead()  {
   m_file = TFile::Open(m_pfn.c_str());
   if ( m_file && !m_file->IsZombie() )   {
-    cout << "Opened file " << m_pfn << " in mode READ." << endl;
-    //m_file->ls();
-    //m_file->Print();
+    if ( _print > 0 ) cout << "Opened file " << m_pfn << " in mode READ." << endl;
+    if ( _print > 1 ) m_file->ls();
+    if ( _print > 2 ) m_file->Print();
     m_refs = (TTree*)m_file->Get("Refs");
     if ( m_refs ) {
       return readRefs();
@@ -67,25 +68,25 @@ StatusCode RootDataConnection::readRefs() {
     l = m_dbBranch->GetLeaf("Databases");
     for(i=0, n=m_dbBranch->GetEntries(); i<n; ++i) {
       if ( m_dbBranch->GetEntry(i)>0 ) m_dbs.push_back((char*)l->GetValuePointer());
-      //cout << "Dbase:" << (char*)l->GetValuePointer() << endl;
+      if ( _print > 2 ) cout << "Dbase:" << (char*)l->GetValuePointer() << endl;
     }
     m_cntBranch->SetAddress(text);
     l = m_cntBranch->GetLeaf("Containers");
     for(i=0, n=m_cntBranch->GetEntries(); i<n; ++i) {
       if ( m_cntBranch->GetEntry(i)>0 ) m_conts.push_back((char*)l->GetValuePointer());
-      //cout << "Cont:" << (char*)l->GetValuePointer() << endl;
+      if ( _print > 2 ) cout << "Cont:" << (char*)l->GetValuePointer() << endl;
     }
     m_lnkBranch->SetAddress(text);
     l = m_lnkBranch->GetLeaf("Links");
     for(i=0, n=m_lnkBranch->GetEntries(); i<n; ++i) {
       if ( m_lnkBranch->GetEntry(i)>0 ) m_links.push_back((char*)l->GetValuePointer());
-      //cout << "Link:" << (char*)l->GetValuePointer() << endl;
+      if ( _print > 2 ) cout << "Link:" << (char*)l->GetValuePointer() << endl;
     }
     m_pathBranch->SetAddress(text);
     l = m_pathBranch->GetLeaf("Paths");
     for(i=0, n=m_pathBranch->GetEntries(); i<n; ++i) {
       if ( m_pathBranch->GetEntry(i)>0 ) m_paths.push_back((char*)l->GetValuePointer());
-      //cout << "Path:" << (char*)l->GetValuePointer() << endl;
+      if ( _print > 2 ) cout << "Path:" << (char*)l->GetValuePointer() << endl;
     }
     return StatusCode::SUCCESS;
   }
@@ -103,7 +104,7 @@ StatusCode RootDataConnection::saveRefs() {
   }
   if ( m_dbBranch && m_cntBranch && m_lnkBranch && m_pathBranch ) {
     Long64_t i, n;
-    //cout << "Saving reference tables...." << endl;
+    if ( _print > 2 ) cout << "Saving reference tables...." << endl;
     for(i=m_dbBranch->GetEntries(), n=m_dbs.size(); i<n; ++i) {
       m_dbBranch->SetAddress((char*)m_dbs[i].c_str());
       if ( m_dbBranch->Fill() <= 1) sc = StatusCode::FAILURE;
@@ -120,7 +121,7 @@ StatusCode RootDataConnection::saveRefs() {
       m_pathBranch->SetAddress((char*)m_paths[i].c_str());
       if ( m_pathBranch->Fill()<=1 ) sc = StatusCode::FAILURE;
     }
-    //cout << "....Done" << endl;
+    if ( _print > 2 ) cout << "....Done" << endl;
     return sc;
   }
   return StatusCode::FAILURE;
@@ -131,18 +132,18 @@ StatusCode RootDataConnection::connectWrite(IoType typ)  {
   case CREATE:
     m_file = TFile::Open(m_pfn.c_str(),"CREATE","Root event data");
     m_refs = new TTree("Refs","Root reference data");
-    cout << "Opened file " << m_pfn << " in mode CREATE." << endl;
+    if ( _print > 0 ) cout << "Opened file " << m_pfn << " in mode CREATE." << endl;
     break;
   case RECREATE:
     resetAge();
     m_file = TFile::Open(m_pfn.c_str(),"RECREATE","Root event data");
-    cout << "Opened file " << m_pfn << " in mode RECREATE." << endl;
+    if ( _print > 0 ) cout << "Opened file " << m_pfn << " in mode RECREATE." << endl;
     m_refs = new TTree("Refs","Root reference data");
     break;
   case UPDATE:
     resetAge();
     m_file = TFile::Open(m_pfn.c_str(),"UPDATE","Root event data");
-    cout << "Opened file " << m_pfn << " in mode UPDATE." << endl;
+    if ( _print > 0 ) cout << "Opened file " << m_pfn << " in mode UPDATE." << endl;
     if ( m_file && !m_file->IsZombie() )  {
       m_refs = (TTree*)m_file->Get("Refs");
       if ( m_refs ) {
@@ -173,16 +174,16 @@ StatusCode RootDataConnection::disconnect()    {
 	for(Sections::iterator i=m_sections.begin(); i!= m_sections.end();++i) {
 	  if ( (*i).second ) {
 	    (*i).second->Write();
-	    cout << "Disconnect section " << (*i).first << " " << (*i).second->GetName() << endl;
+	    if ( _print > 0 ) cout << "Disconnect section " << (*i).first << " " << (*i).second->GetName() << endl;
 	  }
 	}
 	m_sections.clear();
       }
-      //m_file->ls();
-      //m_file->Print();
+      if ( _print > 1 ) m_file->ls();
+      if ( _print > 2 ) m_file->Print();
       m_file->Close();
     }
-    cout << "Disconnected file " << m_pfn << " " << m_file->GetName() << endl;
+    if ( _print > 0 ) cout << "Disconnected file " << m_pfn << " " << m_file->GetName() << endl;
     delete m_file;
     m_file = 0;
   }
@@ -208,7 +209,6 @@ TTree* RootDataConnection::getSection(const std::string& section, bool create) {
 TBranch* RootDataConnection::getBranch(const string& section, const string& n) {
   string m = n;
   TTree* t = getSection(section);
-  //for(size_t i=0;i<m.length();++i) if ( m[i]=='/' ) m[i]='_';
   TBranch* b = t ? t->GetBranch(m.c_str()) : 0;
   if ( b ) b->SetAutoDelete(kFALSE);
   return b;
@@ -217,7 +217,6 @@ TBranch* RootDataConnection::getBranch(const string& section, const string& n) {
 /// Access data branch by name
 TBranch* RootDataConnection::getBranch(const string& section, CSTR n, TClass* cl) {
   string m = n;
-  //for(size_t i=0;i<m.length();++i) if ( m[i]=='/' ) m[i]='_';
   TTree* t = getSection(section,true);
   TBranch* b = t->GetBranch(m.c_str());
   if ( !b && m_file->IsWritable() ) {
