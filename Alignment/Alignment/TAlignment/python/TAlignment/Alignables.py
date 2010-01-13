@@ -174,18 +174,6 @@ class Alignables( list ):
 
     def TTBoxes( self, dofs = "" ) :
         elements = []
-        elements.append( "TTaASide : "  +
-                         self.m_tt + "/TTa/TTa.Layer/R(3Module.{2}|2Module(3.|2T))" )
-        elements.append( "TTaCSide : "  +
-                         self.m_tt + "/TTa/TTa.Layer/R(1Module.{2}|2Module(1.|2B))" )
-        elements.append( "TTbASide : "  +
-                         self.m_tt + "/TTb/TTb.Layer/R(3Module.{2}|2Module(3B|4.|5.))")
-        elements.append( "TTbCSide : "  +
-                         self.m_tt + "/TTb/TTb.Layer/R(1Module.{2}|2Module(1.|2.|3T))" )
-        self.__append( elements, dofs )
-
-    def TTHalves( self, dofs = "" ) :
-        elements = []
         elements.append( "TTASide : "  +
                          self.m_tt + "/TTa/TTa.Layer/R(3Module.{2}|2Module(3.|2T))" )
         elements.append( "TTCSide : "  +
