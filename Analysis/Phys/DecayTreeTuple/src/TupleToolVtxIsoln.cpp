@@ -9,7 +9,6 @@
 #include <Kernel/GetDVAlgorithm.h>
 #include <Kernel/DVAlgorithm.h>
 #include <Kernel/IDistanceCalculator.h>
-#include <Kernel/IPhysDesktop.h>
 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
@@ -99,7 +98,7 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
   */
   const LHCb::Vertex* vtx;
   if (P->isBasicParticle() && !P->particleID().pid() == 511){
-    vtx = mother->endVertex(); //eg for the D this is the birth vertex, and the K, both are the B but why then are the plts different for these to particles
+    vtx = mother->endVertex(); 
   }
   else{
     vtx = P->endVertex();
@@ -228,7 +227,9 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
     parts2Vertex = P->daughtersVector();
   }
 
- if (msgLevel(MSG::DEBUG)) debug() <<"Now final states should include only your particles direct desendents. finalStates.size()= " <<  finalStates.size()  <<endreq;
+ if (msgLevel(MSG::DEBUG)) 
+   debug() <<"Now final states should include only your particles direct desendents. finalStates.size()= " 
+           <<  finalStates.size()  <<endreq;
  
  
  int nCompatibleIP = 0;
@@ -282,7 +283,8 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
         // return sc;
       } else{
         //fabs(vtxChi2 - vtxWithExtraTrack.chi2())  < m_deltaChi2 is not useful if the particle is basic 
-        if(fabs(vtxChi2 - vtxWithExtraTrack.chi2())  < m_deltaChi2 && m_deltaChi2 > 0.0 && (! P->isBasicParticle()) ) nCompatibleDeltaChi2++;
+        if(fabs(vtxChi2 - vtxWithExtraTrack.chi2())  
+           < m_deltaChi2 && m_deltaChi2 > 0.0 && (! P->isBasicParticle()) ) nCompatibleDeltaChi2++;
         if( (vtxWithExtraTrack.chi2()  < m_Chi2) && ( m_Chi2 > 0.0)  ) nCompatibleChi2++;
         if (msgLevel(MSG::DEBUG)) debug() << "Fitted vertex adding track has Delta chi2 = " 
                                           << fabs(vtxChi2 - vtxWithExtraTrack.chi2())  << "chi2 = " 

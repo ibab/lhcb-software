@@ -1,4 +1,4 @@
-// $Id: TupleToolGeometry.cpp,v 1.13 2009-12-08 10:46:45 pkoppenb Exp $
+// $Id: TupleToolGeometry.cpp,v 1.14 2010-01-13 13:04:27 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -10,7 +10,6 @@
 #include <Kernel/DVAlgorithm.h>
 #include <Kernel/GetDVAlgorithm.h>
 #include <Kernel/IDistanceCalculator.h>
-#include <Kernel/IPhysDesktop.h>
 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"

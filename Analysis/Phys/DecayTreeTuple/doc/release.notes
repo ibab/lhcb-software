@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2010-01-13 - Patrick Koppenburg
+ - Remove IPhysDesktop inclusion everywhere
+
 ! 2010-01-11 - V. Gligorov
  - TupleToolTISTOS : use the ANNDispatchSvc to retreive the Hlt selection
    IDs to names mapping.

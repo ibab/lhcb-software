@@ -1,4 +1,4 @@
-// $Id: TupleToolPropertime.cpp,v 1.4 2009-11-12 13:49:25 jpalac Exp $
+// $Id: TupleToolPropertime.cpp,v 1.5 2010-01-13 13:04:27 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -7,7 +7,6 @@
 
 #include <Kernel/GetDVAlgorithm.h>
 #include <Kernel/DVAlgorithm.h>
-#include <Kernel/IPhysDesktop.h>
 #include <Kernel/ILifetimeFitter.h>
 
 // local

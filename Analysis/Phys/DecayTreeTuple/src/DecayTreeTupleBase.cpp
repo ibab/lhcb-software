@@ -1,4 +1,4 @@
-// $Id: DecayTreeTupleBase.cpp,v 1.13 2009-05-14 12:52:39 pkoppenb Exp $
+// $Id: DecayTreeTupleBase.cpp,v 1.14 2010-01-13 13:04:27 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -152,7 +152,6 @@ LHCb::MCParticle::ConstVector DecayTreeTupleBase::daughtersVector(const LHCb::MC
 //=============================================================================
 StatusCode DecayTreeTupleBase::fillEventRelatedVariables( Tuples::Tuple& tuple ){
   if( !m_eTools.empty() ){
-    // const IPhysDesktop* desk = desktop();
     for( std::vector< IEventTupleTool* >::iterator it = m_eTools.begin();
          m_eTools.end() != it; ++it ){
       if( ! (*it)->fill( tuple ) ) return StatusCode::FAILURE;

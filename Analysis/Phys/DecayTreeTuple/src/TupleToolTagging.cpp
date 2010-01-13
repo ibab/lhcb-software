@@ -1,4 +1,4 @@
-// $Id: TupleToolTagging.cpp,v 1.5 2009-11-16 07:06:47 jpalac Exp $
+// $Id: TupleToolTagging.cpp,v 1.6 2010-01-13 13:04:27 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -6,7 +6,6 @@
 #include "GaudiKernel/SmartIF.h"
 
 #include <Kernel/GetDVAlgorithm.h>
-#include <Kernel/IPhysDesktop.h>
 #include <Kernel/IBTaggingTool.h>
 #include <Kernel/DVAlgorithm.h>
 
