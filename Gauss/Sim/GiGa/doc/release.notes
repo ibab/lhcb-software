@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.133 2009-12-17 17:36:53 gcorti Exp $
+! $Id: release.notes,v 1.134 2010-01-13 13:39:32 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GiGa
 ! Responsible : Gloria CORTI, Vanya BELYAEV
 ! Purpose     : Holds interfaces and base classes plus generic implementation
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
+
+! 2010-01-13 - Marco Cattaneo
+ - Follow Gaudi fix #61116: GaudiCommon::Exception now returns void
 
 !======================= GiGa v19r6 2009-12-17 ===============================
 ! 2009-12-17 - Marco Clemencic

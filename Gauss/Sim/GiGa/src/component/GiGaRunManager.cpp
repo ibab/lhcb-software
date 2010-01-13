@@ -1,4 +1,4 @@
-// $Id: GiGaRunManager.cpp,v 1.18 2008-10-10 09:15:33 gcorti Exp $ 
+// $Id: GiGaRunManager.cpp,v 1.19 2010-01-13 13:39:32 cattanem Exp $ 
 // Include files
 
 // STD & STL 
@@ -156,14 +156,14 @@ StatusCode GiGaRunManager::retrieveTheEvent( const G4Event*& event )
     {
       StatusCode sc( StatusCode::SUCCESS ) ; 
       if( !evt_Is_Processed() ) { sc = processTheEvent()                  ; }
-      if( sc.isFailure()      ) { return Exception("retrieveTheEvent()" ) ; }
+      if( sc.isFailure()      ) { Exception("retrieveTheEvent()" ) ; }
     }
   catch( const GaudiException& Excp )
-    { return Exception( "retrieveTheEvent()", Excp ); }
+    { Exception( "retrieveTheEvent()", Excp ); }
   catch( const std::exception& Excp ) 
-    { return Exception( "retrieveTheEvent()", Excp ); }
+    { Exception( "retrieveTheEvent()", Excp ); }
   catch( ... ) 
-    { return Exception( "retrieveTheEvent()"       ); }
+    { Exception( "retrieveTheEvent()"       ); }
   ///
   set_evt_Is_Prepared( false ) ; 
   event = G4RunManager::GetCurrentEvent() ;  
@@ -187,14 +187,14 @@ StatusCode GiGaRunManager::processTheEvent()
     {
       StatusCode sc( StatusCode::SUCCESS ) ;
       if( !evt_Is_Prepared() ) { sc = prepareTheEvent() ; } 
-      if( sc.isFailure() ) { return Exception("processTheEvent()") ;}
+      if( sc.isFailure() ) { Exception("processTheEvent()") ;}
     }
   catch( const GaudiException& Excp )
-    { return Exception( "processTheEvent()", Excp ); }
+    { Exception( "processTheEvent()", Excp ); }
   catch( const std::exception& Excp ) 
-    { return Exception( "processTheEvent()", Excp ); }
+    { Exception( "processTheEvent()", Excp ); }
   catch( ... ) 
-    { return Exception( "processTheEvent()"       ); }
+    { Exception( "processTheEvent()"       ); }
   ///
   if( !evt_Is_Prepared() ) { return StatusCode::FAILURE ; }  /// RETURN !!! 
   ///  to be changed soon  
@@ -249,11 +249,11 @@ StatusCode GiGaRunManager::prepareTheEvent( G4PrimaryVertex * vertex )
   ///
   try { if( !run_Is_Initialized() ) { initializeRun() ; } }
   catch( const GaudiException& Excp )
-    { return Exception( "prepareTheEvent()", Excp ); }
+    { Exception( "prepareTheEvent()", Excp ); }
   catch( const std::exception& Excp ) 
-    { return Exception( "prepareTheEvent()", Excp ); }
+    { Exception( "prepareTheEvent()", Excp ); }
   catch( ... ) 
-    { return Exception( "prepareTheEvent()"       ); }
+    { Exception( "prepareTheEvent()"       ); }
   //
   if( !run_Is_Initialized() ) 
     { return StatusCode::FAILURE ; }  ///< RETURN !!!   
@@ -318,11 +318,11 @@ StatusCode  GiGaRunManager::initializeRun()
   ///
   try { if( !krn_Is_Initialized() ) { initializeKernel() ; } }
   catch( const GaudiException& Excp )
-    { return Exception( "initializeRun()", Excp ); }
+    { Exception( "initializeRun()", Excp ); }
   catch( const std::exception& Excp ) 
-    { return Exception( "initializeRun()", Excp ); }
+    { Exception( "initializeRun()", Excp ); }
   catch( ... ) 
-    { return Exception( "initializeRun()"       ); }
+    { Exception( "initializeRun()"       ); }
   ///
   if( !krn_Is_Initialized() ) {  return StatusCode::FAILURE; }
   ///
@@ -330,11 +330,11 @@ StatusCode  GiGaRunManager::initializeRun()
     G4StateManager::GetStateManager()->GetCurrentState();
   ///
   if( G4State_PreInit != currentState  && G4State_Idle != currentState ) 
-    { return Exception("initializeRun(): wrong Geant4  state!"); }
+    { Exception("initializeRun(): wrong Geant4  state!"); }
   if( !G4RunManager::initializedAtLeastOnce            ) 
-    { return Exception("initializeRun(): G4 kernel must be initialised!");}
+    { Exception("initializeRun(): G4 kernel must be initialised!");}
   if( !G4RunManager::ConfirmBeamOnCondition()          )
-    { return Exception("initializeRun(): no G4 Beam-On conditions!");}
+    { Exception("initializeRun(): no G4 Beam-On conditions!");}
   ///
   // execute all run tools 
   for( Tools::const_iterator itool = m_runTools.begin() ;
@@ -379,15 +379,15 @@ StatusCode GiGaRunManager::initializeKernel()
             StatusCode::SUCCESS , MSG::DEBUG ) ; }
   ///
   if( G4State_PreInit != currentState  && G4State_Idle !=  currentState  )
-    { return Exception("initializeKernel(): Wronmg G4 state!");}
+    { Exception("initializeKernel(): Wronmg G4 state!");}
   if( !(G4RunManager::geometryInitialized ) && 
       ( 0 == G4RunManager::userDetector   ) && 
       ( 0 == m_rootGeo                    ) && 
       ( 0 == geoSrc()                     )    ) 
-    { return Exception("initialzeKernel(): no any geometry sources!"); }
+    { Exception("initialzeKernel(): no any geometry sources!"); }
   if( !(G4RunManager::physicsInitialized ) &&  
       ( 0 == G4RunManager::physicsList   )     )
-    { return Exception("initializeKernel(): no physics information!");}
+    { Exception("initializeKernel(): no physics information!");}
   //flr if( !(G4RunManager::cutoffInitialized  ) &&  
   //flr      ( 0 == G4RunManager::physicsList   )     )
   //flr   { return Exception("initializeKernel(): no cut-off information!");}
