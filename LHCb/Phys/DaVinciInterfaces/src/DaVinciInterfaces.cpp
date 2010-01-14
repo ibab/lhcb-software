@@ -1,4 +1,4 @@
-// $Id: DaVinciInterfaces.cpp,v 1.2 2010-01-14 07:49:27 jpalac Exp $
+// $Id: DaVinciInterfaces.cpp,v 1.3 2010-01-14 08:10:03 pkoppenb Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -10,6 +10,7 @@
 // ============================================================================
 #include "Kernel/IParticleReFitter.h"
 #include "Kernel/IParticleCombiner.h"
+#include "Kernel/IDecodeSimpleDecayString.h"
 #include "Kernel/IDirectionFit.h"
 #include "Kernel/IVertexFit.h"
 #include "Kernel/IMassFit.h"
@@ -41,6 +42,7 @@ IDistanceCalculator      :: ~IDistanceCalculator      () {}
 ISetInputParticles       :: ~ISetInputParticles       () {}
 IPrintDecay              :: ~IPrintDecay              () {}
 ICheckSelResults         :: ~ICheckSelResults         () {}
+IDecodeSimpleDecayString :: ~IDecodeSimpleDecayString () {}
 
 // ============================================================================
 // The END 
