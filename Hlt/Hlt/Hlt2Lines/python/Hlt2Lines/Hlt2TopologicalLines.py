@@ -1,7 +1,7 @@
-## $Id: Hlt2TopologicalLines.py,v 1.26 2010-01-13 09:57:29 spradlin Exp $
+## $Id: Hlt2TopologicalLines.py,v 1.27 2010-01-14 12:37:03 spradlin Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-01-13 09:57:29 $'
-__version__ = '$Revision: 1.26 $'
+__date__    = '$Date: 2010-01-14 12:37:03 $'
+__version__ = '$Revision: 1.27 $'
 
 ###
 #
@@ -338,6 +338,10 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
         from HltLine.HltReco import PV3D
+        from Configurables import Hlt2PID
+
+        tracks = Hlt2PID().hlt2Tracking()
+
 
         importOptions("$HLTCONFROOT/options/Hlt2TrackFitForTopo.py")
         tfRecoSeq = GaudiSequencer('SeqHlt2TFParticlesForTopo')
@@ -354,7 +358,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction before our cut on IP.
-        filterSeq = bindMembers( name, [ PV3D, tfRecoSeq, filter ] )
+        ## Require tracking before attempts to fit the tracks.
+        filterSeq = bindMembers( name, [ PV3D, tracks, tfRecoSeq, filter ] )
 
         return filterSeq
     # }

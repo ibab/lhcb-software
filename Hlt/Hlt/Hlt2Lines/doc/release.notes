@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.99 2010-01-13 09:57:29 spradlin Exp $
+$Id: release.notes,v 1.100 2010-01-14 12:37:02 spradlin Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,14 @@ $Id: release.notes,v 1.99 2010-01-13 09:57:29 spradlin Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2010-01-14 - Patrick Spradlin
+  https://savannah.cern.ch/bugs/?59641
+ - Hlt2CharmLines.py
+   Reorganized the sequencing to remove the logical OR dependence on input
+   kaons and pions.
+ - Hlt2TopologicalLines.py
+   Minor sequencing fix.
 
 ! 2010-01-13 - Patrick Spradlin
   https://savannah.cern.ch/bugs/?59641
