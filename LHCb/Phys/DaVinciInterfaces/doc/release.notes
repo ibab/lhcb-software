@@ -4,6 +4,14 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-01-14 - Juan PALACIOS
+ - src/DavinciInterfaces.cpp
+  . Remove references to IDecodeSimpleDecayString.h
+ - Kernel/IPhysDesktop
+  . primaryVertices() now returns LHCb::RecVertex::ConstVector&
+ - Kernel/IDVAlgorithm
+  . primaryVertices() now returns LHCb::RecVertex::ConstVector*
+
 ! 2010-01-13 - Patrick Koppenburg
  - task #12929: Remove all obsolete algorithms and tools :
    . Removed IBestParticles.h, IContextTool.h, IDecodeSimpleDecayString.h, IFilterCriteriaTESTool.h
