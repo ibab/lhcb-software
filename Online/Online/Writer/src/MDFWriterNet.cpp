@@ -131,7 +131,8 @@ void File::init(const std::string& fileName, unsigned int runNumber) {
   m_next = NULL;
   sprintf(txt,"/File#%02d",s_seqNo++);
   std::string svc = RTL::processName()+txt;
-  m_mon->m_svcID = ::dis_add_service((char*)svc.c_str(),"C",0,0,feedMonitor,(long)m_mon);
+
+  m_mon->m_svcID = ::dis_add_service((char *) svc.c_str(),(char *) "C",0,0,feedMonitor,(long)m_mon);
 }
 
 /// Destructor.
