@@ -55,7 +55,7 @@ void WriterNetFileObject::debug(FILE* fp) {
         fflush(fp);
         return;
     }
-    fprintf(fp, "\n\t\t%i key/value pairs", this->keyValuePairs->size());
+    fprintf(fp, "\n\t\t%i key/value pairs", (int) this->keyValuePairs->size());
     KeyValuePairIterator i = this->keyValuePairs->begin();
     while(i != this->keyValuePairs->end()) {
         fprintf(fp, "\n\t\t");
