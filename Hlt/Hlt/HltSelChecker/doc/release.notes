@@ -19,6 +19,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-01-14 - Juan PALACIOS
+ - src/ReadHltReport.cpp
+  . IPhysDesktop::relatedVertex -> DVAlgorithm::bestPV.
+
 ! 2010-01-13 - Marco Cattaneo
  - Follow Gaudi fix #61116: GaudiCommon::Exception now returns void
 
