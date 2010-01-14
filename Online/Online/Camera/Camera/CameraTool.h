@@ -1,4 +1,4 @@
-// $Id: CameraTool.h,v 1.5 2009-10-15 13:09:52 nmangiaf Exp $
+// $Id: CameraTool.h,v 1.6 2010-01-14 14:39:52 nmangiaf Exp $
 #ifndef CAMERATOOL_H
 #define CAMERATOOL_H 1
 
@@ -17,9 +17,6 @@
 // from std
 #include <string>
 #include <vector>
-
-// Event
-#include "Event/ODIN.h"
 
 // Forward declarations
 class client;
@@ -40,8 +37,7 @@ class TH2D;
  */
 
 class CameraTool : public GaudiTool,
-                   virtual public ICameraTool,
-                   virtual public IIncidentListener {
+                   virtual public ICameraTool {
 
   int numErrBZ;
   int numErrCN;
@@ -149,9 +145,6 @@ private:
   bool m_dosend; ///! Indicates if the messages are to be stored and sent to CAMERA or not.
   unsigned int m_lastHistoNum; ///! Part of the title hack required until MonObjects are used. Notes how many histograms are to sent.
   
-  bool m_newRun;
-  virtual void   handle (const Incident &incident);///! It handles the change of run number to change the Camera data directory
-
 };
 
 #endif
