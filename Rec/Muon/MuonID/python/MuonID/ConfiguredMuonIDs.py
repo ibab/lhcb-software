@@ -208,7 +208,6 @@ class ConfiguredMuonIDs():
     else: mymuid=MuonIDAlg(str(muonid))
 
     ## general MuonIDAlg properties
-    mymuid.OutputLevel = 2
     mymuid.MomentumCuts  = self.info.MomentumCuts
     mymuid.AllMuonTracks = self.info.AllMuonTracks
     mymuid.FindQuality = self.info.FindQuality
