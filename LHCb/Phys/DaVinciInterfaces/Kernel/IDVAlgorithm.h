@@ -1,4 +1,4 @@
-// $Id: IDVAlgorithm.h,v 1.6 2010-01-14 07:49:13 jpalac Exp $
+// $Id: IDVAlgorithm.h,v 1.7 2010-01-14 15:28:38 jpalac Exp $
 #ifndef KERNEL_IDVALGORITHM_H 
 #define KERNEL_IDVALGORITHM_H 1
 
@@ -63,7 +63,7 @@ public:
    * vertices.
    *
    **/
-  virtual const LHCb::RecVertex::ConstVector* primaryVertices() const = 0;
+  virtual const LHCb::RecVertex::Container* primaryVertices() const = 0;
   
   /**
    *
