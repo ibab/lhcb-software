@@ -4,6 +4,7 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+!============================= PatPV v3r11p2 2010-01-14 ======================
 
 ! 2010-01-11 - Mariusz Witek
  - make PatPV2DFit3D as GaudiHistoAlg and add histograms for PV monitoring
