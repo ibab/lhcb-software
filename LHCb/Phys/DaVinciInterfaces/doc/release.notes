@@ -4,6 +4,10 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-01-14 - Juan PALACIOS
+ - Kernel/IPhysDesktop
+  . revert previous behaviour of primaryVertices().
+
 ! 2010-01-14 - Patrick Koppenburg
  - Restore IDecodeSimpleDecayString.h
 
