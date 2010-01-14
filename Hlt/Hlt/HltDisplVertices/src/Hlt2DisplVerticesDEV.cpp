@@ -203,7 +203,7 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
   //Retrieve the RecVertex from PV official reconstruction
   RecVertex::ConstVector PVs;
   if( m_RCutMethod=="FromUpstreamPV" || m_RCutMethod=="CorrFromUpstreamPV" ){
-    const RecVertex::Container * PVc = desktop()-> primaryVertices();
+    const RecVertex::Container * PVc = this->primaryVertices();
     int size = PVc->size();
     if(msgLevel(MSG::DEBUG))
       debug()<<"Retrieved "<< size <<" primary vertices" << endmsg;
