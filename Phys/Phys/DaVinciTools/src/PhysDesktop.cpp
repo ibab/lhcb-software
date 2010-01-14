@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.91 2009-11-16 09:47:04 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.92 2010-01-14 11:07:35 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -92,7 +92,6 @@ PhysDesktop::PhysDesktop( const std::string& type,
     , m_parts     (   )
     , m_secVerts  (   )
     , m_refitPVs  (   )
-    , m_primVerts ( 0 )
   //
     , m_p2VtxTable    (    )
     , m_p2PVMap       (    )
@@ -458,7 +457,7 @@ void PhysDesktop::saveP2PVRelations(const  LHCb::Particle::ConstVector& pToSave)
   
   // V.B.
   
-  if ( 0 == m_primVerts && "None" == m_primVtxLocn )
+  if ( 0 == primaryVertices() && "None" == m_primVtxLocn )
   {
     if ( msgLevel ( MSG::DEBUG ) )
     { debug() << " skip saveP2PVRelations: No Primary Vertices" << endmsg ; }
@@ -726,27 +725,6 @@ StatusCode PhysDesktop::getInputRelations(std::vector<std::string>::const_iterat
   }
 
   return StatusCode::SUCCESS ; // could be sc
-}
-//=============================================================================
-// Get PV
-//=============================================================================
-StatusCode PhysDesktop::getPrimaryVertices() {
-
-
-  if (msgLevel(MSG::VERBOSE)) {
-    verbose() << "Getting PV from " << primaryVertexLocation() << endmsg;
-  }
-  
-  if ( !exist<LHCb::RecVertices>( primaryVertexLocation() ) ) {
-    m_primVerts = 0 ;
-    Info ("No PV container at "+primaryVertexLocation());
-    return StatusCode::SUCCESS;
-  }
-
-  m_primVerts = get<LHCb::RecVertices>( primaryVertexLocation() );
-
-  return StatusCode::SUCCESS ;
-
 }
 //=============================================================================
 // Write an empty container if needed

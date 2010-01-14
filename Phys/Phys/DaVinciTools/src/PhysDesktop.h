@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.48 2010-01-13 14:36:06 graven Exp $
+// $Id: PhysDesktop.h,v 1.49 2010-01-14 11:07:35 jpalac Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -175,8 +175,6 @@ private:
   /// Save the Particle->Vertex relations table in the Desktop to the TES
   void saveP2PVRelations(const LHCb::Particle::ConstVector& pToSave) const;
 
-  StatusCode getPrimaryVertices(); ///< get PV
-
   StatusCode getParticles();       ///< get Particles
 
   StatusCode getInputRelations();       ///< get all Relation tables
@@ -309,9 +307,6 @@ private: // data
   LHCb::Vertex::ConstVector m_secVerts;         ///< Local Container of secondary vertices
 
   LHCb::RecVertex::ConstVector m_refitPVs;    ///< Local Container of re-fitted primary vertices
-  LHCb::RecVertex::Container* m_primVerts;    ///< Local Container of primary vertices
-
-  //  IOnOffline* m_OnOffline ;   ///< locate PV
 
   Particle2Vertex::LightTable m_p2VtxTable; ///< Table of Particle to PV relations
 
