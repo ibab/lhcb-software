@@ -4,6 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-01-14 - Patrick Koppenburg
+ - Restore IDecodeSimpleDecayString.h
+
 ! 2010-01-14 - Juan PALACIOS
  - src/DavinciInterfaces.cpp
   . Remove references to IDecodeSimpleDecayString.h

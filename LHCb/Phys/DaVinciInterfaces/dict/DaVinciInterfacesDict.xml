@@ -9,6 +9,7 @@
   <class name = "ICheckOverlap"/>
   <class name = "ICheckSelResults"/>
   <class name = "IDecayFinder"/>
+  <class name = "IDecodesSimpleDecayString"/>
   <class name = "IDirectionFit"/>
   <class name = "IDistanceCalculator"/>
   <class name = "IDVAlgorithm"/>
