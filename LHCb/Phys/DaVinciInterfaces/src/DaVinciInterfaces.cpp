@@ -1,4 +1,4 @@
-// $Id: DaVinciInterfaces.cpp,v 1.1 2009-08-17 08:03:29 jpalac Exp $
+// $Id: DaVinciInterfaces.cpp,v 1.2 2010-01-14 07:49:27 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -19,7 +19,7 @@
 #include "Kernel/ISetInputParticles.h"
 #include "Kernel/IPrintDecay.h"
 #include "Kernel/ICheckSelResults.h"
-#include "Kernel/IDecodeSimpleDecayString.h"
+
 // ============================================================================
 /** @file
  *  Implementation file for class doem interfaces from 
@@ -41,8 +41,6 @@ IDistanceCalculator      :: ~IDistanceCalculator      () {}
 ISetInputParticles       :: ~ISetInputParticles       () {}
 IPrintDecay              :: ~IPrintDecay              () {}
 ICheckSelResults         :: ~ICheckSelResults         () {}
-IDecodeSimpleDecayString :: ~IDecodeSimpleDecayString () {}
-
 
 // ============================================================================
 // The END 
