@@ -5,6 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-01-14 - Juan PALACIOS
+ - Kernel/IDVAlgorithm
+  . primaryVertices() back to original behaviour.
  - Kernel/IPhysDesktop
   . Remove relatedVertex and primaryVertices methods.
   . revert previous behaviour of primaryVertices().
