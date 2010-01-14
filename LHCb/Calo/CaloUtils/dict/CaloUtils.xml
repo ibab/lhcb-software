@@ -1,7 +1,7 @@
 <!-- 
-     * $Id: CaloUtils.xml,v 1.3 2009-11-28 19:12:40 ibelyaev Exp $ 
+     * $Id: CaloUtils.xml,v 1.4 2010-01-14 17:39:39 vegorych Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
      * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for 
@@ -14,6 +14,7 @@
 
 <lcgdict>
   
+  <class name      = "ICaloElectron"      />
   <class name      = "LHCb::CaloMomentum" />
   <class name      = "LHCb::CaloParticle" />
 

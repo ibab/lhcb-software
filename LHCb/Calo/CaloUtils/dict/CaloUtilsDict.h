@@ -1,6 +1,6 @@
-// $Id: CaloUtilsDict.h,v 1.3 2009-11-28 19:12:40 ibelyaev Exp $
+// $Id: CaloUtilsDict.h,v 1.4 2010-01-14 17:39:40 vegorych Exp $
 // ============================================================================
-// CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 #ifndef CALOUTILS_CALOUTILSDICT_H 
 #define CALOUTILS_CALOUTILSDICT_H 1
@@ -13,6 +13,7 @@
 #include "CaloUtils/CaloParticle.h"
 #include "CaloUtils/CaloCellIDAsProperty.h"
 #include "CaloUtils/CaloUtils.h"
+#include "CaloUtils/ICaloElectron.h"
 // ============================================================================
 // Stefan Roiser's trick to allow compilation on Win32
 // ============================================================================
