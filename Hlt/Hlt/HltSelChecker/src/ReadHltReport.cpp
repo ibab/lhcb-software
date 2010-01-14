@@ -1,4 +1,4 @@
-// $Id: ReadHltReport.cpp,v 1.1 2009-10-15 12:32:16 pkoppenb Exp $
+// $Id: ReadHltReport.cpp,v 1.2 2010-01-14 23:10:50 jpalac Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -171,18 +171,18 @@ StatusCode ReadHltReport::printParticles(const LHCb::Particle::ConstVector& part
     info() << " P= " << (*ip)->momentum() ;
     if ( 0==(*ip)->endVertex()){
       double IP, IPe ;
-      if ( 0!= (desktop()->relatedVertex(*ip)) ){
-        StatusCode sc = distanceCalculator()->distance((*ip), (desktop()->relatedVertex(*ip)), IP, IPe);
+      if ( 0!= (this->bestPV(*ip)) ){
+        StatusCode sc = distanceCalculator()->distance((*ip), (this->bestPV(*ip)), IP, IPe);
         if (!sc) return sc;
         info() << ", IP = " << IP/Gaudi::Units::micrometer << " +/- " 
                << IPe/Gaudi::Units::micrometer << " mum"  ;
       } 
     } else {
       info()  << ", M = " << (*ip)->measuredMass() ;
-      if ( 0!= (desktop()->relatedVertex(*ip)) ){
+      if ( 0!= (this->bestPV(*ip)) ){
         double fp, chi2 ;
         StatusCode sc = distanceCalculator()
-          ->distance((desktop()->relatedVertex(*ip)), (*ip)->endVertex(), fp, chi2);
+          ->distance((this->bestPV(*ip)), (*ip)->endVertex(), fp, chi2);
         if (!sc) return sc;
         double boost = ((*ip)->momentum().Beta())*((*ip)->momentum().Gamma())*Gaudi::Units::c_light ;
         info()  << ", FT = " << (fp/boost)/Gaudi::Units::picosecond << " ps, at "
