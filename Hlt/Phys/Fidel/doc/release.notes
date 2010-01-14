@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.22 2009-10-17 17:20:20 graven Exp $
+!$Id: release.notes,v 1.23 2010-01-14 23:31:06 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/Fidel
 ! Responsible : Sara Furcas
 ! Purpose     : Fidel
 !-----------------------------------------------------------------------------
+
+! 2010-01-15 - Juan PALACIOS
+ - src/Fidel.cpp
+  . get related PV from DVAlgorithm.
+ - cmt/requirements
+  . Increase to v1r3p4
 
 !========================== Fidel v1r3p3 2009-10-17 ==================
 ! 2009-10-17 - Gerhard Raven

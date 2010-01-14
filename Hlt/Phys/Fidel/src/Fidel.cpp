@@ -1,4 +1,4 @@
-// $Id: Fidel.cpp,v 1.13 2009-08-24 10:23:54 pkoppenb Exp $ // Include files
+// $Id: Fidel.cpp,v 1.14 2010-01-14 23:31:06 jpalac Exp $ // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/ToolFactory.h"
@@ -195,7 +195,7 @@ StatusCode Fidel::execute() {
 
       if ( !m_cut  ( &BCand ) )  { continue ; }                    // CONTINUE
 
-      const LHCb::VertexBase* bestPV  = desktop()->relatedVertex(&BCand);
+      const LHCb::VertexBase* bestPV  = this->bestPV(&BCand);
       Gaudi::XYZPoint Origin = bestPV->position();
 
       const LHCb::Particle *myBCand = BCand.clone();
