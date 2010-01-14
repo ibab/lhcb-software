@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.499 2010-01-14 11:07:46 jpalac Exp $
+! $Id: release.notes,v 1.500 2010-01-14 15:12:19 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
@@ -7,7 +7,7 @@
 ! 2010-01-14 - Juan PALACIOS
  - PhysDesktop
   . Remove local pointer to PVs, getPrimaryVertices method.
-
+  . Remove relatedVertex and primaryVertices methods. No longer in IPhysDesktop interface. DVAlgorithm in charge.
 ! 2010-01-14 - Patrick Koppenburg
  - Restore DecodeSimpleDecayString
 
