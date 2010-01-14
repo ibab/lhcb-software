@@ -6,6 +6,7 @@
 
 ! 2010-01-14 - Juan PALACIOS
  - Kernel/IPhysDesktop
+  . Remove relatedVertex and primaryVertices methods.
   . revert previous behaviour of primaryVertices().
 
 ! 2010-01-14 - Patrick Koppenburg
