@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.49 2010-01-14 11:07:35 jpalac Exp $
+// $Id: PhysDesktop.h,v 1.50 2010-01-14 15:12:02 jpalac Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -75,7 +75,7 @@ public:
   virtual const LHCb::Particle::ConstVector& particles() const;
 
   /// Retrieve the PVs from the TES
-  virtual const LHCb::RecVertex::Container* primaryVertices() const;
+  //  virtual const LHCb::RecVertex::Container* primaryVertices() const;
 
   /// Retrieve the local secondary vertex container
   virtual const LHCb::Vertex::ConstVector& secondaryVertices() const;
@@ -130,10 +130,6 @@ public:
   /// Make sure the PhysDesktop has written out the container
   virtual StatusCode writeEmptyContainerIfNeeded() ;
 
-  /// Get the vertex with the highest weight in the association
-  /// between LHCb::Particle and LHCb::VertexBase
-  virtual const LHCb::VertexBase* relatedVertex(const LHCb::Particle* part) const;
-  
   /// Establish a relation between an LHCb::Particle and an LHCb::VertexBase
   virtual void relate(const LHCb::Particle*   part, 
                       const LHCb::VertexBase* vert );

@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.92 2010-01-14 11:07:35 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.93 2010-01-14 15:12:02 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -151,16 +151,6 @@ StatusCode PhysDesktop::initialize()
 //=============================================================================
 const LHCb::Particle::ConstVector& PhysDesktop::particles() const{
   return m_parts;
-}
-//=============================================================================
-// Provides a reference to its internal container of vertices
-//=============================================================================
-const LHCb::RecVertex::Container* PhysDesktop::primaryVertices() const 
-{
-  //
-  //  Warning("IPhysDesktop::primaryVertices() obsolete. Use DVAlgotirhm::primaryVertices() directly. Getting PVs from DVAlgorithm",
-  //          1).ignore();
-  return m_dva->primaryVertices();
 }
 //=============================================================================
 // Provides a reference to its internal container of vertices
@@ -457,7 +447,7 @@ void PhysDesktop::saveP2PVRelations(const  LHCb::Particle::ConstVector& pToSave)
   
   // V.B.
   
-  if ( 0 == primaryVertices() && "None" == m_primVtxLocn )
+  if ( 0 == m_dva->primaryVertices() && "None" == m_primVtxLocn )
   {
     if ( msgLevel ( MSG::DEBUG ) )
     { debug() << " skip saveP2PVRelations: No Primary Vertices" << endmsg ; }
@@ -740,16 +730,6 @@ StatusCode PhysDesktop::writeEmptyContainerIfNeeded(){
     if (msgLevel(MSG::DEBUG)) debug() << "Saved empty containers at " << m_outputLocn << endmsg ;
   }  
   return sc ;
-}
-//=============================================================================
-const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part) const {
-
-  if ( msgLevel(MSG::VERBOSE) )
-    verbose() << "PhysDesktop::relatedVertex" << endmsg;
-
-  // cached during initialize()
-  return m_dva->bestPV(part);
-
 }
 //=============================================================================
 void PhysDesktop::relate(const LHCb::Particle*   part, 
