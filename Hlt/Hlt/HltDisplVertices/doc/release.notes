@@ -4,6 +4,11 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2010-01-14 - Juan PALACIOS
+ - Hlt2DisplVertices*.cpp
+  . Use DVALgorithm::primaryVertices() instead of IPhysDesktop::primaryVertices
+ - cmt/requirements
+  . Increase version to v1r4p1
 
 !========================== HltDisplVertices v1r4 2010-01-11 ==================
 ! 2009-Dec-21 - Neal Gauvin
