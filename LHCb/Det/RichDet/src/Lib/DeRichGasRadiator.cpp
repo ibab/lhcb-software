@@ -5,7 +5,7 @@
  *  Implementation file for detector description class : DeRichGasRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichGasRadiator.cpp,v 1.18 2009-12-10 16:47:42 papanest Exp $
+ *  $Id: DeRichGasRadiator.cpp,v 1.19 2010-01-14 16:39:03 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -145,7 +145,7 @@ StatusCode DeRichGasRadiator::updateProperties ( )
 
   if ( !m_firstUpdate && m_gasParametersCond )
   {
-    const double curPressure = m_gasParametersCond->param<double>("Pressure") * 0.001; //convert to bar
+    const double curPressure = m_gasParametersCond->param<double>("Pressure") * 0.001*Gaudi::Units::bar; //convert to bar
     const double curTemp     = m_gasParametersCond->param<double>("Temperature");
     info() << "Refractive index update triggered : Pressure = " << curPressure/Gaudi::Units::bar
            << " bar Temperature = " << curTemp << " K"
@@ -202,7 +202,7 @@ StatusCode DeRichGasRadiator::calcSellmeirRefIndex (const std::vector<double>& m
   double curPressure, curTemp;
   if ( gasParamCond )
   {
-    curPressure = gasParamCond->param<double>("Pressure") * 0.001 * Gaudi::Units::bar; //convert to bar
+    curPressure = gasParamCond->param<double>("Pressure") * 0.001*Gaudi::Units::bar; //convert to bar
     curTemp = gasParamCond->param<double>("Temperature") * Gaudi::Units::kelvin;
   }
   else // use the old conditions

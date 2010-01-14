@@ -4,6 +4,11 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2010-01-14 - Antonis Papanestis
+ - Fixed printout error for pressure in GasRadiator
+ - Forced the use of magnetic distortion code in HPD
+ - Added new function for going from anode to cathode in DeRichHPD
+
 ! 2010-01-12 - Antonis Papanestis
  - Missing class DeRichBase from the dictionary.
 

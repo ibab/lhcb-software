@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichHPD
  *
- * $Id: DeRichHPD.cpp,v 1.20 2009-08-03 09:22:37 jonrob Exp $
+ * $Id: DeRichHPD.cpp,v 1.21 2010-01-14 16:39:03 papanest Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-09-19
@@ -309,8 +309,9 @@ StatusCode DeRichHPD::getParameters ( )
               << "Corrections will not work properly!" << endmsg;
   }
 
-  m_UseHpdMagDistortions = 0 != deRich1->param<int>("UseHpdMagDistortions");
-  m_UseBFieldTestMap     = 0 != deRich1->param<int>("UseBFieldTestMap");
+  //m_UseHpdMagDistortions = 0 != deRich1->param<int>("UseHpdMagDistortions");
+  m_UseHpdMagDistortions = true;
+  m_UseBFieldTestMap     = ( 0 != deRich1->param<int>("UseBFieldTestMap") );
   m_LongitudinalBField   = deRich1->param<double>("LongitudinalBField");
   //m_UseRandomBField     = deRich1->param<int>("UseRandomBField");
   //m_RandomBFieldMinimum = deRich1->param<double>("RandomBFieldMinimum");

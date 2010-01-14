@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichHPD
  *
  *  CVS Log :-
- *  $Id: DeRichHPD.h,v 1.17 2009-07-26 18:13:17 jonrob Exp $
+ *  $Id: DeRichHPD.h,v 1.18 2010-01-14 16:39:03 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-09-19
@@ -125,6 +125,23 @@ public:
                               Gaudi::XYZPoint& detectPoint,
                               bool photoCathodeSide = false ) const;
 
+
+  /** @brief Converts an x,y point from the anode to the photocathode in the
+   * coordinate system of the HPD.
+   *  The point can be given either on the inside of the HPD window (photocathode) if
+   *  photoCathodeSide=true or on the outside including refraction correction if
+   *  photoCathodeSide=false
+   *
+   *  @param[in]  anodePoint The <x,y> pair on the anode in pixel coordinates
+   *  @param[out] detectPoint The position in HPD coordinates
+   *  @param[in]  photoCathodeSide Set to false to include refraction on HPD window
+   *  @return StatusCode indicating if the conversion was successful or not
+   *  @retval StatusCoe::SUCCESS Conversion was successful
+   *  @retval StatusCode::FAILURE Conversion failed
+   */
+  StatusCode detectionPoint ( double x, double y,
+                              Gaudi::XYZPoint& detectPoint,
+                              bool photoCathodeSide = true ) const;
 
   /** Converts a RichSmartID to a point on the anode in global coordinates.
    *  @param[in] smartID The RichSmartID for the HPD channel
@@ -323,7 +340,7 @@ private: // data
 
   /// binary flags; 1 for update of demag param, 2 for update of geometry; 6 for new hpdQE
   std::bitset<7> flags;
-  
+
   std::vector<double> m_refactParams; ///< refraction parameters for quartz window
 
   //int    rgiState[2+55];
@@ -355,6 +372,23 @@ inline StatusCode DeRichHPD::detectionPoint ( const LHCb::RichSmartID smartID,
   detectPoint = m_SiSensorToHPDMatrix * pointOnSilicon(smartID);
   detectPoint.SetZ(0.0);
   return magnifyToGlobal( detectPoint, photoCathodeSide );
+}
+
+//=========================================================================
+// Converts a pair to a point in global coordinates.
+//=========================================================================
+inline StatusCode DeRichHPD::detectionPoint ( double x, double y,
+                                              Gaudi::XYZPoint& detectPoint,
+                                              bool photoCathodeSide ) const
+{
+  Gaudi::XYZPoint onAnode( x*m_pixelSize - m_siliconHalfLengthX,
+                           m_siliconHalfLengthY - y*m_pixelSize,
+                           0.0 );
+  detectPoint = m_SiSensorToHPDMatrix * onAnode;
+  detectPoint.SetZ(0.0);
+  StatusCode sc = magnifyToGlobal( detectPoint, photoCathodeSide );
+  detectPoint = geometry()->toLocal(detectPoint);
+  return sc;
 }
 
 //=========================================================================
