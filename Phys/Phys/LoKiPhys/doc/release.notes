@@ -1,9 +1,37 @@
-! $Id: release.notes,v 1.126 2010-01-08 15:12:02 ibelyaev Exp $ 
+! $Id: release.notes,v 1.127 2010-01-14 13:30:16 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-01-14 - Vanya Belyaev
+
+ - add new symbols:  
+     
+     DECNODE, that acts on ParicleID and allwos to select the 
+     particles accoridng to their type using  Decays::iNode utilities 
+    
+   e.g. DECNODE ( PartProp.Nodes.Lepton & PartProp.Nodes.Positive , True ) 
+        DECNODE ( PartProp.Nodes.Meson  & PartProp.Nodes.Charm    , True ) 
+        DECNODE ( PartProp.Nodes.Beauty & PartProp.Nodes.Positive , True ) 
+
+   Few prede fined instances are provides:
+
+   # any charged lepton:
+
+    PELL      :   DECNODE ( PartProp.Nodes.Ell    , True )
+    PLEPTON   :   DECNODE ( PartProp.Nodes.Lepton , True )
+    PHADRON   :   DECNODE ( PartProp.Nodes.Hadron , True )
+    PMESON    :   DECNODE ( PartProp.Nodes.Meson  , True )
+    PBARYON   :   DECNODE ( PartProp.Nodes.Baryon , True )
+    PBEAUTY   :   DECNODE ( PartProp.Nodes.Beauty , True )
+    PCHARM    :   DECNODE ( PartProp.Nodes.Charm  , True )
+
+  The symbols and their operations are defined in PartProp.Nodes module ad described in details at: 
+    
+      https://twiki.cern.ch/twiki/bin/view/LHCb/FAQ/LoKiTreeNode#Decay_Tree_Nodes
+
 
 ! 2010-01-08 - Vanya Belyaev
 

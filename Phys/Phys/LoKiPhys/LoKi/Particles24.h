@@ -1,4 +1,4 @@
-// $Id: Particles24.h,v 1.1 2008-12-17 16:53:20 ibelyaev Exp $
+// $Id: Particles24.h,v 1.2 2010-01-14 13:30:16 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES24_H 
 #define LOKI_PARTICLES24_H 1
@@ -37,7 +37,8 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from the actual node 
-      DecNode ( const Decays::iNode& node ) ;
+      DecNode ( const Decays::iNode&      node  , 
+                const bool autovalidate = true  ) ;
       /// MANDATORY: virtual destructor 
       virtual ~DecNode() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -66,6 +67,8 @@ namespace LoKi
       // ======================================================================
       /// the decay node itself 
       Decays::Node m_node ;                            // the decay node itself 
+      /// autovalidate ? 
+      bool m_autovalidate ;                                     // autovalidate
       // ======================================================================
     };  
     // ========================================================================
@@ -91,7 +94,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from the actual node 
-      DecTree ( const iTree& node ) ;
+      DecTree ( const iTree& node , const bool autovalidate = true ) ;
       /// MANDATORY: virtual destructor 
       virtual ~DecTree() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -123,12 +126,14 @@ namespace LoKi
       // ======================================================================
       /// the decay tree itself 
       Tree m_tree ;                                    // the decay tree itself 
+      /// autovalidate ? 
+      bool m_autovalidate ;                                     // autovalidate
       // ======================================================================
     };  
     // ========================================================================
-  } // end of namespace LoKi::Particles 
+  } //                                         end of namespace LoKi::Particles 
   // ==========================================================================
-} // end of namespace LoKi 
+} //                                                      end of namespace LoKi 
 // ============================================================================
 // The END 
 // ============================================================================

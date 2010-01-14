@@ -1,6 +1,10 @@
-// $Id: Particles24.cpp,v 1.1 2008-12-17 16:53:20 ibelyaev Exp $
+// $Id: Particles24.cpp,v 1.2 2010-01-14 13:30:16 ibelyaev Exp $
 // ============================================================================
 // Include files 
+// ============================================================================
+// Kernel
+// ============================================================================
+#include "Kernel/IParticlePropertySvc.h"
 // ============================================================================
 // Event 
 // ============================================================================
@@ -8,6 +12,7 @@
 // ============================================================================
 // LoKi
 // ============================================================================
+#include "LoKi/Services.h"
 #include "LoKi/Particles24.h"
 // ============================================================================
 /** @file 
@@ -19,9 +24,11 @@
 // constructor from the actual node 
 // ============================================================================
 LoKi::Particles::DecNode::DecNode 
-( const Decays::iNode& node ) 
+( const Decays::iNode& node         , 
+  const bool           autovalidate ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate()
-  , m_node ( node ) 
+  , m_node         ( node         ) 
+  , m_autovalidate ( autovalidate )
 {}  
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -35,6 +42,20 @@ LoKi::Particles::DecNode::operator()
     Error ( "LHCb::Particle* point to NULL, return false") ;
     return false ;
   }
+  if ( !valid () && m_autovalidate ) 
+  {
+    const LoKi::Services& svcs = LoKi::Services::instance () ;
+    const LHCb::IParticlePropertySvc* ppsvc  = svcs.ppSvc() ;
+    Assert ( 0 != ppsvc , "LHCb::ParticlePropertySvc* poinst to NULL!") ;
+    StatusCode sc = validate ( ppsvc ) ;
+    Assert ( sc.isSuccess() , "Unable to validate Decays::Node" , sc ) ;
+  }
+  if ( !valid () )
+  {
+    Error ( "Decays::Node is invalid, return false") ;
+    return false ; 
+  }
+  
   // use the node for evaluation 
   return m_node.node ( p->particleID() ) ;  
 }
@@ -53,9 +74,11 @@ std::ostream& LoKi::Particles::DecNode::fillStream( std::ostream& s ) const
 // constructor from the actual tree
 // ============================================================================
 LoKi::Particles::DecTree::DecTree
-( const LoKi::Particles::DecTree::iTree& tree ) 
+( const LoKi::Particles::DecTree::iTree& tree         , 
+  const bool                             autovalidate ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate()
-  , m_tree ( tree ) 
+  , m_tree         ( tree         ) 
+  , m_autovalidate ( autovalidate ) 
 {}  
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -66,13 +89,21 @@ LoKi::Particles::DecTree::operator()
 {
   if ( 0 == p ) 
   {
-    Error ( "LHCb::Particle* point to NULL, return false") ;
+    Error ( "LHCb::Particle* point to NULL, return false" ) ;
     return false ;
   }
-  if ( !valid() ) 
+  if ( !valid () && m_autovalidate ) 
   {
-    Error ( "LoKi::Particles::DecTree::Tree  is invalid, return false") ;
-    return false ;
+    const LoKi::Services& svcs = LoKi::Services::instance () ;
+    const LHCb::IParticlePropertySvc* ppsvc  = svcs.ppSvc() ;
+    Assert ( 0 != ppsvc , "LHCb::ParticlePropertySvc* poinst to NULL!") ;
+    StatusCode sc = validate ( ppsvc ) ;
+    Assert ( sc.isSuccess() , "Unable to validate Decays::Tree" , sc ) ;
+  }
+  if ( !valid () )
+  {
+    Error ( "Decays::Tree is invalid, return false") ;
+    return false ; 
   }
   // use the node for evaluation 
   return m_tree.tree ( p ) ;  

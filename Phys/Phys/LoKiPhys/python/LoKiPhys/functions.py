@@ -634,7 +634,26 @@ MASSFIT       = LoKi.Particles.MassFitter
 # =============================================================================
 ## @see LoKi::Cuts::BPVDVDOCA
 BPVDVDOCA     = LoKi.Particles.DHCoplanarity
- 
+
+# =============================================================================
+##
+# =============================================================================
+
+## @see LoKi::Cuts::DECNODE 
+DECNODE = LoKi.Particles.DecNode 
+### @see LoKi::Cuts::DECTREE
+#DECTREE = LoKi.Particles.DecTree
+## 
+## charged lepton:
+import PartProp.Nodes 
+PELL    = DECNODE ( PartProp.Nodes.Ell    , True )
+PLEPTON = DECNODE ( PartProp.Nodes.Lepton , True )
+PHADRON = DECNODE ( PartProp.Nodes.Hadron , True )
+PMESON  = DECNODE ( PartProp.Nodes.Meson  , True )
+PBARYON = DECNODE ( PartProp.Nodes.Baryon , True )
+PBEAUTY = DECNODE ( PartProp.Nodes.Beauty , True )
+PCHARM  = DECNODE ( PartProp.Nodes.Charm  , True )
+
 
 # vertex separation (for particles) with respect to *all* vertices
 
