@@ -187,7 +187,7 @@ StatusCode BTaggingAnalysis::execute() {
   //----------------------------------------------------------------------
   //PhysDeskTop
   const Particle::ConstVector& parts = desktop()->particles();
-  const RecVertex::Container*  verts = desktop()->primaryVertices();
+  const RecVertex::Container*  verts = primaryVertices();
   debug() << "  Nr of rec. Vertices: " << verts->size() 
           << "  Nr of rec. Particles: " << parts.size() <<endreq;
   desktop()->saveDesktop();
