@@ -1,4 +1,4 @@
-2010-12-12  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+2010-01-12  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies/functions.py: copyLocal improved to fix
 	bug when tar file list is too long; copying documentation to AFS added
