@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.249 2009-12-13 22:00:03 jonrob Exp $
+! $Id: release.notes,v 1.250 2010-01-14 12:49:33 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2010-01-14 - Chris Jones
+ - Add to HPDIdentifier class explicit methods to convert to RichSmartIDs.
+   Usefult for use via python.
 
 ! 2009-12-13 - Chris Jones
  - Extend histogram base class with methods for 2D histograms.

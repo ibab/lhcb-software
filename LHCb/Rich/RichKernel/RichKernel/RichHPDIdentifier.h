@@ -5,7 +5,7 @@
  *  Header file for Rich::DAQ::HPDIdentifier
  *
  *  CVS Log :-
- *  $Id: RichHPDIdentifier.h,v 1.6 2008-06-03 14:39:11 cattanem Exp $
+ *  $Id: RichHPDIdentifier.h,v 1.7 2010-01-14 12:49:33 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   27/04/2007
@@ -53,8 +53,8 @@ namespace Rich
 
     public:
 
-      /// Implicit conversion into a RichSmartID
-      inline operator LHCb::RichSmartID () const
+      /// Return a RichSmartID 
+      inline LHCb::RichSmartID smartID() const
       {
         return ( m_data == -1 ?
                  LHCb::RichSmartID() :
@@ -62,6 +62,12 @@ namespace Rich
                                     (Rich::Side)((m_data/10000)%10),
                                     m_data%100,
                                     (m_data/100)%100 ) );
+      }
+
+      /// Implicit conversion into a RichSmartID
+      inline operator LHCb::RichSmartID () const
+      {
+        return this->smartID();
       }
 
       /// Access the human readable HPD number
