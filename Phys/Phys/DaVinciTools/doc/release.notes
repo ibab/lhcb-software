@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.497 2010-01-13 16:02:17 pkoppenb Exp $
+! $Id: release.notes,v 1.498 2010-01-14 08:03:00 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-01-14 - Patrick Koppenburg
+ - Restore DecodeSimpleDecayString
 
 ! 2010-01-13 - Patrick Koppenburg
  - task #12929: 
