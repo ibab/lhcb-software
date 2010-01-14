@@ -61,7 +61,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.68 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.69 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -117,6 +117,7 @@ class LbLoginScript(Script):
         self.platform = ""
         self.binary   = ""
         self.compdef  = ""
+        self._nativemachine = None
         self.output_file = None
         self.output_name = None
         self._currentcmtroot = os.environ.get("CMTROOT", None)
@@ -413,8 +414,8 @@ class LbLoginScript(Script):
     def setCMTBin(self):
         log = logging.getLogger()
         ev = self._env
-        m = NativeMachine()
-        ev["CMTBIN"] = m.CMTSystem() 
+        self._nativemachine = NativeMachine()
+        ev["CMTBIN"] = self._nativemachine.CMTSystem() 
         log.debug("CMTBIN is set to %s" % ev["CMTBIN"])
         
     def hasCommand(self, cmd):
