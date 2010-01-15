@@ -1,4 +1,4 @@
-// $Id: ReadHltReport.cpp,v 1.2 2010-01-14 23:10:50 jpalac Exp $
+// $Id: ReadHltReport.cpp,v 1.3 2010-01-15 07:51:24 pkoppenb Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -169,20 +169,21 @@ StatusCode ReadHltReport::printParticles(const LHCb::Particle::ConstVector& part
     if ( 0!=pp) info() << "  -> a " << pp->particle() ;
     else info() << "  -> an unknown PID " << (*ip)->particleID() ;
     info() << " P= " << (*ip)->momentum() ;
+    const LHCb::VertexBase* bPV =  bestPV(*ip) ;
     if ( 0==(*ip)->endVertex()){
       double IP, IPe ;
-      if ( 0!= (this->bestPV(*ip)) ){
-        StatusCode sc = distanceCalculator()->distance((*ip), (this->bestPV(*ip)), IP, IPe);
+      if ( 0!= bPV ){
+        StatusCode sc = distanceCalculator()->distance((*ip), bPV, IP, IPe);
         if (!sc) return sc;
         info() << ", IP = " << IP/Gaudi::Units::micrometer << " +/- " 
                << IPe/Gaudi::Units::micrometer << " mum"  ;
       } 
     } else {
       info()  << ", M = " << (*ip)->measuredMass() ;
-      if ( 0!= (this->bestPV(*ip)) ){
+      if ( 0!= bPV ){
         double fp, chi2 ;
         StatusCode sc = distanceCalculator()
-          ->distance((this->bestPV(*ip)), (*ip)->endVertex(), fp, chi2);
+          ->distance(bPV, (*ip)->endVertex(), fp, chi2);
         if (!sc) return sc;
         double boost = ((*ip)->momentum().Beta())*((*ip)->momentum().Gamma())*Gaudi::Units::c_light ;
         info()  << ", FT = " << (fp/boost)/Gaudi::Units::picosecond << " ps, at "

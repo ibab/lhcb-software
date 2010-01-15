@@ -19,6 +19,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-01-15 - Patrick Koppenburg
+ - src/ReadHltReport.cpp : Reduce the number of calls to bestPV() 
+  following Juan's advice
+
 ! 2010-01-14 - Juan PALACIOS
  - src/ReadHltReport.cpp
   . IPhysDesktop::relatedVertex -> DVAlgorithm::bestPV.
