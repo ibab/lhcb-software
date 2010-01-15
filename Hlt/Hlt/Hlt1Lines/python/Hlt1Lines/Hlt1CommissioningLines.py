@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -21,15 +21,14 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
                               , 'Hlt1ODINTechnical'  : 0.000001 # @OnlineEnv.AcceptRate
                               , 'Hlt1Tell1Error'     : 0
                               }
-               , 'TechnicalTrigger' : 'TechnicalTrigger'
                }
    def __apply_configuration__(self):
         from HltLine.HltLine import Hlt1Line   as Line
-        Line('ODINPhysics' ,  ODIN = 'ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger'
+        Line('ODINPhysics',   ODIN = '( ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger ) | ( ODIN_TRGTYP == LHCb.ODIN.TimingTrigger )'
             , prescale = self.prescale
             , postscale = self.postscale
             )
-        Line('ODINTechnical' ,  ODIN = 'ODIN_TRGTYP == LHCb.ODIN.%s' % self.getProp('TechnicalTrigger')
+        Line('ODINTechnical', ODIN = '( ODIN_TRGTYP == LHCb.ODIN.TechnicalTrigger ) | ( ODIN_TRGTYP == LHCb.ODIN.AuxiliaryTrigger ) | ( ODIN_TRGTYP == LHCb.ODIN.NonZSupTrigger ) | ( ODIN_TRGTYP == LHCb.ODIN.CalibrationTrigger )'
             , prescale = self.prescale
             , postscale = self.postscale
             )
