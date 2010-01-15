@@ -2,8 +2,15 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2010-01-15 - Gerhard Raven
+ - always configure reference rate svc online
+ - update default DB snapshot
+ - disable timeout catcher is not default
+ - bump version to v8r5
+
 ! 2010-01-13 - Gerhard Raven
  - configure reference rate svc online
+
 
 !========================== Moore v8r4 2009-12-18 ===================
 ! 2009-12-18 - Gerhard Raven

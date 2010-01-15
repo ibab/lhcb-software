@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.101 2010-01-13 14:51:12 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.102 2010-01-15 08:34:07 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -77,13 +77,13 @@ class Moore(LHCbConfigurableUser):
         , "RunOnline"         : False
         , "UseDBSnapshot"     : True
         , "DBSnapshotDirectory" : "/group/online/hlt/conditions"
-        , 'EnableTimeOutCatcher' : True
+        , 'EnableTimeOutCatcher' : False
         , 'TimeOutThreshold'  : 10000  # milliseconds before giving up, and directing event to time out stream
         , 'TimeOutBits'       : 0x200
         , 'RequireRoutingBits' : [] # to require not lumi exclusive, set to [ 0x0, 0x4, 0x0 ]
         , 'VetoRoutingBits'    : []
-        , 'ReferenceRate' : -1  # rate of ReferencePredicate returning 'True'
-        , 'ReferencePredicate' : '' # the source of the ReferenceRate
+        , 'ReferenceRate' : 80  # rate of ReferencePredicate returning 'True'
+        , 'ReferencePredicate' : 'ODIN_TRGTYPE == LHCb.ODIN.LumiTrigger' # the source of the ReferenceRate
         }   
                 
 
@@ -167,14 +167,13 @@ class Moore(LHCbConfigurableUser):
         from Configurables import AuditorSvc
         AuditorSvc().Auditors = []
         self._configureOnlineMessageSvc()
-        if self.getProp('UseDBSnapshot') : self._configureDBSnapshot()
 
+        from Configurables import HltReferenceRateSvc
+        rsvc = HltReferenceRateSvc()
         if self.getProp('ReferenceRate') > 0 :
-            from Configurables import HltReferenceRateSvc
-            rsvc = HltReferenceRateSvc( ReferenceRate = self.getProp('ReferenceRate')
-                                      , ODINPredicate = self.getProp('ReferencePredicate')
-                                      )
-            ApplicationMgr().ExtSvc.append( rsvc ) 
+            rsvc.ReferenceRate = self.getProp('ReferenceRate')
+        rsvc.ODINPredicate = self.getProp('ReferencePredicate')
+        ApplicationMgr().ExtSvc.append( rsvc ) 
 
 
     def _configureOnlineMessageSvc(self):
@@ -476,6 +475,8 @@ class Moore(LHCbConfigurableUser):
         else:
             self._config_with_hltconf()
             
+        if self.getProp('UseDBSnapshot') : self._configureDBSnapshot()
+
         if self.getProp("RunOnline") :
             self._configureOnline()
         else :

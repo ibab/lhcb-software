@@ -13,7 +13,8 @@ def start() :
     import OnlineEnv 
 
     Moore().RunOnline = True
-    # TODO: record these tags somewhere...
+    Moore().EnableTimeOutCatcher = False
+    # TODO: record these tags somewhere... 
     if OnlineEnv.PartitionName == 'FEST' :
        Moore().Simulation = True
        Moore().DDDBtag   = 'MC09-20090602'
@@ -23,11 +24,10 @@ def start() :
        Moore().TimeOutThreshold = 10000
     else :
        Moore().Simulation = False
-       Moore().CondDBtag = 'head-20091112'
-       Moore().DDDBtag   = 'head-20091112'
+       Moore().CondDBtag = 'hlt-20091214'
+       Moore().DDDBtag   = 'hlt-20091214'
        Moore().UseDBSnapshot = True
        Moore().EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough' ] )
-       Moore().EnableTimeOutCatcher = False
 
     ### pick up requested DB tag 
     if hasattr(OnlineEnv,'CondDBTag') and OnlineEnv.CondDBTag :
