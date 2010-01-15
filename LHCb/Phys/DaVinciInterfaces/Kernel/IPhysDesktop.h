@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.12 2010-01-15 08:22:02 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.13 2010-01-15 09:34:21 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -89,6 +89,9 @@ public:
   /// Retrieve the local particle container
   virtual const LHCb::Particle::ConstVector& particles() const = 0;
 
+  /// Retrieve the PVs from the TES
+  /// Deprecated
+  virtual const LHCb::RecVertex::Container* primaryVertices() const = 0;
   /// Retrieve the local secondary vertex container
   virtual const LHCb::Vertex::ConstVector& secondaryVertices() const = 0;
 

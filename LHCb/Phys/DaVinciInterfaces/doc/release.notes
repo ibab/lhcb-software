@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-01-14 - Juan PALACIOS
+ - Kernel/IPhysDesktop
+  . Add back relatedVertex and primaryVertices methods.
+
+! 2010-01-14 - Juan PALACIOS
  - Kernel/IDVAlgorithm
   . primaryVertices() back to original behaviour.
  - Kernel/IPhysDesktop
