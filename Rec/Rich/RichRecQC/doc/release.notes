@@ -10,6 +10,9 @@
  - Add CK theta versus momentum plots to RichRecQC monitors.
 
 !======================= RichRecQC v2r34p1 2009-11-22 ========================
+! 2010-01-15 - Ross Young
+- Configuration.py: parameters for ion feedback code now in separate method
+
 ! 2009-11-20 - Marco Cattaneo
  - Fix untested StatusCodes in RichAlignmentMonitor
 

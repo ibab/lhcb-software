@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.44 2009-12-13 21:42:36 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.45 2010-01-15 23:01:02 ryoung Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -197,9 +197,7 @@ class RichRecQCConf(RichConfigurableUser):
 
         # HPD IFB
         if self.getProp("HPDIFBMonitoring") :
-            hpdIFBseq = self.newSeq(sequence,"RichHPDIonFeedback")
-            from Configurables import Rich__Mon__HPDIonFeedbackMoni
-            hpdIFBseq.Members += [ self.createMonitor(Rich__Mon__HPDIonFeedbackMoni,"RichHPDIFBMoni") ]
+            self.ionfeedbackMoni(self.newSeq(sequence,"RichHPDIonFeedback"))
 
         # Expert Monitoring
         if self.getProp("ExpertHistos") :
@@ -319,6 +317,20 @@ class RichRecQCConf(RichConfigurableUser):
 
             # Add to sequence
             sequence.Members += [mon]
+
+    ## Ion Feedback monitor
+    def ionfeedbackMoni(self, sequence):
+        from Configurables import Rich__Mon__HPDIonFeedbackMoni
+        RichIFBMon                       = Rich__Mon__HPDIonFeedbackMoni("RichHPDIFBMoni")
+        RichIFBMon.SuppressCornerPixels  = False
+        RichIFBMon.MonitorRate           = 1
+        RichIFBMon.EventSize             = 3000000
+        RichIFBMon.IonFeedbackALICE      = 5
+        RichIFBMon.IonFeedbackLHCB       = 5
+        RichIFBMon.WantIFB               = True
+        RichIFBMon.WantHitmaps           = True
+        RichIFBMon.WantQuickHitmap       = False
+        sequence.Members      += [RichIFBMon]        
 
     ## Expert monitoring options
     def expertMonitoring(self,sequence):
