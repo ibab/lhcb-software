@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.93 2010-01-14 15:12:02 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.94 2010-01-15 08:39:48 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -151,6 +151,16 @@ StatusCode PhysDesktop::initialize()
 //=============================================================================
 const LHCb::Particle::ConstVector& PhysDesktop::particles() const{
   return m_parts;
+}
+//=============================================================================
+// Provides a reference to its internal container of vertices
+//=============================================================================
+const LHCb::RecVertex::Container* PhysDesktop::primaryVertices() const 
+{
+  //
+  //  Warning("IPhysDesktop::primaryVertices() obsolete. Use DVAlgotirhm::primaryVertices() directly. Getting PVs from DVAlgorithm",
+  //          1).ignore();
+  return m_dva->primaryVertices();
 }
 //=============================================================================
 // Provides a reference to its internal container of vertices
@@ -730,6 +740,16 @@ StatusCode PhysDesktop::writeEmptyContainerIfNeeded(){
     if (msgLevel(MSG::DEBUG)) debug() << "Saved empty containers at " << m_outputLocn << endmsg ;
   }  
   return sc ;
+}
+//=============================================================================
+const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part) const {
+
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "PhysDesktop::relatedVertex" << endmsg;
+
+  // cached during initialize()
+  return m_dva->bestPV(part);
+
 }
 //=============================================================================
 void PhysDesktop::relate(const LHCb::Particle*   part, 

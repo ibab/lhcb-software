@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.50 2010-01-14 15:12:02 jpalac Exp $
+// $Id: PhysDesktop.h,v 1.51 2010-01-15 08:39:48 jpalac Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -71,70 +71,47 @@ public:
   /// Only DVAlgorithm::sysExecute() should call this function.
   virtual StatusCode getEventInput();
 
-  /// Retrieve the local particle container
   virtual const LHCb::Particle::ConstVector& particles() const;
 
-  /// Retrieve the PVs from the TES
-  //  virtual const LHCb::RecVertex::Container* primaryVertices() const;
+  virtual const LHCb::RecVertex::Container* primaryVertices() const;
 
-  /// Retrieve the local secondary vertex container
   virtual const LHCb::Vertex::ConstVector& secondaryVertices() const;
 
-  /// retrieve the Particle->Primary vertex relations
   virtual const Particle2Vertex::LightTable& Particle2VertexRelations() const;
 
-  /// retrieve the Particle->Primary vertex relations
   virtual Particle2Vertex::LightTable& Particle2VertexRelations();
 
   virtual Particle2Vertex::Map& Particle2VertexMap();
 
   virtual const Particle2Vertex::Map& Particle2VertexMap() const;
 
-  /// Keep for future use: Register the new particles in the Desktop, 
-  /// pass ownership, return pointer to new particle
   virtual const LHCb::Particle* keep( const LHCb::Particle* input ) ;
 
-  /// Keep for future use: Register the new vertices in the Desktop, 
-  /// pass ownership, return pointer to new vertex
   virtual const LHCb::Vertex* keep( const LHCb::Vertex* input ) ;
 
-  /// Keep for future use: Register re-fitted primary vertices in the Desktop, 
-  /// pass ownership, return pointer to new vertex. Vertices will only
-  /// be stored in the TES if they are related to a particle being stored
-  /// there.
   virtual const LHCb::RecVertex* keep( const LHCb::RecVertex* input ) ;
 
-  /// Save particles, vertices and particle->vertices relations to the TES  
   virtual StatusCode saveDesktop() const{
     if (msgLevel(MSG::VERBOSE)) verbose() << "Save all new particles and vertices in desktop " << endmsg;
     return saveDesktop( m_parts, m_secVerts );
   }
   
-  /// Save a vector of Particles
-  /// If a particle is composite its descendents are also saved
   virtual StatusCode saveTrees( const LHCb::Particle::ConstVector& ) const;
   
-  /// Clone all particles given by a list. This duplicates information 
-  /// on the TES and should be used only when necessary. (Used by Filters)
   virtual StatusCode cloneTrees( const LHCb::Particle::ConstVector& );
   
-  /// Save all Particles with a given particleID code
   virtual StatusCode saveTrees(int partid) const;
 
-  /// Clean desktop
   virtual StatusCode cleanDesktop();
   
-  /// Get output location
   virtual const std::string& getOutputLocation() const { return m_outputLocn ;}
 
-  /// Make sure the PhysDesktop has written out the container
   virtual StatusCode writeEmptyContainerIfNeeded() ;
 
-  /// Establish a relation between an LHCb::Particle and an LHCb::VertexBase
+  virtual const LHCb::VertexBase* relatedVertex(const LHCb::Particle* part) const;
   virtual void relate(const LHCb::Particle*   part, 
                       const LHCb::VertexBase* vert );
 
-  /// Obtain a range of weighted LHCb::VertexBase related to an LHCb::Particle
   virtual Particle2Vertex::Table::Range particle2Vertices(const LHCb::Particle* part ) const;
 
   virtual const std::string& primaryVertexLocation() const 

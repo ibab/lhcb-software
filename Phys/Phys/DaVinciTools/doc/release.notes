@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.500 2010-01-14 15:12:19 jpalac Exp $
+! $Id: release.notes,v 1.501 2010-01-15 08:39:48 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-01-15 - Juan PALACIOS
+- src/PhysDesktop[.h,.cpp]
+  . Add back relatedVertex and primaryVertices methods.
 
 ! 2010-01-14 - Juan PALACIOS
  - PhysDesktop
