@@ -1,4 +1,4 @@
-// $Id: RawBank.cpp,v 1.8 2009-10-09 15:52:34 panmanj Exp $
+// $Id: RawBank.cpp,v 1.9 2010-01-15 13:20:13 marcin Exp $
 
 // local
 #include "Event/RawBank.h"
@@ -74,7 +74,8 @@ std::string LHCb::RawBank::typeName(LHCb::RawBank::BankType e){
   case LHCb::RawBank::DstBank         : return  "DstBank";
   case LHCb::RawBank::DstData         : return  "DstData";
   case LHCb::RawBank::DstAddress      : return  "DstAddress";    
-  case LHCb::RawBank::FileID          : return  "FileID";    
+  case LHCb::RawBank::FileID          : return  "FileID";
+  case LHCb::RawBank::VeloPix         : return  "VeloPix";  
   default                             : return  "Undefined name";
   };
 }  
