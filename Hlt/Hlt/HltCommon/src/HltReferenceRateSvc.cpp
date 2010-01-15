@@ -4,7 +4,9 @@
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/ToolHandle.h"
 #include "GaudiKernel/GaudiException.h"
+#include "GaudiAlg/IGenericTool.h"
 #include "Kernel/IReferenceRate.h"
 #include "LoKi/IHltFactory.h"
 #include "boost/algorithm/string/join.hpp"
@@ -57,6 +59,7 @@ private:
   IDataProviderSvc  *m_evtSvc;
   IToolSvc          *m_toolSvc;
   LoKi::Types::ODIN_Cut* m_predicate;
+  ToolHandle<IGenericTool>     m_decodeOdin;
   std::vector<std::string> m_preambulo_ ;             // the preambulo itself
   std::string m_preambulo ;                           // the preambulo itself
   std::string m_predicateDesc;
@@ -101,6 +104,7 @@ HltReferenceRateSvc::HltReferenceRateSvc( const std::string& name,
   , m_evtSvc(0)
   , m_toolSvc(0)
   , m_predicate(0)
+  , m_decodeOdin("ODINDecodeTool",this)
   , m_rate(0)
   , m_first( ~ulonglong(0) )
   , m_last(0)
@@ -151,6 +155,8 @@ HltReferenceRateSvc::initialize()
   if( !sc.isSuccess() ) return sc;
   sc = service("EventDataSvc",m_evtSvc);
   if( !sc.isSuccess() ) return sc;
+  sc = m_decodeOdin.retrieve();
+  if( !sc.isSuccess()) return sc;
   sc = service( "IncidentSvc", m_incidentSvc);
   if( !sc.isSuccess() ) return sc;
   // insert at low priority, so that ODIN is available when we get invoked..
@@ -168,16 +174,18 @@ HltReferenceRateSvc::initialize()
 StatusCode
 HltReferenceRateSvc::finalize()
 {
-  Gaudi::Time first(  m_first*1000) ;
-  Gaudi::Time last( m_last*1000);
-  Gaudi::TimeSpan interval( last-first) ;
-  info() << "Got " << m_tick << " ticks " 
-         << " in "<<  interval.seconds() << " s."
-         << " during [ " << first.format(true,"%F %T") << "," << last.format(true,"%F %T")  << endmsg;
-  if (interval.seconds()>0) {
-      info() << "This corresponds to an average rate of " << m_tick/interval.seconds() << " Hz."
-             << ", compared to an assumed 'set' rate of " << m_rate << endmsg;
-  }
+  if (m_first<m_last) {
+      Gaudi::Time first( m_first*1000);
+      Gaudi::Time last (  m_last*1000);
+      Gaudi::TimeSpan interval( last-first) ;
+      info() << "Got " << m_tick << " ticks " 
+             << " in "<<  interval.seconds() << " s."
+             << " during [ " << first.format(true,"%F %T") << "," << last.format(true,"%F %T")  << endmsg;
+      if (interval.seconds()>0) {
+          info() << "This corresponds to an average rate of " << m_tick/interval.seconds() << " Hz."
+                 << ", compared to an assumed 'set' rate of " << m_rate << endmsg;
+      }
+  } 
   StatusCode sc = Service::finalize() ;
   m_toolSvc->release();
   m_evtSvc->release();
@@ -197,6 +205,7 @@ void HltReferenceRateSvc::handle ( const Incident& /*incident*/ )
   }
   // get the ODIN bank
   SmartDataPtr<LHCb::ODIN> odin( m_evtSvc , m_location );
+  if (!odin) m_decodeOdin->execute();
   if (!odin) {
         error() << " Could not obtain ODIN...  requesting AbortEvent" << endmsg;
         m_incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
