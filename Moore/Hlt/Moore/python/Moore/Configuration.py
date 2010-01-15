@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.102 2010-01-15 08:34:07 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.103 2010-01-15 14:40:23 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -59,7 +59,7 @@ class Moore(LHCbConfigurableUser):
         , "generateConfig" :   False # whether or not to generate a configuration
         , "configLabel" :      ''    # label for generated configuration
         , "configAlgorithms" : ['Hlt']    # which algorithms to configure (automatically including their children!)...
-        , "configServices" :   ['ToolSvc','HltDataSvc','HltANNSvc' ]    # which services to configure (automatically including their dependencies!)...
+        , "configServices" :   ['ToolSvc','Hlt::Service','HltANNSvc' ]    # which services to configure (automatically including their dependencies!)...
         , "TCKData" :          '$HLTTCKROOT' # where do we read/write TCK data from/to?
         , "TCKpersistency" :   'tarfile' # which method to use for TCK data? valid is 'file','tarfile' and 'sqlite' 
         , "EnableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
@@ -83,7 +83,7 @@ class Moore(LHCbConfigurableUser):
         , 'RequireRoutingBits' : [] # to require not lumi exclusive, set to [ 0x0, 0x4, 0x0 ]
         , 'VetoRoutingBits'    : []
         , 'ReferenceRate' : 80  # rate of ReferencePredicate returning 'True'
-        , 'ReferencePredicate' : 'ODIN_TRGTYPE == LHCb.ODIN.LumiTrigger' # the source of the ReferenceRate
+        , 'ReferencePredicate' : 'ODIN_TRGTYP == LHCb.ODIN.LumiTrigger' # the source of the ReferenceRate
         }   
                 
 
@@ -115,7 +115,7 @@ class Moore(LHCbConfigurableUser):
         # setup the histograms and the monitoring service
         from Configurables import UpdateAndReset
         app.TopAlg = [ UpdateAndReset() ] + app.TopAlg
-        ApplicationMgr().ExtSvc.append( 'MonitorSvc' ) 
+        app.ExtSvc.append( 'MonitorSvc' ) 
         HistogramPersistencySvc().OutputFile = ''
         HistogramPersistencySvc().Warnings = False
         from Configurables import RootHistCnv__PersSvc
@@ -142,7 +142,7 @@ class Moore(LHCbConfigurableUser):
         #>>> To test: force delay bigger than the timeout....
         #delay = OnlineEnv.delayAlg(5500,1)
         #delay.OutputLevel = 1
-        #ApplicationMgr().TopAlg.append(delay)
+        #app.TopAlg.append(delay)
         #
         #>>> Configure timeout catch algorithm
         # event processing timeout: 5000ms, print trace=True
@@ -154,24 +154,25 @@ class Moore(LHCbConfigurableUser):
             tmoCatcher.OutputLevel = 2
             evtMerger.TimeoutBits = self.getProp('TimeOutBits')
             #ExceptionSvc().Catch = 'NONE'
-            ApplicationMgr().TopAlg.append(tmoCatcher)
+            app.TopAlg.append(tmoCatcher)
 
         # define the send sequence
         writer =  GaudiSequencer('SendSequence')
         writer.OutputLevel = OnlineEnv.OutputLevel
         writer.Members = self.getProp('WriterRequires') + [ evtMerger ]
-        ApplicationMgr().TopAlg.append( writer )
-        #ApplicationMgr().OutStream.append( writer )
+        app.TopAlg.append( writer )
+        #app.OutStream.append( writer )
 
         #ToolSvc.SequencerTimerTool.OutputLevel = @OnlineEnv.OutputLevel;          
         from Configurables import AuditorSvc
         AuditorSvc().Auditors = []
         self._configureOnlineMessageSvc()
 
+
+    def _configureReferenceRate(self):
         from Configurables import HltReferenceRateSvc
         rsvc = HltReferenceRateSvc()
-        if self.getProp('ReferenceRate') > 0 :
-            rsvc.ReferenceRate = self.getProp('ReferenceRate')
+        rsvc.ReferenceRate = self.getProp('ReferenceRate')
         rsvc.ODINPredicate = self.getProp('ReferencePredicate')
         ApplicationMgr().ExtSvc.append( rsvc ) 
 
@@ -470,12 +471,15 @@ class Moore(LHCbConfigurableUser):
         # Need a defined HistogramPersistency to read some calibration inputs!!!
         ApplicationMgr().HistogramPersistency = 'ROOT'
         self._outputLevel()
+
+        if self.getProp('UseDBSnapshot') : self._configureDBSnapshot()
+        self._configureReferenceRate()
+
         if self.getProp('UseTCK') :
             self._config_with_tck()
         else:
             self._config_with_hltconf()
             
-        if self.getProp('UseDBSnapshot') : self._configureDBSnapshot()
 
         if self.getProp("RunOnline") :
             self._configureOnline()
