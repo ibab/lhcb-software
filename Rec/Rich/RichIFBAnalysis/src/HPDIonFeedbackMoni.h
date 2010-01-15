@@ -1,4 +1,4 @@
-// $Id: HPDIonFeedbackMoni.h,v 1.2 2009-05-02 12:19:01 ryoung Exp $
+// $Id: HPDIonFeedbackMoni.h,v 1.3 2010-01-15 22:50:08 ryoung Exp $
 #ifndef RICHIFBANALYSIS_HPDIonFeedbackMoni_H
 #define RICHIFBANALYSIS_HPDIonFeedbackMoni_H 1
 
@@ -20,6 +20,7 @@ namespace Rich
      *  Monitors the Ion Feedback in the RICH HPDs
      *
      *  @author Ross Young
+     *  @author Young Min Kim
      *  @author Nicholas Styles
      */
     //-----------------------------------------------------------------------------
@@ -45,16 +46,26 @@ namespace Rich
       const Rich::ISmartIDTool * m_idTool;
       const Rich::DAQ::IPixelClusteringTool * m_clusterTool;
 
-      int m_ionFeedbackCut;      // Define what IFB means: cluster of size this or larger = IFB
-      int m_ionFeedbackCutALICE; // Define what IFB means: cluster of size this or larger = IFB (ALICE MODE)
-      int m_MonitorRate;       // Defines how often events are monitored (every Xth events)
-      int m_dayref;              // Reference day with which dates of savesets are defined (Def. 14365 for 01/05/2009)
-      int m_nEvts;               // Total number of events 
-      int m_nMonitoredEvents;    // Monitored number of events
+      void ExecuteIFB(const Rich::DetectorType RichNum, const Rich::Side PanNum, const unsigned int HPDCol,
+                      const unsigned int HPDRow, unsigned int ionfeedbackCut,
+                      const LHCb::RichSmartID::Vector  &smartIDHits );
+      void ExecuteQuickHitmap(const Rich::DetectorType RichNum, const LHCb::RichSmartID::Vector &smartIDHits);
       
-      bool m_rich1flag;         // RICH1 flag for histo filling in "finalise" method 
-      bool m_rich2flag;         // RICH2 flag for histo filling in "finalise" method 
-       
+      unsigned int m_ionFeedbackCutLHCB;      // Minimum cluster-size to be defined as IFB (LHCb/PHYSICS mode)
+      unsigned int m_ionFeedbackCutALICE; // Minimum cluster-size to be defined as IFB (ALICE mode)
+      unsigned int m_MonitorRate;       // Defines how often events are monitored (every Xth events)
+      unsigned long m_interval;          // Defines event sizes for hitmaps and IFB calculations
+      unsigned long m_nEvts;               // Total number of events 
+      unsigned long m_nMonitoredEvents;    // Monitored number of events
+      unsigned int dataset;                // Index of dataset 
+      unsigned long r1clustersThisEvent;    // Number of non-zero RICH1 clusters in event
+      unsigned long r2clustersThisEvent;    // Number of non-zero RICH2 clusters in event
+      unsigned int minX, maxX, minY, maxY, binsX, binsY;   // Hitmap limits
+
+      bool m_wantIFB;           // To execute clustering. 
+      bool m_wantHitmaps;       // To execute plotting of "All-cluster" hitmap and "IFB-cluster" hitmap. CPU-time consuming. 
+      bool m_wantQuickHitmap;   // To execute quick plotting of hitmap. If "true" sets m_wantIFB to "false". 
+      bool m_suppresscornpix;   // Suppress corner pixels of an HPD. Used with test pattern trigger on calibration farm
     };
   }
 }

@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !=================== Rich/RichIFBAnalysis v1r0 2009-05-08 ====================
+
+! 2010-01-15 - Ross Young
+ - Change in program design: Pixel-clustering now outputs "Cluster-size" distributions, 
+	RICH hitmaps of all-size clusters and RICH hitmaps of IFB-size clusters (>user-defined cut).
+
 ! 2009-05-02 - Ross Young
  - Bug fix; Number of events, date of measurement (relative to reference) and
    "Tot clus"/"IFB clus" ID information added to histograms
