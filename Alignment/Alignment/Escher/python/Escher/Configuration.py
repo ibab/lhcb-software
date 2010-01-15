@@ -3,7 +3,7 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.13 2009-12-26 23:09:47 jblouw Exp $"
+__version__ = "$Id: Configuration.py,v 1.14 2010-01-15 16:00:12 wouter Exp $"
 __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
 from Gaudi.Configuration  import *
@@ -124,7 +124,7 @@ class Escher(LHCbConfigurableUser):
         
         ProcessPhase("Init").DetectorList += self.getProp("InitSequence")
         ProcessPhase("Init").Context = self.getProp("Context")
-        from Configurables import RecInit, TrackSys, GAlign, Centipede
+        from Configurables import RecInit, TrackSys
         log.info("Setting up alignment sequence")
         recInit = RecInit( name = "EscherInit",
                            PrintFreq = self.getProp("PrintFreq"))
