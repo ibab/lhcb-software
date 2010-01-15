@@ -1,3 +1,8 @@
+2010-01-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Project.py: added the Erasmus project to the list of
+	supported projects.
+
 2010-01-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Platform.py: implemented the OS flavour and version 

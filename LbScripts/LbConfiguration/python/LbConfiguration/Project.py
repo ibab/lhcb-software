@@ -14,7 +14,7 @@ project_names = ["Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" ,
                  "Online", "Euler", "Geant4", "DaVinci", "Bender", "Orwell",
                  "Panoramix", "LbScripts", "Dirac", "LHCbGrid", "Panoptes",
                  "Curie", "Vetra", "Compat", "VanDerMeer", "Ganga",
-                 "LHCbDirac", "Integration" ]
+                 "LHCbDirac", "Integration", "Erasmus" ]
 
 # ------------------------------------------------------------------------------------
 
