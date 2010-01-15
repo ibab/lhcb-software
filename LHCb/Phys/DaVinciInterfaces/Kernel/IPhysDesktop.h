@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.11 2010-01-14 15:08:10 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.12 2010-01-15 08:22:02 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -141,6 +141,12 @@ public:
 
   /// Make sure the PhysDesktop has written out the container
   virtual StatusCode writeEmptyContainerIfNeeded() = 0 ;
+
+  /// Get the vertex with the highest weight in the association
+  /// between LHCb::Particle and LHCb::VertexBase
+  /// Deprecated!
+  virtual const LHCb::VertexBase* relatedVertex(const LHCb::Particle* part) const = 0;
+
 
   /// Establish a relation between an LHCb::Particle and an LHCb::VertexBase
   virtual void relate(const LHCb::Particle* part, 
