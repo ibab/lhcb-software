@@ -156,7 +156,8 @@ bool TarFile::index() {
             if (info.name.empty()) break;
             if ( (info.type == REGTYPE || info.type == REGTYPE0 ) 
                && info.name[ info.name.size()-1 ] != '/' 
-               && info.name.find("/CVS/") == string::npos )  {
+               && info.name.find("/CVS/")  == string::npos 
+               && info.name.find("/.svn/") == string::npos )  {
                 m_index.insert(make_pair(info.name,info));
             }
             // round up size to block size, and skip to next header...
