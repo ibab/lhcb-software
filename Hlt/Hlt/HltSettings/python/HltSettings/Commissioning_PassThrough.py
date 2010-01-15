@@ -37,8 +37,11 @@ class Commissioning_PassThrough :
         Returns a dictionary of cuts
         """
         from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
-        return { Hlt1CommissioningLinesConf : { 'Prescale' : { 'Hlt1ODINPhysics'  : 1.
-                                                            , 'Hlt1ODINTechnical'     : 0. # @OnlineEnv.AcceptRate
-                                                            , 'Hlt1Tell1Error'     : 0.
-                                             }              } 
+        return { Hlt1CommissioningLinesConf : { 'Prescale' : { 'Hlt1ODINPhysics'    : 1.
+                                                             , 'Hlt1ODINTechnical'  : 0. # @OnlineEnv.AcceptRate
+                                                             , 'Hlt1Tell1Error'     : 0.
+                                                             }              
+                                              , 'ODINPhysics'   : '( ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger ) | ( ODIN_TRGTYP == LHCb.ODIN.TimingTrigger )'
+                                              , 'ODINTechnical' : '( ODIN_TRGTYP == LHCb.ODIN.TechnicalTrigger ) | ( ODIN_TRGTYP == LHCb.ODIN.AuxiliaryTrigger ) | ( ODIN_TRGTYP == LHCb.ODIN.NonZSupTrigger ) | ( ODIN_TRGTYP == LHCb.ODIN.CalibrationTrigger )'
+                                              } 
                }

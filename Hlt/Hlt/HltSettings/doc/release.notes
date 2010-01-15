@@ -13,6 +13,10 @@
      new configurable, Hlt2CharmLinesConf (they were formerly configured
      through the Hlt2TopologicalLinesConf configurable).
 
+!========================== HltSettings v1r6p1 2010-01-15 ===================
+! 2010-01-15 - Gerhard Raven
+ - update Commissioning_PassThrough (needs matching tag in Hlt1Lines)
+
 !========================== HltSettings v1r6 2010-01-11 ===================
 ! 2010-01-08 - V. Gligorov
  - add Swimming_320Vis_300L0_Hadron_Hlt1_Oct09 
