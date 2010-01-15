@@ -5,6 +5,80 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-01-15 - Vanya Belyaev
+
+ - StrippingV0.py, StrippingV0Geo.py
+
+   The "main" cofigurable  resides in StrippingV0 and has the name 
+   StrippingV0Conf (and int includes "geo"-lines!)
+ 
+
+Following V0-lines are implemented:
+
+   1. "Conventional" K0S 
+   2. "Conventional" Lambda0
+   3. "Geometry"     K0S 
+   4. "Geometry"     Lambda0
+
+The lines 1&2 are subdivided into 4 lines each:    
+
+     a.  PV  
+     b.  PV    & wrong-sign
+     c.  no-PV  
+     d.  no-PV & wrong-sign
+
+In total we have 10 stripping lines.
+
+For 3&4 I've used the preliminary version of Mathias' code.
+As soon as I'll get the updated version, I'll insert it into 
+V0-configurable.
+
+
+The table below contains the results of two tests
+
+  Test1: The full stripping test with 100k 2009-events (without re-recontruction of PV), including empty&lumi events  
+
+  Test2: The test with 10k events from with Juan' datset (at least one re-recontructed "loose" PV)
+
+
+===================================================================
+     Line       |          Name                   | Test1  | Test2  
+================+=================================+========+=======
+     1a         |  StrippingK0SLine               |  346   |  970      
+     1b         |  StrippingK0S_ssLine            |  269   |  741     
+     1c         |  StrippingK0S_noPVLine          | 1133   |   -      
+     1d         |  StrippingK0S_noPV_ssLine       | 2912   |   -    
+     3          |  StrippingKSAllGeo              | 2208   | 6989       
+     2a         |  StrippingLambda0Line           |  615   | 1771     
+     2b         |  StrippingLambda0_ssLine        |  565   | 1588      
+     2c         |  StrippingLambda0_noPVLine      |  944   |   -      
+     2d         |  StrippingLambda0_noPV_ssLine   | 2353   |   -   
+     4          |  StrippingLambdaAllGeo          |  965   | 2975       
+================+========= SUMMARY ===============+========+=======
+Global decision |  StrippingGlobal                | 4150   |
+===================================================================
+
+No "PV-redo" has been used for this data.
+
+Let me remind the cuts for "Conventional" selection:
+
+    - Track selection:  P > 1.5 GeV , chi2(Track)/nDof < 10 
+    
+    - V0 selection : 
+
+        -- |M-M0|  < 100 * MeV
+        -- chi2_VX <  25  
+        -- chi2_LT < 100 
+        -- c*tau > 10 mm for DD case else  c*tau > 1 mm 
+
+    For "no-PV" case, there are no cuts on chi2_LT and c*tau 
+
+
+Note that the numebrs for Mathias' selction are very preliminary and 
+probably will be different as soon as preselection will be ready
+
+
+
 ! 2010-01-13 - Mat Charles
  - Added StrippingD2hhh.py
 
