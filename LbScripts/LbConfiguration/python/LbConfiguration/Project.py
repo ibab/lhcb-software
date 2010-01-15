@@ -266,6 +266,9 @@ LHCbDirac.disableSetenvAlias()#IGNORE:E0602
 LHCbDirac.setFullSize(500000)#IGNORE:E0602
 LHCbDirac.setAFSVolumeName("LBDIRAC")#IGNORE:E0602
 
+# Erasmus
+Erasmus.setAFSVolumeName("ERASM")#IGNORE:E0602
+
 
 # Euler
 Euler.setApplicationPackage("Trig/Euler")#IGNORE:E0602
