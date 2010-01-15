@@ -4,6 +4,9 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+! 2010-01-15 - Marco Clemencic
+ - Added a missing dictionary and removed 2 useless files.
+
 ! 2009-12-29 - Jaap Panman
  - add TimeSpanFSR: keeps earliest/latest event time on a raw file
    EventCountFSR: add pretty print 
