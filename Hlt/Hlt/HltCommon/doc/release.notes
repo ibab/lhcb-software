@@ -3,8 +3,6 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
-! 2010-01-15 - Gerhard Raven
- - adapt to the fact that HltTCK is now in SVN
 
 ! 2010-01-13 - Marco Cattaneo
  - Follow Gaudi fix #61116: GaudiCommon::Exception now returns void
@@ -14,6 +12,7 @@
  - add Odin decoding to HltReferenceRateSvc in case Odin hasn't been decoded 
    yet
  - protect against unphysical timeintervals in HltReferenceRateSvc
+ - adapt to the fact that HltTCK is now in SVN
 
 !========================== HltCommon v5r16 2009-12-03 ===================
 ! 2010-01-11 - Gerhard Raven
