@@ -1,5 +1,6 @@
 2010-01-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbConfiguration/Platform.py: extracted the compatible supported platforms.
 	* python/LbConfiguration/Project.py: added the Erasmus project to the list of
 	supported projects.
 

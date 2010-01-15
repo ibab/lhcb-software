@@ -12,8 +12,24 @@ class PlatformTestCase(unittest.TestCase):
     def testFlavour(self):
         machine = NativeMachine()
         self.assertEqual(machine.OSFlavour(), "Fedora")
+        print machine.OSVersion()
+        print machine.CMTSystem()
+        print machine.CMTOSFlavour()
+        print machine.CMTOSEquivalentFlavour()
+        print machine.CMTCompatibleConfig()
+        print machine.CMTCompatibleConfig(debug=True)
+        print machine.CMTSupportedConfig()
+        print machine.CMTSupportedConfig(debug=True)
+        print "================================================================"
         self.assertEqual(machine.OSFlavour(teststring="Scientific Linux CERN SLC release 5.4 (Boron)"), "Scientific Linux")
         print machine.OSVersion()
+        print machine.CMTSystem()
+        print machine.CMTOSFlavour()
+        print machine.CMTOSEquivalentFlavour()
+        print machine.CMTCompatibleConfig()
+        print machine.CMTCompatibleConfig(debug=True)
+        print machine.CMTSupportedConfig()
+        print machine.CMTSupportedConfig(debug=True)
     def testVersion(self):
         pass
 

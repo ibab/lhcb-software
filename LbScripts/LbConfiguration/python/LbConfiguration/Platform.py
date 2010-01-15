@@ -107,34 +107,36 @@ def getConfig(architecture, platformtype, compiler, debug=False):
             architecture = "i686"
         if architecture == "amd64" :
             architecture = "x86_64"
-        if debug :
-            cmtconfig = "-".join([architecture, platformtype, compiler, "dbg"])
-        else :
-            cmtconfig = "-".join([architecture, platformtype, compiler, "opt"])
+        cmtconfig = "-".join([architecture, platformtype, compiler, "opt"])
     elif not platformtype.startswith("win") :
-        if architecture == "i686" :
+        if architecture in [ "i686", "i586", "i486", "i386"] :
             architecture = "ia32"
         if architecture == "x86_64" :
-            architecture = "i686"
+            architecture = "amd64"
         cmtconfig = "_".join([platformtype, architecture, compiler])
-        if debug :
-            cmtconfig += "_dbg"
     else :
         cmtconfig = "_".join([platformtype, compiler])
-        if debug :
-            cmtconfig += "_dbg"
+    if debug :
+        cmtconfig = getBinaryDbg(cmtconfig)
     return cmtconfig
 
+# officially supported binaries
 binary_opt_list = ["slc3_ia32_gcc323",
                    "slc4_ia32_gcc34", "slc4_amd64_gcc34",
-                   "x86_64-slc5-gcc34-opt", "i686-slc5-gcc34-opt",
-                   "x86_64-slc5-gcc43-opt", "i686-slc5-gcc43-opt",
+                   "x86_64-slc5-gcc43-opt",
                    "win32_vc71"]
+# future possible supported binaries
+extra_binary_opt_list = ["x86_64-slc5-gcc34-opt", "i686-slc5-gcc34-opt",
+                         "i686-slc5-gcc43-opt",
+                         "i686-winxp-vc90-opt", "x86_64-winxp-vc90-opt",
+                         "osx105_ia32_gcc41", "x86_64-osx106-gcc42-opt"]
 
 binary_dbg_list = [ getBinaryDbg(x) for x in binary_opt_list ]
-
+extra_binary_dbg_list = [ getBinaryDbg(x) for x in extra_binary_opt_list ]
 
 binary_list = binary_opt_list + binary_dbg_list
+extra_binary_list = extra_binary_opt_list + extra_binary_dbg_list
+
 
 # supported shells
 supported_shells = ["csh", "sh", "bat"]
@@ -148,6 +150,55 @@ linux_release_files = [ "/etc/redhat-release" ,
                         "/etc/SuSE-release",
                         "/etc/issue", "/etc/issue.net" ]
 
+linux_flavour_aliases = {
+                         "slc"  : ["Scientific Linux"],
+                         "rhel" : ["Redhat Enterprise", "Red Hat Enterprise"],
+                         "rh"   : ["Redhat", "Red Hat"],
+                         "fc"   : ["Fedora", "Fedora Core"],
+                         "suse" : ["SuSE"],
+                         "co"   : ["CentOS"],
+                         "deb"  : ["Debian"],
+                         "ub"   : ["Ubuntu"],
+                         "ml"   : ["Mandriva Linux"]
+                        }
+
+flavor_runtime_compatibility = {
+                                "slc5"  : ["slc5", "slc4"],
+                                "slc4"  : ["slc4", "slc3"],
+                                "slc3"  : ["slc3"],
+                                "rh73"  : ["rh73"],
+                                "win32" : ["win32"],
+                                "osx105": ["osx105"],
+                                "osx106": ["osx105", "osx106"]
+                                }
+
+arch_runtime_compatiblity = {
+                                "x86_64" : ["x86_64", "ia64", "i686", "i586", "i486", "i386"],
+                                "ia64" :   ["x86_64", "ia64", "i686", "i586", "i486", "i386"],
+                                "i686" :   ["i686", "i586", "i486", "i386"],
+                                "i586" :   ["i586", "i486", "i386"],
+                                "i486" :   ["i486", "i386"],
+                                "i386" :   ["i386"]
+                                }
+
+flavor_runtime_equivalence = {
+                              "slc5"  : ["slc5", "co5", "rhel5", "ub9", "fc12", "fc11", "fc10"],
+                              "slc4"  : ["slc4", "co4", "rhel4", "deb4"],
+                              "slc3"  : ["slc3", "suse90", "suse100"],
+                              "rh73"  : ["rh73", "suse80", "suse81", "suse82", "suse83"],
+                              "win32" : ["win32"],
+                              "osx105": ["osx105"],
+                              "osx106": ["osx106"]
+                             }
+
+supported_compilers = {
+                       "slc5"   : ["gcc43"],
+                       "slc4"   : ["gcc34"],
+                       "slc3"   : ["gcc323"],
+                       "win32"  : ["vc71"],
+                       "osx105" : ["gcc41"],
+                       "osx106" : ["gcc42"]
+                       }
 class NativeMachine:
     def __init__(self):
         self._arch = None
@@ -218,23 +269,27 @@ class NativeMachine:
                         break
                 if teststring :
                     cont = teststring
-                oslist = ["Scientific Linux", "Red Hat Enterprise",
-                          "Redhat Enterprise", "SuSE", "CentOS", "Fedora",
-                          "Ubuntu", "Debian", "Mandriva Linux" ]
-                for o in oslist :
-                    if cont.upper().find(o.upper()) != -1 :
-                        self._osflavor = o
-                        if self._osflavor == "Red Hat Enterprise" :
-                            self._osflavor = "Redhat Enterprise"
+                found = False
+                for f in linux_flavour_aliases :
+                    if not found :
+                        for s in linux_flavour_aliases[f]:
+                            if not found :
+                                if cont.upper().find(s.upper()) != -1 :
+                                    self._osflavor = linux_flavour_aliases[f][0]
+                                    found = True
+                                    break
+                            else :
+                                break
+                    else :
                         break
-                vmatch = re.compile("\ +([0-9]+(?:\.[0-9]+)+)\ +")
+                vmatch = re.compile("\ +(\d+(?:\.\d+)*)")
                 m = vmatch.search(cont)
                 if m :
                     self._osversion = m.group(1)
 
         return self._osflavor
 
-    def OSVersion(self, teststring=None):
+    def OSVersion(self, position=None, teststring=None):
         if not self._osversion :
             if self._ostype == "Windows" :
                 self._osversion = self._sysinfo[3]
@@ -253,41 +308,108 @@ class NativeMachine:
                         break
                 if teststring :
                     cont = teststring
-                vmatch = re.compile("\ +([0-9]+(?:\.[0-9]+)+)\ +")
+                vmatch = re.compile("\ +(\d+(?:\.\d+)*)")
                 m = vmatch.search(cont)
                 if m :
                     self._osversion = m.group(1)
 
-        return self._osversion
+        osver = self._osversion
+
+        # returns at most the number of position specified. 
+        if position :
+            osver = ".".join(self._osversion.split(".")[:position])
+
+        return osver
     # CMT derived informations
     def CMTArchitecture(self):
         """ returns the CMT architecture """
         arch = "ia32"
-        if re.compile('i\d86').match(self._machine) :
+        if re.compile('i\d86').match(self.machine()) :
             arch = "ia32"
-        elif re.compile('x86_64').match(self._machine) :
+        elif re.compile('x86_64').match(self.machine()) :
             arch = "amd64"
-        elif re.compile('ia64').match(self._machine) :
+        elif re.compile('ia64').match(self.machine()) :
             arch = "ia64"
-        elif re.compile('power mac', re.I).match(self._machine) :
+        elif re.compile('power mac', re.I).match(self.machine()) :
             arch = "ppc"
-        elif self._ostype == "Windows" :
+        elif self.OSType() == "Windows" :
             arch = sys.platform
         return arch
 
     def CMTSystem(self):
         """ returns the CMTBIn variable used by CMT itself """
         cmtsystem = None
-        if self._ostype == "Windows" :
+        if self.OSType() == "Windows" :
             cmtsystem = "VisualC"
-        elif self._ostype == "Darwin" :
+        elif self.OSType() == "Darwin" :
             cmtsystem = "Darwin-i386"
         else :
-            if self._machine in ["i386", "i486", "i586"] :
-                cmtsystem = "%s-i386" % self._ostype
+            if self.machine() in arch_runtime_compatiblity["i586"] :
+                cmtsystem = "%s-i386" % self.OSType()
             else :
-                cmtsystem = "%s-%s" % (self._ostype, self._machine)
+                cmtsystem = "%s-%s" % (self.OSType(), self.machine())
         return cmtsystem
 
     def CMTOSFlavour(self):
-        pass
+        """ returns the CMT short name for the OS flavour and version """
+        cmtflavour = None
+        if self.OSType() == "Windows" :
+            cmtflavour = "win%s" % self.arch()
+        elif self.OSType() == "SunOS" :
+            cmtflavour = self.OSFlavour() + self.OSVersion(position=2).replace(".", "")
+        elif self.OSType() == "Darwin" :
+            cmtflavour = "osx%s" % self.OSVersion(position=2).replace(".", "")
+        elif self.OSType() == "Linux" :
+            for f in linux_flavour_aliases :
+                if self.OSFlavour() == linux_flavour_aliases[f][0] :
+                    cmtflavour = f + self.OSVersion(position=1)
+                    if self.OSFlavour() == "SuSE" or self.OSFlavour() == "Redhat" :
+                        cmtflavour = f + self.OSVersion(position=2)
+                    if self.OSFlavour() == "SuSE" and int(self.OSVersion(position=1)) > 10 :
+                        cmtflavour = f + self.OSVersion(position=1)
+        return cmtflavour
+
+    def CMTOSEquivalentFlavour(self):
+        """ returns the CMT short name for the OS compatible flavour and version """
+        cmtflavour = None
+        for f in flavor_runtime_equivalence :
+            if self.CMTOSFlavour() in flavor_runtime_equivalence[f] :
+                cmtflavour = f
+                break
+        return cmtflavour
+
+    def CMTCompatibleConfig(self, debug=False):
+        """ return the list of compatible CMT configs """
+        compatibles = []
+        equiv = self.CMTOSEquivalentFlavour()
+        machine = self.machine()
+        if equiv in flavor_runtime_compatibility :
+            for f in flavor_runtime_compatibility[equiv] :
+                for m in arch_runtime_compatiblity[machine] :
+                    for c in supported_compilers[f] :
+                        n = getConfig(m, f, c, debug=False)
+                        if n not in compatibles :
+                            compatibles.append(n)
+                        if debug :
+                            n = getConfig(m, f, c, debug=True)
+                            if n not in compatibles :
+                                compatibles.append(n)
+
+        return compatibles
+
+    def CMTSupportedConfig(self, debug=False):
+        """ returns the list of supported CMT configs among the compatible ones"""
+        compatibles = self.CMTCompatibleConfig(debug)
+        supported = []
+        for c in compatibles :
+            if c in binary_list and c not in supported:
+                supported.append(c)
+        return supported
+    def CMTNativeConfig(self, debug=False):
+        """ 
+        Returns the native configuration if possible. Guess also the compiler
+        on linux platforms 
+        """
+        natconf = None
+        return natconf
+
