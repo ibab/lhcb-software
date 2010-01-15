@@ -55,7 +55,7 @@ Get the list of all configured lines for Lambda0 :
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = '2010-01-14'
-__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $'
+__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $'
 # =============================================================================
 
 from Gaudi.Configuration       import *
@@ -315,7 +315,7 @@ class StrippingV0Conf(LHCbConfigurableUser):
                     ]
                 
                 line2ss = line2.clone ( 
-                    'K0S_noPV_ssLine'  , algos = [ same_sign ]
+                    'K0S_noPV_ssLine'  , algos = [ noPV , same_sign ]
                     )
                 lines.append ( line2ss ) 
                             
@@ -427,7 +427,7 @@ class StrippingV0Conf(LHCbConfigurableUser):
                     ]
                 
                 line2ss = line2.clone ( 
-                    'Lambda0_noPV_ssLine'  , algos = [ same_sign ]
+                    'Lambda0_noPV_ssLine'  , algos = [ noPV , same_sign ]
                     )
                 lines.append ( line2ss ) 
 
