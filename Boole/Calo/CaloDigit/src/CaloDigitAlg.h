@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.h,v 1.9 2009-05-06 15:58:24 odescham Exp $ 
+// $Id: CaloDigitAlg.h,v 1.10 2010-01-15 16:06:31 robbep Exp $ 
 #ifndef   CALODIGIT_CALODIGITALG_H
 #define   CALODIGIT_CALODIGITALG_H 1
 // ============================================================================
@@ -79,6 +79,7 @@ private:
     return nPe();
   }
 
+  int caloTriggerFromAdc( const int adc , const LHCb::CaloCellID id ) const ;
 };
 
 #endif //    CALODIGIT_CALODIGITALG_H

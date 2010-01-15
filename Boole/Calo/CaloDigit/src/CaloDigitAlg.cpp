@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.29 2009-10-01 11:36:11 ibelyaev Exp $
+// $Id: CaloDigitAlg.cpp,v 1.30 2010-01-15 16:06:31 robbep Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -178,6 +178,7 @@ StatusCode CaloDigitAlg::initialize() {
   m_triggerEtScale= m_calo->L0EtGain();
   m_coherentNoise = m_calo->coherentNoise();
   m_incoherentNoise = m_calo->incoherentNoise();
+
   m_mip   = m_calo->mipDeposit();
   m_sat   = m_calo->dynamicsSaturation();
   m_fracPrev  = m_calo->fractionFromPrevious();
@@ -468,7 +469,7 @@ StatusCode CaloDigitAlg::execute() {
       }
     } else {
       double et = intAdc * gain * m_calo->l0EtCorrection( id.area() ) * m_calo->cellSine( id );
-      trigVal = (int)floor( et / m_triggerEtScale + .5 );
+      trigVal = caloTriggerFromAdc( intAdc , id ) ;
       if ( 255 < trigVal ) trigVal = 255;
       if ( 0   > trigVal ) trigVal = 0;
       if ( 0 < trigVal ) {
@@ -549,3 +550,46 @@ StatusCode CaloDigitAlg::finalize()
   return GaudiHistoAlg::finalize();
 }
 //=============================================================================
+// Compute Trigger ADC from Calo ADC
+//=============================================================================
+int CaloDigitAlg::caloTriggerFromAdc( const int adc , 
+                                      const LHCb::CaloCellID id ) const {
+  if ( adc < 0 ) return 0 ;
+
+  int calibCte = m_calo -> cellParam( id ).l0Constant() ;
+  
+  
+  int v1, v2, v3, v4, v5, v6, v7, v8 ;
+  v1 = adc ;
+  v2 = ( adc << 1 ) ;
+  v3 = ( adc << 2 ) ;
+  v4 = ( adc << 3 ) ;
+  v5 = ( adc << 4 ) ;
+  v6 = ( adc << 5 ) ;
+  v7 = ( adc << 6 ) ;
+  v8 = ( adc << 7 ) ;
+  
+  int s1, s2, s3, s4, s5, s6, s7, s8 ;
+  s1 = calibCte & 0x1 ;
+  s2 = ( calibCte >> 1 ) & 0x1 ;
+  s3 = ( calibCte >> 2 ) & 0x1 ;
+  s4 = ( calibCte >> 3 ) & 0x1 ;
+  s5 = ( calibCte >> 4 ) & 0x1 ;
+  s6 = ( calibCte >> 5 ) & 0x1 ;
+  s7 = ( calibCte >> 6 ) & 0x1 ;
+  s8 = ( calibCte >> 7 ) & 0x1 ;
+
+  int R0, R1, R2, R3 ;
+  R0 = ( ( v7 & 0x3FF00 ) * s7 + ( v8 & 0x7FF00 ) * s8 ) & 0xFFF00 ;
+  R1 = ( ( v5 & 0xFFC0  ) * s5 + ( v6 & 0x1FFC0 ) * s6 ) & 0xFFF00 ;
+  R2 = ( ( v3 & 0x3FF0  ) * s3 + ( v4 & 0x7FF0  ) * s4 ) & 0xFFF00 ;
+  R3 = ( ( v1 & 0xFFC   ) * s1 + ( v2 & 0x1FFC  ) * s2 ) & 0xFFF00 ;
+  
+  int result = R0 + R1 + R2 + R3 ;
+  int trig ;
+  trig = ( ( ( result & 0x3FC00 ) >> 10 ) & 0xFF ) ;
+  if ( ( 0 != ( result & 0x200 ) ) && ( 0xFF != trig ) ) trig++ ;
+  if ( 0 != ( result & 0xC0000 ) ) trig = 0xFF ;
+  
+  return trig ;
+}

@@ -4,6 +4,10 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+! 2010-01-15 - Patrick Robbe
+ - CaloDigitAlg.cpp/.h: 
+   * change ADC -> L0ADC conversion to reflect what is done in electronics.
+
 !======================== CaloDigit v3r1 2009-10-22 ==========================
 ! 2009-10-22 - Marco Cattaneo
  - Remove obsolete file CaloDigit_dll.cpp
