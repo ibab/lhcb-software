@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-01-16 - Anton Poluektov 
+ - Added stream "V0" with the selections from StrippingV0 and StrippingV0Geo. 
+
 ! 2010-01-15 - Vanya Belyaev
 
  - new version of StrippingV0Geo from Mathias, with few obvious fixes the performance now is:
