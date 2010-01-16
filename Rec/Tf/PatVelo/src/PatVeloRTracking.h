@@ -1,4 +1,4 @@
-// $Id: PatVeloRTracking.h,v 1.4 2009-07-20 11:35:32 dhcroft Exp $
+// $Id: PatVeloRTracking.h,v 1.5 2010-01-16 19:42:53 dhcroft Exp $
 #ifndef TF_PATVELORTRACKING_H 
 #define TF_PATVELORTRACKING_H 1
 
@@ -80,6 +80,12 @@ namespace Tf {
       /// Merge tracks sharing hits
       void mergeTracks( std::vector<PatRZTrack> &rzTracks );
 
+      /// register callbacks with update service for HLT fast run changes
+      StatusCode registerConditionCallBacks();
+
+      /// callback function to (re)calculate the half box offset corrections
+      StatusCode updateBoxOffset();
+
     private:
       PatVeloRHitManager*   m_hitManager;
 
@@ -112,6 +118,14 @@ namespace Tf {
       double m_zSensorSearchMin;
       /// Maximum Z for first sensor when searching for forward triplets
       double m_zSensorSearchMax;
+
+      /// Left/right offsets in R for overlap track finding, top of detector
+      std::vector<double> m_ROffsetTop; 
+      /// Left/right offsets in R for overlap track finding, bottom of detector
+      std::vector<double> m_ROffsetBottom; 
+
+      /// Use correction for half boxes when looking for overlaps
+      bool m_OverlapCorrection; 
 
   };
 }

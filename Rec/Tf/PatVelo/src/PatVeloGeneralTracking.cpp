@@ -1,8 +1,9 @@
-// $Id: PatVeloGeneralTracking.cpp,v 1.22 2009-07-20 11:35:32 dhcroft Exp $
+// $Id: PatVeloGeneralTracking.cpp,v 1.23 2010-01-16 19:42:53 dhcroft Exp $
 // Include files
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // local
 #include "PatVeloGeneralTracking.h"
@@ -49,6 +50,7 @@ Tf::PatVeloGeneralTracking::PatVeloGeneralTracking( const std::string& name,
   declareProperty( "SingleStationWin" ,   m_NStationSingle   = 2         );
   declareProperty( "SingleClusTol"    ,   m_singleClusTol    = 
       0.1*Gaudi::Units::mm   );
+  declareProperty( "OverlapCorrection" , m_OverlapCorrection = true );
 }
 
 //=============================================================================
@@ -88,6 +90,12 @@ StatusCode Tf::PatVeloGeneralTracking::initialize() {
   m_PhiSensorsMax = (*m_velo->phiSensorsReverseBegin())->sensorNumber();
 
   m_NSensorSingle = 2*m_NStationSingle;
+
+  sc = registerConditionCallBacks();
+  if (sc.isFailure()) {
+    return Error("Failure to register condition update call backs.",
+	  StatusCode::FAILURE);
+  }
 
   return StatusCode::SUCCESS;
 };
@@ -315,7 +323,7 @@ makeAllGoodTriplets(std::vector<PatVeloLocalPoint> &one,
             (PointsList(&(*iOne),&(*iTwo),&(*iThree),
                         gsl_pow_2((iTwo->y()-predY)/(dPredY+iTwo->deltaY()))+
                         gsl_pow_2((iTwo->x()-predX)/(dPredX+iTwo->deltaX())),
-                        m_isLeftRSens[iOne->rHit()->sensorNumber()]));
+                        m_isLeftRSens[iOne->rSensorNumber()]));
         }
       }
     }
@@ -364,19 +372,21 @@ void Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
         (*iPoint)->x(),(*iPoint)->z());
     yFit.increment(1./gsl_pow_2((*iPoint)->deltaY()),
         (*iPoint)->y(),(*iPoint)->z());
-    usedRSensor.push_back((*iPoint)->rHit()->sensorNumber());
+    usedRSensor.push_back((*iPoint)->rSensorNumber());
     lastZ = (*iPoint)->z();
-    lastSensor = GSL_MIN((*iPoint)->rHit()->sensorNumber(),lastSensor);
+    lastSensor = GSL_MIN((*iPoint)->rSensorNumber(),lastSensor);
     if(m_isVerbose) verbose() 
-      << " R sensor " << (*iPoint)->rHit()->sensorNumber()
+      << " R sensor " << (*iPoint)->rSensorNumber()
         << " x: " << (*iPoint)->x() << "+-" <<(*iPoint)->deltaX()
         << " y: " << (*iPoint)->y() << "+-" <<(*iPoint)->deltaY()
-        << " from [" << (*iPoint)->rHit()->sensorNumber() << "," 
+        << " from [" << (*iPoint)->rSensorNumber() << "," 
         << (*iPoint)->rHit()->stripNumber() << "] and ["
         << (*iPoint)->phiHit()->sensorNumber() << "," 
         << (*iPoint)->phiHit()->stripNumber() << "]"
         << endreq;
   }
+
+  bool leftSideSeed = m_isLeftRSens[trackPoints.points()[0]->rSensorNumber()];
 
   PointsContainer::reverse_iterator iPCont;
   for( iPCont = points.rbegin() ; iPCont != points.rend() ; ++iPCont ){
@@ -393,6 +403,26 @@ void Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
     double yPred = yFit.pred((iPCont->second.begin())->z());
     double yPredErr =
       sqrt(yFit.predErr2((iPCont->second.begin())->z()));
+    
+    // see if in opposite half box and correct for box offsets
+    if(  m_OverlapCorrection && // in case overlaps off
+	 leftSideSeed != m_isLeftRSens[iPCont->first] ){
+      if(m_isVerbose) verbose() 
+	<< "Offset opposite side sNum " << iPCont->first
+	<< " from (" << xPred << "," << yPred << ") to (";
+      // in the upper half of the sensor?
+      if( yPred > 0. ){
+	xPred += m_XOffsetTop[iPCont->first];
+	yPred += m_YOffsetTop[iPCont->first];
+      }else{
+	xPred += m_XOffsetBottom[iPCont->first];
+	yPred += m_YOffsetBottom[iPCont->first];
+      }
+      if(m_isVerbose) verbose() 
+	<< xPred << "," << yPred << ")" << endmsg;
+    }	
+
+    
 
     // scale predicted errors by deltaZ * scaleFactor
     // distance between dense stations is 32.3mm, 
@@ -446,7 +476,7 @@ void Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
       if(m_isVerbose) verbose() 
         << " added x: " << bestPoint->x() 
           << " y: " << bestPoint->y()
-          << " from [" << bestPoint->rHit()->sensorNumber() << "," 
+          << " from [" << bestPoint->rSensorNumber() << "," 
           << bestPoint->rHit()->stripNumber() << "] and ["
           << bestPoint->phiHit()->sensorNumber() << "," 
           << bestPoint->phiHit()->stripNumber() << "]"
@@ -461,8 +491,8 @@ void Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
       bestPoint->phiHit()->hit()->setUsed(true);
       trackPoints.points().push_back(&(*bestPoint));
       lastZ = bestPoint->z();
-      lastSensor = GSL_MIN(bestPoint->rHit()->sensorNumber(),lastSensor);
-      usedRSensor.push_back(bestPoint->rHit()->sensorNumber());
+      lastSensor = GSL_MIN(bestPoint->rSensorNumber(),lastSensor);
+      usedRSensor.push_back(bestPoint->rSensorNumber());
 
       if(trackPoints.points().size() > m_maxExtrapStat){
 	// subtract off the points we now want to ignore 
@@ -473,7 +503,7 @@ void Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
 	if(m_isVerbose) verbose() 
 	  << " removed x: " << removePoint->x() 
           << " y: " << removePoint->y()
-          << " from [" << removePoint->rHit()->sensorNumber() << "," 
+          << " from [" << removePoint->rSensorNumber() << "," 
           << removePoint->rHit()->stripNumber() << "] and ["
           << removePoint->phiHit()->sensorNumber() << "," 
           << removePoint->phiHit()->stripNumber() << "]"
@@ -501,8 +531,8 @@ void Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
     newTrack->addPhi((*ipP)->phiHit());
   }
   // sst number of expected clusters
-  int nExpected = 2 + (trackPoints.points().front()->rHit()->sensorNumber() -
-		       trackPoints.points().back()->rHit()->sensorNumber());
+  int nExpected = 2 + (trackPoints.points().front()->rSensorNumber() -
+		       trackPoints.points().back()->rSensorNumber());
   // cast to double as that is how value is stored in LHCb::Track
   // Assume one side only (i.e. either just A or just C)
   newTrack->setNVeloExpected( fabs(static_cast<double>(nExpected)) );
@@ -693,4 +723,69 @@ StatusCode Tf::PatVeloGeneralTracking::finalize() {
     info() << "No events processed" << endreq;
   }
   return GaudiAlgorithm::finalize();
+}
+
+
+StatusCode Tf::PatVeloGeneralTracking::registerConditionCallBacks() {
+
+  updMgrSvc()->
+    registerCondition(this,(*(m_velo->leftSensorsBegin()))->geometry(),
+		      &Tf::PatVeloGeneralTracking::updateBoxOffset);
+  updMgrSvc()->
+    registerCondition(this,(*(m_velo->rightSensorsBegin()))->geometry(),
+		      &Tf::PatVeloGeneralTracking::updateBoxOffset);
+  StatusCode sc = updMgrSvc()->update(this);
+  if(!sc.isSuccess()) 
+    return Error("Failed to update conditions!",StatusCode::FAILURE);
+
+  return StatusCode::SUCCESS;
+}
+
+StatusCode Tf::PatVeloGeneralTracking::updateBoxOffset(){
+  // need to calculate the expected shift of the left -> right (and r->l)
+  // boxes in the overlap region 
+  // Lets be unsubtle and make a table of each possible offset
+  unsigned int nRSens = m_velo->numberRSensors();
+  m_XOffsetTop.resize(nRSens,0.);
+  m_XOffsetBottom.resize(nRSens,0.);
+  m_YOffsetTop.resize(nRSens,0.);
+  m_YOffsetBottom.resize(nRSens,0.);
+  if( ! m_OverlapCorrection ) {
+    return Warning("Overlap correction is off",StatusCode::SUCCESS);
+  }
+  for ( std::vector<DeVeloRType*>::const_iterator iR = 
+	  m_velo->rSensorsBegin() ; 
+	iR !=  m_velo->rSensorsEnd() ; ++iR ){
+    
+    const DeVeloSensor *thisSensor = *iR;
+    const DeVeloSensor *otherSensor = (*iR)->otherSideRSensor();
+    if( ! otherSensor ){ // in case someone kills the sensors in the XML
+      continue;
+    }
+    unsigned int sNum = thisSensor->sensorNumber(); 
+    // point half way up sensitive overlap region, top side of detector
+    // in other side half box frame
+    Gaudi::XYZPoint otherTopPoint(0.,25.,otherSensor->z());
+    // and at bottom of detector
+    Gaudi::XYZPoint otherBottomPoint(0.,-25.,otherSensor->z());
+    // other HB -> global -> this HB to get offsets
+    Gaudi::XYZPoint globalTop = otherSensor->veloHalfBoxToGlobal(otherTopPoint);
+    Gaudi::XYZPoint globalBottom = otherSensor->veloHalfBoxToGlobal(otherBottomPoint);
+    Gaudi::XYZPoint localTop = thisSensor->globalToVeloHalfBox(globalTop);
+    Gaudi::XYZPoint localBottom = thisSensor->globalToVeloHalfBox(globalBottom);
+    // convert the two local frame points to delta r between the frames
+    m_XOffsetTop[sNum] = otherTopPoint.x() - localTop.x() ; 
+    m_YOffsetTop[sNum] = otherTopPoint.y() - localTop.y() ; 
+    m_XOffsetBottom[sNum] = otherBottomPoint.x() - localBottom.x() ; 
+    m_YOffsetBottom[sNum] = otherBottomPoint.y() - localBottom.y() ; 
+    
+    if(m_isVerbose) {
+      verbose() << "Sensor " << sNum << " paired with "
+		<<  otherSensor->sensorNumber()
+		<< " deltaX,Y top " << m_XOffsetTop[sNum] << ", " <<m_YOffsetTop[sNum]
+		<< " deltaX,Y bottom " << m_XOffsetBottom[sNum] <<", "<<m_YOffsetBottom[sNum]
+		<< endmsg;
+    }
+  }
+  return StatusCode::SUCCESS;
 }

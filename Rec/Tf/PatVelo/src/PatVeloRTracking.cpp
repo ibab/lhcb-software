@@ -1,4 +1,4 @@
-// $Id: PatVeloRTracking.cpp,v 1.9 2009-07-20 11:35:32 dhcroft Exp $
+// $Id: PatVeloRTracking.cpp,v 1.10 2010-01-16 19:42:53 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -50,6 +50,7 @@ namespace Tf {
       declareProperty( "AdjacentSectors" , m_adjacentSectors  = false     );
       declareProperty( "OnlyForward"     , m_onlyForward      = false     );
       declareProperty( "OnlyBackward"    , m_onlyBackward     = false     );
+      declareProperty( "OverlapCorrection" , m_OverlapCorrection = true   );
     }
   //=============================================================================
   // Destructor
@@ -89,12 +90,14 @@ namespace Tf {
       << endreq
       << "OnlyForward          = " << (m_onlyForward     ? "True" : "False")
       << endreq
-      << "OnlyBackward          = " << (m_onlyBackward     ? "True" : "False")
+      << "OnlyBackward         = " << (m_onlyBackward     ? "True" : "False")
+      << endreq
+      << "OverlapCorrection    = " << (m_OverlapCorrection  ? "True" : "False")
       << endreq
       << "======================================"                << endreq;
 
     if ( m_zVertexMin >= m_zVertexMax ){
-      warning() << "No overlap between forward and backward track z ranges" << endmsg;
+      warning() << "No overlap between forward and backward track z ranges" << endmsg;      
       return StatusCode::FAILURE;
     }
 
@@ -113,6 +116,13 @@ namespace Tf {
       debug() << "zSearchMin= " << m_zSensorSearchMin << endmsg;
       debug() << "zSearchMax= " << m_zSensorSearchMax << endmsg;
     }
+
+    sc = registerConditionCallBacks();
+    if (sc.isFailure()) {
+      return Error("Failure to register condition update call backs.",
+		   StatusCode::FAILURE);
+    }
+
     return StatusCode::SUCCESS;
   };
 
@@ -624,6 +634,23 @@ namespace Tf {
       double z      = (*station)->z();
       double rPred  = newTrack.rPred( z ); // new predicted co-ord
 
+      if( extraCoord ){
+	// switching between box halves looking for overlaps
+	// need to correct for an offset in y of the VELO sides (if any)
+	if( zone == 0 || zone == 7 ){
+	  rPred += m_ROffsetTop[(*station)->sensor()->sensorNumber()];
+	}else{
+	  rPred += m_ROffsetBottom[(*station)->sensor()->sensorNumber()];
+	}
+	if(m_isVerbose) {
+	  verbose() << "Offset overlap sensor " 
+		    << (*station)->sensor()->sensorNumber()
+		    << " in zone " << zone << " by " 
+		    << m_ROffsetTop[(*station)->sensor()->sensorNumber()]
+		    << endmsg;
+	}      
+      }
+
       const DeVeloRType* rSensor=(*station)->sensor();
       double rPitch = rSensor->rPitch( rPred );
       double tol   = myTol * rPitch;
@@ -767,4 +794,65 @@ namespace Tf {
       }
     }
   }
+
+  StatusCode PatVeloRTracking::registerConditionCallBacks() {
+    
+    updMgrSvc()->
+      registerCondition(this,(*(m_velo->leftSensorsBegin()))->geometry(),
+		      &Tf::PatVeloRTracking::updateBoxOffset);
+    updMgrSvc()->
+      registerCondition(this,(*(m_velo->rightSensorsBegin()))->geometry(),
+			&Tf::PatVeloRTracking::updateBoxOffset);
+    StatusCode sc = updMgrSvc()->update(this);
+    if(!sc.isSuccess()) 
+      return Error("Failed to update conditions!",StatusCode::FAILURE);
+    
+    return StatusCode::SUCCESS;
+  }
+  
+  StatusCode PatVeloRTracking::updateBoxOffset(){
+    // need to calculate the expected shift of the left -> right and
+    // vice versaboxes in r which is the overlap region is in the y direction
+    // Lets be unsubtle and make a table of each possible offset
+    unsigned int nRSens = m_velo->numberRSensors();
+    m_ROffsetTop.resize(nRSens,0.);
+    m_ROffsetBottom.resize(nRSens,0.);
+    if( !m_OverlapCorrection) {
+      return Warning("Overlap correction is not applied",StatusCode::SUCCESS);
+    }
+    for ( std::vector<DeVeloRType*>::const_iterator iR = 
+	    m_velo->rSensorsBegin() ; 
+	  iR !=  m_velo->rSensorsEnd() ; ++iR ){
+
+      const DeVeloSensor *thisSensor = *iR;
+      const DeVeloSensor *otherSensor = (*iR)->otherSideRSensor();
+      if( ! otherSensor ){ // in case someone kills the sensors in the XML
+	continue;
+      }
+      unsigned int sNum = thisSensor->sensorNumber();
+      // point half way up sensitive overlap region, top side of detector
+      // in other side half box frame
+      Gaudi::XYZPoint otherTopPoint(0.,25.,otherSensor->z());
+      // and at bottom of detector
+      Gaudi::XYZPoint otherBottomPoint(0.,-25.,otherSensor->z());
+      // other HB -> global -> this HB to get offsets
+      Gaudi::XYZPoint globalTop = otherSensor->veloHalfBoxToGlobal(otherTopPoint);
+      Gaudi::XYZPoint globalBottom = otherSensor->veloHalfBoxToGlobal(otherBottomPoint);
+      Gaudi::XYZPoint localTop = thisSensor->globalToVeloHalfBox(globalTop);
+      Gaudi::XYZPoint localBottom = thisSensor->globalToVeloHalfBox(globalBottom);
+      // convert the two local frame points to delta r between the frames
+      m_ROffsetTop[sNum] =  localTop.rho() - otherTopPoint.rho(); 
+      m_ROffsetBottom[sNum] =  localBottom.rho() - otherBottomPoint.rho(); 
+
+      if(m_isVerbose) {
+	verbose() << "Sensor " << sNum << " paired with "
+		  <<  otherSensor->sensorNumber()
+		  << " deltaR top " << m_ROffsetTop[sNum]
+		  << " deltaR bottom " << m_ROffsetBottom[sNum]
+		  << endmsg;
+      }
+    }
+    return StatusCode::SUCCESS;
+  }
+
 }

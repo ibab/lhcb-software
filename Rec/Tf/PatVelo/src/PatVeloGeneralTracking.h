@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.h,v 1.9 2009-06-24 18:04:34 dhcroft Exp $
+// $Id: PatVeloGeneralTracking.h,v 1.10 2010-01-16 19:42:53 dhcroft Exp $
 #ifndef TF_PATVELOGENERALTRACKING_H 
 #define TF_PATVELOGENERALTRACKING_H 1
 
@@ -76,6 +76,7 @@ namespace Tf {
           inline PatVeloPhiHit *phiHit() { return m_phiHit; } 
           inline double deltaX() const { return m_dx; }
           inline double deltaY() const { return m_dy; }
+	  inline unsigned int rSensorNumber() {return m_rHit->sensorNumber();}
 
           /// less in X coord function for sorting and upper/lower bound
           struct lessX  {
@@ -178,6 +179,11 @@ namespace Tf {
       /// write out tracks to store that pass cuts
       void storeTracks(std::vector<PatVeloSpaceTrack*> & tracks);
 
+      ///Get and store the velo half box offsets (as a call back for HLT use)
+      StatusCode updateBoxOffset();
+
+      /// Register the callback conditions requied for HLT fast run changes
+      StatusCode registerConditionCallBacks();
 
       PatVeloRHitManager* m_rHitManager;     ///< R hit storage
       PatVeloPhiHitManager* m_phiHitManager; ///< Phi hit storage
@@ -230,6 +236,14 @@ namespace Tf {
       unsigned int m_NumEvt;         ///< Number of Events Processed
 
       CircularRangeUtils<double> m_angleUtils; ///< compare phi ranges
+
+      std::vector<double> m_XOffsetTop; ///< X left/right box offset at top
+      std::vector<double> m_XOffsetBottom; ///< X left/right box offset 
+      std::vector<double> m_YOffsetTop; ///< Y left/right box offset at top
+      std::vector<double> m_YOffsetBottom; ///< Y left/right box offset 
+
+      /// Use correction for half boxes when looking for overlaps
+      bool m_OverlapCorrection;
 
   };
 
