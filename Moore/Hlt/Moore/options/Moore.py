@@ -27,6 +27,7 @@ Moore().ThresholdSettings = 'Physics_10000Vis_1000L0_40Hlt1_Apr09'
 Moore().Verbose = True
 Moore().EvtMax = 10000
 
+Moore().UseDBSnapshot = False
 Moore().DDDBtag   = 'MC09-20090602'
 Moore().CondDBtag = 'sim-20090402-vc-md100'
 Moore().Simulation = True
