@@ -70,15 +70,15 @@ public:
             index();
     }
     bool dump(const std::string& name,ostream& os) {
+        //TODO: try to avoid copy into os, instead return a 'window' on the file...
+        // (using boost iostreams??? (basic_array_source?))
         map<string,Info>::const_iterator i = m_index.find(name);
         if (i==m_index.end()) return false;
         m_file.seekg(i->second.offset);
         static std::vector<char> buf;
         buf.resize(i->second.size);
         m_file.read(&buf[0],buf.size());
-        for (std::vector<char>::const_iterator j=buf.begin();j!=buf.end();++j) {
-            os << *j ;
-        }
+        std::copy(buf.begin(),buf.end(),ostream_iterator<char>(os));
         return true;
     }
 
@@ -86,9 +86,7 @@ public:
     std::vector<std::string> files(const SELECTOR& selector) const {
         std::vector<std::string> f;
         for (map<string,Info>::const_iterator i = m_index.begin(); i!= m_index.end();++i) {
-            if( selector(i->first) ) { 
-                f.push_back(i->first);
-            }
+            if( selector(i->first) ) f.push_back(i->first);
         }
         return f;
     }
