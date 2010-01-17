@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.100 2010-01-14 12:37:02 spradlin Exp $
+$Id: release.notes,v 1.101 2010-01-17 10:16:28 gcowan Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,12 @@ $Id: release.notes,v 1.100 2010-01-14 12:37:02 spradlin Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2010-01-17 - Greig Cowan
+  https://savannah.cern.ch/bugs/?59906
+ - Hlt2B2JpsiXLines.py
+   Using Hlt2Shared Jpsi in the prescaled and detached lines. Vertex chi2 cut 
+   now on the phi.
 
 ! 2010-01-14 - Patrick Spradlin
   https://savannah.cern.ch/bugs/?59641

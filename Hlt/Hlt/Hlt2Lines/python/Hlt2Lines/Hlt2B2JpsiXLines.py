@@ -1,4 +1,4 @@
-# $Id: Hlt2B2JpsiXLines.py,v 1.12 2010-01-12 08:43:39 dvaneijk Exp $
+# $Id: Hlt2B2JpsiXLines.py,v 1.13 2010-01-17 10:16:19 gcowan Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -57,27 +57,18 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
     
         from HltLine.HltLine import Hlt2Line, Hlt2Member
         from Configurables import HltANNSvc
-        from Hlt2SharedParticles.BasicParticles import Muons, NoCutsKaons
+        from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
+        from Hlt2SharedParticles.BasicParticles import NoCutsKaons
         from Configurables import CombineParticles
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsiPhiPrescaledDecision" : 50375 } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsiPhiDetachedDecision" : 50376 } )
-        
-        # Make the J/psi
-        # We should use the HltSharedParticles for this, but they are not quite what
-        # we want. Discussion required.
-        jPsiCombine = Hlt2Member( CombineParticles
-                                  , "JpsiCombine"
-                                  , DecayDescriptor = "J/psi(1S) -> mu+ mu-"
-                                  , InputLocations = [Muons]
-                                  , MotherCut = "(ADMASS('J/psi(1S)')<100*MeV)"
-                                  )
 
         # Make the phi
         phiCombine = Hlt2Member( CombineParticles
                                  , "PhiCombine"
                                  , DecayDescriptor = "phi(1020) -> K+ K-"
                                  , InputLocations = [NoCutsKaons]
-                                 , MotherCut = "(M<1100*MeV) & (PT>500*MeV)"
+                                 , MotherCut = "(M<1100*MeV) & (PT>500*MeV) & (VFASPF(VCHI2/VDOF)<25)"
                                  )
         
         # Make the Bs
@@ -85,14 +76,14 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         BsCombine = Hlt2Member( CombineParticles
                                 , "BsCombine"
                                 , DecayDescriptor = "[B_s0 -> J/psi(1S) phi(1020)]cc"
-                                , InputLocations  = [jPsiCombine, phiCombine]
+                                , InputLocations  = [Jpsi2MuMu, phiCombine]
                                 , MotherCut = BsCuts
                                 )
        
         line = Hlt2Line('Bs2JpsiPhiPrescaled'
                         , prescale = self.prescale
                         , postscale = self.postscale
-                        , algos = [Muons, jPsiCombine, NoCutsKaons, phiCombine, BsCombine]
+                        , algos = [Jpsi2MuMu, NoCutsKaons, phiCombine, BsCombine]
                         )
 
         # Now do the detached 
@@ -101,7 +92,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line.clone('Bs2JpsiPhiDetached'
                    , prescale = self.prescale
                    , postscale = self.postscale
-                   , algos = [Muons, jPsiCombine, NoCutsKaons, phiCombine, BsCombine]
+                   , algos = [Jpsi2MuMu, NoCutsKaons, phiCombine, BsCombine]
                    , BsCombine = {"MotherCut": BsCutsDetached}
                    )
 
