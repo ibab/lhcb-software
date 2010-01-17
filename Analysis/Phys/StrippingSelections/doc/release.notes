@@ -5,6 +5,19 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-01-17 - Vanya Belyaev
+
+ - StrippingV0.py
+   StrippingV0Geo.py
+ 
+     few minor fixed in names 
+     enlarge mass window fo L0-Geo 
+     add monitoring for V0-Geo lines 
+
+ - StreamV0.py 
+  
+     remove line duplication 
+
 ! 2010-01-16 - Anton Poluektov 
  - Added stream "V0" with the selections from StrippingV0 and StrippingV0Geo. 
 

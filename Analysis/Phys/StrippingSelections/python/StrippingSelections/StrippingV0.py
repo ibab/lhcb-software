@@ -51,11 +51,16 @@ Get the list of all configured lines for Lambda0 :
   lines_for_Lambda0 =  v0.Lambda0 ()
 
 
+Get the list of *ALL* configured lines
+    
+   all_lines =  v0.lines ()
+    
+
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = '2010-01-14'
-__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $'
+__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $'
 # =============================================================================
 
 from Gaudi.Configuration       import *
@@ -98,6 +103,10 @@ class StrippingV0Conf(LHCbConfigurableUser):
     
        lines_for_Lambda0 =  v0.Lambda0 ()
     
+    Get the list of *ALL* configured lines
+    
+       all_lines =  v0.lines ()
+    
 
     """
     __slots__ = { 
@@ -135,6 +144,244 @@ class StrippingV0Conf(LHCbConfigurableUser):
         , 'CTauForDD'             : """ Cut on c*tau cut for DD-case             """
         , 'Monitor'               : """ Activate the monitoring ?                """
         }
+
+
+    ## Return the list of all configured stripping lines
+    #  @return the list of all configured stripping lines
+    def lines   ( slef ) :
+        """
+        Return the list of all configured stripping lines
+        
+        """
+        return self.K0S() + self.Lambda0()
+
+    ## create the list of stipping lines for K0S
+    #  @return the list of stripping line for K0S
+    def K0S     ( self ) :
+        """
+        Stripping lines for K0S 
+        """
+        from Configurables import CombineParticles
+        
+        StripK0S = CombineParticles("StrippingK0S")
+        
+        StripK0S.InputLocations  = [ "StdNoPIDsPions", "StdNoPIDsDownPions" ]
+        StripK0S.DecayDescriptor = "KS0 -> pi+ pi-"
+        
+        StripK0S.DaughtersCuts   = self._k0s_daughtersCuts () 
+        StripK0S.CombinationCut  = "AM < 1.0 * GeV " 
+        StripK0S.MotherCut       = self._k0s_motherCut     ()        
+        StripK0S.Preambulo       = self._preambulo         ()
+
+        if self.getProp ( 'Monitor' ) :
+            
+            StripK0S.Preambulo    += self._k0s_histos() 
+            StripK0S.Monitor       = True
+            StripK0S.HistoProduce  = True
+            StripK0S.HistoPrint    = True
+            StripK0S.MotherMonitor = """
+            process ( switch ( LL , massLL , switch ( DD , massDD , massLD ) ) )
+            >> EMPTY 
+            """
+            
+        from StrippingConf.StrippingLine import StrippingLine
+        
+        line1 = StrippingLine (
+            'K0SLine'          ,
+            prescale   = 1     ,
+            checkPV    = True  , ## attention! PV is required!
+            postscale  = 1     ,
+            algos      = [ StripK0S ]
+            )
+        
+        lines = [ line1 ]
+
+        ## use "wrong-sign" combination
+        if self.getProp  ( 'AddSameSign' ) :
+
+            
+            wrong_sign = StripK0S.clone ( 'StrippingK0S_ws' )
+            wrong_sign.DecayDescriptor  = ""
+            wrong_sign.DecayDescriptors = [
+                "KS0 -> pi+ pi+" , "KS0 -> pi- pi-" 
+                ]
+            
+            line1ss = line1.clone ( 
+                'K0S_wsLine'  , algos = [ wrong_sign ]
+                )
+            lines.append ( line1ss ) 
+            
+        if self.getProp ( 'Use_noPV_V0' ) :
+            
+            from Configurables import CheckPV
+            
+            noPV = CheckPV( "noPV" , MinPVs = 0 , MaxPVs = 0 )
+            
+            StripK0S_noPV           = StripK0S.clone ( 'StrippingK0S_noPV' ) 
+            StripK0S_noPV.MotherCut = self._k0s_noPV_motherCut () 
+
+            line2 = StrippingLine (
+                'K0S_noPVLine'      ,
+                prescale   = 1      ,
+                checkPV    = False  , ## attention! PV is *not* required 
+                postscale  = 1      ,
+                algos      = [ noPV , StripK0S_noPV  ]
+                )
+            
+            lines.append ( line2 ) 
+            
+            ## use "wrong-sign" combination
+            if self.getProp ( 'AddSameSign' ) :
+                
+                wrong_sign = StripK0S_noPV.clone ( 'StrippingK0S_noPV_ws' )
+                wrong_sign.DecayDescriptor  = ""
+                wrong_sign.DecayDescriptors = [
+                    "KS0 -> pi+ pi+" , "KS0 -> pi- pi-" 
+                    ]
+                
+                line2ss = line2.clone ( 
+                    'K0S_noPV_wsLine'  , algos = [ noPV , wrong_sign ]
+                    )
+                lines.append ( line2ss ) 
+                            
+        line3 = None 
+        if self.getProp ( 'Use_Geo_K0S') :
+            
+            import StrippingSelections.StrippingV0Geo as V0Geo
+
+            line3  = V0Geo.line_KS_all
+            
+            if self.getProp ( 'Monitor' ) :
+                geoalg               = V0Geo.KsAllCombineGeo
+                geoalg               = getConfigurable ( geoalg.name ( line3._name ) ) 
+                geoalg.Preambulo    += self._k0s_histos()
+                geoalg.Monitor       = True              
+                geoalg.HistoProduce  = True
+                geoalg.HistoPrint    = True
+                geoalg.MotherMonitor = """
+                process ( switch ( LL , massLL , switch ( DD , massDD , massLD ) ) )
+                >> EMPTY 
+                """ 
+                
+            lines.append ( line3 ) 
+
+
+        return lines 
+    
+    ## create the list of stipping lines for Lambda0
+    #  @return the list of stripping line for Lambda
+    def Lambda0   ( self ) :
+        """
+        Stripping lines for Lambda0
+        """
+        
+        from Configurables import CombineParticles
+        
+        StripLambda0 = CombineParticles ( "StrippingLambda0" )
+        
+        StripLambda0.InputLocations  = [ "StdNoPIDsPions"        ,
+                                         "StdNoPIDsDownPions"    ,
+                                         "StdNoPIDsProtons"      ,
+                                         "StdNoPIDsDownProtons"  ]
+        StripLambda0.DecayDescriptor = " [ Lambda0 -> p+ pi-]cc"
+        
+        StripLambda0.DaughtersCuts   = self._lam0_daughtersCuts () 
+        StripLambda0.CombinationCut  = "AM < 1.5 * GeV " 
+        StripLambda0.MotherCut       = self._lam0_motherCut     ()
+        StripLambda0.Preambulo       = self._preambulo          () 
+        
+
+        if self.getProp ( 'Monitor' ) :
+            
+            StripLambda0.Preambulo    += self._lam0_histos() 
+            StripLambda0.Monitor       = True
+            StripLambda0.HistoProduce  = True
+            StripLambda0.HistoPrint    = True
+            StripLambda0.MotherMonitor = """
+            process ( switch ( LL , massLL , switch ( DD , massDD , massLD ) ) ) 
+            >> EMPTY 
+            """
+
+        from StrippingConf.StrippingLine import StrippingLine
+        
+        line1 = StrippingLine (
+            'Lambda0Line'      ,
+            prescale   = 1     ,
+            checkPV    = True  , ## attention! PV is required!
+            postscale  = 1     ,
+            algos      = [ StripLambda0 ]
+            )
+        
+        lines = [ line1 ]
+
+        if self.getProp  ( 'AddSameSign' ) :
+            
+            wrong_sign = StripLambda0.clone ( 'StrippingLambda0_ws' )
+            wrong_sign.DecayDescriptor  = ""
+            wrong_sign.DecayDescriptors = [
+                "Lambda0 ->  p+ pi+" , "Lambda~0 -> p~- pi-" 
+                ]
+            
+            line1ss = line1.clone ( 
+                'Lambda0_wsLine'  , algos = [ wrong_sign ]
+                )
+            lines.append ( line1ss ) 
+            
+
+        if self.getProp ( 'Use_noPV_V0') :
+            
+            from Configurables import CheckPV
+            
+            noPV = CheckPV( "noPV" , MinPVs = 0 , MaxPVs = 0 )
+            
+            StripLambda0_noPV            = StripLambda0.clone ( 'StrippingLambda0_noPV' ) 
+            StripLambda0_noPV.MotherCut  = self._lam0_noPV_motherCut () 
+            
+            line2 = StrippingLine (
+                'Lambda0_noPVLine'      ,
+                prescale   = 1      ,
+                checkPV    = False  , ## attention! PV is *not* required 
+                postscale  = 1      ,
+                algos      = [ noPV , StripLambda0_noPV  ]
+                )
+
+            lines.append ( line2 ) 
+
+            if self.getProp ( 'AddSameSign' ) :
+                
+                wrong_sign = StripLambda0_noPV.clone ( 'StrippingLambda0_noPV_ws' )
+                wrong_sign.DecayDescriptor  = ""
+                wrong_sign.DecayDescriptors = [
+                    "Lambda0 -> p+ pi+" , "Lambda~0 -> p~- pi-" 
+                    ]
+                
+                line2ss = line2.clone ( 
+                    'Lambda0_noPV_wsLine'  , algos = [ noPV , wrong_sign ]
+                    )
+                lines.append ( line2ss ) 
+
+
+        if self.getProp ( 'Use_Geo_Lambda') :
+            
+            import StrippingSelections.StrippingV0Geo as V0Geo
+            
+            line3  = V0Geo.line_lambda_all
+            if self.getProp ( 'Monitor' ) : 
+                geoalg               = V0Geo.LambdaAllCombineGeo
+                geoalg               = getConfigurable ( geoalg.name ( line3._name ) ) 
+                geoalg.Preambulo    += self._lam0_histos()
+                geoalg.Monitor       = True              
+                geoalg.HistoProduce  = True
+                geoalg.HistoPrint    = True
+                geoalg.MotherMonitor = """
+                process ( switch ( LL , massLL , switch ( DD , massDD , massLD ) ) )
+                >> EMPTY 
+                """ 
+                
+            
+            lines.append ( line3 ) 
+            
+        return lines   
 
     ## define daughter cuts for K0S 
     def _k0s_daughtersCuts ( self ) :
@@ -219,228 +466,39 @@ class StrippingV0Conf(LHCbConfigurableUser):
             "LD =  ( 1 == NINTREE ( ISLONG ) ) & ( 1 == NINTREE ( ISDOWN ) ) " ,
             ]
 
-    ## create the list of stipping lines for K0S
-    #  @return the list of stripping line for K0S
-    def K0S     ( self ) :
+    ## define the list of K0S monitoring histograms 
+    def _k0s_histos ( self ) :
         """
-        Stripping lines for K0S 
+        Define the list of K0S monitoring histograms 
         """
-        
-        from Configurables import CombineParticles
-        
-        StripK0S = CombineParticles("StripK0S")
-        
-        StripK0S.InputLocations  = [ "StdNoPIDsPions", "StdNoPIDsDownPions" ]
-        StripK0S.DecayDescriptor = "KS0 -> pi+ pi-"
-        
-        StripK0S.DaughtersCuts   = self._k0s_daughtersCuts () 
-        StripK0S.CombinationCut  = "AM < 1.0 * GeV " 
-        StripK0S.MotherCut       = self._k0s_motherCut     ()        
-        StripK0S.Preambulo       = self._preambulo         ()
+        return [
+            ## define historam type (shortcut)
+            "Histo  = Gaudi.Histo1DDef"  ,
+            ## monitor LL-case
+            "massLL = monitor ( M / GeV , Histo ( 'K0S, LL-case' , 0.4 , 0.6 , 200 ) , 'LL' ) " ,
+            ## monitor DD-case
+            "massDD = monitor ( M / GeV , Histo ( 'K0S, DD-case' , 0.4 , 0.6 , 200 ) , 'DD' ) " ,
+            ## monitor LD-case
+            "massLD = monitor ( M / GeV , Histo ( 'K0S, LD-case' , 0.4 , 0.6 , 200 ) , 'LD' ) " 
+            ]
 
-        if self.getProp ( 'Monitor' ) :
-            
-            StripK0S.Preambulo += [
-                ## define historam type (shortcut)
-                "Histo  = Gaudi.Histo1DDef"  ,
-                ## monitor LL-case
-                "massLL = monitor ( M / GeV , Histo ( 'K0S, LL-case' , 0.4 , 0.6 , 200 ) , 'LL' ) " ,
-                ## monitor DD-case
-                "massDD = monitor ( M / GeV , Histo ( 'K0S, DD-case' , 0.4 , 0.6 , 200 ) , 'DD' ) " ,
-                ## monitor LD-case
-                "massLD = monitor ( M / GeV , Histo ( 'K0S, LD-case' , 0.4 , 0.6 , 200 ) , 'LD' ) " 
-                ]
-            
-            StripK0S.Monitor       = True
-            StripK0S.HistoProduce  = True
-            StripK0S.HistoPrint    = True
-            StripK0S.MotherMonitor = """
-            process ( switch ( LL , massLL , switch ( DD , massDD , massLD ) ) )
-            >> EMPTY 
-            """
-            
-        from StrippingConf.StrippingLine import StrippingLine
-        
-        line1 = StrippingLine (
-            'K0SLine'          ,
-            prescale   = 1     ,
-            checkPV    = True  , ## attention! PV is required!
-            postscale  = 1     ,
-            algos      = [ StripK0S ]
-            )
-        
-        lines = [ line1 ]
-
-        ## use "wrong-sign" combination
-        if self.getProp  ( 'AddSameSign' ) :
-
-            
-            same_sign = StripK0S.clone ( 'StripK0S_ss' )
-            same_sign.DecayDescriptor  = ""
-            same_sign.DecayDescriptors = [
-                "KS0 -> pi+ pi+" , "KS0 -> pi- pi-" 
-                ]
-            
-            line1ss = line1.clone ( 
-                'K0S_ssLine'  , algos = [ same_sign ]
-                )
-            lines.append ( line1ss ) 
-            
-        if self.getProp ( 'Use_noPV_V0' ) :
-            
-            from Configurables import CheckPV
-            
-            noPV = CheckPV( "noPV" , MinPVs = 0 , MaxPVs = 0 )
-            
-            StripK0S_noPV           = StripK0S.clone ( 'StripK0S_noPV' ) 
-            StripK0S_noPV.MotherCut = self._k0s_noPV_motherCut () 
-
-            line2 = StrippingLine (
-                'K0S_noPVLine'      ,
-                prescale   = 1      ,
-                checkPV    = False  , ## attention! PV is *not* required 
-                postscale  = 1      ,
-                algos      = [ noPV , StripK0S_noPV  ]
-                )
-            
-            lines.append ( line2 ) 
-            
-            ## use "wrong-sign" combination
-            if self.getProp ( 'AddSameSign' ) :
-                
-                same_sign = StripK0S_noPV.clone ( 'StripK0S_noPV_ss' )
-                same_sign.DecayDescriptor  = ""
-                same_sign.DecayDescriptors = [
-                    "KS0 -> pi+ pi+" , "KS0 -> pi- pi-" 
-                    ]
-                
-                line2ss = line2.clone ( 
-                    'K0S_noPV_ssLine'  , algos = [ noPV , same_sign ]
-                    )
-                lines.append ( line2ss ) 
-                            
-        line3 = None 
-        if self.getProp ( 'Use_Geo_K0S') :
-            
-            from StrippingSelections.StrippingV0Geo import line_KS_all as line3
-
-            lines.append ( line3 ) 
-
-
-        return lines 
+    ## define the list of Lambda0 monitoring histograms 
+    def _lam0_histos ( self ) :
+        """
+        Define the list of Lambda0 mionitoring histograms 
+        """
+        return  [
+            ## define historam type (shortcut)
+            "Histo  = Gaudi.Histo1DDef"  ,
+            ## monitor LL-case
+            "massLL = monitor ( M / GeV , Histo ( 'Lambda0, LL-case' , 1.030 , 1.230 , 200 ) , 'LL' ) " ,
+            ## monitor DD-case
+            "massDD = monitor ( M / GeV , Histo ( 'Lambda0, DD-case' , 1.030 , 1.230 , 200 ) , 'DD' ) " ,
+            ## monitor LD-case
+            "massLD = monitor ( M / GeV , Histo ( 'Lambda0, LD-case' , 1.030 , 1.230 , 200 ) , 'LD' ) " 
+            ]
     
-    ## create the list of stipping lines for Lambda0
-    #  @return the list of stripping line for Lambda
-    def Lambda0   ( self ) :
-        """
-        Stripping lines for Lambda0
-        """
-        
-        from Configurables import CombineParticles
-        
-        StripLambda0 = CombineParticles ( "StripLambda0" )
-        
-        StripLambda0.InputLocations  = [ "StdNoPIDsPions"        ,
-                                         "StdNoPIDsDownPions"    ,
-                                         "StdNoPIDsProtons"      ,
-                                         "StdNoPIDsDownProtons"  ]
-        StripLambda0.DecayDescriptor = " [ Lambda0 -> p+ pi-]cc"
-        
-        StripLambda0.DaughtersCuts   = self._lam0_daughtersCuts () 
-        StripLambda0.CombinationCut  = "AM < 1.5 * GeV " 
-        StripLambda0.MotherCut       = self._lam0_motherCut     ()
-        StripLambda0.Preambulo       = self._preambulo          () 
-        
 
-        if self.getProp ( 'Monitor' ) :
-            
-            StripLambda0.Preambulo += [
-                ## define historam type (shortcut)
-                "Histo  = Gaudi.Histo1DDef"  ,
-                ## monitor LL-case
-                "massLL = monitor ( M / GeV , Histo ( 'Lambda0, LL-case' , 1.030 , 1.230 , 200 ) , 'LL' ) " ,
-                ## monitor DD-case
-                "massDD = monitor ( M / GeV , Histo ( 'Lambda0, DD-case' , 1.030 , 1.230 , 200 ) , 'DD' ) " ,
-                ## monitor LD-case
-                "massLD = monitor ( M / GeV , Histo ( 'Lambda0, LD-case' , 1.030 , 1.230 , 200 ) , 'LD' ) " 
-                ]
-            
-            StripLambda0.Monitor       = True
-            StripLambda0.HistoProduce  = True
-            StripLambda0.HistoPrint    = True
-            StripLambda0.MotherMonitor = """
-            process ( switch ( LL , massLL , switch ( DD , massDD , massLD ) ) ) 
-            >> EMPTY 
-            """
-
-        from StrippingConf.StrippingLine import StrippingLine
-        
-        line1 = StrippingLine (
-            'Lambda0Line'      ,
-            prescale   = 1     ,
-            checkPV    = True  , ## attention! PV is required!
-            postscale  = 1     ,
-            algos      = [ StripLambda0 ]
-            )
-        
-        lines = [ line1 ]
-
-        if self.getProp  ( 'AddSameSign' ) :
-            
-            same_sign = StripLambda0.clone ( 'StripLambda0_ss' )
-            same_sign.DecayDescriptor  = ""
-            same_sign.DecayDescriptors = [
-                "Lambda0 ->  p+ pi+" , "Lambda~0 -> p~- pi-" 
-                ]
-            
-            line1ss = line1.clone ( 
-                'Lambda0_ssLine'  , algos = [ same_sign ]
-                )
-            lines.append ( line1ss ) 
-            
-
-        if self.getProp ( 'Use_noPV_V0') :
-            
-            from Configurables import CheckPV
-            
-            noPV = CheckPV( "noPV" , MinPVs = 0 , MaxPVs = 0 )
-            
-            StripLambda0_noPV            = StripLambda0.clone ( 'StripLambda0_noPV' ) 
-            StripLambda0_noPV.MotherCut  = self._lam0_noPV_motherCut () 
-            
-            line2 = StrippingLine (
-                'Lambda0_noPVLine'      ,
-                prescale   = 1      ,
-                checkPV    = False  , ## attention! PV is *not* required 
-                postscale  = 1      ,
-                algos      = [ noPV , StripLambda0_noPV  ]
-                )
-
-            lines.append ( line2 ) 
-
-            if self.getProp ( 'AddSameSign' ) :
-                
-                same_sign = StripLambda0_noPV.clone ( 'StripLambda0_noPV_ss' )
-                same_sign.DecayDescriptor  = ""
-                same_sign.DecayDescriptors = [
-                    "Lambda0 -> p+ pi+" , "Lambda~0 -> p~- pi-" 
-                    ]
-                
-                line2ss = line2.clone ( 
-                    'Lambda0_noPV_ssLine'  , algos = [ noPV , same_sign ]
-                    )
-                lines.append ( line2ss ) 
-
-
-        if self.getProp ( 'Use_Geo_Lambda') :
-            
-            from StrippingSelections.StrippingV0Geo import line_lambda_all as line3
-            
-            lines.append ( line3 ) 
-            
-        return lines   
-
-    
     def getProps(self) :
         """
         From HltLinesConfigurableUser

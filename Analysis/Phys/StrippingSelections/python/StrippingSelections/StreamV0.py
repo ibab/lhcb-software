@@ -1,18 +1,26 @@
+#!/usr/bin/env
+# =============================================================================
+# @file StrippingSelections/StreamV0.py
 #
-# Stripping selections 
-# for Minimum Bias physics.
-# author: Yasmine Amhis
-# date : 2009-11-11
+# Stripping selections for V0-stripping
 #
-from Gaudi.Configuration import *
-from StrippingConf.StrippingStream import StrippingStream
+# @date : 2010-01-16
+# =============================================================================
+"""
+Stripping selections for V0-stripping
+"""
+# =============================================================================
 
+from Gaudi.Configuration             import *
+from StrippingConf.StrippingStream   import StrippingStream
 from StrippingSelections.StrippingV0 import StrippingV0Conf
-from StrippingSelections import StrippingV0Geo
 
 stream = StrippingStream("V0")
 
-stream.appendLines( StrippingV0Conf().K0S() )
-stream.appendLines( StrippingV0Conf().Lambda0() )
-stream.appendLines( [ StrippingV0Geo.line_KS_all, 
-                      StrippingV0Geo.line_lambda_all ])
+v0 = StrippingV0Conf()
+
+stream.appendLines( v0.lines() )
+
+# =============================================================================
+# The END 
+# =============================================================================

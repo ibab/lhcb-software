@@ -1,6 +1,8 @@
- ########################################################################
+########################################################################
 #
 # Options for V0 Reconstruction algorithm
+#
+# @author Mathias Oleg Knecht
 #
 ########################################################################
 from os import environ
@@ -19,12 +21,13 @@ from CommonParticles.Utils import *
 
 LambdaAllCombineGeo = StrippingMember(
     CombineParticles
-    , 'LambdaCombineAllGeo'    
+    ## , 'LambdaCombineAllGeo'    
+    , 'Combine'    
     , InputLocations  = [ "StdNoPIDsDownPions", "StdNoPIDsDownProtons","StdNoPIDsPions", "StdNoPIDsProtons" ]
     , DecayDescriptor = "[Lambda0 -> p+ pi-]cc"
     , CombinationCut  = "AM < 1.5 * GeV "
     , MotherCut = """
-    ( ADMASS('Lambda0') < 20*MeV ) & 
+    ( ADMASS('Lambda0') < 100*MeV ) & 
     ( ((CHILD(MIPDV(PRIMARY), 1) * CHILD(MIPDV(PRIMARY), 2)) / MIPDV(PRIMARY))> 1*mm ) &
     ( VFASPF ( VCHI2 ) < 100 )
     """
@@ -33,7 +36,8 @@ LambdaAllCombineGeo = StrippingMember(
 ##########################################################
 KsAllCombineGeo = StrippingMember(
     CombineParticles
-    , 'KsCombineAllGeo'    
+    ##, 'KsCombineAllGeo'    
+    , 'Combine'    
     ,  InputLocations  = [ "StdNoPIDsDownPions","StdNoPIDsPions" ]
     ,  DecayDescriptor = " KS0 -> pi+ pi- "
     ,  CombinationCut  = " AM < 1*GeV "                                    
@@ -46,13 +50,13 @@ KsAllCombineGeo = StrippingMember(
 
 ##########################################################################
 line_lambda_all= StrippingLine(
-    'LambdaAllGeo'
+    'LambdaAllGeoLine'
     , prescale = 1
     , algos = [  LambdaAllCombineGeo ])
 
 
 line_KS_all= StrippingLine(
-    'KSAllGeo'
+    'KSAllGeoLine'
     , prescale = 1
     , algos = [  KsAllCombineGeo ])
 
