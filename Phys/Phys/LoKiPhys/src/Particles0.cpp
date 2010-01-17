@@ -1,10 +1,11 @@
-// $Id: Particles0.cpp,v 1.19 2009-02-11 12:41:49 ibelyaev Exp $
+// $Id: Particles0.cpp,v 1.20 2010-01-17 16:48:42 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // STD & STL
 // ============================================================================
 #include <algorithm>
+#include <cmath>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -377,6 +378,10 @@ std::ostream&
 LoKi::Particles::MomentumZ::fillStream( std::ostream& s ) const 
 { return s << "PZ" ; }
 // ============================================================================
+LoKi::Particles::PseudoRapidity*
+LoKi::Particles::PseudoRapidity::clone() const 
+{ return new LoKi::Particles::PseudoRapidity ( *this ) ; }
+// ============================================================================
 LoKi::Particles::PseudoRapidity::result_type 
 LoKi::Particles::PseudoRapidity::operator() 
   ( LoKi::Particles::PseudoRapidity::argument p ) const
@@ -385,6 +390,66 @@ LoKi::Particles::PseudoRapidity::operator()
   Error(" Invalid Particle, return 'InvalidMomenum'");
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
 }
+// ============================================================================
+double LoKi::Particles::PseudoRapidity::y 
+( const Gaudi::LorentzVector& v ) const
+{
+  const double e  = v.E  () ;
+  const double pz = v.Pz () ;
+  return 0.5*std::log( (e+pz)/(e-pz) ) ;
+}
+// ============================================================================
+double LoKi::Particles::PseudoRapidity::y0
+( const Gaudi::LorentzVector& v ) const
+{
+  const double e  = v.E  () ;
+  const double p  = v.P  () ;
+  return 0.5*std::log( (e+p)/(e-p) ) ;
+}
+// ============================================================================
+std::ostream& 
+LoKi::Particles::PseudoRapidity::fillStream( std::ostream& s ) const 
+{ return s << "ETA" ; }
+// ============================================================================
+std::ostream& 
+LoKi::Particles::Rapidity::fillStream( std::ostream& s ) const 
+{ return s << "Y" ; }
+// ============================================================================
+std::ostream& 
+LoKi::Particles::Rapidity0::fillStream( std::ostream& s ) const 
+{ return s << "Y0" ; }
+// ============================================================================
+
+
+// ============================================================================
+LoKi::Particles::Rapidity*
+LoKi::Particles::Rapidity::clone() const 
+{ return new LoKi::Particles::Rapidity ( *this ) ; }
+// ============================================================================
+LoKi::Particles::Rapidity::result_type 
+LoKi::Particles::Rapidity::operator() 
+  ( LoKi::Particles::Rapidity::argument p ) const
+{
+  if( 0 != p ) { return y ( p ) ; }                        // RETURN 
+  Error(" Invalid Particle, return 'InvalidMomenum'");
+  return LoKi::Constants::InvalidMomentum;                   // RETURN 
+}
+// ============================================================================
+LoKi::Particles::Rapidity0*
+LoKi::Particles::Rapidity0::clone() const 
+{ return new LoKi::Particles::Rapidity0 ( *this ) ; }
+// ============================================================================
+LoKi::Particles::Rapidity0::result_type 
+LoKi::Particles::Rapidity0::operator() 
+  ( LoKi::Particles::Rapidity0::argument p ) const
+{
+  if ( 0 != p ) { return y0 ( p ) ; }                        // RETURN 
+  Error(" Invalid Particle, return 'InvalidMomenum'");
+  return LoKi::Constants::InvalidMomentum;                   // RETURN 
+}
+// ============================================================================
+
+
 // ============================================================================
 LoKi::Particles::Phi::result_type 
 LoKi::Particles::Phi::operator() 

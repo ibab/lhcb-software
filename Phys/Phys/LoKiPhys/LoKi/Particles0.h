@@ -1,4 +1,4 @@
-// $Id: Particles0.h,v 1.19 2009-02-11 12:41:49 ibelyaev Exp $
+// $Id: Particles0.h,v 1.20 2010-01-17 16:48:42 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES0_H 
 #define LOKI_PARTICLES0_H 1
@@ -406,8 +406,12 @@ namespace LoKi
     };
     // ========================================================================
     /** @class PseudoRapidity
-     *  evaluator of the seudorapidity of the particle 
-     *  
+     *  evaluator of the pseudorapidity of the particle 
+     *
+     *  @see LoKi::Cuts::ETA 
+     *  @see LoKi::Cuts::Y
+     *  @see LoKi::Cuts::Y0 
+     *
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
@@ -417,19 +421,76 @@ namespace LoKi
     public:
       // ======================================================================
       /// clone method (mandatory!)
-      virtual PseudoRapidity* clone() const 
-      { return new PseudoRapidity ( *this ) ; }
+      virtual PseudoRapidity* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// the specific printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return s << "ETA" ; }
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
       /// get eta
-      result_type eta ( argument p ) const 
-      { return p -> momentum() . Eta () ; }
+      double eta ( argument                    p ) const 
+      { return eta ( p -> momentum() ) ; }
+      /// get eta
+      double eta ( const Gaudi::LorentzVector& v ) const 
+      { return v . Eta () ; }
+      /// get rapidity 
+      double y  ( argument                    p  ) const 
+      { return y ( p->momentum() ) ; }
+      /// get rapidity 
+      double y  ( const Gaudi::LorentzVector& v  ) const ;
+      /// get rapidity0 
+      double y0 ( argument                    p  ) const 
+      { return y ( p->momentum() ) ; }
+      /// get rapidity 
+      double y0 ( const Gaudi::LorentzVector& v  ) const ;
       // ======================================================================
-   };
+    };
+    // ========================================================================
+    /** @class Rapidity
+     *  evaluator of the rapidity of the particle 
+     *
+     *  \f$ y = \frac{1}{2}\log \frac{ E - p_z }{ E + p_z } \f$ 
+     *
+     *  @see LoKi::Cuts::Y 
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    class Rapidity : public PseudoRapidity 
+    {    
+    public:
+      // ======================================================================
+      /// clone method (mandatory!)
+      virtual Rapidity* clone() const ;
+      /// the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class Rapidity0
+     *  evaluator of the rapidity of the particle 
+     *
+     *  \f$ y_0 = \frac{1}{2}\log \frac{ E - p }{ E + p } \f$ 
+     *
+     *  @see LoKi::Cuts::Y0
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    class Rapidity0 : public Rapidity 
+    {    
+    public:
+      // ======================================================================
+      /// clone method (mandatory!)
+      virtual Rapidity0* clone() const ;
+      /// the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    };
     // ========================================================================    
     /** @class Phi
      *  evaluator of the 'Phi' of the particle 

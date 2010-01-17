@@ -408,6 +408,12 @@ QPT1     = LoKi.Particles.TransverseMomentumQ ( 1 )
 QPT2     = LoKi.Particles.TransverseMomentumQ ( 2 ) 
 
 
+## @see LoKi::Cuts::Y
+Y        = LoKi.Particles.Rapidity  ()
+## @see LoKi::Cuts::Y0
+Y0       = LoKi.Particles.Rapidity0 ()
+
+
 # cosine of the decay  angle
 LV0    = LoKi.Particles.DecayAngle
 # cosine of the decay  angle for the first  daughter 

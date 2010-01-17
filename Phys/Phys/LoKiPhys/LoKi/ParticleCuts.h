@@ -1,4 +1,4 @@
-// $Id: ParticleCuts.h,v 1.40 2010-01-08 15:10:06 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.41 2010-01-17 16:48:42 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -6327,6 +6327,31 @@ namespace LoKi
      *  @date 2006-02-15
      */
     typedef LoKi::Particles::WrongMass                                     WM ;
+    // ========================================================================
+    /** @var Y
+     *  Evaluator of particle rapidity
+     *  \f$ y = \frac{1}{2}\log \frac{ E - p_z }{E + p_z } \f$ 
+     *  @see LoKi::Particles::Rapidity 
+     *  @see LoKi::Particles::Rapidity0 
+     *  @see LoKi::Particles::PseudoRapidity 
+     *  @see LoKi::Cuts::ETA
+     *  @see LoKi::Cuts::Y0
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2010-01-17
+     */
+    const LoKi::Particles::Rapidity                                         Y ;
+    // ========================================================================
+    /** @var Y0
+     *  Evaluator of particle rapidity
+     *  \f$ y_0 = \frac{1}{2}\log \frac{ E - p }{ E + p } \f$ 
+     *  @see LoKi::Particles::Rapidity 
+     *  @see LoKi::Particles::PseudoRapidity 
+     *  @see LoKi::Cuts::ETA
+     *  @see LoKi::Cuts::Y
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2010-01-17
+     */
+    const LoKi::Particles::Rapidity0                                       Y0 ;
     // ========================================================================
     /** @var ZERO
      *  the trivial functor which always evaluates to 0
