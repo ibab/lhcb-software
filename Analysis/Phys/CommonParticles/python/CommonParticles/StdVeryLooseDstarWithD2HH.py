@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdVeryLooseDstarWithD2HH.py,v 1.2 2010-01-05 10:46:54 pkoppenb Exp $ 
+# $Id: StdVeryLooseDstarWithD2HH.py,v 1.3 2010-01-18 10:08:49 gcowan Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdVeryLooseDstarWithD02HH.py
 #  configuration file for 'Standard VeryLoose Dstar WithD02HH' 
@@ -12,7 +12,7 @@ Configuration file for 'Standard VeryLoose Dstar WithD02HH'
 """
 __author__  = "Marta Calvi"
 __date__ = '10/12/2009'
-__version__ = "version $Revision: 1.2 $"
+__version__ = "version $Revision: 1.3 $"
 
 # =============================================================================
 __all__ = (
@@ -32,7 +32,7 @@ from CommonParticles.Utils import *
 StdVeryLooseDstarWithD02KPi = CombineParticles ( 'StdVeryLooseDstarWithD02KPi' )
 
 StdVeryLooseDstarWithD02KPi.InputLocations = [ "StdNoPIDsPions", "StdNoPIDsUpPions", "StdVeryLooseD02KPi" ]
-StdVeryLooseDstarWithD02KPi.DecayDescriptor = "[D*(2010)+ -> pi+ D0]cc" 
+StdVeryLooseDstarWithD02KPi.DecayDescriptor = "[D*(2010)+ -> D0 pi+]cc" 
 
 StdVeryLooseDstarWithD02KPi.CombinationCut = "(ADAMASS('D*(2010)+')<50*MeV) & (APT>1250*MeV)"
 StdVeryLooseDstarWithD02KPi.MotherCut = "(VFASPF(VCHI2/VDOF)<25) & (M-MAXTREE('D0'==ABSID,M)<165.5)"
@@ -46,7 +46,7 @@ locations = updateDoD ( StdVeryLooseDstarWithD02KPi )
 #
 StdVeryLooseDstarWithD02KPiDCS = StdVeryLooseDstarWithD02KPi.clone("StdVeryLooseDstarWithD02KPiDCS")
 GaudiSequencer("SeqStdVeryLooseDstarWithD02KPiDCS").Members += [ StdVeryLooseDstarWithD02KPiDCS ] 
-StdVeryLooseDstarWithD02KPiDCS.DecayDescriptor = "[D*(2010)+ -> pi+ D0]cc"
+StdVeryLooseDstarWithD02KPiDCS.DecayDescriptor = "[D*(2010)+ -> D0 pi+]cc"
 StdVeryLooseDstarWithD02KPiDCS.InputLocations = [ "StdNoPIDsPions", "StdNoPIDsUpPions", "StdVeryLooseD02KPiDCS" ]
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdVeryLooseDstarWithD02KPiDCS )
@@ -56,7 +56,7 @@ locations = updateDoD ( StdVeryLooseDstarWithD02KPiDCS )
 #
 StdVeryLooseDstarWithD02KK = StdVeryLooseDstarWithD02KPi.clone("StdVeryLooseDstarWithD02KK")
 GaudiSequencer("SeqStdVeryLooseDstarWithD02KK").Members += [ StdVeryLooseDstarWithD02KK ] 
-StdVeryLooseDstarWithD02KK.DecayDescriptor = "[D*(2010)+ -> pi+ D0]cc"
+StdVeryLooseDstarWithD02KK.DecayDescriptor = "[D*(2010)+ -> D0 pi+]cc"
 StdVeryLooseDstarWithD02KK.InputLocations = [  "StdNoPIDsPions", "StdNoPIDsUpPions", "StdVeryLooseD02KK" ]
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdVeryLooseDstarWithD02KK )
@@ -66,7 +66,7 @@ locations = updateDoD ( StdVeryLooseDstarWithD02KK )
 #
 StdVeryLooseDstarWithD02PiPi = StdVeryLooseDstarWithD02KK.clone("StdVeryLooseDstarWithD02PiPi")
 GaudiSequencer("SeqStdVeryLooseDstarWithD02PiPi").Members += [ StdVeryLooseDstarWithD02PiPi ] 
-StdVeryLooseDstarWithD02PiPi.DecayDescriptor = "[D*(2010)+ -> pi+ D0]cc"
+StdVeryLooseDstarWithD02PiPi.DecayDescriptor = "[D*(2010)+ -> D0 pi+]cc"
 StdVeryLooseDstarWithD02PiPi.InputLocations = [  "StdNoPIDsPions", "StdNoPIDsUpPions", "StdVeryLooseD02PiPi" ]
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdVeryLooseDstarWithD02PiPi )

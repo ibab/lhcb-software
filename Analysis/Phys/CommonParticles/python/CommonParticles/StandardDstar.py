@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StandardDstar.py,v 1.2 2009-12-23 12:28:07 poluekt Exp $ 
+# $Id: StandardDstar.py,v 1.3 2010-01-18 10:08:49 gcowan Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StandardDstar.py
 #  configuration file for 'Standard D*' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard D*'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 
 _locations = {}
