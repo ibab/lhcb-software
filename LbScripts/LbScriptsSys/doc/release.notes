@@ -1,3 +1,14 @@
+2010-01-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v5r0. Summary of the main changes. Please
+	look at the package release.notes files for details and credits. 
+	- added a new script genProjectSetup that generates the setup script for 
+	  a CMT project.
+	- new LbConfiguration.Version module that holds the LHCb version schemes.
+	- implemented the CMTCONFIG detection in LbConfiguration.Platform
+	- added full support for the Erasmus project.
+	- added curses dialog to getPack
+
 2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v4r4
