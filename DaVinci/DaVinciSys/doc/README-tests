@@ -12,7 +12,6 @@ cmt qmtest_run davincisys.fixedfile.fixedfile-brunel-v35r8-2009-dst-withtruth >!
 cmt qmtest_run davincisys.fixedfile.fixedfile-brunel-v35r8-2009-dst >! fixedfile-brunel-v35r8-2009-dst &
 cmt qmtest_run davincisys.fixedfile.fixedfile-brunel-v35r8-2009-xdst-withtruth-spillover >! fixedfile-brunel-v35r8-2009-xdst-withtruth-spillover &
 cmt qmtest_run davincisys.fixedfile.fixedfile-brunel-v35r8-2009-xdst-withtruth >! fixedfile-brunel-v35r8-2009-xdst-withtruth &
-cmt qmtest_run davincisys.stripping.test_dc06stripping >! dc06stripping & 
 cmt qmtest_run davincisys.stripping.test_bu2llk_dc06 >! bu2llk_dc06 & 
 cmt qmtest_run davincisys.stripping.test_bd2kstarmumu_mc09 >! bd2kstarmumu_mc09 & 
 cmt qmtest_run davincisys.stripping.test_stripping >! stripping & 

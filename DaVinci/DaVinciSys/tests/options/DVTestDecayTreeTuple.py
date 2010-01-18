@@ -65,7 +65,7 @@ from StrippingConf.StrippingStream import StrippingStream
 from StrippingSelections import StrippingBd2JpsiKS
 
 stream = StrippingStream("Test")
-stream.appendLines( [ StrippingBd2JpsiKS.line ] )
+stream.appendLines( [ StrippingBd2JpsiKS.line1 ] )
 
 sc = StrippingConf()
 sc.appendStream( stream )
