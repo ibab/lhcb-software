@@ -2,6 +2,11 @@
 
 	* cmt/requirements: release of version v5r0
 
+2010-01-18  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: fixed a problem with the generated script,
+	it was containing all the untouched variables.
+
 2010-01-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: removed the platform detection. Now uses the

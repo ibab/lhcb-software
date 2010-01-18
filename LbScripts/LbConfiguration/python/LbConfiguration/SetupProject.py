@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # pylint: disable-msg=E1103,W0141
-_cvs_id = "$Id: SetupProject.py,v 1.23 2010-01-13 13:56:19 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.24 2010-01-18 18:01:56 marcocle Exp $"
 
 import os, sys, re, time
 from xml.sax import parse, ContentHandler
@@ -11,7 +11,7 @@ from tempfile import mkdtemp, mkstemp
 
 from LbConfiguration import createProjectMakefile
 from LbUtils.CVS import CVS2Version
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.23 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.24 $")
 
 # subprocess is available since Python 2.4, but LbUtils guarantees that we can
 # import it also in Python 2.3
@@ -110,6 +110,13 @@ class TemporaryEnvironment:
         else:
             self.old_values[key] = self.env[key]
         del self.env[key]
+
+    def __len__(self):
+        """
+        Return the size of the internal dictionary.
+        Needed for the conversion to boolean.
+        """
+        return len(self.env)
 
     def keys(self):
         """
@@ -759,7 +766,7 @@ class SetupProject:
         
         ## Dictionary to store the changes to the environment.
         #  It is initialized as a copy of the current environment.
-        self.environment = dict(os.environ)
+        self.environment = TemporaryEnvironment(dict(os.environ))
         
         self.opts = None
         self.args = None
@@ -816,7 +823,7 @@ class SetupProject:
 
     ## Helper function to simplify the calls to CMT. 
     def cmt(self, cmd, args = [], cwd = None):
-        return cmt(cmd, args, environment = self.environment, cwd = cwd)
+        return cmt(cmd, args, environment = dict(self.environment), cwd = cwd)
 
     def check_environment(self):
         """
@@ -1329,7 +1336,7 @@ class SetupProject:
         script = self.cmt("setup", "-" + self.shell, cwd = root_dir)
 
         #parse the output
-        new_env = dict(self.environment)
+        new_env = TemporaryEnvironment(self.environment)
         # this sets the new environment end return the line it cannot understand
         script = ShellParser[self.shell](script, new_env)
 
@@ -1373,7 +1380,7 @@ class SetupProject:
         if (errors):
             self._debug("----- gen_setup(): errors != [] -----")
         # Do not forget changes in the environment
-        _sync_dicts(new_env, self.environment)
+        new_env.commit()
         return ( "\n".join(lines), errors )
 
     def parse_args(self,args = sys.argv[1:]):
@@ -1663,12 +1670,7 @@ class SetupProject:
                         newlist.append(l)
                 self.environment[p] = os.pathsep.join(newlist)
 
-        # @FIXME: This is not really changing the environment, but I do not have
-        # yet another way to generate the output script.
-        env_ = TemporaryEnvironment(dict(os.environ))
-        _sync_dicts(self.environment, env_)
-        
-        output_script = env_.gen_script(self.shell)
+        output_script = self.environment.gen_script(self.shell)
         output_script += script
         if not self.opts.silent :
             for m in messages:
