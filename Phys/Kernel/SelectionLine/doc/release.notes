@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.1.1.1 2010-01-18 14:52:00 graven Exp $
+! $Id: release.notes,v 1.2 2010-01-18 15:08:35 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/SelectionLine
 ! Responsible : Gerhard Raven
@@ -9,3 +9,5 @@
  - initial import of code adapted from Hlt/HltLine, together with 
    HltBase/HltHistogramUtilities (the latter is here for dependency reasons
    only, and should be moved 'further' down in the dependency stack)
+ - reshuffle a bit.. (Line.{h,cpp} -> SelectionLine.{h,cpp}, move SelectionLine.h
+   into Kernel)

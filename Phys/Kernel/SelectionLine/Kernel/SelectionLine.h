@@ -1,4 +1,4 @@
-// $Id: Line.h,v 1.1.1.1 2010-01-18 14:52:00 graven Exp $
+// $Id: SelectionLine.h,v 1.1 2010-01-18 15:08:35 graven Exp $
 #ifndef SELECTION_LINE_H
 #define SELECTION_LINE_H 1
 
