@@ -1,9 +1,17 @@
-!$Id: release.notes,v 1.24 2009-10-28 13:53:52 jpalac Exp $
+!$Id: release.notes,v 1.25 2010-01-18 08:43:10 pkoppenb Exp $
 !===========================================================================
 ! Package     : VertexFitCheck
 ! Responsible : Yuehong Xie
 ! Puspose     : A set of tests for components in the Phys/VertexFit package.
 !===========================================================================
+
+! 2010-01-18 - Patrick Koppenburg
+ - task #13386, #12929: Remove obsolete ContextTool, geomDisplCalculator
+   PropertimeChecher: 
+      . Replace geomTool with distance tool  
+      . This algorithm duplicates some functionality of decaytreetuple
+        Can it be removed? Can some variables be optained from a loaded tuple tool?
+ - v1r5
 
 !===================== VertexFitCheck v1r4p1 2009-10-28 ====================
 

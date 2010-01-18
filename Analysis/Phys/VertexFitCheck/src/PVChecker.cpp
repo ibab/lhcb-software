@@ -1,4 +1,4 @@
-// $Id: PVChecker.cpp,v 1.2 2009-08-18 09:14:20 jpalac Exp $
+// $Id: PVChecker.cpp,v 1.3 2010-01-18 08:43:10 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -10,8 +10,6 @@
 #include "Event/MCVertex.h"
 #include "Event/Track.h"
 #include "Event/MCHeader.h"
-
-#include "Kernel/IContextTool.h"
 
 // local
 #include "PVChecker.h"
@@ -51,12 +49,6 @@ StatusCode PVChecker::initialize() {
   if (!sc) return sc;
 
   debug() << "==> Initialize" << endmsg;
-
-  m_contextTool = tool<IContextTool>("ContextTool",this );
-  if (!m_contextTool) {
-    fatal() << "    Unable to retrieve ContextTool" ;
-    return StatusCode::FAILURE;
-  }
 
   return StatusCode::SUCCESS;
 }

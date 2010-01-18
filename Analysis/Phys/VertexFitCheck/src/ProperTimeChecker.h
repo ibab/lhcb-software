@@ -1,4 +1,4 @@
-// $Id: ProperTimeChecker.h,v 1.5 2009-08-18 09:14:20 jpalac Exp $
+// $Id: ProperTimeChecker.h,v 1.6 2010-01-18 08:43:10 pkoppenb Exp $
 #ifndef PROPERTIMECHECKER_H 
 #define PROPERTIMECHECKER_H 1
 
@@ -10,8 +10,6 @@
 
 
 class ILifetimeFitter;
-class IGeomDispCalculator;
-class IContextTool;
 class IPVReFitter;
 
 /** @class ProperTimeChecker ProperTimeChecker.h
@@ -22,6 +20,9 @@ class IPVReFitter;
  *  B (or other) particles, it fills a ntuple with 
  *  fitted values, true values and pulls of PV+SV
  *  position, momentum and proper time.
+ *
+ *  @todo This algorithm duplicates some functionality of decaytreetuple
+ *  Can it be removed? Can some variables be optained from a loaded tuple tool?
  *
  *  @author Yuehong Xie
  *  @date   2006-5-25
@@ -49,8 +50,6 @@ private:
 private:
 
   ILifetimeFitter* m_timeFitter;
-  IContextTool* m_contextTool;
-  const IGeomDispCalculator* m_geomTool;
   IPVReFitter* m_pvReFitter;
   IPVReFitter* m_cheatedPVReFitter;
 

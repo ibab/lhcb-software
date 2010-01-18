@@ -1,4 +1,4 @@
-// $Id: PVChecker.h,v 1.3 2009-08-18 09:14:20 jpalac Exp $
+// $Id: PVChecker.h,v 1.4 2010-01-18 08:43:10 pkoppenb Exp $
 #ifndef PVCHECKER_H 
 #define PVCHECKER_H 1
 
@@ -7,8 +7,6 @@
 #include "Kernel/DVAlgorithm.h"
 
 #include "Kernel/Particle2MCLinker.h"
-
-class IContextTool;
 
 /** @class PVChecker PVChecker.h
  *  
@@ -40,8 +38,6 @@ private:
   const LHCb::RecVertex* MCPV2PV(const LHCb::MCVertex* mcpv, int & nTrMatched);
 
 private:
-
-  IContextTool* m_contextTool;
 
 };
 #endif 

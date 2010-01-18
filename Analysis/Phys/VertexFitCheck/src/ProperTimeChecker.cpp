@@ -1,4 +1,4 @@
-// $Id: ProperTimeChecker.cpp,v 1.8 2009-08-18 09:14:20 jpalac Exp $
+// $Id: ProperTimeChecker.cpp,v 1.9 2010-01-18 08:43:10 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -13,7 +13,6 @@
 #include "Event/MCHeader.h"
 
 #include "Kernel/ILifetimeFitter.h"
-#include "Kernel/IContextTool.h"
 #include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IPVReFitter.h"   
 
@@ -67,34 +66,8 @@ StatusCode ProperTimeChecker::initialize() {
                                     std::vector<std::string>(1,m_particlePath));
 
   m_timeFitter =  tool<ILifetimeFitter> ("PropertimeFitter" , this);
-  if (!m_timeFitter) {
-    fatal() << "    Unable to retrieve PropertimeFitter  tool" ;
-    return StatusCode::FAILURE;
-  }
-
-  m_contextTool = tool<IContextTool>("ContextTool",this );
-  if (!m_contextTool) {
-    fatal() << "    Unable to retrieve ContextTool" ;
-    return StatusCode::FAILURE;
-  }
-
-  m_geomTool = m_contextTool->geomTool();
-  if (!m_geomTool) {
-    fatal() << "    Unable to retrieve GeomDispCalculator " ;
-    return StatusCode::FAILURE;
-  }
-
   m_pvReFitter = tool<IPVReFitter>(m_PVReFitterName, this );
-  if (!m_pvReFitter) {
-    fatal() << "    Unable to retrieve " << m_PVReFitterName ;
-    return StatusCode::FAILURE;
-  }
-
   m_cheatedPVReFitter = tool<IPVReFitter>("CheatedPVReFitter",this );
-  if (!m_cheatedPVReFitter) {
-    fatal() << "    Unable to retrieve CheatedPVReFitter " ;
-    return StatusCode::FAILURE;
-  }
 
   return StatusCode::SUCCESS;
 }
@@ -613,19 +586,18 @@ const LHCb::RecVertex* ProperTimeChecker::closestPV(const LHCb::Particle* part)
 {
   const LHCb::RecVertex* bestPV=0;
 
-  double smallest = 999.;
+  double smallest = 999999.;
   LHCb::RecVertices* PVs = get<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary);
   for( LHCb::RecVertices::const_iterator ipv = PVs->begin();
        ipv != PVs->end(); ipv++ ) {
       const LHCb::RecVertex* tmppv = *ipv;
       double tmpip=9999.;
-      double tmpiperr=1.;
-      StatusCode sc = m_geomTool->calcImpactPar(*part,*tmppv,tmpip,tmpiperr);
+      double tmpipchi2=1000.;
+      StatusCode sc = distanceCalculator()->distance(part,tmppv,tmpip,tmpipchi2);
       if(sc.isSuccess()) {
-        double tmpsig=tmpip/tmpiperr;
-        if(tmpsig<smallest) {
+        if(tmpipchi2<smallest) {
           bestPV = tmppv;
-          smallest = tmpsig;
+          smallest = tmpipchi2;
         }
       }
   }
