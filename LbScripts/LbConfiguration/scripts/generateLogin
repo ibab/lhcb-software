@@ -208,6 +208,7 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
     if not building :
         setupprojargs.append("--no-user-area")
     setupprojargs.append("--disable-CASTOR")
+    setupprojargs.append("--no-touch-logfile")
     if not withoutpython :
         setupprojargs.append("--runtime-project")            
         setupprojargs.append("LCGCMT")
