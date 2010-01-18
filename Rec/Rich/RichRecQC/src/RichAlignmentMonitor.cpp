@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.15 2010-01-18 16:02:49 papanest Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.16 2010-01-18 20:33:29 papanest Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -39,16 +39,16 @@ AlignmentMonitor::AlignmentMonitor( const std::string& name,
     m_plotAllHPDs       ( false )
 {
   // Maximum number of tracks
-  declareProperty( "MaxRichRecTracks",    m_maxUsedTracks = 200 );
-  declareProperty( "DeltaThetaRange",     m_deltaThetaRange = 0.004 );
-  declareProperty( "UseMCTruth",          m_useMCTruth     = false );
-  declareProperty( "PreBookHistos",       m_preBookHistos );
-  declareProperty( "ParticleType",        m_particleType = 2 ); // pion
-  declareProperty( "RichDetector",        m_richTemp = 1 ); // default is Rich2
-  declareProperty( "MinimalHistoOutput",  m_minimalHistoOutput = true );
-  declareProperty( "OnlyPrebookedMirrors",m_onlyPrebookedMirrors = true );
-  declareProperty( "UseOnlyIsolatedTracks",m_useOnlyIsolatedTracks = true );
-  declareProperty( "HPDList",             m_HPDList );
+  declareProperty( "MaxRichRecTracks",     m_maxUsedTracks = 200 );
+  declareProperty( "DeltaThetaRange",      m_deltaThetaRange = 0.004 );
+  declareProperty( "UseMCTruth",           m_useMCTruth     = false );
+  declareProperty( "PreBookHistos",        m_preBookHistos );
+  declareProperty( "ParticleType",         m_particleType = 2 ); // pion
+  declareProperty( "RichDetector",         m_richTemp = 1 ); // default is Rich2
+  declareProperty( "MinimalHistoOutput",   m_minimalHistoOutput = true );
+  declareProperty( "OnlyPrebookedMirrors", m_onlyPrebookedMirrors = true );
+  declareProperty( "UseOnlyIsolatedTracks",m_useOnlyIsolatedTracks = false );
+  declareProperty( "HPDList",              m_HPDList );
 }
 
 //=============================================================================

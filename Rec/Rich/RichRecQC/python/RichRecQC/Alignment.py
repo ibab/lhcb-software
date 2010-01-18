@@ -1,5 +1,5 @@
 
-__version__ = "$Id: Alignment.py,v 1.12 2010-01-18 16:02:48 papanest Exp $"
+__version__ = "$Id: Alignment.py,v 1.13 2010-01-18 20:33:29 papanest Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -63,6 +63,7 @@ class RichAlignmentConf(RichConfigurableUser):
             if self.getProp("HistoOutputLevel")[0] == "Full" :
                 RichAlignMoniR1.MinimalHistoOutput = False
                 RichAlignMoniR1.OnlyPrebookedMirrors = False
+                RichAlignMoniR1.UseOnlyIsolatedTracks = True 
             elif self.getProp("HistoOutputLevel")[0] == "OnlyPrebookedMirrors" :
                 RichAlignMoniR1.MinimalHistoOutput = False
                 RichAlignMoniR1.OnlyPrebookedMirrors = True
@@ -101,6 +102,7 @@ class RichAlignmentConf(RichConfigurableUser):
             if self.getProp("HistoOutputLevel")[1] == "Full" :
                 RichAlignMoniR2.MinimalHistoOutput = False
                 RichAlignMoniR2.OnlyPrebookedMirrors = False
+                RichAlignMoniR2.UseOnlyIsolatedTracks = True 
             elif self.getProp("HistoOutputLevel")[1] == "OnlyPrebookedMirrors" :
                 RichAlignMoniR2.MinimalHistoOutput = False
                 RichAlignMoniR2.OnlyPrebookedMirrors = True
