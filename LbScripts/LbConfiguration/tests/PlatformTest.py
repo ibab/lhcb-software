@@ -20,6 +20,10 @@ class PlatformTestCase(unittest.TestCase):
         print machine.CMTCompatibleConfig(debug=True)
         print machine.CMTSupportedConfig()
         print machine.CMTSupportedConfig(debug=True)
+        print machine.nativeCompilerVersion()
+        print machine.nativeCompiler()
+        print machine.CMTNativeConfig()
+        print machine.CMTNativeConfig(debug=True)
         print "================================================================"
         self.assertEqual(machine.OSFlavour(teststring="Scientific Linux CERN SLC release 5.4 (Boron)"), "Scientific Linux")
         print machine.OSVersion()
@@ -30,6 +34,10 @@ class PlatformTestCase(unittest.TestCase):
         print machine.CMTCompatibleConfig(debug=True)
         print machine.CMTSupportedConfig()
         print machine.CMTSupportedConfig(debug=True)
+        print machine.nativeCompilerVersion()
+        print machine.nativeCompiler()
+        print machine.CMTNativeConfig()
+        print machine.CMTNativeConfig(debug=True)
     def testVersion(self):
         pass
 

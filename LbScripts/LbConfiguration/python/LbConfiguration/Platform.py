@@ -102,22 +102,24 @@ def getArchitecture(cmtconfig):
 
 def getConfig(architecture, platformtype, compiler, debug=False):
     cmtconfig = None
-    if platformtype == "slc5" :
+    if platformtype.startswith("win") :
+        cmtconfig = "_".join([platformtype, compiler])
+    else :
         if architecture == "ia32" :
             architecture = "i686"
-        if architecture == "amd64" :
+        elif architecture == "amd64" :
             architecture = "x86_64"
         cmtconfig = "-".join([architecture, platformtype, compiler, "opt"])
-    elif not platformtype.startswith("win") :
-        if architecture in [ "i686", "i586", "i486", "i386"] :
-            architecture = "ia32"
-        if architecture == "x86_64" :
-            architecture = "amd64"
-        cmtconfig = "_".join([platformtype, architecture, compiler])
-    else :
-        cmtconfig = "_".join([platformtype, compiler])
+        if platformtype == "slc4" or platformtype == "slc3" :
+            if architecture in arch_runtime_compatiblity["ia32"] :
+                architecture = "ia32"
+            elif architecture == "x86_64" :
+                architecture = "amd64"
+            cmtconfig = "_".join([platformtype, architecture, compiler])
+                
     if debug :
         cmtconfig = getBinaryDbg(cmtconfig)
+
     return cmtconfig
 
 # officially supported binaries
@@ -173,12 +175,14 @@ flavor_runtime_compatibility = {
                                 }
 
 arch_runtime_compatiblity = {
-                                "x86_64" : ["x86_64", "ia64", "i686", "i586", "i486", "i386"],
-                                "ia64" :   ["x86_64", "ia64", "i686", "i586", "i486", "i386"],
+                                "x86_64" : ["x86_64", "i686", "i586", "i486", "i386"],
+                                "ia64" :   ["ia64", "i686", "i586", "i486", "i386"],
+                                "ia32" :   ["ia32", "i686", "i586", "i486", "i386"],
                                 "i686" :   ["i686", "i586", "i486", "i386"],
                                 "i586" :   ["i586", "i486", "i386"],
                                 "i486" :   ["i486", "i386"],
-                                "i386" :   ["i386"]
+                                "i386" :   ["i386"],
+                                "ppc"  :   ["ppc"]
                                 }
 
 flavor_runtime_equivalence = {
@@ -196,6 +200,7 @@ supported_compilers = {
                        "slc4"   : ["gcc34"],
                        "slc3"   : ["gcc323"],
                        "win32"  : ["vc71"],
+                       "osx104" : ["gcc40"],
                        "osx105" : ["gcc41"],
                        "osx106" : ["gcc42"]
                        }
@@ -206,6 +211,8 @@ class NativeMachine:
         self._machine = None
         self._osflavor = None
         self._osversion = None
+        self._compversion = None
+        self._compiler = None
         self._sysinfo = platform.uname()
         if sys.platform == "win32" :
             self._arch = "32"
@@ -223,6 +230,8 @@ class NativeMachine:
                     self._arch = "64"
                 else :
                     self._arch = "32"
+                if self._ostype == "Darwin" and os.popen("uname -p").read()[:-1] == "powerpc" :
+                    self._arch = "ppc"
     def sysInfo(self):
         """ full platform.uname() list """
         return self._sysinfo
@@ -320,6 +329,32 @@ class NativeMachine:
             osver = ".".join(self._osversion.split(".")[:position])
 
         return osver
+    def nativeCompilerVersion(self, position=None):
+        if not self._compversion :
+            if self._ostype == "Windows" :
+                self._compversion = "vc71"
+            else :
+                compstr = " ".join(os.popen("g++ --version").readlines())[:-1]
+                vmatch = re.compile("\ +(\d+(?:\.\d+)*)")
+                m = vmatch.search(compstr)
+                if m :
+                    self._compversion = m.group(1)
+
+                if position :
+                    self._compversion= ".".join(self._compversion.split(".")[:position])
+
+        return self._compversion
+    
+    def nativeCompiler(self):
+        if not self._compiler :
+            if self._ostype == "Windows" :
+                self._compiler = self.nativeCompilerVersion()
+            else :
+                cvers = [int(c) for c in self.nativeCompilerVersion(position=2).split(".")]
+                self._compiler = "gcc%d%d" % (cvers[0], cvers[1])
+                if cvers[0] == 3 and cvers[1] < 4 :
+                    self._compiler = "gcc%s" %self.nativeCompilerVersion(position=3).replace(".","") 
+        return self._compiler
     # CMT derived informations
     def CMTArchitecture(self):
         """ returns the CMT architecture """
@@ -410,6 +445,10 @@ class NativeMachine:
         Returns the native configuration if possible. Guess also the compiler
         on linux platforms 
         """
-        natconf = None
+        comp = self.nativeCompiler()
+        mach = self.machine()
+        osflav = self.CMTOSFlavour()
+        natconf = getConfig(architecture=mach, platformtype=osflav, 
+                            compiler=comp, debug=debug)
         return natconf
 

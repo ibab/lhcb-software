@@ -1,3 +1,8 @@
+2010-01-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: removed the platform detection. Now uses the
+	LbConfiguration.Platform module.
+
 2010-01-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Platform.py: extracted the compatible supported platforms.

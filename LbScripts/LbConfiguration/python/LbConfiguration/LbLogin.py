@@ -30,7 +30,7 @@ _iapy_dir = os.path.join(_ia_dir, "python")
 
 # added the installarea if I am called from the local package
 if os.path.basename(_base_dir) != "InstallArea" :
-    _ia_dir = os.path.join(os.path.dirname(_base_dir), "InstallArea" )
+    _ia_dir = os.path.join(os.path.dirname(_base_dir), "InstallArea")
     _iapy_dir = os.path.join(_ia_dir, "python")
     if os.path.isdir(_iapy_dir) :
         sys.path.insert(0, _iapy_dir)
@@ -47,7 +47,7 @@ _scripts_dir = os.path.join(_base_dir, "scripts")
 
 from SetupProject import SetupProject
 
-from LbConfiguration.Platform import getBinaryDbg, getConfig
+from LbConfiguration.Platform import getBinaryDbg, getBinaryOpt
 from LbConfiguration.Platform import getCompiler, getPlatformType, getArchitecture
 from LbConfiguration.Platform import isBinaryDbg, NativeMachine
 from LbConfiguration.External import CMT_version
@@ -58,10 +58,9 @@ from LbUtils.Path import multiPathGet, multiPathGetFirst, multiPathJoin
 from tempfile import mkstemp
 from optparse import OptionValueError
 import logging
-import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.69 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.70 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -74,9 +73,9 @@ def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
     return name
 
 
-def getLbLoginEnv(optionlist = None):
+def getLbLoginEnv(optionlist=None):
     if not optionlist :
-        optionlist = [] 
+        optionlist = []
     s = LbLoginScript()
     s.defineOpts()
     s.parseOpts(optionlist)
@@ -115,8 +114,8 @@ class LbLoginScript(Script):
         self._aliases = Aliases()
         self._extra = ""
         self.platform = ""
-        self.binary   = ""
-        self.compdef  = ""
+        self.binary = ""
+        self.compdef = ""
         self._nativemachine = None
         self.output_file = None
         self.output_name = None
@@ -147,32 +146,32 @@ class LbLoginScript(Script):
             log.debug("Writing output to %s" % self.output_name)
         self.output_file.write(env)
         self.output_file.write("\n") # @todo: this may be avoided
-        if close_output: 
+        if close_output:
             self.output_file.close()
     def _add_echo(self, line):
         if line[-1] == "\n" :
             line = line[:-1]
-        if sys.platform != "win32" :           
+        if sys.platform != "win32" :
             outline = "echo '%s'\n" % line
         else :
             outline = "echo %s\n" % line
         self._extra += outline
-            
+
     def defineOpts(self):
         """ define commandline options """
         parser = self.parser
         parser.set_defaults(targetshell="csh")
         parser.add_option("--shell", action="store", type="choice", metavar="SHELL",
-                          dest = "targetshell",
-                          choices = ['csh', 'sh', 'bat'],
+                          dest="targetshell",
+                          choices=['csh', 'sh', 'bat'],
                           help="(internal) select the type of shell to use")
         parser.set_defaults(mktemp=False)
         parser.add_option("--mktemp", action="callback",
-                          callback = _check_output_options_cb,
+                          callback=_check_output_options_cb,
                           help="(internal) send the output to a temporary file and print on stdout the file name (like mktemp)")
         parser.set_defaults(output=None)
         parser.add_option("--output", action="callback", metavar="FILE",
-                          type = "string", callback = _check_output_options_cb,
+                          type="string", callback=_check_output_options_cb,
                           help="(internal) output the command to set up the environment to the given file instead of stdout")
         parser.set_defaults(mysiteroot=None)
         parser.add_option("-m", "--mysiteroot",
@@ -181,22 +180,22 @@ class LbLoginScript(Script):
         parser.set_defaults(cmtsite=None)
         parser.add_option("--cmtsite",
                           dest="cmtsite",
-                          help="set the CMTSITE.", 
+                          help="set the CMTSITE.",
                           fallback_env="CMTSITE")
         parser.set_defaults(cmtconfig=None)
         parser.add_option("-c", "--cmtconfig",
                           dest="cmtconfig",
-                          help="set CMTCONFIG.", 
+                          help="set CMTCONFIG.",
                           fallback_env="CMTCONFIG")
         parser.set_defaults(userarea=None)
         parser.add_option("-u", "--userarea",
                           dest="userarea",
-                          help="set User_release_area.", 
+                          help="set User_release_area.",
                           fallback_env="User_release_area")
         parser.set_defaults(nightlies_dir=None)
         parser.add_option("-n", "--nightlies-dir",
                           dest="nightlies_dir",
-                          help="set nightlies directory.", 
+                          help="set nightlies directory.",
                           fallback_env="LHCBNIGHTLIES")
         parser.set_defaults(remove_userarea=False)
         parser.add_option("--no-userarea",
@@ -209,9 +208,9 @@ class LbLoginScript(Script):
                           action="store_false",
                           help="prevent the usage of the cached setup of LbScripts")
         parser.set_defaults(cmtvers=CMT_version)
-        parser.add_option("--cmtvers", 
+        parser.add_option("--cmtvers",
                           action="callback",
-                          callback= _setCMTVersion_cb,
+                          callback=_setCMTVersion_cb,
                           type="string",
                           help="set CMT version")
         parser.set_defaults(scriptsvers=None)
@@ -225,12 +224,12 @@ class LbLoginScript(Script):
         parser.set_defaults(get_python=True)
         parser.add_option("--no-python",
                           action="callback",
-                          callback = _noPython_cb,
+                          callback=_noPython_cb,
                           help="prevents the python setup")
         parser.set_defaults(sharedarea=None)
         parser.add_option("-s", "--shared",
                           dest="sharedarea",
-                          help="set the shared area", 
+                          help="set the shared area",
                           fallback_env="VO_LHCB_SW_DIR")
         parser.set_defaults(no_compat=False)
         parser.add_option("--no-compat",
@@ -253,7 +252,7 @@ class LbLoginScript(Script):
         parser.set_defaults(user_area_scripts=False)
         parser.add_option("--user-area-scripts",
                           action="callback",
-                          callback = _userAreaScripts_cb,
+                          callback=_userAreaScripts_cb,
                           help="Enable the usage of the user release area for the setup of the scripts. Use with care. [default: %default]")
 
 #-----------------------------------------------------------------------------------
@@ -292,7 +291,7 @@ class LbLoginScript(Script):
             if manl :
                 ev["MANPATH"] = os.pathsep.join(manl)
                 log.debug("Updated MANPATH to %s" % ev["MANPATH"])
-                
+
 
     def setCVSEnv(self):
         """ CVS base setup """
@@ -301,9 +300,9 @@ class LbLoginScript(Script):
             if self._env.has_key("CVS_RSH") :
                 log.info("The CVS_RSH environment variable is set to %s" % self._env["CVS_RSH"])
             else :
-                log.warning("The CVS_RSH environment variable is not set" )
-                log.warning("You should set it to the plink executable from your putty installation" )
-                log.warning("in your System Properties" )
+                log.warning("The CVS_RSH environment variable is not set")
+                log.warning("You should set it to the plink executable from your putty installation")
+                log.warning("in your System Properties")
                 self._env["CVS_RSH"] = "C:\\Program Files\\PuTTY\\plink.exe"
                 log.warning("the CVS_RSH environment variable is defaulted to %s" % self._env["CVS_RSH"])
         else :
@@ -331,7 +330,7 @@ class LbLoginScript(Script):
             log.debug("No MYSITEROOT defined. Trying CMTSITE (%s) setting." % opts.cmtsite)
             if opts.cmtsite == "LOCAL" :
                 self._triedlocalsetup = True
-                log.debug("CMTSITE set to LOCAL. Guessing MYSITEROOT")                    
+                log.debug("CMTSITE set to LOCAL. Guessing MYSITEROOT")
                 thismysiteroot = None
                 log.debug("IA dir: %s" % _ia_dir)
                 thisprojectversdir = os.path.dirname(_ia_dir)
@@ -345,7 +344,7 @@ class LbLoginScript(Script):
                 log.debug("CMTSITE set to LOCAL. Guessed MYSITEROOT: %s" % thismysiteroot)
                 if os.path.isdir(thismysiteroot) and "install_project.py" in os.listdir(thismysiteroot) :
                     log.debug("this mysiteroot: %s" % thismysiteroot)
-                    opts.mysiteroot = thismysiteroot                    
+                    opts.mysiteroot = thismysiteroot
                 else :
                     if self._triedAFSsetup :
                         log.debug("No valid MYSITEROOT. Trying CMTSITE=standalone")
@@ -356,20 +355,20 @@ class LbLoginScript(Script):
                 self.setSite()
             elif opts.cmtsite == "CERN" :
                 self._triedAFSsetup = True
-                log.debug("CMTSITE is set to CERN.")                                    
+                log.debug("CMTSITE is set to CERN.")
                 cernbase = "cern.ch"
                 afsroot = "/afs"
                 cernroot = os.path.join(afsroot, cernbase)
                 if sys.platform == "win32" :
                     if ev.has_key("AFSROOT") :
                         afsroot = ev["AFSROOT"]
-                    else : 
+                    else :
                         afsroot = "Z:"
-                    cernroot = os.path.join(afsroot+os.sep, cernbase)
+                    cernroot = os.path.join(afsroot + os.sep, cernbase)
                 if os.path.isdir(cernroot) :
                     ev["CMTSITE"] = "CERN"
                     ev["AFSROOT"] = afsroot
-                    ev["AFS"] = afsroot 
+                    ev["AFS"] = afsroot
                     ev["SITEROOT"] = cernroot
                 else :
                     if self._triedlocalsetup :
@@ -395,7 +394,7 @@ class LbLoginScript(Script):
                 self.setSite()
             else :
                 log.error("Unknown CMTSITE %s" % opts.cmtsite)
-            
+
 # sites defaults
 
         if opts.cmtsite == "CERN" :
@@ -415,9 +414,9 @@ class LbLoginScript(Script):
         log = logging.getLogger()
         ev = self._env
         self._nativemachine = NativeMachine()
-        ev["CMTBIN"] = self._nativemachine.CMTSystem() 
+        ev["CMTBIN"] = self._nativemachine.CMTSystem()
         log.debug("CMTBIN is set to %s" % ev["CMTBIN"])
-        
+
     def hasCommand(self, cmd):
         hascmd = False
         f = os.popen("which %s >& /dev/null" % cmd)
@@ -442,20 +441,20 @@ class LbLoginScript(Script):
     def setCMTInternals(self):
         ev = self._env
         opts = self.options
-        
+
         self.setCMTBin()
 
         if opts.targetshell == "csh" and ev.has_key("SHELL") :
             if os.path.basename(ev["SHELL"]) == "tcsh" :
-                for l in open(os.path.join(ev["CMTROOT"], "src", "setup.tcsh"),"r") :
+                for l in open(os.path.join(ev["CMTROOT"], "src", "setup.tcsh"), "r") :
                     self._extra += l
-                    
+
         if opts.targetshell == "sh" and ev.has_key("ZSH_NAME") :
             if ev["ZSH_NAME"] == "zsh" :
-                for l in open(os.path.join(ev["CMTROOT"], "src", "setup.zsh"),"r") :
+                for l in open(os.path.join(ev["CMTROOT"], "src", "setup.zsh"), "r") :
                     self._extra += l
-                
-        newpath = []    
+
+        newpath = []
         for p in ev["PATH"].split(os.pathsep) :
             if p.find(os.sep + "CMT" + os.sep) == -1 :
                 newpath.append(p)
@@ -486,7 +485,7 @@ class LbLoginScript(Script):
             ev["CONTRIBDIR"] = os.path.join(ev["SITEROOT"], "sw", "contrib")
         else :
             if ev.has_key("SITEROOT") :
-                ev["CONTRIBDIR"] = multiPathJoin(ev["SITEROOT"], "contrib")            
+                ev["CONTRIBDIR"] = multiPathJoin(ev["SITEROOT"], "contrib")
 
         if opts.cmtvers == "v1r20p20090520" :
             ev["CMTSTRUCTURINGSTYLE"] = "without_version_directory"
@@ -497,14 +496,14 @@ class LbLoginScript(Script):
 
         if sys.platform == "darwin" :
             opts.use_cache = False
-        
+
         if ev.has_key("CONTRIBDIR") :
             ev["CMT_DIR"] = ev["CONTRIBDIR"]
             ev["CMTROOT"] = multiPathGetFirst(ev["CMT_DIR"], os.path.join("CMT", opts.cmtvers))
         if not os.path.isdir(ev["CMTROOT"]) :
             log.error("Directory %s doesn't exist" % ev["CMTROOT"])
             ev["CMTROOT"] = self._currentcmtroot
-        
+
         ev["CMTVERS"] = opts.cmtvers
         log.debug("The CMT version is %s" % opts.cmtvers)
         self.setCMTInternals()
@@ -517,29 +516,29 @@ class LbLoginScript(Script):
         if opts.cmtsite != "standalone" :
             if opts.cmtsite == "LOCAL" :
                 ev["LHCBHOME"] = opts.mysiteroot.split(os.pathsep)[0]
-                ev["LHCB_USERLOGS"] =  os.path.join(ev["LHCBHOME"], "log", "users")
+                ev["LHCB_USERLOGS"] = os.path.join(ev["LHCBHOME"], "log", "users")
                 ev["DIM_release_area"] = ev["CONTRIBDIR"]
                 ev["XMLRPC_release_area"] = ev["CONTRIBDIR"]
-                ev["LCG_release_area"] = multiPathJoin(opts.mysiteroot, os.path.join("lcg" ,"external"))
-                ev["LCG_external_area"] = multiPathJoin(opts.mysiteroot, os.path.join("lcg" ,"external"))
+                ev["LCG_release_area"] = multiPathJoin(opts.mysiteroot, os.path.join("lcg" , "external"))
+                ev["LCG_external_area"] = multiPathJoin(opts.mysiteroot, os.path.join("lcg" , "external"))
                 ev["LHCBRELEASES"] = multiPathJoin(opts.mysiteroot, "lhcb")
                 ev["GAUDISOFT"] = ev["LHCBRELEASES"]
-                ev["LHCBPROJECTPATH"] = os.pathsep.join([ev["LHCBRELEASES"],ev["LCG_release_area"]])
+                ev["LHCBPROJECTPATH"] = os.pathsep.join([ev["LHCBRELEASES"], ev["LCG_release_area"]])
                 if opts.nightlies_dir :
                     ev["LHCBNIGHTLIES"] = opts.nightlies_dir
             else :
                 ev["LHCBHOME"] = os.path.join(ev["SITEROOT"], "lhcb")
-                ev["LHCB_USERLOGS"] =  os.path.join(ev["LHCBHOME"], "project", "logfiles")
+                ev["LHCB_USERLOGS"] = os.path.join(ev["LHCBHOME"], "project", "logfiles")
                 ev["DIM_release_area"] = os.path.join(ev["LHCBHOME"], "online", "control")
-                ev["XMLRPC_release_area"] = os.path.join(ev["LHCBHOME"], "project", "web", "online" )
-                ev["LCG_release_area"] = os.path.join(ev["SITEROOT"], "sw", "lcg", "app", "releases" )
-                ev["LCG_external_area"] = os.path.join(ev["SITEROOT"], "sw", "lcg", "external" )
-                ev["SOFTWARE"] = os.path.join(ev["LHCBHOME"], "software" )
+                ev["XMLRPC_release_area"] = os.path.join(ev["LHCBHOME"], "project", "web", "online")
+                ev["LCG_release_area"] = os.path.join(ev["SITEROOT"], "sw", "lcg", "app", "releases")
+                ev["LCG_external_area"] = os.path.join(ev["SITEROOT"], "sw", "lcg", "external")
+                ev["SOFTWARE"] = os.path.join(ev["LHCBHOME"], "software")
                 ev["LHCBRELEASES"] = os.path.join(ev["SOFTWARE"], "releases")
                 ev["GAUDISOFT"] = os.path.join(ev["SITEROOT"], "sw", "Gaudi", "releases")
                 ev["LHCBPROJECTPATH"] = os.pathsep.join([ev["LHCBRELEASES"], ev["GAUDISOFT"], ev["LCG_release_area"]])
-                ev["LHCBDEV"] = os.path.join(ev["SITEROOT"], "lhcb", "software", "DEV" )
-                ev["LHCBTAR"] = os.path.join(ev["SITEROOT"], "lhcb", "distribution" )
+                ev["LHCBDEV"] = os.path.join(ev["SITEROOT"], "lhcb", "software", "DEV")
+                ev["LHCBTAR"] = os.path.join(ev["SITEROOT"], "lhcb", "distribution")
                 ev["LHCBDOC"] = os.path.join(ev["LHCBRELEASES"], "DOC")
                 ev["EMACSDIR"] = os.path.join(ev["LHCBRELEASES"], "TOOLS", "Tools", "Emacs", "pro")
                 ev["LHCBSTYLE"] = os.path.join(ev["LHCBRELEASES"], "TOOLS", "Tools", "Styles", "pro")
@@ -550,19 +549,19 @@ class LbLoginScript(Script):
                     ev["LHCBNIGHTLIES"] = opts.nightlies_dir
                 else :
                     ev["LHCBNIGHTLIES"] = os.path.join(ev["SOFTWARE"], "nightlies")
-                    
+
                 gangasetupdir = os.path.join(ev["SITEROOT"], "sw", "ganga", "install", "etc")
                 if opts.targetshell == "csh" :
                     al["GangaEnv"] = "source %s/setup-lhcb.csh" % gangasetupdir
                 elif opts.targetshell == "sh" :
                     al["GangaEnv"] = ". %s/setup-lhcb.sh" % gangasetupdir
-    
+
             ev["OSC_release_area"] = ev["CONTRIBDIR"]
             ev["Gaudi_release_area"] = ev["GAUDISOFT"]
             ev["LHCb_release_area"] = ev["LHCBRELEASES"]
             log.debug("LHCBPROJECTPATH is set to %s" % ev["LHCBPROJECTPATH"])
 #-----------------------------------------------------------------------------------
-                      
+
     def setHomeDir(self):
         ev = self._env
         opts = self.options
@@ -571,17 +570,17 @@ class LbLoginScript(Script):
             ev["HOME"] = os.path.join(ev["HOMEDRIVE"], ev["HOMEPATH"])
             log.debug("Setting HOME to %s" % ev["HOME"])
         homedir = ev["HOME"]
-        rhostfile = os.path.join(homedir,".rhosts")
+        rhostfile = os.path.join(homedir, ".rhosts")
         if sys.platform != "win32" :
             username = ev["USER"]
         else :
             username = ev["USERNAME"]
         log.debug("User name is %s" % username)
         if not os.path.exists(rhostfile) and sys.platform != "win32" :
-            self._add_echo( "Creating a %s file to use CMT" % rhostfile ) 
+            self._add_echo("Creating a %s file to use CMT" % rhostfile)
             self._add_echo("Joel.Closier@cern.ch")
             f = open(rhostfile, "w")
-            f.write("+ %s\n" % username )
+            f.write("+ %s\n" % username)
             f.close()
         # remove any .cmtrc file stored in the $HOME directory
         cmtrcfile = os.path.join(homedir, ".cmtrc")
@@ -595,9 +594,9 @@ class LbLoginScript(Script):
                 srcrootrcfile = os.path.join(ev["AFSROOT"], "cern.ch", "lhcb", "scripts", ".rootauthrc")
             elif opts.cmtsite == "LOCAL" :
                 srcrootrcfile = os.path.join(opts.mysiteroot.split(os.pathsep)[0], "lhcb", "scripts", ".rootauthrc")
-            if os.path.exists(srcrootrcfile) :                
+            if os.path.exists(srcrootrcfile) :
                 shutil.copy(srcrootrcfile, rootrcfile)
-                log.debug("Copying %s to %s" % (srcrootrcfile, rootrcfile) )
+                log.debug("Copying %s to %s" % (srcrootrcfile, rootrcfile))
 
         if not ev.has_key("LD_LIBRARY_PATH") :
             ev["LD_LIBRARY_PATH"] = ""
@@ -607,7 +606,7 @@ class LbLoginScript(Script):
             ev["ROOTSYS"] = ""
             log.debug("Setting a default ROOTSYS")
 
-        self.setUserArea()  
+        self.setUserArea()
 
     def setUserArea(self):
         log = logging.getLogger()
@@ -620,7 +619,7 @@ class LbLoginScript(Script):
                 opts.userarea = os.path.join(ev["HOME"], "cmtuser") # @todo: use something different for window
             ev["User_release_area"] = opts.userarea
             log.debug("User_release_area is set to %s" % ev["User_release_area"])
-    
+
             if os.path.exists(opts.userarea) :
                 if not os.path.isdir(opts.userarea) :
                     os.rename(opts.userarea, opts.userarea + "_bak")
@@ -633,16 +632,16 @@ class LbLoginScript(Script):
                 newdir = True
             if opts.cmtsite == "CERN" and sys.platform != "win32" and self.hasCommand("fs"):
                 if newdir :
-                    os.system("fs setacl %s system:anyuser rl" % opts.userarea )
-                    self._add_echo( " --- with public access (readonly)" )
-                    self._add_echo( " --- use mkprivate to remove public access to the current directory" )
-                    self._add_echo( " --- use mkpublic to give public access to the current directory" )
+                    os.system("fs setacl %s system:anyuser rl" % opts.userarea)
+                    self._add_echo(" --- with public access (readonly)")
+                    self._add_echo(" --- use mkprivate to remove public access to the current directory")
+                    self._add_echo(" --- use mkpublic to give public access to the current directory")
                 al["mkprivate"] = "find . -type d -print -exec fs setacl {} system:anyuser l \\;"
                 al["mkpublic"] = "find . -type d -print -exec fs setacl {} system:anyuser rl \\;"
         elif ev.has_key("User_release_area") :
             del ev["User_release_area"]
             log.debug("Removed User_release_area from the environment")
-            
+
     def setSharedArea(self):
         opts = self.options
         if opts.sharedarea :
@@ -663,7 +662,7 @@ class LbLoginScript(Script):
                 for v in os.listdir(d) :
                     gccversloc = os.path.join(d, v)
                     for p in os.listdir(gccversloc) :
-                        if p.find(os.sep+"%s-%s" % (binary, platform)+os.sep) != -1 :
+                        if p.find(os.sep + "%s-%s" % (binary, platform) + os.sep) != -1 :
                             compilers.append(os.path.join(gccversloc, p))
                             log.debug("Found compiler: %s" % os.path.join(gccversloc, p))
         return compilers
@@ -674,7 +673,7 @@ class LbLoginScript(Script):
         selected_compilers = []
         for c in local_compilers :
             if platform == "slc5" :
-                if c.find(os.sep+"4.3") :
+                if c.find(os.sep + "4.3") :
                     selected_compilers.append(c)
         if selected_compilers :
             selected_compilers.sort()
@@ -683,84 +682,8 @@ class LbLoginScript(Script):
             log.debug("Selected gcc 4.3 @ %s" % selected_compilers[0])
         return selected_compilers
 
-    def getNativePlatformComponents(self):
-        platform = None 
-        binary = None
-        compdef = None
-        ev = self._env
-        gcclist = []
-        islinux = False
-        if sys.platform.find("linux") != -1 :
-            islinux = True
-        if ev.has_key("OSTYPE") :
-            if ev["OSTYPE"] == "linux" or ev["OSTYPE"] == "linux-gnu" :
-                islinux = True
-        if islinux :
-            if self.hasCommand("gcc"):
-                for l in os.popen("gcc --version") :
-                    if l.find("gcc") != -1 :
-                        gcclist = l[:-1].split()[2]
-                        gcclist = gcclist.split(".")
-                        gccvers = int("".join(gcclist[:2]))
-                        if gccvers >= 34 :
-                            compdef = "gcc%s" % "".join(gcclist[:2])
-                        else :
-                            compdef = "gcc%s" % "".join(gcclist[:3])
-                        break
-                
-                hwdict = {"ia32" : ["i386"], "amd64" : ["x86_64"] }
-                nathw = os.popen("uname -i").read()[:-1]
-                for h in hwdict :
-                    for l in hwdict[h] :
-                        if l == nathw :
-                            binary = h
-                            break
-                relfiles = [ "/etc/redhat-release" , "/etc/system-release" ]
-                nbre = re.compile("[0-9]")
-                for r in relfiles :
-                    if os.path.exists(r) :
-                        firstl = open(r, "r").read()[:-1]
-                        distrib = firstl.split()[0]
-                        rhw = nbre.search(firstl).group()
-                        if distrib == "Scientific" :
-                            platform = "slc%s" % rhw
-                        elif distrib == "Fedora" :
-                            platform = "fc%s" % rhw
-                        else:
-                            platform = "rh%s" % rhw
-                        break
-                if platform == "slc5" :
-                    compdef = "gcc43"
-                if platform == "slc3" :
-                    binary= "ia32"
-                    
-        elif sys.platform.find("darwin") != -1 :
-            for l in os.popen("gcc --version") :
-                if l.find("gcc") != -1 :
-                    gcclist = l[:-1].split()[2]
-                    gcclist = gcclist.split(".")
-                    gccvers = int("".join(gcclist))
-                    compdef = "gcc%s" % "".join(gcclist)
-                    break
-                
-            nathw = os.popen("uname -p").read()[:-1]
-            if nathw == "powerpc" :
-                binary = "ppc"
-            else :
-                binary = "ia32"
-            
-            for l in os.popen("sw_vers") :
-                if l.find("ProductVersion") != -1 :
-                    platlist = l[:-1].split()[1]
-                    platlist = platlist.split(".")
-                    platform = "osx%s" % "".join(platlist[:2])
-        elif sys.platform == "win32":
-            platform = "win32"
-            compdef = "vc71"
-        return binary, platform, compdef    
-        
     def getTargetPlatformComponents(self):
-        platform = None 
+        platform = None
         binary = None
         compdef = None
         opts = self.options
@@ -768,83 +691,65 @@ class LbLoginScript(Script):
             platform = getPlatformType(opts.cmtconfig)
             binary = getArchitecture(opts.cmtconfig)
             compdef = getCompiler(opts.cmtconfig)
-        return binary, platform, compdef    
-        
-    def needsCompat(self):
-        log = logging.getLogger()
-        needs = False
-        native_platform = self.getNativePlatformComponents()[1]
-        if ( native_platform == "slc5" or native_platform == "sl5" ) and self.platform == "slc4" :
-            log.debug("Using slc4 compatibility layer")
-            needs = True
-        return needs
-        
+        return binary, platform, compdef
+
+
     def setCMTConfig(self, debug=False):
         ev = self._env
         opts = self.options
         log = logging.getLogger()
         if opts.cmtconfig :
+            theconf = opts.cmtconfig
             self.binary, self.platform, self.compdef = self.getTargetPlatformComponents()
             opts.use_nocache = False
-            if not opts.no_compat and self.needsCompat() :
-                opts.no_compat = False
             if isBinaryDbg(opts.cmtconfig) :
                 debug = True
         else :
-            self.binary, self.platform, self.compdef = self.getNativePlatformComponents()
+            supconf = self._nativemachine.CMTSupportedConfig(debug=debug)
+            if supconf :
+                theconf = supconf[0]
+            else :
+                theconf = self._nativemachine.CMTNativeConfig(debug=debug)
+            self.binary = getArchitecture(theconf)
+            self.platform = getPlatformType(theconf)
+            self.compdef = getCompiler(theconf)
 
-        if self.compdef == "gcc323" :
-            if opts.cmtsite == "CERN":
-                compiler_path = "/afs/cern.ch/lhcb/externallib/SLC3COMPAT/slc3_ia32_gcc323"
-                if not os.path.isdir(compiler_path) or not self.hasCommand("gcc32") :
-                    self._add_echo( "%s compiler is not available on this node" % self.compdef )
-                else :
-                    if ev.has_key("PATH") :
-                        pthlist = ev["PATH"].split(os.pathsep)
-                    else :
-                        pthlist = []
-                    pthlist.append(compiler_path)
-                    ev["PATH"] = os.pathsep.join(pthlist)
-                    if ev.has_key("LD_LIBRARY_PATH") :
-                        lpthlist = ev["LD_LIBRARY_PATH"].split(os.path.sep)
-                    else :
-                        lpthlist = []
-                    lpthlist.append(compiler_path)
-                    ev["LD_LIBRARY_PATH"] = os.pathsep.join(lpthlist)
 
-        if self.platform == "slc5" and self.compdef == "gcc43" :
-            self.selectCompiler(self.platform, self.binary)
-        
-        ev["PYTHON_BINOFFSET"] = os.sep+"bin"
+        ev["PYTHON_BINOFFSET"] = os.sep + "bin"
 
         if self.platform == "win32" :
             ev["PYTHON_BINOFFSET"] = ""
 
-                    
-        ev["CMTOPT"] = getConfig(self.binary, self.platform, self.compdef)
-        log.debug("CMTOPT is set to %s" % ev["CMTOPT"])               
-        ev["CMTDEB"] = getBinaryDbg(ev["CMTOPT"])
-        log.debug("CMTDEB is set to %s" % ev["CMTDEB"])               
+
+        if isBinaryDbg(theconf) :
+            ev["CMTOPT"] = getBinaryOpt(theconf)
+            ev["CMTDEB"] = theconf
+        else :
+            ev["CMTDEB"] = getBinaryDbg(theconf)
+            ev["CMTOPT"] = theconf
+        log.debug("CMTOPT is set to %s" % ev["CMTOPT"])
+        log.debug("CMTDEB is set to %s" % ev["CMTDEB"])
+
         ev["CMTCONFIG"] = ev["CMTOPT"]
         if debug or sys.platform == "win32":
             ev["CMTCONFIG"] = ev["CMTDEB"]
-        log.debug("CMTCONFIG is set to %s" % ev["CMTCONFIG"])               
+        log.debug("CMTCONFIG is set to %s" % ev["CMTCONFIG"])
 
-            
+
     def setCMTPath(self):
         ev = self._env
         opts = self.options
         log = logging.getLogger()
-        
+
         self.setHomeDir()
-        
+
         use_project_path = False
-        
+
         if ev.has_key("CMTPROJECTPATH") :
             use_project_path = True
         elif opts.cmtvers.find("v1r20") != -1 :
             use_project_path = True
-            
+
         if opts.cmtsite != "standalone" :
             if use_project_path :
                 if ev.has_key("CMTPATH") :
@@ -860,8 +765,8 @@ class LbLoginScript(Script):
                 if not opts.remove_userarea and ev.has_key("User_release_area"):
                     ev["CMTPATH"] = ev["User_release_area"]
                     log.debug("CMTPATH is set to %s" % ev["CMTPATH"])
-        
-    
+
+
     def setupLbScripts(self):
         log = logging.getLogger()
         opts = self.options
@@ -869,7 +774,7 @@ class LbLoginScript(Script):
         log.debug("Setting up LbScripts and appending to the output")
         for var in self._env.keys() :
             os.environ[var] = self._env[var]
-        
+
         cachefile = getLoginCacheName(shell=opts.targetshell, location=_scripts_dir)
         if opts.use_cache and os.path.exists(cachefile):
             log.debug("Using the cache file %s" % cachefile)
@@ -886,10 +791,10 @@ class LbLoginScript(Script):
                 log.debug("Cache file %s doesn't exist" % cachefile)
                 log.debug("Calling SetupProject directly")
 
-            setupprojargs=[]
-            if opts.log_level=="DEBUG" :
+            setupprojargs = []
+            if opts.log_level == "DEBUG" :
                 setupprojargs.append("--debug")
-            if opts.log_level=="CRITICAL" :
+            if opts.log_level == "CRITICAL" :
                 setupprojargs.append("--silent")
             if not opts.user_area_scripts :
                 setupprojargs.append("--no-user-area")
@@ -902,24 +807,24 @@ class LbLoginScript(Script):
             if opts.scriptsvers :
                 setupprojargs.append(opts.scriptsvers)
             if opts.get_python :
-                setupprojargs.append("--runtime-project")            
+                setupprojargs.append("--runtime-project")
                 setupprojargs.append("LCGCMT")
                 setupprojargs.append("Python")
                 if opts.pythonvers :
                     setupprojargs.append("-v")
                     setupprojargs.append(opts.pythonvers)
             if not opts.no_compat :
-                setupprojargs.append("--runtime-project")            
+                setupprojargs.append("--runtime-project")
                 setupprojargs.append("COMPAT")
                 setupprojargs.append("--use")
                 setupprojargs.append("CompatSys %s" % opts.compat_version)
-                
-    
+
+
             log.debug("Arguments to SetupProject: %s" % " ".join(setupprojargs))
-    
+
             SetupProject().main(setupprojargs)
-    
-    
+
+
     def copyEnv(self):
         retenv = dict(self._env.env)
 #        retenv = {}
@@ -931,7 +836,7 @@ class LbLoginScript(Script):
 #            retaliases[v] = self._aliases[v]
         retextra = self._extra
         return retenv, retaliases, retextra
-    
+
     def setEnv(self, debug=False):
         log = logging.getLogger()
         log.debug("Entering the environment setup")
@@ -953,30 +858,30 @@ class LbLoginScript(Script):
         ev = self._env
         opts = self.options
         if opts.log_level != "CRITICAL" :
-            self._add_echo( "*" * 80 )
+            self._add_echo("*" * 80)
             if opts.scriptsvers :
-                self._add_echo( "*" + ("---- LHCb Login %s ----" % opts.scriptsvers).center(78) + "*" )
+                self._add_echo("*" + ("---- LHCb Login %s ----" % opts.scriptsvers).center(78) + "*")
             else :
                 self._add_echo("*" + "---- LHCb Login ----".center(78) + "*")
             if self.binary :
-                self._add_echo("*" + ("Building with %s on %s_%s system" % (self.compdef, self.platform, self.binary)).center(78)+ "*")
+                self._add_echo("*" + ("Building with %s on %s_%s system" % (self.compdef, self.platform, self.binary)).center(78) + "*")
             else : # for windows
-                self._add_echo("*" + ("Building with %s on %s system" % (self.compdef, self.platform)).center(78)+ "*")
-            self._add_echo( "*" * 80 )
-            self._add_echo( " --- CMTROOT is set to %s " % ev["CMTROOT"] )
-            self._add_echo( " --- CMTCONFIG is set to %s " % ev["CMTCONFIG"] )
+                self._add_echo("*" + ("Building with %s on %s system" % (self.compdef, self.platform)).center(78) + "*")
+            self._add_echo("*" * 80)
+            self._add_echo(" --- CMTROOT is set to %s " % ev["CMTROOT"])
+            self._add_echo(" --- CMTCONFIG is set to %s " % ev["CMTCONFIG"])
             if debug :
-                self._add_echo( " --- to compile and link in debug mode : setenv CMTCONFIG $CMTDEB ; gmake" )
+                self._add_echo(" --- to compile and link in debug mode : setenv CMTCONFIG $CMTDEB ; gmake")
             if ev.has_key("CMTPATH") :
-                self._add_echo( " --- CMTPATH is set to %s" % ev["CMTPATH"]) 
+                self._add_echo(" --- CMTPATH is set to %s" % ev["CMTPATH"])
             else :
                 if ev.has_key("User_release_area") :
-                    self._add_echo( " --- User_release_area is set to %s" % ev["User_release_area"])
-                    self._add_echo( " --- CMTPROJECTPATH is set to $User_release_area:$LHCb_release_area:$Gaudi_release_area:$LCG_release_area")
+                    self._add_echo(" --- User_release_area is set to %s" % ev["User_release_area"])
+                    self._add_echo(" --- CMTPROJECTPATH is set to $User_release_area:$LHCb_release_area:$Gaudi_release_area:$LCG_release_area")
                 else :
-                    self._add_echo( " --- CMTPROJECTPATH is set to $LHCb_release_area:$Gaudi_release_area:$LCG_release_area")                    
-                self._add_echo( " --- projects will be searched in $CMTPROJECTPATH ")
-            self._add_echo( "-" * 80)
+                    self._add_echo(" --- CMTPROJECTPATH is set to $LHCb_release_area:$Gaudi_release_area:$LCG_release_area")
+                self._add_echo(" --- projects will be searched in $CMTPROJECTPATH ")
+            self._add_echo("-" * 80)
 
 
 
@@ -996,7 +901,7 @@ class LbLoginScript(Script):
 
 
         self.setupLbScripts()
-                    
+
         return 0
 
 
