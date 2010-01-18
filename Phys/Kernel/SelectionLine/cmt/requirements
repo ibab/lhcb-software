@@ -6,7 +6,7 @@ package           SelectionLine
 version           v0r1
 # Structure
 #============================================================================
-branches          cmt doc src
+branches          cmt doc src Kernel
 include_path none
 
 # Used packages
@@ -33,6 +33,7 @@ apply_pattern    component_library library=SelectionLine
 
 # =============================================================================
 # ======= the patterns ========================================================
+apply_pattern install_more_includes more=Kernel
 #macro HltLineUserModules "HltConf.HltLinesConfigurableUser"
 #apply_pattern install_python_modules
 
