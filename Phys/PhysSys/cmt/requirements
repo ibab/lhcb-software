@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.209 2010-01-13 16:04:24 pkoppenb Exp $
+#$Id: requirements,v 1.210 2010-01-18 15:01:07 pkoppenb Exp $
 package PhysSys
 version v9r0
 
@@ -20,6 +20,7 @@ use  PhysDict                   v4r1     Phys   # Juan Palacios
 use HltLine                     v2r1     Hlt    # Gerhard Raven
 use HltBase                     v8r0     Hlt    # DO NOT RELEASE PHYS WITH THIS IN !!!!
 use HltInterfaces               v3r0     Kernel # Gerhard Raven
+use SelecctionLine              v1r9     Kernel # Gerhard Raven
 
 # Declare this as a container package
 apply_pattern container_package
