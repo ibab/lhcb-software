@@ -13,17 +13,19 @@ from Configurables import GaudiSequencer, DaVinci
 #
 # Flavour tagging. 
 #
-from Configurables import BTagging, BTaggingTool, PhysDesktop, BTaggingChecker
+from Configurables import BTagging, BTaggingChecker
+
+location = "/Event/Strip/Phys/StripBu2eeK"
 
 tag = BTagging("BTagging")
-tag.InputLocations = [ "/Event/Sel/Phys/Bu2LLK" ]
+tag.InputLocations = [ location ]
 tag.OutputLevel = 2
 
 # Flavour tagging Checker:
 tagcheck = BTaggingChecker("BTaggingChecker")
-tagcheck.InputLocations = [ "Sel09Bu2LLK" ]
-tagcheck.TagsLocation = "/Event/Sel/Phys/Bu2LLK/FlavourTags"
-tagcheck.OutputLevel = 3
+tagcheck.InputLocations = [ location ]
+tagcheck.TagsLocation = location+"/FlavourTags"
+
 
 MessageSvc().Format = "% F%30W%S%7W%R%T %0W%M"
 ########################################################################
@@ -37,18 +39,15 @@ DaVinci().DataType   = "MC09"
 DaVinci().Simulation = True
 
 ########################################################################
-from Configurables import PrintDecayTree
 
-PrintDecayTree().InputLocations = [ "/Event/Sel/Phys/Bu2LLK"  ] 
-
-DaVinci().MoniSequence = [ #PrintDecayTree(),
-                            tag,
+DaVinci().MoniSequence = [  tag,
                             tagcheck
                          ]  # The algorithms
 
 ########################################################################
+#/releases/DAVINCI/DAVINCI_v24r7/DaVinciSys/tests/options/DVTestTagging.py
 #
 # example data file
 #
-DaVinci().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/p/pkoppenb/MC09-Bu2eeK/Bu2LLK-1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+DaVinci().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/p/pkoppenb/MC09-Bu2eeK/Sel.Belectron-440-0.dst' TYP='POOL_ROOTTREE' OPT='READ'"  ]
 

@@ -24,15 +24,14 @@ public:
   static const InterfaceID& interfaceID() { return IID_ITaggingUtils; };
  
   virtual StatusCode calcIP( const LHCb::Particle* , 
-                             const LHCb::Vertex* , double&, double&)=0;
+                             const LHCb::VertexBase* , double&, double&)=0;
   
-  virtual StatusCode calcIP( const LHCb::Particle* , 
-                             const LHCb::RecVertex* , double&, double&)=0;
-
   virtual StatusCode calcIP( const LHCb::Particle* ,
                              const LHCb::RecVertex::ConstVector& ,
                              double& , double& )=0;
+
   virtual int countTracks( LHCb::Particle::ConstVector& )=0;
+
   virtual bool isinTree( const LHCb::Particle*, 
                          std::vector<const LHCb::Particle*>& , double& )=0;
  

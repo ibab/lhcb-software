@@ -1,4 +1,4 @@
-// $Id: SVertexTool.h,v 1.7 2007-06-09 12:46:57 musy Exp $
+// $Id: SVertexTool.h,v 1.8 2010-01-18 22:17:04 musy Exp $
 #ifndef SVERTEXTOOL_H 
 #define SVERTEXTOOL_H 1
 // Include files
@@ -7,9 +7,9 @@
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "Event/ProtoParticle.h"
-#include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IVertexFit.h"
 #include "Kernel/ISecondaryVertexTool.h" // Interface
+#include "ITaggingUtils.h"
 
 /** @class SVertexTool SVertexTool.h SVertexTool.h
  *  
@@ -40,7 +40,8 @@ public:
   //----------------------------------------------------------------
 
 private:
-  IGeomDispCalculator* geom;
+  ITaggingUtils* m_util;
+
   IVertexFit *fitter;
   double m_lcs_Long_cut;
   double m_lcs_Upstream_cut;

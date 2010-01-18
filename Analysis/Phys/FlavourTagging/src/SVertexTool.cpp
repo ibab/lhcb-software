@@ -1,4 +1,4 @@
-// $Id: SVertexTool.cpp,v 1.13 2009-11-30 22:42:51 musy Exp $
+// $Id: SVertexTool.cpp,v 1.14 2010-01-18 22:17:04 musy Exp $
 #include "SVertexTool.h"
 #include "Event/RecVertex.h"
 //-----------------------------------------------------------------------------
@@ -46,11 +46,12 @@ SVertexTool::SVertexTool( const std::string& type,
 
 StatusCode SVertexTool::initialize() {
 
-  geom = tool<IGeomDispCalculator>("GeomDispCalculator");
-  if ( !geom ) {   
-    err() << "Unable to Retrieve GeomDispCalculator" << endreq;
+  m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
+  if( ! m_util ) {
+    fatal() << "Unable to retrieve TaggingUtils tool "<< endreq;
     return StatusCode::FAILURE;
   }
+
   fitter = tool<IVertexFit>("OfflineVertexFitter");
   if ( !fitter ) {   
     err() << "Unable to Retrieve Default VertexFitter" << endreq;
@@ -119,8 +120,8 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
   for ( jp = vtags_unique.begin(); jp != vtags_unique.end(); jp++ ) {
 
     //FIRST seed particle ----
-    sc = geom->calcImpactPar(**jp, RecVert, ipl, iperrl);
-    if( sc.isFailure() ) continue;
+    m_util->calcIP(*jp, &RecVert, ipl, iperrl);
+    if( iperrl==0 ) continue;
     if( iperrl > 1.0 ) continue;                                //preselection
     if( ipl/iperrl < 2.0 ) continue;                            //preselection
     if( ipl/iperrl > 100.0 ) continue;                          //preselection
@@ -128,8 +129,8 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
 
     //SECOND seed particle ----
     for ( kp = (jp+1) ; kp != vtags_unique.end(); kp++ ) {
-      sc = geom->calcImpactPar(**kp, RecVert, ips, iperrs);
-      if( sc.isFailure() ) continue;
+      m_util->calcIP(*kp, &RecVert, ips, iperrs);
+      if( iperrs ==0 ) continue;                                //preselection
       if( iperrs > 1.0 ) continue;                                //preselection
       if( ips/iperrs < 2.0 ) continue;                            //preselection
       if( ips/iperrs > 100.0 ) continue;                          //preselection
@@ -208,8 +209,8 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
       if( (*jpp) == p2 ) continue;
 
       double ip, ipe;
-      sc = geom->calcImpactPar(**jpp, RecVert, ip, ipe);
-      if( !sc ) continue;
+      m_util->calcIP(*jpp, &RecVert, ip, ipe);
+      if( ipe==0 ) continue;
       if( ip/ipe < 1.8 ) continue;                                        //cut
       if( ip/ipe > 100 ) continue;                                        //cut
       if( ipe > 1.5    ) continue;                                        //cut
@@ -247,12 +248,11 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
         Particle::ConstVector tmplist = Pfit;
         tmplist.erase( tmplist.begin() + ikpp );
 
-        // replaced by V.B., 20 aug 2k+9: sc = fitter->fit( tmplist, vtx ); 
         sc = fitter->fit( vtx , tmplist ); 
         if( !sc ) continue;
 
-        sc = geom->calcImpactPar(**kpp, vtx, ip, ipe);
-        if( !sc ) continue;
+        m_util->calcIP(*kpp, &vtx, ip, ipe);
+        if( ipe==0 ) continue;
         if( ip/ipe > ipmax ) {
           ipmax = ip/ipe;
           kpp_worse = kpp;
@@ -271,7 +271,6 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
         }
       }
     }
-    // replaced by V.B., 20 aug 2k+9: sc = fitter->fit( Pfit, Vfit ); //RE-FIT////////////////////
     sc = fitter->fit( Vfit , Pfit ); //RE-FIT////////////////////
     if( !sc ) Pfit.clear();
   }

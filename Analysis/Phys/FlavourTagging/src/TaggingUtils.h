@@ -5,7 +5,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/ToolFactory.h"
 // from Event
-#include "Kernel/IGeomDispCalculator.h"
+//#include "Kernel/IGeomDispCalculator.h"
 #include <Kernel/IDistanceCalculator.h>
 #include <Kernel/DVAlgorithm.h>
 #include <Kernel/GetDVAlgorithm.h>
@@ -33,13 +33,14 @@ public:
   StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
-  StatusCode calcIP( const LHCb::Particle* , 
-		     const LHCb::Vertex* , double&, double&);
-  StatusCode calcIP( const LHCb::Particle* , 
-		     const LHCb::RecVertex* , double&, double&);
+  StatusCode calcIP( const LHCb::Particle* axp, 
+                     const LHCb::VertexBase* v, 
+                     double& ip, double& iperr) ;
+  
   StatusCode calcIP( const LHCb::Particle*,
-		     const LHCb::RecVertex::ConstVector& ,
-		     double& , double& );
+                     const LHCb::RecVertex::ConstVector& ,
+                     double& , double& );
+
   int countTracks( LHCb::Particle::ConstVector& );
   bool isinTree( const LHCb::Particle*, 
                  std::vector<const LHCb::Particle*>& , double& );
@@ -47,7 +48,7 @@ public:
 
 private:
 
-  IGeomDispCalculator *m_Geom;
+  //  IGeomDispCalculator *m_Geom;
   IDistanceCalculator *m_Dist;
   DVAlgorithm* m_dva;
 

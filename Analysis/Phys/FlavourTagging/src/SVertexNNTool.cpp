@@ -1,4 +1,4 @@
-// $Id: SVertexNNTool.cpp,v 1.6 2009-08-20 13:30:07 ibelyaev Exp $
+// $Id: SVertexNNTool.cpp,v 1.7 2010-01-18 22:17:04 musy Exp $
 #include "SVertexNNTool.h"
 #include "Event/RecVertex.h"
 //-----------------------------------------------------------------------------
@@ -25,11 +25,12 @@ SVertexNNTool::SVertexNNTool( const std::string& type,
 
 StatusCode SVertexNNTool::initialize() {
 
-  geom = tool<IGeomDispCalculator>("GeomDispCalculator");
-  if ( !geom ) {   
-    err() << "Unable to Retrieve GeomDispCalculator" << endreq;
+  m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
+  if( ! m_util ) {
+    fatal() << "Unable to retrieve TaggingUtils tool "<< endreq;
     return StatusCode::FAILURE;
   }
+
   fitter = tool<IVertexFit>("UnconstVertexFitter");
   if ( !fitter ) {   
     err() << "Unable to Retrieve UnconstVertexFitter" << endreq;
@@ -53,8 +54,6 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
 
   //Build Up 2 Seed Particles For Vertexing ------------------------
   StatusCode sc;
-  Gaudi::XYZVector ipVec;
-  Gaudi::SymMatrix9x9 errMatrix;
   Vertex Vfit, vtx;
   std::vector<Vertex> vtxvect;
   const Particle* p1=0, *p2=0;
@@ -67,8 +66,9 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
     int jpid = (*jp)->particleID().abspid();
     if( jpid == 2212 ) continue;                                //preselection 
 
-    sc = geom->calcImpactPar(**jp, RecVert, ipl, iperrl, ipVec, errMatrix);
-    if( sc.isFailure() ) continue;
+    m_util->calcIP(*jp, &RecVert, ipl, iperrl);
+
+    if( iperrl==0 ) continue;
     if( fabs(ipl/iperrl) < 2.0 ) continue;                      //preselection 
     if( iperrl > 0.15 ) continue;                               //preselection 
     if( fabs(ipl) > 4.0 ) continue;                             //preselection 
@@ -90,8 +90,8 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
       int kpid = (*kp)->particleID().abspid();
       if( kpid == 2212 ) continue;                             //preselection 
 
-      sc = geom->calcImpactPar(**kp, RecVert, ips,iperrs, ipVec, errMatrix);
-      if( sc.isFailure() ) continue;  
+      m_util->calcIP(*kp, &RecVert, ips, iperrs);
+     if( iperrs==0 ) continue;
       if( fabs(ips/iperrs) < 2.0 ) continue;                   //preselection 
       if( iperrs > 0.15 ) continue;                            //preselection 
       if( fabs(ips) > 4.0 ) continue;                          //preselection 
@@ -105,7 +105,6 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
       if( lcs > 2.0 ) continue;                                //preselection
       if( track->type() == Track::Long ) continue;             //preselection
       
-      // replaced by V.B. 20 Aug 2k+9: sc = fitter->fit( **jp, **kp, vtx );
       sc = fitter->fit( vtx , **jp, **kp );
       if( sc.isFailure() ) continue;
       if((vtx.position().z()/mm - RVz) < -10.0 ) continue;    //preselection
@@ -159,8 +158,8 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
       if( (*jpp) == p2 ) continue;
 
       double ip, ipe;
-      sc = geom->calcImpactPar(**jpp, RecVert, ip, ipe, ipVec, errMatrix);
-      if( !sc ) continue;
+      m_util->calcIP(*jpp, &RecVert, ip, ipe);
+      if( ipe==0 ) continue;
       if( ip/ipe < 2.0 ) continue;                                       //cut
       if( ip/ipe > 100 ) continue;                                       //cut
       if( ipe > 1.5    ) continue;                                       //cut
@@ -172,17 +171,16 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
       double probb=(1-probi1)*(1-probp1);
       if( probs/(probs+probb) < 0.2 ) continue;                          //cut
 
-      // replaced by V.B. 20 Aug 2k+9: sc = fitter->fit( Pfit, VfitTMP ); /////////FIT before
       sc = fitter->fit( VfitTMP , Pfit ); /////////FIT before
       if( !sc ) continue; 
-      sc = geom->calcImpactPar(**jpp, VfitTMP, ip, ipe, ipVec, errMatrix);
-      if( !sc ) continue; 
+
+      m_util->calcIP(*jpp, &VfitTMP, ip, ipe);
+      if( ipe==0 ) continue; 
       if( ip/ipe > 5.0 ) continue;                                       //cut
 
       //Add track to the fit
       Pfit.push_back(*jpp);
 
-      // replaced by V.B. 20 aug 2k+9: sc = fitter->fit( Pfit, VfitTMP ); /////////FIT after
       sc = fitter->fit( VfitTMP , Pfit ); /////////FIT after
       if( !sc ) { Pfit.pop_back(); continue; }
     
@@ -209,12 +207,11 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
         Particle::ConstVector tmplist = Pfit;
         tmplist.erase( tmplist.begin() + ikpp );
 
-        // replaced by V.B. 20 aug 2k+9: sc = fitter->fit( tmplist, vtx ); 
         sc = fitter->fit( vtx , tmplist ); 
         if( !sc ) continue;
 
-        sc = geom->calcImpactPar(**kpp, vtx, ip, ipe, ipVec, errMatrix);
-        if( !sc ) continue;
+        m_util->calcIP(*kpp, &vtx, ip, ipe);
+        if( ipe==0 ) continue;
         if( ip/ipe > ipmax ) {
           ipmax = ip/ipe;
           kpp_worse = kpp;
@@ -225,7 +222,6 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
       if( worse_exist && ipmax > 3.0) Pfit.erase( kpp_worse );
     }
 
-    // replaced by V.B. 20 Aug 2k+9: sc = fitter->fit( Pfit, Vfit ); //RE-FIT////////////////////
     sc = fitter->fit( Vfit , Pfit ); //RE-FIT////////////////////
     if( !sc ) Pfit.clear();
   }

@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.159 2009-12-16 11:17:52 jpalac Exp $
+! $Id: release.notes,v 1.160 2010-01-18 22:17:03 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2010-01-18 - Marco Musy
+ - modified TaggingUtils to take in the asbolute value of impact parameter
+ - raise to version v10r1
+
 
 !========================== FlavourTagging v10r0 2009-12-16 ==================
 

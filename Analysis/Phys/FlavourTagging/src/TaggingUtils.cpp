@@ -17,7 +17,8 @@ DECLARE_TOOL_FACTORY( TaggingUtils );
 TaggingUtils::TaggingUtils( const std::string& type,
                             const std::string& name,
                             const IInterface* parent ) :
-  GaudiTool ( type, name, parent ), m_Geom(0), m_Dist(0), m_dva(0) {
+  GaudiTool ( type, name, parent ), //m_Geom(0),
+  m_Dist(0), m_dva(0) {
 
   declareInterface<ITaggingUtils>(this);
 
@@ -27,11 +28,11 @@ TaggingUtils::~TaggingUtils() {};
 //=====================================================================
 StatusCode TaggingUtils::initialize() { 
 
-  m_Geom = tool<IGeomDispCalculator> ("GeomDispCalculator", this);
-  if ( ! m_Geom ) {   
-    fatal() << "GeomDispCalculator could not be found" << endreq;
-    return StatusCode::FAILURE;
-  }
+//   m_Geom = tool<IGeomDispCalculator> ("GeomDispCalculator", this);
+//   if ( ! m_Geom ) {   
+//     fatal() << "GeomDispCalculator could not be found" << endreq;
+//     return StatusCode::FAILURE;
+//   }
   m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
                              StatusCode::FAILURE);  
@@ -44,55 +45,23 @@ StatusCode TaggingUtils::initialize() {
 
   return StatusCode::SUCCESS; 
 }
-
 //==========================================================================
 StatusCode TaggingUtils::calcIP( const Particle* axp, 
-                                 const Vertex* RecVert, 
+                                 const VertexBase* v, 
                                  double& ip, double& iperr) {
   ip   =-100.0;
   iperr= 0.0;
-  Gaudi::XYZVector ipVec;
-  Gaudi::SymMatrix9x9 errMatrix;
-  StatusCode sc = 
-    m_Geom->calcImpactPar(*axp, *RecVert, ip, iperr, ipVec, errMatrix);
-  if( sc ) {
-    ip   = ipVec.z()>0 ? ip : -ip ; 
-    iperr= iperr; 
-  }
 
   double ipC=0, ipChi2=0;
-  StatusCode sc2 = m_Dist->distance (axp, RecVert, ipC, ipChi2);
+  StatusCode sc2 = m_Dist->distance (axp, v, ipC, ipChi2);
   if(sc2 && ipChi2!=0) {
-//     ip=ipC;
-//     ip=ipC/sqrt(ipChi2);
+     ip=ipC;
+     iperr=ipC/sqrt(ipChi2);
   }
 
-  return sc;
+  return sc2;
 }
-//==========================================================================
-StatusCode TaggingUtils::calcIP( const Particle* axp, 
-                                 const RecVertex* RecVert, 
-                                 double& ip, double& iperr) {
-  ip   =-100.0;
-  iperr= 0.0;
-  Gaudi::XYZVector ipVec;
-  Gaudi::SymMatrix9x9 errMatrix;
-  StatusCode sc = 
-    m_Geom->calcImpactPar(*axp, *RecVert, ip, iperr, ipVec, errMatrix);
-  if( sc ) {
-    ip   = ipVec.z()>0 ? ip : -ip ; 
-    iperr= iperr; 
-  }
 
-  double ipC=0, ipChi2=0;
-  StatusCode sc2 = m_Dist->distance (axp, RecVert, ipC, ipChi2);
-  if(sc2 && ipChi2!=0) {
-//     ip=ipC;
-//     ip=ipC/sqrt(ipChi2);
-  }
-
-  return sc;
-}
 //=========================================================================
 StatusCode TaggingUtils::calcIP( const Particle* axp,
                                  const RecVertex::ConstVector& PileUpVtx,
@@ -103,12 +72,12 @@ StatusCode TaggingUtils::calcIP( const Particle* axp,
 
   RecVertex::ConstVector::const_iterator iv;
   for(iv = PileUpVtx.begin(); iv != PileUpVtx.end(); iv++){
-    double ipx, ipex;
-    sc = m_Geom->calcImpactPar(*axp, **iv, ipx, ipex);
+    double ipx=0, ipex=0;
+    // sc = m_Geom->calcImpactPar(*axp, **iv, ipx, ipex);
 
-    //double ipC=0, ipChi2=0;
-    //sc = m_Dist->distance (axp, *iv, ipC, ipChi2);
-    //if(ipChi2) { ipx=ipC; ipex=ipC/sqrt(ipChi2); }
+    double ipC=0, ipChi2=0;
+    sc = m_Dist->distance (axp, *iv, ipC, ipChi2);
+    if(ipChi2) { ipx=ipC; ipex=ipC/sqrt(ipChi2); }
 
     if( sc ) if( ipx < ipmin ) {
       ipmin = ipx;

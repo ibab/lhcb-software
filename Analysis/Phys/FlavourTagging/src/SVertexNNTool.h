@@ -1,4 +1,4 @@
-// $Id: SVertexNNTool.h,v 1.3 2006-10-24 10:16:44 jpalac Exp $
+// $Id: SVertexNNTool.h,v 1.4 2010-01-18 22:17:04 musy Exp $
 #ifndef SVERTEXNNTOOL_H 
 #define SVERTEXNNTOOL_H 1
 // Include files
@@ -6,8 +6,8 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
+#include "ITaggingUtils.h"
 
-#include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IVertexFit.h"
 #include "Kernel/ISecondaryVertexTool.h"   // Interface
 
@@ -39,8 +39,8 @@ public:
   //-------------------------------------------------------------
 
 private:
-  IGeomDispCalculator* geom;
   IVertexFit *fitter;
+  ITaggingUtils* m_util;
 
   double NNseeding(double P1,
                    double P2,

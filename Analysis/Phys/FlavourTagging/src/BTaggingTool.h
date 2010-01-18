@@ -1,4 +1,4 @@
-// $Id: BTaggingTool.h,v 1.20 2009-12-11 15:15:05 musy Exp $
+// $Id: BTaggingTool.h,v 1.21 2010-01-18 22:17:03 musy Exp $
 #ifndef USER_BTAGGINGTOOL_H 
 #define USER_BTAGGINGTOOL_H 1
 
@@ -20,8 +20,6 @@
 #include "Kernel/IParticleDescendants.h"
 
 #include "ITaggingUtils.h"
-
-class IGeomDispCalculator;
 
 /** @class BTaggingTool BTaggingTool.h 
  *
@@ -56,7 +54,6 @@ public:
 
 private:
 
-  IGeomDispCalculator *m_Geom;
   ITaggingUtils* m_util;
   IParticleDescendants* m_descend;
 
