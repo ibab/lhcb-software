@@ -1,4 +1,4 @@
-// $Id: TTHitExpectation.cpp,v 1.9 2009-07-20 11:16:57 mneedham Exp $
+// $Id: TTHitExpectation.cpp,v 1.10 2010-01-18 10:33:34 mtobin Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -36,7 +36,7 @@ TTHitExpectation::TTHitExpectation(const std::string& type,
 
   declareProperty("extrapolatorName", m_extrapolatorName = "TrackFastParabolicExtrapolator");
   declareProperty( "SelectorType", m_selectorType = "STSelectChannelIDByElement" );
-  declareProperty( "SelectorName", m_selectorName = "TTLiteKiller" ); 
+  declareProperty( "SelectorName", m_selectorName = "ALL" ); 
   declareProperty( "allStrips", m_allStrips = false);
 
   declareInterface<IHitExpectation>(this);
@@ -147,37 +147,42 @@ void TTHitExpectation::collectHits(std::vector<LHCb::STChannelID>& chans,
         Tf::Tsa::Line3D aLine3D(stateVec.position(), stateVec.slopes());
         if (select((*iterS)->elementID()) && insideSensor(*iter, aLine3D) == true){
 
-	  // get the list of strips that could be in the cluster
+          // get the list of strips that could be in the cluster
           Gaudi::XYZPoint globalEntry = intersection(aLine3D,(*iter)->entryPlane());
           Gaudi::XYZPoint globalExit = intersection(aLine3D,(*iter)->exitPlane());
           Gaudi::XYZPoint localEntry = (*iter)->toLocal(globalEntry);
           Gaudi::XYZPoint localExit =  (*iter)->toLocal(globalExit);
-
+          
           unsigned int firstStrip = (*iter)->localUToStrip(localEntry.x());
           unsigned int lastStrip =  (*iter)->localUToStrip(localExit.x());
-         
+          
           // might have to swap...
           if (firstStrip > lastStrip) std::swap(firstStrip, lastStrip);
 
           // allow for capacitive coupling....
           if ((*iter)->isStrip(firstStrip-1) == true) --firstStrip;
           if ((*iter)->isStrip(lastStrip+1) == true) ++lastStrip;
-
+          
           bool found = false;
+          unsigned int middleStrip = (firstStrip+lastStrip)/2;
           for (unsigned int iStrip = firstStrip ; iStrip != lastStrip; ++iStrip){        
             const STChannelID chan = (*iterS)->stripToChan(iStrip);
             if ((*iterS)->isOKStrip(chan) == true){ // check it is alive
               if (m_allStrips == true) {
-                chans.push_back(elemID); // take them all
-	      }
+                chans.push_back(chan); // take them all
+              }
               else {
                 found = true; // take just the sector
-	      }
-	    } // ok strip
-	  } // loop strips
+              }
+            } // ok strip
+          } // loop strips
 
-          if (!m_allStrips && found == true) chans.push_back(elemID);
-
+          if (!m_allStrips && found == true) {
+            STChannelID midChan(elemID.type(), elemID.station(), 
+                                elemID.layer(), elemID.detRegion(), 
+                                elemID.sector(), middleStrip);
+            chans.push_back(midChan);
+          }
         } // select
       }  // iter
     } // station

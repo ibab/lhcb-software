@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2009-12-18 Mark Tobin
+ - bug fix in TTHitExpectationTool to provide correct expected channel ids and
+ change default input to ALL.
+
 !======================== TrackTools v3r24p1 2009-12-18 ======================
 ! 2009-12-18 Stefania Vecchi
  - changes in the MuonMeasurementProvider::addToMeasurements
