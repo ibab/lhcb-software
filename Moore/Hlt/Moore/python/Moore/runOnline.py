@@ -14,22 +14,27 @@ def start() :
 
     Moore().RunOnline = True
     Moore().EnableTimeOutCatcher = False
-    # TODO: record these tags somewhere... 
+
+    ### default database setup
+    Moore().Simulation = False
+    Moore().CondDBtag = 'hlt-20091214'
+    Moore().DDDBtag   = 'hlt-20091214'
+    Moore().UseDBSnapshot = True
+    Moore().EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough' ] )
+
     if OnlineEnv.PartitionName == 'FEST' :
        Moore().Simulation = True
        Moore().DDDBtag   = 'MC09-20090602'
        Moore().CondDBtag = 'sim-20090402-vc-md100'
-       Moore().UseDBSnapshot = True
        Moore().EnableRunChangeHandler = False
-       Moore().TimeOutThreshold = 10000
-    else :
-       Moore().Simulation = False
-       Moore().CondDBtag = 'hlt-20091214'
-       Moore().DDDBtag   = 'hlt-20091214'
-       Moore().UseDBSnapshot = True
-       Moore().EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough' ] )
 
     ### pick up requested DB tag 
+    ### use old capitalization
+    if hasattr(OnlineEnv,'condDBTag') and OnlineEnv.condDBTag :
+        Moore().CondDBtag = OnlineEnv.condDBTag
+        Moore().DDDBtag   = OnlineEnv.condDBTag
+        Moore().UseDBSnapshot = True
+    ### canonical capitalization
     if hasattr(OnlineEnv,'CondDBTag') and OnlineEnv.CondDBTag :
         Moore().CondDBtag = OnlineEnv.CondDBTag
         Moore().DDDBtag   = OnlineEnv.CondDBTag
