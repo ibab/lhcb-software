@@ -253,7 +253,7 @@ def generateLogin(targetlocation, script, version="", mysiteroot=None, building=
                 content = """LbLogin_tmpfile=`%s/python/LbConfiguration/LbLogin.py --shell=sh --mktemp --scripts-version="%s" "$@"`
 """ % (targetlocation, version)
         content += """LbLoginStatus="$?"
-if [ "$LbLoginStatus" = 0 ]; then
+if [ "$LbLoginStatus" = 0 -a -n "$LbLogin_tmpfile" ]; then
     . $LbLogin_tmpfile
 fi
 rm -f $LbLogin_tmpfile
@@ -277,7 +277,7 @@ unset LbLogin_tmpfile
 """ % (targetlocation, version)
 
         content += """set LbLoginStatus = $?
-if ( ! $LbLoginStatus ) then
+if ( ! $LbLoginStatus && "$LbLogin_tmpfile" != "" ) then
     source $LbLogin_tmpfile
 endif
 rm -f $LbLogin_tmpfile
