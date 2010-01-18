@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-01-18 - Anton Poluektov
+ - Typo in StrippingV0 corrected
+
 ! 2010-01-18 - Mat Charles
  - Added StreamDplus.py and inserted the stream into Streams.py
 

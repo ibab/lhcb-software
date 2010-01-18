@@ -60,7 +60,7 @@ Get the list of *ALL* configured lines
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = '2010-01-14'
-__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $'
+__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $'
 # =============================================================================
 
 from Gaudi.Configuration       import *
@@ -148,7 +148,7 @@ class StrippingV0Conf(LHCbConfigurableUser):
 
     ## Return the list of all configured stripping lines
     #  @return the list of all configured stripping lines
-    def lines   ( slef ) :
+    def lines   ( self ) :
         """
         Return the list of all configured stripping lines
         
