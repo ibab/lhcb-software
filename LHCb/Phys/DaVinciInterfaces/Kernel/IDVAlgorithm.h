@@ -1,4 +1,4 @@
-// $Id: IDVAlgorithm.h,v 1.7 2010-01-14 15:28:38 jpalac Exp $
+// $Id: IDVAlgorithm.h,v 1.8 2010-01-18 17:29:03 jpalac Exp $
 #ifndef KERNEL_IDVALGORITHM_H 
 #define KERNEL_IDVALGORITHM_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include <GaudiKernel/IInterface.h>
+#include <GaudiKernel/INamedInterface.h>
 
 // from LHCb
 #include <Event/Particle.h>
@@ -31,15 +31,15 @@ class GaudiAlgorithm;
  *  @author Juan PALACIOS
  *  @date   2010-01-12
  */
-class GAUDI_API IDVAlgorithm : virtual public IInterface {
+class GAUDI_API IDVAlgorithm : virtual public INamedInterface {
 public: 
 
   DeclareInterfaceID(IDVAlgorithm, 1, 0);
 
   /**
    *
-   * Return a pointer to the parent GaudiAlgorithm, if in the
-   * implementation's inheritance tree. Return 0 otherwise.
+   * Handle to the concrete implementation, or to the parent if
+   * implementation does not derive from GaudiAlgorithm
    *
    **/  
   virtual const GaudiAlgorithm* gaudiAlg() const = 0;

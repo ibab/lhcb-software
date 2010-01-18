@@ -4,6 +4,10 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-01-18 - Juan Palacios
+ - Kernel/IDVAlgorithm
+  . Make a INamedInterface. Fix some doxygen.
+
 ! 2010-01-16 - Juan PALACIOS
  - dict/DaVinciInterfacesDict.xml
   . Fix typo
