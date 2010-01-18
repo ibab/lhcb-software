@@ -18,6 +18,11 @@ dstWriter = SelDSTWriter("MyDSTWriter",
 	OutputFileSuffix = '000000'
         )
 
+from StrippingSelections.StartupOptions import veloNZSKiller, redoPV
+dvinit = GaudiSequencer("DaVinciInitSeq")
+dvinit.Members.insert(0, redoPV() )
+dvinit.Members.insert(0, veloNZSKiller() )
+
 DaVinci().EvtMax = 10                         # Number of events
 DaVinci().UserAlgorithms = [ dstWriter.sequence() ]
 

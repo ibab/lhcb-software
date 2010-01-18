@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-01-18 - Anton Poluektov
+ - Added python/StrippingSelections/StartupOptions.py
+   Includes options needed to kill VELO non-zero-suppressed data and to redo PV. 
+
 ! 2010-01-18 - Patrick Koppenburg
  - Task #12929 : Removed DC06-Stripping.opts
 
