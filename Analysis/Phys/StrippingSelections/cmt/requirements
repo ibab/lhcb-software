@@ -6,7 +6,7 @@ version           v1r12
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc options python
+branches          cmt doc python
 include_path      none
 
 # Used packages. 
