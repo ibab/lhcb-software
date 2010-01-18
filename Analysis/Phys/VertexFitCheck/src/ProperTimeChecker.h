@@ -1,4 +1,4 @@
-// $Id: ProperTimeChecker.h,v 1.6 2010-01-18 08:43:10 pkoppenb Exp $
+// $Id: ProperTimeChecker.h,v 1.7 2010-01-18 08:45:30 pkoppenb Exp $
 #ifndef PROPERTIMECHECKER_H 
 #define PROPERTIMECHECKER_H 1
 
@@ -22,7 +22,7 @@ class IPVReFitter;
  *  position, momentum and proper time.
  *
  *  @todo This algorithm duplicates some functionality of decaytreetuple
- *  Can it be removed? Can some variables be optained from a loaded tuple tool?
+ *  Can it be removed? Can some variables be obtained from a loaded tuple tool?
  *
  *  @author Yuehong Xie
  *  @date   2006-5-25
