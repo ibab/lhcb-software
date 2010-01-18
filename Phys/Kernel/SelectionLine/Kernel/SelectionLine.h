@@ -1,4 +1,4 @@
-// $Id: SelectionLine.h,v 1.1 2010-01-18 15:08:35 graven Exp $
+// $Id: SelectionLine.h,v 1.2 2010-01-18 15:44:53 graven Exp $
 #ifndef SELECTION_LINE_H
 #define SELECTION_LINE_H 1
 
@@ -110,6 +110,8 @@ namespace Selection {
       // retrieve (recursive!) list of sub algorithms
       std::vector< const Algorithm* > algorithms() const ;
 
+      IANNSvc&     annSvc() const;
+
     private:
       //TODO: move into DecReport...
       enum stage { initial=          0,  // i.e. did not pass 'prescale
@@ -142,7 +144,6 @@ namespace Selection {
       StatusCode decodeNames(  );
 
       Algorithm* getSubAlgorithm(const std::string& name);
-      IANNSvc&     annSvc() const;
 
       
       /** Private copy, assignment operator. This is not allowed **/
@@ -165,6 +166,7 @@ namespace Selection {
       StatEntity *m_slowCounter;
       std::string m_outputContainerName;
       std::string m_decision;
+      std::string s_ANNSvc;
       std::vector<std::string> m_incidents;  ///< Incidents to be flagged in HltDecReport if they occurs during processing
       bool m_ignoreFilter;                   ///< True if one continues always.
       bool m_measureTime;                    ///< Flag to measure time

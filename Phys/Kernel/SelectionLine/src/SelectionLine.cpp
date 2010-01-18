@@ -1,4 +1,4 @@
-// $Id: SelectionLine.cpp,v 1.1 2010-01-18 15:08:36 graven Exp $
+// $Id: SelectionLine.cpp,v 1.2 2010-01-18 15:44:53 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -132,8 +132,8 @@ Selection::Line::retrieveSubAlgorithms() const {
 
 IANNSvc& Selection::Line::annSvc() const {
   if (m_hltANNSvc == 0) {
-    StatusCode sc = serviceLocator()->service("HltANNSvc", m_hltANNSvc);
-    Assert( sc.isSuccess() && m_hltANNSvc != 0, " no HltANNSvc??");
+    StatusCode sc = serviceLocator()->service(s_ANNSvc, m_hltANNSvc);
+    Assert( sc.isSuccess() && m_hltANNSvc != 0, " no ANNSvc??");
   }
   return *m_hltANNSvc;
 }
@@ -165,6 +165,7 @@ Selection::Line::Line( const std::string& name,
   declareProperty( "HltDecReportsLocation", m_outputContainerName   = LHCb::HltDecReportsLocation::Default );
   //TODO: install updateHandler, refuse changes after initialize...
   declareProperty( "DecisionName"         , m_decision       = name+"Decision"); 
+  declareProperty( "ANNSvc"               , s_ANNSvc         = "HltANNSvc"); 
   declareProperty( "IgnoreFilterPassed"   , m_ignoreFilter   = false );
   declareProperty( "MeasureTime"          , m_measureTime    = false );
   declareProperty( "ReturnOK"             , m_returnOK       = false );
