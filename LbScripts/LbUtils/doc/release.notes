@@ -1,3 +1,7 @@
+2010-01-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v2r0
+
 2010-01-13  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbUtils/Path.py: removed method decorator to be compatible with Python 2.3
