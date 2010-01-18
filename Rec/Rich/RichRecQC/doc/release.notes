@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-01-18 - Antonis Papanestis
+ - Added new histograms to the Alignment Monitor
+ - Added new options to the Alignment Configurable
+
 ! 2010-01-15 - Ross Young
 - Configuration.py: parameters for ion feedback code now in separate method
 

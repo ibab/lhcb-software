@@ -4,7 +4,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::AlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.h,v 1.7 2009-10-07 15:01:26 papanest Exp $
+ *  $Id: RichAlignmentMonitor.h,v 1.8 2010-01-18 16:02:49 papanest Exp $
  *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-02-19
@@ -34,6 +34,7 @@
 #include "RichKernel/IRichParticleProperties.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichTrackSelector.h"
+#include "RichRecBase/IRichIsolatedTrack.h"
 
 // RichDet
 #include "RichDet/DeRichSphMirror.h"
@@ -111,6 +112,7 @@ namespace Rich
         // histogram output level
         bool m_minimalHistoOutput;
         bool m_onlyPrebookedMirrors;
+        bool m_useOnlyIsolatedTracks;
 
         // tools
         const ITrackSelector* m_trSelector;        ///< Track selector
@@ -118,6 +120,7 @@ namespace Rich
         const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;
         const IParticleProperties* m_richPartProp; ///< Rich Particle properties
         const ICherenkovAngle* m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
+        const IIsolatedTrack * m_isoTrack; ///< Pointer to isolated track tool
 
         // Vector of histogram numbers to prebook (helps with merging files).
         // Since the arrival of the python-based configuration, it is
@@ -132,6 +135,8 @@ namespace Rich
 
         // vector with the two side histograms (up/down , A/C side)
         std::vector<AIDA::IHistogram2D*> m_sideHistos;
+        std::vector<AIDA::IHistogram2D*> m_quarterHistos;
+        std::vector<AIDA::IHistogram2D*> m_sideIsolatedHistos;
       };
 
     }

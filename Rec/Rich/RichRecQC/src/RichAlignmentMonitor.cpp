@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.14 2009-11-20 17:32:25 cattanem Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.15 2010-01-18 16:02:49 papanest Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -31,10 +31,11 @@ AlignmentMonitor::AlignmentMonitor( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : RichRecHistoAlgBase ( name , pSvcLocator ),
     m_pTypes            ( 7, 0),
-    m_trSelector        ( 0 ),
-    m_richRecMCTruth    ( 0 ),
-    m_richPartProp      ( 0 ),
-    m_ckAngle           ( 0 ),
+    m_trSelector        ( NULL ),
+    m_richRecMCTruth    ( NULL ),
+    m_richPartProp      ( NULL ),
+    m_ckAngle           ( NULL ),
+    m_isoTrack          ( NULL ),
     m_plotAllHPDs       ( false )
 {
   // Maximum number of tracks
@@ -46,6 +47,7 @@ AlignmentMonitor::AlignmentMonitor( const std::string& name,
   declareProperty( "RichDetector",        m_richTemp = 1 ); // default is Rich2
   declareProperty( "MinimalHistoOutput",  m_minimalHistoOutput = true );
   declareProperty( "OnlyPrebookedMirrors",m_onlyPrebookedMirrors = true );
+  declareProperty( "UseOnlyIsolatedTracks",m_useOnlyIsolatedTracks = true );
   declareProperty( "HPDList",             m_HPDList );
 }
 
@@ -68,6 +70,7 @@ StatusCode AlignmentMonitor::initialize()
   acquireTool( "RichCherenkovAngle",   m_ckAngle  );
   // get track selector
   acquireTool( "TrackSelector", m_trSelector, this );
+  acquireTool( "RichIsolatedTrack", m_isoTrack     );
 
   if ( m_useMCTruth ) {
     acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
@@ -96,12 +99,27 @@ StatusCode AlignmentMonitor::initialize()
   book1D( "deltaThetaUnamb","Ch angle error (Unambigous photons)", -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
   book2D( "dThetavphiRecAll", "dTheta v phi All", 0.0, 2*Gaudi::Units::pi, 20,
           -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50);
+  book2D( "dThetavphiRecIso", "dTheta v phi Isolated", 0.0, 2*Gaudi::Units::pi, 20,
+          -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50);
 
   m_sideHistos.push_back( book2D("dThetavphiRecSide0","dTheta v phi "+ Rich::text( m_rich, Rich::Side(0) ),
                                  0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
   m_sideHistos.push_back( book2D("dThetavphiRecSide1","dTheta v phi "+ Rich::text( m_rich, Rich::Side(1) ),
                                  0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
 
+  m_sideIsolatedHistos.push_back( book2D("dThetavphiRecIsoSide0","dTheta v phi isolated "+ Rich::text( m_rich, Rich::Side(0) ),
+                                         0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
+  m_sideIsolatedHistos.push_back( book2D("dThetavphiRecIsoSide1","dTheta v phi isolated "+ Rich::text( m_rich, Rich::Side(1) ),
+                                         0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
+  // quarter histos
+  m_quarterHistos.push_back( book2D("dThetavphiRecQuart0","dTheta v phi "+ Rich::text( m_rich, Rich::Side(0) )+" Pos",
+                                    0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
+  m_quarterHistos.push_back( book2D("dThetavphiRecQuart1","dTheta v phi "+ Rich::text( m_rich, Rich::Side(0) )+" Neg",
+                                    0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
+  m_quarterHistos.push_back( book2D("dThetavphiRecQuart2","dTheta v phi "+ Rich::text( m_rich, Rich::Side(1) )+" Pos",
+                                    0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
+  m_quarterHistos.push_back( book2D("dThetavphiRecQuart3","dTheta v phi "+ Rich::text( m_rich, Rich::Side(1) )+" Neg",
+                                    0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
   // pre book mirror combinations
   /*
     Since the introduction of python-based configuration, elements of a vector
@@ -287,7 +305,7 @@ StatusCode AlignmentMonitor::execute() {
       plot1D( delTheta, "deltaThetaUnamb","Ch angle error (Unambigous photons)",
               -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
 
-      int side;
+      int side, side2, quarter;
 
       if ( rich == Rich::Rich1 )
       {
@@ -304,6 +322,8 @@ StatusCode AlignmentMonitor::execute() {
                   -700, 700, -1000, 1000, 100, 100);
         }
         side = ( gPhoton.flatMirReflectionPoint().y() > 0.0 ? 0 : 1 );
+        side2 = ( gPhoton.flatMirReflectionPoint().x() > 0.0 ? 0 : 1 );
+        quarter = side*2+side2;
       }
       else
       {
@@ -319,12 +339,22 @@ StatusCode AlignmentMonitor::execute() {
                   -3000, 3000, -1000, 1000, 100, 100);
         }
         side = ( gPhoton.flatMirReflectionPoint().x() > 0.0 ? 0 : 1 );
+        side2 = ( gPhoton.flatMirReflectionPoint().y() > 0.0 ? 0 : 1 );
+        quarter = side*2+side2;
       }
+      // test for isolation
+      const bool isolated = m_isoTrack->isIsolated( segment, m_pType );
+
       plot2D( phiRec, delTheta, "dThetavphiRecAll", "dTheta v phi All", 0.0,
               2*Gaudi::Units::pi, -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50);
+      if ( isolated ) plot2D( phiRec, delTheta, "dThetavphiRecIso", "dTheta v phi Isolated", 0.0,
+                              2*Gaudi::Units::pi, -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50);
 
       // and a separate histogram for each side
       fill( m_sideHistos[side], phiRec, delTheta, 1 );
+      fill( m_quarterHistos[quarter], phiRec, delTheta, 1 );
+
+      if ( isolated ) fill( m_sideIsolatedHistos[side], phiRec, delTheta, 1 );
 
       // for minimal histo output (online) stop here
       if ( !m_minimalHistoOutput )
@@ -360,6 +390,10 @@ StatusCode AlignmentMonitor::execute() {
           h_id += thisCombiNr;
           plot2D( phiRec, delTheta, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
                   -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
+
+          if ( m_useOnlyIsolatedTracks && isolated )
+            plot2D( phiRec, delTheta, hid(rad,h_id+"Iso"), title+" Iso", 0.0, 2*Gaudi::Units::pi,
+                    -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
 
           if ( m_useMCTruth ) {
             // use MC estimate for cherenkov angle

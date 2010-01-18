@@ -1,9 +1,8 @@
 
-__version__ = "$Id: Alignment.py,v 1.11 2009-10-07 14:56:25 papanest Exp $"
+__version__ = "$Id: Alignment.py,v 1.12 2010-01-18 16:02:48 papanest Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
-
 # ----------------------------------------------------------------------------------
 
 ## @class RichAlignmentConf
@@ -24,6 +23,9 @@ class RichAlignmentConf(RichConfigurableUser):
         ,"HistoProduce"     : True
         ,"WithMC"           : False     # set to True to use MC truth
         ,"HistoOutputLevel" : ["OnlyPrebookedMirrors", "OnlyPrebookedMirrors"] # options are: Minimal, OnlyPrebookedMirrors, Full
+        ,"MinTrackMomentum" : [ 5, 10 ] # momentum cut in GeV, use -1 for default
+        ,"DeltaThetaRange"  : [ 0.004, 0.004 ]
+        ,"HPDList"          : [ [], [] ] # list of HPDs for histograms
         }
 
     ## Apply the configuration
@@ -42,15 +44,18 @@ class RichAlignmentConf(RichConfigurableUser):
             RichAlignMoniR1 = Rich__Rec__MC__AlignmentMonitor("RichAlignMoniR1")
             sequence.Members += [RichAlignMoniR1]
 
-            RichAlignMoniR1.UseMCTruth    = self.getProp("WithMC")
-            RichAlignMoniR1.RichDetector  = 0   # Rich1 = 0, Rich2 = 1
+            RichAlignMoniR1.UseMCTruth      = self.getProp("WithMC")
+            RichAlignMoniR1.RichDetector    = 0   # Rich1 = 0, Rich2 = 1
+            RichAlignMoniR1.DeltaThetaRange = self.getProp("DeltaThetaRange")[0]
 
             # Track selector
             trselname = "TrackSelector"
             RichAlignMoniR1.addTool( RichTools().trackSelector(trselname), name=trselname )
 
             RichAlignMoniR1.TrackSelector.TrackAlgs = [ "Match","Forward" ]
-            RichAlignMoniR1.TrackSelector.MinPCut   = 5
+            r1MinPCut = self.getProp("MinTrackMomentum")[0]
+            if r1MinPCut < 0: r1MinPCut = 5
+            RichAlignMoniR1.TrackSelector.MinPCut   = r1MinPCut
 
             # RichAlignMoniR1.NTupleProduce = self.getProp("NTupleProduce")
             RichAlignMoniR1.HistoProduce  = self.getProp("HistoProduce")
@@ -66,7 +71,9 @@ class RichAlignmentConf(RichConfigurableUser):
                 RichAlignMoniR1.OnlyPrebookedMirrors = True
 
             # This list is of "popular" mirrors. A longer list is required for full alignment
-            RichAlignMoniR1.PreBookHistos = ['0003','0106',  '0212','0309' ]
+            RichAlignMoniR1.PreBookHistos = ['0000','0001','0002','0003', '0104','0105','0106','0107',
+                                             '0212','0213','0214','0215', '0308','0309','0310','0311' ]
+            RichAlignMoniR1.HPDList = self.getProp("HPDList")[0]
 
         # Mirror Alignment monitor for Rich2
         #-------------------------------------------------------------------------------
@@ -75,15 +82,18 @@ class RichAlignmentConf(RichConfigurableUser):
             RichAlignMoniR2 = Rich__Rec__MC__AlignmentMonitor("RichAlignMoniR2")
             sequence.Members += [RichAlignMoniR2]
 
-            RichAlignMoniR2.UseMCTruth    = self.getProp("WithMC")
-            RichAlignMoniR2.RichDetector  = 1   # Rich1 = 0, Rich2 = 1
+            RichAlignMoniR2.UseMCTruth      = self.getProp("WithMC")
+            RichAlignMoniR2.RichDetector    = 1   # Rich1 = 0, Rich2 = 1
+            RichAlignMoniR2.DeltaThetaRange = self.getProp("DeltaThetaRange")[1]
 
             # Track selector
             trselname = "TrackSelector"
             RichAlignMoniR2.addTool( RichTools().trackSelector(trselname), name=trselname )
 
             RichAlignMoniR2.TrackSelector.TrackAlgs = [ "Match","Forward" ]
-            RichAlignMoniR2.TrackSelector.MinPCut   = 10
+            r2MinPCut = self.getProp("MinTrackMomentum")[1]
+            if r2MinPCut < 0: r2MinPCut = 10
+            RichAlignMoniR2.TrackSelector.MinPCut   = r2MinPCut
 
             # RichAlignMoniR2.NTupleProduce = self.getProp("NTupleProduce")
             RichAlignMoniR2.HistoProduce  = self.getProp("HistoProduce")
@@ -98,7 +108,7 @@ class RichAlignmentConf(RichConfigurableUser):
                 RichAlignMoniR2.MinimalHistoOutput = True
                 RichAlignMoniR2.OnlyPrebookedMirrors = True
 
-            # RichAlignMoniR2.HPDList = [ 200107, 200108, 200007, 200008 ]
+            RichAlignMoniR2.HPDList = self.getProp("HPDList")[1]
 
             # List of combinations of RICH2 spheric and flat mirror segments where
             # e.g. '2719' means spheric mirror No 27 and flat mirror No 19.
