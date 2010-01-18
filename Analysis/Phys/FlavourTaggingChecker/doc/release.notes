@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.72 2010-01-14 15:18:05 jpalac Exp $
+! $Id: release.notes,v 1.73 2010-01-18 22:17:30 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2010-01-18 - Marco Musy
+ - modified TaggingUtilsChecker to take in the asbolute value of impact parameter
+  . Increase version to v4r1
 
 ! 2010-01-14 - Juan PALACIOS
  - src/BTagginganalysis.cpp

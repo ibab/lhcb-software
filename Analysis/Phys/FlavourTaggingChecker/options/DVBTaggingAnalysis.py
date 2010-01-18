@@ -17,34 +17,36 @@ from Configurables import CheatedSelection, PhysDesktop
 cheat = CheatedSelection("CheatedSelection")
 cheat.InputLocations = [ "Phys/TaggingPions" ]
 cheat.AssociatorInputData = [ "Phys/CheatedSelection/Particles" ]
-cheat.OutputLevel = 3
+cheat.OutputLevel = 2
 
 ########################################################################
 # Flavour tagging. 
 
 from Configurables import BTagging, BTaggingTool, BTaggingAnalysis, BTaggingChecker
 
+location = "/Event/Sel/Phys/CheatedSelection"
+
 tag = BTagging("BTagging")
-tag.InputLocations = [ "Phys/CheatedSelection"]
-tag.OutputLevel = 3
+tag.InputLocations = [ location ]
+tag.OutputLevel = 2
 tag.addTool( PhysDesktop )
-tag.PhysDesktop.OutputLevel = 4
+tag.PhysDesktop.OutputLevel = 3
 
 ########################################################################
 # Flavour tagging Checker:
 
 tagcheck = BTaggingChecker("BTaggingChecker")
-tagcheck.InputLocations = [ "CheatedSelection" ]
-tagcheck.TagsLocation = "Phys/CheatedSelection/FlavourTags"
-tagcheck.OutputLevel = 3
+tagcheck.InputLocations = [ location ]
+tagcheck.TagsLocation = location+"/FlavourTags"
+tagcheck.OutputLevel = 2
 
 ########################################################################
 # BTaggingAnalysis ntuple creation
 
 tagana = BTaggingAnalysis("BTaggingAnalysis")
-tagana.InputLocations = [ "Phys/CheatedSelection", "Phys/TaggingPions" ]
-tagana.TagOutputLocation =  "Phys/CheatedSelection/FlavourTags"
-tagana.OutputLevel = 4
+tagana.InputLocations = [ location , "Phys/TaggingPions" ]
+tagana.TagOutputLocation =  location+"/FlavourTags"
+tagana.OutputLevel = 2
 
 ########################################################################
 # Standard configuration
@@ -63,7 +65,7 @@ DaVinci().DataType   = "MC09"
 #importOptions("$FLAVOURTAGGINGOPTS/BTaggingTool_DC06.py") #to switch to DC06 tuning
 
 from Configurables import PrintDecayTree
-PrintDecayTree().InputLocations = [ "Phys/CheatedSelection"  ] 
+PrintDecayTree().InputLocations = [ location ] 
 
 DaVinci().MoniSequence = [ PrintDecayTree(),
                            cheat,
@@ -75,8 +77,8 @@ DaVinci().MoniSequence = [ PrintDecayTree(),
 ########################################################################
 # example data file
 
-EventSelector().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/p/pkoppenb/MC09-Bu2eeK/Bu2LLK-1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+#EventSelector().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/p/pkoppenb/MC09-Bu2eeK/Bu2LLK-1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 
 #bsdspi_nu3_2.txt.gz
-#EventSelector().Input   = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005272/0000/00005272_00000002_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
+EventSelector().Input   = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005272/0000/00005272_00000002_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
 

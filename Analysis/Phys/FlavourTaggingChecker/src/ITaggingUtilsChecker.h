@@ -1,4 +1,4 @@
-// $Id: ITaggingUtilsChecker.h,v 1.1 2007-06-09 12:47:20 musy Exp $
+// $Id: ITaggingUtilsChecker.h,v 1.2 2010-01-18 22:17:30 musy Exp $
 #ifndef ITAGGINGUTILSCHECKER_H 
 #define ITAGGINGUTILSCHECKER_H 1
 
@@ -27,11 +27,8 @@ public:
   static const InterfaceID& interfaceID() { return IID_ITaggingUtilsChecker; };
  
   virtual StatusCode calcIP( const LHCb::Particle* , 
-                             const LHCb::Vertex* , double&, double&)=0;
+                             const LHCb::VertexBase* , double&, double&)=0;
   
-  virtual StatusCode calcIP( const LHCb::Particle* , 
-                             const LHCb::RecVertex* , double&, double&)=0;
-
   virtual StatusCode calcIP( const LHCb::Particle* ,
                              const LHCb::RecVertex::ConstVector& ,
                              double& , double& )=0;

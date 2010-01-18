@@ -5,9 +5,10 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/ToolFactory.h"
 // from Event
-#include "Kernel/IGeomDispCalculator.h"
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"
 #include "ITaggingUtilsChecker.h"
+#include <Kernel/DVAlgorithm.h>
+#include <Kernel/GetDVAlgorithm.h>
 
 /** @class TaggingUtilsChecker TaggingUtilsChecker.h 
  *
@@ -31,9 +32,7 @@ public:
 
   //-------------------------------------------------------------
   StatusCode calcIP( const LHCb::Particle* , 
-		     const LHCb::Vertex* , double&, double&);
-  StatusCode calcIP( const LHCb::Particle* , 
-		     const LHCb::RecVertex* , double&, double&);
+		     const LHCb::VertexBase* , double&, double&);
   StatusCode calcIP( const LHCb::Particle*,
 		     const LHCb::RecVertex::ConstVector& ,
 		     double& , double& );
@@ -54,8 +53,9 @@ private:
   HepMC::GenParticle* HEPassociated(const LHCb::MCParticle* );
   LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* );
 
-  IGeomDispCalculator *m_Geom;
   IPrintMCDecayTreeTool* m_debug;
+  IDistanceCalculator *m_Dist;
+  DVAlgorithm* m_dva;
 
 };
 

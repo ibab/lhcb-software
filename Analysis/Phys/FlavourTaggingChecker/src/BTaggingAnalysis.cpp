@@ -68,11 +68,6 @@ StatusCode BTaggingAnalysis::initialize() {
       return StatusCode::FAILURE;
     }
   }
-  m_Geom = tool<IGeomDispCalculator> ("GeomDispCalculator", this);
-  if ( ! m_Geom ) {   
-    fatal() << "GeomDispCalculator could not be found" << endreq;
-    return StatusCode::FAILURE;
-  }//becomes obsolete but still used at present
 
   m_bkgCategory = tool<IBackgroundCategory>("BackgroundCategory", this);
   if(!m_bkgCategory){
