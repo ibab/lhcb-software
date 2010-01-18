@@ -1,3 +1,10 @@
+2010-01-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: 
+	- added the  -C or --compatible-configs options
+	that prints the avaible CMTCONFIGs for that platform and exits
+	- added the platform detection if no CMTCONFIG has been provided.
+
 2010-01-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLCGCMTtar: fixed the creation of the LCG tarball for the LHCbDirac 

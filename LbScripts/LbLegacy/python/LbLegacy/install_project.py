@@ -69,6 +69,7 @@ nb_retries = 3
 check_only = False
 overwrite_mode = False
 fix_perm = True
+show_compatible_configs = False
 
 #----------------------------------------------------------------------------------
 def usage() :
@@ -106,6 +107,7 @@ def help() :
                            to make a 'cmt broadcast cmt config' of all projects but LCGCMT
       -n or -nocheck     : no md5 check of the tar balls
       --retry=<nb>       : nb of retries for the download (default=1)
+      -C                 : show compatible CMTCONFIGs for that platform
 
     Perequisite:
       requires python version >= 2.3.4 on Win32 and python >=2.3 on Linux
@@ -1121,6 +1123,10 @@ def cleanBootScripts():
         log.debug("Removing the %s directory" % this_bootscripts_dir)
         removeAll(this_bootscripts_dir)
 
+def showCompatibleConfigs():
+    from LbConfiguration.Platform import NativeMachine
+    m = NativeMachine()
+    print " ".join(m.CMTSupportedConfig(debug=True))
 #
 #  list available versions ==============================================================================
 #
@@ -1519,6 +1525,11 @@ def runInstall(pname,pversion,binary=None):
         listVersions(pname)
         sys.exit()
 
+    if show_compatible_configs :
+        showCompatibleConfigs()
+        sys.exit()
+
+
 # if remove flag is set then correspondind tar files and directories will
 # be removed
     if remove_flag :
@@ -1846,29 +1857,34 @@ def untarFile(file):
 def checkBinaryName(binary):
     global make_flag
     import LbConfiguration.Platform
-    if binary:
-        for b in LbConfiguration.Platform.binary_list:
-            if b == binary:
-                os.environ['CMTCONFIG'] = binary
-                os.environ['CMTDEB'] = binary
-                if LbConfiguration.Platform.isBinaryOpt(binary) :
-                    os.environ['CMTDEB'] = LbConfiguration.Platform.getBinaryDbg(binary)
-                # if a win32 binary is installed from a non win32 platform then do not cmt config
-                if sys.platform != 'win32' and binary.find('win32') != 'win32':
-                    make_flag = None
-                break
-        else:
-            print ' this binary %s is not part of LHCb distribution '% binary
-            print ' choose another one from the list %s '% LbConfiguration.Platform.binary_list
-            print ' or do not require the binary  '
-            sys.exit(' %s is not part of LHCb distribution '%(binary)+'\n' )
-    else:
-        if not os.getenv('CMTCONFIG') in LbConfiguration.Platform.binary_list:
-            print 'BE CAREFUL - your CMTCONFIG %s is not part of the lhcb_binary %s'%(os.getenv('CMTCONFIG'),LbConfiguration.Platform.binary_list)
-            print 'do you want to continue? [yes|no]'
-            next = sys.stdin.readline()
-            if next.lower()[0] != 'y':
-                sys.exit()
+    
+    log = logging.getLogger()
+ 
+    if not binary :
+        log.warning("No CMTCONFIG has been provided")
+        m = LbConfiguration.Platform.NativeMachine()
+        plist = m.CMTSupportedConfig(debug=True)
+        if plist :
+            binary = plist[0]
+        else :
+            binary = m.CMTNativeConfig(debug=False)
+        log.warning("Guessed CMTCONFIG is %s" % binary)
+ 
+
+    os.environ['CMTCONFIG'] = binary
+    os.environ['CMTDEB'] = binary
+    if LbConfiguration.Platform.isBinaryOpt(binary) :
+        os.environ['CMTDEB'] = LbConfiguration.Platform.getBinaryDbg(binary)
+    # if a win32 binary is installed from a non win32 platform then do not cmt config
+    if sys.platform != 'win32' and binary.find('win32') != -1 :
+        make_flag = None
+    
+    if binary not in LbConfiguration.Platform.binary_list:
+        print 'BE CAREFUL - your CMTCONFIG %s is not part of the lhcb_binary %s'%(os.getenv('CMTCONFIG'),LbConfiguration.Platform.binary_list)
+        print 'do you want to continue? [yes|no]'
+        next = sys.stdin.readline()
+        if next.lower()[0] != 'y':
+            sys.exit()
 
 #---------------------------------------------------------------------
 def main():
@@ -1877,6 +1893,7 @@ def main():
     global cmtversion, md5_check, grid_version, nb_retries
     global setup_script, check_only, overwrite_mode
     global _retry_time, fix_perm
+    global show_compatible_configs
 # get arguments
     pname = None
     pversion = None
@@ -1887,11 +1904,12 @@ def main():
         help()
         sys.exit()
     try:
-        keys, values = getopt.getopt(arguments,'hdflrbp:v:c:ng:s:',
+        keys, values = getopt.getopt(arguments,'hdflrbp:v:c:ng:s:C',
             ['help','debug','full','list','remove','binary=',
              'project=','cmtversion=','nocheck',
              'retry=','grid=','setup-script=','check', 'overwrite',
-             'compatversion=', 'retrytime=', 'nofixperm', 'version'])
+             'compatversion=', 'retrytime=', 'nofixperm', 'version',
+             'compatible-configs'])
 
     except getopt.GetoptError:
         help()
@@ -1903,6 +1921,8 @@ def main():
             sys.exit()
         if key in ('-d', '--debug'):
             debug_flag = True
+        if key in ('-C', '--compatible-configs'):
+            show_compatible_configs = True
         if key in ('-f', '--full'):
             full_flag = True
         if key in ('-h', '--help'):
@@ -1923,7 +1943,7 @@ def main():
                 plist = pname.split("/")
                 pname = "/".join(plist[1:])
         if key == '-b':
-            binary = os.environ['CMTCONFIG']
+            binary = os.environ.get('CMTCONFIG', None)
         if key == '--binary':
             binary = value
             os.environ["CMTCONFIG"] = binary
