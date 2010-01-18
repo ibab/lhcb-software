@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.16 2010-01-08 15:41:06 marcocle Exp $
+# $Id: GetPack.py,v 1.17 2010-01-18 15:03:23 marcocle Exp $
 
 from LbUtils.Script import Script
 from LbConfiguration import createProjectMakefile
@@ -106,7 +106,72 @@ class Quit:
 class Skip:
     pass
 
-# Helper function to select one element of a list.
+## Helper function to select one element of a list, simple version (no curses).
+def selectFromListPlain(message, lst, bars = False):
+    page_size = 30
+    count = len(lst)
+    page = 0
+    pages = count/page_size + 1
+
+    default_ans = None
+    idx = -1
+    while idx < 0:
+        # display current page
+        if bars:
+            print '-' * 80
+        print message
+        if bars:
+            print '-' * 80
+        for ln in range(page*page_size, min((page+1)*page_size, count)):
+            print "%3d - %s" % (ln, lst[ln])
+        # prepare the question (with default answer)
+        question = "Please enter your choice (0-%d, " % (count-1)
+        if page < pages - 1:
+            question += "(n)ext, "
+        if page > 0:
+            question += "(p)revious, "
+        if not default_ans:
+            default_ans = 'q'
+            if page < pages - 1:
+                default_ans = 'n'
+            elif page > 0:
+                default_ans = 'p'
+        question += "(q)uit) [%s]: " % default_ans
+
+        ans = None
+        while ans is None:
+            sys.stdout.write(question)
+            ans = sys.stdin.readline().strip().lower()
+            if ans == "":
+                ans = default_ans
+            if ans in ['n', 'next']:
+                page += 1
+                default_ans = ans
+                if page >= pages:
+                    page = pages - 1
+                if page == pages - 1:
+                    default_ans = 'p'
+            elif ans in ['p', 'prev', 'previous']:
+                page -= 1
+                default_ans = ans
+                if page < 0:
+                    page = 0
+                if page == 0:
+                    default_ans = 'n'
+            elif ans in [ 'q', 'quit' ]:
+                raise Quit
+            else:
+                try:
+                    ans = int(ans)
+                except:
+                    ans = -1
+                if ans < 0 or ans >= count:
+                    print "Invalid selection '%s'" % ans
+                    ans = None
+                else:
+                    idx = ans
+    return idx
+
 # It uses curses if available.
 # @todo: needs improvements and clean up
 try:
@@ -255,7 +320,7 @@ try:
     ## Display a dialog with the passed message and return the index of the
     #  element selected in the list.
     #  (the argument 'bars' is used only by the fall-back version)
-    def selectFromList(message, lst, bars = False):
+    def selectFromListCurses(message, lst, bars = False):
         def run_dialog(screen):
             curses.use_default_colors()
             dialog = Dialog(screen, message, lst)
@@ -266,77 +331,16 @@ try:
         return ans
 
 except ImportError:
-    ## Fallback version in case curses is not available
-    def selectFromList(message, lst, bars = False):
-        page_size = 30
-        count = len(lst)
-        page = 0
-        pages = count/page_size + 1
+    # Fall back on the plain implementation if curses is not available
+    selectFromListCurses = selectFromListPlain
 
-        default_ans = None
-        idx = -1
-        while idx < 0:
-            # display current page
-            if bars:
-                print '-' * 80
-            print message
-            if bars:
-                print '-' * 80
-            for ln in range(page*page_size, min((page+1)*page_size, count)):
-                print "%3d - %s" % (ln, lst[ln])
-            # prepare the question (with default answer)
-            question = "Please enter your choice (0-%d, " % (count-1)
-            if page < pages - 1:
-                question += "(n)ext, "
-            if page > 0:
-                question += "(p)revious, "
-            if not default_ans:
-                default_ans = 'q'
-                if page < pages - 1:
-                    default_ans = 'n'
-                elif page > 0:
-                    default_ans = 'p'
-            question += "(q)uit) [%s]: " % default_ans
-
-            ans = None
-            while ans is None:
-                sys.stdout.write(question)
-                ans = sys.stdin.readline().strip().lower()
-                if ans == "":
-                    ans = default_ans
-                if ans in ['n', 'next']:
-                    page += 1
-                    default_ans = ans
-                    if page >= pages:
-                        page = pages - 1
-                    if page == pages - 1:
-                        default_ans = 'p'
-                elif ans in ['p', 'prev', 'previous']:
-                    page -= 1
-                    default_ans = ans
-                    if page < 0:
-                        page = 0
-                    if page == 0:
-                        default_ans = 'n'
-                elif ans in [ 'q', 'quit' ]:
-                    raise Quit
-                else:
-                    try:
-                        ans = int(ans)
-                    except:
-                        ans = -1
-                    if ans < 0 or ans >= count:
-                        print "Invalid selection '%s'" % ans
-                        ans = None
-                    else:
-                        idx = ans
-        return idx
+selectFromList = selectFromListCurses
 
 
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.16 2010-01-08 15:41:06 marcocle Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.17 2010-01-18 15:03:23 marcocle Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]"
@@ -405,11 +409,15 @@ class GetPack(Script):
                                help = "add a custom CVS repository to the known ones")
         self.parser.add_option("--no-pre", action = "store_true",
                                help = "ignore the pre-release tags (those ending in '-pre[0-9]+')")
+        self.parser.add_option("--no-curses", action = "store_true",
+                               help = "use the simple selection from the list of packages "
+                                      "instead of the curses version")
         self.parser.set_defaults(protocol = "default",
                                  version_dirs = False,
                                  user_svn = [],
                                  user_cvs = [],
                                  no_pre = False,
+                                 no_curses = False,
                                  exclude = [],
                                  )
         if "GETPACK_USER" in os.environ:
@@ -613,7 +621,7 @@ class GetPack(Script):
                 if rep not in self.repositories:
                     self.log.error("Uknown repository alias '%s' (allowed: %r)",
                                    self.selected_repository, self.repositories.keys())
-                    return 1
+                    raise Skip # @fixme: (MCl) I'm not sure it is the right way to stop
                 repos = { rep: self.repositories[rep] }
 
             # Collect the list of packages
@@ -707,6 +715,10 @@ class GetPack(Script):
         if self.options.really_recursive or self.options.recursive_head:
             # recursion is implied by the aboves
             self.options.recursive = True
+        
+        if self.options.no_curses:
+            global selectFromList
+            selectFromList = selectFromListPlain
 
     def askPackage(self):
         if self.options.batch:

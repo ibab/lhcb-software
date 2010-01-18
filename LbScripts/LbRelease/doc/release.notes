@@ -2,6 +2,12 @@
 
 	* cmt/requirements: release of version v3r0
 
+2010-01-18  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/GetPack.py: added the possibility to disable the curses
+	dialog and use the old version.
+	Fixed a minor problem occurring when passing the wrong argument to "-i".
+
 2010-01-12  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies/functions.py: copyLocal improved to fix
