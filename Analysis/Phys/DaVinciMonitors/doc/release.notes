@@ -4,6 +4,12 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-01-18 - Patrick Koppenburg
+ - task #13386: Remove include of IContextTool from MuIDMonitor
+   . At the same time break lines thta are too long and remove the
+     useless word "Invariant" from histogram titles.
+ - v1r6p1
+
 ! 2009-12-16 - Patrick Koppenburg
  - Remove obsolete options
 

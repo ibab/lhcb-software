@@ -11,7 +11,6 @@
 #include "GaudiAlg/IHistoTool.h"
 
 #include "Event/Particle.h"
-#include <Kernel/IContextTool.h>
 
 #include "Event/ODIN.h" // event & run number
 
@@ -270,9 +269,9 @@ StatusCode MuIDMonitor::execute() {
     //Main particle daughters
     Particle::ConstVector dau = (*iP)->daughtersVector();
 
-    //Invariant Mass of the 2body pair
+    //Mass of the 2body pair
     PMass = (*iP)->measuredMass();
-    plot1D (PMass, "IM","Invariant mass: tag muon only",m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 );
+    plot1D (PMass, "IM","Mass: tag muon only",m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 );
 
     pl1 = pl2 = 0; pl = -999;
     posPion = -1; cosTr = 0; plTr = 0;
@@ -454,7 +453,7 @@ StatusCode MuIDMonitor::execute() {
 	  if(m_JPAna) {
 	    //Only for probe muons
 	    if(!idTag[id_jp]) { 
-	      plot1D (PMass, "IM_"+name,"Invariant Mass: tag + probe with hit in 2 foi",m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 );
+	      plot1D (PMass, "IM_"+name,"Mass: tag + probe with hit in 2 foi",m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 );
 
 	      if(fabs(PMass-m_MassMean)<m_EffWin) {
 		plot1D ( (track)->p(), nameD+"P_effDeno","P distribution",m_edgesJPX);
@@ -469,9 +468,11 @@ StatusCode MuIDMonitor::execute() {
 	      
 	      if(pMuid) {
 		if(pMuid->IsMuonLoose()) {
-		  plot1D (PMass, "IM_ism_"+name,"Invariant Mass: tag + probe after IsMuonLoose",m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 );
+		  plot1D (PMass, "IM_ism_"+name,"Mass: tag + probe after IsMuonLoose",
+              m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 );
 		  if(fabs(PMass-m_MassMean)<m_EffWin) {
-		    plot1D ( (track)->p(), nameD+"P_effNume","P distribution (after ismuon)",m_edgesJPX);
+		    plot1D ( (track)->p(), nameD+"P_effNume","P distribution (after ismuon)",
+                 m_edgesJPX);
 		  } 
 		}//Requires IsMuonloose
 	      }//Requires pMuid for ismuon loose check
@@ -486,8 +487,10 @@ StatusCode MuIDMonitor::execute() {
 	  if(m_LMAna) {
 
 	    //For both pions and protons
-	    if(idTag[id_jp]) { plot1D (PMass, "IM_"+name,"Invariant Mass Lambda Candidates",m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 ); }
-	    else  { plot1D (PMass, "IM_"+name,"Invariant Mass Lambda Candidates",m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 ); }
+	    if(idTag[id_jp]) { plot1D (PMass, "IM_"+name,"Mass Lambda Candidates",
+                                 m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 ); }
+	    else  { plot1D (PMass, "IM_"+name,"Mass Lambda Candidates",
+                      m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 ); }
 
 	    if(fabs(PMass-m_MassMean)<m_EffWin) {
 
@@ -509,8 +512,10 @@ StatusCode MuIDMonitor::execute() {
 
 	      if(pMuid->IsMuonLoose()) {
 		
-		if(idTag[id_jp]) { plot1D (PMass, "IM_ism_"+name,"Invariant Mass Lambda Candidates (after ismuon)",m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 );}
-		else { plot1D (PMass, "IM_ism_"+name,"Invariant Mass Lambda Candidates (after ismuon)",m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 );}
+		if(idTag[id_jp]) { plot1D (PMass, "IM_ism_"+name,"Mass Lambda Candidates (after ismuon)",
+                               m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 );}
+		else { plot1D (PMass, "IM_ism_"+name,"Mass Lambda Candidates (after ismuon)",
+                   m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 );}
 
 		if(fabs(PMass-m_MassMean)<m_EffWin) {
 		  if(idTag[id_jp]) { plot1D ( (track)->p(), nameD+"P_effNume","P distribution (after ismuon)",m_edgesLMX);}
