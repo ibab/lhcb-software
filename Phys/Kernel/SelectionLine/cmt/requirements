@@ -1,0 +1,42 @@
+#============================================================================
+# Created    : 2010-01-18
+# Maintainer : Gerhard Raven 
+#============================================================================
+package           SelectionLine
+version           v0r1
+# Structure
+#============================================================================
+branches          cmt doc src
+include_path none
+
+# Used packages
+#============================================================================
+use Boost               v*  LCG_Interfaces
+use Python              v*  LCG_Interfaces 
+use AIDA                v*  LCG_Interfaces
+use HltInterfaces       v*  Kernel
+use HltEvent            v*  Event
+use GaudiKernel         v* 
+use GaudiAlg            v* 
+use GaudiUtils          v* 
+
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          SelectionLine    ../src/*.cpp
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=SelectionLine
+
+# =============================================================================
+# ======= the patterns ========================================================
+#macro HltLineUserModules "HltConf.HltLinesConfigurableUser"
+#apply_pattern install_python_modules
+
+## needed because of the use of Aida2Root
+
+private
+macro_append ROOT_linkopts " -lHist "  WIN32 "  libHist.lib"

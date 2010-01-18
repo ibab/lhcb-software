@@ -1,0 +1,11 @@
+! $Id: release.notes,v 1.1.1.1 2010-01-18 14:52:00 graven Exp $
+! -----------------------------------------------------------------------------
+! Package     : Phys/SelectionLine
+! Responsible : Gerhard Raven
+! Purpose     : Infrastructure for HLT and stripping 'lines'
+! -----------------------------------------------------------------------------
+
+! 2010-01-18 - Gerhard Raven
+ - initial import of code adapted from Hlt/HltLine, together with 
+   HltBase/HltHistogramUtilities (the latter is here for dependency reasons
+   only, and should be moved 'further' down in the dependency stack)
