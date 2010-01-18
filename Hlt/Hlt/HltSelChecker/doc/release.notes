@@ -19,6 +19,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-01-18 - Patrick Koppenburg
+ - HltCorrelations: fail on missing DecReports only if L0 is true
+
 ! 2010-01-15 - Patrick Koppenburg
  - src/ReadHltReport.cpp : Reduce the number of calls to bestPV() 
   following Juan's advice

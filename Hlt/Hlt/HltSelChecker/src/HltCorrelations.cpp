@@ -1,4 +1,4 @@
-// $Id: HltCorrelations.cpp,v 1.6 2010-01-13 13:11:32 cattanem Exp $
+// $Id: HltCorrelations.cpp,v 1.7 2010-01-18 12:21:52 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -133,8 +133,12 @@ StatusCode HltCorrelations::execute() {
       return StatusCode::FAILURE;
     }
   } else {
-    Error("No HltDecReports found. Please run HltDecReportsMaker");
-    return StatusCode::FAILURE;
+    if ( l0yes) {
+      err() << "No HltDecReports found. Run HltDecReportsMaker" << endmsg;
+      return StatusCode::FAILURE;
+    } else {
+      Warning("No HltDecReports found. Run HltDecReportsMaker",StatusCode::SUCCESS,1);
+    }
   }
   
   StatusCode sc = moreAlgorithms() ;
