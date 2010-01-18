@@ -59,15 +59,15 @@ class Physics_320Vis_300L0_10Hlt1_Hlt2_Oct09( Physics_320Vis_300L0_10Hlt1_Aug09 
 ##
 ## charm : leave out 4-body lines
 ##
-        list.extend( [ 'Hlt2Topo3BodyCharmSA',
-                       'Hlt2Topo2BodyCharmSA',
-                       #'Hlt2Topo4BodyCharmSA',
-                       'Hlt2TopoTF2BodyCharmSignal',
-                       'Hlt2TopoTF3BodyCharmSignal',
-                       #'Hlt2TopoTF4BodyCharmSignal',
-                       'Hlt2TopoTF2BodyCharmWideMass',
-                       'Hlt2TopoTF3BodyCharmWideMass'
-                       #'Hlt2TopoTF4BodyCharmWideMass'
+        list.extend( [ 'Hlt2Charm3BodySA',
+                       'Hlt2Charm2BodySA',
+                       #'Hlt2Charm4BodySA',
+                       'Hlt2CharmTF2BodySignal',
+                       'Hlt2CharmTF3BodySignal',
+                       #'Hlt2CharmTF4BodySignal',
+                       'Hlt2CharmTF2BodyWideMass',
+                       'Hlt2CharmTF3BodyWideMass'
+                       #'Hlt2CharmTF4BodyWideMass'
                        ] )
 ##
 ## (di)muons : Leptonic list

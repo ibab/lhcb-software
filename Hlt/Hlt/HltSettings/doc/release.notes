@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-01-18 - Patrick Spradlin
+ - Updated list of charm lines in Physics_320Vis_300L0_10Hlt1_Hlt2_Oct09.py.
+   See previous change.
+
 ! 2010-01-12 - Patrick Spradlin
  - Updates related to separation of charm and topological lines in
    Hlt/Hlt2Lines.
