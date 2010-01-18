@@ -1,10 +1,17 @@
+<HEAD>
+<meta http-equiv="no-cache">
+<meta http-equiv="refresh" content="500; URL=<?php echo "$_SERVER[PHP_SELF]"; ?>">
+  <LINK REL=STYLESHEET TYPE="text/css" HREF="styles_screen.css">
+</HEAD>
+<BODY>
 <?
+
 include 'util.php';
 if (isset($_COOKIE["login"])) {
   if ($_COOKIE["login"] == md5($_SESSION["user"] .$_SESSION["password"] . $_SESSION["histdb"] .$_SESSION['REMOTE_ADDR']."lhcbsalt")){
     $user=$_SESSION["user"];
   }
-  $conn=HistDBconnect();
+  $conn=HistDBconnect();  
   if($conn) {
     echo "connected as <span class=\"connected_name\">". $user."</span> ".
       ($canwrite ? "" : " <B>(READ-ONLY)</B>").
@@ -28,12 +35,6 @@ if (isset($_COOKIE["login"])) {
   //$allsubsys=implode("_%_",$subsys);
   //$allpage=implode("_%_",$page);
 ?>
-<HEAD>
-<meta http-equiv="no-cache">
-<meta http-equiv="refresh" content="500; URL=<?php echo "$_SERVER[PHP_SELF]"; ?>">
-  <LINK REL=STYLESHEET TYPE="text/css" HREF="styles_screen.css">
-</HEAD>
-<BODY>
 <h4> Search Histogram</h4> 
 <form action="HistogramList.php" METHOD="POST" target="mymain">
 title contains <input type="Text" name="searchstring" size=10> <br>
@@ -88,7 +89,9 @@ or HID <input type="Text" name="searchHID" size=10> <br>
 <a class='asalink' href="Viewpage.php" target="mymain"> View Pages</a><br>
 <a class='asalink' href="Viewpage.php?page=new__" target="mymain"> Create new Page</a><br>
 <hr>
-<h4> Task Editor & <br> Reference Histograms</h4> 
+<h4> Task Editor 
+<? //& <br> Reference Histograms?> 
+</h4> 
  <form action="Task.php" METHOD="GET" target="mymain">
  Task <select name="task"> 
 <?

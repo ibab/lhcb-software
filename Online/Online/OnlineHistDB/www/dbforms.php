@@ -973,7 +973,8 @@ function task_form($taskname,$mode)
 	 $_POST["SAVEFREQUENCY"]);
   echo "</table><br>\n";
 
-  if($mode == "display") {
+  $refOk=0;
+  if($mode == "display" && $refOk) {
     echo "<B>Reference histograms:</B><br><table>\n";
     if($_POST["REFERENCE"])
       echo "Latest Reference histograms available in ${Reference_home}/".$_POST["REFERENCE"]."<br>\n";
