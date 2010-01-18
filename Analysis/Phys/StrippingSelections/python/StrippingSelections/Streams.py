@@ -9,6 +9,7 @@ from StrippingSelections import StreamBmuon, StreamHadron, StreamJpsi
 from StrippingSelections import StreamDstar, StreamLambda, StreamBelectron
 from StrippingSelections import StreamMiniBias
 from StrippingSelections import StreamV0
+from StrippingSelections import StreamDplus
 
 allStreams = [ StreamBmuon.stream,
                StreamHadron.stream, 
@@ -17,5 +18,6 @@ allStreams = [ StreamBmuon.stream,
                StreamLambda.stream, 
                StreamBelectron.stream, 
                StreamMiniBias.stream, 
-               StreamV0.stream
+               StreamV0.stream,
+               StreamDplus.stream
              ] 

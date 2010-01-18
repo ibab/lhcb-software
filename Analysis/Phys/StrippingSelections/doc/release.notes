@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-01-18 - Mat Charles
+ - Added StreamDplus.py and inserted the stream into Streams.py
+
 ! 2010-01-18 - Greig Cowan
  - Added Loose strippings for Bs2JpsiPhi, Bd2JpsiKstar, Bu2JpsiK and
    Bd2DstarMuNu.
