@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.393 2010-01-12 16:04:14 spradlin Exp $ 
+! $Id: release.notes,v 1.394 2010-01-19 15:31:57 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-01-19 - Gerhard Raven
+ - Follow migration of HltLine -> Hlt::Line
 
 ! 2010-01-12 - Patrick Spradlin
  - Updates related to separation of charm and topological lines in

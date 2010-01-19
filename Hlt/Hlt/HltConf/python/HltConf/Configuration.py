@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.140 2010-01-11 14:48:15 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.141 2010-01-19 15:31:58 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -352,9 +352,9 @@ class HltConf(LHCbConfigurableUser):
         if   self.getProp('HistogrammingLevel') == 'None' : 
             for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable() )
         elif self.getProp('HistogrammingLevel') == 'Line' : 
-            for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable(), lambda x: x.getType()!='HltLine' ) 
+            for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable(), lambda x: x.getType()!='Hlt::Line' ) 
         elif self.getProp('HistogrammingLevel') == 'NotLine' : 
-            for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable(), lambda x: x.getType()=='HltLine' )
+            for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable(), lambda x: x.getType()=='Hlt::Line' )
             
 
 ##################################################################################
@@ -454,10 +454,10 @@ class HltConf(LHCbConfigurableUser):
             self.EnableLumiEventWriting = False
             
         # note: the following is a list and not a dict, as we depend on the order of iterating through it!!!
-        from Configurables import HltLine
+        from Configurables import Hlt__Line as Line
         _list = ( ( "EnableHltRoutingBits"   , [ HltRoutingBitsWriter ] )
                 , ( "EnableHltGlobalMonitor" , [ HltGlobalMonitor ] )
-                , ( "SkipHltRawBankOnRejectedEvents", [ lambda : HltLine('Hlt1Global') ] )
+                , ( "SkipHltRawBankOnRejectedEvents", [ lambda : Line('Hlt1Global') ] )
                 # , ( "SkipHltRawBankOnRejectedEvents", [ lambda : 'Hlt1Global' ] ) # TODO: fwd Moore.WriterRequires (which is a list...)
                 , ( "EnableHltDecReports"    , [ HltDecReportsWriter ] )
                 , ( "EnableHltSelReports"    , [ HltSelReportsMaker, HltSelReportsWriter ] )
