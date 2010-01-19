@@ -29,7 +29,7 @@ library          SelectionLine    ../src/*.cpp
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    component_library library=SelectionLine
+apply_pattern    linker_library library=SelectionLine
 
 # =============================================================================
 # ======= the patterns ========================================================
