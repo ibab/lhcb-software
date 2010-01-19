@@ -277,10 +277,13 @@ class CondDB(ConfigurableUser):
             if isinstance(partition["ONLINE"], CondDBAccessSvc):
                 partition["ONLINE"].HeartBeatCondition = "/Conditions/Online/LHCb/Tick"
             elif isinstance(partition["ONLINE"], CondDBTimeSwitchSvc):
-                for span in partition["ONLINE"].Readers:
-                    span = allConfigurables[eval(span.split(':')[0]).split("/")[1]]
-                    if isinstance(span, CondDBAccessSvc):
-                        span.HeartBeatCondition = "/Conditions/Online/LHCb/Tick"
+                # Add the heart beat conditions to the latest snapshot only since the
+                # others are limited but valid by construction.
+                if partition["ONLINE"].Readers:
+                    latest = partition["ONLINE"].Readers[-1]
+                    config = allConfigurables[eval(latest.split(':')[0]).split("/")[1]]
+                    if isinstance(config, CondDBAccessSvc):
+                        config.HeartBeatCondition = "/Conditions/Online/LHCb/Tick"
         
         if not self.getProp("Simulation"):
             # Standard configurations

@@ -1,9 +1,17 @@
-# $Id: release.notes,v 1.175 2010-01-12 19:06:27 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2010-01-19 - Marco Clemencic
+ - Fixes to the first implementation of task #13270.
+   - Handle properly cool and coral exceptions when retrieving the heart beat
+     condition to be able to issue a meaningful error.
+   - Modified the automatic setting of the HeartBeatCondition property for the
+     readers of CondDBTimeSwitchSvc. The property is added only to the last
+     reader because the other readers are (by construction) accessing limited
+     partitions.
 
 ! 2010-01-12 - Marco Clemencic
  - Completed task #13270: Block access to conditions in ONLINE partition if

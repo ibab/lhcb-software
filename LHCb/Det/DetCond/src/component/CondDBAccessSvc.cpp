@@ -920,6 +920,14 @@ StatusCode CondDBAccessSvc::i_getObject(const std::string &path, const Gaudi::Ti
   return sc;
 }
 
+namespace {
+  // Small helper function to reduce duplications
+  inline void cannotGetHeartBeatError(CondDBAccessSvc *self, const std::string&path) {
+    MsgStream log(self->msgSvc(), self->name());
+    log << MSG::ERROR << "Cannot get latest heart beat (" << path
+        << ") in the database" << endmsg;
+  }
+}
 const cool::ValidityKey& CondDBAccessSvc::i_latestHeartBeat()
 {
   if (m_latestHeartBeat == 0) {
@@ -934,11 +942,19 @@ const cool::ValidityKey& CondDBAccessSvc::i_latestHeartBeat()
       }
       // we do not use the normal functions to retrieve the object because
       // we want to by-pass the cache
-      {
+      try {
         DataBaseOperationLock dbLock(this);
         cool::IFolderPtr folder = database()->getFolder(m_heartBeatCondition);
         cool::IObjectPtr obj = folder->findObject(cool::ValidityKeyMax-1, 0);
         m_latestHeartBeat = obj->since();
+      }
+      catch (cool::Exception &e) {
+        cannotGetHeartBeatError(this, m_heartBeatCondition);
+        m_latestHeartBeat = 1; // not set to 0 to avoid another search in the database
+      }
+      catch (coral::Exception &e) {
+        cannotGetHeartBeatError(this, m_heartBeatCondition);
+        m_latestHeartBeat = 1; // not set to 0 to avoid another search in the database
       }
       if (m_outputLevel <= MSG::DEBUG) {
         MsgStream log(msgSvc(),name());
@@ -949,7 +965,7 @@ const cool::ValidityKey& CondDBAccessSvc::i_latestHeartBeat()
   if (FSMState() != Gaudi::StateMachine::RUNNING) {
     // Temporarily consider the database valid if not running
     // (e.g. during initialize).
-    // Note that the retrieve is done (and muts be done) anyway,
+    // Note that the retrieve is done (and must be done) anyway,
     // because it is needed by i_getObject().
     return cool::ValidityKeyMax;
   }
