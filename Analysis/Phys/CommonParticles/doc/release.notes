@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.166 2010-01-19 10:51:16 pkoppenb Exp $
+!$Id: release.notes,v 1.167 2010-01-19 10:53:03 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -8,7 +8,7 @@
 !
 !-----------------------------------------------------------------------------
 
-!========================= CommonParticles v6r3 2010-01-19 ===================
+!========================= CommonParticles v6r4 2010-01-19 ===================
 ! 2010-01-18 - Greig Cowan
  - Added StdVeryLooseJpsi for B2JpsiX strippings.
 
@@ -28,6 +28,7 @@
  - New StdLooseDiElectron, a copy of the StdLooseDiMuon
  - v6r3
 
+!========================= CommonParticles v6r3 2009-11-16 ===================
 !========================= CommonParticles v6r2 2009-10-28 ===================
 
 ! 2009-10-09 - Patrick Koppenburg
