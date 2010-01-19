@@ -3,6 +3,8 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+! 2009-01-18 - Stephanie Hansmann-Menzemer
+ - add ignore flag to HitBase class 
 
 !============================ TfKernel v2r13 2009-11-13 ======================
 ! 2009-11-10 - Wouter Hulsbergen

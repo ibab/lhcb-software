@@ -5,7 +5,7 @@
  *  Header file for track find hit base class Tf::HitBase
  *
  *  CVS Log :-
- *  $Id: HitBase.h,v 1.16 2008-08-21 18:08:32 smenzeme Exp $
+ *  $Id: HitBase.h,v 1.17 2010-01-19 13:18:35 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -183,6 +183,12 @@ namespace Tf
      */
     inline unsigned int isUsedNTimes () const { return m_status.count(); }
 
+    /** Access the ignore flag of the hit */
+    inline bool ignore() const { return m_ignore; }
+
+    /** Set the ignore flag of the hit */
+    inline void setIgnore(const bool ignore) const { m_ignore = ignore; }
+
     /** Access the region number for the hit */
     inline unsigned int region  () const { return static_cast<unsigned int>(m_regionID.region()); }
 
@@ -253,7 +259,7 @@ namespace Tf
              const RegionID& regionid,
              const double coord    = 0,
              const double variance = 0 )
-      : m_lhcbID(id), m_regionID(regionid), m_coord(coord), m_variance(variance) {}
+      : m_lhcbID(id), m_regionID(regionid), m_coord(coord), m_variance(variance), m_ignore (false) {}
 
     /** Set the coord value
      *  @param x The coord value to use 
@@ -269,9 +275,11 @@ namespace Tf
 
     LHCb::LHCbID m_lhcbID;          ///< The hit LHCbID channel identifier
     RegionID m_regionID;            ///< The hit RegionID
-    double m_coord;                  ///< The hit coord (XXX???XXX X value ?)
-    double m_variance;               ///< The hit variance
+    double m_coord;                 ///< The hit coord (XXX???XXX X value ?)
+    double m_variance;              ///< The hit variance
     mutable StatusFlag m_status;    ///< The hit status word (bit packed)
+    mutable bool m_ignore;                 ///< Flag for efficiency studies 
+
 
   };
 
