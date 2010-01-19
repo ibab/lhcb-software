@@ -15,6 +15,7 @@ Purpose: LHCb Digitization program
    . Fix to untested StatusCodes (VeloAlgorithms v5r1)
    . Monitoring of failed associations (VeloAlgorithms v5r1)
    . Fix to file sharing in FileRecordCnvSvc (Gaudi v21r7)
+   . Improvements to L0Calo simulation (CaloDigit v3r2)
 
 </PRE><H1><A NAME=v20r0>2009-12-07 Boole v20r0</A></H1></PRE>
  - Changes to Configurable:
