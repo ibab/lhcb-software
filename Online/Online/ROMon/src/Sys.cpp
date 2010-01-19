@@ -535,11 +535,15 @@ int ROMon::read(Procset& procset, size_t max_len) {
 	      static map<unsigned int,string> unames;
 	      map<unsigned int,string>::const_iterator iu=unames.find(st_buf.st_uid);
 	      if ( iu == unames.end() ) {
-		struct passwd pw, *ppwd;
+		struct passwd pw, *ppwd = 0;
 		ret = ::getpwuid_r(st_buf.st_uid,&pw,pwdbuff,sizeof(pwdbuff),&ppwd);
 		if ( 0 == ret ) {
-		  unames[st_buf.st_uid] = ppwd->pw_name;
-		  uname = ppwd->pw_name;
+		  if ( 0 != ppwd ) {
+		    unames[st_buf.st_uid] = uname = ppwd->pw_name;
+		  }
+		  else {
+		    unames[st_buf.st_uid] = uname = "<unknown>";
+		  }
 		}
 		else {
 		  continue;
