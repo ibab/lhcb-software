@@ -14,17 +14,17 @@ LHCbApp().DDDBtag   = "default"
 LHCbApp().CondDBtag = "default"
 
 LHCbApp().DDDBtag   = "head-20090330"
-LHCbApp().CondDBtag = "head-20090330"
+LHCbApp().CondDBtag = "head-20090402"
 
 # Latest cosmic run, with CALO, OT and (!!) RICH2 (35569 events)
-Escher().DatasetName = 'Cosmics'
 
 # wouter's dsts
-Escher().InputType = 'DST'
 data = [
-    'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34083.dst',
-    'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34117.dst',
-    'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34120.dst'
+    'PFN:/data/user/data/2008/RAW/LHCb/wouter/run34120.dst',
+    'PFN:/data/user/data/2008/RAW/LHCb/wouter/run31225.dst',
+    'PFN:/data/user/data/2008/RAW/LHCb/wouter/run31557.dst',
+    'PFN:/data/user/data/2008/RAW/LHCb/wouter/run34083.dst',
+    'PFN:/data/user/data/2008/RAW/LHCb/wouter/run34117.dst'
     ]
 
 EventSelector().Input = []
@@ -32,8 +32,16 @@ for d in data:
     name = "DATAFILE='" + d + "' TYP='POOL_ROOTTREE' OPT='READ'" 
     EventSelector().Input.append( name )
 
-EventSelector().PrintFreq = 1
-Escher().PrintFreq = 1
+EventSelector().PrintFreq = 1000
+Escher().PrintFreq = 1000
+Escher().skipBigCluster= True
+Escher().DatasetName = 'Cosmics'
+Escher().InputType = 'DST'
+Escher().PrintFreq = 1000
+Escher().SpecialData += ["fieldOff", "cosmics"]
+Escher().TrackContainer = "Rec/Track/Seed"
+Escher().Simulation = False
+
 
 # do not do the TES check because these data do not have the required lists
 GaudiSequencer("InitReprocSeq").Enable = False

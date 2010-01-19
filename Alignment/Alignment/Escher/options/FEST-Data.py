@@ -10,27 +10,25 @@ from Configurables import Escher, LHCbApp
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
 
 #-- Use latest database tags for real data
-#LHCbApp().DDDBtag   = "default"
-#LHCbApp().CondDBtag = "default"
-LHCbApp().DDDBtag   = "head-20090112"
-LHCbApp().CondDBtag = "head-20090112"
+LHCbApp().DDDBtag   = "default"
+LHCbApp().CondDBtag = "default"
+#LHCbApp().DDDBtag   = "head-20090112"
+#LHCbApp().CondDBtag = "head-20090112"
 
 # Latest cosmic run, with CALO, OT and (!!) RICH2 (35569 events)
-Escher().DatasetName = 'FEST'
-Escher().InputType = 'MDF'
+Escher().DatasetName = 'MC'
+Escher().InputType = 'digi'
 #Escher().Simulation = True
 
 # full data
-data = ['PFN:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/44878/044878_0000000001.raw',
-        'PFN:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/44878/044878_0000000002.raw']
+data = [ '/data/user/data/Alignment/Boole_450GeV_Boff_Beam12_CloseVelo_H_1000_93.digi']
 
 # express stream
-data = ['/castor/cern.ch/grid/lhcb/data/2009/RAW/EXPRESS/FEST/FEST/44878/044878_0000000002.raw']
 
 EventSelector().Input = []
 for d in data:
-    name = "DATA='castor:" + d + "' SVC='LHCb::MDFSelector'"
+    name = "DATA='file:" + d + "'  TYP='POOL_ROOTTREE' OPT='READ'"
     EventSelector().Input.append( name )
     
-from Configurables import CondDB
-CondDB().UseOracle = True
+#from Configurables import CondDB
+#CondDB().UseOracle = True

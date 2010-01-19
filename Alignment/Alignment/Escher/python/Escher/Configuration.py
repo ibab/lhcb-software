@@ -3,7 +3,7 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.14 2010-01-15 16:00:12 wouter Exp $"
+__version__ = "$Id: Configuration.py,v 1.15 2010-01-19 11:29:22 jblouw Exp $"
 __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
 from Gaudi.Configuration  import *
@@ -134,6 +134,9 @@ class Escher(LHCbConfigurableUser):
             self.setProp("Kalman", False )
             log.info("Using Millepede type alignment!")
             self.setProp("Incident", "GlobalMPedeFit")
+            if self.getProp("Simulation") or self.getProp("WithMC") or self.getProp("InputType").upper() == 'DIGI':
+               from Configurables import Derivatives
+               Derivatives().MonteCarlo = True
             if "VELO" in self.getProp("Detectors") : # generate the proper tracking sequence depending on which detectors one wants to align            
                TrackSys.TrackPatRecAlgorithms = ["PatSeed"]
                log.info("Aligning VELO")
@@ -176,23 +179,24 @@ class Escher(LHCbConfigurableUser):
         importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 
         # By default, Escher only needs to open one input file at a time
-        IODataManager().AgeLimit = 0 
-        if  inputType in [ "DST", "RDST", "ETC" ]:
-           from Configurables import ( TESCheck, EventNodeKiller )
-           InitReprocSeq = GaudiSequencer( "InitReprocSeq" )
-           InitReprocSeq.Members.append( "TESCheck" )
-           TESCheck().Inputs = ["Link/Rec/Track/Best"]
-           # in case above container is not on input (e.g. RDST)
-           TESCheck().Stop = False
-           TESCheck().OutputLevel = ERROR
-           InitReprocSeq.Members.append( "EventNodeKiller" )
-           EventNodeKiller().Nodes = [ "Rec", "Raw", "Link/Rec" ]
+        # Only set to zero if not previously set to something else.
+        if not IODataManager().isPropertySet("AgeLimit") : IODataManager().AgeLimit = 0
 
-        # Read ETC selection results into TES for writing to DST
+        if inputType in [ "XDST", "DST", "RDST", "ETC" ]:
+            # Kill knowledge of any previous Brunel processing
+            from Configurables import ( TESCheck, EventNodeKiller )
+            InitReprocSeq = GaudiSequencer( "InitReprocSeq" )
+            if ( self.getProp("WithMC") and inputType in ["XDST","DST"] ):
+                # Load linkers, to kill them (avoid appending to them later)
+                InitReprocSeq.Members.append( "TESCheck" )
+                TESCheck().Inputs = ["Link/Rec/Track/Best"]
+            InitReprocSeq.Members.append( "EventNodeKiller" )
+            EventNodeKiller().Nodes = [ "pRec", "Rec", "Raw", "Link/Rec" ]
+
         if inputType == "ETC":
-            from Configurables import ReadStripETC
-            GaudiSequencer("InitEscherSeq").Members.append("ReadStripETC/TagReader")
-            ReadStripETC("TagReader").CollectionName = "TagCreator"
+            from Configurables import  TagCollectionSvc
+            ApplicationMgr().ExtSvc  += [ TagCollectionSvc("EvtTupleSvc") ]
+            # Read ETC selection results into TES for writing to DST
             IODataManager().AgeLimit += 1
 
         if inputType in [ "MDF", "RDST", "ETC" ]:
@@ -203,9 +207,6 @@ class Escher(LHCbConfigurableUser):
         from Configurables import EventClockSvc
         EventClockSvc().EventTimeDecoder = "OdinTimeDecoder";
 
-        # Convert Calo 'packed' banks to 'short' banks if needed
-        GaudiSequencer("InitCaloSeq").Members += ["GaudiSequencer/CaloBanksHandler"]
-        importOptions("$CALODAQROOT/options/CaloBankHandler.opts")
 
 
     def configureOutput(self, dstType):

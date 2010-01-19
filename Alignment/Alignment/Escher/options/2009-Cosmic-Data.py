@@ -10,8 +10,8 @@ from Configurables import Escher, LHCbApp, TrackSys
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
 
 #-- Use latest database tags for real data
-LHCbApp().DDDBtag   = "default"
-LHCbApp().CondDBtag = "default"
+LHCbApp().DDDBtag   = "head-20090330"
+LHCbApp().CondDBtag = "head-20090402"
 
 #LHCbApp().DDDBtag   = "head-20090330"
 #LHCbApp().CondDBtag = "head-20090330"
@@ -19,8 +19,6 @@ LHCbApp().CondDBtag = "default"
 # Latest cosmic run, with CALO, OT and (!!) RICH2 (35569 events)
 Escher().DatasetName = 'Cosmics'
 
-EventSelector().PrintFreq = 100
-Escher().PrintFreq = 100
 from Configurables import CountingPrescaler
 CountingPrescaler("EscherPrescaler").OutputLevel = 5
 
@@ -44,6 +42,16 @@ TrackSys().SpecialData += ['fieldOff','cosmics']
 
 # wouter's dsts
 Escher().InputType = 'DST'
+EventSelector().PrintFreq = 1000
+Escher().PrintFreq = 1000
+Escher().skipBigCluster= True
+Escher().DatasetName = 'Cosmics'
+Escher().InputType = 'DST'
+Escher().PrintFreq = 1000
+Escher().SpecialData += ["fieldOff", "cosmics"]
+Escher().TrackContainer = "Rec/Track/Seed"
+Escher().Simulation = False
+
 data = [
 'run34120',
 'run31225',
@@ -53,7 +61,7 @@ data = [
 
 EventSelector().Input = []
 for d in data:
-    name = "DATAFILE='file:/data/data/" + d + ".dst' TYP='POOL_ROOTTREE' OPT='READ'" 
+    name = "DATAFILE='file:/data/user/data/2008/RAW/LHCb/wouter/" + d + ".dst' TYP='POOL_ROOTTREE' OPT='READ'" 
     EventSelector().Input.append( name )
 
 

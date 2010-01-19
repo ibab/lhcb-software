@@ -3,21 +3,31 @@
 #
 # example of particular conditions, and magnetic field polarity inversion,
 # uncomment to use.
-from Configurables import ( CondDB, CondDBAccessSvc )
-otCalib = CondDBAccessSvc( 'OTCalib' )
-otCalib.ConnectionString ='sqlite_file:/data/work/DataBases/Collision09_OT_QuarterT0s_071209.db/LHCBCOND'
-CondDB().addLayer( otCalib )
+#from Configurables import ( CondDB, CondDBAccessSvc )
+#otCalib = CondDBAccessSvc( 'OTCalib' )
+#otCalib.ConnectionString ='sqlite_file:/work/blouw/NEWER/Alignment_v4r5/Alignment/Escher/db/LHCBCOND.db/LHCBCOND'
+#otCalib.DefaultTAG = "OT_3"
+#CondDB().addLayer( otCalib )
 #
-from Configurables import UpdateManagerSvc
-UpdateManagerSvc().ConditionsOverride += ["Conditions/Online/LHCb/Magnet/Measured := double Current = 5849.9936523438 ; int Polarity = -1;"]
+#from Configurables import UpdateManagerSvc
+#UpdateManagerSvc().ConditionsOverride += ["Conditions/Online/LHCb/Magnet/Measured := double Current = 5849.9936523438 ; int Polarity = -1;"]
 #
-aligndb = '/data/work/DataBases/TTLayerITLayerOTModules_CollisionsDecember2009.db'
-from Configurables import ( CondDB, CondDBAccessSvc )
-alignCond = CondDBAccessSvc( 'AlignCond' )
-alignCond.ConnectionString = 'sqlite_file:' + aligndb + '/LHCBCOND'
-CondDB().addLayer( alignCond )
+#aligndb = '/data/work/DataBases/TTLayerITLayerOTModules_CollisionsDecember2009.db'
+#from Configurables import ( CondDB, CondDBAccessSvc )
+#alignCond = CondDBAccessSvc( 'AlignCond' )
+#alignCond.ConnectionString = 'sqlite_file:' + aligndb + '/LHCBCOND'
+#CondDB().addLayer( alignCond )
 
-from Configurables import ( ATrackSelector )
+from Configurables import ( LHCbApp, Escher, ATrackSelector, TrackSys )
+
+Escher().Simulation = False
+Escher().Detectors = ["OT"]
+Escher().EvtMax = 1000
+Escher().AlignmentLevel = "layers"
+Escher().Millepede = True
+Escher().Kalman = False
+Escher().Incident = "GlobalMPedeFit"
+
 
 ATrackSelector().MinPCut = 0.0 # value is in MeV
 ATrackSelector().MinPtCut = 0.0

@@ -12,6 +12,7 @@ FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml",
                            "xmlcatalog_file:$BRUNELROOT/job/NewCatalog.xml" ]
 
 #-- Main ('signal') event input
+Escher().InputType = "digi"
 inputType   = Escher().getProp("InputType").upper()
 
 if inputType == "MDF":
@@ -41,12 +42,15 @@ else:
 #    LHCbApp().CondDBtag = "head-20081002"
 #    EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v16r3/" + datasetName + ".digi' TYP='POOL_ROOTTREE' OPT='READ'"]
 
-    datasetName =  "11144101-100ev-20090112"
+    datasetName =  "/Boole_450GeV_Boff_Beam12_CloseVelo_H_1000_15"
     # B->J/Psi(mumu)Ks events with Boole v17r2, Gauss v36r1, DB tag head-20090112
-    LHCbApp().DDDBtag   = "head-20090112"
-    LHCbApp().CondDBtag = "sim-20090112"
-    EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v17r2/" + datasetName + ".digi' TYP='POOL_ROOTTREE' OPT='READ'"]
+    #LHCbApp().DDDBtag   = "head-20090112"
+    #LHCbApp().CondDBtag = "sim-20090112"
+    LHCbApp().DDDBtag   = "default"
+    LHCbApp().CondDBtag = "default"
+    EventSelector().Input = ["DATAFILE='PFN:file:/data/user/data/Alignment/" + datasetName + ".digi' TYP='POOL_ROOTTREE' OPT='READ'"]
 
+# /data/user/data/Alignment/Boole_450GeV_Boff_Beam12_CloseVelo_H_1000_15.digi
 # Default output files names are set up using value Escher().DatasetName property
 Escher().DatasetName = datasetName
 
