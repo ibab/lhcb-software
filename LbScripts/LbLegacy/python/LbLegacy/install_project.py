@@ -344,7 +344,7 @@ def getTmpDirectory():
 def createTmpDirectory():
     log = logging.getLogger()
     if os.path.isdir(getTmpDirectory()) :
-        log.info( '     %s exists' % getTmpDirectory() )
+        log.debug( '     %s exists' % getTmpDirectory() )
         destroyTmpDirectory()
     os.mkdir(getTmpDirectory())
     if fix_perm :
@@ -880,7 +880,7 @@ def getProjectTar(tar_list, already_present_list=None):
     for file in tar_list.keys():
         log.info('---------------------------------------------------------------------------------------------------------')
         if not isInstalled(file) or overwrite_mode :
-            log.debug('file= %s' % file)
+            log.debug(file)
             if tar_list[file] == "source":
                 if file.find('LCGCMT') != -1 or file.find('LCGGrid') != -1 or file.find('LCGGanga') != -1:
                     checkWriteAccess(os.path.join(this_lcg_dir,'..'))
@@ -1144,7 +1144,7 @@ def doesVersionExist(vlist, pname, version, cmt_config=None):
                 exist = True
                 break
         else :
-            if isproj and p.tarBallName(version, cmtconfig, full=True) == l :
+            if isproj and p.tarBallName(version, cmt_config, full=True) == l :
                 exist = True
                 break
     return exist
