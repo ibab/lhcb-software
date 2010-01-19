@@ -1,4 +1,4 @@
-// $Id: TupleToolGeometry.cpp,v 1.14 2010-01-13 13:04:27 pkoppenb Exp $
+// $Id: TupleToolGeometry.cpp,v 1.15 2010-01-19 14:12:32 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -74,6 +74,8 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
   if( P->particleID().pid() == m_photonID ||  P->particleID().pid()  == m_pi0ID  ){
     return Warning("Will not fill geometry tuple for photons and pi0. No worry.", StatusCode::SUCCESS, 10);
   }
+
+  verbose() << "TupleToolGeometry::fill " << mother << " " << P << " " << head << endmsg ;
   
   //fill min IP
   StatusCode sc = fillMinIP(P,head,tuple);
@@ -180,14 +182,18 @@ StatusCode TupleToolGeometry::fillMinIP( const Particle* P
   double ipmin = -1;
   double minchi2 = -1 ;
   const RecVertex::Container* PV = m_dva->primaryVertices();
-  for ( RecVertex::Container::const_iterator pv = PV->begin() ; pv!=PV->end() ; ++pv){
-    double ip, chi2;
-    StatusCode test2 = m_dist->distance ( P, *pv, ip, chi2 );
-    if( test2 ) {
-      if ((ip<ipmin) || (ipmin<0.)) ipmin = ip ;
-      if ((chi2<minchi2) || (minchi2<0.)) minchi2 = chi2 ;
+  if ( 0!=PV ){
+    verbose() << "Filling IP " << head + "_MINIP : " << P << " PVs:" << PV->size() << endmsg ;
+    for ( RecVertex::Container::const_iterator pv = PV->begin() ; pv!=PV->end() ; ++pv){
+      double ip, chi2;
+      StatusCode test2 = m_dist->distance ( P, *pv, ip, chi2 );
+      if( test2 ) {
+        if ((ip<ipmin) || (ipmin<0.)) ipmin = ip ;
+        if ((chi2<minchi2) || (minchi2<0.)) minchi2 = chi2 ;
+      }
     }
   }
+  verbose() << "Filling IP " << head + "_MINIP " << ipmin << " at " << minchi2 << endmsg  ;
   test &= tuple->column( head + "_MINIP", ipmin );
   test &= tuple->column( head + "_MINIPCHI2", minchi2 );
   
