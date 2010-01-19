@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.24 2010-01-08 12:35:30 gligorov Exp $ 
+# $Id: HltLine.py,v 1.25 2010-01-19 12:55:02 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.24 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -95,7 +95,7 @@ from Configurables import HltL0MuonCandidates    as L0MuonCandidates
 from Configurables import HltL0CaloCandidates    as L0CaloCandidates 
 from Configurables import HltVertexToTracks      as VertexToTracks 
 from Configurables import HltAddPhotonToVertex   as AddPhotonToVertex
-from Configurables import HltLine                as Line
+from Configurables import Hlt__Line              as Line
 from Configurables import HltCopySelection_LHCb__Particle_ as HltCopyParticleSelection
 
 
@@ -1233,7 +1233,6 @@ class Hlt2Line(object):
     @date   2009-03-25   
     """
 
-    _PVAlgorithms = None
     ## The constructor, which defines the line
     #
     #  The major arguments
@@ -1254,7 +1253,6 @@ class Hlt2Line(object):
                    algos     = []   ,   # the list of algorithms/members
                    postscale = 1    ,   # postscale factor
                    priority  = None ,   # hint for ordering lines
-                   PV        = None ,   # insert PV reconstruction at the start of the line
                    **args           ) : # other configuration parameters
         """
         The constructor, which essentially defines the line
@@ -1270,17 +1268,21 @@ class Hlt2Line(object):
         
         """
 
+        ## TODO: can we make this one single shared instance???
+        #if not L0DU :
+        #    L0DU = "L0_DECISION"
+        #    L0DU = "L0_ALL" # protects against missing/invalid L0DU 
         if not HLT :
             #HLT = "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi).*Decision')"
             #HLT = "HLT_PASS_RE('Hlt1(?!ODIN)(?!Lumi).*Decision')"
-            HLT = "HLT_PASS_RE('Hlt1(?!L0)(?!Lumi).*Decision')"
+            #HLT = "HLT_PASS_RE('Hlt1(?!L0)(?!Lumi).*Decision')"
+            HLT = "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"
 
         ## 1) clone all arguments
         name  = deepcopy ( name  )
         ODIN  = deepcopy ( ODIN  )
         L0DU  = deepcopy ( L0DU  )
         HLT   = deepcopy ( HLT   )
-        PV    = deepcopy ( PV    )
         algos = deepcopy ( algos )
         args  = deepcopy ( args  )
         
@@ -1294,7 +1296,6 @@ class Hlt2Line(object):
         self._ODIN      = ODIN
         self._L0DU      = L0DU
         self._HLT       = HLT
-        self._PV        = PV
         self._algos     = algos
         self._args      = args
 
@@ -1313,10 +1314,7 @@ class Hlt2Line(object):
         line = self.subname()
 
         # bind members to line 
-        xalgos = []
-        if self._PV   : xalgos += self._PVAlgorithms 
-        xalgos += algos 
-        _boundMembers = bindMembers( line, xalgos )
+        _boundMembers = bindMembers( line, algos )
         _members = _boundMembers.members()
 
 
@@ -1327,10 +1325,10 @@ class Hlt2Line(object):
                       , 'Prescale'     : Scaler(     prescalerName ( line,'Hlt2' ) , AcceptFraction = self._prescale  )
                       , 'Postscale'    : Scaler(    postscalerName ( line,'Hlt2' ) , AcceptFraction = self._postscale ) 
                       } )
-        if ODIN : mdict.update( { 'ODIN' : ODINFilter ( odinentryName( line,'Hlt2' ) , Code = self._ODIN )  } )
-        if L0DU : mdict.update( { 'L0DU' : L0Filter   ( l0entryName  ( line,'Hlt2' ) , Code = self._L0DU )  } )
+        if self._ODIN : mdict.update( { 'ODIN' : ODINFilter ( odinentryName( line,'Hlt2' ) , Code = self._ODIN )  } )
+        if self._L0DU : mdict.update( { 'L0DU' : L0Filter   ( l0entryName  ( line,'Hlt2' ) , Code = self._L0DU )  } )
         ## TODO: in case of HLT, we have a dependency... dangerous, as things become order dependent...
-        if HLT  : mdict.update( { 'HLT'  : HDRFilter  ( hltentryName ( line,'Hlt2' ) , Code = self._HLT  ) } )
+        if self._HLT  : mdict.update( { 'HLT'  : HDRFilter  ( hltentryName ( line,'Hlt2' ) , Code = self._HLT  ) } )
         if _members : 
             last = _members[-1]
             while hasattr(last,'Members') : 
@@ -1451,7 +1449,6 @@ class Hlt2Line(object):
         __ODIN       = deepcopy ( args.get ( 'ODIN'      , self._ODIN      ) )        
         __L0DU       = deepcopy ( args.get ( 'L0DU'      , self._L0DU      ) )        
         __HLT        = deepcopy ( args.get ( 'HLT'       , self._HLT       ) )        
-        __PV         = deepcopy ( args.get ( 'PV'        , self._PV        ) )        
         __postscale  = deepcopy ( args.get ( 'postscale' , self._postscale ) ) 
         __priority   = deepcopy ( args.get ( 'priority ' , self._priority  ) ) 
         __algos      = deepcopy ( args.get ( 'algos'     , self._algos     ) )
@@ -1483,7 +1480,6 @@ class Hlt2Line(object):
                           ODIN      = __ODIN       ,
                           L0DU      = __L0DU       ,
                           HLT       = __HLT        ,
-                          PV        = __PV         ,
                           postscale = __postscale  ,
                           priority  = __priority   ,
                           algos     = __algos      , **__args )

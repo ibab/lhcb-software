@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.70 2010-01-11 13:48:47 graven Exp $
+! $Id: release.notes,v 1.71 2010-01-19 12:55:02 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+
+! 2010-01-19 - Gerhard Raven
+ - move HLT agnostic part of HltLine in SelectionLine (which can be shared by
+   the stripping), replace old HltLine by Hlt::Line which inherits from 
+   ::Selection::Line
+ - adapt python HltLine to HltLine -> Hlt::Line migration
+ - change default Hlt2 HLT filter to just 'not exclusive lumi' (as Hlt1L0.* is 
+   a tiny fraction of the Hlt1Global accepts)
+ - remove obsolete and unused PV argument to Hlt2Line
+ - update version in requirements to v3r0
+
 !========================== HltLine v2r1 2010-01-11 ===================
 ! 2009-01-08 - V. Gligorov
  - python/HltLine.py : add MoveVerticesForSwimming and SelectTracksForSwimming

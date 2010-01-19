@@ -3,7 +3,7 @@
 # Maintainer : Gerhard Raven 
 #============================================================================
 package           HltLine
-version           v2r1
+version           v3r0
 # Structure
 #============================================================================
 branches          cmt doc src python
@@ -15,8 +15,7 @@ use GaudiAlg            v*
 
 use Boost               v*  LCG_Interfaces
 use Python              v*  LCG_Interfaces 
-use AIDA                v*  LCG_Interfaces
-use HltEvent            v*  Event
+use SelectionLine       v*  Kernel
 
 use HltBase             v*  Hlt
 # our python uses various instances defined in HltCommon...
