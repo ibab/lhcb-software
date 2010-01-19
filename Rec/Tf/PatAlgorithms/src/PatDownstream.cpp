@@ -1,4 +1,4 @@
-// $Id: PatDownstream.cpp,v 1.15 2009-12-09 09:24:24 sstahl Exp $
+// $Id: PatDownstream.cpp,v 1.16 2010-01-19 13:04:43 smenzeme Exp $
 // Include files 
 
 #include <algorithm>
@@ -224,6 +224,7 @@ StatusCode PatDownstream::execute() {
     if ( m_printing ) {
       for ( PatTTHits::const_iterator itH = ttCoords.begin(); ttCoords.end() != itH; ++itH ){
         PatTTHit* hit = (*itH);
+	if (hit->hit()->ignore()) continue;
         const double yTrack = track.yAtZ( 0. );
         const double tyTr   = track.slopeY();
         updateTTHitForTrack( hit, yTrack, tyTr );
@@ -453,6 +454,7 @@ void PatDownstream::getPreSelection( PatDownTrack& track ) {
         if ( !reg->isXCompatible( xReg, xPredTol ) ) continue;
         Tf::TTStationHitManager<PatTTHit>::HitRange coords = m_ttHitManager->hits( kSta, kLay, kReg );
         BOOST_FOREACH(PatTTHit* hit, coords) {
+	  if (hit->hit()->ignore()) continue;
           if ( hit->hit()->testStatus( Tf::HitBase::UsedByPatMatch ) ) continue;
           const double yPos   = track.yAtZ( hit->z() );
           if ( !hit->hit()->isYCompatible( yPos, yTol ) ) continue;

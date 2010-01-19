@@ -3,8 +3,11 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2009-01-18 - Stephanie Hansmann-Menzemer
+ - make algorithms use ignore flag of HitBase class 
 
-!========================= PatAlgorithms v3r27 2009-12-11 ====================! 2009-12-10 - Stephanie Hansmann-Menzemer
+!========================= PatAlgorithms v3r27 2009-12-11 ====================
+! 2009-12-10 - Stephanie Hansmann-Menzemer
  - make PatDownstream.py use RecSys SpecialData switch "earlyData"
 
 ! 2009-12-09 - Sascha Stahl

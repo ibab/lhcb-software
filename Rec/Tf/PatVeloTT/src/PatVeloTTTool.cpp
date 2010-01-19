@@ -1,4 +1,4 @@
-// $Id: PatVeloTTTool.cpp,v 1.11 2010-01-09 12:46:27 witekma Exp $
+// $Id: PatVeloTTTool.cpp,v 1.12 2010-01-19 13:06:37 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -214,6 +214,10 @@ void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTra
 
        for ( PatTTHits::const_iterator itH = range.begin();
               range.end() != itH; ++itH ) {
+
+
+	 if ((*itH)->hit()->ignore())
+	   continue;
 
           double xOnTrack = cand.xAtZ( (*itH)->z() );
           double yOnTrack = cand.yAtZ( (*itH)->z() );

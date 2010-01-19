@@ -3,6 +3,8 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2010-01-18 - Stephanie Hansmann-Menzemer
+- make VeloTT algorithm aware of ignore flag of HitBase
 
 ! 2010-01-09 - Mariusz Witek
 - Fix bug in PatVeloTTTool. B field dependent parameters taken from

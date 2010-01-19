@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.33 2009-11-26 18:00:48 mschille Exp $
+// $Id: PatSeedingTool.cpp,v 1.34 2010-01-19 13:04:43 smenzeme Exp $
 // Include files
 
 #include <cmath>
@@ -281,6 +281,13 @@ unsigned PatSeedingTool::prepareHits()
   BOOST_FOREACH( PatFwdHit* hit, range ) {
     hit->setSelected( true );
     hit->setIgnored( false );
+
+
+    if (hit->hit()->ignore()){
+      	hit->setIsUsed( true );
+	continue;
+    }
+   
     if ( m_useForward )
       if ( hit->hit()->testStatus(Tf::HitBase::UsedByPatForward) ) {
 	hit->setIsUsed(true);
