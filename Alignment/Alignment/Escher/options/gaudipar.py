@@ -5,7 +5,7 @@ from optparse import OptionParser
 parser = OptionParser(usage = "%prog [options] <opts_file> ...")
 parser.add_option("-e","--numevents",type="int", dest="numevents",help="number of events", default=1000)
 parser.add_option("-p","--numprocesses",type="int", dest="numprocs",help="number of processes", default=8)
-parser.add_option("-d", "--aligndb",type="str", dest="aligndb",help="path to file with alignment database layer", default = '')
+parser.add_option("-d", "--aligndb", action = 'append', dest="aligndb",help="path to file with alignment database layer")
 parser.add_option("-i", "--iter",type="int", dest="iter",help="number of iteration (used for loggin)", default=0)
 (opts, args) = parser.parse_args()
 
@@ -32,16 +32,66 @@ TAlignment().UpdateInFinalize = False
 
 # set the database layer
 if opts.aligndb:
-   from Configurables import ( CondDB, CondDBAccessSvc )
-   alignCond = CondDBAccessSvc( 'AlignCond' )
-   alignCond.ConnectionString = 'sqlite_file:' + opts.aligndb + '/LHCBCOND'
-   CondDB().addLayer( alignCond )
+   counter = 1
+   for db in opts.aligndb:
+      from Configurables import ( CondDB, CondDBAccessSvc )
+      alignCond = CondDBAccessSvc( 'AlignCond' + str(counter) )
+      alignCond.ConnectionString = 'sqlite_file:' + db + '/LHCBCOND'
+      CondDB().addLayer( alignCond )
+      counter += 1
+   print 'added databases: ', opts.aligndb
    
 # turn off the printfreq
 from Configurables import EventSelector
 EventSelector().PrintFreq = -1
 
 #from Gaudi.Configuration import *
+
+############################################################################
+from GaudiPython.Parallel import aida2root, aidatypes
+
+class HistStore:
+   histDict = {}
+   def collect(self, histsvc ) :
+      self.histDict = {}
+      nlist = histsvc.getHistoNames()
+      for n in nlist :
+         o = histsvc[ n ]
+         if type(o) in aidatypes :
+            #print 'adding histogram to store: \'', n, '\''
+            o = aida2root(o)
+            self.histDict[ n ] = o.Clone()
+
+   def Add(self, rhs ):
+      for k, o in rhs.histDict.iteritems():
+         if k in self.histDict:
+            self.histDict[k].Add( o )
+         else:
+            self.histDict[k] = o.Clone()
+         
+   def dump(self, filename ):
+      from ROOT import TFile
+      import os
+      outputfile = TFile(filename,"RECREATE")
+      for k, o in self.histDict.iteritems():
+         fullname = str(k).replace('/stat','')
+         dirname  = os.path.dirname(fullname)
+         histname = os.path.basename(fullname)
+         #print "dirname=\'", dirname, "\'"
+         #print "histname=\'", histname, "\'"
+         outputfile.cd()
+         curdir = outputfile
+         directories = dirname.split('/')
+         for i in directories:
+            subdir = curdir.GetDirectory(i)
+            if not subdir:
+               curdir.mkdir( i )
+               subdir = curdir.GetDirectory(i)
+            subdir.cd()
+            curdir = subdir
+         o.Write( histname )
+      outputfile.Write()
+      outputfile.Close()
 
 ############################################################################
 from GaudiPython.Parallel import Task, WorkManager
@@ -51,7 +101,8 @@ import copy
 class AlignmentTask(Task):
   def initializeLocal(self):
      from GaudiPython.Bindings import gbl
-     self.output = { 'derivatives' : gbl.LHCb.AlignSummaryData() }
+     self.output = { 'derivatives' : gbl.LHCb.AlignSummaryData(),
+                     'histograms' : HistStore() }
      
   def initializeRemote(self):
      print 'initializeRemote'
@@ -72,6 +123,8 @@ class AlignmentTask(Task):
      alignderivatives = det['AlignDerivativeData']
      #self.output['derivatives'] = copy.deepcopy(alignderivatives)
      self.output['derivatives'].add( alignderivatives )
+     histsvc = appMgr.histsvc()
+     self.output['histograms'].collect( histsvc )
                 
   def finalize(self):
      print 'number of events in derivatives: ', self.output['derivatives'].equations().numEvents()
@@ -88,6 +141,8 @@ class AlignmentTask(Task):
      updatetool.process(  self.output['derivatives'].equations(), opts.iter, 1)
      # now call finalize to write the conditions. there must be a better way.
      appMgr.finalize()
+     # dump the histograms to a file
+     self.output['histograms'].dump('histograms.root')
      # finally create a database layer
      import os
      os.system("copy_files_to_db.py -c sqlite_file:Alignment.db/LHCBCOND -s xml")

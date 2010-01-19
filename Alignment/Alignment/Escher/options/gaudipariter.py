@@ -6,7 +6,7 @@ parser = OptionParser(usage = "%prog [options] <opts_file> ...")
 parser.add_option("-n","--numiter",type="int", dest="numiter",help="number of iterations", default=3)
 parser.add_option("-e","--numevents",type="int", dest="numevents",help="number of events", default=1000)
 parser.add_option("-p","--numprocesses",type="int", dest="numprocs",help="number of processes", default=8)
-parser.add_option("-d", "--aligndb",type="str", dest="aligndb",help="path to file with alignment database layer for first iteration", default = '')
+parser.add_option("-d", "--aligndb", action = 'append', dest="aligndb",help="path to file with alignment database layer for first iteration")
 (opts, args) = parser.parse_args()
 
 import os
@@ -28,8 +28,9 @@ for i in range( opts.numiter ) :
     if i>0 :
         previterdb = '../Iter' + str( i-1 ) + '/Alignment.db'
         theseoptions += ' --aligndb ' + previterdb
-    elif opts.aligndb :
-        theseoptions += ' --aligndb ' + opts.aligndb
+    else :
+        for db in opts.aligndb :
+            theseoptions += ' -d ' + db
 
     # add the remaining options
     for a in args:
