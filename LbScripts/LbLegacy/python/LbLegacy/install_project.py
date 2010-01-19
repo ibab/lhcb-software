@@ -392,7 +392,7 @@ def createDir(here , logname):
         good = True
         if not os.path.isdir(this_log_dir):
             os.mkdir(this_log_dir)
-        else:
+        elif logname:
             if os.path.exists(os.path.join(this_log_dir,logname+'_old')):
                 os.remove(logname+'_old')
             if os.path.exists(logname):
@@ -526,7 +526,9 @@ def getCMT(version=0):
 #
 def getFile(url, file):
     log = logging.getLogger()
-    log.debug('%s/%s ' % (url, file))
+    if not url.endswith("/") :
+        url = url + "/"
+    log.debug('%s%s ' % (url, file))
 
     if file.find('.tar.gz') != -1:
         filetype = 'x-gzip'
@@ -538,42 +540,6 @@ def getFile(url, file):
                     os.remove(dest)
                 except:
                     log.info('can not remove file %s' % dest)
-        else:
-
-    # check existence of the project
-    # if it exists then return
-            pack_ver = getPackVer(file)
-            bin = pack_ver[2]
-            file_base = pack_ver[4]
-            for f in file_base :
-                if bin :
-        # download binary tar file if InstallArea is not there
-                    if pack_ver[0] in LbConfiguration.External.external_projects :
-                        f = os.path.join(f,bin)
-                    else:
-                        f = os.path.join(f,'InstallArea',bin)
-                    if os.path.exists(f):
-                        if overwrite_mode :
-                            exist_flag = False
-                            log.info('%s already exist - Overwriting' % f)
-                        else :
-                            exist_flag = True
-                            log.info('%s already exist - do not overwrite' % f)
-                        return exist_flag
-                else:
-        # check existence of the file_path
-        # if it exists then return
-                    exist_flag = os.path.exists(f)
-                    if exist_flag == True:
-                        if overwrite_mode :
-                            exist_flag = False
-                            log.info('%s on %s exists - Overwriting' % (file, f))
-                        else :
-                            log.info('%s on %s exists - do not overwrite' % (file, f))
-                        return exist_flag
-                    else:
-                        log.info('%s on %s' % (file, os.getcwd()))
-
     elif file.find('.html') != -1 or file.find('.htm') != -1 :
         this_html_dir = html_dir.split(os.pathsep)[0]
         dest = os.path.join(this_html_dir,file)
@@ -690,7 +656,6 @@ def getHTMLFileName(filename):
 #
 def getPackVer(file):
     log = logging.getLogger()
-    log.debug('extract package name and version from %s' % file)
 
     this_lhcb_dir = lhcb_dir.split(os.pathsep)[0]
     this_lcg_dir = lcg_dir.split(os.pathsep)[0]
@@ -834,7 +799,7 @@ def getProjectList(name,version,binary=None):
                 project_list[file] = "source"
                 html_list.append(file)
     log.debug('project_list %s' % project_list)
-    log.debug('CMTPATH order - html_list %s' % html_list)
+    log.debug('html_list %s' % html_list)
 
     os.chdir(here)
 
@@ -892,7 +857,7 @@ def checkInstalledProjects(project_list):
                         newbin = LbConfiguration.Platform.getBinaryOpt(newbin)
                     file = file.replace(pack_ver[2],newbin)
         if isInstalled(file) :
-            log.debug("%s is installed" % file)
+            log.info("%s is installed" % file)
         else :
             log.error("%s is not installed" % file)
             sys.exit("some projects are not installed. Exiting ...")
@@ -904,7 +869,6 @@ def checkInstalledProjects(project_list):
 #
 def getProjectTar(tar_list, already_present_list=None):
     log = logging.getLogger()
-    log.info('download and untar all tar files in the list')
     here = os.getcwd()
 
     this_lcg_dir = lcg_dir.split(os.pathsep)[0]
@@ -914,7 +878,8 @@ def getProjectTar(tar_list, already_present_list=None):
 
 
     for file in tar_list.keys():
-        if not isInstalled(file) :
+        log.info('---------------------------------------------------------------------------------------------------------')
+        if not isInstalled(file) or overwrite_mode :
             log.debug('file= %s' % file)
             if tar_list[file] == "source":
                 if file.find('LCGCMT') != -1 or file.find('LCGGrid') != -1 or file.find('LCGGanga') != -1:
@@ -926,113 +891,109 @@ def getProjectTar(tar_list, already_present_list=None):
                 else:
                     checkWriteAccess(this_contrib_dir)
                     os.chdir(this_contrib_dir)
-                exist_flag = getFile(url_dist+'source/',file)
+                getFile(url_dist+'source/',file)
             elif tar_list[file] == "system":
                 log.info("Obsolete package %s will not be installed. The Compat project is replacing it" % file )
-                exist_flag = True
             else:
                 checkWriteAccess(this_lhcb_dir)
                 os.chdir(this_lhcb_dir)
-                exist_flag = getFile(url_dist+tar_list[file]+'/',file)
-                if exist_flag and already_present_list != None:
-                    already_present_list.append(tar_list[file])
+                getFile(url_dist+tar_list[file]+'/',file)
 
 
-            if not exist_flag :
-                # untar the file
-                log.debug('untar file %s' % file)
-                rc = unTarFileInTmp(os.path.join(this_targz_dir,file), os.getcwd(), overwrite=overwrite_mode)
-                pack_ver = getPackVer(file)
-                if rc != 0 and ( pack_ver[0] != 'LCGGrid' or pack_ver[0] != 'LCGGanga') :
-                    removeAll(pack_ver[3])
-                    log.info('Cleaning up %s' % pack_ver[3])
-                    sys.exit("getProjectTar: Exiting ...")
-                if pack_ver[0] in LbConfiguration.External.external_projects:
-                    # if it is a ext_lhcb project
-                    # create a ext_lhcb project/vers/binary directory
-                    # to remember which binary tar file has been untar
-                    if file.find('GENSER_v') != -1:
-                    # the GENSER project as such does not exist anylonger in LCG
-                        os.chdir(this_lcg_dir)
-                        if not os.path.exists('GENSER'): os.mkdir('GENSER')
-                        os.chdir('GENSER')
-                        if not os.path.exists('GENSER_'+pack_ver[1]): os.mkdir('GENSER_'+pack_ver[1])
-                    os.chdir(pack_ver[3])
-                    if not os.path.exists(pack_ver[2]):
+            # untar the file
+            log.debug('untar file %s' % file)
+            rc = unTarFileInTmp(os.path.join(this_targz_dir,file), os.getcwd(), overwrite=overwrite_mode)
+            pack_ver = getPackVer(file)
+            if rc != 0 and ( pack_ver[0] != 'LCGGrid' or pack_ver[0] != 'LCGGanga') :
+                removeAll(pack_ver[3])
+                log.info('Cleaning up %s' % pack_ver[3])
+                sys.exit("getProjectTar: Exiting ...")
+            if pack_ver[0] in LbConfiguration.External.external_projects:
+                # if it is a ext_lhcb project
+                # create a ext_lhcb project/vers/binary directory
+                # to remember which binary tar file has been untar
+                if file.find('GENSER_v') != -1:
+                # the GENSER project as such does not exist anylonger in LCG
+                    os.chdir(this_lcg_dir)
+                    if not os.path.exists('GENSER'): os.mkdir('GENSER')
+                    os.chdir('GENSER')
+                    if not os.path.exists('GENSER_'+pack_ver[1]): os.mkdir('GENSER_'+pack_ver[1])
+                os.chdir(pack_ver[3])
+                if not os.path.exists(pack_ver[2]):
+                    os.mkdir(pack_ver[2])
+                    log.info('mkdir %s in %s ' % (pack_ver[2], pack_ver[3]))
+
+            if os.getcwd() == this_lhcb_dir :
+                # if binary is requested and InstallArea does not exist : set it
+                if pack_ver[2] :
+                    os.chdir(os.path.join(this_lhcb_dir,pack_ver[0],pack_ver[0]+'_'+pack_ver[1]))
+                    if not os.path.exists(os.path.join('InstallArea',pack_ver[2])):
+                        log.debug('mkdir InstallArea')
+                        if not os.path.exists('InstallArea'):
+                            os.mkdir ('InstallArea')
+                        os.chdir('InstallArea')
                         os.mkdir(pack_ver[2])
-                        log.info('mkdir %s in %s ' % (pack_ver[2], pack_ver[3]))
+                if sys.platform != 'win32' :
+                    try :
+                        from LbLegacy.ProjectLinks import fixLinks
+                        fixLinks(pack_ver[3])
+                    except :
+                        log.warning("Cannot use fixLinks")
+                if multiple_mysiteroot :
+                    if os.path.isdir('EXTRAPACKAGES'):
+                        extradir = None
+                        if pack_ver[3].find('DBASE') != -1 :
+                            extradir = 'DBASE'
+                        elif pack_ver[3].find('PARAM') != -1 :
+                            extradir = 'PARAM'
+                        if extradir is not None :
+                            f = os.path.join(pack_ver[0], pack_ver[1])
+                            tdir = os.path.dirname(os.path.join('EXTRAPACKAGES', f))
+                            if not os.path.exists(tdir) :
+                                os.makedirs(tdir)
+                            shutil.copytree(os.path.join(extradir, f), os.path.join('EXTRAPACKAGES', f))
+                            if fix_perm :
+                                changePermissions(os.path.join('EXTRAPACKAGES',f),recursive=True)
+                            shutil.rmtree(extradir, ignore_errors=True)
+                if pack_ver[0] == "LBSCRIPTS" :
+                    genlogscript = os.path.join(pack_ver[3],"InstallArea", "scripts", "generateLogin")
+                    log.debug("Running: %s --without-python --no-cache -m %s %s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
+                    os.environ["LHCBPROJECTPATH"] = os.pathsep.join([os.path.join(os.environ["MYSITEROOT"], "lhcb"), os.path.join(os.environ["MYSITEROOT"], "lcg", "external")])
+                    log.debug("LHCBPROJECTPATH: %s" % os.environ.get("LHCBPROJECTPATH", None))
+                    os.system("python %s --without-python --no-cache -m %s %s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
+                    registerPostInstallCommand("LCGCMT", "python %s --no-cache -m %s %s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
+                    prodlink = os.path.join(os.path.dirname(pack_ver[3]),"prod")
+                    if sys.platform != "win32" :
+                        if os.path.exists(prodlink) :
+                            if os.path.islink(prodlink) :
+                                os.remove(prodlink)
+                                os.symlink(pack_ver[0]+'_'+pack_ver[1], prodlink)
+                                log.debug("linking %s to %s" % (pack_ver[0]+'_'+pack_ver[1], prodlink) )
+                            else :
+                                log.error("%s is not a link. Please remove this file/directory" % prodlink)
+                    my_dir = os.path.dirname(this_lhcb_dir)
+                    for f in os.listdir(os.path.join(pack_ver[3], "InstallArea", "scripts")) :
+                        if f.startswith("LbLogin.") and not (f.endswith(".zsh") or f.endswith(".py")):
+                            sourcef = os.path.join(pack_ver[3],"InstallArea", "scripts", f)
+                            targetf = os.path.join(my_dir,f)
+                            if os.path.islink(targetf) or os.path.isfile(targetf):
+                                os.remove(targetf)
+                            if sys.platform == "win32" :
+                                shutil.copy(sourcef, targetf)
+                                log.debug("copying %s into %s" % (sourcef, targetf) )
+                            else :
+                                sourcef = sourcef.replace(my_dir,"",1)
+                                while sourcef.startswith("/") or sourcef.startswith("\\") :
+                                    sourcef = sourcef[1:]
+                                os.symlink(sourcef, targetf)
+                                log.debug("linking %s to %s" % (sourcef, targetf) )
 
-                if os.getcwd() == this_lhcb_dir :
-                    # if binary is requested and InstallArea does not exist : set it
-                    if pack_ver[2] :
-                        os.chdir(os.path.join(this_lhcb_dir,pack_ver[0],pack_ver[0]+'_'+pack_ver[1]))
-                        if not os.path.exists(os.path.join('InstallArea',pack_ver[2])):
-                            log.debug('mkdir InstallArea')
-                            if not os.path.exists('InstallArea'):
-                                os.mkdir ('InstallArea')
-                            os.chdir('InstallArea')
-                            os.mkdir(pack_ver[2])
-                    if sys.platform != 'win32' :
-                        try :
-                            from LbLegacy.ProjectLinks import fixLinks
-                            fixLinks(pack_ver[3])
-                        except :
-                            log.warning("Cannot use fixLinks")
-                    if multiple_mysiteroot :
-                        if os.path.isdir('EXTRAPACKAGES'):
-                            extradir = None
-                            if pack_ver[3].find('DBASE') != -1 :
-                                extradir = 'DBASE'
-                            elif pack_ver[3].find('PARAM') != -1 :
-                                extradir = 'PARAM'
-                            if extradir is not None :
-                                f = os.path.join(pack_ver[0], pack_ver[1])
-                                tdir = os.path.dirname(os.path.join('EXTRAPACKAGES', f))
-                                if not os.path.exists(tdir) :
-                                    os.makedirs(tdir)
-                                shutil.copytree(os.path.join(extradir, f), os.path.join('EXTRAPACKAGES', f))
-                                if fix_perm :
-                                    changePermissions(os.path.join('EXTRAPACKAGES',f),recursive=True)
-                                shutil.rmtree(extradir, ignore_errors=True)
-                    if pack_ver[0] == "LBSCRIPTS" :
-                        genlogscript = os.path.join(pack_ver[3],"InstallArea", "scripts", "generateLogin")
-                        log.debug("Running: %s --without-python --no-cache -m %s %s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
-                        os.environ["LHCBPROJECTPATH"] = os.pathsep.join([os.path.join(os.environ["MYSITEROOT"], "lhcb"), os.path.join(os.environ["MYSITEROOT"], "lcg", "external")])
-                        log.debug("LHCBPROJECTPATH: %s" % os.environ.get("LHCBPROJECTPATH", None))
-                        os.system("python %s --without-python --no-cache -m %s %s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
-                        registerPostInstallCommand("LCGCMT", "python %s --no-cache -m %s %s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
-                        prodlink = os.path.join(os.path.dirname(pack_ver[3]),"prod")
-                        if sys.platform != "win32" :
-                            if os.path.exists(prodlink) :
-                                if os.path.islink(prodlink) :
-                                    os.remove(prodlink)
-                                    os.symlink(pack_ver[0]+'_'+pack_ver[1], prodlink)
-                                    log.debug("linking %s to %s" % (pack_ver[0]+'_'+pack_ver[1], prodlink) )
-                                else :
-                                    log.error("%s is not a link. Please remove this file/directory" % prodlink)
-                        my_dir = os.path.dirname(this_lhcb_dir)
-                        for f in os.listdir(os.path.join(pack_ver[3], "InstallArea", "scripts")) :
-                            if f.startswith("LbLogin.") and not (f.endswith(".zsh") or f.endswith(".py")):
-                                sourcef = os.path.join(pack_ver[3],"InstallArea", "scripts", f)
-                                targetf = os.path.join(my_dir,f)
-                                if os.path.islink(targetf) or os.path.isfile(targetf):
-                                    os.remove(targetf)
-                                if sys.platform == "win32" :
-                                    shutil.copy(sourcef, targetf)
-                                    log.debug("copying %s into %s" % (sourcef, targetf) )
-                                else :
-                                    sourcef = sourcef.replace(my_dir,"",1)
-                                    while sourcef.startswith("/") or sourcef.startswith("\\") :
-                                        sourcef = sourcef[1:]
-                                    os.symlink(sourcef, targetf)
-                                    log.debug("linking %s to %s" % (sourcef, targetf) )
-            else:
-                log.debug('do not untar %s ' % file)
 
-            log.debug(' --------- next file -----------')
             setInstalled(file)
         else :
-            log.debug('%s already installed' % file)
+            log.info('%s already installed' % file)
+            if already_present_list != None:
+                already_present_list.append(tar_list[file])
     for file in tar_list.keys():
         pack_ver = getPackVer(file)
         prj = pack_ver[0]
@@ -1075,7 +1036,7 @@ def getBootScripts():
         getMySelf()
         cleanBootScripts()
     scripttar = "LBSCRIPTS_LBSCRIPTS_%s.tar.gz" % lbscripts_version
-    if isInstalled(scripttar) :
+    if isInstalled(scripttar) and not overwrite_mode :
         log.debug("LbScripts %s is already installed" % lbscripts_version)
         this_lhcb_dir = lhcb_dir.split(os.pathsep)[0]
         sys.path.insert(0, os.path.join(this_lhcb_dir, "LBSCRIPTS", "LBSCRIPTS_%s" % lbscripts_version, "InstallArea", "python"))
@@ -1150,10 +1111,10 @@ def getVersionList(pname, ver=None):
                 elif ver :
                     if filename.find(ver+".") != -1 :
                         plist.append(filename) 
-                        log.info(filename)
+#                        log.info(filename)
                 else :
                     plist.append(filename) 
-                    log.info(filename)
+#                    log.info(filename)
                 
     atexit.register(urlcleanup)
     return sortStrings(plist, safe=True)
@@ -1448,13 +1409,17 @@ def createBaseDirs(pname, pversion):
     else :
         tmp_dir = _multiPathJoin(mypath, "tmp")
 
-    logname = os.path.join(log_dir.split(os.pathsep)[0], pname+'_'+pversion+'.log')
+    logname = None
 
+    if pversion :
+        if logname :
+            logname = os.path.join(log_dir.split(os.pathsep)[0], pname+'_'+pversion+'.log')
+        else :
+            logname = os.path.join(log_dir.split(os.pathsep)[0], pname+'.log')
     if not check_only :
         done = createDir(mypath.split(os.pathsep)[0], logname)
     else :
         done = False
-        
     if not done :
         logname = None
 
@@ -1536,74 +1501,77 @@ def runInstall(pname,pversion,binary=None):
         else :
             pversion = getLatestVersion(pname)
 
+    from LbConfiguration.Platform import isBinaryDbg, getBinaryOpt, getBinaryDbg
+
+
     if not check_only :
         if pname != 'LbScripts' :
             script_project_list = getProjectList('LbScripts', lbscripts_version)[0]
             getProjectTar(script_project_list)
     
     project_list,html_list = getProjectList(pname,pversion)
+
+
+    cmtconfig_dbg = getBinaryDbg(cmtconfig)
+    cmtconfig_opt = cmtconfig
+    if isBinaryDbg(cmtconfig) :
+        cmtconfig_dbg = cmtconfig
+        cmtconfig_opt = getBinaryOpt(cmtconfig)
+
     if pname != 'LHCbGrid' and sys.platform != "win32" and cmtconfig.find("slc3")!=-1 and cmtconfig.find("sl3") != -1 :
         grid_project_list, grid_html_list = getProjectList('LHCbGrid', grid_version)
         project_list.update(grid_project_list)
         html_list += grid_html_list
-
+        grid_project_list, grid_html_list = getProjectList('LHCbGrid', grid_version, cmtconfig_opt)
+        project_list.update(grid_project_list)
+        html_list += grid_html_list
     if pname != 'Compat' :
         if not compat_version:
-            new_compat_version = getLatestVersion("Compat")
+            new_compat_version = getLatestVersion("Compat", cmtconfig_opt)
         else :
             new_compat_version = compat_version
         compat_project_list, compat_html_list = getProjectList('Compat', new_compat_version)
         project_list.update(compat_project_list)
         html_list += compat_html_list
+        compat_project_list, compat_html_list = getProjectList('Compat', new_compat_version, cmtconfig_opt)
+        project_list.update(compat_project_list)
+        html_list += compat_html_list
+
+
+    if binary :
+        binary_project_list, binary_html_list = getProjectList(pname, pversion, binary)
+        project_list.update(binary_project_list)
+        html_list += binary_html_list
+        
+
+    if full_flag :
+        log.info('download debug version and reconfigure it')
+        binary_dbg = getBinaryDbg(binary)
+        binary_opt = binary
+        if isBinaryDbg(binary) :
+            binary_dbg = binary
+            binary_opt = getBinaryOpt(binary)
+        full_project_list, full_html_list = getProjectList(pname, pversion, binary_dbg)
+        project_list.update(full_project_list)
+        html_list += full_html_list
+    
+    obsolete_pak = cmtconfig_opt+ ".tar.gz"
+    if obsolete_pak in project_list :
+        del project_list[obsolete_pak]
+    if obsolete_pak in html_list :
+        html_list.remove(obsolete_pak)
+
+    log.debug('global project_list %s' % project_list)
+    log.debug('global html_list %s' % html_list)
 
     if check_only :
         checkInstalledProjects(project_list)
 
+
+
     getProjectTar(project_list)
 
-    if binary:
-        from LbConfiguration.Platform import isBinaryDbg, getBinaryOpt, getBinaryDbg
-        binary_dbg = getBinaryDbg(binary)
-        binary_opt = binary
-        if isBinaryDbg(binary) :
-            binary_dbg = binary
-            binary_opt = getBinaryOpt(binary)
-        if pname == 'Compat' and isBinaryDbg(binary) :
-            log.warning("Cannot install debug version of Compat - Switching to optimized")
-            binary = binary_opt
-        project_list, html_list = getProjectList(pname, pversion, binary)
-        if pname != 'LHCbGrid' and sys.platform != "win32" and cmtconfig.find("slc3")!=-1 and cmtconfig.find("sl3") != -1 :
-            grid_project_list, grid_html_list = getProjectList('LHCbGrid', grid_version, binary_opt)
-            project_list.update(grid_project_list)
-            html_list += grid_html_list
-        if pname != 'Compat' :
-            if not compat_version:
-                new_compat_version = getLatestVersion("Compat", binary_opt)
-            else :
-                new_compat_version = compat_version
-            compat_project_list, compat_html_list = getProjectList('Compat', compat_version, binary_opt)
-            project_list.update(compat_project_list)
-            html_list += compat_html_list
-        already_exist = []
-        getProjectTar(project_list, already_exist)
 
-
-# if full_flag is set : download binary_dbg tar files and configure the projects
-    if full_flag :
-        log.info('download debug version and reconfigure it')
-        from LbConfiguration.Platform import isBinaryDbg, getBinaryOpt, getBinaryDbg
-        binary_dbg = getBinaryDbg(binary)
-        binary_opt = binary
-        if isBinaryDbg(binary) :
-            binary_dbg = binary
-            binary_opt = getBinaryOpt(binary)
-        os.environ['CMTCONFIG'] = binary_dbg
-        project_list, html_list = getProjectList(pname, pversion, binary_dbg)
-        getProjectTar(project_list)
-
-    if setup_script :
-        os.chdir(os.environ["MYSITEROOT"].split(os.pathsep)[0])
-        genSetupScript(pname, pversion, cmtconfig, setup_script)
 
 
 
@@ -1974,6 +1942,10 @@ def main():
     start_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
 
     thelog.info((' %s  python %s starts install_project.py - version no %s ' % (start_time, txt_python_version, script_version)).center(120) )
+
+
+    if not os.environ.has_key("MYSITEROOT") :
+        sys.exit('please set $MYSITEROOT == $INSTALLDIR:$MYSITEROOT before running the python script \n')
 
 
     if not check_only and fix_perm:
