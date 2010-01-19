@@ -1,10 +1,12 @@
-!$Id: release.notes,v 1.186 2010-01-11 14:54:27 wouter Exp $
+!$Id: release.notes,v 1.187 2010-01-19 12:41:14 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+!======================== STDet v4r16 2010-01-19 =========================
 ! 2010-01-11 W. Hulsbergen
- - Fix bug in DeSTSector::cacheInfo: the trajectories used in tackfinding were displaced by 0.5 strippitch
+ - Fix bug in DeSTSector::cacheInfo: the trajectories used in trackfinding
+   were displaced by 0.5 strip pitch
 
 !======================== STDet v4r15 2009-11-13 =========================
 ! 2009-11-06 M Needham
