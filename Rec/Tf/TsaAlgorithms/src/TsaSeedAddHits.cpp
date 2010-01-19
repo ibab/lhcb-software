@@ -1,4 +1,4 @@
-// $Id: TsaSeedAddHits.cpp,v 1.8 2009-11-12 17:20:33 kholubye Exp $
+// $Id: TsaSeedAddHits.cpp,v 1.9 2010-01-19 13:24:23 smenzeme Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -155,6 +155,7 @@ StatusCode SeedAddHits::execute(SeedTracks* seeds, SeedHits* hits ){
             for (Hits::const_iterator itIter = iRange.begin(); itIter != iRange.end(); ++itIter)
             {
               if ((*itIter)->onTrack()) continue;
+	      if ((*itIter)->hit()->ignore()) continue;
               if (m_onlyUnusedHits && (*itIter)->hit()->testStatus(Tf::HitBase::UsedByPatForward)) continue;
               //  Find seed candidate's coordinate at the cluster (midpoint)
               //const double z = clus->zMid();

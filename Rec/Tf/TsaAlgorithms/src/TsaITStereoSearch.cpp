@@ -1,4 +1,4 @@
-// $Id: TsaITStereoSearch.cpp,v 1.9 2009-11-12 17:20:33 kholubye Exp $
+// $Id: TsaITStereoSearch.cpp,v 1.10 2010-01-19 13:24:23 smenzeme Exp $
 
 #include <algorithm>
 
@@ -168,7 +168,8 @@ void ITStereoSearch::loadData(std::vector<SeedHit*> hits[6]) const
             {
               debug() << "  -> " << (*itIter)->hit()->lhcbID() << endreq;
               //if ((*itIter)->isHot() == false) { // CRJ : Need to decide what to do about cleaning
-              if (m_onlyUnusedHits && (*itIter)->hit()->testStatus(Tf::HitBase::UsedByPatForward)) continue;
+	      if ((*itIter)->hit()->ignore()) continue;
+	      if (m_onlyUnusedHits && (*itIter)->hit()->testStatus(Tf::HitBase::UsedByPatForward)) continue;
               SeedHit* hit = new SeedHit(*itIter);
               hits[lay].push_back( hit );
               //}

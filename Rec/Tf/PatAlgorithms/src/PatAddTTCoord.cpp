@@ -1,4 +1,4 @@
-// $Id: PatAddTTCoord.cpp,v 1.4 2009-11-26 18:00:48 mschille Exp $
+// $Id: PatAddTTCoord.cpp,v 1.5 2010-01-19 13:18:04 smenzeme Exp $
 // Include files
 
 #include <cmath>
@@ -105,6 +105,8 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track ) {
   Tf::TTStationHitManager<PatTTHit>::HitRange range = m_ttHitManager->hits();
   for ( itTT = range.begin(); range.end() != itTT; ++itTT ) {
     PatTTHit* tt = *itTT;
+    if (tt->hit()->ignore()) continue;
+
     double z = tt->z();
 
     double yPred = state.y() + ( z - state.z() ) * state.ty();

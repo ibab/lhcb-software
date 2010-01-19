@@ -1,4 +1,4 @@
-// $Id: TsaOTStereoSearch.cpp,v 1.8 2009-11-12 17:20:33 kholubye Exp $
+// $Id: TsaOTStereoSearch.cpp,v 1.9 2010-01-19 13:24:23 smenzeme Exp $
 
 #include <algorithm>
 
@@ -217,7 +217,9 @@ void OTStereoSearch::loadData(std::vector<SeedHit*> hits[6]) const
           //if ( clus->isHot() ) { debug() << "   -> IsHot -> Rejecting" << endreq; continue; }
           if ( (*otIter)->driftRadius() >= m_maxDriftRadius )
           { debug() << "    -> Drift dist " << (*otIter)->driftRadius() << " failed max cut " << m_maxDriftRadius << endreq; continue; }
-          if (m_onlyUnusedHits && (*otIter)->hit()->testStatus(Tf::HitBase::UsedByPatForward)) continue;
+          
+	  if ((*otIter)->hit()->ignore()) continue;
+	  if (m_onlyUnusedHits && (*otIter)->hit()->testStatus(Tf::HitBase::UsedByPatForward)) continue;
           SeedHit* hit = new SeedHit(*otIter);
           hits[lay].push_back( hit );
         }
