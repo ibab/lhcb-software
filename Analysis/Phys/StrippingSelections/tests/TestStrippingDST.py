@@ -24,7 +24,8 @@ dvinit.Members.insert(0, redoPV() )
 dvinit.Members.insert(0, veloNZSKiller() )
 
 DaVinci().EvtMax = 10                         # Number of events
-DaVinci().UserAlgorithms = [ dstWriter.sequence() ]
+DaVinci().appendToMainSequence( [ sc.sequence() ] )
+DaVinci().appendToMainSequence( [ dstWriter.sequence() ] )
 
 #importOptions("$STRIPPINGSELECTIONSROOT/tests/2008-InclBJpsiMuMu.py")
 importOptions("$STRIPPINGSELECTIONSROOT/tests/MC09_Bincl.py")     # Data file
