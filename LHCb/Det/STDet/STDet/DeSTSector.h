@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.45 2009-11-06 12:31:20 mneedham Exp $
+// $Id: DeSTSector.h,v 1.46 2010-01-19 12:44:40 cattanem Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -465,8 +465,8 @@ private:
   double m_dxdy ;
   double m_dzdy ;
   double m_dy ;
-  Gaudi::XYZVectorF m_dp0di ;
-  Gaudi::XYZPointF  m_p0 ;
+  Gaudi::XYZVector m_dp0di ;
+  Gaudi::XYZPoint  m_p0 ;
   double m_angle ;
   double m_cosAngle ;
   double m_sinAngle ;
@@ -723,13 +723,3 @@ inline const Condition* DeSTSector::noiseCondition() const{
 #include "STDet/StatusMap.h"
  
 #endif // _DeSTSector_H
-
-
-
-
-
-
-
-
-
-
