@@ -86,8 +86,11 @@ class PartitionSvc
 std::string folderBuffer("");
 std::string condBuffer("");
 
-DimService foldersService("FOLDERS_SERVICE", "C" , const_cast<char*>(folderBuffer.c_str()), folderBuffer.size()+1);
-DimService conditionsService("CONDITIONS_SERVICE","C" ,const_cast<char*> (condBuffer.c_str()) , condBuffer.size()+1);
+// All these const_cast are needed because of the DIM API (uses "char*" instead of "const char*")
+DimService foldersService(const_cast<char*>("FOLDERS_SERVICE"), const_cast<char*>("C"),
+                          const_cast<char*>(folderBuffer.c_str()), folderBuffer.size()+1);
+DimService conditionsService(const_cast<char*>("CONDITIONS_SERVICE"), const_cast<char*>("C"),
+                             const_cast<char*> (condBuffer.c_str()), condBuffer.size()+1);
 
 long sleep_time = 60; //sleep time in sc
 PartitionSvc partitionsSvc; 
@@ -103,7 +106,7 @@ class Command : public DimCommand
            partitionsSvc.updatePartition(cond);
         }
     public :
-       Command() : DimCommand("COND_DB_COMMAND","I:1;C:512;C") {} 
+       Command() : DimCommand(const_cast<char*>("COND_DB_COMMAND"), const_cast<char*>("I:1;C:512;C")) {} 
 };
 
 
