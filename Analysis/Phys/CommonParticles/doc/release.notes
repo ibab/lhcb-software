@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.165 2010-01-18 10:07:26 gcowan Exp $
+!$Id: release.notes,v 1.166 2010-01-19 10:51:16 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -8,6 +8,7 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================= CommonParticles v6r3 2010-01-19 ===================
 ! 2010-01-18 - Greig Cowan
  - Added StdVeryLooseJpsi for B2JpsiX strippings.
 
