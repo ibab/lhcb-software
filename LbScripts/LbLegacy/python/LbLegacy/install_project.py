@@ -70,6 +70,7 @@ check_only = False
 overwrite_mode = False
 fix_perm = True
 show_compatible_configs = False
+install_binary = False
 
 #----------------------------------------------------------------------------------
 def usage() :
@@ -432,11 +433,6 @@ def createDir(here , logname):
                     changePermissions(dirnm, recursive=True)
             if dirnm == "tmp" :
                 createTmpDirectory()
-        if os.path.isdir(os.path.join(here, cmtconfig)):
-            log.info('%s exists in %s '%(cmtconfig, here))
-        else:
-            os.mkdir(cmtconfig)
-            log.info('%s is created in %s '%(cmtconfig,here))
     else :
         log.warning("Cannot write in %s" % here)
         good = False
@@ -725,15 +721,8 @@ def getPackVer(file):
     file_path = os.path.join(this_lhcb_dir,name,name+'_'+vers)
     base_dir = lhcb_dir.split(os.pathsep)
     file_base = []
-    if bin + ".tar.gz" == file :
-        name = ffile
-        vers = None
-        file_path = os.path.join(os.environ["MYSITEROOT"].split(os.pathsep)[0], name)
     for bd in base_dir :
-        if bin + ".tar.gz" == file :
-            file_base.append(os.path.join(bd,"..",name))
-        else :
-            file_base.append(os.path.join(bd, name, name+'_'+vers))
+        file_base.append(os.path.join(bd, name, name+'_'+vers))
     if name == "LBSCRIPTS" :
         file_base = []
         file_base.append(os.path.join(base_dir[0],name,name+'_'+vers))
@@ -1416,7 +1405,7 @@ def createBaseDirs(pname, pversion):
     global multiple_mysiteroot
     global cmtconfig
     global log_dir, contrib_dir, lcg_dir, lhcb_dir, html_dir
-    global bootscripts_dir, targz_dir, system_dir, tmp_dir
+    global bootscripts_dir, targz_dir, tmp_dir
 
 
     log = logging.getLogger()
@@ -1446,11 +1435,6 @@ def createBaseDirs(pname, pversion):
         #print 'please set $MYSITEROOT before running the python script'
         sys.exit('please set $MYSITEROOT == $INSTALLDIR:$MYSITEROOT before running the python script \n')
 
-    if os.environ.has_key('CMTCONFIG') == 0:
-        #print ' please set $CMTCONFIG before running the python script'
-        sys.exit(' please set $CMTCONFIG before running the python script \n')
-
-    cmtconfig = os.environ['CMTCONFIG']
 
     log_dir = _multiPathJoin(mypath, "log")
     contrib_dir = _multiPathJoin(mypath, "contrib")
@@ -1459,7 +1443,6 @@ def createBaseDirs(pname, pversion):
     html_dir = _multiPathJoin(mypath, "html")
     bootscripts_dir = _multiPathJoin(mypath, "bootscripts")
     targz_dir = _multiPathJoin(mypath, "targz")
-    system_dir = _multiPathJoin(mypath, cmtconfig)
     if sys.platform != "win32" :
         tmp_dir = _multiPathJoin(mypath, os.path.join("tmp", os.environ["USER"]))
     else :
@@ -1505,6 +1488,7 @@ def installLoginScripts():
 #  install one project #################################################
 #
 def runInstall(pname,pversion,binary=None):
+    global cmtconfig
     log = logging.getLogger()
 
 # print action list
@@ -1540,7 +1524,9 @@ def runInstall(pname,pversion,binary=None):
         sys.exit()
 
 # check binary name
-    checkBinaryName(binary)
+    cmtconfig = checkBinaryName(binary)
+    if install_binary :
+        binary = cmtconfig
 
     getCMT(cmtversion)
 
@@ -1886,6 +1872,7 @@ def checkBinaryName(binary):
         if next.lower()[0] != 'y':
             sys.exit()
 
+    return binary
 #---------------------------------------------------------------------
 def main():
     
@@ -1894,6 +1881,7 @@ def main():
     global setup_script, check_only, overwrite_mode
     global _retry_time, fix_perm
     global show_compatible_configs
+    global install_binary
 # get arguments
     pname = None
     pversion = None
@@ -1916,7 +1904,7 @@ def main():
         sys.exit()
 
     for key,value in keys:
-        if key in ('--version'):
+        if key == '--version':
             print script_version
             sys.exit()
         if key in ('-d', '--debug'):
@@ -1944,9 +1932,11 @@ def main():
                 pname = "/".join(plist[1:])
         if key == '-b':
             binary = os.environ.get('CMTCONFIG', None)
+            install_binary = True
         if key == '--binary':
             binary = value
             os.environ["CMTCONFIG"] = binary
+            install_binary = True
         if key in ('-n','--nocheck'):
             md5_check = False
         if key in ('-g','--grid'):
@@ -1983,7 +1973,7 @@ def main():
 
     start_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
 
-    thelog.info((' %s  python %s starts install_project.py - version no %s ' % (start_time, txt_python_version, script_version)).center(120, '+') )
+    thelog.info((' %s  python %s starts install_project.py - version no %s ' % (start_time, txt_python_version, script_version)).center(120) )
 
 
     if not check_only and fix_perm:
@@ -2004,7 +1994,7 @@ def main():
     runInstall(pname, pversion, binary)
 
     end_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
-    thelog.info( (' %s end install_project.py -version no %s ' % (end_time, script_version)).center(120, '+'))
+    thelog.info( (' %s end install_project.py -version no %s ' % (end_time, script_version)).center(120))
 
 
 if __name__ == "__main__":

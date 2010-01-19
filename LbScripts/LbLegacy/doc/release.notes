@@ -1,6 +1,10 @@
-2010-01-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+2010-01-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v3r0
+
+2010-01-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: fixed various hickups
 
 2010-01-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
