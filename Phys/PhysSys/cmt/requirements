@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.210 2010-01-18 15:01:07 pkoppenb Exp $
+#$Id: requirements,v 1.211 2010-01-19 10:14:48 graven Exp $
 package PhysSys
 version v9r0
 
@@ -16,11 +16,8 @@ use  VertexFit			v6r1     Phys   # Yuehong Xie
 use  LoKiFitters                v2r2p1   Phys   # Vanya Belyaev
 use  DecayTreeFitter            v1r6     Phys   # Wouter Hulsbergen
 use  PhysDict                   v4r1     Phys   # Juan Palacios
-
-use HltLine                     v2r1     Hlt    # Gerhard Raven
-use HltBase                     v8r0     Hlt    # DO NOT RELEASE PHYS WITH THIS IN !!!!
+use SelectionLine               v0r1    Kernel # Gerhard Raven
 use HltInterfaces               v3r0     Kernel # Gerhard Raven
-use SelecctionLine              v1r9     Kernel # Gerhard Raven
 
 # Declare this as a container package
 apply_pattern container_package
