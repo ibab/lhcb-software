@@ -459,12 +459,12 @@ bool CaloL0DataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
             }
           }
         }
-        ++data;
-        --size;
-    }
+      }
+      ++data;
+      --size;
+    }  
     //==== Codage for 1 MHz
-  } else if ( 3 == version ) {
-
+  } else if ( 3 == version ) {  
     // Get the FE-Cards associated to that bank (via condDB)
     std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
     int nCards = feCards.size();
