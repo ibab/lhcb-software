@@ -4,8 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2010-01-20 - Silvia Miglioranzi
+ - Modified Configuration.py in order to take into account the validity limits 
+   of the Velo geometry (comparison of global and local tags dates).
+
 !========================= Gauss v38r1 2009-12-17 ============================
-! 2009-12-17 - Silvia Miglioranzi
+
  - Modified Configuration.py to include in the Velo simulation the:
    - Velo/DownstreamPipeSections
    - Velo/UpstreamPipeSections.

@@ -1,7 +1,7 @@
 """
 High level configuration tools for Gauss
 """
-__version__ = "$Id: Configuration.py,v 1.25 2009-12-17 13:12:56 silviam Exp $"
+__version__ = "$Id: Configuration.py,v 1.26 2010-01-20 20:31:48 silviam Exp $"
 __author__  = "Gloria Corti <Gloria.Corti@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -605,9 +605,9 @@ class Gauss(LHCbConfigurableUser):
         DetPiecies = {'BeforeMagnetRegion':[],'AfterMagnetRegion':[],'DownstreamRegion':[],'MagnetRegion':['Magnet','BcmDown']}
         BasePiecies = {}
         # check if the new velo geometry is required with the chosen DDDB tags
-        VeloPostMC09 = False
+        VeloPostMC09 = 0
         VeloP = self.checkVeloDDDB(VeloPostMC09)
-        if VeloP:
+        if (VeloP==1 or VeloP==2):
             BasePiecies['BeforeMagnetRegion']=[]
         else:
             BasePiecies['BeforeMagnetRegion']=['Velo2Rich1']
@@ -1133,7 +1133,7 @@ class Gauss(LHCbConfigurableUser):
         File containing the list of detector element to explicitely set
         to have misalignement in the VELO.
         """
-        print 'VeloPostMC09',VeloPostMC09
+        print 'VeloPostMC09 ',VeloPostMC09
         Geo = GiGaInputStream('Geo')
         Geo.StreamItems.remove("/dd/Structure/LHCb/BeforeMagnetRegion/Velo")
 
@@ -1153,11 +1153,25 @@ class Gauss(LHCbConfigurableUser):
 
         Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/DownStreamWakeFieldCone")
         Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/UpStreamWakeFieldCone")
-        # new description postMC09 of Velo:  
-        if VeloPostMC09:
+        if (VeloPostMC09==1):
+            # description postMC09 of Velo (head-20091120), problem with Velo Tank simulation  
             Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VacTank")
             Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/DownstreamPipeSections")
             Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/UpstreamPipeSections")
+        elif (VeloPostMC09==2):
+            # Thomas L. newer description postMC09 of Velo 
+            # --- Velo Right
+            Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/RFBoxRight")
+            Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/DetSupportRight")
+            Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/ConstSysRight")
+            # --- Velo Left
+            Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/RFBoxLeft")
+            Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/DetSupportLeft")
+            Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/ConstSysLeft")
+            # --- Velo
+            Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/DownstreamPipeSections")
+            Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/UpstreamPipeSections")
+            Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VacTank")
         else:
             Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/UpStreamVacTank")
             Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/DownStreamVacTank")
@@ -1171,11 +1185,17 @@ class Gauss(LHCbConfigurableUser):
         Check if the Velo geometry is compatible with the chosen tags
         """
 
-        # set validity limit for new Velo geometry      
-        GTagLimit = "head-20091120"       
-        GTagLimit = GTagLimit.split('-')[1].strip()
-        VeloLTagLimit = "velo-20091116"       
-        VeloLTagLimit = VeloLTagLimit.split('-')[1].strip()
+        # set validity limits for  Velo geometry      
+        # first postMC09 Velo geometry
+        GTagLimit1 = "head-20091120"       
+        GTagLimit1 = GTagLimit1.split('-')[1].strip()
+        VeloLTagLimit1 = "velo-20091116"       
+        VeloLTagLimit1 = VeloLTagLimit1.split('-')[1].strip()
+        # Thomas L. Velo geometry
+        GTagLimit2 = "head-20100119"       
+        GTagLimit2 = GTagLimit2.split('-')[1].strip()
+        VeloLTagLimit2 = "velo-20100114"       
+        VeloLTagLimit2 = VeloLTagLimit2.split('-')[1].strip()
         
         # DDDB global tag used
         DDDBDate = LHCbApp().DDDBtag
@@ -1191,9 +1211,11 @@ class Gauss(LHCbConfigurableUser):
                     if ltag.find("velo")!=-1 :
                         cdbVeloDate = ltag.split('-')[1].strip()
 
-        # check if the selected tags require the new Velo geometry 
-        if (DDDBDate >= GTagLimit) or (cdbVeloDate >= VeloLTagLimit):
-            VeloPostMC09 = True
+        # check if the selected tags require one of the postMC09 Velo geometries 
+        if (DDDBDate >= GTagLimit1) or (cdbVeloDate >= VeloLTagLimit1):
+            VeloPostMC09 = 1
+        if (DDDBDate >= GTagLimit2) or (cdbVeloDate >= VeloLTagLimit2):
+            VeloPostMC09 = 2
 
         return VeloPostMC09
     ##
