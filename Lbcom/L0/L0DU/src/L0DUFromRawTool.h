@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.h,v 1.13 2009-09-17 12:14:49 odescham Exp $
+// $Id: L0DUFromRawTool.h,v 1.14 2010-01-20 16:30:58 odescham Exp $
 #ifndef L0DUFROMRAWTOOL_H 
 #define L0DUFROMRAWTOOL_H 1
 
@@ -33,7 +33,7 @@ public:
   bool decodeBank(int ibank=0 );
 
   unsigned int data(std::string name);
-  virtual unsigned int version(){return m_vsn;};
+  unsigned int version(){return m_vsn;};
   unsigned int tck(){  return m_tck; }
   unsigned int firmware(){  return m_pgaVsn; }
   const std::pair<unsigned int,unsigned int> bcid(){  return std::make_pair(m_bcid2,m_bcid3); }
@@ -43,7 +43,9 @@ public:
   unsigned int size(){return m_size;  }
   unsigned long roStatus(){return m_roStatus.status();  }
   void fillDataMap(bool fill = true){m_fill = fill;}
+  std::string dump();
   
+    
 
   LHCb::L0DUReport report(){return m_report;}
   LHCb::L0ProcessorDatas* L0ProcessorDatas(){return m_processorDatas;}
@@ -100,6 +102,10 @@ private:
   bool m_emu;
   bool m_encode;
   bool m_stat;
+  std::string m_slot;
+  std::vector<unsigned int> m_dump;
+  int m_dumping;
+  int m_count;
 };
 #endif // L0DUFROMRAWTOOL_H
 
@@ -134,6 +140,21 @@ inline bool L0DUFromRawTool::nextData(){
     return false;
   }else{
     if ( msgLevel( MSG::VERBOSE) )verbose() << "data = " <<  format("0x%04X", *m_data) << endmsg;
+    m_dump.push_back(*m_data);
   }
   return true;
+}
+
+inline std::string L0DUFromRawTool::dump(){
+  std::ostringstream s("");
+  int i = 0;
+  for(std::vector<unsigned int>::iterator it=m_dump.begin();m_dump.end()!=it;++it){
+    unsigned int word = *it;
+    s << format( "%8i",i) << "   :   " << format("0x%08X", word)<< std::endl;
+    i++;
+  }
+  info() << " ------------ bank body event " << m_count << "-------------" << std::endl
+         << s.str()
+         << endmsg;
+  return s.str();
 }

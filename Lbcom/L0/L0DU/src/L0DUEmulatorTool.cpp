@@ -1,4 +1,4 @@
-// $Id: L0DUEmulatorTool.cpp,v 1.11 2009-09-17 12:14:49 odescham Exp $
+// $Id: L0DUEmulatorTool.cpp,v 1.12 2010-01-20 16:30:58 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -273,6 +273,7 @@ StatusCode  L0DUEmulatorTool::dataTree(LHCb::L0DUElementaryData* data, LHCb::L0D
 //===========================================================================================================
 StatusCode L0DUEmulatorTool::processing(){
   if(fillData().isFailure())return StatusCode::FAILURE;  
+  m_config->setCompleted(true);
     //
   if( msgLevel(MSG::VERBOSE)) {
     m_config->emulate();  // process the actual emulation when summary is requested - if not will be done on-Demand
@@ -293,7 +294,7 @@ const LHCb::L0DUReport L0DUEmulatorTool::emulatedReport(){
     return m_report;
   }
   
-  m_report.setDecision( m_config->emulatedDecision()  );
+  m_report.setDecisionValue( m_config->emulatedDecisionValue()  );
   m_report.setSumEt( digit(L0DUBase::Sum::Et) );
 
   
@@ -363,15 +364,20 @@ const std::vector<unsigned int> L0DUEmulatorTool::bank(unsigned int version){
   }
   // Version 1 : complete RawBank as described in EDMS 868071
   //---------------------------------------------------------
-  else  if(1 == version){
-    // global header
+  else  if( 1 == version || 2 == version ){
+
+    // simulation : no previous/next report
+    unsigned int nBxp = 0;
+    unsigned int nBxm = 0;
+
+
+    // global header ( simulation : no PGA f/w version )
     unsigned int ec_size = (m_report.conditionsValueSummaries().size() ) & 0x3 ;
     unsigned int tc_size = (m_report.channelsDecisionSummaries().size() ) & 0x3;
     unsigned int tck     = m_report.tck() & 0xFFFF; 
     unsigned int word  =  tc_size  |  ec_size << 2 | tck << 16;
+    if( 2 == version ) word |= ( nBxm & 0x3 ) << 12 | ( nBxp & 0x3 ) << 14;    
     l0Block.push_back( word );
-
-
 
     // ------------
     // PGA3-Block
@@ -433,14 +439,23 @@ const std::vector<unsigned int> L0DUEmulatorTool::bank(unsigned int version){
       l0Block.push_back(muPt[i]);
     }
 
-
     // ------------
     // PGA2-Block
     // -----------
     unsigned int l0Id = 0 ;
-    unsigned int rsda = l0Id | (m_report.decision() << 12);
-    unsigned int nBxp = 0;
-    unsigned int nBxm = 0;
+
+    unsigned int rsda = 0;
+    if( version == 1 ){
+      rsda = (l0Id & 0xFFF) ;
+      rsda |= ( m_report.decision(LHCb::L0DUDecision::Physics) ) << 12;
+    }
+    else if( version == 2 ){
+      rsda = (l0Id & 0x3FF);
+      rsda |= ( m_report.decision(LHCb::L0DUDecision::Physics) ) << 12;
+      rsda |= ( m_report.decision(LHCb::L0DUDecision::Beam2)   ) << 11;
+      rsda |= ( m_report.decision(LHCb::L0DUDecision::Beam1)   ) << 10;
+    }
+    
     unsigned int status = 
       digit(L0DUBase::Electron::Status) << L0DUBase::Fiber::CaloElectron  |
       digit(L0DUBase::Photon::Status)   << L0DUBase::Fiber::CaloPhoton    |         
@@ -450,10 +465,19 @@ const std::vector<unsigned int> L0DUEmulatorTool::bank(unsigned int version){
       digit(L0DUBase::Sum::Status)      << L0DUBase::Fiber::CaloSumEt     |          
       digit(L0DUBase::Spd::Status)      << L0DUBase::Fiber::CaloSpdMult   |          
       digit(L0DUBase::PileUp::Status1)  << L0DUBase::Fiber::Pu1           |          
-      digit(L0DUBase::PileUp::Status2)  << L0DUBase::Fiber::Pu2      ;
-    
+      digit(L0DUBase::PileUp::Status2)  << L0DUBase::Fiber::Pu2      ;    
+    // simulation : no L0DU status bit
+    int L0DUstatus = 0;
+    status |= (L0DUstatus & 0x7) << 9;
+    int w =  rsda | ( status  ) << 16 ;
+    if( 1 == version ){
+      int bx = ( l0Id & 0x300 ) << 18;
+      w |= bx ;
+    }
+    if(  1 == version ) 
+      w |= ( nBxm << 28 )  | ( nBxp <<30 ) ;
 
-    l0Block.push_back( ( rsda | status << 16 | nBxm << 28 |  nBxp <<30)  ); // header
+    l0Block.push_back( w ); // header
     // PGA2-Block
     for(unsigned int itc = 0 ; itc <tc_size ; ++itc ){
       l0Block.push_back( m_report.channelsPreDecisionSummary(itc)  & 0xFFFFFFFF ); // Channel summary

@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.23 2009-09-17 12:14:49 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.24 2010-01-20 16:30:58 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -28,7 +28,10 @@ L0DUFromRawTool::L0DUFromRawTool( const std::string& type,
     m_processorDatas(),
     // DO NOT TOUCH !! IF YOU MODIFY THIS VALUE THIS WILL BREAK THE DC06 BACKWARD COMPATIBILITY
     m_tck(0xDC06), // default value for DC06 production (TCK was not implemented in Bank) 
-    m_warning(true)
+    m_warning(true),
+    m_slot("T0"),
+    m_dumping(-1),
+    m_count(0)
 {
   declareInterface<IL0DUFromRawTool>(this);
   
@@ -39,10 +42,11 @@ L0DUFromRawTool::L0DUFromRawTool( const std::string& type,
   declareProperty( "ForceSummarySize"        , m_sumSize=-1);        // WARNING : for experts only
   declareProperty( "ForceTCK"                , m_force = -1);        // WARNING : for experts only
   declareProperty( "FullWarning"             , m_warn = false);
-  declareProperty( "FillDataMap"             , m_fill = false);   // WARNING : default is false
+  declareProperty( "FillDataMap"             , m_fill = true);    // EXPERT USAGE
   declareProperty( "EncodeProcessorData"     , m_encode = true);  // EXPERT USAGE
   declareProperty( "Emulate"                 , m_emu  = true);    // EXPERT USAGE
   declareProperty( "StatusOnTES"             , m_stat = true);    // EXPERT USAGE
+  declareProperty( "DumpBank"                , m_dumping = -1);   // EXPERT USAGE
 }
 //=============================================================================
 // Destructor
@@ -57,8 +61,13 @@ StatusCode L0DUFromRawTool::initialize(){
   StatusCode sc = GaudiTool::initialize();
    if(sc.isFailure())return sc;
 
-   if(!m_encode)m_emu = false;
 
+   //
+   m_slot = ( rootInTES() == "" ) ? "T0" : rootInTES();
+
+
+
+   if(!m_encode)m_emu = false;
   // get the configuration provider tool
   m_confTool = tool<IL0DUConfigProvider>("L0DUMultiConfigProvider" , m_configName);
   m_emuTool  = tool<IL0DUEmulatorTool>(m_emulatorType, m_emulatorType,this);
@@ -93,6 +102,8 @@ StatusCode L0DUFromRawTool::initialize(){
 // ---------------------------------------------
 bool L0DUFromRawTool::decodeBank(int ibank){
   bool ok = decoding(ibank);
+  if(m_count < m_dumping )dump();
+  m_count++;
   if( !ok ){
     m_report.clear();
     m_report.setValid( false );
@@ -152,6 +163,7 @@ bool L0DUFromRawTool::decoding(int ibank){
   // clear -------------------
   // ------------------------
   LHCb::L0DUConfig* config = NULL;
+  m_dump.clear();
   m_dataMap.clear();
   m_report.clear();
   // reset
@@ -180,6 +192,7 @@ bool L0DUFromRawTool::decoding(int ibank){
   m_data = bank->data();
   m_size = bank->size();  // Bank size is in bytes
   m_vsn  = bank->version();
+  m_report.setBankVersion( m_vsn );
   m_source = bank->sourceID();
   m_roStatus.addStatus( m_source , LHCb::RawBankReadoutStatus::OK);
   
@@ -196,6 +209,7 @@ bool L0DUFromRawTool::decoding(int ibank){
   // Version 0 : preliminary version used for DC06 simulated data
   //--------------------------------------------------------------
   if(m_vsn == 0){
+
     
     if( m_force >= 0 ){
       std::stringstream msg("");
@@ -214,8 +228,9 @@ bool L0DUFromRawTool::decoding(int ibank){
 
     unsigned int word;
     word = *m_data;
+    m_dump.push_back(word);
     if ( msgLevel( MSG::VERBOSE) )verbose() << "first data word = " << format("0x%04X", word)<< endmsg;
-    m_report.setDecision( (bool) (word & 0x1) );
+    m_report.setDecisionValue( (word & 0x1) );
     m_report.setChannelsDecisionSummary( word >> 1 );
     if( !nextData() )return false;
     word = *m_data;
@@ -245,7 +260,7 @@ bool L0DUFromRawTool::decoding(int ibank){
     } 
     if ( msgLevel( MSG::DEBUG) )debug() << "Loading configuration" << endmsg;
 
-    config = m_confTool->config( m_tck );
+    config = m_confTool->config( m_tck , m_slot);
 
     if( NULL == config){
       std::stringstream tck("");
@@ -259,14 +274,19 @@ bool L0DUFromRawTool::decoding(int ibank){
   }
   // Version 1 : complete RawBank as described in EDMS 868071
   //---------------------------------------------------------
-  else if(m_vsn == 1){  
+  else if(m_vsn == 1 || m_vsn == 2){  // version 2 = adding extra-decisions (beam1/beam2) in RSDA
 
     if ( msgLevel( MSG::VERBOSE) )verbose() << "first data word = " << format("0x%04X", *m_data)<< endmsg;
+    m_dump.push_back(*m_data);
     // global header
     unsigned int itc      = (*m_data & 0x00000003)  >> 0;
     unsigned int iec      = (*m_data & 0x0000000C)  >> 2;
     m_pgaVsn              = (*m_data & 0x00000FF0)  >> 4;
-    m_status              = (*m_data & 0x0000F000)  >> 12;
+    //OD neither in v1 nor v2    m_status              = (*m_data & 0x0000F000)  >> 12;
+    if( m_vsn == 2){ // report size moved to global header
+      nm                    = (*m_data & 0x00000300 ) >> 12;
+      np                    = (*m_data & 0x00000C00 ) >> 14;
+    }
     m_tck                 = (*m_data & 0xFFFF0000)  >> 16;
 
     if(m_sumSize >=0){
@@ -287,19 +307,14 @@ bool L0DUFromRawTool::decoding(int ibank){
       m_tck = (unsigned int) m_force;    
     }
     
-    m_report.setTck( m_tck );
-    
-    if( 0x1 && m_status){
-      m_roStatus.addStatus( m_source , LHCb::RawBankReadoutStatus::Tell1Error );
-      m_roStatus.addStatus( m_source , LHCb::RawBankReadoutStatus::Tell1Sync );
-    }
+    m_report.setTck( m_tck );    
 
     if ( msgLevel( MSG::DEBUG) ){
       debug() << "-- Global header " << endmsg;
       debug() << "   -> TCK = " << m_tck << " [" << format("0x%04X", m_tck) << "]"   <<endmsg;
-      debug() << "   -> L0DU Status : " << m_status  << " [" <<  format("0x%04X", m_status) << "]"   <<endmsg;
       debug() << "   -> Firmware version : " << m_pgaVsn << " [" <<  format("0x%04X", m_pgaVsn) << "]" <<endmsg;
       debug() << "   -> Number of Condition & Channel summaries are : " << iec << " / " << itc << " respectively " ;
+      if(m_vsn == 2) debug() << "   -> Number of Previous/Next BX : " << nm << "/" << np << endmsg;
       if(m_sumSize>0) debug() << " (FORCED BY USER) " ;                        
       debug() <<endmsg;
     }
@@ -307,7 +322,7 @@ bool L0DUFromRawTool::decoding(int ibank){
     //---------------------------------
     // get corresponding configuration
     //---------------------------------
-    config = m_confTool->config( m_tck);
+    config = m_confTool->config( m_tck , m_slot );
     if( NULL == config){
       std::stringstream tck("");
       m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Unknown);      
@@ -341,20 +356,17 @@ bool L0DUFromRawTool::decoding(int ibank){
     encode("MuonCU1(Status)",(pga3Status >> 4) & 0xF  , L0DUBase::Muon3::Status  );
     encode("MuonCU2(Status)",(pga3Status >> 8) & 0xF  , L0DUBase::Muon5::Status  );
     encode("MuonCU3(Status)",(pga3Status >> 12)& 0xF  , L0DUBase::Muon7::Status  );
-
-
     
     unsigned int pga3Size = 4 * ( 4 + ( int((nmu+3)/4) ) + ( int((nmu+1)/2) ) );
     if ( msgLevel( MSG::DEBUG) ){
       debug() << "-- PGA3 header -------------------------- "  << endmsg;
-      debug() << "   -> BCID : " <<  m_bcid3  <<  " [" << format("0x%04X",  m_bcid3) << "]"   <<endmsg;
+      debug() << "   -> BCID (&7F): " <<  m_bcid3  <<  " [" << format("0x%04X",  m_bcid3) << "]"   <<endmsg;
       debug() << "   -> Processors status : "  << pga3Status  <<  " [" << format("0x%04X",  pga3Status) << "]"   <<endmsg;
       debug() << "   -> Number of L0Muon in bank (0-sup) : " << nmu     ;
       if( m_muonNoZsup ) debug() << " (FORCED TO BE NON ZeroSuppressed BY USER) " ;
       debug() << endmsg;
       debug() << "   -> PGA3 block expected size : "<< pga3Size  << " (bytes) " <<endmsg;
     }
-    
     
     // PGA3 processing
     if( !nextData() )return false;
@@ -439,26 +451,54 @@ bool L0DUFromRawTool::decoding(int ibank){
     if( !nextData() )return false;
     m_rsda       = (*m_data & 0x0000FFFF );
     unsigned int pga2Status= (*m_data & 0x0FFF0000 ) >> 16;
-    nm                     = (*m_data & 0x30000000 ) >> 28;
-    np                     = (*m_data & 0xC0000000 ) >> 30;
-    m_bcid2                =  m_rsda & 0xFFF;
+    m_status               = (pga2Status & 0xE00   )  >> 12;
+ 
+    // NOT IMPLEMENTED IN TELL1 F/W TO BE CHANGED IN EDMS !!!!
+    //if( 0x1 & m_status){
+    //  m_roStatus.addStatus( m_source , LHCb::RawBankReadoutStatus::Tell1Error );
+    //  m_roStatus.addStatus( m_source , LHCb::RawBankReadoutStatus::Tell1Sync );
+    //}
+
+    if( m_vsn == 1 ){
+      nm                     = (*m_data & 0x30000000 ) >> 28;
+      np                     = (*m_data & 0xC0000000 ) >> 30;
+    }    
+
+    unsigned int beam1 = 0;
+    unsigned int beam2 = 0;
+    if( m_vsn == 1){
+      m_bcid2                =  m_rsda & 0xFFF;
+    }
+    else if (m_vsn ==2){
+      // BCID split : 10 LSB in RSDA + 2 in PGA2 header
+      m_bcid2                =  (m_rsda & 0x3FF)  | ( (*m_data & 0x30000000 ) >> 18); 
+      beam1     = (m_rsda >> 10) & 0x1;
+      beam2     = (m_rsda >> 11) & 0x1;
+    }
     unsigned int decision  = (m_rsda >> 12) & 1;
     unsigned int fb        = (m_rsda >> 13) & 1;
     unsigned int ttb       = (m_rsda >> 14) & 1;
     
+    int decisionValue = 0x0;
+    if( decision == 1)decisionValue |= LHCb::L0DUDecision::Physics;
+    if( beam1    == 1)decisionValue |= LHCb::L0DUDecision::Beam1;
+    if( beam2    == 1)decisionValue |= LHCb::L0DUDecision::Beam2;
+
     if ( msgLevel( MSG::DEBUG) ){
       debug() << "-- PGA2 header -------------------------- " << endmsg;
       debug() << "   -> RSDA : " <<  m_rsda << " [" << format("0x%04X",  m_rsda) << "]"   << endmsg;
-      debug() << "   -> BCID : "<< m_bcid2 << " [" << format("0x%04X",  m_bcid2) << "]"   << endmsg; 
-      debug() << "   -> Decision : " << decision << endmsg;
+      debug() << "   -> BCID ( & 0xFFF): "<< m_bcid2 << " [" << format("0x%04X",  m_bcid2) << "]"   << endmsg; 
+      debug() << "   -> Decisions : [ physics : " << decision << "| beam1 : " << beam1 << " |  beam2 : " << beam2 << "]" <<endmsg;
       debug() << "   -> TTB : " << ttb  << "  FB : " << fb << endmsg;
-      debug() << "   -> Processor Status : "  << pga2Status << " [" << format("0x%04X",  pga2Status) << "]"   << endmsg;
-      debug() << "   -> Number of Previous/Next BX : " << nm << "/" << np << endmsg;
+      if(m_vsn == 1) debug() << "   -> Number of Previous/Next BX : " << nm << "/" << np << endmsg;
+      debug() << "   -> L0DU Status : " << m_status  << " [" <<  format("0x%04X", m_status) << "]"   <<endmsg;
+      debug() << "   -> Processors Status : " << (m_status&0x1FF)  << " [" <<  format("0x%04X", (m_status&0x1FF)) << "]"<<endmsg;
     }
     if ( msgLevel( MSG::VERBOSE) )verbose() << "-- PGA2 block -------------------------- " << endmsg;
 
     // update L0DUReport
-    m_report.setDecision( (bool) decision );
+    m_report.setDecisionValue( decisionValue );
+
     m_report.setTimingTriggerBit( ttb );
     m_report.setForceBit(fb);
     //
@@ -646,6 +686,11 @@ bool L0DUFromRawTool::decoding(int ibank){
     //  emulate the config for later usage (monitoring) 
     if(m_emu){
       if(NULL != config)m_emuTool->process(config , m_processorDatas).ignore();
+      // template config :
+      LHCb::L0DUConfig* temp =  m_confTool->config( LHCb::L0DUTemplateConfig::TCKValue , m_slot);
+      if( NULL != temp &&  0 != temp->channels().size() ){
+        m_emuTool->process(temp, m_processorDatas).ignore();
+      }
     }
     // Fill report with the consecutive BXs info
     if ( msgLevel( MSG::VERBOSE) )verbose() << " ... filling L0DU Report with consecutive BXs ..." << endmsg;
@@ -675,12 +720,11 @@ bool L0DUFromRawTool::decoding(int ibank){
 
 
 unsigned int L0DUFromRawTool::data(std::string name){
+  // look for data in dataMap :
   std::map<std::string, unsigned int>::iterator it = m_dataMap.find(name);
-  if(m_dataMap.end() == it){
-    if(m_warn)Warning("Warning: Requested data '" + name  + "' is unknown ",StatusCode::SUCCESS).ignore();
-    return 0;
-  }
-  return (*it).second;
+  if( m_dataMap.end() != it) return (*it).second;
+  // not found : look for in config->data() (e.g. compound)
+  return m_report.dataDigit( name );
 }
 
 double L0DUFromRawTool::scale(unsigned int base){

@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.cpp,v 1.14 2009-09-17 12:14:49 odescham Exp $
+// $Id: L0DUConfigProvider.cpp,v 1.15 2010-01-20 16:30:58 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -35,7 +35,8 @@ L0DUConfigProvider::L0DUConfigProvider( const std::string& type,
     m_channels(),
     m_configs(),
     m_cData(0),
-    m_pData(0){
+    m_pData(0),
+    m_template(false){
   declareInterface<IL0DUConfigProvider>(this);
   
   declareProperty( "constData"               , m_constData);
@@ -51,11 +52,20 @@ L0DUConfigProvider::L0DUConfigProvider( const std::string& type,
 
 
   // TCK from name
-  int index = name.rfind("0x") + 2 ;
-  std::string tck = name.substr( index, name.length() );
-  std::istringstream is( tck.c_str() );
-  is >> std::hex >> m_tckopts  ;
 
+  int idx = name.find_last_of(".")+1;
+  std::string nam = name.substr(idx,std::string::npos);
+  if(nam == LHCb::L0DUTemplateConfig::Name )m_template = true;  
+
+  if( m_template ){
+    m_tckopts = LHCb::L0DUTemplateConfig::TCKValue;
+  }else{
+    int index = name.rfind("0x") + 2 ;
+    std::string tck = name.substr( index, name.length() );
+    std::istringstream is( tck.c_str() );
+    is >> std::hex >> m_tckopts  ;
+  }
+  
 
   //
   m_sepMap["["] = "]";
@@ -75,11 +85,13 @@ L0DUConfigProvider::L0DUConfigProvider( const std::string& type,
   m_chanFlags.push_back("rate");
   m_chanFlags.push_back("enable");
   m_chanFlags.push_back("disable");
+  m_chanFlags.push_back("mask");
   m_chanFlags.push_back("index");
 
   m_trigFlags.push_back("name");
   m_trigFlags.push_back("channel");  
   m_trigFlags.push_back("index");  
+  m_trigFlags.push_back("type");
 
   // define the allowed operator and comparators
   m_comparators.push_back(">");
@@ -133,8 +145,13 @@ StatusCode L0DUConfigProvider::finalize(){
 
 
   //delete m_config;
-  m_configs.release();
-  
+  for(std::map<std::string,LHCb::L0DUConfigs*>::iterator it = m_configs.begin();it!=m_configs.end();++it){
+    LHCb::L0DUConfigs* configs = (*it).second;
+    if( configs == NULL )continue;
+    configs->release();
+    delete configs;
+  }
+  m_configs.clear();
   return GaudiTool::finalize();
 }
 
@@ -155,32 +172,40 @@ StatusCode L0DUConfigProvider::initialize(){
     warning() << "A single pair of separators must be defined - will use the first : " 
               << m_separators.first << "data" << m_separators.second << endmsg;
 
-  // clear L0DUConfig container
+  std::string slot = ( "" == rootInTES() ) ? "T0" : rootInTES() ;
 
-  //
+
+
   // load predefined elementary data
   hardcodedData();
   constantData();
-
-
-
   //=====================================
-
   if(m_def == "")m_def = "No Description";
-  if(m_channels.size()   == 0  || 
-     m_conditions.size() == 0) {
-    Warning("Configuration (TCK = " + format("0x%04X" , m_tckopts )  + ") is empty").ignore();
+  if(m_template)m_def += " (L0DUConfig.Template)";
+  else if(m_channels.size()   == 0  || m_conditions.size() == 0) {
+    Warning("Configuration (TCK = " + format("0x%04X" , m_tckopts )  + ") is empty",StatusCode::SUCCESS).ignore();
   }
+  if( slot == "") slot = "T0";
 
-  // create L0DU configuration 
-  m_config = new LHCb::L0DUConfig(m_tckopts);
-  sc = createTriggers();  // the main method
-
+  sc = createTriggers();  // the main method - crate triggers->channels->conditions(->data) chain
 
   if(sc.isFailure()){
     fatal() << " configuring L0DU (TCK = " << format("0x%04X" , m_tckopts )  << ") failed" << endmsg;
     return StatusCode::FAILURE; 
   }
+
+  createConfig(slot);
+  return StatusCode::SUCCESS;
+}
+
+
+//-------------------------------------------
+void L0DUConfigProvider::createConfig(std::string slot){
+
+  
+  // create L0DU configuration 
+  m_config = new LHCb::L0DUConfig(m_tckopts);
+
   m_config->setDefinition( m_def);
 
   if(m_recipe == ""){
@@ -189,23 +214,29 @@ StatusCode L0DUConfigProvider::initialize(){
     m_config->setRecipe( recipe.str() );
   }else{
     m_config->setRecipe( m_recipe );
-  }
-  
-
+  }  
   //=====================================
   m_config->setData( m_dataMap );
   m_config->setConditions( m_conditionsMap );
   m_config->setChannels( m_channelsMap );
   if(m_triggersMap.size() !=0)m_config->setTriggers( m_triggersMap);
-  m_configs.insert(m_config);
+  std::map<std::string,LHCb::L0DUConfigs*>::iterator it = m_configs.find( slot );
+  if(it == m_configs.end()){
+    LHCb::L0DUConfigs* confs = new LHCb::L0DUConfigs();
+    m_configs[slot] = confs;
+  }
+  m_configs[slot]->insert( m_config );
   //=====================================
-  printConfig(*m_config);
-  return sc;
+  printConfig(*m_config,slot);
 }
 
-void L0DUConfigProvider::printConfig(LHCb::L0DUConfig config){
+
+
+void L0DUConfigProvider::printConfig(LHCb::L0DUConfig config,std::string slot){
+  if( slot == "") slot = "T0";
   info() <<  "-------------------------------------------------------------"<<endmsg;
-  info() << "**** L0DU Config loading : L0TCK = " << format("0x%04X" , config.tck()) << " ==> OK " << endmsg;
+  info() << "**** L0DU Config loading : L0TCK = " << format("0x%04X" , config.tck()) << " for slot " 
+         << slot << " ==> OK " << endmsg;
   debug() << "              - " << config.data().size()<< " data with "<<endmsg;
   debug() << "                    - " << m_pData << " predefined data "<<endmsg;
   debug() << "                    - " << m_cData << " constant   data "<<endmsg;
@@ -537,7 +568,7 @@ StatusCode L0DUConfigProvider::createConditions(){
               << "' L0DU Elementary Condition, "
               << " because the required L0DU Data '" << data 
               << "' is not defined." << endmsg;
-      info() << " The previously defined L0DU Data are : " << endmsg;
+      info() << " The predefined L0DU Data are : " << endmsg;
       for (LHCb::L0DUElementaryData::Map::iterator idata = m_dataMap.begin() ; 
            idata != m_dataMap.end() ;idata++){
         info() <<  " -->  "<< (*idata).second->name()  <<  endmsg; 
@@ -649,7 +680,7 @@ StatusCode L0DUConfigProvider::createChannels(){
         info()  << "Allowed flags for new CHANNEL description are : " << m_chanFlags << endmsg;
         return StatusCode::FAILURE;
       } 
-    }
+    }    
 
     // The Channel name 
     //------------------
@@ -698,38 +729,65 @@ StatusCode L0DUConfigProvider::createChannels(){
     unsigned int irate = (unsigned int) rate;
 
 
-    // Enable/disable channel (facultatif : default == enable)
+    // decision mask (facultatif : default == 0x1 == Physics)
     //-----------------------
-    std::vector<std::string> enables = Parse("enable", *iconfig);
-    std::vector<std::string> disables = Parse("disable", *iconfig);
+    std::vector<std::string> enables  = Parse("enable"  , *iconfig);
+    std::vector<std::string> disables = Parse("disable" , *iconfig);
+    std::vector<std::string> masks    = Parse("mask"    , *iconfig);
 
-    bool enable = true;
-    if( enables.size()+disables.size() > 1 ){
+    int type = LHCb::L0DUDecision::Physics; // default
+    if( enables.size()+disables.size() + masks.size() > 1 ){
       error() << "Is the channel " << channelName << " enabled or disabled ?  Please check your settings." << endmsg;
       return StatusCode::FAILURE;
     }else if( enables.size() == 1){
+      Warning("L0DUChannel flag 'Enable' is deprecated - please move to 'Mask' instead",StatusCode::SUCCESS).ignore();
       std::string item(*(enables.begin()));
-      std::string uItem(item);
-      std::transform( item.begin() , item.end() , uItem.begin () , ::toupper ) ;
-      if( uItem == "FALSE" ){
-        enable = false;
-      }else{
-        error() << "Is the channel " << channelName << " enabled or disabled ?  Please check your settings." << endmsg;
-        return StatusCode::FAILURE;        
+      std::string uItem(item); 
+      std::transform( item.begin() , item.end() , uItem.begin () , ::toupper ) ; 
+      if( uItem == "FALSE" ){ 
+        type = LHCb::L0DUDecision::Disable; 
+      }else{ 
+        error() << "Decision type for channel '" << channelName << "' is badly defined -  Please check your setting" << endmsg;
+        return StatusCode::FAILURE;         
       }          
     }else if( disables.size() == 1){
+      Warning("L0DUChannel flag 'Disable' is deprecated - please move to 'Mask' instead",StatusCode::SUCCESS).ignore();
       std::string item(*(disables.begin()));
       std::string uItem(item);
       std::transform( item.begin() , item.end() , uItem.begin () , ::toupper ) ;
       if( uItem == "TRUE" ){
-        enable = false;
+        type = LHCb::L0DUDecision::Disable;
       }else{
-        error() << "Is the channel " << channelName << " enabled or disabled ?  Please check your settings." << endmsg;
+        error() << "Decision type for channel '" << channelName << "' is badly defined -  Please check your setting" << endmsg;
+        return StatusCode::FAILURE;        
+      }
+    }else if( masks.size() == 1){
+      std::string item(*(masks.begin()));
+      std::string uItem(item);
+      std::transform( item.begin() , item.end() , uItem.begin () , ::toupper ) ;
+      if( uItem == "1" || uItem == "0X1" || uItem == "001" || uItem == "Physics" ){
+        type = LHCb::L0DUDecision::Physics;
+      }else if( uItem == "2" || uItem == "0X2" || uItem == "010" || uItem == "Beam1" ){
+        type = LHCb::L0DUDecision::Beam1;
+      }else if( uItem == "4" || uItem == "0X4" || uItem == "100" || uItem == "Beam2" ){
+        type = LHCb::L0DUDecision::Beam2;
+      } else if( uItem == "011" || uItem == "3" || uItem == "0x3" ){
+        type = 3;
+      } else if( uItem == "101" || uItem == "5" || uItem == "0x5" ){
+        type = 5;
+      } else if( uItem == "110" || uItem == "6" || uItem == "0x6" ){
+        type = 6;
+      } else if( uItem == "111" || uItem == "7" || uItem == "0x7" ){
+        type = 7;
+      } else if( uItem == "000" || uItem == "0" || uItem == "0x0" ){
+        type = 0;
+      }else {
+        error() << "Decision type for channel '" << channelName << "' is badly defined -  Please check your setting" << endmsg;
         return StatusCode::FAILURE;        
       }
     }else{
-      // no indication => enable the channel by default
-      enable = true;
+      // no indication => enable the channel for Physics (default)
+      type = LHCb::L0DUDecision::Physics; // default
     }
 
     // the index (facultatif) 
@@ -757,8 +815,7 @@ StatusCode L0DUConfigProvider::createChannels(){
 
 
     // create channel
-    LHCb::L0DUChannel* channel = new LHCb::L0DUChannel(index,  channelName , irate , enable ) ;
-
+    LHCb::L0DUChannel* channel = new LHCb::L0DUChannel(index,  channelName , irate , type ) ;
 
     // The conditions
     // --------------
@@ -818,6 +875,9 @@ StatusCode L0DUConfigProvider::createTriggers(){
   // crate channels -> conditions (-> compound data)
   StatusCode sc = createChannels();
 
+
+  if(m_channels.size()   == 0  || m_conditions.size() == 0)return StatusCode::SUCCESS;
+
   // pre-defined triggers
   predefinedTriggers();
   
@@ -851,7 +911,7 @@ StatusCode L0DUConfigProvider::createTriggers(){
     //------------------
     std::vector<std::string> values = Parse("name", *iconfig);
     if(values.size() != 1){
-      error() << "The TRIGGER defined via option (num = " << iconfig-m_channels.begin() 
+      error() << "The SubTrigger defined via option (num = " << iconfig-m_channels.begin() 
               << ") should have an unique name (found " << values.size() << ")" << endmsg;
       info() << "The syntax is ToolSvc.L0DUConfig.TCK_0xXXXX.Triggers +={ {''name=[TriggerName]'', "
              <<" ''channels=[channelName1],[channelName2], ...'' } };" << endmsg;
@@ -866,8 +926,8 @@ StatusCode L0DUConfigProvider::createTriggers(){
     // Check if the triggers set already exists 
     LHCb::L0DUTrigger::Map::iterator ic = m_triggersMap.find(triggerName);
     if( ic != m_triggersMap.end() ){
-      warning() << "A L0DU Trigger with name  '" << triggerName <<"' already exists " 
-                << " (NB : 'L0Ecal', 'L0Hcal', 'L0Muon' and 'Other' triggers are predefined)" 
+      warning() << "A L0DU SubTrigger with name  '" << triggerName <<"' already exists " 
+                << " (NB : 'L0Ecal', 'L0Hcal', 'L0Muon' and 'Other' SubTrigger names are predefined)" 
                 << " - Please check your settings" << endmsg;
       return StatusCode::FAILURE;
     }
@@ -884,21 +944,38 @@ StatusCode L0DUConfigProvider::createTriggers(){
       str >> index;
     }
     else if(values.size() > 1){
-      error() << "Should be an unique index for the new TRIGGER : " 
+      error() << "Should be an unique index for the new SubTrigger: " 
               << triggerName << " (found "<< values.size() << ")" << endmsg;
       return StatusCode::FAILURE;  
     }
     // check the index is not already used
     for(LHCb::L0DUTrigger::Map::iterator ii = m_triggersMap.begin(); ii!=m_triggersMap.end();ii++){
       if(index == ((*ii).second)->index() ){
-        error() << "The bit index " << index << " is already assigned to the Trigger " << ((*ii).second)->name() << endmsg;
+        error() << "The bit index " << index << " is already assigned to the SubTrigger " << ((*ii).second)->name() << endmsg;
         return StatusCode::FAILURE;
       }
     }
 
-    // create trigger
-    LHCb::L0DUTrigger* trigger = new LHCb::L0DUTrigger(index,  triggerName ) ;
 
+    // The decision type (facultatif)
+    // -----------------
+    std::vector<std::string> types    = Parse("type"    , *iconfig);
+    int mask = LHCb::L0DUDecision::Physics;    
+    if(types.size() > 0){
+      std::string item(*(types.begin()));
+      std::string uItem(item);
+      std::transform( item.begin() , item.end() , uItem.begin () , ::toupper ) ;
+      if( item == "PHYSICS" )mask = LHCb::L0DUDecision::Physics;
+      else if( item == "BEAM1" )mask = LHCb::L0DUDecision::Beam1;
+      else if( item == "BEAM2" )mask = LHCb::L0DUDecision::Beam2;
+      else{    
+        error() << "Trigger type '" << item << "' is not valid (must be PHYSICS, BEAM1 or BEAM2)" << endmsg;
+        return StatusCode::FAILURE;  
+      }
+    }
+
+    // create trigger
+    LHCb::L0DUTrigger* trigger = new LHCb::L0DUTrigger(index,  triggerName , mask) ;
 
 
      // The channels 
@@ -906,18 +983,21 @@ StatusCode L0DUConfigProvider::createTriggers(){
     std::vector<std::string> channels = Parse("channel", *iconfig);
 
     if(channels.size() == 0 ){
-      error() << "The trigger " << triggerName << " has no Channel" << endmsg;
+      error() << "The SubTrigger " << triggerName << " has no Channel" << endmsg;
       return StatusCode::FAILURE;
     }
 
 
+    
+
+
+
     // check all requested channels exists
     for(std::vector<std::string>::iterator ichan = channels.begin() ;ichan != channels.end() ; ichan++){
-
       LHCb::L0DUChannel::Map::iterator ic  = m_channelsMap.find( *ichan );
       LHCb::L0DUTrigger::Map::iterator icc = m_triggersMap.find( *ichan );
       if( m_triggersMap.end() != icc && m_channelsMap.end() != ic){
-        error() << "A Channel  and a Trigger have the same name - please check your setting " << endmsg;
+        error() << "A Channel  and a SubTrigger have the same name - please check your setting " << endmsg;
         return StatusCode::FAILURE;
       }
       if( m_channelsMap.end() == ic ){
@@ -928,9 +1008,9 @@ StatusCode L0DUConfigProvider::createTriggers(){
           }
         } else {
           fatal() << " Can not set-up the '" <<  triggerName
-                  << "' L0DU Trigger "
+                  << "' L0DU SubTrigger "
                   << " because the required '" << *ichan 
-                  << "' is neither a  defined Channel nor a defined Trigger." << endmsg;
+                  << "' is neither a  defined Channel nor a defined SubTrigger." << endmsg;
           return StatusCode::FAILURE;
         }
       } else {
@@ -938,12 +1018,23 @@ StatusCode L0DUConfigProvider::createTriggers(){
       }
     }
 
-    debug() << "Created Trigger  : " << trigger->description() << endmsg;
-
+    // check all channels->decisionType match the trigger->decisionType 
+    const LHCb::L0DUChannel::Map& chans = trigger->channels();
+    for( LHCb::L0DUChannel::Map::const_iterator ic = chans.begin() ; ic != chans.end() ; ++ic){
+      LHCb::L0DUChannel* chan = (*ic).second;
+      if( ( chan->decisionType() & trigger->decisionType() ) == 0 ){
+        warning() << "The channel '" << LHCb::L0DUDecision::Name[chan->decisionType() ] << "|" << chan->name() 
+                  << "' associated to  subTrigger '" 
+                  << LHCb::L0DUDecision::Name[trigger->decisionType()] << "|" << trigger->name()
+                  << "' will be ignored in the subtrigger decision (decisionType mismatch)"
+                  << endmsg;        
+      }
+    }
+    debug() << "Created Trigger  : " << trigger->description() << endmsg; 
     m_triggersMap[triggerName] = trigger;
 
     id++;
-  }   // end loop over trigger sets 
+  }   // end loop over subtrigger 
 
   return StatusCode::SUCCESS;
 }
@@ -952,18 +1043,16 @@ StatusCode L0DUConfigProvider::createTriggers(){
 //===============================================================
 void L0DUConfigProvider::predefinedTriggers(){
 
-
-
-  // create predefined triggers
+  // create predefined triggers (decisionType = physics)
   for(std::map<std::string,int>::iterator imap = m_tIndices.begin() ; m_tIndices.end() != imap ; imap++){
     LHCb::L0DUTrigger* trigger = new LHCb::L0DUTrigger((*imap).second,  (*imap).first ) ;
     m_triggersMap[ (*imap).first ] = trigger;
   }    
 
-  // Associate one channel to one (or several) trigger(s) according to elementary data
+  // Associate one channel to one (or several) trigger(s) according to elementary data (physics decisionType only)
   for(  LHCb::L0DUChannel::Map::iterator ic  = m_channelsMap.begin() ; ic != m_channelsMap.end() ; ic++){
     LHCb::L0DUChannel* channel = (*ic).second;
-    if( !channel->enable() )continue;
+    if( (channel->decisionType() & LHCb::L0DUDecision::Physics) ==0 )continue;
     // loop over conditions
     std::vector<std::string> dataList;
     for( LHCb::L0DUElementaryCondition::Map::const_iterator ie = channel->elementaryConditions().begin(); 

@@ -14,7 +14,7 @@ ReplaceL0DUBankSeq.Members   = { "bankKiller/RemoveL0DUBank",        // remove t
 RemoveL0DUBank.bankTypes ={ "L0DU" };
 
 // Do not store rawBank except for L0DU
-L0DU.StoreInBuffer = true;   
+L0DU.WriteBanks = true;   
 L0Calo.WriteBanks = false;   
 L0Muon.StoreInBuffer = false;   
 

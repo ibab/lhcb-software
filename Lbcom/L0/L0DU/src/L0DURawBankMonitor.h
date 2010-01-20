@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.h,v 1.8 2009-05-20 13:41:35 odescham Exp $
+// $Id: L0DURawBankMonitor.h,v 1.9 2010-01-20 16:30:58 odescham Exp $
 #ifndef L0DURAWBANKMONITOR_H 
 #define L0DURAWBANKMONITOR_H 1
 
@@ -25,9 +25,9 @@
 
 namespace L0DUBase{
   namespace L0DUError{
-    enum Type{ Tell1         = 0,
-               DeMux         = 1,
-               TLK           = 2,
+    enum Type{ Iddle         = 0,
+               TLK           = 1,
+               DeMux         = 2,
                IdleLink      = 3,
                BxPGAShift    = 4,
                BxOdinShift   = 5,

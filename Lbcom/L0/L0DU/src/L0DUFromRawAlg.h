@@ -1,10 +1,12 @@
-// $Id: L0DUFromRawAlg.h,v 1.3 2009-04-19 23:00:43 odescham Exp $
+// $Id: L0DUFromRawAlg.h,v 1.4 2010-01-20 16:30:58 odescham Exp $
 #ifndef L0DUFROMRAWALG_H 
 #define L0DUFROMRAWALG_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+//Base
+#include "L0Base/L0FromRawBase.h" 
 
 // Interfaces
 #include "L0Interfaces/IL0DUFromRawTool.h"
@@ -20,7 +22,7 @@
  *  @author Olivier Deschamps
  *  @date   2007-10-25
  */
-class L0DUFromRawAlg : public GaudiAlgorithm {
+class L0DUFromRawAlg : public L0FromRawBase {
 public: 
   /// Standard constructor
   L0DUFromRawAlg( const std::string& name, ISvcLocator* pSvcLocator );
@@ -36,15 +38,8 @@ protected:
 
 private:
   std::string m_L0DUReportLocation;
-  std::string m_proDataLoc   ;
+  std::string m_procDataLocation   ;
   std::string m_fromRawTool;
   IL0DUFromRawTool* m_fromRaw;
-
-  unsigned long m_sizeMax;
-  unsigned long m_sizeMin;
-  unsigned long m_size;
-  unsigned long m_evt;
-  bool m_proc;
-  bool m_rept;
 };
 #endif // L0DUFROMRAWALG_H

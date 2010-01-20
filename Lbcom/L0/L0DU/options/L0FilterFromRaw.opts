@@ -6,7 +6,7 @@
 //_________________________________________________________
 //
 #include "$L0DUROOT/options/L0Sequence.opts"
-ApplicationMgr.TopAlg += { "GaudiSequencer/L0FromRaw" };
+ApplicationMgr.TopAlg += { "GaudiSequencer/L0FilterFromRawSeq" };
 //ApplicationMgr.TopAlg += { "GaudiSequencer/MoniL0" };
 
 

@@ -1,4 +1,4 @@
-// $Id: L0DUReportMonitor.cpp,v 1.22 2009-09-17 12:14:50 odescham Exp $
+// $Id: L0DUReportMonitor.cpp,v 1.23 2010-01-20 16:30:58 odescham Exp $
 // Include files 
 #include <cmath>
 // from Gaudi
@@ -26,7 +26,7 @@ DECLARE_ALGORITHM_FACTORY( L0DUReportMonitor );
 //=============================================================================
 L0DUReportMonitor::L0DUReportMonitor( const std::string& name,
                                       ISvcLocator* pSvcLocator)
-  : GaudiHistoAlg ( name , pSvcLocator ),
+  : L0AlgBase ( name , pSvcLocator ),
     m_chanCntMap(), 
     m_condCntMap(),
     m_chanRateMap(),
@@ -34,8 +34,10 @@ L0DUReportMonitor::L0DUReportMonitor( const std::string& name,
     m_trigCntMap(),
     m_trigRateMap(),
     m_trigRelRateMap(),
+    m_decCntMap(),
     m_evtCntMap(),
-    m_decCntMap()
+    m_evtCnt(0),
+    m_swap(true)
 {
   declareProperty( "ReportLocation"    , m_reportLocation =  LHCb::L0DUReportLocation::Default );
   declareProperty( "DataMonitor"       , m_data = false );
@@ -68,7 +70,6 @@ StatusCode L0DUReportMonitor::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   m_prevTCK   = -1;
-  m_first = true;
   if(m_full){
     m_data=true;
     m_cond=true;
@@ -85,22 +86,22 @@ StatusCode L0DUReportMonitor::initialize() {
 // Main execution
 //=============================================================================
 StatusCode L0DUReportMonitor::execute() {
-
+  
   debug() << "==> Execute" << endmsg;
   
-
-  if( !exist<LHCb::L0DUReport>( m_reportLocation )){
-    Error("L0DUReport not found at location " + m_reportLocation ).ignore();
+  
+  std::string loc = dataLocation( m_reportLocation );
+  if( !exist<LHCb::L0DUReport>( loc )){
+    Error("L0DUReport not found at location " + loc ).ignore();
     return StatusCode::SUCCESS;
   }
-
-  LHCb::L0DUReport* report   = get<LHCb::L0DUReport>( m_reportLocation );
+  LHCb::L0DUReport* report   = get<LHCb::L0DUReport>( loc );
   LHCb::L0DUConfig* config   = report->configuration();
   unsigned int tck           = report->tck();
   std::stringstream ttck("");
   ttck << format("0x%04X", tck) ;
-
-
+  
+  
   if(config == NULL){
     Error("NULL L0DUConfig for tck = " + ttck.str() + " -> cannot monitor the report").ignore();
     return StatusCode::SUCCESS;
@@ -120,7 +121,12 @@ StatusCode L0DUReportMonitor::execute() {
     if( it == m_evtCntMap.end() ){
       m_configs[tck]=config;
       m_evtCnt = 0.;
-      m_decCnt = 0.;
+      int i = 1;
+      while( i < LHCb::L0DUDecision::Any){
+        m_decCnt[i] = 0.;
+        i = i << 1;
+      }
+      m_decCnt[LHCb::L0DUDecision::Any] = 0.;
       init = true;
       m_chanCnt.clear();  
       m_condCnt.clear();  
@@ -130,19 +136,24 @@ StatusCode L0DUReportMonitor::execute() {
       m_trigCnt.clear();     
       m_trigRate.clear();    
       m_trigRelRate.clear();
-     }
+    }
     else{  
       m_swap = false;
       m_chanCnt     = m_chanCntMap[tck];
       m_condCnt     = m_condCntMap[tck];
       m_chanRate    = m_chanRateMap[tck];
-      m_chanRelRate = m_chanRelRateMap[tck];
       m_condRate    = m_condRateMap[tck];
       m_evtCnt      = m_evtCntMap[tck];
-      m_decCnt      = m_decCntMap[tck];
+      int i = 1;
+      while( i < LHCb::L0DUDecision::Any){
+        m_decCnt[i]      = m_decCntMap[i][tck];
+        m_chanRelRate[i] = m_chanRelRateMap[i][tck];
+        m_trigRelRate[i] = m_trigRelRateMap[i][tck];
+        i = i << 1;
+      }
+      m_decCnt[LHCb::L0DUDecision::Any]      = m_decCntMap[LHCb::L0DUDecision::Any][tck];
       m_trigCnt     = m_trigCntMap[tck];
       m_trigRate    = m_trigRateMap[tck];
-      m_trigRelRate = m_trigRelRateMap[tck];
     }
     if(m_prevTCK != -1){
       if( !m_split){
@@ -173,19 +184,52 @@ StatusCode L0DUReportMonitor::execute() {
   std::map<int,std::string> condNames;
   std::map<int,std::string> trigNames;
   std::map<int,std::string> deciNames;
+  deciNames[0] = "L0 Physics";
+  deciNames[1] = "L0 Beam1";
+  deciNames[2] = "L0 Beam2";
+  deciNames[3] = "Timing Trigger bit";
+  deciNames[4] = "Force bit";
+  std::map<int,std::string> slotNames;
+  slotNames[-2] = "Prev2";
+  slotNames[-1] = "Prev1";
+  slotNames[ 0] = "T0";
+  slotNames[+1] = "Next1";
+  slotNames[+2] = "Next2";
+  std::map<int,std::string> seqNames;
+  for( int i = 0; i < 32 ; ++i){
+    std::ostringstream s("");
+    s << std::bitset<CHAR_BIT>( i );
+    std::string label = s.str().substr(3,8);
+    seqNames[i]=label;
+  }
   
-  m_evtCnt += 1.;  // event counter
-  if(report->decision())m_decCnt += 1.; // decision counter
-  m_chanSeq[ "Global" ] = 0;
 
+
+
+  m_evtCnt += 1.;  // event counter
+  
+  int idec = 1;
+  while( idec < LHCb::L0DUDecision::Any){    
+    if(report->decision( idec )     )m_decCnt[idec] += 1.; // decision counter
+    idec = idec << 1;
+  }
+  if(report->decision( LHCb::L0DUDecision::Any )     )m_decCnt[LHCb::L0DUDecision::Any] += 1.; // decision counter
+  
+  m_chanSeq[ "Global" ] = 0;
+  
   // Channel counters 
   for(LHCb::L0DUChannel::Map::iterator it = channels.begin();it!=channels.end();it++){
     if( init )m_chanCnt[ (*it).first ]=0;//init    
     if(report->channelDecision( ((*it).second)->id() )) m_chanCnt[ (*it).first ] += 1.;
     m_chanRate[(*it).first ] = 0.;
-    m_chanRelRate[(*it).first ] = 0.;
+    
+    int idec = 1;
+    while( idec < LHCb::L0DUDecision::Any){    
+      m_chanRelRate[idec][(*it).first ] = 0.;
+      idec = idec << 1;
+    }
     m_chanSeq[ (*it).first ] = 0;
-    chanNames[ (*it).second->id() ] =  (*it).first ;
+    chanNames[ (*it).second->id() ] =  LHCb::L0DUDecision::Name[((*it).second)->decisionType()] +"|" +(*it).first ;
   }
   // Condition counter 
   for(LHCb::L0DUElementaryCondition::Map::iterator it = conditions.begin();it!=conditions.end();it++){
@@ -195,32 +239,46 @@ StatusCode L0DUReportMonitor::execute() {
     m_condSeq[ (*it).first ] = 0;
     condNames[ (*it).second->id() ] =  (*it).first ;
   }
+  
   // Trigger counters 
   for(LHCb::L0DUTrigger::Map::iterator it = triggers.begin();it!=triggers.end();it++){
     if( init ) m_trigCnt[ (*it).first ] = 0;
     if( report->triggerDecisionByName( (*it).first )) m_trigCnt[ (*it).first ] += 1;
     m_trigRate[ (*it).first ] = 0;
-    m_trigRelRate[ (*it).first ] = 0;
+    int idec = 1;
+    while( idec < LHCb::L0DUDecision::Any){
+      m_trigRelRate[idec][ (*it).first ] = 0;
+      idec = idec << 1;
+    }
     m_trigSeq[ (*it).first ] = 0;
-    trigNames[ (*it).second->id() ] =  (*it).first ;
+    trigNames[ (*it).second->id() ] =  LHCb::L0DUDecision::Name[((*it).second)->decisionType()] +"|" + (*it).first ;
   }
-
+  
   // Ratios
   for(CounterMap::iterator it = m_trigCnt.begin(); m_trigCnt.end()!=it;it++){
     double rate = 0;
-    double relRate = 0;
     if(m_evtCnt != 0) rate = 100. * (*it).second / m_evtCnt;
-    if(m_decCnt != 0) relRate= 100. * (*it).second / m_decCnt;    
+    int idec = 1;
+    while( idec < LHCb::L0DUDecision::Any){    
+      double relRate = 0;
+      if(m_decCnt[idec] != 0) relRate= 100. * (*it).second / m_decCnt[idec];    
+      m_trigRelRate[idec][(*it).first] = relRate ;
+      idec = idec << 1;
+    }
     m_trigRate[(*it).first] = rate ;
-    m_trigRelRate[(*it).first] = relRate ;
   }
   for(CounterMap::iterator it = m_chanCnt.begin(); m_chanCnt.end()!=it;it++){
     double rate = 0;
-    double relRate = 0;
     if(m_evtCnt != 0) rate = 100. * (*it).second / m_evtCnt;
-    if(m_decCnt != 0) relRate= 100. * (*it).second / m_decCnt;    
+
+    int idec = 1;
+    while( idec < LHCb::L0DUDecision::Any){    
+      double relRate = 0;
+      if(m_decCnt[idec] != 0) relRate= 100. * (*it).second / m_decCnt[idec];    
+      m_chanRelRate[idec][(*it).first] = relRate ;
+      idec = idec << 1;
+    }
     m_chanRate[(*it).first] = rate ;
-    m_chanRelRate[(*it).first] = relRate ;
   }
   for(CounterMap::iterator it = m_condCnt.begin(); m_condCnt.end()!=it;it++){
     double rate = 0;
@@ -231,21 +289,27 @@ StatusCode L0DUReportMonitor::execute() {
 
   m_trigCntMap[tck]     = m_trigCnt;
   m_trigRateMap[tck]    = m_trigRate;
-  m_trigRelRateMap[tck] = m_trigRelRate;
   m_chanCntMap[tck]     = m_chanCnt;
   m_chanRateMap[tck]    = m_chanRate;
-  m_chanRelRateMap[tck] = m_chanRelRate;
   m_condCntMap[tck]     = m_condCnt;
   m_condRateMap[tck]    = m_condRate;
   m_evtCntMap[tck]      = m_evtCnt;
-  m_decCntMap[tck]      = m_decCnt;
 
-
+  idec = 1;
+  while( idec < LHCb::L0DUDecision::Any){
+    m_decCntMap[idec][tck]  = m_decCnt[idec];
+    m_chanRelRateMap[idec][tck] = m_chanRelRate[idec];
+    m_trigRelRateMap[idec][tck] = m_trigRelRate[idec];
+    idec = idec << 1;
+  }
+  m_decCntMap[LHCb::L0DUDecision::Any][tck]  = m_decCnt[LHCb::L0DUDecision::Any];
+  
+  
   // -----------------------------------------------------------------------------------------
   // --------------------------------- Histogramming -----------------------------------------
   // -----------------------------------------------------------------------------------------
-  std::stringstream base("");
-
+  std::ostringstream base("");
+  
   if(m_split){
     base << "Config_" << ttck.str();
   }
@@ -253,7 +317,7 @@ StatusCode L0DUReportMonitor::execute() {
     base << "CurrentConfig";
   }
   
-
+  
   // ------------ Data  ------------
   if(m_data){
     std::vector<std::string> moniData;
@@ -270,13 +334,13 @@ StatusCode L0DUReportMonitor::execute() {
       if( !ok )continue;
       if( data->type() == LHCb::L0DUElementaryData::Constant)continue;
       moniData.push_back( data->name() );
-      std::stringstream dUnit("");
+      std::ostringstream dUnit("");
       if( !m_generic ){
         dUnit << base.str() + "/L0Data/" << data->name();
       }else{
         dUnit << base.str() + "/L0Data/" << moniData.size();
       }
-      std::stringstream dName("");
+      std::ostringstream dName("");
       if(data->type() == LHCb::L0DUElementaryData::Compound)
         dName << " L0 compound  data ";
       else
@@ -288,9 +352,12 @@ StatusCode L0DUReportMonitor::execute() {
       plot1D( value , dUnit.str() , dName.str(), 0 , (double) dBin , dBin/m_bin);
     }
   }
+  
+
+
   // ------------ L0DU Conditions ------------
   if(m_cond){
-    std::stringstream ecName("");
+    std::ostringstream ecName("");
     ecName << "L0DU Elementary Conditions counters (TCK = " << ttck.str() << ")";
     int ecBin = conditions.size();
     label( plot1D( -1.,base.str()+"/L0Conditions/Counters/1" , 
@@ -303,10 +370,10 @@ StatusCode L0DUReportMonitor::execute() {
                    ecName.str()+ " - BX=Next1",-1.,(double) ecBin,ecBin+1), condNames);
     label( plot1D( -1.,base.str()+"/L0Conditions/Counters/Next2/1" ,
                    ecName.str()+ " - BX=Next2",-1.,(double) ecBin,ecBin+1), condNames);
-    if(ecBin>1)label( plot2D( -1. , -1. , base.str() + "/L0Conditions/Counters2D/1" 
+    if(ecBin>1)label( plot2D( -1. , -1. , base.str() + "/L0Conditions/Correlations/1" 
                        , "L0DU Elementary Conditions 2D INclusive counters (TCK = " + ttck.str() + ")"              
                        , -1. ,(double) ecBin, -1. ,(double) ecBin , ecBin+1 , ecBin+1), condNames);
-    if(ecBin>1)label( plot2D( -1. , -1. , base.str() + "/L0Conditions/Counters2D/2" 
+    if(ecBin>1)label( plot2D( -1. , -1. , base.str() + "/L0Conditions/Correlations/2" 
                        , "L0DU Elementary Conditions 2D EXclusive counters (TCK = " + ttck.str() + ")"              
                        , -1. ,(double) ecBin, -1. ,(double) ecBin , ecBin+1 , ecBin+1), condNames);
     
@@ -340,35 +407,27 @@ StatusCode L0DUReportMonitor::execute() {
         m_condSeq[name] |=  (1 << 4);
       }
 
-
-      std::stringstream sid("");
+      
+      std::ostringstream sid("");
       sid << id;
       std::string suffix = m_generic ? sid.str() : name;
       AIDA::IHistogram1D* histo = plot1D( m_condSeq[name] , base.str() + "/L0Conditions/Sequence/" + suffix
-              , "Decision sequence over 5 BX for -" + name + "- Elementary Condition (TCK " + ttck.str() +")  - LSB = Prev2"    
-              , 0. , 32. , 32); 
-      if( m_first ){
-        for( int i = 0; i < 32 ; ++i){
-          std::stringstream s("");
-          s << std::bitset<CHAR_BIT>( i ); 
-          std::string label = s.str().substr(3,8);
-          TH1D* h1d = Gaudi::Utils::Aida2ROOT::aida2root( histo );        
-          h1d->GetXaxis()->SetBinLabel( i+1  , label.c_str() );
-          h1d->GetXaxis()->LabelsOption( "v" );
-        }
-      }
+      , "Decision sequence over 5 BX for -" + name + "- Elementary Condition (TCK " + ttck.str() +")  - LSB = Prev2"    
+                                          , 0. , 32. , 32); 
+      label(histo,seqNames,false,"v");
       
       // timing summary
       for(int slot = -2 ; slot <=2 ; slot++){
         int dec =   report->conditionValue( id, slot ) ;
-        plot2D( (double) slot , (double) id 
-                ,  base.str() + "/L0Conditions/Timing/1" 
-                , "L0Conditions value over +-2 BX around trigger : value(BXslot , L0Conditions) - (TCK "+ttck.str() +")"  
-                , -2.5  ,2.5 , 0. , (double) ecBin, 5, ecBin, dec);
+        AIDA::IHistogram2D* histo = plot2D( (double) slot , (double) id 
+                                            ,  base.str() + "/L0Conditions/Timing/1"
+        , "L0Conditions value over +-2 BX around trigger : value(BXslot , L0Conditions) - (TCK "+ttck.str() +")"  
+                                            , -2.5  ,2.5 , 0. , (double) ecBin, 5, ecBin, dec);
+        label(histo, slotNames, 1,false);
+        if(slot == 0)label( histo , condNames , 2,false);
       }
-
-      if( ecBin <= 1)continue;
     
+      
       
       // correlations
       if( report->conditionValue( id ) ){
@@ -377,7 +436,7 @@ StatusCode L0DUReportMonitor::execute() {
           std::string nameY = (*jt).first;
           if( report->conditionValue( jd ) ){
             // Inclusive 2D counters
-            plot2D( (double) id , (double) jd , base.str() + "/L0Conditions/Counters2D/1" 
+            plot2D( (double) id , (double) jd , base.str() + "/L0Conditions/Correlations/1" 
                     , "L0DU Elementary Conditions 2D INclusive counters (TCK = " + ttck.str() + ")"
                     , -1. ,(double) ecBin, -1. ,(double) ecBin , ecBin+1 , ecBin+1);
             // Exclusive 2D counters
@@ -390,7 +449,7 @@ StatusCode L0DUReportMonitor::execute() {
                 break;
               }
             }
-            if(isX)plot2D( (double) id , (double) jd , base.str() + "/L0Conditions/Counters2D/2" 
+            if(isX)plot2D( (double) id , (double) jd , base.str() + "/L0Conditions/Correlations/2" 
                            , "L0DU Elementary Conditions 2D EXclusive counters (TCK = " + ttck.str() + ")"
                            , -1. ,(double) ecBin, -1. ,(double) ecBin , ecBin+1 , ecBin+1);
           }      
@@ -400,9 +459,9 @@ StatusCode L0DUReportMonitor::execute() {
   }
   // ------------ L0DU Channels --------------
   if(m_chan){
-    std::stringstream tcName("");
+    std::ostringstream tcName("");
     tcName << "L0DU  Channels Decision counters (TCK = " << ttck.str() << ")";
-    std::stringstream fcName("");
+    std::ostringstream fcName("");
     fcName << "L0DU  Channels PreDecision counters (TCK = " << ttck.str() << ")";
     int cBin = channels.size();
     label( plot1D( -1.,base.str()+"/L0Channels/Counters/1",
@@ -417,10 +476,10 @@ StatusCode L0DUReportMonitor::execute() {
                    tcName.str()+ " - BX=Next1", -1. ,(double) cBin  , cBin+1), chanNames);
     label( plot1D( -1.,base.str()+"/L0Channels/Counters/Next2/1",
                    tcName.str()+ " - BX=Next2", -1. ,(double) cBin  , cBin+1), chanNames);
-    if(cBin > 1)label( plot2D( -1. , -1. , base.str() + "/L0Channels/Counters2D/1" 
+    if(cBin > 1)label( plot2D( -1. , -1. , base.str() + "/L0Channels/Correlations/1" 
                         , "L0DU Channels Decision 2D INclusive counters (TCK = " + ttck.str() + ")"
                         , -1. ,(double) cBin, -1. ,(double) cBin , cBin+1 , cBin+1), chanNames);
-    if(cBin > 1)label( plot2D( -1. , -1. , base.str() + "/L0Channels/Counters2D/2" 
+    if(cBin > 1)label( plot2D( -1. , -1. , base.str() + "/L0Channels/Correlations/2" 
                         , "L0DU Channels Decision 2D EXclusive counters (TCK = " + ttck.str() + ")"
                         , -1. ,(double) cBin, -1. ,(double) cBin , cBin+1 , cBin+1), chanNames);
     
@@ -463,29 +522,22 @@ StatusCode L0DUReportMonitor::execute() {
                  , fcName.str()+ " - BX=T0"    , -1. ,(double) cBin  , cBin+1);      
 
 
-      std::stringstream sid("");
+      std::ostringstream sid("");
       sid << id;
       std::string suffix = m_generic ? sid.str() : name ;
       AIDA::IHistogram1D* histo = plot1D( m_chanSeq[name] , base.str() + "/L0Channels/Sequence/" + suffix
               , "Decision sequence over 5 BX for -" + name + "- channel (TCK " + ttck.str() +") - LSB = Prev2", 0. , 32., 32);
-      if( m_first ){
-        for( int i = 0; i < 32 ; ++i){
-          std::stringstream s("");
-          s << std::bitset<CHAR_BIT>( i ); 
-          std::string label = s.str().substr(3,8);
-          TH1D* h1d = Gaudi::Utils::Aida2ROOT::aida2root( histo );        
-          h1d->GetXaxis()->SetBinLabel( i+1  , label.c_str() );
-          h1d->GetXaxis()->LabelsOption( "v" );
-        }
-      }
+      label(histo, seqNames,false,"v");
       
       // Timing summary
       for(int slot = -2 ; slot <=2 ; slot++){
         int dec =  report->channelDecision( id , slot);
-        plot2D( (double) slot , (double) id 
+        AIDA::IHistogram2D* histo =  plot2D( (double) slot , (double) id 
                 ,  base.str() + "/L0Channels/Timing/1" 
                 , "Channel decision  over +-2 BX around trigger : decision(BX slot,L0Channel) - (TCK "+ttck.str() +")"  
                 , -2.5  ,2.5 , 0. , (double) cBin, 5, cBin, dec);
+        label(histo, slotNames, 1,false);
+        if(slot == 0)label( histo , chanNames , 2,false);
       }      
       if(cBin <= 1)continue;
       // correlations
@@ -495,7 +547,7 @@ StatusCode L0DUReportMonitor::execute() {
           std::string nameY = (*jt).first;
           if( report->channelDecision( jd ) ){
             // inclusive 2D counters
-            plot2D( (double) id , (double) jd , base.str() + "/L0Channels/Counters2D/1" 
+            plot2D( (double) id , (double) jd , base.str() + "/L0Channels/Correlations/1" 
                     , "L0DU Channels Decision 2D INclusive counters (TCK = " + ttck.str() + ")"
                     , -1. ,(double) cBin, -1. ,(double) cBin , cBin+1 , cBin+1);          
             //exclusive 2D counters
@@ -508,7 +560,7 @@ StatusCode L0DUReportMonitor::execute() {
                 break;
               }  
             }
-            if(isX)plot2D( (double) id , (double) jd , base.str() + "/L0Channels/Counters2D/2" 
+            if(isX)plot2D( (double) id , (double) jd , base.str() + "/L0Channels/Correlations/2" 
                            , "L0DU Channels Decision 2D EXclusive counters (TCK = " + ttck.str() + ")"
                            , -1. ,(double) cBin, -1. ,(double) cBin , cBin+1 , cBin+1);
           }
@@ -517,9 +569,11 @@ StatusCode L0DUReportMonitor::execute() {
     }
   }
   
+
+  
   // ------------ L0DU Triggers --------------
   if(m_trig && triggers.size() != 0){
-    std::stringstream tName("");
+    std::ostringstream tName("");
     tName << "L0DU  Trigger Decision counters (TCK = " << ttck.str() << ")";
     int tBin = triggers.size();
     label( plot1D( -1. , base.str() + "/L0Triggers/Counters/1" , 
@@ -532,10 +586,10 @@ StatusCode L0DUReportMonitor::execute() {
                    tName.str()+" - BX=Next1", -1. ,(double) tBin , tBin+1),trigNames);
     label( plot1D( -1. , base.str() + "/L0Triggers/Counters/Next2/1", 
                    tName.str()+" - BX=Next2", -1. ,(double) tBin , tBin+1),trigNames);
-    if(tBin > 1)label( plot2D( -1. , -1. , base.str() + "/L0Triggers/Counters2D/1" 
+    if(tBin > 1)label( plot2D( -1. , -1. , base.str() + "/L0Triggers/Correlations/1" 
                         , "L0DU Triggers Decision 2D INclusive counters (TCK = " + ttck.str() + ")"
                         , -1. ,(double) tBin, -1. ,(double) tBin , tBin+1 , tBin+1),trigNames);
-    if(tBin > 1)label( plot2D( -1. , -1. , base.str() + "/L0Triggers/Counters2D/2" 
+    if(tBin > 1)label( plot2D( -1. , -1. , base.str() + "/L0Triggers/Correlations/2" 
                         , "L0DU Triggers Decision 2D EXclusive counters (TCK = " + ttck.str() + ")"
                         , -1. ,(double) tBin, -1. ,(double) tBin , tBin+1 , tBin+1),trigNames);
     
@@ -574,29 +628,21 @@ StatusCode L0DUReportMonitor::execute() {
         m_trigSeq[name] |=  (1 << 4);
       }    
 
-      std::stringstream sid("");
+      std::ostringstream sid("");
       sid << id;
       std::string suffix = m_generic ?  sid.str() : name;
       AIDA::IHistogram1D* histo = plot1D( m_trigSeq[name] , base.str() + "/L0Triggers/Sequence/" + suffix
               , "Decision sequence over 5 BX for -" + name + "- trigger (TCK " + ttck.str() +") - LSB = Prev2", 0. , 32., 32);
-      if( m_first ){
-        for( int i = 0; i < 32 ; ++i){
-          std::stringstream s("");
-          s << std::bitset<CHAR_BIT>( i ); 
-          std::string label = s.str().substr(3,8);
-          TH1D* h1d = Gaudi::Utils::Aida2ROOT::aida2root( histo );        
-          h1d->GetXaxis()->SetBinLabel( i+1  , label.c_str() );
-          h1d->GetXaxis()->LabelsOption( "v" );
-        }
-      }
+      label(histo, seqNames,false,"v");
       
       // timing summary
       for(int slot = -2 ; slot <=2 ; slot++){
         int dec =   report->triggerDecisionByName( name , slot);
-        plot2D( (double) slot , (double) id 
-                       ,  base.str() + "/L0Triggers/Timing/1" 
+        AIDA::IHistogram2D* histo = plot2D( (double) slot , (double) id,  base.str() + "/L0Triggers/Timing/1" 
             , "Trigger decision over +-2 BX around trigger : decision(BX slot, L0Trigger) -(TCK " + ttck.str() +")" 
-                , -2.5  , 2.5 , 0. , (double) tBin, 5, tBin, dec);
+                                            , -2.5  , 2.5 , 0. , (double) tBin, 5, tBin, dec);
+        label(histo, slotNames, 1,false);
+        if(slot == 0)label( histo , trigNames , 2,false);
       }
 
       
@@ -608,7 +654,7 @@ StatusCode L0DUReportMonitor::execute() {
           std::string nameY = (*jt).first;
           if( report->triggerDecision( jd ) ){
             // inclusive 2D counters
-            plot2D( (double) id , (double) jd , base.str() + "/L0Triggers/Counters2D/1" 
+            plot2D( (double) id , (double) jd , base.str() + "/L0Triggers/Correlations/1" 
                     , "L0DU Triggers Decision 2D INclusive counters (TCK = " + ttck.str() + ")"
                     , -1. ,(double) tBin, -1. ,(double) tBin , tBin+1 , tBin+1);          
             //exclusive 2D counters
@@ -621,9 +667,9 @@ StatusCode L0DUReportMonitor::execute() {
                 break;
               }  
             }
-            if(isX)plot2D( (double) id , (double) jd , base.str() + "/L0Triggers/Counters2D/2" 
+            if(isX)plot2D( (double) id , (double) jd , base.str() + "/L0Triggers/Correlations/2" 
                             , "L0DU Triggers Decision 2D EXclusive counters (TCK = " + ttck.str() + ")"
-                            , -1. ,(double) tBin, -1. ,(double) tBin , tBin+1 , tBin+1);
+                           , -1. ,(double) tBin, -1. ,(double) tBin , tBin+1 , tBin+1);
           }
         }
       }
@@ -631,51 +677,86 @@ StatusCode L0DUReportMonitor::execute() {
   }  
   // ------------ Decision  ------------
   if(m_dec){
-    std::stringstream decName("");
+    std::ostringstream decName("");
     decName << "L0 Decision counters (TCK = " << ttck.str() << ") - Counter/Decision/TTB/FB";
-    deciNames[0] = "L0 Decision bit";
-    deciNames[1] = "Timing Trigger bit";
-    deciNames[2] = "Force bit";
-    label(plot1D( -1. , base.str() + "/L0Decision/Counters/1" , decName.str(), -1. ,3  , 4),deciNames);
-    if(report->decision())        plot1D( 0. , base.str() + "/L0Decision/Counters/1" , decName.str(),  -1. ,3  , 4);
-    if(report->timingTriggerBit())plot1D( 1. , base.str() + "/L0Decision/Counters/1" , decName.str(),  -1. ,3  , 4);
-    if(report->forceBit())        plot1D( 2. , base.str() + "/L0Decision/Counters/1" , decName.str(),  -1. ,3  , 4);
+    label(plot1D( -1. , base.str() + "/L0Decision/Counters/1" , decName.str(), -1. ,5  , 6),deciNames);
+    if(report->decision(LHCb::L0DUDecision::Physics))
+      plot1D( 0. , base.str() + "/L0Decision/Counters/1" , decName.str(),  -1. ,5  , 6);
+    if(report->decision(LHCb::L0DUDecision::Physics))
+      plot1D( 1. , base.str() + "/L0Decision/Counters/1" , decName.str(),  -1. ,5  , 6);
+    if(report->decision(LHCb::L0DUDecision::Physics))
+      plot1D( 2. , base.str() + "/L0Decision/Counters/1" , decName.str(),  -1. ,5  , 6);
+    if(report->timingTriggerBit())plot1D( 3. , base.str() + "/L0Decision/Counters/1" , decName.str(),  -1. ,5  , 6);
+    if(report->forceBit())        plot1D( 4. , base.str() + "/L0Decision/Counters/1" , decName.str(),  -1. ,5  , 6);
 
     //sequence
     for(int i=-2;i<=2;i++){
-      if(report->decisionFromSummary( i ))m_chanSeq["Global"] |=  (1 << (i+2) );
+      if(report->decisionFromSummary( LHCb::L0DUDecision::Physics, i ))m_chanSeq["Global"] |=  (1 << (i+2) );
     }
-    std::stringstream seqName("");
-    seqName << "L0 Decision sequence over 5 BX (TCK = " << ttck.str() << ") - LSB = Prev2";
+    std::ostringstream seqName("");
+    seqName << "L0|Physics Decision sequence over 5 BX (TCK = " << ttck.str() << ") - LSB = Prev2";
     AIDA::IHistogram1D* histo = 
-      plot1D( (double) m_chanSeq["Global"] , base.str() + "/L0Decision/Sequence/1" , seqName.str(), 0 ,32  , 32);
-    if( m_first ){
-      for( int i = 0; i < 32 ; ++i){
-        std::stringstream s("");
-        s << std::bitset<CHAR_BIT>( i ); 
-        std::string label = s.str().substr(3,8);
-        TH1D* h1d = Gaudi::Utils::Aida2ROOT::aida2root( histo );        
-        h1d->GetXaxis()->SetBinLabel( i+1  , label.c_str() );
-        h1d->GetXaxis()->LabelsOption( "v" );
-      }
-    }
+      plot1D( (double) m_chanSeq["Global"] , base.str() + "/L0Decision/Sequence/1" , seqName.str(), 0. ,32.  , 32);
+    label(histo,seqNames,false,"v");
 
+    // Correlations 
+    AIDA::IHistogram2D* h2d = 
+      plot2D( 0 , 0,  base.str() + "/L0Decision/Correlations/1" , "Decisions INclusive correlations" , 0., 4. , 0. , 4., 4 , 4);
+    AIDA::IHistogram2D* h2d2 = 
+      plot2D( 0 , 0,  base.str() + "/L0Decision/Correlations/2" , "Decisions EXclusive correlations" , 0., 4. , 0. , 4., 4 , 4);
+    label(h2d,deciNames,2);
+    label(h2d,deciNames,1);    
+    label(h2d2,deciNames,2);
+    label(h2d2,deciNames,1);    
+
+    int ic = 1;
+    int jc = 1;
+    int idec = 1;
+    int jdec = 1;
+    while( idec < LHCb::L0DUDecision::Any){
+      while( jdec < LHCb::L0DUDecision::Any){
+        int kdec = ~(idec|jdec);
+        if(report->decision(idec) == report->decision(jdec)){
+          plot2D( ic , jc,  base.str() + "/L0Decision/Correlations/1" , "Decisions INclusive correlations" , 0., 4., 0., 3.,4,3);
+          if( !report->decision(kdec) )
+            plot2D( ic , jc,  base.str() + "/L0Decision/Correlations/2" , "Decisions EXclusive correlations" ,0., 4., 0., 3.,4,3);
+        }
+        
+        jc++;
+        jdec = jdec << 1;
+      }
+      ic++;
+      idec = idec << 1;
+    }
+    
+    
     // Timing summary
     for(int slot = -2 ; slot <=2 ; slot++){
-      int dec =  report->decisionFromSummary( slot );
-      plot1D( (double) slot ,  base.str() + "/L0Decision/Timing/1" 
-              ,  "L0 decision over +-2 BX around trigger : decision(BX) - (TCK " + ttck.str() +")" , -2.5  ,2.5 , 5 , dec);
+      idec = 1;
+      ic = 0;
+      while( idec < LHCb::L0DUDecision::Any){
+        int dec =  report->decisionFromSummary( idec , slot );
+        AIDA::IHistogram2D* histo = plot2D( (double) slot , ic , base.str() + "/L0Decision/Timing/1" 
+                                          ,"L0 decisions over +-2 BX around trigger : decisions(BX) - (TCK " + ttck.str() +")" 
+                                            , -2.5  ,2.5 , 0., 4. , 5 , 4, dec);
+        if(idec == 1)label(histo, slotNames, 1,false);
+        if(slot==0)label(histo,deciNames,2,false);
+        idec = idec << 1;
+        ic++;
+      }
     }
-  }  
-  if( m_first )m_first = false;
+  }
   return StatusCode::SUCCESS;
 }
+  
+
+
 
 //=============================================================================
 //  Finalize
 //=============================================================================
 StatusCode L0DUReportMonitor::finalize() {
-
+  
   debug() << "==> Finalize" << endmsg;
 
 
@@ -690,17 +771,27 @@ StatusCode L0DUReportMonitor::finalize() {
 
     m_trigCnt     = m_trigCntMap[tck];
     m_trigRate    = m_trigRateMap[tck];
-    m_trigRelRate = m_trigRelRateMap[tck];
     m_chanCnt     = m_chanCntMap[tck];
     m_condCnt     = m_condCntMap[tck];
     m_chanRate    = m_chanRateMap[tck];
-    m_chanRelRate = m_chanRelRateMap[tck];
     m_condRate    = m_condRateMap[tck];
     m_evtCnt      = m_evtCntMap[tck];
-    m_decCnt      = m_decCntMap[tck];
-    double rate =  100.* m_decCnt / m_evtCnt ;
-    double eRate = 100.* sqrt(m_decCnt)/m_evtCnt;
     
+    std::map<int,double> rate;
+    std::map<int,double> eRate;
+    int i = 1;
+    while( i < LHCb::L0DUDecision::Any){
+      m_trigRelRate[i] = m_trigRelRateMap[i][tck];
+      m_chanRelRate[i] = m_chanRelRateMap[i][tck];
+      m_decCnt[i]  = m_decCntMap[i][tck];
+      rate[i] =  ( m_evtCnt > 0 ) ? 100.* m_decCnt[i] / m_evtCnt : 0.;
+      eRate[i] = ( m_evtCnt > 0 ) ? 100.* sqrt(m_decCnt[i])/m_evtCnt : 0. ; 
+      i = i << 1;
+    }
+    m_decCnt[LHCb::L0DUDecision::Any]  = m_decCntMap[LHCb::L0DUDecision::Any][tck];
+    rate[LHCb::L0DUDecision::Any] =  ( m_evtCnt > 0 ) ? 100.* m_decCnt[LHCb::L0DUDecision::Any] / m_evtCnt : 0.;
+    eRate[LHCb::L0DUDecision::Any] = ( m_evtCnt > 0 ) ? 100.* sqrt(m_decCnt[LHCb::L0DUDecision::Any])/m_evtCnt : 0. ; 
+      
     info() << "   **************************************************** " << endmsg;    
     info() << "   ***  Trigger Configuration Key : "  << format("0x%04X", tck)  << " (" << tck << ")"<<  endmsg;
     info() << "   ***  Recipe name : '" << config->recipe() << "'" << endmsg;
@@ -713,41 +804,91 @@ StatusCode L0DUReportMonitor::finalize() {
     info() << "   ------------------------------------------------------------------- " <<endmsg;
     info() << "   -- L0 Performance on " << m_evtCnt << " events" << endmsg;  
     info() << "   ------------------------------------------------------------------- " <<endmsg;
-    info() << "              *  Accepted L0          : " 
-           << format( " %8.0f events :  rate = ( %6.2f +- %6.2f) %% ", m_decCnt, rate, eRate ) 
+    int idec = LHCb::L0DUDecision::Any;
+    info() << "           *  Accepted L0 for ANY decision type ' : "
+           << format( " %8.0f events :  rate = ( %6.2f +- %6.2f) %% ", m_decCnt[idec], rate[idec], eRate[idec] ) 
            << endmsg;
-
-    if( m_trigCnt.size() != 0){
-      info() << "   ------------------------ TRIGGERS --------------------------------- " <<endmsg;
-      for(CounterMap::iterator it =  m_trigRate.begin(); m_trigRate.end()!=it ; it++){
-        std::string name = (*it).first;
-        info() << "   * Trigger set : " 
-             << format( "%20s :  %8.0f events : rate = %6.2f  %%  (rel. rate =  %6.2f %% ) ", 
-                        name.c_str(), m_trigCnt[name], m_trigRate[name] , m_trigRelRate[name]) << endmsg;
-      }
+    idec = 1;
+    while( idec < LHCb::L0DUDecision::Any){
+      info() << "              *  Accepted L0 for decision type = '" << LHCb::L0DUDecision::Name[idec] << "' : "
+             << format( " %8.0f events :  rate = ( %6.2f +- %6.2f) %% ", m_decCnt[idec], rate[idec], eRate[idec] ) 
+             << endmsg;
+      idec = idec << 1;
     }
     
-    info() << "   ------------------------ CHANNELS --------------------------------- " <<endmsg;
-    for(CounterMap::iterator ic =  m_chanRate.begin(); m_chanRate.end()!=ic ; ic++){
-      std::string name = (*ic).first;
-      LHCb::L0DUChannel::Map channels = config->channels();
-      LHCb::L0DUChannel* channel = channels[name];
-      std::string status="** DISABLED **";
-      if(channel->enable() ){
-        status ="   ENABLED    ";
-        info() << "   * " << status << " channel : " 
-             << format( "%20s :  %8.0f events : rate = %6.2f  %%  (rel. rate =  %6.2f %% ) ", 
-                        name.c_str(), m_chanCnt[name], m_chanRate[name] , m_chanRelRate[name]) << endmsg;
-      }else{
-        info() << "   * " << status << " channel : " 
-             << format( "%20s :  %8.0f events : rate = %6.2f  %%   ", 
-                        name.c_str(), m_chanCnt[name], m_chanRate[name]) << endmsg;
-      }
-    }
 
-    info() << "   ------------------------ CONDITIONS ------------------------------ " <<endmsg;
-    for(CounterMap::iterator ic =  m_condRate.begin(); m_condRate.end()!=ic ; ic++){
-      std::string name = (*ic).first;
+    if( m_trigCnt.size() != 0){
+      info() << "   ------------------------ SUBTRIGGERS --------------------------------- " <<endmsg;
+      int idec = 1;
+      while( idec < LHCb::L0DUDecision::Any){
+        int count = config->numberOfTriggers(idec);
+        if(count > 0){
+          info() << "    -- " << count << " L0DU SubTrigger(s) associated to decision type  = '" 
+                 << LHCb::L0DUDecision::Name[idec] 
+                 << "'  [OR'ed rate = " << format( " (%6.2f +- %6.2f) %% ", rate[idec], eRate[idec] )<< "] : " 
+                 << endmsg;
+          
+          
+          for(CounterMap::iterator it =  m_trigRate.begin(); m_trigRate.end()!=it ; it++){
+            std::string name = (*it).first;
+            LHCb::L0DUTrigger::Map triggers = config->triggers(); 
+            LHCb::L0DUTrigger* trigger = triggers[name]; 
+            std::string type = LHCb::L0DUDecision::Name[ trigger->decisionType() ]; 
+            if( (trigger->decisionType() & idec ) == 0 )continue;
+            std::string tag = type+"|"+name;
+            info() << "        --- SubTrigger : "  
+                   << format( "%25s :  %8.0f events : rate = %6.2f  %%  (rel. rate =  %6.2f %% ) ",
+                              tag.c_str(), m_trigCnt[name], m_trigRate[name],m_trigRelRate[idec][name]) 
+                   << endmsg;
+          }
+        } 
+        idec = idec << 1;
+      }
+    }    
+
+    info() << "   ------------------------ CHANNELS --------------------------------- " <<endmsg;
+    idec = 1;
+    while( idec < LHCb::L0DUDecision::Any){
+      int count = config->numberOfChannels(idec);
+      if(count > 0){
+        info() << "    -- " << count << " L0DU channel(s) associated to decision type  = '" 
+               << LHCb::L0DUDecision::Name[idec] 
+               << "'  [OR'ed rate = " << format( " (%6.2f +- %6.2f) %% ", rate[idec], eRate[idec] )<< "] : "
+               << endmsg;
+        for(CounterMap::iterator ic =  m_chanRate.begin(); m_chanRate.end()!=ic ; ic++){
+          std::string name = (*ic).first; 
+          LHCb::L0DUChannel::Map channels = config->channels(); 
+          LHCb::L0DUChannel* channel = channels[name]; 
+          std::string type = LHCb::L0DUDecision::Name[ channel->decisionType() ]; 
+          if( (channel->decisionType() & idec ) == 0 )continue;
+          std::string tag = type+"|"+name;
+          info() << "        ---  L0 Channel : " 
+                 << format( "%25s :  %8.0f events : rate = %6.2f  %%  (rel. rate =  %6.2f %% ) ", 
+                            tag.c_str(), m_chanCnt[name], m_chanRate[name] , m_chanRelRate[idec][name]) << endmsg; 
+        } 
+      }
+      idec = idec << 1;
+    }     
+    // disabled channels
+    int count = config->numberOfChannels(LHCb::L0DUDecision::Disable);
+    if( count != 0){
+      info() << "    -- " << count << " Disabled channel(s) :"<< endmsg;
+      for(CounterMap::iterator ic =  m_chanRate.begin(); m_chanRate.end()!=ic ; ic++){  
+        LHCb::L0DUChannel::Map channels = config->channels(); 
+        std::string name = (*ic).first; 
+        LHCb::L0DUChannel* channel = channels[name]; 
+        if( channel->decisionType() != LHCb::L0DUDecision::Disable )continue;
+        std::string type = LHCb::L0DUDecision::Name[ channel->decisionType() ]; 
+        info() << "        --- L0 channel : "  
+               << format( "%25s :  %8.0f events : rate = %6.2f  %%   ", 
+                          (type+"|"+name).c_str(), m_chanCnt[name], m_chanRate[name]) << endmsg;  
+      } 
+    }
+    
+    
+    info() << "   ------------------------ CONDITIONS ------------------------------ " <<endmsg; 
+    for(CounterMap::iterator ic =  m_condRate.begin(); m_condRate.end()!=ic ; ic++){ 
+      std::string name = (*ic).first; 
     info() << "   *  Elementary Condition  " 
              << format( "%20s :  %8.0f events : rate = %6.2f  %%   ", 
                         name.c_str(), m_condCnt[name], m_condRate[name]) << endmsg;
@@ -758,26 +899,49 @@ StatusCode L0DUReportMonitor::finalize() {
 }
 
 //=============================================================================
-void L0DUReportMonitor::label( AIDA::IHistogram1D* h1d , std::map<int,std::string> labels) {
+void L0DUReportMonitor::label( AIDA::IHistogram1D* h1d , std::map<int,std::string> labels,bool count , std::string opt) {
   if( !m_swap)return;
   TH1D* th1d = Gaudi::Utils::Aida2ROOT::aida2root( h1d );
   TAxis* xAxis = th1d->GetXaxis();
-  xAxis->SetBinLabel( 1 , "Counter" );
-  for ( std::map<int,std::string>::iterator i  = labels.begin() ; i != labels.end() ; i++) {
-    xAxis->SetBinLabel( (*i).first + 2 , (*i).second.c_str() );
+  int offset = 0;
+  if(count){
+    xAxis->SetBinLabel( 1 , "Counter" );
+    offset = 1;
   }
-  xAxis->LabelsOption( m_lab.c_str() );
+  int nx = 1;
+  for ( std::map<int,std::string>::iterator i  = labels.begin() ; i != labels.end() ; i++) {
+    if( nx+offset <= xAxis->GetNbins())xAxis->SetBinLabel( nx+offset , (*i).second.c_str() );
+    nx++;
+  }
+  if(opt !="")xAxis->LabelsOption( opt.c_str() );
+  else xAxis->LabelsOption( m_lab.c_str() );
 }
-void L0DUReportMonitor::label( AIDA::IHistogram2D* h2d , std::map<int,std::string> labels) {
+void L0DUReportMonitor::label( AIDA::IHistogram2D* h2d , std::map<int,std::string> labels,  int mask, bool count,std::string opt){
   if( !m_swap)return;
   TH2D* th2d = Gaudi::Utils::Aida2ROOT::aida2root( h2d );
   TAxis* xAxis = th2d->GetXaxis();
   TAxis* yAxis = th2d->GetYaxis();
-  xAxis->SetBinLabel( 1 , "Counter" );
-  yAxis->SetBinLabel( 1 , "Counter" );
-  for ( std::map<int,std::string>::iterator i  = labels.begin() ; i != labels.end() ; i++) {
-    xAxis->SetBinLabel( (*i).first + 2 , (*i).second.c_str() );
-    yAxis->SetBinLabel( (*i).first + 2 , (*i).second.c_str() );
+  int offset = 0;
+  if(count){
+    if(mask == 1 || mask == 3)xAxis->SetBinLabel( 1 , "Counter" );
+    if(mask == 2 || mask == 3)yAxis->SetBinLabel( 1 , "Counter" );
+    offset = 1;
   }
-  xAxis->LabelsOption( m_lab.c_str() );
+  
+  int nx=1;
+  int ny=1;
+  for ( std::map<int,std::string>::iterator i  = labels.begin() ; i != labels.end() ; i++) {
+    if(mask == 1 || mask == 3){
+      if(nx+offset <= xAxis->GetNbins() )xAxis->SetBinLabel( nx+offset , (*i).second.c_str() );
+      nx++;
+    }
+    if(mask == 2 || mask == 3){
+      if( ny+offset <= yAxis->GetNbins() )yAxis->SetBinLabel( ny+offset , (*i).second.c_str() );
+      ny++;
+    }
+  }
+  if(mask == 1 || mask == 3){
+    if(opt !="")xAxis->LabelsOption( opt.c_str() );
+    else xAxis->LabelsOption( m_lab.c_str() );
+  }
 }

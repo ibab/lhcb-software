@@ -1,4 +1,4 @@
-// $Id: L0CondDBProvider.cpp,v 1.5 2009-09-17 12:14:49 odescham Exp $
+// $Id: L0CondDBProvider.cpp,v 1.6 2010-01-20 16:30:58 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -46,7 +46,8 @@ StatusCode L0CondDBProvider::initialize(){
   m_ecal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ); 
 
   // RAM(BCID)
-  m_rams += "{|";
+  m_rams += "{";
+  if(m_mapRam.size() > 1)m_rams += "|";
   for(std::map<std::string,std::vector<int> >::iterator it = m_mapRam.begin(); m_mapRam.end() != it; ++it){
     std::string vsn = (*it).first;
     std::vector<int> rMap = (*it).second;
@@ -56,9 +57,10 @@ StatusCode L0CondDBProvider::initialize(){
       return StatusCode::FAILURE;
     }
     
-    m_rams += vsn + "|";
+    m_rams += vsn ; 
+    if(m_mapRam.size() > 1)m_rams += "|"; 
   }
-  m_rams += "}";
+  m_rams += "}"; 
   info() << "Registered RAM(BCID) versions = " << m_rams << endmsg;
   return StatusCode::SUCCESS;
 }

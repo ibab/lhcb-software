@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.16 2009-09-17 12:14:50 odescham Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.17 2010-01-20 16:30:58 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -72,7 +72,7 @@ StatusCode L0DURawBankMonitor::initialize() {
 
 
   // get the L0tools
-  m_fromRaw  = tool<IL0DUFromRawTool>( m_fromRawTool , m_fromRawTool );
+  m_fromRaw  = tool<IL0DUFromRawTool>( m_fromRawTool , m_fromRawTool,this );
   m_fromRaw->fillDataMap();
   m_condDB   = tool<IL0CondDBProvider>("L0CondDBProvider");
   m_odin     = tool<IEventTimeDecoder>("OdinTimeDecoder","OdinDecoder",this);
@@ -187,24 +187,56 @@ StatusCode L0DURawBankMonitor::execute() {
   if(m_status){     
     if(report.decision() )fill( histo1D(toHistoID("Status/BCID/1")), m_fromRaw->bcid().first, 1 );
     // from L0Processor
-    fill( histo1D(toHistoID("Status/Muon/1")), (m_fromRaw->data("MuonCU0(Status)") & 0xC)>>2 , 1 );
-    fill( histo1D(toHistoID("Status/Muon/2")), (m_fromRaw->data("MuonCU1(Status)") & 0xC)>>2 , 1 );
-    fill( histo1D(toHistoID("Status/Muon/3")), (m_fromRaw->data("MuonCU2(Status)") & 0xC)>>2 , 1 );
-    fill( histo1D(toHistoID("Status/Muon/4")), (m_fromRaw->data("MuonCU3(Status)") & 0xC)>>2 , 1 );
-    fill( histo1D(toHistoID("Status/Muon/5")), (m_fromRaw->data("MuonCU0(Status)") & 0x3) , 1 );
-    fill( histo1D(toHistoID("Status/Muon/6")), (m_fromRaw->data("MuonCU1(Status)") & 0x3) , 1 );
-    fill( histo1D(toHistoID("Status/Muon/7")), (m_fromRaw->data("MuonCU2(Status)") & 0x3) , 1 );
-    fill( histo1D(toHistoID("Status/Muon/8")), (m_fromRaw->data("MuonCU3(Status)") & 0x3) , 1 );
-    fill( histo1D(toHistoID("Status/Calo/1")), m_fromRaw->data("Electron(Status)") , 1 );
-    fill( histo1D(toHistoID("Status/Calo/2")), m_fromRaw->data("Photon(Status)") , 1 );
-    fill( histo1D(toHistoID("Status/Calo/3")), m_fromRaw->data("LocalPi0(Status)") , 1 );
-    fill( histo1D(toHistoID("Status/Calo/4")), m_fromRaw->data("GlobalPi0(Status)") , 1 );
-    fill( histo1D(toHistoID("Status/Calo/5")), m_fromRaw->data("Hadron(Status)") , 1 );
-    fill( histo1D(toHistoID("Status/Calo/6")), m_fromRaw->data("Spd(Status)") , 1 );
-    fill( histo1D(toHistoID("Status/Calo/7")), m_fromRaw->data("Sum(Status)") , 1 );
-    fill( histo1D(toHistoID("Status/Pus/1")), m_fromRaw->data("PU1(Status)") , 1 );
-    fill( histo1D(toHistoID("Status/Pus/2")), m_fromRaw->data("PU2(Status)") , 1 );
-    
+
+    int k = 1;
+    for(int i = 1; i<=4 ; ++i){
+      AIDA::IHistogram1D* hMuon =  histo1D(toHistoID("Status/Muon/" + Gaudi::Utils::toString(i) ) );
+      TH1D* thMuon = Gaudi::Utils::Aida2ROOT::aida2root( hMuon ); 
+      fill( hMuon, 0. , 1. );
+      if( m_fromRaw->data("MuonCU0(Status)") & k )fill( hMuon, 1., 1.);
+      if( m_fromRaw->data("MuonCU1(Status)") & k )fill( hMuon, 2., 1.);
+      if( m_fromRaw->data("MuonCU2(Status)") & k )fill( hMuon, 3., 1.);
+      if( m_fromRaw->data("MuonCU3(Status)") & k )fill( hMuon, 4., 1.);
+      TAxis* axMuon = thMuon->GetXaxis();
+      axMuon->SetBinLabel( 1 , "Counter" );
+      axMuon->SetBinLabel( 2 , "MuonCU0" );
+      axMuon->SetBinLabel( 3 , "MuonCU1" );
+      axMuon->SetBinLabel( 4 , "MuonCU2" );
+      axMuon->SetBinLabel( 5 , "MuonCU3" );
+      k = k << 1;
+    }    
+
+    AIDA::IHistogram1D* hCalo =  histo1D(toHistoID("Status/Calo/1" ) );
+    TH1D* thCalo = Gaudi::Utils::Aida2ROOT::aida2root( hCalo ); 
+    fill( hCalo, 0. , 1. );
+    if( 1 == m_fromRaw->data("Electron(Status)") )fill( hCalo, 1. , 1. );
+    if( 1 == m_fromRaw->data("Photon(Status)")   )fill( hCalo, 2. , 1. );
+    if( 1 == m_fromRaw->data("LocalPi0(Status)") )fill( hCalo, 3. , 1. );
+    if( 1 == m_fromRaw->data("GlobalPi0(Status)"))fill( hCalo, 4. , 1. );
+    if( 1 == m_fromRaw->data("Hadron(Status)")   )fill( hCalo, 5. , 1. );
+    if( 1 == m_fromRaw->data("Spd(Status)")      )fill( hCalo, 6. , 1. );
+    if( 1 == m_fromRaw->data("Sum(Status)")      )fill( hCalo, 7. , 1. );
+    TAxis* axCalo = thCalo->GetXaxis();
+    axCalo->SetBinLabel( 1 , "Counter" );
+    axCalo->SetBinLabel( 2 , "Electron" );
+    axCalo->SetBinLabel( 3 , "Photon" );
+    axCalo->SetBinLabel( 4 , "LocalPi0" );
+    axCalo->SetBinLabel( 5 , "GlobalPi0" );
+    axCalo->SetBinLabel( 6 , "Hadron" );
+    axCalo->SetBinLabel( 7 , "SpdMult" );
+    axCalo->SetBinLabel( 8 , "SumEt" );
+
+    //
+    AIDA::IHistogram1D* hPus =  histo1D(toHistoID("Status/Pus/1" ) );
+    TH1D* thPus = Gaudi::Utils::Aida2ROOT::aida2root( hPus ); 
+    fill( hPus, 0.  , 1. );
+    if( 1 == m_fromRaw->data("PU1(Status)") )fill( hPus, 1.  , 1. );
+    if( 1 == m_fromRaw->data("PU2(Status)") )fill( hPus, 2.  , 1. );
+    TAxis* axPus = thPus->GetXaxis();
+    axPus->SetBinLabel( 1 , "Counter" );
+    axPus->SetBinLabel( 2 , "Pu1" );
+    axPus->SetBinLabel( 3 , "Pu2" );
+
     int inputStatus = 0;
     if( 0 < (m_fromRaw->data("MuonCU0(Status)") & 0xC) )inputStatus++;
     if( 0 < (m_fromRaw->data("MuonCU1(Status)") & 0xC) )inputStatus++;
@@ -281,17 +313,19 @@ StatusCode L0DURawBankMonitor::execute() {
       debug() << "BCID L0DU/ODIN : " <<  m_fromRaw->bcid().first << " / " << odBX << endmsg;
     }
     if( (m_fromRaw->status() & 0x1) ){
-      fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::Tell1 , 1 );
-      if(m_warn)Warning("Status::Warning  : L0DU bank monitor summary : -- TELL1 error bit -- ",StatusCode::SUCCESS).ignore();
+      fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::Iddle , 1 );
+      if(m_warn)Warning("Status::Warning  : L0DU bank monitor summary : --IddleLink error bit -- "
+                        ,StatusCode::SUCCESS).ignore();
     }
     if( (m_fromRaw->status() & 0x2) ){
-      fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::DeMux , 1 );
-      if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- DeMultiplexer error bit -- "
+      fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::TLK , 1 );
+      if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- TLK error bit -- "
                         ,StatusCode::SUCCESS).ignore();
     }
     if( (m_fromRaw->status() & 0x4) ){
-      fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::TLK   , 1 );
-      if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- TLK error bit -- ",StatusCode::SUCCESS).ignore();
+      fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::DeMux   , 1 );
+      if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- DeMultiplexer error bit -- "
+                        ,StatusCode::SUCCESS).ignore();
     }
     if( (m_fromRaw->status() & 0x8) ){
       fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::IdleLink , 1 );
@@ -371,24 +405,12 @@ void L0DURawBankMonitor::bookHistos() {
   }
   
   if(m_status){     
-    book1D( toHistoID("Status/Muon/1") ,  "Muon CU0 status (status & 0xC)" , 0., 4. , 4 );
-    book1D( toHistoID("Status/Muon/2") ,  "Muon CU1 status (status & 0xC)" , 0., 4. , 4 );
-    book1D( toHistoID("Status/Muon/3") ,  "Muon CU2 status (status & 0xC)" , 0., 4. , 4 ); 
-    book1D( toHistoID("Status/Muon/4") ,  "Muon CU3 status (status & 0xC)" , 0., 4. , 4 );
-    book1D( toHistoID("Status/Muon/5") ,  "#muons CU0 (status & 0x3)" , 0., 4. , 4 );
-    book1D( toHistoID("Status/Muon/6") ,  "#muons CU1 (status & 0x3)" , 0., 4. , 4 );
-    book1D( toHistoID("Status/Muon/7") ,  "#muons CU2 (status & 0x3)" , 0., 4. , 4 ); 
-    book1D( toHistoID("Status/Muon/8") ,  "#muons CU3 (status & 0x3)" , 0., 4. , 4 );
-    
-    book1D( toHistoID("Status/Calo/1") ,  "Calo Electron status" , 0., 2. , 2 );
-    book1D( toHistoID("Status/Calo/2") ,  "Calo Photon status" , 0., 2. , 2 );
-    book1D( toHistoID("Status/Calo/3") ,  "Calo LocalPi0 status" , 0., 2. , 2 );
-    book1D( toHistoID("Status/Calo/4") ,  "Calo GlobalPi0  status" , 0., 2. , 2 );
-    book1D( toHistoID("Status/Calo/5") ,  "Calo Hadron status" , 0., 2. , 2 );
-    book1D( toHistoID("Status/Calo/6") ,  "Calo SpdMult status" , 0., 2. , 2 );
-    book1D( toHistoID("Status/Calo/7") ,  "Calo SumEt status" , 0., 2. , 2 );
-    book1D( toHistoID("Status/Pus/1") ,  "Pus  word1 status" , 0., 2. , 2 );
-    book1D( toHistoID("Status/Pus/2")  ,  "Pus  word2 status" , 0., 2. , 2 );
+    book1D( toHistoID("Status/Muon/1") ,  "Muon status & 0x1" , 0., 5. , 5 );
+    book1D( toHistoID("Status/Muon/2") ,  "Muon status & 0x2" , 0., 5. , 5 );
+    book1D( toHistoID("Status/Muon/3") ,  "Muon status & 0x3" , 0., 5. , 5 ); 
+    book1D( toHistoID("Status/Muon/4") ,  "Muon status & 0x4" , 0., 5. , 5 );    
+    book1D( toHistoID("Status/Calo/1") ,  "Calo status bit" , 0., 8. , 8 );
+    book1D( toHistoID("Status/Pus/1")  ,  "Pus  status bit" , 0., 3. , 3 );
     book1D( toHistoID("Status/L0DU/BCID/1") ,  "BCID(ODIN)-BCID(L0DU)" , -15. , 15., 31);
     book1D( toHistoID("Status/L0DU/BCID/2") ,  "BCID(PGA3)-BCID(PGA2)" , -15. , 15., 31);
     // Global summary
@@ -440,12 +462,6 @@ bool L0DURawBankMonitor::emulatorCheck(LHCb::L0DUConfig* config, int unit, std::
     return false;
   }
   bool check = true;
-  std::stringstream one("");
-  std::stringstream two("");
-  //one << unit*2-1;
-  //two << unit*2;
-  one << unit;
-  two << unit;
   
 
   LHCb::L0DUChannel::Map channels = config->channels();
@@ -453,43 +469,67 @@ bool L0DURawBankMonitor::emulatorCheck(LHCb::L0DUConfig* config, int unit, std::
   LHCb::L0DUElementaryCondition::Map conditions = config->conditions();
   int ecBin = conditions.size();
   // Counters
-  AIDA::IHistogram1D* h1 = plot1D( -1. ,"Status/L0DU/EmulatorCheck/Channels/" + one.str(),
+  AIDA::IHistogram1D* h1 = plot1D( -1. ,"Status/L0DU/EmulatorCheck/Channels/" + Gaudi::Utils::toString(unit),
           "L0DU channels preDecision emulator check (" + txt + ")" ,-1. ,(double) cBin  , cBin+1);
-  AIDA::IHistogram1D* h2 = plot1D( -1. ,"Status/L0DU/EmulatorCheck/Conditions/" + two.str(),
+  AIDA::IHistogram1D* h2 = plot1D( -1. ,"Status/L0DU/EmulatorCheck/Conditions/" + Gaudi::Utils::toString(unit),
           "L0DU conditions value emulator check (" + txt + ")",-1. ,(double) ecBin  , ecBin+1);
+  AIDA::IHistogram1D* h3 = plot1D( -1. ,"Status/L0DU/EmulatorCheck/Decisions/" + Gaudi::Utils::toString(unit),
+          "L0 decision  emulator check (" + txt + ")",-1. , 3  , 4);
 
 
   TAxis* ax1=0;
   TAxis* ax2=0;
+  TAxis* ax3=0;
   if(m_first){
     TH1D* th1 = Gaudi::Utils::Aida2ROOT::aida2root( h1 );        
     TH1D* th2 = Gaudi::Utils::Aida2ROOT::aida2root( h2 );        
+    TH1D* th3 = Gaudi::Utils::Aida2ROOT::aida2root( h3 );        
     ax1 = th1->GetXaxis();
     ax2 = th2->GetXaxis();
+    ax3 = th3->GetXaxis();
     ax1->SetBinLabel( 1 , "Counter" );
     ax2->SetBinLabel( 1 , "Counter" );
+    ax3->SetBinLabel( 1 , "Counter" );
   }
   
   LHCb::L0DUReport report = m_fromRaw->report();
+  
+  // Decisions
+  int idec = 1;
+  int bin = 2;
+  while( idec < LHCb::L0DUDecision::Any){    
+    if(  report.decision( idec ) != config->emulatedDecision( idec ) ){
+      plot1D( bin-2 ,"Status/L0DU/EmulatorCheck/Decisions/" + Gaudi::Utils::toString(unit), 
+              "L0 decision  emulator check (" + txt + ")",-1. , 3  , 4);
+      check = false;
+    } 
+    std::string flag = LHCb::L0DUDecision::Name[ idec ] ;
+    if(m_first)ax3->SetBinLabel( bin , flag.c_str() );
+    idec = idec << 1;
+    bin++;
+  }
 
-
+  // Channels
   for(LHCb::L0DUChannel::Map::iterator it = channels.begin();it!=channels.end();it++){
     int id = ((*it).second)->id() ;
     if( report.channelPreDecision( id ) != ((*it).second)->emulate()->emulatedPreDecision() ){
       debug() << "Emulator check error for channel " << (*it).first << endmsg;
-      plot1D( (double) id ,"Status/L0DU/EmulatorCheck/Channels/" + one.str(),
+      plot1D( (double) id ,"Status/L0DU/EmulatorCheck/Channels/" + Gaudi::Utils::toString(unit),
               "L0DU channels preDecision emulator check (" + txt + ")" ,-1. ,(double) cBin  , cBin+1);
       check = false;
     }
     std::string name = (*it).first;
-    if(m_first)ax1->SetBinLabel( id+2 , name.c_str() );
+    std::string type = LHCb::L0DUDecision::Name[((*it).second)->decisionType()];
+    std::string flag = type + "|" + name;
+    if(m_first)ax1->SetBinLabel( id+2 , flag.c_str() );
   }
-  
+
+  // Conditions
   for(LHCb::L0DUElementaryCondition::Map::iterator it = conditions.begin();it!=conditions.end();it++){
     int id = ((*it).second)->id() ;
     if( report.conditionValue( id ) != ((*it).second)->emulatedValue() ){
       debug() << "Emulator check error for condition " << (*it).first << endmsg;
-      plot1D( (double) id ,"Status/L0DU/EmulatorCheck/Conditions/" + two.str(), 
+      plot1D( (double) id ,"Status/L0DU/EmulatorCheck/Conditions/" + Gaudi::Utils::toString(unit), 
               "L0DU conditions value emulator check (" + txt + ")",-1. ,(double) ecBin  , ecBin+1);
       check = false;
     }
@@ -508,7 +548,8 @@ GaudiAlg::HistoID L0DURawBankMonitor::toHistoID(std::string unit){
   if( m_generic  ) return HistoID( unit );
   int index = unit.find_first_of("/");
   std::string pref = unit.substr(0,index);
-  if( unit.find("Calo/1") != std::string::npos )return HistoID( pref + "/Calo/Electron" );
+  if( unit.find("Status/Calo/1")!= std::string::npos)return HistoID( pref + "/Calo/StatusBit" );
+  else  if( unit.find("Calo/1") != std::string::npos )return HistoID( pref + "/Calo/Electron" );
   else if( unit.find("Calo/2")!= std::string::npos)return HistoID( pref + "/Calo/Photon" );
   else if( unit.find("Calo/3")!= std::string::npos)return HistoID( pref + "/Calo/LocalPi0" );
   else if( unit.find("Calo/4")!= std::string::npos)return HistoID( pref + "/Calo/GlobalPi0" );
@@ -528,16 +569,11 @@ GaudiAlg::HistoID L0DURawBankMonitor::toHistoID(std::string unit){
   else if( unit.find("Data/Muon/6")!= std::string::npos)return HistoID( pref + "/Muon/Muon21" );
   else if( unit.find("Data/Muon/7")!= std::string::npos)return HistoID( pref + "/Muon/Muon30" );
   else if( unit.find("Data/Muon/8")!= std::string::npos)return HistoID( pref + "/Muon/Muon31" );
-  else if( unit.find("Status/Muon/1")!= std::string::npos)return HistoID( pref + "/Muon/CU0Status" );
-  else if( unit.find("Status/Muon/2")!= std::string::npos)return HistoID( pref + "/Muon/CU1Status" );
-  else if( unit.find("Status/Muon/3")!= std::string::npos)return HistoID( pref + "/Muon/CU2Status" );
-  else if( unit.find("Status/Muon/4")!= std::string::npos)return HistoID( pref + "/Muon/CU3Status" );
-  else if( unit.find("Status/Muon/5")!= std::string::npos)return HistoID( pref + "/Muon/CU0Count" );
-  else if( unit.find("Status/Muon/6")!= std::string::npos)return HistoID( pref + "/Muon/CU1Count" );
-  else if( unit.find("Status/Muon/7")!= std::string::npos)return HistoID( pref + "/Muon/CU2Count" );
-  else if( unit.find("Status/Muon/8")!= std::string::npos)return HistoID( pref + "/Muon/CU3Count" );
-  else if( unit.find("Status/Pus/1")!= std::string::npos)return HistoID( pref + "/Pus/Word1" );
-  else if( unit.find("Status/Pus/2")!= std::string::npos)return HistoID( pref + "/Pus/Word2" );
+  else if( unit.find("Status/Muon/1")!= std::string::npos)return HistoID( pref + "/Muon/StatusBit0" );
+  else if( unit.find("Status/Muon/2")!= std::string::npos)return HistoID( pref + "/Muon/StatusBit1" );
+  else if( unit.find("Status/Muon/3")!= std::string::npos)return HistoID( pref + "/Muon/StatusBit2" );
+  else if( unit.find("Status/Muon/4")!= std::string::npos)return HistoID( pref + "/Muon/StatusBit3" );
+  else if( unit.find("Status/Pus/1")!= std::string::npos)return HistoID( pref + "/Pus/StatusBit" );
   else if( unit.find("Pus/1")!= std::string::npos)return HistoID( pref + "/Pus/Peak1" );
   else if( unit.find("Pus/2")!= std::string::npos)return HistoID( pref + "/Pus/Peak2" );
   else if( unit.find("Pus/3")!= std::string::npos)return HistoID( pref + "/Pus/Hits" );

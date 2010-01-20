@@ -20,7 +20,7 @@ L0Muon.StoreInBuffer=false;
 L0EmulatorSeq.Members += { "GaudiSequencer/L0ProcessorsSeq",
                            "L0DUAlg/L0DU"};
 // Do not create rawBank when re-running L0DU out of Boole
-L0DU.StoreInBuffer = false;   
+L0DU.WriteBanks = false;   
 
 //--------------------------
 // L0DU Monitoring sequence
@@ -39,14 +39,14 @@ L0MoniSeq.Members += { "L0CaloMonit",
 //------------------------
 // L0DU From Raw sequence
 //-----------------------
-L0DUFromRawSeq.Members += { "L0DUFromRawAlg" };
+L0DUFromRawSeq.Members += { "L0DUFromRawAlg/L0DUFromRaw" };
 
 //------------------------
 // whole L0 From Raw sequence
 //-----------------------
 L0FromRawSeq.Members += {   "L0CaloCandidatesFromRaw/L0CaloFromRaw",
                             "L0MuonCandidatesFromRaw/L0MuonFromRaw",
-                            "L0DUFromRawAlg" };
+                            "L0DUFromRawAlg/L0DUFromRaw" };
 
 //------------------------
 // L0DU Filter From Raw 

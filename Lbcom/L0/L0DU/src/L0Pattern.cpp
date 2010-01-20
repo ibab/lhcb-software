@@ -1,4 +1,4 @@
-// $Id: L0Pattern.cpp,v 1.2 2009-09-17 12:14:50 odescham Exp $
+// $Id: L0Pattern.cpp,v 1.3 2010-01-20 16:30:58 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -54,7 +54,7 @@ StatusCode L0Pattern::initialize() {
   // get the tools
   m_fromRaw   = tool<IL0DUFromRawTool>( m_fromRawTool , m_fromRawTool , this );
   m_emulator  = tool<IL0DUEmulatorTool>(m_emulatorTool, m_emulatorTool,this);
-  m_config    = tool<IL0DUConfigProvider>("L0DUMultiConfigProvider" , m_configTool );
+  m_config    = tool<IL0DUConfigProvider>("L0DUMultiConfigProvider" , m_configTool , this);
   
   // Check
   for(std::vector<std::string>::iterator it = m_list.begin() ; it != m_list.end() ; it++){
@@ -134,7 +134,20 @@ StatusCode L0Pattern::execute() {
     is >> std::hex >> itck;
     LHCb::L0DUConfig* config   = m_config->config( itck );
     if(NULL != config)m_emulator->process(config , m_datas);
-    rsda.push_back( m_bcid | (config->emulatedDecision() << 12) );
+
+    unsigned int rs = 0;
+    if( m_fromRaw->version() == 1 ){
+      rs = m_bcid & 0xFFF;
+      rs |= ( config->emulatedDecision(LHCb::L0DUDecision::Physics) ) << 12;
+    }
+    else if( m_fromRaw->version() == 2 ){
+      rs = (m_bcid & 0x3FF);
+      rs |= ( config->emulatedDecision(LHCb::L0DUDecision::Physics) ) << 12;
+      rs |= ( config->emulatedDecision(LHCb::L0DUDecision::Beam2)   ) << 11;
+      rs |= ( config->emulatedDecision(LHCb::L0DUDecision::Beam1)   ) << 10;
+    }
+
+    rsda.push_back( rs );
     tcks.push_back( itck );
     // channel pattern
     long pattern = 0;

@@ -1,4 +1,4 @@
-// $Id: L0DUAlg.h,v 1.2 2008-01-29 16:02:29 odescham Exp $
+// $Id: L0DUAlg.h,v 1.3 2010-01-20 16:30:58 odescham Exp $
 #ifndef L0DUAlg_H 
 #define L0DUAlg_H 1
 
@@ -7,6 +7,8 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 //Event
 #include "Event/RawEvent.h"
+//Base
+#include "L0Base/L0AlgBase.h"
 // Interface
 #include "L0Interfaces/IL0DUConfigProvider.h"
 #include "L0Interfaces/IL0DUEmulatorTool.h"
@@ -21,7 +23,7 @@
 
 
 
-class L0DUAlg : public GaudiAlgorithm {
+class L0DUAlg : public L0AlgBase {
 public:
   /// Standard constructor
   L0DUAlg( const std::string& name, ISvcLocator* pSvcLocator );
@@ -35,13 +37,12 @@ protected:
 private:
   // I/O Locations  
   std::vector<std::string> m_dataLocations;
+  std::vector<std::string> m_locs;
   
   // parameters
   unsigned int m_rawSrcID;
   std::string m_emulatorType;
-  bool m_fillRaw;
   std::string m_rawLocation;
-  bool m_writeOnTES;
   std::string m_reportLocation;
   std::string m_tck;
   std::string m_configName;

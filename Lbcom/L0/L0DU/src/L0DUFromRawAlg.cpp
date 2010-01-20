@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawAlg.cpp,v 1.8 2009-09-17 12:14:49 odescham Exp $
+// $Id: L0DUFromRawAlg.cpp,v 1.9 2010-01-20 16:30:58 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -29,19 +29,19 @@ DECLARE_ALGORITHM_FACTORY( L0DUFromRawAlg );
 // Standard constructor, initializes variables
 //=============================================================================
 L0DUFromRawAlg::L0DUFromRawAlg( const std::string& name,
-                                      ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+                                ISvcLocator* pSvcLocator)
+  : L0FromRawBase ( name , pSvcLocator )
 {
-  declareProperty( "ReportLocation"       , m_L0DUReportLocation =  LHCb::L0DUReportLocation::Default );
-  declareProperty( "ProcessorDataLocation", m_proDataLoc         =  LHCb::L0ProcessorDataLocation::L0DU );
+  declareProperty( "L0DUReportLocation"   , m_L0DUReportLocation =  LHCb::L0DUReportLocation::Default );
+  declareProperty( "ProcessorDataLocation", m_procDataLocation   =  LHCb::L0ProcessorDataLocation::L0DU );
   declareProperty( "L0DUFromRawToolType"  , m_fromRawTool = "L0DUFromRawTool" );
-  declareProperty( "ProcessorDataOnTES"   , m_proc = true );
-  declareProperty( "L0DUReportOnTES"      , m_rept = true );
 }
-//=============================================================================
-// Destructor
-//=============================================================================
+
+  //=============================================================================
+  // Destructor
+  //=============================================================================
 L0DUFromRawAlg::~L0DUFromRawAlg() {} 
+
 
 //=============================================================================
 // Initialization
@@ -49,19 +49,11 @@ L0DUFromRawAlg::~L0DUFromRawAlg() {}
 StatusCode L0DUFromRawAlg::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
+  
   debug() << "==> Initialize" << endmsg;
   
   // get the decoding tool
-  m_fromRaw = tool<IL0DUFromRawTool>( m_fromRawTool , m_fromRawTool  );
-
-  // init
-  m_evt     = 0;
-  m_size    = 0;
-  m_sizeMax = 0;
-  m_sizeMin = 99999999;
-  
-
+  m_fromRaw = tool<IL0DUFromRawTool>( m_fromRawTool , m_fromRawTool  , this);
 
   return StatusCode::SUCCESS;
 }
@@ -76,19 +68,20 @@ StatusCode L0DUFromRawAlg::execute() {
 
   if(!m_fromRaw->decodeBank())Warning("Unable to decode L0DU rawBank", StatusCode::SUCCESS).ignore();
 
-
   // L0DUReport on TES
-  if(m_rept){
+  if( m_writeOnTES ){
     LHCb::L0DUReport rep = m_fromRaw->report();
     // put the report and processor data on TES
     LHCb::L0DUReport* report = new LHCb::L0DUReport( rep );
-    put (report , m_L0DUReportLocation );
+    std::string loc = dataLocation( m_L0DUReportLocation);
+    put (report , loc , false);
   }
 
   // Clone Processor Data and put it on TES
-  if( m_proc){
+  if( m_writeProcData){
     LHCb::L0ProcessorDatas* datas = new LHCb::L0ProcessorDatas();
-    put (datas  , m_proDataLoc );
+    std::string loc = dataLocation( m_procDataLocation );
+    put (datas  , loc , false);
     for(LHCb::L0ProcessorDatas::iterator it = m_fromRaw->L0ProcessorDatas()->begin();
         it != m_fromRaw->L0ProcessorDatas()->end(); it++){
       LHCb::L0ProcessorData* data = new  LHCb::L0ProcessorData( **it );
@@ -96,34 +89,44 @@ StatusCode L0DUFromRawAlg::execute() {
     }  
   }
   
-  m_evt++;
-  m_size += m_fromRaw->size();
-  if( m_fromRaw->size() > m_sizeMax )m_sizeMax = m_fromRaw->size();
-  if( m_fromRaw->size() < m_sizeMin )m_sizeMin = m_fromRaw->size();
+  counter("L0DU RawBank Size (Bytes)") += m_fromRaw->size();
 
   // print out (CHECKS)
   if( msgLevel( MSG::DEBUG)){
+    debug() << "Bank size : " << m_fromRaw->size() << " (bytes) - Bank version : " << m_fromRaw->report().bankVersion()<< endmsg;
+    debug() << "________________ L0DU decisions ____________________  " << endmsg;
+    int mask = LHCb::L0DUDecision::Any;
+    int typ  = 0x1;
+    while(mask != 0x0){
+      debug()   << " -- Decision type = " << LHCb::L0DUDecision::Name[typ] << " -- " << endmsg;
+      debug()   << "    o decision bit from raw                          : " <<  m_fromRaw->report().decision(typ) << endmsg;
+      debug()   << "    o decision re-built from summary report          : " 
+                <<   m_fromRaw->report().decisionFromSummary(typ) << endmsg;
+      if( m_fromRaw->version() != 0 && 
+          m_fromRaw->report().configuration() != NULL &&
+          m_fromRaw->report().configuration()->completed()
+          ){
+        debug()   << "    o emulated decision from configuration ( "
+                  << format("0x%04X",m_fromRaw->report().configuration()->tck() ) << ") : "
+                  <<   m_fromRaw->report().configuration()->emulatedDecision(typ) 
+                  << " (Downscaling decision : " << m_fromRaw->report().configuration()->isDownscaled() << ") " << endmsg;
+      }
+      typ  = typ  << 1;
+      mask = mask >> 1;
+    }
     if( m_fromRaw->report().configuration() != NULL ){
-      debug() << "Bank size : " << m_fromRaw->size() << " (bytes) " << endmsg;
+      verbose() << "________________ Channels decision ____________________  " << endmsg;
       LHCb::L0DUChannel::Map& channels = m_fromRaw->report().configuration()->channels();
-      debug() << "________________ Trigger decision from raw ____________________ L0-yes = " 
-              << m_fromRaw->report().decision() << endmsg;
-      verbose() << "Rebuilt decision from summary : " << m_fromRaw->report().decisionFromSummary() << endmsg;
       for(LHCb::L0DUChannel::Map::iterator it = channels.begin();channels.end()!=it;it++){
         std::string name = ((*it).second)->name();
-        verbose() << "Channel Decision " << name << " : " << m_fromRaw->report().channelDecisionByName( name ) << endmsg;
+        verbose() << " -- Channel Decision '" << name << "'"
+                  << " (Decision type  : " << LHCb::L0DUDecision::Name[((*it).second)->decisionType()] << ") : " 
+                  << m_fromRaw->report().channelDecisionByName( name ) << endmsg;
       }
       LHCb::L0DUElementaryCondition::Map& conds = m_fromRaw->report().configuration()->conditions();
       for(LHCb::L0DUElementaryCondition::Map::iterator it = conds.begin();conds.end()!=it;it++){
         std::string name = ((*it).second)->name();
-        verbose() << "Condition Value " << name << " : " << m_fromRaw->report().conditionValueByName( name ) << endmsg;
-      }
-      // This works only with L0DU rawBank version > 0
-      if(m_fromRaw->version() != 0){
-        bool emul = m_fromRaw->report().configuration()->emulatedDecision ();
-        debug() << "_________________ EMULATION using data from raw_________________ L0-yes = " << emul ;      
-        if( !emul) debug() << "(Downscaled ? " << m_fromRaw->report().configuration()->isDownscaled() << ") " << endmsg;
-        verbose() << m_fromRaw->report().configuration()->emulate()->summary()  << endmsg;
+        verbose() << "    - Condition Value " << name << " : " << m_fromRaw->report().conditionValueByName( name ) << endmsg;
       }
     }
   }
@@ -137,19 +140,7 @@ StatusCode L0DUFromRawAlg::execute() {
 //  Finalize
 //=============================================================================
 StatusCode L0DUFromRawAlg::finalize() {
-
   debug() << "==> Finalize" << endmsg;
-
-  //
-  info() << " - ------------------------------------------------------------------" << endmsg;
-  info() << " - ========> Final summary of L0DUFromRawAlg" << endmsg;
-  info() << " - Total number of events processed           : " << m_evt << endmsg;
-  info() << " - Average bank size : " << (double) m_size/ (double) m_evt 
-         << " (bytes)  | min= " << m_sizeMin << "  | max= " << m_sizeMax <<endmsg;
-  info() << " - ------------------------------------------------------------------" << endmsg;
-
-
-
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 

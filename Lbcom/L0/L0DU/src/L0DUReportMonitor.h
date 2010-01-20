@@ -1,10 +1,10 @@
-// $Id: L0DUReportMonitor.h,v 1.6 2009-03-05 15:32:45 odescham Exp $
+// $Id: L0DUReportMonitor.h,v 1.7 2010-01-20 16:30:58 odescham Exp $
 #ifndef L0DUREPORTMONITOR_H 
 #define L0DUREPORTMONITOR_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiHistoAlg.h"
+#include "L0Base/L0AlgBase.h"
 // from Event
 #include "Event/L0DUReport.h"
 #include <TH1D.h>
@@ -17,7 +17,7 @@
  *  @author Olivier Deschamps
  *  @date   2007-10-25
  */
-class L0DUReportMonitor : public GaudiHistoAlg {
+class L0DUReportMonitor : public L0AlgBase {
 public: 
   /// Standard constructor
   L0DUReportMonitor( const std::string& name, ISvcLocator* pSvcLocator );
@@ -42,24 +42,27 @@ private:
   CounterMap m_chanCnt;
   CounterMap m_condCnt;
   CounterMap m_chanRate;
-  CounterMap m_chanRelRate;
   CounterMap m_condRate;
   CounterMap m_trigCnt;
   CounterMap m_trigRate;
-  CounterMap m_trigRelRate;
+
   CounterMapMap m_chanCntMap;
   CounterMapMap m_condCntMap;
   CounterMapMap m_chanRateMap;
-  CounterMapMap m_chanRelRateMap;
   CounterMapMap m_condRateMap;
   CounterMapMap m_trigCntMap;
   CounterMapMap m_trigRateMap;
-  CounterMapMap m_trigRelRateMap;  
 
+
+  std::map<int , CounterMap > m_chanRelRate;
+  std::map<int , CounterMap > m_trigRelRate;
+  std::map<int , CounterMapMap > m_trigRelRateMap;
+  std::map<int , CounterMapMap > m_chanRelRateMap;
+  std::map<int , double > m_decCnt;
+  std::map<int ,std::map<unsigned int, double> > m_decCntMap;
+  std::map<unsigned int, double>  m_evtCntMap;
   double m_evtCnt;
-  double m_decCnt;
-  std::map<unsigned int, double> m_evtCntMap;
-  std::map<unsigned int, double> m_decCntMap;
+
   std::map<unsigned int, LHCb::L0DUConfig*> m_configs;
   int m_prevTCK;
   std::string m_reportLocation;
@@ -72,10 +75,9 @@ private:
   int m_bin;
   bool m_split;
   std::string m_lab;
-  void label( AIDA::IHistogram1D* h1d , std::map<int,std::string>  labels);
-  void label( AIDA::IHistogram2D* h2d , std::map<int,std::string>  labels);
+  void label( AIDA::IHistogram1D* h1d , std::map<int,std::string>  labels,bool count=true,std::string opt="");
+  void label( AIDA::IHistogram2D* h2d , std::map<int,std::string>  labels, int mask=0x3,bool count=true,std::string opt="");
   bool m_generic;
-  bool m_first;
   bool m_swap;
 };
 #endif // L0DUREPORTMONITOR_H

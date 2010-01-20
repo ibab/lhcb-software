@@ -1,4 +1,4 @@
-// $Id: L0DUAlg.cpp,v 1.10 2009-09-17 12:14:49 odescham Exp $
+// $Id: L0DUAlg.cpp,v 1.11 2010-01-20 16:30:58 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -28,20 +28,18 @@ DECLARE_ALGORITHM_FACTORY( L0DUAlg );
 //=============================================================================
 L0DUAlg::L0DUAlg( const std::string& name,
             ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ) 
+  : L0AlgBase ( name , pSvcLocator ) 
 {    
-  declareProperty( "DataLocations"                , m_dataLocations   );
+  declareProperty( "ProcessorDataLocations"  , m_dataLocations   );
   m_dataLocations.push_back(LHCb::L0ProcessorDataLocation::Calo);
   m_dataLocations.push_back(LHCb::L0ProcessorDataLocation::Muon);
   m_dataLocations.push_back(LHCb::L0ProcessorDataLocation::PileUp);
  // configure DAQ
-  declareProperty( "BankVersion"             , m_rawVsn   = 1 );
+  declareProperty( "BankVersion"             , m_rawVsn   = 2 );
   declareProperty( "EmulatorTool"            , m_emulatorType="L0DUEmulatorTool");
   //
-  declareProperty( "StoreInBuffer"           , m_fillRaw = true );
   declareProperty( "RawLocation"             , m_rawLocation    = LHCb::RawEventLocation::Default   );
-  declareProperty( "WriteOnTES"              , m_writeOnTES = false   );
-  declareProperty( "ReportLocation"          , m_reportLocation = LHCb::L0DUReportLocation::Default );
+  declareProperty( "L0DUReportLocation"          , m_reportLocation = LHCb::L0DUReportLocation::Default );
   //
   declareProperty( "TCK"                     , m_tck="");
   declareProperty( "L0DUConfigProviderName"  , m_configName="L0DUConfig");
@@ -101,6 +99,15 @@ StatusCode L0DUAlg::initialize() {
   }
 
   info()<< "The L0DUConfig (TCK=" << m_tck << ") have been succesfully loaded" << endmsg;
+
+  // define standard locations (L0Context-depending)
+  m_locs.clear();
+  for( std::vector<std::string>::iterator it = m_dataLocations.begin() ; m_dataLocations.end() != it ; ++it){
+    std::string loc = dataLocation( *it );
+    m_locs.push_back( loc );
+  }
+    
+
   return sc;
 };
 
@@ -112,8 +119,8 @@ StatusCode L0DUAlg::execute() {
 
 
   // process the emulator
-  debug() << "Emulator processing ( Data = " << m_dataLocations << ", TCK = " << m_tck << " )" <<endmsg;
-  StatusCode sc = m_emulator->process(m_config, m_dataLocations );
+  debug() << "Emulator processing ( Data = " << m_locs << ", TCK = " << m_tck << " )" <<endmsg;
+  StatusCode sc = m_emulator->process(m_config, m_locs );
   if(sc.isFailure()){
     Error("Cannot process the emulator").ignore();
     return sc;
@@ -123,11 +130,12 @@ StatusCode L0DUAlg::execute() {
   if(m_writeOnTES){
     debug() <<"Push L0DUReport on TES" << endmsg;
     LHCb::L0DUReport* report = new LHCb::L0DUReport(m_emulator->emulatedReport());
-    put (report   ,  m_reportLocation );//non-const
+    std::string loc = dataLocation( m_reportLocation );
+    put (report   , loc );
   }
   
   //push bank in RawBuffer
-  if(m_fillRaw){
+  if(m_writeBanks){
     debug() << "Insert RawBank in rawEvent" << endmsg;
     const std::vector<unsigned int> block = m_emulator->bank(m_rawVsn);
     LHCb::RawEvent* raw = getOrCreate<LHCb::RawEvent,LHCb::RawEvent>(LHCb::RawEventLocation::Default);

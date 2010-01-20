@@ -1,4 +1,4 @@
-// $Id: L0DUMultiConfigProvider.h,v 1.1 2008-01-29 16:02:30 odescham Exp $
+// $Id: L0DUMultiConfigProvider.h,v 1.2 2010-01-20 16:30:58 odescham Exp $
 #ifndef L0DUMULTICONFIGPROVIDER_H 
 #define L0DUMULTICONFIGPROVIDER_H 1
 
@@ -31,23 +31,24 @@ public:
   virtual StatusCode initialize();
   virtual StatusCode finalize();
 
-  LHCb::L0DUConfig*  config(long tck);
-  LHCb::L0DUConfigs  configs(){return m_configs;};
+  LHCb::L0DUConfig*  config(long tck = LHCb::L0DUTemplateConfig::TCKValue,std::string slot="T0");
+  LHCb::L0DUConfigs*  configs(std::string slot="T0"){return m_configs[slot];};
 
+  
 protected:
 
 private:
   // private method
-  LHCb::L0DUConfig* loadConfig( std::string tck );
+  LHCb::L0DUConfig* loadConfig( std::string tck ,std::string slot="T0");
 
   // attributes
   bool m_preload;
   std::vector<std::string> m_list;
 
   //
-  LHCb::L0DUConfigs m_configs;
+  std::map<std::string,LHCb::L0DUConfigs*> m_configs;
   IL0DUConfigProvider* m_provider;
-
+  std::map<std::string,LHCb::L0DUConfig*> m_template;
 
 };
 #endif // L0DUMULTICONFIGPROVIDER_H

@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.h,v 1.7 2009-09-17 12:14:49 odescham Exp $
+// $Id: L0DUConfigProvider.h,v 1.8 2010-01-20 16:30:58 odescham Exp $
 #ifndef L0DUCONFIGPROVIDER_H 
 #define L0DUCONFIGPROVIDER_H 1
 
@@ -33,7 +33,14 @@ public:
 
   virtual ~L0DUConfigProvider( ); ///< Destructor
 
-  LHCb::L0DUConfig*  config(long tck){
+  LHCb::L0DUConfig*  config(long tck = LHCb::L0DUTemplateConfig::TCKValue ,std::string slot="T0"){
+    if( slot == "") slot = "T0";
+    // first : handle TEMPLATE configuration
+    if( m_template && tck == LHCb::L0DUTemplateConfig::TCKValue ){
+        debug()<<"loading the TEMPLATE Configuration" << endmsg;
+        return m_config;
+    }
+
     if( tck != m_tckopts)warning() << "The requested TCK " << tck  
                                    <<" is not consistent with the options definition " 
                                    << m_tckopts << " CHECK your options ! " << endmsg;
@@ -41,21 +48,32 @@ public:
       warning() << "requested TCK is not a 16 bit word" << endmsg;
       return NULL;
     }
-    return m_configs.object(tck); 
+    std::map<std::string,LHCb::L0DUConfigs*>::iterator it = m_configs.find( slot );
+    if( it == m_configs.end() )createConfig(slot);
+      
+    it = m_configs.find( slot );
+    if( it == m_configs.end() ){ // if re-creating failed (paranoid test)
+      warning() << " no configs container found for slot " << slot << endmsg;
+      return NULL;
+    }
+
+    // it exists
+    return m_configs[slot]->object(tck); 
   }; 
 
-  LHCb::L0DUConfigs  configs(){return m_configs;};
+  LHCb::L0DUConfigs*  configs(std::string slot="T0"){
+    if( slot == "") slot = "T0";
+    return m_configs[slot];
+  };
   
   
 
 protected:
 
 
-
 private:
+  void createConfig(std::string slot="T0");
   std::vector<std::string> Parse(std::string flag, std::vector<std::string> config );
-  
-
   std::map<std::string,int> m_constData;
   typedef std::vector<std::vector<std::string> > ConfigType;
   typedef ConfigType::iterator ConfigIterator;
@@ -64,12 +82,8 @@ private:
   ConfigType m_conditions;
   ConfigType m_channels;
   ConfigType m_triggers;
-  
-
   bool m_detail;
-
-  void printConfig(LHCb::L0DUConfig config);
-
+  void printConfig(LHCb::L0DUConfig config,std::string slot);
   void constantData();
   void predefinedData(const std::string& ,const int param[L0DUBase::Conditions::LastIndex] );
   void hardcodedData();
@@ -89,7 +103,9 @@ private:
   LHCb::L0DUChannel::Map m_channelsMap;
   LHCb::L0DUTrigger::Map m_triggersMap;
 
-  LHCb::L0DUConfigs m_configs;
+  //  std::map<std::string,LHCb::L0DUConfigs> m_configs;
+  std::map<std::string,LHCb::L0DUConfigs*> m_configs;
+
   LHCb::L0DUConfig* m_config;
   
 
@@ -115,5 +131,6 @@ private:
   std::map<std::string,int > m_conditionNumber;
   std::map<std::string,int > m_conditionOperator;
   IL0CondDBProvider*        m_condDB;  
+  bool m_template;
 };
 #endif // L0DUCONFIGPROVIDER_H

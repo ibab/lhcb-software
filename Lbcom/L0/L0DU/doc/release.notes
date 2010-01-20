@@ -1,7 +1,51 @@
-! $Id: release.notes,v 1.170 2009-11-13 17:05:02 cattanem Exp $
+! $Id: release.notes,v 1.171 2010-01-20 16:30:56 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
-!--------------------------------------------------------------------------
+
+
+
+! 2010-01-20 Olivier Deschamps
+  - adapt to Lumi Trigger decisions
+      - adapt to changes in L0Event
+      - new RawBank format (version v2) - default for simulation in L0DUAlg
+      - adapt decoding
+      - adapt monitoring (both L0DUReport and L0DUBank monitoring)
+
+  - add 'template' configuration in L0DUMultiConfigProvider needed by HLT for fast run change
+      - L0DUConfig.Template  tool available at initialization time
+
+  - L0DUAlg, L0DUReportMonitor and L0DUFromRawALg inherit from L0Base base-classes
+   - L0DUFromRawAlg : 
+      - inherits from L0Base/L0FromRawBase 
+      - adapt TES I/O to L0 convention 
+      - Warning : writeProcData now is set false by default (was true)
+
+   - L0DUAlg, L0DUReportMonitor : 
+      - inherits from L0Base/L0AlgBase 
+      - adapt TES I/O to L0 convention 
+
+   - Handling TAE events in L0DU(Multi)ConfigProvider ( L0DUConfig is TAE slot dependent)  
+      - L0DUFromRawTool : load config according to RootInTES
+                          now private tool of L0DUFromRawAlg in order RootInTES being contagious to tool.
+
+   - Monitoring : review and update histogram production
+
+   - adapt and complete L0Pattern.cpp and related options (for firmware checks)
+
+   - new options file : L0ConfigMonitor.opts for monitoring the performance of a given TCK
+   - update FastDecoding.opts 
+        - L0DUFromRawTool : FillDataMap property default is now TRUE  (the default decoding is slower)
+        - to be use for fast minimal decoding of L0DU bank (factor 4 in speed)
+
+  @ MISSING : 
+   - L0Muon not yet inheriting from L0Base classes -> L0EmulatorSeq  fails (non L0Context-dependent TES for L0Muon processor data)
+   - make a L0Conf flag with FastDecoding.opts setting
+   - ConfigProvider : check the configuration against the firmware constraints
+                      automatic ordering for L0DUElementaryConditions
+                      improve L0TCK parsing (MASK flag)
+   - update documentation : new syntax for L0TCK in twiki + update RawBank format EDMS
+  
+
 
 !========================== L0DU v9r0 2009-11-13 ==========================
 ! 2009-10-29 - Patrick Robbe
