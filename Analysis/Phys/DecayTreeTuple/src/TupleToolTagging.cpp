@@ -1,4 +1,4 @@
-// $Id: TupleToolTagging.cpp,v 1.6 2010-01-13 13:04:27 pkoppenb Exp $
+// $Id: TupleToolTagging.cpp,v 1.7 2010-01-20 17:22:36 bkhanji Exp $
 // Include files
 
 // from Gaudi
@@ -109,20 +109,37 @@ StatusCode TupleToolTagging::fill( const Particle* mother
   test &= tuple->column( head+"_TAGOMEGA" , omega );
   
   int taggers_code = 0;
+  // intialize tagger by tagger W :
+  double os_mu_prob  = -1;
+  double os_el_prob  = -1;
+  double os_k_prob   = -1;
+  double ss_k_prob   = -1;
+  double ss_pi_prob  = -1;
+  double os_vtx_prob = -1;
+  
   std::vector<Tagger> taggers = theTag.taggers();
   for(size_t i=0; i<taggers.size(); ++i) {
     int tdec = taggers[i].decision();
+    double om = taggers[i].omega();
+    
     if(tdec) switch ( taggers[i].type() ) {
-    case Tagger::OS_Muon     : taggers_code += 10000 *(tdec+2); break;
-    case Tagger::OS_Electron : taggers_code +=  1000 *(tdec+2); break;
-    case Tagger::OS_Kaon     : taggers_code +=   100 *(tdec+2); break;
-    case Tagger::SS_Kaon     : taggers_code +=    10 *(tdec+2); break;
-    case Tagger::SS_Pion     : taggers_code +=    10 *(tdec+2); break;
-    case Tagger::VtxCharge   : taggers_code +=     1 *(tdec+2); break;
+    case Tagger::OS_Muon     : taggers_code += 10000 *(tdec+2); os_mu_prob = om;break;
+    case Tagger::OS_Electron : taggers_code +=  1000 *(tdec+2); os_el_prob = om;break;
+    case Tagger::OS_Kaon     : taggers_code +=   100 *(tdec+2); os_k_prob  = om;break;
+    case Tagger::SS_Kaon     : taggers_code +=    10 *(tdec+2); ss_k_prob  = om;break;
+    case Tagger::SS_Pion     : taggers_code +=    10 *(tdec+2); ss_pi_prob = om;break;
+    case Tagger::VtxCharge   : taggers_code +=     1 *(tdec+2); os_vtx_prob= om;break;
+      
     }
   }
-  test &= tuple->column( head+"_TAGGER" , taggers_code );
-
+  test &= tuple->column( head+"_TAGGER" , taggers_code);
+  test &= tuple->column( "OS_MU_PROBA"  , os_mu_prob  );
+  test &= tuple->column( "OS_EL_PROBA"  , os_el_prob  );
+  test &= tuple->column( "OS_K_PROBA"   , os_k_prob   );
+  test &= tuple->column( "SS_K_PROBA"   , ss_k_prob   );
+  test &= tuple->column( "SS_PI_PROBA"  , ss_pi_prob  );
+  test &= tuple->column( "OS_VTX_PROBA" , os_vtx_prob );
+  
   if( msgLevel( MSG::DEBUG ) ){
     debug() << "Tagging summary: decision: " << dec 
 	    << ", category: " << cat 
