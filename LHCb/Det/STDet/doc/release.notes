@@ -1,8 +1,9 @@
-!$Id: release.notes,v 1.188 2010-01-19 12:44:40 cattanem Exp $
+!$Id: release.notes,v 1.189 2010-01-20 15:05:06 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+!======================== STDet v4r16p1 2010-01-20 =======================
 ! 2010-01-19 - Marco Cattaneo
  - DeSTSector.h: change precision of m_dp0di and m_p0 from float to double,
    to fix data truncation warning on Windows
