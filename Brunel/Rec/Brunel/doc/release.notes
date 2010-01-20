@@ -28,6 +28,28 @@ Purpose: LHCb reconstruction program
    . Production of TimeSpanAccounting FSR
    . Fix to GaudiPoolDB to enable file sharing in FileRecordCnvSvc
    . Fix DeSTSector::cacheInfo (STDet v4r16)
+   . Protect against accessing ONLINE CondDB with invalid times (DetCond v12r9)
+   . Improved handling of Veol tracks across half boxes (PatVelo v3r19)
+   . New histograms in Rich alignment monitors (RichRecQC v2r35)
+   . Now using online Rich gas temperature & pressure conditions (SQLDBDB v5r18)
+
+</PRE><H1><A NAME=v35r11p2>2010-01-20 Brunel v35r11p2</A></H1><PRE>
+Version built on v35r11b branch
+
+ - Changes to references to reflect changes in Brunel v35r11p2 output:
+   . Fix DeSTSector::cacheInfo (STDet v4r16)
+   . New CondDB default tags (DDDB v1r27)
+
+</PRE><H1><A NAME=v35r11p1>2010-01-19 Brunel v35r11p1</A></H1><PRE>
+Version built on v35r11b branch
+
+ - Changes to example options
+   . 2009-Collisions.py no longer sets Brunel().UseOracle, no longer needed for
+     the 2009 data.
+
+ - Changes to QMTests
+   . Make QMTest exclusion for changes in path to CondDB files more robust
+     (same as fix to GaudiConf v13r3 on head branch)
 
 </PRE><H1><A NAME=v35r11>2009-12-15 Brunel v35r11</A></H1><PRE>
  - Changes to example options
