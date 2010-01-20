@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v13r3 2010-01-20 ===========================
 ! 2010-01-14 - Antonis Papanestis
  - Fixed printout error for pressure in GasRadiator
  - Forced the use of magnetic distortion code in HPD
