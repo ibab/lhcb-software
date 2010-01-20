@@ -4,6 +4,7 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+!======================= PackedEvent v4r0 2010-01-20 =========================
 ! 2009-12-12 - Chris Jones
  - Replace std::vector<int> with plain ints in PackedRichPID
 
