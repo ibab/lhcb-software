@@ -5,6 +5,10 @@
 !----------------------------------------------------------------------------
 ! 2010-01-20 - Gerhard Raven
  - optimize tar file access 
+ - allow reading of gzipped files inside tar file (no support for gzipped tar 
+   file themselves, as it would presumably reduce the random access I/O performance
+   to the various entries in the file -- typically only a small fraction of
+   the files inside the tar file is read)
 
 ! 2010-01-13 - Marco Cattaneo
  - Follow Gaudi fix #61116: GaudiCommon::Exception now returns void

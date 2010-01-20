@@ -12,14 +12,19 @@ using namespace std;
 #include "boost/filesystem/path.hpp"
 namespace fs = boost::filesystem;
 
-#include "boost/iostreams/filtering_streambuf.hpp"
+#include "boost/iostreams/filtering_stream.hpp"
 #include "boost/iostreams/copy.hpp"
 #include "boost/iostreams/filter/gzip.hpp"
 #include "boost/iostreams/slice.hpp"
+#include "boost/iostreams/operations.hpp"
+#include "boost/iostreams/seek.hpp"
+namespace bio = boost::iostreams;
+
 
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/System.h"
+#include "GaudiKernel/StringKey.h"
 
 
 namespace {
@@ -77,28 +82,35 @@ public:
             index();
     }
     bool dump(const std::string& name,ostream& os) {
-        //TODO: try to avoid copy into os, instead return a 'window' on the file...
-        // (using boost iostreams??? (basic_array_source?))
-        map<string,Info>::const_iterator i = m_index.find(name);
-        if (i==m_index.end()) return false;
+        map<Gaudi::StringKey,Info>::const_iterator i = m_index.find(name);
+        if (i!=m_index.end()) {
+            // slice works relative to the current file offset, as it works on an istream...
+            bio::seek(m_file,0,std::ios_base::beg);
+            // suggest an 8K buffer size as hint -- most config items are smaller than that...
+            bio::copy(bio::slice(m_file,i->second.offset,i->second.size), os, 8192);
 
-        // slice works relative to the current file offset, as it works on an istream...
-        m_file.seekg(0);
-        // suggest an 8K buffer size as hint -- most config items are smaller than that...
-        boost::iostreams::copy(boost::iostreams::slice(m_file,i->second.offset,i->second.size), os, 8192);
-
-        //boost::iostreams::filtering_istream in;
-        //if (name ends in .gz) in.push(gzip_decompressor());
-        // in.push(boost::iostreams::slice(file,i->second.offset,i->second.size));
-        // boost::iostreams::copy(in, os);
-
-        return true;
+            return true;
+        }
+        // try to read a gzipped version of the filename
+        i = m_index.find(name+".gz");
+        if (i!=m_index.end()) {
+            std::cerr << " reading gzipped entry " << name << std::endl;
+            // slice works relative to the current file offset, as it works on an istream...
+            bio::seek(m_file,0,std::ios_base::beg);
+            bio::filtering_istream in;
+            in.push(bio::gzip_decompressor());
+            in.push(bio::slice(m_file,i->second.offset,i->second.size));
+            // suggest an 8K buffer size as hint -- most config items are smaller than that...
+            bio::copy(in, os, 8192);
+            return true;
+        }
+        return false;
     }
 
     template <typename SELECTOR>
     std::vector<std::string> files(const SELECTOR& selector) const {
         std::vector<std::string> f;
-        for (map<string,Info>::const_iterator i = m_index.begin(); i!= m_index.end();++i) {
+        for (map<Gaudi::StringKey,Info>::const_iterator i = m_index.begin(); i!= m_index.end();++i) {
             if( selector(i->first) ) f.push_back(i->first);
         }
         return f;
@@ -136,7 +148,7 @@ private:
 
     std::string m_name;
     ifstream m_file;
-    std::map<std::string,Info> m_index;
+    std::map<Gaudi::StringKey,Info> m_index;
 };
 
 bool TarFile::interpretHeader(const posix_header& header, Info& info) {
@@ -169,7 +181,7 @@ bool TarFile::index() {
                && info.name[ info.name.size()-1 ] != '/' 
                && info.name.find("/CVS/")  == string::npos 
                && info.name.find("/.svn/") == string::npos )  {
-                m_index.insert(make_pair(info.name,info));
+                m_index.insert(make_pair(Gaudi::StringKey(info.name),info));
             }
             // round up size to block size, and skip to next header...
             size_t skip = info.size;
