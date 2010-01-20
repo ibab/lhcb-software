@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::PixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.27 2009-08-13 13:22:50 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.28 2010-01-20 01:19:35 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -182,7 +182,7 @@ StatusCode PixelQC::execute()
           }
           if ( nHPDSignalHits>0 )
           {
-            richHisto1D( rich, "nTotalPixsPerHPD",
+            richHisto1D( rich, "nSignalPixsPerHPD",
                          "Average signal HPD occupancy (nHits>0)",
                          0, 150, 75 ) -> fill( nHPDSignalHits );
           }

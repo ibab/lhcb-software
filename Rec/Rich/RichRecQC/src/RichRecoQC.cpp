@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.52 2009-12-13 21:42:36 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.53 2010-01-20 01:19:35 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -243,17 +243,19 @@ StatusCode RecoQC::execute()
       avRecTheta += thetaRec;
       // reconstructed phi
       const double phiRec   = photon->geomPhoton().CherenkovPhi();
+      // delta theta
+      const double deltaTheta = thetaRec-thetaExpTrue;
 
       richHisto1D(rad,"thetaRec")->fill(thetaRec);
       richHisto1D(rad,"phiRec")->fill(phiRec);
-      richHisto1D(rad,"ckResAll")->fill(thetaRec-thetaExpTrue);
+      richHisto1D(rad,"ckResAll")->fill(deltaTheta);
       richHisto2D(rad,"photonCkThetaVP")->fill(ptotLogGeV,thetaRec);
 
       // isolated segment ?
       if ( isolated )
       {
         richHisto1D(rad,"thetaRecIsolated")->fill(thetaRec);
-        richHisto1D(rad,"ckResAllIsolated")->fill(thetaRec-thetaExpTrue);
+        richHisto1D(rad,"ckResAllIsolated")->fill(deltaTheta);
       }
 
       if ( mcTrackOK && mcRICHOK )
@@ -266,11 +268,11 @@ StatusCode RecoQC::execute()
           avRecTrueTheta += thetaRec;
           // resolution plot
           richHisto1D ( rad, "ckResTrue", "Rec-Exp Cktheta : MC true photons",
-                        -m_ckResRange[rad], m_ckResRange[rad], nBins1D() ) -> fill( thetaRec-thetaExpTrue );
+                        -m_ckResRange[rad], m_ckResRange[rad], nBins1D() ) -> fill( deltaTheta );
           if ( resExpTrue>0 )
           {
             // pull plot
-            const double ckPull = (thetaRec-thetaExpTrue)/resExpTrue;
+            const double ckPull = deltaTheta/resExpTrue;
             richHisto1D ( rad, "ckPull", "(Rec-Exp)/Res Cktheta",
                           -4, 4, nBins1D() ) -> fill( ckPull );
           }
@@ -278,7 +280,7 @@ StatusCode RecoQC::execute()
         else // fake photon
         {
           richHisto1D( rad, "ckResFake", "Rec-Exp Cktheta : MC fake photons",
-                       -m_ckResRange[rad], m_ckResRange[rad], nBins1D() ) -> fill( thetaRec-thetaExpTrue );
+                       -m_ckResRange[rad], m_ckResRange[rad], nBins1D() ) -> fill( deltaTheta );
         }
       } // MC is available
 

@@ -11,6 +11,9 @@
 ! 2010-01-15 - Ross Young
 - Configuration.py: parameters for ion feedback code now in separate method
 
+! 2010-01-12 - Chris Jones
+ - Fix bug in filling signal HPD occupancy plots in PixelQC
+
 ! 2009-12-13 - Chris Jones
  - Extend Configurable to allow min beta to be controlled in RichRecQC 
    monitors.
