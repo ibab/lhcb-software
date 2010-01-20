@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.250 2010-01-14 12:49:33 jonrob Exp $
+! $Id: release.notes,v 1.251 2010-01-20 17:37:59 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!====================== RichKernel v7r29 2010-01-20 ====================
 ! 2010-01-14 - Chris Jones
  - Add to HPDIdentifier class explicit methods to convert to RichSmartIDs.
    Usefult for use via python.
