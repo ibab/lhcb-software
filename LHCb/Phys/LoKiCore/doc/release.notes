@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.173 2010-01-13 10:52:32 ibelyaev Exp $ 
+! $Id: release.notes,v 1.174 2010-01-20 17:34:29 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,45 +15,33 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! =========================== LoKiCore v9r10 2010-01-20 =======================
 ! 2010-01-13 - Vanya Belyaev
-
  - Reporter.cpp
-
      fix the probelm with return valeus for Asser/Exception methods 
       Gaudi fix #61116 
-
 
 ! 2010-01-13 - Marco Cattaneo
  - Remove test on GaudiCommon::Exception return code, to follow Gaudi fix #61116
 
 ! 2010-01-03 - Vanya Belyaev
-
  - Primitives/VoidPrimitives: 
  
      1. make use of new (Lomont) comparsions of ploating point numbers 
      2. remove all EqualToInt, EqualToUInt functors... (not needed anymore) 
 
  - cmt/requirements
-
      version increment to v9r10 
  
 ! 2009-12-17 - Vanya BELYAEV
-
  - python/LoKiCore/functions.py
-
     add helper function uints to create std::vector<unsigned int>
-
  - LoKi/FilterAlg.h
- 
     enabel access to "updated" flags to allow 
     the proper reset of functors at finalization
-
  - src/Components/VoidFilter.cpp
-
      add proper finalization method with resetting of functor
-
  - cmt/requirements
-
      version increment to v9r9 
 
 ! =========================== LoKiCore v9r8 2009-12-11 ========================
