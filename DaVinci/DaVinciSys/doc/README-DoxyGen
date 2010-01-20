@@ -1,5 +1,0 @@
-To make the documentation:
-
-DaVinciEnv <version> (give appropriate version)
-source ../cmt/setup.csh
-/afs/cern.ch/lhcb/scripts/makedoc
