@@ -469,7 +469,7 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
   std::string tmpPart=savedirParts[savedirParts.size()-1];
 
 
-  msg << MSG::INFO << " runnumber " << runNumber << endreq;
+  //msg << MSG::INFO << " runnumber " << runNumber << endreq;
   std::string runNumberstr;
   std::stringstream outstr;
   outstr << runNumber;
@@ -511,7 +511,7 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
    // std::string tmpfile = saveDir + m_dimInfoIt->first + "-" + timestr + ".root";
     std::string tmpfile = saveDir + taskName + "/" + month +"/" +day + "/"+ taskName + "-" + runNumberstr +"-"+ timestr + ".root";
     fileName.replace(0, fileName.length(), tmpfile);
-    msg << MSG::INFO << "SaverSvc will save histograms in file " << fileName << endreq;
+ //   msg << MSG::INFO << "SaverSvc will save histograms in file " << fileName << endreq;
 
     std::string dirName = saveDir + taskName + "/" + month +"/" +day ;  
     void *hdir = gSystem->OpenDirectory(dirName.c_str());
@@ -588,13 +588,13 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNu
     delete f;f=0;
   }
   
-  msg << MSG::INFO << "SaverSvc saved histograms in file " << fileName << endreq;
+//  msg << MSG::INFO << "SaverSvc saved histograms in file " << fileName << endreq;
 }
 
 
 void BaseServiceMap::add() {
   MsgStream msg(msgSvc(), name());
-  // msg << MSG::INFO << " Adder will add. " << endreq;
+  bool endofrun=false;
   std::map<std::string, DimInfoMonObject*>::iterator it;
 
   if (0 == m_serverMap.size()){
@@ -612,8 +612,6 @@ void BaseServiceMap::add() {
 
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
   {
-  // msg << MSG::INFO << " Adder : " << m_dimInfoIt->first << endreq;
-
     if (m_dimSrv.find(m_dimInfoIt->first) == m_dimSrv.end()) { 
   //    msg << MSG::DEBUG << "No Adder Found " << m_dimInfoIt->first << endreq;
       continue;
@@ -630,9 +628,11 @@ void BaseServiceMap::add() {
         continue;
       }
     }
-
+    endofrun= m_dimSrv[m_dimInfoIt->first].second->endOfRun();
     m_dimSrv[m_dimInfoIt->first].second->reset();
-    //msg << MSG::DEBUG << "Adder EndOfRun Flag=  " << m_dimSrv[m_dimInfoIt->first].second->endOfRun() << endreq;
+
+  //  msg << MSG::INFO << "endofrun: " << endofrun << endreq;
+
     for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
       if (!m_processMgr->dimInfoServers()->isActive(it->first)) continue;
 
@@ -658,11 +658,25 @@ void BaseServiceMap::add() {
     }
    // msg << MSG::INFO << "Updating Service : " << endreq;
     m_dimSrv[m_dimInfoIt->first].first->updateService(m_dimSrv[m_dimInfoIt->first].second->endOfRun());
-
+ 
     if (m_dimSrv[m_dimInfoIt->first].second->typeName().compare(s_monRate) == 0){
      // msg << MSG::INFO << "Updating MonRate " << endreq;
       if (m_processMgr->publishRates()) m_monRateDecoder->update((MonRate*)(m_dimSrv[m_dimInfoIt->first].second));
     }
   }
+  //if we are at a (fast) endofrun (top level adder), send the save_histos command to the saver
+  //for other adders, do an immediate update
+  if (endofrun) {
+     std::string utgid = m_processMgr->utgid();
+     std::vector<std::string> utgidParts = Misc::splitString(utgid, "_");
+     if (utgidParts[0].find("PART")!= std::string::npos) {
+      std::string saversvc = utgidParts[0]+ "_Saver_1/";
+     // DimClient::setDnsNode("hlt01");  
+      std::string serviceName=saversvc+"/";
+      int commandret=DimClient::sendCommand(serviceName.c_str(),"save_histos");
+      if (commandret==1) msg << MSG::DEBUG << "Save_histos command succesfully sent. " << endreq;
+    } 
+    endofrun=false; 
+  } 
 }
 

@@ -64,7 +64,7 @@ bool DimInfoMonObject::createMonObject() {
     tmpStringSize = m_dimInfo->getSize()/sizeof(char);
     //msg << MSG::DEBUG << "size for service "<< m_svcName << " " << tmpStringSize << endreq;
   }
-  msg << MSG::DEBUG << "size for service "<< m_svcName << " " << tmpStringSize << endreq;
+  //msg << MSG::DEBUG << "size for service "<< m_svcName << " " << tmpStringSize << endreq;
   m_StringSize = tmpStringSize;
   MonObject *monObjectBase;
     
@@ -130,7 +130,7 @@ bool DimInfoMonObject::loadMonObject(){
     usleep(20);
     tmpStringSize = m_dimInfo->getSize()/sizeof(char);
   }
-  msg << MSG::DEBUG << "size for service "<< m_svcName << " " << tmpStringSize << endreq;
+ // msg << MSG::DEBUG << "size for service "<< m_svcName << " " << tmpStringSize << endreq;
   m_StringSize = tmpStringSize;
   
   char* c;

@@ -105,11 +105,13 @@ void ProcessMgr::write(){
 }
 
 
-int ProcessMgr::getrunNumber(){
-   if ((m_runNumber==0)|| (m_runNumber ==-1)) {
+int ProcessMgr::getrunNumber(bool change){
+  MsgStream msg(msgSvc(), "ProcessMgr");
+   //msg<<MSG::INFO<< "runnnumber "<< m_runNumber << endreq;
+   if (((m_runNumber==0)|| (m_runNumber ==-1))||change) {
      m_runNumber = m_runNbSvc->getRunNb();
    }  
-   return  m_runNumber;
+ return  m_runNumber;
 }
 
 
@@ -456,7 +458,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         nodeName = nodeName.substr(0, m_nodeName.size()); // we resize the nodename to do the match.
       //  msg << MSG::DEBUG << "nodeName="<< nodeName << endreq;
         // checking the nodeName
-        msg << MSG::DEBUG << "comparing nodeName="<< nodeName << " with "<< m_nodeName << endreq;    
+       // msg << MSG::DEBUG << "comparing nodeName="<< nodeName << " with "<< m_nodeName << endreq;    
         if ((Misc::findCaseIns(m_nodeName, nodeName) == std::string::npos)||(m_nodeName=="MONA0901")){
      //     msg << MSG::DEBUG << "REFUSED because nodeName not OK" << endreq;
           continue;

@@ -12,8 +12,8 @@ DimTimerProcess::DimTimerProcess (ProcessMgr *processMgr, const int &refreshTime
   m_refreshTime(refreshTime),
   m_msgSvc(msgSvc)
 {
-  MsgStream msg(msgSvc, name());
-  msg << MSG::DEBUG << "Inside DimTimerProcess Creator." << endreq;
+//  MsgStream msg(msgSvc, name());
+//  msg << MSG::DEBUG << "Inside DimTimerProcess Creator." << endreq;
   stop();
 }
 
@@ -22,15 +22,15 @@ DimTimerProcess::~DimTimerProcess(){
 }
 
 void DimTimerProcess::timerHandler() {
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "**********************************" << endreq;
-  msg << MSG::DEBUG << "         timerHandler             " << endreq;
+//  MsgStream msg(msgSvc(), name());
+//  msg << MSG::DEBUG << "**********************************" << endreq;
+//  msg << MSG::DEBUG << "         timerHandler             " << endreq;
   time_t now;
   time(&now);
   m_processMgr->timerHandler();
   start(m_refreshTime);
-  msg << MSG::DEBUG << "        end  timerHandler         " << endreq;
-  msg << MSG::DEBUG << "**********************************" << endreq;
+//  msg << MSG::DEBUG << "        end  timerHandler         " << endreq;
+//  msg << MSG::DEBUG << "**********************************" << endreq;
 }
 
 // bool DimTimerProcess::statusDiscrepancy() {

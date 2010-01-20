@@ -16,6 +16,8 @@ DimServiceMonObject::~DimServiceMonObject() {
 }
 
 void DimServiceMonObject::updateService(bool endOfRun) {
+  MsgStream msg(msgSvc(), name());
+//  if (endOfRun) msg << MSG::INFO << "setting end of run " << endOfRun << endreq;
   m_monObject->setEndOfRun(endOfRun);
   setDataFromMonObject();
 }
