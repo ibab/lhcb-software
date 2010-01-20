@@ -3,6 +3,8 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2010-01-20 - Gerhard Raven
+ - optimize tar file access 
 
 ! 2010-01-13 - Marco Cattaneo
  - Follow Gaudi fix #61116: GaudiCommon::Exception now returns void

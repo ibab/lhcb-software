@@ -180,7 +180,7 @@ HltReferenceRateSvc::finalize()
       Gaudi::TimeSpan interval( last-first) ;
       info() << "Got " << m_tick << " ticks " 
              << " in "<<  interval.seconds() << " s."
-             << " during [ " << first.format(true,"%F %T") << "," << last.format(true,"%F %T")  << endmsg;
+             << " during [ " << first.format(true,"%F %T") << ", " << last.format(true,"%F %T")  << " ]" << endmsg;
       if (interval.seconds()>0) {
           info() << "This corresponds to an average rate of " << m_tick/interval.seconds() << " Hz."
                  << ", compared to an assumed 'set' rate of " << m_rate << endmsg;

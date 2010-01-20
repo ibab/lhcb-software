@@ -49,6 +49,14 @@ namespace {
     };
     typedef enum TarFileType TarFileType;
 
+    template <typename I, typename S, typename O> 
+    void copy_n_(I first, S count, O result) {
+        for(;count>0;--count) { 
+            *result = *first;
+            ++first;++result;
+        }
+    }
+
 }
 
 
@@ -68,12 +76,12 @@ namespace TarFileAccess_details {
             std::map<std::string,Info>::const_iterator i = m_index.find(name);
             if (i==m_index.end()) return false;
             m_file.seekg(i->second.offset);
-            static std::vector<char> buf;
-            buf.resize(i->second.size);
-            m_file.read(&buf[0],buf.size());
-            for (std::vector<char>::const_iterator j=buf.begin();j!=buf.end();++j) {
-                os << *j ;
-            }
+            copy_n_(std::istream_iterator<char>(m_file),i->second.size,std::ostream_iterator<char>(os));
+            //static std::vector<char> buf;
+            //buf.resize(i->second.size);
+            //m_file.read(&buf[0],buf.size());
+            //os.write(&buf[0],buf.size());
+
             return true;
         }
 
@@ -216,6 +224,7 @@ TarFileAccess::open(const std::string &url) {
 
     // if exists, dump into stringstream
     // TODO: use streambuf to implement zero-copy.. but beware of parent lifetime!
+    // TODO: support automated ungzipping ...
     std::stringstream *ss = new std::stringstream(std::stringstream::in|std::stringstream::out);
     stream.reset(ss);
     if (!tarFile->second->fillStream( what.str(2), *ss)) stream.reset(0);

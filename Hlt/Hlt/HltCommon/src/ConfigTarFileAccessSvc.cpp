@@ -5,11 +5,18 @@
 #include <fstream>
 #include <vector>
 #include <map>
+#include <algorithm>
 using namespace std;
 
 #include "boost/lexical_cast.hpp"
 #include "boost/filesystem/path.hpp"
 namespace fs = boost::filesystem;
+
+#include "boost/iostreams/filtering_streambuf.hpp"
+#include "boost/iostreams/copy.hpp"
+#include "boost/iostreams/filter/gzip.hpp"
+#include "boost/iostreams/slice.hpp"
+
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/System.h"
@@ -51,13 +58,22 @@ namespace {
     };
 
 
-/* A nice enum with all the possible tar file content types */
-enum TarFileType 
-{
-    REGTYPE  = '0',            /* regular file */
-    REGTYPE0 = '\0',           /* regular file (ancient bug compat)*/
-};
-typedef enum TarFileType TarFileType;
+    /* A nice enum with all the possible tar file content types */
+    enum TarFileType 
+    {
+        REGTYPE  = '0',            /* regular file */
+        REGTYPE0 = '\0',           /* regular file (ancient bug compat)*/
+    };
+    typedef enum TarFileType TarFileType;
+
+
+    template <typename I, typename S, typename O> 
+    void copy_n_(I first, S count, O result) {
+        for(;count>0;--count) { 
+            *result = *first;
+            ++first;++result;
+        }
+    }
 
 }
 
@@ -74,11 +90,24 @@ public:
         // (using boost iostreams??? (basic_array_source?))
         map<string,Info>::const_iterator i = m_index.find(name);
         if (i==m_index.end()) return false;
-        m_file.seekg(i->second.offset);
-        static std::vector<char> buf;
-        buf.resize(i->second.size);
-        m_file.read(&buf[0],buf.size());
-        std::copy(buf.begin(),buf.end(),ostream_iterator<char>(os));
+
+        // slice works relative to the current file offset, as it works on an istream...
+        m_file.seekg(0);
+        boost::iostreams::copy(boost::iostreams::slice(m_file,i->second.offset,i->second.size), os, 4096);
+
+        //boost::iostreams::filtering_istream in;
+        //if (name ends in .gz) in.push(gzip_decompressor());
+        // in.push(boost::iostreams::slice(file,i->second.offset,i->second.size));
+        // boost::iostreams::copy(in, os);
+
+
+        //m_file.seekg(i->second.offset);
+        //copy_n_(istream_iterator<char>(m_file),i->second.size,ostream_iterator<char>(os));
+        // TODO: not multithread safe... should add a lock on buf...
+        //static std::vector<char> buffer;
+        //buffer.resize(i->second.size);
+        //m_file.read(&buffer[0],buffer.size());
+        //os.write(&buffer[0],buffer.size());
         return true;
     }
 
