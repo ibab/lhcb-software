@@ -1,4 +1,4 @@
-// $Id: L0DUAlg.cpp,v 1.11 2010-01-20 16:30:58 odescham Exp $
+// $Id: L0DUAlg.cpp,v 1.12 2010-01-20 21:13:34 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -98,15 +98,7 @@ StatusCode L0DUAlg::initialize() {
     return StatusCode::FAILURE;
   }
 
-  info()<< "The L0DUConfig (TCK=" << m_tck << ") have been succesfully loaded" << endmsg;
-
-  // define standard locations (L0Context-depending)
-  m_locs.clear();
-  for( std::vector<std::string>::iterator it = m_dataLocations.begin() ; m_dataLocations.end() != it ; ++it){
-    std::string loc = dataLocation( *it );
-    m_locs.push_back( loc );
-  }
-    
+  info()<< "The L0DUConfig (TCK=" << m_tck << ") have been succesfully loaded" << endmsg;    
 
   return sc;
 };
@@ -119,8 +111,8 @@ StatusCode L0DUAlg::execute() {
 
 
   // process the emulator
-  debug() << "Emulator processing ( Data = " << m_locs << ", TCK = " << m_tck << " )" <<endmsg;
-  StatusCode sc = m_emulator->process(m_config, m_locs );
+  debug() << "Emulator processing ( Data = " << m_dataLocations << ", TCK = " << m_tck << " )" <<endmsg;
+  StatusCode sc = m_emulator->process(m_config, m_dataLocations );
   if(sc.isFailure()){
     Error("Cannot process the emulator").ignore();
     return sc;

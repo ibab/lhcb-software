@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawAlg.cpp,v 1.9 2010-01-20 16:30:58 odescham Exp $
+// $Id: L0DUFromRawAlg.cpp,v 1.10 2010-01-20 21:13:34 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -77,11 +77,11 @@ StatusCode L0DUFromRawAlg::execute() {
     put (report , loc , false);
   }
 
-  // Clone Processor Data and put it on TES
+  // Clone Processor Data and put it on TES 
+  // WARNING : PROCESSOR DATA ARE NOT CONTEXT DEPENDANT
   if( m_writeProcData){
     LHCb::L0ProcessorDatas* datas = new LHCb::L0ProcessorDatas();
-    std::string loc = dataLocation( m_procDataLocation );
-    put (datas  , loc , false);
+    put (datas  , m_procDataLocation , false);
     for(LHCb::L0ProcessorDatas::iterator it = m_fromRaw->L0ProcessorDatas()->begin();
         it != m_fromRaw->L0ProcessorDatas()->end(); it++){
       LHCb::L0ProcessorData* data = new  LHCb::L0ProcessorData( **it );

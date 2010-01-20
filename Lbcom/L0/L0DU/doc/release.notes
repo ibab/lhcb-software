@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.171 2010-01-20 16:30:56 odescham Exp $
+! $Id: release.notes,v 1.172 2010-01-20 21:13:34 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 
 
+! 2010-01-21 Olivier Deschamps
+ - L0DUAlg.cpp & L0DUFromRawAlg: was decided to NOT use L0Context-dependent location for ProcessorData
+		   -> remove previous change
 
 ! 2010-01-20 Olivier Deschamps
   - adapt to Lumi Trigger decisions
