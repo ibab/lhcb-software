@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.127 2010-01-20 15:59:06 odescham Exp $
+! $Id: release.notes,v 1.128 2010-01-20 16:47:21 cattanem Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
-
+!======================== L0Event v18r0 2010-01-20 ===========================
 ! 2010-01-20 Olivier Deschamps
- - L0DUChannel.xml, L0DUConfig.xml, L0DUReport.xml, L0DUTrigger.xml : implement  Lumi decisions- change signature of many methods
-
+ - L0DUChannel.xml, L0DUConfig.xml, L0DUReport.xml, L0DUTrigger.xml : implement
+   Lumi decisions - change signature of many methods
 
 !======================== L0Event v17r7p1 2009-09-02 =========================
 ! 2009-08-12 - Vanya BELYAEV
