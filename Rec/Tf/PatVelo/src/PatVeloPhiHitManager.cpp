@@ -1,4 +1,4 @@
-// $Id: PatVeloPhiHitManager.cpp,v 1.5 2009-10-13 12:54:29 dhcroft Exp $
+// $Id: PatVeloPhiHitManager.cpp,v 1.6 2010-01-20 17:16:41 krinnert Exp $
 
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
@@ -44,11 +44,11 @@ namespace Tf {
 
     if( m_maxPhiInner < 512 ){
       info() << "Kill hits in Inner Phi zone with more than " <<  m_maxPhiInner
-	     << " clusters" << endmsg;
+        << " clusters" << endmsg;
     }
     if( m_maxPhiOuter < 512 ){
       info() << "Kill hits in Outer Phi zone with more than " <<  m_maxPhiOuter
-	     << " clusters" << endmsg;
+        << " clusters" << endmsg;
     }
     return StatusCode::SUCCESS;
   }
@@ -81,21 +81,22 @@ namespace Tf {
 
         for (unsigned int zone=0; zone<m_nZones; ++zone) { // loop over inner/outer zones
           Tf::VeloPhiHitRange hits = defaultStation->hits(zone);
-	  bool markUsed = false;
-	  if ( ( zone == 0 && hits.size() > m_maxPhiInner ) ||
-	       ( zone == 1 && hits.size() > m_maxPhiOuter ) ) {
-	    Warning("Very hot VELO Phi zone: ignoring clusters",
-		    StatusCode::SUCCESS, 0 ).ignore();
-	    markUsed = true;
-	  }
-	  Tf::VeloPhiHits::const_iterator hi   = hits.begin();
-	  Tf::VeloPhiHits::const_iterator hend = hits.end();
-	  
-	  m_data[half][defaultStationNumber][zone].reserve(std::distance(hi,hend));
-	  for ( ; hi != hend; ++hi) { // import all hits
-	    if ( markUsed ) (*hi)->setUsed(true); // hot region hit
-	    m_data[half][defaultStationNumber][zone].push_back(PatVeloPhiHit(*hi)); 
-	    station->zone(zone).push_back(&(m_data[half][defaultStationNumber][zone].back()));
+          bool markUsed = false;
+          if ( ( zone == 0 && hits.size() > m_maxPhiInner ) ||
+              ( zone == 1 && hits.size() > m_maxPhiOuter ) ) {
+            Warning("Very hot VELO Phi zone: ignoring clusters",
+                StatusCode::SUCCESS, 0 ).ignore();
+            markUsed = true;
+          }
+          Tf::VeloPhiHits::const_iterator hi   = hits.begin();
+          Tf::VeloPhiHits::const_iterator hend = hits.end();
+
+          m_data[half][defaultStationNumber][zone].reserve(std::distance(hi,hend));
+          for ( ; hi != hend; ++hi) { // import all hits
+            if ( (*hi)->ignore() ) { continue; } // don't use hit if ignore flag is set
+            if ( markUsed ) (*hi)->setUsed(true); // hot region hit
+            m_data[half][defaultStationNumber][zone].push_back(PatVeloPhiHit(*hi)); 
+            station->zone(zone).push_back(&(m_data[half][defaultStationNumber][zone].back()));
           }
         }
         station->setHitsPrepared(true);
@@ -120,18 +121,19 @@ namespace Tf {
       Tf::VeloPhiHitRange hits = defaultStation->hits(zone);
       bool markUsed = false;
       if ( ( zone == 0 && hits.size() > m_maxPhiInner ) ||
-	   ( zone == 1 && hits.size() > m_maxPhiOuter ) ) {
-	Warning("Very hot VELO Phi zone: ignoring clusters",
-		StatusCode::SUCCESS, 0 ).ignore();
+          ( zone == 1 && hits.size() > m_maxPhiOuter ) ) {
+        Warning("Very hot VELO Phi zone: ignoring clusters",
+            StatusCode::SUCCESS, 0 ).ignore();
       }
       Tf::VeloPhiHits::const_iterator hi   = hits.begin();
       Tf::VeloPhiHits::const_iterator hend = hits.end();
-      
+
       m_data[half][defaultStationNumber][zone].reserve(std::distance(hi,hend));
       for ( ; hi != hend; ++hi ) { // import all hits
-	if ( markUsed ) (*hi)->setUsed(true); // hot region hit
-	m_data[half][defaultStationNumber][zone].push_back(PatVeloPhiHit(*hi)); 
-	station->zone(zone).push_back(&(m_data[half][defaultStationNumber][zone].back()));
+        if ( (*hi)->ignore() ) { continue; } // don't use hit if ignore flag is set
+        if ( markUsed ) (*hi)->setUsed(true); // hot region hit
+        m_data[half][defaultStationNumber][zone].push_back(PatVeloPhiHit(*hi)); 
+        station->zone(zone).push_back(&(m_data[half][defaultStationNumber][zone].back()));
       }
     }
     station->setHitsPrepared(true);
@@ -152,7 +154,7 @@ namespace Tf {
           Tf::VeloPhiHits::const_iterator hi   = hits.begin();
           Tf::VeloPhiHits::const_iterator hend = hits.end();
           for ( ; hi != hend; ++hi ) { // import all hits
-	    (*hi)->resetUsedFlag();
+            (*hi)->resetUsedFlag();
           }
         }
       }

@@ -4,7 +4,10 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
-! 2010-1-16 David Hutchcroft
+! 2010-01-20 - Kurt Rinnert
+ - all algorithms in PatVelo now obey the new 'ingore' flag of the hits
+
+! 2010-01-16 - David Hutchcroft
  - Set PatVeloRTracking and PatVeloGeneralTracking to correct for known half box 
    offsets in x and y for tracks crossing halves
 

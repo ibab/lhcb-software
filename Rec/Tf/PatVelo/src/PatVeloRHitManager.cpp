@@ -1,4 +1,4 @@
-// $Id: PatVeloRHitManager.cpp,v 1.6 2009-10-13 12:54:29 dhcroft Exp $
+// $Id: PatVeloRHitManager.cpp,v 1.7 2010-01-20 17:16:41 krinnert Exp $
 
 #include "GaudiKernel/ToolFactory.h"
 
@@ -41,7 +41,7 @@ namespace Tf {
 
     if( m_maxRClustersZone < 512 ) {
       info() << "Kill hits in R zone with more than " << m_maxRClustersZone
-	     << " clusters" << endmsg;
+        << " clusters" << endmsg;
     }
     return StatusCode::SUCCESS;
   }
@@ -71,7 +71,7 @@ namespace Tf {
           Tf::VeloRHits::const_iterator hi   = hits.begin();
           Tf::VeloRHits::const_iterator hend = hits.end();
           for ( ; hi != hend; ++hi ) { // import all hits
-	    (*hi)->resetUsedFlag();
+            (*hi)->resetUsedFlag();
           }
         }
       }
@@ -94,30 +94,31 @@ namespace Tf {
         if (station->hitsPrepared()) continue;
         station->clear();
 
-        for (unsigned int zone=0; zone<m_nZones; ++zone) { // loop over inner/outer zones
+        for (unsigned int zone=0; zone<m_nZones; ++zone) { // loop over r sectors
           Tf::VeloRHitRange hits = defaultStation->hits(zone);
-	  bool markUsed = false;
-	  if ( hits.size() > m_maxRClustersZone ){
-	    Warning("Very hot VELO R zone: ignoring clusters",
-		    StatusCode::SUCCESS, 0 ).ignore();
-	    markUsed = true;
-	  }
-	  Tf::VeloRHits::const_iterator hi   = hits.begin();
-	  Tf::VeloRHits::const_iterator hend = hits.end();
-	  
-	  m_data[half][defaultStationNumber][zone].reserve(std::distance(hi,hend));
-	  for ( ; hi != hend; ++hi ) { // import all hits
-	    if ( markUsed ) (*hi)->setUsed(true); // hot region hit
-	    m_data[half][defaultStationNumber][zone].push_back(PatVeloRHit(*hi)); 
-	    station->zone(zone).push_back(&(m_data[half][defaultStationNumber][zone].back()));
-	  }
-	}
+          bool markUsed = false;
+          if ( hits.size() > m_maxRClustersZone ){
+            Warning("Very hot VELO R zone: ignoring clusters",
+                StatusCode::SUCCESS, 0 ).ignore();
+            markUsed = true;
+          }
+          Tf::VeloRHits::const_iterator hi   = hits.begin();
+          Tf::VeloRHits::const_iterator hend = hits.end();
+
+          m_data[half][defaultStationNumber][zone].reserve(std::distance(hi,hend));
+          for ( ; hi != hend; ++hi ) { // import all hits
+            if ( (*hi)->ignore() ) { continue; } // don't use hit if ignore flag is set
+            if ( markUsed ) (*hi)->setUsed(true); // hot region hit
+            m_data[half][defaultStationNumber][zone].push_back(PatVeloRHit(*hi)); 
+            station->zone(zone).push_back(&(m_data[half][defaultStationNumber][zone].back()));
+          }
+        }
         station->setHitsPrepared(true);
       }
     }
     m_dataValid = true;
   }
-  
+
   //=============================================================================
   // Preparation of measurements for one station, actual implementation
   //=============================================================================
@@ -130,22 +131,23 @@ namespace Tf {
     unsigned int defaultStationNumber = defaultStation->stationNumber();
     unsigned int half = station->veloHalf();
 
-    for (unsigned int zone=0; zone<m_nZones; ++zone) { // loop over inner/outer zones
+    for (unsigned int zone=0; zone<m_nZones; ++zone) { // loop over r sectors
       Tf::VeloRHitRange hits = defaultStation->hits(zone);
       bool markUsed = false;
       if ( hits.size() > m_maxRClustersZone ){
-	Warning("Very hot VELO R zone: ignoring clusters",
-		StatusCode::SUCCESS, 0 ).ignore();
-	markUsed = true;
+        Warning("Very hot VELO R zone: ignoring clusters",
+            StatusCode::SUCCESS, 0 ).ignore();
+        markUsed = true;
       }
       Tf::VeloRHits::const_iterator hi   = hits.begin();
       Tf::VeloRHits::const_iterator hend = hits.end();
-      
+
       m_data[half][defaultStationNumber][zone].reserve(std::distance(hi,hend));
       for ( ; hi != hend; ++hi ) { // import all hits
-	if ( markUsed ) (*hi)->setUsed(true); // hot region hit
-	m_data[half][defaultStationNumber][zone].push_back(PatVeloRHit(*hi)); 
-	station->zone(zone).push_back(&(m_data[half][defaultStationNumber][zone].back()));
+        if ( (*hi)->ignore() ) { continue; } // don't use hit if ignore flag is set
+        if ( markUsed ) (*hi)->setUsed(true); // hot region hit
+        m_data[half][defaultStationNumber][zone].push_back(PatVeloRHit(*hi)); 
+        station->zone(zone).push_back(&(m_data[half][defaultStationNumber][zone].back()));
       }
     }
     station->setHitsPrepared(true);

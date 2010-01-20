@@ -134,6 +134,8 @@ namespace Tf {
             VeloRHitRange hitsR0 = stationR0->hits(zoneR0);
             for(cR0 = hitsR0.begin(); hitsR0.end() != cR0; ++cR0) {
 
+              if ( (*cR0)->ignore() ) { continue; } // skip hit if ignore flag is set
+
               double r = (*cR0)->rHalfBox();
               int r_coord = (int)floor( ( r - m_radiusOffset ) * m_nBinsR / 36. );
               if ( m_verboseLevel ) verbose() << "R coord matching: " << (*cR0)->rHalfBox() << " " << r_coord << endreq;
@@ -141,6 +143,8 @@ namespace Tf {
 
               VeloPhiHitRange hitsP0 = stationP0->hits(zoneP0);
               for(cP0 = hitsP0.begin(); hitsP0.end() != cP0; ++cP0) {
+
+                if ( (*cP0)->ignore() ) { continue; } // skip hit if ignore flag is set
 
                 double phi = (*cP0)->sortCoordHalfBox();
                 if ( Gaudi::Units::pi < phi ) phi -= 2 * Gaudi::Units::pi;
