@@ -1,4 +1,4 @@
-// $Id: L0DUTrigger.cpp,v 1.1 2008-05-29 14:10:07 odescham Exp $
+// $Id: L0DUTrigger.cpp,v 1.2 2010-01-20 15:59:07 odescham Exp $
 // Include files 
 #include <utility>
 #include <string>
@@ -16,7 +16,7 @@
 
 std::string LHCb::L0DUTrigger::summary(){
 
-  std::stringstream s(" ");
+  std::ostringstream s(" ");
   s << description()
     << "  ===== <** EMULATED DECISION **> = <"<< emulatedDecision() << ">" << std::endl;
   return s.str();
@@ -25,15 +25,15 @@ std::string LHCb::L0DUTrigger::summary(){
 }
 
 std::string LHCb::L0DUTrigger::description(){
-  std::stringstream os(" ");
-  std::stringstream s(" ");
+  std::ostringstream os(" ");
+  std::ostringstream s(" ");
   unsigned int k=0;
   for(LHCb::L0DUChannel::Map::iterator ic = m_channels.begin()  ; ic != m_channels.end() ; ic++){
     k++;
-    os << ((*ic).second)->name()  ;
+    os << L0DUDecision::Name[((*ic).second)->decisionType()] <<"|" <<((*ic).second)->name()  ;
     if( k != m_channels.size() ) os << " || ";
   }
-  s << " ====  Trigger '" << m_name   << "' = [" << os.str() << "]" << std::endl;
+  s << " ====  Trigger '" << L0DUDecision::Name[m_decisionType] +"|"+m_name   << "' = [" << os.str() << "]" << std::endl;
   return s.str();
 
 

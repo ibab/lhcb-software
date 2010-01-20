@@ -1,4 +1,4 @@
-// $Id: L0DUElementaryCondition.cpp,v 1.5 2008-09-26 13:30:22 odescham Exp $
+// $Id: L0DUElementaryCondition.cpp,v 1.6 2010-01-20 15:59:06 odescham Exp $
 // Include files 
 #include <utility>
 #include <string>
@@ -23,8 +23,8 @@ bool LHCb::L0DUElementaryCondition::comparison( unsigned int a, const std::strin
 
 std::string LHCb::L0DUElementaryCondition::summary(){
 
-  std::stringstream s(" ");
-  std::stringstream ss(" ");
+  std::ostringstream s(" ");
+  std::ostringstream ss(" ");
   if(m_data->scale() != 1.)ss<< " ( => " << m_data->scale() * (double) m_threshold << " MeV )" ;
   
   s << "Condition [ " << m_name << " : "
@@ -37,7 +37,7 @@ std::string LHCb::L0DUElementaryCondition::summary(){
 
 std::string LHCb::L0DUElementaryCondition::description(){
 
-  std::stringstream s(" ");
+  std::ostringstream s(" ");
   
   s << "Condition [ " << m_name << " : "
     << m_data->description() << " "   << m_comparator  << " "   << m_threshold <<"] ?";

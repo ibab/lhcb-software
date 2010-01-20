@@ -30,26 +30,28 @@
       <copyconstructor/>
       <constructor 
         desc = "non-default constructor"
-        argList   = "int id, const std::string name" 
-        initList  = "m_id(id),m_name(name)">
+        argList   = "int id, const std::string name, int type=L0DUDecision::Physics" 
+        initList  = "m_id(id),m_name(name),m_decisionType(type)">
       </constructor>
 
       <constructor 
         desc = "default constructor"
-        initList  = "m_id(0),m_name()">
+        initList  = "m_id(0),m_name(),m_decisionType(L0DUDecision::Physics)">
       </constructor>
 
  
-      <attribute name = "id"       desc = " L0DU Trigger index "  type = "unsigned int" />
-      <attribute name = "name"     desc = " L0DU Trigger name "   type = "std::string" />
+      <attribute name = "id"       desc = " L0DU SubTrigger index "  type = "unsigned int" />
+      <attribute name = "name"     desc = " L0DU SubTrigger name "   type = "std::string" />
       <attribute name = "channels" desc = " L0DU Channels"        type = "LHCb::L0DUChannel::Map"  nonconstaccessor='TRUE'/>
+      <attribute name = "decisionType"    desc = " Associated decision type "   type = "int" />          
 
 
-      <method name      = "emulatedDecision" desc = "get the trigger emulated decision" type  = "bool" >
+      <method name      = "emulatedDecision" desc = "get the trigger emulated decision" type  = "bool" const="TRUE">
         <code> 
-          for(LHCb::L0DUChannel::Map::iterator ic = m_channels.begin();ic!= m_channels.end() ; ic++ ){
-           if( (*ic).second-&gt;enable() &amp;&amp; (*ic).second-&gt;emulatedDecision() ) return true;
-          }
+          for(LHCb::L0DUChannel::Map::const_iterator ic = m_channels.begin();ic!= m_channels.end() ; ic++ ){
+           if( ( (*ic).second-&gt;decisionType() &amp; decisionType() ) == 0 )continue; 
+	   if(   (*ic).second-&gt;emulatedDecision() ) return true;
+	  }
 	  return false;
         </code>
       </method>

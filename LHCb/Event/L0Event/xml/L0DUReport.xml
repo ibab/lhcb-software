@@ -40,7 +40,7 @@
       </constructor>
         
 
-      <attribute  desc=" global decision"          name="decision"           type="bool"/>
+      <attribute  desc=" global decision value"    name="decisionValue"      type="int"/>
       <attribute  desc=" Timing Trigger Decision"  name="timingTriggerBit"   type="bool" />
       <attribute  desc=" Force Bit"                name="forceBit"           type="bool" />
       <attribute  desc=" L0DU algorithm configuration Key"         name="tck"        type="unsigned int" />
@@ -50,6 +50,7 @@
       <attribute  desc="'Elementary conditions' Summaries (ECS)"   name="conditionsValueSummaries" type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;" />
       <attribute  desc=" sum(Et) value over several BX"            name="sumEt"                    type="std::map&lt;int , unsigned int&gt;" getMeth='FALSE'/>
       <attribute  desc=" validity of the report"   name="valid"  type="bool"/>
+      <attribute  desc=" L0DU bank version number"   name="bankVersion"  type="int"/>
 
 
       <method
@@ -61,12 +62,35 @@
           m_channelsPreDecisionSummaries.clear();
           m_conditionsValueSummaries.clear();
           m_sumEt.clear();
-          m_decision=false;
+          m_decisionValue=0x0;
           m_timingTriggerBit = false;
           m_forceBit = false;
           m_tck = 0x0000;
           m_configuration = NULL;
           m_valid = true;
+        </code>
+      </method>
+
+
+
+      <method
+        name="decision"
+        desc="decision for a given type "
+        argList="int mask=L0DUDecision::Physics"
+        type="bool"
+        const='TRUE'>
+        <code> 
+          return (m_decisionValue &amp; mask) != 0 ;
+        </code>
+      </method>
+
+      <method
+        name="addDecisionValue"
+        desc="add decision for a given type "
+        argList="int decision"
+        type="void">
+        <code> 
+          m_decisionValue |= decision;
         </code>
       </method>
 
@@ -402,7 +426,7 @@
            if( channel == id ) return ((*it).second)->name();
           }          
           bad = &quot; Channel no &quot; ;
-          std::stringstream os(&quot; &quot;);
+          std::ostringstream os(&quot; &quot;);
           os &lt;&lt; channel;
           bad += os.str();
           bad += &quot; is not defined in the loaded configuration - Please check &quot; ;
@@ -428,7 +452,7 @@
            if(   cond == id ) return ((*it).second)->name();          
           }
           bad = &quot; Condition no &quot; ;
-          std::stringstream os(&quot;&quot;);
+          std::ostringstream os(&quot;&quot;);
           os &lt;&lt; cond;
           bad += os.str();
           bad += &quot; is not defined in the loaded configuration - Please check &quot; ;
@@ -440,8 +464,8 @@
 
       <method
         name="decisionFromSummary" 
-        argList="int bx=0"
-        desc="return the L0 decision computed from the ChannelsDecisionSummaries"
+        argList="int type=L0DUDecision::Physics, int bx=0"
+        desc="return the L0 decision (for a given type) evaluated from the ChannelsDecisionSummaries"
         type="bool" 
         const="TRUE">
         <code> 
@@ -449,7 +473,8 @@
           const LHCb::L0DUChannel::Map&amp; channels = m_configuration->channels();
           for(LHCb::L0DUChannel::Map::const_iterator it = channels.begin();it!=channels.end();it++){
            LHCb::L0DUChannel* channel = (*it).second;
-           if( channelDecision( channel->id(),bx  ) &amp;&amp; channel->enable() )return true;
+           if( (channel->decisionType() &amp; type) == 0 )continue;
+           if( channelDecision( channel->id(),bx  ) )return true;
           }
           return false;
         </code>
@@ -471,13 +496,16 @@
           const LHCb::L0DUTrigger::Map&amp; triggers = m_configuration->triggers();
           LHCb::L0DUTrigger::Map::const_iterator it = triggers.find( name );
           if( it == triggers.end()){
-            if( "L0" == name){
-              return decisionFromSummary( bx );
+            if( "L0" == name || "Physics" == name){
+              return decisionFromSummary( L0DUDecision::Physics, bx );
+            }else if( "Beam1" == name){
+              return decisionFromSummary( L0DUDecision::Beam1, bx );
+            }else if( "Beam2" == name){
+              return decisionFromSummary( L0DUDecision::Beam2, bx );
             }else{
               return false;
            }
           }
-
           const LHCb::L0DUChannel::Map&amp; channels = (*it).second-&gt;channels();
           for(LHCb::L0DUChannel::Map::const_iterator ic = channels.begin();ic != channels.end();++ic){
            if( channelDecisionByName( (*ic).second-&gt;name(), bx) )return true;

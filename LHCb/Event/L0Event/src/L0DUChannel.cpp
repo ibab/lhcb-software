@@ -1,4 +1,4 @@
-// $Id: L0DUChannel.cpp,v 1.6 2008-05-29 14:10:07 odescham Exp $
+// $Id: L0DUChannel.cpp,v 1.7 2010-01-20 15:59:06 odescham Exp $
 // Include files 
 #include <utility>
 #include <string>
@@ -42,19 +42,21 @@ LHCb::L0DUChannel*  LHCb::L0DUChannel::emulate(){
 
 std::string LHCb::L0DUChannel::summary(){
 
-  std::stringstream oscond(" ");
-  std::stringstream s(" ");
+  std::ostringstream oscond(" ");
+  std::ostringstream s(" ");
   for(LHCb::L0DUElementaryCondition::Map::iterator 
         icond = m_elementaryConditions.begin()  ;
       icond != m_elementaryConditions.end() ; icond++){
-    std::stringstream os(" ");
+    std::ostringstream os(" ");
     oscond << ((*icond).second)->summary() << std::endl;
   }
   s << " " << std::endl
     << " <=====  Channel (" << m_name   << " ) " 
     << "  ================> <** CHANNEL EMULATED DECISION **> = <"<< m_emulatedDecision << ">" << std::endl
-    << "    ===> Channel PreDecision  ? = <" << m_emulatedPreDecision << "> - ENABLE = " << m_enable<< std::endl
-    << "    ===> Is downscaled ? = <" << isDownscaled() << "> ( Accept Rate = " << m_rate << "/" << LHCb::L0DUCounter::Scale    
+    << "    ===> Channel PreDecision  ? = <" << m_emulatedPreDecision 
+    << "> - DecisionType = " << L0DUDecision::Name[m_decisionType] << std::endl
+    << "    ===> Downscale decision : <" << isDownscaled() << "> ( Accept Rate = " << m_rate << "/" 
+    << LHCb::L0DUCounter::Scale    
     << " -  Counter status " << m_counter  <<")"<< std::endl
     << "    - Based on " << m_elementaryConditions.size() << " Elementary Condition(s)  : " << std::endl
     << oscond.str();
@@ -65,16 +67,16 @@ std::string LHCb::L0DUChannel::summary(){
 
 std::string LHCb::L0DUChannel::description(){
 
-  std::stringstream oscond(" ");
-  std::stringstream s(" ");
+  std::ostringstream oscond(" ");
+  std::ostringstream s(" ");
   for(LHCb::L0DUElementaryCondition::Map::iterator 
         icond = m_elementaryConditions.begin()  ;
       icond != m_elementaryConditions.end() ; icond++){
-    std::stringstream os(" ");
+    std::ostringstream os(" ");
     oscond << ((*icond).second)->description() << std::endl;
   }
   s << " " << std::endl
-    << " -----  Channel (" << m_name   << " ) " << "> - ENABLE = " << m_enable 
+    << " -----  Channel ('" << L0DUDecision::Name[m_decisionType] << "|" << m_name   << "' ) " 
     << " ------ Accept Rate = " << m_rate << "/" << LHCb::L0DUCounter::Scale    <<  std::endl
     << "    - Based on " << m_elementaryConditions.size() << " Elementary Condition(s)  : " << std::endl
     << oscond.str();

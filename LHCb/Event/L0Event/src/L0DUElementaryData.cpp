@@ -1,4 +1,4 @@
-// $Id: L0DUElementaryData.cpp,v 1.7 2008-09-26 13:30:22 odescham Exp $
+// $Id: L0DUElementaryData.cpp,v 1.8 2010-01-20 15:59:07 odescham Exp $
 // Include files 
 #include <utility>
 #include <string>
@@ -35,11 +35,11 @@ v_operands){
 
 
 std::string LHCb::L0DUElementaryData::summary(){
-  std::stringstream s(" ");
-  std::stringstream ss(" ");
+  std::ostringstream s(" ");
+  std::ostringstream ss(" ");
   if(m_operator != "Id")
     ss << " = op[" << m_operator << "](" << operandsName() << ")";
-  std::stringstream sss(" ");
+  std::ostringstream sss(" ");
   if( scale() != 1.)sss<< "  ( => " << value() << " MeV) " ;
   s << " [ " << m_name << ss.str() << "  : " <<  digit() << sss.str() << " ] ";
   return s.str();
@@ -47,8 +47,8 @@ std::string LHCb::L0DUElementaryData::summary(){
 
 
 std::string LHCb::L0DUElementaryData::description(){
-  std::stringstream s(" ");
-  std::stringstream ss(" ");
+  std::ostringstream s(" ");
+  std::ostringstream ss(" ");
   if(m_operator != "Id")ss << " = [" << m_operator << "](" << m_operandsName << ")" ;
   s << "[ " << m_name << " " << ss.str() << "] ";
   return s.str();

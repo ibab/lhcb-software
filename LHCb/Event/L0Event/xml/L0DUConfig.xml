@@ -3,23 +3,41 @@
 <gdd>
   <package name="L0Event">
 
+
+
+    <namespace
+      desc="L0DU template configuration attributes"
+      name="L0DUTemplateConfig"
+      author="O. Deschamps">
+      <attribute
+        desc="default name of the Template configuration" 
+        name="Name" 
+        type="static const std::string" 
+        init='"Template"'/>
+      <attribute
+        desc="fake TCK value of the Template configuration" 
+        name="TCKValue" 
+        type="static const long" 
+        init="0x10000"/>
+    </namespace>
     
-    <class 
-      author="Olivier Deschamps"
-      desc="This class represents the keyed L0DU Configuration"
-      name="L0DUConfig"
-      serializers="FALSE">
+    <class
+     author="Olivier Deschamps"
+     desc="This class represents the keyed L0DU Configuration"
+     name="L0DUConfig"
+     serializers="FALSE">
       <base   name = "KeyedObject&lt;unsigned int&gt;" />
       &KeyedObject;
-
+      
       <location name = "Default"   place = "Trig/L0/L0DUConfig"  />
       <location name = "Emulated"  place = "Emu/L0/L0DUConfig"  />
-
-
+      
+      
       <import name="Event/L0DUElementaryData"/>
       <import name="Event/L0DUElementaryCondition"/>
       <import name="Event/L0DUChannel"/>
       <import name="Event/L0DUTrigger"/>
+      <import name="Event/L0DUTemplateConfig"/> 
       <import name="string" std="TRUE"/>
 
       <typedef
@@ -32,21 +50,20 @@
 
       <constructor
         desc     = "Default constructor"
-        initList = "Base ( 0x0000   ), m_recipe(), m_definition(),m_data(),m_conditions(),m_channels(),m_triggers()"
+        initList = "Base ( 0x0000   ), m_recipe(), m_definition(),m_data(),m_conditions(),m_channels(),m_triggers(),m_completed(false)"
         > <code/></constructor>
 
       <constructor
         desc     = "non-default constructor"
         argList  = "unsigned int tck "
-        initList = "Base ( tck ), m_recipe(), m_definition(),m_data(),m_conditions(),m_channels(),m_triggers()"
+        initList = "Base ( tck ), m_recipe(), m_definition(),m_data(),m_conditions(),m_channels(),m_triggers(),m_completed(false)"
         > <code/> </constructor>
 
 
       <constructor 
         desc     = "Copy Constructor" 
         argList  = "LHCb::L0DUConfig rh"
-        initList = "Base(rh.key() ), m_recipe(rh.recipe()),m_definition(rh.definition() ), m_data(rh.data() ), m_conditions (rh.conditions() )
-        , m_channels(rh.channels() ),m_triggers(rh.triggers() )"
+        initList = "Base(rh.key() ), m_recipe(rh.recipe()),m_definition(rh.definition() ), m_data(rh.data() ), m_conditions (rh.conditions() ), m_channels(rh.channels() ),m_triggers(rh.triggers()),m_completed(rh.completed()) "
         > <code/> </constructor>
 
 
@@ -56,6 +73,9 @@
       <attribute name = "conditions" desc = " L0DU Elementary condition" type = "LHCb::L0DUElementaryCondition::Map"  nonconstaccessor='TRUE'/>
       <attribute name = "channels" desc = " L0DU channels" type = "LHCb::L0DUChannel::Map"  nonconstaccessor='TRUE'/>      
       <attribute name = "triggers" desc = "Set of L0DU channels" type = "LHCb::L0DUTrigger::Map"  nonconstaccessor='TRUE'/>      
+      <attribute name = "completed" desc = "Complete Configuration (i.e. contain Processor Data Value -> ready for emulation)" type = "bool"  nonconstaccessor='TRUE'/>      
+
+
 
       <method desc   = "return Trigger Configuration Key @alias of key() " name   = "tck" type   = "unsigned int" const = 'TRUE'><code>return key();</code></method>
       <method desc   = "delete MAPs content" name="release" type="void">
@@ -84,6 +104,42 @@
 
       <method name  = "description" desc = "L0DUConfig  short description" type  = "std::string" > </method>
       <method name  = "summary" desc = "L0DUConfig full summary after processing" type  = "std::string" > </method>
+
+
+
+      <method name  = "numberOfChannels" 
+	      desc = "Count the number channels with a given decisionType (default ANY)" 
+	      type  = "int" 
+	      argList="int mask=L0DUDecision::Any"
+              const="TRUE">
+        <code>
+	  int k = 0; 
+          for(LHCb::L0DUChannel::Map::const_iterator it = m_channels.begin();it!=m_channels.end();it++){
+	  const LHCb::L0DUChannel* channel = (*it).second;
+          if( mask == 0 &amp;&amp; channel->decisionType() == 0)k++;
+	  else if( ( channel->decisionType() &amp; mask ) == 0)continue;
+	  else k++;
+          }
+	  return k;
+        </code>
+      </method>
+      <method name  = "numberOfTriggers" 
+	      desc = "Count the number trigger with a given decisionType (default ANY)" 
+	      type  = "int" 
+	      argList="int mask=L0DUDecision::Any"
+              const="TRUE">
+        <code>
+	  int k = 0; 
+          for(LHCb::L0DUTrigger::Map::const_iterator it = m_triggers.begin();it!=m_triggers.end();it++){
+	  const LHCb::L0DUTrigger* trigger = (*it).second;
+          if( mask == 0 &amp;&amp; trigger->decisionType() == 0)k++;          
+	  else if( ( trigger->decisionType() &amp; mask ) == 0 )continue;
+	  else k++;
+          }
+	  return k;
+        </code>
+      </method>
+
 
 
       <method name  = "resetChannelCounters" desc = "reset all channel counters" type  = "void" >
@@ -121,9 +177,9 @@
         </code>
       </method>
 
-      <method name  = "emulated" desc = "return true when all channels are emulated" type  = "bool" >
+      <method name  = "emulated" desc = "return true when all channels are emulated" type  = "bool"         const="TRUE">
         <code>
-          for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
+          for(LHCb::L0DUChannel::Map::const_iterator it = m_channels.begin();it!=m_channels.end();it++){
           if( !((*it).second)->emulated() )return false;
           }
           return true;
@@ -150,30 +206,58 @@
       </method>
 
 
-      <method name  = "emulatedDecision" desc = "global emulated decision (incl. downscaling)" type  = "bool" >
+      <method name  = "emulatedDecision" 
+              desc = "global emulated decision (incl. downscaling) for a given decision" 
+              type  = "bool" 
+              argList = "int mask=L0DUDecision::Physics"
+              const="TRUE">
         <code>
-          for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
-           LHCb::L0DUChannel* channel = (*it).second;
-           if( channel->emulatedDecision() &amp;&amp; channel->enable() )return true;
-          }
-	  return false;
-        </code>
+          return ( emulatedDecisionValue() &amp; mask) != 0;
+         </code>
       </method>
 
 
-      <method name  = "emulatedPreDecision" desc = "global emulated decision (without downscaling)" type  = "bool" >
+      <method name  = "emulatedDecisionValue" 
+              desc = "global emulated decision (incl. downscaling)" 
+              type  = "int" 
+              const="TRUE">
         <code>
-          for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
+          int value = 0;
+          for(LHCb::L0DUChannel::Map::const_iterator it = m_channels.begin();it!=m_channels.end();it++){
            LHCb::L0DUChannel* channel = (*it).second;
-           if( channel->emulatedPreDecision() &amp;&amp; channel->enable() )return true;
+           if( channel->emulatedDecision() )value |= channel->decisionType();
           }
-	  return false;
+	  return value;
+         </code>
+      </method>
+
+
+      <method name  = "emulatedPreDecision" 
+              desc = "global emulated decision (without downscaling)" 
+              type  = "bool"
+              argList = "int mask=L0DUDecision::Physics" 
+              const="TRUE">
+        <code>
+          return (emulatedPreDecisionValue() &amp; mask) != 0;
+         </code>
+      </method>
+
+
+
+      <method name  = "emulatedPreDecisionValue" desc = "global emulated decision (without downscaling)" type  = "int"               const="TRUE">
+        <code>
+          int value = 0;
+          for(LHCb::L0DUChannel::Map::const_iterator it = m_channels.begin();it!=m_channels.end();it++){
+           LHCb::L0DUChannel* channel = (*it).second;
+           if( channel->emulatedPreDecision() ) value |=  channel->decisionType();
+          }
+	  return value;
         </code>
       </method>
 
-      <method name  = "isDownscaled" desc = "return true if the L0 decision would be yes without any downscaling" type  = "bool" >
+      <method name  = "isDownscaled" desc = "return the downscaling decision as (emulatedDecision == emulatedPreDecision)" type  = "bool"  const="TRUE">
         <code>
-          return (emulatedPreDecision() == emulatedDecision() );
+          return (emulatedPreDecisionValue() == emulatedDecisionValue() );
         </code>
       </method>
 

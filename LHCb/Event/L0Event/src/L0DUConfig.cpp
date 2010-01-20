@@ -1,4 +1,4 @@
-// $Id: L0DUConfig.cpp,v 1.4 2008-07-03 18:31:46 odescham Exp $
+// $Id: L0DUConfig.cpp,v 1.5 2010-01-20 15:59:06 odescham Exp $
 // Include files 
 #include <utility>
 #include <string>
@@ -17,14 +17,14 @@
 
 std::string LHCb::L0DUConfig::summary(){
 
-  std::stringstream oscond(" ");
-  std::stringstream s(" ");
+  std::ostringstream oscond(" ");
+  std::ostringstream s(" ");
   for(LHCb::L0DUChannel::Map::iterator 
         icond = m_channels.begin()  ; icond != m_channels.end() ; icond++){
-    std::stringstream os(" ");
+    std::ostringstream os(" ");
     oscond << ((*icond).second)->summary() << std::endl;
   }
-  std::stringstream ostrig("");
+  std::ostringstream ostrig("");
   if(triggers().size() > 0 ){
     ostrig << " --> " << triggers().size() << " Trigger sets are defined : " << std::endl;
     for(LHCb::L0DUTrigger::Map::const_iterator it = triggers().begin(); it!=triggers().end();++it){
@@ -32,10 +32,18 @@ std::string LHCb::L0DUConfig::summary(){
     } 
   }
 
+  std::ostringstream dec("");
+  int mask = LHCb::L0DUDecision::Any;
+  int typ  = 0x1;
+  while(mask != 0x0){
+    dec << "   Emulated Decision (" << LHCb::L0DUDecision::Name[typ] << "): " << emulatedDecision(typ) << std::endl;
+    typ  = typ  << 1;
+    mask = mask >> 1;
+  }
 
   s << " " << std::endl
     << " <-----  L0DUConfig (" << key()   << " ) " << " --------------->" <<std::endl
-    << "   Decision : " << emulatedDecision() << std::endl
+    << dec.str()
     << "   Recipe name : '" << m_recipe << "'" << std::endl
     << "   Algorithm description : " << m_definition << std::endl
     << oscond.str()
@@ -50,17 +58,17 @@ std::string LHCb::L0DUConfig::summary(){
 
 std::string LHCb::L0DUConfig::description(){
 
-  std::stringstream oscond(" ");
-  std::stringstream s(" ");
+  std::ostringstream oscond(" ");
+  std::ostringstream s(" ");
   for(LHCb::L0DUChannel::Map::iterator 
         icond = m_channels.begin()  ; icond != m_channels.end() ; icond++){
-    std::stringstream os(" ");
+    std::ostringstream os(" ");
     oscond << ((*icond).second)->description() << std::endl;
   }
 
-  std::stringstream ostrig("");
+  std::ostringstream ostrig("");
   if(triggers().size() > 0 ){
-    ostrig << " --> " << triggers().size() << " Trigger sets are defined : " << std::endl;
+    ostrig << " --> " << triggers().size() << " SubTrigger(s) are defined : " << std::endl;
     for(LHCb::L0DUTrigger::Map::const_iterator it = triggers().begin(); it!=triggers().end();++it){
       ostrig << (*it).second->description() ;
     } 
