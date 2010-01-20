@@ -1,21 +1,21 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.134 2010-01-12 17:42:14 jpalac Exp $
+! $Id: release.notes,v 1.135 2010-01-20 16:51:07 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r25 2010-01-20 =========================
 ! 2010-01-12 - Juan PALACIOS
  - xml/RecVertex.h
     add typedefs:
 
-      1. Selection  for container of shared particles (wihtout ownership)
+      1. Selection  for container of shared particles (without ownership)
       2. Range      for uniform access to underlying containers of particles 
                     ( KeyedContainer or SharedContainer ) 
 
  - cmt/requirements
   . Increase version to v2r25
-
 
 !========================= RecEvent v2r24 2009-11-22 =========================
 ! 2009-11-20 - Chris Jones
