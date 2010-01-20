@@ -104,14 +104,14 @@ public:
   */
   void updateAll( bool endOfRun , const IInterface* owner = 0) ;
   //void resetHistos( const IInterface* owner = 0 ) ;
-  void resetHistos(bool saveHistos);
+  //void resetHistos(bool saveHistos);
 
 private:
 
   std::string m_utgid; 
   DimPropServer* m_dimpropsvr;
   DimCmdServer* m_dimcmdsvr;
-  DimRpcGaucho* m_dimRpcGaucho;
+//  DimRpcGaucho* m_dimRpcGaucho;
   
   // Map associating to each algorithm name a set with the info 
   // names from this algorithm
@@ -151,7 +151,7 @@ public:
   int m_disableMonRate;
   int m_disableDimPropServer;
   int m_disableDimCmdServer;
-  int m_disableDimRcpGaucho;
+  //int m_disableDimRcpGaucho;
   
   int m_disableMonObjectsForBool;
   int m_disableMonObjectsForInt;

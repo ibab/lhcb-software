@@ -35,6 +35,7 @@ SaverSvc::SaverSvc(const std::string& name, ISvcLocator* ploc) : Service(name, p
   m_monitoringFarm = true;
   m_enablePostEvents = true;
   m_finalizing = false;
+  m_runNb=0;
 }
 
 SaverSvc::~SaverSvc() {}
@@ -168,7 +169,8 @@ StatusCode SaverSvc::initialize() {
        serviceName = m_tmpPart+"_Adder_1/GauchoJob/MonitorSvc/monRate/RunNumber"; 
     }
     
-    m_runNbSvc = new DimInfoRunNb(serviceName.c_str());
+    m_runNbSvc = new DimInfoRunNb(serviceName.c_str(),utgidParts[0]);
+   // m_runNb = processMgr->getrunNumber(false);
        
     std::string *fileName = processMgr->fileNamePointer();
     std::string name;
@@ -197,7 +199,7 @@ void SaverSvc::handle(const Event&  ev) {
   std::vector<ProcessMgr *>::iterator it;
   int i=0;
   for (it = m_processMgr.begin(); it < m_processMgr.end(); it++){
-    m_processMgr[i]->setrunNumber(m_runNbSvc);
+   m_processMgr[i]->setrunNumber(m_runNbSvc);
     i++;
   }
   
@@ -206,10 +208,11 @@ void SaverSvc::handle(const Event&  ev) {
   if (s_saveHistos == ev.type) {
     ProcessMgr* processMgr = (ProcessMgr*) ev.data;    
     save(processMgr).ignore();    
+    //update run number for next timer save
+    //processMgr->getrunNumber(true);
   }
   if(s_startTimer == ev.type) {
     ProcessMgr* processMgr = (ProcessMgr*) ev.data;
-
     processMgr->dimTimerProcess()->start(m_refreshTime);
   }
   else if(s_stopTimer == ev.type) {
@@ -257,7 +260,7 @@ void SaverSvc::handle(const Incident& inc) {
   std::vector<ProcessMgr *>::iterator it;
   int i=0;
   for (it = m_processMgr.begin(); it < m_processMgr.end(); it++){
-    m_processMgr[i]->setrunNumber(m_runNbSvc);
+   // m_processMgr[i]->setrunNumber(m_runNbSvc);
     IocSensor::instance().send(this, s_saveHistos, *it);
     i++;
   }
@@ -269,7 +272,7 @@ StatusCode SaverSvc::finalize() {
 //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
   m_enablePostEvents = false;
-  m_finalizing = false;
+  m_finalizing = true;
   msg << MSG::INFO<< "Save historgams on finalized..... " << endmsg;
   // No longer accept incidents!
   if ( m_incidentSvc ) {
@@ -309,8 +312,18 @@ StatusCode SaverSvc::save(ProcessMgr* processMgr) {
     std::string *fileName = processMgr->fileNamePointer();
       
     if (!m_finalizing) processMgr->setrunNumber(m_runNbSvc);
-    processMgr->write();    
-    
+  
+    //when the runnumber changes we should stop and restart the dim timer
+    if (processMgr->getrunNumber(false)!=0) {
+       processMgr->dimTimerProcess()->stop();
+       processMgr->write(); 
+       //set the runnumber of the next run
+       if (!m_finalizing) {
+          m_runNb=processMgr->getrunNumber(true);        
+          processMgr->dimTimerProcess()->start(m_refreshTime);
+       }	  
+    }   
+    else processMgr->write();     
     msg << MSG::DEBUG << "Finished saving histograms in file "<< *fileName << endreq;
   
   return StatusCode::SUCCESS;

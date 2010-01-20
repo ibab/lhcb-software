@@ -62,6 +62,7 @@ private:
   
   // MonRate information
   int m_runNumber;  
+  int m_eorNumber;
   unsigned int m_triggerConfigurationKey;
   unsigned int tck;
   ulonglong gpstime;
