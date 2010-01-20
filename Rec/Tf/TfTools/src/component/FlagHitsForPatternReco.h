@@ -72,7 +72,7 @@ private:
 
   std::vector<std::string> m_effCorrections;
 
-  char* beginsWith (char* input, char* comp);
+  char* beginsWith (char* input, const char* comp);
   
   void readVeloString(char* input);
   void readOTString(char* input);

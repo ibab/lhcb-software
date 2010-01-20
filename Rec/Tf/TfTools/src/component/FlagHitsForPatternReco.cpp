@@ -203,7 +203,6 @@ StatusCode FlagHitsForPatternReco::execute(){
    unsigned long quarter    = 999;
    unsigned long module     = 999;
    double efficiency = 1.0;
-
    
    char* newstring = beginsWith(oldstring,"S");
    
@@ -493,7 +492,7 @@ StatusCode FlagHitsForPatternReco::execute(){
  
 
 
-char* FlagHitsForPatternReco::beginsWith (char* input, char* comp){
+char* FlagHitsForPatternReco::beginsWith (char* input, const char* comp){
   
   if (std::strlen(input) < std::strlen(comp))
     return NULL;
