@@ -66,6 +66,7 @@ private:
   int m_refreshTime;
   std::string m_saveDir;
   int m_saveDiff;
+  int m_runNb;
   bool m_enablePostEvents;
   
   DimService* m_dimSvcSaveSetLoc;  

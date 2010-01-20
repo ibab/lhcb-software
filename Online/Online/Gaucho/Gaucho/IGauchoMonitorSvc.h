@@ -1,4 +1,4 @@
-// $Id: IGauchoMonitorSvc.h,v 1.18 2009-10-16 14:59:53 evh Exp $
+// $Id: IGauchoMonitorSvc.h,v 1.19 2010-01-20 16:06:03 evh Exp $
 #ifndef KERNEL_IGAUCHOMONITORSVC_H 
 #define KERNEL_IGAUCHOMONITORSVC_H 1
 
@@ -43,7 +43,7 @@ public:
   virtual void updateSvc( const std::string& name, bool endOfRun=false, const IInterface* owner = 0 ) = 0;
   virtual void updateAll( bool endOfRun=false , const IInterface* owner = 0) = 0;
   //virtual void resetHistos( const IInterface* owner = 0 ) = 0; 
-  virtual void resetHistos(bool saveHistos) = 0;
+  //virtual void resetHistos(bool saveHistos) = 0;
 
 //   virtual void setTimerElapsed(bool timerelapsed) = 0;
 //   virtual bool getTimerElapsed() const = 0;
