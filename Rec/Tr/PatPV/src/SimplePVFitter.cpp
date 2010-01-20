@@ -1,4 +1,4 @@
-// $Id: SimplePVFitter.cpp,v 1.1 2009-12-16 11:51:51 witekma Exp $
+// $Id: SimplePVFitter.cpp,v 1.2 2010-01-20 13:46:49 rlambert Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -18,7 +18,17 @@ DECLARE_TOOL_FACTORY(SimplePVFitter);
 SimplePVFitter::SimplePVFitter(const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent)
-  : GaudiTool(type,name,parent) {
+  : GaudiTool(type,name,parent),
+    m_minTr(0),
+    m_Iterations(0),
+    m_maxChi2(0.),
+    m_extrapRCut(0.),
+    m_maxDeltaZ(0.),
+    m_acceptTrack(0.),
+    m_pvTracks(0),
+    m_linExtrapolator(0),
+    m_fullExtrapolator(0)
+{
   declareInterface<IPVFitter>(this);
   // Minimum number of tracks in vertex  
   declareProperty("MinTracks", m_minTr = 5);

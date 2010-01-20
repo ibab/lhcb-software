@@ -1,4 +1,4 @@
-// $Id: PVSeed3DTool.cpp,v 1.3 2008-08-28 17:38:45 witekma Exp $
+// $Id: PVSeed3DTool.cpp,v 1.4 2010-01-20 13:46:49 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -23,6 +23,10 @@ public:
   EPoint position;
   EPoint error;
   int multiplicity;
+  
+  seedPoint():position(),error(),multiplicity(0) {};
+  
+  
 };
 
 class seedTrack 
@@ -31,6 +35,8 @@ public:
   const Track* lbtrack;
   int nclose;
   int used;
+  
+  seedTrack():lbtrack(0),nclose(0),used(0) {};
 };
 
 class closeNode 
@@ -40,6 +46,8 @@ public:
   double distance;
   EPoint closest_point;
   int take;
+  
+  closeNode():seed_track(0),distance(0.),closest_point(),take(0){};
 };
 
 bool  trackcomp( const seedTrack &first, const seedTrack &second ) {
@@ -53,7 +61,10 @@ bool  trackcomp( const seedTrack &first, const seedTrack &second ) {
 PVSeed3DTool::PVSeed3DTool( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ),
+    m_TrackPairMaxDistance(0.),
+    m_MinCloseTracks(0),
+    m_zMaxSpread(0.)
 {
   declareInterface<IPVSeeding>(this);
   declareProperty("TrackPairMaxDistance", m_TrackPairMaxDistance = 1. * Gaudi::Units::mm );

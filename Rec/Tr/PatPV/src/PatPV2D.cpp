@@ -1,4 +1,4 @@
-// $Id: PatPV2D.cpp,v 1.5 2008-12-06 19:44:49 witekma Exp $
+// $Id: PatPV2D.cpp,v 1.6 2010-01-20 13:46:49 rlambert Exp $
 // Include files
  
 // from Gaudi
@@ -28,7 +28,22 @@ DECLARE_ALGORITHM_FACTORY( PatPV2D );
 //=============================================================================
 PatPV2D::PatPV2D( const std::string& name,
                   ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_maxNumPv(0),
+    m_minMult(0),
+    m_dzSeparHisto(0.),
+    m_x0MS(0.),
+    m_scatCons(0.),
+    m_saveSeedsAsPV(false),
+    m_phiOfSector(0),
+    m_multiQualityPV(0),
+    m_minBackQualityPV(0),
+    m_dzQualityPV(0.),
+    m_inputTracks(0),
+    m_outputVertices(0),
+    m_pvSeedTool(0),
+    m_inputTracksName(""),
+    m_outputVerticesName("")
 {
   declareProperty( "maxNumPv"        , m_maxNumPv      = 10             );
   declareProperty( "maxIter"         , m_maxIter       =  3             );

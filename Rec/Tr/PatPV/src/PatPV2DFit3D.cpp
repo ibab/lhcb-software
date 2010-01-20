@@ -1,4 +1,4 @@
-// $Id: PatPV2DFit3D.cpp,v 1.4 2010-01-11 10:10:48 witekma Exp $
+// $Id: PatPV2DFit3D.cpp,v 1.5 2010-01-20 13:46:49 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -30,7 +30,22 @@ DECLARE_ALGORITHM_FACTORY( PatPV2DFit3D );
 //=============================================================================
 PatPV2DFit3D::PatPV2DFit3D( const std::string& name,
                   ISvcLocator* pSvcLocator)
-  : GaudiHistoAlg ( name , pSvcLocator )
+  : GaudiHistoAlg ( name , pSvcLocator ),
+    m_maxNumPv(0),
+    m_maxIter(0),
+    m_dzSeparHisto(0.0),
+    m_saveSeedsAsPV(false),
+    m_sTracks(0),
+    m_phiOfSector(0),
+    m_multiQualityPV(0),
+    m_minBackQualityPV(0),
+    m_dzQualityPV(0),
+    m_inputTracks(0),
+    m_outputVertices(0),
+    m_pvSeedTool(0),
+    m_inputTracksName(""),
+    m_outputVerticesName(""),
+    m_pvsfit(0)
 {
   declareProperty( "maxNumPv"        , m_maxNumPv      = 10             );
   declareProperty( "maxIter"         , m_maxIter       =  3             );
@@ -41,6 +56,17 @@ PatPV2DFit3D::PatPV2DFit3D( const std::string& name,
   declareProperty( "SaveSeedsAsPV"   , m_saveSeedsAsPV    =  false      );
   declareProperty( "InputTracksName"    , m_inputTracksName     =  LHCb::TrackLocation::RZVelo);
   declareProperty( "OutputVerticesName" , m_outputVerticesName  =  LHCb::RecVertexLocation::Velo2D );
+  
+  //construct double arrays
+  for (int it=0; it<2; it++)
+  {
+    m_boxOffsetLeft[it]=Gaudi::XYZVector();
+    m_boxOffsetRight[it]=Gaudi::XYZVector();
+    m_zLeft[it]=0;
+    m_zRight[it]=0;
+    
+  }
+  
 }
 //=============================================================================
 // Destructor
@@ -84,7 +110,9 @@ StatusCode PatPV2DFit3D::initialize() {
     err() << "Unable to retrieve the PVOfflineTool" << endmsg;
     return  StatusCode::FAILURE;
   }
-
+  
+  setProduceHistos(false);
+  
   return StatusCode::SUCCESS;
 };
 

@@ -1,4 +1,4 @@
-// $Id: PVOfflineTool.cpp,v 1.6 2009-12-16 11:51:52 witekma Exp $
+// $Id: PVOfflineTool.cpp,v 1.7 2010-01-20 13:46:49 rlambert Exp $
 // Include files:
 // from Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
@@ -18,7 +18,16 @@ DECLARE_TOOL_FACTORY(PVOfflineTool);
 PVOfflineTool::PVOfflineTool(const std::string& type,
                              const std::string& name,
                              const IInterface* parent)
-  : GaudiTool(type,name,parent) {
+  : GaudiTool(type,name,parent),
+    m_requireVelo(false),
+    m_saveSeedsAsPV(false),
+    m_outputVertices(""),
+    m_pvfit(0),
+    m_pvSeedTool(0),
+    m_inputTracks(0),
+    m_pvFitterName(""),
+    m_pvSeedingName("")
+{
   declareInterface<IPVOfflineTool>(this);
   declareProperty("RequireVelo",   m_requireVelo   = true);
   declareProperty("SaveSeedsAsPV", m_saveSeedsAsPV = false);
@@ -146,16 +155,9 @@ StatusCode PVOfflineTool::reconstructMultiPVFromTracks(
 
   std::vector<const LHCb::Track*> rtracks;
   rtracks = tracks2use;
-
+  
   outvtxvec.clear();
-
-  // monitor quality of zseeds. Save them as fake PVs.
-//-//  if(m_saveSeedsAsPV) {
-//-//    storeDummyVertices(seeds, rtracks, outvtxvec);
-//-//    return StatusCode::SUCCESS;
-//-//  }
-
-
+  
   int nvtx_before = -1;
   int nvtx_after  =  0;
   while ( nvtx_after > nvtx_before ) {
@@ -169,6 +171,20 @@ StatusCode PVOfflineTool::reconstructMultiPVFromTracks(
     for (is = seeds.begin(); is != seeds.end(); is++) {
       LHCb::RecVertex recvtx;
       //    Gaudi::XYZPoint *pxyz = &is;
+      if(msgLevel(MSG::VERBOSE)) {
+        verbose() << "ready to fit" << endmsg;
+      }
+      if (m_pvfit==NULL) warning() << "something is null " 
+                                   << " *m_pvfit " << (m_pvfit==NULL) 
+                                   << endmsg;
+      //if(msgLevel(MSG::VERBOSE)) 
+      //{
+      //  verbose() << "preparing to call the fit with" << endmsg;
+      //  verbose() << "m_pvfit->fitVertex( *is, rtracks, recvtx );" << endmsg;
+      //  verbose() << "m_pvfit->fitVertex( "<< *is << "," << rtracks << "," << recvtx << ");" << endmsg;
+      //  verbose() << "about to call the fit" << endmsg;
+      //}
+      
       StatusCode scvfit = m_pvfit->fitVertex( *is, rtracks, recvtx );
       removeTracksUsedByVertex(rtracks, recvtx);
       if(scvfit == StatusCode::SUCCESS) {
@@ -177,9 +193,9 @@ StatusCode PVOfflineTool::reconstructMultiPVFromTracks(
           outvtxvec.push_back(recvtx);
         }
       }
-    }
+    }//iterate on seeds
     nvtx_after = outvtxvec.size();   
-  }
+  }//iterate on vtx
 
   return StatusCode::SUCCESS;
 
@@ -354,6 +370,11 @@ void PVOfflineTool::removeTracksUsedByVertex(std::vector<const LHCb::Track*>& tr
     tracks2remove.push_back(ptr); 
   }
   removeTracks(tracks, tracks2remove);
+  tracks2remove.clear();
+  
+  if(msgLevel(MSG::VERBOSE)) {
+    verbose() << " leaving removeTracksUsedByVertex method" << endmsg;
+  }
 }
 
 //=============================================================================

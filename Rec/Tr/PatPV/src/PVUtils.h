@@ -1,4 +1,4 @@
-// $Id: PVUtils.h,v 1.2 2007-12-04 08:46:52 witekma Exp $
+// $Id: PVUtils.h,v 1.3 2010-01-20 13:46:49 rlambert Exp $
 #ifndef PVUTILS_H 
 #define PVUTILS_H 1
 
@@ -15,6 +15,8 @@ namespace LHCb {
 class PVTrack 
 {
 public:
+  PVTrack():refTrack(0),stateG(),unitVect(),isUsed(false),vd0(),d0(0),err2d0(0),chi2(0),weight(0){};
+  
   const LHCb::Track* refTrack;
   // Current state of the track at the current point
   LHCb::State stateG;
@@ -44,6 +46,10 @@ class PVVertex {
 public:
   PVTrackPtrs pvTracks;
   LHCb::RecVertex primVtx;
+  
+  PVVertex():pvTracks(0),primVtx(0){};
+
+  
 };
 typedef std::vector<PVVertex> PVVertices;
 

@@ -1,4 +1,4 @@
-// $Id: LSAdaptPV3DFitter.cpp,v 1.6 2009-12-22 12:38:26 graven Exp $
+// $Id: LSAdaptPV3DFitter.cpp,v 1.7 2010-01-20 13:46:48 rlambert Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -17,7 +17,17 @@ DECLARE_TOOL_FACTORY(LSAdaptPV3DFitter);
 LSAdaptPV3DFitter::LSAdaptPV3DFitter(const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent)
-  : GaudiTool(type,name,parent) {
+  : GaudiTool(type,name,parent),
+    m_minTr(0),
+    m_Iterations(0),
+    m_maxIP2PV(0.),
+    m_maxDeltaZ(0.),
+    m_minTrackWeight(0.),
+    m_TrackErrorScaleFactor(0.),
+    m_x0MS(0.),
+    m_scatCons(0.),
+    m_pvTracks(0)
+{
   declareInterface<IPVFitter>(this);
   // Minimum number of tracks in vertex
   declareProperty("MinTracks", m_minTr = 5);
@@ -59,6 +69,8 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
                                       std::vector<const LHCb::Track*>& rTracks,
                                       LHCb::RecVertex& vtx)
 {
+  if(msgLevel(MSG::DEBUG)) debug() << "================Test==================" << endmsg;
+  
   Gaudi::XYZPoint xyzvtx = seedPoint;
   // prepare tracks
   m_pvTracks.clear();
@@ -103,13 +115,23 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
         impactParameterVector(xyzvtx, pvTrack->stateG.position(), pvTrack->unitVect);
       pvTrack->vd0 = ipVector;
       pvTrack->d0 = ipVector.Mag2();
-      pvTrack->chi2 = pvTrack->d0/ pvTrack->err2d0;
+      if(pvTrack->err2d0<myzero) 
+      {
+        if(msgLevel(MSG::DEBUG)) debug() << "fitVertex: pvTrack error is too small for computation" << endmsg;
+        pvTrack->chi2=pvTrack->d0/myzero;
+      }
+      else pvTrack->chi2 = pvTrack->d0/ pvTrack->err2d0;
 
       pvTrack->weight = getTukeyWeight(pvTrack->chi2, nbIter);
 
       if (  pvTrack->weight > m_minTrackWeight ) ntrin++;
 
-      double invs = (2.0 / pvTrack->err2d0) * pvTrack->weight;
+      double invs = 1.0;
+      if(pvTrack->err2d0<myzero) 
+      {
+        invs = (2.0 / myzero) * pvTrack->weight;
+      }
+      else invs = (2.0 / pvTrack->err2d0) * pvTrack->weight;
 
       double vd0Std[3];
       vd0Std[0] = ipVector.x();
@@ -225,7 +247,13 @@ void LSAdaptPV3DFitter::addTrackForPV(const LHCb::Track* pvtr,
   if(pvtrack.d0 > m_maxIP2PV*m_maxIP2PV) return;
   pvtrack.err2d0 = err2d0(pvtr);
   pvtrack.chi2 = 0;
-  if(pvtrack.err2d0 > 1.e-12) pvtrack.chi2 = (pvtrack.d0)/pvtrack.err2d0;
+  //does it make sense to add such an error... why is chi2 0 for this case? it should be a very big number
+  if(pvtrack.err2d0 > myzero) pvtrack.chi2 = (pvtrack.d0)/pvtrack.err2d0;
+  else
+  {
+    if(msgLevel(MSG::DEBUG)) debug() << "addTrackForPV: pvTrack error is too small for computation" << endmsg;
+    pvtrack.chi2=pvtrack.d0/myzero;
+  }
   // Keep reference to the original track
   pvtrack.refTrack = pvtr;
   pvTracks.push_back(pvtrack);

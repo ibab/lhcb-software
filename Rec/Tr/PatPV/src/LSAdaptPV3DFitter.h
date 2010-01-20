@@ -1,4 +1,4 @@
-// $Id: LSAdaptPV3DFitter.h,v 1.4 2009-12-22 12:38:26 graven Exp $
+// $Id: LSAdaptPV3DFitter.h,v 1.5 2010-01-20 13:46:48 rlambert Exp $
 #ifndef LSADAPTPVFITTER_H
 #define LSADAPTPVFITTER_H 1
 // from Gaudi
@@ -12,7 +12,7 @@
 #include "Event/Track.h"
 #include "Event/State.h"
 #include "Event/RecVertex.h"
-
+//#include <builtin>
 class LSAdaptPV3DFitter : public GaudiTool, virtual public IPVFitter {
 
 public:
@@ -39,6 +39,9 @@ private:
                           // track parameters to PV
   double m_scatCons;      // calculated from m_x0MS
   PVTracks m_pvTracks;
+  static const double myzero=1E-12;
+  //  inline sign
+  
 
   // Add track for PV
   void addTrackForPV(const LHCb::Track* str, PVTracks& pvTracks,
@@ -51,4 +54,5 @@ private:
   // Get Tukey's weight
   double getTukeyWeight(double trchi2, int iter);
 };
+//const unsigned double LSAdaptPV3DFitter::myzero=1E-12;
 #endif // LSADAPTPVFITTER_H

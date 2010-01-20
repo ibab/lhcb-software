@@ -4,6 +4,13 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2010-01-20 - Rob Lambert
+ - Fixed problem in PVUtils which was causing a FPE in the nightlies
+	 Savannah bug #61282
+ - Required creation of default constructors in classes
+ - Some additional /0 problems now protected, and all member variables
+   initialized explicitly throughout this package.
+
 !============================= PatPV v3r11p2 2010-01-14 ======================
 
 ! 2010-01-11 - Mariusz Witek

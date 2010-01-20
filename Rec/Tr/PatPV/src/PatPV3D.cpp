@@ -21,8 +21,11 @@ DECLARE_ALGORITHM_FACTORY( PatPV3D );
 // Standard constructor, initializes variables
 //=============================================================================
 PatPV3D::PatPV3D( const std::string& name,
-                                          ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ) 
+                  ISvcLocator* pSvcLocator)
+  : GaudiAlgorithm ( name , pSvcLocator ),
+  m_outputVertices(0),
+  m_outputVerticesName(""),
+  m_pvsfit(0)
 {
   declareProperty( "OutputVerticesName" , m_outputVerticesName  =  LHCb::RecVertexLocation::Velo3D );
 }

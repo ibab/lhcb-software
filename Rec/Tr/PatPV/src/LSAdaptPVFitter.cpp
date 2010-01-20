@@ -1,4 +1,4 @@
-// $Id: LSAdaptPVFitter.cpp,v 1.10 2009-12-16 11:51:52 witekma Exp $
+// $Id: LSAdaptPVFitter.cpp,v 1.11 2010-01-20 13:46:48 rlambert Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -18,7 +18,17 @@ DECLARE_TOOL_FACTORY(LSAdaptPVFitter);
 LSAdaptPVFitter::LSAdaptPVFitter(const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent)
-  : GaudiTool(type,name,parent) {
+  : GaudiTool(type,name,parent),
+    m_minTr(0),
+    m_Iterations(0),
+    m_maxChi2(0.),
+    m_extrapRCut(0.),
+    m_maxDeltaZ(0.),
+    m_acceptTrack(0.),
+    m_pvTracks(0),
+    m_linExtrapolator(0),
+    m_fullExtrapolator(0)
+{
   declareInterface<IPVFitter>(this);
   // Minimum number of tracks in vertex  
   declareProperty("MinTracks", m_minTr = 5);
@@ -74,16 +84,26 @@ StatusCode LSAdaptPVFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
                                       std::vector<const LHCb::Track*>& rTracks, 
                                       LHCb::RecVertex& vtx)
 {
+  if(msgLevel(MSG::VERBOSE)) {
+    verbose() << "fitVertex method" << endmsg;
+  }
+
   m_pvTracks.clear();
   PVVertex pvVertex;
-  std::vector<const LHCb::Track*>::iterator itr;
+
+  std::vector<const LHCb::Track*>::const_iterator itr;
   for(itr = rTracks.begin(); itr != rTracks.end(); itr++) {    
     const LHCb::Track* track = *itr;
     if ( !(track->hasVelo()) ) continue;
     addTrackForPV(track, m_pvTracks, seedPoint.z()).ignore();
   }
+  
   initVertex(m_pvTracks,pvVertex,seedPoint);
+  
   // Initial track cleaning
+  if(msgLevel(MSG::VERBOSE)) {
+    verbose() << "clean tracks" << endmsg;
+  }
   for(PVTrackPtrs::iterator itrack = pvVertex.pvTracks.begin(); 
       itrack != pvVertex.pvTracks.end();) {
     PVTrack* pvTrack = *itrack;
@@ -98,7 +118,7 @@ StatusCode LSAdaptPVFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
   // Check the number of tracks for PV candidate
   if((int)pvVertex.pvTracks.size() < m_minTr) {
     if(msgLevel(MSG::DEBUG)) {
-      verbose() << "Too few tracks to fit PV" << endmsg;
+      debug() << "Too few tracks to fit PV" << endmsg;
     }
     vtx = pvVertex.primVtx;
     vtx.setTechnique(LHCb::RecVertex::Primary);
@@ -107,7 +127,7 @@ StatusCode LSAdaptPVFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
 
   StatusCode scvfit = fit(pvVertex.primVtx,pvVertex.pvTracks);
   if (!scvfit.isSuccess() ) {
-    debug() << "PV fit failed" << endmsg;  
+    if(msgLevel(MSG::DEBUG)) debug() << "PV fit failed" << endmsg;  
   }
   
   vtx = pvVertex.primVtx;
@@ -356,7 +376,13 @@ StatusCode LSAdaptPVFitter::trackExtrapolate(PVTrack* pvTrack,
   covMatrix_xyVec_product = covMatrix * xyVec;
   pvTrack->err2d0 = xyVec[0] * covMatrix_xyVec_product[0] 
                   + xyVec[1] * covMatrix_xyVec_product[1];
-  pvTrack->chi2 = (pvTrack->d0 * pvTrack->d0)/ pvTrack->err2d0;
+  if(pvTrack->err2d0>myzero) pvTrack->chi2 = (pvTrack->d0 * pvTrack->d0)/ pvTrack->err2d0;
+  else
+  {
+    if(msgLevel(MSG::DEBUG)) debug() << "trackExtrapolate: pvTrack error is too small for computation" << endmsg;
+    pvTrack->chi2 = (pvTrack->d0 * pvTrack->d0)/ myzero;
+  }
+  
   return StatusCode::SUCCESS;
 }
 
@@ -388,7 +414,13 @@ void LSAdaptPVFitter::addsubTrack(PVTrack* pvTrack,
                                   ROOT::Math::SVector<double,3>& d0vec,
                                   double invs)
 {
-  invs *= (2.0 / pvTrack->err2d0) * pvTrack->weight;
+  if(pvTrack->err2d0>myzero) invs *= (2.0 / pvTrack->err2d0) * pvTrack->weight;
+  else
+  {
+    if(msgLevel(MSG::DEBUG)) debug() << "trackExtrapolate: pvTrack error is too small for computation" << endmsg;
+    invs *= (2.0 / myzero) * pvTrack->weight;
+  }
+  
   double unitVectStd[3];
   unitVectStd[0] = pvTrack->unitVect.x();
   unitVectStd[1] = pvTrack->unitVect.y();

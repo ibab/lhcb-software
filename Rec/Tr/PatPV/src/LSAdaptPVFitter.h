@@ -1,4 +1,4 @@
-// $Id: LSAdaptPVFitter.h,v 1.4 2008-06-11 19:28:24 witekma Exp $
+// $Id: LSAdaptPVFitter.h,v 1.5 2010-01-20 13:46:48 rlambert Exp $
 #ifndef LSADAPTPVFITTER_H
 #define LSADAPTPVFITTER_H 1
 // from Gaudi
@@ -81,5 +81,7 @@ private:
   
   // Get Tukey's weight
   double getTukeyWeight(double trchi2, int iter);
+  
+  static const double myzero=1E-12;
 };
 #endif // LSADAPTPVFITTER_H

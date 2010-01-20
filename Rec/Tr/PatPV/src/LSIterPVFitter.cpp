@@ -1,4 +1,4 @@
-// $Id: LSIterPVFitter.cpp,v 1.1 2007-12-04 08:46:52 witekma Exp $
+// $Id: LSIterPVFitter.cpp,v 1.2 2010-01-20 13:46:48 rlambert Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -20,7 +20,16 @@ DECLARE_TOOL_FACTORY(LSIterPVFitter);
 LSIterPVFitter::LSIterPVFitter(const std::string& type,
                                const std::string& name,
                                const IInterface* parent)
-  : GaudiTool(type,name,parent) {
+  : GaudiTool(type,name,parent),
+    m_Chi2Cut(0.),
+    m_Iterations(0),
+    m_extrapRCut(0.),
+    m_maxChi2(0.),
+    m_minTr(0),
+    m_pvTracks(0),
+    m_linExtrapolator(0),
+    m_fullExtrapolator(0)
+{
   declareInterface<IPVFitter>(this);
   // Cut-off of chi2 for single track
   declareProperty("Chi2Cut", m_Chi2Cut = 16.0);

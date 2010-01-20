@@ -1,4 +1,4 @@
-// $Id: PVSeedTool.cpp,v 1.3 2008-12-06 19:44:48 witekma Exp $
+// $Id: PVSeedTool.cpp,v 1.4 2010-01-20 13:46:49 rlambert Exp $
 // Include files 
 
 // STL
@@ -35,7 +35,20 @@ DECLARE_TOOL_FACTORY( PVSeedTool );
 PVSeedTool::PVSeedTool( const std::string& type,
                     const std::string& name,
                     const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ),
+    m_pvecp2m(0),
+    m_vecp2m(0),
+    m_p2mstatic(0),
+    m_maxChi2Merge(0.),
+    m_factorToIncreaseErrors(0.),
+    m_minClusterMult(0),
+    m_dzCloseTracksInCluster(0.),
+    m_minCloseTracksInCluster(0),
+    m_highMult(0),
+    m_ratioSig2HighMult(0.),
+    m_ratioSig2LowMult(0.),
+    m_x0MS(0.),
+    m_scatCons(0.)
 {
   declareInterface<IPVSeeding>(this);
   declareProperty( "x0MS",                         m_x0MS          =  0.01          );
