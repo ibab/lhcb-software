@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.44 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.45 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -67,7 +67,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         The actual lines
         """
         from HltLine.HltLine     import Hlt2Line
-        Hlt2Line( "Global", HLT= "HLT_PASS_SUBSTR('Hlt2') ", priority = 255, PV = False )
+        Hlt2Line( "Global", HLT= "HLT_PASS_SUBSTR('Hlt2') ", priority = 255 )
         ThresholdSettings = self.getProp("ThresholdSettings")
         #
         # Loop over thresholds
