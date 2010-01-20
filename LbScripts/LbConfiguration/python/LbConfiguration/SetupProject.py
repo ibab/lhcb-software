@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # pylint: disable-msg=E1103,W0141
-_cvs_id = "$Id: SetupProject.py,v 1.25 2010-01-20 08:52:46 joel Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.26 2010-01-20 12:59:51 marcocle Exp $"
 
 import os, sys, re, time
 from xml.sax import parse, ContentHandler
@@ -11,7 +11,7 @@ from tempfile import mkdtemp, mkstemp
 
 from LbConfiguration import createProjectMakefile
 from LbUtils.CVS import CVS2Version
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.25 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.26 $")
 
 # subprocess is available since Python 2.4, but LbUtils guarantees that we can
 # import it also in Python 2.3
@@ -237,8 +237,9 @@ class TempDir(object):
         Remove the temporary directory.
         """
         if self._name:
+            import os # needed when calling "python -m LbConfiguration.SetupProject"
             if self._keep_var in os.environ:
-                import logging
+                import logging # needed when calling "python -m LbConfiguration.SetupProject"
                 logging.info("%s set: I do not remove the temporary directory '%s'",
                              self._keep_var, self._name)
                 return
@@ -1636,7 +1637,7 @@ class SetupProject:
                         if os.path.isdir(user_proj_dir):
                             messages.append('Created user project in %s' % user_proj_dir)
                             # Add the structuring style to the local project
-                            proj_file = open(os.path.join(user_proj_dir), "a")
+                            proj_file = open(os.path.join(user_proj_dir, "cmt", "project.cmt"), "a")
                             proj_file.writelines(["build_strategy with_installarea\n",
                                                   "structure_strategy without_version_directory\n"])
                             proj_file.close()
