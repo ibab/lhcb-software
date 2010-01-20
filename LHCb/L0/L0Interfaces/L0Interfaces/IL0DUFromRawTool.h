@@ -1,4 +1,4 @@
-// $Id: IL0DUFromRawTool.h,v 1.5 2009-04-18 00:13:32 odescham Exp $
+// $Id: IL0DUFromRawTool.h,v 1.6 2010-01-20 16:06:46 odescham Exp $
 #ifndef IL0DUFROMRAWTOOL_H 
 #define IL0DUFROMRAWTOOL_H 1
 
@@ -12,7 +12,7 @@
 #include "Event/L0DUReport.h"
 #include "Event/L0ProcessorData.h"
 
-static const InterfaceID IID_IL0DUFromRawTool ( "IL0DUFromRawTool", 1, 2 );
+static const InterfaceID IID_IL0DUFromRawTool ( "IL0DUFromRawTool", 1, 3 );
 
 /** @class IL0DUFromRawTool IL0DUFromRawTool.h
  *  
@@ -42,6 +42,7 @@ public:
   virtual unsigned int size()=0;
   virtual unsigned long roStatus()=0;
   virtual void fillDataMap(bool fill = true)=0;
+  virtual std::string dump()=0;
 
 protected:
 

@@ -1,4 +1,4 @@
-// $Id: IL0DUConfigProvider.h,v 1.1.1.1 2007-10-31 13:38:04 odescham Exp $
+// $Id: IL0DUConfigProvider.h,v 1.2 2010-01-20 16:06:46 odescham Exp $
 #ifndef IL0DUCONFIGPROVIDER_H 
 #define IL0DUCONFIGPROVIDER_H 1
 
@@ -10,7 +10,7 @@
 //from Event
 #include "Event/L0DUConfig.h"
 
-static const InterfaceID IID_IL0DUConfigProvider ( "IL0DUConfigProvider", 1, 0 );
+static const InterfaceID IID_IL0DUConfigProvider ( "IL0DUConfigProvider", 2, 0 );
 
 /** @class IL0DUConfigProvider IL0DUConfigProvider.h
  *  
@@ -26,8 +26,8 @@ public:
 
   virtual StatusCode initialize()=0; 
   virtual StatusCode finalize()=0; 
-  virtual LHCb::L0DUConfig* config(long tck)=0;
-  virtual LHCb::L0DUConfig::Container configs()=0;
+  virtual LHCb::L0DUConfig* config(long tck,std::string slot="T0")=0;
+  virtual LHCb::L0DUConfig::Container* configs(std::string slot="T0")=0;
   
 
 protected:
