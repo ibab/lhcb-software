@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.394 2010-01-19 15:31:57 graven Exp $ 
+! $Id: release.notes,v 1.395 2010-01-20 10:52:36 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-01-20 - Gerhard Raven
+ - make it mandatory for any line explicitly requested to actually exist
 
 ! 2010-01-19 - Gerhard Raven
  - Follow migration of HltLine -> Hlt::Line

@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.141 2010-01-19 15:31:58 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.142 2010-01-20 10:52:36 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -398,6 +398,9 @@ class HltConf(LHCbConfigurableUser):
         awol2 = set( activeHlt2Lines ) - set( [ i.name() for i in hlt2Lines() ] )
         if awol2 : 
             log.fatal(' # some requested Hlt2 lines are absent : %s ' % awol2 )
+
+        if awol1 or awol2 :
+            raise RuntimeError, ' # some requested lines are absent;\n Hlt1: %s\n Hlt2: %s' % ( awol1 , awol2 )
 
         
         lines1 = [ i for i in hlt1Lines() if  i.name() in activeHlt1Lines ]
