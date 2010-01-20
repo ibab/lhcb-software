@@ -94,7 +94,6 @@ public:
         // try to read a gzipped version of the filename
         i = m_index.find(name+".gz");
         if (i!=m_index.end()) {
-            std::cerr << " reading gzipped entry " << name << std::endl;
             // slice works relative to the current file offset, as it works on an istream...
             bio::seek(m_file,0,std::ios_base::beg);
             bio::filtering_istream in;
