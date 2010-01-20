@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # pylint: disable-msg=E1103,W0141
-_cvs_id = "$Id: SetupProject.py,v 1.24 2010-01-18 18:01:56 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.25 2010-01-20 08:52:46 joel Exp $"
 
 import os, sys, re, time
 from xml.sax import parse, ContentHandler
@@ -11,7 +11,7 @@ from tempfile import mkdtemp, mkstemp
 
 from LbConfiguration import createProjectMakefile
 from LbUtils.CVS import CVS2Version
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.24 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.25 $")
 
 # subprocess is available since Python 2.4, but LbUtils guarantees that we can
 # import it also in Python 2.3
@@ -214,26 +214,26 @@ class TempDir(object):
     """Class to create a temporary directory."""
     def __init__(self, suffix="", prefix="tmp", dir=None, keep_var="KEEPTEMPDIR"):
         """Constructor.
-        
+
         'keep_var' is used to define which environment variable will prevent the
         deletion of the directory.
-        
+
         The other arguments are the same as tempfile.mkdtemp.
         """
-        self._keep_var = keep_var 
+        self._keep_var = keep_var
         self._name = mkdtemp(suffix, prefix, dir)
 
     def getName(self):
         """Returns the name of the temporary directory"""
         return self._name
-    
+
     def __str__(self):
         """Convert to string."""
         return self.getName()
 
     def __del__(self):
         """Destructor.
-        
+
         Remove the temporary directory.
         """
         if self._name:
@@ -247,7 +247,7 @@ class TempDir(object):
 
 def _sync_dicts(src, dest):
     # remove undefined keys
-    keys = dest.keys() 
+    keys = dest.keys()
     for k in keys:
         if k not in src:
             del dest[k]
@@ -278,7 +278,7 @@ def FindProjectVersions(project, search_path, user_area = None):
       'version'  is the canonical version string (e.g. v2r3)
       'realname' is the name of the root directory of the project (e.g GAUDI/GAUDI_v21r6,
                  LHCb_v28r3, DBASE)
-      'basepath' is the directory in which 'realname' is based. 
+      'basepath' is the directory in which 'realname' is based.
     If there is no version the second entry is None.
     """
     versions = [] # container of the results
@@ -419,7 +419,7 @@ class ProjectInfo:
             self.syscmtfullpath = os.path.join(self.project_dir,self.sys,self.version,'cmt')
         else:
             self.syscmtfullpath = None
-        
+
     def _container(self):
         """
         Return the name of the package referencing all the packages belonging to a project.
@@ -443,7 +443,7 @@ class ProjectInfo:
             else:
                 container = self.name + 'Sys'
         return container
-    
+
     def __str__(self):
         if self.version:
             return "%s %s from %s" % (self.name, self.version, self.project_dir)
@@ -763,11 +763,11 @@ class SetupProjectError(RuntimeError):
 class SetupProject:
     def __init__(self):
         self._logger = logging.getLogger("SetupProject")
-        
+
         ## Dictionary to store the changes to the environment.
         #  It is initialized as a copy of the current environment.
         self.environment = TemporaryEnvironment(dict(os.environ))
-        
+
         self.opts = None
         self.args = None
 
@@ -788,7 +788,7 @@ class SetupProject:
                                   'CERN':[], # ['CASTOR'],
                                  }
         self.parser = self._prepare_parser()
-        
+
 
     def __getattr__(self,attr):
         """
@@ -821,7 +821,7 @@ class SetupProject:
     def _debug(self, msg, *args, **kwargs):
         apply(self._logger.debug, [msg] + list(args), kwargs)
 
-    ## Helper function to simplify the calls to CMT. 
+    ## Helper function to simplify the calls to CMT.
     def cmt(self, cmd, args = [], cwd = None):
         return cmt(cmd, args, environment = dict(self.environment), cwd = cwd)
 
@@ -1636,7 +1636,7 @@ class SetupProject:
                         if os.path.isdir(user_proj_dir):
                             messages.append('Created user project in %s' % user_proj_dir)
                             # Add the structuring style to the local project
-                            proj_file = open(os.path.join(user_proj_dir, "a"))
+                            proj_file = open(os.path.join(user_proj_dir), "a")
                             proj_file.writelines(["build_strategy with_installarea\n",
                                                   "structure_strategy without_version_directory\n"])
                             proj_file.close()
