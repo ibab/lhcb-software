@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.60 2009-10-29 10:50:58 robbep Exp $
+// $Id: L0CaloAlg.cpp,v 1.61 2010-01-20 16:08:29 odescham Exp $
 
 /// local
 #include "L0CaloAlg.h"
@@ -434,7 +434,8 @@ StatusCode L0CaloAlg::execute() {
   
   // Save the candidates in CaloProcessor data location (for L0DU) 
   LHCb::L0ProcessorDatas* L0Calo = new LHCb::L0ProcessorDatas() ;
-  put( L0Calo, LHCb::L0ProcessorDataLocation::Calo ) ;
+  std::string procName = dataLocation( LHCb::L0ProcessorDataLocation::Calo);
+  put( L0Calo, procName ) ;
   
   // Candidate is maximum of all Selection Boards inputs. In case of equality, 
   // take the one with smallest input number (done in compareL0Candidate)
