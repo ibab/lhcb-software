@@ -4,5 +4,6 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+!========================= DAQUtils v1r0 2010-01-20 ==========================
 ! 2010-01-13 - Marco Cattaneo
  - Initial version, migrated from Event/DAQEvent/src/components v8r2
