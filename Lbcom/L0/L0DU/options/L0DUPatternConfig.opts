@@ -25,7 +25,9 @@ L0DUFromRaw.L0DUFromRawTool.DumpBank = 50 ;
 // Pattern
 L0Pattern.L0DUFromRawTool.L0DUConfigProviderName = "L0PatternConfig";
 L0DUBankMonitor.L0DUFromRawTool.L0DUConfigProviderName = "L0PatternConfig";
-wL0Pattern.TCKList = { "0xDEB1" , "0xDEB2" , "0xDEB3" , "0xDEB4", "0xDEB5", "0xDEB6" };
+
+
+L0Pattern.TCKList = { "0xDEB1" , "0xDEB2" , "0xDEB3" , "0xDEB4", "0xDEB5", "0xDEB6" };
 ToolSvc.L0PatternConfig.Preload = true; 
 
 //--------------------------------------------- TCK = 0xDEB1 Electron channels
