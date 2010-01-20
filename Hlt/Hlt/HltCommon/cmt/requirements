@@ -40,6 +40,6 @@ library          HltCommon    ../src/*.cpp
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=HltCommon
-macro_append Boost_linkopts " $(Boost_linkopts_regex) "
+macro_append Boost_linkopts " $(Boost_linkopts_regex) $(Boost_linkopts_iostreams) "
 
 

@@ -66,15 +66,6 @@ namespace {
     };
     typedef enum TarFileType TarFileType;
 
-
-    template <typename I, typename S, typename O> 
-    void copy_n_(I first, S count, O result) {
-        for(;count>0;--count) { 
-            *result = *first;
-            ++first;++result;
-        }
-    }
-
 }
 
 
@@ -93,21 +84,14 @@ public:
 
         // slice works relative to the current file offset, as it works on an istream...
         m_file.seekg(0);
-        boost::iostreams::copy(boost::iostreams::slice(m_file,i->second.offset,i->second.size), os, 4096);
+        // suggest an 8K buffer size as hint -- most config items are smaller than that...
+        boost::iostreams::copy(boost::iostreams::slice(m_file,i->second.offset,i->second.size), os, 8192);
 
         //boost::iostreams::filtering_istream in;
         //if (name ends in .gz) in.push(gzip_decompressor());
         // in.push(boost::iostreams::slice(file,i->second.offset,i->second.size));
         // boost::iostreams::copy(in, os);
 
-
-        //m_file.seekg(i->second.offset);
-        //copy_n_(istream_iterator<char>(m_file),i->second.size,ostream_iterator<char>(os));
-        // TODO: not multithread safe... should add a lock on buf...
-        //static std::vector<char> buffer;
-        //buffer.resize(i->second.size);
-        //m_file.read(&buffer[0],buffer.size());
-        //os.write(&buffer[0],buffer.size());
         return true;
     }
 
