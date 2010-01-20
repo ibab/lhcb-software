@@ -1,10 +1,10 @@
-// $Id: L0AlgBase.h,v 1.2 2009-10-29 10:41:22 robbep Exp $
+// $Id: L0AlgBase.h,v 1.3 2010-01-20 16:03:20 odescham Exp $
 #ifndef L0ALGBASE_H 
 #define L0ALGBASE_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/GaudiHistoAlg.h"
 
 
 /** @class L0AlgBase L0AlgBase.h
@@ -13,7 +13,7 @@
  *  @author Julien Cogan
  *  @date   2009-10-20
  */
-class L0AlgBase : public GaudiAlgorithm {
+class L0AlgBase : public GaudiHistoAlg {
 public: 
   /// Standard constructor
   L0AlgBase( const std::string& name, ISvcLocator* pSvcLocator );

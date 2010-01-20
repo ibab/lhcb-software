@@ -1,4 +1,4 @@
-// $Id: L0AlgBase.cpp,v 1.3 2009-10-29 10:41:22 robbep Exp $
+// $Id: L0AlgBase.cpp,v 1.4 2010-01-20 16:03:20 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -18,7 +18,7 @@
 //=============================================================================
 L0AlgBase::L0AlgBase( const std::string& name,
                       ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiHistoAlg ( name , pSvcLocator )
 {
 
   declareProperty("WriteBanks"  , m_writeBanks   = true);
