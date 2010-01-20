@@ -1,4 +1,4 @@
-// $Id: IDVAlgorithm.h,v 1.8 2010-01-18 17:29:03 jpalac Exp $
+// $Id: IDVAlgorithm.h,v 1.9 2010-01-20 12:22:23 jpalac Exp $
 #ifndef KERNEL_IDVALGORITHM_H 
 #define KERNEL_IDVALGORITHM_H 1
 
@@ -55,7 +55,7 @@ public:
    * Return a container of local LHCb::Particle*
    *
    **/  
-  virtual const LHCb::Particle::ConstVector* particles() const = 0;
+  virtual const LHCb::Particle::Range particles() const = 0;
 
   /**
    *
@@ -63,7 +63,7 @@ public:
    * vertices.
    *
    **/
-  virtual const LHCb::RecVertex::Container* primaryVertices() const = 0;
+  virtual const LHCb::RecVertex::Range primaryVertices() const = 0;
   
   /**
    *
