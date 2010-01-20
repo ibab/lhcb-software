@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-01-20 - Gerhard Raven
+ - update SingleElectron -> SingleElectron{With,No}IP
+ - for now, comment out Hlt1MuTrackFitMu
+
 ! 2010-01-18 - Patrick Spradlin
  - Updated list of charm lines in Physics_320Vis_300L0_10Hlt1_Hlt2_Oct09.py.
    See previous change.
