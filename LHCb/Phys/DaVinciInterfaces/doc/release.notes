@@ -4,8 +4,12 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-01-20 - Juan Palacios
+ - Kernel/IDVAlgorithm.h
+  . Change Particle and RecVertex accessors to Particle::Range and RecVertex::Range.
+
 ! 2010-01-18 - Juan Palacios
- - Kernel/IDVAlgorithm
+ - Kernel/IDVAlgorithm.h
   . Make a INamedInterface. Fix some doxygen.
 
 ! 2010-01-16 - Juan PALACIOS
