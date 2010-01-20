@@ -444,19 +444,23 @@ bool CaloL0DataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
         }
         
 
-
-        if ( "Spd" == m_detectorName) {
-          LHCb::CaloCellID id ( spdId );   // SPD
-          LHCb::L0CaloAdc temp( id, (item & 2) );
-          m_adcs.addEntry( temp, id );
+        if( 0 != spdId ){
+          if ( "Spd" == m_detectorName) {
+            if( (item&2) != 0 ){
+              LHCb::CaloCellID id ( spdId );   // SPD
+              LHCb::L0CaloAdc temp( id, 1 );
+              m_adcs.addEntry( temp, id );
+            } 
+          }
+          else {
+            if( (item&1) != 0 ){
+              LHCb::L0CaloAdc temp( prsId, 1 );
+              m_adcs.addEntry( temp, prsId );
+            }
+          }
         }
-        else {
-          LHCb::L0CaloAdc temp( prsId, (item & 1));
-          m_adcs.addEntry( temp, prsId );
-        }
-      }
-      ++data;
-      --size;
+        ++data;
+        --size;
     }
     //==== Codage for 1 MHz
   } else if ( 3 == version ) {

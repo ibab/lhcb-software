@@ -4,6 +4,11 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+
+! 2010-01-20 
+ - CaloL0DataProvider : fix Spd trigger bit value ( 0x2 instead of 0x1 ) in offline format
+
+
 !========================== CaloDAQ v4r16 2009-11-27 =========================
 ! 2009-11-25 
  - CaloZSupAlg/CaloDigitsFromRaw : fix location extension settings
