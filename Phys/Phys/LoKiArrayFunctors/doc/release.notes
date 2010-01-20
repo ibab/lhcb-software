@@ -1,16 +1,14 @@
-$Id: release.notes,v 1.53 2009-12-18 09:42:18 ibelyaev Exp $ 
+$Id: release.notes,v 1.54 2010-01-20 17:32:53 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiArrayFunctors v8r8 2010-01-20 =================
 ! 2009-12-18 - Vanya BELYAEV
-
- - add proper fianlize/reset functor actgion for all tools 
-
+ - add proper fianlize/reset functor action for all tools 
  - cmt/requirements 
-    
      version increment to v8r8 
 
 !========================== LoKiArrayFunctors v8r7 2009-12-11 =================
