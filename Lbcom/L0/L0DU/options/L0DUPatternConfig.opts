@@ -30,162 +30,172 @@ L0DUBankMonitor.L0DUFromRawTool.L0DUConfigProviderName = "L0PatternConfig";
 L0Pattern.TCKList = { "0xDEB1" , "0xDEB2" , "0xDEB3" , "0xDEB4", "0xDEB5", "0xDEB6" };
 ToolSvc.L0PatternConfig.Preload = true; 
 
-//--------------------------------------------- TCK = 0xDEB1 Electron channels
+//-------------------------------------------------------
+// Created by PVSS / L0DU  : 2010-01-21 13:02:28
+//-------------------------------------------------------
+
+//------------------------- TCK = 0xDEB1 / Recipe name : DEBUG_Algo1_0xDEB1
 ToolSvc.L0PatternConfig.registerTCK += {"0xDEB1"};
 ToolSvc.L0PatternConfig.TCK_0xDEB1.Name = "DEBUG_Algo1_0xDEB1";
 ToolSvc.L0PatternConfig.TCK_0xDEB1.Description ="Pattern Generator Config 0xDEB1  :  Electron channel";
 
-ToolSvc.L0PatternConfig.TCK_0xDEB1.Conditions = {   
-	{ "name=[Electron,HighEt]" , "data=[Electron(Et)]"  , "comparator=[>]" , "threshold=[130]"   },
-	{ "name=[Electron,LowEt]"  , "data=[Electron(Et)]"  , "comparator=[>]" , "threshold=[70]"    },
-      { "name=[SumEt]"           , "data=[Sum(Et)]"       , "comparator=[>]" , "threshold=[250]"   },  
-	{ "name=[SpdMult]"         , "data=[Spd(Mult)]"     , "comparator=[<]" , "threshold=[280]"   },
-      { "name=[PuMult]"          , "data=[PUHits(Mult)]"  , "comparator=[<]" , "threshold=[112]"   },
-      { "name=[PuPeak2]"         , "data=[PUPeak2(Cont)]" , "comparator=[<]" , "threshold=[3]"     }
-};
-ToolSvc.L0PatternConfig.TCK_0xDEB1.Channels ={ 
-      { "name=[GEC]"           , "rate==[100.0]" , "conditions= [SpdMult] && [PuMult] && [PuPeak2] && [SumEt]" , "MASK=[000]" },	
-	{ "name=[Electron]"      , "rate==[100.0]" , "conditions= [Electron,HighEt] && [GEC] "                   , "MASK=[001]" }, 
-	{ "name=[Electron,down]" , "rate==[20.0]"  , "conditions= [Electron,LowEt]  && [GEC] "                   , "MASK=[001]" } 
+
+ToolSvc.L0PatternConfig.TCK_0xDEB1.Conditions = {
+{ "name=[Electron,HighEt]" , "data=[Electron(Et)]"  , "comparator=[>]" , "threshold=[130]" },
+{ "name=[Electron,LowEt]"  , "data=[Electron(Et)]"  , "comparator=[>]" , "threshold=[70]"  },
+{ "name=[SumEt]"           , "data=[Sum(Et)]"       , "comparator=[>]" , "threshold=[250]" },
+{ "name=[SpdMult]"         , "data=[Spd(Mult)]"     , "comparator=[<]" , "threshold=[280]" },
+{ "name=[PuPeak2]"         , "data=[PUPeak2(Cont)]" , "comparator=[<]" , "threshold=[3]"   },
+{ "name=[PuMult]"          , "data=[PUHits(Mult)]"  , "comparator=[<]" , "threshold=[112]" }
 };
 
-//--------------------------------------------- TCK = 0xDEB2 Electron || Muon channels
+ToolSvc.L0PatternConfig.TCK_0xDEB1.Channels ={
+{ "name=[GEC]"           , "rate==[100.0]" , "conditions= [SumEt]           && [SpdMult] && [PuPeak2] && [PuMult]" , "MASK=[000]" },
+{ "name=[Electron]"      , "rate==[100.0]" , "conditions= [Electron,HighEt] && [GEC]" , "MASK=[001]" },
+{ "name=[Electron,down]" , "rate==[20.0]"  , "conditions= [Electron,LowEt]  && [GEC]" , "MASK=[001]" }
+};
 
+//------------------------- TCK = 0xDEB2 / Recipe name : DEBUG_Algo2_0xDEB2
 ToolSvc.L0PatternConfig.registerTCK += {"0xDEB2"};
 ToolSvc.L0PatternConfig.TCK_0xDEB2.Name = "DEBUG_Algo2_0xDEB2";
-ToolSvc.L0PatternConfig.TCK_0xDEB2.Description ="Pattern Generator Config 0xDEB2  :  Electron || Muon channel";
+ToolSvc.L0PatternConfig.TCK_0xDEB2.Description ="Pattern Generator Config 0xDEB2  :  Electron ";
 
-ToolSvc.L0PatternConfig.TCK_0xDEB2.Conditions = {   
-	{ "name=[Electron,HighEt]" , "data=[Electron(Et)]"  , "comparator=[>]" , "threshold=[130]"   },
-	{ "name=[Electron,LowEt]"  , "data=[Electron(Et)]"  , "comparator=[>]" , "threshold=[70]"    },
-	{ "name=[Muon1,HighEt]"    , "data=[Muon1(Pt)]"     , "comparator=[>]" , "threshold=[32]"    },
-	{ "name=[Muon1,LowEt]"     , "data=[Muon1(Pt)]"     , "comparator=[>]" , "threshold=[20]"    },
-      { "name=[SumEt]"           , "data=[Sum(Et)]"       , "comparator=[>]" , "threshold=[250]"   },  
-	{ "name=[SpdMult]"         , "data=[Spd(Mult)]"     , "comparator=[<]" , "threshold=[280]"   },
-      { "name=[PuMult]"          , "data=[PUHits(Mult)]"  , "comparator=[<]" , "threshold=[112]"   },
-      { "name=[PuPeak2]"         , "data=[PUPeak2(Cont)]" , "comparator=[<]" , "threshold=[3]"     }
+
+ToolSvc.L0PatternConfig.TCK_0xDEB2.Conditions = {
+{ "name=[Electron,HighEt]" , "data=[Electron(Et)]"  , "comparator=[>]" , "threshold=[130]" },
+{ "name=[Electron,LowEt]"  , "data=[Electron(Et)]"  , "comparator=[>]" , "threshold=[70]"  },
+{ "name=[SumEt]"           , "data=[Sum(Et)]"       , "comparator=[>]" , "threshold=[250]" },
+{ "name=[SpdMult]"         , "data=[Spd(Mult)]"     , "comparator=[<]" , "threshold=[280]" },
+{ "name=[PuPeak2]"         , "data=[PUPeak2(Cont)]" , "comparator=[<]" , "threshold=[3]"   },
+{ "name=[PuMult]"          , "data=[PUHits(Mult)]"  , "comparator=[<]" , "threshold=[112]" },
+{ "name=[Muon1,HighEt]"    , "data=[Muon1(Pt)]"     , "comparator=[>]" , "threshold=[32]"  },
+{ "name=[Muon1,LowEt]"     , "data=[Muon1(Pt)]"     , "comparator=[>]" , "threshold=[20]"  }
 };
 
-ToolSvc.L0PatternConfig.TCK_0xDEB2.Channels ={ 
-      { "name=[GEC]"           , "rate==[100.0]" , "conditions= [SpdMult] && [PuMult] && [PuPeak2] && [SumEt]" , "MASK=[000]" },	
-	{ "name=[Electron]"      , "rate==[100.0]" , "conditions= [Electron,HighEt] && [GEC] "                   , "MASK=[001]" }, 
-	{ "name=[Electron,down]" , "rate==[20.0]"  , "conditions= [Electron,LowEt]  && [GEC] "                   , "MASK=[001]" }, 
-	{ "name=[Muon]"          , "rate==[100.0]" , "conditions= [Muon1,HighEt]    && [GEC] "                   , "MASK=[001]" }, 
-	{ "name=[Muon,down]"     , "rate==[56.0]"  , "conditions= [Muon1,LowEt]     && [GEC] "                   , "MASK=[001]"  } 
+ToolSvc.L0PatternConfig.TCK_0xDEB2.Channels ={
+{ "name=[GEC]"           , "rate==[100.0]" , "conditions= [SumEt]           && [SpdMult] && [PuPeak2] && [PuMult]" , "MASK=[000]" },
+{ "name=[Electron]"      , "rate==[100.0]" , "conditions= [Electron,HighEt] && [GEC]" , "MASK=[001]" },
+{ "name=[Electron,down]" , "rate==[20.0]"  , "conditions= [Electron,LowEt]  && [GEC]" , "MASK=[001]" },
+{ "name=[Muon]"          , "rate==[100.0]" , "conditions= [Muon1,HighEt]    && [GEC]" , "MASK=[001]" },
+{ "name=[Muon,down]"     , "rate==[56.0]"  , "conditions= [Muon1,LowEt]     && [GEC]" , "MASK=[001]" }
 };
 
-
-//--------------------------------------------- TCK = 0xDEB3  Compound data  
-
+//------------------------- TCK = 0xDEB3 / Recipe name : DEBUG_Algo3_0xDEB3
 ToolSvc.L0PatternConfig.registerTCK += {"0xDEB3"};
 ToolSvc.L0PatternConfig.TCK_0xDEB3.Name = "DEBUG_Algo3_0xDEB3";
 ToolSvc.L0PatternConfig.TCK_0xDEB3.Description ="Pattern Generator Config 0xDEB3  :  Compound data";
 
+ToolSvc.L0PatternConfig.TCK_0xDEB3.ConstData = {"CaloArea" : 12288 };
+ToolSvc.L0PatternConfig.TCK_0xDEB3.Data += { {"name=[Photon2(Et)]"    , "data=[LocalPi0(Et)]"  , "operator=[-]" , "data=[Photon(Et)]" } };
+ToolSvc.L0PatternConfig.TCK_0xDEB3.Data += { {"name=[Electron(Area)]" , "data=[Electron(Add)]" , "operator=[&]" , "data=[CaloArea]" } };
+ToolSvc.L0PatternConfig.TCK_0xDEB3.Data += { {"name=[DiMuon(Sgn)]"    , "data=[Muon1(Sgn)]"    , "operator=[+]" , "data=[Muon2(Sgn)]" } };
 
-ToolSvc.L0PatternConfig.TCK_0xDEB3.ConstData = {"CaloArea" : 12288 };  // The mask to retrieve the 2-bits calo-area within the 14-bit calo-address (0x3000)
-ToolSvc.L0PatternConfig.TCK_0xDEB3.Data      += {  { "name=[Electron(Area)]"  , "data=[Electron(Add)]", "operator=[&]", "data=[CaloArea]"   }  };
-ToolSvc.L0PatternConfig.TCK_0xDEB3.Data      += {  { "name=[DiMuon(Sgn)]"     , "data= [Muon1(Sgn)]"  , "operator=[+]", "data=[Muon2(Sgn)]" }  };
-ToolSvc.L0PatternConfig.TCK_0xDEB3.Data      += {  { "name=[Photon2(Et)]"     , "data= [LocalPi0(Et)]", "operator=[-]", "data=[Photon(Et)]" }  };
-
-
-ToolSvc.L0PatternConfig.TCK_0xDEB3.Conditions = {   
-	{ "name=[Electron,Et]"     , "data=[Electron(Et)]"  , "comparator=[>]"  , "threshold=[130]"   },
-	{ "name=[Electron,Inner]"  , "data=[Electron(Area)]", "comparator=[==]" , "threshold=[8192]"  }, // (0x2000)
-	{ "name=[Photon,Pt]"       , "data=[Photon(Et)]"    , "comparator=[>]"  , "threshold=[100]"   },
-	{ "name=[Photon2,Pt]"      , "data=[Photon2(Et)]"   , "comparator=[>]"  , "threshold=[50]"    },
-	{ "name=[DiMuon,Pt]"       , "data=[DiMuon(Pt)]"    , "comparator=[>]"  , "threshold=[37]"    }, 
-	{ "name=[DiMuon,Opposite]" , "data=[DiMuon(Sgn)]"   , "comparator=[==]" , "threshold=[1]"     },
-      { "name=[SumEt]"           , "data=[Sum(Et)]"       , "comparator=[>]"  , "threshold=[250]"   },  
-	{ "name=[SpdMult]"         , "data=[Spd(Mult)]"     , "comparator=[<]"  , "threshold=[280]"   },
-      { "name=[PuMult]"          , "data=[PUHits(Mult)]"  , "comparator=[<]"  , "threshold=[112]"   },
-      { "name=[PuPeak2]"         , "data=[PUPeak2(Cont)]" , "comparator=[<]"  , "threshold=[3]"     }
+ToolSvc.L0PatternConfig.TCK_0xDEB3.Conditions = {
+{ "name=[Electron,Et]"     , "data=[Electron(Et)]"   , "comparator=[>]"  , "threshold=[130]"  },
+{ "name=[Photon,Pt]"       , "data=[Photon(Et)]"     , "comparator=[>]"  , "threshold=[100]"  },
+{ "name=[SumEt]"           , "data=[Sum(Et)]"        , "comparator=[>]"  , "threshold=[250]"  },
+{ "name=[SpdMult]"         , "data=[Spd(Mult)]"      , "comparator=[<]"  , "threshold=[280]"  },
+{ "name=[PuPeak2]"         , "data=[PUPeak2(Cont)]"  , "comparator=[<]"  , "threshold=[3]"    },
+{ "name=[PuMult]"          , "data=[PUHits(Mult)]"   , "comparator=[<]"  , "threshold=[112]"  },
+{ "name=[DiMuon,Pt]"       , "data=[DiMuon(Pt)]"     , "comparator=[>]"  , "threshold=[37]"   },
+{ "name=[Photon2,Pt]"      , "data=[Photon2(Et)]"    , "comparator=[>]"  , "threshold=[50]"   },
+{ "name=[Electron,Inner]"  , "data=[Electron(Area)]" , "comparator=[==]" , "threshold=[8192]" },
+{ "name=[DiMuon,Opposite]" , "data=[DiMuon(Sgn)]"    , "comparator=[==]" , "threshold=[1]"    }
 };
 
-ToolSvc.L0PatternConfig.TCK_0xDEB3.Channels ={ 
-	{"name=[GEC]"            , "rate==[100.0]" , "conditions= [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2]", "MASK=[000]" },
-	{"name=[Electron]"       , "rate==[100.0]" , "conditions= [Electron,Et]                      && [GEC]"   , "MASK=[001]" },
-	{"name=[InnerElectron]"  , "rate==[100.0]" , "conditions= [Electron,Et] && [Electron,Inner]  && [GEC]"   , "MASK=[001]" },
-	{"name=[DiMuon]"         , "rate==[100.0]" , "conditions= [DiMuon,Pt]                        && [GEC]"   , "MASK=[001]" }, 
-	{"name=[OppositeDiMuon]" , "rate==[100.0]" , "conditions= [DiMuon,Pt]   && [DiMuon,Opposite] && [GEC]"   , "MASK=[001]" }, 
-	{"name=[Photon]"         , "rate==[100.0]" , "conditions= [Photon,Pt]                        && [GEC]"   , "MASK=[001]" },
-	{"name=[Photon2]"        , "rate==[100.0]" , "conditions= [Photon2,Pt]                       && [GEC]"   , "MASK=[001]" } 
+ToolSvc.L0PatternConfig.TCK_0xDEB3.Channels ={
+{ "name=[GEC]"            , "rate==[100.0]" , "conditions= [SumEt]       && [SpdMult]         && [PuPeak2] && [PuMult]" , "MASK=[000]" },
+{ "name=[Electron]"       , "rate==[100.0]" , "conditions= [Electron,Et] && [GEC]" , "MASK=[001]" },
+{ "name=[InnerElectron]"  , "rate==[100.0]" , "conditions= [Electron,Et] && [Electron,Inner]" , "MASK=[001]" },
+{ "name=[DiMuon]"         , "rate==[100.0]" , "conditions= [DiMuon,Pt]   && [GEC]" , "MASK=[001]" },
+{ "name=[OppositeDiMuon]" , "rate==[100.0]" , "conditions= [DiMuon,Pt]   && [DiMuon,Opposite]" , "MASK=[001]" },
+{ "name=[Photon]"         , "rate==[100.0]" , "conditions= [Photon,Pt]   && [GEC]" , "MASK=[001]" },
+{ "name=[Photon2]"        , "rate==[100.0]" , "conditions= [Photon2,Pt]  && [GEC]" , "MASK=[001]" }
 };
 
-
-
-//--------------------------------------------- TCK = 0xDEB4  Check Lumi decisions
+//------------------------- TCK = 0xDEB4 / Recipe name : DEBUG_Algo4_0xDEB4
 ToolSvc.L0PatternConfig.registerTCK += {"0xDEB4"};
 ToolSvc.L0PatternConfig.TCK_0xDEB4.Name = "DEBUG_Algo4_0xDEB4";
-ToolSvc.L0PatternConfig.TCK_0xDEB4.Description = "Test Algo 0xDEB4";
+ToolSvc.L0PatternConfig.TCK_0xDEB4.Description ="Test Algo 0xDEB4";
 
 
 ToolSvc.L0PatternConfig.TCK_0xDEB4.Conditions = {
-{ "name=[Hadron,Et]"    , "data=[Hadron(Et)]"    , "comparator=[>]" , "threshold=[200]" },
-{ "name=[SpdMult]"      , "data=[Spd(Mult)]"     , "comparator=[>]" , "threshold=[2]"   },
-{ "name=[Muon1,Pt]"     , "data=[Muon1(Pt)]"     , "comparator=[>]" , "threshold=[12]"  },
-{ "name=[SumEt_GT_50]"  , "data=[Sum(Et)]"       , "comparator=[>]" , "threshold=[50]"  },
-{ "name=[PuMult_GT_10]" , "data=[PUHits(Mult)]"  , "comparator=[>]" , "threshold=[10]"  },
-{ "name=[PuMult_LT_50]" , "data=[PUHits(Mult)]"  , "comparator=[<]" , "threshold=[50]"  }
+{ "name=[Hadron,Et]"    , "data=[Hadron(Et)]"   , "comparator=[>]" , "threshold=[200]" },
+{ "name=[SumEt_GT_50]"  , "data=[Sum(Et)]"      , "comparator=[>]" , "threshold=[50]"  },
+{ "name=[SpdMult]"      , "data=[Spd(Mult)]"    , "comparator=[>]" , "threshold=[2]"   },
+{ "name=[PuMult_GT_10]" , "data=[PUHits(Mult)]" , "comparator=[>]" , "threshold=[10]"  },
+{ "name=[PuMult_LT_50]" , "data=[PUHits(Mult)]" , "comparator=[<]" , "threshold=[50]"  },
+{ "name=[Muon1,Pt]"     , "data=[Muon1(Pt)]"    , "comparator=[>]" , "threshold=[12]"  }
 };
 
 ToolSvc.L0PatternConfig.TCK_0xDEB4.Channels ={
-{ "name=[HCAL]"      , "rate==[100.0]" , "conditions= [Hadron,Et]"                      , "MASK=[000]" },
-{ "name=[SPD]"       , "rate==[100.0]" , "conditions= [SpdMult]"                        , "MASK=[000]" },
-{ "name=[MUON]"      , "rate==[100.0]" , "conditions= [Muon1,Pt]"                       , "MASK=[001]" },
-{ "name=[CALO]"      , "rate==[100.0]" , "conditions= [HCAL] && [SPD]"                  , "MASK=[001]" },
-{ "name=[LumiBeam1]" , "rate==[100.0]" , "conditions= [PuMult_LT_50]  && [SumEt_GT_50]" , "MASK=[010]" },
-{ "name=[LumiBeam2]" , "rate==[100.0]" , "conditions= [PuMult_GT_10]"                   , "MASK=[100]" }
+{ "name=[HCAL]"      , "rate==[100.0]" , "conditions= [Hadron,Et]" , "MASK=[000]" },
+{ "name=[SPD]"       , "rate==[100.0]" , "conditions= [SpdMult]" , "MASK=[000]" },
+{ "name=[MUON]"      , "rate==[100.0]" , "conditions= [Muon1,Pt]" , "MASK=[001]" },
+{ "name=[CALO]"      , "rate==[100.0]" , "conditions= [HCAL]         && [SPD]" , "MASK=[001]" },
+{ "name=[LumiBeam1]" , "rate==[100.0]" , "conditions= [SumEt_GT_50]  && [PuMult_LT_50]" , "MASK=[010]" },
+{ "name=[LumiBeam2]" , "rate==[100.0]" , "conditions= [PuMult_GT_10]" , "MASK=[100]" }
 };
 
-//--------------------------------------------- TCK = 0xDEB5  Check Lumi decisions
-
+//------------------------- TCK = 0xDEB5 / Recipe name : DEBUG_Algo5_0xDEB5
 ToolSvc.L0PatternConfig.registerTCK += {"0xDEB5"};
 ToolSvc.L0PatternConfig.TCK_0xDEB5.Name = "DEBUG_Algo5_0xDEB5";
-ToolSvc.L0PatternConfig.TCK_0xDEB5.Description = "Test Algo 0xDEB5";
+ToolSvc.L0PatternConfig.TCK_0xDEB5.Description ="Test Algo 0xDEB5";
 
 
 ToolSvc.L0PatternConfig.TCK_0xDEB5.Conditions = {
-{ "name=[Hadron,Et]"     , "data=[Hadron(Et)]"    , "comparator=[>]" , "threshold=[50]"  },
-{ "name=[SpdMult]"       , "data=[Spd(Mult)]"     , "comparator=[>]" , "threshold=[2]"   },
-{ "name=[Muon1,Pt]"      , "data=[Muon1(Pt)]"     , "comparator=[>]" , "threshold=[12]"  },
-{ "name=[SumEt_GT_512]"  , "data=[Sum(Et)]"       , "comparator=[>]" , "threshold=[512]" },
-{ "name=[PuMult_GT_10]"  , "data=[PUHits(Mult)]"  , "comparator=[>]" , "threshold=[10]"  },
-{ "name=[PuMult_LT_7]"   , "data=[PUHits(Mult)]"  , "comparator=[<]" , "threshold=[7]"   },
-{ "name=[SpdMult_LT_25]" , "data=[Spd(Mult)]"     , "comparator=[<]" , "threshold=[25]"  }
+{ "name=[Hadron,Et]"     , "data=[Hadron(Et)]"   , "comparator=[>]" , "threshold=[50]"  },
+{ "name=[SumEt_GT_512]"  , "data=[Sum(Et)]"      , "comparator=[>]" , "threshold=[512]" },
+{ "name=[SpdMult]"       , "data=[Spd(Mult)]"    , "comparator=[>]" , "threshold=[2]"   },
+{ "name=[SpdMult_LT_25]" , "data=[Spd(Mult)]"    , "comparator=[<]" , "threshold=[25]"  },
+{ "name=[PuMult_GT_10]"  , "data=[PUHits(Mult)]" , "comparator=[>]" , "threshold=[10]"  },
+{ "name=[PuMult_LT_7]"   , "data=[PUHits(Mult)]" , "comparator=[<]" , "threshold=[7]"   },
+{ "name=[Muon1,Pt]"      , "data=[Muon1(Pt)]"    , "comparator=[>]" , "threshold=[12]"  }
 };
 
 ToolSvc.L0PatternConfig.TCK_0xDEB5.Channels ={
-{ "name=[HCAL]"      , "rate==[100.0]" , "conditions= [Hadron,Et]"                       , "MASK=[000]" },
-{ "name=[SPD]"       , "rate==[100.0]" , "conditions= [SpdMult]"                         , "MASK=[000]" },
-{ "name=[MUON]"      , "rate==[100.0]" , "conditions= [Muon1,Pt]"                        , "MASK=[111]" },
-{ "name=[CALO]"      , "rate==[100.0]" , "conditions= [HCAL] && [SPD]"                   , "MASK=[011]" },
-{ "name=[LumiBeam1]" , "rate==[100.0]" , "conditions= [PuMult_LT_7]  && [SumEt_GT_512]"  , "MASK=[010]" },
-{ "name=[LumiBeam2]" , "rate==[100.0]" , "conditions= [PuMult_GT_10] && [SpdMult_LT_25]" , "MASK=[100]" }
+{ "name=[HCAL]"      , "rate==[100.0]" , "conditions= [Hadron,Et]" , "MASK=[000]" },
+{ "name=[SPD]"       , "rate==[100.0]" , "conditions= [SpdMult]" , "MASK=[000]" },
+{ "name=[MUON]"      , "rate==[100.0]" , "conditions= [Muon1,Pt]" , "MASK=[111]" },
+{ "name=[CALO]"      , "rate==[100.0]" , "conditions= [HCAL]          && [SPD]" , "MASK=[011]" },
+{ "name=[LumiBeam1]" , "rate==[100.0]" , "conditions= [SumEt_GT_512]  && [PuMult_LT_7]" , "MASK=[010]" },
+{ "name=[LumiBeam2]" , "rate==[100.0]" , "conditions= [SpdMult_LT_25] && [PuMult_GT_10]" , "MASK=[100]" }
 };
 
-//--------------------------------------------- TCK = 0xDEB6  Check Lumi decisions
-
+//------------------------- TCK = 0xDEB6 / Recipe name : DEBUG_Algo6_0xDEB6
 ToolSvc.L0PatternConfig.registerTCK += {"0xDEB6"};
 ToolSvc.L0PatternConfig.TCK_0xDEB6.Name = "DEBUG_Algo6_0xDEB6";
-ToolSvc.L0PatternConfig.TCK_0xDEB6.Description = "Test Algo 0xDEB6";
+ToolSvc.L0PatternConfig.TCK_0xDEB6.Description ="Test Algo 0xDEB6";
+
+ToolSvc.L0PatternConfig.TCK_0xDEB6.ConstData = {"CaloArea" : 12288 };
+ToolSvc.L0PatternConfig.TCK_0xDEB6.Data += { {"name=[Photon2(Et)]"    , "data=[LocalPi0(Et)]"  , "operator=[-]" , "data=[Photon(Et)]" } };
+ToolSvc.L0PatternConfig.TCK_0xDEB6.Data += { {"name=[Electron(Area)]" , "data=[Electron(Add)]" , "operator=[&]" , "data=[CaloArea]" } };
+ToolSvc.L0PatternConfig.TCK_0xDEB6.Data += { {"name=[DiMuon(Sgn)]"    , "data=[Muon1(Sgn)]"    , "operator=[+]" , "data=[Muon2(Sgn)]" } };
 
 ToolSvc.L0PatternConfig.TCK_0xDEB6.Conditions = {
-{ "name=[Hadron,Et]"     , "data=[Hadron(Et)]"    , "comparator=[>]" , "threshold=[128]" },
-{ "name=[SpdMult]"       , "data=[Spd(Mult)]"     , "comparator=[>]" , "threshold=[2]"   },
-{ "name=[PUMult]"        , "data=[PUHits(Mult)]"  , "comparator=[>]" , "threshold=[7]"   },
-{ "name=[Muon1,Pt]"      , "data=[Muon1(Pt)]"     , "comparator=[>]" , "threshold=[12]"  },
-{ "name=[PuMult_LT_50]"  , "data=[PUHits(Mult)]"  , "comparator=[<]" , "threshold=[50]"  },
-{ "name=[SpdMult_LT_25]" , "data=[Spd(Mult)]"     , "comparator=[<]" , "threshold=[25]"  }
+{ "name=[Electron,Et]"     , "data=[Electron(Et)]"   , "comparator=[>]"  , "threshold=[130]"  },
+{ "name=[Photon,Pt]"       , "data=[Photon(Et)]"     , "comparator=[>]"  , "threshold=[100]"  },
+{ "name=[SumEt]"           , "data=[Sum(Et)]"        , "comparator=[>]"  , "threshold=[250]"  },
+{ "name=[SumEt_GT_50]"     , "data=[Sum(Et)]"        , "comparator=[>]"  , "threshold=[50]"   },
+{ "name=[SpdMult]"         , "data=[Spd(Mult)]"      , "comparator=[<]"  , "threshold=[280]"  },
+{ "name=[PuPeak2]"         , "data=[PUPeak2(Cont)]"  , "comparator=[<]"  , "threshold=[3]"    },
+{ "name=[PuMult]"          , "data=[PUHits(Mult)]"   , "comparator=[<]"  , "threshold=[112]"  },
+{ "name=[PuMult_GT_10]"    , "data=[PUHits(Mult)]"   , "comparator=[>]"  , "threshold=[10]"   },
+{ "name=[PuMult_LT_50]"    , "data=[PUHits(Mult)]"   , "comparator=[<]"  , "threshold=[50]"   },
+{ "name=[DiMuon,Pt]"       , "data=[DiMuon(Pt)]"     , "comparator=[>]"  , "threshold=[37]"   },
+{ "name=[Photon2,Pt]"      , "data=[Photon2(Et)]"    , "comparator=[>]"  , "threshold=[150]"  },
+{ "name=[Electron,Inner]"  , "data=[Electron(Area)]" , "comparator=[==]" , "threshold=[8192]" },
+{ "name=[DiMuon,Opposite]" , "data=[DiMuon(Sgn)]"    , "comparator=[==]" , "threshold=[1]"    }
 };
 
 ToolSvc.L0PatternConfig.TCK_0xDEB6.Channels ={
-  { "name=[HCAL]"      , "rate==[100.0]" , "conditions= [Hadron,Et]"                 , "MASK=[001]" },
-  { "name=[SPD]"       , "rate==[100.0]" , "conditions= [SpdMult]"                   , "MASK=[000]" },
-  { "name=[MUON]"      , "rate==[100.0]" , "conditions= [Muon1,Pt]"                  , "MASK=[101]" },
-  { "name=[CALO]"      , "rate==[100.0]" , "conditions= [HCAL] && [SPD]"             , "MASK=[110]" },
-  { "name=[LumiBeam1]" , "rate==[100.0]" , "conditions= [PuMult_LT_50] && [SPD]"     , "MASK=[010]" },
-  { "name=[LumiBeam2]" , "rate==[100.0]" , "conditions= [SpdMult_LT_25]&& [PUMult]"  , "MASK=[100]" }
+{ "name=[GEC]"            , "rate==[100.0]" , "conditions= [SumEt]        && [SpdMult]         && [PuPeak2] && [PuMult]" , "MASK=[000]" },
+{ "name=[Electron]"       , "rate==[100.0]" , "conditions= [Electron,Et]  && [GEC]" , "MASK=[001]" },
+{ "name=[InnerElectron]"  , "rate==[100.0]" , "conditions= [Electron,Et]  && [Electron,Inner]" , "MASK=[001]" },
+{ "name=[DiMuon]"         , "rate==[100.0]" , "conditions= [DiMuon,Pt]    && [GEC]" , "MASK=[001]" },
+{ "name=[OppositeDiMuon]" , "rate==[100.0]" , "conditions= [DiMuon,Pt]    && [DiMuon,Opposite]" , "MASK=[001]" },
+{ "name=[Photon]"         , "rate==[100.0]" , "conditions= [Photon,Pt]    && [GEC]" , "MASK=[001]" },
+{ "name=[Photon2]"        , "rate==[100.0]" , "conditions= [Photon2,Pt]   && [GEC]" , "MASK=[001]" },
+{ "name=[LumiBeam1]"      , "rate==[100.0]" , "conditions= [SumEt_GT_50]  && [PuMult_LT_50]" , "MASK=[010]" },
+{ "name=[LumiBeam2]"      , "rate==[100.0]" , "conditions= [PuMult_GT_10]" , "MASK=[100]" }
 };
-
-
-

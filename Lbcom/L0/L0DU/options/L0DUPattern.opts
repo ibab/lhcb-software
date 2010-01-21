@@ -16,7 +16,7 @@ L0DU.L0DUConfigProviderName = "L0PatternConfig";
 L0DUFromRaw.L0DUFromRawTool.L0DUConfigProviderName = "L0PatternConfig";
 
 // Emulation config : 
-L0DU.TCK = "0xDEB3";  
+L0DU.TCK = "0xDEB6";  
 L0DU.BankVersion = 2;
 
 
@@ -42,7 +42,7 @@ NTupleSvc.Output={"FILE1 DATAFILE='L0Pattern.root' TYP='ROOT' OPT='NEW'"};
 // Event input  (& output)
 //---------------------------------------------------------------------------
 
-ApplicationMgr.EvtMax = 512;
+ApplicationMgr.EvtMax = 256;
 EventSelector.FirstEvent = 1;  
 //EventSelector.Input += {  
 //	"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v3-lumi2/00001883/DST/0000/00001883_00002264_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
