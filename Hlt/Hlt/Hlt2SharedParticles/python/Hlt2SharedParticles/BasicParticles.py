@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
@@ -30,6 +30,12 @@ Hlt2NoCutsPions.WriteP2PVRelations = False
 #
 Hlt2NoCutsKaons = Hlt2NoCutsPions.clone("Hlt2NoCutsKaons")
 Hlt2NoCutsKaons.Particle =  "kaon" 
+##########################################################################
+# Make the protons
+#
+Hlt2NoCutsProtons = Hlt2NoCutsPions.clone("Hlt2NoCutsProtons")
+Hlt2NoCutsProtons.Particle =  "proton" 
+
 ##########################################################################
 # Make the RICH kaons
 #
@@ -92,10 +98,11 @@ NeutralProtos = Hlt2PID().hlt2NeutralProtos()
 # from Hlt2SharedParticles.BasicParticles import Muons
 #
 
-__all__ = ( 'NoCutsPions', 'NoCutsKaons', 'Muons', 'RichPIDsKaons', 'Electrons', 'Photons' )
+__all__ = ( 'NoCutsPions', 'NoCutsKaons', 'NoCutsProtons', 'Muons', 'RichPIDsKaons', 'Electrons', 'Photons' )
 
 NoCutsPions   = bindMembers( None, [ hadronProtos, Hlt2NoCutsPions ] )
 NoCutsKaons   = bindMembers( None, [ hadronProtos, Hlt2NoCutsKaons ] )
+NoCutsProtons = bindMembers( None, [ hadronProtos, Hlt2NoCutsProtons ] )
 Muons         = bindMembers( None, [ muonProtos , Hlt2Muons ] )
 Electrons     = bindMembers( None, [ caloProtos, Hlt2Electrons ] )
 RichPIDsKaons = bindMembers( None, [ Hlt2RichPIDsKaons ] ) # TODO: add Rich reco as dependency!!!

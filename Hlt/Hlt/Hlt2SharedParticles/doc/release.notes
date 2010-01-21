@@ -1,10 +1,12 @@
-$Id: release.notes,v 1.68 2010-01-12 16:45:01 spradlin Exp $
+$Id: release.notes,v 1.69 2010-01-21 15:25:58 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2010-01-21 - Johannes Albrecht
+ - add NoCutsProtons to basic particles
 
 ! 2010-01-12 - Patrick Spradlin
  - Remove obsolete shared particles for topological.
