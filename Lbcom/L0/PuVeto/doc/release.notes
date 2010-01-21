@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.59 2010-01-11 08:57:47 serena Exp $
+! $Id: release.notes,v 1.60 2010-01-21 17:28:28 cattanem Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Serena Oggero
 !-------------------------------------------------------------------------
 
+!======================== PuVeto v7r5 2010-01-21 =========================
 ! 2010-01-11 - Serena Oggero
  - from PuVetoAlg, removed unused variables
 
