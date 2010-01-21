@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.173 2010-01-21 17:33:23 odescham Exp $
+! $Id: release.notes,v 1.174 2010-01-21 17:39:16 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
+!--------------------------------------------------------------------------
 
-
+!========================== L0DU v10r0 2010-01-21 =========================
 ! 2010-01-21 Olivier Deschamps
   - L0DUFromRawTool : fix problem with Calo address encoding for ProcessorData.
   - adapt options for L0Muon change
@@ -51,8 +52,6 @@
                       automatic ordering for L0DUElementaryConditions
                       improve L0TCK parsing (MASK flag)
    - update documentation : new syntax for L0TCK in twiki + update RawBank format EDMS
-  
-
 
 !========================== L0DU v9r0 2009-11-13 ==========================
 ! 2009-10-29 - Patrick Robbe
