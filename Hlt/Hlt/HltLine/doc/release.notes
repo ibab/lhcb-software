@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.71 2010-01-19 12:55:02 graven Exp $
+! $Id: release.notes,v 1.72 2010-01-21 15:24:41 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+
+! 2010-01-21 - Gerhard Raven
+ - use DecodeL0DU consistently, do NOT instantiate a default L0DUFromRawAlg.
 
 ! 2010-01-19 - Gerhard Raven
  - move HLT agnostic part of HltLine in SelectionLine (which can be shared by

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.25 2010-01-19 12:55:02 graven Exp $ 
+# $Id: HltLine.py,v 1.26 2010-01-21 15:24:41 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.26 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -909,11 +909,9 @@ class Hlt1Line(object):
                       } )
         if ODIN : mdict.update( { 'ODIN' : ODINFilter ( odinentryName( line ) , Code = self._ODIN )  } )
         if L0DU : 
-            from Configurables import L0DUFromRawAlg
+            from HltDecodeRaw import DecodeL0DU
             _s = GaudiSequencer( l0entryName(line) + 'Sequence'
-                               , Members = [ L0DUFromRawAlg()
-                                           , L0Filter( l0entryName( line ) , Code = self._L0DU  )
-                                           ] 
+                               , Members = DecodeL0DU.members() + [ L0Filter( l0entryName( line ) , Code = self._L0DU  ) ] 
                                )
             mdict.update( { 'L0DU' : _s } )
         ## TODO: in case of HLT, we have a dependency... dangerous, as things become order dependent...
