@@ -131,6 +131,7 @@ HltANNSvc().Hlt1SelectionID = {
     'PV3D'                                  :10103,
     'VeloOpen'                              :10104,
     'PV3DOpen'                              :10105,
+    'RZVeloBW'                              :10106,
     #
     # 11K - 20K : added automatically by configuration...
     # 50K+ : used by Hlt2
