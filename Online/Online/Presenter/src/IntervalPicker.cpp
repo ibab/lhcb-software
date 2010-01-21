@@ -766,3 +766,16 @@ void IntervalPicker::ok()
 //  m_mainFrame->setHistoryMode(s_runInterval);
   }
 }
+
+const char* IntervalPicker::startTimeString() {
+  Int_t year, month, day, hour, min, sec;
+  m_startDateNumberEntry->GetDate(year, month, day);
+  m_startTimeNumberEntry->GetTime(hour, min, sec);       
+  return Form("%d/%d/%d %2d:%2d",day,month,year,hour,min);
+}
+const char* IntervalPicker::endTimeString() {
+  Int_t year, month, day, hour, min, sec;
+  m_endDateNumberEntry->GetDate(year, month, day);
+  m_endTimeNumberEntry->GetTime(hour, min, sec);       
+  return Form("%d/%d/%d %02d:%02d",day,month,year,hour,min);
+}

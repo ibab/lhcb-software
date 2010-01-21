@@ -33,6 +33,9 @@ public:
   void nowButton();
   void ok();
   
+  const char* startTimeString();
+  const char* endTimeString();
+
 private:
   PresenterMainFrame* m_mainFrame;
   Archive*  m_archive;

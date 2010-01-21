@@ -199,8 +199,6 @@ void DbRootHist::loadAnaSources()
                                               *m_dimMutex,
                                               *m_tasksNotRunning,
                                               *m_rootMutex);
-        //anaHisto->initHistogram();
-        //anaHisto->setTH1FromDB();                                              
         m_anaSources.push_back(anaHisto);
         if (NULL == m_anaSources[i]->rootHistogram) { sourcesOK = false; }
       }
@@ -905,7 +903,6 @@ bool DbRootHist::setOnlineHistogram(OnlineHistogram* newOnlineHistogram)
         m_histogramType = newOnlineHistogram->hstype();
       }
       if (rootHistogram && isInit) { 
-        std::cout<< "GG: Setting TH1 option at  DbRootHist object creation for "<<newOnlineHistogram->identifier() <<std::endl;
         setTH1FromDB(); }
       out = true;
     } else {
@@ -934,7 +931,7 @@ bool DbRootHist::connectToDB(OnlineHistDB* onlineHistDbSession,
   bool out;
   if (onlineHistDbSession) { m_session = onlineHistDbSession; }
   if (m_session) {
-    out = setOnlineHistogram(m_session->getHistogram(m_identifier, page,
+    out = setOnlineHistogram(m_session->getNewHistogram(m_identifier, page,
                                                      instanceOnPage));
   } else { out = false; }
   return out;

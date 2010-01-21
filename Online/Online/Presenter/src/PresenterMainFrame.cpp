@@ -1925,6 +1925,8 @@ void PresenterMainFrame::setStartupHistograms(const std::vector<std::string> & h
     TString inputParamTS = TString(*histogramListIt);
     if (inputParamTS.EndsWith(s_rootFileExtension.c_str())) {
       m_savesetFileName = *histogramListIt;
+       setStatusBarText(m_savesetFileName.c_str(),2);
+      m_historyIntervalComboBox->Select(M_Last_File, false);
 //      m_rightMiscFrame->HideFrame(m_dimBrowserDock);
 //      m_rightMiscFrame-> ShowFrame();
       
@@ -2094,9 +2096,9 @@ void PresenterMainFrame::stopPageRefresh()
   disablePageRefresh();
   if (0 != m_pageRefreshTimer) {
     m_message = "Refresh stopped.";
-    m_mainStatusBar->SetText(m_message.c_str(), 2);
     if (m_verbosity >= Verbose) { std::cout << m_message << std::endl; }
     if (History != m_presenterMode) {
+      m_mainStatusBar->SetText(m_message.c_str(), 2);
       m_startRefreshButton->SetState(kButtonUp);
       m_viewMenu->EnableEntry(START_COMMAND);
     }
@@ -2117,13 +2119,14 @@ void PresenterMainFrame::clearHistos()
     disableHistogramClearing();
   } else {
     m_message = "Histograms cleared.";
-    m_mainStatusBar->SetText(m_message.c_str(), 2);
     m_clearHistoButton->SetState(kButtonDown);
     m_clearedHistos = true;
     m_viewMenu->CheckEntry(CLEAR_HISTOS_COMMAND);
     enableHistogramClearing();
   }
-  m_mainStatusBar->SetText(m_message.c_str(), 2);
+  if (History != m_presenterMode) {
+      m_mainStatusBar->SetText(m_message.c_str(), 2);
+  }
   if (m_verbosity >= Verbose) { std::cout << m_message << std::endl; }
 }
 OMAlib* PresenterMainFrame::analysisLib()
@@ -2344,7 +2347,7 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
       m_message = "Histograms read from Database.";
 //      listView->MapSubwindows();
       listView->MapWindow();
-gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
+      gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
 
     } catch (std::string sqlException) {
         if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
@@ -2360,7 +2363,9 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
     m_message = "Histograms not read from Database.";
   }
   if (Batch != m_presenterMode) {
-    m_mainStatusBar->SetText(m_message.c_str(), 2);
+    if (History != m_presenterMode) {
+      m_mainStatusBar->SetText(m_message.c_str(), 2);
+    }
     sortTreeChildrenItems(listView, listView->GetFirstItem());
     fClient->NeedRedraw(listView);
   }
@@ -4063,6 +4068,9 @@ void PresenterMainFrame::loadAllPages()
      }
   }
 }
+
+
+
 void PresenterMainFrame::loadSelectedAlarmFromDB(int msgId)
 {
   if (isConnectedToHistogramDB()) {
@@ -4072,6 +4080,7 @@ void PresenterMainFrame::loadSelectedAlarmFromDB(int msgId)
     OMAMessage message(msgId, *m_histogramDB);
     std::string previousSaveset = m_savesetFileName;
     m_savesetFileName = message.saveSet();
+    setStatusBarText(m_savesetFileName.c_str(),2);
     m_prevPresenterMode = m_presenterMode; 
     m_presenterMode = History;
     addHistoToPage(message.hIdentifier(), separate);
@@ -4146,22 +4155,30 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
       if (("last 8 hours" == history_entry)) {
         rw_timePoint = s_Now;
         rw_pastDuration = std::string("08:00:00");
+        m_message = "History for last 8 hours";
       } else if (("last 1 hour" == history_entry)) {
         rw_timePoint = s_Now;
         rw_pastDuration = std::string("01:00:00");
+        m_message = "History for last hour";
       } else if (("preset file" == history_entry)) {
         rw_timePoint = s_startupFile;
         rw_pastDuration = pastDuration;
+        m_message = m_savesetFileName;
       } else if (("set file" == history_entry)) {
         rw_timePoint = s_startupFile;
         rw_pastDuration = pastDuration;
+        m_message = m_savesetFileName;
       } else {
         rw_timePoint = global_timePoint;
         rw_pastDuration = global_pastDuration;        
+        m_message = Form("History from %s to %s",
+                         m_intervalPicker->startTimeString(),
+                         m_intervalPicker->endTimeString());
       }
       if (m_verbosity >= Verbose) {
         std::cout << "Navigation step size " << global_stepSize << std::endl;
       }
+      m_mainStatusBar->SetText(m_message.c_str(), 2);
     }
 //    startBenchmark(pageName); 
       try {
