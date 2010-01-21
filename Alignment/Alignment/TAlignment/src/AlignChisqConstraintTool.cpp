@@ -45,7 +45,10 @@ namespace Al
     LHCb::ChiSquare addConstraints(const Elements& elements,
 				   AlVec& halfDChi2DAlpha, AlSymMat& halfD2Chi2DAlpha2,
 				   std::ostream& stream) const ;
-    
+    LHCb::ChiSquare addConstraints(const Elements& inputelements,
+				   Al::Equations& equations,
+				   std::ostream& logmessage) const ;
+    LHCb::ChiSquare chiSquare( const AlignmentElement& element, bool activeonly ) const ; 
   private: 
     void fillErrors( SurveyDictionaryEntry& entry ) const ;
     StatusCode parseXmlFile( const std::string& filename) ;
@@ -450,5 +453,62 @@ namespace Al
     }
     logmessage << "Total chisquare of survey constraints: " << totalchisq << " / " << totalnumconstraints << std::endl ;
     return LHCb::ChiSquare(totalchisq,totalnumconstraints) ;
-  }  
+  }   
+
+
+  LHCb::ChiSquare AlignChisqConstraintTool::addConstraints(const IGetElementsToBeAligned::Elements& inputelements,
+							   Al::Equations& equations,
+							   std::ostream& logmessage) const
+  {
+    size_t totalnumconstraints(0) ;
+    double totalchisq(0) ;
+    for( IGetElementsToBeAligned::Elements::const_iterator ielem = inputelements.begin() ;
+	 ielem != inputelements.end(); ++ielem) {
+      const SurveyDictionaryEntry* survey = findSurveyData( **ielem ) ;
+      ElementData& elemdata = equations.element((*ielem)->index()) ;
+      if( survey ) {
+	AlParameters currentdelta = (*ielem)->currentDelta() ;
+	for(int idof=0 ; idof<6; ++idof ) {
+	  if( (*ielem)->dofMask().isActive(idof) ) 
+	    if( survey->err[idof] > 0 ) {
+	      double weight = 1/( survey->err[idof] * survey->err[idof] ) ;
+	      double residual = survey->par[idof] - currentdelta.parameters()(idof) ;
+	      elemdata.m_dChi2DAlpha(idof)        += weight * residual ; 
+	      elemdata.m_d2Chi2DAlpha2(idof,idof) += weight ;
+	      ++ totalnumconstraints;
+	      totalchisq += weight * residual * residual ;
+	      debug() << "adding survey constraint: "
+		      << (*ielem)->name() << " "
+		      << currentdelta.parName(idof) << " "
+		      << survey->par[idof] << " " << survey->err[idof] << endreq ;
+	    } else {
+	      warning() << "No survey constraint for dof: "
+			<< (*ielem)->name() << " " << currentdelta.parName(idof) << endreq ;
+	    }
+	}
+      }
+    }
+    logmessage << "Total chisquare of survey constraints: " << totalchisq << " / " << totalnumconstraints << std::endl ;
+    return LHCb::ChiSquare(totalchisq,totalnumconstraints) ;
+  }   
+
+  LHCb::ChiSquare AlignChisqConstraintTool::chiSquare(const AlignmentElement& element,
+						      bool activeonly ) const
+  {
+    size_t totalnumconstraints(0) ;
+    double totalchisq(0) ;
+    const SurveyDictionaryEntry* survey = findSurveyData( element ) ;
+    if( survey ) {
+      AlParameters currentdelta = element.currentDelta() ;
+      for(int idof=0 ; idof<6; ++idof ) 
+	if( (!activeonly || element.dofMask().isActive( idof ) ) &&
+	    survey->err[idof] > 0 ) {
+	  double weight = 1/( survey->err[idof] * survey->err[idof] ) ;
+	  double residual = survey->par[idof] - currentdelta.parameters()(idof) ;
+	  ++totalnumconstraints;
+	  totalchisq += weight * residual * residual ;
+	}
+    }
+    return LHCb::ChiSquare(totalchisq,totalnumconstraints) ;
+  }
 }
