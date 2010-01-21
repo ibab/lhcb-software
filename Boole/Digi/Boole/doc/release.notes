@@ -16,6 +16,8 @@ Purpose: LHCb Digitization program
    . Monitoring of failed associations (VeloAlgorithms v5r1)
    . Fix to file sharing in FileRecordCnvSvc (Gaudi v21r7)
    . Improvements to L0Calo simulation (CaloDigit v3r2)
+   . Improved printout of L0DU configuration (L0DU)
+   . New L0DUReportMonitor monitoring histograms and improved printout (L0DU)
 
 </PRE><H1><A NAME=v20r0>2009-12-07 Boole v20r0</A></H1></PRE>
  - Changes to Configurable:
