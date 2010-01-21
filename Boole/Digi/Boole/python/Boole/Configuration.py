@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.64 2009-12-17 08:54:32 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.65 2010-01-21 14:32:29 marcin Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -306,12 +306,13 @@ class Boole(LHCbConfigurableUser):
         #        VeloPix digitisation and clustering
         if tae == "":
             from Configurables import (VeloPixMCDepositCreator,VeloPixMCDigitCreator,VeloPixDigitCreator,
-                                       VeloPixSpilloverSubtraction,VeloPixClusterCreator)
+                                       VeloPixSpilloverSubtraction,VeloPixClusterCreator,PrepareVeloPixRawBank)
             seq.Members += [VeloPixMCDepositCreator("VeloPixMCDepositCreator") ]
             seq.Members += [VeloPixMCDigitCreator("VeloPixMCDigitCreator") ]
             seq.Members += [VeloPixDigitCreator("VeloPixDigitCreator") ]
             seq.Members += [VeloPixSpilloverSubtraction("VeloPixSpilloverSubtraction") ]
             seq.Members += [VeloPixClusterCreator("VeloPixClusterCreator") ]
+            seq.Members += [PrepareVeloPixRawBank("PrepareVeloPixRawBank") ]
         else:
             raise RuntimeError("TAE not implemented for VELOPIX")
 
