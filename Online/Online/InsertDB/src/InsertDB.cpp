@@ -44,7 +44,7 @@ InsertDB::InsertDB(const std::string& name, ISvcLocator* ploc)
   declareProperty("AdderName",m_addername="_Adder_1"); 
   declareProperty("DNS",m_dimclientdns="mona08"); 
   declareProperty("HLTDBFolder",m_hltdbfolder=""); 
-  declareProperty("HLTType",m_nickname="Physics_MinBiasL0_PassThroughHlt_Nov09"); 
+  declareProperty("HLTType",m_nickname="Physics_320Vis_300L0_10Hlt1_Aug09"); 
   declareProperty("MonitoringTasks",m_monitoringtasks); 
   declareProperty("Alleys",m_alleys);
   declareProperty("Pages",m_subfolders);
@@ -66,6 +66,10 @@ StatusCode InsertDB::initialize() {
  if ((int)m_alleys.size()==0) {
     //these are the alleys and alley algorithm names
     //could be put in a joboption but hardcoded for the moment
+    m_alleys.push_back("AlignVelo");
+    m_alleysearchstring.push_back("Hlt1AlignVelo");
+    m_alleys.push_back("DiHadron");
+    m_alleysearchstring.push_back("Hlt1DiHadron");
     m_alleys.push_back("DiMuon");
     m_alleysearchstring.push_back("Hlt1DiMuon");
     m_alleys.push_back("Electron");
@@ -76,6 +80,8 @@ StatusCode InsertDB::initialize() {
     m_alleysearchstring.push_back("HltGlobalMonitor");
     m_alleys.push_back("Hadron");
     m_alleysearchstring.push_back("Hlt1Hadron");
+    m_alleys.push_back("Incident");
+    m_alleysearchstring.push_back("Hlt1Incident");
     m_alleys.push_back("L0");
     m_alleysearchstring.push_back("Hlt1L0");
     m_alleys.push_back("Lumi");
@@ -90,10 +96,20 @@ StatusCode InsertDB::initialize() {
     m_alleysearchstring.push_back("Hlt1ODINPhysics");
     m_alleys.push_back("Photon");
     m_alleysearchstring.push_back("Hlt1Photon");
+    m_alleys.push_back("SingleHadron");
+    m_alleysearchstring.push_back("Hlt1SingleHadron");
+    m_alleys.push_back("SingleMuon");
+    m_alleysearchstring.push_back("Hlt1SingleMuon");
+    m_alleys.push_back("SoftDiHadron");
+    m_alleysearchstring.push_back("Hlt1SoftDiHadron");
     m_alleys.push_back("Tell1Error");
     m_alleysearchstring.push_back("Hlt1Tell1Error");
     m_alleys.push_back("Velo");
     m_alleysearchstring.push_back("Hlt1Velo");
+    m_alleys.push_back("XPress");
+    m_alleysearchstring.push_back("Hlt1XPress");
+    m_alleys.push_back("Hlt2");
+    m_alleysearchstring.push_back("Hlt2");
     m_DMalleys.push_back("GlobalMonitor");
     m_DMalleysearchstring.push_back("HltGlobalMonitor");
  }   
@@ -273,9 +289,10 @@ void InsertDB::doEFF() {
 	   for (int ip=0;ip<(int)pagenames.size();ip++) {
               pagename=m_hltdbfolder+"/HLT/"+m_nickname+"/DataManager/"+pagenames[ip];
 	      std::string hlt1line=j->first;
+	     // msg << MSG::INFO<< "Page name " <<pagename << endreq; 
 	      OnlineHistPage* evsize = HistDB->getPage(pagename);
 	      evsize->removeAllHistograms();
-              int nbofhistosonpage = nbofhistosonpages.size();
+              int nbofhistosonpage = nbofhistosonpages[ip];
 
               //set up the coordinates of the histograms on the page	   
               double xmargin = 0.03;
@@ -298,9 +315,11 @@ void InsertDB::doEFF() {
 	      for (k=j->second.begin(); k!=j->second.end(); k++) {	    
 
 	         std::string tname=*k;
+		 std::string::size_type found=NULL;
+		 int fx=1;
 	         if (ip==0) {
 		       doc= "top left: number of accepted events by ODIN per ODIN trigger type.\ntop right: number of accepted events by L0 per L0 trigger alley.\nbottom: number of accepted events by Hlt1 per Hlt1 trigger alley.";
-		       std::string::size_type found=tname.find("ODIN trigger type",0);
+		       found=tname.find("ODIN trigger type",0);
 		       if (found ==std::string::npos) {
 		          found=tname.find("L0 channel",0);
 		          if (found ==std::string::npos) {
@@ -308,54 +327,54 @@ void InsertDB::doEFF() {
 		             if (found ==std::string::npos) {
 			     continue;
 			     }
+			     else {zx=0;zy=1;fx=2;}
 			  }
-		       }	    
+			  else {zx=1;zy=0;}
+		       }
+		       else {zx=0;zy=0;}	    
 		  }
 		  if (ip==1) {
-		       std::string::size_type found=tname.find("Hlt1 Alleys",0);
+		       found=tname.find("HltLines Inclusive",0);
 		       doc="top-left: Number of accepted events in Hlt1 per Hlt1 alley.(same plot as on bottom previous page)\ntop-right: Correlation matrix of accepted events in Hlt1 per Hlt1 line (horizontal and  vertical axis show the different Hlt1 lines, the color represents the number of events accepted by  this line).\nbottom: Number of accepted events by Hlt1 per Hlt1 line (zoom in)";
 		       if (found ==std::string::npos) {
 		          found=tname.find("HltLines Correlations",0);
 		          if (found ==std::string::npos) {
-		            found=tname.find("HltLines Inclusive",0);
+		            found=tname.find("# positive HltLines",0);
 		            if (found ==std::string::npos) {
 			    continue;
 			    }
+			    else {zx=0;zy=0;}
 			  }
-		       }       
+			  else  {zx=1;zy=0;}
+		       } 
+		       else {zx=0;zy=1;fx=2;}      
 		   }
 		   if (ip==2) {
-		       std::string::size_type found=tname.find("Virtual memory per event",0);
+		       found=tname.find("Virtual memory",0);
 		       if (found==std::string::npos) {
-		          found=tname.find("Virtual Memory",0);
+		          found=tname.find("Virtual memory",0);
 		          if (found ==std::string::npos) {
-		             found=tname.find("time per event dist",0);
+		             found=tname.find("average time per event",0);
 		             if (found ==std::string::npos) {
 			         found=tname.find("time per event",0);
 		                 if (found ==std::string::npos) {
 			            continue;
-			         }				 
+			         }
+				 else {zx=1;zy=1;}				 
 			     }
+			     else {zx=0;zy=1;}
 			  }
-		       } 	        
+			  else  {zx=1;zy=0;}
+		       } 
+		       else  {zx=0;zy=0;}	        
 		    }
 		      
 	            std::string histogramname="GauchoJob/"+hlt1line+"/"+tname;
 	            OnlineHistogram* h=HistDB->getHistogram(histogramname);
 	            //this code is to place the histogram in the right place on the page
 	            ok = true;	          
-	            if (zx < nx ) {
-                        x1 = zx*dx + xmargin;
-                       x2 = x1 + dx - xmargin;
-		       zx ++;
-	            }
-	            else {
-	               zy++;
-		       zx=0;
-		       x1 = zx*dx + xmargin;
-                       x2 = x1 + dx - xmargin;
-		       zx ++;
-	            }	      
+		    x1 = zx*dx + xmargin;
+		    x2 = x1 + fx*dx - xmargin;       
 	            y2 = 1 - zy*dy - ymargin; 
 	            y1 = y2 - dy + ymargin;
 	            //add the histogram to the page
@@ -371,7 +390,7 @@ void InsertDB::doEFF() {
 	   }
        }	      
 
-       msg << MSG::INFO << "Committing changes to Hist DB" << endreq;
+     //  msg << MSG::INFO << "doEFF: committing changes to Hist DB" << endreq;
        HistDB->commit();
      }
      delete HistDB;
@@ -564,7 +583,7 @@ void InsertDB::doEFFHltExperts() {
 	   else abort();
 	}    	
 
-       msg << MSG::INFO << "Committing changes to Hist DB" << endreq;
+     //  msg << MSG::INFO << "doEFFHLTExperts: committing changes to Hist DB" << endreq;
        HistDB->commit();
      }
      delete HistDB;
@@ -782,7 +801,7 @@ void InsertDB::doMF(std::string monitoringtask) {
 	   }
 	}    	
 
-       msg << MSG::INFO << "Committing changes to Hist DB" << endreq;
+     //  msg << MSG::INFO << "doMF: committing changes to Hist DB" << endreq;
        HistDB->commit();
      }
      delete HistDB; 
