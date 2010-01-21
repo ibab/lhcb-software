@@ -38,13 +38,13 @@
 # \----- (End of User Boole/Boole) -------------------------------------------------------------------
 # DigiWriter.ItemList    = ['/Event/Gen/Header#1', '/Event/MC/Header#1', '/Event/MC/DigiHeader#1', '/Event/DAQ/RawEvent#1', '/Event/Gen/Collisions#1', '/Event/Gen/HepMCEvents#1', '/Event/pSim/MCVertices#1', '/Event/pSim/MCParticles#1', '/Event/pSim/Rich/DigitSummaries#1', '/Event/MC/Muon/DigitsInfo#1', '/Event/Link/Raw/Velo/Clusters#1', '/Event/Link/Trig/L0/Calo#1', '/Event/Link/Trig/L0/FullCalo#1', '/Event/Link/Raw/TT/Clusters#1', '/Event/Link/Raw/IT/Clusters#1', '/Event/Link/Raw/OT/Times#1', '/Event/Link/Raw/Ecal/Digits#1', '/Event/Link/Raw/Hcal/Digits#1', '/Event/Link/Raw/Muon/Digits#1', '/Event/MC/TrackInfo#1', '/Event/Link/Raw/Velo/Clusters2MCHits#1', '/Event/Link/Raw/TT/Clusters2MCHits#1', '/Event/Link/Raw/IT/Clusters2MCHits#1', '/Event/Link/Raw/OT/Times2MCHits#1']
 # DigiWriter.OptItemList = []
-# WARNING: Default tag requested for partition DDDB (using head-20091120)
-# WARNING: Default tag requested for partition LHCBCOND (using head-20091211)
-# WARNING: Default tag requested for partition SIMCOND (using sim-20091112-vc-md100)
+# WARNING: Default tag requested for partition DDDB (using head-20100119)
+# WARNING: Default tag requested for partition LHCBCOND (using head-20100119)
+# WARNING: Default tag requested for partition SIMCOND (using sim-20100119-vc-md100)
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Boole version v20r0
-                                          running on lxbuild156.cern.ch on Fri Jan  8 08:57:06 2010
+                                          running on lxbuild156.cern.ch on Thu Jan 21 11:20:05 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -56,7 +56,7 @@ EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEv
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.86 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.65 times the speed of a 2.8 GHz Xeon.
 BooleSequencer       INFO Member list: ProcessPhase/Init, ProcessPhase/Digi, ProcessPhase/Link, ProcessPhase/Moni, ProcessPhase/Filter
 Init                 INFO Member list: GaudiSequencer/InitBooleSeq, GaudiSequencer/InitDataSeq, GaudiSequencer/InitMuonSeq
 InitBooleSeq         INFO Member list: BooleInit, GaudiSequencer/SpilloverHandler
@@ -77,10 +77,10 @@ InitMuonSeq          INFO Member list: MuonBackground/MuonLowEnergy, MuonBackgro
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
-DDDB                 INFO Using TAG "head-20091120"
+DDDB                 INFO Using TAG "head-20100119"
 EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 SIMCOND              INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/SIMCOND.db/SIMCOND"
-SIMCOND              INFO Using TAG "sim-20091112-vc-md100"
+SIMCOND              INFO Using TAG "sim-20100119-vc-md100"
 RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r2/data/muonlow-G4.root" for reading
 RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r2/data/muonflat-G4.root" for reading
 Digi                 INFO Member list: GaudiSequencer/DigiVeloSeq, GaudiSequencer/DigiTTSeq, GaudiSequencer/DigiITSeq, GaudiSequencer/DigiOTSeq, GaudiSequencer/DigiRichSeq, GaudiSequencer/DigiCaloSeq, GaudiSequencer/DigiMuonSeq, GaudiSequencer/DigiL0Seq
@@ -197,10 +197,14 @@ L0Muon               INFO  foiYSize = 0,0,0,1,1
 L0Muon               INFO  ignoreM1 = 0
 L0Muon               INFO  ignoreM2 = 0
 L0Muon               INFO  procVersion = 2
-L0MuonTrigger I...   INFO Time User   : Tot= 1.81  [s]                                             #=  1
-ToolSvc.L0CondD...   INFO Registered RAM(BCID) versions = {|}
+L0MuonTrigger I...   INFO Time User   : Tot= 1.78  [s]                                             #=  1
+ToolSvc.L0CondD...   INFO Registered RAM(BCID) versions = {}
+ToolSvc.L0DUConfig   INFO Creating the TEMPLATE configuration tools : ToolSvc.L0DUConfig.Template for time slot :  'T0'
 ToolSvc.L0DUCon...   INFO -------------------------------------------------------------
-ToolSvc.L0DUCon...   INFO **** L0DU Config loading : L0TCK = 0xDC09 ==> OK
+ToolSvc.L0DUCon...   INFO **** L0DU Config loading : L0TCK = 0x10000 for slot T0 ==> OK
+ToolSvc.L0DUCon...   INFO Short description :: NO DESCRIPTION (L0DUConfig.Template)
+ToolSvc.L0DUCon...   INFO -------------------------------------------------------------
+ToolSvc.L0DUCon...   INFO **** L0DU Config loading : L0TCK = 0xDC09 for slot T0 ==> OK
 ToolSvc.L0DUCon...   INFO Short description ::  TCK = 0xDC09 : DC09 tuning by Leandro (March 2009) - gain:Calo[20] : Muon[40]
 L0DU                 INFO The L0DUConfig (TCK=0xDC09) have been succesfully loaded
 Link                 INFO Member list: GaudiSequencer/LinkVeloSeq, GaudiSequencer/LinkTTSeq, GaudiSequencer/LinkITSeq, GaudiSequencer/LinkOTSeq, GaudiSequencer/LinkTrSeq, GaudiSequencer/LinkRichSeq, GaudiSequencer/LinkCaloSeq, GaudiSequencer/LinkMuonSeq, GaudiSequencer/LinkL0Seq
@@ -440,7 +444,7 @@ L0MuonOnlineMon...SUCCESS Booked 9 Histogram(s) : 1D=5 2D=4
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.86 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.65 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -596,8 +600,8 @@ DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/0(Alg/Node/Total).
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
-L0MuonTrigger I...   INFO Time User   : Tot= 1.81  [s]                                             #=  1
-ChronoStatSvc        INFO Time User   : Tot= 3.02  [s]                                             #=  1
+L0MuonTrigger I...   INFO Time User   : Tot= 1.78  [s]                                             #=  1
+ChronoStatSvc        INFO Time User   : Tot= 3.09  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized successfully
 ApplicationMgr       INFO Application Manager Finalized successfully
