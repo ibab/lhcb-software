@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 """
 Bd->K*MuMu selections 
@@ -15,7 +15,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
     @todo Now only new (low lumi) cuts in slots. The nominal lumi stripping lines
     by Rob Lambert are hard-coded.
     """
-
+    
     __slots__ = { 
                    'BMassLow'           : 5050       # MeV, low mass cut
                 ,  'BMassHighWin'       :  500       # MeV, high mass window
@@ -51,7 +51,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
           , 'J/psi(1S)': "(BPVDIRA> %(IntDIRA)s ) & (2 == NINTREE((ABSID=='mu-') & (TRCHI2DOF< %(TrackChi2)s )))" % self.getProps()
             }
          Early_loose_Bd.CombinationCut = "(AM > %(BMassLow)s *MeV) & (ADAMASS('B0') < %(BMassHighWin)s *MeV)"  % self.getProps()
-         Early_loose_Bd.MotherCut = "(BPVDIRA> %(BDIRA)s ) & (BPVVDCHI2 < %(BFlightCHI2)s ) & (BPVIPCHI2() > %(BIPCHI2)s )"  % self.getProps()
+         Early_loose_Bd.MotherCut = "(BPVDIRA> %(BDIRA)s ) & (BPVVDCHI2 > %(BFlightCHI2)s ) & (BPVIPCHI2() < %(BIPCHI2)s )"  % self.getProps()
          return Early_loose_Bd
 
     def Early_SignalLine(self):
