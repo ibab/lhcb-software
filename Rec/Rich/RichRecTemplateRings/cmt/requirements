@@ -2,11 +2,11 @@
 # Created    : 20/08/2007
 # Maintainer : Sajan Easo
 #============================================================================
-# $Id: requirements,v 1.5 2009-10-20 15:32:36 cattanem Exp $
+# $Id: requirements,v 1.6 2010-01-21 14:44:37 rlambert Exp $
 #============================================================================
 
 package RichRecTemplateRings
-version v1r1p1
+version v1r2
 
 # ================ structure ================================================
 branches src cmt doc python

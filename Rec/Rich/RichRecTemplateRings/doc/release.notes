@@ -4,6 +4,9 @@
 ! Purpose      : Reconstruct Cherenkov Rings for Particle Identification
 !-----------------------------------------------------------------------------
 
+!==================== RichRecTemplateRings v1r2 2010-01-21 =================
+
+
 !==================== RichRecTemplateRings v1r1p1 2009-10-20 =================
 ! 2009-12-16- Sajan Easo
  - Added additional options to use with no-Magnetic field data
