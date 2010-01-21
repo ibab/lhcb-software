@@ -1,6 +1,9 @@
 #
 #   Stripping selections 
 #
+#   B (and charm) decays with one muon required, exclusive and
+#   semi-inclusive selections.
+#
 #   @author A. Poluektov
 #   @date 2009-05-15
 #

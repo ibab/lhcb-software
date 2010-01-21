@@ -1,5 +1,8 @@
 #
-#   Stripping selections 
+#   Dimuon stripping selections 
+# 
+#   all physics channels with at least 2 electrons inside
+#   (with minimal electron ID required)
 #
 #   @author A. Poluektov
 #   @date 2009-05-15

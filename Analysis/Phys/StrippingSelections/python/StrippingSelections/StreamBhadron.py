@@ -1,5 +1,10 @@
 #
-#   Stripping selections 
+#   Bhadron stripping selections 
+#
+#  all physics channels with hadronic final states from a B decay
+#    - B exclusive selections like: B->D(KSpipi),B->phiphi,B->K*K* etc.
+#    - B semi-inclusive selections: B->DX
+#    - Topological selections
 #
 #   @author A. Poluektov
 #   @date 2009-05-15

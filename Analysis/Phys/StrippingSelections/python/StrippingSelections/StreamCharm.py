@@ -1,6 +1,8 @@
 #
 #   Charm stripping selection
 #
+#   all physics channels with hadronic final states from charm decay
+#
 #   @author A. Poluektov
 #   @date 2010-01-21
 # 

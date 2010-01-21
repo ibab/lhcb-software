@@ -1,6 +1,9 @@
 #
 #   Calibration stripping selections 
 #
+#   Calibration channels: Lambda->Kpi, J/psi->mumu and 
+#   J/psi->ee selected without PID requirements
+#
 #   @author A. Poluektov
 #   @date 2009-05-15
 #

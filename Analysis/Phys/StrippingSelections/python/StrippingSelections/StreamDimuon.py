@@ -1,5 +1,12 @@
 #
-#   Stripping selections 
+#   Dimuon stripping selections 
+#
+#  all B decay channels with at least 2 muons inside
+#  (with minimal muon ID required)
+#      - exclusive selections for: B->J/psi(mm)X, B->K*mumu, B->mumu
+#      - J/psi(mm) inclusive for physics (with pre-scaling
+#        with increasing Luminosity)
+#            
 #
 #   @author A. Poluektov
 #   @date 2009-05-15
