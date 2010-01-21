@@ -59,6 +59,9 @@ use VeloDAQ           v4r12   Velo      # Kurt Rinnert
 use VeloSimulation    v3r6p1  Velo      # Tomasz Szumlak
 use VeloTools         v3r4    Velo      # Tomasz Szumlak
 
+# VeloPix
+use VeloPixDAQ        v1r0    VeloPix  # Marcin Kucharczyk
+
 # Declare this as a container package
 apply_pattern container_package
 

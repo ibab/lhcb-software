@@ -9,6 +9,8 @@
 </PRE><H1><A NAME=v7r11>2009-12-15 LbcomSys v7r11</A></H1><PRE>
 This version uses Gaudi v21r6 and LHCb v28r5
 
+- Added package VeloPix/VeloPixDAQ 
+
 - Packages modified: PuVeto v7r4, OTAssociators v4r4, STMonitors v2r3
 
 - In PuVeto v7r4
