@@ -15,8 +15,12 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 #
 
 from StrippingConf.Configuration import StrippingConf
+from StrippingSelections.Streams import allStreams
+from StrippingSelections import StreamMiniBias
 
-sc = StrippingConf()
+noMB = allStreams
+noMB.remove( StreamMiniBias.stream )
+sc = StrippingConf(Streams = noMB)
 
 from Configurables import EventTuple, TupleToolSelResults
 
