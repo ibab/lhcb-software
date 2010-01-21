@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-01-21 - Anton Poluektov
+ - Rearranged streams for MC09 restripping
+
 ! 2010-01-19 - Anton Poluektov
  - TestStrippingDST.py: Added StrippingConf sequencer before DSTwriter sequencer
    (to fix problems with inter-stream correlations). 
