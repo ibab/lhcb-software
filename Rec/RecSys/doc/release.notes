@@ -5,6 +5,83 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v8r0>2010-01-21 RecSys v8r0</A></H1><PRE>
+This version uses Gaudi v21r7 and LHCb v29r0
+
+- Multiple changes for reprocessing the first data
+  Most are activated by the "earlyData" switch
+
+
+- Packages updated: Calo/CaloMoniDst v4r3, Calo/CaloPIDs v5r3, 
+                    Muon/MuonID v7r6, Rec/GlobalReco v6r31,
+                    Rec/LumiAlgs v3r2, Rich/RichIFBAnalysis v2r35,
+										Rich/RichRecQC v2r35, Rich/RichRecTemplateRings v1r2,
+                    Tf/PatAlgorithms v3r28, Tf/PatVelo v3r19, 
+                    Tf/PatVeloTT v3r10, Tf/TfTools v1r9,
+                    Tf/TrackMatching v2r26, Tf/TsaAlgorithms v3r15,
+                    Tr/PatPV v3r12, Tr/TrackTools v3r25, Tr/TrackUtils v1r33
+
+- In Calo/CaloMoniDst v4r3:
+	. Bugfixes and small changes in CaloProtoElectronMonitor,
+    CaloMoniAlg and CaloPi0Monitor
+
+- In Calo/CaloPIDs v5r3:
+	. Follow Gaudi fix #61116
+
+- In Muon/MuonID v7r6:
+	. Implemented EarlyData for muonID
+
+- In Rec/GlobalReco v6r31:
+	. Always set MuonPID SmartRef in ChargedProtoParticleAddMuonInfo when 
+   available
+
+- In Rec/LumiAlgs v3r2:
+	. added support for TimeSpanFSR
+	. DumpFSR: new: walks the FSR tree for each new input file and prints content
+
+- In Rich/RichIFBAnalysis v2r35:
+	. Pixel-clustering now outputs "Cluster-size" distributions, 
+	. RICH hitmaps of all-size clusters and RICH hitmaps of IFB-size clusters
+
+- In Rich/RichRecQC v2r35:
+	. Cosmetic changes to monitoring histogram and configurable
+
+- In Rich/RichRecTemplateRings v1r2:
+	. Added some options to find Cherenkov Rings in No-Magnetic field data 
+
+- In Tf/PatAlgorithms v3r28:
+	. changes to use ignore flag of HitBase class
+
+- In Tf/PatVelo v3r19:
+	. Set PatVeloRTracking and PatVeloGeneralTracking to correct for known half box 
+   offsets in x and y for tracks crossing halves
+
+- In Tf/PatVeloTT v3r10:
+	. bugfix, and respect new ignore flag of HitBase
+
+- In Tf/TfTools v1r9:
+	. add algorithm to flag hits to be not used in pattern reco
+
+- In Tf/TrackMatching v2r26:
+	. make sure Forward container is not retrieved if not used
+
+- In Tf/TsaAlgorithms v3r15:
+	. add check for ignore flag on Pattern Reco Hits 
+
+- In Tr/PatPV v3r12:
+	. Fix for Savannah bug #61282, required explicit constructors
+  . register for updates of Velo position in PatPV2DFit3D
+  . Other cosmetic changes
+
+- In Tr/TrackTools v3r25:
+	. Changed STClusterCollector so that it can run on B field on data. An option was
+    added to allow to run B off data. Default option is B ON.
+	. Minor bugfix
+
+- In Tr/TrackUtils v1r33:
+	. add TrackListMerger and TrackListRefiner
+	. access containers by Range in TrackContainerCopy
+
 </PRE><H1><A NAME=v7r12>2009-12-10 RecSys v7r12</A></H1><PRE>
 This version uses Gaudi v21r6 and LHCb v28r5
 
