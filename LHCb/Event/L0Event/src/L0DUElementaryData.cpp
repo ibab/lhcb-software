@@ -1,4 +1,4 @@
-// $Id: L0DUElementaryData.cpp,v 1.8 2010-01-20 15:59:07 odescham Exp $
+// $Id: L0DUElementaryData.cpp,v 1.9 2010-01-21 17:40:10 odescham Exp $
 // Include files 
 #include <utility>
 #include <string>
@@ -23,13 +23,14 @@ v_operands){
   // 2 dimensional operator (+,-)
   if(2 == v_operands.size() ){
     if( "+" == v_operator ){digit = v_operands[0] + v_operands[1] ;}
-    if( "-" == v_operator ){digit = v_operands[0] - v_operands[1] ;}
+    if( "-" == v_operator )digit = v_operands[0] - v_operands[1]; 
     if( "&" == v_operator ){digit = v_operands[0] & v_operands[1] ;}
     if( "^" == v_operator ){digit = v_operands[0] ^ v_operands[1] ;}
   }
   // Insert here other N-dimensional operators you need (LUT,...)
   // ...
   //  
+  if(digit < 0)digit = 0; // A revoir avec Hervé (handling negative value)
   return digit;
 }
 
