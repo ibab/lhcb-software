@@ -32,6 +32,9 @@ Purpose: LHCb reconstruction program
    . Improved handling of Veol tracks across half boxes (PatVelo v3r19)
    . New histograms in Rich alignment monitors (RichRecQC v2r35)
    . Now using online Rich gas temperature & pressure conditions (SQLDBDB v5r18)
+   . New online snapshot changes initialisation values for Magnet (SQLDBDB v5r18)
+   . Improved printout of L0DU configuration when re-running L0 trigger (L0DU)
+   . New L0DUReportMonitor monitoring histograms and improved printout (L0DU)
 
 </PRE><H1><A NAME=v35r11p2>2010-01-20 Brunel v35r11p2</A></H1><PRE>
 Version built on v35r11b branch

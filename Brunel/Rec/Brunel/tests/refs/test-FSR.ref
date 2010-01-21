@@ -1,5 +1,5 @@
 # --> Including file '/build/cattanem/Brunel_HEAD/Rec/Brunel/tests/options/test-FSR.py'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb3/Thu/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r7/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
 # EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
@@ -20,7 +20,7 @@
 # PoolRootEvtCnvSvc.EnableIncident      =    1;
 # PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
 # PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb3/Thu/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r7/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # <-- End of file '/build/cattanem/Brunel_HEAD/Rec/Brunel/tests/options/test-FSR.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
@@ -39,19 +39,19 @@
 # applying configuration of LumiAlgsConf
 # /***** User LumiAlgsConf/LumiAlgsConf **************************************************************
 # |-ForceFullSequence = False
-# |-DataType          = '2009'  (default: '2008')
+# |-DataType          = '2009'  (default: '2009')
 # |-SetFSRStatus      = ''
 # |-OutputLevel       = 1  (default: 3)
 # |-BXTypes           = ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2']
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0xa1d650>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0xa1a3b0>  (default: None)
 # |-InputType         = 'DST'  (default: 'MDF')
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # applying configuration of DDDBConf
-# WARNING: Using default tag head-20091120 for partition DDDB
-# WARNING: Using default tag head-20091211 for partition LHCBCOND
-# WARNING: Using default tag sim-20091112-vc-md100 for partition SIMCOND
+# WARNING: Using default tag head-20100119 for partition DDDB
+# WARNING: Using default tag head-20100119 for partition LHCBCOND
+# WARNING: Using default tag sim-20100119-vc-md100 for partition SIMCOND
 # /***** User DDDBConf/DDDBConf **********************************************************************
 # |-DataType   = '2009'
 # |-DbRoot     = 'conddb:/lhcb.xml'
@@ -63,10 +63,13 @@
 # /***** User CondDB/CondDB **************************************************************************
 # |-PartitionConnectionString = {}  (default: {})
 # |-LocalTags                 = {}  (default: {})
+# |-IgnoreHeartBeat           = False
 # |-Tags                      = {}  (default: {})
 # |-Overrides                 = []  (default: [])
+# |-DisableLFC                = False
 # |-Simulation                = False
 # |-SQLiteLocalCopiesDir      = ''
+# |-Online                    = False
 # |-UseOracle                 = False
 # |-LogFile                   = ''
 # |-OverwriteSQLiteLocalCopy  = False
@@ -75,7 +78,7 @@ ApplicationMgr      DEBUG Getting my own properties
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v35r11
-                                          running on lxbuild156.cern.ch on Thu Jan  7 16:24:51 2010
+                                          running on lxbuild156.cern.ch on Thu Jan 21 08:58:13 2010
 ====================================================================================================================================
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service EvtDataSvc/EventDataSvc
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service DetDataSvc/DetectorDataSvc
@@ -151,9 +154,14 @@ EventLoopMgr        DEBUG Creating Top Algorithm GaudiSequencer with name LumiSe
 LumiSequence        DEBUG Releasing service 'JobOptionsSvc'
 LumiSequence        DEBUG Property update for OutputLevel : new value = 1
 LumiSequence        DEBUG Property update for OutputLevel : new value = 1
+AlgContextSvc       DEBUG Service base class initialized successfully
+AlgContextSvc     VERBOSE ServiceLocatorHelper::service: found service IncidentSvc
+IncidentSvc         DEBUG Adding [BeginEvent] listener 'AlgContextSvc' with priority 0
+IncidentSvc         DEBUG Adding [EndEvent] listener 'AlgContextSvc' with priority 0
+LumiSequence      VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
 LumiSequence        DEBUG Initialize base class GaudiCommon<Algorithm>
 LumiSequence        DEBUG could not locate CounterSummarySvc, no counter summary will be made
-LumiSequence        DEBUG List of ALL properties of GaudiSequencer/LumiSequence  #properties = 39
+LumiSequence        DEBUG List of ALL properties of GaudiSequencer/LumiSequence  #properties = 38
 LumiSequence        DEBUG Property ['Name': Value] =  'ShortCircuit':False
 LumiSequence        DEBUG Property ['Name': Value] =  'ReturnOK':False
 LumiSequence        DEBUG Property ['Name': Value] =  'MeasureTime':True
@@ -162,8 +170,6 @@ LumiSequence        DEBUG Property ['Name': Value] =  'ModeOR':True
 LumiSequence        DEBUG Property ['Name': Value] =  'Members':[ 'EventAccounting/EventAccount' , 'createODIN/createODIN' , 'LumiIntegrateFSR/TouchLumiFSR' ]
 LumiSequence        DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
 LumiSequence        DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
-LumiSequence        DEBUG Property ['Name': Value] =  'RegisterForContextService':True
-LumiSequence        DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
 LumiSequence        DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
 LumiSequence        DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
 LumiSequence        DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
@@ -178,6 +184,7 @@ LumiSequence        DEBUG Property ['Name': Value] =  'TypePrint':True
 LumiSequence        DEBUG Property ['Name': Value] =  'StatPrint':True
 LumiSequence        DEBUG Property ['Name': Value] =  'PropertiesPrint':False
 LumiSequence        DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+LumiSequence        DEBUG Property ['Name': Value] =  'RegisterForContextService':True
 LumiSequence        DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
 LumiSequence        DEBUG Property ['Name': Value] =  'AuditStop':False
 LumiSequence        DEBUG Property ['Name': Value] =  'AuditStart':False
@@ -240,19 +247,18 @@ RndmGenSvc.Engine   DEBUG Service base class initialized successfully
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.86 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.75 times the speed of a 2.8 GHz Xeon.
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
+EventAccount      VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
 EventAccount        DEBUG Initialize base class GaudiCommon<Algorithm>
 EventAccount        DEBUG could not locate CounterSummarySvc, no counter summary will be made
-EventAccount        DEBUG List of ALL properties of EventAccounting/EventAccount  #properties = 36
+EventAccount        DEBUG List of ALL properties of EventAccounting/EventAccount  #properties = 35
 EventAccount        DEBUG Property ['Name': Value] =  'DefaultStatus':UNCHECKED
 EventAccount        DEBUG Property ['Name': Value] =  'OverrideStatus':False
 EventAccount        DEBUG Property ['Name': Value] =  'OutputDataContainer':/FileRecords/EventCountFSR
 EventAccount        DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
 EventAccount        DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
-EventAccount        DEBUG Property ['Name': Value] =  'RegisterForContextService':True
-EventAccount        DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
 EventAccount        DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
 EventAccount        DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
 EventAccount        DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
@@ -267,6 +273,7 @@ EventAccount        DEBUG Property ['Name': Value] =  'TypePrint':True
 EventAccount        DEBUG Property ['Name': Value] =  'StatPrint':True
 EventAccount        DEBUG Property ['Name': Value] =  'PropertiesPrint':False
 EventAccount        DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+EventAccount        DEBUG Property ['Name': Value] =  'RegisterForContextService':True
 EventAccount        DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
 EventAccount        DEBUG Property ['Name': Value] =  'AuditStop':False
 EventAccount        DEBUG Property ['Name': Value] =  'AuditStart':False
@@ -296,13 +303,12 @@ EventAccount        DEBUG EventAccounting:: The object of type 'LHCb::EventCount
 IncidentSvc         DEBUG Adding [WroteToOutputFile] listener 'EventAccount' with priority 0
 EventAccount        DEBUG registered with incSvc
 createODIN          DEBUG Property update for OutputLevel : new value = 1
+createODIN        VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
 createODIN          DEBUG Initialize base class GaudiCommon<Algorithm>
 createODIN          DEBUG could not locate CounterSummarySvc, no counter summary will be made
-createODIN          DEBUG List of ALL properties of createODIN/createODIN  #properties = 33
+createODIN          DEBUG List of ALL properties of createODIN/createODIN  #properties = 32
 createODIN          DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
 createODIN          DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
-createODIN          DEBUG Property ['Name': Value] =  'RegisterForContextService':True
-createODIN          DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
 createODIN          DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
 createODIN          DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
 createODIN          DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
@@ -317,6 +323,7 @@ createODIN          DEBUG Property ['Name': Value] =  'TypePrint':True
 createODIN          DEBUG Property ['Name': Value] =  'StatPrint':True
 createODIN          DEBUG Property ['Name': Value] =  'PropertiesPrint':False
 createODIN          DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+createODIN          DEBUG Property ['Name': Value] =  'RegisterForContextService':True
 createODIN          DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
 createODIN          DEBUG Property ['Name': Value] =  'AuditStop':False
 createODIN          DEBUG Property ['Name': Value] =  'AuditStart':False
@@ -397,9 +404,10 @@ ToolSvc.OdinTim...  DEBUG Property ['Name': Value] =  'OutputLevel':1
 ToolSvc.OdinTim...  DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
 TouchLumiFSR        DEBUG Property update for OutputLevel : new value = 1
 TouchLumiFSR        DEBUG Property update for OutputLevel : new value = 1
+TouchLumiFSR      VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
 TouchLumiFSR        DEBUG Initialize base class GaudiCommon<Algorithm>
 TouchLumiFSR        DEBUG could not locate CounterSummarySvc, no counter summary will be made
-TouchLumiFSR        DEBUG List of ALL properties of LumiIntegrateFSR/TouchLumiFSR  #properties = 42
+TouchLumiFSR        DEBUG List of ALL properties of LumiIntegrateFSR/TouchLumiFSR  #properties = 41
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'IntegratorToolName':LumiIntegrator
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'SubtractBXTypes':[  ]
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'AddBXTypes':[  ]
@@ -411,8 +419,6 @@ TouchLumiFSR        DEBUG Property ['Name': Value] =  'FileRecordLocation':/File
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'RawEventLocation':DAQ/RawEvent
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
-TouchLumiFSR        DEBUG Property ['Name': Value] =  'RegisterForContextService':True
-TouchLumiFSR        DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
@@ -427,6 +433,7 @@ TouchLumiFSR        DEBUG Property ['Name': Value] =  'TypePrint':True
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'StatPrint':True
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'PropertiesPrint':False
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+TouchLumiFSR        DEBUG Property ['Name': Value] =  'RegisterForContextService':True
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'AuditStop':False
 TouchLumiFSR        DEBUG Property ['Name': Value] =  'AuditStart':False
@@ -518,6 +525,7 @@ ToolSvc           VERBOSE ToolSvc.LumiIntegrator::start()
 ToolSvc           VERBOSE EventSelector.DataStreamTool::start()
 ServiceManager      DEBUG Starting service XmlParserSvc
 ServiceManager      DEBUG Starting service XmlCnvSvc
+ServiceManager      DEBUG Starting service AlgContextSvc
 ServiceManager      DEBUG Starting service RndmGenSvc
 ServiceManager      DEBUG Starting service FileRecordPersistencySvc
 ServiceManager      DEBUG Starting service FileRecordDataSvc
@@ -533,7 +541,7 @@ LumiSequence        DEBUG ==> beginRun
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 createODIN          DEBUG Property update for OutputLevel : new value = 1
 TouchLumiFSR        DEBUG Property update for OutputLevel : new value = 1
-RootDBase.open    SUCCESS 56721-100ev.dst File version:52400
+RootDBase.open    SUCCESS 56721-100ev.dst File version:52600
 PoolRootTreeEvt...   INFO Records token:[DB=324C6EEC-9EE8-DE11-9355-001E4F3E5979][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=0000001C-00000000]
 IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [FILE_OPEN_READ]
 FileRecordDataSvc   DEBUG Request to load record for file 324C6EEC-9EE8-DE11-9355-001E4F3E5979
@@ -589,11 +597,8 @@ PoolDbBaseCnv       DEBUG {ID=00000001-0000-0000-0000-000000000000}{CL=DataObjec
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
+IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
-AlgContextSvc       DEBUG Service base class initialized successfully
-AlgContextSvc     VERBOSE ServiceLocatorHelper::service: found service IncidentSvc
-IncidentSvc         DEBUG Adding [BeginEvent] listener 'AlgContextSvc' with priority 0
-IncidentSvc         DEBUG Adding [EndEvent] listener 'AlgContextSvc' with priority 0
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -679,8 +684,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -711,8 +716,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -743,8 +748,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -775,8 +780,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -807,8 +812,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -839,8 +844,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -871,8 +876,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -903,8 +908,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -935,8 +940,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -968,8 +973,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1000,8 +1005,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1032,8 +1037,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1064,8 +1069,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1096,8 +1101,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1128,8 +1133,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1160,8 +1165,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1192,8 +1197,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1224,8 +1229,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1256,8 +1261,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1289,8 +1294,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1321,8 +1326,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1353,8 +1358,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1385,8 +1390,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1417,8 +1422,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1449,8 +1454,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1481,8 +1486,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1513,8 +1518,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1545,8 +1550,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1577,8 +1582,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1610,8 +1615,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1642,8 +1647,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1674,8 +1679,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1706,8 +1711,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1738,8 +1743,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1770,8 +1775,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1802,8 +1807,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1834,8 +1839,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1866,8 +1871,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1898,8 +1903,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1931,8 +1936,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1963,8 +1968,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -1995,8 +2000,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2027,8 +2032,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2059,8 +2064,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2091,8 +2096,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2123,8 +2128,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2155,8 +2160,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2187,8 +2192,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2219,8 +2224,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2252,8 +2257,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2284,8 +2289,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2316,8 +2321,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2348,8 +2353,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2380,8 +2385,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2412,8 +2417,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2444,8 +2449,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2476,8 +2481,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2508,8 +2513,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2540,8 +2545,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2573,8 +2578,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2605,8 +2610,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2637,8 +2642,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2669,8 +2674,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2701,8 +2706,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2733,8 +2738,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2765,8 +2770,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2797,8 +2802,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2829,8 +2834,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2861,8 +2866,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2894,8 +2899,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2926,8 +2931,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2958,8 +2963,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -2990,8 +2995,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3022,8 +3027,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3054,8 +3059,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3086,8 +3091,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3118,8 +3123,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3150,8 +3155,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3182,8 +3187,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3215,8 +3220,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3247,8 +3252,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3279,8 +3284,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3311,8 +3316,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3343,8 +3348,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3375,8 +3380,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3407,8 +3412,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3439,8 +3444,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3471,8 +3476,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3503,8 +3508,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3536,8 +3541,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3568,8 +3573,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3600,8 +3605,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3632,8 +3637,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3664,8 +3669,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3696,8 +3701,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3728,8 +3733,8 @@ EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 createODIN          DEBUG ==> Execute
 EventDataSvc      VERBOSE Requested object /Event/DAQ
@@ -3763,7 +3768,6 @@ EventAccount        DEBUG Property update for OutputLevel : new value = 1
 createODIN          DEBUG Property update for OutputLevel : new value = 1
 TouchLumiFSR        DEBUG Property update for OutputLevel : new value = 1
 ServiceManager      DEBUG Stopping service EventLoopMgr
-ServiceManager      DEBUG Stopping service AlgContextSvc
 ServiceManager      DEBUG Stopping service HistogramDataSvc
 ServiceManager      DEBUG Stopping service HistogramPersistencySvc
 ServiceManager      DEBUG Stopping service EventSelector
@@ -3772,6 +3776,7 @@ ServiceManager      DEBUG Stopping service EventPersistencySvc
 ServiceManager      DEBUG Stopping service FileRecordDataSvc
 ServiceManager      DEBUG Stopping service FileRecordPersistencySvc
 ServiceManager      DEBUG Stopping service RndmGenSvc
+ServiceManager      DEBUG Stopping service AlgContextSvc
 ServiceManager      DEBUG Stopping service XmlCnvSvc
 ServiceManager      DEBUG Stopping service XmlParserSvc
 ServiceManager      DEBUG Stopping service ToolSvc
@@ -3802,15 +3807,13 @@ EventAccount        DEBUG The object of type 'LHCb::EventCountFSR*' has been ret
 EventAccount        DEBUG READ FSR: {  input : 97 output : 0 statusFlag : UNRELIABLE }
 EventAccount        DEBUG Finalize base class GaudiAlgorithm
 EventAccount        DEBUG Tools to release :
-EventAccount        DEBUG Services to release : AlgContextSvc FileRecordDataSvc IncidentSvc
-EventAccount        DEBUG Releasing service 'AlgContextSvc'
+EventAccount        DEBUG Services to release : FileRecordDataSvc IncidentSvc
 EventAccount        DEBUG Releasing service 'FileRecordDataSvc'
 EventAccount        DEBUG Releasing service 'IncidentSvc'
 createODIN          DEBUG Finalize base class GaudiAlgorithm
 createODIN          DEBUG Tools to release : ToolSvc.OdinTimeDecoder
 createODIN          DEBUG Releasing tool 'ToolSvc.OdinTimeDecoder'
-createODIN          DEBUG Services to release : AlgContextSvc
-createODIN          DEBUG Releasing service 'AlgContextSvc'
+createODIN          DEBUG Services to release :
 TouchLumiFSR        DEBUG ==> Finalize
 TouchLumiFSR         INFO number of files seen: 1
 TouchLumiFSR         INFO number of events seen: 97
@@ -3818,29 +3821,27 @@ TouchLumiFSR         INFO integrated normalization: {  runs : 56721  files : rfi
 TouchLumiFSR        DEBUG Finalize base class GaudiAlgorithm
 TouchLumiFSR        DEBUG Tools to release : ToolSvc.LumiIntegrator
 TouchLumiFSR        DEBUG Releasing tool 'ToolSvc.LumiIntegrator'
-TouchLumiFSR        DEBUG Services to release : AlgContextSvc
-TouchLumiFSR        DEBUG Releasing service 'AlgContextSvc'
+TouchLumiFSR        DEBUG Services to release :
 LumiSequence        DEBUG ==> Finalize
 LumiSequence        DEBUG Finalize base class GaudiAlgorithm
 LumiSequence        DEBUG Tools to release : ToolSvc.SequencerTimerTool
 LumiSequence        DEBUG Releasing tool 'ToolSvc.SequencerTimerTool'
-LumiSequence        DEBUG Services to release : AlgContextSvc
-LumiSequence        DEBUG Releasing service 'AlgContextSvc'
+LumiSequence        DEBUG Services to release :
 IncidentSvc         DEBUG Removing [AbortEvent] listener '<unknown>'
 EventLoopMgr         INFO Histograms converted successfully according to request.
-ServiceManager      DEBUG Finalizing service AlgContextSvc
-IncidentSvc         DEBUG Removing [BeginEvent] listener 'AlgContextSvc'
-IncidentSvc         DEBUG Removing [EndEvent] listener 'AlgContextSvc'
 ServiceManager      DEBUG Finalizing service EventSelector
 EventSelector       DEBUG finalize()
 ServiceManager      DEBUG Finalizing service EventDataSvc
 ServiceManager      DEBUG Finalizing service EventPersistencySvc
 ServiceManager      DEBUG Finalizing service FileRecordDataSvc
 IncidentSvc         DEBUG Removing [BeginEvent] listener 'FileRecordDataSvc'
-IncidentSvc         DEBUG Removing [FILE_OPEN_READ] listener 'FileRecordDataSvc'
 IncidentSvc         DEBUG Removing [SAVE_FILE_RECORD] listener 'FileRecordDataSvc'
+IncidentSvc         DEBUG Removing [FILE_OPEN_READ] listener 'FileRecordDataSvc'
 ServiceManager      DEBUG Finalizing service FileRecordPersistencySvc
 ServiceManager      DEBUG Finalizing service RndmGenSvc
+ServiceManager      DEBUG Finalizing service AlgContextSvc
+IncidentSvc         DEBUG Removing [BeginEvent] listener 'AlgContextSvc'
+IncidentSvc         DEBUG Removing [EndEvent] listener 'AlgContextSvc'
 ServiceManager      DEBUG Finalizing service XmlCnvSvc
 ServiceManager      DEBUG Finalizing service XmlParserSvc
 ServiceManager      DEBUG Finalizing service ToolSvc
@@ -3862,13 +3863,13 @@ ToolSvc.OdinTim...  DEBUG Releasing service 'EventDataSvc'
 ToolSvc.OdinTim...  DEBUG Releasing service 'IncidentSvc'
 ToolSvc             DEBUG   Performing finalization of ToolSvc.SequencerTimerTool (refCount 1)
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.86 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.75 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiSequence                  |     1.134 |     2.441 |    0.759      48.1 |      97 |     0.237 |
+ToolSvc.Sequenc...   INFO LumiSequence                  |     1.350 |     1.446 |    0.700      40.0 |      97 |     0.140 |
 ToolSvc.Sequenc...   INFO   EventAccount                |     0.000 |     0.003 |    0.002       0.0 |      97 |     0.000 |
-ToolSvc.Sequenc...   INFO   createODIN                  |     1.041 |     2.009 |    0.679      15.4 |      97 |     0.195 |
-ToolSvc.Sequenc...   INFO   TouchLumiFSR                |     0.072 |     0.414 |    0.064      32.6 |      97 |     0.040 |
+ToolSvc.Sequenc...   INFO   createODIN                  |     1.227 |     1.316 |    0.614      35.9 |      97 |     0.128 |
+ToolSvc.Sequenc...   INFO   TouchLumiFSR                |     0.113 |     0.113 |    0.064       4.0 |      97 |     0.011 |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...  DEBUG  ==> Finalize the base class GaudiTool
 ToolSvc.Sequenc...  DEBUG Tools to release :
@@ -3892,6 +3893,7 @@ ToolSvc           VERBOSE   Delaying   deletion of ToolSvc.OdinTimeDecoder.ODIND
 ToolSvc             DEBUG   Performing deletion of ToolSvc.OdinTimeDecoder.ODINDecodeTool
 ServiceManager      DEBUG Finalizing service DetectorPersistencySvc
 ServiceManager      DEBUG Finalizing service IncidentSvc
+IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0.127209(+-2.1193)/0/41.994[ms] Total:0.049993[s]
 ServiceManager      DEBUG Finalizing service AppMgrRunable
 ServiceManager      DEBUG Finalizing service FileRecordCnvSvc
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
@@ -3930,13 +3932,13 @@ ServiceManager      DEBUG ---- DetectorPersistencySvc (refCount = 2)
 ServiceManager      DEBUG ---- ToolSvc (refCount = 3)
 ServiceManager      DEBUG ---- XmlParserSvc (refCount = 3)
 ServiceManager      DEBUG ---- XmlCnvSvc (refCount = 5)
+ServiceManager      DEBUG ---- AlgContextSvc (refCount = 2)
 ServiceManager      DEBUG ---- RndmGenSvc (refCount = 2)
 ServiceManager      DEBUG ---- FileRecordPersistencySvc (refCount = 2)
 ServiceManager      DEBUG ---- FileRecordDataSvc (refCount = 5)
 ServiceManager      DEBUG ---- EventPersistencySvc (refCount = 2)
 ServiceManager      DEBUG ---- EventDataSvc (refCount = 5)
 ServiceManager      DEBUG ---- EventSelector (refCount = 2)
-ServiceManager      DEBUG ---- AlgContextSvc (refCount = 2)
 ServiceManager      DEBUG ---- EventLoopMgr (refCount = 3)
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
