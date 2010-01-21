@@ -3,6 +3,8 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
+
+!======================= TsaAlgorithms v3r15 2010-01-21====================
 ! 2009-01-19 Stephanie Hansmann-Menzemer
  - add check for ignore flag on Pattern Reco Hits 
 
