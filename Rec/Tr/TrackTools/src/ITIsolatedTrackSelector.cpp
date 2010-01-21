@@ -69,8 +69,6 @@ StatusCode ITIsolatedTrackSelector::initialize()
 
 bool ITIsolatedTrackSelector::accept ( const Track& aTrack ) const
 {
-
-
   const vector<LHCb::LHCbID>& ids = aTrack.lhcbIDs();
   vector<LHCb::LHCbID> itHits; itHits.reserve(ids.size());
   LoKi::select(ids.begin(), ids.end(), back_inserter(itHits), bind(&LHCbID::isIT,_1));
@@ -78,19 +76,33 @@ bool ITIsolatedTrackSelector::accept ( const Track& aTrack ) const
 
   plot(itHits.size(), "ITHits", "ITHits", -.5, 20.5, 21);
 
-  if (itHits.size() < m_minNumITHits) return false;
+  if (itHits.size() < m_minNumITHits)
+    {
+      plot( -1., "selection", "Selection -1 is too few, 0 is too much",
+	    -1.5, 1.5, 3 );
+      return false;
+    }
 
   Category type = ITCategory(itHits);
 
   ISTClusterCollector::Hits output;
 
-
   m_collectors[type-1] -> execute( aTrack, output );
 
   plot(output.size(), ST::toString(type) + "surround",
-       "Surrounding hits" + ST::toString(type), -.5, 99.5, 100);
+       "Surrounding hits" + ST::toString(type), -.5, 20.5, 21);
 
-  if ( output.size() > m_maxHitNbr ) return false;
+  plot(output.size(), "ALLsurround", "Surrounding hits", -.5, 20.5, 21);
+
+  if ( output.size() > m_maxHitNbr ) 
+    {
+      plot( 0., "selection", "Selection -1 is too few, 0 is too much",
+	    -1.5, 1.5, 3 );
+      return false;
+    }
+
+  plot( 1., "selection", "Selection -1 is too few, 0 is too much",
+	-1.5, 1.5, 3 );
 
   return true;
 }

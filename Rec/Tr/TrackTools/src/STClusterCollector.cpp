@@ -1,4 +1,4 @@
-// $Id: STClusterCollector.cpp,v 1.2 2009-07-03 13:31:03 mneedham Exp $
+// $Id: STClusterCollector.cpp,v 1.3 2010-01-21 13:51:18 jluisier Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -8,6 +8,7 @@
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "Kernel/ITrajPoca.h"
 
+#include "GaudiKernel/IMagneticFieldSvc.h"
 
 // Event
 #include "Event/STCluster.h"
@@ -15,6 +16,7 @@
 #include "Event/State.h"
 #include "Kernel/LHCbID.h"
 #include "Kernel/LineTraj.h"
+#include "TrackKernel/TrackTraj.h"
 #include "Event/StateVector.h"
 #include "Event/STCluster.h"
 #include "Kernel/Trajectory.h"
@@ -30,8 +32,7 @@
 #include "GaudiKernel/GenericVectorTypes.h"
 #include "GaudiKernel/GenericMatrixTypes.h"
 
-
-DECLARE_TOOL_FACTORY( STClusterCollector);
+DECLARE_TOOL_FACTORY( STClusterCollector );
 
 // trivial helpers to make code clearer...
 namespace
@@ -66,6 +67,7 @@ STClusterCollector::STClusterCollector(const std::string& type,
   declareProperty("extrapolatorName", m_extrapolatorName = "TrackMasterExtrapolator") ;
   declareProperty( "SelectorType", m_selectorType = "STSelectChannelIDByElement" );
   declareProperty( "SelectorName", m_selectorName = "ALL" );
+  declareProperty( "MagFieldOn", m_magneticField = true );
 
   declareInterface<ISTClusterCollector>(this);
 }
@@ -78,11 +80,18 @@ StatusCode STClusterCollector::initialize() {
 
   incSvc()->addListener(this, IncidentType::BeginEvent);
 
+  m_magFieldSvc  = svc<IMagneticFieldSvc>( "MagneticFieldSvc", this );
+
   m_extrapolator = tool<ITrackExtrapolator>(m_extrapolatorName, "Extrapolator", this);
   m_trajPoca = tool<ITrajPoca>("TrajPoca");
   if (m_selectorName != "ALL") m_selector  = tool< ISTChannelIDSelector >( m_selectorType,m_selectorName );
 
-  detType() == "IT" ? m_refZ = 750.0 *Gaudi::Units::cm : m_refZ = 250.0 *Gaudi::Units::cm ; 
+  detType() == "IT" ? m_refZ = 750.0 *Gaudi::Units::cm : m_refZ = 250.0 *Gaudi::Units::cm ;
+
+  if ( m_magneticField )
+    info() << "Magnetic field is set to ON" << endmsg;
+  else
+    info() << "Magnetic field is set to OFF" << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -110,12 +119,12 @@ void STClusterCollector::initEvent() const{
   // TODO: maybe put this functionality in STMeasurement and use projectors
   LHCb::STClusters::const_iterator iClus = clusterCont -> begin();
   for ( ; iClus != clusterCont->end(); ++iClus ) {
-     STClusterTrajectory thisClusTraj;    
-     thisClusTraj.first  = *iClus ;
-     const DeSTSector* aSector = tracker()->findSector((*iClus)->channelID());
-     thisClusTraj.second.reset(
-       aSector->trajectory((*iClus)->channelID() , (*iClus)->interStripFraction()).release());     
-     m_dataCont.push_back( thisClusTraj ) ;
+    STClusterTrajectory thisClusTraj;    
+    thisClusTraj.first  = *iClus ;
+    const DeSTSector* aSector = tracker()->findSector((*iClus)->channelID());
+    thisClusTraj.second.reset(
+			      aSector->trajectory((*iClus)->channelID() , (*iClus)->interStripFraction()).release());     
+    m_dataCont.push_back( thisClusTraj ) ;
   }
 
 }
@@ -123,74 +132,102 @@ void STClusterCollector::initEvent() const{
 StatusCode STClusterCollector::execute(const LHCb::Track& track, 
                                        ISTClusterCollector::Hits& outputCont) const{
 
-  if (m_configured == false){
-    m_configured = true;
-    initEvent();
-  }  
+  if (m_configured == false)
+    {
+      m_configured = true;
+      initEvent();
+    }  
   
-  LHCb::State aState;
-  StatusCode sc = m_extrapolator->propagate(track, m_refZ,aState );
-  if (sc.isFailure()){
-    return Warning("Failed to extrapolate state", StatusCode::SUCCESS, 1);
-  }
+  LHCb::Trajectory *trackTraj;
+  
+  if ( m_magneticField )
+    // If there is a mag field, use tracktraj
+    {
+      trackTraj = new LHCb::TrackTraj( track, m_magFieldSvc );
+    }
+  else
+    // else, a LineTraj is used
+    {
+      LHCb::State aState;
+      StatusCode sc = m_extrapolator->propagate( track, m_refZ, aState );
+      if (sc.isFailure())
+	{
+	  return Warning("Failed to extrapolate state", StatusCode::SUCCESS, 1);
+	}
+      LHCb::StateVector stateVec = LHCb::StateVector(aState.stateVector(), aState.z());
+      Gaudi::XYZVector slope( aState.slopes() );
+      slope /= slope.z();
+      trackTraj = new LHCb::LineTraj(aState.position(), slope, 
+				     std::make_pair(-100000., 100000.));
+    }
 
-  // make a line traj from the state
-  LHCb::StateVector stateVec = LHCb::StateVector(aState.stateVector(), aState.z());
-  LHCb::LineTraj trackTraj = LHCb::LineTraj(aState.position(), aState.slopes(), 
-                                            std::make_pair(-100000., 100000.));
-
-  // helper lines in x and y
-  Tf::Tsa::Line yLine = Tf::Tsa::Line(stateVec.ty(), stateVec.y(), stateVec.z());
-  Tf::Tsa::Line xLine = Tf::Tsa::Line(stateVec.tx(), stateVec.x(), stateVec.z());
+  StatusCode sc;
+  LHCb::Trajectory* tmpTraj;
+  double xMin, xMax, yMin, yMax, xTest, yTest, zTest, s1, s2;
+  Gaudi::XYZVector distance;
 
   for (STClusterTrajectories::const_iterator iter = m_dataCont.begin();
-      iter != m_dataCont.end() ; ++iter){
-   
+       iter != m_dataCont.end() ; ++iter)
+    {
       // check its not on the track
-      if (m_ignoreHitsOnTrack == true && track.isOnTrack(LHCb::LHCbID((iter->first)->channelID()))) continue;
-
+      if (m_ignoreHitsOnTrack == true && track.isOnTrack(LHCb::LHCbID((iter->first)->channelID())))
+	{
+	  continue;
+	}
+      
       const DeSTSector* aSector = findSector((iter->first)->channelID());
-
+      
       // check we want this sector
-      if (select(aSector->elementID()) == false) continue;
-
+      if (select(aSector->elementID()) == false)
+	{
+	  continue;
+	}
+      
       // get the traj
-      LHCb::Trajectory* tmpTraj = ((*iter).second).get();
-    
+      tmpTraj = ((*iter).second).get();
+
+      //       info() << "From : " << tmpTraj -> beginPoint()
+      // 	     << " to " << tmpTraj -> endPoint() << endmsg;
+      
       // check that y is consistant....
-      double yMin = tmpTraj->beginPoint().y();
-      double yMax = tmpTraj->endPoint().y();
+      yMin = tmpTraj->beginPoint().y();
+      yMax = tmpTraj->endPoint().y();
       if (yMin > yMax) std::swap(yMin,yMax);
-      double zTest = tmpTraj->beginPoint().z();     
-      double yTest = yLine.value(zTest);
-      if (yTest > yMax + m_yTol || yTest < yMin - m_yTol ) continue;
+      zTest = tmpTraj->beginPoint().z();     
+      yTest = (trackTraj -> position( zTest )).y();
+      if (yTest > yMax + m_yTol || yTest < yMin - m_yTol )
+	{
+	  continue;
+	}
 
       // and and also the x range
-      double xMin = tmpTraj->beginPoint().x();
-      double xMax = tmpTraj->endPoint().x();
+      xMin = tmpTraj->beginPoint().x();
+      xMax = tmpTraj->endPoint().x();
       if (xMin > xMax) std::swap(xMin,xMax);
-      double xTest = xLine.value(zTest);
-      if (xTest > xMax+m_xTol || xTest < xMin-m_xTol) continue;
+      xTest = (trackTraj -> position( zTest )).x();
+      //double xTest = xLine.value(zTest);
+      if (xTest > xMax+m_xTol || xTest < xMin-m_xTol)
+	{
+	  continue;
+	}
      
       // poca....
-      Gaudi::XYZVector distance;
-      double s1 = 0;
-      double s2 = tmpTraj->muEstimate(trackTraj.position(s1));
-      StatusCode sc = m_trajPoca->minimize(trackTraj,s1, *tmpTraj, s2, distance, 20.0*Gaudi::Units::mm);
+      s1 = 0;
+      s2 = tmpTraj -> muEstimate( trackTraj -> position(s1) );
+      sc = m_trajPoca->minimize( *trackTraj, s1, true, *tmpTraj, s2, true, distance, 0.5*Gaudi::Units::mm);
 
       // Set up the vector onto which we project everything
-      DualVector unit = dual( (tmpTraj->direction(s2).Cross( trackTraj.direction(s1) ) ).Unit() ) ;
-  
+      DualVector unit = dual( (tmpTraj->direction(s2).Cross( trackTraj->direction(s1) ) ).Unit() ) ;
+      
       // Calculate the residual by projecting the distance onto unit
       const double residual = - dot( unit, distance ) ;
-
-  
-     if (fabs(residual) < m_windowSize) {
-       ISTClusterCollector::Hit hitPair; hitPair.cluster = iter->first; hitPair.residual = residual;
-       outputCont.push_back(hitPair);
-     }
-  } // iter
-
+      
+      if (fabs(residual) < m_windowSize) {
+	ISTClusterCollector::Hit hitPair; hitPair.cluster = iter->first; hitPair.residual = residual;
+	outputCont.push_back(hitPair);
+      }      
+    } // iter
+  delete trackTraj;
   return StatusCode::SUCCESS;
 }
   

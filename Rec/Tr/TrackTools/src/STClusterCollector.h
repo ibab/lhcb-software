@@ -1,4 +1,4 @@
-// $Id: STClusterCollector.h,v 1.2 2009-07-03 13:31:03 mneedham Exp $
+// $Id: STClusterCollector.h,v 1.3 2010-01-21 13:51:18 jluisier Exp $
 #ifndef _STClusterCollector_H
 #define _STClusterCollector_H 1
 
@@ -34,10 +34,11 @@ namespace LHCb{
 class ITrackExtrapolator;
 class ITrajPoca;
 class ISTChannelIDSelector;
+class IMagneticFieldSvc;
 
 class STClusterCollector: public ST::ToolBase, 
-                                virtual public ISTClusterCollector,
-                                virtual public IIncidentListener  {
+                          virtual public ISTClusterCollector,
+                          virtual public IIncidentListener  {
 
  public: 
    
@@ -95,6 +96,8 @@ class STClusterCollector: public ST::ToolBase,
 
   ITrajPoca * m_trajPoca;
 
+  IMagneticFieldSvc *m_magFieldSvc;
+  bool m_magneticField;
 };
 
 #endif // STClusterCollector_H
