@@ -1,109 +1,185 @@
-# Bd->KstarMuMu selection
-#
-# See RDWG talk, 08.07.2009, Rob Lambert
+__author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
+__date__ = '21/01/2009'
+__version__ = '$Revision: 1.3 $'
 
+"""
+Bd->K*MuMu selections 
+"""
 from Gaudi.Configuration import *
-from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-from Configurables import CombineParticles, FilterDesktop
+from LHCbKernel.Configuration import *
 
-# Make the DiMuon, Now in a common particle, StdLooseDiMuon
-#
-#Strip_Penguin_Jpsi2MuMu = CombineParticles ( 'Strip_Penguin_Jpsi2MuMu' )
-#Strip_Penguin_Jpsi2MuMu.InputLocations = [ "StdLooseMuons" ]
-#Strip_Penguin_Jpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-" 
-#
-#Strip_Penguin_Jpsi2MuMu.CombinationCut = "ADAMASS('J/psi(1S)')<3000*MeV"
-#Strip_Penguin_Jpsi2MuMu.MotherCut = "(VFASPF(VCHI2/VDOF)<64)"
-#
-####
+class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
+    """
+    Definition of B->MuMuK* stripping
 
-####
-# Make the K*. Now in a common particle StdLooseDetachedKstar
-#Strip_Penguin_Kstar2KPi = CombineParticles ( 'Strip_Penguin_Kstar2KPi' )#
+    @todo Now only new (low lumi) cuts in slots. The nominal lumi stripping lines
+    by Rob Lambert are hard-coded.
+    """
+
+    __slots__ = { 
+                   'BMassLow'           : 5050       # MeV, low mass cut
+                ,  'BMassHighWin'       :  500       # MeV, high mass window
+                ,  'BMassMedWin'        :  300       # MeV, high mass window
+                ,  'BMassLowWin'        :  150       # MeV, high mass window
+                ,  'BDIRA'              : 0.9999     # adimentional
+                ,  'BFlightCHI2'        : 16         # adimentional 
+                ,  'BFlightCHI2Loose'   : 100        # adimentional 
+                ,  'BIPCHI2'            : 64         # adimentional  
+                ,  'BIPCHI2Loose'       : 25         # adimentional  
+                ,  'BVertexCHI2'        : 36         # adimentional
+                ,  'BVertexCHI2Loose'   : 25         # adimentional
+                ,  'KstarHighMass'      : 2500       # MeV
+                ,  'IntDIRA'            : -0.95      # adimentional
+                ,  'TrackChi2'          : 10         # adimentional
+                   }
+
+####################
+# Mitesh's selections. Stripping workshop December 2009
 #
-#Strip_Penguin_Kstar2KPi.InputLocations = [ "StdLooseKaons", "StdLoosePions" ]
-#Strip_Penguin_Kstar2KPi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc" 
-#Strip_Penguin_Kstar2KPi.DaughtersCuts = { "pi+" : "(MIPCHI2DV(PRIMARY)>2.25)",
-#                                    "K+" : "(MIPCHI2DV(PRIMARY)>2.25)" } 
-#Strip_Penguin_Kstar2KPi.CombinationCut = "(ADAMASS('K*(892)0')<300*MeV)"
-#Strip_Penguin_Kstar2KPi.MotherCut = "(VFASPF(VCHI2/VDOF)<100) & (MIPCHI2DV(PRIMARY)>1.5)"
+    def _Early_Bd(self):
+         """
+         Common Bd for Eraly data selections
 
+         @todo These should be coded in a smarter way.
+         """
+         from Configurables import CombineParticles
+         Early_loose_Bd = CombineParticles("Early_Signal_Bd2MuMuKstar")
+         Early_loose_Bd.InputLocations = ["StdLooseDiMuon", "StdLooseDetachedKst2Kpi"]
+         Early_loose_Bd.DecayDescriptor = "[B0 -> K*(892)0 J/psi(1S)]cc"
+         Early_loose_Bd.DaughtersCuts = {
+            'K*(892)0':  "(BPVDIRA> %(IntDIRA)s ) & (INTREE((ABSID=='pi+') & (TRCHI2DOF< %(TrackChi2)s ))) & (INTREE((ABSID=='pi+') & (TRCHI2DOF< %(TrackChi2)s )))" % self.getProps() 
+          , 'J/psi(1S)': "(BPVDIRA> %(IntDIRA)s ) & (2 == NINTREE((ABSID=='mu-') & (TRCHI2DOF< %(TrackChi2)s )))" % self.getProps()
+            }
+         Early_loose_Bd.CombinationCut = "(AM > %(BMassLow)s *MeV) & (ADAMASS('B0') < %(BMassHighWin)s *MeV)"  % self.getProps()
+         Early_loose_Bd.MotherCut = "(BPVDIRA> %(BDIRA)s ) & (BPVVDCHI2 < %(BFlightCHI2)s ) & (BPVIPCHI2() > %(BIPCHI2)s )"  % self.getProps()
+         return Early_loose_Bd
 
+    def Early_SignalLine(self):
+        """
+        The '10 Hz' line
+        """
+        from StrippingConf.StrippingLine import StrippingLine, StrippingMember       
+        return StrippingLine('Bd2KstarMuMu_Early_Signal'
+                             , prescale = 1
+                             , algos = [ self._Early_Bd() ]
+                             )
+
+####################
+# Rob's selections. See RDWG talk, 08.07.2009, Rob Lambert
 #
-# Make the Bd. This is the common loosest set of cuts
-# 
-Strip_loose_Bd2KstarMuMu = CombineParticles("Strip_loose_Bd2KstarMuMu")
+    def _Strip_loose_Bd2KstarMuMu(self):
+        """
+        CombineParticles for Rob's loose B->MuMuK*. This is the common loosest set of cuts.
+        """
+        from Configurables import CombineParticles
+        
+        Strip_loose_Bd2KstarMuMu = CombineParticles("Strip_loose_Bd2KstarMuMu")
+        
+        Strip_loose_Bd2KstarMuMu.InputLocations = ["StdLooseDiMuon", "StdLooseDetachedKst2Kpi"]
+        Strip_loose_Bd2KstarMuMu.DecayDescriptor = "[B0 -> K*(892)0 J/psi(1S)]cc"
+        Strip_loose_Bd2KstarMuMu.DaughtersCuts = {
+            'K*(892)0':  ("(BPVVDZ>-50*mm) & "+
+                          "(INTREE((ABSID=='pi+') & ((PIDpi-PIDmu)>-10) & ((PIDpi-PIDK)>-10))) &"+
+                          "(INTREE((ABSID=='K+') & ((PIDK-PIDmu)>-10) & ((PIDK-PIDpi)>-5)))" ),
+            'J/psi(1S)' : "(2 == NINTREE((ABSID=='mu+') & ((PIDmu-PIDpi)>-10) & ((PIDmu-PIDK)>-10) & (MIPCHI2DV(PRIMARY)>0)) )"
+            }
+        Strip_loose_Bd2KstarMuMu.CombinationCut = "(ADAMASS('B0')<300*MeV)"
+        Strip_loose_Bd2KstarMuMu.MotherCut=( "(MIPDV(PRIMARY)<0.08*mm) & (MIPCHI2DV(PRIMARY) < 150) & (PT>300*MeV) & (BPVDIRA>0.9998) & "+
+                                             "(VFASPF(VCHI2/VDOF)<64) & (DMASS('B0')<250*MeV) & (DMASS('B0')>-150*MeV)"
+                                             )
 
-Strip_loose_Bd2KstarMuMu.InputLocations = ["StdLooseDiMuon", "StdLooseDetachedKst2Kpi"]
-Strip_loose_Bd2KstarMuMu.DecayDescriptor = "[B0 -> K*(892)0 J/psi(1S)]cc"
-Strip_loose_Bd2KstarMuMu.DaughtersCuts = {
-    'K*(892)0':  ("(BPVVDZ>-50*mm) & "+
-                  "(INTREE((ABSID=='pi+') & ((PIDpi-PIDmu)>-10) & ((PIDpi-PIDK)>-10))) &"+
-                  "(INTREE((ABSID=='K+') & ((PIDK-PIDmu)>-10) & ((PIDK-PIDpi)>-5)))" ),
-    'J/psi(1S)' : "(2 == NINTREE((ABSID=='mu+') & ((PIDmu-PIDpi)>-10) & ((PIDmu-PIDK)>-10) & (MIPCHI2DV(PRIMARY)>0)) )"
-    }
-Strip_loose_Bd2KstarMuMu.CombinationCut = "(ADAMASS('B0')<300*MeV)"
-Strip_loose_Bd2KstarMuMu.MotherCut=( "(MIPDV(PRIMARY)<0.08*mm) & (MIPCHI2DV(PRIMARY) < 150) & (PT>300*MeV) & (BPVDIRA>0.9998) & "+
-                                     "(VFASPF(VCHI2/VDOF)<64) & (DMASS('B0')<250*MeV) & (DMASS('B0')>-150*MeV)"
-                                    )
+        return Strip_loose_Bd2KstarMuMu
 
 
-#
-# Filter the Bd for the ~10Hz stripping selection
-#
+    def _ForNominal_Bd2KstarMuMu_High(self):
+        """
+        Loosest filter
+        """
+        from Configurables import FilterDesktop
+        ForNominal_Bd2KstarMuMu_High = FilterDesktop("ForNominal_Bd2KstarMuMu_High")
+        ForNominal_Bd2KstarMuMu_High.InputLocations = ["Strip_loose_Bd2KstarMuMu"]
+        ForNominal_Bd2KstarMuMu_High.Code=( "(INTREE((ABSID=='K+') & (TRCHI2DOF < 36))) & "+
+                                        "(INTREE((ABSID=='pi+') & (TRCHI2DOF < 36))) & "+
+                                        "(2 == NINTREE((ABSID=='mu+') & (MIPCHI2DV(PRIMARY)>4) & (TRCHI2DOF < 16))) & "+
+                                        "(INTREE((ABSID=='K*(892)0') & (BPVVDCHI2>25) & (VFASPF(VCHI2/VDOF)<36))) & "+
+                                        "(PT>300*MeV) & (BPVDIRA>0.9998) & (BPVVDCHI2>36) & (VFASPF(VCHI2/VDOF)<36) "
+                                        )
+        return ForNominal_Bd2KstarMuMu_High
 
-filter_Bd2KstarMuMu_10Hz = FilterDesktop("filter_Bd2KstarMuMu_10Hz")
-filter_Bd2KstarMuMu_10Hz.InputLocations = ["Strip_loose_Bd2KstarMuMu"]
-filter_Bd2KstarMuMu_10Hz.Code=( "(INTREE((ABSID=='K+') & (TRCHI2DOF < 36))) & "+
-                                "(INTREE((ABSID=='pi+') & (TRCHI2DOF < 36))) & "+
-                                "(2 == NINTREE((ABSID=='mu+') & (MIPCHI2DV(PRIMARY)>4) & (TRCHI2DOF < 16))) & "+
-                                "(INTREE((ABSID=='K*(892)0') & (BPVVDCHI2>25) & (VFASPF(VCHI2/VDOF)<36))) & "+
-                                "(PT>300*MeV) & (BPVDIRA>0.9998) & (BPVVDCHI2>36) & (VFASPF(VCHI2/VDOF)<36) "
-                                )
+    def _ForNominal_Bd2KstarMuMu_Med(self):
+        """
+        Medium filter
+        """
+        from Configurables import FilterDesktop
+        ForNominal_Bd2KstarMuMu_Med = FilterDesktop("ForNominal_Bd2KstarMuMu_Med")
+        ForNominal_Bd2KstarMuMu_Med.InputLocations = ["ForNominal_Bd2KstarMuMu_High"]
+        ForNominal_Bd2KstarMuMu_Med.Code = ( "(INTREE((ABSID=='K+') & ((PIDK-PIDpi)>-5) & ((PIDK-PIDmu)>-5) & (TRCHI2DOF < 9))) & "+
+                                         "(2 == NINTREE((ABSID=='mu+') & ((PIDmu-PIDpi)>-5) & (TRCHI2DOF < 9))) & "+
+                                         "(INTREE((ABSID=='pi+') & (TRCHI2DOF < 16))) & "+
+                                         "(INTREE((ABSID=='K*(892)0') & (BPVVDZ>-30*mm) & (VFASPF(VCHI2/VDOF)<16) & (PT>300*MeV))) & "+
+                                         "(INTREE((ABSID=='J/psi(1S)') & (BPVVDCHI2>25) )) & "+
+                                         "(BPVDIRA>0.9999) & (BPVVDCHI2>64) & (MIPCHI2DV(PRIMARY) < 36) & (VFASPF(VCHI2/VDOF)<16) "
+                                         )
+        return ForNominal_Bd2KstarMuMu_Med
+    
+    def _ForNominal_Bd2KstarMuMu_Low(self):
+        """
+        Hard filter
+        """
+        from Configurables import FilterDesktop
+        ForNominal_Bd2KstarMuMu_Low = FilterDesktop("ForNominal_Bd2KstarMuMu_Low")
+        ForNominal_Bd2KstarMuMu_Low.InputLocations = ["Strip_loose_Bd2KstarMuMu"]
+        ForNominal_Bd2KstarMuMu_Low.Code = ( "(INTREE((ABSID=='K+') & ((PIDK-PIDpi)>-5) & ((PIDK-PIDmu)>-5))) & "+
+                                         "(2 == NINTREE((ABSID=='mu+') & ((PIDmu-PIDpi)>-5) & (MIPDV(PRIMARY) > 0.08*mm))) & "+
+                                         "(INTREE((ABSID=='K*(892)0') & (BPVVDZ>-5*mm) & (PT>1000*MeV) & (MIPDV(PRIMARY) > 0.06*mm))) & "+
+                                         "(BPVDIRA>0.99995) & (VFASPF(VMINVDDV(PRIMARY))>1*mm) & (MIPDV(PRIMARY) < 0.06*mm)"
+                                         )
+        return ForNominal_Bd2KstarMuMu_Low
+        
 
-# 
-# Create StrippingLine with this selection.
-#
-line_10hz = StrippingLine('Bd2KstarMuMu_10Hz'
-               , prescale = 1
-               , algos = [ Strip_loose_Bd2KstarMuMu, filter_Bd2KstarMuMu_10Hz ]
-               )
-#
-# Filter the Bd for the ~2Hz stripping selection
-#
+    def line_for_nominal_high(self):
+        """
+        The '10 Hz' line
+        """
+        from StrippingConf.StrippingLine import StrippingLine, StrippingMember       
+        return StrippingLine('Bd2KstarMuMu_ForNominal_High'
+                             , prescale = 1
+                             , algos = [ self._Strip_loose_Bd2KstarMuMu(),
+                                         self._ForNominal_Bd2KstarMuMu_High() ]
+                             )
 
-filter_Bd2KstarMuMu_2Hz = FilterDesktop("filter_Bd2KstarMuMu_2Hz")
-filter_Bd2KstarMuMu_2Hz.InputLocations = ["filter_Bd2KstarMuMu_10Hz"]
-filter_Bd2KstarMuMu_2Hz.Code = ( "(INTREE((ABSID=='K+') & ((PIDK-PIDpi)>-5) & ((PIDK-PIDmu)>-5) & (TRCHI2DOF < 9))) & "+
-                                 "(2 == NINTREE((ABSID=='mu+') & ((PIDmu-PIDpi)>-5) & (TRCHI2DOF < 9))) & "+
-                                 "(INTREE((ABSID=='pi+') & (TRCHI2DOF < 16))) & "+
-                                 "(INTREE((ABSID=='K*(892)0') & (BPVVDZ>-30*mm) & (VFASPF(VCHI2/VDOF)<16) & (PT>300*MeV))) & "+
-                                 "(INTREE((ABSID=='J/psi(1S)') & (BPVVDCHI2>25) )) & "+
-                                 "(BPVDIRA>0.9999) & (BPVVDCHI2>64) & (MIPCHI2DV(PRIMARY) < 36) & (VFASPF(VCHI2/VDOF)<16) "
-                                 )
+    def line_for_nominal_med(self):
+        """
+        The '2 Hz' line
+        """
+        from Configurables import FilterDesktop
+        from StrippingConf.StrippingLine import StrippingLine, StrippingMember
 
-#
-# Make the 2Hz Bd as a clone of 10Hz line
-# 
-line_2hz = line_10hz.clone("Bd2KstarMuMu_2Hz"
-			, algos = [ Strip_loose_Bd2KstarMuMu, filter_Bd2KstarMuMu_10Hz, filter_Bd2KstarMuMu_2Hz ]
-)
+         
+        return self.line_for_nominal_high().clone("Bd2KstarMuMu_ForNominal_Med"
+                                              , algos = [ self._Strip_loose_Bd2KstarMuMu(),
+                                                          self._ForNominal_Bd2KstarMuMu_High(),
+                                                          self._ForNominal_Bd2KstarMuMu_Med() ]
+                                              )
+    
+    def line_for_nominal_low(self):
+        """
+        The '1 Hz' line
+        """
+        from Configurables import FilterDesktop
+        from StrippingConf.StrippingLine import StrippingLine, StrippingMember
 
-#
-# Filter the Bd for the ~1Hz stripping selection
-#
+        return self.line_for_nominal_high().clone("Bd2KstarMuMu_ForNominal_Low"
+                                             , algos = [ self._Strip_loose_Bd2KstarMuMu(),
+                                                         self._ForNominal_Bd2KstarMuMu_Low() ]
+                                             )
 
-filter_Bd2KstarMuMu_1Hz = FilterDesktop("filter_Bd2KstarMuMu_1Hz")
-filter_Bd2KstarMuMu_1Hz.InputLocations = ["Strip_loose_Bd2KstarMuMu"]
-filter_Bd2KstarMuMu_1Hz.Code = ( "(INTREE((ABSID=='K+') & ((PIDK-PIDpi)>-5) & ((PIDK-PIDmu)>-5))) & "+
-                                 "(2 == NINTREE((ABSID=='mu+') & ((PIDmu-PIDpi)>-5) & (MIPDV(PRIMARY) > 0.08*mm))) & "+
-                                 "(INTREE((ABSID=='K*(892)0') & (BPVVDZ>-5*mm) & (PT>1000*MeV) & (MIPDV(PRIMARY) > 0.06*mm))) & "+
-                                 "(BPVDIRA>0.99995) & (VFASPF(VMINVDDV(PRIMARY))>1*mm) & (MIPDV(PRIMARY) < 0.06*mm)"
-                                 )
-#
-# Make the 1Hz Bd as a clone of 10Hz line
-# 
-line_1hz = line_10hz.clone("Bd2KstarMuMu_1Hz"
-			, algos = [ Strip_loose_Bd2KstarMuMu, filter_Bd2KstarMuMu_1Hz ]
-)
-
+    def getProps(self) :
+        """
+        From HltLinesConfigurableUser
+        @todo Should be shared between Hlt and stripping
+        """
+        d = dict()
+        for (k,v) in self.getDefaultProperties().iteritems() :
+            d[k] = getattr(self,k) if hasattr(self,k) else v
+        return d

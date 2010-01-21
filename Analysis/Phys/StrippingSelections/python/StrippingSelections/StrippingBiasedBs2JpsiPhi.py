@@ -11,7 +11,7 @@ import GaudiKernel.SystemOfUnits as Units
 ##################
 # Jpsi Selection :
 ##################
-JpsiFilter = FilterDesktop('JpsiFilter')
+JpsiFilter = FilterDesktop('JpsiFilterForBiasedBs2JpsiPhi')
 JpsiFilter.InputLocations = ['StdLTUnbiasedJpsi2MuMu']
 # cuts 
 JpsiFilter.Code = " (MINTREE('mu+'==ABSID, PIDmu) > -10.0)" \
@@ -23,7 +23,7 @@ JpsiFilter.Code = " (MINTREE('mu+'==ABSID, PIDmu) > -10.0)" \
 # Phi Selection:
 ################
 
-Phi2KK = FilterDesktop('Phi2KK')
+Phi2KK = FilterDesktop('Phi2KKForBiasedBs2JpsiPhi')
 Phi2KK.InputLocations = ["StdLoosePhi2KK"]
 Phi2KK.Code = "  (MINTREE('K+'==ABSID, PIDK) > -5.0)" \
               "& (MINTREE('K+'==ABSID, PT) > 200.0)"\
@@ -36,7 +36,7 @@ Phi2KK.Code = "  (MINTREE('K+'==ABSID, PIDK) > -5.0)" \
 ######
 BiasedBs2JpsiPhi = CombineParticles( "BiasedBs2JpsiPhi")
 BiasedBs2JpsiPhi.DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)"
-BiasedBs2JpsiPhi.InputLocations = ["JpsiFilter","Phi2KK"]
+BiasedBs2JpsiPhi.InputLocations = ["JpsiFilterForBiasedBs2JpsiPhi","Phi2KKForBiasedBs2JpsiPhi"]
 BiasedBs2JpsiPhi.addTool( OfflineVertexFitter() )
 BiasedBs2JpsiPhi.VertexFitters.update( { "" : "OfflineVertexFitter"} )
 BiasedBs2JpsiPhi.ReFitPVs= True

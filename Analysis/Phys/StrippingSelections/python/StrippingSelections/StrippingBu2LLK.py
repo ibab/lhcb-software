@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg'
 __date__ = '08/12/2009'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 """
 B->llK selections for B->eeK versus B->MuMuK
@@ -30,17 +30,17 @@ class StrippingBu2LLKConf(LHCbConfigurableUser):
 
     def eeK( self ) :
         from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-        StripBu2MuMuK = self.combineBu()
+        StripBu2MuMuK = self._combineBu()
         StripBu2eeK = StripBu2MuMuK.clone("StripBu2eeK")
         StripBu2eeK.InputLocations = [ "StdLooseDiElectron", "StdLooseKaons" ]
         return StrippingLine('Bu2eeK', prescale = 1, algos = [ StripBu2eeK ] )    
     
     def mmK( self ) :
         from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-        StripBu2MuMuK = self.combineBu()
+        StripBu2MuMuK = self._combineBu()
         return StrippingLine('Bu2MuMuK', prescale = 1, algos = [ StripBu2MuMuK ] )
 
-    def combineBu(self):
+    def _combineBu(self):
         """
         The thing that defines The B
         """        

@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-01-21 - Patrick Koppenburg
+ - Biased bs->J/psi Phi : rename too generic Phi2KK, JpsiFilter 
+ - Bd2MuMuK* : Make it configurable, add first of 4 lines.
+
 ! 2010-01-21 - Jacopo Nardulli
  - Add python/StrippingSelections/StrippingB2DPiNoErrors.py
  - M python/StrippingSelections/StrippingB2DPi.py
