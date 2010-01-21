@@ -1,19 +1,21 @@
-#include "IAlignUpdateTool.h"
-#include "GaudiAlg/GaudiHistoTool.h"
-#include "AlignKernel/AlMat.h"
+#include "GaudiKernel/ToolHandle.h"
 #include "GaudiKernel/ToolFactory.h"
-#include "LHCbMath/LHCbMath.h"
-#include "IGetElementsToBeAligned.h"
-#include "AlignmentInterfaces/IAlignSolvTool.h"
-#include "IAlignConstraintTool.h"
+#include "GaudiAlg/GaudiHistoTool.h"
+#include "GaudiUtils/Aida2ROOT.h"
 #include "AIDA/IProfile1D.h"
 #include "AIDA/IHistogram2D.h"
-#include "GaudiUtils/Aida2ROOT.h"
-#include "boost/lexical_cast.hpp"
+
+#include "AlignmentInterfaces/IAlignSolvTool.h"
+
+#include "IAlignUpdateTool.h"
+#include "IGetElementsToBeAligned.h"
+#include "IAlignConstraintTool.h"
+#include "IAlignChisqConstraintTool.h"
 
 #include <string>
 #include <sstream>
 #include <fstream>
+#include "boost/lexical_cast.hpp"
 #include "TH1D.h"
 
 namespace Al
@@ -48,8 +50,8 @@ namespace Al
     std::string                m_matrixSolverToolName;          ///< Name of linear algebra solver tool
     IAlignSolvTool*            m_matrixSolverTool;              ///< Pointer to linear algebra solver tool
     IGetElementsToBeAligned*   m_elementProvider ;
-    IAlignConstraintTool*      m_constrainttool ;
-    IAlignConstraintTool*      m_chisqconstrainttool ;
+    ToolHandle<IAlignConstraintTool>      m_lagrangeconstrainttool ;
+    ToolHandle<IAlignChisqConstraintTool> m_chisqconstrainttool ;
     size_t                     m_minNumberOfHits ;              ///< Minimum number of hits for an Alignable to be aligned
     bool                       m_usePreconditioning ;           ///< Precondition the system of equations before calling solver
     std::string                m_logFileName ;
@@ -67,7 +69,9 @@ namespace Al
   AlignUpdateTool::AlignUpdateTool(const std::string& type,
 					   const std::string& name,
 					   const IInterface* parent)
-    : GaudiHistoTool(type,name,parent)
+    : GaudiHistoTool(type,name,parent),
+      m_lagrangeconstrainttool("Al::AlignConstraintTool",this),
+      m_chisqconstrainttool("Al::AlignChisqConstraintTool",this)
   {
     // interfaces
     declareInterface<IAlignUpdateTool>(this); 
@@ -75,6 +79,8 @@ namespace Al
     declareProperty("MinNumberOfHits"             , m_minNumberOfHits              = 100u                    ); 
     declareProperty("UsePreconditioning"          , m_usePreconditioning           = true                    );
     declareProperty("LogFile"                     , m_logFileName                  = "alignlog.txt" ) ;
+    declareProperty("SurveyConstraintTool", m_chisqconstrainttool ) ;
+    declareProperty("LagrangeConstraintTool", m_lagrangeconstrainttool ) ;
   }
 
   AlignUpdateTool::~AlignUpdateTool()
@@ -94,12 +100,12 @@ namespace Al
     if (!m_elementProvider) return Error("==> Failed to retrieve detector selector tool!", StatusCode::FAILURE);
     
     // Get the constraint tool, also from the toolsvc
-    m_constrainttool = tool<IAlignConstraintTool>("Al::AlignConstraintTool") ;
-    if (!m_constrainttool) return Error("==> Failed to retrieve constraint tool!", StatusCode::FAILURE);
+    sc = m_lagrangeconstrainttool.retrieve() ;
+    if (!sc.isSuccess()) return Error("==> Failed to retrieve lagrange constraint tool!", StatusCode::FAILURE);
 
     // Get the constraint tool, also from the toolsvc
-    m_chisqconstrainttool = tool<IAlignConstraintTool>("Al::AlignChisqConstraintTool") ;
-    if (!m_chisqconstrainttool) return Error("==> Failed to retrieve chisq constraint tool!", StatusCode::FAILURE);
+    sc = m_chisqconstrainttool.retrieve() ;
+    if (!sc.isSuccess()) return Error("==> Failed to retrieve chisq constraint tool!", StatusCode::FAILURE);
     
     //Get matrix solver tool
     //m_matrixSolverTool = tool<IAlignSolvTool>(m_matrixSolverToolName, "MatrixSolver", this);
@@ -115,6 +121,8 @@ namespace Al
       std::ofstream logfile(m_logFileName.c_str()) ;
       logfile << m_logMessage.str() << std::endl ;
     }
+    m_lagrangeconstrainttool.release().ignore() ;
+    m_chisqconstrainttool.release().ignore() ;
     return GaudiHistoTool::finalize() ;
   }
 
@@ -264,11 +272,11 @@ namespace Al
 	    for( Al::ElementData::OffDiagonalContainer::const_iterator jelem = jdata->d2Chi2DAlphaDBeta().begin() ;
 		 jelem != jdata->d2Chi2DAlphaDBeta().end(); ++jelem) {
 	      size_t rightindex = jelem->first ;
-	      if( rightindex == (*ielem)->index() ) {
-		error() << "Very serious ordering problem: "
-			<< (*ielem)->index() << " " << leftindex << " " << rightindex << endreq ;
-		assert(rightindex != (*ielem)->index()) ;
-	      }
+	      //if( rightindex == (*ielem)->index() ) {
+	      //error() << "Very serious ordering problem: "
+	      //	<< (*ielem)->index() << " " << leftindex << " " << rightindex << endreq ;
+	      //assert(rightindex != (*ielem)->index()) ;
+	      //}
 	      int leftdaughter  = daughterIndices[leftindex] ;
 	      int rightdaughter = daughterIndices[rightindex] ;
 	      if( leftdaughter>=0 ) {
@@ -317,10 +325,13 @@ namespace Al
       }
   }
   
-  StatusCode AlignUpdateTool::process( const Al::Equations& equations,
+  StatusCode AlignUpdateTool::process( const Al::Equations& constequations,
 				       size_t iteration,
 				       size_t maxiteration) const
-  {  
+  {
+    // make a local non-const copy
+    Al::Equations equations = constequations ;
+
     typedef Gaudi::Matrix1x6 Derivatives;
     StatusCode sc = StatusCode::SUCCESS ;
     if ( equations.nElem() == 0 ) {
@@ -376,9 +387,9 @@ namespace Al
     // if there are mother-daughter relations, the information from
     // the daugters must be transformed to the mothers. This is kind
     // of tricky. it should also be done only once!
-    addDaughterDerivatives( const_cast<Al::Equations&>(equations) ) ;
+    addDaughterDerivatives( equations ) ;
     
-    
+
     if (printDebug()) { 
       size_t index(0) ;
       for( Al::Equations::ElementContainer::const_iterator ieq = equations.elements().begin() ;
@@ -391,12 +402,16 @@ namespace Al
       }
     }
     
+    // add the survey constraints
+    LHCb::ChiSquare surveychisq = m_chisqconstrainttool->addConstraints(elements,equations,logmessage) ;
+
     // Create the dof mask and a map from AlignableElements to an
     // offset. The offsets are initialized with '-1', which signals 'not
     // enough hits'.
     size_t numParameters(0), numExcluded(0) ;
     for (Elements::const_iterator it = elements.begin(); it != elements.end(); ++it ) {
-      if (equations.element((*it)->index()).numHits() >= m_minNumberOfHits) {
+      if (equations.element((*it)->index()).numHits() >= m_minNumberOfHits &&
+	  equations.element((*it)->index()).d2Chi2DAlpha2().Trace()>0) {
 	(*it)->setActiveParOffset( numParameters ) ;
 	numParameters += (*it)->dofMask().nActive() ;
       } else {
@@ -444,17 +459,16 @@ namespace Al
 	}
       }
       
-      // add the constraints
-      size_t numChisqConstraints = m_chisqconstrainttool->addConstraints(elements,equations,halfDChi2dX,halfD2Chi2dX2) ;
-      size_t numConstraints = m_constrainttool->addConstraints(elements,equations,halfDChi2dX,halfD2Chi2dX2) ;
+      // add the lagrange constraints to the linear system
+      size_t numConstraints = m_lagrangeconstrainttool->addConstraints(elements,equations,halfDChi2dX,halfD2Chi2dX2) ;
       
       logmessage << "Number of alignables with insufficient statistics: " << numExcluded << std::endl
 		 << "Number of lagrange constraints: "                    << numConstraints << std::endl
-		 << "Number of chisq constraints:    "                    << numChisqConstraints << std::endl
+		 << "Number of chisq constraints:    "                    << surveychisq.nDoF() << std::endl
 		 << "Number of active parameters:    "                    << numParameters << std::endl ;
       
       int numDoFs = halfDChi2dX.size() ;
-      if (numDoFs < 50 ) {
+      if (numDoFs < 20 ) {
 	info() << "AlVec Vector    = " << halfDChi2dX << endmsg;
 	info() << "AlSymMat Matrix = " << halfD2Chi2dX2      << endmsg;
       } else {
@@ -481,11 +495,7 @@ namespace Al
 		   << "Alignment delta chisquare/track dof: "
 		   << deltaChi2 / equations.totalTrackNumDofs() << std::endl;
 	
-	//m_dAlignChi2vsIterHisto->fill(iteration, deltaChi2) ;
-	//m_nordAlignChi2vsIterHisto->fill(iteration, deltaChi2 /numParameters);
-	
-	m_constrainttool->printConstraints(solution, covmatrix, logmessage) ;
-	m_chisqconstrainttool->printConstraints(solution, covmatrix, logmessage) ;
+	m_lagrangeconstrainttool->printConstraints(solution, covmatrix, logmessage) ;
 	
 	if (printDebug()) debug() << "==> Putting alignment constants" << endmsg;
 	size_t iElem(0u) ;
@@ -540,6 +550,11 @@ namespace Al
 	    
 	    // need const_cast because loki range givess access only to const values 
 	    StatusCode sc = (const_cast<AlignmentElement*>(*it))->updateGeometry(delta) ;
+
+	    // print this one after the update
+	    LHCb::ChiSquare surveychisq = m_chisqconstrainttool->chiSquare( **it ) ;
+	    logmessage << "survey chi2 / dof: " << surveychisq.chi2() << " / " << surveychisq.nDoF() << std::endl ;
+
 	    if (!sc.isSuccess()) error() << "Failed to set alignment condition for " << (*it)->name() << endmsg ;
 	   
 	    std::string name = (*it)->name(); 
