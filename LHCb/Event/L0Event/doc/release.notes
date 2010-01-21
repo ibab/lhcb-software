@@ -1,13 +1,13 @@
-! $Id: release.notes,v 1.129 2010-01-21 17:40:10 odescham Exp $
+! $Id: release.notes,v 1.130 2010-01-21 17:41:22 cattanem Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
-
+!======================== L0Event v18r0 2010-01-21 ===========================
 ! 2010-01-21 Olivier Deschamps
-  - L0DUElementaryData.cpp : low saturation at 0 for compound data (to be adapted to the actual firmware processing)
+  - L0DUElementaryData.cpp : low saturation at 0 for compound data
+   (to be adapted to the actual firmware processing)
   
-!======================== L0Event v18r0 2010-01-20 ===========================
 ! 2010-01-20 Olivier Deschamps
  - L0DUChannel.xml, L0DUConfig.xml, L0DUReport.xml, L0DUTrigger.xml : implement
    Lumi decisions - change signature of many methods
