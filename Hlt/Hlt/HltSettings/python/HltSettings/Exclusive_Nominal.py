@@ -31,26 +31,26 @@ class Exclusive_Nominal :
 #            , 'Hlt2B2D2hhKstarReq3BodyMW'
 #            , 'Hlt2B2D2hhKstarReq4BodyMW'
         # Hlt2B2JpsiXLines.py
-              'Bs2JpsiPhiPrescaled'
-            , 'Bs2JpsiPhi'
-            , 'Bd2JpsiKstar'
-            , 'Bu2JpsiK'
-            , 'Bd2JpsiMuMuKsLLBiased'
-            , 'Bd2JpsiMuMuKsLLUnbiased'
-            , 'Bd2JpsiMuMuKsDDBiased'
-            , 'Bd2JpsiMuMuKsDDUnbiased'
-            , 'B2JpsiX_MuMu'
+#              'Bs2JpsiPhiPrescaled'
+#            , 'Bs2JpsiPhi'
+#            , 'Bd2JpsiKstar'
+#            , 'Bu2JpsiK'
+#            , 'Bd2JpsiMuMuKsLLBiased'
+#            , 'Bd2JpsiMuMuKsLLUnbiased'
+#            , 'Bd2JpsiMuMuKsDDBiased'
+#            , 'Bd2JpsiMuMuKsDDUnbiased'
+#            , 'B2JpsiX_MuMu'
         # Hlt2B2LLXLines.py
-            , 'Hlt2Bu2eeK'
-            , 'Hlt2Bu2eeKSignal'
-            , 'Hlt2Bu2eeKJpsi'
-            , 'Hlt2Bu2eeKHighMass'
-            , 'Hlt2Bu2MuMuK'
-            , 'Hlt2Bu2MuMuKSignal'
-            , 'Hlt2Bu2MuMuKJpsi'
-            , 'Hlt2Bu2MuMuKHighMass'
+#            , 'Hlt2Bu2eeK'
+#            , 'Hlt2Bu2eeKSignal'
+#            , 'Hlt2Bu2eeKJpsi'
+#            , 'Hlt2Bu2eeKHighMass'
+#            , 'Hlt2Bu2MuMuK'
+#            , 'Hlt2Bu2MuMuKSignal'
+#            , 'Hlt2Bu2MuMuKJpsi'
+#            , 'Hlt2Bu2MuMuKHighMass'
         # Hlt2DisplVerticesLines.py
-            , 'Hlt2DisplVertices'
+              'Hlt2DisplVertices'
         # Hlt2B2XGammaLines.py
               , 'Hlt2Bs2PhiGamma'
               , 'Hlt2Bs2PhiGammaNoCutsK'
@@ -66,7 +66,7 @@ class Exclusive_Nominal :
         # Hlt2B2PhiXLines
             , 'Hlt2Bs2PhiPhi'
         # Hlt2InclusiveDiMuonLines
-            , 'UnbiasedZmm'
+#            , 'UnbiasedZmm'
              ]
         
         return lines

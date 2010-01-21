@@ -6,7 +6,7 @@
 
 __phiLines__ = [ 'Hlt2IncPhi',
                  'Hlt2IncPhiRobust',
-                 'Hlt2IncPhiTF',
+#                 'Hlt2IncPhiTF',
                  'Hlt2IncPhiSidebands' ]
 
 class PhiHigh_Nominal :
