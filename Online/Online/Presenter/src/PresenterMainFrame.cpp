@@ -1664,7 +1664,7 @@ void PresenterMainFrame::setDatabaseMode(const DatabaseMode & databaseMode) {
       logoutFromHistogramDB();
       if (0 < m_knownDbCredentials.size()) {
         std::map<std::string*, std::string*>::iterator dbCred;
-        dbCred = m_knownDbCredentials.begin();      
+        dbCred = m_knownDbCredentials.begin();  
         connectToHistogramDB(*(*dbCred).second,
                              *(*dbCred).first,
                              *m_knownDatabases[0]);
@@ -1945,7 +1945,6 @@ bool PresenterMainFrame::connectToHistogramDB(const std::string & dbPassword,
                                               const std::string & dbUsername,
                                               const std::string & dbName)
 {
-//std::cout << dbPassword << " " <<   dbUsername << " " << dbName <<  std::endl;
   if ("" != dbPassword &&
       "" != dbUsername &&
       "" != dbUsername) {
@@ -1972,14 +1971,10 @@ bool PresenterMainFrame::connectToHistogramDB(const std::string & dbPassword,
       if (0 != m_archive) { m_archive->setAnalysisLib(m_analysisLib); }
 
       m_dbName = dbName;
-      m_message = "Successfully connected to OnlineHistDB.";
-      
-      if (Batch != m_presenterMode) {
-        m_mainStatusBar->SetText(dbUsername.c_str(), 2);
-        m_mainStatusBar->SetText(m_message.c_str(), 2);
-      }
+      m_message = "Successfully connected to OnlineHistDB";
 
-      if (m_verbosity >= Verbose) { std::cout << m_message << std::endl; }
+     
+
 
 //    statusBar()->message(tr("Successfully connected to OnlineHistDB."));
       m_histogramDB->setExcLevel(AllExceptions);
@@ -1997,6 +1992,16 @@ bool PresenterMainFrame::connectToHistogramDB(const std::string & dbPassword,
       } else {
         m_databaseMode = ReadOnly;
       }
+      if (Batch != m_presenterMode) {
+        m_mainStatusBar->SetText(dbUsername.c_str(), 2);
+        m_mainStatusBar->SetText(m_message.c_str(), 2);
+      }
+
+      if (m_verbosity >= Verbose) { std::cout << m_message  << " in "<<
+          (m_databaseMode == ReadWrite ? "read-write" : "read-only") << 
+          " mode" <<std::endl; }
+
+
     } catch (std::string sqlException) {
       if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
       if (Batch != m_presenterMode) {
@@ -2019,6 +2024,8 @@ bool PresenterMainFrame::connectToHistogramDB(const std::string & dbPassword,
                      kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
     }
   }
+
+  reconfigureGUI();
   return isConnectedToHistogramDB();
 }
 void PresenterMainFrame::loginToHistogramDB()
@@ -2077,7 +2084,6 @@ void PresenterMainFrame::startPageRefresh()
       m_startRefreshButton->SetState(kButtonDisabled);
       m_viewMenu->DisableEntry(START_COMMAND);
     }    
-  
     enablePageRefresh();
     m_pageRefreshTimer->TurnOn();
     m_refreshingPage = true;
@@ -2806,6 +2812,7 @@ void PresenterMainFrame::inspectPage()
 }
 void PresenterMainFrame::reconfigureGUI()
 {
+  
   removeHistogramsFromPage();
   UInt_t current_width  = 0;
   UInt_t current_height = 0;
@@ -3501,10 +3508,12 @@ void PresenterMainFrame::addHistoToHistoDB()
   currentNode = list->GetFirstItem();
   while (0 != currentNode) {
     try {
-      if (0 != m_histogramDB) {
-
+      if (0 != m_histogramDB) {        
         TString histoName = (*static_cast<TObjString*>(currentNode->GetUserData())).GetString();
         if (histoName.BeginsWith(s_FILE_URI)) {histoName.Remove(0, s_FILE_URI.length()); }
+        if (m_verbosity >= Verbose) { 
+          std::cout<<"presenter is declaring "<<std::string(histoName)<<std::endl;
+        }
         HistogramIdentifier histogramService = HistogramIdentifier(std::string(histoName));
 
         m_histogramDB->declareHistogram(histogramService.taskName(),
@@ -4115,7 +4124,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
 {
   if (isConnectedToHistogramDB() && (false == m_loadingPage)) {
     m_loadingPage = true;
-gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
+    gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
     if (m_refreshingPage) {
       stopPageRefresh();
       m_resumePageRefreshAfterLoading = true;
@@ -4211,7 +4220,7 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
           page->getHistogramList(&m_onlineHistosOnPage);
           ParallelWait parallelWait(this);
           parallelWait.loadHistograms(&m_onlineHistosOnPage, &dbHistosOnPage);
-
+          
 //          m_onlineHistosOnPageIt = m_onlineHistosOnPage.begin();
           std::vector<DbRootHist*>::iterator drawHist_dbHistosOnPageIt;
 //     if (gSystem->ProcessEvents()) break; -> handle fast pageload clicks?
@@ -4220,7 +4229,7 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
                drawHist_dbHistosOnPageIt != dbHistosOnPage.end();
                drawHist_dbHistosOnPageIt++) {
 
-// HLTA0101_Adder_1/GauchoJob/MonitorSvc/monRate/TCK
+            // HLTA0101_Adder_1/GauchoJob/MonitorSvc/monRate/TCK
 //           
 
             if ( (m_verbosity >= Verbose) &&
@@ -4247,7 +4256,7 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
             double ylow(0.0);
             double xup(0.0);
             double yup(0.0);
-                        
+            
             if ( (*drawHist_dbHistosOnPageIt) &&
                  ((*drawHist_dbHistosOnPageIt)->onlineHistogram()) &&
                  ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage() &&
@@ -4257,32 +4266,32 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
               xup  = ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->xmax;
               yup  = ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->ymax;
   
-             if(((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->isOverlap()) { // histogram must be overdrawn on previous hist: look for the corresponding TPad
-               OnlineHistoOnPage *mother = ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->getOverlap();
-               std::vector<DbRootHist*>::iterator prevh;
-               DbRootHist* dbRootHist = NULL;
-               for (prevh=dbHistosOnPage.begin() ; (*prevh) != dbRootHist ; prevh++) {
-                 if ( (*prevh)->onlineHistogram() == mother->histo) {
-                   overlayOnPad = (*prevh)->hostingPad;
-                   break;
-                 }
-               }
-             }
-           }
-           if (m_verbosity >= Debug) {
-             if (overlayOnPad) {
-               std::cout << "drawing overlap on pad " << overlayOnPad <<std::endl;
-             } else {
-               std::cout << "drawing pad X "<< xlow << " to "<< xup <<
-                 "  Y " << ylow << " to " << yup <<std::endl;
-             }
-           }
-          if ( (*drawHist_dbHistosOnPageIt) &&
-               (TCKinfo != (*drawHist_dbHistosOnPageIt)->effServiceType())) {
-            (*drawHist_dbHistosOnPageIt)->draw(editorCanvas, xlow, ylow, xup, yup, m_fastHitMapDraw, overlayOnPad);
-          }
-//          stopBenchmark((*m_onlineHistosOnPageIt)->histo->identifier());
-//          m_onlineHistosOnPageIt++;
+              if(((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->isOverlap()) { // histogram must be overdrawn on previous hist: look for the corresponding TPad
+                OnlineHistoOnPage *mother = ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->getOverlap();
+                std::vector<DbRootHist*>::iterator prevh;
+                DbRootHist* dbRootHist = NULL;
+                for (prevh=dbHistosOnPage.begin() ; (*prevh) != dbRootHist ; prevh++) {
+                  if ( (*prevh)->onlineHistogram() == mother->histo) {
+                    overlayOnPad = (*prevh)->hostingPad;
+                    break;
+                  }
+                }
+              }
+            }
+            if (m_verbosity >= Debug) {
+              if (overlayOnPad) {
+                std::cout << "drawing overlap on pad " << overlayOnPad <<std::endl;
+              } else {
+                std::cout << "drawing pad X "<< xlow << " to "<< xup <<
+                  "  Y " << ylow << " to " << yup <<std::endl;
+              }
+            }
+            if ( (*drawHist_dbHistosOnPageIt) &&
+                 (TCKinfo != (*drawHist_dbHistosOnPageIt)->effServiceType())) {
+              (*drawHist_dbHistosOnPageIt)->draw(editorCanvas, xlow, ylow, xup, yup, m_fastHitMapDraw, overlayOnPad);
+            }
+            //          stopBenchmark((*m_onlineHistosOnPageIt)->histo->identifier());
+            //          m_onlineHistosOnPageIt++;
           }
           
           m_pageDescriptionView->Clear();
@@ -4346,8 +4355,7 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
        startPageRefresh();
     }
     
-    
-gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
+    gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
   }
   if (m_referencesOverlayed) {
     enableReferenceOverlay();
@@ -4717,18 +4725,54 @@ void PresenterMainFrame::nextInterval()
     }
   }
 }
+
+
+bool PresenterMainFrame::threadSafePage() {
+  bool out=true;
+  std::vector<DbRootHist*>::iterator pageHistoIt = dbHistosOnPage.begin();
+  while( pageHistoIt !=  dbHistosOnPage.end() ) {
+    if ( (*pageHistoIt)->onlineHistogram()->hasFitFunction() ||
+         (*pageHistoIt)->onlineHistogram()->isAnaHist() ) {
+      out=false;
+      break;
+    }
+  }
+  return out;
+}
+
 void PresenterMainFrame::refreshPage()
 {
+  bool parallelRefresh = threadSafePage();
+
   if (m_verbosity >= Verbose) {
-//    std::cout << "refreshing." << std::endl;
+    std::cout << "refreshing..." << std::endl;
   }
   if (Batch != m_presenterMode) {
+    if( parallelRefresh ) {
+      if (m_verbosity >= Debug) {
+        std::cout << "refreshing histograms in parallel..." << std::endl;
+      }
       ParallelWait parallelWait(this);
       parallelWait.refreshHistograms(&dbHistosOnPage);
+      
+    }
+    else {
+      if (m_verbosity >= Debug) {
+        std::cout << "refreshing histograms one by one..." << std::endl;
+      }
+      std::vector<DbRootHist*>::iterator dbHistosOnPageIt;
+      dbHistosOnPageIt = dbHistosOnPage.begin();
+      while (dbHistosOnPageIt != dbHistosOnPage.end()) {
+        (*dbHistosOnPageIt)->fillHistogram();
+        (*dbHistosOnPageIt)->normalizeReference();
+        dbHistosOnPageIt++;
+      }
+    }
     if (! gROOT->IsInterrupted()) {      
       editorCanvas->Update();
     }
-  } else if (Batch == m_presenterMode) {
+  } 
+  else if (Batch == m_presenterMode) {
     
 //  <HEAD>
 //  <META HTTP-EQUIV=REFRESH CONTENT=5> // CONTENT=5 means wait for 5 seconds to reload the page.
@@ -4738,27 +4782,29 @@ void PresenterMainFrame::refreshPage()
     dump_dbHistosOnPageIt = dbHistosOnPage.begin();
     editorCanvas->cd();
     while (dump_dbHistosOnPageIt != dbHistosOnPage.end()) {
-    if (false == (*dump_dbHistosOnPageIt)->isEmptyHisto()) {
-      (*dump_dbHistosOnPageIt)->fillHistogram();
-      (*dump_dbHistosOnPageIt)->normalizeReference();
-    }
-//    if (true == (*dump_dbHistosOnPageIt)->rateInitialised()) {
+      if (false == (*dump_dbHistosOnPageIt)->isEmptyHisto()) {
+        (*dump_dbHistosOnPageIt)->fillHistogram();
+        (*dump_dbHistosOnPageIt)->normalizeReference();
+      }
+      //    if (true == (*dump_dbHistosOnPageIt)->rateInitialised()) {
       std::string plotName(m_currentPartition);
-        plotName.append(" ").append(currentTime->AsSQLString());
-        (*dump_dbHistosOnPageIt)->rootHistogram->SetTitle(plotName.c_str());
-        
-        (*dump_dbHistosOnPageIt)->rootHistogram->Draw();
-        gPad->Modified(); 
-        editorCanvas->Modified(); 
-        editorCanvas->Update();
-        std::string dumpFile = m_imagePath + s_slash +
-                               (*dump_dbHistosOnPageIt)->fileName() +
-                               "." + m_dumpFormat;
-        if (! gROOT->IsInterrupted()) {
-          editorCanvas->SaveAs(dumpFile.c_str());
-        }
-//      }  else {
-//        if (m_verbosity >= Verbose) {
+      plotName.append(" ").append(currentTime->AsSQLString());
+      (*dump_dbHistosOnPageIt)->rootHistogram->SetTitle(plotName.c_str());
+      
+      (*dump_dbHistosOnPageIt)->rootHistogram->Draw();
+      (*dump_dbHistosOnPageIt)->fit();
+
+      gPad->Modified(); 
+      editorCanvas->Modified(); 
+      editorCanvas->Update();
+      std::string dumpFile = m_imagePath + s_slash +
+        (*dump_dbHistosOnPageIt)->fileName() +
+        "." + m_dumpFormat;
+      if (! gROOT->IsInterrupted()) {
+        editorCanvas->SaveAs(dumpFile.c_str());
+      }
+      //      }  else {
+      //        if (m_verbosity >= Verbose) {
 //          std::cout << (*dump_dbHistosOnPageIt)->fileName() <<
 //                       " rate not initialised." << std::endl;
 //        }      

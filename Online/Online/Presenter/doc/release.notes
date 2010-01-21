@@ -4,6 +4,14 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+2010-01-21 G.Graziani
+some fixes 
++ recover loading of pages with multiple virtual histograms
++ fits are now correctly redone on every refresh, avoid parallel histogram refresh for pages containing fits
+  (ROOT fitting not thread-safe)
++ re-establish automatic DB connection at startup
++ update source list in requirements
+
 !============ Presenter v0r22 2009-11-13 =============
 2009-11-13
 + reshuffle pages in folders via DND in left panel

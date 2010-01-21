@@ -25,7 +25,7 @@ class TPave;
 class DimBrowser;
 class vector;
 class PresenterMainFrame;
-
+class OMAFitFunction;
 
 enum ReferenceVisibility {
     Show = 0,
@@ -113,6 +113,8 @@ class DbRootHist : public HistogramIdentifier
     void setTH1FromDB();
     /// updates pad margins from  Histogram DB
     void setPadMarginsFromDB(TPad* &pad);
+    /// fit histogram if requested in Histogram DB
+    void fit();
     /// updates current drawing options from Histogram DB (via OnlineHistogram object)
     void setDrawOptionsFromDB(TPad* &pad);
     /// saves current ROOT display options to OnlineHistogram object and to Histogram DB
@@ -195,6 +197,7 @@ class DbRootHist : public HistogramIdentifier
     pres::MsgLevel m_verbosity;
     DimBrowser*       m_dimBrowser;
     std::string m_partition;
+    OMAFitFunction* m_fitfunction;
 
     TPave* m_titpave;
     TPave* m_statpave;

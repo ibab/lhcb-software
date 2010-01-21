@@ -213,6 +213,7 @@ class PresenterMainFrame : public TGMainFrame
     void loadPreviousPage();
     void nextInterval();
     void previousInterval();
+    bool threadSafePage();
     void refreshPage();
     void refreshClock();
     void listAlarmsFromHistogramDB(TGListTree* listView,

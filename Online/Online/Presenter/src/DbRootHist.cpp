@@ -6,6 +6,7 @@
 #include <TH2F.h>
 #include <TH1D.h>
 #include <TH2D.h>
+#include <TF1.h>
 #include <TProfile.h>
 #include <TStyle.h>
 #include <TSystem.h>
@@ -96,6 +97,7 @@ DbRootHist::DbRootHist(const std::string & identifier,
   m_verbosity(verbosity),
   m_dimBrowser(DimBr),
   m_partition(dimServiceName),
+  m_fitfunction(NULL),
   m_titpave(NULL),
   m_statpave(NULL),
   m_historyTrendPlotMode(false),
@@ -155,6 +157,7 @@ DbRootHist::~DbRootHist()
   if (m_dimInfo) { delete m_dimInfo; m_dimInfo = NULL; }
   if (m_dimInfoMonObject) { delete m_dimInfoMonObject; m_dimInfoMonObject = NULL; }
   if (m_monRateRace) { delete m_monRateRace; m_monRateRace = NULL; }
+  if (m_fitfunction) { delete m_fitfunction; m_fitfunction = NULL; }
   if (m_titpave) {delete m_titpave; m_titpave = NULL; }
   if (m_statpave) {delete m_statpave; m_statpave = NULL; }
   if (m_prettyPalette) {delete m_prettyPalette; m_prettyPalette = NULL; }  
@@ -196,8 +199,8 @@ void DbRootHist::loadAnaSources()
                                               *m_dimMutex,
                                               *m_tasksNotRunning,
                                               *m_rootMutex);
-        anaHisto->initHistogram();
-        anaHisto->setTH1FromDB();                                              
+        //anaHisto->initHistogram();
+        //anaHisto->setTH1FromDB();                                              
         m_anaSources.push_back(anaHisto);
         if (NULL == m_anaSources[i]->rootHistogram) { sourcesOK = false; }
       }
@@ -549,14 +552,21 @@ void DbRootHist::initHistogram()
       initHistogram();
     }
   } else if (m_isAnaHist && m_anaSources.size() > 0) { // analib hist
+    if (m_verbosity >= Debug) {
+      std::cout << "initializing virtual histogram " << m_identifier << std::endl;
+    }
     std::vector<TH1*> sources(m_anaSources.size());
     bool sourcesOk = true;
     for (unsigned int i=0; i< m_anaSources.size(); ++i) {
+      if (m_verbosity >= Debug) {
+        std::cout << "   ->  virtual histogram source " << m_anaSources[i]->identifier() << std::endl;
+      }
+      m_anaSources[i]->initHistogram();
       sources[i]= m_anaSources[i]->rootHistogram;
       if (m_anaSources[i]->isEmptyHisto() ) {
         sourcesOk = false;
         if (m_verbosity >= Verbose) {
-          std::cout << "source " << i << " is empty" << std::endl;
+          std::cout << "source " << m_anaSources[i]->identifier() << " is empty" << std::endl;
         }
       }
     }
@@ -704,7 +714,6 @@ void DbRootHist::fillHistogram()
         }
 
         rootHistogram->SetEntries(entries);
-
       } else if (s_P1D == m_histogramType || s_HPD == m_histogramType) {
         const int   nBins   = (int) histoDimData[1];
 //        const float xMin    = histoDimData[2];
@@ -796,7 +805,7 @@ void DbRootHist::fillHistogram()
       } 
    } else if (s_pfixMonProfile == m_histogramType || s_pfixMonH1D == m_histogramType
                 || s_pfixMonH2D == m_histogramType) {
-     if (m_dimInfoMonObject && m_dimInfoMonObject->loadMonObject()) {
+      if (m_dimInfoMonObject && m_dimInfoMonObject->loadMonObject()) {
 
         if (s_pfixMonH1D == m_histogramType){
           MonH1D* monTH1D = (MonH1D*) m_dimInfoMonObject->monObject();
@@ -847,9 +856,7 @@ void DbRootHist::fillHistogram()
                       ((TH2D*)rootHistogram)->GetNbinsY() + 2, m_prettyPalette); //  gWebImagePalette, gHistImagePalette
         }
       }      
-      if (hostingPad) { hostingPad->Modified(); }  
-  
-} else if (m_isAnaHist && m_anaSources.size()>0)  {
+  } else if (m_isAnaHist && m_anaSources.size()>0)  {
     std::vector<TH1*> sources(m_anaSources.size());
     bool sourcesOk = true;
     for (unsigned int i=0; i< m_anaSources.size(); ++i) {
@@ -867,8 +874,24 @@ void DbRootHist::fillHistogram()
                                     isEmptyHisto() ? NULL : rootHistogram);
       beRegularHisto();
     }
-    if (hostingPad) { hostingPad->Modified(); }
   }
+  if(m_onlineHistogram->hasFitFunction() && NULL != m_fitfunction && false == m_isEmptyHisto) {
+    // trick to update fit w/o redrawing
+    TF1* newfit = new TF1(*(m_fitfunction->fittedfun())); // clone fit TF1
+    newfit->SetRange( rootHistogram->GetXaxis()->GetXmin(),
+                      rootHistogram->GetXaxis()->GetXmax() );
+    rootHistogram->GetListOfFunctions()->Add(newfit); // attach newfit to histo, which now owns it
+    rootHistogram->Fit(newfit,"QN"); // fit w/o drawing/storing
+    for (int ip=0; ip <newfit->GetNpar(); ip++) {
+      // update parameters of stored fit function
+      m_fitfunction->fittedfun()->SetParameter(ip, newfit->GetParameter(ip));
+    }
+  }
+  
+  if (hostingPad) { 
+    hostingPad->Modified();
+ }
+
 }
 bool DbRootHist::setOnlineHistogram(OnlineHistogram* newOnlineHistogram)
 {
@@ -881,7 +904,9 @@ bool DbRootHist::setOnlineHistogram(OnlineHistogram* newOnlineHistogram)
       if ( newOnlineHistogram->isAnaHist() ) {
         m_histogramType = newOnlineHistogram->hstype();
       }
-      if (rootHistogram && isInit) { setTH1FromDB(); }
+      if (rootHistogram && isInit) { 
+        std::cout<< "GG: Setting TH1 option at  DbRootHist object creation for "<<newOnlineHistogram->identifier() <<std::endl;
+        setTH1FromDB(); }
       out = true;
     } else {
       newOnlineHistogram->warningMessage("provided OnlineHistogram object is not compatible");
@@ -1082,6 +1107,26 @@ void DbRootHist::setPadMarginsFromDB(TPad* &pad) {
   }
 }
 
+void DbRootHist::fit() {
+  if ( true == m_onlineHistogram->hasFitFunction() && NULL != rootHistogram) {
+    std::string Name;
+    std::vector<float> initValues;
+    gStyle->SetOptFit(1111111);
+    m_onlineHistogram->getFitFunction(Name,&initValues);
+    if (m_verbosity >= Verbose) {
+      std::cout << "fitting histogram " << m_onlineHistogram->identifier() <<
+        " with function "<< Name << std::endl;
+    }
+    if (!m_fitfunction) { // first call
+      OMAFitFunction* requestedFit =  m_analysisLib->getFitFunction(Name);
+      // clone to own it and be thread-safe
+      m_fitfunction = new OMAFitFunction(*requestedFit);
+    }
+    m_fitfunction->fit(rootHistogram, &initValues);
+  }
+}
+
+
 void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
 {
 //  int curStat = gStyle->GetOptStat();
@@ -1196,13 +1241,6 @@ void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
         if (m_onlineHistogram->getDisplayOption("PHI", &fopt)) {
           pad->SetPhi(fopt);
         }
-      }
-      if (m_onlineHistogram->hasFitFunction()) {
-        gStyle->SetOptFit(1111111);
-        std::string Name;
-        std::vector<float> initValues;
-        m_onlineHistogram->getFitFunction(Name,&initValues);
-        m_analysisLib->getFitFunction(Name)->fit(rootHistogram, &initValues);
       }
       
       if(m_onlineHistogram->getDisplayOption("TICK_X", &iopt)) {
@@ -1472,6 +1510,7 @@ void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xu
   }
 //  gStyle->SetOptStat(curStat);
   setDrawOptionsFromDB(pad);
+  fit(); // fit if requested
   if (!m_isOverlap) pad->SetName(m_histoRootName);
   hostingPad = pad;
 

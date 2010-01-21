@@ -239,6 +239,21 @@ int main(int argc, char* argv[])
     presenterMainFrame.setKnownDatabases(startupSettings["databases"].as<std::string>(),
                                          startupSettings["database-credentials"].as<std::string>());
 
+
+    if (startupSettings.count("verbosity")) {
+      if ("silent" == startupSettings["verbosity"].as<std::string>()) {
+        messageLevelCli = Silent;
+      } else if ("verbose" == startupSettings["verbosity"].as<std::string>()) {
+        messageLevelCli = Verbose;        
+      } else if ("debug" == startupSettings["verbosity"].as<std::string>()) {
+        messageLevelCli = Debug;        
+      }
+    } else {
+      messageLevelCli = Silent;
+    }
+    presenterMainFrame.setVerbosity(messageLevelCli);
+    
+
     if (startupSettings.count("mode")) {
       if ("online" == startupSettings["mode"].as<std::string>()) {
         presenterMainFrame.setPresenterMode(Init);  
@@ -264,19 +279,6 @@ int main(int argc, char* argv[])
       presenterMainFrame.setPresenterMode(Online);
     }
 
-    if (startupSettings.count("verbosity")) {
-      if ("silent" == startupSettings["verbosity"].as<std::string>()) {
-        messageLevelCli = Silent;
-      } else if ("verbose" == startupSettings["verbosity"].as<std::string>()) {
-        messageLevelCli = Verbose;        
-      } else if ("debug" == startupSettings["verbosity"].as<std::string>()) {
-        messageLevelCli = Debug;        
-      }
-    } else {
-      messageLevelCli = Silent;
-    }
-    presenterMainFrame.setVerbosity(messageLevelCli);
-    
     if (startupSettings.count("partition")) {
       presenterMainFrame.setPartition(startupSettings["partition"].as<std::string>());
     }    
