@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.h,v 1.14 2010-01-20 16:30:58 odescham Exp $
+// $Id: L0DUFromRawTool.h,v 1.15 2010-01-21 17:33:23 odescham Exp $
 #ifndef L0DUFROMRAWTOOL_H 
 #define L0DUFROMRAWTOOL_H 1
 
@@ -117,7 +117,8 @@ inline void L0DUFromRawTool::encode(std::string name, unsigned int data ,  const
   if(!m_encode)return;
   LHCb::L0ProcessorData* fiber = m_processorDatas->object( base[ L0DUBase::Index::Fiber ]  )  ;
   unsigned int word = fiber->word();  
-  word |= ( (data << base[L0DUBase::Index::Shift]) & base[L0DUBase::Index::Mask] );
+  //  word |= ( (data << base[L0DUBase::Index::Shift]) & base[L0DUBase::Index::Mask] );
+  word |= ( (data & ( base[L0DUBase::Index::Mask] >> base[L0DUBase::Index::Shift] )) << base[L0DUBase::Index::Shift]);
   fiber->setWord( word);
   if( L0DUBase::Fiber::Empty != base[ L0DUBase::Index::Fiber2 ]  ) {
     fiber = m_processorDatas->object( base[ L0DUBase::Index::Fiber2 ]  )  ;

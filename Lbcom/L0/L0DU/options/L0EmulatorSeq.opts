@@ -15,12 +15,13 @@ L0EmulationSeq.Members += { "GaudiSequencer/L0EmulatorSeq",
 L0DU.WriteOnTES = true;
 L0DU.L0Context = "Emulator";
 L0Calo.L0Context = "Emulator";
+L0Calo.L0Muon = "Emulator";
 L0DUEmulMonitor.Context = "Emulator";
 
 // DO NOT store rawBanks in rawEvent in Emulation mode
 L0DU.WriteBanks = false;
 L0Calo.WriteBanks = false;   
-L0Muon.StoreInBuffer = false;   
+L0Muon.WriteBanks = false;   
 
 
 // ----- OVERWRITE DEFAULT TCK ----- //

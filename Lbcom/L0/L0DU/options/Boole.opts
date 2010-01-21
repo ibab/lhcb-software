@@ -17,7 +17,7 @@ L0DU.WriteOnTES = true;
 // Store rawBanks in rawEvent in SIMulation mode
 L0DU.WriteBanks = true;   
 L0Calo.WriteBanks=true;
-L0Muon.StoreInBuffer=true;
+L0Muon.WriteBanks=true;
 
 
 // ----- OVERWRITE DEFAULT TCK ----- //

@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.cpp,v 1.15 2010-01-20 16:30:58 odescham Exp $
+// $Id: L0DUConfigProvider.cpp,v 1.16 2010-01-21 17:33:23 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -854,10 +854,8 @@ StatusCode L0DUConfigProvider::createChannels(){
         }
       } else {
         channel->addElementaryCondition ( (*ic).second ) ;
-      }
-    
+      } 
     }
-    
     debug() << "Created Channel : " << channel->description() << endmsg;
     
     
@@ -874,6 +872,7 @@ StatusCode L0DUConfigProvider::createTriggers(){
 
   // crate channels -> conditions (-> compound data)
   StatusCode sc = createChannels();
+  if(sc.isFailure())return sc;
 
 
   if(m_channels.size()   == 0  || m_conditions.size() == 0)return StatusCode::SUCCESS;
@@ -882,7 +881,6 @@ StatusCode L0DUConfigProvider::createTriggers(){
   predefinedTriggers();
   
   // Additional user-defined triggers
-  if(sc.isFailure())return sc;
   int id = m_triggersMap.size();  
   for(ConfigIterator iconfig = m_triggers.begin(); iconfig != m_triggers.end() ; ++iconfig){
     

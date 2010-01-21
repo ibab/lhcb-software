@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.24 2010-01-20 16:30:58 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.25 2010-01-21 17:33:23 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -594,7 +594,7 @@ bool L0DUFromRawTool::decoding(int ibank){
     encode("PUHits(Mult)" ,(*m_data & 0xFF000000 ) >> 24     , L0DUBase::PileUp::Hits      );
     
     if( !nextData() )return false;
-    encode("Electron(Add)" ,(*m_data & 0x0000FFFF ) >> 0     , L0DUBase::Photon::Address   );
+    encode("Electron(Add)" ,(*m_data & 0x0000FFFF ) >> 0     , L0DUBase::Electron::Address   );
     encode("Photon(Add)"   ,(*m_data & 0xFFFF0000 ) >> 16    , L0DUBase::Photon::Address   );
     
     if( !nextData() )return false;

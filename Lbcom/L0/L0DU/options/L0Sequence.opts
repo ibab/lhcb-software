@@ -11,7 +11,7 @@ L0ProcessorsSeq.Members += { "L0CaloAlg/L0Calo",
                              "PuVetoAlg/L0PuVeto"};
 // Do not create rawBank when re-running L0DU out of Boole
 L0Calo.WriteBanks=false;
-L0Muon.StoreInBuffer=false;
+L0Muon.WriteBanks=false;
 
 
 //-----------------------------------------------------

@@ -19,7 +19,7 @@ ToolSvc.L0DUConfig.OutputLevel = 3;
 
 
 // Dump L0DU bank (Nevents)
-L0DUFromRaw.L0DUFromRawTool.DumpBank = 50 ;
+L0DUFromRaw.L0DUFromRawTool.DumpBank = 256 ;
 
 
 // Pattern

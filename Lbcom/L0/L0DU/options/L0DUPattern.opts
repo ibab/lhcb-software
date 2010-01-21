@@ -16,7 +16,7 @@ L0DU.L0DUConfigProviderName = "L0PatternConfig";
 L0DUFromRaw.L0DUFromRawTool.L0DUConfigProviderName = "L0PatternConfig";
 
 // Emulation config : 
-L0DU.TCK = "0xDEB6";  
+L0DU.TCK = "0xDEB3";  
 L0DU.BankVersion = 2;
 
 
