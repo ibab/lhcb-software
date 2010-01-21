@@ -22,7 +22,9 @@ namespace Al
     ConstraintDerivatives(size_t dim, const std::vector<std::string>& activeconstraints, const std::string& name="", int offset=0) ;
     AlMat& derivatives() { return m_derivatives ; }
     const AlMat& derivatives() const { return m_derivatives ; }
-
+    AlVec& residuals() { return m_residuals ; }
+    const AlVec& residuals() const { return m_residuals ; }
+    
     static std::vector<std::string> all()  { return m_names ; }
     std::string name(size_t i) const { return m_nameprefix + m_names[i] ; }
     static size_t index(const std::string& aname) {
@@ -98,26 +100,31 @@ namespace Al
   private:
     void clearConstraintDerivatives() const ;
     Al::ConstraintDerivatives* createConstraintDerivatives(const std::string& name,
-						 const std::vector<std::string>& activeconstraints,
-						 const Elements& elements,
-						 const Al::Equations& equations, size_t numAlignPars) const ;
-
+							   const std::vector<std::string>& activeconstraints,
+							   const Elements& elements,
+							   bool addResidual,
+							   const Al::Equations& equations, size_t numAlignPars) const ;
+    
     void addConstraintToNominal(const Elements& elements,
 				AlVec& halfDChi2DAlpha, AlSymMat& halfD2Chi2DAlpha2) const ;
   private:
     class ConstraintDefinition
     {
     public:
-      ConstraintDefinition(const std::string& name) : m_name(name) {}
+      enum Mode { ConstrainTotal, ConstrainDelta } ;
+      ConstraintDefinition(const std::string& name) : m_name(name), m_mode(ConstrainDelta) {}
       const std::string& name() const { return m_name ; }
       const std::vector<std::string>& dofs() const { return m_dofs ; }
       const Elements& elements() const { return m_elements ; }
+      Mode mode() const { return m_mode ; }
       void addDof(const std::string& dof) { m_dofs.push_back(dof) ; }
       void addElements(const Elements& elements) { m_elements.insert( m_elements.end(), elements.begin(), elements.end() ) ; }
+      void setMode( const Mode& mode ) { m_mode = mode ; }
     private:
       std::string m_name ;
       std::vector<std::string> m_dofs ;
       Elements m_elements ;
+      Mode m_mode ;
     } ;
     
   private:
@@ -201,7 +208,7 @@ namespace Al
 	  std::vector<std::string> dofs = tokenize(*ic," ,") ;
 	  for( std::vector<std::string>::const_iterator idof = dofs.begin(); idof != dofs.end(); ++idof)
 	    m_definitions.front().addDof( removechars(*idof," ,") ) ;
-	} else if( tokens.size() == 3 ) {
+	} else if( tokens.size() == 3 || tokens.size() == 4 ) {
 	  ConstraintDefinition newconstraint( tokens.at(0) ) ;
 	  Elements elements ;
 	  sc = m_elementtool->findElements( removechars(tokens.at(1)," ,"), elements ) ;
@@ -209,6 +216,16 @@ namespace Al
 	  std::vector<std::string> dofs = tokenize(tokens.at(2)," ,") ;
 	  for( std::vector<std::string>::const_iterator idof = dofs.begin(); idof != dofs.end(); ++idof)
 	    newconstraint.addDof( removechars(*idof," ,") ) ;
+	  if ( tokens.size() == 4 ) {
+	    std::string modestr = removechars(tokens.at(3)," ") ;
+	    std::transform(modestr.begin(), modestr.end(), modestr.begin(), tolower);
+	    if(      modestr == "total") newconstraint.setMode( ConstraintDefinition::ConstrainTotal ) ;
+	    else if( modestr == "delta") newconstraint.setMode( ConstraintDefinition::ConstrainDelta ) ;
+	    else {
+	      error() << "Unknown mode in constraint definition: " << *ic << " | \'" << modestr << "\'" << endmsg ;
+	      return StatusCode::FAILURE ;
+	    }
+	  }
 	  m_definitions.push_back( newconstraint ) ;
 	}
       }
@@ -241,6 +258,7 @@ namespace Al
   Al::ConstraintDerivatives* AlignConstraintTool::createConstraintDerivatives(const std::string& name,
 									      const std::vector<std::string>& activeconstraints,
 									      const Elements& elements,
+									      bool addResidual,
 									      const Al::Equations& equations,
 									      size_t numAlignPars) const
   {
@@ -271,32 +289,43 @@ namespace Al
     // 13 -> Average track Ty
     // 14 -> Curvature (Curvature constraint)
     
-    // it should be possible to do this better
-    double weight(0) ;
-    size_t numhits(0) ;
-    Gaudi::XYZVector pivot ;
-    double zmin(9999999), zmax(-999999), xmin(9999999), xmax(-999999) ;
-    for (Elements::const_iterator it = elements.begin(); it !=elements.end() ; ++it) 
-      if((*it)->activeParOffset() >= 0) {
-	size_t elemindex = (*it)->index() ;
-	double thisweight = m_useWeightedAverage ? equations.element(elemindex).weightV() : 1 ;
-	weight += thisweight ;
-	Gaudi::XYZPoint cog = (*it)->centerOfGravity() ;
-	pivot += thisweight * Gaudi::XYZVector( cog ) ;
-	zmin = std::min(cog.z(),zmin) ;
-	zmax = std::max(cog.z(),zmax) ;
-	xmin = std::min(cog.x(),xmin) ;
-	xmax = std::max(cog.x(),xmax) ;
-	numhits += equations.element(elemindex).numHits() ;
-      }
-      
-    if (weight>0) pivot *= 1/weight ;
-    Gaudi::Transform3D canonicalframe( pivot ) ;
-    Gaudi::Transform3D canonicalframeInv = canonicalframe.Inverse() ;
-    info() << "Pivot, z/x-range for canonical constraints: " 
-	   << pivot << ", [" << zmin << "," << zmax << "]" 
+    // If there is only a single element, then we use its alignment
+    // frame. In that case we can also not compute shearings, so we
+    // leave zmin.max and xmin.max invalid. If there is more than one
+    // element, we use the average center as the frame.
+    double zmin(9999999), zmax(-999999), xmin(9999999), xmax(-999999), weight(1) ;
+    Gaudi::Transform3D canonicalframe ;
+    bool useWeightedAverage = false ;
+    if( elements.size() == 1 ) {
+      canonicalframe = elements.front()->alignmentFrame() ;
+    } else {
+      // FIXME: it should be possible to do this better. we could for example
+      // take the frame fo the parent. see AlignmentElement.
+      size_t numhits(0) ;
+      double weight(0) ;
+      Gaudi::XYZVector pivot ;
+      useWeightedAverage = m_useWeightedAverage ;
+      for (Elements::const_iterator it = elements.begin(); it !=elements.end() ; ++it) 
+	if((*it)->activeParOffset() >= 0) {
+	  size_t elemindex = (*it)->index() ;
+	  double thisweight = useWeightedAverage ? equations.element(elemindex).weightV() : 1 ;
+	  weight += thisweight ;
+	  Gaudi::XYZPoint cog = (*it)->centerOfGravity() ;
+	  pivot += thisweight * Gaudi::XYZVector( cog ) ;
+	  zmin = std::min(cog.z(),zmin) ;
+	  zmax = std::max(cog.z(),zmax) ;
+	  xmin = std::min(cog.x(),xmin) ;
+	  xmax = std::max(cog.x(),xmax) ;
+	  numhits += equations.element(elemindex).numHits() ;
+	}
+      if (weight>0) pivot *= 1/weight ;
+      canonicalframe = Gaudi::Transform3D ( pivot ) ;
+      info() << "Pivot, z/x-range for canonical constraints: " 
+	     << pivot << ", [" << zmin << "," << zmax << "]" 
 	   << ", [" << xmin << "," << xmax << "]" << endmsg ;
-
+    }
+    Gaudi::Transform3D canonicalframeInv = canonicalframe.Inverse() ;
+    
     // create the object that we will return
     Al::ConstraintDerivatives* constraints = new Al::ConstraintDerivatives(numAlignPars,activeconstraints,name) ;
  
@@ -307,12 +336,15 @@ namespace Al
 	// turn things around. It certainly works if the transforms are
 	// just translations.
 	size_t elemindex = (*it)->index() ;
-	Gaudi::Transform3D trans = canonicalframeInv * (*it)->alignmentFrame() ;
+	Gaudi::Transform3D trans  = canonicalframeInv * (*it)->alignmentFrame() ;
 	Gaudi::Matrix6x6 jacobian = AlParameters::jacobian( trans ) ;
-	double thisweight = (m_useWeightedAverage ? equations.element(elemindex).weightV() : 1.0 )/weight ;
+
+	double thisweight = (useWeightedAverage ? equations.element(elemindex).weightV() : 1.0 )/weight ;
 	double deltaZ = (*it)->centerOfGravity().z() - 0.5*(zmax+zmin) ;
 	double deltaX = (*it)->centerOfGravity().x() - 0.5*(xmax+xmin) ;
-	
+	double zweight = zmax > zmin ? deltaZ/(zmax-zmin) : 0 ;
+	double xweight = xmax > xmin ? deltaX/(xmax-xmin) : 0 ;
+
 	// loop over all parameters in this element. skip inactive parameters.
 	for (size_t j=0 ; j<6; ++j) {
 	  int jpar = (*it)->activeParIndex(j) ;
@@ -323,26 +355,19 @@ namespace Al
 	      // wrong, but I think that this is right. if( it->activeParOffset() >= 0 ) { // only take selected elements
 	      constraints->derivatives()(i,jpar) = thisweight * jacobian(i,j) ;
 	    
-	    if(zmax > zmin) {
-	      double zweight = deltaZ/(zmax-zmin) ;
-	      // Derivatives for shearings
-	      for (size_t i = 0u; i < 3u; ++i) 
-		constraints->derivatives()(i+6,jpar) = thisweight * zweight * jacobian(i,j) ;
-	      
-	      // Derivatives for twist around z-axis
-	      constraints->derivatives()(ConstraintDerivatives::SRz,jpar) = thisweight * zweight * jacobian(5,j) ;
-
-	      // Derivatives for bowing
-	      for (size_t i = 0u; i < 2u; ++i) 
-		constraints->derivatives()(ConstraintDerivatives::Sz2x+i,jpar) = thisweight * zweight*zweight * jacobian(i,j) ;
-	      
-	    }
-
-	    if( xmax > xmin ) {
-	      // Derivative for scaling in x
-	      double xweight = deltaX/(xmax-xmin) ;
-	      constraints->derivatives()(ConstraintDerivatives::Sxx,jpar) = thisweight * xweight * jacobian(0,j) ;
-	    }
+	    // Derivatives for shearings
+	    for (size_t i = 0u; i < 3u; ++i) 
+	      constraints->derivatives()(i+6,jpar) = thisweight * zweight * jacobian(i,j) ;
+	    
+	    // Derivatives for twist around z-axis
+	    constraints->derivatives()(ConstraintDerivatives::SRz,jpar) = thisweight * zweight * jacobian(5,j) ;
+	    
+	    // Derivatives for bowing
+	    for (size_t i = 0u; i < 2u; ++i) 
+	      constraints->derivatives()(ConstraintDerivatives::Sz2x+i,jpar) = thisweight * zweight*zweight * jacobian(i,j) ;
+	    
+	    // Derivative for scaling in x
+	    constraints->derivatives()(ConstraintDerivatives::Sxx,jpar) = thisweight * xweight * jacobian(0,j) ;
 	    
 	    // Average track parameter constraint
 	    for(size_t trkpar=0; trkpar<5; ++trkpar) 
@@ -355,7 +380,27 @@ namespace Al
 		constraints->derivatives()(ConstraintDerivatives::PVx+vtxpar,jpar) 
 		  = equations.element(elemindex).dVertexDAlpha()(j,vtxpar)/equations.numVertices() ;
 	  }
-	} 
+	}
+
+	// now we still need to do the residuals, as far as those are
+	// meaningful. note the minus signs.
+	if( addResidual ) {
+	  AlParameters delta = (*it)->currentDelta( canonicalframe ) ;
+	  AlVec deltaparameters = delta.parameters() ;
+	  // Residuals for global rotations and translations
+	  for (size_t i = 0u; i < 6; ++i)
+	    constraints->residuals()(i) -= thisweight * deltaparameters(i) ;
+	  // Residuals for shearings
+	  for (size_t i = 0u; i < 3u; ++i) 
+	    constraints->residuals()(i+6) -= thisweight * zweight * deltaparameters(i) ;
+	  // Residuals for twist around z-axis
+	  constraints->residuals()(ConstraintDerivatives::SRz) -= thisweight * zweight * deltaparameters(5) ;
+	  // Residuals for bowing
+	  for (size_t i = 0u; i < 2u; ++i) 
+	    constraints->residuals()(ConstraintDerivatives::Sz2x+i) -= thisweight * zweight*zweight * deltaparameters(i) ;
+	  // Residuals for scaling in x
+	  constraints->residuals()(ConstraintDerivatives::Sxx) -= thisweight * xweight * deltaparameters(0) ;
+	}
       }
     
     // turn off constraints with only zero derivatives
@@ -393,6 +438,7 @@ namespace Al
 	 idef != m_definitions.end(); ++idef) {
       ConstraintDerivatives* derivative = 
 	createConstraintDerivatives(idef->name(),idef->dofs(),idef->elements(),
+				    idef->mode() == ConstraintDefinition::ConstrainTotal,
 				    equations,numpars) ;
       derivative->setActiveParOffset(numpars + numactive) ;
       m_derivatives.push_back(derivative) ;
@@ -426,6 +472,12 @@ namespace Al
 		halfD2Chi2DAlpha2New.fast( (*ic)->activeParOffset() + iactive , jrow ) = 
 		  (*ic)->derivatives()(irow,jrow) ;
 	    }
+	  }
+
+	  for(size_t irow=0; irow<Al::ConstraintDerivatives::NumConstraints; ++irow) {
+	    int iactive = (*ic)->activeParIndex(irow) ;
+	    if( 0 <= iactive ) 
+	      halfDChi2DAlphaNew( (*ic)->activeParOffset() + iactive ) = (*ic)->residuals()(irow) ;
 	  }
 	}
       
