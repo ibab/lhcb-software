@@ -4,6 +4,8 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v38r2 2010-01-21 ============================
+
 ! 2010-01-20 - Silvia Miglioranzi
  - Modified Configuration.py in order to take into account the validity limits 
    of the Velo geometry (comparison of global and local tags dates).
