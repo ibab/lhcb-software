@@ -103,6 +103,7 @@ This version uses Gaudi v21r7 and LCG_58
 - In L0Event v18r0
   . L0DUChannel.xml, L0DUConfig.xml, L0DUReport.xml, L0DUTrigger.xml : implement
     Lumi decisions - change signature of many methods
+  . L0DUElementaryData.cpp : low saturation at 0 for compound data
 
 - In PackedEvent v4r0
   . Replace std::vector<int> with plain ints in PackedRichPID
