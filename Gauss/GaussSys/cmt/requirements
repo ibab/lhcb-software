@@ -1,5 +1,5 @@
 package GaussSys
-version v38r1
+version v38r2
 
 branches cmt doc
 
@@ -8,7 +8,7 @@ branches cmt doc
 #==================================================================
 
 # Gauss application: the application is not built on Win32
-macro Gauss_use         "Gauss        v38r1 Sim"  WIN32 ""
+macro Gauss_use         "Gauss        v38r2 Sim"  WIN32 ""
 use ${Gauss_use} 
 
 # Generator packages: Basic configuration
@@ -51,7 +51,7 @@ macro LbPGuns_use       "LbPGuns v1r2    Gen"  WIN32 ""
 use ${LbPGuns_use}
 
 # Simulation basic packages
-use GiGa        	v19r6	  Sim     
+use GiGa        	v19r7	  Sim     
 use GiGaCnv     	v18r7	  Sim
 use SimSvc              v5r2      Sim
 macro GiGaVisUI_use     "GiGaVisUI    v5r1    Sim"  WIN32 ""
