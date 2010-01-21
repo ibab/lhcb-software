@@ -1,7 +1,9 @@
 !--------------------------------------------------------------------------
 ! Package     : VeloPix/VeloPixDAQ
 ! Responsible : Marcin Kucharczyk
+! Purpose     : Prepare VeloPix RawBank and decode it
 !--------------------------------------------------------------------------
 
-
+!=========================  VeloPixDAQ v1r0 2010-01-20 =====================
+ - First release
 
