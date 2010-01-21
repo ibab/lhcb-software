@@ -16,13 +16,7 @@
 # D0 -> Kpipi0
 # D0 -> Kshh (h=pi,K all combinations)
 # 
-# The selection is based on a combination of loose chi2 cuts on the impact paramters
-# and flight significances (wrt. the offline selections),
-# and some additional "robust" cuts which correlate with what is used in the trigger.
-# Note that since the HLT2 topological selection for these modes will use Chi2
-# cuts on the impact parameters and flight distances, there is no real motivation
-# for not including these cuts in the stripping, but they are nonetheless kept loose.
-#
+# The selection is based only on cuts on variables without their errors. 
 # This selection deliberately uses no RICH information, since the channels in
 # the B->DX family are kinematically identical to each other and are the dominant
 # non-combinatoric backgrounds to each other.  
@@ -31,11 +25,11 @@
 # the size of the Rec/Track/Best container to be less than 240.
 #
 # The selection is tuned on the L0xHLT1 sample of minbias, achieving 
-# a reduction factor of 1/10000 for MC09 mbias data. 
-# The signal efficiency for the various channels ranges between 80 and 90%.
+# a reduction factor of ~3/1000 for MC09 mbias data. 
+# The signal efficiency for the various channels ranges between 75 and 90%.
 #
 # Further rate control is provided by the "robust" IP cut, set by default to
-# 80 microns (0.08mm) to correlate with what is done in the topological trigger.  
+# 100 microns (0.1mm) to correlate with what is done in the topological trigger.  
 # 
 # Will further update the selection in stages.
 #
@@ -57,15 +51,15 @@ for i in [ 'LoKiTrigger.decorators' ] :
 
 ########################################################################
 #Define the shared cuts
-ipcut = "0.08" #robust IP cut used for rate control
+ipcut = "0.1" #robust IP cut used for rate control
 
-Dcut = "((M > 1768.*MeV) & (M < 2068.*MeV) & (VFASPF(VCHI2/VDOF)<10) & (BPVVDCHI2 > 36) & (BPVVD>2*mm) & (BPVVDR>0.2*mm)) "
+Dcut = "((M > 1768.*MeV) & (M < 2068.*MeV) & (VFASPF(VCHI2/VDOF)<10) & (BPVVD>2*mm) & (BPVVDR>0.2*mm)) "
 DSignalcut = "((M > 1840.*MeV) & (M < 1895.*MeV)) | ((M > 1944.*MeV ) & (M < 1994.*MeV))"
 
 Dptcut = "PT>1*GeV"
 Dcombcut = "(A" + Dptcut + ")"   #Common pt cut for D, K*, phi, second version to use
                                  #before the vertexing  
-KPhiMothercut = "((VFASPF(VCHI2/VDOF) < 12) & (MIPCHI2DV(PRIMARY) > 4.) & (MIPDV(PRIMARY) >"+ipcut+"*mm))"
+KPhiMothercut = "((VFASPF(VCHI2/VDOF) < 12) & (MIPDV(PRIMARY) >"+ipcut+"*mm))"
 
 Kstarcut = "(M > 0)"
 KstarSignalcut = "(M > 0)" #Removed K* mass cuts for B->DKpi Dalitz analysis 
@@ -75,12 +69,12 @@ KstarSignalcut = "(M > 0)" #Removed K* mass cuts for B->DKpi Dalitz analysis
 Phicut = "(M > 0)"
 PhiSignalcut = "(M > 0)"
 
-Bcut = "((VFASPF(VCHI2/VDOF)<10)  & (BPVIPCHI2() < 36) & (BPVVDCHI2 > 225) & (BPVIP() < 0.06*mm) & (BPVVD > 2*mm) & (BPVDIRA > 0.9995))"
+Bcut = "((VFASPF(VCHI2/VDOF)<10)  & (BPVIP() < 0.06*mm) & (BPVVD > 2*mm) & (BPVDIRA > 0.9995))"
 Bcombcut = "((AM > 4800.*MeV) & (AM < 5900.*MeV))"
 BSignalcombcut = "((M > 5229.*MeV) & (M < 5329.*MeV)) | ((M > 5316.*MeV ) & (M < 5416.*MeV))"
 
-Daughtercut = "((TRCHI2DOF<10) & (PT >250*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.) & (MIPDV(PRIMARY)>"+ipcut+"*mm))"
-Bachelorcut = "((TRCHI2DOF<10) & (PT >400*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.) & (MIPDV(PRIMARY)>"+ipcut+"*mm))"
+Daughtercut = "((PT >250*MeV) & (P > 2*GeV) & (MIPDV(PRIMARY)>"+ipcut+"*mm))"
+Bachelorcut = "((PT >400*MeV) & (P > 2*GeV) & (MIPDV(PRIMARY)>"+ipcut+"*mm))"
 PhiDaughterCut = "( 2 == NINTREE( (ABSID=='K+') & (" + Daughtercut + ")))" 
 ########################################################################
 ########################################################################

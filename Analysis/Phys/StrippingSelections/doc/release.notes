@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-01-21 - Jacopo Nardulli
+ - Add python/StrippingSelections/StrippingB2DPiNoErrors.py
+ - M python/StrippingSelections/StrippingB2DPi.py
+   B->DX selection modified as described in talks given on 17/12/2009
+
 ! 2010-01-21 - Anton Poluektov
  - Rearranged streams for MC09 restripping
 
