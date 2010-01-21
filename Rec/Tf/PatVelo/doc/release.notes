@@ -4,6 +4,8 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+
+!========================== PatVelo v3r19 2010-01-21 =========================
 ! 2010-01-20 - Kurt Rinnert
  - all algorithms in PatVelo now obey the new 'ingore' flag of the hits
 
