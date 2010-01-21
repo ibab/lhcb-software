@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================== LumiAlgs v3r2 2010-01-21 =========================
 ! 2010-01-13 - Jaap Panman
  - qmtests: add test 4 and 5: write and read FSR (still a warning message)
             update requirements file
