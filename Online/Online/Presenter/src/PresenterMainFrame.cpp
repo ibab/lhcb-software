@@ -4736,6 +4736,7 @@ bool PresenterMainFrame::threadSafePage() {
       out=false;
       break;
     }
+    pageHistoIt++;
   }
   return out;
 }
