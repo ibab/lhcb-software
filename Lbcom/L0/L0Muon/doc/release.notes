@@ -1,7 +1,12 @@
-!  $Id: release.notes,v 1.88 2009-11-27 13:04:30 cattanem Exp $
+!  $Id: release.notes,v 1.89 2010-01-21 08:35:35 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !---------------------------------------------------------------------------
+
+! 2010-01-21 - Julien Cogan
+ - requirements: use new base package L0/L0Base
+ - L0MuonAlg, L0MuonCandidatesFromRaw : use new structure (common
+   options amongst all L0 packages, defined in L0Base)
 
 !========================= L0Muon v8r5p3 2009-11-24 ========================
 ! 2009-11-24 - Julien Cogan

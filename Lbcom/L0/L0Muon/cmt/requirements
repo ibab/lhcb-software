@@ -1,11 +1,12 @@
 package L0Muon
-
 version v8r5p3
 
+# ================ structure =============================================
 branches cmt src options doc
-
 include_path none
 
+# ================ used packages =========================================
+use L0Base          v*   L0
 use L0MuonKernel    v*   L0
 use ProcessorKernel v*   L0
 use MuonKernel      v*   Muon
@@ -15,5 +16,7 @@ use DigiEvent       v*   Event
 use MuonDAQ         v*   Muon
 use ParamFiles      v*   -no_auto_imports
 
+# ================ component library =====================================
 library L0Muon ../src/component/*.cpp
+
 apply_pattern component_library library=L0Muon

@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.23 2009-07-15 20:22:28 graven Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.24 2010-01-21 08:35:35 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -15,6 +15,7 @@
 #include "GaudiKernel/AlgFactory.h"
 
 #include "Event/RawEvent.h"
+#include "Event/ODIN.h"
 #include "Kernel/MuonTileID.h"
 
 #include "GaudiKernel/IDataManagerSvc.h"
@@ -25,17 +26,15 @@ DECLARE_ALGORITHM_FACTORY( L0MuonCandidatesFromRaw );
 
 L0MuonCandidatesFromRaw::L0MuonCandidatesFromRaw(const std::string& name,
                                          ISvcLocator* pSvcLocator) 
-  :GaudiAlgorithm(name, pSvcLocator)
+  :L0FromRawBase(name, pSvcLocator)
  
 {
 
   declareProperty( "ConfigFile"     , m_configfile= "$PARAMFILESROOT/data/L0MuonKernel.xml" );
 
-  declareProperty( "DisableTAE"     , m_disableTAE = false  );
+  declareProperty( "DisableTAE"     , m_disableTAE = true  );
 
   // Default for HLT :
-  declareProperty( "WriteOnTES"     , m_writeOnTES       = true);  
-  declareProperty( "WriteL0ProcData", m_writeL0ProcData  = false);  
   declareProperty( "DAQMode"        , m_mode = 0 );
 }
 
@@ -43,7 +42,7 @@ L0MuonCandidatesFromRaw::L0MuonCandidatesFromRaw(const std::string& name,
 StatusCode L0MuonCandidatesFromRaw::initialize()
 {
 
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = L0FromRawBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   IChronoStatSvc * svc = chronoSvc();
@@ -95,17 +94,16 @@ StatusCode L0MuonCandidatesFromRaw::execute()
 
   StatusCode sc;
 
+  // TAE window
   std::vector<std::string> bunches;
-  bunches.push_back("");
-  if (!m_disableTAE) {
+  if (m_disableTAE) {
+    bunches.push_back("");
+  } else {
     sc=tae_bunches(bunches);
-    if ( sc.isFailure() ) {
-      return Error("Failed to get available bunches",StatusCode::SUCCESS,50);
-    }
+    if( msgLevel(MSG::VERBOSE) ) verbose() << "Looping over "<<bunches.size()<<" bunches" << endmsg;
   }
 
-  if( msgLevel(MSG::VERBOSE) ) verbose() << "Looping over "<<bunches.size()<<" bunches" << endmsg;
-
+  // Loop over time slots of TAE window
   for (std::vector<std::string>::iterator itbunches=bunches.begin(); itbunches<bunches.end(); ++itbunches) {
     if (!m_disableTAE) {
       sc=setProperty("RootInTes",(*itbunches));
@@ -141,7 +139,7 @@ StatusCode L0MuonCandidatesFromRaw::execute()
     // Write on TES
     if ( m_writeOnTES) {
       if( msgLevel(MSG::VERBOSE) ) verbose() << "Write on TES ..." << endreq;
-      sc = m_outputTool->writeOnTES();
+      sc = m_outputTool->writeOnTES(m_l0context);
       if ( sc.isFailure() ) { 
         Warning("Error from writeOnTES - skip this time slice"
                        ,StatusCode::SUCCESS,50);
@@ -155,7 +153,7 @@ StatusCode L0MuonCandidatesFromRaw::execute()
     }
   
     // Fill the container for the L0DU (L0ProcessorData)
-    if ( m_writeL0ProcData) {
+    if ( m_writeProcData) {
       if( msgLevel(MSG::VERBOSE) ) verbose() << "Fill L0ProcessorData ..." << endreq;
       sc = m_outputTool->writeL0ProcessorData();
       if ( sc.isFailure() ) { 
@@ -209,43 +207,26 @@ StatusCode L0MuonCandidatesFromRaw::finalize()
     info() << "- ------------------------------------------------------------------"<<endmsg;
   }
   
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  return L0FromRawBase::finalize();  // must be called after all other actions
 }
 
 
 StatusCode L0MuonCandidatesFromRaw::tae_bunches(std::vector<std::string> &bunches)
 {
   
-  DataObject * pObj=get<DataObject>("/Event");
-  if (!pObj) return Error("tae_bunches : no DataObject found at /Event",StatusCode::FAILURE,50);
-  
-  SmartIF<IDataManagerSvc> mgr(eventSvc());
-  if ( !mgr ) return Error("tae_bunches : failed to retrieve DataManagerSvc",StatusCode::FAILURE,50);
-
-  typedef std::vector<IRegistry*> Leaves;
-  Leaves leaves;
-  StatusCode sc = mgr->objectLeaves(pObj, leaves);
-  if (! sc.isSuccess() ) return Error("tae_bunches : failed to get leaves",StatusCode::FAILURE,50);
-  if( msgLevel(MSG::VERBOSE) ) verbose() << " tae_bunches : nb of leaves =  "<<leaves.size()<< endmsg;
-  
-  for ( Leaves::const_iterator i=leaves.begin(); i !=leaves.end(); i++ ) {
-    
-    const std::string& id = (*i)->identifier();
-    if( msgLevel(MSG::VERBOSE) ) verbose() << " tae_bunches : leaf found @ "<<id<< endmsg;
-
-    unsigned int first=id.rfind("/");
-    if (first>=id.size()) continue;
-    
-    std::string top=id.substr(first,id.size()-first);
-    if ((id.find("/Event/Next")<id.size()) || (id.find("/Event/Prev")<id.size())) {
-      std::string bunch=id.substr(first+1,id.size()-first);
-      if (bunch.size()!=6) continue;
-      bunch.append("/");
-      if( msgLevel(MSG::VERBOSE) ) verbose() << " tae_bunches : add "<<bunch<< endmsg;
-      bunches.push_back(bunch);
+  bunches.clear();
+  if( exist<LHCb::ODIN>( LHCb::ODINLocation::Default) ){
+    LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+    int tae_window = odin->timeAlignmentEventWindow();
+    for (int it = -1*tae_window ; it<=tae_window ; ++it){
+      bunches.push_back( timeSlot(it) );
     }
+  } else {
+    return Warning("Fail to get ODIN - can not determine the tae window - no time slot will be decoded"
+                   ,StatusCode::SUCCESS,10);
   }
-
+  
+    
   return StatusCode::SUCCESS;
   
 }

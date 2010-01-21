@@ -1,7 +1,7 @@
 #ifndef L0MUONTRIGGER_L0MUONCANDIDATESFROMRAW_H
 #define L0MUONTRIGGER_L0MUONCANDIDATESFROMRAW_H     1
 
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "L0Base/L0FromRawBase.h"
 #include "L0MuonOutputs.h"
 
 /** @class L0MuonCandidatesFromRaw L0MuonCandidatesFromRaw.h component/L0MuonCandidatesFromRaw.h
@@ -10,7 +10,7 @@
  *  @author Julien Cogan
  *  @date   2008-04-14
  */
-class L0MuonCandidatesFromRaw : public GaudiAlgorithm {
+class L0MuonCandidatesFromRaw : public L0FromRawBase {
     
 public:
 
@@ -28,8 +28,6 @@ private:
   // Algorithm's properties
   int m_procVersion;                  // Emulator version
   std::string  m_configfile;          // Config file name
-  bool m_writeL0ProcData;             // Flag to activate the writing of the L0ProcessorData for the L0DU
-  bool m_writeOnTES;                  // Flag to activate the writing of the L0MuonCandidates 
   int m_mode;                         // Output mode (defin the bank to be decoded)
   bool m_disableTAE;                  // Flag to disable the decoding of TAE event
 

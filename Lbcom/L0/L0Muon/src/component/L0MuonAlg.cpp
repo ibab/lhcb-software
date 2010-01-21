@@ -1,4 +1,4 @@
-// $Id: L0MuonAlg.cpp,v 1.25 2009-09-13 10:57:32 jonrob Exp $
+// $Id: L0MuonAlg.cpp,v 1.26 2010-01-21 08:35:35 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -28,7 +28,7 @@ DECLARE_ALGORITHM_FACTORY( L0MuonAlg );
 
 L0MuonAlg::L0MuonAlg(const std::string& name,
                      ISvcLocator* pSvcLocator)
-  :GaudiAlgorithm(name, pSvcLocator)
+  :L0AlgBase(name, pSvcLocator)
 
 {
 
@@ -63,12 +63,9 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   declareProperty("DebugMode"      , m_debug       = false );
 
   // Default for Boole :
-  declareProperty("StoreInBuffer"  , m_storeBank        = true);
-  declareProperty("WriteOnTES"     , m_writeOnTES       = false);
-  declareProperty("WriteL0ProcData", m_writeL0ProcData  = true);
   declareProperty("InputSource"    , m_inputSource = 0);
   declareProperty("Version"        , m_version     = 2 );
-  declareProperty("DAQMode"        , m_mode  = 1 );
+  declareProperty("DAQMode"        , m_mode        = 1 );
   declareProperty("Compression"    , m_compression = true );
 
 }
@@ -76,7 +73,7 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
 
 StatusCode L0MuonAlg::initialize()
 {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = L0AlgBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   IChronoStatSvc * svc = chronoSvc();
@@ -169,7 +166,7 @@ StatusCode L0MuonAlg::execute()
     m_outputTool->setVersion(m_version, m_mode, m_compression);
 
     // Fill the Raw Event container
-    if ( m_storeBank ) {
+    if ( m_writeBanks ) {
       if( msgLevel(MSG::DEBUG) ) debug() << "Fill RawEvent ..." << endreq;
       sc = m_outputTool->writeRawBanks();
       if ( sc.isFailure() ) return sc;
@@ -178,16 +175,14 @@ StatusCode L0MuonAlg::execute()
     // Write on TES
     if ( m_writeOnTES) {
       if( msgLevel(MSG::DEBUG) ) debug() << "Write on TES ..." << endreq;
-      sc = m_outputTool->writeOnTES();
+      sc = m_outputTool->writeOnTES(m_l0context);
       if ( sc.isFailure() ) return sc;
     }
 
     // Fill the container for the L0DU (L0ProcessorData)
-    if ( m_writeL0ProcData) {
-      if( msgLevel(MSG::DEBUG) ) debug() << "Fill L0ProcessorData ..." << endreq;
-      sc = m_outputTool->writeL0ProcessorData();
-      if ( sc.isFailure() ) return sc;
-    }
+    if( msgLevel(MSG::DEBUG) ) debug() << "Fill L0ProcessorData ..." << endreq;
+    sc = m_outputTool->writeL0ProcessorData();
+    if ( sc.isFailure() ) return sc;
 
     // Postexecution phase: reset registers
     if( msgLevel(MSG::DEBUG) ) debug() << "Postexecution of MuonKernel units ..." << endreq;
@@ -224,7 +219,7 @@ StatusCode L0MuonAlg::finalize()
   m_outputTool->statTot(info());
   info() << "- ------------------------------------------------------------------"<<endmsg;
 
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  return L0AlgBase::finalize();  // must be called after all other actions
 }
 
 

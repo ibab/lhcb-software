@@ -1,9 +1,9 @@
 #ifndef L0MUONTRIGGER_L0MUONALG_H
 #define L0MUONTRIGGER_L0MUONALG_H     1
 
-#include "GaudiAlg/GaudiAlgorithm.h"
-#include "MuonKernel/MuonSystemLayout.h"
+#include "L0Base/L0AlgBase.h"
 
+#include "MuonKernel/MuonSystemLayout.h"
 #include "ProcessorKernel/Property.h"
 #include "ProcessorKernel/Unit.h"
 
@@ -39,7 +39,7 @@
 
  */
 
-class L0MuonAlg : public GaudiAlgorithm {
+class L0MuonAlg : public L0AlgBase {
     
 public:
 
@@ -73,9 +73,6 @@ private:
   bool m_debug;                       ///< Flag to turn on debug mode for L0MuonKernel
   
   // Algorithm's properties
-  bool m_writeL0ProcData;             ///< Flag to activate the writing of the L0ProcessorData for the L0DU
-  bool m_writeOnTES;                  ///< Flag to activate the writing of the L0MuonCandidates 
-  bool m_storeBank;                   ///< Flag to enable/disable event storage in raw banks
   int  m_inputSource;                 ///< Specify where to take the input data for the processing
                                       ///<  - 0: from Muon output
                                       ///<  - 1: from the input of the processor (extracted form L0Muon itself) 
