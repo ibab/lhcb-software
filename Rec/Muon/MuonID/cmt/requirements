@@ -1,5 +1,5 @@
 package MuonID
-version v7r5
+version v7r6
 
 branches src cmt doc python
 

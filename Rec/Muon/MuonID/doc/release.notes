@@ -2,6 +2,10 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !-----------------------------------------------------------------------------
 
+!======================== MuonID v7r6 2010-01-21 ===========================
+! 2010-01-21 - Alessio Sarti
+ - Implemented EarlyData for muonID: use Ttracks, lower mom threshold
+
 !======================== MuonID v7r5 2010-01-13 ===========================
 ! 2010-01-13 - Alessio Sarti
  - Moved the Ttrack and preselMomentum for first data directly into the
