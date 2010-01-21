@@ -5,6 +5,239 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v29r0>2010-01-22 LHCbSys v29r0</A></H1><PRE>
+This version uses Gaudi v21r7 and LCG_58
+
+- Packages added in SVN: DAQ/DAQUtils - Utilities to manipule RawEvent, previously in DAQEvent
+
+- Packages modified: CaloDAQ v4r17, CaloUtils v8r11, DDDB v1r27, DetCond v12r9,
+    DetDesc v18r19, DetDescChecks v5r1, RichDet v13r3, STDet v4r16p1,
+    DAQEvent v9r0, DigiEvent v2r15, EventPacker v2r2, HltEvent v9r0,
+    LumiEvent v2r4, L0Event v18r0, PackedEvent v4r0, PhysEvent v11r11,
+    RecEvent v2r25, TrackEvent v5r3, DetCondExample v11r8, IOExample v3r4,
+    GaudiConf v13r3, GaudiObjDesc v11r10, LHCbAlgs v2r32, LHCbKernel v11r11,
+    LHCbMath v3r15, PartProp v1r6, L0Base v1r3, L0Interfaces v1r6, MuonDAQ v4r7,
+    DaVinciInterfaces v2r0, DaVinciKernel v8r4, LoKiArrayFunctors v8r8,
+    LoKiCore v9r10, LoKiHlt v2r5, LoKiPhys v8r13, RichKernel v7r29,
+    CondDBUI v3r1, TfKernel v2r14
+
+- The following packages have been moved to the SVN code repository:
+    DetCond, DetDesc, DetDescChecks, DetDescCnv, DetDescSvc, DetCondExample,
+    DetDescExample, GaudiConf, GaudiObjDesc, CondDBEntityResolver, CondDBUI,
+    XmlTools
+
+- In CaloDAQ v4r17
+  . CaloL0DataProvider : fix Spd trigger bit value in offline format
+
+- In CaloUtils v8r11
+  . Add dictionary for ICaloElectron interface 
+
+- In DDDB v1r27
+  . Changed default tags for 2009 data:
+    o head-20100119         for DDDB
+    o head-20100119         for LHCBCOND
+    o sim-20100119-vc-md100 for SIMCOND
+
+- In DetCond v12r9
+  . Completed task #13270: Block access to conditions in ONLINE partition if
+                           validity interval is not closed
+    o Modified CondDBAccessSvc to accept a new property (HeartBeatCondition).
+    o Modified the ConfigurableUser CondDB to set the HeartBeatCondition for the
+      Online partition and snapshots (can be disabled with the property
+      IgnoreHeartBeat).
+    o Removed the OnlineDBValidatorSvc because it is not needed anymore.
+    o Adapted the TestCondition algorithm to test the new feature and added the
+      relative test.
+  . Added the properties "DisableLFC" and "Online" to the ConfigurableUser CondDB
+    to be able to ignore the LFC when using Oracle and enable special
+    configuration for the Online environment (Oracle).
+
+- In DetDesc v18r19
+  . Added method to AlignmentCondition to set pivot point
+  . Fix bug in 3DTransformationFunctions: getZYXTransformParameters was
+    not correctly dealing with the pivot point. (It was essentially ignoring it.)
+    This affects the TT alignment.
+
+- In DetDescChecks v5r1
+  . Modified options/LoadDDDB.py to ignore the Online partition heart beat during
+    the tests (Requires Det/DetCond >= v12r9)
+
+- In RichDet v13r3
+  . Fixed printout error for pressure in GasRadiator
+  . Forced the use of magnetic distortion code in HPD
+  . Added new function for going from anode to cathode in DeRichHPD
+  . Missing class DeRichBase from the dictionary.
+
+- In STDet v4r16p1, v4r16
+  . DeSTSector: 
+    o change precision of m_dp0di and m_p0 from float to double, to fix data
+      truncation warning on Windows
+    o Fix bug in DeSTSector::cacheInfo: the trajectories used in trackfinding
+      were displaced by 0.5 strip pitch
+
+- In DAQEvent v9r0
+  . Major strip down of package. Component library and tests removed, split
+    between new DAQ/DAQUtils (including helpers) and DAQ/DAQMonitors packages
+    See Savannah task 13031
+  . Fix bug in RawEvent.h, which prevented the removal of banks for MDF files.
+  . Change bankKiller to always() print banks to remove at initialize()
+  . Add VeloPix RawBank type to RawBank.h and RawBank.cpp
+
+- In DigiEvent v2r15
+  . VeloPixLiteCluster: Hard code masks since putting them as member increases
+    the class sizeof (48 instead of 8 as ulonglong). Cannot use enum since
+    64bits enum are not supported by win32_vc7
+
+- In EventPacker v2r2
+  . Add support for packed RichPIDs and MuonPIDs to the MDF Writer and Reader.
+
+- In HltEvent v9r0
+  . New access methods in HltSelReports to deal with PV info
+  . Print cov matrix in HltVertexReport printout 
+
+- In LumiEvent v2r4
+  . Added a missing dictionary and removed 2 useless files.
+  . add TimeSpanFSR: keeps earliest/latest event time on a raw file
+  . EventCountFSR: add pretty print 
+
+- In L0Event v18r0
+  . L0DUChannel.xml, L0DUConfig.xml, L0DUReport.xml, L0DUTrigger.xml : implement
+    Lumi decisions - change signature of many methods
+
+- In PackedEvent v4r0
+  . Replace std::vector<int> with plain ints in PackedRichPID
+
+- In PhysEvent v11r11, RecEvent v2r25
+  . xml/Vertex.h, xml/Particle.h, xml/RecVertex.h
+    add typedefs:
+      1. Selection  for container of shared objects (without ownership)
+      2. Range      for uniform access to underlying containers of objects 
+                    ( KeyedContainer or SharedContainer ) 
+
+- In TrackEvent v5r3
+  . Added typedef for gaudi::range in Track
+
+- In IOExample v3r4
+  . Update QMTest references for changes in Gaudi v12r7:
+    o AlgContextSvc changes (patch 3478)
+    o Fix to file sharing in GaudiPoolDB options
+
+- In GaudiConf v13r3
+  . Make QMTest exclusion for changes in path to CondDB files more robust
+  . Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
+    SimConf does not add spillover Gen info to output file. Fixes bug 60636   
+  . Change the structure of DigiConf.py according to the requirements of upgrade
+
+- In GaudiObjDesc v11r10
+  .  Add new <class> attribute "defaultdestructor". The default value for it is
+     set to "TRUE". Setting it to "FALSE" will disable the generation of a 
+     default destructor also in the case no other destructor was defined, which
+     was the case before.
+
+- In LHCbAlgs v2r32
+  . Protect TrajPoca against piecewisetraj returning '0' for distToErr
+
+- In LHCbKernel v11r11
+  . Bug fix in OTChannelID::uniqueSequentialModule
+
+- In LHCbMath v3r15
+  . Equal_To : 
+    a. use "Lomont"-compare for floating point numbers (from GaudiKernel) 
+       instead of "Knuth/GSL"-compare
+    b. "Precision" parameter now is unsigned short/int instead of float/double.
+    c. add explicit specializations for std::vector<double>, std::vector<float>
+  . equal_to_int, equal_to_uint:
+    use "Lomont"-compare for floating point numbers (from GaudiKernel) 
+    instead of "Knuth/GSL"-compare
+  . knuth_equal_to_double: 
+    backup old "Knuth/GSL" comparison criteria for floating point numbers
+
+- In PartProp v1r6
+  . rename printAsTable functions with return value std::ostream& to 
+    printAsTable_ (see bug #59009) and to remove them from dictionaries 
+  . add printAsTable function for std::vector<LHCb::ParticleID>
+  . src/IParticlePropertySvc.cpp
+    fix compiler warning for Win32 platform, see bug #59882
+
+- In L0Base v1r3
+  . L0AlgBase.cpp : inheriting from GaudiHistoAlg instead of GaudiAlg
+
+- In L0Interfaces v1r6
+  . IL0DUFromRawTool : new virtual method dump()
+  . IL0DUConfigProvider : change signature of methods (TAE slot argument)
+
+- In MuonDAQ v4r7
+  . Remove obsolete file MuonDAQ_dll.cpp
+  . Add dependency on DAQUtils, new location of BankWriter.h helper
+
+- In DaVinciInterfaces v2r0
+  . Add Kernel/IDVAlgorithm.h
+    INamedInterface exporting a few useful methods from DVAlgorithm.
+  . task #12929: Remove all obsolete algorithms and tools :
+    o Removed IBestParticles.h, IContextTool.h, IFilterCriteriaTESTool.h
+
+- In DaVinciKernel v8r4
+  . src/Lib/DVAlgorithm.cpp
+    o Lazy evalution of anything PV related.
+    o Bug fix: Do not load PVs when InputPrimaryVertices = "None"
+
+- In LoKiArrayFunctors v8r8
+  . Add proper finalize/reset functor action for all tools 
+
+- In LoKiCore v9r10
+  . Follow Gaudi fix #61116: 
+    o Remove tests on GaudiCommon::Exception return code
+    o In Reporter.cpp: fix return values for Asser/Exception methods 
+  . Primitives/VoidPrimitives: 
+    1. make use of new (Lomont) comparsions of ploating point numbers 
+    2. remove all EqualToInt, EqualToUInt functors... (not needed anymore) 
+  . python/LoKiCore/functions.py
+    add helper function uints to create std::vector<unsigned int>
+  . LoKi/FilterAlg.h
+    enable access to "updated" flags to allow proper reset of functors at
+    finalization
+  . src/Components/VoidFilter.cpp
+    add proper finalization method with resetting of functor
+
+- In LoKiHlt v2r5
+  . see task #13263
+    1. implement functor L0_VALID, that checks validity of L0DUReport pointer
+       and validity of underlying L0DURport objects using L0DUReport::valid
+    2. Add property "CheckValidity" for L0Filter. 
+
+- In LoKiPhys v8r13
+  .  add new symbols:
+     o Y  for rapidity    (Pz)
+     o Y0 for rapidity    (P)
+     o DECNODE, that acts on ParticleID and allows to select the 
+       particles according to their type using  Decays::iNode utilities 
+       Few predefined instances are provides:
+       PELL      :   DECNODE ( PartProp.Nodes.Ell    , True )
+       PLEPTON   :   DECNODE ( PartProp.Nodes.Lepton , True )
+       PHADRON   :   DECNODE ( PartProp.Nodes.Hadron , True )
+       PMESON    :   DECNODE ( PartProp.Nodes.Meson  , True )
+       PBARYON   :   DECNODE ( PartProp.Nodes.Baryon , True )
+       PBEAUTY   :   DECNODE ( PartProp.Nodes.Beauty , True )
+       PCHARM    :   DECNODE ( PartProp.Nodes.Charm  , True )
+       See https://twiki.cern.ch/twiki/bin/view/LHCb/FAQ/LoKiTreeNode#Decay_Tree_Nodes
+  . LoKi/Particles12.h src/Particles12.cpp
+    add new functor LoKi::Particles::InMuonAcceptance, symbol: INMUON to check 
+    "is in muon acceptance" condition using LHCb::MuonPID::InAcceptance
+  . LoKi/Vertices1.h, LoKi/Particles4.h
+    fix compiler warnings 
+
+- In RichKernel v7r29
+  . Add to HPDIdentifier class explicit methods to convert to RichSmartIDs.
+  . Extend histogram base class with methods for 2D histograms.
+
+- In CondDBUI v3r1
+  . Fixed a minor bug in CondDBBrowser: it was not possible to add conditions to
+    empty folders.
+
+- In TfKernel v2r14
+  . Add ignore flag to HitBase class 
+
+
 </PRE><H1><A NAME=v28r5>2009-12-14 LHCbSys v28r5</A></H1><PRE>
 This version uses Gaudi v21r6 and LCG_57a
 
