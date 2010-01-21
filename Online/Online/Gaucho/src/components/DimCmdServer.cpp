@@ -1,4 +1,4 @@
-// $Id: DimCmdServer.cpp,v 1.16 2009-02-04 08:00:12 evh Exp $
+// $Id: DimCmdServer.cpp,v 1.17 2010-01-21 08:23:29 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -30,9 +30,10 @@
   static IHistogramSvc* m_histogramSvc; 
   //static IService* m_HDS = 0;
   static char *m_nextcommand;
+  std::string cmdstr = "C";
 
 DimCmdServer::DimCmdServer(std::string name, ISvcLocator* svclocator, IGauchoMonitorSvc* publishsvc) : 
-  DimCommand(name.c_str(),"C"), m_incidentSvc(0) {
+  DimCommand((char*)name.c_str(),(char*)cmdstr.c_str()), m_incidentSvc(0) {
   StatusCode sc;
 
   m_histogramSvc = 0; 

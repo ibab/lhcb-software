@@ -1,4 +1,4 @@
-// $Id: DimPropServer.cpp,v 1.20 2009-05-25 15:08:01 frankb Exp $
+// $Id: DimPropServer.cpp,v 1.21 2010-01-21 08:23:29 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -39,7 +39,7 @@ namespace wins {
 //m_histogramSvc =EventDataService but used as generic name for anything on store
 // IGauchoMonitorSvc* m_publishsvc;
 
-DimPropServer::DimPropServer(std::string name, ISvcLocator* svclocator) :  DimRpc(name.c_str(),"C", "C") {
+DimPropServer::DimPropServer(std::string name, ISvcLocator* svclocator) :  DimRpc((char*)name.c_str(),"C", "C") {
   StatusCode sc;
   //m_publishsvc = 0;
   m_histogramSvc = 0; 
@@ -165,7 +165,8 @@ void DimPropServer::rpcHandler() {
   else {   
     if (strcmp(nextRPCcommand,"wait")==0)   {
       log << MSG::DEBUG << " Wait found. Setting data to null. "<< endreq;   
-      setData("");
+      std::string sdatastr="";
+      setData((char*)sdatastr.c_str());
     }
     else {        
       if ((strcmp(nextRPCcommand,"listhistos")==0)|| (strncmp(nextRPCcommand,"resethistos",11)==0)){
@@ -380,7 +381,8 @@ void DimPropServer::rpcHandler() {
         } 
         else {
           log << MSG::DEBUG << "Setting data to null." << endreq;
-          setData("");
+	  std::string sdatastr="";
+          setData((char*)sdatastr.c_str());
         } // endif to make sense of nextcommand    
       }
     } 

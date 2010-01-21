@@ -5,8 +5,9 @@
 #include <string>
 #include <sstream>
 
+std::string dimstr="C";
 
-DimServiceMonObject::DimServiceMonObject(const std::string& svcName, MonObject *monObject):DimService(svcName.c_str(),"C",0,0), m_monObject(monObject), m_msgSvc(0)
+DimServiceMonObject::DimServiceMonObject(const std::string& svcName, MonObject *monObject):DimService((char*)svcName.c_str(),(char*)dimstr.c_str(),0,0), m_monObject(monObject), m_msgSvc(0)
 {
   setDataFromMonObject();
   m_name = "DimServiceMonObject";
