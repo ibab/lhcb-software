@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r35 2010-01-21 ========================
 ! 2010-01-18 - Antonis Papanestis
  - Added new histograms to the Alignment Monitor
  - Added new options to the Alignment Configurable
