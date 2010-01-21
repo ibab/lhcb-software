@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.26 2010-01-13 10:28:35 wouter Exp $
+// $Id: AlignmentElement.cpp,v 1.27 2010-01-21 11:00:59 wouter Exp $
 // Include files
 
 // from STD
@@ -33,7 +33,7 @@
 
 std::string AlignmentElement::stripElementName(const std::string& name)
 {
-  return boost::algorithm::erase_all_regex_copy(name, boost::regex("/dd/Structure/LHCb/.*Region/")) ;
+  return boost::algorithm::erase_all_regex_copy(name, boost::regex("/dd/Structure/LHCb/.*Region(/T/|/)")) ;
 }
 
 
