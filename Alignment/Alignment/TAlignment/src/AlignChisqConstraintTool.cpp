@@ -346,7 +346,9 @@ namespace Al
     } else if(  match( entry.name, "ITT.*?Box" ) ) {
       // box
       entry.err[0] = entry.err[1] = entry.err[2] = 0.5 * Gaudi::Units::mm ;
-      entry.err[3] = entry.err[4] = entry.err[5] = 1 * Gaudi::Units::mrad ;
+      entry.err[3] = 5 * Gaudi::Units::mrad ;
+      entry.err[4] = 2 * Gaudi::Units::mrad ;
+      entry.err[5] = 1 * Gaudi::Units::mrad ;
     } else if(  match( entry.name, "ITT.*?Layer.{1,2}" ) ) {
       // layer
       entry.err[0] = entry.err[1] = entry.err[2] = 0.05 * Gaudi::Units::mm ;
@@ -367,7 +369,11 @@ namespace Al
       entry.err[3] = entry.err[4] = entry.err[5] = 0.02  * Gaudi::Units::mrad ;
     }
     // try ST
-    else if( match( entry.name, "TT..LayerR.Module.*?" ) ) {
+    else if( match( entry.name, "TTSystem" ) ) {
+      // TT global
+      entry.err[0] = entry.err[1] = entry.err[2] = 0.5 * Gaudi::Units::mm ;
+      entry.err[3] = entry.err[4] = entry.err[5] = 1   * Gaudi::Units::mrad ;
+    } else if( match( entry.name, "TT..LayerR.Module.*?" ) ) {
       // TT module, sensor etc
       entry.err[0] = entry.err[1] = entry.err[2] = 0.1 * Gaudi::Units::mm ;
       entry.err[3] = entry.err[4] = entry.err[5] = 0.5 * Gaudi::Units::mrad ;
