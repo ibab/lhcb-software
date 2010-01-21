@@ -41,7 +41,6 @@ class TAlignment( LHCbConfigurableUser ):
         , "UsePreconditioning"           : True                        # Pre-conditioning
         , "SolvTool"                     : "DiagSolvTool"              # Solver to use
         , "EigenValueThreshold"          : -1                          # Eigenvalue threshold for cutting out weak modes
-        , "MinEigenModeChisquare"        : -1                          # Minimum value of the chisquare of an eigenmode
         , "WriteCondSubDetList"          : []                          # List of sub-detectors for which to write out the conditions
         , "CondFilePrefix"               : "xml/"                      # Prefix for xml file names
         , "VeloTopLevelElement"          : "/dd/Structure/LHCb/BeforeMagnetRegion/Velo"
@@ -223,7 +222,6 @@ class TAlignment( LHCbConfigurableUser ):
             # and these too
             gslSVDsolver().EigenValueThreshold    = self.getProp( "EigenValueThreshold" )
             DiagSolvTool().EigenValueThreshold    = self.getProp( "EigenValueThreshold" )
-            DiagSolvTool().MinEigenModeChisquare  = self.getProp( "MinEigenModeChisquare" )
                         
             trackresidualtool = Al__TrackResidualTool("Al::TrackResidualTool")
             trackresidualtool.KalmanFilter.BiDirectionalFit = False
