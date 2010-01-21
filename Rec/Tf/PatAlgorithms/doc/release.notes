@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+!========================= PatAlgorithms v3r28 2010-01-21 ====================
 ! 2009-01-18 - Stephanie Hansmann-Menzemer
  - make algorithms use ignore flag of HitBase class 
 
