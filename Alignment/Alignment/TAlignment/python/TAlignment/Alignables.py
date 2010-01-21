@@ -98,6 +98,15 @@ class Alignables( list ):
             
     ## Some predefined alignables
 
+    ## Global ###############################################################################         
+    def Tracker( self, dofs = "" ) :
+        elements = []
+        elements.append( "Tracker : " + self.m_velo )
+        elements.append( "Tracker : " + self.m_tt )
+        elements.append( "Tracker : " + self.m_it )
+        elements.append( "Tracker : " + self.m_ot )
+        self.__append( elements, dofs )
+
     ## VELO ###############################################################################
     def Velo( self, dofs = "" ) :
         self.__append( self.m_velo, dofs )
@@ -210,6 +219,16 @@ class Alignables( list ):
             for j in self.m_itBoxes :
                 for k in self.m_itLayers :
                     elements.append( self.m_it + i + j + k )
+        self.__append( elements, dofs )
+        
+    def ITDoubleLayers( self, dofs = "" ) :
+        elements = []
+        for i in self.m_itStations :
+            for j in self.m_itBoxes :
+                elements.append( "IT" + i + j + "/LayerX1U" + " : "
+                                 + self.m_it + i + j + "/Layer(X1|U)" )
+                elements.append( "IT" + i + j + "/LayerVX2" + " : "
+                                 + self.m_it + i + j + "/Layer(X2|V)" )
         self.__append( elements, dofs )
         
     def ITLadders( self, dofs = "" ) :

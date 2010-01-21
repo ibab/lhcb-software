@@ -41,6 +41,7 @@ class TAlignment( LHCbConfigurableUser ):
         , "UsePreconditioning"           : True                        # Pre-conditioning
         , "SolvTool"                     : "DiagSolvTool"              # Solver to use
         , "EigenValueThreshold"          : -1                          # Eigenvalue threshold for cutting out weak modes
+        , "MinEigenModeChisquare"        : -1                          # Minimum value of the chisquare of an eigenmode
         , "WriteCondSubDetList"          : []                          # List of sub-detectors for which to write out the conditions
         , "CondFilePrefix"               : "xml/"                      # Prefix for xml file names
         , "VeloTopLevelElement"          : "/dd/Structure/LHCb/BeforeMagnetRegion/Velo"
@@ -202,12 +203,15 @@ class TAlignment( LHCbConfigurableUser ):
             #print alignAlg
             # and also the update tool is in the toolsvc
             updatetool = Al__AlignUpdateTool("Al::AlignUpdateTool")
-            updatetool.MinNumberOfHits            = self.getProp( "MinNumberOfHits"              )
-            updatetool.UsePreconditioning         = self.getProp( "UsePreconditioning"           )
-            updatetool.LogFile                    = self.getProp( "LogFile"             )
+            updatetool.MinNumberOfHits            = self.getProp( "MinNumberOfHits"    )
+            updatetool.UsePreconditioning         = self.getProp( "UsePreconditioning" )
+            updatetool.LogFile                    = self.getProp( "LogFile"            )
             updatetool.addTool(gslSVDsolver)
             updatetool.MatrixSolverTool           = self.getProp( "SolvTool" )
-
+            updatetool.SurveyConstraintTool.Constraints          = self.getProp( "SurveyConstraints" )
+            updatetool.LagrangeConstraintTool.Constraints        = self.getProp( "Constraints" )
+            updatetool.LagrangeConstraintTool.UseWeightedAverage = self.getProp( "UseWeightedAverageConstraint" )
+            
             # configure in the tool service
             elementtool 			  = GetElementsToBeAligned( "GetElementsToBeAligned" )
             elementtool.OutputLevel               = outputLevel
@@ -216,19 +220,11 @@ class TAlignment( LHCbConfigurableUser ):
             elementtool.UseLocalFrame             = self.getProp( "UseLocalFrame"   )  
             #alignAlg.addTool( elementtool )
             
-            # this one is in the toolsvc, for now
-            constrainttool                        = Al__AlignConstraintTool("Al::AlignConstraintTool")
-            constrainttool.Constraints            = self.getProp( "Constraints" )
-            constrainttool.UseWeightedAverage     = self.getProp( "UseWeightedAverageConstraint" )
-
-            # this one is in the toolsvc, for now
-            chisqconstrainttool                   = Al__AlignConstraintTool("Al::AlignChisqConstraintTool")
-            chisqconstrainttool.Constraints       = self.getProp( "SurveyConstraints" )
-
             # and these too
             gslSVDsolver().EigenValueThreshold    = self.getProp( "EigenValueThreshold" )
             DiagSolvTool().EigenValueThreshold    = self.getProp( "EigenValueThreshold" )
-
+            DiagSolvTool().MinEigenModeChisquare  = self.getProp( "MinEigenModeChisquare" )
+                        
             trackresidualtool = Al__TrackResidualTool("Al::TrackResidualTool")
             trackresidualtool.KalmanFilter.BiDirectionalFit = False
             
@@ -245,8 +241,7 @@ class TAlignment( LHCbConfigurableUser ):
         ## The main sequence
         mainSeq = self.getProp("Sequencer")
         mainSeq.MeasureTime = True
-        print "(2)I will try to aling ", self.getProp( "ElementsToAlign" ), " elements!"
-#        ApplicationMgr().TopAlg.append( mainSeq )        
+        #ApplicationMgr().TopAlg.append( mainSeq )        
 
         # Different sequencers depending on whether we use pat or not
         mainSeq.Members.append( self.filterSeq(    self.getProp( "OutputLevel" ) ) )
