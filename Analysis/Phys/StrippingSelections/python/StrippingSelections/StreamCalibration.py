@@ -13,7 +13,7 @@ from StrippingSelections import StrippingMuIDCalib
 stream = StrippingStream("Calibration")
 stream.appendLines( [ 
 		        StrippingMuIDCalib.jp_line, 
-		        StrippingMuIDCalib.b_line 
+		        StrippingMuIDCalib.b_line, 
 		        StrippingLambdaNoPID.line_lambda_dd, 
 		        StrippingLambdaNoPID.line_lambda_ll 
 		    ] )

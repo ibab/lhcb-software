@@ -5,19 +5,22 @@
 #   @date 2009-12-04
 #
 
-from StrippingSelections import StreamBmuon, StreamHadron, StreamJpsi
-from StrippingSelections import StreamDstar, StreamLambda, StreamBelectron
+from StrippingSelections import StreamBhadron
+from StrippingSelections import StreamCalibration
+from StrippingSelections import StreamCharm
+from StrippingSelections import StreamDielectron
+from StrippingSelections import StreamDimuon
 from StrippingSelections import StreamMiniBias
+from StrippingSelections import StreamSemileptonic
 from StrippingSelections import StreamV0
-from StrippingSelections import StreamDplus
 
-allStreams = [ StreamBmuon.stream,
-               StreamHadron.stream, 
-               StreamJpsi.stream,
-               StreamDstar.stream,     
-               StreamLambda.stream, 
-               StreamBelectron.stream, 
+allStreams = [ 
+               StreamBhadron.stream,
+               StreamCalibration.stream, 
+               StreamCharm.stream,
+               StreamDielectron.stream,     
+               StreamDimuon.stream, 
                StreamMiniBias.stream, 
-               StreamV0.stream,
-               StreamDplus.stream
+               StreamSemileptonic.stream, 
+               StreamV0.stream
              ] 
