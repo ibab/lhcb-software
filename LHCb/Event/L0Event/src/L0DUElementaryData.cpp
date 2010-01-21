@@ -1,4 +1,4 @@
-// $Id: L0DUElementaryData.cpp,v 1.9 2010-01-21 17:40:10 odescham Exp $
+// $Id: L0DUElementaryData.cpp,v 1.10 2010-01-21 23:42:28 odescham Exp $
 // Include files 
 #include <utility>
 #include <string>
@@ -23,7 +23,9 @@ v_operands){
   // 2 dimensional operator (+,-)
   if(2 == v_operands.size() ){
     if( "+" == v_operator ){digit = v_operands[0] + v_operands[1] ;}
-    if( "-" == v_operator )digit = v_operands[0] - v_operands[1]; 
+    if( "-" == v_operator ){
+	digit = ( v_operands[0] > v_operands[1]) ? v_operands[0] - v_operands[1] : 0;
+    } 
     if( "&" == v_operator ){digit = v_operands[0] & v_operands[1] ;}
     if( "^" == v_operator ){digit = v_operands[0] ^ v_operands[1] ;}
   }
