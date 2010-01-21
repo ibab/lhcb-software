@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.84 2010-01-13 12:57:52 cattanem Exp $ 
+! $Id: release.notes,v 1.85 2010-01-21 14:29:49 rlambert Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
@@ -6,6 +6,7 @@
 !------------------------------------------------------------------------------
 
 
+!========================== CaloPIDs v5r3 2010-01-21 =========================
 ! 2010-01-13 - Marco Cattaneo
  - Follow Gaudi fix #61116: GaudiCommon::Exception now returns void
 
