@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-----------------------------------------------------------------------------
 
+!========================== HltDAQ v1r3 2010-01-21 ===========================
 ! 2010-01-07 - V. Gligorov
  - src/HltDecReportsDecoder.cpp
    src/HltSelReportsDecoder.cpp
