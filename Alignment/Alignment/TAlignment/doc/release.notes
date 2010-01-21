@@ -3,6 +3,11 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2010-01-21 Wouter Hulsbergen
+ - AlignChisqConstraintTool: add functionality to read survey constraints from an xml file
+ - AlignConstraintTool: add functionality to fix lagrange constraints to 'nominal' and not just the 'delta'
+ - remove the leading 'T/' from OT and IT alignable names
+ - added directory with survey xml
 
 ! 2009-01-04 Wouter Hulsbergen
  - extended functionality of chisquare constraints
