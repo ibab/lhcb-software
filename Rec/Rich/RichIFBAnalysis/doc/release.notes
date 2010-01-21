@@ -4,6 +4,7 @@
 ! Purpose     : Ross Young
 !-----------------------------------------------------------------------------
 
+!=================== Rich/RichIFBAnalysis v1r1 2010-01-20 ====================
 ! 2010-01-15 - Ross Young
  - Change in program design: Pixel-clustering now outputs "Cluster-size" distributions, 
 	RICH hitmaps of all-size clusters and RICH hitmaps of IFB-size clusters (>user-defined cut).
