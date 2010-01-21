@@ -44,7 +44,7 @@ AdaptivePVReFitter::AdaptivePVReFitter( const std::string& type,
                    m_fullExtrapolatorName = "TrackMasterExtrapolator");
   declareProperty( "veloExtrapolatorName", 
                    m_veloExtrapolatorName = "TrackLinearExtrapolator");
-  declareProperty( "minTrNumber", m_minTrNumber = 2);
+  declareProperty( "minTrNumber", m_minTrNumber = 4);
 
   m_temperatures.push_back(10.0);
   m_temperatures.push_back(4.0);
