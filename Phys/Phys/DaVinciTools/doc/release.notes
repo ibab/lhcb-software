@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.501 2010-01-15 08:39:48 jpalac Exp $
+! $Id: release.notes,v 1.502 2010-01-22 09:34:20 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-01-22 - Patrick Koppenburg
+ - GeomDispCalculator : Remove names of input to avoid compilation warnings
 
 ! 2010-01-15 - Juan PALACIOS
 - src/PhysDesktop[.h,.cpp]

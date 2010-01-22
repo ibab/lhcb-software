@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.h,v 1.16 2010-01-13 16:17:25 pkoppenb Exp $
+// $Id: GeomDispCalculator.h,v 1.17 2010-01-22 09:34:20 pkoppenb Exp $
 #ifndef GEOMDISPCALCULATOR_H
 #define GEOMDISPCALCULATOR_H 1
 
@@ -48,64 +48,64 @@ public:
   /// Retrieve the necessary tools
   StatusCode initialize();
 
-  StatusCode calcImpactPar( const LHCb::Particle& particle,
-                            const LHCb::VertexBase& vertex, 
-                            double& impactParameter, 
-                            double& impactParameterError ) const { return printFailure() ; };
+  StatusCode calcImpactPar( const LHCb::Particle&,
+                            const LHCb::VertexBase&, 
+                            double& , 
+                            double& ) const { return printFailure() ; };
 
-  StatusCode calcImpactPar( const LHCb::Particle& particle,
-                            const LHCb::VertexBase& vertex, 
-                            double& impactParameter, 
-                            double& impactParameterError,
-                            Gaudi::XYZVector& ipVector, 
-                            Gaudi::SymMatrix9x9& errMatrix ) const { return printFailure() ; };
+  StatusCode calcImpactPar( const LHCb::Particle&,
+                            const LHCb::VertexBase&, 
+                            double& , 
+                            double& ,
+                            Gaudi::XYZVector& , 
+                            Gaudi::SymMatrix9x9&  ) const { return printFailure() ; };
 
-  StatusCode calcImpactPar( const LHCb::Particle& particle,
-                            const LHCb::VertexBase& vertex, 
-                            double& impactParameter, 
-                            double& impactParameterError,
-                            Gaudi::XYZVector& ipVector, 
-                            Gaudi::XYZVector& errVector ) const { return printFailure() ; };
+  StatusCode calcImpactPar( const LHCb::Particle&,
+                            const LHCb::VertexBase&, 
+                            double& , 
+                            double& ,
+                            Gaudi::XYZVector& , 
+                            Gaudi::XYZVector&  ) const { return printFailure() ; };
 
-  StatusCode calcImpactPar( const LHCb::Particle& particle,
-                            const Gaudi::XYZPoint& point, 
-                            double& ip , 
-                            double& impactParameterError ) const { return printFailure() ; };
+  StatusCode calcImpactPar( const LHCb::Particle&,
+                            const Gaudi::XYZPoint& , 
+                            double&  , 
+                            double&  ) const { return printFailure() ; };
 
-  StatusCode calcImpactPar( const LHCb::Particle& particle,
-                            const Gaudi::XYZPoint& point, 
-                            double& ip , 
-                            double& impactParameterError,
-                            Gaudi::XYZVector& ipVector, 
-                            Gaudi::SymMatrix9x9& errMatrix ) const { return printFailure() ; };
+  StatusCode calcImpactPar( const LHCb::Particle&,
+                            const Gaudi::XYZPoint& , 
+                            double&  , 
+                            double& ,
+                            Gaudi::XYZVector& , 
+                            Gaudi::SymMatrix9x9&  ) const { return printFailure() ; };
 
-  StatusCode calcImpactPar(const LHCb::Particle& transParticle,
-                           const Gaudi::XYZPoint& pos,
-                           const Gaudi::SymMatrix3x3& posError,
-                           double& impactParameter, 
-                           double& impactParameterError,
-                           Gaudi::XYZVector& ipVector, 
-                           Gaudi::SymMatrix9x9& errMatrix ) const { return printFailure() ; };
+  StatusCode calcImpactPar(const LHCb::Particle& ,
+                           const Gaudi::XYZPoint&,
+                           const Gaudi::SymMatrix3x3& ,
+                           double& , 
+                           double& ,
+                           Gaudi::XYZVector& , 
+                           Gaudi::SymMatrix9x9& ) const { return printFailure() ; };
   
-  StatusCode calcCloseAppr( const LHCb::Particle& particle0,       
-                            const LHCb::Particle& particle1, 
-                            double& distance, 
-                            double& distanceError ) const { return printFailure() ; };
+  StatusCode calcCloseAppr( const LHCb::Particle& ,       
+                            const LHCb::Particle& , 
+                            double& , 
+                            double& ) const { return printFailure() ; };
 
-  StatusCode calcVertexDis( const LHCb::VertexBase& vertex0,
-                            const LHCb::VertexBase& vertex1, 
-                            double& distance, 
-                            double& distanceError ) const { return printFailure() ; };
+  StatusCode calcVertexDis( const LHCb::VertexBase& ,
+                            const LHCb::VertexBase& , 
+                            double& , 
+                            double& ) const { return printFailure() ; };
 
-  StatusCode calcSignedFlightDistance( const LHCb::VertexBase& vertex,
-                                       const LHCb::Particle& particle, 
-                                       double& distance, 
-                                       double& distanceError) const { return printFailure() ; };
+  StatusCode calcSignedFlightDistance( const LHCb::VertexBase&,
+                                       const LHCb::Particle&, 
+                                       double&e, 
+                                       double& ) const { return printFailure() ; };
   
-  StatusCode calcProjectedFlightDistance( const LHCb::VertexBase& vertex,
-                                          const LHCb::Particle& particle, 
-                                          double& distance, 
-                                          double& distanceError) const { return printFailure() ; };
+  StatusCode calcProjectedFlightDistance( const LHCb::VertexBase&,
+                                          const LHCb::Particle&, 
+                                          double& , 
+                                          double& ) const { return printFailure() ; };
   
 private:
 
