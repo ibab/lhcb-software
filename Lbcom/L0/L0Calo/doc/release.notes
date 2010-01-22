@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.151 2010-01-22 13:49:59 robbep Exp $
+! $Id: release.notes,v 1.152 2010-01-22 18:10:04 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
@@ -6,6 +6,7 @@
 ! 2010-01-22 - Patrick Robbe
  - L0CaloAlg.h/.cpp: use condition database to decide if we use ECAL in 
    the Hadron trigger, and PS/SPD in the ECAL triggers.
+ - L0CaloCheckCalibCte.cpp: move from int to unsigned long
 
 !========================= L0Calo v10r3 2010-01-21 ========================
 ! 2010-01-21 Olivier Deschamps
