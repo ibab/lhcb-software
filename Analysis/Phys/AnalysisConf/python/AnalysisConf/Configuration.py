@@ -4,7 +4,7 @@
 High level configuration tools for AnalysisConf
 """
 # =============================================================================
-__version__ = "$Id: Configuration.py,v 1.22 2009-11-10 17:32:49 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.23 2010-01-22 13:11:30 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 # =============================================================================
 
@@ -118,15 +118,6 @@ class AnalysisConf(LHCbConfigurableUser) :
         ApplicationMgr().ExtSvc +=  [ DataOnDemandSvc() ]
         import CommonParticles.StandardBasic
         import CommonParticles.StandardIntermediate
-#
-# Standard Particles
-#
-    def standardDC06Particles(self):
-        """
-        Temporary DC06 particles
-        @todo Remove
-        """
-        importOptions("$COMMONPARTICLESROOT/options/StandardDC06Options.opts")
 
 #
 # Unpack MC
@@ -152,7 +143,6 @@ class AnalysisConf(LHCbConfigurableUser) :
             self.configureMC()
         self.tagging()
         self.standardParticles()
-        self.standardDC06Particles()
 
 
 if '__main__' == __name__ :

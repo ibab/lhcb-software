@@ -3,7 +3,7 @@
 # Maintainer : Patrick Koppenburg
 #============================================================================
 package           AnalysisConf
-version           v1r10
+version           v2r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
