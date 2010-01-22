@@ -4,6 +4,14 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2010-Jan-22 - Neal Gauvin
+ - New functionality in Hlt2DisplVerticesDEV : save in tuple values to cut on as in the Hlt2HidValley algo
+
+! 2009-Dec-21 - Neal Gauvin
+ - Remove explicit use of the Velo geometry and obsolete options
+
+!========================== HltDisplVertices v1r4p1 2009-11-30 ===================
+=======
 ! 2010-01-14 - Juan PALACIOS
  - Hlt2DisplVertices*.cpp
   . Use DVALgorithm::primaryVertices() instead of IPhysDesktop::primaryVertices
@@ -15,6 +23,7 @@
  - Remove explicit use of the Velo geometry and obsolete options
 
 !========================== HltDisplVertices v1r3 2009-11-30 ==================
+
 ! 2009-Nov-26 - Neal Gauvin
  - Retrieve PVs from the desktop + fix details
 

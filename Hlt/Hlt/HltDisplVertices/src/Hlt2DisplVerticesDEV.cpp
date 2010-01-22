@@ -2,7 +2,10 @@
  * THIS IS THE DEVELOPMENT VERSION
  * Hlt2DisplVertices is the REFERENCE VERSION
  *********************************************************/
-
+/*********************** TODO ******************************
+ * be able to clone decision part
+ *
+ ***********************************************************/
 // Include files:
 //from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -22,6 +25,13 @@
 
 //get the Header of the event
 #include "Event/RecHeader.h"
+
+//for beam line
+#include "LHCbMath/EigenSystem.h"   
+#include "GaudiKernel/SymmetricMatrixTypes.h"
+#include "GaudiKernel/GenericVectorTypes.h"
+#include "GaudiUtils/Aida2ROOT.h"
+#include "TF1.h"
 
 // Local
 #include "Hlt2DisplVerticesDEV.h"
@@ -47,7 +57,17 @@ Hlt2DisplVerticesDEV::Hlt2DisplVerticesDEV(const std::string& name,
     , m_nbevent(0)
     , m_nbpassed(0)
     , m_pt(400.)
+    , m_BeamLine(0)
+    , m_bin(500)
+  //for now, settable only internally
+    , m_minz(-25*cm)
+    , m_maxz(75*cm)
+    , m_maxx(5*mm)
+    , m_maxy(5*mm)
+    , m_maxchi(2)
+    , m_mintrks(10)
 {
+  declareProperty("SaveHidValSelCut", m_HidValSel = false );
   declareProperty("SaveInTuple", m_Save = true );
   declareProperty("DefMom", m_DefMom = true );
   declareProperty("RCutMethod", m_RCutMethod = "FromUpstreamPV" );
@@ -61,6 +81,9 @@ Hlt2DisplVerticesDEV::Hlt2DisplVerticesDEV(const std::string& name,
   declareProperty("MinSumpt1", m_MinSumpt1 = 6*GeV );
   declareProperty("MinSumpt2", m_MinSumpt2 = 2*GeV );
   declareProperty("RemVtxFromDet", m_RemVtxFromDet = 1*mm  );
+  declareProperty("BeamLineInitPos", m_BLInitPos ); //no default values !
+  declareProperty("BeamLineInitDir", m_BLInitDir );
+  declareProperty("BeamLineCycle", m_cycle = 1000 );
 }
 
 //=============================================================================
@@ -113,6 +136,11 @@ StatusCode Hlt2DisplVerticesDEV::initialize() {
              << endmsg;
     }
     debug() << "------------------------------------"<< endmsg;
+    if( m_HidValSel ){
+      m_Save = true;
+      debug() << "You asked to save the Hlt2HidValley values."<< endmsg;
+      debug() << "------------------------------------"<< endmsg;
+    }
   }
 
   if( m_RemVtxFromDet != 0 ){
@@ -166,7 +194,51 @@ StatusCode Hlt2DisplVerticesDEV::initialize() {
     }
     //matrix to transform to local velo frame
     m_toVeloFrame = halfgeominfo->toLocalMatrix() ;
+    //m_toGlobalFrame = halfgeominfo->toGlobalMatrix();
   }
+
+  //Initialize the beam line
+  if( m_RCutMethod == "FromBeamLine" ){
+
+    m_BeamLine = new Particle();
+
+    if( !m_BLInitPos.empty() ){
+      //sanity check
+      if( m_BLInitPos.size()<3 ) 
+        info()<<"BeamLineInitPos not set properly. Need 3 doubles. "
+              <<"Beam line initial position will be disguarded."<< endmsg;
+      m_BeamLine->setReferencePoint(
+        Gaudi::XYZPoint( m_BLInitPos[0], m_BLInitPos[1], m_BLInitPos[2] ) );
+      if(msgLevel(MSG::DEBUG))
+        debug()<<"Beam line initial position : "<< m_BLInitPos << endmsg;
+    }
+    
+    if( !m_BLInitDir.empty() ){
+      //sanity check
+      if( m_BLInitDir.size()<3 ) 
+        info()<<"BeamLineInitDir not set properly. Need 3 doubles. "
+              <<"Beam line initial direction will be disguarded."<< endmsg;
+      m_BeamLine->setMomentum(
+  Gaudi::LorentzVector( m_BLInitDir[0], m_BLInitDir[1], m_BLInitDir[2], 0. ) );
+      if(msgLevel(MSG::DEBUG))
+        debug()<<"Beam line initial direction : "<< m_BLInitDir << endmsg;
+    }    
+
+    //Book histos
+    m_x = book1D("PV x position", -m_maxx, m_maxx, m_bin);
+    m_y = book1D("PV y position", -m_maxy, m_maxy, m_bin);
+    m_z = book1D("PV z position", m_minz, m_maxz, m_bin);
+    
+    int bins2 = m_bin*m_bin;
+    m_xx = book1D("PVxx", 0., (m_maxx*m_maxx), bins2);
+    m_yy = book1D("PVyy", 0., (m_maxy*m_maxy), bins2);
+    m_zz = book1D("PVzz", 0. , (m_maxz*m_maxz), bins2);
+    m_xy = book1D("PVxy", -(m_maxx*m_maxy), (m_maxx*m_maxy), bins2);
+    m_xz = book1D("PVxz", -(m_maxx*m_maxz), (m_maxx*m_maxz), bins2);
+    m_yz = book1D("PVyz", -(m_maxy*m_maxz), (m_maxy*m_maxz), bins2);
+  }
+  
+
 
   return StatusCode::SUCCESS;
 };
@@ -176,10 +248,10 @@ StatusCode Hlt2DisplVerticesDEV::initialize() {
 //=============================================================================
 StatusCode Hlt2DisplVerticesDEV::execute() {
 
-  if(msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
-
+  ++m_nbevent;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Execute event "
+                                   << m_nbevent << endmsg;
   setFilterPassed(false);
-  m_nbevent++;
 
   //save a dummy Particle in the TES
   Particle::ConstVector Pions ;
@@ -187,9 +259,13 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
   if( InputParts.empty() ) return desktop()->cloneTrees(Pions);
   Pion = *(InputParts.begin());
 
+  //update beam line position and direction
+  if( m_RCutMethod == "FromBeamLine" && !BeamLineCalibration() ) 
+    return desktop()->cloneTrees(Pions);
+
   m_map.clear(); //Re-initialize the map
 
-  //Retrieve the 3D RecVertex
+  //Retrieve the RecVertex from private PatPV3D
   RecVertices* RVs = get<RecVertices>(m_InputDisplVertices);
   if(msgLevel(MSG::DEBUG))
     debug()<<"Retrieved "<< RVs->size() 
@@ -236,6 +312,8 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
     UpPV = (*PVs.begin())->position();
     if(msgLevel(MSG::DEBUG))
       debug() <<"Upstream PV position "<< UpPV << endmsg;
+  } else if( m_RCutMethod=="FromBeamLine" ){
+    UpPV = m_BeamLine->referencePoint();
   } else {
     UpPV = (*iRV)->position();
   }
@@ -274,6 +352,8 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
         m_RCutMethod == "FromUpstreamPVOpt" ||
         m_RCutMethod == "CorrFromUpstreamPV" ){
       R = (RV->position() - UpPV).rho();
+    } else if( m_RCutMethod == "FromBeamLine" ){
+      R = RadDist(RV->position());
     } else {
       R = Pos.rho();
     }
@@ -335,9 +415,10 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
     tuple->column( "PVx", UpPV.x() );
     tuple->column( "PVy", UpPV.y() );
     if( !fillHeader( tuple ) ) return desktop()->cloneTrees(Pions);
+    if( m_HidValSel && !SaveHidValSel( tuple, RVs ) ) 
+      return desktop()->cloneTrees(Pions);
     tuple->write();
   }
-
 
   // Cuts 
   if( Sel1 > 0 || Sel2 >1 ){
@@ -364,6 +445,8 @@ StatusCode Hlt2DisplVerticesDEV::finalize() {
     debug() << "------------------------------------"<< endmsg;
   }
 
+  if( m_RCutMethod == "FromBeamLine" ) delete m_BeamLine;
+
   return DVAlgorithm::finalize();
 }
 
@@ -375,8 +458,8 @@ StatusCode Hlt2DisplVerticesDEV::Done( Particle::ConstVector & Pions){
     m_nbpassed++;
     setFilterPassed(true);
     Pions.push_back(Pion);
-    LHCb::Tracks* inputTracks = get<Tracks>(TrackLocation::HltForward);
-    plot( inputTracks->size(), "NbTracksSelEvts", 0, 150 );
+    //LHCb::Tracks* inputTracks = get<Tracks>(TrackLocation::HltForward);
+    //plot( inputTracks->size(), "NbTracksSelEvts", 0, 150 );
     return desktop()->cloneTrees(Pions);
 }
 
@@ -570,11 +653,76 @@ Gaudi::XYZPoint Hlt2DisplVerticesDEV::GetCorrPosition( const RecVertex* RV,
 }
 
 //============================================================================
+// Save in Tuple the values from Hlt2HidValley
+//============================================================================
+StatusCode  Hlt2DisplVerticesDEV::SaveHidValSel( Tuple & tuple,  RecVertices* RVs ){
+
+  //Global track cuts
+  double sumPtTracks = 0.;
+  double sumXYTrackfirstStates = 0.;
+
+  //Get forward tracks
+  Tracks* inputTracks = get<Tracks>(TrackLocation::HltForward);
+
+  for(Track::Container::const_iterator itr = inputTracks->begin(); 
+      inputTracks->end() != itr; itr++) {
+    const Track* trk = *itr;
+    double xyfState = sqrt(trk->firstState().x() * trk->firstState().x() +
+			   trk->firstState().y() * trk->firstState().y());
+    sumPtTracks += trk->pt();
+    sumXYTrackfirstStates += xyfState;
+  }
+
+  //Find the upstream PV
+  const RecVertex::Container* primVertices = this->primaryVertices();
+  if((primVertices->size() == 0) && inputTracks->size() == 0)
+    return StatusCode::FAILURE; 
+  vector<const RecVertex*> primVrtcs;
+  for( RecVertex::Container::const_iterator 
+        itPV = primVertices->begin(); primVertices->end() != itPV; ++itPV) {
+    const RecVertex* pvtx = *itPV;
+    primVrtcs.push_back(pvtx);
+  }
+  std::sort( primVrtcs.begin(), primVrtcs.end(), SortPVz );
+  const RecVertex* realPV = *(primVrtcs.begin());
+
+  //Global RV cut
+  double sumSVxyDist = 0.;
+  for( RecVertices::const_iterator itRV = RVs->begin();
+       RVs->end() != itRV; ++itRV) {
+    const RecVertex* dVtx = *itRV;
+    
+    double distVtcs = sqrt((realPV->position().x() - dVtx->position().x()) * 
+			   (realPV->position().x() - dVtx->position().x()) +
+			   (realPV->position().y() - dVtx->position().y()) * 
+			   (realPV->position().y() - dVtx->position().y()) +
+			   (realPV->position().z() - dVtx->position().z()) * 
+			   (realPV->position().z() - dVtx->position().z()));
+    double xyDist = sqrt(dVtx->position().x() * dVtx->position().x() +
+			 dVtx->position().y() * dVtx->position().y());
+    if(distVtcs > .001) 
+      sumSVxyDist += xyDist;
+  }
+  
+  //Write values in tuple
+  tuple->column( "sumPtTracks", sumPtTracks );
+  tuple->column( "sumXYTrackfirstStates", sumXYTrackfirstStates );
+  tuple->column( "sumSVxyDist", sumSVxyDist );
+
+  if(msgLevel(MSG::DEBUG))
+    debug()<<"Global event values : sumPtTracks "<< sumPtTracks/1000. 
+	   <<" GeV, sumXYTrackfirstStates "<< sumXYTrackfirstStates 
+	   <<" mm, sumSVxyDist "<< sumSVxyDist <<" mm" << endmsg;
+
+  return StatusCode::SUCCESS ;
+}
+
+//============================================================================
 // Event and run number 
 //============================================================================
 StatusCode Hlt2DisplVerticesDEV::fillHeader( Tuple & tuple ){
 
-  const LHCb::RecHeader* header = get<LHCb::RecHeader>(LHCb::RecHeaderLocation::Default);  
+  const LHCb::RecHeader* header = get<RecHeader>(RecHeaderLocation::Default);  
   debug() << "Filling Tuple Event " << header->evtNumber() << endmsg ;
   tuple->column("Event", (int)header->evtNumber());
   return StatusCode::SUCCESS ;
@@ -756,6 +904,200 @@ bool Hlt2DisplVerticesDEV::RemVtxFromDet( const RecVertex* RV ){
 }
 
 //============================================================================
+// Update beam line position and direction 
+//============================================================================
+bool Hlt2DisplVerticesDEV::BeamLineCalibration(){
+
+  //Get the reconstructed primary vertices
+  const RecVertex::Container * PVc = desktop()-> primaryVertices();
+  int size = PVc->size();
+  if(msgLevel(MSG::DEBUG))
+    debug()<<"Retrieved "<< size <<" primary vertices." << endmsg;
+
+  //Loop on the reconstructed primary vertices
+  for( RecVertex::Container::const_iterator ipv = PVc->begin() ;
+       ipv != PVc->end(); ++ipv ) {
+    const RecVertex* pv = *ipv ;
+    int nbtrks = pv->tracks().size();
+
+    //transform the PV position to the local Velo frame
+//     Gaudi::XYZPoint localPV;
+//     if( msgLevel(MSG::DEBUG) || m_local ){
+//       localPV = m_toVeloFrame * pv->position();
+//     }
+
+    if( msgLevel( MSG::DEBUG ) ){
+      debug()<<"Primary Vertex position "<< pv->position() 
+             <<" R "<< pv->position().rho()
+             <<" Number of associated tracks "<< nbtrks 
+             <<" Chi2/NDoF " << pv->chi2PerDoF() << endmsg;
+      //debug()<<" PV in Velo local frame "<< localPV << endmsg;
+    }
+    Gaudi::XYZPoint PV = pv->position();
+    //if( m_local ) PV = localPV;
+    double x = PV.x();
+    double y = PV.y();
+    double z = PV.z();
+    double r = PV.rho();
+    double chi = pv->chi2PerDoF();
+    
+    //eventually cut on the PV !
+    if( chi > m_maxchi || nbtrks < m_mintrks ) 
+      continue;
+    ++m_nbpv;
+    
+    //plot variables
+    m_x->fill( x ); m_y->fill( y ); m_z->fill( z );
+    m_xx->fill( x*x ); m_yy->fill( y*y ); m_zz->fill( z*z );
+    m_xy->fill( x*y ); m_yz->fill( y*z ); m_xz->fill( x*z );
+    
+    plot( r, "PV radial distance to z axis", 0., m_maxx, m_bin ); 
+    plot( chi, "PV chisquare per dof",0,5) ;
+    plot( nbtrks, "PV number of tracks", -0.5, 120.5, 121 );
+  }
+
+  //Do not go on without any beam line position !  
+  if( m_nbevent < m_cycle && m_BLInitPos.empty() ) return false;
+
+  //Update the beam line 
+  if( m_nbevent%m_cycle == 0 ){
+
+    //Translate AIDA into ROOT
+    TH1D* rx = Gaudi::Utils::Aida2ROOT::aida2root( m_x );
+    TH1D* ry = Gaudi::Utils::Aida2ROOT::aida2root( m_y );
+    TH1D* rz = Gaudi::Utils::Aida2ROOT::aida2root( m_z );
+    TH1D* rxx = Gaudi::Utils::Aida2ROOT::aida2root( m_xx );
+    TH1D* ryy = Gaudi::Utils::Aida2ROOT::aida2root( m_yy );
+    TH1D* rzz = Gaudi::Utils::Aida2ROOT::aida2root( m_zz );
+    TH1D* rxy = Gaudi::Utils::Aida2ROOT::aida2root( m_xy );
+    TH1D* ryz = Gaudi::Utils::Aida2ROOT::aida2root( m_yz );
+    TH1D* rxz = Gaudi::Utils::Aida2ROOT::aida2root( m_xz );
+    
+    //Get the means
+    double mx, my, mz, mxx, myy, mzz, mxy, myz, mxz;
+    rx->Fit("gaus","QO","goff"); ry->Fit("gaus","QO","goff");
+    rz->Fit("gaus","QO","goff"); 
+    mx = rx->GetFunction("gaus")->GetParameter(1);
+    my = ry->GetFunction("gaus")->GetParameter(1);
+    mz = rz->GetFunction("gaus")->GetParameter(1);
+    mxx = rxx->GetMean();
+    myy = ryy->GetMean();
+    mzz = rzz->GetMean();
+    mxy = rxy->GetMean();
+    myz = ryz->GetMean();
+    mxz = rxz->GetMean();
+
+    //Compute the covariance matrix
+    Gaudi::SymMatrix3x3 Cov;
+    Cov(0,0) = mxx - mx*mx;
+    Cov(0,1) = mxy - mx*my;
+    Cov(0,2) = mxz - mx*mz;
+    Cov(1,2) = myz - my*mz;
+    Cov(1,1) = myy - my*my;
+    Cov(2,2) = mzz - mz*mz;
+    
+    //let's diagonalize the matrix
+    // create the evaluator 
+    Gaudi::Math::GSL::EigenSystem Eval ;  
+
+   // get the sorted vector of eigenvalues and eigenvectors
+    Gaudi::Vector3  eigval;
+    Gaudi::Matrix3x3 eigvects;
+    StatusCode sc = 
+      Eval.eigenVectors( static_cast<const Gaudi::SymMatrix3x3>(Cov), 
+                         eigval, eigvects );
+    //fill eigenvalues and eigenvectors in beam calibration class
+    if( sc.isFailure() ){
+      warning()<<"Failed to get the eigenvalues and eigenvectors of " 
+               <<"the IP covariance matrix, saving the estimate of "
+               <<"the mean interaction point position."<< endmsg;
+      return false;
+    }
+    
+    //Transform back into LHCb frame
+
+
+    //  Set X,Y,Z eigenvectors as being the vectors closest to the X,Y,Z axis, 
+    //     respectively, with positive eigenvalues.
+
+    // Eigenvectors that is most along x,y,z
+    Gaudi::Matrix3x3 tmp;
+    Gaudi::Vector3 tmpd;
+
+    for(size_t ivec=0; ivec<3; ++ivec) {
+      // clumsy way of finding the largest coordinate
+      size_t icoord = 0;
+      for(size_t jcoord = 1; jcoord<3; ++jcoord)
+        if( abs(eigvects(icoord,ivec)) < abs(eigvects(jcoord,ivec)) )
+          icoord = jcoord;
+      tmp(0, icoord) = eigvects(0,ivec);
+      tmp(1, icoord) = eigvects(1,ivec);
+      tmp(2, icoord) = eigvects(2,ivec);
+      tmpd.At(icoord) = eigval.At(ivec);
+      // turn the vector around if the direction is wrong.
+      if( tmp(icoord,icoord) < 0 ){ 
+        tmp(0,icoord) *= -1; tmp(1,icoord) *= -1; tmp(2,icoord) *= -1;
+        //change the sign of the eigenvalue as well.
+        tmpd.At(icoord) *= -1;
+      } 
+    }
+    eigval = tmpd;
+    eigvects = tmp;
+
+    //Eventually reset if the beams have moved
+    double x = m_BeamLine->referencePoint().x() - mx;
+    double y = m_BeamLine->referencePoint().y() - my;
+    if( m_BeamLine->referencePoint().z() != 0. && sqrt( x*x + y*y ) > 0.05 ){
+      m_x->reset();
+      m_y->reset();
+      m_z->reset();
+      m_xx->reset();
+      m_yy->reset();
+      m_zz->reset();
+      m_xy->reset();
+      m_xz->reset();
+      m_yz->reset();
+    }
+
+    //Save beam line informations
+    m_BeamLine->setReferencePoint( Gaudi::XYZPoint( mx, my, mz ) );
+    m_BeamLine->setMomentum(
+     Gaudi::LorentzVector( eigvects(0,2), eigvects(1,2), eigvects(2,2), 0. ) );
+
+    //Print out !
+    int nbentries = m_x->allEntries();
+    info()<<"Average interaction point position : "
+          <<"( " << mx <<" +- "<< sqrt(abs(eigval(0))/nbentries) 
+          <<", "<< my <<" +- "<< sqrt(abs(eigval(1))/nbentries) 
+          <<", "<< mz <<" +- "<< sqrt(abs(eigval(2))/nbentries) 
+          <<" )"<< endmsg;
+    if ( msgLevel(MSG::DEBUG) ) 
+      info()<<"Covariance matrix of the interaction point "
+            <<"position distribution : "<< Cov << endmsg;
+    info()<<"X eigenvector ( "<< eigvects(0,0) <<", "<< eigvects(1,0) <<", " 
+          << eigvects(2,0) <<" ),"
+          <<" Y eigenvector ( "<< eigvects(0,1) <<", "<< eigvects(1,1) <<", " 
+          << eigvects(2,1) <<" )," 
+          <<" Z eigenvector ("<< eigvects(0,2) <<", "<< eigvects(1,2) <<", " 
+          << eigvects(2,2) <<" )" <<endmsg;
+    info()<<"Eigenvalues "<< eigval << endmsg;
+    info()<<"Done on "<< m_nbpv <<" primary vertices."<< endmsg;
+  }
+  
+  //anyway...
+  if( m_BeamLine->referencePoint().z() == 0. ) return false;
+  
+  //Save the beam line on the TES.
+  Particles* vec = new Particles();
+  vec->insert( m_BeamLine->clone() ); 
+  //put( vec, "/Event/HLT/BeamLine");
+  put( vec, "/Event/HLT/Hlt2LineDisplVertices/BeamLine");
+
+  return true;
+}
+
+
+//============================================================================
 // Basic operations between two Gaudi::XYZPoint
 //============================================================================
 Gaudi::XYZPoint Hlt2DisplVerticesDEV::Plus( const Gaudi::XYZPoint & p1, 
@@ -767,3 +1109,27 @@ Gaudi::XYZPoint Hlt2DisplVerticesDEV::Minus( const Gaudi::XYZPoint& p1,
 				   const Gaudi::XYZPoint & p2 ){
   return Gaudi::XYZPoint( p1.x()-p2.x(), p1.y()-p2.y(), p1.z()-p2.z() );
 }
+
+//============================================================================
+// Distance of a XYZPoint to the beam interaction line
+//============================================================================
+double Hlt2DisplVerticesDEV::RadDist( const Gaudi::XYZPoint& p ){
+  
+  //intersection of the beam line with the XY plane, 
+  //find the lambda parameter of the line.
+  double lambda = (p.z() - m_BeamLine->referencePoint().z()) /
+    m_BeamLine->momentum().z();
+
+  //find x and y of intersection point
+  double x = m_BeamLine->referencePoint().x() 
+    + lambda * m_BeamLine->momentum().x();
+  double y = m_BeamLine->referencePoint().y() 
+    + lambda * m_BeamLine->momentum().y();
+  
+  //return distance to the intersection point 
+  x =- p.x(); y =- p.y();
+  return sqrt( x*x + y*y );
+}
+
+
+
