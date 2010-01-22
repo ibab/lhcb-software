@@ -4,7 +4,7 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
-!============ Presenter v0r23 2010-01-21 =============
+!============ Presenter v0r23 2010-01-22 =============
 2010-01-22 G.Graziani
 + recover loading of pages with multiple virtual histograms
 + fits are now correctly redone on every refresh, avoid parallel histogram refresh for pages containing fits
