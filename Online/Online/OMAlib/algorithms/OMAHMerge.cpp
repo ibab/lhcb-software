@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAHMerge.cpp,v 1.5 2009-10-22 09:41:46 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAHMerge.cpp,v 1.6 2010-01-22 09:42:51 ggiacomo Exp $
 #include <TH2D.h>
 #include "OMAlib/OMAAlgorithms.h"
 #include "OMAlib/OMAlib.h"
@@ -18,8 +18,7 @@ TH1* OMAHMerge::exec( const std::vector<TH1*> *sources,
 			  std::string &outTitle,
 			  TH1* existingHisto) {
   TH1* out=NULL;
-  if (!sources) return out;
-  if(sources->empty()) return out;
+  if (! sourceVerified(sources) ) return out;
   params=params; // avoid compil. warning
   if(existingHisto) {
     fillMerged(existingHisto, sources);
@@ -74,7 +73,6 @@ TH1* OMAHMerge::hMerge(const char* newname, const char* newtitle, const std::vec
       }
     }
   }
-
   if ( false == (steps[0]).empty() ) {
     const Double_t* xl = &((steps[0]).at(0));
     if (dimension == 1) {

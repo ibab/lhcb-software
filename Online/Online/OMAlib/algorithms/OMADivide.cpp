@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMADivide.cpp,v 1.5 2009-06-11 15:17:31 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMADivide.cpp,v 1.6 2010-01-22 09:42:51 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -19,6 +19,7 @@ TH1* OMADivide::exec( const std::vector<TH1*> *sources,
 			  std::string &outTitle,
 			  TH1* existingHisto) {
   TH1* out=NULL;
+  if (! sourceVerified(sources) ) return out;
   params=params; // avoid compil. warning
   if (sources->size() >= 2)
     out = exec( sources->at(0), sources->at(1), outName, outTitle, existingHisto);

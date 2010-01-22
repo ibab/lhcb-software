@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.11 2009-08-31 17:24:05 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.12 2010-01-22 09:42:51 ggiacomo Exp $
 #ifndef OMALIB_OMAALG_H
 #define OMALIB_OMAALG_H 1
 /** @class  OMAalg OMAalg.h OMAlib/OMAalg.h
@@ -91,10 +91,6 @@ class OMACheckAlg : public OMAalg
   std::vector<std::string> m_inputNames;
   std::vector<float> m_inputDefValues;
   int m_minEntries; // minimum entries for this test
- private:
-   // private dummy copy constructor and assignment operator 
-  OMACheckAlg(const OMACheckAlg&) : OMAalg(m_name, NULL) {}
-  OMACheckAlg & operator= (const OMACheckAlg&) {return *this;}
 };
 
 
@@ -116,12 +112,21 @@ class OMAHcreatorAlg : public OMAalg
   void setHistSetFlag(bool Flag=true) { m_histSetFlag= Flag; }
 
  protected:
+  bool sourceVerified(const std::vector<TH1*> *sources) {
+    bool out=true;
+    if (sources) {
+      std::vector<TH1*>::const_iterator is;
+      for (is=sources->begin(); is!= sources->end(); is++) {
+        if ( NULL == (*is)) out=false;
+      }
+    }
+    else {
+      out=false;
+    }
+    return out;
+  }
   OnlineHistDBEnv::HistType m_outHType;
   bool m_histSetFlag;
 
- private:
-   // private dummy copy constructor and assignment operator 
-  OMAHcreatorAlg(const OMAHcreatorAlg&) : OMAalg(m_name, NULL) {}
-  OMAHcreatorAlg & operator= (const OMAHcreatorAlg&) {return *this;}
 };
 #endif // OMALIB_OMAALG_H
