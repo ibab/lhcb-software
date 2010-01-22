@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.5 $'
+__version__ = '$Revision: 1.6 $'
 
 """
 Bd->K*MuMu selections 
@@ -156,7 +156,9 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         
         # this violates charge
         return StdLooseDiMuon.clone("NoMuIDDiMuonForBd2MuMuKstar",
-                                    InputLocations = ["StdNoPIDsMuons"])
+                                    InputLocations = ["StdLooseMuons",
+                                                      "StdNoPIDsPions"],
+                                    DecayDescriptor = "[J/psi(1S) -> pi+ mu-]cc")
         
     def _Early_NoMuIDBd(self):
         """
@@ -165,6 +167,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         algo = self._Early_Bd().clone("Early_NoMuID_Bd2MuMuKstar",
                                       InputLocations = ["NoMuIDDiMuonForBd2MuMuKstar",
                                                         "StdVeryLooseDetachedKst2Kpi"])
+        algo.DaughtersCuts['J/psi(1S)'] =  "(BPVDIRA> %(IntDIRA)s ) & (INTREE((ABSID=='mu-') & (TRCHI2DOF< %(TrackChi2)s ))) & (INTREE((ABSID=='pi+') & (TRCHI2DOF< %(TrackChi2)s )))" % self.getProps()
         return algo
 
     def Early_NoMuIDLine(self):
