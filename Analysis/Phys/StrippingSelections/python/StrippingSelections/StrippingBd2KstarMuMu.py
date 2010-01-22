@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.9 $'
+__version__ = '$Revision: 1.10 $'
 
 """
 Bd->K*MuMu selections 
@@ -117,7 +117,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         The Wide K*
         """
         from CommonParticles.StdVeryLooseDetachedKstar import StdVeryLooseDetachedKst2Kpi
-        return StdVeryLooseDetachedKst2Kpi.clone("WideKstar4Bd2KstarMuMu",
+        return StdVeryLooseDetachedKst2Kpi.clone("WideKstarForBd2KstarMuMu",
                                                  CombinationCut = "AM < %(KstarHighMass)s" % self.getProps(),
                                                  MotherCut = "(VFASPF(VCHI2/VDOF) < %(IntVertexCHI2Tight)s ) & ( BPVVDCHI2 > %(IntFlightCHI2)s )" % self.getProps() ) 
      
@@ -126,11 +126,11 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         The Bd with a wide K*
         """
         algo = self._Early_Bd().clone("Early_WideKstar_Bd2KstarMuMu",
-                                      InputLocations = ["StdLooseDiMuon", "WideKstar4Bd2KstarMuMu"])
+                                      InputLocations = ["StdLooseDiMuon", "WideKstarForBd2KstarMuMu"])
         jcuts = algo.DaughtersCuts['J/psi(1S)']
         jcuts = jcuts+" & (VFASPF(VCHI2/VDOF) < %(IntVertexCHI2Tight)s )" % self.getProps()
         kcuts = algo.DaughtersCuts['K*(892)0']
-        kcuts = jcuts+" & (VFASPF(VCHI2/VDOF) < %(IntVertexCHI2Tight)s )" % self.getProps()
+        kcuts = kcuts+" & (VFASPF(VCHI2/VDOF) < %(IntVertexCHI2Tight)s )" % self.getProps()
         algo.DaughtersCuts = { 'J/psi(1S)' : jcuts,
                                'K*(892)0' : kcuts }
         algo.CombinationCut = "(ADAMASS('B0') < %(BMassMedWin)s *MeV)"  % self.getProps()
