@@ -8,6 +8,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! 2010-01-22 - Patrick Koppenburg
  - More lines in MuMuK*. Requires pkoppenb_20100122 of Phys/CommonParticles
 
+! 2010-01-22 - Sebastian Schleich
+ - Bs->PhiPhi : remove Bs-DOCA cut
+
 ! 2010-01-21 - Anton Poluektov
  - Added streams descriptions in the comments for StreamXXX.py
 
@@ -179,6 +182,10 @@ probably will be different as soon as preselection will be ready
    - Removed StrippingDstarNoPID.py
    + Added StrippingDstarPromptWithD02HH.py
    . Modified StreamDstar.py to remove the old line and add the new lines.
+
+! 2009-12-23 - Sebastian Schleich
+ - Bs->PhiPhi for 1E-3 reduction on MB / no PID
+ - made Bs->PhiPhi configurable. Adapted hadron stream definition accordingly.
 
 ! 2009-12-22 - Anton Poluektov
  - Removed StreamMinBias.py (replaced by StreamMiniBias.py)
