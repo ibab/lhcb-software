@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.30 2010-01-15 16:06:31 robbep Exp $
+// $Id: CaloDigitAlg.cpp,v 1.31 2010-01-22 17:49:07 robbep Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -556,10 +556,9 @@ int CaloDigitAlg::caloTriggerFromAdc( const int adc ,
                                       const LHCb::CaloCellID id ) const {
   if ( adc < 0 ) return 0 ;
 
-  int calibCte = m_calo -> cellParam( id ).l0Constant() ;
+  unsigned long calibCte = m_calo -> cellParam( id ).l0Constant() ;  
   
-  
-  int v1, v2, v3, v4, v5, v6, v7, v8 ;
+  unsigned long v1, v2, v3, v4, v5, v6, v7, v8 ;
   v1 = adc ;
   v2 = ( adc << 1 ) ;
   v3 = ( adc << 2 ) ;
@@ -569,7 +568,7 @@ int CaloDigitAlg::caloTriggerFromAdc( const int adc ,
   v7 = ( adc << 6 ) ;
   v8 = ( adc << 7 ) ;
   
-  int s1, s2, s3, s4, s5, s6, s7, s8 ;
+  unsigned long s1, s2, s3, s4, s5, s6, s7, s8 ;
   s1 = calibCte & 0x1 ;
   s2 = ( calibCte >> 1 ) & 0x1 ;
   s3 = ( calibCte >> 2 ) & 0x1 ;
@@ -579,17 +578,17 @@ int CaloDigitAlg::caloTriggerFromAdc( const int adc ,
   s7 = ( calibCte >> 6 ) & 0x1 ;
   s8 = ( calibCte >> 7 ) & 0x1 ;
 
-  int R0, R1, R2, R3 ;
+  unsigned long R0, R1, R2, R3 ;
   R0 = ( ( v7 & 0x3FF00 ) * s7 + ( v8 & 0x7FF00 ) * s8 ) & 0xFFF00 ;
   R1 = ( ( v5 & 0xFFC0  ) * s5 + ( v6 & 0x1FFC0 ) * s6 ) & 0xFFF00 ;
   R2 = ( ( v3 & 0x3FF0  ) * s3 + ( v4 & 0x7FF0  ) * s4 ) & 0xFFF00 ;
   R3 = ( ( v1 & 0xFFC   ) * s1 + ( v2 & 0x1FFC  ) * s2 ) & 0xFFF00 ;
   
-  int result = R0 + R1 + R2 + R3 ;
-  int trig ;
+  unsigned long result = R0 + R1 + R2 + R3 ;
+  unsigned long trig ;
   trig = ( ( ( result & 0x3FC00 ) >> 10 ) & 0xFF ) ;
   if ( ( 0 != ( result & 0x200 ) ) && ( 0xFF != trig ) ) trig++ ;
   if ( 0 != ( result & 0xC0000 ) ) trig = 0xFF ;
-  
+
   return trig ;
 }
