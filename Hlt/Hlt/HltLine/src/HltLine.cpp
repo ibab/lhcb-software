@@ -51,6 +51,7 @@ Hlt::Line::Line( const std::string& name, ISvcLocator* pSvcLocator )
     : ::Selection::Line(name,pSvcLocator)
     , m_hltSvc(0)
     , m_inspectionSvc(0)
+    , m_regSvc(0)
     , m_selection(0)
 {
 
