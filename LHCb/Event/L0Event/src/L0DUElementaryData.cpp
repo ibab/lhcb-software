@@ -1,4 +1,4 @@
-// $Id: L0DUElementaryData.cpp,v 1.10 2010-01-21 23:42:28 odescham Exp $
+// $Id: L0DUElementaryData.cpp,v 1.11 2010-01-22 09:12:42 odescham Exp $
 // Include files 
 #include <utility>
 #include <string>
@@ -32,7 +32,6 @@ v_operands){
   // Insert here other N-dimensional operators you need (LUT,...)
   // ...
   //  
-  if(digit < 0)digit = 0; // A revoir avec Hervé (handling negative value)
   return digit;
 }
 
