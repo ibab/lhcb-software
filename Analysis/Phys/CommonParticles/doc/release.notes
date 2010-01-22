@@ -1,4 +1,4 @@
- )!$Id: release.notes,v 1.169 2010-01-22 13:04:38 pkoppenb Exp $
+ )!$Id: release.notes,v 1.170 2010-01-22 13:06:39 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -7,6 +7,10 @@
 ! When adding a Particle make sure it is appended to one of the Standard* files
 !
 !-----------------------------------------------------------------------------
+
+! 2010-01-22 - Patrick Koppenburg
+ - Remove all DC06 options
+ - v7r0
 
 ! 2010-01-22 - Patrick Koppenburg
  - Add StdVeryLooseDetachedKstar

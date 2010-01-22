@@ -11,7 +11,7 @@ version           v7r0
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc options python 
+branches          cmt doc python 
 
 use GaudiPolicy v* 
 
