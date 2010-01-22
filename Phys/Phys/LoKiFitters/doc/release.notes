@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.24 2010-01-04 16:50:56 ibelyaev Exp $ 
+! $Id: release.notes,v 1.25 2010-01-22 10:20:58 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiFitters
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
+
+! 2010-01-22 - Juan PALACIOS
+ - src/VertexFitter.h
+  . Re-order some data member declarations to match constructor initialisation.
 
 ! 2010-01-04 - Vanya BELYAEV
 
