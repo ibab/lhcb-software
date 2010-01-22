@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.6 $'
+__version__ = '$Revision: 1.7 $'
 
 """
 Bd->K*MuMu selections 
@@ -46,7 +46,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
          @todo These should be coded in a smarter way.
          """
          from Configurables import CombineParticles
-         Early_loose_Bd = CombineParticles("Early_Signal_Bd2MuMuKstar")
+         Early_loose_Bd = CombineParticles("Early_Signal_Bd2KstarMuMu")
          Early_loose_Bd.InputLocations = ["StdLooseDiMuon", "StdVeryLooseDetachedKst2Kpi"]
          Early_loose_Bd.DecayDescriptor = "[B0 -> K*(892)0 J/psi(1S)]cc"
          Early_loose_Bd.DaughtersCuts = {
@@ -82,15 +82,15 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         from CommonParticles.StdLooseDiMuon import StdLooseDiMuon
         
         # this violates charge
-        return StdLooseDiMuon.clone("SameSignDiMuonForBd2MuMuKstar",
+        return StdLooseDiMuon.clone("SameSignDiMuonForBd2KstarMuMu",
                                     DecayDescriptor = "[J/psi(1S) -> mu+ mu+]cc")
         
     def _Early_SameSignBd(self):
         """
         The Bd algorithm for same sign dimuons : clone of Bd algorithm
         """
-        return self._Early_Bd().clone("Early_SameSign_Bd2MuMuKstar",
-                                      InputLocations = ["SameSignDiMuonForBd2MuMuKstar",
+        return self._Early_Bd().clone("Early_SameSign_Bd2KstarMuMu",
+                                      InputLocations = ["SameSignDiMuonForBd2KstarMuMu",
                                                         "StdVeryLooseDetachedKst2Kpi"])
 
     def Early_SameSignLine(self):
@@ -122,7 +122,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         """
         The Bd with a wide K*
         """
-        algo = self._Early_Bd().clone("Early_WideKstar_Bd2MuMuKstar",
+        algo = self._Early_Bd().clone("Early_WideKstar_Bd2KstarMuMu",
                                       InputLocations = ["StdLooseDiMuon", "WideKstar4Bd2KstarMuMu"])
         jcuts = algo.DaughtersCuts['J/psi(1S)']
         jcuts = jcuts+" & (VFASPF(VCHI2/VDOF) < 25 )"
@@ -155,7 +155,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         from CommonParticles.StdLooseDiMuon import StdLooseDiMuon
         
         # this violates charge
-        return StdLooseDiMuon.clone("NoMuIDDiMuonForBd2MuMuKstar",
+        return StdLooseDiMuon.clone("NoMuIDDiMuonForBd2KstarMuMu",
                                     InputLocations = ["StdLooseMuons",
                                                       "StdNoPIDsPions"],
                                     DecayDescriptor = "[J/psi(1S) -> pi+ mu-]cc")
@@ -164,8 +164,8 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         """
         The Bd algorithm for no MuID dimuons : clone of Bd algorithm
         """
-        algo = self._Early_Bd().clone("Early_NoMuID_Bd2MuMuKstar",
-                                      InputLocations = ["NoMuIDDiMuonForBd2MuMuKstar",
+        algo = self._Early_Bd().clone("Early_NoMuID_Bd2KstarMuMu",
+                                      InputLocations = ["NoMuIDDiMuonForBd2KstarMuMu",
                                                         "StdVeryLooseDetachedKst2Kpi"])
         algo.DaughtersCuts['J/psi(1S)'] =  "(BPVDIRA> %(IntDIRA)s ) & (INTREE((ABSID=='mu-') & (TRCHI2DOF< %(TrackChi2)s ))) & (INTREE((ABSID=='pi+') & (TRCHI2DOF< %(TrackChi2)s )))" % self.getProps()
         return algo
@@ -193,7 +193,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         from CommonParticles.StdLooseDiMuon import StdLooseDiMuon
         
         # this violates charge
-        return StdLooseDiMuon.clone("MuonEleForBd2MuMuKstar",
+        return StdLooseDiMuon.clone("MuonEleForBd2KstarMuMu",
                                     InputLocations = ["StdLooseMuons",
                                                       "StdLooseElectrons"],
                                     DecayDescriptor = "[J/psi(1S) -> e+ mu-]cc")
@@ -202,8 +202,8 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         """
         The Bd algorithm for eMu : clone of Bd algorithm
         """
-        algo = self._Early_Bd().clone("Early_eMu_Bd2MuMuKstar",
-                                      InputLocations = ["MuonEleForBd2MuMuKstar",
+        algo = self._Early_Bd().clone("Early_eMu_Bd2KstarMuMu",
+                                      InputLocations = ["MuonEleForBd2KstarMuMu",
                                                         "StdVeryLooseDetachedKst2Kpi"])
         algo.DaughtersCuts['J/psi(1S)'] =  "(BPVDIRA> %(IntDIRA)s ) & (INTREE((ABSID=='mu-') & (TRCHI2DOF< %(TrackChi2)s ))) & (INTREE((ABSID=='e-') & (TRCHI2DOF< %(TrackChi2)s )))" % self.getProps()
         
