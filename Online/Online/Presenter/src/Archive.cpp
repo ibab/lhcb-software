@@ -83,6 +83,7 @@ void Archive::fillHistogram(DbRootHist* histogram,
   if ( ! (histogram->isAnaHist()) ) {
     histogram->beRegularHisto();
     std::vector<path> foundRootFiles;
+    std::vector<path> goodRootFiles;
     if (s_startupFile == timePoint) {
       path filePath(pastDuration);
       if (s_rootFileExtension == extension(filePath) ) {
@@ -105,27 +106,10 @@ void Archive::fillHistogram(DbRootHist* histogram,
       }
       std::vector<path>::const_iterator foundRootFilesIt;
       foundRootFilesIt = foundRootFiles.begin();
-      TFile rootFile((*foundRootFilesIt).file_string().c_str());
-      if (rootFile.IsZombie()) {
-        cout << "Error opening Root file" << endl;
-      } else {
-        if (histogram->rootHistogram) {
-          delete (histogram->rootHistogram);
-          histogram->rootHistogram = NULL;
-        }
-        TH1* archiveHisto;
-        rootFile.GetObject((histogram->onlineHistogram()->rootName()).c_str(),
-                           archiveHisto);
-        if (!archiveHisto) { // try w/o algorithm name (to be bkwd compat.)
-          rootFile.GetObject((histogram->onlineHistogram()->hname()).c_str(),
-                             archiveHisto);
-        }
-        if (archiveHisto) {
-          histogram->rootHistogram = archiveHisto;
-        }
-        ++foundRootFilesIt;
+      if (histogram->rootHistogram) {
+        delete (histogram->rootHistogram);
+        histogram->rootHistogram = NULL;
       }
-      rootFile.Close();
       TList* list = new TList;
       while (foundRootFilesIt != foundRootFiles.end()) {
         TFile rootFile((*foundRootFilesIt).file_string().c_str());
@@ -142,29 +126,38 @@ void Archive::fillHistogram(DbRootHist* histogram,
           }
           if (archiveHisto) {
             list->Add(archiveHisto);
+            goodRootFiles.push_back(*foundRootFilesIt);
+            if (! histogram->rootHistogram) {
+              histogram->rootHistogram = (TH1*) (archiveHisto->Clone());
+              histogram->rootHistogram->Reset();
+            }
           }
         }
         ++foundRootFilesIt;
       }
-      if (histogram->rootHistogram) {
-        if (false == m_mainFrame->isHistoryTrendPlotMode() || histogram->rootHistogram->GetDimension()>1) {
+      if (histogram->rootHistogram) { // at least one source is available
+        if (false == m_mainFrame->isHistoryTrendPlotMode() || 
+            histogram->rootHistogram->GetDimension()>1) {
           (histogram->rootHistogram)->Merge(list);
         } else {
-          if(list->GetSize()>0) {
-            std::string histogramTitle("History plot for ");
-            histogramTitle += histogram->rootHistogram->GetTitle();
-            TH1* newh = new TH1F(histogramTitle.c_str(), histogramTitle.c_str(),
-                                 list->GetSize(), 0.5,  list->GetSize() +0.5);
-            newh->Sumw2();
-            for (int i=0 ; i<list->GetSize(); i++) {
-              newh->SetBinContent(list->GetSize()-i, ((TH1*)list->At(i))->GetMean() );
-              newh->SetBinError(list->GetSize()-i, ((TH1*)list->At(i))->GetMeanError() );
-            }
-            if (histogram->rootHistogram) { delete histogram->rootHistogram; }
-            histogram->rootHistogram = newh;
-            histogram->setHistoryTrendPlotMode(true);
+          // do a trend plot of mean and rms
+          std::string histogramTitle("History plot for ");
+          histogramTitle += histogram->rootHistogram->GetTitle();
+          TH1* newh = new TH1F(histogramTitle.c_str(), histogramTitle.c_str(),
+                               list->GetSize(), 0.5,  list->GetSize() +0.5);
+          newh->Sumw2();
+          for (int i=0 ; i<list->GetSize(); i++) {
+            newh->SetBinContent(list->GetSize()-i, ((TH1*)list->At(i))->GetMean() );
+            newh->SetBinError(list->GetSize()-i, ((TH1*)list->At(i))->GetMeanError() );
           }
+          setHistoryLabels(newh, goodRootFiles);
+          delete (histogram->rootHistogram);
+          histogram->rootHistogram = newh;
+          histogram->setHistoryTrendPlotMode(true);
         }
+      }
+      else {
+        histogram->beEmptyHisto();
       }
 
       TH1* histo;
@@ -217,6 +210,8 @@ void Archive::fillHistogram(DbRootHist* histogram,
   }
   histogram->setTH1FromDB();
 }
+
+
 std::vector<path> Archive::listAvailableRootFiles(const path & dirPath,
                                                   const date_period & datePeriod,
                                                   const std::string & taskName)
@@ -527,3 +522,42 @@ void Archive::closeRootFiles()
 //    ++foundRootFilesIt;
 //  }
 }
+
+void Archive::setHistoryLabels(TH1* h, std::vector<boost::filesystem::path>& rootFiles) {
+  if (!h) return;
+  unsigned int n=h->GetNbinsX();
+  if (n != rootFiles.size()) {
+    std::cout << " Error in setHistoryLabels: uncompatible file list" << std::endl;
+    return;
+  }
+  int bin=0,lastbin=-100;
+  std::string ts("20020131T235959");
+  ptime lastTime(from_iso_string(ts));
+  time_duration maxdelta= hours(1); 
+  const int maxnbinUnlabeled = 3;
+  std::vector<path>::const_iterator rootFilesIt = rootFiles.end();
+  while ( rootFilesIt > rootFiles.begin() ) {
+    rootFilesIt--;
+    bin++;
+    TObjArray* fileDateMatchGroup = 0;
+    fileDateMatchGroup = s_fileDateRegexp.MatchS((*rootFilesIt).leaf());
+    ptime fileTime = from_iso_string((((TObjString *)fileDateMatchGroup->At(3))->GetString()).Data());
+    time_duration delta = (fileTime-lastTime);
+    if ( delta > maxdelta || 
+         (bin-lastbin) > maxnbinUnlabeled ) { // add a label
+      h->GetXaxis()->SetBinLabel(bin, Form("%d/%d %02d:%02d", 
+                                           (int) (fileTime.date().day()),
+                                           (int) (fileTime.date().month()),
+                                           (int) (fileTime.time_of_day().hours()),
+                                           (int) (fileTime.time_of_day().minutes()) ) );
+      lastTime = fileTime;
+      lastbin = bin;
+    }
+  }
+
+}
+
+
+
+
+

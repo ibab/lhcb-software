@@ -1149,7 +1149,11 @@ void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
       if (stats) stats->Delete();
       pad->SetLogx(0);
       pad->SetLogy(0);
-      rootHistogram->SetXTitle ("Saveset");
+      fopt=.16;
+      pad->SetBottomMargin(fopt);
+      rootHistogram->GetXaxis()->SetTitle("time");
+      fopt=1.6;
+      rootHistogram->GetXaxis()->SetTitleOffset(fopt);
       std::string ylab="Average";
       if (m_onlineHistogram->getDisplayOption("LABEL_X", &sopt)) {
         ylab = ylab + " (" + sopt + ")";

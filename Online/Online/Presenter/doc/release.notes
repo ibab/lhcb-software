@@ -5,13 +5,14 @@
 !-----------------------------------------------------------------------------
 
 !============ Presenter v0r23 2010-01-21 =============
-2010-01-21 G.Graziani
-some fixes 
+2010-01-22 G.Graziani
 + recover loading of pages with multiple virtual histograms
 + fits are now correctly redone on every refresh, avoid parallel histogram refresh for pages containing fits
   (ROOT fitting not thread-safe)
 + history mode: show sources in statusbar
++ history trend plots: show time on bin labels
 + if saveset on command line, load it at startup (no more need to select "preset file")
++ fix crash with virtual histograms with missing sources in savesets
 + re-establish automatic DB connection at startup
 + update source list in requirements
 
