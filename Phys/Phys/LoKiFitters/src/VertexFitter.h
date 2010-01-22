@@ -1,4 +1,4 @@
-// $Id: VertexFitter.h,v 1.5 2010-01-04 16:50:56 ibelyaev Exp $
+// $Id: VertexFitter.h,v 1.6 2010-01-22 10:21:12 jpalac Exp $
 // ============================================================================
 #ifndef LOKIFITTERS_VERTEXFITTER_H 
 #define LOKIFITTERS_VERTEXFITTER_H 1
@@ -542,12 +542,12 @@ namespace LoKi
     // ========================================================================
     /// particle property service 
     mutable const LHCb::IParticlePropertySvc* m_ppSvc      ;
-    /// Gamma-like particles 
-    mutable Decays::Nodes::Pid                m_gammaLike  ;
     /// Long-lived particles 
     mutable Decays::Nodes::LongLived_         m_longLived  ;
     /// Short-lived particles 
     mutable Decays::Nodes::ShortLived_        m_shortLived ;
+    /// Gamma-like particles 
+    mutable Decays::Nodes::Pid                m_gammaLike  ;
     // ========================================================================
   } ;
   // ==========================================================================
