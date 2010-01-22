@@ -6,6 +6,74 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v8r0>2010-01-22 LbcomSys v8r0</A></H1><PRE>
+This version uses Gaudi v21r7 and LHCb v29r0
+
+- Packages added in SVN: DAQ/DAQMonitors    : Monitors for DAQ event objects
+
+- Packages added in CVS: VeloPix/VeloPixDAQ : Prepare and decode VeloPix RawBank
+
+- Packages modified: L0Calo v10r3, L0DU v10r0, L0Muon v8r6, PuVeto v7r5,
+                     OTMonitor v3r2, STDAQ v3r21, VeloAlgorithms v5r1
+
+- In L0Calo v10r3
+  . L0CaloCompare.cpp: add print out of candidate type to ease debugging
+
+- In L0DU v10r0
+  . L0DUFromRawTool : fix problem with Calo address encoding for ProcessorData.
+  . Adapt options for L0Muon change
+  . Adapt to Lumi Trigger decisions
+    o adapt to changes in L0Event
+    o new RawBank format (version v2) - default for simulation in L0DUAlg
+    o adapt decoding
+    o adapt monitoring (both L0DUReport and L0DUBank monitoring)
+  . Add 'template' configuration in L0DUMultiConfigProvider needed by HLT for
+    fast run change: L0DUConfig.Template tool available at initialization time
+  . L0DUFromRawAlg : 
+    o inherits from L0Base/L0FromRawBase 
+    o adapt TES I/O to L0 convention 
+    o Warning : writeProcData now is set false by default (was true)
+  . L0DUAlg, L0DUReportMonitor : 
+    o inherits from L0Base/L0AlgBase 
+    o adapt TES I/O to L0 convention 
+  . Handling TAE events in L0DU(Multi)ConfigProvider (L0DUConfig is TAE slot
+    dependent)
+    o L0DUFromRawTool : load config according to RootInTES
+                        now private tool of L0DUFromRawAlg to propagate RootInTES
+  . Monitoring : review and update histogram production
+  . Adapt and complete L0Pattern.cpp and related options (for firmware checks)
+  . New L0ConfigMonitor.opts for monitoring the performance of a given TCK
+  . Update FastDecoding.opts 
+    o L0DUFromRawTool : FillDataMap property default is now TRUE
+      to be used for fast minimal decoding of L0DU bank (factor 4 in speed)
+
+- In L0Muon v8r6
+  . Add dependency on new base package L0/L0Base
+  . L0MuonAlg, L0MuonCandidatesFromRaw : use new structure (common options
+    amongst all L0 packages, defined in L0Base)
+
+- In PuVeto v7r5
+  . Temporary removed all PuVetoAlg histos not needed for the trigger itself
+  . Put a safe check in PuVetoAlg no to (even) create any histo by default
+
+- In OTMonitor v3r2
+  . Update OTTimeChecker and OTTimeClassification to use OTLiteTime's
+
+- In STDAQ v3r21
+  . Add dependency on DAQUtils, new location of BankWriter.h helper
+
+- In VeloAlgorithms v5r1
+  . Change signatures of two methods from:  
+      StatusCode VeloSimTell1ClusterMaker::fillAndWriteRawEvent()
+      StatusCode VeloTell1DataProcessor::writeForSenors()
+    to
+      void VeloSimTell1ClusterMaker::fillAndWriteRawEvent()
+      void VeloTell1DataProcessor::writeForSenors()
+  . Implement two new methods for adding ZS processing engines
+      void addEngineInStaticMode(unsigned int tell1, const DeVeloSensor* sens)
+      void addEngineInDynamicMode(unsigned int tell1)  
+  . Add extra layer of protection against missing NZS data streams
+
 </PRE><H1><A NAME=v7r11>2009-12-15 LbcomSys v7r11</A></H1><PRE>
 This version uses Gaudi v21r6 and LHCb v28r5
 
