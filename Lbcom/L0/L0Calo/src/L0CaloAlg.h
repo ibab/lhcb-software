@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.h,v 1.31 2009-10-29 10:50:58 robbep Exp $
+// $Id: L0CaloAlg.h,v 1.32 2010-01-22 13:48:42 robbep Exp $
 
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
@@ -91,6 +91,10 @@ protected:
 private:
   bool        m_usePsSpd                  ;   ///< use Ps/Spd in validation
   bool        m_addEcalToHcal             ;   ///< Use ECAL in Validation
+
+  bool        m_usePsSpdOpts              ;   ///< use Ps/Spd in validation (by options)
+  bool        m_addEcalToHcalOpts         ;   ///< Use ECAL in Validation (by options)
+
   bool        m_createHCALLut             ;   ///< Create HCAL LUT Files for validation boards (Set by options)
   
   // Local variables
@@ -119,6 +123,11 @@ private:
   int m_nbValidation ; ///< Number of validation boards
 
   std::vector< int > m_spdMult            ; ///< Multiplicity of Spd
+
+  Condition * m_l0Cond ; ///< Pointer to the L0 conditions 
+
+  /// Call back function to check condition database content
+  StatusCode updateL0Calibration() ;
   
   /// Utility function to create HCAL LUT for validation from geometry
   void createHCALLut( ) ;
