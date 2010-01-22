@@ -54,10 +54,10 @@ use TrackAssociators     v2r7    Tr   # Eduardo Rodrigues, Edwin Bos
 use TrackCheckers        v4r10   Tr   # Eduardo Rodrigues
 use TrackExtrapolators   v2r24p1 Tr   # Eduardo Rodrigues
 use TrackFitEvent        v4r3    Tr   # Eduardo Rodrigues
-use TrackFitter          v2r43   Tr   # Eduardo Rodrigues
+use TrackFitter          v2r44   Tr   # Eduardo Rodrigues
 use TrackIdealPR         v2r19   Tr   # Eduardo Rodrigues
 use TrackMCTools         v2r24   Tr   # Eduardo Rodrigues
-use TrackMonitors        v1r18   Tr   # Wouter Hulsbergen, Stephanie Menzemer
+use TrackMonitors        v1r19   Tr   # Wouter Hulsbergen, Stephanie Menzemer
 use TrackProjectors      v2r26   Tr   # Wouter Hulsbergen
 use TrackTools           v3r25   Tr   # Eduardo Rodrigues
 use TrackUtils           v1r33   Tr   # Eduardo Rodrigues
