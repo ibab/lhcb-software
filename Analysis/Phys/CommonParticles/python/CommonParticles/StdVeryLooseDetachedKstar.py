@@ -17,7 +17,7 @@ import GaudiKernel.SystemOfUnits as Units
 
 StdVeryLooseDetachedKst2Kpi = CombineParticles("StdVeryLooseDetachedKst2Kpi")
 StdVeryLooseDetachedKst2Kpi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
-StdVeryLooseDetachedKst2Kpi.InputLocations = ["StdNoPIDsKaons","StdNoPIDsPions"]
+StdVeryLooseDetachedKst2Kpi.InputLocations = ["StdLooseKaons","StdLoosePions"]
 StdVeryLooseDetachedKst2Kpi.DaughtersCuts = {"K+" :"(ISLONG) & (MIPCHI2DV(PRIMARY)>2.25)",
                                   "pi-":"(ISLONG) & (MIPCHI2DV(PRIMARY)>2.25)"}
 StdVeryLooseDetachedKst2Kpi.CombinationCut = "(ADAMASS('K*(892)0')<300*MeV)"
