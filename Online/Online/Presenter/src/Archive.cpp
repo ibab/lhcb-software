@@ -174,6 +174,9 @@ void Archive::fillHistogram(DbRootHist* histogram,
         delete histo;
       }
       delete list;
+      if (! histogram->rootHistogram) {
+        histogram->beEmptyHisto();
+      }
     } else {
       histogram->beEmptyHisto();
     }
@@ -187,13 +190,15 @@ void Archive::fillHistogram(DbRootHist* histogram,
                       timePoint,
                       pastDuration);
         sources[i]= ((histogram->anaSources())->at(i))->rootHistogram;
-        if ( ((histogram->anaSources())->at(i))->isEmptyHisto() ) {
+        if ( ((histogram->anaSources())->at(i))->isEmptyHisto() ||
+             NULL == sources[i]) {
           sourcesOk = false;
         }
       }
       OMAHcreatorAlg* creator = dynamic_cast<OMAHcreatorAlg*>
                      (m_analysisLib->getAlg(histogram->creationAlgorithm()));
       if (creator && sourcesOk) {
+
         std::string htitle(histogram->onlineHistogram()->htitle());
         histogram->rootHistogram = creator->exec(&sources,
                                                  histogram->anaParameters(),

@@ -69,6 +69,9 @@ DbRootHist::DbRootHist(const std::string & identifier,
   m_isAnaHist(false),
   m_anaLoaded(false),
   m_analysisLib(analysisLib),
+  m_creationAlgorithm(""),
+  m_sourcenames(0),
+  m_parameters(0),
   m_refreshTime(refreshTime),
 //  m_toRefresh(false),
   m_cleared(false),
@@ -587,8 +590,8 @@ void DbRootHist::initHistogram()
       }
       beEmptyHisto(); 
     }
-    if (!rootHistogram) {beEmptyHisto(); }
   }
+
   if (!rootHistogram) {
     beEmptyHisto();
   } else if (rootHistogram) {
