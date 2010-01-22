@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.63 2010-01-22 13:49:59 robbep Exp $
+// $Id: L0CaloAlg.cpp,v 1.64 2010-01-22 14:23:15 robbep Exp $
 
 /// local
 #include "L0CaloAlg.h"
@@ -1036,16 +1036,16 @@ StatusCode L0CaloAlg::updateL0Calibration( ) {
   debug() << "Updating L0Calibration" << endreq ;
 
   if ( ! m_l0Cond -> exists( "AddECALToHCAL" ) ) {
-    Error("AddECALToHCAL parameter does not exist in DB").ignore() ;
-    Error("Use default AddECALToHCAL = true").ignore() ;
+    Warning("AddECALToHCAL parameter does not exist in DB").ignore() ;
+    Warning("Use default AddECALToHCAL = true").ignore() ;
     m_addEcalToHcal = m_addEcalToHcalOpts ;
   } else {
     m_addEcalToHcal = m_l0Cond -> param< int >( "AddECALToHCAL" ) ;
   }
 
   if ( ! m_l0Cond -> exists( "UsePSSPD" ) ) {
-    Error("UsePSSPD parameter does not exist in DB").ignore() ;
-    Error("Use default UsePSSPD = true").ignore() ;
+    Warning("UsePSSPD parameter does not exist in DB").ignore() ;
+    Warning("Use default UsePSSPD = true").ignore() ;
     m_usePsSpd = m_usePsSpdOpts ;
   } else {
     m_usePsSpd      = m_l0Cond -> param< int >( "UsePSSPD" ) ;
