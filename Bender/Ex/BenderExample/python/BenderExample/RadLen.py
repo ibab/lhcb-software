@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RadLen.py,v 1.2 2009-11-16 16:00:36 ibelyaev Exp $ 
+# $Id: RadLen.py,v 1.3 2010-01-22 14:26:01 ibelyaev Exp $ 
 # =============================================================================
 ## The simple Bender-based example for radiation lenth studies 
 #
@@ -27,7 +27,7 @@ The simple Bender-based example for radiation length studies
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
 # =============================================================================
 ## import everything from bender 
 from   Bender.All                  import *
@@ -161,6 +161,7 @@ class RadLen(AlgoMC) :
             nt2 . column ( 'mat' , mat )  ## x / X0 
             
             nt2 . write () 
+
         
         
         return SUCCESS 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RealMip.py,v 1.2 2010-01-12 10:58:34 ibelyaev Exp $
+# $Id: RealMip.py,v 1.3 2010-01-22 14:26:01 ibelyaev Exp $
 # =============================================================================
 # @file BenderExample/RealMip.py
 #
@@ -30,7 +30,7 @@ An attempt to find mip on real data
 """
 # ============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # ============================================================================
 ## import all needed stuff:
 import ROOT                           ## needed to produce/visualize the histograms
@@ -177,12 +177,15 @@ class RealMip(Algo) :
         """
         Get Calorimeter information for the given track 
         """
-
-        digits = LHCb.CaloDigit.Set()
         
-        line = Gaudi.Math.XYZLine( track.position() , track.slopes() )
-     
-        sc = tool.collect ( line , digits )
+        if not track : return (-1,0.0)
+        
+        if hasattr ( track , 'proto' ) : return self.treat ( track.proto() , tool )
+        if hasattr ( track , 'track' ) : return self.treat ( track.track() , tool )
+        
+        digits = LHCb.CaloDigit.Set()
+
+        sc = tool.collect ( track , digits )
         
         if sc.isFailure() : return (-1,0.0)
         
@@ -228,10 +231,13 @@ def configure ( datafiles ) :
 
     from Configurables import EcalEnergyForTrack , HcalEnergyForTrack , PrsEnergyForTrack
 
-    for t in ( EcalEnergyForTrack , HcalEnergyForTrack , PrsEnergyForTrack ) : 
+    for t in ( EcalEnergyForTrack ,
+               HcalEnergyForTrack ,
+               PrsEnergyForTrack  ) : 
         
-        t ( AddNeighbours = 1 , PropertiesPrint = True )
-
+        t ( AddNeighbours   = 1                         ,
+            Extrapolator    = 'TrackMasterExtrapolator' , 
+            PropertiesPrint = True                      )
 
     ## end of static configurtaion
     
@@ -268,6 +274,8 @@ if '__main__' == __name__ :
     evtsel = gaudi.evtSel()
     
     from BenderExample.JuanFiles2009 import files
+
+    evtsel.open ( files )
     
     run ( -1 )
 

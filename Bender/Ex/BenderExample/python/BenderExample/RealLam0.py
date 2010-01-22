@@ -40,8 +40,9 @@ from   Bender.Main         import *   ## import all bender goodies
 import LHCbMath.Types                 ## easy access to various geometry routines 
 from   Gaudi.Configuration import *   ## needed for job configuration
 
-from   GaudiKernel.SystemOfUnits     import GeV, MeV, mm 
+from   GaudiKernel.SystemOfUnits     import GeV, MeV, mm, cm 
 from   GaudiKernel.PhysicalConstants import c_light
+from   GaudiPython.GaudiAlgs         import Vector
 
 # =============================================================================
 ## @class Lam0
@@ -53,8 +54,7 @@ from   GaudiKernel.PhysicalConstants import c_light
 class Lam0(Algo) :
     """
     Simple algorithm to study Lam0 -> p pi-
-    """
-    
+    """    
     ## the standard initialization
     def initialize ( self ) :
         """
@@ -65,10 +65,12 @@ class Lam0(Algo) :
 
         self.npv  = self.counter ( '#nPV'  )
 
-        self.ltfitter  = self.lifetimeFitter() 
+        self.ltfitter      = self.lifetimeFitter()
+        ITrackExtrapolator = cpp.ITrackExtrapolator
+        self.extrapolator  = self.tool( ITrackExtrapolator, 'TrackMasterExtrapolator' , parent = self ) 
         
         return SUCCESS
-    
+
     ## the only one esential method: 
     def analyse  (self ) :
         """
@@ -79,9 +81,12 @@ class Lam0(Algo) :
         if primaries.empty() :
             return self.Warning('No primary vertices are found', SUCCESS )
 
-        pions   = self.select( 'pion'    , 'pi+' == ABSID )
-        protons = self.select( 'p'       , 'p+'  == ABSID )
+
+        goodTrack = ( P > 1.5 * GeV ) & ( TRCHI2DOF < 10 )
         
+        pions   = self.select ( 'pion' , ( 'pi+' == ABSID ) & goodTrack )
+        protons = self.select ( 'p'    , ( 'p+'  == ABSID ) & goodTrack )
+
         if pions.empty() or protons.empty() : return SUCCESS
 
         self.npv  += 1
@@ -103,6 +108,12 @@ class Lam0(Algo) :
           p   = lam(1)
           pi  = lam(2)
 
+          long1 = True if ISLONG ( p   ) else False  
+          long2 = True if ISLONG ( pi  ) else False  
+
+          down1 = True if ISDOWN ( p   ) else False  
+          down2 = True if ISDOWN ( pi  ) else False  
+
           qP  = Q ( p )
           qPi = Q ( pi )
 
@@ -112,27 +123,55 @@ class Lam0(Algo) :
           # check the charge:
           if not -0.5 < ( qP + qPi ) < 0.5 : continue
           
-          self.plot ( m12 , 'p pi mass 2', 1.05 , 1.25 ) 
-
+          self.plot ( m12 , 'p pi mass, correct sign', 1.05 , 1.25 ) 
+          
           p   = lam(1)
           chi2 = VCHI2(lam)
-          if not 0 <= chi2 < 100 : continue
-
-          self.plot ( m12 , 'p pi mass 3', 1.05 , 1.25 ) 
+          if not 0 <= chi2 < 25 : continue
+          
+          self.plot ( m12 , 'p pi mass, chi2(vx)<25', 1.05 , 1.25 ) 
           
           m = M(lam) / GeV;
-          if m > 1.3 : continue
+          if m > 1.3               : continue
           
-          self.plot ( m , 'p pi mass 4', 1.05 , 1.25 ) 
+          self.plot ( m , 'p pi mass, correct mass', 1.05 , 1.25 ) 
+
+          if dm ( lam ) > 50 * MeV : continue
+          
+          self.plot ( m , 'p pi mass, correct mass-2', 1.05 , 1.25 ) 
 
           z = VZ(lam) / mm 
 
+          if z > 220 * cm : continue 
           mips1 = mips ( p  ) 
           mips2 = mips ( pi )
+
+          if min ( mips1 , mips2 ) < 25 : continue  
           
           tup.column ( "mips0" , mips ( lam ) )
           tup.column ( "mips1" , mips1 )
           tup.column ( "mips2" , mips2 ) 
+
+          bpv = self.bestPV ( primaries, lam.particle() )
+          if not not bpv :
+              _ltime  = LTIME        ( self.ltfitter , bpv )
+              _ltchi2 = LTIMEFITCHI2 ( self.ltfitter , bpv )
+
+              ltime  = _ltime  ( lam ) * c_light
+              ltchi2 = _ltchi2 ( lam )
+              pvz    = VZ ( bpv )
+          else :
+              ltime  = -1.e+100
+              ltchi2 = -1.e+100
+              pvz    = -1.e+100
+
+          self.tupPV ( tup , bpv )
+          
+          if   down1 and down2 and ltime < 10 * mm : continue
+          elif                     ltime <  1 * mm : continue 
+
+          if ltchi2 > 49                           : continue 
+
 
           tup.column ( "p0"    , P  ( lam ) / GeV ) 
           tup.column ( "p1"    , P  ( p   ) / GeV ) 
@@ -151,42 +190,29 @@ class Lam0(Algo) :
           tup.column ( "z"     , z     )
           tup.column ( "chi2"  , chi2  )
 
-          tup.column ( 'lmu1' , ISLOOSEMUON( p  ) )
-          tup.column ( 'lmu2' , ISLOOSEMUON( pi ) )
-
-          tup.column ( 'mu1'  , ISMUON( p  ) )
-          tup.column ( 'mu2'  , ISMUON( pi ) )
-
-          long1 = True if ISLONG ( p   ) else False  
-          long2 = True if ISLONG ( pi  ) else False  
+          tup.column ( 'yLam'   , Y   ( lam ) )
+          tup.column ( 'yP'     , Y   ( p   ) )
+          tup.column ( 'yPi'    , Y   ( pi  ) )
+          
+          tup.column ( 'y0Lam'  , Y0  ( lam ) )
+          tup.column ( 'y0P'    , Y0  ( p   ) )
+          tup.column ( 'y0Pi'   , Y0  ( pi  ) )
+                    
+          tup.column ( 'etaLam' , ETA ( lam ) )
+          tup.column ( 'etaP'   , ETA ( p   ) )
+          tup.column ( 'etaPi'  , ETA ( pi  ) )
 
           tup.column ( 'long1'  , long1 )
           tup.column ( 'long2'  , long2 )
-
-          down1 = True if ISDOWN ( p   ) else False  
-          down2 = True if ISDOWN ( pi  ) else False  
           
           tup.column ( 'down1'  , down1 )
           tup.column ( 'down2'  , down2 )
 
-          tup.column ( 'trgh1'    , TRGHP( p   ) )
-          tup.column ( 'trgh2'    , TRGHP( pi  ) )
+          tup.column ( 'trgh1'  , TRGHP( p   ) )
+          tup.column ( 'trgh2'  , TRGHP( pi  ) )
 
           tup.column ( 'trchi2dof1' , TRCHI2DOF ( p   ) )
           tup.column ( 'trchi2dof2' , TRCHI2DOF ( pi  ) )
-
-          bpv = self.bestPV ( primaries, lam.particle() )
-          if not not bpv :
-              _ltime  = LTIME        ( self.ltfitter , bpv )
-              _ltchi2 = LTIMEFITCHI2 ( self.ltfitter , bpv )
-
-              ltime  = _ltime  ( lam ) * c_light
-              ltchi2 = _ltchi2 ( lam )
-              pvz    = VZ ( bpv ) 
-          else :
-              ltime  = -1.e+100
-              ltchi2 = -1.e+100
-              pvz    = -1.e+100
 
           tup.column ( 'ctau'  , ltime  )
           tup.column ( 'tchi2' , ltchi2 )
@@ -194,24 +220,35 @@ class Lam0(Algo) :
           
           tup.column ( "m"  , m  )
           tup.column ( "qP" , qP )
-          
+
+          goodTT1 = self.goodTT ( p  )
+          goodTT2 = self.goodTT ( pi )
+
+          tup.column ( "tt1" , goodTT1 )
+          tup.column ( "tt2" , goodTT2 )
+
+          tup.column ( "m"  , m  )
+          tup.column ( "qP" , qP )
+
           tup.write  ( )
 
           self.plot ( m , 'p pi mass 5', 1.05 , 1.25 ) 
 
-          if long1 and long1 :
+          if long1 and long2 :
               if chi2 < 25 and  5 <= ltime and 25 <= min(mips1,mips2) :  
                   self.plot ( m , 'Lambda0 mass, LL' , 1.05 , 1.25 , 200 )
                   if dm ( lam ) < 0.010 : lam.save( 'lam' )
-                  if ltchi2 <64 and ltime <100  : 
-                      self.plot ( m , 'Lambda0 mass, LL-2' , 1.05 , 1.25 , 200 )
-          
-          if down1 and down2 :
-              if chi2 < 25 and 20 <= ltime and 49<= min(mips1,mips2) :  
+                  if ltchi2 < 49 : self.plot ( m , 'Lambda0 mass, LL-2' , 1.05 , 1.25 , 200 )
+          elif down1 and down2 :
+              if chi2 < 25 and 20 <= ltime and 25<= min(mips1,mips2) :  
                   self.plot ( m , 'Lambda0 mass, DD' , 1.05 , 1.25 , 200 ) 
                   if dm ( lam ) < 0.015 : lam.save( 'lam' )
-                  if ltchi2 <49 and ltime <250  : 
-                      self.plot ( m , 'Lambda0 mass, DD-2' , 1.05 , 1.25 , 200 )
+                  if ltchi2 < 49 : self.plot ( m , 'Lambda0 mass, DD-2' , 1.05 , 1.25 , 200 )
+          else                 :
+              if chi2 < 25 and  5 <= ltime and 25<= min(mips1,mips2) :  
+                  self.plot ( m , 'Lambda0 mass, LD' , 1.05 , 1.25 , 200 ) 
+                  if dm ( lam ) < 0.015 : lam.save( 'lam' )
+                  if ltchi2 < 49 : self.plot ( m , 'Lambda0 mass, LD-2' , 1.05 , 1.25 , 200 )
           
           lambdas = self.selected('lam0')
 
@@ -235,10 +272,66 @@ class Lam0(Algo) :
                 pv   = v
         return pv
 
+
+    def tupPV ( self , tup , pv ) :
+        """
+        Add information about PV:
+        """
+        chi2  = -100000
+        pts   = Vector()
+        typ   = Vector()
+        ptmin  =  1.e+6 
+        ptmax  = -1.e+6 
+        if not not pv :
+            chi2   = VCHI2 ( pv )
+            tracks = pv.tracks()
+            for t in tracks :
+                pts.push_back ( t.pt   () )
+                typ.push_back ( t.type () )
+                if t.pt () < ptmin : ptmin = t.pt()
+                if t.pt () > ptmax : ptmax = t.pt()
+                
+        tup.column ( 'pvchi2'  , chi2  )
+        tup.column ( 'trptmin' , ptmin ) 
+        tup.column ( 'trptmax' , ptmax ) 
+        tup.farray ( 'trpt'    , pts   , 'nTrk' , 100 ) 
+        tup.farray ( 'trtyp'   , typ   , 'nTrk' , 100 ) 
+                     
+        return SUCCESS 
+
+    def goodTT ( self , part ) :
+
+        if not part : return True
+        if hasattr ( part , 'proto' ) : return self.goodTT ( part.proto () )
+        if hasattr ( part , 'track' ) : return self.goodTT ( part.track () )
+
+
+        # The numbers are from Matt :
         
+        zTT   = ( 220. + 5. ) * cm
+
+        # "Bad" envelop in TT: 
+        yMax  =   0.0 * cm 
+        yMin  = -70.0 * cm
+        xMin  =  -5.0 * cm 
+        xMax  =   5.0 * cm
+        
+        state = LHCb.State ( part.closestState( zTT ) )
+        ext   = self.extrapolator 
+        st    = ext.propagate ( state , zTT )
+        if st.isFailure() : return False
+
+        x = state.x()
+        y = state.y()
+
+        if xMin < x < xMax and yMin < y < yMax : return False
+
+        return True 
+
+                
 # =============================================================================
 ## configure the job 
-def configure ( datafiles ) :
+def configure ( datafiles , catalogs = [] ) :
     """
     Job configuration 
     """
@@ -286,41 +379,6 @@ def configure ( datafiles ) :
     return SUCCESS 
 
 
-data =  [
-    '/castor/cern.ch/user/j/jpalac/72/0/outputdata/Data2009.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/72/1/outputdata/Data2009.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/72/2/outputdata/Data2009.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/72/3/outputdata/Data2009.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/72/4/outputdata/Data2009.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/72/5/outputdata/Data2009.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/72/6/outputdata/Data2009.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/72/7/outputdata/Data2009.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/72/8/outputdata/Data2009.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/72/9/outputdata/Data2009.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/72/10/outputdata/Data2009.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/72/11/outputdata/Data2009.PhysEvent.dst'
-    ]
-
-files_5730 = [
-    '/castor/cern.ch/user/j/jpalac/74/0/outputdata/Prod5730.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/74/1/outputdata/Prod5730.PhysEvent.dst'
-    ]
-
-files_5731 = [
-    '/castor/cern.ch/user/j/jpalac/76/0/outputdata/Prod5731.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/76/1/outputdata/Prod5731.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/76/2/outputdata/Prod5731.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/76/3/outputdata/Prod5731.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/76/4/outputdata/Prod5731.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/76/5/outputdata/Prod5731.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/76/6/outputdata/Prod5731.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/76/7/outputdata/Prod5731.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/76/8/outputdata/Prod5731.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/76/9/outputdata/Prod5731.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/76/10/outputdata/Prod5731.PhysEvent.dst',
-    '/castor/cern.ch/user/j/jpalac/76/11/outputdata/Prod5731.PhysEvent.dst'
-    ]
-
 # =============================================================================
 # The actual job steering
 if '__main__' == __name__ :
@@ -336,9 +394,9 @@ if '__main__' == __name__ :
     evtsel = gaudi.evtSel()
 
     from BenderExample.JuanFiles2009 import files
-    
+
     evtsel.open( files ) 
-          
+    
     run ( -1 )
     
     myalg = gaudi.algorithm ( 'Lam0' )
@@ -347,7 +405,7 @@ if '__main__' == __name__ :
     histos = myalg.Histos()
     for (k,h) in histos.items() :
         if hasattr ( h , 'dump' ) :
-            print h.dump ( 50 , 25 , True )
+            print h.dump ( 50 , 25 , False )
         
 
 # =============================================================================

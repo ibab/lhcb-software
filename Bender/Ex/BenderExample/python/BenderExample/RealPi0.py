@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RealPi0.py,v 1.3 2010-01-12 10:58:34 ibelyaev Exp $
+# $Id: RealPi0.py,v 1.4 2010-01-22 14:26:01 ibelyaev Exp $
 # =============================================================================
 # @file BenderExampele/RealPi0.py
 # Attempt to recontruct pi0 on real data 
@@ -14,7 +14,7 @@ Attempt to recontruct pi0 on real data
 """
 # ============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # ============================================================================
 ## import all needed stuff:
 import ROOT                           ## needed to produce/visualize the histograms
@@ -184,16 +184,10 @@ def configure ( datafiles ) :
     
     maker.InputPrimaryVertices = "None" ## NB: it saves a lot of CPU time 
 
-    from Configurables import CondDB
-    
-    CondDB(UseOracle = True)
-    
     ## end of static configuration
-
     
     ## instantiate application manager
     gaudi = appMgr()
-
     
     ## start of dynamic configuration 
     
