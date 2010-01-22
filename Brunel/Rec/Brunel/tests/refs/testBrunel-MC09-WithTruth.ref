@@ -5807,12 +5807,6 @@ DetailedMateria...   INFO Time User   : Tot= 2.73  [s] Ave/Min/Max= 6.32(+- 67.7
 ChronoStatSvc        INFO Time User   : Tot= 13.5  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized successfully
-StatusCodeSvc        INFO listing all unchecked return codes:
-StatusCodeSvc        INFO
-Num | Function                       | Source Library
-----+--------------------------------+------------------------------------------
-  1 | L0DUConfigProvider::createTriggers() | libL0DU.so
-
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
 Tuples::TupleObj WARNING  Create/Destroy      (mis)balance 'Tuple 'CKTuple'' Counts = 9
