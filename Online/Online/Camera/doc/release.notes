@@ -4,6 +4,11 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+=============== v1r13 ===============
+
+! 2010-01-22 - Nicola Mangiafave
+- Changed the cmt/requirement file to the new version v1r12.
+
 ! 2010-01-14 - Nicola Mangiafave
 - In CameraTool: eliminated the automatic change of data directory with run
 changes to avoid dependences of the Online package to the LHCb package. 
