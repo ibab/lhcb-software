@@ -201,7 +201,6 @@ namespace pres
 //  static TPRegexp s_fileDateRegexp("^(.*)-(\\d{8}T\\d{6})(-EOR)?\\.root$");
   static TPRegexp s_fileDateRegexp("^([^-]+)(-\\d+)?-(\\d{8}T\\d{6})(-EOR)?\\.root$");
   static TPRegexp s_fileRunRegexp("^(.+)-run(\\d+)\\.root$");
-  
  
 //  Brunel_45044_00004599_00000034_1_Hist.root
 //  Brunel_Ex_45044_00004598_00000003_1_Hist.root

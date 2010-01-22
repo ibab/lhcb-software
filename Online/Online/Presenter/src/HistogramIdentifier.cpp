@@ -7,6 +7,7 @@
 #include "presenter.h"
 #include "HistogramIdentifier.h"
 #include "Gaucho/MonObject.h"
+#include "OnlineHistDB/OnlineHistDBEnv.h"
 
 using namespace pres;
 
@@ -64,7 +65,7 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
   TObjArray* histogramUrlMatchGroup = s_histogramUrlRegexp.MatchS(m_histogramUrlTS);
 
   if (!histogramUrlMatchGroup->IsEmpty()) {
-
+    m_isPlausible = true;                    
     m_histogramType = (((TObjString *)histogramUrlMatchGroup->At(1))->
       GetString()).Data();
     if (m_histogramType.empty()) {
@@ -119,7 +120,7 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
       m_histogramName = (((TObjString *)histogramUrlMatchGroup->At(4 + matchOffset))->
         GetString()).Data();
     }
-    m_isPlausible = true;                    
+
     if (m_isPlausible && m_histogramType != "") {
       m_isDimFormat = true;
     }
@@ -133,12 +134,13 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
   delete histogramUrlMatchGroup;
   
   if (m_isFromHistogramSet) {
-    m_identifier =  m_taskName + s_slash + m_algorithmName +
-                    s_slash + m_setName + s_setSwitch + m_histogramName;    
-  } else {
-    m_identifier =  m_taskName + s_slash + m_algorithmName +
-                    s_slash + m_histogramName;    
+    m_histogramFullName = m_setName + s_setSwitch + m_histogramName;
   }
+  else {
+    m_histogramFullName = m_histogramName;
+  }
+  m_identifier =  m_taskName + s_slash + m_algorithmName +
+    s_slash + m_histogramFullName;
 
   m_dbDimServiceName = m_histogramType + s_slash + m_identifier;
   
@@ -172,6 +174,15 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
     fileName.ReplaceAll("&", "_005_");
     m_fileName = fileName;
   }
+
+  if ( m_taskName.empty() ||
+       m_algorithmName.empty() ||
+       m_histogramName.empty() ||
+       m_dbHistogramType < 0 ||
+       m_dbHistogramType >= OnlineHistDBEnv_constants::NHTYPES ) {
+    m_isPlausible = false;
+  }
+
 }
 
 void HistogramIdentifier::dumpMembersToConsole()

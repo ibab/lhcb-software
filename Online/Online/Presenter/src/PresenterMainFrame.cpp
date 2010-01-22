@@ -3310,51 +3310,58 @@ if (Batch != m_presenterMode) {
                        kMBOk, &m_msgBoxReturnCode);
         } else {        
           std::string taskName(m_archive->taskNameFromFile(std::string(rootFile.GetName())));
-          pres::SavesetType savesetType = pres::OfflineFile;                
-          TObjArray* fileNameMatchGroup = 0;
-          
-          fileNameMatchGroup = s_fileDateRegexp.MatchS(rootFile.GetName());
-          if (false == fileNameMatchGroup->IsEmpty()) {
+          if (taskName.empty()) {
+            m_message = "ERROR: could not get guess the taskname from your saveset name";
+            std::cout << m_message << ". Offline Editor cannot work"<<std::endl;
+            m_mainStatusBar->SetText(m_message.c_str(), 2);
+          }
+          else {
+            pres::SavesetType savesetType = pres::OfflineFile;                
+            TObjArray* fileNameMatchGroup = 0;
+            
+            fileNameMatchGroup = s_fileDateRegexp.MatchS(rootFile.GetName());
+            if (false == fileNameMatchGroup->IsEmpty()) {
             savesetType = pres::OnlineFile;
             if (fileNameMatchGroup) {
               fileNameMatchGroup->Delete();
               delete fileNameMatchGroup;
               fileNameMatchGroup = 0;
             } 
-          } else {
-            if (fileNameMatchGroup) {
-              fileNameMatchGroup->Delete();
-              delete fileNameMatchGroup;
-              fileNameMatchGroup = 0;
-            }
-            fileNameMatchGroup = s_offlineJobRegexp.MatchS(rootFile.GetName());        
-            if (false == fileNameMatchGroup->IsEmpty()) {
-              savesetType = pres::OfflineFile;
-              if (fileNameMatchGroup) {
-                fileNameMatchGroup->Delete();
-                delete fileNameMatchGroup;
-                fileNameMatchGroup = 0;
-              }
             } else {
               if (fileNameMatchGroup) {
                 fileNameMatchGroup->Delete();
                 delete fileNameMatchGroup;
                 fileNameMatchGroup = 0;
               }
-              fileNameMatchGroup = s_fileRunRegexp.MatchS(rootFile.GetName());        
+              fileNameMatchGroup = s_offlineJobRegexp.MatchS(rootFile.GetName());        
               if (false == fileNameMatchGroup->IsEmpty()) {
-                savesetType = pres::OnlineFile;
-              }
-              if (fileNameMatchGroup) {
-                fileNameMatchGroup->Delete();
-                delete fileNameMatchGroup;
-                fileNameMatchGroup = 0;
+                savesetType = pres::OfflineFile;
+                if (fileNameMatchGroup) {
+                  fileNameMatchGroup->Delete();
+                  delete fileNameMatchGroup;
+                  fileNameMatchGroup = 0;
+                }
+              } else {
+                if (fileNameMatchGroup) {
+                  fileNameMatchGroup->Delete();
+                  delete fileNameMatchGroup;
+                  fileNameMatchGroup = 0;
+                }
+                fileNameMatchGroup = s_fileRunRegexp.MatchS(rootFile.GetName());        
+                if (false == fileNameMatchGroup->IsEmpty()) {
+                  savesetType = pres::OnlineFile;
+                }
+                if (fileNameMatchGroup) {
+                  fileNameMatchGroup->Delete();
+                  delete fileNameMatchGroup;
+                  fileNameMatchGroup = 0;
+                }
               }
             }
+            listRootHistogramsFrom(dynamic_cast<TDirectory*>(&rootFile),
+                                   m_knownHistogramServices, m_histogramTypes,
+                                   taskName, savesetType);        
           }
-          listRootHistogramsFrom(dynamic_cast<TDirectory*>(&rootFile),
-                                 m_knownHistogramServices, m_histogramTypes,
-                                 taskName, savesetType);        
         }
         rootFile.Close();       
       }
@@ -3520,11 +3527,25 @@ void PresenterMainFrame::addHistoToHistoDB()
           std::cout<<"presenter is declaring "<<std::string(histoName)<<std::endl;
         }
         HistogramIdentifier histogramService = HistogramIdentifier(std::string(histoName));
-
-        m_histogramDB->declareHistogram(histogramService.taskName(),
-                                        histogramService.algorithmName(),
-                                        histogramService.histogramName(),
-                                        ((OnlineHistDBEnv::HistType)histogramService.dbHistogramType()));
+        
+        if(histogramService.isPlausible()) {
+          if (m_verbosity >= Verbose) { 
+            std::cout<<"declaring histogram to DB: " <<std::endl <<
+              "      taskName= "<< histogramService.taskName() <<std::endl <<
+              "      algorithmName= "<< histogramService.algorithmName() <<std::endl <<
+              "      histogramName= " << histogramService.histogramFullName() <<std::endl;
+          }
+          m_histogramDB->declareHistogram(histogramService.taskName(),
+                                          histogramService.algorithmName(),
+                                          histogramService.histogramFullName(),
+                                          (OnlineHistDBEnv::HistType) histogramService.dbHistogramType());
+        }
+        else {
+          std::cout<<"ERROR: input histogram identifier is not correct: " <<
+            " taskName= "<< histogramService.taskName() <<
+            " algorithmName= "<< histogramService.algorithmName() <<
+            " histogramName= " << histogramService.histogramFullName() <<std::endl;
+        }
       }
     } catch (std::string sqlException) {
       if (m_verbosity >= Verbose) { std::cout << sqlException; }

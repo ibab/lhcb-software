@@ -25,6 +25,7 @@ class HistogramIdentifier
     bool isFromHistogramSet() const {return m_isFromHistogramSet; };
     std::string histogramSetName() const { return m_setName; };
     std::string histogramName() const { return m_histogramName; };
+    std::string histogramFullName() const { return m_histogramFullName; };
     std::string lastName() const { return m_lastName; };
     std::string fileName() const { return m_fileName; };
     bool isPlausible() const { return m_isPlausible; };
@@ -45,11 +46,12 @@ class HistogramIdentifier
     std::string m_taskName;
     std::string m_instanceOnNode;
     std::string m_histogramUTGID;
-    std::string m_algorithmName;
+    std::string m_algorithmName; 
     bool m_isFromHistogramSet;
     bool m_isEFF;
     std::string m_setName;
-    std::string m_histogramName;
+    std::string m_histogramName;// is the sub-name in case of set
+    std::string m_histogramFullName;
     std::string m_lastName;
     std::string m_fileName;
     bool m_isPlausible;

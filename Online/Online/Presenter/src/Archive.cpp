@@ -75,6 +75,7 @@ void Archive::fillHistogram(DbRootHist* histogram,
                             const std::string & timePoint,
                             const std::string & pastDuration)
 {
+  bool singleSaveset=false;
   if (m_verbosity >= Verbose) {
     std::cout << "Histogram to seek: " << histogram->identifier()
               << " timePoint " << timePoint
@@ -85,6 +86,7 @@ void Archive::fillHistogram(DbRootHist* histogram,
     std::vector<path> foundRootFiles;
     std::vector<path> goodRootFiles;
     if (s_startupFile == timePoint) {
+      singleSaveset = true;
       path filePath(pastDuration);
       if (s_rootFileExtension == extension(filePath) ) {
         if (exists(filePath)){
@@ -137,7 +139,8 @@ void Archive::fillHistogram(DbRootHist* histogram,
       }
       if (histogram->rootHistogram) { // at least one source is available
         if (false == m_mainFrame->isHistoryTrendPlotMode() || 
-            histogram->rootHistogram->GetDimension()>1) {
+            histogram->rootHistogram->GetDimension()>1 ||
+            singleSaveset) {
           (histogram->rootHistogram)->Merge(list);
         } else {
           // do a trend plot of mean and rms
@@ -390,9 +393,22 @@ std::string Archive::taskNameFromFile(const std::string & fileName) {
       delete fileNameMatchGroup;
       fileNameMatchGroup = 0;
     }
-    fileNameMatchGroup = s_offlineJobRegexp.MatchS(path(fileName).leaf());
+    // try with run-aggregated saveset
+    fileNameMatchGroup = s_fileRunRegexp.MatchS(path(fileName).leaf());
     if (!fileNameMatchGroup->IsEmpty()) {
-      taskNameFound = (((TObjString *)fileNameMatchGroup->At(1))->GetString()).Data();
+    taskNameFound = (((TObjString *)fileNameMatchGroup->At(1))->GetString()).Data();
+    } 
+    else {
+      // try with offline DQ saveset
+      if (fileNameMatchGroup) {
+        fileNameMatchGroup->Delete();
+        delete fileNameMatchGroup;
+        fileNameMatchGroup = 0;
+      }
+      fileNameMatchGroup = s_offlineJobRegexp.MatchS(path(fileName).leaf());
+      if (!fileNameMatchGroup->IsEmpty()) {
+        taskNameFound = (((TObjString *)fileNameMatchGroup->At(1))->GetString()).Data();
+      }
     }
   }
   if (fileNameMatchGroup) {
@@ -534,7 +550,8 @@ void Archive::setHistoryLabels(TH1* h, std::vector<boost::filesystem::path>& roo
   std::string ts("20020131T235959");
   ptime lastTime(from_iso_string(ts));
   time_duration maxdelta= hours(1); 
-  const int maxnbinUnlabeled = 3;
+  int maxnbinUnlabeled = n/4;
+  
   std::vector<path>::const_iterator rootFilesIt = rootFiles.end();
   while ( rootFilesIt > rootFiles.begin() ) {
     rootFilesIt--;
