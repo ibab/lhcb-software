@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.16 2009-04-24 08:06:22 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.17 2010-01-22 20:36:44 frankb Exp $
 //  ====================================================================
 //  RawBufferCreator.cpp
 //  --------------------------------------------------------------------
@@ -37,9 +37,9 @@ namespace {
 
   struct MEPProducer  : public MEP::Producer  {
     string m_fname;
-    int m_spaceSize, m_refCount, m_evtCount;
-    MEPProducer(const string& nam, int partitionID, const string& fn, int refcnt, size_t siz, int evtCount, bool unused) 
-      : MEP::Producer(nam, partitionID), m_fname(fn), m_spaceSize(siz), m_refCount(refcnt), m_evtCount(evtCount)
+    int m_spaceSize, m_refCount, m_evtCount, m_etyp;
+    MEPProducer(const string& nam, int partitionID, const string& fn, int refcnt, size_t siz, int evtCount, bool unused, int etyp) 
+      : MEP::Producer(nam, partitionID), m_fname(fn), m_spaceSize(siz), m_refCount(refcnt), m_evtCount(evtCount), m_etyp(etyp)
     {
       m_spaceSize *= 1024;  // Space size is in kBytes
       m_flags = USE_MEP_BUFFER;
@@ -114,7 +114,7 @@ namespace {
         m_event.mask[1] = 0;
         m_event.mask[2] = 0;
         m_event.mask[3] = 0;
-        m_event.type    = EVENT_TYPE_MEP;
+        m_event.type    = m_etyp;
 
         declareEvent();
         status = sendSpace();
@@ -145,11 +145,13 @@ extern "C" int mep_producer(int argc,char **argv) {
   int partID = 0x103;              // default is LHCb partition id
   int refCount = 2;
   int evtCount = -1;
+  int etyp = EVENT_TYPE_MEP;
   string name = "producer";
   string fname = "../cmt/mepData_0.dat";
   bool async = cli.getopt("asynchronous",1) != 0;
   bool debug = cli.getopt("debug",1) != 0;
   bool unused = cli.getopt("mapunused",1) != 0;
+  cli.getopt("etype",1,etyp);
   cli.getopt("name",1,name);
   cli.getopt("file",1,fname);
   cli.getopt("space",1,space);
@@ -157,9 +159,9 @@ extern "C" int mep_producer(int argc,char **argv) {
   cli.getopt("refcount",1,refCount);
   cli.getopt("count",1,evtCount);
   if ( debug ) ::lib_rtl_start_debugger();
-  ::printf("%synchronous MEP Producer \"%s\" Partition:%d (pid:%d) included in buffers. Will produce %d MEPs from %s\n",
-	   async ? "As" : "S", name.c_str(), partID, MEPProducer::pid(),evtCount,fname.c_str());
-  MEPProducer p(name, partID, fname, refCount, space, evtCount, unused);
+  ::printf("%synchronous MEP Producer \"%s\" Partition:%d (pid:%d) included in buffers. Will produce %d MEPs from %s Type:%d\n",
+	   async ? "As" : "S", name.c_str(), partID, MEPProducer::pid(),evtCount,fname.c_str(),etyp);
+  MEPProducer p(name, partID, fname, refCount, space, evtCount, unused, etyp);
   if ( async ) p.setNonBlocking(WT_FACILITY_DAQ_SPACE, true);
   return p.run();
 }

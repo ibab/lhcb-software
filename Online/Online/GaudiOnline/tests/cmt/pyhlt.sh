@@ -5,6 +5,7 @@ echo "All args: $*"
 #
 start_py_task MepInit   "import GaudiOnlineTests;GaudiOnlineTests.runMepBuffer()"
 start_py_task MbmOutput "import GaudiOnlineTests;GaudiOnlineTests.runOutBuffer()"
+start_py_task MbmSend   "import GaudiOnlineTests;GaudiOnlineTests.runSendBuffer()"
 #
 $MINITERM TanServer@${HOST} -e "export UTGID=${NODENAME}/TANServer; exec -a \${UTGID} $gaudi_run libOnlineKernel.so tan_nameserver -a -tcp -d"&
 #$MINITERM ROCollect@${HOST} -e "export UTGID=${NODENAME}/ROCollect; exec -a \${UTGID} $gaudi_run libGaudiOnline.so romon_collect -gbl=ROMonitor -size=64 -delay=500 -verbose"&

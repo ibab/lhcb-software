@@ -25,7 +25,7 @@ def runReproSender(target,buffer,req='ALL'):
 # Data receiver task; puts data into buffer 'buffer'
 def runReceiver(buffer='OUT'):               return _run(dataReceiverApp(pid,pnam,buffer,True))
 #------------------------------------------------------------------------------------------------
-def runEvtProd():                            return _run(mepConverterApp(pid,pnam,bursts=True,freq=0.001))
+def runEvtProd():                            return _run(mepConverterApp(pid,pnam,bursts=True,freq=0.001,errors=2))
 #------------------------------------------------------------------------------------------------
 def runEvtHolder(errBuffer='OUT'):           return _run(mepHolderApp(pid,pnam,errBuffer,True))
 #------------------------------------------------------------------------------------------------
@@ -101,6 +101,9 @@ def runBuffer(buffer='Events', partitionBuffers=True):
 #------------------------------------------------------------------------------------------------
 def runOutBuffer():
   return _run(mbmInitApp(pid,pnam,flags='-s=8096 -e=64 -u=64 -i=OUT -c',partitionBuffers=True))
+#------------------------------------------------------------------------------------------------
+def runSendBuffer():
+  return _run(mbmInitApp(pid,pnam,flags='-s=8096 -e=64 -u=64 -i=SEND -c',partitionBuffers=False))
 #------------------------------------------------------------------------------------------------
 def runRecBuffer():
   return _run(mbmInitApp(pid,pnam,flags='-s=8096 -e=64 -u=64 -i=Events -c -s=8096 -e=64 -u=64 -i=Output -c',partitionBuffers=True))

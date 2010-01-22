@@ -53,6 +53,8 @@ namespace LHCb  {
     MEPManager*      m_mepMgr;
     /// MBM Producer pointer
     MBM::Producer*   m_producer;
+    /// MBM Producer pointer for ERROR events
+    MBM::Producer*   m_errProd;
     /// MBM Consumer pointer
     MBM::Consumer*   m_consumer;
     /// Flag indicating that MBM event retrieval is active
@@ -61,8 +63,14 @@ namespace LHCb  {
     bool             m_burstMode;
     /// Property: printout frequence
     float            m_freq;
+    /// Property: Flag to register callback for MEP error event handling. 0=No handling, 1=save as MEP, 2=save as events
+    int              m_handleErrs;
+    /// Property: 4rth. Word of trigger mask for sending ERROR MEPs. 
+    int              m_routingBits;
     /// Property: Request specification
     Requirements     m_req;
+    /// Property: Name of output buffer for error events (requires handleErrs to be set)
+    std::string      m_errBuffer;
     /// Property: MEP manager service name/type
     std::string      m_mepMgrName;
 
@@ -74,6 +82,8 @@ namespace LHCb  {
     int              m_mepCount;
     /// Monitoring quantity: Packing factor
     int              m_packingFactor;
+    /// Monitoring quantity: Number of ERROR Meps
+    int              m_errMEPCount;
 
     /// Declare all subevents of a full MEP in burst mode
     int declareAllSubEvents(const MBM::EventDesc& evt, SubEvents& events);
@@ -81,6 +91,11 @@ namespace LHCb  {
     int declareSubEvents(const MBM::EventDesc& evt, SubEvents& events);
     /// Declare single subevent
     int declareSubEvent(const MBM::EventDesc& evt, int evID, const Frags& frags, int len);
+
+    /// Save event data on error
+    StatusCode saveEvents(void* data, size_t length, const unsigned int* mask);
+    StatusCode saveMEP(void* data, size_t length, const unsigned int* mask);
+
   public:
     /// Standard Constructor
     MEPConverterSvc(const std::string& name, ISvcLocator* svc);

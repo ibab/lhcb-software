@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.cpp,v 1.26 2009-12-14 10:49:54 frankb Exp $
+// $Id: DimRPCFileReader.cpp,v 1.27 2010-01-22 20:36:43 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -70,16 +70,15 @@ StatusCode DimRPCFileReader::initialize()   {
   declareInfo("EvtCount",m_evtCount=0,"Number of events processed");
 
   m_command = new Command();
-  std::stringstream outstream;
-  outstream << "ds6:statusi1es7:commands4:idles6:paramsdee";
-  outstream >> m_idle;
-  m_reply = m_idle;
+  m_reply = m_idle = "ds6:statusi1es7:commands4:idles6:paramsdee";
 
   // Init the extra Services
   std::string svcName=RTL::processName()+"/RpcFileDBOut";
   std::string cmdName=RTL::processName()+"/RpcFileDBIn";
   m_rpc.first  = ::dis_add_service((char*)svcName.c_str(),(char*)"C",0,0,publishEvents,(long)this);
   m_rpc.second = ::dis_add_cmnd((char*)cmdName.c_str(),(char*)"C",cmndCallback,(long)this);
+  error("INITIALIZE: publish request:"+m_reply);
+  ::dis_update_service(m_rpc.first);
   ::lib_rtl_lock(m_lock);
   return sc;
 }
@@ -108,6 +107,7 @@ StatusCode DimRPCFileReader::sysStart()   {
     m_rpc.first  = ::dis_add_service((char*)svcName.c_str(),(char*)"C",0,0,publishEvents,(long)this);
   if ( 0 == m_rpc.second )
     m_rpc.second = ::dis_add_cmnd((char*)cmdName.c_str(),(char*)"C",cmndCallback,(long)this);
+  //error("SYSSTART: publish request:"+m_reply);
   return StatusCode::SUCCESS;
 }
 
@@ -198,8 +198,6 @@ StatusCode DimRPCFileReader::run()   {
   if ( ui )    {
     while(1) {
       m_receiveEvts = true;
-      info ("Starting loop through events");
-      // ::dis_update_service(m_rpc.first);
       info("Locking event loop. Waiting for work....");
       ::lib_rtl_lock(m_lock);
       if ( !m_receiveEvts ) {

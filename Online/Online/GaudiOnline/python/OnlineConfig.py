@@ -26,6 +26,8 @@ mbm_requirements['SEND']  = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffff
 
 mbm_requirements['OTHER'] = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=%s;Frequency=PERC;Perc=100.0"
 
+mbm_requirements['ERROR']  = "EvType=3;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ALL;Frequency=PERC;Perc=100.0"
+
 ApplicationMgr = CFG.ApplicationMgr
 
 #------------------------------------------------------------------------------------------------
@@ -293,14 +295,23 @@ def mepHolderApp(partID, partName,errBuffer=None,partitionBuffers=False,routing=
   return _application('NONE',evtsel='NONE',extsvc=extsvc,runable=runable,evtloop=evtloop)
 
 #------------------------------------------------------------------------------------------------
-def mepConverterApp(partID, partName, bursts=True, freq=0.):
+def mepConverterApp(partID, partName, bursts=True, freq=0.,errors=None):
   "MEP to event converter application for usage of multi event packet buffers."
+  print 'Running event producer with error flag:',errors
   monSvc               = Configs.MonitorSvc()
-  mepMgr               = mepManager(partID,partName,['MEP','EVENT'])
+  buffs                = ['MEP','EVENT']
+  if errors: buffs.append('SEND')
+  mepMgr               = mepManager(partID,partName,buffs)
   runable              = Configs.LHCb__MEPConverterSvc('Runable')
   runable.BurstMode    = False # bursts
   runable.PrintFreq    = freq
   runable.Requirements = [mbm_requirements['MEP']]
+  if errors:
+    runable.HandleErrors = errors
+    runable.ErrorBuffer  = 'SEND'
+    runable.RoutingBits  = 0x400
+    runable.Requirements.append(mbm_requirements['ERROR'])
+
   evtloop              = Configs.LHCb__OnlineRunable('EmptyEventLoop')
   evtloop.Wait         = 1
   msgSvc().OutputLevel = 1

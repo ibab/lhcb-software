@@ -68,7 +68,12 @@ StatusCode MEPHolderSvc::queryInterface(const InterfaceID& riid,void** ppIf) {
 
 /// Save event data on error
 StatusCode MEPHolderSvc::saveOnError(void* data, size_t length) {
-  return (m_handleErrs == 1) ? saveMEP(data,length) : saveEvents(data,length);
+  if ( m_handleErrs > 0 ) {
+    if ( m_handleErrs == 1 ) return saveMEP(data,length);
+    if ( m_handleErrs == 2 ) return saveEvents(data,length);
+    return StatusCode::FAILURE;
+  }
+  return StatusCode::SUCCESS;
 }
 
 /// Save event data on error
