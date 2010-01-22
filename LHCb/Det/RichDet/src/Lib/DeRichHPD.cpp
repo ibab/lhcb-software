@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichHPD
  *
- * $Id: DeRichHPD.cpp,v 1.21 2010-01-14 16:39:03 papanest Exp $
+ * $Id: DeRichHPD.cpp,v 1.22 2010-01-22 14:02:20 papanest Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-09-19
@@ -15,6 +15,10 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
 #include "GaudiKernel/PhysicalConstants.h"
+#include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/Bootstrap.h"
+
+#include "Kernel/ILHCbMagnetSvc.h"
 
 // DetDesc
 #include "DetDesc/Condition.h"
@@ -56,7 +60,8 @@ DeRichHPD::DeRichHPD(const std::string & name):
   m_magMapR           ( NULL ),
   m_magMapPhi         ( NULL ),
   m_hpdQuantumEffFunc ( NULL ),
-  m_refactParams      ( 4,  0)
+  m_refactParams      ( 4,  0),
+  m_magFieldSvc       ( NULL )
 { }
 
 //=============================================================================
@@ -65,6 +70,7 @@ DeRichHPD::DeRichHPD(const std::string & name):
 DeRichHPD::~DeRichHPD()
 {
   cleanUpInterps();
+  if (0 != m_magFieldSvc) m_magFieldSvc->release();
 }
 
 //=============================================================================
@@ -189,15 +195,10 @@ StatusCode DeRichHPD::initialize ( )
     return StatusCode::FAILURE;
   }
 
-
   // register updates for the locally cached geometry information
   updMgrSvc()->registerCondition(this, geometry(),
                                  &DeRichHPD::updateTransformations );
-  sc = updMgrSvc()->update(this);
-  if ( sc.isFailure() ) {
-    msg << MSG::FATAL << "ums update failure for transformations"<<endmsg;
-    return sc;
-  }
+
 
   // get quantum efficiency tabulated property from LHCBCOND if available
   SmartDataPtr<DeRichSystem> deRichS( dataSvc(), DeRichLocations::RichSystem );
@@ -250,6 +251,19 @@ StatusCode DeRichHPD::initialize ( )
   debug() << "QE from location:" << m_hpdQuantumEffFunc->tabProperty()->name() << endmsg;
   debug() << m_hpdQuantumEffFunc->tabProperty() << endmsg;
 
+  // get the magnetic field service
+  ISvcLocator* svcLocator = Gaudi::svcLocator();
+  if (0 == svcLocator) {
+    throw GaudiException("DeRichHPD::ISvcLocator* points to NULL!",
+                         "*DeRichException*" , StatusCode::FAILURE);
+  }
+
+  StatusCode scMag = svcLocator->service("MagneticFieldSvc" , m_magFieldSvc);
+  if ( !scMag.isSuccess() ) {
+    throw GaudiException("DeRichHPD::Could not locate MagneticFieldSvc",
+                         "*DeRichException*" , StatusCode::FAILURE);
+  }
+
   // Magnetic Distortions
   // Make interpolators
   m_demagMapR   = new Rich::TabulatedFunction1D();
@@ -257,30 +271,26 @@ StatusCode DeRichHPD::initialize ( )
   m_magMapR     = new Rich::TabulatedFunction1D();
   m_magMapPhi   = new Rich::TabulatedFunction1D();
 
-  if (m_UseHpdMagDistortions)
-  {
-    //if(m_UseRandomBField) init_mm();
-    msg << MSG::DEBUG<< "Current set is UseBFieldTestMap="<<m_UseBFieldTestMap
-        << " LongitudinalBField="<<m_LongitudinalBField
-      //<< " UseRandomBField="<<m_UseRandomBField
-      //<< " within:"<<m_RandomBFieldMinimum<<"-"<<m_RandomBFieldMaximum
-        << endmsg;
+  //if(m_UseRandomBField) init_mm();
+  msg << MSG::DEBUG<< "Current set is UseBFieldTestMap="<<m_UseBFieldTestMap
+      << " LongitudinalBField="<<m_LongitudinalBField
+    //<< " UseRandomBField="<<m_UseRandomBField
+    //<< " within:"<<m_RandomBFieldMinimum<<"-"<<m_RandomBFieldMaximum
+      << endmsg;
 
-    if ( hasCondition( "DemagParameters" ) ) {
-      m_demagCond = condition( "DemagParameters" );
-      updMgrSvc()->registerCondition(this, m_demagCond.path(),
-                                     &DeRichHPD::updateDemagProperties );
-    }
-    else {
-      m_demagCond = 0;
-    }
-    
-    sc = updMgrSvc()->update(this);
-    if ( sc.isFailure() ) {
-      msg << MSG::FATAL << "Demagnification ums update failure."<<endmsg;
-      return sc;
-    }
+  if ( hasCondition( "DemagParameters" ) ) {
+    m_demagCond = condition( "DemagParameters" );
+    updMgrSvc()->registerCondition(this, m_demagCond.path(),
+                                   &DeRichHPD::updateDemagProperties );
+  }
+  else {
+    m_demagCond = 0;
+  }
 
+  sc = updMgrSvc()->update(this);
+  if ( sc.isFailure() ) {
+    msg << MSG::FATAL << "Demagnification ums update failure."<<endmsg;
+    return sc;
   }
 
   return sc;
@@ -309,8 +319,7 @@ StatusCode DeRichHPD::getParameters ( )
               << "Corrections will not work properly!" << endmsg;
   }
 
-  //m_UseHpdMagDistortions = 0 != deRich1->param<int>("UseHpdMagDistortions");
-  m_UseHpdMagDistortions = true;
+  m_UseHpdMagDistortions = ( 0 != deRich1->param<int>("UseHpdMagDistortions") );
   m_UseBFieldTestMap     = ( 0 != deRich1->param<int>("UseBFieldTestMap") );
   m_LongitudinalBField   = deRich1->param<double>("LongitudinalBField");
   //m_UseRandomBField     = deRich1->param<int>("UseRandomBField");
@@ -561,10 +570,11 @@ StatusCode DeRichHPD::magnifyToGlobal( Gaudi::XYZPoint& detectPoint,
                                        bool photoCathodeSide ) const
 {
   const double rAnode = detectPoint.R();
+  bool isMagnetOn = ( m_magFieldSvc->scaleFactor() > 0.5 || m_UseHpdMagDistortions );
 
   // chose method to use for the rCathode
   double rCathode =
-    ( m_UseHpdMagDistortions ?
+    ( isMagnetOn ?
       // use magnetic distortion
       magnification_RtoR()->value( rAnode ) :
 
@@ -590,7 +600,7 @@ StatusCode DeRichHPD::magnifyToGlobal( Gaudi::XYZPoint& detectPoint,
   }
 
   double xWindow(0.0), yWindow(0.0);
-  if ( m_UseHpdMagDistortions )
+  if ( isMagnetOn )
   {
     const double result_phi = magnification_RtoPhi()->value( rAnode );
 

@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichHPD
  *
  *  CVS Log :-
- *  $Id: DeRichHPD.h,v 1.18 2010-01-14 16:39:03 papanest Exp $
+ *  $Id: DeRichHPD.h,v 1.19 2010-01-22 14:02:19 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-09-19
@@ -29,6 +29,7 @@
 
 #include <bitset>
 
+class ILHCbMagnetSvc;
 // External declarations
 extern const CLID CLID_DERichHPD;
 
@@ -344,6 +345,8 @@ private: // data
   std::vector<double> m_refactParams; ///< refraction parameters for quartz window
 
   //int    rgiState[2+55];
+  ///< Force the use of MDMS corrections code even if the field is OFF
+  ///< When FALSE the magnetic field service is used to decide.
   bool   m_UseHpdMagDistortions;
   bool   m_UseBFieldTestMap ;
   double m_LongitudinalBField ;
@@ -357,7 +360,8 @@ private: // data
   Gaudi::Transform3D m_fromHPDToPanel; ///< HPD to HPD Panel transform
   /// The centre of the HPD window (inside) in the mother (panel) coordinate system
   Gaudi::XYZPoint m_windowInsideCentreMother;
-
+  /// pointer to the magnetic field service
+  ILHCbMagnetSvc* m_magFieldSvc;
 };
 
 //=========================================================================
