@@ -35,30 +35,9 @@ from StrippingSelections.StrippingBd2KstarMuMu import StrippingBd2KstarMuMuConf
 
 stream = StrippingStream("Dimuon")
 stream.appendLines( [ 
-		        StrippingDiMuon.line, 
-		        StrippingBs2JpsiPhi.line,  
-		        StrippingBs2JpsiPhiLoose.line,  
-		        StrippingBs2JpsiPhiPrescaled.line,  
-			StrippingBs2JpsiPhiDetached.line, 
-		        StrippingBd2JpsiKS.line1,  
-		        StrippingBd2JpsiKS.line2,  
-		        StrippingBd2JpsiKstar.line,  
-		        StrippingBd2JpsiKstarLoose.line,  
-		        StrippingBd2JpsiKstarDetached.line,  
-		        StrippingBd2JpsiKstarDetachedR.line,  
-		        StrippingBd2KstarMuMuConf().line_for_nominal_low(),  
-		        StrippingBd2KstarMuMuConf().line_for_nominal_med(),  
-		        StrippingBd2KstarMuMuConf().line_for_nominal_high(),  
 		        StrippingBd2KstarMuMuConf().Early_SignalLine(),  
 		        StrippingBd2KstarMuMuConf().Early_SameSignLine(),  
 		        StrippingBd2KstarMuMuConf().Early_WideKstarLine(),  
 		        StrippingBd2KstarMuMuConf().Early_NoMuIDLine(),  
 		        StrippingBd2KstarMuMuConf().Early_eMuLine(),  
-		        StrippingBs2Jpsif0.line,  
-		        StrippingBiasedBs2JpsiPhi.line,  
-		        StrippingBu2JpsiK.line,  
-		        StrippingBu2JpsiKLoose.line,  
-		        StrippingBu2JpsiKDetached.line,  
-		        StrippingBu2JpsiKDetachedR.line,
-		        StrippingBu2LLKConf().mmK()
 		    ] )

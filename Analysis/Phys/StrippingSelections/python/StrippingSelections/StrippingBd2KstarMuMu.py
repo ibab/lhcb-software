@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.8 $'
+__version__ = '$Revision: 1.9 $'
 
 """
 Bd->K*MuMu selections 
@@ -30,8 +30,8 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
                 ,  'BVertexCHI2Tight'   : 25         # adimentional
                 ,  'KstarHighMass'      : 2500       # MeV
                 ,  'IntDIRA'            : -0.95      # adimentional
-                ,  'IntVertexCHI2Tight' : 25         # adimentional
-                ,  'IntFlightCHI2'    : 9          # adimentional
+                ,  'IntVertexCHI2Tight' : 36         # adimentional
+                ,  'IntFlightCHI2'      : 9          # adimentional
                 ,  'TrackChi2'          : 10         # adimentional
                    }
 
@@ -65,6 +65,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         The Signal line
         """
         from StrippingConf.StrippingLine import StrippingLine, StrippingMember       
+        from PhysSelPython.Wrappers import DataOnDemand
         from CommonParticles.StdVeryLooseDetachedKstar import StdVeryLooseDetachedKst2Kpi
         from CommonParticles.StdLooseDiMuon import StdLooseDiMuon
         return StrippingLine('Bd2KstarMuMu_Early_Signal'
@@ -128,7 +129,10 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
                                       InputLocations = ["StdLooseDiMuon", "WideKstar4Bd2KstarMuMu"])
         jcuts = algo.DaughtersCuts['J/psi(1S)']
         jcuts = jcuts+" & (VFASPF(VCHI2/VDOF) < %(IntVertexCHI2Tight)s )" % self.getProps()
-        algo.DaughtersCuts['J/psi(1S)'] = jcuts
+        kcuts = algo.DaughtersCuts['K*(892)0']
+        kcuts = jcuts+" & (VFASPF(VCHI2/VDOF) < %(IntVertexCHI2Tight)s )" % self.getProps()
+        algo.DaughtersCuts = { 'J/psi(1S)' : jcuts,
+                               'K*(892)0' : kcuts }
         algo.CombinationCut = "(ADAMASS('B0') < %(BMassMedWin)s *MeV)"  % self.getProps()
         algo.MotherCut = "(VFASPF(VCHI2/VDOF) < %(BVertexCHI2Tight)s ) & (BPVDIRA> %(BDIRA)s ) & (BPVVDCHI2 > %(BFlightCHI2Tight)s ) & (BPVIPCHI2() < %(BIPCHI2Tight)s )"  % self.getProps()
         return algo
