@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.41 2009-11-05 17:38:30 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.42 2010-01-22 13:50:44 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -100,6 +100,7 @@ void OnlineHistDB::declareHistogram(std::string TaskName,
 				    std::string Title,
 				    OnlineHistDBEnv::HistType Type)
 {
+  if (Type<0 || Type >= NHTYPES) return;
   OCIStmt *stmt;
   m_StmtMethod = "OnlineHistDB::declareHistogram";
 
@@ -268,6 +269,7 @@ bool OnlineHistDB::declareCreatorAlgorithm(std::string Name,
                                            std::vector<float> *defv,
                                            std::string *doc) {
   bool out=false;
+  if (OutputType<0 || OutputType >= NHTYPES) return out;
   if(Npars>0) {
     if (pars == NULL || defv == NULL)
       return out;

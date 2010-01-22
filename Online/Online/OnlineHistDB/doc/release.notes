@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.52 2009-12-09 08:40:03 ggiacomo Exp $
+! $Id: release.notes,v 1.53 2010-01-22 13:50:44 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
 ! user manual in pdf format is available at /afs/cern.ch/user/g/ggrazian/www/lhcb/histdbdoc.pdf
 ! or using makedoc script in this folder
 !
+
+! 20100122 v6r2
+- protection against incorrect histogram types
 
 ! 20091209 v6r1
 - minor fixes to sql part (permissions/synonyms for offline mirror)

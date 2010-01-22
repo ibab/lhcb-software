@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.44 2009-12-09 08:40:03 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.45 2010-01-22 13:50:43 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -23,7 +23,7 @@ namespace OnlineHistDBEnv_constants {
   static const std::string ACCOUNT="HIST_READER";
   static const std::string PASSWORD="reader";
   static const unsigned int DBschema = 15;
-  static const std::string version = "v6r1";
+  static const std::string version = "v6r2";
 
   static const int NHTYPES=6;
   static const char HistTypeName[][4] = {
@@ -68,7 +68,7 @@ namespace OnlineHistDBEnv_constants {
 class OnlineHistDBEnv {
  public:
   /// get verbosity level (0 for no debug messages, up to 3)
-  typedef enum { H1D, H2D, P1D, P2D, CNT, SAM} HistType;
+  typedef enum { H1D=0, H2D, P1D, P2D, CNT, SAM} HistType;
   inline int debug() const { return m_debug;}
   /// set verbosity level
   void setDebug(int DebugLevel) { m_debug=DebugLevel;}
