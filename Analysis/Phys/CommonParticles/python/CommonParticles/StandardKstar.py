@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StandardKstar.py,v 1.1 2009-10-09 12:39:26 pkoppenb Exp $ 
+# $Id: StandardKstar.py,v 1.2 2010-01-22 13:04:01 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StandardKstar.py
 #  configuration file for 'Standard K*' 
@@ -11,12 +11,14 @@
 Configuration file for 'Standard K*'
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 
 _locations = {} 
 
 from CommonParticles.StdLooseKstar import *
+_locations.update ( locations )
+from CommonParticles.StdVeryLooseDetachedKstar import *
 _locations.update ( locations )
 from CommonParticles.StdLooseDetachedKstar import *
 _locations.update ( locations )
