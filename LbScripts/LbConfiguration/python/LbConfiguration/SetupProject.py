@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # pylint: disable-msg=E1103,W0141
-_cvs_id = "$Id: SetupProject.py,v 1.26 2010-01-20 12:59:51 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.27 2010-01-22 17:18:23 marcocle Exp $"
 
 import os, sys, re, time
 from xml.sax import parse, ContentHandler
@@ -11,7 +11,7 @@ from tempfile import mkdtemp, mkstemp
 
 from LbConfiguration import createProjectMakefile
 from LbUtils.CVS import CVS2Version
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.26 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.27 $")
 
 # subprocess is available since Python 2.4, but LbUtils guarantees that we can
 # import it also in Python 2.3
@@ -380,8 +380,17 @@ def _GetVersionTuple(pattern, versions):
             match = v
             break # exit the loop at the first match
     if not found and pattern is None: # fall back solution
-        match = version_strings[0] # latest version
-
+        match = version_strings.pop(0) # latest version
+        # FIXME: Special hack for the transition from Dirac v4 to LHCbDirac v5.
+        # Starting from Dirac v5, to use Dirac functionalities we have to do
+        # "SetupProject LHCbDirac" even if "SetupProject Dirac" will succeed
+        # because the plain Dirac project will not be usable.
+        # The hack is to ignore too recent versions of Dirac when the user did
+        # not specify any.
+        if versions[0][0].lower() == "dirac":
+            while match.startswith("v5") or match.startswith("v6"):
+                match = version_strings.pop(0)
+    
     # Now that we have a string (and not a pattern), we can extract the tuple
     for vers_tuple in versions:
         if match == vers_tuple[1]:
@@ -1455,7 +1464,7 @@ class SetupProject:
         self._debug("Look for all versions of '%s' in %s" % (self.project_name, self.search_path)
                     + ((self.user_area and (" with user area in '%s'" % self.user_area)) or ""))
         versions = FindProjectVersions(self.project_name, self.search_path, self.user_area)
-
+        
         if not versions:
             self._error("Cannot find project '%s'" % self.project_name)
             return 1
