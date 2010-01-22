@@ -804,11 +804,5 @@ L0MuonTrigger I...   INFO Time User   : Tot= 1.64  [s]                          
 ChronoStatSvc        INFO Time User   : Tot= 10.7  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized successfully
-StatusCodeSvc        INFO listing all unchecked return codes:
-StatusCodeSvc        INFO
-Num | Function                       | Source Library
-----+--------------------------------+------------------------------------------
-  1 | L0DUConfigProvider::createTriggers() | libL0DU.so
-
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
