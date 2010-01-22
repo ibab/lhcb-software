@@ -1,8 +1,8 @@
-# $Id: StrippingBs2PhiPhi.py,v 1.3 2009-12-23 14:31:22 schleich Exp $
+# $Id: StrippingBs2PhiPhi.py,v 1.4 2010-01-22 13:04:07 schleich Exp $
 
 __author__ = 'Sebastian Schleich'
-__date__ = '2009/12/23'
-__version__ = '$Revision: 1.3 $'
+__date__ = '2010/01/22'
+__version__ = '$Revision: 1.4 $'
 
 '''
 Bs->PhiPhi stripping selection
@@ -60,7 +60,7 @@ class StrippingBs2PhiPhiConf(LHCbConfigurableUser):
         Phi2KK_MC = "ALL"
         PhiFilter = "(ADMASS('phi(1020)') < %(PhiMassWindow)s*MeV)" % self.getProps()
         Bs2PhiPhi_DC = "(PT> %(PhiPT)s *MeV)" % self.getProps()
-        Bs2PhiPhi_CC = "(AMAXDOCA('') < %(BsDOCA)s *mm)&(ADAMASS('B_s0')< %(BsMassWindow)s *MeV)&(ACHILD(PT,1)*ACHILD(PT,2)> %(PhiPTsq)s *GeV*GeV)" % self.getProps()
+        Bs2PhiPhi_CC = "(ADAMASS('B_s0')< %(BsMassWindow)s *MeV)&(ACHILD(PT,1)*ACHILD(PT,2)> %(PhiPTsq)s *GeV*GeV)" % self.getProps()
         #Bs2PhiPhi_MC = ""
         #Add error estimate cuts:
         Phi2KK_DC = "(MIPCHI2DV(PRIMARY)> %(KaonIPCHI2)s )&"% self.getProps()+ Phi2KK_DC
