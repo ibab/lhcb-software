@@ -1,4 +1,4 @@
- )!$Id: release.notes,v 1.168 2010-01-22 13:04:06 pkoppenb Exp $
+ )!$Id: release.notes,v 1.169 2010-01-22 13:04:38 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -10,6 +10,7 @@
 
 ! 2010-01-22 - Patrick Koppenburg
  - Add StdVeryLooseDetachedKstar
+ - v6r5
 
 !========================= CommonParticles v6r4 2010-01-19 ===================
 ! 2010-01-18 - Greig Cowan
