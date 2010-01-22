@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.23 2009-11-26 14:07:38 jpalac Exp $
+#$Id: Wrappers.py,v 1.24 2010-01-22 16:00:20 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -102,7 +102,7 @@ class Selection(object) :
             print "Selection: Adding Required Selection ", sel.name()
             self.requiredSelections.append(sel)
         self._name = name
-        self.alg = Algorithm.clone(self._name)
+        self.alg = Algorithm.clone(self._name, InputLocations = [])
         print "Selection: cloned", type(self.alg) , Algorithm.name(), "to", self.alg.name()
         self._outputBranch = OutputBranch
         
