@@ -93,7 +93,6 @@ class Physics_10000Vis_1000L0_40Hlt1_Apr09 :
                  'Hlt1VeloASide',
                  'Hlt1VeloCSide',
                  'Hlt1AlignVelo',
-                 'Hlt1XPress',
                  'Hlt1ODINPhysics',
                  'Hlt1ODINTechnical',
                  'Hlt1Tell1Error' ,
