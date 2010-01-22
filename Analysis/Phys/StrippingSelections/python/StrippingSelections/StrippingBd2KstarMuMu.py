@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.7 $'
+__version__ = '$Revision: 1.8 $'
 
 """
 Bd->K*MuMu selections 
@@ -23,13 +23,15 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
                 ,  'BMassLowWin'        :  150       # MeV, high mass window
                 ,  'BDIRA'              : 0.9999     # adimentional
                 ,  'BFlightCHI2'        : 16         # adimentional 
-                ,  'BFlightCHI2Loose'   : 100        # adimentional 
+                ,  'BFlightCHI2Tight'   : 100        # adimentional 
                 ,  'BIPCHI2'            : 64         # adimentional  
-                ,  'BIPCHI2Loose'       : 25         # adimentional  
+                ,  'BIPCHI2Tight'       : 36         # adimentional  
                 ,  'BVertexCHI2'        : 36         # adimentional
                 ,  'BVertexCHI2Tight'   : 25         # adimentional
                 ,  'KstarHighMass'      : 2500       # MeV
                 ,  'IntDIRA'            : -0.95      # adimentional
+                ,  'IntVertexCHI2Tight' : 25         # adimentional
+                ,  'IntFlightCHI2'    : 9          # adimentional
                 ,  'TrackChi2'          : 10         # adimentional
                    }
 
@@ -115,8 +117,8 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         """
         from CommonParticles.StdVeryLooseDetachedKstar import StdVeryLooseDetachedKst2Kpi
         return StdVeryLooseDetachedKst2Kpi.clone("WideKstar4Bd2KstarMuMu",
-                                                 CombinationCut = "(ADAMASS('K*(892)0')<2500*MeV)",
-                                                 MotherCut = "(VFASPF(VCHI2/VDOF)<36)")
+                                                 CombinationCut = "AM < %(KstarHighMass)s" % self.getProps(),
+                                                 MotherCut = "(VFASPF(VCHI2/VDOF) < %(IntVertexCHI2Tight)s ) & ( BPVVDCHI2 > %(IntFlightCHI2)s )" % self.getProps() ) 
      
     def _Early_WideKstarBd(self):
         """
@@ -125,10 +127,10 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         algo = self._Early_Bd().clone("Early_WideKstar_Bd2KstarMuMu",
                                       InputLocations = ["StdLooseDiMuon", "WideKstar4Bd2KstarMuMu"])
         jcuts = algo.DaughtersCuts['J/psi(1S)']
-        jcuts = jcuts+" & (VFASPF(VCHI2/VDOF) < 25 )"
+        jcuts = jcuts+" & (VFASPF(VCHI2/VDOF) < %(IntVertexCHI2Tight)s )" % self.getProps()
         algo.DaughtersCuts['J/psi(1S)'] = jcuts
         algo.CombinationCut = "(ADAMASS('B0') < %(BMassMedWin)s *MeV)"  % self.getProps()
-        algo.MotherCut = "(VFASPF(VCHI2/VDOF) < %(BVertexCHI2Tight)s ) & (BPVDIRA> %(BDIRA)s ) & (BPVVDCHI2 > %(BFlightCHI2)s ) & (BPVIPCHI2() < %(BIPCHI2)s )"  % self.getProps()
+        algo.MotherCut = "(VFASPF(VCHI2/VDOF) < %(BVertexCHI2Tight)s ) & (BPVDIRA> %(BDIRA)s ) & (BPVVDCHI2 > %(BFlightCHI2Tight)s ) & (BPVIPCHI2() < %(BIPCHI2Tight)s )"  % self.getProps()
         return algo
     
         
@@ -164,10 +166,11 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         """
         The Bd algorithm for no MuID dimuons : clone of Bd algorithm
         """
-        algo = self._Early_Bd().clone("Early_NoMuID_Bd2KstarMuMu",
-                                      InputLocations = ["NoMuIDDiMuonForBd2KstarMuMu",
-                                                        "StdVeryLooseDetachedKst2Kpi"])
-        algo.DaughtersCuts['J/psi(1S)'] =  "(BPVDIRA> %(IntDIRA)s ) & (INTREE((ABSID=='mu-') & (TRCHI2DOF< %(TrackChi2)s ))) & (INTREE((ABSID=='pi+') & (TRCHI2DOF< %(TrackChi2)s )))" % self.getProps()
+        algo = self._Early_WideKstarBd().clone("Early_NoMuID_Bd2KstarMuMu",
+                                               InputLocations = ["NoMuIDDiMuonForBd2KstarMuMu",
+                                                                 "StdVeryLooseDetachedKst2Kpi"])
+        algo.DaughtersCuts['J/psi(1S)'] =  "(BPVDIRA> %(IntDIRA)s ) & (INTREE((ABSID=='mu-') & (TRCHI2DOF< %(TrackChi2)s ))) & (INTREE((ABSID=='pi+') & (TRCHI2DOF< %(TrackChi2)s ))) & ( BPVVDCHI2 > %(IntFlightCHI2)s )" % self.getProps()
+        algo.CombinationCut = "(ADAMASS('B0') < %(BMassLowWin)s *MeV)"  % self.getProps()
         return algo
 
     def Early_NoMuIDLine(self):
@@ -205,7 +208,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         algo = self._Early_Bd().clone("Early_eMu_Bd2KstarMuMu",
                                       InputLocations = ["MuonEleForBd2KstarMuMu",
                                                         "StdVeryLooseDetachedKst2Kpi"])
-        algo.DaughtersCuts['J/psi(1S)'] =  "(BPVDIRA> %(IntDIRA)s ) & (INTREE((ABSID=='mu-') & (TRCHI2DOF< %(TrackChi2)s ))) & (INTREE((ABSID=='e-') & (TRCHI2DOF< %(TrackChi2)s )))" % self.getProps()
+        algo.DaughtersCuts['J/psi(1S)'] = "(BPVDIRA> %(IntDIRA)s ) & (INTREE((ABSID=='mu-') & (TRCHI2DOF< %(TrackChi2)s ))) & (INTREE((ABSID=='e+') & (TRCHI2DOF< %(TrackChi2)s ))) & ( BPVVDCHI2 > %(IntFlightCHI2)s )"  % self.getProps()
         
         return algo
 
