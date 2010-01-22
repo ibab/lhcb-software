@@ -20,6 +20,7 @@ This version uses Gaudi v21r7 and LHCb v29r0
                     Tf/PatVeloTT v3r10, Tf/TfTools v1r9,
                     Tf/TrackMatching v2r26, Tf/TsaAlgorithms v3r15,
                     Tr/PatPV v3r12, Tr/TrackTools v3r25, Tr/TrackUtils v1r33
+										Tr/TrackMonitors v1r19, Tr/TrackFitter v2r44
 
 - In Calo/CaloMoniDst v4r3:
 	. Bugfixes and small changes in CaloProtoElectronMonitor,
@@ -81,6 +82,15 @@ This version uses Gaudi v21r7 and LHCb v29r0
 - In Tr/TrackUtils v1r33:
 	. add TrackListMerger and TrackListRefiner
 	. access containers by Range in TrackContainerCopy
+
+- In Tr/TrackMonitors v1r19:
+	. Added TrackITOverlapMonitor
+	. Reactivation of OTTimeMonitor
+	. Modified TrackVertexMonitor
+	. Other cosmetic changes
+
+- In Tr/TrackFitter v2r44:
+  . added more stable expression for standard smoother.
 
 </PRE><H1><A NAME=v7r12>2009-12-10 RecSys v7r12</A></H1><PRE>
 This version uses Gaudi v21r6 and LHCb v28r5
