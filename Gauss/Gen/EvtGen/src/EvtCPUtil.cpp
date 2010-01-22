@@ -351,7 +351,6 @@ void EvtCPUtil::OtherB( EvtParticle * p ,
 //============================================================================
 void EvtCPUtil::OtherB( EvtParticle *p,double &t, EvtId &otherb){
 
-
   static EvtId BSB=EvtPDL::getId("anti-B_s0");
   static EvtId BS0=EvtPDL::getId("B_s0");
   static EvtId B0B=EvtPDL::getId("anti-B0");
@@ -397,7 +396,9 @@ void EvtCPUtil::OtherB( EvtParticle *p,double &t, EvtId &otherb){
   }
 
 
-
+  report( ERROR , "EvtCPUtil" ) 
+    << "OtherB with 3 arguments must not be used in LHCb" << std::endl ;
+  ::abort() ;
   
   p->setLifetime();
 

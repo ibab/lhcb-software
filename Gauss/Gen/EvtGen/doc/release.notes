@@ -4,6 +4,13 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2010-01-22 - Patrick Robbe
+ - EvtBTo3piCP.cpp: use OtherB function with 4 arguments to have this
+   model working correctly in LHCb.
+ - EvtCPUtil.cpp: abort when using EvtCPUtil::OtherB with 3 arguments as
+   this does not work for hadronic environment
+ - EvtBTo3pi.F: reintroduce changes made long time ago for 64 bits
+
 !========================== EvtGen v11r7 2009-12-17 ==========================
 ! 2009-12-17 - Mark Whitehead
  - CPV Fix moved from EvtIncoherentMixing.cpp to EvtCPUtil.cpp so

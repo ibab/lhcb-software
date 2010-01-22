@@ -83,6 +83,17 @@ EvtGen::EvtGen(const char* const decayName,
 
   report(INFO,"EvtGen") << "Initializing EvtGen"<<endl;
 
+  if (randomEngine==0){
+    static EvtSimpleRandomEngine defaultRandomEngine;
+    EvtRandom::setRandomEngine((EvtRandomEngine*)&defaultRandomEngine);
+    report(INFO,"EvtGen") <<"No random engine given in "
+			  <<"EvtGen::EvtGen constructor, "
+			  <<"will use default EvtSimpleRandomEngine."<<endl;
+  }
+  else{
+    EvtRandom::setRandomEngine(randomEngine);    
+  }
+
   report(INFO,"EvtGen") << "Storing known decay models"<<endl;
   EvtModelReg dummy(extraModels);
 
@@ -101,17 +112,6 @@ EvtGen::EvtGen(const char* const decayName,
   _pdl.readPDT(pdtTableName);
 
   EvtDecayTable::readDecayFile(decayName,false);
-
-  if (randomEngine==0){
-    static EvtSimpleRandomEngine defaultRandomEngine;
-    EvtRandom::setRandomEngine((EvtRandomEngine*)&defaultRandomEngine);
-    report(INFO,"EvtGen") <<"No random engine given in "
-			  <<"EvtGen::EvtGen constructor, "
-			  <<"will use default EvtSimpleRandomEngine."<<endl;
-  }
-  else{
-    EvtRandom::setRandomEngine(randomEngine);    
-  }
 
   report(INFO,"EvtGen") << "Done initializing EvtGen"<<endl;
 
