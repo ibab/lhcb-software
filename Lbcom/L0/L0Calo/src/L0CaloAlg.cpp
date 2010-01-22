@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.62 2010-01-20 21:13:55 odescham Exp $
+// $Id: L0CaloAlg.cpp,v 1.63 2010-01-22 13:49:59 robbep Exp $
 
 /// local
 #include "L0CaloAlg.h"
@@ -64,12 +64,15 @@ int L0CaloAlg::s_hcalLUT[ 4 ][ 16 ] = {
 //=============================================================================
 L0CaloAlg::L0CaloAlg( const std::string & name , ISvcLocator * pSvcLocator)
   : L0AlgBase( name , pSvcLocator )
+  , m_usePsSpd( true )
+  , m_addEcalToHcal( true )
   , m_rawOutput  ( 2 )
   , m_bankVersion( 1 ) 
-  , m_nbValidation( 0 ) {
-  declareProperty( "UsePSSPD"        , m_usePsSpd       = true     ) ;
-  declareProperty( "AddECALToHCAL"   , m_addEcalToHcal  = true     ) ;
-  declareProperty( "CreateHCALLut"   , m_createHCALLut  = false    ) ;
+  , m_nbValidation( 0 )
+  , m_l0Cond( 0 ) {
+  declareProperty( "CreateHCALLut"   , m_createHCALLut      = false    ) ;
+  declareProperty( "UsePSSPD"        , m_usePsSpdOpts       = true     ) ;
+  declareProperty( "AddECALToHCAL"   , m_addEcalToHcalOpts  = true     ) ;
   m_spdMult = std::vector< int >( 16 , 0 ) ;
 }
 
@@ -115,6 +118,21 @@ StatusCode L0CaloAlg::initialize() {
   // Get PRS Detector Element
   m_prs = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );  
 
+  // Get Condition AddEcalToHcal to set correct processing in the
+  // L0Calo emulation
+  try {
+    registerCondition( "Conditions/Calibration/Ecal/L0Calibration" ,
+                       m_l0Cond ,
+                       &L0CaloAlg::updateL0Calibration ) ;
+  } catch ( GaudiException &e ) {
+    error() << e << endmsg ;
+    error() << "Cannot access Ecal/Calibration/L0Calibration condition" 
+            << endmsg ;
+    error() << "Run with options configuration: " << endmsg ;
+    m_usePsSpd = m_usePsSpdOpts ;
+    m_addEcalToHcal = m_addEcalToHcalOpts ;
+  }
+  
   // Link the ECAL cards to the HCAL cards for the trigger.
   // Method: An ECAL card is connected to a single HCAL card.
   // Get the bottom left cell, get is coordinates, extrapolate to HCAL and
@@ -1010,3 +1028,31 @@ void L0CaloAlg::createHCALLut( ) {
     }
   }
 }  
+
+//=============================================================================
+// Callback function to check L0Calo conditions
+//=============================================================================
+StatusCode L0CaloAlg::updateL0Calibration( ) {
+  debug() << "Updating L0Calibration" << endreq ;
+
+  if ( ! m_l0Cond -> exists( "AddECALToHCAL" ) ) {
+    Error("AddECALToHCAL parameter does not exist in DB").ignore() ;
+    Error("Use default AddECALToHCAL = true").ignore() ;
+    m_addEcalToHcal = m_addEcalToHcalOpts ;
+  } else {
+    m_addEcalToHcal = m_l0Cond -> param< int >( "AddECALToHCAL" ) ;
+  }
+
+  if ( ! m_l0Cond -> exists( "UsePSSPD" ) ) {
+    Error("UsePSSPD parameter does not exist in DB").ignore() ;
+    Error("Use default UsePSSPD = true").ignore() ;
+    m_usePsSpd = m_usePsSpdOpts ;
+  } else {
+    m_usePsSpd      = m_l0Cond -> param< int >( "UsePSSPD" ) ;
+  }
+  
+  debug() << "Add ECAL to HCAL = " << m_addEcalToHcal << endreq ;
+  debug() << "Use PS and SPD = " << m_usePsSpd << endreq ;
+  
+  return StatusCode::SUCCESS ;
+}
