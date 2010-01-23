@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2010-01-22 - Chris Jones
+ - Update maximum reconstructed CK theta value for aerogel from 290mrad to
+   320mrad, to match the observed spectrum from 2009 data
+
 !===================== RichRecBase v3r25 2009-09-02 ==========================
 ! 2009-07-31 - Chris Jones
  - Add protected method to pixel creator base class to allow derived classes

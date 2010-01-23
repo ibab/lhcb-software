@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : Rich::Rec::PhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.30 2009-10-02 18:58:46 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.31 2010-01-23 00:51:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -51,7 +51,7 @@ namespace Rich
 
       // defaults                 Aero    R1Gas   R2Gas
       m_minCKtheta     = list_of (0.075) (0.005) (0.005) ;
-      m_maxCKtheta     = list_of (0.290) (0.075) (0.035) ;
+      m_maxCKtheta     = list_of (0.320) (0.075) (0.035) ;
       m_minPhotonProb  = list_of (1e-15) (1e-15) (1e-15) ;
       if ( context() == "HLT" || context() == "Hlt" )
       {
