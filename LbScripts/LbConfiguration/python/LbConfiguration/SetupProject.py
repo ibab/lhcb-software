@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # pylint: disable-msg=E1103,W0141
-_cvs_id = "$Id: SetupProject.py,v 1.27 2010-01-22 17:18:23 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.28 2010-01-23 15:51:05 marcocle Exp $"
 
 import os, sys, re, time
 from xml.sax import parse, ContentHandler
@@ -11,7 +11,7 @@ from tempfile import mkdtemp, mkstemp
 
 from LbConfiguration import createProjectMakefile
 from LbUtils.CVS import CVS2Version
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.27 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.28 $")
 
 # subprocess is available since Python 2.4, but LbUtils guarantees that we can
 # import it also in Python 2.3
@@ -380,7 +380,6 @@ def _GetVersionTuple(pattern, versions):
             match = v
             break # exit the loop at the first match
     if not found and pattern is None: # fall back solution
-        match = version_strings.pop(0) # latest version
         # FIXME: Special hack for the transition from Dirac v4 to LHCbDirac v5.
         # Starting from Dirac v5, to use Dirac functionalities we have to do
         # "SetupProject LHCbDirac" even if "SetupProject Dirac" will succeed
@@ -388,8 +387,15 @@ def _GetVersionTuple(pattern, versions):
         # The hack is to ignore too recent versions of Dirac when the user did
         # not specify any.
         if versions[0][0].lower() == "dirac":
-            while match.startswith("v5") or match.startswith("v6"):
-                match = version_strings.pop(0)
+            match = None
+            for v in version_strings:
+                if not (v.startswith("v5") or v.startswith("v6")):
+                    match = v
+            if match is None:
+                return None
+        else:
+            # Normal behavior
+            match = version_strings.pop(0) # latest version
     
     # Now that we have a string (and not a pattern), we can extract the tuple
     for vers_tuple in versions:
