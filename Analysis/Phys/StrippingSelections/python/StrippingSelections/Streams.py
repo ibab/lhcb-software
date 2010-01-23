@@ -13,6 +13,7 @@ from StrippingSelections import StreamDimuon
 from StrippingSelections import StreamMiniBias
 from StrippingSelections import StreamSemileptonic
 from StrippingSelections import StreamV0
+from StrippingSelections import StreamRadiative
 
 allStreams = [ 
                StreamBhadron.stream,
@@ -22,5 +23,6 @@ allStreams = [
                StreamDimuon.stream, 
                StreamMiniBias.stream, 
                StreamSemileptonic.stream, 
-               StreamV0.stream
+               StreamV0.stream,
+               StreamRadiative.stream
              ] 

@@ -4,6 +4,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2010-01-23 - Fatima Soomro
+- Added the Bs2PhiGamma and Bd2KstGamma stripping selections (configubale: Stripping B2XGamma) according to what was presented at the stripping workshop on 17Dec2009.
+- Created a separate stream,'StreamRadiative' for these selections, and added the stream to Streams.py
 
 ! 2010-01-22 - Patrick Koppenburg
  - More lines in MuMuK*. Requires pkoppenb_20100122 of Phys/CommonParticles
