@@ -1,5 +1,5 @@
 // ============================================================================
-// $Id: CellParam.cpp,v 1.10 2009-05-06 15:59:13 odescham Exp $
+// $Id: CellParam.cpp,v 1.11 2010-01-23 20:21:01 robbep Exp $
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 #define  CALODET_CELLPARAM_CPP 1 
@@ -39,6 +39,7 @@ CellParam::CellParam( const LHCb::CaloCellID& id )
     , m_quality       ( CaloCellQuality::OK )
     , m_calibration   (  1.0    )
     , m_l0constant    (    0    )
+    , m_shift         (  0.0    )
     , m_ledDataRef    (  0.0    )
     , m_ledMoniRef    (  1.0    )
     , m_ledData       (  0.0    )
