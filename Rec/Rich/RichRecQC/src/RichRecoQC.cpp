@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.53 2010-01-20 01:19:35 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.54 2010-01-23 01:21:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -48,9 +48,9 @@ RecoQC::RecoQC( const std::string& name,
 
   // Ch Theta Rec histogram limits: low, high -> aerogel, C4F10, CF4
   declareProperty( "ChThetaRecHistoLimitMin",
-                   m_ckThetaMin = boost::assign::list_of(0.1)(0.03)(0.01) );
+                   m_ckThetaMin = boost::assign::list_of(0.100)(0.030)(0.010) );
   declareProperty( "ChThetaRecHistoLimitMax",
-                   m_ckThetaMax = boost::assign::list_of(0.3)(0.065)(0.036) );
+                   m_ckThetaMax = boost::assign::list_of(0.325)(0.065)(0.036) );
   declareProperty( "CKResHistoRange",
                    m_ckResRange = boost::assign::list_of(0.012)(0.006)(0.004) );
 

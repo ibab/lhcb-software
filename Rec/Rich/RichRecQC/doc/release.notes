@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-01-22 - Chris Jones
+ - Extend Maximum CK theta range in plots in RichRecoQC to match observed
+   spectrum in 2009 data.
+
 !======================= RichRecQC v2r35 2010-01-21 ========================
 ! 2010-01-18 - Antonis Papanestis
  - Added new histograms to the Alignment Monitor
