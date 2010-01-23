@@ -14,6 +14,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! 2010-01-22 - Sebastian Schleich
  - Bs->PhiPhi : remove Bs-DOCA cut
 
+! 2010-01-23 - Susan Haines
+- Added new inclusive B->D(Kshh)h lines (configurable)
+- Replaced exclusive B->D(KsPiPi)K lines to match new MC09 offline selection (configurable)
+
 ! 2010-01-21 - Anton Poluektov
  - Added streams descriptions in the comments for StreamXXX.py
 
