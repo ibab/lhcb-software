@@ -1,5 +1,5 @@
 
-__version__ = "$Id: Alignment.py,v 1.13 2010-01-18 20:33:29 papanest Exp $"
+__version__ = "$Id: Alignment.py,v 1.14 2010-01-24 22:07:27 papanest Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -20,6 +20,8 @@ class RichAlignmentConf(RichConfigurableUser):
         ,"AlignmentSequencer" : None
         ,"Detectors"        : [ "Rich1", "Rich2" ] # The RICH detectors to monitor
         ,"NTupleProduce"    : True
+        ,"R1NTupleProduce"  : False
+        ,"R2NTupleProduce"  : False
         ,"HistoProduce"     : True
         ,"WithMC"           : False     # set to True to use MC truth
         ,"HistoOutputLevel" : ["OnlyPrebookedMirrors", "OnlyPrebookedMirrors"] # options are: Minimal, OnlyPrebookedMirrors, Full
@@ -57,13 +59,13 @@ class RichAlignmentConf(RichConfigurableUser):
             if r1MinPCut < 0: r1MinPCut = 5
             RichAlignMoniR1.TrackSelector.MinPCut   = r1MinPCut
 
-            # RichAlignMoniR1.NTupleProduce = self.getProp("NTupleProduce")
+            RichAlignMoniR1.NTupleProduce = self.getProp("NTupleProduce") and self.getProp("R1NTupleProduce")
             RichAlignMoniR1.HistoProduce  = self.getProp("HistoProduce")
 
             if self.getProp("HistoOutputLevel")[0] == "Full" :
                 RichAlignMoniR1.MinimalHistoOutput = False
                 RichAlignMoniR1.OnlyPrebookedMirrors = False
-                RichAlignMoniR1.UseOnlyIsolatedTracks = True 
+                RichAlignMoniR1.UseOnlyIsolatedTracks = True
             elif self.getProp("HistoOutputLevel")[0] == "OnlyPrebookedMirrors" :
                 RichAlignMoniR1.MinimalHistoOutput = False
                 RichAlignMoniR1.OnlyPrebookedMirrors = True
@@ -96,13 +98,13 @@ class RichAlignmentConf(RichConfigurableUser):
             if r2MinPCut < 0: r2MinPCut = 10
             RichAlignMoniR2.TrackSelector.MinPCut   = r2MinPCut
 
-            # RichAlignMoniR2.NTupleProduce = self.getProp("NTupleProduce")
+            RichAlignMoniR2.NTupleProduce = self.getProp("NTupleProduce") and self.getProp("R2NTupleProduce")
             RichAlignMoniR2.HistoProduce  = self.getProp("HistoProduce")
 
             if self.getProp("HistoOutputLevel")[1] == "Full" :
                 RichAlignMoniR2.MinimalHistoOutput = False
                 RichAlignMoniR2.OnlyPrebookedMirrors = False
-                RichAlignMoniR2.UseOnlyIsolatedTracks = True 
+                RichAlignMoniR2.UseOnlyIsolatedTracks = True
             elif self.getProp("HistoOutputLevel")[1] == "OnlyPrebookedMirrors" :
                 RichAlignMoniR2.MinimalHistoOutput = False
                 RichAlignMoniR2.OnlyPrebookedMirrors = True

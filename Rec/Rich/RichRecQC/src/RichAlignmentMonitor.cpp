@@ -4,16 +4,18 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.16 2010-01-18 20:33:29 papanest Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.17 2010-01-24 22:08:10 papanest Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
  */
 
+
 // local
 #include "RichAlignmentMonitor.h"
 // From Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
+
 // RichKernel
 #include "RichKernel/RichHPDIdentifier.h"
 
@@ -29,7 +31,7 @@ DECLARE_ALGORITHM_FACTORY( AlignmentMonitor );
 //=============================================================================
 AlignmentMonitor::AlignmentMonitor( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-  : RichRecHistoAlgBase ( name , pSvcLocator ),
+  : RichRecTupleAlgBase ( name , pSvcLocator ),
     m_pTypes            ( 7, 0),
     m_trSelector        ( NULL ),
     m_richRecMCTruth    ( NULL ),
@@ -62,7 +64,7 @@ AlignmentMonitor::~AlignmentMonitor() {};
 StatusCode AlignmentMonitor::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecHistoAlgBase::initialize();
+  const StatusCode sc = RichRecTupleAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   m_deltaThetaHistoRange = floor((m_deltaThetaRange + 0.0014)*1000)/1000.0;
@@ -421,6 +423,21 @@ StatusCode AlignmentMonitor::execute() {
           plot2D( phiRec, delTheta, "HPDs/"+hpd_id, hpd_id, 0.0, 2*Gaudi::Units::pi,
                   -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
         }
+
+        if ( produceNTuples() )
+        {
+          Tuple myTuple = nTuple( "RichAlign", "Rich Alignment" );
+          myTuple->column( "thetaRec"  , thetaRec   );
+          myTuple->column( "phiRec"    , phiRec     );
+          myTuple->column( "deltaTheta", delTheta   );
+          myTuple->column( "sphMirror" , sphMirNum  );
+          myTuple->column( "secMirror" , flatMirNum );
+          myTuple->column( "hpd"       , Rich::DAQ::HPDIdentifier(gPhoton.smartID()).number() );
+          myTuple->column( "quarter"   , quarter    );
+          myTuple->column( "momentum"  ,sqrt(segment->trackSegment().bestMomentum().Mag2())/Gaudi::Units::GeV );
+          myTuple->write();
+        }
+
       }
     }
   }
@@ -442,7 +459,7 @@ StatusCode AlignmentMonitor::finalize()
   }
 
   // Execute base class method
-  return RichRecHistoAlgBase::finalize();
+  return RichRecTupleAlgBase::finalize();
 }
 
 //=========================================================================

@@ -4,7 +4,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::AlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.h,v 1.8 2010-01-18 16:02:49 papanest Exp $
+ *  $Id: RichAlignmentMonitor.h,v 1.9 2010-01-24 22:08:05 papanest Exp $
  *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-02-19
@@ -15,7 +15,7 @@
 
 // Include files
 // base class
-#include "RichRecBase/RichRecHistoAlgBase.h"
+#include "RichRecBase/RichRecTupleAlgBase.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -61,7 +61,7 @@ namespace Rich
        *  @date   2004-02-19
        */
 
-      class AlignmentMonitor : public RichRecHistoAlgBase
+      class AlignmentMonitor : public RichRecTupleAlgBase
       {
 
       public:
