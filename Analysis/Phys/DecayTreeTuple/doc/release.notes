@@ -7,8 +7,6 @@
 ! 2010-01-20 Basem Khanji
  - TupleToolTagging : Added the probability per tagger variables.
 
-
-
 !========================== DecayTreeTuple v2r10 2010-01-19 ==================
 ! 2010-01-19 - Patrick Koppenburg
  - TupleToolGeometry : protect against no PV locations
