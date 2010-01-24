@@ -14,7 +14,7 @@
 #include <cstdlib> 	 
 #include <cerrno> 	 
 #include <ctime>
-
+#include <sstream>
 #ifdef _WIN32
 #include <WinSock2.h>
 #include <Ws2tcpip.h>
@@ -47,20 +47,20 @@
 namespace MEPRxSys {
 #ifndef _WIN32
 // wrapper classes for Unix System structs
-struct MsgHdr: public msghdr {
-  MsgHdr(struct iovec *v, int n) {
-    msg_iov = v; msg_iovlen = n; msg_control = NULL; msg_controllen = 0; msg_name = NULL; msg_namelen = 0; }
-};
-struct InAddr: public in_addr {
-  InAddr(u_int32_t a) {
-    s_addr = a;
-  }
-};
-struct IOVec: public iovec {
-  IOVec(void *base, size_t len) {
-    iov_base = base; iov_len = len;
-  }
-};
+  struct MsgHdr: public msghdr {
+    MsgHdr(struct iovec *v, int n ) {
+      msg_iov = v; msg_iovlen = n; msg_control = NULL; msg_controllen = 0; msg_name = NULL; msg_namelen = 0; }
+  };
+  struct InAddr: public in_addr {
+    InAddr(u_int32_t a) {
+      s_addr = a;
+    }
+  };
+  struct IOVec: public iovec {
+    IOVec(void *base, size_t len) {
+      iov_base = base; iov_len = len;
+    }
+  };
 #endif // _WIN32
 
 std::string sys_err_msg(void) {
@@ -86,6 +86,35 @@ std::string dotted_addr(u_int32_t addr)
   return inet_ntoa(in);
 }
 
+int open_sock_udp(std::string &errmsg, int port)
+{
+  struct sockaddr_in si;
+  int s;
+  int on = 1;
+
+  if ((s = socket(PF_INET, SOCK_DGRAM, 0)) < 0) {
+    errmsg = "socket";
+    goto drop_out;
+  }
+  memset((char *) &si, 0, sizeof(si));
+  si.sin_family = AF_INET;
+  si.sin_port = htons(port);
+  si.sin_addr.s_addr = htonl(INADDR_ANY);
+  if (bind(s, (const sockaddr *) &si, sizeof(si)) == -1) {
+    errmsg = "bind";
+    goto drop_out;
+  }
+  if (setsockopt(s, SOL_SOCKET, SO_TIMESTAMP, 
+			     &on, sizeof(on))) {
+    errmsg = "setsockopt SO_TIMESTAMP";
+    goto shut_out;
+  }
+shut_out:
+  ::shutdown(s, SHUT_RD);
+drop_out:  
+  return -1;
+}
+
 int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname, 
           bool mepreq, std::string &errmsg) 
 {
@@ -93,6 +122,7 @@ int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname,
 #ifndef _WIN32
   char netdev_name[10];
   int fd;
+  int on = 1;
   if ((fd = open("/proc/raw_cap_hack", O_RDONLY)) != -1) {
     ioctl(fd, 0, 0);  
     close(fd);
@@ -105,15 +135,19 @@ int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname,
 #else
   addr.s_addr = myaddr;
 #endif
-  struct sockaddr_in saddr = {AF_INET, 0, addr,0, }; 
+  struct sockaddr_in saddr = {AF_INET, 0, addr,{0,}}; 
   if ((retSockFd = socket(AF_INET, SOCK_RAW, ipproto)) < 0) {
     errmsg = "socket";
     goto drop_out;
   }
-
   if (setsockopt(retSockFd, SOL_SOCKET, SO_RCVBUF, (const char *)
      &rxbufsiz, sizeof(rxbufsiz))) {
     errmsg = "setsockopt SO_RCVBUF";
+    goto shut_out;
+  }
+  if (setsockopt(retSockFd, SOL_SOCKET, SO_TIMESTAMP, 
+			     &on, sizeof(on))) {
+    errmsg = "setsockopt SO_TIMESTAMP";
     goto shut_out;
   }
   if (myaddr == INADDR_NONE) { 
@@ -150,7 +184,6 @@ drop_out:
   return -1;
 }
 
-
 int recv_msg(int sockfd, void *buf, int len,  int flags)
 {
   int ioflags = 0;
@@ -159,7 +192,7 @@ int recv_msg(int sockfd, void *buf, int len,  int flags)
   struct MsgHdr msg(&bufs, 1);
 #endif
   if (flags & MEPRX_PEEK) {
-   ioflags |= MSG_PEEK;
+    ioflags |= MSG_PEEK;
   }
 #ifdef _WIN32
   int rlen = recv(sockfd, (char *) buf, len, ioflags);
@@ -169,6 +202,75 @@ int recv_msg(int sockfd, void *buf, int len,  int flags)
 #endif
 }
 
+int recv_msg(int sockfd, void *buf, int len,  int flags, u_int64_t *whentsc, 
+	     u_int64_t *when, std::string &errstr)
+{
+  int ioflags = 0;
+#ifndef _WIN32
+  struct IOVec bufs(buf, len);
+#endif
+  if (flags & MEPRX_PEEK) {
+   ioflags |= MSG_PEEK;
+  }
+#ifdef _WIN32
+  int rlen = recv(sockfd, (char *) buf, len, ioflags);
+  *whentsc = *when = 0; // the X-Box knows no good time...
+  return ((rlen == -1 && WSAGetLastError() == WSAEMSGSIZE) ? len : rlen);  
+#else 
+  union {
+    struct cmsghdr cm;
+    char control[CMSG_SPACE(sizeof(struct timeval))];
+  } cmsg_un;
+  struct cmsghdr *cmsg;
+  struct timeval *tv;
+  struct iovec vec[1];
+  struct msghdr msg;
+
+  when = 0;
+  vec[0].iov_base = buf;
+  vec[0].iov_len = len;
+  ::memset(&msg, 0, sizeof(msg));
+  ::memset(&cmsg_un, 0, sizeof(cmsg_un));
+  msg.msg_iov = vec;
+  msg.msg_iovlen = 1;
+  msg.msg_control = cmsg_un.control;
+  msg.msg_controllen = sizeof(cmsg_un.control);
+  int s = ::recvmsg(sockfd, &msg, ioflags | MSG_DONTWAIT);
+  *whentsc = rdtsc();
+  if (s <= 0) {
+    if (errno == EAGAIN || EINTR)
+      return 0;
+    return s;
+  }
+  if (msg.msg_flags & MSG_TRUNC) {
+    errstr = "received truncated message";
+    return s;
+  }
+  if (msg.msg_flags & MSG_CTRUNC) {
+    errstr = "received truncated ancillary data";
+    return s;
+  }
+  if (msg.msg_controllen < sizeof(cmsg_un.control)) {
+    std::stringstream out;
+    out << "received short ancillary data (" <<msg.msg_controllen << "/" << 
+      sizeof(cmsg_un.control) << ")";
+    errstr = out.str();
+    return s;
+  }
+  tv = 0;
+  for (cmsg = CMSG_FIRSTHDR(&msg); cmsg != NULL; 
+       cmsg = CMSG_NXTHDR(&msg, cmsg)) {
+    if (cmsg->cmsg_level == SOL_SOCKET && cmsg->cmsg_type == SCM_TIMESTAMP)
+      tv = (struct timeval *) CMSG_DATA(cmsg);
+  }
+  if (tv) {
+    *when = 1000000 * tv->tv_sec + tv->tv_usec;
+  } 
+  return s;
+#endif // ifndef _WIN32
+}
+
+
 #ifdef _WIN32
 int send_msg(int sockfd, u_int32_t addr, u_int8_t protocol, void *buf, int len, int flags) {
   int ioflags = 0;
@@ -177,19 +279,19 @@ int send_msg(int sockfd, u_int32_t addr, u_int8_t protocol, void *buf, int len, 
   struct sockaddr_in sinaddr = {AF_INET, protocol, in, 0,}; 
   return (sendto(sockfd, (const char *) buf, len, ioflags, 
            (const struct sockaddr *) &sinaddr, sizeof(sinaddr)));
+
 #else
 int send_msg(int sockfd, u_int32_t addr, u_int8_t protocol, void *buf, int len, int /* flags */) {
   struct IOVec bufs(buf, len);  
   struct MsgHdr msg(&bufs, 1);
   struct in_addr in;
   in.s_addr = addr;
-  static struct sockaddr_in _addr = { AF_INET, protocol, in, 0,};
+  static struct sockaddr_in _addr = { AF_INET, protocol, in, {0,}};
   msg.msg_name = &_addr;
   msg.msg_namelen = sizeof(_addr);
   return (sendmsg(sockfd, &msg, MSG_DONTWAIT | MSG_CONFIRM));
 #endif
 }
-
 
 int
 send_msg_arb_source(int raw_socket, u_int8_t proto, u_int32_t srcAddr, u_int32_t destAddr, void *buf, int len, u_int16_t datagramID) {
@@ -270,16 +372,17 @@ open_sock_arb_source(int ipproto, int rxbufsiz, std::string &errmsg) {
 
   int val;
   val = MEP_REQ_TTL;
-  if (setsockopt(raw_socket, SOL_IP, IP_TTL, (const char *) &val, sizeof(int))) {
+  if (setsockopt(raw_socket, SOL_IP, IP_TTL, (const char *) &val, 
+		 sizeof(int))) {
     errmsg = "setsockopt SOL_IP TTL";
     return -1;
   }
-
   return raw_socket;
 }
 
 
-int parse_addr(const std::string &straddr, u_int32_t &addr)
+int 
+parse_addr(const std::string &straddr, u_int32_t &addr)
 {
 #ifdef _WIN32
   if ((addr = inet_addr(straddr.c_str())) == INADDR_NONE) return 1;
@@ -424,3 +527,8 @@ u_int32_t IPStringToBits(std::string &StrIPAddr) {
 }
 
 } // namespace MEPRxSys
+#if 0
+;;; Local Variables: ***
+;;; c-basic-offset:2 ***
+;;; End: ***
+#endif

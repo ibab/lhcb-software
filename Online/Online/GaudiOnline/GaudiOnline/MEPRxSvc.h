@@ -22,14 +22,15 @@
 #include "GaudiKernel/Message.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IMonitorSvc.h"
-
+#include "GaudiKernel/IHistogramSvc.h"
+#include "AIDA/IHistogram1D.h"
 // Online stuff
 #include "RTL/rtl.h"
 #include "RTL/types.h"
 #include "NET/IPHeader.h"
 #include "GaudiOnline/MEPHdr.h"
+#include "GaudiOnline/DAQError.h"
 #include "dis.hxx"
-
 
 // Forward declarations
 class MsgStream;
@@ -51,18 +52,7 @@ namespace LHCb  {
   class MEPRQCommand;
 
   struct DAQErrorEntry {    
-    enum DAQErrorType { 
-      MissingSrc = 0, 
-      BadPkt, 
-      Multiple,
-      ShortPkt,
-      WrongPartitionID,
-      WrongPackingFactor,
-      EmptyMEP,
-      DAQ_LAST_ERROR  /* LoopType */
-    };
-      
-    /* LHCb Bankheader */
+       /* LHCb Bankheader */
     u_int16_t m_magic;
     u_int16_t m_length;
     u_int8_t  m_type;
@@ -89,8 +79,8 @@ namespace LHCb  {
     char                       *m_allNames;
     int                         m_dataSock; /* Raw socket for receiving data.*/
     int                         m_mepSock;  /* Raw socket to send MEP requests.*/
-    EvtBuilderState             m_ebState;
-    bool                        m_forceStop;
+	    EvtBuilderState             m_ebState;
+	    bool                        m_forceStop;
     bool                        m_RTTCCompat;
     bool                        m_dynamicMEPRequest;
     bool                        m_dropIncompleteEvents;	
@@ -134,6 +124,7 @@ namespace LHCb  {
     
     IIncidentSvc*               m_incidentSvc; 
     IMonitorSvc*                m_monSvc;
+    IHistogramSvc*              m_histSvc;
 
     int                         m_sourceID;
 
@@ -176,7 +167,10 @@ namespace LHCb  {
     std::vector<int64_t>        m_truncPkt;
     std::vector<int64_t>        m_emptyPkt;
     std::vector<int64_t>	m_multipleEvt;
-
+    IHistogram1D                *m_complTimeTSC; // how long to complete an evt
+    IHistogram1D                *m_idleTimeTSC;  // how long between tow evts
+    IHistogram1D                *m_complTimeSock; // how long to complete an evt
+    IHistogram1D                *m_idleTimeSock;  // how long between tow evts
     /// Standard Constructor
     MEPRxSvc(const std::string& name, ISvcLocator* svc);
     /// Standard Destructor
