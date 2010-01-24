@@ -15,19 +15,16 @@ from Gaudi.Configuration import *
 from StrippingConf.StrippingStream import StrippingStream
 
 from StrippingSelections import StrippingDiMuon
-from StrippingSelections import StrippingBs2JpsiPhi
-from StrippingSelections import StrippingBs2JpsiPhiLoose
+from StrippingSelections.StrippingBs2JpsiPhi import StrippingBs2JpsiPhiConf
 from StrippingSelections import StrippingBs2JpsiPhiDetached
 from StrippingSelections import StrippingBs2JpsiPhiPrescaled
 from StrippingSelections import StrippingBd2JpsiKS
-from StrippingSelections import StrippingBd2JpsiKstar
-from StrippingSelections import StrippingBd2JpsiKstarLoose
+from StrippingSelections.StrippingBd2JpsiKstar import StrippingBd2JpsiKstarConf 
 from StrippingSelections import StrippingBd2JpsiKstarDetached
 from StrippingSelections import StrippingBd2JpsiKstarDetachedR
 from StrippingSelections import StrippingBs2Jpsif0
 from StrippingSelections import StrippingBiasedBs2JpsiPhi
-from StrippingSelections import StrippingBu2JpsiK
-from StrippingSelections import StrippingBu2JpsiKLoose
+from StrippingSelections.StrippingBu2JpsiK import StrippingBu2JpsiKConf
 from StrippingSelections import StrippingBu2JpsiKDetached
 from StrippingSelections import StrippingBu2JpsiKDetachedR
 from StrippingSelections.StrippingBu2LLK  import StrippingBu2LLKConf
@@ -36,14 +33,14 @@ from StrippingSelections.StrippingBd2KstarMuMu import StrippingBd2KstarMuMuConf
 stream = StrippingStream("Dimuon")
 stream.appendLines( [ 
 		        StrippingDiMuon.line, 
-		        StrippingBs2JpsiPhi.line,  
-		        StrippingBs2JpsiPhiLoose.line,  
+		        StrippingBs2JpsiPhiConf().nominal_line(),  
+		        StrippingBs2JpsiPhiConf().loose_line(),  
 		        StrippingBs2JpsiPhiPrescaled.line,  
 			StrippingBs2JpsiPhiDetached.line, 
 		        StrippingBd2JpsiKS.line1,  
 		        StrippingBd2JpsiKS.line2,  
-		        StrippingBd2JpsiKstar.line,  
-		        StrippingBd2JpsiKstarLoose.line,  
+		        StrippingBd2JpsiKstarConf().nominal_line(),  
+		        StrippingBd2JpsiKstarConf().loose_line(),  
 		        StrippingBd2JpsiKstarDetached.line,  
 		        StrippingBd2JpsiKstarDetachedR.line,  
 		        StrippingBd2KstarMuMuConf().line_for_nominal_low(),  
@@ -56,8 +53,8 @@ stream.appendLines( [
 		        StrippingBd2KstarMuMuConf().Early_eMuLine(),  
 		        StrippingBs2Jpsif0.line,  
 		        StrippingBiasedBs2JpsiPhi.line,  
-		        StrippingBu2JpsiK.line,  
-		        StrippingBu2JpsiKLoose.line,  
+		        StrippingBu2JpsiKConf().nominal_line(),  
+		        StrippingBu2JpsiKConf().loose_line(),  
 		        StrippingBu2JpsiKDetached.line,  
 		        StrippingBu2JpsiKDetachedR.line,
 		        StrippingBu2LLKConf().mmK()

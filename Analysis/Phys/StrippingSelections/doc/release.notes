@@ -4,9 +4,18 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2010-01-25 - Greig Cowan
+ - Converted Bs2JpsiPhi, Bd2JpsiKstar and Bu2JpsiK lifetime unbiased selections
+   to configurables. Bs2JpsiPhiConf controls both the nominal stripping
+   selection and the loose selection for early data. Similarly for the other
+   two channels.
+ - Converted Bd2DstarMuNuLoose to configurable. ToDo: combine this with the
+   nominal selection for this channel.
+
 ! 2010-01-23 - Fatima Soomro
-- Added the Bs2PhiGamma and Bd2KstGamma stripping selections (configubale: Stripping B2XGamma) according to what was presented at the stripping workshop on 17Dec2009.
-- Created a separate stream,'StreamRadiative' for these selections, and added the stream to Streams.py
+ - Added the Bs2PhiGamma and Bd2KstGamma stripping selections (configubale: Stripping B2XGamma) according to what was presented at the stripping workshop on 17Dec2009.
+ - Created a separate stream,'StreamRadiative' for these selections, and added the stream to Streams.py
 
 ! 2010-01-22 - Patrick Koppenburg
  - More lines in MuMuK*. Requires pkoppenb_20100122 of Phys/CommonParticles

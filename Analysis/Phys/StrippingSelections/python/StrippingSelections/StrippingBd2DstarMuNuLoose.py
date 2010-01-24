@@ -1,58 +1,94 @@
-# $Id: StrippingBd2DstarMuNuLoose.py,v 1.1 2010-01-18 10:15:48 gcowan Exp $
+# $Id: StrippingBd2DstarMuNuLoose.py,v 1.2 2010-01-24 23:36:01 gcowan Exp $
 
 __author__ = 'Greig Cowan, Marta Calvi'
 __date__ = '10/12/2009'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Bd->Dstar mu nu loose stripping selection using LoKi::Hybrid and python
 configurables.
 '''
+
 from Gaudi.Configuration import *
-from StrippingConf.StrippingLine import StrippingLine
-from Configurables import CombineParticles
-import GaudiKernel.SystemOfUnits as Units
+from LHCbKernel.Configuration import *
+from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter	
+from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 
-Bd2DstarMu = CombineParticles("Bd2DstarMuLoose")
-Bd2DstarMu.DecayDescriptor = "[B0 -> D*(2010)- mu+]cc"
-Bd2DstarMu.InputLocations = ["StdVeryLooseDstarWithD02KPi", "StdLooseMuons"]
+class StrippingBd2DstarMuNuLooseConf(LHCbConfigurableUser):
+    """
+    Definition of LOOSE Bd->D*MuNu stripping. 
+    """
+    __slots__ = { 
+			"MuonTRCHI2"		: 10.0		# adimensional 
+		,	"MuonPT"		: 800.0		# MeV 
+		,	"MuonMIPDV"		: 0.04		# mm
+		,	"D0PT"			: 1600.		# MeV
+		,	"KaonPT"		: 350.0		# MeV  
+		,	"PionPT"		: 350.0		# MeV  
+		,	"BdDeltaMassLower"	: -2279.0	# MeV
+		,	"BdDeltaMassUpper"	: 0.0		# MeV
+		,	"BdVCHI2" 		: 20.0		# adimensional
+                }
+    
+    def line( self ):
+        from StrippingConf.StrippingLine import StrippingLine
+	Bd2DstarMuNuSel = self.Bd2DstarMuNu()
+	Bd2DstarMuNuSeq = SelectionSequence("SeqBd2DstarMuNuLoose", TopSelection = Bd2DstarMuNuSel)
+	return StrippingLine('Bd2DstarMuNuLooseLine', prescale = 1, algos = [Bd2DstarMuNuSeq])
+     	
+    def Bd2DstarMuNu( self ):
+	stdVeryLooseMuons = DataOnDemand("stdVeryLooseMuons", Location = "StdVeryLooseMuons")
+	stdVeryLooseDstar = DataOnDemand("stdVeryLooseDstarWithD02KPi", Location = "StdVeryLooseDstarWithD02KPi")
+	stdVeryLooseDstarDCS = DataOnDemand("stdVeryLooseDstarWithD02KPiDCS", Location = "StdVeryLooseDstarWithD02KPiDCS")
+	
+	Bd2DstarMu = CombineParticles("Bd2DstarMuNuLoose")
+	Bd2DstarMu.DecayDescriptor = "[B0 -> D*(2010)- mu+]cc"
 
-# D* has the following decay chain:  D*+ -> ( D0 -> K pi ) pi 
-muonCuts = "  (ISLONG)"\
-           "& (PT > 800.*MeV)"\
-           "& (MIPDV(PRIMARY)>0.04*mm)"\
-           "& (TRCHI2DOF < 10.)"
+	# D* has the following decay chain:  D*+ -> ( D0 -> K pi ) pi 
+	muonCuts = "  (ISLONG)"\
+           	   "& (PT > %(MuonPT)s *MeV)"\
+           	   "& (MIPDV(PRIMARY) > %(MuonMIPDV)s *mm)"\
+           	   "& (TRCHI2DOF < %(MuonTRCHI2)s)" % self.getProps()
 
-DstarCutsD0 = "CHILDCUT("\
-             "    (PT > 1600.*MeV)"\
-             ",1)"
+	DstarCutsD0 = "CHILDCUT("\
+             	      "    (PT > %(D0PT)s *MeV)"\
+             	      ",1)" % self.getProps()
 
-DstarCutsK = "& CHILDCUT("\
-            "   CHILDCUT("\
-            "       (ISLONG)"\
-            "     & (PT > 350.*MeV)"\
-            "   ,1)"\
-            ",1)"
+	DstarCutsK = "& CHILDCUT("\
+                     "   CHILDCUT("\
+                     "       (ISLONG)"\
+                     "     & (PT > %(KaonPT)s *MeV)"\
+                     "   ,1)"\
+                     ",1)" % self.getProps()
 
-DstarCutsPi= "& CHILDCUT("\
-             "   CHILDCUT("\
-             "       (ISLONG)"\
-             "     & (PT > 350.*MeV)"\
-             "   ,2)"\
-             ",1)"
+	DstarCutsPi= "& CHILDCUT("\
+                     "   CHILDCUT("\
+             	     "       (ISLONG)"\
+             	     "     & (PT > %(PionPT)s *MeV)"\
+             	     "   ,2)"\
+             	     ",1)" % self.getProps()
 
-finalDstarCuts = DstarCutsD0 + DstarCutsK + DstarCutsPi 
+	finalDstarCuts = DstarCutsD0 + DstarCutsK + DstarCutsPi 
 
-Bd2DstarMu.DaughtersCuts = { "mu-" : muonCuts,
-                             "D*(2010)+" : finalDstarCuts}
+	Bd2DstarMu.DaughtersCuts = { "mu-" : muonCuts,
+                             	     "D*(2010)+" : finalDstarCuts}
 
-Bd2DstarMu.CombinationCut = "  (DAMASS('B0') > -2279.*MeV)"\
-                            "& (DAMASS('B0') < 0*MeV)"
+	Bd2DstarMu.CombinationCut = "  (DAMASS('B0') > %(BdDeltaMassLower)s *MeV)"\
+                            	    "& (DAMASS('B0') < %(BdDeltaMassUpper)s *MeV)" % self.getProps()
 
-Bd2DstarMu.MotherCut = "  (VFASPF(VCHI2) < 20.)"
+	Bd2DstarMu.MotherCut = "  (VFASPF(VCHI2) < %(BdVCHI2)s)" % self.getProps()
+	
+	Bd2DstarMuSel = Selection("SelBd2DstarMuNuLoose",
+                 	Algorithm = Bd2DstarMu,
+                 	RequiredSelections = [stdVeryLooseMuons, stdVeryLooseDstar, stdVeryLooseDstarDCS])
+	return Bd2DstarMuSel
 
-
-line = StrippingLine('Bd2DstarMuNuLooseLine'
-               , prescale = 1
-               , algos = [Bd2DstarMu]
-               )
+    def getProps(self) :
+        """
+        From HltLinesConfigurableUser
+        @todo Should be shared between Hlt and stripping
+        """
+        d = dict()
+        for (k,v) in self.getDefaultProperties().iteritems() :
+            d[k] = getattr(self,k) if hasattr(self,k) else v
+        return d

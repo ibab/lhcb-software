@@ -1,48 +1,112 @@
-# $Id: StrippingBu2JpsiK.py,v 1.1 2009-10-13 13:24:16 poluekt Exp $
+# $Id: StrippingBu2JpsiK.py,v 1.2 2010-01-24 23:36:04 gcowan Exp $
 
-__author__ = 'Greig Cowan'
-__date__ = '20/05/2009'
-__version__ = '$Revision: 1.1 $'
+__author__ = ['Greig Cowan']
+__date__ = '24/01/2010'
+__version__ = '$Revision: 1.2 $'
 
 '''
-Bu->JpsiK stripping selection using LoKi::Hybrid and python
-configurables. PV refitting is done. Based on roadmap selection
-with loose PID cuts.
+Bu->JpsiK lifetime unbiased stripping selection using LoKi::Hybrid and
+python configurables. PV refitting is done. Implements the nominal 
+and loose stripping selections.
 '''
 
 from Gaudi.Configuration import *
-from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
-import GaudiKernel.SystemOfUnits as Units
+from LHCbKernel.Configuration import *
+from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter	
+from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 
-######
-# Bu #
-######
-Bu2JpsiK = CombineParticles("StripBu2JpsiK")
-Bu2JpsiK.DecayDescriptor = "[ B+ -> J/psi(1S) K+ ]cc"
-Bu2JpsiK.InputLocations = ["StdLTUnbiasedJpsi2MuMu",
-                           "StdLooseKaons"]
+class StrippingBu2JpsiKConf(LHCbConfigurableUser):
+    """
+    Definition of Bu->JpsiK stripping.
+    """
+    __slots__ = { 
+               		"MuonTRCHI2Loose"	: 10.0	# adimensional 
+		,	"MuonPTLoose"		: 250.0	# MeV 
+		,	"JpsiMassWinLoose"	: 80.0	# MeV
+		,	"JpsiVCHI2Loose"	: 20.0	# adimensional
+		,	"JpsiPTLoose"		: 500.0	# MeV
+		,	"KaonPIDKMinusPIDp"	: -6.0	# adimensional  
+		,	"KaonPIDK"		: -5.0	# adimensional  
+		,	"KaonTRCHI2"		: 4.0	# adimensional  
+		,	"KaonTRCHI2Loose"	: 10.0	# adimensional  
+		,	"KaonPT"		: 1300.0# # MeV  
+		,	"KaonPTLoose"		: 250.0	# MeV  
+		,	"KaonP"			: 10000.0# MeV  
+		,	"BuMassWin"		: 300.0	# MeV
+		,	"BuMassWinLoose"	: 300.0	# MeV
+		,	"BuVCHI2" 		: 5.0	# adimensional
+		,	"BuVCHI2Loose" 		: 20.0	# adimensional
+		,	"BuBPVIPCHI2" 		: 25.0	# adimensional
+          }
+    
+    def nominal_line( self ):
+        from StrippingConf.StrippingLine import StrippingLine
+	Bu2JpsiKSel = self.Bu2JpsiK()
+	Bu2JpsiKSeq = SelectionSequence("SeqBu2JpsiK", TopSelection = Bu2JpsiKSel)
+	return StrippingLine('Bu2JpsiKLine', prescale = 1, algos = [Bu2JpsiKSeq])   
+     	
+    def loose_line( self ):
+        from StrippingConf.StrippingLine import StrippingLine
+	Bu2JpsiKSel = self.Bu2JpsiKLoose()
+	Bu2JpsiKSeq = SelectionSequence("SeqBu2JpsiKLoose", TopSelection = Bu2JpsiKSel)
+	return StrippingLine('Bu2JpsiKLooseLine', prescale = 1, algos = [Bu2JpsiKSeq])   
+     	
+    def Jpsi2MuMuLoose( self ):
+        StdVeryLooseJpsi2MuMu = DataOnDemand("StdVeryLooseJpsi2MuMu", "StdVeryLooseJpsi2MuMu")
+	_JpsiFilter = FilterDesktop("JpsiFilterForBu2JpsiKLoose")
+	_JpsiFilter.Code = "  (MINTREE('mu+'==ABSID, TRCHI2DOF) < %(MuonTRCHI2Loose)s)" \
+			   "& (MINTREE('mu+'==ABSID, PT) > %(MuonPTLoose)s *MeV)" \
+        	           "& (PT > %(JpsiPTLoose)s *MeV)" \
+        	           "& (ADMASS('J/psi(1S)') < %(JpsiMassWinLoose)s *MeV)" \
+        	           "& (VFASPF(VCHI2/VDOF) < %(JpsiVCHI2Loose)s)" % self.getProps()
 
-Bu2JpsiK.addTool( OfflineVertexFitter() )
-Bu2JpsiK.VertexFitters.update( { "" : "OfflineVertexFitter"} )
-Bu2JpsiK.OfflineVertexFitter.useResonanceVertex = False
-Bu2JpsiK.ReFitPVs = True
+	Jpsi = Selection("Jpsi2MuMuForBu2JpsiKLoose",
+			Algorithm = _JpsiFilter,
+			RequiredSelections = [StdVeryLooseJpsi2MuMu])
+	return Jpsi
 
-Bu2JpsiK.DaughtersCuts = {"K+" :
-                          "  ((PIDK - PIDp)>-6.)"\
-                          "& (PIDK > -5.)"\
-                          "& (TRCHI2DOF<4.)"\
-                          "& (PT>1300.*MeV)"\
-                          "& (P>10000.*MeV)"
-                          }
+    def Bu2JpsiK( self ):
+	Jpsi = DataOnDemand("StdLTUnbiasedJpsi2MuMu", "StdLTUnbiasedJpsi2MuMu")
+	StdLooseKaons = DataOnDemand("StdLooseKaons", "StdLooseKaons")
+	_Bu = CombineParticles("Bu2JpsiK")
+      	_Bu.DecayDescriptor = "[B+ -> J/psi(1S) K+]cc"
+	_Bu.DaughtersCuts = {"K+": "  ((PIDK - PIDp) > %(KaonPIDKMinusPIDp)s)"\
+ 				   "& (PIDK > %(KaonPIDK)s)"\
+                          	   "& (TRCHI2DOF < %(KaonTRCHI2)s)"\
+                         	   "& (PT > %(KaonPT)s *MeV)"\
+                        	   "& (P > %(KaonP)s *MeV)" % self.getProps()}
+ 	_Bu.CombinationCut = "ADAMASS('B+') < %(BuMassWin)s *MeV" % self.getProps()
+        _Bu.MotherCut = "(VFASPF(VCHI2/VDOF) < %(BuVCHI2)s) & (BPVIPCHI2() < %(BuBPVIPCHI2)s)" % self.getProps()
+        _Bu.ReFitPVs = True
+	_Bu.addTool( OfflineVertexFitter() )
+	_Bu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+	_Bu.OfflineVertexFitter.useResonanceVertex = False
 
-Bu2JpsiK.CombinationCut = "ADAMASS('B+') < 300.*MeV"
-Bu2JpsiK.MotherCut = "(VFASPF(VCHI2/VDOF) < 5.) & (BPVIPCHI2() < 25.)"
+	Bu = Selection("SelBu2JpsiK",
+                 	Algorithm = _Bu,
+                 	RequiredSelections = [Jpsi, StdLooseKaons])
+	return Bu
 
-############################################
-# Create StrippingLine with this selection #
-############################################
-line = StrippingLine('Bu2JpsiKLine'
-               , prescale = 1
-               , algos = [Bu2JpsiK]
-               )
+    def Bu2JpsiKLoose( self ):
+	Jpsi = self.Jpsi2MuMuLoose()
+	StdNoPIDsKaons = DataOnDemand("StdNoPIDsKaons", "StdNoPIDsKaons")
+	_Bu = CombineParticles("Bu2JpsiKLoose",
+        	               DecayDescriptor = "[B+ -> J/psi(1S) K+]cc",
+			       DaughtersCuts = {"K+": "(PT > %(KaonPTLoose)s *MeV) & (TRCHI2DOF < %(KaonTRCHI2Loose)s)" % self.getProps()},
+                	       CombinationCut = "ADAMASS('B+') < %(BuMassWinLoose)s *MeV" % self.getProps(),
+              		       MotherCut = "(VFASPF(VCHI2/VDOF) < %(BuVCHI2Loose)s)" % self.getProps(),
+                       	       ReFitPVs = True)
+	Bu = Selection("SelBu2JpsiKLoose",
+                 	Algorithm = _Bu,
+                 	RequiredSelections = [Jpsi, StdNoPIDsKaons])
+	return Bu
+
+    def getProps(self) :
+        """
+        From HltLinesConfigurableUser
+        @todo Should be shared between Hlt and stripping
+        """
+        d = dict()
+        for (k,v) in self.getDefaultProperties().iteritems() :
+            d[k] = getattr(self,k) if hasattr(self,k) else v
+        return d
