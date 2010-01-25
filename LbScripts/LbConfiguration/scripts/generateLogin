@@ -190,6 +190,9 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
     cachefilename = getLoginCacheName(shell=shell, location=location)
     if os.path.exists(cachefilename) :
         os.remove(cachefilename)
+    pardir = os.path.dirname(cachefilename)
+    if not os.path.exists(pardir) :
+        os.makedirs(pardir)
     
     os.environ["CMTCONFIG"] = "slc4_ia32_gcc34"
     llsargs = []
