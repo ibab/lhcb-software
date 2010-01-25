@@ -14,7 +14,7 @@
 from Gaudi.Configuration import *
 from StrippingConf.StrippingStream import StrippingStream
 
-from StrippingSelections import StrippingDiMuon
+from StrippingSelections.StrippingDiMuon import StrippingDiMuonConf
 from StrippingSelections.StrippingBs2JpsiPhi import StrippingBs2JpsiPhiConf
 from StrippingSelections import StrippingBs2JpsiPhiDetached
 from StrippingSelections import StrippingBs2JpsiPhiPrescaled
@@ -35,7 +35,8 @@ from StrippingSelections.StrippingBc2JpsiHDetached import StrippingBc2JpsiHDetac
 
 stream = StrippingStream("Dimuon")
 stream.appendLines( [ 
-		        StrippingDiMuon.line, 
+		        StrippingDiMuonConf().nominal_line(), 
+		        StrippingDiMuonConf().loose_line(), 
 		        StrippingBs2JpsiPhiConf().nominal_line(),  
 		        StrippingBs2JpsiPhiConf().loose_line(),  
 		        StrippingBs2JpsiPhiPrescaled.line,  

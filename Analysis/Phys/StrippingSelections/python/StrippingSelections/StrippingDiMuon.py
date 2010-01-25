@@ -1,3 +1,4 @@
+# $Id: StrippingDiMuon.py,v 1.3 2010-01-25 20:10:27 gcowan Exp $
 ## #####################################################################
 # A stripping selection for inclusive J/psi(1S) -> mu+ mu- decays
 #
@@ -6,43 +7,76 @@
 # 
 ## #####################################################################
 
-name = "DiMuonInc"
-
-__all__ = ('name', 'Jpsi', 'sequence')
-
 from Gaudi.Configuration import *
-from Configurables import GaudiSequencer, CombineParticles, FilterDesktop
-from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
+from LHCbKernel.Configuration import *
+from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter	
+from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 
-# Create Jpsi -> mumu candidates out of std loose muons
-## ############################################################
-_muons =  DataOnDemand('stdLooseMuons', Location = 'Phys/StdLooseMuons')
+class StrippingDiMuonConf(LHCbConfigurableUser):
+    """
+    Definition of Jpsi -> mu mu stripping.
+    """
+    __slots__ = {
+			"MuonPT":		500.	# MeV
+		,	"MuonPTLoose":		500.	# MeV
+		,	"MuonTRCHI2":		3.	# adimensional
+		,	"MuonTRCHI2Loose":	10.	# adimensional
+		,	"JpsiAM":		2700.	# MeV
+		,	"JpsiAMLoose":		2700.	# MeV
+		,	"JpsiVCHI2":		20.	# adimensional
+		,	"JpsiVCHI2Loose":	20.	# adimensional
+		}
 
-mucut = '(PT>500*MeV) & (TRCHI2DOF<3) & (ISLONG) '
+    def nominal_line( self ):
+        from StrippingConf.StrippingLine import StrippingLine
+	JpsiSel = self.Jpsi()
+	JpsiSeq = SelectionSequence("SeqDiMuonInc", TopSelection = JpsiSel)
+	return StrippingLine('DiMuonIncLine', prescale = 1, algos = [JpsiSeq])   
+     	
+    def loose_line( self ):
+        from StrippingConf.StrippingLine import StrippingLine
+	JpsiSel = self.JpsiLoose()
+	JpsiSeq = SelectionSequence("SeqDiMuonIncLoose", TopSelection = JpsiSel)
+	return StrippingLine('DiMuonIncLooseLine', prescale = 1, algos = [JpsiSeq])   
 
-_Jpsi = CombineParticles(name,
+    def Jpsi( self ):
+	_muons =  DataOnDemand('stdLooseMuons', Location = 'StdLooseMuons')
+	mucut = '(PT > %(MuonPT)s *MeV) & (TRCHI2DOF < %(MuonTRCHI2)s) & (ISLONG)' % self.getProps()
+	_Jpsi = CombineParticles("DiMuonIncCombine",
                          DecayDescriptor = 'J/psi(1S) -> mu+ mu-',
-                         DaughtersCuts = { 'mu+' : mucut , 
-                                           'mu-' : mucut },
-                         CombinationCut = " (AM>2700*MeV) ",
-                         MotherCut = "(VFASPF(VCHI2/VDOF)<20) ",
+                         DaughtersCuts = {'mu+': mucut}, 
+                         CombinationCut = " (AM > %(JpsiAM)s *MeV)" % self.getProps(),
+                         MotherCut = "(VFASPF(VCHI2/VDOF) < %(JpsiVCHI2)s)" % self.getProps(),
                          WriteP2PVRelations = False
                          )
-                         
-Jpsi = Selection( "Sel"+name,
+	Jpsi = Selection("SelDiMuonInc",
                   Algorithm = _Jpsi,
                   RequiredSelections = [_muons]
                   )
+	return Jpsi
+	
+    def JpsiLoose( self ):
+	_muons =  DataOnDemand('stdVeryLooseMuons', Location = 'Phys/StdVeryLooseMuons')
+	mucut = '(PT > %(MuonPTLoose)s *MeV) & (TRCHI2DOF < %(MuonTRCHI2Loose)s) & (ISLONG)' % self.getProps()
+	_Jpsi = CombineParticles("DiMuonIncCombineLoose",
+                         DecayDescriptor = 'J/psi(1S) -> mu+ mu-',
+                         DaughtersCuts = {'mu+': mucut},
+                         CombinationCut = " (AM > %(JpsiAMLoose)s *MeV)" % self.getProps(),
+                         MotherCut = "(VFASPF(VCHI2/VDOF) < %(JpsiVCHI2Loose)s)" % self.getProps(),
+                         WriteP2PVRelations = False
+                         )
+	Jpsi = Selection("SelDiMuonInciLoose",
+                  Algorithm = _Jpsi,
+                  RequiredSelections = [_muons]
+                  )
+	return Jpsi
 
-# build the SelectionSequence
-sequence = SelectionSequence("Seq"+name,
-                             TopSelection = Jpsi
-                             )
-# Define the line
-## ############################################################
-line = StrippingLine('DiMuonInclusive'
-                           , prescale = 1.
-                           , algos = [ sequence ]
-                           )
-
+    def getProps(self) :
+        """
+        From HltLinesConfigurableUser
+        @todo Should be shared between Hlt and stripping
+        """
+        d = dict()
+        for (k,v) in self.getDefaultProperties().iteritems() :
+            d[k] = getattr(self,k) if hasattr(self,k) else v
+        return d
