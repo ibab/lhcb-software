@@ -1,52 +1,150 @@
-__author__ = 'Celestino Rodriguez Cobo'
-__date__ = 'October 6, 2009'
-__version__='1.0'
+__author__ = ['Celestino Rodriguez']
+__date__ = '25/01/2010'
+__version__ = '$Revision: 1.3 $'
+
+'''
+Bs->Kst0Kst0 selection
+'''
 
 from Gaudi.Configuration import *
-from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
-import GaudiKernel.SystemOfUnits as Units
+from LHCbKernel.Configuration import *
+from CommonParticles.Utils import *
+from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter	
+from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 
+class StrippingBs2KstKstConf(LHCbConfigurableUser):
+    """
+    Definition of Bs->Kst0Kst0 stripping.
+    """
+    __slots__ = { 
+    			"KaonPLoose"		: 1000.0# MeV 
+		,	"KaonPTLoose"		: 350.0	# MeV 
+		,	"KaonIPLoose"		: 0.03	# mm
+                ,       "PionPLoose"            : 1000.0# MeV
+                ,       "PionPTLoose"           : 350.0 # MeV
+                ,       "PionIPLoose"           : 0.03  # mm
+		,	"KstarVCHI2Loose"	: 30.0	# adimensional
+		,	"KstarPTLoose"		: 750.0	# MeV
+                ,       "KstarIPLoose"          : 0.08	# mm
+		,	"KstarMassWinLoose"	: 150.0	# MeV
+		,	"BMassWinLoose"		: 500.0	# MeV
+		,	"BVCHI2Loose" 		: 10.0	# adimensional
+		,	"BMIPLoose" 		: 0.1	# mm
+		,	"BDisLoose"		: 0.7	# mm
+                ,	"KaonP"			: 1000.0# MeV
+                ,	"KaonPT"		: 350.0 # MeV
+                ,	"KaonIPCHI2"		: 1.	# adimensional
+                ,       "PionP"                 : 1000.0# MeV
+                ,       "PionPT"                : 350.0 # MeV
+                ,       "PionIPCHI2"            : 1.	# adimensional
+                ,	"KstarVCHI2"		: 25.0  # adimensional
+                ,	"KstarPT"		: 750.0 # MeV
+                ,	"KstarIPCHI2"		: 6.25  # adimensional
+                ,       "KaonPIDK"              : -5.0  # adimensional
+                ,	"KstarMassWin"		: 150.0 # MeV
+                ,	"BMassWin"		: 500.0 # MeV
+                ,	"BVCHI2"		: 5.0	# adimensional
+                ,	"BMIPCHI2"		: 16	# adimensional
+                ,       "BDisCHI2"		: 64	# mm
 
+             }
+    
+    def nominall( self ):
+        from StrippingConf.StrippingLine import StrippingLine
+	Bs2KstKstSel = self.Bs2KstKst()
+	Bs2KstKstSeq = SelectionSequence("SeqBs2KstKst", TopSelection = Bs2KstKstSel)
+	return StrippingLine('BsKst0Kst0Line', prescale = 1, algos = [Bs2KstKstSeq])   
+     	
+    def loosel( self ):
+        from StrippingConf.StrippingLine import StrippingLine
+	Bs2KstKstSel = self.Bs2KstKstLoose()
+	Bs2KstKstSeq = SelectionSequence("SeqBs2KstKst", TopSelection = Bs2KstKstSel)
+	return StrippingLine('Bs2Kst0Kst0LooseLine', prescale = 1, algos = [Bs2KstKstSeq])   
+    def Kstar2Kpi( self ):
+        StdNoPIDsKaons = DataOnDemand("StdNoPIDsKaons", "StdNoPIDsKaons")
+        StdNoPIDsPions = DataOnDemand("StdNoPIDsPions", "StdNoPIDsPions")
+        _Kstar = CombineParticles("Kstar2KPiForBs2KstKst")
+        _Kstar.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
+        _Kstar.DaughtersCuts = {  "K+" :"(PT > %(KaonPT)s *MeV) & (MIPCHI2DV(PRIMARY)  > %(KaonIPCHI2)s)& (P > %(KaonP)s *MeV) & (PIDK > %(KaonPIDK)s)" % self.getProps()
+                                , "pi+":"(PT > %(PionPT)s *MeV) & (MIPCHI2DV(PRIMARY)  > %(PionIPCHI2)s)& (P > %(PionP)s *MeV)" % self.getProps()
+                                }
+        _Kstar.CombinationCut = "(ADAMASS('K*(892)0') < %(KstarMassWin)s *MeV)" % self.getProps()
+        _Kstar.MotherCut = "(VFASPF(VCHI2/VDOF)< %(KstarVCHI2)s) & (PT > %(KstarPT)s *MeV) & (MIPCHI2DV(PRIMARY) > %(KstarIPCHI2)s)" % self.getProps()
 
-#########
-# Kstar #
-#########
+        Kstar = Selection("SelKstarForBs2KstKst",
+                        Algorithm = _Kstar,
+                        RequiredSelections = [StdNoPIDsKaons, StdNoPIDsPions])
+        return Kstar
+	
 
-KstCuts ="(VFASPF(VCHI2/VDOF)<25) & (ADMASS('K*(892)0')<150*MeV)"
-KstCuts+= "&(PT> 750*MeV) &(MIPCHI2DV(PRIMARY)  > 25.)"
-KstCuts += "& (INTREE( (ABSID=='K+') & (MIPCHI2DV(PRIMARY)  > 4.)"
-KstCuts += "& (PT>350*MeV) & (P>1000*MeV) & (PIDK>-5.0) ))"
-KstCuts += "& (INTREE((ABSID=='pi+') & (MIPCHI2DV(PRIMARY)  > 4.)"
-KstCuts += "& (PT>350*MeV) & (P>1000*MeV)))"
+    def Kstar2KpiLoose( self ):
+        from Configurables import  OnOfflineTool
+        StdNoPIDsKaons = DataOnDemand("StdNoPIDsKaons", "StdNoPIDsKaons")
+        StdNoPIDsPions = DataOnDemand("StdNoPIDsPions", "StdNoPIDsPions")
+	_Kstar = CombineParticles("Kstar2KPiForBd2JpsiKstarLoose")
+	_Kstar.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
+	_Kstar.addTool(OnOfflineTool())
+	_Kstar.OnOfflineTool.OfflinePVRelatorName = 'GenericParticle2PVRelator__p2PVWithIP_OfflineDistanceCalculatorName_'
+	_Kstar.DaughtersCuts = {  "K+" :"(PT > %(KaonPTLoose)s *MeV) & (MIPDV(PRIMARY)  > %(KaonIPLoose)s *mm)& (P > %(KaonP)s *MeV)" % self.getProps()
+				, "pi+":"(PT > %(PionPTLoose)s *MeV) & (MIPDV(PRIMARY)  > %(PionIPLoose)s *mm)& (P > %(PionP)s *MeV)" % self.getProps()
+                	  	}
+	_Kstar.CombinationCut = "(ADAMASS('K*(892)0') < %(KstarMassWinLoose)s *MeV)" % self.getProps()
+	_Kstar.MotherCut = "(VFASPF(VCHI2/VDOF)< %(KstarVCHI2Loose)s) & (PT > %(KstarPTLoose)s *MeV) & (MIPDV(PRIMARY) > %(KstarIPLoose)s *mm)" % self.getProps()
 
-######
-# Bs #
-######
+	Kstar = Selection("SelKstarForBs2KstKstLoose",
+                 	Algorithm = _Kstar,
+                 	RequiredSelections = [StdNoPIDsKaons, StdNoPIDsPions])
+	return Kstar
 
-Bs2KstKst = CombineParticles("Bs2KstKst")
-Bs2KstKst.DecayDescriptor = " [B_s0 -> K*(892)0 K*(892)~0]cc"
+    def Bs2KstKst( self ):
 
-Bs2KstKst.InputLocations = ["Phys/StdLooseDetachedKst2Kpi"]
+	Kstar = self.Kstar2Kpi()
+	_Bs = CombineParticles("Bs2KstKst")
+      	_Bs.DecayDescriptor = "B_s0 -> K*(892)0 K*(892)~0"
+        _Bs.CombinationCut = "ADAMASS('B0') < %(BMassWin)s *MeV" % self.getProps()
+        _Bs.MotherCut = "(VFASPF(VCHI2/VDOF) < %(BVCHI2)s)"\
+			"& (MIPCHI2DV(PRIMARY) < %(BMIPCHI2)s)"\
+			"& (BPVVDCHI2	       > %(BDisCHI2)s)"\
+			"& (BPVVDSIGN > 0*mm )" % self.getProps()
+        _Bs.ReFitPVs = True
 
-Bs2KstKst.addTool( OfflineVertexFitter() )
-Bs2KstKst.VertexFitters.update( { "" : "OfflineVertexFitter"} )
-Bs2KstKst.OfflineVertexFitter.useResonanceVertex = False
-Bs2KstKst.ReFitPVs = True
-Bs2KstKst.DaughtersCuts = {"K*(892)0" : KstCuts,"K*(892)~0" : KstCuts }
-                               
-Bs2KstKst.CombinationCut ="ADAMASS('B_s0') < 500.*MeV"
-Bs2KstKst.MotherCut ="(MIPCHI2DV(PRIMARY)<16) & (VFASPF(VCHI2/VDOF)<5) & (BPVVDCHI2>64) & (BPVVDSIGN > 0 )"
+	_Bs.addTool( OfflineVertexFitter() )
+	_Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+	_Bs.OfflineVertexFitter.useResonanceVertex = False
 
+	Bs = Selection("SelBs2KstKst",
+                 	Algorithm = _Bs,
+                 	RequiredSelections = [Kstar])
+	return Bs
 
+    def Bs2KstKstLoose( self ):
+        from Configurables import  OnOfflineTool
+	Kstar = self.Kstar2KpiLoose()
+	_Bs = CombineParticles("Bs2KstKstLoose")
+      	_Bs.DecayDescriptor = "B_s0 -> K*(892)0 K*(892)~0"
+        _Bs.CombinationCut = "ADAMASS('B0') < %(BMassWinLoose)s *MeV" % self.getProps()
+        _Bs.MotherCut = "  (VFASPF(VCHI2/VDOF) < %(BVCHI2Loose)s)"\
+                        "& (MIPDV(PRIMARY) < %(BMIPLoose)s *mm)"\
+                        "& (BPVVDSIGN > %(BDisLoose)s *mm)" % self.getProps()
 
+        _Bs.ReFitPVs = True
+	# Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar
+	_Bs.addTool( OfflineVertexFitter() )
+	_Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+	_Bs.OfflineVertexFitter.useResonanceVertex = False
+        _Bs.addTool(OnOfflineTool())
+        _Bs.OnOfflineTool.OfflinePVRelatorName = 'GenericParticle2PVRelator__p2PVWithIP_OfflineDistanceCalculatorName_'
+	Bs = Selection("SelBs2KstKstLoose",
+                 	Algorithm = _Bs,
+                 	RequiredSelections = [Kstar])
+	return Bs
 
-############################################
-# Create StrippingLine with this selection #
-############################################
-
-line = StrippingLine('BsKst0Kst0Line'
-               , prescale = 1
-               , algos = [Bs2KstKst]
-            )
-
+    def getProps(self) :
+        """
+        From HltLinesConfigurableUser
+        @todo Should be shared between Hlt and stripping
+        """
+        d = dict()
+        for (k,v) in self.getDefaultProperties().iteritems() :
+            d[k] = getattr(self,k) if hasattr(self,k) else v
+        return d

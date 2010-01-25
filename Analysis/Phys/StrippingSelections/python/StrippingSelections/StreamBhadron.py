@@ -20,8 +20,8 @@ from StrippingSelections.StrippingBu2D0h_D02KShh_NoPIDNoErrors import StrippingB
 from StrippingSelections import StrippingBu2hhh
 from StrippingSelections import StrippingBu2hhh_1e4
 from StrippingSelections import StrippingTopo
-from StrippingSelections import StrippingBs2Kst0Kst0
-
+#from StrippingSelections import StrippingBs2Kst0Kst0
+from StrippingSelections.StrippingBs2Kst0Kst0 import StrippingBs2KstKstC
 stream = StrippingStream("Bhadron")
 stream.appendLines( [ 
 		        StrippingB2Charged2Body.line,  
@@ -37,5 +37,6 @@ stream.appendLines( [
 		        StrippingBu2hhh_1e4.line,  
 		        StrippingTopo.line1,
                         StrippingTopo.line2, 
-                        StrippingBs2Kst0Kst0.line
+                        StrippingBs2KstKstConf().nominall(),
+                        StrippingBs2KstKstConf().loosel()
 		    ] )
