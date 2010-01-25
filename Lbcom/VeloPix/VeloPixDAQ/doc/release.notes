@@ -4,6 +4,11 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !--------------------------------------------------------------------------
 
+!=========================  VeloPixDAQ v1r0 2010-01-25 =====================
+! 2010-01-25 Marcin Kucharczyk
+ -  Fix the problem with pattern in PrepareVeloPixRawBank 
+ -  corresponding to Windows compilation problems
+
 !=========================  VeloPixDAQ v1r0 2010-01-20 =====================
  - First release
 
