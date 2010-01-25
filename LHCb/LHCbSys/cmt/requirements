@@ -23,7 +23,7 @@ use ProcessorKernel       v5r3p1  L0      # Andrei Tsaregorodtsev, Julien Cogan
 # Detector description
 use DetSys                v17r0   Det     # Marco Cattaneo
 use BcmDet                v1r3    Det     # Magnus Lieng
-use CaloDet               v10r3   Det     # Olivier Deschamps
+use CaloDet               v10r3p1 Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r2    Det     # Olivier Deschamps
 use DDDB                  v1r27   Det     # Marco Cattaneo
 use DetCond               v12r9   Det     # In SVN. Marco Clemencic

@@ -5,13 +5,13 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v29r0>2010-01-22 LHCbSys v29r0</A></H1><PRE>
+</PRE><H1><A NAME=v29r0>2010-01-23 LHCbSys v29r0</A></H1><PRE>
 This version uses Gaudi v21r7 and LCG_58
 
 - Packages added in SVN: DAQ/DAQUtils - Utilities to manipule RawEvent, previously in DAQEvent
 
-- Packages modified: CaloDAQ v4r17, CaloUtils v8r11, DDDB v1r27, DetCond v12r9,
-    DetDesc v18r19, DetDescChecks v5r1, RichDet v13r3, STDet v4r16p1,
+- Packages modified: CaloDAQ v4r17, CaloUtils v8r11, CaloDet v10r3p1, DDDB v1r27,
+    DetCond v12r9, DetDesc v18r19,DetDescChecks v5r1,RichDet v13r3,STDet v4r16p1,
     DAQEvent v9r0, DigiEvent v2r15, EventPacker v2r2, HltEvent v9r0,
     LumiEvent v2r4, L0Event v18r0, PackedEvent v4r0, PhysEvent v11r11,
     RecEvent v2r25, TrackEvent v5r3, DetCondExample v11r8, IOExample v3r4,
@@ -31,6 +31,9 @@ This version uses Gaudi v21r7 and LCG_58
 
 - In CaloUtils v8r11
   . Add dictionary for ICaloElectron interface 
+
+- In CaloDet v10r3p1
+  . src/Lib/CellParam.cpp: fix unitialized variable in CellParam constructor
 
 - In DDDB v1r27
   . Changed default tags for 2009 data:
