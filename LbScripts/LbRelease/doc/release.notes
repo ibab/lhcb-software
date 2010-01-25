@@ -1,3 +1,11 @@
+2010-01-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/rcs.py: added the method hasVersion to the repository
+	interface classes to be able to check out non-standard tags or repository
+	specific versions ("trunk" and "r[0-9]+" for Subversion).
+	* python/LbRelease/GetPack.py: ask to the repository interface if a version
+	is available (if it is not found in the filtered list).
+
 2010-01-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v3r0

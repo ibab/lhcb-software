@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.17 2010-01-18 15:03:23 marcocle Exp $
+# $Id: GetPack.py,v 1.18 2010-01-25 15:05:49 marcocle Exp $
 
 from LbUtils.Script import Script
 from LbConfiguration import createProjectMakefile
@@ -340,7 +340,7 @@ selectFromList = selectFromListCurses
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.17 2010-01-18 15:03:23 marcocle Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.18 2010-01-25 15:05:49 marcocle Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]"
@@ -488,12 +488,16 @@ class GetPack(Script):
                             if v.startswith(pre_v):
                                 vers = v
                                 break
-                    if vers: # this is Flase if the -pre version was not wanted or not found
+                    if vers: # this is False if the -pre version was not wanted or not found
                         self.log.warning("Version '%s' not found for package '%s', using '%s'" % (version, package, vers))
                         version = vers
                     else:
-                        self.log.warning("Version '%s' not found for package '%s'" % (version, package))
-                        version = self._askVersion(versions)
+                        # Since the version is not in the filtered list and it is not a "-pre" 
+                        # try to ask to the repository if it knows about it.
+                        if not rep.hasVersion(package, version):
+                            # No way to match the version string using any of the rules
+                            self.log.warning("Version '%s' not found for package '%s'" % (version, package))
+                            version = self._askVersion(versions)
             else:
                 self.log.warning("Version not specified for package '%s'" % package)
                 version = self._askVersion(versions)

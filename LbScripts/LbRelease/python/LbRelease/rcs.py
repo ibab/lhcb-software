@@ -164,6 +164,20 @@ class RevisionControlSystem(object):
         """
         return self.projects
 
+    def hasModule(self, module, isProject = False):
+        """
+        Check if the specified 'module' is available in the repository.
+        """
+        return (isProject and module in self.projects) or \
+               ((not isProject) and module in self.packages)
+
+    def _assertModule(self, module, isProject = False):
+        """
+        Raise an RCSUnknownModuleError if the module does not exist.
+        """
+        if not self.hasModule(module, isProject):
+            raise RCSUnknownModuleError(module, self.repository, isProject)
+        
     def _retrieveVersions(self, module, isProject):
         """
         Extract from the repository the list of symbolic names for the module.
@@ -174,10 +188,19 @@ class RevisionControlSystem(object):
         """
         Return a list of strings identifying the known versions of a package.
         """
-        if (isProject and module not in self.projects) or \
-           ((not isProject) and module not in self.packages):
-            raise RCSUnknownModuleError(module, self.repository, isProject)
+        self._assertModule(module, isProject)
         return filterSortVersions(self._retrieveVersions(module, isProject))
+
+    def hasVersion(self, module, version, isProject = False):
+        """
+        Check if the specified 'version' is available for the package.
+        By default this method only checks the available versions (even if not
+        accepted by the 'filterSortVersions' function), including "head".
+        Derived classes can override it to support specific symbolic names.
+        """
+        self._assertModule(module, isProject)
+        return version.lower() == "head" \
+            or version in self._retrieveVersions(module, isProject)
 
     def checkout(self, module, dest = None, vers_dir = False, project = False):
         """
@@ -331,10 +354,9 @@ class CVS(RevisionControlSystem):
         Extract a module in the directory specified with "dest".
         If no destination is specified, the current directory is used.
         """
-        # this implies a check on the existence of the module
-        versions = self.listVersions(module, project)
         # check for the validity of the version
-        if version.lower() != "head" and version not in versions:
+        # (this implies a check on the existence of the module)
+        if not self.hasVersion(module, version, project):
             raise RCSUnknownVersionError(module, version)
 
         if dest: # prepare destination directory
@@ -397,6 +419,7 @@ class SubversionCmd(RevisionControlSystem):
         self._packages = None
         self._repositoryVersion = None
         self._ls_cache = {}
+        self._latestRevisionCached = None
         self.forceScan = False
 
     @classmethod
@@ -665,6 +688,17 @@ class SubversionCmd(RevisionControlSystem):
         else:
             return "packages"
 
+    def _latestRevision(self):
+        """
+        Return the latest revision number available in the repository.
+        """
+        if self._latestRevisionCached is None:
+            out, _err, _retcode = _svn("info", "--xml", self.repository)
+            from xml.etree import ElementTree
+            et = ElementTree.fromstring(out)
+            self._latestRevisionCached = int(et.find('entry').get('revision', 0))
+        return self._latestRevisionCached
+            
     def _retrieveVersions(self, module, isProject):
         """
         Extract from the repository the list of symbolic names for the module.
@@ -701,15 +735,29 @@ class SubversionCmd(RevisionControlSystem):
                 versions = [ v[:-1] for v in versions ] # remove trailing "/" and convert to list
                 return versions
 
+    def hasVersion(self, module, version, isProject = False):
+        """
+        Check if the specified 'version' is available for the package.
+        By default this method only checks the available versions (even if not
+        accepted by the 'filterSortVersions' function, but derived classes can
+        override it to support specific symbolic names.
+        """
+        self._assertModule(module, isProject)
+        if version == "trunk":
+            return True
+        m = re.match("^r([0-9]+)$", version)
+        if m and int(m.group(1)) <= self._latestRevision():
+            return True
+        return super(SubversionCmd, self).hasVersion(module, version, isProject)
+
     def checkout(self, module, version = "head", dest = None, vers_dir = False, project = False):
         """
         Extract a module in the directory specified with "dest".
         If no destination is specified, the current directory is used.
         """
-        # this implies a check on the existence of the module
-        versions = self.listVersions(module, project)
         # check for the validity of the version
-        if version.lower() != "head" and version not in versions:
+        # (this implies a check on the existence of the module)
+        if not self.hasVersion(module, version, project):
             raise RCSUnknownVersionError(module, version)
 
         if dest: # prepare destination directory
@@ -720,7 +768,7 @@ class SubversionCmd(RevisionControlSystem):
             dest = "." # If not specified, use local directory
 
         if self.repositoryVersion < (2,0):
-            if version.lower() != "head":
+            if version.lower() not in ["head", "trunk"]:
                 src = "/".join([self.repository, self._topLevel(project), module, "tags", version])
             else:
                 src = "/".join([self.repository, self._topLevel(project), module, "trunk"])
@@ -742,8 +790,11 @@ class SubversionCmd(RevisionControlSystem):
                 versiondir = version
                 root = self.modules[module]
             
+            # Compare the version string with the revision ID regexp
+            revId = re.match("^r([0-9]+)$", version)
             src = [self.repository, root]
-            if version.lower() == "head":
+            if revId or version.lower() in ["head", "trunk"]:
+                # a revId or trunk (or head) are checked out from trunk   
                 src.append("trunk")
                 if not project:
                     src.append(module)
@@ -752,6 +803,9 @@ class SubversionCmd(RevisionControlSystem):
             if project: # for projects we check-out only the cmt directory
                 src.append("cmt")
             src = "/".join(src)
+            if revId:
+                # Special syntax for revision IDs
+                src += "@" + revId.group(1)
     
             dst = os.path.join(dest, module)
             if vers_dir:
