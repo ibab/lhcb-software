@@ -6,7 +6,14 @@
 !-----------------------------------------------------------------------------
 
 </PRE><H1><A NAME=v4r36>2010-01-25 OnlineSys v4r36</A></H1><PRE>
-   Fixes for OnlineHistDB, OMAlib, Presenter
+   Fixes for Camera, CondDBServer, Gaucho, GaudiOnline, InsertDB,
+   OMAlib, OnlineHistDB, Presenter, ROMon and Writer.
+   Additional dependencies: DAQ/MDF Event/DAQEvent and GaudiObjDesc.
+  Note: 
+   This version of Online is independent of the LHCb project!
+   There in no need anymore to depend explicitly on Online for
+   data processing packages. In General it is sufficient to include
+   the installarea of the online project in the load path.
 
 </PRE><H1><A NAME=v4r35>2009-11-24 OnlineSys v4r35</A></H1><PRE>
      New version v4r35 built against LHCb v28r5.
