@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.143 2010-01-25 12:06:20 albrecht Exp $"
+__version__ = "$Id: Configuration.py,v 1.144 2010-01-25 13:27:03 albrecht Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -178,7 +178,7 @@ class HltConf(LHCbConfigurableUser):
                       "scale(HLT_PASS('Hlt2ExpressLambdaDecision'),RATE(1)) |"\
                       "scale(HLT_PASS('Hlt2ExpressKSDecision'),RATE(1)) |"\
                       "scale(HLT_PASS('Hlt2ExpressDs2PhiPiDecision'),RATE(1)) |"\
-                      "scale(HLT_PASS('Hlt2ExpressBeamHaloDecision'),RATE(1)) |"\
+                      "scale(HLT_PASS('Hlt2ExpressBeamHaloDecision'),RATE(1)) "\
                       ",RATE(10))"
                
         routingBits = { 32 : "HLT_PASS('Hlt1Global')"
