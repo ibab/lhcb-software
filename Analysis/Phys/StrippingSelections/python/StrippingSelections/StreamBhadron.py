@@ -21,7 +21,7 @@ from StrippingSelections import StrippingBu2hhh
 from StrippingSelections import StrippingBu2hhh_1e4
 from StrippingSelections import StrippingTopo
 #from StrippingSelections import StrippingBs2Kst0Kst0
-from StrippingSelections.StrippingBs2Kst0Kst0 import StrippingBs2KstKstC
+from StrippingSelections.StrippingBs2Kst0Kst0 import StrippingBs2KstKstConf
 stream = StrippingStream("Bhadron")
 stream.appendLines( [ 
 		        StrippingB2Charged2Body.line,  
