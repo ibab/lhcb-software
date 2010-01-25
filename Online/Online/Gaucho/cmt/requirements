@@ -11,7 +11,7 @@ use GaudiAlg v*
 use Boost v* LCG_Interfaces
 use ROOT v* LCG_Interfaces
 use DAQEvent v* Event
-
+use MDF      v* DAQ
 use OnlineKernel v* Online
 
 macro_append Boost_linkopts " $(Boost_linkopts_serialization) "
