@@ -1,6 +1,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <algorithm>
 
 #include "boost/algorithm/string/join.hpp"
 
@@ -32,8 +33,17 @@ namespace Hlt {
       StatusCode decode();
       typedef LoKi::BasicFunctors<LHCb::Track>::Predicate Predicate;
 
+      struct Filter {
+           Predicate* predicate_;
+           StatEntity* counterPass_;
+           StatEntity* counterCand_;
+      };
+
       Hlt::SelectionContainer2<LHCb::Track,LHCb::Track> m_selection;
+      // group the following three together...
       std::auto_ptr<Predicate>                          m_predicate;
+      StatEntity*                                       m_counterPass;
+      StatEntity*                                       m_counterCand;
 
       std::string                                       m_factory;
       void updateCode ( Property& );
@@ -47,19 +57,18 @@ namespace Hlt {
       bool m_preambulo_updated;
     };
 }
-
 namespace {
-        template <class InputIterator, class OutputIterator, class Predicate>
-        OutputIterator copy_if_(InputIterator first, InputIterator last,
-                               OutputIterator result, Predicate& pred)
-        { while(first!=last) {
-             if(pred(**first)) result = *first;
-             ++first;
-          }
-          return result;
-        }
+    template <typename T> class adaptor_ {
+    public:
+        typedef typename T::result_type    result_type;
+        typedef typename T::argument_type* argument_type;
+        adaptor_(T& t) : m_t(t) {}
+        result_type operator()(argument_type x) { return !m_t(*x); }
+    private:
+        T& m_t;
+    };
+    template <typename T> adaptor_<T> adapt(T& t) { return adaptor_<T>(t); }
 }
-
 // Declaration of the Algorithm Factory
 DECLARE_NAMESPACE_ALGORITHM_FACTORY( Hlt, TrackFilter );
 
@@ -68,6 +77,8 @@ Hlt::TrackFilter::TrackFilter( const std::string& name,
   : HltAlgorithm ( name , pSvcLocator )
   , m_selection(*this)
   , m_predicate(0)
+  , m_counterPass(0)
+  , m_counterCand(0)
   , m_code_updated(false)
   , m_preambulo_updated(false)
 {
@@ -90,11 +101,22 @@ StatusCode Hlt::TrackFilter::initialize() {
 // Main execution
 //=============================================================================
 StatusCode Hlt::TrackFilter::execute() {
-  counter("#input")  +=  m_selection.input<1>()->size();
-  copy_if_( m_selection.input<1>()->begin(), m_selection.input<1>()->end(), 
-            std::back_inserter(*m_selection.output()),
-            *m_predicate);
-  setFilterPassed( !m_selection.output()->empty() );
+
+  const Hlt::TSelection<LHCb::Track>* in  = m_selection.input<1>();
+  Hlt::TSelection<LHCb::Track>* out = m_selection.output();
+
+  //counter("#input")  +=  in->size();
+  assert(out->empty());
+
+  out->insert(out->end(), in->begin(), in->end());
+  {   //TODO: make the predicate a vector...
+      out->erase( std::remove_if( out->begin(), out->end(),
+                                  adapt(*m_predicate) )
+                , out->end() );
+      *m_counterPass += !out->empty();
+      if (!out->empty()) *m_counterCand += out->size();
+  }
+  setFilterPassed( !out->empty() );
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -115,6 +137,8 @@ Hlt::TrackFilter::decode()
     StatusCode sc = factory->get( m_code, cut, m_preambulo );
     if (sc.isFailure()) return sc;
     m_predicate.reset( cut.clone() );
+    m_counterPass = &counter( m_code );
+    m_counterCand = &counter( m_code+ " candidates" );
     this->release(factory);
     m_code_updated      = false ;
     m_preambulo_updated = false ;
