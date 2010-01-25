@@ -1,3 +1,10 @@
+2010-01-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Platform.py: 
+	  - retains all digits internally for the compiler version.
+	  - fixed for the Leopard CMTCONFIG detection.
+	
+
 2010-01-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py:

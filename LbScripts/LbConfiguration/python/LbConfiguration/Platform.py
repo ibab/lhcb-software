@@ -110,7 +110,7 @@ def getConfig(architecture, platformtype, compiler, debug=False):
         elif architecture == "amd64" :
             architecture = "x86_64"
         cmtconfig = "-".join([architecture, platformtype, compiler, "opt"])
-        if platformtype == "slc4" or platformtype == "slc3" :
+        if platformtype == "slc4" or platformtype == "slc3" or platformtype == "osx105":
             if architecture in arch_runtime_compatiblity["ia32"] :
                 architecture = "ia32"
             elif architecture == "x86_64" :
@@ -131,7 +131,7 @@ binary_opt_list = ["slc3_ia32_gcc323",
 extra_binary_opt_list = ["x86_64-slc5-gcc34-opt", "i686-slc5-gcc34-opt",
                          "i686-slc5-gcc43-opt",
                          "i686-winxp-vc90-opt", "x86_64-winxp-vc90-opt",
-                         "osx105_ia32_gcc41", "x86_64-osx106-gcc42-opt"]
+                         "osx105_ia32_gcc401", "x86_64-osx106-gcc42-opt"]
 
 binary_dbg_list = [ getBinaryDbg(x) for x in binary_opt_list ]
 extra_binary_dbg_list = [ getBinaryDbg(x) for x in extra_binary_opt_list ]
@@ -201,7 +201,7 @@ supported_compilers = {
                        "slc3"   : ["gcc323"],
                        "win32"  : ["vc71"],
                        "osx104" : ["gcc40"],
-                       "osx105" : ["gcc41"],
+                       "osx105" : ["gcc401"],
                        "osx106" : ["gcc42"]
                        }
 class NativeMachine:
@@ -340,10 +340,12 @@ class NativeMachine:
                 if m :
                     self._compversion = m.group(1)
 
-                if position :
-                    self._compversion= ".".join(self._compversion.split(".")[:position])
+        ncv = self._compversion
 
-        return self._compversion
+        if position :
+            ncv = ".".join(self._compversion.split(".")[:position])
+
+        return ncv
     
     def nativeCompiler(self):
         if not self._compiler :
@@ -354,6 +356,8 @@ class NativeMachine:
                 self._compiler = "gcc%d%d" % (cvers[0], cvers[1])
                 if cvers[0] == 3 and cvers[1] < 4 :
                     self._compiler = "gcc%s" %self.nativeCompilerVersion(position=3).replace(".","") 
+                if self._ostype == "Darwin" and self.OSVersion(position=2) == "10.5" :
+                    self._compiler = "gcc%s" %self.nativeCompilerVersion(position=3).replace(".","")                     
         return self._compiler
     # CMT derived informations
     def CMTArchitecture(self):
