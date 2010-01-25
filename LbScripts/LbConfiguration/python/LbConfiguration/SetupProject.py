@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # pylint: disable-msg=E1103,W0141
-_cvs_id = "$Id: SetupProject.py,v 1.28 2010-01-23 15:51:05 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.29 2010-01-25 11:37:29 joel Exp $"
 
 import os, sys, re, time
 from xml.sax import parse, ContentHandler
@@ -11,7 +11,7 @@ from tempfile import mkdtemp, mkstemp
 
 from LbConfiguration import createProjectMakefile
 from LbUtils.CVS import CVS2Version
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.28 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.29 $")
 
 # subprocess is available since Python 2.4, but LbUtils guarantees that we can
 # import it also in Python 2.3
@@ -391,12 +391,13 @@ def _GetVersionTuple(pattern, versions):
             for v in version_strings:
                 if not (v.startswith("v5") or v.startswith("v6")):
                     match = v
+                    break
             if match is None:
                 return None
         else:
             # Normal behavior
-            match = version_strings.pop(0) # latest version
-    
+            match = version_strings[0] # latest version
+
     # Now that we have a string (and not a pattern), we can extract the tuple
     for vers_tuple in versions:
         if match == vers_tuple[1]:
@@ -1470,7 +1471,7 @@ class SetupProject:
         self._debug("Look for all versions of '%s' in %s" % (self.project_name, self.search_path)
                     + ((self.user_area and (" with user area in '%s'" % self.user_area)) or ""))
         versions = FindProjectVersions(self.project_name, self.search_path, self.user_area)
-        
+
         if not versions:
             self._error("Cannot find project '%s'" % self.project_name)
             return 1
