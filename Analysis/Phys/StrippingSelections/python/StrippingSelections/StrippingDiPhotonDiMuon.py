@@ -37,7 +37,7 @@ _diPhoton = CombineParticles(name,
                          
 diPhoton = Selection( "Sel"+name,
                   Algorithm = _diPhoton,
-                  RequiredSelections = [_muons,FilterNumMuons ]
+                  RequiredSelections = [_muons,]   # FilterNumMuons ] Does not work
                   )
 
 # build the SelectionSequence

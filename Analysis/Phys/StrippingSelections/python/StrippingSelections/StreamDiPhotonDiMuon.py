@@ -14,5 +14,5 @@ from StrippingSelections import  StrippingDiPhotonDiMuon
 
 stream = StrippingStream("DiPhotonDiMuon")
 stream.appendLines( [ 
-                        StrippingDiPhotonDiMuon
+                        StrippingDiPhotonDiMuon.line
 		    ] )

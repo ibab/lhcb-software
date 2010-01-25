@@ -23,7 +23,7 @@ mucut = '(PT>10*GeV) '
 
 _W = FilterDesktop(name
                     , InputLocations = ["StdLooseMuons"]
-                    , Code = "(PT>10GeV)"
+                    , Code = mucut
                                )
                          
 W = Selection( "Sel"+name,

@@ -30,6 +30,5 @@ allStreams = [
                StreamV0.stream,
                StreamRadiative.stream,
                StreamEW.stream,
-               StreamDiPhotonDiMuon
-
+               StreamDiPhotonDiMuon.stream
              ] 
