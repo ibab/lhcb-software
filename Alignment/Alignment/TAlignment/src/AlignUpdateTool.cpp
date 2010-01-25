@@ -329,8 +329,21 @@ namespace Al
 				       size_t iteration,
 				       size_t maxiteration) const
   {
-    // make a local non-const copy
-    Al::Equations equations = constequations ;
+    // Print a warning if the geometry used to compute the derivatives
+    // is not the same as the actual one. It is no longer a reason to
+    // abort since we allow using derivatives computed with a
+    // different geometry.
+    if( m_elementProvider->initTime() != constequations.initTime() ) {
+      warning() << "Time of geometry does not match time of equations: "
+		<< m_elementProvider->initTime().ns() << " " << constequations.initTime().ns() << endmsg ;
+    }
+    
+    // It is possible that the set we process does _not_ correspond to
+    // the version of the geometry here. This is the safest way to
+    // make sure it does:
+    Al::Equations equations ;
+    m_elementProvider->initEquations( equations ) ;
+    equations.add( constequations ) ;
 
     typedef Gaudi::Matrix1x6 Derivatives;
     StatusCode sc = StatusCode::SUCCESS ;
@@ -339,16 +352,6 @@ namespace Al
       return sc ;
     }
     
-    // Check that the geometry used for getting the derivatives
-    // matches the actual geometry. for now, we'll abort if this is
-    // not ok. In the furture we could 'reinitialize' the geometry and
-    // elements.
-    if( m_elementProvider->initTime() != equations.initTime() ) {
-      error() << "Time of geometry does not match time of equations: "
-	      << m_elementProvider->initTime().ns() << " " << equations.initTime().ns() << endmsg ;
-      return StatusCode::FAILURE ;
-    }
-
     info() << "\n";
     info() << "==> iteration " << iteration << " : Initial alignment conditions  : [";
     const Elements& elements = m_elementProvider->elements() ;
