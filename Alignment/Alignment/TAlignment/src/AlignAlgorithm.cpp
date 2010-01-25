@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.60 2009-12-30 05:30:15 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.61 2010-01-25 16:20:42 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -75,7 +75,7 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
     m_equations(0),
     m_resetHistos(false)
 {
-  declareProperty("NumberOfIterations"          , m_nIterations        = 10u                     );
+  declareProperty("NumberOfIterations"          , m_nIterations        = 10u );
   declareProperty("TracksLocation"              , m_tracksLocation     = TrackLocation::Default  );
   declareProperty("VertexLocation"              , m_vertexLocation     = "" );
   declareProperty("DimuonLocation"              , m_dimuonLocation     = "" );
@@ -94,7 +94,9 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
   declareProperty("AlignSummaryDataSvc", m_alignSummaryDataSvc = "DetectorDataSvc" ) ;
   //"HistogramDataSvc" ) ;
   declareProperty("AlignSummaryLocation", m_alignSummaryLocation = "AlignDerivativeData") ;
+  declareProperty("FillHistos", m_fillHistos = false ) ;
   
+ 
 
 }
 
@@ -155,11 +157,10 @@ StatusCode AlignAlgorithm::initialize() {
   }
 
   m_equations = &(m_summaryData->equations()) ;
-  m_equations->clear() ;
-  assert( elements.size() == m_equations->nElem() ) ;
+  m_align->initEquations( *m_equations ) ;
   for(std::vector<std::string>::const_iterator ifile = m_inputDataFileNames.begin() ; 
       ifile != m_inputDataFileNames.end(); ++ifile) {
-    Al::Equations tmp(m_equations->nElem()) ;
+    Al::Equations tmp(0) ;
     tmp.readFromFile( (*ifile).c_str() ) ;
     m_equations->add( tmp ) ; 
     warning() << "Adding derivatives from input file: " << *ifile << " " << tmp.numHits() << " "
@@ -174,15 +175,12 @@ StatusCode AlignAlgorithm::initialize() {
   /// Book residual histograms
   /// Residuals
   /// @todo: this should go into a monitoring tool
-  info() << "booking histograms assuming " << m_nIterations << " iterations " << endmsg;
-  m_trackChi2Histo           = book2D(10, "Track chi2 distribution vs iteration",
-				      -0.5, m_nIterations-0.5, m_nIterations, -1.00, 
-                                      +100.00, 100);
-  m_trackNorChi2Histo        = book2D(11, "Normalised track chi2 distribution vs iteration", 
-                                      -0.5, m_nIterations-0.5, m_nIterations,0,20) ;
-  for(Elements::const_iterator i = elements.begin(); i!= elements.end(); ++i) 
-    m_elemHistos.push_back( new AlElementHistos(*this,**i,m_nIterations) ) ;
-  m_resetHistos = false ;
+  if( m_fillHistos ) {
+    info() << "booking histograms assuming " << m_nIterations << " iterations " << endmsg;
+    for(Elements::const_iterator i = elements.begin(); i!= elements.end(); ++i) 
+      m_elemHistos.push_back( new AlElementHistos(*this,**i,m_nIterations) ) ;
+    m_resetHistos = false ;
+  }
 
   info() << "Use correlations = " << m_correlation << endreq ;
 
@@ -190,10 +188,8 @@ StatusCode AlignAlgorithm::initialize() {
 }
 
 StatusCode AlignAlgorithm::finalize() {
-  if(!m_outputDataFileName.empty()) 
-    m_equations->writeToFile( m_outputDataFileName.c_str() ) ;
   if (m_updateInFinalize) update() ;
-
+  
   for( std::vector<AlElementHistos*>::iterator ielem = m_elemHistos.begin() ;
        ielem != m_elemHistos.end(); ++ielem) delete *ielem ;
 
@@ -332,11 +328,7 @@ StatusCode AlignAlgorithm::execute() {
     // this cannot return a zero pointer since we have already checked before
     const Al::Residuals* res = m_trackresidualtool->get(**iTrack) ;
     assert(res!=0) ;
-    if( res && accumulate( *res ) ) {
-      m_trackChi2Histo->fill(m_iteration, (*iTrack)->chi2());
-      m_trackNorChi2Histo->fill(m_iteration, (*iTrack)->chi2PerDoF());
-      ++numusedtracks ;
-    }
+    if( res && accumulate( *res ) ) ++numusedtracks ;
   } 
   
   Gaudi::Time eventtime ;
@@ -454,25 +446,27 @@ bool AlignAlgorithm::accumulate( const Al::Residuals& residuals )
       }
       
       // fill some histograms
-      nodeindex = 0 ;
-      for (Al::Residuals::ResidualContainer::const_iterator ires = residuals.residuals().begin();
-	   ires != residuals.residuals().end();++ires, ++nodeindex) {
-	const Derivative& deriv = derivatives[nodeindex] ;
-	double f = std::sqrt(ires->R()/ires->V()) ;
-	double pull = ires->r() / std::sqrt(ires->R()) ;
-	size_t index = ires->element().index() ;
-	double sign = deriv(0,0) > 0 ? 1 : -1 ;
-	m_elemHistos[index]->m_nHitsHisto->fill(m_iteration);
-	m_elemHistos[index]->m_resHisto->fill(m_iteration, sign*ires->r());
-	m_elemHistos[index]->m_unbiasedResHisto->fill(m_iteration, sign*ires->r()/f);
-	m_elemHistos[index]->m_pullHisto->fill(m_iteration, sign*pull);
-	m_elemHistos[index]->m_autoCorrHisto->fill(m_iteration,f) ;
-	for(int ipar=0; ipar<6; ++ipar) {
-	  double weight = deriv(0,ipar) * f ;
-	  double thispull = pull ;
-	  if(weight<0) { weight *= -1 ; thispull *= -1 ; }
-	  // the last minus sign is because somebody defined our first derivative with the wrong sign
-	  m_elemHistos[index]->m_residualPullHistos[ipar]->fill( -thispull, weight ) ;
+      if( m_fillHistos ) {
+	nodeindex = 0 ;
+	for (Al::Residuals::ResidualContainer::const_iterator ires = residuals.residuals().begin();
+	     ires != residuals.residuals().end();++ires, ++nodeindex) {
+	  const Derivative& deriv = derivatives[nodeindex] ;
+	  double f = std::sqrt(ires->R()/ires->V()) ;
+	  double pull = ires->r() / std::sqrt(ires->R()) ;
+	  size_t index = ires->element().index() ;
+	  double sign = deriv(0,0) > 0 ? 1 : -1 ;
+	  m_elemHistos[index]->m_nHitsHisto->fill(m_iteration);
+	  m_elemHistos[index]->m_resHisto->fill(m_iteration, sign*ires->r());
+	  m_elemHistos[index]->m_unbiasedResHisto->fill(m_iteration, sign*ires->r()/f);
+	  m_elemHistos[index]->m_pullHisto->fill(m_iteration, sign*pull);
+	  m_elemHistos[index]->m_autoCorrHisto->fill(m_iteration,f) ;
+	  for(int ipar=0; ipar<6; ++ipar) {
+	    double weight = deriv(0,ipar) * f ;
+	    double thispull = pull ;
+	    if(weight<0) { weight *= -1 ; thispull *= -1 ; }
+	    // the last minus sign is because somebody defined our first derivative with the wrong sign
+	    m_elemHistos[index]->m_residualPullHistos[ipar]->fill( -thispull, weight ) ;
+	  }
 	}
       }
       
@@ -511,6 +505,8 @@ void AlignAlgorithm::update()
 
 void AlignAlgorithm::update(const Al::Equations& equations)
 {
+  if(!m_outputDataFileName.empty()) 
+    m_equations->writeToFile( m_outputDataFileName.c_str() ) ;
   m_updatetool->process(equations,m_iteration,m_nIterations).ignore() ;
 }
 
@@ -521,8 +517,9 @@ void AlignAlgorithm::reset() {
   // set counters to zero
   m_nTracks = 0u;
   m_covFailure = 0u;
-  // clear derivatives and H maps
-  m_equations->clear();
+  // clear derivatives. update the parameter vectors used for bookkeeping.
+  m_align->initEquations( *m_equations ) ;
+  // clear the histograms on the next execute call
   m_resetHistos = true ;
 }
 
@@ -530,8 +527,10 @@ void AlignAlgorithm::resetHistos()
 {
   m_resetHistos = false ;
   // moved this seperately such that histograms are not reset on last iteration
-  std::for_each(m_elemHistos.begin(),m_elemHistos.end(),
-		boost::lambda::bind(&AlElementHistos::reset,*boost::lambda::_1)) ;
+  if( m_fillHistos ) {
+    std::for_each(m_elemHistos.begin(),m_elemHistos.end(),
+		  boost::lambda::bind(&AlElementHistos::reset,*boost::lambda::_1)) ;
+  }
 }
 
 StatusCode AlignAlgorithm::queryInterface(const InterfaceID& id, void** ppI) {

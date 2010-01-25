@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.37 2009-12-11 12:31:22 wouter Exp $
+// $Id: AlignAlgorithm.h,v 1.38 2010-01-25 16:20:42 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -135,6 +135,7 @@ private:
   ToolHandle<ITrackSelector> m_vertextrackselector ;
   std::string                       m_alignSummaryDataSvc ;
   std::string                       m_alignSummaryLocation ;
+  bool                              m_fillHistos ;
 
   Al::Equations*                    m_equations;                     ///< Equations to solve
   bool                              m_correlation ;                  ///< Do we take into account correlations between residuals?
@@ -148,10 +149,8 @@ private:
 
   /// Monitoring
   // @todo: Move this to a monitoring tool
-  std::vector<AlElementHistos*>                                  m_elemHistos ;
-  IHistogram2D*                                                  m_trackChi2Histo;
-  IHistogram2D*                                                  m_trackNorChi2Histo;
-  bool                                                           m_resetHistos ; // reset histos on next event processing
+  std::vector<AlElementHistos*>     m_elemHistos ;
+  bool                              m_resetHistos ; // reset histos on next event processing
 };
 
 #endif // TALIGNMENT_ALIGNALGORITHM_H
