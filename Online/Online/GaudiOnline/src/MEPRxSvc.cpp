@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.85 2010-01-25 10:55:21 garnierj Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.86 2010-01-25 16:18:34 garnierj Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -806,10 +806,6 @@ StatusCode MEPRxSvc::run() {
 	// 
 	m_idleTimeTSC->fill(tsc - lasttsc, 1.0);
 	m_idleTimeSock->fill(rxtim - lastrxtim, 1.0);
-        std::cout << "tsc - lasttsc" << tsc - lasttsc << std::endl;
-        std::cout << "rxtim - lastrxtim" << rxtim - lastrxtim << std::endl;
-        log << MSG::ALWAYS << "tsc - lasttsc" << tsc - lasttsc << endmsg;
-        log << MSG::ALWAYS << "rxtim - lastrxtim" << rxtim - lastrxtim << endmsg;
 
         try {
           if (m_freeDsc.empty()) {
