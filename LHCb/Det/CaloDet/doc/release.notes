@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.109 2010-01-23 20:21:00 robbep Exp $ 
+! $Id: release.notes,v 1.110 2010-01-25 07:46:54 cattanem Exp $ 
 ! =============================================================================
 ! Package         : CaloDet   
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!======================== CaloDet v10r3p1 2010-01-23 ==========================
 ! 2010-01-23 - Patrick Robbe
  - src/Lib/CellParam.cpp: fix unitialized variable in CellParam 
    constructor (m_shift)
