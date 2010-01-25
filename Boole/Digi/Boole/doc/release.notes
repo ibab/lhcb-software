@@ -3,6 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v20r1>2010-01-26 Boole v20r1</A></H1></PRE>
  - Changes to Configurable:
    . Change structure and names of sub-detector sequences in the process phases,
      to allow usage with Upgrade detector

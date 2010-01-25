@@ -43,7 +43,7 @@
 #-------------------------------------------------------------------------------
 # Make a new job object for Boole
 #-------------------------------------------------------------------------------
-j = Job( application = Boole( version = 'v20r0' ) )
+j = Job( application = Boole( version = 'v20r1' ) )
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
@@ -59,7 +59,7 @@ j.name = 'MyBoole'
 myOptsPath = ( j.application.user_release_area + '/Boole_' +
                j.application.version + '/Digi/Boole/options/' )
 j.application.optsfile = [ File ( myOptsPath + 'Boole-Default.py' ),
-                           File ( myOptsPath + 'DC06-Files.py'    ) ]
+                           File ( myOptsPath + 'MC09-Files.py'    ) ]
 # Extra options
 # Appended to the end of the main options to override default settings
 #j.application.extraopts = ''
