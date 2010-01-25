@@ -4,6 +4,7 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+!======================== CaloDigit v3r2 2010-01-25 ==========================
 ! 2010-01-22 - Patrick Robbe
  - CaloDigitAlg.cpp: convert int to unsigned long in caloTriggerFromAdc
    function to try to remove floating point exceptions when running on 
