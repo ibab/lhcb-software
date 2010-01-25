@@ -1,4 +1,4 @@
-// $Id: HltUnit.h,v 1.10 2009-12-23 10:37:35 graven Exp $
+// $Id: HltUnit.h,v 1.11 2010-01-25 09:30:11 graven Exp $
 // ============================================================================
 #ifndef LOKI_HLTUNIT_H 
 #define LOKI_HLTUNIT_H 1
@@ -17,10 +17,10 @@
 // LoKi 
 // ============================================================================
 #include "LoKi/FilterAlg.h"
-#include "LoKi/IHltUnit.h"
 #include "LoKi/ILoKiSvc.h"
 #include "LoKi/CoreTypes.h"
 // ============================================================================
+#include "HltBase/IHltUnit.h"
 #include "HltBase/IHltRegister.h"
 #include "HltBase/IHltData.h"
 #include "HltBase/IHltInspector.h"
@@ -36,7 +36,7 @@ namespace LoKi
    */
   class HltUnit 
     : public LoKi::FilterAlg
-    , public virtual LoKi::IHltUnit
+    , public virtual Hlt::IUnit
   {
     // ========================================================================
     // the friend factory for instantiation 
@@ -70,7 +70,7 @@ namespace LoKi
      */
     virtual StatusCode setCode ( const LoKi::Types::FCuts& cut ) ; // functor
     // ========================================================================
-  public:                                                // LoKi::IHltUnit part 
+  public:                                                // Hlt::IUnit part 
     // ========================================================================
     /** register the selection 
      *  (internal method, should not be invoked directly) 
@@ -140,7 +140,7 @@ namespace LoKi
     ( const Client& /* client */ , 
       const Key&    /* key    */ ) const 
     {
-      Error("retrive(): not implemented ") ;
+      Error("retrieve(): not implemented ") ;
       return 0 ;
     }
     // ========================================================================

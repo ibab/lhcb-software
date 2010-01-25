@@ -1,4 +1,4 @@
-// $Id: Hlt1.h,v 1.5 2009-12-23 10:37:34 graven Exp $
+// $Id: Hlt1.h,v 1.6 2010-01-25 09:30:09 graven Exp $
 // ============================================================================
 #ifndef LOKI_HLT1_H 
 #define LOKI_HLT1_H 1
@@ -14,13 +14,13 @@
 // HltBase 
 // ============================================================================
 #include "HltBase/HltSelection.h"
+#include "HltBase/IHltUnit.h"
 // ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/BasicFunctors.h"
 #include "LoKi/Interface.h"
 #include "LoKi/TrackTypes.h"
-#include "LoKi/IHltUnit.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -32,7 +32,7 @@ namespace LoKi
      *  simple functor which acts as a source for the tracks
      *  Tracks are extracted from Hlt::IData
      *  @see Hlt::IData
-     *  @see LoKi::IHltUnit
+     *  @see Hlt::IUnit
      *  @see LoKi::Cuts::TsSELECTION 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-11-10
@@ -82,7 +82,7 @@ namespace LoKi
      *  simple functor which register its input in Hlt Store 
      *  Tracks are copied to Hlt::IData
      *  @see Hlt::IData
-     *  @see LoKi::IHltUnit
+     *  @see Hlt::IUnit
      *  @see LoKi::Cuts::TrREGISTER
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-11-10
@@ -129,7 +129,7 @@ namespace LoKi
      *  simple functor which acts as a source for the vertices
      *  Vertices are extracted from Hlt::IData
      *  @see Hlt::IData
-     *  @see LoKi::IHltUnit
+     *  @see Hlt::IUnit
      *  @see LoKi::Cuts::RvSELECTION
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-11-10
@@ -179,7 +179,7 @@ namespace LoKi
      *  simple functor which register its input in Hlt Store 
      *  Vertices are copied to Hlt::IData
      *  @see IHltDataSvc
-     *  @see LoKi::IHltUnit
+     *  @see Hlt::IUnit
      *  @see LoKi::Cuts::RvREGISTER
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-11-10
@@ -257,7 +257,7 @@ namespace LoKi
     public:      
       // ======================================================================      
       /// get the unit 
-      const LoKi::IHltUnit*      unit () const { return m_unit ; }  // get unit 
+      const Hlt::IUnit*      unit () const { return m_unit ; }  // get unit 
       /// get the key 
       const std::string&         key  () const { return m_key  ; }  //  get key 
       /// get the cuts 
@@ -268,9 +268,9 @@ namespace LoKi
     private:
       // ======================================================================
       /// The Unit 
-      LoKi::Interface<LoKi::IHltUnit>  m_unit ;                     // The Unit 
+      LoKi::Interface<Hlt::IUnit>  m_unit ;                     // The Unit 
       /// The Key 
-      LoKi::IHltUnit::Key              m_key  ;                     //  The Key
+      Hlt::IUnit::Key              m_key  ;                     //  The Key
       /// The Cut 
       LoKi::Types::TrCut               m_cut  ;                     //  The Cut
       // ======================================================================      
@@ -311,7 +311,7 @@ namespace LoKi
     public:      
       // ======================================================================      
       /// get the unit 
-      const LoKi::IHltUnit*      unit () const { return m_unit ; }  // get unit 
+      const Hlt::IUnit*      unit () const { return m_unit ; }  // get unit 
       /// get the key 
       const std::string&         key  () const { return m_key  ; }  //  get key 
       /// get the cuts 
@@ -322,9 +322,9 @@ namespace LoKi
     private:
       // ======================================================================
       /// The Unit 
-      LoKi::Interface<LoKi::IHltUnit>  m_unit ;                     // The Unit 
+      LoKi::Interface<Hlt::IUnit>  m_unit ;                     // The Unit 
       /// The Key 
-      LoKi::IHltUnit::Key              m_key  ;                     //  The Key
+      Hlt::IUnit::Key              m_key  ;                     //  The Key
       /// The Cut 
       LoKi::Types::RVCut               m_cut  ;                     //  The Cut
       // ======================================================================      

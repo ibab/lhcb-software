@@ -1,4 +1,4 @@
-// $Id: HltFunctions.cpp,v 1.7 2008-12-07 14:34:29 ibelyaev Exp $
+// $Id: HltFunctions.cpp,v 1.8 2010-01-25 09:30:10 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -28,11 +28,8 @@ LoKi::Tracks::DistanceOfClosestApproach::result_type
 LoKi::Tracks::DistanceOfClosestApproach::operator() 
   ( LoKi::Tracks::DistanceOfClosestApproach::argument a ) const 
 { 
-  // unpack argument:
-  const LHCb::Track& t1 = a.first  ;
-  const LHCb::Track& t2 = a.second ;
   // try to calculate DOCA...
-  return HltUtils::closestDistanceMod ( t1 , t2 ) ;    
+  return HltUtils::closestDistanceMod ( a.first , a.second ) ;    
 }
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -102,17 +99,13 @@ LoKi::Tracks::TrackMatch::result_type
 LoKi::Tracks::TrackMatch::operator() 
   ( LoKi::Tracks::TrackMatch::argument a ) const 
 {
-  // unpack argument:
-  const LHCb::Track& t1 = a.first  ;
-  const LHCb::Track& t2 = a.second ;
   if ( !m_tool.validPointer() )
   {
     Error ( "Tool is invalid, return +inf" ) ;
     return LoKi::Constants::PositiveInfinity ;               // RETURN
   }
   //
-  double chi2 = m_tool -> function ( t1 , t2 ) ;
-  // 
+  double chi2 = m_tool -> function ( a.first , a.second ) ;
   return chi2 ;  
 }
 // ============================================================================
@@ -122,11 +115,7 @@ LoKi::Tracks::RadialIP::result_type
 LoKi::Tracks::RadialIP::operator() 
   ( LoKi::Tracks::RadialIP::argument a ) const 
 {
-  // unpack argument:
-  const LHCb::Track&     t = a.first  ;
-  const LHCb::RecVertex& v = a.second ;
-  // 
-  return HltUtils::rImpactParameter ( v , t ) ;
+  return HltUtils::rImpactParameter ( a.second , a.first ) ;
 }
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -135,11 +124,7 @@ LoKi::Tracks::ImpactParameter::result_type
 LoKi::Tracks::ImpactParameter::operator() 
   ( LoKi::Tracks::ImpactParameter::argument a ) const 
 {
-  // unpack argument:
-  const LHCb::Track&     t = a.first  ;
-  const LHCb::RecVertex& v = a.second ;
-  // 
-  return HltUtils::impactParameter ( v , t ) ;
+  return HltUtils::impactParameter ( a.second , a.first ) ;
 }
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -148,11 +133,7 @@ LoKi::Tracks::MatchIDsFraction::result_type
 LoKi::Tracks::MatchIDsFraction::operator() 
   ( LoKi::Tracks::MatchIDsFraction::argument a ) const 
 { 
-  // unpack argument:
-  const LHCb::Track& t1 = a.first  ;
-  const LHCb::Track& t2 = a.second ;
-  //
-  return HltUtils::matchIDsFraction ( t1 , t2 ) ;
+  return HltUtils::matchIDsFraction ( a.first , a.second ) ;
 }
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -161,11 +142,7 @@ LoKi::Tracks::DeltaAngle::result_type
 LoKi::Tracks::DeltaAngle::operator() 
   ( LoKi::Tracks::DeltaAngle::argument a ) const 
 { 
-  // unpack argument:
-  const LHCb::Track& t1 = a.first  ;
-  const LHCb::Track& t2 = a.second ;
-  //
-  return HltUtils::deltaAngle ( t1 , t2 ) ;
+  return HltUtils::deltaAngle ( a.first , a.second ) ;
 }
 // ============================================================================
 // The END 

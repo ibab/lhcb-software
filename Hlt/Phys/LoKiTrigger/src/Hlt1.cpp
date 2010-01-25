@@ -1,4 +1,4 @@
-// $Id: Hlt1.cpp,v 1.8 2009-12-23 17:59:50 graven Exp $
+// $Id: Hlt1.cpp,v 1.9 2010-01-25 09:30:10 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -49,9 +49,9 @@ LoKi::Hlt1::TrSelection::TrSelection
   , m_selection ( 0 )
   , m_selName ( selection ) 
 {
-  // get seleciton form the Hlt Unit/Hlt Data service 
-  SmartIF<LoKi::IHltUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
-  Assert ( !(!unit) , "LoKi::IHltUnit* point to NULL" ) ;
+  // get selection form the Hlt Unit/Hlt Data service 
+  SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!unit) , "Hlt::IUnit* point to NULL" ) ;
   const Hlt::Selection* sel = unit->declareInput ( selection , *this ) ;
   Assert ( 0 != sel         , "Hlt::Selection                points to NULL!" ) ;  
   m_selection = LoKi::Hlt1::Utils::cast<LHCb::Track> ( sel ) ;
@@ -84,8 +84,8 @@ LoKi::Hlt1::TrRegister::TrRegister
   , m_selection ( 0 )
   , m_selName ( selection ) 
 {
-  SmartIF<LoKi::IHltUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
-  Assert ( !(!unit) , "LoKi::IHltUnit* point to NULL" ) ;
+  SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!unit) , "Hlt::IUnit* point to NULL" ) ;
   // declare the selection  
   m_selection = unit->declareOutput<LHCb::Track> ( selName(), *this ) ;
   Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::Track>* points to NULL!" ) ;  
@@ -145,10 +145,12 @@ LoKi::Hlt1::RvSelection::RvSelection
   , m_selection ( 0 )
   , m_selName ( selection )
 {
-  SmartIF<LoKi::IHltUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
-  Assert ( !(!unit) , "LoKi::IHltUnit* point to NULL" ) ;
-  // declare the selection  
-  m_selection = unit->declareOutput<LHCb::RecVertex> ( selName() , *this ) ;
+  // get selection form the Hlt Unit/Hlt Data service 
+  SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!unit) , "Hlt::IUnit* point to NULL" ) ;
+  const Hlt::Selection* sel = unit->declareInput ( selection , *this ) ;
+  Assert ( 0 != sel         , "Hlt::Selection                points to NULL!" ) ;  
+  m_selection = LoKi::Hlt1::Utils::cast<LHCb::RecVertex> ( sel ) ;
   Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::RecVertex>* points to NULL!" ) ;  
 }
 // ============================================================================
@@ -177,8 +179,8 @@ LoKi::Hlt1::RvRegister::RvRegister
   , m_selection ( 0 )
   , m_selName ( selection ) 
 {
-  SmartIF<LoKi::IHltUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
-  Assert ( !(!unit) , "LoKi::IHltUnit* point to NULL" ) ;
+  SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!unit) , "Hlt::IUnit* point to NULL" ) ;
   // declare the selection  
   m_selection = unit->declareOutput<LHCb::RecVertex> ( selName() , *this ) ;
   Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::RecVertex>* points to NULL!" ) ;  
@@ -217,8 +219,8 @@ LoKi::Hlt1::TrTESInput::TrTESInput
   , m_cut  ( cuts ) 
 {
   // get the unit :
-  SmartIF<LoKi::IHltUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
-  Assert ( !(!_unit) , "LoKi::IHltUnit* points to NULL" ) ;
+  SmartIF<Hlt::IUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!_unit) , "Hlt::IUnit* points to NULL" ) ;
   m_unit = _unit ;
   // register TESInput input location 
   StatusCode sc = m_unit->registerTESInput ( m_key , *this ) ;
@@ -237,8 +239,8 @@ LoKi::Hlt1::TrTESInput::TrTESInput
   , m_cut  ( cuts ) 
 {
   // get the unit :
-  SmartIF<LoKi::IHltUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
-  Assert ( !(!_unit) , "LoKi::IHltUnit* points to NULL" ) ;
+  SmartIF<Hlt::IUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!_unit) , "Hlt::IUnit* points to NULL" ) ;
   m_unit = _unit ;
   // register TESInput input location 
   StatusCode sc = m_unit->registerTESInput ( m_key , *this ) ;
@@ -256,8 +258,8 @@ LoKi::Hlt1::TrTESInput::TrTESInput
   , m_cut  ( LoKi::Constant<LHCb::Track,bool>( true ) ) 
 {
   // get the unit :
-  SmartIF<LoKi::IHltUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
-  Assert ( !(!_unit) , "LoKi::IHltUnit* points to NULL" ) ;
+  SmartIF<Hlt::IUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!_unit) , "Hlt::IUnit* points to NULL" ) ;
   m_unit = _unit ;
   // register TESInput input location 
   StatusCode sc = m_unit->registerTESInput ( m_key , *this ) ;
@@ -314,8 +316,8 @@ LoKi::Hlt1::RvTESInput::RvTESInput
   , m_cut  ( cuts ) 
 {
   // get the unit :
-  SmartIF<LoKi::IHltUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
-  Assert ( !(!_unit) , "LoKi::IHltUnit* points to NULL" ) ;
+  SmartIF<Hlt::IUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!_unit) , "Hlt::IUnit* points to NULL" ) ;
   m_unit = _unit ;
   // register TESInput input location 
   StatusCode sc = m_unit->registerTESInput ( m_key , *this ) ;
@@ -334,8 +336,8 @@ LoKi::Hlt1::RvTESInput::RvTESInput
   , m_cut  ( cuts ) 
 {
   // get the unit :
-  SmartIF<LoKi::IHltUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
-  Assert ( !(!_unit) , "LoKi::IHltUnit* points to NULL" ) ;
+  SmartIF<Hlt::IUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!_unit) , "Hlt::IUnit* points to NULL" ) ;
   m_unit = _unit ;
   // register TESInput input location 
   StatusCode sc = m_unit->registerTESInput ( m_key , *this ) ;
@@ -353,8 +355,8 @@ LoKi::Hlt1::RvTESInput::RvTESInput
   , m_cut  ( LoKi::Constant<LHCb::RecVertex,bool>( true ) ) 
 {
   // get the unit :
-  SmartIF<LoKi::IHltUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
-  Assert ( !(!_unit) , "LoKi::IHltUnit* points to NULL" ) ;
+  SmartIF<Hlt::IUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
+  Assert ( !(!_unit) , "Hlt::IUnit* points to NULL" ) ;
   m_unit = _unit ;
   // register TESInput input location 
   StatusCode sc = m_unit->registerTESInput ( m_key , *this ) ;

@@ -1,4 +1,4 @@
-// $Id: LTTools.cpp,v 1.8 2009-12-23 10:37:35 graven Exp $
+// $Id: LTTools.cpp,v 1.9 2010-01-25 09:30:11 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -20,7 +20,7 @@
 // ============================================================================
 #include "LoKi/AuxFunBase.h"
 #include "LoKi/ILoKiSvc.h"
-#include "LoKi/IHltUnit.h"
+#include "HltBase/IHltUnit.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -66,8 +66,8 @@ const Hlt::Selection* LoKi::Hlt1::Utils::getSelection
 ( const Gaudi::StringKey& key  ,
   const LoKi::AuxFunBase& base )
 {
-  SmartIF<LoKi::IHltUnit> unit ( getAlg ( base ) ) ;
-  base.Assert( !(!unit) , "LoKi::IHltUnit* is invalid") ;
+  SmartIF<Hlt::IUnit> unit ( getAlg ( base ) ) ;
+  base.Assert( !(!unit) , "Hlt::IUnit* is invalid") ;
   return unit->selection ( key ) ;
 }
 // ==========================================================================

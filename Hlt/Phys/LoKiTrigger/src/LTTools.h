@@ -1,4 +1,4 @@
-// $Id: LTTools.h,v 1.6 2009-12-23 10:37:35 graven Exp $
+// $Id: LTTools.h,v 1.7 2010-01-25 09:30:11 graven Exp $
 // ============================================================================
 #ifndef LTTOOLS_H 
 #define LTTOOLS_H 1
@@ -20,7 +20,7 @@
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/IHltUnit.h"
+#include "HltBase/IHltUnit.h"
 #include "HltBase/IHltRegister.h"
 #include "HltBase/IHltData.h"
 // ============================================================================
@@ -45,8 +45,8 @@ namespace LoKi
       IAlgorithm*     getAlg      ( const LoKi::AuxFunBase& base ) ;
       // ======================================================================
       /// get the "unit" from the algorithm 
-      inline SmartIF<LoKi::IHltUnit> getUnit ( const LoKi::AuxFunBase& base )
-      { return SmartIF<LoKi::IHltUnit>( getAlg ( base )  ) ; }
+      inline SmartIF<Hlt::IUnit> getUnit ( const LoKi::AuxFunBase& base )
+      { return SmartIF<Hlt::IUnit>( getAlg ( base )  ) ; }
       // ======================================================================
       /// get ANN-Service 
       inline SmartIF<IANNSvc> annSvc( const LoKi::AuxFunBase& base ) 

@@ -1,4 +1,4 @@
-// $Id: HltUnit.cpp,v 1.10 2009-12-29 09:50:13 graven Exp $
+// $Id: HltUnit.cpp,v 1.11 2010-01-25 09:30:11 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -8,7 +8,7 @@
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/IHltUnit.h"
+#include "HltBase/IHltUnit.h"
 #include "LoKi/ICoreFactory.h"
 // ============================================================================
 // local 
@@ -201,9 +201,9 @@ StatusCode LoKi::HltUnit::queryInterface
   /// valid placeholder?
   if ( 0 == ppvi ) { return StatusCode::FAILURE ; }
   /// 
-  if ( LoKi::IHltUnit::interfaceID() == iid ) 
+  if ( Hlt::IUnit::interfaceID() == iid ) 
   { 
-    *ppvi = static_cast<LoKi::IHltUnit*>( this ) ; 
+    *ppvi = static_cast<Hlt::IUnit*>( this ) ; 
     addRef() ;
     return StatusCode::SUCCESS ;                                      // RETURN 
   }
@@ -284,8 +284,8 @@ StatusCode LoKi::HltUnit::execute ()
 // ============================================================================
 const DataObject*
 LoKi::HltUnit::tes 
-( const LoKi::IHltUnit::Client& /* client  */ , 
-  const LoKi::IHltUnit::Key&       location   ) const 
+( const Hlt::IUnit::Client& /* client  */ , 
+  const Hlt::IUnit::Key&       location   ) const 
 {
   // check the location
   LVct::const_iterator ifind = std::find
@@ -304,8 +304,8 @@ LoKi::HltUnit::tes
  */
 // ============================================================================
 StatusCode LoKi::HltUnit::registerTESInput
-( const LoKi::IHltUnit::Key&       location    ,        //         TES location 
-  const LoKi::IHltUnit::Client& /* client   */ ) const  //               client
+( const Hlt::IUnit::Key&       location    ,        //         TES location 
+  const Hlt::IUnit::Client& /* client   */ ) const  //               client
 {
   //
   StatusCode sc = regSvc()->registerTESInput ( location , this ) ;
