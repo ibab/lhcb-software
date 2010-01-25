@@ -141,8 +141,8 @@ MEPInjector::MEPInjector(const std::string & name, ISvcLocator * pSvcLocator):Se
     declareProperty("OdinIPAddr", m_StrOdinIPAddr = "0.0.0.0");
     declareProperty("HLTIf", m_HLTIfIPAddr = "0.0.0.0");
     
-    declareProperty("OdinEthInterface", m_OdinEthInterface=m_OdinIfIPAddr[m_OdinIfIPAddr.length()]);
-    declareProperty("HLTEthInterface", m_HLTEthInterface=m_HLTIfIPAddr[m_HLTIfIPAddr.length()]);
+    declareProperty("OdinEthInterface", m_OdinEthInterface=2);
+    declareProperty("HLTEthInterface", m_HLTEthInterface=1);
     
 
     declareProperty("TimeOut", m_TimeOut = 10000);
@@ -425,8 +425,8 @@ StatusCode MEPInjector::initialize() {
     
     m_HLTReqsIte = m_HLTReqs.begin();
 
-    m_OdinEthInterface = m_OdinIfIPAddr[m_OdinIfIPAddr.length() -1] -48;
-    m_HLTEthInterface = m_HLTIfIPAddr[m_HLTIfIPAddr.length() -1] -48;
+//    m_OdinEthInterface = m_OdinIfIPAddr[m_OdinIfIPAddr.length() -1] -48;
+//    m_HLTEthInterface = m_HLTIfIPAddr[m_HLTIfIPAddr.length() -1] -48;
    
     if (m_MEPProto < 0 || m_MEPProto > 255) {
 	ERRMSG(msgLog, "IPProtoIn is an unsigned 8 bit quantity");
