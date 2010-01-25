@@ -10,7 +10,7 @@
 # Import everything from in Gaudi configuration and the configurables that we wish to use.
 #
 from Gaudi.Configuration  import *
-from GaudiConf.Configuration import *
+###from GaudiConf.Configuration import *
 
 # ==========================================================================================
 # @class Camera
@@ -19,7 +19,7 @@ from GaudiConf.Configuration import *
 # @author Gareth Rogers (gareth.rogers@cern.ch)
 # @date   26/09/2008
 #
-class Camera(LHCbConfigurableUser):
+class Camera(ConfigurableUser):
     # Steering options
     __slots__ = {
         'CameraServers' : []
