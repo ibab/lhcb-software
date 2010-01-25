@@ -1,4 +1,4 @@
-// $Id: PrepareVeloPixRawBank.cpp,v 1.1.1.1 2010-01-21 13:16:41 marcin Exp $
+// $Id: PrepareVeloPixRawBank.cpp,v 1.2 2010-01-25 10:06:48 marcin Exp $
 // Include files:
 // GSL
 #include "gsl/gsl_math.h"
@@ -279,14 +279,14 @@ long PrepareVeloPixRawBank::findPattern(LHCb::VeloPixChannelID centrChanID,
     }
     patternVec.push_back(pattFlg);
   }
-  double pattern = 0;
+  long pattern = 0;
   int num = -1;
   for(std::vector<int>::iterator ip = patternVec.begin();
       ip != patternVec.end(); ip++) {
     num++;
-    if(*ip != 0) pattern = pattern + pow(2,double(num));
+    if(*ip != 0) pattern = pattern | (1 << num);
   }
-  return long(pattern);
+  return pattern;
 }
 
 
