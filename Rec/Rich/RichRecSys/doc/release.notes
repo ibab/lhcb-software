@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2010-01-25 - Chris Jones
+ - Add early data options to use Loose photon selection cuts.
+
 ! 2009-12-11 - Marco Cattaneo
  - In TrackCreator.py, adapt cuts for "earlyData". These are the same cuts as in
    AppConfig/options/Brunel/richLooseTrackCuts.py

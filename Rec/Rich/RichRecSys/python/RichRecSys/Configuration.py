@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.24 2009-06-25 10:19:09 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.25 2010-01-25 16:38:24 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -297,7 +297,8 @@ class RichRecSysConf(RichConfigurableUser):
         # Tracks and segments
         tkConf = RichTrackCreatorConfig()
         tkConf.setProp("Radiators",self.usedRadiators())
-        self.setOtherProps(tkConf,["OutputLevel","Context","SpecialData","UseCaloMomentumTracks"])
+        self.setOtherProps(tkConf,["OutputLevel","Context","SpecialData",
+                                   "UseCaloMomentumTracks"])
 
         # Pixels
         pixConf = RichPixelCreatorConfig()
@@ -307,7 +308,7 @@ class RichRecSysConf(RichConfigurableUser):
         # Photons
         photConf = RichPhotonCreatorConfig()
         photConf.setProp("Radiators",self.usedRadiators())
-        self.setOtherProps(photConf,["OutputLevel","Context"])
+        self.setOtherProps(photConf,["OutputLevel","SpecialData","Context"])
 
         #--------------------------------------------------------------------
 

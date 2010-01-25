@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: PhotonCreator.py,v 1.10 2009-09-22 11:19:39 jonrob Exp $"
+__version__ = "$Id: PhotonCreator.py,v 1.11 2010-01-25 16:38:24 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -21,8 +21,9 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
     __slots__ = {
         "Context": "Offline" # The context within which to run
        ,"Radiators":  [] # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
-       ,"SelectionMode" : ""
-       ,"OutputLevel"   : INFO    # The output level to set all algorithms and tools to use
+       ,"SelectionMode" : "Tight"
+       ,"SpecialData"  : [] 
+       ,"OutputLevel"   : INFO # The output level to set all algorithms and tools to use
         }
 
 ## @brief Set OutputLevel 
@@ -39,12 +40,16 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
     ## Apply configurations
     def applyConf(self):
 
+        # First data options
+        if "earlyData" in self.getProp("SpecialData") :
+            if not self.isPropertySet("SelectionMode") :
+                self.setProp("SelectionMode","Loose")
+
         # Context
         context = self.getProp("Context")
 
         # Photon selection criteria
         selMode = self.getProp("SelectionMode")
-        if selMode == "" : selMode = "Tight"
         
         # -----------------------------------------------------------------------
         # Photon maker
