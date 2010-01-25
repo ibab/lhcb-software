@@ -1,4 +1,4 @@
-// $Id: IGetElementsToBeAligned.h,v 1.10 2009-12-30 05:26:25 wouter Exp $
+// $Id: IGetElementsToBeAligned.h,v 1.11 2010-01-25 16:17:20 wouter Exp $
 #ifndef IGETELEMENTSTOBEALIGNED_H 
 #define IGETELEMENTSTOBEALIGNED_H 1
 
@@ -37,6 +37,10 @@ namespace Gaudi {
   class Time ;
 }
 
+namespace Al {
+  class Equations ;
+}
+
 class IGetElementsToBeAligned : virtual public IAlgTool {
 
  public:
@@ -61,6 +65,10 @@ class IGetElementsToBeAligned : virtual public IAlgTool {
   virtual StatusCode findElements(const std::string& path, 
 				  std::vector<const AlignmentElement*>& alignelements) const = 0 ;
 
+  // return the time with which the geometry was initializes
   virtual Gaudi::Time initTime() const = 0 ;
+  
+  // initialize an Al::Equations object with the current par set
+  virtual void initEquations( Al::Equations& ) const = 0 ;
 };
 #endif // IGETELEMENTSTOBEALIGNED_H

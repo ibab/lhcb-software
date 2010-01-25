@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.h,v 1.14 2009-12-30 05:26:25 wouter Exp $
+// $Id: GetElementsToBeAligned.h,v 1.15 2010-01-25 16:17:20 wouter Exp $
 #ifndef GETELEMENTSTOBEALIGNED_H
 #define GETELEMENTSTOBEALIGNED_H 1
 
@@ -63,7 +63,9 @@ public:
   StatusCode findElements(const std::string& path, 
 			  std::vector<const AlignmentElement*>& alignelements) const ; 
   // return the time with which the geometry was initialized
-  Gaudi::Time initTime() const { return m_initTime ; }
+  Gaudi::Time initTime() const { return m_initTime ; } 
+  // initialize an Al::Equations object
+  void initEquations(Al::Equations& ) const ;
 private:
   enum e_DoFs {Tx, Ty, Tz, Rx, Ry, Rz};
   

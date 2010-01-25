@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.26 2009-12-30 05:26:25 wouter Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.27 2010-01-25 16:17:20 wouter Exp $
 // Include files
 
 //from STL
@@ -31,6 +31,7 @@
 
 // // local
 #include "GetElementsToBeAligned.h"
+#include "AlignKernel/AlEquations.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : GetElementsToBeAligned
@@ -386,4 +387,15 @@ const AlignmentElement* GetElementsToBeAligned::findElement(const LHCb::LHCbID& 
   // see if that element is in the map
   ElementMap::const_iterator it = m_elementMap.find( element ) ;
   return it == m_elementMap.end() ? 0 : it->second ;
+}
+
+void GetElementsToBeAligned::initEquations( Al::Equations& equations ) const
+{
+  equations = Al::Equations( m_elements.size(), initTime() ) ;
+  for(Elements::const_iterator ielem = m_elements.begin(); ielem!= m_elements.end(); ++ielem) {
+    // get the current delta (called alpha in Al::Equations)
+    Gaudi::Vector6 alpha = (*ielem)->currentTotalDelta().parameterVector6() ;
+    equations.element( (*ielem)->index() ).m_alpha = alpha ;
+    equations.element( (*ielem)->index() ).m_alphaIsSet = true ;
+  }
 }
