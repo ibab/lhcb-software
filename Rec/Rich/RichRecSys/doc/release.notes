@@ -4,7 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
-!====================== RichRecSys v3r24 2010-01-25 ==========================
+!====================== RichRecSys v3r25 2010-01-25 ==========================
 ! 2010-01-25 - Chris Jones
  - Add early data options to use Loose photon selection cuts.
 
