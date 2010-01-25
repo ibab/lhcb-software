@@ -17,14 +17,12 @@ importOptions( "$DAVINCIMONITORSROOT/options/DaVinciMonitoring.py")
 # Stripping
 #
 from StrippingConf.Configuration import StrippingConf
-from StrippingSelections import StreamBmuon, StreamHadron, StreamJpsi, StreamDstar, StreamLambda, StreamBelectron
-sc = StrippingConf( Streams = [ StreamBmuon.stream
-                    , StreamHadron.stream 
-                    , StreamJpsi.stream
-                    , StreamDstar.stream
-                    , StreamLambda.stream
-#                    , StreamBelectron.stream 
-                    ] )
+from StrippingSelections.Streams import allStreams
+from StrippingSelections import StreamMiniBias
+noMB = allStreams
+noMB.remove( StreamMiniBias.stream )
+
+sc = StrippingConf( Streams = noMB )
 # Dirac should modify OutputFilePrefix.
 # SelDSTWriter("StripMC09DSTWriter").OutputFileSuffix = '012345'
 dstWriter = SelDSTWriter("StripMC09DSTWriter",

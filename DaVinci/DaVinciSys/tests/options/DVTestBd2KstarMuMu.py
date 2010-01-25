@@ -1,6 +1,6 @@
-## $Id: DVTestBd2KstarMuMu.py,v 1.13 2009-10-21 15:40:17 pkoppenb Exp $
+## $Id: DVTestBd2KstarMuMu.py,v 1.14 2010-01-25 10:35:54 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $
 ## ============================================================================
 """
 @file DVTestBd2KstarMuMu.py
@@ -36,11 +36,10 @@ TestCorrelations.AlgorithmCorrelations.OnlyNonZero = False
 TestCorrelations.Algorithms = ["FilterTrueTracks",
                                "StdLooseMuons",
                                "StdLooseDiMuon",
-                               "StdNoPIDsKaons",
-                               "StdNoPIDsPions",
-                               "StdLooseDetachedKst2Kpi", 
-                               "Strip_loose_Bd2KstarMuMu",
-                               "filter_Bd2KstarMuMu_10Hz" ]
+                               "StdLooseKaons",
+                               "StdLoosePions",
+                               "StdVeryLooseDetachedKst2Kpi", 
+                               "Early_Signal_Bd2KstarMuMu" ]
 ###
 # DaVinci
 ###
@@ -48,10 +47,10 @@ TestCorrelations.Algorithms = ["FilterTrueTracks",
 
 from StrippingConf.Configuration import StrippingConf
 from StrippingConf.StrippingStream import StrippingStream
-from StrippingSelections import StrippingBd2KstarMuMu
+from StrippingSelections.StrippingBd2KstarMuMu import StrippingBd2KstarMuMuConf
 
 stream = StrippingStream("Bmuon")
-stream.appendLines( [ StrippingBd2KstarMuMu.line_10hz ] )
+stream.appendLines( [ StrippingBd2KstarMuMuConf().Early_SignalLine() ] )
 
 sc = StrippingConf()
 sc.appendStream( stream )

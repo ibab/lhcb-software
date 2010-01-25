@@ -27,7 +27,7 @@ tuple.ToolList +=  [
     , "TupleToolTrackInfo"
 #    , "TupleToolTISTOS"
      ]
-tuple.InputLocations = ["StripBd2JpsiKS"]
+tuple.InputLocations = ["SelBLLBd2JpsiKS"]
 tuple.Decay = "[B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-)]cc"
 #tuple.OutputLevel = 1 ;
 ########################################################################
