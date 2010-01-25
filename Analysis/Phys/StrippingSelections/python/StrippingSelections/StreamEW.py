@@ -26,7 +26,7 @@ stream.appendLines( [
 		        StrippingDY2MuMu.line3,
 		        StrippingDY2MuMu.line4,
                         StrippingZ02ee.line,
-                        StrippingWe.line,
+                      # StrippingWe.line,
                         StrippingDY2ee.line1,
                         StrippingDY2ee.line2,
 		        StrippingDY2ee.line3,

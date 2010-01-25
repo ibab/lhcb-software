@@ -49,4 +49,3 @@ DaVinci().HistogramFile = "hist.root"
 
 #importOptions("$STRIPPINGSELECTIONSROOT/tests/2008-InclBJpsiMuMu.py")     # Data file
 importOptions("$STRIPPINGSELECTIONSROOT/tests/MC09_Bincl.py")     # Data file
-

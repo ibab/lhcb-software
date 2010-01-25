@@ -19,7 +19,7 @@ from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
 ## ############################################################
 _muons =  DataOnDemand('stdLooseMuons', Location = 'Phys/StdLooseMuons')
 
-mucut = '(PT>10*GeV) '
+mucut = '(PT>10*GeV)'
 
 _W = FilterDesktop(name
                     , InputLocations = ["StdLooseMuons"]

@@ -19,11 +19,11 @@ from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
 ## ############################################################
 _electrons =  DataOnDemand('stdLooseElectrons', Location = 'Phys/StdLooseElectrons')
 
-ecut = '(PT>10*GeV) '
+ecut = '(PT>10*GeV)'
 
 _W = FilterDesktop(name
                     , InputLocations = ["StdLooseElectrons"]
-                    , Code = "(PT>10GeV)"
+                    , Code = ecut
                                )
                          
 W = Selection( "Sel"+name,

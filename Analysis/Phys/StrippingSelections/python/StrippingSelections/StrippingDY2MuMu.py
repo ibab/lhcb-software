@@ -25,7 +25,7 @@ _DY1 = CombineParticles(name,
                          DecayDescriptor = 'Z0 -> mu+ mu-',
                          DaughtersCuts = { 'mu+' : mucut , 
                                            'mu-' : mucut },
-                         MotherCut = "(MM>2.5*GeV &&MM<5*GeV ) ",
+                         MotherCut = "(MM>2.5*GeV) & (MM<5*GeV )",
                          WriteP2PVRelations = False
                          )
 
@@ -33,7 +33,7 @@ _DY2 = CombineParticles(name,
                          DecayDescriptor = 'Z0 -> mu+ mu-',
                          DaughtersCuts = { 'mu+' : mucut , 
                                            'mu-' : mucut },
-                         MotherCut = "(MM>5*GeV &&MM<10*GeV ) ",
+                         MotherCut = "(MM>5*GeV) &(MM<10*GeV)",
                          WriteP2PVRelations = False
                          )
 
@@ -41,7 +41,7 @@ _DY3 = CombineParticles(name,
                          DecayDescriptor = 'Z0 -> mu+ mu-',
                          DaughtersCuts = { 'mu+' : mucut , 
                                            'mu-' : mucut },
-                         MotherCut = "(MM>10*GeV &&MM<20*GeV ) ",
+                         MotherCut = "(MM>10*GeV) &(MM<20*GeV ) ",
                          WriteP2PVRelations = False
                          )
 
@@ -49,7 +49,7 @@ _DY4 = CombineParticles(name,
                          DecayDescriptor = 'Z0 -> mu+ mu-',
                          DaughtersCuts = { 'mu+' : mucut , 
                                            'mu-' : mucut },
-                         MotherCut = "(MM>20*GeV &&MM<40*GeV ) ",
+                         MotherCut = "(MM>20*GeV) &(MM<40*GeV ) ",
                          WriteP2PVRelations = False
                          )
 

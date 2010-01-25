@@ -31,18 +31,21 @@ _diPhoton = CombineParticles(name,
                          DecayDescriptor = 'J/psi(1S) -> mu+ mu-',
                          DaughtersCuts = { 'mu+' : mucut , 
                                            'mu-' : mucut },
-                         MotherCut = "(MM>1*GeV) ",
+                         CombinationCut =
+                         "(AM>1000*MeV)&(APT<900*MeV)&(AMAXDOCA('')<0.15)" ,
+                         MotherCut = "ALL",
                          WriteP2PVRelations = False
                          )
                          
 diPhoton = Selection( "Sel"+name,
                   Algorithm = _diPhoton,
-                  RequiredSelections = [_muons,]   # FilterNumMuons ] Does not work
+                  RequiredSelections = [_muons] 
                   )
 
 # build the SelectionSequence
 sequence = SelectionSequence("Seq"+name,
-                             TopSelection = diPhoton
+                             TopSelection = diPhoton,
+                             EventPreSelector = [FilterNumMuons]
                              )
 # Define the line
 ## ############################################################
