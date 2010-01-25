@@ -1,7 +1,9 @@
 Python options:-opt=command=import GaudiOnlineTests;GaudiOnlineTests.runMepBuffer()
+Python options:-opt=command=import GaudiOnlineTests;GaudiOnlineTests.runSendBuffer()
 Python options:-opt=command=import GaudiOnlineTests;GaudiOnlineTests.runEvtHolder(errBuffer=None)
 Python options:-opt=command=import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(percent=100.0)
 Python options:-opt=command=import GaudiOnlineTests;GaudiOnlineTests.runSender(target=None)
+Parent: Started process:MEPInit_0 output redirected to:/dev/null
 Parent: Started process:MEPInit_0 output redirected to:/dev/null
 Starting processes .....
 Parent: Started process:EvtProd_0 output redirected to:/dev/null
@@ -47,9 +49,18 @@ Child: Starting process:MBMsummary_0
  PROD_ONE              14d    P            55000   100                                 RESULT
  CONS_ONE              14d    C                            55000   100   1  RESULT
 
+======================== MBM Bufer summary for buffer "SEND" ========================
+
+ Buffer "SEND"              Events: Produced:0 Seen:0 Pending:0 Max:64
+                            Space(kB):[Tot:8088 Free:8088] Users:[Tot:1 Max:64]
+
+ Name            Partition Type State   Produced %prod     #seen %seen Reqs Buffer
+ EvtProd_0             14d    ?                                                          SEND
+
 +++++ MBM summary finished.
 waitpid() exited: Status=1
 Summary task finished work..
+waitpid() exited: Status=0
 waitpid() exited: Status=0
 waitpid() exited: Status=0
 waitpid() exited: Status=0

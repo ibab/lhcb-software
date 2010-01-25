@@ -29,7 +29,7 @@ ApplicationMgr       INFO Application Manager Configured successfully
               'OutputLevel': 3,
               'PrintFreq': 0.00021000000000000001},
  'FileCatalog': {'Catalogs': ['xmlcatalog_file:qmTest.xml']},
- 'FileRecordCnvSvc': {'DbType': 'POOL_ROOTTREE', 'ShareFiles': True},
+ 'FileRecordCnvSvc': {'DbType': 'POOL_ROOTTREE', 'ShareFiles': 'YES'},
  'FileRecordDataSvc': {'EnableFaultHandler': True,
                        'ForceLeaves': True,
                        'RootCLID': 1},
@@ -68,7 +68,7 @@ EventSelector.D...   INFO Compression:1 Checksum:1
 R__unzip: too small target
 EventSelector.D...   INFO Retry with increased buffer space of 185208 bytes.
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-Explorer             INFO ========= /Event[0x1b6a2cc0@EventDataSvc]:
+Explorer             INFO ========= /Event[0x15d629f0@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO | +--> /Prev5 [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
@@ -103,8 +103,8 @@ Explorer             INFO   +--> /Next5 [Address: CLID=0x1 Type=0xa000000]  Data
 Explorer             INFO     +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO       +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
 Domain[ROOT_All]     INFO ->  Access   DbDatabase   CREATE    [ROOT_All] 26FE952B-F81E-DE11-B1D8-000423D6B700
-Domain[ROOT_All]     INFO ->  Access   DbDatabase   CREATE    [ROOT_All] 26FE952B-F81E-DE11-B1D8-000423D6B700                          taePOOL.dat
-RootDBase.open    SUCCESS taePOOL.dat File version:52400
+Domain[ROOT_All]     INFO                           taePOOL.dat
+RootDBase.open    SUCCESS taePOOL.dat File version:52600
 EventSelector     SUCCESS Reading Event record 201. Record number within stream 1: 201
 EventSelector     SUCCESS Reading Event record 401. Record number within stream 1: 401
 EventSelector     SUCCESS Reading Event record 601. Record number within stream 1: 601
@@ -126,8 +126,8 @@ ApplicationMgr       INFO Application Manager Stopped successfully
 TAEMini              INFO Events output: 3000
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
+FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
 taePOOL.dat          INFO Database being retired...
-RootDBase.close     ERROR Failed to modify file: taePOOL.dat Errno=2 No such file or directory
 Domain[ROOT_All]     INFO ->  Deaccess DbDatabase   CREATE    [ROOT_All] 26FE952B-F81E-DE11-B1D8-000423D6B700
 taePOOL.dat          INFO Database being retired...
 PoolRootTreeEvt...   INFO Disconnected data IO:26FE952B-F81E-DE11-B1D8-000423D6B700[taePOOL.dat]

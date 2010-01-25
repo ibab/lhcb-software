@@ -1,6 +1,6 @@
-JobOptionsSvc        INFO 
+JobOptionsSvc        INFO
 //GP:================================================================================
-//GP: include "../../options/TimeoutAlg.opts"                                 (0,0)
+//GP: include "/afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_v4r36/Online/GaudiOnline/options/TimeoutAlg.opts" (0,0)
 ApplicationMgr.HistogramPersistency = "NONE";                           //GP: (1,1)
 ApplicationMgr.EvtSel = "NONE";                                         //GP: (1,1)
 EventDataSvc.RootCLID = 1;                                              //GP: (1,1)
@@ -9,6 +9,7 @@ Delay.DelayTime = 5000;                                                 //GP: (1
 Delay.ErrorMax = 10;                                                    //GP: (1,1)
 Timeout.Timeout = 1000;                                                 //GP: (1,1)
 Timeout.PrintTrace = 0;                                                 //GP: (1,1)
+Timeout.ExitTimeout = 0;                                                //GP: (1,1)
 Explorer.Load = 0;                                                      //GP: (1,1)
 Explorer.PrintFreq = 1;                                                 //GP: (1,1)
 MessageSvc.OutputLevel = 4;                                             //GP: (1,1)
@@ -16,42 +17,42 @@ ExceptionSvc.Catch = "NONE";                                            //GP: (1
 ChronoStatSvc.ChronoPrintOutTable = 0;                                  //GP: (1,1)
 CounterSvc.PrintStat = 0;                                               //GP: (1,1)
 ApplicationMgr.AppName = "";                                            //GP: (1,1)
-//GP: end  "../../options/TimeoutAlg.opts"                                    (16,1)
+//GP: end  "/afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_v4r36/Online/GaudiOnline/options/TimeoutAlg.opts" (17,1)
 //GP:================================================================================
 
-JobOptionsSvc        INFO Job options successfully read in from ../../options/TimeoutAlg.opts
-EventLoopMgr      WARNING Unable to locate service "EventSelector" 
+JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_v4r36/Online/GaudiOnline/options/TimeoutAlg.opts
+EventLoopMgr      WARNING Unable to locate service "EventSelector"
 EventLoopMgr      WARNING No events will be processed from external input.
 HistogramPersis...WARNING Histograms saving not required.
-Delay.sysExecute()  FATAL  Standard std::exception is caught 
-Delay.sysExecute()  ERROR TIMEOUT during event processing after 1000 milliseconds
+Delay               FATAL  Standard std::exception is caught
+Delay               ERROR TIMEOUT during event processing after 1000 milliseconds
 Delay             WARNING Continuing from error (cnt=1, max=10)
-Delay.sysExecute()  FATAL  Standard std::exception is caught 
-Delay.sysExecute()  ERROR TIMEOUT during event processing after 1000 milliseconds
+Delay               FATAL  Standard std::exception is caught
+Delay               ERROR TIMEOUT during event processing after 1000 milliseconds
 Delay             WARNING Continuing from error (cnt=2, max=10)
-Delay.sysExecute()  FATAL  Standard std::exception is caught 
-Delay.sysExecute()  ERROR TIMEOUT during event processing after 1000 milliseconds
+Delay               FATAL  Standard std::exception is caught
+Delay               ERROR TIMEOUT during event processing after 1000 milliseconds
 Delay             WARNING Continuing from error (cnt=3, max=10)
-Delay.sysExecute()  FATAL  Standard std::exception is caught 
-Delay.sysExecute()  ERROR TIMEOUT during event processing after 1000 milliseconds
+Delay               FATAL  Standard std::exception is caught
+Delay               ERROR TIMEOUT during event processing after 1000 milliseconds
 Delay             WARNING Continuing from error (cnt=4, max=10)
-Delay.sysExecute()  FATAL  Standard std::exception is caught 
-Delay.sysExecute()  ERROR TIMEOUT during event processing after 1000 milliseconds
+Delay               FATAL  Standard std::exception is caught
+Delay               ERROR TIMEOUT during event processing after 1000 milliseconds
 Delay             WARNING Continuing from error (cnt=5, max=10)
-Delay.sysExecute()  FATAL  Standard std::exception is caught 
-Delay.sysExecute()  ERROR TIMEOUT during event processing after 1000 milliseconds
+Delay               FATAL  Standard std::exception is caught
+Delay               ERROR TIMEOUT during event processing after 1000 milliseconds
 Delay             WARNING Continuing from error (cnt=6, max=10)
-Delay.sysExecute()  FATAL  Standard std::exception is caught 
-Delay.sysExecute()  ERROR TIMEOUT during event processing after 1000 milliseconds
+Delay               FATAL  Standard std::exception is caught
+Delay               ERROR TIMEOUT during event processing after 1000 milliseconds
 Delay             WARNING Continuing from error (cnt=7, max=10)
-Delay.sysExecute()  FATAL  Standard std::exception is caught 
-Delay.sysExecute()  ERROR TIMEOUT during event processing after 1000 milliseconds
+Delay               FATAL  Standard std::exception is caught
+Delay               ERROR TIMEOUT during event processing after 1000 milliseconds
 Delay             WARNING Continuing from error (cnt=8, max=10)
-Delay.sysExecute()  FATAL  Standard std::exception is caught 
-Delay.sysExecute()  ERROR TIMEOUT during event processing after 1000 milliseconds
+Delay               FATAL  Standard std::exception is caught
+Delay               ERROR TIMEOUT during event processing after 1000 milliseconds
 Delay             WARNING Continuing from error (cnt=9, max=10)
-Delay.sysExecute()  FATAL  Standard std::exception is caught 
-Delay.sysExecute()  ERROR TIMEOUT during event processing after 1000 milliseconds
+Delay               FATAL  Standard std::exception is caught
+Delay               ERROR TIMEOUT during event processing after 1000 milliseconds
 EventLoopMgr      WARNING Execution of algorithm Delay failed
 EventLoopMgr        ERROR Error processing event loop.
 EventLoopMgr        ERROR Terminating event processing loop due to errors

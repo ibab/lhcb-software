@@ -6,6 +6,7 @@ Delay.DelayTime                      = 5000;
 Delay.ErrorMax                       = 10;
 Timeout.Timeout                      = 1000;
 Timeout.PrintTrace                   = false;
+Timeout.ExitTimeout                  = false;
 Explorer.Load                        = 0;
 Explorer.PrintFreq                   = 1.0;
 MessageSvc.OutputLevel               = 4;
