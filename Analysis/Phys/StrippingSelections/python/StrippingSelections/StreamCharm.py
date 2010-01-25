@@ -14,6 +14,7 @@ from StrippingSelections import StrippingD2hhh
 from StrippingSelections import StrippingDstarD2KShh
 from StrippingSelections import StrippingDstarD2KShhRobust
 from StrippingSelections import StrippingDstarD02PipiMuMuPiMuKPiKmu
+from StrippingSelections import StrippingDstar_D2KPiPi0
 
 from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
 
@@ -70,5 +71,7 @@ stream.appendLines( [
 	, StrippingDstarD2KShhRobust.line12
 	, StrippingDstarD02PipiMuMuPiMuKPiKmu.lineDstarWithD02MuMu
 	, StrippingDstarD02PipiMuMuPiMuKPiKmu.lineDstarWithD0PiPiForDstarWithD02MuMu
+        , StrippingDstar_D2KPiPi0.lineRS
+        , StrippingDstar_D2KPiPi0.lineWS
     ] )
 stream.appendLines( StrippingDstarPromptWithD02HHConf().lines() )

@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-01-25 - Patrick Spradlin for Andrea Contu
+ - New stripping lines for D*+ -> D0(K pi pi0) pi+
+   + StrippingDstar_D2KPiPi0.py:  New file with line definitions
+   - StreamCharm.py: edited to include the new lines.
+
 ! 2010-01-25 - Patrick Koppenburg
  - Remove EW lines : they are too buggy
 
