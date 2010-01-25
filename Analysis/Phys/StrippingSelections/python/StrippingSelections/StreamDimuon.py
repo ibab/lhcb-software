@@ -60,7 +60,7 @@ stream.appendLines( [
 		        StrippingBu2JpsiKConf().loose_line(),  
 		        StrippingBu2JpsiKDetached.line,  
 		        StrippingBu2JpsiKDetachedR.line,
-		        StrippingBu2LLKConf().mmK()
+		        StrippingBu2LLKConf().mmK(),
                         StrippingBc2JpsiMuXConf().MuMu(),
                         StrippingBc2JpsiHConf().MuMu(),
                         StrippingBc2JpsiHDetachedConf(),MuMu()
