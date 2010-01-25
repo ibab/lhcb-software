@@ -1,4 +1,4 @@
- )!$Id: release.notes,v 1.170 2010-01-22 13:06:39 pkoppenb Exp $
+ )!$Id: release.notes,v 1.171 2010-01-25 12:07:07 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -7,6 +7,9 @@
 ! When adding a Particle make sure it is appended to one of the Standard* files
 !
 !-----------------------------------------------------------------------------
+
+! 2010-01-25 - Patrick Koppenburg
+ - Very Loose K* has chi2 of 64
 
 ! 2010-01-22 - Patrick Koppenburg
  - Remove all DC06 options

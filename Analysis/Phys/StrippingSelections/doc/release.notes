@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-01-25 - Patrick Koppenburg
+ - Bd2MuMuK* bug fixes: NoMuIDDiMuonForBd2KstarMuMu and MuonEleForBd2KstarMuMu
+	 have chi2 of 36. All contol lines ahve tight mother cuts
+  
 ! 2010-01-25 - Celestino Rodriguez
 - Converted BsKst0Kst0 to configurable. Added BsKst0Kst0Loose line.
   BsKst0Kst0Conf controls both nominal and loose selection for early data.

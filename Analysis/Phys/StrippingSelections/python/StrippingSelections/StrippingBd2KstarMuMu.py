@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.10 $'
+__version__ = '$Revision: 1.11 $'
 
 """
 Bd->K*MuMu selections 
@@ -110,6 +110,11 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
                              )
     
 #####
+# That will be useful later
+#
+def _tightMotherCuts(self):
+    return "(VFASPF(VCHI2/VDOF) < %(BVertexCHI2Tight)s ) & (BPVDIRA> %(BDIRA)s ) & (BPVVDCHI2 > %(BFlightCHI2Tight)s ) & (BPVIPCHI2() < %(BIPCHI2Tight)s )"  % self.getProps()
+#####
 # The wide K* mass line
 #
     def _Early_WideKstar(self):
@@ -134,7 +139,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         algo.DaughtersCuts = { 'J/psi(1S)' : jcuts,
                                'K*(892)0' : kcuts }
         algo.CombinationCut = "(ADAMASS('B0') < %(BMassMedWin)s *MeV)"  % self.getProps()
-        algo.MotherCut = "(VFASPF(VCHI2/VDOF) < %(BVertexCHI2Tight)s ) & (BPVDIRA> %(BDIRA)s ) & (BPVVDCHI2 > %(BFlightCHI2Tight)s ) & (BPVIPCHI2() < %(BIPCHI2Tight)s )"  % self.getProps()
+        algo.MotherCut = self._tightMotherCuts()
         return algo
     
         
@@ -161,10 +166,11 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         from CommonParticles.StdLooseDiMuon import StdLooseDiMuon
         
         # this violates charge
-        return StdLooseDiMuon.clone("NoMuIDDiMuonForBd2KstarMuMu",
+        return StdLooseDiMuon.clone("NoMuIDDiMuonForBd2KstarMuMu",  
                                     InputLocations = ["StdLooseMuons",
                                                       "StdNoPIDsPions"],
-                                    DecayDescriptor = "[J/psi(1S) -> pi+ mu-]cc")
+                                    DecayDescriptor = "[J/psi(1S) -> pi+ mu-]cc" ,
+                                    MotherCut = "(VFASPF(VCHI2/VDOF)<36)" )
         
     def _Early_NoMuIDBd(self):
         """
@@ -175,6 +181,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
                                                                  "StdVeryLooseDetachedKst2Kpi"])
         algo.DaughtersCuts['J/psi(1S)'] =  "(BPVDIRA> %(IntDIRA)s ) & (INTREE((ABSID=='mu-') & (TRCHI2DOF< %(TrackChi2)s ))) & (INTREE((ABSID=='pi+') & (TRCHI2DOF< %(TrackChi2)s ))) & ( BPVVDCHI2 > %(IntFlightCHI2)s )" % self.getProps()
         algo.CombinationCut = "(ADAMASS('B0') < %(BMassLowWin)s *MeV)"  % self.getProps()
+        algo.MotherCut = self._tightMotherCuts()
         return algo
 
     def Early_NoMuIDLine(self):
@@ -195,12 +202,11 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
 
     def _Early_eMu(self):
         """
-        The MuMu algorithm for eMu: clone of standard DiMuon
+        The MuMu algorithm for eMu: clone of NoMuIDMuMu
         """
-        from CommonParticles.StdLooseDiMuon import StdLooseDiMuon
         
         # this violates charge
-        return StdLooseDiMuon.clone("MuonEleForBd2KstarMuMu",
+        return self._Early_NoMuIDMuMu().clone("MuonEleForBd2KstarMuMu",
                                     InputLocations = ["StdLooseMuons",
                                                       "StdLooseElectrons"],
                                     DecayDescriptor = "[J/psi(1S) -> e+ mu-]cc")
@@ -213,6 +219,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
                                       InputLocations = ["MuonEleForBd2KstarMuMu",
                                                         "StdVeryLooseDetachedKst2Kpi"])
         algo.DaughtersCuts['J/psi(1S)'] = "(BPVDIRA> %(IntDIRA)s ) & (INTREE((ABSID=='mu-') & (TRCHI2DOF< %(TrackChi2)s ))) & (INTREE((ABSID=='e+') & (TRCHI2DOF< %(TrackChi2)s ))) & ( BPVVDCHI2 > %(IntFlightCHI2)s )"  % self.getProps()
+        algo.MotherCut = self._tightMotherCuts()
         
         return algo
 
@@ -349,3 +356,4 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         for (k,v) in self.getDefaultProperties().iteritems() :
             d[k] = getattr(self,k) if hasattr(self,k) else v
         return d
+
