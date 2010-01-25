@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-01-25 - Johannes Albrecht
+ - add new threshold settings on top of the the ones below 
+   with additionally the Hlt2 Express stream
+
 ! 2010-01-25 - Johanens Albrecht
  - add new threshold settings using both hadron via Velo and viaT
 
