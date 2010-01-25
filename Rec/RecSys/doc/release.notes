@@ -15,7 +15,7 @@ This version uses Gaudi v21r7 and LHCb v29r0
 - Packages updated: Calo/CaloMoniDst v4r3, Calo/CaloPIDs v5r3, 
                     Muon/MuonID v7r6, Rec/GlobalReco v6r31,
                     Rec/LumiAlgs v3r2, Rich/RichIFBAnalysis v2r35,
-										Rich/RichRecQC v2r35, Rich/RichRecTemplateRings v1r2,
+										Rich/RichRecQC v2r35, Rich/RichRecTemplateRings v1r2, Rich/RichRecSys v3r25,
                     Tf/PatAlgorithms v3r28, Tf/PatVelo v3r19, 
                     Tf/PatVeloTT v3r10, Tf/TfTools v1r9,
                     Tf/TrackMatching v2r26, Tf/TsaAlgorithms v3r15,
@@ -49,6 +49,9 @@ This version uses Gaudi v21r7 and LHCb v29r0
 
 - In Rich/RichRecTemplateRings v1r2:
 	. Added some options to find Cherenkov Rings in No-Magnetic field data 
+
+- In Rich/RichRecSys v3r25:
+	. Add early data options to use Loose photon selection cuts.
 
 - In Tf/PatAlgorithms v3r28:
 	. changes to use ignore flag of HitBase class

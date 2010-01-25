@@ -34,7 +34,7 @@ use RichRecMonitors      v2r24   Rich # Chris Jones
 use RichRecPhotonTools   v1r6p1  Rich # Chris Jones
 use RichRecQC            v2r35   Rich # Chris Jones
 use RichRecStereoTools   v1r6p1  Rich # Chris Jones
-use RichRecSys           v3r24   Rich # Chris Jones
+use RichRecSys           v3r25   Rich # Chris Jones
 use RichRecTemplateRings v1r2    Rich # Sajan Easo
 use RichRecTools         v4r9p1  Rich # Chris Jones
 use RichRecTrackTools    v1r16   Rich # Chris Jones
