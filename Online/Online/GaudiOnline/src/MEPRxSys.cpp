@@ -226,7 +226,7 @@ int recv_msg(int sockfd, void *buf, int len,  int flags, u_int64_t *whentsc,
   struct iovec vec[1];
   struct msghdr msg;
 
-  when = 0;
+  *when = 0;
   vec[0].iov_base = buf;
   vec[0].iov_len = len;
   ::memset(&msg, 0, sizeof(msg));
