@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.102 2010-01-25 12:14:34 albrecht Exp $
+$Id: release.notes,v 1.103 2010-01-25 15:46:18 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,9 @@ $Id: release.notes,v 1.102 2010-01-25 12:14:34 albrecht Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+! 2010-01-25 - Johannes Albrecht
+ - Hlt2ExpressLines.py: add slots to all selections
+
 ! 2010-01-25 - Johannes Albrecht
  - Hlt2ExpressLines.py: first meaningful draft of express lines
    (not all varaibles slots yet, to some..)
