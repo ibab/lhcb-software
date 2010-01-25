@@ -3,12 +3,50 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
- - Changes to requirements:
-   . Added temporarily GaudiConf v13r3, not included in LHCB v28r5
-   . Added packages for VeloPix: VeloPixAlgorithms and VeloPixAssociators
+</PRE><H1><A NAME=v20r1>2010-01-26 Boole v20r1</A></H1><PRE>
+This version uses projects Gaudi v21r7, LHCb v29r0, Lbcom v8r0
+ and SQLDDDB v5r18, ParamFiles v8r2, FieldMap v5r3, L0TCK v1r5, AppConfig v3r*
 
- - Changes to references to reflect changes in Boole v20r1 output:
-   . Follow changes in sequence names
+Version for 2009 450 GeV productions. 
+Output needs Brunel v35r8 or later, Brunel v36r0 if decoding L0DU bank
+Needs SQLDDDB v5r4 or later with tags including calo-20090508 or later
+
+ - Changes to Configurable:
+   . Change structure and names of sub-detector sequences in the process phases,
+     to allow usage with Upgrade detector
+
+ - Persistency changes
+   . New L0DU bank format (version v2) to accomodate Lumi Trigger decisions.
+     Needs Brunel v36r0/DaVinci v25r0 to decode (L0DU v10r0)
+
+ - New functionality
+   . Possibility to digitize VeloPix detector (VeloPixAlgorithms v1r0, 
+     VeloPixAssociators v1r0, VeloPixDAQ v1r0, DigiEvent v2r15, GaudiConf v13r3)
+   . Implement Lumi decisions in L0 (L0DU v10r0, L0Event v18r0)
+
+ - New tuning
+   . Change Calo ADC -> L0ADC conversion to reflect what is done in electronics
+     (CaloDigit v3r2)
+   . Changed default tags for 2009 DataType (DDDB v1r27, SQLDDDB v5r18):
+     o head-20100119         for DDDB
+     o sim-20100119-vc-md100 for SIMCOND
+   . New (single) condition for the temperature and pressure of the Gas Radiators
+-    (RichDet v13r2)
+
+ - Packaging changes
+   . Restructuring of L0 configurables, code and options
+     (L0DU v10r0, L0Muon v8r6, L0Base v1r3, L0Interfaces v1r6)
+
+ - Bug fixes
+   . Fix untested StatusCodes (VeloAlgorithms v5r1)
+   . Fix to file sharing in FileRecordCnvSvc (Gaudi v21r7)
+   . Fix uninitialized variable in CellParam constructor (CaloDet v10r3p1)
+   . Fix bug #60276: SolidPolycone does not define a correct bounding box
+     (DetDesc v18r18)
+
+ - Monitoring changes
+   . Improved printout from L0 configuration (L0Calo v10r3, L0DU v10r0)
+   . Changes to L0DU monitoring (L0DU v10r0)
 
 </PRE><H1><A NAME=v20r0>2009-12-08 Boole v20r0</A></H1><PRE>
 This version uses projects Gaudi v21r6, LHCb v28r4, Lbcom v7r10
