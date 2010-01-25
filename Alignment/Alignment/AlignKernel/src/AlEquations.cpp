@@ -8,45 +8,55 @@
 namespace Al
 {   
 
-  std::ostream& operator<<(std::ostream& file, const Al::ElementData& data)
-  {
-    using namespace FileIO ;
-    file  << data.m_dChi2DAlpha 
-	  << data.m_d2Chi2DAlpha2
-	  << data.m_d2Chi2DAlphaDBeta
-	  << data.m_dStateDAlpha
-	  << data.m_dVertexDAlpha
-	  << data.m_numHits
-	  << data.m_numOutliers
-	  << data.m_numTracks
-	  << data.m_weightV 
-	  << data.m_weightR ;
-    return file ;
-  }
+  namespace FileIO {
+    
+    std::ofstream& operator<<(std::ofstream& file, const Al::ElementData& data)
+    {
+      file  << data.m_alpha
+	    << data.m_dChi2DAlpha 
+	    << data.m_d2Chi2DAlpha2
+	    << data.m_d2Chi2DAlphaDBeta
+	    << data.m_dStateDAlpha
+	    << data.m_dVertexDAlpha
+	    << data.m_numHits
+	    << data.m_numOutliers
+	    << data.m_numTracks
+	    << data.m_weightV 
+	    << data.m_weightR 
+	    << data.m_alphaIsSet ;
+      return file ;
+    }
   
-  inline
-  std::ifstream& operator>>(std::ifstream& file, Al::ElementData& data)
-  {
-    using namespace FileIO ;
-    file  >> data.m_dChi2DAlpha 
-	  >> data.m_d2Chi2DAlpha2
-	  >> data.m_d2Chi2DAlphaDBeta
-      	  >> data.m_dStateDAlpha
-      	  >> data.m_dVertexDAlpha
-	  >> data.m_numHits
-	  >> data.m_numOutliers
-	  >> data.m_numTracks
-	  >> data.m_weightV 
-	  >> data.m_weightR ;
-    return file ;
+    inline
+    std::ifstream& operator>>(std::ifstream& file, Al::ElementData& data)
+    {
+      file  >> data.m_alpha
+	    >> data.m_dChi2DAlpha 
+	    >> data.m_d2Chi2DAlpha2
+	    >> data.m_d2Chi2DAlphaDBeta
+	    >> data.m_dStateDAlpha
+	    >> data.m_dVertexDAlpha
+	    >> data.m_numHits
+	    >> data.m_numOutliers
+	    >> data.m_numTracks
+	    >> data.m_weightV 
+	    >> data.m_weightR 
+	    >> data.m_alphaIsSet ;
+      return file ;
+    }
   }
 
   ElementData::ElementData()
-    : m_numHits(0), m_numOutliers(0), m_numTracks(0), m_weightV(0), m_weightR(0) 
+    : m_numHits(0), m_numOutliers(0), m_numTracks(0), m_weightV(0), m_weightR(0), m_alphaIsSet(false)
   {}
   
   void ElementData::add( const ElementData& rhs ) 
   {
+    if( !m_alphaIsSet && rhs.m_alphaIsSet ) {
+      // if this is the first one and the parameters are not set, copy the parameters
+      m_alpha = rhs.m_alpha ;
+      m_alphaIsSet = rhs.m_alphaIsSet ;
+    } 
     m_dChi2DAlpha += rhs.m_dChi2DAlpha ;
     m_d2Chi2DAlpha2 += rhs.m_d2Chi2DAlpha2 ;
     m_numHits += rhs.m_numHits ;
@@ -115,7 +125,7 @@ namespace Al
     m_lastTime = Gaudi::Time(Gaudi::Time::epoch()) ;
   }
 
-  void Equations::writeToBuffer(std::ostream& buffer) const
+  void Equations::writeToBuffer(std::ofstream& buffer) const
   {
     using namespace FileIO ;
     buffer << m_elements
@@ -133,7 +143,7 @@ namespace Al
 	   << m_initTime ;
   }
 
-  void Equations::readFromBuffer(std::istream& buffer)
+  void Equations::readFromBuffer(std::ifstream& buffer)
   {
     using namespace FileIO ;
     buffer >> m_elements
@@ -155,26 +165,70 @@ namespace Al
   {
     std::ofstream file(filename,std::ios::out | std::ios::binary);
     writeToBuffer(file) ;
-    // std::cout << "Equations::wroteToFile wrote " << file.tellg() << " bytes to file" << std::endl ;
+    std::cout << "Equations::wroteToFile wrote " << file.tellp() << " bytes to file" << std::endl ;
     file.close() ;
   }
   
   void Equations::readFromFile(const char* filename)
   {
     std::ifstream file(filename,std::ios::in | std::ios::binary);
-    readFromBuffer(file) ;
-    // std::cout << "Equations::readFromFile read " << file.tellg() << " bytes from file" << std::endl ;
-    file.close() ;
+    if( file.is_open() ) {
+      readFromBuffer(file) ;
+      std::cout << "Equations::readFromFile read " << file.tellg() << " bytes from file" << std::endl ;
+      file.close() ;
+    } else {
+      printf("Cannot open input file: \'%s\'",filename) ;
+    }
   }
   
   void Equations::add(const Equations& rhs)
   {
-    if( m_elements.empty() ) m_elements.resize( rhs.m_elements.size() ) ;
-    assert( m_elements.size() == rhs.m_elements.size() ) ;
-
-    ElementContainer::iterator it = m_elements.begin() ;
-    for( ElementContainer::const_iterator rhsit = rhs.m_elements.begin() ;
-	 rhsit != rhs.m_elements.end(); ++rhsit, ++it) (*it).add( *rhsit ) ;
+    // if this if the first one, we just copy
+    if( m_elements.empty() ) {
+      m_elements = rhs.m_elements ;
+      m_initTime = rhs.m_initTime ;
+    } else {
+      if( m_elements.size() != rhs.m_elements.size() ) {
+	std::cout << "Al::Equations: adding up derivatives with different size" << std::endl ;
+	assert(0) ;
+      }
+      if( m_initTime != rhs.m_initTime ) 
+	std::cout << "Al::Equations::add: WARNING:: adding up Equations with different initTime. Make sure you know what you are doing."
+		  << std::endl ;
+      
+      // this is a tricky one. if we add up derivatievs that were
+      // actually computed around a different point, then we need to
+      // update all first derivatives. we correct the rhs before doing
+      // the addition. Note the signs. I think that they are correct now.
+      Equations ncrhs = rhs ;
+      size_t index(0) ;
+      for( ElementContainer::iterator rhsit = ncrhs.m_elements.begin() ;
+      	   rhsit != ncrhs.m_elements.end(); ++rhsit, ++index) {
+      	// compute dela-alpha (usign the 'old' rhs)
+      	Gaudi::Vector6 deltaalpha = rhs.m_elements[index].m_alpha - m_elements[index].m_alpha ;
+	std::cout << "**************** Correcting for shifted alignment: "
+		    << deltaalpha << std::endl ;
+	// first the diagonal
+      	rhsit->m_dChi2DAlpha += rhsit->m_d2Chi2DAlpha2 * deltaalpha ;
+      	// now all the correlated elements
+      	for( ElementData::OffDiagonalContainer::const_iterator offdiagit = rhsit->m_d2Chi2DAlphaDBeta.begin() ;
+      	     offdiagit != rhsit->m_d2Chi2DAlphaDBeta.end() ; ++offdiagit) {
+      	  // the upper diagonal
+      	  ncrhs.m_elements[ offdiagit->first ].m_dChi2DAlpha += ROOT::Math::Transpose(offdiagit->second.matrix()) * deltaalpha ;
+      	  // but also the lower diagonal. for this we need the delta-alpha of the other element
+      	  Gaudi::Vector6 deltaalphaj = rhs.m_elements[ offdiagit->first ].m_alpha - m_elements[ offdiagit->first ].m_alpha ;
+      	  rhsit->m_dChi2DAlpha += offdiagit->second.matrix() * deltaalphaj ;
+      	}
+      	// update alpha itself
+      	rhsit->m_alpha = m_elements[index].m_alpha ;
+      }
+      
+      // only now add the right-hand-side
+      ElementContainer::iterator it = m_elements.begin() ;
+      for( ElementContainer::const_iterator rhsit = ncrhs.m_elements.begin() ;
+	   rhsit != ncrhs.m_elements.end(); ++rhsit, ++it) (*it).add( *rhsit ) ;
+    }
+    
     m_numEvents       += rhs.m_numEvents ;
     m_numTracks       += rhs.m_numTracks ;
     m_numVertices     += rhs.m_numVertices ;
@@ -186,15 +240,7 @@ namespace Al
     m_totalVertexNumDofs    += rhs.m_totalVertexNumDofs ;
     if( m_firstTime.ns() > rhs.m_firstTime.ns() ) m_firstTime = rhs.m_firstTime ;
     if( m_lastTime.ns()  < rhs.m_lastTime.ns()  ) m_lastTime  = rhs.m_lastTime ;
-    if( m_initTime != Gaudi::Time(Gaudi::Time::epoch()) ) {
-      if( m_initTime != rhs.m_initTime ) {
-	std::cout << "Equations::add: adding up Equations with different initTime. Asserting."
-		  << std::endl ;
-	assert(0) ;
-      }
-    } else {
-      m_initTime = rhs.m_initTime ;
-    }
+    
   }
   
   size_t Equations::numHits() const

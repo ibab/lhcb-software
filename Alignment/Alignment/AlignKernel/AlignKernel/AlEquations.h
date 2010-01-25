@@ -5,6 +5,7 @@
 #include <map>
 #include <ostream>
 #include <istream>
+#include <fstream>
 #include "GaudiKernel/GenericMatrixTypes.h"
 #include "GaudiKernel/SymmetricMatrixTypes.h"
 #include "GaudiKernel/GenericVectorTypes.h"
@@ -15,7 +16,7 @@ namespace Al
 {
   class OffDiagonalData
   {
-  private:
+  public:
     Gaudi::Matrix6x6 m_matrix ;
     size_t m_numTracks ;
     size_t m_numHits ;
@@ -55,6 +56,7 @@ namespace Al
     const OffDiagonalContainer& d2Chi2DAlphaDBeta() const { return m_d2Chi2DAlphaDBeta ; }
     const TrackDerivatives& dStateDAlpha() const { return m_dStateDAlpha ; }
     const VertexDerivatives& dVertexDAlpha() const { return m_dVertexDAlpha ; }
+    const Gaudi::Vector6& alpha() const { return m_alpha ; }
 
     double fracNonOutlier() const { return 1 - (m_numHits >0 ? m_numOutliers/double(m_numHits): 0 ) ; }
     double weightV() const { return m_weightV ; }
@@ -69,6 +71,7 @@ namespace Al
     }
     void addTrack() { ++m_numTracks ; }
 
+    Gaudi::Vector6       m_alpha ;            // the set of parameters at which the derivatives are computed
     Gaudi::Vector6       m_dChi2DAlpha ;      // (half) 1st derivative
     Gaudi::SymMatrix6x6  m_d2Chi2DAlpha2;     // (half) 2nd derivative diagonal ('this-module')
     OffDiagonalContainer m_d2Chi2DAlphaDBeta; // (half) 2nd derivative off-diagonal ('module-to-module')
@@ -79,6 +82,7 @@ namespace Al
     size_t               m_numTracks ;
     double               m_weightV ; // sum V^{-1}          --> weight of 1st derivative
     double               m_weightR ; // sum V^{-1} R V^{-1} --> weight of 2nd derivative
+    bool                 m_alphaIsSet ;
   } ;
   
   class Equations {
@@ -131,8 +135,8 @@ namespace Al
     
     void writeToFile(const char* filename) const ;
     void readFromFile(const char* filename) ;
-    void writeToBuffer(std::ostream& buffer) const ;
-    void readFromBuffer(std::istream& buffer) ;
+    void writeToBuffer(std::ofstream& buffer) const ;
+    void readFromBuffer(std::ifstream& buffer) ;
     void add(const Al::Equations&) ;
 
     std::ostream& fillStream(std::ostream& os) const ;

@@ -1,8 +1,7 @@
 #ifndef ALIGNSOLVTOOLS_ALFILEIO_H
 #define ALIGNSOLVTOOLS_ALFILEIO_H
 
-#include <ostream>
-#include <istream>
+#include <fstream>
 #include <vector>
 #include <map>
 
@@ -14,13 +13,13 @@ namespace Al
 
     // IO for a generic simple object
     template<class T>
-    std::ostream& operator<<(std::ostream& file, const T& object) 
+    std::ofstream& operator<<(std::ofstream& file, const T& object) 
     {
       file.write( reinterpret_cast<const char*>(&object), sizeof(object) ) ;
       return file ;
     }
     template<class T>
-    std::istream& operator>>(std::istream& file, T& object) 
+    std::ifstream& operator>>(std::ifstream& file, T& object) 
     {
       file.read( reinterpret_cast<char*>(&object), sizeof(object) ) ;
       return file ;
@@ -28,9 +27,10 @@ namespace Al
     
     // IO for a map
     template<class T, class S>
-    std::ostream& operator<<(std::ostream& file, const std::map<T,S>& amap) 
+    std::ofstream& operator<<(std::ofstream& file, const std::map<T,S>& amap) 
     {
-      size_t n = amap.size() ;
+      size_t n = amap.size() ; 
+      //printf("Trying to write map with size: %d\n",int(n)) ;
       file << n ;
       for( typename std::map<T,S>::const_iterator it = amap.begin() ;
            it != amap.end(); ++it)
@@ -38,10 +38,11 @@ namespace Al
       return file ;
     }
     template<class T, class S>
-    std::istream& operator>>(std::istream& file, std::map<T,S>& amap) 
+    std::ifstream& operator>>(std::ifstream& file, std::map<T,S>& amap) 
     {
       size_t n ;
       file >> n ;
+      //printf("Trying to read map with size: %d\n",int(n)) ;
       T key ;
       S obj ;
       for(size_t i=0; i<n ; ++i) {
@@ -53,7 +54,7 @@ namespace Al
 
     // IO for a vector
     template<class T>
-    std::ostream& operator<<(std::ostream& file, const std::vector<T>& v) 
+    std::ofstream& operator<<(std::ofstream& file, const std::vector<T>& v) 
     {
       size_t n = v.size() ;
       file << n ;
@@ -62,7 +63,7 @@ namespace Al
       return file ;
     }
     template<class T>
-    std::istream& operator>>(std::istream& file, std::vector<T>& v) 
+    std::ifstream& operator>>(std::ifstream& file, std::vector<T>& v) 
     {
       size_t n ;
       file >> n ;
