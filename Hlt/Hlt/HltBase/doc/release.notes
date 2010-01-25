@@ -3,6 +3,11 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+
+! 2010-01-25 - Gerhard Raven
+ - migrate LoKi::IHltUnit to HltBase, Hlt::IUnit
+ - HltAlgorithm now implements the above interface
+
 !========================== HltBase v8r0 2010-01-11 ===================
 ! 2010-01-07 - Gerhard Raven
  - extend histogram utilities to profile histograms

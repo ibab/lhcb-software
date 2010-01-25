@@ -1,8 +1,9 @@
-// $Id: HltAlgorithm.h,v 1.44 2009-12-24 14:13:19 graven Exp $
+// $Id: HltAlgorithm.h,v 1.45 2010-01-25 09:28:01 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
 // Include files
+#include "HltBase/IHltUnit.h"
 #include "HltBase/HltBaseAlg.h"
 #include "HltBase/HltSelection.h"
 #include "boost/utility.hpp"
@@ -24,7 +25,8 @@
  *  @author Jose Angel Hernando Morata
  *  @date   2006-06-15
  */
-class HltAlgorithm : public HltBaseAlg {
+class HltAlgorithm : public HltBaseAlg,
+                     virtual public Hlt::IUnit {
 public:
 
   // Standard constructor
@@ -40,23 +42,33 @@ public:
   // restart algorithm
   virtual StatusCode restart  ();
 
+  StatusCode queryInterface(const InterfaceID& iid, void** ppvi ) ;
+
   // retrieve a selection
-  const Hlt::Selection& retrieveSelection(const Gaudi::StringKey& selname);
+  const Hlt::Selection* selection(const Gaudi::StringKey& key) const;
+  const Hlt::Selection* selection(const Gaudi::StringKey& key, const Hlt::IUnit::Client&) const;
+  const Hlt::Selection* declareInput(const Gaudi::StringKey&, const Hlt::IUnit::Client&) const;
+  StatusCode registerTESInput(const Gaudi::StringKey&, const Hlt::IUnit::Client&) const;
+  StatusCode registerTESInput(const Gaudi::StringKey&) const;
+  const DataObject* tes(const Hlt::IUnit::Client&, const Gaudi::StringKey&) const;
+  Hlt::Selection* retrieve(const Hlt::IUnit::Client&, const Gaudi::StringKey&) const;
+
 
   // retrieve a selection with candidates of type T (e.g. Track)
   template <class T>
   const Hlt::TSelection<T>& retrieveTSelection(const Gaudi::StringKey& key) {
         const Hlt::TSelection<T> *sel = (key.str().substr(0,4) == "TES:")  ?
                                   this->registerTESSelection<T>(Gaudi::StringKey(key.str().substr(4))) :
-                                  retrieveSelection(key).template down_cast<T>();
+                                  selection(key)->template down_cast<T>();
         if (sel==0) throw GaudiException("Failed to down_cast Selection",key.str(),StatusCode::FAILURE);
         return *sel;
   }
 
+
   // register an output selection of no candidates
   Hlt::Selection& registerSelection(const Gaudi::StringKey& key) {
         Hlt::Selection* tsel = new Hlt::Selection(key);
-        setOutputSelection(tsel);
+        registerOutput(tsel);
         return *tsel;
   }
 
@@ -64,18 +76,9 @@ public:
   template <typename T>
   Hlt::TSelection<T>& registerTSelection(const Gaudi::StringKey& key) {
         Hlt::TSelection<T>* tsel = new Hlt::TSelection<T>(key);
-        setOutputSelection(tsel);
+        registerOutput(tsel);
         return *tsel;
   }
-
-  Hlt::Selection& outputSelection() const {
-    Assert(m_outputSelection != 0, "No defined output selection!!");
-    return *m_outputSelection;
-  }
-  
-  size_t outputSelectionSize() const 
-  {return m_outputSelection != 0?  m_outputSelection->size():0;}
-  
 
 private:
 
@@ -97,7 +100,7 @@ private:
   template <typename T> 
   const Hlt::TSelection<T>* registerTESSelection(const Gaudi::StringKey& key) {
        // must ALWAYS add a callback to our stack for this 
-       StatusCode sc = regSvc()->registerTESInput(key,this);
+       StatusCode sc = registerTESInput(key);
        if (sc.isFailure()) {
             throw GaudiException("Failed to register TES Selection",key.str(),StatusCode::FAILURE);
        }
@@ -120,19 +123,28 @@ private:
 
   // set this selection as output, to be monitor, and to decide if the 
   // event pass
-  void setOutputSelection(Hlt::Selection* sel);
+  StatusCode registerOutput(Hlt::Selection* sel, const Hlt::IUnit::Client& client) const;
+  StatusCode registerOutput(Hlt::Selection* sel) const;
 
-  // list of all the input selections
-  std::vector<const Hlt::Selection*> m_inputSelections;
+  // (owner!) pointer to the output selection
+  mutable Hlt::Selection* m_outputSelection;
 
-  // (owner) pointer to the output selection
-  Hlt::Selection* m_outputSelection;
+  /// container of keys 
+  typedef GaudiUtils::VectorMap<Key,      Hlt::Selection*> OMap ;
+  typedef GaudiUtils::VectorMap<Key,const Hlt::Selection*> IMap ;
+  typedef std::vector<Key>                                 LVct ;
+  /// keys for all "input"  selections 
+  mutable IMap      m_in  ;               // keys for all "input"  selections 
+  /// keys for all "output" selections 
+  mutable OMap      m_out ;               // keys for all "output" selections 
+  /// keys for all TES input locations 
+  mutable LVct      m_tes ;               // keys for all TES input locations 
 
   // map of id of selection and histogram to monitor input candidate
-  std::map<Gaudi::StringKey,AIDA::IHistogram1D*> m_inputHistos;
+  mutable std::map<Gaudi::StringKey,AIDA::IHistogram1D*> m_inputHistos;
   
   // map of the output selection candidates
-  AIDA::IHistogram1D* m_outputHisto;
+  mutable AIDA::IHistogram1D* m_outputHisto;
 
 
   struct CallBack {
