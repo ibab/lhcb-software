@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.11 $'
+__version__ = '$Revision: 1.12 $'
 
 """
 Bd->K*MuMu selections 
@@ -112,8 +112,8 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
 #####
 # That will be useful later
 #
-def _tightMotherCuts(self):
-    return "(VFASPF(VCHI2/VDOF) < %(BVertexCHI2Tight)s ) & (BPVDIRA> %(BDIRA)s ) & (BPVVDCHI2 > %(BFlightCHI2Tight)s ) & (BPVIPCHI2() < %(BIPCHI2Tight)s )"  % self.getProps()
+    def _tightMotherCuts(self):
+	return "(VFASPF(VCHI2/VDOF) < %(BVertexCHI2Tight)s ) & (BPVDIRA> %(BDIRA)s ) & (BPVVDCHI2 > %(BFlightCHI2Tight)s ) & (BPVIPCHI2() < %(BIPCHI2Tight)s )"  % self.getProps()
 #####
 # The wide K* mass line
 #

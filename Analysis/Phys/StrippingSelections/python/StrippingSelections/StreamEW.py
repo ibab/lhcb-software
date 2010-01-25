@@ -9,26 +9,26 @@
 from Gaudi.Configuration import *
 from StrippingConf.StrippingStream import StrippingStream
 
-from StrippingSelections import StrippingZMuMu
+from StrippingSelections import StrippingZ02MuMu
 from StrippingSelections import StrippingWMu
-from StrippingSelections import StrippingDYMuMu
-from StrippingSelections import StrippingZee
+from StrippingSelections import StrippingDY2MuMu
+from StrippingSelections import StrippingZ02ee
 from StrippingSelections import StrippingWe
-from StrippingSelections import StrippingDYee
+from StrippingSelections import StrippingDY2ee
 
 
 stream = StrippingStream("EW")
 stream.appendLines( [ 
-		        StrippingZMuMu.line, 
+		        StrippingZ02MuMu.line, 
 		        StrippingWMu.line,  
-		        StrippingDYMuMu.line1,
-                        StrippingDYMuMu.line2,
-		        StrippingDYMuMu.line3,
-		        StrippingDYMuMu.line4,
-                        StrippingZee.line,
+		        StrippingDY2MuMu.line1,
+                        StrippingDY2MuMu.line2,
+		        StrippingDY2MuMu.line3,
+		        StrippingDY2MuMu.line4,
+                        StrippingZ02ee.line,
                         StrippingWe.line,
-                        StrippingDYee.line1,
-                        StrippingDYee.line2,
-		        StrippingDYee.line3,
-		        StrippingDYee.line4, 
+                        StrippingDY2ee.line1,
+                        StrippingDY2ee.line2,
+		        StrippingDY2ee.line3,
+		        StrippingDY2ee.line4, 
 		    ] )
