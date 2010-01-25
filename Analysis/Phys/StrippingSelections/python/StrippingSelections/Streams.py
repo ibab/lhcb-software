@@ -29,6 +29,6 @@ allStreams = [
                StreamSemileptonic.stream, 
                StreamV0.stream,
                StreamRadiative.stream,
-               StreamEW.stream,
-               StreamDiPhotonDiMuon.stream
+#               StreamEW.stream,
+#               StreamDiPhotonDiMuon.stream
              ] 

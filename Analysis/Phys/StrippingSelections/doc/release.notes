@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-01-25 - Patrick Koppenburg
+ - Remove EW lines : they are too buggy
+
 ! 2010-01-25 - Anton Poluektov 
   Bug fixes to StreamEW (correct line names) and Bd2KstarMuMu line (indentation)
 
