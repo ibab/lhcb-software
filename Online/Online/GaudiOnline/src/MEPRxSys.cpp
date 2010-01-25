@@ -242,10 +242,12 @@ int recv_msg(int sockfd, void *buf, int len,  int flags, u_int64_t *whentsc,
       return 0;
     return s;
   }
-  if (msg.msg_flags & MSG_TRUNC) {
+
+  if (msg.msg_flags & MSG_TRUNC & !(flags & MEPRX_PEEK)) {
     errstr = "received truncated message";
     return s;
   }
+
   if (msg.msg_flags & MSG_CTRUNC) {
     errstr = "received truncated ancillary data";
     return s;

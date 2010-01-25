@@ -42,7 +42,9 @@ namespace MEPRxSys {
   int open_sock_arb_source(int ipproto, int rxbufsize, std::string &errmsg);
   int send_msg_arb_source(int raw_socket, u_int8_t proto, u_int32_t srcAddr, u_int32_t destAddr, void *buf, int len);
   int send_msg_arb_source(int raw_socket, u_int8_t proto, u_int32_t srcAddr, u_int32_t destAddr, void *buf, int len, u_int16_t datagramID);
-  int rx_poll(int sockfd, int msec); 
+  int rx_poll(int sockfd, int msec);
+  int open_sock_udp(std::string &errmsg, int port);
+ 
 	
 //MSF: usleep is a (unprotected!!!!!) define by DIM !!!!
   void microsleep(int us);
