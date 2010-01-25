@@ -29,6 +29,9 @@ from StrippingSelections import StrippingBu2JpsiKDetached
 from StrippingSelections import StrippingBu2JpsiKDetachedR
 from StrippingSelections.StrippingBu2LLK  import StrippingBu2LLKConf
 from StrippingSelections.StrippingBd2KstarMuMu import StrippingBd2KstarMuMuConf
+from StrippingSelections.StrippingBc2JpsiMuX import StrippingBc2JpsiMuXConf
+from StrippingSelections.StrippingBc2JpsiH import StrippingBc2JpsiHConf
+from StrippingSelections.StrippingBc2JpsiHDetached import StrippingBc2JpsiHDetachedConf
 
 stream = StrippingStream("Dimuon")
 stream.appendLines( [ 
@@ -58,4 +61,7 @@ stream.appendLines( [
 		        StrippingBu2JpsiKDetached.line,  
 		        StrippingBu2JpsiKDetachedR.line,
 		        StrippingBu2LLKConf().mmK()
+                        StrippingBc2JpsiMuXConf().MuMu(),
+                        StrippingBc2JpsiHConf().MuMu(),
+                        StrippingBc2JpsiHDetachedConf(),MuMu()
 		    ] )

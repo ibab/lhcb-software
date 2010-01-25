@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-01-25 - Jibo He
+ - Added three new lines (configurable): Bc2JpsiMuX, Bc2JpsiH, Bc2JpsiHDetached  
+   and put them in StreamDimuon.
+
 ! 2010-01-25 - Greig Cowan
  - Converted Bs2JpsiPhi, Bd2JpsiKstar and Bu2JpsiK lifetime unbiased selections
    to configurables. Bs2JpsiPhiConf controls both the nominal stripping
