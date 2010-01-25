@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # pylint: disable-msg=E1103,W0141
-_cvs_id = "$Id: SetupProject.py,v 1.29 2010-01-25 11:37:29 joel Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.30 2010-01-25 17:18:39 marcocle Exp $"
 
 import os, sys, re, time
 from xml.sax import parse, ContentHandler
@@ -11,7 +11,7 @@ from tempfile import mkdtemp, mkstemp
 
 from LbConfiguration import createProjectMakefile
 from LbUtils.CVS import CVS2Version
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.29 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.30 $")
 
 # subprocess is available since Python 2.4, but LbUtils guarantees that we can
 # import it also in Python 2.3
@@ -491,7 +491,7 @@ def makeProjectInfo(project = None, version = None, versions = None, search_path
         return None
     return apply(ProjectInfo,vers_tuple)
 
-if "win" in sys.platform:
+if sys.platform.startswith("win"):
     # On Windows, Popen needs a list (when using shell=True)
     _prepare_cmt_cmd = lambda cmd, args: ["cmt", cmd] + args
 else:
