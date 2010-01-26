@@ -1,4 +1,4 @@
- )!$Id: release.notes,v 1.173 2010-01-26 14:02:38 pkoppenb Exp $
+ )!$Id: release.notes,v 1.174 2010-01-26 20:41:22 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -9,6 +9,7 @@
 !-----------------------------------------------------------------------------
 
 !========================== CommonParticles v7r0 2010-01-26 ===================
+!========================== CommonParticles v6r5 2010-01-26 ===================
 ! 2010-01-26 - Patrick Koppenburg
  - Very Loose DiMuon
 
