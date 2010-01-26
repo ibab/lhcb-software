@@ -6,7 +6,7 @@
 
 __author__ = ['Marco Gersabeck']
 __date__ = '03/11/2009'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 __all__ = ('name', 'D0', 'sequence')
 
@@ -36,23 +36,24 @@ D0 = Selection ( "Sel"+name,
 sequence = SelectionSequence("Seq"+name, TopSelection = D0)
 
 # Global event cuts
-from Configurables import LoKi__VoidFilter as VoidFilter
-from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
-modules = CoreFactory('CoreFactory').Modules
-for i in [ 'LoKiTrigger.decorators' ]:
-    if i not in modules: modules.append( i )
-gec_cuts = VoidFilter('gec_cuts',
-                      Code = "( VSOURCE('Rec/Vertex/Primary', NTRACKS >= 10) >> (VSIZE == 1) )\
-                              & ( TrSOURCE('Rec/Track/Best') >> (TrSIZE < 150 ) )",
-                      Preambulo = [ "from LoKiPhys.decorators import *",
-                                    "from LoKiCore.functions import *" ]
-                     )
+#from Configurables import LoKi__VoidFilter as VoidFilter
+#from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+#modules = CoreFactory('CoreFactory').Modules
+#for i in [ 'LoKiTrigger.decorators' ]:
+#    if i not in modules: modules.append( i )
+#gec_cuts = VoidFilter('gec_cuts',
+#                      Code = "( VSOURCE('Rec/Vertex/Primary', NTRACKS >= 10) >> (VSIZE == 1) )\
+#                              & ( TrSOURCE('Rec/Track/Best') >> (TrSIZE < 150 ) )",
+#                      Preambulo = [ "from LoKiPhys.decorators import *",
+#                                    "from LoKiCore.functions import *" ]
+#                     )
 
 ############################################
 # Create StrippingLine with this selection #
 ############################################
 line = StrippingLine(name+"Line"
                           , prescale = 1.
-                          , algos = [ gec_cuts, sequence ]
+                          , algos = [ sequence ]
+#                          , algos = [ gec_cuts, sequence ]
 #                          , HLT = HDRFilter( 'NoLumiFilter', Code="HLT_PASS_RE('Hlt1(?!Lumi).*Decision')" )
                           )
