@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2010-01-26 - Patrick Robbe
+ - EvtModelReg.cpp: reactivates Direct CPV
+
 ! 2010-01-22 - Patrick Robbe
  - EvtBTo3piCP.cpp: use OtherB function with 4 arguments to have this
    model working correctly in LHCb.
