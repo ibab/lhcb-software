@@ -1,9 +1,18 @@
-!$Id: release.notes,v 1.31 2010-01-22 16:23:37 jpalac Exp $
+!$Id: release.notes,v 1.32 2010-01-26 18:56:39 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2010-01-26 - Juan PALACIOS
+ - Added tests directory with some py.test test functions.
+ - added __init__.py to allow to use and test PhysSelPython.Wrappers
+   without InstallArea of any special environment.
+ - Added python/PhysSelPython/Configurabloids.py with some dummy configurables
+   for testing.
+ - cmt/requirements
+  . Increase version to v3r3
 
 !==================== PhysSel/PhysSelPython v3r2p1 2010-01-22 ==============
 
