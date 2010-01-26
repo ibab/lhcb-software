@@ -1,0 +1,115 @@
+#
+# test Selection-like classes
+#
+import sys
+sys.path.append('../python')
+from PhysSelPython.Wrappers import Selection, AutomaticData
+from PhysSelPython.Configurabloids import DummyAlgorithm, DummySequencer
+
+def test_instantiate_tree(selID='0000') :
+    sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
+    sel01 = AutomaticData('Sel01', Location = 'Phys/Sel01')
+    alg0 = DummyAlgorithm('Alg000')
+    sel0 = Selection(selID, Algorithm = alg0,
+                     RequiredSelections = [sel00, sel01])
+    return sel0
+
+def test_tree_InputLocations_propagated() :
+    
+    sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
+    sel01 = AutomaticData('Sel01', Location = 'Phys/Sel01')
+    alg0 = DummyAlgorithm('Alg001')
+    sel0 = Selection('Sel001', Algorithm = alg0,
+                     RequiredSelections = [sel00, sel01])
+    assert len(alg0.InputLocations) == 0
+    assert len(sel0.alg.InputLocations) == 2
+    assert sel0.alg.InputLocations.count('Phys/Sel00') ==1
+    assert sel0.alg.InputLocations.count('Phys/Sel01') ==1
+
+def test_tree_InputLocations_not_duplicated() :
+    
+    sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
+    sel01 = AutomaticData('Sel01', Location = 'Phys/Sel01')
+    alg0 = DummyAlgorithm('Alg002', InputLocations = ['Phys/Sel00', 'Phys/Sel01'])
+    sel0 = Selection('Sel0', Algorithm = alg0,
+                     RequiredSelections = [sel00, sel01])
+    print "algo length ", len(alg0.InputLocations)
+    assert len(alg0.InputLocations) == 2
+    assert len(sel0.alg.InputLocations) == 2
+    assert sel0.alg.InputLocations.count('Phys/Sel00') ==1
+    assert sel0.alg.InputLocations.count('Phys/Sel01') ==1
+
+def test_selection_with_existing_algo_name_raises() :
+    
+    sel02 = AutomaticData('Sel02', Location = 'Phys/Sel02')
+    sel03 = AutomaticData('Sel03', Location = 'Phys/Sel03')
+    alg0 = DummyAlgorithm('Alg003', InputLocations = ['Phys/Sel00', 'Phys/Sel01'])
+    try :
+        sel0 = Selection('Alg003', Algorithm = alg0,
+                         RequiredSelections = [sel02, sel03])
+        assert alg0.InputLocations == ['Phys/Sel00', 'Phys/Sel01']
+    except KeyError :
+        print "KeyError caught"
+        
+def test_clone_alg_with_new_InputLocations() :
+    alg = DummyAlgorithm('Alg',
+                         InputLocations = ['loc0', 'loc1'])
+    clone = alg.clone('Clone',
+                      InputLocations = ['clone0', 'clone1', 'clone2'])
+
+    assert alg.name() == 'Alg'
+    assert len(alg.InputLocations) == 2
+    assert alg.InputLocations.count('loc0') == 1
+    assert alg.InputLocations.count('loc1') == 1
+
+    assert clone.name() == 'Clone'
+    assert len(clone.InputLocations) == 3
+    assert clone.InputLocations.count('clone0') == 1
+    assert clone.InputLocations.count('clone1') == 1
+    assert clone.InputLocations.count('clone2') == 1
+
+
+def test_clone_alg_with_same_name_and_new_InputLocations_raises() :
+    alg = DummyAlgorithm('Alg05',
+                         InputLocations = ['loc0', 'loc1'])
+    try :
+        clone = alg.clone('Alg05',
+                          InputLocations = ['clone0', 'clone1', 'clone2'])
+
+        assert alg.name() == 'Alg05'
+        assert len(alg.InputLocations) == 2
+        assert alg.InputLocations.count('loc0') == 1
+        assert alg.InputLocations.count('loc1') == 1
+
+        assert clone.name() == 'Alg05'
+        assert len(clone.InputLocations) == 3
+        assert clone.InputLocations.count('clone0') == 1
+        assert clone.InputLocations.count('clone1') == 1
+        assert clone.InputLocations.count('clone2') == 1
+    except KeyError:
+        print 'KeyError caught'
+
+def test_clone_selection_with_new_alg() :
+    sel0 = test_instantiate_tree('0001')
+    alg1 = DummyAlgorithm('Alg1')
+    selClone = sel0.clone('sel0_clone0', Algorithm = alg1)
+
+    assert alg1.name() == 'Alg1'
+    assert len(alg1.InputLocations) == 0
+
+    assert len(sel0.alg.InputLocations) == 2
+    assert sel0.alg.InputLocations.count('Phys/Sel00') ==1
+    assert sel0.alg.InputLocations.count('Phys/Sel01') ==1
+
+def test_clone_selection_with_new_InputLocations() :
+    sel = test_instantiate_tree('0002')
+    clone00 = AutomaticData('Clone00', Location = 'Phys/Clone00')
+    clone01 = AutomaticData('Clone01', Location = 'Phys/Clone01')
+    selClone = sel.clone('sel0_clone1', RequiredSelections = [clone00, clone01])
+    assert len(selClone.alg.InputLocations) == 2
+    assert selClone.alg.InputLocations.count('Phys/Clone00') ==1
+    assert selClone.alg.InputLocations.count('Phys/Clone01') ==1
+
+def test_clone_selection_with_cloned_alg() :
+    pass
+
