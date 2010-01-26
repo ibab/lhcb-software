@@ -1,10 +1,11 @@
-!$Id: release.notes,v 1.44 2010-01-22 13:11:30 pkoppenb Exp $
+!$Id: release.notes,v 1.45 2010-01-26 14:07:03 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/AnalysisConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
 
+!========================== AnalysisConf v2r0 2010-01-26 ===================
 ! 2010-01-22 - Patrick Koppenburg
  - Removed DC06 particles (backward incompatible with v24 series)
  - v2r0
