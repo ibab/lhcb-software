@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v36r0>2010-01-26 Brunel v36r0</A></H1><PRE>
+ - Changes to requirements
+   . Use ParamFiles v8r2
+
  - Changes to Configurable: 
    . Do not write NanoEvents to DST by default (task 12940). Can be
      switched on by setting Brunel().WriteLumi = True
@@ -15,18 +19,18 @@ Purpose: LHCb reconstruction program
 
  - Changes to tests:
    . Use correct magnet polarity in mdfrdst test
+   . Added brunel-fest09-olddddb to check if bug 59544 re-appears
+     runs the Fest09 data with an old dddb tag. Segfaults in v35r8.
 
  - Changes to example options
    . 2009-Collisions.py no longer sets Brunel().UseOracle, no longer needed for
      the 2009 data.
-   . Added brunel-fest09-olddddb to check if bug 59544 re-appears
-     runs the Fest09 data with an old dddb tag. Segfaults in v35r8.
 
  - Changes to references to reflect changes in Brunel v35r12 output:
    . New counters in DST packer algorithms (EventPacker v2r2)
-   . New RichCKRes 2D plots
-   . Production of TimeSpanAccounting FSR
-   . Fix to GaudiPoolDB to enable file sharing in FileRecordCnvSvc
+   . New RichCKRes 2D plots (RichRecQC v2r35)
+   . Production of TimeSpanAccounting FSR (LumiAlgs v3r2)
+   . Fix to GaudiPoolDB to enable file sharing in FileRecordCnvSvc (Gaudi v21r7)
    . Fix DeSTSector::cacheInfo (STDet v4r16)
    . Protect against accessing ONLINE CondDB with invalid times (DetCond v12r9)
    . Improved handling of Veol tracks across half boxes (PatVelo v3r19)
@@ -35,7 +39,7 @@ Purpose: LHCb reconstruction program
    . New online snapshot changes initialisation values for Magnet (SQLDBDB v5r18)
    . Improved printout of L0DU configuration when re-running L0 trigger (L0DU)
    . New L0DUReportMonitor monitoring histograms and improved printout (L0DU)
-   . Looser photon preselection cuts in Rich reco for first data (RichRecSys)
+   . Looser photon preselection cuts in Rich reco for first data (RichRecSys v3r25)
 
 </PRE><H1><A NAME=v35r11p2>2010-01-20 Brunel v35r11p2</A></H1><PRE>
 Version built on v35r11b branch
