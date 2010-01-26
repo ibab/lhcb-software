@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2010-01-26 - Silvia Miglioranzi
+ - Updated the QMTest gauss-dev.qmt with latest conditions.
+
 !========================= Gauss v38r2 2010-01-21 ============================
 
 ! 2010-01-20 - Silvia Miglioranzi
