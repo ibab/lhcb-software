@@ -1,4 +1,4 @@
-// $Id: SimulationToMCTruth.cpp,v 1.7 2009-03-26 21:42:04 robbep Exp $
+// $Id: SimulationToMCTruth.cpp,v 1.8 2010-01-26 10:41:30 silviam Exp $
 // Include files 
 
 // local 
@@ -399,13 +399,14 @@ LHCb::MCVertex::MCVertexType SimulationToMCTruth::vertexType( int id ) {
 // Find Primary vertex
 //==============================================================================
 LHCb::MCVertex * SimulationToMCTruth::findPrimaryVertex( const Gaudi::XYZPoint & vertex ) const { 
-  LHCb::Math::Equal_To< double > cmp( 1.e-6 ) ;
+  //LHCb::Math::Equal_To< double > cmp( 1.e-6 ) ;
   const SmartRefVector< LHCb::MCVertex > pv = m_mcHeader -> primaryVertices() ;
   for ( SmartRefVector< LHCb::MCVertex >::const_iterator it = pv.begin() ;
         it != pv.end() ; ++it ) {
     Gaudi::XYZVector D = vertex - (*it) -> position() ;
     double distance = D.Mag2() ;
-    if ( cmp( distance , 0. ) ) return const_cast< LHCb::MCVertex *>( (*it).data() ) ;
+    //    if ( cmp( distance , 0. ) ) return const_cast< LHCb::MCVertex *>( (*it).data() ) ;
+    if ( LHCb::Math::knuth_equal_to_double( distance , 0. ) ) return const_cast< LHCb::MCVertex *>( (*it).data() ) ;
   }
   return 0 ;
 }
