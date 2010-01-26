@@ -30,68 +30,32 @@ class SurveyConstraints( list ):
         self.append("Velo      : 0 0 0 -0.0001 0 -0.0001 : 0.2 0.2 0.2 0.0001 0.0001 0.0001" )
         self.append("Velo/Velo(Right|Left) : 0 0 0 0 0 0 : 0.2 0.2 0.2 0.0001 0.0001 0.0001" ) 
         
-    def OTCFrames( self, dofs = "TxTyTzRxRyRz" ) :
-        # Q0 is C-side
-        if dofs.find( "Tx" ) >=0 :
-            self.append("OT/T1X1UCSide : Tx : -0.79 +/- 0.5")
-            self.append("OT/T1X1UASide : Tx : -1.43 +/- 0.5")
-            self.append("OT/T1VX2CSide : Tx : -0.35 +/- 0.5")
-            self.append("OT/T1VX2ASide : Tx : -0.47 +/- 0.5")
-            self.append("OT/T2X1UCSide : Tx : -0.98 +/- 0.5")
-            self.append("OT/T2X1UASide : Tx : -0.27 +/- 0.5")
-            self.append("OT/T2VX2CSide : Tx :  0.04 +/- 0.5")
-            self.append("OT/T2VX2ASide : Tx : -1.69 +/- 0.5")
-            self.append("OT/T3X1UCSide : Tx : -0.04 +/- 0.5")
-            self.append("OT/T3X1UASide : Tx : -1.52 +/- 0.5")
-            self.append("OT/T3VX2CSide : Tx :  0.20 +/- 0.5")
-            self.append("OT/T3VX2ASide : Tx : -1.49 +/- 0.5")
-
-        if dofs.find( "Ty" ) >=0 :
-            self.append("OT/T1X1UCSide : Ty : -0.05 +/- 0.5")
-            self.append("OT/T1X1UASide : Ty :  0.05 +/- 0.5")
-            self.append("OT/T1VX2CSide : Ty : -1.50 +/- 0.5")
-            self.append("OT/T1VX2ASide : Ty : -0.65 +/- 0.5")
-            self.append("OT/T2X1UCSide : Ty : -0.70 +/- 0.5")
-            self.append("OT/T2X1UASide : Ty :  0.05 +/- 0.5")
-            self.append("OT/T2VX2CSide : Ty : -1.70 +/- 0.5")
-            self.append("OT/T2VX2ASide : Ty : -0.85 +/- 0.5")
-            self.append("OT/T3X1UCSide : Ty : -1.00 +/- 0.5")
-            self.append("OT/T3X1UASide : Ty : -1.25 +/- 0.5")
-            self.append("OT/T3VX2CSide : Ty : -1.70 +/- 0.5")
-            self.append("OT/T3VX2ASide : Ty : -1.30 +/- 0.5")
-
-        if dofs.find( "Tz" ) >=0 :
-            self.append("OT/T1X1UCSide : Tz :  0    +/- 0.5")
-            self.append("OT/T1X1UASide : Tz :  0    +/- 0.5")
-            self.append("OT/T1VX2CSide : Tz : -0.5  +/- 0.5")
-            self.append("OT/T1VX2ASide : Tz : -0.5  +/- 0.5")
-            self.append("OT/T2X1UCSide : Tz : -2.50 +/- 0.5")
-            self.append("OT/T2X1UASide : Tz : -2.50 +/- 0.5")
-            self.append("OT/T2VX2CSide : Tz : -3.50 +/- 0.5")
-            self.append("OT/T2VX2ASide : Tz : -3.50 +/- 0.5")
-            self.append("OT/T3X1UCSide : Tz :  0.00 +/- 0.5")
-            self.append("OT/T3X1UASide : Tz :  0.00 +/- 0.5")
-            self.append("OT/T3VX2CSide : Tz : -2.50 +/- 0.5")
-            self.append("OT/T3VX2ASide : Tz : -2.50 +/- 0.5")
-            
-        if dofs.find( "Rz" ) >=0 :
-            self.append("OT/T1X1UCSide : Rz : 0.0001")
-            self.append("OT/T1X1UASide : Rz : 0.0001")
-            self.append("OT/T1VX2CSide : Rz : 0.0001")
-            self.append("OT/T1VX2ASide : Rz : 0.0001")
-            self.append("OT/T2X1UCSide : Rz : 0.0001")
-            self.append("OT/T2X1UASide : Rz : 0.0001")
-            self.append("OT/T2VX2CSide : Rz : 0.0001")
-            self.append("OT/T2VX2ASide : Rz : 0.0001")
-            self.append("OT/T3X1UCSide : Rz : 0.0001")
-            self.append("OT/T3X1UASide : Rz : 0.0001")
-            self.append("OT/T3VX2CSide : Rz : 0.0001")
-            self.append("OT/T3VX2ASide : Rz : 0.0001")
-
     def OT( self ) :
+        # modules
         self.append("OT/.*?M. : 0 0 0 0 0 0 : 0.05 0.05 0.05 0.00005 0.0005 0.00005")
-        self.OTCFrames() 
 
+        # C frames
+        self.append("OT/T1X1UASide : -1.43  0.05  0.0  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        self.append("OT/T1X1UCSide : -0.79 -0.05  0.0  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        self.append("OT/T1VX2ASide : -0.47 -0.65 -0.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        self.append("OT/T1VX2CSide : -0.35 -1.50 -0.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        self.append("OT/T2X1UASide : -0.27  0.05 -2.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        self.append("OT/T2X1UCSide : -0.98 -0.70 -2.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        self.append("OT/T2VX2ASide : -1.69 -0.85 -3.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        self.append("OT/T2VX2CSide :  0.04 -1.70 -3.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        self.append("OT/T3X1UASide : -1.52 -1.25  0.0  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        self.append("OT/T3X1UCSide : -0.04 -1.00  0.0  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        self.append("OT/T3VX2ASide : -1.49 -1.30 -2.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        self.append("OT/T3VX2CSide :  0.20 -1.70 -2.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+
+        # this is for the average of 2 C-frames
+        self.append("OT/T1X1U : -1.11  0.00  0.0  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        self.append("OT/T1VX2 : -0.41 -1.50 -0.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        self.append("OT/T2X1U : -0.63 -0.33 -2.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        self.append("OT/T2VX2 : -0.83 -1.28 -3.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        self.append("OT/T3X1U : -0.78 -1.13  0.0  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        self.append("OT/T3VX2 : -0.65 -1.50 -2.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        
     def TT( self ) :
         self += [ self.defaultSurveyDir() + "TT/Detectors.xml" ]
         self += [ self.defaultSurveyDir() + "TT/Modules.xml" ]
