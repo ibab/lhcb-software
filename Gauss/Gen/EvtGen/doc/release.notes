@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : EvtGen
-! Responsible : Patrick Robbe 
+! Responsible : Patrick Robbe, Mark Whitehead 
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== EvtGen v11r8 2010-01-26 ==========================
 ! 2010-01-26 - Patrick Robbe
  - EvtModelReg.cpp: reactivates Direct CPV
 
