@@ -2,7 +2,7 @@
 Module providing the basic functionalities of the GetPack utility.
 """
 import os, re, sys
-from subprocess import Popen, PIPE, STDOUT
+from subprocess import Popen, PIPE
 import logging
 
 _use_shell = sys.platform.startswith("win")
