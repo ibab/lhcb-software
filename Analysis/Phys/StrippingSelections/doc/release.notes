@@ -5,6 +5,7 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingSelections v1r14 2010-01-26 ===================
 ! 2010-01-26 - Andrea Contu 
  Updated stripping lines for D*+ -> D0(K pi pi0) pi+
  - StrippingDstar_D2KPiPi0.py:  Now complex conjugate D0s are selected
