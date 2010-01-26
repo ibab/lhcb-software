@@ -1,0 +1,129 @@
+#!/usr/bin/env python
+import os, sys, re
+
+from LbUtils.Script import Script
+from LbRelease import rcs
+from LbConfiguration.Repository import repositories
+
+class TagPackage(Script):
+    def __init__(self):
+        Script.__init__(self, usage = "%prog [options] package version",
+                              description = "script to easily tag a package in "
+                                            "the LHCb Subversion or CVS repositories")
+        self._packageRepos = None
+        
+        self.package = None
+        self.version = None
+        
+    def defineOpts(self):
+        """ User options """
+        self.parser.add_option("-x", "--exclude", action = "append",
+                               metavar = "REPOSITORY",
+                               help = "exclude a default repository %s" % repositories.keys())
+        self.parser.add_option("--user-svn", action = "append",
+                               metavar = "URL",
+                               help = "add a custom subversion repository to the known ones")
+        self.parser.add_option("--user-cvs", action = "append",
+                               metavar = "CVSROOT",
+                               help = "add a custom CVS repository to the known ones")
+        self.parser.add_option("-F", "--force", action = "store_true",
+                               help = "ignore malformed version strings when tagging")
+        #self.parser.add_option("--dry-run", action = "store_true",
+        #                       help = "show the command that would be run, but not call it")
+        self.parser.set_defaults(exclude = [],
+                                 user_svn = [],
+                                 user_cvs = [],
+                                 force = False)
+    
+    def packageRepos(self):
+        """
+        Find the repository that contains the requested package.
+        """
+        global repositories
+        if self._packageRepos is None:
+            # Add user-defined repositories to the known ones
+            if self.options.user_svn or self.options.user_cvs:
+                # we modify the global dictionary here
+                from urllib import splittype, splituser, splithost
+                from LbConfiguration.Repository import SVNReposInfo, CVSReposInfo
+                # add user-defined repositories
+                i = 0
+                for rep in self.options.user_svn:
+                    # FIXME: need some error checking
+                    protocol, rest = splittype(rep)
+                    rest, path = splithost(rest)
+                    user, host = splituser(rest)
+                    repositories["user_svn_%d" % i] = SVNReposInfo(protocol, host, path, user)
+                    i += 1
+                i = 0
+                for rep in self.options.user_cvs:
+                    # FIXME: need some error checking
+                    dummy, protocol, rest, path = rep.split(":")
+                    user, host = splituser(rest)
+                    repositories["user_cvs_%d" % i] = CVSReposInfo(protocol, host, path, user)
+                    i += 1
+            # Loop over the known repositories to find the package
+            for name in repositories:
+                if name not in self.options.exclude:
+                    url = str(repositories[name]["ssh"]) # the protocol is forced (anyway we need to write)
+                    self.log.info("Looking for package '%s' in '%s' (%s)", self.package, name, url)
+                    repos = rcs.connect(url)
+                    if self.package in repos.packages:
+                        self._packageRepos = repos
+                        break
+        return self._packageRepos
+    
+    def isValidVersion(self):
+        """
+        Tell if the specified version name conforms to the standards.
+        """
+        from LbConfiguration.Version import _txt_cvs_version_style
+        import re
+        return bool(re.match(_txt_cvs_version_style + '$', self.version))
+    
+    def main(self):
+        """
+        Main function of the script.
+        """
+        if len(self.args) != 2:
+            self.parser.error("Wrong number of arguments. Use -h for more information.")
+        self.package, self.version = self.args
+        
+        # Check the format of the version/tag
+        if not self.isValidVersion():
+            if not self.options.force:
+                self.log.error("Tag '%s' is not standard. You may want to use --force.", self.version)
+                return 1
+            else:
+                self.log.warning("Ignoring malformed tag '%s'", self.version)
+        
+        # Locate the package in the repositories
+        repos = self.packageRepos()
+        if not repos:
+            self.log.error("Cannot find the package '%s', check the name.", self.package)
+            return 1
+        
+        declared_version = repos.getDeclaredVersion(self.package)
+        if declared_version is None:
+            self.log.warning("The requirements file of the package '%s' does not contain the version", self.package)
+        elif declared_version != self.version:
+            if not self.options.force:
+                self.log.error("The requirements file of the package '%s' declares version '%s' "
+                               "(requested '%s'). You may want to use --force.", self.package, declared_version, self.version)
+                return 1
+            else:
+                self.log.warning("Ignoring the version declared in the requirements file (%s)", declared_version)
+        
+        # Check if the tag is already present
+        if repos.hasVersion(self.package, self.version):
+            self.log.error("The package '%s' has got already the tag '%s'. Remove it first.", self.package, self.version)
+            return 1
+        
+        retcode = repos.tag(self.package, self.version)
+        if retcode:
+            self.log.error("Tagging of the package failed (return code %d)", retcode)
+        return retcode
+
+
+if __name__ == '__main__':
+    TagPackage().run()

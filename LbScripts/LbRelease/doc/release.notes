@@ -1,3 +1,12 @@
+2010-01-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/GetPack.py: Moved the list of repositories
+	from LbRelease.GetPack to LbConfiguration.Repository
+	* python/LbRelease/rcs.py: added methods to tag packages and to retrieve
+	the requirements files to extract the version number.
+	* scripts/tag_package: simple script to tag a package independently of
+	the repository.
+
 2010-01-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/rcs.py: added the method hasVersion to the repository

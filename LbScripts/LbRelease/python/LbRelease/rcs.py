@@ -208,7 +208,33 @@ class RevisionControlSystem(object):
         If no destination is specified, the current directory is used.
         """
         pass
+    
+    def tag(self, module, version, isProject = False):
+        """
+        Create a tag for the given module.
+        Retursn the error code of the underlying command.
+        """
+        return 0 
 
+    def _getRequirements(self, module, version = "head"):
+        """
+        Return the content of the trunk/HEAD version of the requirements/project.cmt
+        file of the module for the requested version (in the repository). 
+        """
+        return ""
+
+    def getDeclaredVersion(self, module, version = "head"):
+        """
+        Return the version number that the trunk/HEAD version of the module has
+        in the requirements/project.cmt file (in the repository). 
+        """
+        requirements = self._getRequirements(module, version)
+        for l in requirements.splitlines():
+            l = l.strip()
+            if l and l.startswith("version"):
+                return l.split()[1]
+        return None
+    
     def _create_vers_cmt(self, base, version = "v*"):
         """Create the version.cmt file in 'base'/cmt.
         The file will contain the version found in the requirements file. If there is no
@@ -380,7 +406,30 @@ class CVS(RevisionControlSystem):
 
         if not vers_dir and not project:
             # create version.cmt file
-            self._create_vers_cmt(os.path.join(dest, module), version)
+            self._create_vers_cmt(os.path.join(dest, module), version)    
+    
+    def tag(self, module, version, isProject = False):
+        """
+        Create a tag for the given module.
+        """
+        self._assertModule(module, isProject)
+        options = ("-d", self.repository, "rtag", version, module)
+        _, _, retcode = apply(_cvs, options, {"stdout": None, "stderr": None})
+        return retcode
+    
+    def _getRequirements(self, module, version = "head"):
+        """
+        Return the content of the trunk/HEAD version of the requirements/project.cmt
+        file of the module for the requested version (in the repository). 
+        """
+        self._assertModule(module, isProject = False)
+        module_dir =  self._paths[module]
+        file_to_check = self.__package_version_check_file__
+        if version.lower() == "head":
+            version = "HEAD"
+        out, _, _ = _cvs("-d", self.repository, "co", "-p", "-r", version, module_dir + file_to_check)
+        return out
+
     ## Human-readable description
     def __str__(self):
         return "CVS repository at %s" % self.repository
@@ -750,6 +799,52 @@ class SubversionCmd(RevisionControlSystem):
             return True
         return super(SubversionCmd, self).hasVersion(module, version, isProject)
 
+    def _computePaths(self, module, version, isProject = False, vers_dir = False):
+        """
+        Return the URL to the requested version of the module and the (relative)
+        path that should be used for the check out.
+        """
+        if self.repositoryVersion < (2, 0):
+            if version.lower() not in ["head", "trunk"]:
+                src = "/".join([self.repository, self._topLevel(isProject), module, "tags", version])
+            else:
+                src = "/".join([self.repository, self._topLevel(isProject), module, "trunk"])
+            if isProject:
+                version = "%s_%s" % (module, version)
+            dst = module
+            if vers_dir:
+                dst = os.path.join(dst, version)
+            if isProject: # projects in SVN _are_ the content of the "cmt" directory
+                dst = os.path.join(dst, "cmt")
+        else:
+            if isProject:
+                root = module
+                module = module.upper()
+                versiondir = "%s_%s" % (module, version)
+            else:
+                versiondir = version
+                root = self.modules[module]
+            # Compare the version string with the revision ID regexp
+            revId = re.match("^r([0-9]+)$", version)
+            src = [self.repository, root]
+            if revId or version.lower() in ["head", "trunk"]: # a revId or trunk (or head) are checked out from trunk
+                src.append("trunk")
+                if not isProject:
+                    src.append(module)
+            else:
+                src += ["tags", module, versiondir]
+            if isProject: # for projects we check-out only the cmt directory
+                src.append("cmt")
+            src = "/".join(src)
+            if revId: # Special syntax for revision IDs
+                src += "@" + revId.group(1)
+            dst = module
+            if vers_dir:
+                dst = os.path.join(dst, versiondir)
+            if isProject: # for projects we check-out only the cmt directory
+                dst = os.path.join(dst, "cmt")
+        return src, dst
+
     def checkout(self, module, version = "head", dest = None, vers_dir = False, project = False):
         """
         Extract a module in the directory specified with "dest".
@@ -767,51 +862,8 @@ class SubversionCmd(RevisionControlSystem):
         else:
             dest = "." # If not specified, use local directory
 
-        if self.repositoryVersion < (2,0):
-            if version.lower() not in ["head", "trunk"]:
-                src = "/".join([self.repository, self._topLevel(project), module, "tags", version])
-            else:
-                src = "/".join([self.repository, self._topLevel(project), module, "trunk"])
-    
-            if project:
-                version = "%s_%s" % (module, version)
-    
-            dst = os.path.join(dest, module)
-            if vers_dir:
-                dst = os.path.join(dst, version)
-            if project: # projects in SVN _are_ the content of the "cmt" directory
-                dst = os.path.join(dst, "cmt")
-        else:
-            if project:
-                root = module
-                module = module.upper()
-                versiondir = "%s_%s" % (module, version)
-            else:
-                versiondir = version
-                root = self.modules[module]
-            
-            # Compare the version string with the revision ID regexp
-            revId = re.match("^r([0-9]+)$", version)
-            src = [self.repository, root]
-            if revId or version.lower() in ["head", "trunk"]:
-                # a revId or trunk (or head) are checked out from trunk   
-                src.append("trunk")
-                if not project:
-                    src.append(module)
-            else:
-                src += ["tags", module, versiondir]
-            if project: # for projects we check-out only the cmt directory
-                src.append("cmt")
-            src = "/".join(src)
-            if revId:
-                # Special syntax for revision IDs
-                src += "@" + revId.group(1)
-    
-            dst = os.path.join(dest, module)
-            if vers_dir:
-                dst = os.path.join(dst, versiondir)
-            if project: # for projects we check-out only the cmt directory
-                dst = os.path.join(dst, "cmt")
+        src, dst = self._computePaths(module, version, project, vers_dir)
+        dst = os.path.join(dest, dst)
 
         if os.path.isdir(os.path.join(dst,".svn")): # looks like a SVN working copy
             # try with "switch"
@@ -825,6 +877,32 @@ class SubversionCmd(RevisionControlSystem):
         if not vers_dir and not project:
             # create version.cmt file
             self._create_vers_cmt(os.path.join(dest, module), version)
+    
+    def tag(self, module, version, isProject = False):
+        """
+        Create a tag for the given module.
+        """
+        if self.repositoryVersion < (2,0):
+            raise RCSError("tag not implemented for Subversion repositories with "
+                           "version < 2.0 (current version %s)" % self.repositoryVersion)
+        self._assertModule(module, isProject)
+        trunkUrl, _ = self._computePaths(module, "trunk", isProject)
+        versionUrl, _ = self._computePaths(module, version, isProject)
+        _, _, retcode = _svn("copy", trunkUrl, versionUrl, stdout = None, stderr = None)
+        return retcode
+    
+    
+    def _getRequirements(self, module, version = "head"):
+        """
+        Return the content of the trunk/HEAD version of the requirements/project.cmt
+        file of the module for the requested version (in the repository). 
+        """
+        self._assertModule(module, isProject = False)
+        url, _ = self._computePaths(module, version, isProject = False)
+        url += "/cmt/requirements"
+        out, _, _ = _svn("cat", url, stderr = None)
+        return out
+
     ## Human-readable description
     def __str__(self):
         return "Subversion repository at %s" % self.repository
