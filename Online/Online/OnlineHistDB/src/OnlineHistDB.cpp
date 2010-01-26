@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.42 2010-01-22 13:50:44 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.43 2010-01-26 18:12:38 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -282,8 +282,9 @@ bool OnlineHistDB::declareCreatorAlgorithm(std::string Name,
   int ipar=0;
   int setflag = (int)SetAsInput;
   
-  while (ipar++<Npars) {
-    statement << ":p" << ipar;
+  while (ipar<Npars) {
+    statement << "'" << pars->at(ipar)<< "'";
+    ipar++;
     if(ipar<Npars) statement << ",";
   } 
   statement << "),thetype=>:type";
@@ -291,25 +292,19 @@ bool OnlineHistDB::declareCreatorAlgorithm(std::string Name,
     statement << ",doc=>:d";
   statement << ",thegetset=>:setflag,defVals=>VTHRESHOLDS(";
   ipar=0;
-  while (ipar++<Npars) {
-    statement << ":dv" << ipar;
+  while (ipar<Npars) {
+    statement << defv->at(ipar);
+    ipar++;
     if(ipar<Npars) statement << ",";
   } 
   statement << ") ); END;";
 
   m_StmtMethod = "OnlineHistDB::declareCreatorAlgorithm";
+
   OCIStmt *stmt=NULL;
   if ( OCI_SUCCESS == prepareOCIStatement(stmt, statement.str().c_str()) ) {
     myOCIBindString(stmt, ":x1", Name);
     myOCIBindInt   (stmt, ":x2", Ninput);
-    ipar=0;
-    while (ipar++<Npars) {
-      std::stringstream pname,dvname;
-      pname << ":p" << ipar;
-      dvname << ":dv" << ipar;
-      myOCIBindString(stmt, pname.str().c_str(), pars->at(ipar) );
-      myOCIBindFloat(stmt, dvname.str().c_str(), defv->at(ipar) );
-    }
     std::string myType( HistTypeName[(int)OutputType] );
     myOCIBindString(stmt,":type",myType);
     myOCIBindInt   (stmt,":setflag",setflag);    
