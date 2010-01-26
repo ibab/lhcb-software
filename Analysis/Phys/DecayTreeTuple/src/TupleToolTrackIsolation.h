@@ -1,4 +1,4 @@
-// $Id: TupleToolTrackIsolation.h,v 1.1 2009-08-13 10:48:50 rlambert Exp $
+// $Id: TupleToolTrackIsolation.h,v 1.2 2010-01-26 15:48:57 rlambert Exp $
 #ifndef TUPLETOOLTRACKISOLATION_H 
 #define TUPLETOOLTRACKISOLATION_H 1
 
@@ -6,7 +6,7 @@
 // from DaVinci, this is a specialized GaudiAlgorithm
 //#include "Kernel/DVAlgorithm.h"
 #include "Kernel/IParticleTupleTool.h" 
-#include "GaudiAlg/GaudiTool.h"
+#include "TupleToolBase.h"
 
 /** @class TupleToolTrackIsolation TupleToolTrackIsolation.h
  *  
@@ -22,6 +22,9 @@
  * - head_cpx : Summed px inside cone
  * - head_cpy : Summed py inside cone
  * - head_cpz : Summed pz inside cone
+ *
+ * If Verbose, or other flags are set:
+ *
  * Asymmetry variables
  * - head_pasy : (head_P - head_cp)/(head_P + head_cp)
  * - head_ptasy : (head_PT - head_cpt)/(head_PT + head_cpt)
@@ -48,7 +51,7 @@
  */
 
 
-class TupleToolTrackIsolation : public GaudiTool, virtual public IParticleTupleTool {
+class TupleToolTrackIsolation : public TupleToolBase, virtual public IParticleTupleTool {
 public: 
   /// Standard constructor
   TupleToolTrackIsolation( const std::string& type, 

@@ -1,4 +1,4 @@
-// $Id: TupleToolTrackIsolation.cpp,v 1.1 2009-08-13 10:48:50 rlambert Exp $
+// $Id: TupleToolTrackIsolation.cpp,v 1.2 2010-01-26 15:48:57 rlambert Exp $
 // Include files 
 
 
@@ -26,22 +26,22 @@ DECLARE_TOOL_FACTORY( TupleToolTrackIsolation );
 // Standard constructor, initializes variables
 //=============================================================================
 TupleToolTrackIsolation::TupleToolTrackIsolation( const std::string& type,
-                        const std::string& name,
-					const IInterface* parent) : GaudiTool ( type, name , parent )
+                                                  const std::string& name,
+                                                  const IInterface* parent) : TupleToolBase ( type, name , parent )
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty( "MinConeAngle", m_minConeAngle = 0.5,
-		   "Set the minimal deltaR of the cone (default = 0.5), in radians");
+                   "Set the minimal deltaR of the cone (default = 0.5), in radians");
   declareProperty( "MaxConeAngle", m_maxConeAngle = 1.0,
-		   "Set the maximum deltaR of the cone (default = 1.0), in radians");
+                   "Set the maximum deltaR of the cone (default = 1.0), in radians");
   declareProperty( "StepSize", m_stepSize = 0.1,
-		   "Set the step of deltaR between two iterations (default = 0.1), in radians");
+                   "Set the step of deltaR between two iterations (default = 0.1), in radians");
   declareProperty( "TrackType", m_trackType = 3,
-		   "Set the type of tracks which are considered inside the cone (default = 3)");
+                   "Set the type of tracks which are considered inside the cone (default = 3)");
   declareProperty( "FillAsymmetry", m_fillAsymmetry = false,
-		   "Flag to fill the asymmetry variables (default = false)");
+                   "Flag to fill the asymmetry variables (default = false)");
   declareProperty( "FillDeltaAngles", m_fillDeltaAngles = false,
-		   "Flag to fill the delta angle variables (default = false)");
+                   "Flag to fill the delta angle variables (default = false)");
   
 }
 //=============================================================================
@@ -53,7 +53,7 @@ TupleToolTrackIsolation::~TupleToolTrackIsolation() {}
 // Initialization
 //=============================================================================
 StatusCode TupleToolTrackIsolation::initialize() {
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = TupleToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   if( m_minConeAngle > m_maxConeAngle){
@@ -61,7 +61,9 @@ StatusCode TupleToolTrackIsolation::initialize() {
     return StatusCode::FAILURE;
   }
 
-
+  if(isVerbose()) m_fillAsymmetry=m_fillDeltaAngles =true;
+  
+  
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
   return StatusCode::SUCCESS;
 
@@ -74,8 +76,10 @@ StatusCode TupleToolTrackIsolation::initialize() {
 // Fill the tuple
 //=============================================================================
 StatusCode TupleToolTrackIsolation::fill( const LHCb::Particle *top, const LHCb::Particle *  	part,
-				     const std::string &  	head, Tuples::Tuple &  	tuple	){
-
+                                          const std::string &  	head, Tuples::Tuple &  	tuple	)
+{
+  
+  const std::string prefix=fullName(head);
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Fill" << endmsg;
 
   // -- The vector m_decayParticles contains all the particles that belong to the given decay 
@@ -84,7 +88,7 @@ StatusCode TupleToolTrackIsolation::fill( const LHCb::Particle *top, const LHCb:
   // -- Clear the vector with the particles in the specific decay
   m_decayParticles.clear();
   
-  // -- Add the mother (head of the decay chain) to the vector
+  // -- Add the mother (prefix of the decay chain) to the vector
   if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << top->particleID().pid() << endmsg;
   m_decayParticles.push_back( top );
 
@@ -93,18 +97,20 @@ StatusCode TupleToolTrackIsolation::fill( const LHCb::Particle *top, const LHCb:
   
   // -- Get all tracks in the event
   LHCb::Tracks* tracks = get<LHCb::Tracks>(LHCb::TrackLocation::Default);
-  if(tracks->size() == 0){
+  if(tracks->size() == 0)
+  {
     if ( msgLevel(MSG::WARNING) ) warning() << "Could not retrieve tracks. Skipping" << endmsg;
     return StatusCode::FAILURE;
   }
 
   bool test = true;
       
-  if( part ){
+  if( part )
+  {
      
    
     if ( msgLevel(MSG::VERBOSE) ) verbose() << "Start looping through different conesizes" << endmsg;
-
+    
     // --  Loop over the different conesizes
     double coneSizeCounter = m_minConeAngle;
     while(coneSizeCounter <= m_maxConeAngle){
@@ -143,32 +149,34 @@ StatusCode TupleToolTrackIsolation::fill( const LHCb::Particle *top, const LHCb:
       std::string conesize(coneNumber);
 
       // -- Fill the tuple with the variables
-      test &= tuple->column( head+"_cpx_"+conesize, conePx);
-      test &= tuple->column( head+"_cpy_"+conesize, conePy);
-      test &= tuple->column( head+"_cpz_"+conesize, conePz);
-      test &= tuple->column( head+"_cpt_"+conesize, conePt );
-      test &= tuple->column( head+"_cp_"+conesize,  coneP );
-      test &= tuple->column( head+"_cmult_"+conesize, myPair.second);
+      test &= tuple->column( prefix+"_cpx_"+conesize, conePx);
+      test &= tuple->column( prefix+"_cpy_"+conesize, conePy);
+      test &= tuple->column( prefix+"_cpz_"+conesize, conePz);
+      test &= tuple->column( prefix+"_cpt_"+conesize, conePt );
+      test &= tuple->column( prefix+"_cp_"+conesize,  coneP );
+      test &= tuple->column( prefix+"_cmult_"+conesize, myPair.second);
 
       // -- Fill the difference in Eta and Phi between the summed momentum of all tracks in the cone and the 
       // -- track of the particle in question if requested
-      if(m_fillDeltaAngles){
-	test &= tuple->column( head+"_deltaEta_"+conesize, deltaEta );
-	test &= tuple->column( head+"_deltaPhi_"+conesize, deltaPhi );
+      if(m_fillDeltaAngles)
+      {
+        test &= tuple->column( prefix+"_deltaEta_"+conesize, deltaEta );
+        test &= tuple->column( prefix+"_deltaPhi_"+conesize, deltaPhi );
       }
 
       // -- Fill the asymmetry information if requested
-      if(m_fillAsymmetry){
-	test &= tuple->column( head+"_pxasy_"+conesize, 
-			       (part->momentum().Px() - conePx)/(part->momentum().Px() + conePx) );
-	test &= tuple->column( head+"_pyasy_"+conesize, 
-			       (part->momentum().Py() - conePy)/(part->momentum().Py() + conePy) );
-	test &= tuple->column( head+"_pzasy_"+conesize, 
-			       (part->momentum().Pz() - conePz)/(part->momentum().Pz() + conePz) );
-	test &= tuple->column( head+"_pasy_"+conesize, 
-			       (part->p() - coneP)/(part->p() + coneP) );
-	test &= tuple->column( head+"_ptasy_"+conesize, 
-			       (part->pt() - conePt)/(part->pt() + conePt) );
+      if(m_fillAsymmetry)
+      {
+        test &= tuple->column( prefix+"_pxasy_"+conesize, 
+                               (part->momentum().Px() - conePx)/(part->momentum().Px() + conePx) );
+        test &= tuple->column( prefix+"_pyasy_"+conesize, 
+                               (part->momentum().Py() - conePy)/(part->momentum().Py() + conePy) );
+        test &= tuple->column( prefix+"_pzasy_"+conesize, 
+                               (part->momentum().Pz() - conePz)/(part->momentum().Pz() + conePz) );
+        test &= tuple->column( prefix+"_pasy_"+conesize, 
+                               (part->p() - coneP)/(part->p() + coneP) );
+        test &= tuple->column( prefix+"_ptasy_"+conesize, 
+                               (part->pt() - conePt)/(part->pt() + conePt) );
       }
 
       // -- Increase the counter with the stepsize
@@ -176,7 +184,9 @@ StatusCode TupleToolTrackIsolation::fill( const LHCb::Particle *top, const LHCb:
 
     }
 
-  } else {
+  } 
+  else 
+  {
     if ( msgLevel(MSG::WARNING) ) warning() << "The particle in question is not valid" << endmsg;
     return StatusCode::FAILURE;
   }
@@ -216,7 +226,7 @@ void TupleToolTrackIsolation::saveDecayParticles( const LHCb::Particle *top){
 // Loop over all the tracks in the cone which do not belong to the desired decay
 //=============================================================================
 std::pair< std::vector<double>, int> TupleToolTrackIsolation::ConeP(const LHCb::Particle *part, 
-                                                               const LHCb::Tracks* tracks, const double rcut)
+                                                                    const LHCb::Tracks* tracks, const double rcut)
 {
 
   // -- Get the (4-) momentum of the particle in question
@@ -227,34 +237,34 @@ std::pair< std::vector<double>, int> TupleToolTrackIsolation::ConeP(const LHCb::
   int counter = 0;
 
   for( LHCb::Tracks::const_iterator it = tracks->begin(); it != tracks->end(); ++it){
-      LHCb::Track* track = (*it);
+    LHCb::Track* track = (*it);
       
-      // -- Check if the track belongs to the decay itself
-      bool isInDecay = isTrackInDecay(track);
-      if(isInDecay) continue;
+    // -- Check if the track belongs to the decay itself
+    bool isInDecay = isTrackInDecay(track);
+    if(isInDecay) continue;
 
-      // -- Get the (3-) momentum of the track
-      Gaudi::XYZVector trackMomentum = track->momentum();
-      //double tracketa = track->pseudoRapidity();
-      double trackpx = trackMomentum.X();
-      double trackpy = trackMomentum.Y();
-      double trackpz = trackMomentum.Z();
+    // -- Get the (3-) momentum of the track
+    Gaudi::XYZVector trackMomentum = track->momentum();
+    //double tracketa = track->pseudoRapidity();
+    double trackpx = trackMomentum.X();
+    double trackpy = trackMomentum.Y();
+    double trackpz = trackMomentum.Z();
 
-      // -- Calculate the difference in Eta and Phi between the particle in question and a track
-      double deltaPhi = partMomentum.Phi() - trackMomentum.Phi();
-      if(deltaPhi > M_PI) deltaPhi  = 2*M_PI-deltaPhi;
+    // -- Calculate the difference in Eta and Phi between the particle in question and a track
+    double deltaPhi = partMomentum.Phi() - trackMomentum.Phi();
+    if(deltaPhi > M_PI) deltaPhi  = 2*M_PI-deltaPhi;
 
-      double deltaEta = partMomentum.Eta() - trackMomentum.Eta();
+    double deltaEta = partMomentum.Eta() - trackMomentum.Eta();
 
-      double deltaR = sqrt(deltaPhi * deltaPhi + deltaEta * deltaEta);
+    double deltaR = sqrt(deltaPhi * deltaPhi + deltaEta * deltaEta);
       
-      // -- Add the tracks to the summation if deltaR is smaller than the cut value of deltaR
-      if(deltaR < rcut && track->type()== m_trackType ){
-        sumPx += trackpx;
-        sumPy += trackpy;
-        sumPz += trackpz;
-        counter++;
-      } 
+    // -- Add the tracks to the summation if deltaR is smaller than the cut value of deltaR
+    if(deltaR < rcut && track->type()== m_trackType ){
+      sumPx += trackpx;
+      sumPy += trackpy;
+      sumPz += trackpz;
+      counter++;
+    } 
       
 
   }
@@ -288,7 +298,7 @@ bool TupleToolTrackIsolation::isTrackInDecay(const LHCb::Track* track){
       if(myTrack){
         
         if(myTrack == track){
-	  if ( msgLevel(MSG::DEBUG) ) debug() << "Track is in decay, skipping it" << endmsg;
+          if ( msgLevel(MSG::DEBUG) ) debug() << "Track is in decay, skipping it" << endmsg;
           isInDecay = true;
         }
       }
