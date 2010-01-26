@@ -274,7 +274,7 @@ EvtModelReg::EvtModelReg(const std::list<EvtDecayBase*>* extraModels)
     modelist.registerModel(new EvtLambda2PPiForLambdaB2LambdaV);
     modelist.registerModel(new EvtV2VpVmForLambdaB2LambdaV);
     modelist.registerModel(new EvtPVVCPLH);
-    //   modelist.registerModel(new EvtSSD_DirectCP);
+    modelist.registerModel(new EvtSSD_DirectCP);
 
 
 #ifndef EVTSTANDALONE
