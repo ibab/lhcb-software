@@ -3,8 +3,8 @@
 ApplicationMgr.DLLs += { "OMAlib" };
 
 // for using Monitoring Service 
-ApplicationMgr.ExtSvc += { "MonitorSvc" };
-ApplicationMgr.DLLs += {"Gaucho"};
+//ApplicationMgr.ExtSvc += { "MonitorSvc" };
+//ApplicationMgr.DLLs += {"Gaucho"};
 
 
 
@@ -16,11 +16,15 @@ DBDrivenAnalysisTask.useHistDB   = true;
 DBDrivenAnalysisTask.Partition = "LHCb";
 DBDrivenAnalysisTask.InputTasks = {"any"};
 
+// optional log file for alarms
+DBDrivenAnalysisTask.TextLog = "/tmp/mylog.txt";
+
+
 // for testing offline on existing savesets, uncomment the following:
-ApplicationMgr.EvtMax = 0;
-DBDrivenAnalysisTask.InputFiles   = {
- "/afs/cern.ch/user/g/ggiacomo/public/Histograms/Savesets/MuonDAQMon-20081126T193149-EOR.root"
-};
+//ApplicationMgr.EvtMax = 0;
+//DBDrivenAnalysisTask.InputFiles   = {
+// "/afs/cern.ch/user/g/ggiacomo/public/Histograms/Savesets/MuonDAQMon-20081126T193149-EOR.root"
+//};
 
 // uncomment for using db mirror (read only)
 //DBDrivenAnalysisTask.HistDB      = "LHCBR_HIST";
@@ -30,8 +34,8 @@ DBDrivenAnalysisTask.InputFiles   = {
 //DBDrivenAnalysisTask.HistDBuser  = "lhcb_mon_giacomo";
 //DBDrivenAnalysisTask.HistDBpw    = "ask_me";
 
-// for changing the reference path
-DBDrivenAnalysisTask.HistRefRoot = "/afs/cern.ch/user/g/ggiacomo/public/Histograms/Reference";
+// uncomment for changing the reference path
+//DBDrivenAnalysisTask.HistRefRoot = "/afs/cern.ch/user/g/ggiacomo/public/Histograms/Reference";
 
 // uncomment to switch off saving of alarms to HistDB
 // DBDrivenAnalysisTask.HistDBMsgPersistency = false;
