@@ -15,7 +15,7 @@ L0EmulationSeq.Members += { "GaudiSequencer/L0EmulatorSeq",
 L0DU.WriteOnTES = true;
 L0DU.L0Context = "Emulator";
 L0Calo.L0Context = "Emulator";
-L0Calo.L0Muon = "Emulator";
+L0Muon.L0Context = "Emulator";
 L0DUEmulMonitor.Context = "Emulator";
 
 // DO NOT store rawBanks in rawEvent in Emulation mode

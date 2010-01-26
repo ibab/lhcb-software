@@ -1,7 +1,22 @@
-! $Id: release.notes,v 1.174 2010-01-21 17:39:16 cattanem Exp $
+! $Id: release.notes,v 1.175 2010-01-26 11:15:24 jucogan Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2010-01-25 - Julien Cogan
+ - L0Conf : 
+     - remove the imports of opts files (translated in python).
+     - add new properties :
+         - EnableL0DecodingOnDemand : setup the data on demand service 
+           to decode the L0 on demand
+         - FastL0DUDecoding  : activate fast L0 decoding for HLT
+         - FullL0MuonDecoding : activate L0Muon full decoding 
+         - L0DecodingContext : string appended to the location of the 
+           containers with the decoding results 
+	       - L0EmulatorContext : string appended to the location of the
+	         containers with the emulation results 
+
+  - L0EmulatorSeq.opts : fix typo
 
 !========================== L0DU v10r0 2010-01-21 =========================
 ! 2010-01-21 Olivier Deschamps
