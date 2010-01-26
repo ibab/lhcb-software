@@ -8,11 +8,12 @@
 ########################################################################                   
 __author__ = 'Andrea Contu'
 __date__ = '22/01/2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 from Configurables import GaudiSequencer, CombineParticles
 from StrippingConf.StrippingLine import StrippingLine
 
+seq=GaudiSequencer("seq")
 seqRS=GaudiSequencer("seqRS")
 seqWS=GaudiSequencer("seqWS")
 
@@ -21,8 +22,7 @@ str_D0_ChargedDau="(PT>500*MeV) & (P>5*GeV) & (MIPCHI2DV(PRIMARY)>4) & (TRCHI2DO
 str_D0_Pi0="(PT>800*MeV) & (P>5*GeV)"
 str_D0_CombCuts="(ADAMASS('D0')<200*MeV)"
 str_D0_MotherCuts="(BPVDIRA>0.99995) & (PT>2.5*GeV) & (VFASPF(VCHI2/VDOF)<10) & (BPVVDCHI2>16)"
-str_D0_DecayDescriptor_RS="D0 -> K- pi+ pi0"
-str_D0_DecayDescriptor_WS="D0 -> K+ pi- pi0"
+str_D0_DecayDescriptor_RS="[D0 -> K- pi+ pi0]cc"
 str_D0_Sidebands="200*MeV"
 
 #D* Cuts
@@ -39,20 +39,16 @@ D02KPiPi0_RS.DaughtersCuts = { "K-" : str_D0_ChargedDau,
                                     "pi0" : str_D0_Pi0}
 D02KPiPi0_RS.CombinationCut = str_D0_CombCuts
 D02KPiPi0_RS.MotherCut = str_D0_MotherCuts
-seqRS.Members.append(D02KPiPi0_RS)
+seq.Members.append(D02KPiPi0_RS)
 
-
+from Configurables import ConjugateNeutralPID
 #make D0 WS
-D02KPiPi0_WS = CombineParticles ( "D02KPiPi0_WS" )
-D02KPiPi0_WS.InputLocations = [ "StdNoPIDsKaons", "StdNoPIDsPions", "StdLooseMergedPi0", "StdLooseResolvedPi0" ]
-D02KPiPi0_WS.DecayDescriptor = str_D0_DecayDescriptor_WS
-D02KPiPi0_WS.DaughtersCuts = { "K+" : str_D0_ChargedDau,
-                                    "pi-" : str_D0_ChargedDau,
-                                    "pi0" : str_D0_Pi0}
-D02KPiPi0_WS.CombinationCut = str_D0_CombCuts
-D02KPiPi0_WS.MotherCut = str_D0_MotherCuts
-seqRS.Members.append(D02KPiPi0_WS)
+D02KPiPi0_WS=ConjugateNeutralPID("D02KPiPi0_WS")
+D02KPiPi0_WS.InputLocations = [ "D02KPiPi0_RS" ]
+seq.Members.append(D02KPiPi0_WS)
 
+seqRS.Members.append(seq)
+seqWS.Members.append(seq)
 #make D* RS
 Strip_DStar2D0Pi_D02KPiPi0_RS = CombineParticles ( "DStar2D0Pi_D02KPiPi0_RS" )
 Strip_DStar2D0Pi_D02KPiPi0_RS.InputLocations = [ "D02KPiPi0_RS", "StdNoPIDsPions" ]
