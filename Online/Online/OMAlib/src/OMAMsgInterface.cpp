@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.27 2009-11-20 10:12:04 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.28 2010-01-26 14:25:37 ggiacomo Exp $
 #include <cstring>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
@@ -13,7 +13,8 @@ OMAMsgInterface::OMAMsgInterface( OnlineHistDB* HistDB ,
                                   std::string Name) : 
   OMAEnv(HistDB, Name), m_savesetName("") , m_taskname(""), 
   m_anaName(""), m_anaid(0), m_msgInit(false), m_textLog(false),
-  m_doPublish(true), m_textLogName(""), m_outs(NULL), m_dimSvc(NULL)
+  m_doPublish(true), m_logToHistDB(true), m_textLogName(""), m_outs(NULL), 
+  m_dimSvc(NULL)
 {
   checkWritePermissions();
   m_MessageStore.clear();
@@ -31,7 +32,7 @@ OMAMsgInterface::~OMAMsgInterface()
 
 
 void OMAMsgInterface::checkWritePermissions() {
-  if (NULL != m_histDB && NULL != m_outs) {
+  if (NULL != m_histDB && NULL != m_outs && m_logToHistDB) {
     if(false == m_histDB->canwrite()) {
       (*m_outs) << MSG::WARNING << "You don't have write permissions on HistDB" <<endmsg;
       (*m_outs) << MSG::WARNING << "No persistency available for analysis messages" <<endmsg;
@@ -47,8 +48,10 @@ void OMAMsgInterface::loadMessages() {
        m_anaTaskname << endmsg;
     }
     // clean up old alarms
-    if (m_histDB->canwrite())
+    if (m_histDB->canwrite() && m_logToHistDB) {
       m_histDB->deleteOldMessages(OMAconstants::AlarmExpTime, m_anaTaskname);
+      m_histDB->commit();
+    }
     // load known alarms from DB
     std::vector<int> messID;
     m_histDB->getMessages(messID, m_anaTaskname);
@@ -120,7 +123,7 @@ void OMAMsgInterface::refreshMessageList(std::string& TaskName) {
         kept=false;
         lowerAlarm( (**iM) );
         unpublishMessage(*iM);
-        if (m_histDB->canwrite())
+        if (m_histDB->canwrite() && m_logToHistDB) 
           (*iM)->remove();
         delete (*iM);
         iM = m_MessageStore.erase(iM);
@@ -128,7 +131,7 @@ void OMAMsgInterface::refreshMessageList(std::string& TaskName) {
     }
     if (kept) iM++;
   }
-  if(m_histDB)
+  if(m_histDB->canwrite() && m_logToHistDB)
     m_histDB->commit();
 }
 
@@ -176,9 +179,10 @@ void OMAMsgInterface::raiseMessage(OMAMessage::OMAMsgLevel level,
   }
   if (msg) {
     if (m_histDB) {
-      if(m_histDB->canwrite())
+      if(m_histDB->canwrite() && m_logToHistDB) {
         msg->store();
-      m_histDB->commit();
+        m_histDB->commit();
+      }
     }
   }
   if (msg && send ) {
@@ -199,6 +203,16 @@ void OMAMsgInterface::sendLine(std::string line,
   if (m_textLog) {
     m_logOut << line << std::endl;
   }
+}
+
+void OMAMsgInterface::senderror( const char* wmessage) {
+  (*m_outs) << MSG::ERROR << wmessage  << endmsg;
+}
+void OMAMsgInterface::sendwarning( const char* wmessage) {
+  (*m_outs) << MSG::WARNING << wmessage  << endmsg;
+}
+void OMAMsgInterface::sendinfo( const char* wmessage) {
+  (*m_outs) << MSG::INFO << wmessage  << endmsg;
 }
 
 

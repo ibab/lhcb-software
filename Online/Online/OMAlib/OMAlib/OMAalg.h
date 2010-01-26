@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.12 2010-01-22 09:42:51 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.13 2010-01-26 14:25:37 ggiacomo Exp $
 #ifndef OMALIB_OMAALG_H
 #define OMALIB_OMAALG_H 1
 /** @class  OMAalg OMAalg.h OMAlib/OMAalg.h
@@ -28,9 +28,6 @@ class OMAalg
   inline std::string& doc() {return m_doc;}
   inline std::string& parName(int i)  { return m_parnames[i];}
   inline float parDefValue(int i)  { return m_parDefValues[i];}
-  inline bool needRef() { return m_needRef; }
-  virtual bool checkStats(TH1* h,
-                          unsigned int anaID);
   void setOnlineHistogram(OnlineHistogram *h) {m_oh=h;}
 
  protected:
@@ -48,8 +45,6 @@ class OMAalg
                     bool alarmCondition,
                     std::string message,
                     std::string& histogramName);
-  inline void setNeedRef() { m_needRef = true; }
-  virtual bool notEnoughStats(TH1* h);
 
   std::string m_name;
   AlgType m_type;
@@ -59,7 +54,6 @@ class OMAalg
   std::vector<float> m_parDefValues;
   std::string m_doc;
   OMAlib* m_omaEnv;
-  bool m_needRef;
   OnlineHistogram* m_oh;
  private:
    // private dummy copy constructor and assignment operator 
@@ -71,7 +65,9 @@ class OMACheckAlg : public OMAalg
 {
  public:
   OMACheckAlg(std::string Name, OMAlib* OMAenv) : OMAalg(Name,OMAenv),
-    m_minEntries(50) {
+                                                  m_needRef(false), 
+                                                  m_minEntries(50), 
+                                                  m_minEntriesPerBin(5) {
     setType(OMAalg::CHECK); 
     m_inputNames.clear(); 
     m_inputDefValues.clear(); 
@@ -86,11 +82,22 @@ class OMACheckAlg : public OMAalg
                     std::vector<float> & input_pars,
                     unsigned int anaID,
                     TH1* Ref) =0;
+  inline bool needRef() { return m_needRef; }
+  virtual bool checkStats(TH1* h,
+                          unsigned int anaID,
+                          TH1* ref,
+                          std::vector<float> & input_pars);
 
  protected:
+  virtual bool notEnoughStats(TH1* h);
+  virtual bool refMissing(TH1* ref,
+                          std::vector<float> & input_pars);
+
   std::vector<std::string> m_inputNames;
   std::vector<float> m_inputDefValues;
+  bool m_needRef;
   int m_minEntries; // minimum entries for this test
+  int m_minEntriesPerBin; // minimum entries per bin for this test
 };
 
 

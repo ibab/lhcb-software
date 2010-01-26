@@ -22,7 +22,7 @@ void OMACompareToReference::exec(TH1 &Histo,
                                  TH1* Ref) {
   if( warn_thresholds.size() <m_npars ||  alarm_thresholds.size() <m_npars)
     return;
-  if(Histo.GetEntries() < m_minEntries) return; // too few hits for this test
+  if(notEnoughStats(&Histo)) return; // too few hits for this test
   int test =1;
   double pvalue=1.;
   if(input_pars.size() > 0)
@@ -48,4 +48,10 @@ void OMACompareToReference::exec(TH1 &Histo,
                 ( pvalue  < alarm_thresholds[0] ),
                 message.str(), 
                 hname);
+}
+
+bool OMACompareToReference::refMissing(TH1* ref,
+                                       std::vector<float> & input_pars) {
+  if (!ref && input_pars.empty()) ref=NULL; // cheat compiler (avoid warnings)
+  if (!ref) return true; 
 }

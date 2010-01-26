@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.33 2010-01-22 09:42:51 ggiacomo Exp $
+! $Id: release.notes,v 1.34 2010-01-26 14:25:37 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
+
+! 20100126
+- warn if reference is requested but not available in analysis
+- add HistDBMsgPersistency option to AnalysisTask for switching off persistency of messages in HistDB
+- add -c option to clear messages in DumpOMAlarms
 
 ! 20100122 v2r12
 - enforce checks on sources for creator algorithms

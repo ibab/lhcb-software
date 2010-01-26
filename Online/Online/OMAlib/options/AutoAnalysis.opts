@@ -13,7 +13,7 @@ ApplicationMgr.EvtSel = "NONE";
 
 DBDrivenAnalysisTask.OutputLevel = 2;
 DBDrivenAnalysisTask.useHistDB   = true;
-DBDrivenAnalysisTask.Partition = "FEST";
+DBDrivenAnalysisTask.Partition = "LHCb";
 DBDrivenAnalysisTask.InputTasks = {"any"};
 
 // for testing offline on existing savesets, uncomment the following:
@@ -22,15 +22,19 @@ DBDrivenAnalysisTask.InputFiles   = {
  "/afs/cern.ch/user/g/ggiacomo/public/Histograms/Savesets/MuonDAQMon-20081126T193149-EOR.root"
 };
 
-// for using test offline DB
-DBDrivenAnalysisTask.HistDB      = "devdb10";
-DBDrivenAnalysisTask.HistDBuser  = "lhcb_devmon_giacomo";
-DBDrivenAnalysisTask.HistDBpw    = "testhist2009";
+// uncomment for using db mirror (read only)
+//DBDrivenAnalysisTask.HistDB      = "LHCBR_HIST";
+
+// uncomment for using test offline DB
+//DBDrivenAnalysisTask.HistDB      = "devdb10";
+//DBDrivenAnalysisTask.HistDBuser  = "lhcb_mon_giacomo";
+//DBDrivenAnalysisTask.HistDBpw    = "ask_me";
 
 // for changing the reference path
 DBDrivenAnalysisTask.HistRefRoot = "/afs/cern.ch/user/g/ggiacomo/public/Histograms/Reference";
 
-
+// uncomment to switch off saving of alarms to HistDB
+// DBDrivenAnalysisTask.HistDBMsgPersistency = false;
 
 
 

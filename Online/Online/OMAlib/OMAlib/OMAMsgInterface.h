@@ -1,11 +1,11 @@
-// $Id: OMAMsgInterface.h,v 1.19 2009-11-20 10:12:04 ggiacomo Exp $
+// $Id: OMAMsgInterface.h,v 1.20 2010-01-26 14:25:37 ggiacomo Exp $
 #ifndef OMALIB_OMAMSGINTERFACE_H 
 #define OMALIB_OMAMSGINTERFACE_H 1
 
 /** @class OMAMsgInterface OMAMsgInterface.h OMAlib/OMAMsgInterface.h
  *  Output interface for Online Monitoring Analysis messages.
  *  Supports MsgStream when available (analysis Gaudi jobs),
- *  uses HistDB (if available) to log alarms   
+ *  uses HistDB (if available) and/or optional log file to log alarms   
  *
  *  @author Giacomo Graziani
  *  @date   2008-02-29
@@ -46,6 +46,12 @@ public:
   inline void setAnaId(int id) {m_anaid = id;}
   /// set current analysis name for messages
   inline void setAnaName(std::string &name) {m_anaName = name;}
+  /// send error  to MsgService
+  void senderror( const char* wmessage);
+  /// send warning  to MsgService
+  void sendwarning( const char* wmessage);
+  /// send info  to MsgService
+  void sendinfo( const char* wmessage);
 protected:
   void checkWritePermissions();
   void openLog();
@@ -62,6 +68,7 @@ protected:
   bool m_msgInit;
   bool m_textLog;
   bool m_doPublish;
+  bool m_logToHistDB;
   std::string m_textLogName;
   std::ofstream m_logOut;
 private:

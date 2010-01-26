@@ -1,4 +1,4 @@
-// $Id: OMACheckDeadBins.cpp,v 1.2 2009-08-31 17:24:05 ggiacomo Exp $
+// $Id: OMACheckDeadBins.cpp,v 1.3 2010-01-26 14:25:37 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TF1.h>
@@ -103,4 +103,11 @@ void OMACheckDeadBins::exec(TH1 &Histo,
     }
     raiseMessage(anaID, level, message.str(), hname);
   }
+}
+
+bool OMACheckDeadBins::refMissing(TH1* ref,
+                                  std::vector<float> & input_pars) {
+  if(input_pars.size() <m_ninput) return false; 
+  bool useRef = (bool) ((int) (input_pars[0]+.1));
+  return (useRef &&  !ref);
 }

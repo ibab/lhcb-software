@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.cpp,v 1.22 2009-12-09 08:42:49 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.23 2010-01-26 14:25:37 ggiacomo Exp $
 
 
 // from Gaudi
@@ -32,6 +32,7 @@ AnalysisTask::AnalysisTask( const std::string& name,
   declareProperty ( "InputTasks"   , m_inputTasks);
   declareProperty ( "Partition"    , m_partition = "LHCb" );
   declareProperty ( "TextLog"      , m_textLogName = "");
+  declareProperty ( "HistDBMsgPersistency", m_logToHistDB = "true");
   declareProperty ( "StopAlgSequence", m_stayHere = true);
   //
   declareProperty ( "RICHclustersDir", m_RICHClDir= "/home/ryoung");

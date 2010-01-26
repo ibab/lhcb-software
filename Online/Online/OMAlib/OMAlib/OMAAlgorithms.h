@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.13 2009-06-16 17:39:49 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.14 2010-01-26 14:25:37 ggiacomo Exp $
 #ifndef OMALIB_OMAALGORITHMS_H
 #define OMALIB_OMAALGORITHMS_H 1
 
@@ -88,6 +88,8 @@ class OMACheckHolesAndSpikes  : public OMACheckAlg
                     std::vector<float> & input_pars,
                     unsigned int anaID,
                     TH1* Ref);
+  virtual bool refMissing(TH1* ref,
+                          std::vector<float> & input_pars);
 };
 
 class OMACheckEmptyBins  : public OMACheckAlg
@@ -112,6 +114,8 @@ class OMACompareToReference : public OMACheckAlg
                     std::vector<float> & input_pars,
                     unsigned int anaID,
                     TH1* Ref);
+  virtual bool refMissing(TH1* ref,
+                          std::vector<float> & input_pars);
 };
 
 class OMACheckEntriesInRange : public OMACheckAlg
@@ -167,6 +171,8 @@ class OMACheckDeadBins  : public OMACheckAlg
                     std::vector<float> & input_pars,
                     unsigned int anaID,
                     TH1* Ref);
+  virtual bool refMissing(TH1* ref,
+                          std::vector<float> & input_pars);
 };
 
 //------ Histogram Creator Algorithms ------------------//

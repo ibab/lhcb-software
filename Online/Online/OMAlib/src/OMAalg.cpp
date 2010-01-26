@@ -1,14 +1,14 @@
-// $Id: OMAalg.cpp,v 1.9 2009-08-31 17:24:06 ggiacomo Exp $
+// $Id: OMAalg.cpp,v 1.10 2010-01-26 14:25:37 ggiacomo Exp $
 #include "OMAlib/OMAalg.h"
 #include "OMAlib/OMAlib.h"
 #include <TH1.h>
+#include <sstream>
 
 OMAalg::OMAalg(std::string Name, OMAlib* OMAenv) 
   : m_name(Name),
     m_type(CHECK),
     m_npars(0),
     m_omaEnv(OMAenv),
-    m_needRef(false),
     m_oh(NULL)
 {
   m_parnames.clear(); 
@@ -63,19 +63,42 @@ void OMAalg::raiseMessage(unsigned int Id,
   return;
 }
 
-bool OMAalg::notEnoughStats(TH1* h) {
+bool OMACheckAlg::notEnoughStats(TH1* h) {
   int nb=h->GetXaxis()->GetNbins();
-  return (h->GetEntries() < nb * 5);
+  return (h->GetEntries() < m_minEntries || 
+          h->GetEntries() < (nb * m_minEntriesPerBin) );
 }
 
-bool OMAalg::checkStats(TH1* h,
-                                unsigned int anaID) {
+
+bool OMACheckAlg::refMissing(TH1* ref,
+                        std::vector<float> & input_pars) {
+  ref = (input_pars.empty() ? ref : NULL); // cheat compiler (avoid warnings)
+  return false; // never mind by default (will be overloaded for algorihtm who care)
+}
+
+
+bool OMACheckAlg::checkStats(TH1* h,
+                        unsigned int anaID,
+                        TH1* ref,
+                        std::vector<float> & input_pars) {
+
   bool ok=true;
   std::string message="";
   std::string hname=h->GetName();
   if (notEnoughStats(h)) {
     raiseMessage(anaID, OMAMessage::NOSTAT, message, hname);
+    std::stringstream warn;
+    warn << "not enough stats for histogram " << hname <<
+      ": entries=" << h->GetEntries();
+    m_omaEnv->sendinfo(warn.str().data());
+    ok=false;
+  }
+  if (refMissing(ref, input_pars))  {
+    std::string warn = "Reference requested but not available for algorithm " +
+      m_name;
+    m_omaEnv->sendwarning(warn.data());
     ok=false;
   }
   return ok;
 }
+

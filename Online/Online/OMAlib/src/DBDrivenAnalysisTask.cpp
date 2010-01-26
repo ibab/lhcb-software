@@ -1,4 +1,4 @@
-// $Id: DBDrivenAnalysisTask.cpp,v 1.15 2009-08-31 17:24:06 ggiacomo Exp $
+// $Id: DBDrivenAnalysisTask.cpp,v 1.16 2010-01-26 14:25:37 ggiacomo Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "OMAlib/DBDrivenAnalysisTask.h"
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -73,7 +73,7 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
               if (thisalg) {
                 if (OMACheckAlg* cka = dynamic_cast<OMACheckAlg*>(thisalg) ) {
                   TH1* myref = NULL;
-                  if (thisalg->needRef()) {
+                  if (cka->needRef()) {
                     myref=getReference((*ih),1,"default",m_ownedRefs[(*ih)->identifier()]);
                     if ( (*ih)->isAnaHist() ) { // keep track for later use
                       m_ownedRefs[(*ih)->identifier()] = myref;
@@ -81,7 +81,9 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
                   }
                   // check if we have statistics first, then exec the algorithm
                   if ( cka->checkStats(rooth,
-                                      anaIDs[iana]) ) {
+                                       anaIDs[iana],
+                                       myref,
+                                       inputs) ) {
                     cka->setOnlineHistogram(*ih);
                     cka->exec(*(rooth),
                               warningThr,
@@ -89,10 +91,6 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
                               inputs,
                               anaIDs[iana],
                               myref);
-                  }
-                  else {
-                    debug() << "not enough stats for histogram "<<rooth->GetName()
-                            << " entries="<< rooth->GetEntries() << endmsg;
                   }
                   if (myref) delete myref;
                 }

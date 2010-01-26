@@ -1,4 +1,4 @@
-// $Id: DumpOMAlarms.cpp,v 1.3 2009-06-17 13:18:46 ggiacomo Exp $
+// $Id: DumpOMAlarms.cpp,v 1.4 2010-01-26 14:25:37 ggiacomo Exp $
 #include <iostream>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OnlineHistDB/OMAMessage.h"
@@ -9,6 +9,7 @@ std::string AnaTask = "any";
 std::string DB = OnlineHistDBEnv_constants::DB;
 std::string DBuser = "HIST_READER";
 std::string DBpw = "READER";
+bool clear=false;
 
 OnlineHistDB *HistDB= NULL;
 
@@ -26,6 +27,9 @@ int main(int narg,char **argv ) {
         usage();
         return 0;
       }
+      else if('c' == opt) {
+        clear = true;
+      }
       else {
         setoption( *(argv[iarg]+1), argv[iarg+1] );
       }
@@ -33,6 +37,14 @@ int main(int narg,char **argv ) {
     iarg++;
   }
   
+  if(clear && DBuser == "HIST_READER") {
+    DBuser ="HIST_READER";
+    cout << "Enter the " << DBuser <<" password on "<<DB<<" for clearing alarms:";
+    cin >> DBpw;
+    cout<<endl;
+  }
+
+
   // connect to DB
   HistDB = new OnlineHistDB(DBpw,DBuser,DB);
 
@@ -56,6 +68,24 @@ int main(int narg,char **argv ) {
     message->dump(&(std::cout));
     delete message;
   }
+
+  if (clear) {
+    std::string answer;
+    cout << "Are you sure you want to clear these alarms? (Y/N)";
+    cin >> answer;
+    if (answer == "Y") {
+      for (std::vector<int>::iterator im= messID.begin() ; im !=  messID.end() ; im++) {
+        OMAMessage* message = new OMAMessage(*im, *HistDB);
+        message->remove();
+        delete message;
+      }
+      cout << messID.size() << " messages have been cleared"<<endl;
+    }
+    else {
+      cout << "Message NOT cleared"<<endl;
+    }
+  }
+
 
   delete HistDB;
   return 0;

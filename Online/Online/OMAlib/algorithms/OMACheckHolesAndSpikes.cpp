@@ -146,3 +146,9 @@ void OMACheckHolesAndSpikes::exec(TH1 &Histo,
     raiseMessage(anaID, level, message.str(), hname);
   }
 }
+
+bool OMACheckHolesAndSpikes::refMissing(TH1* ref,
+                                       std::vector<float> & input_pars) {
+  if(input_pars.size() <m_ninput) return false; 
+  return (input_pars[0] < 0. &&  !ref);
+}
