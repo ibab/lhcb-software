@@ -53,5 +53,5 @@ void OMACompareToReference::exec(TH1 &Histo,
 bool OMACompareToReference::refMissing(TH1* ref,
                                        std::vector<float> & input_pars) {
   if (!ref && input_pars.empty()) ref=NULL; // cheat compiler (avoid warnings)
-  if (!ref) return true; 
+  return (!ref); 
 }

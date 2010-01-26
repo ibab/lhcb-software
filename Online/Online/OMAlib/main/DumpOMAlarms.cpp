@@ -1,4 +1,4 @@
-// $Id: DumpOMAlarms.cpp,v 1.4 2010-01-26 14:25:37 ggiacomo Exp $
+// $Id: DumpOMAlarms.cpp,v 1.5 2010-01-26 14:54:50 ggiacomo Exp $
 #include <iostream>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OnlineHistDB/OMAMessage.h"
@@ -115,8 +115,9 @@ void usage()
 {
   cout << "DumpOMAlarms <options>" <<endl;
   cout << "   where options are:" <<endl;
-  cout << "      -t  <AnalysisTaskName> \t (default is 'any') " <<endl;
-  cout << "      -d  <DB>    \t choose database (default is the production DB at the pit)" <<endl;
-  cout << "      -u  <DBuser>\t database login user (default is HIST_READER)" <<endl;
-  cout << "      -p  <DBpw>  \t database login password (default is read-only password) " <<endl;
+  cout << "      -t  <AnalysisTaskName> \t to filter by analysys task name (default is 'any') " <<endl;
+  cout << "      -c          \t\t to clear the filtered alarms " <<endl;
+  cout << "      -d  <DB>    \t\t choose database (default is the production DB at the pit)" <<endl;
+  cout << "      -u  <DBuser>\t\t database login user (default is HIST_READER)" <<endl;
+  cout << "      -p  <DBpw>  \t\t database login password (default is read-only password) " <<endl;
 }
