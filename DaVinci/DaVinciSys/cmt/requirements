@@ -8,7 +8,6 @@ branches doc cmt
 #=======================================================
 use  DaVinci                 	v24r8   Phys
 use  PatPV                      v3r11p1 Tr
-use  StrippingSelections        v1r13 Phys
 use  GlobalReco                 v6r31 Rec
 use  DecayTreeTuple             v2r11 Phys
 use  PhysSelPython              v3r2p1 PhysSel
