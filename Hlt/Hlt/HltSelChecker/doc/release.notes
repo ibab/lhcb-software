@@ -19,6 +19,7 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== HltSelChecker v10r3 2010-01-26 ===================
 ! 2010-01-18 - Patrick Koppenburg
  - HltCorrelations: fail on missing DecReports only if L0 is true
 
