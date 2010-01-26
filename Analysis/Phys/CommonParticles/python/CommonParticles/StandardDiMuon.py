@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StandardDiMuon.py,v 1.3 2009-07-09 12:42:31 rlambert Exp $ 
+# $Id: StandardDiMuon.py,v 1.4 2010-01-26 13:43:38 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLoose.py
 #  configuration file for 'Standard Loose DiMuon' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Loose DiMuon'
 """
 __author__  = "Rob Lambert"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 from Gaudi.Configuration import *
 
@@ -21,6 +21,9 @@ from Gaudi.Configuration import *
 _locations = {} 
 
 from CommonParticles.StdLooseDiMuon import *
+_locations.update ( locations )
+
+from CommonParticles.StdVeryLooseDiMuon import *
 _locations.update ( locations )
 
 # redefine the locations 
