@@ -327,11 +327,21 @@ class Alignables( list ):
             elements.append( "OT/" + i.strip( '/' ) + "VX2ASide : " + station + "/(V|X2)" + self.m_otQuarters[1] )
         self.__append( elements, dofs )
 
-    
     def OTCFrames( self, dofs = "" ) :
         self.OTCFramesASide( dofs )
         self.OTCFramesCSide( dofs )
 
+    def OTCFrameLayers( self, dofs = "" ) :
+        elements = []
+        for i in self.m_otStations :
+            station = self.m_ot + i
+            # we could also make the c-frame pairs groups of 2
+            # layers. however, to be a bit consistent, I prefer to
+            # put everything at quarter level.
+            elements.append( "OT/" + i.strip( '/' ) + "X1U : " + station + "/(X1|U)/Q." )
+            elements.append( "OT/" + i.strip( '/' ) + "VX2 : " + station + "/(V|X2)/Q." )
+        self.__append( elements, dofs )
+    
     def OTLayersCSide( self, dofs = "" ) :
         elements = []
         for i in self.m_otStations :
