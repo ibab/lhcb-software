@@ -1,4 +1,4 @@
-// $Id: MCTupleToolAngles.cpp,v 1.2 2009-01-23 10:28:10 pkoppenb Exp $
+// $Id: MCTupleToolAngles.cpp,v 1.3 2010-01-26 15:39:25 rlambert Exp $
 // Include files 
 #include "gsl/gsl_sys.h"
 
@@ -32,7 +32,7 @@ DECLARE_TOOL_FACTORY( MCTupleToolAngles );
 MCTupleToolAngles::MCTupleToolAngles( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : TupleToolBase ( type, name , parent )
 {
   declareInterface<IMCParticleTupleTool>(this);
 }
@@ -46,7 +46,7 @@ MCTupleToolAngles::~MCTupleToolAngles() {}
 //=============================================================================
 
 StatusCode MCTupleToolAngles::initialize(){
-  if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
+  if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
   return StatusCode::SUCCESS ;
 }
 //=============================================================================
@@ -55,14 +55,18 @@ StatusCode MCTupleToolAngles::initialize(){
 StatusCode MCTupleToolAngles::fill( const LHCb::MCParticle* mother
                                      , const LHCb::MCParticle* mcp
                                      , const std::string& head
-                                     , Tuples::Tuple& tuple ){
+                                     , Tuples::Tuple& tuple )
+{
+  const std::string prefix=fullName(head);
   
   bool test = true;
-
-  if ( 0==mcp || 0==mother || mcp==mother ) return StatusCode::SUCCESS ;
-  double cosT = cosTheta(mother->momentum(), mcp->momentum() );
+  
+  double cosT =0.;
+  
+  if ( 0!=mcp && 0!=mother && mcp!=mother ) cosT = cosTheta(mother->momentum(), mcp->momentum() );
   // fill the tuple:
-  test &= tuple->column( head+"_TRUECosTheta", cosT );
+  test &= tuple->column( prefix+"_TRUECosTheta", cosT );
+  if(isVerbose()) test &= tuple->column( prefix+"_TRUETheta", acos(cosT) );
   if ( msgLevel(MSG::DEBUG)) debug() << mother->particleID().pid() << " " << mother->momentum() << " " 
                                      << mcp->particleID().pid() << " " << mcp->momentum() << endmsg ;
   return StatusCode(test) ;

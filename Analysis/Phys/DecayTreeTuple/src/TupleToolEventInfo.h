@@ -1,10 +1,10 @@
-// $Id: TupleToolEventInfo.h,v 1.2 2009-02-09 09:16:55 pkoppenb Exp $
+// $Id: TupleToolEventInfo.h,v 1.3 2010-01-26 15:39:26 rlambert Exp $
 #ifndef JBOREL_TUPLETOOLEVENTINFO_H
 #define JBOREL_TUPLETOOLEVENTINFO_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "TupleToolBase.h"
 #include "Kernel/IEventTupleTool.h"            // Interface
 
 class ITupleTool;
@@ -21,7 +21,7 @@ class ITupleTool;
  *  @author Jeremie Borel
  *  @date   2007-11-07
  */
-class TupleToolEventInfo : public GaudiTool, virtual public IEventTupleTool {
+class TupleToolEventInfo : public TupleToolBase, virtual public IEventTupleTool {
 public:
   /// Standard constructor
   TupleToolEventInfo( const std::string& type,

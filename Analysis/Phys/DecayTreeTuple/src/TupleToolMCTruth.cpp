@@ -1,4 +1,4 @@
-// $Id: TupleToolMCTruth.cpp,v 1.16 2009-10-15 09:05:22 jpalac Exp $
+// $Id: TupleToolMCTruth.cpp,v 1.17 2010-01-26 15:39:26 rlambert Exp $
 // Include files
 #include "gsl/gsl_sys.h"
 // from Gaudi
@@ -32,7 +32,7 @@ using namespace LHCb;
 TupleToolMCTruth::TupleToolMCTruth( const std::string& type,
 				    const std::string& name,
 				    const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : TupleToolBase ( type, name , parent )
   , m_p2mcAssoc(0)
   , m_p2mcAssocType("DaVinciSmartAssociator")
   , m_toolList(0)
@@ -52,7 +52,7 @@ TupleToolMCTruth::TupleToolMCTruth( const std::string& type,
 //=============================================================================
 
 StatusCode TupleToolMCTruth::initialize(){
-  if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
+  if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
 
   m_p2mcAssoc = tool<IParticle2MCAssociator>(m_p2mcAssocType, 
                                              this);
@@ -80,8 +80,11 @@ StatusCode TupleToolMCTruth::initialize(){
 StatusCode TupleToolMCTruth::fill( const LHCb::Particle* 
 				 , const LHCb::Particle* P
 				 , const std::string& head
-				 , Tuples::Tuple& tuple ){
-
+				 , Tuples::Tuple& tuple )
+{
+  
+  const std::string prefix=fullName(head);
+  
   Assert( m_p2mcAssoc 
           , "The DaVinci smart associator hasn't been initialized!");
   
@@ -90,11 +93,12 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
   bool test = true;
   const LHCb::MCParticle* mcp(0);
   
-  if( P ){
+  if( P )
+  {
     //assignedPid = P->particleID().pid();
-    if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolKinematic::getting related MCP to " << P << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "TupleToolMCTruth::getting related MCP to " << P << endmsg ;
     mcp = m_p2mcAssoc->relatedMCP(P);
-    if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolKinematic::got mcp " << mcp << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "TupleToolMCTruth::got mcp " << mcp << endmsg ;
   }
  
   // pointer is ready, prepare the values:
@@ -104,11 +108,11 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
   }
   
   // fill the tuple:
-  test &= tuple->column( head+"_TRUEID", mcPid );  
+  test &= tuple->column( prefix+"_TRUEID", mcPid );  
 
   //fill all requested MCTools
   for(std::vector< IMCParticleTupleTool* >::const_iterator it=m_mcTools.begin(); it!=m_mcTools.end(); it++)
-    test &=(*it)->fill(NULL,mcp,head,tuple);
+    test &=(*it)->fill(NULL,mcp,prefix,tuple);
   
   return StatusCode(test);
 }

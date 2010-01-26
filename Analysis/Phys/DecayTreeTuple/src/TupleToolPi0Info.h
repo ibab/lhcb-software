@@ -1,10 +1,10 @@
-// $Id: TupleToolPi0Info.h,v 1.2 2009-11-24 17:22:26 pkoppenb Exp $
+// $Id: TupleToolPi0Info.h,v 1.3 2010-01-26 15:39:26 rlambert Exp $
 #ifndef _TUPLETOOLEPI0INFO_H
 #define _TUPLETOOLEPI0INFO_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "TupleToolBase.h"
      // Interface
 #include "Kernel/IParticleTupleTool.h"  
 
@@ -40,7 +40,7 @@
 
 
 //============================================================================
-class TupleToolPi0Info : public GaudiTool, virtual public IParticleTupleTool {
+class TupleToolPi0Info : public TupleToolBase, virtual public IParticleTupleTool {
 //==========================================================================
 public:
  // Standard constructor

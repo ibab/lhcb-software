@@ -1,4 +1,4 @@
-// $Id: MCTupleToolDecayType.cpp,v 1.1 2009-06-04 10:54:45 rlambert Exp $
+// $Id: MCTupleToolDecayType.cpp,v 1.2 2010-01-26 15:39:25 rlambert Exp $
 // Include files
 #include "gsl/gsl_sys.h"
 // from Gaudi
@@ -31,9 +31,9 @@ using namespace LHCb;
 // Standard constructor, initializes variables
 //=============================================================================
 MCTupleToolDecayType::MCTupleToolDecayType( const std::string& type,
-				    const std::string& name,
-				    const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+                                            const std::string& name,
+                                            const IInterface* parent )
+  : TupleToolBase ( type, name , parent )
   , m_mother(0)
   , m_top(0)
   , m_fillSlowFind(0)
@@ -67,12 +67,15 @@ MCTupleToolDecayType::MCTupleToolDecayType( const std::string& type,
   // look for this decay string aswell
   declareProperty( "hasMCDecay", m_hasMCDecay="" );
 
+  //extra name. MCP in this case.
+  declareProperty("ExtraName",m_extraName="MCP",
+                  "prepend the name of any variable with this string");
 }
 
 //=============================================================================
 
 StatusCode MCTupleToolDecayType::initialize(){
-  if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
+  if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
   StatusCode sc=StatusCode::SUCCESS;
   
   
@@ -84,19 +87,19 @@ StatusCode MCTupleToolDecayType::initialize(){
 
   if(!m_findEventTypes.empty()) sc=m_mcEventType->setEventTypes(m_findEventTypeSet);
   if(!m_findEventTypes.empty() && sc.isFailure())
-    {
-      warning()<<"Error setting the event types starting with " << m_findEventTypes[0] << endmsg;
-      m_findEventTypes.clear();
-    }
+  {
+    warning()<<"Error setting the event types starting with " << m_findEventTypes[0] << endmsg;
+    m_findEventTypes.clear();
+  }
   
   if (m_mcDecay && m_hasMCDecay!="") sc=m_mcDecay->setDecay(m_hasMCDecay);
   if(sc.isFailure())
-    {
-      warning()<<"Error setting this decay string " << m_hasMCDecay << endmsg;
-      m_mcDecay=NULL;
-      m_hasMCDecay="";
+  {
+    warning()<<"Error setting this decay string " << m_hasMCDecay << endmsg;
+    m_mcDecay=NULL;
+    m_hasMCDecay="";
       
-    }
+  }
   if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE))
   {
     //output all the options
@@ -117,10 +120,11 @@ StatusCode MCTupleToolDecayType::initialize(){
 }
 
 StatusCode MCTupleToolDecayType::fill( const LHCb::MCParticle* 
-				 , const LHCb::MCParticle* mcp
-				 , const std::string& head
-				 , Tuples::Tuple& tuple ){
-
+                                       , const LHCb::MCParticle* mcp
+                                       , const std::string& head
+                                       , Tuples::Tuple& tuple )
+{
+  const std::string prefix=fullName(head);
 
   if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "Filling MCTupleToolDecayType" << endmsg;
   
@@ -140,91 +144,96 @@ StatusCode MCTupleToolDecayType::fill( const LHCb::MCParticle*
 
   // pointer is ready, prepare the sets:
   if( mcp ) 
+  {
+    verbose() << "found MC Particle" << endmsg;
+    //fast or slow?
+    if(m_fillSlowFind) sc=m_mcEventType->findDecayType(foundfull,mcp);
+    if(sc.isFailure())
     {
-      verbose() << "found MC Particle" << endmsg;
-      //fast or slow?
-      if(m_fillSlowFind) sc=m_mcEventType->findDecayType(foundfull,mcp);
-      if(sc.isFailure())
-        {
-          warning() << "Could not perform the fill using the slow method, reverting to the fast method" << endmsg;
-          m_fillSlowFind=false;
-          m_fillPseudoFind=true;
-        }
-        
-      if(m_fillPseudoFind) sc=m_mcEventType->constructDecayType(foundfast,mcp);
-      if(sc.isFailure())
-        {
-          warning() << "Could not perform the fill using the fast method, I therefore cannot find the overall event type" << endmsg;
-          m_fillPseudoFind=false;
-        }
+      warning() << "Could not perform the fill using the slow method, reverting to the fast method" << endmsg;
+      m_fillSlowFind=false;
+      m_fillPseudoFind=true;
     }
+        
+    if(m_fillPseudoFind) sc=m_mcEventType->constructDecayType(foundfast,mcp);
+    if(sc.isFailure())
+    {
+      warning() << "Could not perform the fill using the fast method," 
+                << " I therefore cannot find the overall event type" << endmsg;
+      m_fillPseudoFind=false;
+    }
+  }
   if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "filling info for MCAssociate" << endmsg;
   if(m_fillSlowFind)
+  {
+    test &= tuple->column( prefix+"_numFoundTypes", foundfull.size() );
+    //insert "found" as an farray
+    std::vector<long unsigned int> foundvec(0);
+    set2vec(foundfull,foundvec);
+    test &= tuple->farray( prefix+"_MCP_FoundTypes", foundvec, prefix+"_FoundLen", 20 );
+      
+    if(!m_hasEventTypeSet.empty()) //book the matching types
     {
-      test &= tuple->column( head+"_MCP_numFoundTypes", foundfull.size() );
+          
+      LHCb::EventTypeSet intersection;
+      std::set_intersection(foundfull.begin(),foundfull.end(),
+                            m_hasEventTypeSet.begin(), m_hasEventTypeSet.end(),
+                            std::inserter(intersection,intersection.begin()),
+                            LHCb::EventTypeComp() );
+          
+      //bool foundGiven=(intersection.size()>0);
+      test &= tuple->column( prefix+"_numMatchingTypes", intersection.size() );
+      if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "booked intersection of size:" 
+                                                                 << intersection.size() << endmsg;
       //insert "found" as an farray
       std::vector<long unsigned int> foundvec(0);
-      set2vec(foundfull,foundvec);
-      test &= tuple->farray( head+"_MCP_FoundTypes", foundvec, head+"_MCP_FoundLen", 20 );
-      
-      if(!m_hasEventTypeSet.empty()) //book the matching types
-        {
-          
-          LHCb::EventTypeSet intersection;
-          std::set_intersection(foundfull.begin(),foundfull.end(),
-                                m_hasEventTypeSet.begin(), m_hasEventTypeSet.end(),
-                                std::inserter(intersection,intersection.begin()),
-				LHCb::EventTypeComp() );
-          
-          //bool foundGiven=(intersection.size()>0);
-          test &= tuple->column( head+"_MCP_numMatchingTypes", intersection.size() );
-          if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "booked intersection of size:" << intersection.size() << endmsg;
-          //insert "found" as an farray
-          std::vector<long unsigned int> foundvec(0);
-          set2vec(intersection,foundvec);
-          test &= tuple->farray( head+"_MCP_MatchingTypes", foundvec, head+"_MCP_MatchLen", m_hasEventTypeSet.size() );
-        }
+      set2vec(intersection,foundvec);
+      test &= tuple->farray( prefix+"_MatchingTypes", foundvec, prefix+"_MatchLen", m_hasEventTypeSet.size() );
     }
+  }
   if(m_fillPseudoFind)
+  {
+    test &= tuple->column( prefix+"_numPseudoTypes", foundfast.size() );
+    //insert "found" as an farray
+    std::vector<long unsigned int> foundvec(0);
+    set2vec(foundfast,foundvec);
+    test &= tuple->farray( prefix+"_PseudoTypes", foundvec, prefix+"_MCP_PseudoLen", 20 );
+      
+    if(!m_hasEventTypeSet.empty()) //book the matching types
     {
-      test &= tuple->column( head+"_MCP_numPseudoTypes", foundfast.size() );
+          
+      LHCb::EventTypeSet intersection;
+      std::set_intersection(foundfast.begin(),foundfast.end(),
+                            m_hasEventTypeSet.begin(), m_hasEventTypeSet.end(),
+                            std::inserter(intersection,intersection.begin()),
+                            LHCb::EventTypeComp() );
+          
+      //bool foundGiven=(intersection.size()>0);
+      test &= tuple->column( prefix+"_numMatchingPseudoTypes", intersection.size() );
+      if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "booked intersection of size:" 
+                                                                 << intersection.size() << endmsg;
       //insert "found" as an farray
       std::vector<long unsigned int> foundvec(0);
-      set2vec(foundfast,foundvec);
-      test &= tuple->farray( head+"_MCP_PseudoTypes", foundvec, head+"_MCP_PseudoLen", 20 );
-      
-      if(!m_hasEventTypeSet.empty()) //book the matching types
-        {
-          
-          LHCb::EventTypeSet intersection;
-          std::set_intersection(foundfast.begin(),foundfast.end(),
-                                m_hasEventTypeSet.begin(), m_hasEventTypeSet.end(),
-                                std::inserter(intersection,intersection.begin()),
-				LHCb::EventTypeComp() );
-          
-          //bool foundGiven=(intersection.size()>0);
-          test &= tuple->column( head+"_MCP_numMatchingPseudoTypes", intersection.size() );
-          if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "booked intersection of size:" << intersection.size() << endmsg;
-          //insert "found" as an farray
-          std::vector<long unsigned int> foundvec(0);
-          set2vec(intersection,foundvec);
-          test &= tuple->farray( head+"_MCP_MatchingPseudoTypes", foundvec, head+"_MCP_MatchPseudoLen", m_hasEventTypeSet.size() );
-        }
+      set2vec(intersection,foundvec);
+      test &= tuple->farray( prefix+"_MatchingPseudoTypes",
+                             foundvec, prefix+"_MCP_MatchPseudoLen",
+                             m_hasEventTypeSet.size() );
     }
+  }
   
   if(m_hasMCDecay!="" && m_mcDecay )
+  {
+    bool hasMCDecay =false;
+    LHCb::MCParticle::ConstVector dummyvec(0); //stupid way, but is the only way!
+    if (mcp) 
     {
-      bool hasMCDecay =false;
-      LHCb::MCParticle::ConstVector dummyvec(0); //stupid way, but is the only way!
-      if (mcp) 
-        {
-          dummyvec.push_back(mcp);
-          hasMCDecay = m_mcDecay->hasDecay(dummyvec);
-        }
-      
-      test &= tuple->column( head+"_MCP_hasGivenDecay", hasMCDecay );
-      //use the standard decay finding method
+      dummyvec.push_back(mcp);
+      hasMCDecay = m_mcDecay->hasDecay(dummyvec);
     }
+      
+    test &= tuple->column( prefix+"_hasGivenDecay", hasMCDecay );
+    //use the standard decay finding method
+  }
   
   
 
@@ -237,9 +246,9 @@ bool MCTupleToolDecayType::vec2set(std::vector<long unsigned int>& avec, LHCb::E
 {
   aset.clear();
   for(std::vector<long unsigned int>::iterator n=avec.begin(); n!=avec.end(); n++)
-    {
-      aset.insert(*n);
-    }
+  {
+    aset.insert(*n);
+  }
   return (aset.size() > 0);
   
 }
@@ -249,9 +258,9 @@ bool MCTupleToolDecayType::set2vec(LHCb::EventTypeSet& aset,std::vector<long uns
   avec.clear();
   avec.reserve(aset.size());
   for(LHCb::EventTypeSet::iterator n=aset.begin(); n!=aset.end(); n++)
-    {
-      avec.push_back(*n);
-    }
+  {
+    avec.push_back(*n);
+  }
   return (avec.size() > 0);
   
 }

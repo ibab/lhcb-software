@@ -1,10 +1,10 @@
-// $Id: MCTupleToolHierarchy.h,v 1.1 2009-06-04 10:54:45 rlambert Exp $
+// $Id: MCTupleToolHierarchy.h,v 1.2 2010-01-26 15:39:25 rlambert Exp $
 #ifndef SPOSS_TUPLETOOLMCHIERARCHY_H
 #define SPOSS_TUPLETOOLMCHIERARCHY_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "TupleToolBase.h"
 #include "Kernel/IMCParticleTupleTool.h"            // Interface
 
 //struct Particle2MCLinker;
@@ -35,7 +35,7 @@
  *  @author Stephane Poss
  *  @date   2008-02-28
  */
-class MCTupleToolHierarchy : public GaudiTool, virtual public IMCParticleTupleTool {
+class MCTupleToolHierarchy : public TupleToolBase, virtual public IMCParticleTupleTool {
 public:
   /// Standard constructor
   MCTupleToolHierarchy( const std::string& type,

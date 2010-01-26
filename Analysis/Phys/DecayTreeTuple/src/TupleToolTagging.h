@@ -1,10 +1,10 @@
-// $Id: TupleToolTagging.h,v 1.3 2009-11-12 13:49:25 jpalac Exp $
+// $Id: TupleToolTagging.h,v 1.4 2010-01-26 15:39:27 rlambert Exp $
 #ifndef JBOREL_TUPLETOOLTAGGING_H
 #define JBOREL_TUPLETOOLTAGGING_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
 
 class DVAlgorithm;
@@ -18,7 +18,7 @@ class IBTaggingTool;
  * @author Jeremie Borel
  * @date   2007-11-07
  */
-class TupleToolTagging : public GaudiTool, virtual public IParticleTupleTool {
+class TupleToolTagging : public TupleToolBase, virtual public IParticleTupleTool {
 public:
   /// Standard constructor
   TupleToolTagging( const std::string& type,

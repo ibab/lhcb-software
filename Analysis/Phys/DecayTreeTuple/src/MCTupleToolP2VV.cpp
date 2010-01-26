@@ -1,4 +1,4 @@
-// $Id: MCTupleToolP2VV.cpp,v 1.1 2009-01-19 18:07:44 pkoppenb Exp $
+// $Id: MCTupleToolP2VV.cpp,v 1.2 2010-01-26 15:39:26 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -26,8 +26,8 @@ DECLARE_TOOL_FACTORY( MCTupleToolP2VV );
 MCTupleToolP2VV::MCTupleToolP2VV( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : GaudiTool ( type, name , parent )
-    , m_angleTool()
+  : TupleToolBase ( type, name , parent )
+    , m_angleTool(0)
 {
   declareInterface<IMCParticleTupleTool>(this);
 
@@ -40,7 +40,7 @@ MCTupleToolP2VV::~MCTupleToolP2VV() {}
 
 //=============================================================================
 StatusCode MCTupleToolP2VV::initialize( ){
-   if( ! GaudiTool::initialize() ) return StatusCode::FAILURE; 
+   if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE; 
    m_angleTool = tool<IP2VVMCPartAngleCalculator>(m_calculator,this);
    return StatusCode::SUCCESS ;
 }
@@ -50,7 +50,9 @@ StatusCode MCTupleToolP2VV::initialize( ){
 StatusCode MCTupleToolP2VV::fill( const LHCb::MCParticle* 
                                   , const LHCb::MCParticle* mcp
                                   , const std::string& head
-                                  , Tuples::Tuple& tuple ){
+                                  , Tuples::Tuple& tuple )
+{
+  const std::string prefix=fullName(head);
   
   bool test = true;
   
@@ -66,16 +68,17 @@ StatusCode MCTupleToolP2VV::fill( const LHCb::MCParticle*
     phi=9999.;      
   }
   
-  if (msgLevel(MSG::DEBUG)) {
+  if (msgLevel(MSG::DEBUG)) 
+  {
     debug() << "Three true helicity angles are theta_L : " 
             << thetaL 
             << " K: "<< thetaK
             << " phi: " << phi << endmsg ;
   }
   
-  test &= tuple->column( head+"_TRUEThetaL", thetaL );
-  test &= tuple->column( head+"_TRUEThetaK", thetaK );
-  test &= tuple->column( head+"_TRUEPhi",    phi  );
+  test &= tuple->column( prefix+"_TRUEThetaL", thetaL );
+  test &= tuple->column( prefix+"_TRUEThetaK", thetaK );
+  test &= tuple->column( prefix+"_TRUEPhi",    phi  );
   
   //Transversity
   double Theta_tr(9999), Phi_tr(9999), Theta_V(9999);
@@ -89,7 +92,8 @@ StatusCode MCTupleToolP2VV::fill( const LHCb::MCParticle*
     Theta_V=9999.;
   }
   
-  if (msgLevel(MSG::DEBUG)) {
+  if (msgLevel(MSG::DEBUG)) 
+  {
     debug() << "Three true transversity angles are Theta_tr : " 
             << Theta_tr 
             << " Phi_tr: " << Phi_tr
@@ -97,9 +101,9 @@ StatusCode MCTupleToolP2VV::fill( const LHCb::MCParticle*
             << endmsg ;
   }
   
-  test &= tuple->column( head+"_TRUEThetaTr", Theta_tr );
-  test &= tuple->column( head+"_TRUEPhiTr", Phi_tr );
-  test &= tuple->column( head+"_TRUEThetaVtr", Theta_V  );
+  test &= tuple->column( prefix+"_TRUEThetaTr", Theta_tr );
+  test &= tuple->column( prefix+"_TRUEPhiTr", Phi_tr );
+  test &= tuple->column( prefix+"_TRUEThetaVtr", Theta_V  );
   
   return StatusCode(test);
 }

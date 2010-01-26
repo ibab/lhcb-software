@@ -1,10 +1,10 @@
-// $Id: TupleToolRecoStats.h,v 1.2 2009-07-30 14:54:47 pkoppenb Exp $
+// $Id: TupleToolRecoStats.h,v 1.3 2010-01-26 15:39:26 rlambert Exp $
 #ifndef TUPLETOOLRECOSTATS_H 
 #define TUPLETOOLRECOSTATS_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTupleTool.h"
+#include "TupleToolBase.h"
 #include "Kernel/IEventTupleTool.h"            // Interface
 
 /** @class TupleToolRecoStats TupleToolRecoStats.h
@@ -14,7 +14,7 @@
  *  @author Patrick Koppenburg
  *  @date   2009-02-11
  */
-class TupleToolRecoStats : public GaudiTupleTool, virtual public IEventTupleTool {
+class TupleToolRecoStats : public TupleToolBase, virtual public IEventTupleTool {
 public: 
   /// Standard constructor
   TupleToolRecoStats( const std::string& type, 

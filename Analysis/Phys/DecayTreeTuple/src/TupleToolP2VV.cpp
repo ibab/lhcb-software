@@ -1,4 +1,4 @@
-// $Id: TupleToolP2VV.cpp,v 1.4 2009-09-06 16:58:27 gcowan Exp $
+// $Id: TupleToolP2VV.cpp,v 1.5 2010-01-26 15:39:26 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -30,7 +30,7 @@ DECLARE_TOOL_FACTORY( TupleToolP2VV );
 TupleToolP2VV::TupleToolP2VV( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : TupleToolBase ( type, name , parent )
 , m_angleTool()
 {
   declareInterface<IParticleTupleTool>(this);
@@ -49,7 +49,7 @@ TupleToolP2VV::~TupleToolP2VV() {}
 //  initialize
 //=========================================================================
 StatusCode TupleToolP2VV::initialize( ) {
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = TupleToolBase::initialize();
 
   debug() << "m_calc " << m_calculator << endmsg;
   
@@ -69,7 +69,11 @@ StatusCode TupleToolP2VV::initialize( ) {
 StatusCode TupleToolP2VV::fill( const LHCb::Particle* 
 				   , const LHCb::Particle* P
 				   , const std::string& head
-				   , Tuples::Tuple& tuple ){
+				   , Tuples::Tuple& tuple )
+{
+  std::string prefix=fullName(head);
+  
+  
   bool test = true;
   if( P ){
     
@@ -85,9 +89,9 @@ StatusCode TupleToolP2VV::fill( const LHCb::Particle*
 					<< " K: "<< thetaK
 					<< " phi: " << phi << endmsg ;
       
-      test &= tuple->column( head+"_ThetaL", thetaL );
-      test &= tuple->column( head+"_ThetaK", thetaK );
-      test &= tuple->column( head+"_Phi",    phi  );
+      test &= tuple->column( prefix+"_ThetaL", thetaL );
+      test &= tuple->column( prefix+"_ThetaK", thetaK );
+      test &= tuple->column( prefix+"_Phi",    phi  );
     }
     
     if ( m_trans ){
@@ -106,9 +110,9 @@ StatusCode TupleToolP2VV::fill( const LHCb::Particle*
 					<< " Theta_phi_tr: " << Theta_V 
 					<< endmsg ;
       
-      test &= tuple->column( head+"_ThetaTr", Theta_tr );
-      test &= tuple->column( head+"_PhiTr", Phi_tr );
-      test &= tuple->column( head+"_ThetaVtr", Theta_V  );
+      test &= tuple->column( prefix+"_ThetaTr", Theta_tr );
+      test &= tuple->column( prefix+"_PhiTr", Phi_tr );
+      test &= tuple->column( prefix+"_ThetaVtr", Theta_V  );
     }
   } else {
     return StatusCode::FAILURE;

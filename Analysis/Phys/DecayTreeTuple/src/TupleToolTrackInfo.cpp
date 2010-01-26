@@ -1,4 +1,4 @@
-// $Id: TupleToolTrackInfo.cpp,v 1.9 2009-08-06 18:24:09 smenzeme Exp $
+// $Id: TupleToolTrackInfo.cpp,v 1.10 2010-01-26 15:39:27 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -26,7 +26,7 @@ DECLARE_TOOL_FACTORY( TupleToolTrackInfo );
 TupleToolTrackInfo::TupleToolTrackInfo( const std::string& type,
 				    const std::string& name,
 				    const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : TupleToolBase ( type, name , parent )
 {
   declareInterface<IParticleTupleTool>(this);
 }
@@ -36,50 +36,68 @@ TupleToolTrackInfo::TupleToolTrackInfo( const std::string& type,
 StatusCode TupleToolTrackInfo::fill( const LHCb::Particle* 
 				   , const LHCb::Particle* P
 				   , const std::string& head
-				   , Tuples::Tuple& tuple ){
+				   , Tuples::Tuple& tuple )
+{
+  const std::string prefix=fullName(head);
+  
   bool test = true;
-  if( P ){
-    if( P->isBasicParticle() ){
-      const LHCb::ProtoParticle* protop = P->proto();
-      if(protop){
-        const LHCb::Track* track = protop->track();
-        if(track){
-          if (msgLevel(MSG::DEBUG)) debug() << head << " " << track->type() 
-                                            << " "+head+"_TRACK_CHI2 " << track->chi2() << endmsg ;
-          if (msgLevel(MSG::VERBOSE)) verbose() << *track << endmsg ;
-          test &= tuple->column( head+"_TRACK_Type",  track->type() );
-          test &= tuple->column( head+"_TRACK_CHI2",  track->chi2() );
-          int nDoF = track->nDoF();
-          test &= tuple->column( head+"_TRACK_NDOF",  nDoF );
-          if (nDoF){
-            test &= tuple->column( head+"_TRACK_PCHI2", track->probChi2() );
-            if ( track->info(LHCb::Track::FitVeloNDoF,0) >0) {
-              test &= tuple->column( head+"_TRACK_VeloCHI2NDOF",  
-                                     track->info(LHCb::Track::FitVeloChi2, -1.)/
-                                     track->info(LHCb::Track::FitVeloNDoF, 0) );
-            } else test &= tuple->column( head+"_TRACK_VeloCHI2NDOF",-1.);
-            if ( track->info(LHCb::Track::FitTNDoF,0) >0) {
-              test &= tuple->column( head+"_TRACK_TCHI2NDOF",  
-                                     track->info(LHCb::Track::FitTChi2, -1.)/
-                                     track->info(LHCb::Track::FitTNDoF, 0) );
-            } else test &= tuple->column( head+"_TRACK_TCHI2NDOF",-1.);
-          } else {
-            if (msgLevel(MSG::VERBOSE)) verbose() << "No NDOF" << endmsg ;
-            test &= tuple->column( head+"_TRACK_PCHI2",-1.);
-            test &= tuple->column( head+"_TRACK_VeloCHI2NDOF",-1.);
-            test &= tuple->column( head+"_TRACK_TCHI2NDOF",-1.);
-          }
-	  double ghostProbability = -1.0;
-	  if (track->ghostProbability() != 0)
-	    ghostProbability = track->ghostProbability();
+  if( !P ) return StatusCode::FAILURE;
 
-          test &= tuple->column( head+"_TRACK_GhostProb",ghostProbability);
-          test &= tuple->column( head+"_TRACK_CloneDist", track->info(LHCb::Track::CloneDist, -1.) );
-        }
-      }
+  //first just return if the particle isn't supposed to have a track
+  if( !P->isBasicParticle() ) return StatusCode::SUCCESS;
+
+  const LHCb::ProtoParticle* protop = P->proto();
+  if(!protop) return StatusCode::SUCCESS;
+  const LHCb::Track* track = protop->track();
+  if(!track) return StatusCode::SUCCESS;
+  
+  
+  if (msgLevel(MSG::DEBUG)) debug() << prefix << " " << track->type() 
+                                    << " "+prefix+"_TRACK_CHI2 " << track->chi2() << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << *track << endmsg ;
+  test &= tuple->column( prefix+"_TRACK_Type",  track->type() );
+  if(isVerbose()) test &= tuple->column( prefix+"_TRACK_CHI2",  track->chi2() );
+  int nDoF = track->nDoF();
+  if(isVerbose()) test &= tuple->column( prefix+"_TRACK_NDOF",  nDoF );
+  if (nDoF)
+  {
+    test &= tuple->column( prefix+"_TRACK_CHI2NDOF", track->chi2()/nDoF );
+    test &= tuple->column( prefix+"_TRACK_PCHI2", track->probChi2() );
+    if(isVerbose())
+    {
+      
+      if ( track->info(LHCb::Track::FitVeloNDoF,0) >0) 
+      {
+        test &= tuple->column( prefix+"_TRACK_VeloCHI2NDOF",  
+                               track->info(LHCb::Track::FitVeloChi2, -1.)/
+                               track->info(LHCb::Track::FitVeloNDoF, 0) );
+      } 
+      else test &= tuple->column( prefix+"_TRACK_VeloCHI2NDOF",-1.);
+      if ( track->info(LHCb::Track::FitTNDoF,0) >0) 
+      {
+        test &= tuple->column( prefix+"_TRACK_TCHI2NDOF",  
+                               track->info(LHCb::Track::FitTChi2, -1.)/
+                               track->info(LHCb::Track::FitTNDoF, 0) );
+      } 
+      else test &= tuple->column( prefix+"_TRACK_TCHI2NDOF",-1.);
     }
-  } else {
-    return StatusCode::FAILURE;
+    
+  } 
+  else 
+  {
+    if (msgLevel(MSG::VERBOSE)) verbose() << "No NDOF" << endmsg ;
+    test &= tuple->column( prefix+"_TRACK_PCHI2",-1.);
+    test &= tuple->column( prefix+"_TRACK_CHI2NDOF", -1 );
+    if(isVerbose()) test &= tuple->column( prefix+"_TRACK_VeloCHI2NDOF",-1.);
+    if(isVerbose()) test &= tuple->column( prefix+"_TRACK_TCHI2NDOF",-1.);
   }
+  double ghostProbability = -1.0;
+  if (track->ghostProbability() != 0)
+    ghostProbability = track->ghostProbability();
+          
+  test &= tuple->column( prefix+"_TRACK_GhostProb",ghostProbability);
+  test &= tuple->column( prefix+"_TRACK_CloneDist", track->info(LHCb::Track::CloneDist, -1.) );
+  
+  
   return StatusCode(test);
 }

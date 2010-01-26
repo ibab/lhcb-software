@@ -1,10 +1,10 @@
-// $Id: MCTupleToolP2VV.h,v 1.1 2009-01-19 18:07:45 pkoppenb Exp $
+// $Id: MCTupleToolP2VV.h,v 1.2 2010-01-26 15:39:26 rlambert Exp $
 #ifndef MCTUPLETOOLP2VV_H 
 #define MCTUPLETOOLP2VV_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "TupleToolBase.h"
 #include "Kernel/IMCParticleTupleTool.h"            // Interface
 
 /** @class MCTupleToolP2VV MCTupleToolP2VV.h
@@ -23,7 +23,7 @@
  *  @date   2009-01-19
  */
 class IP2VVMCPartAngleCalculator ;
-class MCTupleToolP2VV : public GaudiTool, virtual public IMCParticleTupleTool {
+class MCTupleToolP2VV : public TupleToolBase, virtual public IMCParticleTupleTool {
 public: 
   /// Standard constructor
   MCTupleToolP2VV( const std::string& type, 

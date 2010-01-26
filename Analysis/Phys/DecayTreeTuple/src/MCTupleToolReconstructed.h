@@ -1,10 +1,10 @@
-// $Id: MCTupleToolReconstructed.h,v 1.4 2009-05-14 13:40:45 pkoppenb Exp $
+// $Id: MCTupleToolReconstructed.h,v 1.5 2010-01-26 15:39:26 rlambert Exp $
 #ifndef MCTUPLETOOLMCRECONSTRUCTED_H 
 #define MCTUPLETOOLMCRECONSTRUCTED_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "TupleToolBase.h"
 #include "Kernel/IMCParticleTupleTool.h"            // Interface
 #include "Kernel/Particle2MCLinker.h"
 #include "Event/ProtoParticle.h"
@@ -29,7 +29,7 @@
 class IMCReconstructible ;
 class IMCReconstructed ;
 
-class MCTupleToolReconstructed : public GaudiTool, virtual public IMCParticleTupleTool {
+class MCTupleToolReconstructed : public TupleToolBase, virtual public IMCParticleTupleTool {
 public: 
   /// Standard constructor
   MCTupleToolReconstructed( const std::string& type, 

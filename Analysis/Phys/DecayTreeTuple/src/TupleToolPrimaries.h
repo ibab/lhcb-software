@@ -1,10 +1,10 @@
-// $Id: TupleToolPrimaries.h,v 1.4 2009-11-17 12:33:12 pkoppenb Exp $
+// $Id: TupleToolPrimaries.h,v 1.5 2010-01-26 15:39:26 rlambert Exp $
 #ifndef JBOREL_TUPLETOOLPRIMARIES_H
 #define JBOREL_TUPLETOOLPRIMARIES_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "TupleToolBase.h"
 #include "Kernel/IEventTupleTool.h"            // Interface
 
 /** @class TupleToolPrimaries TupleToolPrimaries.h jborel/TupleToolPrimaries.h
@@ -22,7 +22,7 @@
  *  @author Jeremie Borel
  *  @date   2007-11-07
  */
-class TupleToolPrimaries : public GaudiTool, virtual public IEventTupleTool {
+class TupleToolPrimaries : public TupleToolBase, virtual public IEventTupleTool {
 public:
   /// Standard constructor
   TupleToolPrimaries( const std::string& type,

@@ -1,4 +1,4 @@
-// $Id: TupleToolTagging.cpp,v 1.7 2010-01-20 17:22:36 bkhanji Exp $
+// $Id: TupleToolTagging.cpp,v 1.8 2010-01-26 15:39:27 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -36,7 +36,7 @@ using namespace LHCb;
 TupleToolTagging::TupleToolTagging( const std::string& type,
 				      const std::string& name,
 				      const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : TupleToolBase ( type, name , parent )
   , m_dva(0)
   , m_tagging(0)
 {
@@ -48,7 +48,7 @@ TupleToolTagging::TupleToolTagging( const std::string& type,
 }//=============================================================================
 
 StatusCode TupleToolTagging::initialize() {
-  if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
+  if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
   
   m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
@@ -69,8 +69,10 @@ StatusCode TupleToolTagging::initialize() {
 StatusCode TupleToolTagging::fill( const Particle* mother
 				   , const Particle* P
 				   , const std::string& head
-				   , Tuples::Tuple& tuple ){
-
+				   , Tuples::Tuple& tuple )
+{
+  const std::string prefix=fullName(head);
+  
   Assert( P && mother && m_dva && m_tagging,
 	  "Should not happen, you are inside TupleToolTagging.cpp" );
 
@@ -104,9 +106,9 @@ StatusCode TupleToolTagging::fill( const Particle* mother
   }
 
   bool test = true;
-  test &= tuple->column( head+"_TAGDECISION" , dec );
-  test &= tuple->column( head+"_TAGCAT" , cat );
-  test &= tuple->column( head+"_TAGOMEGA" , omega );
+  test &= tuple->column( prefix+"_TAGDECISION" , dec );
+  test &= tuple->column( prefix+"_TAGCAT" , cat );
+  test &= tuple->column( prefix+"_TAGOMEGA" , omega );
   
   int taggers_code = 0;
   // intialize tagger by tagger W :
@@ -132,13 +134,18 @@ StatusCode TupleToolTagging::fill( const Particle* mother
       
     }
   }
-  test &= tuple->column( head+"_TAGGER" , taggers_code);
-  test &= tuple->column( "OS_MU_PROBA"  , os_mu_prob  );
-  test &= tuple->column( "OS_EL_PROBA"  , os_el_prob  );
-  test &= tuple->column( "OS_K_PROBA"   , os_k_prob   );
-  test &= tuple->column( "SS_K_PROBA"   , ss_k_prob   );
-  test &= tuple->column( "SS_PI_PROBA"  , ss_pi_prob  );
-  test &= tuple->column( "OS_VTX_PROBA" , os_vtx_prob );
+  
+  test &= tuple->column( prefix+"_TAGGER" , taggers_code);
+  if(isVerbose())
+  {
+    test &= tuple->column( prefix+"OS_MU_PROBA"  , os_mu_prob  );
+    test &= tuple->column( prefix+"OS_EL_PROBA"  , os_el_prob  );
+    test &= tuple->column( prefix+"OS_K_PROBA"   , os_k_prob   );
+    test &= tuple->column( prefix+"SS_K_PROBA"   , ss_k_prob   );
+    test &= tuple->column( prefix+"SS_PI_PROBA"  , ss_pi_prob  );
+    test &= tuple->column( prefix+"OS_VTX_PROBA" , os_vtx_prob );
+  }
+  
   
   if( msgLevel( MSG::DEBUG ) ){
     debug() << "Tagging summary: decision: " << dec 

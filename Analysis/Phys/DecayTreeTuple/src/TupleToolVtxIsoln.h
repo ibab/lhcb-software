@@ -3,7 +3,7 @@
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
 #include "Kernel/IVertexFit.h"
 #include "Kernel/IGeomDispCalculator.h"
@@ -32,7 +32,7 @@ namespace LHCb {
  *  @author Mitesh Patel
  *  @date   2008-04-15
  */
-class TupleToolVtxIsoln : public GaudiTool, virtual public IParticleTupleTool {
+class TupleToolVtxIsoln : public TupleToolBase, virtual public IParticleTupleTool {
 public:
   /// Standard constructor
   TupleToolVtxIsoln( const std::string& type,

@@ -1,10 +1,10 @@
-// $Id: TupleToolMCBackgroundInfo.h,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: TupleToolMCBackgroundInfo.h,v 1.2 2010-01-26 15:39:26 rlambert Exp $
 #ifndef JBOREL_TUPLETOOLMCBACKGROUNDINFO_H
 #define JBOREL_TUPLETOOLMCBACKGROUNDINFO_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
 
 class IBackgroundCategory;
@@ -26,7 +26,7 @@ namespace LHCb{
  *  @author Jeremie Borel
  *  @date   2007-11-07
  */
-class TupleToolMCBackgroundInfo : public GaudiTool, virtual public IParticleTupleTool {
+class TupleToolMCBackgroundInfo : public TupleToolBase, virtual public IParticleTupleTool {
 public:
   /// Standard constructor
   TupleToolMCBackgroundInfo( const std::string& type,

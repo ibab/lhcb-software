@@ -1,10 +1,10 @@
-// $Id: TupleToolP2VV.h,v 1.2 2008-07-03 13:59:46 pkoppenb Exp $
+// $Id: TupleToolP2VV.h,v 1.3 2010-01-26 15:39:26 rlambert Exp $
 #ifndef TUPLETOOLP2VV_H 
 #define TUPLETOOLP2VV_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
 /** @class TupleToolP2VV TupleToolP2VV.h
  *  
@@ -23,7 +23,7 @@
  */
 class IP2VVPartAngleCalculator;
 
-class TupleToolP2VV : public GaudiTool, virtual public IParticleTupleTool {
+class TupleToolP2VV : public TupleToolBase, virtual public IParticleTupleTool {
 public: 
   /// Standard constructor
   TupleToolP2VV( const std::string& type, 

@@ -1,4 +1,4 @@
-// $Id: TupleToolPrimaries.cpp,v 1.5 2009-11-17 12:33:12 pkoppenb Exp $
+// $Id: TupleToolPrimaries.cpp,v 1.6 2010-01-26 15:39:26 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -73,7 +73,7 @@ namespace {
 TupleToolPrimaries::TupleToolPrimaries( const std::string& type,
 					const std::string& name,
 					const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : TupleToolBase ( type, name , parent )
 {
   declareInterface<IEventTupleTool>(this);
   declareProperty("InputLocation", m_pvLocation = "" , 
@@ -85,7 +85,7 @@ TupleToolPrimaries::TupleToolPrimaries( const std::string& type,
 //=============================================================================
 
 StatusCode TupleToolPrimaries::initialize(){
-  if( !GaudiTool::initialize() ) return StatusCode::FAILURE;
+  if( !TupleToolBase::initialize() ) return StatusCode::FAILURE;
 
   if ( "" == m_pvLocation){
     const IOnOffline* oo = tool<IOnOffline>("OnOfflineTool",this);
@@ -99,7 +99,9 @@ StatusCode TupleToolPrimaries::initialize(){
 //=============================================================================
 //=============================================================================
 
-StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple ) {
+StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple ) 
+{
+  const std::string prefix=fullName();
   
   std::vector<flat> pvs;
   std::vector<const flat*> refPvs;
@@ -111,7 +113,7 @@ StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple ) {
     refPvs.reserve( size );
     
     RecVertex::Container::const_iterator it = PV->begin();
-    for( ; (PV->end()!=it && it-PV->begin() < size ) ; ++it ){
+    for( ; (PV->end()!=it && int(it-PV->begin()) < int(size) ) ; ++it ){
       pvs.push_back( **it ); // doing this avoid using delete at the end...
       refPvs.push_back( &(pvs.back()) ); // to use mem_fun
     }
@@ -122,26 +124,26 @@ StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple ) {
   }
   
   StatusCode test;
-  test = tuple->farray( "PVX", std::mem_fun( &flat::x ),
-			"PVY", std::mem_fun( &flat::y ),
-			"PVZ", std::mem_fun( &flat::z ),
+  test = tuple->farray( prefix+"PVX", std::mem_fun( &flat::x ),
+			prefix+"PVY", std::mem_fun( &flat::y ),
+			prefix+"PVZ", std::mem_fun( &flat::z ),
 			refPvs.begin(), refPvs.end(),
-			"nPV", 40 );
+			prefix+"nPV", 40 );
   if( !test.isSuccess() ) return StatusCode::FAILURE;
   
   
-  test = tuple->farray( "PVXERR", std::mem_fun( &flat::ex ),
-			"PVYERR", std::mem_fun( &flat::ey ),
-			"PVZERR", std::mem_fun( &flat::ez ),
+  test = tuple->farray( prefix+"PVXERR", std::mem_fun( &flat::ex ),
+			prefix+"PVYERR", std::mem_fun( &flat::ey ),
+			prefix+"PVZERR", std::mem_fun( &flat::ez ),
 			refPvs.begin(), refPvs.end(),
-			"nPV", 40 );
+			prefix+"nPV", 40 );
   if( !test.isSuccess() ) return StatusCode::FAILURE;
   
-  test = tuple->farray( "PVCHI2", std::mem_fun( &flat::chi2 ),
-			"PVNDOF", std::mem_fun( &flat::ndof ),
-			"PVNTRACKS", std::mem_fun( &flat::nTracks ),
+  test = tuple->farray( prefix+"PVCHI2", std::mem_fun( &flat::chi2 ),
+			prefix+"PVNDOF", std::mem_fun( &flat::ndof ),
+			prefix+"PVNTRACKS", std::mem_fun( &flat::nTracks ),
 			refPvs.begin(), refPvs.end(),
-			"nPV", 40 );
+			prefix+"nPV", 40 );
 
   return StatusCode(test);
   //  return StatusCode::SUCCESS;

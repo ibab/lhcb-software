@@ -1,4 +1,4 @@
-// $Id: TupleToolGeneration.cpp,v 1.5 2009-07-07 10:48:26 rlambert Exp $
+// $Id: TupleToolGeneration.cpp,v 1.6 2010-01-26 15:39:26 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -33,7 +33,7 @@ DECLARE_TOOL_FACTORY( TupleToolGeneration );
 TupleToolGeneration::TupleToolGeneration( const std::string& type,
 					const std::string& name,
 					const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : TupleToolBase ( type, name , parent )
 {
   declareInterface<IEventTupleTool>(this);
 }
@@ -41,15 +41,18 @@ TupleToolGeneration::TupleToolGeneration( const std::string& type,
 //=============================================================================
 
 StatusCode TupleToolGeneration::initialize() {
-  if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
+  if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
 
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 
-StatusCode TupleToolGeneration::fill( Tuples::Tuple& tuple ) {
-
+StatusCode TupleToolGeneration::fill( Tuples::Tuple& tuple ) 
+{
+  
+  const std::string prefix=fullName();
+  
   if (msgLevel(MSG::DEBUG)) debug() << "TupleToolGeneration" << endmsg  ;
 
   if (!exist<LHCb::GenHeader>(LHCb::GenHeaderLocation::Default)) 
@@ -87,9 +90,9 @@ StatusCode TupleToolGeneration::fill( Tuples::Tuple& tuple ) {
   }
   
   bool test = true;
-  test &= tuple->farray( "ProcessType" ,  processType , "Collisions" , 20 );
-  test &= tuple->farray( "HeaviestQuark", heaviestQuark, "Collisions" , 20 );
-  test &= tuple->column( "HeaviestQuarkInEvent" , hqEvent );
+  test &= tuple->farray( prefix+"ProcessType" ,  processType , prefix+"Collisions" , 20 );
+  test &= tuple->farray( prefix+"HeaviestQuark", heaviestQuark, prefix+"Collisions" , 20 );
+  test &= tuple->column( prefix+"HeaviestQuarkInEvent" , hqEvent );
 
   return StatusCode(test);
 }

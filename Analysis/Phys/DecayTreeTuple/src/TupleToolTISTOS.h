@@ -3,7 +3,7 @@
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "TupleToolTriggerBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
 #include "Kernel/ITriggerTisTos.h" //
 #include "Kernel/IParticleDescendants.h"
@@ -21,12 +21,26 @@
  *  TIS      : was the event tis? 1 is yes, 0 is no.  
  *  TOS      : was the event tos? 1 is yes, 0 is no.
  *
+ * If verbose is true the tool needs somehow to find a list of triggers to fill.
+ * In this case it uses the base class TupleToolTriggerBase to sort everything out. 
+ *
+ * If \b VerboseL0 = true
+ * L0Decision_xxx : LHCb::L0DUReport->channelDecisionByName(xxx)
+ *  
+ * If \b VerboseHlt1 = true
+ * Hlt1_xxx_Decision : filled
+ * 
+ * If \b VerboseHlt2 = true
+ * Hlt2_xxx_Decision : filled
+ * 
+ * Verbose flag is a shortcut to turn all verbosity on.
+ *  
  *  @author V. Gligorov
  *  @date   2008-04-09
  */
 class IP2VVPartAngleCalculator;
 
-class TupleToolTISTOS : public GaudiTool, virtual public IParticleTupleTool {
+class TupleToolTISTOS : public TupleToolTriggerBase, virtual public IParticleTupleTool {
 public: 
   /// Standard constructor
   TupleToolTISTOS( const std::string& type, 
@@ -36,11 +50,17 @@ public:
   virtual ~TupleToolTISTOS( ); ///< Destructor
 
   StatusCode initialize() ;
+  
+  StatusCode finalize() ;
 
-  virtual StatusCode fill( const LHCb::Particle*
-			   , const LHCb::Particle*
-			   , const std::string&
-			   , Tuples::Tuple& );
+  //implemented in TupleToolTriggerBase
+  virtual StatusCode fill( const LHCb::Particle* M
+		   , const LHCb::Particle* P
+			   , const std::string& head
+			   , Tuples::Tuple& tuple)
+  {
+    return TupleToolTriggerBase::fill(M, P, head, tuple);
+  };
 
 protected:
   
@@ -49,14 +69,18 @@ private:
   ITriggerTisTos* m_TriggerTisTosTool;
   IParticleDescendants* m_particleDescendants;
 
-  bool m_verboseL0;     ///< get details on L0
-  bool m_verboseHlt1;   ///< get details on Hlt1
-  bool m_verboseHlt2;   ///< get details on Hlt2
-
-  // do not allow trigger names to mutate from event-to-event
-  std::vector<std::string> m_l0;
-  std::vector<std::string> m_hlt1;
-  std::vector<std::string> m_hlt2;
-
+  StatusCode fillBasic( const LHCb::Particle* 
+                               , const LHCb::Particle* P
+                               , const std::string& head
+                               , Tuples::Tuple& tuple );
+  
+  
+  
+  StatusCode fillVerbose( const LHCb::Particle* 
+                   , const LHCb::Particle* P
+                   , const std::string& head
+                   , Tuples::Tuple& tuple );
+  
+  
 };
 #endif // TUPLETOOLTISTOS_H

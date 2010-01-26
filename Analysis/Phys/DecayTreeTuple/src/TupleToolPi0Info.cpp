@@ -1,4 +1,4 @@
-// $Id: TupleToolPi0Info.cpp,v 1.3 2009-11-27 08:05:36 odescham Exp $
+// $Id: TupleToolPi0Info.cpp,v 1.4 2010-01-26 15:39:26 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -28,7 +28,7 @@ DECLARE_TOOL_FACTORY( TupleToolPi0Info );
 TupleToolPi0Info::TupleToolPi0Info( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
+  : TupleToolBase ( type, name , parent ),
     m_Pi0ID(111)
 { 
   declareInterface<IParticleTupleTool>(this); 
@@ -38,11 +38,10 @@ TupleToolPi0Info::TupleToolPi0Info( const std::string& type,
 //=============================================================================
 StatusCode TupleToolPi0Info::fill(const Particle* , const Particle* P 
                                   ,const std::string& head
-                                  ,Tuples::Tuple& tuple ) {
-
-
+                                  ,Tuples::Tuple& tuple ) 
+{
+  const std::string prefix=fullName(head);
   
-
   bool filltuple = true;
   if( P ){
     if (P->particleID().pid() == m_Pi0ID) { 
@@ -53,7 +52,7 @@ StatusCode TupleToolPi0Info::fill(const Particle* , const Particle* P
         Type= 2; //for the  resolved pi0s
       }
       else Type  = 1; //for the merged pi0s 
-      filltuple &= tuple->column( head+"_Type", Type );
+      filltuple &= tuple->column( prefix+"_Type", Type );
       
       
       if(m_RequireMCTruth == true){
@@ -97,17 +96,17 @@ StatusCode TupleToolPi0Info::fill(const Particle* , const Particle* P
           MCPi0GrandGrandMother_id  = MCPi0GrandGrandMother->particleID().pid();
         }
         
-        filltuple &= tuple->column( head+"_MCPi0_id", MCPi0_id  );
-        filltuple &= tuple->column( head+"_MCPi0_key", MCPi0_key  );
+        filltuple &= tuple->column( prefix+"_MCPi0_id", MCPi0_id  );
+        filltuple &= tuple->column( prefix+"_MCPi0_key", MCPi0_key  );
         
-        filltuple &= tuple->column( head+"_MCPi0Mother_id", MCPi0Mother_id );
-        filltuple &= tuple->column( head+"_MCPi0Mother_key", MCPi0Mother_key );
+        filltuple &= tuple->column( prefix+"_MCPi0Mother_id", MCPi0Mother_id );
+        filltuple &= tuple->column( prefix+"_MCPi0Mother_key", MCPi0Mother_key );
         
-        filltuple &= tuple->column( head+"_MCPi0GrandMother_id", MCPi0GrandMother_id  );
-        filltuple &= tuple->column( head+"_MCPi0GrandMother_id", MCPi0GrandMother_id );
+        filltuple &= tuple->column( prefix+"_MCPi0GrandMother_id", MCPi0GrandMother_id  );
+        filltuple &= tuple->column( prefix+"_MCPi0GrandMother_id", MCPi0GrandMother_id );
         
-        filltuple &= tuple->column( head+"_MCPi0GrandGrandMother_id", MCPi0GrandGrandMother_id  );
-        filltuple &= tuple->column( head+"_MCPi0GrandGrandMother_key", MCPi0GrandGrandMother_key  );
+        filltuple &= tuple->column( prefix+"_MCPi0GrandGrandMother_id", MCPi0GrandGrandMother_id  );
+        filltuple &= tuple->column( prefix+"_MCPi0GrandGrandMother_key", MCPi0GrandGrandMother_key  );
         debug() << "This is the MC part associated to your  pi0 -->   " 
                 <<  MCPi0_id  << "   and its  mother   -->" 
                 <<  MCPi0Mother_id   << endmsg;

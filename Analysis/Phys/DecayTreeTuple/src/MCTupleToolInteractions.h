@@ -1,10 +1,10 @@
-// $Id: MCTupleToolInteractions.h,v 1.1 2009-06-04 10:54:45 rlambert Exp $
+// $Id: MCTupleToolInteractions.h,v 1.2 2010-01-26 15:39:25 rlambert Exp $
 #ifndef MCTUPLETOOLINTERACTIONS_H
 #define MCTUPLETOOLINTERACTIONS_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "TupleToolBase.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "Kernel/IEventTupleTool.h"            // Interface
 
@@ -30,7 +30,7 @@ class ITupleTool;
  *  EVT_Int_AdjustProb    double         probability of this event in the adjusted case
  *  EVT_Int_AdjustWeight  double         weight to apply to change from mean to adjust mean
  *
- * If the details option (FillDetails) is set
+ * If the Verbose option is set
  *  EVT_Int_NormalisedAt   unsigned int   chosen place to normalise the weight
  *  EVT_Int_NormalisedTo   double         weights normalised to this value
  *  EVT_Int_nMCI           unsigned int   number of collisions from the GenHeader
@@ -57,7 +57,7 @@ class ITupleTool;
  *  @author R. Lambert
  *  @date   2009-05-01
  */
-class MCTupleToolInteractions : public GaudiTool, virtual public IEventTupleTool {
+class MCTupleToolInteractions : public TupleToolBase, virtual public IEventTupleTool {
 public:
   /// Standard constructor
   MCTupleToolInteractions( const std::string& type,
@@ -74,9 +74,9 @@ private :
   double m_mean;       ///<mean number of interactions per event. set by the option Mean. Default of zero will get the result from the GenHeader
   double m_adjustmean; ///<mean number of interactions to weight to. set by the option AdjustMean. Default of zero will not calculate the adjustment.
   unsigned int m_normaliseAt; ///<where to place the normalisation such that the weight is one at this value. set by the option NormaliseAt. Default of zero will not calculate specific normalisation, but use the correct weighting from te poisson.
-  std::string m_prefix; ///<mean number of interactions to weight to. set by the option AdjustMean. Default of zero will not calculate the adjustment.
+  //std::string m_prefix; ///<mean number of interactions to weight to. set by the option AdjustMean. Default of zero will not calculate the adjustment.
   bool m_useRecPV; ///<use the #of reconstructed PVs, rather than the MC Collisions. set by the option UseRecPV.
-  bool m_fillDetails; ///<fill extra information on MCPV, MC Collisions and Reconstructed PVs. set by the option FillDetails.
+  //bool m_fillDetails; ///<fill extra information on MCPV, MC Collisions and Reconstructed PVs. set by the option FillDetails.
   std::string m_RecPVLocation; ///<mean number of interactions to weight to. set by the option AdjustMean. Default of zero will not calculate the adjustment.
  
   ///calculate the probability of n interactions given that the mean is mu

@@ -1,10 +1,10 @@
-// $Id: TupleToolPid.h,v 1.2 2008-11-11 07:47:58 pkoppenb Exp $
+// $Id: TupleToolPid.h,v 1.3 2010-01-26 15:39:26 rlambert Exp $
 #ifndef JBOREL_TUPLETOOLPID_H
 #define JBOREL_TUPLETOOLPID_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
 
 /** @class TupleToolPid TupleToolPid.h jborel/TupleToolPid.h
@@ -25,7 +25,7 @@
  *  @author Jeremie Borel
  *  @date   2007-11-07
  */
-class TupleToolPid : public GaudiTool, virtual public IParticleTupleTool {
+class TupleToolPid : public TupleToolBase, virtual public IParticleTupleTool {
 public:
   /// Standard constructor
   TupleToolPid( const std::string& type,

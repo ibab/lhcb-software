@@ -1,4 +1,4 @@
-// $Id: TupleToolDalitz.cpp,v 1.5 2009-11-24 17:22:25 pkoppenb Exp $
+// $Id: TupleToolDalitz.cpp,v 1.6 2010-01-26 15:39:26 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -24,7 +24,7 @@ DECLARE_TOOL_FACTORY( TupleToolDalitz );
 TupleToolDalitz::TupleToolDalitz( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : TupleToolBase ( type, name , parent )
   , m_ppSvc(0)
 {
   declareInterface<IParticleTupleTool>(this);
@@ -43,13 +43,14 @@ StatusCode TupleToolDalitz::fill( const LHCb::Particle* mother
                                   , const LHCb::Particle* part
                                   , const std::string& head
                                   , Tuples::Tuple& tuple ){
+  const std::string prefix=fullName(head);
   
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Dalitz fill " << head << " " << mother 
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Dalitz fill " << prefix << " " << mother 
                                         << " " << part << endmsg ;
   if (0==part) return StatusCode::FAILURE ;
   const LHCb::Particle::ConstVector	dauts = part->daughtersVector() ;
   if ( 2>=dauts.size() ){
-    return Warning("Will not fill Dalitz of two body decay "+head,StatusCode::SUCCESS,0);
+    return Warning("Will not fill Dalitz of two body decay "+prefix,StatusCode::SUCCESS,0);
   }
   return fill(dauts,"",tuple,(part->particleID().pid()<0)) ;
   

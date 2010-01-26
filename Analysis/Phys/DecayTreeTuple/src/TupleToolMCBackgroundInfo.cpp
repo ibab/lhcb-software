@@ -1,4 +1,4 @@
-// $Id: TupleToolMCBackgroundInfo.cpp,v 1.3 2009-02-19 13:50:41 pkoppenb Exp $
+// $Id: TupleToolMCBackgroundInfo.cpp,v 1.4 2010-01-26 15:39:26 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -32,7 +32,7 @@ using namespace LHCb;
 TupleToolMCBackgroundInfo::TupleToolMCBackgroundInfo( const std::string& type,
 						      const std::string& name,
 						      const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : TupleToolBase ( type, name , parent )
   , m_bkg(0)
 {
   declareInterface<IParticleTupleTool>(this);
@@ -41,7 +41,7 @@ TupleToolMCBackgroundInfo::TupleToolMCBackgroundInfo( const std::string& type,
 //=============================================================================
 
 StatusCode TupleToolMCBackgroundInfo::initialize() {
-  if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
+  if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
   
   m_bkg = tool<IBackgroundCategory>( "BackgroundCategory", this );
   return StatusCode::SUCCESS;
@@ -52,17 +52,23 @@ StatusCode TupleToolMCBackgroundInfo::initialize() {
 StatusCode TupleToolMCBackgroundInfo::fill( const Particle*
 					    , const Particle* P
 					    , const std::string& head
-					    , Tuples::Tuple& tuple ) {
+					    , Tuples::Tuple& tuple ) 
+{
+  
+  const std::string prefix=fullName(head);
+  
+  
   Assert( P && m_bkg , "This should not happen :(" );
 
-  if( !P->isBasicParticle() ){
+  if( !P->isBasicParticle() )
+  {
 
     int category = (int)(m_bkg->category( P ));
 
     if (msgLevel(MSG::DEBUG)) debug() << "BackgroundCategory decision for "
-                                      << head <<": " << category << endreq;
+                                      << prefix <<": " << category << endreq;
 
-    if( tuple->column( head+"_BKGCAT", category ) ) 
+    if( tuple->column( prefix+"_BKGCAT", category ) ) 
       return StatusCode::SUCCESS;
   }
   return StatusCode::SUCCESS;

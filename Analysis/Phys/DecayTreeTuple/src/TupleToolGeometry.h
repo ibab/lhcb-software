@@ -1,10 +1,10 @@
-// $Id: TupleToolGeometry.h,v 1.8 2009-11-12 13:49:25 jpalac Exp $
+// $Id: TupleToolGeometry.h,v 1.9 2010-01-26 15:39:26 rlambert Exp $
 #ifndef JBOREL_TUPLETOOLGEOMETRY_H
 #define JBOREL_TUPLETOOLGEOMETRY_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
 
 class IDistanceCalculator;
@@ -27,15 +27,6 @@ namespace LHCb {
  * - head_ENDVERTEX_[X|Y|Z]ERR : decay vertex position error estimate for composite particles
  * - head_ENDVERTEX_CHI2 : decay vertex chi2
  * - head_ENDVERTEX_NDOF : decay vertex nDoF
- * - head_PV_[X|Y|Z] : PhysDesktop::relatedVertex() of the top of decay chain position
- * - head_PV_[X|Y|Z]ERR : PhysDesktop::relatedVertex() of the top of decay chain position error estimate
- * - head_PV_CHI2 : PhysDesktop::relatedVertex() of the top of decay chain chi2
- * - head_PV_NDOF : PhysDesktop::relatedVertex() of the top of decay chain nDoF
- * - head_IP : impact parameter with respect to the PhysDesktop::relatedVertex() of the top of decay chain
- * - head_IPCHI2 : impact parameter chi2 with respect to the PhysDesktop::relatedVertex() of the top of decay chain
- * - head_FD : flight distance of composite particle wrt. the PhysDesktop::relatedVertex() of the top of decay chain
- * - head_FDCHI2 : flight distance significance in units of chi2 wrt. the PhysDesktop::relatedVertex() of the top of decay chain
- * - head_DIRA : direction angle wrt. the PhysDesktop::relatedVertex() of the top of decay chain
  * - head_OWNPV_[X|Y|Z] : related primary vertex position
  * - head_OWNPV_[X|Y|Z]ERR : related primary vertex position error estimate for composite particles
  * - head_OWNPV_CHI2 : related primary vertex chi2
@@ -45,6 +36,20 @@ namespace LHCb {
  * - head_FD_OWNPV : flight distance of composite particle wrt. the PhysDesktop::relatedVertex() considered particle 
  * - head_FDCHI2_OWNPV : flight distance significance in units of chi2 wrt. the PhysDesktop::relatedVertex() considered particle 
  * - head_DIRA_OWNPV : direction angle wrt. the PhysDesktop::relatedVertex() considered particle 
+ *
+ *  If Verbose is true:
+ *
+ *
+ * - head_TOPPV_[X|Y|Z] : PhysDesktop::relatedVertex() of the top of decay chain position
+ * - head_TOPPV_[X|Y|Z]ERR : PhysDesktop::relatedVertex() of the top of decay chain position error estimate
+ * - head_TOPPV_CHI2 : PhysDesktop::relatedVertex() of the top of decay chain chi2
+ * - head_TOPPV_NDOF : PhysDesktop::relatedVertex() of the top of decay chain nDoF
+ * - head_IP_TOPPV : impact parameter with respect to the PhysDesktop::relatedVertex() of the top of decay chain
+ * - head_IPCHI2_TOPPV : impact parameter chi2 with respect to the PhysDesktop::relatedVertex() of the top of decay chain
+ * - head_FD_TOPPV : flight distance of composite particle wrt. the PhysDesktop::relatedVertex() of the top of decay chain
+ * - head_FDCHI2_TOPPV : flight distance significance in units of chi2 wrt. the PhysDesktop::relatedVertex() of the top of decay chain
+ * - head_DIRA_TOPPV : direction angle wrt. the PhysDesktop::relatedVertex() of the top of decay chain
+ *
  * - head_ORIVX_[X|Y|Z] : ancestor's related primary vertex position (when applicable)
  * - head_ORIVX_[X|Y|Z]ERR : ancestor's related primary vertex position error estimate (when applicable)
  * - head_ORIVX_CHI2 : ancestor's related primary vertex chi2 (when applicable)
@@ -60,7 +65,7 @@ namespace LHCb {
  *  @author Jeremie Borel
  *  @date   2007-11-07
  */
-class TupleToolGeometry : public GaudiTool, virtual public IParticleTupleTool {
+class TupleToolGeometry : public TupleToolBase, virtual public IParticleTupleTool {
 public:
   /// Standard constructor
   TupleToolGeometry( const std::string& type,
@@ -103,7 +108,7 @@ private:
   
   int m_photonID; 
   int m_pi0ID;
-  bool m_fillMother;
+  //bool m_fillMother;
   
   DVAlgorithm* m_dva;
 

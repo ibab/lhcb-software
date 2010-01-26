@@ -1,4 +1,4 @@
-// $Id: TupleToolSelResults.cpp,v 1.1 2009-02-11 18:02:35 pkoppenb Exp $
+// $Id: TupleToolSelResults.cpp,v 1.2 2010-01-26 15:39:26 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -24,11 +24,14 @@ DECLARE_TOOL_FACTORY( TupleToolSelResults );
 TupleToolSelResults::TupleToolSelResults( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
-  : GaudiTupleTool ( type, name , parent )
+  : TupleToolBase ( type, name , parent ),
+    m_selTool(0),
+    m_selections(0)
 {
   declareInterface<IEventTupleTool>(this);
   declareProperty("Selections", m_selections, "List of algorithm names");
-  declareProperty("Head", m_head = "", "This will be appended before any tuple entry");
+  //deprecated, use ExtraName instead
+  //declareProperty("Head", m_head = "", "This will be appended before any tuple entry");
 }
 //=============================================================================
 // Destructor
@@ -39,7 +42,7 @@ TupleToolSelResults::~TupleToolSelResults() {}
 // init
 //=============================================================================
 StatusCode TupleToolSelResults::initialize() {
-  StatusCode sc = GaudiTupleTool::initialize();
+  StatusCode sc = TupleToolBase::initialize();
   m_selTool = tool<ICheckSelResults>("CheckSelResultsTool",this);
   return sc ;
 } 
@@ -47,12 +50,14 @@ StatusCode TupleToolSelResults::initialize() {
 //=============================================================================
 // Fill
 //=============================================================================
-StatusCode TupleToolSelResults::fill( Tuples::Tuple& tup) {
+StatusCode TupleToolSelResults::fill( Tuples::Tuple& tup) 
+{
+  const std::string prefix=fullName();
   bool test = true;
   for ( std::vector<std::string>::const_iterator s = m_selections.begin() ; s!= m_selections.end() ; ++s){
-    test &= tup->column(m_head+(*s),m_selTool->isSelected(*s));
+    test &= tup->column(prefix+(*s),m_selTool->isSelected(*s));
     if (!test) {
-      err() << "Cannot fill variable name " << m_head+(*s) << endmsg ;
+      err() << "Cannot fill variable name " << prefix+(*s) << endmsg ;
       break;
     }
   }

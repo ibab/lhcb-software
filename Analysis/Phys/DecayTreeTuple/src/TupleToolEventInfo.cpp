@@ -1,4 +1,4 @@
-// $Id: TupleToolEventInfo.cpp,v 1.4 2009-12-08 23:03:47 gligorov Exp $
+// $Id: TupleToolEventInfo.cpp,v 1.5 2010-01-26 15:39:26 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -37,7 +37,7 @@ DECLARE_TOOL_FACTORY( TupleToolEventInfo );
 TupleToolEventInfo::TupleToolEventInfo( const std::string& type,
 					const std::string& name,
 					const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : TupleToolBase ( type, name , parent )
 {
   declareInterface<IEventTupleTool>(this);
 
@@ -45,7 +45,11 @@ TupleToolEventInfo::TupleToolEventInfo( const std::string& type,
 
 //=============================================================================
 
-StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple ) {
+StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple ) 
+{
+  const std::string prefix=fullName();
+  
+ 
   int run = -1;
   int ev = -1;
   int bcid = -1;
@@ -66,9 +70,9 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple ) {
     debug() << "Event " << ev << ", run " << run << endreq;
 
   bool test = true;
-  test &= tuple->column( "runNumber", run );
-  test &= tuple->column( "eventNumber", ev );
-  test &= tuple->column( "BCID", bcid );
+  test &= tuple->column( prefix+"runNumber", run );
+  test &= tuple->column( prefix+"eventNumber", ev );
+  test &= tuple->column( prefix+"BCID", bcid );
   if( msgLevel( MSG::VERBOSE ) )
     verbose() << "Returns " << test << endreq;
   return StatusCode(test);

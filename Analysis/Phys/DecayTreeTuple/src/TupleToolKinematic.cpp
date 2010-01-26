@@ -1,4 +1,4 @@
-// $Id: TupleToolKinematic.cpp,v 1.2 2009-04-09 19:10:24 gligorov Exp $
+// $Id: TupleToolKinematic.cpp,v 1.3 2010-01-26 15:39:26 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -26,7 +26,7 @@ DECLARE_TOOL_FACTORY( TupleToolKinematic );
 TupleToolKinematic::TupleToolKinematic( const std::string& type,
 				    const std::string& name,
 				    const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : TupleToolBase ( type, name , parent )
 {
   declareInterface<IParticleTupleTool>(this);
 }
@@ -36,22 +36,29 @@ TupleToolKinematic::TupleToolKinematic( const std::string& type,
 StatusCode TupleToolKinematic::fill( const LHCb::Particle* 
 				   , const LHCb::Particle* P
 				   , const std::string& head
-				   , Tuples::Tuple& tuple ){
+				   , Tuples::Tuple& tuple )
+{
+  const std::string prefix=fullName(head);
+  
   bool test = true;
-  if( P ){
-    test &= tuple->column( head+"_P", P->p() );
-    test &= tuple->column( head+"_PT", P->pt() );
+  if( P )
+  {
+    test &= tuple->column( prefix+"_P", P->p() );
+    test &= tuple->column( prefix+"_PT", P->pt() );
 
     // momentum components
-    test &= tuple->column( head+"_P", P->momentum() );
+    test &= tuple->column( prefix+"_P", P->momentum() );
+    
     // reference point:
-    test &= tuple->column( head+"_REFP", P->referencePoint() );
+    if(isVerbose()) test &= tuple->column( prefix+"_REFP", P->referencePoint() );
 
-    test &= tuple->column( head+"_MM", P->measuredMass() );
+    test &= tuple->column( prefix+"_MM", P->measuredMass() );
     if( !P->isBasicParticle() )
-      test &= tuple->column( head+"_MMERR", P->measuredMassErr() );
-    test &= tuple->column( head+"_M", P->momentum().M() );
-  } else {
+      test &= tuple->column( prefix+"_MMERR", P->measuredMassErr() );
+    test &= tuple->column( prefix+"_M", P->momentum().M() );
+  } 
+  else 
+  {
     return StatusCode::FAILURE;
   }
   return StatusCode(test);

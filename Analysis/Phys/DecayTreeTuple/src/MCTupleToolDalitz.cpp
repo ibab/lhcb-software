@@ -1,4 +1,4 @@
-// $Id: MCTupleToolDalitz.cpp,v 1.5 2009-11-24 17:22:25 pkoppenb Exp $
+// $Id: MCTupleToolDalitz.cpp,v 1.6 2010-01-26 15:39:25 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -23,7 +23,7 @@ DECLARE_TOOL_FACTORY( MCTupleToolDalitz );
 MCTupleToolDalitz::MCTupleToolDalitz( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : TupleToolBase ( type, name , parent )
   , m_ppSvc(0)
 {
   declareInterface<IMCParticleTupleTool>(this);
@@ -41,7 +41,9 @@ MCTupleToolDalitz::~MCTupleToolDalitz() {}
 StatusCode MCTupleToolDalitz::fill( const LHCb::MCParticle* mother
                                   , const LHCb::MCParticle* part
                                   , const std::string& head
-                                  , Tuples::Tuple& tuple ){
+                                  , Tuples::Tuple& tuple )
+{
+  const std::string prefix=fullName(head);
   
   if (0==part) return StatusCode::FAILURE ;
   if (msgLevel(MSG::DEBUG)) debug() << "Decay of " << part->particleID().pid() << " with mother " << mother << endmsg ;
@@ -60,7 +62,7 @@ StatusCode MCTupleToolDalitz::fill( const LHCb::MCParticle* mother
   }
 
   if ( 2>=dauts.size() ){
-    return Warning("Will not fill Dalitz of two body decay "+head,StatusCode::SUCCESS,0);
+    return Warning("Will not fill Dalitz of two body decay "+prefix,StatusCode::SUCCESS,0);
   }
 
   return fill(dauts,"MC",tuple,(part->particleID().pid()<0)) ;

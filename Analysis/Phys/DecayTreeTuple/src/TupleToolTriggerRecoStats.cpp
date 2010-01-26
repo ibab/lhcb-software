@@ -1,4 +1,4 @@
-// $Id: TupleToolTriggerRecoStats.cpp,v 1.1 2009-07-30 14:54:47 pkoppenb Exp $
+// $Id: TupleToolTriggerRecoStats.cpp,v 1.2 2010-01-26 15:39:27 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -24,7 +24,8 @@ DECLARE_TOOL_FACTORY( TupleToolTriggerRecoStats );
 TupleToolTriggerRecoStats::TupleToolTriggerRecoStats( const std::string& type,
                                                       const std::string& name,
                                                       const IInterface* parent )
-  : GaudiTupleTool ( type, name , parent )
+  : TupleToolBase ( type, name , parent ),
+    m_locations()
 {
   declareInterface<IEventTupleTool>(this);
   m_locations.push_back("Hlt2NoCutsPions");
@@ -44,10 +45,13 @@ TupleToolTriggerRecoStats::~TupleToolTriggerRecoStats() {}
 //=============================================================================
 // Fill
 //=============================================================================
-StatusCode TupleToolTriggerRecoStats::fill( Tuples::Tuple& tup) {
+StatusCode TupleToolTriggerRecoStats::fill( Tuples::Tuple& tup) 
+{
+  const std::string prefix=fullName();
   bool test = true;
-  for ( std::vector<std::string>::const_iterator l = m_locations.begin() ; l != m_locations.end() ; ++l){
-    test &= tup->column("NumberOf"+*l,number<LHCb::Particles>("/Event/HLT/"+*l+"/Particles"));
+  for ( std::vector<std::string>::const_iterator l = m_locations.begin() ; l != m_locations.end() ; ++l)
+  {
+    test &= tup->column(prefix+"NumberOf"+*l,number<LHCb::Particles>("/Event/HLT/"+*l+"/Particles"));
   }
   return StatusCode(test) ;
 } 

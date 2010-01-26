@@ -1,10 +1,10 @@
-// $Id: MCTupleToolKinematic.h,v 1.3 2009-11-19 12:22:05 rlambert Exp $
+// $Id: MCTupleToolKinematic.h,v 1.4 2010-01-26 15:39:25 rlambert Exp $
 #ifndef MCTUPLETOOLKINEMATIC_H 
 #define MCTUPLETOOLKINEMATIC_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "TupleToolBase.h"
 #include "Kernel/IMCParticleTupleTool.h"            // Interface
 #include "Event/MCParticle.h"            // Interface
 /** @class MCTupleToolKinematic MCTupleToolKinematic.h
@@ -28,7 +28,7 @@
  *  @date   2009-01-19
  */
 
-class MCTupleToolKinematic : public GaudiTool, virtual public IMCParticleTupleTool {
+class MCTupleToolKinematic : public TupleToolBase, virtual public IMCParticleTupleTool {
 public: 
   /// Standard constructor
   MCTupleToolKinematic( const std::string& type, 

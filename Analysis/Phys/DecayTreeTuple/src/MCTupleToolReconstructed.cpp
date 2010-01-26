@@ -1,4 +1,4 @@
-// $Id: MCTupleToolReconstructed.cpp,v 1.6 2009-05-14 13:40:44 pkoppenb Exp $
+// $Id: MCTupleToolReconstructed.cpp,v 1.7 2010-01-26 15:39:26 rlambert Exp $
 // Include files 
 #include "gsl/gsl_sys.h"
 
@@ -34,7 +34,7 @@ DECLARE_TOOL_FACTORY( MCTupleToolReconstructed );
 MCTupleToolReconstructed::MCTupleToolReconstructed( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : TupleToolBase ( type, name , parent )
   , m_recible(0)
   , m_rected(0)
   , m_pCPPAsct(0)
@@ -42,7 +42,7 @@ MCTupleToolReconstructed::MCTupleToolReconstructed( const std::string& type,
 {
   declareInterface<IMCParticleTupleTool>(this);
   declareProperty("Associate",m_associate=true,"Fill associated protoparticle");
-  declareProperty("FillPID",m_pid=true,"Fill PID");
+  declareProperty("FillPID",m_pid=true,"Fill PID, also set by Verbose");
 }
 //=============================================================================
 // Destructor
@@ -53,16 +53,20 @@ MCTupleToolReconstructed::~MCTupleToolReconstructed() {}
 // initialize
 //=============================================================================
 
-StatusCode MCTupleToolReconstructed::initialize(){
-  if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
+StatusCode MCTupleToolReconstructed::initialize()
+{
+  if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
 
   m_recible = tool<IMCReconstructible>("MCReconstructible");
   m_rected  = tool<IMCReconstructed>("MCReconstructed");
 
-  if (m_associate){  
+  if (m_associate)
+  {  
     m_pCPPAsct = new ProtoParticle2MCLinker( this, Particle2MCMethod::ChargedPP, LHCb::ProtoParticleLocation::Charged);
     m_pNPPAsct = new ProtoParticle2MCLinker( this, Particle2MCMethod::NeutralPP, LHCb::ProtoParticleLocation::Neutrals);
   }
+  
+  if(isVerbose()) m_pid=true;
   
   return StatusCode::SUCCESS ;
 }
@@ -72,7 +76,9 @@ StatusCode MCTupleToolReconstructed::initialize(){
 StatusCode MCTupleToolReconstructed::fill( const LHCb::MCParticle* 
                                      , const LHCb::MCParticle* mcp
                                      , const std::string& head
-                                     , Tuples::Tuple& tuple ){
+                                     , Tuples::Tuple& tuple )
+{
+  const std::string prefix=fullName(head);
   
   bool test = true;
   int catted = -10 ;
@@ -85,18 +91,21 @@ StatusCode MCTupleToolReconstructed::fill( const LHCb::MCParticle*
   }
 
   // fill the tuple:
-  test &= tuple->column( head+"_Reconstructible", catible );  
-  test &= tuple->column( head+"_Reconstructed", catted );  
+  test &= tuple->column( prefix+"_Reconstructible", catible );  
+  test &= tuple->column( prefix+"_Reconstructed", catted );  
   std::vector<double> PX, PY, PZ, Weights, dlle, dllmu, dllk, dllp, pchi2;
 
-  if ( (0!=mcp) && m_associate && isStable(mcp)){
+  if ( (0!=mcp) && m_associate && isStable(mcp))
+  {
     std::vector<std::pair<const LHCb::ProtoParticle*,double> > ppv = getProtos(mcp);
     for ( std::vector<std::pair<const LHCb::ProtoParticle*,double> >::const_iterator ppp = ppv.begin() ; 
-          ppp != ppv.end() ; ++ppp){
+          ppp != ppv.end() ; ++ppp)
+    {
       const LHCb::ProtoParticle* proto = ppp->first;
       double w = ppp->second;
       /// @todo There's plenty more that can be added here. Like PID for instance.
-      if (0!=proto->track()){
+      if (0!=proto->track())
+      {
         Gaudi::XYZVector mom = proto->track()->momentum();
         PX.push_back(mom.X());
         PY.push_back(mom.Y());
@@ -112,18 +121,20 @@ StatusCode MCTupleToolReconstructed::fill( const LHCb::MCParticle*
       }
     }
   }
-  if (isStable(mcp)){
+  if (isStable(mcp))
+  {
     const unsigned int maxPP = 20 ;
-    test &= tuple->farray(  head+"_PP_PX", PX,  head+"_ProtoParticles" , maxPP );
-    test &= tuple->farray(  head+"_PP_PY", PY,  head+"_ProtoParticles" , maxPP );
-    test &= tuple->farray(  head+"_PP_PZ", PZ,  head+"_ProtoParticles" , maxPP );
-    test &= tuple->farray(  head+"_PP_Weight", Weights,  head+"_ProtoParticles" , maxPP );
-    test &= tuple->farray(  head+"_PP_tr_pchi2", pchi2,  head+"_ProtoParticles" , maxPP );
-    if (m_pid){
-      test &= tuple->farray(  head+"_PP_DLLe", dlle,  head+"_ProtoParticles" , maxPP );
-      test &= tuple->farray(  head+"_PP_DLLk", dllk,  head+"_ProtoParticles" , maxPP );
-      test &= tuple->farray(  head+"_PP_DLLp", dllp,  head+"_ProtoParticles" , maxPP );
-      test &= tuple->farray(  head+"_PP_DLLmu", dllmu,  head+"_ProtoParticles" , maxPP );
+    test &= tuple->farray(  prefix+"_PP_PX", PX,  prefix+"_ProtoParticles" , maxPP );
+    test &= tuple->farray(  prefix+"_PP_PY", PY,  prefix+"_ProtoParticles" , maxPP );
+    test &= tuple->farray(  prefix+"_PP_PZ", PZ,  prefix+"_ProtoParticles" , maxPP );
+    test &= tuple->farray(  prefix+"_PP_Weight", Weights,  prefix+"_ProtoParticles" , maxPP );
+    test &= tuple->farray(  prefix+"_PP_tr_pchi2", pchi2,  prefix+"_ProtoParticles" , maxPP );
+    if (m_pid)
+    {
+      test &= tuple->farray(  prefix+"_PP_DLLe", dlle,  prefix+"_ProtoParticles" , maxPP );
+      test &= tuple->farray(  prefix+"_PP_DLLk", dllk,  prefix+"_ProtoParticles" , maxPP );
+      test &= tuple->farray(  prefix+"_PP_DLLp", dllp,  prefix+"_ProtoParticles" , maxPP );
+      test &= tuple->farray(  prefix+"_PP_DLLmu", dllmu,  prefix+"_ProtoParticles" , maxPP );
     }
   }
   
@@ -134,13 +145,15 @@ StatusCode MCTupleToolReconstructed::fill( const LHCb::MCParticle*
 ///  Protoparticles list @todo return weight as well
 //========================================================================
 std::vector<std::pair<const LHCb::ProtoParticle*,double> > 
-MCTupleToolReconstructed::getProtos(const LHCb::MCParticle* mcp) const {
+MCTupleToolReconstructed::getProtos(const LHCb::MCParticle* mcp) const 
+{
   ProtoParticle2MCLinker* asct = (mcp->particleID().threeCharge()==0)?m_pNPPAsct:m_pCPPAsct;
   if (0==asct) Exception("Null PP asociator");
   std::vector<std::pair<const LHCb::ProtoParticle*,double> > ppv ;
   double w=0;
   const LHCb::ProtoParticle* pp = asct->firstP(mcp,w);
-  while( pp ){
+  while( pp )
+  {
     ppv.push_back(std::pair<const LHCb::ProtoParticle*,double>(pp,w));
     pp = asct->nextP(w);
   }

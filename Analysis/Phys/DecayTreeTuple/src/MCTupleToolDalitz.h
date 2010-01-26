@@ -1,11 +1,11 @@
-// $Id: MCTupleToolDalitz.h,v 1.2 2009-02-18 18:41:04 pkoppenb Exp $
+// $Id: MCTupleToolDalitz.h,v 1.3 2010-01-26 15:39:25 rlambert Exp $
 #ifndef MCTUPLETOOLDALITZ_H 
 #define MCTUPLETOOLDALITZ_H 1
 
 // Include files
 // from Gaudi
 #include "Kernel/IMCParticleTupleTool.h"     
-#include "GaudiAlg/GaudiTool.h"
+#include "TupleToolBase.h"
 #include "Kernel/Escape.h"
 #include "Event/MCParticle.h" 
 #include "GaudiAlg/Tuple.h"
@@ -20,7 +20,7 @@
  *  @author Patrick Koppenburg
  *  @date   2009-02-17
  */
-class MCTupleToolDalitz : public GaudiTool, virtual public IMCParticleTupleTool {
+class MCTupleToolDalitz : public TupleToolBase, virtual public IMCParticleTupleTool {
 public: 
   /// Standard constructor
   MCTupleToolDalitz( const std::string& type, 

@@ -1,4 +1,4 @@
-// $Id: TupleToolDecay.cpp,v 1.3 2009-02-19 11:57:16 pkoppenb Exp $
+// $Id: TupleToolDecay.cpp,v 1.4 2010-01-26 15:39:26 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -60,7 +60,8 @@ TupleToolDecay::~TupleToolDecay() {}
 //=============================================================================
 
 StatusCode TupleToolDecay::initialize( const std::string& dcy, bool isMC ){
-
+  if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
+  
   m_isMC = isMC ;
 
   if (msgLevel(MSG::DEBUG)) debug() << "TupleToolDecay::initialize " << dcy << " " << isMC << endmsg ;

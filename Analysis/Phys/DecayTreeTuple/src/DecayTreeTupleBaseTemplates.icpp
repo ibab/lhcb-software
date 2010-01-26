@@ -195,8 +195,12 @@ void findAssociatedOneParts(  PARTICLEVECTOR& buffer, const PARTICLEVECTOR& row,
 /// Initialize all Particle tools
 template<class ITUPLETOOL>
 void initializeStufferTools(std::vector< ITUPLETOOL* >& pTools){
+  if(msgLevel(MSG::VERBOSE)) verbose() << "input tool list " << m_toolList << " size " << m_toolList.size() << endmsg;
+  
   std::sort( m_toolList.begin(), m_toolList.end() );
   std::unique( m_toolList.begin(), m_toolList.end() );
+  
+  if(msgLevel(MSG::VERBOSE)) verbose() << "unique tool list " << m_toolList << " size " << m_toolList.size() << endmsg;
     
   // base instantiation:
   std::vector<std::string>::const_iterator it = m_toolList.begin();

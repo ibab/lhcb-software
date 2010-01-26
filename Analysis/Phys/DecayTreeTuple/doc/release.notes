@@ -4,7 +4,31 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-01-26 - Rob Lambert
+ - Major changes:
+		. All TupleTools now inherit from TupleToolBase.
+			- defines the Verbose property for all Tools, which can be 
+				checked with isVerbose()
+			- defines the ExtraName property for all Tools, which is used
+				to add a prefix to the name of every variable
+				This lets you have more than one copy of the same tool.
+				fullName() is cleverly used to construct the prefix.
+		
+		. TupleToolTrigger and TupleToolTISTOS now inherit from a common class
+			- TupleToolTriggerBase, allows the user to circumvent automatic
+        lists of trigger contents, to make sure the ntuple can be filled
+        from real data, where the trigger changes continuously.
+		
+		. The Verbose mode of TupleToolBase is now propagated to all tools,
+			only the most common/mandatory entries will be filled if !isVerbose().	
+	
+ - These changes have been tested and verified for 
+	 all the tools which changed a lot
+
+ - The savannah bugs:61744,61672,61644 and task: 13423 should be consulted 
+
 !========================== DecayTreeTuple v2r11 2010-01-26 ===================
+
 ! 2010-01-20 Basem Khanji
  - TupleToolTagging : Added the probability per tagger variables.
 

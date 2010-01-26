@@ -1,10 +1,10 @@
-// $Id: TupleToolAngles.h,v 1.4 2009-09-04 12:40:11 rlambert Exp $
+// $Id: TupleToolAngles.h,v 1.5 2010-01-26 15:39:26 rlambert Exp $
 #ifndef TUPLETOOLANGLES_H 
 #define TUPLETOOLANGLES_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
 #include "Math/Boost.h"
 #include "GaudiKernel/Vector4DTypes.h"
@@ -25,7 +25,7 @@
  *  @date   2009-09-04
  */
 
-class TupleToolAngles : public GaudiTool, virtual public IParticleTupleTool {
+class TupleToolAngles : public TupleToolBase, virtual public IParticleTupleTool {
 public: 
   /// Standard constructor
   TupleToolAngles( const std::string& type, 

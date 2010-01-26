@@ -1,10 +1,10 @@
-// $Id: MCTupleToolEventType.h,v 1.2 2009-06-04 12:16:53 rlambert Exp $
+// $Id: MCTupleToolEventType.h,v 1.3 2010-01-26 15:39:25 rlambert Exp $
 #ifndef MCTUPLETOOLEVENTTYPE_H
 #define MCTUPLETOOLEVENTTYPE_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "TupleToolBase.h"
 #include "Kernel/IEventTupleTool.h"            // Interface
 #include "Event/GenCollision.h"
 #include "Event/GenHeader.h"
@@ -195,7 +195,7 @@
  */
 
 
-class MCTupleToolEventType : public GaudiTool, virtual public IEventTupleTool {
+class MCTupleToolEventType : public TupleToolBase, virtual public IEventTupleTool {
 public:
   /// Standard constructor
   MCTupleToolEventType( const std::string& type,
@@ -221,9 +221,11 @@ private:
   bool m_fillWholeEvent; //< set by the fillWholeEvent option, to fill info on the whole event
   bool m_fillSlowFind;   //< set by the fillSlowFind   option, search through using decay strings
   bool m_fillPseudoFind; //< set by the fillPseudoFind option, construct the event types logically, much faster but less accurate
-
-  std::vector<long unsigned int> m_findEventTypes; //< set by the allEventTypes option, the full list of all event types to consider. 
-  std::vector<long unsigned int> m_hasEventType;   //< set by the hasEventType option, how many of this list of types appear in this event?
+  
+  /// m_findEventTypes set by the allEventTypes option, the full list of all event types to consider. 
+  std::vector<long unsigned int> m_findEventTypes;
+  /// m_hasEventType set by the hasEventType option, how many of this list of types appear in this event?
+  std::vector<long unsigned int> m_hasEventType;   
   std::string m_hasMCDecay;                        //< set by the hasMCDecay option, look for this decay string aswell
 
   //Other Members

@@ -32,10 +32,10 @@ using namespace LHCb;
 TupleToolVtxIsoln::TupleToolVtxIsoln( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : GaudiTool ( type, name , parent )
-  , m_dva(0) 
-  , m_dist(0)
-  , m_pVertexFit(0)
+  : TupleToolBase ( type, name , parent )
+    , m_dva(0) 
+    , m_dist(0)
+    , m_pVertexFit(0)
 {
   declareInterface<IParticleTupleTool>(this);
 
@@ -51,7 +51,7 @@ TupleToolVtxIsoln::TupleToolVtxIsoln( const std::string& type,
 //=============================================================================
 
 StatusCode TupleToolVtxIsoln::initialize() {
-  if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
+  if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
   
   m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
@@ -77,7 +77,10 @@ StatusCode TupleToolVtxIsoln::initialize() {
 StatusCode TupleToolVtxIsoln::fill( const Particle* mother
                                     , const Particle* P
                                     , const std::string& head
-                                    , Tuples::Tuple& tuple ){
+                                    , Tuples::Tuple& tuple )
+{
+  
+  const std::string prefix=fullName(head);
   Assert( P && mother && m_dist
           , "This should not happen, you are inside TupleToolVtxIsoln.cpp :(" );
 
@@ -92,7 +95,7 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
     const VertexBase* vtx = 0;
     if( mother != P ) vtx = originVertex( mother, P );
     if( !vtx ){
-    Error("Can't retrieve the origin vertex for " + head );
+    Error("Can't retrieve the origin vertex for " + prefix );
     return StatusCode::FAILURE;
     }
   */
@@ -106,7 +109,7 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
   }
   info()<<"vertex for P, ID " <<P->particleID().pid()<<" = " <<vtx<<" at "<<vtx->position()<<  endmsg;
   if( !vtx ){
-    Error("Can't retrieve the  vertex for " + head );
+    Error("Can't retrieve the  vertex for " + prefix );
     return StatusCode::FAILURE;
   }
 
@@ -121,7 +124,7 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
   LHCb::Particle::ConstVector parts2Vertex;
   parts2Vertex.clear();
   
-  //   const LHCb::Particle* head = P;
+  //   const LHCb::Particle* prefix = P;
   if (P->isBasicParticle()){
     source.push_back(mother);
   }
@@ -303,10 +306,10 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
                                 << nCompatibleChi2 << endreq;
   }
   
-  if(m_IP > 0.0) test &= tuple->column( head + "_NOPARTWITHINIPWDW", nCompatibleIP );
-  //  if(m_IPS > 0.0) test &= tuple->column( head + "_NOPARTWITHINIPSWDW", nCompatibleIPS );
-  if(m_deltaChi2 > 0.0) test &= tuple->column( head + "_NOPARTWITHINDCHI2WDW",  nCompatibleDeltaChi2);
-  if(m_Chi2 > 0.0) test &= tuple->column( head + "_NOPARTWITHINCHI2WDW",  nCompatibleChi2);
+  if(m_IP > 0.0) test &= tuple->column( prefix + "_NOPARTWITHINIPWDW", nCompatibleIP );
+  //  if(m_IPS > 0.0) test &= tuple->column( prefix + "_NOPARTWITHINIPSWDW", nCompatibleIPS );
+  if(m_deltaChi2 > 0.0) test &= tuple->column( prefix + "_NOPARTWITHINDCHI2WDW",  nCompatibleDeltaChi2);
+  if(m_Chi2 > 0.0) test &= tuple->column( prefix + "_NOPARTWITHINCHI2WDW",  nCompatibleChi2);
   
   return StatusCode(test);
 }

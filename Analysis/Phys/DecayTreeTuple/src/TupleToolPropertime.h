@@ -1,10 +1,10 @@
-// $Id: TupleToolPropertime.h,v 1.2 2009-11-12 13:49:25 jpalac Exp $
+// $Id: TupleToolPropertime.h,v 1.3 2010-01-26 15:39:26 rlambert Exp $
 #ifndef JBOREL_TUPLETOOLPROPERTIME_H
 #define JBOREL_TUPLETOOLPROPERTIME_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
 
 class DVAlgorithm;
@@ -28,7 +28,7 @@ namespace LHCb {
  *  @author Jeremie Borel
  *  @date   2007-11-07
  */
-class TupleToolPropertime : public GaudiTool, virtual public IParticleTupleTool {
+class TupleToolPropertime : public TupleToolBase, virtual public IParticleTupleTool {
 public:
   /// Standard constructor
   TupleToolPropertime( const std::string& type,

@@ -8,6 +8,7 @@ StatusCode fill( const std::vector<const TYPE*> dauts      /// daughters
                  , Tuples::Tuple& tuple                    /// tuple
                  , bool revert ){                          /// revert all PID (because mother is antiparticle)
   
+  const std::string prefix=fullName(head);
   bool test = true;
   
   typename std::vector<const TYPE*>::const_iterator i, j;
@@ -18,8 +19,8 @@ StatusCode fill( const std::vector<const TYPE*> dauts      /// daughters
       std::string n2 = name( (*j)->particleID(), revert );                                        
       Gaudi::LorentzVector p = p1+(*j)->momentum() ;
       if (msgLevel(MSG::VERBOSE)) verbose() << (*i)->particleID().pid() << " " << (*j)->particleID().pid()  << " " 
-                                            << head+"Dalitz_"+n1+"_"+n2+"_M2"<< " " << revert << endmsg ;
-      test &= tuple->column( head+"Dalitz_"+n1+"_"+n2+"_M2",p.M2()  );
+                                            << prefix+"Dalitz_"+n1+"_"+n2+"_M2"<< " " << revert << endmsg ;
+      test &= tuple->column( prefix+"Dalitz_"+n1+"_"+n2+"_M2",p.M2()  );
     }
   }
 
@@ -40,7 +41,7 @@ const LHCb::IParticlePropertySvc* ppSvc()const{
 }
 
 StatusCode initialize(){
-  if (!GaudiTool::initialize()) return StatusCode::FAILURE ;
+  if (!TupleToolBase::initialize()) return StatusCode::FAILURE ;
   m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true );
   return StatusCode::SUCCESS ;
 }

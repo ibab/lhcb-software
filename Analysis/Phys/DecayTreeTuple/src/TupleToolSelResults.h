@@ -1,10 +1,10 @@
-// $Id: TupleToolSelResults.h,v 1.1 2009-02-11 18:02:35 pkoppenb Exp $
+// $Id: TupleToolSelResults.h,v 1.2 2010-01-26 15:39:26 rlambert Exp $
 #ifndef TUPLETOOLSELRESULTS_H 
 #define TUPLETOOLSELRESULTS_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTupleTool.h"
+#include "TupleToolBase.h"
 #include "Kernel/IEventTupleTool.h"            // Interface
 
 /** @class TupleToolSelResults TupleToolSelResults.h
@@ -21,7 +21,7 @@
  *  @date   2009-02-11
  */
 class ICheckSelResults ;
-class TupleToolSelResults : public GaudiTupleTool, virtual public IEventTupleTool {
+class TupleToolSelResults : public TupleToolBase, virtual public IEventTupleTool {
 public: 
   /// Standard constructor
   TupleToolSelResults( const std::string& type, 
@@ -37,7 +37,7 @@ protected:
 private:
   ICheckSelResults* m_selTool ; ///< CheckselResults tool
   std::vector<std::string> m_selections ; ///< list of algorithm names
-  std::string m_head ; ///< head, just in case there are clashes
+  //std::string m_head ; ///< head, just in case there are clashes
 
 };
 #endif // TUPLETOOLSELRESULTS_H

@@ -1,4 +1,4 @@
-// $Id: MCTupleToolEventType.cpp,v 1.1 2009-06-04 10:54:45 rlambert Exp $
+// $Id: MCTupleToolEventType.cpp,v 1.2 2010-01-26 15:39:25 rlambert Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -29,7 +29,7 @@ using namespace LHCb;
 MCTupleToolEventType::MCTupleToolEventType( const std::string& type,
 				    const std::string& name,
 				    const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : TupleToolBase ( type, name , parent )
   , m_fillGenEvent(0)
   , m_findGenEvent(0)
   , m_fillWholeEvent(0)
@@ -67,12 +67,16 @@ MCTupleToolEventType::MCTupleToolEventType( const std::string& type,
   // look for this decay string aswell
   declareProperty( "hasMCDecay", m_hasMCDecay="" );
 
+  //extra name. EVT in this case.
+  declareProperty("ExtraName",m_extraName="EVT",
+                  "prepend the name of any variable with this string");
 }
 
 //=============================================================================
 
-StatusCode MCTupleToolEventType::initialize(){
-  if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
+StatusCode MCTupleToolEventType::initialize()
+{
+  if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
   StatusCode sc=StatusCode::SUCCESS;
   
   m_mcEventType = tool<IMCEventTypeFinder>("MCEventTypeFinder","Event_Type",this);
@@ -113,7 +117,8 @@ StatusCode MCTupleToolEventType::initialize(){
     debug() << "-m_mcDecay " << (m_mcDecay!=NULL) << endmsg;
     
   }
-  if(!m_fillGenEvent && !m_fillWholeEvent) warning() << "Nothing to fill, choose at least one of fillGenEvent or fillWholeEvent" << endmsg;
+  if(!m_fillGenEvent && !m_fillWholeEvent) warning() << "Nothing to fill, choose at least one of" 
+                                                     << " fillGenEvent or fillWholeEvent" << endmsg;
   
 
   return StatusCode::SUCCESS;
@@ -124,6 +129,7 @@ StatusCode MCTupleToolEventType::fill( Tuples::Tuple& tuple )/*( const LHCb::Par
 				 , const std::string& 
 				 , Tuples::Tuple& tuple )*/{
 
+  const std::string prefix=fullName();
 
   if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "Filling MCTupleToolEventType" << endmsg;
   
@@ -185,7 +191,7 @@ StatusCode MCTupleToolEventType::fill( Tuples::Tuple& tuple )/*( const LHCb::Par
         long unsigned int genType=header->evType();
       
         //add this to the tuple
-        test &= tuple->column( "EVT_GenEvent", genType );
+        test &= tuple->column( prefix+"GenEvent", genType );
         
         if(m_findGenEvent) //find the event of this type :)
         {
@@ -193,14 +199,14 @@ StatusCode MCTupleToolEventType::fill( Tuples::Tuple& tuple )/*( const LHCb::Par
           {
             
             bool foundGenType = (foundfull.count(genType));
-            test &= tuple->column( "EVT_hasGenEvent", foundGenType );
+            test &= tuple->column( prefix+"hasGenEvent", foundGenType );
             if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "Booked slow event find" << endmsg;
           }
           if(m_fillPseudoFind)
           {
             
             bool foundGenType = (foundfast.count(genType));
-            test &= tuple->column( "EVT_hasPseudoGenEvent", foundGenType );
+            test &= tuple->column( prefix+"hasPseudoGenEvent", foundGenType );
             if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "Booked fast event find" << endmsg;
           }
           
@@ -218,13 +224,14 @@ StatusCode MCTupleToolEventType::fill( Tuples::Tuple& tuple )/*( const LHCb::Par
       if(m_fillSlowFind)
       {
         
-        test &= tuple->column( "EVT_numFoundTypes", foundfull.size() );
+        test &= tuple->column( prefix+"numFoundTypes", foundfull.size() );
         
         //insert "found" as an farray
         std::vector<long unsigned int> foundvec(0);
         set2vec(foundfull,foundvec);
-        if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "ready to book vector of size:" << foundvec.size() << endmsg;
-        test &= tuple->farray( "EVT_FoundTypes", foundvec, "EVT_FoundLen", 20 );
+        if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "ready to book vector of size:" 
+                                                                   << foundvec.size() << endmsg;
+        test &= tuple->farray( "FoundTypes", foundvec, "FoundLen", 20 );
         if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "booked vector of size:" << foundvec.size() << endmsg;
         
         if(!m_hasEventTypeSet.empty()) //book the matching types
@@ -236,23 +243,25 @@ StatusCode MCTupleToolEventType::fill( Tuples::Tuple& tuple )/*( const LHCb::Par
                                 std::insert_iterator<LHCb::EventTypeSet>(intersection,intersection.begin()),
 				LHCb::EventTypeComp() );
           
-          test &= tuple->column( "EVT_numMatchingTypes", intersection.size() );
-          if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "booked intersection of size:" << intersection.size() << endmsg;
+          test &= tuple->column( prefix+"numMatchingTypes", intersection.size() );
+          if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "booked intersection of size:" 
+                                                                     << intersection.size() << endmsg;
           //insert "found" as an farray
           std::vector<long unsigned int> foundvec(0);
           set2vec(intersection,foundvec);
-          test &= tuple->farray( "EVT_MatchingTypes", foundvec, "EVT_MatchLen", m_hasEventTypeSet.size() );
+          test &= tuple->farray( prefix+"MatchingTypes", foundvec, prefix+"MatchLen", m_hasEventTypeSet.size() );
         }
       }
       if(m_fillPseudoFind)
       {
         
-        test &= tuple->column( "EVT_numPseudoTypes", foundfast.size() );
+        test &= tuple->column( prefix+"numPseudoTypes", foundfast.size() );
         //insert "found" as an farray
         std::vector<long unsigned int> foundvec(0);
         set2vec(foundfast,foundvec);
-        if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "ready to book vector of size:" << foundvec.size() << endmsg;
-        test &= tuple->farray( "EVT_PseudoTypes", foundvec, "EVT_PseudoLen", 20 );
+        if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "ready to book vector of size:" 
+                                                                   << foundvec.size() << endmsg;
+        test &= tuple->farray( prefix+"PseudoTypes", foundvec, prefix+"PseudoLen", 20 );
         if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "booked vector of size:" << foundvec.size() << endmsg;
 
 
@@ -265,19 +274,20 @@ StatusCode MCTupleToolEventType::fill( Tuples::Tuple& tuple )/*( const LHCb::Par
                                 std::insert_iterator<LHCb::EventTypeSet>(intersection,intersection.begin()),
 				LHCb::EventTypeComp() );
           
-          test &= tuple->column( "EVT_numMatchingPseudoTypes", intersection.size() );
-          if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "booked intersection of size:" << intersection.size() << endmsg;
+          test &= tuple->column( prefix+"numMatchingPseudoTypes", intersection.size() );
+          if(msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE)) debug() << "booked intersection of size:" 
+                                                                     << intersection.size() << endmsg;
           //insert "found" as an farray
           std::vector<long unsigned int> foundvec(0);
           set2vec(intersection,foundvec);
-          test &= tuple->farray( "EVT_MatchingPseudoTypes", foundvec, "EVT_MatchPseudoLen", m_hasEventTypeSet.size() );
+          test &= tuple->farray( prefix+"MatchingPseudoTypes", foundvec, prefix+"MatchPseudoLen", m_hasEventTypeSet.size() );
         }
         
       }
       if(m_hasMCDecay!="" && m_mcDecay )
       {
         bool hasMCDecay = m_mcDecay->hasDecay();
-        test &= tuple->column( "EVT_hasGivenDecay", hasMCDecay );
+        test &= tuple->column( prefix+"hasGivenDecay", hasMCDecay );
         //use the standard decay finding method
       }
       

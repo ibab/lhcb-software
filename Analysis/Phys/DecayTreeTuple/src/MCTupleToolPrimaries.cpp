@@ -1,4 +1,4 @@
-// $Id: MCTupleToolPrimaries.cpp,v 1.1 2009-11-17 12:33:12 pkoppenb Exp $
+// $Id: MCTupleToolPrimaries.cpp,v 1.2 2010-01-26 15:39:26 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -26,7 +26,7 @@ DECLARE_TOOL_FACTORY( MCTupleToolPrimaries );
 MCTupleToolPrimaries::MCTupleToolPrimaries( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : TupleToolBase ( type, name , parent )
 {
   declareInterface<IEventTupleTool>(this);
 
@@ -37,7 +37,10 @@ MCTupleToolPrimaries::MCTupleToolPrimaries( const std::string& type,
 MCTupleToolPrimaries::~MCTupleToolPrimaries() {} 
 
 //=============================================================================
-StatusCode MCTupleToolPrimaries::fill( Tuples::Tuple& tuple ){
+StatusCode MCTupleToolPrimaries::fill( Tuples::Tuple& tuple )
+{
+  const std::string prefix=fullName();
+  
   if (msgLevel(MSG::VERBOSE)) verbose() << "getting MCHeader" << endmsg;
   if (!exist<LHCb::MCHeader>(LHCb::MCHeaderLocation::Default)){
     Warning("No MCHeader at "+LHCb::MCHeaderLocation::Default,StatusCode::SUCCESS,1);
@@ -54,10 +57,10 @@ StatusCode MCTupleToolPrimaries::fill( Tuples::Tuple& tuple ){
       pvt.push_back((*i)->time());      
     }
   }
-  if (!(tuple->farray( "MCPVX", pvx, "MCPVs" , 50 ))) return StatusCode::FAILURE;
-  if (!(tuple->farray( "MCPVY", pvy, "MCPVs" , 50 ))) return StatusCode::FAILURE;
-  if (!(tuple->farray( "MCPVZ", pvz, "MCPVs" , 50 ))) return StatusCode::FAILURE;
-  if (!(tuple->farray( "MCPVT", pvt, "MCPVs" , 50 ))) return StatusCode::FAILURE;
+  if (!(tuple->farray( prefix+"MCPVX", pvx, prefix+"MCPVs" , 50 ))) return StatusCode::FAILURE;
+  if (!(tuple->farray( prefix+"MCPVY", pvy, prefix+"MCPVs" , 50 ))) return StatusCode::FAILURE;
+  if (!(tuple->farray( prefix+"MCPVZ", pvz, prefix+"MCPVs" , 50 ))) return StatusCode::FAILURE;
+  if (!(tuple->farray( prefix+"MCPVT", pvt, prefix+"MCPVs" , 50 ))) return StatusCode::FAILURE;
   
   return StatusCode::SUCCESS ;
 }

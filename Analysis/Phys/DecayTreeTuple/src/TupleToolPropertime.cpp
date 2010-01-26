@@ -1,4 +1,4 @@
-// $Id: TupleToolPropertime.cpp,v 1.5 2010-01-13 13:04:27 pkoppenb Exp $
+// $Id: TupleToolPropertime.cpp,v 1.6 2010-01-26 15:39:26 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -35,7 +35,7 @@ using namespace LHCb;
 TupleToolPropertime::TupleToolPropertime( const std::string& type,
 					  const std::string& name,
 					  const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : TupleToolBase ( type, name , parent )
   , m_dva(0)
   , m_fit(0)
 {
@@ -46,7 +46,7 @@ TupleToolPropertime::TupleToolPropertime( const std::string& type,
 }//=============================================================================
 
 StatusCode TupleToolPropertime::initialize() {
-  if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
+  if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
   
   m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
@@ -66,8 +66,11 @@ StatusCode TupleToolPropertime::initialize() {
 StatusCode TupleToolPropertime::fill( const Particle* mother
 				   , const Particle* P
 				   , const std::string& head
-				   , Tuples::Tuple& tuple ){
+				   , Tuples::Tuple& tuple )
+{
 
+  const std::string prefix=fullName(head);
+  
   Assert( m_fit && P,
 	  "Should not happen, you are inside TupleToolPropertime.cpp" );
 
@@ -101,9 +104,9 @@ StatusCode TupleToolPropertime::fill( const Particle* mother
   }
 
   bool test = true;
-  test &= tuple->column( head+"_TAU" , pt/Gaudi::Units::picosecond );
-  test &= tuple->column( head+"_TAUERR" , ept/Gaudi::Units::picosecond );
-  test &= tuple->column( head+"_TAUCHI2" , chi2 );
+  test &= tuple->column( prefix+"_TAU" , pt/Gaudi::Units::picosecond );
+  test &= tuple->column( prefix+"_TAUERR" , ept/Gaudi::Units::picosecond );
+  test &= tuple->column( prefix+"_TAUCHI2" , chi2 );
   
   return StatusCode(test);
 

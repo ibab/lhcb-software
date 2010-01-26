@@ -1,4 +1,4 @@
-// $Id: TupleToolAngles.cpp,v 1.4 2009-09-04 12:28:43 rlambert Exp $
+// $Id: TupleToolAngles.cpp,v 1.5 2010-01-26 15:39:26 rlambert Exp $
 // Include files 
 #include "gsl/gsl_sys.h"
 
@@ -32,7 +32,7 @@ DECLARE_TOOL_FACTORY( TupleToolAngles );
 TupleToolAngles::TupleToolAngles( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
+  : TupleToolBase ( type, name , parent ),
     m_wrtMother(0)
 {
   declareInterface<IParticleTupleTool>(this);
@@ -49,7 +49,7 @@ TupleToolAngles::~TupleToolAngles() {}
 //=============================================================================
 
 StatusCode TupleToolAngles::initialize(){
-  if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
+  if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
   return StatusCode::SUCCESS ;
 }
 //=============================================================================
@@ -58,7 +58,9 @@ StatusCode TupleToolAngles::initialize(){
 StatusCode TupleToolAngles::fill( const LHCb::Particle* top
                                      , const LHCb::Particle* part
                                      , const std::string& head
-                                     , Tuples::Tuple& tuple ){
+                                     , Tuples::Tuple& tuple )
+{
+  const std::string prefix=fullName(head);
   
   bool test = true;
   const LHCb::Particle* mother=top;
@@ -66,7 +68,8 @@ StatusCode TupleToolAngles::fill( const LHCb::Particle* top
   if ( 0==part || 0==mother || part==mother ) return StatusCode::SUCCESS ;
   double cosT = cosTheta(mother->momentum(), part->momentum() );
   // fill the tuple:
-  test &= tuple->column( head+"_CosTheta", cosT );
+  test &= tuple->column( prefix+"_CosTheta", cosT );
+  if(isVerbose()) test &= tuple->column( prefix+"_Theta", acos(cosT) );
   if ( msgLevel(MSG::DEBUG)) debug() << mother->particleID().pid() << " " << mother->momentum() << " " 
                                      << part->particleID().pid() << " " << part->momentum() << endmsg ;
   return StatusCode(test) ;

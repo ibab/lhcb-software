@@ -1,10 +1,10 @@
-// $Id: MCTupleToolDecayType.h,v 1.2 2009-06-04 12:16:53 rlambert Exp $
+// $Id: MCTupleToolDecayType.h,v 1.3 2010-01-26 15:39:25 rlambert Exp $
 #ifndef TUPLETOOLMCDECAYTYPE_H
 #define TUPLETOOLMCDECAYTYPE_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "TupleToolBase.h"
 #include "Kernel/IMCParticleTupleTool.h"            // Interface
 #include "Event/GenCollision.h"
 #include "Event/GenHeader.h"
@@ -24,7 +24,8 @@
  *  @author Robert Lambert
  *  @date   2009-02-25
  *  
- *  This TupleTool enables you to output the LHCb EventTypes for the MC particle associated to this candidate and/or search for a given MCDecay string
+ *  This TupleTool enables you to output the LHCb EventTypes for the MC particle associated to this candidate
+ *  and/or search for a given MCDecay string
  *  The association should be done in TupleToolMCTruth
  *  
  *  There are two methods used to find the event type   (Pseudo or Slow)
@@ -185,11 +186,11 @@
 
  *  _MCP_numPseudoTypes          (unsigned int)      number of pseudo types found in this case
 
- *  _MCP_MatchingPseudoTypes     (farray)            List of Pseudo Event types which match those in hasEventType for the assosciate
+ *  _MCP_MatchingPseudoTypes     (farray)            List of Pseudo Event types which match those in hasEventType for the MCP
 
  *  _MCP_MatchPseudoLen          (unsigned int)      Maximum length of this farray
 
- *  _MCP_numMatchingPseudoTypes  (unsigned int)      How many of hasEventType there are in the Pseudo Event Types for the assosciate
+ *  _MCP_numMatchingPseudoTypes  (unsigned int)      How many of hasEventType are in the Pseudo Event Types for the assosciate
 
  * 
 
@@ -199,7 +200,7 @@
  */
 
 
-class MCTupleToolDecayType : public GaudiTool, virtual public IMCParticleTupleTool {
+class MCTupleToolDecayType : public TupleToolBase, virtual public IMCParticleTupleTool {
 public:
   /// Standard constructor
   MCTupleToolDecayType( const std::string& type,
@@ -227,9 +228,11 @@ private:
 
   bool m_fillSlowFind;   //< set by the fillSlowFind   option, search through using decay strings
   bool m_fillPseudoFind; //< set by the fillPseudoFind option, construct the event types logically, much faster but less accurate
-
-  std::vector<long unsigned int> m_findEventTypes; //< set by the allEventTypes option, the full list of all event types to consider. 
-  std::vector<long unsigned int> m_hasEventType;   //< set by the hasEventType option, how many of this list of types appear in this event?
+  
+  ///m_findEventTypes set by the allEventTypes option, the full list of all event types to consider. 
+  std::vector<long unsigned int> m_findEventTypes; 
+  ///m_hasEventType set by the hasEventType option, how many of this list of types appear in this event?
+  std::vector<long unsigned int> m_hasEventType;
   std::string m_hasMCDecay;                        //< set by the hasMCDecay option, look for this decay string aswell
 
   //Other Members
