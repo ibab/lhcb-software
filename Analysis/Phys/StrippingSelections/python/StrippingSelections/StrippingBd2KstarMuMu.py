@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.13 $'
+__version__ = '$Revision: 1.14 $'
 
 """
 Bd->K*MuMu selections 
@@ -49,7 +49,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
          """
          from Configurables import CombineParticles
          Early_loose_Bd = CombineParticles("Early_Signal_Bd2KstarMuMu")
-         Early_loose_Bd.InputLocations = ["StdLooseDiMuon", "StdVeryLooseDetachedKst2Kpi"]
+         Early_loose_Bd.InputLocations = ["StdVeryLooseDiMuon", "StdVeryLooseDetachedKst2Kpi"]
          Early_loose_Bd.DecayDescriptor = "[B0 -> K*(892)0 J/psi(1S)]cc"
          Early_loose_Bd.DaughtersCuts = {
             'K*(892)0':  "(BPVDIRA> %(IntDIRA)s ) & (INTREE((ABSID=='pi+') & (TRCHI2DOF< %(TrackChi2)s ))) & (INTREE((ABSID=='K+') & (TRCHI2DOF< %(TrackChi2)s )))" % self.getProps() 
@@ -67,10 +67,10 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         from StrippingConf.StrippingLine import StrippingLine, StrippingMember       
         from PhysSelPython.Wrappers import DataOnDemand
         from CommonParticles.StdVeryLooseDetachedKstar import StdVeryLooseDetachedKst2Kpi
-        from CommonParticles.StdLooseDiMuon import StdLooseDiMuon
+        from CommonParticles.StdVeryLooseDiMuon import StdVeryLooseDiMuon
         return StrippingLine('Bd2KstarMuMu_Early_Signal'
                              , prescale = 1
-                             , algos = [ StdLooseDiMuon,
+                             , algos = [ StdVeryLooseDiMuon,
                                          StdVeryLooseDetachedKst2Kpi,
                                          self._Early_Bd() ]
                              )
@@ -82,10 +82,10 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         """
         The MuMu algorithm for same sign dimuons: clone of standard DiMuon
         """
-        from CommonParticles.StdLooseDiMuon import StdLooseDiMuon
+        from CommonParticles.StdVeryLooseDiMuon import StdVeryLooseDiMuon
         
         # this violates charge
-        return StdLooseDiMuon.clone("SameSignDiMuonForBd2KstarMuMu",
+        return StdVeryLooseDiMuon.clone("SameSignDiMuonForBd2KstarMuMu",
                                     DecayDescriptor = "[J/psi(1S) -> mu+ mu+]cc")
         
     def _Early_SameSignBd(self):
@@ -131,7 +131,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         The Bd with a wide K*
         """
         algo = self._Early_Bd().clone("Early_WideKstar_Bd2KstarMuMu",
-                                      InputLocations = ["StdLooseDiMuon", "WideKstarForBd2KstarMuMu"])
+                                      InputLocations = ["StdVeryLooseDiMuon", "WideKstarForBd2KstarMuMu"])
         jcuts = algo.DaughtersCuts['J/psi(1S)']
         jcuts = jcuts+" & (VFASPF(VCHI2/VDOF) < %(IntVertexCHI2Tight)s )" % self.getProps()
         kcuts = algo.DaughtersCuts['K*(892)0']
@@ -148,10 +148,10 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         The Wide K* line
         """
         from StrippingConf.StrippingLine import StrippingLine, StrippingMember       
-        from CommonParticles.StdLooseDiMuon import StdLooseDiMuon
+        from CommonParticles.StdVeryLooseDiMuon import StdVeryLooseDiMuon
         return StrippingLine('Bd2KstarMuMu_Early_WideKstar'
                              , prescale = 1
-                             , algos = [ StdLooseDiMuon ,
+                             , algos = [ StdVeryLooseDiMuon ,
                                          self._Early_WideKstar(),
                                          self._Early_WideKstarBd() ]
                              )
@@ -163,11 +163,11 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         """
         The MuMu algorithm for no MuID dimuons: clone of standard DiMuon
         """
-        from CommonParticles.StdLooseDiMuon import StdLooseDiMuon
+        from CommonParticles.StdVeryLooseDiMuon import StdVeryLooseDiMuon
         
         # this violates charge
-        return StdLooseDiMuon.clone("NoMuIDDiMuonForBd2KstarMuMu",  
-                                    InputLocations = ["StdLooseMuons",
+        return StdVeryLooseDiMuon.clone("NoMuIDDiMuonForBd2KstarMuMu",  
+                                    InputLocations = ["StdVeryLooseMuons",
                                                       "StdNoPIDsPions"],
                                     DecayDescriptor = "[J/psi(1S) -> pi+ mu-]cc" ,
                                     MotherCut = "(VFASPF(VCHI2/VDOF)<36)" )
@@ -207,7 +207,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         
         # this violates charge
         return self._Early_NoMuIDMuMu().clone("MuonEleForBd2KstarMuMu",
-                                    InputLocations = ["StdLooseMuons",
+                                    InputLocations = ["StdVeryLooseMuons",
                                                       "StdLooseElectrons"],
                                     DecayDescriptor = "[J/psi(1S) -> e+ mu-]cc")
         
@@ -248,7 +248,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         
         Strip_loose_Bd2KstarMuMu = CombineParticles("Strip_loose_Bd2KstarMuMu")
         
-        Strip_loose_Bd2KstarMuMu.InputLocations = ["StdLooseDiMuon", "StdLooseDetachedKst2Kpi"]
+        Strip_loose_Bd2KstarMuMu.InputLocations = ["StdVeryLooseDiMuon", "StdLooseDetachedKst2Kpi"]
         Strip_loose_Bd2KstarMuMu.DecayDescriptor = "[B0 -> K*(892)0 J/psi(1S)]cc"
         Strip_loose_Bd2KstarMuMu.DaughtersCuts = {
             'K*(892)0':  ("(BPVVDZ>-50*mm) & "+
