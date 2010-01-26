@@ -1,12 +1,21 @@
 package DaVinciSys
-version v24r7
+version v24r8
 
 branches doc cmt
 
 #=======================================================
 # Don't forget DaVinci itself
 #=======================================================
-use  DaVinci                 	v24r7   Phys
+use  DaVinci                 	v24r8   Phys
+use  PatPV                      v3r11p1 Tr
+use  StrippingSelections        v1r13 Phys
+use  GlobalReco                 v6r31 Rec
+use  DecayTreeTuple             v2r11 Phys
+use  PhysSelPython              v3r2p1 PhysSel
+use  HltSelChecker              v10r3 Hlt
+use  CommonParticles            v7r0 Phys
+use  StrippingSelections        v1r14 Phys
+use  AnalysisConf               v2r0 Phys
 #  
 # Declare this as a container package
 apply_pattern container_package
