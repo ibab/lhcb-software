@@ -3,22 +3,146 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-! 2010-01-08 - Marco Cattaneo
- - Update QMTest reference for fixes in Gaudi v21r7:
-   . Enable File sharing in FileRecordCnvSvc
+
+</PRE><H1><A NAME=v36r0>2010-01-26 Brunel v36r0</A></H1><PRE>
+This version uses projects Gaudi v21r7, LHCb v29r0, Lbcom v8r0, Rec v8r0
+ and SQLDDDB v5r18, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
+
+This is a development version for 2010 data preparation
+Output requires DaVinci v25r0 or later
+
+ - Changes to Configurable: 
+   . Do not write NanoEvents to DST by default (task 12940). Can be
+     switched on by setting Brunel().WriteLumi = True
+   . If not writing NanoEvents, do not run dummy DST packers
+   . LumiFSR creation done only if input are MDF events
+   . New option RawBanksToKill: removes banks from RawEvent so they are not
+     seen by the reconstruction and not copied to DST. Default is empty list,
+     except if DataType is "2009", when ["VeloFull", "L0PUFull"] are removed.
+
+ - Persistency changes
+   . Always set MuonPID SmartRef in ChargedProtoParticleAddMuonInfo when 
+     available (GlobalReco v6r31)
+   . Added TimeSpanFSR: keeps earliest/latest event time on a raw file
+     (LumiEvent v2r4, LumiAlgs v3r2)
+   . Added support for packed RichPIDs and MuonPIDs to the MDF Writer and Reader
+     (EventPacker v2r2)
+   . Replace std::vector<int> with plain ints in PackedRichPID (PackedEvent v4r0)
+     N.B. This change is backwards incompatible, requires DaVinci v25r0 to read
+
+ - New functionality
+   . Add possibility to flag tracking hits not to be used in pattern reco
+     (TfTools v1r9, PatAlgorithms v3r28, PatVelo v3r19, PatVeloTT v3r10,
+      TsaAlgorithms v3r15, TfKernel v2r14)
+   . Completed task #13270: Block access to conditions in ONLINE partition if
+     validity interval is not closed (DetCond v12r9)
+
+ - New tuning
+   . New tunings for Brunel().SpecialData += ["EarlyData"]:
+     o Looser photon preselection cuts in Rich (RichRecSys v3r25)
+     o Use Ttracks and lower momentum threshold for MuonID (MuonID v7r6)
+   . Improved handling of Velo tracks across half boxes (PatVelo v3r19)
+   . Added more stable expression for standard smoother (TrackFitter v2r44)
+   . Changed default tags for 2009 data (DDDB v1r27)
+     o head-20100119         for DDDB
+     o head-20100119         for LHCBCOND
+     o sim-20100119-vc-md100 for SIMCOND
+   . Now using online Rich gas temperature & pressure conditions (SQLDBDB v5r18)
+
+ - Bug fixes
+   . Pass Brunel().DataType to DstConf (who propagates it to SimConf). 
+     Fixes bug 60636
+   . Fix bug in filling signal HPD occupancy plots in PixelQC (RichRecQC v2r35)
+   . Fix PatVeloTTTool to correctly update B field dependent parameters if
+     Magnetic field changes after initialization (PatVeloTT v3r10)
+   . Fixed problem in PVUtils which was causing a FPE (bug #61282) (PatPV v3r12)
+   . Fix uninitialized variable in CellParam constructor (CaloDet v10r3p1)
+   . In DeSTSector, change precision of m_dp0di and m_p0 from float to double, 
+     to fix data truncation warning on Windows (STDet v4r16p1)
+   . Fix bug in RawEvent.h, which prevented the removal of banks for MDF files
+     (DAQEvent v9r0, DAQUtils v1r0)
+   . Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
+     SimConf does not add spillover Gen info to output file. Fixes bug 60636
+     (GaudiConf v13r3)
+   . Protect TrajPoca against piecewisetraj returning '0' for distToErr
+     (LHCbAlgs v2r32)
+   . Fix to options to enable file sharing in FileRecordCnvSvc (GaudiPoolDb v5r6)
    . Fix untested StatusCode in EventLoopMgr when no events processed 
+     (bug 59797, GaudiSvc v18r7)
+
+
+ - Monitoring changes
+   . New CK theta versus momentum plots (RichRecQC v2r35)
+   . New histograms in Rich alignment monitors (RichRecQC v2r35)
+   . Improved printout of L0DU configuration when re-running L0 (L0DU v10r0)
+   . New L0DUReportMonitor histograms and improved printout (L0DU v10r0)
+   . New counters in DST packer algorithms (EventPacker v2r2)
+
+ - Changes to tests:
+   . Use correct magnet polarity in mdfrdst test
+   . Added brunel-fest09-olddddb to check if bug 59544 re-appears
+     runs the Fest09 data with an old dddb tag. Segfaults in v35r8.
+
+ - Changes to example options
+   . 2009-Collisions.py no longer sets Brunel().UseOracle, no longer needed for
+     the 2009 data.
+
+
+</PRE><H1><A NAME=v35r11p2>2010-01-19 Brunel v35r11p2</A></H1><PRE>
+Version built on v35r11b branch
+This version uses projects Gaudi v21r6, LHCb v28r5, Lbcom v7r11, Rec v7r12
+ and SQLDDDB v5r17, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
+
+This is a production version for reprocessing of 2009 real data with 20100119
+alignment.
+
+Output requires DaVinci v24r5p1 or later
+
+- Bug fixes
+  . Fix bug in DeSTSector::cacheInfo: the trajectories used in track finding were
+    displaced by 0.5 strip pitch (STDet v4r16)
+
+</PRE><H1><A NAME=v35r11p1>2010-01-19 Brunel v35r11p1</A></H1><PRE>
+Version built on v35r11b branch
+This version uses projects Gaudi v21r6, LHCb v28r5, Lbcom v7r11, Rec v7r12
+ and SQLDDDB v5r17, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
+
+This is a production version for reconstruction of 2009 simulation in the same
+conditions as the January 2010 V0 stripping of 2009 real data
+
+Output requires DaVinci v24r5p1 or later
+
+- New tuning
+  . modifications to reconstruct loose PV without requirement of VELO segment
+    (PatPV v3r11p1)
+  . modified PVLoose.py options for Collision09 (PatPV v3r11p1)
+  . Changed default database tags for 2009 data (DDDB v1r27)
+    o head-20100119         for DDDB
+    o head-20100119         for LHCBCOND
+    o sim-20100119-vc-md100 for SIMCOND
+
+- Bug fixes
+  . Fix untested StatusCode in LSAdaptPVFitter.cpp (PatPV v3r11p1)
+
+- Changes to example options
+  . 2009-Collisions.py no longer sets Brunel().UseOracle, no longer needed for
+    the 2009 data.
+
+- Changes to QMTests
+  . Make QMTest exclusion for changes in path to CondDB files more robust
+    (same as fix to GaudiConf v13r3 on head branch)
 
 </PRE><H1><A NAME=v35r11>2009-12-16 Brunel v35r11</A></H1><PRE>
 This version uses projects Gaudi v21r6, LHCb v28r5, Lbcom v7r11, Rec v7r12
  and SQLDDDB v5r17, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
 
 This is a production version for 2009 data reprocessing
-Output requires DaVinci v24r5p1 or later
+Output requires DaVinci v24r5p1 to v24r*
 
 - New tuning
   . Add Brunel().SpecialData = ["earlyData"] switch to include all special
     tunings for 2009 data reprocessing
-    (AppConfig v3r28, RecSys v7r12, TrackSys v4r29))
+    (AppConfig v3r28, RecSys v7r12, TrackSys v4r29, RichRecSys v3r24)
   . New tuning for "earlyData" introduced for DownStream (PatAlgorithms v3r27)
     Seed(TsaAlgorithms v3r14p3) and Match (TrackMatching v2r25) tracks.
   . Looser cuts for "earlyData" in Rich (RichRecSys v3r24) and Global PID
@@ -66,7 +190,7 @@ This version uses projects Gaudi v21r6, LHCb v28r4, Lbcom v7r10, Rec v7r10
                              TrackFitter v2r42, TrackMonitors v1r17p1
 
 This is a production version for 2009 data-taking
-Output requires DaVinci v24r5p1 or later
+Output requires DaVinci v24r5p1 to v24r*
 
 - New tuning:
   . Extend python Configurable for Rich Track Creator to allow track selection
@@ -99,7 +223,7 @@ This version uses projects Gaudi v21r6, LHCb v28r4, Lbcom v7r10, Rec v7r10
  and SQLDDDB v5r16, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
 
 This is a production version for 2009 data-taking
-Output requires DaVinci v24r5p1 or later
+Output requires DaVinci v24r5p1 to v24r*
 
  - New tuning:
    . Improved comparison of floating point numbers (DetDesc v18r17)
@@ -119,7 +243,7 @@ This version uses projects Gaudi v21r6, LHCb v28r3, Lbcom v7r9, Rec v7r9
                              TrackFitter v2r40p1, TrackTools v3r24
 
 This is a production version for 2009 data-taking
-Output requires DaVinci v24r5p1 or later
+Output requires DaVinci v24r5p1 to v24r*
 
  - New tuning:
    . Changed the default momentum for magnet off tracks from 1 GeV to 100 GeV.
@@ -145,7 +269,7 @@ This version uses projects Gaudi v21r6, LHCb v28r3, Lbcom v7r9, Rec v7r9
  and SQLDDDB v5r15, ParamFiles v8r1, FieldMap v5r3, AppConfig v3r*
 
 This is a production version for 2009 data-taking
-Output requires DaVinci v24r5p1 or later
+Output requires DaVinci v24r5p1 to v24r*
 
  - Configuration changes:
    . Fixes to ConfiguredFitter
@@ -189,7 +313,7 @@ This version uses projects Gaudi v21r6, LHCb v28r2, Lbcom v7r8, Rec v7r8
  and SQLDDDB v5r15, ParamFiles v8r1, FieldMap v5r3, AppConfig v3r*
 
 This is a production version for 2009 data-taking
-Output requires DaVinci v24r5p1 or later
+Output requires DaVinci v24r5p1 to v24r*
 
 - Bug fixes:
   . Fixed a problem in the decoding and encoding of the event time in the ODIN
@@ -200,7 +324,7 @@ This version uses projects Gaudi v21r6, LHCb v28r2, Lbcom v7r8, Rec v7r8
  and SQLDDDB v5r14, ParamFiles v8r1, FieldMap v5r3, AppConfig v3r*
 
 This is a production version for 2009 data-taking
-Output requires DaVinci v24r5 or later
+Output requires DaVinci v24r5 to v24r*
 
  - Changes to Configuration:
    . Use new configurable to decode CaloDigits (CaloDAQ v5r15, CaloReco v5r3)
@@ -303,7 +427,7 @@ This version uses projects Gaudi v21r5, LHCb v28r1, Lbcom v7r7, Rec v7r7
  and SQLDDDB v5r13, ParamFiles v8r1, FieldMap v5r3, AppConfig v3r*
 
 This is a development version for changes subsequent to the 2009 MC production. 
-Output requires DaVinci v24r3 or later
+Output requires DaVinci v24r3 to v24r*
 
  - Changes to configuration:
    . Allow users to explicit set empty sequences
@@ -346,7 +470,7 @@ Output requires DaVinci v24r3 or later
      o Changed way of fitting the x projection
    . Speed up initialisation through optimisation of Muon geometry (remove
      detector elements for gas gaps). Enabled only for post-MC09 geometries,
-     requires SQLDDDB v5r13 or later
+     requires SQLDDDB v5r13 to v24r*
      (MuonDet v9r0, MuonAlgs v6r9, MuonBackground v2r10)
    . Save memory with alignment of libraries (GaudiPolicy v10r3)
    . Magnetic field grid is now stored in class DetDesc/MagneticFieldGrid. 
@@ -404,7 +528,7 @@ This version uses projects Gaudi v21r4, LHCb v28r0, Lbcom v7r6, Rec v7r6
  and SQLDDDB v5r11, ParamFiles v8r1, FieldMap v5r2, AppConfig v3r*
 
 This is a development version for changes subsequent to the 2009 MC production. 
-Output requires DaVinci v24r3 or later
+Output requires DaVinci v24r3 to v24r*
 
  - Changes to configuration:
    . Reorganisation of charged ProtoParticle algorithms for greater flexibility:-
@@ -1450,7 +1574,7 @@ This is a development version.
 - Cannot reconstruct 2008 simulation digitized with Boole v16r0 (use v33r0)
 
 - Persistency changes
-  . Output data needs DaVinci v19r15 or later in following cases:
+  . Output data needs DaVinci v19r15 to v24r* in following cases:
     o If accessing simulated OT raw banks produced with Boole v16r1 or later
       (bank version SIM=63) (OTDAQ v7r1)
     o If accessing TT raw banks in 2008 data or simulation, due to fixes to 2008
