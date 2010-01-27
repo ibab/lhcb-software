@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.26 2010-01-27 16:16:13 jpalac Exp $
+#$Id: Wrappers.py,v 1.27 2010-01-27 16:37:47 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -38,7 +38,11 @@ from selection import ( Selection,
                         SelSequence                )
 
 
-def SelectionSequence(*args, **kwargs) :
+def SelectionSequence(name,
+                      TopSelection,
+                      EventPreSelector = [],
+                      PostSelectionAlgs = [],
+                      SequencerType = __sequencerType) :
     """
     Wrapper function for offline selection sequence creation.
     Takes a Selection object
@@ -68,6 +72,8 @@ def SelectionSequence(*args, **kwargs) :
     """
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
 
-    if not 'SequencerType' in kwargs.keys() :
-        kwargs['SequencerType'] = __sequencerType
-    return SelSequence(*args, **kwargs)
+    return SelSequence(name,
+                       TopSelection,
+                       EventPreSelector,
+                       PostSelectionAlgs,
+                       SequencerType)
