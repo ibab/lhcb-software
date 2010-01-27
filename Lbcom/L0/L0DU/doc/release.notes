@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.177 2010-01-27 15:13:43 graven Exp $
+! $Id: release.notes,v 1.178 2010-01-27 23:35:20 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2010-01-27 - Olivier Deschamps
+  - cmt/requirements link to L0TCK v2*
+  - update FastL0DUFilter.cpp (for bank version=2)
+  - new algorithm : L0DUMultiTrends.cpp  provides comparaison of various TCK + trending
+  - few update in L0DUConfigMonitor.opts
+
 
 ! 2010-01-27 - Gerhard Raven
  - make L0DUConfigProvider reconfigure itself when 'on the fly' updates of its

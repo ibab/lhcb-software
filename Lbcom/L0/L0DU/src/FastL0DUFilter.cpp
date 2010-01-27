@@ -1,4 +1,4 @@
-// $Id: FastL0DUFilter.cpp,v 1.2 2009-09-17 12:14:49 odescham Exp $
+// $Id: FastL0DUFilter.cpp,v 1.3 2010-01-27 23:35:23 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -77,7 +77,7 @@ StatusCode FastL0DUFilter::execute() {
     LHCb::RawBank* bank = *itB;
     if( NULL == bank || 0 == bank->size() )continue;
     if( m_source != bank->sourceID() )continue;
-    if( 1 != bank->version() ){
+    if( 1 != bank->version() && 2!= bank->version() ){
       Warning( "Inconsistent L0DU bank version" ).ignore();
       continue;
     }    
