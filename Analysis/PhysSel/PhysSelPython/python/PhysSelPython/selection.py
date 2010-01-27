@@ -1,4 +1,4 @@
-#$Id: selection.py,v 1.3 2010-01-27 16:39:40 jpalac Exp $
+#$Id: selection.py,v 1.4 2010-01-27 17:03:19 jpalac Exp $
 """
 Classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -243,20 +243,17 @@ class FlatSelectionListBuilder(object) :
     def __init__(self,
                  TopSelection) :
 
-        self.selectionList = []
         _alg = TopSelection.algorithm()
-        self.sels = [_alg]
+        self.selectionList = [_alg]
         if (_alg != None) :
             self.buildSelectionList( TopSelection.requiredSelections )
-        self.gaudiseq = None
-        self.selectionList += self.sels
 
     def buildSelectionList(self, selections) :
         for sel in selections :
             if type(sel) == DataOnDemand :
                 print "DataOnDemand: do nothing"
             else :
-                self.sels.insert(0, sel.algorithm())
+                self.selectionList.insert(0, sel.algorithm())
                 self.buildSelectionList( sel.requiredSelections )
 
 
