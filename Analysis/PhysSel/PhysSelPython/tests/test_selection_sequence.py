@@ -1,4 +1,4 @@
-#$Id: test_selection_sequence.py,v 1.4 2010-01-27 16:36:13 jpalac Exp $
+#$Id: test_selection_sequence.py,v 1.5 2010-01-27 17:00:23 jpalac Exp $
 '''
 Test suite for SelectionSequence class.
 '''
@@ -75,17 +75,22 @@ def test_sequencer_sequence() :
 
     seqAlgos = seq.sequence().Members
 
+    ref_algos = [presel0,
+                 presel1,
+                 sel02.algorithm(),
+                 sel01.algorithm(),
+                 sel03.algorithm(),
+                 postsel0,
+                 postsel1]
+
     assert len(seqAlgos) == 7
-    for sel in [sel01, sel02, sel03] :
-        assert sel.algorithm() in seqAlgos
 
-    
+    assert presels == ref_algos[:len(presels)]
 
-    for sel in presels :
-        assert sel in seqAlgos[:len(presels)]
+    assert postsels == ref_algos[len(ref_algos)-len(postsels):]
 
-    for sel in postsels :
-        assert sel in seqAlgos[len(seqAlgos)-len(postsels):]
+    for sel in [sel01, sel02, sel03]:
+        assert sel.algorithm() in ref_algos[len(presels):len(ref_algos)-len(postsels)]
 
 def test_clone_sequence() :
     _sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
