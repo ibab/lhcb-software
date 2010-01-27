@@ -1,4 +1,4 @@
-#$Id: test_selection_sequence.py,v 1.2 2010-01-27 14:52:49 jpalac Exp $
+#$Id: test_selection_sequence.py,v 1.3 2010-01-27 16:14:13 jpalac Exp $
 '''
 Test suite for SelectionSequence class.
 '''
@@ -7,8 +7,13 @@ __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
 import sys
 sys.path.append('../python')
-from PhysSelPython.Wrappers import Selection, SelectionSequence, AutomaticData, NameError
-from PhysSelPython.Configurabloids import DummyAlgorithm, DummySequencer
+
+from PhysSelPython.Wrappers import ( Selection,
+                                     SelectionSequence,
+                                     AutomaticData,
+                                     NameError         )
+from PhysSelPython.Configurabloids import ( DummyAlgorithm,
+                                            DummySequencer  )
 
 
 def test_instantiate_sequencer() :
