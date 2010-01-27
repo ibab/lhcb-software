@@ -3606,7 +3606,6 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl,  pres::
     OnlineHistogram* onlineHistogram = NULL;
     DimBrowser* dimBrowser = NULL;
     std::string currentPartition(m_currentPartition);
-    
     if (isConnectedToHistogramDB() &&
         (invisible != overlapMode) ){
       histogramDB = m_histogramDB;
@@ -3629,7 +3628,6 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl,  pres::
         currentPartition = histogramUrl;
       }
     }
-
     DbRootHist* dbRootHist = getPageHistogram(this,
                                           histogramUrl,
                                           currentPartition,
@@ -3639,16 +3637,14 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl,  pres::
                                           onlineHistogram,
                                           m_verbosity,
                                           dimBrowser);
-
-     dbRootHist->setOverlapMode(overlapMode);     
-     if ((0 != m_archive) && isConnectedToHistogramDB() &&
-          (false == m_savesetFileName.empty()) &&
-          ((History == m_presenterMode) || (EditorOffline == m_presenterMode))) {
-          m_archive->fillHistogram(dbRootHist,
-                                 s_startupFile,
-                                 m_savesetFileName);
-      }
-                                              
+    dbRootHist->setOverlapMode(overlapMode);     
+    if ((0 != m_archive) && isConnectedToHistogramDB() &&
+        (false == m_savesetFileName.empty()) &&
+        ((History == m_presenterMode) || (EditorOffline == m_presenterMode))) {
+      m_archive->fillHistogram(dbRootHist,
+                               s_startupFile,
+                               m_savesetFileName);
+    }
   if ( (false == isConnectedToHistogramDB())  &&
        (invisible != overlapMode) ) {
     // Set Properties
@@ -3740,6 +3736,7 @@ void PresenterMainFrame::addDimHistosToPage()
   list->Delete();
   delete list;
   list = NULL;
+
   m_histoSvcListTree->CheckAllChildren(m_histoSvcListTree->GetFirstItem(),
                                        s_uncheckTreeItems);
 //  fClient->NeedRedraw(m_histoSvcListTree);

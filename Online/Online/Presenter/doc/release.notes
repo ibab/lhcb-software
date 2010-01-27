@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+2010-01-27 G.Graziani
++ fix bug affecting editor mode without HistDB 
+
 !============ Presenter v0r23 2010-01-22 =============
 2010-01-22 G.Graziani
 + recover loading of pages with multiple virtual histograms

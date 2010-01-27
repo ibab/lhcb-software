@@ -806,24 +806,27 @@ void DbRootHist::fillHistogram()
       } 
    } else if (s_pfixMonProfile == m_histogramType || s_pfixMonH1D == m_histogramType
                 || s_pfixMonH2D == m_histogramType) {
-      if (m_dimInfoMonObject && m_dimInfoMonObject->loadMonObject()) {
-
-        if (s_pfixMonH1D == m_histogramType){
-          MonH1D* monTH1D = (MonH1D*) m_dimInfoMonObject->monObject();
-          if (monTH1D) { monTH1D->loadObject(); }
+      if (m_dimInfoMonObject) {
+        if (m_dimInfoMonObject->loadMonObject()) {
+          
+          if (s_pfixMonH1D == m_histogramType){
+            MonH1D* monTH1D = (MonH1D*) m_dimInfoMonObject->monObject();
+            if (monTH1D) { monTH1D->loadObject(); }
+          }
+          if (s_pfixMonH2D == m_histogramType){
+            MonH2D* monTH2D = (MonH2D*) m_dimInfoMonObject->monObject();
+            if (monTH2D) { monTH2D->loadObject(); }
+          }
+          if (s_pfixMonProfile == m_histogramType){
+            MonProfile* monProfile = (MonProfile*) m_dimInfoMonObject->monObject();
+            if (monProfile) { monProfile->loadObject(); }
+          }
+          //        if (hostingPad) hostingPad->Modified();
         }
-        if (s_pfixMonH2D == m_histogramType){
-          MonH2D* monTH2D = (MonH2D*) m_dimInfoMonObject->monObject();
-          if (monTH2D) { monTH2D->loadObject(); }
-        }
-        if (s_pfixMonProfile == m_histogramType){
-          MonProfile* monProfile = (MonProfile*) m_dimInfoMonObject->monObject();
-          if (monProfile) { monProfile->loadObject(); }
-        }
-//        if (hostingPad) hostingPad->Modified();
       }
     }
     if (m_cleared && m_offsetHistogram) {
+      
 //        rootHistogram->Add(m_offsetHistogram,-1.0); - does not reset errors
         if (s_H1D == m_histogramType ||
             s_P1D == m_histogramType || s_HPD == m_histogramType ||
@@ -876,16 +879,18 @@ void DbRootHist::fillHistogram()
       beRegularHisto();
     }
   }
-  if(m_onlineHistogram->hasFitFunction() && NULL != m_fitfunction && false == m_isEmptyHisto) {
-    // trick to update fit w/o redrawing
-    TF1* newfit = new TF1(*(m_fitfunction->fittedfun())); // clone fit TF1
-    newfit->SetRange( rootHistogram->GetXaxis()->GetXmin(),
-                      rootHistogram->GetXaxis()->GetXmax() );
-    rootHistogram->GetListOfFunctions()->Add(newfit); // attach newfit to histo, which now owns it
-    rootHistogram->Fit(newfit,"QN"); // fit w/o drawing/storing
-    for (int ip=0; ip <newfit->GetNpar(); ip++) {
-      // update parameters of stored fit function
-      m_fitfunction->fittedfun()->SetParameter(ip, newfit->GetParameter(ip));
+  if( m_onlineHistogram) {
+    if (m_onlineHistogram->hasFitFunction() && NULL != m_fitfunction && false == m_isEmptyHisto) {
+      // trick to update fit w/o redrawing
+      TF1* newfit = new TF1(*(m_fitfunction->fittedfun())); // clone fit TF1
+      newfit->SetRange( rootHistogram->GetXaxis()->GetXmin(),
+                        rootHistogram->GetXaxis()->GetXmax() );
+      rootHistogram->GetListOfFunctions()->Add(newfit); // attach newfit to histo, which now owns it
+      rootHistogram->Fit(newfit,"QN"); // fit w/o drawing/storing
+      for (int ip=0; ip <newfit->GetNpar(); ip++) {
+        // update parameters of stored fit function
+        m_fitfunction->fittedfun()->SetParameter(ip, newfit->GetParameter(ip));
+      }
     }
   }
   
@@ -1108,24 +1113,25 @@ void DbRootHist::setPadMarginsFromDB(TPad* &pad) {
 }
 
 void DbRootHist::fit() {
-  if ( true == m_onlineHistogram->hasFitFunction() && NULL != rootHistogram) {
-    std::string Name;
-    std::vector<float> initValues;
-    gStyle->SetOptFit(1111111);
-    m_onlineHistogram->getFitFunction(Name,&initValues);
-    if (m_verbosity >= Verbose) {
-      std::cout << "fitting histogram " << m_onlineHistogram->identifier() <<
-        " with function "<< Name << std::endl;
+  if(m_onlineHistogram) {
+    if ( true == m_onlineHistogram->hasFitFunction() && NULL != rootHistogram) {
+      std::string Name;
+      std::vector<float> initValues;
+      gStyle->SetOptFit(1111111);
+      m_onlineHistogram->getFitFunction(Name,&initValues);
+      if (m_verbosity >= Verbose) {
+        std::cout << "fitting histogram " << m_onlineHistogram->identifier() <<
+          " with function "<< Name << std::endl;
+      }
+      if (!m_fitfunction) { // first call
+        OMAFitFunction* requestedFit =  m_analysisLib->getFitFunction(Name);
+        // clone to own it and be thread-safe
+        m_fitfunction = new OMAFitFunction(*requestedFit);
+      }
+      m_fitfunction->fit(rootHistogram, &initValues);
     }
-    if (!m_fitfunction) { // first call
-      OMAFitFunction* requestedFit =  m_analysisLib->getFitFunction(Name);
-      // clone to own it and be thread-safe
-      m_fitfunction = new OMAFitFunction(*requestedFit);
-    }
-    m_fitfunction->fit(rootHistogram, &initValues);
   }
 }
-
 
 void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
 {
@@ -1522,60 +1528,59 @@ void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xu
  if (NULL != m_session) {
   std::string sopt("");
   boost::recursive_mutex::scoped_lock rootLock(*m_rootMutex);
-  if (rootLock && 0 != m_onlineHistogram  &&
-      m_onlineHistogram->getDisplayOption("DRAWPATTERN", &sopt) &&
-      false == m_isOverlap) {
+  if (rootLock && 0 != m_onlineHistogram ) { 
+    if (m_onlineHistogram->getDisplayOption("DRAWPATTERN", &sopt) &&
+        false == m_isOverlap) {
+      
+      std::string drawPatternFile = m_analysisLib->refRoot() + "/" + 
+        m_onlineHistogram->task() + "/" + sopt;
+      // std::cout << "drawPatternFile: "  << drawPatternFile.c_str() << std::endl;
+      TFile rootFile(drawPatternFile.c_str()); 
 
-    std::string drawPatternFile = m_analysisLib->refRoot() + "/" + 
-                                  m_onlineHistogram->task() + "/" + sopt;
-// std::cout << "drawPatternFile: "  << drawPatternFile.c_str() << std::endl;
-    TFile rootFile(drawPatternFile.c_str()); 
-
-//  secondPad->SetFillStyle(4000); //will be transparent
-// or TImage::Merge(const TImage* , const char* = "alphablend", Int_t = 0, Int_t = 0) 4 pixmap
-
-    if (rootFile.IsZombie()) {
+      //  secondPad->SetFillStyle(4000); //will be transparent
+      // or TImage::Merge(const TImage* , const char* = "alphablend", Int_t = 0, Int_t = 0) 4 pixmap
+      
+      if (rootFile.IsZombie()) {
         std::cout << "Error opening Root file" << std::endl;
-    } else {
-       TIter next1(rootFile.GetListOfKeys());
-       TKey* key;    
-       while ((key = (TKey*)next1())) {
-         if (key->ReadObj()->InheritsFrom(TCanvas::Class())) {
-       m_drawPattern = (TCanvas*)key->ReadObj();
-         }
-       }
-       m_drawPattern->SetPad(TMath::Abs(xlow), TMath::Abs(ylow),
-                      TMath::Abs(xup), TMath::Abs(yup));
-       m_drawPattern->SetName(m_identifier.c_str());
-
-   TPad *padsav = (TPad*)gPad;
-//   gPad =   editorCanvas->cd();
-   TObject *obj; //, *clone;
-
-// ST: Check for text...   
-
-   dynamic_cast<TAttLine*>(m_drawPattern)->Copy((TAttLine&)*pad);
-   dynamic_cast<TAttFill*>(m_drawPattern)->Copy((TAttFill&)*pad);
-   dynamic_cast<TAttPad*>(m_drawPattern)->Copy((TAttPad&)*pad);
-
-   TIter next(m_drawPattern->GetListOfPrimitives());
-   while ((obj=next())) {
-      pad->cd();
-      if (TBox::Class() == obj->IsA() ||
-          TLine::Class() == obj->IsA() ||
-          TText::Class() == obj->IsA()) {
-          obj->Draw();
-//      clone = obj->Clone();
-//      pad->GetListOfPrimitives()->Add(clone,next.GetOption());
+      } else {
+        TIter next1(rootFile.GetListOfKeys());
+        TKey* key;    
+        while ((key = (TKey*)next1())) {
+          if (key->ReadObj()->InheritsFrom(TCanvas::Class())) {
+            m_drawPattern = (TCanvas*)key->ReadObj();
+          }
+        }
+        m_drawPattern->SetPad(TMath::Abs(xlow), TMath::Abs(ylow),
+                              TMath::Abs(xup), TMath::Abs(yup));
+        m_drawPattern->SetName(m_identifier.c_str());
+        
+        TPad *padsav = (TPad*)gPad;
+        //   gPad =   editorCanvas->cd();
+        TObject *obj; //, *clone;
+        
+        // ST: Check for text...   
+        
+        dynamic_cast<TAttLine*>(m_drawPattern)->Copy((TAttLine&)*pad);
+        dynamic_cast<TAttFill*>(m_drawPattern)->Copy((TAttFill&)*pad);
+        dynamic_cast<TAttPad*>(m_drawPattern)->Copy((TAttPad&)*pad);
+        
+        TIter next(m_drawPattern->GetListOfPrimitives());
+        while ((obj=next())) {
+          pad->cd();
+          if (TBox::Class() == obj->IsA() ||
+              TLine::Class() == obj->IsA() ||
+              TText::Class() == obj->IsA()) {
+            obj->Draw();
+            //      clone = obj->Clone();
+            //      pad->GetListOfPrimitives()->Add(clone,next.GetOption());
+          }
+        }
+        if (padsav) padsav->cd();
       }
-   }
-   if (padsav) padsav->cd();
-  }
-  rootFile.Close();
- }
-
-
+      rootFile.Close();
     }
+  }
+ }
 }
 
 void DbRootHist::normalizeReference()
