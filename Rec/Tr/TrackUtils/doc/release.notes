@@ -4,9 +4,12 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-01-28 - Wouter Hulsbergen
+ - added TrackHitAdder
+
 !========================== TrackUtils v1r33 2010-01-21 ======================
 
-! 2009-01-05 - Wouter Hulsbergen
+! 2010-01-05 - Wouter Hulsbergen
  - add TrackListMerger and TrackListRefiner
  - access containers by Range in TrackContainerCopy
 
