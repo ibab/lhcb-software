@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.h,v 1.15 2010-01-25 16:17:20 wouter Exp $
+// $Id: GetElementsToBeAligned.h,v 1.16 2010-01-27 21:12:48 wouter Exp $
 #ifndef GETELEMENTSTOBEALIGNED_H
 #define GETELEMENTSTOBEALIGNED_H 1
 
@@ -82,7 +82,12 @@ private:
 		    const AlignmentElement* rhs) const {
       return lhs->basename() < rhs->basename() ||
 	(lhs->basename() == rhs->basename() &&
-	 lhs->detelements().front()->name() < rhs->detelements().front()->name() ) ;
+	 (lhs->detelements().front()->name() < rhs->detelements().front()->name() ||
+	  lhs->detelements().front()->name() == rhs->detelements().front()->name() &&
+	  lhs->elementsInTree().size() > rhs->elementsInTree().size() ) ) ;
+	 //return lhs->basename() < rhs->basename() ||
+      //	(lhs->basename() == rhs->basename() &&
+      //	 lhs->detelements().front()->name() < rhs->detelements().front()->name() ) ;
    
       // all varant below do not work or do not give result I wanted.
       //       return lhs->detelements().front()->name() < 
