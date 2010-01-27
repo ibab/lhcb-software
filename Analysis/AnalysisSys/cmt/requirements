@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.155 2010-01-13 15:18:52 pkoppenb Exp $
+# $Id: requirements,v 1.156 2010-01-27 21:21:32 jpalac Exp $
 package AnalysisSys
 version v3r14
 
@@ -53,6 +53,9 @@ use MicroDSTExample             v2r11   Ex                # Juan Palacios
 
 # Declare this as a container package
 apply_pattern container_package
+
+# Allow the generation of the SAM QMTest
+apply_pattern QMTest
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
