@@ -1,4 +1,4 @@
-// $Id: LSAdaptPV3DFitter.cpp,v 1.7 2010-01-20 13:46:48 rlambert Exp $
+// $Id: LSAdaptPV3DFitter.cpp,v 1.8 2010-01-27 09:52:17 rlambert Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -26,7 +26,8 @@ LSAdaptPV3DFitter::LSAdaptPV3DFitter(const std::string& type,
     m_TrackErrorScaleFactor(0.),
     m_x0MS(0.),
     m_scatCons(0.),
-    m_pvTracks(0)
+    m_pvTracks(0),
+    m_myZero(1E-12)
 {
   declareInterface<IPVFitter>(this);
   // Minimum number of tracks in vertex
@@ -115,10 +116,10 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
         impactParameterVector(xyzvtx, pvTrack->stateG.position(), pvTrack->unitVect);
       pvTrack->vd0 = ipVector;
       pvTrack->d0 = ipVector.Mag2();
-      if(pvTrack->err2d0<myzero) 
+      if(pvTrack->err2d0<m_myZero) 
       {
         if(msgLevel(MSG::DEBUG)) debug() << "fitVertex: pvTrack error is too small for computation" << endmsg;
-        pvTrack->chi2=pvTrack->d0/myzero;
+        pvTrack->chi2=pvTrack->d0/m_myZero;
       }
       else pvTrack->chi2 = pvTrack->d0/ pvTrack->err2d0;
 
@@ -127,9 +128,9 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
       if (  pvTrack->weight > m_minTrackWeight ) ntrin++;
 
       double invs = 1.0;
-      if(pvTrack->err2d0<myzero) 
+      if(pvTrack->err2d0<m_myZero) 
       {
-        invs = (2.0 / myzero) * pvTrack->weight;
+        invs = (2.0 / m_myZero) * pvTrack->weight;
       }
       else invs = (2.0 / pvTrack->err2d0) * pvTrack->weight;
 
@@ -248,11 +249,11 @@ void LSAdaptPV3DFitter::addTrackForPV(const LHCb::Track* pvtr,
   pvtrack.err2d0 = err2d0(pvtr);
   pvtrack.chi2 = 0;
   //does it make sense to add such an error... why is chi2 0 for this case? it should be a very big number
-  if(pvtrack.err2d0 > myzero) pvtrack.chi2 = (pvtrack.d0)/pvtrack.err2d0;
+  if(pvtrack.err2d0 > m_myZero) pvtrack.chi2 = (pvtrack.d0)/pvtrack.err2d0;
   else
   {
     if(msgLevel(MSG::DEBUG)) debug() << "addTrackForPV: pvTrack error is too small for computation" << endmsg;
-    pvtrack.chi2=pvtrack.d0/myzero;
+    pvtrack.chi2=pvtrack.d0/m_myZero;
   }
   // Keep reference to the original track
   pvtrack.refTrack = pvtr;

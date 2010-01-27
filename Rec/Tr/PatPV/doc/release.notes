@@ -4,8 +4,11 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
-
 !============================= PatPV v3r12 2010-01-21 ======================
+! 2010-01-27 - Rob Lambert
+ - Compilation problem on windows with static double.
+	 . changed to member variable
+
 ! 2010-01-20 - Rob Lambert
  - Fixed problem in PVUtils which was causing a FPE in the nightlies
 	 Savannah bug #61282

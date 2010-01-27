@@ -1,4 +1,4 @@
-// $Id: LSAdaptPV3DFitter.h,v 1.5 2010-01-20 13:46:48 rlambert Exp $
+// $Id: LSAdaptPV3DFitter.h,v 1.6 2010-01-27 09:52:17 rlambert Exp $
 #ifndef LSADAPTPVFITTER_H
 #define LSADAPTPVFITTER_H 1
 // from Gaudi
@@ -39,10 +39,12 @@ private:
                           // track parameters to PV
   double m_scatCons;      // calculated from m_x0MS
   PVTracks m_pvTracks;
-  static const double myzero=1E-12;
-  //  inline sign
+  //problem on windows for some reason
+  //static const double myzero=1E-12;
+  const double m_myZero; //myzero=1E-12;
+  //work around by just initialising it in constructor...
+  //Annoying, though!
   
-
   // Add track for PV
   void addTrackForPV(const LHCb::Track* str, PVTracks& pvTracks,
                            Gaudi::XYZPoint seed);
