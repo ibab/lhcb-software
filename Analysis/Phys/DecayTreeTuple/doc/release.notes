@@ -4,6 +4,12 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-01-27 - Rob Lambert
+ - Minor fixes:
+	  . added forgotten baseclasses into the cvs
+ - TupleToolTagging:
+    . Verbose mode now gives decision and probability for all ActiveTaggers
+
 ! 2010-01-26 - Rob Lambert
  - Major changes:
 		. All TupleTools now inherit from TupleToolBase.

@@ -1,4 +1,4 @@
-// $Id: TupleToolTagging.cpp,v 1.8 2010-01-26 15:39:27 rlambert Exp $
+// $Id: TupleToolTagging.cpp,v 1.9 2010-01-27 11:43:50 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -19,6 +19,8 @@
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
 #include "Event/RecVertex.h"
+#include <utility>
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : EventInfoTupleTool
 //
@@ -39,11 +41,47 @@ TupleToolTagging::TupleToolTagging( const std::string& type,
   : TupleToolBase ( type, name , parent )
   , m_dva(0)
   , m_tagging(0)
+  , m_tagger_map()
+  , m_tagger_rmap()
+  , m_activeTaggers(0)
 {
   declareInterface<IParticleTupleTool>(this);
-
+  
+  //there is a long list of taggers defined in the enum
+  m_tagger_map[(int)Tagger::none]="none";
+  m_tagger_map[(int)Tagger::unknown]="unknown";
+  m_tagger_map[(int)Tagger::OS_Muon]="OS_Muon";
+  m_tagger_map[(int)Tagger::OS_Electron ]="OS_Electron";
+  m_tagger_map[(int)Tagger::OS_Kaon]="OS_Kaon";
+  m_tagger_map[(int)Tagger::SS_Kaon]="SS_Kaon";
+  m_tagger_map[(int)Tagger::SS_Pion]="SS_Pion";
+  m_tagger_map[(int)Tagger::jetCharge]="jetCharge";
+  m_tagger_map[(int)Tagger::OS_jetCharge]="OS_jetCharge";
+  m_tagger_map[(int)Tagger::SS_jetCharge]="SS_jetCharge";
+  m_tagger_map[(int)Tagger::VtxCharge]="VtxCharge";
+  m_tagger_map[(int)Tagger::Topology]="Topology";
+  
+  for(std::map<int, std::string>::const_iterator t=m_tagger_map.begin();
+      t!=m_tagger_map.end(); t++)
+  {
+    m_tagger_rmap[t->second]=t->first;
+  }
+  
+  //but only these ones really need to be filled, and only these are really used
+  m_activeTaggers.push_back("OS_Muon");
+  m_activeTaggers.push_back("OS_Electron");
+  m_activeTaggers.push_back("OS_Kaon");
+  m_activeTaggers.push_back("SS_Kaon");
+  m_activeTaggers.push_back("SS_Pion");
+  m_activeTaggers.push_back("VtxCharge");
+  
+  
   declareProperty("TaggingToolName", m_toolName = "BTaggingTool" );
   // declareProperty("StoreTaggersInfo", m_extendedTagging = false );
+
+  declareProperty("ActiveTaggers", m_activeTaggers );
+  // declareProperty("StoreTaggersInfo", m_extendedTagging = false );
+
 
 }//=============================================================================
 
@@ -112,38 +150,46 @@ StatusCode TupleToolTagging::fill( const Particle* mother
   
   int taggers_code = 0;
   // intialize tagger by tagger W :
-  double os_mu_prob  = -1;
-  double os_el_prob  = -1;
-  double os_k_prob   = -1;
-  double ss_k_prob   = -1;
-  double ss_pi_prob  = -1;
-  double os_vtx_prob = -1;
   
   std::vector<Tagger> taggers = theTag.taggers();
   for(size_t i=0; i<taggers.size(); ++i) {
     int tdec = taggers[i].decision();
-    double om = taggers[i].omega();
     
     if(tdec) switch ( taggers[i].type() ) {
-    case Tagger::OS_Muon     : taggers_code += 10000 *(tdec+2); os_mu_prob = om;break;
-    case Tagger::OS_Electron : taggers_code +=  1000 *(tdec+2); os_el_prob = om;break;
-    case Tagger::OS_Kaon     : taggers_code +=   100 *(tdec+2); os_k_prob  = om;break;
-    case Tagger::SS_Kaon     : taggers_code +=    10 *(tdec+2); ss_k_prob  = om;break;
-    case Tagger::SS_Pion     : taggers_code +=    10 *(tdec+2); ss_pi_prob = om;break;
-    case Tagger::VtxCharge   : taggers_code +=     1 *(tdec+2); os_vtx_prob= om;break;
+    case Tagger::OS_Muon     : taggers_code +=  10000 *(tdec+2); break;
+    case Tagger::OS_Electron : taggers_code +=   1000 *(tdec+2); break;
+    case Tagger::OS_Kaon     : taggers_code +=    100 *(tdec+2); break;
+    case Tagger::SS_Kaon     : taggers_code +=     10 *(tdec+2); break;
+    case Tagger::SS_Pion     : taggers_code +=     10 *(tdec+2); break;
+    case Tagger::VtxCharge   : taggers_code +=      1 *(tdec+2); break;
       
     }
   }
   
   test &= tuple->column( prefix+"_TAGGER" , taggers_code);
+  
   if(isVerbose())
   {
-    test &= tuple->column( prefix+"OS_MU_PROBA"  , os_mu_prob  );
-    test &= tuple->column( prefix+"OS_EL_PROBA"  , os_el_prob  );
-    test &= tuple->column( prefix+"OS_K_PROBA"   , os_k_prob   );
-    test &= tuple->column( prefix+"SS_K_PROBA"   , ss_k_prob   );
-    test &= tuple->column( prefix+"SS_PI_PROBA"  , ss_pi_prob  );
-    test &= tuple->column( prefix+"OS_VTX_PROBA" , os_vtx_prob );
+    //intitialize a map to some unphysical defaults
+    std::map< std::string, std::pair<int, double > > tag_results;
+    for(std::vector<std::string>::const_iterator t=m_activeTaggers.begin();
+        t!=m_activeTaggers.end(); t++)
+    {
+      tag_results[*t]=std::pair<int, double >(-1000,-2.);
+    }
+    //fill the map for the taggers which were used
+    for(size_t i=0; i<taggers.size(); ++i) 
+    {
+      tag_results[m_tagger_map[(int)taggers[i].type()]]=
+        std::pair<int, double >(taggers[i].decision(),taggers[i].omega());
+    }
+    //fill the tuple for 
+    for(std::vector<std::string>::const_iterator t=m_activeTaggers.begin();
+        t!=m_activeTaggers.end(); t++)
+    {
+      test &= tuple->column( prefix+"_"+(*t)+"_DEC"   , tag_results[*t].first   );
+      test &= tuple->column( prefix+"_"+(*t)+"_PROB"  , tag_results[*t].second   );
+    }
   }
   
   
