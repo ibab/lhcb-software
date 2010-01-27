@@ -82,6 +82,13 @@ void Archive::fillHistogram(DbRootHist* histogram,
               << " pastDuration " << pastDuration << std::endl;
   }
   if ( ! (histogram->isAnaHist()) ) {
+    // fill HistogramIdentifier from history mode
+    std::string fakeDimName = s_H1D + "/" + histogram->identifier();
+    histogram->setIdentifiersFromDim(fakeDimName);
+    if (m_verbosity >= Debug) {
+      std::cout <<"  Task="<<histogram->taskName()<<" RootName="<<histogram->rootName()
+                << " full HName="<<histogram->histogramFullName()<<std::endl;
+    }
     histogram->beRegularHisto();
     std::vector<path> foundRootFiles;
     std::vector<path> goodRootFiles;
@@ -97,7 +104,7 @@ void Archive::fillHistogram(DbRootHist* histogram,
       }
     } else {
       
-      foundRootFiles = findSavesets((histogram->onlineHistogram())->task(),
+      foundRootFiles = findSavesets(histogram->taskName(),
                                     timePoint,
                                     pastDuration);
     } 
@@ -120,10 +127,10 @@ void Archive::fillHistogram(DbRootHist* histogram,
             (*foundRootFilesIt).file_string() << endl;
         } else {
           TH1* archiveHisto;
-          rootFile.GetObject((histogram->onlineHistogram()->rootName()).c_str(),
+          rootFile.GetObject((histogram->rootName()).c_str(),
                              archiveHisto);
           if (!archiveHisto) { // try w/o algorithm name (to be bkwd compat.)
-            rootFile.GetObject((histogram->onlineHistogram()->hname()).c_str(),
+            rootFile.GetObject((histogram->histogramFullName()).c_str(),
                                archiveHisto);
           }
           if (archiveHisto) {

@@ -26,6 +26,7 @@ class HistogramIdentifier
     std::string histogramSetName() const { return m_setName; };
     std::string histogramName() const { return m_histogramName; };
     std::string histogramFullName() const { return m_histogramFullName; };
+    std::string rootName() const { return m_algorithmName+"/"+m_histogramFullName; };
     std::string lastName() const { return m_lastName; };
     std::string fileName() const { return m_fileName; };
     bool isPlausible() const { return m_isPlausible; };

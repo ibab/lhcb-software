@@ -3638,7 +3638,7 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl,  pres::
                                           m_verbosity,
                                           dimBrowser);
     dbRootHist->setOverlapMode(overlapMode);     
-    if ((0 != m_archive) && isConnectedToHistogramDB() &&
+    if ((0 != m_archive) && //isConnectedToHistogramDB() &&
         (false == m_savesetFileName.empty()) &&
         ((History == m_presenterMode) || (EditorOffline == m_presenterMode))) {
       m_archive->fillHistogram(dbRootHist,

@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 2010-01-27 G.Graziani
-+ fix bug affecting editor mode without HistDB 
++ fixes for Presenter without HistDB 
 
 !============ Presenter v0r23 2010-01-22 =============
 2010-01-22 G.Graziani
