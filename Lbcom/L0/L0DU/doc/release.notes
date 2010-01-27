@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.175 2010-01-26 11:15:24 jucogan Exp $
+! $Id: release.notes,v 1.176 2010-01-27 13:44:10 graven Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2010-01-27 - Gerhard Raven
+ - make L0DUConfigProvider reconfigure itself when 'on the fly' updates of its
+   properties are performed
 
 ! 2010-01-25 - Julien Cogan
  - L0Conf : 

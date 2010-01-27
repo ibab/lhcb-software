@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.h,v 1.8 2010-01-20 16:30:58 odescham Exp $
+// $Id: L0DUConfigProvider.h,v 1.9 2010-01-27 13:44:10 graven Exp $
 #ifndef L0DUCONFIGPROVIDER_H 
 #define L0DUCONFIGPROVIDER_H 1
 
@@ -34,6 +34,7 @@ public:
   virtual ~L0DUConfigProvider( ); ///< Destructor
 
   LHCb::L0DUConfig*  config(long tck = LHCb::L0DUTemplateConfig::TCKValue ,std::string slot="T0"){
+    if (!m_uptodate) { reset();update(); }
     if( slot == "") slot = "T0";
     // first : handle TEMPLATE configuration
     if( m_template && tck == LHCb::L0DUTemplateConfig::TCKValue ){
@@ -62,6 +63,7 @@ public:
   }; 
 
   LHCb::L0DUConfigs*  configs(std::string slot="T0"){
+    if (!m_uptodate) { reset();update(); }
     if( slot == "") slot = "T0";
     return m_configs[slot];
   };
@@ -72,17 +74,28 @@ protected:
 
 
 private:
+  void handler(Property&);
+  StatusCode update();
+  void reset();
+
   void createConfig(std::string slot="T0");
   std::vector<std::string> Parse(std::string flag, std::vector<std::string> config );
-  std::map<std::string,int> m_constData;
   typedef std::vector<std::vector<std::string> > ConfigType;
   typedef ConfigType::iterator ConfigIterator;
   
+  std::map<std::string,std::string> m_sepMap;
+  std::map<std::string,int> m_constData;
   ConfigType m_data;
   ConfigType m_conditions;
   ConfigType m_channels;
   ConfigType m_triggers;
+
+  std::string m_tck;
+  std::string m_def;
+  std::string m_recipe;
   bool m_detail;
+  
+
   void printConfig(LHCb::L0DUConfig config,std::string slot);
   void constantData();
   void predefinedData(const std::string& ,const int param[L0DUBase::Conditions::LastIndex] );
@@ -103,34 +116,16 @@ private:
   LHCb::L0DUChannel::Map m_channelsMap;
   LHCb::L0DUTrigger::Map m_triggersMap;
 
-  //  std::map<std::string,LHCb::L0DUConfigs> m_configs;
   std::map<std::string,LHCb::L0DUConfigs*> m_configs;
 
   LHCb::L0DUConfig* m_config;
-  
 
+  IL0CondDBProvider*        m_condDB;  
 
   unsigned long m_cData;
   int m_pData;
   long m_tckopts;
-  std::vector<std::string> m_comparators;
-  std::vector<std::pair<std::string, unsigned int> > m_operators;
-
-  std::string m_def;
-  std::string m_recipe;
-  
-  std::map<std::string,std::string> m_sepMap;
-  std::pair <std::string,std::string> m_separators;
-  std::vector<std::string> m_dataFlags;
-  std::vector<std::string> m_condFlags;
-  std::vector<std::string> m_chanFlags;
-  std::vector<std::string> m_trigFlags;
-  std::map<std::string,int> m_tIndices;
-  std::map<std::string,int > m_conditionOrder;
-  std::map<std::string,int > m_conditionInputs;
-  std::map<std::string,int > m_conditionNumber;
-  std::map<std::string,int > m_conditionOperator;
-  IL0CondDBProvider*        m_condDB;  
-  bool m_template;
+  bool m_template; 
+  bool m_uptodate;
 };
 #endif // L0DUCONFIGPROVIDER_H

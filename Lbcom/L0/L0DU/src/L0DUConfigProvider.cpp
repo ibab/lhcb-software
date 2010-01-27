@@ -1,6 +1,5 @@
-// $Id: L0DUConfigProvider.cpp,v 1.16 2010-01-21 17:33:23 odescham Exp $
-// Include files 
-
+// $Id: L0DUConfigProvider.cpp,v 1.17 2010-01-27 13:44:10 graven Exp $ // Include files 
+#include "boost/assign/list_of.hpp"
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/SystemOfUnits.h"
@@ -22,93 +21,64 @@
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( L0DUConfigProvider );
 
-
+namespace {
+  static const std::vector<std::string> s_dataFlags = (boost::assign::list_of(std::string("name")),"data","operator");
+  static const std::vector<std::string> s_condFlags = (boost::assign::list_of(std::string("name")),"data","comparator","threshold","index");
+  static const std::vector<std::string> s_chanFlags = (boost::assign::list_of(std::string("name")),"condition","rate","enable","disable","mask","index");
+  static const std::vector<std::string> s_trigFlags = (boost::assign::list_of(std::string("name")),"channel","index","type");
+  // define the allowed operator and comparators
+  static const std::vector<std::string> s_comparators=  (boost::assign::list_of( std::string(">") ),"<","==","!=");
+  // pair(operator,dimension)
+  static const std::vector<std::pair<std::string, unsigned int> > s_operators = boost::assign::list_of(std::make_pair("Id",1))
+                                                                                                      (std::make_pair("+", 2))
+                                                                                                      (std::make_pair("-", 2))
+                                                                                                      (std::make_pair("&", 2))
+                                                                                                      (std::make_pair("^", 2));
+  // index of the predefined triggers
+  static const std::map<std::string,int> s_tIndices = boost::assign::map_list_of(std::string("L0Ecal"), 0)
+                                                                                (std::string("L0Hcal"), 1)
+                                                                                (std::string("L0Muon"), 2)
+                                                                                (std::string("Other"),  3);
+};
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 L0DUConfigProvider::L0DUConfigProvider( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
-    m_data(),
-    m_conditions(),
-    m_channels(),
-    m_configs(),
-    m_cData(0),
-    m_pData(0),
-    m_template(false){
+  : GaudiTool ( type, name , parent )
+  , m_cData(0)
+  , m_pData(0)
+  , m_template(false)
+  , m_uptodate(false)
+{
   declareInterface<IL0DUConfigProvider>(this);
   
-  declareProperty( "constData"               , m_constData);
-  declareProperty( "Data"                    , m_data     );
-  declareProperty( "Conditions"              , m_conditions );
-  declareProperty( "Channels"                , m_channels );
-  declareProperty( "Triggers"                , m_triggers );
+  declareProperty( "constData"               , m_constData)->declareUpdateHandler(&L0DUConfigProvider::handler,this);
+  declareProperty( "Data"                    , m_data     )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
+  declareProperty( "Conditions"              , m_conditions )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
+  declareProperty( "Channels"                , m_channels )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
+  declareProperty( "Triggers"                , m_triggers )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
   // for options defined configuration
-  declareProperty( "Description"             , m_def     = "NO DESCRIPTION");  
-  declareProperty( "Name"                    , m_recipe  = "");  
-  declareProperty( "Separators"              , m_sepMap);
-  declareProperty( "FullDescription"         , m_detail  = false);
-
+  declareProperty( "Description"             , m_def     = "NO DESCRIPTION")->declareUpdateHandler(&L0DUConfigProvider::handler,this);  
+  declareProperty( "Name"                    , m_recipe  = "")->declareUpdateHandler(&L0DUConfigProvider::handler,this);  
+  m_sepMap["["] = "]";
+  declareProperty( "Separators"              , m_sepMap)->declareUpdateHandler(&L0DUConfigProvider::handler,this);
+  declareProperty( "FullDescription"         , m_detail  = false)->declareUpdateHandler(&L0DUConfigProvider::handler,this);
 
   // TCK from name
-
   int idx = name.find_last_of(".")+1;
   std::string nam = name.substr(idx,std::string::npos);
-  if(nam == LHCb::L0DUTemplateConfig::Name )m_template = true;  
-
-  if( m_template ){
-    m_tckopts = LHCb::L0DUTemplateConfig::TCKValue;
-  }else{
-    int index = name.rfind("0x") + 2 ;
-    std::string tck = name.substr( index, name.length() );
-    std::istringstream is( tck.c_str() );
-    is >> std::hex >> m_tckopts  ;
+  if (nam == LHCb::L0DUTemplateConfig::Name) m_template = true;  
+  else { 
+      size_t index = nam.rfind("0x");
+      nam = (index != std::string::npos ) ? nam.substr( index ) : "0x0000";
   }
-  
 
-  //
-  m_sepMap["["] = "]";
-  m_dataFlags.push_back("name");
-  m_dataFlags.push_back("data");
-  m_dataFlags.push_back("operator");
 
-  m_condFlags.push_back("name");
-  m_condFlags.push_back("data");
-  m_condFlags.push_back("comparator");
-  m_condFlags.push_back("threshold");
-  m_condFlags.push_back("index");
-  
-  
-  m_chanFlags.push_back("name");
-  m_chanFlags.push_back("condition");
-  m_chanFlags.push_back("rate");
-  m_chanFlags.push_back("enable");
-  m_chanFlags.push_back("disable");
-  m_chanFlags.push_back("mask");
-  m_chanFlags.push_back("index");
+  declareProperty( "TCK"                     , m_tck  = m_template ? format("0x%04X" , LHCb::L0DUTemplateConfig::TCKValue )
+                                                                   : nam )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
 
-  m_trigFlags.push_back("name");
-  m_trigFlags.push_back("channel");  
-  m_trigFlags.push_back("index");  
-  m_trigFlags.push_back("type");
-
-  // define the allowed operator and comparators
-  m_comparators.push_back(">");
-  m_comparators.push_back("<");
-  m_comparators.push_back("==");
-  m_comparators.push_back("!=");
-  //
-  m_operators.push_back(std::make_pair("Id",1));  // pair(operator,dimension)
-  m_operators.push_back(std::make_pair("+",2));
-  m_operators.push_back(std::make_pair("-",2));
-  m_operators.push_back(std::make_pair("&",2));
-  m_operators.push_back(std::make_pair("^",2));
-  // index of the predefined triggers
-  m_tIndices["L0Ecal" ] = 0 ;
-  m_tIndices["L0Hcal" ] = 1 ;
-  m_tIndices["L0Muon" ] = 2 ;
-  m_tIndices["Other"  ] = 3 ;
 }
 //============================================================================= 
 // Destructor 
@@ -120,38 +90,7 @@ L0DUConfigProvider::~L0DUConfigProvider() {}
 // finalize 
 //============
 StatusCode L0DUConfigProvider::finalize(){
-
-  debug() << "release L0DUConfigProvider" << endmsg;
-  
-  
-  debug() << "Deleting " <<  m_triggersMap.size() << " L0DUTrigger* " << endmsg;
-  for(LHCb::L0DUTrigger::Map::iterator id=m_triggersMap.begin();id!=m_triggersMap.end();id++){
-   delete (*id).second;
-  }
-  
-  debug() << "Deleting " <<  m_dataMap.size() << " L0DUElementaryData* " << endmsg;
-  for(LHCb::L0DUElementaryData::Map::iterator id=m_dataMap.begin();id!=m_dataMap.end();id++){
-    delete (*id).second;
-  }  
-  debug() << "Deleting " <<  m_conditionsMap.size() << " L0DUElementaryConditions* " << endmsg;
-  for(LHCb::L0DUElementaryCondition::Map::iterator id=m_conditionsMap.begin();id!=m_conditionsMap.end();id++){
-    delete (*id).second;
-  }
-  
-  debug() << "Deleting " <<  m_channelsMap.size() << " L0DUElementaryChannels* " << endmsg;
-  for(LHCb::L0DUChannel::Map::iterator id=m_channelsMap.begin();id!=m_channelsMap.end();id++){
-   delete (*id).second;
-  }
-
-
-  //delete m_config;
-  for(std::map<std::string,LHCb::L0DUConfigs*>::iterator it = m_configs.begin();it!=m_configs.end();++it){
-    LHCb::L0DUConfigs* configs = (*it).second;
-    if( configs == NULL )continue;
-    configs->release();
-    delete configs;
-  }
-  m_configs.clear();
+  reset();  
   return GaudiTool::finalize();
 }
 
@@ -166,35 +105,86 @@ StatusCode L0DUConfigProvider::initialize(){
   //get condDB tool
   m_condDB = tool<IL0CondDBProvider>("L0CondDBProvider");
 
-  //  
-  m_separators = *(m_sepMap.begin());
-  if(m_sepMap.size() != 1)
-    warning() << "A single pair of separators must be defined - will use the first : " 
-              << m_separators.first << "data" << m_separators.second << endmsg;
+  return update();
+}
 
-  std::string slot = ( "" == rootInTES() ) ? "T0" : rootInTES() ;
+void L0DUConfigProvider::handler(Property&) {
+    m_uptodate=false;
+}
+
+void L0DUConfigProvider::reset() {
+  debug() << "reset L0DUConfigProvider" << endmsg;
+
+  debug() << "Deleting " <<  m_triggersMap.size() << " L0DUTrigger* " << endmsg;
+  for(LHCb::L0DUTrigger::Map::iterator id=m_triggersMap.begin();id!=m_triggersMap.end();id++){
+   delete id->second;
+  }
+  m_triggersMap.clear();
+  
+  debug() << "Deleting " <<  m_dataMap.size() << " L0DUElementaryData* " << endmsg;
+  for(LHCb::L0DUElementaryData::Map::iterator id=m_dataMap.begin();id!=m_dataMap.end();id++){
+    delete id->second;
+  }  
+  m_dataMap.clear();
+  m_pData = 0;
+  m_cData = 0;
 
 
+  debug() << "Deleting " <<  m_conditionsMap.size() << " L0DUElementaryConditions* " << endmsg;
+  for(LHCb::L0DUElementaryCondition::Map::iterator id=m_conditionsMap.begin();id!=m_conditionsMap.end();id++){
+    delete id->second;
+  }
+  m_conditionsMap.clear();
+  
+  debug() << "Deleting " <<  m_channelsMap.size() << " L0DUElementaryChannels* " << endmsg;
+  for(LHCb::L0DUChannel::Map::iterator id=m_channelsMap.begin();id!=m_channelsMap.end();id++){
+   delete id->second;
+  }
+  m_channelsMap.clear();
+
+
+  //delete m_config;
+  for(std::map<std::string,LHCb::L0DUConfigs*>::iterator it = m_configs.begin();it!=m_configs.end();++it){
+    LHCb::L0DUConfigs* configs = it->second;
+    if( configs == 0 )continue;
+    configs->release();
+    delete configs;
+  }
+  m_config = 0;
+  m_configs.clear();
+}
+
+StatusCode L0DUConfigProvider::update() {
+
+  int index = m_tck.rfind("0x") + 2 ;
+  std::string tck = m_tck.substr( index, m_tck.length() );
+  std::istringstream is( tck.c_str() );
+  is >> std::hex >> m_tckopts  ;
 
   // load predefined elementary data
   hardcodedData();
   constantData();
+
   //=====================================
   if(m_def == "")m_def = "No Description";
   if(m_template)m_def += " (L0DUConfig.Template)";
   else if(m_channels.size()   == 0  || m_conditions.size() == 0) {
     Warning("Configuration (TCK = " + format("0x%04X" , m_tckopts )  + ") is empty",StatusCode::SUCCESS).ignore();
   }
-  if( slot == "") slot = "T0";
 
-  sc = createTriggers();  // the main method - crate triggers->channels->conditions(->data) chain
+  StatusCode sc = createTriggers();  // the main method - crate triggers->channels->conditions(->data) chain
 
   if(sc.isFailure()){
     fatal() << " configuring L0DU (TCK = " << format("0x%04X" , m_tckopts )  << ") failed" << endmsg;
     return StatusCode::FAILURE; 
   }
 
+  std::string slot = ( "" == rootInTES() ) ? "T0" : rootInTES() ;
+  if( slot == "") slot = "T0";
+
   createConfig(slot);
+
+  m_uptodate = true;
   return StatusCode::SUCCESS;
 }
 
@@ -222,8 +212,7 @@ void L0DUConfigProvider::createConfig(std::string slot){
   if(m_triggersMap.size() !=0)m_config->setTriggers( m_triggersMap);
   std::map<std::string,LHCb::L0DUConfigs*>::iterator it = m_configs.find( slot );
   if(it == m_configs.end()){
-    LHCb::L0DUConfigs* confs = new LHCb::L0DUConfigs();
-    m_configs[slot] = confs;
+    m_configs[slot] = new LHCb::L0DUConfigs();
   }
   m_configs[slot]->insert( m_config );
   //=====================================
@@ -290,13 +279,10 @@ void L0DUConfigProvider::hardcodedData( ) {
 }
 
 //=============================================================================
-void L0DUConfigProvider::predefinedData(const std::string& name,const int param[L0DUBase::Conditions::LastIndex]){
-  LHCb::L0DUElementaryData* data = 
-    new LHCb::L0DUElementaryData(m_pData,LHCb::L0DUElementaryData::Predefined,name,"Id",name);
-  m_conditionOrder[name] = param[L0DUBase::Conditions::Order];
-  m_dataMap[name]=data ;
+void L0DUConfigProvider::predefinedData(const std::string& name,const int /*param*/[L0DUBase::Conditions::LastIndex]){
+  LHCb::L0DUElementaryData* data = new LHCb::L0DUElementaryData(m_pData++,LHCb::L0DUElementaryData::Predefined,name,"Id",name);
+  m_dataMap[name]= data;
   debug() << "Predefined Data : " << data->description() << endmsg;
-  m_pData++;
 }
 
 //---------------
@@ -308,7 +294,7 @@ void L0DUConfigProvider::constantData(){
     LHCb::L0DUElementaryData* data = 
       new LHCb::L0DUElementaryData(m_pData+m_cData,LHCb::L0DUElementaryData::Constant,(*idata).first,"Id",(*idata).first);
     data->setOperand( (*idata).second , 1. );
-    m_dataMap[(*idata).first]=data ;
+    m_dataMap[idata->first]=data ;
     debug() << "Constant Data : " << data->summary() << endmsg;
     m_cData++;
   }  
@@ -317,6 +303,11 @@ void L0DUConfigProvider::constantData(){
 
 //===============================================================
 std::vector<std::string> L0DUConfigProvider::Parse(std::string flag, std::vector<std::string> config ){
+
+  std::pair <std::string,std::string> separators = *(m_sepMap.begin());
+  if(m_sepMap.size() != 1)
+    warning() << "A single pair of separators must be defined - will use the first : " 
+              << separators.first << "data" << separators.second << endmsg;
 
   std::vector<std::string> values;
   for(std::vector<std::string>::iterator iconfig= config.begin(); iconfig != config.end(); iconfig++){
@@ -332,26 +323,26 @@ std::vector<std::string> L0DUConfigProvider::Parse(std::string flag, std::vector
       verbose() << "Flag '" << flag << "' found in the data string '" << *iconfig << "'" << endmsg;
 
       // loop over separators
-      int id = (*iconfig).find(m_separators.first);
+      int id = (*iconfig).find(separators.first);
       if( id < 0){
         error() << "Unable to parse the tag " << *iconfig 
-                << " due to a missing separator (" <<m_separators.first<<"..."<<m_separators.second<<")"<< endmsg;
+                << " due to a missing separator (" <<separators.first<<"..."<<separators.second<<")"<< endmsg;
         values.clear();
         return values;
       }
       while(id >= 0){
-        int from = (*iconfig).find(m_separators.first,id); 
-        int to   = (*iconfig).find(m_separators.second,from+1);
+        int from = (*iconfig).find(separators.first,id); 
+        int to   = (*iconfig).find(separators.second,from+1);
         if(from != -1 && to != -1){
           val = (*iconfig).substr(from+1, to-from-1);
           verbose() << "parsed value = '" << val << "'" <<endmsg;  
           values.push_back( val );
-          id = (*iconfig).find(m_separators.first,to+1);
+          id = (*iconfig).find(separators.first,to+1);
         }
         else{
           id = -1;    
           error() << "Unable to parse the tag " << *iconfig 
-                  << " due to a missing separator (" <<m_separators.first<<"..."<<m_separators.second<<")"<< endmsg;
+                  << " due to a missing separator (" <<separators.first<<"..."<<separators.second<<")"<< endmsg;
           values.clear();
           return values;
         }
@@ -376,7 +367,7 @@ StatusCode L0DUConfigProvider::createData(){
     // check all tags exist
     for(std::vector<std::string>::iterator itag = (*iconfig).begin() ; itag != (*iconfig).end() ; itag++){
       bool ok = false;
-      for(std::vector<std::string>::iterator iflag = m_dataFlags.begin();iflag!=m_dataFlags.end();iflag++){
+      for(std::vector<std::string>::const_iterator iflag = s_dataFlags.begin();iflag!=s_dataFlags.end();iflag++){
         std::string uTag(*itag);
         std::string uFlag(*iflag);
         std::transform( (*itag).begin() , (*itag).end() , uTag.begin () , ::toupper ) ;
@@ -387,7 +378,7 @@ StatusCode L0DUConfigProvider::createData(){
       if( !ok ){ 
         error() << "Description tag : '" << *itag << "' is unknown for the new DATA defined via options (num =  " 
                 << iconfig-m_data.begin()  << ")" << endmsg;
-        info()  << "Allowed flags for new data description are : " << m_dataFlags << endmsg;
+        info()  << "Allowed flags for new data description are : " << s_dataFlags << endmsg;
         return StatusCode::FAILURE;
       } 
     }
@@ -430,13 +421,13 @@ StatusCode L0DUConfigProvider::createData(){
 
     bool ok = false;
     unsigned int dim = 0;
-    for(std::vector<std::pair<std::string,unsigned int> >::iterator iop = m_operators.begin();iop!=m_operators.end();++iop){
+    for(std::vector<std::pair<std::string,unsigned int> >::const_iterator iop = s_operators.begin();iop!=s_operators.end();++iop){
       if( op == (*iop).first){ok=true;dim=(*iop).second;break;}
     }
     if(!ok){
       fatal() << "requested operator "<< op <<" is not allowed " << endmsg;
       info() << "allowed operators are : " << endmsg;
-      for(std::vector<std::pair<std::string, unsigned int> >::iterator  it = m_operators.begin();it!=m_operators.end();it++){
+      for(std::vector<std::pair<std::string, unsigned int> >::const_iterator  it = s_operators.begin();it!=s_operators.end();it++){
         info() << "--> " << (*it).first << endmsg;
         return StatusCode::FAILURE;
       } 
@@ -492,7 +483,7 @@ StatusCode L0DUConfigProvider::createConditions(){
     // check all tags exist
     for(std::vector<std::string>::iterator itag = (*iconfig).begin() ; itag != (*iconfig).end() ; itag++){
       bool ok = false;
-      for(std::vector<std::string>::iterator iflag = m_condFlags.begin();iflag!=m_condFlags.end();iflag++){
+      for(std::vector<std::string>::const_iterator iflag = s_condFlags.begin();iflag!=s_condFlags.end();iflag++){
         std::string uTag(*itag);
         std::string uFlag(*iflag);
         std::transform( (*itag).begin() , (*itag).end() , uTag.begin () , ::toupper ) ;
@@ -503,7 +494,7 @@ StatusCode L0DUConfigProvider::createConditions(){
       if( !ok ){ 
         error() << "Description tag : '" << *itag << "' is unknown for the new CONDITION defined via options (num =  " 
                 << iconfig-m_conditions.begin()  << ")" << endmsg;
-        info()  << "Allowed flags for new CONDITION description are : " << m_condFlags << endmsg;
+        info()  << "Allowed flags for new CONDITION description are : " << s_condFlags << endmsg;
         return StatusCode::FAILURE;
       } 
     }
@@ -588,12 +579,12 @@ StatusCode L0DUConfigProvider::createConditions(){
     std::string comp =  *(values.begin()); // The COMPARATOR
 
     bool ok = false;
-    for(std::vector<std::string>::iterator icomp = m_comparators.begin();icomp!=m_comparators.end();++icomp){
+    for(std::vector<std::string>::const_iterator icomp = s_comparators.begin();icomp!=s_comparators.end();++icomp){
       if( comp == *icomp){ok=true;break;}
     }
     if(!ok){
       fatal() << "requested comparator "<< comp <<" is not allowed " << endmsg;
-      info() << "Allowes comparators are : " << m_comparators << endmsg;
+      info() << "Allowes comparators are : " << s_comparators << endmsg;
       return StatusCode::FAILURE;
     }
    
@@ -666,7 +657,7 @@ StatusCode L0DUConfigProvider::createChannels(){
     // check all tags exist
     for(std::vector<std::string>::iterator itag = (*iconfig).begin() ; itag != (*iconfig).end() ; itag++){
       bool ok = false;
-      for(std::vector<std::string>::iterator iflag = m_chanFlags.begin();iflag!=m_chanFlags.end();iflag++){
+      for(std::vector<std::string>::const_iterator iflag = s_chanFlags.begin();iflag!=s_chanFlags.end();iflag++){
         std::string uTag(*itag);
         std::string uFlag(*iflag);
         std::transform( (*itag).begin() , (*itag).end() , uTag.begin () , ::toupper ) ;
@@ -677,7 +668,7 @@ StatusCode L0DUConfigProvider::createChannels(){
       if( !ok ){ 
         error() << "Description tag : '" << *itag << "' is unknown for the new CHANNEL defined via options (num =  " 
                 << iconfig-m_channels.begin()  << ")" << endmsg;
-        info()  << "Allowed flags for new CHANNEL description are : " << m_chanFlags << endmsg;
+        info()  << "Allowed flags for new CHANNEL description are : " << s_chanFlags << endmsg;
         return StatusCode::FAILURE;
       } 
     }    
@@ -887,7 +878,7 @@ StatusCode L0DUConfigProvider::createTriggers(){
     // check all tags exist
     for(std::vector<std::string>::iterator itag = (*iconfig).begin() ; itag != (*iconfig).end() ; itag++){
       bool ok = false;
-      for(std::vector<std::string>::iterator iflag = m_trigFlags.begin();iflag!=m_trigFlags.end();iflag++){
+      for(std::vector<std::string>::const_iterator iflag = s_trigFlags.begin();iflag!=s_trigFlags.end();iflag++){
         std::string uTag(*itag);
         std::string uFlag(*iflag);
         std::transform( (*itag).begin() , (*itag).end() , uTag.begin () , ::toupper ) ;
@@ -898,7 +889,7 @@ StatusCode L0DUConfigProvider::createTriggers(){
       if( !ok ){ 
         error() << "Description tag : '" << *itag << "' is unknown for the new TRIGGER set defined via options (num =  " 
                 << iconfig-m_triggers.begin()  << ")" << endmsg;
-        info()  << "Allowed flags for new TRIGGER description are : " << m_trigFlags << endmsg;
+        info()  << "Allowed flags for new TRIGGER description are : " << s_trigFlags << endmsg;
         return StatusCode::FAILURE;
       } 
     }
@@ -1042,7 +1033,7 @@ StatusCode L0DUConfigProvider::createTriggers(){
 void L0DUConfigProvider::predefinedTriggers(){
 
   // create predefined triggers (decisionType = physics)
-  for(std::map<std::string,int>::iterator imap = m_tIndices.begin() ; m_tIndices.end() != imap ; imap++){
+  for(std::map<std::string,int>::const_iterator imap = s_tIndices.begin() ; s_tIndices.end() != imap ; imap++){
     LHCb::L0DUTrigger* trigger = new LHCb::L0DUTrigger((*imap).second,  (*imap).first ) ;
     m_triggersMap[ (*imap).first ] = trigger;
   }    
