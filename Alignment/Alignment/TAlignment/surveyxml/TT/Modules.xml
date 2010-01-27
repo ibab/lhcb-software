@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE DDDB SYSTEM "../../../DTD/structure.dtd">
+<DDDB>
+  <condition classID="6" name="TTaXLayerR3Module6T">
+    <paramVector name="dPosXYZ"  type="double">-0.593*mm -0.160*mm -0.858*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.121*mrad  0.000*mrad -0.256*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR3Module6B">
+    <paramVector name="dPosXYZ"  type="double"> 0.593*mm  0.160*mm -0.858*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.121*mrad -0.000*mrad -0.256*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR3Module5T">
+    <paramVector name="dPosXYZ"  type="double">-0.606*mm -0.115*mm -0.993*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.251*mrad  0.000*mrad -0.257*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR3Module5B">
+    <paramVector name="dPosXYZ"  type="double"> 0.606*mm  0.115*mm -0.993*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.251*mrad -0.000*mrad -0.257*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR3Module4T">
+    <paramVector name="dPosXYZ"  type="double">-0.501*mm -0.072*mm -0.957*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.240*mrad  0.000*mrad -0.285*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR3Module4B">
+    <paramVector name="dPosXYZ"  type="double"> 0.501*mm  0.072*mm -0.957*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.240*mrad -0.000*mrad -0.285*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR3Module3T">
+    <paramVector name="dPosXYZ"  type="double">-0.527*mm -0.216*mm -0.956*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.312*mrad  0.000*mrad -0.259*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR3Module3B">
+    <paramVector name="dPosXYZ"  type="double"> 0.527*mm  0.216*mm -0.956*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.312*mrad -0.000*mrad -0.259*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR3Module2T">
+    <paramVector name="dPosXYZ"  type="double">-0.506*mm -0.210*mm -0.979*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.411*mrad  0.000*mrad -0.342*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR3Module2B">
+    <paramVector name="dPosXYZ"  type="double"> 0.506*mm  0.210*mm -0.979*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.411*mrad -0.000*mrad -0.342*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR3Module1T">
+    <paramVector name="dPosXYZ"  type="double">-0.532*mm -0.209*mm -0.894*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.439*mrad  0.000*mrad -0.253*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR3Module1B">
+    <paramVector name="dPosXYZ"  type="double"> 0.532*mm  0.209*mm -0.894*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.439*mrad -0.000*mrad -0.253*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR2Module3T">
+    <paramVector name="dPosXYZ"  type="double">-0.439*mm -0.314*mm -0.739*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.472*mrad  0.000*mrad -0.198*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR2Module3B">
+    <paramVector name="dPosXYZ"  type="double"> 0.439*mm  0.314*mm -0.739*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.472*mrad -0.000*mrad -0.198*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR2Module2T">
+    <paramVector name="dPosXYZ"  type="double">-0.463*mm -0.364*mm -1.004*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.000*mrad  0.000*mrad  0.000*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.500*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR2Module2B">
+    <paramVector name="dPosXYZ"  type="double"> 0.053*mm -0.446*mm -0.992*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.000*mrad  0.000*mrad  0.547*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.500*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR2Module1T">
+    <paramVector name="dPosXYZ"  type="double"> 0.058*mm -0.068*mm -0.717*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.161*mrad  0.000*mrad  0.129*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR2Module1B">
+    <paramVector name="dPosXYZ"  type="double">-0.058*mm  0.068*mm -0.717*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.161*mrad -0.000*mrad  0.129*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR1Module6T">
+    <paramVector name="dPosXYZ"  type="double"> 0.139*mm  0.019*mm -0.598*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.200*mrad  0.000*mrad  0.185*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR1Module6B">
+    <paramVector name="dPosXYZ"  type="double">-0.139*mm -0.019*mm -0.598*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.200*mrad -0.000*mrad  0.185*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR1Module5T">
+    <paramVector name="dPosXYZ"  type="double"> 0.160*mm  0.020*mm -0.611*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.075*mrad  0.000*mrad  0.135*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR1Module5B">
+    <paramVector name="dPosXYZ"  type="double">-0.160*mm -0.020*mm -0.611*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.075*mrad -0.000*mrad  0.135*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR1Module4T">
+    <paramVector name="dPosXYZ"  type="double"> 0.186*mm -0.005*mm -0.514*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.174*mrad  0.000*mrad  0.160*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR1Module4B">
+    <paramVector name="dPosXYZ"  type="double">-0.186*mm  0.005*mm -0.514*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.174*mrad -0.000*mrad  0.160*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR1Module3T">
+    <paramVector name="dPosXYZ"  type="double"> 0.198*mm  0.105*mm -0.460*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.177*mrad  0.000*mrad  0.145*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR1Module3B">
+    <paramVector name="dPosXYZ"  type="double">-0.198*mm -0.105*mm -0.460*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.177*mrad -0.000*mrad  0.145*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR1Module2T">
+    <paramVector name="dPosXYZ"  type="double"> 0.206*mm  0.054*mm -0.349*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.132*mrad  0.000*mrad  0.185*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR1Module2B">
+    <paramVector name="dPosXYZ"  type="double">-0.206*mm -0.054*mm -0.349*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.132*mrad -0.000*mrad  0.185*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR1Module1T">
+    <paramVector name="dPosXYZ"  type="double"> 0.162*mm  0.021*mm -0.388*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.119*mrad  0.000*mrad  0.099*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayerR1Module1B">
+    <paramVector name="dPosXYZ"  type="double">-0.162*mm -0.021*mm -0.388*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.119*mrad -0.000*mrad  0.099*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR3Module6T">
+    <paramVector name="dPosXYZ"  type="double">-0.479*mm -0.142*mm -0.958*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.212*mrad  0.000*mrad -0.156*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR3Module6B">
+    <paramVector name="dPosXYZ"  type="double"> 0.479*mm  0.142*mm -0.958*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.212*mrad -0.000*mrad -0.156*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR3Module5T">
+    <paramVector name="dPosXYZ"  type="double">-0.462*mm -0.186*mm -0.872*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.223*mrad  0.000*mrad -0.150*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR3Module5B">
+    <paramVector name="dPosXYZ"  type="double"> 0.462*mm  0.186*mm -0.872*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.223*mrad -0.000*mrad -0.150*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR3Module4T">
+    <paramVector name="dPosXYZ"  type="double">-0.484*mm -0.123*mm -0.934*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.356*mrad  0.000*mrad -0.158*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR3Module4B">
+    <paramVector name="dPosXYZ"  type="double"> 0.484*mm  0.123*mm -0.934*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.356*mrad -0.000*mrad -0.158*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR3Module3T">
+    <paramVector name="dPosXYZ"  type="double">-0.416*mm -0.181*mm -0.856*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.292*mrad  0.000*mrad -0.166*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR3Module3B">
+    <paramVector name="dPosXYZ"  type="double"> 0.416*mm  0.181*mm -0.856*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.292*mrad -0.000*mrad -0.166*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR3Module2T">
+    <paramVector name="dPosXYZ"  type="double">-0.486*mm -0.163*mm -1.059*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.571*mrad  0.000*mrad -0.192*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR3Module2B">
+    <paramVector name="dPosXYZ"  type="double"> 0.486*mm  0.163*mm -1.059*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.571*mrad -0.000*mrad -0.192*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR3Module1T">
+    <paramVector name="dPosXYZ"  type="double">-0.463*mm -0.226*mm -0.933*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.577*mrad  0.000*mrad -0.193*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR3Module1B">
+    <paramVector name="dPosXYZ"  type="double"> 0.463*mm  0.226*mm -0.933*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.577*mrad -0.000*mrad -0.193*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR2Module3T">
+    <paramVector name="dPosXYZ"  type="double">-0.459*mm -0.206*mm -0.876*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.525*mrad  0.000*mrad -0.119*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR2Module3B">
+    <paramVector name="dPosXYZ"  type="double"> 0.459*mm  0.206*mm -0.876*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.525*mrad -0.000*mrad -0.119*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR2Module2T">
+    <paramVector name="dPosXYZ"  type="double">-0.542*mm -0.267*mm -0.961*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.000*mrad  0.000*mrad -0.031*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.500*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR2Module2B">
+    <paramVector name="dPosXYZ"  type="double"> 0.091*mm -0.331*mm -0.922*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.000*mrad  0.000*mrad  0.047*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.500*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR2Module1T">
+    <paramVector name="dPosXYZ"  type="double"> 0.192*mm -0.160*mm -0.952*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.031*mrad  0.000*mrad  0.235*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR2Module1B">
+    <paramVector name="dPosXYZ"  type="double">-0.192*mm  0.160*mm -0.952*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.031*mrad -0.000*mrad  0.235*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR1Module6T">
+    <paramVector name="dPosXYZ"  type="double"> 0.150*mm -0.088*mm -0.626*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.047*mrad  0.000*mrad  0.201*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR1Module6B">
+    <paramVector name="dPosXYZ"  type="double">-0.150*mm  0.088*mm -0.626*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.047*mrad -0.000*mrad  0.201*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR1Module5T">
+    <paramVector name="dPosXYZ"  type="double"> 0.136*mm -0.078*mm -0.608*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.051*mrad  0.000*mrad  0.170*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR1Module5B">
+    <paramVector name="dPosXYZ"  type="double">-0.136*mm  0.078*mm -0.608*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.051*mrad -0.000*mrad  0.170*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR1Module4T">
+    <paramVector name="dPosXYZ"  type="double"> 0.208*mm -0.092*mm -0.618*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.027*mrad  0.000*mrad  0.215*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR1Module4B">
+    <paramVector name="dPosXYZ"  type="double">-0.208*mm  0.092*mm -0.618*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.027*mrad -0.000*mrad  0.215*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR1Module3T">
+    <paramVector name="dPosXYZ"  type="double"> 0.249*mm  0.000*mm -0.395*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.072*mrad  0.000*mrad  0.217*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR1Module3B">
+    <paramVector name="dPosXYZ"  type="double">-0.249*mm -0.000*mm -0.395*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.072*mrad -0.000*mrad  0.217*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR1Module2T">
+    <paramVector name="dPosXYZ"  type="double"> 0.173*mm -0.057*mm -0.388*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.160*mrad  0.000*mrad  0.138*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR1Module2B">
+    <paramVector name="dPosXYZ"  type="double">-0.173*mm  0.057*mm -0.388*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.160*mrad -0.000*mrad  0.138*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR1Module1T">
+    <paramVector name="dPosXYZ"  type="double"> 0.105*mm -0.015*mm -0.342*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.090*mrad  0.000*mrad  0.101*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayerR1Module1B">
+    <paramVector name="dPosXYZ"  type="double">-0.105*mm  0.015*mm -0.342*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.090*mrad -0.000*mrad  0.101*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR3Module6T">
+    <paramVector name="dPosXYZ"  type="double"> 0.496*mm -0.126*mm  0.962*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.257*mrad  0.000*mrad  0.155*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR3Module6B">
+    <paramVector name="dPosXYZ"  type="double">-0.496*mm  0.126*mm  0.962*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.257*mrad -0.000*mrad  0.155*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR3Module5T">
+    <paramVector name="dPosXYZ"  type="double"> 0.372*mm -0.182*mm  0.941*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.215*mrad  0.000*mrad -0.022*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR3Module5B">
+    <paramVector name="dPosXYZ"  type="double">-0.372*mm  0.182*mm  0.941*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.215*mrad -0.000*mrad -0.022*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR3Module4T">
+    <paramVector name="dPosXYZ"  type="double"> 0.317*mm -0.095*mm  1.024*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.303*mrad  0.000*mrad -0.191*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR3Module4B">
+    <paramVector name="dPosXYZ"  type="double">-0.317*mm  0.095*mm  1.024*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.303*mrad -0.000*mrad -0.191*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR3Module3T">
+    <paramVector name="dPosXYZ"  type="double"> 0.459*mm -0.121*mm  0.991*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.330*mrad  0.000*mrad -0.066*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR3Module3B">
+    <paramVector name="dPosXYZ"  type="double">-0.459*mm  0.121*mm  0.991*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.330*mrad -0.000*mrad -0.066*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR3Module2T">
+    <paramVector name="dPosXYZ"  type="double"> 0.450*mm -0.094*mm  0.967*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.427*mrad  0.000*mrad -0.068*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR3Module2B">
+    <paramVector name="dPosXYZ"  type="double">-0.450*mm  0.094*mm  0.967*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.427*mrad -0.000*mrad -0.068*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR3Module1T">
+    <paramVector name="dPosXYZ"  type="double"> 0.444*mm -0.132*mm  1.067*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.585*mrad  0.000*mrad  0.020*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR3Module1B">
+    <paramVector name="dPosXYZ"  type="double">-0.444*mm  0.132*mm  1.067*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.585*mrad -0.000*mrad  0.020*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR2Module5T">
+    <paramVector name="dPosXYZ"  type="double"> 0.467*mm -0.029*mm  1.141*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.773*mrad  0.000*mrad  0.080*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR2Module5B">
+    <paramVector name="dPosXYZ"  type="double">-0.467*mm  0.029*mm  1.141*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.773*mrad -0.000*mrad  0.080*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR2Module4T">
+    <paramVector name="dPosXYZ"  type="double"> 0.525*mm -0.049*mm  1.254*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.723*mrad  0.000*mrad  0.021*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR2Module4B">
+    <paramVector name="dPosXYZ"  type="double">-0.525*mm  0.049*mm  1.254*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.723*mrad -0.000*mrad  0.021*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR2Module3B">
+    <paramVector name="dPosXYZ"  type="double">-0.383*mm -0.149*mm -0.122*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.000*mrad  0.000*mrad -0.266*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.500*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR2Module3T">
+    <paramVector name="dPosXYZ"  type="double">-0.076*mm -0.178*mm  0.958*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.000*mrad  0.000*mrad  0.125*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.500*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR2Module2T">
+    <paramVector name="dPosXYZ"  type="double">-0.046*mm -0.239*mm  0.816*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.035*mrad  0.000*mrad -0.081*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR2Module2B">
+    <paramVector name="dPosXYZ"  type="double"> 0.046*mm  0.239*mm  0.816*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.035*mrad -0.000*mrad -0.081*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR2Module1T">
+    <paramVector name="dPosXYZ"  type="double">-0.137*mm -0.123*mm  0.814*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.001*mrad  0.000*mrad -0.203*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR2Module1B">
+    <paramVector name="dPosXYZ"  type="double"> 0.137*mm  0.123*mm  0.814*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.001*mrad -0.000*mrad -0.203*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR1Module6T">
+    <paramVector name="dPosXYZ"  type="double">-0.025*mm -0.170*mm  0.629*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.029*mrad  0.000*mrad -0.161*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR1Module6B">
+    <paramVector name="dPosXYZ"  type="double"> 0.025*mm  0.170*mm  0.629*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.029*mrad -0.000*mrad -0.161*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR1Module5T">
+    <paramVector name="dPosXYZ"  type="double">-0.089*mm -0.092*mm  0.749*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.128*mrad  0.000*mrad -0.279*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR1Module5B">
+    <paramVector name="dPosXYZ"  type="double"> 0.089*mm  0.092*mm  0.749*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.128*mrad -0.000*mrad -0.279*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR1Module4T">
+    <paramVector name="dPosXYZ"  type="double">-0.193*mm -0.126*mm  0.620*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.021*mrad  0.000*mrad -0.239*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR1Module4B">
+    <paramVector name="dPosXYZ"  type="double"> 0.193*mm  0.126*mm  0.620*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.021*mrad -0.000*mrad -0.239*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR1Module3T">
+    <paramVector name="dPosXYZ"  type="double">-0.110*mm -0.135*mm  0.509*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.019*mrad  0.000*mrad -0.201*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR1Module3B">
+    <paramVector name="dPosXYZ"  type="double"> 0.110*mm  0.135*mm  0.509*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.019*mrad -0.000*mrad -0.201*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR1Module2T">
+    <paramVector name="dPosXYZ"  type="double">-0.015*mm -0.144*mm  0.471*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.044*mrad  0.000*mrad -0.140*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR1Module2B">
+    <paramVector name="dPosXYZ"  type="double"> 0.015*mm  0.144*mm  0.471*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.044*mrad -0.000*mrad -0.140*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR1Module1T">
+    <paramVector name="dPosXYZ"  type="double">-0.068*mm -0.226*mm  0.350*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.068*mrad  0.000*mrad -0.234*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayerR1Module1B">
+    <paramVector name="dPosXYZ"  type="double"> 0.068*mm  0.226*mm  0.350*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.068*mrad -0.000*mrad -0.234*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR3Module6T">
+    <paramVector name="dPosXYZ"  type="double"> 0.364*mm -0.146*mm  0.764*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.173*mrad  0.000*mrad -0.086*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR3Module6B">
+    <paramVector name="dPosXYZ"  type="double">-0.364*mm  0.146*mm  0.764*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.173*mrad -0.000*mrad -0.086*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR3Module5T">
+    <paramVector name="dPosXYZ"  type="double"> 0.402*mm -0.116*mm  0.843*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.345*mrad  0.000*mrad -0.128*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR3Module5B">
+    <paramVector name="dPosXYZ"  type="double">-0.402*mm  0.116*mm  0.843*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.345*mrad -0.000*mrad -0.128*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR3Module4T">
+    <paramVector name="dPosXYZ"  type="double"> 0.390*mm -0.066*mm  0.863*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.351*mrad  0.000*mrad -0.132*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR3Module4B">
+    <paramVector name="dPosXYZ"  type="double">-0.390*mm  0.066*mm  0.863*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.351*mrad -0.000*mrad -0.132*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR3Module3T">
+    <paramVector name="dPosXYZ"  type="double"> 0.445*mm -0.044*mm  1.016*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.496*mrad  0.000*mrad -0.021*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR3Module3B">
+    <paramVector name="dPosXYZ"  type="double">-0.445*mm  0.044*mm  1.016*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.496*mrad -0.000*mrad -0.021*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR3Module2T">
+    <paramVector name="dPosXYZ"  type="double"> 0.445*mm -0.003*mm  1.048*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.671*mrad  0.000*mrad -0.012*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR3Module2B">
+    <paramVector name="dPosXYZ"  type="double">-0.445*mm  0.003*mm  1.048*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.671*mrad -0.000*mrad -0.012*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR3Module1T">
+    <paramVector name="dPosXYZ"  type="double"> 0.540*mm -0.087*mm  1.005*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.656*mrad  0.000*mrad  0.025*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR3Module1B">
+    <paramVector name="dPosXYZ"  type="double">-0.540*mm  0.087*mm  1.005*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.656*mrad -0.000*mrad  0.025*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR2Module5T">
+    <paramVector name="dPosXYZ"  type="double"> 0.465*mm  0.018*mm  0.961*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.602*mrad  0.000*mrad -0.005*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR2Module5B">
+    <paramVector name="dPosXYZ"  type="double">-0.465*mm -0.018*mm  0.961*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.602*mrad -0.000*mrad -0.005*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR2Module4T">
+    <paramVector name="dPosXYZ"  type="double"> 0.416*mm  0.022*mm  1.133*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.890*mrad  0.000*mrad -0.043*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR2Module4B">
+    <paramVector name="dPosXYZ"  type="double">-0.416*mm -0.022*mm  1.133*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.890*mrad -0.000*mrad -0.043*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR2Module3B">
+    <paramVector name="dPosXYZ"  type="double">-0.437*mm -0.255*mm -0.271*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.000*mrad  0.000*mrad -0.469*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.500*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR2Module3T">
+    <paramVector name="dPosXYZ"  type="double">-0.015*mm -0.154*mm  0.753*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.000*mrad  0.000*mrad  0.859*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.500*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR2Module2T">
+    <paramVector name="dPosXYZ"  type="double">-0.035*mm -0.237*mm  0.791*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.256*mrad  0.000*mrad -0.179*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR2Module2B">
+    <paramVector name="dPosXYZ"  type="double"> 0.035*mm  0.237*mm  0.791*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.256*mrad -0.000*mrad -0.179*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR2Module1T">
+    <paramVector name="dPosXYZ"  type="double"> 0.015*mm -0.241*mm  0.776*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.028*mrad  0.000*mrad -0.162*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR2Module1B">
+    <paramVector name="dPosXYZ"  type="double">-0.015*mm  0.241*mm  0.776*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.028*mrad -0.000*mrad -0.162*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR1Module6T">
+    <paramVector name="dPosXYZ"  type="double"> 0.018*mm -0.199*mm  0.622*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.074*mrad  0.000*mrad -0.177*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR1Module6B">
+    <paramVector name="dPosXYZ"  type="double">-0.018*mm  0.199*mm  0.622*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.074*mrad -0.000*mrad -0.177*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR1Module5T">
+    <paramVector name="dPosXYZ"  type="double"> 0.001*mm -0.153*mm  0.614*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.136*mrad  0.000*mrad -0.216*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR1Module5B">
+    <paramVector name="dPosXYZ"  type="double">-0.001*mm  0.153*mm  0.614*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.136*mrad -0.000*mrad -0.216*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR1Module4T">
+    <paramVector name="dPosXYZ"  type="double">-0.070*mm -0.109*mm  0.526*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.033*mrad  0.000*mrad -0.219*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR1Module4B">
+    <paramVector name="dPosXYZ"  type="double"> 0.070*mm  0.109*mm  0.526*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.033*mrad -0.000*mrad -0.219*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR1Module3T">
+    <paramVector name="dPosXYZ"  type="double">-0.141*mm -0.150*mm  0.409*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.029*mrad  0.000*mrad -0.279*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR1Module3B">
+    <paramVector name="dPosXYZ"  type="double"> 0.141*mm  0.150*mm  0.409*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.029*mrad -0.000*mrad -0.279*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR1Module2T">
+    <paramVector name="dPosXYZ"  type="double">-0.024*mm -0.158*mm  0.370*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.025*mrad  0.000*mrad -0.189*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR1Module2B">
+    <paramVector name="dPosXYZ"  type="double"> 0.024*mm  0.158*mm  0.370*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.025*mrad -0.000*mrad -0.189*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR1Module1T">
+    <paramVector name="dPosXYZ"  type="double">-0.068*mm -0.172*mm  0.539*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double">-0.063*mrad  0.000*mrad -0.247*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">39.000*mm -416.525*mm  0.000*mm </paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayerR1Module1B">
+    <paramVector name="dPosXYZ"  type="double"> 0.068*mm  0.172*mm  0.539*mm </paramVector>
+    <paramVector name="dRotXYZ"  type="double"> 0.063*mrad -0.000*mrad -0.247*mrad </paramVector>
+    <paramVector name="pivotXYZ" type="double">-39.000*mm 1078.675*mm  0.000*mm </paramVector>
+  </condition>
+</DDDB>
