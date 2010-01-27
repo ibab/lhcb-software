@@ -1,9 +1,22 @@
-!$Id: release.notes,v 1.32 2010-01-26 18:56:39 jpalac Exp $
+!$Id: release.notes,v 1.33 2010-01-27 13:42:25 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2010-01-27 - Juan Palacios
+ - python/PhysSelPython/Wrappers.py
+  . Selection, SelectionSequence raise PhysSelPython.Wrappers.NameError if
+    attempt is made to create or clone one with the name of a previously
+    existing one.
+ - tests
+  . Switch off tests to do with algorithms raising if attempt is made to 
+    instantiate them or clone them with the name of an existing algorithm. 
+    This isn't done in Gaudi, and we are trying to replicate that (awful) 
+    behaviour.
+  . Add tests for Selection and SelectionSequence raising if attempt is made to
+    create or clone them with name of existing one.
 
 ! 2010-01-26 - Juan PALACIOS
  - Added tests directory with some py.test test functions.
