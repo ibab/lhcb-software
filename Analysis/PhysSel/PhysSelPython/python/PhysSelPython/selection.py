@@ -1,4 +1,4 @@
-#$Id: selection.py,v 1.4 2010-01-27 17:03:19 jpalac Exp $
+#$Id: selection.py,v 1.5 2010-01-27 20:52:09 jpalac Exp $
 """
 Classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -197,7 +197,7 @@ class SelSequence(object) :
         return self._name
 
     def algorithm(self) :
-        return self.alg
+        return self._topSelection.algorithm()
         
     def sequence(self) :
         if self.gaudiseq == None :

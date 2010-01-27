@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.27 2010-01-27 16:37:47 jpalac Exp $
+#$Id: Wrappers.py,v 1.28 2010-01-27 20:52:09 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -23,7 +23,7 @@ __all__ = ('DataOnDemand',
 __sequencerType = None
 
 try :
-    from Gaudi.Configuation import *
+    from Gaudi.Configuration import *
     from Configurables import GaudiSequencer
     __sequencerType = GaudiSequencer
 except :
