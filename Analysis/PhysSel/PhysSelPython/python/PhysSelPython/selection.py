@@ -1,4 +1,4 @@
-#$Id: selection.py,v 1.2 2010-01-27 16:15:12 jpalac Exp $
+#$Id: selection.py,v 1.3 2010-01-27 16:39:40 jpalac Exp $
 """
 Classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -185,13 +185,12 @@ class SelSequence(object) :
         del self.__ctor_dict__['self']
         del self.__ctor_dict__['name']
 
+        self.algos = copy(EventPreSelector)
         self._name = name
         self._topSelection = TopSelection
         self._seqType = SequencerType
-        self.algos = FlatSelectionListBuilder(TopSelection,
-                                              EventPreSelector,
-                                              PostSelectionAlgs).selectionList()
-
+        self.algos += FlatSelectionListBuilder(TopSelection).selectionList
+        self.algos += PostSelectionAlgs
         self.gaudiseq = None
         
     def name(self) :
@@ -224,9 +223,7 @@ class FlatSelectionListBuilder(object) :
     Builds a flat selection list. Takes a Selection object
     corresponding to the top selection algorithm, and recursively uses
     Selection.requiredSelections to make a flat list with all the required
-    selecitons needed to run the top selection. Can add list of event selection
-    algorithms to be added at the beginning of the sequence, and a list of
-    algorithms to be run straight after the selection algoritms.
+    selecitons needed to run the top selection. 
 
     Example: selection sequence for A -> B(bb), C(cc). Add pre-selectors alg0
              and alg1, and counter counter0.
@@ -236,9 +233,7 @@ class FlatSelectionListBuilder(object) :
     from A2B2bbC2cc import SelA2B2bbC2cc
     from PhysSelPython.selection import FlatSelectionListBuilder
     SeqA2B2bbC2cc = FlatSelectionListBuilder('SeqA2B2bbC2cc',
-                                             TopSelection = SelA2B2bbC2cc,
-                                             EventPreSelector = [alg0, alg1],
-                                             PostSelectionAlgs = [counter0]   )
+                                             TopSelection = SelA2B2bbC2cc)
     # use it
     mySelList = SeqA2B2bbC2cc.selectionList()
     print mySelList
@@ -246,21 +241,15 @@ class FlatSelectionListBuilder(object) :
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
 
     def __init__(self,
-                 TopSelection,
-                 EventPreSelector = [],
-                 PostSelectionAlgs = []) :
+                 TopSelection) :
 
-        self.algos = copy(EventPreSelector)
+        self.selectionList = []
         _alg = TopSelection.algorithm()
         self.sels = [_alg]
         if (_alg != None) :
             self.buildSelectionList( TopSelection.requiredSelections )
         self.gaudiseq = None
-        self.algos += self.sels
-        self.algos += PostSelectionAlgs
-
-    def selectionList(self) :
-        return self.algos
+        self.selectionList += self.sels
 
     def buildSelectionList(self, selections) :
         for sel in selections :
