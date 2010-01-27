@@ -100,7 +100,7 @@ StatusCode AdaptivePVReFitter::reFit(LHCb::VertexBase* PV) const {
     fittracks.push_back(aFitTrack);
   }
 
-  fitPV(primvtx, fittracks);
+  sc = fitPV(primvtx, fittracks);
 
   return sc;
 }

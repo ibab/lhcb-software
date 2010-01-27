@@ -1,11 +1,16 @@
-! $Id: release.notes,v 1.183 2010-01-21 15:09:18 xieyu Exp $
+! $Id: release.notes,v 1.184 2010-01-27 17:41:24 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+! 2010-1-27 - Yuehong Xie
+ - src/AdaptivePVReFitter.cpp
+   . return failure (instead of success) if not enough tarcks in PV
+
 ! 2010-1-21 - Yuehong Xie
  - src/AdaptivePVReFitter.cpp
+   . require at least 4 tracks after removing signal tracks from PV
 
 !========================== VertexFit v6r1 2009-11-16 =================
 
