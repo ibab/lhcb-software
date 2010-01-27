@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::ITTHitCreator
  *
- *  $Id: ITTHitCreator.h,v 1.3 2008-08-21 18:08:32 smenzeme Exp $
+ *  $Id: ITTHitCreator.h,v 1.4 2010-01-27 23:10:49 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -172,6 +172,26 @@ namespace Tf
                             const TTRegionID iRegion,
                             const double xmin,
                             const double xmax) const = 0 ;
+
+
+    /** Load the TT hits for a given region of interest
+     *
+     * @attention This call may lead to loading on demand and
+     *            may invalidate iterators returned by a previous call.
+     *
+     *  @param[in] iStation Station ID
+     *  @param[in] iLayer   Station layer ID
+     *  @param[in] iRegion  Region within the layer
+     *  @param[in] xmin     Minimum local x value for region of interest
+     *  @param[in] xmax     Maximum local x value for region of interest
+     *
+     *  @return Range object for the hits in the selected region of interest
+     */
+    virtual STHitRange hitsLocalXRange(const TTStationID iStation,
+				       const TTLayerID iLayer,
+				       const TTRegionID iRegion,
+				       const double xminT,
+				       const double xmaxT) const = 0 ;
 
     /** Load the TT hits for a given region of interest
      *

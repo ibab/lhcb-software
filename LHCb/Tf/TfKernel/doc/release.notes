@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2009-01-28 - Wouter Hulsbergen
+ - add hitsLocalXRange function to IT/OT/TT hit creator interface
+ 
 !============================ TfKernel v2r14 2010-01-20 ======================
 ! 2009-01-18 - Stephanie Hansmann-Menzemer
  - add ignore flag to HitBase class 
