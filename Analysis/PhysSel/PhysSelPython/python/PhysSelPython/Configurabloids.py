@@ -58,13 +58,11 @@ class DummyAlgorithm(object) :
 
     def __init__(self, name, InputLocations = []) :
         self._name = name
-        print 'InputLocations = ', InputLocations
         if not name in DummyAlgorithm.__instance.keys() :
             DummyAlgorithm.__instance[name] = DummyAlgorithm.__impl(name,
                                                                     InputLocations)
         if InputLocations != [] and InputLocations != DummyAlgorithm.__instance[name].InputLocations :
             DummyAlgorithm.__instance[name].InputLocations = copy(InputLocations)
-            
 
     class __impl(object) :
         def __init__(self, name, InputLocations) :
@@ -74,11 +72,11 @@ class DummyAlgorithm(object) :
             return self._name
         
     def clone(self, name, **kwargs) :
-        if name in DummyAlgorithm.__instance.keys() :
-            raise KeyError('Cannot clone with existing name ' + name)
-        else :
-            return DummyAlgorithm(name, **kwargs)
-#        return DummyAlgorithm.__impl(name, **kwargs)
+        return DummyAlgorithm(name, **kwargs)
+#        if name in DummyAlgorithm.__instance.keys() :
+#            raise KeyError('Cannot clone with existing name ' + name)
+#        else :
+#            return DummyAlgorithm(name, **kwargs)
 
     def __getattr__(self, attr) :
         return getattr(self.__instance[self._name], attr)
