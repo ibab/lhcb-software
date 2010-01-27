@@ -3,7 +3,9 @@ include 'util.php';
 $conn=HistDBconnect();
 $type=$_GET["type"];
 echo "<table border=1><thead>";
-echo "<tr><td><B>Algorithm name</B></td><td># Input <br>Parameters</td><td># Output <br>Parameters<td><B>Description</B></td></tr></thead>";
+$inputdoc= ($type == "HCREATOR") ? "Input <br> Histograms" : "Input <br>Parameters";
+$outputdoc= ($type == "HCREATOR") ? "Parameters" : "Output <br>Parameters";
+echo "<tr><td><B>Algorithm name</B></td><td># $inputdoc <br></td><td># $outputdoc <td><B>Description</B></td></tr></thead>";
 $stid = OCIParse($conn,"SELECT ALGNAME,NINPUT,NPARS,ALGDOC from ALGORITHM where ALGTYPE='$type' order by ALGNAME");
 OCIExecute($stid);
 echo "<HTML>
