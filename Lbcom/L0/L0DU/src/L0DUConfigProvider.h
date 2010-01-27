@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.h,v 1.9 2010-01-27 13:44:10 graven Exp $
+// $Id: L0DUConfigProvider.h,v 1.10 2010-01-27 15:13:43 graven Exp $
 #ifndef L0DUCONFIGPROVIDER_H 
 #define L0DUCONFIGPROVIDER_H 1
 
@@ -47,7 +47,7 @@ public:
                                    << m_tckopts << " CHECK your options ! " << endmsg;
     if(tck < 0 || tck > 0xFFFF){
       warning() << "requested TCK is not a 16 bit word" << endmsg;
-      return NULL;
+      return 0;
     }
     std::map<std::string,LHCb::L0DUConfigs*>::iterator it = m_configs.find( slot );
     if( it == m_configs.end() )createConfig(slot);
@@ -55,7 +55,7 @@ public:
     it = m_configs.find( slot );
     if( it == m_configs.end() ){ // if re-creating failed (paranoid test)
       warning() << " no configs container found for slot " << slot << endmsg;
-      return NULL;
+      return 0;
     }
 
     // it exists
