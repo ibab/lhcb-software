@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2010-01-28 Wouter Hulsbergen
+ - added hitsLocalXRange function to IT/OT/TT hit creators
+
 !============================ TfTools v1r9 2010-01-21 ========================
 ! 2009-01-19 - Stephanie Hansmann-Menzemer
  - add algorithm to flag hits to be not used in pattern reco

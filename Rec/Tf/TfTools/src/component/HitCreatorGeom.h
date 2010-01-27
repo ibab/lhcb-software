@@ -250,7 +250,13 @@ namespace Tf
 
       /// Get all hits
       virtual HitRangeType hits() const {
+	if( !m_parent->isLoaded() )
+	  (const_cast<RegionOfModules<ModuleType,HitLoader>*>(this))->m_parent->loadHits(m_modules.begin(),
+											 m_modules.end()) ;
         return HitRangeType(m_modules.front()->hits().begin(), m_modules.back()->hits().end()) ; }
+      
+      /// find the hits in a region of interest with a bounding box in X
+      virtual HitRangeType hitsLocalXRange(double xmin, double xmax) const ;
 
       /// find the hits in a region of interest with a bounding box in X
       virtual HitRangeType hits(double xmin, double xmax) const ;
@@ -271,6 +277,12 @@ namespace Tf
       ModuleContainer m_modules ;
     } ;
 
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // find the hits in a region of interest with a bounding box in global X 
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     template<class ModuleType, class HitLoader>
     typename RegionOfModules<ModuleType,HitLoader>::HitRangeType
     RegionOfModules<ModuleType,HitLoader>::hits(double xmin, double xmax) const
@@ -278,6 +290,8 @@ namespace Tf
       typename ModuleContainer::const_iterator first = modules().begin() ;
       typename ModuleContainer::const_iterator last = modules().end() ; --last ;
 
+      if( xmin > (*last)->xmax() || xmax < (*first)->xmin()) return HitRangeType() ;
+      
       // FIXME. we could use a binary search, but there are so few
       // modules, that it might be overkill. bullshit ... this might
       // be slower than anything that follows!
@@ -382,6 +396,49 @@ namespace Tf
       }
       return rc ;
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // find the hits in a region of interest with a bounding box in local X
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    template<class ModuleType, class HitLoader>
+    typename RegionOfModules<ModuleType,HitLoader>::HitRangeType
+    RegionOfModules<ModuleType,HitLoader>::hitsLocalXRange(double xmin, double xmax) const
+    {
+ 
+      typename ModuleContainer::const_iterator first = modules().begin() ;
+      typename ModuleContainer::const_iterator last = modules().end() ; --last ;
+
+      if( xmin > (*last)->xmaxT() || xmax < (*first)->xminT()) return HitRangeType() ;
+      
+      // FIXME. we could use a binary search, but there are so few
+      // modules, that it might be overkill. bullshit ... this might
+      // be slower than anything that follows!
+     
+      while( first<= last  && (*first)->xmaxT() < xmin ) ++first ;
+      while( last >= first && (*last)->xminT() > xmax )  --last ;
+
+      if( !m_parent->isLoaded() )
+        (const_cast<RegionOfModules<ModuleType,HitLoader>*>(this))->m_parent->loadHits(first,last+1) ;
+
+      // binary search to find first hit in first module
+      //const HitRangeType& firstrange = (*first)->hits() ;
+      const HitRangeType& firstrange = (*first)->hits() ;
+      typename HitRangeType::const_iterator beginhit = firstrange.begin() ;
+      if( firstrange.size()>0)
+        beginhit = std::lower_bound(firstrange.begin(), firstrange.end(), xmin,
+                                    boost::lambda::bind(&HitType::xT,boost::lambda::_1) <  boost::lambda::_2) ;
+
+      // binary search to find last hit in last module
+      const HitRangeType& lastrange = (*last)->hits() ;
+      typename HitRangeType::const_iterator endhit = lastrange.end() ;
+      if( lastrange.size()>0)
+        endhit = std::lower_bound(lastrange.begin(), lastrange.end(), xmax,
+                                  boost::lambda::bind(&HitType::xT,boost::lambda::_1) <  boost::lambda::_2) ;
+      return HitRangeType( beginhit, endhit ) ;
+    }
+
   }
 }
 #endif

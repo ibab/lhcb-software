@@ -370,6 +370,16 @@ namespace Tf
     return region->hits(xmin,xmax) ;
   }
 
+  Tf::OTHitRange OTHitCreator::hitsLocalXRange( const TStationID iStation,
+						const TLayerID iLayer,
+						const OTRegionID iRegion,
+						const double xmin,
+						const double xmax ) const
+  {
+    const Tf::HitCreatorGeom::OTRegionImp* region = m_detectordata->region(iStation,iLayer,iRegion) ;
+    return region->hitsLocalXRange(xmin,xmax) ;
+  }
+
   Tf::OTHitRange OTHitCreator::hits( const TStationID iStation,
                                      const TLayerID iLayer,
                                      const OTRegionID iRegion,

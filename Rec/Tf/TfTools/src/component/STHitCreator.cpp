@@ -4,7 +4,7 @@
  *
  *  Implementation file for class : Tf::STHitCreator
  *
- *  $Id: STHitCreator.cpp,v 1.7 2008-08-21 18:03:18 smenzeme Exp $
+ *  $Id: STHitCreator.cpp,v 1.8 2010-01-27 23:25:06 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -231,6 +231,18 @@ namespace Tf
   }
   
   template<class Trait>
+  Tf::STHitRange STHitCreator<Trait>::hitsLocalXRange( const typename Trait::StationID iStation,
+						       const typename Trait::LayerID iLayer,
+						       const typename Trait::RegionID iRegion,
+						       const double xmin,
+						       const double xmax ) const
+  {
+    if( !m_detectordata->isLoaded() ) m_detectordata->loadHits() ;
+    const Tf::HitCreatorGeom::STRegionImp* region = m_detectordata->region(iStation,iLayer,iRegion) ;
+    return region->hitsLocalXRange(xmin,xmax) ;
+  }
+  
+  template<class Trait>
   Tf::STHitRange STHitCreator<Trait>::hits( const typename Trait::StationID iStation,
 					    const typename Trait::LayerID iLayer,
 					    const typename Trait::RegionID iRegion,
@@ -265,10 +277,9 @@ namespace Tf
     typedef TLayerID   LayerID ;
     typedef ITRegionID RegionID ;
   } ;
-    
+  
   typedef STHitCreator<IT> ITHitCreator ;
   DECLARE_TOOL_FACTORY( ITHitCreator );
-
   
   struct TT {
     static std::string defaultDetectorLocation() { return DeSTDetLocation::location("TT") ; }
@@ -281,6 +292,7 @@ namespace Tf
   
   typedef STHitCreator<TT> TTHitCreator ;
   DECLARE_TOOL_FACTORY( TTHitCreator );
+
 
 
   // RestUsed flag for all OT hits 

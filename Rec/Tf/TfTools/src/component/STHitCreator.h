@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::STHitCreator
  *
- *  $Id: STHitCreator.h,v 1.3 2008-08-21 18:03:18 smenzeme Exp $
+ *  $Id: STHitCreator.h,v 1.4 2010-01-27 23:25:06 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -90,6 +90,13 @@ namespace Tf
                             const double xmin,
                             const double xmax) const ;
 
+    // Load the ST hits for a given region of interest
+    virtual STHitRange hitsLocalXRange(const typename Trait::StationID iStation,
+				       const typename Trait::LayerID iLayer,
+				       const typename Trait::RegionID iRegion,
+				       const double xmin,
+				       const double xmax) const ;
+    
     // Load the hits for a given region of interest
     virtual STHitRange hits(const typename Trait::StationID iStation,
                             const typename Trait::LayerID iLayer,
