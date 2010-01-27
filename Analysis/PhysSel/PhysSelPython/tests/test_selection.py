@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #
 # test Selection-like classes
 #
@@ -109,3 +110,13 @@ def test_clone_selection_with_new_InputLocations() :
 def test_clone_selection_with_cloned_alg() :
     pass
 
+if '__main__' == __name__ :
+
+    test_instantiate_tree()
+    test_tree_InputLocations_propagated()
+    test_tree_InputLocations_not_duplicated()
+    test_selection_with_existing_selection_name_raises()    
+    test_clone_selection_with_existing_selection_name_raises()    
+    test_clone_selection_with_new_alg()
+    test_clone_selection_with_new_InputLocations()
+    test_clone_selection_with_cloned_alg()
