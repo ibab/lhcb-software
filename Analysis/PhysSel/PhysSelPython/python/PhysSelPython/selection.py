@@ -1,4 +1,4 @@
-#$Id: selection.py,v 1.1 2010-01-27 15:02:51 jpalac Exp $
+#$Id: selection.py,v 1.2 2010-01-27 16:15:12 jpalac Exp $
 """
 Classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -13,7 +13,7 @@ __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 __all__ = ('DataOnDemand',
            'AutomaticData',
            'Selection',
-           'SelectionSequenceBuilder',
+           'FlatSelectionListBuilder',
            'NameError',
            'update_overlap')
 
@@ -139,10 +139,89 @@ class Selection(object) :
     def clone(self, name, **args) :
         new_dict = update_overlap(self.__ctor_dict__, args)
         return Selection(name, **new_dict)
-    
-class SelectionSequenceBuilder(object) :
+
+class SelSequence(object) :
     """
-    To buils a flat selection sequence. Takes a Selection object
+    Wrapper class for offline selection sequence. Takes a Selection object
+    corresponding to the top selection algorithm, and recursively uses
+    Selection.requiredSelections to for a GaudiSequences with all the required
+    selecitons needed to run the top selection. Can add list of event selection
+    algorithms to be added at the beginning of the sequence, and a list of
+    algorithms to be run straight after the selection algoritms.
+
+    Example: selection sequence for A -> B(bb), C(cc). Add pre-selectors alg0
+             and alg1, and counter counter0.
+
+    # Assume module A2B2bbC2cc defining a Selection object for the decay
+    # A -> B(bb), C(cc)
+    from A2B2bbC2cc import SelA2B2bbC2cc
+    from PhysSelPython.Wrappers import SelSequence
+    SeqA2B2bbC2cc = SelSequence('SeqA2B2bbC2cc',
+                                TopSelection = SelA2B2bbC2cc,
+                                EventPreSelector = [alg0, alg1],
+                                PostSelectionAlgs = [counter0],
+                                SequencerType = GaudiSequencer  )
+    # use it
+    mySelSeq = SeqA2B2bbC2cc.sequence()
+    dv = DaVinci()
+    dv.UserAlgorithms = [mySelSeq]
+    """
+
+    __author__ = "Juan Palacios juan.palacios@nikhef.nl"
+
+    __used_names = []
+
+    def __init__(self,
+                 name,
+                 TopSelection,
+                 EventPreSelector = [],
+                 PostSelectionAlgs = [],
+                 SequencerType = None) :
+
+        if name in SelSequence.__used_names :
+            raise NameError('SelSequence name ' + name + ' has already been used. Pick a new one.')
+        SelSequence.__used_names.append(name)
+        self.__ctor_dict__ = copy(locals())
+        del self.__ctor_dict__['self']
+        del self.__ctor_dict__['name']
+
+        self._name = name
+        self._topSelection = TopSelection
+        self._seqType = SequencerType
+        self.algos = FlatSelectionListBuilder(TopSelection,
+                                              EventPreSelector,
+                                              PostSelectionAlgs).selectionList()
+
+        self.gaudiseq = None
+        
+    def name(self) :
+        return self._name
+
+    def algorithm(self) :
+        return self.alg
+        
+    def sequence(self) :
+        if self.gaudiseq == None :
+            self.gaudiseq = self._seqType(self.name(), Members = self.algos)
+        return self.gaudiseq
+
+    def algName(self) :
+        return self.algorithm().name()
+
+    def outputLocation(self) :
+        return self._topSelection.outputLocation()
+
+    def outputLocations(self) :
+        return [self.outputLocation()]
+
+    def clone(self, name, **args) :
+        new_dict = update_overlap(self.__ctor_dict__, args)
+        return SelSequence(name, **new_dict)
+
+    
+class FlatSelectionListBuilder(object) :
+    """
+    Builds a flat selection list. Takes a Selection object
     corresponding to the top selection algorithm, and recursively uses
     Selection.requiredSelections to make a flat list with all the required
     selecitons needed to run the top selection. Can add list of event selection
@@ -155,13 +234,13 @@ class SelectionSequenceBuilder(object) :
     # Assume module A2B2bbC2cc defining a Selection object for the decay
     # A -> B(bb), C(cc)
     from A2B2bbC2cc import SelA2B2bbC2cc
-    from PhysSelPython.Wrappers import SelectionSequence
-    SeqA2B2bbC2cc = SelectionSequence( 'SeqA2B2bbC2cc',
-                                       TopSelection = SelA2B2bbC2cc,
-                                       EventPreSelector = [alg0, alg1],
-                                       PostSelectionAlgs = [counter0]   )
+    from PhysSelPython.selection import FlatSelectionListBuilder
+    SeqA2B2bbC2cc = FlatSelectionListBuilder('SeqA2B2bbC2cc',
+                                             TopSelection = SelA2B2bbC2cc,
+                                             EventPreSelector = [alg0, alg1],
+                                             PostSelectionAlgs = [counter0]   )
     # use it
-    mySelList = SeqA2B2bbC2cc.flatSelectionList()
+    mySelList = SeqA2B2bbC2cc.selectionList()
     print mySelList
     """
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
@@ -171,17 +250,16 @@ class SelectionSequenceBuilder(object) :
                  EventPreSelector = [],
                  PostSelectionAlgs = []) :
 
-        self._topSelection = TopSelection
         self.algos = copy(EventPreSelector)
-        self.alg = self._topSelection.algorithm()
-        self.sels = [self.alg]
-        if (self.alg != None) :
-            self.buildSelectionList( self._topSelection.requiredSelections )
+        _alg = TopSelection.algorithm()
+        self.sels = [_alg]
+        if (_alg != None) :
+            self.buildSelectionList( TopSelection.requiredSelections )
         self.gaudiseq = None
         self.algos += self.sels
         self.algos += PostSelectionAlgs
 
-    def flatSelectionList(self) :
+    def selectionList(self) :
         return self.algos
 
     def buildSelectionList(self, selections) :
