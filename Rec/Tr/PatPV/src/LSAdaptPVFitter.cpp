@@ -1,4 +1,4 @@
-// $Id: LSAdaptPVFitter.cpp,v 1.11 2010-01-20 13:46:48 rlambert Exp $
+// $Id: LSAdaptPVFitter.cpp,v 1.12 2010-01-27 14:15:58 rlambert Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -27,7 +27,8 @@ LSAdaptPVFitter::LSAdaptPVFitter(const std::string& type,
     m_acceptTrack(0.),
     m_pvTracks(0),
     m_linExtrapolator(0),
-    m_fullExtrapolator(0)
+    m_fullExtrapolator(0),
+    m_myZero(1E-12)
 {
   declareInterface<IPVFitter>(this);
   // Minimum number of tracks in vertex  
@@ -376,11 +377,11 @@ StatusCode LSAdaptPVFitter::trackExtrapolate(PVTrack* pvTrack,
   covMatrix_xyVec_product = covMatrix * xyVec;
   pvTrack->err2d0 = xyVec[0] * covMatrix_xyVec_product[0] 
                   + xyVec[1] * covMatrix_xyVec_product[1];
-  if(pvTrack->err2d0>myzero) pvTrack->chi2 = (pvTrack->d0 * pvTrack->d0)/ pvTrack->err2d0;
+  if(pvTrack->err2d0>m_myZero) pvTrack->chi2 = (pvTrack->d0 * pvTrack->d0)/ pvTrack->err2d0;
   else
   {
     if(msgLevel(MSG::DEBUG)) debug() << "trackExtrapolate: pvTrack error is too small for computation" << endmsg;
-    pvTrack->chi2 = (pvTrack->d0 * pvTrack->d0)/ myzero;
+    pvTrack->chi2 = (pvTrack->d0 * pvTrack->d0)/ m_myZero;
   }
   
   return StatusCode::SUCCESS;
@@ -414,11 +415,11 @@ void LSAdaptPVFitter::addsubTrack(PVTrack* pvTrack,
                                   ROOT::Math::SVector<double,3>& d0vec,
                                   double invs)
 {
-  if(pvTrack->err2d0>myzero) invs *= (2.0 / pvTrack->err2d0) * pvTrack->weight;
+  if(pvTrack->err2d0>m_myZero) invs *= (2.0 / pvTrack->err2d0) * pvTrack->weight;
   else
   {
     if(msgLevel(MSG::DEBUG)) debug() << "trackExtrapolate: pvTrack error is too small for computation" << endmsg;
-    invs *= (2.0 / myzero) * pvTrack->weight;
+    invs *= (2.0 / m_myZero) * pvTrack->weight;
   }
   
   double unitVectStd[3];

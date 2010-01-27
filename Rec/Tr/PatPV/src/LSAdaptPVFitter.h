@@ -1,4 +1,4 @@
-// $Id: LSAdaptPVFitter.h,v 1.5 2010-01-20 13:46:48 rlambert Exp $
+// $Id: LSAdaptPVFitter.h,v 1.6 2010-01-27 14:15:58 rlambert Exp $
 #ifndef LSADAPTPVFITTER_H
 #define LSADAPTPVFITTER_H 1
 // from Gaudi
@@ -82,6 +82,10 @@ private:
   // Get Tukey's weight
   double getTukeyWeight(double trchi2, int iter);
   
-  static const double myzero=1E-12;
+  //problem on windows for some reason
+  //static const double myzero=1E-12;
+  const double m_myZero; //myzero=1E-12;
+  //work around by just initialising it in constructor...
+  //Annoying, though!
 };
 #endif // LSADAPTPVFITTER_H
