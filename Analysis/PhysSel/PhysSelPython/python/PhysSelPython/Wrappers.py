@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.24 2010-01-22 16:00:20 jpalac Exp $
+#$Id: Wrappers.py,v 1.25 2010-01-27 13:26:23 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -86,12 +86,17 @@ class Selection(object) :
     """
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
 
+    __used_names = []
+
     def __init__(self,
                  name,
                  Algorithm,
                  RequiredSelections = [],
                  OutputBranch = "Phys") :
 
+        if name in Selection.__used_names :
+            raise NameError('Selection name ' + name + ' has already been used. Pick a new one.')
+        Selection.__used_names.append(name)
         self.__ctor_dict__ = copy(locals())
         del self.__ctor_dict__['self']
         del self.__ctor_dict__['name']
@@ -157,18 +162,27 @@ class SelectionSequence(object) :
     """
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
 
+    from Configurables import GaudiSequencer
+
+    __used_names = []
+
     def __init__(self,
                  name,
                  TopSelection,
                  EventPreSelector = [],
-                 PostSelectionAlgs = [] ) :
+                 PostSelectionAlgs = [],
+                 SequencerType = GaudiSequencer) :
 
+        if name in SelectionSequence.__used_names :
+            raise NameError('SelectionSequence name ' + name + ' has already been used. Pick a new one.')
+        SelectionSequence.__used_names.append(name)
         self.__ctor_dict__ = copy(locals())
         del self.__ctor_dict__['self']
         del self.__ctor_dict__['name']
 
         self._name = name
         self._topSelection = TopSelection
+        self._seqType = SequencerType
         self.algos = copy(EventPreSelector)
         self.alg = self._topSelection.algorithm()
         self.sels = [self.alg]
@@ -177,7 +191,8 @@ class SelectionSequence(object) :
         self.gaudiseq = None
         self.algos += self.sels
         self.algos += PostSelectionAlgs
-            
+
+        
     def name(self) :
         return self._name
 
@@ -189,8 +204,7 @@ class SelectionSequence(object) :
         
     def sequence(self) :
         if self.gaudiseq == None :
-            from Configurables import GaudiSequencer
-            self.gaudiseq = GaudiSequencer(self.name(), Members = self.algos)
+            self.gaudiseq = self._seqType(self.name(), Members = self.algos)
         return self.gaudiseq
 
     def algName(self) :
@@ -223,3 +237,6 @@ def update_overlap(dict0, dict1) :
     result = copy(dict0)
     for key in overlap_keys : result[key] = dict1[key]
     return result
+
+class NameError(Exception) :
+    pass
