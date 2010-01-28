@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.8 2010-01-28 14:22:40 graven Exp $
+# $Id: HltL0Candidates.py,v 1.9 2010-01-28 16:27:27 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -97,7 +97,6 @@ _l0Channels = None
 ### setupL0Channels _must_ be called before L0Channels, convertL0Candidates or HltL0Candidates is
 ### invoked...
 def decodeL0Channels( L0TCK , skipDisabled = True) :
-    print 'decodeL0Channels invoked'
     importOptions('$L0TCK/L0DUConfig.opts')
     from Configurables import L0DUMultiConfigProvider,L0DUConfigProvider
     if L0TCK not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
