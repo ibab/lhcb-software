@@ -1,6 +1,4 @@
-## $Id: DVTestBd2KstarMuMu.py,v 1.14 2010-01-25 10:35:54 pkoppenb Exp $
-## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $
 ## ============================================================================
 """
 @file DVTestBd2KstarMuMu.py
@@ -34,10 +32,11 @@ TestCorrelations = AlgorithmCorrelationsAlg("TestCorrelations")
 TestCorrelations.addTool(AlgorithmCorrelations())
 TestCorrelations.AlgorithmCorrelations.OnlyNonZero = False
 TestCorrelations.Algorithms = ["FilterTrueTracks",
+                               "StdVeryLooseMuons",
                                "StdLooseMuons",
-                               "StdLooseDiMuon",
                                "StdLooseKaons",
                                "StdLoosePions",
+                               "StdVeryLooseDiMuon",
                                "StdVeryLooseDetachedKst2Kpi", 
                                "Early_Signal_Bd2KstarMuMu" ]
 ###

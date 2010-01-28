@@ -1,6 +1,6 @@
-## $Id: DVTestReadETC.py,v 1.4 2009-10-13 17:35:37 pkoppenb Exp $
+## $Id: DVTestReadETC.py,v 1.5 2010-01-28 07:21:10 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 ## ============================================================================
 #
 # Example options to read a user-defined ETC
@@ -9,10 +9,10 @@ from Gaudi.Configuration import *
 from Configurables import DaVinci
 from StrippingConf.Configuration import StrippingConf
 
-from StrippingSelections import StreamBmuon
+from StrippingSelections import StreamDimuon
 
 sc = StrippingConf()
-sc.appendStream( StreamBmuon.stream )
+sc.appendStream( StreamDimuon.stream )
 
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().EvtMax = -1
