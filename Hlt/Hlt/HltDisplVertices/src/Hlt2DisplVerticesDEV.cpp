@@ -2,10 +2,6 @@
  * THIS IS THE DEVELOPMENT VERSION
  * Hlt2DisplVertices is the REFERENCE VERSION
  *********************************************************/
-/*********************** TODO ******************************
- * be able to clone decision part
- *
- ***********************************************************/
 // Include files:
 //from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -73,14 +69,10 @@ Hlt2DisplVerticesDEV::Hlt2DisplVerticesDEV(const std::string& name,
   declareProperty("RCutMethod", m_RCutMethod = "FromUpstreamPV" );
   declareProperty("InputDisplacedVertices", m_InputDisplVertices = 
                   "Rec/Vertices/Hlt2RV");
-  declareProperty("MinNbTracks", m_MinNbtrks = 0 );
-  declareProperty("RMin1", m_RMin1 = 0.5 );
-  declareProperty("RMin2", m_RMin2 = 0.3 );
-  declareProperty("MinMass1", m_MinMass1 = 6.5*GeV );
-  declareProperty("MinMass2", m_MinMass2 = 2*GeV );
-  declareProperty("MinSumpt1", m_MinSumpt1 = 6*GeV );
-  declareProperty("MinSumpt2", m_MinSumpt2 = 2*GeV );
+  declareProperty("RMin", m_RMin = 0.3 );
+  declareProperty("MinMass", m_MinMass = 2*GeV );
   declareProperty("RemVtxFromDet", m_RemVtxFromDet = 1*mm  );
+  declareProperty("RemVtxFromDetWithSigma", m_RemVtxFromDetSig = -1  );
   declareProperty("BeamLineInitPos", m_BLInitPos ); //no default values !
   declareProperty("BeamLineInitDir", m_BLInitDir );
   declareProperty("BeamLineCycle", m_cycle = 1000 );
@@ -100,22 +92,13 @@ StatusCode Hlt2DisplVerticesDEV::initialize() {
   if (!sc) return sc;
 
   if(msgLevel(MSG::DEBUG)){
-    debug() << "==> Initialize" << endmsg;
+    debug() << "==> Initialize Hlt2DisplVerticesDEV" << endmsg;
     debug() << "---------------- CUTS on RecVertex --------------"<< endmsg;
     debug() << "No backward tracks"<< endmsg;
     debug() << "the upstream RV will be disguarded"<< endmsg;
     debug() << "Min number of tracks           "<< m_MinNbtrks << endmsg;
-    debug() << "For single prey hunting :"<< endmsg;
-    debug() << "Min radial displacement        "<< m_RMin1 <<" mm"<< endmsg;
-    debug() << "Min reconstructed mass         "<< m_MinMass1/GeV 
-	    <<" GeV"<< endmsg;
-    debug() << "Min sum of all daughter tracks "<< m_MinSumpt1/GeV 
-	    <<" GeV"<< endmsg;
-    debug() << "For double prey hunting :"<< endmsg;
-    debug() << "Min radial displacement        "<< m_RMin2 <<" mm"<< endmsg;
-    debug() << "Min reconstructed mass         "<< m_MinMass2/GeV 
-	    <<" GeV"<< endmsg;
-    debug() << "Min sum of all daughter tracks "<< m_MinSumpt2/GeV
+    debug() << "Min radial displacement        "<< m_RMin <<" mm"<< endmsg;
+    debug() << "Min reconstructed mass         "<< m_MinMass/GeV 
 	    <<" GeV"<< endmsg;
     debug()<< "The radial displacement is ";
     if( m_RCutMethod == "LocalVeloFrame" )
@@ -134,6 +117,7 @@ StatusCode Hlt2DisplVerticesDEV::initialize() {
 	      << endmsg;
       debug()<< "THIS OPTION SHOULD NOT BE USED ON REAL DATA !!" 
              << endmsg;
+      
     }
     debug() << "------------------------------------"<< endmsg;
     if( m_HidValSel ){
@@ -143,38 +127,19 @@ StatusCode Hlt2DisplVerticesDEV::initialize() {
     }
   }
 
-  if( m_RemVtxFromDet != 0 ){
+  if( m_RemVtxFromDet != 0 || m_RemVtxFromDetSig > 0 ){
     //Get detector elements
     IDetectorElement* lhcb = getDet<IDetectorElement>
       ( "/dd/Structure/LHCb/BeforeMagnetRegion/Velo" );
     m_lhcbGeo = lhcb->geometry();
 
     // Get Transport Service
-    if( m_RemVtxFromDet > 0 ) 
+    if( m_RemVtxFromDet > 0 || m_RemVtxFromDetSig > 0 ) 
       m_transSvc = svc<ITransportSvc>( "TransportSvc", true  );
   }
 
-  //Sanity checks
-  if( m_MinMass2 > m_MinMass1 ){
-    warning()<<"MinMass2 set to a value smaller than MinMass1 : "	
-             << m_MinMass2 <<"<"<< m_MinMass1 
-             <<"This is non-sense !"<< endmsg;
-    return StatusCode::FAILURE;
-  }
-  if( m_RMin2 > m_RMin1 ){
-    warning()<<"RMin2 set to a bigger value than RMin1 : "	
-             << m_RMin2 <<"<"<< m_RMin1 
-             <<"This is non-sense !"<< endmsg;
-    return StatusCode::FAILURE;
-  }
-
-
   //Get the pion mass
   const ParticleProperty* Ppion = ppSvc()->find( "pi+" );
-//   if ( !Ppion ) { //
-//     err() << "Cannot find particle property for the pion." << endmsg ;
-//     return StatusCode::FAILURE;
-//   }
   m_piMass = Ppion->mass();
 
   //get the Velo geometry
@@ -198,9 +163,8 @@ StatusCode Hlt2DisplVerticesDEV::initialize() {
   }
 
   //Initialize the beam line
+  m_BeamLine = new Particle();
   if( m_RCutMethod == "FromBeamLine" ){
-
-    m_BeamLine = new Particle();
 
     if( !m_BLInitPos.empty() ){
       //sanity check
@@ -237,7 +201,12 @@ StatusCode Hlt2DisplVerticesDEV::initialize() {
     m_xz = book1D("PVxz", -(m_maxx*m_maxz), (m_maxx*m_maxz), bins2);
     m_yz = book1D("PVyz", -(m_maxy*m_maxz), (m_maxy*m_maxz), bins2);
   }
-  
+
+  //Set beam line to z axis
+  if( m_RCutMethod=="" ){
+    m_BeamLine->setReferencePoint( Gaudi::XYZPoint( 0., 0., 0. ) );
+    m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
+  } 
 
 
   return StatusCode::SUCCESS;
@@ -253,15 +222,12 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
                                    << m_nbevent << endmsg;
   setFilterPassed(false);
 
-  //save a dummy Particle in the TES
-  Particle::ConstVector Pions ;
-  const Particle::ConstVector & InputParts = desktop()->particles();
-  if( InputParts.empty() ) return desktop()->cloneTrees(Pions);
-  Pion = *(InputParts.begin());
+  //A container to save all candidates
+  Particle::ConstVector RecParts;
 
   //update beam line position and direction
   if( m_RCutMethod == "FromBeamLine" && !BeamLineCalibration() ) 
-    return desktop()->cloneTrees(Pions);
+    return desktop()->saveTrees( RecParts );
 
   m_map.clear(); //Re-initialize the map
 
@@ -272,7 +238,7 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
 	   <<" displ vertices, the one with lowest z will be disguarded" 
 	   << endmsg;
   plot( RVs->size(), "NbRV", 0, 6);
-  if( RVs->empty() ) return desktop()->cloneTrees(Pions);
+  if( RVs->empty() ) return desktop()->saveTrees( RecParts );
   //sort them by ascending z position
   sort( RVs->begin(), RVs->end(), SortPVz);
 
@@ -297,25 +263,27 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
   //PrintTracksType();
   //PrintParticle();
 
-  vector<double> Xs, Ys, Zs, sumPt, RPt, Ms; 
+  vector<double> Xs, Ys, Zs, sumPt, RPt, Ms, Muonpts; 
   vector<int> Nbtrks; 
   vector<int> InDets;
 
-  //Selections
-  int Sel1 = 0; //for single dv hunting
-  int Sel2 = 0;//for double dv hunting
-
   //Let's loop on the RecVertex
   RecVertices::const_iterator iRV = RVs->begin();
+
+  //Set reference axis for radial measurment
   Gaudi::XYZPoint UpPV;
   if( m_RCutMethod=="FromUpstreamPV" || m_RCutMethod=="CorrFromUpstreamPV" ){
     UpPV = (*PVs.begin())->position();
     if(msgLevel(MSG::DEBUG))
       debug() <<"Upstream PV position "<< UpPV << endmsg;
+    m_BeamLine->setReferencePoint( UpPV );
+    m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
   } else if( m_RCutMethod=="FromBeamLine" ){
     UpPV = m_BeamLine->referencePoint();
   } else {
     UpPV = (*iRV)->position();
+    m_BeamLine->setReferencePoint( UpPV );
+    m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
   }
 
   iRV++; //Do not consider first one
@@ -358,16 +326,11 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
       R = Pos.rho();
     }
 
+    double sumpt, recpt, mass, muonpt;
 
-    double sumpt, recpt, mass;
-
-    //Retrieve Particles corresponding to vertices
-    if( m_map.empty() ) CreateMap(); //Create map if necessary
-    Particle::ConstVector RecParts ;
-    GetPartsFromRecVtx( RV, RecParts );
-
-    //compute the kinematics
-    Kinematics( RecParts, mass, sumpt, recpt ); 
+    // Turn RecVertex into a Particle
+    if( !RecVertex2Particle( RV, RecParts, mass, sumpt, recpt, muonpt ) ) 
+      continue;
 
     //Properties of reconstructed vertices
     Ms.push_back( mass );
@@ -377,29 +340,28 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
     sumPt.push_back( sumpt );
     Nbtrks.push_back( RV->tracks().size() );
     RPt.push_back( recpt );
+    Muonpts.push_back( muonpt );
 
-    debug()<<"RV mass "<< mass/1000. <<" GeV, R "<< R <<" mm, rec pt "<< recpt 
-	   <<" GeV, sum pt "<< sumPt <<" GeV"<< endmsg;
+    if(msgLevel(MSG::DEBUG)){
+      debug()<<"RV mass "<< mass/GeV <<" GeV, R "<< R <<" mm, rec pt "<< recpt 
+	     <<" GeV, sum pt "<< sumPt <<" GeV"<< endmsg;
+      debug()<<"RV contains a muon with pt "<< muonpt << endmsg;
+    }
 
-    //Remove if found to be in detector material
+    //Do not save if found to be in detector material
     bool InDet = false;
     if( m_RemVtxFromDet && RemVtxFromDet(RV) ){
       InDet = true;
     } 
     InDets.push_back(InDet);
 
-
-    //Criterias
-    if( !InDet ){
-      if( R >= m_RMin1 && Ms.back() >= m_MinMass1 && sumpt >= m_MinSumpt1 ) 
-        Sel1++;
-      if( R >= m_RMin2 && Ms.back() >= m_MinMass2 && sumpt >= m_MinSumpt2 ) 
-        Sel2++;
-    }
+    //rm candidate from Desktop if it doesn't pass the cuts
+    //mass cut already been applied
+    if( mass > m_MinMass && (InDet || R < m_RMin) ) RecParts.pop_back();
   }    
 
   //Don't save every ntuples
-  if( Zs.empty() ) return desktop()->cloneTrees(Pions);
+  if( Zs.empty() ) return desktop()->saveTrees( RecParts );
 
   if( m_Save ){
     const int maxSize = 25;
@@ -412,20 +374,27 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
     tuple->farray( "RPt", RPt.begin(), RPt.end(), "Nb", maxSize );
     tuple->farray( "M", Ms.begin(), Ms.end(), "Nb", maxSize );
     tuple->farray( "InDet", InDets.begin(), InDets.end(), "Nb", maxSize );
+    tuple->farray( "MuonPt", Muonpts.begin(), Muonpts.end(), "Nb", maxSize );
     tuple->column( "PVx", UpPV.x() );
     tuple->column( "PVy", UpPV.y() );
-    if( !fillHeader( tuple ) ) return desktop()->cloneTrees(Pions);
+    if( !fillHeader( tuple ) ) return desktop()->saveTrees( RecParts );
     if( m_HidValSel && !SaveHidValSel( tuple, RVs ) ) 
-      return desktop()->cloneTrees(Pions);
+      return desktop()->saveTrees( RecParts );
     tuple->write();
   }
 
   // Cuts 
-  if( Sel1 > 0 || Sel2 >1 ){
-    return Done(Pions);
-  } else { debug()<<"Event rejected !"<< endmsg; } 
+  if( RecParts.size() > 0 ){
+    if(msgLevel(MSG::DEBUG))
+      debug()<<"Event satisfied HLT2DisplVertices criteria ! "
+	     <<"Nb of candidates "<< RecParts.size() << endmsg;
+    ++m_nbpassed;
+    setFilterPassed(true);
+    SaveBeamLine();
+  } else { if(msgLevel(MSG::DEBUG)) debug()<<"Event rejected !"<< endmsg; } 
 
-  return desktop()->cloneTrees(Pions);
+  //Save eventual candidates in TES
+  return desktop()->saveTrees( RecParts );
 }
 
 //=============================================================================
@@ -434,7 +403,7 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
 StatusCode Hlt2DisplVerticesDEV::finalize() {
 
   if (msgLevel(MSG::DEBUG)) {
-    debug() << "==> Finalize" << endmsg;
+    debug() << "==> Finalize Hlt2DisplVerticesDEV" << endmsg;
     if(m_nbevent == 0) m_nbevent++;
     double err = 10.*std::sqrt( static_cast<double>(m_nbpassed/m_nbevent) );
     debug() << "------------- Efficiency -----------"<< endmsg;
@@ -445,24 +414,84 @@ StatusCode Hlt2DisplVerticesDEV::finalize() {
     debug() << "------------------------------------"<< endmsg;
   }
 
-  if( m_RCutMethod == "FromBeamLine" ) delete m_BeamLine;
+  delete m_BeamLine;
 
   return DVAlgorithm::finalize();
 }
 
 //=============================================================================
-// Event is accepted
+// Turn RecVertex into a Particle
 //=============================================================================
-StatusCode Hlt2DisplVerticesDEV::Done( Particle::ConstVector & Pions){
-    debug()<<"Event satisfied HLT2DisplVertices criteria !"<< endmsg;
-    m_nbpassed++;
-    setFilterPassed(true);
-    Pions.push_back(Pion);
-    //LHCb::Tracks* inputTracks = get<Tracks>(TrackLocation::HltForward);
-    //plot( inputTracks->size(), "NbTracksSelEvts", 0, 150 );
-    return desktop()->cloneTrees(Pions);
-}
+bool Hlt2DisplVerticesDEV::RecVertex2Particle( const RecVertex* rv, 
+			  Particle::ConstVector & RecParts, double & mass,
+			  double & sumpt, double & recpt, double & muonpt  ){
 
+  //Retrieve Particles corresponding to vertices
+  if( m_map.empty() ) CreateMap(); //Create map if necessary
+
+  Particle::ConstVector Parts ;
+  GetPartsFromRecVtx( rv, Parts );
+
+  //Create a particle
+  Particle tmpPart = Particle( ); //don't give any PID.
+
+  //Compute momentum
+  muonpt = 0;
+  Gaudi::LorentzVector mom;
+  sumpt = 0.;
+  Particle::ConstVector::const_iterator ip = Parts.begin();
+  Particle::ConstVector::const_iterator iend = Parts.end();
+  for( ; ip != iend; ++ip ){
+    mom += (*ip)->momentum();
+    double pt = (*ip)->pt();
+    sumpt += pt;
+    //save only high pt daughters, get rid of default pions
+    if( pt > 1*GeV ) continue;
+    tmpPart.addToDaughters(*ip);
+    //check if tracks could be a muon
+    if( (*ip)->proto() == NULL ) continue;
+    if( (*ip)->proto()->muonPID() == NULL ) continue;
+    if( pt > muonpt && (*ip)->proto()->muonPID()->IsMuonLoose() ) 
+      muonpt = pt;
+    
+  }
+  // Compute the pT of a RecVertex from all its tracks 
+  recpt = mom.Pt();
+  // mass
+  mass = mom.M();
+
+  //create a particle to save in TES only if candidates passes the cuts
+  if( mass < m_MinMass ) return true;
+
+  //Create an decay vertex
+  const Gaudi::XYZPoint point = rv->position();
+  Vertex tmpVtx = Vertex( point );
+  tmpVtx.setNDoF( rv->nDoF());
+  tmpVtx.setChi2( rv->chi2());
+  tmpVtx.setCovMatrix( rv->covMatrix() );
+  
+  //Fix end vertex
+  tmpPart.setEndVertex( &tmpVtx );
+  tmpPart.setReferencePoint( point );
+  tmpPart.setMomentum( mom );
+  tmpPart.setMeasuredMass( mass );
+  tmpPart.setMeasuredMassErr( 0 );
+
+  Gaudi::SymMatrix4x4 MomCovMatrix = 
+    Gaudi::SymMatrix4x4( ROOT::Math::SMatrixIdentity() );
+  tmpPart.setMomCovMatrix( MomCovMatrix );
+  Gaudi::SymMatrix3x3 PosCovMatrix = 
+    Gaudi::SymMatrix3x3( ROOT::Math::SMatrixIdentity() );
+  tmpPart.setPosCovMatrix( PosCovMatrix );
+  Gaudi::Matrix4x3 PosMomCovMatrix;
+  tmpPart.setPosMomCovMatrix( PosMomCovMatrix );
+
+  //Save Rec Particle in the Desktop
+  RecParts.push_back( desktop()->keep( &tmpPart ) );
+  
+
+  return true;
+}
 //=============================================================================
 // Get Particles related to a RecVertex
 //=============================================================================
@@ -710,7 +739,7 @@ StatusCode  Hlt2DisplVerticesDEV::SaveHidValSel( Tuple & tuple,  RecVertices* RV
   tuple->column( "sumSVxyDist", sumSVxyDist );
 
   if(msgLevel(MSG::DEBUG))
-    debug()<<"Global event values : sumPtTracks "<< sumPtTracks/1000. 
+    debug()<<"Global event values : sumPtTracks "<< sumPtTracks/GeV 
 	   <<" GeV, sumXYTrackfirstStates "<< sumXYTrackfirstStates 
 	   <<" mm, sumSVxyDist "<< sumSVxyDist <<" mm" << endmsg;
 
@@ -763,28 +792,27 @@ void Hlt2DisplVerticesDEV::PrintTracksType(){
 // 	 j != trk->ancestors().end(); ++j )
 //       debug()<<"Anc. Track key "<< (*j)->key()<<" slope "<< (*j)->slopes() 
 // 	     <<" type "<<(*j)->type() <<endmsg;  
-}
+  }
 
 
   //Check the tracks from a 2D vertex...
-  debug()<<"Check the tracks from a 2D vertex"<< endmsg;
-  RecVertices* RV2Ds = get<RecVertices>("/Event/Hlt/Vertex/PV2D");
-  if( RV2Ds->empty() ) return;
-  RecVertices::const_iterator iRV = RV2Ds->begin();
-  for( SmartRefVector<Track>::const_iterator itr = (*iRV)->tracks().begin();
-       itr != (*iRV)->tracks().end(); ++itr ){
-    const Track* trk = *itr;
-    string s = "False !";
-    if ( trk->checkFlag( Track::Backward ) ) s = "True !";
-    debug()<<"Track key "<< trk->key()<<" slope "<< trk->slopes() 
-	   <<" type "<<trk->type()<<" Is backward ? "<< s 
-	   <<" Looking for ancestors :" <<endmsg;
+//   debug()<<"Check the tracks from a 2D vertex"<< endmsg;
+//   RecVertices* RV2Ds = get<RecVertices>("/Event/Hlt/Vertex/PV2D");
+//   if( RV2Ds->empty() ) return;
+//   RecVertices::const_iterator iRV = RV2Ds->begin();
+//   for( SmartRefVector<Track>::const_iterator itr = (*iRV)->tracks().begin();
+//        itr != (*iRV)->tracks().end(); ++itr ){
+//     const Track* trk = *itr;
+//     string s = "False !";
+//     if ( trk->checkFlag( Track::Backward ) ) s = "True !";
+//     debug()<<"Track key "<< trk->key()<<" slope "<< trk->slopes() 
+// 	   <<" type "<<trk->type()<<" Is backward ? "<< s 
+// 	   <<" Looking for ancestors :" <<endmsg;
 //     for( SmartRefVector<Track>::const_iterator j = trk->ancestors().begin();
 // 	 j != trk->ancestors().end(); ++j )
 //       debug()<<"Anc. Track key "<< (*j)->key()<<" slope "<< (*j)->slopes() 
 // 	     <<" type "<<(*j)->type() <<endmsg;
-
-  }
+//  }
 }
 void Hlt2DisplVerticesDEV::PrintParticle(){
   const Particle::ConstVector& InputParts = desktop()->particles();
@@ -793,8 +821,12 @@ void Hlt2DisplVerticesDEV::PrintParticle(){
   for ( Particle::ConstVector::const_iterator j = InputParts.begin();
 	j != InputParts.end();++j) {
     debug()<<"Particle id "<< (*j)->particleID().pid() <<" Mass "
-           << (*j)->measuredMass()/1000. << " GeV"<<" slope "
+           << (*j)->measuredMass()/GeV << " GeV"<<" slope "
            << (*j)->slopes() << endmsg;
+    if( (*j)->proto() == NULL ) continue;
+    if( (*j)->proto()->muonPID() == NULL ) continue;
+    debug() <<"Is muon ? "<< (*j)->proto()->muonPID()->IsMuon() 
+	    <<" Loose ? "<< (*j)->proto()->muonPID()->IsMuonLoose() << endmsg;
   }
 
 }
@@ -819,6 +851,8 @@ bool Hlt2DisplVerticesDEV::HasBackwardTracks( const RecVertex* RV ){
 // if m_RemVtxFromDet > 0  : remove reco vtx if rad length along z 
 //                           from (decay pos - m_RemVtxFromDet) to 
 //                           (decay pos + m_RemVtxFromDet)  is > threshold
+// if m_RemVtxFromDetSig > 0 : remove reco vtx if rad length along 
+//                             +- m_RemVtxFromDetSig * PositionCovMatrix
 //
 //=============================================================================
 
@@ -826,7 +860,7 @@ bool Hlt2DisplVerticesDEV::RemVtxFromDet( const RecVertex* RV ){
 
   double threshold = 1e-10;
 
-  if( m_RemVtxFromDet < 0 ){
+  if( m_RemVtxFromDet < 0 && m_RemVtxFromDet < 0 ){
 
     IGeometryInfo* start = 0;
     ILVolume::PVolumePath path ;
@@ -860,15 +894,11 @@ bool Hlt2DisplVerticesDEV::RemVtxFromDet( const RecVertex* RV ){
       return true;
     } 
   } //end of <0 condition
-  else if( m_RemVtxFromDet > 0 ){
+  else if( m_RemVtxFromDetSig < 0 && m_RemVtxFromDet > 0 ){
 
     const Gaudi::XYZPoint pos = RV->position();
     const Gaudi::XYZPoint dz = Gaudi::XYZPoint( 0., 0., m_RemVtxFromDet );
-    //const Gaudi::XYZPoint dx = Gaudi::XYZPoint( m_RemVtxFromDet, 0., 0. );
-    //const Gaudi::XYZPoint dy = Gaudi::XYZPoint( 0., m_RemVtxFromDet, 0. );
 
-    //Compute the radiation length
-    //double radlength = m_transSvc->distanceInRadUnits( start, end );
 
     if( m_lhcbGeo == 0 ){ 
       warning()<<"IGeometryInfo* m_lhcbGeo is broken"<< endmsg; return true; }
@@ -880,17 +910,12 @@ bool Hlt2DisplVerticesDEV::RemVtxFromDet( const RecVertex* RV ){
     double radlength = m_transSvc->distanceInRadUnits
       ( start, end, 1e-35, dum, m_lhcbGeo );
 
-//     start = Minus(pos,dx); end = Plus(pos,dx);
-//     radlength += m_transSvc->distanceInRadUnits
-//       ( start, end, 1e-35, dum, m_lhcbGeo );
-//     start = Minus(pos,dy); end = Plus(pos,dy);
-//     radlength += m_transSvc->distanceInRadUnits
-//       ( start, end, 1e-35, dum, m_lhcbGeo );
-
     plot( radlength, "RVRadLength", 0, 0.01);
-    debug()<<"Radiation length from "<< start <<" to "
-	   << end <<" : "<< radlength 
-	   <<" [mm]" << endmsg;
+    if(msgLevel(MSG::DEBUG)){
+      debug()<<"Radiation length from "<< start <<" to "
+	     << end <<" : "<< radlength 
+	     <<" [mm]" << endmsg;
+    }
 
     if( radlength > threshold ){ 
       debug()<<"RV is too closed to a detector material --> disguarded !"
@@ -898,8 +923,28 @@ bool Hlt2DisplVerticesDEV::RemVtxFromDet( const RecVertex* RV ){
       return true;
     }
   } //end of >0 condition
-
-
+  else if (m_RemVtxFromDetSig > 0){
+    
+    Gaudi::XYZPoint RVPosition = RV->position();
+    Gaudi::SymMatrix3x3 RVPositionCovMatrix = RV->covMatrix();
+    double sigNx = m_RemVtxFromDetSig*sqrt(RVPositionCovMatrix[0][0]);
+    double sigNy = m_RemVtxFromDetSig*sqrt(RVPositionCovMatrix[1][1]);
+    double sigNz = m_RemVtxFromDetSig*sqrt(RVPositionCovMatrix[2][2]);
+    // Is there material within N*sigma
+    for (int ix = -1 ; ix<2; ix += 2 ){
+      for (int iy = -1 ; iy<2; iy += 2 ){
+        Gaudi::XYZPoint tmp_pointP( RVPosition.x()+ix*sigNx,
+				    RVPosition.y()+iy*sigNy,
+				    RVPosition.z()+sigNz );
+        Gaudi::XYZPoint tmp_pointM ( RVPosition.x()-ix*sigNx,
+				     RVPosition.y()-iy*sigNy,
+				     RVPosition.z()-sigNz );
+        if( m_transSvc->distanceInRadUnits(tmp_pointM,tmp_pointP) > threshold )
+          return true;
+      }
+    }
+  }
+  
   return false;
 }
 
@@ -1088,14 +1133,19 @@ bool Hlt2DisplVerticesDEV::BeamLineCalibration(){
   if( m_BeamLine->referencePoint().z() == 0. ) return false;
   
   //Save the beam line on the TES.
-  Particles* vec = new Particles();
-  vec->insert( m_BeamLine->clone() ); 
-  //put( vec, "/Event/HLT/BeamLine");
-  put( vec, "/Event/HLT/Hlt2LineDisplVertices/BeamLine");
+  SaveBeamLine();
 
   return true;
 }
 
+void Hlt2DisplVerticesDEV::SaveBeamLine(){
+
+  //Save the beam line on the TES.
+  Particles* vec = new Particles();
+  vec->insert( m_BeamLine->clone() ); 
+  put( vec, "/Event/HLT/Hlt2LineDisplVertices/BeamLine");
+
+}
 
 //============================================================================
 // Basic operations between two Gaudi::XYZPoint
@@ -1127,7 +1177,7 @@ double Hlt2DisplVerticesDEV::RadDist( const Gaudi::XYZPoint& p ){
     + lambda * m_BeamLine->momentum().y();
   
   //return distance to the intersection point 
-  x =- p.x(); y =- p.y();
+  x -= p.x(); y -= p.y();
   return sqrt( x*x + y*y );
 }
 

@@ -35,31 +35,41 @@
 class Hlt2DisplVerticesDEV : public DVAlgorithm {
 public:
   Hlt2DisplVerticesDEV(const std::string& name, ISvcLocator* pSvcLocator);
-  // Destructor
+  /// Destructor
   virtual ~Hlt2DisplVerticesDEV();
-  // Algorithm initialization
+  /// Algorithm initialization
   virtual StatusCode initialize();
-  // Algorithm execution
+  /// Algorithm execution
   virtual StatusCode execute();
-  // Algorithm finalization
+  /// Algorithm finalization
   virtual StatusCode finalize();
 
 private:
   StatusCode fillHeader( Tuple & );
-  StatusCode Done( LHCb::Particle::ConstVector & );
   StatusCode SaveHidValSel( Tuple &, LHCb::RecVertices* );
+  /// Get all Particles related to the Tracks participating in a RecVertex
   void GetPartsFromRecVtx(const LHCb::RecVertex*, 
 			  LHCb::Particle::ConstVector & );
+  /// Create a map between the Particles and the Velo Tracks
   void CreateMap();
+  void SaveBeamLine(); ///< Save the beam line in TES
+  /// Compute some kinematical values for a ConstVector of Particles
   void Kinematics( LHCb::Particle::ConstVector &,double &,double &,double & );
+  bool RecVertex2Particle( const LHCb::RecVertex*, 
+			   LHCb::Particle::ConstVector &, 
+			   double &, double &, double &, double & );
+  /// Has a RecVertex a backward track ?
   bool HasBackwardTracks( const LHCb::RecVertex* RV );
+/// Returns true if a RecVertex is found to be too close to a detector material
   bool RemVtxFromDet( const LHCb::RecVertex* );
   bool BeamLineCalibration();
+  /// Creates a pions with 400 MeV pt from track slopes.
   const LHCb::Particle* DefaultParticle( const LHCb::Track * p );
   Gaudi::XYZPoint GetCorrPosition( const LHCb::RecVertex*, 
                                    LHCb::RecVertex::ConstVector & );
   Gaudi::XYZPoint Plus( const Gaudi::XYZPoint &, const Gaudi::XYZPoint & );
   Gaudi::XYZPoint Minus( const Gaudi::XYZPoint &, const Gaudi::XYZPoint & );
+  /// Compute the radial distance to the beam line
   double RadDist( const Gaudi::XYZPoint & );
 
   //Check up
@@ -88,33 +98,39 @@ private:
   IGeometryInfo* m_lhcbGeo;
 
   //Job options
-  std::string m_InputDisplVertices;
+  std::string m_InputDisplVertices; ///< Where to find the RecVertices
+  /*****************************************************************
+   * the type of R cut to be applied 
+   * ""                  : cut with respect to (0,0,z)
+   * "LocalVeloFrame"    : cut with respect to (0,0,z) in the local Velo frame
+   * "FromUpstreamPV"    : cut with respect to the upstream PV (PV3D)
+   * "FromUpstreamPVOpt" : cut with respect to the upstream RV 
+   * "CorrFromUpstreamPV" : cut with respect to the upstream PV 2D. 
+   *                        Take the position of the associated 2D RV, if any.
+   * "FromBeamLine"     : compute the beam interaction axis and cut wrst to it.
+   ******************************************************************/
   std::string m_RCutMethod;   
-  // the type of R cut to be applied 
-  // ""               : cut with respect to (0,0,z)
-  // "LocalVeloFrame" : cut with respect to (0,0,z) in the local Velo frame
-  // "FromUpstreamPV" : cut with respect to the upstream PV
-  // "FromUpstreamPV3D" : cut with respect to the upstream PV from 
-  //                      private PatPV3D
-  // "CorrFromUpstreamPV" : cut with respect to the upstream PV 2D. 
-  //                        Take the position of the associated 2D RV, if any.
-  // "FromBeamLine" : compute the beam interaction axis and cut wrst to it.
-
-  bool m_HidValSel;       //Save cuts from Hlt2HidValley
-  bool m_Save;            // save info in tuples
-  bool m_DefMom;        // work with default pion when no long tracks
-  int m_MinNbtrks;        //min number of daughters tracks in a RecVertex
-  double m_RMin1;          //min radial displacement 
-  double m_RMin2;          //min radial displacement 
-  double m_MinMass1;      //min reconstructed mass
-  double m_MinMass2;      //min reconstructed mass
-  double m_MinSumpt1;     //min sum of all daughters track
-  double m_MinSumpt2;     //min sum of all daughters track
-  double m_RemVtxFromDet ;// remove vtx reco in detector material
-  // if = 0  : disabled
-  // if < 0  : remove reco vtx if in detector material
-  // if > 0  : remove reco vtx if rad length from decay pos - m_RemVtxFromDet 
-  //           to decay pos + m_RemVtxFromDet along z is > threshold
+  bool m_HidValSel;     ///< Save cuts from Hlt2HidValley
+  bool m_Save;          ///< Save info in tuples
+  bool m_DefMom;        ///< Work with default pion when no long tracks
+  int m_MinNbtrks;      ///< Min number of daughters tracks in a RecVertex
+  double m_RMin;        ///< Min radial displacement 
+  double m_MinMass;     ///< Min reconstructed mass
+  /*****************************************************************
+   * Remove vtx reco in detector material
+   * if = 0  : disabled
+   * if < 0  : remove reco vtx if in detector material
+   * if > 0  : remove reco vtx if rad length from decay pos - m_RemVtxFromDet 
+   *           to decay pos + m_RemVtxFromDet along z is > threshold
+   ******************************************************************/
+  double m_RemVtxFromDet ;
+  /*****************************************************************
+   * Remove vtx reco in detector material
+   * if < 0  : disabled
+   *  if m_RemVtxFromDetSig > 0 : remove reco vtx if rad length along 
+   *                             +- m_RemVtxFromDetSig * PositionCovMatrix
+   ******************************************************************/
+  double m_RemVtxFromDetSig ;
 
   GaudiUtils::VectorMap<int, const LHCb::Particle *> m_map;
 
@@ -123,8 +139,6 @@ private:
 
   Gaudi::Transform3D m_toVeloFrame; ///< to transform to local velo frame
 
-  //a pions
-  const LHCb::Particle* Pion;
   double m_piMass;  ///< the pion mass
   double m_pt;      ///< default pt for default pions
 

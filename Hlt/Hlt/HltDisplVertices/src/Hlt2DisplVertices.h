@@ -77,12 +77,19 @@ private:
   double m_MinSumpt2;      ///< Min sum of all daughters track
   /*****************************************************************
    * Remove vtx reco in detector material
-  * if = 0  : disabled
-  * if < 0  : remove reco vtx if in detector material
-  * if > 0  : remove reco vtx if rad length from decay pos - m_RemVtxFromDet 
-  *           to decay pos + m_RemVtxFromDet along z is > threshold
-  ******************************************************************/
+   * if = 0  : disabled
+   * if < 0  : remove reco vtx if in detector material
+   * if > 0  : remove reco vtx if rad length from decay pos - m_RemVtxFromDet 
+   *           to decay pos + m_RemVtxFromDet along z is > threshold
+   ******************************************************************/
   double m_RemVtxFromDet ;
+  /*****************************************************************
+   * Remove vtx reco in detector material
+   * if < 0  : disabled
+   *  if m_RemVtxFromDetSig > 0 : remove reco vtx if rad length along 
+   *                             +- m_RemVtxFromDetSig * PositionCovMatrix
+   ******************************************************************/
+  double m_RemVtxFromDetSig ;
 
   GaudiUtils::VectorMap<int, const LHCb::Particle *> m_map;
 
