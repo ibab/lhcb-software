@@ -112,20 +112,17 @@ def test_clone_selection_with_cloned_alg() :
 
 if '__main__' == __name__ :
 
-    def compare_length(x,y) :
-        if len(x) < len(y)  : return -1
-        if len(x) > len(y)  : return  1
-        if len(x) == len(y) : return  0
-
     import sys
 
     test_names = filter(lambda k : k.count('test_') > 0, locals().keys())
 
     __tests = filter( lambda x : x[0] in test_names, locals().items())
+    
 
     message = ''
     summary = '\n'
-    length = len(sorted(test_names, cmp = compare_length, reverse = True)[0]) +2
+    length = len(sorted(test_names,
+                        cmp = lambda x,y : cmp(len(y),len(x)))[0]) +2
     
     for test in __tests :
         try :
@@ -144,3 +141,4 @@ if '__main__' == __name__ :
 
     summary += 'Global'.ljust(length) + ':' + message.rjust(10) + '\n\n'
     wr(summary)
+        
