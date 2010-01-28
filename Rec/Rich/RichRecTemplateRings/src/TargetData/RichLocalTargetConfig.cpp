@@ -1,4 +1,4 @@
-// $Id: RichLocalTargetConfig.cpp,v 1.4 2009-12-16 13:42:49 seaso Exp $
+// $Id: RichLocalTargetConfig.cpp,v 1.5 2010-01-28 16:08:09 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -174,6 +174,7 @@ StatusCode RichLocalTargetConfig::SelectHitsInFoi(int itk, int irad , int iRich 
       // special case for aerogel: check if the hit is already used in the
       // gas ring.
       // also use selection bands in aerogel and rich2gas.
+      // no selection bands to be used for any radiator. Jan 2010.
 
           if(irad == 1 ) {
 
@@ -185,14 +186,16 @@ StatusCode RichLocalTargetConfig::SelectHitsInFoi(int itk, int irad , int iRich 
            if( (irad == 0) &&  (RRslt()-> HitSelectedInRecRingsValue (i,1))) {
               // hit already used for a rich1 gas ring and not to be used for aerogel
            } else {
-              int ip=0;
-              while( ( m_HitIsSelected[i] == false ) && ip < (  RConst()-> RichNumParticleSpecies())) {
-              double aExpRad = Tfm()-> TrackExpectedRadiusValue(itk,irad,ip);
-              if( (aExpRad > 0.0) && (fabs(aradius-aExpRad) < aRadiusSigma) ) {
-                  m_HitIsSelected[i]=true;
-              }
-              ip++;
-              }
+             // the following commented Jan 2010.
+             //  int ip=0;
+             //  while( ( m_HitIsSelected[i] == false ) && ip < (  RConst()-> RichNumParticleSpecies())) {
+             //  double aExpRad = Tfm()-> TrackExpectedRadiusValue(itk,irad,ip);
+             //  if( (aExpRad > 0.0) && (fabs(aradius-aExpRad) < aRadiusSigma) ) {
+             //   m_HitIsSelected[i]=true;
+             //  }
+             //  ip++;
+             //  }
+                m_HitIsSelected[i]=true;
               
            }
            

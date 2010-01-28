@@ -1,4 +1,4 @@
-// $Id: RichRingRecConstants.cpp,v 1.3 2009-06-15 09:08:28 seaso Exp $
+// $Id: RichRingRecConstants.cpp,v 1.4 2010-01-28 16:08:09 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -103,17 +103,23 @@ void RichRingRecConstants::InitRichRingRecConstantsParam()
    m_MaxNominalRadiusForRadiator[2]=160.0;
 
    m_RadiusSigma.clear();m_RadiusSigma.resize(m_maxNumRadiator);
-      m_RadiusSigma[0]=10.0;
+   m_RadiusSigma[0]=10.0; /// used for mean radius
    // m_RadiusSigma[0]=5.0;
-   m_RadiusSigma[1]=5.0;
-   m_RadiusSigma[2]=10.0;
+      // m_RadiusSigma[1]=5.0; // used for mean radius
+      // m_RadiusSigma[2]=10.0; // used for mean radius
+      m_RadiusSigma[1]=6.0; // new from jan 2010
+      m_RadiusSigma[2]=8.0; // new from jan 2010
 
    m_RadiusTightSigma.clear();m_RadiusTightSigma.resize(m_maxNumRadiator);
-      m_RadiusTightSigma[0]=7.0;
+   //    m_RadiusTightSigma[0]=7.0; // until jan2010
    //m_RadiusTightSigma[0]=4.0;
-   m_RadiusTightSigma[1]=3.0;
-   //m_RadiusTightSigma[1]=5.0;
+   //m_RadiusTightSigma[1]=3.0;   // until jan2010
+   //m_RadiusTightSigma[1]=5.0;   // until jan2010
    m_RadiusTightSigma[2]=5.0;
+
+   m_RadiusTightSigma[0]=20.0; // for track-assoc-with-hits. from Jan2010
+   m_RadiusTightSigma[1]=20.0; // for track-assoc-with-hits. from Jan2010
+   m_RadiusTightSigma[2]=20.0; // for track-assoc-with-hits. from Jan2010
 
 
    m_radiusSatRingTypical.clear();m_radiusSatRingTypical.resize(m_maxNumRadiator);

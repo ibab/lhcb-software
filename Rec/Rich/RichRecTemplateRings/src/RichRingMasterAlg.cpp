@@ -1,4 +1,4 @@
-// $Id: RichRingMasterAlg.cpp,v 1.7 2009-12-16 13:42:49 seaso Exp $
+// $Id: RichRingMasterAlg.cpp,v 1.8 2010-01-28 16:08:09 seaso Exp $
 // Include files
 
 // from Gaudi
@@ -258,6 +258,9 @@ StatusCode RichRingMasterAlg::StoreRingInfoInNtup()
     VI tkMM = rt()->Tfm()->getTrackIndexLimits( irad);
     int iRich = rt()->Tfm()->RichDetNumFromRadiator(irad);
     int aNumHit = rt()->tgD()->NumHitsTarget(iRich);
+    //info()<<" RichMasterAlg Radiator Rich Number of hits "<<irad<<"   "<< iRich<<"  "<<aNumHit<<endmsg;
+    // info() <<" RichMasterAlg Number of tracks "<<tkMM[0]<<"  "<< tkMM[1]<<endmsg;
+    
     // int aNumTk = rt()->tgD()->NumChRdTrackValue(irad);
     VD tkX; tkX.clear(); tkX.reserve(200);
     VD tkY; tkY.clear(); tkY.reserve(200);
@@ -268,6 +271,7 @@ StatusCode RichRingMasterAlg::StoreRingInfoInNtup()
     VD tkMom; tkMom.clear(); tkMom.reserve(200);
     VD tkMass; tkMass.clear();
     tkMass.reserve(200);
+
     
     
     for(int itk=tkMM[0]; itk< (tkMM [1]) ; ++itk){
@@ -288,9 +292,11 @@ StatusCode RichRingMasterAlg::StoreRingInfoInNtup()
       
     }
 
+
     std::vector<double> htX; htX.clear(); htX.reserve(maxNumHit);
     std::vector<double> htY; htY.clear(); htY.reserve(maxNumHit);
     for (int ih=0; ih< aNumHit; ih++){
+
       htX.push_back(rt()->tgD()->XHitInpValue(ih,iRich));
       htY.push_back(rt()->tgD()->YHitInpValue(ih,iRich));
     }

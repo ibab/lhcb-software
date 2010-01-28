@@ -1,4 +1,4 @@
-// $Id: RichTargetDataConfigAlg.cpp,v 1.8 2009-12-16 13:42:49 seaso Exp $
+// $Id: RichTargetDataConfigAlg.cpp,v 1.9 2010-01-28 16:08:09 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -77,15 +77,20 @@ StatusCode RichTargetDataConfigAlg::AcquireTargetRichHitInfo()
   StatusCode sc=  StatusCode::SUCCESS;
   rt()->tgD()->clearHitInputs();
   int aNumHitsInp = (int) richPixels()->size();
-  if( aNumHitsInp > 0 ) {
+  //debug()<<" Rich AcquireTargerRichHitInfo() Number of RichHits "<<aNumHitsInp<<endmsg;
 
-    // there are RICH hits in this event    
+  
+  //  if( aNumHitsInp > 0 ) {
+
+
     VC r1h; r1h.reserve(aNumHitsInp);
     VC r2h; r2h.reserve(aNumHitsInp);
     VI r1inv;  r1inv.reserve(aNumHitsInp);
     VI r2inv; r2inv.reserve(aNumHitsInp);  
     int r1s=0;
     int r2s=0;
+ if( aNumHitsInp > 0 ) {
+    // there are RICH hits in this event    
 
     // Loop through all the RICH hits
     for ( LHCb::RichRecPixels::const_iterator iPix = richPixels()->begin();
@@ -111,16 +116,19 @@ StatusCode RichTargetDataConfigAlg::AcquireTargetRichHitInfo()
       
     }
     
-    // Store the Target info.
-     rt()->tgD()->setNumHitsInp(aNumHitsInp);
-     rt()->tgD()->StoreTargetHitData(r1h,r1s,r1inv);
-     rt()->tgD()->StoreTargetHitData(r2h,r2s,r2inv);
-  
-  } else {
+ } else {
     
      debug() << "RichRingRec TargetData: No Rich Target hits data in this event " << endmsg;
     
   }
+    
+    // Store the Target info.
+    debug()<<" Rich TargetDataConfigAlg Acquire target data hits rich1 rich2   "<<r1s<<"      "<<r2s<<endmsg;
+    
+     rt()->tgD()->setNumHitsInp(aNumHitsInp);
+     rt()->tgD()->StoreTargetHitData(r1h,r1s,r1inv);
+     rt()->tgD()->StoreTargetHitData(r2h,r2s,r2inv);
+  
   
   return sc;
   
@@ -133,7 +141,7 @@ StatusCode RichTargetDataConfigAlg::AcquireTargetTrackInfo()
   
   int aNumtk=-1;
   int aNumMaxTk= (int) richSegments()->size();
-  debug()<<" Number of input segments in this event = "<<aNumMaxTk<<endmsg;
+  // info()<<" Number of input segments in this event = "<<aNumMaxTk<<endmsg;
   
     VC t0h; VD m0h; t0h.reserve(aNumMaxTk); m0h.reserve(aNumMaxTk);
     VC t1h; VD m1h; t1h.reserve(aNumMaxTk); m1h.reserve(aNumMaxTk);
@@ -223,8 +231,8 @@ StatusCode RichTargetDataConfigAlg::AcquireTargetTrackInfo()
            ti2.push_back(invIndex);
            m2h.push_back(  tkTotMom);
 
-         // info() <<"Target acquire track track num "<<rad
-         // <<"  "<<invIndex<<"  "<<aNumtk<<"  "<<n2s<<"  "<<pdPointLocal<<endmsg;
+           // info() <<"Target acquire track track num "<<rad
+           // <<"  "<<invIndex<<"  "<<aNumtk<<"  "<<n2s<<"  "<<pdPointLocal<<endmsg;
            
          }
          
