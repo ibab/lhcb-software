@@ -114,25 +114,20 @@ if '__main__' == __name__ :
 
     import sys
 
-    __tests = [test_instantiate_tree,
-               test_tree_InputLocations_propagated,
-               test_tree_InputLocations_not_duplicated,
-               test_selection_with_existing_selection_name_raises,
-               test_clone_selection_with_existing_selection_name_raises,
-               test_clone_selection_with_new_alg,
-               test_clone_selection_with_new_InputLocations,
-               test_clone_selection_with_cloned_alg                      ]
+    test_names = filter(lambda k : k.count('test_') > 0, locals().keys())
+
+    __tests = filter( lambda x : x[0] in test_names, locals().items())
 
     message = ''
     summary = '\n'
     
     for test in __tests :
         try :
-            test()
+            test[1]()
             message = 'PASS'
         except :
             message = "FAIL"
-        summary += '\t' + test.__name__ + ':\t\t' + message + '\n'
+        summary += '\t' + test[0] + ':\t\t' + message + '\n'
 
     if summary.count('FAIL') > 0 :
         message = 'FAIL'

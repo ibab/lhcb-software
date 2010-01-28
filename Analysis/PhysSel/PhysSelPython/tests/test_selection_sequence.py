@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Id: test_selection_sequence.py,v 1.7 2010-01-28 08:41:12 jpalac Exp $
+#$Id: test_selection_sequence.py,v 1.8 2010-01-28 10:51:04 jpalac Exp $
 '''
 Test suite for SelectionSequence class.
 '''
@@ -124,28 +124,25 @@ def test_clone_sequence() :
         assert sel.algorithm() in seqAlgos
 
 
-def test_fail() :
-    assert True == False
-
 if '__main__' == __name__ :
 
     import sys
 
-    __tests = [test_instantiate_sequencer,
-               test_sequencer_sequence,
-               test_sequencer_algos,
-               test_clone_sequence        ]
+    test_names = filter(lambda k : k.count('test_') > 0, locals().keys())
+
+    __tests = filter( lambda x : x[0] in test_names, locals().items())
+    
 
     message = ''
     summary = '\n'
     
     for test in __tests :
         try :
-            test()
+            test[1]()
             message = 'PASS'
         except :
             message = "FAIL"
-        summary += '\t' + test.__name__ + ':\t\t' + message + '\n'
+        summary += '\t' + test[0] + ':\t\t' + message + '\n'
 
     if summary.count('FAIL') > 0 :
         message = 'FAIL'
