@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Id: test_dummy_configurables.py,v 1.6 2010-01-28 11:11:08 jpalac Exp $
+#$Id: test_dummy_configurables.py,v 1.7 2010-01-28 13:32:20 jpalac Exp $
 
 import sys
 sys.path.append('../python')
@@ -14,6 +14,8 @@ def test_ConfigurableGenerator_is_singleton() :
     assert confGen0.__dict__ == confGen1.__dict__
 
 def test_clone_with_used_name_overwrites_original() :
+
+    
     '''Mimic the bad behaviour of GaudiAlgorithm configurables'''
     dummy = DummyAlgorithm('Dummy00',
                            InputLocations = ['sel0', 'sel1'])
@@ -107,6 +109,11 @@ def test_get_existing_DummyAlgorithm_with_new_InputLocations() :
 
 if '__main__' == __name__ :
 
+    def compare_length(x,y) :
+        if len(x) < len(y)  : return -1
+        if len(x) > len(y)  : return  1
+        if len(x) == len(y) : return  0
+
     import sys
 
     test_names = filter(lambda k : k.count('test_') > 0, locals().keys())
@@ -116,6 +123,7 @@ if '__main__' == __name__ :
 
     message = ''
     summary = '\n'
+    length = len(sorted(test_names, cmp = compare_length, reverse = True)[0])+2
     
     for test in __tests :
         try :
@@ -123,7 +131,7 @@ if '__main__' == __name__ :
             message = 'PASS'
         except :
             message = "FAIL"
-        summary += '\t' + test[0] + ':\t\t' + message + '\n'
+        summary += test[0].ljust(length) + ':' + message.rjust(10) + '\n'
 
     if summary.count('FAIL') > 0 :
         message = 'FAIL'
@@ -132,6 +140,6 @@ if '__main__' == __name__ :
         message = 'PASS'
         wr = sys.stdout.write
 
-    summary += '\tGlobal:\t\t' + message + '\n\n'
+    summary += 'Global'.ljust(length) + ':' + message.rjust(10) + '\n\n'
     wr(summary)
         
