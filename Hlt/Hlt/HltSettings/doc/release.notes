@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-01-28 - Patrick Koppenburg
+ - Remove two obsolete lines
+
 ! 2010-01-25 - Johannes Albrecht
  - add new threshold settings on top of the the ones below 
    with additionally the Hlt2 Express stream

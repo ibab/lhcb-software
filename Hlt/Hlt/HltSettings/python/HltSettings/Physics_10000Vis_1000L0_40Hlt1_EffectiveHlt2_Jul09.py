@@ -117,8 +117,9 @@ class Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09( Physics_10000Vis_1000L
                        'Hlt2CharmTF2BodyWideMass',
                        'Hlt2CharmTF3BodyWideMass',
                        'Hlt2CharmTF4BodyWideMass',
-                       'Hlt2DX3BodyCopKsDD',
-                       'Hlt2DX3BodyCopNoKs' ] )
+#                       'Hlt2DX3BodyCopKsDD',
+#                       'Hlt2DX3BodyCopNoKs'
+                       ] )
 ##
 ## (di)muons : whole default list
 ##
