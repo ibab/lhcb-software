@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.6 2010-01-07 15:39:18 graven Exp $
+# $Id: HltL0Candidates.py,v 1.7 2010-01-28 13:36:42 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -98,7 +98,11 @@ _l0Channels = None
 ### setupL0Channels _must_ be called before L0Channels, convertL0Candidates or HltL0Candidates is
 ### invoked...
 def decodeL0Channels( L0TCK , skipDisabled = True) :
-    # we assume somebody has done an 'importOptions' of the relevant L0 setup...
+    print 'decodeL0Channels invoked'
+    importOptions('$L0TCK/L0DUConfig.opts')
+    from Configurables import L0DUMultiConfigProvider
+    if L0TCK not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
+        raise KeyError('requested L0 TCK %s is not known'%L0TCK)
     channels = _parseL0settings( ConfigurableGeneric('ToolSvc.L0DUConfig.TCK_'+L0TCK).Channels )
     print '# decoded L0 channels for L0TCK=%s: %s'%(L0TCK, str(channels))
     return [ i['name'] for i in channels if ( not skipDisabled or 'DISABLE' not in i or i['DISABLE'].upper().find('TRUE') == -1 ) ]
