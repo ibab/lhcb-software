@@ -3,6 +3,8 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2010-01-28 - Gerhard Raven
+ - add Hlt::TrackPipe
 ! 2010-01-22 - Gerhard Raven
  - add Hlt::TrackFilter
 
