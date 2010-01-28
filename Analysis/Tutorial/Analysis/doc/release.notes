@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.90 2010-01-28 09:36:14 pkoppenb Exp $
+!$Id: release.notes,v 1.91 2010-01-28 09:48:30 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Tutorial/Analysis
 ! Responsible : P. Koppenburg
@@ -9,6 +9,7 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== Analysis v8r3p2 2010-01-28 ===============
 ! 2010-01-28 - Patrick Koppenburg
  - Removed obsolete html pages
  - v8r3p2

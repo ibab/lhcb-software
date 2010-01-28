@@ -1,5 +1,5 @@
 ########################################################################
-# $Id: DVTutorial_4.py,v 1.6 2010-01-05 16:36:42 jdickens Exp $
+# $Id: DVTutorial_4.py,v 1.7 2010-01-28 09:47:45 pkoppenb Exp $
 #
 # Options for exercise 4
 #
@@ -22,7 +22,7 @@ seq = SeqBs2JpsiPhi.sequence()
 from Configurables import DaVinci
 DaVinci().HistogramFile = "DVHistos_4.root"    # Histogram file
 DaVinci().EvtMax = 1000                          # Number of events
-DaVinci().DataType = "2008"                    # Default is "MC09"
+DaVinci().DataType = "MC09"                    # Default is "MC09"
 DaVinci().Simulation   = True                  # It's MC
 #
 # Add our own stuff
@@ -32,6 +32,6 @@ DaVinci().MainOptions  = ""                    # None
 ########################################################################
 #
 # To run in shell :
-# gaudirun.py solutions/DaVinci4/DVTutorial_4.py options/Bs2JpsiPhi2008.py
+# gaudirun.py solutions/DaVinci4/DVTutorial_4.py options/MC09-Bs2JpsiPhi.py
 #
 ########################################################################
