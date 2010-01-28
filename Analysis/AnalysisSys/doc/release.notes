@@ -3,6 +3,9 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+ - Highlights:
+   * New Package DisplVertices
+
 </PRE><H1><A NAME=v3r14>2009-12-16 Analysis v3r14 </A></H1><PRE>
 
  - Based on LHCb v28r5, and Gaudi v21r6
