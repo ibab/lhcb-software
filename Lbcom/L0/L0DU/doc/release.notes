@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.178 2010-01-27 23:35:20 odescham Exp $
+! $Id: release.notes,v 1.179 2010-01-28 16:11:40 jucogan Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2010-01-28 - Julien Cogan
+ - L0Conf: 
+   - bug fix (crash when running Boole). The emulators now write on TES in the L0SimulationSeq
+   - fix compilation warning (?). Import of L0 configurables have been removed from global scope 
+     and inserted in the class.
 
 ! 2010-01-27 - Olivier Deschamps
   - cmt/requirements link to L0TCK v2*
