@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.145 2010-01-28 13:37:31 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.146 2010-01-28 15:43:30 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -169,20 +169,22 @@ class HltConf(LHCbConfigurableUser):
         ###       bit 34 -> count number of 'non-lumi-exlusive events'
         ###       bit 33 -> lumi stream
         ###       bit 32 -> full stream (actually, not used for that, but it could be ;-)
-        Hlt2Express = "scale(scale(HLT_PASS('Hlt2ExpressJPsiDecision'),RATE(5)) |"\
-                      "scale(HLT_PASS('Hlt2ExpressJPsiTagProbeDecision'),RATE(5)) |"\
-                      "scale(HLT_PASS('Hlt2ExpressLambdaDecision'),RATE(1)) |"\
-                      "scale(HLT_PASS('Hlt2ExpressKSDecision'),RATE(1)) |"\
-                      "scale(HLT_PASS('Hlt2ExpressDs2PhiPiDecision'),RATE(1)) |"\
-                      "scale(HLT_PASS('Hlt2ExpressBeamHaloDecision'),RATE(1)) "\
-                      ",RATE(10))"
+
+        from Configurables import HltRoutingBitsWriter
+        HltRoutingBitsWriter().Preambulo = [ "XP5Jpsi   = scale(HLT_PASS('Hlt2ExpressJPsiDecision'),RATE(5))"
+                                           , "XP5JpsiTP = scale(HLT_PASS('Hlt2ExpressJPsiTagProbeDecision'),RATE(5))"
+                                           , "XP1Lambda = scale(HLT_PASS('Hlt2ExpressLambdaDecision'),RATE(1))"
+                                           , "XP1KS     = scale(HLT_PASS('Hlt2ExpressKSDecision'),RATE(1))"
+                                           , "XP1PhiPi  = scale(HLT_PASS('Hlt2ExpressDs2PhiPiDecision'),RATE(1))"
+                                           , "XP1BeamHalo = scale(HLT_PASS('Hlt2ExpressBeamHaloDecision'),RATE(1))"
+                                           , "XP1Phys   = scale(HLT_PASS_RE('Hlt1(?!Lumi).*Decision'), RATE(1))"
+                                           ]
                
         routingBits = { 32 : "HLT_PASS('Hlt1Global')"
                       , 33 : "HLT_PASS_SUBSTR('Hlt1Lumi')" 
                       , 34 : "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global
                       , 35 : "HLT_PASS_SUBSTR('Hlt1Velo')"
-                        # flag 1 Hz of 'physics events' ored with the Hlt2Express Stream lines
-                      , 36 : "scale(HLT_PASS_RE('Hlt1(?!Lumi).*Decision'), RATE(1)) |"+Hlt2Express
+                      , 36 : "scale( %s ,RATE(10))" % "|".join([ "XP5Jpsi", "XP5JpsiTP", "XP1Lambda", "XP1KS", "XP1PhiPi", "XP1BeamHalo", "XP1Phys" ])
                       , 37 : "HLT_PASS('Hlt1ODINPhysicsDecision')"
                       , 38 : "HLT_PASS('Hlt1ODINTechnicalDecision')"
                       , 39 : "HLT_PASS_SUBSTR('Hlt1L0')"
@@ -198,6 +200,7 @@ class HltConf(LHCbConfigurableUser):
                       , 65 : "HLT_PASS('Hlt2DebugEventDecision')"
                       , 66 : "HLT_PASS_RE('Hlt2(?!Transparent).*Decision')"
                       }
+        HltRoutingBitsWriter().RoutingBits = routingBits
 
         ## and record the settings in the ANN service
         HltANNSvc().RoutingBits = dict( [ (v,k) for k,v in routingBits.iteritems() ] )
@@ -217,8 +220,6 @@ class HltConf(LHCbConfigurableUser):
         #  forward compatibility: HltFactory will become private for HltRoutingBitsWriter...
         HltFactory('HltRoutingBitsWriter.LoKi::Hybrid::HltFactory').Modules += [ 'LoKiCore.functions', 'LoKiNumbers.sources' ]
         # and, last but not least, tell the writer what it should write..
-        from Configurables import HltRoutingBitsWriter
-        HltRoutingBitsWriter().RoutingBits = routingBits
 
 ##################################################################################
     def configureVertexPersistence(self,lines) :

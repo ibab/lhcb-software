@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.398 2010-01-28 13:37:31 graven Exp $ 
+! $Id: release.notes,v 1.399 2010-01-28 15:43:30 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-01-28 - Gerhard Raven
+ - Configuration.py: shorten string for Express stream bit using Preambulo
+
 ! 2010-01-25 - Johannes Albrecht
  - Configuration.py: modify to include the Hlt2Express stream
  - Configuration.py: fix syntax error in second commit 
