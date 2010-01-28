@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.55 2010-01-05 11:53:08 pkoppenb Exp $ 
+# $Id: requirements,v 1.56 2010-01-28 09:36:14 pkoppenb Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.55 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.56 $
 # ============================================================================
 # Created    : 2004-11-04
 # Maintainer : P. Koppenburg
@@ -11,7 +11,7 @@ version           v8r3p2
 # ============================================================================
 # Structure, i.e. directories to process. 
 # ============================================================================
-branches          cmt doc src options solutions exercises python
+branches          cmt doc src options solutions python
 
 # ============================================================================
 # Used packages.
