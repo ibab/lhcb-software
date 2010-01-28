@@ -187,7 +187,7 @@ StatusCode OdinTypesFilter::execute() {
   if( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
     odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
   }else{
-    return Error("ODIN cannot be loaded");
+    return Error("ODIN cannot be loaded - FilterPassed = false",StatusCode::SUCCESS);
   }
 
   
