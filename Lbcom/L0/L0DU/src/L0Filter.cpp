@@ -1,4 +1,4 @@
-// $Id: L0Filter.cpp,v 1.5 2009-09-17 12:14:50 odescham Exp $
+// $Id: L0Filter.cpp,v 1.6 2010-01-28 16:55:23 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -25,15 +25,17 @@ DECLARE_ALGORITHM_FACTORY( L0Filter );
 //=============================================================================
 L0Filter::L0Filter( const std::string& name,
                     ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : L0AlgBase ( name , pSvcLocator )
   ,m_count(0)
   ,m_sel(0)
 {
   m_l0channels.clear();
   declareProperty("L0DULocation", m_l0Location = LHCb::L0DUReportLocation::Default );
-  declareProperty("OrChannels", m_l0channels );
-  declareProperty("TriggerBit", m_trig = "L0" );
-
+  declareProperty("OrChannels"  , m_l0channels );
+  declareProperty("OrSubTriggers"  , m_l0triggers );
+  declareProperty("TriggerBit"  , m_trig = "L0" ); // decision bit (L0/TTB/FB)
+  declareProperty("L0DecisionMask", m_mask = LHCb::L0DUDecision::Physics ); //L0 decision type (Physics/Beam1/Beam2)
+  declareProperty("Revert"        , m_revert = false );
 }
 //=============================================================================
 // Destructor
@@ -44,7 +46,7 @@ L0Filter::~L0Filter() {}
 // Initialization
 //=============================================================================
 StatusCode L0Filter::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = L0AlgBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   debug() << "==> Initialize" << endmsg;
 
@@ -53,15 +55,29 @@ StatusCode L0Filter::initialize() {
   }else if( "Force" == m_trig) { 
     info() << "Will require that the L0DU 'Force Bit' is fired " << endmsg;
   }else if( "L0" == m_trig){
-    info() << "Will require that any " ;
+    info() << "Will require that : " << endmsg;
     if ( !m_l0channels.empty()) {
-      info() << "of " ;
+      info() << " - any of : [" ;
       for ( std::vector<std::string>::const_iterator c = m_l0channels.begin() ; 
             c != m_l0channels.end() ; ++c ) {
-        info() << *c << " " ;
+        info() << "'" << *c << "' " ;
       }
+      info() << "] L0 channel(s) is passed "<< endmsg;
+      if ( !m_l0triggers.empty()) info() << " OR " << endmsg;
     }
-    info() << "L0 channel(s) is passed" << endmsg ;
+
+    if ( !m_l0triggers.empty()) {
+      info() << " - any of : [" ;
+      for ( std::vector<std::string>::const_iterator c = m_l0triggers.begin() ; 
+            c != m_l0triggers.end() ; ++c ) {
+        info() << *c << " " ;
+      } 
+      info() << "] L0 trigger(s) is passed "<< endmsg;
+    } 
+
+    if( m_l0triggers.empty() || m_l0channels.empty() )
+      info() << " - trigger decision type " << LHCb::L0DUDecision::Name[ m_mask ] << " is passed " << endmsg;
+
   }
   else{
     error() << "The 'TriggerBit' property must be either : " << endmsg;
@@ -70,6 +86,10 @@ StatusCode L0Filter::initialize() {
     error() << "   - 'Force'  : L0DU force bit decision " <<endmsg;
     return StatusCode::FAILURE;
   }
+
+  std::string def = ( m_revert ) ? "REJECT" : "ACCEPT" ;
+  info() << "---- > TO " << def << " THE EVENT" << endreq;
+
   return StatusCode::SUCCESS;
 } 
 
@@ -80,48 +100,75 @@ StatusCode L0Filter::execute() {
 
   debug() << "==> Execute" << endmsg;
   m_count++;
-  const  LHCb::L0DUReport* l0 = get<LHCb::L0DUReport>(m_l0Location);
 
-  setFilterPassed(false); // switch off by default
+  std::string loc = dataLocation( m_l0Location );
+  const  LHCb::L0DUReport* l0 = get<LHCb::L0DUReport>( loc );
+
+  bool accept = m_revert ? false : true;
+
+
+  setFilterPassed( !accept ); // switch off by default
 
   // Timing Trigger decision
   if( "Timing" == m_trig  ){
-    if( l0->timingTriggerBit() )setFilterPassed(true);
+    if( l0->timingTriggerBit() )setFilterPassed( accept );
     return StatusCode::SUCCESS;
   }
   // Force decision
   if( "Force" == m_trig  ){
-    if( l0->forceBit() )setFilterPassed(true);
+    if( l0->forceBit() )setFilterPassed( accept );
     return StatusCode::SUCCESS;
   }
   
   if( "L0" != m_trig)return StatusCode::FAILURE;
   // standard L0DU decision
-  if (l0->decision()){ 
-    if ( !m_l0channels.empty()) {
-      for ( std::vector<std::string>::const_iterator c = m_l0channels.begin() ; 
-            c != m_l0channels.end() ; ++c ) {
-        if (l0->channelDecisionByName(*c)){
-          setFilterPassed(true);
-          if ( msgLevel(MSG::VERBOSE)) verbose() << "Event is accepted by " 
-                                                 << *c << endmsg ;
-        } else if ( msgLevel(MSG::VERBOSE)) verbose() << "Event is not accepted by " 
-                                                      << *c << endmsg ; 
-      }
-    } else { // any decision will do
-      if ( msgLevel(MSG::VERBOSE)) verbose() << "Event is accepted by L0" << endmsg ;
-      setFilterPassed(true);
+
+  if ( !m_l0channels.empty()) {
+    for ( std::vector<std::string>::const_iterator c = m_l0channels.begin() ; 
+          c != m_l0channels.end() ; ++c ) {
+      if (l0->channelDecisionByName(*c)){
+        setFilterPassed( accept );
+        if ( msgLevel(MSG::VERBOSE)) verbose() << "Event is accepted by " 
+                                               << *c << " Channel" << endmsg ;
+      } else if ( msgLevel(MSG::VERBOSE)) verbose() << "Event is not accepted by "
+                                                    << *c << " Channel" << endmsg ; 
     }
+  }
+
+  if ( !m_l0triggers.empty()) {
+    for ( std::vector<std::string>::const_iterator c = m_l0triggers.begin() ; 
+          c != m_l0triggers.end() ; ++c ) {
+      if (l0->triggerDecisionByName(*c)){
+        setFilterPassed( accept );
+          if ( msgLevel(MSG::VERBOSE)) verbose() << "Event is accepted by " 
+                                                 << *c << " SubTrigger" << endmsg ;
+      } else if ( msgLevel(MSG::VERBOSE)) verbose() << "Event is not accepted by " 
+                                                    << *c << " SubTrigger" << endmsg ; 
+    }
+  }  
+
+  if ( m_l0triggers.empty() && m_l0channels.empty() && l0->decision(m_mask)){
+    if ( msgLevel(MSG::VERBOSE)) verbose() << "Event is accepted by L0 decision " 
+                                           << LHCb::L0DUDecision::Name[m_mask] <<endmsg ;
+    setFilterPassed( accept );
   } else {
-    setFilterPassed(false);
-    verbose() << "Event is rejected by L0" << endmsg ;
+    setFilterPassed( !accept );
+    verbose() << "Event is rejected by L0 decision " 
+              << LHCb::L0DUDecision::Name[m_mask] <<endmsg ;
   }
+  
+
+  std::string acc = m_revert ? "rejected " : "accepted";
+  std::string rej = m_revert ?  "accepted" : "rejected " ;
+
   if ( msgLevel(MSG::DEBUG)){
-    if ( filterPassed()) debug() << "Event is accepted" << endmsg ;
-    else debug() << "Event is rejected" << endmsg ;
+    if ( filterPassed()) debug() << "Event is " << acc << endmsg ;
+    else debug() << "Event is " << rej  << endmsg ;
   }
-  if(filterPassed())m_sel++;
-  return StatusCode::SUCCESS;
+
+  if(filterPassed())m_sel++; 
+
+  return StatusCode::SUCCESS; 
 }
 
 //=============================================================================
@@ -131,7 +178,7 @@ StatusCode L0Filter::finalize() {
 
   debug() << "==> Finalize" << endmsg;
   info() << "Filtering : " << m_sel << " events among " << m_count << " processed " << endmsg;
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  return L0AlgBase::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

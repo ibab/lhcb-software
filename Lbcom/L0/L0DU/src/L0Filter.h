@@ -1,10 +1,9 @@
-// $Id: L0Filter.h,v 1.3 2009-03-05 15:32:45 odescham Exp $
+// $Id: L0Filter.h,v 1.4 2010-01-28 16:55:23 odescham Exp $
 #ifndef L0FILTER_H 
 #define L0FILTER_H 1
 
 // Include files
-// from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "L0Base/L0AlgBase.h"
 
 
 /** @class L0Filter L0Filter.h
@@ -30,7 +29,7 @@
  *  @author Patrick Koppenburg
  *  @date   2007-07-11
  */
-class L0Filter : public GaudiAlgorithm {
+class L0Filter : public L0AlgBase {
 public: 
   /// Standard constructor
   L0Filter( const std::string& name, ISvcLocator* pSvcLocator );
@@ -49,5 +48,8 @@ private:
   std::string m_trig;
   unsigned long m_count;
   unsigned long m_sel;
+  int m_mask;
+  std::vector<std::string> m_l0triggers;
+  bool m_revert;
 };
 #endif // L0FILTER_H

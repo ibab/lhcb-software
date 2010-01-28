@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.179 2010-01-28 16:11:40 jucogan Exp $
+! $Id: release.notes,v 1.180 2010-01-28 16:55:23 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+
+! 2010-01-28 - Olivier Deschamps
+  - L0Filter :- update with decision type and subTriggers filtering
+              - inherits from L0AlgBase (L0Context-dependent location)
 
 ! 2010-01-28 - Julien Cogan
  - L0Conf: 
