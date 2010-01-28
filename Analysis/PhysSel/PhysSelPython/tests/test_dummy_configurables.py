@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$IsD $
+#$Is: $
 
 import sys
 sys.path.append('../python')
