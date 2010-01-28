@@ -1,0 +1,17 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/DisplVertices
+! Responsible : Neal Gauvin
+! Purpose     : Stripping and Offline algorithms and tools for the selection
+!               of events with exotic displaced vertices
+!-----------------------------------------------------------------------------
+
+! 2010-01-28 - Neal Gauvin
+ - First official commit of the package. 
+ - RecVertices2Particles : 
+     * take input reconstructed vertices and apply basic cuts to remove 
+       the PVs, vertices from interaction with the matter of the detector 
+       and low mass vertices.
+     * Turn candidates into Particles to be saved in TES.
+ - DisplVertices essentially loops on the candidates Particle and applies cuts
+     * Successful candidates can be saved in TES.
+     * Basic properties of successful candidates can be saved in a tuple.
