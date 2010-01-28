@@ -112,11 +112,34 @@ def test_clone_selection_with_cloned_alg() :
 
 if '__main__' == __name__ :
 
-    test_instantiate_tree()
-    test_tree_InputLocations_propagated()
-    test_tree_InputLocations_not_duplicated()
-    test_selection_with_existing_selection_name_raises()    
-    test_clone_selection_with_existing_selection_name_raises()    
-    test_clone_selection_with_new_alg()
-    test_clone_selection_with_new_InputLocations()
-    test_clone_selection_with_cloned_alg()
+    import sys
+
+    __tests = [test_instantiate_tree,
+               test_tree_InputLocations_propagated,
+               test_tree_InputLocations_not_duplicated,
+               test_selection_with_existing_selection_name_raises,
+               test_clone_selection_with_existing_selection_name_raises,
+               test_clone_selection_with_new_alg,
+               test_clone_selection_with_new_InputLocations,
+               test_clone_selection_with_cloned_alg                      ]
+
+    message = ''
+    summary = '\n'
+    
+    for test in __tests :
+        try :
+            test()
+            message = 'PASS'
+        except :
+            message = "FAIL"
+        summary += '\t' + test.__name__ + ':\t\t' + message + '\n'
+
+    if summary.count('FAIL') > 0 :
+        message = 'FAIL'
+        wr = sys.stderr.write
+    else :
+        message = 'PASS'
+        wr = sys.stdout.write
+
+    summary += '\tGlobal:\t\t' + message + '\n\n'
+    wr(summary)

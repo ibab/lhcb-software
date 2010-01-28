@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Id: test_selection_sequence.py,v 1.6 2010-01-27 21:08:44 jpalac Exp $
+#$Id: test_selection_sequence.py,v 1.7 2010-01-28 08:41:12 jpalac Exp $
 '''
 Test suite for SelectionSequence class.
 '''
@@ -124,11 +124,36 @@ def test_clone_sequence() :
         assert sel.algorithm() in seqAlgos
 
 
+def test_fail() :
+    assert True == False
+
 if '__main__' == __name__ :
 
-    test_instantiate_sequencer()
-    test_sequencer_sequence()
-    test_sequencer_algos()
-    test_clone_sequence()    
+    import sys
 
+    __tests = [test_instantiate_sequencer,
+               test_sequencer_sequence,
+               test_sequencer_algos,
+               test_clone_sequence        ]
 
+    message = ''
+    summary = '\n'
+    
+    for test in __tests :
+        try :
+            test()
+            message = 'PASS'
+        except :
+            message = "FAIL"
+        summary += '\t' + test.__name__ + ':\t\t' + message + '\n'
+
+    if summary.count('FAIL') > 0 :
+        message = 'FAIL'
+        wr = sys.stderr.write
+    else :
+        message = 'PASS'
+        wr = sys.stdout.write
+
+    summary += '\tGlobal:\t\t' + message + '\n\n'
+    wr(summary)
+        
