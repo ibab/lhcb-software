@@ -19,3 +19,7 @@ apply_pattern python_alias script=genXMLCatalog
 apply_pattern python_alias script=webAddRelease
 apply_pattern python_alias script=webRemoveRelease
 apply_pattern python_alias script=webArchiveRelease
+
+apply_pattern python_alias script=tag_package
+
+
