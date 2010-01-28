@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Is: $
+#$Id: test_dummy_configurables.py,v 1.6 2010-01-28 11:11:08 jpalac Exp $
 
 import sys
 sys.path.append('../python')
