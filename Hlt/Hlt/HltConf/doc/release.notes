@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.397 2010-01-25 13:28:25 albrecht Exp $ 
+! $Id: release.notes,v 1.398 2010-01-28 13:37:31 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -7,6 +7,9 @@
 ! 2010-01-25 - Johannes Albrecht
  - Configuration.py: modify to include the Hlt2Express stream
  - Configuration.py: fix syntax error in second commit 
+
+! 2010-01-28 - Gerhard Raven
+ - move some L0 specific configuration actions to Hlt1Lines
 
 ! 2010-01-20 - Gerhard Raven
  - make it mandatory for any line explicitly requested to actually exist

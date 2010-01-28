@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.144 2010-01-25 13:27:03 albrecht Exp $"
+__version__ = "$Id: Configuration.py,v 1.145 2010-01-28 13:37:31 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -59,10 +59,6 @@ class HltConf(LHCbConfigurableUser):
             log.warning( '###############################################################')
             log.warning( '## WARNING HLT will assume input data contains L0 TCK %s ##' % L0TCK )
             log.warning( '###############################################################')
-            importOptions('$L0TCK/L0DUConfig.opts')
-            from Configurables import L0DUMultiConfigProvider
-            if L0TCK not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
-                raise KeyError('requested L0 TCK %s is not known'%L0TCK)
             from Hlt1Lines.HltL0Candidates import decodeL0Channels
             channels = decodeL0Channels( L0TCK )
         else :
