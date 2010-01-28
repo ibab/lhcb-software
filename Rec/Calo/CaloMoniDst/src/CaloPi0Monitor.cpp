@@ -1,6 +1,6 @@
-// $Id: CaloPi0Monitor.cpp,v 1.13 2009-12-13 12:42:11 odescham Exp $
+// $Id: CaloPi0Monitor.cpp,v 1.14 2010-01-28 17:30:59 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -46,6 +46,8 @@ public:
     // get tool
     m_toSpd = tool<ICaloHypo2Calo> ( "CaloHypo2Calo", "CaloHypo2Spd" , this );
     m_toSpd->setCalos( "Ecal" ,"Spd");
+    m_toPrs = tool<ICaloHypo2Calo> ( "CaloHypo2Calo", "CaloHypo2Prs" , this );
+    m_toPrs->setCalos( "Ecal" ,"Prs");
 
     // set mass window to histo range
     m_massFilterMin = m_massMin;
@@ -67,6 +69,8 @@ protected:
     declareProperty( "IsolationFilter"  , m_isol = 4 );
     declareProperty( "AllowConverted"   , m_conv = false);
     declareProperty( "RejectedYBand"    , m_yCut = 300);
+    declareProperty( "PhotonPrsFilterMin", m_prsPhoton = 10*Gaudi::Units::MeV);
+
     m_multMax = 150;
     addToInputs( LHCb::CaloHypoLocation::Photons );
   }
@@ -82,8 +86,10 @@ private:
 private:
   double m_ptPhoton;
   double m_isol;
+  double m_prsPhoton;
   DeCalorimeter* m_calo;
   ICaloHypo2Calo* m_toSpd ;   
+  ICaloHypo2Calo* m_toPrs ;   
   bool m_conv;
   double m_yCut;
 };
@@ -118,6 +124,7 @@ StatusCode CaloPi0Monitor::execute()
   for( photon g1 = photons.begin(); photons.end() != g1; ++g1 ){
     if ( 0 == *g1 ) continue;
     if( !m_conv && m_toSpd->multiplicity ( *(*g1) , "Spd"  ) > 0 )continue;
+    if( m_toPrs->energy ( *(*g1) , "Prs"  ) < m_prsPhoton )continue;
     LHCb::CaloMomentum momentum1( *g1 );
     if(momentum1.pt() < m_ptPhoton)continue;
     Gaudi::LorentzVector v1( momentum1.momentum() );
@@ -129,6 +136,7 @@ StatusCode CaloPi0Monitor::execute()
       LHCb::CaloMomentum momentum2( *g2 );
       if(momentum2.pt() < m_ptPhoton)continue;
       if( !m_conv && m_toSpd->multiplicity ( *(*g2) , "Spd"  ) > 0 )continue;
+      if( m_toPrs->energy ( *(*g1) , "Prs"  ) < m_prsPhoton )continue;
       Gaudi::LorentzVector v2( momentum2.momentum() );
       Gaudi::LorentzVector pi0( v1 + v2 );
       Gaudi::XYZPoint p2( (*g2)->position()->x() , (*g2)->position()->y() , (*g2)->position()->z() );

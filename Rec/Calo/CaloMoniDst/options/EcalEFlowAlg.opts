@@ -5,10 +5,16 @@ EcalEFlowAlgo.histoList   = { "All" };
 
 //define parameters
 EcalEFlowAlgo.SplitAreas = false;
-EcalEFlowAlgo.EtFilterMax  = -1.;
-EcalEFlowAlgo.EnergyFilterMax = -1;
-EcalEFlowAlgo.EtFilterMin  = -1.;
-EcalEFlowAlgo.EnergyFilterMin = -1;
+EcalEFlowAlgo.EtFilterMax  = -999.;
+EcalEFlowAlgo.EnergyFilterMax = -999;
+EcalEFlowAlgo.ADCFilterMax = -999;
+EcalEFlowAlgo.ADCFilterMin  = -999;
+EcalEFlowAlgo.EtFilterMin  = -999.;
+EcalEFlowAlgo.EnergyFilterMin = -999;
+EcalEFlowAlgo.Simulation = false;
+EcalEFlowAlgo.IgnoreTAE = true;
+EcalEFlowAlgo.IgnoreNonBeamCrossing = true;
+EcalEFlowAlgo.IgnoreNonPhysicsTrigger = false;
 EcalEFlowAlgo.OneDimension = true;
 
 // EcalEFlowAlgo.Profile = true;

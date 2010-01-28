@@ -5,10 +5,16 @@ HcalEFlowAlgo.histoList   = { "All" };
 
 //define parameters
 HcalEFlowAlgo.SplitAreas = false;
-HcalEFlowAlgo.EtFilterMax  = -1.;
-HcalEFlowAlgo.EnergyFilterMax = -1;
-HcalEFlowAlgo.EtFilterMin  = -1.;
-HcalEFlowAlgo.EnergyFilterMin = -1;
+HcalEFlowAlgo.EtFilterMax  = -999.;
+HcalEFlowAlgo.EnergyFilterMax = -999;
+HcalEFlowAlgo.ADCFilterMax = -999;
+HcalEFlowAlgo.ADCFilterMin  = -999;
+HcalEFlowAlgo.EtFilterMin  = -999.;
+HcalEFlowAlgo.EnergyFilterMin = -999;
+HcalEFlowAlgo.Simulation = false;
+HcalEFlowAlgo.IgnoreTAE = true;
+HcalEFlowAlgo.IgnoreNonBeamCrossing = true;
+HcalEFlowAlgo.IgnoreNonPhysicsTrigger = false;
 HcalEFlowAlgo.OneDimension = true;
 
 // HcalEFlowAlgo.Profile = true;

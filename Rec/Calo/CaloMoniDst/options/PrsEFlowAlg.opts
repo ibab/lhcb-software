@@ -5,10 +5,16 @@ PrsEFlowAlgo.histoList   = { "All" };
 
 //define parameters
 PrsEFlowAlgo.SplitAreas = false;
-PrsEFlowAlgo.EtFilterMax  = -1.;
-PrsEFlowAlgo.EnergyFilterMax = -1;
-PrsEFlowAlgo.EtFilterMin  = -1.;
-PrsEFlowAlgo.EnergyFilterMin = -1;
+PrsEFlowAlgo.EtFilterMax  = -999.;
+PrsEFlowAlgo.EnergyFilterMax = -999;
+PrsEFlowAlgo.ADCFilterMax = -999;
+PrsEFlowAlgo.ADCFilterMin  = -999;
+PrsEFlowAlgo.EtFilterMin  = -999.;
+PrsEFlowAlgo.EnergyFilterMin = -999;
+PrsEFlowAlgo.Simulation = false;
+PrsEFlowAlgo.IgnoreTAE = true;
+PrsEFlowAlgo.IgnoreNonBeamCrossing = true;
+PrsEFlowAlgo.IgnoreNonPhysicsTrigger = false;
 PrsEFlowAlgo.OneDimension = true;
 
 // PrsEFlowAlgo.Profile = true;

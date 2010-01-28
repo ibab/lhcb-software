@@ -1,4 +1,4 @@
-// $Id: CaloEFlowAlg.h,v 1.2 2009-10-16 15:39:40 odescham Exp $
+// $Id: CaloEFlowAlg.h,v 1.3 2010-01-28 17:30:59 odescham Exp $
 #ifndef CALOENERGYFLOWMONITOR_H 
 #define CALOENERGYFLOWMONITOR_H 1
 
@@ -78,6 +78,23 @@ private:
   double m_etFilterMin;
   double m_eFilterMax;
   double m_etFilterMax;  
+  int m_ADCFilterMin;
+  int m_ADCFilterMax;
+
+  bool m_mctruth;
+  bool m_simulation;
+  bool m_ignoreNonBeamCrossing;
+  bool m_ignoreTAE;
+  bool m_ignoreNonPhysicsTrigger;
+  
+  int m_pidKplus;
+  int m_pidKminus;
+  int m_pidPiplus;
+  int m_pidPiminus;
+
+  std::string m_detectorName;
+  std::string m_slot;
+  
 
 };
 #endif // CALOENERGYFLOWMONITOR_H
