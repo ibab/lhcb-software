@@ -13,12 +13,13 @@ branches          cmt src options doc
 # ============================================================================
 # Used packages.
 # ============================================================================
-use DaVinci             v*    Phys
 use DaVinciKernel       v* Phys
 
-#For DisplVertices
+use HepMC              v*    LCG_Interfaces -no_auto_imports
 use TrackInterfaces v* Tr
 
+#-- Analysis
+use AnalysisSys v*
 
 # ============================================================================
 # Eventually set new environnment values
