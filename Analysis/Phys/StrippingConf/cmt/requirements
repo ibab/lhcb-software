@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.12 2010-01-13 18:30:40 poluekt Exp $ 
+# $Id: requirements,v 1.13 2010-01-28 09:16:07 poluekt Exp $ 
 # =============================================================================
 # Stripping configuration package
 # =============================================================================
@@ -24,7 +24,7 @@ use AIDA         v* LCG_Interfaces
 use DaVinciKernel        v*     Phys
 use LoKiCore             v*     Phys
 
-use HltLine              v*     Hlt
+use SelectionLine        v*     Kernel
 
 private
 use LHCbAlgs             v*     Kernel  

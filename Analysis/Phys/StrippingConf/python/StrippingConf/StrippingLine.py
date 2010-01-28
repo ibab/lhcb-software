@@ -18,7 +18,7 @@ from Configurables import DeterministicPrescaler as Scaler
 from Configurables import LoKi__L0Filter    as L0Filter
 from Configurables import LoKi__HDRFilter   as HDRFilter
 from Configurables import LoKi__ODINFilter  as ODINFilter
-from Configurables import HltCopySelection_LHCb__Particle_ as HltCopyParticleSelection
+#from Configurables import HltCopySelection_LHCb__Particle_ as HltCopyParticleSelection
 
 ## Convention: the name of 'Filter' algorithm inside StrippingLine
 def filterName   ( line , level = 'Stripping') :
@@ -42,12 +42,12 @@ def memberName     ( member, line, level='Stripping' ) :
 
 ## Convention: the name of 'ODINFilter' algorithm inside StrippingLine
 def odinentryName    ( line, level = 'Stripping' ) :
-    """ Convention: the name of 'ODINFilter' algorithm inside HltLine """
+    """ Convention: the name of 'ODINFilter' algorithm inside StrippingLine """
     return '%s%sODINFilter'   % (level,line)
 
 ## Convention: the name of 'L0DUFilter' algorithm inside StrippingLine
 def l0entryName    ( line, level = 'StrippingLine' ) :
-    """ Convention: the name of 'L0DUFilter' algorithm inside HltLine """
+    """ Convention: the name of 'L0DUFilter' algorithm inside StrippingLine """
     return '%s%sL0DUFilter'   % (level,line)
 
 ## Convention: the name of 'HLTFilter' algorithm inside StrippingLine
@@ -401,19 +401,19 @@ class StrippingLine(object):
 #            if last.getType() in needsCopy :
 
 
-	    if self.outputLocation() : 
-        	members += [ HltCopyParticleSelection( decisionName( line, 'Stripping')
-                                                     , InputSelection = 'TES:/Event/Strip/%s/Particles'%self.outputLocation()
-                                                     , OutputSelection = decisionName(line, 'Stripping')) ]
+#	    if self.outputLocation() : 
+#        	members += [ HltCopyParticleSelection( decisionName( line, 'Stripping')
+#                                                     , InputSelection = 'TES:/Event/Strip/%s/Particles'%self.outputLocation()
+#                                                     , OutputSelection = decisionName(line, 'Stripping')) ]
 
             mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = members ) })
         
         mdict.update( { 'HltDecReportsLocation' : 'Strip/Phys/DecReports' } )
         
         __mdict = deepcopy ( mdict ) 
-        from Configurables import HltLine
-        self._configurable = HltLine ( self.name() , **__mdict )
-        print '# created HltLine configurable for', name, '\n'
+        from Configurables import StrippingAlg
+        self._configurable = StrippingAlg ( self.name() , **__mdict )
+        print '# created StrippingAlg configurable for', name, '\n'
         print self._configurable
         return self._configurable
 
