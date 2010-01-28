@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.7 2010-01-28 13:36:42 graven Exp $
+# $Id: HltL0Candidates.py,v 1.8 2010-01-28 14:22:40 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -37,7 +37,6 @@
 
 import re
 from Gaudi.Configuration import *
-from GaudiKernel.Configurable import ConfigurableGeneric
 from HltLine.HltLine import bindMembers
 
 # utilities to pack and unpack L0 conditions into Condition property...
@@ -100,10 +99,10 @@ _l0Channels = None
 def decodeL0Channels( L0TCK , skipDisabled = True) :
     print 'decodeL0Channels invoked'
     importOptions('$L0TCK/L0DUConfig.opts')
-    from Configurables import L0DUMultiConfigProvider
+    from Configurables import L0DUMultiConfigProvider,L0DUConfigProvider
     if L0TCK not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
         raise KeyError('requested L0 TCK %s is not known'%L0TCK)
-    channels = _parseL0settings( ConfigurableGeneric('ToolSvc.L0DUConfig.TCK_'+L0TCK).Channels )
+    channels = _parseL0settings( L0DUConfigProvider('ToolSvc.L0DUConfig.TCK_'+L0TCK).Channels )
     print '# decoded L0 channels for L0TCK=%s: %s'%(L0TCK, str(channels))
     return [ i['name'] for i in channels if ( not skipDisabled or 'DISABLE' not in i or i['DISABLE'].upper().find('TRUE') == -1 ) ]
 
