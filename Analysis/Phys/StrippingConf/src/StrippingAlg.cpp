@@ -58,7 +58,7 @@ std::pair<std::string,unsigned> StrippingAlg::SetupID() {
 
   const std::string *major = 0;
   static const std::string major1("StrippingSelectionID");
-  if (!decisionName().find("Stripping")!=std::string::npos) {
+  if (decisionName().find("Stripping") == std::string::npos) {
     error() << " Could not find Stripping in decision " << decisionName() << " ???? " << endmsg;
   } else {
     major = &major1;

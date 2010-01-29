@@ -131,6 +131,15 @@ class bindMembers (object) :
         self._outputsel = loc
         self._outputloc = loc
 
+    def _handle_SelSequence(self, line, alg) :
+        gaudiSeq = alg.sequence()
+        members = gaudiSeq.Members
+        for a in members :
+            self._members += [a]
+        loc = alg.outputLocations()[0]
+        self._outputsel = loc
+        self._outputloc = loc
+
     # allow chaining of previously bound members...
     def _handle_bindMembers( self, line, alg ) :
         self._members  += alg.members()
@@ -151,6 +160,7 @@ class bindMembers (object) :
         for alg in algos:
             # dispatch according to the type of alg...
             x = '_handle_' + type(alg).__name__
+            
             handle = getattr(self, x if hasattr(self, x) else '_default_handler_')
             handle(line,alg)
 
@@ -407,7 +417,7 @@ class StrippingLine(object):
 #                                                     , OutputSelection = decisionName(line, 'Stripping')) ]
 
             mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = members ) })
-        
+            
         mdict.update( { 'HltDecReportsLocation' : 'Strip/Phys/DecReports' } )
         
         __mdict = deepcopy ( mdict ) 

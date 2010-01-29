@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.35 2010-01-28 09:16:07 poluekt Exp $
+!$Id: release.notes,v 1.36 2010-01-29 08:53:41 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-01-29 - Anton Poluektov 
+ - Small bugfixes, added SelSequence handler for bindMembers. 
 
 ! 2010-01-28 - Anton Poluektov
  - First commit of StrippingConf using Selection::Line. Not fully functional with HltDecReport yet, 

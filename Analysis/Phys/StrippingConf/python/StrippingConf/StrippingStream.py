@@ -48,5 +48,6 @@ class StrippingStream ( LHCbConfigurableUser ) :
 	outputList = []
 	for i in self.lines() :
 	    output = i.outputLocation()
-	    outputList.append(output)
+	    if output : 
+		outputList.append(output)
 	return outputList
