@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.18 2010-01-29 19:06:20 odescham Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.19 2010-01-29 19:16:40 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -421,13 +421,12 @@ void L0DURawBankMonitor::bookHistos() {
       xAxis->SetBinLabel( 2 , "Idle link" );
       xAxis->SetBinLabel( 3 , "TLK Error" );
       xAxis->SetBinLabel( 4 , "DeMultiplexer Error" );
-      xAxis->SetBinLabel( 5 , "Idle Link" );
-      xAxis->SetBinLabel( 6 , "PGA  BC MisAlign" );
-      xAxis->SetBinLabel( 7 , "ODIN BC MisAlign" );
-      xAxis->SetBinLabel( 8 , "Input Data Error" );
-      xAxis->SetBinLabel( 9 , "Emulator Check" );
-      xAxis->SetBinLabel( 10 , "Unknow TCK" );
-      xAxis->SetBinLabel( 11 , "SpdMult Error" );
+      xAxis->SetBinLabel( 5 , "PGA  BC MisAlign" );
+      xAxis->SetBinLabel( 6 , "ODIN BC MisAlign" );
+      xAxis->SetBinLabel( 7 , "Input Data Error" );
+      xAxis->SetBinLabel( 8 , "Emulator Check" );
+      xAxis->SetBinLabel( 9 , "Unknow TCK" );
+      xAxis->SetBinLabel( 10 , "SpdMult Error" );
       xAxis->LabelsOption( m_lab.c_str() );
     // BXID decision
     book1D( toHistoID("Status/BCID/1")        ,  "BCID for positive decisions"     , 0 , 3565, 3565);
