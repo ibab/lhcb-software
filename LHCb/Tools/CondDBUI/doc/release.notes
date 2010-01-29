@@ -5,6 +5,14 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2010-01-28 - Illya Shapoval
+ - Added python/CondDBUI/Admin/TagsFilter.py script. It analyses the
+   release_notes.xml file (under the given condition of fixed partition name 
+   and data type) to return:
+   - the most recent global tag and the list of all subsequent local tags for it;
+   - the list of all global tags.
+   Can be used as a standalone script.
+
 !===================== Tools/CondDBUI v3r1 2010-01-20 =========================
 ! 2010-01-12 - Marco Clemencic
  - Fixed a minor bug in CondDBBrowser: it was not possible to add conditions to
