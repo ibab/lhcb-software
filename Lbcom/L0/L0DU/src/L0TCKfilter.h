@@ -1,10 +1,10 @@
-// $Id: L0TCKfilter.h,v 1.1 2008-03-27 16:32:14 odescham Exp $
+// $Id: L0TCKfilter.h,v 1.2 2010-01-29 12:49:27 odescham Exp $
 #ifndef L0TCKFILTER_H 
 #define L0TCKFILTER_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "L0Base/L0AlgBase.h"
 
 
 /** @class L0TCKfilter L0TCKfilter.h
@@ -13,7 +13,7 @@
  *  @author Olivier Deschamps
  *  @date   2008-03-25
  */
-class L0TCKfilter : public GaudiAlgorithm {
+class L0TCKfilter : public L0AlgBase {
 public: 
   /// Standard constructor
   L0TCKfilter( const std::string& name, ISvcLocator* pSvcLocator );

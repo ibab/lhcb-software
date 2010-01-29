@@ -1,4 +1,4 @@
-// $Id: L0Filter.cpp,v 1.7 2010-01-29 12:30:03 odescham Exp $
+// $Id: L0Filter.cpp,v 1.8 2010-01-29 12:49:27 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -105,27 +105,32 @@ StatusCode L0Filter::execute() {
   setFilterPassed( !accept ); // switch off by default
   std::string acc = m_revert ? "rejected " : "accepted";
   std::string rej = m_revert ?  "accepted" : "rejected " ;
-
   std::string loc = dataLocation( m_l0Location );
+
+
+  if( !exist<LHCb::L0DUReport>( loc)){
+    Warning("L0DUReport not found at location : the event is " + rej + loc ).ignore();
+    counter("Report not found L0Filter reject") += 1;
+    return StatusCode::SUCCESS;
+  }
+
   const  LHCb::L0DUReport* l0 = get<LHCb::L0DUReport>( loc );
 
-  if( NULL == l0)return Warning("L0DUReport points to NULL : the event is " + rej,StatusCode::SUCCESS);
   
 
   // Timing Trigger decision
   if( "Timing" == m_trig  ){
     if( l0->timingTriggerBit() )setFilterPassed( accept );
-    return StatusCode::SUCCESS;
   }
+  
   // Force decision
   if( "Force" == m_trig  ){
     if( l0->forceBit() )setFilterPassed( accept );
-    return StatusCode::SUCCESS;
   }
-  
-  if( "L0" != m_trig)return StatusCode::FAILURE;
-  // standard L0DU decision
 
+  if( "L0" != m_trig)return StatusCode::FAILURE;
+
+  // standard L0DU decision
   if ( !m_l0channels.empty()) {
     for ( std::vector<std::string>::const_iterator c = m_l0channels.begin() ; 
           c != m_l0channels.end() ; ++c ) {
@@ -166,7 +171,7 @@ StatusCode L0Filter::execute() {
     counter("L0Filter accept") += 1;
     if ( msgLevel(MSG::DEBUG))debug() << "Event is " << acc << endmsg ;
   }else{
-    counter("L0Filter rejectt") += 1;
+    counter("L0Filter reject") += 1;
     if ( msgLevel(MSG::DEBUG))debug() << "Event is " << rej  << endmsg ;
   }
   if(filterPassed())m_sel++; 

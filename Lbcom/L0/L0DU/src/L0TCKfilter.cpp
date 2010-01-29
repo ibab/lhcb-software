@@ -1,4 +1,4 @@
-// $Id: L0TCKfilter.cpp,v 1.2 2009-09-17 12:14:50 odescham Exp $
+// $Id: L0TCKfilter.cpp,v 1.3 2010-01-29 12:49:27 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -23,7 +23,7 @@ DECLARE_ALGORITHM_FACTORY( L0TCKfilter );
 //=============================================================================
 L0TCKfilter::L0TCKfilter( const std::string& name,
                           ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : L0AlgBase ( name , pSvcLocator )
 {
   declareProperty("TCKList" , m_list);
   declareProperty( "ReportLocation"    , m_reportLocation =  LHCb::L0DUReportLocation::Default );
@@ -53,12 +53,14 @@ StatusCode L0TCKfilter::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   setFilterPassed(false);
 
+  std::string loc = dataLocation( m_reportLocation );
+
   // get tck from raw
   if( !exist<LHCb::L0DUReport>( m_reportLocation )){
-    Error("L0DUReport not found at location " + m_reportLocation ).ignore();
+    Error("L0DUReport not found at location " + m_reportLocation + " - event rejected").ignore();
+    counter("Report not found L0TCKFilter reject") += 1;
     return StatusCode::SUCCESS;
   }
-
   LHCb::L0DUReport* report   = get<LHCb::L0DUReport>( m_reportLocation );
   unsigned int tck           = report->tck();
   std::stringstream ttck("");
@@ -72,11 +74,13 @@ StatusCode L0TCKfilter::execute() {
     if( *it == ttck.str() ){
       setFilterPassed(true);
       debug() << "accepted TCK = " << ttck.str() << " -> set FilterPassed to true" << endmsg;
+      counter("L0TCKFilter accept") += 1;
       return StatusCode::SUCCESS;
     }
   }
   debug() << "rejected TCK = " << ttck.str() << " -> set FilterPassed to false" << endmsg;
-      
+  counter("L0TCKFilter reject") += 1;
+
   return StatusCode::SUCCESS;
 }
 
