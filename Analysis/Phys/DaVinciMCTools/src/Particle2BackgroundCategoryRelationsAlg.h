@@ -29,9 +29,13 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
+
+private:
+  StatusCode backCategoriseParticles(const std::string& location) const; ///< THe method that does the work.
+   
 private:
 
-  std::string m_particleLocation;
+  std::vector<std::string> m_particleLocations;
 
   IBackgroundCategory* m_bkg;  
 };

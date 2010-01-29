@@ -23,9 +23,10 @@ Particle2BackgroundCategoryRelationsAlg::Particle2BackgroundCategoryRelationsAlg
                                                                                   ISvcLocator* pSvcLocator)
   : 
   GaudiAlgorithm ( name , pSvcLocator ),
+  m_particleLocations(),
   m_bkg(0)  
 {
-  declareProperty("InputParticles", m_particleLocation, "");
+  declareProperty("ParticleLocations", m_particleLocations);
 }
 //=============================================================================
 // Destructor
@@ -57,33 +58,51 @@ StatusCode Particle2BackgroundCategoryRelationsAlg::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   //Check that we have an input location
-  if (m_particleLocation == "") {
+  if (m_particleLocations.empty()) {
+    return Error ( "No particle location provided" ) ;
+  }
+
+  std::vector<std::string>::const_iterator _begin = m_particleLocations.begin();
+
+  StatusCode sc = StatusCode::SUCCESS;
+  for (std::vector<std::string>::const_iterator iLoc = _begin; iLoc != m_particleLocations.end(); ++iLoc) {
+    sc = backCategoriseParticles(*iLoc);
+    if (sc.isFailure()) return Error("Problem BackgroundCategorizing "+ *iLoc);
+  }
+  
+  return StatusCode::SUCCESS;
+}
+//=============================================================================
+StatusCode Particle2BackgroundCategoryRelationsAlg::backCategoriseParticles(const std::string& location) const 
+{
+  
+  //Check that we have an input location
+  if (location == "") {
     return Error ( "No particle location provided" ) ;
   }
   //Get the input particles
-  LHCb::Particle::Container* myParticles = get<LHCb::Particle::Container>(m_particleLocation);
+  LHCb::Particle::Container* myParticles = get<LHCb::Particle::Container>(location);
   //Check that this returns something 
   if (!myParticles) {
     return Error ( "No particles at the location provided" );
   }
 
   //Make the relations table
-  //LHCb::Relation1D<const LHCb::Particle*,IBackgroundCategory::categories>* catRelations = 
-  //  new LHCb::Relation1D<const LHCb::Particle*, IBackgroundCategory::categories>;
-  
   LHCb::Relation1D<const LHCb::Particle*,int>* catRelations =
     new LHCb::Relation1D<const LHCb::Particle*, int>( myParticles->size() );
 
-  for(LHCb::Particle::Container::const_iterator iP = myParticles->begin(); iP != myParticles->end(); ++iP ){
-    //IBackgroundCategory::categories thisCat = m_bkg->category(*iP);
-    int thisCat = (int) m_bkg->category(*iP);
+  for(LHCb::Particle::Container::const_iterator iP = myParticles->begin(); 
+      iP != myParticles->end(); ++iP ){
+    int thisCat = static_cast<int>(m_bkg->category(*iP));
     catRelations->i_relate(*iP,thisCat);
   }
 
-  put(catRelations,m_particleLocation+"/P2BCRelations");
- 
+  put(catRelations, location+"/P2BCRelations");
+
   return StatusCode::SUCCESS;
+  
 }
+
 //=============================================================================
 //  Finalize
 //=============================================================================
@@ -93,5 +112,4 @@ StatusCode Particle2BackgroundCategoryRelationsAlg::finalize() {
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
-
 //=============================================================================
