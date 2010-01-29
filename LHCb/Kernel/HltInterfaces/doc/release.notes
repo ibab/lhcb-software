@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.12 2009-12-04 13:09:24 graven Exp $
+! $Id: release.notes,v 1.13 2010-01-29 12:49:25 jpalac Exp $
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
+
+!============ Kernel/HltInterfaces v3r1 2010-01-29 ============================
 
 ! 2009-12-04 - Gerhard Raven
  - move IHltReferenceClockSvc out of HltBase and into HltInterfaces
