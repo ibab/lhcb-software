@@ -62,6 +62,13 @@ namespace {
         char padding[12];             /* 500-512 (pad to exactly the TAR_BLOCK_SIZE) */
     };
 
+    bool isZeroHeader(const struct posix_header& h) {
+         const char* i = (const char*)(&h);
+         const char* end = i+512;
+         while (i<end && *i++==0) { /* nothing*/  }
+         return i==end;
+    }
+
 
     /* A nice enum with all the possible tar file content types */
     enum TarFileType 
@@ -77,23 +84,22 @@ namespace {
 namespace ConfigTarFileAccessSvc_details {
 class TarFile {
 public:
-    TarFile(const std::string& name) : m_name(name) {
+    TarFile(const std::string& name) : m_name(name), m_leof(0), m_indexUpToDate(false) {
             m_file.open(m_name.c_str(), ios::in | ios::binary );
-            index();
     }
     bool dump(const std::string& name,ostream& os) {
-        map<Gaudi::StringKey,Info>::const_iterator i = m_index.find(name);
-        if (i!=m_index.end()) {
+        const map<Gaudi::StringKey,Info>& myIndex = getIndex();
+        map<Gaudi::StringKey,Info>::const_iterator i = myIndex.find(name);
+        if (i!=myIndex.end()) {
             // slice works relative to the current file offset, as it works on an istream...
             bio::seek(m_file,0,std::ios_base::beg);
             // suggest an 8K buffer size as hint -- most config items are smaller than that...
             bio::copy(bio::slice(m_file,i->second.offset,i->second.size), os, 8192);
-
             return true;
         }
         // try to read a gzipped version of the filename
-        i = m_index.find(name+".gz");
-        if (i!=m_index.end()) {
+        i = myIndex.find(name+".gz");
+        if (i!=myIndex.end()) {
             // slice works relative to the current file offset, as it works on an istream...
             bio::seek(m_file,0,std::ios_base::beg);
             bio::filtering_istream in;
@@ -109,7 +115,8 @@ public:
     template <typename SELECTOR>
     std::vector<std::string> files(const SELECTOR& selector) const {
         std::vector<std::string> f;
-        for (map<Gaudi::StringKey,Info>::const_iterator i = m_index.begin(); i!= m_index.end();++i) {
+        const map<Gaudi::StringKey,Info>& myIndex = getIndex();
+        for (map<Gaudi::StringKey,Info>::const_iterator i = myIndex.begin(); i!= myIndex.end();++i) {
             if( selector(i->first) ) f.push_back(i->first);
         }
         return f;
@@ -128,13 +135,20 @@ private:
         size_t           offset;
     };
 
-    bool index();
-    bool interpretHeader(const posix_header& header, struct Info& info);
+    bool index() const;
+    const std::map<Gaudi::StringKey,Info>&  getIndex() const {
+        if (!m_indexUpToDate) m_indexUpToDate = index();
+        if (!m_indexUpToDate) {
+            throw GaudiException("Failed to index tarfile ",m_name,StatusCode::FAILURE);
+        }
+        return m_index;
+    }
+    bool interpretHeader(const posix_header& header, struct Info& info) const;
     /* Read an octal value in a field of the specified width, with optional
      * spaces on both sides of the number and with an optional null character
      * at the end.  Returns -1 on an illegal format.  */
-    bool is_octal(const char& ch)   { return ((ch >= '0') && (ch <= '7')); }
-    long getOctal(const char *cp, int size)
+    bool is_octal(const char& ch) const   { return ((ch >= '0') && (ch <= '7')); }
+    long getOctal(const char *cp, int size) const
     {
        long val = 0;
        for(;(size > 0) && (*cp == ' '); cp++, size--);
@@ -146,12 +160,16 @@ private:
     }
 
     std::string m_name;
-    ifstream m_file;
-    std::map<Gaudi::StringKey,Info> m_index;
+    mutable ifstream m_file;
+    mutable std::map<Gaudi::StringKey,Info> m_index;
+    mutable unsigned long m_leof;
+    mutable bool m_indexUpToDate;
 };
 
-bool TarFile::interpretHeader(const posix_header& header, Info& info) {
-            if (!strncmp(header.magic,"ustar",6)) return false;
+bool TarFile::interpretHeader(const posix_header& header, Info& info) const {
+            if (strncmp(header.magic,"ustar ",6)) { 
+                return false;
+            }
             long chksum       = getOctal(header.chksum,sizeof(header.chksum));
             /* Check the checksum */
             long sum=0;
@@ -163,18 +181,34 @@ bool TarFile::interpretHeader(const posix_header& header, Info& info) {
                  sum -= (unsigned char) header.chksum[i];
             }
             sum += ' ' * sizeof header.chksum;
-            if (sum!=chksum) return false;
+            if (sum!=chksum) {
+                std::cerr << "inconsistent checksum" << std::endl;
+                return false;
+            }
             info.name  = header.name;
             info.type  = TarFileType(header.typeflag);
             info.size  = getOctal(header.size,sizeof(header.size));
             return true;
 }
 
-bool TarFile::index() {
+bool TarFile::index() const {
         posix_header header;
+        bio::seek(m_file,0,std::ios::beg);
+        m_index.clear();
         while (m_file.read( (char*) &header, sizeof(header) )) {
             Info info(m_file.tellg());
-            if (!interpretHeader( header, info))  return false;
+            if (!interpretHeader( header, info))  {
+                // see if we're at the end of the file: (at least) two all-zero headers)
+                if (isZeroHeader(header)) {
+                    m_file.read( (char*) &header, sizeof(header) ) ;
+                    if (isZeroHeader(header) ){
+                        m_leof = info.offset;
+                        return true;
+                    }
+                }
+                std::cerr << "failed to interpret header @ " << info.offset << " in tarfile " << m_name << std::endl;
+                return false;
+            }
             if (info.name.empty()) break;
             if ( (info.type == REGTYPE || info.type == REGTYPE0 ) 
                && info.name[ info.name.size()-1 ] != '/' 
@@ -186,9 +220,9 @@ bool TarFile::index() {
             size_t skip = info.size;
             size_t padding = skip % 512;
             if (padding!=0 ) skip += 512 - padding;
-            m_file.seekg(skip,ios::cur);
+            bio::seek(m_file,skip,std::ios::cur);
         }
-        m_file.seekg(0, ios::beg);
+        bio::seek(m_file,0,std::ios::beg);
         return true;
 };
 }
