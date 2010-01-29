@@ -25,6 +25,7 @@
 #include "GaudiKernel/IHistogramSvc.h"
 #include "AIDA/IHistogram1D.h"
 // Online stuff
+#include <Gaucho/IGauchoMonitorSvc.h>
 #include "RTL/rtl.h"
 #include "RTL/types.h"
 #include "NET/IPHeader.h"
@@ -123,7 +124,8 @@ namespace LHCb  {
     //SourceStatService           *m_statService;
     
     IIncidentSvc*               m_incidentSvc; 
-    IMonitorSvc*                m_monSvc;
+    //IMonitorSvc*                m_monSvc;
+    IGauchoMonitorSvc*                m_monSvc;
     IHistogramSvc*              m_histSvc;
 
     int                         m_sourceID;
@@ -210,6 +212,7 @@ namespace LHCb  {
     void clearCounters();
     int setupCounters();
     void publishCounters(void);
+    void publishHists(void);
     void handle(const Incident&); 
     void ageEvents(void);
     int checkPartitionID(u_int32_t addr, struct MEPHdr *);
