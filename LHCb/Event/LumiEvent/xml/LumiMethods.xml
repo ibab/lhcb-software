@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Jaap Panman -->
+<!--- Created : 2010-01-28 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='LumiEvent'>
+
+<!-- LumiMethods Class -->
+
+    <class
+      name="LumiMethods"
+      author="Jaap Panman"
+      desc="Enum class to flag Lumi methods"
+      id="13505"
+      serializers="TRUE"
+      >
+
+      &DataObject;
+      <base name="DataObject"/>
+      <import name="GaudiKernel/VectorMap" />
+
+      <enum
+        desc="lookup table for method keys"
+        name="methodKey"
+        strTypConv = 'TRUE'
+        access="PUBLIC" >
+        <enumval name="RandomMethod"  value = "0"   desc="Random Method"/>
+        <enumval name="L0RateMethod"  value = "1"   desc="L0Rate Method"/>
+        <enumval name="Unknown"       value = "98"  desc="unknown value"/>
+        <enumval name="LastGlobal"    value = "99"  desc="The last official flag value. Private user variables should use
+ flags greater than this value"/>
+      </enum>
+
+      <!-- readable printout -->
+
+      <method
+        name='fillStream'
+        type='std::ostream&amp;'
+        argList='std::ostream&amp; s'
+        desc='intelligent printout'
+        const='TRUE' >
+        <code>
+
+    std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
+    ss &lt;&lt; "{ }"; 
+
+    return ss;
+        </code>
+      </method>
+
+
+    </class>
+
+  </package>
+
+
+</gdd>
