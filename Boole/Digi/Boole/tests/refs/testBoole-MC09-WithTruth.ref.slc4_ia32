@@ -233,11 +233,7 @@ MoniITSeq            INFO Member list: MCSTDepositMonitor/MCITDepositMonitor, MC
 ITEffChecker.MC...   INFO MCParticle Momentum cut     : 1 GeV/c < P < 1.79769e+308 GeV/c
 ITEffChecker.MC...   INFO            Beta * gamma cut : 1 < beta*gamma
 ITEffChecker.MC...   INFO            Eta cut          : -1.79769e+308 < P < 1.79769e+308
-MoniOTSeq            INFO Member list: MCOTDepositMonitor, OTTimeCreator, OTTimeChecker, OTTimeMonitor, OTTimeClassification
-OTTimeCreator.O...   INFO  countsPerBX = 64
-OTTimeCreator.O...   INFO  numberOfBX  = 3
-OTTimeCreator.O...   INFO  timePerBX = 25
-OTTimeCreator.O...   INFO  ForceBankVersion = 255
+MoniOTSeq            INFO Member list: MCOTDepositMonitor, OTTimeChecker, OTTimeMonitor, OTTimeClassification
 ToolSvc.OTRawBa...   INFO  countsPerBX = 64
 ToolSvc.OTRawBa...   INFO  numberOfBX  = 3
 ToolSvc.OTRawBa...   INFO  timePerBX = 25
@@ -761,7 +757,6 @@ TimingAuditor.T...   INFO     MCP2ITMCHitAlg            |     0.200 |     0.146 
 TimingAuditor.T...   INFO     ITEffChecker              |     1.500 |     1.333 |    0.145       3.0 |      10 |     0.013 |
 TimingAuditor.T...   INFO    MoniOTSeq                  |    15.898 |    16.293 |    0.959      35.6 |      10 |     0.163 |
 TimingAuditor.T...   INFO     MCOTDepositMonitor        |     7.799 |     8.259 |    0.330      17.7 |      10 |     0.083 |
-TimingAuditor.T...   INFO     OTTimeCreator             |     0.700 |     0.730 |    0.194       1.4 |      10 |     0.007 |
 TimingAuditor.T...   INFO     OTTimeChecker             |     4.199 |     4.129 |    0.190      11.2 |      10 |     0.041 |
 TimingAuditor.T...   INFO     OTTimeMonitor             |     0.400 |     0.495 |    0.074       1.1 |      10 |     0.005 |
 TimingAuditor.T...   INFO     OTTimeClassification      |     2.700 |     2.624 |    0.126       7.1 |      10 |     0.026 |
