@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.504 2010-01-29 11:57:40 rlambert Exp $
+! $Id: release.notes,v 1.505 2010-01-29 12:40:31 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v20r0 2010-01-29 ===================
 
 ! 2010-01-29 - Rob Lambert
  - src/FindCloneTool.cpp: fix uninitialised bool variable
