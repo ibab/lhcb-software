@@ -98,43 +98,75 @@ def _digest(x,cas) :
     return x
 
 class _TreeNodeCache:
-   ncache = None
-   lcache = None
-   svc   = None
-   def __init__(self,svc=None):
-      if type(_TreeNodeCache.ncache) is type(None) :
-        if type(svc) is type(None):
-            raise RuntimeWarning('oops... no svc during singleton creation')
-        _TreeNodeCache.ncache = dict()
-        _TreeNodeCache.lcache = dict()
-        _TreeNodeCache.svc = svc
-      elif svc and svc != TreeNodeCache.svc :
-        raise RuntimeWarning('oops... already have a different svc during singleton access ')
-   def node(self,id):
-      if id not in _TreeNodeCache.ncache : 
-        node = _TreeNodeCache.svc.resolveConfigTreeNode( id ) 
-        _TreeNodeCache.ncache[ id ] = node
-      return _TreeNodeCache.ncache[ id ]
-   def leaf(self,id):
-      if not id.valid() : return None
-      if id not in _TreeNodeCache.lcache :
-         leaf = _TreeNodeCache.svc.resolvePropertyConfig( id )
-         _TreeNodeCache.lcache[ id ] = leaf
-      return _TreeNodeCache.lcache[id]
-      
+    ncache = None
+    lcache = None
+    svc   = None
+    def __init__(self,svc=None):
+       if type(_TreeNodeCache.ncache) is type(None) :
+         if type(svc) is type(None):
+             raise RuntimeWarning('oops... no svc during singleton creation')
+         _TreeNodeCache.ncache = dict()
+         _TreeNodeCache.lcache = dict()
+         _TreeNodeCache.svc = svc
+       elif svc and svc != TreeNodeCache.svc :
+         raise RuntimeWarning('oops... already have a different svc during singleton access ')
+    def node(self,id):
+       if id not in _TreeNodeCache.ncache : 
+         node = _TreeNodeCache.svc.resolveConfigTreeNode( id ) 
+         _TreeNodeCache.ncache[ id ] = node
+       return _TreeNodeCache.ncache[ id ]
+    def leaf(self,id):
+       if not id.valid() : return None
+       if id not in _TreeNodeCache.lcache :
+          leaf = _TreeNodeCache.svc.resolvePropertyConfig( id )
+          _TreeNodeCache.lcache[ id ] = leaf
+       return _TreeNodeCache.lcache[id]
+       
 
 def _createTCKEntries(d, cas ) :
-    name = cas.getFullName()
+    ## first pick up all the L0 configurations during the Configurable step
+    l0tcks = {}
+    for tck,id in d.iteritems() :
+        l0tck = tck & 0xffff
+        if l0tck : l0tcks['0x%04X'%l0tck] = None
+    ## find the L0 configurations...   
+    importOptions('$L0TCK/L0DUConfig.opts')
+    from Configurables import L0DUMultiConfigProvider,L0DUConfigProvider
+    for l0tck in l0tcks.keys() :
+        if l0tck not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
+             raise KeyError('requested L0 TCK %s is not known'%l0tck) 
+        configProvider = L0DUConfigProvider('ToolSvc.L0DUConfig.TCK_%s'%l0tck)
+        l0tcks[l0tck] = configProvider.getValuedProperties()
+    pc = PropertyConfigSvc( prefetchConfig = [ _digest(id,cas).str() for (tck,id) in d.iteritems() ],
+                            ConfigAccessSvc = cas.getFullName() )
     appMgr = _appMgr()
-    appMgr.createSvc(name)
-    s = appMgr.service(name,'IConfigAccessSvc')
+    appMgr.createSvc(cas.getFullName())
+    appMgr.createSvc(pc.getFullName())
+    cas = appMgr.service(cas.getFullName(),'IConfigAccessSvc')
+    pc = appMgr.service(pc.getFullName(),'IPropertyConfigSvc')
     for tck,id in d.iteritems() :
         id  = _digest(id,cas)
         tck = _tck(tck)
-        print ' creating mapping:  TCK: ' + ('0x%08x'%tck) + ' -> ID: ' + str(id)
-        ref = s.readConfigTreeNode( id )
+        # check whether L0 part of the TCK is specified
+        l0tck = tck & 0xffff
+        if l0tck :
+            l0tck = '0x%04X'%l0tck
+        for i in pc.collectLeafRefs( id ) :
+            propConfig = pc.resolvePropertyConfig( i )
+            #  check for either a MultiConfigProvider with the right setup,
+            #  or for a template with the right TCK in it...
+            if propConfig.name() == 'ToolSvc.L0DUConfig' : 
+                cfg = PropCfg(propConfig)
+                if cfg.type not in [ 'L0DUMultiConfigProvider', 'L0DUConfigProvider' ] :
+                    raise KeyError("not a valid L0DU config provider: %s" % cfg.type )
+                if cfg.type == 'L0DUMultiConfigProvider' and l0tck not in cfg.props['registerTCK'] :
+                    raise KeyError('requested L0TCK %s not known by L0DUMultiConfigProvider in config %s' % ( l0tck, id ))
+                elif cfg.type == 'L0DUConfigProvider' and l0tck != cfg.props['TCK'] :
+                    raise KeyError('requested L0TCK %s not known by L0DUConfigProvider in config %s' % ( l0tck, id ))
+        print 'creating mapping TCK: 0x%08x -> ID: %s' % (tck,id)
+        ref = cas.readConfigTreeNode( id )
         alias = TCK( ref.get(), tck )
-        s.writeConfigTreeNodeAlias(alias)
+        cas.writeConfigTreeNodeAlias(alias)
 
 
 def _getConfigurations( cas = ConfigAccessSvc() ) :
