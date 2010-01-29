@@ -1,4 +1,4 @@
-// $Id: L0DUEmulatorTool.cpp,v 1.12 2010-01-20 16:30:58 odescham Exp $
+// $Id: L0DUEmulatorTool.cpp,v 1.13 2010-01-29 10:02:22 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -349,7 +349,7 @@ const std::vector<unsigned int> L0DUEmulatorTool::bank(unsigned int version){
   //--------------------------------------------------------------
   if( 0 == version ){
 
-    unsigned int word = ( (m_report.channelsDecisionSummary() << 1) | m_report.decision() ) & 0xFFFF;
+    unsigned int word = ( (m_report.channelsDecisionSummary() << 1) | (m_report.decisionValue() & 0x1 )) & 0xFFFF;
     
     l0Block.push_back( word ); // decision Pattern (first 32 bits)
     l0Block.push_back( m_report.conditionsValueSummary() ); // condition Pattern (first 32 bits)

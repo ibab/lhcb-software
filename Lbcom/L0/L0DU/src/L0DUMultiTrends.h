@@ -1,4 +1,4 @@
-// $Id: L0DUMultiTrends.h,v 1.1 2010-01-27 23:35:24 odescham Exp $
+// $Id: L0DUMultiTrends.h,v 1.2 2010-01-29 10:02:22 odescham Exp $
 #ifndef L0DUMULTITRENDS_H 
 #define L0DUMULTITRENDS_H 1
 
@@ -77,7 +77,7 @@ private:
   int m_nPredTriggers;
   bool m_tTrend ;
   // trending
-  int m_trendStep;
+  long m_trendStep;
   int m_trendPeriod;
   longlong m_origin;
   longlong m_oBin;

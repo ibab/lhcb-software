@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.26 2010-01-29 07:54:33 graven Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.27 2010-01-29 10:02:22 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -500,8 +500,8 @@ bool L0DUFromRawTool::decoding(int ibank){
     // update L0DUReport
     m_report.setDecisionValue( decisionValue );
 
-    m_report.setTimingTriggerBit( ttb );
-    m_report.setForceBit(fb);
+    m_report.setTimingTriggerBit( (ttb == 1) );
+    m_report.setForceBit( (fb == 1) );
     //
     encode("Electron(Status)",(pga2Status>>L0DUBase::Fiber::CaloElectron)  & 0x1    , L0DUBase::Electron::Status  );
     encode("Photon(Status)",(pga2Status>>L0DUBase::Fiber::CaloPhoton)    & 0x1      , L0DUBase::Photon::Status    );

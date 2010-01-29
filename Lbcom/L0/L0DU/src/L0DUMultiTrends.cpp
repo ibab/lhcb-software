@@ -1,4 +1,4 @@
-// $Id: L0DUMultiTrends.cpp,v 1.1 2010-01-27 23:35:24 odescham Exp $
+// $Id: L0DUMultiTrends.cpp,v 1.2 2010-01-29 10:02:22 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -157,31 +157,30 @@ StatusCode L0DUMultiTrends::execute() {
   // =============== trending =====================
   if(m_trendPeriod > 0 && NULL != m_odin){
     // get ODIN time
-    Gaudi::Time time = m_odin->getTime();
+    longlong time = (longlong) ( (double) m_odin->getTime().ns()/Gaudi::Units::second);
     if( exist<LHCb::ODIN>( LHCb::ODINLocation::Default) ){
       LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
-
       // fix origin
       if( !m_hasOrigin ){
-        m_origin = time.ns()/Gaudi::Units::second;
+        m_origin = time;
         //        if( !m_tTrend )m_origin = odin->eventNumber();
         if( !m_tTrend )m_origin = m_count;
         m_hasOrigin = true;
-      }
-      
-      long diff = (time.ns()/Gaudi::Units::second - m_origin);
+      }      
+
+      longlong diff = (time - m_origin);
       //      if( !m_tTrend )diff = odin->eventNumber() - m_origin;
       if( !m_tTrend )diff = m_count - m_origin;
 
       if( diff < 0)counter("lost events in trending") +=  1;
       else if( diff >= 0){ // may loose some events at first pass
-        int nStep = floor(  diff / m_trendStep );
+        int nStep =  diff / m_trendStep ;
         long bin = m_oBin+nStep;
         // slide
         if( bin >= m_trendPeriod){
           int shift = bin-m_trendPeriod+1; 
-          debug() << "Sliding origin = " << m_origin << time.ns() / Gaudi::Units::second 
-                  << " time " << time.ns()/Gaudi::Units::second << " s - eventNumber " << odin->eventNumber() 
+          debug() << "Sliding origin = " << m_origin 
+                  << " time " << time << " s - eventNumber " << odin->eventNumber() 
                   << "  diff = " << diff << "   shift = " << shift <<endmsg;
           slideHistos(shift);
           doRates();

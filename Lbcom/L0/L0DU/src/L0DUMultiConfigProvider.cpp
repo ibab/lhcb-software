@@ -1,4 +1,4 @@
-// $Id: L0DUMultiConfigProvider.cpp,v 1.5 2010-01-20 16:30:58 odescham Exp $
+// $Id: L0DUMultiConfigProvider.cpp,v 1.6 2010-01-29 10:02:22 odescham Exp $
 // Include files 
 
 #include<iostream>
@@ -149,9 +149,8 @@ LHCb::L0DUConfig*  L0DUMultiConfigProvider::loadConfig( std::string tck ,std::st
 
 
   bool ok = false;
-  for( std::vector<std::string>::iterator itck = m_list.begin() ; itck != m_list.end() ; ++itck){
-    if( tck == *itck){ ok = true ; break;  }
-  
+  for( std::vector<std::string>::iterator it = m_list.begin() ; it != m_list.end() ; ++it){
+    if( tck == *it){ ok = true ; break;  }  
   }  
   if(!ok){
     Error("The requested TCK = " + tck + " is not registered ", StatusCode::SUCCESS ).ignore();

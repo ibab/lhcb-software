@@ -41,5 +41,5 @@ HistogramPersistencySvc.OutputFile = "L0DUTrending.root";
 
 
 #include "$ORWELLOPTS/inputRawData.opts"
-//ApplicationMgr.EvtMax = 20000; 
+ApplicationMgr.EvtMax = 20000; 
 
