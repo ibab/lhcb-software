@@ -1,4 +1,4 @@
-// $Id: L0DUMultiTrends.cpp,v 1.2 2010-01-29 10:02:22 odescham Exp $
+// $Id: L0DUMultiTrends.cpp,v 1.3 2010-01-29 11:18:39 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -73,7 +73,7 @@ StatusCode L0DUMultiTrends::initialize() {
 
 
   // Check
-  if(m_list.empty())return Warning("Empty list of TCKs - only data TCK will be monitored");
+  if(m_list.empty())debug() << "Empty list of TCKs - only data TCK will be monitored" << endmsg;
   for(std::vector<std::string>::iterator it = m_list.begin() ; it != m_list.end() ; it++){
     for(std::vector<std::string>::iterator jt = it+1  ; jt != m_list.end() ; jt++){
       if( (*it) == (*jt) ){

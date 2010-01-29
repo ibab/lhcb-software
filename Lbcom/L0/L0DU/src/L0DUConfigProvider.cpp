@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.cpp,v 1.19 2010-01-29 08:08:14 graven Exp $ // Include files 
+// $Id: L0DUConfigProvider.cpp,v 1.20 2010-01-29 11:18:38 odescham Exp $ // Include files 
 #include "boost/assign/list_of.hpp"
 // from Gaudi
 #include "GaudiKernel/StateMachine.h" 
@@ -23,18 +23,23 @@
 DECLARE_TOOL_FACTORY( L0DUConfigProvider );
 
 namespace {
-  static const std::vector<std::string> s_dataFlags = (boost::assign::list_of(std::string("name")),"data","operator");
-  static const std::vector<std::string> s_condFlags = (boost::assign::list_of(std::string("name")),"data","comparator","threshold","index");
-  static const std::vector<std::string> s_chanFlags = (boost::assign::list_of(std::string("name")),"condition","rate","enable","disable","mask","index");
-  static const std::vector<std::string> s_trigFlags = (boost::assign::list_of(std::string("name")),"channel","index","type");
+  static const std::vector<std::string> s_dataFlags = 
+    (boost::assign::list_of(std::string("name")),"data","operator");
+  static const std::vector<std::string> s_condFlags = 
+    (boost::assign::list_of(std::string("name")),"data","comparator","threshold","index");
+  static const std::vector<std::string> s_chanFlags = 
+    (boost::assign::list_of(std::string("name")),"condition","rate","enable","disable","mask","index");
+  static const std::vector<std::string> s_trigFlags = 
+    (boost::assign::list_of(std::string("name")),"channel","index","type");
   // define the allowed operator and comparators
   static const std::vector<std::string> s_comparators=  (boost::assign::list_of( std::string(">") ),"<","==","!=");
   // pair(operator,dimension)
-  static const std::vector<std::pair<std::string, unsigned int> > s_operators = boost::assign::list_of(std::make_pair("Id",1))
-                                                                                                      (std::make_pair("+", 2))
-                                                                                                      (std::make_pair("-", 2))
-                                                                                                      (std::make_pair("&", 2))
-                                                                                                      (std::make_pair("^", 2));
+  static const std::vector<std::pair<std::string, unsigned int> > 
+  s_operators = boost::assign::list_of(std::make_pair("Id",1))
+    (std::make_pair("+", 2))
+    (std::make_pair("-", 2))
+    (std::make_pair("&", 2))
+    (std::make_pair("^", 2));
   // index of the predefined triggers
   static const std::map<std::string,int> s_tIndices = boost::assign::map_list_of(std::string("L0Ecal"), 0)
                                                                                 (std::string("L0Hcal"), 1)
@@ -61,7 +66,8 @@ L0DUConfigProvider::L0DUConfigProvider( const std::string& type,
   declareProperty( "Channels"                , m_channels )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
   declareProperty( "Triggers"                , m_triggers )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
   // for options defined configuration
-  declareProperty( "Description"             , m_def     = "NO DESCRIPTION")->declareUpdateHandler(&L0DUConfigProvider::handler,this);  
+  declareProperty( "Description"             , m_def     = "NO DESCRIPTION")
+    ->declareUpdateHandler(&L0DUConfigProvider::handler,this);  
   declareProperty( "Name"                    , m_recipe  = "")->declareUpdateHandler(&L0DUConfigProvider::handler,this);  
   m_sepMap["["] = "]";
   declareProperty( "Separators"              , m_sepMap)->declareUpdateHandler(&L0DUConfigProvider::handler,this);
@@ -70,7 +76,7 @@ L0DUConfigProvider::L0DUConfigProvider( const std::string& type,
   // TCK from name
   int idx = name.find_last_of(".")+1;
   std::string nam = name.substr(idx,std::string::npos);
-  if (nam == LHCb::L0DUTemplateConfig::Name | name == "L0DUConfig") m_template = true;  
+  if ( (nam == LHCb::L0DUTemplateConfig::Name) | (name == "L0DUConfig")) m_template = true;  
   else { 
       size_t index = nam.rfind("0x");
       nam = (index != std::string::npos ) ? nam.substr( index ) : "0x0000";
@@ -78,7 +84,7 @@ L0DUConfigProvider::L0DUConfigProvider( const std::string& type,
 
 
   declareProperty( "TCK"                     , m_tck  = m_template ? format("0x%04X" , LHCb::L0DUTemplateConfig::TCKValue )
-                                                                   : nam )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
+                   : nam )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
 
 }
 //============================================================================= 
@@ -432,7 +438,8 @@ StatusCode L0DUConfigProvider::createData(){
     if(!ok){
       fatal() << "requested operator "<< op <<" is not allowed " << endmsg;
       info() << "allowed operators are : " << endmsg;
-      for(std::vector<std::pair<std::string, unsigned int> >::const_iterator  it = s_operators.begin();it!=s_operators.end();it++){
+      for(std::vector<std::pair<std::string, unsigned int> >::const_iterator  it = s_operators.begin();
+          it!=s_operators.end();it++){
         info() << "--> " << it->first << endmsg;
         return StatusCode::FAILURE;
       } 

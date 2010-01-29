@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.183 2010-01-29 10:02:22 odescham Exp $
+! $Id: release.notes,v 1.184 2010-01-29 11:18:38 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
@@ -6,7 +6,8 @@
 
 ! 2010-01-29 - Olivier Deschamps
   - Fix compilation warnings
-
+  - allow for empty TCK list in L0DUMultiTrends (only data TCK will be monitored when empty)
+  
 ! 2010-01-29 - Gerhard Raven
   - L0DUAlg,L0DUFromRawTool: allow to set the type of the IL0DUConfigProver tool
   - L0DUConfigProvider: also allow 'L0DUConfig' as name of the template
