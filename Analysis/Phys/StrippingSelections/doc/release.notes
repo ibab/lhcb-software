@@ -5,6 +5,14 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-01-29 - Greig Cowan
+ - Removed IPVIPCHI2 cuts from B in Bs2JpsiPhi, Bd2JpsiKstar and Bu2JpsiK
+   nominal stripping selections.
+
+! 2010-01-29 - Greig Cowan for Liming Zhang
+ - Converted Bs2Jpsif0 selections to configurables, and added a loose
+ selection for early data. Updated StrippingDimuon.py for Bs2Jpsif0.
+
 ! 2010-01-29 - Anton Poluektov 
  - Added StrippingB2D3Pi lines by Steven Blusk
 

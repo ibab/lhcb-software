@@ -1,8 +1,8 @@
-# $Id: StrippingBu2JpsiK.py,v 1.2 2010-01-24 23:36:04 gcowan Exp $
+# $Id: StrippingBu2JpsiK.py,v 1.3 2010-01-29 18:59:51 gcowan Exp $
 
 __author__ = ['Greig Cowan']
 __date__ = '24/01/2010'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 '''
 Bu->JpsiK lifetime unbiased stripping selection using LoKi::Hybrid and
@@ -36,7 +36,6 @@ class StrippingBu2JpsiKConf(LHCbConfigurableUser):
 		,	"BuMassWinLoose"	: 300.0	# MeV
 		,	"BuVCHI2" 		: 5.0	# adimensional
 		,	"BuVCHI2Loose" 		: 20.0	# adimensional
-		,	"BuBPVIPCHI2" 		: 25.0	# adimensional
           }
     
     def nominal_line( self ):
@@ -54,7 +53,7 @@ class StrippingBu2JpsiKConf(LHCbConfigurableUser):
     def Jpsi2MuMuLoose( self ):
         StdVeryLooseJpsi2MuMu = DataOnDemand("StdVeryLooseJpsi2MuMu", "StdVeryLooseJpsi2MuMu")
 	_JpsiFilter = FilterDesktop("JpsiFilterForBu2JpsiKLoose")
-	_JpsiFilter.Code = "  (MINTREE('mu+'==ABSID, TRCHI2DOF) < %(MuonTRCHI2Loose)s)" \
+	_JpsiFilter.Code = "  (MAXTREE('mu+'==ABSID, TRCHI2DOF) < %(MuonTRCHI2Loose)s)" \
 			   "& (MINTREE('mu+'==ABSID, PT) > %(MuonPTLoose)s *MeV)" \
         	           "& (PT > %(JpsiPTLoose)s *MeV)" \
         	           "& (ADMASS('J/psi(1S)') < %(JpsiMassWinLoose)s *MeV)" \
@@ -76,7 +75,7 @@ class StrippingBu2JpsiKConf(LHCbConfigurableUser):
                          	   "& (PT > %(KaonPT)s *MeV)"\
                         	   "& (P > %(KaonP)s *MeV)" % self.getProps()}
  	_Bu.CombinationCut = "ADAMASS('B+') < %(BuMassWin)s *MeV" % self.getProps()
-        _Bu.MotherCut = "(VFASPF(VCHI2/VDOF) < %(BuVCHI2)s) & (BPVIPCHI2() < %(BuBPVIPCHI2)s)" % self.getProps()
+        _Bu.MotherCut = "(VFASPF(VCHI2/VDOF) < %(BuVCHI2)s)" % self.getProps()
         _Bu.ReFitPVs = True
 	_Bu.addTool( OfflineVertexFitter() )
 	_Bu.VertexFitters.update( { "" : "OfflineVertexFitter"} )

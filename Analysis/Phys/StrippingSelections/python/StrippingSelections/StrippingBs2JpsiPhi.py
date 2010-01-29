@@ -1,8 +1,8 @@
-# $Id: StrippingBs2JpsiPhi.py,v 1.3 2010-01-24 23:36:03 gcowan Exp $
+# $Id: StrippingBs2JpsiPhi.py,v 1.4 2010-01-29 18:59:51 gcowan Exp $
 
 __author__ = ['Greig Cowan']
 __date__ = '24/01/2010'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 '''
 Bs->JpsiPhi lifetime unbiased stripping selection using LoKi::Hybrid and
@@ -37,7 +37,6 @@ class StrippingBs2JpsiPhiConf(LHCbConfigurableUser):
 		,	"BsMassWinLoose"	: 300.0	# MeV
 		,	"BsVCHI2" 	: 5.0	# adimensional
 		,	"BsVCHI2Loose" 	: 20.0	# adimensional
-		,	"BsBPVIPCHI2" 	: 25.0	# adimensional
                  }
     
     def nominal_line( self ):
@@ -55,7 +54,7 @@ class StrippingBs2JpsiPhiConf(LHCbConfigurableUser):
     def Jpsi2MuMuLoose( self ):
 	StdVeryLooseJpsi2MuMu = DataOnDemand("StdVeryLooseJpsi2MuMu", "StdVeryLooseJpsi2MuMu")
 	_JpsiFilter = FilterDesktop("JpsiFilterForBs2JpsiPhiLoose")
-	_JpsiFilter.Code = "  (MINTREE('mu+'==ABSID, TRCHI2DOF) < %(MuonTRCHI2Loose)s)" \
+	_JpsiFilter.Code = "  (MAXTREE('mu+'==ABSID, TRCHI2DOF) < %(MuonTRCHI2Loose)s)" \
         	           "& (ADMASS('J/psi(1S)') < %(JpsiMassWinLoose)s *MeV)" \
         	           "& (VFASPF(VCHI2/VDOF) < %(JpsiVCHI2Loose)s)" % self.getProps()
 
@@ -67,7 +66,7 @@ class StrippingBs2JpsiPhiConf(LHCbConfigurableUser):
     def Phi2KKLoose( self ):
 	StdLoosePhi2KK = DataOnDemand("StdLoosePhi2KK", "StdLoosePhi2KK")
 	_phiFilter = FilterDesktop("PhiFilterForBs2JpsiPhiLoose")
-	_phiFilter.Code = "  (MINTREE('K+'==ABSID, TRCHI2DOF) < %(KaonTRCHI2Loose)s)" \
+	_phiFilter.Code = "  (MAXTREE('K+'==ABSID, TRCHI2DOF) < %(KaonTRCHI2Loose)s)" \
         	          "& (MINTREE('K+'==ABSID, PT) > %(KaonPTLoose)s *MeV)"\
                 	  "& (ADMASS('phi(1020)') < %(PhiMassWinLoose)s *MeV)" \
                   	  "& (PT > %(PhiPTLoose)s *MeV)" \
@@ -116,7 +115,7 @@ class StrippingBs2JpsiPhiConf(LHCbConfigurableUser):
 	_Bs = CombineParticles("Bs2JpsiPhi")
      	_Bs.DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)"
         _Bs.CombinationCut = "ADAMASS('B_s0') < %(BsMassWin)s *MeV" % self.getProps()
-        _Bs.MotherCut = "(VFASPF(VCHI2/VDOF) < %(BsVCHI2)s) & (BPVIPCHI2() < %(BsBPVIPCHI2)s)" % self.getProps()
+        _Bs.MotherCut = "(VFASPF(VCHI2/VDOF) < %(BsVCHI2)s)" % self.getProps()
         _Bs.ReFitPVs = True
 	# Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Phi
 	_Bs.addTool( OfflineVertexFitter() )

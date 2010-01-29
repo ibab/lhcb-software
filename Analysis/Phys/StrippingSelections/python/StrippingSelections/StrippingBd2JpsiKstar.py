@@ -1,8 +1,8 @@
-# $Id: StrippingBd2JpsiKstar.py,v 1.2 2010-01-24 23:36:01 gcowan Exp $
+# $Id: StrippingBd2JpsiKstar.py,v 1.3 2010-01-29 18:59:51 gcowan Exp $
 
 __author__ = ['Greig Cowan']
 __date__ = '24/01/2010'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 '''
 Bd->JpsiKstar lifetime unbiased stripping selection using LoKi::Hybrid and
@@ -41,7 +41,6 @@ class StrippingBd2JpsiKstarConf(LHCbConfigurableUser):
 		,	"BdMassWinLoose"	: 300.0	# MeV
 		,	"BdVCHI2" 		: 5.0	# adimensional
 		,	"BdVCHI2Loose" 		: 20.0	# adimensional
-		,	"BdBPVIPCHI2" 		: 25.0	# adimensional
 		,	"BdPT"	 		: 2000.	# adimensional
 
              }
@@ -61,7 +60,7 @@ class StrippingBd2JpsiKstarConf(LHCbConfigurableUser):
     def Jpsi2MuMuLoose( self ):
         StdVeryLooseJpsi2MuMu = DataOnDemand("StdVeryLooseJpsi2MuMu", "StdVeryLooseJpsi2MuMu")
 	_JpsiFilter = FilterDesktop("JpsiFilterForBd2JpsiKstarLoose")
-	_JpsiFilter.Code = "  (MINTREE('mu+'==ABSID, TRCHI2DOF) < %(MuonTRCHI2Loose)s)" \
+	_JpsiFilter.Code = "  (MAXTREE('mu+'==ABSID, TRCHI2DOF) < %(MuonTRCHI2Loose)s)" \
 			   "& (MINTREE('mu+'==ABSID, PT) > %(MuonPTLoose)s *MeV)" \
         	           "& (PT > %(JpsiPTLoose)s *MeV)" \
         	           "& (ADMASS('J/psi(1S)') < %(JpsiMassWinLoose)s *MeV)" \
@@ -109,7 +108,6 @@ class StrippingBd2JpsiKstarConf(LHCbConfigurableUser):
       	_Bd.DecayDescriptor = "[B0 -> J/psi(1S) K*(892)0]cc"
         _Bd.CombinationCut = "ADAMASS('B0') < %(BdMassWin)s *MeV" % self.getProps()
         _Bd.MotherCut = "  (VFASPF(VCHI2/VDOF) < %(BdVCHI2)s)"\
-			"& (BPVIPCHI2() < %(BdBPVIPCHI2)s )"\
 			"& (PT > %(BdPT)s *MeV)" % self.getProps()
         _Bd.ReFitPVs = True
 	# Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar

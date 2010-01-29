@@ -15,7 +15,7 @@ JpsiFilter = FilterDesktop('JpsiFilterForBiasedBs2JpsiPhi')
 JpsiFilter.InputLocations = ['StdLTUnbiasedJpsi2MuMu']
 # cuts 
 JpsiFilter.Code = " (MINTREE('mu+'==ABSID, PIDmu) > -10.0)" \
-                  " &(MINTREE('mu+'==ABSID,TRCHI2DOF)< 10.0)"\
+                  " &(MAXTREE('mu+'==ABSID,TRCHI2DOF)< 10.0)"\
                   " & (ADMASS('J/psi(1S)') < 50.*MeV)"\
                   " & (VFASPF(VCHI2/VDOF) < 15.0)"
 # released the PID cut w.r.t offline
@@ -27,7 +27,7 @@ Phi2KK = FilterDesktop('Phi2KKForBiasedBs2JpsiPhi')
 Phi2KK.InputLocations = ["StdLoosePhi2KK"]
 Phi2KK.Code = "  (MINTREE('K+'==ABSID, PIDK) > -5.0)" \
               "& (MINTREE('K+'==ABSID, PT) > 200.0)"\
-              "& (MINTREE('K+'==ABSID,TRCHI2DOF)< 10.0)"\
+              "& (MAXTREE('K+'==ABSID,TRCHI2DOF)< 10.0)"\
               "& (ADMASS('phi(1020)') < 20.*MeV)" \
               "& (VFASPF(VCHI2/VDOF) < 15.0)"
 # released the pT kaons cut and the PID cut w.r.t offline 
