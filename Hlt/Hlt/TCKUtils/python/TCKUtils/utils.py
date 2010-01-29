@@ -129,8 +129,8 @@ def _createTCKEntries(d, cas ) :
     for tck,id in d.iteritems() :
         l0tck = tck & 0xffff
         if l0tck : l0tcks['0x%04X'%l0tck] = None
-    ## find the L0 configurations...   
-    importOptions('$L0TCK/L0DUConfig.opts')
+    ## find the L0 configurations if needed...   
+    if l0tcks : importOptions('$L0TCK/L0DUConfig.opts')
     from Configurables import L0DUMultiConfigProvider,L0DUConfigProvider
     for l0tck in l0tcks.keys() :
         if l0tck not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
@@ -149,20 +149,20 @@ def _createTCKEntries(d, cas ) :
         tck = _tck(tck)
         # check whether L0 part of the TCK is specified
         l0tck = tck & 0xffff
-        if l0tck :
+        if l0tck : 
             l0tck = '0x%04X'%l0tck
-        for i in pc.collectLeafRefs( id ) :
-            propConfig = pc.resolvePropertyConfig( i )
-            #  check for either a MultiConfigProvider with the right setup,
-            #  or for a template with the right TCK in it...
-            if propConfig.name() == 'ToolSvc.L0DUConfig' : 
-                cfg = PropCfg(propConfig)
-                if cfg.type not in [ 'L0DUMultiConfigProvider', 'L0DUConfigProvider' ] :
-                    raise KeyError("not a valid L0DU config provider: %s" % cfg.type )
-                if cfg.type == 'L0DUMultiConfigProvider' and l0tck not in cfg.props['registerTCK'] :
-                    raise KeyError('requested L0TCK %s not known by L0DUMultiConfigProvider in config %s' % ( l0tck, id ))
-                elif cfg.type == 'L0DUConfigProvider' and l0tck != cfg.props['TCK'] :
-                    raise KeyError('requested L0TCK %s not known by L0DUConfigProvider in config %s' % ( l0tck, id ))
+            for i in pc.collectLeafRefs( id ) :
+                propConfig = pc.resolvePropertyConfig( i )
+                #  check for either a MultiConfigProvider with the right setup,
+                #  or for a template with the right TCK in it...
+                if propConfig.name() == 'ToolSvc.L0DUConfig' : 
+                    cfg = PropCfg(propConfig)
+                    if cfg.type not in [ 'L0DUMultiConfigProvider', 'L0DUConfigProvider' ] :
+                        raise KeyError("not a valid L0DU config provider: %s" % cfg.type )
+                    if cfg.type == 'L0DUMultiConfigProvider' and l0tck not in cfg.props['registerTCK'] :
+                        raise KeyError('requested L0TCK %s not known by L0DUMultiConfigProvider in config %s' % ( l0tck, id ))
+                    elif cfg.type == 'L0DUConfigProvider' and l0tck != cfg.props['TCK'] :
+                        raise KeyError('requested L0TCK %s not known by L0DUConfigProvider in config %s' % ( l0tck, id ))
         print 'creating mapping TCK: 0x%08x -> ID: %s' % (tck,id)
         ref = cas.readConfigTreeNode( id )
         alias = TCK( ref.get(), tck )
