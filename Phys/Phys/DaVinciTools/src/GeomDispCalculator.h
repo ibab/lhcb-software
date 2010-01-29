@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.h,v 1.17 2010-01-22 09:34:20 pkoppenb Exp $
+// $Id: GeomDispCalculator.h,v 1.18 2010-01-29 11:44:53 jpalac Exp $
 #ifndef GEOMDISPCALCULATOR_H
 #define GEOMDISPCALCULATOR_H 1
 
@@ -99,7 +99,7 @@ public:
 
   StatusCode calcSignedFlightDistance( const LHCb::VertexBase&,
                                        const LHCb::Particle&, 
-                                       double&e, 
+                                       double&, 
                                        double& ) const { return printFailure() ; };
   
   StatusCode calcProjectedFlightDistance( const LHCb::VertexBase&,

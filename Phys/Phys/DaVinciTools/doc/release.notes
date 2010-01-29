@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.502 2010-01-22 09:34:20 pkoppenb Exp $
+! $Id: release.notes,v 1.503 2010-01-29 11:44:53 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-01-29 - Juan Palacios
+ - src/GeomDispCalculator.h
+  . Remove one remaining unused parameter.
 
 ! 2010-01-22 - Patrick Koppenburg
  - GeomDispCalculator : Remove names of input to avoid compilation warnings
