@@ -1,4 +1,4 @@
-// $Id: L0DUReportMonitor.cpp,v 1.23 2010-01-20 16:30:58 odescham Exp $
+// $Id: L0DUReportMonitor.cpp,v 1.24 2010-01-29 19:06:20 odescham Exp $
 // Include files 
 #include <cmath>
 // from Gaudi
@@ -682,9 +682,9 @@ StatusCode L0DUReportMonitor::execute() {
     label(plot1D( -1. , base.str() + "/L0Decision/Counters/1" , decName.str(), -1. ,5  , 6),deciNames);
     if(report->decision(LHCb::L0DUDecision::Physics))
       plot1D( 0. , base.str() + "/L0Decision/Counters/1" , decName.str(),  -1. ,5  , 6);
-    if(report->decision(LHCb::L0DUDecision::Physics))
+    if(report->decision(LHCb::L0DUDecision::Beam1))
       plot1D( 1. , base.str() + "/L0Decision/Counters/1" , decName.str(),  -1. ,5  , 6);
-    if(report->decision(LHCb::L0DUDecision::Physics))
+    if(report->decision(LHCb::L0DUDecision::Beam2))
       plot1D( 2. , base.str() + "/L0Decision/Counters/1" , decName.str(),  -1. ,5  , 6);
     if(report->timingTriggerBit())plot1D( 3. , base.str() + "/L0Decision/Counters/1" , decName.str(),  -1. ,5  , 6);
     if(report->forceBit())        plot1D( 4. , base.str() + "/L0Decision/Counters/1" , decName.str(),  -1. ,5  , 6);

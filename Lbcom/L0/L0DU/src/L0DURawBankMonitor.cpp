@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.17 2010-01-20 16:30:58 odescham Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.18 2010-01-29 19:06:20 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -313,7 +313,7 @@ StatusCode L0DURawBankMonitor::execute() {
       debug() << "BCID L0DU/ODIN : " <<  m_fromRaw->bcid().first << " / " << odBX << endmsg;
     }
     if( (m_fromRaw->status() & 0x1) ){
-      fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::Iddle , 1 );
+      fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::IdleLink , 1 );
       if(m_warn)Warning("Status::Warning  : L0DU bank monitor summary : --IddleLink error bit -- "
                         ,StatusCode::SUCCESS).ignore();
     }
@@ -414,13 +414,13 @@ void L0DURawBankMonitor::bookHistos() {
     book1D( toHistoID("Status/L0DU/BCID/1") ,  "BCID(ODIN)-BCID(L0DU)" , -15. , 15., 31);
     book1D( toHistoID("Status/L0DU/BCID/2") ,  "BCID(PGA3)-BCID(PGA2)" , -15. , 15., 31);
     // Global summary
-    AIDA::IHistogram1D* histo = book1D( toHistoID("Status/Summary/1")     ,  "L0DU error status summary"       , -1. , 10., 11);
+    AIDA::IHistogram1D* histo = book1D( toHistoID("Status/Summary/1")     ,  "L0DU error status summary"       , -1. , 9., 10);
       TH1D* th1 = Gaudi::Utils::Aida2ROOT::aida2root( histo );        
       TAxis* xAxis = th1->GetXaxis();
       xAxis->SetBinLabel( 1 , "Counter" );
-      xAxis->SetBinLabel( 2 , "Tell1 Error" );
-      xAxis->SetBinLabel( 3 , "DeMultiplexer Error" );
-      xAxis->SetBinLabel( 4 , "TLK Error" );
+      xAxis->SetBinLabel( 2 , "Idle link" );
+      xAxis->SetBinLabel( 3 , "TLK Error" );
+      xAxis->SetBinLabel( 4 , "DeMultiplexer Error" );
       xAxis->SetBinLabel( 5 , "Idle Link" );
       xAxis->SetBinLabel( 6 , "PGA  BC MisAlign" );
       xAxis->SetBinLabel( 7 , "ODIN BC MisAlign" );
