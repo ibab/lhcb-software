@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.2 2010-01-18 15:08:35 graven Exp $
+! $Id: release.notes,v 1.3 2010-01-29 12:48:07 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/SelectionLine
 ! Responsible : Gerhard Raven
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
+
+!======================= SelectionLine v1r0 2010-01-29 =====================
 
 ! 2010-01-18 - Gerhard Raven
  - initial import of code adapted from Hlt/HltLine, together with 
