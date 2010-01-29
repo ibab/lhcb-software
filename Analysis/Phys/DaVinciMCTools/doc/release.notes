@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.284 2010-01-13 13:25:40 pkoppenb Exp $
+! $Id: release.notes,v 1.285 2010-01-29 08:24:18 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-11-30 - Juan PALACIOS
+ - src/Particle2BackgroundCategoryRelationsAlg.{cpp,h}
+  . Now takes list of input particle locations.
 
 ! 2010-01-13 - Patrick Koppenburg
  - Task #13333 : Remove IPhysDesktop dependency
