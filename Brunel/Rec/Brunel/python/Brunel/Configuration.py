@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.115 2010-01-11 17:50:47 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.116 2010-01-29 13:49:14 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -542,7 +542,7 @@ class Brunel(LHCbConfigurableUser):
                 GaudiSequencer("CheckITSeq").Members += [effCheck]
 
             if "OT" in checkSeq :
-                GaudiSequencer("CheckOTSeq").Members += ["OTTimeCreator", "OTTimeChecker"] # needs MCHits
+                GaudiSequencer("CheckOTSeq").Members += ["OTTimeChecker"] # needs MCHits
 
             if "Tr" in  checkSeq :
                 # Checking on the tracks in the "best" container - needs MCHits
