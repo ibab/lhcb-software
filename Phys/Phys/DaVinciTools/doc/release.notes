@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.503 2010-01-29 11:44:53 jpalac Exp $
+! $Id: release.notes,v 1.504 2010-01-29 11:57:40 rlambert Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-01-29 - Rob Lambert
+ - src/FindCloneTool.cpp: fix uninitialised bool variable
 
 ! 2010-01-29 - Juan Palacios
  - src/GeomDispCalculator.h

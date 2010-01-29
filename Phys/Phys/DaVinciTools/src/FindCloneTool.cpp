@@ -1,4 +1,4 @@
-// $Id: FindCloneTool.cpp,v 1.3 2009-03-03 15:19:55 pkoppenb Exp $
+// $Id: FindCloneTool.cpp,v 1.4 2010-01-29 11:57:40 rlambert Exp $
 
 // Include files 
 
@@ -94,7 +94,7 @@ bool FindCloneTool::searchOverlap( std::vector< std::vector<const LHCb::ProtoPar
   isclone.clear(); //I want this to be an empty vector at this stage.
   
 
-  bool foundsomeclones;
+  bool foundsomeclones=false;
 
   for (std::vector< std::vector<const LHCb::ProtoParticle*> >::const_iterator i = proto.begin(); 
        i != proto.end() ; ++i) //loop over first particle
