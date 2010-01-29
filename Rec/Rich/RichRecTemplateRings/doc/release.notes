@@ -3,7 +3,9 @@
 ! Responsible  : Sajan Easo
 ! Purpose      : Reconstruct Cherenkov Rings for Particle Identification
 !-----------------------------------------------------------------------------
-
+! 2010-01-28   - Sajan Easo
+-  Added a fix to avoid selecting bands around the expected radius.
+-  Added a fix for the cases with zero number of hits in input to avoid crash.
 !==================== RichRecTemplateRings v1r2 2010-01-21 =================
 
 
