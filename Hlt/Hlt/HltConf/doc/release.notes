@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.400 2010-01-29 13:42:33 panmanj Exp $ 
+! $Id: release.notes,v 1.401 2010-01-29 15:40:56 kvervink Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-01-29 - Kim Vervink
+ - Changed done by Danielle Tostes (UFRJ - summer student).
+ - Added Hlt2 lines to configureHltMonitoring.
+ - Defined the grouping of lines in alley, according to the files in Hlt2Lines.
+ - Added 2 more Hlt1 alleys for the monitoring: MinBias and BeamGas and 
+   combined in Hlt1 and Hlt2 SingleMuon and MuTrack to one monitoring alley.
 
 ! 2010-01-29 - Jaap Panman
  - activate LumiLow* lines
