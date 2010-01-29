@@ -1,4 +1,4 @@
-// $Id: L0Filter.cpp,v 1.8 2010-01-29 12:49:27 odescham Exp $
+// $Id: L0Filter.cpp,v 1.9 2010-01-29 13:25:59 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -75,7 +75,7 @@ StatusCode L0Filter::initialize() {
       info() << "] L0 trigger(s) is passed "<< endmsg;
     } 
 
-    if( m_l0triggers.empty() || m_l0channels.empty() )
+    if( m_l0triggers.empty() && m_l0channels.empty() )
       info() << " - trigger decision type " << LHCb::L0DUDecision::Name[ m_mask ] << " is passed " << endmsg;
 
   }
@@ -109,8 +109,8 @@ StatusCode L0Filter::execute() {
 
 
   if( !exist<LHCb::L0DUReport>( loc)){
-    Warning("L0DUReport not found at location : the event is " + rej + loc ).ignore();
-    counter("Report not found L0Filter reject") += 1;
+    counter("Report not found") += 1;
+    Warning("L0DUReport not found at location : '" + loc + "' - the event is " + rej + loc ).ignore();
     return StatusCode::SUCCESS;
   }
 
