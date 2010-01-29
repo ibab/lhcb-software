@@ -6,6 +6,7 @@
 
 ! 2010-01-29 - Gerhard Raven
  - further optimization of tar file access
+ - tar file access now understands GNU LONGNAME extension
 
 ! 2010-01-28 - Gerhard Raven
  - add Hlt::TrackPipe

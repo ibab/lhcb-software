@@ -1,7 +1,9 @@
 #include "ConfigTarFileAccessSvc.h"
 #include <sstream>
 #include <string>
+#include <string.h>
 #include <iostream>
+#include <sstream>
 #include <fstream>
 #include <vector>
 #include <map>
@@ -62,11 +64,15 @@ namespace {
         char padding[12];             /* 500-512 (pad to exactly the TAR_BLOCK_SIZE) */
     };
 
-    bool isZeroHeader(const struct posix_header& h) {
+    bool isZero(const struct posix_header& h) {
          const char* i = (const char*)(&h);
          const char* end = i+512;
          while (i<end && *i++==0) { /* nothing*/  }
          return i==end;
+    }
+
+    void zero(struct posix_header& h) {
+         memset(&h,0,sizeof(posix_header));
     }
 
 
@@ -75,6 +81,8 @@ namespace {
     {
         REGTYPE  = '0',            /* regular file */
         REGTYPE0 = '\0',           /* regular file (ancient bug compat)*/
+        GNUTYPE_LONGLINK = 'K',
+        GNUTYPE_LONGNAME = 'L',
     };
     typedef enum TarFileType TarFileType;
 
@@ -128,7 +136,7 @@ public:
     }
 private:
     struct Info {
-        Info(size_t _offset) : size(0),type( TarFileType(0) ),offset(_offset) {}
+        Info() : size(0),type( TarFileType(0) ),offset(0) {}
         std::string      name;
         size_t           size;
         TarFileType      type;
@@ -143,7 +151,7 @@ private:
         }
         return m_index;
     }
-    bool interpretHeader(const posix_header& header, struct Info& info) const;
+    bool interpretHeader(posix_header& header, struct Info& info) const;
     /* Read an octal value in a field of the specified width, with optional
      * spaces on both sides of the number and with an optional null character
      * at the end.  Returns -1 on an illegal format.  */
@@ -166,7 +174,7 @@ private:
     mutable bool m_indexUpToDate;
 };
 
-bool TarFile::interpretHeader(const posix_header& header, Info& info) const {
+bool TarFile::interpretHeader(posix_header& header, Info& info) const {
             if (strncmp(header.magic,"ustar ",6)) { 
                 return false;
             }
@@ -185,9 +193,31 @@ bool TarFile::interpretHeader(const posix_header& header, Info& info) const {
                 std::cerr << "inconsistent checksum" << std::endl;
                 return false;
             }
-            info.name  = header.name;
+            // name should be header.prefix + '/' + header.name,
+            // in case header.prefix[0]!=0
+            if (header.prefix[0]!=0) std::cerr << "got prefix: [" << (char*)(&header.prefix[0]) << "]/[" << header.name << "]" << std::endl;
+            // std::cerr << "got name " << (char*)(&header.name[0]) << std::endl;
             info.type  = TarFileType(header.typeflag);
             info.size  = getOctal(header.size,sizeof(header.size));
+            info.name  = header.name;
+            info.offset = m_file.tellg();
+
+            if ( info.type == GNUTYPE_LONGNAME ) { 
+                // current header is a dummy 'flag', followed by data blocks 
+                // with name as content (length of name is 'size' of data)
+                assert(strncmp(header.name,"././@LongLink",13)==0);
+                // attach os to filename string
+                std::ostringstream fname;
+                bio::copy(bio::slice(m_file,0,info.size), fname);
+                size_t padding = info.size % 512;
+                if (padding!=0) bio::seek(m_file,512-padding,std::ios_base::cur);
+                // and now get another header , which contains a truncated name
+                // but which is otherwise the 'real' one
+                m_file.read( (char*) &header, sizeof(header) ) ;
+                interpretHeader( header, info);
+                // so we put in the currect name to 'fix' the truncated one...
+                info.name = fname.str();
+            }
             return true;
 }
 
@@ -196,12 +226,12 @@ bool TarFile::index() const {
         bio::seek(m_file,0,std::ios::beg);
         m_index.clear();
         while (m_file.read( (char*) &header, sizeof(header) )) {
-            Info info(m_file.tellg());
+            Info info;
             if (!interpretHeader( header, info))  {
                 // see if we're at the end of the file: (at least) two all-zero headers)
-                if (isZeroHeader(header)) {
+                if (isZero(header)) {
                     m_file.read( (char*) &header, sizeof(header) ) ;
-                    if (isZeroHeader(header) ){
+                    if (isZero(header)){
                         m_leof = info.offset;
                         return true;
                     }
@@ -209,7 +239,10 @@ bool TarFile::index() const {
                 std::cerr << "failed to interpret header @ " << info.offset << " in tarfile " << m_name << std::endl;
                 return false;
             }
-            if (info.name.empty()) break;
+            if (info.name.empty()) {
+                std::cerr << " got empty name " << std::endl;
+                break;
+            }
             if ( (info.type == REGTYPE || info.type == REGTYPE0 ) 
                && info.name[ info.name.size()-1 ] != '/' 
                && info.name.find("/CVS/")  == string::npos 
