@@ -173,6 +173,9 @@ MEPInjector::MEPInjector(const std::string & name, ISvcLocator * pSvcLocator):Se
 
     declareProperty("NeedOTConv", m_NeedOTConv = 0);
 
+    declareProperty("LocalTest", m_LocalTest = false);
+    declareProperty("TestPort", m_TestPort = 45678);
+
     m_InjState = NOT_READY;
 }
 
@@ -438,10 +441,24 @@ StatusCode MEPInjector::initialize() {
 
     m_BitOdinIPAddr = MEPRxSys::IPStringToBits(m_StrOdinIPAddr);
 
-    /// Open the raw socket for IP header management.
-    if ((m_ToHLTSock =  MEPRxSys::open_sock_arb_source(m_MEPProto, m_MEPBufSize, errmsg)) < 0)    {
-        ERRMSG(msgLog, "Failed to open socket:" + errmsg);
-	return StatusCode::FAILURE;
+    if(m_LocalTest) {
+        /// Local test has to run in Automode, and destination has to be loopback interface
+        m_AutoMode = true;
+        m_HLTStrIPAddrTo = "127.0.0.1";
+
+        /// Open the raw socket for IP header management.
+        if ((m_ToHLTSock =  MEPRxSys::open_sock_udp(errmsg, m_TestPort)) < 0)    {
+            ERRMSG(msgLog, "Failed to open socket:" + errmsg);
+            return StatusCode::FAILURE;
+        }
+
+    }
+    else {
+        /// Open the raw socket for IP header management.
+        if ((m_ToHLTSock =  MEPRxSys::open_sock_arb_source(m_MEPProto, m_MEPBufSize, errmsg)) < 0)    {
+            ERRMSG(msgLog, "Failed to open socket:" + errmsg);
+   	    return StatusCode::FAILURE;
+        }
     }
 
     m_HLTIPAddrTo=0;
@@ -539,7 +556,7 @@ StatusCode MEPInjector::initialize() {
 */
 
     /// If requested, ping all HLT nodes to update ARP table (it should be useless now).
-    if(m_ARPMe)
+    if(m_ARPMe && !m_LocalTest)
         pingHLTNodes();
 
 
@@ -958,7 +975,8 @@ StatusCode MEPInjector::processEvent(char *curEvt, unsigned int curEvtSize) {
 
                 curmep->setSize(IPHDRSZ + MEPHDRSZ ); 
                 mh->m_totLen  = MEPHDRSZ;
-                mh->m_partitionID = m_PartitionID;
+//                mh->m_partitionID = m_PartitionID;
+                mh->m_partitionID = MEPRxSys::rdtsc();
                 
                 mh->m_l0ID = m_L0ID;
             }
@@ -1173,9 +1191,9 @@ StatusCode MEPInjector::readThenSend() {
 
         // Check TAE bank integrity and get useful information
         for ( int nbl = 0; nBlocks -1 > nbl; ++nbl ) {
-            int nBx = *block++;
-            int off = *block++;
-            int len = *block++;
+            unsigned int nBx = *block++;
+            unsigned int off = *block++;
+            unsigned int len = *block++;
     
             if(off != lenSum) {
                 msgLog << MSG::ERROR << WHERE << " Severe error in TAE bank" << endmsg;
@@ -1696,12 +1714,29 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me) {
     }
     else
         addrTo = m_HLTIPAddrTo;
+
+    // Case of local test, fragmentation is managed by the kernel
+    if(m_LocalTest) {
+        int n=0;
+        n = MEPRxSys::send_msg(m_ToHLTSock, addrTo, 0, datagram, iDatagramSize, 0);
+        if (n == (int) iDatagramSize) {
+            m_TotMEPsTx++;
+            m_TotBytesTx += MEPSize;
+            return StatusCode::SUCCESS;
+        }   
+        if (n == -1) {
+            ERRMSG(msgLog, " MEP sending ");
+            return StatusCode::FAILURE;
+        }
+        ERRMSG(msgLog, " MEP corrupted on send! Sent length:" + n);
+        return StatusCode::FAILURE; 
+    }
+ 
     /// If the frame size, i.e. the size of the datagram + the ethernet header, is less than the MTU, send it in one block, else fragment it  
     if (iDatagramSize < iIPMTU) {
 	// Do not fragment
 
-	int n =
-	    MEPRxSys::send_msg_arb_source(m_ToHLTSock, m_MEPProto, tell1IP,
+        int n = MEPRxSys::send_msg_arb_source(m_ToHLTSock, m_MEPProto, tell1IP,
 					  addrTo, datagram, iDatagramSize,
 					  m_DatagramID);
 
