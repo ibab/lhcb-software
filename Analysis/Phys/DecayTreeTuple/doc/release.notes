@@ -4,6 +4,8 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!========================== DecayTreeTuple v3r0 2010-01-27 ==================
+
 ! 2010-01-27 - Rob Lambert
  - Minor fixes:
 	  . added forgotten baseclasses into the cvs
