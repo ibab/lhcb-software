@@ -1,4 +1,4 @@
-// $Id: L0Filter.cpp,v 1.9 2010-01-29 13:25:59 odescham Exp $
+// $Id: L0Filter.cpp,v 1.10 2010-01-29 13:28:52 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -110,7 +110,7 @@ StatusCode L0Filter::execute() {
 
   if( !exist<LHCb::L0DUReport>( loc)){
     counter("Report not found") += 1;
-    Warning("L0DUReport not found at location : '" + loc + "' - the event is " + rej + loc ).ignore();
+    Warning("L0DUReport not found at location : '" + loc + "' - the event is " + rej  ).ignore();
     return StatusCode::SUCCESS;
   }
 
