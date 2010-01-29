@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.86 2010-01-25 16:18:34 garnierj Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.87 2010-01-29 09:27:15 garnierj Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -425,6 +425,8 @@ int MEPRx::spaceAction() {
   int sc = sendSpace();
   m_parent->m_complTimeTSC->fill(1.0 * (m_hdrtsc - m_firsthdrtsc), 1.0);
   m_parent->m_complTimeSock->fill(1.0 * (m_hdrrxtim - m_firsthdrrxtim), 1.0);
+  //m_monSvc->updateAll(false);
+
   return sc;
 }
 
@@ -740,6 +742,7 @@ StatusCode MEPRxSvc::run() {
       
       static int ncrh = 1;
       if (m_ebState != RUNNING) {
+        m_monSvc->updateAll(false);
         for(RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w)
           forceEvent(w);
         log << MSG::DEBUG << "Exiting from receive loop" << endmsg;
@@ -806,6 +809,7 @@ StatusCode MEPRxSvc::run() {
 	// 
 	m_idleTimeTSC->fill(tsc - lasttsc, 1.0);
 	m_idleTimeSock->fill(rxtim - lastrxtim, 1.0);
+//        m_monSvc->updateAll(false);
 
         try {
           if (m_freeDsc.empty()) {
@@ -1059,6 +1063,13 @@ void MEPRxSvc::ageEvents() {
   }
 }
 
+void MEPRxSvc::publishHists() {
+  m_monSvc->declareInfo("complTimeTSC",m_complTimeTSC,"Time to event-completion (TSC)", this);
+  m_monSvc->declareInfo("idleTimeTSC",m_idleTimeTSC,"Time between (TSC)", this);
+  m_monSvc->declareInfo("complTimeSock",m_complTimeSock,"Time to event-completion (Sock)", this);
+  m_monSvc->declareInfo("idleTimeSock",m_idleTimeSock,"Time between events (Sock)", this);
+}
+
 void MEPRxSvc::publishCounters()
 {
   PUB64CNT(totRxOct,           "Total received bytes");
@@ -1116,6 +1127,7 @@ void MEPRxSvc::clearCounters() {
 
 int MEPRxSvc::setupCounters() {
   MsgStream log(msgSvc(),"MEPRx");
+/*
   m_complTimeTSC = m_histSvc->book("complTime (TSC)", 
 				   "Time to event-completion (TSC)",
 				   50, 0., 1e09);
@@ -1126,8 +1138,31 @@ int MEPRxSvc::setupCounters() {
 				   50, 0., 1e09);
   m_idleTimeSock = m_histSvc->book("idleTime (Sock)", 
 				  "Time between events [Sock]", 50, 0., 1e09);
+*/
+  m_complTimeTSC = m_histSvc->book("complTimeTSC", 
+				   "Time to event-completion (TSC)",
+				   50, 0., 1e09);
+  m_idleTimeTSC = m_histSvc->book("idleTimeTSC", 
+				  "Time between events [TSC]", 50, 0., 1e09);
+  m_complTimeSock = m_histSvc->book("complTimeSock", 
+				   "Time to event-completion (Sock)",
+				   50, 0., 1e09);
+  m_idleTimeSock = m_histSvc->book("idleTimeSock", 
+				  "Time between events [Sock]", 50, 0., 1e09);
+  publishHists();
+
+  if(m_complTimeTSC == NULL || m_idleTimeTSC == NULL || m_complTimeSock == NULL || m_idleTimeSock == NULL) {
+    log << MSG::ERROR << "hist pointers were not booked !!!" << endmsg;
+    if(m_complTimeTSC == NULL) log << MSG::ERROR << "complTimeTSC" << endmsg; 
+    if(m_complTimeSock == NULL) log << MSG::ERROR << "complTimeSock" << endmsg; 
+    if(m_idleTimeTSC == NULL) log << MSG::ERROR << "idleTimeTSC" << endmsg; 
+    if(m_idleTimeSock == NULL) log << MSG::ERROR << "idleTTimeSock" << endmsg; 
+    return 1;
+  }
+
   clearCounters();
   publishCounters();
+
 
   // create cstring for source names
   std::string all_names = "";
