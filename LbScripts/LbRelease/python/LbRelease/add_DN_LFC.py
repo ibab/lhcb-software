@@ -36,7 +36,7 @@ def checkDN (userDN,nickname):
 	print statement
 	res = os.popen(statement)
 	s = res.readline()
-	if s.find("nickname=") == -1 :	
+	if s.find("nickname=") == -1 :
 		print "Couldn't verify the nickname "+s
 		return -1
 	nickname_temp = s.split('=')
@@ -50,55 +50,53 @@ def checkDN (userDN,nickname):
 		return 0
 
 def checkDir (nickname):
-	
+
 	first_letter = nickname[0]
 	dirname = '/grid/lhcb/user/'
-	dirname += first_letter  
+	dirname += first_letter
 	dirname += '/'
 	dirname += nickname
 	stat = lfc.lfc_filestatg()
-       	res = lfc.lfc_statg(dirname,"",stat)
+	res = lfc.lfc_statg(dirname,"",stat)
 	if res == 0:
 		print "Directory exists "
-        	return 0	
-       	else:
-       		err_num = lfc.cvar.serrno
-          	err_string = lfc.sstrerror(err_num)
-          	print  "There was an error while looking for " + dirname + ": Error " + str(err_num) + " (" + err_string  + ")"
+		return 0
+	else:
+		err_num = lfc.cvar.serrno
+		err_string = lfc.sstrerror(err_num)
+		print  "There was an error while looking for " + dirname + ": Error " + str(err_num) + " (" + err_string  + ")"
 		if err_num == 2:
 			res = createDir(dirname, nickname)
-			return res 
+			return res
 		else:
 			return -3
 
 def createDir (dirname, nickname):
-	 
+
 	res = lfc.lfc_mkdir(dirname,0777)
-        if res == 0 :
-        	print "Directory "+dirname+ " has been created and " +str(res)
+	if res == 0 :
+		print "Directory "+dirname+ " has been created and " +str(res)
 		#we delete the directory
 		#res = lfc.lfc_rmdir(dirname)
 		return -1
-        else :
-        	err_num = lfc.cvar.serrno
-                err_string = lfc.sstrerror(err_num)
-                print  "There was an error while creating " + dirname +" Error " + str(err_num) + " (" + err_string  + ")"
-                return -2
-	
-
+	else :
+		err_num = lfc.cvar.serrno
+		err_string = lfc.sstrerror(err_num)
+		print  "There was an error while creating " + dirname +" Error " + str(err_num) + " (" + err_string  + ")"
+		return -2
 
 def createUser (userDN, userid):
-	res = lfc.lfc_enterusrmap(userid,userDN)      
+	res = lfc.lfc_enterusrmap(userid,userDN)
 	if res == 0:
 		print "User created "+userDN
 		return 0
 	else :
 		err_num = lfc.cvar.serrno
-                err_string = lfc.sstrerror(err_num)
+		err_string = lfc.sstrerror(err_num)
 		# error not due to userDN exists
 		if err_num != 17 :
-                	print  "There was an error while adding " + userDN +" Error " + str(err_num) + " (" + err_string  + ")"
-                	return -1
+			print  "There was an error while adding " + userDN +" Error " + str(err_num) + " (" + err_string  + ")"
+			return -1
 		#however we return 0 because we want to update the dir as it has been created by root
 		else :
 			print "UserDN already exists"
@@ -111,7 +109,7 @@ def delUser (userDN, userid):
 		return 0
 	else:
 		err_num = lfc.cvar.serrno
-        	err_string = lfc.sstrerror(err_num)
+		err_string = lfc.sstrerror(err_num)
 		print "There was an error while deleting user: Error " + str(err_num) + " (" + err_string  + ")"
 		return -1
 
@@ -119,46 +117,43 @@ def rmDir(nickname):
 	dirname = "/grid/lhcb/user/"+nickname[0]+"/"+nickname
 	res=lfc.lfc_rmdir(dirname)
 	if res == 0:
-                print "user dir has been removed "
-                return 0
-        else:
-                err_num = lfc.cvar.serrno
-                err_string = lfc.sstrerror(err_num)
-                print "There was an error while deleting dir: Error " + str(err_num) + " (" + err_string  + ")"
-                return -1
- 
-def getUserID (userDN):	
+		print "user dir has been removed "
+		return 0
+	else:
+		err_num = lfc.cvar.serrno
+		err_string = lfc.sstrerror(err_num)
+		print "There was an error while deleting dir: Error " + str(err_num) + " (" + err_string  + ")"
+		return -1
+
+def getUserID (userDN):
 	result, list = lfc.lfc_getusrmap()
-       	#print result
-       	#print len(list)
-       	if (result == 0):
-        	for i in list:
-                	if i.username == userDN:
+	if (result == 0):
+		for i in list:
+			if i.username == userDN:
 				print "userDN exists mapped to "+str(i.userid)
 				return i.userid
-		print "Did not find the corresponding userid for " +userDN			
+		print "Did not find the corresponding userid for " +userDN
 		return -1
 	else :
 		err_num = lfc.cvar.serrno
-                err_string = lfc.sstrerror(err_num)
-                print  "There was an error while looking at userid for " + userDN +" Error " + str(err_num) + " (" + err_string  + ")"
-                return -1			     
-def getUserName (userID): 
-        result, list = lfc.lfc_getusrmap()
-        #print result
-        #print len(list)
-        if (result == 0):
-                for i in list:
-                        if i.userid == userID:
+		err_string = lfc.sstrerror(err_num)
+		print  "There was an error while looking at userid for " + userDN +" Error " + str(err_num) + " (" + err_string  + ")"
+		return -1
+
+def getUserName (userID):
+	result, list = lfc.lfc_getusrmap()
+	if (result == 0):
+		for i in list:
+			if i.userid == userID:
 				print "userID exists mapped to "+str(i.username)
-                                return i.username
-                print "Did not find the corresponding username for " + str(userID)                    
+				return i.username
+			print "Did not find the corresponding username for " + str(userID)
 		return "ERROR"
-        else :
-                err_num = lfc.cvar.serrno
-                err_string = lfc.sstrerror(err_num)
-                print  "There was an error while looking at username for " + str(userID) +" Error " + str(err_num) + " (" + err_string  + ")"
-                return "ERROR"
+	else :
+		err_num = lfc.cvar.serrno
+		err_string = lfc.sstrerror(err_num)
+		print  "There was an error while looking at username for " + str(userID) +" Error " + str(err_num) + " (" + err_string  + ")"
+		return "ERROR"
 
 def updateDirPerm (userid, nickname, userDN) :
 	dirname = "/grid/lhcb/user/"+nickname[0]+"/"+nickname
@@ -169,9 +164,9 @@ def updateDirPerm (userid, nickname, userDN) :
 		return 0
 	else :
 		err_num = lfc.cvar.serrno
-                err_string = lfc.sstrerror(err_num)
-                print  "There was an error while updating ownerid for " + dirname +" Error " + str(err_num) + " (" + err_string  + ")"
-		return -1	
+		err_string = lfc.sstrerror(err_num)
+		print  "There was an error while updating ownerid for " + dirname +" Error " + str(err_num) + " (" + err_string  + ")"
+		return -1
 
 def getOwnerACL (nickname):
 	dirname = "/grid/lhcb/user/"+nickname[0]+"/"+nickname
@@ -179,7 +174,7 @@ def getOwnerACL (nickname):
 	if len(acls_list) > 0:
 		for i in acls_list:
 			if i.a_type == 1:
-				return i.a_id	
+				return i.a_id
 		print "No ACL_USER defined"
 		return -1
 	else :
@@ -188,51 +183,51 @@ def getOwnerACL (nickname):
 def usage ():
 	print "Usage : python add_DN_to_LFC.py --userDN=<user_dn> --nickname=<nickname> -f [force to add the DN if the user dir exists]  -h [help]"
 	print "Usage : the user_dn should be put between double quotes"
-	
+
 def main () :
 	if len(sys.argv) != 3 and len(sys.argv) != 4:
 		usage ()
-		print "len list = "+ str(len(sys.argv)) 
+		print "len list = "+ str(len(sys.argv))
 		sys.exit(-1)
-	if checkEnv() != 0 : 
+	if checkEnv() != 0 :
 		print "Exiting the script"
 		sys.exit(-1)
-	
+
 	#os.popen ("source /afs/cern.ch/project/gd/LCG-share/current_3.1/etc/profile.d/grid-env.sh")
 	os.environ["X509_USER_CERT"] = "/etc/grid-security/hostcert.pem"
 	os.environ["X509_USER_KEY"] = "/etc/grid-security/hostkey.pem"
 	os.environ["LFC_HOST"] = "lfc-lhcb.cern.ch"
 	try:
-        	opts, args = getopt.getopt(sys.argv[1:], "hfun:v", ["help", "force", "userDN=", "nickname="])
-    	except getopt.GetoptError, err:
-        	# print help information and exit:
-        	print str(err) # will print something like "option -a not recognized"
-        	usage()
-        	sys.exit(2)
-    	userDN = None
+		opts, args = getopt.getopt(sys.argv[1:], "hfun:v", ["help", "force", "userDN=", "nickname="])
+	except getopt.GetoptError, err:
+	# print help information and exit:
+		print str(err) # will print something like "option -a not recognized"
+		usage()
+		sys.exit(2)
+	userDN = None
 	userid = -1
 	nickname = None
-    	force = False
-    	for o, a in opts:
-        	if o in ("-f", "--force"):
-            		force = True
-        	elif o in ("-h", "--help"):
-            		usage()
-            		sys.exit()
-	   	elif o in ("-u", "--userDN"):
-            		userDN = a
+	force = False
+	for o, a in opts:
+		if o in ("-f", "--force"):
+			force = True
+		elif o in ("-h", "--help"):
+			usage()
+			sys.exit()
+		elif o in ("-u", "--userDN"):
+			userDN = a
 		elif o in ("-n", "--nickname"):
 			nickname = a
-        	else:
-            		assert False, "unhandled option"  
+		else:
+			assert False, "unhandled option"
 	#check the existence of the user dir and create it if doesn't exist
-	
+
 	print "userDN="+userDN
 	print "nickname="+str(nickname)
 	res = checkDN(userDN, nickname)
 	if res == -1:
 		print "Exiting the script"
-                sys.exit(-1)
+		sys.exit(-1)
 	res = checkDir (nickname)
 	#res = checkDir (nickname)
 	#mean failure we exit
@@ -249,32 +244,32 @@ def main () :
 		userid = getUserID(userDN)
 		if userid == -1:
 			#we delete the directory as we create it
-                        res = rmDir (nickname)
+			res = rmDir (nickname)
 			# we delete the user entry in the userinfo
 			res = delUser(userDN,-1)
 			print "Exiting the script"
 			sys.exit(-1)
-		if updateDirPerm(userid,nickname,userDN) != 0:	
+		if updateDirPerm(userid,nickname,userDN) != 0:
 			#we delete the directory as we create it
-                        res = rmDir (nickname)
+			res = rmDir (nickname)
                         # we delete the user entry in the userinfo
 			#print "user dn = "+ userDN
-                        res = delUser(userDN,-1)
+			res = delUser(userDN,-1)
 			print "Exiting the script"
-			sys.exit(-1)		
+			sys.exit(-1)
 	#mean the dir exists before executing the script
 	if res == 0:
 		userid = getUserID (userDN)
 		if userid != -1:
-			if updateDirPerm(userid,nickname,userDN) != 0: 
+			if updateDirPerm(userid,nickname,userDN) != 0:
 				print "Exiting the script"
-				sys.exit(-1)    
-		#case where the dir exists but the new DN not              
+				sys.exit(-1)
+		#case where the dir exists but the new DN not
 		else :
 			userid = getOwnerACL (nickname)
-			#means that there is a pb with the ACL, we exit 
+			#means that there is a pb with the ACL, we exit
 			if userid < 0:
-				print "Exiting the script"			
+				print "Exiting the script"
 				sys.exit(-1)
 			ownerDN = getUserName (userid)
 			#case where the ownerDN does not exist in userinfo table
@@ -290,14 +285,14 @@ def main () :
 			else:
 				if createUser(userDN,userid) != 0:
 					print "Exiting the script"
-                        		sys.exit(-1)
+					sys.exit(-1)
 				else :
 					print "UserDN "+userDN+" is now mapped to userid "+ str(userid)
 					print "Exiting the script"
 					sys.exit(0)
 
 	print "Exiting the script"
-	sys.exit(0)			
-	
+	sys.exit(0)
+
 if __name__ == '__main__':
-	main()		
+	main()
