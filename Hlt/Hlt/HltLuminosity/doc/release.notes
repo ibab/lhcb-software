@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2010-01-29 - Jaap Panman
+ - add LumiFlagMethod: creates "counter" holding 0 (LumiTrigger); 1 (L0 count)
+
 !========================== HltLuminosity v2r14 2010-01-11 ===================
 ! 2009-12-24 - Gerhard Raven
  - migrate from IHltDataSvc to Hlt::IDataSvc  and Hlt::IRegisterSvc
