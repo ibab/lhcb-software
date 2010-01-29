@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.110 2009-12-08 12:55:07 pkoppenb Exp $ 
+! $Id: release.notes,v 1.111 2010-01-29 12:42:24 jpalac Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
+
+========================== ParticleMaker v5r5 2010-01-29 ====================
 
 ! 2009-12-08 - Patrick Koppenburg
  - Move state to referencePoint conversion from CombinedParticleMaker and 
