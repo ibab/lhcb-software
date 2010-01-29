@@ -1,6 +1,7 @@
-// $Id: L0DUConfigProvider.cpp,v 1.18 2010-01-27 15:13:43 graven Exp $ // Include files 
+// $Id: L0DUConfigProvider.cpp,v 1.19 2010-01-29 08:08:14 graven Exp $ // Include files 
 #include "boost/assign/list_of.hpp"
 // from Gaudi
+#include "GaudiKernel/StateMachine.h" 
 #include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/SystemOfUnits.h"
 
@@ -69,7 +70,7 @@ L0DUConfigProvider::L0DUConfigProvider( const std::string& type,
   // TCK from name
   int idx = name.find_last_of(".")+1;
   std::string nam = name.substr(idx,std::string::npos);
-  if (nam == LHCb::L0DUTemplateConfig::Name) m_template = true;  
+  if (nam == LHCb::L0DUTemplateConfig::Name | name == "L0DUConfig") m_template = true;  
   else { 
       size_t index = nam.rfind("0x");
       nam = (index != std::string::npos ) ? nam.substr( index ) : "0x0000";
@@ -109,6 +110,10 @@ StatusCode L0DUConfigProvider::initialize(){
 }
 
 void L0DUConfigProvider::handler(Property&) {
+    if (!m_template && FSMState() >= Gaudi::StateMachine::INITIALIZED ) {
+        // on-the-fly update of properties only allowed for template!
+        throw GaudiException("L0DUConfig: update of properties only allowd for template","",StatusCode::FAILURE);
+    }
     m_uptodate=false;
 }
 
