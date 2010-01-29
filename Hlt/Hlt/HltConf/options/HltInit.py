@@ -23,7 +23,10 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1Tell1ErrorDecision"                :   31,
     # LU Hlt1Lumi.*Decision
     #"Hlt1LumiDecision"                      :   40, 
-    #"Hlt1IgnoringLumiDecision"              :   41,
+    "Hlt1LumiLowNoBeamDecision"             :   41, 
+    "Hlt1LumiLowBeamCrossingDecision"       :   42, 
+    "Hlt1LumiLowBeam1Decision"              :   43, 
+    "Hlt1LumiLowBeam2Decision"              :   44,
     "Hlt1LumiNoBeamDecision"                :   45, 
     "Hlt1LumiBeamCrossingDecision"          :   46, 
     "Hlt1LumiBeam1Decision"                 :   47, 

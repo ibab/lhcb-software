@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-01-29 - Jaap Panman
+ - add LumiLow* lines to the relevant settings
+
 ! 2010-01-28 - Patrick Koppenburg
  - Remove two obsolete lines
 

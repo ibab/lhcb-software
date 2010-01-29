@@ -11,7 +11,8 @@ from Hlt1Lines.LumiCounterDefinition import LumiCounterDefinitionConf
 from Configurables import ( LumiCountVertices,
                             LumiCountTracks,
                             LumiFromL0DU,
-                            LumiCountHltTracks
+                            LumiCountHltTracks,
+                            LumiFlagMethod
                             )
 from Configurables import GaudiSequencer as Sequence
 from Configurables import DeterministicPrescaler as Scaler
@@ -45,18 +46,17 @@ def _combine( op, arg ) :
 class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
     __used_configurables__ = [ LumiCounterDefinitionConf ]
 
-    __slots__ = { 'TriggerType'            : 'LumiTrigger'  # ODIN trigger type accepted
+    __slots__ = { 'TriggerType'            : 'LumiTrigger'  # ODIN trigger type accepted for Lumi
+                , 'L0Channel'              : ['Hadron']     # L0 channels accepted for LowLumi
                 , 'BXTypes'                : ['NoBeam', 'BeamCrossing','Beam1','Beam2']
                 , 'LumiLines'              : ['Count','VDM']
-                , 'EnableReco'                   : False 
+                , 'EnableReco'             : False 
                 , 'OutputLevel'            : WARNING
                 }
 
-
-    def __create_lumi_line__(self, BXType):
+    def __create_lumi_algos__(self, BXType, postfix=''):
         '''
-        returns an Hlt1 "Line" including input filter, reconstruction sequence and counting
-        adds histogramming
+        returns algorithm sequences for Hlt1 Lumi Lines
         '''
         # get counters
         counters = LumiCounterDefinitionConf().defineCounters()
@@ -67,7 +67,6 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
 
         # define reco scaler
         recoScaler = Scaler( 'LumiRecoScaler' ,  AcceptFraction = 1 if self.getProp('EnableReco') else 0 )  
-
 
         # define empty reco sequence
         seqRecoName = 'LumiReco'
@@ -81,14 +80,21 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                     , MeasureTime = True)
 
         # define empty sequence to collect counters
-        seqCountName = 'LumiCount'
-        lumiCountSequence = Sequence(seqCountName+BXType +'Seq'
+        seqCountName = 'LumiCount'+postfix+BXType
+        lumiCountSequence = Sequence(seqCountName +'Seq'
                                     , ModeOR = True
                                     , ShortCircuit = False
                                     , OutputLevel = debugOPL
                                     , IgnoreFilterPassed = True
                                     , MeasureTime = True)
 
+        # LumiLow lines must be flagged - do not flag the traditional method, would interfere
+        if postfix == 'Low':
+            lumiCountSequence.Members.append( LumiFlagMethod( seqCountName+'FlagMethod'
+                                                              , CounterName='Method'
+                                                              , ValueName='L0RateMethod'
+                                                              , OutputContainer='Hlt/LumiSummary' ) )
+            
         # populate count sequence from the definition
         createdCounters = []
         histoThresholds = []
@@ -98,14 +104,12 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
             (op, flag, inputDef, threshold, bins) = definition
             if flag:
                 createdCounters.extend( 
-                    _combine( _createCounter( op, seqCountName+BXType, lumiCountSequence,
-                                              #self.getProp('EnableReco')
-                                              True
-                                              ), { key : inputDef } ) )
+                    _combine( _createCounter( op, seqCountName, lumiCountSequence, True ),
+                              { key : inputDef } ) )
                 histoThresholds.extend( [threshold] )
                 histoMaxBins.extend( [bins] )
                 if debugOPL <= DEBUG:
-                    print '# DEBUG   : Hlt1LumiLines::HistoMaker:', BXType, key, threshold, bins
+                    print '# DEBUG   : Hlt1LumiLines::HistoMaker:', postfix+BXType, key, threshold, bins
                 
         lumiRecoSequence.Members.append( Sequence('LumiTrackRecoSequence' ,
                                                    Members = [  recoScaler ] + PV2D.members(),
@@ -158,17 +162,17 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         # define histogrammers
         from Configurables import LumiHistoMaker, LumiHisto2dSPD
         HistoMembers=[]
-        HistoMembers.append(LumiHistoMaker('Histo'+BXType,
+        HistoMembers.append(LumiHistoMaker('Histo'+postfix+BXType,
                                            InputVariables = createdCounters,
                                            Thresholds = histoThresholds,
                                            MaxBins = histoMaxBins,
                                            OutputLevel = debugOPL
                                            ))
-        HistoMembers.append(LumiHisto2dSPD('Histo2D'+BXType,
-                                           HistoTitle=str(BXType),
+        HistoMembers.append(LumiHisto2dSPD('Histo2D'+postfix+BXType,
+                                           HistoTitle=str(postfix+BXType),
                                            OutputLevel = debugOPL ))
 
-        lumiHistoSequence = Sequence('LumiHisto'+BXType +'Seq'
+        lumiHistoSequence = Sequence('LumiHisto'+postfix+BXType +'Seq'
                                      , Members = HistoMembers
                                      , ModeOR = True
                                      , ShortCircuit = False
@@ -176,12 +180,35 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                      , OutputLevel = debugOPL
                                      )
 
+        return [ lumiRecoSequence, lumiCountSequence, lumiHistoSequence ] 
 
+
+    def __create_lumi_line__(self, BXType):
+        '''
+        returns an Hlt1 "Line" including input filter, reconstruction sequence and counting
+        adds histogramming
+        '''
         from HltLine.HltLine import Hlt1Line   as Line
         return Line ( 'Lumi'+BXType
                     , prescale = self.prescale
-                    , ODIN = ' ( ODIN_TRGTYP == LHCb.ODIN.%s ) & ( ODIN_BXTYP == LHCb.ODIN.%s)' % ( self.getProp('TriggerType'),BXType )
-                    , algos = [ lumiRecoSequence, lumiCountSequence, lumiHistoSequence ] 
+                    , ODIN = ' ( ODIN_TRGTYP == LHCb.ODIN.%s ) & ( ODIN_BXTYP == LHCb.ODIN.%s)' % ( self.getProp('TriggerType'), BXType )
+                    , algos = self.__create_lumi_algos__( BXType, '' )
+                    , postscale = self.postscale
+                    ) 
+
+    def __create_lumi_low_line__(self, BXType):
+        '''
+        returns an Hlt1 "Line" including input filter, reconstruction sequence and counting
+        adds histogramming
+        '''
+        postfix = 'Low'
+        from HltLine.HltLine import Hlt1Line   as Line
+        l0du = ' | '.join( [ (" ( L0_CHANNEL('%s') ) "%(x)) for x in  self.getProp('L0Channel') ] )
+        return Line ( 'Lumi'+postfix+BXType
+                    , prescale = self.prescale
+                    , ODIN = ' ( ODIN_TRGTYP <= LHCb.ODIN.%s ) & ( ODIN_BXTYP == LHCb.ODIN.%s)' % ( self.getProp('TriggerType'), BXType )
+                    , L0DU  = l0du
+                    , algos = self.__create_lumi_algos__( BXType, postfix )
                     , postscale = self.postscale
                     ) 
 
@@ -190,7 +217,10 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         creates parallel HLT1 Lines for each beam crossing type
         '''
         from HltLine.HltLine import Hlt1Line   as Line
+        # LumiTrigger lines
         map( self.__create_lumi_line__, self.getProp('BXTypes') )
+        # PhysicsTrigger lines
+        map( self.__create_lumi_low_line__, self.getProp('BXTypes') )
 
 
         

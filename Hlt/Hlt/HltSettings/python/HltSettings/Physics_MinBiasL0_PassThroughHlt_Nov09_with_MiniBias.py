@@ -31,6 +31,7 @@ class Physics_MinBiasL0_PassThroughHlt_Nov09_with_MiniBias :
         return [ 'Hlt1ODINPhysics','Hlt1ODINTechnical','Hlt1Tell1Error'
                , 'Hlt1L0Any'
                , 'Hlt1LumiNoBeam','Hlt1LumiBeamCrossing','Hlt1LumiBeam1','Hlt1LumiBeam2'
+               , 'Hlt1LumiLowNoBeam','Hlt1LumiLowBeamCrossing','Hlt1LumiLowBeam1','Hlt1LumiLowBeam2'
                , 'Hlt1MiniBiasNoBeam','Hlt1MiniBiasBeamCrossing','Hlt1MiniBiasBeam1','Hlt1MiniBiasBeam2'
                , 'Hlt1NoBiasNoBeam','Hlt1NoBiasBeamCrossing','Hlt1NoBiasBeam1','Hlt1NoBiasBeam2'
                , 'Hlt1VeloASide','Hlt1VeloCSide'
