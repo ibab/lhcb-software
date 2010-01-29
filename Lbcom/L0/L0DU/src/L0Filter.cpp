@@ -1,4 +1,4 @@
-// $Id: L0Filter.cpp,v 1.10 2010-01-29 13:28:52 odescham Exp $
+// $Id: L0Filter.cpp,v 1.11 2010-01-29 14:16:02 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -98,7 +98,6 @@ StatusCode L0Filter::initialize() {
 //=============================================================================
 StatusCode L0Filter::execute() {
 
-  debug() << "==> Execute" << endmsg;
   m_count++;
 
   bool accept = m_revert ? false : true;
@@ -155,16 +154,18 @@ StatusCode L0Filter::execute() {
     }
   }  
 
-  if ( m_l0triggers.empty() && m_l0channels.empty() && l0->decision(m_mask)){
-    if ( msgLevel(MSG::VERBOSE)) verbose() << "Event is accepted by L0 decision " 
-                                           << LHCb::L0DUDecision::Name[m_mask] <<endmsg ;
-    setFilterPassed( accept );
-  } else {
-    setFilterPassed( !accept );
-    verbose() << "Event is rejected by L0 decision " 
-              << LHCb::L0DUDecision::Name[m_mask] <<endmsg ;
+  if ( m_l0triggers.empty() && m_l0channels.empty() ){
+    if( l0->decision(m_mask) ){
+      if ( msgLevel(MSG::VERBOSE)) verbose() << "Event is accepted by L0 decision " 
+                                             << LHCb::L0DUDecision::Name[m_mask] <<endmsg ;
+      setFilterPassed( accept );
+    } else {
+      setFilterPassed( !accept );
+      verbose() << "Event is rejected by L0 decision " 
+                << LHCb::L0DUDecision::Name[m_mask] <<endmsg ;
+    }
   }
-  
+
 
 
   if ( filterPassed()){

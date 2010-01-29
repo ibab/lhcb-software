@@ -4,6 +4,7 @@ DataOnDemandSvc.AlgMap += {
   "Trig/L0/FullCalo"      : "L0CaloCandidatesFromRaw/L0CaloFromRaw",
   "Trig/L0/L0DUReport"    : "L0DUFromRawAlg/L0DUFromRaw" 
 };
+
 #include "$L0TCK/L0DUConfig.opts"
 
 //L0MuonFromRaw.OutputLevel=1;
