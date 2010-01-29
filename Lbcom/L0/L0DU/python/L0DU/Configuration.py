@@ -273,9 +273,9 @@ class L0Conf(LHCbConfigurableUser) :
             seq.Members+= [ writeTagSeq ]
             
             evtTupleSvc = TagCollectionSvc("EvtTupleSvc")
-            evtTupleSvc.Output = []
+            # evtTupleSvc.Output = []
 
-            ApplicationMgr().ExtSvc  += evtTupleSvc
+            ApplicationMgr().ExtSvc  += [ evtTupleSvc ]
 
             tagCreator=L0ETC("TagCreator")
             tagCreator.EvtColsProduce = True
@@ -297,7 +297,9 @@ class L0Conf(LHCbConfigurableUser) :
             MyWriter.ItemList += [ "DAQ/ODIN#1" ]
             if not MyWriter.isPropertySet( "Output" ):
                 MyWriter.Output = "Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='" + self.getProp("ETCOutput") + "' TYP='POOL_ROOTTREE' OPT='RECREATE'"
-       
+
+            writeTagSeq.Members+= [ tagCreator , MyWriter ]
+            
     def _setSpecificOptions(self):
         """Specific options to tune the L0 components."""
 

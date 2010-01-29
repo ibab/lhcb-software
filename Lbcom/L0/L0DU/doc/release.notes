@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.186 2010-01-29 12:49:26 odescham Exp $
+! $Id: release.notes,v 1.187 2010-01-29 14:14:45 jucogan Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+
+! 2010-01-29 - Julien Cogan
+ - L0Conf : fix for L0ETC
 
 ! 2010-01-29 - Olivier Deschamps
   - Fix compilation warnings
