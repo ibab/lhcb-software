@@ -6,23 +6,24 @@ from TrackSys.Configuration import TrackSys
 #                             SimplifiedMaterialLocator, DetailedMaterialLocator,
 #                             MeasurementProvider)
 
+
 from TrackFitter.ConfiguredFitters import ( ConfiguredEventFitter )
 from Configurables import ( TrackKalmanFilter, MeasurementProvider )
 
 muonTrackFit = ConfiguredEventFitter( 'MuonTrackFitter', 'Rec/Track/Muon')
 muonTrackFit.Fitter.addTool( TrackKalmanFilter , 'NodeFitter' )
 muonTrackFit.Fitter.addTool( MeasurementProvider, name = 'MeasProvider')
-muonTrackFit.Fitter.ZPositions = [12100]
+#muonTrackFit.Fitter.ZPositions = [12100]
 muonTrackFit.Fitter.MeasProvider.IgnoreVelo = True 
 muonTrackFit.Fitter.MeasProvider.IgnoreTT   = True 
 muonTrackFit.Fitter.MeasProvider.IgnoreIT   = True 
 muonTrackFit.Fitter.MeasProvider.IgnoreOT   = True 
 muonTrackFit.Fitter.MeasProvider.IgnoreMuon = False 
 muonTrackFit.Fitter.NodeFitter.BiDirectionalFit = False
-muonTrackFit.Fitter.ErrorX2  = 1000000
-muonTrackFit.Fitter.ErrorY2  = 1000000
-muonTrackFit.Fitter.ErrorTx2 = 0.5
-muonTrackFit.Fitter.ErrorTy2 = 0.5
+muonTrackFit.Fitter.ErrorX  = 1000
+muonTrackFit.Fitter.ErrorY  = 1000
+muonTrackFit.Fitter.ErrorTx = 0.7
+muonTrackFit.Fitter.ErrorTy = 0.7
 muonTrackFit.Fitter.NumberFitIterations = 4
 muonTrackFit.Fitter.MaxNumberOutliers   = 2
 muonTrackFit.OutputLevel = 4

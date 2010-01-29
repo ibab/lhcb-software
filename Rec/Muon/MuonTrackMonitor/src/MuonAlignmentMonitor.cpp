@@ -1,4 +1,4 @@
-// $Id: MuonAlignmentMonitor.cpp,v 1.2 2009-04-29 08:37:08 ggiacomo Exp $
+// $Id: MuonAlignmentMonitor.cpp,v 1.3 2010-01-29 13:30:26 ggiacomo Exp $
 // Include files 
 
 // from Gaudi
@@ -191,101 +191,104 @@ StatusCode MuonAlignmentMonitor::execute() {
   
   LHCb::MuonPIDs::iterator ip;
   for ( ip = pMuids->begin(); ip != pMuids->end(); ip++) {
-        
+    
     const LHCb::Track *muTrack = (*ip)->muonTrack();
     const LHCb::Track *longTrack = (*ip)->idTrack();
-   
+    
     if( longTrack->p()/GeV > m_pCut ) {
       
       if(muTrack) {
-	LHCb::State muState = muTrack->closestState( 10000 ); 
-	LHCb::State longState = longTrack->closestState( muState.z() ); 
+        double zM1 = 12100;
+        LHCb::State muState = muTrack->closestState( zM1 ); 
+        LHCb::State longState = longTrack->closestState( muState.z() ); 
 
-	LHCb::ParticleID pid(13);
-
-	double chi2;
-
-	m_h_p->fill( longState.p()/GeV );
-	m_h_xy->fill( longState.x(), longState.y() );
-	m_h_txty->fill( longState.tx(), longState.ty() );
-
-	StatusCode sc = m_extrapolator->propagate(longState,muState.z(),pid);
-	//      if ( sc.isFailure() ) 
-	//      debug() << "Extrapolating to z = " << muState.z() << " failed " << endmsg;
-      
-	sc = m_chi2Calculator->calculateChi2( longState.stateVector(), longState.covariance(), 
-					      muState.stateVector(), muState.covariance(),
-					      chi2 );
-	if ( !sc.isSuccess() ) Error( "Could not invert matrices", StatusCode::FAILURE );
-
-	double resx = longState.x() - muState.x();
-	double resy = longState.y() - muState.y();
-	double restx = longState.tx() - muState.tx();
-	double resty = longState.ty() - muState.ty();
-	double x = muState.x();
-	double y = muState.y();
-	double tx = muState.tx();
-	double ty = muState.ty();
-	double dummy,z;
-
-	if(m_LongToMuonMatch) {
-
-	  m_p_resxx->fill( x, resx ); 
-	  m_p_resxy->fill( y, resx );
-
-	  m_p_resxtx->fill( tx, resx ); 
-	  m_p_resxty->fill( ty, resx );
-
-	  m_p_restxx->fill( x, restx ); 
-	  m_p_restxy->fill( y, restx );
-
-	  m_p_restxtx->fill( tx, restx ); 
-	  m_p_restxty->fill( ty, restx );
-
-	  m_p_resyx->fill( x, resy ); 
-	  m_p_resyy->fill( y, resy );
-
-	  m_p_resytx->fill( tx, resy ); 
-	  m_p_resyty->fill( ty, resy );
-
-	  m_p_restyx->fill( x, resty ); 
-	  m_p_restyy->fill( y, resty );
-
-	  m_p_restytx->fill( tx, resty ); 
-	  m_p_restyty->fill( ty, resty );
-      
-	  m_h_chi2->fill(chi2);
-	}
-
-	std::vector<LHCb::LHCbID>  list_of_tile = (muTrack)->lhcbIDs();
-	std::vector<LHCb::LHCbID>::const_iterator itTile;
-
-	for (itTile = list_of_tile.begin(); itTile != list_of_tile.end(); itTile++){
-	  if ((*itTile).isMuon() == true) {
-	  
-	    LHCb::MuonTileID tile = itTile->muonID();
-	    std::vector<DeMuonChamber*> vchambers;
-	    m_muonDet->Tile2XYZ( tile, x, dummy, y, dummy, z, dummy );
-	    vchambers = m_muonDet->Tile2Chamber( tile );
-	  
-	    debug() << "*** tile position ***" << tile << endreq;
-	    debug() << " x = " << x << " y = " << y << " z = " << z << endreq;
-	    debug() << " region " << tile.region() <<" station " << tile.station() << endreq;
-	    debug() << "*********************" << tile << endreq;
-	  
-	    sc = m_extrapolator->propagate( longState, z, pid );
-
-	    AIDA::IHistogram1D *tempx, *tempy;
-
-	    tempx = x > 0 ? m_h_resx_a[ tile.station() ] : m_h_resx_c[ tile.station() ];
-	    tempy = x > 0 ? m_h_resy_a[ tile.station() ] : m_h_resy_c[ tile.station() ];	  	  
-
-	    LHCb::State fitState = m_IsLongTrackState ? longState : muState;
-	  
-	    tempx->fill( x - fitState.x() );
-	    tempy->fill( y - fitState.y() );
-	  }
-	}
+        LHCb::ParticleID pid(13);
+        StatusCode sc = m_extrapolator->propagate(longState,zM1,pid);
+        //      if ( sc.isFailure() ) 
+        //      debug() << "Extrapolating longState to z = " << zM1 << " failed " << endmsg;
+        sc = m_extrapolator->propagate(muState,zM1,pid);
+        //      if ( sc.isFailure() ) 
+        //      debug() << "Extrapolating muState to z = " << zM1 << " failed " << endmsg;
+        
+        double chi2;
+        
+        m_h_p->fill( longState.p()/GeV );
+        m_h_xy->fill( longState.x(), longState.y() );
+        m_h_txty->fill( longState.tx(), longState.ty() );
+        
+        sc = m_chi2Calculator->calculateChi2( longState.stateVector(), longState.covariance(), 
+                                              muState.stateVector(), muState.covariance(),
+                                              chi2 );
+        if ( !sc.isSuccess() ) Error( "Could not invert matrices", StatusCode::FAILURE );
+        
+        double resx = longState.x() - muState.x();
+        double resy = longState.y() - muState.y();
+        double restx = longState.tx() - muState.tx();
+        double resty = longState.ty() - muState.ty();
+        double x = muState.x();
+        double y = muState.y();
+        double tx = muState.tx();
+        double ty = muState.ty();
+        double dummy,z;
+        
+        if(m_LongToMuonMatch) {
+          
+          m_p_resxx->fill( x, resx ); 
+          m_p_resxy->fill( y, resx );
+          
+          m_p_resxtx->fill( tx, resx ); 
+          m_p_resxty->fill( ty, resx );
+          
+          m_p_restxx->fill( x, restx ); 
+          m_p_restxy->fill( y, restx );
+          
+          m_p_restxtx->fill( tx, restx ); 
+          m_p_restxty->fill( ty, restx );
+          
+          m_p_resyx->fill( x, resy ); 
+          m_p_resyy->fill( y, resy );
+          
+          m_p_resytx->fill( tx, resy ); 
+          m_p_resyty->fill( ty, resy );
+          
+          m_p_restyx->fill( x, resty ); 
+          m_p_restyy->fill( y, resty );
+          
+          m_p_restytx->fill( tx, resty ); 
+          m_p_restyty->fill( ty, resty );
+          
+          m_h_chi2->fill(chi2);
+        }
+        
+        std::vector<LHCb::LHCbID>  list_of_tile = (muTrack)->lhcbIDs();
+        std::vector<LHCb::LHCbID>::const_iterator itTile;
+        
+        for (itTile = list_of_tile.begin(); itTile != list_of_tile.end(); itTile++){
+          if ((*itTile).isMuon() == true) {
+            
+            LHCb::MuonTileID tile = itTile->muonID();
+            std::vector<DeMuonChamber*> vchambers;
+            m_muonDet->Tile2XYZ( tile, x, dummy, y, dummy, z, dummy );
+            vchambers = m_muonDet->Tile2Chamber( tile );
+            
+            debug() << "*** tile position ***" << tile << endreq;
+            debug() << " x = " << x << " y = " << y << " z = " << z << endreq;
+            debug() << " region " << tile.region() <<" station " << tile.station() << endreq;
+            debug() << "*********************" << tile << endreq;
+            
+            sc = m_extrapolator->propagate( longState, z, pid );
+            
+            AIDA::IHistogram1D *tempx, *tempy;
+            
+            tempx = x > 0 ? m_h_resx_a[ tile.station() ] : m_h_resx_c[ tile.station() ];
+            tempy = x > 0 ? m_h_resy_a[ tile.station() ] : m_h_resy_c[ tile.station() ];	  	  
+            
+            LHCb::State fitState = m_IsLongTrackState ? longState : muState;
+            
+            tempx->fill( x - fitState.x() );
+            tempy->fill( y - fitState.y() );
+          }
+        }
       }
     }
   }
