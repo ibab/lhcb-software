@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.180 2010-01-28 16:55:23 odescham Exp $
+! $Id: release.notes,v 1.181 2010-01-29 07:54:33 graven Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2010-01-29 - Gerhard Raven
+  - L0DUAlg,L0DUFromRawTool: allow to set the type of the IL0DUConfigProver tool
 
 ! 2010-01-28 - Olivier Deschamps
   - L0Filter :- update with decision type and subTriggers filtering

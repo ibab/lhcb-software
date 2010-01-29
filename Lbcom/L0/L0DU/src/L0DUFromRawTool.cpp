@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.25 2010-01-21 17:33:23 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.26 2010-01-29 07:54:33 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -38,6 +38,7 @@ L0DUFromRawTool::L0DUFromRawTool( const std::string& type,
   declareProperty( "RawLocation"             , m_rawLocation = LHCb::RawEventLocation::Default   );
   declareProperty( "EmulatorTool"            , m_emulatorType="L0DUEmulatorTool");
   declareProperty( "L0DUConfigProviderName"  , m_configName="L0DUConfig");
+  declareProperty( "L0DUConfigProviderType"  , m_configType="L0DUMultiConfigProvider");
   declareProperty( "ForceNonZeroSupMuons"    , m_muonNoZsup=false);  // WARNING : for experts only
   declareProperty( "ForceSummarySize"        , m_sumSize=-1);        // WARNING : for experts only
   declareProperty( "ForceTCK"                , m_force = -1);        // WARNING : for experts only
@@ -69,7 +70,7 @@ StatusCode L0DUFromRawTool::initialize(){
 
    if(!m_encode)m_emu = false;
   // get the configuration provider tool
-  m_confTool = tool<IL0DUConfigProvider>("L0DUMultiConfigProvider" , m_configName);
+  m_confTool = tool<IL0DUConfigProvider>(m_configType , m_configName);
   m_emuTool  = tool<IL0DUEmulatorTool>(m_emulatorType, m_emulatorType,this);
   m_condDB   = tool<IL0CondDBProvider>("L0CondDBProvider");
 

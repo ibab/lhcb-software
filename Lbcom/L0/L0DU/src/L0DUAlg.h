@@ -1,4 +1,4 @@
-// $Id: L0DUAlg.h,v 1.3 2010-01-20 16:30:58 odescham Exp $
+// $Id: L0DUAlg.h,v 1.4 2010-01-29 07:54:33 graven Exp $
 #ifndef L0DUAlg_H 
 #define L0DUAlg_H 1
 
@@ -46,6 +46,7 @@ private:
   std::string m_reportLocation;
   std::string m_tck;
   std::string m_configName;
+  std::string m_configType;
 
 //
   unsigned int m_rawVsn ;  

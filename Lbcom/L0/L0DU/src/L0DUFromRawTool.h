@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.h,v 1.15 2010-01-21 17:33:23 odescham Exp $
+// $Id: L0DUFromRawTool.h,v 1.16 2010-01-29 07:54:33 graven Exp $
 #ifndef L0DUFROMRAWTOOL_H 
 #define L0DUFROMRAWTOOL_H 1
 
@@ -65,6 +65,7 @@ private:
   std::string m_rawLocation;
   std::string m_emulatorType;
   std::string m_configName;
+  std::string m_configType;
   bool m_muonNoZsup;
   int m_force;
   int m_sumSize;

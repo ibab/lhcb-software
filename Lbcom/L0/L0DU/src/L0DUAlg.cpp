@@ -1,4 +1,4 @@
-// $Id: L0DUAlg.cpp,v 1.12 2010-01-20 21:13:34 odescham Exp $
+// $Id: L0DUAlg.cpp,v 1.13 2010-01-29 07:54:33 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -43,6 +43,7 @@ L0DUAlg::L0DUAlg( const std::string& name,
   //
   declareProperty( "TCK"                     , m_tck="");
   declareProperty( "L0DUConfigProviderName"  , m_configName="L0DUConfig");
+  declareProperty( "L0DUConfigProviderType"  , m_configType="L0DUMultiConfigProvider");
   declareProperty( "BankSourceID"            ,  m_rawSrcID = 0);
 
   m_rawBankType  = LHCb::RawBank::L0DU; // rawBank Type
@@ -90,7 +91,7 @@ StatusCode L0DUAlg::initialize() {
   int itck;
   std::istringstream is( m_tck.c_str() );
   is >> std::hex >> itck;
-  m_confTool = tool<IL0DUConfigProvider>("L0DUMultiConfigProvider" , m_configName );
+  m_confTool = tool<IL0DUConfigProvider>(m_configType , m_configName );
   debug() << " loading the configuration for TCK = " << m_tck << " /  " << itck << endmsg;
   m_config   = m_confTool->config( itck );
   if( NULL == m_config){
