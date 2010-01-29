@@ -42,7 +42,7 @@ class ReleaseNotesHandler(ContentHandler):
                 self.found_lt_Partition = True
             elif name == 'lhcb:tag':
                 self.found_lt_Name = True
-            elif name == 'lhcb:datatype':
+            elif name == 'lhcb:type':
                 self.found_lt_DataType = True
         
         # Global tag entry treating. Marking needed elements.
@@ -51,7 +51,7 @@ class ReleaseNotesHandler(ContentHandler):
         elif self.found_gt:
             if not self.gt_Name and name == 'lhcb:tag':
                 self.found_gt_Name = True
-            elif name == 'lhcb:datatype':
+            elif name == 'lhcb:type':
                 self.found_gt_DataType = True
             elif name == 'lhcb:name':
                 self.found_gt_Partition = True
@@ -112,7 +112,7 @@ class ReleaseNotesHandler(ContentHandler):
                 self.found_lt_Partition = False
             elif name == 'lhcb:tag':
                 self.found_lt_Name = False
-            elif name == 'lhcb:datatype':
+            elif name == 'lhcb:type':
                 self.found_lt_DataType = False
             elif name == 'lhcb:note':
                 self.found_lt = False
@@ -123,7 +123,7 @@ class ReleaseNotesHandler(ContentHandler):
         elif self.found_gt:
             if name == 'lhcb:tag':
                 self.found_gt_Name = False
-            elif name == 'lhcb:datatype':
+            elif name == 'lhcb:type':
                 self.found_gt_DataType = False
             elif name == 'lhcb:name':
                 self.found_gt_Partition = False
@@ -137,7 +137,7 @@ class ReleaseNotesHandler(ContentHandler):
                 self.gt_Name, self.gt_DataType = None, None
                 
 
-def init_finder(partition, datatype, search_gts, rel_notes):
+def init_finder(partition, datatype, search_gts):
     """Initializing SAX handler and parser for the "release_notes.xml" file."""
     
     handler = ReleaseNotesHandler(partition, datatype, search_gts)
@@ -151,7 +151,7 @@ def all_gts(partition, datatype, rel_notes = None):
     The output is in the form of a list. The fist one global tag is the most recent one.    
     """
     
-    parser, handler = init_finder(partition, datatype, True, rel_notes)
+    parser, handler = init_finder(partition, datatype, True)
     if not rel_notes:
         rel_notes = os.path.join(os.environ["SQLDDDBROOT"], "doc", "release_notes.xml")
     try:
@@ -167,7 +167,7 @@ def all_gts(partition, datatype, rel_notes = None):
         % rel_notes
         return 1
 
-def last_gt__lts(partition, datatype, rel_notes = None):
+def last_gt_lts(partition, datatype, rel_notes = None):
     """Returns for the given partition and datatype the most recent global tag and \
     all subsequent local tags.
     
@@ -178,7 +178,7 @@ def last_gt__lts(partition, datatype, rel_notes = None):
     will be returned, even if local tags were found for the condition.
     """
     
-    parser, handler = init_finder(partition, datatype, False, rel_notes)
+    parser, handler = init_finder(partition, datatype, False)
     if not rel_notes:
         rel_notes = os.path.join(os.environ["SQLDDDBROOT"], "doc", "release_notes.xml")
     try:
@@ -213,9 +213,8 @@ will be returned, even if local tags were found for the given condition.
     parser.add_option("-r", "--rel-notes", type = "string",
                     help = "XML file containing the release notes to analyze"
                     )
-    parser.add_option("-v", action="store_true", dest="verbose", default=True)
     parser.add_option("-g","--search_GTs", action="store_true", dest="search_GTs", default = False,
-                    help = "Search for all global tags with given partition and data type"
+                    help = "Search for all global tags with the given partition and data type"
                     )
     
     try:

@@ -5,6 +5,10 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2010-01-29 - Illya Shapoval
+ - TagsFilter.py script adopted to the changes in the release_notes.xml structure. 
+   Fixed some minor bugs.
+
 ! 2010-01-28 - Illya Shapoval
  - Added python/CondDBUI/Admin/TagsFilter.py script. It analyses the
    release_notes.xml file (under the given condition of fixed partition name 
