@@ -2,6 +2,9 @@
 ! Package manager : Wouter Hulsbergen
 !---------------------------------------------------------------------------
 
+! 2010-01-29 - Marco Cattaneo
+ - Remove obsolete OTTimeCreator from Boole.opts (see task 12764)
+
 !==================== OTMonitor v3r2 2010-01-21 ============================
 ! 2010-01-12 - Alexandr Kozlinskiy
  - Update OTTimeChecker and OTTimeClassification to use OTLiteTime's

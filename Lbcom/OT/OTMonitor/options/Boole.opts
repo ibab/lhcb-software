@@ -8,7 +8,6 @@ OTTimeChecker.fullDetail      = true;
 OTMCHitLinker.LinkSpillOver = true;
 
 MoniOTSeq.Members += { 
-  "OTTimeCreator",       /// Needed for checking/classification of OTTimes
   "OTTimeChecker", 
   "OTTimeMonitor",       /// Should give the same as Brunel
   "OTTimeClassification"
