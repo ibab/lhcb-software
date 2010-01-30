@@ -131,7 +131,7 @@ void CaloDataProvider::cleanData(int feb ) {
 //===================
 const CaloVector<LHCb::CaloAdc>& CaloDataProvider::adcs(int source,bool clean){
   if(clean)clear();
-  decodeTell1(source);
+  (!m_packed)? decodeTell1(-1) : decodeTell1(source);
   return m_adcs;
 }
 const CaloVector<LHCb::CaloAdc>& CaloDataProvider::adcs(std::vector<int> sources,bool clean){

@@ -116,11 +116,12 @@ void CaloL0DataProvider::cleanData(int feb ) {
 //===================
 const CaloVector<LHCb::L0CaloAdc>& CaloL0DataProvider::l0Adcs(int source,bool clean){
   if(clean)clear();
-  decodeTell1(source);
+  (!m_packed)? decodeTell1(-1) : decodeTell1(source);
   return m_adcs;
 }
 const CaloVector<LHCb::L0CaloAdc>& CaloL0DataProvider::l0Adcs(std::vector<int> sources,bool clean){
   if( clean)clear();
+  if( m_getRaw )getBanks();
   if( !m_packed) return l0Adcs(); // decode the single 'offline' bank
   for(std::vector<int>::iterator i = sources.begin();i!=sources.end();i++){
     decodeTell1(*i);
@@ -130,6 +131,7 @@ const CaloVector<LHCb::L0CaloAdc>& CaloL0DataProvider::l0Adcs(std::vector<int> s
 
 //-------------------------------------------------------
 int CaloL0DataProvider::l0Adc (LHCb::CaloCellID id){
+  if( m_getRaw )getBanks();
   bool ok=true;
   if( 0 >  m_adcs.index(id) )ok = decodeCell( id );
   if( 0 >  m_adcs.index(id) )return 0; // 0-suppressed data or non-valid CellID
