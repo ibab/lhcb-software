@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.26 2010-01-21 15:24:41 graven Exp $ 
+# $Id: HltLine.py,v 1.27 2010-01-30 17:44:36 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.26 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.27 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -85,6 +85,7 @@ from Configurables import LoKi__ODINFilter  as ODINFilter
 from Configurables import HltTrackUpgrade   as TrackUpgrade 
 from Configurables import HltTrackMatch     as TrackMatch   
 from Configurables import HltTrackFilter    as TrackFilter 
+from Configurables import Hlt__TrackFilter, Hlt__TrackPipe
 from Configurables import HltVertexMaker1   as VertexMaker1 
 from Configurables import HltVertexMaker2   as VertexMaker2 
 from Configurables import HltVertexFilter   as VertexFilter 
@@ -322,6 +323,8 @@ _types_ = { TrackUpgrade  : 'TU'
           , AddPhotonToVertex : 'AddPhotonToVertex'
           , MoveVerticesForSwimming : 'MoveVerticesForSwimming'
           , SelectTracksForSwimming : 'SelectTracksForSwimming'   
+          , Hlt__TrackFilter : 'Hlt::TrackFilter'
+          , Hlt__TrackPipe : 'Hlt::TrackPipe'
           } 
 
 ## protected attributes 
@@ -340,6 +343,8 @@ def typeFromNick ( nick ) :
     """
     for t in _types_ :
         if nick == _types_[t] : return t
+    for t in _types_ :
+        print 'checking: %s == %s : %s ' % ( nick, _types_[t], nick==_types_[t] )
     raise AttributeError, " No type is defined for nick '%s'"%nick 
 
 # =============================================================================
@@ -747,7 +752,10 @@ class Hlt1Member ( object ) :
 
     def subtype( self )        :
         " Return the 'subtype' of the member "
-        return _types_[ self.Type ]
+        _aliases_ = { 'Hlt::TrackFilter' : 'TF' , 'Hlt::TrackPipe' : 'TP' }
+        x =  _types_[ self.Type ]
+        if x in _aliases_ : x = _aliases_[x]
+        return x
     def name   ( self , line ) :
         " Return the full name of the member "
         return memberName ( self , line ) 
@@ -904,8 +912,8 @@ class Hlt1Line(object):
         # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations
         #       and change them -- and not having the scaler would be problem in that case...
         mdict.update( { 'DecisionName' : decisionName ( line ) 
-                      , 'Prescale'     : Scaler(     prescalerName ( line ) , AcceptFraction = self._prescale  )
-                      , 'Postscale'    : Scaler(    postscalerName ( line ) , AcceptFraction = self._postscale ) 
+                      , 'Prescale'     : Scaler(     prescalerName ( line ) , AcceptFraction = self._prescale, OutputLevel = 5  )
+                      , 'Postscale'    : Scaler(    postscalerName ( line ) , AcceptFraction = self._postscale, OutputLevel = 5 ) 
                       } )
         if ODIN : mdict.update( { 'ODIN' : ODINFilter ( odinentryName( line ) , Code = self._ODIN )  } )
         if L0DU : 
@@ -1320,8 +1328,8 @@ class Hlt2Line(object):
         # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations
         #       and change them -- and not having the scaler would be problem in that case...
         mdict.update( { 'DecisionName' : decisionName ( line, 'Hlt2' ) 
-                      , 'Prescale'     : Scaler(     prescalerName ( line,'Hlt2' ) , AcceptFraction = self._prescale  )
-                      , 'Postscale'    : Scaler(    postscalerName ( line,'Hlt2' ) , AcceptFraction = self._postscale ) 
+                      , 'Prescale'     : Scaler(     prescalerName ( line,'Hlt2' ) , AcceptFraction = self._prescale,  OutputLevel = 5  )
+                      , 'Postscale'    : Scaler(    postscalerName ( line,'Hlt2' ) , AcceptFraction = self._postscale, OutputLevel = 5  ) 
                       } )
         if self._ODIN : mdict.update( { 'ODIN' : ODINFilter ( odinentryName( line,'Hlt2' ) , Code = self._ODIN )  } )
         if self._L0DU : mdict.update( { 'L0DU' : L0Filter   ( l0entryName  ( line,'Hlt2' ) , Code = self._L0DU )  } )

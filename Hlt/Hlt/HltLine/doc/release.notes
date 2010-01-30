@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.72 2010-01-21 15:24:41 graven Exp $
+! $Id: release.notes,v 1.73 2010-01-30 17:44:36 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+! 2010-01-30 - Gerhard Raven
+ - allow Hlt::TrackFilter and Hlt::TrackPipe as Hlt1Members
+ - increase OutputLevel of DeterministicPrescaler to ERROR
 
 
 ! 2010-01-21 - Gerhard Raven
