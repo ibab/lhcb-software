@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.49 2010-01-29 15:45:57 kvervink Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.50 2010-01-30 17:47:10 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -733,8 +733,8 @@ StatusCode HltGlobalMonitor::execute() {
 
  if(  (m_events)%m_scanevents ==0) monitorMemory();
 
-  counter("#events")   += 1.0;
-  m_events             += 1;
+  counter("#events")++;
+  m_events++;
 
   return StatusCode::SUCCESS;
   
