@@ -11,7 +11,8 @@
  - rename Physics_MinBiasL0_PassThroughHlt_Nov09_with_MiniBias
    into Physics_MinBiasL0_PassThroughHlt_Jan10
  - comment out lumilow lines -- they depend on LHCb v29r1
-
+ - simplify Physics_320Vis_300L0_10Hlt1_ExpressHlt2_Jan10
+   by making it inherit from Physics_320Vis_300L0_10Hlt1_Jan10
 
 ! 2010-01-29 - Jaap Panman
  - add LumiLow* lines to the relevant settings
