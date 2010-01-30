@@ -12,7 +12,7 @@ from Configurables import ( LumiCountVertices,
                             LumiCountTracks,
                             LumiFromL0DU,
                             LumiCountHltTracks,
-                            LumiFlagMethod
+                            #LumiFlagMethod
                             )
 from Configurables import GaudiSequencer as Sequence
 from Configurables import DeterministicPrescaler as Scaler
@@ -141,9 +141,8 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         lumiTTTSequence.Members.append( recoScaler )
         lumiTTTSequence.Members.append(
             Sequence('TTTSequence'
-                     , Members  = [ RawBankToSTClusterAlg("lumiTTClusters",
-                                                          ),
-                                    TTGenericTracking("lumiTTT",
+                     , Members  = [ RawBankToSTClusterAlg("lumiTTClusters")
+                                  , TTGenericTracking("lumiTTT",
                                                       MaxNumClusters = 2000,
                                                       OutputLocation = 'Hlt/Track/TTIP',
                                                       WindowCenter = [0,0,0],
@@ -220,7 +219,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         # LumiTrigger lines
         map( self.__create_lumi_line__, self.getProp('BXTypes') )
         # PhysicsTrigger lines
-        map( self.__create_lumi_low_line__, self.getProp('BXTypes') )
+        # map( self.__create_lumi_low_line__, self.getProp('BXTypes') )
 
 
         
