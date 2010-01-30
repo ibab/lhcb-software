@@ -25,7 +25,7 @@ def _appMgr() :
     return appMgr
 
 def _tck(x) :
-    if type(x) == str and x[0:2] == '0x' :  return int(x,16)
+    if type(x) == str and x[0:2].upper() == '0X' :  return int(x,16)
     return int(x)
 
 def _tck2id(x,cas = ConfigAccessSvc() ) :
@@ -122,6 +122,58 @@ class _TreeNodeCache:
           _TreeNodeCache.lcache[ id ] = leaf
        return _TreeNodeCache.lcache[id]
        
+
+def _updateL0TCK( id, l0tck, cas ) :
+    l0tck = '0x%04X'%_tck(l0tck)
+    importOptions('$L0TCK/L0DUConfig.opts')
+    from Configurables import L0DUMultiConfigProvider,L0DUConfigProvider
+    if l0tck not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
+             raise KeyError('requested L0 TCK %s is not known'%l0tck) 
+    configProvider = L0DUConfigProvider('ToolSvc.L0DUConfig.TCK_%s'%l0tck)
+    l0config = configProvider.getValuedProperties()
+    l0config['TCK'] = l0tck
+
+    pc = PropertyConfigSvc( prefetchConfig = [ _digest(id,cas).str() ],
+                            ConfigAccessSvc = cas.getFullName() )
+    cte = ConfigTreeEditor( PropertyConfigSvc = pc.getFullName() )
+
+    appMgr = _appMgr()
+    appMgr.createSvc(cas.getFullName())
+    appMgr.createSvc(pc.getFullName())
+    cas = appMgr.service(cas.getFullName(),'IConfigAccessSvc')
+    pc = appMgr.service(pc.getFullName(),'IPropertyConfigSvc')
+    cte = appMgr.toolsvc().create(cte.getFullName(),interface='IConfigTreeEditor')
+    id  = _digest(id,cas)
+    a = [ i.alias().str() for  i in cas.configTreeNodeAliases( alias('TOPLEVEL/') ) if i.ref() == id ]
+    if len(a) != 1 : 
+        print 'something went wrong: no unique toplevel match for ' + str(id)
+        return
+    (release,hlttype) = a[0].split('/',3)[1:3]
+    mods = vector_string()
+    # check L0 config in source config
+    for i in pc.collectLeafRefs( id ) :
+        propConfig = pc.resolvePropertyConfig( i )
+        #  check for either a MultiConfigProvider with the right setup,
+        #  or for a template with the right TCK in it...
+        if propConfig.name() == 'ToolSvc.L0DUConfig' : 
+            cfg = PropCfg(propConfig)
+            if cfg.type != 'L0DUConfigProvider':
+                raise KeyError("Can only update configuration which use L0DUConfigProvider, not  %s" % cfg.type )
+            #  check that all specified properties exist in cfg
+            for (k,v) in l0config.iteritems() :
+                if k not in cfg.props :
+                    raise KeyError('Specified property %s not in store'%k)
+                print 'key: %s  request: %s  persistent: %s ' % ( k, v, cfg.props[k] )
+                mods.push_back('ToolSvc.L0DUConfig.%s:%s' % (k,v) )
+
+    print 'requested update: %s ' % mods
+    newId = cte.updateAndWrite(id,mods,'XXXX put something correct here XXXX')
+    noderef = cas.readConfigTreeNode( newId )
+    top = topLevelAlias( release, hlttype, noderef.get() )
+    cas.writeConfigTreeNodeAlias(top)
+    print 'wrote ' + str(top.alias()) 
+    return str(newId)
+
 
 def _createTCKEntries(d, cas ) :
     ## first pick up all the L0 configurations during the Configurable step
@@ -380,6 +432,8 @@ def diff( lhs, rhs , cas = ConfigAccessSvc() ) :
 
 def updateProperties(id,updates,label='', cas = ConfigAccessSvc() ) :
     return execInSandbox( _updateProperties,id,updates,label, cas )
+def updateL0TCK(id, l0tck , cas = ConfigAccessSvc() ) :
+    return execInSandbox( _updateL0TCK, id, l0tck, cas )
 def createTCKEntries(d, cas = ConfigAccessSvc() ) :
     return execInSandbox( _createTCKEntries, d, cas )
 def copy( source = ConfigAccessSvc() , target = ConfigDBAccessSvc(ReadOnly=False) ) :
