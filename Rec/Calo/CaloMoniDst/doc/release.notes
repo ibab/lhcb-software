@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.68 2010-01-28 17:30:58 odescham Exp $ 
+! $Id: release.notes,v 1.69 2010-01-30 21:30:26 dgolubko Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+! 2010-01-30 - Dmitry Golubkov
+ - CaloEMuMonitor: add more histograms, crude windows based on rp6 of Dec 2009 data
+ - CaloEMuChecker: move include Kernel/Particle2MCLinker.h from CaloEMuMonitor.h
 
 ! 2010-01-28 : Olivier Deschamps
  - SpdMonitor    : speed up processing - inherits from Calo2Dview (Albert Puig)

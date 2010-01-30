@@ -1,5 +1,8 @@
-// $Id: CaloEMuChecker.cpp,v 1.3 2009-09-07 10:40:25 dgolubko Exp $
+// $Id: CaloEMuChecker.cpp,v 1.4 2010-01-30 21:30:27 dgolubko Exp $
 // Include files
+
+// from Gaudi
+#include "Kernel/Particle2MCLinker.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"

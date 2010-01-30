@@ -1,4 +1,4 @@
-// $Id: CaloEMuMonitor.cpp,v 1.6 2009-09-07 10:40:25 dgolubko Exp $
+// $Id: CaloEMuMonitor.cpp,v 1.7 2010-01-30 21:30:27 dgolubko Exp $
 // Include files
 
 // from Gaudi
@@ -47,61 +47,86 @@ CaloEMuMonitor::CaloEMuMonitor( const std::string &name,
   declareProperty( "eCaloEcalChi2_histo",     m_refPar["chi2e" ].v_def = boost::assign::list_of<double> (100)(0.)(10000.)(300) );
   // mean, rms, first_bin, skewness, kurtosis, last_bin, underflow, overflow
   declareProperty( "eCaloEcalChi2_params",    m_refPar["chi2e" ].v_par = boost::assign::list_of<double> (1080.)(2790.)(0.669)(0.0)(0.0)(0.074)(0.0)(0.0) );
-  declareProperty( "eCaloEcalChi2_errors",    m_refPar["chi2e" ].v_err = boost::assign::list_of<double> ( 100.)( 120.)(0.015)(-1.)(-1.)(0.008)(-1.)(-1.) );
+  declareProperty( "eCaloEcalChi2_errors",    m_refPar["chi2e" ].v_err = boost::assign::list_of<double> (-100.)(-120.)(-0.015)(-1.)(-1.)(-0.008)(-1.)(-1.) );
 
   m_refPar.insert(std::pair<std::string, RefPar>("tanhe",this));
   m_refPar["tanhe" ].htitle = "tanh(CaloEcalChi2 / Chi2eNormalization)";
   declareProperty( "eCaloEcalChi2Tanh_histo", m_refPar["tanhe" ].v_def = boost::assign::list_of<double> (100)(0.)(1.)(150) );
   // mean, rms, first_bin, skewness, kurtosis, last_bin, underflow, overflow
   declareProperty( "eCaloEcalChi2Tanh_params",m_refPar["tanhe" ].v_par = boost::assign::list_of<double> (0.159)(0.313)(0.418)(0.0)(0.0)(0.087)(0.0)(0.0) );
-  declareProperty( "eCaloEcalChi2Tanh_errors",m_refPar["tanhe" ].v_err = boost::assign::list_of<double> (0.014)(0.013)(0.005)(-1.)(-1.)(0.010)(-1.)(-1.) );
+  declareProperty( "eCaloEcalChi2Tanh_errors",m_refPar["tanhe" ].v_err = boost::assign::list_of<double> (-0.014)(-0.013)(-0.005)(-1.)(-1.)(-0.010)(-1.)(-1.) );
 
   m_refPar.insert(std::pair<std::string, RefPar>("chi2d",this));
   m_refPar["chi2d"].htitle = "ProtoParticle::CaloTrMatch";
   declareProperty( "eCaloTrMatch_histo",      m_refPar["chi2d" ].v_def = boost::assign::list_of<double> (500)(0.)(10.)(300) );
   // mean, rms, first_bin, skewness, kurtosis, last_bin, underflow, overflow
   declareProperty( "eCaloTrMatch_params",     m_refPar["chi2d" ].v_par = boost::assign::list_of<double> (0.503)(0.96)(0.0)(0.0)(0.0)(0.0)(0.0)(0.041) );
-  declareProperty( "eCaloTrMatch_errors",     m_refPar["chi2d" ].v_err = boost::assign::list_of<double> (0.012)(0.05)(-1.)(-1.)(-1.)(-1.)(-1.)(0.005) );
+  declareProperty( "eCaloTrMatch_errors",     m_refPar["chi2d" ].v_err = boost::assign::list_of<double> (-0.012)(-0.05)(-1.)(-1.)(-1.)(-1.)(-1.)(-0.005) );
 
   m_refPar.insert(std::pair<std::string, RefPar>("echi2",this));
   m_refPar["echi2"].htitle = "(E-p)^{2}/(cov(E,E)+cov(p,p))";
   declareProperty( "eChi2_histo",             m_refPar["echi2" ].v_def = boost::assign::list_of<double> (100)(0.)(1000.)(300) );
   // mean, rms, first_bin, skewness, kurtosis, last_bin, underflow, overflow
   declareProperty( "eChi2_params",            m_refPar["echi2" ].v_par = boost::assign::list_of<double> (67.)(190.)(0.0)(0.0)(0.0)(0.0202)(0.0)(0.0) );
-  declareProperty( "eChi2_errors",            m_refPar["echi2" ].v_err = boost::assign::list_of<double> ( 7.)(  8.)(-1.)(-1.)(-1.)(0.0015)(-1.)(-1.) );
+  declareProperty( "eChi2_errors",            m_refPar["echi2" ].v_err = boost::assign::list_of<double> (-7.)( -8.)(-1.)(-1.)(-1.)(-0.0015)(-1.)(-1.) );
 
   m_refPar.insert(std::pair<std::string, RefPar>("epull",this));
   m_refPar["epull"].htitle = "(E-p) pull";
   declareProperty( "ePull_histo",             m_refPar["epull" ].v_def = boost::assign::list_of<double> (100)(-10.)(10.)(100)  );
   // mean, rms, first_bin, skewness, kurtosis, last_bin, underflow, overflow
   declareProperty( "ePull_params",            m_refPar["epull" ].v_par = boost::assign::list_of<double> (-0.13)(2.90)(0.0)(-0.48)(1.6)(0.0)(0.0)(0.0) );
-  declareProperty( "ePull_errors",            m_refPar["epull" ].v_err = boost::assign::list_of<double> ( 0.03)(0.12)(-1.)( 0.07)(0.2)(-1.)(-1.)(-1.) );
+  declareProperty( "ePull_errors",            m_refPar["epull" ].v_err = boost::assign::list_of<double> (-0.03)(-0.12)(-1.)(-0.07)(-0.2)(-1.)(-1.)(-1.) );
 
   m_refPar.insert(std::pair<std::string, RefPar>("prse",this));
   m_refPar["prse"].htitle = "ProtoParticle::CaloPrsE";
   // mean, rms, first_bin, skewness, kurtosis, last_bin, underflow, overflow
   declareProperty( "ePrseE_histo",            m_refPar["prse" ].v_def = boost::assign::list_of<double> (100)(0.)(275.)(100)     );
   declareProperty( "ePrseE_params",           m_refPar["prse" ].v_par = boost::assign::list_of<double> (80.)(56.)(0.0)(0.0)(0.0)(0.0066)(0.0)(0.0) );
-  declareProperty( "ePrseE_errors",           m_refPar["prse" ].v_err = boost::assign::list_of<double> ( 5.)( 2.)(-1.)(-1.)(-1.)(0.0015)(-1.)(-1.) );
+  declareProperty( "ePrseE_errors",           m_refPar["prse" ].v_err = boost::assign::list_of<double> (-5.)(-2.)(-1.)(-1.)(-1.)(-0.0015)(-1.)(-1.) );
+
+
+  m_refPar.insert(std::pair<std::string, RefPar>("prsem",this));
+  m_refPar["prsem"].htitle = "ProtoParticle::CaloPrsE (mu)";
+  // mean, rms, first_bin, skewness, kurtosis, last_bin, underflow, overflow
+  declareProperty( "muPrseE_histo",           m_refPar["prsem"].v_def = boost::assign::list_of<double> (25)(0.5)(25.5)(100)     );
+  declareProperty( "muPrseE_params",          m_refPar["prsem"].v_par = boost::assign::list_of<double> (3.9)(2.6)(0.0)(0.0)(0.0)(0.0)(0.3)(0.0) );
+  declareProperty( "muPrseE_errors",          m_refPar["prsem"].v_err = boost::assign::list_of<double> (0.4)(0.6)(-1.)(-1.)(-1.)(-1.)(0.1)(-1.) );
 
   m_refPar.insert(std::pair<std::string, RefPar>("ecalem",this));
   m_refPar["ecalem"].htitle = "ProtoParticle::CaloEcalE (mu)";
-  declareProperty( "muCaloEcalE_histo",       m_refPar["ecalem"].v_def = boost::assign::list_of<double> (100)(0.)(5000.)(300) );
+  declareProperty( "muCaloEcalE_histo",       m_refPar["ecalem"].v_def = boost::assign::list_of<double> (50)(40.)(2040.)(100) );
   // mean, rms, first_bin, skewness, kurtosis, last_bin, underflow, overflow
-  declareProperty( "muCaloEcalE_params",      m_refPar["ecalem"].v_par = boost::assign::list_of<double> (520.)(830.)(0.46)(0.0)(0.0)(0.0)(0.0)(0.0) ); 
-  declareProperty( "muCaloEcalE_errors",      m_refPar["ecalem"].v_err = boost::assign::list_of<double> ( 50.)( 60.)(0.02)(-1.)(-1.)(-1.)(-1.)(-1.) ); 
+  declareProperty( "muCaloEcalE_params",      m_refPar["ecalem"].v_par = boost::assign::list_of<double> (540.)(360.)(0.0)(0.0)(0.0)(0.0)(0.7)(0.0) ); 
+  declareProperty( "muCaloEcalE_errors",      m_refPar["ecalem"].v_err = boost::assign::list_of<double> (100.)( 50.)( 0.)(-1.)(-1.)(-1.)(0.1)(-1.) ); 
 
   m_refPar.insert(std::pair<std::string, RefPar>("hcalem",this));
   m_refPar["hcalem"].htitle = "ProtoParticle::CaloHcalE (mu)";
-  declareProperty( "muCaloHcalE_histo",       m_refPar["hcalem"].v_def = boost::assign::list_of<double> (100)(0.)(20000.)(300) );
+  declareProperty( "muCaloHcalE_histo",       m_refPar["hcalem"].v_def = boost::assign::list_of<double> (50)(100.)(5100.)(100) );
   // mean, rms, first_bin, skewness, kurtosis, last_bin, underflow, overflow
-  declareProperty( "muCaloHcalE_params",      m_refPar["hcalem"].v_par = boost::assign::list_of<double> (2550.)(2590.)(0.068)(0.0)(0.0)(0.0)(0.0)(0.0) ); 
-  declareProperty( "muCaloHcalE_errors",      m_refPar["hcalem"].v_err = boost::assign::list_of<double> (  40.)(  50.)(0.011)(-1.)(-1.)(-1.)(-1.)(-1.) ); 
+  declareProperty( "muCaloHcalE_params",      m_refPar["hcalem"].v_par = boost::assign::list_of<double> (1650.)(720.)(0.0)(0.0)(0.0)(0.0)(0.10)(0.0) ); 
+  declareProperty( "muCaloHcalE_errors",      m_refPar["hcalem"].v_err = boost::assign::list_of<double> ( 300.)( 50.)(-1.)(-1.)(-1.)(-1.)(0.02)(-1.) ); 
+
+
+  m_refPar.insert(std::pair<std::string, RefPar>("eop_c",this));
+  m_refPar["eop_c"].htitle = "E/p C-side";
+  declareProperty( "eOpC_histo",       m_refPar["eop_c"].v_def = boost::assign::list_of<double> (50)(0.05)(2.55)(0) );
+  // mean, rms, first_bin, skewness, kurtosis, last_bin, underflow, overflow
+  declareProperty( "eOpC_params",      m_refPar["eop_c"].v_par = boost::assign::list_of<double> (0.84)(0.30)(0.0)(0.0)(0.0)(0.0)(0.22)(0.0) ); 
+  declareProperty( "eOpC_errors",      m_refPar["eop_c"].v_err = boost::assign::list_of<double> (0.05)(0.03)(-1.)(-1.)(-1.)(-1.)(0.05)(-1.) ); 
+
+  m_refPar.insert(std::pair<std::string, RefPar>("eop_a",this));
+  m_refPar["eop_a"].htitle = "E/p A-side";
+  declareProperty( "eOpA_histo",       m_refPar["eop_a"].v_def = boost::assign::list_of<double> (50)(0.05)(2.55)(0) );
+  // mean, rms, first_bin, skewness, kurtosis, last_bin, underflow, overflow
+  declareProperty( "eOpA_params",      m_refPar["eop_a"].v_par = boost::assign::list_of<double> (0.84)(0.30)(0.0)(0.0)(0.0)(0.0)(0.25)(0.0) ); 
+  declareProperty( "eOpA_errors",      m_refPar["eop_a"].v_err = boost::assign::list_of<double> (0.05)(0.03)(-1.)(-1.)(-1.)(-1.)(0.05)(-1.) ); 
+
 
   for (std::map<std::string,RefPar>::iterator it = m_refPar.begin(); it != m_refPar.end(); ++it)
     (*it).second.hname = (*it).first;
 
   declareProperty( "NSigmaThreshold",         m_nSigmaThreshold = boost::assign::list_of<double> (3.)(7.), "Warning and Error thresholds in sigmas"); 
+
 }
 /// initialization @see IAlgTool
 StatusCode CaloEMuMonitor::initialize() 
@@ -110,15 +135,28 @@ StatusCode CaloEMuMonitor::initialize()
   if ( sc.isFailure() ) { return sc ; }
   
   m_ext          = tool<ITrackExtrapolator>("TrackMasterExtrapolator", this);
+  m_lin_extr     = tool<ITrackExtrapolator>("TrackLinearExtrapolator", this);
 
   m_calo         = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ) ;
+  m_hcal         = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal ) ;
 
   m_plane        = m_calo->plane(CaloPlane::ShowerMax);
 
   m_ppSvc        = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true);
 
+  // Ecal ShowerMax == zShowerMax() in the global coordinates 
+  Gaudi::XYZPoint loc(0., 0., m_calo->zShowerMax());
+  Gaudi::XYZPoint glb = m_calo -> geometry() -> toGlobal(loc);
+  m_zShowerMaxEcal = glb.z();
+
+  // Hcal Middle == zOffset() in the global coordinates (alternative way of calculation)
+  // ROOT::Math::Plane3D: a*x + b*y + c*z + d = 0
+  Gaudi::Plane3D pl = m_hcal->plane( CaloPlane::Middle );
+  m_zMiddleHcal     = - pl.D() / pl.C();
 
   bookMonitoringHistograms();
+  bookUncutHistograms();
+  bookSoftHistograms();
 
   if (m_extraHistograms) bookExtraHistograms();
 
@@ -176,7 +214,7 @@ void CaloEMuMonitor::bookExtraHistograms()
 
   hBook1("e_rel_err","sqrt(cov(E,E))/E", 0., 0.05,100);
   hBook1("p_rel_err","sqrt(cov(p,p))/p", 0., 0.10,100);
-  hBook1("eop",      "E/p",              0., 4.,  100);
+//hBook1("eop",      "E/p",              0., 4.,  100);
   hBook1("ndigit","number of digits per CaloHypo",  0.,10.,10);
 }
 /// fill monitoring histograms from the contents of the struct MoniVars m_var 
@@ -189,19 +227,73 @@ void CaloEMuMonitor::fillMonitoringHistograms()
     m_refPar["echi2"].histo->fill(m_var->echi2);
     m_refPar["epull"].histo->fill(m_var->epull);
     m_refPar["prse" ].histo->fill(m_var->prse );
-  }
+
+
+    if (m_var->ecalx < 0){
+      m_refPar["eop_c"].histo->fill(m_var->eoverp);
+    }else{
+      m_refPar["eop_a"].histo->fill(m_var->eoverp);
+    }
+  } // -- electron candidate
+
 
   if (m_var->muCandidate){
     m_refPar["hcalem"].histo->fill(m_var->hcale);
     m_refPar["ecalem"].histo->fill(m_var->ecale);
-  }
+    m_refPar["prsem" ].histo->fill(m_var->prse );
+
+
+/*  if (m_var->ecalx < 0){
+      m_refPar["ecalem_c"].histo->fill(m_var->ecale);
+      m_refPar["prsem_c" ].histo->fill(m_var->prse );
+
+      switch ( m_var->ecalarea ){
+        case 0: m_refPar["ecalem_co"].histo->fill(m_var->ecale);
+                m_refPar["prsem_co" ].histo->fill(m_var->prse ); break;
+        case 1: m_refPar["ecalem_cm"].histo->fill(m_var->ecale);
+                m_refPar["prsem_cm" ].histo->fill(m_var->prse ); break;
+        case 2: // m_refPar["ecalem_ci"].histo->fill(m_var->ecale); // no MIP
+                m_refPar["prsem_ci" ].histo->fill(m_var->prse ); break;
+      }
+    }else{
+      m_refPar["ecalem_a"].histo->fill(m_var->ecale);
+      m_refPar["prsem_a" ].histo->fill(m_var->prse );
+
+      switch ( m_var->ecalarea ){
+        case 0: m_refPar["ecalem_ao"].histo->fill(m_var->ecale);
+                m_refPar["prsem_ao" ].histo->fill(m_var->prse ); break;
+        case 1: m_refPar["ecalem_am"].histo->fill(m_var->ecale);
+                m_refPar["prsem_am" ].histo->fill(m_var->prse ); break;
+        case 2: // m_refPar["ecalem_ai"].histo->fill(m_var->ecale); // no MIP
+                m_refPar["prsem_ai" ].histo->fill(m_var->prse ); break;
+      }
+
+    }
+
+    if (m_var->hcalx < 0){
+      m_refPar["hcalem_c"].histo->fill(m_var->hcale);
+
+      switch ( m_var->hcalarea ){
+        case 0: m_refPar["hcalem_co"].histo->fill(m_var->hcale); break;
+        case 1: m_refPar["hcalem_cm"].histo->fill(m_var->hcale); break;
+      }
+    }else{
+      m_refPar["hcalem_a"].histo->fill(m_var->hcale);
+
+      switch ( m_var->hcalarea ){
+        case 0: m_refPar["hcalem_ao"].histo->fill(m_var->hcale); break;
+        case 1: m_refPar["hcalem_am"].histo->fill(m_var->hcale); break;
+      }
+    }
+*/
+  } // -- mu candidate
 }
 /**
  * fill additional histograms from the contents of the struct MoniVars m_var
  */
 void CaloEMuMonitor::fillExtraHistograms()
 {
-  hFill1("eop",     m_var->eoverp);
+//hFill1("eop",     m_var->eoverp);
 
   hFill1("p",       m_var->p);
   hFill1("pt",      m_var->pt);
@@ -226,6 +318,206 @@ void CaloEMuMonitor::fillExtraHistograms()
   hFill1("e_rel_err", m_var->e_rel_err);
   hFill1("p_rel_err", m_var->p_rel_err);
 }
+/**
+ * book uncut e/p and MIP histograms from the contents of the struct MoniVars m_var
+ */
+void CaloEMuMonitor::bookUncutHistograms()
+{
+  m_uncut["eop_c" ].histo = book1D("uncut/eop_c",  "E/p uncut C-side",        0.05, 2.55, 50);
+  m_uncut["eop_co"].histo = book1D("uncut/eop_co", "E/p uncut C-side Outer",  0.05, 2.55, 50);
+  m_uncut["eop_cm"].histo = book1D("uncut/eop_cm", "E/p uncut C-side Middle", 0.05, 2.55, 50);
+  m_uncut["eop_ci"].histo = book1D("uncut/eop_ci", "E/p uncut C-side Inner",  0.05, 2.55, 50);
+
+  m_uncut["eop_a" ].histo = book1D("uncut/eop_a",  "E/p uncut A-side",        0.05, 2.55, 50);
+  m_uncut["eop_ao"].histo = book1D("uncut/eop_ao", "E/p uncut A-side Outer",  0.05, 2.55, 50);
+  m_uncut["eop_am"].histo = book1D("uncut/eop_am", "E/p uncut A-side Middle", 0.05, 2.55, 50);
+  m_uncut["eop_ai"].histo = book1D("uncut/eop_ai", "E/p uncut A-side Inner",  0.05, 2.55, 50);
+
+  m_uncut["prsem" ].histo = book1D("uncut/prsem",  "E Prs  uncut", 0.5, 25.5,  25);
+  m_uncut["ecalem"].histo = book1D("uncut/ecalem", "E Ecal uncut", 40., 2040., 50);
+  m_uncut["hcalem"].histo = book1D("uncut/hcalem", "E Hcal uncut", 100.,5100., 50);
+}
+/**
+ * book muon-selected MIP histograms from the contents of the struct MoniVars m_var
+ */
+void CaloEMuMonitor::bookSoftHistograms()
+{
+  m_soft["prsem"    ].histo = book1D("soft/prsem",     "Prs MIP  soft",               0.5, 25.5,  25);
+  m_soft["prsem_c"  ].histo = book1D("soft/prsem_c",   "Prs MIP  soft C-side",        0.5, 25.5,  25);
+  m_soft["prsem_co" ].histo = book1D("soft/prsem_co",  "Prs MIP  soft C-side Outer",  0.5, 25.5,  25);
+  m_soft["prsem_cm" ].histo = book1D("soft/prsem_cm",  "Prs MIP  soft C-side Middle", 0.5, 25.5,  25);
+  m_soft["prsem_ci" ].histo = book1D("soft/prsem_ci",  "Prs MIP  soft C-side Inner",  0.5, 25.5,  25);
+  m_soft["prsem_a"  ].histo = book1D("soft/prsem_a",   "Prs MIP  soft A-side",        0.5, 25.5,  25);
+  m_soft["prsem_ao" ].histo = book1D("soft/prsem_ao",  "Prs MIP  soft A-side Outer",  0.5, 25.5,  25);
+  m_soft["prsem_am" ].histo = book1D("soft/prsem_am",  "Prs MIP  soft A-side Middle", 0.5, 25.5,  25);
+  m_soft["prsem_ai" ].histo = book1D("soft/prsem_ai",  "Prs MIP  soft A-side Inner",  0.5, 25.5,  25);
+
+
+  m_soft["ecalem"   ].histo = book1D("soft/ecalem",    "Ecal MIP soft",               40., 2040., 50);
+  m_soft["ecalem_c" ].histo = book1D("soft/ecalem_c",  "Ecal MIP soft C-side",        40., 2040., 50);
+  m_soft["ecalem_co"].histo = book1D("soft/ecalem_co", "Ecal MIP soft C-side Outer",  40., 2040., 50);
+  m_soft["ecalem_cm"].histo = book1D("soft/ecalem_cm", "Ecal MIP soft C-side Middle", 40., 2040., 50);
+  m_soft["ecalem_a" ].histo = book1D("soft/ecalem_a",  "Ecal MIP soft A-side",        40., 2040., 50);
+  m_soft["ecalem_ao"].histo = book1D("soft/ecalem_ao", "Ecal MIP soft A-side Outer",  40., 2040., 50);
+  m_soft["ecalem_am"].histo = book1D("soft/ecalem_am", "Ecal MIP soft A-side Middle", 40., 2040., 50);
+
+
+  m_soft["hcalem"   ].histo = book1D("soft/hcalem",    "Hcal MIP soft",               100.,5100., 50);
+  m_soft["hcalem_c" ].histo = book1D("soft/hcalem_c",  "Hcal MIP soft C-side",        100.,5100., 50);
+  m_soft["hcalem_co"].histo = book1D("soft/hcalem_co", "Hcal MIP soft C-side Outer",  100.,5100., 50);
+  m_soft["hcalem_cm"].histo = book1D("soft/hcalem_cm", "Hcal MIP soft C-side Middle", 100.,5100., 50);
+  m_soft["hcalem_a" ].histo = book1D("soft/hcalem_a",  "Hcal MIP soft A-side",        100.,5100., 50);
+  m_soft["hcalem_ao"].histo = book1D("soft/hcalem_ao", "Hcal MIP soft A-side Outer",  100.,5100., 50);
+  m_soft["hcalem_am"].histo = book1D("soft/hcalem_am", "Hcal MIP soft A-side Middle", 100.,5100., 50);
+}
+/*
+ * fill uncut e/p and MIP histograms from the contents of the struct MoniVars m_var
+ */
+void CaloEMuMonitor::fillSoftHistograms()
+{
+  // soft cuts: currently only select muon ID (and Energy in the corresponding Calo)
+  if ( ! m_var->ismuon ) return;
+
+  m_soft["hcalem"].histo->fill(m_var->hcale);
+  m_soft["ecalem"].histo->fill(m_var->ecale);
+  m_soft["prsem" ].histo->fill(m_var->prse );
+
+  if (m_var->ecalx < 0){
+      m_soft["ecalem_c"].histo->fill(m_var->ecale);
+      m_soft["prsem_c" ].histo->fill(m_var->prse );
+
+      switch ( m_var->ecalarea ){
+        case 0: m_soft["ecalem_co"].histo->fill(m_var->ecale);
+                m_soft["prsem_co" ].histo->fill(m_var->prse ); break;
+        case 1: m_soft["ecalem_cm"].histo->fill(m_var->ecale);
+                m_soft["prsem_cm" ].histo->fill(m_var->prse ); break;
+        case 2: // m_refPar["ecalem_ci"].histo->fill(m_var->ecale); // no MIP
+                m_soft["prsem_ci" ].histo->fill(m_var->prse ); break;
+      }
+    }else{
+      m_soft["ecalem_a"].histo->fill(m_var->ecale);
+      m_soft["prsem_a" ].histo->fill(m_var->prse );
+
+      switch ( m_var->ecalarea ){
+        case 0: m_soft["ecalem_ao"].histo->fill(m_var->ecale);
+                m_soft["prsem_ao" ].histo->fill(m_var->prse ); break;
+        case 1: m_soft["ecalem_am"].histo->fill(m_var->ecale);
+                m_soft["prsem_am" ].histo->fill(m_var->prse ); break;
+        case 2: // m_refPar["ecalem_ai"].histo->fill(m_var->ecale); // no MIP
+                m_soft["prsem_ai" ].histo->fill(m_var->prse ); break;
+      }
+
+    }
+
+    if (m_var->hcalx < 0){
+      m_soft["hcalem_c"].histo->fill(m_var->hcale);
+
+      switch ( m_var->hcalarea ){
+        case 0: m_soft["hcalem_co"].histo->fill(m_var->hcale); break;
+        case 1: m_soft["hcalem_cm"].histo->fill(m_var->hcale); break;
+      }
+    }else{
+      m_soft["hcalem_a"].histo->fill(m_var->hcale);
+
+      switch ( m_var->hcalarea ){
+        case 0: m_soft["hcalem_ao"].histo->fill(m_var->hcale); break;
+        case 1: m_soft["hcalem_am"].histo->fill(m_var->hcale); break;
+      }
+    }
+}
+/**
+ * fill uncut e/p and MIP histograms from the contents of the struct MoniVars m_var
+ */
+void CaloEMuMonitor::fillUncutHistograms(const LHCb::ProtoParticle* proto)
+{
+  if ( 0 == proto ) return;
+
+  const LHCb::Track* track = proto->track() ;
+  if ( 0 == track ) return;
+
+  if ( track->type() != LHCb::Track::Downstream &&
+       track->type() != LHCb::Track::Long          ) return;
+
+  m_var->prse = proto->info(LHCb::ProtoParticle::CaloPrsE,  -1 * Gaudi::Units::GeV);
+  m_var->ecale= proto->info(LHCb::ProtoParticle::CaloEcalE, -1 * Gaudi::Units::GeV);
+  m_var->hcale= proto->info(LHCb::ProtoParticle::CaloHcalE, -1 * Gaudi::Units::GeV);
+
+  m_var->ismuon = (bool) proto->muonPID()
+    ? ( m_muonLoose ? proto->muonPID()->IsMuonLoose() : proto->muonPID()->IsMuon() )
+    : false;
+
+  // find out the Ecal (~= Prs) side and section
+  if (   proto->hasInfo( LHCb::ProtoParticle::CaloPrsE  )
+      || proto->hasInfo( LHCb::ProtoParticle::CaloEcalE )){
+    Gaudi::XYZPoint pos(-10000., -10000., -10000.);
+
+    StatusCode sc = m_lin_extr -> position (*proto->track(), m_zShowerMaxEcal, pos);
+    if ( sc.isFailure() ) error() << "Track extrapolation to z =" << m_zShowerMaxEcal << " failed!" << endmsg;
+    else{
+      const LHCb::CaloCellID hypoCell = m_calo->Cell( pos );
+      m_var->ecalx    = pos.x();
+      m_var->ecalarea = hypoCell.area();
+    }
+  }
+
+  if ( proto->hasInfo( LHCb::ProtoParticle::CaloHcalE ) ){
+    Gaudi::XYZPoint pos(-10000., -10000., -10000.);
+
+    StatusCode sc = m_lin_extr -> position (*proto->track(), m_zMiddleHcal, pos);
+    if ( sc.isFailure() ) error() << "Track extrapolation to z =" << m_zMiddleHcal << " failed!" << endmsg;
+    else{
+      const LHCb::CaloCellID hypoCell = m_hcal->Cell( pos );
+      m_var->hcalx    = pos.x();
+      m_var->hcalarea = hypoCell.area();
+    }
+  }
+
+  const SmartRefVector < LHCb::CaloHypo > & hypos      = proto->calo();
+  const LHCb::CaloHypo                    * m_electron = NULL;
+
+  for (SmartRefVector<LHCb::CaloHypo>::const_iterator ihypo =  hypos.begin(); ihypo != hypos.end() ; ++ihypo){
+    const LHCb::CaloHypo* hypo = *ihypo;
+    if (NULL == hypo) continue;
+    if (LHCb::CaloHypo::EmCharged == hypo->hypothesis() ) m_electron = hypo;
+  }
+
+
+  m_var->p        = track->p();
+  m_var->eoverp   =-1.;
+  m_var->e_hypo   =-10000.;
+
+
+  if ( m_electron ){
+    m_var->e_hypo = m_electron->position()->e();
+    m_var->eoverp = m_var->e_hypo/m_var->p;
+  }
+
+
+  if (m_var->ecalx < 0){
+    m_uncut["eop_c"].histo -> fill(m_var->eoverp);
+
+    switch ( m_var->ecalarea ){
+      case 0: m_uncut["eop_co"].histo -> fill(m_var->eoverp); break;
+      case 1: m_uncut["eop_cm"].histo -> fill(m_var->eoverp); break;
+      case 2: m_uncut["eop_ci"].histo -> fill(m_var->eoverp); break;
+    }
+  }else{
+    m_uncut["eop_a"].histo -> fill(m_var->eoverp);
+
+    switch ( m_var->ecalarea ){
+      case 0: m_uncut["eop_ao"].histo -> fill(m_var->eoverp); break;
+      case 1: m_uncut["eop_am"].histo -> fill(m_var->eoverp); break;
+      case 2: m_uncut["eop_ai"].histo -> fill(m_var->eoverp); break;
+    }
+  }
+
+  m_uncut["prsem" ].histo -> fill(m_var->prse );
+  m_uncut["ecalem"].histo -> fill(m_var->ecale);
+  m_uncut["hcalem"].histo -> fill(m_var->hcale);
+
+
+  fillSoftHistograms();
+}
 /** apply PID-related cuts to select/reject muon candidate ProtoParticle's for histogramming
  *
  *  @param proto pointer to the ProtoParticle
@@ -237,7 +529,9 @@ bool CaloEMuMonitor::acceptMu(const LHCb::ProtoParticle *proto) const
   if ( !proto->info( LHCb::ProtoParticle::InAccEcal, false )     ) return false;
   if ( !proto->info( LHCb::ProtoParticle::InAccHcal, false )     ) return false;
 
-  bool ismuon = (bool) proto->muonPID() ? proto->muonPID()->IsMuon() : false;
+  bool ismuon = (bool) proto->muonPID()
+    ? ( m_muonLoose ? proto->muonPID()->IsMuonLoose() : proto->muonPID()->IsMuon() )
+    : false;
   if ( !ismuon ) return false;
 
   return true;
@@ -287,11 +581,14 @@ StatusCode CaloEMuMonitor::execute()
     const LHCb::Track* track = proto->track() ;
     if ( 0 == track ) continue ;
 
+    fillUncutHistograms(proto);
+
     if ( !acceptTrack(proto) ) continue ;
 
     fillMVar(proto);
 
     fillMonitoringHistograms();
+
     if (m_extraHistograms) fillExtraHistograms();
   } // end loop over ProtoParticles
 
@@ -305,10 +602,12 @@ void CaloEMuMonitor::declareBasicProperties()
   declareProperty( "Chi2eNormalization", m_chi2eNorm       = 2500., "scale factor for the tanh(chi2e / Chi2eNormalization) histogram");
   declareProperty( "minTrackType",       m_minTrackType    =     3, "minimal ProtoParticle::TrackType");
   declareProperty( "nEventMin",          m_nEventMin       =   200, "minimal number of events to check");
+  declareProperty( "useIsMuonLoose",     m_muonLoose       = true , "use IsMuonLoose instead of IsMuon for muon selection");
+
 
   declareProperty( "ExtraHistograms",    m_extraHistograms = false, "fill additional histograms (not monitored)");
 
-  declareProperty( "RefSample",          m_RefSample       = "Brunel_v34r3: Bs_Jpsiphi,ee/mumu + b_inc  (~=DC09)", "description of the reference sample");
+  declareProperty( "RefSample",          m_RefSample       = "crude settings based on rp6 of Dec 2009 data", "description of the reference sample");
 }
 /** Finalize - calculate mean, rms, relative overflow, etc. and
  *  compare with the reference parameters, generate warnins or
@@ -490,7 +789,37 @@ void CaloEMuMonitor::fillMVar(const LHCb::ProtoParticle *proto)
   // fill the PID-related fields before applying selections
   m_var->rdlle  = proto->info( LHCb::ProtoParticle::RichDLLe, -9999.);
   m_var->rdllmu = proto->info( LHCb::ProtoParticle::RichDLLmu , -9999.);
-  m_var->ismuon = (bool) proto->muonPID() ? proto->muonPID()->IsMuon() : false;
+  m_var->ismuon = (bool) proto->muonPID()
+    ? ( m_muonLoose ? proto->muonPID()->IsMuonLoose() : proto->muonPID()->IsMuon() )
+    : false;
+
+
+  // find out the Ecal (~= Prs) side and section
+  if (   proto->hasInfo( LHCb::ProtoParticle::CaloPrsE  )
+      || proto->hasInfo( LHCb::ProtoParticle::CaloEcalE )){
+    Gaudi::XYZPoint pos(-10000., -10000., -10000.);
+
+    StatusCode sc = m_lin_extr -> position (*proto->track(), m_zShowerMaxEcal, pos);
+    if ( sc.isFailure() ) error() << "Track extrapolation to z =" << m_zShowerMaxEcal << " failed!" << endmsg;
+    else{
+      const LHCb::CaloCellID hypoCell = m_calo->Cell( pos );
+      m_var->ecalx    = pos.x();
+      m_var->ecalarea = hypoCell.area();
+    }
+  }
+
+  if ( proto->hasInfo( LHCb::ProtoParticle::CaloHcalE ) ){
+    Gaudi::XYZPoint pos(-10000., -10000., -10000.);
+
+    StatusCode sc = m_lin_extr -> position (*proto->track(), m_zMiddleHcal, pos);
+    if ( sc.isFailure() ) error() << "Track extrapolation to z =" << m_zMiddleHcal << " failed!" << endmsg;
+    else{
+      const LHCb::CaloCellID hypoCell = m_hcal->Cell( pos );
+      m_var->hcalx    = pos.x();
+      m_var->hcalarea = hypoCell.area();
+    }
+  }
+
 }
 /// compare histogram paramaters with the reference values
 int CaloEMuMonitor::RefPar::check()

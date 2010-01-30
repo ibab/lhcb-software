@@ -1,12 +1,12 @@
 #ifndef CALOMONIDST_CALOEMUMONITOR_H
 #define CALOMONIDST_CALOEMUMONITOR_H 1
 // ============================================================================
-// $Id: CaloEMuMonitor.h,v 1.5 2009-10-06 12:22:48 cattanem Exp $
+// $Id: CaloEMuMonitor.h,v 1.6 2010-01-30 21:30:27 dgolubko Exp $
 // Include files
 // ============================================================================
 
-// from Gaudi
-#include "Kernel/Particle2MCLinker.h"
+///// from Gaudi
+///#include "Kernel/Particle2MCLinker.h"
 
 // TrEvent
 #include "Event/Track.h"
@@ -268,6 +268,10 @@ protected:
     float rdlle;       ///< ProtoParticle::RichDLLe
     float rdllmu;      ///< ProtoParticle::RichDLLmu
     bool  ismuon;      ///< ProtoParticle->muonPID->IsMuon()
+    float ecalx;       ///< x position of the associated Ecal cluster (x < 0 / x > 0 = C-side / A-side)
+    float hcalx;       ///< x position of the associated Hcal cluster (x < 0 / x > 0 = C-side / A-side)
+    int   ecalarea;    ///< Ecal section number (0 / 1 / 2 = Outer / Middle / Inner section)
+    int   hcalarea;    ///< Hcal section number (0 / 1     = Outer / Middle         section)
   };
 
   /// pointer to an intermediate storage used for filling the monitoring histograms
@@ -276,7 +280,11 @@ protected:
 
   Gaudi::Plane3D       m_plane;  ///< Ecal ShowerMax plane
   ITrackExtrapolator  *m_ext;    ///< track extrapolator tool
+  ITrackExtrapolator  *m_lin_extr;  ///< track linear xtrapolator tool
   DeCalorimeter       *m_calo;   ///< Ecal
+  DeCalorimeter       *m_hcal;   ///< Hcal
+  double               m_zShowerMaxEcal;  ///< Ecal zShowerMax in the global coordinates
+  double               m_zMiddleHcal;     ///< Hcal zOffset (Middle) in the global coordinates
 
   /// Accessor for ParticlePropertySvc
   LHCb::IParticlePropertySvc* m_ppSvc;
@@ -296,6 +304,7 @@ protected:
   int   m_minTrackType;     ///< minimal track type (LHCb::Track::Types)
   float m_RichDLLe;         ///< minimal ProtoParticle::RichDLLe for electron identification
   float m_maxEHcalE;        ///< maximal ProtoParticle::CaloHcalE for electron identification
+  bool  m_muonLoose;        ///< use IsMuonLoose instead of IsMuon for muon sample selections 
 
 
 
@@ -303,16 +312,26 @@ protected:
   virtual void  bookMonitoringHistograms();
   /// book additional useful histograms (although not monitored)
   virtual void  bookExtraHistograms();
+  /// book uncut histograms from m_var (inpendent from Rich and Muon identification)
+  virtual void  bookUncutHistograms();
+  /// book soft-cut histograms from m_var (inpendent from Rich and Muon identification)
+  virtual void  bookSoftHistograms();
   /// fill m_var for the selected track before histogramming
   virtual void  fillMVar(const LHCb::ProtoParticle* proto);
   /// fill monitoring histograms from m_var
   virtual void  fillMonitoringHistograms();
   /// fill additional histograms from m_var
   virtual void  fillExtraHistograms();
+  /// fill uncut histograms from m_var (inpendent from Rich and Muon identification)
+  virtual void  fillUncutHistograms(const LHCb::ProtoParticle* proto);
+  /// fill soft-cut histograms from m_var (cut only on muon ID)
+  virtual void  fillSoftHistograms();
   /// declare a few basic properties - to be called from the constructor
   void declareBasicProperties();
 
   std::map<std::string,RefPar> m_refPar;  ///< the map of the monitored histograms + references
+  std::map<std::string,RefPar> m_uncut;   ///< the map of the uncut histograms + references
+  std::map<std::string,RefPar> m_soft;    ///< the map of the soft-selected histograms + references
   std::string m_RefSample;                ///< description of the reference sample used
 private:
 };
