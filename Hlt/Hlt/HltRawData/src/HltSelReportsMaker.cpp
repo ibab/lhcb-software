@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.cpp,v 1.21 2009-12-25 22:14:40 graven Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.22 2010-01-30 17:58:01 graven Exp $
 // #define DEBUGCODE
 // Include files 
 #include "boost/algorithm/string/replace.hpp"
@@ -689,7 +689,6 @@ StatusCode HltSelReportsMaker::execute() {
         ppHos!=m_objectSummaries->end();++ppHos){
      const HltObjectSummary* pHos=*ppHos;    
      verbose() << " key " << pHos->index();
-#ifdef LHCBv26r6ORLATER
      std::vector<std::string> selby = outputSummary->selectedAsCandidateBy(pHos);
      if( selby.size() ){
        verbose() << " selectedAsCandidateBy=";       
@@ -701,7 +700,6 @@ StatusCode HltSelReportsMaker::execute() {
          verbose() << " pvSelectionName= " << pvInfo.first << " pvKey= " << pvInfo.second << " ";
        }
      }     
-#endif
      verbose() << *pHos << endmsg;    
    }
    

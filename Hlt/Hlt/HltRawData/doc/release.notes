@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.60 2010-01-11 13:53:40 graven Exp $
+!$Id: release.notes,v 1.61 2010-01-30 17:58:00 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+! 2010-01-30 - Gerhard Raven
+ - remove #ifdef now that new LHCb is released
 
 !========================== HltRawData v2r3 2010-01-11 ===================
 ! 2009-12-28 - Gerhard Raven
