@@ -160,9 +160,9 @@ def _createTCKEntries(d, cas ) :
                     if cfg.type not in [ 'L0DUMultiConfigProvider', 'L0DUConfigProvider' ] :
                         raise KeyError("not a valid L0DU config provider: %s" % cfg.type )
                     if cfg.type == 'L0DUMultiConfigProvider' and l0tck not in cfg.props['registerTCK'] :
-                        raise KeyError('requested L0TCK %s not known by L0DUMultiConfigProvider in config %s' % ( l0tck, id ))
+                        raise KeyError('requested L0TCK %s not known by L0DUMultiConfigProvider in config %s; known L0TCKs: %s' % ( l0tck, id, cfg.props['registerTCK'] ))
                     elif cfg.type == 'L0DUConfigProvider' and l0tck != cfg.props['TCK'] :
-                        raise KeyError('requested L0TCK %s not known by L0DUConfigProvider in config %s' % ( l0tck, id ))
+                        raise KeyError('requested L0TCK %s not known by L0DUConfigProvider in config %s; known L0TCK: %s' % ( l0tck, id, cfg.props['TCK'] ))
         print 'creating mapping TCK: 0x%08x -> ID: %s' % (tck,id)
         ref = cas.readConfigTreeNode( id )
         alias = TCK( ref.get(), tck )
