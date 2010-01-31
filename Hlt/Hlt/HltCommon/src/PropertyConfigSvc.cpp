@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.26 2010-01-31 20:30:15 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.27 2010-01-31 21:24:23 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -146,7 +146,7 @@ StatusCode PropertyConfigSvc::queryInterface(const InterfaceID& riid,
 // Initialization
 //=============================================================================
 StatusCode PropertyConfigSvc::initialize() {
-   info() << "Initialize" << endmsg;
+   debug() << "Initialize" << endmsg;
    StatusCode status = Service::initialize();
    if ( !status.isSuccess() )   return status;
    status = service(s_accessSvc,m_accessSvc);
@@ -533,7 +533,7 @@ PropertyConfigSvc::setTopAlgs(const ConfigTreeNode::digest_type& id) const {
     if ( appProps->getProperty(&topAlgs).isFailure() ) {
         error() << " problem getting StringArrayProperty \"TopAlg\"" << endmsg;
     }
-    info() << " current TopAlgs: " << topAlgs.toString() << endmsg;
+    debug() << " current TopAlgs: " << topAlgs.toString() << endmsg;
 
     if (m_initialTopAlgs.get()==0) {
         m_initialTopAlgs.reset( new vector<string>( topAlgs.value() ) );
@@ -594,7 +594,7 @@ PropertyConfigSvc::setTopAlgs(const ConfigTreeNode::digest_type& id) const {
         }
         info() << " updated TopAlgs: " << topAlgs.toString() << endmsg;
     } else {
-        info() << " TopAlgs remain unchanged: " << topAlgs.toString() << endmsg;
+        debug() << " TopAlgs remain unchanged: " << topAlgs.toString() << endmsg;
     }
     return StatusCode::SUCCESS;
 } 

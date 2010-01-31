@@ -315,7 +315,7 @@ StatusCode ConfigTarFileAccessSvc::queryInterface(const InterfaceID& riid,
 // Initialization
 //=============================================================================
 StatusCode ConfigTarFileAccessSvc::initialize() {
-  info() << "Initialize" << endmsg;
+  debug() << "Initialize" << endmsg;
   StatusCode status = Service::initialize();
   if ( !status.isSuccess() )   return status;
   status = setProperties();
