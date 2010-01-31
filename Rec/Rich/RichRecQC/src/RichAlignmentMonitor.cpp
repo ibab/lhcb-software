@@ -4,12 +4,11 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.17 2010-01-24 22:08:10 papanest Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.18 2010-01-31 13:49:31 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
  */
-
 
 // local
 #include "RichAlignmentMonitor.h"
@@ -167,7 +166,7 @@ StatusCode AlignmentMonitor::initialize()
 
   debug() << "Finished Initialization" << endmsg;
   return sc;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -184,22 +183,30 @@ StatusCode AlignmentMonitor::execute() {
 
   // If any containers are empty, form them
   if ( richTracks()->empty() ) {
-    if ( trackCreator()->newTracks().isFailure() ) return StatusCode::FAILURE;
+    if ( trackCreator()->newTracks().isFailure() ) 
+    {
+      return Error( "Problem Making Tracks" );
+    }
     debug() << "No tracks found : Created " << richTracks()->size()
             << " RichRecTracks " << richSegments()->size()
             << " RichRecSegments" << endmsg;
   }
-  if ( msgLevel(MSG::DEBUG) ) {
+  if ( msgLevel(MSG::DEBUG) ) 
+  {
     debug() << " Found " << richTracks()->size() << " tracks" << endmsg;
   }
-
-  if ( (int)richTracks()->size() > m_maxUsedTracks ) {
+  if ( (int)richTracks()->size() > m_maxUsedTracks ) 
+  {
     debug() << "Found " << richTracks()->size() << ">"
             << m_maxUsedTracks << " max usable tracks, stopping." << endmsg;
     return StatusCode::SUCCESS;
   }
+
   if ( richPixels()->empty() ) {
-    if ( !pixelCreator()->newPixels().isFailure() ) return StatusCode::FAILURE;
+    if ( pixelCreator()->newPixels().isFailure() ) 
+    {
+      return Error( "Problem Making Pixels" );
+    }
     debug() << "No Pixels found : Created "
             << richPixels()->size() << " RichRecPixels" << endmsg;
   }

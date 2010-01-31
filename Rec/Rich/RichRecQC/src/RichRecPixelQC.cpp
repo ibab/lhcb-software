@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::PixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.28 2010-01-20 01:19:35 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.29 2010-01-31 13:49:31 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -70,8 +70,6 @@ StatusCode PixelQC::prebookHistograms()
 // Main execution
 StatusCode PixelQC::execute()
 {
-  debug() << "Execute" << endmsg;
-
   // Check event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
@@ -186,7 +184,7 @@ StatusCode PixelQC::execute()
                          "Average signal HPD occupancy (nHits>0)",
                          0, 150, 75 ) -> fill( nHPDSignalHits );
           }
-          
+
         } // valid HPD ID
 
       } // loop over HPDs
@@ -274,58 +272,75 @@ void PixelQC::printRICH( const Rich::DetectorType rich ) const
   info() << "  " << rich << " : All pixels          : " << occ(m_recoTally.pixels[rich],m_nEvts)
          << "   Eff. = " << pois(m_recoTally.pixels[rich],m_rawTally.pixels[rich]) << " %" << endmsg;
 
-  info() << "        : Cherenkov Signal    : " << occ(m_recoTally.signal[rich],m_nEvts)
-         << "   Eff. = " << pois(m_recoTally.signal[rich],m_rawTally.signal[rich]) << " %" << endmsg;
+  if ( m_recoTally.signal[rich] > 0 )
+  {
+    info() << "        : Cherenkov Signal    : " << occ(m_recoTally.signal[rich],m_nEvts)
+           << "   Eff. = " << pois(m_recoTally.signal[rich],m_rawTally.signal[rich]) << " %" << endmsg;
+  }
 
   if ( Rich::Rich1 == rich )
   {
-    info() << "        :     Aerogel         : " << occ(m_recoTally.radHits[Rich::Aerogel],m_nEvts)
-           << "   Eff. = " << pois(m_recoTally.radHits[Rich::Aerogel],m_rawTally.radHits[Rich::Aerogel])
-           << " %" << endmsg;
-    info() << "        :     Rich1Gas        : " << occ(m_recoTally.radHits[Rich::Rich1Gas],m_nEvts)
-           << "   Eff. = " << pois(m_recoTally.radHits[Rich::Rich1Gas],m_rawTally.radHits[Rich::Rich1Gas])
-           << " %" << endmsg;
+    if ( m_recoTally.radHits[Rich::Aerogel] > 0 )
+    {
+      info() << "        :     Aerogel         : " << occ(m_recoTally.radHits[Rich::Aerogel],m_nEvts)
+             << "   Eff. = " << pois(m_recoTally.radHits[Rich::Aerogel],m_rawTally.radHits[Rich::Aerogel])
+             << " %" << endmsg;
+    }
+    if ( m_recoTally.radHits[Rich::Rich1Gas] > 0 )
+    {
+      info() << "        :     Rich1Gas        : " << occ(m_recoTally.radHits[Rich::Rich1Gas],m_nEvts)
+             << "   Eff. = " << pois(m_recoTally.radHits[Rich::Rich1Gas],m_rawTally.radHits[Rich::Rich1Gas])
+             << " %" << endmsg;
+    }
   }
   else
   {
-    info() << "        :     Rich2Gas        : " << occ(m_recoTally.radHits[Rich::Rich2Gas],m_nEvts)
-           << "   Eff. = " << pois(m_recoTally.radHits[Rich::Rich2Gas],m_rawTally.radHits[Rich::Rich2Gas])
-           << " %" << endmsg;
+    if ( m_recoTally.radHits[Rich::Rich2Gas] > 0 )
+    {
+      info() << "        :     Rich2Gas        : " << occ(m_recoTally.radHits[Rich::Rich2Gas],m_nEvts)
+             << "   Eff. = " << pois(m_recoTally.radHits[Rich::Rich2Gas],m_rawTally.radHits[Rich::Rich2Gas])
+             << " %" << endmsg;
+    }
   }
 
-  info() << "        : All Backgrounds     : " << occ(m_recoTally.bkgs[rich],m_nEvts)
-         << "   Eff. = " << pois(m_recoTally.bkgs[rich],m_rawTally.bkgs[rich]) << " %" << endmsg;
+  if ( m_recoTally.bkgs[rich] > 0 )
+  {
 
-  if ( m_rawTally.npdqcks[rich] > 0 )
-    info() << "        :   - HPD Quartz CK   : " << occ(m_recoTally.npdqcks[rich],m_nEvts)
-           << "   Eff. = " << pois(m_recoTally.npdqcks[rich],m_rawTally.npdqcks[rich]) << " %" << endmsg;
+    info() << "        : All Backgrounds     : " << occ(m_recoTally.bkgs[rich],m_nEvts)
+           << "   Eff. = " << pois(m_recoTally.bkgs[rich],m_rawTally.bkgs[rich]) << " %" << endmsg;
 
-  if ( m_rawTally.ngasck[rich] > 0 )
-    info() << "        :   - Gas Quartz CK   : " << occ(m_recoTally.ngasck[rich],m_nEvts)
-           << "   Eff. = " << pois(m_recoTally.ngasck[rich],m_rawTally.ngasck[rich]) << " %" << endmsg;
+    if ( m_rawTally.npdqcks[rich] > 0 )
+      info() << "        :   - HPD Quartz CK   : " << occ(m_recoTally.npdqcks[rich],m_nEvts)
+             << "   Eff. = " << pois(m_recoTally.npdqcks[rich],m_rawTally.npdqcks[rich]) << " %" << endmsg;
 
-  if ( m_rawTally.n2ck[rich] > 0 )
-    info() << "        :   - N2 CK           : " << occ(m_recoTally.n2ck[rich],m_nEvts)
-           << "   Eff. = " << pois(m_recoTally.n2ck[rich],m_rawTally.n2ck[rich]) << " %" << endmsg;
+    if ( m_rawTally.ngasck[rich] > 0 )
+      info() << "        :   - Gas Quartz CK   : " << occ(m_recoTally.ngasck[rich],m_nEvts)
+             << "   Eff. = " << pois(m_recoTally.ngasck[rich],m_rawTally.ngasck[rich]) << " %" << endmsg;
 
-  if ( m_rawTally.naerofilter[rich] > 0 )
-    info() << "        :   - Aero. filter CK : " << occ(m_recoTally.naerofilter[rich],m_nEvts)
-           << "   Eff. = " << pois(m_recoTally.naerofilter[rich],m_rawTally.naerofilter[rich]) << " %" << endmsg;
+    if ( m_rawTally.n2ck[rich] > 0 )
+      info() << "        :   - N2 CK           : " << occ(m_recoTally.n2ck[rich],m_nEvts)
+             << "   Eff. = " << pois(m_recoTally.n2ck[rich],m_rawTally.n2ck[rich]) << " %" << endmsg;
 
-  if ( m_rawTally.nbackscatter[rich] > 0 )
-    info() << "        :   - Si Back-Scatter : " << occ(m_recoTally.nbackscatter[rich],m_nEvts)
-           << "   Eff. = " << pois(m_recoTally.nbackscatter[rich],m_rawTally.nbackscatter[rich]) << " %" << endmsg;
+    if ( m_rawTally.naerofilter[rich] > 0 )
+      info() << "        :   - Aero. filter CK : " << occ(m_recoTally.naerofilter[rich],m_nEvts)
+             << "   Eff. = " << pois(m_recoTally.naerofilter[rich],m_rawTally.naerofilter[rich]) << " %" << endmsg;
 
-  if ( m_rawTally.nhpdintreflect[rich] > 0 )
-    info() << "        :   - HPD Reflections : " << occ(m_recoTally.nhpdintreflect[rich],m_nEvts)
-           << "   Eff. = " << pois(m_recoTally.nhpdintreflect[rich],m_rawTally.nhpdintreflect[rich]) << " %" << endmsg;
+    if ( m_rawTally.nbackscatter[rich] > 0 )
+      info() << "        :   - Si Back-Scatter : " << occ(m_recoTally.nbackscatter[rich],m_nEvts)
+             << "   Eff. = " << pois(m_recoTally.nbackscatter[rich],m_rawTally.nbackscatter[rich]) << " %" << endmsg;
 
-  if ( m_rawTally.ntrack[rich] > 0 )
-    info() << "        :   - Track On HPD    : " << occ(m_recoTally.ntrack[rich],m_nEvts)
-           << "   Eff. = " << pois(m_recoTally.ntrack[rich],m_rawTally.ntrack[rich]) << " %" << endmsg;
+    if ( m_rawTally.nhpdintreflect[rich] > 0 )
+      info() << "        :   - HPD Reflections : " << occ(m_recoTally.nhpdintreflect[rich],m_nEvts)
+             << "   Eff. = " << pois(m_recoTally.nhpdintreflect[rich],m_rawTally.nhpdintreflect[rich]) << " %" << endmsg;
 
-  if ( m_rawTally.nchargeshare[rich] > 0 )
-    info() << "        :   - Si Charge Share : " << occ(m_recoTally.nchargeshare[rich],m_nEvts)
-           << "   Eff. = " << pois(m_recoTally.nchargeshare[rich],m_rawTally.nchargeshare[rich]) << " %" << endmsg;
+    if ( m_rawTally.ntrack[rich] > 0 )
+      info() << "        :   - Track On HPD    : " << occ(m_recoTally.ntrack[rich],m_nEvts)
+             << "   Eff. = " << pois(m_recoTally.ntrack[rich],m_rawTally.ntrack[rich]) << " %" << endmsg;
+
+    if ( m_rawTally.nchargeshare[rich] > 0 )
+      info() << "        :   - Si Charge Share : " << occ(m_recoTally.nchargeshare[rich],m_nEvts)
+             << "   Eff. = " << pois(m_recoTally.nchargeshare[rich],m_rawTally.nchargeshare[rich]) << " %" << endmsg;
+
+  }
 
 }

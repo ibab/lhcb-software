@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.45 2010-01-15 23:01:02 ryoung Exp $"
+__version__ = "$Id: Configuration.py,v 1.46 2010-01-31 13:49:31 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -249,9 +249,11 @@ class RichRecQCConf(RichConfigurableUser):
     ## Pixel performance monitors
     def pixelPerf(self,sequence):
 
-        from Configurables import ( Rich__Rec__MC__PixelQC )
+        from Configurables import ( Rich__Rec__MC__PixelQC,
+                                    Rich__Rec__PixelClusterMoni )
 
         sequence.Members += [ self.createMonitor(Rich__Rec__MC__PixelQC,"RichRecPixelQC") ]
+        sequence.Members += [ self.createMonitor(Rich__Rec__PixelClusterMoni,"RichRecPixelClusters") ]
 
     ## Run the PID Performance monitors
     def pidPerf(self,sequence):

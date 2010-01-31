@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.54 2010-01-23 01:21:48 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.55 2010-01-31 13:49:31 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -322,34 +322,40 @@ StatusCode RecoQC::execute()
 StatusCode RecoQC::finalize()
 {
 
-  // statistical tool
-  const StatDivFunctor occ("%8.2f +-%5.2f");
-
-  info() << "=============================================================================="
-         << endmsg;
-
-  // track selection
-  info() << " Track Selection : " << m_trSelector->selectedTracks() << endmsg;
-  info() << "                 : " << m_maxBeta << " > beta > " << m_minBeta << endmsg;
-
-  // loop over radiators
-  for ( int irad = 0; irad < Rich::NRadiatorTypes; ++irad )
+  if ( m_truePhotCount[Rich::Aerogel]  > 0 ||
+       m_truePhotCount[Rich::Rich1Gas] > 0 ||
+       m_truePhotCount[Rich::Rich2Gas] > 0  )
   {
-    const Rich::RadiatorType rad = (Rich::RadiatorType)irad;
 
-    // rad name
-    std::string radName = Rich::text(rad);
-    radName.resize(15,' ');
-    // photon count
-    if ( m_truePhotCount[rad]>0 )
+    // statistical tool
+    const StatDivFunctor occ("%8.2f +-%5.2f");
+
+    info() << "=============================================================================="
+           << endmsg;
+
+    // track selection
+    info() << " Track Selection : " << m_trSelector->selectedTracks() << endmsg;
+    info() << "                 : " << m_maxBeta << " > beta > " << m_minBeta << endmsg;
+
+    // loop over radiators
+    for ( int irad = 0; irad < Rich::NRadiatorTypes; ++irad )
     {
-      info() << " " << radName << " Av. # CK photons = "
-             << occ(m_truePhotCount[rad],m_nSegs[rad]) << " photons/segment" << endmsg;
-    }
-  }
+      const Rich::RadiatorType rad = (Rich::RadiatorType)irad;
 
-  info() << "=============================================================================="
-         << endmsg;
+      // rad name
+      std::string radName = Rich::text(rad);
+      radName.resize(15,' ');
+      // photon count
+      if ( m_truePhotCount[rad]>0 )
+      {
+        info() << " " << radName << " Av. # CK photons = "
+               << occ(m_truePhotCount[rad],m_nSegs[rad]) << " photons/segment" << endmsg;
+      }
+    }
+
+    info() << "=============================================================================="
+           << endmsg;
+  }
 
   // Execute base class method
   return HistoAlgBase::finalize();
