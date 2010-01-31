@@ -1,4 +1,4 @@
-// $Id: HltGenConfig.cpp,v 1.16 2009-08-27 14:41:16 graven Exp $
+// $Id: HltGenConfig.cpp,v 1.17 2010-01-31 13:08:51 graven Exp $
 // Include files 
 #include <algorithm>
 #include "boost/assign/list_of.hpp"
@@ -60,8 +60,8 @@ HltGenConfig::HltGenConfig( const string& name, ISvcLocator* pSvcLocator)
     declareProperty("ConfigTop", m_topConfig = list_of( string("Hlt") ) );
     declareProperty("ConfigSvc", m_svcConfig = list_of( string("ToolSvc") )
                                                       ( string("HltANNSvc") )
-                                                      ( string("HltDataSvc") ) );
-    declareProperty("ConfigAccessSvc",   s_accessSvc = "ConfigFileAccessSvc");
+                                                      ( string("Hlt::Service") ) );
+    declareProperty("ConfigAccessSvc",   s_accessSvc = "ConfigTarFileAccessSvc");
     declareProperty("PropertyConfigSvc", s_configSvc = "PropertyConfigSvc");
     declareProperty("HltType", m_hltType );
     declareProperty("MooreRelease", m_release );
