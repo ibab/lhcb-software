@@ -5,8 +5,17 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2010-01-31 - Illya Shapoval
+ - Some upgrade of tools in the frame of creation the automation procedure
+   for the latest global tag and appropriate on-top local tags usage.
+   Particularly:
+   ReleaseNotes class is modified to attach the 'type' elements to global and 
+   local tags entries in the release_notes.xml file when processing patches.
+   Also corresponding changes were introduced into the CondDBAdmin_Commit.py 
+   and CondDBAdmin_Global_Tag.py scripts. See help for right options usage.
+
 ! 2010-01-29 - Illya Shapoval
- - TagsFilter.py script adopted to the changes in the release_notes.xml structure. 
+ - TagsFilter.py script adapted to the changes in the release_notes.xml structure. 
    Fixed some minor bugs.
 
 ! 2010-01-28 - Illya Shapoval

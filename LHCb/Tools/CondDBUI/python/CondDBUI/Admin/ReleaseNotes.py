@@ -85,10 +85,10 @@ class ReleaseNotes(object):
 
         self.tree.getroot().insert(pos, entry)
         
-    def _findHomogeneous(self, contributor, date, tag = None, patch = None, description = None):
+    def _findHomogeneous(self, contributor, date, tag, datatypes, patch = None, description = None):
         """
         This internal function does look-up in the release_note.xml file for possible previously added homogeneous 
-        tags entries, checking whether coincidence takes place for "tag" name, date and contributor in case of 
+        tags entries, checking whether coincidence takes place for "tag" name, date, contributor and data types in case of 
         a global tag processing, and date, contributor, patch and description for a local tag entry processing.
         It returns the object of found entry for further modifications. The homogeneous entry is looked only in 
         the area of release_notes.xml which is after the last one sqldddb release. 
@@ -115,36 +115,45 @@ class ReleaseNotes(object):
         for element in rootelement:
             if counter > 0: break
             if element.tag != _xel("sqldddb_tag"):
-                bingoGeneral = 0 # Number of general for global and local tags matchings found in a target entry
+                bingoCommon = 0 # Number of common for global and local tags matchings found in a target entry
                 bingoLT = 0 # Number of local tag matchings (for description text and patch number) found in a target entry
+                found_datatypes = []
                 if element.tag == _xel("global_tag") or element.tag == _xel("note"):
                     for subelement in element:
                         if subelement.text == contributor or subelement.text == date or subelement.text == tag:
-                            bingoGeneral += 1
+                            bingoCommon += 1
                             continue
-                        if bingoGeneral >= 2 and subelement.tag == _xel("partition"):
+                        if subelement.tag == _xel("type"):
+                            found_datatypes.append(subelement.text)
+                        if bingoCommon >= 2 and subelement.tag == _xel("partition"):
                             for subsubelement in subelement:
                                 if subsubelement.tag == _xel("name"): partitionList.append(subsubelement.text)
-                        elif bingoGeneral == 2 and subelement.tag == _xel("description"):
+                        elif bingoCommon == 2 and subelement.tag == _xel("description"):
                             for subsubelement in subelement:
                                 for line in description:
                                     if subsubelement.text == line:
                                         bingoLT += 1
                                 if subsubelement.text == str(patch):
                                     bingoLT += 1
-                    if bingoGeneral == 3 or bingoLT == len(description)+1:
+                    if (bingoCommon == 3 and set(found_datatypes) == set(datatypes)) or bingoLT == len(description)+1:
                         counter += 1
                         homogenEntry = element
-                        self.log.info('Homogeneous entry with tag name "%s" is found to be used in the CondDB for %d partition(s): %s' % (tag,counter,partitionList))
-                        self.log.info('Merging will be done in release notes for homogeneous entries for patch "%s" ...' % patch)
+                        self.log.info('Homogeneous entry with tag name "%s" is found to be used in the \
+                        CondDB for %d partition(s): %s' % (tag,counter,partitionList))
+                        self.log.info('Merging will be done in release notes for homogeneous entries \
+                        for patch "%s" ...' % patch)
                     else: homogenEntry = None
+                    if bingoCommon == 3 and not set(found_datatypes) == set(datatypes):
+                        log.warning("Check the data types! Previous global tag is homogeneous with the \
+new one except the data types. Previous data type set:%s. New one:%s" %(found_datatypes, datatypes))
+                        log.info("Now we are going to create the global tag entry in release_notes.xml without merging.")
             else:
                 homogenEntry = None
                 break
                                              
         return homogenEntry
                 
-    def addNote(self, contributor, partitions, description, date = None, patch = None, forceNewLT = False):
+    def addNote(self, contributor, partitions, description, datatypes, date = None, patch = None, forceNewLT = False):
         """
         And a basic entry to the release notes.
         
@@ -157,7 +166,7 @@ class ReleaseNotes(object):
         """
         local_tag = partitions[partitions.keys()[0]][0]
         
-        homogenEntry = self._findHomogeneous(contributor, date, local_tag, patch, description)
+        homogenEntry = self._findHomogeneous(contributor, date, local_tag, datatypes, patch, description)
         if forceNewLT or not homogenEntry:
             note = self._makeEntry("note", contributor, date)
             # Adding new local tag entry element to the root element of release_notes.xml tree
@@ -178,10 +187,13 @@ class ReleaseNotes(object):
             files.sort()
             for f in files:
                 ET.SubElement(part_el,_xel("file")).text = f
+            if len(datatypes) != 0:
+                for type in datatypes:
+                    ET.SubElement(part_el,_xel("type")).text = type
                 
         self._setDescription(note, description, patch)
         
-    def addGlobalTag(self, contributor, tag, partitions, description = None, date = None, patch = None, forceNewGT = False):
+    def addGlobalTag(self, contributor, tag, partitions, datatypes, description = None, date = None, patch = None, forceNewGT = False):
         """
         And an entry for a global tag to the release notes.
         
@@ -195,10 +207,13 @@ class ReleaseNotes(object):
                     as a stand-alone entry in case any previous homogeneous entries are found.  
         """
         
-        homogenEntry = self._findHomogeneous(contributor,date,tag)
+        homogenEntry = self._findHomogeneous(contributor,date,tag,datatypes)
         if forceNewGT or not homogenEntry:
             global_tag = self._makeEntry("global_tag", contributor, date)
             ET.SubElement(global_tag,_xel("tag")).text = tag
+            if len(datatypes) != 0:
+                for type in datatypes:
+                    ET.SubElement(global_tag,_xel("type")).text = type
             # Adding new global tag entry element to the root element of release_notes.xml tree
             self._prependEntry(global_tag)
         elif homogenEntry:

@@ -35,17 +35,17 @@ def reallySure():
     # Yes, really sure
     return True
 
-def updateRelNotes(db, contributor, new_globalTag, base_globalTag, localTags, rn_file, description = None):
+def updateRelNotes(db, contributor, new_globalTag, base_globalTag, localTags, datatypes, rn_file, description = None):
     ##########################################################################################
     # Release notes update preparation procedure
     ##########################################################################################
     from CondDBUI.Admin import ReleaseNotes
-    
     try:
         rel_notes = ReleaseNotes(rn_file)
         rel_notes.addGlobalTag(contributor,
                     new_globalTag,
                     {db.db.databaseName():(base_globalTag, localTags)},
+                    datatypes,
                     description)
     except IOError:
         print "\nSorry.. Path to Release Notes file is not valid or hardware IO problems occurred.\nCommitting was not done.\nCheck path and try again."
@@ -75,6 +75,9 @@ ask for the contributor name.""")
     parser.add_option("-c","--contributor", type = "string",
                       help = "Name of the contributor of the global tag."
                       )
+    parser.add_option("-d","--datatypes", type = "string",
+                      help = "List of data types new global tag is intended for."
+                      )
     parser.add_option("-n","--dry-run", action = "store_true",
                       help = "Skip the actual global tagging and the update of release notes."
                       )
@@ -82,6 +85,7 @@ ask for the contributor name.""")
     parser.set_default("rel_notes", os.path.join(os.environ["SQLDDDBROOT"], "doc", "release_notes.xml"))
     parser.set_default("message", None)
     parser.set_default("contributor", None)
+    parser.set_default("datatypes", [])
         
     # parse command line
     options, args = parser.parse_args()
@@ -116,7 +120,7 @@ ask for the contributor name.""")
     else:
         options.message = options.message.replace("\\n","\n")
         log.info("Message for the changes: '%s'" % options.message)
-    
+
     ##########################################################################################
     # Positional arguments redefinition and partition verification
     ##########################################################################################
@@ -127,9 +131,23 @@ ask for the contributor name.""")
     if partition not in partitions:
         parser.error("'%s' is not a valid partition name. Allowed: %s" % \
                      (partition, partitions))
+    # Processing the data type option string
+    if options.datatypes != []:
+        datatypes = []
+        word = ""
+        for i in options.datatypes:
+            if i != ",":
+                word += i
+            elif i == ",":
+                datatypes.append(word)
+                word = ""
+        datatypes.append(word)         
+    else:
+        datatypes = options.datatypes
     log.info("New global tag name: %s" %new_globalTag)
     log.info("Base global tag name: %s" %base_globalTag)
     log.info("Local tags set for add-on: %s" %localTags)
+    log.info("This global tag is intended for the following data types: %s" %datatypes)
     
     ##########################################################################################
     # Connecting to the DB
@@ -144,7 +162,7 @@ ask for the contributor name.""")
     # Processing the case of cloning the global tag with new name
     ##########################################################################################
     if len(localTags) == 0:
-        rel_notes = updateRelNotes(db, options.contributor, new_globalTag, base_globalTag, localTags, options.rel_notes, options.message.splitlines())
+        rel_notes = updateRelNotes(db, options.contributor, new_globalTag, base_globalTag, localTags, datatypes, options.rel_notes, options.message.splitlines())
         log.info("Script entered cloning mode!")
         if not reallySure():
             return 0
@@ -199,7 +217,7 @@ ask for the contributor name.""")
     ##########################################################################################
     # User verification of committing procedure and final modification of DB and Release notes
     ##########################################################################################
-    rel_notes = updateRelNotes(db, options.contributor, new_globalTag, base_globalTag, localTags, options.rel_notes, options.message.splitlines())
+    rel_notes = updateRelNotes(db, options.contributor, new_globalTag, base_globalTag, localTags, datatypes, options.rel_notes, options.message.splitlines())
     if not reallySure():
         return 0
     if not options.dry_run:

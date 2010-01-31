@@ -111,6 +111,9 @@ and for a short message for the release notes.""")
                       dest = "contributor",
                       help = "alias for --contributor"
                       )
+    parser.add_option("-t","--datatypes", type = "string",
+                      help = "List of data types new global tag is intended for."
+                      )
     parser.add_option("-n","--dry-run", action = "store_true",
                       help = "Skip the actual commit to database and the update of release notes."
                       )
@@ -130,6 +133,7 @@ and for a short message for the release notes.""")
     parser.set_default("rel_notes", os.path.join(os.environ["SQLDDDBROOT"], "doc", "release_notes.xml"))
     parser.set_default("message", None)
     parser.set_default("contributor", None)
+    parser.set_default("datatypes", [])
     parser.set_default("since", None)
     parser.set_default("until", None)
     
@@ -162,6 +166,21 @@ and for a short message for the release notes.""")
     if partition not in partitions:
         parser.error("'%s' is not a valid partition name. Allowed: %s" % \
                      (partition, partitions))
+        
+    # Processing the data type option string
+    if options.datatypes != []:
+        datatypes = []
+        word = ""
+        for i in options.datatypes:
+            if i != ",":
+                word += i
+            elif i == ",":
+                datatypes.append(word)
+                word = ""
+        datatypes.append(word)         
+    else:
+        datatypes = options.datatypes
+    log.info("This local tag is intended for the following data types: %s" %datatypes)
     
     from CondDBUI.Admin import timeToValKey
     from PyCool import cool
@@ -253,6 +272,7 @@ and for a short message for the release notes.""")
     rel_notes.addNote(contributor = options.contributor,
                       partitions = {partition:(local_tag,modified + added)},
                       description = options.message.splitlines(),
+                      datatypes = datatypes,
                       patch = options.patch)
     
     ans = None
