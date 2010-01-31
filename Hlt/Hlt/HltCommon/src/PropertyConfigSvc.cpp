@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.25 2009-08-27 14:51:52 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.26 2010-01-31 20:30:15 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -14,6 +14,7 @@
 // from Gaudi
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/Algorithm.h" 
+#include "GaudiKernel/AlgTool.h" 
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/SvcFactory.h"
@@ -114,6 +115,7 @@ PropertyConfigSvc::PropertyConfigSvc( const string& name, ISvcLocator* pSvcLocat
   declareProperty("SkipComponent", m_skip); // do not touch these algorithms configurations, NOR THEIR DEPENDENTS!
   declareProperty("optionsfile", m_ofname);
   declareProperty("createGraphVizFile", m_createGraphVizFile=false);
+  declareProperty("AllowFlowChanges",m_allowFlowChanges = false);
 }
 
 //=============================================================================
@@ -155,6 +157,9 @@ StatusCode PropertyConfigSvc::initialize() {
    if ( !status.isSuccess() )   return status;
    status = service("JobOptionsSvc",m_joboptionsSvc);
    if ( !status.isSuccess() )   return status;
+   status = service("ToolSvc",m_toolSvc);
+   if ( !status.isSuccess() )   return status;
+   m_toolSvc->registerObserver(this);
 
    if (!m_ofname.empty()) m_os.reset( new boost::filesystem::ofstream( m_ofname.c_str() ) );
 
@@ -170,6 +175,14 @@ StatusCode PropertyConfigSvc::initialize() {
      if (m_createGraphVizFile) createGraphVizFile(digest, digest.str()); 
   } 
   return status;
+}
+
+void PropertyConfigSvc::onCreate(const IAlgTool* tool) {
+    assert(tool!=0);
+    string name = tool->name();
+    //string key = name.substr(0,name.rfind('.'));
+    debug() << "adding " << name << " to toolmap " << endmsg;
+    m_toolmap.insert( make_pair(name,tool) );
 }
 
 //=============================================================================
@@ -188,6 +201,7 @@ template <typename T>
 T* 
 PropertyConfigSvc::resolve(const string&) const 
 {
+    error() << "Generic resolve called -- this is bad news!" << endmsg;
     return 0;
 }
 template <> 
@@ -208,6 +222,15 @@ PropertyConfigSvc::resolve(const string& name) const
 }
 
 template <> 
+IAlgTool*
+PropertyConfigSvc::resolve(const string& name) const 
+{
+    std::map<std::string, const IAlgTool*>::const_iterator i = m_toolmap.find(name);
+    if (i==m_toolmap.end()) return 0;
+    return const_cast<IAlgTool*>(i->second);
+}
+
+template <> 
 Algorithm*
 PropertyConfigSvc::resolve(const string& name) const 
 {
@@ -219,6 +242,12 @@ PropertyConfigSvc::resolve(const string& name) const
 {
     return dynamic_cast<Service*>(resolve<IService>(name));
 }
+template <> 
+AlgTool*
+PropertyConfigSvc::resolve(const string& name) const 
+{
+    return dynamic_cast<AlgTool*>(resolve<IAlgTool>(name));
+}
 
 StatusCode 
 PropertyConfigSvc::invokeSetProperties(const PropertyConfig& conf) const {
@@ -229,6 +258,9 @@ PropertyConfigSvc::invokeSetProperties(const PropertyConfig& conf) const {
     } else if (conf.kind() == "IService")  {
         Service *svc = resolve<Service>(conf.name()); 
         return svc!=0 ? svc->setProperties() : StatusCode::FAILURE ;
+    } else if (conf.kind() == "IAlgTool")  {
+        AlgTool *tool = resolve<AlgTool>(conf.name()); 
+        return tool!=0 ? tool->setProperties() : StatusCode::FAILURE ;
     } 
     return StatusCode::FAILURE;
 }
@@ -394,9 +426,24 @@ PropertyConfigSvc::outOfSyncConfigs(const ConfigTreeNode::digest_type& configID,
                       << endmsg;
             continue;
         }
-        if ( m_configPushed[config->name()] != *i ) { 
-             debug() << " " << config->name() 
-                      << " current: " <<  m_configPushed[config->name()]  
+        ConfigPushed_t::const_iterator current = m_configPushed.find( config->name() );
+
+        // WARNING: the following doesn't catch all flow changes
+        //          as it fails to recognize that we've dropped some
+        //          part of the configuration tree... it only recognizes
+        //          additional new branches...
+        if ( current == m_configPushed.end() && !m_configPushed.empty() ) { // new, after already having pushed 
+            warning() << " WARNING WARNING WARNING WARNING WARNING WARNING" << endmsg;
+            warning() << " WARNING  new configuration has entry not in old configuration" << endmsg;
+            warning() << " WARNING  " << config->name() << endmsg;
+            warning() << " WARNING  this transition will most likely fail to do what you want it to do... " << endmsg;
+            warning() << " WARNING WARNING WARNING WARNING WARNING WARNING\n" << endmsg;
+            if (!m_allowFlowChanges) return StatusCode::FAILURE;
+        }
+
+        if ( current == m_configPushed.end() ||  current->second != *i ) {  // not present, or different; needs to be pushed
+             debug() << " " << config->name()
+                      << " current: " <<  current->second 
                       << " requested: " << *i << endmsg;
             *newConfigs = config;
         }
@@ -434,8 +481,13 @@ PropertyConfigSvc::configure(const ConfigTreeNode::digest_type& configID, bool c
     //  _after_ pushing all configurations, invoke 'setProperties'...
     //@TODO: should we do this in reverse order??
     if (callSetProperties) {
-        for (vector<const PropertyConfig*>::const_iterator i=configs.begin();i!=configs.end();++i)
-            invokeSetProperties(**i);
+        for (vector<const PropertyConfig*>::const_iterator i=configs.begin();i!=configs.end();++i) {
+             sc = invokeSetProperties(**i);
+             if (sc.isFailure()) {
+                  error() << "failed whilst invoking setProperties for " << (*i)->name() << endmsg;
+                  return sc;
+             }
+        }
     }
     return StatusCode::SUCCESS;
 }

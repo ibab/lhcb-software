@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.h,v 1.9 2008-07-30 13:37:33 graven Exp $
+// $Id: PropertyConfigSvc.h,v 1.10 2010-01-31 20:30:15 graven Exp $
 #ifndef PROPERTYCONFIGSVC_H 
 #define PROPERTYCONFIGSVC_H 1
 
@@ -16,6 +16,7 @@
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/IAppMgrUI.h"
+#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/VectorMap.h"
 
@@ -40,8 +41,9 @@
  *  @author Gerhard Raven
  *  @date   2007-10-24
  */
-class PropertyConfigSvc : public Service,
-                          virtual public IPropertyConfigSvc {
+class PropertyConfigSvc : public Service
+                        , public IToolSvc::Observer 
+                        , virtual public IPropertyConfigSvc {
 public:
   PropertyConfigSvc(const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -102,6 +104,7 @@ private:
   mutable std::auto_ptr<MsgStream>     m_msg;
   std::string                          s_accessSvc;
   IJobOptionsSvc*                      m_joboptionsSvc;
+  IToolSvc*                            m_toolSvc;
   IAlgManager*                         m_algMgr;
   IAppMgrUI*                           m_appMgrUI;
   IConfigAccessSvc*                    m_accessSvc;
@@ -111,14 +114,18 @@ private:
   mutable Tree2LeafMap_t               m_leavesInTree; // top level node ref -> config refs (leaves)
   mutable Tree2NodeMap_t               m_nodesInTree; // top level node ref -> node refs
   mutable ConfigPushed_t               m_configPushed;
+  std::map<std::string,const IAlgTool*> m_toolmap;
   std::vector<std::string>             m_prefetch;    ///< configurations to load at initialization
   std::vector<std::string>             m_skip;        ///< items NOT to configure with this service
   std::string                          m_ofname;
   std::auto_ptr<std::ostream>          m_os;
   bool                                 m_createGraphVizFile;
+  bool                                 m_allowFlowChanges;
   mutable std::auto_ptr<std::vector<std::string> > m_initialTopAlgs;
 
   MsgStream& msg(MSG::Level level) const;
+
+  void onCreate(const IAlgTool* tool);
 
   template <typename T> T* resolve(const std::string& name) const;
   StatusCode invokeSetProperties(const PropertyConfig& config) const;
