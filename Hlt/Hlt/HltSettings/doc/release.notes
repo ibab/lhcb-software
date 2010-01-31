@@ -8,7 +8,7 @@
  - put Physics_320Vis_300L0_10Hlt1_Jan10 on top of L0 0x1409 instead
    of 0xFF68, update the list of Hlt1L0...  lines
  - put Physics_MinBiasL0_PassThroughHlt_Jan10 on top of L0 0x1309
-   instead of 0x2009
+   instead of 0x2009, remove Hlt1LumiLow... lines for now.
 
 ! 2010-01-30 - Gerhard Raven
  - remove LumiLow from Physics_MinBiasL0_PassThroughHlt_Nov09.py and
