@@ -170,7 +170,7 @@ private:
        long val = 0;
        for(;(size > 0) && (*cp == ' '); cp++, size--);
        if ((size == 0) || !isOctal(*cp)) return -1;
-       for(; (size > 0) && isOctal(*cp); size--) val = val * 8 + *cp++ - '0';
+       for(; (size > 0) && isOctal(*cp); size--) val = (val<<3)  + (*cp++ - '0');
        for (;(size > 0) && (*cp == ' '); cp++, size--);
        if ((size > 0) && *cp) return -1;
        return val;
@@ -198,13 +198,17 @@ bool TarFile::interpretHeader(posix_header& header, Info& info) const {
                  sum -= (unsigned char) header.chksum[i];
             }
             sum += ' ' * sizeof header.chksum;
-            if (sum!=chksum) return false;
+            if (sum!=chksum) {
+                std::cerr << " bad chksum " << sum << " vs. " << chksum << std::endl;
+                return false;
+            }
             info.type  = TarFileType(header.typeflag);
-            info.size  = getOctal(header.size,sizeof(header.size));
-            if (info.size<0) {
+            long size  = getOctal(header.size,sizeof(header.size));
+            if (size<0) {
                 std::cerr << " got negative file size: " << info.size << std::endl;
                 return false;
             }
+            info.size  = size;
             info.name  = convert(header.name);
             if (header.prefix[0]!=0) {
                 std::string prefix = convert(header.prefix);
