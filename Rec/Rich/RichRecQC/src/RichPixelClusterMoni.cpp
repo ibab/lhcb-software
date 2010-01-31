@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::PixelClusterMoni
  *
- *  $Id: RichPixelClusterMoni.cpp,v 1.1 2010-01-31 13:49:31 jonrob Exp $
+ *  $Id: RichPixelClusterMoni.cpp,v 1.2 2010-01-31 13:57:27 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   31/02/2010
@@ -48,7 +48,7 @@ StatusCode PixelClusterMoni::prebookHistograms()
   { 
     richHisto1D( *rich,
                  "clusterSize", "Pixel Cluster Sizes",
-                 -0.5, 50.5, 51 );
+                 -0.5, 100.5, 101 );
   }
 
   return StatusCode::SUCCESS;
