@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.35 2009-11-02 08:56:57 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.36 2010-01-31 20:49:04 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -244,25 +244,22 @@ void HltConfigSvc::dummyCheckOdin() {
 }
 
 void HltConfigSvc::checkOdin() {
-
     SmartDataPtr<LHCb::ODIN> odin( m_evtSvc , LHCb::ODINLocation::Default );
     if (!odin) m_decodeOdin->execute();
     if (!odin) {
         error() << " Could not locate ODIN... " << endmsg;
         m_incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
+        throw GaudiException("No ODIN present??","",StatusCode::FAILURE ); 
         return;
     }
     unsigned int TCK = odin->triggerConfigurationKey();
 
-    debug() << "checkOdin: TCK in ODIN bank: " << TCK << endmsg;
-    debug() << "checkOdin: currently configured TCK: " << m_configuredTCK << endmsg;
-
     if ( m_configuredTCK != TCK ) {
         TCKrep TCKr(TCK);
-        info() << "requesting configuration update from TCK " 
-               << m_configuredTCK 
+        info() << "requesting configuration update from TCK " << m_configuredTCK 
                << " to TCK " << TCKr << endmsg;
-        if (reconfigure( tck2id(TCKr) ).isSuccess()) { 
+        StatusCode sc = reconfigure( tck2id(TCKr) );
+        if (sc.isSuccess()) { 
             m_configuredTCK = TCKr;
         } else {
             error()   << "\n\n\n\n\n"
@@ -278,6 +275,7 @@ void HltConfigSvc::checkOdin() {
                       << "\n\n\n\n\n"
                       << endmsg;
             m_incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
+            throw GaudiException("Reconfigure failed","",sc); 
             return;
         }
     }
@@ -291,7 +289,7 @@ void HltConfigSvc::createHltDecReports() {
 }
 
 void HltConfigSvc::handle(const Incident& /*incident*/) {
-     //dummyCheckOdin();
+    //dummyCheckOdin();
     if (m_checkOdin) checkOdin();
     createHltDecReports();
 }

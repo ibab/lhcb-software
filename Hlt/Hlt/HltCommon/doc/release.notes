@@ -6,6 +6,7 @@
 
 ! 2010-01-31 - Gerhard Raven
  - support AlgTools in PropertyConfigSvc
+ - HltConfigSvc: throw exception if reconfigure fails.
 
 ! 2010-01-29 - Gerhard Raven
  - further optimization of tar file access
