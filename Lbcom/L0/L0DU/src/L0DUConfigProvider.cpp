@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.cpp,v 1.21 2010-01-31 20:44:54 graven Exp $ // Include files 
+// $Id: L0DUConfigProvider.cpp,v 1.22 2010-01-31 21:02:49 graven Exp $ // Include files 
 #include "boost/assign/list_of.hpp"
 // from Gaudi
 #include "GaudiKernel/StateMachine.h" 
@@ -116,7 +116,7 @@ StatusCode L0DUConfigProvider::initialize(){
   return update();
 }
 
-void L0DUConfigProvider::handler(Property& p) {
+void L0DUConfigProvider::handler(Property& ) {
     if (!m_template && FSMState() >= Gaudi::StateMachine::INITIALIZED ) {
         // on-the-fly update of properties only allowed for template!
         error() << "only template L0DUConfig can be updated after  Initialize has been called" << endmsg;
@@ -168,8 +168,6 @@ void L0DUConfigProvider::reset() {
 }
 
 StatusCode L0DUConfigProvider::update() {
-    always() << "updating... " << endmsg;
-
   int index = m_tck.rfind("0x") + 2 ;
   std::string tck = m_tck.substr( index, m_tck.length() );
   std::istringstream is( tck.c_str() );
@@ -237,7 +235,7 @@ void L0DUConfigProvider::createConfig(std::string slot){
 
 void L0DUConfigProvider::printConfig(LHCb::L0DUConfig config,std::string slot){
   if( slot == "") slot = "T0";
-  info() <<  "-------------------------------------------------------------"<<endmsg;
+  //info() <<  "-------------------------------------------------------------"<<endmsg;
   info() << "**** L0DU Config loading : L0TCK = " << format("0x%04X" , config.tck()) << " for slot " 
          << slot << " ==> OK " << endmsg;
   debug() << "              - " << config.data().size()<< " data with "<<endmsg;
