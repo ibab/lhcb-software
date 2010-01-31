@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.187 2010-01-29 14:14:45 jucogan Exp $
+! $Id: release.notes,v 1.188 2010-01-31 20:44:54 graven Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2010-01-31 - Gerhard Raven
+ - L0DUConfigProvider: fix typo which prevented on-the-fly reconfiguration
 
 ! 2010-01-29 - Julien Cogan
  - L0Conf : fix for L0ETC

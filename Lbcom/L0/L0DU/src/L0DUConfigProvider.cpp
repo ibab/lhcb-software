@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.cpp,v 1.20 2010-01-29 11:18:38 odescham Exp $ // Include files 
+// $Id: L0DUConfigProvider.cpp,v 1.21 2010-01-31 20:44:54 graven Exp $ // Include files 
 #include "boost/assign/list_of.hpp"
 // from Gaudi
 #include "GaudiKernel/StateMachine.h" 
@@ -60,24 +60,25 @@ L0DUConfigProvider::L0DUConfigProvider( const std::string& type,
 {
   declareInterface<IL0DUConfigProvider>(this);
   
-  declareProperty( "constData"               , m_constData)->declareUpdateHandler(&L0DUConfigProvider::handler,this);
-  declareProperty( "Data"                    , m_data     )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
+  declareProperty( "constData"               , m_constData  )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
+  declareProperty( "Data"                    , m_data       )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
   declareProperty( "Conditions"              , m_conditions )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
-  declareProperty( "Channels"                , m_channels )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
-  declareProperty( "Triggers"                , m_triggers )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
+  declareProperty( "Channels"                , m_channels   )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
+  declareProperty( "Triggers"                , m_triggers   )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
   // for options defined configuration
   declareProperty( "Description"             , m_def     = "NO DESCRIPTION")
     ->declareUpdateHandler(&L0DUConfigProvider::handler,this);  
   declareProperty( "Name"                    , m_recipe  = "")->declareUpdateHandler(&L0DUConfigProvider::handler,this);  
   m_sepMap["["] = "]";
-  declareProperty( "Separators"              , m_sepMap)->declareUpdateHandler(&L0DUConfigProvider::handler,this);
+  declareProperty( "Separators"              , m_sepMap      )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
   declareProperty( "FullDescription"         , m_detail  = false)->declareUpdateHandler(&L0DUConfigProvider::handler,this);
 
   // TCK from name
   int idx = name.find_last_of(".")+1;
   std::string nam = name.substr(idx,std::string::npos);
-  if ( (nam == LHCb::L0DUTemplateConfig::Name) | (name == "L0DUConfig")) m_template = true;  
-  else { 
+  if ( (nam == LHCb::L0DUTemplateConfig::Name) | (nam == "L0DUConfig")) {
+      m_template = true;  
+  } else { 
       size_t index = nam.rfind("0x");
       nam = (index != std::string::npos ) ? nam.substr( index ) : "0x0000";
   }
@@ -115,9 +116,10 @@ StatusCode L0DUConfigProvider::initialize(){
   return update();
 }
 
-void L0DUConfigProvider::handler(Property&) {
+void L0DUConfigProvider::handler(Property& p) {
     if (!m_template && FSMState() >= Gaudi::StateMachine::INITIALIZED ) {
         // on-the-fly update of properties only allowed for template!
+        error() << "only template L0DUConfig can be updated after  Initialize has been called" << endmsg;
         throw GaudiException("L0DUConfig: update of properties only allowd for template","",StatusCode::FAILURE);
     }
     m_uptodate=false;
@@ -166,6 +168,7 @@ void L0DUConfigProvider::reset() {
 }
 
 StatusCode L0DUConfigProvider::update() {
+    always() << "updating... " << endmsg;
 
   int index = m_tck.rfind("0x") + 2 ;
   std::string tck = m_tck.substr( index, m_tck.length() );

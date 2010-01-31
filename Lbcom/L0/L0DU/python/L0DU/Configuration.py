@@ -308,7 +308,7 @@ class L0Conf(LHCbConfigurableUser) :
             from Configurables import L0DUFromRawAlg, L0DUFromRawTool
             log.info("Using Fast decoding for L0DU")
             l0du   = L0DUFromRawAlg(L0DUFromRawAlgName)
-            l0du.addTool(L0DUFromRawTool(),name = "L0DUFromRawTool")
+            l0du.addTool(L0DUFromRawTool,name = "L0DUFromRawTool")
             l0du.L0DUFromRawTool.FillDataMap         = False
             l0du.L0DUFromRawTool.EncodeProcessorData = False
             l0du.L0DUFromRawTool.Emulate             = False
