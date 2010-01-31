@@ -64,6 +64,15 @@ namespace {
         char padding[12];             /* 500-512 (pad to exactly the TAR_BLOCK_SIZE) */
     };
 
+    template <typename T>
+    std::string convert(const T& in) {
+        // take into account that eg. name and prefix do not have a
+        // terminating '\0' in case they occupy the full length...
+        std::string s(in,sizeof(in));
+        std::string::size_type last = s.find(char(0));
+        return  (last==std::string::npos)? s : s.substr(0,last);
+    }
+
     bool isZero(const struct posix_header& h) {
          const char* i = (const char*)(&h);
          const char* end = i+512;
@@ -155,13 +164,13 @@ private:
     /* Read an octal value in a field of the specified width, with optional
      * spaces on both sides of the number and with an optional null character
      * at the end.  Returns -1 on an illegal format.  */
-    bool is_octal(const char& ch) const   { return ((ch >= '0') && (ch <= '7')); }
+    bool isOctal(const char& ch) const   { return ((ch >= '0') && (ch <= '7')); }
     long getOctal(const char *cp, int size) const
     {
        long val = 0;
        for(;(size > 0) && (*cp == ' '); cp++, size--);
-       if ((size == 0) || !is_octal(*cp)) return -1;
-       for(; (size > 0) && is_octal(*cp); size--) val = val * 8 + *cp++ - '0';
+       if ((size == 0) || !isOctal(*cp)) return -1;
+       for(; (size > 0) && isOctal(*cp); size--) val = val * 8 + *cp++ - '0';
        for (;(size > 0) && (*cp == ' '); cp++, size--);
        if ((size > 0) && *cp) return -1;
        return val;
@@ -175,7 +184,7 @@ private:
 };
 
 bool TarFile::interpretHeader(posix_header& header, Info& info) const {
-            if (strncmp(header.magic,"ustar ",6)) { 
+            if (strncmp(header.magic,"ustar ",6)&&strncmp(header.magic,"ustar\0",6)) { 
                 return false;
             }
             long chksum       = getOctal(header.chksum,sizeof(header.chksum));
@@ -189,33 +198,34 @@ bool TarFile::interpretHeader(posix_header& header, Info& info) const {
                  sum -= (unsigned char) header.chksum[i];
             }
             sum += ' ' * sizeof header.chksum;
-            if (sum!=chksum) {
-                std::cerr << "inconsistent checksum" << std::endl;
-                return false;
-            }
-            // name should be header.prefix + '/' + header.name,
-            // in case header.prefix[0]!=0
-            if (header.prefix[0]!=0) std::cerr << "got prefix: [" << (char*)(&header.prefix[0]) << "]/[" << header.name << "]" << std::endl;
-            // std::cerr << "got name " << (char*)(&header.name[0]) << std::endl;
+            if (sum!=chksum) return false;
             info.type  = TarFileType(header.typeflag);
             info.size  = getOctal(header.size,sizeof(header.size));
-            info.name  = header.name;
+            if (info.size<0) {
+                std::cerr << " got negative file size: " << info.size << std::endl;
+                return false;
+            }
+            info.name  = convert(header.name);
+            if (header.prefix[0]!=0) {
+                std::string prefix = convert(header.prefix);
+                info.name = prefix + "/" + info.name;
+            }
             info.offset = m_file.tellg();
 
             if ( info.type == GNUTYPE_LONGNAME ) { 
                 // current header is a dummy 'flag', followed by data blocks 
                 // with name as content (length of name is 'size' of data)
-                assert(strncmp(header.name,"././@LongLink",13)==0);
-                // attach os to filename string
+                assert(info.name == "././@LongLink");
+                // first read the real, untruncated name as data
                 std::ostringstream fname;
                 bio::copy(bio::slice(m_file,0,info.size), fname);
                 size_t padding = info.size % 512;
-                if (padding!=0) bio::seek(m_file,512-padding,std::ios_base::cur);
-                // and now get another header , which contains a truncated name
+                if (padding!=0) bio::seek(m_file,512-padding,std::ios::cur);
+                // and now get another header, which contains a truncated name
                 // but which is otherwise the 'real' one
                 m_file.read( (char*) &header, sizeof(header) ) ;
-                interpretHeader( header, info);
-                // so we put in the currect name to 'fix' the truncated one...
+                if (!interpretHeader( header, info)) return false;
+                // so we overwrite the truncated one with the long one...
                 info.name = fname.str();
             }
             return true;
@@ -226,6 +236,7 @@ bool TarFile::index() const {
         bio::seek(m_file,0,std::ios::beg);
         m_index.clear();
         while (m_file.read( (char*) &header, sizeof(header) )) {
+            std::streamoff offset = m_file.tellg()-std::streamoff(sizeof(header));
             Info info;
             if (!interpretHeader( header, info))  {
                 // see if we're at the end of the file: (at least) two all-zero headers)
@@ -233,10 +244,12 @@ bool TarFile::index() const {
                     m_file.read( (char*) &header, sizeof(header) ) ;
                     if (isZero(header)){
                         m_leof = info.offset;
+                        bio::seek(m_file,0,std::ios::beg);
                         return true;
                     }
                 }
-                std::cerr << "failed to interpret header @ " << info.offset << " in tarfile " << m_name << std::endl;
+                std::cerr << "failed to interpret header @ " << offset << " in tarfile " << m_name << std::endl;
+                bio::seek(m_file,0,std::ios::beg);
                 return false;
             }
             if (info.name.empty()) {
