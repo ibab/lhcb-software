@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.97 2010-01-30 17:49:08 graven Exp $
+! $Id: release.notes,v 1.98 2010-01-31 20:55:14 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -9,6 +9,9 @@
 ! for the production. Commit them AS WELL in branch production200912. 
 !
 !-----------------------------------------------------------------------------
+
+! 2010-01-31 - Gerhard Raven
+ - use L0DUConfigProvider instead of L0DUMultiConfigProvider 
 
 ! 2010-01-30 - Gerhard Raven
  - comment out Hlt1LumiLow for time being (needs newer LHCb release)

@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.9 2010-01-28 16:27:27 graven Exp $
+# $Id: HltL0Candidates.py,v 1.10 2010-01-31 20:55:14 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -101,7 +101,21 @@ def decodeL0Channels( L0TCK , skipDisabled = True) :
     from Configurables import L0DUMultiConfigProvider,L0DUConfigProvider
     if L0TCK not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
         raise KeyError('requested L0 TCK %s is not known'%L0TCK)
-    channels = _parseL0settings( L0DUConfigProvider('ToolSvc.L0DUConfig.TCK_'+L0TCK).Channels )
+    if 'ToolSvc.L0DUConfig.TCK_%s'%L0TCK not in allConfigurables :
+        raise KeyError('requested L0DUConfigProvider for TCK %s is not known'%L0TCK)
+    orig = L0DUConfigProvider('ToolSvc.L0DUConfig.TCK_'+L0TCK)
+    del allConfigurables['ToolSvc.L0DUConfig']
+    new = L0DUConfigProvider('ToolSvc.L0DUConfig')
+    for p,v in orig.getValuedProperties().items() : setattr(new,p,v)
+    new.TCK = L0TCK
+    from Configurables import L0DUFromRawTool
+    from Configurables import L0DUFromRawAlg
+    l0du   = L0DUFromRawAlg("L0DUFromRaw")
+    l0du.addTool(L0DUFromRawTool,name = "L0DUFromRawTool")
+    getattr( l0du, 'L0DUFromRawTool' ).L0DUConfigProviderType = 'L0DUConfigProvider'
+    from Configurables import L0DUAlg
+    L0DUAlg('L0DU').L0DUConfigProviderType = 'L0DUConfigProvider'
+    channels = _parseL0settings( new.Channels )
     print '# decoded L0 channels for L0TCK=%s: %s'%(L0TCK, str(channels))
     return [ i['name'] for i in channels if ( not skipDisabled or 'DISABLE' not in i or i['DISABLE'].upper().find('TRUE') == -1 ) ]
 
