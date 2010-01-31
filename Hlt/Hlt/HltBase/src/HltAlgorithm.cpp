@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.61 2010-01-25 09:28:01 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.62 2010-01-31 20:54:03 graven Exp $
 // Include files 
 
 #include "Event/Particle.h"
@@ -92,7 +92,7 @@ StatusCode HltAlgorithm::sysFinalize() {
 
 
 StatusCode HltAlgorithm::restart() {
-  always() << "restart of " << name() << " requested -- please implement! " << endmsg;
+  info() << "restart of " << name() << " requested " << endmsg;
   return StatusCode::SUCCESS;
 }
 
