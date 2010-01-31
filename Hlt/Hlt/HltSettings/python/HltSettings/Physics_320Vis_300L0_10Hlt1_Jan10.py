@@ -22,7 +22,7 @@ class Physics_320Vis_300L0_10Hlt1_Jan10 :
 
     
     def L0TCK(self) :
-        return '0xFF68'
+        return '0x1409'
 
     def HltType(self) :
         self.verifyType( Physics_320Vis_300L0_10Hlt1_Jan10 )
@@ -35,7 +35,7 @@ class Physics_320Vis_300L0_10Hlt1_Jan10 :
         from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
         from Hlt1Lines.Hlt1MuonLines           import Hlt1MuonLinesConf
         from Hlt1Lines.Hlt1HadronLines         import Hlt1HadronLinesConf
-	from Hlt1Lines.Hlt1HadronViaTLines     import Hlt1HadronViaTLinesConf
+        from Hlt1Lines.Hlt1HadronViaTLines     import Hlt1HadronViaTLinesConf
         from Hlt1Lines.Hlt1ElectronLines       import Hlt1ElectronLinesConf
         from Hlt1Lines.Hlt1PhotonLines         import Hlt1PhotonLinesConf
         from Hlt1Lines.Hlt1ExpressLines        import Hlt1ExpressLinesConf

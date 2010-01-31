@@ -1,4 +1,4 @@
-class Physics_MinBiasL0_PassThroughHlt_Nov09_with_MiniBias :
+class Physics_MinBiasL0_PassThroughHlt_Jan10 :
     """
     Threshold settings for Hlt1 and 2 in nominal conditions (list of commissioning)
     
@@ -13,10 +13,10 @@ class Physics_MinBiasL0_PassThroughHlt_Nov09_with_MiniBias :
         self.StripEndSequence = False
 
     def HltType(self) :
-        return 'Physics_MinBiasL0_PassThroughHlt_Nov09'
+        return 'Physics_MinBiasL0_PassThroughHlt_Jan10'
 
     def L0TCK(self) :
-        return "0x2009"
+        return "0x1309"
 
     def ActiveHlt2Lines(self) :
         """
