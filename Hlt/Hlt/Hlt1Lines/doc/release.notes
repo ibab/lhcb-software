@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.99 2010-02-01 09:43:51 graven Exp $
+! $Id: release.notes,v 1.100 2010-02-01 21:41:59 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -11,6 +11,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== Hlt1Lines v2r1 2010-02-01 ===================
+! 2010-02-01 - Gerhard Raven
+ - take into account that not all L0 channels have candidates to be converted
+
 ! 2010-01-31 - Gerhard Raven
  - use L0DUConfigProvider instead of L0DUMultiConfigProvider 
 

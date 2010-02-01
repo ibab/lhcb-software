@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.10 2010-01-31 20:55:14 graven Exp $
+# $Id: HltL0Candidates.py,v 1.11 2010-02-01 21:41:59 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -39,12 +39,30 @@ import re
 from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
 
+
+### TODO: for a given channel name, pick up the conditions; 
+### next, pick up the conditions, and see whether the corresponding 'data' is in _dataWithoutCandidates
+### and if only those, skip making candidates (as there are no candidates for those data...
+
+_dataCandidates = { 'Spd(Mult)'    : False 
+                  , 'PUHits(Mult)' : False
+                  , 'Sum(Et)'      : False
+                  , 'Electron(Et)' : True
+                  , 'Photon(Et)'   : True
+                  , 'Hadron(Et)'   : True
+                  , 'Muon1(Pt)'    : True
+                  , 'Muon2(Pt)'    : True
+                  , 'DiMuon(Pt)'   : True
+                  , 'LocalPi0(Et)' : True
+                  , 'GlobalPi0(Et)': True
+                  }
+
 # utilities to pack and unpack L0 conditions into Condition property...
 # given the 'Conditions' property of an L0DUCOnfig tool instance, 
 # return a pythonized table of settings
 # i.e. the inverse of 'genItems'
 def _parseL0settings( settings ) :
-    return [ _parseL0setting(i) for i in settings ]
+    return  [ _parseL0setting(i) for i in settings ]
 def _parseL0setting( setting ) :
     p = re.compile('(.*)= *\[(.*)\]')
     val = {}
@@ -86,8 +104,11 @@ def _calo( channel ) :
     return x
 
 def _converter( channel ) :
-    _conv = _muon if channel.upper().find('MUON') != -1 else _calo
-    return _conv(channel)
+    # TODO: check the conditions of the channel, and dispatch based on that
+    #       so that we become agnostic to the actual names...
+    if channel.upper().find('MUON') != -1 : return _muon(channel)
+    if channel in [ 'SPD','PU','SPD40','PU40','B1gas','B2gas' ] : return { channel : None }
+    return _calo(channel)
 
 global _dict,_l0Channels
 _dict       = None
@@ -116,8 +137,12 @@ def decodeL0Channels( L0TCK , skipDisabled = True) :
     from Configurables import L0DUAlg
     L0DUAlg('L0DU').L0DUConfigProviderType = 'L0DUConfigProvider'
     channels = _parseL0settings( new.Channels )
-    print '# decoded L0 channels for L0TCK=%s: %s'%(L0TCK, str(channels))
-    return [ i['name'] for i in channels if ( not skipDisabled or 'DISABLE' not in i or i['DISABLE'].upper().find('TRUE') == -1 ) ]
+    print '# decoded L0 channels for L0TCK=%s: %s'%(L0TCK, channels)
+    def _hasBeenDisabled( d ) :
+        if 'DISABLE' in d and d['DISABLE'].upper().find('TRUE') != -1 : return True # old style
+        if 'MASK'    in d and d['MASK'] == '000' : return True    
+        return False
+    return [ i['name'] for i in channels if ( not skipDisabled or not _hasBeenDisabled(i)) ]
 
 def setupL0Channels( channels ) :
     global _l0Channels,_dict

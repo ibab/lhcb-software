@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -27,10 +27,11 @@ class Hlt1L0LinesConf(HltLinesConfigurableUser) :
         channels = self.getProp('L0Channels')
         if not channels : channels = L0Channels()
         for channel in channels :
+            converter = convertL0Candidates(channel) 
             Line ( 'L0' + channel 
                  , prescale = self.prescale
                  , L0DU  = "L0_CHANNEL('%s')" % channel
-                 , algos = [ convertL0Candidates(channel) ]
+                 , algos = [ converter ] if converter else []
                  , postscale = self.postscale
                  )
         Line('L0Any' ,  L0DU = 'L0_DECISION' 
