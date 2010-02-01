@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.403 2010-02-01 09:50:17 graven Exp $ 
+! $Id: release.notes,v 1.404 2010-02-01 21:19:15 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 !========================== HltConf v6r3 2010-02-01 ===================
+! 2010-02-01 - Gerhard Raven
+ - add some addition lines to HltInit.py
+
 ! 2010-01-29 - Kim Vervink
  - Changed done by Danielle Tostes (UFRJ - summer student).
  - Added Hlt2 lines to configureHltMonitoring.
