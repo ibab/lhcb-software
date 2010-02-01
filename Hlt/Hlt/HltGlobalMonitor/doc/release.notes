@@ -1,14 +1,15 @@
-!$Id: release.notes,v 1.57 2010-01-29 15:50:01 kvervink Exp $
+!$Id: release.notes,v 1.58 2010-02-01 09:53:08 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+!========================== HltGlobalMonitor v3r0 2010-02-01 ===================
 ! 2010-01-29 - Kim Vervink
  - Changed done by Danielle Tostes (UFRJ - summer student).
  - Added histograms to monitor Hlt2 in the same way as Hlt1 was monitored and 
    structured.
- - Added more Hlt1 histograms, deviding the plot of the accepted events per
+ - Added more Hlt1 histograms, dividing the plot of the accepted events per
    line in several plots according to their corresponding alley.
 
 
