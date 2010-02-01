@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.36 2010-01-29 08:53:41 poluekt Exp $
+!$Id: release.notes,v 1.37 2010-02-01 14:40:56 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-02-01 - Anton Poluektov
+ - Make alorithm name the default outputSelection for bindMembers 
 
 ! 2010-01-29 - Anton Poluektov 
  - Small bugfixes, added SelSequence handler for bindMembers. 

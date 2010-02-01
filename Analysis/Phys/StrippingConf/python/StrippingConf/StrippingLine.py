@@ -111,10 +111,10 @@ class bindMembers (object) :
             if hasattr ( alg , 'OutputLocation' ) :
                 self._outputloc = alg.OutputLocation 
         else :
-            self._outputsel = None
-            self._outputloc = None
-#            self._outputsel = alg.name()
-#            self._outputloc = "Phys/"+alg.name()
+#            self._outputsel = None
+#            self._outputloc = None
+            self._outputsel = alg.name()
+            self._outputloc = "Phys/"+alg.name()
 
     def _default_handler_( self, line, alg ) :
         # if not known, blindly copy -- not much else we can do
