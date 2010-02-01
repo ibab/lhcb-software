@@ -16,7 +16,7 @@ class Physics_MinBiasL0_PassThroughHlt_Jan10 :
         return 'Physics_MinBiasL0_PassThroughHlt_Jan10'
 
     def L0TCK(self) :
-        return "0x1309"
+        return "0x1409"
 
     def ActiveHlt2Lines(self) :
         """
