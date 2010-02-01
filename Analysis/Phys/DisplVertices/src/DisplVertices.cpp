@@ -614,7 +614,7 @@ void DisplVertices::StudyDiffGenMC(){
   HepMC::GenEvent::particle_const_iterator p= theEvent->particles_begin();
   PV = (*p)->end_vertex();
   debug()<<"--------------------------------------------------" << endmsg;
-  debug()<<"Primary Vertex " << PV->position() << endmsg;
+  debug()<<"Primary Vertex " << Print(PV->position()) << endmsg;
 
   //Find the interesting particles
   HepMC::GenEvent::particle_const_iterator pend = theEvent->particles_end();
@@ -623,7 +623,7 @@ void DisplVertices::StudyDiffGenMC(){
     //the prey
     if( (*p)->pdg_id() == 1000022 && (*p)->status() == 2 ){
       HepMC::GenVertex* Vert = (*p)->end_vertex();
-      debug()<<"Position of neut decay "<< Vert->position() << endmsg;
+      debug()<<"Position of neut decay "<< Print(Vert->position()) << endmsg;
       double dist = VertDistance( PV,Vert );
       debug() << "Dist of flight " << dist << endmsg;
       //plot( dist, "GenPreyFlight", 0., 100. );
@@ -632,7 +632,7 @@ void DisplVertices::StudyDiffGenMC(){
     //the chargino
     if( abs((*p)->pdg_id()) == 1000024 && (*p)->status() == 2 ){
       HepMC::GenVertex* Vert = (*p)->end_vertex();
-      debug()<<"Position of charg decay "<< Vert->position() << endmsg;
+      debug()<<"Position of charg decay "<< Print(Vert->position()) << endmsg;
       double dist = VertDistance( PV,Vert );
       debug() << "Dist of flight " << dist << endmsg;
       //plot( dist, "GenChargFlight", 0., 100. );
@@ -2289,7 +2289,7 @@ double DisplVertices::IsitFromaPrey( const MCParticle * p,
 
   if( p->mother() ){
     const MCParticle * mother = p->mother();
-    if( mother->particleID().abspid() == abs(m_PreyPID) ) {
+    if( mother->particleID().abspid() == m_PreyID.abspid() ) {
       SmartRefVector< LHCb::MCVertex >::const_iterator vtx = 
         mother->endVertices().begin();
       if( VertDistance( prod->position(),(*vtx)->position() ) < 0.08 )
