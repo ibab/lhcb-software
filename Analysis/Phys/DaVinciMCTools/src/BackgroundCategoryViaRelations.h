@@ -12,6 +12,10 @@
  *  A tool to read a relations table of Particle->BackgroundCategory and
  *  return the results. Only implements the category method for now.  
  *
+ *  inputTable : give the TES location of the relations table. This should be
+ *               a relations table Particle*->int, created by the algorithm
+ *               Particle2BackgroundCategoryRelationsAlg. 
+ *
  *  @author Vladimir Gligorov
  *  @date   2009-11-27
  */

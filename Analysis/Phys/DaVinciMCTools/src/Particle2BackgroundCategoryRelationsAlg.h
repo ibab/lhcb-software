@@ -12,7 +12,10 @@
  *  
  *  Algorithm which takes as input a TES container of Particles, gets the BackgroundCategory
  *  for each one, and writes a Relations table between these Particles and their
- *  BackgroundCategories to the TES. 
+ *  BackgroundCategories to the TES. The table is Particle*->int. 
+ *
+ *  ParticleLocations : the TES locations of the particles for which the table is to be written.
+ *                      The table is written to ParticleLocations+"/P2BCRelations"
  *
  *  @author V. Gligorov
  *  @date   2009-11-30
