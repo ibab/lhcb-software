@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.81 2009-12-07 22:25:57 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.82 2010-02-01 09:42:07 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -638,11 +638,15 @@ StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track, LHCb
       double tanth  = std::max(sqrt( slope2/(1+slope2)),1e-4) ;
       scatteringMomentum = m_scatteringPt/tanth ;
     }
+    // always allow some scattering
+    scatteringMomentum = std::min( scatteringMomentum, m_maxMomentumForScattering );
+
     // if m_scatteringP is set, use it
     if( m_scatteringP>0 ) scatteringMomentum = m_scatteringP ;
-
-    scatteringMomentum = std::min( scatteringMomentum, m_maxMomentumForScattering );
     fitresult.setPScatter( scatteringMomentum ) ;
+
+
+    if ( m_debugLevel ) debug() << "scattering momentum: " << scatteringMomentum << endreq ;
 
     LHCb::TrackTraj tracktraj( nodes ) ;
     IMaterialLocator::Intersections intersections ;
