@@ -1,6 +1,6 @@
 __author__ = ['Celestino Rodriguez']
 __date__ = '25/01/2010'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 '''
 Bs->Kst0Kst0 selection
@@ -52,13 +52,13 @@ class StrippingBs2KstKstConf(LHCbConfigurableUser):
     def nominall( self ):
         from StrippingConf.StrippingLine import StrippingLine
 	Bs2KstKstSel = self.Bs2KstKst()
-	Bs2KstKstSeq = SelectionSequence("SeqBs2KstKst", TopSelection = Bs2KstKstSel)
+	Bs2KstKstSeq = SelectionSequence("SeqBs2KstKstNominal", TopSelection = Bs2KstKstSel)
 	return StrippingLine('BsKst0Kst0Line', prescale = 1, algos = [Bs2KstKstSeq])   
      	
     def loosel( self ):
         from StrippingConf.StrippingLine import StrippingLine
 	Bs2KstKstSel = self.Bs2KstKstLoose()
-	Bs2KstKstSeq = SelectionSequence("SeqBs2KstKst", TopSelection = Bs2KstKstSel)
+	Bs2KstKstSeq = SelectionSequence("SeqBs2KstKstLoose", TopSelection = Bs2KstKstSel)
 	return StrippingLine('Bs2Kst0Kst0LooseLine', prescale = 1, algos = [Bs2KstKstSeq])   
     def Kstar2Kpi( self ):
         StdNoPIDsKaons = DataOnDemand("StdNoPIDsKaons", "StdNoPIDsKaons")

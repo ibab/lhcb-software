@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-02-01 - Anton Poluektov
+ - Fixed duplicate names of Selections in Kst0Kst0 line
+ - Timing information in tests/TestStripping.C
+
 ! 2010-01-29 - Greig Cowan
  - Removed IPVIPCHI2 cuts from B in Bs2JpsiPhi, Bd2JpsiKstar and Bu2JpsiK
    nominal stripping selections.

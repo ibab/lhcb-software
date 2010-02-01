@@ -2,6 +2,9 @@ void TestStripping(TString filename = "etc.root") {
   gROOT->Reset();
 
   TFile* f = new TFile(filename);
+  TFile* f2 = new TFile("hist.root");
+
+  f->cd();
 
   TTree *tree = gROOT->FindObject("<local>_TagCreator_EventTuple");
   
@@ -40,7 +43,14 @@ void TestStripping(TString filename = "etc.root") {
       lines++;
       tree->Project("h", sel, sel+"==1");
       double num = h.GetEntries();
-      printf("    %2d: Line %32s: %d\n", n, sel.Data(), num);
+  
+      f2->cd(sel);
+      TH1F* th = (TH1F*)gROOT->FindObject(sel+" walltime");
+      double wt = 0;
+      if (th) wt = th->GetMean();
+      f->cd();
+      
+      printf("    %2d: Line %32s: %d %lf\n", n, sel.Data(), num, wt);
     }
   }
 
