@@ -15,6 +15,15 @@ def test_instantiate_tree(selID='0000') :
                      RequiredSelections = [sel00, sel01])
     return sel0
 
+def test_outputLocation() :
+    sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
+    assert sel00.outputLocation() == 'Phys/Sel00'
+    alg0 = DummyAlgorithm('Alg0001')
+    sel0 = Selection('SomeName001', Algorithm = alg0)
+    assert sel0.outputLocation() == 'Phys/SomeName001'
+    sel1 = Selection('SomeName002', OutputBranch = 'HLT2', Algorithm = alg0)
+    assert sel1.outputLocation() == 'HLT2/SomeName002'
+    
 def test_tree_InputLocations_propagated() :
     
     sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
@@ -73,11 +82,11 @@ def test_clone_selection_with_existing_selection_name_raises() :
     
     sel02 = AutomaticData('Sel02', Location = 'Phys/Sel02')
     sel03 = AutomaticData('Sel03', Location = 'Phys/Sel03')
-    alg0 = DummyAlgorithm('Alg003', InputLocations = ['Phys/Sel00', 'Phys/Sel01'])
+    alg0 = DummyAlgorithm('Alg004', InputLocations = ['Phys/Sel00', 'Phys/Sel01'])
     try :
-        sel0 = Selection('Sel003', Algorithm = alg0,
+        sel0 = Selection('Sel004', Algorithm = alg0,
                          RequiredSelections = [sel02, sel03])
-        sel1 = sel0.clone('Sel003', Algorithm = alg0,
+        sel1 = sel0.clone('Sel004', Algorithm = alg0,
                           RequiredSelections = [sel02, sel03])
         assert sel0.alg.InputLocations == ['Phys/Sel00', 'Phys/Sel01']
         assert sel1.alg.InputLocations == ['Phys/Sel02', 'Phys/Sel03']
@@ -105,7 +114,15 @@ def test_clone_selection_with_new_InputLocations() :
     assert selClone.alg.InputLocations.count('Phys/Clone00') ==1
     assert selClone.alg.InputLocations.count('Phys/Clone01') ==1
 
-
+def test_selection_with_name_overlap_doesnt_raise() :
+    sel02 = AutomaticData('Sel02', Location = 'Phys/Sel02')
+    sel03 = AutomaticData('Sel03', Location = 'Phys/Sel03')
+    alg0 = DummyAlgorithm('Alg005',
+                          InputLocations = ['Phys/Sel00', 'Phys/Sel01'])
+    sel0 = Selection('Sel005', Algorithm = alg0)
+    sel1 = Selection('Sel005Loose', Algorithm = alg0)
+    assert sel0.outputLocation() == 'Phys/Sel005'
+    assert sel1.outputLocation() == 'Phys/Sel005Loose'
 
 def test_clone_selection_with_cloned_alg() :
     pass
