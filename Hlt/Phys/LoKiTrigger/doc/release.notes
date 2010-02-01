@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.65 2010-01-25 09:30:10 graven Exp $
+! $Id: release.notes,v 1.66 2010-02-01 10:39:08 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiTrigger v9r8 2010-02-01 ===================
 ! 2010-01-25 - Gerhard Raven
  - migrate LoKi::IHltUnit to HltBase, Hlt::IUnit, update code that uses 
    this interface
