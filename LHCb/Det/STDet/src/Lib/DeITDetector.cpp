@@ -116,6 +116,9 @@ DeITBox* DeITDetector::findBox(const Gaudi::XYZPoint& point){
 
 DeSTBaseElement* DeITDetector::findTopLevelElement(const std::string& nickname){
 
+  // sanity check...
+  if (nickname.find("IT") == std::string::npos) return 0;
+
   const STChannelID chan = ITNames().stringToChannel(nickname);
   if (chan.sector() != 0){
     // its a sector

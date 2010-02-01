@@ -76,6 +76,7 @@ DeSTSector* DeTTDetector::findSector(const Gaudi::XYZPoint& aPoint){
 }
 
 DeSTBaseElement* DeTTDetector::findTopLevelElement(const std::string& nickname){
+  if (nickname.find("TT") == std::string::npos) return 0;
 
   const STChannelID chan = TTNames().stringToChannel(nickname);
   if (chan.sector() != 0){
