@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2ExpressLines.py,v 1.3 2010-01-25 15:44:42 albrecht Exp $
+# $Id: Hlt2ExpressLines.py,v 1.4 2010-02-01 08:24:31 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt2 Lines for the express stream
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Johannes Albrecht albrecht@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -100,6 +100,8 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                              " & (PT>%(ExJPsiPt)d*MeV)"\
                              " & (MINTREE('mu-'==ABSID,PT)>%(ExJPsiMuPt)d*MeV) " %  self.getProps() 
                              , InputLocations  = [ DiMuon ]
+                             , InputPrimaryVertices = "None"
+                             , UseP2PVRelations = False
                              )
       
       line = Hlt2Line('ExpressJPsi'
