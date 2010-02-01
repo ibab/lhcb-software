@@ -9,9 +9,10 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
+#include "Kernel/LHCbID.h"
+
 // forward decls
 namespace LHCb {
-    class LHCbID;
     class Track;
 }
 
@@ -30,52 +31,23 @@ class ITrackHitCollector : virtual public IAlgTool {
 	// Return the interface ID
 	static const InterfaceID& interfaceID() { return IID_ITrackHitCollector; }
 
-	/// collect hits around a track
-	/** collect hits around a track
-	 *
-	 * @param tr    track around which hits are to be collected
-	 * @param ids   vector to hold collected LHCbIDs
-	 * @param collectVelo collect hits in Velo
-	 * @param collectTT collect hits in TT
-	 * @param collectIT collect hits in IT
-	 * @param collectOT collect hits in OT
-	 * @param collectMuon collect hits in Muon
-	 * @return StatusCode::SUCCESS or StatusCode::FAILURE
-	 */
-	virtual StatusCode execute(
-		const LHCb::Track& tr, std::vector<LHCb::LHCbID>& ids,
-		bool collectVelo = true, bool collectTT = true,
-		bool collectIT = true, bool collectOT = true,
-		bool collectMuon = true) = 0;
-
-	/// collect hits around a track
-	/** collect hits around a track
-	 *
-	 * @param tr track around which hits are to be collected
-	 * @param ids vector to hold collected LHCbIDs
-	 * @param resids vector to hold residuals to collected LHCbIDs
-	 * @param collectVelo collect hits in Velo
-	 * @param collectTT collect hits in TT
-	 * @param collectIT collect hits in IT
-	 * @param collectOT collect hits in OT
-	 * @param collectMuon collect hits in Muon
-	 * @return StatusCode::SUCCESS or StatusCode::FAILURE
-	 */
-	virtual StatusCode execute(
-		const LHCb::Track& tr, std::vector<LHCb::LHCbID>& ids,
-		std::vector<double>& resids,
-		bool collectVelo = true, bool collectTT = true,
-		bool collectIT = true, bool collectOT = true,
-		bool collectMuon = true) = 0;
-
+	/// an LHCbID along with residual and error
+	struct IDWithResidual {
+	    double m_res;
+	    double m_reserr;
+	    // m_id is last to avoid gaps in memory layout
+	    LHCb::LHCbID m_id;
+	    /// constructor
+	    IDWithResidual(LHCb::LHCbID id, double res, double reserr) :
+		m_res(res), m_reserr(reserr), m_id(id)
+	    { }
+	};
 
 	/// collect hits around a track
 	/** collect hits around a track
 	 *
 	 * @param tr    track around which hits are to be collected
-	 * @param ids   vector to hold collected LHCbIDs
-	 * @param resids vector to hold residuals to collected LHCbIDs
-	 * @param errests vector to hold error estimates for residuals
+	 * @param ids   vector of IDWithResidual holding collected hits
 	 * @param collectVelo collect hits in Velo
 	 * @param collectTT collect hits in TT
 	 * @param collectIT collect hits in IT
@@ -84,8 +56,7 @@ class ITrackHitCollector : virtual public IAlgTool {
 	 * @return StatusCode::SUCCESS or StatusCode::FAILURE
 	 */
 	virtual StatusCode execute(
-		const LHCb::Track& tr, std::vector<LHCb::LHCbID>& ids,
-		std::vector<double>& resids, std::vector<double>& errests,
+		const LHCb::Track& tr, std::vector<IDWithResidual>& ids,
 		bool collectVelo = true, bool collectTT = true,
 		bool collectIT = true, bool collectOT = true,
 		bool collectMuon = true) = 0;

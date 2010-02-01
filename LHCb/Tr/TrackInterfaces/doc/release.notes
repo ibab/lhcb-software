@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2010-02-01 - Manuel Tobias Schiller
+ - modified ITrackCollector interface to reflect the changes suggested by
+   Wouter during the Tracking and Alignment workshop
+
 ! 2010-01-27 - Manuel Tobias Schiller
  - added ITrackHitCollector interface - an interface for tools collecting hits
    around a track, filling a vector of LHCbIDs on return (and optionally
