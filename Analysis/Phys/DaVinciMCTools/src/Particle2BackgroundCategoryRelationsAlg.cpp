@@ -26,7 +26,7 @@ Particle2BackgroundCategoryRelationsAlg::Particle2BackgroundCategoryRelationsAlg
   m_particleLocations(),
   m_bkg(0)  
 {
-  declareProperty("ParticleLocations", m_particleLocations);
+  declareProperty("InputLocations", m_particleLocations);
 }
 //=============================================================================
 // Destructor
