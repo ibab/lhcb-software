@@ -5,6 +5,19 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v9r0>2010-02-01 HltSys v9r0</A></H1><PRE>
+ - release on LHCb v29r0
+ - HltLine now unified with SelectionLine, HLT now depends on PHYS!
+ - modified L0DU configuration in Hlt. Only one L0DU configuration
+   known at a time, produces an error if L0DU in inputdata does not match
+   the expectations. Added utilities in TCKUtils to update an Hlt 
+   configuration with a new L0DU configuration.
+ - HltAlgorithm now inherits from Hlt::IUnit interface, allows use 
+   of LoKi based Hlt1 filters
+ - Improved monitoring, including Hlt2
+ - Proper Express Lines setup
+
+
 </PRE><H1><A NAME=v8r2>2010-01-11 HltSys v8r2</A></H1><PRE>
  - migrate IHltDataSvc -> Hlt::IDataSvc, HltBase/stringKey -> GaudiKernel/StringKey
  - added functionality in routing bits defintions: can now rate-limit and
