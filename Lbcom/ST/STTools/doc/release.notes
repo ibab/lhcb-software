@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2010-01-02 M Needham
+ - Add STSelectBySN tool 
+
 !=========================== STTools v3r14 2009-11-27 =========================
 ! 2009-11-25 - Mark Tobin
  - Add protection against empty containers in noise tools.
