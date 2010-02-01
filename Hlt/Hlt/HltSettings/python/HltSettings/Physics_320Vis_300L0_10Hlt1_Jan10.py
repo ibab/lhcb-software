@@ -42,57 +42,70 @@ class Physics_320Vis_300L0_10Hlt1_Jan10 :
         from Hlt1Lines.Hlt1VeloLines           import Hlt1VeloLinesConf
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
 
-        return { Hlt1HadronViaTLinesConf : {  'SingleHadronViaT_PTCut' : 4800
-                                         , 'HadViaTMain_PTCut' : 250
-                                         , 'HadViaTCompanion_DZCut' : 1.83
-                                         , 'HadViaTCompanion_PTCut' : 750
-                                         , 'HadViaTCompanion_PointingCut' : 0.39
-                                        }
-		 , Hlt1HadronLinesConf : {  'SingleHadron_PTCut' : 4800
-                                         , 'HadSingle_IPCut' : 0.06
-                                         , 'HadMain_PTCut' : 250
-                                         , 'HadCompanion_DZCut' : 1.83
-                                         , 'HadDi_IPCut' : 0.05
-                                         , 'HadCompanion_PTCut' : 750
-                                         , 'HadCompanion_PointingCut' : 0.39
-                                        }
-                 , Hlt1PhotonLinesConf : { 'Pho_EtCut'         : 2800.0
-                                          , 'Pho_IsPho'        : -0.082 
-                                          , 'Track_IPCut'      : 0.15
-                                          , 'Track_PtCut'      : 1250.
-                                          , 'DiTrack_PtCut'    : 650
-                                          }
-                 , Hlt1ElectronLinesConf : { 'EleIP_PtCut'             : 2820.0
-                                            , 'EleIP_IPCut'            : 0.13 
-                                            , 'EleIPCompanion_PtCut'   : 2750
-                                            , 'EleCompanion_PtCut'     : 1000
-                                            }
-                 , Hlt1MuonLinesConf : {  'DiMuon_SumPtCut' : 120.0
-                                      , 'Muon_PtCut' : 1000
-                                      , 'MuonIP_PtCut' : 1000
-                                      , 'Muon_IPMinCut' : 0.05
-                                      , 'DiMuon_DOCACut' : 1.0
-                                      , 'DiMuon_MassCut' : 2500
-                                      , 'DiMuonIP_MassCut' : 300
-                                      , 'DiMuon_IPCut' : 0.08
-                                      , 'Prescale' : { 'Hlt1MuTrack4JPsi' : 0. }
-                                      , 'MuTrackMuPt' : 500
-                                      , 'MuTrackMuIP' : 0.07
-                                      , 'MuTrackTrPt' : 550
-                                      , 'MuTrackTrIP' : 0.1
-                                      , 'MuTrackDoca' : 0.2
-                                      , 'MuTrackDZ' : 2.0
-                                      , 'MuTrackDimuMass' : 1000
-                                      , 'MuTrackPoint' : 0.4
-                                      , 'MuTrackTrChi2' : 10
-                                      }
-                 , Hlt1ExpressLinesConf : {  'Prescale' : { '.*' : .000015  } }
-                 , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 1.
-                                                               , 'Hlt2Forward'      : 0. # first needs a check that /Hlt/Track/Long actually exists..
-                                                               , 'Hlt2DebugEvent'   : 0.0001
-                                                }              }
+        return { Hlt1HadronViaTLinesConf : { 'SingleHadronViaT_PTCut'       : 1400
+                                           , 'HadViaTMain_PTCut'            : 1250
+                                           , 'HadViaTCompanion_DZCut'       :    1.50
+                                           , 'HadViaTCompanion_PTCut'       :  750
+                                           , 'HadViaTCompanion_PointingCut' :    0.5
+                                           }
+               , Hlt1HadronLinesConf :     { 'SingleHadron_PTCut'           : 1400
+                                           , 'HadSingle_IPCut'              :    0.14
+                                           , 'HadMain_PTCut'                : 1250
+                                           , 'HadCompanion_DZCut'           :    1.50
+                                           , 'HadDi_IPCut'                  :    0.07
+                                           , 'HadCompanion_PTCut'           :  750
+                                           , 'HadCompanion_PointingCut'     :    0.5
+                                           , 'HadMain_TrackFitChi2Cut'      :  999.
+                                           }
+               , Hlt1PhotonLinesConf :     { 'Pho_EtCut'                    : 2800.0
+                                           , 'Pho_IsPho'                    :   -0.1
+                                           , 'Track_IPCut'                  :    0.16
+                                           , 'Track_PtCut'                  :  900
+                                           , 'DiTrack_PtCut'                :  200
+                                           }
+               , Hlt1ElectronLinesConf :   { 'Ele_EtCut'                    :  560.0
+                                           , 'EleIP_PtCut'                  : 1250
+                                           , 'EleIP_IPCut'                  :    0.11
+                                           , 'EleIPCompanion_PtCut'         : 2550
+                                           , 'EleCompanion_PtCut'           : 4300.
+                                           }
+               , Hlt1MuonLinesConf :       { 'DiMuon_SumPtCut'              :  400.0
+                                           , 'Muon_PtCut'                   : 1300
+                                           , 'MuonIP_PtCut'                 :  750
+                                           , 'Muon_IPMinCut'                :    0.08
+                                           , 'DiMuon_DOCACut'               :    1.90
+                                           , 'DiMuon_MassCut'               : 2500
+                                           , 'DiMuonIP_MassCut'             :  800
+                                           , 'DiMuon_IPCut'                 :    0.00
+                                           , 'Muon_FitChiCut'               :  999.
+                                           , 'Muon_FitMuChi2Cut'            :  999.
+                                           , 'MuTrackMuPt'                  :  750
+                                           , 'MuTrackMuIP'                  :    0.03
+                                           , 'MuTrackTrPt'                  :  700
+                                           , 'MuTrackTrIP'                  :    0.07
+                                           , 'MuTrackDoca'                  :    0.2
+                                           , 'MuTrackDZ'                    :    2.0
+                                           , 'MuTrackDimuMass'              : 1000
+                                           , 'MuTrackPoint'                 :    0.4
+                                           , 'MuTrackTrChi2'                :  999.
+                                           , 'MuTrackMuChi2'                :  999.
+                                           , 'MuTrackMuPt4JPsi'             : 1900
+                                           , 'MuTrackTrPt4JPsi'             :  400
+                                           , 'MuTrackDoca4JPsi'             :    1.0
+                                           , 'MuTrackAngle4JPsiLow'         :    0.0 
+                                           , 'MuTrackAngle4JPsiHigh'        :    0.5
+                                           , 'MuTrackDimuMass4JPsiLow'      : 3000
+                                           , 'MuTrackDimuMass4JPsiHigh'     : 3900
+                                           , 'MuTrackMuChi24JPsi'           :  999.
+                                           , 'MuTrackTrChi24JPsi'           :  999.
+                                           }
+               , Hlt1ExpressLinesConf : {  'Prescale' : { '.*' : .000015  } }
+               , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 1.
+                                                             , 'Hlt2Forward'      : 0. # first needs a check that /Hlt/Track/Long actually exists..
+                                                             , 'Hlt2DebugEvent'   : 0.0001
+                                              }              }
 
-                 }
+               }
     
     def ActiveHlt2Lines(self) :
         """
