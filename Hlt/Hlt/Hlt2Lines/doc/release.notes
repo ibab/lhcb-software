@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.105 2010-02-01 09:46:12 graven Exp $
+$Id: release.notes,v 1.106 2010-02-01 15:59:23 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,9 @@ $Id: release.notes,v 1.105 2010-02-01 09:46:12 graven Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+! 2010-01-25 - Johannes Albrecht
+ - Hlt2ExpressLines.py: Update selections
+
 !========================== Hlt2Lines v2r3 2010-02-01 ===================
 ! 2010-02-01 - Gerhard Raven
  - Hlt2ExpressLines.py: explicitly kill useless PV messages
