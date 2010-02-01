@@ -4,6 +4,12 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2010-02-01 - Michael Alexander
+ - VeloIPResolutionMonitor:
+  - Added filtering of beam-gas events by default
+  - Changes to histo titles
+  - Added IP errors to ntupling
+
 !======================= VeloRecMonitors v2r5 2009-12-10 =====================
 ! 2009-12-09 - Michael Alexander
  - VeloIPResolutionMonitor: modified fitting options for output profiles

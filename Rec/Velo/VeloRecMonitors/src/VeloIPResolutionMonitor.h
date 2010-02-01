@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.h,v 1.6 2009-12-09 17:45:27 malexand Exp $
+// $Id: VeloIPResolutionMonitor.h,v 1.7 2010-02-01 14:59:29 malexand Exp $
 #ifndef VELORECMONITORS_VELOIPRESOLUTIONMONITOR_H 
 #define VELORECMONITORS_VELOIPRESOLUTIONMONITOR_H 1
 
@@ -11,6 +11,8 @@
 #include "TrackInterfaces/ITrackVertexer.h"
 #include "TrackInterfaces/ITrackFitter.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
+
+#include <Event/RecVertex.h>
 
 #include <TH1D.h>
 #include <TProfile.h>
@@ -42,9 +44,14 @@ namespace Velo
     virtual StatusCode execute   ();    ///< Algorithm execution
     virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-    StatusCode fillHistos(Gaudi::XYZVector, Gaudi::XYZVector, double);
+    StatusCode calculateIPs( const LHCb::RecVertex*, const LHCb::Track*, double&, double&, double&, double&, double&, double& );
+    StatusCode distance( const LHCb::RecVertex*, LHCb::State&, double&, double&, int );
 
-    StatusCode plotInBin(Gaudi::XYZVector, Gaudi::XYZVector, int );
+    StatusCode fillHistos(double&, double&, double&, double&);
+
+    StatusCode plotInBin(double&, double&, double&, int& );
+
+    bool filterBeamGas( const LHCb::RecVertices* & );
 
     StatusCode plotRMS( std::vector< TH1D* >, TH1D* );
     StatusCode fitGaussAndPlotWidth( std::vector< TH1D* >, TH1D* );
@@ -53,19 +60,27 @@ namespace Velo
     StatusCode plotMean( std::vector< TH1D* >, TH1D* );
     StatusCode fit2DGausAndPlotMean( std::vector< TH1D* >, TH1D* );
     StatusCode fitDbl2DGausAndPlotMean( std::vector< TH1D* >, TH1D* );
-    StatusCode fitLandauAndPlotMPV( std::vector< TH1D* >, TH1D* );    
+    StatusCode fitLandauAndPlotMPV( std::vector< TH1D* >, TH1D* );
 
   protected:
 
   private:
 
+    const LHCb::RecVertex* m_pv;
+    const LHCb::Track* m_track;
+
     bool m_requireL0;
+    bool m_filterBeamGas;
+    bool m_useBeamGas;
+    bool m_useCollisions;
 
     bool m_useLogScale;
+    bool m_statOverflows;
     std::vector<double> m_bins;
     double m_InversePTMin;
     double m_InversePTMax;
     int m_nBins;
+    unsigned int m_minPVnTracks;
 
     bool m_saveUnderlyingHistos;
     float m_limitIntercept1D;
@@ -99,6 +114,9 @@ namespace Velo
   
     ITrackExtrapolator* m_trackExtrapolator;
     ToolHandle<ITrackVertexer> m_vertexer;
+    IMeasurementProvider* m_measurementProvider;
+    bool m_loadMeasurements;
+    ITrackFitter* m_trackFitter;
   
     Tuple m_tuple;
     bool m_writeTuple;
