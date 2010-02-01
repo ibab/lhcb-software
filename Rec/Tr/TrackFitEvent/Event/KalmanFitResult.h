@@ -55,7 +55,7 @@ namespace LHCb
       return m_chi2Velo ;
     }
     
-    // return (chisq,dof) for the segment downstream of the magnet
+    // return (chisq,dof) for the segment downstream of the magnet (T + Muon)
     const ChiSquare& chi2Downstream() const {
       if(  m_chi2.nDoF() <= 0 ) computeChiSquares() ;
       return m_chi2MuonT ;
@@ -73,6 +73,24 @@ namespace LHCb
       return m_chi2 - m_chi2VeloTT - m_chi2MuonT ;
     }
     
+    // return (chisq,dof) for the velo-TT-T segment, so everything excluding muon
+    const ChiSquare& chi2Long() const {
+      if(  m_chi2.nDoF() <= 0 ) computeChiSquares() ;
+      return m_chi2VeloTTT ;
+    }
+    
+    // return (chisq,dof) for the muon segment
+    const ChiSquare& chi2Muon() const {
+      if(  m_chi2.nDoF() <= 0 ) computeChiSquares() ;
+      return m_chi2Muon ;
+    }
+    
+    // return (chisq,dof) for the muon - T match
+    ChiSquare chi2MuonTMatch() const {
+      if(  m_chi2.nDoF() <= 0 ) computeChiSquares() ;
+      return m_chi2 - m_chi2VeloTTT - m_chi2Muon ;
+    }
+
   private:
     void computeChiSquares() const ;
     
@@ -82,7 +100,9 @@ namespace LHCb
     mutable ChiSquare m_chi2 ;
     mutable ChiSquare m_chi2Velo ;
     mutable ChiSquare m_chi2VeloTT ;
+    mutable ChiSquare m_chi2VeloTTT ;
     mutable ChiSquare m_chi2MuonT ;
+    mutable ChiSquare m_chi2Muon ;
   } ;  
 }
 

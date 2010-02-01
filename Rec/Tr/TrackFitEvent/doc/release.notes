@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2010-02-01 Wouter Hulsbergen
+ - added muon chisquare to KalmanFitResult
+
 !========================== TrackFitEvent v4r3 2009-12-11 ====================
 ! 2009-12-07 Wouter Hulsbergen
  - removed default constructors for measurement classes

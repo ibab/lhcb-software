@@ -48,10 +48,11 @@ namespace LHCb
     
   
     // Compute the chisquare integrals for forward and backward
-    double chisqMuonT[2]    = {0,0} ;
+    double chisqMuon[2]    = {0,0} ;
+    double chisqT[2]    = {0,0} ;
     double chisqTT[2]   = {0,0} ;
     double chisqVelo[2] = {0,0} ;
-    int    nhitsMuonT(0), nhitsTT(0), nhitsVelo(0) ; 
+    int    nhitsMuon(0), nhitsT(0), nhitsTT(0), nhitsVelo(0) ; 
     BOOST_FOREACH( const LHCb::Node* node, nodes() ) {
       if( node->type() == LHCb::Node::HitOnTrack ) {
 	const LHCb::FitNode* fitnode = dynamic_cast<const LHCb::FitNode*>(node) ;
@@ -70,13 +71,17 @@ namespace LHCb
 	  chisqTT[1] += fitnode->deltaChi2Backward() ;
 	  ++nhitsTT ;
 	  break;
-	case Measurement::Muon:
 	case Measurement::OT:
 	case Measurement::IT:
 	case Measurement::ITLite:
-	  chisqMuonT[0] += fitnode->deltaChi2Forward() ;
-	  chisqMuonT[1] += fitnode->deltaChi2Backward() ;
-	  ++nhitsMuonT ;
+	  chisqT[0] += fitnode->deltaChi2Forward() ;
+	  chisqT[1] += fitnode->deltaChi2Backward() ;
+	  ++nhitsT ;
+	  break;
+	case Measurement::Muon:
+	  chisqMuon[0] += fitnode->deltaChi2Forward() ;
+	  chisqMuon[1] += fitnode->deltaChi2Backward() ;
+	  ++nhitsMuon ;
 	  break;
 	case Measurement::Unknown:
 	  break ;
@@ -87,14 +92,20 @@ namespace LHCb
     bool upstream = nodes().front()->z() > nodes().back()->z() ;
     int nPar = nTrackParameters() ;
     
-    m_chi2MuonT  = nhitsMuonT > 0 ?
-      ChiSquare(upstream ? chisqMuonT[0] : chisqMuonT[1],nhitsMuonT - nPar) : ChiSquare() ;
+    m_chi2Muon  = nhitsMuon > 0 ?
+      ChiSquare(upstream ? chisqMuon[0] : chisqMuon[1],nhitsMuon - nPar) : ChiSquare() ;
+    m_chi2MuonT  = (nhitsT + nhitsMuon) > 0 ?
+      ChiSquare(upstream ? (chisqT[0]+ chisqMuon[0]) : (chisqT[1] +chisqMuon[0]),
+		nhitsT + nhitsMuon - nPar) : ChiSquare() ;
     m_chi2Velo   = nhitsVelo > 0 ?
       ChiSquare(upstream ? chisqVelo[1] : chisqVelo[0],nhitsVelo - nPar) : ChiSquare() ;
     m_chi2VeloTT = nhitsVelo + nhitsTT >0 ?
       ChiSquare(upstream ? chisqVelo[1] + chisqTT[1] : chisqVelo[0] + chisqTT[0],
 		nhitsVelo + nhitsTT - nPar ) : ChiSquare() ;
-    m_chi2 = ChiSquare( std::max( chisqMuonT[0]+chisqTT[0]+chisqVelo[0], chisqMuonT[1]+chisqTT[1]+chisqVelo[1] ),
-			nhitsMuonT + nhitsVelo + nhitsTT - nPar) ;
+    m_chi2VeloTTT = (nhitsVelo + nhitsTT + nhitsT) >0 ?
+      ChiSquare(upstream ? chisqVelo[1] + chisqTT[1] + chisqT[1] : chisqVelo[0] + chisqTT[0] + chisqT[0],
+		nhitsVelo + nhitsTT + nhitsT - nPar ) : ChiSquare() ;
+    m_chi2 = ChiSquare( std::max( chisqMuon[0] + chisqT[0]+chisqTT[0]+chisqVelo[0], chisqMuon[1]+chisqT[1]+chisqTT[1]+chisqVelo[1] ),
+			nhitsMuon+ nhitsT + nhitsVelo + nhitsTT - nPar) ;
   }
 }
