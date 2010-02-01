@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.4 2010-01-07 08:19:34 panmanj Exp $
+!$Id: release.notes,v 1.5 2010-02-01 11:44:17 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! 2010-02-01 - Juan Palacios
+ - MicroDSTWriter, SelDSTWriter
+   .Remove 'WriteFSR' slot. Should come from BaseDSTWriter.
 
 ! 2009-12-29 - Jaap Panman
  - BaseDSTWriter.py, MicroDSTWriter.py, SelDSTWriter.py: copy FSR by default
