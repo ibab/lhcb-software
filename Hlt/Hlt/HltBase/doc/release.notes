@@ -4,6 +4,7 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================== HltBase v8r1 2010-02-01 ===================
 ! 2010-01-31 - Gerhard Raven
  - HltAlgorithm: restart request goes from always() to info()
 
