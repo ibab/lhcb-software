@@ -4,6 +4,7 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================== HltSettings v1r7 2010-02-01 ===================
 ! 2010-01-31 - Gerhard Raven
  - put Physics_320Vis_300L0_10Hlt1_Jan10 on top of L0 0x1409 instead
    of 0xFF68, update the list of Hlt1L0...  lines
