@@ -1,4 +1,4 @@
-// $Id: TrackHitCollector.cpp,v 1.1 2010-01-27 18:46:43 mschille Exp $
+// $Id: TrackHitCollector.cpp,v 1.2 2010-02-01 15:55:31 mschille Exp $
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 
@@ -20,6 +20,9 @@
 #include "Kernel/LHCbID.h"
 #include "Event/State.h"
 #include "Event/Track.h"
+#include "Event/Measurement.h"
+#include "Event/Node.h"
+#include "Event/FitNode.h"
 #include "PatKernel/PatForwardHit.h"
 #include "PatKernel/PatTTHit.h"
 #include "TfKernel/TStationHitManager.h"
@@ -128,54 +131,19 @@ StatusCode TrackHitCollector::finalize()
 }
 
 StatusCode TrackHitCollector::execute(
-	const LHCb::Track& tr, std::vector<LHCb::LHCbID>& ids,
-	bool collectVelo, bool collectTT, bool collectIT,
-	bool collectOT, bool collectMuon)
-{
-    return execute(tr, &ids, 0, 0, 
-	    collectVelo, collectTT, collectIT,
-	    collectOT, collectMuon);
-}
-
-StatusCode TrackHitCollector::execute(
-	const LHCb::Track& tr, std::vector<LHCb::LHCbID>& ids,
-	std::vector<double>& resids,
-	bool collectVelo, bool collectTT, bool collectIT,
-	bool collectOT, bool collectMuon)
-{
-    return execute(tr, &ids, &resids, 0,
-	    collectVelo, collectTT, collectIT,
-	    collectOT, collectMuon);
-}
-
-StatusCode TrackHitCollector::execute(
-	const LHCb::Track& tr, std::vector<LHCb::LHCbID>& ids,
-	std::vector<double>& resids, std::vector<double>& errests,
-	bool collectVelo, bool collectTT, bool collectIT,
-	bool collectOT, bool collectMuon)
-{
-    return execute(tr, &ids, &resids, &errests,
-	    collectVelo, collectTT, collectIT,
-	    collectOT, collectMuon);
-}
-
-StatusCode TrackHitCollector::execute(
-	const LHCb::Track& tr, std::vector<LHCb::LHCbID>* ids,
-	std::vector<double>* resids, std::vector<double>* errests,
+	const LHCb::Track& tr, std::vector<IDWithResidual>& ids,
 	bool collectVelo, bool collectTT, bool collectIT,
 	bool collectOT, bool collectMuon)
 {
     try {
 	LHCb::TrackTraj ttraj(tr);
 	// reserve ample space for collected hits
-	if (ids) ids->reserve(3 * tr.lhcbIDs().size());
-	if (resids) resids->reserve(3 *tr.lhcbIDs().size());
-	if (errests) errests->reserve(3 *tr.lhcbIDs().size());
+	ids.reserve(3 * tr.lhcbIDs().size());
 	if (collectVelo) {
 	    this->collectVeloHits<HitManVeloR>(
-		    m_hitManagerVeloR, ttraj, ids, resids, errests);
+		    m_hitManagerVeloR, ttraj, ids);
 	    this->collectVeloHits<HitManVeloPhi>(
-		    m_hitManagerVeloPhi, ttraj, ids, resids, errests);
+		    m_hitManagerVeloPhi, ttraj, ids);
 	}
 	if (collectTT)
 	    collectLineHits<HitManTT,
@@ -184,7 +152,7 @@ StatusCode TrackHitCollector::execute(
 		Tf::RegionID::TTIndex::kMinStation,
 		Tf::RegionID::TTIndex::kMaxStation,
 		Tf::RegionID::TTIndex::MinLayer,
-		Tf::RegionID::TTIndex::kMaxLayer>(m_hitManagerTT, ttraj, ids, resids, errests);
+		Tf::RegionID::TTIndex::kMaxLayer>(m_hitManagerTT, ttraj, ids);
 	if (collectOT)
 	    collectLineHits<HitManT,
 		Tf::RegionID::OTIndex::kMinRegion,
@@ -192,7 +160,7 @@ StatusCode TrackHitCollector::execute(
 		Tf::RegionID::OTIndex::kMinStation,
 		Tf::RegionID::OTIndex::kMaxStation,
 		Tf::RegionID::OTIndex::kMinLayer,
-		Tf::RegionID::OTIndex::kMaxLayer>(m_hitManagerT, ttraj, ids, resids, errests);
+		Tf::RegionID::OTIndex::kMaxLayer>(m_hitManagerT, ttraj, ids);
 	if (collectIT)
 	    collectLineHits<HitManT,
 		Tf::RegionID::OTIndex::kNRegions + Tf::RegionID::ITIndex::kMinRegion,
@@ -200,7 +168,7 @@ StatusCode TrackHitCollector::execute(
 		Tf::RegionID::OTIndex::kMinStation,
 		Tf::RegionID::OTIndex::kMaxStation,
 		Tf::RegionID::OTIndex::kMinLayer,
-		Tf::RegionID::OTIndex::kMaxLayer>(m_hitManagerT, ttraj, ids, resids, errests);
+		Tf::RegionID::OTIndex::kMaxLayer>(m_hitManagerT, ttraj, ids);
 	if (collectMuon) {
 	    ; // not implemented yet
 	}
@@ -208,6 +176,7 @@ StatusCode TrackHitCollector::execute(
 	info() << f.what() << endreq;
 	return StatusCode::FAILURE;
     }
+    updateWithProperResiduals(ids, tr);
     return StatusCode::SUCCESS;
 }
 
@@ -216,8 +185,7 @@ template<typename HITMANAGER,
     unsigned staMin, unsigned staMax,
     unsigned layMin, unsigned layMax>
 void TrackHitCollector::collectLineHits(HITMANAGER* hitman,
-	const LHCb::TrackTraj& ttraj, std::vector<LHCb::LHCbID>* ids,
-	std::vector<double>* resids, std::vector<double>* errests) const
+	const LHCb::TrackTraj& ttraj, std::vector<IDWithResidual>& ids) const
 {
     typedef typename HITMANAGER::Hits::value_type HITP;
     typedef typename boost::remove_pointer<HITP>::type HIT;
@@ -253,9 +221,7 @@ void TrackHitCollector::collectLineHits(HITMANAGER* hitman,
 		    if (!lhit.isYCompatible(st.y(), ytrerr + m_tolY)) continue;
 		    double resid, err;
 		    if (!computeResidAndErr(hit, ttraj, st, resid, err)) continue;
-		    if (ids) ids->push_back(lhit.lhcbID());
-		    if (resids) resids->push_back(resid);
-		    if (errests) errests->push_back(err);
+		    ids.push_back(IDWithResidual(lhit.lhcbID(), resid, err));
 		}
 	    }
 	}
@@ -464,8 +430,7 @@ std::pair<double, double> TrackHitCollector::selectVeloCoordinates(
 
 template<typename HITMANAGER>
 void TrackHitCollector::collectVeloHits(HITMANAGER* hitman,
-	const LHCb::TrackTraj& ttraj, std::vector<LHCb::LHCbID>* ids,
-	std::vector<double>* resids, std::vector<double>* errests) const
+	const LHCb::TrackTraj& ttraj, std::vector<IDWithResidual>& ids) const
 {
     using namespace TrackHitCollectorHelpers;
     hitman->prepareHits();
@@ -516,11 +481,40 @@ void TrackHitCollector::collectVeloHits(HITMANAGER* hitman,
 			    hit, sensor->trajectory(hit->channelID(), 0.),
 			    ttraj, p, sensor, trerr2, trerrphi2 * r2, resid, err))
 		    continue;
-		if (ids) ids->push_back(LHCb::LHCbID(hit->channelID()));
-		if (resids) resids->push_back(resid);
-		if (errests) errests->push_back(err);
-
+		ids.push_back(
+			IDWithResidual(LHCb::LHCbID(hit->channelID()), resid, err));
 	    }
+	}
+    }
+}
+
+void TrackHitCollector::updateWithProperResiduals(
+	std::vector<IDWithResidual>& ids, const LHCb::Track& tr) const
+{
+    if (ids.empty()) return;
+    typedef LHCb::Track::ConstNodeRange Nodes;
+    Nodes nodes(tr.nodes());
+    if (nodes.begin() == nodes.end()) return;
+    BOOST_FOREACH(IDWithResidual& idwr, ids) {
+	/// check if we have a node for given LHCbID
+	Nodes::const_iterator nit = nodes.begin(), nend = nodes.end();
+	for (; nit != nend; ++nit) {
+	    // only consider hits on track or outliers
+	    if (LHCb::Node::HitOnTrack != (*nit)->type() &&
+		    LHCb::Node::Outlier != (*nit)->type())
+		continue;
+	    if ((*nit)->measurement().lhcbID() == idwr.m_id) break;
+	}
+	// if not, we're done
+	if (nit == nend) continue;
+	const LHCb::Node* np = *nit;
+	if (np->type() == LHCb::Node::HitOnTrack) {
+	    const LHCb::FitNode* fnp = reinterpret_cast<const LHCb::FitNode*>(np);
+	    idwr.m_res = fnp->unbiasedResidual();
+	    idwr.m_reserr = fnp->errUnbiasedResidual();
+	} else {
+	    idwr.m_res = np->residual();
+	    idwr.m_reserr = np->errResidual();
 	}
     }
 }

@@ -1,4 +1,4 @@
-// $Id: TrackHitCollector.h,v 1.1 2010-01-27 18:46:43 mschille Exp $
+// $Id: TrackHitCollector.h,v 1.2 2010-02-01 15:55:31 mschille Exp $
 #ifndef INCLUDE_TRACKHITCOLLECTOR_H
 #define INCLUDE_TRACKHITCOLLECTOR_H 1
 
@@ -12,7 +12,6 @@
 #include "TrackInterfaces/ITrackHitCollector.h"
 
 namespace LHCb {
-    class LHCbID;
     class Track;
     class TrackTraj;
     class Trajectory;
@@ -68,7 +67,7 @@ class TrackHitCollector : public GaudiTool, virtual public ITrackHitCollector
 	/** collect hits around a track
 	 *
 	 * @param tr	track around which hits are to be collected
-	 * @param ids	vector to hold collected LHCbIDs
+	 * @param ids	vector to hold collected hits with residuals
 	 * @param collectVelo collect hits in Velo
 	 * @param collectTT collect hits in TT
 	 * @param collectIT collect hits in IT
@@ -77,46 +76,7 @@ class TrackHitCollector : public GaudiTool, virtual public ITrackHitCollector
 	 * @return StatusCode::SUCCESS or StatusCode::FAILURE
 	 */
 	virtual StatusCode execute(
-		const LHCb::Track& tr, std::vector<LHCb::LHCbID>& ids,
-		bool collectVelo = true, bool collectTT = true,
-		bool collectIT = true, bool collectOT = true,
-		bool collectMuon = true);
-	/// collect hits around a track
-	/** collect hits around a track
-	 *
-	 * @param tr track around which hits are to be collected
-	 * @param ids vector to hold collected LHCbIDs
-	 * @param resids vector to hold residuals to collected LHCbIDs
-	 * @param collectVelo collect hits in Velo
-	 * @param collectTT collect hits in TT
-	 * @param collectIT collect hits in IT
-	 * @param collectOT collect hits in OT
-	 * @param collectMuon collect hits in Muon
-	 * @return StatusCode::SUCCESS or StatusCode::FAILURE
-	 */
-	virtual StatusCode execute(
-		const LHCb::Track& tr, std::vector<LHCb::LHCbID>& ids,
-		std::vector<double>& resids,
-		bool collectVelo = true, bool collectTT = true,
-		bool collectIT = true, bool collectOT = true,
-		bool collectMuon = true);
-	/// collect hits around a track
-	/** collect hits around a track
-	 *
-	 * @param tr	track around which hits are to be collected
-	 * @param ids	vector to hold collected LHCbIDs
-	 * @param resids vector to hold residuals to collected LHCbIDs
-	 * @param errests vector to hold error estimates for residuals
-	 * @param collectVelo collect hits in Velo
-	 * @param collectTT collect hits in TT
-	 * @param collectIT collect hits in IT
-	 * @param collectOT collect hits in OT
-	 * @param collectMuon collect hits in Muon
-	 * @return StatusCode::SUCCESS or StatusCode::FAILURE
-	 */
-	virtual StatusCode execute(
-		const LHCb::Track& tr, std::vector<LHCb::LHCbID>& ids,
-		std::vector<double>& resids, std::vector<double>& errests,
+		const LHCb::Track& tr, std::vector<IDWithResidual>& ids,
 		bool collectVelo = true, bool collectTT = true,
 		bool collectIT = true, bool collectOT = true,
 		bool collectMuon = true);
@@ -143,14 +103,6 @@ class TrackHitCollector : public GaudiTool, virtual public ITrackHitCollector
 	double m_maxDistTT; ///< max. final dist. hit-track in TT
 	double m_maxDistVelo; ///< max. final dist. hit-track in Velo
 	
-	/// implementation of execute above with generic interface
-	StatusCode execute(
-		const LHCb::Track& tr, std::vector<LHCb::LHCbID>* ids = 0,
-		std::vector<double>* resids = 0, std::vector<double>* errests = 0,
-		bool collectVelo = true, bool collectTT = true,
-		bool collectIT = true, bool collectOT = true,
-		bool collectMuon = true);
-
 	/// collect line hits as used in IT, TT and OT
 	template<typename HITMANAGER,
 	    unsigned regMin, unsigned regMax,
@@ -158,9 +110,7 @@ class TrackHitCollector : public GaudiTool, virtual public ITrackHitCollector
 	    unsigned layMin, unsigned layMax>
 	void collectLineHits(HITMANAGER* hitman,
 		const LHCb::TrackTraj& ttraj,
-		std::vector<LHCb::LHCbID>* ids,
-		std::vector<double>* resids,
-		std::vector<double>* errests) const;
+		std::vector<IDWithResidual>& ids) const;
 
 	/// compute residual between track and hit, return true if small enough
 	bool computeResidAndErr(
@@ -211,9 +161,12 @@ class TrackHitCollector : public GaudiTool, virtual public ITrackHitCollector
 	template<typename HITMANAGER>
 	void collectVeloHits(HITMANAGER* hitman,
 		const LHCb::TrackTraj& ttraj,
-		std::vector<LHCb::LHCbID>* ids,
-		std::vector<double>* resids,
-		std::vector<double>* errests) const;
+		std::vector<IDWithResidual>& ids) const;
+
+	/// update list with proper unbiased residuals (if available)
+	void updateWithProperResiduals(
+		std::vector<IDWithResidual>& ids,
+		const LHCb::Track& tr) const;
 };
 #endif // INCLUDE_TRACKHITCOLLECTOR_H
 

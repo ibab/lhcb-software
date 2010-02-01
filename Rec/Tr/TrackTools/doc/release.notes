@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 
+! 2010-02-01 - Manuel Tobias Schiller
+ - modified TrackHitCollector to include suggestions from Tracking workshop:
+   unbiased residuals from fitter (where available), saner interface
+
 ! 2010-01-27 - Manuel Tobias Schiller
  - added TrackHitCollector, a tool which collects hits around a track,
    returning a vector with LHCbIDs (and optionally residuals)
