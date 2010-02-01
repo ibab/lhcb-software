@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v5r17 2010-02-01 ===================
 ! 2010-01-31 - Gerhard Raven
  - support AlgTools in PropertyConfigSvc
  - HltConfigSvc: throw exception if reconfigure fails.
