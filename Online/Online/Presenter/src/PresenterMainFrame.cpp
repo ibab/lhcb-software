@@ -79,6 +79,9 @@
 #include "../icons/presenter32.xpm"
 #include "icons.h"
 
+#include "Elog.h"
+#include "ElogDialog.h"
+
 using namespace pres;
 using namespace std;
 PresenterMainFrame* gPresenter = 0;
@@ -243,10 +246,6 @@ PresenterMainFrame::~PresenterMainFrame()
   if (0 != m_archive) { delete m_archive; m_archive = NULL; }
   
   
-  std::vector<std::string*>::iterator pageString;
-  for (pageString = m_loadedPagesHistory.begin();pageString != m_loadedPagesHistory.end(); ++pageString) 
-    delete *pageString; 
-    
   std::vector<std::string*>::iterator dbString;
   for (dbString = m_knownDatabases.begin();dbString != m_knownDatabases.end(); ++dbString) 
     delete *dbString;
@@ -985,9 +984,9 @@ void PresenterMainFrame::buildGUI()
                          new TGLayoutHints(kLHintsLeft | kLHintsTop |
                                            kLHintsExpandX | kLHintsExpandY,
                                            0, 0, 0, 0));
-    int partsTop[] = {75, 25};
+    int partsTop[] = {25, 50, 25};
     m_statusBarTop = new TGStatusBar(centralPageFrame, 50, 10, kVerticalFrame);
-    m_statusBarTop->SetParts(partsTop, 2);
+    m_statusBarTop->SetParts(partsTop, 3);
     m_statusBarTop->Draw3DCorner(false);
     centralPageFrame->AddFrame(m_statusBarTop, new TGLayoutHints(kLHintsTop |
                                                                  kLHintsExpandX,
@@ -1553,7 +1552,7 @@ void PresenterMainFrame::handleCommand(Command cmd)
       m_nextIntervalButton->SetState(kButtonUp);
 //      m_currentPageName = selectedPageFromDbTree();
       if (!m_currentPageName.empty() && (false == m_loadingPage)) {
-        loadSelectedPageFromDB(m_currentPageName, global_timePoint, global_pastDuration, false);
+        loadSelectedPageFromDB(m_currentPageName, global_timePoint, global_pastDuration);
       }
       break;
     case LOAD_NEXT_PAGE_COMMAND:
@@ -1570,7 +1569,7 @@ void PresenterMainFrame::handleCommand(Command cmd)
       m_nextIntervalButton->SetState(kButtonDisabled);
       m_currentPageName = selectedPageFromDbTree();
       if (!m_currentPageName.empty() && (false == m_loadingPage)) {
-        loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName, s_previousPageToHistory);
+        loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName);
       }
     }
       break;
@@ -1596,7 +1595,7 @@ void PresenterMainFrame::handleCommand(Command cmd)
             m_currentPageName = selectedPageFromDbTree();                  
   
             if (!m_currentPageName.empty() && (false == m_loadingPage)) {
-              loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName, s_previousPageToHistory);
+              loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName);
             }          
           }
         }
@@ -1905,13 +1904,40 @@ void PresenterMainFrame::reportToLog()
   }
   
   if (false == m_logBookConfig.empty()) {  
+
+    ElogDialog* elogDialog = new ElogDialog(this, 646, 435 );
+    // Default vlues. Could be improved by retrieveing the DM name, and the system from teh plot name/group?
+    std::string logbook  = "Shift";
+    std::string username = "Data Manager";
+    std::string system   = "LHCb";
+    std::string message  = "See attached plot.";
+    int         isOK     = 0;
+    
+    elogDialog->setParameters( logbook, username, system, message, isOK );
+    
     TString pageName;
     gSystem->TempFileName(pageName);
     pageName.Append(".png");
-    editorCanvas->SaveAs(pageName.Data());      
-    std::string shellcmd(m_logBookConfig + " -f " + pageName.Data() + " " + std::string("LHCb ST TED run pages removed from logbook")); //  " -m "  
-    gSystem->Exec(shellcmd.c_str());
-    gSystem->Unlink(pageName.Data());
+    editorCanvas->SaveAs(pageName.Data());
+
+    fClient->WaitFor(dynamic_cast<TGWindow*>( elogDialog ));
+    if ( 1 == isOK ) {
+      Elog myElog( m_logBookConfig, 8080 );
+      myElog.setCredential( "common", "Common!" );
+      myElog.setLogbook( logbook );
+      myElog.addAttachment( pageName.Data() );
+      myElog.addAttribute( "Author", username );
+      myElog.addAttribute( "System", system );
+      std::cout << "send to Elog " << std::endl;
+      int number = myElog.submit( message );
+      std::cout << "=== produced entry " << number << std::endl;
+      char statusMessage[100];
+      sprintf( statusMessage, "Entry %d created in logbook %s", number, logbook.c_str() );
+      m_mainStatusBar->SetText( statusMessage, 2);
+    } else {
+      std::string statusMessage = "No logbook entry created";
+      m_mainStatusBar->SetText( statusMessage.c_str(), 2);
+    }
   }
   if (m_resumePageRefreshAfterLoading) { startPageRefresh(); }
   
@@ -3450,7 +3476,7 @@ void PresenterMainFrame::partitionSelectorComboBoxHandler(int partitionNumber)
     m_currentPartition = partition_entry;  
   }
   if (isConnectedToHistogramDB() && (false == m_currentPageName.empty()) && (false == m_loadingPage)) {
-    loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName, s_noPageHistory);
+    loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName);
   }
 }
 void PresenterMainFrame::clickedHistoSvcTreeItem(TGListTreeItem* node,
@@ -3479,7 +3505,28 @@ void PresenterMainFrame::clickedPageTreeItem(TGListTreeItem* node,
              ((EditorOnline != m_presenterMode) || (EditorOffline != m_presenterMode))) {
     m_currentPageName = selectedPageFromDbTree();
     if (!m_currentPageName.empty() && (false == m_loadingPage)) {
-      loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName, s_previousPageToHistory);
+      loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName);
+
+      //== Store the siblings to have group navigation by prev/next pages
+      m_alarmPages.clear();
+      m_groupPages.clear();
+      TGListTreeItem* temp = node;
+      while ( 0 != temp->GetPrevSibling() ) temp = temp->GetPrevSibling();
+      while ( 0 != temp ) {
+        if ( 0 == temp->GetFirstChild() ) {  //== pages without children only!
+          TString newPageName  = (*static_cast<TObjString*>(temp->GetUserData())).GetString();
+          if (newPageName.BeginsWith(s_FILE_URI)) { newPageName.Remove(0, s_FILE_URI.length()); }
+          std::string name( newPageName );
+          m_groupPages.push_back( name );
+        }
+        temp = temp->GetNextSibling();
+      }
+      //== get iterator to point to the current page
+      m_groupPagesIt = m_groupPages.begin();
+      while ( m_groupPagesIt != m_groupPages.end() &&
+             *m_groupPagesIt != m_currentPageName ) {
+        m_groupPagesIt++;
+      }
     }
 
 //  } else if (0 != node &&
@@ -3500,6 +3547,22 @@ void PresenterMainFrame::clickedAlarmTreeItem(TGListTreeItem* node,
     int id = selectedAlarmFromDbTree();
     if (id !=-1) {
       loadSelectedAlarmFromDB(id);
+      m_groupPages.clear(); //== No navigation there...
+      m_alarmPages.clear();
+
+      TGListTreeItem* temp = node;
+      while ( 0 != temp->GetPrevSibling() ) temp = temp->GetPrevSibling();
+      while ( 0 != temp ) {
+        int id = *(int*)(node->GetUserData());
+        m_alarmPages.push_back( id );
+        temp = temp->GetNextSibling();
+      }
+      //== get iterator to point to the current page
+      m_alarmPagesIt = m_alarmPages.begin();
+      while ( m_alarmPagesIt != m_alarmPages.end() &&
+             *m_alarmPagesIt != id ) {
+        m_alarmPagesIt++;
+      }
     }
   }
 }
@@ -4082,7 +4145,7 @@ void PresenterMainFrame::loadAllPages()
 
      for (m_folderIt = m_localDatabaseFolders.begin();
           m_folderIt != m_localDatabaseFolders.end(); ++m_folderIt) {
-      loadSelectedPageFromDB(*m_folderIt, s_startupFile, m_savesetFileName, false);
+      loadSelectedPageFromDB(*m_folderIt, s_startupFile, m_savesetFileName);
      }
   }
 }
@@ -4103,6 +4166,10 @@ void PresenterMainFrame::loadSelectedAlarmFromDB(int msgId)
     m_presenterMode = History;
     addHistoToPage(message.hIdentifier(), separate);
     autoCanvasLayout();
+
+    char header[100];
+    sprintf( header, "Alarm message %3d", msgId );
+    m_statusBarTop->SetText( header, 1);
     
     m_presenterMode = m_prevPresenterMode;
     m_savesetFileName = previousSaveset;
@@ -4120,34 +4187,42 @@ void PresenterMainFrame::loadSelectedAlarmFromDB(int msgId)
 }
 void PresenterMainFrame::loadPreviousPage()
 {
-  if ((false == m_loadedPagesHistory.empty()) &&
-      (m_loadedPagesHistoryIt > m_loadedPagesHistory.begin()) &&
-      (false == m_loadingPage)) {
-    m_loadedPagesHistoryIt--;
-    if (m_loadedPagesHistoryIt != m_loadedPagesHistory.end() &&
-      (false == (**m_loadedPagesHistoryIt).empty())) {
-    m_currentPageName = **m_loadedPagesHistoryIt;
-    loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName, s_noPageHistory);  
-    } 
+  if ((false == m_loadingPage) ) {
+    if ( (false == m_groupPages.empty()) ) {
+      
+      if ( m_groupPagesIt == m_groupPages.begin() )  m_groupPagesIt = m_groupPages.end();
+      m_groupPagesIt--;
+      if ( false == (*m_groupPagesIt).empty()) {
+        m_currentPageName = *m_groupPagesIt;
+        loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName);  
+      }
+    } else if ( (false == m_alarmPages.empty()) ) {
+      if ( m_alarmPagesIt == m_alarmPages.begin() )  m_alarmPagesIt = m_alarmPages.end();
+      m_alarmPagesIt--;
+      loadSelectedAlarmFromDB( *m_alarmPagesIt );
+    }
   }
 }
 void PresenterMainFrame::loadNextPage()
 {
-  if ((false == m_loadedPagesHistory.empty()) &&
-      (m_loadedPagesHistoryIt < m_loadedPagesHistory.end()-1) &&
-      (false == m_loadingPage)) {
-    m_loadedPagesHistoryIt++;
-    if ((m_loadedPagesHistoryIt != m_loadedPagesHistory.end()) &&
-      (false == (**m_loadedPagesHistoryIt).empty())) {
-      m_currentPageName = **m_loadedPagesHistoryIt;
-      loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName, s_noPageHistory);  
-    }    
+  if ( (false == m_loadingPage)) {
+    if ( (false == m_groupPages.empty()) ) {
+      m_groupPagesIt++;
+      if ( m_groupPagesIt == m_groupPages.end() ) m_groupPagesIt = m_groupPages.begin();
+      if ( false == (*m_groupPagesIt).empty() ) {
+        m_currentPageName = *m_groupPagesIt;
+        loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName);  
+      }    
+    } else if ( (false == m_alarmPages.empty()) ) {
+      m_alarmPagesIt++;
+      if ( m_alarmPagesIt == m_alarmPages.end() )  m_alarmPagesIt = m_alarmPages.begin();
+      loadSelectedAlarmFromDB( *m_alarmPagesIt );
+    }
   }
 }
 void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
                                                 const std::string & timePoint,
-                                                const std::string & pastDuration,
-                                                bool pageHistoryMode)
+                                                const std::string & pastDuration )
 {
   if (isConnectedToHistogramDB() && (false == m_loadingPage)) {
     m_loadingPage = true;
@@ -4252,6 +4327,10 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
 ////       if (m_verbosity >= Debug) {
 //std::cout << "page pattern file: " << page->patternFile() << std::endl;
 ////       } 
+          if (Batch != m_presenterMode) {
+            m_statusBarTop->SetText( pageName.c_str(), 1);  // UPdate the page name in the status bar.
+          }
+          
           page->getHistogramList(&m_onlineHistosOnPage);
           ParallelWait parallelWait(this);
           parallelWait.loadHistograms(&m_onlineHistosOnPage, &dbHistosOnPage);
@@ -4328,7 +4407,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
             //          stopBenchmark((*m_onlineHistosOnPageIt)->histo->identifier());
             //          m_onlineHistosOnPageIt++;
           }
-          
+
           m_pageDescriptionView->Clear();
           m_pageDescription = page->doc();
           m_pageDescriptionView->LoadBuffer(m_pageDescription.c_str());
@@ -4378,11 +4457,6 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
 //    stopBenchmark(pageName);
 //    m_deadTasksOnPage = m_tasksNotRunning.size();
 //    printBenchmark(pageName);      
-    if (false == pageHistoryMode) {
-      std::string* history = new std::string(pageName.c_str());
-      m_loadedPagesHistory.push_back(history);
-      m_loadedPagesHistoryIt = m_loadedPagesHistory.end()-1;      
-    }
     
     m_loadingPage = false;
     if (m_resumePageRefreshAfterLoading &&
@@ -4718,7 +4792,7 @@ void PresenterMainFrame::refreshClock()
   if (currentTime) {
     currentTime->Set();
     if (Batch != m_presenterMode) {
-      m_statusBarTop->SetText(currentTime->AsSQLString(), 1);
+      m_statusBarTop->SetText(currentTime->AsSQLString(), 2);
     }
   }
 }
@@ -4734,7 +4808,7 @@ void PresenterMainFrame::previousInterval()
                                                        global_stepSize);
 //    m_currentPageName = selectedPageFromDbTree();
     if (!m_currentPageName.empty()) {
-      loadSelectedPageFromDB(m_currentPageName, global_timePoint, global_pastDuration, false);
+      loadSelectedPageFromDB(m_currentPageName, global_timePoint, global_pastDuration);
     }
     if (m_verbosity >= Verbose) {
       std::cout << "after previousInterval global_timePoint " << global_timePoint << std::endl;
@@ -4753,7 +4827,7 @@ void PresenterMainFrame::nextInterval()
                                                  global_stepSize);
 //    m_currentPageName = selectedPageFromDbTree();                                                 
     if (!m_currentPageName.empty()) {
-      loadSelectedPageFromDB(m_currentPageName, global_timePoint, global_pastDuration, false);
+      loadSelectedPageFromDB(m_currentPageName, global_timePoint, global_pastDuration);
     }
     if (m_verbosity >= Verbose) {
       std::cout << "after nextInterval global_timePoint " << global_timePoint << std::endl;
@@ -4977,7 +5051,7 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
             }
             m_currentPageName = ((*eventInfo_dbHistosOnPageIt)->onlineHistogram())->page2display();
             if (!m_currentPageName.empty()) {
-              loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName, s_previousPageToHistory);
+              loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName);
             }
             break;
           }  

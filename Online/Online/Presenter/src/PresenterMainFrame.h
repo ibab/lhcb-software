@@ -324,8 +324,7 @@ class PresenterMainFrame : public TGMainFrame
     void loadAllPages();
     void loadSelectedPageFromDB(const std::string & pageName = "",
                                 const std::string & timePoint = "",
-                                const std::string & pastDuration = "",
-                                bool pageHistoryMode = false);
+                                const std::string & pastDuration = "" );
     void moveSelectedInDB();
     void deleteSelectedPageFromDB();
     void createFolderInDB();
@@ -361,8 +360,6 @@ class PresenterMainFrame : public TGMainFrame
   private:
     UInt_t            m_initWidth;
     UInt_t            m_initHeight;
-    static const bool s_previousPageToHistory = false;
-    static const bool s_noPageHistory = true;
     pres::MsgLevel    m_verbosity;
     std::string       m_logBookConfig;
     bool              m_historyMode;
@@ -600,8 +597,10 @@ class PresenterMainFrame : public TGMainFrame
     std::vector<std::string>      m_candidateDimServices;
     std::vector<std::string>::const_iterator m_candidateDimServicesIt;
 
-    std::vector<std::string*>      m_loadedPagesHistory;
-    std::vector<std::string*>::const_iterator m_loadedPagesHistoryIt;
+    std::vector<std::string>      m_groupPages;
+    std::vector<std::string>::const_iterator m_groupPagesIt;
+    std::vector<int>              m_alarmPages;
+    std::vector<int>::const_iterator m_alarmPagesIt;
 
     std::vector<OnlineHistoOnPage*>      m_onlineHistosOnPage;
     std::vector<OnlineHistoOnPage*>::const_iterator m_onlineHistosOnPageIt;

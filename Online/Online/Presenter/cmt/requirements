@@ -57,6 +57,7 @@ macro_append Boost_linkopts "" WIN32 "boost_system-vc71-mt-1_39.lib boost_filesy
 
 application presenter " $(PRESENTERROOT)/$(tag)/dict/*.cpp ParallelWait.cpp \
                                      DbRootHist.cpp HistogramIdentifier.cpp \
+                                     Elog.cpp ElogDialog.cpp \
                                      ReferencePicker.cpp IntervalPicker.cpp \
                                      LoginDialog.cpp HistoPropDialog.cpp Archive.cpp \
                                      DatabasePagePathDialog.cpp MonRateRace.cpp \

@@ -4,6 +4,17 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-02-01 - Olivier Callot
+ - Make the ELOG button functional. You need to specify the Elog server host in the config file
+   under entry 'logbook-settings'. When pressing the button, a windows pops up to specify
+   the logbook name, user name, system and message text. The current displayed page is attached
+   to the logbook entry.
+
+! 2010-01-27 - Olivier Callot
+ - Display the name of the page in the top status bar, aslo for alarms.
+ - Prev/Next page navigate in a group, i.e. a directory of the database,
+   or the list of alarms. The list wraps around, i.e. next of last is first.
+
 2010-01-27 G.Graziani
 + fixes for Presenter without HistDB 
 

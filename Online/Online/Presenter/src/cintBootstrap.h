@@ -7,6 +7,7 @@
 #include "LoginDialog.h"
 #include "ReferencePicker.h"
 #include "DatabasePagePathDialog.h"
+#include "ElogDialog.h"
 #include "HistoPropDialog.h"
 
 #endif /*CINTBOOTSTRAP_H_*/
