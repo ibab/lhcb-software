@@ -8,39 +8,30 @@
 #include "TGraph2DErrors.h"
 #include "TF1.h"
 #include "TH2F.h"
-#include "TMultiLayerPerceptron.h"
-#include "TMLPAnalyzer.h"
 #include "TVector3.h"
 #include "TLorentzVector.h"
 #include "TROOT.h"
 
-#include "TLegend.h"
-#include "TLine.h"
-
 // global variables
 string CombTechnique="NNet";
-double nsele(0),nrt[20],nwt[20],nrtag[20],nwtag[20];
+double nrt[20],nwt[20],nrtag[20],nwtag[20];
 float nlm(0),nllm(0),nle(0),nlle(0),nlk(0),nlkS(0),nllk(0),nllkS(0),nidm(0)
      ,nide(0),nidk(0),nidkS(0); 
 float nghost_m(0),nghost_e(0),nghost_k(0), nghost_kS(0), ghrate_k(0),gherror_k(0); 
 float ghrate_kS(0),gherror_kS(0); 
 float ghrate_m(0),gherror_m(0),ghrate_e(0),gherror_e(0);
-int nrL0tis(0),nrL0tos(0),nrL0tob(0),nrL1tis(0),nrL1tos(0),nrL1tob(0);
 int nrTisTis(0),nrTosTos(0),nrTisTos(0),nrTosTis(0),nrTob(0);
+int n2trackR=0, n2trackW=0, ntrackR=0, ntrackW=0;
+bool isBs(0), DBG(0);
 
-
-
+double nsele = *(new double(0));
 
 //functions////////////////////////////////////////////////////////////////
 bool isD(int id) {
   
   int aid = abs(id);
-//   if(aid>500&&aid<560) return true;
-//   if(aid>10513&&aid<10554) return true;
-//   if(aid>10510&&aid<10552) return true;
-//   if(aid>5100&&aid<5556) return true;
-  if(aid>410&&aid<446) return true;
-  if(aid>4100&&aid<4556) return true;
+  if(aid>410&&aid<446)     return true;
+  if(aid>4100&&aid<4556)   return true;
   if(aid>10410&&aid<10454) return true;
   if(aid>20410&&aid<20454) return true;
 
@@ -183,6 +174,102 @@ void calculateOmega(TH1F* rh, TH1F* wh, TH1F* omega){
 }
 
 ////////////////////////////////////////////////////////////////////////
+TH1F* plot_omega(TH1F* rh, TH1F* wh, TString name, int opts=1){ 
+
+  TCanvas* c= (TCanvas*)gROOT->GetListOfCanvases()->FindObject("c");  
+  c->Clear(); 
+  c->Divide(1,2);
+  c->cd(1);
+  
+  if(name=="sameside"){ if(isBs) name="kS"; else name="pS"; }
+
+  if(opts==0) rh->SetLineColor(1);rh->SetFillColor(3);rh->SetFillStyle(3001);
+  if(opts==1) rh->SetLineColor(0);
+  if(opts==0) rh->SetTitle(";NNET Output for "   +name+";Events");
+  if(opts==1) rh->SetTitle("; "+name+";Events");
+  rh->SetLineWidth(1); 
+  rh->SetMinimum(0.0); 
+  rh->Draw();
+
+  if(opts==0) wh->SetLineColor(1);wh->SetFillColor(2);wh->SetFillStyle(3001);
+  if(opts==1) wh->SetLineColor(0);
+  wh->SetLineWidth(1); 
+  wh->SetMinimum(0.0); 
+  wh->Draw("same");
+
+  TH1F* hhh = (TH1F*) rh->Clone(); 
+  if(opts==0) hhh->SetName("hom");
+  if(opts==1) hhh->SetName("homp");
+  calculateOmega(rh, wh, hhh);
+  if(opts==0) hhh->SetTitle(";NNET Output for "   +name+";Wrong tag fraction");
+  if(opts==1) hhh->SetTitle("; "+name+";TRUE OMEGA");
+  c->GetPad(1)->RedrawAxis();
+
+  c->cd(2); c->GetPad(2)->SetGrid();
+  if(opts==3) {
+    hhh->Fit("pol3");
+    double p0= hhh->GetFunction("pol3")->GetParameter(0);
+    double p1= hhh->GetFunction("pol3")->GetParameter(1);
+    double p2= hhh->GetFunction("pol3")->GetParameter(2);
+    double p3= hhh->GetFunction("pol3")->GetParameter(3);
+    ofstream out;
+    out.open("NN_FitParameters.txt", ios::app);
+    if(out){ 
+      out<< name <<"  "<<p0<<"  "<<p1<<"  "<<p2<<"  "<<p3<<endl;
+      out.close();
+    } else cout<<"ERROR: do touch ./NN_FitParameters.txt"<<endl;
+  } 
+  if(opts==1) hhh->Fit("pol1"); 
+  c->Print("pics/nn_"+name+".gif"); c->cd();
+  c->Update();
+
+  return hhh;
+}
+
+////////////////////////////////////////////////////////////////////////
+TH1F* calculateEffEff(TString name, TH1F* rh,  TH1F* wh, 
+		      TString direction="left2right" ){ 
+
+  TH1F* effeff = new TH1F(*rh);
+  effeff->Reset();
+  effeff->SetName(name);
+
+  for(int i=1; i!=rh->GetNbinsX(); ++i) {
+
+    double rtag=0, wtag=0;
+    if(direction == "left2right") {
+      for(int j=i; j!=rh->GetNbinsX()+1; j++)  { 
+	rtag += rh->GetBinContent(j);
+	wtag += wh->GetBinContent(j);
+      }
+    } else if(direction == "right2left") {
+      for(int j=1; j!=i+1; j++)  { 
+	rtag += rh->GetBinContent(j);
+	wtag += wh->GetBinContent(j);
+      }
+    } else cout<<"Error: unknown option "<<direction<<endl;
+
+    if(rtag) if(wtag) {
+      double utag = nsele-rtag-wtag;              // untagged
+      double omtag = wtag/(rtag+wtag);
+      double eftag = (rtag+wtag)/nsele;           // tagging efficiency
+      double epsil = eftag*pow(1-2*omtag,2);      // effective efficiency
+      if(rtag<wtag) epsil= -epsil;
+      double epsilerr = sqrt((pow(rtag - wtag,2)*
+			      (-(pow(rtag - wtag,2)*(rtag +wtag))+nsele
+			       *(pow(rtag,2) +14*rtag*wtag+ pow(wtag,2))))
+			     /(pow(rtag+wtag+utag,3)*pow(rtag + wtag,3)));
+      effeff->SetBinContent(i, epsil*100);
+      effeff->SetBinError(i, epsilerr*100);
+    }
+  }
+  rh->SetMinimum(0);
+  wh->SetMinimum(0);
+
+  return effeff;
+}
+
+////////////////////////////////////////////////////////////////////////
 void calculateEffEff(double nsele, TH1F* rh, TH1F* wh, TH1F* effeff, 
 		     TString direction="left2right" ){ 
 
@@ -215,29 +302,8 @@ void calculateEffEff(double nsele, TH1F* rh, TH1F* wh, TH1F* effeff,
       effeff->SetBinError(i, epsilerr*100);
     }
   }
-}
-
-////////////////////////////////////////////////////////////////////////
-void decode(const int flags, int& a, int& b, int& c, int& d) {
-  a = int(float(flags)/1000);
-  b = int(float(flags-1000*a)/100);
-  c = int(float(flags-1000*a-100*b)/10);
-  d = int(float(flags-1000*a-100*b-10*c)/1);
-}
-void decode(const int flags, int& a, int& b, int& c, int& d, int& e) {
-  a = int(float(flags)/10000);
-  b = int(float(flags-10000*a)/1000);
-  c = int(float(flags-10000*a-1000*b)/100);
-  d = int(float(flags-10000*a-1000*b-100*c)/10);
-  e = int(float(flags-10000*a-1000*b-100*c-10*d)/1);
-}
-void decode(const int flags, int& a, int& b, int& c, int& d, int& e, int& f) {
-  a = int(float(flags) /100000);
-  b = int(float(flags-100000*a)/10000);
-  c = int(float(flags-100000*a-10000*b)/1000);
-  d = int(float(flags-100000*a-10000*b-1000*c)/100);
-  e = int(float(flags-100000*a-10000*b-1000*c-100*d)/10);
-  f = int(float(flags-100000*a-10000*b-1000*c-100*d-10*e)/1);
+  rh->SetMinimum(0);
+  wh->SetMinimum(0);
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -261,34 +327,21 @@ float PrintPerformance(){
   if(den_kS)ghrate_kS = nghost_kS/den_kS*100;
   if(den_kS)gherror_kS= sqrt(nghost_kS)/den_kS*100;
 
-/*   cout << " L0 TIS=" <<nrL0tis/float(nsele)*100 */
-/*        << "  TOS="   <<nrL0tos/float(nsele)*100 */
-/*        << "  TOB="   <<nrL0tob/float(nsele)*100 <<endl; */
-/*   cout << " L1 TIS=" <<nrL1tis/float(nsele)*100 */
-/*        << "  TOS="   <<nrL1tos/float(nsele)*100 */
-/*        << "  TOB="   <<nrL1tob/float(nsele)*100 <<endl; */
-/*   cout << " L0TOS-L1TIS "  <<nrTosTis/float(nsele)*100 */
-/*        << " L0TOS-L1TOS "  <<nrTosTos/float(nsele)*100 <<endl; */
-/*   cout << " L0TIS-L1TIS "  <<nrTisTis/float(nsele)*100 */
-/*        << " L0TIS-L1TOS "  <<nrTisTos/float(nsele)*100 <<endl; */
-/*   cout << " TOB="   <<nrTob/float(nsele)*100 <<endl; */
-/*   cout <<"\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"; */
-
   if(den_m) cout<<"\nMuon Ghosts = "<<ghrate_m<<" +- "<<gherror_m<<endl;
   if(den_e) cout<<  "Elec        = "<<ghrate_e<<" +- "<<gherror_e<<endl;
   if(den_k) cout<<  "Kaon_opp    = "<<ghrate_k<<" +- "<<gherror_k<<endl;
   if(nghost_kS && den_kS)
             cout<<  "Kaon_same   = "<<ghrate_kS<<" +- "<<gherror_kS<<endl;
   cout <<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-  cout <<"PID purity (in r+w), and efficiency (P>5GeV)\n";
-  if(den_m) cout <<"muon:    "<<int(nidm/den_m*100)
-		 <<"    "<<int(nllm/nlm*100)<<endl;
-  if(den_e) cout <<"elec:    "<<int(nide/den_e*100)
-		 <<"    "<<int(nlle/nle*100)<<endl;
-  if(den_k) cout <<"kaon:    "<<int(nidk/den_k*100)
-		 <<"    "<<int(nllk/nlk*100)<<endl;
-  if(den_kS)cout <<"kaonS:   "<<int(nidkS/den_kS*100)
-		 <<"    "<<int(nllkS/nlkS*100)<<endl;
+  cout <<setprecision(2)<<"PID purity (in r+w), and efficiency (P>5GeV)\n";
+  if(den_m) cout <<"muon:       "<<(nidm/den_m*100)
+		 <<"       "<<(nllm/nlm*100)<<endl;
+  if(den_e) cout <<"elec:       "<<(nide/den_e*100)
+		 <<"       "<<(nlle/nle*100)<<endl;
+  if(den_k) cout <<"kaon:       "<<(nidk/den_k*100)
+		 <<"       "<<(nllk/nlk*100)<<endl;
+  if(isBs)if(den_kS)cout <<"kaonS:      "<<(nidkS/den_kS*100)
+			 <<"       "<<(nllkS/nlkS*100)<<endl;
   cout<< "=========================================================\n";
   cout<< " Category            EFF.          Etag         Wrong TF"
       << "      r       w\n";
@@ -311,7 +364,8 @@ float PrintPerformance(){
     if(it==13) { cats =  "  OS muons"; rtag = nrtag[1]; wtag = nwtag[1]; }
     if(it==14) { cats =  "  OS elect"; rtag = nrtag[2]; wtag = nwtag[2]; }
     if(it==15) { cats =  "  OS kaons"; rtag = nrtag[3]; wtag = nwtag[3]; }
-    if(it==16) { cats =  "  SS pi/k "; rtag = nrtag[4]; wtag = nwtag[4]; }
+    if(it==16) { cats =  "  SS pions"; rtag= nrtag[4]; wtag= nwtag[4]; }
+    if(isBs)if(it==16){cats ="  SS kaons"; rtag= nrtag[4]; wtag= nwtag[4]; }
     if(it==17) { cats =  "  VertexCh"; rtag = nrtag[5]; wtag = nwtag[5]; }
     if(CombTechnique=="NNet" && it<13) cats =  "  NNet    "; 
     else if(it==13) 
@@ -348,9 +402,9 @@ float PrintPerformance(){
     cout.setf(ios::fixed);
     if(it<13) cout<<setw(2)<< it; else cout<<"**";
     cout<< cats
-        <<" "<<setprecision(2)<<setw(8)<< epsil*100 << "+-" << epsilerr*100 
+        <<" "<<setw(8)<< epsil*100 << "+-" << epsilerr*100 
         <<" "<<setw(8)<< eftag*100 << "+-" <<eftag_err*100
-        <<" "<<setprecision(1)<<setw(8)<< omtag*100 << "+-" <<omtag_err*100
+        <<" "<<setw(8)<< omtag*100 << "+-" <<omtag_err*100
         <<" "<<setw(7)<< (int) rtag
         <<" "<<setw(7)<< (int) wtag
 	<< endl;
@@ -366,21 +420,44 @@ float PrintPerformance(){
   double avw_invert_err= sqrt( rtt*wtt /(rtt+wtt) ) / (rtt+wtt);
 
   cout << "---------------------------------------------------------\n";
-  cout << "Tagging efficiency =  "<<setprecision(2)<<setw(5)
+  cout << "Tagging efficiency =  "<<setw(5)
        << ef_tot*100 << " +/- "<<eftot_err*100<< " %"<< endl;       
-  cout << "Wrong Tag fraction =  "<<setprecision(2)<<setw(5)
+  cout << "Wrong Tag fraction =  "<<setw(5)
        << avw_invert*100 << " +/- " <<avw_invert_err*100 << " %"<< endl;
-  cout << "EFFECTIVE COMB. TE =  "<<setprecision(2)<<setw(5)
+  cout << "EFFECTIVE COMB. TE =  "<<setw(5)
        << effe_tot*100 << " +/- "<<epsilerrtot*100<< " %"
-       << "     (Total events= "<<setw(5) << nsele <<")"<< endl;
+       << "     (Total events= "<<setw(5) << int(nsele) <<")"<< endl;
   cout << "=========================================================\n\n";
   return effe_tot*100;
 }
 
 //======================================================================
+void decode(const int flags, int& a, int& b, int& c, int& d, int& e, int& f) {
+  a = int(float(flags)/100000);
+  b = int(float(flags-100000*a)/10000);
+  c = int(float(flags-100000*a-10000*b)/1000);
+  d = int(float(flags-100000*a-10000*b-1000*c)/100);
+  e = int(float(flags-100000*a-10000*b-1000*c-100*d)/10);
+  f = int(float(flags-100000*a-10000*b-1000*c-100*d-10*e)/1);
+}
+
+//======================================================================
 void PrintAdvance(int n, float nmax) {
-  float r= float(n)/int(nmax/56.);
-  if(r-int(r)==0.) cout<<"\b=>"<<flush;
+  if(!n) cout<<"|------------------|";
+  float r= float(n)/int(nmax/20.);
+  if(r==int(r)) cout<<"\b\b| \b"<<flush;
+}
+// void PrintAdvance(int n, float nmax) {
+//   float r= float(n)/int(nmax/56.);
+//   if(r-int(r)==0.) cout<<"\b=>"<<flush;
+// }
+bool waitandstop() {
+  cout<<"--> Hit return to continue.  ";
+  char *s = new char[1];
+  char *bb = fgets(s, 1, stdin); bb=0;
+  if(*s=='q' || *s=='.') { delete s; return true; }
+  cout<<endl; delete s;
+  return false;
 }
 
 //======================================================================
@@ -394,74 +471,3 @@ double pol(double x, double a0,
   return res;
 }
 
-//================================================================== NEW NNET
-void normalise(std::vector<double>& par){
-  if( par.size() != 8 ) {
-    cout<<"ERROR in normalise!"<<endl;
-    return;
-  }
-  par.at(0) /= 90.; //mult
-  par.at(1) /= 20.; //ptB
-  par.at(2) = std::min( par.at(2)/80., 1.); //partP
-  par.at(3) = std::min( par.at(3)/5., 1.); //partPt
-  par.at(4) = par.at(4)/50.; //IPPV
-  if(par.at(4)> 1.) par.at(4)= 1.; if(par.at(4)<-1.) par.at(4)=-1.;
-  par.at(5) /= 2.; //nndeta
-  par.at(6) /= 3.; //nndphi
-  par.at(7) /= 12.;//nndq
-  if(par.at(7)>1.) par.at(7) = 1.;
-}
-
-////////////////////////////////////////////////////////////////////////
-#include "NNmuon.cxx"
-double MLP_muon(std::vector<double> par) {
-  normalise(par);
-  NNmuon net;
-//   cout<<"norm entering MLPm  "<<setprecision(7)<<par.at(0) 
-//                     <<" "<<par.at(2)<<" "<<par.at(3) 
-//                     <<" "<<par.at(4)<< endl; 
-  return net.value(0, par.at(0),par.at(2),par.at(3),par.at(4));
-};
-
-#include "NNele.cxx"
-double MLP_ele(std::vector<double> par) {
-  normalise(par);
-  NNele net;
-/*   cout<<"norm entering MLPe  "<<setprecision(7)<<par.at(0) */
-/*                    <<" "<<par.at(2)<<" "<<par.at(3) */
-/*                    <<" "<<par.at(4)<< endl; */
-  return net.value(0, par.at(0),par.at(2),par.at(3),par.at(4));
-};
-
-#include "NNkaon.cxx"
-double MLP_kaon(std::vector<double> par) {
-  normalise(par);
-  NNkaon net;
-/*   cout<<"norm entering MLPk  "<<setprecision(7)<<par.at(0) */
-/*                    <<" "<<par.at(2)<<" "<<par.at(3) */
-/*                    <<" "<<par.at(4)<< endl; */
-  return net.value(0, par.at(0),par.at(2),par.at(3),par.at(4));
-};
-#include "NNkaonS.cxx"
-double MLP_kaonS(std::vector<double> par) {
-  normalise(par);
-  NNkaonS net;
-/*   cout<<"norm entering MLPkS  "<<setprecision(7)<<par.at(0) */
-/*                    <<" "<<par.at(2)<<" "<<par.at(3) */
-/*                    <<" "<<par.at(4)<<" "<<par.at(5) */
-/*                    <<" "<<par.at(6)<<" "<<par.at(7)<< endl; */
-  return net.value(0, par.at(0),par.at(2),par.at(3),par.at(4),
-		   par.at(5),par.at(6),par.at(7) );
-};
-#include "NNpionS.cxx"
-double MLP_pionS(std::vector<double> par) {
-  normalise(par);
-  NNpionS net;
-/*   cout<<"norm entering MLPpS  "<<setprecision(7)<<par.at(0) */
-/*                    <<" "<<par.at(2)<<" "<<par.at(3) */
-/*                    <<" "<<par.at(4)<<" "<<par.at(5) */
-/*                    <<" "<<par.at(6)<<" "<<par.at(7)<< endl; */
-  return net.value(0, par.at(0),par.at(2),par.at(3),par.at(4),
-		   par.at(5),par.at(6),par.at(7) );
-};
-//=====================================================================

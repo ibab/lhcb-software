@@ -69,23 +69,23 @@ StatusCode TaggingUtilsChecker::calcIP( const Particle* axp,
 StatusCode TaggingUtilsChecker::calcIP( const Particle* axp,
                                         const RecVertex::ConstVector& PileUpVtx,
                                         double& ip, double& ipe) {
-  double ipmin = 100000.0;
+  double ipmin = 10000.0;
   double ipminerr = 0.0;
-  StatusCode sc, lastsc=1;
+  StatusCode lastsc=1;
 
   RecVertex::ConstVector::const_iterator iv;
-  for(iv = PileUpVtx.begin(); iv != PileUpVtx.end(); iv++){
-    double ipx=0, ipex=0;
-    //sc = m_Geom->calcImpactPar(*axp, **iv, ipx, ipex);
+  if(PileUpVtx.size()>1) {
+    for(iv = PileUpVtx.begin(); iv != PileUpVtx.end(); iv++){
+      double ipx=0, ipex=0;
+      double ipC=0, ipChi2=0;
+      StatusCode sc = m_Dist->distance (axp, *iv, ipC, ipChi2);
+      if(ipChi2) { ipx=ipC; ipex=ipC/sqrt(ipChi2); }
 
-    double ipC=0, ipChi2=0;
-    sc = m_Dist->distance (axp, *iv, ipC, ipChi2);
-    if(ipChi2) { ipx=ipC; ipex=ipC/sqrt(ipChi2); }
-
-    if( sc ) if( ipx < ipmin ) {
-      ipmin = ipx;
-      ipminerr = ipex;
-    } else lastsc = sc;
+      if( sc ) if( ipx < ipmin ) {
+	  ipmin = ipx;
+	  ipminerr = ipex;
+	} else lastsc = sc;
+    }
   }
   ip  = ipmin;
   ipe = ipminerr;
@@ -128,6 +128,7 @@ const MCParticle* TaggingUtilsChecker::originof( const MCParticle* product ) {
   if ( (!mother) || product->particleID().hasBottom() ) return product; 
   else return originof( mother );
 }
+
 //============================================================================
 bool TaggingUtilsChecker::isinTree( const Particle* axp, 
                                     Particle::ConstVector& sons, 

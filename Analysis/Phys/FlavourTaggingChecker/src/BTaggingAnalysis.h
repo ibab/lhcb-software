@@ -1,4 +1,4 @@
-// $Id: BTaggingAnalysis.h,v 1.20 2010-01-18 22:17:30 musy Exp $
+// $Id: BTaggingAnalysis.h,v 1.21 2010-02-02 19:31:54 musy Exp $
 #ifndef USER_BTAGGINGANALYSIS_H 
 #define USER_BTAGGINGANALYSIS_H 1
 
@@ -11,8 +11,12 @@
 #include "Event/RecHeader.h"
 #include "Event/L0DUReport.h"
 #include "Event/HltDecReports.h"
-#
+
+//ntuple
 #include "GaudiKernel/INTupleSvc.h"
+#include "GaudiAlg/Tuple.h"
+#include "GaudiAlg/TupleObj.h"
+
 #include "Kernel/ISecondaryVertexTool.h"
 #include "Kernel/IBTaggingTool.h"
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"
@@ -49,7 +53,15 @@ class BTaggingAnalysis : public DVAlgorithm {
 
  private:
 
-  std::string m_SVtype, m_veloChargeName, m_TagLocation;
+  const LHCb::Particle*  chooseBHypothesis(const LHCb::Particle::ConstVector&);
+  const LHCb::RecVertex* choosePrimary( const LHCb::RecVertex::Container* , 
+					const LHCb::Particle* , const LHCb::MCParticle*);
+  const LHCb::Particle::ConstVector chooseParticles(const LHCb::Particle::ConstVector& ,
+						    LHCb::Particle::ConstVector,
+						    LHCb::RecVertex::ConstVector);
+
+  std::string m_SVtype, m_veloChargeName, 
+    m_TagLocation, m_BHypoCriterium, m_ChoosePV ;
   IPrintMCDecayTreeTool*     m_debug;
   ICaloElectron*             m_electron;
   IForcedBDecayTool*         m_forcedBtool;
@@ -62,10 +74,9 @@ class BTaggingAnalysis : public DVAlgorithm {
   IParticle2MCAssociator*    m_assoc; 
  
   double m_IPPU_cut, m_distphi_cut, m_thetaMin;
-  std::vector<std::string> m_setInputData;
 
   //properties ----------------
-  bool m_requireTrigger, m_UseMCTrueFlavour;
+  bool m_requireTrigger, m_UseMCTrueFlavour, m_requireTisTos;
 
 };
 
