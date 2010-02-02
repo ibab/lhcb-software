@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -31,7 +31,7 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
     #     HadViaTCompanion_IPCut
     #     HadViaTCompanion_PtCut
     #
-    __slots__ = { 'L0Channel'               : "CALO" 
+    __slots__ = { 'L0Channel'               : "Hadron" 
                 , 'HadViaTSingle_IPCut'         : 0.1
 		, 'HadViaTDi_IPCut'             : 0.1
                 , 'HadViaTMain_PTCut'           : 2500.
@@ -112,18 +112,12 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
 
             conf = l0.members()  + [ DecodeIT, DecodeTT
                     , Hlt1HadronViaTTUTConf
-                    , Member ( 'TF' , 'TConf'
-                           , FilterDescriptor = ['ptAtOrigin,>,'+PTCut]
-                             )
+                    , Member ( 'TF' , 'TConf' , FilterDescriptor = ['ptAtOrigin,>,'+PTCut])
                     , RZVelo
                     , PV2D.ignoreOutputSelection()
-                    , Member ( 'TF' , 'VeloRZTMatch'
-                           , FilterDescriptor = ['RZVeloTMatch_%TFTConf,<,'+VTMatchCut]
-                             ) 
+                    , Member ( 'TF' , 'VeloRZTMatch' , FilterDescriptor = ['RZVeloTMatch_%TFTConf,<,'+VTMatchCut]) 
                     , Member ( 'TU', 'Velo',  RecoName = 'Velo')
-                    , Member ( 'TF', 'Velo3DIP',
-                           FilterDescriptor = [ 'IP_PV2D,||>,'+IPCut]
-                           )
+                    , Member ( 'TF', 'Velo3DIP', FilterDescriptor = [ 'IP_PV2D,||>,'+IPCut])
                     , Member ( 'TM' , 'VeloT'
                                , InputSelection1 = '%TFVelo3DIP'
                                , InputSelection2 = '%TFTConf'
@@ -198,7 +192,7 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
             Line ( 'SingleHadronViaT'
                    , prescale = self.prescale
                    , postscale = self.postscale
-                   , L0DU  = "L0_CHANNEL('CALO')"
+                   , L0DU  = "L0_CHANNEL('%s')" % self.getProp('L0Channel')
                    , algos = [confirmation()]+singlehadron()
                    )
 
@@ -207,6 +201,6 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
             Line ('DiHadronViaT'
                   , prescale = self.prescale
                   , postscale = self.postscale
-                  , L0DU  = "L0_CHANNEL('CALO')"
+                  , L0DU  = "L0_CHANNEL('%s')" % self.getProp('L0Channel')
                   , algos =  [confirmation()]+companion()+dihadron()
                   )
