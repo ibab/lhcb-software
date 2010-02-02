@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.43 2009-09-24 12:04:49 wouter Exp $
+// $Id: DeOTModule.cpp,v 1.44 2010-02-02 15:51:05 wouter Exp $
 // GaudiKernel
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
@@ -546,7 +546,7 @@ StatusCode DeOTModule::statusCallback() {
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Updating Status parameters" << endmsg;
   try {
-    m_channelStatus = m_status->param< std::vector<int> >( "ChannelStatus" );
+    m_strawStatus = m_status->param< std::vector<int> >( "ChannelStatus" );
   }
   catch (...) {
     msg << MSG::ERROR << "Failed to update status conditions for " << this->name() << "!" << endmsg;
@@ -586,6 +586,43 @@ std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectory(const OTChannelID& aChan,
   Gaudi::XYZPoint posWire = m_midTraj[mono]->position( localUOfStraw(aStraw) );
   
   return std::auto_ptr<Trajectory>(new LineTraj(posWire, m_dir, m_range[mono],true));
+}
+
+StatusCode DeOTModule::setStrawStatus( const std::vector< int >& flags ) 
+{
+  if ( hasCondition( m_statusName ) ) {
+    // Modify condition in TES
+    m_status->param< std::vector<int> >( "ChannelStatus" ) = flags ;
+    // m_calibration->neverUpdateMode() /// Always valid for any and all IOV
+    // Now we need to inform the ums that the condition has changed
+    updMgrSvc()->invalidate( m_status.target() ); 
+    // Trigger an update
+    StatusCode sc = updMgrSvc()->update( this );
+    if ( !sc.isSuccess() ) {
+      MsgStream msg( msgSvc(), name() );
+      msg << MSG::ERROR << "Failed to update straw status flags for " << this->name() << "!" << endmsg;
+      return StatusCode::FAILURE;
+    } 
+  } else {
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::ERROR << "Condition " << m_statusName << " doesn't exist for " << this->name() << "!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  return StatusCode::SUCCESS;
+}
+
+const std::vector<int>&  DeOTModule::strawStatus() const
+{
+  const std::vector<int> *rc(0) ;
+  if ( hasCondition( m_calibrationName ) ) {
+    rc =&( m_calibration->param< std::vector<int> >( "ChannelStatus" )) ;
+  } else {
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::ERROR << "Condition " << m_statusName << " doesn't exist for " << this->name() << "!" << endmsg;
+    static std::vector<int> dummy ;
+    rc = &dummy ;
+  }
+  return *rc ;
 }
 
 StatusCode DeOTModule::setStrawT0s( const std::vector< double >& tzeros ) {

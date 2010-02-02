@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.41 2009-09-24 12:04:48 wouter Exp $
+// $Id: DeOTModule.h,v 1.42 2010-02-02 15:51:04 wouter Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -81,6 +81,7 @@ public:
   typedef std::vector<DeOTModule*> Container;
   typedef std::vector<unsigned int> Straws;
   enum { MAXNUMCHAN = 128 } ;
+  enum ChannelStatus { Good = 0, Dead = 1, Noisy = 2, Unknown = 99 } ;
   
   /** Constructor */
   DeOTModule(const std::string& name = "");
@@ -294,6 +295,15 @@ public:
   void trajectory(unsigned int aStraw, double& dxdy, double& dzdy, 
 		  double& xAtYEq0, double& zAtYEq0, double& ybegin, double& yend) const ;
 
+  /** Set the status flags for all straws in this module */
+  StatusCode setStrawStatus( const std::vector< int >& tzeros );
+
+  /** Get the vector of straw status flags from the condition */
+  const std::vector< int >& strawStatus() const;
+  
+  /** Status flag for a straw */
+  int strawStatus(unsigned int istraw) const { return m_strawStatus[istraw-1] ; }
+
   /** Set the t0 for a straw in this module */
   StatusCode setStrawT0s( const std::vector< double >& tzeros );
 
@@ -466,7 +476,7 @@ private :
   SmartRef< Condition > m_calibration;          ///< Calibration condition
   std::string           m_statusName;           ///< Name of calibration condition
   SmartRef< Condition > m_status;               ///< Status condition
-  std::vector<int>      m_channelStatus;        ///< vector of channel statuses
+  std::vector<int>      m_strawStatus;          ///< vector of channel statuses
 };
 
 // -----------------------------------------------------------------------------
