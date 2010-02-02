@@ -19,8 +19,9 @@
 namespace {
   struct ModuleEfficiencyHistograms
   {
+    AIDA::IProfile1D* m_effvsmonocoord ;
     AIDA::IProfile1D* m_effvsdist ;
-    AIDA::IProfile1D* m_receffvsdist ;
+    AIDA::IProfile1D* m_receffvsmonocoord ;
     AIDA::IProfile1D* m_effvsyfrac ;
     AIDA::IProfile1D* m_receffvsyfrac ;
     AIDA::IHistogram2D* m_clustersize ;
@@ -28,14 +29,16 @@ namespace {
     ModuleEfficiencyHistograms(GaudiHistoAlg& alg,  size_t moduleID ) {
       // construct a directory name
       std::string modulename = std::string("Module") + boost::lexical_cast<std::string>( moduleID ) + "/" ;
+      m_effvsmonocoord = alg.bookProfile1D( modulename + "effvsmonocoord", 
+						"hit efficiency versus coordinate in mono layer plane", -3, 3, 200) ;
       m_effvsdist     = alg.bookProfile1D( modulename + "effvsdist", 
-					   "hit efficiency versus distance in mono layer plane", -3, 3, 200) ;
+					   "hit efficiency versus distance", -7.5, 7.5, 200) ;
       m_effvsyfrac    = alg.bookProfile1D( modulename + "effvsy", 
-					   "hit efficiency versus y-coordinate in mono layer plane", -0.1, 1.1, 24) ;
-      m_receffvsdist  = alg.bookProfile1D( modulename + "hoteffvsdist", 
-					   "hot efficiency versus distance in mono layer plane", -3, 3, 200) ;
+					   "hit efficiency versus y-coordinate in mono layer plane", -0.1, 1.1, 120) ;
+      m_receffvsmonocoord = alg.bookProfile1D( modulename + "hoteffvsmonocoord", 
+						"hot efficiency versus coordinate in mono layer plane", -3, 3, 200) ;
       m_receffvsyfrac    = alg.bookProfile1D( modulename + "hoteffvsy", 
-					      "hot efficiency versus y-coordinate in mono layer plane", -0.1, 1.1, 24) ;
+					      "hot efficiency versus y-coordinate in mono layer plane", -0.1, 1.1, 120) ;
       
       m_clustersize = alg.book2D( modulename + "clustersize", 
 				  "clustersize versus slope", -1,1,20,-0.5,10.5,11) ;
@@ -125,9 +128,9 @@ OTHitEfficiencyMonitor::OTHitEfficiencyMonitor( const std::string& name,
     m_linearextrapolator("TrackLinearExtrapolator")
 {
   declareProperty( "TrackLocation", m_trackLocation = LHCb::TrackLocation::Default  );
-  declareProperty( "MinOTHits",m_minOTHitsPerTrack = 5  ) ;
-  declareProperty( "MaxChi2PerDoF",m_maxChi2PerDoF = 2  ) ;
-  declareProperty( "MaxDistError", m_maxDistError = 0.5 ) ;
+  declareProperty( "MinOTHits",m_minOTHitsPerTrack = 5   ) ;
+  declareProperty( "MaxChi2PerDoF",m_maxChi2PerDoF = 2   ) ;
+  declareProperty( "MaxDistError", m_maxDistError = 0.2 ) ;
   declareProperty( "RawBankDecoder",m_decoder ) ;
 }
 
@@ -232,13 +235,15 @@ void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
   // make a temporary structure that tells which hits are in this
   // module. if this takes time, then we should do it once per event
   LHCb::OTChannelID modid = module.elementID() ;
+  double pitch = module.xPitch() ;
   int uniquemodule  = uniqueModule(modid) ;
   size_t nstraws = module.nChannels() ;
   ModuleEfficiencyHistograms* modulehist = m_moduleHistograms[module.elementID().module()-1] ;
 
   // compute the direction in the local frame. this can be done a lot more efficient, but okay:
   Gaudi::XYZVector localslopes = module.geometry()->toLocal( refstate.slopes() ) ;
-  double localTx = localslopes.x()/localslopes.z() ;
+  double localTx  = localslopes.x()/localslopes.z() ;
+  double cosalpha = 1/std::sqrt( 1+localTx*localTx) ;
 
   for(size_t imono = 0; imono<2 ; ++imono ) {
     // find the hits in a +- 3 straw window
@@ -249,9 +254,11 @@ void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
       LHCb::OTChannelID channel = m_moduleHitMap[ uniquemodule ].hashit[ istraw + monooffset ] ;
       bool foundhit = channel != 0 ;
       bool foundhot = foundhit && track.isOnTrack( LHCb::LHCbID( channel ) ) ;
-      double dstraw = strawpos[imono] - istraw ;
+      double monocoord = strawpos[imono] - istraw ;
+      double dstraw    = monocoord*pitch*cosalpha  ;
       modulehist->m_effvsdist->fill(dstraw,foundhit) ;
-      modulehist->m_receffvsdist->fill(dstraw,foundhot) ;
+      modulehist->m_effvsmonocoord->fill(monocoord,foundhit) ;
+      modulehist->m_receffvsmonocoord->fill(monocoord,foundhot) ;
       if( std::abs(dstraw) < 0.25 ) {
 	modulehist->m_effvsyfrac->fill(yfrac[imono],foundhit) ;
 	modulehist->m_receffvsyfrac->fill(yfrac[imono],foundhot) ;
@@ -400,7 +407,9 @@ void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track)
       
       // only consider if state has reasonably small error. we should
       // still fine-tune this a little bit, make a propor projecion
-      // etc.
+      // etc. the best is to cut only when you have unbiased the
+      // state. cutting to tight will introduce a significant bias in
+      // the efficiency measurement.
       if( std::sqrt( state.covariance()(0,0) ) < m_maxDistError ) {
 	
 	// to get a slightly more precise answer, intersect with the plane
