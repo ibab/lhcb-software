@@ -1,5 +1,5 @@
 package MooreSys
-version v8r5
+version v8r6
 
 branches doc cmt
 
@@ -7,13 +7,8 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 
-use  Moore              v8r5     Hlt
+use  Moore              v8r6     Hlt
 
-# temporarily here
-use PatPV               v3r11p2     Tr
-use Hlt1Lines           v2r0p1      Hlt
-use HltSettings         v1r6p1      Hlt
-use HltCommon           v5r16p1     Hlt
 
 # Declare this as a container package
 apply_pattern container_package
