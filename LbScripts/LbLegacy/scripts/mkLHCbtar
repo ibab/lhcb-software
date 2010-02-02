@@ -41,7 +41,7 @@ script_version = '091013'
 from LbConfiguration.Package import package_names, getPackage
 
 LHCBTAR = os.getenv('LHCBTAR')
-HTMLDIR = os.path.join(LHCBTAR,'html')
+HTMLDIR = os.path.join(LHCBTAR, 'html')
 TARSRC = 'source'
 here = os.getcwd()
 
@@ -80,16 +80,16 @@ def _get_base_project(native_version):
     Name = NAME.lower().capitalize()
     if NAME == 'LCGCMT': Name = 'LCG'
     if NAME == 'LHCBGRID' : Name = 'LHCbGrid'
-    NameSys = Name+'Sys'
-    if Name == 'Gaudi': NameSys = Name+'Release'
-    if Name == 'LCG' : NameSys = Name+'_Release'
-    release_area = Name+'_release_area'
+    NameSys = Name + 'Sys'
+    if Name == 'Gaudi': NameSys = Name + 'Release'
+    if Name == 'LCG' : NameSys = Name + '_Release'
+    release_area = Name + '_release_area'
     return NAME, version, Name, NameSys, release_area
 
 
 def _get_project_dir(native_version):
     NAME, version, Name, NameSys, release_area = _get_base_project(native_version)
-    dir = os.path.join(os.environ[release_area],NAME,native_version)
+    dir = os.path.join(os.environ[release_area], NAME, native_version)
     return dir
 
 
@@ -98,7 +98,7 @@ def _get_runtime_deps(filename):
     matchexpr = re.compile("#\s*runtime_use\s+\w+")
     for l in open(filename, "r") :
         if matchexpr.search(l[:-1]) :
-            words = l[:-1].replace("#","").split()
+            words = l[:-1].replace("#", "").split()
             if len(words) < 3 :
                 deps[words[1]] = ""
             else :
@@ -124,7 +124,7 @@ def _get_grid_version(path_list):
     return grid_version
 #-----------------------------------------------------------------------------------
 def make_tar(pname, pversion, binary=''):
-    
+
     global TARSRC
 
     if debug_flag :
@@ -138,32 +138,32 @@ def make_tar(pname, pversion, binary=''):
     compMiscLinuxIa32 = 'i686-slc'
 
     # exclude following files and directories from source tar file
-    exclude_source = ['install.history','core.*', 'html', 'Visual', '*.pyc', '*.pyo',
-                      compLinux+'*',
-                      compWIN32+'*',
-                      compMac+'*',
-                      compMiscLinuxAmd64+'*',
-                      compMiscLinuxIa32+'*']
+    exclude_source = ['install.history', 'core.*', 'html', 'Visual', '*.pyc', '*.pyo',
+                      compLinux + '*',
+                      compWIN32 + '*',
+                      compMac + '*',
+                      compMiscLinuxAmd64 + '*',
+                      compMiscLinuxIa32 + '*']
     # exclude following files from binary tar file
-    exclude_binary = ['.glimpse_*','core.*', 'html', '*.o', 'lib*.a','*.obj']
+    exclude_binary = ['.glimpse_*', 'core.*', 'html', '*.o', 'lib*.a', '*.obj']
 
     if binary == '':
     # source tar file
         tar_bin = ''
         title = ' (source files) '
         # external package binary (CMTCONFIG) distributed with source tar file
-        tar_opt ='_'+ os.environ['CMTCONFIG']
+        tar_opt = '_' + os.environ['CMTCONFIG']
         platform = ''
     else:
     # binary tar file
-        tar_bin = '_'+binary
-        title = ' ('+binary+' binary files) '
+        tar_bin = '_' + binary
+        title = ' (' + binary + ' binary files) '
         # external package binary : only the optimized version is distributed
         tar_opt = tar_bin
         if isBinaryDbg(binary) :
             tar_opt = "_" + getBinaryOpt(binary)
         platform = binary.split('_')[0]
-        if platform.find('slc') != -1: 
+        if platform.find('slc') != -1:
             platform = 'slc'
 
 
@@ -187,19 +187,19 @@ def make_tar(pname, pversion, binary=''):
 
 # environment package
     if CMTPROJECTPATH == '':
-        env = pname+'Env'
+        env = pname + 'Env'
         if not os.path.isdir(env):
-            print '%s environment package does not exist - STOP '%(env)
+            print '%s environment package does not exist - STOP ' % (env)
             sys.exit('No environment package')
     else:
         env = ''
 
     PACK = pname.upper()
-    maindir = os.path.join(PACK,PACK+'_'+pversion)
-    packver = PACK+'_'+PACK+'_'+pversion
-    packSys = pname+'Sys'
+    maindir = os.path.join(PACK, PACK + '_' + pversion)
+    packver = PACK + '_' + PACK + '_' + pversion
+    packSys = pname + 'Sys'
     if pname == 'Gaudi' :
-        packSys = pname+'Release'
+        packSys = pname + 'Release'
         if env == 'GaudiEnv': packSys = 'Gaudi'
 
 #
@@ -207,18 +207,18 @@ def make_tar(pname, pversion, binary=''):
 #
     if CMTPROJECTPATH == '':
         if platform != '':
-            if not os.path.isdir(os.path.join(maindir,'InstallArea',binary)):
+            if not os.path.isdir(os.path.join(maindir, 'InstallArea', binary)):
                 os.chdir(maindir)
-                str = 'LbInstallArea '+binary
+                str = 'LbInstallArea ' + binary
                 os.system(str)
                 os.chdir(here)
-            l = os.listdir(os.path.join(maindir,'InstallArea',binary,'lib'))
-            b = os.listdir(os.path.join(maindir,'InstallArea',binary,'bin'))
-            if len(l) == 0 and len(b) == 0 : sys.exit('no library for this binary %s '%(binary))
+            l = os.listdir(os.path.join(maindir, 'InstallArea', binary, 'lib'))
+            b = os.listdir(os.path.join(maindir, 'InstallArea', binary, 'bin'))
+            if len(l) == 0 and len(b) == 0 : sys.exit('no library for this binary %s ' % (binary))
 
 # tar files location: tar files are stored in $LHCBTAR/<PROJECT> or in $LHCBTAR/source
-    if os.path.exists(os.path.join(LHCBTAR,PACK)): TARSRC = PACK
-    TARDIR = os.path.join(LHCBTAR,TARSRC)
+    if os.path.exists(os.path.join(LHCBTAR, PACK)): TARSRC = PACK
+    TARDIR = os.path.join(LHCBTAR, TARSRC)
 
 #
 # ==== clean some directories before making a tar file =============
@@ -227,8 +227,8 @@ def make_tar(pname, pversion, binary=''):
         if os.path.exists(os.path.join(here, maindir, 'GaudiExamples', 'home')) :
             os.chdir(os.path.join(here, maindir, 'GaudiExamples', 'home'))
         else :
-            v = os.listdir(os.path.join(here,maindir,'GaudiExamples'))
-            os.chdir(os.path.join(here,maindir,'GaudiExamples',v[0],'home'))
+            v = os.listdir(os.path.join(here, maindir, 'GaudiExamples'))
+            os.chdir(os.path.join(here, maindir, 'GaudiExamples', v[0], 'home'))
 
         for line in os.popen('cvs update').readlines():
             if line.split()[0] == '?': os.remove(line.split()[1])
@@ -239,13 +239,13 @@ def make_tar(pname, pversion, binary=''):
 #
     os.environ['CMTPATH'] = ''
     if CMTPROJECTPATH == '':
-        os.chdir(os.path.join(env,pversion,'cmt'))
+        os.chdir(os.path.join(env, pversion, 'cmt'))
     else:
-        os.chdir(os.path.join(here,maindir,'cmt'))
+        os.chdir(os.path.join(here, maindir, 'cmt'))
 
-    os.environ['CMTPATH'] = _get_runtime_cmtpath(os.path.join(here,maindir,'cmt','project.cmt'))
+    os.environ['CMTPATH'] = _get_runtime_cmtpath(os.path.join(here, maindir, 'cmt', 'project.cmt'))
 
-    status,value = commands.getstatusoutput('cmt show set_value CMTPATH')
+    status, value = commands.getstatusoutput('cmt show set_value CMTPATH')
     if value.find('#CMT>') != -1:
         CMTPATH = value.split('\n')[1]
     else:
@@ -260,15 +260,15 @@ def make_tar(pname, pversion, binary=''):
             if os.path.exists(os.path.join(here, maindir, 'PanoramixSys', 'cmt')) :
                 os.chdir(os.path.join(here, maindir, 'PanoramixSys', 'cmt'))
             else :
-                os.chdir(os.path.join(here,maindir,'PanoramixSys',pversion,'cmt'))
-            status,OSC_home = commands.getstatusoutput('cmt show macro_value OSC_home')
-            status,LCG_system = commands.getstatusoutput('cmt show macro_value LCG_system')
+                os.chdir(os.path.join(here, maindir, 'PanoramixSys', pversion, 'cmt'))
+            status, OSC_home = commands.getstatusoutput('cmt show macro_value OSC_home')
+            status, LCG_system = commands.getstatusoutput('cmt show macro_value LCG_system')
             OSC_PATH = OSC_home.split(LCG_system)[0]
-            CMTPATH = CMTPATH+':'+OSC_PATH[0:-1]
-    os.putenv('CMTPATH',CMTPATH)
+            CMTPATH = CMTPATH + ':' + OSC_PATH[0:-1]
+    os.putenv('CMTPATH', CMTPATH)
     os.environ['CMTPATH'] = CMTPATH
 
-    print 'CMTPATH = %s '%(os.getenv('CMTPATH'))
+    print 'CMTPATH = %s ' % (os.getenv('CMTPATH'))
     os.chdir(here)
 
 #
@@ -281,8 +281,8 @@ def make_tar(pname, pversion, binary=''):
 # LCG projects (LCGCMT, GENSER) and OpenSCientist tar files are stored on $LHCBTAR/source
 # DBASE and PARAM package dependencies are found using 'cmt show uses'
 
-    dephtml = os.path.join('/tmp',PACK+'_'+pversion+'.html')
-    dep = open(dephtml,'w')
+    dephtml = os.path.join('/tmp', PACK + '_' + pversion + '.html')
+    dep = open(dephtml, 'w')
 
     dep.write('<MENU><LI>\n')
 
@@ -295,33 +295,33 @@ def make_tar(pname, pversion, binary=''):
         dnam = dver.split('_')[0]
         if dnam == 'LCGCMT' or p.find('OpenScientist') != -1 or p.find('osc_vis') != -1 :
             if dnam != 'LCGCMT' :
-                if p.find('OpenScientist') != -1 : 
+                if p.find('OpenScientist') != -1 :
                     dver = 'OpenScientist_' + dver
                 elif p.find('osc_vis') != -1 :
                     dver = 'osc_vis' + '_' + dver
             if PACK == 'LHCBGRID':
                 dver = 'LCGGrid' + '_' + pversion
-            if ( PACK == 'DIRAC' or PACK == 'LHCBDIRAC' or PACK == 'GANGA' ) and dnam == 'LCGCMT' :
+            if (PACK == 'DIRAC' or PACK == 'LHCBDIRAC' or PACK == 'GANGA') and dnam == 'LCGCMT' :
                 dver = 'LCGGrid' + '_' + _get_grid_version(path_list)
             dbin = tar_opt
-            dtar = dver+dbin
-            print 'dnam %s, dver %s, dbin %s, dtar %s' %(dnam,dver,dbin,dtar)
-            dep.write('[<A HREF=source/'+dtar+'.tar.gz>'+dtar+'</A>]\n')
+            dtar = dver + dbin
+            print 'dnam %s, dver %s, dbin %s, dtar %s' % (dnam, dver, dbin, dtar)
+            dep.write('[<A HREF=source/' + dtar + '.tar.gz>' + dtar + '</A>]\n')
             if PACK == 'GANGA' and dnam == 'LCGCMT' :
                 dver = 'LCGGanga' + '_' + pversion
-                dtar = dver+dbin
-                print 'dnam %s, dver %s, dbin %s, dtar %s' %(dnam,dver,dbin,dtar)
-                dep.write('[<A HREF=source/'+dtar+'.tar.gz>'+dtar+'</A>]\n')
+                dtar = dver + dbin
+                print 'dnam %s, dver %s, dbin %s, dtar %s' % (dnam, dver, dbin, dtar)
+                dep.write('[<A HREF=source/' + dtar + '.tar.gz>' + dtar + '</A>]\n')
         else:
-            dtar = dnam+'_'+dver+tar_bin
-            dep.write('[<A HREF='+dnam+'/'+dtar+'.tar.gz>'+dtar+'</A>]\n')
+            dtar = dnam + '_' + dver + tar_bin
+            dep.write('[<A HREF=' + dnam + '/' + dtar + '.tar.gz>' + dtar + '</A>]\n')
 
 
 # add dependencies to DBASE and PARAM packages to dephtml
     if os.path.exists(os.path.join(maindir, packSys, 'cmt')) :
-        os.chdir(os.path.join(maindir,packSys, 'cmt'))
+        os.chdir(os.path.join(maindir, packSys, 'cmt'))
     else :
-        os.chdir(os.path.join(maindir,packSys,pversion,'cmt'))
+        os.chdir(os.path.join(maindir, packSys, pversion, 'cmt'))
     for line in os.popen('cmt show uses').readlines():
         if line.find('DBASE') != -1 or line.find('PARAM') != -1:
             dnam = 'DBASE'
@@ -329,54 +329,54 @@ def make_tar(pname, pversion, binary=''):
             file = line.split('(')[0].split()
             print file
             name = file[1]
-            ver  = file[2]
-            hat  = ''
-            if len(file) == 4: hat  = file[3]+'_'
-            dver = hat+name+'_'+ver
-            dtar = dnam+'_'+dver
-            dep.write('[<A HREF='+dnam+'/'+dtar+'.tar.gz>'+dtar+'</A>]\n')
+            ver = file[2]
+            hat = ''
+            if len(file) == 4: hat = file[3] + '_'
+            dver = hat + name + '_' + ver
+            dtar = dnam + '_' + dver
+            dep.write('[<A HREF=' + dnam + '/' + dtar + '.tar.gz>' + dtar + '</A>]\n')
     os.chdir(here)
 
 # if GAUSS: get GENSER dependency
     if PACK == 'GAUSS':
         if os.path.exists(os.path.join(maindir, packSys, 'cmt')) :
-            os.chdir(os.path.join(maindir,packSys, 'cmt'))
+            os.chdir(os.path.join(maindir, packSys, 'cmt'))
         else :
-            os.chdir(os.path.join(maindir,packSys,pversion,'cmt'))
+            os.chdir(os.path.join(maindir, packSys, pversion, 'cmt'))
         if os.environ.has_key('CMTPROJECTPATH'):
-            status,value = commands.getstatusoutput('cmt show macro_value GENSERVERSION')
+            status, value = commands.getstatusoutput('cmt show macro_value GENSERVERSION')
             if value.find('#CMT>') != -1:
-                GENSER_version = 'GENSER_'+value.split('\n')[1]
+                GENSER_version = 'GENSER_' + value.split('\n')[1]
             else:
-                GENSER_version = 'GENSER_'+value
+                GENSER_version = 'GENSER_' + value
         else:
-            status,GENSER_version = commands.getstatusoutput('cmt show macro_value GENSER_native_version')
+            status, GENSER_version = commands.getstatusoutput('cmt show macro_value GENSER_native_version')
 
         if status != 0:
             print 'GENSER is not used'
         else:
-            dtar = GENSER_version+tar_opt
-            dep.write('[<A HREF=source/'+dtar+'.tar.gz>'+dtar+'</A>]\n')
+            dtar = GENSER_version + tar_opt
+            dep.write('[<A HREF=source/' + dtar + '.tar.gz>' + dtar + '</A>]\n')
         os.chdir(here)
 
 # if ONLINE: get DIM dependency
     if PACK == 'ONLINE':
         if os.path.exists(os.path.join(maindir, packSys, 'cmt')) :
-            os.chdir(os.path.join(maindir,packSys, 'cmt'))
+            os.chdir(os.path.join(maindir, packSys, 'cmt'))
         else :
-            os.chdir(os.path.join(maindir,packSys,pversion,'cmt'))
-        status,DIM_version = commands.getstatusoutput('cmt show macro_value DIM_native_version')
+            os.chdir(os.path.join(maindir, packSys, pversion, 'cmt'))
+        status, DIM_version = commands.getstatusoutput('cmt show macro_value DIM_native_version')
         if status != 0:
             print 'DIM is not used'
         else:
-            dtar = 'DIM_'+DIM_version+tar_opt
-            dep.write('[<A HREF=source/'+dtar+'.tar.gz>'+dtar+'</A>]\n')
+            dtar = 'DIM_' + DIM_version + tar_opt
+            dep.write('[<A HREF=source/' + dtar + '.tar.gz>' + dtar + '</A>]\n')
         os.chdir(here)
 
 # get system dependency
     if platform != 'win32' and binary != '':
         dtar = tar_opt[1:]
-        dep.write('[<A HREF=system/'+dtar+'.tar.gz>'+dtar+'</A>]\n')
+        dep.write('[<A HREF=system/' + dtar + '.tar.gz>' + dtar + '</A>]\n')
 
 # close the dephtml file
     dep.write('</MENU>\n')
@@ -386,35 +386,35 @@ def make_tar(pname, pversion, binary=''):
 # ==== build the project tar file ===================================
 #
 # tar the main directory
-    tarfile = TARDIR+'/'+packver+tar_bin+'.tar.gz'
+    tarfile = TARDIR + '/' + packver + tar_bin + '.tar.gz'
     if binary == '':
         exclude_list = ' --exclude=' + ' --exclude='.join(exclude_source)
         if env != '':
-            str = 'tar '+exclude_list+' -zcvf '+tarfile+' '+env+'/'+pversion+' '+maindir
+            str = 'tar ' + exclude_list + ' -zcvf ' + tarfile + ' ' + env + '/' + pversion + ' ' + maindir
         else:
-            str = 'tar '+exclude_list+' -zcvf '+tarfile+' '+maindir
+            str = 'tar ' + exclude_list + ' -zcvf ' + tarfile + ' ' + maindir
 #    status = os.system(str)
-        tar_status,output = commands.getstatusoutput(str)
-        print 'make_tar: %s tar status= %s'%(tarfile,tar_status)
+        tar_status, output = commands.getstatusoutput(str)
+        print 'make_tar: %s tar status= %s' % (tarfile, tar_status)
     else:
         exclude_list = ' --exclude=' + ' --exclude='.join(exclude_binary)
-        status,output = commands.getstatusoutput('find '+maindir+' -type d -name '+binary+' -print')
-        binlist = output.replace('\n',' ')
-        str = 'tar '+exclude_list+' -zcvf '+tarfile+' '+binlist
-        tar_status,output = commands.getstatusoutput(str)
-        print  ' make_tar: %s tar status= %s'%(tarfile,tar_status)
+        status, output = commands.getstatusoutput('find ' + maindir + ' -type d -name ' + binary + ' -print')
+        binlist = output.replace('\n', ' ')
+        str = 'tar ' + exclude_list + ' -zcvf ' + tarfile + ' ' + binlist
+        tar_status, output = commands.getstatusoutput(str)
+        print  ' make_tar: %s tar status= %s' % (tarfile, tar_status)
 
 #
 # ==== if tar file is OK :create the html of the project tar file ======================
 #
     if tar_status != 0 :
-        print ' error making %s - STOP '%(tarfile)
+        print ' error making %s - STOP ' % (tarfile)
     else:
-        htmlfile = HTMLDIR+'/'+packver+tar_bin+'.html'
+        htmlfile = HTMLDIR + '/' + packver + tar_bin + '.html'
         if os.path.exists(htmlfile): os.remove(htmlfile)
-        html = open(htmlfile,'w')
-        html.write('<H3>Project '+pname+' version '+pversion+title+'</H3>\n')
-        html.write('<A NAME='+packver+tar_bin+' HREF='+TARSRC+'/'+packver+tar_bin+'.tar.gz>'+packver+tar_bin+'</A>\n')
+        html = open(htmlfile, 'w')
+        html.write('<H3>Project ' + pname + ' version ' + pversion + title + '</H3>\n')
+        html.write('<A NAME=' + packver + tar_bin + ' HREF=' + TARSRC + '/' + packver + tar_bin + '.tar.gz>' + packver + tar_bin + '</A>\n')
         for line in open(dephtml).readlines():
             html.write(line)
         html.close()
@@ -426,10 +426,10 @@ def make_tar(pname, pversion, binary=''):
 #
 
     if tar_status == 0 :
-        md5file = TARDIR+'/'+ packver + tar_bin + '.md5'
+        md5file = TARDIR + '/' + packver + tar_bin + '.md5'
         md5sum = calculateMD5(tarfile)
-        mdf = open(md5file,"w")
-        mdf.write("%s  %s" % (md5sum,os.path.basename(tarfile)))
+        mdf = open(md5file, "w")
+        mdf.write("%s  %s" % (md5sum, os.path.basename(tarfile)))
 #
 # ==== end of make_tar ==================================================================
 #
@@ -441,45 +441,45 @@ def make_tar(pname, pversion, binary=''):
 # ========================================================================
 def data_files_tar(pname, pversion):
     global TARSRC
-    
+
     p = getPackage(pname)
-    prefix = p.project().upper()
-    maindir = os.path.join(prefix.replace('_',os.sep),pversion)
-    packver = prefix+'_'+pversion
+    prefix = "_".join([p.project().upper(), p.hat()])
+    maindir = os.path.join(prefix.replace("_", os.sep), pversion)
+    packver = prefix + '_' + pversion
 
     if not os.path.exists(maindir):
-        print ' %s does not exist - STOP '%(maindir)
+        print ' %s does not exist - STOP ' % (maindir)
         sys.exit()
 
     TARSRC = prefix.split('_')[0]
-    TARDIR = os.path.join(LHCBTAR,TARSRC)
-    tarfile = os.path.join(TARDIR,packver+'.tar.gz')
+    TARDIR = os.path.join(LHCBTAR, TARSRC)
+    tarfile = os.path.join(TARDIR, packver + '.tar.gz')
 
 # dereference GeantFiles
     deref = ''
     if pname == 'Geant4Files' : deref = ' -h '
 
 # tar the main directory
-    str = 'tar '+deref+' -zcvf '+tarfile+' '+TARSRC+'/cmt '+maindir
+    str = 'tar ' + deref + ' -zcvf ' + tarfile + ' ' + TARSRC + '/cmt ' + maindir
     print str
-    tar_status,output = commands.getstatusoutput(str)
-    print 'data_files_tar: %s tar status= %s '%(tarfile,tar_status)
+    tar_status, output = commands.getstatusoutput(str)
+    print 'data_files_tar: %s tar status= %s ' % (tarfile, tar_status)
 
     if tar_status == 0:
 #   create the HTML file
-        htmlfile = HTMLDIR+'/'+packver+'.html'
+        htmlfile = HTMLDIR + '/' + packver + '.html'
         if os.path.exists(htmlfile): os.remove(htmlfile)
-        html = open(htmlfile,'w')
-        html.write('<H3>'+pname+' version '+pversion+'</H3>\n')
-        html.write('<A NAME='+maindir+' HREF='+TARSRC+'/'+packver+'.tar.gz>'+packver+'</A>\n')
+        html = open(htmlfile, 'w')
+        html.write('<H3>' + pname + ' version ' + pversion + '</H3>\n')
+        html.write('<A NAME=' + maindir + ' HREF=' + TARSRC + '/' + packver + '.tar.gz>' + packver + '</A>\n')
         html.write('</MENU>\n')
         html.close()
 
     if tar_status == 0 :
-        md5file = os.path.join(TARDIR,packver+'.md5')
+        md5file = os.path.join(TARDIR, packver + '.md5')
         md5sum = calculateMD5(tarfile)
-        mdf = open(md5file,"w")
-        mdf.write("%s  %s" % (md5sum,os.path.basename(tarfile)))
+        mdf = open(md5file, "w")
+        mdf.write("%s  %s" % (md5sum, os.path.basename(tarfile)))
 
     return tar_status
 
@@ -495,13 +495,13 @@ def create_web():
     webfile = 'distribution.htm'
     if os.path.exists(webfile): os.remove(webfile)
 
-    flist = fnmatch.filter(os.listdir(HTMLDIR),'*.html')
+    flist = fnmatch.filter(os.listdir(HTMLDIR), '*.html')
     flist.sort()
 
-    web = open(webfile,'w')
+    web = open(webfile, 'w')
 
     for line in open('Header.txt').readlines():
-        web.write(line+'\n')
+        web.write(line + '\n')
 
     for f in flist:
         for line in open(f).readlines():
@@ -509,10 +509,10 @@ def create_web():
 
 #  d = datetime.date.today().isoformat()
     d = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
-    web.write('<HR>Last Update : '+d+'\n')
+    web.write('<HR>Last Update : ' + d + '\n')
 
     for line in open('Footer.txt').readlines():
-        web.write(line+'\n')
+        web.write(line + '\n')
 
     web.close()
     os.chdir(here)
@@ -527,8 +527,8 @@ if __name__ == "__main__":
         help()
         sys.exit()
     try:
-        keys, values = getopt.getopt(arguments,'hdwb:p:v:',
-            ['help','debug','web','binary','project=','version='])
+        keys, values = getopt.getopt(arguments, 'hdwb:p:v:',
+            ['help', 'debug', 'web', 'binary', 'project=', 'version='])
 
     except getopt.GetoptError:
         help()
@@ -536,12 +536,12 @@ if __name__ == "__main__":
 
     binary = ''
 
-    for key,value in keys:
+    for key, value in keys:
         if key in ('-d', '--debug'):
             debug_flag = 1
         if key in ('-h', '--help'):
             help()
-        if key in ( '-v', '--version'):
+        if key in ('-v', '--version'):
             pversion = value
         if key in ('-p', '--project'):
             pname = value
@@ -552,14 +552,14 @@ if __name__ == "__main__":
             sys.exit()
 
 # print action list
-    print '+++++++++++++++++++++++ Start mkLHCbtar.py - version no %s '% script_version
+    print '+++++++++++++++++++++++ Start mkLHCbtar.py - version no %s ' % script_version
     print pname, pversion, binary
-    print 'debug_flag= %s'%(debug_flag)
+    print 'debug_flag= %s' % (debug_flag)
 
     tar_status = make_tar(pname, pversion, binary)
 
     if tar_status == 0 : rc = create_web()
 
-    print '+++++++++++++++++++++++ End mkLHCbtar.py -version no ',script_version
+    print '+++++++++++++++++++++++ End mkLHCbtar.py -version no ', script_version
 
     sys.exit(tar_status)
