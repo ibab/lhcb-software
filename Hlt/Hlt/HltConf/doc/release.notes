@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.404 2010-02-01 21:19:15 graven Exp $ 
+! $Id: release.notes,v 1.405 2010-02-02 06:59:46 albrecht Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-02-02 - Johannes Albrecht
+ - remove obsolete Hlt1ExpressLines
 
 !========================== HltConf v6r3 2010-02-01 ===================
 ! 2010-02-01 - Gerhard Raven
