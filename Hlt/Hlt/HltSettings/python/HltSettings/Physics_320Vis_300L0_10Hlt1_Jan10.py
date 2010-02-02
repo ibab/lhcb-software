@@ -46,6 +46,8 @@ class Physics_320Vis_300L0_10Hlt1_Jan10 :
                                            , 'HadViaTCompanion_DZCut'       :    1.50
                                            , 'HadViaTCompanion_PTCut'       :  750
                                            , 'HadViaTCompanion_PointingCut' :    0.5
+                                           , 'HadViaTSingle_IPCut'              :    0.14
+					   , 'HadViaTDi_IPCut'                  :    0.07
                                            }
                , Hlt1HadronLinesConf :     { 'SingleHadron_PTCut'           : 1400
                                            , 'HadSingle_IPCut'              :    0.14

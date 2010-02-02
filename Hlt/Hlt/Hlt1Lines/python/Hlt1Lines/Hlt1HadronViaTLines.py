@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -31,17 +31,16 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
     #     HadViaTCompanion_IPCut
     #     HadViaTCompanion_PtCut
     #
-    __slots__ = { 'L0Channel'               : "Hadron" 
-                , 'HadViaTMain_IPCut'           : 0.1
+    __slots__ = { 'L0Channel'               : "CALO" 
+                , 'HadViaTSingle_IPCut'         : 0.1
+		, 'HadViaTDi_IPCut'             : 0.1
                 , 'HadViaTMain_PTCut'           : 2500.
-                , 'VeloTMatchCut'           : 80
+                , 'VeloTMatchCut'               : 80
                 , 'HadViaTCompanion_DOCACut'    : 0.2
                 , 'HadViaTCompanion_DZCut'      : 0.
-                , 'HadViaTCompanion_IPCut'      : 0.1
                 , 'HadViaTCompanion_PTCut'      : 1000.
                 , 'HadViaTCompanion_PointingCut': 0.4
                 , 'SingleHadronViaT_PTCut'      : 5000.
-                , 'Prescale'                : { 'Hlt1SoftDiHadron' : 0 }
                 }
     
     def __apply_configuration__(self) : 
@@ -59,18 +58,26 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
         # confirmed track
         #------------------------
         def confirmation(type=""):
-            candidates = _cut("L0Channel")
+ 	    prefix = 'HadronViaTConfirmation'+type
+
+            if (self.getProp('L0Channel') == 'CALO') : 
+	      candidates = 'AllHadron'
+            else :
+	      candidates = self.getProp('L0Channel')
+
             L0candidates = "Hlt1L0"+candidates+"Decision"
             
-            IPCut = _cut(type+"HadViaTMain_IPCut")
+            IPCut = str(min( self.getProp(type+"HadViaTDi_IPCut"),self.getProp("HadViaTSingle_IPCut")))
             PTCut = _cut(type+"HadViaTMain_PTCut")
             VTMatchCut = _cut(type+"VeloTMatchCut")
             # get the L0 candidates (all or L0)
             from Hlt1Lines.HltL0Candidates import convertL0Candidates
-            conf = [convertL0Candidates(candidates)]
+            #conf = [convertL0Candidates(candidates)]
             from HltLine.HltDecodeRaw import DecodeIT,DecodeTT
             from Configurables import PatConfirmTool, PatSeedingTool,L0ConfirmWithT,HltTrackUpgradeTool
- 
+
+ 	    l0 = bindMembers(prefix, [ convertL0Candidates(candidates)]) 
+	
             #Define the tool which actually makes the forward tracks
             #from the L0 confirmed objects
             Hlt1HadronViaTTUTConf = Member ( 'TU', 
@@ -103,7 +110,7 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
                                                RecoName = 'THadronConf' 
                                            )
 
-            conf += [ DecodeIT, DecodeTT
+            conf = l0.members()  + [ DecodeIT, DecodeTT
                     , Hlt1HadronViaTTUTConf
                     , Member ( 'TF' , 'TConf'
                            , FilterDescriptor = ['ptAtOrigin,>,'+PTCut]
@@ -123,14 +130,17 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
                                , MatchName = 'VeloT' , MaxQuality = 2.
                                )
                     ]
-            return conf
+            return bindMembers(prefix,conf)
         
         # simple hadron cut
         #---------------
         def singlehadron():
-            sh = [ Member ( 'TF' , 'SingleHadronViaT' , OutputSelection = "%Decision" ,
+            sh = [ Member ( 'TF' , 'SingleHadronViaTPT' , 
                             FilterDescriptor = ['ptAtOrigin,>,'+_cut('SingleHadronViaT_PTCut')]
                             )
+                   , Member ( 'TF', 'SingleHadronViaTIP', OutputSelection = "%Decision" ,
+                           FilterDescriptor = [ 'IP_PV2D,||>,'+_cut('HadViaTSingle_IPCut')]
+                           ) 
                    ]
             return sh
 
@@ -138,12 +148,13 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
         # companion track - dihadron part
         #------------------------------------
         def companion(type=""):
-            IP2Cut = _cut(type+"HadViaTCompanion_IPCut")
+            OutputOfConfirmation = confirmation(type).outputSelection() 
+            IP2Cut = _cut(type+"HadViaTDi_IPCut")
             comp = [ RZVelo 
                    , PV2D.ignoreOutputSelection()
                    , Member ( 'TU', 'UVelo' , RecoName = 'Velo')
                    , Member ( 'TF', '1UVelo'
-                           , FilterDescriptor = ['MatchIDsFraction_%TMVeloT,<,0.9' ]
+                           , FilterDescriptor = ['MatchIDsFraction_%s,<,0.9' %OutputOfConfirmation]
                            )
                    , Member ( 'TF', 'Companion'
                            , FilterDescriptor = [ 'IP_PV2D,||>,'+IP2Cut]
@@ -155,10 +166,15 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
         # dihadron part
         #---------------------
         def dihadron(type=""):
+            OutputOfConfirmation = confirmation(type).outputSelection()
             PT2Cut = _cut(type+"HadViaTCompanion_PTCut")
+            IP3Cut = _cut(type+"HadViaTDi_IPCut")
             dih = [ PV2D.ignoreOutputSelection()
+                , Member ( 'TF', 'DiHadronViaTIP', InputSelection = '%s' %OutputOfConfirmation
+                           , FilterDescriptor = [ 'IP_PV2D,||>,'+IP3Cut]
+                           )
                 , Member ( 'VM2', 'UVelo'
-                         , InputSelection1 = '%TMVeloT'
+                         , InputSelection1 = '%TFDiHadronViaTIP'
                          , InputSelection2 = '%TFCompanion'
                          , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('HadViaTCompanion_DOCACut'))]
                            )
@@ -182,8 +198,8 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
             Line ( 'SingleHadronViaT'
                    , prescale = self.prescale
                    , postscale = self.postscale
-                   , L0DU  = "L0_CHANNEL('"+_cut("L0Channel")+"')"
-                   , algos = confirmation()+singlehadron()
+                   , L0DU  = "L0_CHANNEL('CALO')"
+                   , algos = [confirmation()]+singlehadron()
                    )
 
             # DiHadron Line
@@ -191,6 +207,6 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
             Line ('DiHadronViaT'
                   , prescale = self.prescale
                   , postscale = self.postscale
-                  , L0DU  = "L0_CHANNEL('"+_cut("L0Channel")+"')"
-                  , algos =  confirmation()+companion()+dihadron()
+                  , L0DU  = "L0_CHANNEL('CALO')"
+                  , algos =  [confirmation()]+companion()+dihadron()
                   )

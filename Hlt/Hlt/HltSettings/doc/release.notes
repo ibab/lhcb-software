@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-02-02 - V. Gligorov
+ - Update ViaT lines in Physics_320Vis_300L0_10Hlt1_Jan10
+
 !========================== HltSettings v1r7 2010-02-02 ===================
 ! 2010-02-02 - Johannes Albrecht
  - remove obsolete Hlt1ExpressLines from all threshold settings

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.102 2010-02-02 07:33:23 graven Exp $
+! $Id: release.notes,v 1.103 2010-02-02 10:55:26 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -9,6 +9,9 @@
 ! for the production. Commit them AS WELL in branch production200912. 
 !
 !-----------------------------------------------------------------------------
+
+! 2010-02-02 - V. Gligorov
+ - Update ViaT lines
 
 !========================== Hlt1Lines v2r1 2010-02-02 ===================
 ! 2010-02-02 - Johannes Albrecht
