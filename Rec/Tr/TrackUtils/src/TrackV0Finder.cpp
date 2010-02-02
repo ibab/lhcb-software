@@ -1,4 +1,4 @@
-// $Id: TrackV0Finder.cpp,v 1.14 2009-12-10 11:13:18 wouter Exp $
+// $Id: TrackV0Finder.cpp,v 1.15 2010-02-02 08:35:14 wouter Exp $
 // Include files 
 
 
@@ -223,6 +223,11 @@ inline bool inAnyVertex( const LHCb::Track& track,
 //=============================================================================
 StatusCode TrackV0Finder::execute() 
 {
+  // Create the output container 
+  typedef KeyedContainer<LHCb::TwoProngVertex, Containers::HashMap> TwoProngVertices;
+  TwoProngVertices* v0container = new TwoProngVertices() ;
+  put(v0container, m_v0ContainerName) ;
+  
   // Get the primary vertices. Locate the one that's most downstream.
   const LHCb::RecVertices* pvcontainer = get<LHCb::RecVertices>( m_pvContainerName ) ;
   if( pvcontainer->empty() ) 
@@ -269,10 +274,6 @@ StatusCode TrackV0Finder::execute()
   const double ksmass  = m_ksProperty->mass() ;
   const double lambdamass = m_lambdaProperty->mass() ;
   
-  // Create the output container 
-  typedef KeyedContainer<LHCb::TwoProngVertex, Containers::HashMap> TwoProngVertices;
-  TwoProngVertices* v0container = new TwoProngVertices() ;
-  put(v0container, m_v0ContainerName) ;
   
   for( TrackContainer::iterator ipos = postracks.begin() ;
        ipos != postracks.end(); ++ipos) 
