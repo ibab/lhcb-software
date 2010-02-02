@@ -1,4 +1,4 @@
-// $Id: L0DUMultiConfigProvider.cpp,v 1.6 2010-01-29 10:02:22 odescham Exp $
+// $Id: L0DUMultiConfigProvider.cpp,v 1.7 2010-02-02 11:27:02 odescham Exp $
 // Include files 
 
 #include<iostream>
@@ -182,9 +182,9 @@ LHCb::L0DUConfig*  L0DUMultiConfigProvider::loadConfig( std::string tck ,std::st
 
 
   debug() << "looking for configs for slot " << slot << " size = " << m_configs.size() << endmsg;
-  std::map<std::string,LHCb::L0DUConfigs*>::iterator it = m_configs.find( slot );
-  if(it != m_configs.end())debug() << "configs for slot " << slot << " found : " << (*it).second << endmsg;
-  if(it == m_configs.end()){
+  std::map<std::string,LHCb::L0DUConfigs*>::iterator ic = m_configs.find( slot );
+  if(ic != m_configs.end())debug() << "configs for slot " << slot << " found : " << (*ic).second << endmsg;
+  if(ic == m_configs.end()){
     LHCb::L0DUConfigs* confs = new LHCb::L0DUConfigs();
     m_configs[slot]= confs;
   }

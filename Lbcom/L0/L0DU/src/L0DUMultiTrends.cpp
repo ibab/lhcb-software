@@ -1,4 +1,4 @@
-// $Id: L0DUMultiTrends.cpp,v 1.3 2010-01-29 11:18:39 odescham Exp $
+// $Id: L0DUMultiTrends.cpp,v 1.4 2010-02-02 11:27:02 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -157,7 +157,7 @@ StatusCode L0DUMultiTrends::execute() {
   // =============== trending =====================
   if(m_trendPeriod > 0 && NULL != m_odin){
     // get ODIN time
-    longlong time = (longlong) ( (double) m_odin->getTime().ns()/Gaudi::Units::second);
+    unsigned long time = (unsigned long) ( (double) m_odin->getTime().ns()/Gaudi::Units::second);
     if( exist<LHCb::ODIN>( LHCb::ODINLocation::Default) ){
       LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
       // fix origin
@@ -168,13 +168,13 @@ StatusCode L0DUMultiTrends::execute() {
         m_hasOrigin = true;
       }      
 
-      longlong diff = (time - m_origin);
+      long diff = (time - m_origin);
       //      if( !m_tTrend )diff = odin->eventNumber() - m_origin;
       if( !m_tTrend )diff = m_count - m_origin;
 
       if( diff < 0)counter("lost events in trending") +=  1;
       else if( diff >= 0){ // may loose some events at first pass
-        int nStep =  diff / m_trendStep ;
+        long nStep =  diff / m_trendStep ;
         long bin = m_oBin+nStep;
         // slide
         if( bin >= m_trendPeriod){
@@ -271,7 +271,7 @@ StatusCode L0DUMultiTrends::execute() {
     }
   }
   return StatusCode::SUCCESS ;
-};
+}
 //=============================================================================
 //  Finalize
 //=============================================================================

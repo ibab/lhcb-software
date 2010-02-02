@@ -1,4 +1,4 @@
-// $Id: L0DUMultiTrends.h,v 1.2 2010-01-29 10:02:22 odescham Exp $
+// $Id: L0DUMultiTrends.h,v 1.3 2010-02-02 11:27:02 odescham Exp $
 #ifndef L0DUMULTITRENDS_H 
 #define L0DUMULTITRENDS_H 1
 
@@ -79,12 +79,13 @@ private:
   // trending
   long m_trendStep;
   int m_trendPeriod;
-  longlong m_origin;
-  longlong m_oBin;
   int m_dMon;
   bool m_sMon;
   bool m_cMon;
   bool m_rate;
-  longlong m_count;
+  //
+  unsigned long m_origin;
+  unsigned long m_oBin;
+  unsigned long m_count;
 };
 #endif // L0DUMULTITRENDS_H
