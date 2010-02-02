@@ -44,7 +44,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Boole version v20r0
-                                          running on lxbuild156.cern.ch on Thu Jan 21 11:20:05 2010
+                                          running on lxbuild156.cern.ch on Tue Feb  2 16:51:18 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -56,7 +56,7 @@ EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEv
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.65 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.62 times the speed of a 2.8 GHz Xeon.
 BooleSequencer       INFO Member list: ProcessPhase/Init, ProcessPhase/Digi, ProcessPhase/Link, ProcessPhase/Moni, ProcessPhase/Filter
 Init                 INFO Member list: GaudiSequencer/InitBooleSeq, GaudiSequencer/InitDataSeq, GaudiSequencer/InitMuonSeq
 InitBooleSeq         INFO Member list: BooleInit, GaudiSequencer/SpilloverHandler
@@ -103,6 +103,11 @@ DigiRichSeq          INFO Member list: Rich::MC::Digi::Signal/RichPDSignal, Rich
 DeRichSystem         INFO Update triggered for HPD numbering maps
 DeRichSystem         INFO Built mappings for  7 L1 and 196 HPDs in Rich1
 DeRichSystem         INFO Built mappings for  8 L1 and 288 HPDs in Rich2
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c1.vs.down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c2.vs.down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c3.vs.down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c4.vs.down.cdf
+MagneticFieldSvc     INFO Map scaled by factor 1 with polarity -1
 RichChargeShare      INFO Will add charge sharing at 2.5 % level
 ToolSvc.RichSma...   INFO Created active HPD channel list : # channels RICH(1/2) = 167776 / 246528
 RichPDResponse       INFO Time Calibration (Rich1/RICH2) = [10, 6]
@@ -185,9 +190,9 @@ HcalFillRawBuffer    INFO Processing 54 FE-Cards and 8 TELL1
 HcalFillRawBuffer    INFO Data coding type 2
 DigiMuonSeq          INFO Member list: MuonDigitization, MuonDigitToRawBuffer
 DigiL0Seq            INFO Member list: GaudiSequencer/L0SimulationSeq
-L0SimulationSeq      INFO Member list: PuVetoFillRawBuffer, GaudiSequencer/L0EmulatorSeq, L0CaloCandidatesFromRaw
-L0EmulatorSeq        INFO Member list: GaudiSequencer/L0ProcessorsSeq, L0DUAlg/L0DU
-L0ProcessorsSeq      INFO Member list: L0CaloAlg/L0Calo, L0MuonAlg/L0Muon, PuVetoAlg/L0PuVeto
+L0SimulationSeq      INFO Member list: PuVetoFillRawBuffer, GaudiSequencer/L0EmulatorSeq
+L0EmulatorSeq        INFO Member list: GaudiSequencer/subL0EmulatorSeq, L0DUAlg/L0DU
+subL0EmulatorSeq     INFO Member list: L0CaloAlg/L0Calo, L0MuonAlg/L0Muon, PuVetoAlg/L0PuVeto
 L0Calo               INFO 192 Ecal and 54 Hcal front end cards.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 L0Muon               INFO XML file = /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r2/data/L0MuonKernel.xml
@@ -197,13 +202,11 @@ L0Muon               INFO  foiYSize = 0,0,0,1,1
 L0Muon               INFO  ignoreM1 = 0
 L0Muon               INFO  ignoreM2 = 0
 L0Muon               INFO  procVersion = 2
-L0MuonTrigger I...   INFO Time User   : Tot= 1.78  [s]                                             #=  1
+L0MuonTrigger I...   INFO Time User   : Tot= 1.79  [s]                                             #=  1
 ToolSvc.L0CondD...   INFO Registered RAM(BCID) versions = {}
 ToolSvc.L0DUConfig   INFO Creating the TEMPLATE configuration tools : ToolSvc.L0DUConfig.Template for time slot :  'T0'
-ToolSvc.L0DUCon...   INFO -------------------------------------------------------------
 ToolSvc.L0DUCon...   INFO **** L0DU Config loading : L0TCK = 0x10000 for slot T0 ==> OK
 ToolSvc.L0DUCon...   INFO Short description :: NO DESCRIPTION (L0DUConfig.Template)
-ToolSvc.L0DUCon...   INFO -------------------------------------------------------------
 ToolSvc.L0DUCon...   INFO **** L0DU Config loading : L0TCK = 0xDC09 for slot T0 ==> OK
 ToolSvc.L0DUCon...   INFO Short description ::  TCK = 0xDC09 : DC09 tuning by Leandro (March 2009) - gain:Calo[20] : Muon[40]
 L0DU                 INFO The L0DUConfig (TCK=0xDC09) have been succesfully loaded
@@ -444,7 +447,7 @@ L0MuonOnlineMon...SUCCESS Booked 9 Histogram(s) : 1D=5 2D=4
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.65 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.62 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -508,12 +511,11 @@ TimingAuditor.T...   INFO    DigiL0Seq                  |     0.000 |     0.000 
 TimingAuditor.T...   INFO     L0SimulationSeq           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      PuVetoFillRawBuffer      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      L0EmulatorSeq            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       L0ProcessorsSeq         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       subL0EmulatorSeq        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO        L0Calo                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO        L0Muon                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO        L0PuVeto               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       L0DU                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      L0CaloCandidatesFromRaw  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO   Link                        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    LinkVeloSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     DecodeVeloRawBuffer       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -600,8 +602,8 @@ DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/0(Alg/Node/Total).
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
-L0MuonTrigger I...   INFO Time User   : Tot= 1.78  [s]                                             #=  1
-ChronoStatSvc        INFO Time User   : Tot= 3.09  [s]                                             #=  1
+L0MuonTrigger I...   INFO Time User   : Tot= 1.79  [s]                                             #=  1
+ChronoStatSvc        INFO Time User   : Tot= 2.93  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized successfully
 ApplicationMgr       INFO Application Manager Finalized successfully
