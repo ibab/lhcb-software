@@ -8,7 +8,9 @@ Purpose: LHCb reconstruction program
 
  - Changes to references to reflect changes in Brunel v36r1 output:
    . Change in aerogel CK theta range (RichRecBase v3r26, RichRecQC v2r36)
-   . Updates to SpdMonitor (CaloMoniDst v4r4)
+   . Updates to SpdMonitor, add histograms in CaloEMuMonitor (CaloMoniDst v4r4)
+   . New Pixel Cluster monitor, remove MC related printout (RichRecQC v2r36)
+   . New RichIFB histograms following bug fixes (RichIFBAnalysis v1r1p1)
 
 </PRE><H1><A NAME=v36r0>2010-01-26 Brunel v36r0</A></H1><PRE>
  - Changes to requirements
