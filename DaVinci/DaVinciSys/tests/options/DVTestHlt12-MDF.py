@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt12-MDF.py,v 1.9 2009-11-23 06:30:12 pkoppenb Exp $
+# $Id: DVTestHlt12-MDF.py,v 1.10 2010-02-02 15:27:58 pkoppenb Exp $
 #
 # Test for Hlt1&2. Test for MDF files.
 #
@@ -26,6 +26,7 @@ DaVinci().PrintFreq  = 1                       # Print frequency
 DaVinci().Hlt = True             ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
 DaVinci().InputType = "MDF"
 DaVinci().HltThresholdSettings = 'Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09'
+DaVinci().ReplaceL0BanksWithEmulated = True
 from Configurables import HltCorrelations
 DaVinci().MoniSequence = [ HltCorrelations() ]
 EventSelector().Input   = [

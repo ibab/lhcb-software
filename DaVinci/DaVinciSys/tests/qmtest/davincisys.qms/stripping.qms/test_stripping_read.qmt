@@ -8,7 +8,7 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-StrippingBs2JpsiPhiLine                                     SUCCESS Number of counters : 2
+StrippingBs2JpsiPhiLine                                     SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  |*"#accept"                                       |        17 |         17 |(  100.000 +- 5.88235  )%|   -------   |   -------   |
  | "#errors"                                       |        17 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |

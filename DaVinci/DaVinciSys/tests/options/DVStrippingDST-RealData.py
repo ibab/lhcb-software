@@ -37,7 +37,7 @@ dstWriter = SelDSTWriter("StripMC09DSTWriter",
 DaVinci().Hlt = True
 DaVinci().HltThresholdSettings = 'Physics_320Vis_300L0_10Hlt1_Aug09'
 # DaVinci().L0 = True
-# DaVinci().ReplaceL0BanksWithEmulated = True
+DaVinci().ReplaceL0BanksWithEmulated = True
 ##############################################################################
 #
 # DaVinci
