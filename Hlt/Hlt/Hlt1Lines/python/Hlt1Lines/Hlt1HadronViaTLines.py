@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -93,11 +93,11 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
                                                                                                          zMagnet = 0
                                                                                                        )
       												 ],
-                                                                                         nSigmaX = 4,
-                                                                                         nSigmaY = 4,
-                                                                                         nSigmaTx = 4,
-                                                                                         nSigmaTy = 4,
-                                                                                         restrictSearch = False,
+                                                                                         nSigmaX = 3,
+                                                                                         nSigmaY = 3,
+                                                                                         nSigmaTx = 3,
+                                                                                         nSigmaTy = 3,
+                                                                                         restrictSearch = True,
                                                                                          debugMode = False 
                                                                                        )
                                                                                  ],
