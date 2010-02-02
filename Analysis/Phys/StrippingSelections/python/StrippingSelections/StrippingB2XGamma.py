@@ -1,6 +1,6 @@
 __author__ = 'Fatima Soomro'
 __date__ = '18/12/2009'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -35,31 +35,42 @@ class StrippingB2XGammaConf(LHCbConfigurableUser):
                    ,'KstVCHI2'            : 15       # dimensionless
                    }
     
+    __phiGamma = None
+    __phiGammaBMass = None
+    __phiGammaDira = None
+    __kstGamma = None
+    __kstGammaBMass = None
+    __kstGammaDira = None
+    __kstGammaKMass = None
+    
     def phigammaWideBMass( self ) :
-        mySelection = self.combineBs() #this is an object of type Selection
-        WideBMassBs = mySelection.algorithm().clone("WideBMassBs", CombinationCut = "(ADAMASS('B_s0')<%(BMassWinSB)s*MeV)"% self.getProps() )
-        #WideBMassBs.PropertiesPrint = True
-        SelWideBMassBs = mySelection.clone("SelWideBMassBs", Algorithm = WideBMassBs)
-        SelSeqBs2PhiGammaWideBMass = SelectionSequence('SelSeqBs2PhiGammaWideBMass', SelWideBMassBs)
-        return StrippingLine('Bs2PhiGammaWideBMass', prescale =0.1, algos = [ SelSeqBs2PhiGammaWideBMass ] )  
+        if StrippingB2XGammaConf.__phiGammaBMass == None:
+            mySelection = self.combineBs(name = "BsMassSideBand") #this is an object of type Selection
+            WideBMassBs = mySelection.algorithm().clone("WideBMassBs", CombinationCut = "(ADAMASS('B_s0')<%(BMassWinSB)s*MeV)"% self.getProps() )
+            WideBMassBs.PropertiesPrint = False
+            SelWideBMassBs = mySelection.clone("SelWideBMassBs", Algorithm = WideBMassBs)
+            StrippingB2XGammaConf.__phiGammaBMass = SelectionSequence('SelSeqBs2PhiGammaWideBMass', SelWideBMassBs)
+        return StrippingLine('Bs2PhiGammaWideBMass', prescale =0.1, algos = [ StrippingB2XGammaConf.__phiGammaBMass ] )  
     
     def phigammaLooseDira( self ) :
-        mySelection = self.combineBs() #this is an object of type Selection
-        LooseDiraBs  = mySelection.algorithm().clone("LooseDiraBs", MotherCut = "(acos(BPVDIRA) < %(BDirAngleMoni)s) & (BPVIPCHI2() < %(BsPVIPchi2)s)" % self.getProps() )
-        # LooseDiraBs.PropertiesPrint = True
-        SelLooseDiraBs = mySelection.clone("SelLooseDiraBs", Algorithm = LooseDiraBs)
-        SelSeqBs2PhiGammaLooseDira = SelectionSequence('SelSeqBs2PhiGammaLooseDira', SelLooseDiraBs)
-        return StrippingLine('Bs2PhiGammaLooseDira', prescale = 0.1, algos = [ SelSeqBs2PhiGammaLooseDira ] ) 
+        if StrippingB2XGammaConf.__phiGammaDira ==None:
+            mySelection = self.combineBs(name = "BsDiraSideBand") #this is an object of type Selection
+            LooseDiraBs  = mySelection.algorithm().clone("LooseDiraBs", MotherCut = "(acos(BPVDIRA) < %(BDirAngleMoni)s) & (BPVIPCHI2() < %(BsPVIPchi2)s)" % self.getProps() )
+            LooseDiraBs.PropertiesPrint = False
+            SelLooseDiraBs = mySelection.clone("SelLooseDiraBs", Algorithm = LooseDiraBs)
+            StrippingB2XGammaConf.__phiGammaDira = SelectionSequence('SelSeqBs2PhiGammaLooseDira', SelLooseDiraBs)
+        return StrippingLine('Bs2PhiGammaLooseDira', prescale = 0.1, algos = [   StrippingB2XGammaConf.__phiGammaDira ] ) 
     
     def phigamma( self ) :
-        StripBs2PhiGamma = SelectionSequence('SeqSelBs2PhiGamma', TopSelection  = self.combineBs())
-        return StrippingLine('Bs2PhiGamma', prescale = 1, algos = [ StripBs2PhiGamma] )
+        if StrippingB2XGammaConf.__phiGamma == None :
+            mySelection = self.combineBs(name = "Bs2PhiGamma")
+            StrippingB2XGammaConf.__phiGamma = SelectionSequence('SeqSelBs2PhiGamma', TopSelection  = mySelection)#self.combineBs(name = "Bs2PhiGamma"))
+        return StrippingLine('Bs2PhiGamma', prescale = 1, algos = [ StrippingB2XGammaConf.__phiGamma] )
     
-    def combineBs(self):
+    def combineBs(self, name = "MakeBs2PhiGamma" ):
         """
         Define the Bs
         """        
-        name = "Bs2PhiGamma" 
         _stdPhi4Bs = DataOnDemand("LoosePhi2KK4Bs", Location = "Phys/StdLoosePhi2KK")
         _phi4BsFilter = FilterDesktop ("PhiFilterFor"+name)
         _phi4BsFilter.Code = "(MINTREE(ABSID=='K+', MIPCHI2DV(PRIMARY))> %(TrIPchi2Phi)s) & (ADMASS('phi(1020)') < %(PhiMassWinT)s*MeV) & (VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s)" % self.getProps()
@@ -84,50 +95,54 @@ class StrippingB2XGammaConf(LHCbConfigurableUser):
                                   ,Algorithm = _Bs2PhiGamma
                                   ,RequiredSelections = [Gamma, Phi4Bs])
         
-        return Bs2PhiGamma 
+        return Bs2PhiGamma
     
     def kstgammaWideBMass( self ) :
-        mySelection = self.combineBd() 
-        WideBMassBd = mySelection.algorithm().clone("WideBMassBd", CombinationCut = "(ADAMASS('B0')<%(BMassWinSB)s*MeV)"% self.getProps() )
-        #WideBMassBd.PropertiesPrint = True
-        SelWideBMassBd = mySelection.clone("SelWideBMassBd", Algorithm =  WideBMassBd )
-        SelSeqBd2KstGammaWideBMass = SelectionSequence('SelSeqBd2KstGammaWideBMass', SelWideBMassBd)
-        return StrippingLine('Bd2KstGammaWideBMass', prescale = 0.1, algos = [ SelSeqBd2KstGammaWideBMass] )  
+        if StrippingB2XGammaConf.__kstGammaBMass == None :
+            mySelection = self.combineBd(name = "BdMassSideBand" ) 
+            WideBMassBd = mySelection.algorithm().clone("WideBMassBd", CombinationCut = "(ADAMASS('B0')<%(BMassWinSB)s*MeV)"% self.getProps() )
+            WideBMassBd.PropertiesPrint = False
+            SelWideBMassBd = mySelection.clone("SelWideBMassBd", Algorithm =  WideBMassBd )
+            StrippingB2XGammaConf.__kstGammaBMass = SelectionSequence('SelSeqBd2KstGammaWideBMass', SelWideBMassBd)
+        return StrippingLine('Bd2KstGammaWideBMass', prescale = 0.1, algos = [ StrippingB2XGammaConf.__kstGammaBMass] )  
     
     def kstgammaLooseDira( self ) :
-        mySelection = self.combineBd() 
-        LooseDiraBd  = mySelection.algorithm().clone("LooseDiraBd", MotherCut = "(acos(BPVDIRA) < %(BDirAngleMoni)s) & (BPVIPCHI2() < %(B0PVIPchi2)s)" % self.getProps() )
-        #LooseDiraBd.PropertiesPrint = True
-        SelLooseDiraBd = mySelection.clone("SelLooseDiraBd", Algorithm =LooseDiraBd  )
-        SelSeqBd2KstGammaLooseDira = SelectionSequence('SelSeqBsd2KstGammaLooseDira', SelLooseDiraBd)
-        return StrippingLine('Bd2KstGammaLooseDira', prescale =0.1, algos = [ SelSeqBd2KstGammaLooseDira] )
+        if StrippingB2XGammaConf.__kstGammaDira == None :
+            mySelection = self.combineBd(name = "BdDiraSideBand") 
+            LooseDiraBd  = mySelection.algorithm().clone("LooseDiraBd", MotherCut = "(acos(BPVDIRA) < %(BDirAngleMoni)s) & (BPVIPCHI2() < %(B0PVIPchi2)s)" % self.getProps() )
+            LooseDiraBd.PropertiesPrint = False
+            SelLooseDiraBd = mySelection.clone("SelLooseDiraBd", Algorithm =LooseDiraBd  )
+            StrippingB2XGammaConf.__kstGammaDira = SelectionSequence('SelSeqBsd2KstGammaLooseDira', SelLooseDiraBd)
+        return StrippingLine('Bd2KstGammaLooseDira', prescale =0.1, algos = [  StrippingB2XGammaConf.__kstGammaDira] )
 
     def kstgammaWideKstMass( self ) :
-        mySelection = self.combineBd() 
-        Sel = mySelection.clone("Sel") 
-        mylist = Sel.requiredSelections 
-        mygamma = mylist[0].clone("myGamma")
-        KstMass =  mylist[1].algorithm().clone("KstMass", CombinationCut ="(ADAMASS('K*(892)0')<%(KstMassWinSB)s*MeV)" % self.getProps() ) # a combineParticles
-        #KstMass.PropertiesPrint = True
-        myKst = mylist[1].clone("myKst", Algorithm = KstMass)
-        makeB0 = Sel.algorithm().clone("makeB0")
-        #makeB0.PropertiesPrint = True
-        Bd2KstGammaWideKstMass = Selection ( "Bd2KstGammaWideKMass"
-                                             ,Algorithm = makeB0
-                                             ,RequiredSelections = [ mygamma, myKst]) 
-        SelSeqBd2KstGammaWideKstMassBd = SelectionSequence('SelSeqBsd2KstGammaWideKstMassBd',  Bd2KstGammaWideKstMass )
-        return StrippingLine('Bd2KstGammaWideKstMassBd', prescale = 0.1, algos = [ SelSeqBd2KstGammaWideKstMassBd ] )
+        if StrippingB2XGammaConf.__kstGammaKMass == None :
+            mySelection = self.combineBd(name = "KstMassSideBand") 
+            Sel = mySelection.clone("Sel") 
+            mylist = Sel.requiredSelections 
+            mygamma = mylist[0].clone("myGamma")
+            KstMass =  mylist[1].algorithm().clone("KstMass", CombinationCut ="(ADAMASS('K*(892)0')<%(KstMassWinSB)s*MeV)" % self.getProps() ) # a combineParticles
+            KstMass.PropertiesPrint = False
+            myKst = mylist[1].clone("myKst", Algorithm = KstMass)
+            makeB0 = Sel.algorithm().clone("makeB0")
+            makeB0.PropertiesPrint = False
+            Bd2KstGammaWideKstMass = Selection ( "Bd2KstGammaWideKMass"
+                                                 ,Algorithm = makeB0
+                                                 ,RequiredSelections = [ mygamma, myKst]) 
+            StrippingB2XGammaConf.__kstGammaKMass = SelectionSequence('SelSeqBsd2KstGammaWideKstMassBd',  Bd2KstGammaWideKstMass )
+        return StrippingLine('Bd2KstGammaWideKstMassBd', prescale = 0.1, algos = [ StrippingB2XGammaConf.__kstGammaKMass ] )
 
     
     def kstgamma( self ) :
-        StripBd2KstGamma = SelectionSequence('SeqSelBd2KstGamma', TopSelection  = self.combineBd())
-        return StrippingLine('Bd2KstGamma', prescale = 1, algos = [ StripBd2KstGamma] )
+        if   StrippingB2XGammaConf.__kstGamma == None:
+            mySelection = self.combineBd(name = "Bd2KstGamma") 
+            StrippingB2XGammaConf.__kstGamma = SelectionSequence('SeqSelBd2KstGamma', TopSelection  = mySelection)
+        return StrippingLine('Bd2KstGamma', prescale = 1, algos = [ StrippingB2XGammaConf.__kstGamma] )
     
-    def combineBd(self):
+    def combineBd(self, name = "Make2KstGamma" ):
         """
         Define the Bd
         """        
-        name = "Bd2KstGamma" 
         _K4Kst  = DataOnDemand("K4Kst",  Location = "Phys/StdLooseKaons")
         _pi4Kst = DataOnDemand("pi4Kst", Location = "Phys/StdLoosePions")
 
