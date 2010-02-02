@@ -1,8 +1,8 @@
-# $Id: StrippingBd2DstarMuNuLoose.py,v 1.2 2010-01-24 23:36:01 gcowan Exp $
+# $Id: StrippingBd2DstarMuNuLoose.py,v 1.3 2010-02-02 21:24:47 gcowan Exp $
 
 __author__ = 'Greig Cowan, Marta Calvi'
 __date__ = '10/12/2009'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 '''
 Bd->Dstar mu nu loose stripping selection using LoKi::Hybrid and python
@@ -42,8 +42,8 @@ class StrippingBd2DstarMuNuLooseConf(LHCbConfigurableUser):
 	stdVeryLooseDstarDCS = DataOnDemand("stdVeryLooseDstarWithD02KPiDCS", Location = "StdVeryLooseDstarWithD02KPiDCS")
 	
 	Bd2DstarMu = CombineParticles("Bd2DstarMuNuLoose")
-	Bd2DstarMu.DecayDescriptor = "[B0 -> D*(2010)- mu+]cc"
-
+	Bd2DstarMu.DecayDescriptors = ["[B0 -> D*(2010)- mu+]cc", "[B0 -> D*(2010)+ mu+]cc"] # includes wrong sign
+	
 	# D* has the following decay chain:  D*+ -> ( D0 -> K pi ) pi 
 	muonCuts = "  (ISLONG)"\
            	   "& (PT > %(MuonPT)s *MeV)"\

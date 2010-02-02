@@ -1,8 +1,8 @@
-# $Id: StrippingBs2JpsiPhi.py,v 1.4 2010-01-29 18:59:51 gcowan Exp $
+# $Id: StrippingBs2JpsiPhi.py,v 1.5 2010-02-02 21:24:47 gcowan Exp $
 
 __author__ = ['Greig Cowan']
 __date__ = '24/01/2010'
-__version__ = '$Revision: 1.4 $'
+__version__ = '$Revision: 1.5 $'
 
 '''
 Bs->JpsiPhi lifetime unbiased stripping selection using LoKi::Hybrid and
@@ -25,8 +25,6 @@ class StrippingBs2JpsiPhiConf(LHCbConfigurableUser):
 		,	"JpsiVCHI2Loose"	: 20.0	# adimensional
 		,	"KaonTRCHI2Loose"	: 10.0	# adimensional  
 		,	"KaonPIDK"	: -5.0	# adimensional  
-		,	"KaonPT"	: 500.0	# MeV  
-		,	"KaonPTLoose"	: 250.0	# MeV  
 		,	"PhiMassWin"	: 15.0	# MeV
 		,	"PhiMassWinLoose"	: 30.0	# MeV
 		,	"PhiPT" 	: 1000.0# MeV
@@ -67,7 +65,6 @@ class StrippingBs2JpsiPhiConf(LHCbConfigurableUser):
 	StdLoosePhi2KK = DataOnDemand("StdLoosePhi2KK", "StdLoosePhi2KK")
 	_phiFilter = FilterDesktop("PhiFilterForBs2JpsiPhiLoose")
 	_phiFilter.Code = "  (MAXTREE('K+'==ABSID, TRCHI2DOF) < %(KaonTRCHI2Loose)s)" \
-        	          "& (MINTREE('K+'==ABSID, PT) > %(KaonPTLoose)s *MeV)"\
                 	  "& (ADMASS('phi(1020)') < %(PhiMassWinLoose)s *MeV)" \
                   	  "& (PT > %(PhiPTLoose)s *MeV)" \
                   	  "& (VFASPF(VCHI2/VDOF) < %(PhiVCHI2Loose)s)" % self.getProps()
@@ -81,7 +78,6 @@ class StrippingBs2JpsiPhiConf(LHCbConfigurableUser):
 	StdLoosePhi2KK = DataOnDemand("StdLoosePhi2KK", "StdLoosePhi2KK")
 	_phiFilter = FilterDesktop("PhiFilterForBs2JpsiPhi")
 	_phiFilter.Code = "  (MINTREE('K+'==ABSID, PIDK) > %(KaonPIDK)s)" \
-        	          "& (MINTREE('K+'==ABSID, PT) > %(KaonPT)s *MeV)"\
                 	  "& (ADMASS('phi(1020)') < %(PhiMassWin)s *MeV)" \
                   	  "& (PT > %(PhiPT)s *MeV)" \
                   	  "& (VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s)" % self.getProps()

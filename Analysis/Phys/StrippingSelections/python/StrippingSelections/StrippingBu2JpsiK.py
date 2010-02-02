@@ -1,8 +1,8 @@
-# $Id: StrippingBu2JpsiK.py,v 1.3 2010-01-29 18:59:51 gcowan Exp $
+# $Id: StrippingBu2JpsiK.py,v 1.4 2010-02-02 21:24:47 gcowan Exp $
 
 __author__ = ['Greig Cowan']
 __date__ = '24/01/2010'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 '''
 Bu->JpsiK lifetime unbiased stripping selection using LoKi::Hybrid and
@@ -54,7 +54,6 @@ class StrippingBu2JpsiKConf(LHCbConfigurableUser):
         StdVeryLooseJpsi2MuMu = DataOnDemand("StdVeryLooseJpsi2MuMu", "StdVeryLooseJpsi2MuMu")
 	_JpsiFilter = FilterDesktop("JpsiFilterForBu2JpsiKLoose")
 	_JpsiFilter.Code = "  (MAXTREE('mu+'==ABSID, TRCHI2DOF) < %(MuonTRCHI2Loose)s)" \
-			   "& (MINTREE('mu+'==ABSID, PT) > %(MuonPTLoose)s *MeV)" \
         	           "& (PT > %(JpsiPTLoose)s *MeV)" \
         	           "& (ADMASS('J/psi(1S)') < %(JpsiMassWinLoose)s *MeV)" \
         	           "& (VFASPF(VCHI2/VDOF) < %(JpsiVCHI2Loose)s)" % self.getProps()

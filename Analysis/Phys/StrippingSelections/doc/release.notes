@@ -5,6 +5,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-02-02 - Greig Cowan
+ - Removed PT cuts on muons and kaons (from phi and Kstar) in the lifetime
+   unbiased B2JpsiX lines. Both loose and nominal changed. Leads to tiny 
+   rate increase.
+ - Added WS decay to Bd2DstarMuNu loose line. <2 times rate increase.
+
 ! 2010-02-02 - Greig Cowan for Liming Zhang
  - Fixed Bs2Jpsif0 line to prevent duplication of some methods
    when building the lines.

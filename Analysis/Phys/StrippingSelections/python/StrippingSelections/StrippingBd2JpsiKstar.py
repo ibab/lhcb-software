@@ -1,8 +1,8 @@
-# $Id: StrippingBd2JpsiKstar.py,v 1.3 2010-01-29 18:59:51 gcowan Exp $
+# $Id: StrippingBd2JpsiKstar.py,v 1.4 2010-02-02 21:24:47 gcowan Exp $
 
 __author__ = ['Greig Cowan']
 __date__ = '24/01/2010'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 '''
 Bd->JpsiKstar lifetime unbiased stripping selection using LoKi::Hybrid and
@@ -28,9 +28,7 @@ class StrippingBd2JpsiKstarConf(LHCbConfigurableUser):
 		,	"KaonPIDKMinusPIDp"	: -6.0	# adimensional  
 		,	"KaonPIDK"		: -5.0	# adimensional  
 		,	"KaonTRCHI2Loose"	: 10.0	# adimensional  
-		,	"KaonPTLoose"		: 250.0	# MeV 
 		,	"PionTRCHI2Loose"	: 10.0	# adimensional   
-		,	"PionPTLoose"		: 250.0	# MeV 
 		,	"KstarMassWin"		: 90.0	# MeV 
 		,	"KstarMassWinLoose"	: 300.0	# MeV
 		,	"KstarPT"		: 1000. # MeV
@@ -61,7 +59,6 @@ class StrippingBd2JpsiKstarConf(LHCbConfigurableUser):
         StdVeryLooseJpsi2MuMu = DataOnDemand("StdVeryLooseJpsi2MuMu", "StdVeryLooseJpsi2MuMu")
 	_JpsiFilter = FilterDesktop("JpsiFilterForBd2JpsiKstarLoose")
 	_JpsiFilter.Code = "  (MAXTREE('mu+'==ABSID, TRCHI2DOF) < %(MuonTRCHI2Loose)s)" \
-			   "& (MINTREE('mu+'==ABSID, PT) > %(MuonPTLoose)s *MeV)" \
         	           "& (PT > %(JpsiPTLoose)s *MeV)" \
         	           "& (ADMASS('J/psi(1S)') < %(JpsiMassWinLoose)s *MeV)" \
         	           "& (VFASPF(VCHI2/VDOF) < %(JpsiVCHI2Loose)s)" % self.getProps()
@@ -90,8 +87,8 @@ class StrippingBd2JpsiKstarConf(LHCbConfigurableUser):
         StdNoPIDsPions = DataOnDemand("StdNoPIDsPions", "StdNoPIDsPions")
 	_Kstar = CombineParticles("Kstar2KPiForBd2JpsiKstarLoose")
 	_Kstar.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
-	_Kstar.DaughtersCuts = {  "K+" :"(PT > %(KaonPTLoose)s *MeV) & (TRCHI2DOF < %(KaonTRCHI2Loose)s)" % self.getProps()
-				, "pi+":"(PT > %(PionPTLoose)s *MeV) & (TRCHI2DOF < %(PionTRCHI2Loose)s)" % self.getProps()
+	_Kstar.DaughtersCuts = {  "K+" :"(TRCHI2DOF < %(KaonTRCHI2Loose)s)" % self.getProps()
+				, "pi+":"(TRCHI2DOF < %(PionTRCHI2Loose)s)" % self.getProps()
                 	  	}
 	_Kstar.CombinationCut = "(ADAMASS('K*(892)0') < %(KstarMassWinLoose)s *MeV)" % self.getProps()
 	_Kstar.MotherCut = "(VFASPF(VCHI2/VDOF)< %(KstarVCHI2Loose)s) & (PT > %(KstarPTLoose)s *MeV)" % self.getProps()
