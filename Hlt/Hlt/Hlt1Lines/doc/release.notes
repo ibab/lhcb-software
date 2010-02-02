@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.101 2010-02-02 07:03:34 albrecht Exp $
+! $Id: release.notes,v 1.102 2010-02-02 07:33:23 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -10,10 +10,10 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v2r1 2010-02-02 ===================
 ! 2010-02-02 - Johannes Albrecht
  - remove obsolete Hlt1ExpressLines.py
 
-!========================== Hlt1Lines v2r1 2010-02-01 ===================
 ! 2010-02-01 - Gerhard Raven
  - take into account that not all L0 channels have candidates to be converted
 
