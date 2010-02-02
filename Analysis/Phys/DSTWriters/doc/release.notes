@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.6 2010-02-01 13:25:06 jpalac Exp $
+!$Id: release.notes,v 1.7 2010-02-02 17:32:26 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! 2010-02-02 - Juan Palacios
+ - Added new fragment modules which factor out various elements of the various
+   DST writing problems.
+ - cmt/requirements
+  . Increase version to v1r2.
 
 ! ======================== DSTWriters v1r1 2010-02-01 ========================
 
