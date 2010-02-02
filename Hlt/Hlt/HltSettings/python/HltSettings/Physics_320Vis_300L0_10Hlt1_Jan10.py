@@ -181,7 +181,6 @@ class Physics_320Vis_300L0_10Hlt1_Jan10 :
                  'Hlt1PhotonDiTrackFromEle',
                  'Hlt1VeloASide',
                  'Hlt1VeloCSide',
-                 'Hlt1AlignVelo',
                  'Hlt1ODINPhysics',
                  'Hlt1ODINTechnical',
                  'Hlt1Tell1Error' ,
