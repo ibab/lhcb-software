@@ -1,11 +1,11 @@
-# $Id: StrippingBs2Jpsif0.py,v 1.2 2010-01-29 18:59:51 gcowan Exp $
+# $Id: StrippingBs2Jpsif0.py,v 1.3 2010-02-02 09:14:27 gcowan Exp $
 
 __author__ = ['Liming Zhang']
 __date__ = '28/01/2010'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 '''
-Bs->Jpsif0 lifetime unbiased stripping selection using LoKi::Hybrid and
+Bs->Jpsif0 lifetime biased stripping selection using LoKi::Hybrid and
 python configurables. PV refitting is done. Implements the nominal and 
 loose lifetime unbiased stripping selections.
 '''
@@ -47,28 +47,21 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
                 ,       "BsFDLoose"             : 0.8   # mm
                 ,       "BsFD"                  : 1.5   # mm
                  }
-    
     def nominal_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        Jpsi2MuMuSel = self.Jpsi2MuMu()
-        f02PiPiSel = self.f02PiPi()
-	Bs2Jpsif0Sel = self.Bs2Jpsif0()
-	Jpsi2MuMuSeq = SelectionSequence("SeqJpsi", TopSelection = Jpsi2MuMuSel)
-	f02PiPiSeq = SelectionSequence("Seqf0", TopSelection = f02PiPiSel)
-	Bs2Jpsif0Seq = SelectionSequence("SeqBs2Jpsif0", TopSelection = Bs2Jpsif0Sel)	
-	return StrippingLine('Bs2Jpsif0Line', prescale = 1, algos = [Jpsi2MuMuSeq, f02PiPiSeq, Bs2Jpsif0Seq])   
-     	
+        return StrippingLine('Bs2Jpsif0Line', prescale = 1., algos = [self._nominal_line_sequence()]) 
+            	
     def loose_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        Jpsi2MuMuSel = self.Jpsi2MuMuLoose()
-        f02PiPiSel = self.f02PiPiLoose()
-	Bs2Jpsif0Sel = self.Bs2Jpsif0Loose()
-	Jpsi2MuMuSeq = SelectionSequence("SeqJpsiLoose", TopSelection = Jpsi2MuMuSel)
-	f02PiPiSeq = SelectionSequence("Seqf0Loose", TopSelection = f02PiPiSel)
-	Bs2Jpsif0Seq = SelectionSequence("SeqBs2Jpsif0Loose", TopSelection = Bs2Jpsif0Sel)
-	return StrippingLine('Bs2Jpsif0LooseLine', prescale = 1, algos = [Jpsi2MuMuSeq, f02PiPiSeq, Bs2Jpsif0Seq])   
-     
-    def Jpsi2MuMuLoose( self ):
+	return StrippingLine('Bs2Jpsif0LooseLine', prescale = 1, algos = [self._loose_line_sequence()])   
+
+    def _nominal_line_sequence( self ):
+        return SelectionSequence('SeqBs2Jpsif0', TopSelection = self._Bs2Jpsif0())
+
+    def _loose_line_sequence( self ):
+        return SelectionSequence("SeqBs2Jpsif0Loose", TopSelection = self._Bs2Jpsif0Loose())
+            
+    def _Jpsi2MuMuLoose( self ):
 	StdVeryLooseJpsi2MuMu = DataOnDemand("StdVeryLooseJpsi2MuMu", "StdVeryLooseJpsi2MuMu")
 	_JpsiFilter = FilterDesktop("JpsiFilterForBs2Jpsif0Loose")
 	_JpsiFilter.Code = "  (MAXTREE('mu+'==ABSID, TRCHI2DOF) < %(MuonTRCHI2Loose)s)" \
@@ -80,7 +73,7 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
 			RequiredSelections = [StdVeryLooseJpsi2MuMu])
 	return Jpsi
     
-    def Jpsi2MuMu( self ):
+    def _Jpsi2MuMu( self ):
 	StdLooseJpsi2MuMu = DataOnDemand("StdLooseJpsi2MuMu", "StdLooseJpsi2MuMu")
 	_JpsiFilter = FilterDesktop("JpsiFilterForBs2Jpsif0")
 	_JpsiFilter.Code = "  (MAXTREE('mu+'==ABSID, TRCHI2DOF) < %(MuonTRCHI2)s)" \
@@ -94,7 +87,7 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
 	return Jpsi
 
  
-    def f02PiPiLoose( self ):
+    def _f02PiPiLoose( self ):
         StdNoPIDsPions = DataOnDemand("StdNoPIDsPions", "StdNoPIDsPions")
         _f0 = CombineParticles("f02PiPiLoose")
         _f0.DecayDescriptors = ["f_0(980) -> pi+ pi-", "f_0(980) -> pi- pi-", "f_0(980) -> pi+ pi+"]
@@ -108,7 +101,7 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
                  RequiredSelections = [StdNoPIDsPions])
 	return f0	
 
-    def f02PiPi( self ):
+    def _f02PiPi( self ):
         StdLoosePions = DataOnDemand("StdLoosePions", "StdLoosePions")
         _f0 = CombineParticles("f02PiPi")
         _f0.DecayDescriptors = ["f_0(980) -> pi+ pi-", "f_0(980) -> pi- pi-", "f_0(980) -> pi+ pi+"]
@@ -124,9 +117,9 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
                  RequiredSelections = [StdLoosePions])
 	return f0	
 
-    def Bs2Jpsif0Loose( self ):
-	Jpsi = self.Jpsi2MuMuLoose()
-	f0 = self.f02PiPiLoose()
+    def _Bs2Jpsif0Loose( self ):
+	Jpsi = self._Jpsi2MuMuLoose()
+	f0 = self._f02PiPiLoose()
 	_Bs = CombineParticles("Bs2Jpsif0Loose")
       	_Bs.DecayDescriptor = "B_s0 -> J/psi(1S) f_0(980)"
         _Bs.CombinationCut = "ADAMASS('B_s0') < %(BsMassWinLoose)s *MeV" % self.getProps()
@@ -141,12 +134,12 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
 
 	Bs = Selection("SelBs2Jpsif0Loose",
                  	Algorithm = _Bs,
-                 	RequiredSelections = [Jpsi, f0])
+                 	RequiredSelections = [ f0, Jpsi])
 	return Bs
 
-    def Bs2Jpsif0( self ):
-	Jpsi = self.Jpsi2MuMu()
-	f0 = self.f02PiPi()
+    def _Bs2Jpsif0( self ):
+	Jpsi = self._Jpsi2MuMu()
+	f0 = self._f02PiPi()
 	_Bs = CombineParticles("Bs2Jpsif0")
       	_Bs.DecayDescriptor = "B_s0 -> J/psi(1S) f_0(980)"
         _Bs.CombinationCut = "ADAMASS('B_s0') < %(BsMassWin)s *MeV" % self.getProps()
@@ -161,7 +154,7 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
 
 	Bs = Selection("SelBs2Jpsif0",
                  	Algorithm = _Bs,
-                 	RequiredSelections = [Jpsi, f0])
+                 	RequiredSelections = [f0, Jpsi])
 	return Bs
 
 	
