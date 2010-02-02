@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-02-02 - Greig Cowan for Liming Zhang
+ - Fixed Bs2Jpsif0 line to prevent duplication of some methods
+   when building the lines.
+
 ! 2010-02-01 - Anton Poluektov
  - Fixed duplicate names of Selections in Kst0Kst0 line
  - Timing information in tests/TestStripping.C
