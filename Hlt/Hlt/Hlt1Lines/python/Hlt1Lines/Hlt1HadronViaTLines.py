@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -93,10 +93,10 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
                                                                                                          zMagnet = 0
                                                                                                        )
       												 ],
-                                                                                         nSigmaX = 10,
-                                                                                         nSigmaY = 10,
-                                                                                         nSigmaTx = 10,
-                                                                                         nSigmaTy = 10,
+                                                                                         nSigmaX = 4,
+                                                                                         nSigmaY = 4,
+                                                                                         nSigmaTx = 4,
+                                                                                         nSigmaTy = 4,
                                                                                          restrictSearch = False,
                                                                                          debugMode = False 
                                                                                        )
