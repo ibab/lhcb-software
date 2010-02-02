@@ -30,6 +30,9 @@ class Physics_MinBiasL0_PassThroughHlt_Jan10 :
         """
         return [ 'Hlt1ODINPhysics','Hlt1ODINTechnical','Hlt1Tell1Error'
                , 'Hlt1L0Any'
+               , 'Hlt1L0SPD' , 'Hlt1L0CALO' , 'Hlt1L0MUON' , 'Hlt1L0PU' , 'Hlt1L0SPD40' , 'Hlt1L0PU40' 
+               , 'Hlt1L0Electron' , 'Hlt1L0Photon' , 'Hlt1L0Hadron' , 'Hlt1L0Muon' , 'Hlt1L0DiMuon' , 'Hlt1L0Muon,lowMult' , 'Hlt1L0DiMuon,lowMult'
+               , 'Hlt1L0B1gas' , 'Hlt1L0B2gas'
                , 'Hlt1LumiNoBeam','Hlt1LumiBeamCrossing','Hlt1LumiBeam1','Hlt1LumiBeam2'
                #, 'Hlt1LumiLowNoBeam','Hlt1LumiLowBeamCrossing','Hlt1LumiLowBeam1','Hlt1LumiLowBeam2'
                , 'Hlt1MiniBiasNoBeam','Hlt1MiniBiasBeamCrossing','Hlt1MiniBiasBeam1','Hlt1MiniBiasBeam2'
@@ -52,13 +55,14 @@ class Physics_MinBiasL0_PassThroughHlt_Jan10 :
                                                              , 'Hlt1Tell1Error'     : 0.
                                                              } 
                                               }
-               , Hlt1LumiLinesConf : { 'EnableReco' : True  }
-               , Hlt1L0LinesConf   : { 'Prescale' : { '.*' : 1 } }
-               , Hlt1VeloLinesConf : { 'Prescale' : { '.*' : 0 } }
-               , Hlt1MiniBiasLinesConf : { 'Prescale' : { '.*' : 0.5 } }
-               , Hlt1NoBiasLinesConf : { 'Prescale' : { 'Hlt1NoBiasNoBeam'        : 0.01,
-                                                        'Hlt1NoBiasBeam1'         : 0.05,
-                                                        'Hlt1NoBiasBeam2'         : 0.01,
-                                                        'Hlt1NoBiasBeamCrossing'  : 0.1,
-                                                        } }
-                 }
+               , Hlt1LumiLinesConf          : { 'EnableReco' : True  }
+               , Hlt1L0LinesConf            : { 'Prescale' : { '.*' : 1 } }
+               , Hlt1VeloLinesConf          : { 'Prescale' : { '.*' : 0 } }
+               , Hlt1MiniBiasLinesConf      : { 'Prescale' : { '.*' : 0.5 } }
+               , Hlt1NoBiasLinesConf        : { 'Prescale' : { 'Hlt1NoBiasNoBeam'        : 0.01
+                                                             , 'Hlt1NoBiasBeam1'         : 0.05
+                                                             , 'Hlt1NoBiasBeam2'         : 0.01
+                                                             , 'Hlt1NoBiasBeamCrossing'  : 0.1
+                                                             } 
+                                              }
+               }
