@@ -36,7 +36,6 @@ class Swimming_320Vis_300L0_Hadron_Hlt1_Oct09 :
         from Hlt1Lines.Hlt1HadronForSwimmingLines         import Hlt1HadronForSwimmingLinesConf
         from Hlt1Lines.Hlt1ElectronLines       import Hlt1ElectronLinesConf
         from Hlt1Lines.Hlt1PhotonLines         import Hlt1PhotonLinesConf
-        from Hlt1Lines.Hlt1ExpressLines        import Hlt1ExpressLinesConf
         from Hlt1Lines.Hlt1VeloLines           import Hlt1VeloLinesConf
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
 

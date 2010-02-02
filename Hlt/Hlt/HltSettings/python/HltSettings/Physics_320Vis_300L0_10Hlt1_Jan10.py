@@ -38,7 +38,6 @@ class Physics_320Vis_300L0_10Hlt1_Jan10 :
         from Hlt1Lines.Hlt1HadronViaTLines     import Hlt1HadronViaTLinesConf
         from Hlt1Lines.Hlt1ElectronLines       import Hlt1ElectronLinesConf
         from Hlt1Lines.Hlt1PhotonLines         import Hlt1PhotonLinesConf
-        from Hlt1Lines.Hlt1ExpressLines        import Hlt1ExpressLinesConf
         from Hlt1Lines.Hlt1VeloLines           import Hlt1VeloLinesConf
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
 
@@ -99,7 +98,6 @@ class Physics_320Vis_300L0_10Hlt1_Jan10 :
                                            , 'MuTrackMuChi24JPsi'           :  999.
                                            , 'MuTrackTrChi24JPsi'           :  999.
                                            }
-               , Hlt1ExpressLinesConf : {  'Prescale' : { '.*' : .000015  } }
                , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 1.
                                                              , 'Hlt2Forward'      : 0. # first needs a check that /Hlt/Track/Long actually exists..
                                                              , 'Hlt2DebugEvent'   : 0.0001

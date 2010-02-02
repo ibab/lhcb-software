@@ -48,7 +48,6 @@ class Debug_10000Vis_1000L0_MuTrack_Hlt1_Oct09 :
         from Hlt1Lines.Hlt1HadronLines         import Hlt1HadronLinesConf
         from Hlt1Lines.Hlt1ElectronLines       import Hlt1ElectronLinesConf
         from Hlt1Lines.Hlt1PhotonLines         import Hlt1PhotonLinesConf
-        from Hlt1Lines.Hlt1ExpressLines        import Hlt1ExpressLinesConf
         from Hlt1Lines.Hlt1VeloLines           import Hlt1VeloLinesConf
         from Hlt2Lines.Hlt2CommissioningLines import Hlt2CommissioningLinesConf
     
@@ -90,7 +89,6 @@ class Debug_10000Vis_1000L0_MuTrack_Hlt1_Oct09 :
                                         , 'MuTrackPoint'       : 0.4
                                         , 'MuTrackTrChi2'      : 10 
                                         }
-                 , Hlt1ExpressLinesConf : {  'Prescale' : { '.*' : .000015  } }
                  , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 1.
                                                                , 'Hlt2Forward'      : 0. # first needs a check that /Hlt/Track/Long actually exists..
                                                                , 'Hlt2DebugEvent'   : 0.0001
