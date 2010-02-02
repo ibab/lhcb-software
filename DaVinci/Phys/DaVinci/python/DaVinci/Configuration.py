@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.83 2010-01-07 08:18:23 panmanj Exp $"
+__version__ = "$Id: Configuration.py,v 1.84 2010-02-02 15:33:53 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -242,7 +242,13 @@ class DaVinci(LHCbConfigurableUser) :
             L0Conf().setProp( "L0Sequencer", l0seq )
             L0Conf().setProp( "ReplaceL0BanksWithEmulated", self.getProp("ReplaceL0BanksWithEmulated") )
             L0Conf().setProp( "DataType", self.getProp("DataType"))
-            log.info("Will run L0")
+            if ( self.getProp('HltThresholdSettings') ):
+                from HltConf.ThresholdUtils import Name2Threshold
+                L0TCK = Name2Threshold(self.getProp('HltThresholdSettings')).L0TCK()
+                L0Conf().setProp( "TCK", L0TCK )
+                log.info("Will run L0 with TCK "+L0TCK)
+            else :
+                log.warning("L0 TCK has not been set by DaVinci. Assume it's set otherwise.")
         
 ################################################################################
 # @todo Stolen from Brunel. Could be common to all apps?

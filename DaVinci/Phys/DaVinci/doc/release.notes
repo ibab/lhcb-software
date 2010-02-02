@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.399 2010-02-01 12:52:36 panmanj Exp $
+! $Id: release.notes,v 1.400 2010-02-02 15:33:53 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,11 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2010-02-02 - Patrick Koppenburg
+ - Get L0TCK from HltSettings. 
+   Warning : if you weant to run an Hlt setting taht uses a different TCK from 
+   what has been run on the data you must re-emulate L0. 
 
 ! 2010-02-01 - Jaap Panman
  - add testjobs for writing FSRs in options directory
