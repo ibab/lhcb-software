@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-02-02 - Giacomo Graziani
+ - added MuonAlignmentMonitor algorithm by A.Petrella and S.Vecchi
+
 ! 2010-01-18 - Patrick Koppenburg
  - task #13386: Remove include of IContextTool from MuIDMonitor
    . At the same time break lines thta are too long and remove the

@@ -19,6 +19,9 @@ use LoKiPhys              v* Phys
 use LoKiArrayFunctors     v* Phys
 use MuonDet		v* Det
 use LinkerEvent        v*    Event
+use RecEvent           v* Event
+use TrackEvent         v* Event
+
 
 include_path      none
 #============================================================================

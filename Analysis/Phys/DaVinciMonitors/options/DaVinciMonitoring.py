@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: DaVinciMonitoring.py,v 1.4 2009-11-25 17:15:47 pkoppenb Exp $
+# $Id: DaVinciMonitoring.py,v 1.5 2010-02-02 11:42:36 ggiacomo Exp $
 #
 # syntax: gaudirun.py $DAVINCIMONITORSROOT/options/DVMonitorDst.py
 #
@@ -29,3 +29,4 @@ importOptions( "$DAVINCIMONITORSROOT/options/RichCalib.py" )
 #importOptions( "$DAVINCIMONITORSROOT/options/MuonPidJpCalib.py" ) 
 #importOptions( "$DAVINCIMONITORSROOT/options/MuonPidLaCalib.py" ) 
 importOptions( "$DAVINCIMONITORSROOT/options/MuIDMonitor.py" ) 
+importOptions( "$DAVINCIMONITORSROOT/options/MuonAlignmentMonitor.py" ) 
