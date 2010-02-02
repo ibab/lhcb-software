@@ -154,23 +154,26 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double IP, IPerr;
     double B0the= ptotB.Theta();
     double B0phi= ptotB.Phi();
-    double ang = asin((ipionS->pt()/GeV)/(ipionS->p()/GeV));
+    double ang = asin((ipionS->pt())/(ipionS->p()));
     double deta= log(tan(B0the/2.))-log(tan(ang/2.));
     double dphi= std::min(fabs(ipionS->momentum().Phi()-B0phi), 
                           6.283-fabs(ipionS->momentum().Phi()-B0phi));
-    double dQ  = ((ptotB+ipionS->momentum()).M() - B0mass)/GeV;
+    double dQ  = ((ptotB+ ipionS->momentum() ).M() - B0mass);
+//     debug()<<"   B0mass+pSS "<< (ptotB+ ipionS->momentum() ).M()
+// 	   <<"   B0mass "<<B0mass
+// 	   <<"        dQ"<<dQ/GeV<< endreq;
+
     m_util->calcIP(ipionS, RecVert, IP, IPerr);
 
     std::vector<double> NNinputs(10);
     NNinputs.at(0) = m_util->countTracks(vtags);
-    NNinputs.at(1) = AXB0->p()/GeV;
+    NNinputs.at(1) = AXB0->pt()/GeV;
     NNinputs.at(2) = ipionS->p()/GeV;
     NNinputs.at(3) = ipionS->pt()/GeV;
     NNinputs.at(4) = IP/IPerr;
     NNinputs.at(5) = deta;
     NNinputs.at(6) = dphi;
-    NNinputs.at(7) = dQ;
-//    NNinputs.at(8) = m_util->getNvtx();
+    NNinputs.at(7) = dQ/GeV;
     NNinputs.at(8) = allVtx.size();
     NNinputs.at(9) = ncand;
 

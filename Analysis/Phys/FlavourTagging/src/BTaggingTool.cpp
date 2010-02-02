@@ -25,7 +25,8 @@ BTaggingTool::BTaggingTool( const std::string& type,
   declareProperty( "CombineTaggersName",
                    m_CombineTaggersName = "CombineTaggersProbability" );
   declareProperty( "UseVtxChargeWithoutOS", m_UseVtxOnlyWithoutOS = false );
-
+  declareProperty( "ChoosePVCriterium",     m_ChoosePV="ChoosePVbyIPs");
+  
   declareProperty( "IPPU_cut",     m_IPPU_cut    = 3.0 );
   declareProperty( "thetaMin_cut", m_thetaMin    = 0.012 );
   declareProperty( "distphi_cut",  m_distphi_cut = 0.005 );
@@ -134,26 +135,15 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
                                         << "  Nr Particles: " << parts->size() <<endreq;
   
   //----------------------------
-  RecVertex::Container::const_iterator iv;
+  if( ! RecVert ) RecVert = choosePrimary(verts, AXB);
   if( ! RecVert ) {
-    double kdmin = 1000000;
-    for(iv=verts->begin(); iv!=verts->end(); iv++){
-      double ip, iperr;
-      m_util->calcIP(AXB, *iv, ip, iperr);
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Vertex IP/s="<<ip/iperr<<endreq;
-      if(iperr) if( fabs(ip/iperr) < kdmin ) {
-        kdmin = fabs(ip/iperr);
-        RecVert = (*iv);
-      }     
-    }
-    if( ! RecVert ) {
-      err() <<"No Reconstructed Vertex!! Skip." <<endreq;
-      return StatusCode::SUCCESS;
-    }    
-  }
-
+    err() <<"No Reconstructed Vertex!! Skip." <<endreq;
+    return StatusCode::SUCCESS;
+  }    
+  
   //build a vector of pileup vertices --------------------------
   Vertex::ConstVector allVtx;
+  RecVertex::Container::const_iterator iv;
   RecVertex::ConstVector PileUpVtx(0); //contains all the other primary vtx's
   for(iv=verts->begin(); iv!=verts->end(); iv++){
     const Vertex* av=AXB->endVertex();
@@ -304,6 +294,42 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
 
   return StatusCode::SUCCESS;
 }
+
+//=========================================================================
+const RecVertex* BTaggingTool::choosePrimary(const RecVertex::Container* verts,
+                                             const Particle* AXB) {
+  
+  const RecVertex* RecVert = 0;
+  RecVertex::Container::const_iterator iv;
+  if (m_ChoosePV == "ChoosePVbyIPs") {
+    
+      double kdmin = 1000000;
+      for(iv=verts->begin(); iv!=verts->end(); iv++){
+        double ip, iperr;
+        m_util->calcIP(AXB, *iv, ip, iperr);
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Vertex IP/s="<<ip/iperr<<endreq;
+        if(iperr) if( fabs(ip/iperr) < kdmin ) {
+          kdmin = fabs(ip/iperr);
+          RecVert = (*iv);
+        }     
+      }
+  } else if (m_ChoosePV == "ChoosePVbyIP") {
+    
+      double kdmin = 1000000;
+      for(iv=verts->begin(); iv!=verts->end(); iv++){
+        double ip, iperr;
+        m_util->calcIP(AXB, *iv, ip, iperr);
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Vertex IP="<<ip<<endreq;
+        if( fabs(ip) < kdmin ) {
+          kdmin = fabs(ip);
+          RecVert = (*iv);
+        }     
+      }
+  } else err()<<"Unknown property ChoosePVCriterium: "<<m_ChoosePV<<endreq;
+
+  return RecVert;
+}
+
 //=========================================================================
 StatusCode BTaggingTool::finalize() { return StatusCode::SUCCESS; }
 

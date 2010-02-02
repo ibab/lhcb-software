@@ -93,6 +93,9 @@ StatusCode TaggingUtils::calcIP( const Particle* axp,
 int TaggingUtils::countTracks( Particle::ConstVector& vtags ) {
 
   int nr = 0;
+
+  //nr = vtags.size();
+
   Particle::ConstVector::const_iterator ipart, jpart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
     bool duplic=false;
@@ -104,6 +107,7 @@ int TaggingUtils::countTracks( Particle::ConstVector& vtags ) {
     }
     if(!duplic) ++nr;
   }
+
   return nr;
 }
 //============================================================================

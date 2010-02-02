@@ -1,4 +1,4 @@
-// $Id: CombineTaggersPID.cpp,v 1.2 2008-11-27 07:21:05 cattanem Exp $
+// $Id: CombineTaggersPID.cpp,v 1.3 2010-02-02 19:29:08 musy Exp $
 #include "CombineTaggersPID.h"
 
 //-----------------------------------------------------------------------------
@@ -200,8 +200,8 @@ int CombineTaggersPID::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& 
   if(abs(tagsum)>1) index += 100000;
 
   //Give a tagger decision
-  if (tagsum > 0) tagdecision=1;
-  if (tagsum < 0) tagdecision=-1;
+  if (tagsum > 0)  tagdecision=1;
+  if (tagsum < 0)  tagdecision=-1;
   if (tagsum == 0) tagdecision=0;
 
   debug() << "Index = " << index << endmsg;           
@@ -217,12 +217,12 @@ int CombineTaggersPID::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& 
       if (pionSS==true) m_index[ic]=m_pid_cats_bu[ic];
       if (m_index[ic]==index){
         debug() << "Index =    " << m_index[ic] << " = " << index << endmsg;     
-        if ((ic>=0) && (ic<=10)) catt=5;
-        if ((ic>=11) && (ic<=18)) catt=4;
-        if ((ic>=19) && (ic<=25)) catt=3;
-        if ((ic>=26) && (ic<=32)) catt=2;
-        if ((ic>=33) && (ic<=39)) catt=1;
-        if (ic>=40) catt=0;
+        if      (ic<=10) catt=5;
+        else if (ic<=18) catt=4;
+        else if (ic<=25) catt=3;
+        else if (ic<=32) catt=2;
+        else if (ic<=39) catt=1;
+        else catt=0;
       }
     }
   }

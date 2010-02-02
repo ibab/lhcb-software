@@ -38,6 +38,8 @@ NNetTool_DC06::NNetTool_DC06( const std::string& type,
   declareProperty( "P1_ks_scale", m_P1ks = -1.017668);
   declareProperty( "P0_ps_scale", m_P0ps =  1.147873);
   declareProperty( "P1_ps_scale", m_P1ps = -1.241866);
+  declareProperty( "P0_vtx_scale", m_P0vtx = 1.);
+  declareProperty( "P1_vtx_scale", m_P1vtx = -1.);
     
 }
 NNetTool_DC06::~NNetTool_DC06(){}
@@ -165,3 +167,5 @@ double NNetTool_DC06::MLPpS(std::vector<double>& par) {
   return pn;
 };
 //=============================================================================
+double NNetTool_DC06::MLPvtx(std::vector<double>& par) { return 0.0; }
+

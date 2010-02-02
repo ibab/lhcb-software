@@ -1,13 +1,20 @@
-! $Id: release.notes,v 1.160 2010-01-18 22:17:03 musy Exp $
+! $Id: release.notes,v 1.161 2010-02-02 19:29:08 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2010-02-02 - Marco Musy
+ - modified nnets to cope with new impact parameter optimised on MC09 events
+ - bug fix on PID of OS kaon taggers 
+ - bug fix on SS pion taggers (nnet input set as p instead of pt)
+ - NNet changed for MC09 nu=1 tuning, to account for changes in IP definition
+ - updated options
+ . raise to version v11r0
+
 ! 2010-01-18 - Marco Musy
  - modified TaggingUtils to take in the asbolute value of impact parameter
- - raise to version v10r1
 
 
 !========================== FlavourTagging v10r0 2009-12-16 ==================

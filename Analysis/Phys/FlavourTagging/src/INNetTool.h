@@ -1,4 +1,4 @@
-// $Id: INNetTool.h,v 1.5 2006-05-16 10:20:04 musy Exp $
+// $Id: INNetTool.h,v 1.6 2010-02-02 19:29:08 musy Exp $
 #ifndef NNETTOOL_INNETTOOL_H 
 #define NNETTOOL_INNETTOOL_H 1
 
@@ -27,6 +27,7 @@ public:
   virtual double MLPk(std::vector<double>& )=0;
   virtual double MLPkS(std::vector<double>&)=0;
   virtual double MLPpS(std::vector<double>&)=0;
+  virtual double MLPvtx(std::vector<double>&)=0;
 
 };
 #endif // NNETTOOL_INNETTOOL_H

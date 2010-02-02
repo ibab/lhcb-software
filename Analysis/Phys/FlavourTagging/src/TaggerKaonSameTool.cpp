@@ -88,7 +88,6 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if(pidk < m_KaonSPID_kS_cut ) continue;
     if(pidk - pidp < m_KaonSPID_kpS_cut ) continue;
 
-
     debug()<<"           candidate accepted"<<(*ipart)->p()/GeV <<endreq;
 
 

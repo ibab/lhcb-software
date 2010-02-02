@@ -35,6 +35,7 @@ public:
   virtual double MLPk(std::vector<double>&);
   virtual double MLPkS(std::vector<double>&);
   virtual double MLPpS(std::vector<double>&);
+  virtual double MLPvtx(std::vector<double>&);
 
 private:
   void normaliseOS(std::vector<double>& );

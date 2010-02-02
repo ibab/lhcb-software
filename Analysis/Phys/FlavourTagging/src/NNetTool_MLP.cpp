@@ -28,16 +28,24 @@ NNetTool_MLP::NNetTool_MLP( const std::string& type,
   GaudiTool ( type, name, parent ) { 
   declareInterface<INNetTool>(this);
 
-  declareProperty( "P0_mu_scale", m_P0mu =  9.715387e-01); //MC09
-  declareProperty( "P1_mu_scale", m_P1mu = -9.635686e-01);
-  declareProperty( "P0_e_scale",  m_P0e  =  9.205908e-01);
-  declareProperty( "P1_e_scale",  m_P1e  = -8.862215e-01);
-  declareProperty( "P0_k_scale",  m_P0k  =  1.015971);
-  declareProperty( "P1_k_scale",  m_P1k  = -1.021638);
-  declareProperty( "P0_ks_scale", m_P0ks =  9.205908e-01);
-  declareProperty( "P1_ks_scale", m_P1ks = -8.862215e-01);
-  declareProperty( "P0_ps_scale", m_P0ps =  1.147873);
-  declareProperty( "P1_ps_scale", m_P1ps = -1.241866);
+  declareProperty( "P0_mu_scale", m_P0mu =  9.610658e-01); //MC09 defaults
+  declareProperty( "P1_mu_scale", m_P1mu = -9.336494e-01);
+  declareProperty( "P0_e_scale",  m_P0e  =  7.353325e-01);
+  declareProperty( "P1_e_scale",  m_P1e  = -6.463841e-01);
+  declareProperty( "P0_k_scale",  m_P0k  =  9.149897e-01);
+  declareProperty( "P1_k_scale",  m_P1k  = -8.646468e-01);
+  declareProperty( "P0_ks_scale", m_P0ks =  9.845081e-01);
+  declareProperty( "P1_ks_scale", m_P1ks = -9.742343e-01);
+  declareProperty( "P0_ps_scale", m_P0ps =  1.222453);
+  declareProperty( "P1_ps_scale", m_P1ps = -1.369672);
+
+  declareProperty( "P0_vtx_scale", m_P0vtx =  5.255669e-01);
+  declareProperty( "P1_vtx_scale", m_P1vtx = -3.251661e-01);
+  declareProperty( "Gt075_vtx",    m_Gt075 = 0.35);
+  declareProperty( "wSameSign2",         m_wSameSign2         = 0.4141);
+  declareProperty( "wSameSignMoreThan2", m_wSameSignMoreThan2 = 0.3250);
+  declareProperty( "ProbMinVtx",       m_ProbMinVtx     = 0.52);
+  declareProperty( "MinimumVCharge",   m_MinimumVCharge = 0.15);
 
 }
 NNetTool_MLP::~NNetTool_MLP(){}
@@ -48,9 +56,6 @@ StatusCode NNetTool_MLP::finalize()   { return StatusCode::SUCCESS; }
 double NNetTool_MLP::pol2(double x, double a0, double a1) {
   return a0+a1*x;
 }
-double NNetTool_MLP::pol3(double x, double a0, double a1, double a2) {
-  return a0+a1*x+a2*x*x;
-}
 
 //=============================================================================
 void NNetTool_MLP::normaliseOS(std::vector<double>& par) { 
@@ -59,7 +64,7 @@ void NNetTool_MLP::normaliseOS(std::vector<double>& par) {
          <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)<<" "<<par.at(7)
 	 <<" "<<par.at(8)<<" "<<par.at(9)<<" "<<par.at(1)<<endreq;
 
-  par.at(0) /= 90.; //mult
+  par.at(0) /= 90.; //multiplicity
   par.at(1) /= 25.; //ptB
   par.at(2) = std::min( sqrt(par.at(2))/15., 1.); //partP
   par.at(3) = std::min( sqrt(par.at(3))/2.5, 1.); //partPt
@@ -89,9 +94,9 @@ double NNetTool_MLP::MLPm(std::vector<double>& par) {
 
   double pn = 1.0-pol2(rnet, m_P0mu, m_P1mu);// <=========
 
-  debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
+  if(msgLevel(MSG::DEBUG))debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
          <<" "<<par.at(4)<<" "<<par.at(8)<<" "<<par.at(9)<<" "<<par.at(1)<<endreq;
-  debug()<<" muon: rnet="<<rnet<<" pn="<<pn<<endreq;
+  if(msgLevel(MSG::DEBUG))debug()<<" muon: rnet="<<rnet<<" pn="<<pn<<endreq;
 
   return pn;
 }; 
@@ -106,10 +111,10 @@ double NNetTool_MLP::MLPe(std::vector<double>& par) {
 
   double pn = 1.0-pol2(rnet, m_P0e, m_P1e);// <=========
 
-  debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
+  if(msgLevel(MSG::DEBUG))debug()<<"ele: par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
 	 <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)<<" "<<par.at(7)
 	 <<" "<<par.at(8)<<" "<<par.at(9)<<" "<<par.at(1)<<endreq;
-  debug()<<" ele: rnet="<<rnet<<" pn="<<pn<<endreq;
+  if(msgLevel(MSG::DEBUG))debug()<<" ele: rnet="<<rnet<<" pn="<<pn<<endreq;
 
   return pn;
 }; 
@@ -124,9 +129,9 @@ double NNetTool_MLP::MLPk(std::vector<double>& par ) {
 
   double pn = 1.0-pol2(rnet, m_P0k, m_P1k);// <=========
 
-  debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
+  if(msgLevel(MSG::DEBUG))debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
 	 <<" "<<par.at(4)<<" "<<par.at(8)<<" "<<par.at(9)<<" "<<par.at(1)<<endreq;
-  debug()<<" k: rnet="<<rnet<<" pn="<<pn<<endreq;
+  if(msgLevel(MSG::DEBUG))debug()<<" k: rnet="<<rnet<<" pn="<<pn<<endreq;
 
   return pn;
 }; 
@@ -142,10 +147,10 @@ double NNetTool_MLP::MLPkS(std::vector<double>& par) {
   
   double pn = 1.0-pol2(rnet, m_P0ks, m_P1ks);// <=========
 
-  debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
+  if(msgLevel(MSG::DEBUG))debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
 	 <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)
 	 <<" "<<par.at(7)<<" "<<par.at(8)<<" "<<par.at(9)<<" "<<par.at(1)<<endreq;
-  debug()<<" kS: rnet="<<rnet<<" pn="<<pn<<endreq;
+  if(msgLevel(MSG::DEBUG))debug()<<" kS: rnet="<<rnet<<" pn="<<pn<<endreq;
 
   return pn;
 }; 
@@ -161,11 +166,35 @@ double NNetTool_MLP::MLPpS(std::vector<double>& par) {
 
   double pn = 1.0-pol2(rnet, m_P0ps, m_P1ps);// <=========
 
-  debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
+  if(msgLevel(MSG::DEBUG)) debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
 	 <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)
 	 <<" "<<par.at(7)<<" "<<par.at(8)<<" "<<par.at(9)<<" "<<par.at(1)<<endreq;
-  debug()<<" pS: rnet="<<rnet<<" pn="<<pn<<endreq;
+  if(msgLevel(MSG::DEBUG)) debug()<<" pS: rnet="<<rnet<<" pn="<<pn<<endreq;
 
   return pn;
 };
+//=============================================================================
+double NNetTool_MLP::MLPvtx(std::vector<double>& par) { 
+
+  if ( par.size() != 2 ) {
+    err()<<"Wrong size input parameter. "<<par.size()<<endreq;
+    return 0.5;
+  }
+
+  double WeigVch = par.at(0);
+  double vflagged= par.at(1);
+
+  double omega=0.50;
+  if( fabs(WeigVch)<0.75 ) omega = pol2(fabs(WeigVch), m_P0vtx, m_P1vtx);
+  if( fabs(WeigVch)>0.75 ) omega = m_Gt075;
+  if( fabs(WeigVch)>0.99 ) { // tracks have all the same charge
+    if(vflagged==2) omega = m_wSameSign2;
+    if(vflagged >2) omega = m_wSameSignMoreThan2;
+  }
+  if( 1-omega < m_ProbMinVtx || omega > m_ProbMinVtx ) {
+    return 0.50;
+  }
+  return 1 - omega; 
+
+}
 //=============================================================================

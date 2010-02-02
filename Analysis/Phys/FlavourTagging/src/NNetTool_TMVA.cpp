@@ -246,3 +246,7 @@ double NNetTool_TMVA::MLPpS(std::vector<double>& par) {
   return pn;
 };
 //=============================================================================
+double NNetTool_TMVA::MLPvtx(std::vector<double>& par) { 
+  debug()<<par.size()<<endreq;
+  return 0;
+}

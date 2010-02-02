@@ -30,11 +30,14 @@ TaggerKaonOppositeTool::TaggerKaonOppositeTool( const std::string& type,
   declareProperty( "Kaon_LongTrack_LCS_cut",    m_lcs_kl = 2.5 );
   declareProperty( "Kaon_upstreamTrack_LCS_cut",m_lcs_ku = 2.0 );
 
-  declareProperty( "Kaon_PIDkp_extracut", m_PIDkp_extracut= -1.0 );
-  declareProperty( "Kaon_ghost_cut",      m_ghost_cut     =-14.0 );
+  declareProperty( "Kaon_PIDk",  m_PID_k_cut =  0.0);
+  declareProperty( "Kaon_PIDkp", m_PIDkp_cut = -1.0 );
+
+  declareProperty( "Kaon_ghost_cut", m_ghost_cut =-14.0 );
 
   declareProperty( "Kaon_LongTrack_IP_cut",     m_IP_kl  = 999.0 );
   declareProperty( "Kaon_upstreamTrack_IP_cut", m_IP_ku  = 999.0 );
+
   declareProperty( "AverageOmega", m_AverageOmega = 0.33 );
   m_nnet = 0;
   m_util = 0;
@@ -44,7 +47,7 @@ TaggerKaonOppositeTool::~TaggerKaonOppositeTool() {};
 //=====================================================================
 StatusCode TaggerKaonOppositeTool::initialize() { 
 
-  m_nnet = tool<INNetTool> ( m_NeuralNetName, this);
+  m_nnet = tool<INNetTool> ( m_NeuralNetName, this );
   if(! m_nnet) {
     fatal() << "Unable to retrieve NNetTool"<< endreq;
     return StatusCode::FAILURE;
@@ -66,29 +69,28 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
   Tagger tkaon;
   if(!RecVert) return tkaon;
 
-  verbose()<<"allVtx.size()="<< allVtx.size() << endreq;
-
   //select kaon opposite tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
   const Particle* ikaon=0;
   double ptmaxk = -99.0, ncand=0;
   Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
-    if( (*ipart)->particleID().abspid() != 321 ) continue;
 
     double pidk=(*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 );
-    debug()<<"tagger k pidk="<<pidk<<endreq;
+    if(pidk < m_PID_k_cut ) continue;
     if(pidk==0 || pidk==-1000.0) continue;
-    if(pidk - (*ipart)->proto()->info( ProtoParticle::CombDLLp, -1000.0 ) 
-       < m_PIDkp_extracut ) continue;
-    
-    double tsa= (*ipart)->proto()->track()->likelihood();
-    if(tsa < m_ghost_cut) continue;
+    debug()<<"tagger k pidk="<<pidk<<endreq;
 
+    double pidproton = (*ipart)->proto()->info(ProtoParticle::CombDLLp, -1000.0);
+    if( pidk - pidproton < m_PIDkp_cut ) continue;
+    
     double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_kaon )  continue;
     double P = (*ipart)->p();
     if( P < m_P_cut_kaon )  continue;
+
+    double tsa = (*ipart)->proto()->track()->likelihood();
+    if( tsa < m_ghost_cut ) continue;
 
     //calculate signed IP wrt RecVert
     double IP, IPerr;
@@ -147,7 +149,5 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
 }
 
 //==========================================================================
-StatusCode TaggerKaonOppositeTool::finalize() { 
-  return StatusCode::SUCCESS; 
-}
+StatusCode TaggerKaonOppositeTool::finalize() { return StatusCode::SUCCESS; }
 

@@ -30,11 +30,11 @@ TaggerVertexChargeTool::TaggerVertexChargeTool( const std::string& type,
   declareProperty( "PowerK",       m_PowerK               = 0.35 );
   declareProperty( "MinimumCharge",m_MinimumCharge        = 0.15 );
 
-  declareProperty( "P0",           m_P0                   = 5.258432e-01 );
-  declareProperty( "P1",           m_P1                   = -2.881809e-01 );
+  declareProperty( "P0",           m_P0                   = 5.255669e-01 );
+  declareProperty( "P1",           m_P1                   = -3.251661e-01 );
   declareProperty( "Gt075",        m_Gt075                = 0.35 );
-  declareProperty( "TracksEq2",    m_wSameSign2           = 0.442416 );
-  declareProperty( "TracksGt2",    m_wSameSignMoreThan2   = 0.384416 );
+  declareProperty( "TracksEq2",    m_wSameSign2           = 0.4141 );
+  declareProperty( "TracksGt2",    m_wSameSignMoreThan2   = 0.3250 );
 
   declareProperty( "ProbMin",      m_ProbMin              = 0.52);
 

@@ -38,6 +38,7 @@ public:
   virtual double MLPk(std::vector<double>&);
   virtual double MLPkS(std::vector<double>&);
   virtual double MLPpS(std::vector<double>&);
+  virtual double MLPvtx(std::vector<double>&);
 
 private:
   double SIGMOID(double);
@@ -46,7 +47,7 @@ private:
   double pol2(double x, double a0, double a1);
   double pol3(double x, double a0, double a1, double a2);
   double m_P0mu, m_P1mu, m_P0e, m_P1e, m_P0k, m_P1k; 
-  double m_P0ks, m_P1ks, m_P0ps, m_P1ps;  
+  double m_P0ks, m_P1ks, m_P0ps, m_P1ps, m_P0vtx, m_P1vtx;  
 
 };
 #endif // NNETTOOL_NNETTOOL_DC06_H
