@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.103 2010-02-02 10:55:26 gligorov Exp $
+! $Id: release.notes,v 1.104 2010-02-02 12:01:26 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -10,10 +10,10 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v2r1 2010-02-02 ===================
 ! 2010-02-02 - V. Gligorov
  - Update ViaT lines
 
-!========================== Hlt1Lines v2r1 2010-02-02 ===================
 ! 2010-02-02 - Johannes Albrecht
  - remove obsolete Hlt1ExpressLines.py
 

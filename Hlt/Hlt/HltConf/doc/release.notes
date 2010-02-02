@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.407 2010-02-02 10:54:36 gligorov Exp $ 
+! $Id: release.notes,v 1.408 2010-02-02 12:00:00 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v6r3 2010-02-02 ===================
 ! 2010-02-02 - V. Gligorov
  - Update ViaT lines
 
-!========================== HltConf v6r3 2010-02-02 ===================
 ! 2010-02-02 - Johannes Albrecht
  - remove obsolete Hlt1ExpressLines
 
