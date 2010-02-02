@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-02-02 Wouter Hulsbergen
+ - Added profiles to OTHitEfficiencyMonitor. Adjusted cuts.
+
 !========================== TrackMonitors v1r19 2010-01-22 ==================
 ! 2010-01-12 Wouter Hulsbergen
  - Added TrackITOverlapMonitor
