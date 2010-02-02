@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-01-28 - Wouter Hulsbergen
+ - added TrackHitAdder
+
 !========================== TrackUtils v1r33p1 2010-02-02 ======================
 ! 2010-02-02 - Wouter Hulsbergen for Marco Cattaneo
  - fixed bug in TrackV0Finder: output container would be missing in events
