@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.27 2010-01-29 10:02:22 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.28 2010-02-02 21:11:06 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -285,8 +285,8 @@ bool L0DUFromRawTool::decoding(int ibank){
     m_pgaVsn              = (*m_data & 0x00000FF0)  >> 4;
     //OD neither in v1 nor v2    m_status              = (*m_data & 0x0000F000)  >> 12;
     if( m_vsn == 2){ // report size moved to global header
-      nm                    = (*m_data & 0x00000300 ) >> 12;
-      np                    = (*m_data & 0x00000C00 ) >> 14;
+      nm                  = (*m_data & 0x00003000 ) >> 12;
+      np                  = (*m_data & 0x0000C000 ) >> 14;
     }
     m_tck                 = (*m_data & 0xFFFF0000)  >> 16;
 
