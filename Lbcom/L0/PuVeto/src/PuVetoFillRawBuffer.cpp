@@ -50,14 +50,11 @@ StatusCode PuVetoFillRawBuffer::initialize() {
 
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
-  //m_nbPuSensor = m_velo->numberPileUpSensors();
   m_firstPuSensor = (*(m_velo->pileUpRSensorsBegin()))->sensorNumber();
   debug() << "First PU sensor is " << m_firstPuSensor << endmsg;
   
   inizializePUcontainer( m_PUcontainerBee ) ;
   
-  debug() << "Strip charge threshold: " << m_threshold << endreq;
-
   return StatusCode::SUCCESS;
 }
 
@@ -67,7 +64,8 @@ StatusCode PuVetoFillRawBuffer::initialize() {
 StatusCode PuVetoFillRawBuffer::execute() {
 
   debug() << "==> Execute " << endmsg;
-
+  inizializePUcontainer( m_PUcontainerBee ) ;
+  
   //*** Get the input data
   LHCb::MCVeloFEs *fes =get<LHCb::MCVeloFEs>( eventSvc() , m_inputContainer );
  
@@ -82,7 +80,7 @@ StatusCode PuVetoFillRawBuffer::execute() {
   
   int debugit = 0;
   for ( LHCb::MCVeloFEs::const_iterator itFe = fes->begin(); itFe != fes->end() ; itFe++  ) {  
-    debug() << "debugit " << debugit << ": It charge is " << (*itFe)->charge() << endmsg;
+    //debug() << "debugit " << debugit << ": It charge is " << (*itFe)->charge() << endmsg;
     debugit++;
     
     if ( m_threshold < (*itFe)->charge() ) {      
@@ -112,10 +110,8 @@ StatusCode PuVetoFillRawBuffer::execute() {
   } // loop on McFes
   
   adjustPUcontainer( m_PUcontainerBee ) ;
-  
-  // Store all hits in the RawEvent buffer
   writeDataVec( m_PUcontainerBee, rawDataVec);
-  int srcId = 2; // to be checked
+  int srcId = 2; 
   
   LHCb::RawEvent* raw = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
   raw->addBank( srcId, LHCb::RawBank::L0PU, 2, rawDataVec ); // new version is 2
@@ -169,7 +165,9 @@ void PuVetoFillRawBuffer::adjustPUcontainer( Word PUcontainerBee[4][16] )
   for (int sens = 0; sens<4; sens++ ){
     for ( int bee = 0; bee<16; bee++ ){
       if ( (PUcontainerBee[sens][bee]).flag == false ){
+        debug() << "word for s=" << sens <<",bee=" << bee << " was " << binary( PUcontainerBee[sens][bee].w );
 	reverse_bit( PUcontainerBee[sens][bee].w );
+	debug() << " ----> " << binary( PUcontainerBee[sens][bee].w ) << endmsg;
       }
     }
   }     
@@ -201,12 +199,12 @@ void PuVetoFillRawBuffer::writeDataVec( Word PUcontainerBee[4][16], std::vector 
   rawDataVec[17] = (PUcontainerBee[3][7]).w;
   rawDataVec[18] = (PUcontainerBee[0][10]).w;
   rawDataVec[19] = (PUcontainerBee[0][8]).w;
-  rawDataVec[20] = (PUcontainerBee[0][2]).w;
-  rawDataVec[21] = (PUcontainerBee[1][5]).w;
-  rawDataVec[22] = (PUcontainerBee[1][7]).w;
-  rawDataVec[23] = (PUcontainerBee[2][5]).w;
-  rawDataVec[24] = (PUcontainerBee[2][7]).w;
-  rawDataVec[25] = (PUcontainerBee[3][10]).w;
+  rawDataVec[20] = (PUcontainerBee[1][5]).w;
+  rawDataVec[21] = (PUcontainerBee[1][7]).w;
+  rawDataVec[22] = (PUcontainerBee[2][5]).w;
+  rawDataVec[23] = (PUcontainerBee[2][7]).w;
+  rawDataVec[24] = (PUcontainerBee[3][10]).w;
+  rawDataVec[25] = (PUcontainerBee[3][8]).w;
   rawDataVec[26] = (PUcontainerBee[0][13]).w;
   rawDataVec[27] = (PUcontainerBee[0][15]).w;
   rawDataVec[28] = (PUcontainerBee[1][2]).w;
@@ -250,17 +248,19 @@ void PuVetoFillRawBuffer::writeDataVec( Word PUcontainerBee[4][16], std::vector 
   rawDataVec[66] = (PUcontainerBee[3][14]).w;    
   rawDataVec[67] = (PUcontainerBee[3][12]).w;             
 }
-//=============================================================================
+
+//============================================================================
 // binary function with strings
 
 std::string PuVetoFillRawBuffer::binary( unsigned int number )
 {
   std::string result;
-  while(number)
+  unsigned int numberTmp = number;
+  while(numberTmp)
   {
-    result.insert(result.begin(), number % 2 + '0');
-    number /= 2;
+    result.insert(result.begin(), numberTmp % 2 + '0');
+    numberTmp /= 2;
   }
+  if(number==0) result='0';
   return result;
 }
-//============================================================================

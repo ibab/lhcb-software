@@ -11,11 +11,19 @@
 // from LHCbKernel
 #include "Kernel/VeloChannelID.h"
 
+// Include files 
+#include <iostream>
+#include <limits>
+
+
+using namespace std;
+
 class Word {
   public:
     unsigned int w;
     bool flag;
 };
+
 
 /** @class PuVetoFillRawBuffer PuVetoFillRawBuffer.h
  *
@@ -49,7 +57,6 @@ private:
   double             m_threshold;
 
   // detector geometry variables
-  //unsigned int   m_nbPuSensor;
   unsigned int 	m_firstPuSensor;
   DeVelo* 	m_velo;
   Word 		m_PUcontainerBee[4][16];

@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.60 2010-01-21 17:28:28 cattanem Exp $
+! $Id: release.notes,v 1.61 2010-02-02 20:05:06 serena Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Serena Oggero
 !-------------------------------------------------------------------------
 
+! 2010-02-02 - Serena Oggero
+ - PuVetoFillRawBuffer bug fixed: m_PUcontainer inizialized per event; swap
+   in the LUT found and corrected
+ - bit_order.h bug fixed: words with 32st bit on are now correctly reversed
+ 
+ 
 !======================== PuVeto v7r5 2010-01-21 =========================
 ! 2010-01-11 - Serena Oggero
  - from PuVetoAlg, removed unused variables

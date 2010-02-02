@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.33 2010-01-07 17:35:03 serena Exp $
+# $Id: requirements,v 1.34 2010-02-02 20:05:06 serena Exp $
 # Created    : 09/12/2009
 # Maintainer : Serena Oggero
 
 package           PuVeto
-version           v7r5
+version           v7r6
 
 # Structure, i.e. directories to process. 
 #============================================================================

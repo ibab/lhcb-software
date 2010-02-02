@@ -56,6 +56,7 @@ public:
   
   /// reverse bits in PUhitmap
   void reverseWords( unsigned int PU_hitmap[4][16] );
+  
   /// tool    
   std::string binary ( unsigned int );
   
