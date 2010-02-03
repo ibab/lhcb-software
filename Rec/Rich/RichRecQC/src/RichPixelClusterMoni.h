@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::PixelClusterMoni
  *
  *  CVS Log :-
- *  $Id: RichPixelClusterMoni.h,v 1.1 2010-01-31 13:49:31 jonrob Exp $
+ *  $Id: RichPixelClusterMoni.h,v 1.2 2010-02-03 08:17:54 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   31/02/2010
@@ -70,7 +70,6 @@ namespace Rich
 
       virtual StatusCode initialize();    // Algorithm initialization
       virtual StatusCode execute   ();    // Algorithm execution
-      virtual StatusCode finalize  ();    // Algorithm finalization
 
     protected:
 

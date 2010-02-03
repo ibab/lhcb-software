@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.55 2010-01-31 13:49:31 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.56 2010-02-03 08:17:54 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -95,6 +95,9 @@ StatusCode RecoQC::prebookHistograms()
                  -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D() );
     richHisto1D( *rad,
                  "thetaRec", "Reconstructed Ch Theta : All photons",
+                 m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D() );
+    richHisto1D( *rad,
+                 "thetaExpect", "Expected Ch Theta : All Tracks",
                  m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D() );
     richHisto1D( *rad,
                  "phiRec", "Reconstructed Ch Phi : All photons",
@@ -197,6 +200,7 @@ StatusCode RecoQC::execute()
 
     // Expected Cherenkov theta angle for 'true' particle type
     thetaExpTrue = m_ckAngle->avgCherenkovTheta( segment, mcType );
+    richHisto1D( rad, "thetaExpect" ) -> fill ( thetaExpTrue );
 
     // Cherenkov angle resolution for 'true' type
     resExpTrue = m_ckRes->ckThetaResolution( segment, mcType );

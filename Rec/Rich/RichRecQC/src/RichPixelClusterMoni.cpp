@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::PixelClusterMoni
  *
- *  $Id: RichPixelClusterMoni.cpp,v 1.2 2010-01-31 13:57:27 jonrob Exp $
+ *  $Id: RichPixelClusterMoni.cpp,v 1.3 2010-02-03 08:17:54 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   31/02/2010
@@ -23,7 +23,7 @@ DECLARE_ALGORITHM_FACTORY( PixelClusterMoni );
 
 // Standard constructor, initializes variables
 PixelClusterMoni::PixelClusterMoni( const std::string& name,
-                                    ISvcLocator* pSvcLocator)
+                                    ISvcLocator* pSvcLocator )
   : HistoAlgBase ( name, pSvcLocator )
 { }
 
@@ -43,6 +43,7 @@ StatusCode PixelClusterMoni::initialize()
 StatusCode PixelClusterMoni::prebookHistograms()
 {
 
+  // Pre book detector level histograms
   for ( Rich::Detectors::const_iterator rich = Rich::detectors().begin();
         rich != Rich::detectors().end(); ++rich )
   { 
@@ -61,16 +62,6 @@ StatusCode PixelClusterMoni::execute()
   // Check event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
-  // Make sure all pixels have been formed
-  if ( richPixels()->empty() )
-  {
-    const StatusCode sc = pixelCreator()->newPixels();
-    if ( sc.isFailure() )
-    { return Error( "Problem creating RichRecPixels", sc ); }
-    debug() << "No Pixels found : Created "
-            << richPixels()->size() << " RichRecPixels" << endmsg;
-  }
-
   // Histogramming
   const RichHistoID hid;
 
@@ -78,21 +69,19 @@ StatusCode PixelClusterMoni::execute()
   for ( LHCb::RichRecPixels::const_iterator iP = richPixels()->begin();
         iP != richPixels()->end(); ++iP )
   {
+
     // Which detector
     const Rich::DetectorType rich = (*iP)->detector();
 
     // Associated Cluster
     const Rich::HPDPixelCluster & cluster = (*iP)->associatedCluster();
+    if ( 0 == cluster.size() ) { Warning("Empty cluster !").ignore(); continue; }
 
-    richHisto1D( rich, "clusterSize" ) -> fill( cluster.size() );
+    // cluster size histogram
+    const double weight = 1.0 / (double)cluster.size(); // since will be filled size() times ...
+    richHisto1D( rich, "clusterSize" ) -> fill( cluster.size(), weight );
+
   }
 
   return StatusCode::SUCCESS;
-}
-
-//  Finalize
-StatusCode PixelClusterMoni::finalize()
-{
-  // Execute base class method
-  return HistoAlgBase::finalize();
 }
