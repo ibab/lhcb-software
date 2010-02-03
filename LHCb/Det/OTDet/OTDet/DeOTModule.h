@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.42 2010-02-02 15:51:04 wouter Exp $
+// $Id: DeOTModule.h,v 1.43 2010-02-03 08:30:05 wouter Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -295,8 +295,13 @@ public:
   void trajectory(unsigned int aStraw, double& dxdy, double& dzdy, 
 		  double& xAtYEq0, double& zAtYEq0, double& ybegin, double& yend) const ;
 
-  /** Set the status flags for all straws in this module */
-  StatusCode setStrawStatus( const std::vector< int >& tzeros );
+  /** Set the status flags for all straws in this module. The vector
+      can have 3 different lengths:
+      - if the length is nChannels() or MAXNUMCHANNELS, then it contains one status flag per channel
+      - if the length is 2 or 4, then it contains 1 status flag per otis
+      - if the length is 1, it contains one satus flag for the entire module.
+  */
+  StatusCode setStrawStatus( const std::vector< int >& statusflags );
 
   /** Get the vector of straw status flags from the condition */
   const std::vector< int >& strawStatus() const;
@@ -476,7 +481,7 @@ private :
   SmartRef< Condition > m_calibration;          ///< Calibration condition
   std::string           m_statusName;           ///< Name of calibration condition
   SmartRef< Condition > m_status;               ///< Status condition
-  std::vector<int>      m_strawStatus;          ///< vector of channel statuses
+  unsigned char m_strawStatus[MAXNUMCHAN] ;     ///< vector of channel statuses
 };
 
 // -----------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.44 2010-02-02 15:51:05 wouter Exp $
+// $Id: DeOTModule.cpp,v 1.45 2010-02-03 08:30:06 wouter Exp $
 // GaudiKernel
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
@@ -546,7 +546,18 @@ StatusCode DeOTModule::statusCallback() {
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Updating Status parameters" << endmsg;
   try {
-    m_strawStatus = m_status->param< std::vector<int> >( "ChannelStatus" );
+    const std::vector<int>& statusflags = m_status->param< std::vector<int> >( "ChannelStatus" );
+    if( statusflags.size() == nChannels() || statusflags.size() == MAXNUMCHAN ) // 1 t0 per channel
+      std::copy( statusflags.begin(), statusflags.end(), m_strawStatus ) ;
+    else if( statusflags.size()== nChannels()/32 || statusflags.size()== 4 ) // 1 t0 per otis
+      for( size_t ichan=0; ichan<nChannels(); ++ichan)
+	m_strawStatus[ichan] = statusflags[ichan/32] ;
+    else if( statusflags.size() == 1 )      // 1 t0 per module
+      std::fill( m_strawStatus, m_strawStatus + MAXNUMCHAN, statusflags.front() ) ;
+    else {
+      msg << MSG::ERROR << "Bad length of straw status vector in conditions: " << statusflags.size() << endmsg ;
+      std::fill( m_strawStatus, m_strawStatus + MAXNUMCHAN, 0 ) ;
+    }
   }
   catch (...) {
     msg << MSG::ERROR << "Failed to update status conditions for " << this->name() << "!" << endmsg;
