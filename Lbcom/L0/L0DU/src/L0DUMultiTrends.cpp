@@ -1,4 +1,4 @@
-// $Id: L0DUMultiTrends.cpp,v 1.5 2010-02-03 17:15:44 odescham Exp $
+// $Id: L0DUMultiTrends.cpp,v 1.6 2010-02-03 18:12:36 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -120,6 +120,7 @@ StatusCode L0DUMultiTrends::execute() {
   // =============== Fill Comparaison histo  =====================
 
   // event counter bin
+  /* This block commented because it does not compile on Windows - MC 20100203
   for( std::map<std::string,AIDA::IHistogram1D*>::iterator ih = m_cMap.begin() ; m_cMap.end() != ih ; ++ih ){
     AIDA::IHistogram1D* h1d = (*ih).second;
     std::string name = (*ih).first;
@@ -127,6 +128,7 @@ StatusCode L0DUMultiTrends::execute() {
     if( NULL == h1d )continue;
     fill( h1d , -1 ,1.);
   }
+  */
 
   // bin 0 = current config (from raw)
   int bin = 0;
