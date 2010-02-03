@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Id: test_selection_sequence.py,v 1.11 2010-02-03 07:43:48 jpalac Exp $
+#$Id: test_selection_sequence.py,v 1.12 2010-02-03 08:28:21 jpalac Exp $
 '''
 Test suite for SelectionSequence class.
 '''
@@ -39,8 +39,7 @@ def test_sequencer_algos() :
     sel03 = Selection('00102', Algorithm = DummyAlgorithm('Alg003'),
                       RequiredSelections = [ sel01, sel02])
     seq = SelectionSequence('Seq01',
-                            TopSelection = sel03,
-                            SequencerType = DummySequencer)
+                            TopSelection = sel03)
 
     seqAlgos = seq.algos
 
@@ -70,11 +69,10 @@ def test_sequencer_sequence() :
     postsels = [postsel0, postsel1]
     seq = SelectionSequence('Seq0002',
                             TopSelection = sel03,
-                            SequencerType = DummySequencer,
                             EventPreSelector = presels,
                             PostSelectionAlgs = postsels)
 
-    seqAlgos = seq.sequence().Members
+    seqAlgos = seq.sequence(sequencerType=DummySequencer).Members
 
     ref_algos = [presel0,
                  presel1,
@@ -105,24 +103,47 @@ def test_clone_sequence() :
                       RequiredSelections = [_sel02, _sel03])
     sel03 = Selection('00122', Algorithm = DummyAlgorithm('Alg003'),
                       RequiredSelections = [ sel01, sel02])
+
+    presel0 = DummyAlgorithm('Presel00')
+    presel1 = DummyAlgorithm('Presel01')
+    postsel0 = DummyAlgorithm('Postsel00')
+    postsel1 = DummyAlgorithm('Postsel01')
+
+    presels =  [presel0, presel1]
+    postsels = [postsel0, postsel1]
+
     seq = SelectionSequence('Seq03',
                             TopSelection = sel03,
-                            SequencerType = DummySequencer)
-
+                            EventPreSelector = presels,
+                            PostSelectionAlgs = postsels)
+    
     clone = seq.clone('clone')
 
-    seqAlgos = clone.sequence().Members
+    seqAlgos = clone.sequence(sequencerType=DummySequencer).Members
 
-    assert len(seqAlgos) == 3
-    for sel in [sel01, sel02, sel03] :
-        assert sel.algorithm() in seqAlgos
+    ref_algos = [presel0,
+                 presel1,
+                 sel02.algorithm(),
+                 sel01.algorithm(),
+                 sel03.algorithm(),
+                 postsel0,
+                 postsel1]
+
+    assert len(seqAlgos) == 7
+    assert presels == ref_algos[:len(presels)]
+    assert postsels == ref_algos[len(ref_algos)-len(postsels):]
+
+    for sel in [sel01, sel02, sel03]:
+        assert sel.algorithm() in ref_algos[len(presels):len(ref_algos)-len(postsels)]
 
     seqAlgos = seq.algos
 
-    assert len(seqAlgos) == 3
-    for sel in [sel01, sel02, sel03] :
-        assert sel.algorithm() in seqAlgos
+    assert len(seqAlgos) == 7
+    assert presels == ref_algos[:len(presels)]
+    assert postsels == ref_algos[len(ref_algos)-len(postsels):]
 
+    for sel in [sel01, sel02, sel03]:
+        assert sel.algorithm() in ref_algos[len(presels):len(ref_algos)-len(postsels)]
 
 if '__main__' == __name__ :
 
