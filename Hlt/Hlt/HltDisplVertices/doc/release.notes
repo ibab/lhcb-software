@@ -4,6 +4,9 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2010-Feb-03 - Neal Gauvin
+ - fix bug in function RemVtxFromDet in Hlt2DisplVerticesDEV 
+
 !========================== HltDisplVertices v1r5 2010-02-01 ===================
 ! 2010-Jan-22 - Neal Gauvin
  - New functionality in Hlt2DisplVerticesDEV : save in tuple values to cut on as in the Hlt2HidValley algo

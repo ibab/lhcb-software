@@ -350,7 +350,7 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
 
     //Do not save if found to be in detector material
     bool InDet = false;
-    if( m_RemVtxFromDet && RemVtxFromDet(RV) ){
+    if( ( m_RemVtxFromDet || m_RemVtxFromDetSig > 0 ) && RemVtxFromDet(RV) ){
       InDet = true;
     } 
     InDets.push_back(InDet);
@@ -855,7 +855,6 @@ bool Hlt2DisplVerticesDEV::HasBackwardTracks( const RecVertex* RV ){
 //                             +- m_RemVtxFromDetSig * PositionCovMatrix
 //
 //=============================================================================
-
 bool Hlt2DisplVerticesDEV::RemVtxFromDet( const RecVertex* RV ){
 
   double threshold = 1e-10;
@@ -911,36 +910,47 @@ bool Hlt2DisplVerticesDEV::RemVtxFromDet( const RecVertex* RV ){
       ( start, end, 1e-35, dum, m_lhcbGeo );
 
     plot( radlength, "RVRadLength", 0, 0.01);
-    if(msgLevel(MSG::DEBUG)){
+    if(msgLevel(MSG::DEBUG))
       debug()<<"Radiation length from "<< start <<" to "
 	     << end <<" : "<< radlength 
 	     <<" [mm]" << endmsg;
-    }
+    
 
     if( radlength > threshold ){ 
-      debug()<<"RV is too closed to a detector material --> disguarded !"
-	     << endmsg;
+      if(msgLevel(MSG::DEBUG))
+	debug()<<"RV is too closed to a detector material --> disguarded !"
+	       << endmsg;
       return true;
     }
   } //end of >0 condition
-  else if (m_RemVtxFromDetSig > 0){
-    
+  else if( m_RemVtxFromDetSig > 0 ){
+ 
     Gaudi::XYZPoint RVPosition = RV->position();
     Gaudi::SymMatrix3x3 RVPositionCovMatrix = RV->covMatrix();
     double sigNx = m_RemVtxFromDetSig*sqrt(RVPositionCovMatrix[0][0]);
     double sigNy = m_RemVtxFromDetSig*sqrt(RVPositionCovMatrix[1][1]);
     double sigNz = m_RemVtxFromDetSig*sqrt(RVPositionCovMatrix[2][2]);
     // Is there material within N*sigma
+    double radlength = 0;
     for (int ix = -1 ; ix<2; ix += 2 ){
       for (int iy = -1 ; iy<2; iy += 2 ){
-        Gaudi::XYZPoint tmp_pointP( RVPosition.x()+ix*sigNx,
-				    RVPosition.y()+iy*sigNy,
-				    RVPosition.z()+sigNz );
-        Gaudi::XYZPoint tmp_pointM ( RVPosition.x()-ix*sigNx,
-				     RVPosition.y()-iy*sigNy,
-				     RVPosition.z()-sigNz );
-        if( m_transSvc->distanceInRadUnits(tmp_pointM,tmp_pointP) > threshold )
+        Gaudi::XYZPoint start( RVPosition.x()+ix*sigNx,
+                               RVPosition.y()+iy*sigNy,
+                               RVPosition.z()+sigNz );
+        Gaudi::XYZPoint end( RVPosition.x()-ix*sigNx,
+                             RVPosition.y()-iy*sigNy,
+                             RVPosition.z()-sigNz );
+        radlength = m_transSvc->distanceInRadUnits( start, end );
+        if(msgLevel(MSG::DEBUG))
+          debug()<<"Radiation length from "<< start <<" to "
+                 << end <<" : "<< radlength 
+                 <<" [mm]" << endmsg;
+        if( radlength > threshold ){
+          if(msgLevel(MSG::DEBUG))
+            debug()<<"RV is too closed to a detector material --> disguarded !"
+                   << endmsg;
           return true;
+        }
       }
     }
   }
