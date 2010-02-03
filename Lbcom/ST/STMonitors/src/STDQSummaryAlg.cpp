@@ -1,4 +1,4 @@
-// $Id: STDQSummaryAlg.cpp,v 1.1 2010-02-02 16:40:59 nchiapol Exp $
+// $Id: STDQSummaryAlg.cpp,v 1.2 2010-02-03 07:43:55 nchiapol Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -177,6 +177,7 @@ double STDQSummaryAlg::calculateProcEff(const unsigned int corrupted,
     eff -= iter->second; // how much was processed
   } // iter
   eff /= double(nBanks);
+  return eff;
 }
 
 
