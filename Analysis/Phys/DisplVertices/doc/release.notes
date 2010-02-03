@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-02-03 - Neal Gauvin
+ - Fix small bug in DisplVertices.cpp, SaveTrigInfinTuple() now run before any cuts...
+
 !==================== Phys/DisplVertices v6r0 2010-02-02 =====================
 
 ! 2010-01-28 - Neal Gauvin

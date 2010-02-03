@@ -273,6 +273,12 @@ StatusCode DisplVertices::execute() {
   //Study resolution of the reconstructed PV
   if(false) Resolution();
 
+  //---------------------------------------------  
+  if( m_SaveTrigInfos ){
+    if( SaveTrigInfinTuple().isFailure() )
+      Warning("Not being able to save trigger infos in tuple !");
+  }
+
   //------------------Set the beam line------------------
   if( m_RCut=="FromBeamLine" ){
     if( exist<Particles>( m_BLLoc ) ){
@@ -400,13 +406,6 @@ StatusCode DisplVertices::execute() {
   if( m_SelectForSample ) desktop()->saveDesktop() ;
   //The following just saves the Particles in the desktop !!
   //if( m_SelectForSample ) desktop()->saveTrees( m_outputParticles ) ;
-
-
-  //---------------------------------------------  
-  if( m_SaveTrigInfos ){
-    if( SaveTrigInfinTuple().isFailure() )
-      Warning("Not being able to save trigger infos in tuple !");
-  }
 
 
   //--------------Mother Reconstruction------------------  
