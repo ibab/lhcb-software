@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -31,11 +31,11 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
     #     HadViaTCompanion_IPCut
     #     HadViaTCompanion_PtCut
     #
-    __slots__ = { 'L0Channel'               : "Hadron" 
+    __slots__ = { 'L0Channel'                   : "Hadron" 
                 , 'HadViaTSingle_IPCut'         : 0.1
-		, 'HadViaTDi_IPCut'             : 0.1
-                , 'HadViaT_ETCut'		: 2500.
-		, 'HadViaTMain_PTCut'           : 2500.
+                , 'HadViaTDi_IPCut'             : 0.1
+                , 'HadViaT_ETCut'               : 2500.
+                , 'HadViaTMain_PTCut'           : 2500.
                 , 'VeloTMatchCut'               : 80
                 , 'HadViaTCompanion_DOCACut'    : 0.2
                 , 'HadViaTCompanion_DZCut'      : 0.
@@ -155,7 +155,7 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
                            , FilterDescriptor = ['MatchIDsFraction_%s,<,0.9' %OutputOfConfirmation]
                            )
                    , Member ( 'TF', 'Companion'
-                           , FilterDescriptor = [ 'IP_PV2D,||>,'+IP2Cut]
+                           , FilterDescriptor = [ 'IP_PV2D,||>,%s'%IP2Cut]
                            )
                    ]
             return comp
@@ -174,7 +174,7 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
                 , Member ( 'VM2', 'UVelo'
                          , InputSelection1 = '%TFDiHadronViaTIP'
                          , InputSelection2 = '%TFCompanion'
-                         , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('HadViaTCompanion_DOCACut'))]
+                         , FilterDescriptor = [ 'DOCA,<,%s'%(self.getProp('HadViaTCompanion_DOCACut'))]
                            )
                 , Member ( 'VF', 'UVelo'
                            , FilterDescriptor = [ 'VertexDz_PV2D,>,'+_cut('HadViaTCompanion_DZCut')]
@@ -196,7 +196,7 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
             Line ( 'SingleHadronViaT'
                    , prescale = self.prescale
                    , postscale = self.postscale
-                   , L0DU  = "L0_CHANNEL('%s')" % self.getProp('L0Channel')
+                   , L0DU  = "L0_CHANNEL('%(L0Channel)s')" % self.getProps()
                    , algos = [confirmation()]+singlehadron()
                    )
 
@@ -205,6 +205,6 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
             Line ('DiHadronViaT'
                   , prescale = self.prescale
                   , postscale = self.postscale
-                  , L0DU  = "L0_CHANNEL('%s')" % self.getProp('L0Channel')
+                  , L0DU  = "L0_CHANNEL('%(L0Channel)s')" % self.getProps()
                   , algos =  [confirmation()]+companion()+dihadron()
                   )
