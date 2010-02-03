@@ -4,6 +4,11 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+
+! 2010-02-02 - Nicola Mangiafave
+- In CameraTool: it's now able to send messages to both Camera and the DIM
+server (i.e. to PVSS).
+
 =============== v1r13 ===============
 
 ! 2010-01-22 - Nicola Mangiafave

@@ -19,6 +19,10 @@ use GaudiPolicy       v*
 use GaudiAlg          v*
 use ROOT              v*    LCG_Interfaces  -no_auto_imports
 
+# to publish own DIM service (without MonitorSvc) and to get UTGID
+use DIM               v*    Online
+use OnlineKernel      v*    Online
+
 #apply_pattern disable_package_on platform=target-winxp
 
 #============================================================================
