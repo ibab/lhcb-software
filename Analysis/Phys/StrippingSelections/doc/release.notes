@@ -5,6 +5,8 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!==================== StrippingSelections v1r15 2010-02-02 ====================
+
 ! 2010-02-02 - Greig Cowan
  - Removed PT cuts on muons and kaons (from phi and Kstar) in the lifetime
    unbiased B2JpsiX lines. Both loose and nominal changed. Leads to tiny 
@@ -30,7 +32,7 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! 2010-01-29 - Anton Poluektov 
  - Added StrippingB2D3Pi lines by Steven Blusk
 
-!========================== StrippingSelections v1r14 2010-01-26 ===================
+!========================== StrippingSelections v1r14 2010-01-26 ==============
 
 ! 2010-01-26
  - Modified StrippingDstar_D2KPiPi0.py: changed sequencers name to less common ones
