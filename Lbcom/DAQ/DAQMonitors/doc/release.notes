@@ -4,10 +4,10 @@
 ! Purpose     : Monitors for DAQ event objects
 !-----------------------------------------------------------------------------
 
+!=========================  DAQMonitors v1r1 2010-02-03 ======================
 ! 2010-01-28 - Olivier Deschamps
- - new monitoring algo : TriggerTypeCounter provides event counter per TriggerType/BXType/CalibrationType
-
-
+ - new monitoring algo : TriggerTypeCounter provides event counter per
+   TriggerType/BXType/CalibrationType
 
 !=========================  DAQMonitors v1r0 2010-01-21 ======================
 ! 2010-01-13 - Marco Cattaneo
