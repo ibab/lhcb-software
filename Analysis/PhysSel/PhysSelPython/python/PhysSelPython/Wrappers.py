@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.28 2010-01-27 20:52:09 jpalac Exp $
+#$Id: Wrappers.py,v 1.29 2010-02-03 08:27:40 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -19,13 +19,12 @@ __all__ = ('DataOnDemand',
            'SelSequence')
 
 
-
-__sequencerType = None
+_sequencerType = None
 
 try :
     from Gaudi.Configuration import *
     from Configurables import GaudiSequencer
-    __sequencerType = GaudiSequencer
+    _sequencerType = GaudiSequencer
 except :
     print 'WARNING: Gaudi Configurables not found. No default sequencer type defined.'
 
@@ -38,20 +37,17 @@ from selection import ( Selection,
                         SelSequence                )
 
 
-def SelectionSequence(name,
-                      TopSelection,
-                      EventPreSelector = [],
-                      PostSelectionAlgs = [],
-                      SequencerType = __sequencerType) :
+class SelectionSequence(SelSequence) :
     """
-    Wrapper function for offline selection sequence creation.
+    Wrapper class for offline selection sequence creation.
     Takes a Selection object
     corresponding to the top selection algorithm, and recursively uses
-    Selection.requiredSelections to for a GaudiSequences with all the required
-    selecitons needed to run the top selection. Can add list of event selection
+    Selection.requiredSelections to form a GaudiSequencer with all the required
+    selections needed to run the top selection. Can add list of event selection
     algorithms to be added at the beginning of the sequence, and a list of
     algorithms to be run straight after the selection algoritms.
-
+    Wraps SelSequence, simply adding a method sequence() that creates the
+    GaudiSequencer on-demand.
     Example: selection sequence for A -> B(bb), C(cc). Add pre-selectors alg0
              and alg1, and counter counter0.
 
@@ -69,11 +65,29 @@ def SelectionSequence(name,
     dv.UserAlgorithms = [mySelSeq]
 
     Uses selection.SelSequence and selection.FlatSelectionListBuilder
+    help(SelSequence)
+    help(FlatSelectionListBuilder)
     """
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
 
-    return SelSequence(name,
-                       TopSelection,
-                       EventPreSelector,
-                       PostSelectionAlgs,
-                       SequencerType)
+    def __init__(self,
+                 name,
+                 TopSelection,
+                 EventPreSelector = [],
+                 PostSelectionAlgs = []) :
+        SelSequence.__init__(self,
+                             name,
+                             TopSelection,
+                             EventPreSelector,
+                             PostSelectionAlgs)
+
+        self.gaudiSeq = None
+
+    def sequence(self, sequencerType = _sequencerType) :
+        if self.gaudiseq == None :
+            self.gaudiseq = sequencerType(self.name(), Members = self.algos)
+        return self.gaudiseq
+
+    def clone(self, name, **args) :
+        new_dict = update_overlap(self.__ctor_dict__, args)
+        return SelectionSequence(name, **new_dict)

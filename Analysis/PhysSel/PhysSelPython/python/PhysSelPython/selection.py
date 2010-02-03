@@ -1,4 +1,4 @@
-#$Id: selection.py,v 1.5 2010-01-27 20:52:09 jpalac Exp $
+#$Id: selection.py,v 1.6 2010-02-03 08:27:40 jpalac Exp $
 """
 Classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -142,10 +142,10 @@ class Selection(object) :
 
 class SelSequence(object) :
     """
-    Wrapper class for offline selection sequence. Takes a Selection object
+    Class for offline selection sequence. Takes a Selection object
     corresponding to the top selection algorithm, and recursively uses
-    Selection.requiredSelections to for a GaudiSequences with all the required
-    selecitons needed to run the top selection. Can add list of event selection
+    Selection.requiredSelections to form a flat list with all the required
+    selections needed to run the top selection. Can add list of event selection
     algorithms to be added at the beginning of the sequence, and a list of
     algorithms to be run straight after the selection algoritms.
 
@@ -159,10 +159,10 @@ class SelSequence(object) :
     SeqA2B2bbC2cc = SelSequence('SeqA2B2bbC2cc',
                                 TopSelection = SelA2B2bbC2cc,
                                 EventPreSelector = [alg0, alg1],
-                                PostSelectionAlgs = [counter0],
-                                SequencerType = GaudiSequencer  )
+                                PostSelectionAlgs = [counter0])
     # use it
-    mySelSeq = SeqA2B2bbC2cc.sequence()
+    mySelList = SeqA2B2bbC2cc.algos
+    print mySelList
     dv = DaVinci()
     dv.UserAlgorithms = [mySelSeq]
     """
@@ -175,8 +175,7 @@ class SelSequence(object) :
                  name,
                  TopSelection,
                  EventPreSelector = [],
-                 PostSelectionAlgs = [],
-                 SequencerType = None) :
+                 PostSelectionAlgs = []) :
 
         if name in SelSequence.__used_names :
             raise NameError('SelSequence name ' + name + ' has already been used. Pick a new one.')
@@ -188,7 +187,6 @@ class SelSequence(object) :
         self.algos = copy(EventPreSelector)
         self._name = name
         self._topSelection = TopSelection
-        self._seqType = SequencerType
         self.algos += FlatSelectionListBuilder(TopSelection).selectionList
         self.algos += PostSelectionAlgs
         self.gaudiseq = None
@@ -199,11 +197,6 @@ class SelSequence(object) :
     def algorithm(self) :
         return self._topSelection.algorithm()
         
-    def sequence(self) :
-        if self.gaudiseq == None :
-            self.gaudiseq = self._seqType(self.name(), Members = self.algos)
-        return self.gaudiseq
-
     def algName(self) :
         return self.algorithm().name()
 
