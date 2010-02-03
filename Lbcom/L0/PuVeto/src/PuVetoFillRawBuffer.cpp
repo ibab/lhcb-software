@@ -85,7 +85,7 @@ StatusCode PuVetoFillRawBuffer::execute() {
     
     if ( m_threshold < (*itFe)->charge() ) {      
       if ( ! (*itFe)->channelID().isPileUp() ){
-        info() << "Unexpected sensor " 
+        debug() << "Unexpected sensor " 
                << (*itFe)->channelID().sensor()
                << " in " << m_inputContainer << endreq;
         continue; 

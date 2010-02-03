@@ -209,7 +209,7 @@ StatusCode PuVetoAlg::initialize() {
 //=============================================================================
 StatusCode PuVetoAlg::execute() {
 
-  if (msgLevel(MSG::DEBUG)) info() << "==> Execute: " << endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Execute: " << endreq;
   
   // Clear hit and masked bit patterns
   for (int k=0;k<4;k++) {
@@ -220,21 +220,21 @@ StatusCode PuVetoAlg::execute() {
   }
 
   m_totMult = 0;
-  info() << "----- TotMult " << m_totMult<< endreq ;
+  debug() << "----- TotMult " << m_totMult<< endreq ;
   //*** Get the input data and store them in a map m_PUhitmap[sensor][beetle]
   RawEvent* raw = get<RawEvent>( m_rawEventLoc );
   if (msgLevel(MSG::DEBUG)) debug() << "Get Raw Event from " << m_rawEventLoc << endmsg;
   const std::vector<LHCb::RawBank*>& bank = raw->banks( LHCb::RawBank::L0PU );
-  info() << "LHCb::RawBank::L0PU size is " << bank.size() << endmsg;
-  info() << "----- TotMult " << m_totMult<< endreq ;
+  debug() << "LHCb::RawBank::L0PU size is " << bank.size() << endmsg;
+  debug() << "----- TotMult " << m_totMult<< endreq ;
   std::vector<LHCb::RawBank*>::const_iterator itBnk;
   for ( itBnk = bank.begin() ; bank.end() != itBnk ; itBnk++ ) {
     LHCb::RawBank* aBank = *itBnk;
     int version = aBank->version();
-    info() << "Bank version is " << version << endmsg;
+    debug() << "Bank version is " << version << endmsg;
     
     if ( version == 2 ){ // current bank format
-    info() << "----- TotMult " << m_totMult<< endreq ;
+    debug() << "----- TotMult " << m_totMult<< endreq ;
       /*
       // need the official PU decoder from Velo/VeloDAQ in the Boole sequence!
       // get binary ZS clusters
@@ -258,10 +258,8 @@ StatusCode PuVetoAlg::execute() {
       int wordTot = (aBank->size() / (2 * sizeof(unsigned int)));
       //if (msgLevel(MSG::DEBUG)) debug() << "wordTot = " << wordTot << endmsg;
       fillPUmap( d, wordTot, data, 34, m_PUhitmap );
-      info() << "----- TotMult " << m_totMult<< endreq ;
       //now check whether the words must be reversed or not
       reverseWords( m_PUhitmap );
-      info() << "----- TotMult " << m_totMult<< endreq ;      
     }
     else if ( version == 1 ){ // old bank formatversion from Marko
       unsigned int* ptData = (*itBnk)->data();
