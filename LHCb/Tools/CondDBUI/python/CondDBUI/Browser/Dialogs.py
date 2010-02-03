@@ -412,10 +412,7 @@ class AddConditionDialog(QDialog, Ui_AddConditionDialog):
         self.since.setToNow()
         self.since.setMaxEnabled(False)
         self.channel.setText("0")
-        # prepare the buffer
-        self.buffer = {}
-        for f in self.fieldsModel.getFieldNames():
-            self.buffer[f] = ""
+        self._updateBuffer()
         # Bind signals and slots
         QObject.connect(self.folder, SIGNAL("currentIndexChanged(QString)"),
                         self.fieldsModel.setPath)
@@ -431,6 +428,13 @@ class AddConditionDialog(QDialog, Ui_AddConditionDialog):
         # Use a consistent DisplayFormat
         self.conditionsStack.setShowUTC(self.utc.checkState())
         self.conditionsStack.setDisplayFormat(self.since.displayFormat())
+    
+    def _updateBuffer(self):
+        # prepare the buffer
+        self.buffer = {}
+        for f in self.fieldsModel.getFieldNames():
+            self.buffer[f] = ""
+        
     ## Set the value of the channel field.
     def setChannel(self, ch):
         if ch or ch == 0:
@@ -447,6 +451,7 @@ class AddConditionDialog(QDialog, Ui_AddConditionDialog):
     def setFolder(self, folder):
         try:
             self.folder.setCurrentIndex(self.folderModel.nodes.index(str(folder)))
+            self._updateBuffer()
         except ValueError:
             pass # This may happen when the user selected a folderset
     

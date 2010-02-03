@@ -5,6 +5,10 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2010-02-03 - Marco Clemencic
+ - Correctly fixed the bug in CondDBBrowser: cannot add conditions to empty
+   folders.
+
 ! 2010-01-31 - Illya Shapoval
  - Some upgrade of tools in the frame of creation the automation procedure
    for the latest global tag and appropriate on-top local tags usage.
