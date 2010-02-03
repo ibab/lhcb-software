@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.38 2010-02-03 08:45:49 poluekt Exp $
+!$Id: release.notes,v 1.39 2010-02-03 17:59:31 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+!========================== StrippingConf v2r0 2010-02-02 ===================
 
 ! 2010-02-03 - Anton Poluektov 
  - Temporary measures to suppress "Invalid decision ID" warnings while StrippingANNSvc 
