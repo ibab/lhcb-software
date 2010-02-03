@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt12-WithLumi.py,v 1.1 2009-12-15 16:14:40 pkoppenb Exp $
+# $Id: DVTestHlt12-WithLumi.py,v 1.2 2010-02-03 10:00:23 pkoppenb Exp $
 #
 # Test for Hlt1&2. This should be identical to Hlt1 except for the Hlt settings
 #
@@ -27,6 +27,7 @@ DaVinci().DataType = "2009"                    # Pretend it's real data
 #
 DaVinci().Hlt = True             
 DaVinci().HltThresholdSettings = 'Debug_10000Vis_1000L0_Velo_Hlt1_Oct09'   # Do almost nothing
+DaVinci().ReplaceL0BanksWithEmulated = True
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 #
 # first contains lumi events, second doesn't
