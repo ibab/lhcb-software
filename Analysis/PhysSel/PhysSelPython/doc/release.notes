@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.33 2010-01-27 13:42:25 jpalac Exp $
+!$Id: release.notes,v 1.34 2010-02-03 08:28:37 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2010-02-02 - Juan Palacios
+ - python/PhysSelPython/Wrappers.py, selection.py
+  . Move sequence() method from SelSequence to wrapper class SelectionSequence.
+    selection.py now totally independent of configurables.
+ - tests/test_selection_sequence.py
+  . Adapt to changes in interface.
 
 ! 2010-01-27 - Juan Palacios
  - python/PhysSelPython/Wrappers.py
