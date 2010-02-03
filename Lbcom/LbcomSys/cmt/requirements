@@ -1,5 +1,5 @@
 package LbcomSys
-version v8r0
+version v8r1
 
 branches doc cmt
 
@@ -15,24 +15,24 @@ use CaloAssociators   v6r10   Calo      # Olivier Deschamps
 use CaloTools         v5r14   Calo      # Olivier Deschamps
 
 # DAQ
-use DAQMonitors       v1r0    DAQ       # In SVN. Olivier Deschamps
+use DAQMonitors       v1r1    DAQ       # In SVN. Olivier Deschamps
 
 # HLT
 use HltDAQ            v1r3    Hlt       # Tomasz Skwarnicki
 
 # L0 trigger simulation
-use L0Calo            v10r3   L0        # Olivier Deschamps, Patrick Robbe
-use L0DU              v10r0   L0        # Olivier Deschamps   
+use L0Calo            v11r0   L0        # Olivier Deschamps, Patrick Robbe
+use L0DU              v10r1   L0        # Olivier Deschamps   
 use L0Muon            v8r6    L0        # Andrei Tsarogorodtsev, Julien Cogan
 use L0MuonMonitor     v1r5    L0        # Julien Cogan
-use PuVeto            v7r5    L0        # Serena Oggero
+use PuVeto            v7r6    L0        # Serena Oggero
 
 # Muon
 use MuonAssociators   v3r2    Muon      # Alessia Satta
 
 # Outer tracker
 use OTAssociators     v4r4    OT        # Alexandr Kozlinskiy
-use OTMonitor         v3r2    OT        # Wouter Hulsbergen
+use OTMonitor         v3r2p1  OT        # Wouter Hulsbergen
 
 # Rich
 use RichAlgorithms    v1r2    Rich      # Chris Jones
