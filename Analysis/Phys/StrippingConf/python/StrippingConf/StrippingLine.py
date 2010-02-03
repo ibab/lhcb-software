@@ -419,6 +419,7 @@ class StrippingLine(object):
             mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = members ) })
             
         mdict.update( { 'HltDecReportsLocation' : 'Strip/Phys/DecReports' } )
+#        mdict.update( { 'ANNSvc' : 'StripANNSvc' } )
         
         __mdict = deepcopy ( mdict ) 
         from Configurables import StrippingAlg

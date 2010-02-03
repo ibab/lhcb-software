@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.37 2010-02-01 14:40:56 poluekt Exp $
+!$Id: release.notes,v 1.38 2010-02-03 08:45:49 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-02-03 - Anton Poluektov 
+ - Temporary measures to suppress "Invalid decision ID" warnings while StrippingANNSvc 
+   is absent. 
 
 ! 2010-02-01 - Anton Poluektov
  - Make alorithm name the default outputSelection for bindMembers 

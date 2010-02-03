@@ -33,7 +33,10 @@ StrippingAlg::StrippingAlg( const std::string& name, ISvcLocator* pSvcLocator )
 StatusCode StrippingAlg::initialize() {
   StatusCode sc = Selection::Line::initialize();
   SetupSelections();
-  m_id = SetupID();
+//  m_id = SetupID();
+
+  m_id = std::make_pair(std::string(decisionName()), 1);
+  
   return sc;
 }
 
