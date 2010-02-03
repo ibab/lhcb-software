@@ -5,6 +5,8 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+!==================== Phys/DisplVertices v1r0 2010-02-02 =====================
+
 ! 2010-01-28 - Neal Gauvin
  - First official commit of the package. 
  - RecVertices2Particles : 

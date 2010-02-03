@@ -3,7 +3,7 @@
 # Maintainer : Neal Gauvin 
 # ============================================================================
 package           DisplVertices
-version           v6r0
+version           v1r0
 
 # ============================================================================
 # Structure, i.e. directories to process. 
