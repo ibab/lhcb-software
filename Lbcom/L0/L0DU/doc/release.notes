@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.189 2010-02-02 21:11:05 odescham Exp $
+! $Id: release.notes,v 1.190 2010-02-03 17:41:37 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
 
+!========================== L0DU v10r1 2010-02-03 =========================
 ! 2010-02-02 - Olivier Deschamps
  - L0DUFromRawTool : fix problem in decoding n+/n- consecutive events : affects only data taken with recent f/w &  bank v2
 
