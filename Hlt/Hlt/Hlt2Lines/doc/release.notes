@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.107 2010-02-01 21:22:42 graven Exp $
+$Id: release.notes,v 1.108 2010-02-03 11:32:00 dmoran Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -10,6 +10,9 @@ $Id: release.notes,v 1.107 2010-02-01 21:22:42 graven Exp $
 !-----------------------------------------------------------------------------
 
 !========================== Hlt2Lines v2r3 2010-02-01 ===================
+ 2010-02-03 - Dermot Moran
+ - Hlt2diphotonDiMuon.py: Added selection
+
 ! 2010-02-01 - Johannes Albrecht
  - Hlt2ExpressLines.py: Update selections
 

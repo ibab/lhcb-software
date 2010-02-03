@@ -67,6 +67,7 @@ class Exclusive_Nominal :
             , 'Hlt2Bs2PhiPhi'
         # Hlt2InclusiveDiMuonLines
 #            , 'UnbiasedZmm'
+#            , 'Hlt2diphotonDiMuon' 
              ]
         
         return lines
