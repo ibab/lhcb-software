@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.287 2010-02-01 13:17:56 jpalac Exp $
+! $Id: release.notes,v 1.288 2010-02-03 10:51:57 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v9r25 2010-02-02 ==================
 
 ! 2010-02-01 - Juan Palacios
  - src/Particle2BackgroundCategoryRelationsAlg.cpp
