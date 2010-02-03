@@ -1,4 +1,4 @@
-#$Id: selection.py,v 1.7 2010-02-03 08:37:59 jpalac Exp $
+#$Id: selection.py,v 1.8 2010-02-03 08:46:31 jpalac Exp $
 """
 Classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -209,6 +209,8 @@ class SelSequence(object) :
         new_dict = update_overlap(self.__ctor_dict__, args)
         return SelSequence(name, **new_dict)
 
+    def __getitem__(self, index) :
+        return self.algos[index]
     
 class FlatSelectionListBuilder(object) :
     """
