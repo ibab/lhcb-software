@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Id: test_selection_sequence.py,v 1.10 2010-01-28 13:48:38 jpalac Exp $
+#$Id: test_selection_sequence.py,v 1.11 2010-02-03 07:43:48 jpalac Exp $
 '''
 Test suite for SelectionSequence class.
 '''
@@ -54,11 +54,11 @@ def test_sequencer_sequence() :
     _sel02 = AutomaticData('Sel02', Location = 'Phys/Sel02')
     _sel03 = AutomaticData('Sel03', Location = 'Phys/Sel03')
 
-    sel01 = Selection('00110', Algorithm = DummyAlgorithm('Alg000'),
+    sel01 = Selection('000110', Algorithm = DummyAlgorithm('Alg000'),
                       RequiredSelections = [_sel00, _sel01])
-    sel02 = Selection('00111', Algorithm = DummyAlgorithm('Alg001'),
+    sel02 = Selection('000111', Algorithm = DummyAlgorithm('Alg001'),
                       RequiredSelections = [_sel02, _sel03])
-    sel03 = Selection('00112', Algorithm = DummyAlgorithm('Alg003'),
+    sel03 = Selection('000112', Algorithm = DummyAlgorithm('Alg003'),
                       RequiredSelections = [ sel01, sel02])
 
     presel0 = DummyAlgorithm('Presel0')
@@ -68,7 +68,7 @@ def test_sequencer_sequence() :
 
     presels =  [presel0, presel1]
     postsels = [postsel0, postsel1]
-    seq = SelectionSequence('Seq02',
+    seq = SelectionSequence('Seq0002',
                             TopSelection = sel03,
                             SequencerType = DummySequencer,
                             EventPreSelector = presels,
