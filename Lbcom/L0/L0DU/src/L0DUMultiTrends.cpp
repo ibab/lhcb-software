@@ -1,4 +1,4 @@
-// $Id: L0DUMultiTrends.cpp,v 1.4 2010-02-02 11:27:02 odescham Exp $
+// $Id: L0DUMultiTrends.cpp,v 1.5 2010-02-03 17:15:44 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -217,8 +217,9 @@ StatusCode L0DUMultiTrends::execute() {
           int ic = 0;
           for(std::vector<std::string>::iterator i = temp.begin() ; i != temp.end() ; i++){
             LHCb::L0DUConfig* config = NULL;
-            if( *i == "data" )config = m_fromRaw->report().configuration();
-            else{
+            if( *i == "data" ){
+              config = m_fromRaw->report().configuration();
+            }else{
               int itck = tck2int( *i );
               config = m_config->config( itck );
             }
@@ -233,8 +234,11 @@ StatusCode L0DUMultiTrends::execute() {
               if(trigger->index() >= m_nPredTriggers)continue;
               std::string name  =  trigger->name();
               std::string unit  = "Counters/Trending/SubTriggers/" + conf + name;
-              if( "data" == *i && m_fromRaw->report().triggerDecisionByName( name ) )tFill( unit, bin );
-              else if( trigger->emulatedDecision() )tFill( unit ,bin ); 
+              if( "data" == *i && m_fromRaw->report().triggerDecisionByName( name ) ){
+                tFill( unit, bin );
+              }else if( trigger->emulatedDecision() ){
+                tFill( unit ,bin ); 
+              } 
             }
           }  
         } 
@@ -244,8 +248,9 @@ StatusCode L0DUMultiTrends::execute() {
           int ic = 0;
           for(std::vector<std::string>::iterator i = temp.begin() ; i != temp.end() ; i++){
             LHCb::L0DUConfig* config = NULL;
-            if( *i == "data" )config = m_fromRaw->report().configuration();
-            else{
+            if( *i == "data" ){
+              config = m_fromRaw->report().configuration();
+            }else{
               int itck = tck2int( *i );
               config = m_config->config( itck );
             }
@@ -259,8 +264,11 @@ StatusCode L0DUMultiTrends::execute() {
               if( NULL == channel )continue;
               std::string name  =  channel->name();
               std::string unit  = "Counters/Trending/Channels/" + conf + name;
-              if( "data" == *i && m_fromRaw->report().channelDecisionByName( name ) )tFill( unit, bin );
-              else if( channel->emulatedDecision() )tFill( unit ,bin ); 
+              if( "data" == *i && m_fromRaw->report().channelDecisionByName( name ) ){
+                tFill( unit, bin );
+              }else if( channel->emulatedDecision() ){
+                tFill( unit ,bin ); 
+              } 
             }
           }
         }
