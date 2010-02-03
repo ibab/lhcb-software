@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -114,10 +114,11 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
                                                RecoName = 'THadronConf' 
                                            )
 
-            conf = l0.members()  + [ DecodeIT, DecodeTT
+            conf = l0.members()  + [ DecodeIT 
                     , Hlt1HadronViaTTUTConf
                     , Member ( 'TF' , 'TConf' , FilterDescriptor = ['ptAtOrigin,>,'+PTCut])
-                    , RZVelo
+                    , DecodeTT
+		    , RZVelo
                     , PV2D.ignoreOutputSelection()
                     , Member ( 'TF' , 'VeloRZTMatch' , FilterDescriptor = ['RZVeloTMatch_%TFTConf,<,'+VTMatchCut]) 
                     , Member ( 'TU', 'Velo',  RecoName = 'Velo')
