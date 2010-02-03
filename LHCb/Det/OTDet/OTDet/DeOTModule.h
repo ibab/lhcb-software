@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.43 2010-02-03 08:30:05 wouter Exp $
+// $Id: DeOTModule.h,v 1.44 2010-02-03 08:35:24 wouter Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -297,9 +297,12 @@ public:
 
   /** Set the status flags for all straws in this module. The vector
       can have 3 different lengths:
-      - if the length is nChannels() or MAXNUMCHANNELS, then it contains one status flag per channel
+      - if the length is nChannels() or MAXNUMCHANNELS, then it contains one status 
+        flag per channel
       - if the length is 2 or 4, then it contains 1 status flag per otis
       - if the length is 1, it contains one satus flag for the entire module.
+      Note: the flags are actually internally stored as 'unsigned chars', 
+      so don't use more than 8 bits.
   */
   StatusCode setStrawStatus( const std::vector< int >& statusflags );
 
