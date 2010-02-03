@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.74 2010-02-02 19:31:53 musy Exp $
+! $Id: release.notes,v 1.75 2010-02-03 10:55:51 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+!========================== FlavourTaggingChecker v5r0 2010-02-02 ============
 
 ! 2010-02-02 - Marco Musy
   - drop variables of ip in entuple in src/BTaggingAnalysis.cpp 
