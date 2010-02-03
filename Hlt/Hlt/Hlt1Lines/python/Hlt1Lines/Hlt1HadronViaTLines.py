@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -34,7 +34,8 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
     __slots__ = { 'L0Channel'               : "Hadron" 
                 , 'HadViaTSingle_IPCut'         : 0.1
 		, 'HadViaTDi_IPCut'             : 0.1
-                , 'HadViaTMain_PTCut'           : 2500.
+                , 'HadViaT_ETCut'		: 2500.
+		, 'HadViaTMain_PTCut'           : 2500.
                 , 'VeloTMatchCut'               : 80
                 , 'HadViaTCompanion_DOCACut'    : 0.2
                 , 'HadViaTCompanion_DZCut'      : 0.
@@ -76,7 +77,10 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
             from HltLine.HltDecodeRaw import DecodeIT,DecodeTT
             from Configurables import PatConfirmTool, PatSeedingTool,L0ConfirmWithT,HltTrackUpgradeTool
 
- 	    l0 = bindMembers(prefix, [ convertL0Candidates(candidates)]) 
+ 	    l0 = bindMembers(prefix, [ convertL0Candidates(candidates)
+						 , Member('TF','L0HadronViaT'
+                                                 , FilterDescriptor = ["L0ET,>,%s"%self.getProp("HadViaT_ETCut")]
+                                                 )]) 
 	
             #Define the tool which actually makes the forward tracks
             #from the L0 confirmed objects
