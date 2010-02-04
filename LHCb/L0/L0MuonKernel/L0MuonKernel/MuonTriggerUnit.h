@@ -37,44 +37,13 @@ namespace L0Muon {
     /// Destructor
     ~MuonTriggerUnit();
 
-    /// Initialize subunits
-    void initialize();
-
     /// Give a static type name to the unit
     std::string type() {
       return "MuonTriggerUnit";
     }
 
-    /// Return x foi in station sta
-    int xFoi(int sta);
-    
-    /// Return y foi in station sta
-    int yFoi(int sta);
-    
-    /// Return the flag for searching candidates without M1 
-    bool ignoreM1(){ return m_ignoreM1;} 
-
-    /// Return the flag for searching candidates without M2
-    bool ignoreM2(){ return m_ignoreM2;} 
-
-    /// Return parameters for calculating pT
-    std::vector<double> ptParameters(){ return m_ptparameters;}
-
-    /// Return the emulator version
-    int procVersion(){ return m_procVersion;}
-     
-  private:
-     
-    std::vector<int> m_xfoi; ///< Vector of FOI in X (5 elements, 1 per station)
-    std::vector<int> m_yfoi; ///< Vector of FOI in Y (5 elements, 1 per station)   
-    bool m_ignoreM1;         ///< Flag to ignore M1
-    bool m_ignoreM2;         ///< Flag to ignore M2
-    std::vector<double> m_ptparameters; ///< parameters for PT encoding
-    int m_procVersion;                  ///< processor version 
 
   };
-
-
 };  // namespace L0Muon
 
 #endif      // L0MUONKERNEL_MUONTRIGGERPROCESSORUNIT_H  

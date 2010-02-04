@@ -16,6 +16,32 @@ L0Muon::CoreUnit::CoreUnit(DOMNode* pNode):L0MUnit(pNode) {
     
 L0Muon::CoreUnit::~CoreUnit() {};  
 
+int L0Muon::CoreUnit::xFoi(int sta)
+{
+  //  int xfoi= m_xfoi[sta];
+  std::vector<int>  xfoi= m_properties["foiXSize"];
+  return xfoi[sta];  
+}
+
+int L0Muon::CoreUnit::yFoi(int sta)
+{
+  //  int yfoi= m_yfoi[sta];
+  std::vector<int> yfoi= m_properties["foiYSize"];
+  return yfoi[sta];
+}
+
+int L0Muon::CoreUnit::procVersion()
+{
+  int procVersion  =  m_properties["procVersion"];
+  return procVersion;
+}
+
+bool L0Muon::CoreUnit::ignoreM1()
+{
+  bool ignoreM1 = m_properties["ignoreM1"];
+  return ignoreM1;
+}
+
 bool L0Muon::CoreUnit::makePads() {
   // Construct the logical pads list from the input tiles (OL+neighbours)
   // Return false if the pad list is empty
@@ -330,28 +356,29 @@ void L0Muon::CoreUnit::initializeM1TowerMap() {
   } // End of Loop over M1 pads
 }
 
-void L0Muon::CoreUnit::initialize() {
+void L0Muon::CoreUnit::setProperties(std::map<std::string,L0Muon::Property> properties) {
 
-  // Get a pointer to the parent Crate Unit
-  MuonTriggerUnit * pmuontrigger = dynamic_cast<MuonTriggerUnit *>( parentByType("MuonTriggerUnit"));
+  Unit::setProperties( properties );
 
   // Set the NO M1 flag
-  m_ignoreM1=pmuontrigger->ignoreM1();  
-  m_tower.setIgnoreM1(m_ignoreM1);
+  m_tower.setIgnoreM1( ignoreM1() );
   if (m_ignoreM1) initializeM1TowerMap();
-
-  // Set the NO M2 flag
-  m_ignoreM2=pmuontrigger->ignoreM2();
-  m_tower.setIgnoreM2(m_ignoreM2);
 
   // Set the foi
   for (int ista=0; ista<5; ista++){ 
-    m_tower.setFoi(ista,pmuontrigger->xFoi(ista),pmuontrigger->yFoi(ista));
+    m_tower.setFoi(ista, xFoi(ista), yFoi(ista));
   }
   
   // Set the emulator version
-  m_tower.setProcVersion(pmuontrigger->procVersion());
+  m_tower.setProcVersion( procVersion() );
 
+  if (m_debug) std::cout << "*!! Core:setProperties" 
+                         << " FOI X"<<xFoi(0)<<xFoi(1)<<xFoi(3)<<xFoi(4)<<" Y"<<yFoi(3)<<yFoi(4)
+                         << " procVersion "<<procVersion()
+                         << std::endl;
+}
+
+void L0Muon::CoreUnit::initialize() {
   // Candidate Register handler for output candidates
   char buf[4096];
   sprintf(buf,"CAND_PUQ%dR%d%d%d",m_mid.quarter()+1,m_mid.region()+1,m_mid.nX(),m_mid.nY());

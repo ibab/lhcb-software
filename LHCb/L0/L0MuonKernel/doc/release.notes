@@ -4,6 +4,14 @@
 ! Purpose     : 
 !------------------------------------------------------------------------------
 
+! 2010-02-04 - Julien Cogan
+ - Changes to use configure the emulator with the CondDB :
+   - Handling of trigger parameters moved from MuonTriggerUnit to CoreUnits 
+	 using the unit's properties mechanism. 
+   - CoreUnit : trigger parameters applied in the setProperty rather than in 
+   initialize to allow change during job execution
+ - CoreUnit : remove unused ignoreM2 property
+
 !============================ L0MuonKernel v8r9 2009-11-27 ==================== 
 ! 2009-11-24 - Julien Cogan
  - Modification of the error field format in the PU L0Buffer specification.

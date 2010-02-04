@@ -1,4 +1,4 @@
-// $Id: CoreUnit.h,v 1.10 2008-11-07 16:23:38 jucogan Exp $
+// $Id: CoreUnit.h,v 1.11 2010-02-04 15:58:26 jucogan Exp $
 #ifndef L0MUONKERNEL_COREUNIT_H
 #define L0MUONKERNEL_COREUNIT_H     1
 
@@ -78,6 +78,24 @@ namespace L0Muon {
 
     /// Constructor from a xml node
     CoreUnit(DOMNode* pNode);
+
+    /// Set the unit properties
+    void setProperties(std::map<std::string,L0Muon::Property>properties);
+
+    /// Return x foi in station sta
+    int xFoi(int sta);
+    
+    /// Return y foi in station sta
+    int yFoi(int sta);
+    
+    /// Return the flag for searching candidates without M1 
+    bool ignoreM1();
+
+//     /// Return the flag for searching candidates without M1 
+//     bool ignoreM2(){return false;}
+
+    /// Return the emulator version
+    int procVersion();
 
     /// Construct logical pads; return false is the pad list is empty
     bool makePads();
