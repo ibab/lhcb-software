@@ -6,11 +6,17 @@ Purpose: LHCb reconstruction program
  - Changes to Configurable: 
    . Remove OTTimeCreator from CheckOTSeq, no longer needed (task 12674)
 
+ - Changes to tests:
+   . Modify brunel-cosmics.qmt to add a test of writing unpacked DST
+
  - Changes to references to reflect changes in Brunel v36r1 output:
    . Change in aerogel CK theta range (RichRecBase v3r26, RichRecQC v2r36)
    . Updates to SpdMonitor, add histograms in CaloEMuMonitor (CaloMoniDst v4r4)
    . New Pixel Cluster monitor, remove MC related printout (RichRecQC v2r36)
+   . New histogram per radiator for raw expected CK theta distn (RichRecQC v2r36)
    . New RichIFB histograms following bug fixes (RichIFBAnalysis v1r1p1)
+   . Bug fix in TrackV0Utils (TrackUtils v1r34)
+   . Added profiles to OTHitEfficiencyMonitor (TrackMonitor v1r20)
 
 </PRE><H1><A NAME=v36r0>2010-01-26 Brunel v36r0</A></H1><PRE>
  - Changes to requirements

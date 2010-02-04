@@ -6,6 +6,8 @@
     <text>$BRUNELROOT/tests/options/testBrunel-defaults.py</text>
     <text>$BRUNELOPTS/Brunel-Cosmics.py</text>
     <text>$BRUNELOPTS/2008-Cosmic-Data.py</text>
+    <text>--option</text>
+    <text>from Brunel.Configuration import *; Brunel().PackType="NONE";</text>
   </set></argument>
   <argument name="reference"><text>../refs/testBrunel-Cosmics.ref</text></argument>
   <argument name="validator"><text>
