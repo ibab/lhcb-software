@@ -1,4 +1,4 @@
-// $Id: RelTableFunctors.h,v 1.2 2009-05-27 13:51:59 jpalac Exp $
+// $Id: RelTableFunctors.h,v 1.3 2010-02-04 11:24:39 jpalac Exp $
 #ifndef MICRODST_RELTABLEFUNCTORS_H 
 #define MICRODST_RELTABLEFUNCTORS_H 1
 
@@ -15,8 +15,8 @@ namespace MicroDST
   template <class TABLE>   
   struct Cloners
   {
-    typedef boost::function< const typename TABLE::From (const typename TABLE::From )> From;
-    typedef boost::function< const typename TABLE::To (const typename TABLE::To )> To;
+    typedef boost::function< typename TABLE::From (typename TABLE::From )> From;
+    typedef boost::function< typename TABLE::To (typename TABLE::To )> To;
   };
 
   template <class TABLE>

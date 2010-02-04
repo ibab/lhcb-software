@@ -1,4 +1,4 @@
-// $Id: RelationsClonerAlg.h,v 1.13 2009-08-21 15:50:35 jpalac Exp $
+// $Id: RelationsClonerAlg.h,v 1.14 2010-02-04 11:24:39 jpalac Exp $
 #ifndef MICRODST_RELATIONSCLONERALG_H 
 #define MICRODST_RELATIONSCLONERALG_H 1
 
@@ -164,7 +164,7 @@ namespace MicroDST
 
   private:
     inline const CLONER* cloner() { return m_cloner; }
-    inline const typename TABLE::From cloneFrom(const typename TABLE::From from) 
+    inline typename TABLE::From cloneFrom(const typename TABLE::From from) 
     {
 
       if (0==from) {
@@ -175,7 +175,7 @@ namespace MicroDST
 
     }
 
-    inline const typename TABLE::To cloneTo(const typename TABLE::To to) 
+    inline typename TABLE::To cloneTo(const typename TABLE::To to) 
     {
       if (0==m_cloner) return to;
       const typename TABLE::To storedTo = getStoredClone< TO_TYPE >(to);
