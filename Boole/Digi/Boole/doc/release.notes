@@ -3,8 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v20r2>2010-02-04 Boole v20r2</A></H1></PRE>
  - Changes to references to reflect changes in Boole v20r2 output:
-   . Proper handling of magnetic field (RichDet v13r4)
    . Improvements to L0DU configurable (L0DU v10r1)
    . Remove OTTimeCreator from expert checking (OTmonitor v3r2p1)
 
