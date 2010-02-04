@@ -543,16 +543,17 @@ int main(int argc, char ** argv){
   std::string configfile = "etc/camserv.conf";
   
   for (int i = 0; i<argc;i++){
-    if (strncmp(argv[i],"-C",2) == 0)
+    if (strncmp(argv[i],"-C",2) == 0){
       if (i+1 < argc){
-	configfile = (std::string) argv[i+1];
+        configfile = (std::string) argv[i+1];
       }
       else{
-	std::cerr<<"ERROR: Usage: "<<argv[0]<<" -C <filename>"<<std::endl;
-	std::cerr<<"ERROR: -C needs an argument: the config file localtion"<<std::endl;
+        std::cerr<<"ERROR: Usage: "<<argv[0]<<" -C <filename>"<<std::endl;
+        std::cerr<<"ERROR: -C needs an argument: the config file localtion"<<std::endl;
       }
+    }
   }
-  
+
   mapc.setfile(configfile.c_str());
 
   if (mapc.get("ID")!="")

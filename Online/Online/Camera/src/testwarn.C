@@ -66,7 +66,9 @@ int main(int  /*argc*/ , char ** argv)
 
     char buf[3];
     while (  c.rd(buf,2)==-2){};
-    buf[3] = 0;
+    // NM: the following line has been corrected by Nicola Mangiafave and
+    // it has to be checked
+    buf[2] = 0;
     printf("%s\n",buf);
     if (strncmp(buf,"GO",2) ==0)
     {

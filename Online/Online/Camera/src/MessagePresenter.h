@@ -96,7 +96,7 @@ private:
 
  public:  
   void DoClose(); 
-  void messageloop(char * host = "127.0.0.1",char * file =NULL);
+  void messageloop(char * host = (char*)"127.0.0.1",char * file = NULL);
   MessagePresenter();
   ~MessagePresenter(){}
   void selectWarn();

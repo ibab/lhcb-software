@@ -1067,8 +1067,9 @@ int main(int /* argc */, char ** argv){
   //  std::cout <<"Hello"<<std::endl;
   
   int   dummy_argc   = 1;
-  char *dummy_argv[] =  { "MP", NULL  };
-
+  // NM: modified the following line to couple with warning message:
+  // "deprecated conversion from string constant to char*"
+  char *dummy_argv[] =  { (char*)"MP", NULL  };
 
   TApplication * TApp = 
     new TApplication("MessagePresenter",&dummy_argc,dummy_argv);
@@ -1076,7 +1077,11 @@ int main(int /* argc */, char ** argv){
   mp.display();
   //mp.messageloop(argv[1],argv[2]);
 
-  if (argv[1]==NULL) mp.messageloop();
+  // NM: modified the following line to couple with warning message:
+  // "deprecated conversion from string constant to char*"
+  if (argv[1]==NULL){
+    mp.messageloop();
+  }
   else mp.messageloop(argv[1],argv[2]);
 
   delete TApp;

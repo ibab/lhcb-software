@@ -4,6 +4,8 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2010-02-04 - Nicola Mangiafave
+- In /src/: fixed warning messages from compilation.
 
 ! 2010-02-02 - Nicola Mangiafave
 - In CameraTool: it's now able to send messages to both Camera and the DIM
