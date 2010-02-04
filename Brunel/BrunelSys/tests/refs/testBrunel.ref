@@ -72,7 +72,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v35r11
-                                          running on lxbuild156.cern.ch on Tue Feb  2 18:48:19 2010
+                                          running on lxbuild156.cern.ch on Thu Feb  4 12:38:43 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -85,7 +85,7 @@ EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEv
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.59 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.61 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 BrunelSequencer      INFO Member list: ProcessPhase/Init, GaudiSequencer/PhysicsSeq, ProcessPhase/Output, with context 'Offline'
@@ -831,7 +831,7 @@ TrackEcalMatchM...SUCCESS Booked 14 Histogram(s) : 1D=6 1DProf=8
 TrackSpdMatchMo...SUCCESS Booked 14 Histogram(s) : 1D=6 1DProf=8
 TrackPrsMatchMo...SUCCESS Booked 14 Histogram(s) : 1D=6 1DProf=8
 OTTrackMonitor    SUCCESS Booked 59 Histogram(s) : 1D=43 2D=7 1DProf=9
-OTHitEfficiency...SUCCESS Booked 47 Histogram(s) : 2D=9 1DProf=38
+OTHitEfficiency...SUCCESS Booked 56 Histogram(s) : 2D=9 1DProf=47
 OTTimeMonitor     SUCCESS Booked 9 Histogram(s) : 1D=8 1DProf=1
 TTClusterMonitor  SUCCESS Booked 10 Histogram(s) : 1D=7 2D=3
 ITClusterMonitor  SUCCESS Booked 6 Histogram(s) : 1D=3 2D=3
@@ -909,12 +909,12 @@ RiMatchTrkEff     SUCCESS Booked 15 Histogram(s) : 1D=10 1DProf=5
 RiKsTrackTrkEff   SUCCESS Booked 15 Histogram(s) : 1D=10 1DProf=5
 RiVeloTTTrkEff    SUCCESS Booked 15 Histogram(s) : 1D=10 1DProf=5
 RiSeedTrkEff      SUCCESS Booked 15 Histogram(s) : 1D=10 1DProf=5
-RiCKResLong       SUCCESS Booked 42 Histogram(s) : 1D=27 2D=15
-RiCKResForward    SUCCESS Booked 42 Histogram(s) : 1D=27 2D=15
-RiCKResMatch      SUCCESS Booked 42 Histogram(s) : 1D=27 2D=15
-RiCKResKsTrack    SUCCESS Booked 42 Histogram(s) : 1D=27 2D=15
-RiCKResVeloTT     SUCCESS Booked 42 Histogram(s) : 1D=27 2D=15
-RiCKResSeed       SUCCESS Booked 42 Histogram(s) : 1D=27 2D=15
+RiCKResLong       SUCCESS Booked 45 Histogram(s) : 1D=30 2D=15
+RiCKResForward    SUCCESS Booked 45 Histogram(s) : 1D=30 2D=15
+RiCKResMatch      SUCCESS Booked 45 Histogram(s) : 1D=30 2D=15
+RiCKResKsTrack    SUCCESS Booked 45 Histogram(s) : 1D=30 2D=15
+RiCKResVeloTT     SUCCESS Booked 45 Histogram(s) : 1D=30 2D=15
+RiCKResSeed       SUCCESS Booked 45 Histogram(s) : 1D=30 2D=15
 RiPIDMonLong2To100WARNING NO ENTRIES -> PID table skipped ...
 RiPIDMonLong2To10 WARNING NO ENTRIES -> PID table skipped ...
 RiPIDMonLong10To70WARNING NO ENTRIES -> PID table skipped ...
@@ -992,7 +992,7 @@ ToolSvc.Offline...SUCCESS  #WARNINGS   = 1        Message = 'No pixels produced'
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.59 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.61 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
