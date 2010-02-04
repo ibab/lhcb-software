@@ -1,4 +1,4 @@
-// $Id: TupleToolBase.h,v 1.1 2010-01-27 08:43:40 rlambert Exp $
+// $Id: TupleToolBase.h,v 1.2 2010-02-04 10:09:35 rlambert Exp $
 #ifndef DV_TUPLETOOLBASE_H
 #define DV_TUPLETOOLBASE_H 1
 
@@ -42,8 +42,8 @@ public:
   virtual ~TupleToolBase( ){}; ///< Destructor
   
   const std::string& extraName() {return m_extraName;};
-  const bool isVerbose() {return m_verbose;};
-  const std::string fullName(const std::string head="") 
+  bool isVerbose() {return m_verbose;};
+  std::string fullName(const std::string head="") 
   {
     if (m_extraName=="") return head;
     else if(head=="") return (m_extraName+'_');

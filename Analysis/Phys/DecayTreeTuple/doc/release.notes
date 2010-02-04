@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-02-04 - Rob Lambert
+ - Minor Fix TupleTool Base
+    . Fix for slc5 warning returning const in return by value, see bug 62360
+
 !========================== DecayTreeTuple v3r0 2010-01-27 ==================
 
 ! 2010-01-27 - Rob Lambert
