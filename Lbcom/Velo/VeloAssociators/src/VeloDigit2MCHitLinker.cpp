@@ -1,4 +1,4 @@
-// $Id: VeloDigit2MCHitLinker.cpp,v 1.2 2006-03-06 10:57:36 cattanem Exp $
+// $Id: VeloDigit2MCHitLinker.cpp,v 1.3 2010-02-04 16:27:53 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -49,8 +49,9 @@ VeloDigit2MCHitLinker::~VeloDigit2MCHitLinker() {}
 // Main execution
 //=============================================================================
 StatusCode VeloDigit2MCHitLinker::execute() {
+  bool isDebug = msgLevel(MSG::DEBUG);
   //
-  debug() << "==> Execute" << endmsg;
+  if(isDebug) debug() << "==> Execute" << endmsg;
   //
   LHCb::VeloDigits* digits;
   if(!exist<LHCb::VeloDigits>(m_inputDigits)){
@@ -64,7 +65,7 @@ StatusCode VeloDigit2MCHitLinker::execute() {
   LinkerWithKey<LHCb::MCHit, LHCb::VeloDigit> myLink(evtSvc(),
                                                     msgSvc(), asctName());  
   //
-  debug()<< " ==> relations table has been created " <<endmsg;
+  if(isDebug) debug()<< " ==> relations table has been created " <<endmsg;
   // link the VeloDigits to MCHits
   LHCb::VeloDigits::const_iterator digIt;
   for(digIt=digits->begin(); digIt!=digits->end(); digIt++){
@@ -72,7 +73,7 @@ StatusCode VeloDigit2MCHitLinker::execute() {
     StatusCode sc=VeloTruthTool::associateToTruth((*digIt), relations, mcFEs);
     if(sc){
       //
-      debug()<< " ==> after the associator" <<endmsg;
+      if(isDebug) debug()<< " ==> after the associator" <<endmsg;
       std::map<LHCb::MCHit*,double>::const_iterator relIt;
       for (relIt=relations.begin(); relIt!=relations.end(); relIt++){
         SmartRef<LHCb::MCHit> hit=(*relIt).first;
@@ -82,7 +83,7 @@ StatusCode VeloDigit2MCHitLinker::execute() {
         myLink.link((*digIt), hit, weight);
       }
     }else{
-      debug()<< " ==> Empty table - no associations made! " <<endmsg;
+      if(isDebug) debug()<< " ==> Empty table - no associations made! " <<endmsg;
     }
   } // loop clusters
   //

@@ -55,11 +55,16 @@ namespace VeloTruthTool{
              const LHCb::VeloDigit* aDigit,
              std::map<LHCb::MCHit*, double>& hitMap,
              SmartDataPtr<LHCb::MCVeloFEs> mcfes);
-  //
+
+  /// make link between VeloDigits and MCHits
   StatusCode associateToTruth(
              const LHCb::VeloDigit* aDigit,
              std::map<LHCb::MCHit*, double>& hitMap,
              LHCb::MCVeloFEs* mcfes);
+
+  /// correctly assign MCHits from delta rays to parent MCParticle
+  void removeDeltaRays(const std::map<LHCb::MCHit*, double>& inputMap,
+		       std::map<LHCb::MCHit*, double>& outputMap);
   
 }; // VELOTRUTHTOOL_H
 #endif

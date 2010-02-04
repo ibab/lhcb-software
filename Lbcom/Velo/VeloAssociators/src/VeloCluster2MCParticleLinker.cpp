@@ -1,4 +1,4 @@
-// $Id: VeloCluster2MCParticleLinker.cpp,v 1.3 2006-05-10 15:08:23 cattanem Exp $
+// $Id: VeloCluster2MCParticleLinker.cpp,v 1.4 2010-02-04 16:27:53 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -45,7 +45,9 @@ VeloCluster2MCParticleLinker::~VeloCluster2MCParticleLinker() {}
 //=============================================================================
 StatusCode VeloCluster2MCParticleLinker::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  bool isDebug = msgLevel(MSG::DEBUG);
+
+  if(isDebug) debug() << "==> Execute" << endmsg;
   // input objects
   LHCb::VeloClusters* clusters;
   if(!exist<LHCb::VeloClusters>(m_inputClusters)){
@@ -53,7 +55,7 @@ StatusCode VeloCluster2MCParticleLinker::execute() {
     return ( StatusCode::FAILURE );
   }else{
     clusters=get<LHCb::VeloClusters>(m_inputClusters);
-    debug()<< "assoc size of clusters: " << clusters->size() <<endmsg;    
+    if(isDebug) debug()<< "assoc size of clusters: " << clusters->size() <<endmsg;    
   }
   //
   LHCb::MCParticles* parts;
@@ -62,7 +64,7 @@ StatusCode VeloCluster2MCParticleLinker::execute() {
     return ( StatusCode::FAILURE );
   }else{
     parts=get<LHCb::MCParticles>(m_inputParts);
-    debug()<< "size of parts: " << parts->size() <<endmsg;
+    if(isDebug) debug()<< "size of parts: " << parts->size() <<endmsg;
   }
   // linker table VeloClusters -> MCParticles
   LinkerWithKey<LHCb::MCParticle, LHCb::VeloCluster>
@@ -86,19 +88,19 @@ StatusCode VeloCluster2MCParticleLinker::execute() {
     Range range1=table->relations(*cluIt);
     iterator asctIt;
     // make associations
-    debug()<< "table: " << range1.size() <<endmsg;
+    if(isDebug) debug()<< "table: " << range1.size() <<endmsg;
     
     for(asctIt=range1.begin(); asctIt!=range1.end(); asctIt++){
       const LHCb::MCHit* aHit=asctIt->to();
       const LHCb::MCParticle* aPart=aHit->mcParticle();
-      debug()<< "energy: " << aPart->momentum().e()/Gaudi::Units::GeV
-             << " [GeV]" <<endmsg;
+      if(isDebug)   debug()<< "energy: " << aPart->momentum().e()/Gaudi::Units::GeV
+			   << " [GeV]" <<endmsg;
       //
       relations[aPart]+=asctIt->weight();
     }
     // linkere table
     if(!relations.empty()){
-      debug()<< " ==> Make links " <<endmsg;
+      if(isDebug) debug()<< " ==> Make links " <<endmsg;
       //
       std::map<const LHCb::MCParticle*, double>::const_iterator relIt;
       for(relIt=relations.begin(); relIt!=relations.end(); relIt++){
@@ -108,7 +110,7 @@ StatusCode VeloCluster2MCParticleLinker::execute() {
       }
       //
     }else{
-      debug()<< " ==> No associations made! " <<endmsg;
+      if(isDebug) debug()<< " ==> No associations made! " <<endmsg;
     }
     relations.clear();
   }

@@ -42,8 +42,10 @@ InternalVeloCluster2MCHitLinker::~InternalVeloCluster2MCHitLinker() {};
 // Main execution
 //=============================================================================
 StatusCode InternalVeloCluster2MCHitLinker::execute() {
+  
+  bool isDebug = msgLevel(MSG::DEBUG);
   //
-  debug() << "==> Execute" << endmsg;
+  if(isDebug) debug() << "==> Execute" << endmsg;
   //
   LHCb::InternalVeloClusters* clusters=
         get<LHCb::InternalVeloClusters>(m_inputClusters);
@@ -52,7 +54,7 @@ StatusCode InternalVeloCluster2MCHitLinker::execute() {
   LinkerWithKey<LHCb::MCHit,LHCb::InternalVeloCluster> myLink(
                                 evtSvc(), msgSvc(), asctName());  
   //
-  debug()<< " ==> relations table has been created " <<endmsg;
+  if(isDebug) debug()<< " ==> relations table has been created " <<endmsg;
   // link the InternalVeloClusters to MCHits
   LHCb::InternalVeloClusters::const_iterator cluIt;
   for(cluIt=clusters->begin(); cluIt!=clusters->end(); cluIt++){
@@ -60,7 +62,7 @@ StatusCode InternalVeloCluster2MCHitLinker::execute() {
     StatusCode sc=VeloTruthTool::associateToTruth((*cluIt), relations, mcFEs);
     if(sc){
       //
-      debug()<< " ==> after the associator" <<endmsg;
+      if(isDebug) debug()<< " ==> after the associator" <<endmsg;
       std::map<LHCb::MCHit*,double>::const_iterator relIt;
       for (relIt=relations.begin(); relIt!=relations.end(); relIt++){
         SmartRef<LHCb::MCHit> hit=(*relIt).first;
@@ -70,7 +72,7 @@ StatusCode InternalVeloCluster2MCHitLinker::execute() {
         myLink.link((*cluIt), hit, weight);
       }
     }else{
-      debug()<< " ==> Empty table - no associations made! " <<endmsg;
+      if(isDebug) debug()<< " ==> Empty table - no associations made! " <<endmsg;
     }
   } // loop clusters
   //

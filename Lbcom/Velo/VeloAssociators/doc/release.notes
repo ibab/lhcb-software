@@ -2,6 +2,10 @@
 ! Responsible : Chris Parkes
 !------------------------------------------------------------------------
 
+! 2010-02-04 - David Hutchcroft
+ - Better associate clusters to MCParticles with MCHits from delta rays
+ - Prevent the creation of debug messages if the message level is too high
+
 !==================== VeloAssociators v2r3 2007-12-05 ===================
 ! 2007-12-05 - Marco Cattaneo
  - Remove obsolete VeloCluster2VeloDigitTool

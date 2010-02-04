@@ -1,4 +1,4 @@
-// $Id: VeloDigit2MCParticleLinker.cpp,v 1.3 2006-03-09 08:37:29 szumlat Exp $
+// $Id: VeloDigit2MCParticleLinker.cpp,v 1.4 2010-02-04 16:27:53 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -36,7 +36,9 @@ VeloDigit2MCParticleLinker::~VeloDigit2MCParticleLinker() {}
 //=============================================================================
 StatusCode VeloDigit2MCParticleLinker::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  bool isDebug = msgLevel(MSG::DEBUG);
+
+  if(isDebug) debug() << "==> Execute" << endmsg;
   // take the input data
   // VeloDigits
   LHCb::VeloDigits* digits;
@@ -82,14 +84,14 @@ StatusCode VeloDigit2MCParticleLinker::execute() {
     for(asctIt=range1.begin(); asctIt!=range1.end(); asctIt++){
       const LHCb::MCHit* myHit=asctIt->to();
       const LHCb::MCParticle* myPart=myHit->mcParticle();
-      debug()<< "energy: " << myPart->momentum().e() <<endmsg;
+      if(isDebug) debug()<< "energy: " << myPart->momentum().e() <<endmsg;
       
       double charge=myHit->energy();
       relations[myPart]+=charge;
     }
     // fill the link table
     if(relations.size()!=0){
-      debug()<< " ==> Make links " <<endmsg;
+      if(isDebug) debug()<< " ==> Make links " <<endmsg;
       //
       std::map<const LHCb::MCParticle*, double>::const_iterator relIt;
       for(relIt=relations.begin(); relIt!=relations.end(); relIt++){
@@ -98,7 +100,7 @@ StatusCode VeloDigit2MCParticleLinker::execute() {
         myLink.link(*digIt, myPart, weight);
       }
     }else{
-      debug()<< " ==> No associations made! " <<endmsg;
+      if(isDebug) debug()<< " ==> No associations made! " <<endmsg;
     }
     relations.clear();
   }
