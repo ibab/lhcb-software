@@ -136,7 +136,7 @@ def printProjects():
     for pName in unusedProjects:
       print pName, ' versions: ', unusedProjectVersions[pName]
       if removeAll:
-        if not pName in ['COMPAT','BRUNEL','GAUSS','DAVINCI','BOOLE','LBSCRIPTS','DIRAC','BENDER','LHCBGRID']:
+        if not pName in ['COMPAT','BRUNEL','GAUSS','DAVINCI','BOOLE','LBSCRIPTS','DIRAC','LHCBDIRAC','BENDER','LHCBGRID']:
           for toberemove in unusedProjectVersions[pName]:
             print 'remove ',pName,' version ',toberemove
             if not printAll:
@@ -180,7 +180,11 @@ def findAllDatabases( distArea ):
 #------------------------------------------------------------------------------
 argChecker()
 envChecker()
-findAllDatabases( 'LHCBTAR' )
+if os.environ.has_key('LHCBTAR'):
+  findAllDatabases( 'LHCBTAR' )
+else:
+  findAllDatabases( 'LHCb_release_area' )
+
 findAllProjects( 'Gaudi_release_area' )
 findAllProjects( 'LHCb_release_area' )
 processOldProjects( 'Gaudi_release_area' )
