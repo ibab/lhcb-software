@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-02-04 - V. Gligorov
+ - Add Debug_ForL0HadronConfStudy_Feb10.py, the threshold settings
+   used for the L0 confirmation study
+
 !========================== HltSettings v1r7 2010-02-02 ===================
 ! 2010-02-02 - V. Gligorov
  - Update ViaT lines in Physics_320Vis_300L0_10Hlt1_Jan10
