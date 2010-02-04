@@ -9,6 +9,8 @@ branches doc cmt
 
 use  Moore              v8r6     Hlt
 
+use  TCKUtils           v1r6p1     Hlt
+
 
 # Declare this as a container package
 apply_pattern container_package
