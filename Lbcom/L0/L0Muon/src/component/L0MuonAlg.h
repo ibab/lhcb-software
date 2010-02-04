@@ -13,23 +13,30 @@
 
 #include "L0MuonKernel/MuonCandidate.h"
 
+#include "DetDesc/Condition.h"
+
 /** @class L0MuonAlg L0MuonAlg.h component/L0MuonAlg.h
 
  Algorithm to run the L0Muon emulator.
 
  Algorithm main properties :
-  - StoreInBuffer   : write the raw banks (default is true)
+
+ Properties inherited from L0AlgBase
+  - WriteBanks      : write the raw banks (default is true)
   - WriteOnTES      : write on TES the L0MuonCandidates (default is false)
-  - WriteL0ProcData : write on TES the L0ProcessorData to be used by the L0DU emulator (default is true)
-  - InputSource     : 0 => use MuonDigits in input / 1 => use L0MuonData in input (default is 0)
-  - DAQMode         : 0 =>  
+  - L0Context       : string added to the L0MuonCandidates location on TES
 
  Additional properties :
-  - ConfigFile : path of the xml configuration file
-  - IgnoreM1 : run without M1 
-  - IgnoreM2 : run without M2 
-  - ForceM3  : force input M3 optical links content to 1
+  - InputSource     : 0 => use MuonDigits in input / 1 => use L0MuonData in input (default is 0)
+  - DAQMode         : TELL1 output mode : 0 => Light / 1 => Standard / 2 => Debug (default is 1)  
+  - Compression     : flag to activate the compression of the output banks (default is True)
+  - ConfigFile      : path of the xml configuration file
+  - IgnoreM1        : run without M1
+  - ForceM3         : force input M3 optical links content to 1
+  - DebugMode       : flag to activate the debug mode of the emulator
+  - IgnoreCondDB    : flag not to use the CondDB (default is False)
 
+ Properties overloaded with CondDB parameters 
   - Version  : version of the processor to emulate 
   - FoiXSize : vectors of integer specifying the size of the fields of interest in X. 
   - FoiXSize : vectors of integer specifying the size of the fields of interest in Y. 
@@ -56,7 +63,16 @@ private:
   void setLayouts(); ///< Set the layouts to be used in fillOLsfromCoords
   std::map<std::string,L0Muon::Property>  l0MuonProperties(); ///< Build the properties of L0MuonKernel Units
 
-  StatusCode fillOLsfromDigits(); ///< Fill the Optical Links before processing
+  StatusCode getDigitsFromMuon();   ///< Get the hits from the muon (Digits or ZS raw data)
+  StatusCode getDigitsFromMuonNZS();///< Get the hits from the muon data (Non Zero supp.)
+  StatusCode getDigitsFromL0Muon(); ///< Get the hits from the L0Muon data
+  StatusCode fillOLsfromDigits();   ///< Fill the Optical Links before processing
+
+  // Emulator input
+  std::vector<LHCb::MuonTileID> m_digits; ///< Hits used by the emulator
+
+  // CondDB
+  bool m_ignoreCondDB;                ///< Flag to ignore the CondDB 
 
   // Emulator running modes
   int m_version;                      ///< Emulator version 
@@ -68,7 +84,6 @@ private:
   std::vector<int> m_foiYSize;        ///< values of FoI's in Y
   std::string  m_configfile;          ///< Config file name
   bool m_ignoreM1;                    ///< Flag to use M1 or not (not tested)
-  bool m_ignoreM2;                    ///< Flag to use M2 or not (not tested)
   bool m_forceM3;                     ///< Flag to force M3 optical link content to 1
   bool m_debug;                       ///< Flag to turn on debug mode for L0MuonKernel
   
@@ -91,6 +106,26 @@ private:
   int m_totEvent; ///< Event counter
 
   IMuonRawBuffer* m_muonBuffer;  ///< Interface to muon raw buffer 
+
+  Condition * m_l0CondCtrl ;  ///< Pointer to the L0 Controller board conditions 
+  Condition * m_l0CondProc ;  ///< Pointer to the L0 Processing board conditions
+
+  /// Call back function to check the controller board condition database content  
+  StatusCode updateL0CondCtrl() ;
+
+  /// Call back function to check the processing board condition database content  
+  StatusCode updateL0CondProc() ;
+
+  static inline int hard2softFOIConversion(int sta) 
+  {
+    switch (sta) {
+    case 0: return 2; // M1
+    case 1: return 1; // M2
+    case 3: return 4; // M4
+    case 4: return 4; // M5
+    default : return 1;
+    }
+  }
 
   static inline std::string timeSlot(int bx)  {
     std::string ts;

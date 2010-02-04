@@ -1,7 +1,23 @@
-!  $Id: release.notes,v 1.90 2010-01-21 17:27:24 cattanem Exp $
+!  $Id: release.notes,v 1.91 2010-02-04 22:55:35 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !---------------------------------------------------------------------------
+
+! 2010-02-04 - Julien Cogan
+ - Trigger parameters and CondDB :
+    - access the FOI values and the procVersion from CondDB
+    - new property : IgnoreCondDB to disable the previous feature if needed
+      (set to false by default)
+    - remove useless IgnoreM2 property 
+    - set new default for procVersion = 3
+ - Clean up :
+    - remove calls to ChronoStatSvc (L0MuonAlg + L0MuonCandidatesFromRaw)
+    - split the fillOlsFromDigits method into parts:
+       - get the hits from the relevants location
+       - fill the ol registers
+    - L0MuonOutputTool : use locations defined in L0Event for BCSU candidates
+    - L0MuonOutputTool : remove the check using exists<>(location) to avoid
+      conflict with the data on demand svc.
 
 !========================= L0Muon v8r6 2010-01-21 ==========================
 ! 2010-01-21 - Julien Cogan

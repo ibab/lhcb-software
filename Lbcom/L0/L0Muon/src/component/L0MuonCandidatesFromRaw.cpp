@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.24 2010-01-21 08:35:35 jucogan Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.25 2010-02-04 22:55:35 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -45,8 +45,8 @@ StatusCode L0MuonCandidatesFromRaw::initialize()
   StatusCode sc = L0FromRawBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  IChronoStatSvc * svc = chronoSvc();
-  svc->chronoStart("L0MuonCandidatesFromRaw Initialize");
+  //   IChronoStatSvc * svc = chronoSvc();
+  //   svc->chronoStart("L0MuonCandidatesFromRaw Initialize");
   
   L0Muon::RegisterFactory::selectInstance(1);
 
@@ -56,8 +56,8 @@ StatusCode L0MuonCandidatesFromRaw::initialize()
   L0Muon::L0MuonKernelFromXML(xmlFileName,false);
   if( msgLevel(MSG::DEBUG) ) debug() <<  "MuonTrigger build from xml "<< endmsg;
 
-  svc->chronoStop("L0MuonCandidatesFromRaw Initialize");
-  svc->chronoDelta("L0MuonCandidatesFromRaw Initialize",IChronoStatSvc::KERNEL);
+  //   svc->chronoStop("L0MuonCandidatesFromRaw Initialize");
+  //   svc->chronoDelta("L0MuonCandidatesFromRaw Initialize",IChronoStatSvc::KERNEL);
   //   svc->chronoPrint("L0MuonCandidatesFromRaw Initialize");
   
   // L0MuonOutputs tool
@@ -89,8 +89,8 @@ StatusCode L0MuonCandidatesFromRaw::execute()
 {
   L0Muon::RegisterFactory::selectInstance(1);
 
-  IChronoStatSvc * svc = chronoSvc();
-  svc->chronoStart("L0MuonCandidatesFromRaw Execute");
+  //   IChronoStatSvc * svc = chronoSvc();
+  //   svc->chronoStart("L0MuonCandidatesFromRaw Execute");
 
   StatusCode sc;
 
@@ -181,8 +181,8 @@ StatusCode L0MuonCandidatesFromRaw::execute()
 
   } // End of loop over time slots
   
-  svc->chronoStop("L0MuonCandidatesFromRaw Execute");
-  svc->chronoDelta("L0MuonCandidatesFromRaw Execute", IChronoStatSvc::KERNEL);
+  //   svc->chronoStop("L0MuonCandidatesFromRaw Execute");
+  //   svc->chronoDelta("L0MuonCandidatesFromRaw Execute", IChronoStatSvc::KERNEL);
 
   ++m_totEvent;
 
