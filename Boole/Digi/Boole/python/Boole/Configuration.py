@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.65 2010-01-21 14:32:29 marcin Exp $"
+__version__ = "$Id: Configuration.py,v 1.66 2010-02-04 15:43:23 asatta Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -48,6 +48,7 @@ class Boole(LHCbConfigurableUser):
        ,"MoniSequence"        : []
        ,"FilterSequence"      : []
        ,"EnablePack"          : True
+       ,"IgnoreFlatSpillover" : False 
         }
 
     _propertyDocDct = { 
@@ -81,6 +82,7 @@ class Boole(LHCbConfigurableUser):
        ,'MoniSequence' : """ List of subdetectors to monitor, see KnownMoniSubdets """
        ,'FilterSequence' : """ List of Filter sequences, see KnownFilterSubdets  """
        ,'EnablePack'    : """ Turn on/off packing of the data (where appropriate/available) """
+       ,'IgnoreFlatSpillover'    : """ Turn on/off the simulation of flat spillover in muon  """
        }
 
     KnownFilterSubdets = [ "L0", "ODIN" ]
@@ -134,6 +136,12 @@ class Boole(LHCbConfigurableUser):
         else:
             tae = False
 
+        if self.getProp( "IgnoreFlatSpillover" ) :
+           IgnoreFlatSpillover = True
+        else:
+           IgnoreFlatSpillover = False
+        
+           
         detListInit = []
         if 'Data'    in self.getProp('DetectorInit')['DATA'] : detListInit += ['Data']
         if 'Muon'    in self.getProp('DetectorInit')['MUON'] : detListInit += ['Muon']
@@ -176,13 +184,13 @@ class Boole(LHCbConfigurableUser):
         linkDets   = self._setupPhase( "Link",   detListLink )
         moniDets   = self._setupPhase( "Moni",   detListMoni )
 
-        self.configureInit(tae, initDets)
+        self.configureInit(tae, initDets, IgnoreFlatSpillover)
         self.configureDigi(digiDets)
         self.configureLink(linkDets,moniDets)
         self.configureMoni(moniDets)
         self.configureFilter()
             
-    def configureInit(self,tae,initDets):
+    def configureInit(self,tae,initDets,IgnoreFlatSpillover):
         """
         Set up the initialization sequence
         """
@@ -255,7 +263,7 @@ class Boole(LHCbConfigurableUser):
             from Configurables import MuonBackground
             GaudiSequencer("InitMuonSeq").Members += [ MuonBackground("MuonLowEnergy") ]
             importOptions( "$MUONBACKGROUNDROOT/options/MuonLowEnergy-G4.opts" )
-            if not tae:
+            if ((not tae) and (not IgnoreFlatSpillover)):
                 GaudiSequencer("InitMuonSeq").Members += [ MuonBackground("MuonFlatSpillover") ]
                 importOptions( "$MUONBACKGROUNDROOT/options/MuonFlatSpillover-G4.opts" )
 

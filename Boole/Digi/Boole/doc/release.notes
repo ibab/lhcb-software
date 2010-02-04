@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Add a slot (IgnoreFlatSpillover) to ignore in muon detector digitization if in 
+   low luminosity condition. It is a temporary patch
+ 
  - Changes to references to reflect changes in Boole v20r3 output:
    . Proper handling of magnetic field (RichDet v13r4)
 
