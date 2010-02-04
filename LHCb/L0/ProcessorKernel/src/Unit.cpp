@@ -147,19 +147,25 @@ void L0Muon::Unit::setDebugMode(bool debug) {
     }
   } 
 }
+void L0Muon::Unit::setProperty(std::string name,L0Muon::Property value) 
+{
+  m_properties[name]=value;
+  if ( ! m_units.empty() ) {
+    std::vector<L0Muon::Unit*>::iterator  iu;
+    for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
+      (*iu)->setProperty(name, value);
+    }
+  } 
+}
 
 void L0Muon::Unit::setProperties(std::map<std::string,L0Muon::Property> properties) {
-  //   std::cout <<"Unit::setProperties IN"<<std::endl;
-  m_properties.clear();
-  //   std::cout <<"Unit::setProperties  m_properties cleared "<<std::endl;
-  //   std::cout <<"Unit::setProperties  m_properties.size()= "<< m_properties.size() <<std::endl;
-  std::map<std::string,L0Muon::Property>::iterator iproperties;
-  for (iproperties=properties.begin(); iproperties!=properties.end(); iproperties++){
-    //     std::cout <<"Unit::setProperties (loop)  "<<iproperties->first<<" "<<iproperties->second<<std::endl;
-    m_properties[iproperties->first]=iproperties->second;
-  }
-  // m_properties = properties;
-  //   std::cout <<"Unit::setProperties OUT"<<std::endl;
+  if ( ! m_units.empty() ) {
+    std::vector<L0Muon::Unit*>::iterator  iu;
+    for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
+      (*iu)->setProperties(properties);
+    }
+  } 
+  m_properties = properties;
 }
 
 void L0Muon::Unit::initialize() {

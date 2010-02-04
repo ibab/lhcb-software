@@ -4,6 +4,9 @@
 ! Purpose     : Base classes for a generic processor simulation
 !-----------------------------------------------------------------------------
 
+! 2010-02-03 - Julien Cogan
+ - Unit : propagate properties of a unit to its daughters
+
 !======================== ProcessorKernel v5r3p1 2009-01-08 ==================
 ! 2008-12-16 - Marco Cattaneo
  - Fix a gcc 4.3 warning

@@ -1,4 +1,4 @@
-// $Id: Unit.h,v 1.9 2008-11-07 16:19:57 jucogan Exp $
+// $Id: Unit.h,v 1.10 2010-02-04 15:48:40 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_UNIT_H
 #define PROCESSORKERNEL_UNIT_H     1
@@ -116,9 +116,9 @@ namespace L0Muon {
     void dumpUnitTree(int offset=0 );
 
     /// Set a new property
-    void setProperty(std::string name,L0Muon:: Property value) {m_properties[name]=value;}
+    virtual void setProperty(std::string name,L0Muon::Property value);
     /// Set a new property
-    void setProperties(std::map<std::string,L0Muon::Property>properties);
+    virtual void setProperties(std::map<std::string,L0Muon::Property>properties);
 
     /// Retrieve a property
     L0Muon::Property getProperty(std::string name);
