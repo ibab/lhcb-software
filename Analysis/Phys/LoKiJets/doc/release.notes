@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.19 2010-02-03 10:58:00 jpalac Exp $ 
+! $Id: release.notes,v 1.20 2010-02-04 12:37:55 cocov Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.19 $ 
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.20 $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiJets
 ! Responsible : Victor Coco victor.coco@cern.ch
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
+
+! 2010-02-04 - Victor Coco
+ - rename Configuration.py to JetMaker_Config.py in order to fix some warning
+   concerning configurables
 
 !================== LoKiJets v5r0 2010-02-02 =================================
 
@@ -223,6 +227,9 @@ Please credit this data as "generated using 'SLOCCount' by David A. Wheeler."
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.19  2010/02/03 10:58:00  jpalac
+! Tag as v5r0
+!
 ! Revision 1.18  2010/01/11 08:37:42  cocov
 ! remove stdint.h include from LoKiFastJetMaker
 !

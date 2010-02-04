@@ -3,7 +3,7 @@
 #  @author Victor Coco  (Victor.Coco@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.2 2010-01-08 13:12:42 cocov Exp $"
+__version__ = "$Id: JetMaker_Config.py,v 1.1 2010-02-04 12:37:55 cocov Exp $"
 __author__  = "Victor Coco <Victor.Coco@cern.ch>"
 
 from LHCbKernel.Configuration import *
