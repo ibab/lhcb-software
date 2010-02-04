@@ -123,7 +123,10 @@ class _TreeNodeCache:
        return _TreeNodeCache.lcache[id]
        
 
-def _updateL0TCK( id, l0tck, cas ) :
+def _updateL0TCK( id, l0tck, label, cas ) :
+    if not label : 
+        print 'please provide a reasonable label for the new configuration'
+        return None
     l0tck = '0x%04X'%_tck(l0tck)
     importOptions('$L0TCK/L0DUConfig.opts')
     from Configurables import L0DUMultiConfigProvider,L0DUConfigProvider
@@ -167,7 +170,7 @@ def _updateL0TCK( id, l0tck, cas ) :
                 mods.push_back('ToolSvc.L0DUConfig.%s:%s' % (k,v) )
 
     print 'requested update: %s ' % mods
-    newId = cte.updateAndWrite(id,mods,'XXXX put something correct here XXXX')
+    newId = cte.updateAndWrite(id,mods,label)
     noderef = cas.readConfigTreeNode( newId )
     top = topLevelAlias( release, hlttype, noderef.get() )
     cas.writeConfigTreeNodeAlias(top)
@@ -308,6 +311,9 @@ def _getProperty(id,algname,property, cas ) :
     return _lookupProperty(tables[id],algname,property)
 
 def _updateProperties(id, updates, label, cas  ) :
+    if not label : 
+        print 'please provide a reasonable label for the new configuration'
+        return None
     if type(id) == str: id = digest( id )
     pc = PropertyConfigSvc( prefetchConfig = [ id.str() ],
                             ConfigAccessSvc = cas.getFullName() )
@@ -432,7 +438,7 @@ def diff( lhs, rhs , cas = ConfigAccessSvc() ) :
 
 def updateProperties(id,updates,label='', cas = ConfigAccessSvc() ) :
     return execInSandbox( _updateProperties,id,updates,label, cas )
-def updateL0TCK(id, l0tck , cas = ConfigAccessSvc() ) :
+def updateL0TCK(id, l0tck, label='', cas = ConfigAccessSvc() ) :
     return execInSandbox( _updateL0TCK, id, l0tck, cas )
 def createTCKEntries(d, cas = ConfigAccessSvc() ) :
     return execInSandbox( _createTCKEntries, d, cas )
