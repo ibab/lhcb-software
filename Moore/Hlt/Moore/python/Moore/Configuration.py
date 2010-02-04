@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.103 2010-01-15 14:40:23 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.104 2010-02-04 18:34:41 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -53,9 +53,9 @@ class Moore(LHCbConfigurableUser):
         , "UseTCK"     :       False # use TCK instead of options...
         , "L0"         :       False # run L0
         , "ReplaceL0BanksWithEmulated" : False # rerun L0
-        , "CheckOdin"  :       False  # use TCK from ODIN
+        , "CheckOdin"  :       True  # use TCK from ODIN
         , "InitialTCK" :'0x00012009'  # which configuration to use during initialize
-        , "prefetchConfigDir" :'MOORE_v8r5'  # which configurations to prefetch.
+        , "prefetchConfigDir" :'MOORE_v8r6'  # which configurations to prefetch.
         , "generateConfig" :   False # whether or not to generate a configuration
         , "configLabel" :      ''    # label for generated configuration
         , "configAlgorithms" : ['Hlt']    # which algorithms to configure (automatically including their children!)...
@@ -327,17 +327,17 @@ class Moore(LHCbConfigurableUser):
     def _generateConfig(self) :
         from HltConf.ThresholdUtils import Name2Threshold
         settings = Name2Threshold(self.getProp('ThresholdSettings'))
-
-        importOptions('$L0TCKROOT/options/L0DUConfig.opts')
+        #importOptions('$L0TCKROOT/options/L0DUConfig.opts')
         # cannot write (yet) to a tarfile...
         if self.getProp('TCKpersistency').lower() == 'tarfile' :
             self.setProp('TCKpersistency','file')
         # make sure we load as many L0 TCKs as possible...
-        from Configurables import L0DUMultiConfigProvider
-        L0DUMultiConfigProvider('L0DUConfig').Preload = True
+        #from Configurables import L0DUMultiConfigProvider
+        #L0DUMultiConfigProvider('L0DUConfig').Preload = True
         svcs = self.getProp("configServices")
         algs = self.getProp("configAlgorithms")
         from Configurables import HltGenConfig
+        print 'requesting following  svcs: %s ' % svcs
         gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] for i in algs ]
                           , ConfigSvc = [ i.rsplit('/')[-1] for i in svcs ]
                           , ConfigAccessSvc = self.getConfigAccessSvc().getName()
@@ -375,8 +375,16 @@ class Moore(LHCbConfigurableUser):
         appendPostConfigAction( genConfigAction )
 
     def _l0(self) :
-        #from Configurables import L0DUFromRawAlg
-        #L0DUFromRawAlg().ProcessorDataOnTES = False
+        from Configurables import L0DUFromRawAlg, L0DUFromRawTool
+        #L0DUFromRawAlg('L0DUFromRaw').ProcessorDataOnTES = False
+        l0du   = L0DUFromRawAlg("L0DUFromRaw")
+        l0du.WriteProcData       = False
+        l0du.addTool(L0DUFromRawTool,name = "L0DUFromRawTool")
+        l0du = getattr( l0du, 'L0DUFromRawTool' )
+        l0du.FillDataMap         = False
+        l0du.EncodeProcessorData = False
+        l0du.Emulate             = False
+        l0du.StatusOnTES         = False
 
         if ( self.getProp("DataType") == 'DC06' and not self.getProp("L0") ):
             log.warning("It is mandatory to rerun the L0 emulation on DC06 data to get the HLT to work correctly")

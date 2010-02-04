@@ -2,6 +2,11 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2010-02-04 - Gerhard Raven
+ - adapt to updated L0 configuration setup
+ - bump version v8r6
+
+!========================== Moore v8r5 2009-01-15 ===================
 ! 2010-01-15 - Gerhard Raven
  - always configure reference rate svc
  - update default DB snapshot
