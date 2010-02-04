@@ -10,8 +10,7 @@ importOptions("$APPCONFIGROOT/options/Boole/MC09-WithTruth.py")
 
 from Configurables import Boole
 Boole().DataType  = "MC09"
-Boole().EvtMax  = 2
-Boole().IgnoreFlatSpillover = True
+
 ##############################################################################
 # I/O datasets and database tags are defined in a separate file,
 # see examples in MC09-Files.py
