@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.18 2010-01-31 13:49:31 jonrob Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.19 2010-02-04 17:14:02 papanest Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -66,7 +66,7 @@ StatusCode AlignmentMonitor::initialize()
   const StatusCode sc = RichRecTupleAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  m_deltaThetaHistoRange = floor((m_deltaThetaRange + 0.0014)*1000)/1000.0;
+  m_deltaThetaHistoRange = floor((m_deltaThetaRange + 0.0004)*1000)/1000.0;
 
   acquireTool( "RichCherenkovAngle",   m_ckAngle  );
   // get track selector
@@ -234,6 +234,9 @@ StatusCode AlignmentMonitor::execute() {
     // track selection
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
 
+    plot( sqrt(segment->trackSegment().bestMomentum().Mag2())/Gaudi::Units::GeV, "momentum",
+          "Momentum of seleceted tracks /GeV", 0.0, 150.0 );
+    
     double thetaExpTrue(0.0), thetaExpected(0.0);
     if ( m_useMCTruth ) {
       // Get true beta from true particle type

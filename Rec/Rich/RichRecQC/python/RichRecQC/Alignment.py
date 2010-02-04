@@ -1,5 +1,5 @@
 
-__version__ = "$Id: Alignment.py,v 1.14 2010-01-24 22:07:27 papanest Exp $"
+__version__ = "$Id: Alignment.py,v 1.15 2010-02-04 17:14:02 papanest Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -26,7 +26,7 @@ class RichAlignmentConf(RichConfigurableUser):
         ,"WithMC"           : False     # set to True to use MC truth
         ,"HistoOutputLevel" : ["OnlyPrebookedMirrors", "OnlyPrebookedMirrors"] # options are: Minimal, OnlyPrebookedMirrors, Full
         ,"MinTrackMomentum" : [ 5, 10 ] # momentum cut in GeV, use -1 for default
-        ,"DeltaThetaRange"  : [ 0.004, 0.004 ]
+        ,"DeltaThetaRange"  : [ 0.01, 0.005 ]
         ,"HPDList"          : [ [], [] ] # list of HPDs for histograms
         }
 
