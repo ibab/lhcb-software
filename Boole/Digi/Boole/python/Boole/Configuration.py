@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.66 2010-02-04 15:43:23 asatta Exp $"
+__version__ = "$Id: Configuration.py,v 1.67 2010-02-04 16:37:10 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -136,12 +136,6 @@ class Boole(LHCbConfigurableUser):
         else:
             tae = False
 
-        if self.getProp( "IgnoreFlatSpillover" ) :
-           IgnoreFlatSpillover = True
-        else:
-           IgnoreFlatSpillover = False
-        
-           
         detListInit = []
         if 'Data'    in self.getProp('DetectorInit')['DATA'] : detListInit += ['Data']
         if 'Muon'    in self.getProp('DetectorInit')['MUON'] : detListInit += ['Muon']
@@ -184,13 +178,13 @@ class Boole(LHCbConfigurableUser):
         linkDets   = self._setupPhase( "Link",   detListLink )
         moniDets   = self._setupPhase( "Moni",   detListMoni )
 
-        self.configureInit(tae, initDets, IgnoreFlatSpillover)
+        self.configureInit(tae, initDets)
         self.configureDigi(digiDets)
         self.configureLink(linkDets,moniDets)
         self.configureMoni(moniDets)
         self.configureFilter()
             
-    def configureInit(self,tae,initDets,IgnoreFlatSpillover):
+    def configureInit(self,tae,initDets):
         """
         Set up the initialization sequence
         """
@@ -263,7 +257,7 @@ class Boole(LHCbConfigurableUser):
             from Configurables import MuonBackground
             GaudiSequencer("InitMuonSeq").Members += [ MuonBackground("MuonLowEnergy") ]
             importOptions( "$MUONBACKGROUNDROOT/options/MuonLowEnergy-G4.opts" )
-            if ((not tae) and (not IgnoreFlatSpillover)):
+            if ((not tae) and ( not self.getProp("IgnoreFlatSpillover") )):
                 GaudiSequencer("InitMuonSeq").Members += [ MuonBackground("MuonFlatSpillover") ]
                 importOptions( "$MUONBACKGROUNDROOT/options/MuonFlatSpillover-G4.opts" )
 
