@@ -1,10 +1,17 @@
-!$Id: release.notes,v 1.39 2009-08-31 13:07:56 jpalac Exp $
+!$Id: release.notes,v 1.40 2010-02-04 11:24:55 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+! 2010-02-04 - Juan Palacios
+ - MicroDST/RelTableFunctors.h
+ - MicroDST/RelationsClonerAlg.h
+  . Remove const qualifier for return by value methods.
+ - cmt/requirements
+  . Increase version to v1r6p2
 
 !====================== MicroDSTBase v1r6p1 2009-08-31 ====================
 
