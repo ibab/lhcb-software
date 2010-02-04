@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2010-02-04 - Patrick Robbe
+ - PythiaProduction.cpp: change PARP(90) parameter from 0.119 to 0.238
+
 !========================= LbPythia v8r6 2009-11-18 ==========================
 ! 2009-11-9 - Neal Gauvin
  - PythiaHiggsType as a full event cut tool : FullEventHiggsType
