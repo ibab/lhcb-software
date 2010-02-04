@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.84 2010-02-02 15:33:53 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.85 2010-02-04 11:08:23 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -191,6 +191,20 @@ class DaVinci(LHCbConfigurableUser) :
         LumiIntegratorConf().LumiSequencer = lumiInt
         seq += [ lumiInt ]
         return seq
+        
+################################################################################
+# Decode DecReports
+#
+    def decReports(self):
+        """
+        Decode DecReports _if_ Hlt is not run
+        """
+        if (not self.getProp("Hlt")):
+            from Configurables import HltDecReportsDecoder,HltSelReportsDecoder,HltVertexReportsDecoder
+            DataOnDemandSvc().AlgMap["Hlt/DecReports"] = HltDecReportsDecoder( OutputLevel = 4)
+            DataOnDemandSvc().AlgMap["Hlt/SelReports"] = HltSelReportsDecoder( OutputLevel = 4)
+            DataOnDemandSvc().AlgMap["Hlt/VertexReports"] = HltVertexReportsDecoder( OutputLevel = 4)
+       
         
 ################################################################################
 # HLT setup
@@ -478,6 +492,7 @@ class DaVinci(LHCbConfigurableUser) :
         self.initSeq()
         self.l0()
         self.hlt()
+        self.decReports()
         self.defineMonitors()
         self.defineEvents()
         self.defineInput()

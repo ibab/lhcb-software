@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.400 2010-02-02 15:33:53 pkoppenb Exp $
+! $Id: release.notes,v 1.401 2010-02-04 11:08:23 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,10 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2010-02-04 - Patrick Koppenburg
+ - Add decoding of DecReports from data _if_ Hlt is not run.
+	 Solves task 13391
 
 ! 2010-02-02 - Patrick Koppenburg
  - Get L0TCK from HltSettings. 
