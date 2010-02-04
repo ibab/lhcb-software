@@ -1,0 +1,18 @@
+Package: ROMon
+Author:  Markus Frank
+
+2008-09-10  Marksu Frank
+ - Split classes for FarmDisplay monitor
+ - Add TaskSupervisor python script
+
+2008-04-11  Markus Frank
+ - Added combined CPU information to be combined and published for
+   the entire HLT farm. Used Domenico's tools to access the information
+   in a simple way. Files are CPUMon*.*
+
+!================== ROMon v1r0 2008-02-01 =============================
+
+  New Package.
+  The ROMon package supports very basic online monitoring and 
+  information collection to investigate the readout status.
+
