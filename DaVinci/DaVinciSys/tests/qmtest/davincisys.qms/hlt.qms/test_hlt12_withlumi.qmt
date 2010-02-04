@@ -3,6 +3,7 @@
 <!-- This must be identical to the blocks in test_hlt1_mc09.qmt and test_hlt2_mc09.qmt -->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
 <argument name="program"><text>gaudirun.py</text></argument>
+<argument name="timeout"><integer>3600</integer></argument>
 <argument name="args"><set>
   <text>../options/DVTestHlt12-WithLumi.py</text>
 </set></argument>
