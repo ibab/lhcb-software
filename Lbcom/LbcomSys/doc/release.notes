@@ -6,6 +6,61 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v8r1>2010-02-04 LbcomSys v8r1</A></H1><PRE>
+This version uses Gaudi v21r7 and LHCb v29r0
+
+- Packages modified: DAQMonitors v1r1, L0Calo v11r0, L0DU v10r1, PuVeto v7r6,
+    OTMonitor v3r2p1, STTools v3r15
+
+- In DAQMonitors v1r1
+  . New monitoring algo : TriggerTypeCounter provides event counter per
+    TriggerType/BXType/CalibrationType
+
+- In L0Calo v11r0
+  . L0CaloAlg.h/.cpp: use condition database to decide if we use ECAL in 
+    the Hadron trigger, and PS/SPD in the ECAL triggers 
+    (available starting from tags *-20100202*, SQLDDDB v5r19)
+  . L0CaloCheckCalibCte.cpp: move from int to unsigned long
+
+- In L0DU v10r1
+  . cmt/requirements: link to L0TCK v2*
+  . update FastL0DUFilter.cpp (for bank version=2)
+  . L0DUFromRawTool : fix problem in decoding n+/n- consecutive events
+                      affects only data taken with recent f/w &  bank v2
+  . L0TCKFilter : inherit from L0AlgBase + add counters
+  . L0DUAlg,L0DUFromRawTool: allow to set the type of the IL0DUConfigProver tool
+  . L0DUConfigProvider: o Also allow 'L0DUConfig' as name of the template
+                        o Reconfigures itself when 'on the fly' updates of its
+                          properties are performed
+  . L0Filter : o update with decision type and subTriggers filtering
+               o inherits from L0AlgBase (L0Context-dependent location)
+               o protect against missing L0 + add counters  
+  . new algo L0DUMultiTrends.cpp provides comparison of various TCK + trending
+  . L0Conf : 
+    o remove the imports of opts files (translated in python).
+    o add new properties :
+      + EnableL0DecodingOnDemand : setup the data on demand service 
+                                   to decode the L0 on demand
+      + FastL0DUDecoding  : activate fast L0 decoding for HLT
+      + FullL0MuonDecoding : activate L0Muon full decoding 
+      + L0DecodingContext : string appended to the location of the 
+                            containers with the decoding results 
+	    + L0EmulatorContext : string appended to the location of the
+	                          containers with the emulation results
+  . L0EmulatorSeq.opts : fix typo
+  . Few updates in L0DUConfigMonitor.opts
+
+- In PuVeto v7r6
+  . PuVetoFillRawBuffer bug fixed: o m_PUcontainer inizialized per event
+                                   o swap in the LUT found and corrected
+  . bit_order.h bug fixed: words with 32nd bit on are now correctly reversed
+
+- In OTMonitor v3r2p1
+  . Remove obsolete OTTimeCreator from Boole.opts (see task 12764)
+
+- In STTools v3r15
+  . Add STSelectBySN tool 
+
 </PRE><H1><A NAME=v8r0>2010-01-22 LbcomSys v8r0</A></H1><PRE>
 This version uses Gaudi v21r7 and LHCb v29r0
 
