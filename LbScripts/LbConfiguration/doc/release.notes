@@ -1,3 +1,8 @@
+2010-02-04  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: fixed the TemporaryEnvironment class. The keys
+	of that dictionary are insensitive on windows (bug #62367).
+
 2010-01-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/Repository.py: Moved the list of repositories

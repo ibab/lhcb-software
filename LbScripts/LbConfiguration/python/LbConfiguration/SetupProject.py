@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # pylint: disable-msg=E1103,W0141
-_cvs_id = "$Id: SetupProject.py,v 1.30 2010-01-25 17:18:39 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.31 2010-02-04 16:39:15 hmdegaud Exp $"
 
 import os, sys, re, time
 from xml.sax import parse, ContentHandler
@@ -11,7 +11,7 @@ from tempfile import mkdtemp, mkstemp
 
 from LbConfiguration import createProjectMakefile
 from LbUtils.CVS import CVS2Version
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.30 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.31 $")
 
 # subprocess is available since Python 2.4, but LbUtils guarantees that we can
 # import it also in Python 2.3
@@ -64,6 +64,11 @@ days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 ########################################################################
 # Utility classes
 ########################################################################
+if sys.platform.startswith("win"):
+    _fixKey = lambda key: key.upper()
+else:
+    _fixKey = lambda key: key
+
 class TemporaryEnvironment:
     """
     Class to changes the environment temporarily.
@@ -82,6 +87,7 @@ class TemporaryEnvironment:
         """
         Set an environment variable recording the previous value.
         """
+        key = _fixKey(key)
         if key not in self.old_values :
             if key in self.env :
                 if not self._keep_same or self.env[key] != value:
@@ -95,6 +101,7 @@ class TemporaryEnvironment:
         Get an environment variable.
         Needed to provide the same interface as os.environ.
         """
+        key = _fixKey(key)
         return self.env[key]
 
     def __delitem__(self,key):
@@ -102,6 +109,7 @@ class TemporaryEnvironment:
         Unset an environment variable.
         Needed to provide the same interface as os.environ.
         """
+        key = _fixKey(key)
         if key not in self.env :
             raise KeyError(key)
         # Record that we unset a variable only if it was not set before
@@ -129,6 +137,7 @@ class TemporaryEnvironment:
         """
         return True if the key is present
         """
+        key = _fixKey(key)
         return (key in self.env.keys())
 
     def items(self):
@@ -143,6 +152,7 @@ class TemporaryEnvironment:
         Operator 'in'.
         Needed to provide the same interface as os.environ.
         """
+        key = _fixKey(key)
         return key in self.env
 
     def restore(self):
@@ -168,6 +178,7 @@ class TemporaryEnvironment:
         Implementation of the standard get method of a dictionary: return the
         value associated to "key" if present, otherwise return the default.
         """
+        key = _fixKey(key)
         return self.env.get(key,default)
 
     def commit(self):
