@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Changes to references to reflect changes in Boole v20r3 output:
+   . Proper handling of magnetic field (RichDet v13r4)
+
 </PRE><H1><A NAME=v20r2>2010-02-04 Boole v20r2</A></H1></PRE>
  - Changes to Configurable:
    . Add IgnoreFlatSpillover slot, switches off FlatSpillover in Muon
