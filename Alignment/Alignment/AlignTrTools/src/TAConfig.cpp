@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.30 2009-12-29 13:49:21 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.31 2010-02-05 16:47:55 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -165,7 +165,7 @@ StatusCode TAConfig::Initialize( std::vector<std::string> &m_dets ) {
   // - trajecory poca tool
   m_poca = tool<ITrajPoca>( "TrajPoca" );
   // magnetic field tool
-  m_bField = svc<IMagneticFieldSvc>( "MagneticFieldSvc",true );
+  // m_bField = svc<IMagneticFieldSvc>( "MagneticFieldSvc",true );
   // Count number of degrees of freedom
   for( unsigned int i = 0; i < m_dof.size(); i++ ) 
     if ( m_dof[i] )
@@ -654,7 +654,6 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
 
 
 
-
             const Gaudi::Transform3D misalGlobalL = m_OTLayers[j]->geometry()->toGlobalMatrix();
             const Gaudi::Transform3D nominGlobalL = m_OTLayers[j]->geometry()->toGlobalMatrixNominal();
             const Gaudi::Transform3D deltaGlobalL = misalGlobalL*nominGlobalL.Inverse();
@@ -668,7 +667,7 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
 
             std::vector<DeOTLayer*> layers = deotdet->layers();
             unsigned mid = i*4+j;
-            info() <<"stat " << i << " lay " << j <<" name " << m_OTModules[l]->name() << endreq
+            debug() <<"stat " << i << " lay " << j <<" name " << m_OTModules[l]->name() << endreq
                    << " mid = >  "<< mid<<endreq;
 
             DeOTLayer* mlay = layers.at(mid);
@@ -678,12 +677,12 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
             GetHalflayerReference(mlay, HlRef,HlRefnom, rnk);
             CreateHalflayerReferenceMap(rnk,HlRefnom);
 
-            info() << " Lay rotlocal    = " << rotlocalL  << " shiftlocal  = " <<  shiftlocalL <<endreq
+            debug() << " Lay rotlocal    = " << rotlocalL  << " shiftlocal  = " <<  shiftlocalL <<endreq
                    << " Lay rotglobal   = " << rotGlobalL << " shiftglobal = " << shiftGlobalL <<  endreq;
-            info() << " Mod rotlocal    = " << rotlocal  << " shiftlocal  = " <<  shiftlocal <<endreq
+            debug() << " Mod rotlocal    = " << rotlocal  << " shiftlocal  = " <<  shiftlocal <<endreq
                    << " Mod rotglobal   = " << rotGlobal << " shiftglobal = " << shiftGlobal <<  endreq
                    <<"---------------------------------------------------------------"<<endreq;
-            info() << " HL rotlocal    = " << rotlocal  << " shiftlocal  = " <<  HlRef.x()-HlRefnom.x()
+            debug() << " HL rotlocal    = " << rotlocal  << " shiftlocal  = " <<  HlRef.x()-HlRefnom.x()
                    <<  " " << HlRef.y()-HlRefnom.y()<< " " << HlRef.z()-HlRefnom.z()<< endreq
                    <<"---------------------------------------------------------------"<<endreq;
 
@@ -696,17 +695,15 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
                                           ROOT::Math::RotationZ(0)) ;
             ROOT::Math::Transform3D myglobal = transM * rotM;
             Gaudi::Transform3D locglobal = DetDesc::localDeltaMatrix( m_OTModules[l]->geometry(), myglobal);
-
-            std::vector<double> locrot(3,0.), locshift(3,0.);
-            m_OTModules[l]->geometry()->ownToOffNominalParams(locshift,locrot);
-
+	    std::vector<double> locrot(3,0.), locshift(3,0.);
+	    // for some reason, the call below also causes the magneticfield svc to update...
+	    //m_OTModules[l]->geometry()->ownToOffNominalParams(locshift,locrot);
             const Gaudi::Transform3D misa = m_OTModules[l]->geometry()->toGlobalMatrix();
             const Gaudi::Transform3D nomi = m_OTModules[l]->geometry()->toGlobalMatrixNominal();
             const Gaudi::Transform3D delt = misa*nomi.Inverse();
             const Gaudi::Transform3D del  = nomi.Inverse()*delt*nomi;
             std::vector<double> rot(3,0.), shift(3,0.);
             DetDesc::getZYXTransformParameters(del, shift, rot);
-            
             m_misalInput_X.at(rank) = HlRef.x()-HlRefnom.x();
             m_misalInput_Y.at(rank) = HlRef.y()-HlRefnom.y();
             m_misalInput_Z.at(rank) = HlRef.z()-HlRefnom.z();
@@ -715,7 +712,6 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
             m_misalInput_A.at(rank) = rotlocalL[0];
             m_misalInput_B.at(rank) = rotlocalL[1];
             m_misalInput_C.at(rank) = rotlocalL[2];
-            
           }//m_otHalflayer        
           /*************************
            ***** Modules  **********
@@ -737,8 +733,8 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
             DetDesc::getZYXTransformParameters(deltalocal, shiftlocal, rotlocal);
             DetDesc::getZYXTransformParameters(deltaGlobal, shiftGlobal, rotGlobal);            
 
-            info() << rank << "  " <<m_OTModules[l]->name() << endreq;
-            info() << " rotlocal    = " << rotlocal  << " shiftlocal  = " <<  shiftlocal <<endreq
+            debug() << rank << "  " <<m_OTModules[l]->name() << endreq;
+            debug() << " rotlocal    = " << rotlocal  << " shiftlocal  = " <<  shiftlocal <<endreq
                    << " rotglobal   = " << rotGlobal << " shiftglobal = " << shiftGlobal <<  endreq
                    <<"---------------------------------------------------------------"<<endreq;
 
@@ -810,8 +806,8 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
             DetDesc::getZYXTransformParameters(deltalocal, shiftlocal, rotlocal);
             DetDesc::getZYXTransformParameters(deltaGlobal, shiftGlobal, rotGlobal);            
 
-            info() << rank << "  " <<m_OTModules[l]->name() << endreq;
-            info() << " rotlocal    = " << rotlocal  << " shiftlocal  = " <<  shiftlocal <<endreq
+            debug() << rank << "  " <<m_OTModules[l]->name() << endreq;
+            debug() << " rotlocal    = " << rotlocal  << " shiftlocal  = " <<  shiftlocal <<endreq
                    << " rotglobal   = " << rotGlobal << " shiftglobal = " << shiftGlobal <<  endreq
                    <<"---------------------------------------------------------------"<<endreq;
 
@@ -839,7 +835,7 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
           std::vector<double> rotlocal(3,0.), shiftlocal(3,0.);
           DetDesc::getZYXTransformParameters(deltalocal, shiftlocal, rotlocal);
           DetDesc::getZYXTransformParameters(deltaGlobal, shiftGlobal, rotGlobal);            
-          info( ) << " --> delta ROT   (local)  = " << rotlocal    << " shift = " << shiftlocal <<  endreq;
+          debug( ) << " --> delta ROT   (local)  = " << rotlocal    << " shift = " << shiftlocal <<  endreq;
           debug() << " --> delta SHIFT (global) = " << shiftGlobal << " rot   = " << rotGlobal <<  endreq;
 
           m_misalInput_X.at(rank) = shiftlocal[0];
@@ -869,8 +865,8 @@ StatusCode TAConfig::ConfigOT( std::vector<Gaudi::Transform3D> &OTmap , DeOTDete
         DetDesc::getZYXTransformParameters(deltalocal, shiftlocal, rotlocal);
         DetDesc::getZYXTransformParameters(deltaGlobal, shiftGlobal, rotGlobal);            
 
-        info() << rank << "  " <<m_OTLayers[j]->name() << endreq;
-        info() << " rotlocal    = " << rotlocal  << " shiftlocal  = " <<  shiftlocal <<endreq
+        debug() << rank << "  " <<m_OTLayers[j]->name() << endreq;
+        debug() << " rotlocal    = " << rotlocal  << " shiftlocal  = " <<  shiftlocal <<endreq
                << " rotglobal   = " << rotGlobal << " shiftglobal = " << shiftGlobal <<  endreq
                <<"---------------------------------------------------------------"<<endreq;
         
@@ -1086,8 +1082,8 @@ void TAConfig::CreateMap( int & r,  IDetectorElement* id, double &m_zmoy ) {
     debug() << "key of map (rank) = " << (*t).first 
             << "value of map Zpos = " << (*t).second << endreq;
   }
-  for(unsigned int i=0;i<m_stereoAngle.size();i++){
-    debug() << i << " m_stereoAngle " << m_stereoAngle.at(i)<< endreq;}
+  //for(unsigned int i=0;i<m_stereoAngle.size();i++){
+  //    debug() << i << " m_stereoAngle " << m_stereoAngle.at(i)<< endreq;}
 }
 
 StatusCode TAConfig::ConfigMillepede() {
@@ -1572,7 +1568,7 @@ StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id,
 
     //    weight = 1./pow(trMeas.errMeasure(),2.);
     //weight = (1./.2)*(1./.2);
-    weight = (1./1.44)*(1./1.44);
+    //weight = (1./1.44)*(1./1.44);
     double stereo_angle  = 0.;
     stereo_angle         = m_ot->findLayer( id.otID() )->angle();
     stereo               = stereo_angle;

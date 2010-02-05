@@ -24,11 +24,14 @@ Derivatives::Derivatives( const std::string &type,
                           const std::string& name,
                           const IInterface* parent )
   : GaudiTool( type, name, parent ),
+    m_MonteCarlo(false),
+    m_sign(1.0), // 1.0 for data; -1.0 for MC data.
     m_n_elements(0),
     m_tr_pars(0),
     m_n_dofs(0)
 {
   declareInterface<IDerivatives>(this);
+  declareProperty("MonteCarlo", m_MonteCarlo = false );
 }
 
 /// Destructor:
@@ -37,6 +40,14 @@ Derivatives::~Derivatives(){};
 StatusCode Derivatives::initialize( const int &n_tr_pars,
                                     const int &n_elements,
                                     const std::vector<bool> &dofs ) {
+  if ( m_MonteCarlo ) {
+    m_sign = 1.0;
+    info() << "Trying to find misalignments in MC data!" << endreq;
+  } else {
+    info() << "Trying to find misalignments in data!" << endreq;
+    m_sign = -1.0;
+  }
+
   m_n_elements = n_elements;
   m_tr_pars = n_tr_pars;
   m_dofs = dofs;
@@ -79,7 +90,7 @@ StatusCode Derivatives::SetGlobal( const Gaudi::XYZVector &slope, const
   int dof_cnt = 0; // count the degrees of freedom
   // shift in co-ordinate along measurement:
   if ( m_dofs[0] ) {
-    m_derGB[station] = -1.0;//-1.0 == real Data; +1 == sim
+    m_derGB[station] = m_sign;//-1.0 == real Data; +1 == sim
     dof_cnt++;
   }
 
@@ -91,14 +102,14 @@ StatusCode Derivatives::SetGlobal( const Gaudi::XYZVector &slope, const
 
   // shift along z co-ordinate
   if ( m_dofs[2] ) {
-    m_derGB[station+dof_cnt*m_n_elements] = 1*(tx*cos(sta)+ty*sin(sta)); // +1 == real; -1==sim
+    m_derGB[station+dof_cnt*m_n_elements] = (-m_sign) * (tx*cos(sta)+ty*sin(sta)); // +1 == real; -1==sim
     dof_cnt++;
   }
 
 
   // rotation around  x-axis
   if ( m_dofs[3] ) {
-    m_derGB[station+dof_cnt*m_n_elements] = (1)*(sin(sta)*ty*(predic.y) + cos(sta)*tx*(predic.y)); //+1 ==real, -1==sim
+    m_derGB[station+dof_cnt*m_n_elements] = (-m_sign)*(sin(sta)*ty*(predic.y) + cos(sta)*tx*(predic.y)); //+1 ==real, -1==sim
     debug() << "  ALPHA m_derGB["<<station+dof_cnt*m_n_elements<<"]= " <<  m_derGB[station+dof_cnt*m_n_elements] << endreq;
     
     dof_cnt++;
@@ -106,14 +117,14 @@ StatusCode Derivatives::SetGlobal( const Gaudi::XYZVector &slope, const
 
   // rotation around y-axis
   if ( m_dofs[4] ) {
-    m_derGB[station+dof_cnt*m_n_elements] = (1)*(-sin(sta)*ty*(predic.x)-cos(sta)*tx*(predic.x));//+1 ==real; -1==sim
+    m_derGB[station+dof_cnt*m_n_elements] = (-m_sign)*(-sin(sta)*ty*(predic.x)-cos(sta)*tx*(predic.x));//+1 ==real; -1==sim
 
     dof_cnt++;
   }
 
   // rotation around z-axis
   if ( m_dofs[5] ) {
-    m_derGB[station+dof_cnt*m_n_elements] = (-1)*(predic.y*cos(sta)-predic.x*sin(sta));// -1 == real; +1  == sim 
+    m_derGB[station+dof_cnt*m_n_elements] = (m_sign)*(predic.y*cos(sta)-predic.x*sin(sta));// -1 == real; +1  == sim 
     dof_cnt++;
   }
 

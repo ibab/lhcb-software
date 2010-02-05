@@ -67,6 +67,8 @@ virtual ~Derivatives(); ///< Destructor
 
 
 private:
+  bool m_MonteCarlo;
+  double m_sign;
   int m_n_elements;
   int m_tr_pars;
   int m_n_dofs;

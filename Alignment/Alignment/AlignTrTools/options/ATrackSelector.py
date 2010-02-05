@@ -11,3 +11,4 @@ ATrackSelector().MinITHitCut    = 0
 ATrackSelector().MinOTHitCut = 15
 ATrackSelector().MinTTHitCut = 0
 ATrackSelector().MinEnergyCut = 0.0
+ATrackSelector().OutputLevel = 1

@@ -1,16 +1,12 @@
-#MD from Configurables import ( TAConfig, Derivatives, AlignTrTools, Centipede, MuonMeasurementProvider )
-from Configurables import ( TAConfig, Derivatives, AlignTrTools, Centipede)
+from Configurables import AlignTrTools
+from AlignmentTools.AlignmentToolsConf import Centipede
+from AlignTrTools.AlignTrToolsConf import ( TAConfig, Derivatives )
 import AlignTrTools.Configuration
 
 ########################################################
-#tac = AlignTrTools.Configuration.AligTrTools()
 TAConfig().addTool(Centipede)
 TAConfig().MillepedeTool = "Centipede"
-art = AlignTrTools.Configuration.AlignTrTools()
-art.Tools = ["Derivatives"]
-art.__apply_configuration__()
 
-TAConfig().OutputLevel = 4
 TAConfig().properties()
 
 
@@ -21,35 +17,36 @@ TAConfig().Velo_left_modules  = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 TAConfig().Velo_right_modules = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 
 TAConfig().PenaltyTerms       = [100000.0,300000.0,300000.0,300000.0,30000.0,30000.0]
-TAConfig().Degrees_of_Freedom = [1,0,1,1,1,1];
-TAConfig().nTrackModelParameters = 5; #4;
+TAConfig().Degrees_of_Freedom = [1,0,0,0,0,0];
+TAConfig().nTrackModelParameters = 4; #4;
 #//TAConfig().Fix_alignable_objects = true;
 TAConfig().Constrain_OT = [
     
-    "X_S1_L1_Q0_M0",
-    "X_S1_L2_Q0_M0",
-    "X_S3_L1_Q0_M0",
-    "X_S3_L2_Q0_M0",
+    #"X_S1_L1_Q0_M0",
+    #"X_S1_L2_Q0_M0",
+    #"X_S3_L1_Q0_M0",
+    #"X_S3_L2_Q0_M0",
         
-    "Z_S1_L1_Q0_M0",
-    "Z_S1_L2_Q0_M0",
-    "Z_S3_L1_Q0_M0",
-    "Z_S3_L2_Q0_M0",
-    
-    "A_S1_L1_Q0_M0",
-    "A_S1_L2_Q0_M0",
-    "A_S3_L1_Q0_M0",
-    "A_S3_L2_Q0_M0",
+    #"Z_S1_L1_Q0_M0",
+    #"Z_S1_L2_Q0_M0",
+    #"Z_S3_L1_Q0_M0",
+    #"Z_S3_L2_Q0_M0"
 
-    "B_S1_L1_Q0_M0",
-    "B_S1_L2_Q0_M0",
-    "B_S3_L1_Q0_M0",
-    "B_S3_L2_Q0_M0",
     
-    "C_S1_L1_Q0_M0",
-    "C_S1_L2_Q0_M0",
-    "C_S3_L1_Q0_M0",
-    "C_S3_L2_Q0_M0"
+    #"A_S1_L1_Q0_M0",
+    #"A_S1_L2_Q0_M0",
+    #"A_S3_L1_Q0_M0",
+    #"A_S3_L2_Q0_M0",
+
+    #"B_S1_L1_Q0_M0",
+    #"B_S1_L2_Q0_M0",
+    #"B_S3_L1_Q0_M0",
+    #"B_S3_L2_Q0_M0",
+    
+    #"C_S1_L1_Q0_M0",
+    #"C_S1_L2_Q0_M0",
+    #"C_S3_L1_Q0_M0",
+    #"C_S3_L2_Q0_M0"
     
     ]
 

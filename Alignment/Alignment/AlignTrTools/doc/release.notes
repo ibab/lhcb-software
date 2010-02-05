@@ -4,6 +4,23 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+</PRE><H1><A NAME=v4r5>2010-02-05 AlignTrTools v4r5 </A></H1><PRE>
+ - J. Blouw tagged the package v4r5 for alignment release v4r6
+
+! 2010-02-05 Johan Blouw
+  - modified the ATrackSelector, it now attempts to create a uniform distribution
+    of tracks across the OT. Therefore, a method 'uniformTD' was added,
+    and used inside 'accept' to do just that. Two new parameters were introduced:
+    m_weights, to switch on/off this feature, and 
+    m_uniCut (UniformCutOff). The algorithm accepts a track through module i,
+    in case there are equal or more tracks going through module i-1.
+    Note that module 8 is nearest the beampipe, and module 0 furthest. 
+  - modified ATrackSelector.py to reflect the aforementioned changes.
+  - modified the AlignTrTools Configurable for the same reasone.
+  - modifed the Derivatives class so that it automagically sets the signs in the 
+    derivatives according to the data (e.g. -1 for MC, +1 for data etc.)
+  - removed a useless call in TAConfig (namely: TAConfig::Resolution)
+
 ! 2010-01-12 Wouter Hulsbergen
  - Add flag to remove pivot points when writing out xml. (True by default.)
 

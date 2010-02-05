@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.h,v 1.22 2009-12-29 13:49:21 jblouw Exp $
+ *  $Id: TAConfig.h,v 1.23 2010-02-05 16:47:55 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -25,7 +25,7 @@
 // Poca 
 #include "Kernel/ITrajPoca.h"
 // Magnetic field service 
-#include "GaudiKernel/IMagneticFieldSvc.h"
+// #include "GaudiKernel/IMagneticFieldSvc.h"
 // Tracking
 #include "TrackInterfaces/ITrajectoryProvider.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
@@ -447,7 +447,7 @@ public:
 
 	  // Interfaces
 	  ITrajPoca *m_poca;
-	  IMagneticFieldSvc *m_bField;
+	  // IMagneticFieldSvc *m_bField;
 	  ICentipede *m_Centipede;
 	  IDerivatives *m_derivatives;
 	  ITrackExtrapolator* m_extrapolator;

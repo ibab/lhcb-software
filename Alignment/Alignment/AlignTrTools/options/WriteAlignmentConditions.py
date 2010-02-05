@@ -1,9 +1,9 @@
-from Configurables import ( WriteAlignmentConditions )
+from AlignTrTools.AlignTrToolsConf import ( WriteAlignmentConditions )
 
 WriteAlignmentConditions().topElement = ""
 WriteAlignmentConditions().footer = "</DDDB>"
 WriteAlignmentConditions().startTag = "<condition"
 WriteAlignmentConditions().outputFile = "alignment.xml"
 WriteAlignmentConditions().depths = []
-WriteAlignmentConditions().precision = 16
+WriteAlignmentConditions().precision = 8
 
