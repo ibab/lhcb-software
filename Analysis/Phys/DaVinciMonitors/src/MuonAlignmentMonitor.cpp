@@ -1,4 +1,4 @@
-// $Id: MuonAlignmentMonitor.cpp,v 1.1 2010-02-02 11:42:36 ggiacomo Exp $
+// $Id: MuonAlignmentMonitor.cpp,v 1.2 2010-02-05 10:31:09 svecchi Exp $
 // Include files 
 
 // from Gaudi
@@ -172,6 +172,7 @@ StatusCode MuonAlignmentMonitor::initialize() {
   }
 
   m_extrapolator      = tool<ITrackExtrapolator>( m_extrapolatorName, "Extrapolator" ,this );
+
   m_chi2Calculator    = tool<ITrackChi2Calculator>( m_Chi2CalculatorName, "Chi2Calculator", this );
   m_muonDet           = getDet<DeMuonDetector>(DeMuonLocation::Default);  //  /dd/Structure/LHCb/DownstreamRegion/Muon
 
@@ -193,6 +194,7 @@ StatusCode MuonAlignmentMonitor::execute() {
   for ( ip = pMuids->begin(); ip != pMuids->end(); ip++) {
     
     const LHCb::Track *muTrack = (*ip)->muonTrack();
+
     const LHCb::Track *longTrack = (*ip)->idTrack();
     
     if( longTrack->p()/GeV > m_pCut ) {
@@ -201,15 +203,24 @@ StatusCode MuonAlignmentMonitor::execute() {
         double zM1 = 12100;
         LHCb::State muState = muTrack->closestState( zM1 ); 
         LHCb::State longState = longTrack->closestState( muState.z() ); 
-
+        debug()<< " muState "<<muState<<endmsg;
+        debug()<< " longState "<<longState<<endmsg;
+        
         LHCb::ParticleID pid(13);
         StatusCode sc = m_extrapolator->propagate(longState,zM1,pid);
-        //      if ( sc.isFailure() ) 
-        //      debug() << "Extrapolating longState to z = " << zM1 << " failed " << endmsg;
-        sc = m_extrapolator->propagate(muState,zM1,pid);
-        //      if ( sc.isFailure() ) 
-        //      debug() << "Extrapolating muState to z = " << zM1 << " failed " << endmsg;
+        if ( sc.isFailure()){
+          debug()<<"Extrapolation of longState to z = "<< zM1<< " failed "<<endmsg;
+          continue;
+        }
         
+        sc = m_extrapolator->propagate(muState,zM1,pid);
+        if ( sc.isFailure()) {
+          debug()<<"Extrapolation of muonState to z = "<< zM1<< " failed "<<endmsg;
+          continue;
+        }
+      
+        debug()<< "--> NEW muState "<<muState<<endmsg;
+        debug()<< "--> NEW longState "<<longState<<endmsg;
         double chi2;
         
         m_h_p->fill( longState.p()/GeV );
@@ -219,7 +230,10 @@ StatusCode MuonAlignmentMonitor::execute() {
         sc = m_chi2Calculator->calculateChi2( longState.stateVector(), longState.covariance(), 
                                               muState.stateVector(), muState.covariance(),
                                               chi2 );
-        if ( !sc.isSuccess() ) Error( "Could not invert matrices", StatusCode::FAILURE );
+        if ( !sc.isSuccess() ) {
+          Error( "Could not invert matrices", StatusCode::FAILURE );
+          continue;          
+        }
         
         double resx = longState.x() - muState.x();
         double resy = longState.y() - muState.y();
@@ -230,6 +244,8 @@ StatusCode MuonAlignmentMonitor::execute() {
         double tx = muState.tx();
         double ty = muState.ty();
         double dummy,z;
+        
+        debug()<<" Residuals between states x="<< resx <<" y="<<resy<<" resTx="<<restx<<" resTy="<<resty<<endmsg;
         
         if(m_LongToMuonMatch) {
           
@@ -274,7 +290,7 @@ StatusCode MuonAlignmentMonitor::execute() {
             debug() << "*** tile position ***" << tile << endreq;
             debug() << " x = " << x << " y = " << y << " z = " << z << endreq;
             debug() << " region " << tile.region() <<" station " << tile.station() << endreq;
-            debug() << "*********************" << tile << endreq;
+            debug() << "*********************************************************" << endreq;
             
             sc = m_extrapolator->propagate( longState, z, pid );
             

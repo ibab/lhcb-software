@@ -5,7 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== DaVinciMonitors v1r7 2010-02-02 ==================
-
+! 2010-02-05 - Steania Vecchi
+ - fixed MuonAlignmentMonitor.py the in order to get the right informations 
+   in the histograms to check Muon Alignment.
 ! 2010-02-02 - Giacomo Graziani
  - added MuonAlignmentMonitor algorithm by A.Petrella and S.Vecchi
 

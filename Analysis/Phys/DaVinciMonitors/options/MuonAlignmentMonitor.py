@@ -7,7 +7,8 @@ from TrackFitter.ConfiguredFitters import ConfiguredEventFitter
 muonTrackFit = ConfiguredEventFitter( 'MuonTrackFitter', 'Rec/Track/Muon')
 muonTrackFit.Fitter.addTool( TrackKalmanFilter , 'NodeFitter' )
 muonTrackFit.Fitter.addTool( MeasurementProvider, name = 'MeasProvider')
-#muonTrackFit.Fitter.ZPositions = [12100]
+#muonTrackFit.Fitter.MeasProvider.MuonProvider.clusterize = True   # compatible only with REC_v8r0
+#muonTrackFit.Fitter.MeasProvider.MuonProvider.OutputLevel = 4 # compatible only with REC_v8r0
 muonTrackFit.Fitter.MeasProvider.IgnoreVelo = True 
 muonTrackFit.Fitter.MeasProvider.IgnoreTT   = True 
 muonTrackFit.Fitter.MeasProvider.IgnoreIT   = True 
@@ -32,5 +33,5 @@ monalig.pCut = 0
 monalig.IsCosmics = "false"
 
 
-DaVinci().MoniSequence += [ monalig ]
+DaVinci().MoniSequence += [ muonTrackFit, monalig ]
 
