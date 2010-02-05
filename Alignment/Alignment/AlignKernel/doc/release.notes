@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.8 2010-01-01 05:00:48 wouter Exp $
+! $Id: release.notes,v 1.9 2010-02-05 16:44:18 jblouw Exp $
 ! Package     : AlignKernel
 ! Responsible : Adlene Hicheur en Wouter Hulsbergen
 !-------------------------------------------------------------------------------
+
+! 2010-02-05 Johan Blouw
+ - tagged the package with v3r2
 
 ! 2009-01-01 Wouter Hulsbergen
  - update dict to suppress genreflex warning
