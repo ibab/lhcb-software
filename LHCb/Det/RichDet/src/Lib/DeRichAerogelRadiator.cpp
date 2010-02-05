@@ -5,7 +5,7 @@
  *  Implementation file for detector description class : DeRichAerogelRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichAerogelRadiator.cpp,v 1.13 2009-08-03 09:22:37 jonrob Exp $
+ *  $Id: DeRichAerogelRadiator.cpp,v 1.14 2010-02-05 11:54:47 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -34,7 +34,7 @@ const CLID CLID_DeRichAerogelRadiator = 12043;  // User defined
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeRichAerogelRadiator::DeRichAerogelRadiator(const std::string & name) 
+DeRichAerogelRadiator::DeRichAerogelRadiator(const std::string & name)
   : DeRichSingleSolidRadiator(name) {}
 
 //=============================================================================
@@ -54,7 +54,7 @@ StatusCode DeRichAerogelRadiator::initialize ( )
 {
 
   MsgStream msg = msgStream( "DeRichAerogelRadiator" );
-  msg << MSG::DEBUG << "Initialize " << name() << endmsg;
+  msg << MSG::DEBUG << "Initialize " << myName() << endmsg;
 
   StatusCode sc = DeRichSingleSolidRadiator::initialize();
   if ( sc.isFailure() ) return sc;
@@ -63,7 +63,7 @@ StatusCode DeRichAerogelRadiator::initialize ( )
   const std::string::size_type pos = name().find(':');
   if ( std::string::npos == pos )
   {
-    msg << MSG::FATAL << "An Aerogel tile without a number!" << endmsg;
+    fatal() << "An Aerogel tile without a number!" << endmsg;
     return StatusCode::FAILURE;
   }
   m_tileNumber = atoi( name().substr(pos+1).c_str() );
@@ -76,7 +76,7 @@ StatusCode DeRichAerogelRadiator::initialize ( )
   // configure refractive index updates
 
   // aerogel parameters from cond DB
-  if ( hasCondition( "AerogelParameters" ) ) 
+  if ( hasCondition( "AerogelParameters" ) )
   {
     m_AerogelCond = condition( "AerogelParameters" );
     updMgrSvc()->registerCondition( this,
@@ -86,17 +86,17 @@ StatusCode DeRichAerogelRadiator::initialize ( )
   else
   {
     m_AerogelCond = 0;
-    msg << MSG::WARNING << "Cannot load Condition AerogelParameters" << endmsg;
+    warning() << "Cannot load Condition AerogelParameters" << endmsg;
   }
 
   sc = updMgrSvc()->update(this);
   if ( sc.isFailure() )
   {
-    msg << MSG::ERROR << "First UMS update failed" << endmsg;
+    error() << "First UMS update failed" << endmsg;
     return sc;
   }
 
-  msg << MSG::DEBUG << "Initialisation Complete" << endmsg;
+  msg << MSG::DEBUG << "Initialisation Complete " << myName() << endmsg;
   m_firstUpdate = false;
 
   // return
@@ -109,7 +109,7 @@ StatusCode DeRichAerogelRadiator::initialize ( )
 StatusCode DeRichAerogelRadiator::updateProperties ( )
 {
   if ( !m_firstUpdate )
-    info() << "Refractive index update triggered" << endmsg;
+    debug() << "Refractive index update triggered" << endmsg;
 
   // load various parameters
   const double photonEnergyLowLimit     = m_deRich1->param<double>("PhotonMinimumEnergyAerogel");

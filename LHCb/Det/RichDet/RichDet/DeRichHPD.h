@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichHPD
  *
  *  CVS Log :-
- *  $Id: DeRichHPD.h,v 1.19 2010-01-22 14:02:19 papanest Exp $
+ *  $Id: DeRichHPD.h,v 1.20 2010-02-05 11:54:46 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-09-19
@@ -140,7 +140,7 @@ public:
    *  @retval StatusCoe::SUCCESS Conversion was successful
    *  @retval StatusCode::FAILURE Conversion failed
    */
-  StatusCode detectionPoint ( double x, double y,
+  StatusCode detectionPoint ( double fracPixelCol, double fracPixelRow,
                               Gaudi::XYZPoint& detectPoint,
                               bool photoCathodeSide = true ) const;
 
@@ -381,12 +381,20 @@ inline StatusCode DeRichHPD::detectionPoint ( const LHCb::RichSmartID smartID,
 //=========================================================================
 // Converts a pair to a point in global coordinates.
 //=========================================================================
-inline StatusCode DeRichHPD::detectionPoint ( double x, double y,
+inline StatusCode DeRichHPD::detectionPoint ( double fracPixelCol,
+                                              double fracPixelRow,
                                               Gaudi::XYZPoint& detectPoint,
                                               bool photoCathodeSide ) const
 {
-  Gaudi::XYZPoint onAnode( x*m_pixelSize - m_siliconHalfLengthX,
-                           m_siliconHalfLengthY - y*m_pixelSize,
+  if ( fracPixelCol < 0.0 || fracPixelRow < 0.0 )
+  {
+    error() << "Negative pixel coordinate " << fracPixelCol << ","
+            << fracPixelRow << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  Gaudi::XYZPoint onAnode( fracPixelCol*m_pixelSize - m_siliconHalfLengthX,
+                           m_siliconHalfLengthY - fracPixelRow*m_pixelSize,
                            0.0 );
   detectPoint = m_SiSensorToHPDMatrix * onAnode;
   detectPoint.SetZ(0.0);

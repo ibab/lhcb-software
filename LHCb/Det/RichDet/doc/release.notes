@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2010-02-03 - Antonis Papanestis
+ - Change output level to DEBUG for the update of parameters in the HPDs
+
 ! 2010-01-21 - Antonis Papanestis
  - Correctly handle the presence or absence of magnetic field for the 
    magnetic field corrections in the HPDs.
