@@ -15,18 +15,17 @@ LHCbApp().CondDBtag = "default"
 LHCbApp().DDDBtag   = "HEAD"
 LHCbApp().CondDBtag = "HEAD"
 
-#from Configurables import ( CondDB, CondDBAccessSvc )
-#otCalib = CondDBAccessSvc( 'OTCalib' )
-##otCalib.ConnectionString = 'sqlite_file:/afs/cern.ch/user/w/wouter/public/AlignDB/ConditionsOTCalibration.db/LHCBCOND'
-#otCalib.ConnectionString = 'sqlite_file:/afs/cern.ch/user/w/wouter/public/AlignDB/CalibrationOTQuarterT0s_071209.db/LHCBCOND'
-#CondDB().addLayer( otCalib )
+from Configurables import ( CondDB, CondDBAccessSvc )
+otCalib = CondDBAccessSvc( 'OTCalib' )
+otCalib.ConnectionString = 'sqlite_file:/afs/cern.ch/user/a/akozlins/public/OT/LHCBCOND/Collision09_OT_ModuleT0s_220110_sigma4ns.db/LHCBCOND'
+CondDB().addLayer( otCalib )
 
 # Latest cosmic run, with CALO, OT and (!!) RICH2 (35569 events)
 Escher().DatasetName = 'collisions'
 Escher().InputType = 'DST'
 
 from Configurables import EventClockSvc
-EventClockSvc().InitialTime = 1260497718112960000
+EventClockSvc().InitialTime = 1260495107691392000
 
 prefix = 'PFN:castor:/castor/cern.ch/user/t/truf/data_2009/'
 data = [
@@ -40,7 +39,9 @@ data = [
 
 # copy the files to /pool if it exists
 import os
-if os.path.isdir( '/pool/spool/wouter/' ) :
+if os.path.isdir( '/pool/spool/' ) :
+    if not os.path.exists( '/pool/spool/wouter' ):
+        os.system('mkdir /pool/spool/wouter')
     prefix = 'PFN:/pool/spool/wouter/'
     for d in data:
         if not os.path.exists( '/pool/spool/wouter/' + d ):
