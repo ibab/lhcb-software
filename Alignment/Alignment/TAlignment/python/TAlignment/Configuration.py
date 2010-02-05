@@ -34,6 +34,7 @@ class TAlignment( LHCbConfigurableUser ):
         , "UseCorrelations"              : True                        # Correlations
         , "ApplyMS"                      : True                        # Multiple Scattering
         , "Constraints"                  : []                          # Specifies 'exact' (lagrange) constraints  
+        , "DoF"                          : []                          # list of constraints
         , "SurveyConstraints"            : []                          # Specifies 'chisquare' constraints
         , "UseWeightedAverageConstraint" : False                       # Weighted average constraint
         , "MinNumberOfHits"              : 100                         # Min number of hits per element
@@ -68,26 +69,23 @@ class TAlignment( LHCbConfigurableUser ):
         import  TAlignment.TAlignmentConf 
         if self.getProp("Method") == 'Millepede' and "OT" in self.getProp("Detectors"):
             self.setProp("Incident", 'GlobalMPedeFit')
-            ga = TAlignment.TAlignmentConf.GAlign()
+            importOptions("$TALIGNMENTROOT/options/GAlign.py")
+            ga = TAlignment.TAlignmentConf.GAlign() 
             print "Adding ", ga.name(), " to sequence ", mainseq.name()
             mainseq.Members += [ga]
-            importOptions("$TALIGNMENTROOT/options/GAlign.py")
             self.setProp("WriteCondSubDetList", self.getProp("Detectors"))
 	    listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
             if listOfCondToWrite:
                mainseq.Members.append( self.writeSeq( listOfCondToWrite ) )
-
-            
             if len( self.getProp("TrackLocation") ) == 0 :
                 raise RuntimeError("ERROR: no track container defined!")
             ga.InputContainer = self.getProp("TrackLocation")
             ga.skipBigCluster = self.getProp("skipBigCluster")
-
+            from Configurables import AlignTrTools
+	    AlignTrTools().Constraints = self.getProp("Constraints")
+	    AlignTrTools().Degrees_of_Freedom = self.getProp("DoF")
             if len( ga.Detectors ) == 0:
                 ga.Detectors = self.getProp("Detectors")
-		
-                #           ga.propagateProperties()
-                #              importOptions("$ALIGNTRTOOLS/options/AlignTrTools.py")
                     
 	if self.getProp("Method") == 'Kalman' :
             print "****** setting up Kalman type alignment!"

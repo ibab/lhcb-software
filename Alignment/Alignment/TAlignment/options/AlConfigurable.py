@@ -235,6 +235,7 @@ class AlConfigurable( LHCbConfigurableUser ) :
 
     def writeAlg( self, subdet, condname, depths, outputLevel = INFO) :
         from Configurables import WriteAlignmentConditions
+        print "Setting WriteAlignmentConditions configuration..."
         return WriteAlignmentConditions( 'Write' + subdet + condname + 'ToXML',
                                          OutputLevel = outputLevel,
                                          topElement = self.getProp( subdet + 'TopLevelElement' ),

@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment algorithm: TAlignment
  *
  *  CVS Log :-
- *  $Id: GAlign.h,v 1.7 2009-12-27 14:27:21 jblouw Exp $
+ *  $Id: GAlign.h,v 1.8 2010-02-05 16:51:35 jblouw Exp $
  *
  *  @author J. Blouw  Johan.Blouw@cern.ch
  *  @date   30/12/2007
@@ -40,7 +40,7 @@
 // Poca 
 #include "Kernel/ITrajPoca.h"
 // Magnetic field service 
-#include "GaudiKernel/IMagneticFieldSvc.h"
+// #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "OTDet/DeOTDetector.h"
 // geometry
 #include "DetDesc/IDetectorElement.h"
@@ -100,7 +100,7 @@ public:
   ITAConfigTool *m_taConfig;
   IMeasurementProvider *m_measProvider;
   ITrajPoca *m_trpoca;
-  IMagneticFieldSvc *m_bField;
+  // IMagneticFieldSvc *m_bField;
   ITrackExtrapolator* m_extrapolator;
   IATrackSelectorTool* m_trackselection;    
 

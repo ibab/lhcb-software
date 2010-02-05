@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : TStation
  *
  *  CVS Log :-
- *  $Id: TStation.cpp,v 1.4 2009-12-26 23:29:36 jblouw Exp $
+ *  $Id: TStation.cpp,v 1.5 2010-02-05 16:51:35 jblouw Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -64,37 +64,37 @@ StatusCode TStation::execute() {
   ITTracks = new Tracks();
   OTTracks = new Tracks();
   XTracks = new Tracks();
-//  Tracks* inCont = get<Tracks>(m_inputcontainer);
+  Tracks* inCont = get<Tracks>(m_inputcontainer);
   if ( ITTracks->size() > 0 ) ITTracks->clear();
   if ( OTTracks->size() > 0 ) OTTracks->clear();
   if ( XTracks->size() > 0 ) XTracks->clear();
   
 //   debug() << "Number of tracks in container " << inCont->end() - inCont->begin() << endreq;
-//   for ( Tracks::iterator iterT = inCont->begin();
-// 	iterT != inCont->end(); iterT++) {
-//     Track* aTrack = *iterT;
-//     int OThits = 0, IThits = 0;
-//     if ( m_trackselection->accept( *aTrack ) ) {
+   for ( Tracks::iterator iterT = inCont->begin();
+ 	iterT != inCont->end(); iterT++) {
+     Track* aTrack = *iterT;
+     int OThits = 0, IThits = 0;
+     if ( m_trackselection->accept( *aTrack ) ) {
 //       int hot = 0;
 //       hot = m_trackselection->traversesIT( *aTrack, OThits, IThits );
 // //      if ( hot == 10 ) debug() << "Error: found " << OThits << " OThits on track and " << IThits << " IThits." << endreq;
 //       if ( hot > 0 && IThits >= m_minITHitCut ) {
 //         ITTracks->insert( aTrack->clone() );
 //       } else if ( hot < 0 && OThits >= m_minOTHitCut ) {
-//         OTTracks->insert( aTrack->clone() );
+         OTTracks->insert( aTrack->clone() );
 //       } else if ( OThits+IThits > m_minOTHitCut + m_minITHitCut ) {
 //         XTracks->insert( aTrack->clone() );
 //       }
-//     } else {
-//     debug() << "Track not selected!" << " "
-//           << *iterT << endreq; 
-// }
-//   }
+     } else {
+     debug() << "Track not selected!" << " "
+           << *iterT << endreq; 
+    }
+  }
 //   debug() << "Into TStation execute(): storing tracks..." <<endreq;
 //   debug() << "Size of ITTrack container: " << (*ITTracks).size() << endreq;
 //   put ( ITTracks, m_ITTrackLocation  );
 //   debug() << "Size of OTTrack container: " << (*OTTracks).size() << endreq;
-//   put ( OTTracks, m_OTTrackLocation  );
+   put ( OTTracks, m_OTTrackLocation  );
 //   debug() << "Size of XTrack container: " << (*XTracks).size() << endreq;
 //   put ( XTracks, m_XTrackLocation  );
   return StatusCode::SUCCESS;
