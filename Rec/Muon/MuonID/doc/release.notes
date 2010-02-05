@@ -2,6 +2,13 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !-----------------------------------------------------------------------------
 
+!======================== MuonID v7r7 2010-02-01 ===========================
+! 2010-02-01 - Helder Lopes
+ - Some global MuonID parameters and the ones for calculating the DLL with
+ the default method DLL_flag=1 (DLLs from region/momentum binned distributions 
+ with Landau fits) to the Conditions database. MuonIDAlg code modified to
+ use these informations when adequate.
+
 !======================== MuonID v7r6 2010-01-21 ===========================
 ! 2010-01-21 - Alessio Sarti
  - Implemented EarlyData for muonID: use Ttracks, lower mom threshold
@@ -11,7 +18,6 @@
  - Moved the Ttrack and preselMomentum for first data directly into the
    ConfiguredMuonIDs package trough the 'earlyData' flag.
    The Muon*def* packages now are unchanged (reverted back to v4r7).
-
 
 !======================== MuonID v7r4p1 2009-12-11 ===========================
 ! 2009-12-11 - Alessio Sarti

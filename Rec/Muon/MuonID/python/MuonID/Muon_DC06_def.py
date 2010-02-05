@@ -22,6 +22,10 @@ if DEBUG:
 AllMuonTracks = False   
 ## Calculate chi2 or set it default to 0
 FindQuality = True 
+
+## Override data from conditions database, keeping the values from this option file
+OverrideDB = False;
+
 ## Set which DLL is input to MuonPID
 DLL_flag = 1  #0=old; 1=DLL new;
 ## Use arrival probability as weight to IsMuon/IsMuonLoose and Dist

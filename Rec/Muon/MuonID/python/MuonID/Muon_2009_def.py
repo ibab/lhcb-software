@@ -24,6 +24,10 @@ if DEBUG:
 AllMuonTracks = False   
 ## Calculate chi2 or set it default to 0
 FindQuality = True
+
+## Override data from conditions database, keeping the values from this option file
+OverrideDB = False;
+
 ## Set which DLL is input to MuonPID
 DLL_flag = 1  #0=old; 1=DLL new;
 ## Use arrival probability as weight to IsMuon/IsMuonLoose and Dist
@@ -39,7 +43,6 @@ MomentumCuts = [ 6000. , 10000. ]
 
 FOIfactor = 1.2
 
-print "# MuonID WARNING: FOI tuning not ready for DATA=%s,VERSION=%s. Loading FOIfactor=%f" %(DATA,VERSION,FOIfactor)
 XFOIParameter1 = [5.5, 4.0, 3.3, 2.8,
                   5.2, 3.6, 2.4, 2.4,
                   5.7, 4.4, 2.8, 2.3,

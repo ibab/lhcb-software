@@ -1,5 +1,5 @@
 package MuonID
-version v7r6
+version v7r7
 
 branches src cmt doc python
 
@@ -12,6 +12,7 @@ use RecEvent           v* Event
 use TrackEvent         v* Event
 use MuonDet            v* Det
 use ROOT               v* LCG_Interfaces
+
 
 # build a MuonID library
 library MuonID ../src/*.cpp

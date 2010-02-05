@@ -110,6 +110,7 @@ private:
 
   /// TES path of the tracks to analyse
   std::string m_TracksPath;
+
   bool m_useTtrack;
 
   /// TES path to output the MuonPIDs to
@@ -121,7 +122,9 @@ private:
   /// TES path to output the all Track PIDs to
   std::string m_MuonTracksPathAll;
 
-
+  /// Ignore MuonID info from conditions database.
+  bool m_OverrideDB;
+  
   /// Preselection momentum (no attempt to ID below this)
   double m_PreSelMomentum;
 

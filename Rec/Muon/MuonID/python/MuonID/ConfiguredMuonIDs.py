@@ -208,6 +208,8 @@ class ConfiguredMuonIDs():
     else: mymuid=MuonIDAlg(str(muonid))
 
     ## general MuonIDAlg properties
+    mymuid.OverrideDB = self.info.OverrideDB
+    
     mymuid.MomentumCuts  = self.info.MomentumCuts
     mymuid.AllMuonTracks = self.info.AllMuonTracks
     mymuid.FindQuality = self.info.FindQuality
@@ -223,6 +225,7 @@ class ConfiguredMuonIDs():
     mymuid.YFOIParameter3 = self.info.YFOIParameter3
       
     mymuid.FOIfactor = self.info.FOIfactor
+      
     mymuid.PreSelMomentum = self.info.PreSelMomentum
     mymuid.useTtrack = False
     if "earlyData" in self.specialData:
