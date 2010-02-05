@@ -6,7 +6,9 @@ Purpose     : LHCb analysis packages
 </PRE><H1><A NAME=v4r0p1>2010-02-05 Analysis v4r0p1 </A></H1><PRE>
 
  - Highlights:
-   * New Package DisplVertices
+
+   * New implementation of Selection, SelecitonSequence, plut test suite.
+   * Added QMTests based on PhysSelPython py.test functions.
 
 </PRE><H1><A NAME=v3r14>2009-12-16 Analysis v3r14 </A></H1><PRE>
 
