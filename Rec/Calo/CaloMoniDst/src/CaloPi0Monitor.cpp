@@ -1,6 +1,6 @@
-// $Id: CaloPi0Monitor.cpp,v 1.14 2010-01-28 17:30:59 odescham Exp $
+// $Id: CaloPi0Monitor.cpp,v 1.15 2010-02-05 17:06:29 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -32,7 +32,7 @@ class CaloPi0Monitor : public CaloMoniAlg
 public:
   /// standard algorithm initialization
   virtual StatusCode initialize()
-  { StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
+  { StatusCode sc = CaloMoniAlg::initialize(); // must be executed first
     if ( sc.isFailure() ) return sc; // error already printedby GaudiAlgorithm
     hBook1( "1", "pi0 multiplicity " + inputData() , m_multMin  , m_multMax , m_multBin );
     hBook1( "2", "pi0 energy " + inputData()       , m_energyMin  , m_energyMax , m_energyBin );

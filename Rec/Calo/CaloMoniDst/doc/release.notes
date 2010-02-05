@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.69 2010-01-30 21:30:26 dgolubko Exp $ 
+! $Id: release.notes,v 1.70 2010-02-05 17:06:29 odescham Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
@@ -8,6 +8,10 @@
 ! 2010-01-30 - Dmitry Golubkov
  - CaloEMuMonitor: add more histograms, crude windows based on rp6 of Dec 2009 data
  - CaloEMuChecker: move include Kernel/Particle2MCLinker.h from CaloEMuMonitor.h
+
+! 2010-02-04 : Olivier Deschamps
+  - CaloPi0Monitor : fix bad initialization of base class
+  - CaloMoniAlg : init m_detData for non specific calo detector algo (default Ecal is assumed)
 
 ! 2010-01-28 : Olivier Deschamps
  - SpdMonitor    : speed up processing - inherits from Calo2Dview (Albert Puig)

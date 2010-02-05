@@ -1,4 +1,4 @@
-// $Id: CaloMoniAlg.cpp,v 1.10 2009-12-11 17:07:40 odescham Exp $
+// $Id: CaloMoniAlg.cpp,v 1.11 2010-02-05 17:06:29 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -31,7 +31,7 @@ CaloMoniAlg::CaloMoniAlg( const std::string& name,
 
   declareProperty( "Input",    m_inputData );
   declareProperty( "Inputs",   m_inputs );
-  declareProperty( "Detector", m_detData );
+  declareProperty( "Detector", m_detData = "Ecal" );
   //
 
   declareProperty( "HistoEnergyMin"      , m_energyMin = 0. );
@@ -99,6 +99,11 @@ CaloMoniAlg::CaloMoniAlg( const std::string& name,
     m_detData = "Spd";
     m_energyMax = 10.* Gaudi::Units::MeV;
   }
+  if( m_detData != "Ecal" && 
+     m_detData != "Hcal" &&  
+     m_detData != "Prs"  &&  
+     m_detData != "Ecal")m_detData = "Ecal";
+  
 }
 //=============================================================================
 // Destructor
