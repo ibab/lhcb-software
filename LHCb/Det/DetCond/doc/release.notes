@@ -4,6 +4,11 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2010-02-05 - Marco Clemencic
+ - Added the function CondDB.useLatestTags(DataType) to automatically select
+   the latest local and global tags for a given data type from the SQLDDDB
+   release notes.
+
 !===================== Det/DetCond v12r9 2010-01-20 ==========================
 ! 2010-01-19 - Marco Clemencic
  - Fixes to the first implementation of task #13270.

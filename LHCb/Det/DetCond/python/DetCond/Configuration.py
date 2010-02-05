@@ -346,6 +346,19 @@ class CondDB(ConfigurableUser):
         from Configurables       import CondDBEntityResolver
         VFSSvc().FileAccessTools.append(CondDBEntityResolver())
 
+    def useLatestTags(self, DataType):
+        """
+        Configure the conditions database to use the latest local tags on top of the latest global tag for a given data type.
+        """
+        from CondDBUI.Admin.TagsFilter import last_gt_lts
+        for partition in ["DDDB", "LHCBCOND"]:
+            tags = last_gt_lts(partition, DataType)
+            if not tags:
+                raise RuntimeError("Cannot find tags for partition %s, data type %s" % (partition, DataType))
+            gt, lts = tags
+            self.Tags[partition] = gt
+            self.LocalTags[partition] = lts
+
 
 # Exported symbols
 __all__ = [ "addCondDBLayer", "addCondDBAlternative", "useCondDBLogger",
@@ -476,6 +489,4 @@ def configureOnlineSnapshots(start = None, end = None, connStrFunc = None):
     until = 0x7fffffffffffffffL # Defined in PyCool.cool as ValidityKeyMax
     descr = "'%s':(%d,%d)" % ( accSvc.getFullName(), since, until )
     ONLINE.Readers.append(descr)
-    
-    
-    
+

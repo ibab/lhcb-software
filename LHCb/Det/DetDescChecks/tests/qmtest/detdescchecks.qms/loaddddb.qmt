@@ -5,9 +5,14 @@
   <argument name="args"><set>
     <text>-v</text>
     <text>../../options/LoadDDDB.py</text>
-    <text>--option</text>
-    <text>from DDDB.Configuration import DDDBConf; DDDBConf(DataType="DC06")</text>
   </set></argument>
+<argument name="options"><text>
+from Gaudi.Configuration import *
+from Configurables import DDDBConf, CondDB
+
+DDDBConf(DataType = "DC06")
+CondDB().useLatestTags(DataType = "DC06")
+</text></argument>
 <argument name="validator"><text>
 countErrorLines()
 </text></argument>
