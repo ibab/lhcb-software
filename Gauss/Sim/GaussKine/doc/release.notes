@@ -4,11 +4,11 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= GaussKine v3r5 2010-02-05 ========================= 
 ! 2010-01-26 - Silvia Miglioranzi
  - Fix error in compilation for Sim/GaussKine due to incompatibility with
    LHCb v29r0: the method "LHCb::Math::Equal_To" have been
    replaced by "LHCb::Math::knuth_equal_to_double".
- - 
 
 !========================= GaussKine v3r4 2009-11-25 ========================= 
 ! 2009-03-26 - Patrick Robbe
