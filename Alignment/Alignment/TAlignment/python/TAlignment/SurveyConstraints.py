@@ -27,6 +27,8 @@ class SurveyConstraints( list ):
         return os.getenv("TALIGNMENTROOT") + "/surveyxml/"
 
     def Velo( self ) :
+        self += [ self.defaultSurveyDir() + "Velo/Modules.xml" ]
+        self += [ self.defaultSurveyDir() + "Velo/Detectors.xml" ]
         self.append("Velo      : 0 0 0 -0.0001 0 -0.0001 : 0.2 0.2 0.2 0.0001 0.0001 0.0001" )
         self.append("Velo/Velo(Right|Left) : 0 0 0 0 0 0 : 0.2 0.2 0.2 0.0001 0.0001 0.0001" ) 
         
@@ -48,13 +50,14 @@ class SurveyConstraints( list ):
         self.append("OT/T3VX2ASide : -1.49 -1.30 -2.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
         self.append("OT/T3VX2CSide :  0.20 -1.70 -2.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
 
-        # this is for the average of 2 C-frames
-        self.append("OT/T1X1U : -1.11  0.00  0.0  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
-        self.append("OT/T1VX2 : -0.41 -1.50 -0.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
-        self.append("OT/T2X1U : -0.63 -0.33 -2.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
-        self.append("OT/T2VX2 : -0.83 -1.28 -3.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
-        self.append("OT/T3X1U : -0.78 -1.13  0.0  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
-        self.append("OT/T3VX2 : -0.65 -1.50 -2.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        # this is for the average of 2 C-frames.
+        # corrected  for the bowing of the bridge (2010/01/26)
+        self.append("OT/T1X1U : -1.11 -0.7  0.0  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        self.append("OT/T1VX2 : -0.41 -2.2 -0.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        self.append("OT/T2X1U : -0.63 -1.2 -2.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        self.append("OT/T2VX2 : -0.83 -2.2 -3.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        self.append("OT/T3X1U : -0.78 -2.5  0.0  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
+        self.append("OT/T3VX2 : -0.65 -2.9 -2.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
         
     def TT( self ) :
         self += [ self.defaultSurveyDir() + "TT/Detectors.xml" ]
@@ -63,25 +66,19 @@ class SurveyConstraints( list ):
         #self.append(".*?/TT/.*?/Module.{2} : Tx : 0.1")
         #self.append(".*?/TT/.*?/Module.{2} : Rz : 0.0001")
         # halflayers
-        self.append("TTaXLayerASide : Tx : 0.1")
-        self.append("TTaULayerASide : Tx : 0.1")
-        self.append("TTaXLayerCSide : Tx : 0.1")
-        self.append("TTaULayerCSide : Tx : 0.1")
-        self.append("TTbVLayerASide : Tx : 0.1")
-        self.append("TTbXLayerASide : Tx : 0.1")
-        self.append("TTbVLayerCSide : Tx : 0.1")
-        self.append("TTbXLayerCSide : Tx : 0.1")
+        self.append("TTaXLayerASide : 0 0 0 0 0 0 : 0.1 0.1 0.1 0.0002 0.0002 0.0002")
+        self.append("TTaULayerASide : 0 0 0 0 0 0 : 0.1 0.1 0.1 0.0002 0.0002 0.0002")
+        self.append("TTaXLayerCSide : 0 0 0 0 0 0 : 0.1 0.1 0.1 0.0002 0.0002 0.0002")
+        self.append("TTaULayerCSide : 0 0 0 0 0 0 : 0.1 0.1 0.1 0.0002 0.0002 0.0002")
+        self.append("TTbVLayerASide : 0 0 0 0 0 0 : 0.1 0.1 0.1 0.0002 0.0002 0.0002")
+        self.append("TTbXLayerASide : 0 0 0 0 0 0 : 0.1 0.1 0.1 0.0002 0.0002 0.0002")
+        self.append("TTbVLayerCSide : 0 0 0 0 0 0 : 0.1 0.1 0.1 0.0002 0.0002 0.0002")
+        self.append("TTbXLayerCSide : 0 0 0 0 0 0 : 0.1 0.1 0.1 0.0002 0.0002 0.0002")
         # boxes
-        self.append("TTASide : Tx : 0.5")
-        self.append("TTASide : Ty : 0.5")
-        self.append("TTASide : Tz : 0.5")
-        self.append("TTCSide : Tx : 0.5")
-        self.append("TTCSide : Ty : 0.5")
-        self.append("TTCSide : Tz : 0.5")
+        self.append("TTASide : 0 0 0 0 0 0 : 0.5 0.5 0.5 0.001 0.001 0.001")
+        self.append("TTCSide : 0 0 0 0 0 0 : 0.5 0.5 0.5 0.001 0.001 0.001")
         # global
-        self.append("TT : Tx : 0.5")
-        self.append("TT : Ty : 0.5")
-        self.append("TT : Tz : 0.5")
+        self.append("TT : 0 0 0 0 0 0 : 0.5 0.5 0.5 0.001 0.001 0.001")
 
     def IT( self ) :
         self += [ self.defaultSurveyDir() + "IT/Detectors.xml" ]
