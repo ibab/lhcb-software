@@ -1,3 +1,8 @@
+2010-02-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/File.py: added checkEmptyFiles function. This will be used to
+	validate a build.
+
 2010-01-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r0

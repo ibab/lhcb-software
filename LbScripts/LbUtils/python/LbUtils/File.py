@@ -3,6 +3,7 @@
 
 from shutil import copy2
 
+import logging
 import fnmatch
 import stat
 import os
@@ -13,9 +14,11 @@ except NameError:
     WindowsError = None
 
 
-def isFilePathExcluded(filepath, exclude=[]):
+def isFilePathExcluded(filepath, excludelist=None):
+    if not excludelist :
+        excludelist = []
     isexcluded = False
-    for e in exclude :
+    for e in excludelist :
         if fnmatch.fnmatch(filepath, e) :
             isexcluded = True
             break
@@ -35,7 +38,7 @@ def copyStat(src, dst, symlinks=True):
     if hasattr(os, 'chmod'):
         os.chmod(dst, mode)
     if hasattr(os, 'chflags') and hasattr(st, 'st_flags'):
-        os.chflags(dst, st.st_flags)
+        os.chflags(dst, st.st_flags)#IGNORE:E1101
 
 def copyTree(src, dst, symlinks=False, ignore=None):
     """Recursively copy a directory tree using copy2().
@@ -85,3 +88,38 @@ def copyTree(src, dst, symlinks=False, ignore=None):
                 errors.append((root, dstroot, str(why)))
         for d in dirs_to_remove :
             dirs.remove(d)
+
+def checkEmptyFiles(topdir, filterfunc=None, extlist=None):
+    """ 
+    Checks for empty files. The filter takes has argument
+    the full file name path.
+    @param filterfunc: function that returns True or False. it takes one 
+    argument which is the full file name path.
+    @param extlist: list of files extension to check for
+    @return: True if there was no empty file found, otherwise false. 
+    """
+    log = logging.getLogger()
+    if not extlist :
+        extlist = ["o", "so", "exe", "rootmap"]
+    if not filterfunc :
+        filterfunc = lambda x: True
+    good = True
+    for data in os.walk(topdir) :
+        root = data[0]
+        files = data[2]
+        for f in files :
+            fn = os.path.join(root, f)
+            fnext = os.path.splitext(fn)[1]
+            if fnext :
+                fnext = fnext[1:]
+            if os.path.isfile(fn) and not os.path.islink(fn) and filterfunc(fn) :
+                if extlist and fnext in extlist:
+                    if os.path.getsize(fn) == 0 :
+                        log.warning("%s is null sized" % fn)
+                        good = False
+                else :
+                    if os.path.getsize(fn) == 0 :
+                        log.warning("%s is null sized" % fn)
+                        good = False
+                        
+    return good
