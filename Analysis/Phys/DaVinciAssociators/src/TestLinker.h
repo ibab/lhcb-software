@@ -1,4 +1,4 @@
-// $Id: TestLinker.h,v 1.4 2007-02-24 14:27:15 pkoppenb Exp $
+// $Id: TestLinker.h,v 1.5 2010-02-05 08:20:04 jpalac Exp $
 #ifndef TestLinker_H
 #define TestLinker_H 1
 
@@ -19,7 +19,9 @@
 
 #define TR_EFFICIENCY
 
-class LHCb::Track;
+namespace LHCb {  
+  class Track;
+}
 
 class TestLinker : public AsctAlgorithm {
 
