@@ -73,8 +73,8 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2LineDisplVertices.InputDisplacedVertices = Hlt2PatPV3D.OutputVerticesName 
         Hlt2LineDisplVertices.MinNbTracks = self.getProp('MinNbTracks')
         Hlt2LineDisplVertices.RCutMethod = self.getProp('RCutMethod')
-        # Hlt2LineDisplVertices.RMin1 = self.getProp('RMin1')
-        # Hlt2LineDisplVertices.RMin2 = self.getProp('RMin2')
+        Hlt2LineDisplVertices.RMin1 = self.getProp('RMin1')
+        Hlt2LineDisplVertices.RMin2 = self.getProp('RMin2')
         Hlt2LineDisplVertices.MinMass1 = self.getProp('MinMass1')
         Hlt2LineDisplVertices.MinMass2 = self.getProp('MinMass2')
         Hlt2LineDisplVertices.MinSumpt1 = self.getProp('MinSumpt1')
