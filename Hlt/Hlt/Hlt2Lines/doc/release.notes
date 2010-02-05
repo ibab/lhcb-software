@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.108 2010-02-03 11:32:00 dmoran Exp $
+$Id: release.notes,v 1.109 2010-02-05 07:29:14 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,9 @@ $Id: release.notes,v 1.108 2010-02-03 11:32:00 dmoran Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2010-02-05 - Johannes Albrecht
+ - Hlt2DisplVerticesLines.py: revert accidental commit which disabled 2 properties
 
 !========================== Hlt2Lines v2r3 2010-02-01 ===================
  2010-02-03 - Dermot Moran
