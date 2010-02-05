@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2010-01-05 - Gerhard Raven
+ - if DeterministicPrescaler accepts all events, don't print out an Info() 
+   level messages stating this
 !======================== LHCbAlgs v2r32 2010-01-20 ==========================
 ! 2009-12-28 - Wouter Hulsbergen
  - Protect TrajPoca against piecewisetraj returning '0' for distToErr

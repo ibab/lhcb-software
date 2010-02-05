@@ -94,7 +94,7 @@ DeterministicPrescaler::initialize()
 
   if (msgLevel(MSG::DEBUG)) debug() << " generated initial value " << m_initial << endmsg;
   
-  info() << "Prescaling events; keeping " << m_accFrac << " of events " << endmsg;
+  if (m_accFrac<1) info() << "Prescaling events; keeping " << m_accFrac << " of events " << endmsg;
   return sc;
 }
 
