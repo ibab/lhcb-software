@@ -5,8 +5,7 @@
 # uncomment to use.
 #from Configurables import ( CondDB, CondDBAccessSvc )
 #otCalib = CondDBAccessSvc( 'OTCalib' )
-#otCalib.ConnectionString ='sqlite_file:/work/blouw/NEWER/Alignment_v4r5/Alignment/Escher/db/LHCBCOND.db/LHCBCOND'
-#otCalib.DefaultTAG = "OT_3"
+#otCalib.ConnectionString ='sqlite_file:/data/work/DataBases/Collision09_OT_QuarterT0s_071209.db/LHCBCOND'
 #CondDB().addLayer( otCalib )
 #
 #from Configurables import UpdateManagerSvc
@@ -18,21 +17,7 @@
 #alignCond.ConnectionString = 'sqlite_file:' + aligndb + '/LHCBCOND'
 #CondDB().addLayer( alignCond )
 
-from Configurables import ( LHCbApp, Escher, TrackSys, ATrackSelector, TStation, TrackMonitor, OTTrackMonitor )
-
-Escher().Detectors = ["OT"]
-Escher().EvtMax = 100
-Escher().PrintFreq = 1000
-Escher().AlignmentLevel = "layers"
-Escher().Millepede = True
-Escher().Kalman = False
-Escher().Incident = "GlobalMPedeFit"
-Escher().TrackContainer = "Rec/Track/Seed"
-
-
-OTTrackMonitor().TrackLocation = "Event/Alignment/OTTracks"
-TrackMonitor().TracksInContainer = "Event/Alignment/OTTracks"
-
+from Configurables import ( ATrackSelector, Escher )
 
 ATrackSelector().MinPCut = 0.0 # value is in MeV
 ATrackSelector().MinPtCut = 0.0
@@ -45,3 +30,12 @@ ATrackSelector().MinITHitCut    = 0
 ATrackSelector().MinOTHitCut = 15
 ATrackSelector().MinTTHitCut = 0
 ATrackSelector().MinEnergyCut = 0.0
+
+Escher().Detectors = ["OT"]
+Escher().EvtMax = 100
+Escher().AlignmentLevel = "layers"
+Escher().Millepede = True
+Escher().Kalman = False
+Escher().Incident = "GlobalMPedeFit"
+Escher().TrackContainer = "Rec/Track/Best"
+

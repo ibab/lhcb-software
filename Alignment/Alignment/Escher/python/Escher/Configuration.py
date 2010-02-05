@@ -3,7 +3,7 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.15 2010-01-19 11:29:22 jblouw Exp $"
+__version__ = "$Id: Configuration.py,v 1.16 2010-02-05 16:49:31 jblouw Exp $"
 __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
 from Gaudi.Configuration  import *
@@ -27,8 +27,9 @@ class Escher(LHCbConfigurableUser):
     DefaultSequence = [ CountingPrescaler("EscherPrescaler")
                         , "ProcessPhase/Init"
 			, "ProcessPhase/Reco"
+                        , GaudiSequencer("AlignSequence") 
 			, "ProcessPhase/Moni"
-                        , GaudiSequencer("AlignSequence") ]
+			]
 
     
     # Steering options
@@ -46,6 +47,8 @@ class Escher(LHCbConfigurableUser):
        , "TrackContainer" 	: "Long"   # Tracktype to be used for alignment (Long, Seed, VeloTT...)
        , "Detectors" 		: ["VELO", "TT", "IT", "OT", "MUON", "Tr", "Vertex"] # detectors to be aligned
        , "AlignmentLevel" 	: "layers" # level of alignment, stations, layers, quarters, modules, sensors...
+       , "Constraints"          : []       # list of constraints
+       , "DoF"                  : [0, 0, 0, 0, 0, 0]       # list of degrees of freedom to align
        , "DatasetName"		: ""       # string used to build file names
        , "DDDBtag"		: ""       # Tag for DDDB. Default as set in DDDBConf for DataType
        , "CondDBtag"		: ""       # Tag for CondDB. Default as set in DDDBConf for DataType
@@ -115,6 +118,7 @@ class Escher(LHCbConfigurableUser):
 
     def configureSequences(self):
         escherSeq = GaudiSequencer("EscherSequencer")
+        #escherSeq.Context = self.getProp("Context")
         ApplicationMgr().TopAlg = [ escherSeq ]
         mainSeq = self.getProp("MainSequence")
         if len( mainSeq ) == 0:
@@ -130,6 +134,9 @@ class Escher(LHCbConfigurableUser):
                            PrintFreq = self.getProp("PrintFreq"))
         GaudiSequencer("InitEscherSeq").Members += [ recInit ]
         alignSeq = GaudiSequencer("AlignSequence")
+        from Configurables import TStation
+        ts = TStation()
+        alignSeq.Members.append( ts )
         if  self.getProp("Millepede") :
             self.setProp("Kalman", False )
             log.info("Using Millepede type alignment!")
@@ -155,6 +162,8 @@ class Escher(LHCbConfigurableUser):
                
                ProcessPhase("Align").DetectorList += ["OT"]
                ta = TAlignment()
+               ta.DoF = self.getProp("DoF")
+	       ta.Constraints = self.getProp("Constraints")
                ta.skipBigCluster = self.getProp("skipBigCluster")
                ta.Method = "Millepede"
  	       ta.TrackLocation = self.getProp("TrackContainer")
@@ -266,7 +275,7 @@ class Escher(LHCbConfigurableUser):
                etcWriter.Output = [ "EVTTAGS2 DATAFILE='" + self.getProp("DatasetName") + "-etc.root' TYP='POOL_ROOTTREE' OPT='RECREATE' " ]
 
         # Do not print event number at every event (done already by Brunel)
-        #EventSelector().PrintFreq = -1
+        EventSelector().PrintFreq = -1
         CountingPrescaler("EscherPrescaler").PrintFreq = self.getProp( "PrintFreq" )
         # Modify printout defaults
         if self.getProp( "NoWarnings" ):
@@ -295,6 +304,7 @@ class Escher(LHCbConfigurableUser):
 
         if self.isPropertySet("RecoSequence") :
             self.setOtherProp(RecSysConf(),"RecoSequence")
+
         # there is a bug in setOtherProps, so we cannot use it to set the MoniSequence.
         self.setOtherProps(RecMoniConf(),["Context","DataType"])
         RecMoniConf().MoniSequence = self.getProp("MoniSequence")

@@ -1,20 +1,32 @@
-# Example 2008 Cosmics files for Brunel.
+from GaudiKernel.ProcessJobOptions import importOptions
 
-# Syntax is:
-#   gaudirun.py Brunel-Cosmics.py 2008-Cosmic-Data.py
-#
-from Gaudi.Configuration import *
-from Configurables import Escher, LHCbApp
+from Configurables import (Escher, LHCbApp, ApplicationMgr, NTupleSvc, ATrackSelector)
+from Gaudi.Configuration import FileCatalog, EventSelector
+
 
 #-- File catalogs. First one is read-write
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
 
-#-- Use latest database tags for real data
-LHCbApp().DDDBtag   = "default"
-LHCbApp().CondDBtag = "default"
+Escher().DataType = "2008"
+Escher().Simulation = False
+Escher().SpecialData += ["fieldOff", "cosmics"]
+Escher().skipBigCluster= True
+Escher().InputType = 'DST'
+Escher().Detectors = ["OT"]
+Escher().EvtMax = 100
+Escher().PrintFreq = 1000
+Escher().AlignmentLevel = "layers"
+Escher().Millepede = True
+Escher().Kalman = False
+Escher().Incident = "GlobalMPedeFit"
+Escher().DatasetName = '2008-Cosmics'
 
-LHCbApp().DDDBtag   = "head-20090330"
-LHCbApp().CondDBtag = "head-20090402"
+ATrackSelector().UseWeights = False
+
+#-- Use latest database tags for real data
+LHCbApp().DDDBtag   = "head-20100119"
+LHCbApp().CondDBtag = "head-20091112"
+
 
 # Latest cosmic run, with CALO, OT and (!!) RICH2 (35569 events)
 
@@ -27,24 +39,13 @@ data = [
     'PFN:/data/user/data/2008/RAW/LHCb/wouter/run34117.dst'
     ]
 
+# do not do the TES check because these data do not have the required lists
+#GaudiSequencer("InitReprocSeq").Enable = False
+
 EventSelector().Input = []
 for d in data:
     name = "DATAFILE='" + d + "' TYP='POOL_ROOTTREE' OPT='READ'" 
     EventSelector().Input.append( name )
-
-EventSelector().PrintFreq = 1000
-Escher().PrintFreq = 1000
-Escher().skipBigCluster= True
-Escher().DatasetName = 'Cosmics'
-Escher().InputType = 'DST'
-Escher().PrintFreq = 1000
-Escher().SpecialData += ["fieldOff", "cosmics"]
-Escher().TrackContainer = "Rec/Track/Seed"
-Escher().Simulation = False
-
-
-# do not do the TES check because these data do not have the required lists
-GaudiSequencer("InitReprocSeq").Enable = False
 
 # raw data
 #Escher().InputType = 'MDF'
