@@ -1,5 +1,10 @@
 2010-02-04  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* data/Makefile: Automatically add no-pyzip to the CMTEXTRATAGS environment
+	variable if the container package is going to be built.
+
+2010-02-04  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* python/LbConfiguration/SetupProject.py: fixed the TemporaryEnvironment class. The keys
 	of that dictionary are insensitive on windows (bug #62367).
 

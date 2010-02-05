@@ -15,6 +15,25 @@ ifdef container
 $(warning No container keyword in cmt/project.cmt, so I try $(container).)
 endif
 endif
+
+# Special hack to generate the python.zip file only once
+# - if we have the container in the local directory and we are going to build it
+#   we delay the generation of the python.zip file
+ifneq ($(wildcard $(container)/cmt/requirements),)
+_building_container = false
+ifndef MAKECMDGOALS
+_building_container = true
+else
+ifneq ($(findstring $(container),$(MAKECMDGOALS)),)
+_building_container = true
+endif
+endif
+ifeq ($(_building_container),true)
+$(warning Adding "no-pyzip" to the CMTEXTRATAGS)
+override CMTEXTRATAGS := no-pyzip,$(CMTEXTRATAGS)
+endif
+endif
+
 # Get the name of the project as known by cmt
 cmt_project = $(shell cmt show projects | awk '/current/{print $$1}')
 
