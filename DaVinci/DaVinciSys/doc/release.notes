@@ -3,12 +3,19 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
-</PRE><H1><A NAME=v24r8>2010-01-26 DaVinci v24r8. Release for MC09 Re-stripping. </A></H1><PRE>
+</PRE><H1><A NAME=v25r0>2010-02-05 DaVinci v25r0. Release for MC09 Re-stripping. </A></H1><PRE>
 
-Based on Phys v8r14, Analysis v3r14, Rec v7r12, HLT v8r2, Lbcom v7r11, LHCb v28r5, Gaudi v21r6
+Based on Phys v9r0, Analysis v4r0, Rec v8r0, HLT v9r0, Lbcom v8r1, LHCb v29r0, Gaudi v21r7
 
-  * New stripping sleections
+  * LHCb v29r0 stack.
+  * New stripping selections
   * All what's in v24r7p2
+  * Hlt and Stripping Line unification
+  * L0DU configuration in HLT changed.
+  * Enable LoKi functors in Hlt1 filters
+  * Re-implementation of Particle Selections
+  * Strict safety checks in Selection, SelectionSequence classes: name re-use no longer allowed.
+  * Re-structuring of DecayTreeTuple
 
 </PRE><H1><A NAME=v24r7>2009-12-04 DaVinci v24r7. Release for 2009 collisions and beam data. </A></H1><PRE>
 
