@@ -1,3 +1,7 @@
+2010-02-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkLCGCMTtar: fixed the pyqt_compat problem on windows.
+
 2010-01-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v3r0

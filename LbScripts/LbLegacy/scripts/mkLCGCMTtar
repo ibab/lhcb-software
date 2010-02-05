@@ -78,7 +78,7 @@ def fixDPMRFIO(searchdir=None, shiftvers="2.1"):
                 break
 
 #----------------------------------------------------------------------------
-#  package filer ==============================================
+#  package filter ==============================================
 #----------------------------------------------------------------------------
 def pkgFilter(NAME, pak, vers, binary):
     keep = True
@@ -87,6 +87,8 @@ def pkgFilter(NAME, pak, vers, binary):
             keep = False
         if pak == "pyqt" and vers.startswith("3.") :
             keep = False
+    if binary.startswith("win32") and pak == "pyqt_compat" :
+        keep = False
     if not keep :
         print "Excluding %s %s for %s" % (pak, vers, binary)
     return keep
