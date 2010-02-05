@@ -4,6 +4,10 @@
 ! Purpose     : Package for the alignment event model classes
 !-----------------------------------------------------------------------------
 
+!======================= AlignEvent v1r1 2010-02-05 =========================
+- tagged by J. Blowu for Alignment release v4r6
+
+
 ! 2009-12-30 - Wouter Hulsbergen
 - adapted to change in TrackKernel
 
