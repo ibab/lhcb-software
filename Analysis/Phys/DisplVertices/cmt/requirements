@@ -3,7 +3,7 @@
 # Maintainer : Neal Gauvin 
 # ============================================================================
 package           DisplVertices
-version           v6r0
+version           v6r0p2
 
 # ============================================================================
 # Structure, i.e. directories to process. 
@@ -17,9 +17,6 @@ use DaVinciKernel       v* Phys
 
 use HepMC              v*    LCG_Interfaces -no_auto_imports
 use TrackInterfaces v* Tr
-
-#-- Analysis
-use AnalysisSys v*
 
 # ============================================================================
 # Eventually set new environnment values
