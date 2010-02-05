@@ -1,4 +1,4 @@
-// $Id: STDQSummaryAlg.cpp,v 1.2 2010-02-03 07:43:55 nchiapol Exp $
+// $Id: STDQSummaryAlg.cpp,v 1.3 2010-02-05 15:22:33 nchiapol Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -75,12 +75,30 @@ StatusCode STDQSummaryAlg::initialize()
 
 StatusCode STDQSummaryAlg::execute(){
 
-  // get the summary block 
+  bool data_available = true;
+  if (!exist<STSummary>(m_summaryLocation) || !exist<STClusters>(m_clusterLocation)) {
+    return Error("No Data available at given locations.", StatusCode::SUCCESS);
+  }
   const STSummary* summary = get<STSummary>(m_summaryLocation);  
-     
-  // clusters
   const STClusters* clusters = get<STClusters>(m_clusterLocation); 
+  
+  // get the summary block 
+  try {
+    summary = get<STSummary>(m_summaryLocation);  
+  } catch (...) {
+    data_available = false;
+  }
+  // clusters
+  try {
+    clusters = get<STClusters>(m_clusterLocation); 
+  } catch (...) {
+    data_available = false;
+  }
 
+  if (!data_available) {
+    return StatusCode::SUCCESS;
+  }
+  
   // odin
   const ODIN* odin = get<ODIN>(ODINLocation::Default);
   const int run = odin->runNumber();
