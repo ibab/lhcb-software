@@ -3,6 +3,29 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v20r2>2010-02-08 Boole v20r2</A></H1><PRE>
+This version uses projects Gaudi v21r7, LHCb v29r0, Lbcom v8r1
+ and SQLDDDB v5r20, ParamFiles v8r2, FieldMap v5r3, L0TCK v1r5, AppConfig v3r*
+
+Version for 2009 450 GeV productions. 
+Output needs Brunel v35r8 or later, Brunel v36r0 if decoding L0DU bank
+Needs SQLDDDB v5r19 or later with tags from *-20100202*
+
+ - Changes to Configurable:
+   . Add IgnoreFlatSpillover slot, switches off FlatSpillover in Muon
+     digitization. Temporary patch to be used for low luminosity conditions
+
+ - New functionality
+   . L0CaloAlg now uses condition database to decide if we use ECAL in the Hadron
+     trigger, and PS/SPD in the ECAL triggers
+     (available starting from tags *-20100202*, SQLDDDB v5r19) (L0Calo v11r0)
+
+ - Bug fixes
+   . Fixes in PuVetoFillRawBuffer bug fixed: m_PUcontainer inizialized per event,
+     swap in the LUT found and corrected (PuVeto v7r6)
+   . Removed obsolete OTTimeCreator from OT monitoring sequence in Boole.opts
+     (see task 12764) (OTMonitor v3r2p1)
+
 </PRE><H1><A NAME=v20r1>2010-01-26 Boole v20r1</A></H1><PRE>
 This version uses projects Gaudi v21r7, LHCb v29r0, Lbcom v8r0
  and SQLDDDB v5r18, ParamFiles v8r2, FieldMap v5r3, L0TCK v1r5, AppConfig v3r*
