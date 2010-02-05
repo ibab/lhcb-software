@@ -89,21 +89,19 @@ def copyTree(src, dst, symlinks=False, ignore=None):
         for d in dirs_to_remove :
             dirs.remove(d)
 
-def checkEmptyFiles(topdir, filterfunc=None, extlist=None):
+def getEmpyFiles(topdir, filterfunc=None, extlist=None):
     """ 
-    Checks for empty files. The filter takes has argument
+    generator function that looks for empty files The filter takes has argument
     the full file name path.
     @param filterfunc: function that returns True or False. it takes one 
     argument which is the full file name path.
     @param extlist: list of files extension to check for
-    @return: True if there was no empty file found, otherwise false. 
+    @return: yields empty files
     """
-    log = logging.getLogger()
     if not extlist :
-        extlist = ["o", "so", "exe", "rootmap"]
+        extlist = []
     if not filterfunc :
         filterfunc = lambda x: True
-    good = True
     for data in os.walk(topdir) :
         root = data[0]
         files = data[2]
@@ -115,11 +113,24 @@ def checkEmptyFiles(topdir, filterfunc=None, extlist=None):
             if os.path.isfile(fn) and not os.path.islink(fn) and filterfunc(fn) :
                 if extlist and fnext in extlist:
                     if os.path.getsize(fn) == 0 :
-                        log.warning("%s is null sized" % fn)
-                        good = False
+                        yield fn
                 else :
                     if os.path.getsize(fn) == 0 :
-                        log.warning("%s is null sized" % fn)
-                        good = False
-                        
+                        yield fn
+
+def checkEmptyFiles(topdir, filterfunc=None, extlist=None):
+    """ 
+    Checks for empty files. The filter takes has argument
+    the full file name path.
+    @param filterfunc: function that returns True or False. it takes one 
+    argument which is the full file name path.
+    @param extlist: list of files extension to check for
+    @return: True if there was no empty file found, otherwise false. 
+    """
+    log = logging.getLogger()
+    good = True
+    for f in getEmpyFiles(topdir, filterfunc, extlist) :
+        log.warning("%s is null sized" % f)
+        good = False
+                
     return good

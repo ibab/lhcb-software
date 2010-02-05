@@ -1,7 +1,8 @@
 2010-02-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbUtils/File.py: added checkEmptyFiles function. This will be used to
-	validate a build.
+	* python/LbUtils/File.py: 
+	- added checkEmptyFiles function. This will be used to validate a build.
+	- factored out the search of the empty files in a generator function getEmptyFiles.
 
 2010-01-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
