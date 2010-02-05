@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.147 2010-01-29 15:31:05 kvervink Exp $"
+__version__ = "$Id: Configuration.py,v 1.148 2010-02-05 13:46:39 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -435,6 +435,20 @@ class HltConf(LHCbConfigurableUser):
         # make sure Hlt.Global is included as soon as there is at least one Hlt. line...
         if activeHlt1Lines : activeHlt1Lines += [ 'Hlt1Global' ]
         if activeHlt2Lines : activeHlt2Lines += [ 'Hlt2Global' ]
+
+        # Brute force uniquifier...
+        def unique( s ) :
+            u = []
+            for x in s:
+               if x not in u: 
+                    u.append(x)
+               else :
+                    log.warning('Duplicate entry in requested list of lines: %s  please fix ' % x  )
+            return u
+
+        activeHlt1Lines = unique( activeHlt1Lines )
+        activeHlt2Lines = unique( activeHlt2Lines )
+
 
         print '# List of requested Hlt1Lines : %s ' % activeHlt1Lines 
         print '# List of available Hlt1Lines : %s ' % [ i.name() for i in hlt1Lines() ] 
