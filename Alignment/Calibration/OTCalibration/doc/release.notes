@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.8 2010-01-02 22:17:29 wouter Exp $
+! $Id: release.notes,v 1.9 2010-02-05 16:54:20 jblouw Exp $
 ! Package     : OTCalibration
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
+
+
+</PRE><H1><A NAME=v1r3>2010-02-05 OTCAlibration v1r3</A></H1><PRE>
+ - Johan Blouw tagged  the package as v1r3 for alignment release v4r6
 
 ! 2010-01-02 Wouter Hulsbergen
   - replaced sqrt with std::sqrt to try and solve windows compilation problem
