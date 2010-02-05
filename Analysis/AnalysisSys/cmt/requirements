@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.161 2010-02-05 16:31:54 jpalac Exp $
+# $Id: requirements,v 1.162 2010-02-05 16:43:07 jpalac Exp $
 package AnalysisSys
 version v4r0p1
 
@@ -27,7 +27,7 @@ use  VertexFitCheck             v1r5     Phys   # Yuehong Xie
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
 use  FlavourTaggingChecker      v5r0     Phys   # Marco Musy
 use  ParticleMakerChecker       v1r3p2   Phys   # Chris Jones
-use  DecayTreeTuple             v3r0     Phys   # Rob Lambert
+use  DecayTreeTuple             v3r0p1   Phys   # Rob Lambert
 use  LoKiJets                   v5r0     Phys   # Victor Coco
 #use  DisplVertices              v6r0p2   Phys   # Neal Gauvin
 ####################################################################
@@ -41,7 +41,7 @@ use StrippingConf               v2r0   Phys   # Anton Poluektov
 use StrippingSelections         v1r15  Phys   # Anton Poluektov
 
 ####################################################################
-use  MicroDSTBase        	v1r6p1  MicroDST          # Juan Palacios
+use  MicroDSTBase        	v1r6p2  MicroDST          # Juan Palacios
 use  MicroDSTInterfaces  	v1r4    MicroDST          # Juan Palacios
 use  MicroDSTTools      	v1r6    MicroDST          # Juan Palacios
 use  MicroDSTAlgorithm   	v3r9    MicroDST          # Juan Palacios
