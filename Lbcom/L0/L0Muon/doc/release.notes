@@ -1,7 +1,11 @@
-!  $Id: release.notes,v 1.91 2010-02-04 22:55:35 jucogan Exp $
+!  $Id: release.notes,v 1.92 2010-02-05 10:21:10 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !---------------------------------------------------------------------------
+
+! 2010-02-05 - Julien Cogan
+ - set IgnoreCondDB to true not to use condb until the conditions are really
+   there 
 
 ! 2010-02-04 - Julien Cogan
  - Trigger parameters and CondDB :

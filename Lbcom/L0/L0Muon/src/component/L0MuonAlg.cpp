@@ -1,4 +1,4 @@
-// $Id: L0MuonAlg.cpp,v 1.27 2010-02-04 22:55:35 jucogan Exp $
+// $Id: L0MuonAlg.cpp,v 1.28 2010-02-05 10:21:10 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -54,7 +54,7 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   m_foiYSize.push_back(1); // 3-> Yfoi in M4
   m_foiYSize.push_back(1); // 4-> Yfoi in M5
 
-  declareProperty("IgnoreCondDB"   , m_ignoreCondDB = false);
+  declareProperty("IgnoreCondDB"   , m_ignoreCondDB = true);
 
   declareProperty("Version"        , m_version = 3 );
 
@@ -109,7 +109,8 @@ StatusCode L0MuonAlg::initialize()
     // Use CondDB
     // - processor version 
     try {
-      registerCondition( "Conditions/Private/L0MUON/Q1/CB" ,
+      info() << "Accessing Conditions/L0MUON/Q1/CB"<< endmsg ;
+      registerCondition( "Conditions/L0MUON/Q1/CB" ,
                          m_l0CondCtrl ,
                          &L0MuonAlg::updateL0CondCtrl ) ;
     } catch ( GaudiException &e ) {
@@ -120,7 +121,8 @@ StatusCode L0MuonAlg::initialize()
     }
     // - FOI 
     try {
-      registerCondition( "Conditions/Private/L0MUON/Q1/PB1" ,
+      info() << "Accessing Conditions/L0MUON/Q1/PB1"<< endmsg ;
+      registerCondition( "Conditions/L0MUON/Q1/PB1" ,
                          m_l0CondProc ,
                          &L0MuonAlg::updateL0CondProc ) ;
     } catch ( GaudiException &e ) {
