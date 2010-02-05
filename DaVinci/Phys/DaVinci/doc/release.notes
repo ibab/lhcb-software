@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.401 2010-02-04 11:08:23 pkoppenb Exp $
+! $Id: release.notes,v 1.402 2010-02-05 13:50:07 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,12 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+!========================== DaVinci v25r0 2010-02-05 =======================
+
+! 2010-02-05 - Juan Palacios
+ - Use ParamFiles v8r2, with new real-life M1R2 mapping.
+
 
 ! 2010-02-04 - Patrick Koppenburg
  - Add decoding of DecReports from data _if_ Hlt is not run.
