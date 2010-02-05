@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : ITAConfigTool
  *
  *  CVS Log :-
- *  $Id: ITAConfigTool.h,v 1.12 2009-12-27 17:25:22 jblouw Exp $
+ *  $Id: ITAConfigTool.h,v 1.13 2010-02-05 16:44:52 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -35,9 +35,11 @@ struct Point
 
 namespace LHCb {
 	class Track;
+  	class Trajectory;
+ 	class Measurement;
 	class LHCbID;
-  class MCHit;
-  class State;
+  	class MCHit;
+  	class State;
   
 };
 
@@ -59,6 +61,7 @@ class ITAConfigTool : virtual public IAlgTool {
                                    double &,
                                    struct Point  &
                                    ) = 0;
+
 
   //MD  virtual StatusCode FillMatrix( const int &,
 			// 	 const double [], 

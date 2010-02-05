@@ -3,6 +3,15 @@ Package : AlignmentInterfaces
 Package Coordinator : Johan Blouw
 Purpose :  Collection of interfaces needed for the T-station alignment
 
+! 2010/02/05 Johan Blouw
+- tagged the package as v3r1
+
+! 2010/02/05 Johan Blouw
+- changes to IAtrackSelector: 
+  - removed const from the methods, so that variables passed to the method may be modified
+  - retyped the 'accept' method so that it returns a bool. 
+- small changes to ITAConfigTool: added 'class Trajectory' and 'class Measurement' to
+  the list of forward declarations.
 
 ! 2009/12/27 - Johan Blouw
 - removed unnecessary variables from ICentipede

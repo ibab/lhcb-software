@@ -21,13 +21,13 @@ public:
   static const InterfaceID & interfaceID() { return IID_IATrackSelectorTool;   }
 
   // Accept a track when it fullfills certain criteria
-  virtual bool accept( const LHCb::Track& aTrack ) const = 0;
+  virtual bool accept( const LHCb::Track& aTrack ) = 0;
 
   // divide tracks in three classes (Through IT stations, through OT stations, crossing from one to the other
-  virtual void countTHits( const LHCb::Track& aTrack, 
+  virtual bool countTHits( const LHCb::Track& aTrack, 
                            int& nOTHits, 
                            int& nITHits ,
-                           int& nTTHits) const = 0;
+                           int& nTTHits) = 0;
  protected:
 
  private:
