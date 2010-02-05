@@ -12,7 +12,7 @@ Based on Phys v9r0, Analysis v4r0, Rec v8r0, HLT v9r0, Lbcom v8r1, LHCb v29r0, G
   * All what's in v24r7p2
   * Hlt and Stripping Line unification
   * L0DU configuration in HLT changed.
-  * Enable LoKi functors in Hlt1 filters
+  * Allow LoKi functors in Hlt1 filters
   * Re-implementation of Particle Selections
   * Strict safety checks in Selection, SelectionSequence classes: name re-use no longer allowed.
   * Re-structuring of DecayTreeTuple
