@@ -13,6 +13,6 @@ importOptions("$APPCONFIGOPTS/Gauss/MC09-b3,5TeV-md100-nu1.py")
 # latest database tags 
 ##############################################################################
 from Configurables import LHCbApp
-LHCbApp().DDDBtag   = "head-20091120"
-LHCbApp().CondDBtag = "sim-20091112-vc-md100"
+LHCbApp().DDDBtag   = "head-20100119"
+LHCbApp().CondDBtag = "sim-20100202-vc-md100"
 

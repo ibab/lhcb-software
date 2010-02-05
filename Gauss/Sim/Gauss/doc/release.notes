@@ -4,6 +4,14 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v38r3 2010-02-05 ============================
+! 2010-02-05 - Gloria CORTI
+ - Update with the latest database tags options/Gauss-DEV.py
+ - Make new options Gauss-MC-2009.py as shortcut to produce MC for 2009 data 
+   with latest available condition at time of release. 
+ - Update the QMTest gauss-dev.qmt with latest conditions not specific for 
+   simulation for 2009 data
+
 ! 2010-01-26 - Silvia Miglioranzi
  - Updated the QMTest gauss-dev.qmt with latest conditions.
 
