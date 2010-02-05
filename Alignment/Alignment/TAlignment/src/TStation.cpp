@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : TStation
  *
  *  CVS Log :-
- *  $Id: TStation.cpp,v 1.5 2010-02-05 16:51:35 jblouw Exp $
+ *  $Id: TStation.cpp,v 1.6 2010-02-05 17:07:38 jblouw Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -73,7 +73,7 @@ StatusCode TStation::execute() {
    for ( Tracks::iterator iterT = inCont->begin();
  	iterT != inCont->end(); iterT++) {
      Track* aTrack = *iterT;
-     int OThits = 0, IThits = 0;
+//     int OThits = 0, IThits = 0;
      if ( m_trackselection->accept( *aTrack ) ) {
 //       int hot = 0;
 //       hot = m_trackselection->traversesIT( *aTrack, OThits, IThits );
