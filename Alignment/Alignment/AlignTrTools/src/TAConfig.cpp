@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.31 2010-02-05 16:47:55 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.32 2010-02-06 11:45:45 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -1555,7 +1555,6 @@ StatusCode TAConfig::FillMatrix( int rank,
 StatusCode TAConfig::CalcResidual( const LHCb::LHCbID &id, 
                                    int rank, // do we realy need the rank ?
                                    struct Point &meas,
-                                   double &weight,
                                    bool fitok,  // need to see if there is a local fit in progress.
                                    double & zpos , //MD
                                    double & stereo,  //MD

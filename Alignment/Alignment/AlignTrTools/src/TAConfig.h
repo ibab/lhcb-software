@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.h,v 1.23 2010-02-05 16:47:55 jblouw Exp $
+ *  $Id: TAConfig.h,v 1.24 2010-02-06 11:45:45 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -119,7 +119,6 @@ public:
   StatusCode CalcResidual( const LHCb::LHCbID &,
                            int ,
                            struct Point &,
-                           double &,
                            bool, double &, double & ,
                            double &, struct Point &);
   
