@@ -207,7 +207,7 @@ bool TupleToolTriggerBase::compileAutoList()
 {
   
   boost::regex l0("Hlt1L0.*Decision");
-  boost::regex hlt1("Hlt1.*Decision");
+  boost::regex hlt1("Hlt1[^L0]*Decision");//Not to save the L0 stuff twice!
   boost::regex hlt2("Hlt2.*Decision");
   
   m_hlt1_init = svc<IANNSvc>("ANNDispatchSvc")->keys("Hlt1SelectionID");
@@ -239,7 +239,7 @@ bool TupleToolTriggerBase::compileMyList(const std::vector<std::string>& list)
 {
   
   boost::regex l0("Hlt1L0.*Decision");
-  boost::regex hlt1("Hlt1.*Decision");
+  boost::regex hlt1("Hlt1[^L0]*Decision");
   boost::regex hlt2("Hlt2.*Decision");
   
   //m_hlt1_init = svc<IANNSvc>("ANNDispatchSvc")->keys("Hlt1SelectionID");

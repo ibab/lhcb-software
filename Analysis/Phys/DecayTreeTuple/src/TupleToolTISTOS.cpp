@@ -83,19 +83,16 @@ StatusCode TupleToolTISTOS::fillBasic( const LHCb::Particle*
 
   m_TriggerTisTosTool->setOfflineInput(*P);
 
-  m_TriggerTisTosTool->setTriggerInput("Hlt1L0.*Decision");
-  std::vector<std::string> vs = m_TriggerTisTosTool->triggerSelectionNames();
-  
   //Fill the decision, tis and tos parametres for the L0 as a whole
-  m_TriggerTisTosTool->selectionTisTos(vs,decision,tis,tos);
+  ITriggerTisTos::TisTosDecision classifiedL0Dec = m_TriggerTisTosTool->selectionTisTos(m_TriggerTisTosTool->triggerSelectionNames("Hlt1L0.*Decision") );
   // decision here is that of Hlt1 L0 pass through lines and not of L0 itself
   // however if any candidates were saved then L0 decision must have been true
   
-  decision = m_TriggerTisTosTool->hltObjectSummaries().size()!=0;
+  decision = m_TriggerTisTosTool->hltObjectSummaries("Hlt1L0.*Decision").size()!=0;
   tuple->column( prefix+"L0Global"+"_Dec", decision);
-  tuple->column( prefix+"L0Global"+"_TIS", tis);
-  tuple->column( prefix+"L0Global"+"_TOS", tos);
-  
+  tuple->column( prefix+"L0Global"+"_TIS", classifiedL0Dec.tis());
+  tuple->column( prefix+"L0Global"+"_TOS", classifiedL0Dec.tos());
+ 
   //Do the Hlt1
   m_TriggerTisTosTool->setTriggerInput("Hlt1.*Decision");
   //Fill the decision, tis and tos parametres for the Hlt1 as a whole   

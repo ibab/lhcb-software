@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-02-06 - V. Gligorov
+ - TupleToolTISTOS,TupleToolTriggerBase : eliminate duplication of L0
+   tistos information between the L0 and Hlt1L0 triggers 
+
 !========================== DecayTreeTuple v3r0p1 2010-02-05 ================
 
 ! 2010-02-04 - Rob Lambert
