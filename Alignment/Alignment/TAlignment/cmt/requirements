@@ -36,6 +36,9 @@ use     LHCbMath                v*      Kernel
 use     LoKiCore        	v*      Phys
 use     LinkerEvent		v*	Event
 
+use     MuonMonKernel           v*      Muon
+use     MuonTrackRec            v*      Muon
+
 #============================================================================
 # Component library building rule
 #============================================================================
