@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.21 2010-02-05 17:07:38 jblouw Exp $
+ *  $Id: GAlign.cpp,v 1.22 2010-02-06 11:47:31 jblouw Exp $
  *
  *  @author J.Blouw Johan.Blouw@cern.ch
  *  @date   30/12/2005
@@ -1125,7 +1125,7 @@ StatusCode GAlign::execute() {
 	  continue;
 	}
 	debug()<<" GET MEANZ GET MEANZ GET MEANZ GET MEANZ "<<endreq;
-	sc=m_taConfig->CalcResidual(id, rank,  meas,weight,
+	sc=m_taConfig->CalcResidual(id, rank,  meas,
 				    flagL ,Z_position, stereo_angle,refZ,localPos);
 	if ( sc.isFailure() ){
 	  debug() << "Failure to calculate residual... will continue!" << endreq;
@@ -1311,7 +1311,7 @@ StatusCode GAlign::execute() {
            
            
                        
-           sc=m_taConfig->CalcResidual(id, rank,  meas,weight,
+           sc=m_taConfig->CalcResidual(id, rank,  meas,
                                        flagL ,Z_position, stereo_angle,refZ, localPos);
            if ( sc.isFailure() ){
              debug() << "Failure in calculating residual!" << endreq;
@@ -1777,7 +1777,7 @@ StatusCode GAlign::execute() {
         
         m_taConfig->SetMeanZ(meanZ);
 
-        sc=m_taConfig->CalcResidual(id, rank,  meas, weight,
+        sc=m_taConfig->CalcResidual(id, rank,  meas, 
                                     flagL,Z_position, stereo_angle, refZ,localPos);
         if ( sc.isFailure() )
           continue;
