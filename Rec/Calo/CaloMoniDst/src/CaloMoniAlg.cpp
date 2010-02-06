@@ -1,4 +1,4 @@
-// $Id: CaloMoniAlg.cpp,v 1.11 2010-02-05 17:06:29 odescham Exp $
+// $Id: CaloMoniAlg.cpp,v 1.12 2010-02-06 15:30:23 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -102,7 +102,7 @@ CaloMoniAlg::CaloMoniAlg( const std::string& name,
   if( m_detData != "Ecal" && 
      m_detData != "Hcal" &&  
      m_detData != "Prs"  &&  
-     m_detData != "Ecal")m_detData = "Ecal";
+     m_detData != "Spd")m_detData = "Ecal";
   
 }
 //=============================================================================
