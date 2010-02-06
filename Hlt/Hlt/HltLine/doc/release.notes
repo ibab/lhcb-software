@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.74 2010-02-01 09:55:12 graven Exp $
+! $Id: release.notes,v 1.75 2010-02-06 18:48:50 gligorov Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+! 2010-02-06 - V. Gligorov
+ - HltLine.py: allow rate limiting pre/postscalers using the "RATE(X)"
+   syntax.
+
 !========================== HltLine v3r0 2010-02-01 ===================
 ! 2010-01-30 - Gerhard Raven
  - allow Hlt::TrackFilter and Hlt::TrackPipe as Hlt1Members
