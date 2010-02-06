@@ -6,7 +6,9 @@ Purpose	: collection of alignment algorithms
 
 </PRE><H1><A NAME=v4r5>2010-02-05 TAlignment v4r6</A></H1><PRE>
  - Johan Blouw tagged the package v4r6 for alignment release v4r6.
-
+! 2010-02-06 Stefania Vecchi
+ - added ResidualsM1 algo to check residuals between the Long tracks and the 
+   Muon hits in M1
 
 ! 2010-02-05 Johan Blouw
  - removed update conditions dbase call from GAlign. It wasn't needed.
