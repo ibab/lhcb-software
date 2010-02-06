@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : ITAConfigTool
  *
  *  CVS Log :-
- *  $Id: ITAConfigTool.h,v 1.13 2010-02-05 16:44:52 jblouw Exp $
+ *  $Id: ITAConfigTool.h,v 1.14 2010-02-06 11:44:25 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -56,7 +56,6 @@ class ITAConfigTool : virtual public IAlgTool {
   virtual StatusCode CalcResidual( const LHCb::LHCbID &,
                                    int ,
                                    struct Point  &,
-                                   double &,
                                    bool, double &, double & ,
                                    double &,
                                    struct Point  &

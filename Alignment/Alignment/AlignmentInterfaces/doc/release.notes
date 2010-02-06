@@ -3,6 +3,11 @@ Package : AlignmentInterfaces
 Package Coordinator : Johan Blouw
 Purpose :  Collection of interfaces needed for the T-station alignment
 
+! 2010/02/06 Johan Blouw
+- removed an unused variable from ITAConfig::CalcResidual method.
+
+</PRE><H1><A NAME=v3r1>2010-02-06 AlignmentInterfaces v3r1 </A></H1><PRE>
+
 ! 2010/02/05 Johan Blouw
 - tagged the package as v3r1
 
