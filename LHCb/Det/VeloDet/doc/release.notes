@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.218 2009-07-28 07:37:55 cattanem Exp $
+! $Id: release.notes,v 1.219 2010-02-07 15:10:19 krinnert Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+! 2010-02-07 - Kurt Rinnert
+ - added residual method that propagates a line to the sensor plane
+ - improved documentation of residual methods
 
 !======================== VeloDet v13r8 2009-07-28 ===========================
 ! 2009-07-27 - Chris Jones

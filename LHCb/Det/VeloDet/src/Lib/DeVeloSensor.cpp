@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.37 2009-07-27 10:36:15 jonrob Exp $
+// $Id: DeVeloSensor.cpp,v 1.38 2010-02-07 15:10:19 krinnert Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -196,6 +196,53 @@ void DeVeloSensor::initSensor()
   } else if (m_isPhi) {
     m_isDownstream = 0 != param<int>("DownstreamPhi");
   }
+}
+
+//=========================================================================
+// residual in sensor plane at line-plane intersection 
+//=========================================================================
+StatusCode DeVeloSensor::residual(const Gaudi::XYZPoint& point,
+    const Gaudi::XYZVector& dir,
+    const LHCb::VeloChannelID& channel,
+    const double interStripFraction,
+    double &residual,
+    double &chi2) const
+{
+  Gaudi::XYZPoint intersection;
+  StatusCode sc = intersectWithLine(point,dir,intersection);
+  if ( !sc ) { return sc; }
+  return this->residual(intersection,channel,interStripFraction,residual,chi2);
+}
+
+//=========================================================================
+// intersect line with sensor plane
+//=========================================================================
+StatusCode DeVeloSensor::intersectWithLine(const Gaudi::XYZPoint& point,
+    const Gaudi::XYZVector& dir,
+    Gaudi::XYZPoint& intersection) const
+{
+  // define sensor plane and transform to global frame
+  Gaudi::XYZPoint p(0.0,0.0,0.0);
+  Gaudi::XYZPoint n(0.0,0.0,1.0);
+  p = localToGlobal(p);
+  n = localToGlobal(n);
+
+  // compute n*dir and check for parallel case
+  double denom = n.x()*dir.x() + n.y()*dir.y() + n.z()*dir.z();
+  double epsilon = 1.0e-12;
+  if (fabs(denom) < epsilon) {
+    msg() << MSG::ERROR
+          << "Failed to compute intersection. Line parallel to sensor plane."
+          << endreq;
+    return StatusCode::FAILURE;
+  }
+
+  // compute intersection
+  Gaudi::XYZVector diff = p - point;
+  double num = n.x()*diff.x() + n.y()*diff.y() + n.z()*diff.z();
+  intersection = point + (num/denom)*dir;
+
+  return StatusCode::SUCCESS;
 }
 
 //=========================================================================

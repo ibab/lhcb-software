@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.44 2009-07-27 10:36:15 jonrob Exp $
+// $Id: DeVeloSensor.h,v 1.45 2010-02-07 15:10:19 krinnert Exp $
 #ifndef VELODET_DEVELOSENSOR_H
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -74,7 +74,13 @@ public:
   /// Return a trajectory (for track fit) from strip + offset
   virtual std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::VeloChannelID& id, const double offset) const = 0;
 
-  /// Residual of 3-d point to a VeloChannelID
+  /** Residual of 3-d point to a VeloChannelID
+   *
+   *  This is not a residual in 3D! The supplied 3-d point is assumed
+   *  to be in the plane of the sensor and the residual is computed
+   *  in this plane. No check is performed whether the point is 
+   *  actually on the sensor.
+   */
   virtual StatusCode residual(const Gaudi::XYZPoint& point,
                               const LHCb::VeloChannelID& channel,
                               double &residual,
@@ -88,12 +94,44 @@ public:
       double &residual,
       double &chi2) const = 0;*/
 
-  /// Residual of a 3-d point to a VeloChannelID + interstrip fraction
+  /** Residual of 3-d point to a VeloChannelID + interstrip fraction
+   *
+   *  This is not a residual in 3D! The supplied 3-d point is assumed
+   *  to be in the plane of the sensor and the residual is computed
+   *  in this plane. No check is performed whether the point is 
+   *  actually on the sensor.
+   */
   virtual StatusCode residual(const Gaudi::XYZPoint& point,
                               const LHCb::VeloChannelID& channel,
                               const double interStripFraction,
                               double &residual,
                               double &chi2) const =0 ;
+
+  /** Residual of a line-sensor plane intersection to a VeloChannelID + interstrip fraction
+   *
+   *  This is not a residual in 3D! The line is defined by a point and a
+   *  direction in the global frame. The line is intersected with the plane of
+   *  the sensor and the residual is computed in this plane.  No check is
+   *  performed whether the intersection is actually on the sensor.
+   */
+  StatusCode residual(const Gaudi::XYZPoint& point,
+      const Gaudi::XYZVector& dir,
+      const LHCb::VeloChannelID& channel,
+      const double interStripFraction,
+      double &residual,
+      double &chi2) const;
+
+  /** Propagate a line to the sensor plane in the global frame.
+   *
+   *  The line is defined by a 3-d point and slope vector in the
+   *  global frame. The resulting 3-d point is the intersection 
+   *  of the line and the sensor plane. Note that the result is
+   *  not guaranteed to actually be on the sensor.
+   */
+  StatusCode intersectWithLine(const Gaudi::XYZPoint& point,
+                               const Gaudi::XYZVector& dir,
+                               Gaudi::XYZPoint& intersection) const;
+
 
   /// The zones number for a given strip
   //  virtual unsigned int zoneOfStrip(const LHCb::VeloChannelID& channel)=0;
