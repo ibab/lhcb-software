@@ -2,6 +2,8 @@
 Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
+! 2010-02-07  Stefania Vecchi
+ - removed ResidualsM1 algo 
 
 ! 2010-02-06 Johan Blouw
  - updated the CalcResidual call according to ITAConfigTool.
