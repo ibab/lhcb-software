@@ -4,6 +4,11 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2010-02-04 - Michel De Cian
+ - Modified IAddTTClusterTool. Only the relevant methods in PatAddTTCoord have
+   now virtual methods definied. Causes incompatibility with (unused) 
+   AddTTClusterTool in Tf/TrackMatching
+
 ! 2010-02-01 - Manuel Tobias Schiller
  - modified ITrackCollector interface to reflect the changes suggested by
    Wouter during the Tracking and Alignment workshop
