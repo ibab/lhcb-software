@@ -1,4 +1,4 @@
-// $Id: STCMSNoiseCalculationTool.cpp,v 1.3 2009-11-25 11:25:11 mtobin Exp $
+// $Id: STCMSNoiseCalculationTool.cpp,v 1.4 2010-02-08 14:33:12 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -130,7 +130,7 @@ StatusCode ST::STCMSNoiseCalculationTool::initialize() {
       Condition* condition = getDet<Condition>(condPath);
       std::vector<int> pedestalValues;
       if(condition != 0) {
-        pedestalValues = condition->param<std::vector<int> >("Pedestal_value");
+        pedestalValues = condition->param<std::vector<int> >("pedestal");
         std::vector<int>::iterator itPed = pedestalValues.begin();
         for(; itPed != pedestalValues.end(); ++itPed) {
           m_pedestalMaps[TELL1SourceID][0].push_back(std::make_pair((*itPed), 1));
