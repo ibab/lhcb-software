@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.219 2010-02-07 15:10:19 krinnert Exp $
+! $Id: release.notes,v 1.220 2010-02-08 14:31:06 krinnert Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+! 2010-02-08 - Kurt Rinnert
+ - bug fix in new intersection method: sensor plane normal was defined as
+   point, not a vector
 
 ! 2010-02-07 - Kurt Rinnert
  - added residual method that propagates a line to the sensor plane

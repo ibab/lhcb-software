@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.38 2010-02-07 15:10:19 krinnert Exp $
+// $Id: DeVeloSensor.cpp,v 1.39 2010-02-08 14:31:07 krinnert Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -223,9 +223,9 @@ StatusCode DeVeloSensor::intersectWithLine(const Gaudi::XYZPoint& point,
 {
   // define sensor plane and transform to global frame
   Gaudi::XYZPoint p(0.0,0.0,0.0);
-  Gaudi::XYZPoint n(0.0,0.0,1.0);
   p = localToGlobal(p);
-  n = localToGlobal(n);
+  Gaudi::XYZVector n(0.0,0.0,1.0);
+  n = m_geometry->toGlobal(n);
 
   // compute n*dir and check for parallel case
   double denom = n.x()*dir.x() + n.y()*dir.y() + n.z()*dir.z();
