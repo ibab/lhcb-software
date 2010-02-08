@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.148 2010-02-05 13:46:39 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.149 2010-02-08 09:28:33 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -171,20 +171,13 @@ class HltConf(LHCbConfigurableUser):
         ###       bit 32 -> full stream (actually, not used for that, but it could be ;-)
 
         from Configurables import HltRoutingBitsWriter
-        HltRoutingBitsWriter().Preambulo = [ "XP5Jpsi   = scale(HLT_PASS('Hlt2ExpressJPsiDecision'),RATE(5))"
-                                           , "XP5JpsiTP = scale(HLT_PASS('Hlt2ExpressJPsiTagProbeDecision'),RATE(5))"
-                                           , "XP1Lambda = scale(HLT_PASS('Hlt2ExpressLambdaDecision'),RATE(1))"
-                                           , "XP1KS     = scale(HLT_PASS('Hlt2ExpressKSDecision'),RATE(1))"
-                                           , "XP1PhiPi  = scale(HLT_PASS('Hlt2ExpressDs2PhiPiDecision'),RATE(1))"
-                                           , "XP1BeamHalo = scale(HLT_PASS('Hlt2ExpressBeamHaloDecision'),RATE(1))"
-                                           , "XP1Phys   = scale(HLT_PASS_RE('Hlt1(?!Lumi).*Decision'), RATE(1))"
-                                           ]
+        HltRoutingBitsWriter().Preambulo = [ "Hlt1Express   = scale(HLT_PASS_RE('Hlt1(?!Lumi).*Decision'), RATE(1))" ]
                
         routingBits = { 32 : "HLT_PASS('Hlt1Global')"
                       , 33 : "HLT_PASS_SUBSTR('Hlt1Lumi')" 
                       , 34 : "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global
                       , 35 : "HLT_PASS_SUBSTR('Hlt1Velo')"
-                      , 36 : "scale( %s ,RATE(10))" % "|".join([ "XP5Jpsi", "XP5JpsiTP", "XP1Lambda", "XP1KS", "XP1PhiPi", "XP1BeamHalo", "XP1Phys" ])
+                      , 36 : "scale( %s ,RATE(10))" % "|".join([ "HLT_PASS_RE('Hlt2Express.*Decision')",  "Hlt1Express" ])
                       , 37 : "HLT_PASS('Hlt1ODINPhysicsDecision')"
                       , 38 : "HLT_PASS('Hlt1ODINTechnicalDecision')"
                       , 39 : "HLT_PASS_SUBSTR('Hlt1L0')"
@@ -436,14 +429,14 @@ class HltConf(LHCbConfigurableUser):
         if activeHlt1Lines : activeHlt1Lines += [ 'Hlt1Global' ]
         if activeHlt2Lines : activeHlt2Lines += [ 'Hlt2Global' ]
 
-        # Brute force uniquifier...
+        # Brute force uniquifier, which conserves order
         def unique( s ) :
             u = []
             for x in s:
                if x not in u: 
                     u.append(x)
                else :
-                    log.warning('Duplicate entry in requested list of lines: %s  please fix ' % x  )
+                    log.warning('Duplicate entry in requested list of lines: %s; please fix ' % x  )
             return u
 
         activeHlt1Lines = unique( activeHlt1Lines )
