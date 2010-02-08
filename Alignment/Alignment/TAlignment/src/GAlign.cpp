@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.22 2010-02-06 11:47:31 jblouw Exp $
+ *  $Id: GAlign.cpp,v 1.23 2010-02-08 09:31:53 jblouw Exp $
  *
  *  @author J.Blouw Johan.Blouw@cern.ch
  *  @date   30/12/2005
@@ -1110,7 +1110,6 @@ StatusCode GAlign::execute() {
 	LHCb::LHCbID id = measurement->lhcbID();
 	debug() << "Unbiased residual: " << aNode->unbiasedResidual() << "error: " << aNode->errUnbiasedResidual() << endreq;
 	int rank            = 0; // position in c-matrix for a detector element        
-	double weight       = aNode->errUnbiasedResidual();
 	double Z_position   = 0.;
 	double stereo_angle = 0.0;
 	double refZ         = 0.;

@@ -2,6 +2,13 @@
 Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
+
+</PRE><H1><A NAME=v4r7>2010-02-08 TAlignment v4r7</A></H1><PRE> 
+ - J. Blouw: Contrary to what is written below, v4r7 will now be used
+   for Alignment release v4r6.
+ - J. Blouw tagged the package v4r7.
+
+
 ! 2010-02-07  Stefania Vecchi
  - removed ResidualsM1 algo 
 
