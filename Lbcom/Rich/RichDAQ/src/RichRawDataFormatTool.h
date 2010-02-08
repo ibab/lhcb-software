@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.40 2009-09-08 12:30:51 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.41 2010-02-08 15:52:37 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -93,6 +93,8 @@ namespace Rich
 
       // Finalization of the tool before deletion
       StatusCode finalize();
+
+    public:
 
       /** Implement the handle method for the Incident service.
        *  This is used to inform the tool of software incidents.
