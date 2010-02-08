@@ -1,4 +1,4 @@
-// $Id: PatAddTTCoord.cpp,v 1.6 2010-02-08 11:02:53 decianm Exp $
+// $Id: PatAddTTCoord.cpp,v 1.7 2010-02-08 16:45:11 decianm Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -60,6 +60,28 @@ StatusCode PatAddTTCoord::initialize ( ) {
 
   return StatusCode::SUCCESS;
 }
+
+//=========================================================================
+//
+//=========================================================================
+// StatusCode addTTClusters( LHCb::Track& track, 
+//                                     std::vector<LHCb::STCluster*>& ttClusters,
+//                           std::vector<double>& ttChi2s ){
+//   ; // -- Method not implemented, only there because of interface
+//   return StatusCode::SUCCESS;
+  
+  
+// }
+//=========================================================================
+//
+//=========================================================================
+// double PatAdddistanceToStrip( const LHCb::Track& track, 
+//                         const LHCb::STCluster& ttCluster ){
+//   ; // -- Method not implemented, only there because of interface
+//   return 0;
+  
+  
+// }
 //=========================================================================
 //  Add the TT hits on the track, only the ids.
 //=========================================================================

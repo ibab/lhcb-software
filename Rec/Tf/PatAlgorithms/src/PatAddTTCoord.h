@@ -1,4 +1,4 @@
-// $Id: PatAddTTCoord.h,v 1.3 2010-02-08 11:02:53 decianm Exp $
+// $Id: PatAddTTCoord.h,v 1.4 2010-02-08 16:45:11 decianm Exp $
 #ifndef PATADDTTCOORD_H
 #define PATADDTTCOORD_H 1
 
@@ -54,6 +54,14 @@ public:
   virtual StatusCode addTTClusters( LHCb::Track& track);
   virtual StatusCode returnTTClusters( LHCb::State& state, PatTTHits& ttHits, double& finalChi2, double p = 0 );
 
+  virtual StatusCode addTTClusters( LHCb::Track& /*track*/, 
+                                    std::vector<LHCb::STCluster*>& /*ttClusters*/,
+                                    std::vector<double>& /*ttChi2s*/ ) { return StatusCode::SUCCESS;};
+  
+
+  virtual double distanceToStrip( const LHCb::Track& /*track*/, 
+                                  const LHCb::STCluster& /*ttCluster*/ ) {return 0.;};
+  
   
     
  

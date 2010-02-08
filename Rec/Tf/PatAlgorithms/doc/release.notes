@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2010-02-08 - Michel De Cian
+ - Added a new method as interface IAddTTClusterTool had to be changed.
+
 ! 2010-02-04 - Michel De Cian
  - Modified PatAddTTCoord. Restructured algorithm, added new parametrisations,
    changed default parameters. New method which returns the hits instead of 
