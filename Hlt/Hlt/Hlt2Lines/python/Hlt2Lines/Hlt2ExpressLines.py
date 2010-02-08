@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2ExpressLines.py,v 1.5 2010-02-01 15:57:17 albrecht Exp $
+# $Id: Hlt2ExpressLines.py,v 1.6 2010-02-08 09:25:13 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt2 Lines for the express stream
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Johannes Albrecht albrecht@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -19,57 +19,64 @@ from HltLine.HltLinesConfigurableUser import *
 
 class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
    
-   __slots__ = { 'Prescale' : { 'Hlt2ExpressJPsi'          : 1.
-                                , 'Hlt2ExpressJPsiTagProbe': 1.
-                                , 'Hlt2ExpressLambda'      : 1.
-                                , 'Hlt2ExpressKS'          : 1.
-                                , 'Hlt2ExpressDs2PhiPi'    : 1.
-                                , 'Hlt2ExpressBeamHalo'    : 1.
-                                }
-                 ,'ExJPsiMassWindow'        :  120   # MeV
-                 ,'ExJPsiPt'                : 1000   # MeV
-                 ,'ExJPsiMuPt'              :  500   # MeV
-                 ,'ExJPsiTPMassWindow'      :  300   # MeV
-                 ,'ExJPsiTPVChi2'           :   20
-                 ,'ExJPsiTPCoP'             : 3000   # MeV
-                 ,'ExJPsiTPCoPt'            :  800   # MeV
-                 ,'ExJPsiTPTagP'            : 6000   # MeV
-                 ,'ExJPsiTPTagPt'           : 1500   # MeV
-                 ,'ExJPsiTPMaxEcalE'        : 1000   # MeV
-                 ,'ExJPsiTPMinEcalE'        :  -10   # MeV
-                 ,'ExJPsiTPMaxHcalE'        : 4000   # MeV
-                 ,'ExJPsiTPMinHcalE'        : 1000   # MeV
-                 ,'ExLambdaMassWin'         :   20   # MeV
-                 ,'ExLambdaMassWinWide'     :   30   # MeV
-                 ,'ExLambdaMinDz'           :   50   #  mm
-                 ,'ExLambdaMaxDz'           :  600   #  mm
-                 ,'ExLambdaDira'            : 0.9999995
-                 ,'ExLambdaPiP'             : 3000   # MeV
-                 ,'ExLambdaPiPt'            :  100   # MeV
-                 ,'ExLambdaPiIPChi2'        :    9
-                 ,'ExKSNu1'                 :    2   
-                 ,'ExKSMassWinWide'         :  150   # MeV
-                 ,'ExKSMassWin'             :  100   # MeV
-                 ,'ExPhiMassWinWide'        :   75 # MeV
-                 ,'ExPhiMassWin'            :   50 # MeV
-                 ,'ExPhiBPVVDCHI2'          :   60
-                 ,'ExPhiMIPDV'              :  0.5
-                 ,'ExPhiVCHI2'              :   20
-                 ,'ExPhiKPt'                :  300 # MeV
-                 ,'ExPhiKP'                 : 1000 # MeV
-                 ,'ExPhiKMIPDV'             :  0.5
-                 ,'ExPhiBPVIPCHI2'          :   20
-                 ,'ExDsMassWinWide'         :  150 # MeV
-                 ,'ExDsMassWin'             :   75 # MeV
-                 ,'ExDsBPVDIRA'             : 0.9999
-                 ,'ExDsBPVVDCHI2'           :   85
-                 ,'ExDsMIPDV'               :  0.1
-                 ,'ExDsVCHI2'               :   10
-                 ,'ExDsPiPt'                :  300 # MeV
-                 ,'ExDsPiP'                 : 1000 # MeV
-                 ,'ExDsPiMIPDV'             :  0.1
-                 ,'ExDsPiBPVIPCHI2'         :   20
-                 }
+   __slots__ = { 'Prescale'  : { 'Hlt2ExpressJPsi'        : 1.
+                               , 'Hlt2ExpressJPsiTagProbe': 1.
+                               , 'Hlt2ExpressLambda'      : 1.
+                               , 'Hlt2ExpressKS'          : 1.
+                               , 'Hlt2ExpressDs2PhiPi'    : 1.
+                               , 'Hlt2ExpressBeamHalo'    : 1.
+                               }
+               , 'Postscale' : { 'Hlt2ExpressJPsi'        : 'RATE(5)'
+                               , 'Hlt2ExpressJPsiTagProbe': 'RATE(5)'
+                               , 'Hlt2ExpressLambda'      : 'RATE(1)'
+                               , 'Hlt2ExpressKS'          : 'RATE(1)'
+                               , 'Hlt2ExpressDs2PhiPi'    : 'RATE(1)'
+                               , 'Hlt2ExpressBeamHalo'    : 'RATE(1)'
+                               }
+               , 'ExJPsiMassWindow'        :  120   # MeV
+               , 'ExJPsiPt'                : 1000   # MeV
+               , 'ExJPsiMuPt'              :  500   # MeV
+               , 'ExJPsiTPMassWindow'      :  300   # MeV
+               , 'ExJPsiTPVChi2'           :   20
+               , 'ExJPsiTPCoP'             : 3000   # MeV
+               , 'ExJPsiTPCoPt'            :  800   # MeV
+               , 'ExJPsiTPTagP'            : 6000   # MeV
+               , 'ExJPsiTPTagPt'           : 1500   # MeV
+               , 'ExJPsiTPMaxEcalE'        : 1000   # MeV
+               , 'ExJPsiTPMinEcalE'        :  -10   # MeV
+               , 'ExJPsiTPMaxHcalE'        : 4000   # MeV
+               , 'ExJPsiTPMinHcalE'        : 1000   # MeV
+               , 'ExLambdaMassWin'         :   20   # MeV
+               , 'ExLambdaMassWinWide'     :   30   # MeV
+               , 'ExLambdaMinDz'           :   50   #  mm
+               , 'ExLambdaMaxDz'           :  600   #  mm
+               , 'ExLambdaDira'            : 0.9999995
+               , 'ExLambdaPiP'             : 3000   # MeV
+               , 'ExLambdaPiPt'            :  100   # MeV
+               , 'ExLambdaPiIPChi2'        :    9
+               , 'ExKSNu1'                 :    2   
+               , 'ExKSMassWinWide'         :  150   # MeV
+               , 'ExKSMassWin'             :  100   # MeV
+               , 'ExPhiMassWinWide'        :   75 # MeV
+               , 'ExPhiMassWin'            :   50 # MeV
+               , 'ExPhiBPVVDCHI2'          :   60
+               , 'ExPhiMIPDV'              :  0.5
+               , 'ExPhiVCHI2'              :   20
+               , 'ExPhiKPt'                :  300 # MeV
+               , 'ExPhiKP'                 : 1000 # MeV
+               , 'ExPhiKMIPDV'             :  0.5
+               , 'ExPhiBPVIPCHI2'          :   20
+               , 'ExDsMassWinWide'         :  150 # MeV
+               , 'ExDsMassWin'             :   75 # MeV
+               , 'ExDsBPVDIRA'             : 0.9999
+               , 'ExDsBPVVDCHI2'           :   85
+               , 'ExDsMIPDV'               :  0.1
+               , 'ExDsVCHI2'               :   10
+               , 'ExDsPiPt'                :  300 # MeV
+               , 'ExDsPiP'                 : 1000 # MeV
+               , 'ExDsPiMIPDV'             :  0.1
+               , 'ExDsPiBPVIPCHI2'         :   20
+               }  
    
    def __apply_configuration__(self):
       from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
