@@ -16,7 +16,14 @@ branches          cmt src options doc
 use DaVinciKernel       v* Phys
 
 use HepMC              v*    LCG_Interfaces -no_auto_imports
+use GenEvent     v*    Event
+
+use MCEvent       v* Event
+use DaVinciMCKernel v* Phys
+
 use TrackInterfaces v* Tr
+
+use CaloDet             v* Det
 
 # ============================================================================
 # Eventually set new environnment values

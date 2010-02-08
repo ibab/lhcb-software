@@ -5,6 +5,10 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-02-08 - Neal Gauvin
+ - cmt/requirements
+	. Add all necessary requirements to compile
+
 !==================== Phys/DisplVertices v6r0p1 2010-02-02 =====================
 
 ! 2010-02-05 - Juan Palacios
