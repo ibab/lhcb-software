@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::HPDHotPixelFinder
  *
  * CVS Log :-
- * $Id: RichHPDHotPixelFinder.cpp,v 1.3 2009-10-11 16:05:11 jonrob Exp $
+ * $Id: RichHPDHotPixelFinder.cpp,v 1.4 2010-02-08 15:53:16 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
@@ -33,7 +33,7 @@ HPDHotPixelFinder::HPDHotPixelFinder( const std::string& type,
   declareInterface<IGenericHPDAnalysisTool>(this);
   // job opts
   declareProperty( "HotOcc",            m_hotOcc            = 0.9 );
-  declareProperty( "NEventsForAverage", m_nEventsForAverage = 250 );
+  declareProperty( "NEventsForAverage", m_nEventsForAverage = 100 );
 }
 
 StatusCode HPDHotPixelFinder::initialize()
