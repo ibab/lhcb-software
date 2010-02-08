@@ -1,4 +1,4 @@
-// $Id: CaloID2DLL.h,v 1.5 2009-08-21 16:49:45 odescham Exp $
+// $Id: CaloID2DLL.h,v 1.6 2010-02-08 17:36:16 dgolubko Exp $
 // ============================================================================
 #ifndef CALOPIDS_CALOID2DLL_H 
 #define CALOPIDS_CALOID2DLL_H 1
@@ -35,6 +35,13 @@
 #include "ToString.h"
 #include "ToVector.h"
 // ============================================================================
+#include "DetDesc/Condition.h"
+// ============================================================================
+#include "TH2D.h"
+// ============================================================================
+
+class ITHistSvc;
+// ============================================================================
 /** @class CaloID2DLL CaloID2DLL.h
  *  
  *
@@ -51,17 +58,22 @@ public:
   virtual StatusCode initialize () ;    
   /// Algorithm execution
   virtual StatusCode execute    () ;    
+  StatusCode dumpDLLsToFile();
+  /// callback function invoked by the UpdateManagerSvc
+  StatusCode  i_updateDLL();
 protected: 
   /// Standard protected constructor
   CaloID2DLL 
   ( const std::string& name , 
     ISvcLocator*       pSvc ) ;
   /// virtual protected destructor 
-  virtual ~CaloID2DLL(){}; 
+  virtual ~CaloID2DLL() {}; 
 private:
   CaloID2DLL () ;
   CaloID2DLL            ( const CaloID2DLL& ) ;
   CaloID2DLL& operator= ( const CaloID2DLL& ) ;
+  StatusCode  initializeWithCondDB   ();
+  StatusCode  initializeWithoutCondDB();
 protected:
   //
   inline double dLL 
@@ -79,25 +91,30 @@ protected:
   std::string             m_title_tt    ; ///< histogram title TTrack
   std::string             m_title_ut    ; ///< histogram title upstr
   std::string             m_title_vt    ; ///< histogram title velo
+
   double                  m_pScale_lt   ; ///< scale for mom long
   double                  m_pScale_dt   ; ///< scale for mom down
   double                  m_pScale_tt   ; ///< scale for mom TT
   double                  m_pScale_ut   ; ///< scale for val upstr
   double                  m_pScale_vt   ; ///< scale for val velo
+
   double                  m_vScale_lt   ; ///< scale for val long
   double                  m_vScale_dt   ; ///< scale for val down
   double                  m_vScale_tt   ; ///< scale for val TT
   double                  m_vScale_ut   ; ///< scale for val upstr
   double                  m_vScale_vt   ; ///< scale for val velo
 private:
-  //  double                    m_pScale ;
-  //  double                    m_vScale ;  
-  //  const AIDA::IHistogram2D* m_histo  ;
-  const AIDA::IHistogram2D* m_histo_lt  ;
-  const AIDA::IHistogram2D* m_histo_dt  ;
-  const AIDA::IHistogram2D* m_histo_tt  ;
-  const AIDA::IHistogram2D* m_histo_ut  ;
-  const AIDA::IHistogram2D* m_histo_vt  ;
+
+  const TH2D *m_histo_lt  ;
+  const TH2D *m_histo_dt  ;
+  const TH2D *m_histo_tt  ;
+  const TH2D *m_histo_ut  ;
+  const TH2D *m_histo_vt  ;
+
+  bool        m_useCondDB;  ///< if true - use CondDB, otherwise get the DLLs via THS from a root file
+
+  std::string m_conditionName;
+  Condition * m_cond;
 } ;
 // ============================================================================
 inline double CaloID2DLL::dLL
@@ -106,7 +123,7 @@ inline double CaloID2DLL::dLL
   const LHCb::Track::Types t ) const 
 {
   
-  const AIDA::IHistogram2D* histo = 0 ;
+  const TH2D* histo = 0 ;
   double pScale = -1.;
   double vScale = -1.;
   
@@ -150,9 +167,11 @@ inline double CaloID2DLL::dLL
   
   const double _x = ::tanh ( p / pScale ) ;
   const double _y = ::tanh ( v / vScale ) ;
-  const int    ix = histo->coordToIndexX ( _x ) ;
-  const int    iy = histo->coordToIndexY ( _y ) ;
-  return histo->binHeight(  ix , iy ) ;
+//const int    ix = histo->coordToIndexX ( _x ) ;
+//const int    iy = histo->coordToIndexY ( _y ) ;
+//return histo->binHeight(  ix , iy ) ;
+  const int    ii = const_cast<TH2D *>(histo)->FindBin(_x, _y) ;
+  return histo->GetBinContent( ii ) ;
 
 } ;
 // ============================================================================

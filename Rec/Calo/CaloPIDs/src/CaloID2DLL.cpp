@@ -1,8 +1,11 @@
-// $Id: CaloID2DLL.cpp,v 1.8 2009-09-10 10:47:05 odescham Exp $
+// $Id: CaloID2DLL.cpp,v 1.9 2010-02-08 17:36:16 dgolubko Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.8 $
+// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.9 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2009/09/10 10:47:05  odescham
+// add protection + reduce verbosity
+//
 // Revision 1.7  2008/10/20 09:22:36  odescham
 // fix unitialized member
 //
@@ -27,7 +30,10 @@
 // ============================================================================
 // Include files 
 // ============================================================================
-#include "GaudiKernel/IHistogramSvc.h"
+#include "GaudiKernel/ITHistSvc.h"
+// ============================================================================
+/////// #include "GaudiKernel/IHistogramSvc.h"
+#include "DetDesc/HistoParam.h"
 // ============================================================================
 // Boost 
 // ============================================================================
@@ -40,6 +46,10 @@
 // Local
 // ============================================================================
 #include "CaloID2DLL.h"
+// ============================================================================
+//// #include "TFile.h"
+// ============================================================================
+#include <GaudiUtils/Aida2ROOT.h>
 // ============================================================================
 /** @file 
  *  Implementation file for class CaloID2DLL
@@ -66,29 +76,38 @@ CaloID2DLL::CaloID2DLL
   , m_title_tt  () 
   , m_title_ut  () 
   , m_title_vt  () 
+  //
   , m_pScale_lt ( -1 ) 
   , m_pScale_dt ( -1 ) 
   , m_pScale_tt ( -1 ) 
   , m_pScale_ut ( -1 ) 
   , m_pScale_vt ( -1 ) 
+  //
   , m_vScale_lt ( -1 ) 
   , m_vScale_dt ( -1 ) 
   , m_vScale_tt ( -1 )
   , m_vScale_ut ( -1 ) 
   , m_vScale_vt ( -1 ) 
+  //
   , m_histo_lt ( 0 )
   , m_histo_dt ( 0 )
   , m_histo_tt ( 0 )
   , m_histo_ut ( 0 )
   , m_histo_vt ( 0 )
+  //
+  , m_useCondDB( false )
+  , m_conditionName()
+  , m_cond    ( NULL )
 {
   declareProperty ( "Input"     , m_input   ) ;
   declareProperty ( "Output"    , m_output  ) ;
+
   declareProperty ( "HistogramL" , m_title_lt   ) ;
   declareProperty ( "HistogramD" , m_title_dt   ) ;
   declareProperty ( "HistogramT" , m_title_tt   ) ;
   declareProperty ( "HistogramU" , m_title_ut   ) ;
   declareProperty ( "HistogramV" , m_title_vt   ) ;
+
   declareProperty ( "nMlong"    , m_pScale_lt) ;
   declareProperty ( "nMdown"    , m_pScale_dt) ;
   declareProperty ( "nMTtrack"  , m_pScale_tt) ;
@@ -99,6 +118,11 @@ CaloID2DLL::CaloID2DLL
   declareProperty ( "nVTtrack"  , m_vScale_tt ) ;  
   declareProperty ( "nVupstr"   , m_vScale_ut ) ;  
   declareProperty ( "nVvelo"    , m_vScale_vt ) ;  
+
+  declareProperty ( "UseCondDB",    m_useCondDB   = false,
+                    "get DLLs from CondDB or from a root file via THS (the old way)" );
+  declareProperty ( "ConditionName", m_conditionName = "" ) ;
+
   // track types 
   _setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
                  ( LHCb::Track::Long       ,
@@ -112,31 +136,68 @@ CaloID2DLL::CaloID2DLL
 StatusCode CaloID2DLL::initialize() 
 {
   StatusCode sc = CaloTrackAlg::initialize(); 
-  if ( sc.isFailure() ) { return sc ; } 
-  // locate the histogram 
-  //
+  if ( sc.isFailure() ) return sc ;
 
-  if ( !m_title_lt.empty() ) 
-  { m_histo_lt = get<AIDA::IHistogram2D>( histoSvc() , m_title_lt ); }
-  
-  if ( !m_title_dt.empty() ) {
-    m_histo_dt = get<AIDA::IHistogram2D>( histoSvc() , m_title_dt );
+  sc = m_useCondDB ? initializeWithCondDB() : initializeWithoutCondDB();
+
+  return sc;
+} ;
+// ============================================================================
+StatusCode CaloID2DLL::initializeWithCondDB()
+{
+  info() << "init with CondDB, m_conditionName = " << m_conditionName << endmsg;
+  try {
+    registerCondition(m_conditionName, m_cond, &CaloID2DLL::i_updateDLL);
+  }
+  catch (GaudiException &e) {
+    fatal() << e << endmsg;
+    return StatusCode::FAILURE;
   }
 
+  StatusCode sc = runUpdate();  // load the conditions
+
+  return sc;
+}
+// ============================================================================
+StatusCode CaloID2DLL::initializeWithoutCondDB()
+{
+  debug() << "init w/o CondDB ..." << endmsg;
+
+  // locate the histogram 
+  if ( !m_title_lt.empty() ) {
+    AIDA::IHistogram2D *aida = get<AIDA::IHistogram2D>( histoSvc() , m_title_lt );
+    m_histo_lt = Gaudi::Utils::Aida2ROOT::aida2root( aida );
+  }
+   
+  if ( !m_title_dt.empty() ) {
+    AIDA::IHistogram2D *aida = get<AIDA::IHistogram2D>( histoSvc() , m_title_dt );
+    m_histo_dt = Gaudi::Utils::Aida2ROOT::aida2root( aida );
+  }
+  
   if ( !m_title_tt.empty() ) {
-    m_histo_tt = get<AIDA::IHistogram2D>( histoSvc() , m_title_tt );
+    AIDA::IHistogram2D *aida = get<AIDA::IHistogram2D>( histoSvc() , m_title_tt );
+    m_histo_tt = Gaudi::Utils::Aida2ROOT::aida2root( aida );
+  }
+  
+  if ( !m_title_vt.empty() ) {
+    AIDA::IHistogram2D *aida = get<AIDA::IHistogram2D>( histoSvc() , m_title_vt );
+    m_histo_vt = Gaudi::Utils::Aida2ROOT::aida2root( aida );
   }
 
   if ( !m_title_ut.empty() ) {
-    m_histo_ut = get<AIDA::IHistogram2D>( histoSvc() , m_title_ut );
+    AIDA::IHistogram2D *aida = get<AIDA::IHistogram2D>( histoSvc() , m_title_ut );
+    m_histo_ut = Gaudi::Utils::Aida2ROOT::aida2root( aida );
   }
+  
 
-  if ( !m_title_vt.empty() ) {
-    m_histo_vt = get<AIDA::IHistogram2D>( histoSvc() , m_title_vt );
-  }
+  debug() <<"\nLong:        '"<<m_title_lt<<"' -> "<<(void *)m_histo_lt
+          <<"\nDownstream:  '"<<m_title_dt<<"' -> "<<(void *)m_histo_dt
+          <<"\nTTuricensis: '"<<m_title_tt<<"' -> "<<(void *)m_histo_tt
+          <<"\nUpstream:    '"<<m_title_ut<<"' -> "<<(void *)m_histo_ut
+          <<"\nVelo:        '"<<m_title_vt<<"' -> "<<(void *)m_histo_vt << endmsg;
 
   return StatusCode::SUCCESS;
-} ;
+}
 // ============================================================================
 #define INHERITS(T1,T2) \
      (Relations::IsConvertible<const T1*,const T2*>::value && \
@@ -181,6 +242,48 @@ StatusCode CaloID2DLL::execute()
   return StatusCode::SUCCESS;
 } ;
 // ============================================================================
+StatusCode CaloID2DLL::i_updateDLL()
+{
+  debug() << "i_updateDLL() called" << endmsg;
+  if ( !m_cond ) return StatusCode::FAILURE;
 
+  try {
+    if ( !m_title_lt.empty() ){
+      m_histo_lt = reinterpret_cast<TH2D *>(
+        & m_cond->param<DetDesc::Params::Histo2D>(m_title_lt) );
+    }
 
+    if ( !m_title_dt.empty() ){
+      m_histo_dt = reinterpret_cast<TH2D *>(
+        & m_cond->param<DetDesc::Params::Histo2D>(m_title_dt) );
+    }
 
+    if ( !m_title_tt.empty() ){
+      m_histo_tt = reinterpret_cast<TH2D *>(
+        & m_cond->param<DetDesc::Params::Histo2D>(m_title_tt) );
+    }
+
+    if ( !m_title_ut.empty() ){
+      m_histo_ut = reinterpret_cast<TH2D *>(
+        & m_cond->param<DetDesc::Params::Histo2D>(m_title_ut) );
+    }
+
+    if ( !m_title_vt.empty() ){
+      m_histo_vt = reinterpret_cast<TH2D *>(
+        & m_cond->param<DetDesc::Params::Histo2D>(m_title_vt) );
+    }
+  }
+  catch ( GaudiException &exc ){
+    fatal() << "DLL update failed! msg ='" << exc << "'" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  debug() <<"\nLong:        '"<<m_title_lt<<"' -> "<<(void *)m_histo_lt
+          <<"\nDownstream:  '"<<m_title_dt<<"' -> "<<(void *)m_histo_dt
+          <<"\nTTuricensis: '"<<m_title_tt<<"' -> "<<(void *)m_histo_tt
+          <<"\nUpstream:    '"<<m_title_ut<<"' -> "<<(void *)m_histo_ut
+          <<"\nVelo:        '"<<m_title_vt<<"' -> "<<(void *)m_histo_vt << endmsg;
+
+  return StatusCode::SUCCESS;
+}
+// ============================================================================

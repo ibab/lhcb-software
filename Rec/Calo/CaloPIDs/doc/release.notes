@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.85 2010-01-21 14:29:49 rlambert Exp $ 
+! $Id: release.notes,v 1.86 2010-02-08 17:36:16 dgolubko Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+! 2010-02-08 - Dmitry Golubkov
+ - CaloID2DLL - optionally read the DLLs from CondDB
+ - cmt/requirements - version incremented to v5r4
 
 !========================== CaloPIDs v5r3 2010-01-21 =========================
 ! 2010-01-13 - Marco Cattaneo
