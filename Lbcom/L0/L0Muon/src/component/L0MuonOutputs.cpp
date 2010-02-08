@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.29 2010-02-04 22:55:35 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.30 2010-02-08 11:03:00 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -645,7 +645,7 @@ StatusCode L0MuonOutputs::writeOnTES(std::string l0context){
     for (int i=0; i<2; ++i) 
     { // Loop over the quarters in side
       int iq=is*2+i;
-      if ( m_ctrlCand[iq].inError(i)>0 ) 
+      if ( m_ctrlCand[iq].inError(i) ) 
       { // Error detected in CU or SU
         LHCb::MuonTileID mid(0);
         mid.setQuarter(iq);
@@ -663,7 +663,7 @@ StatusCode L0MuonOutputs::writeOnTES(std::string l0context){
       } // End of Error detected on a CU or SU
       for (int ib=0; ib<12; ++ib)
       { // Loop over processing boards in quarter
-        if ( m_ctrlCand[iq].inError(i,ib)>0 ) 
+        if ( m_ctrlCand[iq].inError(i,ib) ) 
         { // Error detected on a BCSU 
           LHCb::MuonTileID mid=m_ctrlCand[is].mid_BCSU(i,ib);
           LHCb::L0MuonError * l0merror = new LHCb::L0MuonError(mid);
@@ -682,7 +682,7 @@ StatusCode L0MuonOutputs::writeOnTES(std::string l0context){
   { // Loop over quarters 
     for (int ib=0; ib<12; ++ib)
     { // Loop over processing boards in quarter
-      if ( m_procCand[iq].inError(ib)>0 ) 
+      if ( m_procCand[iq].inError(ib) ) 
       { // Error detected on a BCSU
         LHCb::MuonTileID mid=m_procCand[iq].mid_BCSU(ib);
         LHCb::L0MuonError * l0merror = new LHCb::L0MuonError(mid);
@@ -694,7 +694,7 @@ StatusCode L0MuonOutputs::writeOnTES(std::string l0context){
       } // End of Error detected on a BCSU
       for (int ipu=0; ipu<4; ++ipu) 
       { // Loop over PU in a board
-        if ( (m_procCand[iq].inError(ib,ipu)>0) || (m_procData[iq].inError(ib,ipu)>0) ) 
+        if ( (m_procCand[iq].inError(ib,ipu)) || (m_procData[iq].inError(ib,ipu)) ) 
         { // Error detected on a PU
           LHCb::MuonTileID mid=m_procCand[iq].mid_PU(ib,ipu);
           LHCb::L0MuonError * l0merror = new LHCb::L0MuonError(mid);

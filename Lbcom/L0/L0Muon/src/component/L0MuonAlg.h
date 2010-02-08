@@ -73,6 +73,11 @@ private:
 
   // CondDB
   bool m_ignoreCondDB;                ///< Flag to ignore the CondDB 
+  std::string m_conditionNameCB;      ///< Name of the condition of the Controller board
+  std::string m_conditionNamePB;      ///< Name of the condition of the Processing board
+  std::string m_parameterNameFOIx;    ///< Name of the parameter with FOIx in CondDB  
+  std::string m_parameterNameFOIy;    ///< Name of the parameter with FOIy in CondDB  
+  std::string m_parameterNameVersion; ///< Name of the parameter with emulator version in CondDB  
 
   // Emulator running modes
   int m_version;                      ///< Emulator version 

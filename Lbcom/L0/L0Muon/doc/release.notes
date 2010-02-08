@@ -1,7 +1,13 @@
-!  $Id: release.notes,v 1.92 2010-02-05 10:21:10 jucogan Exp $
+!  $Id: release.notes,v 1.93 2010-02-08 11:03:00 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !---------------------------------------------------------------------------
+
+! 2010-02-08 - Julien Cogan
+ - Fix compilation warning on Windows (L0MuonOutputs, L0MuonFromRawTrans)
+ - L0MuonAlg : 
+    - set proper protection against missing condition in CondDB
+    - define CondDB conditions and parameters names as algorithm properties 
 
 ! 2010-02-05 - Julien Cogan
  - set IgnoreCondDB to true not to use condb until the conditions are really

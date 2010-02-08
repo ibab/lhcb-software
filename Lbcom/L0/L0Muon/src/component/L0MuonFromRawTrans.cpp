@@ -1,4 +1,4 @@
-// $Id: L0MuonFromRawTrans.cpp,v 1.16 2009-07-15 20:22:28 graven Exp $
+// $Id: L0MuonFromRawTrans.cpp,v 1.17 2010-02-08 11:03:00 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -482,8 +482,8 @@ StatusCode L0MuonFromRawTrans::writeOnTES(){
       int quarter = i*2+ii;
       LHCb::L0MuonCtrlError * l0mctrlerror = new LHCb::L0MuonCtrlError(quarter);
       // Fill errors
-      if (m_ctrlRaw[i].decodingError(ii)>0 ) l0mctrlerror->setHeader(4);
-      else if (m_ctrlRaw[i].inError(ii)>0 ) l0mctrlerror->setHeader(2);
+      if (m_ctrlRaw[i].decodingError(ii) ) l0mctrlerror->setHeader(4);
+      else if (m_ctrlRaw[i].inError(ii) ) l0mctrlerror->setHeader(2);
       else l0mctrlerror->setHeader(1);
       pl0mctrlerrors->insert(l0mctrlerror);
     }
@@ -501,8 +501,8 @@ StatusCode L0MuonFromRawTrans::writeOnTES(){
     for (int ib=0; ib<12; ++ib){
       LHCb::L0MuonProcError * l0mprocerror = new LHCb::L0MuonProcError(m_procRaw[iq].mid_BCSU(ib),ib);
       // Fill errors
-      if (m_procRaw[iq].decodingError(ib)>0 ) l0mprocerror->setHeader(4);
-      else if (m_procRaw[iq].inError(ib)>0 ) l0mprocerror->setHeader(2);
+      if (m_procRaw[iq].decodingError(ib) ) l0mprocerror->setHeader(4);
+      else if (m_procRaw[iq].inError(ib) ) l0mprocerror->setHeader(2);
       else l0mprocerror->setHeader(1);
       pl0mprocerrors->insert(l0mprocerror);
     }
