@@ -4,6 +4,10 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-02-04 - Michel De Cian
+ - Removed AddTTClusterTool. Unused and incompatible with new IAddTTClusterTool
+   used for PatAddTTCoord.
+
 !======================= TrackMatching v2r26 2010-01-21======================
 
 ! 2009-01-05 Wouter Hulsbergen
