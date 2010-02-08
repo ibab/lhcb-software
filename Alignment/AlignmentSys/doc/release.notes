@@ -17,6 +17,13 @@ Purpose: LHCb Alignment packages.
 	Alignment/TAlignment			v4r6
 	Alignment/Escher			v4r5
 
+- Addendum & Erratum: The following packages have had their tag increased in order
+  to include a few updates to source code, see the respective doc/release.notes for more information:
+        Alignment/AlignTrTools                  v4r6
+        Alignment/AlignmentInterfaces           v3r2
+        Alignment/TAlignment                    v4r7
+
+
 </PRE><H1><A NAME=v4r5>2009-11-26 AlignmentSys v4r5</A></H1><PRE>
 
 - Updated packages:
