@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.410 2010-02-08 09:28:33 graven Exp $ 
+! $Id: release.notes,v 1.411 2010-02-08 10:33:08 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -7,6 +7,7 @@
 ! 2010-02-08 - Gerhard Raven
  - remove explicit rate limit on individual Hlt2ExpressLines when setting 
    express bit, this is now intrinsic in the line definition
+ - put express stream rate limit into a slot
 
 ! 2010-02-05 - Gerhard Raven
  - check for duplicate requests of Hlt lines...
