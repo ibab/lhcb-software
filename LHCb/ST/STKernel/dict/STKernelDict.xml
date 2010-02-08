@@ -2,6 +2,7 @@
 
   <class name = "ISTReadoutTool"       />
   <class name = "ISTSignalToNoiseTool" />
+  <class name = "ISTNoiseCalculationTool" />
   <class name = "ISTClusterSelector" />
   <class name = "ISTChannelIDSelector" />
   <class name = "ISTRawADCInfo" />

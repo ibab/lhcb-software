@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.82 2009-11-13 15:50:51 cattanem Exp $
+! $Id: release.notes,v 1.83 2010-02-08 14:50:38 mtobin Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2010-02-088 - Mark Tobin
+ - Added missing dictionary for ISTNoiseCalculationTool.
 
 !====================== STKernel v1r18 2009-11-13 ===========================
 ! 2009-11-09 - Mark Tobin
