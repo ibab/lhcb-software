@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.28 2010-02-06 18:47:49 gligorov Exp $ 
+# $Id: HltLine.py,v 1.29 2010-02-08 09:54:30 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.28 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.29 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -78,8 +78,6 @@ from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable , log
 #import logging
 #log = logging.getLogger( 'HltLine.HltLine')
 #log.setLevel(logging.DEBUG)
-from Configurables import DeterministicPrescaler as Scaler
-from Configurables import LoKi__VoidFilter as RateScaler 
 from Configurables import LoKi__L0Filter    as L0Filter
 from Configurables import LoKi__HDRFilter   as HDRFilter
 from Configurables import LoKi__ODINFilter  as ODINFilter
@@ -133,6 +131,18 @@ def memberName     ( member, line, level='Hlt1' ) :
 def decisionName   ( line, level = 'Hlt1' ) :
     """Convention: the name of 'Decision' algorithm inside HltLine"""
     return level + '%sDecision'   % line if line != 'Global' else level+'Global'
+
+
+## Type of scalar...
+# if the pre/postscales are a string, the pre/postscaler is a LoKi_VoidFilter,
+# imported here as a RateScaler. Otherwise they are the plain DeterministicScaler (Scaler here)
+def _createScalar( name, arg ) :
+        from Configurables import DeterministicPrescaler as Scaler
+        from Configurables import LoKi__VoidFilter  as RateScaler 
+        if (isinstance(arg, basestring) ):
+                return RateScaler(name , Code = arg )
+        else :
+                return Scaler(name , AcceptFraction = arg )
 
 ## the list of all created lines 
 _hlt_1_lines__ = []
@@ -912,21 +922,9 @@ class Hlt1Line(object):
         # create the line configurable
         # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations
         #       and change them -- and not having the scaler would be problem in that case...
-
-	# if the pre/postscales are a string, the pre/postscaler is a LoKi_VoidFilter,
-        # imported here as a RateScaler. Otherwise they are the plain DeterministicScaler (Scaler here)
-        if (isinstance(self._prescale, basestring) ):
-        	thisprescaler = RateScaler(prescalerName ( line ) , Code = self._prescale, OutputLevel = 5  )
-	else :
-		thisprescaler = Scaler(     prescalerName ( line ) , AcceptFraction = self._prescale, OutputLevel = 5  )
-	if (isinstance(self._postscale, basestring) ):
-                thispostscaler = RateScaler(postscalerName ( line ) , Code = self._postscale, OutputLevel = 5  )
-        else :
-                thispostscaler = Scaler(     postscalerName ( line ) , AcceptFraction = self._postscale, OutputLevel = 5  )
-		
         mdict.update( { 'DecisionName' : decisionName ( line ) 
-                      , 'Prescale'     : thisprescaler
-                      , 'Postscale'    : thispostscaler 
+                      , 'Prescale'     : _createScalar( prescalerName(line), self._prescale)
+                      , 'Postscale'    : _createScalar( postscalerName(line),self._postscale)
                       } )
         if ODIN : mdict.update( { 'ODIN' : ODINFilter ( odinentryName( line ) , Code = self._ODIN )  } )
         if L0DU : 
@@ -1340,20 +1338,9 @@ class Hlt2Line(object):
         # create the line configurable
         # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations
         #       and change them -- and not having the scaler would be problem in that case...
-        # if the pre/postscales are a string, the pre/postscaler is a LoKi_VoidFilter,
-        # imported here as a RateScaler. Otherwise they are the plain DeterministicScaler (Scaler here)
-        if (isinstance(self._prescale, basestring) ):
-                thisprescaler = RateScaler(prescalerName ( line,'Hlt2' ) , Code = self._prescale, OutputLevel = 5  )
-        else :
-                thisprescaler = Scaler(     prescalerName ( line,'Hlt2' ) , AcceptFraction = self._prescale, OutputLevel = 5  )
-        if (isinstance(self._postscale, basestring) ):
-                thispostscaler = RateScaler(postscalerName ( line,'Hlt2' ) , Code = self._postscale, OutputLevel = 5  )
-        else :
-                thispostscaler = Scaler(     postscalerName ( line,'Hlt2' ) , AcceptFraction = self._postscale, OutputLevel = 5  )
-
-	mdict.update( { 'DecisionName' : decisionName ( line, 'Hlt2' ) 
-                      , 'Prescale'     : thisprescaler
-                      , 'Postscale'    : thispostscaler
+        mdict.update( { 'DecisionName' : decisionName ( line, 'Hlt2' ) 
+                      , 'Prescale'     : _createScalar( prescalerName(line,'Hlt2'), self._prescale)
+                      , 'Postscale'    : _createScalar( postscalerName(line,'Hlt2'),self._postscale)
                       } )
         if self._ODIN : mdict.update( { 'ODIN' : ODINFilter ( odinentryName( line,'Hlt2' ) , Code = self._ODIN )  } )
         if self._L0DU : mdict.update( { 'L0DU' : L0Filter   ( l0entryName  ( line,'Hlt2' ) , Code = self._L0DU )  } )
