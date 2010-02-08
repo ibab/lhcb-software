@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-02-08 - Michel De Cian
+ - Change in AddTTClusterTool to reflect change in interface IAddTTClusterTool
+
 ! 2010-02-04 - Michel De Cian
  - Removed AddTTClusterTool. Unused and incompatible with new IAddTTClusterTool
    used for PatAddTTCoord.
