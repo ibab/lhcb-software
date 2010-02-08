@@ -1,4 +1,4 @@
-// $Id: IAddTTClusterTool.h,v 1.4 2010-02-08 11:15:01 decianm Exp $
+// $Id: IAddTTClusterTool.h,v 1.5 2010-02-08 16:40:21 decianm Exp $
 #ifndef TRACKINTERFACES_IADDTTCLUSTERTOOL_H
 #define TRACKINTERFACES_IADDTTCLUSTERTOOL_H 1
 
@@ -27,6 +27,9 @@ namespace LHCb {
 class PatTTHit;
 
 
+class PatTTHit;
+
+
 class IAddTTClusterTool : virtual public IAlgTool {
   
 public: 
@@ -37,6 +40,9 @@ public:
   virtual StatusCode addTTClusters( LHCb::Track& track ) = 0;
   virtual StatusCode returnTTClusters( LHCb::State& state, std::vector<PatTTHit*>& ttHits, double& finalChi2, double p) = 0;
 
+
+  /// Return the hits instead of adding them
+  virtual StatusCode returnTTClusters( LHCb::State& state, std::vector<PatTTHit*>& ttHits, double& finalChi2, double p) = 0;
 
 };
 #endif // TRACKINTERFACES_IADDTTCLUSTERTOOL_H

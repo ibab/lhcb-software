@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2010-02-08 - Michel De Cian
+ - Added new method to IAddTTClusterTool, which allows to return hits instead of 
+   adding them to the track (in PatAddTTCoord). Corrects incompatibility.
+
 ! 2010-02-04 - Michel De Cian
  - Modified IAddTTClusterTool. Only the relevant methods in PatAddTTCoord have
    now virtual methods definied. Causes incompatibility with (unused) 
