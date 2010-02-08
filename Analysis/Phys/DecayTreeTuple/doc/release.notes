@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-02-06 - V. Gligorov
+ - TupleToolEventInfo : add L0, HLT, ODIN TCK information
+
+! 2010-02-06 - V. Gligorov
  - TupleToolTISTOS,TupleToolTriggerBase : eliminate duplication of L0
    tistos information between the L0 and Hlt1L0 triggers 
 

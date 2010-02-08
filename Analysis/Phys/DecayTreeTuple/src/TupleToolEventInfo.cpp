@@ -1,4 +1,4 @@
-// $Id: TupleToolEventInfo.cpp,v 1.5 2010-01-26 15:39:26 rlambert Exp $
+// $Id: TupleToolEventInfo.cpp,v 1.6 2010-02-08 16:00:32 gligorov Exp $
 // Include files
 
 // from Gaudi
@@ -8,6 +8,8 @@
 #include "TupleToolEventInfo.h"
 
 #include "Event/ODIN.h" // event & run number
+#include "Event/L0DUReport.h"
+#include "Event/HltDecReports.h"
 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/ITupleTool.h"
@@ -53,6 +55,9 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
   int run = -1;
   int ev = -1;
   int bcid = -1;
+  unsigned int odintck = 0; 
+  unsigned int l0dutck = 0;
+  unsigned int hlttck = 0;
 
   LHCb::ODIN* odin(0);
 
@@ -61,9 +66,26 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
     run = odin->runNumber();
     ev = odin->eventNumber();
     bcid = odin->bunchId();
+    odintck = odin->triggerConfigurationKey();	
   } else {
     Error("Can't get LHCb::ODINLocation::Default (" +
 	  LHCb::ODINLocation::Default + ")" );
+  }
+
+  if(exist<L0DUReport>( LHCb::L0DUReportLocation::Default) ) {
+    LHCb::L0DUReport* report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
+    l0dutck = report->tck();
+  } else {
+    Warning("Can't get LHCb::L0DUReportLocation::Default (" +
+    LHCb::L0DUReportLocation::Default + ")");
+  }
+
+  if(exist<HltDecReports>( LHCb::HltDecReportsLocation::Default) ) {
+    LHCb::HltDecReports* decreport = get<LHCb::HltDecReports>(LHCb::HltDecReportsLocation::Default);
+    hlttck = decreport->configuredTCK();
+  } else {
+    Warning("Can't get LHCb::HltDecReportsLocation::Default (" +
+    LHCb::HltDecReportsLocation::Default + ")");
   }
 
   if( msgLevel( MSG::DEBUG ) )
@@ -73,6 +95,9 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
   test &= tuple->column( prefix+"runNumber", run );
   test &= tuple->column( prefix+"eventNumber", ev );
   test &= tuple->column( prefix+"BCID", bcid );
+  test &= tuple->column( prefix+"OdinTCK", odintck );
+  test &= tuple->column( prefix+"L0DUTCK", l0dutck );
+  test &= tuple->column( prefix+"HLTTCK", hlttck );
   if( msgLevel( MSG::VERBOSE ) )
     verbose() << "Returns " << test << endreq;
   return StatusCode(test);
