@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.cpp,v 1.15 2010-02-01 14:59:29 malexand Exp $
+// $Id: VeloIPResolutionMonitor.cpp,v 1.16 2010-02-08 21:47:57 malexand Exp $
 // Include files
 #include "VeloIPResolutionMonitor.h"
 
@@ -675,37 +675,31 @@ bool Velo::VeloIPResolutionMonitor::filterBeamGas( const LHCb::RecVertices* &pvs
     }    
   }
   else debug() << "No ODIN bank found" << endmsg;
-  
-  LHCb::RecVertices* usePVs = new LHCb::RecVertices();
 
-  // check if a pv is from a collision by:
-  // requiring one forward & one backward track
-  // requiring one long/upstream track with pt > 300 MeV
+  // require a PV in the collision region (+/- 150mm)
+  unsigned int nPVsInCollisionArea = 0;
   for ( LHCb::RecVertices::const_iterator ipv = pvs->begin() ;
         ipv != pvs->end() ; ++ipv ){
-    // Get tracks from current PV & loop
-    bool hasForward = false;
-    bool hasBackward = false;
-    bool hasLong = false;
-    const SmartRefVector< LHCb::Track > & PVtracks = (*ipv)->tracks();
-    for ( SmartRefVector< LHCb::Track >::const_iterator tr = PVtracks.begin(); 
-          tr != PVtracks.end() ; tr++ ){
-      if( ((*tr)->type() == Track::Long || (*tr)->type() == Track::Upstream) && (*tr)->pt()/MeV > 300. ) 
-        hasLong = true;
-      if( (*((*tr)->nodes().begin()) )->position().z() > (*ipv)->position().z() ) 
-        hasForward = true;
-      if( (*((*tr)->nodes().rbegin()) )->position().z() < (*ipv)->position().z() ) 
-        hasBackward = true;
-    } // close loop over tracks
-    
-    if( hasForward && hasBackward && hasLong && m_useCollisions ) usePVs->add( (*ipv) );
-    else if( !odin && m_useBeamGas && ( !hasForward || !hasBackward ) ) usePVs->add( (*ipv) );
+    if( fabs( (*ipv)->position().z() ) < 150*mm ) nPVsInCollisionArea += 1;
   }
   
-  pvs = (const LHCb::RecVertices* )usePVs;
+  // check for long or upstream track with pT > 300MeV
+  // and for a backward track
+  if( !exist<Tracks>(TrackLocation::Default) ) return m_useBeamGas;
+  bool hasLong = false;
+  bool hasBackward = false;
+  Tracks* tracks = get<Tracks>(TrackLocation::Default);
+  for( Tracks::const_iterator tr=tracks->begin(); tr != tracks->end(); ++tr ){
+    if( ((*tr)->type() == Track::Long || (*tr)->type() == Track::Upstream) && (*tr)->pt() > 300*MeV ) hasLong = true;
+    if( (*tr)->flag() == Track::Backward ) hasBackward = true;
+    if( hasBackward && hasLong ) break;
+  }
+  
+  bool isCollision = (nPVsInCollisionArea>0) && hasBackward && hasLong;
 
   debug() << "Beam-Gas Filtered" << endmsg;
-  return ( pvs->size() > 0 );
+  return ( ( isCollision && m_useCollisions ) ||
+           ( !odin && !isCollision && m_useBeamGas ) );
 }
 
 
