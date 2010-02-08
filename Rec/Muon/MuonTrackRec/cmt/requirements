@@ -4,7 +4,7 @@
 # =============================================================================
 
 package MuonTrackRec
-version v2r6
+version v2r7
 
 
 # ================ structure =========================================
@@ -20,15 +20,6 @@ use MuonDAQ      v*     Muon
 #
 use MuonDet      v*     Det
 use GaudiAlg     v*
-#
-use MCEvent     v*      Event
-use LinkerEvent v*      Event
-
-use TrackTools  v*      Tr
-use Magnet      v*      Det
-
-use TrackTools  v*      Tr
-use Magnet      v*      Det
 
 library MuonTrackRecLib  ../src/Lib/*.cpp
 library MuonTrackRec  *  ../src/component/*.cpp
