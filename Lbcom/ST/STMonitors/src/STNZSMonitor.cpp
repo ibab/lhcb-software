@@ -1,4 +1,4 @@
-// $Id: STNZSMonitor.cpp,v 1.14 2009-12-06 02:02:13 mtobin Exp $
+// $Id: STNZSMonitor.cpp,v 1.15 2010-02-08 14:23:17 mtobin Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -83,6 +83,7 @@ StatusCode STNZSMonitor::initialize() {
     m_selectedTells = true;
     sort(m_limitToTell.begin(), m_limitToTell.end());
   }
+ 
   bookHistograms();
 
   return StatusCode::SUCCESS;

@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.h,v 1.6 2009-12-06 02:02:13 mtobin Exp $
+// $Id: STClusterMonitor.h,v 1.7 2010-02-08 14:23:17 mtobin Exp $
 #ifndef STCLUSTERMONITOR_H 
 #define STCLUSTERMONITOR_H 1
 
@@ -62,9 +62,8 @@ namespace ST
     bool m_verbose; ///< true if message service level is verbose
 
     unsigned int m_nTELL1s; ///< Number of TELL1 boards expected.
-    unsigned int m_maxNClusters; ///< Maximum number of clusters expected
 
-    /// Store number of clusters/TELL1 (48 Tell1s, 1->48)
+    /// Store number of clusters/TELL1 (48 (42) Tell1s, 1->48 (42) for TT (IT))
     std::vector<unsigned int> m_nClustersPerTELL1;
 
   private:
@@ -78,6 +77,7 @@ namespace ST
     AIDA::IHistogram2D* m_2d_nClustersVsTELL1;///< Number of clusters per TELL1
 
     // filled in fillHistograms
+    AIDA::IHistogram1D* m_1d_ClusterSize;///< Cluster Size
     AIDA::IHistogram2D* m_2d_ClusterSizeVsTELL1;///< Cluster Size vs TELL1
     AIDA::IHistogram2D* m_2d_STNVsTELL1;///< Signal to Noise vs TELL1
     AIDA::IHistogram2D* m_2d_ChargeVsTELL1;///< Cluster Charge vs TELL1

@@ -1,4 +1,4 @@
-// $Id: STErrorMonitor.h,v 1.5 2009-11-25 13:07:20 mtobin Exp $
+// $Id: STErrorMonitor.h,v 1.6 2010-02-08 14:23:17 mtobin Exp $
 #ifndef STERRORMONITOR_H 
 #define STERRORMONITOR_H 1
 
@@ -44,9 +44,13 @@ private:
 
   // Book histrograms for online monitoring
   AIDA::IHistogram1D* m_1d_errorBanks;
+  AIDA::IHistogram2D* m_2d_errorTypes;
 
   /// Map of error histograms booked in initialize
   std::map<unsigned int, AIDA::IHistogram2D*> m_errorHistos;
+  
+  /// Label the y-axis with the error types
+  void labelHistoErrorTypes( AIDA::IHistogram2D* histo );
 
   /// Fraction of ports which send error banks
   AIDA::IHistogram1D* m_1d_fracErrors;

@@ -1,4 +1,4 @@
-// $Id: STErrorMonitor.cpp,v 1.12 2009-12-06 02:02:13 mtobin Exp $
+// $Id: STErrorMonitor.cpp,v 1.13 2010-02-08 14:23:17 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -18,6 +18,10 @@
 // AIDA
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
+// ROOT
+#include "GaudiUtils/Aida2ROOT.h"
+#include "TH2D.h"
+#include "TAxis.h"
 
 // local
 #include "STErrorMonitor.h"
@@ -62,6 +66,8 @@ StatusCode STErrorMonitor::initialize()
   // Book histograms
   m_1d_errorBanks = book1D("Error banks per Tell1", 0.5, m_maxTell1s+0.5, m_maxTell1s);
   m_1d_fracErrors = book1D("Fraction of ports which sent error banks",0.,1.0,100);
+  m_2d_errorTypes = book2D("ErrorTypes","Error types per TELL1", 0.5, m_maxTell1s+0.5, m_maxTell1s,0.,10., 10);
+  labelHistoErrorTypes( m_2d_errorTypes );
 
   // Get the tell1 mapping from source ID to tell1 number
   std::map<unsigned int, unsigned int>::const_iterator itT = (this->readoutTool())->SourceIDToTELLNumberMap().begin();
@@ -74,7 +80,7 @@ StatusCode STErrorMonitor::initialize()
     HistoID histoID        = "error-types_$tell" + strTellID;
     std::string histoTitle = "Error types tell" + strTellID;
     m_errorHistos[tellID] = book2D(histoID, histoTitle, 0., noptlinks, nports*noptlinks, 0., 10., 10);
-
+    labelHistoErrorTypes( m_errorHistos[tellID] );
     // Work out the total number of links for the detector (over-estimate for TT as some links not enabled)
     m_activePorts += nports*noptlinks;
 
@@ -83,6 +89,30 @@ StatusCode STErrorMonitor::initialize()
 
   return StatusCode::SUCCESS;
 }
+//==============================================================================
+// Set the labels for the error type histograms
+//==============================================================================
+void STErrorMonitor::labelHistoErrorTypes( AIDA::IHistogram2D* histo ) {
+
+  TH2D *h = Gaudi::Utils::Aida2ROOT::aida2root( histo );
+  if ( 0 != h ) {
+    // get the axis:
+    TAxis* axis = h->GetYaxis() ;     
+    if( 0 != axis ) {       
+      axis->SetBinLabel( 1, "None" );
+      axis->SetBinLabel( 2, "WrongPCN" );
+      axis->SetBinLabel( 3, "PseudoHeader" );
+      axis->SetBinLabel( 4, "OptLinkNoEvent" );
+      axis->SetBinLabel( 5, "SyncEvtSize" );
+      axis->SetBinLabel( 6, "SyncRAMFull" );
+      axis->SetBinLabel( 7, "OptLinkNoClock" );
+      axis->SetBinLabel( 8, "TlkLinkLoss" );
+      axis->SetBinLabel( 9, "OptLinkDisabled" );
+      axis->SetBinLabel(10, "CorruptedBank" );
+    }       
+  }
+}
+
 
 //=============================================================================
 // Main execution
@@ -136,7 +166,10 @@ StatusCode STErrorMonitor::execute()
           unsigned int errorType = (*errorIt) -> linkInfo(beetle, port, pcn);
           double portBin = double(port)/double(nports)+beetle+pp*nBeetlesPerPPx;
           m_errorHistos[tellNum]->fill(portBin, errorType);
-          if(errorType > 0) nErrors++;
+          if(errorType > 0) {
+            nErrors++;
+            m_2d_errorTypes->fill(tellNum,errorType);
+          }
         }
       }
     }

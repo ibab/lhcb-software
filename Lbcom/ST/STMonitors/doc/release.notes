@@ -4,6 +4,12 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2010-02-08 - Mark Tobin
+ - changed binning of some histograms in STClusterMonitor to more realistic
+ range.
+ - Added labels to 2D histograms in STErrorMonitor plus added new histogram of
+ error type versus TELL1
+
 !======================= STMonitors v2r3 2009-12-11 ==========================
 ! 2009-12-06 - Jeroen van Tilburg and Mark Tobin
  - STPulseMonitor, STClusterMonitor, STTAEClusterMonitor: Made the selection of a bunchID a list of bunchIDs.

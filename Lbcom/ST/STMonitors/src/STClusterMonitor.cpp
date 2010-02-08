@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.17 2009-12-06 13:28:52 mtobin Exp $
+// $Id: STClusterMonitor.cpp,v 1.18 2010-02-08 14:23:17 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -72,9 +72,6 @@ ST::STClusterMonitor::STClusterMonitor( const std::string& name,
   /// Plot hitmap for each layer
   declareProperty( "HitMaps", m_hitMaps=false );
 
-  /// Set maximum number of clusters per TELL1
-  declareProperty( "MaxClustersPerTELL1", m_maxNClusters=4000 );
-
   declareProperty("BunchID",       m_bunchID               );// BunchID 
 
 }
@@ -137,8 +134,6 @@ StatusCode ST::STClusterMonitor::execute() {
 
   counter("Number of events") += 1; 
 
-  //  std::cout << "Counter: " << counter("Number of events").nEntries() << std::endl;
-  
   // code goes here  
   monitorClusters();
 
@@ -159,8 +154,6 @@ StatusCode ST::STClusterMonitor::finalize() {
 // Look at the clusters histogram
 //=============================================================================
 void ST::STClusterMonitor::monitorClusters() {
-
-  //  std::cout << counter("Number of events").nEntries() << ": BCID: " << BCID << std::endl;
 
   // Check location exists
   if(m_debug) debug() << "monitorClusters" << endmsg;
@@ -208,14 +201,15 @@ void ST::STClusterMonitor::bookHistograms() {
   m_1d_nClusters_gt_100 = book1D("Number of clusters (N > 100)", 0., 5000.,
                                  500);
   m_2d_nClustersVsTELL1 = book2D("Number of clusters per TELL1", 0.5, 
-                                 m_nTELL1s+0.5, m_nTELL1s, -5.,505., 51);
+                                 m_nTELL1s+0.5, m_nTELL1s, 0.,100., 50);
 
   // filled in fillHistograms
+  m_1d_ClusterSize = book1D("Cluster Size", 0.5, 4.5, 4); 
   m_2d_ClusterSizeVsTELL1 = book2D("Cluster Size vs TELL1", 0.5, 
                                    m_nTELL1s+0.5, m_nTELL1s, 0.5, 4.5, 4);
   if(m_stn) {
     m_2d_STNVsTELL1 = book2D("Signal to Noise vs TELL1", 0.5, 
-                             m_nTELL1s+0.5, m_nTELL1s, -2.5, 102.5, 21);
+                             m_nTELL1s+0.5, m_nTELL1s, 0., 100., 25);
   }
   m_2d_ChargeVsTELL1 = book2D("Cluster Charge vs TELL1", 0.5, 
                               m_nTELL1s+0.5, m_nTELL1s, 0., 60., 60);
@@ -278,6 +272,7 @@ void ST::STClusterMonitor::fillHistograms(const LHCb::STCluster* cluster){
   const unsigned int sourceID = cluster->sourceID();
   unsigned int TELL1ID = (this->readoutTool())->SourceIDToTELLNumber(sourceID);
   m_nClustersPerTELL1[TELL1ID-1] += 1;
+  m_1d_ClusterSize->fill(clusterSize);
   m_2d_ClusterSizeVsTELL1->fill(TELL1ID, clusterSize);
   if(m_stn) {
     m_2d_STNVsTELL1->fill(TELL1ID, m_sigNoiseTool->signalToNoise(cluster));
