@@ -4,6 +4,12 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2010-02-04 - Michel De Cian
+ - Modified PatAddTTCoord. Restructured algorithm, added new parametrisations,
+   changed default parameters. New method which returns the hits instead of 
+   adding them to the long track.
+
+
 !========================= PatAlgorithms v3r28 2010-01-21 ====================
 ! 2009-01-18 - Stephanie Hansmann-Menzemer
  - make algorithms use ignore flag of HitBase class 
