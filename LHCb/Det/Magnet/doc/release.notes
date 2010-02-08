@@ -4,6 +4,11 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+! 2010-02-08 - Marco Cattaneo
+ - Register MagneticFieldSvc with UpdateManagerSvc even in cases when not using
+   CondDB. This allows clients to register callbacks transparently even if they
+   will never be called...
+
 !====================== Magnet v5r6 2009-12-11 ===============================
 ! 2009-12-10 - Marco Cattaneo
  - Add implementation of new ILHCbMagneticFieldSvc::polarity() member to 

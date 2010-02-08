@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.47 2009-12-10 10:31:40 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.48 2010-02-08 09:12:17 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -85,13 +85,19 @@ MagneticFieldSvc::~MagneticFieldSvc()
 //=============================================================================
 StatusCode MagneticFieldSvc::initialize()
 {
-  
-  MsgStream log(msgSvc(), name());
   StatusCode status = Service::initialize();
   if( status.isFailure() ) return status;
 
+  status = service("UpdateManagerSvc",m_updMgrSvc);
+  if ( status.isFailure() ) {
+    MsgStream log(msgSvc(), name());
+    log << MSG::ERROR << "Cannot find the UpdateManagerSvc" << endmsg;
+    return status;
+  }
+
   if( m_useConstField ) {
     // Constant field requested, do not use any field map
+    MsgStream log(msgSvc(), name());
     log << MSG::WARNING << "using constant magnetic field with field vector "
         << m_constFieldVector << " (Tesla)" << endmsg;
     
@@ -100,6 +106,10 @@ StatusCode MagneticFieldSvc::initialize()
 							     m_constFieldVector[2] * Gaudi::Units::tesla),
 					    m_magFieldGrid ) ;
     
+    // register anyway with UpdateManagerSvc, so clients can register callbacks
+    // transparently, even if they are never going to be called
+    m_updMgrSvc->registerCondition(this);
+
     return StatusCode::SUCCESS;
   }
   
@@ -109,6 +119,9 @@ StatusCode MagneticFieldSvc::initialize()
   }
   else {
     status = initializeWithoutCondDB();
+    // register anyway with UpdateManagerSvc, so clients can register callbacks
+    // transparently, even if they are never going to be called
+    m_updMgrSvc->registerCondition(this);
   }
   
   return status;  
@@ -137,12 +150,6 @@ StatusCode MagneticFieldSvc::initializeWithCondDB()
 //=============================================================================
 {
   MsgStream log(msgSvc(), name());
-
-  StatusCode status = service("UpdateManagerSvc",m_updMgrSvc);
-  if ( status.isFailure() ) {
-    log << MSG::ERROR << "Cannot find the UpdateManagerSvc" << endmsg;
-    return status;
-  }
 
   // Polarity and current
   if( m_UseSetCurrent ) {
@@ -218,7 +225,7 @@ StatusCode MagneticFieldSvc::initializeWithoutCondDB()
   StatusCode sc = m_mapFileNames.size() == 1 ?
     m_magFieldGridReader.readDC06File( m_mapFileNames.front(), m_magFieldGrid ) :
     m_magFieldGridReader.readFiles( m_mapFileNames, m_magFieldGrid ) ;
-  
+
   return sc ;
 }
 
