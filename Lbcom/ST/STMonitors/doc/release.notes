@@ -8,11 +8,12 @@
  - changed binning of some histograms in STClusterMonitor to more realistic
  range.
  - Added labels to 2D histograms in STErrorMonitor plus added new histogram of
- error type versus TELL1
+ error type versus TELL1.
 
 !======================= STMonitors v2r3 2009-12-11 ==========================
 ! 2009-12-06 - Jeroen van Tilburg and Mark Tobin
- - STPulseMonitor, STClusterMonitor, STTAEClusterMonitor: Made the selection of a bunchID a list of bunchIDs.
+ - STPulseMonitor, STClusterMonitor, STTAEClusterMonitor: Made the selection of
+ a bunchID a list of bunchIDs.
  - Added cut on ADC values of clusters when filling sampling plots.
 	
 ! 2009-12-03 - Mark Tobin
