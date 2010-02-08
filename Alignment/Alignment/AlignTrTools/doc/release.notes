@@ -4,6 +4,10 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+</PRE><H1><A NAME=v4r6>2010-02-08 AlignTrTools v4r6 </A></H1><PRE>
+! 2010-02-08 Johan Blouw tagged the package v4r6 to be included in
+  Alignment Project release v4r6...
+
 ! 2010-02-06 Johan Blouw
  - removed unused variable from TAConfig::CalcResidual method.
 
