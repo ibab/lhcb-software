@@ -4,6 +4,12 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-02-08 - Patrick Koppenburg
+ - Task #13657 : New setting Physics_320Vis_300L0_10Hlt1_Hlt2_Feb10 
+	 using the new Jan10 Hlt1 setting plus the new Hlt2 express lines. 
+	 A part from that identical to Oct09.
+ - Factor out express lines into a new configuration
+
 ! 2010-02-04 - V. Gligorov
  - Add Debug_ForL0HadronConfStudy_Feb10.py, the threshold settings
    used for the L0 confirmation study

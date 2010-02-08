@@ -23,13 +23,11 @@ class Physics_320Vis_300L0_10Hlt1_ExpressHlt2_Jan10(  Physics_320Vis_300L0_10Hlt
         """
         Returns a list of active lines
         """
-        return [ 'Hlt2PassThrough'
-               , 'Hlt2Transparent'
-               , 'Hlt2DebugEvent'
-               , 'Hlt2ExpressJPsi'
-               , 'Hlt2ExpressJPsiTagProbe'
-               , 'Hlt2ExpressLambda'
-               , 'Hlt2ExpressKS'
-               , 'Hlt2ExpressDs2PhiPi'
-               , 'Hlt2ExpressBeamHalo'
-               ]
+        lines = [ 'Hlt2PassThrough'
+                  , 'Hlt2Transparent'
+                  , 'Hlt2DebugEvent'
+                  ]
+        from Express_Hlt2_Jan10 import Express_Hlt2_Jan10
+        list.extend( Express_Hlt2_Jan10().ActiveHlt2Lines() )
+        
+        return lines
