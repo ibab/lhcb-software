@@ -48,20 +48,24 @@ namespace Al
     LHCb::ChiSquare addConstraints(const Elements& inputelements,
 				   Al::Equations& equations,
 				   std::ostream& logmessage) const ;
-    LHCb::ChiSquare chiSquare( const AlignmentElement& element, bool activeonly ) const ; 
-  private: 
-    void fillErrors( SurveyDictionaryEntry& entry ) const ;
+    LHCb::ChiSquare chiSquare( const AlignmentElement& element, bool activeonly ) const ;
+    SurveyData surveyData( const AlignmentElement& element ) const {
+      const SurveyData* s = findSurveyData(element) ;
+      return s ? *s : SurveyData() ;
+    }
+  private:
     StatusCode parseXmlFile( const std::string& filename) ;
+    StatusCode parseXmlUncertainties( const std::string& patterm ) ;
     StatusCode parseElement( const std::string& element) ;
-    const SurveyDictionaryEntry* findSurveyData( const AlignmentElement& element ) const ;
+    const SurveyData* findSurveyData( const AlignmentElement& element ) const ;
     
   private:
-    typedef std::map<std::string, SurveyDictionaryEntry> XmlData ;
+    typedef std::map<std::string, SurveyData> XmlData ;
     XmlData m_xmldata ;
-    typedef std::map<std::string, SurveyDictionaryEntry> ConstraintData ;
+    typedef std::map<std::string, SurveyData> ConstraintData ;
     ConstraintData m_constraints ;
     std::vector< std::string > m_constraintNames ;
-    
+    std::vector< std::string > m_xmlUncertainties ;
   } ;
   
   DECLARE_TOOL_FACTORY( AlignChisqConstraintTool );
@@ -76,6 +80,7 @@ namespace Al
     // interfaces
     declareInterface<IAlignChisqConstraintTool>(this);
     declareProperty("Constraints", m_constraintNames) ;
+    declareProperty("XmlUncertainties", m_xmlUncertainties) ;
   }
   
   StatusCode
@@ -83,13 +88,17 @@ namespace Al
   {
     StatusCode sc = GaudiTool::initialize() ;
     for( std::vector<std::string>::const_iterator ifile = m_constraintNames.begin() ;
-	 ifile != m_constraintNames.end(); ++ifile ) {
+	 ifile != m_constraintNames.end() && sc.isSuccess() ; ++ifile ) 
       if ( ifile->find(".xml") != std::string::npos ) 
-	sc = parseXmlFile ( *ifile ) ;
-      else {
+	sc = parseXmlFile( *ifile ) ;
+      else 
 	sc = parseElement( *ifile ) ;
-      }
-      if( ! sc.isSuccess() ) return sc ;
+
+    for( std::vector<std::string>::const_iterator ipattern = m_xmlUncertainties.begin() ;
+	 ipattern != m_xmlUncertainties.end() && sc.isSuccess(); ++ipattern ) {
+      sc = parseXmlUncertainties(*ipattern) ;
+      if( !sc.isSuccess() ) 
+	error() << "Cannot parse XML uncertainty pattern \'" << *ipattern << "\'" << endreq ;
     }
     
     info() << "Number of entries in xml data: " << m_xmldata.size() << endreq ;
@@ -254,7 +263,7 @@ namespace Al
 	  }
 	}
 	// now put the result in the dictionary
-	SurveyDictionaryEntry entry ;
+	SurveyData entry ;
 	entry.name    = conditionname ;
 	entry.par[0] = pospars[0] ;
 	entry.par[1] = pospars[1] ;
@@ -282,7 +291,7 @@ namespace Al
       sc = StatusCode::FAILURE ;
     } else {
       std::string name = removechars(tokens[0]," ") ;
-      SurveyDictionaryEntry& entry = m_constraints[name] ;
+      SurveyData& entry = m_constraints[name] ;
       entry.name = name ;
 
       // first see if definition is of the old type
@@ -327,65 +336,40 @@ namespace Al
     }
     return sc ;
   }
-  
-  
-  void AlignChisqConstraintTool::fillErrors( SurveyDictionaryEntry& entry ) const
+ 
+  StatusCode
+  AlignChisqConstraintTool::parseXmlUncertainties(const std::string& ipattern)
   {
-    // this is all hardcoded for now
-    boost::regex ex ;
-
-    // try IT 
-    if(       match( entry.name, "ITSystem" ) ) {
-      // system
-      entry.err[0] = entry.err[1] = entry.err[2] = 1  * Gaudi::Units::mm ;
-      entry.err[3] = entry.err[4] = entry.err[5] = 10 * Gaudi::Units::mrad ;
-    } else if(  match( entry.name, "ITT." ) ) {
-      // station
-      entry.err[0] = entry.err[1] = entry.err[2] = 0.5 * Gaudi::Units::mm ;
-      entry.err[3] = entry.err[4] = entry.err[5] = 1 * Gaudi::Units::mrad ;
-    } else if(  match( entry.name, "ITT.*?Box" ) ) {
-      // box
-      entry.err[0] = entry.err[1] = entry.err[2] = 0.5 * Gaudi::Units::mm ;
-      entry.err[3] = 5 * Gaudi::Units::mrad ;
-      entry.err[4] = 2 * Gaudi::Units::mrad ;
-      entry.err[5] = 1 * Gaudi::Units::mrad ;
-    } else if(  match( entry.name, "ITT.*?Layer.{1,2}" ) ) {
-      // layer
-      entry.err[0] = entry.err[1] = entry.err[2] = 0.05 * Gaudi::Units::mm ;
-      entry.err[3] = entry.err[4] = entry.err[5] = 0.1 * Gaudi::Units::mrad ;
-    } else if(  match( entry.name, "ITT.*?Layer.{1,2}Ladder.*?" ) ) {
-      // ladder, dector, sensor
-      entry.err[0] = entry.err[1] = entry.err[2] = 0.02 * Gaudi::Units::mm ;
-      entry.err[3] = entry.err[4] = entry.err[5] = 0.1 * Gaudi::Units::mrad ;
-    } 
-    // try OT
-    else if(  match( entry.name, "OTSystem" ) ) {
-      // system
-      entry.err[0] = entry.err[1] = entry.err[2] = 1  * Gaudi::Units::mm ;
-      entry.err[3] = entry.err[4] = entry.err[5] = 1  * Gaudi::Units::mrad ;
-    } else if(  match( entry.name, "T.(X1|U|V|X2)Q.M." ) ) {
-      // module
-      entry.err[0] = entry.err[1] = entry.err[2] = 0.05  * Gaudi::Units::mm ;
-      entry.err[3] = entry.err[4] = entry.err[5] = 0.02  * Gaudi::Units::mrad ;
+    // now still parse the patterns with XML uncertainties
+    StatusCode sc = StatusCode::SUCCESS ;
+    std::vector<std::string> tokens = tokenize(ipattern,":") ;
+    if( tokens.size() != 2 ) {
+      error() << "xml uncertainty pattern has wrong number of tokens: " << ipattern << endreq ;
+      sc = StatusCode::FAILURE ;
     }
-    // try ST
-    else if( match( entry.name, "TTSystem" ) ) {
-      // TT global
-      entry.err[0] = entry.err[1] = entry.err[2] = 0.5 * Gaudi::Units::mm ;
-      entry.err[3] = entry.err[4] = entry.err[5] = 1   * Gaudi::Units::mrad ;
-    } else if( match( entry.name, "TT..LayerR.Module.*?" ) ) {
-      // TT module, sensor etc
-      entry.err[0] = entry.err[1] = entry.err[2] = 0.1 * Gaudi::Units::mm ;
-      entry.err[3] = entry.err[4] = entry.err[5] = 0.5 * Gaudi::Units::mrad ;
-    } else {
-      error() << "Cannot find a decent set of errors for the survey information of entry: "
-	      << entry.name << endreq ;
+    std::string pattern = removechars(tokens[0]," ") ;
+    std::vector<std::string> valuetokens = tokenize(tokens[1]," ") ;
+    if( valuetokens.size() != 6 ) {
+      error() << "xml uncertainty pattern has wrong number of errors: " << tokens[1] << endreq ;
+      sc = StatusCode::FAILURE ;
     }
+    double errors[6] ;
+    for(int i=0; i<6; ++i) errors[i] = boost::lexical_cast<double>(valuetokens[0]) ;
+    // now find all matching elements
+    size_t nummatches(0) ;
+    for( ConstraintData::iterator it = m_xmldata.begin() ; it != m_xmldata.end(); ++it ) 
+      // match the name of the alignable, or, if there is only one element, match the name of the condition
+      if( match(it->first,pattern) ) {
+	++nummatches ;
+	for(int i=0; i<6; ++i) it->second.err[i] = errors[i] ;
+      }
+    if( nummatches==0 ) warning() << "Found no matches for xml uncertainty pattern: \'" << pattern << "\'" << endreq ;
+    return sc ;
   }
-
-  const SurveyDictionaryEntry* AlignChisqConstraintTool::findSurveyData( const AlignmentElement& element ) const 
+  
+  const AlignChisqConstraintTool::SurveyData* AlignChisqConstraintTool::findSurveyData( const AlignmentElement& element ) const 
   {
-    const SurveyDictionaryEntry* rc(0) ;
+    const SurveyData* rc(0) ;
     std::string elementname = element.name() ;
     // extract the condition name, but only if this alignable has only one detector element
     std::string condname ;
@@ -410,7 +394,6 @@ namespace Al
       XmlData::const_iterator it = m_xmldata.find( condname ) ;
       if( it != m_xmldata.end() ) {
 	rc = &(it->second) ;
-	fillErrors( const_cast<SurveyDictionaryEntry&>(*rc) ) ;
       } else {
 	debug() << "Cannot find condition \"" << cond->name() << "\" for alignable "
 		<< element.name() << " in survey dictionary." << endreq ;
@@ -432,9 +415,9 @@ namespace Al
     double totalchisq(0) ;
     for( IGetElementsToBeAligned::Elements::const_iterator ielem = inputelements.begin() ;
 	 ielem != inputelements.end(); ++ielem) {
-      const SurveyDictionaryEntry* survey = findSurveyData( **ielem ) ;
+      const SurveyData* survey = findSurveyData( **ielem ) ;
       if( survey ) {
-	AlParameters currentdelta = (*ielem)->currentDelta() ;
+	AlParameters currentdelta = (*ielem)->currentLocalDelta() ;
 	for(int idof=0 ; idof<6; ++idof ) {
 	  int ipar = (*ielem)->activeParIndex( idof ) ;
 	  if( ipar>=0 ) {
@@ -445,10 +428,10 @@ namespace Al
 	      halfD2Chi2DAlpha2.fast(ipar,ipar) += weight ;
 	      ++ totalnumconstraints;
 	      totalchisq += weight * residual * residual ;
-	      debug() << "adding survey constraint: "
-		      << (*ielem)->name() << " "
-		      << currentdelta.parName(idof) << " "
-		      << survey->par[idof] << " " << survey->err[idof] << endreq ;
+	      info() << "adding survey constraint: "
+		     << (*ielem)->name() << " "
+		     << currentdelta.parName(idof) << " "
+		     << survey->par[idof] << " " << survey->err[idof] << endreq ;
 	    } else {
 	      warning() << "No survey constraint for dof: "
 			<< (*ielem)->name() << " " << currentdelta.parName(idof) << endreq ;
@@ -470,15 +453,16 @@ namespace Al
     double totalchisq(0) ;
     for( IGetElementsToBeAligned::Elements::const_iterator ielem = inputelements.begin() ;
 	 ielem != inputelements.end(); ++ielem) {
-      const SurveyDictionaryEntry* survey = findSurveyData( **ielem ) ;
+      const SurveyData* survey = findSurveyData( **ielem ) ;
       ElementData& elemdata = equations.element((*ielem)->index()) ;
       if( survey ) {
-	AlParameters currentdelta = (*ielem)->currentDelta() ;
+	AlParameters currentdelta = (*ielem)->currentLocalDelta() ;
 	for(int idof=0 ; idof<6; ++idof ) {
 	  if( (*ielem)->dofMask().isActive(idof) ) 
 	    if( survey->err[idof] > 0 ) {
 	      double weight = 1/( survey->err[idof] * survey->err[idof] ) ;
 	      double residual = survey->par[idof] - currentdelta.parameters()(idof) ;
+	      // FIXME: the sign is odd here simlpy because we have from the start reversed the sign of dChi2DAlpha
 	      elemdata.m_dChi2DAlpha(idof)        += weight * residual ; 
 	      elemdata.m_d2Chi2DAlpha2(idof,idof) += weight ;
 	      ++ totalnumconstraints;
@@ -503,9 +487,9 @@ namespace Al
   {
     size_t totalnumconstraints(0) ;
     double totalchisq(0) ;
-    const SurveyDictionaryEntry* survey = findSurveyData( element ) ;
+    const SurveyData* survey = findSurveyData( element ) ;
     if( survey ) {
-      AlParameters currentdelta = element.currentDelta() ;
+      AlParameters currentdelta = element.currentLocalDelta() ;
       for(int idof=0 ; idof<6; ++idof ) 
 	if( (!activeonly || element.dofMask().isActive( idof ) ) &&
 	    survey->err[idof] > 0 ) {
