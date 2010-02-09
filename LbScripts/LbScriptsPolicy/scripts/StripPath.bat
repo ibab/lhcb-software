@@ -7,7 +7,11 @@ set StripPath_tmpfile="%TEMP%\StripPath_tmpsetup.bat"
 
 call runpy LbScriptsPolicy.PathStripper --shell=bat --output=%StripPath_tmpfile% -e PATH -e PYTHONPATH -e JOBOPTSEARCHPATH -e HPATH
 
-call %StripPath_tmpfile%
+set StripPathStatus=%ERRORLEVEL%
+
+if %StripPathStatus% EQU 0 (
+	call %StripPath_tmpfile%
+)
 
 
 if exist %StripPath_tmpfile% del %StripPath_tmpfile%
