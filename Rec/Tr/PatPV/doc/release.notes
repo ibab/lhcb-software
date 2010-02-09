@@ -4,6 +4,10 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2010-02-09 - Piotr Morawski
+ - modified PVOfflineTools to reconstruct displaced vertices
+ - PVDisplaced.py - options to run displaced vertices reconstruction
+
 !============================= PatPV v3r12 2010-01-21 ======================
 ! 2010-01-27 - Rob Lambert
  - Compilation problem on windows with static double.

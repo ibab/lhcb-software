@@ -1,4 +1,4 @@
-// $Id: PVOfflineTool.cpp,v 1.7 2010-01-20 13:46:49 rlambert Exp $
+// $Id: PVOfflineTool.cpp,v 1.8 2010-02-09 10:44:20 witekma Exp $
 // Include files:
 // from Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
@@ -29,11 +29,13 @@ PVOfflineTool::PVOfflineTool(const std::string& type,
     m_pvSeedingName("")
 {
   declareInterface<IPVOfflineTool>(this);
-  declareProperty("RequireVelo",   m_requireVelo   = true);
-  declareProperty("SaveSeedsAsPV", m_saveSeedsAsPV = false);
-  declareProperty("InputTracks",   m_inputTracks);
-  declareProperty("PVFitterName",  m_pvFitterName = "LSAdaptPVFitter");
-  declareProperty("PVSeedingName", m_pvSeedingName = "PVSeedTool");
+  declareProperty("RequireVelo"      , m_requireVelo   = true);
+  declareProperty("SaveSeedsAsPV"    , m_saveSeedsAsPV = false);
+  declareProperty("InputTracks"      , m_inputTracks);
+  declareProperty("InputVerticesName", m_inputVerticesName = LHCb::RecVertexLocation::Velo3D);
+  declareProperty("PVFitterName"     , m_pvFitterName  = "LSAdaptPVFitter");
+  declareProperty("PVSeedingName"    , m_pvSeedingName = "PVSeedTool");
+  declareProperty("LookForDisplaced" , m_lookForDisplaced = false);
 }
 
 //=========================================================================
@@ -258,7 +260,19 @@ void PVOfflineTool::readTracks(std::vector<const LHCb::Track*>& rtracks)
       }
     }
   }
-  
+
+  //remove tracks used by the other vertices to look for displaced vertices
+  if(m_lookForDisplaced){
+    m_inputVertices = get<LHCb::RecVertices>(m_inputVerticesName);
+    if(!m_inputVertices) {
+      warning() << "Vertices not found at location: " << m_inputVerticesName << endmsg;
+    }
+    for (LHCb::RecVertices::iterator ivt = m_inputVertices->begin(); ivt != m_inputVertices->end(); ivt++){
+      LHCb::RecVertex* vrt = *ivt;
+      removeTracksUsedByVertex(rtracks, *vrt);
+    }
+  }
+
   if(msgLevel(MSG::DEBUG)) {
     debug() << "readTracks: " << rtracks.size() << endmsg;
   }

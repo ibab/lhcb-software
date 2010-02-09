@@ -1,4 +1,4 @@
-// $Id: PVOfflineTool.h,v 1.6 2009-12-16 11:51:52 witekma Exp $
+// $Id: PVOfflineTool.h,v 1.7 2010-02-09 10:44:20 witekma Exp $
 #ifndef PVOFFLINETOOL_H 
 #define PVOFFLINETOOL_H 1
 // Include files:
@@ -54,7 +54,10 @@ public:
 private:
   bool m_requireVelo;   // Option to use tracks with VELO segment only
   bool m_saveSeedsAsPV; // Save seeds as PVs (for monitoring)
-  std::string m_outputVertices;
+  bool m_lookForDisplaced;
+  std::string        m_outputVertices;
+  LHCb::RecVertices* m_inputVertices;   ///< Pointer to the 3D vertices
+  std::string        m_inputVerticesName;
   // Tools
   IPVFitter* m_pvfit;                // PV fitting tool
   IPVSeeding* m_pvSeedTool;              // Seeding tool
