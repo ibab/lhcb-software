@@ -133,6 +133,7 @@ namespace Al
     std::vector<ConstraintDefinition> m_definitions ;
     mutable DerivativeContainer m_derivatives ;
     bool m_useWeightedAverage ;
+    bool m_fixRedundantMotherDofs ;
     const IGetElementsToBeAligned* m_elementtool ;
   } ;
   
@@ -148,6 +149,7 @@ namespace Al
     declareInterface<IAlignConstraintTool>(this);
     declareProperty("Constraints", m_constraintNames ) ;
     declareProperty("UseWeightedAverage", m_useWeightedAverage = false ) ;
+    declareProperty("FixRedundantMotherDofs", m_fixRedundantMotherDofs = false ) ;
   }
 
   AlignConstraintTool::~AlignConstraintTool()
@@ -252,6 +254,24 @@ namespace Al
 	     << m_definitions.size() 
 	     << ",  number of active constraints = " << nactive << endreq ;
     }
+    
+    if( sc.isSuccess() && m_fixRedundantMotherDofs ) {
+      size_t num = m_definitions.size()  ;
+      for( IGetElementsToBeAligned::Elements::const_iterator ielem = m_elementtool->elements().begin() ;
+	   ielem != m_elementtool->elements().end(); ++ielem) {
+	std::vector<int> dofs = (*ielem)->redundantDofs() ;
+	if( !dofs.empty() ) {
+	  ConstraintDefinition constraint((*ielem)->name() + "Daughters") ;
+	  for(size_t idof=0; idof<dofs.size(); ++idof)
+	    constraint.addDof( ConstraintDerivatives::all()[dofs[idof]] ) ;
+	  constraint.addElements( (*ielem)->daughters() ) ;
+	  constraint.setMode( ConstraintDefinition::ConstrainTotal ) ;
+	  m_definitions.push_back( constraint ) ;
+	}
+      }
+      info() << "Number of 'redundancy' constraints: " << m_definitions.size()-num<< endreq ;
+    }
+    
     return sc ;
   }
   
