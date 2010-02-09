@@ -1,8 +1,11 @@
-// $Id: EigenSystem.icpp,v 1.1 2006-05-31 14:49:53 jpalac Exp $
+// $Id: EigenSystem.icpp,v 1.2 2010-02-09 11:04:18 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/05/31 14:49:53  jpalac
+// Add EigenSystem, make into link library, tag as v1r1
+// 
 // ============================================================================
 #ifndef EIGENSYSTEM_ICPP
 #define EIGENSYSTEM_ICPP 1
@@ -22,7 +25,22 @@ inline void Gaudi::Math::GSL::_copy
 {
   for ( unsigned int i = 0 ; i < D ; ++i ) 
   { output[i] = gsl_vector_get ( input , i ) ; }
-} ;
+} 
+// ======================================================================
+// (fast) copy of GSL matrix into MathLib matrix into GSL  
+// ======================================================================
+template < class T, unsigned int D, class R> 
+inline void 
+Gaudi::Math::GSL::_copy 
+( const gsl_matrix*             input  ,
+  ROOT::Math::SMatrix<T,D,D,R>& output ) 
+{
+  for ( unsigned int i = 0 ; i < D ; ++i ) 
+  {
+    for ( unsigned int j = 0 ; j < D ; ++j  ) 
+    { output ( i , j ) = gsl_matrix_get ( input , i , j ) ; } 
+  } 
+} 
 // ============================================================================
 // (fast) copy of symmetric MathLib matrix into GSL matrix 
 // ============================================================================
@@ -43,22 +61,7 @@ inline void Gaudi::Math::GSL::_copy
       gsl_matrix_set ( output , j , i , _val ) ; 
     } 
   }
-} ;
-// ======================================================================
-// (fast) copy of GSL matrix into MathLib matrix into GSL  
-// ======================================================================
-template < class T, unsigned int D> 
-inline void 
-Gaudi::Math::GSL::_copy 
-( const gsl_matrix*           input  ,
-  ROOT::Math::SMatrix<T,D,D>& output ) 
-{
-  for ( unsigned int i = 0 ; i < D ; ++i ) 
-  {
-    for ( unsigned int j = 0 ; j < D ; ++j  ) 
-    { output ( i , j ) = gsl_matrix_get ( input , i , j ) ; } 
-  } 
-} ;
+} 
 // ============================================================================
 // evaluate the eigenvalues of symmetrical matrix 
 // ============================================================================
@@ -95,12 +98,12 @@ Gaudi::Math::GSL::EigenSystem::eigenValues
 // ============================================================================
 // evaluate the eigenvalues and eigenvectors of the symmetrical matrix 
 // ============================================================================
-template <class T, unsigned int D>
+template <class T, unsigned int D, class R>
 inline StatusCode 
 Gaudi::Math::GSL::EigenSystem::eigenVectors 
 ( const ROOT::Math::SMatrix<T,D,D,ROOT::Math::MatRepSym<T,D> >& mtrx ,
   ROOT::Math::SVector<T,D>&                                     vals , 
-  ROOT::Math::SMatrix<T,D,D>&                                   vecs , 
+  ROOT::Math::SMatrix<T,D,D,R>&                                 vecs , 
   const bool sorted ) const
 {
   StatusCode sc = _fill ( mtrx ) ;

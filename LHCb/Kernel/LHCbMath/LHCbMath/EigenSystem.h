@@ -1,4 +1,4 @@
-// $Id: EigenSystem.h,v 1.3 2008-01-15 18:11:51 ibelyaev Exp $
+// $Id: EigenSystem.h,v 1.4 2010-02-09 11:04:18 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_EIGENSYSTEM_H 
 #define LHCBMATH_EIGENSYSTEM_H 1
@@ -149,12 +149,12 @@ namespace Gaudi
          *  @param sorted (input)  flag to be use for sorting 
          *  @return status code 
          */
-        template <class T, unsigned int D>
+        template <class T, unsigned int D, class R>
         inline StatusCode 
         eigenVectors 
         ( const ROOT::Math::SMatrix<T,D,D,ROOT::Math::MatRepSym<T,D> >& mtrx ,
           ROOT::Math::SVector<T,D>&                                     vals , 
-          ROOT::Math::SMatrix<T,D,D>&                                   vecs , 
+          ROOT::Math::SMatrix<T,D,D,R>&                                 vecs , 
           const bool sorted = true ) const ;
         // ====================================================================
         /** evaluate the eigenvalues and eigenvectors of the symmetrical matrix 
@@ -236,6 +236,19 @@ namespace Gaudi
       ( const gsl_vector*         input  , 
         ROOT::Math::SVector<T,D>& output ) ;
       // ======================================================================
+      /** copy GSL matrix into MathLib matrix into GSL  
+       *  @attention Fast!no checks are performed!
+       *  @param input  GSL matrix (source)
+       *  @param output MathLib matrix (destination)
+       *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+       *  @date 2006-05-24
+       */
+      template < class T, unsigned int D, class R> 
+      inline void 
+      _copy 
+      ( const gsl_matrix*             input  ,
+        ROOT::Math::SMatrix<T,D,D,R>& output ) ;
+      // ======================================================================      
       /** copy symmetric MathLib matrix into GSL matrix 
        *  @attention Fast!no checks are performed!
        *  @param input  MathLib symmetric matrix (source)
@@ -249,22 +262,11 @@ namespace Gaudi
       ( const ROOT::Math::SMatrix<T,D,D,ROOT::Math::MatRepSym<T,D> >& input , 
         gsl_matrix* output ) ;
       // ======================================================================
-      /** copy GSL matrix into MathLib matrix into GSL  
-       *  @attention Fast!no checks are performed!
-       *  @param input  GSL matrix (source)
-       *  @param output MathLib matrix (destination)
-       *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-       *  @date 2006-05-24
-       */
-      template < class T, unsigned int D> 
-      inline void 
-      _copy 
-      ( const gsl_matrix*           input  ,
-        ROOT::Math::SMatrix<T,D,D>& output ) ;
-      // ======================================================================      
-    } //  end of namespace GSL
-  } //end of namespace Math 
-} // end of namespace Gaudi
+    } //                                                   end of namespace GSL
+    // ========================================================================
+  } //                                                    end of namespace Math 
+  // ==========================================================================
+} //                                                     end of namespace Gaudi
 // ============================================================================
 #endif // LHCBMATH_EIGENSYSTEM_H
 // ============================================================================
