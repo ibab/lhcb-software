@@ -50,6 +50,8 @@ private:
    std::vector<std::string> m_DMalleys;   
    std::vector<std::string> m_DMalleysearchstring; 
    std::vector<std::vector<std::string> > m_subfolders;
+   bool m_mfonly;
+   bool m_effonly;
    
 };
 

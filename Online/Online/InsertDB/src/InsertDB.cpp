@@ -19,6 +19,7 @@
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/Timing.h"
 
 #include "RTL/rtl.h"
 
@@ -48,6 +49,8 @@ InsertDB::InsertDB(const std::string& name, ISvcLocator* ploc)
   declareProperty("MonitoringTasks",m_monitoringtasks); 
   declareProperty("Alleys",m_alleys);
   declareProperty("Pages",m_subfolders);
+  declareProperty("MFOnly",m_mfonly=false);
+  declareProperty("EFFOnly",m_effonly=false);
 }   
    
 StatusCode InsertDB::initialize() {
@@ -121,12 +124,16 @@ StatusCode InsertDB::initialize() {
 StatusCode InsertDB::execute() {
    MsgStream msg(msgSvc(), name());
    if (icount==0) {
-     doEFF();
-     doEFFHltExperts();
-     for (int i=0;i<(int)m_monitoringtasks.size();i++) {
-       doMF(m_monitoringtasks[i]);
-       mtaskcount++;
-     }  
+     if (!m_mfonly) { 
+          doEFF();
+          doEFFHltExperts();
+     }
+     if (!m_effonly) {	    
+        for (int i=0;i<(int)m_monitoringtasks.size();i++) {
+          doMF(m_monitoringtasks[i]);
+          mtaskcount++;
+        }  
+     }	
    }  
    else {
      msg << MSG::INFO<< "Done." << endreq;
@@ -607,6 +614,8 @@ void InsertDB::doMF(std::string monitoringtask) {
    }
    else { 
        HistDB->setDebug(3);
+       //lines will contain the folder names, plus a vector called histograms
+       //which are the histgorams that were found for that folder
        std::map <std::string, std::vector<std::string> > lines;
        std::vector<std::string> pages;
        std::vector<std::string> histograms;
@@ -632,14 +641,18 @@ void InsertDB::doMF(std::string monitoringtask) {
 	   if (first_slash != std::string::npos ) {
 	     std::string line = rest.substr(0,first_slash);
 	     std::string histoname = rest.substr(first_slash+1);
+	  //   msg << MSG::INFO<< "histoname " << histoname << " line " << line << " rest " << rest <<endreq;
 	     histograms.clear();
-	     if (lines.find(line)!= lines.end()) {
-	        //map entry exists; retrieve it
-	        histograms=lines[line];
+	     if ((lines.find(line)!= lines.end()) && (lines.find(line)->first == line)){
+	  //   	msg << MSG::INFO<< "lines.find(line)->first " << lines.find(line)->first << " line " << line << endreq;
+	        //map entry exists; retrieve it, only if they have the same name
+		histograms=lines[line];
              }
              histograms.push_back(histoname);
+	   // msg << MSG::INFO<< "putting Histo " << histoname << " in line " << line<< endreq;
 	     lines[line]=histograms;		       	 	      	     
            }
+	  // msg << MSG::INFO<< "declaring Histo from service " << hSvcname << endreq;
 	   HistDB->declareHistByServiceName(hSvcname);
 	} 
         //2d histograms
@@ -657,7 +670,7 @@ void InsertDB::doMF(std::string monitoringtask) {
 	     std::string line = rest.substr(0,first_slash);
 	     std::string histoname = rest.substr(first_slash+1);
 	     histograms.clear();
-	     if (lines.find(line)!= lines.end()) {
+	     if ((lines.find(line)!= lines.end()) && (lines.find(line)->first == line)){
 	        //map entry exists; retrieve it
 	        histograms=lines[line];
              }
@@ -681,7 +694,7 @@ void InsertDB::doMF(std::string monitoringtask) {
 	      std::string line = rest.substr(0,first_slash);
 	      std::string histoname = rest.substr(first_slash+1);
 	      histograms.clear();
-	      if (lines.find(line)!= lines.end()) {
+	     if ((lines.find(line)!= lines.end()) && (lines.find(line)->first == line)){
 	         //map entry exists; retrieve it
 	         histograms=lines[line];
               }
@@ -716,18 +729,18 @@ void InsertDB::doMF(std::string monitoringtask) {
 	   HistDB->declareHistByServiceName(rSvcname);
          }
 	 */
-	//now make a page per line and add the histograms & rates to the page 
+	//now make a folder per line and add the histograms & rates to pages 
 	std::string pagename;
 	std::map <std::string, std::vector<std::string> >::const_iterator j;
         std::vector<OnlineHistogram*> list;
 	int nh=HistDB->getHistogramsByTask(monitoringtask,&list);
 	
 	for (j=lines.begin(); j!=lines.end();j++) {
-	   std::string subfolder;
-	   bool subfolderfound=false;
-	   for (int si=0;si<(int)m_subfolders[mtaskcount].size();si++) {
+	  // std::string subfolder;
+	 //  bool subfolderfound=false;
+	  // for (int si=0;si<(int)m_subfolders[mtaskcount].size();si++) {
 	      //need to organize the histograms in subfolders as there are a priori no alleys
-	      std::vector<std::string> histogramsonthispage;
+	    /*  std::vector<std::string> histogramsonthispage;
 	      std::vector<std::string>::const_iterator f;
 	      for (f=j->second.begin(); f!=j->second.end(); f++) { 
 	         std::string fname=*f;
@@ -737,13 +750,19 @@ void InsertDB::doMF(std::string monitoringtask) {
 		   subfolderfound=true;
 		   histogramsonthispage.push_back(fname);
 		 }  
-	      }	  
-              pagename=m_hltdbfolder+"/"+monitoringtask+"/"+m_nickname+ "/" +j->first + "/" + subfolder  ;
+	      }	  */
+            //  pagename=m_hltdbfolder+"/"+monitoringtask+"/"+m_nickname+ "/" +j->first + "/" + subfolder  ;
+	      
+	      pagename=m_hltdbfolder+"/"+monitoringtask+"/"+m_nickname+ "/" +j->first + "/" + j->first  ;
+	    //  msg << MSG::INFO<< "pagename " << pagename << " j->first " << j->first << endreq;
+	      
 	      std::string hlt1line=j->first;
+	    //  msg << MSG::INFO << " j->first " << j->first << endreq;
+	      if (j->first.size()==0) continue;
 	      OnlineHistPage* evsize = HistDB->getPage(pagename);
 	      evsize->removeAllHistograms();
-              int nbofhistosonpage = histogramsonthispage.size();
-	   
+            //  int nbofhistosonpage = histogramsonthispage.size();
+	      int nbofhistosonpage = j->second.size();
               double xmargin = 0.03;
               double ymargin = 0.03;
               int nx = (int) ceil(sqrt(nbofhistosonpage));
@@ -761,22 +780,27 @@ void InsertDB::doMF(std::string monitoringtask) {
 	      int zx=0;
 	      std::vector<std::string>::const_iterator k;
 	      int cnt=0;
-	      for (k=histogramsonthispage.begin(); k!=histogramsonthispage.end(); k++) {	  
-	         cnt++;	     
-	         std::string tname=*k;
+//	      for (k=histogramsonthispage.begin(); k!=histogramsonthispage.end(); k++) {	  
+	      for (k=j->second.begin(); k!=j->second.end(); k++) {	  
+	         cnt++;	 
+		 //just *k is not enough, need the full identifier  
+	         std::string tname=monitoringtask+"/"+j->first+"/"+*k;
+		// msg << MSG::INFO << " tname " << tname << endreq;
 	         OnlineHistogram* h=NULL;
+		 
 	         bool hfound=false;
 
 	         for (int kn=0;kn<nh;kn++) {
+		   // msg << MSG::INFO << " list[kn]->identifier() " << list[kn]->identifier() << " tname " << tname << endreq;
 	            std::string::size_type histofound=list[kn]->identifier().find(tname,0);
 		    if (histofound !=std::string::npos) {
 		       h=list[kn];
 		       hfound=true;
 		       break;
 	            } 
-		    if (hfound) break;
 	         }
-
+		 if (!hfound) continue;
+                 
 	         //this code is to place the histogram in the right place on the page
 	         ok = true;	          
 	         if (zx < nx ) {
@@ -793,15 +817,18 @@ void InsertDB::doMF(std::string monitoringtask) {
 	         }	      
 	         y2 = 1 - zy*dy - ymargin; 
 	         y1 = y2 - dy + ymargin;
+		// msg << MSG::INFO << "doMF: adding histogram " << h->hname() << " to page " << pagename << endreq;
 	         ok &= (NULL !=evsize->addHistogram(h,x1,y1,x2,y2));
 		 HistogramDisplayOptions(h);
 	      }	
-	      if (ok) evsize->save();
-	      else abort();
-	   }
+	      if (ok) {
+	         evsize->save();
+	      }
+              else abort();
+	  // }
 	}    	
 
-     //  msg << MSG::INFO << "doMF: committing changes to Hist DB" << endreq;
+       msg << MSG::INFO << "doMF: committing changes to Hist DB" << endreq;
        HistDB->commit();
      }
      delete HistDB; 

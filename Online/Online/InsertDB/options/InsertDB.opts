@@ -19,10 +19,13 @@ AuditorSvc.Auditors +=  [ "ChronoAuditor" ] ;
 
 InsertDB.PartitionName = @OnlineEnv.PartitionName;  // in seconds
 InsertDB.DNS = "$DIM_DNS_NODE";
-InsertDB.HLTDBFolder = "/test";
+InsertDB.HLTDBFolder = "/test2";
 InsertDB.HLTType = @OnlineEnv.HLTType;
-InsertDB.MonitoringTasks = { "LumiDAQMon","LumiVDMMon" };
-InsertDB.Pages = {{ "RawR_RZVeloBW" ,"RawR_RZVelo_" , "RawR_CaloEt", "RawRPUMult" , "RawR_PV2D", "RawR_SPDMult", "In_SPDMult", "In_RZVeloBW", "In_RZVelo_", "In_CaloEt","In_PV2D", "In_PUMult", "BXTypes", "Trend"}};
+//InsertDB.MonitoringTasks = { "LumiDAQMon"};
+//InsertDB.Pages = {{ "RawR_RZVeloBW" ,"RawR_RZVelo_" , "RawR_CaloEt", "RawRPUMult" , "RawR_PV2D", "RawR_SPDMult", "In_SPDMult", "In_RZVeloBW", "In_RZVelo_", "In_CaloEt","In_PV2D", "In_PUMult", "BXTypes", "Trend"}};
+//InsertDB.MonitoringTasks = { "HltExpertMon" };
 
+//InsertDB.MFOnly = true;
+InsertDB.EFFOnly = true;
 // Modify Message Format to print algorithm name with 20 characters
 MessageSvc.Format = "% F%20W%S%7W%R%T %0W%M";
