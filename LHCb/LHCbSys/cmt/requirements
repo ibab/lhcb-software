@@ -85,6 +85,7 @@ use L0Interfaces          v1r6    L0      # Olivier Deschamps
 use L0MuonKernel          v8r9    L0      # Andrei Tsaregorodtsev, Julien Cogan
 
 use MuonDAQ               v4r7    Muon    # Alessia Satta
+use MuonInterfaces        v1r0    Muon    # Alessia Satta
 
 # L1/Raw buffer encoding and decoding
 use DAQSys                v6r0    DAQ     # Marco Cattaneo
