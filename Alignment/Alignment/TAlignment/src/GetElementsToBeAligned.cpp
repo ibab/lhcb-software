@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.27 2010-01-25 16:17:20 wouter Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.28 2010-02-09 12:59:21 wouter Exp $
 // Include files
 
 //from STL
@@ -129,7 +129,8 @@ StatusCode GetElementsToBeAligned::initialize() {
       groupname = tokens.at(0) ;
       if( groupname.find("Group") != std::string::npos) groupname = path ;
     } else {
-      error() << "==> There is something wrong with the specified property Elements: " << std::endl 
+      error() << "==> There is something wrong with the specified property Elements: " 
+	      << tokens.size() << std::endl 
 	      << *i << endmsg;
       return StatusCode::FAILURE;
     }
@@ -192,12 +193,7 @@ StatusCode GetElementsToBeAligned::initialize() {
     if (dofs.find("Rz") != std::string::npos) matchRz = true;
     /// create mask
     std::vector<bool> dofMask = boost::assign::list_of(matchTx)(matchTy)(matchTz)(matchRx)(matchRy)(matchRz);
-    /// align for all dofs if dofs not specified or couldn't find any match 
-    if (dofs.empty() || (!matchTx && !matchTy && !matchTz && !matchRx && !matchRy && !matchRz)) { 
-      dofMask.at(Tx) = true; dofMask.at(Ty) = true; dofMask.at(Tz) = true;
-      dofMask.at(Rx) = true; dofMask.at(Ry) = true; dofMask.at(Rz) = true;
-    }
-    
+     
     // Loop over elements and create AlignmentElements
     if (groupElems) {
       // first check that there isn't already a group with this name. if there is, add the elements.
