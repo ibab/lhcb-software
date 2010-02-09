@@ -45,6 +45,7 @@ namespace Al
     void getAlignmentConstants(const Elements& elements, AlignConstants& alignConstants) const ;
     void fillIterProfile( const HistoID& id,const std::string& title,size_t numiter,size_t iter,double val, double err=0) const ;
     void addDaughterDerivatives(Al::Equations& equations) const ;
+    void dumpMostImportantDofs(const Elements& elements,const Al::Equations& equations,std::ostream& logmessage) const ;
 
   private:
     std::string                m_matrixSolverToolName;          ///< Name of linear algebra solver tool
@@ -423,6 +424,8 @@ namespace Al
       }
     }
 
+    dumpMostImportantDofs( elements,equations,logmessage ) ;
+
     if(numParameters>0) {
       
       // now fill the 'big' vector and matrix
@@ -557,7 +560,11 @@ namespace Al
 	    // print this one after the update
 	    LHCb::ChiSquare surveychisq = m_chisqconstrainttool->chiSquare( **it ) ;
 	    logmessage << "survey chi2 / dof: " << surveychisq.chi2() << " / " << surveychisq.nDoF() << std::endl ;
-
+	    const IAlignChisqConstraintTool::SurveyData survey = m_chisqconstrainttool->surveyData( **it ) ;
+	    logmessage << "survey pars: "
+		       << survey.par[0] << " " << survey.par[1] << " " << survey.par[2] << " "
+		       << survey.par[3] << " " << survey.par[4] << " " << survey.par[5] << std::endl ;
+	    
 	    if (!sc.isSuccess()) error() << "Failed to set alignment condition for " << (*it)->name() << endmsg ;
 	   
 	    std::string name = (*it)->name(); 
@@ -653,7 +660,52 @@ namespace Al
     }
     return StatusCode::SUCCESS;
   }
+
+  struct DofChisq
+  {
+    const AlignmentElement* element ;
+    int dof ;
+    double chi2 ;
+    double par ;
+    double err ;
+  } ;
+
+  bool operator<( const DofChisq& lhs, const DofChisq& rhs)
+  {
+    return lhs.chi2 > rhs.chi2 ;
+  }
+
   
+  void AlignUpdateTool::dumpMostImportantDofs(const Elements& elements,
+					      const Al::Equations& equations,
+					      std::ostream& logmessage) const
+  {
+    std::vector<DofChisq> dofchi2s ;
+    dofchi2s.reserve(6*elements.size()) ;
+    DofChisq dofchi2 ;
+    size_t index(0);
+    for( Al::Equations::ElementContainer::const_iterator ieq = equations.elements().begin() ;
+	 ieq != equations.elements().end(); ++ieq, ++index ) {
+      dofchi2.element = elements[index] ;
+      for(dofchi2.dof = 0; dofchi2.dof<6; ++dofchi2.dof) {
+	double dChi2DAlpha = ieq->dChi2DAlpha()(dofchi2.dof) ;
+	double d2Chi2DAlpha2 = ieq->d2Chi2DAlpha2()(dofchi2.dof,dofchi2.dof) ;
+	// I could be a factor 2 wrong here
+	dofchi2.chi2 = dChi2DAlpha * 1/d2Chi2DAlpha2 * dChi2DAlpha ;
+	dofchi2.par  = - 1/d2Chi2DAlpha2 * dChi2DAlpha ;
+	dofchi2.err  = 1/std::sqrt(d2Chi2DAlpha2) ;
+	dofchi2s.push_back( dofchi2 ) ;
+      }
+    }
+    std::sort( dofchi2s.begin(), dofchi2s.end() ) ;
+
+    logmessage << "Most important dofs: " << std::endl ;
+    for(size_t i=0; i<10; ++i) 
+      logmessage << "  " << i << " " << dofchi2s[i].element->name() 
+		 << " dof=" << dofchi2s[i].dof 
+		 << " chi2= " << dofchi2s[i].chi2 
+		 << " delta= " << dofchi2s[i].par << " +/- " << dofchi2s[i].err << std::endl ;
+  }
   
 
 }
