@@ -303,7 +303,8 @@ void ReprocessingWriter::notifyClose(struct cmd_header *cmd)   {
 			  cmd->data.stop_data.md5_sum,
                           cmd->data.stop_data.size,
                           cmd->data.stop_data.events,
-                          cmd->data.stop_data.physEvents);
+                          cmd->data.stop_data.physEvents,
+                          cmd->data.stop_data.trgEvents);
     *m_log << MSG::INFO << "Confirmed ";
   }
   catch(exception& rte) {

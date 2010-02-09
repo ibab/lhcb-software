@@ -9,6 +9,7 @@
 
 #include "Writer/RPCComm.h"
 #include "Writer/Utils.h"
+#include "Writer/chunk_headers.h"
 
 using namespace LHCb;
 
@@ -25,7 +26,8 @@ void RPCComm::confirmFile(char *fileName,
                           const unsigned char *md5CSum,
                           unsigned long size,
                           unsigned long events,
-                          unsigned long physEvents
+                          unsigned long physEvents,
+                          unsigned int *trgEvents
                           )
 {
   int ret;
@@ -35,6 +37,8 @@ void RPCComm::confirmFile(char *fileName,
 
   char adler32String[9];
   char md5CharString[33];
+
+  char trgEventsCharString[33]; 
 
   /* We need to send this as a string because it's not very clear how the
    * XMLRPC library handles unsigned values.
@@ -47,9 +51,16 @@ void RPCComm::confirmFile(char *fileName,
 
   sprintf(adler32String, "%08X", adlerSum);
 
+  //sprintf(trgEventsCharString, "%8X%8X%8X%8X%8X%8X%8X%8X", 
+  sprintf(trgEventsCharString, "%d;%d;%d;%d;%d;%d;%d;%d", 
+      trgEvents[0], trgEvents[1], trgEvents[2], trgEvents[3], 
+      trgEvents[4], trgEvents[5], trgEvents[6], trgEvents[7]);
+
+  
+
   /* Now we fill up templates. */
   snprintf(xmlData, sizeof(xmlData), CONFIRM_TEMPLATE,
-           fileName, adler32String, md5CharString, size, events, physEvents);
+           fileName, adler32String, md5CharString, size, events, physEvents, trgEventsCharString);
   snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
            "WriterHost",  strlen(xmlData));
 

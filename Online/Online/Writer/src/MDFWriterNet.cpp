@@ -25,6 +25,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
+#include "MDF/OnlineRunInfo.h"
 #include "MDF/RawEventHelpers.h"
 #include "MDF/MDFWriter.h"
 #include "MDF/MDFHeader.h"
@@ -49,7 +50,7 @@ using namespace LHCb;
 /**
  * Macro for initialising a close command.
  */
-#define INIT_CLOSE_COMMAND(h, fname, adler_32, md_5, seqno, rno, thesize, noofevents, noofphysevents) { \
+#define INIT_CLOSE_COMMAND(h, fname, adler_32, md_5, seqno, rno, thesize, noofevents, noofphysevents, trgevents) { \
     (h)->cmd = CMD_CLOSE_FILE; \
     (h)->run_no = rno;  \
     (h)->data.chunk_data.seq_num = seqno; \
@@ -59,6 +60,7 @@ using namespace LHCb;
     (h)->data.stop_data.events = noofevents; \
     (h)->data.stop_data.physEvents = noofphysevents; \
     strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
+    memcpy((h)->data.stop_data.trgEvents, (trgevents), MAX_TRIGGER_TYPES*sizeof(unsigned int)); \
 }
 
 /**
@@ -131,6 +133,8 @@ void File::init(const std::string& fileName, unsigned int runNumber) {
   m_next = NULL;
   sprintf(txt,"/File#%02d",s_seqNo++);
   std::string svc = RTL::processName()+txt;
+
+  memset(m_mon->m_trgEvents, 0, MAX_TRIGGER_TYPES*sizeof(unsigned int));
 
   m_mon->m_svcID = ::dis_add_service((char *) svc.c_str(),(char *) "C",0,0,feedMonitor,(long)m_mon);
 }
@@ -441,6 +445,12 @@ void MDFWriterNet::closeFile(File *currFile)
   struct cmd_header header;
   memset(&header, 0, sizeof(struct cmd_header));
 
+
+  unsigned int trgEvents[MAX_TRIGGER_TYPES];
+  if(currFile->getTrgEvents(trgEvents) != 0) {
+    *m_log << MSG::ERROR << WHERE << "Error getting the triggered event statistics" << endmsg;
+  } 
+
   INIT_CLOSE_COMMAND(&header,
 		     currFile->getFileName()->c_str(),
 		     currFile->getAdlerChecksum(),
@@ -449,7 +459,8 @@ void MDFWriterNet::closeFile(File *currFile)
 		     currFile->getRunNumber(),
              currFile->getBytesWritten(),
              currFile->getEvents(),
-             currFile->getPhysEvents());
+             currFile->getPhysEvents(),
+             trgEvents);
   *m_log << MSG::INFO << " Command: " << header.cmd << " "
          << "Filename: "   << header.file_name << " "
 	 << "RunNumber: "  << header.run_no << " "
@@ -458,7 +469,15 @@ void MDFWriterNet::closeFile(File *currFile)
          << "Seq Nr: "     << header.data.chunk_data.seq_num << " "
          << "Size: "       << header.data.stop_data.size << " "
          << "Events: "     << header.data.stop_data.events << " "
-         << "Phys:  "      << header.data.stop_data.physEvents << " " 
+         << "Phys:  "      << header.data.stop_data.physEvents << " "
+         << "Trg0 : " << header.data.stop_data.trgEvents[0] << " "
+         << "Trg1 : " << header.data.stop_data.trgEvents[1] << " "
+         << "Trg2 : " << header.data.stop_data.trgEvents[2] << " "
+         << "Trg3 : " << header.data.stop_data.trgEvents[3] << " "
+         << "Trg4 : " << header.data.stop_data.trgEvents[4] << " "
+         << "Trg5 : " << header.data.stop_data.trgEvents[5] << " "
+         << "Trg6 : " << header.data.stop_data.trgEvents[6] << " "
+         << "Trg7 : " << header.data.stop_data.trgEvents[7] << " " 
          << "Command size is: " << sizeof(header)
          << endmsg;
   m_srvConnection->sendCommand(&header);
@@ -632,6 +651,9 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
   if( checkForPhysEvent(data, len)) {
       m_currFile->incPhysEvents();
   }
+
+  incTriggerType(data, len);
+
  
   // after every MB send statistics
   if (m_mq_available && totalBytesWritten % 1048576 < len) {
@@ -694,6 +716,50 @@ inline unsigned int MDFWriterNet::getRunNumber(const void *data, size_t /*len*/)
   else
     mHeader = (MDFHeader*)data;
   return mHeader->subHeader().H1->m_runNumber;
+}
+
+
+
+/**
+ * Reach the Odin bank in the MDF, and increment the number of event of this Odin trigger for the current file
+ */
+inline bool MDFWriterNet::incTriggerType(const void *data, size_t) {
+    MDFHeader *mHeader;
+    RawBank* b = (RawBank*)data;
+    if ( b->magic() == RawBank::MagicPattern ) {
+        mHeader = b->begin<MDFHeader>();
+    }
+    else
+        mHeader = (MDFHeader*)data;
+
+
+    if( !( (mHeader->size0() == mHeader->size1()) && (mHeader->size0() == mHeader->size2()) ) ) {
+        *m_log << MSG::ERROR << WHERE << "MDFHeader corrupted, aborting!" << endmsg;
+        Incident incident(name(),"DAQ_ERROR");
+        m_incidentSvc->fireIncident(incident);
+        return false;
+    }
+
+    RawBank *rBanks = (RawBank *) mHeader->data();
+    char *ccur = (char*) mHeader->data();
+
+    while(rBanks->magic() == 0xCBCB && rBanks->type() != RawBank::ODIN) {
+        ccur=ccur + (rBanks->totalSize());
+        rBanks=(RawBank*)ccur; 
+    }
+
+    if(rBanks->magic() == 0xCBCB && rBanks->type()==RawBank::ODIN) {
+        OnlineRunInfo *ori = (OnlineRunInfo *) rBanks->data();
+        if(!m_currFile->incTriggerType(ori->triggerType)) {
+            *m_log << MSG::ERROR << WHERE << "No counter increment for event triggered by " << ori->triggerType << "." << endmsg;
+        }
+    }
+    else {
+        *m_log << MSG::ERROR << WHERE << "No Odin bank in the event, no trigger type incremented." << endmsg;
+        return false;
+    }
+
+    return true;
 }
 
 
@@ -793,7 +859,8 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 			              cmd->data.stop_data.md5_sum,
                           cmd->data.stop_data.size,
                           cmd->data.stop_data.events,
-                          cmd->data.stop_data.physEvents);
+                          cmd->data.stop_data.physEvents,
+                          cmd->data.stop_data.trgEvents);
     *m_log << MSG::INFO << "Confirmed file " << cmd->file_name 
          << "RunNumber: "  << cmd->run_no << " "
          << "Adler32: "    << cmd->data.stop_data.adler32_sum << " "
@@ -802,6 +869,14 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
          << "Size: "       << cmd->data.stop_data.size << " "
          << "Events: "     << cmd->data.stop_data.events << " "
          << "Phys:  "      << cmd->data.stop_data.physEvents << " "
+         << "Trg0 : " << cmd->data.stop_data.trgEvents[0] << " "
+         << "Trg1 : " << cmd->data.stop_data.trgEvents[1] << " "
+         << "Trg2 : " << cmd->data.stop_data.trgEvents[2] << " "
+         << "Trg3 : " << cmd->data.stop_data.trgEvents[3] << " "
+         << "Trg4 : " << cmd->data.stop_data.trgEvents[4] << " "
+         << "Trg5 : " << cmd->data.stop_data.trgEvents[5] << " "
+         << "Trg6 : " << cmd->data.stop_data.trgEvents[6] << " "
+         << "Trg7 : " << cmd->data.stop_data.trgEvents[7] << " " 
          << endmsg;
 
   } catch(std::exception& rte) {
