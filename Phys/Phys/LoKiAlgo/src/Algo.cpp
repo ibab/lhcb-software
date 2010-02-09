@@ -1,4 +1,4 @@
-// $Id: Algo.cpp,v 1.24 2008-12-05 13:29:43 ibelyaev Exp $
+// $Id: Algo.cpp,v 1.25 2010-02-09 18:08:32 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -164,6 +164,8 @@ LoKi::Algo::vselect
   // get all PRIMARY particles from desktop
   const LHCb::RecVertex::Container* prims = desktop()->primaryVertices();
   //
+  if ( 0 == prims ) { Warning("No Primary vertices").ignore() ; }
+  else 
   { /// temporary fix 
     int changed = 0 ;
     /// @todo remove this fix with NEW data
@@ -187,9 +189,9 @@ LoKi::Algo::vselect
       debug() << " Number of modified vertices " 
               << changed << "/" << prims->size() << endreq ;
     }
+    //
+    vselect ( name , prims->begin() , prims->end() , cut ) ;
   }
-  //
-  vselect ( name , prims->begin() , prims->end() , cut ) ;
   // get all SECONDARY  particles from desktop
   const LHCb::Vertex::ConstVector&     secs  = desktop()->secondaryVertices();
   // 

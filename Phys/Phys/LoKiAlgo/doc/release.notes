@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.53 2009-01-12 06:49:51 cattanem Exp $ 
+! $Id: release.notes,v 1.54 2010-02-09 18:08:32 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
+
+! 2010-02-09 - Vanya Belyaev
+
+ - Algo.cpp 
+
+    add protection agains misisng PVs 
+
+ - cmt/requirements 
+
+    version increment to v8r2  
 
 !========================== LoKiAlgo v8r1 2009-01-12 ==========================
 ! 2009-01-10 - Chris Jones
