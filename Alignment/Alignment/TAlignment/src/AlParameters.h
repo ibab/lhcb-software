@@ -29,6 +29,7 @@ public:
 	       DofMask mask=DofMask(NumPars), size_t offset = 0u) ;
   AlParameters(double parameters[6], DofMask mask=DofMask(NumPars)) ;
   AlParameters(const TransformParameters& parameters, DofMask mask=DofMask(NumPars)) ;
+  AlParameters(const ROOT::Math::Transform3D& transform, DofMask mask=DofMask(NumPars)) ;
   
   size_t dim() const { return m_mask.nActive() ; }
   static std::string parName( int ) ;

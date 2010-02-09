@@ -2,11 +2,14 @@
 #include <cmath>
 #include <algorithm>
 
+#include "Math/RotationZYX.h"
 #include "Math/RotationX.h"
 #include "Math/RotationY.h"
 #include "Math/RotationZ.h"
 #include "Math/Vector3D.h"
 #include "Math/SVector.h"
+
+#include "DetDesc/3DTransformationFunctions.h"
 
 AlParameters::AlParameters(DofMask mask) 
   : m_mask(mask), m_parameters(dim()), m_covariance(dim()) 
@@ -48,6 +51,17 @@ AlParameters::AlParameters(const TransformParameters& parameters, DofMask mask)
 {
   for( unsigned int i = 0u; i < dim(); ++i) 
     m_parameters[i] = parameters[mask.parIndex(i)] ;
+}
+
+AlParameters::AlParameters(const ROOT::Math::Transform3D& transform, DofMask mask)
+  : m_mask(mask), m_parameters(dim()), m_covariance(dim())
+{
+  std::vector<double> translations(3,0.0), rotations(3,0.0);
+  DetDesc::getZYXTransformParameters(transform, translations, rotations);
+  for( unsigned int i = 0u; i < dim(); ++i) {
+    unsigned int index = mask.parIndex(i) ;
+    m_parameters[i] = index<3 ? translations[index] : rotations[index-3] ;
+  }
 }
 
 std::string AlParameters::parName(int parindex)
@@ -138,11 +152,11 @@ ROOT::Math::Transform3D AlParameters::transform() const
 
 ROOT::Math::Transform3D AlParameters::transform(const TransformParameters& pars)
 {
-  ROOT::Math::Transform3D translation( ROOT::Math::XYZVector(pars[0], pars[1], pars[2])) ;
-  ROOT::Math::Transform3D rotation( ROOT::Math::RotationX(pars[3])*
- 				    ROOT::Math::RotationY(pars[4])*
-				    ROOT::Math::RotationZ(pars[5])
- 				    ) ;
+  ROOT::Math::Transform3D translation(ROOT::Math::XYZVector(pars[0], pars[1], pars[2])) ;
+  ROOT::Math::RotationZYX rotation = ROOT::Math::RotationZYX( pars[5], pars[4],pars[3]);
+  //ROOT::Math::Transform3D rotation( ROOT::Math::RotationX(pars[3])*
+  //ROOT::Math::RotationY(pars[4])*
+  //ROOT::Math::RotationZ(pars[5])) ;
   return translation * rotation ;
 }
 
