@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Alessia Satta -->
+<!--- Created : 2010-01-15 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name="RecEvent">
+    <class name="MuonCluster"
+      author="Alessia Satta"
+      desc="Reconstructed muon hit clusters"
+      id="11041"
+      >
+      <base
+        name="KeyedObject&lt;int&gt;"/>
+      <import name="Kernel/MuonTileID"/>
+      <import name="Event/MuonCoord"/>
+      <import name="vector" std="TRUE"/>
+            &KeyedContainer;
+     <constructor
+	argList  = " LHCb::MuonCoord* coord ,float x , float dx , float y , float dy ,float z , float dz"
+        desc="create a cluster from single coords"
+        initList = " m_x(x),m_y(y),m_z(z)">
+<code>
+addToCoords(coord);
+m_xmin=x-dx;
+m_ymin=y-dy;
+m_zmin=z-dz;
+m_xmax=x+dx;
+m_ymax=y+dy;
+m_zmax=z+dz;
+</code>
+        </constructor>
+
+	<constructor
+        argList="MuonCluster clu"
+        initList="KeyedObject&lt;int&gt;()"
+        desc="Copy constructor" >
+<code>
+setX(clu.x());
+setY(clu.y());
+setZ(clu.z());
+setXmin(clu.xmin());
+setYmin(clu.ymin());
+setZmin(clu.zmin());
+setXmax(clu.xmax());
+setYmax(clu.ymax());
+setZmax(clu.zmax());
+    setCoords(clu.coords());
+</code>      
+  </constructor>
+
+
+      <attribute
+        type="float"
+        name="x"
+        desc="average x position of the cluster"/>
+ 
+      <attribute
+        type="float"
+        name="y"
+        desc="average y position of the cluster"/>
+ 
+      <attribute
+        type="float"
+        name="z"
+        desc="average z position of the cluster"/>
+ 
+      <attribute
+        type="float"
+        name="xmin"
+        desc="left x position of the cluster"/>
+ 
+      <attribute
+        type="float"
+        name="ymin"
+        desc="left y position of the cluster"/>
+      <attribute
+        type="float"
+        name="zmin"
+        desc="left z position of the cluster"/>
+ 
+      <attribute
+        type="float"
+        name="xmax"
+        desc="right x position of the cluster"/>
+ 
+      <attribute
+        type="float"
+        name="ymax"
+        desc="right y position of the cluster"/>
+      <attribute
+        type="float"
+        name="zmax"
+        desc="right z position of the cluster"/>
+
+      <method
+        desc   = "Add a pad to the cluster! "
+	name   = "addPad"
+	argList  = " LHCb::MuonCoord* coord ,float x , float dx , float y , float dy ,float z , float dz"
+	type   = "void"
+	access = "PUBLIC" >
+	<code>
+          if(checkPad(coord))return;
+	  addToCoords(coord);
+	  if( m_xmin > x-dx ) m_xmin=x-dx;  
+	  if( m_ymin > y-dy ) m_ymin=y-dy;  	 
+	  if( m_zmin > z-dz ) m_zmin=z-dz;  
+	  if( m_xmax > x+dx ) m_xmax=x+dx;  
+	  if( m_ymax > y+dy ) m_ymax=y+dy;  	 
+	  if( m_zmax > z+dz ) m_zmax=z+dz;  
+	</code>
+      </method>
+      <method
+        desc   = "Add a pad to the cluster! "
+	name   = "addPad"
+	argList  = " LHCb::MuonCoord* coord "
+	type   = "void"
+	access = "PUBLIC" >
+	<code>
+          if(checkPad(coord))return;
+	  addToCoords(coord);
+	</code>
+      </method>
+      <method
+        desc   = "check if  a pad is already in  the cluster! "
+	name   = "checkPad"
+	argList  = " const LHCb::MuonCoord* coord"
+	type   = "bool"
+	access = "PUBLIC" >
+	<code>
+		SmartRefVector&lt;LHCb::MuonCoord&gt;::iterator it;
+		for(it=m_coords.begin();it!=m_coords.end();it++){
+                   LHCb::MuonCoord* mycoord=*it;
+                   if(mycoord->key()==coord->key())return true;
+		}
+		return false;
+	</code>
+      </method>
+      <method
+        desc   = "merge two clusters "
+	name   = "mergeCluster"
+	argList  = " LHCb::MuonCluster* cluster"
+	type   = "void"
+	access = "PUBLIC" >
+	<code>
+            if(cluster-&gt;xmin()&lt;m_xmin)m_xmin=cluster-&gt;xmin();	     
+            if(cluster-&gt;ymin()&lt;m_ymin)m_ymin=cluster-&gt;ymin();	     
+            if(cluster-&gt;zmin()&lt;m_zmin)m_zmin=cluster-&gt;zmin();	     
+            if(cluster-&gt;xmax()&gt;m_xmax)m_xmax=cluster-&gt;xmax();	     
+            if(cluster-&gt;ymax()&gt;m_ymax)m_ymax=cluster-&gt;ymax();	     
+            if(cluster-&gt;zmax()&gt;m_zmax)m_zmax=cluster-&gt;zmax();	     
+	    SmartRefVector&lt;LHCb::MuonCoord&gt;::const_iterator it;
+	    
+for(it=cluster-&gt;coords().begin();it!=cluster-&gt;coords().end();it++){
+
+		   const LHCb::MuonCoord* mycoord=*it;
+if(checkPad(mycoord))continue;
+		   addToCoords(mycoord);
+		}
+	</code>
+      </method>
+      
+ 
+      <relation 
+       name = "coords"
+       desc = "References to the MuonCoords"
+       type = "LHCb::MuonCoord"
+       multiplicity = "M"
+       />
+
+
+      <location
+        name="MuonClusters"
+        place="Raw/Muon/Clusters"/>
+
+   </class>
+  </package>
+
+</gdd>
