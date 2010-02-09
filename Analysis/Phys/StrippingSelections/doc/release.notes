@@ -5,6 +5,25 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-02-09 - Vanya Belyaev
+
+ - StreamWithPV.py, StrippingPV.py
+
+    	new stream&line for "WithPV"-(pseudo)selection
+
+ - StrippingV0.py    
+
+	   update monitoring: add "almost-final-cuts" histograms, usefull 
+                        to see the clear peaks 
+
+ - StrippingV0Geo.py 
+
+     update the stripping cuts
+
+ - cmt/requirements 
+
+    version increment to v1r16 
+
 !==================== StrippingSelections v1r15 2010-02-02 ====================
 
 ! 2010-02-02 - Greig Cowan

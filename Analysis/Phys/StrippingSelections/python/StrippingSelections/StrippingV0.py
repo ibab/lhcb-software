@@ -7,7 +7,6 @@
 # This stripping is intended for 2009 data, and probably
 # it can serve as some starting point for refined stripping for 2010 data
 #
-#
 # Acknowledgemens:
 #
 #   - Matt & Manuel for track quality definition
@@ -60,7 +59,7 @@ Get the list of *ALL* configured lines
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = '2010-01-14'
-__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $'
+__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $'
 # =============================================================================
 
 from Gaudi.Configuration       import *
@@ -68,10 +67,13 @@ from LHCbKernel.Configuration  import *
 from GaudiKernel.SystemOfUnits import mm, cm , MeV, GeV
 
 # =============================================================================
-# @class StrippingV0Conf 
+# @class StrippingV0Conf
+#
 # Configurable for V0 ( K0S and  Lambda0) stripping.
+#
 # This stripping is intended for 2009 data, and probably
 # it can serve as some starting point for refined stripping for 2010 data
+#
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # @date 2010-01-14 
 class StrippingV0Conf(LHCbConfigurableUser):
@@ -181,6 +183,7 @@ class StrippingV0Conf(LHCbConfigurableUser):
             StripK0S.HistoPrint    = True
             StripK0S.MotherMonitor = """
             process ( switch ( LL , massLL , switch ( DD , massDD , massLD ) ) )
+            >> process ( switch ( LL & LLcuts , massLLcuts , switch ( DD & DDcuts , massDDcuts , switch ( LD & LDcuts , massLDcuts , M ) ) ) ) 
             >> EMPTY 
             """
             
@@ -299,6 +302,7 @@ class StrippingV0Conf(LHCbConfigurableUser):
             StripLambda0.HistoPrint    = True
             StripLambda0.MotherMonitor = """
             process ( switch ( LL , massLL , switch ( DD , massDD , massLD ) ) ) 
+            >> process ( switch ( LL & LLcuts , massLLcuts , switch ( DD & DDcuts , massDDcuts , switch ( LD & LDcuts , massLDcuts , M ) ) ) ) 
             >> EMPTY 
             """
 
@@ -463,23 +467,47 @@ class StrippingV0Conf(LHCbConfigurableUser):
             ## define LL-category of K0S 
             "LL =    CHILDCUT ( ISLONG , 1 ) & CHILDCUT ( ISLONG , 2 ) " ,
             ## define LD-category of K0S 
-            "LD =  ( 1 == NINTREE ( ISLONG ) ) & ( 1 == NINTREE ( ISDOWN ) ) " ,
+            "LD =  ( 1 == NINTREE ( ISLONG ) ) & ( 1 == NINTREE ( ISDOWN ) ) "
             ]
 
+    def final_cuts ( self , **cuts ) :
+        
+        _cuts  = "   ( VFASPF( VCHI2 )                         < %(chi2v)g ) "
+        _cuts += " & ( MINTREE ( ISBASIC , MINIPCHI2WITHDV() ) > %(mips)g  ) "
+        _cuts += " & ( BPVLTFITCHI2 ()                         < %(tchi2)g ) "
+        _cuts += " & ( BPVLTIME     () * c_light               > %(ctau)g  ) "
+
+        print ' CUTS :', cuts
+        
+        return _cuts % cuts
+        
     ## define the list of K0S monitoring histograms 
     def _k0s_histos ( self ) :
         """
         Define the list of K0S monitoring histograms 
         """
+        
         return [
             ## define historam type (shortcut)
             "Histo  = Gaudi.Histo1DDef"  ,
             ## monitor LL-case
-            "massLL = monitor ( M / GeV , Histo ( 'K0S, LL-case' , 0.4 , 0.6 , 200 ) , 'LL' ) " ,
+            "massLL     = monitor ( M / GeV , Histo ( 'K0S, LL-case'           , 0.4 , 0.6 , 200 ) , 'LL'     ) " ,
             ## monitor DD-case
-            "massDD = monitor ( M / GeV , Histo ( 'K0S, DD-case' , 0.4 , 0.6 , 200 ) , 'DD' ) " ,
+            "massDD     = monitor ( M / GeV , Histo ( 'K0S, DD-case'           , 0.4 , 0.6 , 200 ) , 'DD'     ) " ,
             ## monitor LD-case
-            "massLD = monitor ( M / GeV , Histo ( 'K0S, LD-case' , 0.4 , 0.6 , 200 ) , 'LD' ) " 
+            "massLD     = monitor ( M / GeV , Histo ( 'K0S, LD-case'           , 0.4 , 0.6 , 200 ) , 'LD'     ) " ,
+            ## monitor LL-case
+            "massLLcuts = monitor ( M / GeV , Histo ( 'K0S, LL-case with cuts' , 0.4 , 0.6 , 200 ) , 'LLcuts' ) " ,
+            ## monitor DD-case
+            "massDDcuts = monitor ( M / GeV , Histo ( 'K0S, DD-case with cuts' , 0.4 , 0.6 , 200 ) , 'DDcuts' ) " ,
+            ## monitor LD-case
+            "massLDcuts = monitor ( M / GeV , Histo ( 'K0S, LD-case with cuts' , 0.4 , 0.6 , 200 ) , 'LDcuts' ) " ,
+            ## LL-cuts :
+            "LLcuts = " + self.final_cuts ( chi2v  = 25 , mips   = 25 , tchi2 = 49 , ctau =  1 * mm ) ,
+            ## LD-cuts :
+            "LDcuts = " + self.final_cuts ( chi2v  = 25 , mips   = 25 , tchi2 = 49 , ctau =  1 * mm ) ,
+            ## DD-cuts :
+            "DDcuts = " + self.final_cuts ( chi2v  = 25 , mips   = 25 , tchi2 = 49 , ctau = 10 * mm ) 
             ]
 
     ## define the list of Lambda0 monitoring histograms 
@@ -491,11 +519,23 @@ class StrippingV0Conf(LHCbConfigurableUser):
             ## define historam type (shortcut)
             "Histo  = Gaudi.Histo1DDef"  ,
             ## monitor LL-case
-            "massLL = monitor ( M / GeV , Histo ( 'Lambda0, LL-case' , 1.030 , 1.230 , 200 ) , 'LL' ) " ,
+            "massLL     = monitor ( M / GeV , Histo ( 'Lambda0, LL-case'           , 1.030 , 1.230 , 200 ) , 'LL'     ) " ,
             ## monitor DD-case
-            "massDD = monitor ( M / GeV , Histo ( 'Lambda0, DD-case' , 1.030 , 1.230 , 200 ) , 'DD' ) " ,
+            "massDD     = monitor ( M / GeV , Histo ( 'Lambda0, DD-case'           , 1.030 , 1.230 , 200 ) , 'DD'     ) " ,
             ## monitor LD-case
-            "massLD = monitor ( M / GeV , Histo ( 'Lambda0, LD-case' , 1.030 , 1.230 , 200 ) , 'LD' ) " 
+            "massLD     = monitor ( M / GeV , Histo ( 'Lambda0, LD-case'           , 1.030 , 1.230 , 200 ) , 'LD'     ) " ,
+            ## monitor LL-case
+            "massLLcuts = monitor ( M / GeV , Histo ( 'Lambda0, LL-case with cuts' , 1.030 , 1.230 , 200 ) , 'LLcuts' ) " ,
+            ## monitor DD-case
+            "massDDcuts = monitor ( M / GeV , Histo ( 'Lambda0, DD-case with cuts' , 1.030 , 1.230 , 200 ) , 'DDcuts' ) " ,
+            ## monitor LD-case
+            "massLDcuts = monitor ( M / GeV , Histo ( 'Lambda0, LD-case with cuts' , 1.030 , 1.230 , 200 ) , 'LDcuts' ) " ,
+            ## LL-cuts :
+            "LLcuts = " + self.final_cuts ( chi2v  = 25 , mips   = 25 , tchi2 = 49 , ctau =  5 * mm ) ,
+            ## LD-cuts :
+            "LDcuts = " + self.final_cuts ( chi2v  = 25 , mips   = 25 , tchi2 = 49 , ctau =  5 * mm ) ,
+            ## DD-cuts :
+            "DDcuts = " + self.final_cuts ( chi2v  = 25 , mips   = 25 , tchi2 = 49 , ctau = 20 * mm ) 
             ]
     
 
@@ -573,9 +613,15 @@ if '__main__' == __name__ :
     
     print conf
 
-    props = [ 'DaughtersCuts'   , 'CombinationCut' , 'MotherCut' ,
-              'DecauDescriptor' , 'DecayDescriptors'] 
+    props = [ 'DaughtersCuts'   ,
+              'CombinationCut'  ,
+              'MotherCut'       ,
+              'DecauDescriptor' ,
+              'DecayDescriptors'] 
                            
     for l in conf.K0S     () : print __enroll__ ( l , lst = props ) 
     for l in conf.Lambda0 () : print __enroll__ ( l , lst = props )
     
+# =============================================================================
+# The END 
+# =============================================================================

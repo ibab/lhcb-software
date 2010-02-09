@@ -1,4 +1,4 @@
-#!/usr/bin/env
+#!/usr/bin/env python 
 # =============================================================================
 # @file StrippingSelections/StreamV0.py
 #
