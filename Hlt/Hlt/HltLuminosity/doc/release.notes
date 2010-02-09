@@ -4,10 +4,6 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
-! 2010-01-29 - Gerhard Raven
- - temporarily disable compilation of LumiFlagMethod, as it depends on 
-   LHCb v29r1, and next HLT release is on LHCb v29r0
-
 ! 2010-01-29 - Jaap Panman
  - add LumiFlagMethod: creates "counter" holding 0 (LumiTrigger); 1 (L0 count)
 
