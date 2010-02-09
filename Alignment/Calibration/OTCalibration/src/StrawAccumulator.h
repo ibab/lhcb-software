@@ -46,7 +46,7 @@ namespace OTCal
     // proper units. however, the weight have a rather arbitrary scale
     // here. therefore, we'll just return rms/sqrt(N), sort of.
     double rms = std::sqrt( ( m_sumrawtimeresidualsq - m_sumrawtimeresidual*m_sumrawtimeresidual/m_sumw)/m_sumw ) ;
-    return rms / std::sqrt(m_nevents) ;
+    return rms / std::sqrt( (double) m_nevents) ;
   }
 
 

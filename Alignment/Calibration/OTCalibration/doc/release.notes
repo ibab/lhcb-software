@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.10 2010-02-05 16:56:47 jblouw Exp $
+! $Id: release.notes,v 1.11 2010-02-09 13:15:43 jblouw Exp $
 ! Package     : OTCalibration
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
 
+! 2010-02-09 Johan Blouw
+ - The windows compiler complains about sqrt of an integer.
+   Added a cast into a double...
 
 </PRE><H1><A NAME=v1r4>2010-02-05 OTCAlibration v1r4</A></H1><PRE>
  - Johan Blouw tagged  the package as v1r4 for alignment release v4r6
