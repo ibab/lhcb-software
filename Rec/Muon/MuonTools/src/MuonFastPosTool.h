@@ -1,4 +1,4 @@
-// $Id: MuonFastPosTool.h,v 1.1 2009-04-29 14:15:55 asatta Exp $
+// $Id: MuonFastPosTool.h,v 1.2 2010-02-09 13:06:19 asatta Exp $
 #ifndef MUONFASTPOSTOOL_H 
 #define MUONFASTPOSTOOL_H 1
 
@@ -62,4 +62,4 @@ private:
   DeMuonDetector* m_muonDetector;  
   bool m_debug;
 };
-#endif // MUONFAASTPOSTOOL_H
+#endif // MUONFASTPOSTOOL_H

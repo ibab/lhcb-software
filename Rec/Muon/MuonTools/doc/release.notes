@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.46 2009-06-02 13:42:27 cattanem Exp $
+! $Id: release.notes,v 1.47 2010-02-09 13:06:19 asatta Exp $
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : Alessia Satta Alessia.Sattaft@cern.ch
 ! =============================================================================
+! 2010-02-09 - Alessia Satta
+ - Add new tools
 
 !======================== MuonTools v5r0p1 2009-06-02 =========================
 ! 2009-06-02 - Marco Cattaneo
