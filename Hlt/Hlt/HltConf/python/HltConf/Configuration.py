@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.150 2010-02-08 10:33:08 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.151 2010-02-09 09:06:00 albrecht Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -39,7 +39,7 @@ class HltConf(LHCbConfigurableUser):
                 , "WithMC"                         : False
                 , "AdditionalHlt1Lines"            : []         # must be configured
                 , "AdditionalHlt2Lines"            : []         # must be configured
-                , "ExpressStreamRateLimit"         : 10         # Hz
+                , "ExpressStreamRateLimit"         : 5         # Hz
                 }
 
     __settings__ = None 

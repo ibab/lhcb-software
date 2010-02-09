@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.411 2010-02-08 10:33:08 graven Exp $ 
+! $Id: release.notes,v 1.412 2010-02-09 09:06:50 albrecht Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2010-02-09 - Johannes Albrecht
+ -  change express stream rate to 5Hz
+
 ! 2010-02-08 - Gerhard Raven
  - remove explicit rate limit on individual Hlt2ExpressLines when setting 
    express bit, this is now intrinsic in the line definition

@@ -3,6 +3,8 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+! 2010-02-09 - Patrick Koppenburg
+ - fix small syntax error in the change by Patrick below
 
 ! 2010-02-08 - Patrick Koppenburg
  - Task #13657 : New setting Physics_320Vis_300L0_10Hlt1_Hlt2_Feb10 
