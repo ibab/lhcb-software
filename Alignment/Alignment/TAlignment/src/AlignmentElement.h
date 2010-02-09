@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.20 2010-01-13 10:28:35 wouter Exp $
+// $Id: AlignmentElement.h,v 1.21 2010-02-09 12:48:17 wouter Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -158,12 +158,24 @@ public:
   /** return the current delta (in the alignment frame) */
   AlParameters currentDelta() const ;
 
+  /** returns the current delta n the aliognment frame the difference
+      with the method above is that if this alignable shares all
+      conditions with the mother (because they have the same
+      detelements), then it will subtract the mother currentDelta. I
+      couldn't think of another way to deal with the survey
+      constraints.
+   */
+  AlParameters currentLocalDelta() const ;
+  
   /** return the current delta (active parameters only) */
   AlParameters currentActiveDelta() const ;
 
   /** returns the current delta in an arbitrary frame */
   AlParameters currentDelta( const Gaudi::Transform3D& frame ) const ;
 
+  /** returns the current delta in an arbitrary frame. see also currentLocalDelta() */
+  AlParameters currentLocalDelta(const Gaudi::Transform3D& frame) const ;
+    
   /** set the active par index offset. if negative, this is a deselected element */
   void setActiveParOffset( int offset ) const { m_activeParOffset = offset ; }
   
@@ -185,17 +197,27 @@ public:
   double histoResidualMax() const ;
 
   /** Add element to daughter list */
-  void addDaughter( const AlignmentElement& dau) { m_daughters.push_back(&dau) ; }
+  void addDaughter( AlignmentElement& dau) { 
+    m_daughters.push_back(&dau) ; 
+    dau.m_mother = this ;
+  }
 
   /** Get daughter list */
   const DaughterContainer& daughters() const { return m_daughters ; }
 
+  /** Get the mother, if it exists */
+  const AlignmentElement* mother() const { return m_mother ; }
+
   /** Is daughter or granddaughter ... */
   bool isOffspring( const AlignmentElement& dau) const ;
 
-
   /** add more detector elements to this alignable */
   void addElements( const std::vector<const DetectorElement*>& elements ) ;
+
+  /** if this alignable has no 'own' detector conditions because its
+      daughters serve the same detector elements, then return a vector
+      with the dofs shared with its daughters. */
+  std::vector<int> redundantDofs() const ;
 
 private:
   static std::string stripElementName(const std::string& name) ;
@@ -217,6 +239,7 @@ private:
   std::string         m_basename;
   ElementContainer    m_elements;         ///< Vector of pointers to detector elements
   DaughterContainer   m_daughters;        ///< Container with pointers to daughter elements
+  const AlignmentElement* m_mother ;      ///< Pointer to the mother, if any.
   unsigned int        m_index;            ///< Index. Needed for bookkeeping
   mutable int         m_activeParOffset;  ///< Parameter index of first active parameter in this element
   DofMask             m_dofMask;          ///< d.o.f's we want to align for

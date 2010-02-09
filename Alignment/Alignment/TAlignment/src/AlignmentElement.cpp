@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.27 2010-01-21 11:00:59 wouter Exp $
+// $Id: AlignmentElement.cpp,v 1.28 2010-02-09 12:48:17 wouter Exp $
 // Include files
 
 // from STD
@@ -36,13 +36,20 @@ std::string AlignmentElement::stripElementName(const std::string& name)
   return boost::algorithm::erase_all_regex_copy(name, boost::regex("/dd/Structure/LHCb/.*Region(/T/|/)")) ;
 }
 
-
+namespace {
+  template<class T> struct SortByName
+  {
+    bool operator()( const T* lhs, const T* rhs ) { return lhs->name() < rhs->name() ; }
+  } ;
+}
+  
 AlignmentElement::AlignmentElement(const DetectorElement* element, 
                                    const unsigned int index, 
                                    const std::vector<bool>& dofMask,
 				   bool useLocalFrame)
   : m_name(stripElementName(element->name())),
     m_basename(element->name()),
+    m_mother(0),
     m_index(index),
     m_activeParOffset(-1),
     m_dofMask(dofMask),
@@ -59,6 +66,7 @@ AlignmentElement::AlignmentElement(const std::string& aname,
                                    const std::vector<bool>& dofMask,
 				   bool useLocalFrame)
   : m_name(aname),
+    m_mother(0),
     m_index(index),
     m_activeParOffset(-1),
     m_dofMask(dofMask),
@@ -77,7 +85,9 @@ void AlignmentElement::addElements( const std::vector<const DetectorElement*>& e
        ielem != elements.end(); ++ielem) 
     addToElementsInTree( *ielem, m_elementsInTree ) ;
   std::sort( m_elementsInTree.begin(), m_elementsInTree.end() ) ;
+
   m_elements.insert(m_elements.end(), elements.begin(), elements.end()) ;
+  std::sort( m_elements.begin(), m_elements.end(),SortByName<DetectorElement>() ) ;
  
   // loop over all elements in tree and find the largest name they have in common
   m_basename = m_elements.front()->name() ;
@@ -251,9 +261,16 @@ AlParameters AlignmentElement::currentDelta() const {
   return currentDelta( alignmentFrame() ) ;
 }
 
-AlParameters AlignmentElement::currentDelta(const Gaudi::Transform3D& frame) const {
-  double par[6] = {0,0,0,0,0,0} ;
+AlParameters AlignmentElement::currentLocalDelta() const {
+  return currentLocalDelta( alignmentFrame() ) ;
+}
+
+
+AlParameters AlignmentElement::currentDelta(const Gaudi::Transform3D& frame) const 
+{
+  // cache the inverse of the frame
   Gaudi::Transform3D frameInv = frame.Inverse() ;
+  double par[6] = {0,0,0,0,0,0} ;
   for (ElemIter ielem = m_elements.begin(); ielem != m_elements.end(); ++ielem) {
     // here I want just the _local_ delta.
     const Gaudi::Transform3D& localDelta   = ((*ielem)->geometry())->ownToOffNominalMatrix() ;
@@ -276,6 +293,25 @@ AlParameters AlignmentElement::currentDelta(const Gaudi::Transform3D& frame) con
   }
   for(size_t i=0; i<6; ++i) par[i] /= m_elements.size() ;
   return AlParameters(par) ;
+}
+
+AlParameters AlignmentElement::currentLocalDelta(const Gaudi::Transform3D& frame) const
+{
+  // if our mother uses the same conditions as we, then we want to
+  // subtract the delta of the mother. this is important for the
+  // survey constraints.
+  AlParameters rc = currentDelta(frame) ;
+  if(m_mother &&
+     std::includes( m_mother->m_elements.begin(), m_mother->m_elements.end(),
+		    m_elements.begin(), m_elements.end(), SortByName<DetectorElement>() ) ) {
+    AlParameters motherDelta = m_mother->currentActiveDelta() ;
+    Gaudi::Transform3D frameInv = frame.Inverse() ;
+    Gaudi::Transform3D localMotherDelta = frameInv * m_mother->alignmentFrame() * motherDelta.transform() * m_mother->alignmentFrame().Inverse() * frame ;
+    // does the order matter here? I hope not ...
+    Gaudi::Transform3D localCorrectedDelta = localMotherDelta.Inverse() * rc.transform() ;
+    rc = AlParameters( localCorrectedDelta ) ;
+  }
+  return rc ;
 }
 
 AlParameters AlignmentElement::currentActiveDelta() const 
@@ -322,6 +358,7 @@ std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
   lhs << std::left << std::setw(80u) << std::setfill('*') << "" << std::endl;
   lhs << "* Alignable: " << name() << "\n" 
       << "* Element  : " << description() << std::endl
+      << "* Num elements in tree: " << m_elementsInTree.size() << std::endl 
       << "* Basename : " << basename() << std::endl
       << "* Index    : " << index() << "\n"
       << "* dPosXYZ  : " << Gaudi::XYZPoint(t[0], t[1], t[2]) << "\n"
@@ -360,3 +397,27 @@ double AlignmentElement::histoResidualMax() const
     dettype = 2 ;
   return resmax[dettype] ;
 }
+
+std::vector<int> AlignmentElement::redundantDofs() const
+{
+  // first check that all elements of this alignable also appear as its daughters
+  std::vector<int> rc ;
+  ElementContainer  dauelements ;
+  for( DaughterContainer::const_iterator idau = daughters().begin() ;
+       idau != daughters().end() ; ++idau) 
+    dauelements.insert( dauelements.end(), (*idau)->detelements().begin(), (*idau)->detelements().end()) ;
+  std::sort( dauelements.begin(), dauelements.end() ) ;
+  ElementContainer myelements = detelements() ;
+  std::sort( myelements.begin(), myelements.end()) ;
+  if( dauelements == myelements ) 
+    for(int i=0; i<6; ++i) 
+      if(dofMask().isActive(i)) {
+	bool foundall(true) ;
+	for( DaughterContainer::const_iterator idau = daughters().begin() ;
+	     idau != daughters().end()&&foundall ; ++idau)
+	  foundall = foundall && (*idau)->dofMask().isActive(i) ;
+	if(foundall) rc.push_back(i) ;
+      }
+  return rc ;
+}
+
