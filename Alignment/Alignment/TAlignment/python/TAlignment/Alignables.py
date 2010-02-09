@@ -3,7 +3,7 @@ import types
 class Alignables( list ):
     
     def __init__( self, elements = None, dofs = "" ) :        
-        self.m_dofs       = [ "Tx", "Ty", "Tz", "Rx", "Ry", "Rz" ]
+        self.m_dofs       = [ "Tx", "Ty", "Tz", "Rx", "Ry", "Rz", "None" ]
         self.m_velo       = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo"
         self.m_veloLeft   = "/VeloLeft"
         self.m_veloRight  = "/VeloRight"
@@ -105,6 +105,10 @@ class Alignables( list ):
         elements.append( "Tracker : " + self.m_tt )
         elements.append( "Tracker : " + self.m_it )
         elements.append( "Tracker : " + self.m_ot )
+        self.__append( elements, dofs )
+
+    def T( self, dofs = "" ) :
+        elements = [ "T : /dd/Structure/LHCb/AfterMagnetRegion/T/(I|O)T" ]
         self.__append( elements, dofs )
 
     ## VELO ###############################################################################
