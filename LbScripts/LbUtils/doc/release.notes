@@ -1,5 +1,8 @@
 2010-02-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbUtils/Script.py: implemented the SourceScript file which is a factored out code 
+	used by AllProjectsSetup and LbLogin. This is the default script to be used for python scripts
+	that modify the environment.
 	* python/LbUtils/Env.py: fixed the keys usage in the Environment class. The problem was that
 	on windows these keys are case insensitive.
 

@@ -1,16 +1,19 @@
-# $Id: Script.py,v 1.11 2009-11-11 10:15:28 hmdegaud Exp $
+# $Id: Script.py,v 1.12 2010-02-09 18:08:37 hmdegaud Exp $
 from LbUtils.Option import Parser
 from LbUtils.ConfigFile import addConfigFileOptions, readConfigFile
 from LbUtils.ConfigFile import setConfigFileDefaultValues
 from LbUtils.ConfigFile import setDefaultConfig
-from LbUtils import Env
-import logging
+from LbUtils.Env import Environment, Aliases, getDefaultEnv
 
+from tempfile import mkstemp
+from optparse import OptionValueError
+
+import logging
 import sys
 import os
 
 class PlainScript:
-    _version = "$Id: Script.py,v 1.11 2009-11-11 10:15:28 hmdegaud Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: Script.py,v 1.12 2010-02-09 18:08:37 hmdegaud Exp $".replace("$","").replace("Id:","").strip()
     _description = ""
     def __init__(self, usage=None, version=None, parser=Parser, 
                  help_output=sys.stdout, description=None):
@@ -22,7 +25,7 @@ class PlainScript:
             description = self._description
         self.parser = parser(usage=usage, version=version, 
                              help_output=help_output, description=description)
-        self.env = Env.getDefaultEnv()
+        self.env = getDefaultEnv()
         self.log = logging.getLogger()
         self.options = None
         self.args = None
@@ -43,6 +46,8 @@ class PlainScript:
         return self.main()
         
 class ConfigScript(PlainScript):
+    _version = "$Id: Script.py,v 1.12 2010-02-09 18:08:37 hmdegaud Exp $".replace("$","").replace("Id:","").strip()
+    _description = ""
     def __init__(self, usage=None, version=None, parser=Parser, 
                  help_output=sys.stdout, description=None, use_config_file=False):
         """ constructor of the Script. provides default options parser 
@@ -107,8 +112,8 @@ class ConfigScript(PlainScript):
         config_ext  = self.parser.defaults["config_ext"]
         for a in args_cpy :
             for o in config_opts :
-                conf_name = o
-                conf_value = None
+#                conf_name = o
+#                conf_value = None
                 if a.startswith(o) :
                     if a == o :
                         pass
@@ -130,6 +135,98 @@ class ConfigScript(PlainScript):
         self.parseOpts(args)
         return self.main()
 
-
 # backward compatibility for old clients
 Script = PlainScript
+
+def _check_output_options_cb(option, opt_str, value, parser):
+    if opt_str == "--mktemp":
+        if parser.values.output:
+            raise OptionValueError("--mktemp cannot be used at the same time as --output")
+        parser.values.mktemp = True
+    elif opt_str == "--output":
+        if parser.values.mktemp:
+            raise OptionValueError("--mktemp cannot be used at the same time as --output")
+        parser.values.output = value
+
+class SourceScript(Script):
+    _version = "$Id: Script.py,v 1.12 2010-02-09 18:08:37 hmdegaud Exp $".replace("$","").replace("Id:","").strip()
+    _description = ""
+    def __init__(self, usage=None, version=None, parser=Parser, description=None):
+        Script.__init__(self, usage=usage, version=version, parser=parser, 
+                        help_output=sys.stderr, description=description)
+        self.output_file = None
+        self.output_name = None
+        self._env = Environment()
+        self._aliases = Aliases()
+        self._extra = ""
+    def _write_script(self, env):
+        """ select the ouput stream according to the cmd line options """
+        log = logging.getLogger()
+        close_output = False
+        if self.options.output:
+            self.output_file = open(self.options.output, "w")
+            self.output_name = self.options.output
+            self.options.output = None # reset the option value to avoid to reuse it
+            close_output = True
+        elif self.options.mktemp:
+            fd, outname = mkstemp()
+            self.output_name = outname
+            self.output_file = os.fdopen(fd, "w")
+            print outname
+            self.options.mktemp = None # reset the option value to avoid to reuse it
+            close_output = True
+        else :
+            self.output_file = sys.stdout
+            close_output = False
+        # write the data
+        if self.output_name :
+            log.debug("Writing output to %s" % self.output_name)
+        self.output_file.write(env)
+        self.output_file.write("\n") # @todo: this may be avoided
+        if close_output:
+            self.output_file.close()
+    def addSourceOpts(self):
+        parser = self.parser
+        parser.set_defaults(targetshell="csh")
+        parser.add_option("--shell", action="store", type="choice", metavar="SHELL",
+                          dest="targetshell",
+                          choices=['csh', 'sh', 'bat'],
+                          help="(internal) select the type of shell to use")
+        parser.set_defaults(mktemp=False)
+        parser.add_option("--mktemp", action="callback",
+                          callback=_check_output_options_cb,
+                          help="(internal) send the output to a temporary file and print on stdout the file name (like mktemp)")
+        parser.set_defaults(output=None)
+        parser.add_option("--output", action="callback", metavar="FILE",
+                          type="string", callback=_check_output_options_cb,
+                          help="(internal) output the command to set up the environment to the given file instead of stdout")
+    def flush(self):
+        opts = self.options
+        self._write_script(self._env.gen_script(opts.targetshell)
+                           + self._aliases.gen_script(opts.targetshell)
+                           + self.extra())
+    def Environment(self):
+        return self._env
+    def Aliases(self):
+        return self._aliases
+    def targetShell(self):
+        return self.options.targetshell
+    def addEcho(self, line):
+        if line[-1] == "\n" :
+            line = line[:-1]
+        if sys.platform != "win32" :
+            outline = "echo '%s'\n" % line
+        else :
+            outline = "echo %s\n" % line
+        self._extra += outline
+    def extra(self):
+        return self._extra
+    def addExtra(self, line):
+        self._extra += line
+
+    def run(self, args=sys.argv[1:]):
+        """ main function to be called by the user """
+        self.addSourceOpts()
+        output = Script.run(self, args)
+        return output
+
