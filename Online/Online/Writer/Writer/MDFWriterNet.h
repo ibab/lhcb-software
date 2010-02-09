@@ -73,6 +73,9 @@ namespace LHCb {
       /// was set
       unsigned int m_physEvents;
 
+      /// A counter array for ODIN trigger types
+      unsigned int m_trgEvents[8];
+
       /// The sequence number of the last command that was sent for this file.
       unsigned int m_seqNum;
 
@@ -127,6 +130,15 @@ namespace LHCb {
     
     /// increases the number of phys events by one
     inline void incPhysEvents() { m_mon->m_physEvents++; }
+
+    /// Increment the trigger type statistic
+    inline bool incTriggerType(int trg) { 
+        bool ret = true;
+        if(trg < MAX_TRIGGER_TYPES && trg >=0) 
+            m_mon->m_trgEvents[trg]+=1; 
+        else ret = false; 
+        return ret;
+    }
     
     /// set the value of events, used when there where events before the
     /// file was created
@@ -139,6 +151,15 @@ namespace LHCb {
 
     /// get the number of phys events
     inline unsigned int getPhysEvents() { return m_mon->m_physEvents; }
+
+    /// get the number of trigger events
+    inline int getTrgEvents(unsigned int * destBuffer) { 
+        if(sizeof(destBuffer) >= MAX_TRIGGER_TYPES) {
+            memcpy((void*) destBuffer, (void*) m_mon->m_trgEvents, MAX_TRIGGER_TYPES*sizeof(unsigned int));
+            return 0;
+        }
+        return -1;
+    }
 
     /// get the phys stat which is number of events - lumi events
 //    inline unsigned int getPhysStat() { return m_mon->m_events - m_mon->m_lumiEvents;}
@@ -362,8 +383,11 @@ namespace LHCb {
     /// Returns the run number from an MDF header.
     virtual unsigned int getRunNumber(const void *data, size_t len);
 
-    /// check if an event is a phys event
+    /// Check if an event is a phys event
     virtual bool checkForPhysEvent(const void*, size_t);
+
+    /// Increment the trigger type statistic for this event
+    virtual bool incTriggerType(const void *, size_t);
 
     /// Returns a File object for the specified run number
 

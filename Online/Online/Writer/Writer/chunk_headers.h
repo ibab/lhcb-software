@@ -7,6 +7,7 @@
  * Maximum length of a file name in bytes.
  */
 #define MAX_FILE_NAME 256
+#define MAX_TRIGGER_TYPES 8
 
 /**
  * Encapsulates a command that is accompanied by data to be written.
@@ -38,6 +39,7 @@ struct cmd_stop_header {
         __uint64_t size;
         __uint32_t events;
         __uint32_t physEvents;
+        __uint32_t trgEvents[MAX_TRIGGER_TYPES];
 } __attribute__((__packed__));
 
 
