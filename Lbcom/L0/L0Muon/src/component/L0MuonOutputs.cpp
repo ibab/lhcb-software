@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.30 2010-02-08 11:03:00 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.31 2010-02-09 14:45:56 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -645,7 +645,7 @@ StatusCode L0MuonOutputs::writeOnTES(std::string l0context){
     for (int i=0; i<2; ++i) 
     { // Loop over the quarters in side
       int iq=is*2+i;
-      if ( m_ctrlCand[iq].inError(i) ) 
+      if ( m_ctrlCand[is].inError(i) ) 
       { // Error detected in CU or SU
         LHCb::MuonTileID mid(0);
         mid.setQuarter(iq);
@@ -663,7 +663,7 @@ StatusCode L0MuonOutputs::writeOnTES(std::string l0context){
       } // End of Error detected on a CU or SU
       for (int ib=0; ib<12; ++ib)
       { // Loop over processing boards in quarter
-        if ( m_ctrlCand[iq].inError(i,ib) ) 
+        if ( m_ctrlCand[is].inError(i,ib) ) 
         { // Error detected on a BCSU 
           LHCb::MuonTileID mid=m_ctrlCand[is].mid_BCSU(i,ib);
           LHCb::L0MuonError * l0merror = new LHCb::L0MuonError(mid);

@@ -1,7 +1,10 @@
-!  $Id: release.notes,v 1.93 2010-02-08 11:03:00 jucogan Exp $
+!  $Id: release.notes,v 1.94 2010-02-09 14:45:56 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !---------------------------------------------------------------------------
+
+! 2010-02-09 - Julien Cogan
+ - fix bug when filling L0MuonError for L0MuonCtrlCand Bank
 
 ! 2010-02-08 - Julien Cogan
  - Fix compilation warning on Windows (L0MuonOutputs, L0MuonFromRawTrans)
