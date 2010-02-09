@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.28 2009-10-30 11:49:01 siborghi Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.29 2010-02-09 18:55:47 siborghi Exp $
 // Include files 
 
 // from Gaudi
@@ -283,13 +283,13 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
   double theta(0.);
   //Number of R, Phi and total clusters in tracks per Event
   unsigned int nRClusEvent (0), nPhiClusEvent (0), nSumClusEvent (0);
- 
-  if ( ( context() == "Online" ) &&  (m_event == m_resetProfile) ) { m_prof_sensors -> reset() ; } // RESET AFTER CERTAIN EVENTS
-  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_pos_mom_res -> reset() ; } // RESET AFTER CERTAIN EVENTS
-  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_neg_mom_res -> reset() ; } // RESET AFTER CERTAIN EVENTS  
-  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_thetaR -> reset() ; } // RESET AFTER CERTAIN EVENTS
-  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_thetaTot -> reset() ; } // RESET AFTER CERTAIN EVENTS
-  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_pseudoEffsens -> reset() ; } // RESET AFTER CERTAIN EVENTS
+ // RESET AFTER CERTAIN EVENTS
+  if ( ( context() == "Online" ) &&  (m_event == m_resetProfile) ) { m_prof_sensors -> reset() ; } 
+  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_pos_mom_res -> reset() ; } 
+  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_neg_mom_res -> reset() ; } 
+  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_thetaR -> reset() ; } 
+  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_thetaTot -> reset() ; } 
+  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_pseudoEffsens -> reset() ; } 
 
   //Loop over track container
   LHCb::Tracks::const_iterator itTrk;
@@ -482,7 +482,8 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
       double interStripFr = toolInfo.fractionalPosition; 
       double biasedResid;
       double chi2;
-      StatusCode sc3 = sensor -> residual( trackInterceptGlobal, vcID,
+ 
+      StatusCode sc3 = sensor -> residual( trackInterceptGlobal,track->slopes(), vcID,
                                            interStripFr, biasedResid, chi2 );
       if ( !( sc3.isSuccess() ) ) {
         debug() << "Residual calculation failed for " 
@@ -687,7 +688,9 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
         m_prof_pseudoEffsens -> fill(sensnumber, pseudoEfficiency_sens);          
       }
       //if expect hits on both sensor and only one sensor has hit -> mismatch
-      if (((N_exp[i]>=1) && (N_exp[i+64]>=1)) && ((N_rec[i]==0) || (N_rec[i+64]==0))){
+      if (((N_exp[i]>=1) && (N_exp[i+64]>=1)) && 
+          ((N_rec[i]==0) || (N_rec[i+64]==0)) &&
+          ((N_rec[i]==1) || (N_rec[i+64]==1)) ){
         if (N_rec[i+64]==0)
            m_mod_mismatch->fill(i+64);
         else if (N_rec[i]==0)
@@ -772,10 +775,12 @@ StatusCode Velo::VeloTrackMonitor::unbiasedResiduals (LHCb::Track *track )
 {
   if(track->checkFitHistory(Track::BiKalman) == true){
     debug() << "Start Unbiased Residual method" << endmsg;    
-    
-    if ( m_event ==  m_resetProfile ) { m_prof_unsensors -> reset() ; } // RESET AFTER CERTAIN EVENTS
-    if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_pos_mom_unres -> reset() ; } // RESET AFTER CERTAIN EVENTS
-    if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_neg_mom_unres -> reset() ; } // RESET AFTER CERTAIN EVENTS  
+    // RESET AFTER CERTAIN EVENTS
+    if ( m_event ==  m_resetProfile ) { m_prof_unsensors -> reset() ; } 
+    // RESET AFTER CERTAIN EVENTS
+    if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_pos_mom_unres -> reset() ; } 
+    // RESET AFTER CERTAIN EVENTS
+    if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_neg_mom_unres -> reset() ; } 
     
     //Loop over nodes
     LHCb::Track::ConstNodeRange nodes = track->nodes();
@@ -809,7 +814,8 @@ StatusCode Velo::VeloTrackMonitor::unbiasedResiduals (LHCb::Track *track )
       double chi2;
       
       //Sensors vs Unbiased Residuals profile
-      StatusCode sc3 = sensor->residual(trackInterceptGlobal, vcID, interStripFr, UnbiasedResid, chi2);
+      StatusCode sc3 = sensor->residual(trackInterceptGlobal,track->slopes(),
+                                        vcID, interStripFr, UnbiasedResid, chi2);
       if ( !( sc3.isSuccess() ) ) {
         debug() << "Residual calculation failed for "
                 << trackInterceptGlobal.x() << " "

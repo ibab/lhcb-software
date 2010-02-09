@@ -4,6 +4,12 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2010-02-09 - Silvia Borghi
+ - in VeloTrackMonitor: 
+   - Fix bug in MisMatch histogram
+   - Update the residual evaluation using the new method for the extrapolation 
+	   to the sensor plane
+
 ! 2010-02-01 - Michael Alexander
  - VeloIPResolutionMonitor:
   - Added filtering of beam-gas events by default
