@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.11 2010-02-01 21:41:59 graven Exp $
+# $Id: HltL0Candidates.py,v 1.12 2010-02-09 21:12:31 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -64,7 +64,7 @@ _dataCandidates = { 'Spd(Mult)'    : False
 def _parseL0settings( settings ) :
     return  [ _parseL0setting(i) for i in settings ]
 def _parseL0setting( setting ) :
-    p = re.compile('(.*)= *\[(.*)\]')
+    p = re.compile('([^ ]+) *= *\[(.+)\]')
     val = {}
     for s in setting :
         m = p.match(s)
@@ -110,39 +110,84 @@ def _converter( channel ) :
     if channel in [ 'SPD','PU','SPD40','PU40','B1gas','B2gas' ] : return { channel : None }
     return _calo(channel)
 
-global _dict,_l0Channels
+def _parseMask( mask ) :
+    mask = mask.upper()
+    if mask in [ '0','0X0','000'           ] : return 'Disable'
+    if mask in [ '1','0X1','001','PHYSICS' ] : return 'Physics'
+    if mask in [ '2','0X2','010','BEAM1'   ] : return 'Beam1'
+    if mask in [ '3','0X3','011'           ] : return 'Physics+Beam1'
+    if mask in [ '4','0X4','100','BEAM2'   ] : return 'Beam2'
+    if mask in [ '5','0X5','101'           ] : return 'Physics+Beam2'
+    if mask in [ '6','0X6','110'           ] : return 'Beam1+Beam2'
+    if mask in [ '7','0X7','111'           ] : return 'Physics+Beam1+Beam2'
+    return None
+
+
+def _updateL0Config( L0TCK, singleL0Configuration ) :
+    from Configurables import L0DUConfigProvider
+    orig =  L0DUConfigProvider('ToolSvc.L0DUConfig.TCK_'+L0TCK)
+    if not singleL0Configuration : return orig
+    del allConfigurables['ToolSvc.L0DUConfig']
+    single = L0DUConfigProvider('ToolSvc.L0DUConfig')
+    for p,v in orig.getValuedProperties().items() : setattr(single,p,v)
+    single.TCK = L0TCK
+    from Configurables import L0DUFromRawTool, L0DUFromRawAlg
+    l0du   = L0DUFromRawAlg("L0DUFromRaw")
+    l0du.addTool(L0DUFromRawTool,name = "L0DUFromRawTool")
+    getattr( l0du, 'L0DUFromRawTool' ).L0DUConfigProviderType = 'L0DUConfigProvider'
+    from Configurables import L0DUAlg
+    L0DUAlg('L0DU').L0DUConfigProviderType = 'L0DUConfigProvider'
+    return single
+
+
+global _dict,_l0Channels, _l0Masks
 _dict       = None
 _l0Channels = None
+_l0Masks    = None
 
 ########################################## public visible part of this module...
 ### setupL0Channels _must_ be called before L0Channels, convertL0Candidates or HltL0Candidates is
 ### invoked...
-def decodeL0Channels( L0TCK , skipDisabled = True) :
+
+
+def decodeL0Channels( L0TCK , skipDisabled = True, forceSingleL0Configuration = True) :
     importOptions('$L0TCK/L0DUConfig.opts')
     from Configurables import L0DUMultiConfigProvider,L0DUConfigProvider
     if L0TCK not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
         raise KeyError('requested L0 TCK %s is not known'%L0TCK)
     if 'ToolSvc.L0DUConfig.TCK_%s'%L0TCK not in allConfigurables :
         raise KeyError('requested L0DUConfigProvider for TCK %s is not known'%L0TCK)
-    orig = L0DUConfigProvider('ToolSvc.L0DUConfig.TCK_'+L0TCK)
-    del allConfigurables['ToolSvc.L0DUConfig']
-    new = L0DUConfigProvider('ToolSvc.L0DUConfig')
-    for p,v in orig.getValuedProperties().items() : setattr(new,p,v)
-    new.TCK = L0TCK
-    from Configurables import L0DUFromRawTool
-    from Configurables import L0DUFromRawAlg
-    l0du   = L0DUFromRawAlg("L0DUFromRaw")
-    l0du.addTool(L0DUFromRawTool,name = "L0DUFromRawTool")
-    getattr( l0du, 'L0DUFromRawTool' ).L0DUConfigProviderType = 'L0DUConfigProvider'
-    from Configurables import L0DUAlg
-    L0DUAlg('L0DU').L0DUConfigProviderType = 'L0DUConfigProvider'
-    channels = _parseL0settings( new.Channels )
+    l0config = _updateL0Config( L0TCK, forceSingleL0Configuration )
+    channels = _parseL0settings( l0config.Channels )
+
     print '# decoded L0 channels for L0TCK=%s: %s'%(L0TCK, channels)
+    global _l0Masks
+    if _l0Masks : raise RunTimeError('HltL0Candidates already initialized -- 2nd call to decodeL0Channels...')
+    _l0Masks = {}
+    for i in channels :
+        _l0Masks[i['name']] = _parseMask(i['MASK'])  if 'MASK' in i else None
     def _hasBeenDisabled( d ) :
         if 'DISABLE' in d and d['DISABLE'].upper().find('TRUE') != -1 : return True # old style
-        if 'MASK'    in d and d['MASK'] == '000' : return True    
+        if 'MASK'    in d and _parseMask(d['MASK']) == 'Disable' : return True    
         return False
     return [ i['name'] for i in channels if ( not skipDisabled or not _hasBeenDisabled(i)) ]
+
+
+def L0Mask( channel ) :
+    global _dict,_l0Masks
+    if channel not in _dict.keys() : raise KeyError('Unknown L0 channel requested: %s -- check that this channel is included in requested L0 configuration...'%channel)
+    return _l0Masks[channel]
+
+def L0Mask2ODINPredicate( mask ) :
+    _predicate = { 'Disable'              : 'ODIN_NONE'
+                 , 'Physics'              : 'ODIN_BXTYP == LHCb.ODIN.BeamCrossing'
+                 , 'Beam1'                : 'ODIN_BXTYP == LHCb.ODIN.Beam1'
+                 , 'Physics+Beam1'        : 'ODIN_BXTYP == LHCb.ODIN.BeamCrossing | ODIN_BXTYP == LHCb.ODIN.Beam1'
+                 , 'Beam2'                : 'ODIN_BXTYP == LHCb.ODIN.Beam2'
+                 , 'Physics+Beam2'        : 'ODIN_BXTYP == LHCb.ODIN.BeamCrossing | ODIN_BXTYP == LHCb.ODIN.Beam2'
+                 , 'Beam1+Beam2'          : 'ODIN_BXTYP == LHCb.ODIN.Beam1        | ODIN_BXTYP == LHCb.ODIN.Beam2'
+                 , 'Physics+Beam1+Beam2'  : 'ODIN_BXTYP != LHCb.ODIN.NoBeam' }
+    return _predicate[mask]
 
 def setupL0Channels( channels ) :
     global _l0Channels,_dict

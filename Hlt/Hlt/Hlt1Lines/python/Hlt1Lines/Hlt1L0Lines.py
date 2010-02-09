@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -23,17 +23,21 @@ class Hlt1L0LinesConf(HltLinesConfigurableUser) :
    def __apply_configuration__(self):
         from HltLine.HltLine import Hlt1Line   as Line
         from HltLine.HltLine     import hlt1Lines
-        from Hlt1Lines.HltL0Candidates import convertL0Candidates,L0Channels
+        from Hlt1Lines.HltL0Candidates import convertL0Candidates,L0Channels, L0Mask, L0Mask2ODINPredicate
         channels = self.getProp('L0Channels')
         if not channels : channels = L0Channels()
         for channel in channels :
             converter = convertL0Candidates(channel) 
+            mask = L0Mask(channel)
             Line ( 'L0' + channel 
                  , prescale = self.prescale
+                 , ODIN  = L0Mask2ODINPredicate(mask) if mask else None 
                  , L0DU  = "L0_CHANNEL('%s')" % channel
                  , algos = [ converter ] if converter else []
                  , postscale = self.postscale
                  )
+        #  How to deal with the MASKing ???
+        #  Actually, we don't have to -- ODIN will do this 'upstream' of us ;-)
         Line('L0Any' ,  L0DU = 'L0_DECISION' 
             , prescale = self.prescale
             , postscale = self.postscale
