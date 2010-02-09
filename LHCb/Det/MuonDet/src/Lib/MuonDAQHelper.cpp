@@ -1,4 +1,4 @@
-// $Id: MuonDAQHelper.cpp,v 1.12 2009-10-02 13:24:19 asatta Exp $
+// $Id: MuonDAQHelper.cpp,v 1.13 2010-02-09 12:47:38 asatta Exp $
 // Include files
 
 #include "GaudiKernel/SmartDataPtr.h"
@@ -1762,3 +1762,71 @@ unsigned int MuonDAQHelper::getODENumberInQuadrant(std::string ODEName)
 }
 
 
+std::string MuonDAQHelper::getODEECSName(int number){
+return m_ODENameInECS[number];
+
+}
+
+LHCb::MuonTileID MuonDAQHelper::getPadTileInODE(std::string ODEName, int firstChannel, int secondChannel){
+
+ unsigned int station;
+
+  unsigned int region;
+
+  unsigned int quadrant;
+
+   std::string sCurr;
+   sCurr = ODEName.substr(1,2); // get up to the end
+
+   const char *pq;
+   pq=sCurr.c_str();
+   sscanf(pq, "%d", &quadrant);
+
+   sCurr = ODEName.substr(3,4); // get up to the end
+
+   const char *ps;
+
+   ps=sCurr.c_str();
+   sscanf(ps, "%d", &station);
+   sCurr = ODEName.substr(5,6); // get up to the end
+
+   const char *pr;
+
+   pr=sCurr.c_str();
+   sscanf(pr, "%d", &region);
+
+region--;
+station--;
+quadrant--; 
+msgStream()<<MSG::DEBUG<<" debug "<<station<<" "<<region<<" "<<quadrant<<endreq;
+
+  int odeStart=m_ODENameStart[station][region][quadrant];
+  int odeEnd=m_ODENameEnd[station][region][quadrant];
+
+	  //verbose()<<station<<" "<<region<<" "<<quadrant<<endmsg;
+  //verbose()<<odeStart<<" "<<odeEnd<<" "<<m_ODEName[odeStart]<<endmsg;
+  int odeNumber=-1;
+  
+  for(int ode=odeStart+1;ode<odeEnd+1;ode++){
+msgStream()<<MSG::DEBUG<<ODEName<<" debug ode "<<m_ODENameInECS[ode]<<endreq;
+    if(m_ODENameInECS[ode]==ODEName){
+      odeNumber=ode;      
+      break;      
+    }    
+  }
+msgStream()<<MSG::DEBUG<<" debug ode "<<odeNumber<<endreq;
+
+LHCb:MuonTileID firstTile;
+firstTile= m_mapTileInODE[odeNumber-1][firstChannel];
+LHCb::MuonTileID secondTile;
+ if(secondChannel>=0)secondTile= m_mapTileInODE[odeNumber-1][secondChannel];
+ if(!secondTile.isValid())return firstTile;
+ return firstTile.intercept(secondTile);
+ 
+
+
+}
+
+
+;
+ 

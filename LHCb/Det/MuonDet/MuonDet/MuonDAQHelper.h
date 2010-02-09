@@ -1,4 +1,4 @@
-// $Id: MuonDAQHelper.h,v 1.7 2009-09-14 08:58:35 jonrob Exp $
+// $Id: MuonDAQHelper.h,v 1.8 2010-02-09 12:47:38 asatta Exp $
 #ifndef MUONDET_MUONDAQHELPER_H 
 #define MUONDET_MUONDAQHELPER_H 1
 #include <string>
@@ -88,6 +88,7 @@ public:
                           std::string& ECSName,long& link_number,
                           long& link_ch);
   
+  std::string getODEECSName(int number);
   StatusCode findStrips(LHCb::MuonTileID pad,
                         LHCb::MuonTileID  strips[2]);
   
@@ -111,6 +112,7 @@ public:
   std::string getBasePath(int station);  
   std::vector<unsigned int> padsinTS(std::vector<unsigned int>& TSDigit, 
                                      std::string TSPath);
+  LHCb::MuonTileID getPadTileInODE(std::string ODEName, int firstChannel, int secondChannel); 
   //  */
   StatusCode updateLUT();
 
