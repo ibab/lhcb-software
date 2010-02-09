@@ -1,3 +1,10 @@
+2010-02-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/AllProjectsSetup.py: 
+	* python/LbConfiguration/LbLogin.py: 
+	* scripts/generateLogin: Make use of the new class SourceScript from the LbUtils.Script
+	module. Please have a look at its release notes.
+
 2010-02-04  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* data/Makefile: Automatically add no-pyzip to the CMTEXTRATAGS environment

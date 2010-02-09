@@ -36,11 +36,15 @@ private
 macro Lblogin_script_location "$(LbConfiguration_cmtpath)/$(cmt_installarea_prefix)" \
                         WIN32 "$(LbConfiguration_cmtpath)\$(cmt_installarea_prefix)"
 
+macro singleq '"'
 pattern generateShellLogin \
-   macro generate_<shell>_Login_output " ../scripts/LbLogin.<shell>" \
-                                 WIN32 " ..\scripts\LbLogin.<shell>" ; \
-   macro generate_<shell>_Login_command "python ../scripts/generateLogin  --build "$(version)" $(Lblogin_script_location) $(generate_<shell>_Login_output) " \
-                                  WIN32 "python ..\scripts\generateLogin  --build "$(version)" $(Lblogin_script_location) $(generate_<shell>_Login_output) " ; \ 
+   macro generate_<shell>_Login_output "../scripts/LbLogin.<shell>" \
+                                 WIN32 "..\scripts\LbLogin.<shell>" ; \
+   macro generate_<shell>_Login_command "python ../scripts/generateLogin" \
+                                  WIN32 "python ..\scripts\generateLogin" ; \ 
+   macro_append generate_<shell>_Login_command " --build --login-version=$(singleq)$(version)$(singleq)" ; \
+   macro_append generate_<shell>_Login_command " $(Lblogin_script_location)" ; \
+   macro_append generate_<shell>_Login_command " $(generate_<shell>_Login_output)" ; \   
    apply_pattern CallCommand target=generate_<shell>_Login ; \
    macro_append install_scripts_dependencies " generate_<shell>_Login " 
   
