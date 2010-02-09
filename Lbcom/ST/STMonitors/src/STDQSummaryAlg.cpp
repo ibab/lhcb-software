@@ -1,4 +1,4 @@
-// $Id: STDQSummaryAlg.cpp,v 1.3 2010-02-05 15:22:33 nchiapol Exp $
+// $Id: STDQSummaryAlg.cpp,v 1.4 2010-02-09 12:41:47 nchiapol Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -14,8 +14,8 @@
 #include "Kernel/ISTReadoutTool.h"
 
 // BOOST
-#include <boost/assign/list_of.hpp>
-#include <boost/assign/std/vector.hpp>
+//#include <boost/assign/list_of.hpp>
+//#include <boost/assign/std/vector.hpp>
 
 // fstream
 #include <fstream>
@@ -43,8 +43,16 @@ STDQSummaryAlg::STDQSummaryAlg( const std::string& name,
   declareProperty("writeTuple", m_writeTuple = true);
   declareProperty("outputFile",m_outputFileName = "STDQSummary.txt");
 
-  using namespace boost::assign;
-  m_txtColumns += "Run", "Events", "Clusters/evt", "#Noise/event",  "Proc Eff", "#Corrupted", "#Missing"; 
+  //using namespace boost::assign;
+  //m_txtColumns += "Run", "Events", "Clusters/evt", "#Noise/event",  "Proc Eff", "#Corrupted", "#Missing"; 
+  m_txtColumns.push_back("Run");
+  m_txtColumns.push_back("Events");
+  m_txtColumns.push_back("Clusters/evt");
+  m_txtColumns.push_back("#Noise/event");
+  m_txtColumns.push_back("Proc Eff");
+  m_txtColumns.push_back("#Corrupted");
+  m_txtColumns.push_back("#Missing");
+  
   declareProperty("txtColumns", m_txtColumns);
   
   // S/N cut
@@ -81,23 +89,6 @@ StatusCode STDQSummaryAlg::execute(){
   }
   const STSummary* summary = get<STSummary>(m_summaryLocation);  
   const STClusters* clusters = get<STClusters>(m_clusterLocation); 
-  
-  // get the summary block 
-  try {
-    summary = get<STSummary>(m_summaryLocation);  
-  } catch (...) {
-    data_available = false;
-  }
-  // clusters
-  try {
-    clusters = get<STClusters>(m_clusterLocation); 
-  } catch (...) {
-    data_available = false;
-  }
-
-  if (!data_available) {
-    return StatusCode::SUCCESS;
-  }
   
   // odin
   const ODIN* odin = get<ODIN>(ODINLocation::Default);
