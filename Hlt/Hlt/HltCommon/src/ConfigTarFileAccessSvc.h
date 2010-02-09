@@ -1,4 +1,4 @@
-// $Id: ConfigTarFileAccessSvc.h,v 1.1 2009-06-05 13:34:06 graven Exp $
+// $Id: ConfigTarFileAccessSvc.h,v 1.2 2010-02-09 09:53:01 graven Exp $
 #ifndef CONFIGFILEACCESSSVC_H 
 #define CONFIGFILEACCESSSVC_H 1
 
@@ -57,9 +57,11 @@ private:
   
   mutable std::auto_ptr<MsgStream>     m_msg;
   std::string                          m_name;   ///< filename of tar file from which to read configurations
+  std::string                          m_mode;   ///< which flags to specify when opening the tar file
   std::auto_ptr<ConfigTarFileAccessSvc_details::TarFile>               m_file;
 
   template <typename T> boost::optional<T> read(const std::string& path) const;
+  template <typename T> bool write(const std::string& path,const T& object) const;
   std::string propertyConfigPath( const PropertyConfig::digest_type& digest ) const;
   std::string configTreeNodePath( const ConfigTreeNode::digest_type& digest ) const;
   std::string configTreeNodeAliasPath( const ConfigTreeNodeAlias::alias_type& alias ) const;

@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-02-09 - Gerhard Raven
+ - ConfigTarFileAccess now supports direct writing to tar files.
+   
+
 !========================== HltCommon v5r17 2010-02-01 ===================
 ! 2010-01-31 - Gerhard Raven
  - support AlgTools in PropertyConfigSvc
