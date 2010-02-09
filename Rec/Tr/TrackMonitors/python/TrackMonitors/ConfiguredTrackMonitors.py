@@ -2,7 +2,7 @@ from Configurables import (GaudiSequencer, TrackMonitor, TrackVertexMonitor,
                            TrackAlignMonitor,
                            TrackFitMatchMonitor,TrackV0Monitor,TrackDiMuonMonitor,
                            OTTrackMonitor, OTHitEfficiencyMonitor,OTTimeMonitor,
-                           TrackCaloMatchMonitor)
+                           TrackCaloMatchMonitor,TrackMuonMatchMonitor)
 from Configurables import (RecSysConf, TrackSys)
 
 def ConfiguredTrackMonitorSequence(Name = "TrackMonitorSequence",
@@ -22,6 +22,9 @@ def ConfiguredTrackMonitorSequence(Name = "TrackMonitorSequence",
         #seq.Members.append(TrackCaloMatchMonitor("TrackHcalMatchMonitor", CaloSystem='Hcal', HistoPrint=HistoPrint))
         seq.Members.append(TrackCaloMatchMonitor("TrackSpdMatchMonitor", CaloSystem='Spd',HistoPrint=HistoPrint))
         seq.Members.append(TrackCaloMatchMonitor("TrackPrsMatchMonitor", CaloSystem='Prs',HistoPrint=HistoPrint))
+
+    if "MUON" in RecSysConf().RecoSequence:
+        seq.Members.append(TrackMuonMatchMonitor("TrackMuonMatchMonitor", HistoPrint=HistoPrint))
 
     return seq
     

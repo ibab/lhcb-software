@@ -3,6 +3,9 @@
 ! Responsible : Wouter Hulsbergen, Stephanie Hansmann-Menzemer
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
+! 2010-02-09 Stefania Vecchi
+ - Added TrackMuonMatchMonitor.cpp (.h) to monitor the M1-Track residuals.
+   ConfiguredTrackMonitors.py updated to include it in the sequence
 
 ! 2010-02-02 Wouter Hulsbergen
  - Added profiles to OTHitEfficiencyMonitor. Adjusted cuts.
