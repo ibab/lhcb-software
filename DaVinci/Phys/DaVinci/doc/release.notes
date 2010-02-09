@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.402 2010-02-05 13:50:07 jpalac Exp $
+! $Id: release.notes,v 1.403 2010-02-09 14:50:52 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2010-02-09 - Patrick Koppenburg
+ - Removed Reco05 data and added Reco07 DSTs and stripped V0 DSTs
 
 !========================== DaVinci v25r0 2010-02-05 =======================
 
