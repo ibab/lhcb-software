@@ -28,6 +28,6 @@ class Physics_320Vis_300L0_10Hlt1_ExpressHlt2_Jan10(  Physics_320Vis_300L0_10Hlt
                   , 'Hlt2DebugEvent'
                   ]
         from Express_Hlt2_Jan10 import Express_Hlt2_Jan10
-        list.extend( Express_Hlt2_Jan10().ActiveHlt2Lines() )
-        
+        lines.extend( Express_Hlt2_Jan10().ActiveHlt2Lines() )
+                                       
         return lines
