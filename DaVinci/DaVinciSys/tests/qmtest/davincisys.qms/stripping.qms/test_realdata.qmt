@@ -8,10 +8,11 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-DaVinciInit                                                 SUCCESS ==================================================================
-DaVinciInit                                                 SUCCESS 10000 events processed
-DaVinciInit                                                 SUCCESS ==================================================================
-""", stdout, result, causes, signature_offset = 1)
+checkPV                                                     SUCCESS Number of counters : 2
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "Events"                                        |      1000 |        540 |    0.54000 |    0.49840 |      0.0000 |      1.0000 |
+ | "PVs"                                           |      1000 |        541 |    0.54100 |    0.50032 |      0.0000 |      2.0000 |
+""", stdout, result, causes, signature_offset = 0)
 countErrorLines({"FATAL":0})
 </text></argument>
 </extension>

@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt12-MC09.py,v 1.8 2010-01-18 14:30:32 pkoppenb Exp $
+# $Id: DVTestHlt12-MC09.py,v 1.9 2010-02-09 15:25:42 pkoppenb Exp $
 #
 # Test for Hlt1&2. This should be identical to Hlt1 except for the Hlt settings
 #
@@ -30,7 +30,8 @@ DaVinci().MoniSequence = [ HltCorrelations() ]
 # HLT
 #
 DaVinci().Hlt = True             
-DaVinci().HltThresholdSettings = 'Physics_320Vis_300L0_10Hlt1_Hlt2_Oct09'   # Hlt2 for MC09
+DaVinci().HltThresholdSettings = 'Physics_320Vis_300L0_10Hlt1_Hlt2_Feb10'   # Hlt2 for MC09
+DaVinci().ReplaceL0BanksWithEmulated = True 
 #
 # a lambda stream file from the first MC09 MB stripping 
 #

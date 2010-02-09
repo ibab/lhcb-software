@@ -9,33 +9,17 @@ from Gaudi.Configuration import *
 from Configurables import SelDSTWriter, DaVinci
 ##############################################################################
 #
-# Monitoring
-#
-importOptions( "$DAVINCIMONITORSROOT/options/DaVinciMonitoring.py") 
-##############################################################################
-#
-# Stripping
-#
-from StrippingConf.Configuration import StrippingConf
-from StrippingSelections.Streams import allStreams
-from StrippingSelections import StreamMiniBias
-
-#sc = StrippingConf( Streams = noMB )
-sc = StrippingConf( Streams = allStreams )
-##############################################################################
-#
 # Hlt
 #
-# DaVinci().Hlt = True
-# DaVinci().HltThresholdSettings = 'Physics_320Vis_300L0_10Hlt1_Jan10'
-# DaVinci().L0 = True
-# DaVinci().ReplaceL0BanksWithEmulated = True
+DaVinci().Hlt = True
+DaVinci().HltThresholdSettings = 'Physics_320Vis_300L0_10Hlt1_Hlt2_Feb10'
+DaVinci().L0 = True
+DaVinci().ReplaceL0BanksWithEmulated = True
 ##############################################################################
 #
 # DaVinci
 #
 DaVinci().DataType = "2009"                   # Default is "MC09"
-DaVinci().UserAlgorithms = [ sc.sequence() ]
 DaVinci().EvtMax = 1000
 ##############################################################################
 #

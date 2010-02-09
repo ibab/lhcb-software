@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="timeout"><integer>3600</integer></argument>
+<argument name="args"><set>
+  <text>../options/DVTestHlt12-RealData.py</text>
+</set></argument>
+<argument name="validator"><text>
+findReferenceBlock("""
+HltGlobalMonitor                                            SUCCESS Number of counters : 19
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "#events"                                       |       999 |        999 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "BeamGas"                                       |      1998 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "DiMuon"                                        |      1998 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "Electron"                                      |      1998 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "Global"                                        |      1998 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "Hadron"                                        |      1998 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "L0"                                            |      1998 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ |*"L0Accept"                                      |       999 |        999 |(  100.000 +- 0.100100 )%|   -------   |   -------   |
+ | "L0Forced"                                      |       999 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "Lumi"                                          |      1998 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "MinBias"                                       |      1998 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "ODIN::Lumi"                                    |       999 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "ODIN::NotLumi"                                 |       999 |        999 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Other"                                         |      1998 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "PA"                                            |      1998 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "Photon"                                        |      1998 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "SingleMuon"                                    |      1998 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "Velo"                                          |      1998 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "XPress"                                        |      1998 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+""", stdout, result, causes, signature_offset = 0)
+countErrorLines({"FATAL":0})
+</text></argument>
+</extension>

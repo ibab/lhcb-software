@@ -14,12 +14,12 @@ cmt qmtest_run davincisys.fixedfile.fixedfile-brunel-v35r8-2009-xdst-withtruth-s
 cmt qmtest_run davincisys.fixedfile.fixedfile-brunel-v35r8-2009-xdst-withtruth >! fixedfile-brunel-v35r8-2009-xdst-withtruth &
 cmt qmtest_run davincisys.stripping.test_bu2llk_dc06 >! bu2llk_dc06 & 
 cmt qmtest_run davincisys.stripping.test_bd2kstarmumu_mc09 >! bd2kstarmumu_mc09 & 
+cmt qmtest_run davincisys.stripping.test_realdata >! realdata &  
 cmt qmtest_run davincisys.stripping.test_stripping >! stripping & 
 cmt qmtest_run davincisys.stripping.test_commonparticles >! commonparticles & 
 cmt qmtest_run davincisys.stripping.test_v0 >! v0 & 
 cmt qmtest_run davincisys.tagging.test_tag >! tag & 
 cmt qmtest_run davincisys.io.test_dst >! dst &  
-cmt qmtest_run davincisys.io.test_realdata >! realdata &  
 cmt qmtest_run davincisys.io.test_rdst >! rdst &  
 cmt qmtest_run davincisys.io.test_decaytreetuple >! decaytreetuple & 
 cmt qmtest_run davincisys.hlt.test_tistos >! tistos & 
@@ -36,6 +36,7 @@ cmt qmtest_run davincisys.hlt.test_hlt12_mc09 >! hlt12_mc09 &
 cmt qmtest_run davincisys.hlt.test_hlt12_mc09_dev >! hlt12_mc09_dev & 
 cmt qmtest_run davincisys.hlt.test_hlt12_mdf >! hlt12_mdf & 
 cmt qmtest_run davincisys.hlt.test_hlt12_withlumi >! hlt12_withlumi & 
+cmt qmtest_run davincisys.hlt.test_hlt12_realdata >! hlt12_realdata & 
 cmt qmtest_run davincisys.hlt.test_hltMC >! hltMC & 
 cmt qmtest_run davincisys.kali.pi0 >! pi0 & 
 
