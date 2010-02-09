@@ -1,8 +1,12 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DecayTreeTuple
-! Responsible : Patrick Koppenburg & the WGs
+! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+
+! 2010-02-09 - Patrick Koppenburg
+ - TupleToolPrimaries : get PVs from DVAlgorithm by default. Fixes #62588.
+ - TupleToolPID : Add Ecal and Calo energies
 
 ! 2010-02-06 - V. Gligorov
  - TupleToolEventInfo : add L0, HLT, ODIN TCK information

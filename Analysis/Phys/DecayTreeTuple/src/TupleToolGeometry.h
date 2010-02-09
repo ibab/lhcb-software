@@ -1,4 +1,4 @@
-// $Id: TupleToolGeometry.h,v 1.9 2010-01-26 15:39:26 rlambert Exp $
+// $Id: TupleToolGeometry.h,v 1.10 2010-02-09 09:40:49 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLGEOMETRY_H
 #define JBOREL_TUPLETOOLGEOMETRY_H 1
 
@@ -9,7 +9,6 @@
 
 class IDistanceCalculator;
 class DVAlgorithm;
-
 
 namespace LHCb {
   class Particle;
@@ -47,7 +46,8 @@ namespace LHCb {
  * - head_IP_TOPPV : impact parameter with respect to the PhysDesktop::relatedVertex() of the top of decay chain
  * - head_IPCHI2_TOPPV : impact parameter chi2 with respect to the PhysDesktop::relatedVertex() of the top of decay chain
  * - head_FD_TOPPV : flight distance of composite particle wrt. the PhysDesktop::relatedVertex() of the top of decay chain
- * - head_FDCHI2_TOPPV : flight distance significance in units of chi2 wrt. the PhysDesktop::relatedVertex() of the top of decay chain
+ * - head_FDCHI2_TOPPV : flight distance significance in units of chi2 wrt. 
+ *      the PhysDesktop::relatedVertex() of the top of decay chain
  * - head_DIRA_TOPPV : direction angle wrt. the PhysDesktop::relatedVertex() of the top of decay chain
  *
  * - head_ORIVX_[X|Y|Z] : ancestor's related primary vertex position (when applicable)

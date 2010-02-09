@@ -1,4 +1,4 @@
-// $Id: TupleToolPrimaries.cpp,v 1.6 2010-01-26 15:39:26 rlambert Exp $
+// $Id: TupleToolPrimaries.cpp,v 1.7 2010-02-09 09:40:49 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -9,11 +9,11 @@
 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
+#include "Kernel/DVAlgorithm.h"
 
 #include <Kernel/GetDVAlgorithm.h>
 #include <Kernel/DVAlgorithm.h>
 #include <Event/RecVertex.h>
-#include "Kernel/IOnOffline.h"
 
 #include <functional>
 
@@ -74,6 +74,7 @@ TupleToolPrimaries::TupleToolPrimaries( const std::string& type,
 					const std::string& name,
 					const IInterface* parent )
   : TupleToolBase ( type, name , parent )
+  , m_dva(0)
 {
   declareInterface<IEventTupleTool>(this);
   declareProperty("InputLocation", m_pvLocation = "" , 
@@ -90,8 +91,10 @@ StatusCode TupleToolPrimaries::initialize(){
   if ( "" == m_pvLocation){
     const IOnOffline* oo = tool<IOnOffline>("OnOfflineTool",this);
     m_pvLocation = oo->primaryVertexLocation();
+    debug() << "Will be looking for PVs at " << m_pvLocation << endmsg ;
   } 
-  debug() << "Will be looking for PVs at " << m_pvLocation << endmsg ;
+  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);
 
   return StatusCode::SUCCESS;
 }
@@ -106,8 +109,12 @@ StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple )
   std::vector<flat> pvs;
   std::vector<const flat*> refPvs;
 
-  if (exist<RecVertex::Container>(m_pvLocation)){
-    const RecVertex::Container* PV = get<RecVertex::Container>(m_pvLocation);
+  const RecVertex::Container* PV = 0 ;
+  if ( ""==m_pvLocation ) PV = m_dva->primaryVertices();   // default
+  else if (exist<RecVertex::Container>(m_pvLocation)){     // user given
+    PV = get<RecVertex::Container>(m_pvLocation);
+  }
+  if (0!=PV){
     unsigned int size = std::min<unsigned int>( PV->size(), 40 );  
     pvs.reserve( size );
     refPvs.reserve( size );

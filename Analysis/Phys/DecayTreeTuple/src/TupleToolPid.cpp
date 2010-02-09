@@ -1,4 +1,4 @@
-// $Id: TupleToolPid.cpp,v 1.4 2010-01-26 15:39:26 rlambert Exp $
+// $Id: TupleToolPid.cpp,v 1.5 2010-02-09 09:40:49 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -68,6 +68,11 @@ StatusCode TupleToolPid::fill( const Particle*
       // uncomment it if one days set to something non zero..
       //       test &= tuple->column( prefix+"_PIDpi"
       // 			     ,proto->info(LHCb::ProtoParticle::CombDLLpi,-1000));
+      test &= tuple->column( prefix+"_CaloEcalE"
+			     ,proto->info(LHCb::ProtoParticle::CaloEcalE,-10000.));
+      test &= tuple->column( prefix+"_CaloHcalE"
+			     ,proto->info(LHCb::ProtoParticle::CaloHcalE,-10000.));
+      
       return StatusCode(test);
     }
   }
