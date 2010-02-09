@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.19 2010-01-07 10:35:11 albrecht Exp $
+# $Id: HltReco.py,v 1.20 2010-02-09 18:57:26 graven Exp $
 # =============================================================================
 ## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -139,6 +139,9 @@ cloneKiller.CloneFinderTool.RestrictedSearch = True
 #                                 , OutputVerticesName = "Hlt/Vertex/PV2D" )  
 patPV2D = PatPV2DFit3D( 'HltRecoPV2D' , InputTracksName = patVeloR.OutputTracksName
                                       , OutputVerticesName = "Hlt/Vertex/PV2D" )  
+patPV2D.addTool(PVOfflineTool, name = 'PVOfflineTool')
+patPV2D.PVOfflineTool.PVFitterName='LSAdaptPV3DFitter'
+
 
 recoPV3D =  PatPV3D('HltRecoPV3D' )
 recoPV3D.addTool( PVOfflineTool, name = 'PVOfflineTool' )
