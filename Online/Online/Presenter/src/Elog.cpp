@@ -1,4 +1,4 @@
-// $Id: Elog.cpp,v 1.1 2010-02-01 14:32:43 ocallot Exp $
+// $Id: Elog.cpp,v 1.2 2010-02-09 07:07:39 ocallot Exp $
 // Include files
 /********************************************************************\
 This file is a stripped version of the original Elog, made c++;
@@ -7,7 +7,7 @@ This file is a stripped version of the original Elog, made c++;
 
   Contents:     Electronic logbook utility
 
-  $Id: Elog.cpp,v 1.1 2010-02-01 14:32:43 ocallot Exp $
+  $Id: Elog.cpp,v 1.2 2010-02-09 07:07:39 ocallot Exp $
 
 \********************************************************************/
 
@@ -46,7 +46,6 @@ Elog::Elog( std::string name, int port ) {
   m_nAttach  = 0;
   m_hostname = name; 
   m_port     = port;
-  verbose    = 0;
   
 #if defined( _MSC_VER )
   {
@@ -55,7 +54,6 @@ Elog::Elog( std::string name, int port ) {
     WSAStartup(MAKEWORD(1, 1), &WSAData);
   }
 #endif
-  std::cout << "Elog object created for host " << name << std::endl;
 }
 //=============================================================================
 // Destructor
@@ -185,7 +183,7 @@ void Elog::stou(char *str) {
 //=========================================================================
 void Elog::url_encode(char *ps, int size) {
   unsigned char *pd, *p;
-  unsigned char str[NAME_LENGTH];
+  unsigned char str[500];
 
   pd = (unsigned char *) str;
   p = (unsigned char *) ps;
@@ -203,37 +201,6 @@ void Elog::url_encode(char *ps, int size) {
   }
   *pd = '\0';
   strlcpy(ps, (char *) str, size);
-}
-//=========================================================================
-// Replace 
-//=========================================================================
-void Elog::add_crlf(char *buffer, int bufsize) {
-  char *p;
-  char *tmpbuf;
-
-  tmpbuf = (char*)malloc(bufsize);
-
-  /* convert \n -> \r\n */
-  p = buffer;
-  while ((p = strstr(p, "\n")) != NULL) {
-
-    if (p > buffer && *(p - 1) == '\r') {
-      p++;
-      continue;
-    }
-
-    if ((int) strlen(buffer) + 2 >= bufsize) {
-      free(tmpbuf);
-      return;
-    }
-
-    strlcpy(tmpbuf, p, bufsize);
-    *(p++) = '\r';
-    strlcpy(p, tmpbuf, bufsize - (p - buffer));
-    p++;
-  }
-
-  free(tmpbuf);
 }
 //=========================================================================
 //  Connect to host-port
@@ -268,10 +235,6 @@ int Elog::elog_connect( ) {
     printf("Cannot connect to host %s, port %d\n", m_hostname.c_str(), m_port );
     return -1;
   }
-
-  if (verbose)
-    printf("Successfully connected to host %s, port %d\n", m_hostname.c_str(), m_port );
-
   return sock;
 }
 
@@ -285,25 +248,6 @@ int Elog::submit( std::string text ) {
 
   char request[100000], response[100000], *content;
 
-  //add_crlf(text, sizeof(text));
-
-  //  /* get local host name */
-  //gethostname(host_name, sizeof(host_name));
-
-  //  phe = gethostbyname(host_name);
-  //if (phe == NULL) {
-  //  perror("Cannot retrieve host name");
-  //  return -1;
-  //}
-  //phe = gethostbyaddr(phe->h_addr, sizeof(int), AF_INET);
-  //if (phe == NULL) {
-  //  perror("Cannot retrieve host name");
-  //  return -1;
-  //}
-
-  //  /* if domain name is not in host name, hope to get it from phe */
-  //if (strchr(host_name, '.') == NULL)
-  //  strcpy(host_name, phe->h_name);
 
   sock = elog_connect( );
   if (sock < 0) return -1;
@@ -384,17 +328,9 @@ int Elog::submit( std::string text ) {
 
   /* send request */
   send(sock, request, header_length, 0);
-  if (verbose) {
-    printf("Request sent to host:\n");
-    puts(request);
-  }
 
   /* send content */
   send(sock, content, content_length, 0);
-  if (verbose) {
-    printf("Content sent to host:\n");
-    puts(content);
-  }
 
   /* receive response */
   memset(response, 0, sizeof(response));
@@ -415,11 +351,6 @@ int Elog::submit( std::string text ) {
 
   closesocket(sock);
 
-  if (verbose) {
-    printf("Response received:\n");
-    puts(response);
-  }
-  
   int entryNumber = 0;
 
   /* check response status */

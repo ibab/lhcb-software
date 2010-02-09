@@ -1909,11 +1909,12 @@ void PresenterMainFrame::reportToLog()
     // Default vlues. Could be improved by retrieveing the DM name, and the system from teh plot name/group?
     std::string logbook  = "Shift";
     std::string username = "Data Manager";
-    std::string system   = "LHCb";
+    std::string system   = m_currentPartition; // "LHCb";
+    std::string subject  = "";
     std::string message  = "See attached plot.";
     int         isOK     = 0;
     
-    elogDialog->setParameters( logbook, username, system, message, isOK );
+    elogDialog->setParameters( logbook, username, system, subject, message, isOK );
     
     TString pageName;
     gSystem->TempFileName(pageName);
@@ -1928,6 +1929,7 @@ void PresenterMainFrame::reportToLog()
       myElog.addAttachment( pageName.Data() );
       myElog.addAttribute( "Author", username );
       myElog.addAttribute( "System", system );
+      if ( "Shift" != logbook ) myElog.addAttribute( "Subject", subject );
       std::cout << "send to Elog " << std::endl;
       int number = myElog.submit( message );
       std::cout << "=== produced entry " << number << std::endl;
@@ -1938,6 +1940,7 @@ void PresenterMainFrame::reportToLog()
       std::string statusMessage = "No logbook entry created";
       m_mainStatusBar->SetText( statusMessage.c_str(), 2);
     }
+    remove( pageName.Data() ); // delete temporary file.
   }
   if (m_resumePageRefreshAfterLoading) { startPageRefresh(); }
   
@@ -2189,6 +2192,8 @@ void PresenterMainFrame::listAlarmsFromHistogramDB(TGListTree* listView,
            m_alarmMessageIDsIt++) {
         OMAMessage* message = new OMAMessage(*m_alarmMessageIDsIt, *m_histogramDB);
         if (message) {
+          // filter per partition ??? TBD
+
           std::string nodeName (message->humanTime());
           nodeName.erase(nodeName.length()-1); // remove \n
           nodeName = nodeName + ": ";

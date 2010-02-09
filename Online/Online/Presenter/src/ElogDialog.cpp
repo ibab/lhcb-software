@@ -37,10 +37,12 @@ ElogDialog::~ElogDialog() {
   Cleanup();
 }
 void ElogDialog::setParameters( std::string& logbook, std::string& username,
-                                std::string& system, std::string& message, int& isOK ) {
+                                std::string& system, std::string& subject,
+                                std::string& message, int& isOK ) {
   m_logbook  = &logbook;
   m_username = &username;
   m_system   = &system;
+  m_subject  = &subject;
   m_message  = &message;
   m_isOK     = &isOK;
   
@@ -53,7 +55,7 @@ void ElogDialog::ok() {
   *m_logbook  =  m_logbookTextEntry->GetDisplayText().Data();
   *m_username =  m_usernameTextEntry->GetDisplayText().Data();
   *m_system   =  m_systemTextEntry->GetDisplayText().Data();
-  //*m_message  =  m_messageTextEntry->GetDisplayText().Data();
+  *m_subject  =  m_subjectTextEntry->GetDisplayText().Data();
   *m_message  =  m_messageTextEntry->GetText()->AsString();
   *m_isOK     = 1;
   
@@ -70,27 +72,42 @@ void ElogDialog::build() {
 
   TGLayoutHints* layout = new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2);
 
-  TGTextButton* okButton = new TGTextButton(elogFrame,"OK");
+  int xBeg = 20;
+  int yBeg = 25;
+  int xSize = 150;
+  int xInputSize = 400;
+  int yStep = 30;
+
+  int xButtonSize = 92;
+  int yButtonSize = 24;
+  int yButtonPos  = 392;
+
+  TGTextButton* okButton = new TGTextButton(elogFrame,"Send to Elog");
   okButton->SetTextJustify(36);
-  okButton->Resize(92, 24);
+  //okButton->Resize( xButtonSize, yButtonSize );
   elogFrame->AddFrame(okButton, layout );
-  okButton->MoveResize(432, 392, 92, 24);
+  okButton->MoveResize( xBeg + xSize, yButtonPos, xButtonSize, yButtonSize );
   okButton->Connect("Clicked()", "ElogDialog", this, "ok()");
 
   TGTextButton*  cancelButton = new TGTextButton(elogFrame,"Cancel");
   cancelButton->SetTextJustify(36);
-  cancelButton->Resize(92, 24);
+  //cancelButton->->Resize( xButtonSize, yButtonSize );
   elogFrame->AddFrame(cancelButton, layout );
-  cancelButton->MoveResize(536, 392, 92, 24);
+  cancelButton->MoveResize( xBeg+xSize+xSize, yButtonPos, xButtonSize, yButtonSize );
   cancelButton->Connect("Clicked()", "ElogDialog", this, "CloseWindow()");
 
+  TGLabel* m_usernameLabel = new TGLabel(elogFrame,"Username : ");
+  m_usernameLabel->SetTextJustify(36);
+  elogFrame->AddFrame(m_usernameLabel, layout );
+  m_usernameLabel->MoveResize( xBeg, yBeg, xSize, 18);
+  m_usernameTextEntry = new TGTextEntry(elogFrame, new TGTextBuffer(15), -1);
+  m_usernameTextEntry->SetMaxLength(255);
+  m_usernameTextEntry->SetAlignment(kTextLeft);
+  m_usernameTextEntry->SetText( (*m_username).c_str() );
+  elogFrame->AddFrame(m_usernameTextEntry, layout );
+  m_usernameTextEntry->MoveResize( xBeg + xSize, yBeg, xInputSize, 22);
+  yBeg += yStep;
 
-  int xBeg = 20;
-  int yBeg = 25;
-  int xSize = 100;
-  int xInputSize = 400;
-  int yStep = 30;
-  
   TGLabel* m_logbookLabel = new TGLabel(elogFrame,"Logbook name : ");
   m_logbookLabel->SetTextJustify(36);
   elogFrame->AddFrame( m_logbookLabel, layout );
@@ -99,26 +116,23 @@ void ElogDialog::build() {
   m_logbookTextEntry->SetMaxLength(255);
   m_logbookTextEntry->SetAlignment(kTextLeft);
   m_logbookTextEntry->SetText( (*m_logbook).c_str() );
-  //m_logbookTextEntry->Resize( 300, m_logbookTextEntry->GetDefaultHeight());
   elogFrame->AddFrame( m_logbookTextEntry, layout );
   m_logbookTextEntry->MoveResize( xBeg + xSize, yBeg, xInputSize, 22);
   yBeg += yStep;
 
-  TGLabel* m_usernameLabel = new TGLabel(elogFrame,"Username name : ");
-  m_usernameLabel->SetTextJustify(36);
-  elogFrame->AddFrame(m_usernameLabel, layout );
-  m_usernameLabel->MoveResize( xBeg, yBeg, xSize, 18);
-  m_usernameTextEntry = new TGTextEntry(elogFrame, new TGTextBuffer(15), -1);
-  m_usernameTextEntry->SetMaxLength(255);
-  m_usernameTextEntry->SetAlignment(kTextLeft);
-  m_usernameTextEntry->SetText( (*m_username).c_str() );
-  //m_usernameTextEntry->Resize(300, m_usernameTextEntry->GetDefaultHeight());
-  elogFrame->AddFrame(m_usernameTextEntry, layout );
-  m_usernameTextEntry->MoveResize( xBeg + xSize, yBeg, xInputSize, 22);
+  TGLabel* m_subjectLabel = new TGLabel(elogFrame,"Subject (not for Shift): ");
+  m_subjectLabel->SetTextJustify(36);
+  elogFrame->AddFrame(m_subjectLabel, layout );
+  m_subjectLabel->MoveResize( xBeg, yBeg, xSize, 18);
+  m_subjectTextEntry = new TGTextEntry(elogFrame, new TGTextBuffer(15), -1);
+  m_subjectTextEntry->SetMaxLength(255);
+  m_subjectTextEntry->SetAlignment(kTextLeft);
+  m_subjectTextEntry->SetText( (*m_subject).c_str() );
+  elogFrame->AddFrame(m_subjectTextEntry, layout );
+  m_subjectTextEntry->MoveResize( xBeg + xSize, yBeg, xInputSize, 22);
   yBeg += yStep;
 
-
-  TGLabel* m_systemLabel = new TGLabel(elogFrame,"System name : ");
+  TGLabel* m_systemLabel = new TGLabel(elogFrame,"System : ");
   m_systemLabel->SetTextJustify(36);
   elogFrame->AddFrame(m_systemLabel, layout );
   m_systemLabel->MoveResize( xBeg, yBeg, xSize, 18);
@@ -126,7 +140,6 @@ void ElogDialog::build() {
   m_systemTextEntry->SetMaxLength(255);
   m_systemTextEntry->SetAlignment(kTextLeft);
   m_systemTextEntry->SetText( (*m_system).c_str() );
-  //m_systemTextEntry->Resize(400, m_systemTextEntry->GetDefaultHeight());
   elogFrame->AddFrame(m_systemTextEntry, layout );
   m_systemTextEntry->MoveResize( xBeg + xSize, yBeg, xInputSize, 22);
   yBeg += yStep;

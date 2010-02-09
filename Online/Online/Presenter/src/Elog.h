@@ -1,4 +1,4 @@
-// $Id: Elog.h,v 1.1 2010-02-01 14:32:43 ocallot Exp $
+// $Id: Elog.h,v 1.2 2010-02-09 07:07:39 ocallot Exp $
 #ifndef ELOG_H 
 #define ELOG_H 1
 
@@ -23,9 +23,6 @@
 class Elog {
 public: 
 #define MAX_ATTACHMENTS  50
-#define NAME_LENGTH     500
-#define MAX_N_ATTR       50
-#define TEXT_SIZE    100000
   /// Standard constructor
   Elog( std::string name, int port ); 
 
@@ -50,10 +47,8 @@ protected:
   void   do_crypt( const char *s, char *d, int size);
   void   stou(char *str);
   void   url_encode(char *ps, int size);
-  void   add_crlf(char *buffer, int bufsize);
   int    elog_connect( );
 private:
-  int  verbose;
   std::string m_hostname;
   int         m_port;
   std::string m_username;

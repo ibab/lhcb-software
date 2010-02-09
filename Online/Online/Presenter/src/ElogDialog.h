@@ -21,7 +21,8 @@ public:
   ElogDialog(PresenterMainFrame* gui, int width, int height);
   virtual ~ElogDialog();
   
-  void setParameters( std::string& logbook, std::string& username, std::string& system, std::string& message, int& isOK );
+  void setParameters( std::string& logbook, std::string& username, std::string& system, 
+                      std::string& subject, std::string& message, int& isOK );
   
   void ok();
   void build();
@@ -36,12 +37,14 @@ private:
   std::string* m_logbook;
   std::string* m_username;
   std::string* m_system;
+  std::string* m_subject;
   std::string* m_message;
   int*         m_isOK;
 
   TGTextEntry        *m_logbookTextEntry;
   TGTextEntry        *m_usernameTextEntry;
   TGTextEntry        *m_systemTextEntry;
+  TGTextEntry        *m_subjectTextEntry;
   TGTextEdit         *m_messageTextEntry;
 
   ClassDef(ElogDialog, 0);
