@@ -1,3 +1,8 @@
+2010-02-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Env.py: fixed the keys usage in the Environment class. The problem was that
+	on windows these keys are case insensitive.
+
 2010-02-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/File.py: 

@@ -1,5 +1,7 @@
-import os
+import os, sys
 import logging
+
+
 
 
 class Environment:
@@ -15,11 +17,19 @@ class Environment:
         self.old_values = {}
         self.env = orig
         self._keep_same = keep_same
+
+        # the keys of the environment dictionary are case insensitive on windows
+        if sys.platform.startswith("win"):
+            self._fixKey = lambda key: key.upper()
+        else:
+            self._fixKey = lambda key: key
+
         
     def __setitem__(self,key,value):
         """
         Set an environment variable recording the previous value.
         """
+        key = self._fixKey(key)
         if key not in self.old_values :
             if key in self.env :
                 if not self._keep_same or self.env[key] != value:
@@ -33,6 +43,7 @@ class Environment:
         Get an environment variable.
         Needed to provide the same interface as os.environ.
         """
+        key = self._fixKey(key)
         return self.env[key]
     
     def __delitem__(self,key):
@@ -40,6 +51,7 @@ class Environment:
         Unset an environment variable.
         Needed to provide the same interface as os.environ.
         """
+        key = self._fixKey(key)
         if key not in self.env :
             raise KeyError(key)
         self.old_values[key] = self.env[key]
@@ -58,6 +70,7 @@ class Environment:
         """
         return True if the key is present
         """
+        key = self._fixKey(key)
         return (key in self.env.keys())
     
     def items(self):
@@ -72,6 +85,7 @@ class Environment:
         Operator 'in'.
         Needed to provide the same interface as os.environ.
         """
+        key = self._fixKey(key)
         return key in self.env
     
     def restore(self):
@@ -97,6 +111,7 @@ class Environment:
         Implementation of the standard get method of a dictionary: return the
         value associated to "key" if present, otherwise return the default.
         """
+        key = self._fixKey(key)
         return self.env.get(key,default)
     
     def commit(self):
@@ -137,6 +152,7 @@ class Environment:
 class Aliases(Environment) :
     def __init__(self, keep_same=False):
         Environment.__init__(self, orig=dict(), keep_same=keep_same)
+        self._fixKey = lambda key: key
     def gen_script(self,shell_type):
         """
         Generate a shell script to reproduce the changes in the aliases.
