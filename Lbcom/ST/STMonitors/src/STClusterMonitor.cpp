@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.18 2010-02-08 14:23:17 mtobin Exp $
+// $Id: STClusterMonitor.cpp,v 1.19 2010-02-10 11:33:55 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -251,12 +251,11 @@ void ST::STClusterMonitor::bookHistograms() {
   if(m_hitMaps) {
     std::string idMap = detType()+" cluster map";
     if(detType()=="TT"){// Cluster maps for TT
-      const unsigned int nBinsPerSector = 16u; // equals ports per sector in TT
-      ST::TTDetectorPlot hitMap(idMap, idMap, nBinsPerSector);
+    ST::TTDetectorPlot hitMap(idMap, idMap, m_nBinsPerTTSector);
       m_2d_hitmap = book2D(hitMap.name(), hitMap.minBinX(), hitMap.maxBinX(), hitMap.nBinX(),
                            hitMap.minBinY(), hitMap.maxBinY(), hitMap.nBinY());
     } else if( detType() == "IT" ) {// Cluster map for IT
-      ST::ITDetectorPlot hitMap(idMap, idMap);
+      ST::ITDetectorPlot hitMap(idMap, idMap, m_nBinsPerITSector);
       m_2d_hitmap = book2D(hitMap.name(), hitMap.minBinX(), hitMap.maxBinX(), hitMap.nBinX(),
                            hitMap.minBinY(), hitMap.maxBinY(), hitMap.nBinY());
     }
@@ -359,13 +358,12 @@ void ST::STClusterMonitor::fillDetailedHistograms(const LHCb::STCluster*
 void ST::STClusterMonitor::fillHitMaps(const LHCb::STCluster* cluster) {  
   std::string idMap = detType()+" cluster map";
   if(detType()=="TT"){// Cluster maps for TT
-    const unsigned int nBinsPerSector = 16u; // equals ports per sector in TT
     const DeSTSector* aSector = tracker()->findSector(cluster->channelID());
     const DeTTSector* ttSector = dynamic_cast<const DeTTSector* >(aSector);
-    ST::TTDetectorPlot hitMap(idMap, idMap, nBinsPerSector);
+    ST::TTDetectorPlot hitMap(idMap, idMap, m_nBinsPerTTSector);
     ST::TTDetectorPlot::Bins bins = hitMap.toBins(ttSector);
     int port = (cluster->channelID().strip()-1)/STDAQ::nstrips;
-    double xBin = bins.xBin - double(port+1)/nBinsPerSector + 0.5;
+    double xBin = bins.xBin - double(port+1)/m_nBinsPerTTSector + 0.5;
     // Hack to make real x-y distribution plot (not occupancy)
     int nBins = bins.endBinY - bins.beginBinY;
     for( int yBin = bins.beginBinY; yBin != bins.endBinY; ++yBin ) {
@@ -373,9 +371,9 @@ void ST::STClusterMonitor::fillHitMaps(const LHCb::STCluster* cluster) {
     }
   } else if( detType() == "IT" ) {// Cluster map for IT
     //    const unsigned int nBinsPerSector = 16u; // equals ports per sector in TT
-    ST::ITDetectorPlot hitMap(idMap, idMap);
+    ST::ITDetectorPlot hitMap(idMap, idMap, m_nBinsPerITSector);
     ST::ITDetectorPlot::Bins bins = hitMap.toBins(cluster->channelID());
-     // Hack to make real x-y distribution plot (not occupancy)
+    // Hack to make real x-y distribution plot (not occupancy)
     m_2d_hitmap->fill(bins.xBin, bins.yBin, 1.);
   }
 }

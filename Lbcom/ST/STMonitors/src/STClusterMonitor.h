@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.h,v 1.7 2010-02-08 14:23:17 mtobin Exp $
+// $Id: STClusterMonitor.h,v 1.8 2010-02-10 11:33:55 mtobin Exp $
 #ifndef STCLUSTERMONITOR_H 
 #define STCLUSTERMONITOR_H 1
 
@@ -95,6 +95,9 @@ namespace ST
 
     /// Cut on the bunch ID (distinguish Beam from cosmics)
     std::vector<unsigned int> m_bunchID;
+
+    static const unsigned int m_nBinsPerTTSector=16u;///< Number of bins per TT sector in the hitmap (beetle ports)
+    static const unsigned int m_nBinsPerITSector=12u;///< Number of bins in each IT sector (beetle ports)
 
   };
 } // End of ST namespace

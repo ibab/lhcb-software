@@ -10,7 +10,7 @@ from Configurables import ( ST__STClusterMonitor )
 itClusterMonitorCentral = ST__STClusterMonitor("ITClusterMonitorCentral")
 itClusterMonitorCentral.DetType = "IT"
 itClusterMonitorCentral.ClusterLocation = "Raw/IT/Clusters"
-itClusterMonitorCentral.HitMaps = False
+itClusterMonitorCentral.HitMaps = True
 itClusterMonitorCentral.ByDetectorRegion = False
 itClusterMonitorCentral.ByServiceBox = True
 itClusterMonitorCentral.ByPort = True;

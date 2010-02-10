@@ -4,6 +4,9 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2010-02-10 - Mark Tobin
+ - Modified STClusterMonitor to use newest version of ITDetectorPlot.
+
 ! 2010-02-08 - Mark Tobin
  - changed binning of some histograms in STClusterMonitor to more realistic
  range.

@@ -10,7 +10,7 @@ from Configurables import ( ST__STClusterMonitor )
 ttClusterMonitorCentral = ST__STClusterMonitor("TTClusterMonitorCentral")
 ttClusterMonitorCentral.DetType = "TT"
 ttClusterMonitorCentral.ClusterLocation = "Raw/TT/Clusters"
-ttClusterMonitorCentral.HitMaps = False
+ttClusterMonitorCentral.HitMaps = True
 ttClusterMonitorCentral.ByDetectorRegion = False
 ttClusterMonitorCentral.ByServiceBox = True
 ttClusterMonitorCentral.ByPort = True
