@@ -518,7 +518,6 @@ def getCMT(version=0):
 
     newpath = os.path.join(os.getenv('CMTROOT'),cmtbin)+os.pathsep+os.getenv('PATH')
     os.environ['PATH'] = newpath
-        
 
     if debug_flag :
         log.debug( 'CMTROOT %s' % os.getenv('CMTROOT'))
@@ -760,7 +759,6 @@ def getProjectList(name,version,binary=None):
     if not check_only :
         if os.path.exists(disthtm) :
             os.remove(disthtm)
-        log.debug("Downloading %s/%s" % (url_dist + "html", disthtm) )
         getFile(url_dist + "html", disthtm)
 
     # loop over projects to be downloaded
@@ -955,6 +953,7 @@ def getProjectTar(tar_list, already_present_list=None):
                 if sys.platform != 'win32' :
                     try :
                         from LbLegacy.ProjectLinks import fixLinks
+                        log.debug("Fixing links in %s" % pack_ver[3])
                         fixLinks(pack_ver[3])
                     except :
                         log.warning("Cannot use fixLinks")
@@ -976,10 +975,10 @@ def getProjectTar(tar_list, already_present_list=None):
                             shutil.rmtree(extradir, ignore_errors=True)
                 if pack_ver[0] == "LBSCRIPTS" :
                     genlogscript = os.path.join(pack_ver[3],"InstallArea", "scripts", "generateLogin")
-                    log.debug("Running: %s --without-python --no-cache -m %s %s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
+                    log.debug("Running: %s --without-python --no-cache -m %s --login-version=%s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
                     os.environ["LHCBPROJECTPATH"] = os.pathsep.join([os.path.join(os.environ["MYSITEROOT"], "lhcb"), os.path.join(os.environ["MYSITEROOT"], "lcg", "external")])
                     log.debug("LHCBPROJECTPATH: %s" % os.environ.get("LHCBPROJECTPATH", None))
-                    os.system("python %s --without-python --no-cache -m %s %s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
+                    os.system("python %s --without-python --no-cache -m %s --login-version=%s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
                     registerPostInstallCommand("LCGCMT", "python %s --no-cache -m %s %s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
                     prodlink = os.path.join(os.path.dirname(pack_ver[3]),"prod")
                     if sys.platform != "win32" :
