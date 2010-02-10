@@ -57,7 +57,7 @@ from LbUtils.Path import multiPathGet, multiPathGetFirst, multiPathJoin
 import logging
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.72 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.73 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -377,7 +377,6 @@ class LbLoginScript(SourceScript):
     def setCMTInternals(self):
         ev = self.Environment()
         al = self.Aliases()
-        opts = self.options
 
         self.setCMTBin()
 
@@ -819,7 +818,6 @@ class LbLoginScript(SourceScript):
 
 
     def main(self):
-        opts = self.options
         debug = False
         for a in self.args :
             if a == "debug" :
