@@ -1,4 +1,4 @@
-// $Id: STDQSummaryAlg.cpp,v 1.4 2010-02-09 12:41:47 nchiapol Exp $
+// $Id: STDQSummaryAlg.cpp,v 1.5 2010-02-10 07:32:01 nchiapol Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -83,7 +83,6 @@ StatusCode STDQSummaryAlg::initialize()
 
 StatusCode STDQSummaryAlg::execute(){
 
-  bool data_available = true;
   if (!exist<STSummary>(m_summaryLocation) || !exist<STClusters>(m_clusterLocation)) {
     return Error("No Data available at given locations.", StatusCode::SUCCESS);
   }
