@@ -17,7 +17,7 @@ from StrippingSelections import StrippingB2DPi
 from StrippingSelections import StrippingB2D3Pi
 from StrippingSelections.StrippingBs2PhiPhi import StrippingBs2PhiPhiConf #from StrippingSelections import StrippingBs2PhiPhi
 from StrippingSelections.StrippingBu2D0K_D02KSPiPi import StrippingBu2D0K_D02KSPiPiConf
-from StrippingSelections.StrippingBu2D0h_D02KShh_NoPIDNoErrors import StrippingBu2D0h_D02KShh_NoPIDNoErrorsConf
+from StrippingSelections.StrippingBu2D0h_D02KShh_NoPID import StrippingBu2D0h_D02KShh_NoPIDConf
 from StrippingSelections import StrippingBu2hhh
 from StrippingSelections import StrippingBu2hhh_1e4
 from StrippingSelections import StrippingTopo
@@ -35,8 +35,8 @@ stream.appendLines( [
 			StrippingBs2PhiPhiConf().wide(),    #StrippingBs2PhiPhi.line2, 
 		        StrippingBu2D0K_D02KSPiPiConf().Bu2D0K_KSLL(), #StrippingBu2D0K_D02KSPiPi.line1,  
 		        StrippingBu2D0K_D02KSPiPiConf().Bu2D0K_KSDD(), #StrippingBu2D0K_D02KSPiPi.line2,
-                        StrippingBu2D0h_D02KShh_NoPIDNoErrorsConf().Bu2D0h_KSLL(), #StrippingBu2D0h_D02KShh_NoPIDNoErrors.line1,  
-		        StrippingBu2D0h_D02KShh_NoPIDNoErrorsConf().Bu2D0h_KSDD(), #StrippingBu2D0h_D02KShh_NoPIDNoErrors.line2,
+                        StrippingBu2D0h_D02KShh_NoPIDConf().Bu2D0h_KSPiPi_KSLL(),  
+		        StrippingBu2D0h_D02KShh_NoPIDConf().Bu2D0h_KSPiPi_KSDD(),
      		        StrippingBu2hhh.line,  
 		        StrippingBu2hhh_1e4.line,  
 		        StrippingTopo.line1,
