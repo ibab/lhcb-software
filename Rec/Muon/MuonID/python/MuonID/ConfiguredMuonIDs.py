@@ -7,6 +7,7 @@
 """
 
 import os
+import sys
 
 from Gaudi.Configuration import *
 
@@ -22,31 +23,30 @@ class ConfiguredMuonIDs():
     initialization for the class. Use as input data type (DC06,MC08,etc) and version of it if necessary.
     """
     self.debug=debug
-    if self.debug: print "# CONFIGUREDMUONIDs v7r1"
+    if self.debug: print "# CONFIGUREDMUONIDs v7r7"
     if self.debug: print "# INITIALIZING"
 
     self.specialData=specialData
     if self.debug: print "# SPECIAL DATA=",self.specialData
-
+    
     ## from datatype and version look for module with data. Store extra modules in case desired does not exist
     mod=[data+"_"+version,data+"_def","DC06_def"]
     mod = map(lambda x: "Muon_"+x,mod)
 
     if self.debug: print "# \tmods -> ",mod
-
+    
     ## check if modules exist and load them
     try: exec("from MuonID import "+mod[0]+" as info")
     except:
       if debug: print "# WARNING: not available info for DATA=%s,VERSION=%s. Loading default" %(data,version)
       try: exec("from MuonID import "+mod[1]+" as info")
-      except:  exec("from MuonID import "+mod[2]+" as info")
+      except: exec("from MuonID import "+mod[2]+" as info")
 
-    ## set final module with info to be laoded
+    ## set final module with info to be loaded
     self.info=info
     self.info.DEBUG = debug
     self.initializeAll = True
-
-
+    
   def configureFitter(self,fitter):
     """
     configure fitter to be used inside MuonID chi2 calculation
@@ -242,7 +242,7 @@ class ConfiguredMuonIDs():
     if "Weight_flag" in dir(self.info): mymuid.Weight_flag= self.info.Weight_flag
     if "step" in dir(self.info): mymuid.step=self.info.step
     if "nMax_bin" in dir(self.info): mymuid.nMax_bin=self.info.nMax_bin
-
+    
     #Landau's paramateres:
     #Muons - Region1:
     if "MuLandauParameterR1_1" in dir(self.info): mymuid.MuLandauParameterR1_1= self.info.MuLandauParameterR1_1
@@ -288,7 +288,66 @@ class ConfiguredMuonIDs():
     if "MupBinsR3" in dir(self.info): mymuid.MupBinsR3= self.info.MupBinsR3
     if "MupBinsR4" in dir(self.info): mymuid.MupBinsR4= self.info.MupBinsR4
     
-    
+    ## Configure hyperbolic tangent tanh(dist2) parameters
+    if "tanhScaleFactorsR1" in dir(self.info): mymuid.tanhScaleFactorsR1= self.info.tanhScaleFactorsR1
+    if "tanhScaleFactorsR2" in dir(self.info): mymuid.tanhScaleFactorsR2= self.info.tanhScaleFactorsR2
+    if "tanhScaleFactorsR3" in dir(self.info): mymuid.tanhScaleFactorsR3= self.info.tanhScaleFactorsR3
+    if "tanhScaleFactorsR4" in dir(self.info): mymuid.tanhScaleFactorsR4= self.info.tanhScaleFactorsR4
+
+    ## Signal muons
+    if "tanhCumulHistoMuonR1_1" in dir(self.info): mymuid.tanhCumulHistoMuonR1_1= self.info.tanhCumulHistoMuonR1_1
+    if "tanhCumulHistoMuonR1_2" in dir(self.info): mymuid.tanhCumulHistoMuonR1_2= self.info.tanhCumulHistoMuonR1_2
+    if "tanhCumulHistoMuonR1_3" in dir(self.info): mymuid.tanhCumulHistoMuonR1_3= self.info.tanhCumulHistoMuonR1_3
+    if "tanhCumulHistoMuonR1_4" in dir(self.info): mymuid.tanhCumulHistoMuonR1_4= self.info.tanhCumulHistoMuonR1_4
+    if "tanhCumulHistoMuonR1_5" in dir(self.info): mymuid.tanhCumulHistoMuonR1_5= self.info.tanhCumulHistoMuonR1_5
+    if "tanhCumulHistoMuonR1_6" in dir(self.info): mymuid.tanhCumulHistoMuonR1_6= self.info.tanhCumulHistoMuonR1_6
+    if "tanhCumulHistoMuonR1_7" in dir(self.info): mymuid.tanhCumulHistoMuonR1_7= self.info.tanhCumulHistoMuonR1_7
+
+    if "tanhCumulHistoMuonR2_1" in dir(self.info): mymuid.tanhCumulHistoMuonR2_1= self.info.tanhCumulHistoMuonR2_1
+    if "tanhCumulHistoMuonR2_2" in dir(self.info): mymuid.tanhCumulHistoMuonR2_2= self.info.tanhCumulHistoMuonR2_2
+    if "tanhCumulHistoMuonR2_3" in dir(self.info): mymuid.tanhCumulHistoMuonR2_3= self.info.tanhCumulHistoMuonR2_3
+    if "tanhCumulHistoMuonR2_4" in dir(self.info): mymuid.tanhCumulHistoMuonR2_4= self.info.tanhCumulHistoMuonR2_4
+    if "tanhCumulHistoMuonR2_5" in dir(self.info): mymuid.tanhCumulHistoMuonR2_5= self.info.tanhCumulHistoMuonR2_5
+
+    if "tanhCumulHistoMuonR3_1" in dir(self.info): mymuid.tanhCumulHistoMuonR3_1= self.info.tanhCumulHistoMuonR3_1
+    if "tanhCumulHistoMuonR3_2" in dir(self.info): mymuid.tanhCumulHistoMuonR3_2= self.info.tanhCumulHistoMuonR3_2
+    if "tanhCumulHistoMuonR3_3" in dir(self.info): mymuid.tanhCumulHistoMuonR3_3= self.info.tanhCumulHistoMuonR3_3
+    if "tanhCumulHistoMuonR3_4" in dir(self.info): mymuid.tanhCumulHistoMuonR3_4= self.info.tanhCumulHistoMuonR3_4
+    if "tanhCumulHistoMuonR3_5" in dir(self.info): mymuid.tanhCumulHistoMuonR3_5= self.info.tanhCumulHistoMuonR3_5
+
+    if "tanhCumulHistoMuonR4_1" in dir(self.info): mymuid.tanhCumulHistoMuonR4_1= self.info.tanhCumulHistoMuonR4_1
+    if "tanhCumulHistoMuonR4_2" in dir(self.info): mymuid.tanhCumulHistoMuonR4_2= self.info.tanhCumulHistoMuonR4_2
+    if "tanhCumulHistoMuonR4_3" in dir(self.info): mymuid.tanhCumulHistoMuonR4_3= self.info.tanhCumulHistoMuonR4_3
+    if "tanhCumulHistoMuonR4_4" in dir(self.info): mymuid.tanhCumulHistoMuonR4_4= self.info.tanhCumulHistoMuonR4_4
+    if "tanhCumulHistoMuonR4_5" in dir(self.info): mymuid.tanhCumulHistoMuonR4_5= self.info.tanhCumulHistoMuonR4_5
+
+    ## Bakground Comb muons: Also per regions AND momentum bins. Not suitable for low statistics
+    if "tanhCumulHistoNonMuonR1_1" in dir(self.info): mymuid.tanhCumulHistoNonMuonR1_1= self.info.tanhCumulHistoNonMuonR1_1
+    if "tanhCumulHistoNonMuonR1_2" in dir(self.info): mymuid.tanhCumulHistoNonMuonR1_2= self.info.tanhCumulHistoNonMuonR1_2
+    if "tanhCumulHistoNonMuonR1_3" in dir(self.info): mymuid.tanhCumulHistoNonMuonR1_3= self.info.tanhCumulHistoNonMuonR1_3
+    if "tanhCumulHistoNonMuonR1_4" in dir(self.info): mymuid.tanhCumulHistoNonMuonR1_4= self.info.tanhCumulHistoNonMuonR1_4
+    if "tanhCumulHistoNonMuonR1_5" in dir(self.info): mymuid.tanhCumulHistoNonMuonR1_5= self.info.tanhCumulHistoNonMuonR1_5
+    if "tanhCumulHistoNonMuonR1_6" in dir(self.info): mymuid.tanhCumulHistoNonMuonR1_6= self.info.tanhCumulHistoNonMuonR1_6
+    if "tanhCumulHistoNonMuonR1_7" in dir(self.info): mymuid.tanhCumulHistoNonMuonR1_7= self.info.tanhCumulHistoNonMuonR1_7
+
+    if "tanhCumulHistoNonMuonR2_1" in dir(self.info): mymuid.tanhCumulHistoNonMuonR2_1= self.info.tanhCumulHistoNonMuonR2_1
+    if "tanhCumulHistoNonMuonR2_2" in dir(self.info): mymuid.tanhCumulHistoNonMuonR2_2= self.info.tanhCumulHistoNonMuonR2_2
+    if "tanhCumulHistoNonMuonR2_3" in dir(self.info): mymuid.tanhCumulHistoNonMuonR2_3= self.info.tanhCumulHistoNonMuonR2_3
+    if "tanhCumulHistoNonMuonR2_4" in dir(self.info): mymuid.tanhCumulHistoNonMuonR2_4= self.info.tanhCumulHistoNonMuonR2_4
+    if "tanhCumulHistoNonMuonR2_5" in dir(self.info): mymuid.tanhCumulHistoNonMuonR2_5= self.info.tanhCumulHistoNonMuonR2_5
+
+    if "tanhCumulHistoNonMuonR3_1" in dir(self.info): mymuid.tanhCumulHistoNonMuonR3_1= self.info.tanhCumulHistoNonMuonR3_1
+    if "tanhCumulHistoNonMuonR3_2" in dir(self.info): mymuid.tanhCumulHistoNonMuonR3_2= self.info.tanhCumulHistoNonMuonR3_2
+    if "tanhCumulHistoNonMuonR3_3" in dir(self.info): mymuid.tanhCumulHistoNonMuonR3_3= self.info.tanhCumulHistoNonMuonR3_3
+    if "tanhCumulHistoNonMuonR3_4" in dir(self.info): mymuid.tanhCumulHistoNonMuonR3_4= self.info.tanhCumulHistoNonMuonR3_4
+    if "tanhCumulHistoNonMuonR3_5" in dir(self.info): mymuid.tanhCumulHistoNonMuonR3_5= self.info.tanhCumulHistoNonMuonR3_5
+
+    if "tanhCumulHistoNonMuonR4_1" in dir(self.info): mymuid.tanhCumulHistoNonMuonR4_1= self.info.tanhCumulHistoNonMuonR4_1
+    if "tanhCumulHistoNonMuonR4_2" in dir(self.info): mymuid.tanhCumulHistoNonMuonR4_2= self.info.tanhCumulHistoNonMuonR4_2
+    if "tanhCumulHistoNonMuonR4_3" in dir(self.info): mymuid.tanhCumulHistoNonMuonR4_3= self.info.tanhCumulHistoNonMuonR4_3
+    if "tanhCumulHistoNonMuonR4_4" in dir(self.info): mymuid.tanhCumulHistoNonMuonR4_4= self.info.tanhCumulHistoNonMuonR4_4
+    if "tanhCumulHistoNonMuonR4_5" in dir(self.info): mymuid.tanhCumulHistoNonMuonR4_5= self.info.tanhCumulHistoNonMuonR4_5
+
     ## add and configure either DistMuIDTool or Chi2MuIDTool.
     ## no need to initialize all sub tools there
     prev = self.initializeAll

@@ -3,6 +3,13 @@
 !-----------------------------------------------------------------------------
 
 !======================== MuonID v7r7 2010-02-01 ===========================
+! 2010-02-09 - Helder Lopes
+- New DLL_flag=3 method: The closest distance is mapped into [0,1] by 
+  hyperbolic tangent, filling histograms, with a conversion factor per 
+  region/momentum bin. Muon and NonMuon probabilities are read directly from 
+  the histograms, coded in options file as vectors of doubles (since the 
+  binning is known). No Landau fits are needed.
+  
 ! 2010-02-01 - Helder Lopes
  - Some global MuonID parameters and the ones for calculating the DLL with
  the default method DLL_flag=1 (DLLs from region/momentum binned distributions 

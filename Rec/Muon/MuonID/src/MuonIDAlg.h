@@ -164,6 +164,14 @@ private:
   double calcNorm(double *par);
   double calcNorm_nmu(double *par);
 
+  /// Return the momentum bin corresponding to p, given the region
+  int GetPbin(double p, int region);
+  
+  /// Determine probabilities for DLL_flag=3
+  StatusCode calcMuonLL_tanhdist(LHCb::MuonPID * pMuid, const double& p);
+  double     calc_ProbMu_tanh(const double& tanhdist0, int pBin, int region);
+  double     calc_ProbNonMu_tanh(const double& tanhdist0, int pBin, int region);
+  
   double Fdist[5];
   double small_dist[5];
   double closest_region[5];
@@ -215,7 +223,88 @@ private:
   
   double m_x; // x-width for the integral
   int m_nMax;// number of steps
+
+  // hyperbolic tangent mapping of distances:
   
+  // Number of bins for tanh(dist) histos
+  int m_nDistBins;
+
+  // tanh scale factors
+  std::vector< double > 	m_tanhScaleFactorsR1;
+  std::vector< double > 	m_tanhScaleFactorsR2;
+  std::vector< double > 	m_tanhScaleFactorsR3;
+  std::vector< double > 	m_tanhScaleFactorsR4;
+
+  typedef std::vector< std::vector< double >* > vectorOfVectors;
+  vectorOfVectors m_tanhScaleFactors;
+  
+  // tanh(dist2) histograms contents
+  std::vector< double >     m_tanhCumulHistoMuonR1_1;
+  std::vector< double >     m_tanhCumulHistoMuonR1_2;
+  std::vector< double >     m_tanhCumulHistoMuonR1_3;
+  std::vector< double >     m_tanhCumulHistoMuonR1_4;
+  std::vector< double >     m_tanhCumulHistoMuonR1_5;
+  std::vector< double >     m_tanhCumulHistoMuonR1_6;
+  std::vector< double >     m_tanhCumulHistoMuonR1_7;
+  vectorOfVectors m_tanhCumulHistoMuonR1;
+
+  
+  std::vector< double >     m_tanhCumulHistoMuonR2_1;
+  std::vector< double >     m_tanhCumulHistoMuonR2_2;
+  std::vector< double >     m_tanhCumulHistoMuonR2_3;
+  std::vector< double >     m_tanhCumulHistoMuonR2_4;
+  std::vector< double >     m_tanhCumulHistoMuonR2_5;
+  vectorOfVectors m_tanhCumulHistoMuonR2;
+
+  std::vector< double >     m_tanhCumulHistoMuonR3_1;
+  std::vector< double >     m_tanhCumulHistoMuonR3_2;
+  std::vector< double >     m_tanhCumulHistoMuonR3_3;
+  std::vector< double >     m_tanhCumulHistoMuonR3_4;
+  std::vector< double >     m_tanhCumulHistoMuonR3_5;
+  vectorOfVectors m_tanhCumulHistoMuonR3;
+
+  std::vector< double >     m_tanhCumulHistoMuonR4_1;
+  std::vector< double >     m_tanhCumulHistoMuonR4_2;
+  std::vector< double >     m_tanhCumulHistoMuonR4_3;
+  std::vector< double >     m_tanhCumulHistoMuonR4_4;
+  std::vector< double >     m_tanhCumulHistoMuonR4_5;
+  vectorOfVectors m_tanhCumulHistoMuonR4;
+  
+  std::vector< vectorOfVectors * > m_tanhCumulHistoMuon;
+  
+  // tanh(dist2) histograms contents
+  std::vector< double >     m_tanhCumulHistoNonMuonR1_1;
+  std::vector< double >     m_tanhCumulHistoNonMuonR1_2;
+  std::vector< double >     m_tanhCumulHistoNonMuonR1_3;
+  std::vector< double >     m_tanhCumulHistoNonMuonR1_4;
+  std::vector< double >     m_tanhCumulHistoNonMuonR1_5;
+  std::vector< double >     m_tanhCumulHistoNonMuonR1_6;
+  std::vector< double >     m_tanhCumulHistoNonMuonR1_7;
+  vectorOfVectors m_tanhCumulHistoNonMuonR1;
+
+  
+  std::vector< double >     m_tanhCumulHistoNonMuonR2_1;
+  std::vector< double >     m_tanhCumulHistoNonMuonR2_2;
+  std::vector< double >     m_tanhCumulHistoNonMuonR2_3;
+  std::vector< double >     m_tanhCumulHistoNonMuonR2_4;
+  std::vector< double >     m_tanhCumulHistoNonMuonR2_5;
+  vectorOfVectors m_tanhCumulHistoNonMuonR2;
+
+  std::vector< double >     m_tanhCumulHistoNonMuonR3_1;
+  std::vector< double >     m_tanhCumulHistoNonMuonR3_2;
+  std::vector< double >     m_tanhCumulHistoNonMuonR3_3;
+  std::vector< double >     m_tanhCumulHistoNonMuonR3_4;
+  std::vector< double >     m_tanhCumulHistoNonMuonR3_5;
+  vectorOfVectors m_tanhCumulHistoNonMuonR3;
+
+  std::vector< double >     m_tanhCumulHistoNonMuonR4_1;
+  std::vector< double >     m_tanhCumulHistoNonMuonR4_2;
+  std::vector< double >     m_tanhCumulHistoNonMuonR4_3;
+  std::vector< double >     m_tanhCumulHistoNonMuonR4_4;
+  std::vector< double >     m_tanhCumulHistoNonMuonR4_5;
+  vectorOfVectors m_tanhCumulHistoNonMuonR4;
+  
+  std::vector< vectorOfVectors * > m_tanhCumulHistoNonMuon;  
 
   //want to find quality?
   bool m_FindQuality;
@@ -225,7 +314,6 @@ private:
   //Which MuIDTool should be used
   std::string m_myMuIDTool;
   
-
   // function that defines the field of interest size
   // formula is p(1) + p(2)*exp(-p(3)*momentum)
   std::vector< double >     m_xfoiParam1;

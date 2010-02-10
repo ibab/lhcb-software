@@ -29,7 +29,7 @@ FindQuality = True
 OverrideDB = False;
 
 ## Set which DLL is input to MuonPID
-DLL_flag = 1  #0=old; 1=DLL new;
+DLL_flag = 1  #0=old; 1=DLL new; 3=hyperbolic tangent mapping
 ## Use arrival probability as weight to IsMuon/IsMuonLoose and Dist
 Weight_flag = False
 
@@ -250,3 +250,9 @@ MupBinsR1 = [10000., 20000., 30000., 40000., 50000., 60000.]
 MupBinsR2 = [10000., 20000., 30000., 40000.]
 MupBinsR3 = [ 6000., 10000., 20000., 30000.]
 MupBinsR4 = [ 6000.,  8000., 10000., 15000.]
+
+# Load parameters for DLL_flag=3: mapping of dist2 with hyperbolic tangent
+# Tuning for DC06 data.
+
+from MuonID import tanh_DC06
+from tanh_DC06 import *

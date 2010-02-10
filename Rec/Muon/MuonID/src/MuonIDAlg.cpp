@@ -78,7 +78,12 @@
 // Some global properties and DLL_flag=1 parameters may be read from conditions database. 
 // Or alternatively(OverrideDB=true or database not found), still from options file 
 // 16/01/2010: J. H. Lopes
-//-----------------------------------------------------------------------------
+//
+// Implementation of the hyperbolic tangent mapping of distances:
+//=====================
+// 02/02/2010: J. Helder Lopes
+// Replace Landau fits by histograms. The closest distance is mapped into [0,1]
+// by hyperbolic tangent, with a conversion factor per region/momentum bin.
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( MuonIDAlg );
@@ -153,6 +158,7 @@ MuonIDAlg::MuonIDAlg( const std::string& name,
   //--------------------
   // 0 -- default 
   // 1 -- binned distance with closest hit + integral
+  // 3 -- binned tanh(distance) with closest hit + integral. Flag 2 used by MuonPIDChecker for monitoring Prob Mu 
   //-----------------------------
   declareProperty("DLL_flag",m_dllFlag = 0);
   
@@ -209,6 +215,139 @@ MuonIDAlg::MuonIDAlg( const std::string& name,
   declareProperty( "MupBinsR3", m_MupBinsR3);
   declareProperty( "MupBinsR4", m_MupBinsR4);
   
+  // hyperbolic tangent mapping of distances:
+  // Number of bins in the tanh(dist) histos
+  declareProperty( "nDistBins", m_nDistBins = 50);
+
+  // tanh scale factors
+  declareProperty( "tanhScaleFactorsR1", m_tanhScaleFactorsR1);
+  declareProperty( "tanhScaleFactorsR2", m_tanhScaleFactorsR2);
+  declareProperty( "tanhScaleFactorsR3", m_tanhScaleFactorsR3);
+  declareProperty( "tanhScaleFactorsR4", m_tanhScaleFactorsR4);
+  
+  // tanh(dist2) histograms contents
+  declareProperty( "tanhCumulHistoMuonR1_1", m_tanhCumulHistoMuonR1_1);
+  declareProperty( "tanhCumulHistoMuonR1_2", m_tanhCumulHistoMuonR1_2);
+  declareProperty( "tanhCumulHistoMuonR1_3", m_tanhCumulHistoMuonR1_3);
+  declareProperty( "tanhCumulHistoMuonR1_4", m_tanhCumulHistoMuonR1_4);
+  declareProperty( "tanhCumulHistoMuonR1_5", m_tanhCumulHistoMuonR1_5);
+  declareProperty( "tanhCumulHistoMuonR1_6", m_tanhCumulHistoMuonR1_6);
+  declareProperty( "tanhCumulHistoMuonR1_7", m_tanhCumulHistoMuonR1_7);
+  
+  declareProperty( "tanhCumulHistoMuonR2_1", m_tanhCumulHistoMuonR2_1);
+  declareProperty( "tanhCumulHistoMuonR2_2", m_tanhCumulHistoMuonR2_2);
+  declareProperty( "tanhCumulHistoMuonR2_3", m_tanhCumulHistoMuonR2_3);
+  declareProperty( "tanhCumulHistoMuonR2_4", m_tanhCumulHistoMuonR2_4);
+  declareProperty( "tanhCumulHistoMuonR2_5", m_tanhCumulHistoMuonR2_5);
+  
+  declareProperty( "tanhCumulHistoMuonR3_1", m_tanhCumulHistoMuonR3_1);
+  declareProperty( "tanhCumulHistoMuonR3_2", m_tanhCumulHistoMuonR3_2);
+  declareProperty( "tanhCumulHistoMuonR3_3", m_tanhCumulHistoMuonR3_3);
+  declareProperty( "tanhCumulHistoMuonR3_4", m_tanhCumulHistoMuonR3_4);
+  declareProperty( "tanhCumulHistoMuonR3_5", m_tanhCumulHistoMuonR3_5);
+  
+  declareProperty( "tanhCumulHistoMuonR4_1", m_tanhCumulHistoMuonR4_1);
+  declareProperty( "tanhCumulHistoMuonR4_2", m_tanhCumulHistoMuonR4_2);
+  declareProperty( "tanhCumulHistoMuonR4_3", m_tanhCumulHistoMuonR4_3);
+  declareProperty( "tanhCumulHistoMuonR4_4", m_tanhCumulHistoMuonR4_4);
+  declareProperty( "tanhCumulHistoMuonR4_5", m_tanhCumulHistoMuonR4_5);
+  
+  
+  // tanh(dist2) histograms contents
+  // # For the moment, non-muons dist per momentum bin come form the same dist per region 
+  declareProperty( "tanhCumulHistoNonMuonR1_1", m_tanhCumulHistoNonMuonR1_1);
+  declareProperty( "tanhCumulHistoNonMuonR1_2", m_tanhCumulHistoNonMuonR1_2);
+  declareProperty( "tanhCumulHistoNonMuonR1_3", m_tanhCumulHistoNonMuonR1_3);
+  declareProperty( "tanhCumulHistoNonMuonR1_4", m_tanhCumulHistoNonMuonR1_4);
+  declareProperty( "tanhCumulHistoNonMuonR1_5", m_tanhCumulHistoNonMuonR1_5);
+  declareProperty( "tanhCumulHistoNonMuonR1_6", m_tanhCumulHistoNonMuonR1_6);
+  declareProperty( "tanhCumulHistoNonMuonR1_7", m_tanhCumulHistoNonMuonR1_7);
+  
+  declareProperty( "tanhCumulHistoNonMuonR2_1", m_tanhCumulHistoNonMuonR2_1);
+  declareProperty( "tanhCumulHistoNonMuonR2_2", m_tanhCumulHistoNonMuonR2_2);
+  declareProperty( "tanhCumulHistoNonMuonR2_3", m_tanhCumulHistoNonMuonR2_3);
+  declareProperty( "tanhCumulHistoNonMuonR2_4", m_tanhCumulHistoNonMuonR2_4);
+  declareProperty( "tanhCumulHistoNonMuonR2_5", m_tanhCumulHistoNonMuonR2_5);
+  
+  declareProperty( "tanhCumulHistoNonMuonR3_1", m_tanhCumulHistoNonMuonR3_1);
+  declareProperty( "tanhCumulHistoNonMuonR3_2", m_tanhCumulHistoNonMuonR3_2);
+  declareProperty( "tanhCumulHistoNonMuonR3_3", m_tanhCumulHistoNonMuonR3_3);
+  declareProperty( "tanhCumulHistoNonMuonR3_4", m_tanhCumulHistoNonMuonR3_4);
+  declareProperty( "tanhCumulHistoNonMuonR3_5", m_tanhCumulHistoNonMuonR3_5);
+  
+  declareProperty( "tanhCumulHistoNonMuonR4_1", m_tanhCumulHistoNonMuonR4_1);
+  declareProperty( "tanhCumulHistoNonMuonR4_2", m_tanhCumulHistoNonMuonR4_2);
+  declareProperty( "tanhCumulHistoNonMuonR4_3", m_tanhCumulHistoNonMuonR4_3);
+  declareProperty( "tanhCumulHistoNonMuonR4_4", m_tanhCumulHistoNonMuonR4_4);
+  declareProperty( "tanhCumulHistoNonMuonR4_5", m_tanhCumulHistoNonMuonR4_5);
+  
+  m_tanhScaleFactors.push_back(&m_tanhScaleFactorsR1);
+  m_tanhScaleFactors.push_back(&m_tanhScaleFactorsR2);
+  m_tanhScaleFactors.push_back(&m_tanhScaleFactorsR3);
+  m_tanhScaleFactors.push_back(&m_tanhScaleFactorsR4);
+
+  m_tanhCumulHistoMuonR1.push_back(&m_tanhCumulHistoMuonR1_1);
+  m_tanhCumulHistoMuonR1.push_back(&m_tanhCumulHistoMuonR1_2);
+  m_tanhCumulHistoMuonR1.push_back(&m_tanhCumulHistoMuonR1_3);
+  m_tanhCumulHistoMuonR1.push_back(&m_tanhCumulHistoMuonR1_4);
+  m_tanhCumulHistoMuonR1.push_back(&m_tanhCumulHistoMuonR1_5);
+  m_tanhCumulHistoMuonR1.push_back(&m_tanhCumulHistoMuonR1_6);
+  m_tanhCumulHistoMuonR1.push_back(&m_tanhCumulHistoMuonR1_7);
+
+  m_tanhCumulHistoMuonR2.push_back(&m_tanhCumulHistoMuonR2_1);
+  m_tanhCumulHistoMuonR2.push_back(&m_tanhCumulHistoMuonR2_2);
+  m_tanhCumulHistoMuonR2.push_back(&m_tanhCumulHistoMuonR2_3);
+  m_tanhCumulHistoMuonR2.push_back(&m_tanhCumulHistoMuonR2_4);
+  m_tanhCumulHistoMuonR2.push_back(&m_tanhCumulHistoMuonR2_5);
+  
+  m_tanhCumulHistoMuonR3.push_back(&m_tanhCumulHistoMuonR3_1);
+  m_tanhCumulHistoMuonR3.push_back(&m_tanhCumulHistoMuonR3_2);
+  m_tanhCumulHistoMuonR3.push_back(&m_tanhCumulHistoMuonR3_3);
+  m_tanhCumulHistoMuonR3.push_back(&m_tanhCumulHistoMuonR3_4);
+  m_tanhCumulHistoMuonR3.push_back(&m_tanhCumulHistoMuonR3_5);
+  
+  m_tanhCumulHistoMuonR4.push_back(&m_tanhCumulHistoMuonR4_1);
+  m_tanhCumulHistoMuonR4.push_back(&m_tanhCumulHistoMuonR4_2);
+  m_tanhCumulHistoMuonR4.push_back(&m_tanhCumulHistoMuonR4_3);
+  m_tanhCumulHistoMuonR4.push_back(&m_tanhCumulHistoMuonR4_4);
+  m_tanhCumulHistoMuonR4.push_back(&m_tanhCumulHistoMuonR4_5);
+  
+  m_tanhCumulHistoMuon.push_back(&m_tanhCumulHistoMuonR1);
+  m_tanhCumulHistoMuon.push_back(&m_tanhCumulHistoMuonR2);
+  m_tanhCumulHistoMuon.push_back(&m_tanhCumulHistoMuonR3);
+  m_tanhCumulHistoMuon.push_back(&m_tanhCumulHistoMuonR4);
+
+  m_tanhCumulHistoNonMuonR1.push_back(&m_tanhCumulHistoNonMuonR1_1);
+  m_tanhCumulHistoNonMuonR1.push_back(&m_tanhCumulHistoNonMuonR1_2);
+  m_tanhCumulHistoNonMuonR1.push_back(&m_tanhCumulHistoNonMuonR1_3);
+  m_tanhCumulHistoNonMuonR1.push_back(&m_tanhCumulHistoNonMuonR1_4);
+  m_tanhCumulHistoNonMuonR1.push_back(&m_tanhCumulHistoNonMuonR1_5);
+  m_tanhCumulHistoNonMuonR1.push_back(&m_tanhCumulHistoNonMuonR1_6);
+  m_tanhCumulHistoNonMuonR1.push_back(&m_tanhCumulHistoNonMuonR1_7);
+
+  m_tanhCumulHistoNonMuonR2.push_back(&m_tanhCumulHistoNonMuonR2_1);
+  m_tanhCumulHistoNonMuonR2.push_back(&m_tanhCumulHistoNonMuonR2_2);
+  m_tanhCumulHistoNonMuonR2.push_back(&m_tanhCumulHistoNonMuonR2_3);
+  m_tanhCumulHistoNonMuonR2.push_back(&m_tanhCumulHistoNonMuonR2_4);
+  m_tanhCumulHistoNonMuonR2.push_back(&m_tanhCumulHistoNonMuonR2_5);
+  
+  m_tanhCumulHistoNonMuonR3.push_back(&m_tanhCumulHistoNonMuonR3_1);
+  m_tanhCumulHistoNonMuonR3.push_back(&m_tanhCumulHistoNonMuonR3_2);
+  m_tanhCumulHistoNonMuonR3.push_back(&m_tanhCumulHistoNonMuonR3_3);
+  m_tanhCumulHistoNonMuonR3.push_back(&m_tanhCumulHistoNonMuonR3_4);
+  m_tanhCumulHistoNonMuonR3.push_back(&m_tanhCumulHistoNonMuonR3_5);
+  
+  m_tanhCumulHistoNonMuonR4.push_back(&m_tanhCumulHistoNonMuonR4_1);
+  m_tanhCumulHistoNonMuonR4.push_back(&m_tanhCumulHistoNonMuonR4_2);
+  m_tanhCumulHistoNonMuonR4.push_back(&m_tanhCumulHistoNonMuonR4_3);
+  m_tanhCumulHistoNonMuonR4.push_back(&m_tanhCumulHistoNonMuonR4_4);
+  m_tanhCumulHistoNonMuonR4.push_back(&m_tanhCumulHistoNonMuonR4_5);
+  
+  m_tanhCumulHistoNonMuon.push_back(&m_tanhCumulHistoNonMuonR1);
+  m_tanhCumulHistoNonMuon.push_back(&m_tanhCumulHistoNonMuonR2);
+  m_tanhCumulHistoNonMuon.push_back(&m_tanhCumulHistoNonMuonR3);
+  m_tanhCumulHistoNonMuon.push_back(&m_tanhCumulHistoNonMuonR4);
+
 }
 
 //=============================================================================
@@ -226,13 +365,10 @@ StatusCode MuonIDAlg::initialize() {
   if ( sc.isFailure() ) { return sc; }
   
   info()   << "MuonIDAlg v7r7" << endmsg;
-  
-  if (msgLevel(MSG::DEBUG) ) {
-    debug()  << "==> Initialise" << endmsg;
-    debug()  << "Input tracks in: " << m_TracksPath << endmsg;
-    debug()  << "Output MuonPID in: " << m_MuonPIDsPath<< endmsg;  
-  }
-  
+
+    info()  << "==> Initialise: Input tracks in: " << m_TracksPath << endmsg;
+    info()  << "                Output MuonPID in: " << m_MuonPIDsPath<< endmsg;  
+    
   // Check the presence of MuonID parameters in the loaded conditions database  
   if(existDet<DataObject>(detSvc(),"Conditions/ParticleID/Muon/PreSelMomentum" )){
     debug()  << "Initialise: Conditions database with muon ID info found"  << endmsg; 
@@ -301,13 +437,10 @@ StatusCode MuonIDAlg::initialize() {
       debug()  << "==> Weight_flag:" << m_weightFlag << endmsg;
       debug()  << endmsg;
       
-      //--------------------
-      // flag to use DLL:
-      //--------------------
-      // 0 -- default 
-      // 1 -- binned distance with closest hit + integral
-      //-----------------------------
-      m_dllFlag  = (bool)DLL_flag->param<int>("DLL_flag");
+      double dllFlag  = (bool)DLL_flag->param<int>("DLL_flag");
+      if(dllFlag != m_dllFlag) warning() << "Initialise: OverrideDB=false but dllFlag in options cards (=" 
+        << m_dllFlag << ") not equal dllFlag in database (="  << dllFlag << "). Using database value" << endmsg;
+      m_dllFlag = dllFlag;
       debug()  << "==> DLL_flag:" << std::boolalpha << m_dllFlag << endmsg;
       
       // Muon ParticleID Conditions for DLL_flag = 1 from database
@@ -535,9 +668,6 @@ StatusCode MuonIDAlg::initialize() {
   if( m_distPion.size() != 9 || m_distMuon.size() != 9) 
     return Error("OPTIONS are wrong: size of m_distPion or m_distMuon vector is not correct");
   
-  //  Load MeasurementProvider Tool
-  m_Chi2MuIDTool  = tool<ImuIDTool>(m_myMuIDTool,"myMuIDTool",this);
-  
   // GL&SF: Check that Landaus parameters are properly uploaded:
   m_parLandauMu = 6;
   m_parLandauNonMu = 3;
@@ -576,11 +706,12 @@ StatusCode MuonIDAlg::initialize() {
   }
   
   // GL&SF: Check that dll flag is properly set:
-  if (m_dllFlag==0) info() << " -----> DLL standard (old method) " << endmsg;
-  if (m_dllFlag==1) info() << " -----> DLL  new (binned-integrated method) " << endmsg;
+  if (m_dllFlag==0) info() << " dllFlag=0 -----> DLL standard (old method) " << endmsg;
+  if (m_dllFlag==1) info() << " dllFlag=1 -----> DLL  new (binned-integrated method) " << endmsg;
+  if (m_dllFlag==3) info() << " dllFlag=3 -----> DLL  new (hyperbolic tangent mapping) " << endmsg;
   
-  if (m_dllFlag<0 || m_dllFlag>1) 
-    return Error("DLL flag set to a not existing value: allowed values are: 0=DLL old, 1=DLL integrated");
+  if (m_dllFlag<0 || m_dllFlag>3 || m_dllFlag==2) 
+    return Error("DLL flag set to a not existing value: allowed values are: 0=DLL old, 1=DLL integrated, 3=hyperbolic tangent mapping");
   
   // GL&SF: Check that parameters of the integral are fine
   if ((int)(m_x*m_nMax) !=800) return Error(format("DLL integral cannot be calculated, parameters are wrong: x, N %8.3f, %8.3f",
@@ -589,6 +720,33 @@ StatusCode MuonIDAlg::initialize() {
   // GL&SF: Calculate Landaus normalizations:
   StatusCode sc2 = calcLandauNorm();
   if ( sc2.isFailure() ) return Error(" Normalizations of Landaus not properly set ",sc2);
+  
+  // Print tanh(dist2) parameters
+  if(3 == m_dllFlag && msgLevel(MSG::DEBUG)){
+    debug() << "Initialize: tahn(dist2) parameters set by options:" << endmsg;
+    debug() << "Initialize: m_nMupBinsR1: " << m_nMupBinsR1 << endmsg;
+    for(int iR=0;iR<4;++iR){
+      int npBins=m_tanhScaleFactors[iR]->size();
+      debug() << "Region " << iR+1 <<  " npBins: " << npBins << endmsg;
+      for(int ipBin=0;ipBin<npBins;++ipBin){
+        debug() << "    ipBin+1:  " << ipBin+1 << " tanhScaleFactor: " 
+	        << (*m_tanhScaleFactors[iR])[ipBin] << " tanh(dist2) bin contents:" << endmsg;
+        debug() << "\tMuons: ";		
+        for(int idBin=0;idBin<m_nDistBins;++idBin){
+          debug() << (*(*m_tanhCumulHistoMuon[iR])[ipBin])[idBin] << " ";
+        }
+	debug() << endmsg;
+        debug() << "\tNonMuons: ";		
+        for(int idBin=0;idBin<m_nDistBins;++idBin){
+          debug() << (*(*m_tanhCumulHistoNonMuon[iR])[ipBin])[idBin] << " ";
+        }
+	debug() << endmsg;
+      }
+    }
+  }
+  
+    //  Load MeasurementProvider Tool
+  m_Chi2MuIDTool  = tool<ImuIDTool>(m_myMuIDTool,"myMuIDTool",this);
   
   return StatusCode::SUCCESS;
 }
@@ -794,8 +952,6 @@ StatusCode MuonIDAlg::find_LandauParam(const double& p,const std::vector<int>& t
   return StatusCode::SUCCESS;
 }
 
-
-
 //=============================================================================
 // Clear the coord vector
 //=============================================================================
@@ -893,11 +1049,17 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
      if(sc.isFailure()){
        if (myIsMuonLoose) m_mullfail++; 
      }
-   }  else {             // DLL with distance+integral:
+   }  else if(m_dllFlag == 1){             // DLL with distance+integral:
      sc = calcMuonLL_dist(pMuid,m_MomentumPre); 
      if(sc.isFailure()){
        if (msgLevel(MSG::DEBUG) ) debug() << " calcMuonLL(binned) failed (P<0) to MuonPID object " << pMuid << endmsg;
        if (myIsMuonLoose) m_mullfail++; 
+     }
+   } else  if(m_dllFlag == 3){ // DLL with tanh(dist2) histograms
+     sc = calcMuonLL_tanhdist(pMuid,m_MomentumPre); 
+     if(sc.isFailure()){
+       if (msgLevel(MSG::DEBUG) ) debug() << " calcMuonLL(tanh mapping) failed (P<0) to MuonPID object " << pMuid << endmsg;
+       if (myIsMuonLoose) m_mullfail++;    
      }
    }
 
@@ -1182,8 +1344,82 @@ StatusCode MuonIDAlg::calcMuonLL_dist(LHCb::MuonPID * pMuid, const double& p){
   // Set in the MuonPID object the ProbMu & ProbNonMu (Not the Log!)
   pMuid->setMuonLLMu(log(ProbMu));
   pMuid->setMuonLLBg(log(ProbNonMu));
+  
+  if (msgLevel(MSG::DEBUG) ) {
+    debug() << "calcMuonLL_dist: region: " << trackRegion << " momentum: " << p
+            << " dist: " << myDist << " ProbMu: " << ProbMu << " ProbNonMu: " 
+  	    << ProbNonMu << " DLL: " << log(ProbMu/ProbNonMu) << endmsg;
+  }
+  return StatusCode::SUCCESS;
+}
 
+StatusCode MuonIDAlg::calcMuonLL_tanhdist(LHCb::MuonPID * pMuid, const double& p){
+//=============================================================================
+// comment: Calculate the muon DLL with the cumulative histos of the hyperbolic 
+//          tangent of the closest distance, per region and momentum bins:
+// authors: J. Helder Lopes
+// date:    13/10/09
+//=============================================================================
 
+  pMuid->setMuonLLMu(-10000.);
+  pMuid->setMuonLLBg(-10000.);
+
+  // calculate dll only for IsMuonLoose:
+  if ( !pMuid->IsMuonLoose() ) return StatusCode::SUCCESS;
+
+  // Initialize some variables:
+  double myDist=-1.;
+  double ProbMu=-1.;
+  double ProbNonMu = -1.;
+  double parMu[6];
+  double parNonMu[3];
+  for(int i=0;i<6;i++){parMu[i]=0;}
+  for(int i=0;i<3;i++){parNonMu[i]=0;}
+  std::vector<int> trackRegion(m_NStation,-1); 
+
+  // Calculate Distance using the closest hit:
+  myDist = calc_closestDist(pMuid,p,closest_region);
+  if (myDist<=0) return Error(" Closest Distance < 0 ");
+  
+  //EP: Store dist to fill Muon Track extra info
+  m_dist_out=myDist;
+
+  // Region of the track extrapolated:
+  for (int sta=0;sta<m_NStation; sta++){
+    trackRegion[sta] = findTrackRegion(sta);
+    if (trackRegion[sta]<0 && msgLevel(MSG::DEBUG) ) 
+      debug() << format(" Track extrapolation in station %d gives not-existent region ",sta)
+              << endmsg;
+  }
+  
+  int region=trackRegion[1]; // M2 
+  if (region<0) region=trackRegion[2]; // M3 
+
+  // Determine the momentum bin for this region
+  int pBin=GetPbin(p, region);
+  double tanhdist;
+    // Calculate tanh(dist). The effetive scale factor is after dividing by tanh^¯1(0.5)
+    tanhdist = tanh(myDist/(*(m_tanhScaleFactors[region]))[pBin]*atanh(0.5));
+  
+  // Calculate Prob(mu) and Prob(non-mu) for a given track;
+    ProbMu = calc_ProbMu_tanh(tanhdist, pBin, region );
+    if (ProbMu<0) return Error("ProbMu <0", StatusCode::FAILURE); 
+
+    ProbNonMu = calc_ProbNonMu_tanh(tanhdist, pBin, region );
+    if (ProbNonMu<0) return Error("ProbNonMu <0", StatusCode::FAILURE);
+
+  
+  // Set in the MuonPID object the ProbMu & ProbNonMu (Not the Log!)
+  pMuid->setMuonLLMu(log(ProbMu));
+  pMuid->setMuonLLBg(log(ProbNonMu));
+
+  if (msgLevel(MSG::DEBUG) ) {
+    debug() << "calcMuonLL_tanhdist: region: " << region << " momentum: " << p 
+            << " pBin: " <<  pBin << " dist " << myDist << " tanh(dist2): " 
+	    << tanhdist << " ProbMu: " << ProbMu << " ProbNonMu: " << ProbNonMu 
+	    <<" DLL: " << log(ProbMu/ProbNonMu) << endmsg;
+  }
+   
   return StatusCode::SUCCESS;
 }
 
@@ -1686,6 +1922,40 @@ double MuonIDAlg::calc_closestDist(LHCb::MuonPID *pMuid, const double& p, double
   
 }
 
+int MuonIDAlg::GetPbin(double p, int region){
+  std::vector<double> * pBins=0;
+  switch( region+1 ){
+    case 1:{ pBins = &m_MupBinsR1; break;}
+    case 2:{ pBins = &m_MupBinsR2; break;}
+    case 3:{ pBins = &m_MupBinsR3; break;}
+    case 4:{ pBins = &m_MupBinsR4; break;}
+  }
+  debug() << "GetPbin: region+1 " << region+1 << " p " <<  p << " pBins address: " << pBins << endmsg;
+  if(0 == pBins) warning() << "GetPbin: No match to a pBins vector. Null pBins pointer" << endmsg;
+  for(unsigned int iBin=0; iBin<pBins->size();++iBin){
+    debug() << "GetPbin:\tiBin " <<  iBin << " pBins[iBin] " << (*pBins)[iBin] << endmsg;
+    if(p < (*pBins)[iBin]) return iBin;
+  }
+  return pBins->size();  // last bin. npBins goes from 0 to (Gaias npBin)+1
+}
+
+//=====================================================================
+double MuonIDAlg::calc_ProbMu_tanh(const double& tanhdist0, int pBin, int region){
+  int itanhdist=int(tanhdist0*m_nDistBins)+1;
+  if(itanhdist>=m_nDistBins)itanhdist--;
+  debug() << "calc_ProbMu_tanh: region " << region << " pBin " << pBin << " tanh(dist) " << tanhdist0 
+          << " itanhdist " << itanhdist << " ProbMu " << (*((*(m_tanhCumulHistoMuon[region]))[pBin]))[itanhdist] << endmsg;
+  return (*((*(m_tanhCumulHistoMuon[region]))[pBin]))[itanhdist];
+}
+
+//=====================================================================
+double MuonIDAlg::calc_ProbNonMu_tanh(const double& tanhdist0, int pBin, int region){
+  int itanhdist=int(tanhdist0*m_nDistBins)+1;
+  if(itanhdist>=m_nDistBins)itanhdist--;
+  debug() << "calc_ProbNonMu_tanh: region " << region << " pBin " << pBin << " tanh(dist) " << tanhdist0 
+          << " itanhdist " << itanhdist << " ProbNonMu " << (*((*(m_tanhCumulHistoNonMuon[region]))[pBin]))[itanhdist] << endmsg;
+  return (*((*(m_tanhCumulHistoNonMuon[region]))[pBin]))[itanhdist];
+}
 
 //=====================================================================
 double MuonIDAlg::calc_ProbMu(const double& dist0, const double *parMu){
