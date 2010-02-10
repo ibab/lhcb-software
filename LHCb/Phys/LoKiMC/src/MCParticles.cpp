@@ -1,4 +1,4 @@
-// $Id: MCParticles.cpp,v 1.20 2009-08-19 13:37:13 ibelyaev Exp $
+// $Id: MCParticles.cpp,v 1.21 2010-02-10 17:36:38 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -164,7 +164,7 @@ LoKi::MCParticles::PseudoRapidity::result_type
 LoKi::MCParticles::PseudoRapidity::operator() 
   ( LoKi::MCParticles::PseudoRapidity::argument p ) const
 {
-  if( 0 != p ) { return p -> momentum () . Eta () ; }    // RETURN 
+  if( 0 != p ) { return eta ( p ) ; }    // RETURN 
   Error(" Invalid Particle, return 'InvalidMomenum'") ;
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
 }
@@ -177,6 +177,61 @@ std::ostream&
 LoKi::MCParticles::PseudoRapidity::fillStream
 ( std::ostream& s ) const 
 { return s << "MCETA" ; }
+// ============================================================================
+double LoKi::MCParticles::PseudoRapidity::y 
+( const Gaudi::LorentzVector& v ) const
+{
+  const double e  = v.E  () ;
+  const double pz = v.Pz () ;
+  return 0.5*std::log( (e+pz)/(e-pz) ) ;
+}
+// ============================================================================
+double LoKi::MCParticles::PseudoRapidity::y0
+( const Gaudi::LorentzVector& v ) const
+{
+  const double e  = v.E  () ;
+  const double p  = v.P  () ;
+  return 0.5*std::log( (e+p)/(e-p) ) ;
+}
+// ============================================================================
+LoKi::MCParticles::Rapidity*
+LoKi::MCParticles::Rapidity::clone() const 
+{ return new LoKi::MCParticles::Rapidity(*this) ; }
+// ============================================================================
+LoKi::MCParticles::Rapidity0*
+LoKi::MCParticles::Rapidity0::clone() const 
+{ return new LoKi::MCParticles::Rapidity0(*this) ; }
+// ============================================================================
+LoKi::MCParticles::Rapidity::result_type 
+LoKi::MCParticles::Rapidity::operator() 
+  ( LoKi::MCParticles::Rapidity::argument p ) const
+{
+  if ( 0 != p ) { return y ( p ) ; }    // RETURN 
+  Error(" Invalid Particle, return 'InvalidMomenum'") ;
+  return LoKi::Constants::InvalidMomentum;                   // RETURN 
+}
+// ============================================================================
+LoKi::MCParticles::Rapidity0::result_type 
+LoKi::MCParticles::Rapidity0::operator() 
+  ( LoKi::MCParticles::Rapidity0::argument p ) const
+{
+  if ( 0 != p ) { return y0 ( p ) ; }    // RETURN 
+  Error(" Invalid Particle, return 'InvalidMomenum'") ;
+  return LoKi::Constants::InvalidMomentum;                   // RETURN 
+}
+// ============================================================================
+std::ostream&
+LoKi::MCParticles::Rapidity::fillStream
+( std::ostream& s ) const 
+{ return s << "MCY" ; }
+// ============================================================================
+std::ostream&
+LoKi::MCParticles::Rapidity0::fillStream
+( std::ostream& s ) const 
+{ return s << "MCY0" ; }
+// ============================================================================
+
+
 // ============================================================================
 LoKi::MCParticles::Theta::result_type 
 LoKi::MCParticles::Theta::operator() 

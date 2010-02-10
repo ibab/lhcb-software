@@ -1,4 +1,4 @@
-// $Id: MCParticleCuts.h,v 1.13 2008-12-18 15:24:34 ibelyaev Exp $
+// $Id: MCParticleCuts.h,v 1.14 2010-02-10 17:36:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCPARTICLECUTS_H 
 #define LOKI_MCPARTICLECUTS_H 1
@@ -1444,6 +1444,28 @@ namespace LoKi
      *  @date 2005-05-16
      */
     typedef LoKi::MCParticles::MCVertexFunAdapter                    MCVFASPF ;    
+    // ========================================================================
+    /** @var MCY 
+     *  Evaluator of rapidity of the particle 
+     *  \f$ y = \frac{1}{2}\log \frac{ E - p_z }{ E + p_z } \f$ 
+     *  @see LoKi::MCParticles::Rapidity
+     *  @see LoKi::Cuts::MCETA
+     *  @see LoKi::Cuts::MCY0
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-02-10
+     */
+    const LoKi::MCParticles::Rapidity                                     MCY ;
+    // ========================================================================
+    /** @var MCY0 
+     *  Evaluator of rapidity of the particle 
+     *  \f$ y_0 = \frac{1}{2}\log \frac{ E - p }{ E + p } \f$ 
+     *  @see LoKi::MCParticles::Rapidity0
+     *  @see LoKi::Cuts::MCETA
+     *  @see LoKi::Cuts::MCY
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-02-10
+     */
+    const LoKi::MCParticles::Rapidity0                                   MCY0 ;
     // ========================================================================
     /** @var MCZERO
      *  primitive function, "always 0"

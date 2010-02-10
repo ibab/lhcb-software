@@ -201,6 +201,11 @@ MCSUMTREE  = LoKi.MCParticles.SumTree
 ## @see LoKi::Cuts::MCMULTTREE
 MCMULTTREE = LoKi.MCParticles.MultTree
 
+## @see LoKi::Cuts::MCY
+MCY        = LoKi.MCParticles.Rapidity  ()
+## @see LoKi::Cuts::MCY0
+MCY0       = LoKi.MCParticles.Rapidity0 ()
+
 ## @see LoKi::Cuts::CHARM
 CHARM      =  MCCHARM 
 ## @see LoKi::Cuts::BEAUTY

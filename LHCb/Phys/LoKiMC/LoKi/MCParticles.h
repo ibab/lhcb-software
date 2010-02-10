@@ -1,4 +1,4 @@
-// $Id: MCParticles.h,v 1.21 2009-08-19 13:37:13 ibelyaev Exp $
+// $Id: MCParticles.h,v 1.22 2010-02-10 17:36:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCPARTICLES_H 
 #define LOKI_MCPARTICLES_H 1
@@ -163,7 +163,7 @@ namespace LoKi
     };
     // ========================================================================    
     /** @class Theta
-     *  evaluator of the pseudorapidity of the particle 
+     *  evaluator of the theta angle of the particle 
      *  
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2002-07-15
@@ -180,22 +180,90 @@ namespace LoKi
     };
     // ========================================================================    
     /** @class PseudoRapidity
-     *  evaluator of the seudorapidity of the particle 
-     *  
+     *  evaluator of the pseudorapidity of the particle 
+     *  @see LoKi::Cuts::MCETA 
+     *
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
     class PseudoRapidity : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {    
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual PseudoRapidity* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
       /// get eta 
-      result_type eta ( argument p ) const { return p->momentum() .Eta() ; }
+      double eta ( argument                    p ) const 
+      { return eta ( p -> momentum() ) ; }
+      /// get eta
+      double eta ( const Gaudi::LorentzVector& v ) const 
+      { return v . Eta () ; }
+      /// get rapidity 
+      double y  ( argument                    p  ) const 
+      { return y ( p->momentum() ) ; }
+      /// get rapidity 
+      double y  ( const Gaudi::LorentzVector& v  ) const ;
+      /// get rapidity0 
+      double y0 ( argument                    p  ) const 
+      { return y ( p->momentum() ) ; }
+      /// get rapidity0
+      double y0 ( const Gaudi::LorentzVector& v  ) const ;
+      // ======================================================================
+    };
+    // ========================================================================    
+    /** @class Rapidity
+     *  evaluator of the rapidity of the particle 
+     *
+     *  \f$ y = \frac{1}{2}\log \frac{ E - p_z }{ E + p_z } \f$ 
+     *
+     *  @see LoKi::Cuts::MCY 
+     *  @see LoKi::Cuts::MCY0 
+     *  @see LoKi::Cuts::MCETA
+     *  
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2010-02-10
+     */
+    class Rapidity : public PseudoRapidity
+    {    
+    public:
+      // ======================================================================
+      /// clone method (mandatory!)
+      virtual Rapidity* clone() const ;
+      /// the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
+    };
+    // ========================================================================    
+    /** @class Rapidity0
+     *  evaluator of the rapidity_0 of the particle 
+     *
+     *  \f$ y_0 = \frac{1}{2}\log \frac{ E - p }{ E + p } \f$ 
+     *
+     *  @see LoKi::Cuts::MCY0 
+     *  @see LoKi::Cuts::MCY
+     *  @see LoKi::Cuts::MCETA 
+     *  
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2010-02-10
+     */
+    class Rapidity0 : public Rapidity
+    {    
+    public:
+      // ======================================================================
+      /// clone method (mandatory!)
+      virtual Rapidity0* clone() const ;
+      /// the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================    
     /** @class Phi
