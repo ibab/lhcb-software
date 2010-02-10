@@ -1,4 +1,4 @@
-// $Id: MuonTimeCor.cpp,v 1.1 2010-02-09 16:02:24 asatta Exp $
+// $Id: MuonTimeCor.cpp,v 1.2 2010-02-10 09:19:48 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -130,9 +130,9 @@ StatusCode MuonTimeCor::initialize()
     std::ifstream corList;
     int sn1,sn2,sc1,sc2,cor;
     //  std::string ode;
-    char ode[10]="";
-    char testona[10]="";
-    char testina[9]="";
+    char ode[8]="";
+    //char testona[10]="";
+    //char testina[9]="";
     corList.open(iFile->c_str());
     if(!corList) {
       error() << "Cannot open input file"<<endreq;
@@ -195,9 +195,9 @@ return StatusCode::SUCCESS;
 
 int MuonTimeCor::getIndex(MuonTileID tile)
 {
-  int region=tile.region();  
-  int station=tile.station();
-  int index=station*4+region;
+  //int region=tile.region();  
+  //int station=tile.station();
+  //int index=station*4+region;
   
   int quarter=tile.quarter();
   
