@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # ==========================================================================================
-## @file BenderExample/RealK0S.py
+## @file BenderExample/RealK0S_MC.py
 #
 #  A little bit modified version of original script by Alexander KOZLINSKY  and
 #  Thomas BAUER to look for K0S -> pi+ pi- peak on real data

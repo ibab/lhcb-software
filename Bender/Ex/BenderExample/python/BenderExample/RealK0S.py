@@ -254,12 +254,21 @@ def configure ( datafiles ) :
         Output = [ "K0S DATAFILE='RealK0S.root' TYPE='ROOT' OPT='NEW'" ]
         )
     
+    from Configurables import NoPIDsParticleMaker    
+    for nam in ( 'StdNoPIDsPions'       ,
+                 'StdNoPIDsDownPions'   ) :
+        alg = NoPIDsParticleMaker ( nam )
+        alg.InputPrimaryVertices = 'Strip/Rec/Vertex/Primary' 
+        
     gaudi = appMgr()
-    
-    alg = Ks(
+        
+    alg = Ks (
         'Ks'              ,   ## Algorithm name
-        NTupleLUN = 'K0S' ,   ## Logical unit for output file with N-tuples 
-        InputLocations = [ 'StdNoPIDsPions', 'StdNoPIDsDownPions' ] ## input particles 
+        NTupleLUN = 'K0S' ,   ## Logical unit for output file with N-tuples        
+        ## primary vertices for stripping: 
+        InputPrimaryVertices = 'Strip/Rec/Vertex/Primary' ,
+        InputLocations = [ 'StdNoPIDsPions'     ,
+                           'StdNoPIDsDownPions' ] ## input particles 
         )
     
     #gaudi.setAlgorithms ( [ 'PatPVOffline' , alg ] ) 
@@ -282,7 +291,11 @@ if '__main__' == __name__ :
     
     evtsel = gaudi.evtSel()
     
-    from BenderExample.JuanFiles2009 import files 
+    pfn = '/castor/cern.ch/grid/lhcb/data/2009/DST/00005848/0000/00005848_0000000%d_1.V0.dst'
+    files = [ pfn % i for i in range(1,7) ]
+    print files
+    
+    ##from BenderExample.JuanFiles2009 import files 
     
     evtsel.open( files ) 
     

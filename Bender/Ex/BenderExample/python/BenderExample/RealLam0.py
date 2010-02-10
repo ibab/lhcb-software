@@ -81,7 +81,6 @@ class Lam0(Algo) :
         if primaries.empty() :
             return self.Warning('No primary vertices are found', SUCCESS )
 
-
         goodTrack = ( P > 1.5 * GeV ) & ( TRCHI2DOF < 10 )
         
         pions   = self.select ( 'pion' , ( 'pi+' == ABSID ) & goodTrack )
@@ -341,6 +340,7 @@ def configure ( datafiles , catalogs = [] ) :
     from GaudiConf.Configuration import FileCatalog   ## needed for job configuration 
     from GaudiConf.Configuration import NTupleSvc     ## needed for job configuration 
 
+
     davinci = DaVinci (
         DataType      = '2009' ,
         Simulation    = False  ,
@@ -361,12 +361,23 @@ def configure ( datafiles , catalogs = [] ) :
     ## tuning of 'loose' PV recontruction by Mariusz: 
     importOptions("$PATPVROOT/options/PVLoose.py")
     
-    
+    from Configurables import NoPIDsParticleMaker    
+    for nam in ( 'StdNoPIDsPions'       ,
+                 'StdNoPIDsDownPions'   ,
+                 'StdNoPIDsProtons'     ,
+                 'StdNoPIDsDownProtons' ) :
+        alg = NoPIDsParticleMaker ( nam )
+        alg.InputPrimaryVertices = 'Strip/Rec/Vertex/Primary' 
+        
+        
     gaudi = appMgr()
     
     alg = Lam0(
         'Lam0'             ,   ## Algorithm name
-        NTupleLUN = 'LAM0' ,   ## Logical unit for output file with N-tuples 
+        NTupleLUN = 'LAM0' ,   ## Logical unit for output file with N-tuples
+        ## primary vertices for stripping: 
+        InputPrimaryVertices = 'Strip/Rec/Vertex/Primary' ,
+        ## 
         InputLocations = [ 'StdNoPIDsPions'        ,
                            'StdNoPIDsDownPions'    ,
                            'StdNoPIDsProtons'      ,
@@ -375,7 +386,8 @@ def configure ( datafiles , catalogs = [] ) :
     
     #gaudi.setAlgorithms ( [ 'PatPVOffline' , alg ] ) 
     gaudi.setAlgorithms ( [ alg ] ) 
-    
+    # gaudi.setAlgorithms ( [ alg , 'StoreExplorerAlg'] ) 
+
     return SUCCESS 
 
 
@@ -393,7 +405,11 @@ if '__main__' == __name__ :
     
     evtsel = gaudi.evtSel()
 
-    from BenderExample.JuanFiles2009 import files
+    pfn = '/castor/cern.ch/grid/lhcb/data/2009/DST/00005848/0000/00005848_0000000%d_1.V0.dst'
+    files = [ pfn % i for i in range(1,7) ]
+    print files
+    
+    ## from BenderExample.JuanFiles2009 import files
 
     evtsel.open( files ) 
     
