@@ -1,10 +1,20 @@
 <PRE>
-! $Id: release.notes,v 1.32 2010-01-12 11:12:34 ibelyaev Exp $ 
+! $Id: release.notes,v 1.33 2010-02-10 17:58:37 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : BenderSys
 ! Responsible : Vanya BELYAEV  vanya@nikhef.nl
 ! Purpose     : Easy/interactive python-based LHCb physics analysis
 ! -----------------------------------------------------------------------------
+</PRE>
+
+<H1>
+<A NAME=v13r0>2010-02-10 Bender v13r0 based on the DaVinci v25r0 </A>
+</H1>	
+
+<PRE>		
+The version based on DaVinci v25r0. Essentially it is identical to v12r*, 
+but exmaples have been fixed and many "read-data" examples has been added 
+and/or updated 
 </PRE>
 
 <H1>
