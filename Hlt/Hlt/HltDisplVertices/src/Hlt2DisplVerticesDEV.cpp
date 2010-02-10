@@ -1059,8 +1059,8 @@ bool Hlt2DisplVerticesDEV::BeamLineCalibration(){
     Gaudi::Vector3  eigval;
     Gaudi::Matrix3x3 eigvects;
     StatusCode sc = 
-      Eval.eigenVectors( static_cast<const Gaudi::SymMatrix3x3>(Cov), 
-                         eigval, eigvects );
+      Eval.eigenVectors( Cov, eigval, eigvects );
+
     //fill eigenvalues and eigenvectors in beam calibration class
     if( sc.isFailure() ){
       warning()<<"Failed to get the eigenvalues and eigenvectors of " 
