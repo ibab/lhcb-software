@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.83 2010-02-08 14:50:38 mtobin Exp $
+! $Id: release.notes,v 1.84 2010-02-10 11:32:16 mtobin Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
-! 2010-02-088 - Mark Tobin
+! 2009-02-10 - Mark Tobin
+ - Modified ITDetectorPlot so that it can be configured to display detector per
+ beetle or per beetle port.
+
+! 2010-02-08 - Mark Tobin
  - Added missing dictionary for ISTNoiseCalculationTool.
 
 !====================== STKernel v1r18 2009-11-13 ===========================

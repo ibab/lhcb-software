@@ -3,7 +3,6 @@
 #include "Kernel/STChannelID.h"
 
 #include <string>
-#include <iostream>
 
 using namespace ST;
 
