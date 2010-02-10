@@ -93,6 +93,7 @@ use OTDAQ                 v7r6    OT      # Wouter Hulsbergen
 use SiDAQ                 v2r1    Si      # Matt Needham
 
 # Other stuff
+use MCAssociators         v*      Associators # V. Gligorov
 use DaVinciInterfaces     v2r0    Phys    # Juan Palacios
 use DaVinciKernel         v8r4    Phys    # Juan Palacios
 use DaVinciMCKernel       v4r1    Phys    # Juan Palacios

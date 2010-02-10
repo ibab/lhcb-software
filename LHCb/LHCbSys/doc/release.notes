@@ -4,6 +4,8 @@
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
+- Add new package Associators/MCAssociators
+
 - Add new package Muon/MuonInterfaces
 
 </PRE><H1><A NAME=v29r0>2010-01-23 LHCbSys v29r0</A></H1><PRE>
