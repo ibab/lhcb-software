@@ -1,5 +1,10 @@
 2010-02-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/colorgcc_wrap: new script to colorize the gcc output. This is a wrapper that
+	has to be prepended to the gcc command. This can be achived in the requirements file of
+	a CMTUSERCONTEXT directory with something like:
+	     apply_tag use-color-gcc
+	     macro_prepend cpp "" target-gcc&use-color-gcc "colorgcc_wrap "
 	* python/LbUtils/Links.py: removed the debug message in makeRelativeLinks.
 
 2010-02-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
