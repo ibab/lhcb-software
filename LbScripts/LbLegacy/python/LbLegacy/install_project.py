@@ -14,7 +14,7 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from shutil import rmtree
 
-script_version = '100118'
+script_version = '100210'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v5r0"
@@ -506,12 +506,19 @@ def getCMT(version=0):
                 log.debug(l)
         log.info('install CMT %s' % cmtvers)
         setInstalled(file)
+        os.environ['CMTROOT'] = os.path.join(this_contrib_dir,'CMT',cmtvers)
     else:
-        log.info( 'CMT %s is already installed' % cmtvers)
+        location = getInstallLocation(file)
+        log.info( 'CMT %s is already installed in %s' % (cmtvers, location))
+        for cd in contrib_dir.split(os.pathsep) :
+            if cd.startswith(location) :
+                that_contrib_dir = cd
+                break
+        os.environ['CMTROOT'] = os.path.join(that_contrib_dir,'CMT',cmtvers)
 
-    os.environ['CMTROOT'] = os.path.join(this_contrib_dir,'CMT',cmtvers)
     newpath = os.path.join(os.getenv('CMTROOT'),cmtbin)+os.pathsep+os.getenv('PATH')
     os.environ['PATH'] = newpath
+        
 
     if debug_flag :
         log.debug( 'CMTROOT %s' % os.getenv('CMTROOT'))
@@ -824,6 +831,17 @@ def isInstalled(file):
                     break
     return installed
 
+def getInstallLocation(filenm) :
+    location = None
+    if isInstalled(filenm) :
+        for ld in log_dir.split(os.pathsep) :
+            installedfilename = os.path.join(ld,filenm.replace(".tar.gz", ".installed"))
+            if os.path.exists(installedfilename) :
+                location = os.path.dirname(ld)
+                break
+            
+    return location
+
 def setInstalled(filenm):
     this_log_dir = log_dir.split(os.pathsep)[0]
 
@@ -856,8 +874,9 @@ def checkInstalledProjects(project_list):
                     if LbConfiguration.Platform.isBinaryDbg(newbin) :
                         newbin = LbConfiguration.Platform.getBinaryOpt(newbin)
                     file = file.replace(pack_ver[2],newbin)
-        if isInstalled(file) :
-            log.info("%s is installed" % file)
+        location = getInstallLocation(file)
+        if location :
+            log.info("%s is installed in %s" % (file, location))
         else :
             log.error("%s is not installed" % file)
             sys.exit("some projects are not installed. Exiting ...")
@@ -1037,9 +1056,13 @@ def getBootScripts():
         cleanBootScripts()
     scripttar = "LBSCRIPTS_LBSCRIPTS_%s.tar.gz" % lbscripts_version
     if isInstalled(scripttar) and not overwrite_mode :
-        log.debug("LbScripts %s is already installed" % lbscripts_version)
-        this_lhcb_dir = lhcb_dir.split(os.pathsep)[0]
-        sys.path.insert(0, os.path.join(this_lhcb_dir, "LBSCRIPTS", "LBSCRIPTS_%s" % lbscripts_version, "InstallArea", "python"))
+        location = getInstallLocation(scripttar)
+        log.debug("LbScripts %s is already installed in %s" % (lbscripts_version, location))
+        for l in lhcb_dir.split(os.pathsep) :
+            if l.startswith(location) :
+                that_lhcb_dir = l
+                break
+        sys.path.insert(0, os.path.join(that_lhcb_dir, "LBSCRIPTS", "LBSCRIPTS_%s" % lbscripts_version, "InstallArea", "python"))
         log.debug("sys.path is %s" % os.pathsep.join(sys.path))
     else :
         log.info("LbScripts %s is not installed. Dowloading it." % lbscripts_version)
@@ -1373,15 +1396,17 @@ def createBaseDirs(pname, pversion):
 
     # removes the trailing "/" at the end of the path
     if os.environ.has_key("MYSITEROOT") :
+        mysiteroot = os.environ["MYSITEROOT"]
         path_list = []
-        for p in  os.environ["MYSITEROOT"].split(os.pathsep) :
+        for p in  mysiteroot.split(os.pathsep) :
             while p.endswith(os.sep) :
                 p = p[:-1]
             path_list.append(p)
-        os.environ["MYSITEROOT"] = os.pathsep.join(path_list)
-        if os.environ['MYSITEROOT'].find(os.pathsep) != -1 :
+        mysiteroot = os.pathsep.join(path_list)
+        os.environ["MYSITEROOT"] = mysiteroot
+        if mysiteroot.find(os.pathsep) != -1 :
             multiple_mysiteroot = True
-        mypath = os.path.realpath(os.environ['MYSITEROOT'].split(os.pathsep)[0])
+        mypath = os.path.realpath(mysiteroot.split(os.pathsep)[0])
         thispwd = os.path.realpath(os.getcwd())
         if sys.platform == 'win32' :
             if mypath.upper() != thispwd.upper() :
@@ -1397,17 +1422,17 @@ def createBaseDirs(pname, pversion):
         sys.exit('please set $MYSITEROOT == $INSTALLDIR:$MYSITEROOT before running the python script \n')
 
 
-    log_dir = _multiPathJoin(mypath, "log")
-    contrib_dir = _multiPathJoin(mypath, "contrib")
-    lcg_dir = _multiPathJoin(mypath, os.path.join("lcg", "external"))
-    lhcb_dir = _multiPathJoin(mypath, "lhcb")
-    html_dir = _multiPathJoin(mypath, "html")
-    bootscripts_dir = _multiPathJoin(mypath, "bootscripts")
-    targz_dir = _multiPathJoin(mypath, "targz")
+    log_dir = _multiPathJoin(mysiteroot, "log")
+    contrib_dir = _multiPathJoin(mysiteroot, "contrib")
+    lcg_dir = _multiPathJoin(mysiteroot, os.path.join("lcg", "external"))
+    lhcb_dir = _multiPathJoin(mysiteroot, "lhcb")
+    html_dir = _multiPathJoin(mysiteroot, "html")
+    bootscripts_dir = _multiPathJoin(mysiteroot, "bootscripts")
+    targz_dir = _multiPathJoin(mysiteroot, "targz")
     if sys.platform != "win32" :
-        tmp_dir = _multiPathJoin(mypath, os.path.join("tmp", os.environ["USER"]))
+        tmp_dir = _multiPathJoin(mysiteroot, os.path.join("tmp", os.environ["USER"]))
     else :
-        tmp_dir = _multiPathJoin(mypath, "tmp")
+        tmp_dir = _multiPathJoin(mysiteroot, "tmp")
 
     logname = None
 
