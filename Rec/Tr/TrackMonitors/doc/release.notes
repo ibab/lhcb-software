@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen, Stephanie Hansmann-Menzemer
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
+! 2010-02-10 Stefania Vecchi
+ - minor changes to TrackMuonMatchMonitor.cpp:
+    1) applied more stringent requirements to the tracks before 
+    extrapolating to M1; 2) made less verbose the output
 ! 2010-02-09 Stefania Vecchi
  - Added TrackMuonMatchMonitor.cpp (.h) to monitor the M1-Track residuals.
    ConfiguredTrackMonitors.py updated to include it in the sequence

@@ -1,4 +1,4 @@
-// $Id: TrackMuonMatchMonitor.h,v 1.1 2010-02-09 16:03:57 svecchi Exp $
+// $Id: TrackMuonMatchMonitor.h,v 1.2 2010-02-10 11:14:30 svecchi Exp $
 #ifndef TRACKMUONMATCHMONITOR_H 
 #define TRACKMUONMATCHMONITOR_H 1
 
@@ -44,7 +44,7 @@ private:
   std::string           m_nExtrapolator;
   
 
-  double                m_zM1;
+  double                m_zM1, m_MAXsizeX, m_MAXsizeY;
   int                   m_iMS;
   double                m_nFOI;
 
