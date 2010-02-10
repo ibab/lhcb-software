@@ -1,4 +1,4 @@
-// $Id: GenParticleCuts.h,v 1.19 2008-12-18 14:49:00 ibelyaev Exp $
+// $Id: GenParticleCuts.h,v 1.20 2010-02-10 17:37:00 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENPARTICLECUTS_H 
 #define LOKI_GENPARTICLECUTS_H 1
@@ -1397,6 +1397,28 @@ namespace LoKi
      */
     const   LoKi::GenParticles::ValidEndVertex                           GVEV ;
     // ========================================================================
+    /** @var GY 
+     *  Evaluator of rapidity of the particle 
+     *  \f$ y = \frac{1}{2}\log \frac{ E - p_z }{ E + p_z } \f$ 
+     *  @see LoKi::GenParticles::Rapidity
+     *  @see LoKi::Cuts::GETA
+     *  @see LoKi::Cuts::GY0
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-02-10
+     */
+    const LoKi::GenParticles::Rapidity                                     GY ;
+    // ========================================================================
+    /** @var GY0 
+     *  Evaluator of rapidity of the particle 
+     *  \f$ y_0 = \frac{1}{2}\log \frac{ E - p }{ E + p } \f$ 
+     *  @see LoKi::GenParticles::Rapidity0
+     *  @see LoKi::Cuts::GETA
+     *  @see LoKi::Cuts::GY
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-02-10
+     */
+    const LoKi::GenParticles::Rapidity0                                   GY0 ;
+    // ========================================================================
     /** @var GZERO
      *  primitive function, "always 0"
      *  @see LoKi::Constant
@@ -1405,8 +1427,9 @@ namespace LoKi
      */
     const LoKi::BasicFunctors<const HepMC::GenParticle*>::Constant GZERO ( 0 ) ;    
     // ========================================================================
-  } // end of namespace LoKi::Cuts  
-} // end of namespace LoKi
+  } //                                              end of namespace LoKi::Cuts  
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

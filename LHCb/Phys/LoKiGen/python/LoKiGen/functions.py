@@ -207,8 +207,12 @@ GVALID   = LoKi.Valid           ( _GP ) ()
 ## @see LoKi::Cuts::GVEV
 GVEV     = LoKi.GenParticles.ValidEndVertex()
 ## @see LoKi::Cuts::GZERO
-GZERO     = LoKi.Constant       ( _GP + ',double' )( 0.0 )    
+GZERO    = LoKi.Constant       ( _GP + ',double' )( 0.0 )    
 
+## @see LoKi::Cuts::GY 
+GY       = LoKi.GenParticles.Rapidity  ()
+## @see LoKi::Cuts::GY0 
+GY0      = LoKi.GenParticles.Rapidity0 ()
 
 ## @see LoKi::Cuts::GVTRUE
 GVTRUE     = LoKi.Constant( _GV , bool )(True)

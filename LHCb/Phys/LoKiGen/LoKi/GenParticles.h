@@ -1,4 +1,4 @@
-// $Id: GenParticles.h,v 1.23 2008-12-18 14:49:00 ibelyaev Exp $
+// $Id: GenParticles.h,v 1.24 2010-02-10 17:37:00 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENPARTICLES_H 
 #define LOKI_GENPARTICLES_H 1
@@ -153,7 +153,7 @@ namespace LoKi
     };
     // ========================================================================
     /** @class PseudoRapidity
-     *  evaluator of the seudorapidity of the particle 
+     *  evaluator of the pseudorapidity of the particle 
      *
      *  @see HepMC::GenParticle 
      *  @see LoKi::Cuts::GETA
@@ -173,10 +173,71 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
+      double eta ( argument p ) const 
+      { return eta ( Gaudi::LorentzVector  ( p-> momentum() ) ) ; }
+      /// get eta
+      double eta ( const Gaudi::LorentzVector& v ) const 
+      { return v . Eta () ; }
+      /// get rapidity 
+      double y  ( argument                    p  ) const 
+      { return y ( Gaudi::LorentzVector ( p->momentum () ) )  ; }
+      /// get rapidity 
+      double y  ( const Gaudi::LorentzVector& v  ) const ;
+      /// get rapidity0 
+      double y0 ( argument                    p  ) const 
+      { return y ( Gaudi::LorentzVector ( p->momentum () ) ) ; }
+      /// get rapidity0
+      double y0 ( const Gaudi::LorentzVector& v  ) const ;
+      // ======================================================================
+   };
+    // ========================================================================
+    /** @class Rapidity
+     *  evaluator of the rapidity of the particle 
+     *
+     *  \f$ y = \frac{1}{2}\log \frac{ E - p_z }{ E + p_z } \f$ 
+     *
+     *  @see HepMC::GenParticle 
+     *  @see LoKi::Cuts::GY
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    class Rapidity : public PseudoRapidity
+    {   
     public:
       // ======================================================================
-      double eta ( argument p ) const 
-      { return LoKi::LorentzVector  ( p-> momentum() ) . Eta () ; }
+      /// clone method (mandatory!)
+      virtual  Rapidity* clone() const ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Rapidity();
+      /// the only one essential method 
+      virtual  result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class Rapidity0
+     *  evaluator of the rapidity_0 of the particle 
+     *
+     *  \f$ y_0 = \frac{1}{2}\log \frac{ E - p }{ E + p } \f$ 
+     *
+     *  @see HepMC::GenParticle 
+     *  @see LoKi::Cuts::GY0
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2002-07-15
+     */
+    class Rapidity0 : public PseudoRapidity
+    {   
+    public:
+      // ======================================================================
+      /// clone method (mandatory!)
+      virtual  Rapidity0* clone() const ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Rapidity0();
+      /// the only one essential method 
+      virtual  result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
     };
     // ========================================================================

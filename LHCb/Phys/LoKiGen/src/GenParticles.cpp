@@ -1,4 +1,4 @@
-// $Id: GenParticles.cpp,v 1.21 2008-12-18 14:49:00 ibelyaev Exp $
+// $Id: GenParticles.cpp,v 1.22 2010-02-10 17:37:00 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -335,9 +335,19 @@ LoKi::GenParticles::PseudoRapidity*
 LoKi::GenParticles::PseudoRapidity::clone() const 
 { return new LoKi::GenParticles::PseudoRapidity( *this ) ; }
 // ============================================================================
+LoKi::GenParticles::Rapidity*
+LoKi::GenParticles::Rapidity::clone() const 
+{ return new LoKi::GenParticles::Rapidity( *this ) ; }
+// ============================================================================
+LoKi::GenParticles::Rapidity0*
+LoKi::GenParticles::Rapidity0::clone() const 
+{ return new LoKi::GenParticles::Rapidity0( *this ) ; }
+// ============================================================================
 //  MANDATORY: virtual destructor 
 // ============================================================================
 LoKi::GenParticles::PseudoRapidity::~PseudoRapidity(){}
+LoKi::GenParticles::Rapidity::~Rapidity(){}
+LoKi::GenParticles::Rapidity0::~Rapidity0(){}
 // ============================================================================
 //  the only one essential method 
 // ============================================================================
@@ -345,9 +355,43 @@ LoKi::GenParticles::PseudoRapidity::result_type
 LoKi::GenParticles::PseudoRapidity::operator() 
   ( LoKi::GenParticles::PseudoRapidity::argument p ) const
 {
-  if( 0 != p ) { return p -> momentum () . pseudoRapidity () ; }    // RETURN 
+  if( 0 != p ) { return eta ( p ) ; }    // RETURN 
   Error("Invalid HepMC::GenParticle, return 'InvalidMomenum'");
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
+}
+// ============================================================================
+LoKi::GenParticles::Rapidity::result_type
+LoKi::GenParticles::Rapidity::operator() 
+  ( LoKi::GenParticles::Rapidity::argument p ) const
+{
+  if( 0 != p ) { return y ( p ) ; }    // RETURN 
+  Error("Invalid HepMC::GenParticle, return 'InvalidMomenum'");
+  return LoKi::Constants::InvalidMomentum;                   // RETURN 
+}
+// ============================================================================
+LoKi::GenParticles::Rapidity0::result_type
+LoKi::GenParticles::Rapidity0::operator() 
+  ( LoKi::GenParticles::Rapidity0::argument p ) const
+{
+  if( 0 != p ) { return y0 ( p ) ; }    // RETURN 
+  Error("Invalid HepMC::GenParticle, return 'InvalidMomenum'");
+  return LoKi::Constants::InvalidMomentum;                   // RETURN 
+}
+// ============================================================================
+double LoKi::GenParticles::PseudoRapidity::y 
+( const Gaudi::LorentzVector& v ) const
+{
+  const double e  = v.E  () ;
+  const double pz = v.Pz () ;
+  return 0.5*std::log( (e+pz)/(e-pz) ) ;
+}
+// ============================================================================
+double LoKi::GenParticles::PseudoRapidity::y0
+( const Gaudi::LorentzVector& v ) const
+{
+  const double e  = v.E  () ;
+  const double p  = v.P  () ;
+  return 0.5*std::log( (e+p)/(e-p) ) ;
 }
 // ============================================================================
 //  "SHORT" representation, @see LoKi::AuxFunBase 
@@ -355,6 +399,14 @@ LoKi::GenParticles::PseudoRapidity::operator()
 std::ostream& 
 LoKi::GenParticles::PseudoRapidity::fillStream 
 ( std::ostream& s ) const { return s << "GETA" ; }
+// ============================================================================
+std::ostream& 
+LoKi::GenParticles::Rapidity::fillStream 
+( std::ostream& s ) const { return s << "GY" ; }
+// ============================================================================
+std::ostream& 
+LoKi::GenParticles::Rapidity0::fillStream 
+( std::ostream& s ) const { return s << "GY0" ; }
 // ============================================================================
 //  clone method (mandatory!)
 // ============================================================================
