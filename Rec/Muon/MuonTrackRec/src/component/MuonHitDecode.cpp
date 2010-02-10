@@ -1,4 +1,4 @@
-// $Id: MuonHitDecode.cpp,v 1.4 2009-11-29 19:50:54 ggiacomo Exp $
+// $Id: MuonHitDecode.cpp,v 1.5 2010-02-10 19:20:17 ggiacomo Exp $
 // Include files 
 
 // from Gaudi
@@ -10,7 +10,7 @@
 #include "MuonDet/DeMuonDetector.h"
 #include "MuonDAQ/IMuonRawBuffer.h"
 #include "Kernel/MuonTileID.h"
-#include "MuonTrackRec/MuonLogHit.h"
+#include "MuonInterfaces/MuonLogHit.h"
 
 using namespace LHCb;
 

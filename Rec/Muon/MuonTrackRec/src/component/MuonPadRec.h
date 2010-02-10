@@ -1,10 +1,10 @@
-// $Id: MuonPadRec.h,v 1.4 2009-10-09 09:38:43 ggiacomo Exp $
+// $Id: MuonPadRec.h,v 1.5 2010-02-10 19:20:17 ggiacomo Exp $
 #ifndef MUONPADREC_H 
 #define MUONPADREC_H 1
 #include <map>
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IIncidentListener.h"
-#include "MuonTrackRec/IMuonPadRec.h"            // Interface
+#include "MuonInterfaces/IMuonPadRec.h"            // Interface
 
 class DeMuonDetector;
 

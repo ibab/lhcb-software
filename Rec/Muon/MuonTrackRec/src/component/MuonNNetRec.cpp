@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.cpp,v 1.22 2009-12-16 16:24:16 ggiacomo Exp $
+// $Id: MuonNNetRec.cpp,v 1.23 2010-02-10 19:20:17 ggiacomo Exp $
 
 #include <list>
 
@@ -10,12 +10,13 @@
 #include "Event/StateVector.h"
 #include "Event/State.h"
 
-#include "MuonTrackRec/MuonLogHit.h"
-#include "MuonTrackRec/MuonLogPad.h"
-#include "MuonTrackRec/MuonHit.h"
-#include "MuonTrackRec/IMuonHitDecode.h"
-#include "MuonTrackRec/IMuonPadRec.h"
-#include "MuonTrackRec/IMuonClusterRec.h"
+#include "MuonInterfaces/MuonLogHit.h"
+#include "MuonInterfaces/MuonLogPad.h"
+#include "MuonInterfaces/MuonHit.h"
+#include "MuonInterfaces/IMuonHitDecode.h"
+#include "MuonInterfaces/IMuonPadRec.h"
+#include "MuonInterfaces/IMuonClusterRec.h"
+#include "MuonInterfaces/IMuonTrackMomRec.h"
 #include "MuonDet/DeMuonDetector.h"
 #include "MuonNNetRec.h"
 //tools
@@ -595,86 +596,31 @@ const std::vector<MuonHit*>* MuonNNetRec::trackhits()   {
   return m_clusterTool->clusters(m_padTool->pads());
 }
 
-
 StatusCode MuonNNetRec::copyToLHCbTracks()
 {
+  
   if (exist<LHCb::Tracks>(m_trackOutputLoc)) {
     //already called with this output location, exit
     return StatusCode::SUCCESS;
   }
-  
+
   typedef std::vector< MuonTrack* > MTracks;
-  typedef std::vector< MuonHit*   > MHits  ;
-  typedef std::vector<LHCb::MuonTileID*> MTileIDs;  
   
   const MTracks* mTracks = tracks();
-  if(mTracks == NULL) {    
-    err()<<"No track found! Can not copy anything !";
-    return StatusCode::FAILURE;
-  }
 
   Tracks* tracks = new Tracks();
 
   for ( MTracks::const_iterator t = mTracks->begin(), tEnd = mTracks->end(); t != tEnd; ++t ) {
     /// New track
     Track* track = new Track();
-    /// Get the hits
-    MHits hits   = (*t)->getHits();
     
-    // create a state at the Z of the first hit
-    Gaudi::XYZPoint trackPos((*t)->bx() + (*t)->sx() * hits.front()->Z(),
-                             (*t)->by() + (*t)->sy() * hits.front()->Z(),
-                             hits.front()->Z());
-    LHCb::State state( StateVector( trackPos,
-                                    Gaudi::XYZVector( (*t)->sx(), (*t)->sy(), 1.0 ),1./10000.) );
-
-    double qOverP, sigmaQOverP;
-    if(m_Bfield){
-      m_fCalcMomentum->calculate(&state, qOverP, sigmaQOverP);
-      state.setQOverP(qOverP);
-      
-      // fill momentum variables for MuonTrack
-      (*t)->setP(state.p());
-      (*t)->setPt(state.pt());
-      (*t)->setqOverP(state.qOverP());
-      (*t)->setMomentum(state.momentum());
-    }
-    
-
-    //
-    state.setLocation( State::Muon );
-    Gaudi::TrackSymMatrix seedCov;
-    seedCov(0,0) = (*t)->errbx()*(*t)->errbx();
-    seedCov(2,2) = (*t)->errsx()*(*t)->errsx();
-    seedCov(1,1) = (*t)->errby()*(*t)->errby();
-    seedCov(3,3) = (*t)->errsy()*(*t)->errsy();
-    seedCov(4,4) = 0.0001;
-    state.setCovariance(seedCov);
-
-    /// add state to new track
-    debug() << "Muon state = " << state << endmsg;
-    track->addToStates( state );
-    
-    debug()<< " NNet Track has "<<(*t)->getHits().size() <<" Muonhits"<<endmsg;
-    int ntile=0;    
-    for ( MHits::const_iterator h = hits.begin(); h != hits.end(); ++h ){
-      const MTileIDs Tiles = (*h)->getLogPadTiles();
-      debug()<< " Muon Hits has "<< (*h)->getLogPadTiles().size()<<" tiles in station "<< (*h)->station() <<endmsg;
-      for (MTileIDs::const_iterator it = Tiles.begin(); it!= Tiles.end(); ++it){
-        debug()<<" Tile info ====== "<< LHCbID(**it)<<endmsg;
-        track->addToLhcbIDs( LHCbID( **it ) );
-        ntile++;        
-      }
-    }
-    debug()<< " in total "<<ntile<<" tiles"<<endmsg;
-    
-    /// Sort of done Pat ;)
-        track->setPatRecStatus( Track::PatRecIDs );
-        track->setType( Track::Muon );
-
+    m_momentumTool->recMomentum( (*t), track);
     tracks->insert( track );
   }
+  debug()<< " copying container to TES"<<endmsg;
   put( tracks, m_trackOutputLoc );
+
 
   return StatusCode::SUCCESS;
 }
+

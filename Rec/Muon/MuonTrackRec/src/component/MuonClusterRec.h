@@ -1,11 +1,11 @@
-// $Id: MuonClusterRec.h,v 1.2 2009-10-27 11:57:17 ggiacomo Exp $
+// $Id: MuonClusterRec.h,v 1.3 2010-02-10 19:20:17 ggiacomo Exp $
 #ifndef COMPONENT_MUONCLUSTERREC_H 
 #define COMPONENT_MUONCLUSTERREC_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "MuonTrackRec/IMuonClusterRec.h"            // Interface
+#include "MuonInterfaces/IMuonClusterRec.h"            // Interface
 #include "GaudiKernel/IIncidentListener.h"
 #include "Kernel/MuonTileID.h"
 

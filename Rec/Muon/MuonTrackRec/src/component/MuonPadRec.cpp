@@ -1,4 +1,4 @@
-// $Id: MuonPadRec.cpp,v 1.4 2009-10-09 09:38:43 ggiacomo Exp $
+// $Id: MuonPadRec.cpp,v 1.5 2010-02-10 19:20:17 ggiacomo Exp $
 #include <vector>
 
 #include "GaudiKernel/DeclareFactoryEntries.h" 
@@ -7,8 +7,8 @@
 #include "MuonDet/DeMuonDetector.h"
 
 // local
-#include "MuonTrackRec/MuonLogHit.h"
-#include "MuonTrackRec/MuonLogPad.h"
+#include "MuonInterfaces/MuonLogHit.h"
+#include "MuonInterfaces/MuonLogPad.h"
 #include "MuonPadRec.h"
 using namespace LHCb;
 using namespace std;

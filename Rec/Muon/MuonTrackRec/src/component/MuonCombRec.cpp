@@ -1,4 +1,4 @@
-// $Id: MuonCombRec.cpp,v 1.13 2009-12-17 14:55:22 ggiacomo Exp $
+// $Id: MuonCombRec.cpp,v 1.14 2010-02-10 19:20:17 ggiacomo Exp $
 // Include files 
 #include <fstream>
 
@@ -14,19 +14,18 @@
 #include "Event/Track.h"
 #include "Event/StateVector.h"
 #include "Event/State.h"
-#include "Kernel/IBIntegrator.h"
 
-#include "MuonTrackRec/MuonLogHit.h"
-#include "MuonTrackRec/MuonLogPad.h"
-#include "MuonTrackRec/MuonHit.h"
-#include "MuonTrackRec/IMuonHitDecode.h"
-#include "MuonTrackRec/IMuonPadRec.h"
-#include "MuonTrackRec/IMuonClusterRec.h"
+#include "MuonInterfaces/MuonLogHit.h"
+#include "MuonInterfaces/MuonLogPad.h"
+#include "MuonInterfaces/MuonHit.h"
+#include "MuonInterfaces/IMuonHitDecode.h"
+#include "MuonInterfaces/IMuonPadRec.h"
+#include "MuonInterfaces/IMuonClusterRec.h"
+#include "MuonInterfaces/IMuonTrackMomRec.h"
 #include "MuonDet/DeMuonDetector.h"
 #include "Kernel/MuonTileID.h"
 #include "boost/assign/list_of.hpp"
 //tools
-#include "TrackInterfaces/ITrackMomentumEstimate.h"
 // local
 #include "MuonCombRec.h"
 using namespace LHCb; 
@@ -57,7 +56,6 @@ MuonCombRec::MuonCombRec( const std::string& type,
   declareProperty( "MeasureTime"      , m_measureTime = true );
   declareProperty( "CloneKiller"      , m_optCloneKiller = true );
   declareProperty( "StrongCloneKiller", m_optStrongCloneKiller = true );
-  declareProperty( "BField"           , m_Bfield = true );
   declareProperty( "SkipStation"      , m_optSkipStation = -1 );
   declareProperty( "SeedStation"      , m_optSeedStation = 4); // default seed: M5
   //                 R1     R2    R3    R4
@@ -305,11 +303,7 @@ StatusCode MuonCombRec::initialize() {
 
 
   //calculate the transverse momentum  
-  m_fCalcMomentum = tool<ITrackMomentumEstimate>("TrackPtKick");
-  m_bIntegrator = tool<IBIntegrator>( "BIntegrator" );
-  debug() << "In init, PTKick from geometry " << endreq;
-
-
+  m_momentumTool = tool<IMuonTrackMomRec>("MuonTrackMomRec");
 
   // clear all object containers
   clear();
@@ -664,7 +658,7 @@ StatusCode MuonCombRec::muonSearch() {
                (m_zStations[prevStat]-m_zStations[is]);
       
       if(is == M3){
-        if(m_Bfield){
+        if(fabs(m_momentumTool->getBdl()) > 0.1){
           x = zslope * ( bcX[prevStat]-bcX[is] ) + bcX[is];
         } else {
           x = bcX[is] * m_zStations[nextStat]/m_zStations[is];
@@ -992,90 +986,16 @@ StatusCode MuonCombRec::copyToLHCbTracks()
   }
 
   typedef std::vector< MuonTrack* > MTracks;
-  typedef std::vector< MuonHit*   > MHits  ;
-  typedef std::vector<LHCb::MuonTileID*> MTileIDs;
-  
   
   const MTracks* mTracks = tracks();
-  if(mTracks == NULL) {    
-    err()<<"No track found! Can not copy anything !";
-    return StatusCode::FAILURE;
-  }
 
   Tracks* tracks = new Tracks();
 
   for ( MTracks::const_iterator t = mTracks->begin(), tEnd = mTracks->end(); t != tEnd; ++t ) {
-
     /// New track
     Track* track = new Track();
-    /// Get the hits
-    MHits hits   = (*t)->getHits();
-    // create a state at the Z of the first hit
-    Gaudi::XYZPoint trackPos((*t)->bx() + (*t)->sx() * hits.front()->Z(),
-                             (*t)->by() + (*t)->sy() * hits.front()->Z(),
-                             hits.front()->Z());
-    LHCb::State state( StateVector( trackPos,
-                                    Gaudi::XYZVector( (*t)->sx(), (*t)->sy(), 1.0 ), 1./10000.));
     
-    double qOverP, sigmaQOverP;
-    if(m_Bfield){
-      m_fCalcMomentum->calculate(&state, qOverP, sigmaQOverP);
-      state.setQOverP(qOverP);
-
-      // fill momentum variables (at primary Vx) for MuonTrack
-      Gaudi::XYZPoint  begin( 0., 0., 0. );
-      Gaudi::XYZPoint  end( state.x(), state.y(), state.z() );
-      Gaudi::XYZVector bdl;
-      double zCenter;
-      StatusCode sc = m_bIntegrator -> calculateBdlAndCenter(begin, end, state.tx(), 
-                                                             state.ty(), zCenter, bdl );
-      if (sc.isFailure()){
-         return Warning("Failed to integrate field", StatusCode::FAILURE, 1);
-       }
-      double xCenter = state.x() + state.tx() * ( zCenter - state.z() );
-      double tx_vtx   = xCenter / zCenter;
-      double pz_vtx =  state.p() * sqrt(1- tx_vtx*tx_vtx - state.ty()*state.ty() );
-      Gaudi::XYZVector momentum_vtx( tx_vtx * pz_vtx,
-                                     state.ty()* pz_vtx,
-                                     pz_vtx);
-
-      (*t)->setP(state.p());
-      (*t)->setPt(sqrt(momentum_vtx.X()*momentum_vtx.X() + momentum_vtx.Y()*momentum_vtx.Y()));
-      (*t)->setqOverP(state.qOverP());
-      (*t)->setMomentum(momentum_vtx);
-    }    
-
-    //
-    state.setLocation( State::Muon );
-    Gaudi::TrackSymMatrix seedCov;
-    seedCov(0,0) = (*t)->errbx()*(*t)->errbx();
-    seedCov(2,2) = (*t)->errsx()*(*t)->errsx();
-    seedCov(1,1) = (*t)->errby()*(*t)->errby();
-    seedCov(3,3) = (*t)->errsy()*(*t)->errsy();
-    seedCov(4,4) = 0.0001;
-    state.setCovariance(seedCov);
-
-    /// add state to new track
-    debug() << "Muon state = " << state << endmsg;
-    track->addToStates( state );
-    
-    debug()<< " CombRec Track has "<<(*t)->getHits().size() <<" Muonhits"<<endmsg;
-    int ntile=0;    
-    for ( MHits::const_iterator h = hits.begin(); h != hits.end(); ++h ){
-      const MTileIDs Tiles = (*h)->getLogPadTiles();
-      debug()<< " Muon Hits has "<< (*h)->getLogPadTiles().size()<<" tiles in station "<< (*h)->station() <<endmsg;
-      for (MTileIDs::const_iterator it = Tiles.begin(); it!= Tiles.end(); ++it){
-        debug()<<" Tile info ====== "<< LHCbID(**it)<<endmsg;
-        track->addToLhcbIDs( LHCbID( **it ) );
-        ntile++;        
-      }
-    }
-    debug()<< " in total "<<ntile<<" tiles"<<endmsg;
-    
-    /// Sort of done Pat ;)
-        track->setPatRecStatus( Track::PatRecIDs );
-        track->setType( Track::Muon );
-
+    m_momentumTool->recMomentum( (*t), track);
     tracks->insert( track );
   }
   debug()<< " copying container to TES"<<endmsg;

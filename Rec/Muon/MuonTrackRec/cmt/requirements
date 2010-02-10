@@ -4,35 +4,27 @@
 # =============================================================================
 
 package MuonTrackRec
-version v2r7
+version v3r0
 
 
 # ================ structure =========================================
 
 branches src cmt doc options
 
-include_dirs      $(MUONTRACKRECROOT)
 
 # ================ used packages =========================================
-# requires MuonDAQ v4r4 (head) or later
 #
-use MuonDAQ      v*     Muon
+use MuonInterfaces v*     Muon
+use MuonDAQ        v*     Muon
 #
-use MuonDet      v*     Det
-use GaudiAlg     v*
+use MuonDet        v*     Det
+use GaudiAlg       v*
 
-library MuonTrackRecLib  ../src/Lib/*.cpp
+
 library MuonTrackRec  *  ../src/component/*.cpp
 
 
-# =============== LCG Dictionaries ============================================
-apply_pattern reflex_dictionary                                                 \
-              dictionary=MuonTrackRec                                       \
-              headerfiles=$(MUONTRACKRECROOT)/dict/dict.h     \
-              selectionfile=$(MUONTRACKRECROOT)/dict/dict.xml \
-              options="-U__MINGW32__"
 
-apply_pattern linker_library library=MuonTrackRecLib
 apply_pattern component_library library=MuonTrackRec
 
 #===============================================================

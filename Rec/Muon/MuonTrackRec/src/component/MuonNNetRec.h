@@ -1,12 +1,12 @@
-// $Id: MuonNNetRec.h,v 1.12 2009-12-15 19:17:51 ggiacomo Exp $
+// $Id: MuonNNetRec.h,v 1.13 2010-02-10 19:20:17 ggiacomo Exp $
 #ifndef MUONNNETREC_H 
 #define MUONNNETREC_H 1
 
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IIncidentListener.h"
-#include "MuonTrackRec/IMuonTrackRec.h"            // Interface
-#include "MuonTrackRec/MuonTrack.h"
-#include "MuonTrackRec/MuonNeuron.h"
+#include "MuonInterfaces/IMuonTrackRec.h"            // Interface
+#include "MuonInterfaces/MuonTrack.h"
+#include "MuonInterfaces/MuonNeuron.h"
 #include <string>
 #include <vector>
 class DeMuonDetector;
@@ -14,7 +14,7 @@ class IMuonHitDecode;
 class IMuonPadRec;
 class IMuonClusterRec;
 class ISequencerTimerTool;
-class ITrackMomentumEstimate;
+class IMuonTrackMomRec;
 
 /** @class MuonNNetRec MuonNNetRec.h
  *  
@@ -72,8 +72,7 @@ private:
   IMuonHitDecode* m_decTool;
   IMuonPadRec* m_padTool;
   IMuonClusterRec* m_clusterTool;
-
-  ITrackMomentumEstimate* m_fCalcMomentum; // momentum tool
+  IMuonTrackMomRec* m_momentumTool;
 
   DeMuonDetector* m_muonDetector;
   bool m_recDone;

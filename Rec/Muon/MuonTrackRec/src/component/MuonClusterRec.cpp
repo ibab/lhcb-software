@@ -1,4 +1,4 @@
-// $Id: MuonClusterRec.cpp,v 1.3 2009-10-27 11:57:17 ggiacomo Exp $
+// $Id: MuonClusterRec.cpp,v 1.4 2010-02-10 19:20:17 ggiacomo Exp $
 // Include files 
 
 // from Gaudi
@@ -6,9 +6,9 @@
 #include "GaudiKernel/IIncidentSvc.h" 
 // local
 #include "MuonClusterRec.h"
-#include "MuonTrackRec/MuonLogPad.h"
-#include "MuonTrackRec/MuonHit.h"
-#include "MuonTrackRec/OfflineTimeAlig.h"
+#include "OfflineTimeAlig.h"
+#include "MuonInterfaces/MuonLogPad.h"
+#include "MuonInterfaces/MuonHit.h"
 #include "MuonDet/IMuonFastPosTool.h"
 #include "MuonDet/DeMuonDetector.h"
 using namespace LHCb;

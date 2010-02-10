@@ -8,6 +8,10 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+! 2009-02-10 - v3r0 - GG
+- move data classes and interfaces to Muon/MuonInterfaces
+- add tool for momentum reconstruction MuonTrackMomRec
+
 ! 2009-12-15 - v2r6 - GG
  - bug fix in copyToLHCbTracks()
 

@@ -1,11 +1,11 @@
-// $Id: MuonFakeClustering.h,v 1.1 2009-10-16 17:05:59 ggiacomo Exp $
+// $Id: MuonFakeClustering.h,v 1.2 2010-02-10 19:20:17 ggiacomo Exp $
 #ifndef COMPONENT_MUONFAKECLUSTERING_H 
 #define COMPONENT_MUONFAKECLUSTERING_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "MuonTrackRec/IMuonClusterRec.h"            // Interface
+#include "MuonInterfaces/IMuonClusterRec.h"            // Interface
 #include "GaudiKernel/IIncidentListener.h"
 
 /** @class MuonFakeClustering MuonFakeClustering.h component/MuonFakeClustering.h

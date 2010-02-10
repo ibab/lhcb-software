@@ -1,11 +1,11 @@
-// $Id: MuonHitDecode.h,v 1.8 2009-12-02 16:35:51 ggiacomo Exp $
+// $Id: MuonHitDecode.h,v 1.9 2010-02-10 19:20:17 ggiacomo Exp $
 #ifndef LIB_MUONHITDECODE_H 
 #define LIB_MUONHITDECODE_H 1
 
 // Include files
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IIncidentListener.h"
-#include "MuonTrackRec/IMuonHitDecode.h"            // Interface
+#include "MuonInterfaces/IMuonHitDecode.h"            // Interface
 class IMuonRawBuffer;
 class DeMuonDetector;
 

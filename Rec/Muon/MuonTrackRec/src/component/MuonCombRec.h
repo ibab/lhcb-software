@@ -1,4 +1,4 @@
-// $Id: MuonCombRec.h,v 1.6 2009-12-17 14:55:22 ggiacomo Exp $
+// $Id: MuonCombRec.h,v 1.7 2010-02-10 19:20:17 ggiacomo Exp $
 #ifndef COMPONENT_MUONCOMBREC_H 
 #define COMPONENT_MUONCOMBREC_H 1
 
@@ -6,9 +6,9 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IIncidentListener.h"
-#include "MuonTrackRec/IMuonTrackRec.h"            // Interface
-#include "MuonTrackRec/MuonTrack.h"
-#include "MuonTrackRec/MuonNeuron.h"
+#include "MuonInterfaces/IMuonTrackRec.h"            // Interface
+#include "MuonInterfaces/MuonTrack.h"
+#include "MuonInterfaces/MuonNeuron.h"
 
 // forward declarations
 class DeMuonDetector;
@@ -16,9 +16,7 @@ class IMuonHitDecode;
 class IMuonPadRec;
 class IMuonClusterRec;
 class ISequencerTimerTool;
-class ITrackMomentumEstimate;
-class IBIntegrator;
-
+class IMuonTrackMomRec;
 /** @class MuonCombRec MuonCombRec.h component/MuonCombRec.h
  *  
  *
@@ -109,9 +107,8 @@ private:
   IMuonHitDecode* m_decTool;
   IMuonPadRec* m_padTool;
   IMuonClusterRec* m_clusterTool;
+  IMuonTrackMomRec* m_momentumTool;
 
-  ITrackMomentumEstimate* m_fCalcMomentum; // momentum tool
-  IBIntegrator* m_bIntegrator; // magnetic field tool
 
   //  IMuonFastPosTool* m_posTool;
   DeMuonDetector* m_muonDetector;
@@ -164,8 +161,6 @@ private:
   // enable strong clone fining and killing
   bool m_optStrongCloneKiller;
   bool m_strongCloneKiller;
-  // B field on/off
-  bool m_Bfield;
 
   // station to be skipped (e.g. for eff. study): 0-4;
   // -1 = keep all stns (default)
