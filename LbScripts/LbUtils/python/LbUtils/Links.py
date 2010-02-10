@@ -73,7 +73,6 @@ def makeRelativeLink(src, dest, dryrunmode):
     log = logging.getLogger()
     if not dryrunmode :
         symlink(relpath, dest)
-        log.debug("Creating relativelink %s -> %s" % (dest, relpath))
     else :
         log.info("Creating relativelink %s -> %s" % (dest, relpath))
         

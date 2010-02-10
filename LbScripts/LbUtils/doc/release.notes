@@ -1,3 +1,7 @@
+2010-02-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Links.py: removed the debug message in makeRelativeLinks.
+
 2010-02-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/Script.py: implemented the SourceScript file which is a factored out code 
