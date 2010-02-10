@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitorNT.cpp,v 1.3 2009-10-08 15:05:16 wouter Exp $
+// $Id: VeloTrackMonitorNT.cpp,v 1.4 2010-02-10 14:26:22 szumlat Exp $
 // Include files 
 
 
@@ -18,7 +18,7 @@
 #include "VeloDet/DeVelo.h"
 
 //from TrackInterfaces
-#include "TrackInterfaces/IVeloClusterPosition.h"
+//#include "TrackInterfaces/IVeloClusterPosition.h"
 #include "TrackInterfaces/IVeloExpectation.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
 
@@ -43,7 +43,7 @@ using namespace boost::lambda;
 using namespace LHCb;
 using namespace Gaudi;
  
-
+typedef IVeloClusterPosition::Direction Direction;
 
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(Velo, VeloTrackMonitorNT );
 
@@ -91,7 +91,7 @@ StatusCode Velo::VeloTrackMonitorNT::execute()
  
   if ( exist<LHCb::ODIN>( LHCb::ODINLocation::Default )){
     LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
-    debug() << "Run "     << odin->runNumber()
+    if( msgLevel(MSG::DEBUG) ) debug()<< "Run "     << odin->runNumber()
             << ", Event " << odin->eventNumber() << endmsg;
     m_runodin=odin->runNumber();
     m_eventodin= odin->eventNumber();
@@ -136,7 +136,7 @@ void Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track)
 {
   Tuple tuple=nTuple("VeloClNtuple", "Clusters on track",CLID_ColumnWiseTuple );
 
-  debug() << "Cluster information ntuple " << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<< "Cluster information ntuple " << endmsg;
 
   const LHCb::State& firststate = track.firstState() ;
   const LHCb::State& laststate = track.closestState(760) ;
@@ -149,10 +149,10 @@ void Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track)
 
   double z0=firststate.position().z()+20;
   double z1=laststate.position().z()-20;
-  debug() << " z0="<<z0<<" z1="<<z1 <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << " z0="<<z0<<" z1="<<z1 <<endmsg;
   
-  debug() << "Track node size="<<  track.nodes().size()<<endmsg;
-  debug() << "Track lhcbids size="<<  track.lhcbIDs().size()<<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "Track node size="<<  track.nodes().size()<<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "Track lhcbids size="<<  track.lhcbIDs().size()<<endmsg;
 
   if( nVeloHits>0 ) {
     std::string names[] = { "VeloR","VeloPhi" } ;
@@ -165,6 +165,7 @@ void Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track)
     double y0 = track.firstState().y();
     double ndof=track.nDoF();
     float adcpertrack=0.;
+    Gaudi::XYZVector globalDir=Gaudi::XYZVector(slx, sly, 1.);
     //const std::vector< LHCb::LHCbID >& trackIDs = track.lhcbIDs();
     //std::vector< LHCb::LHCbID >::const_iterator it;
     LHCb::Track::ConstNodeRange nodes = track.nodes();
@@ -187,8 +188,8 @@ void Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track)
 
     for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
          inode != nodes.end(); ++inode) {
-      debug() << " node type="<< (*inode)->type() <<endmsg;
-      debug() << " errResidual2=" << (*inode)->errResidual2() <<
+      if( msgLevel(MSG::DEBUG) ) debug() << " node type="<< (*inode)->type() <<endmsg;
+      if( msgLevel(MSG::DEBUG) ) debug() << " errResidual2=" << (*inode)->errResidual2() <<
         " tolerance="<<TrackParameters::lowTolerance<<endmsg;
     
       if( (*inode)->type() == LHCb::Node::HitOnTrack 
@@ -207,6 +208,8 @@ void Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track)
         double pitch(1) ;
         double pntx,pnty,pntz,pntphi,pntr;
         double adcsum=0;
+        double projAngle=0.;
+        Direction localDirection;
         if( (*inode)->measurement().type() == LHCb::Measurement::VeloPhi ) {
           const LHCb::VeloCluster* clus = static_cast<LHCb::VeloPhiMeasurement&>
             ((*inode)->measurement()).cluster() ;
@@ -221,6 +224,9 @@ void Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track)
             (*inode)->measurement().detectorElement()->geometry()->toLocal( globalPoint ) ;
           pitch =  localPoint.Rho() * phiDet->phiPitch( unsigned(clus->strip(0)) ) ;
           adcsum=clus->totalCharge();
+          localDirection=localTrackDirection(globalDir, phiDet);
+          unsigned int centreStrip=clus->channelID().strip();
+          projAngle=projAnglePhi(localDirection, phiDet, centreStrip);
         } 
         else {
           const LHCb::VeloCluster* clus = 
@@ -234,6 +240,10 @@ void Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track)
           pntr=globalPoint.Rho();
           pitch = rDet->rPitch( unsigned(clus->strip(0)) ) ;
           adcsum=clus->totalCharge();
+          Gaudi::XYZPoint localPoint = 
+            (*inode)->measurement().detectorElement()->geometry()->toLocal( globalPoint );
+          localDirection=localTrackDirection(globalDir, rDet);
+          projAngle=projAngleR(localDirection, localPoint);
         }
         int clSize =0, sensLeft=-1, SensRtype=-1,SensNumber=-1;
         double zSensPos=0.;
@@ -290,13 +300,14 @@ void Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track)
         tuple->column( "pntz",pntz);
         tuple->column( "pntr",pntr);
         tuple->column( "pntphi",pntphi);
+        tuple->column( "projectedAngle", projAngle);
         tuple->write();
         
       }
       //low tolerance
     }//end of loop on the node
   } //track.nodes.size>0
-  debug() << "Filled cluster information ntuple " << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "Filled cluster information ntuple " << endmsg;
   
 }
 
@@ -305,7 +316,7 @@ void Velo::VeloTrackMonitorNT::FillVeloTrNtuple(const LHCb::Track& track)
 {
   Tuple tuple=nTuple("VeloTrNtuple", "Track ntuple",CLID_ColumnWiseTuple );
 
-  debug() << "Track information ntuple " << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "Track information ntuple " << endmsg;
  
 
   // found hits of each type
@@ -351,7 +362,7 @@ void Velo::VeloTrackMonitorNT::FillVeloTrNtuple(const LHCb::Track& track)
       else
         m_sideRight=1;
       N_rec[sensorID]+=1;
-      debug()<<"z pos=" << sensor->z() <<" sensor" << chan.sensor()<<endmsg;
+      if( msgLevel(MSG::DEBUG) ) debug()<<"z pos=" << sensor->z() <<" sensor" << chan.sensor()<<endmsg;
       if (sensor->z() <zmin)
         zmin = sensor->z();
       if ((chan.sensor()<sensnrmin) && (chan.sensor()<42))
@@ -372,25 +383,25 @@ void Velo::VeloTrackMonitorNT::FillVeloTrNtuple(const LHCb::Track& track)
   unsigned int sensnmin=105, sensnmax=0;
   sensnmax= ((sensnpmax-64)>sensnrmax) ? (sensnpmax-64) : sensnrmax ;
   sensnmin= ((sensnpmin-64)<sensnrmin) ? (sensnpmin-64) : sensnrmin ;
-  debug()<<" zmin=" <<zmin <<" zmax="<<zmax<<" sensnmin="<<sensnmin<<" sensnmax="<<sensnmax<<endmsg;
-  debug()<<" sensnrmin="<<sensnrmin<<" sensnrmax="<<sensnrmax<<endmsg;
-  debug()<<" sensnpmin="<<sensnpmin<<" sensnpmax="<<sensnpmax<<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<<" zmin=" <<zmin <<" zmax="<<zmax<<" sensnmin="<<sensnmin<<" sensnmax="<<sensnmax<<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<<" sensnrmin="<<sensnrmin<<" sensnrmax="<<sensnrmax<<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<<" sensnpmin="<<sensnpmin<<" sensnpmax="<<sensnpmax<<endmsg;
 
   for(unsigned int j=(sensnmin); j<=sensnmax; j++){
     if ((j<=41) || ((j>=64)&&(j<=105))){
-      debug()<<"sensor number "<<j<<endmsg;
+      if( msgLevel(MSG::DEBUG) ) debug()<<"sensor number "<<j<<endmsg;
       bool nExpectedHits_sensorR = m_expectTool -> isInside(track, j);
       if(nExpectedHits_sensorR == true) 
         N_exp[j]+=1;
-      debug()<<j <<" ==> N_exp "<<N_exp[j]<<endmsg;
+      if( msgLevel(MSG::DEBUG) ) debug()<<j <<" ==> N_exp "<<N_exp[j]<<endmsg;
       bool nExpectedHits_sensorP = m_expectTool -> isInside(track, j+64);
       if(nExpectedHits_sensorP == true) 
         N_exp[j+64]+=1;
-      debug()<<j+64<<" ==> N_exp "<<N_exp[j]<<endmsg;
+      if( msgLevel(MSG::DEBUG) ) debug()<<j+64<<" ==> N_exp "<<N_exp[j]<<endmsg;
     }
   }//end of loop over sensors
 
-  debug()<<"Pseudoefficiency per sensor " <<endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug()<<"Pseudoefficiency per sensor " <<endmsg;
   //Pseudoefficiency for each sensor
   //--------------------------------
   double pseudoEfficiency_sens=0;
@@ -398,18 +409,18 @@ void Velo::VeloTrackMonitorNT::FillVeloTrNtuple(const LHCb::Track& track)
   double N_expTot=0,N_recTot=0;
     
   for(unsigned int i=(sensnmin); i<=sensnmax; i++){
-    debug()<<"N_recTot " << N_recTot <<endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug()<<"N_recTot " << N_recTot <<endmsg;
 
     N_expTot+=N_exp[i+64];
     N_recTot+=N_rec[i+64];
     N_expTot+=N_exp[i];
     N_recTot+=N_rec[i];
     
-    debug()<<i<<" N_rec "<<N_rec[i]<<" N_exp "<<N_exp[i]<<endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug()<<i<<" N_rec "<<N_rec[i]<<" N_exp "<<N_exp[i]<<endmsg;
     if(N_exp[i]>=1){
       pseudoEfficiency_sens = N_rec[i] / N_exp[i];
       sensnumber=(double) i;
-      debug()<<i<<" ==> pseudoefficiency "<<pseudoEfficiency_sens<<endmsg;    
+      if( msgLevel(MSG::DEBUG) ) debug()<<i<<" ==> pseudoefficiency "<<pseudoEfficiency_sens<<endmsg;    
       if(N_rec[i] < N_exp[i]){
         const DeVeloSensor* sensor_h = m_veloDet->sensor(i); 
         Gaudi::XYZPoint trackInterceptGlobal_h= extrapolateToZ(&track, sensor_h->z());
@@ -420,10 +431,10 @@ void Velo::VeloTrackMonitorNT::FillVeloTrNtuple(const LHCb::Track& track)
         //double phicoor_h  = trackInterceptHalf_h.Phi();  
       } 
     }
-    debug()<<i+64<<" N_rec "<<N_rec[i+64]<<" N_exp "<<N_exp[i+64]<<endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug()<<i+64<<" N_rec "<<N_rec[i+64]<<" N_exp "<<N_exp[i+64]<<endmsg;
     pseudoEfficiency_sens = N_rec[i+64] / N_exp[i+64];
     sensnumber=(double) i+64.;
-    debug()<<i+64<<" ==> pseudoefficiency "<<pseudoEfficiency_sens<<endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug()<<i+64<<" ==> pseudoefficiency "<<pseudoEfficiency_sens<<endmsg;
   }//loop on sensors
 
 
@@ -469,7 +480,7 @@ void Velo::VeloTrackMonitorNT::FillVeloTrNtuple(const LHCb::Track& track)
     tuple->column( "EffInterp", pseudoEfficiencyInterp);
     tuple->write();
   }
-  debug() << "Filled Track information ntuple " << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "Filled Track information ntuple " << endmsg;
 }
 
 //=============================================================================
@@ -477,7 +488,7 @@ void Velo::VeloTrackMonitorNT::FillVeloEvNtuple(LHCb::Tracks* tracks)
 {
   Tuple tuple=nTuple("VeloTrEvNtuple", "Event ntuple",CLID_ColumnWiseTuple );
 
-  debug() << "Event information ntuple " << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "Event information ntuple " << endmsg;
 
   int lefttracknum=0,righttracknum=0,troverlapnum=0;
   int tottrcl=0, tottrrcl=0;
@@ -533,7 +544,7 @@ void Velo::VeloTrackMonitorNT::FillVeloEvNtuple(LHCb::Tracks* tracks)
   tuple->column( "tottrrcl", tottrrcl);
   tuple->write();
 
-  debug() << "Filled Event information ntuple " << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "Filled Event information ntuple " << endmsg;
 
 }	  
 
@@ -551,5 +562,89 @@ Gaudi::XYZPoint Velo::VeloTrackMonitorNT::extrapolateToZ(const LHCb::Track *trac
   result.SetXYZ(coord.x()+slope.x()*deltaZ, coord.y()+slope.y()*deltaZ, toZ);
   
   return result;
+}
+
+double VeloTrackMonitorNT::projAngleR(const Direction& locDirection,
+                                      const Gaudi::XYZPoint& aLocPoint)
+{
+  if( msgLevel(MSG::DEBUG) ) debug()<< " --> projAngleR() " <<endmsg;
+  //
+  Gaudi::XYZVector parallel2Track;
+  //Direction locDir=localTrackDirection(m_trackDir, sensor);
+  //-- track angle
+  double alphaOfTrack=angleOfInsertion(locDirection, parallel2Track);
+  //-- vector normal to the strip - sensor type specific
+  Gaudi::XYZVector perp2RStrip(aLocPoint.x(), aLocPoint.y(), 0.);
+  double cosTrackOnNormal=parallel2Track.Dot(perp2RStrip.Unit());
+  //-- projection of track on normal to local strip
+  double trackOnNormal=fabs(cosTrackOnNormal);
+  //-- projection of track on Z axis
+  double trackOnZ=cos(alphaOfTrack);
+  double projectedAngle=atan(trackOnNormal/trackOnZ);
+  //
+  return ( projectedAngle );
+}
+
+double VeloTrackMonitorNT::projAnglePhi(const Direction& locDirection,
+                                        const DeVeloPhiType* phiSensor,
+                                        unsigned int centreStrip)
+{
+  if( msgLevel(MSG::DEBUG) ) debug()<< " --> projAnglePhi() " <<endmsg;
+  //
+  Gaudi::XYZVector parallel2Track;
+  std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> strip;
+  strip=phiSensor->localStripLimits(centreStrip);
+  Gaudi::XYZVector perp2PhiStrip((strip.first.y()-strip.second.y()),
+                                 (strip.second.x()-strip.first.x()), 0.);
+  double alphaOfTrack=angleOfInsertion(locDirection, parallel2Track);
+  double cosTrackOnNormal=parallel2Track.Dot(perp2PhiStrip.Unit());
+  double trackOnNormal=fabs(cosTrackOnNormal);
+  double trackOnZ=cos(alphaOfTrack);
+  double projectedAngle=atan(trackOnNormal/trackOnZ);
+  //
+  return ( projectedAngle );
+}
+
+Direction VeloTrackMonitorNT::localTrackDirection(const Gaudi::XYZVector& gloTrackDir,
+                                                  const DeVeloSensor* sensor) const
+{
+  if( msgLevel(MSG::DEBUG) ) debug()<< " --> localTrackDirection() " <<endmsg;
+  //-- translate global slopes into local
+  using namespace std;
+  Direction locTrackDir;
+  if(sensor->isLeft()&&(!sensor->isDownstream())){
+    locTrackDir=make_pair(gloTrackDir.x(), gloTrackDir.y());
+  }else if(sensor->isLeft()&&sensor->isDownstream()){
+    locTrackDir=make_pair((-1)*gloTrackDir.x(), gloTrackDir.y());
+  }else if(sensor->isRight()&&sensor->isDownstream()){
+    locTrackDir=make_pair(gloTrackDir.x(), (-1)*gloTrackDir.y());
+  }else if(sensor->isRight()&&(!sensor->isDownstream())){
+    locTrackDir=make_pair((-1)*gloTrackDir.x(), (-1)*gloTrackDir.y());
+  }
+  //
+  return ( locTrackDir );
+}
+
+double VeloTrackMonitorNT::angleOfInsertion(const Direction& localSlopes,
+                                            Gaudi::XYZVector& parallel2Track) const
+{
+  if( msgLevel(MSG::DEBUG) ) debug()<< " --> angleOfInsertion() " <<endmsg;
+  //
+  const Gaudi::XYZVector ZVersor(0., 0., 1.);
+  Gaudi::XYZVector perpPi1(1., 0., -(localSlopes.first));
+  Gaudi::XYZVector perpPi2(0., 1., -(localSlopes.second));
+  // vector parallel to the track
+  Gaudi::XYZVector parallel=perpPi1.Cross(perpPi2);
+  double modParallel=sqrt(parallel.Mag2());
+  // and normalized parallel to track
+  Gaudi::XYZVector normParallel(parallel.x()/modParallel,
+                                parallel.y()/modParallel,
+                                parallel.z()/modParallel
+  );
+  parallel2Track=normParallel;
+  double cosOfInsertion=parallel2Track.Dot(ZVersor);
+  double alphaOfInsertion=acos(cosOfInsertion);
+  //
+  return ( alphaOfInsertion );
 }
 

@@ -1,11 +1,11 @@
-// $Id: VeloTrackMonitorNT.h,v 1.1 2009-08-20 11:05:14 siborghi Exp $
+// $Id: VeloTrackMonitorNT.h,v 1.2 2010-02-10 14:26:22 szumlat Exp $
 #ifndef VELOTRACKMONITORNT_H 
 #define VELOTRACKMONITORNT_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-
+#include "TrackInterfaces/IVeloClusterPosition.h"
 
 
 /** @class VeloTrackMonitorNT
@@ -13,13 +13,17 @@
  * Class for Velo track monitoring Ntuple
  *  @author S. Borghi
  *  @date   28-07-2009
- */                 
+ */
+
+class DeVeloRType;
+class DeVeloPhiType;
                                                            
 namespace Velo
 {
   class VeloTrackMonitorNT : public GaudiTupleAlg {
                                                                              
   public:
+    typedef IVeloClusterPosition::Direction Direction;
                                                                              
     /** Standard construtor */
     VeloTrackMonitorNT( const std::string& name, ISvcLocator* pSvcLocator );
@@ -55,6 +59,14 @@ namespace Velo
   protected:
 
     Gaudi::XYZPoint extrapolateToZ(const LHCb::Track *track, double toZ);
+    double projAngleR(const Direction& locDirection, const Gaudi::XYZPoint& aLocPoint);
+    double projAnglePhi(const Direction& locDirection,
+                        const DeVeloPhiType* phiSensor,
+                        unsigned int centreStrip);
+    Direction localTrackDirection(const Gaudi::XYZVector& globalTrackDir,
+                                  const DeVeloSensor* sensor) const;
+    double angleOfInsertion(const Direction& localSlopes,
+                            Gaudi::XYZVector& parallel2Track) const;
 
   };
 
