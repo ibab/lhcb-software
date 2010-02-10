@@ -47,7 +47,7 @@ MuonPIDChecker::MuonPIDChecker( const std::string& name,
   declareProperty("MuonTrackLocation",
                   m_MuonTracksPath = LHCb::TrackLocation::Muon);
   // DLL flag (to decide which DLL to use: 
-  // 0=standard, 1=DLL=log(P(mu)/P(non-mu)) with integrated- p binned distance, 2=Prob(mu))  
+  // 0=standard, 1=DLL=log(P(mu)/P(non-mu)) with integrated- p binned distance, 2=Prob(mu), 3=as 1, plus tanh(dist)  
   declareProperty( "DLLFlag", m_DLLFlag = 1 );
   // Limits for the DLL histos
   declareProperty( "DLLlower", m_DLLlower = -1. ); // -10 for DLLFlag = 0
@@ -158,9 +158,10 @@ StatusCode MuonPIDChecker::initialize() {
   if (m_DLLFlag==0)info() << "initialize:: ======> Monitor Performance of old DLL  " << endreq;
   if (m_DLLFlag==1)info() << "initialize:: ======> Monitor Performance of (binned+integrated) DLL " << endreq;
   if (m_DLLFlag==2)info() << "initialize:: ======> Monitor Performance of Prob Mu " << endreq;
-  if (m_DLLFlag<0 || m_DLLFlag>2){
+  if (m_DLLFlag==3)info() << "initialize:: ======> Monitor Performance of tanh(dist) binned+integrated DLL " << endreq;
+  if (m_DLLFlag<0 || m_DLLFlag>3){
     warning() << "initialize::  DLLFlag chosen not valid. DLLFLag = " << m_DLLFlag << endreq;
-    warning() << "initialize::  allowed values are = 0 [DLL old], 1 [DLL binned+integrated], 2 [ProbMU] " <<  endreq;
+    warning() << "initialize::  allowed values are = 0 [DLL old], 1 [DLL binned+integrated], 2 [ProbMU], 3[tanh(dist)] " <<  endreq;
   }
 
   
@@ -547,7 +548,7 @@ void MuonPIDChecker::fillTrHistos(const int Level){
 
   if (Level>0){               // IsMuon or IsMuonLoose
     double DLL = -999;
-    if (m_DLLFlag<2) DLL =m_TrMuonLhd-m_TrNMuonLhd;
+    if (m_DLLFlag!=2) DLL =m_TrMuonLhd-m_TrNMuonLhd;
     if (m_DLLFlag==2) DLL =exp(m_TrMuonLhd);
 
     if ((m_IsMuonFlag ==0 && Level==1) || (m_IsMuonFlag ==1 && Level==2)) {
@@ -557,10 +558,14 @@ void MuonPIDChecker::fillTrHistos(const int Level){
       plot1D( m_TrNShared, hname , "Tracks sharing hits", -0.5, 9.5, 10 ); 
 
       // Standard DLL
+      debug() << "fillTrHistos: Level: " <<  Level << " TrackType: " << m_TrType  << " mom: " 
+          << m_Trp0 << "  DLL info: m_TrMuonLhd = " << m_TrMuonLhd 
+          << " m_TrNMuonLhd = " << m_TrNMuonLhd << " DLL = " << DLL << endreq;
+
       // prepare to fill Eff and Misid vs DLL cut histos
       sprintf ( hname, "hDLLeff_%d", m_TrType);
       double dll_binw = (m_DLLupper - m_DLLlower)/50.;
-      if ( m_DLLFlag<2 ) {
+      if ( m_DLLFlag!=2 ) {
 	if ( DLL > m_DLLCut) m_nTrDLL[m_TrType]++;
 	for (unsigned int idllbin=0;idllbin<50;idllbin++){
 	  if (DLL> (idllbin*dll_binw) ) {

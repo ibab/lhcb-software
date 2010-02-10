@@ -2,6 +2,10 @@
 ! Responsible : E. Polycarpo, M. Gandelman
 !----------------------------------------------------------------------------
 
+!====================== MuonPIDChecker v4r1 2010-02-10 ======================
+!2010-02-10 - Helder Lopes
+ - Added compatibility with DLL_flag=3 (hyperbolic tangent of distance histos)
+ 
 !====================== MuonPIDChecker v4r0 2009-07-14 ======================
 ! 2009-07-14 - Marco Cattaneo
  - Remove obsolete file MuonPIDChecker_dll.cpp
