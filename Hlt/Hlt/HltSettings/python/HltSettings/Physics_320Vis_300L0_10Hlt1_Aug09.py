@@ -99,7 +99,7 @@ class Physics_320Vis_300L0_10Hlt1_Aug09 :
         """
         return [ 'Hlt1SingleHadron',
                  'Hlt1DiHadron',
-                 'Hlt1SoftDiHadron',
+                 'Hlt1DiHadronSoft',
                  'Hlt1SingleMuonNoIPL0',
                  'Hlt1SingleMuonIPCL0',                    
                  'Hlt1DiMuonNoIPL0Di',

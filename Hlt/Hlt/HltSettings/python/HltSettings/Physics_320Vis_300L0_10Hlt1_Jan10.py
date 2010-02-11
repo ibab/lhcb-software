@@ -139,7 +139,7 @@ class Physics_320Vis_300L0_10Hlt1_Jan10 :
                  'Hlt1DiHadron',
                  'Hlt1SingleHadronViaT',
                  'Hlt1DiHadronViaT',
-                 'Hlt1SoftDiHadron',
+                 'Hlt1DiHadronSoft',
                  'Hlt1SingleMuonNoIPL0',
                  'Hlt1SingleMuonIPCL0',                    
                  'Hlt1DiMuonNoIPL0Di',

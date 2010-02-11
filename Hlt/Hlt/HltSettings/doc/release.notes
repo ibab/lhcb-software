@@ -3,6 +3,10 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+
+! 2010-02-11 - V. Gligorov
+ - Rename SoftDiHadron as DiHadronSoft
+
 ! 2010-02-09 - Patrick Koppenburg
  - fix small syntax error in the change by Patrick below
 

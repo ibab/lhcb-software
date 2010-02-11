@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.412 2010-02-09 09:06:50 albrecht Exp $ 
+! $Id: release.notes,v 1.413 2010-02-11 11:12:02 gligorov Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2010-02-11 - V. Gligorov
+ - Change SoftDiHadron to DiHadronSoft 
+
 ! 2010-02-09 - Johannes Albrecht
  -  change express stream rate to 5Hz
 

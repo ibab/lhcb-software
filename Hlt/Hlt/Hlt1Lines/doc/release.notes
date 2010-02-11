@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.106 2010-02-09 21:12:31 graven Exp $
+! $Id: release.notes,v 1.107 2010-02-11 11:10:45 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -9,6 +9,9 @@
 ! for the production. Commit them AS WELL in branch production200912. 
 !
 !-----------------------------------------------------------------------------
+! 2010-02-11 - V. Gligorov
+ - rename SoftDiHadron to DiHadronSoft  
+
 ! 2010-02-09 - Gerhard Raven
  - check L0 channels for MASKs -- if present, add ODIN filter
    to the corresponding Hlt1L0xxx line.
