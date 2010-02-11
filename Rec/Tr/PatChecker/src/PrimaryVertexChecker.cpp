@@ -1,4 +1,4 @@
-// $Id: PrimaryVertexChecker.cpp,v 1.3 2010-02-11 08:23:45 pmorawsk Exp $
+// $Id: PrimaryVertexChecker.cpp,v 1.4 2010-02-11 08:46:19 pmorawsk Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -394,7 +394,7 @@ StatusCode PrimaryVertexChecker::execute() {
       reconstructed = 1;
       dx = recpvvec[indRec].position.x() - itmc->pMCPV->position().x();
       dy = recpvvec[indRec].position.y() - itmc->pMCPV->position().y();
-      dz = recpvvec[indRec].position.z() - itmc->pMCPV->position().z()
+      dz = recpvvec[indRec].position.z() - itmc->pMCPV->position().z();
       errx = recpvvec[indRec].positionSigma.x();
       erry = recpvvec[indRec].positionSigma.y();
       errz = recpvvec[indRec].positionSigma.z();
@@ -768,6 +768,7 @@ void PrimaryVertexChecker::count_reconstructed_tracks(std::vector<MCPVInfo>& mcp
     }
     itinfomc->nRecTracks = itinfomc->m_mcPartInMCPV.size();       
   }
+}
 
 int  PrimaryVertexChecker::count_velo_tracks(LHCb::RecVertex* RecVtx){
   SmartRefVector< LHCb::Track >  vtx_tracks = RecVtx->tracks();
