@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.84 2010-02-10 11:32:16 mtobin Exp $
+! $Id: release.notes,v 1.85 2010-02-11 07:33:02 mtobin Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2010-02-11 - Mark Tobin
+ - Fix STKernelDict.xml
 
 ! 2009-02-10 - Mark Tobin
  - Modified ITDetectorPlot so that it can be configured to display detector per
