@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::PixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.29 2010-01-31 13:49:31 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.30 2010-02-11 20:01:30 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -24,7 +24,7 @@ DECLARE_ALGORITHM_FACTORY( PixelQC );
 // Standard constructor, initializes variables
 PixelQC::PixelQC( const std::string& name,
                   ISvcLocator* pSvcLocator)
-  : Rich::Rec::HistoAlgBase ( name, pSvcLocator ),
+  : HistoAlgBase        ( name, pSvcLocator ),
     m_richRecMCTruth    ( NULL ),
     m_truth             ( NULL ),
     m_richSys           ( NULL ),
@@ -37,7 +37,7 @@ PixelQC::~PixelQC() { }
 StatusCode PixelQC::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecHistoAlgBase::initialize();
+  const StatusCode sc = HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -57,11 +57,11 @@ StatusCode PixelQC::prebookHistograms()
   for ( Rich::Detectors::const_iterator rich = Rich::detectors().begin();
         rich != Rich::detectors().end(); ++rich )
   {
-    richHisto1D( *rich,
-                 "nTotalPixsPerHPD", "Average overall HPD occupancy (nHits>0)",
+    richHisto1D( Rich::HistogramID("nTotalPixsPerHPD",*rich),
+                 "Average overall HPD occupancy (nHits>0)",
                  0, 150, 75 );
-    richHisto1D( *rich,
-                 "nTotalPixs", "Overall occupancy (nHits>0)", 0, 5000, 100 );
+    richHisto1D( Rich::HistogramID("nTotalPixs",*rich), 
+                 "Overall occupancy (nHits>0)", 0, 5000, 100 );
   }
 
   return StatusCode::SUCCESS;
@@ -87,7 +87,7 @@ StatusCode PixelQC::execute()
   ++m_nEvts;
 
   // Histogramming
-  const RichHistoID hid;
+  const Rich::HistoID hid;
 
   std::vector<unsigned int> pixels ( Rich::NRiches, 0 );
   std::vector<unsigned int> signal ( Rich::NRiches, 0 );
@@ -176,11 +176,11 @@ StatusCode PixelQC::execute()
 
           if ( nHPDHits>0 )
           {
-            richHisto1D( rich, "nTotalPixsPerHPD" ) -> fill( nHPDHits );
+            richHisto1D( Rich::HistogramID("nTotalPixsPerHPD",rich) ) -> fill( nHPDHits );
           }
           if ( nHPDSignalHits>0 )
           {
-            richHisto1D( rich, "nSignalPixsPerHPD",
+            richHisto1D( Rich::HistogramID("nSignalPixsPerHPD",rich),
                          "Average signal HPD occupancy (nHits>0)",
                          0, 150, 75 ) -> fill( nHPDSignalHits );
           }
@@ -192,14 +192,14 @@ StatusCode PixelQC::execute()
   } // L1 boards
 
   if ( pixels[Rich::Rich1] > 0 )
-    richHisto1D(Rich::Rich1,"nTotalPixs") -> fill ( pixels[Rich::Rich1] );
+    richHisto1D(Rich::HistogramID("nTotalPixs",Rich::Rich1)) -> fill ( pixels[Rich::Rich1] );
   if ( pixels[Rich::Rich2] > 0 )
-    richHisto1D(Rich::Rich2,"nTotalPixs") -> fill ( pixels[Rich::Rich2] );
+    richHisto1D(Rich::HistogramID("nTotalPixs",Rich::Rich2)) -> fill ( pixels[Rich::Rich2] );
   if ( signal[Rich::Rich1] > 0 )
-    richHisto1D( Rich::Rich1, "nSignalPixs",
+    richHisto1D( Rich::HistogramID("nSignalPixs",Rich::Rich1),
                  "Signal occupancy (nHits>0)", 0, 5000, 100 ) -> fill ( signal[Rich::Rich1] );
   if ( signal[Rich::Rich2] > 0 )
-    richHisto1D( Rich::Rich2, "nSignalPixs",
+    richHisto1D( Rich::HistogramID("nSignalPixs",Rich::Rich2),
                  "Signal occupancy (nHits>0)", 0, 5000, 100 ) -> fill ( signal[Rich::Rich2] );
 
   return StatusCode::SUCCESS;
@@ -261,7 +261,7 @@ StatusCode PixelQC::finalize()
   }
 
   // Execute base class method
-  return RichRecHistoAlgBase::finalize();
+  return HistoAlgBase::finalize();
 }
 
 void PixelQC::printRICH( const Rich::DetectorType rich ) const

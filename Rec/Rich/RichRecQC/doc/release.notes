@@ -4,8 +4,12 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-02-11 - Chris Jones
+ - Adapt to changes in histogramming base classes
+ - Remove a few 2D histograms no longer needed.
+
 ! 2010-02-04 - Antonis Papanestis
- - Added a momentum histogram to the alignemt monitor and change the 
+ - Added a momentum histogram to the alignment monitor and change the 
    default histogram limits.
 
 ! 2010-02-03 - Chris Jones

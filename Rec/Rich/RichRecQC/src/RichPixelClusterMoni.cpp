@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::PixelClusterMoni
  *
- *  $Id: RichPixelClusterMoni.cpp,v 1.3 2010-02-03 08:17:54 jonrob Exp $
+ *  $Id: RichPixelClusterMoni.cpp,v 1.4 2010-02-11 20:01:30 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   31/02/2010
@@ -37,6 +37,8 @@ StatusCode PixelClusterMoni::initialize()
   const StatusCode sc = HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
+  // Keep in case we need some initisation
+
   return sc;
 }
 
@@ -47,8 +49,8 @@ StatusCode PixelClusterMoni::prebookHistograms()
   for ( Rich::Detectors::const_iterator rich = Rich::detectors().begin();
         rich != Rich::detectors().end(); ++rich )
   { 
-    richHisto1D( *rich,
-                 "clusterSize", "Pixel Cluster Sizes",
+    richHisto1D( Rich::HistogramID( "clusterSize", *rich ), 
+                 "Pixel Cluster Sizes",
                  -0.5, 100.5, 101 );
   }
 
@@ -63,7 +65,7 @@ StatusCode PixelClusterMoni::execute()
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // Histogramming
-  const RichHistoID hid;
+  const Rich::HistoID hid;
 
   // Loop over pixels
   for ( LHCb::RichRecPixels::const_iterator iP = richPixels()->begin();
@@ -79,8 +81,8 @@ StatusCode PixelClusterMoni::execute()
 
     // cluster size histogram
     const double weight = 1.0 / (double)cluster.size(); // since will be filled size() times ...
-    richHisto1D( rich, "clusterSize" ) -> fill( cluster.size(), weight );
-
+    richHisto1D( Rich::HistogramID("clusterSize",rich) ) -> fill( cluster.size(), weight );
+    
   }
 
   return StatusCode::SUCCESS;

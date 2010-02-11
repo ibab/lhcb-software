@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::SummaryCKResMoni
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryCKResMoni.cpp,v 1.2 2009-06-10 13:26:48 jonrob Exp $
+ *  $Id: RichRecSummaryCKResMoni.cpp,v 1.3 2010-02-11 20:01:30 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -28,7 +28,7 @@ DECLARE_ALGORITHM_FACTORY( SummaryCKResMoni );
 // Standard constructor, initializes variables
 SummaryCKResMoni::SummaryCKResMoni( const std::string& name,
                                     ISvcLocator* pSvcLocator )
-  : RichRecHistoAlgBase ( name, pSvcLocator ),
+  : HistoAlgBase        ( name, pSvcLocator ),
     m_richPartProp      ( 0 ),
     m_richRecMCTruth    ( 0 ),
     m_summaryLoc        ( LHCb::RichSummaryTrackLocation::Default ),
@@ -51,13 +51,13 @@ SummaryCKResMoni::SummaryCKResMoni( const std::string& name,
 }
 
 // Destructor
-SummaryCKResMoni::~SummaryCKResMoni() {};
+SummaryCKResMoni::~SummaryCKResMoni() {}
 
 // Initialisation
 StatusCode SummaryCKResMoni::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecHistoAlgBase::initialize();
+  const StatusCode sc = HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // acquire tools
@@ -82,7 +82,7 @@ StatusCode SummaryCKResMoni::execute()
   const bool mcRICHOK  = richRecMCTool()->pixelMCHistoryAvailable();
 
   // Rich Histo ID
-  const RichHistoID hid;
+  const Rich::HistoID hid;
 
   // loop over the summary tracks
   for ( LHCb::RichSummaryTracks::const_iterator iTrack = sumTracks->begin();

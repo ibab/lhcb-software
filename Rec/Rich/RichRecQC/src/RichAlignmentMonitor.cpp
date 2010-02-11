@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.19 2010-02-04 17:14:02 papanest Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.20 2010-02-11 20:01:30 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -30,7 +30,7 @@ DECLARE_ALGORITHM_FACTORY( AlignmentMonitor );
 //=============================================================================
 AlignmentMonitor::AlignmentMonitor( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-  : RichRecTupleAlgBase ( name , pSvcLocator ),
+  : TupleAlgBase        ( name , pSvcLocator ),
     m_pTypes            ( 7, 0),
     m_trSelector        ( NULL ),
     m_richRecMCTruth    ( NULL ),
@@ -63,7 +63,7 @@ AlignmentMonitor::~AlignmentMonitor() {};
 StatusCode AlignmentMonitor::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecTupleAlgBase::initialize();
+  const StatusCode sc = TupleAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   m_deltaThetaHistoRange = floor((m_deltaThetaRange + 0.0004)*1000)/1000.0;
@@ -90,9 +90,6 @@ StatusCode AlignmentMonitor::initialize()
     rad = Rich::Rich2Gas;
 
   const std::string RAD = Rich::text(rad);
-
-  // Rich Histo ID
-  const RichHistoID hid;
 
   // prebook histograms
   book1D( "Un_Amb", "Ambigious/Unambigious photons", -0.5, 1.5, 2 );
@@ -143,17 +140,17 @@ StatusCode AlignmentMonitor::initialize()
       std::string sph  = strCombi.substr(0,2);
       std::string flat = strCombi.substr(2,2);
       std::string title = "Alignment Histogram: Sph "+sph+" flat "+flat+" R"+(boost::lexical_cast<std::string>(m_rich+1));
-      book2D( hid(rad, h_id), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
+      book2D( Rich::HistogramID(h_id,rad), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
               m_deltaThetaHistoRange, 50 );
       if ( m_useMCTruth ) {
         // use MC estimate for cherenkov angle
         h_id += "MC";
         title += " MC";
-        book2D( hid(rad, h_id), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
+        book2D( Rich::HistogramID(h_id,rad), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
                 m_deltaThetaHistoRange, 50 );
         title += " TrueP";
         h_id += "TruP";
-        book2D( hid(rad, h_id), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
+        book2D( Rich::HistogramID(h_id,rad), title, 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
                 m_deltaThetaHistoRange, 50 );
       }
     }
@@ -171,15 +168,14 @@ StatusCode AlignmentMonitor::initialize()
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode AlignmentMonitor::execute() {
-
-  debug() << "Execute" << endmsg;
+StatusCode AlignmentMonitor::execute() 
+{
 
   // Check Status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // Rich Histo ID
-  const RichHistoID hid;
+  const Rich::HistoID hid;
 
   // If any containers are empty, form them
   if ( richTracks()->empty() ) {
@@ -469,7 +465,7 @@ StatusCode AlignmentMonitor::finalize()
   }
 
   // Execute base class method
-  return RichRecTupleAlgBase::finalize();
+  return TupleAlgBase::finalize();
 }
 
 //=========================================================================

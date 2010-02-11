@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : Rich::Rec::RingPeakSearch
  *
  *  CVS Log :-
- *  $Id: RichRecRingPeakSearch.cpp,v 1.1 2009-09-04 14:32:39 jonrob Exp $
+ *  $Id: RichRecRingPeakSearch.cpp,v 1.2 2010-02-11 20:01:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -26,7 +26,7 @@ DECLARE_ALGORITHM_FACTORY( RingPeakSearch );
 // Standard constructor, initializes variables
 RingPeakSearch::RingPeakSearch( const std::string& name,
                                 ISvcLocator* pSvcLocator )
-  : Rich::Rec::HistoAlgBase ( name, pSvcLocator )
+  : HistoAlgBase ( name, pSvcLocator )
 {
   using namespace boost::assign;
 
@@ -44,8 +44,8 @@ RingPeakSearch::~RingPeakSearch() {}
 
 StatusCode RingPeakSearch::prebookHistograms()
 {
-  richHisto1D( Rich::Rich1, "normRadii", "Hit Separation to Ring Centre", 0, 10, nBins1D() );
-  //richHisto1D( Rich::Rich2, "normRadii", "Hit Separation to Ring Centre", 0, 10, nBins1D() );
+  richHisto1D( Rich::HistogramID("normRadii",Rich::Rich1), 
+               "Hit Separation to Ring Centre", 0, 10, nBins1D() );
   return StatusCode::SUCCESS;
 }
 
@@ -95,7 +95,7 @@ StatusCode RingPeakSearch::execute()
         sep /= fitter.result().Radius;
 
         // plot the result
-        richHisto1D((*iR)->rich(),"normRadii")->fill(sep);
+        richHisto1D( Rich::HistogramID("normRadii",(*iR)->rich()) )->fill(sep);
 
       } // loop over pixels
 

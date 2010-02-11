@@ -5,7 +5,7 @@
  *  Implementation file for monitor : Rich::DAQ::RawDataSize
  *
  *  CVS Log :-
- *  $Id: RichRawDataSize.cpp,v 1.10 2009-09-02 17:08:49 jonrob Exp $
+ *  $Id: RichRawDataSize.cpp,v 1.11 2010-02-11 20:01:30 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
@@ -30,7 +30,7 @@ DECLARE_ALGORITHM_FACTORY( RawDataSize );
 //=============================================================================
 RawDataSize::RawDataSize( const std::string& name,
                           ISvcLocator* pSvcLocator)
-  : Rich::HistoAlgBase ( name , pSvcLocator ),
+  : HistoAlgBase       ( name , pSvcLocator ),
     m_SmartIDDecoder   ( NULL  ),
     m_RichSys          ( NULL  ),
     m_taeEvents        ( 1, "" )
@@ -50,7 +50,7 @@ RawDataSize::~RawDataSize() {}
 //=============================================================================
 StatusCode RawDataSize::initialize()
 {
-  const StatusCode sc = Rich::HistoAlgBase::initialize();
+  const StatusCode sc = HistoAlgBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // get tools
