@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovResMoni
  *
  *  CVS Log :-
- *  $Id: RichCherenkovResMoni.cpp,v 1.14 2007-10-09 15:35:44 jonrob Exp $
+ *  $Id: RichCherenkovResMoni.cpp,v 1.15 2010-02-11 19:57:25 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -28,7 +28,7 @@ DECLARE_ALGORITHM_FACTORY( CherenkovResMoni );
 // Standard constructor, initializes variables
 CherenkovResMoni::CherenkovResMoni( const std::string& name,
                                     ISvcLocator* pSvcLocator )
-  : RichRecHistoAlgBase ( name, pSvcLocator ),
+  : HistoAlgBase        ( name, pSvcLocator ),
     m_richRecMCTruth    ( NULL ),
     m_ckAngle           ( NULL ),
     m_ckAngleRes        ( NULL ),
@@ -44,7 +44,7 @@ CherenkovResMoni::~CherenkovResMoni() {};
 StatusCode CherenkovResMoni::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecHistoAlgBase::initialize();
+  const StatusCode sc = HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -64,7 +64,7 @@ StatusCode CherenkovResMoni::execute()
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // Histogramming
-  const RichHistoID hid;
+  const Rich::HistoID hid;
 
   // Histo ranges               Aero   Rich1Gas  Rich2Gas
   //const double ckResRange[] = { 0.015, 0.01,  0.005 };
@@ -185,12 +185,5 @@ StatusCode CherenkovResMoni::execute()
   }
 
   return StatusCode::SUCCESS;
-}
-
-//  Finalize
-StatusCode CherenkovResMoni::finalize()
-{
-  // Execute base class method
-  return RichRecHistoAlgBase::finalize();
 }
 

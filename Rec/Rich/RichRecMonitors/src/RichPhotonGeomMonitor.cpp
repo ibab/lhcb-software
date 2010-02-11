@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonGeomMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonGeomMonitor.cpp,v 1.16 2008-11-26 13:42:38 jonrob Exp $
+ *  $Id: RichPhotonGeomMonitor.cpp,v 1.17 2010-02-11 19:57:25 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -28,7 +28,7 @@ DECLARE_ALGORITHM_FACTORY( PhotonGeomMonitor );
 // Standard constructor, initializes variables
 PhotonGeomMonitor::PhotonGeomMonitor( const std::string& name,
                                       ISvcLocator* pSvcLocator )
-  : RichRecHistoAlgBase ( name, pSvcLocator ),
+  : HistoAlgBase        ( name, pSvcLocator ),
     m_richRecMCTruth    ( NULL ),
     m_ckAngle           ( NULL ),
     m_geomTool          ( NULL ),
@@ -38,13 +38,13 @@ PhotonGeomMonitor::PhotonGeomMonitor( const std::string& name,
 }
 
 // Destructor
-PhotonGeomMonitor::~PhotonGeomMonitor() {};
+PhotonGeomMonitor::~PhotonGeomMonitor() {}
 
 //  Initialize
 StatusCode PhotonGeomMonitor::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecHistoAlgBase::initialize();
+  const StatusCode sc = HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -76,7 +76,7 @@ StatusCode PhotonGeomMonitor::execute()
     return Error( "Problem creating RichRecPhotons" );
 
   // Histogramming
-  const RichHistoID hid;
+  const Rich::HistoID hid;
   MAX_CKTHETA_RAD;
   MIN_CKTHETA_RAD;
   PD_LOCAL_POSITIONS_X;

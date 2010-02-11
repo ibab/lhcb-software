@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : Rich::Rec::MC::PhotonRecoRayTraceTest
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoRayTraceTest.cpp,v 1.6 2009-07-30 11:18:33 jonrob Exp $
+ *  $Id: RichPhotonRecoRayTraceTest.cpp,v 1.7 2010-02-11 19:57:25 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   03/01/2008
@@ -26,7 +26,7 @@ DECLARE_ALGORITHM_FACTORY( PhotonRecoRayTraceTest );
 // Standard constructor, initializes variables
 PhotonRecoRayTraceTest::PhotonRecoRayTraceTest( const std::string& name,
                                                 ISvcLocator* pSvcLocator )
-  : Rich::Rec::HistoAlgBase ( name, pSvcLocator ),
+  : HistoAlgBase        ( name, pSvcLocator ),
     m_richRecMCTruth    ( NULL ),
     m_ckAngle           ( NULL ),
     m_trSelector        ( NULL ),
@@ -49,7 +49,7 @@ PhotonRecoRayTraceTest::~PhotonRecoRayTraceTest() {}
 StatusCode PhotonRecoRayTraceTest::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = Rich::Rec::HistoAlgBase::initialize();
+  const StatusCode sc = HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -148,7 +148,7 @@ void PhotonRecoRayTraceTest::makePlots( const std::string & type,
                                         const double photonEnergy )
 {
   // Histogramming
-  const RichHistoID hid;
+  const Rich::HistoID hid;
   //                       Aero  C4F10  CF4
   const double pRLoc[]  = { 0.6,  0.5,   1     };
   const double pRGlo[]  = { 1,    1,     3     };

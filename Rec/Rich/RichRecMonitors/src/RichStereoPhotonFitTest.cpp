@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : StereoPhotonFitTest
  *
- *  $Id: RichStereoPhotonFitTest.cpp,v 1.4 2009-07-30 11:18:33 jonrob Exp $
+ *  $Id: RichStereoPhotonFitTest.cpp,v 1.5 2010-02-11 19:57:26 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -27,7 +27,7 @@ DECLARE_ALGORITHM_FACTORY( StereoPhotonFitTest );
 // Standard constructor, initializes variables
 StereoPhotonFitTest::StereoPhotonFitTest( const std::string& name,
                                           ISvcLocator* pSvcLocator )
-  : RichRecHistoAlgBase ( name, pSvcLocator ),
+  : HistoAlgBase        ( name, pSvcLocator ),
     m_fitter            ( NULL ),
     m_trSelector        ( NULL ),
     m_ckAngle           ( NULL ),
@@ -49,7 +49,7 @@ StereoPhotonFitTest::~StereoPhotonFitTest() { }
 StatusCode StereoPhotonFitTest::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecHistoAlgBase::initialize();
+  const StatusCode sc = HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -80,7 +80,7 @@ StatusCode StereoPhotonFitTest::execute()
   }
 
   // Rich Histo ID
-  const RichHistoID hid;
+  const Rich::HistoID hid;
 
   // Iterate over segments
   for ( LHCb::RichRecSegments::iterator iSeg = richSegments()->begin();

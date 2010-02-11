@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : PhotonRecoEffMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.13 2007-08-13 12:38:49 jonrob Exp $
+ *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.14 2010-02-11 19:57:25 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -28,7 +28,7 @@ DECLARE_ALGORITHM_FACTORY( PhotonRecoEffMonitor );
 // Standard constructor, initializes variables
 PhotonRecoEffMonitor::PhotonRecoEffMonitor( const std::string& name,
                                             ISvcLocator* pSvcLocator )
-  : RichRecHistoAlgBase ( name, pSvcLocator ),
+  : HistoAlgBase        ( name, pSvcLocator ),
     m_richRecMCTruth    ( NULL ),
     m_ckAngle           ( NULL ),
     m_geomTool          ( NULL ),
@@ -45,7 +45,7 @@ PhotonRecoEffMonitor::~PhotonRecoEffMonitor() {};
 StatusCode PhotonRecoEffMonitor::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecHistoAlgBase::initialize();
+  const StatusCode sc = HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -78,7 +78,7 @@ StatusCode PhotonRecoEffMonitor::execute()
     return Error( "Problem creating RichRecPhotons" );
 
   // Histogramming
-  const RichHistoID hid;
+  const Rich::HistoID hid;
   MAX_CKTHETA_RAD;
   MIN_CKTHETA_RAD;
   PD_LOCAL_POSITIONS_X;
@@ -236,11 +236,4 @@ StatusCode PhotonRecoEffMonitor::execute()
   } // loop over all segments
 
   return StatusCode::SUCCESS;
-}
-
-//  Finalize
-StatusCode PhotonRecoEffMonitor::finalize()
-{
-  // Execute base class method
-  return RichRecHistoAlgBase::finalize();
 }

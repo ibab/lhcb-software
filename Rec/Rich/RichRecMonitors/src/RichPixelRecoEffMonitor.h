@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::PixelRecoEffMonitor
  *
  *  CVS Log :-
- *  $Id: RichPixelRecoEffMonitor.h,v 1.5 2007-06-01 09:03:05 cattanem Exp $
+ *  $Id: RichPixelRecoEffMonitor.h,v 1.6 2010-02-11 19:57:26 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -68,7 +68,6 @@ namespace Rich
 
         virtual StatusCode initialize();    // Algorithm initialization
         virtual StatusCode execute   ();    // Algorithm execution
-        virtual StatusCode finalize  ();    // Algorithm finalization
 
       private: // data
 

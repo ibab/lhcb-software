@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : PhotonSignalMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalMonitor.cpp,v 1.11 2008-11-30 10:48:12 jonrob Exp $
+ *  $Id: RichPhotonSignalMonitor.cpp,v 1.12 2010-02-11 19:57:25 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -28,7 +28,7 @@ DECLARE_ALGORITHM_FACTORY( PhotonSignalMonitor );
 // Standard constructor, initializes variables
 PhotonSignalMonitor::PhotonSignalMonitor( const std::string& name,
                                           ISvcLocator* pSvcLocator )
-  : Rich::Rec::HistoAlgBase ( name, pSvcLocator ),
+  : HistoAlgBase        ( name, pSvcLocator ),
     m_richRecMCTruth    ( NULL ),
     m_tkSignal          ( NULL ),
     m_geomEffic         ( NULL ),
@@ -45,7 +45,7 @@ PhotonSignalMonitor::~PhotonSignalMonitor() {}
 StatusCode PhotonSignalMonitor::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = Rich::Rec::HistoAlgBase::initialize();
+  const StatusCode sc = HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -67,7 +67,7 @@ StatusCode PhotonSignalMonitor::execute()
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // Histogramming
-  const RichHistoID hid;
+  const Rich::HistoID hid;
   //            Radiator          Aerogel  Rich1Gas  Rich2Gas
   const double minPhotEn[]    = { 1.5,     1.5,      1.5     };
   const double maxPhotEn[]    = { 4.5,     7,        7.5     };

@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelPositionMonitor
  *
- *  $Id: RichPixelPositionMonitor.cpp,v 1.20 2009-07-30 11:18:33 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.cpp,v 1.21 2010-02-11 19:57:26 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -29,7 +29,7 @@ DECLARE_ALGORITHM_FACTORY( PixelPositionMonitor );
 // Standard constructor, initializes variables
 PixelPositionMonitor::PixelPositionMonitor( const std::string& name,
                                             ISvcLocator* pSvcLocator)
-  : RichRecHistoAlgBase ( name, pSvcLocator ),
+  : HistoAlgBase     ( name, pSvcLocator ),
     m_richRecMCTruth ( NULL ),
     m_mcTool         ( NULL ),
     m_idTool         ( NULL ),
@@ -45,7 +45,7 @@ PixelPositionMonitor::~PixelPositionMonitor() { }
 StatusCode PixelPositionMonitor::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecHistoAlgBase::initialize();
+  const StatusCode sc = HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -77,7 +77,7 @@ StatusCode PixelPositionMonitor::execute()
   }
 
   // Histogramming
-  const RichHistoID hid;
+  const Rich::HistoID hid;
   PD_GLOBAL_POSITIONS;
   PD_LOCAL_POSITIONS;
 

@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelRecoEffMonitor
  *
- *  $Id: RichPixelRecoEffMonitor.cpp,v 1.9 2009-07-30 11:18:33 jonrob Exp $
+ *  $Id: RichPixelRecoEffMonitor.cpp,v 1.10 2010-02-11 19:57:26 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -41,7 +41,7 @@ PixelRecoEffMonitor::~PixelRecoEffMonitor() { }
 StatusCode PixelRecoEffMonitor::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecHistoAlgBase::initialize();
+  const StatusCode sc = HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -77,7 +77,7 @@ StatusCode PixelRecoEffMonitor::execute()
   }
 
   // Histogramming
-  const RichHistoID hid;
+  const Rich::HistoID hid;
   //PD_GLOBAL_POSITIONS;
   //PD_LOCAL_POSITIONS;
 
@@ -170,9 +170,3 @@ StatusCode PixelRecoEffMonitor::execute()
   return StatusCode::SUCCESS;
 }
 
-//  Finalize
-StatusCode PixelRecoEffMonitor::finalize()
-{
-  // Execute base class method
-  return RichRecHistoAlgBase::finalize();
-}

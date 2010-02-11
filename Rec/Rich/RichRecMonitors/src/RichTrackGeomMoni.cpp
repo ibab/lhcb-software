@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichTrackGeomMoni
  *
- *  $Id: RichTrackGeomMoni.cpp,v 1.21 2009-07-30 11:18:33 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.cpp,v 1.22 2010-02-11 19:57:26 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -24,7 +24,7 @@ DECLARE_ALGORITHM_FACTORY ( TrackGeomMoni );
 // Standard constructor, initializes variables
 TrackGeomMoni::TrackGeomMoni( const std::string& name,
                               ISvcLocator* pSvcLocator )
-  : RichRecHistoAlgBase ( name, pSvcLocator ),
+  : HistoAlgBase        ( name, pSvcLocator ),
     m_rayTrace          ( 0 ),
     m_richRecMCTruth    ( 0 ),
     m_geomTool          ( 0 ),
@@ -43,7 +43,7 @@ TrackGeomMoni::~TrackGeomMoni() {}
 StatusCode TrackGeomMoni::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecHistoAlgBase::initialize();
+  const StatusCode sc = HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -91,7 +91,7 @@ StatusCode TrackGeomMoni::execute()
   traceMode.setMirrorSegBoundary ( false                 );
 
   // Histogramming
-  const RichHistoID hid;
+  const Rich::HistoID hid;
   PD_GLOBAL_POSITIONS;
   PD_LOCAL_POSITIONS;
   RADIATOR_GLOBAL_POSITIONS;

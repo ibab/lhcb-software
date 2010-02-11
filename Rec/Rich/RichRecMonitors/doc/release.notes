@@ -4,6 +4,9 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-02-11 - Chris Jones
+ - Adapt to changes in histogramming base classes.
+
 !====================== RichRecMonitors v2r24 2009-10-20 =====================
 ! 2009-10-01 - Christopher Rob Jones
  - Fix some untested StatusCodes in various ntupling methods.

@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecDataObjVerifier
  *
  *  CVS Log :-
- *  $Id: RichRecDataObjVerifier.cpp,v 1.6 2009-07-30 11:18:33 jonrob Exp $
+ *  $Id: RichRecDataObjVerifier.cpp,v 1.7 2010-02-11 19:57:26 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -27,7 +27,7 @@ DECLARE_ALGORITHM_FACTORY( DataObjVerifier );
 // Standard constructor, initializes variables
 DataObjVerifier::DataObjVerifier( const std::string& name,
                                   ISvcLocator* pSvcLocator )
-  : RichRecHistoAlgBase ( name, pSvcLocator )
+  : HistoAlgBase ( name, pSvcLocator )
 {
   declareProperty( "PrintPixels",   m_bdPixels   = false );
   declareProperty( "PrintTracks",   m_bdTracks   = false );
@@ -36,7 +36,7 @@ DataObjVerifier::DataObjVerifier( const std::string& name,
 }
 
 // Destructor
-DataObjVerifier::~DataObjVerifier() {};
+DataObjVerifier::~DataObjVerifier() {}
 
 // Main execution
 StatusCode DataObjVerifier::execute()
@@ -45,7 +45,7 @@ StatusCode DataObjVerifier::execute()
 
   using namespace LHCb;
 
-  const RichHistoID hid;
+  const Rich::HistoID hid;
 
   // If not rerunning at DEBUG or VERBOSE level, return
   //if ( !msgLevel(MSG::DEBUG) ) return StatusCode::SUCCESS;

@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTrackResolutionMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackResolutionMoni.cpp,v 1.16 2009-10-01 15:13:09 jonrob Exp $
+ *  $Id: RichTrackResolutionMoni.cpp,v 1.17 2010-02-11 19:57:26 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -37,13 +37,13 @@ TrackResolutionMoni::TrackResolutionMoni( const std::string& name,
 }
 
 // Destructor
-TrackResolutionMoni::~TrackResolutionMoni() {};
+TrackResolutionMoni::~TrackResolutionMoni() {}
 
 //  Initialize
 StatusCode TrackResolutionMoni::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = Rich::Rec::TupleAlgBase::initialize();
+  const StatusCode sc = TupleAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -81,7 +81,7 @@ StatusCode TrackResolutionMoni::execute()
   const double minP = m_trSelector->minPCut() * Gaudi::Units::GeV;
 
   // Histogramming
-  const RichHistoID hid;
+  const Rich::HistoID hid;
 
   // Iterate over segments
   for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
