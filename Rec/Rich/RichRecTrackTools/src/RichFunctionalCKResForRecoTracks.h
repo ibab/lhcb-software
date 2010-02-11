@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::FunctionalCKResForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichFunctionalCKResForRecoTracks.h,v 1.2 2008-11-30 11:02:23 jonrob Exp $
+ *  $Id: RichFunctionalCKResForRecoTracks.h,v 1.3 2010-02-11 20:08:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -69,13 +69,10 @@ namespace Rich
                                     const IInterface* parent);
 
       /// Destructor
-      virtual ~FunctionalCKResForRecoTracks() {};
+      virtual ~FunctionalCKResForRecoTracks() { }
 
       // Initialize method
       StatusCode initialize();
-
-      // Finalize method
-      StatusCode finalize();
 
     public: // methods (and doxygen comments) inherited from public interface
 

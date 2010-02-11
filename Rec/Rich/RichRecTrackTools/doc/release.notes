@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-02-11 - Chris Jones
+ - Adapt to changes in histogramming base class.
+
 !======================== RichRecTrackTools v1r16 2009-12-09 =================
 ! 2009-12-08 - Christopher Rob Jones
  - Switch from Herab to RungeRutta track extrapolator by default.
