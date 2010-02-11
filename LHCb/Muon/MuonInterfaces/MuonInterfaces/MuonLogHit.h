@@ -1,4 +1,4 @@
-// $Id: MuonLogHit.h,v 1.1 2010-02-10 19:07:50 ggiacomo Exp $
+// $Id: MuonLogHit.h,v 1.2 2010-02-11 09:29:51 ggiacomo Exp $
 #ifndef MUONLOGHIT_H 
 #define MUONLOGHIT_H 1
 #include "Kernel/MuonTileID.h"
@@ -28,7 +28,7 @@ class MuonLogHit {
   {m_ODEindex =(int)OdeIndex; }
   inline float time() const 
   { //avoid bias due to bins 0 and 1 being added in bin 1
-    return ((m_time+50*16)%16 == 1  ? m_time-0.499 : m_time);}
+    return (float) ((m_time+50*16)%16 == 1  ? m_time-0.499 : m_time);}
   inline int rawtime() const 
   { return m_time;}
   inline bool intime() const

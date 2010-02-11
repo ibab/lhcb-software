@@ -1,4 +1,4 @@
-// $Id: MuonLogPad.h,v 1.1 2010-02-10 19:07:50 ggiacomo Exp $
+// $Id: MuonLogPad.h,v 1.2 2010-02-11 09:29:51 ggiacomo Exp $
 #ifndef MUONLOGPAD_H 
 #define MUONLOGPAD_H 1
 
@@ -73,8 +73,8 @@ class MuonLogPad {
   }
   
   inline void assignTimes(float t1, float t2) {
-    m_time = ( t1 + t2 ) / 2.;
-    m_dtime = ( t1 - t2 ) / 2.;
+    m_time = (float) (( t1 + t2 ) / 2.);
+    m_dtime = (float) (( t1 - t2 ) / 2.);
   }
 
 
@@ -97,11 +97,11 @@ class MuonLogPad {
   }  
   inline float timeX() {
     LogPadType t=type();
-    return ( (t == XONEFE || t == XTWOFE) ? m_time+m_dtime : -9999. );
+    return (float) ( (t == XONEFE || t == XTWOFE) ? m_time+m_dtime : -9999. );
   }
   inline float timeY() {
     LogPadType t=type();
-    return ( (t == XONEFE || t == XTWOFE) ? m_time-m_dtime : -9999. );
+    return (float) ( (t == XONEFE || t == XTWOFE) ? m_time-m_dtime : -9999. );
   }
   /// return the half difference of the two hit times for crossed pads, in TDC bits
   inline float dtime()

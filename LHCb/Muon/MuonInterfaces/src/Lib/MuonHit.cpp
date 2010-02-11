@@ -1,4 +1,4 @@
-// $Id: MuonHit.cpp,v 1.1 2010-02-10 19:07:50 ggiacomo Exp $
+// $Id: MuonHit.cpp,v 1.2 2010-02-11 09:29:51 ggiacomo Exp $
 // Include files
 #include <cmath>
 #include "MuonInterfaces/MuonHit.h"
@@ -85,9 +85,9 @@ void MuonHit::createFromPad(MuonLogPad* mp) {
     m_padx.push_back(x);
     m_pady.push_back(y);
     m_padz.push_back(z);
-    m_dx = dx/sqrt(12);
-    m_dy = dy/sqrt(12);
-    m_dz = dz/sqrt(12);
+    m_dx = dx/sqrt(12.);
+    m_dy = dy/sqrt(12.);
+    m_dz = dz/sqrt(12.);
     m_hit_minx=x-dx;
     m_hit_maxx=x+dx;
     m_hit_miny=y-dy;
