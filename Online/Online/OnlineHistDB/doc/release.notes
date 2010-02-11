@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.54 2010-01-27 10:04:08 ggiacomo Exp $
+! $Id: release.notes,v 1.55 2010-02-11 18:22:45 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
@@ -6,7 +6,10 @@
 ! or using makedoc script in this folder
 !
 
-! 20100127 
+! 20100211 v6r4
+- add option to OMAMessage to enable changing pad colors
+
+! 20100127 v6r3
 - fixes for creator algorithms with parameters
 
 ! 20100122 v6r2

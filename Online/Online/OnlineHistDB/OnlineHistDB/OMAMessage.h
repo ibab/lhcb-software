@@ -1,4 +1,4 @@
-// $Id: OMAMessage.h,v 1.8 2009-09-02 14:24:42 ggiacomo Exp $
+// $Id: OMAMessage.h,v 1.9 2010-02-11 18:22:44 ggiacomo Exp $
 #ifndef OMALIB_OMAMESSAGE_H 
 #define OMALIB_OMAMESSAGE_H 1
 
@@ -45,7 +45,7 @@ public:
   // load from HistDB
   void load();
   // store to HistDB
-  void store();
+  void store(bool changePadColor=false);
   // delete from DB
   void remove();
 

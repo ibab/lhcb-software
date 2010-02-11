@@ -1,4 +1,4 @@
-// $Id: OMAMessage.cpp,v 1.17 2009-09-02 14:24:42 ggiacomo Exp $
+// $Id: OMAMessage.cpp,v 1.18 2010-02-11 18:22:45 ggiacomo Exp $
 #include <time.h>
 #include "OnlineHistDB/OMAMessage.h"
 using namespace std;
@@ -138,7 +138,7 @@ void OMAMessage::load() {
 
 
 
-void OMAMessage::store() {
+void OMAMessage::store(bool changePadColor) {
   if( NULL == m_envhp) return; // no HistDB
   if( m_isAbort ) return; 
   OCIStmt *stmt=NULL;
@@ -176,7 +176,7 @@ void OMAMessage::store() {
   }
 
   // flag histograms with alarms using pad color
-  if(!m_histo_null && (m_level > INFO) && m_dbsession) {
+  if(!m_histo_null && (m_level > INFO) && m_dbsession && changePadColor) {
     OnlineHistogram* histo = m_dbsession->getHistogram(m_histo);
     if (histo) {
       OMAMsgColor color = (m_level == ALARM) ?  ALARMCOLOR : WARNINGCOLOR;
