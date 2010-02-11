@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: BaseDSTWriter.py,v 1.2 2010-01-07 08:19:34 panmanj Exp $"
+__version__ = "$Id: BaseDSTWriter.py,v 1.3 2010-02-11 10:33:18 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -29,7 +29,8 @@ class BaseDSTWriter(ConfigurableUser) :
 
     def sequence(self) :
         return GaudiSequencer(self.name() + "MainSeq",
-                              IgnoreFilterPassed = True)
+                              ModeOR = True, 
+                              ShortCircuit = False)
 
     def selectionSequences(self) :
         return self.getProp('SelectionSequences')
