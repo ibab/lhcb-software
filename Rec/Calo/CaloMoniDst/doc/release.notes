@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.70 2010-02-05 17:06:29 odescham Exp $ 
+! $Id: release.notes,v 1.71 2010-02-11 16:00:53 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+! 2010-02-11 - Marco Cattaneo
+ - Replace dependency on DaVinciMCKernel with MCAssociators, to follow changes
+   in LHCB v29r1
 
 ! 2010-01-30 - Dmitry Golubkov
  - CaloEMuMonitor: add more histograms, crude windows based on rp6 of Dec 2009 data
