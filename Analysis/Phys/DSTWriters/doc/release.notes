@@ -1,9 +1,17 @@
-!$Id: release.notes,v 1.8 2010-02-03 10:43:30 jpalac Exp $
+!$Id: release.notes,v 1.9 2010-02-11 10:34:41 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! 2010-02-11 - Juan Palacios
+ - python/DSTWriters/BaseDSTWriter.py
+  . Attempted bug-fix: problems with writing out many selection sequences.
+    Create main sequence with parameters ModeOR=True, ShortCircuit=False
+    instead of IgnoreFilterPassed=True.
+ - cmt/requirements
+  . Increase version to v1r2p1
 
 ! ======================== DSTWriters v1r2 2010-02-02 ========================
 
