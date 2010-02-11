@@ -1,4 +1,4 @@
-// $Id: MuonDAQHelper.cpp,v 1.13 2010-02-09 12:47:38 asatta Exp $
+// $Id: MuonDAQHelper.cpp,v 1.14 2010-02-11 09:31:36 asatta Exp $
 // Include files
 
 #include "GaudiKernel/SmartDataPtr.h"
@@ -1816,9 +1816,9 @@ msgStream()<<MSG::DEBUG<<ODEName<<" debug ode "<<m_ODENameInECS[ode]<<endreq;
   }
 msgStream()<<MSG::DEBUG<<" debug ode "<<odeNumber<<endreq;
 
-LHCb:MuonTileID firstTile;
+MuonTileID firstTile;
 firstTile= m_mapTileInODE[odeNumber-1][firstChannel];
-LHCb::MuonTileID secondTile;
+MuonTileID secondTile;
  if(secondChannel>=0)secondTile= m_mapTileInODE[odeNumber-1][secondChannel];
  if(!secondTile.isValid())return firstTile;
  return firstTile.intercept(secondTile);
