@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.93 2010-01-11 14:09:59 graven Exp $
+!$Id: release.notes,v 1.94 2010-02-11 16:24:53 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2010-02-11 - Gerhard Raven
+ - move some printout from info() to debug()
+
 !========================== HltTracking v4r4p1 2010-01-11 ===================
 ! 2009-12-23 - Gerhard Raven
  - move #include arround to facilitate HltBase/stringKey -> GaudiKernel/StringKey

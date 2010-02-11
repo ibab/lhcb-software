@@ -1,4 +1,4 @@
-// $Id: HltRZVeloTCaloMatch.cpp,v 1.1 2009-05-30 12:40:21 graven Exp $
+// $Id: HltRZVeloTCaloMatch.cpp,v 1.2 2010-02-11 16:24:53 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -59,8 +59,7 @@ double HltRZVeloTCaloMatch::function(const Track& track,
   ey     = state.ty()/Gaudi::Units::cm;
   e      = tcalo.pt()/Gaudi::Units::GeV;
   
-  double matchChi2 = match(track);
-  return matchChi2;
+  return match(track);
 }
 
 double HltRZVeloTCaloMatch::match(const Track& track, 

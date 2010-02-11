@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.38 2009-12-03 10:14:28 graven Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.39 2010-02-11 16:24:53 graven Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -175,10 +175,10 @@ StatusCode HltTrackUpgradeTool::setReco(const std::string& key)
 
   info() << " Reco: " << m_recoName 
          << " Tool: " << toolName
-         << " Output: " << m_TESOutput << endreq;
-  
-  info() << " reco ID " << m_recoID
-         << " owner " << m_owner << " transfers IDs " << m_transferIDs 
+         << " Output: " << m_TESOutput 
+         << " reco ID " << m_recoID << endreq;
+
+  debug()<< " owner " << m_owner << " transfers IDs " << m_transferIDs 
          << " transfer ancestor " << m_transferAncestor
          << " Input track type " << m_ItrackType 
          << " Output track type " << m_OtrackType << endreq;
