@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.42 2010-02-10 17:48:22 ibelyaev Exp $
+! $Id: release.notes,v 1.43 2010-02-11 13:59:55 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV ibelyaev@physics.syr.edu
@@ -6,7 +6,12 @@
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
 
-! ====================== Ex/BenderExample v13r0 2010-02-10 ====================
+
+! ====================== Ex/BenderExample v13r0 2010-02-11 ====================
+
+! 2010-02-11 - Vanya Belyaev
+
+ - add examples to work with V0-striping
 
 ! 2010-02-10 - Vanya Belyaev
 
