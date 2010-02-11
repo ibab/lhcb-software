@@ -17,7 +17,6 @@ muonComb.yFOIs = [ 30., 60.,100.,150.,  # M1
 muonComb.MeasureTime = True
 muonComb.CloneKiller = True
 muonComb.SkipStation = -1 # -1=no skip, 0=M1, 1=M2, 2=M3, 3=M4, 4=M5
-muonComb.BField = False
 muonComb.DecodingTool = "MuonHitDecode"
 muonComb.PadRecTool = "MuonPadRec"
 muonComb.ClusterTool = "MuonFakeClustering" # to enable: "MuonClusterRec"
