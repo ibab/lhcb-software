@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.85 2010-02-04 11:08:23 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.86 2010-02-11 12:59:09 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -37,15 +37,16 @@ class DaVinci(LHCbConfigurableUser) :
        , "UserAlgorithms"     : []              # User algorithms to run.
        , "RedoMCLinks"        : False           # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
        , "InputType"          : "DST"           # or "DIGI" or "ETC" or "RDST" or "DST or "MDST". Nothing means the input type is compatible with being a DST. 
+       , 'EnableUnpack' : None                  # Explicitly enable/disable unpacking for input data (if specified) 
+       , "Lumi"               : True            # Run event count and Lumi accounting (should normally be True)
          # Trigger running
        , "L0"                 : False           # Run L0.
        , "Hlt"                : False           # Run Hlt
-       , "Lumi"               : True            # Run event count and Lumi accounting (should normally be True)
        , "ReplaceL0BanksWithEmulated" : False   # Re-run L0 
        , "HltUserAlgorithms"  : [ ]             # put here user algorithms to add
        , "Hlt2Requires"       : 'L0+Hlt1'       # Say what Hlt2 requires
        , "HltThresholdSettings" : ''            # Use some special threshold settings, eg. 'Miriam_20090430' or 'FEST'
-       , 'EnableUnpack' : None                  # Explicitly enable/disable unpacking for input data (if specified) 
+       , "OverruleL0TCK"      : ''              # Overrule the TCK defined in the threshold setting to allow the use of the one in the data
        }
 
     _propertyDocDct = {  
@@ -66,16 +67,17 @@ class DaVinci(LHCbConfigurableUser) :
        , "UserAlgorithms"     : """ User algorithms to run. """
        , "RedoMCLinks"        : """ On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. """
        , "InputType"          : """ 'DST' or 'DIGI' or 'ETC' or 'RDST' or 'DST' or 'MDST'. Nothing means the input type is compatible with being a DST.  """
-       , "L0"                 : """ Re-Run L0 """
+       , 'EnableUnpack' : """Explicitly enable/disable unpacking for input data (if specified) """
        , "Lumi"               : """ Run event count and Lumi accounting (should normally be True) """
+       , "L0"                 : """ Re-Run L0 """
        , "ReplaceL0BanksWithEmulated" : """ Re-run L0 and replace all data with emulation  """
        , "HltUserAlgorithms"  : """ Put here user algorithms to add to Hlt """
        , "Hlt2Requires"       : """ Definition of what Hlt2 requires to run. Default is 'L0+Hlt1' (equivalent to 'Hlt1').
                                     'L0' will run Hlt1 in pass-all mode.
                                     """
        , "HltThresholdSettings" : """ Use some special threshold settings, for instance 'Miriam_20090430' or 'FEST' """
-       , 'EnableUnpack' : """Explicitly enable/disable unpacking for input data (if specified) """
-         }
+        , "OverruleL0TCK"      : """Overrule the TCK defined in the threshold setting to allow the use of the one in the data"""
+        }
 
     __used_configurables__ = [
         PhysConf          ,
@@ -201,9 +203,9 @@ class DaVinci(LHCbConfigurableUser) :
         """
         if (not self.getProp("Hlt")):
             from Configurables import HltDecReportsDecoder,HltSelReportsDecoder,HltVertexReportsDecoder
-            DataOnDemandSvc().AlgMap["Hlt/DecReports"] = HltDecReportsDecoder( OutputLevel = 4)
-            DataOnDemandSvc().AlgMap["Hlt/SelReports"] = HltSelReportsDecoder( OutputLevel = 4)
-            DataOnDemandSvc().AlgMap["Hlt/VertexReports"] = HltVertexReportsDecoder( OutputLevel = 4)
+            DataOnDemandSvc().AlgMap["Hlt/DecReports"] = HltDecReportsDecoder( OutputLevel = 4 )
+            DataOnDemandSvc().AlgMap["Hlt/SelReports"] = HltSelReportsDecoder( OutputLevel = 4 )
+            DataOnDemandSvc().AlgMap["Hlt/VertexReports"] = HltVertexReportsDecoder( OutputLevel = 4 )
        
         
 ################################################################################
@@ -216,14 +218,16 @@ class DaVinci(LHCbConfigurableUser) :
         if (self.getProp("Hlt")):
             HltConf().DataType = self.getProp("DataType")
             HltConf().WithMC =  self.getProp("Simulation")                                       
+            HltConf().L0TCK =  self.getProp("OverruleL0TCK")                                       
             if ( self.getProp("HltThresholdSettings") != '' ):
                 HltConf().ThresholdSettings = self.getProp("HltThresholdSettings")
             if ( self.getProp("Hlt2Requires") == 'L0+Hlt1' or self.getProp("Hlt2Requires") == 'Hlt1' ):
                 log.info('Hlt2 requires L0 and Hlt1')
             elif ( self.getProp("Hlt2Requires") == 'L0' ):
                 log.info('Hlt2 requires L0 only. Will set Hlt1 passthrough prescale to 1. Note that Hlt1Global has no useful meaning.')
-                from Hlt1Lines.Hlt1CommissioningLines import Hlt1CommissioningLinesConf
-                Hlt1CommissioningLinesConf().Prescale.update( { 'Hlt1ODINPhysics'  : 1. } )
+                from Hlt1Lines.Hlt1L0Lines import Hlt1L0LinesConf
+                Hlt1L0LinesConf().Prescale.update( { 'Hlt1L0Any'  : 1. } )
+
             else : raise AttributeError, 'Hlt2 can require L0 or Hlt1'
 
             from Configurables import GaudiSequencer, HltRoutingBitsFilter
@@ -250,19 +254,33 @@ class DaVinci(LHCbConfigurableUser) :
         if ( self.getProp("ReplaceL0BanksWithEmulated") and (not self.getProp("L0")) ):
             log.warning("You asked to replace L0 banks with emulation. Will set L0 = True")
             self.setProp("L0",True)
+        if ( self.getProp("OverruleL0TCK")):
+            if (not self.getProp("L0")):
+                log.warning("You asked to Overrule the L0TCK defined in Hlt settings. Will set L0 = True")
+                self.setProp("L0",True)
+            if (not self.getProp("ReplaceL0BanksWithEmulated")):
+                log.warning("""
+                You asked to Overrule the L0TCK defined in Hlt settings but not to emulate L0.
+                This might be possible or not depending on the TCKs. I hope you know what you are doing
+                """)
+        # done with all warnings. Now do the logic.
         if ( self.getProp("L0") ):
             l0seq = GaudiSequencer("seqL0")
             ApplicationMgr().TopAlg += [ l0seq ]
             L0Conf().setProp( "L0Sequencer", l0seq )
             L0Conf().setProp( "ReplaceL0BanksWithEmulated", self.getProp("ReplaceL0BanksWithEmulated") )
             L0Conf().setProp( "DataType", self.getProp("DataType"))
+
             if ( self.getProp('HltThresholdSettings') ):
                 from HltConf.ThresholdUtils import Name2Threshold
-                L0TCK = Name2Threshold(self.getProp('HltThresholdSettings')).L0TCK()
+                if ( self.getProp("OverruleL0TCK") ):
+                    L0TCK = self.getProp("OverruleL0TCK")
+                else:
+                    L0TCK = Name2Threshold(self.getProp('HltThresholdSettings')).L0TCK()
                 L0Conf().setProp( "TCK", L0TCK )
                 log.info("Will run L0 with TCK "+L0TCK)
             else :
-                log.warning("L0 TCK has not been set by DaVinci. Assume it's set otherwise.")
+                log.info("L0 TCK has not been set by DaVinci. Assume it's set otherwise.")
         
 ################################################################################
 # @todo Stolen from Brunel. Could be common to all apps?
