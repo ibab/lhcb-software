@@ -16,6 +16,7 @@ use CaloReco             v5r3    Calo # Olivier Deschamps
 use MuonID               v7r6    Muon # Erica Polycarpo, Miriam Gandelman
 use MuonPIDChecker       v4r0    Muon # Erica Polycarpo, Miriam Gandelman
 use MuonTrackAlign       v1r8    Muon # Silvia Pozzi
+use MuonTrackRec         v3r0    Muon # Giacomo Graziani
 
 # Non sub-detector specific components
 use GlobalReco           v6r31   Rec  # Chris Jones
