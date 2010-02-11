@@ -1,4 +1,4 @@
-// $Id: PrimaryVertexChecker.h,v 1.2 2008-12-17 15:49:14 cattanem Exp $
+// $Id: PrimaryVertexChecker.h,v 1.3 2010-02-11 08:23:58 pmorawsk Exp $
 #ifndef PRIMARYVERTEXCHECKER_H 
 #define PRIMARYVERTEXCHECKER_H 1
 
@@ -22,6 +22,7 @@ typedef struct {
 typedef struct {
  public:
   int nTracks;                    // number of tracks in a vertex
+  int nVeloTracks;                // number of velo tracks in a vertex
   int nBackTracks;                // number of backward tracks in a vertex
   Gaudi::XYZPoint position;       // position
   Gaudi::XYZPoint positionSigma;  // position sigmas
@@ -46,11 +47,12 @@ private:
 
   IForcedBDecayTool* m_forcedBtool;
 
-  int m_nTracksToBeRecble;
-  bool m_produceHistogram;
-  bool m_produceNtuple;
+  int    m_nTracksToBeRecble;
+  bool   m_produceHistogram;
+  bool   m_produceNtuple;
+  bool   m_requireVelo;
   double m_dzIsolated;
-  bool m_matchByTracks;
+  bool   m_matchByTracks;
   std::string m_inputTracksName;
   std::string m_inputVerticesName;
 
@@ -79,6 +81,7 @@ private:
  void match_mc_vertex_by_tracks(int ipv, std::vector<RecPVInfo>&  rinfo, std::vector<MCPVInfo>& mcpvvec);
  void match_mc_vertex_by_distance(int ipv, std::vector<RecPVInfo>&  rinfo, std::vector<MCPVInfo>& mcpvvec);
  void count_reconstructed_tracks(std::vector<MCPVInfo>& mcpvvec, std::vector<LHCb::Track*>& vecOfTracks, std::string trackLoc);
+ int  count_velo_tracks(LHCb::RecVertex* RecVtx);
  void count_reconstructible_mc_particles(std::vector<MCPVInfo>& mcpvvec);
  bool getInputTracks( std::vector<LHCb::Track*>& vecOfTracks,  std::string& trackLoc);
  bool getInputVertices( std::vector<LHCb::RecVertex*>& vecOfVertices );

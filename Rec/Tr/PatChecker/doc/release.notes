@@ -4,7 +4,12 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
-!========================== PatChecker v3r5 2009-09-03 =======================
+! 2010-02-11 - Piotr Morawski
+- added additional printout and histos
+- added VELO track counter
+- vertex shifts now measured with respect to MC position
+
+=========================== PatChecker v3r5 2009-09-03 =======================
 ! 2009-08-27 - Stephanie Hansmann-Menzemer
 - Replace TfHits by LiteClusters in PatLHCbID2MCParticle
 

@@ -1,13 +1,15 @@
-// $Id: PrimaryVertexChecker.cpp,v 1.2 2009-07-28 12:13:52 cattanem Exp $
+// $Id: PrimaryVertexChecker.cpp,v 1.3 2010-02-11 08:23:45 pmorawsk Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiAlg/Tuples.h"
+#include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
-#include "Linker/LinkedTo.h"
-#include "Event/MCTrackInfo.h"
+#include "VeloDet/DeVelo.h"
+#include <Linker/LinkedTo.h>
+#include <Event/MCTrackInfo.h>
 #include "Event/L0DUReport.h"
 #include "GaudiUtils/HistoStats.h"
 #include "AIDA/IHistogram1D.h"
@@ -35,6 +37,7 @@ PrimaryVertexChecker::PrimaryVertexChecker(const std::string& name,
 {
     declareProperty("nTracksToBeRecble",  m_nTracksToBeRecble = 5);
     declareProperty("produceNtuple",      m_produceNtuple     = false);
+    declareProperty("RequireVelo",        m_requireVelo       = true);
     declareProperty("produceHistogram",   m_produceHistogram  = true);
     declareProperty("dzIsolated",         m_dzIsolated        = 10.0 * Gaudi::Units::mm);
     declareProperty("matchByTracks",      m_matchByTracks     = true);
@@ -140,6 +143,7 @@ StatusCode PrimaryVertexChecker::execute() {
     Gaudi::XYZPoint a3d(sigx,sigy,sigz);
     recinfo.positionSigma = a3d;
     recinfo.nTracks = pv->tracks().size();
+    recinfo.nVeloTracks = count_velo_tracks(pv);
     recpvvec.push_back(recinfo);
     recinfo.indexMCPVInfo = -1;
   }
@@ -223,6 +227,7 @@ StatusCode PrimaryVertexChecker::execute() {
                         ipv,recpvvec[ipv].indexMCPVInfo, 
                         recpvvec[ipv].position.x(),recpvvec[ipv].position.y(),recpvvec[ipv].position.z(),
                         recpvvec[ipv].nTracks,
+                        recpvvec[ipv].nVeloTracks,
                         recpvvec[ipv].positionSigma.x(),recpvvec[ipv].positionSigma.y(),recpvvec[ipv].positionSigma.z(),
                         recpvvec[ipv].pRECPV->chi2PerDoF()) << ff << endreq;
       
@@ -378,6 +383,7 @@ StatusCode PrimaryVertexChecker::execute() {
     int indRec        = itmc->indexRecPVInfo;
     int reconstructed = 0;
     int ntracks_pvrec = 0;
+    int nvelotracks_pvrec = 0;
     int ntracks_pvmc  = 0;
     int dtrcks        = 0;
     int pvevt         = 0;
@@ -386,13 +392,14 @@ StatusCode PrimaryVertexChecker::execute() {
     if(indRec > -1) {
       pvevt++;
       reconstructed = 1;
-      dx = itmc->pMCPV->position().x()-recpvvec[indRec].position.x();
-      dy = itmc->pMCPV->position().y()-recpvvec[indRec].position.y();
-      dz = itmc->pMCPV->position().z()-recpvvec[indRec].position.z();
-      errx = recpvvec[indRec].positionSigma.x(); 
-      erry = recpvvec[indRec].positionSigma.y(); 
+      dx = recpvvec[indRec].position.x() - itmc->pMCPV->position().x();
+      dy = recpvvec[indRec].position.y() - itmc->pMCPV->position().y();
+      dz = recpvvec[indRec].position.z() - itmc->pMCPV->position().z()
+      errx = recpvvec[indRec].positionSigma.x();
+      erry = recpvvec[indRec].positionSigma.y();
       errz = recpvvec[indRec].positionSigma.z();
       ntracks_pvrec = recpvvec[indRec].nTracks;
+      nvelotracks_pvrec = recpvvec[indRec].nVeloTracks;
       ntracks_pvmc = itmc->pMCPV->products().size();
       dtrcks = ntracks_pvmc - ntracks_pvrec;
       // Filling histograms
@@ -411,6 +418,7 @@ StatusCode PrimaryVertexChecker::execute() {
         plot(dz/errz, 1033, "pullz", -5., 5., 50);
         plot(double(ntracks_pvrec), 1041, "ntracks_pvrec", 0., 150., 50);
         plot(double(dtrcks), 1042, "mcrdtracks", 0., 150., 50);
+        plot(double(nvelotracks_pvrec), 1043, "nvelotracks_pvrec", 0., 150., 50);
         if(pvevt == 1) {
           plot(double(recpvvec.size()), 1051, "nPVperEvt", -0.5, 5.5, 6);
           for(int ipvrec = 0; ipvrec < (int)recpvvec.size(); ipvrec++) {
@@ -434,6 +442,7 @@ StatusCode PrimaryVertexChecker::execute() {
       myTuple->column("reco",     double(reconstructed));
       myTuple->column("isol",     double(isolated));
       myTuple->column("ntracks",  double(ntracks_pvrec));
+      myTuple->column("nvelotracks",  double(nvelotracks_pvrec));
       myTuple->column("nrectrmc", double(itmc->nRecTracks));
       myTuple->column("dzclose",   dist_closest);
       myTuple->column("nmcpv",    double(rblemcpv.size()));
@@ -653,14 +662,45 @@ StatusCode PrimaryVertexChecker::finalize() {
            << " Visible MC PV: 2 tracks reconstructed" << endreq;
     info() << " " << endreq;
   }
+  const AIDA::IHistogram1D* dx = histo( HistoID(1021) ) ;
+  const AIDA::IHistogram1D* pullx = histo( HistoID(1031) ) ;
+  const AIDA::IHistogram1D* dy = histo( HistoID(1022) ) ;
+  const AIDA::IHistogram1D* pully = histo( HistoID(1032) ) ;
   const AIDA::IHistogram1D* dz = histo( HistoID(1023) ) ;
   const AIDA::IHistogram1D* pullz = histo( HistoID(1033) ) ;
   if( dz && pullz ) {
     info() << "      ---------------------------------------" << endreq;
+    info() << "dx:    "
+	   << format( "mean =  %5.3f +/- %5.3f, RMS =  %5.3f +/- %5.3f",
+		      dx->mean(), Gaudi::Utils::HistoStats::meanErr(dx),
+		      dx->rms(), Gaudi::Utils::HistoStats::rmsErr(dx)) << endreq ;
+  }
+  if( dy ) {
+    info() << "dy:    "
+	   << format( "mean =  %5.3f +/- %5.3f, RMS =  %5.3f +/- %5.3f",
+		      dy->mean(), Gaudi::Utils::HistoStats::meanErr(dy),
+		      dy->rms(), Gaudi::Utils::HistoStats::rmsErr(dy)) << endreq ;
+  }
+  if( dz ) {
     info() << "dz:    "
 	   << format( "mean =  %5.3f +/- %5.3f, RMS =  %5.3f +/- %5.3f",
 		      dz->mean(), Gaudi::Utils::HistoStats::meanErr(dz),
 		      dz->rms(), Gaudi::Utils::HistoStats::rmsErr(dz)) << endreq ;
+  }
+  info() << "      ---------------------------------------" << endreq;
+  if( pullx ) {
+    info() << "pullx: "
+	   << format( "mean =  %5.3f +/- %5.3f, RMS =  %5.3f +/- %5.3f",
+		      pullx->mean(), Gaudi::Utils::HistoStats::meanErr(pullx),
+		      pullx->rms(), Gaudi::Utils::HistoStats::rmsErr(pullx)) << endreq ;
+  }
+  if( pully ) {
+    info() << "pully: "
+	   << format( "mean =  %5.3f +/- %5.3f, RMS =  %5.3f +/- %5.3f",
+		      pully->mean(), Gaudi::Utils::HistoStats::meanErr(pully),
+		      pully->rms(), Gaudi::Utils::HistoStats::rmsErr(pully)) << endreq ;
+  }
+  if( pullz ) {
     info() << "pullz: "
 	   << format( "mean =  %5.3f +/- %5.3f, RMS =  %5.3f +/- %5.3f",
 		      pullz->mean(), Gaudi::Utils::HistoStats::meanErr(pullz),
@@ -712,9 +752,11 @@ void PrimaryVertexChecker::count_reconstructed_tracks(std::vector<MCPVInfo>& mcp
         LHCb::MCParticle* partmc = trackMClink.first((*itrec)->key());
         if (partmc && partmc == pmcp) {
           recTrack = (*itrec);
-          isReco = 1;
-          break;
-	}
+          if (!m_requireVelo || recTrack->hasVelo()){
+            isReco = 1;
+            break;
+          }
+        }
       }
       if(pmcp->particleID().threeCharge() != 0  &&  isReco ) {
         double dv2 = (avtx->position() - pmcp->originVertex()->position()).Mag2();
@@ -727,7 +769,14 @@ void PrimaryVertexChecker::count_reconstructed_tracks(std::vector<MCPVInfo>& mcp
     itinfomc->nRecTracks = itinfomc->m_mcPartInMCPV.size();       
   }
 
-
+int  PrimaryVertexChecker::count_velo_tracks(LHCb::RecVertex* RecVtx){
+  SmartRefVector< LHCb::Track >  vtx_tracks = RecVtx->tracks();
+  int nVeloTracks = 0;
+  for (unsigned int it = 0; it < vtx_tracks.size(); it++ ) {
+    const LHCb::Track* ptr =  vtx_tracks[it];
+    if (ptr->hasVelo()) nVeloTracks++;
+  }
+  return nVeloTracks;
 }
 
 void PrimaryVertexChecker::count_reconstructible_mc_particles(std::vector<MCPVInfo>& mcpvvec) {
