@@ -1,3 +1,10 @@
+2010-02-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: 
+	- fixed CMTCONFIG extraction from the environment in case of shared tarball
+	installation.
+	- fixed the formating 
+
 2010-02-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLCGCMTtar: fixed the pyqt_compat problem on windows.

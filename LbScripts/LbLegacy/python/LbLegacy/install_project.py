@@ -25,7 +25,7 @@ compat_version = None
 url_dist = 'http://lhcbproject.web.cern.ch/lhcbproject/dist/'
 
 # list of subdirectories created in runInstall
-subdir = ['lcg','lhcb','contrib','html','targz', 'tmp']
+subdir = ['lcg', 'lhcb', 'contrib', 'html', 'targz', 'tmp']
 
 # dynamic modules
 
@@ -34,14 +34,14 @@ LbConfiguration = None
 
 
 # base directories
-log_dir     = None
+log_dir = None
 contrib_dir = None
-lcg_dir     = None
-lhcb_dir    = None
-html_dir    = None
+lcg_dir = None
+lhcb_dir = None
+html_dir = None
 bootscripts_dir = None
-targz_dir   = None
-tmp_dir     = None
+targz_dir = None
+tmp_dir = None
 
 # global creation mask
 globalmask = None
@@ -76,11 +76,11 @@ install_binary = False
 def usage() :
     print 'Usage:'
     print '  python install_project.py -p <project> -v <version> [-b] '
-    print 'version %s - Try "python install_project.py -h" for more information.'% script_version
+    print 'version %s - Try "python install_project.py -h" for more information.' % script_version
     sys.exit()
 
 def help() :
-    print ' install_project.py - version %s:  install a project in the current directory '% script_version
+    print ' install_project.py - version %s:  install a project in the current directory ' % script_version
     print """
     Usage:
       python install_project.py -p <project> -v <version> [-b| --binary=<bin> ] [-d or --debug] [-m <global|select>]
@@ -126,23 +126,23 @@ def help() :
       tar.gz file which cannot be untared is removed and a message is printed
       """
     sys.exit()
-    
+
 #----------------------------------------------------------------------------------
 
 def initRandSeed():
     random.seed("%d-%s" % (os.getpid(), socket.getfqdn()))
 
 _block_count = 0
-_block_size  = 0
-_file_size   = 0
-_cur_size    = 0
+_block_size = 0
+_file_size = 0
+_cur_size = 0
 
 def reportHook(bcount, bsize, fsize):
     global _block_count, _block_size, _file_size, _cur_size
     _block_count = bcount
-    _block_size  = bsize
-    _file_size   = fsize
-    _cur_size   += bcount * bsize 
+    _block_size = bsize
+    _file_size = fsize
+    _cur_size += bcount * bsize
 
 _retry_time = 120.0
 
@@ -162,14 +162,19 @@ def retrieve(url, dest):
                 os.remove(dest)
         local_retries -= 1
         if local_retries and not retrieved:
-            sleep_time = _retry_time + random.uniform(-_retry_time/2, _retry_time/2)
+            sleep_time = _retry_time + random.uniform(-_retry_time / 2, _retry_time / 2)
             log.warning("Sleeping for %f second before retrying" % sleep_time)
             time.sleep(sleep_time)
-    log.debug("Block count: %d\tBlock size: %d\tFile size:%d\tRetrieved: %d" % (_block_count, _block_size, _file_size, _cur_size) )
-    _block_size  = 0
+    debugmsglist = []
+    debugmsglist.append("Block count %d" % _block_count)
+    debugmsglist.append("Block size %d" % _block_size)
+    debugmsglist.append("File size %d" % _file_size )
+    debugmsglist.append("Retrieved %d" % _cur_size)
+    log.debug("\t".join(debugmsglist))
+    _block_size = 0
     _block_count = 0
-    _file_size   = 0
-    _cur_size    = 0
+    _file_size = 0
+    _cur_size = 0
 
     return fname, finfo
 
@@ -186,12 +191,12 @@ def registerPostInstallCommand(project, command, dirname=None):
         cmdlist = _postinstall_commands[project]
     else :
         cmdlist = []
-    cmdlist.append((command,dirname))
+    cmdlist.append((command, dirname))
     _postinstall_commands[project] = cmdlist
     if dirname :
-        log.debug("Registered PostInstall for %s: \"%s\" in %s" % (project, command, dirname) )
+        log.debug("Registered PostInstall for %s: \"%s\" in %s" % (project, command, dirname))
     else :
-        log.debug("Registered PostInstall for %s: \"%s\"" % (project, command) )
+        log.debug("Registered PostInstall for %s: \"%s\"" % (project, command))
 
 
 def callPostInstallCommand(project):
@@ -202,7 +207,7 @@ def callPostInstallCommand(project):
             if c[1] :
                 os.chdir(c[1])
             os.system("%s" % c[0])
-            log.info("Executing PostInstall for %s: \"%s\" in %s" % (project, c[0], c[1]) )
+            log.info("Executing PostInstall for %s: \"%s\" in %s" % (project, c[0], c[1]))
     else :
         log.debug("Project %s has no postinstall command" % project)
 
@@ -229,7 +234,7 @@ def removeAll(path):
             if os.path.isdir(path) and not os.path.islink(path):
                 lst = os.listdir(path)
                 for p in lst:
-                    removeAll(os.path.join(path,p))
+                    removeAll(os.path.join(path, p))
                 os.rmdir(path)
             else:
                 os.remove(path)
@@ -272,13 +277,13 @@ def getGlobalMask():
         os.umask(themask)
         authbits1 = 0777 - themask
         basedir = os.environ["MYSITEROOT"].split(os.pathsep)[0]
-        authbits2=stat.S_IMODE(os.stat(basedir)[stat.ST_MODE])
+        authbits2 = stat.S_IMODE(os.stat(basedir)[stat.ST_MODE])
         authbits = authbits1 | authbits2
         globalmask = 0777 - authbits
         os.umask(globalmask)
         log.debug("Calculating global permissions:")
-        log.debug("Read/write permissions according to mask %04o are %04o" % (themask, 0777-themask))
-        log.debug("Read/write permissions according to MYSITEROOT are %04o" % authbits2 )
+        log.debug("Read/write permissions according to mask %04o are %04o" % (themask, 0777 - themask))
+        log.debug("Read/write permissions according to MYSITEROOT are %04o" % authbits2)
     return globalmask
 
 def changePermissions(directory, recursive=True):
@@ -290,13 +295,13 @@ def changePermissions(directory, recursive=True):
         # add write permissions to the user if needed
         authbits = 0777 - getGlobalMask()
         if recursive and os.path.isdir(directory):
-            log.debug( "Adding read/write permissions %04o recursively to %s" % (authbits, directory) )
+            log.debug("Adding read/write permissions %04o recursively to %s" % (authbits, directory))
         else :
-            log.debug( "Adding read/write permissions %04o to %s" % (authbits, directory))
+            log.debug("Adding read/write permissions %04o to %s" % (authbits, directory))
         addPermissions(authbits, directory, recursive)
     else :
         if recursive :
-            log.debug( "Adding read/write permissions recursively to %s" % directory )
+            log.debug("Adding read/write permissions recursively to %s" % directory)
             os.chmod(directory, stat.S_IWRITE)
             for root, dirs, files in os.walk(directory, topdown=True) :
                 for d in dirs :
@@ -304,7 +309,7 @@ def changePermissions(directory, recursive=True):
                 for f in files :
                     os.chmod(os.path.join(root, f), stat.S_IWRITE)
         else :
-            log.debug( "Adding read/write permissions to %s" % directory)
+            log.debug("Adding read/write permissions to %s" % directory)
             os.chmod(directory, stat.S_IWRITE)
         if os.path.isdir(directory):
             if os.listdir(directory) :
@@ -320,17 +325,17 @@ def checkWriteAccess(directory):
 
     canwrite = os.access(directory, os.W_OK)
     if not canwrite :
-        log.warning( "No POSIX write permission in %s" % directory )
+        log.warning("No POSIX write permission in %s" % directory)
     dirok = dirok & canwrite
 
     canread = os.access(directory, os.R_OK)
     if not canread :
-        log.warning("No POSIX read permission in %s - cannot list directory" % directory )
+        log.warning("No POSIX read permission in %s - cannot list directory" % directory)
     dirok = dirok & canread
 
     canexe = os.access(directory, os.X_OK)
     if not canexe :
-        log.warning( "No POSIX execute permission in %s - cannot cd in there" % directory )
+        log.warning("No POSIX execute permission in %s - cannot cd in there" % directory)
     dirok = dirok & canexe
 
 
@@ -344,16 +349,16 @@ def getTmpDirectory():
 def createTmpDirectory():
     log = logging.getLogger()
     if os.path.isdir(getTmpDirectory()) :
-        log.debug( '     %s exists' % getTmpDirectory() )
+        log.debug('     %s exists' % getTmpDirectory())
         destroyTmpDirectory()
     os.mkdir(getTmpDirectory())
     if fix_perm :
         changePermissions(getTmpDirectory(), recursive=True)
-    log.info( '     %s created' % getTmpDirectory() )
+    log.info('     %s created' % getTmpDirectory())
 
 def destroyTmpDirectory():
     log = logging.getLogger()
-    log.info( '     Removing %s' % getTmpDirectory())
+    log.info('     Removing %s' % getTmpDirectory())
     removeAll(getTmpDirectory())
 
 def cleanTmpDirectory():
@@ -361,7 +366,7 @@ def cleanTmpDirectory():
     log.info('     Cleaning up %s' % getTmpDirectory())
     tmpdir = getTmpDirectory()
     for f in os.listdir(tmpdir) :
-        removeAll(os.path.join(tmpdir,f))
+        removeAll(os.path.join(tmpdir, f))
 
 #----------------------------------------------------------------------------
 
@@ -383,7 +388,7 @@ def getSourceCmd():
 def createDir(here , logname):
     log = logging.getLogger()
 
-    log.info('create necessary sub-directories' )
+    log.info('create necessary sub-directories')
 
     this_log_dir = log_dir.split(os.pathsep)[0]
 
@@ -393,17 +398,17 @@ def createDir(here , logname):
         if not os.path.isdir(this_log_dir):
             os.mkdir(this_log_dir)
         elif logname:
-            if os.path.exists(os.path.join(this_log_dir,logname+'_old')):
-                os.remove(logname+'_old')
+            if os.path.exists(os.path.join(this_log_dir, logname + '_old')):
+                os.remove(logname + '_old')
             if os.path.exists(logname):
-                os.rename(logname,logname+'_old')
-    
+                os.rename(logname, logname + '_old')
+
         for dirnm in subdir:
             if os.path.isdir(os.path.join(here, dirnm)):
-                log.debug('%s exists in %s '%(dirnm, here))
+                log.debug('%s exists in %s ' % (dirnm, here))
             else:
                 os.mkdir(dirnm)
-                log.info('%s is created in %s '%(dirnm, here))
+                log.info('%s is created in %s ' % (dirnm, here))
                 if dirnm == 'lcg':
                     os.mkdir(os.path.join(dirnm, 'external'))
                     log.info('%s is created in %s ' % (os.path.join(dirnm, 'external'), here))
@@ -419,7 +424,7 @@ def createDir(here , logname):
                         if not found_dbase :
                             os.mkdir(os.path.join(dirnm, 'DBASE'))
                         if not found_param :
-                            os.mkdir(os.path.join(dirnm,'PARAM'))
+                            os.mkdir(os.path.join(dirnm, 'PARAM'))
                         if found_dbase or found_param :
                             os.mkdir(os.path.join(dirnm, 'EXTRAPACKAGES'))
                             os.mkdir(os.path.join(dirnm, 'EXTRAPACKAGES', 'cmt'))
@@ -436,7 +441,7 @@ def createDir(here , logname):
     else :
         log.warning("Cannot write in %s" % here)
         good = False
-        
+
     return good
 
 #
@@ -462,7 +467,7 @@ def getCMT(version=0):
     # get the cmt version number from the argument
     else:
         cmtvers = version
-        log.debug('get cmtversion from argument %s '% cmtvers)
+        log.debug('get cmtversion from argument %s ' % cmtvers)
 
     log.info('CMT version %s ' % cmtvers)
 
@@ -475,29 +480,29 @@ def getCMT(version=0):
     elif sys.platform.find('linux') != -1:
         platform = 'linux'
         hw = commands.getstatusoutput('uname -m')[1]
-        cmtbin = 'Linux-'+hw
+        cmtbin = 'Linux-' + hw
 
     os.environ['CMTBIN'] = cmtbin
 
-    file ='CMT_'+cmtvers+'_'+platform+'.tar.gz'
+    fname = 'CMT_' + cmtvers + '_' + platform + '.tar.gz'
     # if the version does not exist get it from the web site
-    if overwrite_mode or not isInstalled(file):
+    if overwrite_mode or not isInstalled(fname):
         os.chdir(this_contrib_dir)
 
-        # get the tar file
+        # get the tar fname
         log.info('get %s' % os.path.join(this_contrib_dir, 'CMT', cmtvers, platform))
-        getFile(url_dist+'source/','CMT_'+cmtvers+'_'+platform+'.tar.gz')
+        getFile(url_dist + 'source/', 'CMT_' + cmtvers + '_' + platform + '.tar.gz')
         # untar it
         checkWriteAccess(this_contrib_dir)
         os.chdir(this_contrib_dir)
-        rc = unTarFileInTmp(os.path.join(this_targz_dir,file), os.getcwd(), overwrite=overwrite_mode)
+        rc = unTarFileInTmp(os.path.join(this_targz_dir, fname), os.getcwd(), overwrite=overwrite_mode)
         if rc != 0 :
             removeAll(os.path.join(this_contrib_dir, 'CMT'))
             log.info('CMT directory removed')
             sys.exit("getCMT: Exiting ...\n")
 
         # install CMT
-        os.chdir(os.path.join(this_contrib_dir,'CMT',cmtvers,'mgr'))
+        os.chdir(os.path.join(this_contrib_dir, 'CMT', cmtvers, 'mgr'))
         if sys.platform == 'win32':
             rc = os.system('call INSTALL.bat')
         else:
@@ -505,24 +510,24 @@ def getCMT(version=0):
             for l in output.split("\n") :
                 log.debug(l)
         log.info('install CMT %s' % cmtvers)
-        setInstalled(file)
-        os.environ['CMTROOT'] = os.path.join(this_contrib_dir,'CMT',cmtvers)
+        setInstalled(fname)
+        os.environ['CMTROOT'] = os.path.join(this_contrib_dir, 'CMT', cmtvers)
     else:
-        location = getInstallLocation(file)
-        log.info( 'CMT %s is already installed in %s' % (cmtvers, location))
+        location = getInstallLocation(fname)
+        log.info('CMT %s is already installed in %s' % (cmtvers, location))
         for cd in contrib_dir.split(os.pathsep) :
             if cd.startswith(location) :
                 that_contrib_dir = cd
                 break
-        os.environ['CMTROOT'] = os.path.join(that_contrib_dir,'CMT',cmtvers)
+        os.environ['CMTROOT'] = os.path.join(that_contrib_dir, 'CMT', cmtvers)
 
-    newpath = os.path.join(os.getenv('CMTROOT'),cmtbin)+os.pathsep+os.getenv('PATH')
+    newpath = os.path.join(os.getenv('CMTROOT'), cmtbin) + os.pathsep + os.getenv('PATH')
     os.environ['PATH'] = newpath
 
     if debug_flag :
-        log.debug( 'CMTROOT %s' % os.getenv('CMTROOT'))
-        log.debug( 'PATH %s ' % os.getenv('PATH'))
-        log.debug( 'CMTBIN %s '% os.getenv('CMTBIN'))
+        log.debug('CMTROOT %s' % os.getenv('CMTROOT'))
+        log.debug('PATH %s ' % os.getenv('PATH'))
+        log.debug('CMTBIN %s ' % os.getenv('CMTBIN'))
 
     os.chdir(here)
 
@@ -530,56 +535,56 @@ def getCMT(version=0):
 #
 #  download a file from the web site in targz_dir =================================
 #
-def getFile(url, file):
+def getFile(url, fname):
     log = logging.getLogger()
     if not url.endswith("/") :
         url = url + "/"
-    log.debug('%s%s ' % (url, file))
+    log.debug('%s%s ' % (url, fname))
 
-    if file.find('.tar.gz') != -1:
+    if fname.find('.tar.gz') != -1:
         filetype = 'x-gzip'
         this_targz_dir = targz_dir.split(os.pathsep)[0]
-        dest = os.path.join(this_targz_dir, file)
+        dest = os.path.join(this_targz_dir, fname)
         if url.find('scripts') != -1 or url.find('system') != -1:
             if os.path.exists(dest) :
                 try:
                     os.remove(dest)
                 except:
-                    log.info('can not remove file %s' % dest)
-    elif file.find('.html') != -1 or file.find('.htm') != -1 :
+                    log.info('can not remove fname %s' % dest)
+    elif fname.find('.html') != -1 or fname.find('.htm') != -1 :
         this_html_dir = html_dir.split(os.pathsep)[0]
-        dest = os.path.join(this_html_dir,file)
+        dest = os.path.join(this_html_dir, fname)
         filetype = 'html'
 
     else:
         filetype = 'text'
-        if file.find('.py') != -1:
-            dest = file
-            if file == 'install_project.py' : dest = 'latest_install_project.py'
+        if fname.find('.py') != -1:
+            dest = fname
+            if fname == 'install_project.py' : dest = 'latest_install_project.py'
             if os.path.exists(dest):
                 try:
                     os.remove(dest)
                 except:
-                    log.warning('can not remove file %s' % dest)
+                    log.warning('can not remove fname %s' % dest)
 
 
     exist_flag = False
-    log.debug('%s on %s' % (file, dest))
+    log.debug('%s on %s' % (fname, dest))
 
     if not os.path.exists(dest):
         local_retries = nb_retries + 1
         hasbeendownloaded = False
-        while ( not hasbeendownloaded and (local_retries>0) ) :
-            h =  retrieve(url+'/'+file,dest)[1]
+        while (not hasbeendownloaded and (local_retries > 0)) :
+            h = retrieve(url + '/' + fname, dest)[1]
             if h.type.find(filetype) == -1:
-                log.warning('cannot download %s - retry' % file)
+                log.warning('cannot download %s - retry' % fname)
                 os.remove(dest)
             else:
                 if md5_check and isTarBall(dest):
-                    if not checkMD5(url,file,os.path.dirname(dest)):
-                        removeReferenceMD5(file, os.path.dirname(dest) )
+                    if not checkMD5(url, fname, os.path.dirname(dest)):
+                        removeReferenceMD5(fname, os.path.dirname(dest))
                         os.remove(dest)
-                        log.error('md5 check failed on %s' % file)
+                        log.error('md5 check failed on %s' % fname)
                     else:
                         hasbeendownloaded = True
                 else:
@@ -587,7 +592,7 @@ def getFile(url, file):
             local_retries = local_retries - 1
 
         if not hasbeendownloaded:
-            sys.exit('Cannot download %s after %s attempts - exit ' %(file,nb_retries)+'\n')
+            sys.exit('Cannot download %s after %s attempts - exit ' % (fname, nb_retries) + '\n')
 
     return exist_flag
 
@@ -603,17 +608,17 @@ def isTarBall(filename):
 def calculateMD5(filename):
     import md5
     m = md5.new()
-    f = open(filename,"rb")
-    buf = f.read(2**13)
+    f = open(filename, "rb")
+    buf = f.read(2 ** 13)
     while(buf):
         m.update(buf)
-        buf = f.read(2**13)
+        buf = f.read(2 ** 13)
     return m.hexdigest()
 
 def removeReferenceMD5(fnm, dest):
     log = logging.getLogger()
     md5name = getMD5FileName(fnm)
-    filename = os.path.join(dest,md5name)
+    filename = os.path.join(dest, md5name)
     if os.path.exists(filename):
         try:
             os.remove(filename)
@@ -623,14 +628,14 @@ def removeReferenceMD5(fnm, dest):
 def getReferenceMD5(url, filen, dest):
     log = logging.getLogger()
     md5name = getMD5FileName(filen)
-    filename = os.path.join(dest,md5name)
+    filename = os.path.join(dest, md5name)
     if md5name :
         if os.path.exists(filename) :
             os.remove(filename)
-        filename = retrieve(url+'/'+ md5name, filename )[0]
+        filename = retrieve(url + '/' + md5name, filename)[0]
     else:
         log.warning('cannot retrieve %s' % md5name)
-    for line in open(filename,"r").readlines():
+    for line in open(filename, "r").readlines():
         md5sum = line.split(" ")[0]
     return md5sum
 
@@ -640,7 +645,7 @@ def checkMD5(url, filenm, dest):
     log.info("Checking %s tar ball consistency ..." % filenm)
     refmd5 = getReferenceMD5(url, filenm, dest)
     log.debug("   reference md5 sum is: %s" % refmd5)
-    compmd5 = calculateMD5(os.path.join(dest,filenm))
+    compmd5 = calculateMD5(os.path.join(dest, filenm))
     log.debug("       local md5 sum is: %s" % compmd5)
     if refmd5 == compmd5 :
         isok = True
@@ -660,8 +665,7 @@ def getHTMLFileName(filename):
 #
 #  get package name, version and binary =======================================
 #
-def getPackVer(file):
-    log = logging.getLogger()
+def getPackVer(fname):
 
     this_lhcb_dir = lhcb_dir.split(os.pathsep)[0]
     this_lcg_dir = lcg_dir.split(os.pathsep)[0]
@@ -669,44 +673,44 @@ def getPackVer(file):
 
 
     # get the binary if any
-    if file.find("LBSCRIPTS") == -1 :
+    if fname.find("LBSCRIPTS") == -1 :
         import LbConfiguration.Platform
         binary_list = LbConfiguration.Platform.binary_dbg_list + LbConfiguration.Platform.binary_opt_list
         for b in binary_list:
-            if file.find(b) != -1:
+            if fname.find(b) != -1:
                 bin = b
-                if file.find('_'+b) != -1 :
-                    ffile = file[:file.find('_'+b)]
+                if fname.find('_' + b) != -1 :
+                    ffile = fname[:fname.find('_' + b)]
                 else :
-                    ffile = file[:file.find('.tar.gz')]
+                    ffile = fname[:fname.find('.tar.gz')]
                 break
             else:
                 bin = None
-                ffile = file[:file.find('.tar.gz')]
+                ffile = fname[:fname.find('.tar.gz')]
     else :
         bin = None
-        ffile = file[:file.find('.tar.gz')]
+        ffile = fname[:fname.find('.tar.gz')]
     packver = ffile.split('_')
     vers = packver[-1]
     name = packver[0]
-    file_path = os.path.join(this_lhcb_dir,name,name+'_'+vers)
+    file_path = os.path.join(this_lhcb_dir, name, name + '_' + vers)
     base_dir = lhcb_dir.split(os.pathsep)
     file_base = []
     for bd in base_dir :
-        file_base.append(os.path.join(bd, name, name+'_'+vers))
+        file_base.append(os.path.join(bd, name, name + '_' + vers))
     if name == "LBSCRIPTS" :
         file_base = []
-        file_base.append(os.path.join(base_dir[0],name,name+'_'+vers))
+        file_base.append(os.path.join(base_dir[0], name, name + '_' + vers))
     if name == "LCGCMT" or name == "GENSER" or name == "LCGGrid" or name == "LCGGanga":
         if len(packver) >= 2:
             vers = '_'.join(packver[1:])
-            file_path = os.path.join(this_lcg_dir,name,name+'_'+vers)
+            file_path = os.path.join(this_lcg_dir, name, name + '_' + vers)
             base_dir = lcg_dir.split(os.pathsep)
             file_base = []
             for bd in base_dir :
-                file_base.append(os.path.join(bd, name, name+'_'+vers))
+                file_base.append(os.path.join(bd, name, name + '_' + vers))
     if name == "OpenScientist" or name == "osc_vis" or name == "DIM" :
-        file_path = os.path.join(this_contrib_dir,name,vers)
+        file_path = os.path.join(this_contrib_dir, name, vers)
         base_dir = contrib_dir.split(os.pathsep)
         file_base = []
         for bd in base_dir :
@@ -715,8 +719,8 @@ def getPackVer(file):
         if len(packver) == 3:
             name = packver[1]
         else:
-            name = os.path.join(packver[1],packver[2])
-        file_path = os.path.join(this_lhcb_dir,packver[0],name,vers)
+            name = os.path.join(packver[1], packver[2])
+        file_path = os.path.join(this_lhcb_dir, packver[0], name, vers)
         base_dir = lhcb_dir.split(os.pathsep)
         file_base = []
         if len(base_dir) > 1 :
@@ -728,7 +732,7 @@ def getPackVer(file):
 #
 #  get the project_list =====================================================
 #
-def getProjectList(name,version,binary=None):
+def getProjectList(name, version, binary=None):
     log = logging.getLogger()
     log.debug('get list of projects to install %s %s %s' % (name, version, binary))
     here = os.getcwd()
@@ -740,11 +744,11 @@ def getProjectList(name,version,binary=None):
         p = LbConfiguration.Package.getPackage(name)
         tar_file = p.tarBallName(version)
     else:
-        tar_file = name.upper()+'_'+name.upper()
+        tar_file = name.upper() + '_' + name.upper()
         if version != 0 :
             tar_file = tar_file + '_' + version
-        if binary: 
-            tar_file = tar_file+'_'+binary
+        if binary:
+            tar_file = tar_file + '_' + binary
 
     this_html_dir = html_dir.split(os.pathsep)[0]
 
@@ -752,10 +756,10 @@ def getProjectList(name,version,binary=None):
         checkWriteAccess(this_html_dir)
     os.chdir(this_html_dir)
     if not check_only :
-        getFile(url_dist+'html/',tar_file+'.html')
-    
-    disthtm = os.path.join(this_html_dir,"distribution.htm")
-    
+        getFile(url_dist + 'html/', tar_file + '.html')
+
+    disthtm = os.path.join(this_html_dir, "distribution.htm")
+
     if not check_only :
         if os.path.exists(disthtm) :
             os.remove(disthtm)
@@ -768,7 +772,7 @@ def getProjectList(name,version,binary=None):
     if os.path.exists(tar_file_html) :
         fd = open(tar_file_html)
     else :
-        log.error("File %s doesn't exist" % os.path.join(this_html_dir,tar_file_html))
+        log.error("File %s doesn't exist" % os.path.join(this_html_dir, tar_file_html))
         log.warning("%s %s %s is not installed" % (name, version, binary))
         sys.exit("some projects are not installed. Exiting ...")
 
@@ -778,14 +782,14 @@ def getProjectList(name,version,binary=None):
             log.info('the required project %s %s %s is not available' % (name, version, binary))
             log.info('remove %s.html and exit ' % tar_file)
             fd.close()
-            os.remove(tar_file+'.html')
-            sys.exit(' %s %s %s is not available' %(name,version,binary)+'\n')
+            os.remove(tar_file + '.html')
+            sys.exit(' %s %s %s is not available' % (name, version, binary) + '\n')
         if fdline.find('HREF=') != -1:
             eq_sign = fdline.find('HREF=')
             gt_sign = fdline.find('>')
             slash_sign = eq_sign + fdline[eq_sign:].find('/')
-            source = fdline[eq_sign+5:slash_sign]
-            file   = fdline[slash_sign+1:gt_sign]
+            source = fdline[eq_sign + 5:slash_sign]
+            file = fdline[slash_sign + 1:gt_sign]
             project_list[file] = source
             html_list.append(file)
 
@@ -800,7 +804,7 @@ def getProjectList(name,version,binary=None):
                     newbin = cmtconfig
                     if LbConfiguration.Platform.isBinaryDbg(newbin) :
                         newbin = LbConfiguration.Platform.getBinaryOpt(newbin)
-                    file = file.replace(pack_ver[2],newbin)
+                    file = file.replace(pack_ver[2], newbin)
                 project_list[file] = "source"
                 html_list.append(file)
     log.debug('project_list %s' % project_list)
@@ -812,38 +816,38 @@ def getProjectList(name,version,binary=None):
 
 #----------------------------------------------------------------------------------
 # check installation
-def isInstalled(file):
+def isInstalled(fname):
     installed = False
     if not overwrite_mode :
         # special case: the LbScripts project has to be installed locally anyway
-        if file.find("LbScripts") != -1 or file.find("LBSCRIPTS") != -1 :
-            installedfilename = os.path.join(log_dir.split(os.pathsep)[0],file.replace(".tar.gz", ".installed"))
+        if fname.find("LbScripts") != -1 or fname.find("LBSCRIPTS") != -1 :
+            installedfilename = os.path.join(log_dir.split(os.pathsep)[0], fname.replace(".tar.gz", ".installed"))
             if os.path.exists(installedfilename) :
                 installed = True
         else :
             # regular case: the project can be installed in different locations
             for ld in log_dir.split(os.pathsep) :
-                installedfilename = os.path.join(ld,file.replace(".tar.gz", ".installed"))
+                installedfilename = os.path.join(ld, fname.replace(".tar.gz", ".installed"))
                 if os.path.exists(installedfilename) :
                     installed = True
                     break
     return installed
 
-def getInstallLocation(filenm) :
+def getInstallLocation(fname) :
     location = None
-    if isInstalled(filenm) :
+    if isInstalled(fname) :
         for ld in log_dir.split(os.pathsep) :
-            installedfilename = os.path.join(ld,filenm.replace(".tar.gz", ".installed"))
+            installedfilename = os.path.join(ld, fname.replace(".tar.gz", ".installed"))
             if os.path.exists(installedfilename) :
                 location = os.path.dirname(ld)
                 break
-            
+
     return location
 
 def setInstalled(filenm):
     this_log_dir = log_dir.split(os.pathsep)[0]
 
-    installedfilename = os.path.join(this_log_dir,filenm.replace(".tar.gz", ".installed"))
+    installedfilename = os.path.join(this_log_dir, filenm.replace(".tar.gz", ".installed"))
 
     if os.path.exists(installedfilename) :
         os.remove(installedfilename)
@@ -852,10 +856,10 @@ def setInstalled(filenm):
     f.write("Done\n")
     f.close()
 
-def delInstalled(filenm):
+def delInstalled(fname):
     this_log_dir = log_dir.split(os.pathsep)[0]
 
-    installedfilename = os.path.join(this_log_dir,filenm.replace(".tar.gz", ".installed"))
+    installedfilename = os.path.join(this_log_dir, fname.replace(".tar.gz", ".installed"))
     os.remove(installedfilename)
 
 # check installed project
@@ -863,20 +867,20 @@ def checkInstalledProjects(project_list):
     log = logging.getLogger()
     log.info('check all project in the list %s' % project_list)
     import LbConfiguration.Platform
-    for file in project_list.keys() :
-        if project_list[file] == "source":
-            pack_ver = getPackVer(file)
+    for f in project_list.keys() :
+        if project_list[f] == "source":
+            pack_ver = getPackVer(f)
             if pack_ver[2] != cmtconfig:
                 if cmtconfig in LbConfiguration.Platform.binary_list:
                     newbin = cmtconfig
                     if LbConfiguration.Platform.isBinaryDbg(newbin) :
                         newbin = LbConfiguration.Platform.getBinaryOpt(newbin)
-                    file = file.replace(pack_ver[2],newbin)
-        location = getInstallLocation(file)
+                    f = f.replace(pack_ver[2], newbin)
+        location = getInstallLocation(f)
         if location :
-            log.info("%s is installed in %s" % (file, location))
+            log.info("%s is installed in %s" % (f, location))
         else :
-            log.error("%s is not installed" % file)
+            log.error("%s is not installed" % f)
             sys.exit("some projects are not installed. Exiting ...")
     sys.exit()
 #----------------------------------------------------------------------------------
@@ -900,28 +904,28 @@ def getProjectTar(tar_list, already_present_list=None):
             log.debug(file)
             if tar_list[file] == "source":
                 if file.find('LCGCMT') != -1 or file.find('LCGGrid') != -1 or file.find('LCGGanga') != -1:
-                    checkWriteAccess(os.path.join(this_lcg_dir,'..'))
-                    os.chdir(os.path.join(this_lcg_dir,'..'))
+                    checkWriteAccess(os.path.join(this_lcg_dir, '..'))
+                    os.chdir(os.path.join(this_lcg_dir, '..'))
                 elif file.find('GENSER') != -1:
                     checkWriteAccess(this_lcg_dir)
                     os.chdir(this_lcg_dir)
                 else:
                     checkWriteAccess(this_contrib_dir)
                     os.chdir(this_contrib_dir)
-                getFile(url_dist+'source/',file)
+                getFile(url_dist + 'source/', file)
             elif tar_list[file] == "system":
-                log.info("Obsolete package %s will not be installed. The Compat project is replacing it" % file )
+                log.info("Obsolete package %s will not be installed. The Compat project is replacing it" % file)
             else:
                 checkWriteAccess(this_lhcb_dir)
                 os.chdir(this_lhcb_dir)
-                getFile(url_dist+tar_list[file]+'/',file)
+                getFile(url_dist + tar_list[file] + '/', file)
 
 
             # untar the file
             log.debug('untar file %s' % file)
-            rc = unTarFileInTmp(os.path.join(this_targz_dir,file), os.getcwd(), overwrite=overwrite_mode)
+            rc = unTarFileInTmp(os.path.join(this_targz_dir, file), os.getcwd(), overwrite=overwrite_mode)
             pack_ver = getPackVer(file)
-            if rc != 0 and ( pack_ver[0] != 'LCGGrid' or pack_ver[0] != 'LCGGanga') :
+            if rc != 0 and (pack_ver[0] != 'LCGGrid' or pack_ver[0] != 'LCGGanga') :
                 removeAll(pack_ver[3])
                 log.info('Cleaning up %s' % pack_ver[3])
                 sys.exit("getProjectTar: Exiting ...")
@@ -934,7 +938,7 @@ def getProjectTar(tar_list, already_present_list=None):
                     os.chdir(this_lcg_dir)
                     if not os.path.exists('GENSER'): os.mkdir('GENSER')
                     os.chdir('GENSER')
-                    if not os.path.exists('GENSER_'+pack_ver[1]): os.mkdir('GENSER_'+pack_ver[1])
+                    if not os.path.exists('GENSER_' + pack_ver[1]): os.mkdir('GENSER_' + pack_ver[1])
                 os.chdir(pack_ver[3])
                 if not os.path.exists(pack_ver[2]):
                     os.mkdir(pack_ver[2])
@@ -943,8 +947,8 @@ def getProjectTar(tar_list, already_present_list=None):
             if os.getcwd() == this_lhcb_dir :
                 # if binary is requested and InstallArea does not exist : set it
                 if pack_ver[2] :
-                    os.chdir(os.path.join(this_lhcb_dir,pack_ver[0],pack_ver[0]+'_'+pack_ver[1]))
-                    if not os.path.exists(os.path.join('InstallArea',pack_ver[2])):
+                    os.chdir(os.path.join(this_lhcb_dir, pack_ver[0], pack_ver[0] + '_' + pack_ver[1]))
+                    if not os.path.exists(os.path.join('InstallArea', pack_ver[2])):
                         log.debug('mkdir InstallArea')
                         if not os.path.exists('InstallArea'):
                             os.mkdir ('InstallArea')
@@ -971,40 +975,40 @@ def getProjectTar(tar_list, already_present_list=None):
                                 os.makedirs(tdir)
                             shutil.copytree(os.path.join(extradir, f), os.path.join('EXTRAPACKAGES', f))
                             if fix_perm :
-                                changePermissions(os.path.join('EXTRAPACKAGES',f),recursive=True)
+                                changePermissions(os.path.join('EXTRAPACKAGES', f), recursive=True)
                             shutil.rmtree(extradir, ignore_errors=True)
                 if pack_ver[0] == "LBSCRIPTS" :
-                    genlogscript = os.path.join(pack_ver[3],"InstallArea", "scripts", "generateLogin")
+                    genlogscript = os.path.join(pack_ver[3], "InstallArea", "scripts", "generateLogin")
                     log.debug("Running: %s --without-python --no-cache -m %s --login-version=%s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
                     os.environ["LHCBPROJECTPATH"] = os.pathsep.join([os.path.join(os.environ["MYSITEROOT"], "lhcb"), os.path.join(os.environ["MYSITEROOT"], "lcg", "external")])
                     log.debug("LHCBPROJECTPATH: %s" % os.environ.get("LHCBPROJECTPATH", None))
                     os.system("python %s --without-python --no-cache -m %s --login-version=%s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
                     registerPostInstallCommand("LCGCMT", "python %s --no-cache -m %s %s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
-                    prodlink = os.path.join(os.path.dirname(pack_ver[3]),"prod")
+                    prodlink = os.path.join(os.path.dirname(pack_ver[3]), "prod")
                     if sys.platform != "win32" :
                         if os.path.exists(prodlink) :
                             if os.path.islink(prodlink) :
                                 os.remove(prodlink)
-                                os.symlink(pack_ver[0]+'_'+pack_ver[1], prodlink)
-                                log.debug("linking %s to %s" % (pack_ver[0]+'_'+pack_ver[1], prodlink) )
+                                os.symlink(pack_ver[0] + '_' + pack_ver[1], prodlink)
+                                log.debug("linking %s to %s" % (pack_ver[0] + '_' + pack_ver[1], prodlink))
                             else :
                                 log.error("%s is not a link. Please remove this file/directory" % prodlink)
                     my_dir = os.path.dirname(this_lhcb_dir)
                     for f in os.listdir(os.path.join(pack_ver[3], "InstallArea", "scripts")) :
                         if f.startswith("LbLogin.") and not (f.endswith(".zsh") or f.endswith(".py")):
-                            sourcef = os.path.join(pack_ver[3],"InstallArea", "scripts", f)
-                            targetf = os.path.join(my_dir,f)
+                            sourcef = os.path.join(pack_ver[3], "InstallArea", "scripts", f)
+                            targetf = os.path.join(my_dir, f)
                             if os.path.islink(targetf) or os.path.isfile(targetf):
                                 os.remove(targetf)
                             if sys.platform == "win32" :
                                 shutil.copy(sourcef, targetf)
-                                log.debug("copying %s into %s" % (sourcef, targetf) )
+                                log.debug("copying %s into %s" % (sourcef, targetf))
                             else :
-                                sourcef = sourcef.replace(my_dir,"",1)
+                                sourcef = sourcef.replace(my_dir, "", 1)
                                 while sourcef.startswith("/") or sourcef.startswith("\\") :
                                     sourcef = sourcef[1:]
                                 os.symlink(sourcef, targetf)
-                                log.debug("linking %s to %s" % (sourcef, targetf) )
+                                log.debug("linking %s to %s" % (sourcef, targetf))
 
 
             setInstalled(file)
@@ -1019,17 +1023,17 @@ def getProjectTar(tar_list, already_present_list=None):
             callPostInstallCommand(prj)
 
     os.chdir(here)
-    
+
 # Autoupdate myself
 def getMySelf():
     log = logging.getLogger()
     new_install = 'latest_install_project.py'
     if os.path.exists("latest_install_project.py") :
         os.remove("latest_install_project.py")
-    getFile(url_dist,'install_project.py')
+    getFile(url_dist, 'install_project.py')
     if fix_perm :
         changePermissions('latest_install_project.py', recursive=False)
-    latest_line = readString(new_install,'script_version')
+    latest_line = readString(new_install, 'script_version')
     latest_version = latest_line.split("'")[1]
 #    latest_version = os.popen("python %s --version" % new_install).read()[:-1]
     if script_version < latest_version :
@@ -1040,7 +1044,7 @@ def getMySelf():
             os.remove("install_project.py.old")
         shutil.copy("install_project.py", "install_project.py.old")
         shutil.copy("latest_install_project.py", "install_project.py")
-        os.execv(sys.executable, [sys.executable] + sys.argv)    
+        os.execv(sys.executable, [sys.executable] + sys.argv)
 
 #
 # download necessary scripts ==============================================
@@ -1065,14 +1069,14 @@ def getBootScripts():
         log.debug("sys.path is %s" % os.pathsep.join(sys.path))
     else :
         log.info("LbScripts %s is not installed. Dowloading it." % lbscripts_version)
-        getFile(url_dist+'LBSCRIPTS/',scripttar)
+        getFile(url_dist + 'LBSCRIPTS/', scripttar)
         this_bootscripts_dir = bootscripts_dir.split(os.pathsep)[0]
         this_targz_dir = targz_dir.split(os.pathsep)[0]
         if not os.path.isdir(this_bootscripts_dir) :
             os.mkdir(this_bootscripts_dir)
         checkWriteAccess(this_bootscripts_dir)
         os.chdir(this_bootscripts_dir)
-        rc = unTarFileInTmp(os.path.join(this_targz_dir,scripttar), os.getcwd(), overwrite=True)
+        rc = unTarFileInTmp(os.path.join(this_targz_dir, scripttar), os.getcwd(), overwrite=True)
         os.chdir(here)
         if rc != 0 :
             removeAll(this_bootscripts_dir)
@@ -1107,7 +1111,7 @@ def getVersionList(pname, ver=None):
     from LbConfiguration.Package import package_names, getPackage
 
     datapackage = False
-    
+
     log = logging.getLogger()
     log.debug('Browsing versions for %s ' % pname)
 
@@ -1117,27 +1121,27 @@ def getVersionList(pname, ver=None):
         datapackage = True
     else :
         PROJECT = pname.upper()
-        
-    webpage = urlopen(url_dist+'/'+PROJECT)
+
+    webpage = urlopen(url_dist + '/' + PROJECT)
     weblines = webpage.readlines()
     plist = []
     for webline in weblines:
-        if webline.find('href="'+PROJECT) != -1:
+        if webline.find('href="' + PROJECT) != -1:
             href = webline.index('href=')
             quote1 = webline[href:].index('"')
-            quote2 = webline[href+quote1+1:].index('"')
-            filename = webline[href+quote1+1:href+quote1+1+quote2]
+            quote2 = webline[href + quote1 + 1:].index('"')
+            filename = webline[href + quote1 + 1:href + quote1 + 1 + quote2]
             if filename.find(".md5") == -1 :
                 if datapackage and filename.find(pname) == -1:
                     continue
                 elif ver :
-                    if filename.find(ver+".") != -1 :
-                        plist.append(filename) 
+                    if filename.find(ver + ".") != -1 :
+                        plist.append(filename)
 #                        log.info(filename)
                 else :
-                    plist.append(filename) 
+                    plist.append(filename)
 #                    log.info(filename)
-                
+
     atexit.register(urlcleanup)
     return sortStrings(plist, safe=True)
 
@@ -1151,15 +1155,15 @@ def doesVersionExist(vlist, pname, version, cmt_config=None):
     from LbConfiguration.Project import project_names, getProject
 
     exist = False
-    
+
     isproj = False
-        
+
     if pname in package_names :
         p = getPackage(pname)
     elif pname in project_names:
         p = getProject(pname)
         isproj = True
-    
+
     for l in vlist :
         if not cmt_config :
             if p.tarBallName(version, full=True) == l :
@@ -1170,7 +1174,7 @@ def doesVersionExist(vlist, pname, version, cmt_config=None):
                 exist = True
                 break
     return exist
-    
+
 def getProjectVersions(pname, cmt_config=None):
     from LbConfiguration.Package import package_names
     from LbConfiguration.Project import project_names
@@ -1178,15 +1182,15 @@ def getProjectVersions(pname, cmt_config=None):
 
     isproj = False
     ispack = False
-    
+
     version_list = []
-    
+
     if pname in package_names :
         ispack = True
     elif pname in project_names:
         isproj = True
 
-    
+
     vlist = getVersionList(pname)
     for l in vlist :
         toappend = False
@@ -1212,7 +1216,7 @@ def getLatestVersion(pname, cmt_config=None):
 #
 #  read a string from a file ==============================================
 #
-def readString(filename,string):
+def readString(filename, string):
     fd = open(filename)
     fdlines = fd.readlines()
     for fdline in fdlines:
@@ -1225,7 +1229,7 @@ def readString(filename,string):
 #
 def removeProject(project, pvers):
     log = logging.getLogger()
-    log.info('%s %s '% (project, pvers))
+    log.info('%s %s ' % (project, pvers))
 
     this_lhcb_dir = lhcb_dir.split(os.pathsep)[0]
     this_html_dir = html_dir.split(os.pathsep)[0]
@@ -1240,87 +1244,87 @@ def removeProject(project, pvers):
 
     if PROJECT in [ p.NAME() for p in LbConfiguration.Project.project_list ] :
         head = this_lhcb_dir
-        VERSION = PROJECT+'_'+pvers
+        VERSION = PROJECT + '_' + pvers
 
         flist = os.listdir(this_html_dir)
         for file in flist:
-            if file.find(VERSION+'.') != -1 or file.find(VERSION+'_') != -1 :
+            if file.find(VERSION + '.') != -1 or file.find(VERSION + '_') != -1 :
                 os.remove(os.path.join(this_html_dir, file))
                 log.info('remove %s' % os.path.join(this_html_dir, file))
 
         flist = os.listdir(this_targz_dir)
         for file in flist:
-            if file.find(VERSION+'.') != -1 or file.find(VERSION+'_') != -1:
-                os.remove(os.path.join(this_targz_dir,file))
+            if file.find(VERSION + '.') != -1 or file.find(VERSION + '_') != -1:
+                os.remove(os.path.join(this_targz_dir, file))
                 log.info('remove %s' % os.path.join(this_targz_dir, file))
 
         flist = os.listdir(this_log_dir)
         for file in flist:
-            if file.find(VERSION+'.') != -1 or file.find(VERSION+'_') != -1:
-                os.remove(os.path.join(this_log_dir,file))
+            if file.find(VERSION + '.') != -1 or file.find(VERSION + '_') != -1:
+                os.remove(os.path.join(this_log_dir, file))
                 log.info('remove %s' % os.path.join(this_log_dir, file))
 
         if os.path.isdir(os.path.join(head, PROJECT, VERSION)):
             shutil.rmtree(os.path.join(head, PROJECT, VERSION))
-            log.info('remove %s'% os.path.join(head, PROJECT, VERSION))
-        if os.path.isdir(os.path.join(head, project+'Env', pvers)):
-            shutil.rmtree(os.path.join(head, project+'Env', pvers))
-            log.info('remove %s' % os.path.join(head, project+'Env', pvers))
+            log.info('remove %s' % os.path.join(head, PROJECT, VERSION))
+        if os.path.isdir(os.path.join(head, project + 'Env', pvers)):
+            shutil.rmtree(os.path.join(head, project + 'Env', pvers))
+            log.info('remove %s' % os.path.join(head, project + 'Env', pvers))
     else:
-        proj_vers = project+'_'+pvers
+        proj_vers = project + '_' + pvers
         flist = os.listdir(this_html_dir)
         for file in flist:
             if file.find(proj_vers) != -1 :
-                os.remove(os.path.join(this_html_dir,file))
+                os.remove(os.path.join(this_html_dir, file))
                 log.info('remove %s' % os.path.join(this_html_dir, file))
 
         flist = os.listdir(this_targz_dir)
         for file in flist:
-            if file.find(proj_vers+'.') != -1 or file.find(proj_vers+'_') != -1:
-                os.remove(os.path.join(this_targz_dir,file))
+            if file.find(proj_vers + '.') != -1 or file.find(proj_vers + '_') != -1:
+                os.remove(os.path.join(this_targz_dir, file))
                 log.info('remove %s \n' % os.path.join(this_targz_dir, file))
 
         flist = os.listdir(this_log_dir)
         for file in flist:
-            if file.find(proj_vers+'.') != -1 or file.find(proj_vers+'_') != -1:
-                os.remove(os.path.join(this_log_dir,file))
+            if file.find(proj_vers + '.') != -1 or file.find(proj_vers + '_') != -1:
+                os.remove(os.path.join(this_log_dir, file))
                 log.info('remove %s' % os.path.join(this_log_dir, file))
 
         head = this_contrib_dir
-        if os.path.isdir(os.path.join(head,project,pvers)):
-            shutil.rmtree(os.path.join(head,project,pvers))
+        if os.path.isdir(os.path.join(head, project, pvers)):
+            shutil.rmtree(os.path.join(head, project, pvers))
             log.info('remove %s' % os.path.join(head, project, pvers))
         else:
             head = this_lcg_dir
             vers = pvers
             if project == 'LCGCMT' or project == 'GENSER': vers = proj_vers
-            if os.path.isdir(os.path.join(head,project,vers)):
-                shutil.rmtree(os.path.join(head,project,vers))
+            if os.path.isdir(os.path.join(head, project, vers)):
+                shutil.rmtree(os.path.join(head, project, vers))
                 log.info('remove %s' % os.path.join(head, project, vers))
 
     if multiple_mysiteroot and os.path.isdir(os.path.join(this_lhcb_dir, 'EXTRAPACKAGES')):
-        head = os.path.join(this_lhcb_dir,'EXTRAPACKAGES')
+        head = os.path.join(this_lhcb_dir, 'EXTRAPACKAGES')
         if project.find('Field') != -1:
-            head = os.path.join(this_lhcb_dir,'EXTRAPACKAGES')
+            head = os.path.join(this_lhcb_dir, 'EXTRAPACKAGES')
         if project.find('DDDB') != -1:
-            head = os.path.join(this_lhcb_dir,'EXTRAPACKAGES','Det')
+            head = os.path.join(this_lhcb_dir, 'EXTRAPACKAGES', 'Det')
         if project.find('Dec') != -1:
-            head = os.path.join(this_lhcb_dir,'EXTRAPACKAGES','Gen')
-        if os.path.isdir(os.path.join(head,project,pvers)):
-            shutil.rmtree(os.path.join(head,project,pvers))
+            head = os.path.join(this_lhcb_dir, 'EXTRAPACKAGES', 'Gen')
+        if os.path.isdir(os.path.join(head, project, pvers)):
+            shutil.rmtree(os.path.join(head, project, pvers))
             log.info('remove %s' % os.path.join(head, project, pvers))
 
-    head = os.path.join(this_lhcb_dir,'PARAM')
+    head = os.path.join(this_lhcb_dir, 'PARAM')
     if project.find('Field') != -1 or project.find("AppConfig") != -1:
-        head = os.path.join(this_lhcb_dir,'DBASE')
+        head = os.path.join(this_lhcb_dir, 'DBASE')
     if project.find('DDDB') != -1:
-        head = os.path.join(this_lhcb_dir,'DBASE','Det')
+        head = os.path.join(this_lhcb_dir, 'DBASE', 'Det')
     if project.find('Dec') != -1:
-        head = os.path.join(this_lhcb_dir,'DBASE','Gen')
+        head = os.path.join(this_lhcb_dir, 'DBASE', 'Gen')
     if project.find('L0TCK') != -1 :
         head = os.path.join(this_lhcb_dir, 'DBASE', "TCK")
-    if os.path.isdir(os.path.join(head,project,pvers)):
-        shutil.rmtree(os.path.join(head,project,pvers))
+    if os.path.isdir(os.path.join(head, project, pvers)):
+        shutil.rmtree(os.path.join(head, project, pvers))
         log.info('remove %s' % os.path.join(head, project, pvers))
 
 # -------------------------------------------------------------------------------------------
@@ -1336,11 +1340,11 @@ def genSetupScript(pname, pversion, cmtconfig, scriptfile):
             break
     os.environ["CMTCONFIG"] = cmtconfig
     # setup the scripts python path
-    lbscriptspydir = os.path.join(this_lhcb_dir,"LBSCRIPTS", "LBSCRIPTS_"+lbscripts_version, "InstallArea", "python")
+    lbscriptspydir = os.path.join(this_lhcb_dir, "LBSCRIPTS", "LBSCRIPTS_" + lbscripts_version, "InstallArea", "python")
     if os.path.exists(lbscriptspydir) :
         sys.path.append(lbscriptspydir)
     else :
-        log.error("%s doesn't exist" % lbscriptspydir )
+        log.error("%s doesn't exist" % lbscriptspydir)
     # setup the base LHCb environment
     lbloginscript = os.path.join(lbscriptspydir, "LbConfiguration", "LbLogin.py")
     log.debug("Using LbLogin from %s" % lbloginscript)
@@ -1381,7 +1385,7 @@ def genSetupScript(pname, pversion, cmtconfig, scriptfile):
 def _multiPathJoin(path, subdir):
     pathlist = []
     for d in path.split(os.pathsep) :
-        pathlist.append(os.path.join(d,subdir))
+        pathlist.append(os.path.join(d, subdir))
     return os.pathsep.join(pathlist)
 
 def createBaseDirs(pname, pversion):
@@ -1437,9 +1441,9 @@ def createBaseDirs(pname, pversion):
 
     if pversion :
         if logname :
-            logname = os.path.join(log_dir.split(os.pathsep)[0], pname+'_'+pversion+'.log')
+            logname = os.path.join(log_dir.split(os.pathsep)[0], pname + '_' + pversion + '.log')
         else :
-            logname = os.path.join(log_dir.split(os.pathsep)[0], pname+'.log')
+            logname = os.path.join(log_dir.split(os.pathsep)[0], pname + '.log')
     if not check_only :
         done = createDir(mypath.split(os.pathsep)[0], logname)
     else :
@@ -1476,7 +1480,7 @@ def installLoginScripts():
 #
 #  install one project #################################################
 #
-def runInstall(pname,pversion,binary=None):
+def runInstall(pname, pversion, binary=None):
     global cmtconfig
     log = logging.getLogger()
 
@@ -1507,8 +1511,8 @@ def runInstall(pname,pversion,binary=None):
 # be removed
     if remove_flag :
         if pversion :
-            removeProject(pname,pversion)
-        else : 
+            removeProject(pname, pversion)
+        else :
             log.error("A version of %s must be specified for the removal" % pname)
         sys.exit()
 
@@ -1532,8 +1536,8 @@ def runInstall(pname,pversion,binary=None):
         if pname != 'LbScripts' :
             script_project_list = getProjectList('LbScripts', lbscripts_version)[0]
             getProjectTar(script_project_list)
-    
-    project_list,html_list = getProjectList(pname,pversion)
+
+    project_list, html_list = getProjectList(pname, pversion)
 
 
     cmtconfig_dbg = getBinaryDbg(cmtconfig)
@@ -1542,31 +1546,32 @@ def runInstall(pname,pversion,binary=None):
         cmtconfig_dbg = cmtconfig
         cmtconfig_opt = getBinaryOpt(cmtconfig)
 
-    if pname != 'LHCbGrid' and sys.platform != "win32" and cmtconfig.find("slc3")!=-1 and cmtconfig.find("sl3") != -1 :
-        grid_project_list, grid_html_list = getProjectList('LHCbGrid', grid_version)
-        project_list.update(grid_project_list)
-        html_list += grid_html_list
-        grid_project_list, grid_html_list = getProjectList('LHCbGrid', grid_version, cmtconfig_opt)
-        project_list.update(grid_project_list)
-        html_list += grid_html_list
-    if pname != 'Compat' :
-        if not compat_version:
-            new_compat_version = getLatestVersion("Compat", cmtconfig_opt)
-        else :
-            new_compat_version = compat_version
-        compat_project_list, compat_html_list = getProjectList('Compat', new_compat_version)
-        project_list.update(compat_project_list)
-        html_list += compat_html_list
-        compat_project_list, compat_html_list = getProjectList('Compat', new_compat_version, cmtconfig_opt)
-        project_list.update(compat_project_list)
-        html_list += compat_html_list
+    if not check_only :
+        if pname != 'LHCbGrid' and sys.platform != "win32" and cmtconfig.find("slc3") != -1 and cmtconfig.find("sl3") != -1 :
+            grid_project_list, grid_html_list = getProjectList('LHCbGrid', grid_version)
+            project_list.update(grid_project_list)
+            html_list += grid_html_list
+            grid_project_list, grid_html_list = getProjectList('LHCbGrid', grid_version, cmtconfig_opt)
+            project_list.update(grid_project_list)
+            html_list += grid_html_list
+        if pname != 'Compat' :
+            if not compat_version:
+                new_compat_version = getLatestVersion("Compat", cmtconfig_opt)
+            else :
+                new_compat_version = compat_version
+            compat_project_list, compat_html_list = getProjectList('Compat', new_compat_version)
+            project_list.update(compat_project_list)
+            html_list += compat_html_list
+            compat_project_list, compat_html_list = getProjectList('Compat', new_compat_version, cmtconfig_opt)
+            project_list.update(compat_project_list)
+            html_list += compat_html_list
 
 
     if binary :
         binary_project_list, binary_html_list = getProjectList(pname, pversion, binary)
         project_list.update(binary_project_list)
         html_list += binary_html_list
-        
+
 
     if full_flag :
         log.info('download debug version and reconfigure it')
@@ -1578,8 +1583,8 @@ def runInstall(pname,pversion,binary=None):
         full_project_list, full_html_list = getProjectList(pname, pversion, binary_dbg)
         project_list.update(full_project_list)
         html_list += full_html_list
-    
-    obsolete_pak = cmtconfig_opt+ ".tar.gz"
+
+    obsolete_pak = cmtconfig_opt + ".tar.gz"
     if obsolete_pak in project_list :
         del project_list[obsolete_pak]
     if obsolete_pak in html_list :
@@ -1606,13 +1611,13 @@ def runInstall(pname,pversion,binary=None):
 def tarFileList(filename):
     log = logging.getLogger()
     if not useTarFileModule() :
-        lststr =  'tar --list --ungzip --file %s' % filename
+        lststr = 'tar --list --ungzip --file %s' % filename
         for l in os.popen(lststr) :
             yield l[:-1]
     else :
         import tarfile
         if tarfile.is_tarfile(filename):
-            tar = tarfile.open(filename,'r:gz')
+            tar = tarfile.open(filename, 'r:gz')
             for l in tar.getnames() :
                 yield l
         else:
@@ -1639,7 +1644,7 @@ def addSoft(srcdir, dstdir, overwrite=False):
         dirstoremove = []
         for d in dirs :
             src = os.path.join(root, d)
-            dst = src.replace(srcdir+os.sep,"")
+            dst = src.replace(srcdir + os.sep, "")
             dst = os.path.join(dstdir, dst)
             if not os.path.exists(dst) :
                 pdst = os.path.dirname(dst)
@@ -1649,7 +1654,7 @@ def addSoft(srcdir, dstdir, overwrite=False):
                 dirstoremove.append(d)
         for f in files :
             src = os.path.join(root, f)
-            dst = src.replace(srcdir+os.sep,"")
+            dst = src.replace(srcdir + os.sep, "")
             dst = os.path.join(dstdir, dst)
             if not os.path.exists(dst) :
                 pdst = os.path.dirname(dst)
@@ -1701,9 +1706,9 @@ def untarFile(file):
 
     this_targz_dir = targz_dir.split(os.pathsep)[0]
 
-    filename = os.path.join(this_targz_dir,file)
+    filename = os.path.join(this_targz_dir, file)
     md5filename = getMD5FileName(filename)
-    htmlfilename = os.path.join(html_dir,getHTMLFileName(file))
+    htmlfilename = os.path.join(html_dir, getHTMLFileName(file))
     if not os.path.isfile(filename):
         log.warning('%s does not exist' % filename)
         retcode = 1
@@ -1713,7 +1718,7 @@ def untarFile(file):
 
         import tarfile
         if tarfile.is_tarfile(filename):
-            tar = tarfile.open(filename,'r:gz')
+            tar = tarfile.open(filename, 'r:gz')
         else:
             log.warning('%s is not a tar file' % filename)
             log.warning('check the existence of the file on the repository')
@@ -1727,21 +1732,21 @@ def untarFile(file):
                 log.info('%s removed' % htmlfilename)
             retcode = 1
             return retcode
-        i=0
-        j=0
+        i = 0
+        j = 0
         try:
             for tarinfo in tar:
-                i=i+1
+                i = i + 1
                 try:
                     if not os.path.exists(tarinfo.name):
-                        j=j+1
+                        j = j + 1
                         if sys.platform == 'win32'and tarinfo.issym():
-                            log.info( '%s %s %s' % (j, tarinfo.name, tarinfo.issym()))
+                            log.info('%s %s %s' % (j, tarinfo.name, tarinfo.issym()))
                         else:
                             tar.extract(tarinfo)
                     else:
                         if file.find('script') != -1:
-                            j=j+1
+                            j = j + 1
                             tar.extract(tarinfo)
                 except tarfile.ExtractError:
                     os.remove(filename)
@@ -1762,7 +1767,7 @@ def untarFile(file):
                 log.info('%s removed' % md5filename)
             if os.path.exists(htmlfilename):
                 os.remove(htmlfilename)
-                log.info('%s removed'% htmlfilename)
+                log.info('%s removed' % htmlfilename)
             retcode = 1
             return retcode
 
@@ -1772,7 +1777,7 @@ def untarFile(file):
     else:
         if sys.platform == 'win32':
             os.remove(filename)
-            log.warning('your python version %s is not able to untar a file - try to get a version >= 2.3.4 '% python_version )
+            log.warning('your python version %s is not able to untar a file - try to get a version >= 2.3.4 ' % python_version)
             if os.path.exists(md5filename):
                 os.remove(md5filename)
                 log.info('%s removed' % md5filename)
@@ -1792,14 +1797,14 @@ def untarFile(file):
                 status, tar_output = commands.getstatusoutput(strcmd)
             except:
                 os.remove(filename)
-                log.warning( 'exception in: %s' % strcmd)
-                log.warning( '%s removed' % filename)
-                log.warning( 'tar command output:' )
+                log.warning('exception in: %s' % strcmd)
+                log.warning('%s removed' % filename)
+                log.warning('tar command output:')
                 for l in tar_output.split("\n") :
                     log.warning(l)
                 if os.path.exists(md5filename):
                     os.remove(md5filename)
-                    log.info('%s removed'% md5filename)
+                    log.info('%s removed' % md5filename)
                 if os.path.exists(htmlfilename):
                     os.remove(htmlfilename)
                     log.info('%s removed' % htmlfilename)
@@ -1807,20 +1812,20 @@ def untarFile(file):
                 return retcode
             else:
                 if status != 0:
-                    log.warning( 'error in: %s' % strcmd)
-                    log.warning( 'return code %s' % status )
-                    log.warning( 'tar command output:' )
+                    log.warning('error in: %s' % strcmd)
+                    log.warning('return code %s' % status)
+                    log.warning('tar command output:')
                     for l in tar_output.split("\n") :
                         log.warning(l)
                     if os.path.exists(filename):
                         os.remove(filename)
-                        log.info('%s removed'%(filename))
+                        log.info('%s removed' % (filename))
                     if os.path.exists(md5filename):
                         os.remove(md5filename)
-                        log.info('%s removed'%(md5filename))
+                        log.info('%s removed' % (md5filename))
                     if os.path.exists(htmlfilename):
                         os.remove(htmlfilename)
-                        log.info('%s removed'%(htmlfilename))
+                        log.info('%s removed' % (htmlfilename))
                     retcode = 1
                     return retcode
 
@@ -1835,18 +1840,23 @@ def untarFile(file):
 def checkBinaryName(binary):
     global make_flag
     import LbConfiguration.Platform
-    
+
     log = logging.getLogger()
- 
+
     if not binary :
-        log.warning("No CMTCONFIG has been provided")
-        m = LbConfiguration.Platform.NativeMachine()
-        plist = m.CMTSupportedConfig(debug=True)
-        if plist :
-            binary = plist[0]
+        log.warning("No CMTCONFIG has been provided on the command line")
+        if os.environ.has_key("CMTCONFIG") :
+            binary = os.environ["CMTCONFIG"]
+            log.warning("Extracting CMTCONFIG from the environment: %s" % binary)
         else :
-            binary = m.CMTNativeConfig(debug=False)
-        log.warning("Guessed CMTCONFIG is %s" % binary)
+            m = LbConfiguration.Platform.NativeMachine()
+            plist = m.CMTSupportedConfig(debug=True)
+            if plist :
+                binary = plist[0]
+            else :
+                binary = m.CMTNativeConfig(debug=False)
+            log.warning("No CMTCONFIG in the environment")
+            log.warning("Guessed CMTCONFIG is %s" % binary)
  
 
     os.environ['CMTCONFIG'] = binary
@@ -1856,9 +1866,9 @@ def checkBinaryName(binary):
     # if a win32 binary is installed from a non win32 platform then do not cmt config
     if sys.platform != 'win32' and binary.find('win32') != -1 :
         make_flag = None
-    
+
     if binary not in LbConfiguration.Platform.binary_list:
-        print 'BE CAREFUL - your CMTCONFIG %s is not part of the lhcb_binary %s'%(os.getenv('CMTCONFIG'),LbConfiguration.Platform.binary_list)
+        print 'BE CAREFUL - your CMTCONFIG %s is not part of the lhcb_binary %s' % (os.getenv('CMTCONFIG'), LbConfiguration.Platform.binary_list)
         print 'do you want to continue? [yes|no]'
         next = sys.stdin.readline()
         if next.lower()[0] != 'y':
@@ -1867,7 +1877,7 @@ def checkBinaryName(binary):
     return binary
 #---------------------------------------------------------------------
 def main():
-    
+
     global debug_flag, full_flag, list_flag, remove_flag
     global cmtversion, md5_check, grid_version, nb_retries
     global setup_script, check_only, overwrite_mode
@@ -1884,10 +1894,10 @@ def main():
         help()
         sys.exit()
     try:
-        keys, values = getopt.getopt(arguments,'hdflrbp:v:c:ng:s:C',
-            ['help','debug','full','list','remove','binary=',
-             'project=','cmtversion=','nocheck',
-             'retry=','grid=','setup-script=','check', 'overwrite',
+        keys, values = getopt.getopt(arguments, 'hdflrbp:v:c:ng:s:C',
+            ['help', 'debug', 'full', 'list', 'remove', 'binary=',
+             'project=', 'cmtversion=', 'nocheck',
+             'retry=', 'grid=', 'setup-script=', 'check', 'overwrite',
              'compatversion=', 'retrytime=', 'nofixperm', 'version',
              'compatible-configs'])
 
@@ -1895,7 +1905,7 @@ def main():
         help()
         sys.exit()
 
-    for key,value in keys:
+    for key, value in keys:
         if key == '--version':
             print script_version
             sys.exit()
@@ -1911,11 +1921,11 @@ def main():
             list_flag = True
         if key in ('-r', '--remove'):
             remove_flag = True
-        if key in ( '-c', '--cmtversion'):
+        if key in ('-c', '--cmtversion'):
             cmtversion = value
         if key == '--compatversion':
             compat_version = value
-        if key in ( '-v'):
+        if key in ('-v'):
             pversion = value
         if key in ('-p', '--project'):
             pname = value
@@ -1929,9 +1939,9 @@ def main():
             binary = value
             os.environ["CMTCONFIG"] = binary
             install_binary = True
-        if key in ('-n','--nocheck'):
+        if key in ('-n', '--nocheck'):
             md5_check = False
-        if key in ('-g','--grid'):
+        if key in ('-g', '--grid'):
             grid_version = value
         if key == '--retry':
             nb_retries = int(value)
@@ -1945,7 +1955,7 @@ def main():
             fix_perm = False
         if key == '--overwrite':
             overwrite_mode = True
-            
+
 
     thelog = logging.getLogger()
     thelog.setLevel(logging.DEBUG)
@@ -1965,7 +1975,7 @@ def main():
 
     start_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
 
-    thelog.info((' %s  python %s starts install_project.py - version no %s ' % (start_time, txt_python_version, script_version)).center(120) )
+    thelog.info((' %s  python %s starts install_project.py - version no %s ' % (start_time, txt_python_version, script_version)).center(120))
 
 
     if not os.environ.has_key("MYSITEROOT") :
@@ -1990,7 +2000,7 @@ def main():
     runInstall(pname, pversion, binary)
 
     end_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
-    thelog.info( (' %s end install_project.py -version no %s ' % (end_time, script_version)).center(120))
+    thelog.info((' %s end install_project.py -version no %s ' % (end_time, script_version)).center(120))
 
 
 if __name__ == "__main__":
