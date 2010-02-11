@@ -205,6 +205,7 @@ HltANNSvc().InfoID = {
     "L0ET"                                  : 2501,
     "L0ConfirmWithT/TEleConf"               : 2550,
     "L0ConfirmWithT/TMuonConf"              : 2551,
+    "L0ConfirmWithT/THadronConf"            : 2552,
     "MatchIDsFraction"                      : 2601,
     "MatchIDsFraction_Hlt1DiHadronTFGuidedForward": 2602,
     "MatchIDsFraction_Hlt1DiHadronTFConfirmed" : 2603,
