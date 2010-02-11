@@ -3,6 +3,8 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
+! 2010-02-11 - Gerhard Raven
+ - SimplifiedMaterialLocator: move some info messages to debug
 
 !======================= TrackExtrapolators v2r24p1 2009-12-09=================
 ! 2009-12-08 - Marco Cattaneo

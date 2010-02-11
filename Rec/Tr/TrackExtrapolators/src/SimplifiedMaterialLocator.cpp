@@ -110,7 +110,7 @@ SimplifiedMaterialLocator::SimplifiedMaterialLocator( const std::string& type,
 
 StatusCode SimplifiedMaterialLocator::initialize()
 {  
-  info() << "SimplifiedMaterialLocator::initialize()" << endreq ;
+  debug() << "SimplifiedMaterialLocator::initialize()" << endreq ;
   StatusCode sc = MaterialLocatorBase::initialize();
   if( sc.isSuccess() ) {
     
@@ -121,7 +121,7 @@ StatusCode SimplifiedMaterialLocator::initialize()
       error() << "Did not find TrackfitGeometry volume " << m_tgvolname << endreq ;
       sc = StatusCode::FAILURE ;
     } else {
-      info() << "Found TrackfitGeometry volume with " << tgvol->pvolumes().size() << " daughters." << endreq ;
+      debug() << "Found TrackfitGeometry volume with " << tgvol->pvolumes().size() << " daughters." << endreq ;
       for( ILVolume::PVolumes::const_iterator it = tgvol->pvBegin() ;
 	   it != tgvol->pvEnd() ; ++it) 
 	m_volumes.push_back( new MaterialLocatorUtils::PVolumeWrapper(**it) ) ;
