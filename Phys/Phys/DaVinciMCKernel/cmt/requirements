@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.25 2009-10-15 14:07:08 jpalac Exp $
+# $Id: requirements,v 1.26 2010-02-11 10:55:37 gligorov Exp $
 # =============================================================================
 # Created    : 11/10/2006
 # Maintainer : J. Palacios
@@ -21,6 +21,7 @@ use  LinkerEvent         v*  Event
 use  RecEvent            v*  Event
 use  DaVinciInterfaces   v*  Phys
 use  LoKiCore            v*  Phys
+use  MCAssociators       v*  Associators
 
 # Exported header files
 #============================================================================

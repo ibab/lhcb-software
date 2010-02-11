@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.99 2010-02-10 22:59:40 gligorov Exp $
+! $Id: release.notes,v 1.100 2010-02-11 10:56:17 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+! 2010-02-11 - V. Gligorov
+ - Depend explicitly on the new Assciators/MCAssociators package 
 
 ! 2010-02-10 - V. Gligorov
  - moved Kernel/Particle2MCLinker.{h,icpp}, Kernel/Particle2MCMethod.h and
