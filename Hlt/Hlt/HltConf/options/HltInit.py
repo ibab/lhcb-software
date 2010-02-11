@@ -195,6 +195,7 @@ HltANNSvc().InfoID = {
     "FitChi2OverNdf"                        : 1901,
     "FitMuChi2"                             : 1902,
     "HltTrackFit"                           : 2001,
+    "HltRadCorTool"                         : 2091,
     "IP"                                    : 2101,
     "IP_PV2D"                               : 2102,
     "IP_PV3D"                               : 2103,
