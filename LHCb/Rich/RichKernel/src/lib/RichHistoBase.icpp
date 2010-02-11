@@ -5,7 +5,7 @@
  *  Implementation file for RICH base class : Rich::HistoBase
  *
  *  CVS Log :-
- *  $Id: RichHistoBase.icpp,v 1.2 2009-12-13 22:00:03 jonrob Exp $
+ *  $Id: RichHistoBase.icpp,v 1.3 2010-02-11 19:32:28 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2009-07-27
@@ -91,23 +91,19 @@ StatusCode Rich::HistoBase<PBASE>::prebookHistograms()
 
 template <class PBASE>
 AIDA::IHistogram1D *
-Rich::HistoBase<PBASE>::richHisto1D( const Rich::RadiatorType rad,
-                                     const std::string &       id,
+Rich::HistoBase<PBASE>::richHisto1D( const Rich::HistogramID & id,
                                      const std::string &    title,
                                      const double             low,
                                      const double            high,
                                      const unsigned long     bins )
 {
   // Already been booked ?
-  AIDA::IHistogram1D *& h = (m_rad1dhmaps[rad])[id];
+  AIDA::IHistogram1D *& h = m_1dhmap[id.id()];
   if ( !h )
   {
-    // Rich Histo ID
-    const RichHistoID hid;
-
     // Book the histo
-    h = PBASE::book1D( hid(rad,id),
-                       Rich::text(rad)+" "+title,
+    h = PBASE::book1D( id.id(), 
+                       fullTitle(id,title),
                        low, high, bins );
   }
 
@@ -117,8 +113,7 @@ Rich::HistoBase<PBASE>::richHisto1D( const Rich::RadiatorType rad,
 
 template <class PBASE>
 AIDA::IHistogram2D *
-Rich::HistoBase<PBASE>::richHisto2D( const Rich::RadiatorType  rad,
-                                     const std::string &        id,
+Rich::HistoBase<PBASE>::richHisto2D( const Rich::HistogramID & id,
                                      const std::string &     title,
                                      const double             lowX,
                                      const double            highX,
@@ -128,15 +123,12 @@ Rich::HistoBase<PBASE>::richHisto2D( const Rich::RadiatorType  rad,
                                      const unsigned long     binsY )
 {
   // Already been booked ?
-  AIDA::IHistogram2D *& h = (m_rad2dhmaps[rad])[id];
+  AIDA::IHistogram2D *& h = m_2dhmap[id.id()];
   if ( !h )
   {
-    // Rich Histo ID
-    const RichHistoID hid;
-
     // Book the histo
-    h = PBASE::book2D( hid(rad,id), 
-                       Rich::text(rad)+" "+title,
+    h = PBASE::book2D( id.id(), 
+                       fullTitle(id,title),
                        lowX, highX, binsX,
                        lowY, highY, binsY );
   }
@@ -147,176 +139,19 @@ Rich::HistoBase<PBASE>::richHisto2D( const Rich::RadiatorType  rad,
 
 template <class PBASE>
 AIDA::IProfile1D *
-Rich::HistoBase<PBASE>::richProfile1D( const Rich::RadiatorType rad,
-                                       const std::string &       id,
+Rich::HistoBase<PBASE>::richProfile1D( const Rich::HistogramID & id,
                                        const std::string &    title,
                                        const double             low,
                                        const double            high,
                                        const unsigned long     bins )
 {
   // Already been booked ?
-  AIDA::IProfile1D *& h = (m_rad1dpmaps[rad])[id];
-  if ( !h )
-  {
-    // Rich Histo ID
-    const RichHistoID hid;
-
-    // Book the histo
-    h = PBASE::bookProfile1D( hid(rad,id),
-                              Rich::text(rad)+" "+title,
-                              low, high, bins );
-  }
-
-  // return the histo
-  return h;
-}
-
-//=============================================================================
-
-template <class PBASE>
-AIDA::IHistogram1D *
-Rich::HistoBase<PBASE>::richHisto1D( const Rich::DetectorType rich,
-                                     const std::string &       id,
-                                     const std::string &    title,
-                                     const double             low,
-                                     const double            high,
-                                     const unsigned long     bins )
-{
-  // Already been booked ?
-  AIDA::IHistogram1D *& h = (m_rich1dhmaps[rich])[id];
-  if ( !h )
-  {
-    // Rich Histo ID
-    const RichHistoID hid;
-
-    // Book the histo
-    h = PBASE::book1D( hid(rich,id),
-                       Rich::text(rich)+" "+title,
-                       low, high, bins );
-  }
-
-  // return the histo
-  return h;
-}
-
-template <class PBASE>
-AIDA::IHistogram2D *
-Rich::HistoBase<PBASE>::richHisto2D( const Rich::DetectorType rich,
-                                     const std::string &        id,
-                                     const std::string &     title,
-                                     const double             lowX,
-                                     const double            highX,
-                                     const unsigned long     binsX,
-                                     const double             lowY,
-                                     const double            highY,
-                                     const unsigned long     binsY )
-{
-  // Already been booked ?
-  AIDA::IHistogram2D *& h = (m_rich2dhmaps[rich])[id];
-  if ( !h )
-  {
-    // Rich Histo ID
-    const RichHistoID hid;
-
-    // Book the histo
-    h = PBASE::book2D( hid(rich,id),
-                       Rich::text(rich)+" "+title,
-                       lowX, highX, binsX,
-                       lowY, highY, binsY );
-  }
-
-  // return the histo
-  return h;
-}
-
-template <class PBASE>
-AIDA::IProfile1D *
-Rich::HistoBase<PBASE>::richProfile1D( const Rich::DetectorType rich,
-                                       const std::string &       id,
-                                       const std::string &    title,
-                                       const double             low,
-                                       const double            high,
-                                       const unsigned long     bins )
-{
-  // Already been booked ?
-  AIDA::IProfile1D *& h = (m_rich1dpmaps[rich])[id];
-  if ( !h )
-  {
-    // Rich Histo ID
-    const RichHistoID hid;
-
-    // Book the histo
-    h = PBASE::bookProfile1D( hid(rich,id),
-                              Rich::text(rich)+" "+title,
-                              low, high, bins );
-  }
-
-  // return the histo
-  return h;
-}
-
-//=============================================================================
-
-template <class PBASE>
-AIDA::IHistogram1D *
-Rich::HistoBase<PBASE>::richHisto1D( const std::string &       id,
-                                     const std::string &    title,
-                                     const double             low,
-                                     const double            high,
-                                     const unsigned long     bins )
-{
-  // Already been booked ?
-  AIDA::IHistogram1D *& h = m_1dhmap[id];
+  AIDA::IProfile1D *& h = m_1dpmap[id.id()];
   if ( !h )
   {
     // Book the histo
-    h = PBASE::book1D( id, title,
-                       low, high, bins );
-  }
-
-  // return the histo
-  return h;
-}
-
-template <class PBASE>
-AIDA::IHistogram2D *
-Rich::HistoBase<PBASE>::richHisto2D( const std::string &        id,
-                                     const std::string &     title,
-                                     const double             lowX,
-                                     const double            highX,
-                                     const unsigned long     binsX,
-                                     const double             lowY,
-                                     const double            highY,
-                                     const unsigned long     binsY )
-{
-  // Already been booked ?
-  AIDA::IHistogram2D *& h = m_2dhmap[id];
-  if ( !h )
-  {
-    // Book the histo
-    h = PBASE::book2D( id, title,
-                       lowX, highX, binsX,
-                       lowY, highY, binsY );
-  }
-
-  // return the histo
-  return h;
-}
-
-template <class PBASE>
-AIDA::IProfile1D *
-Rich::HistoBase<PBASE>::richProfile1D( const std::string &       id,
-                                       const std::string &    title,
-                                       const double             low,
-                                       const double            high,
-                                       const unsigned long     bins )
-{
-  // Already been booked ?
-  AIDA::IProfile1D *& h = m_1dpmap[id];
-  if ( !h )
-  {
-    // Book the histo
-    h = PBASE::bookProfile1D( id, title,
+    h = PBASE::bookProfile1D( id.id(), 
+                              fullTitle(id,title),
                               low, high, bins );
   }
 

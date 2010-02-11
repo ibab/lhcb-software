@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichHistoID.h
  *
- *  Header file for RICH utility class : RichHistoID
+ *  Header file for RICH utility class : Rich::HistogramID
  *
  *  CVS Log :-
- *  $Id: RichHistoID.h,v 1.6 2008-02-07 17:54:35 jonrob Exp $
+ *  $Id: RichHistoID.h,v 1.7 2010-02-11 19:32:28 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   27/10/2005
@@ -29,7 +29,160 @@ namespace Rich
 {
 
   //-----------------------------------------------------------------------------
-  /** @class HistoID RichHistoID.h RichKernel/RichHistoID.h
+  /** @class HistogramID RichKernel/RichHistoID.h
+   *
+   *  Utility class providing a convenient ID object for histograms, depending on
+   *  various RICH criteria.
+   *
+   *  @code
+   *
+   *    // Create an ID object for Rich::RadiatorType rad
+   *    Rich::HistogramID hid("shortName",rad);
+   *
+   *    // Can also be used directly with GaudiHistos methods i.e.
+   *    const double ckPull = ....;
+   *    const Rich::RadiatorType rad = ...;
+   *    plot1D( ckPull, Rich::HistogramID("ckPull",rad), "(Rec-Exp)/Res Cktheta", -5, 5 );
+   *
+   *  @endcode
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   10/02/2010
+   */
+  //-----------------------------------------------------------------------------
+  class HistogramID
+  {
+
+  private:
+
+    /// Form the full ID
+    inline void constructID()
+    {
+      if ( m_pid  != Rich::Unknown         ) { m_id = Rich::text(m_pid)  + "/" + m_id; }
+      if ( m_side != Rich::InvalidSide     ) { m_id = Rich::text(m_side) + "/" + m_id; }
+      if ( m_rad  != Rich::InvalidRadiator ) { m_id = Rich::text(m_rad)  + "/" + m_id; }
+      if ( m_det  != Rich::InvalidDetector ) { m_id = Rich::text(m_det)  + "/" + m_id; }
+    }
+
+  public:
+
+    /// Constructor from a string, with no detector information
+    HistogramID( const std::string & id )
+      : m_id   ( id                    ),
+        m_det  ( Rich::InvalidDetector ),
+        m_rad  ( Rich::InvalidRadiator ),
+        m_side ( Rich::InvalidSide     ),
+        m_pid  ( Rich::Unknown         )
+    { }
+
+    /** Constructor with RICH specific information
+     *  @param id    Histogram string ID
+     *  @param det   The RICH detector
+     */
+    HistogramID( const std::string & id,
+                 Rich::DetectorType  det )
+      : m_id   ( Rich::text(det) + "/" + id ),
+        m_det  ( det                   ), 
+        m_rad  ( Rich::InvalidRadiator ),
+        m_side ( Rich::InvalidSide     ), 
+        m_pid  ( Rich::Unknown         )
+    { }
+
+    /** Constructor with RICH specific information
+     *  @param id    Histogram string ID
+     *  @param rad   The radiator medium
+     */
+    HistogramID(  const std::string & id,
+                  Rich::RadiatorType  rad )
+      : m_id   ( Rich::text(rad) + "/" + id ),
+        m_det  ( Rich::InvalidDetector ), 
+        m_rad  ( rad                   ),
+        m_side ( Rich::InvalidSide     ), 
+        m_pid  ( Rich::Unknown         )
+    { }
+
+    /** Constructor with RICH specific information
+     *  @param id    Histogram string ID
+     *  @param det   The RICH detector
+     *  @param side  The side of the RICH detector
+     *  @param rad   The radiator medium
+     *  @param pid   The mass hypothesis
+     */
+    HistogramID( const std::string &   id,
+                 Rich::DetectorType   det,
+                 Rich::Side          side,
+                 Rich::RadiatorType   rad = Rich::InvalidRadiator,
+                 Rich::ParticleIDType pid = Rich::Unknown )
+      : m_id   ( id   ), 
+        m_det  ( det  ), 
+        m_rad  ( rad  ),
+        m_side ( side ),
+        m_pid  ( pid  )
+    {
+      constructID();
+    }
+
+    /** Constructor with RICH specific information
+     *  @param id    Histogram string ID
+     *  @param rad   The radiator medium
+     *  @param pid   The mass hypothesis
+     */
+    HistogramID( const std::string &   id,
+                 Rich::RadiatorType   rad,
+                 Rich::ParticleIDType pid )
+      : m_id   ( Rich::text(rad) + "/" + Rich::text(pid) + "/" + id ),
+        m_det  ( Rich::InvalidDetector ), 
+        m_rad  ( rad                   ),
+        m_side ( Rich::InvalidSide     ), 
+        m_pid  ( pid                   )
+    { }
+
+  public:
+
+    /// Returns the appropriate histogram ID
+    inline const std::string& id() const
+    {
+      return m_id;
+    }
+
+    /// implicit conversion to an std::string
+    inline operator std::string() const
+    {
+      return this->id();
+    }
+
+    /// Implicit conversion to a GaudiAlg::HistoID
+    inline operator GaudiAlg::HistoID() const
+    {
+      return GaudiAlg::HistoID(this->id());
+    }
+
+  public:
+
+    /// Access the Detector type
+    inline Rich::DetectorType   det() const { return m_det; }
+    /// Access the radiator medium
+    inline Rich::RadiatorType   rad() const { return m_rad; }
+    /// Access the side of the RICH
+    inline Rich::Side          side() const { return m_side; }
+    /// Access the Particle ID hypothesis
+    inline Rich::ParticleIDType pid() const { return m_pid; }
+
+  private:
+
+    std::string m_id;           ///< The ID string
+    Rich::DetectorType m_det;   ///< The RICH detector
+    Rich::RadiatorType m_rad;   ///< The radiator medium
+    Rich::Side m_side;          ///< The detector 'side' (up,down,left,right)
+    Rich::ParticleIDType m_pid; ///< The Particle hypothesis
+
+  };
+
+  /// Shortcut for reduced typing where useful ...
+  typedef HistogramID HID;
+
+  //-----------------------------------------------------------------------------
+  /** @class HistoID RichKernel/RichHistoID.h
    *
    *  Utility class providing a convenient ID object for histograms, depending on
    *  various RICH criteria.
@@ -37,7 +190,7 @@ namespace Rich
    *  @code
    *
    *    // Create an ID object
-   *    RichHistoID hid;
+   *    Rich::HistoID hid;
    *
    *    // Create the histo ID for a histogram in a given radiator
    *    // id will be "[rad]/shortName" where [rad] is either aerogel, rich1Gas or rich2Gas.
@@ -50,11 +203,12 @@ namespace Rich
    *
    *  @endcode
    *
+   *  @attention Kept for backwards compatibility. Superceded by Rich::HistogramID
+   *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   05/04/2002
    */
   //-----------------------------------------------------------------------------
-
   class HistoID
   {
 
@@ -68,12 +222,12 @@ namespace Rich
      *  @param rad RICH radiator type
      *  @param tag Histogram tag
      *
-     *  @return Full histogram identifier string
+     *  @return Full histogram identifier
      */
-    inline const std::string operator() ( const Rich::RadiatorType rad,
+    inline Rich::HistogramID operator() ( const Rich::RadiatorType rad,
                                           const std::string & tag ) const
     {
-      return Rich::text(rad)+"/"+tag;
+      return Rich::HistogramID(tag,rad);
     }
 
     /** Create histo ID for given RICH detector and histogram tag
@@ -81,12 +235,12 @@ namespace Rich
      *  @param det RICH detector type
      *  @param tag Histogram tag
      *
-     *  @return Full histogram identifier string
+     *  @return Full histogram identifier
      */
-    inline const std::string operator() ( const Rich::DetectorType det,
+    inline Rich::HistogramID operator() ( const Rich::DetectorType det,
                                           const std::string & tag ) const
     {
-      return Rich::text(det)+"/"+tag;
+      return Rich::HistogramID(tag,det);
     }
 
     /** Create histo ID for given RICH detector, HPD panel and histogram tag
@@ -95,13 +249,13 @@ namespace Rich
      *  @param side The HPD panel
      *  @param tag  Histogram tag
      *
-     *  @return Full histogram identifier string
+     *  @return Full histogram identifier
      */
-    inline const std::string operator() ( const Rich::DetectorType det,
+    inline Rich::HistogramID operator() ( const Rich::DetectorType det,
                                           const Rich::Side side,
                                           const std::string & tag ) const
     {
-      return Rich::text(det)+"/"+Rich::text(det,side)+"/"+tag;
+      return Rich::HistogramID(tag,det,side);
     }
 
     /** Create histo ID for given radiator type, mass hypothesis and histogram tag
@@ -110,21 +264,17 @@ namespace Rich
      *  @param pid Particle mass hypothesis
      *  @param tag Histogram tag
      *
-     *  @return Full histogram identifier string
+     *  @return Full histogram identifier
      */
-    inline const std::string operator() ( const Rich::RadiatorType rad,
+    inline Rich::HistogramID operator() ( const Rich::RadiatorType rad,
                                           const Rich::ParticleIDType pid,
                                           const std::string & tag ) const
     {
-      return Rich::text(rad)+"/"+Rich::text(pid)+"/"+tag;
+      return Rich::HistogramID(tag,rad,pid);
     }
 
   };
 
 } // RICH
-
-/** backwards compatibility
- *  @todo Remove eventually */
-typedef Rich::HistoID RichHistoID;
 
 #endif // RICHKERNEL_RICHHISTOID_H
