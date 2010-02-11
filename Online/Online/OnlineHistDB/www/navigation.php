@@ -1,3 +1,11 @@
+<?
+include 'util.php';
+if (isset($_COOKIE["login"])) {
+  if ($_COOKIE["login"] == md5($_SESSION["user"] .$_SESSION["password"] . $_SESSION["histdb"] .$_SESSION['REMOTE_ADDR']."lhcbsalt")){
+    $user=$_SESSION["user"];
+  }
+  $conn=HistDBconnect();  
+?>
 <HEAD>
 <meta http-equiv="no-cache">
 <meta http-equiv="refresh" content="500; URL=<?php echo "$_SERVER[PHP_SELF]"; ?>">
@@ -5,13 +13,6 @@
 </HEAD>
 <BODY>
 <?
-
-include 'util.php';
-if (isset($_COOKIE["login"])) {
-  if ($_COOKIE["login"] == md5($_SESSION["user"] .$_SESSION["password"] . $_SESSION["histdb"] .$_SESSION['REMOTE_ADDR']."lhcbsalt")){
-    $user=$_SESSION["user"];
-  }
-  $conn=HistDBconnect();  
   if($conn) {
     echo "connected as <span class=\"connected_name\">". $user."</span> ".
       ($canwrite ? "" : " <B>(READ-ONLY)</B>").
