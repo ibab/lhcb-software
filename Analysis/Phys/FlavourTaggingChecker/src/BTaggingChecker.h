@@ -1,4 +1,4 @@
-// $Id: BTaggingChecker.h,v 1.10 2010-02-11 18:39:15 musy Exp $
+// $Id: BTaggingChecker.h,v 1.11 2010-02-11 21:41:58 musy Exp $
 #ifndef BTAGGINGCHECKER_H 
 #define BTAGGINGCHECKER_H 1
 
@@ -48,7 +48,7 @@ class BTaggingChecker : public DVAlgorithm {
   const LHCb::MCParticle* forcedB(void);
   bool  m_requireHltTrigger;
   
-  int nsele,nrt[50],nwt[50];
+  int nsele,nrt[50],nwt[50],nrtag[50],nwtag[50];
 
 };
 #endif // BTAGGINGCHECKER_H

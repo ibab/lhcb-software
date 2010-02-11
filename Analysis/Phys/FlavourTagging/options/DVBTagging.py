@@ -32,7 +32,7 @@ MessageSvc().Format = "% F%30W%S%7W%R%T %0W%M"
 #
 # Standard configuration
 #
-DaVinci().EvtMax     = 100                         # Number of events
+DaVinci().EvtMax     = 200                         # Number of events
 DaVinci().SkipEvents = 0                           # Events to skip
 DaVinci().PrintFreq  = 1
 DaVinci().DataType   = "MC09" 

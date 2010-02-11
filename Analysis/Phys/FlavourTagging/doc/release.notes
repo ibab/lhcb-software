@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.162 2010-02-03 10:45:39 jpalac Exp $
+! $Id: release.notes,v 1.163 2010-02-11 21:40:53 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+
+! 2010-02-11 - Marco Musy
+ - fix some warning messages on slc5
+ - BTaggingTool.cpp now deals also with refitted primary vertex
+   user can switch it on with ChoosePVCriterium proprety.
+   If UseReFitPV is set to true the refitted PV will be used in 
+   the calculation of the impact params of all taggers and SV building.
+ - remove useless NNetTool_DC06.h,cpp and src/NeuralNet/DC06*
+ . raise to version v11r1
 
 !========================== FlavourTagging v11r0 2010-02-02 ==================
 

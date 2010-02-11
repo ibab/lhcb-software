@@ -1,9 +1,20 @@
-! $Id: release.notes,v 1.75 2010-02-03 10:55:51 jpalac Exp $
+! $Id: release.notes,v 1.76 2010-02-11 21:41:58 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+
+
+! 2010-02-11 - Marco Musy
+  - fix some warning messages on slc5
+  - updated DVBTaggingAnalysis.py example
+  - BTaggingAnalysis now also gives the info on the refitted PV.
+  - remove obsolete TaggingTuplesData.cpp,h TaggingTuplesSignal.cpp,h
+  - cleanup and update of BTaggingAnalysis
+  - BTaggingChecker updated with tagger info.
+  - Increase version to v5r1
 
 !========================== FlavourTaggingChecker v5r0 2010-02-02 ============
 

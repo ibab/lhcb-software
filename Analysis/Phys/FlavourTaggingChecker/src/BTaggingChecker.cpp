@@ -1,4 +1,4 @@
-// $Id: BTaggingChecker.cpp,v 1.17 2010-02-11 18:39:15 musy Exp $
+// $Id: BTaggingChecker.cpp,v 1.18 2010-02-11 21:41:58 musy Exp $
 #include "BTaggingChecker.h"
 
 //--------------------------------------------------------------------------
@@ -18,8 +18,8 @@ BTaggingChecker::BTaggingChecker( const std::string& name,
                                   ISvcLocator* pSvcLocator )
   : DVAlgorithm ( name , pSvcLocator ),
     m_debug(0)
-    , m_forcedBtool(0) 
-    , m_bkg(0)
+  , m_forcedBtool(0) 
+  , m_bkg(0)
 {
   declareProperty("TagsLocation", 
                   m_tags_location = FlavourTagLocation::Default );
@@ -39,7 +39,7 @@ StatusCode BTaggingChecker::initialize() {
   m_bkg = tool<IBackgroundCategory>( "BackgroundCategory", this );
 
   nsele=0;
-  for(int i=0; i<50; ++i) { nrt[i]=0; nwt[i]=0; }
+  for(int i=0; i<50; ++i) { nrt[i]=0; nwt[i]=0; nrtag[i]=0; nwtag[i]=0; }
 
   return sc ;
 };
@@ -85,10 +85,29 @@ StatusCode BTaggingChecker::execute() {
       pmax=(*ti)->taggedB()->p();
       tagdecision = (*ti)->decision();
       ix          = (*ti)->category();
+
+      if(!tagdecision) continue;
+      
+      std::vector<Tagger> mytaggers = (*ti)->taggers();
+      std::vector<Tagger>::iterator itag;
+      for(itag=mytaggers.begin(); itag!=mytaggers.end(); ++itag) {
+        std::string tts;
+        int taggdec=itag->decision();
+        switch ( itag->type() ) {
+        case Tagger::OS_Muon    : (taggdec==truetag ? ++nrtag[1] : ++nwtag[1]); break;
+        case Tagger::OS_Electron: (taggdec==truetag ? ++nrtag[2] : ++nwtag[2]); break;
+        case Tagger::OS_Kaon    : (taggdec==truetag ? ++nrtag[3] : ++nwtag[3]); break;
+        case Tagger::SS_Kaon    : (taggdec==truetag ? ++nrtag[4] : ++nwtag[4]); break;
+        case Tagger::SS_Pion    : (taggdec==truetag ? ++nrtag[4] : ++nwtag[4]); break;
+        case Tagger::VtxCharge  : (taggdec==truetag ? ++nrtag[5] : ++nwtag[5]); break;
+        }
+      }
+    
+      if(msgLevel(MSG::DEBUG)) m_debug->printTree( (*ti)->taggedB() );
     }
     
-    if(msgLevel(MSG::DEBUG)) m_debug->printTree( (*ti)->taggedB() );
   }
+  
 
   if(P) if(m_bkg) if( ! P->isBasicParticle() ){
     bkgcat = (int)(m_bkg->category( P ));
@@ -126,42 +145,66 @@ StatusCode BTaggingChecker::execute() {
 
   setFilterPassed( true );
   return StatusCode::SUCCESS;
-};
+}
 
 //==========================================================================
 StatusCode BTaggingChecker::finalize(){
   MsgStream req( msgSvc(), name() );
+  req.setf(std::ios::fixed);
 
   // calculate effective efficiency in categories with errors
   double rtt=0;
   double wtt=0;
+  double rtag,wtag,utag;
   double ef_tot=0;
   double effe_tot=0;
   double epsilerr, epsilerrtot=0;
 
   info()<<"======================================================="<<endreq;
   info()<< std::setw(40)<< "Summary: EXCLUSIVE TAGGING PERFORMANCE " <<endmsg; 
-  info()<< "Summary : " <<endreq;
   info()<< " Category            EFF.          Etag         Wrong TF"
         << "      r       w       "<<endreq;
 
-  for( int it=1; it < 13; it++ ) {
+  for( int it=1; it < 19; it++ ) {
+    rtag = wtag = 0;
+    std::string cats;
+    if(it== 1) cats =  "   mu only";
+    if(it== 2) cats =  "    e only";
+    if(it== 3) cats =  "    k only";
+    if(it== 4) cats =  "    mu + k";
+    if(it== 5) cats =  "     e + k";
+    if(it== 6) cats =  "  vtx only";
+    if(it== 7) cats =  "     ps/ks";
+    if(it== 8) cats =  "   mu + ks";
+    if(it== 9) cats =  "    e + ks";
+    if(it==10) cats =  "    k + ks";
+    if(it==11) cats =  "   mu+k+ks";
+    if(it==12) cats =  "    e+k+ks";
+    if(it==13) { cats =  "  OS muons"; rtag = nrtag[1]; wtag = nwtag[1]; }
+    if(it==14) { cats =  "  OS elect"; rtag = nrtag[2]; wtag = nwtag[2]; }
+    if(it==15) { cats =  "  OS kaons"; rtag = nrtag[3]; wtag = nwtag[3]; }
+    if(it==16) { cats =  "  SS k/pi "; rtag=  nrtag[4]; wtag= nwtag[4]; }
+    if(it==17) { cats =  "  VertexCh"; rtag = nrtag[5]; wtag = nwtag[5]; }
+    if(it<13) cats =  "  NNet ";
+    else if(it==13)
+      info()<<"---------------------------------------------------------"<<endreq;
 
-    double rtag = nrt[it];               // right
-    double wtag = nwt[it];               // wrong
-    double utag = nsele-rtag-wtag;       // untagged
+    if(it<13) { rtag = nrt[it]; wtag = nwt[it]; }
 
-    if(rtag+wtag == 0) continue;         //empty category
+    if(rtag+wtag == 0) continue; //empty category
 
+    utag = nsele-rtag-wtag;       // untagged
     double omtag = wtag/(rtag+wtag);
     double eftag = (rtag+wtag)/nsele;           // tagging efficiency
     double epsil = eftag*pow(1-2*omtag,2);      // effective efficiency
     if(rtag<wtag) epsil= -epsil;
 
-    rtt      += rtag;
-    wtt      += wtag;
-    ef_tot   += eftag;
-    effe_tot += epsil;
+    if(it<13){
+      rtt      += rtag;
+      wtt      += wtag;
+      ef_tot   += eftag;
+      effe_tot += epsil;
+    }
 
     //errors on efficiency and omega
     double eftag_err= sqrt((rtag*utag + utag*wtag)/nsele)/nsele;
@@ -171,20 +214,24 @@ StatusCode BTaggingChecker::finalize(){
                      (-(pow(rtag - wtag,2)*(rtag +wtag))+nsele
                       *(pow(rtag,2) +14*rtag*wtag+ pow(wtag,2))))
                     /(pow(rtag+wtag+utag,3)*pow(rtag + wtag,3)));
-    epsilerrtot = sqrt(pow(epsilerrtot,2)+pow(epsilerr,2));
+    if(it<13) epsilerrtot = sqrt(pow(epsilerrtot,2)+pow(epsilerr,2));
 
+    //PRINT: ----------------------------------
     req.setf(std::ios::fixed);
-    info()<<std::setw(2)<< "  " << it << "     "
-          <<std::setprecision(2)<<std::setw(8)
-          << epsil*100 << "+-" << epsilerr*100
+    req.setf(std::ios::fixed);
+    if(it<13) {
+      info()<<std::setprecision(2)<<std::setw(8)<< it;
+    } else info()<<" ** ";
+    info()<< cats
+          <<" "<<std::setw(8)<< epsil*100 << "+-" << epsilerr*100
           <<" "<<std::setw(8)<< eftag*100 << "+-" <<eftag_err*100
-          <<" "<<std::setprecision(1)<<std::setw(8)
-          << omtag*100 << "+-" <<omtag_err*100
+          <<" "<<std::setw(8)<< omtag*100 << "+-" <<omtag_err*100
           <<" "<<std::setw(7)<< (int) rtag
           <<" "<<std::setw(7)<< (int) wtag
           << endreq;
   }
 
+  
   //calculate global tagging performances -------------------------------
 
   //equivalent value of the wrong tag fraction
@@ -194,19 +241,15 @@ StatusCode BTaggingChecker::finalize(){
   double eftot_err= sqrt((rtt*utt + utt*wtt)/nsele)/nsele;
   double avw_invert_err= sqrt( rtt*wtt /(rtt+wtt) ) / (rtt+wtt);
 
-  info()<<"---------------------------------------------------------"<<endreq;
-  info()<< "Total nr of events =  "<<std::setw(5) << nsele << endreq;
-  info()<< "Tagging efficiency =  "
-        <<std::setprecision(2)<<std::setw(5)
-        << ef_tot*100 << " +/- "<<eftot_err*100<< " %"<< endreq;
-  info()<< "Wrong Tag fraction =  "
-        <<std::setprecision(2)<<std::setw(5)
-        << avw_invert*100 << " +/- " <<avw_invert_err*100 << " %"<< endreq;
-  info()<< "EFFECTIVE COMB. TE =  "
-        <<std::setprecision(2)<<std::setw(5)
-        << effe_tot*100 << " +/- "<<epsilerrtot*100<< " %"<< endreq;
-  info()<<"==========END OF EXCLUSIVE TAGGING PERFORMANCE ======="<<endmsg;
-  info()<<"========================================================="<<endreq;
+  info() << "---------------------------------------------------------"<< endreq;
+  info() << "Tagging efficiency =  "<<std::setw(5)
+         << ef_tot*100 << " +/- "<<eftot_err*100<< " %"<< endreq;
+  info() << "Wrong Tag fraction =  "<<std::setw(5)
+         << avw_invert*100 << " +/- " <<avw_invert_err*100 << " %"<< endreq;
+  info() << "EFFECTIVE COMB. TE =  "<<std::setw(5)
+         << effe_tot*100 << " +/- "<<epsilerrtot*100<< " %"
+         << "     (Total events= "<<std::setw(5) << int(nsele) <<")"<< endreq;
+  info() << "=========================================================\n\n";
 
   return DVAlgorithm::finalize() ; 
 }
