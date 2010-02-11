@@ -59,7 +59,7 @@ Get the list of *ALL* configured lines
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = '2010-01-14'
-__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $'
+__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $'
 # =============================================================================
 
 from Gaudi.Configuration       import *
@@ -116,7 +116,7 @@ class StrippingV0Conf(LHCbConfigurableUser):
         , 'Use_Geo_K0S'          : True               ## Use 'Geometrical' selection of K0S
         , 'Use_Geo_Lambda'       : True               ## Use 'Geometrical' selection of Lambda0
         , 'AddSameSign'          : True               ## Use  same-sign combinations 
-        , 'TrackQuality'         : " TRCHI2DOF < 10 " ## Track quality selection 
+        , 'TrackQuality'         : " TRCHI2DOF < 25 " ## Track quality selection 
         , 'VertexChi2'           : 25                 ## Cut on Vertex chi2-quality
         , 'DeltaMassK0S'         : 100 * MeV          ## Mass-window (half)width for K0S 
         , 'DeltaMassK0S_noPV'    : 100 * MeV          ## Mass-window (half)width for K0S_noPV 

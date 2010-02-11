@@ -5,6 +5,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-02-11 - Vanya Belyaev
+
+ - StrippingV0.py:
+
+     set the track-chi2/nDoF < 25 according to decision of V0-analysis group.
+
 ! 2010-02-09 - Vanya Belyaev
 
  - StreamWithPV.py, StrippingPV.py
