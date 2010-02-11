@@ -1,12 +1,13 @@
 ########################################################################
 #
-# Example Options for BTagging algorithm
+# Example Options for BTaggingAnalysis algorithm
 #
 # @author Marco Musy
-# @date 2009-11-30
+# @date 2010-02-11
 #
 ########################################################################
 from Gaudi.Configuration import *
+from Configurables import GaudiSequencer, DaVinci
 
 ########################################################################
 # CheatedSelection. 
@@ -21,18 +22,20 @@ cheatsel.OutputLevel = 3
 ########################################################################
 # Flavour tagging. 
 
-from Configurables import BTagging, BTaggingTool, BTaggingAnalysis, BTaggingChecker, TriggerTisTos, TaggingUtilsChecker, MCMatchObjP2MCRelator, BackgroundCategory
+from Configurables import BTagging, BTaggingTool, BTaggingAnalysis, BTaggingChecker, TriggerTisTos, TaggingUtilsChecker, TaggingUtils, MCMatchObjP2MCRelator, BackgroundCategory
 
 location = "Phys/CheatedSelection"
 
 tag = BTagging("BTagging")
 tag.InputLocations = [ location ]
-tag.OutputLevel = 3
+tag.OutputLevel    = 2
 tag.addTool( PhysDesktop )
 tag.PhysDesktop.OutputLevel = 4
 
 tag.addTool( BTaggingTool )
-tag.BTaggingTool.ChoosePVCriterium = "ChoosePVbyIP" #only needed by CheatedSel
+tag.BTaggingTool.ChoosePVCriterium = "PVbyIP"#needed by CheatedSel
+#tag.BTaggingTool.ChoosePVCriterium = "RefitPV"
+#tag.BTaggingTool.UseReFitPV = True
 
 ########################################################################
 # Flavour tagging Checker:
@@ -49,10 +52,10 @@ tagana = BTaggingAnalysis("BTaggingAnalysis")
 tagana.InputLocations = [ location , "Phys/TaggingPions" ]
 tagana.TagOutputLocation =  location + "/FlavourTags"
 
-tagana.ChoosePVCriterium = "ChoosePVbyIP"  #only needed by CheatedSel   
+tagana.ChoosePVCriterium = "PVbyIP"  #needed by CheatedSel   
 tagana.RequireTisTos = False
 
-tagana.OutputLevel = 2
+tagana.OutputLevel = 3
 
 tagana.addTool( PhysDesktop )
 tagana.PhysDesktop.OutputLevel = 4
@@ -65,12 +68,12 @@ tagana.MCMatchObjP2MCRelator.OutputLevel = 4
 tagana.addTool( BackgroundCategory )
 tagana.BackgroundCategory.OutputLevel = 4
 
+
 ########################################################################
 # Standard configuration
 MessageSvc().Format  = "% F%30W%S%7W%R%T %0W%M"
 
-from Configurables import DaVinci
-DaVinci().EvtMax = 100                         # Number of events
+DaVinci().EvtMax     = 200                         # Number of events
 DaVinci().SkipEvents = 0                           # Events to skip
 DaVinci().PrintFreq  = 1
 DaVinci().TupleFile     = "analysis.root"     # Ntuple
@@ -81,14 +84,13 @@ DaVinci().DataType   = "MC09"
 
 DaVinci().MoniSequence = [ cheatsel,
                            tag,
-                           tagcheck,
+                           #tagcheck,
                            tagana
-                         ]  # The algorithms
+                           ]  # The algorithms
 
 ########################################################################
-# example data file
 #DAVINCI/DAVINCI_HEAD/DaVinciSys/tests/options/DVTestTagging.py
-
+# example data files
 #bsdspi_1.py
 EventSelector().Input   = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005138/0000/00005138_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
 
