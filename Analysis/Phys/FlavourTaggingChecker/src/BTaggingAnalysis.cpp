@@ -26,21 +26,21 @@ BTaggingAnalysis::BTaggingAnalysis(const std::string& name,
   m_util(0),
   m_vtxtool(0),
   m_descend(0),
+  m_pvReFitter(0),
   m_TriggerTisTosTool(0),
   m_assoc(0) 
 {
-  declareProperty( "SecondaryVertexType",m_SVtype      = "SVertexTool" );
-  declareProperty( "BHypoCriterium",     m_BHypoCriterium = "MaximumPt");
-  declareProperty( "TagOutputLocation",  m_TagLocation = FlavourTagLocation::Default );
+  declareProperty( "SecondaryVertexType",m_SVtype           = "SVertexTool" );
+  declareProperty( "BHypoCriterium",     m_BHypoCriterium   = "MaximumPt");
   declareProperty( "UseMCTrueFlavour",   m_UseMCTrueFlavour = true );
   declareProperty( "RequireTrigger",     m_requireTrigger   = true );
   declareProperty( "RequireTisTos",      m_requireTisTos    = true );
-  declareProperty( "ChoosePVCriterium",  m_ChoosePV  = "ChoosePVbyIPs" );
+  declareProperty( "ChoosePVCriterium",  m_ChoosePV         = "PVbyIPs" );
+  declareProperty( "TagOutputLocation",  m_TagLocation = FlavourTagLocation::Default );
 
   declareProperty( "IPPU_cut",     m_IPPU_cut    = 3.0 );
   declareProperty( "distphi_cut",  m_distphi_cut = 0.005 );
   declareProperty( "thetaMin_cut", m_thetaMin    = 0.012 );
-  
 }
 
 BTaggingAnalysis::~BTaggingAnalysis() {}; 
@@ -101,6 +101,11 @@ StatusCode BTaggingAnalysis::initialize() {
   m_util = tool<ITaggingUtilsChecker> ( "TaggingUtilsChecker", this );
   if( ! m_util ) {
     fatal() << "Unable to retrieve TaggingUtilsChecker tool "<< endreq;
+    return StatusCode::FAILURE;
+  }
+  m_pvReFitter = tool<IPVReFitter>("AdaptivePVReFitter", this );
+  if(! m_pvReFitter) {
+    fatal() << "Unable to retrieve AdaptivePVReFitter" << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -334,39 +339,12 @@ StatusCode BTaggingAnalysis::execute() {
   //debug()<<"OPPOSITE B (TAGGING B):"<<endreq; m_debug -> printTree(BO);
 
   //-------------------- OFFICIAL TAG of the Event --------------------
-  bool foundb = false;
-  ProtoParticle::ConstVector partsInSV;
-  FlavourTags*  tags = new FlavourTags;
-  FlavourTag* theTag = new FlavourTag;
-  if (exist<FlavourTags>(m_TagLocation)){//there is already something in TES
-    tags = get<FlavourTags>(m_TagLocation);
-    if(tags->size()>1) info()<<"FlavourTag objects in TES:"<<tags->size()
-			     <<"  Search for the highest pT B.."<<endreq;
-    FlavourTags::const_iterator ti;
-    for( ti=tags->begin(); ti!=tags->end(); ti++ ) {
-      if((*ti)->taggedB() == AXBS) {
-        theTag = (*ti);
-        foundb = true;
-        debug()<<"Will use candidate with pT="<<AXBS->pt()<<endreq;
-      }
-    }
-    if(!foundb) warning()<<"B Signal mismatch! Redo tagging..."<<endreq;
-  } 
-
-  if(!foundb ){
-    info()<<"Will tag the B hypo now."<<endreq;
-    StatusCode sc = flavourTagging()->tag( *theTag, AXBS );
-    if (!sc) {
-      err() <<"Tagging Tool returned error."<< endreq;
-      delete theTag;
-      return StatusCode::SUCCESS;
-    } 
-    if(!exist<FlavourTags>(m_TagLocation)){
-      tags->insert(theTag);
-      put(tags, m_TagLocation);
-      debug()<<"Inserted tags into "<<m_TagLocation<<endreq;
-    }
+  FlavourTag* theTag = tagevent( AXBS );
+  if(!theTag) { 
+    err() <<"Tagging Tool returned error."<< endreq;
+    return StatusCode::SUCCESS;
   }
+  
   tuple -> column ("Tag",     theTag->decision());
   tuple -> column ("Omega",   theTag->omega());
   tuple -> column ("TagCat",  theTag->category());
@@ -379,7 +357,8 @@ StatusCode BTaggingAnalysis::execute() {
   if(!m_UseMCTrueFlavour) TrueTag = AXBS->particleID().pid()>0 ? 1 : -1; 
   tuple -> column ("TrueTag", TrueTag);
 
-  debug()<<"looking taggers"<<endreq;
+  debug()<<"looking at taggers"<<endreq;
+  ProtoParticle::ConstVector partsInSV(0);
   std::vector<float> tagtype, tagdecision, tagomega;
   std::vector<Tagger> taggers = theTag->taggers();
   for(size_t i=0; i<taggers.size(); ++i) {
@@ -455,26 +434,23 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> column ("BOz", BOz);
   tuple -> column ("BOosc", BOosc);
 
-  
-  const RecVertex* RecVert = choosePrimary(verts, AXBS, BS);
-
+  //build primary and pileup vertices
+  const RecVertex* RecVert=0;
+  RecVertex RefitRecVert(0);
+  const RecVertex::ConstVector PileUpVtx = 
+    choosePrimary(AXBS, BS, verts, RecVert, RefitRecVert);
   if( !RecVert ) {
     err() <<"No Reconstructed Vertex!! Skip." <<endreq;
     return StatusCode::SUCCESS;
   }    
 
-  //build VertexVector of pileup ----------------------------
-  RecVertex::ConstVector PileUpVtx(0);
-  RecVertex::Container::const_iterator iv;
-  for( iv=verts->begin(); iv!=verts->end(); iv++){
-    if( (*iv) == RecVert ) continue;
-    PileUpVtx.push_back(*iv);
-    debug()<<"Pileup Vtx z="<< (*iv)->position().z()/Gaudi::Units::mm <<endreq;
-  }
-  tuple -> column ("krec", verts->size() );
-  tuple -> column ("RVx", RecVert->position().x()/Gaudi::Units::mm);
-  tuple -> column ("RVy", RecVert->position().y()/Gaudi::Units::mm);
-  tuple -> column ("RVz", RecVert->position().z()/Gaudi::Units::mm);
+  tuple -> column ("krec",  verts->size() );
+  tuple -> column ("RVx",   RecVert->position().x()/Gaudi::Units::mm);
+  tuple -> column ("RVy",   RecVert->position().y()/Gaudi::Units::mm);
+  tuple -> column ("RVz",   RecVert->position().z()/Gaudi::Units::mm);
+  tuple -> column ("RVx_r", RefitRecVert.position().x()/Gaudi::Units::mm);
+  tuple -> column ("RVy_r", RefitRecVert.position().y()/Gaudi::Units::mm);
+  tuple -> column ("RVz_r", RefitRecVert.position().z()/Gaudi::Units::mm);
 
   //lifetime fitter
   double ct=0., ctErr=0., ctChi2=0.;
@@ -493,7 +469,7 @@ StatusCode BTaggingAnalysis::execute() {
   debug() << "-------- Tagging Candidates: " << vtags.size() <<endreq;
 
   ///------------------------------------------------------- Fill Tagger info
-  std::vector<float> pID, pP, pPt, pphi, pch, pip, piperr, pipPU;
+  std::vector<float> pID, pP, pPt, pphi, pch, pip, piperr, pip_r, piperr_r, pipPU;
   std::vector<float> ptrtyp, plcs, ptsal, pdistPhi, pveloch, pEOverP, 
     pPIDe, pPIDm, pPIDk, pPIDp,pPIDfl;
   std::vector<float> pMCID, pMCP, pMCPt, pMCphi, pMCz, 
@@ -523,9 +499,11 @@ StatusCode BTaggingAnalysis::execute() {
     ptsal.push_back(track->likelihood());
     
     //calculate signed IP wrt RecVert
-    double IP, IPerr;
-    if(!(axp->particleID().hasBottom())) m_util->calcIP(axp, RecVert, IP, IPerr);
-    //if(!IPerr) continue;                                      //preselection cut
+    double IP, IPerr, IP_r, IPerr_r;
+    if(!(axp->particleID().hasBottom())) {
+      m_util->calcIP(axp, RecVert, IP, IPerr);
+      m_util->calcIP(axp, &RefitRecVert, IP_r, IPerr_r);
+    }
     //calculate min IP wrt all pileup vtxs 
     double IPPU = 10000;
     double ipval, iperr;
@@ -542,6 +520,8 @@ StatusCode BTaggingAnalysis::execute() {
     pch   .push_back((int) axp->charge());
     pip   .push_back(IP);
     piperr.push_back(IPerr);
+    pip_r .push_back(IP_r);
+    piperr_r.push_back(IPerr_r);
     pipPU .push_back(IPPU);
     plcs     .push_back(lcs);
     pdistPhi .push_back(distphi);
@@ -591,7 +571,7 @@ StatusCode BTaggingAnalysis::execute() {
       debug() << " --- trtyp="<<trtyp<<" ID="<<ID<<" P="<<P<<" Pt="<<Pt <<endreq;
       debug() << " deta="<<deta << " dphi="<<dphi << " dQ="<<dQ <<endreq;
       debug() << " IPsig="<<(IPerr!=0 ? fabs(IP/IPerr) : -999)
-	      << " IPPU="<<IPPU <<endreq;
+              << " IPPU="<<IPPU <<endreq;
       //debug() << " sigPhi="<<distphi<< " lcs " << lcs << endreq;
       //debug()<< " mNSH="<<muonNSH<< " vFlag="<<vFlag<<endreq;
       if(vFlag) debug() << "Found to be in SVTX "<<endreq;
@@ -646,53 +626,54 @@ StatusCode BTaggingAnalysis::execute() {
   }
 
   debug()<<"writing ntuple"<<endreq;
-
-  tuple -> farray ("sID", sigID, "M", 10);
+  tuple -> farray ("sID",     sigID, "M", 10);
   tuple -> farray ("sMothID", sigMothID, "M", 10);
-  tuple -> farray ("sP", sigP, "M", 10);
-  tuple -> farray ("sPt", sigPt, "M", 10);
-  tuple -> farray ("sPhi", sigPhi, "M", 10);
-  tuple -> farray ("sMass", sigMass, "M", 10);
-  tuple -> farray ("sMCID", sigMCID, "M", 10);
+  tuple -> farray ("sP",      sigP, "M", 10);
+  tuple -> farray ("sPt",     sigPt, "M", 10);
+  tuple -> farray ("sPhi",    sigPhi, "M", 10);
+  tuple -> farray ("sMass",   sigMass, "M", 10);
+  tuple -> farray ("sMCID",   sigMCID, "M", 10);
   tuple -> farray ("sMCMothID", sigMCMothID, "M", 10);
-  tuple -> farray ("sMCP", sigMCP, "M", 10);
-  tuple -> farray ("sMCPt", sigMCPt,"M", 10);
-  tuple -> farray ("sMCPhi", sigMCPhi,"M", 10);
-  tuple -> farray ("sVx", sigVx, "M", 10);
-  tuple -> farray ("sVy", sigVy, "M", 10);
-  tuple -> farray ("sVz", sigVz, "M", 10);
-  tuple -> farray ("TaggerType", tagtype, "T", 10);
-  tuple -> farray ("TaggerDecision", tagdecision, "T", 10);
-  tuple -> farray ("TaggerOmega", tagomega, "T", 10);
-  tuple -> farray ("ID", pID, "N", 200);
-  tuple -> farray ("P", pP, "N", 200);
-  tuple -> farray ("Pt", pPt, "N", 200);
-  tuple -> farray ("phi", pphi, "N", 200);
-  tuple -> farray ("ch", pch, "N", 200);
-  tuple -> farray ("ip", pip, "N", 200);
-  tuple -> farray ("iperr", piperr, "N", 200);
-  tuple -> farray ("ipPU", pipPU, "N", 200);
-  tuple -> farray ("trtyp", ptrtyp, "N", 200);
-  tuple -> farray ("lcs", plcs, "N", 200);
-  tuple -> farray ("tsal", ptsal, "N", 200);
+  tuple -> farray ("sMCP",    sigMCP, "M", 10);
+  tuple -> farray ("sMCPt",   sigMCPt,"M", 10);
+  tuple -> farray ("sMCPhi",  sigMCPhi,"M", 10);
+  tuple -> farray ("sVx",     sigVx, "M", 10);
+  tuple -> farray ("sVy",     sigVy, "M", 10);
+  tuple -> farray ("sVz",     sigVz, "M", 10);
+  tuple -> farray ("TaggerType",    tagtype, "T", 10);
+  tuple -> farray ("TaggerDecision",tagdecision, "T", 10);
+  tuple -> farray ("TaggerOmega",   tagomega, "T", 10);
+  tuple -> farray ("ID",      pID, "N", 200);
+  tuple -> farray ("P",       pP, "N", 200);
+  tuple -> farray ("Pt",      pPt, "N", 200);
+  tuple -> farray ("phi",     pphi, "N", 200);
+  tuple -> farray ("ch",      pch, "N", 200);
+  tuple -> farray ("ip",      pip, "N", 200);
+  tuple -> farray ("iperr",   piperr, "N", 200);
+  tuple -> farray ("ip_r",    pip_r, "N", 200);
+  tuple -> farray ("iperr_r", piperr_r, "N", 200);
+  tuple -> farray ("ipPU",    pipPU, "N", 200);
+  tuple -> farray ("trtyp",   ptrtyp, "N", 200);
+  tuple -> farray ("lcs",     plcs, "N", 200);
+  tuple -> farray ("tsal",    ptsal, "N", 200);
   tuple -> farray ("distPhi", pdistPhi, "N", 200);
-  tuple -> farray ("veloch", pveloch, "N", 200);
-  tuple -> farray ("EOverP", pEOverP, "N", 200);
-  tuple -> farray ("PIDe", pPIDe, "N", 200);
-  tuple -> farray ("PIDm", pPIDm, "N", 200);
-  tuple -> farray ("PIDk", pPIDk, "N", 200);
-  tuple -> farray ("PIDp", pPIDp, "N", 200);
-  tuple -> farray ("PIDfl", pPIDfl, "N", 200);
-  tuple -> farray ("MCID", pMCID, "N", 200);
-  tuple -> farray ("MCP", pMCP, "N", 200);
-  tuple -> farray ("MCPt", pMCPt, "N", 200);
-  tuple -> farray ("MCphi", pMCphi, "N", 200);
-  tuple -> farray ("MCz", pMCz, "N", 200);
-  tuple -> farray ("mothID", pmothID, "N", 200);
-  tuple -> farray ("ancID", pancID, "N", 200);
-  tuple -> farray ("bFlag", pbFlag, "N", 200);
-  tuple -> farray ("xFlag", pxFlag, "N", 200);
-  tuple -> farray ("vFlag", pvFlag, "N", 200);
+  tuple -> farray ("veloch",  pveloch, "N", 200);
+  tuple -> farray ("EOverP",  pEOverP, "N", 200);
+  tuple -> farray ("PIDe",    pPIDe, "N", 200);
+  tuple -> farray ("PIDm",    pPIDm, "N", 200);
+  tuple -> farray ("PIDk",    pPIDk, "N", 200);
+  tuple -> farray ("PIDp",    pPIDp, "N", 200);
+  tuple -> farray ("PIDfl",   pPIDfl, "N", 200);
+  tuple -> farray ("MCID",    pMCID, "N", 200);
+  tuple -> farray ("MCP",     pMCP, "N", 200);
+  tuple -> farray ("MCPt",    pMCPt, "N", 200);
+  tuple -> farray ("MCphi",   pMCphi, "N", 200);
+  tuple -> farray ("MCz",     pMCz, "N", 200);
+  tuple -> farray ("mothID",  pmothID, "N", 200);
+  tuple -> farray ("ancID",   pancID, "N", 200);
+  tuple -> farray ("bFlag",   pbFlag, "N", 200);
+  tuple -> farray ("xFlag",   pxFlag, "N", 200);
+  tuple -> farray ("vFlag",   pvFlag, "N", 200);
 
   if( !( tuple->write()) ) err() << "Cannot fill mytagging Ntuple" << endreq;
   ///----------------------------------------------------------------------
@@ -714,8 +695,7 @@ const Particle* BTaggingAnalysis::chooseBHypothesis(const Particle::ConstVector&
       if(maxptB > (*ip)->pt()) continue; else maxptB=(*ip)->pt();
       AXBS = (*ip);
     }
-  }
-  else {
+  } else {
     err()<<"Unknown BHypoCriterium: "<<m_BHypoCriterium<<endreq;
     return NULL;
   }
@@ -724,61 +704,66 @@ const Particle* BTaggingAnalysis::chooseBHypothesis(const Particle::ConstVector&
 }
 
 //=============================================================================
-const RecVertex* BTaggingAnalysis::choosePrimary(const RecVertex::Container* verts, 
-						 const Particle* AXBS, 
-						 const MCParticle* BS){
-  const RecVertex* RecVert = 0; 
+const RecVertex::ConstVector 
+BTaggingAnalysis::choosePrimary(const Particle* AXB,
+                                const MCParticle* BS,
+                                const RecVertex::Container* verts,
+                                const RecVertex*& RecVert,
+                                RecVertex& RefitRecVert) {
+
+  RecVertex::ConstVector PileUpVtx(0); //will contain all the other primary vtx's
+
+  double kdmin = 1000000;
   RecVertex::Container::const_iterator iv;
-
-  if(m_ChoosePV == "CheatPrimaryVertex") {
-    double dmin = 1000000;
-    const MCVertex * truepv = BS->primaryVertex();
-    for(iv=verts->begin(); iv!=verts->end(); iv++){
-      double dis= fabs(truepv->position().z() - (*iv)->position().z() );
-      if( dis < dmin ) {
-	dmin = dis;
-	RecVert = (*iv);
-      }     
+  for(iv=verts->begin(); iv!=verts->end(); iv++){
+    double var, ip, iperr;
+    if(m_ChoosePV == "CheatPV") {
+      var = fabs( BS->primaryVertex()->position().z() - (*iv)->position().z() );
+      debug()<<" distance from true PV="<<var<<endreq;
+    } 
+    else if(m_ChoosePV=="PVbyIP") { //cheated sel needs this
+      m_util->calcIP(AXB, *iv, ip, iperr);
+      var=fabs(ip); 	
+    } else if(m_ChoosePV=="PVbyIPs") { 
+      m_util->calcIP(AXB, *iv, ip, iperr);
+      if(!iperr){
+        err()<<"IPerror zero or nan, skip vertex: "<<iperr<<endreq;
+        continue;
+      }
+      var=fabs(ip/iperr); 	
+    } else {
+      err()<<"Invalid option ChoosePVCriterium: "<<m_ChoosePV<<endreq;
+      return PileUpVtx;
     }
+    if( var < kdmin ) {
+      kdmin = var;
+      RecVert = (*iv);
 
-  } else if(m_ChoosePV == "ChoosePVbyIPs") {
+      RecVertex newPV(**iv);
+      Particle newPart(*AXB);
+      StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);     
+      if(!sc) { 
+        err()<<"ReFitter fails!"<<endreq; 
+        continue; 
+      } else RefitRecVert = newPV;
 
-    //choose as primary vtx the one with smallest IP significance
-    double kdmin = 1000000;
-    for(iv=verts->begin(); iv!=verts->end(); iv++){
-      double ip, iperr;
-      m_util->calcIP(AXBS, *iv, ip, iperr);
-      debug() << "Vertex IP="<< ip <<" iperr="<<iperr<<endreq;
-      if(iperr) if( fabs(ip/iperr) < kdmin ) {
-	  kdmin = fabs(ip/iperr);
-	  RecVert = (*iv);
-	}     
-    }
+    }    
+  }
 
-  } else if(m_ChoosePV == "ChoosePVbyIP") {
+  //build a vector of pileup vertices --------------------------
+  for(iv=verts->begin(); iv!=verts->end(); iv++){
+    if( (*iv) == RecVert ) continue;
+    PileUpVtx.push_back(*iv);
+  }
 
-    //choose as primary vtx the one with smallest IP absolute value
-    double kdmin = 1000000;
-    for(iv=verts->begin(); iv!=verts->end(); iv++){
-      double ip, iperr=0;
-      m_util->calcIP(AXBS, *iv, ip, iperr);
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Vertex IP="<<ip<<endreq;
-      if( fabs(ip) < kdmin ) {
-	kdmin = fabs(ip);
-	RecVert = (*iv);
-      }     
-    }
-
-  } else err()<<"Unknown property ChoosePVCriterium: "<<m_ChoosePV<<endreq;
-  return RecVert;
-
+  return PileUpVtx;
 }
 
 //=============================================================================
 const Particle::ConstVector 
 BTaggingAnalysis::chooseParticles(const Particle::ConstVector& parts,
-				  Particle::ConstVector axdaugh,
-				  RecVertex::ConstVector PileUpVtx) {
+                                  Particle::ConstVector axdaugh,
+                                  RecVertex::ConstVector PileUpVtx) {
 
   //loop over Particles, preselect tags 
   double distphi;
@@ -814,14 +799,53 @@ BTaggingAnalysis::chooseParticles(const Particle::ConstVector& parts,
 
     if (msgLevel(MSG::DEBUG)) 
       debug() <<"part ID="<<(*ip)->particleID().pid()
-	      <<" p="<<(*ip)->p()/Gaudi::Units::GeV
-	      <<" PIDm="<<(*ip)->proto()->info( ProtoParticle::CombDLLmu, 0)
-	      <<" PIDe="<<(*ip)->proto()->info( ProtoParticle::CombDLLe, 0)
-	      <<" PIDk="<<(*ip)->proto()->info( ProtoParticle::CombDLLk, 0)
-	      <<endreq;
+              <<" p="<<(*ip)->p()/Gaudi::Units::GeV
+              <<" PIDm="<<(*ip)->proto()->info( ProtoParticle::CombDLLmu, 0)
+              <<" PIDe="<<(*ip)->proto()->info( ProtoParticle::CombDLLe, 0)
+              <<" PIDk="<<(*ip)->proto()->info( ProtoParticle::CombDLLk, 0)
+              <<endreq;
   }
 
   return vtags;
+}
+
+//=============================================================================
+FlavourTag* BTaggingAnalysis::tagevent (const Particle* AXBS) {
+      
+  bool foundb = false;
+  FlavourTags*  tags = new FlavourTags;
+  FlavourTag* theTag = new FlavourTag;
+  if (exist<FlavourTags>(m_TagLocation)){//there is already something in TES
+    tags = get<FlavourTags>(m_TagLocation);
+    if(tags->size()>1) info()<<"FlavourTag objects in TES:"<<tags->size()
+                             <<"  Search for the highest pT B.."<<endreq;
+    FlavourTags::const_iterator ti;
+    for( ti=tags->begin(); ti!=tags->end(); ti++ ) {
+      if((*ti)->taggedB() == AXBS) {
+        theTag = (*ti);
+        foundb = true;
+        debug()<<"Will use candidate with pT="<<AXBS->pt()<<endreq;
+      }
+    }
+    if(!foundb) warning()<<"B Signal mismatch! Redo tagging..."<<endreq;
+  } 
+
+  if(!foundb ){
+    info()<<"Will tag the B hypo now."<<endreq;
+    StatusCode sc = flavourTagging()->tag( *theTag, AXBS );
+    if (!sc) {
+      err() <<"Tagging Tool returned error."<< endreq;
+      delete theTag;
+      return NULL;
+    } 
+    if(!exist<FlavourTags>(m_TagLocation)){
+      tags->insert(theTag);
+      put(tags, m_TagLocation);
+      debug()<<"Inserted tags into "<<m_TagLocation<<endreq;
+    }
+  }
+  
+  return theTag;
 }
 
 //=============================================================================

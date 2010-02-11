@@ -1,6 +1,4 @@
-// $Id: BTaggingChecker.cpp,v 1.16 2009-11-30 22:46:24 musy Exp $
-
-// local
+// $Id: BTaggingChecker.cpp,v 1.17 2010-02-11 18:39:15 musy Exp $
 #include "BTaggingChecker.h"
 
 //--------------------------------------------------------------------------
@@ -89,7 +87,7 @@ StatusCode BTaggingChecker::execute() {
       ix          = (*ti)->category();
     }
     
-    //m_debug->printTree( (*ti)->taggedB() );
+    if(msgLevel(MSG::DEBUG)) m_debug->printTree( (*ti)->taggedB() );
   }
 
   if(P) if(m_bkg) if( ! P->isBasicParticle() ){
@@ -116,8 +114,6 @@ StatusCode BTaggingChecker::execute() {
       trig += HLT2Decision*100 + HLT1Decision*10;
     }
   }
-  
-  
 
   //----------------------------------------------------------------------
   info() << "BTAGGING MON "<< std::setw(3) << trig << std::setw(4) << truetag 
@@ -215,23 +211,3 @@ StatusCode BTaggingChecker::finalize(){
   return DVAlgorithm::finalize() ; 
 }
 
-//========================================================================
-MCParticle* BTaggingChecker::associatedofHEP(HepMC::GenParticle* hepmcp) {
-
-  MCParticles* mcpart = get<MCParticles> ( MCParticleLocation::Default );
-
-  int mid = hepmcp->pdg_id();
-  double mothmom = hepmcp->momentum().mag();
-  double moththeta = hepmcp->momentum().theta();
-  MCParticles::const_iterator imc;
-  for ( imc = mcpart->begin(); imc != mcpart->end(); ++imc ) {
-    if( mid == (*imc)->particleID().pid() ) {
-      if( fabs(mothmom - (*imc)->momentum().P())< 1.0){
-        if( fabs(moththeta -(*imc)->momentum().Theta())< 0.0001){
-          return (*imc);
-        }
-      }
-    }
-  }
-  return 0;
-}

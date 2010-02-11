@@ -167,5 +167,13 @@ double NNetTool_DC06::MLPpS(std::vector<double>& par) {
   return pn;
 };
 //=============================================================================
-double NNetTool_DC06::MLPvtx(std::vector<double>& par) { return 0.0; }
+double NNetTool_DC06::MLPvtx(std::vector<double>& par) { 
+
+  //unused 
+  debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
+         <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)
+         <<" "<<par.at(7)<<endreq;
+  
+  return 0.0; 
+}
 

@@ -35,5 +35,9 @@ public:
   virtual bool isinTree( const LHCb::Particle*, 
                          std::vector<const LHCb::Particle*>& , double& )=0;
  
+  virtual StatusCode choosePrimary( std::string ,
+				    const LHCb::RecVertex::Container* ,
+				    const LHCb::Particle* ,
+				    const LHCb::RecVertex*  )=0;
 };
 #endif // ICOMBINETAGGERSTOOL_H

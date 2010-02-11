@@ -79,7 +79,6 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
     double pidk=(*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 );
     if(pidk < m_PID_k_cut ) continue;
     if(pidk==0 || pidk==-1000.0) continue;
-    debug()<<"tagger k pidk="<<pidk<<endreq;
 
     double pidproton = (*ipart)->proto()->info(ProtoParticle::CombDLLp, -1000.0);
     if( pidk - pidproton < m_PIDkp_cut ) continue;
@@ -97,8 +96,8 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
     m_util->calcIP(*ipart, RecVert, IP, IPerr);
     if(!IPerr) continue;
     double IPsig = fabs(IP/IPerr);
-    verbose() << " Kaon P="<< P <<" Pt="<< Pt << " IPsig=" << IPsig 
-              << " IP=" << IP <<endreq;
+    debug() << " Kaon P="<< P <<" Pt="<< Pt << " IPsig=" << IPsig 
+            << " IP=" << IP <<endreq;
 
     if(IPsig > m_IPs_cut_kaon ) if(fabs(IP)< m_IP_cut_kaon)  {
       const Track* track = (*ipart)->proto()->track();

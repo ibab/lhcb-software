@@ -113,11 +113,17 @@ int main(int argc, char **argv) {
   cout << "\n========================================================================"<<endl;
   cout << "Summary tagging performance for: " << argv[1] <<endl;
   if(Trig == -1) cout << "Trigger info not available in file." << endl;
-  else if(argc>2) if(*argv[2] == '1') cout << "Before triggers, " << endl;
-  else if(argc>2) if(*argv[2] == '2') cout << "After L0 trigger only, "<< endl;
-  else if(argc>2) if(*argv[2] == '3') cout << "After L0*HLT triggers, " <<endl;
-  if(argc>3)if(*argv[3]=='1')  cout << "ONLY opposite-side taggers considered!"<<endl;
-  if(argc>4)if(*argv[4]=='1')  cout << "Only Backg. Category= 0 or 50 evts. considered!"<<endl;
+  else if(argc>2) {
+    if(*argv[2] == '1') cout << "Before triggers, " << endl;
+  }
+  else if(argc>2) {
+    if(*argv[2] == '2') cout << "After L0 trigger only, "<< endl;
+  }
+  else if(argc>2) {
+    if(*argv[2] == '3') cout << "After L0*HLT triggers, " <<endl;
+  }
+  if(argc>3) if(*argv[3]=='1')  cout << "ONLY opposite-side taggers considered!"<<endl;
+  if(argc>4) if(*argv[4]=='1')  cout << "Only Backg. Category= 0 or 50 evts. considered!"<<endl;
 
   cout << "------------------------------------------------------------------------"<<endl;
   cout<< " Category            EFF.          Etag         Wrong TF"

@@ -1,4 +1,4 @@
-// $Id: SVertexTool.cpp,v 1.14 2010-01-18 22:17:04 musy Exp $
+// $Id: SVertexTool.cpp,v 1.15 2010-02-11 18:35:45 musy Exp $
 #include "SVertexTool.h"
 #include "Event/RecVertex.h"
 //-----------------------------------------------------------------------------
@@ -297,12 +297,12 @@ bool SVertexTool::isin(Particle::ConstVector& vtags_toexclude,
 //=============================================================================
 double SVertexTool::angle( Gaudi::LorentzVector a, Gaudi::LorentzVector b) {
   double ang=0;
-  if(a.Vect().Mag2()) if(b.Vect().Mag2()) {
+  if(a.Vect().Mag2() && b.Vect().Mag2()) {
     ang = acos( (a.Vect().Unit()).Dot(b.Vect().Unit()) );
     if(ang>3.1416) ang=6.2832-ang;
     if(ang<0) ang=-ang;
   } else {
-    err()<<"Zero vector! Arguments: "<<a.Vect().Mag2()
+    err()<<"Zero vector(s)! Arguments: "<<a.Vect().Mag2()
          <<" "<<b.Vect().Mag2()<<endreq;
   }
   return ang;

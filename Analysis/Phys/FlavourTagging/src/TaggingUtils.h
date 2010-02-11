@@ -6,9 +6,10 @@
 #include "GaudiKernel/ToolFactory.h"
 // from Event
 //#include "Kernel/IGeomDispCalculator.h"
-#include <Kernel/IDistanceCalculator.h>
 #include <Kernel/DVAlgorithm.h>
 #include <Kernel/GetDVAlgorithm.h>
+#include <Kernel/IDistanceCalculator.h>
+#include "Kernel/IPVReFitter.h"
 
 #include "ITaggingUtils.h"
 
@@ -48,9 +49,10 @@ public:
 
 private:
 
-  //  IGeomDispCalculator *m_Geom;
+  std::string m_ChoosePV ;
   IDistanceCalculator *m_Dist;
   DVAlgorithm* m_dva;
+  IPVReFitter* m_pvReFitter;
 
 };
 

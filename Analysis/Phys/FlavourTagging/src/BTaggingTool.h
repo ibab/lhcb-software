@@ -1,4 +1,4 @@
-// $Id: BTaggingTool.h,v 1.22 2010-02-02 19:29:08 musy Exp $
+// $Id: BTaggingTool.h,v 1.23 2010-02-11 18:35:45 musy Exp $
 #ifndef USER_BTAGGINGTOOL_H 
 #define USER_BTAGGINGTOOL_H 1
 
@@ -18,6 +18,7 @@
 #include "Kernel/ITagger.h" 
 #include "Kernel/IBTaggingTool.h" 
 #include "Kernel/IParticleDescendants.h"
+#include "Kernel/IPVReFitter.h"
 
 #include "ITaggingUtils.h"
 
@@ -51,11 +52,19 @@ public:
   StatusCode tag( LHCb::FlavourTag& theTag, 
                   const LHCb::Particle*, const LHCb::RecVertex*, 
                   LHCb::Particle::ConstVector& ); 
-  const LHCb::RecVertex* choosePrimary(const LHCb::RecVertex::Container* , 
-                                       const LHCb::Particle* );
-  
 
 private:
+
+  const LHCb::RecVertex::ConstVector
+  choosePrimary(const LHCb::Particle* AXB,
+                const LHCb::RecVertex::Container* verts, 
+                const LHCb::RecVertex*& RecVert,
+                LHCb::RecVertex& RefitRecVert);
+
+  const LHCb::Particle::ConstVector 
+  chooseCandidates(const LHCb::Particle* AXB,
+                   const LHCb::Particle::Container* parts,
+                   const LHCb::RecVertex::ConstVector& PileUpVtx);
 
   ITaggingUtils* m_util;
   IParticleDescendants* m_descend;
@@ -63,6 +72,7 @@ private:
   ITagger *m_taggerMu, *m_taggerEle, *m_taggerKaon, *m_taggerVtxCh;
   ITagger *m_taggerKaonS, *m_taggerPionS, *m_taggerVtx, *m_taggerJetS;
   ICombineTaggersTool *m_combine;
+  IPVReFitter* m_pvReFitter;
 
   //properties ----------------
   double m_thetaMin, m_distphi_cut;
@@ -74,7 +84,7 @@ private:
   bool m_EnableKaonSS,m_EnablePionSS,m_EnableVertexCharge;
   bool m_EnableJetSame;
 
-  bool m_UseVtxOnlyWithoutOS;
+  bool m_UseVtxOnlyWithoutOS, m_UseReFitPV;
 
 };
 

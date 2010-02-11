@@ -80,11 +80,13 @@ StatusCode TaggingUtilsChecker::calcIP( const Particle* axp,
       double ipC=0, ipChi2=0;
       StatusCode sc = m_Dist->distance (axp, *iv, ipC, ipChi2);
       if(ipChi2) { ipx=ipC; ipex=ipC/sqrt(ipChi2); }
-
-      if( sc ) if( ipx < ipmin ) {
+      if( sc ) {
+	if( ipx < ipmin ) {
 	  ipmin = ipx;
 	  ipminerr = ipex;
-	} else lastsc = sc;
+	} 
+      } else lastsc = sc;
+
     }
   }
   ip  = ipmin;
@@ -384,6 +386,7 @@ int TaggingUtilsChecker::comes_from_excitedB(const MCParticle* BS,
 
   return origin;
 }
+
 //=============================================================================
 StatusCode TaggingUtilsChecker::finalize() { return StatusCode::SUCCESS; }
 

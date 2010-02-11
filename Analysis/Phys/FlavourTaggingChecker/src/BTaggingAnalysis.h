@@ -1,4 +1,4 @@
-// $Id: BTaggingAnalysis.h,v 1.21 2010-02-02 19:31:54 musy Exp $
+// $Id: BTaggingAnalysis.h,v 1.22 2010-02-11 18:39:15 musy Exp $
 #ifndef USER_BTAGGINGANALYSIS_H 
 #define USER_BTAGGINGANALYSIS_H 1
 
@@ -27,6 +27,7 @@
 #include "Kernel/IParticleDescendants.h"
 #include "Kernel/ILifetimeFitter.h"
 #include "Kernel/ITriggerTisTos.h"
+#include "Kernel/IPVReFitter.h"
 
 #include "MCInterfaces/IForcedBDecayTool.h"
 
@@ -54,11 +55,18 @@ class BTaggingAnalysis : public DVAlgorithm {
  private:
 
   const LHCb::Particle*  chooseBHypothesis(const LHCb::Particle::ConstVector&);
-  const LHCb::RecVertex* choosePrimary( const LHCb::RecVertex::Container* , 
-					const LHCb::Particle* , const LHCb::MCParticle*);
-  const LHCb::Particle::ConstVector chooseParticles(const LHCb::Particle::ConstVector& ,
-						    LHCb::Particle::ConstVector,
-						    LHCb::RecVertex::ConstVector);
+  const LHCb::Particle::ConstVector 
+  chooseParticles(const LHCb::Particle::ConstVector& ,
+                  LHCb::Particle::ConstVector,
+                  LHCb::RecVertex::ConstVector);
+  const LHCb::RecVertex::ConstVector 
+  choosePrimary(const LHCb::Particle* AXB,
+                const LHCb::MCParticle* BS,
+                const LHCb::RecVertex::Container* verts,
+                const LHCb::RecVertex*& RecVert,
+                LHCb::RecVertex& RefitRecVert) ;
+  LHCb::FlavourTag* tagevent (const LHCb::Particle* AXBS);
+  
 
   std::string m_SVtype, m_veloChargeName, 
     m_TagLocation, m_BHypoCriterium, m_ChoosePV ;
@@ -70,6 +78,7 @@ class BTaggingAnalysis : public DVAlgorithm {
   ITaggingUtilsChecker*      m_util;
   ISecondaryVertexTool*      m_vtxtool;
   IParticleDescendants*      m_descend;
+  IPVReFitter*               m_pvReFitter;
   ITriggerTisTos*            m_TriggerTisTosTool;
   IParticle2MCAssociator*    m_assoc; 
  

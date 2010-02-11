@@ -7,7 +7,6 @@
 #
 ########################################################################
 from Gaudi.Configuration import *
-from Configurables import GaudiSequencer, DaVinci
 
 ########################################################################
 # CheatedSelection. 
@@ -70,7 +69,8 @@ tagana.BackgroundCategory.OutputLevel = 4
 # Standard configuration
 MessageSvc().Format  = "% F%30W%S%7W%R%T %0W%M"
 
-DaVinci().EvtMax     = 100                         # Number of events
+from Configurables import DaVinci
+DaVinci().EvtMax = 100                         # Number of events
 DaVinci().SkipEvents = 0                           # Events to skip
 DaVinci().PrintFreq  = 1
 DaVinci().TupleFile     = "analysis.root"     # Ntuple
@@ -87,6 +87,8 @@ DaVinci().MoniSequence = [ cheatsel,
 
 ########################################################################
 # example data file
+#DAVINCI/DAVINCI_HEAD/DaVinciSys/tests/options/DVTestTagging.py
+
 #bsdspi_1.py
 EventSelector().Input   = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005138/0000/00005138_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
 

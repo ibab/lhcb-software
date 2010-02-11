@@ -1,6 +1,5 @@
 // Include files 
 #include "BTaggingTool.h"
-#include "GaudiKernel/IIncidentSvc.h"
 
 //--------------------------------------------------------------------------
 // Implementation file for class : BTaggingTool
@@ -25,8 +24,10 @@ BTaggingTool::BTaggingTool( const std::string& type,
   declareProperty( "CombineTaggersName",
                    m_CombineTaggersName = "CombineTaggersProbability" );
   declareProperty( "UseVtxChargeWithoutOS", m_UseVtxOnlyWithoutOS = false );
-  declareProperty( "ChoosePVCriterium",     m_ChoosePV="ChoosePVbyIPs");
-  
+
+  declareProperty( "ChoosePVCriterium",     m_ChoosePV="PVbyIPs");
+  declareProperty( "UseReFitPV",            m_UseReFitPV  = false );
+
   declareProperty( "IPPU_cut",     m_IPPU_cut    = 3.0 );
   declareProperty( "thetaMin_cut", m_thetaMin    = 0.012 );
   declareProperty( "distphi_cut",  m_distphi_cut = 0.005 );
@@ -39,8 +40,10 @@ BTaggingTool::BTaggingTool( const std::string& type,
   declareProperty( "EnableVertexChargeTagger",m_EnableVertexCharge= true);
   declareProperty( "EnableJetSameTagger", m_EnableJetSame = false );
   declareProperty( "TaggerLocation", m_taggerLocation = "Phys/TaggingParticles" );
-  m_util = 0;
-  m_descend =0;
+  m_util    = 0;
+  m_descend = 0;
+  m_pvReFitter = 0;
+  m_combine = 0;
   m_taggerMu=m_taggerEle=m_taggerKaon=0;
   m_taggerKaonS=m_taggerPionS=m_taggerVtx=0 ;
 }
@@ -48,8 +51,6 @@ BTaggingTool::~BTaggingTool() {};
 
 //==========================================================================
 StatusCode BTaggingTool::initialize() {
-
-  // Register to the Incident service to be notified 
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
   if( ! m_util ) {
@@ -61,7 +62,6 @@ StatusCode BTaggingTool::initialize() {
     fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
     return StatusCode::FAILURE;
   }
-
   m_taggerMu = tool<ITagger> ("TaggerMuonTool", this);
   if(! m_taggerMu) {
     fatal() << "Unable to retrieve TaggerMuonTool"<< endreq;
@@ -102,21 +102,17 @@ StatusCode BTaggingTool::initialize() {
     fatal() << "Unable to retrieve "<< m_CombineTaggersName << endreq;
     return StatusCode::FAILURE;
   }
+  if(m_ChoosePV =="RefitPV") {
+    m_pvReFitter = tool<IPVReFitter>("AdaptivePVReFitter", this );
+    if(! m_pvReFitter) {
+      fatal() << "Unable to retrieve AdaptivePVReFitter" << endreq;
+      return StatusCode::FAILURE;
+    }
+  }
 
   return StatusCode::SUCCESS;
 }
 
-//==========================================================================
-StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB ) {
-  Particle::ConstVector p(0);
-  return tag( theTag, AXB, 0, p ) ;
-}
-//==========================================================================
-StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB, 
-                              const RecVertex* RecVert ) {
-  Particle::ConstVector p(0);
-  return tag( theTag, AXB, RecVert, p );
-}
 //==========================================================================
 StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB, 
                               const RecVertex* RecVert,
@@ -128,78 +124,39 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
     return StatusCode::FAILURE;
   }
 
-  const Particle::Container* parts = get<Particle::Container>(m_taggerLocation+"/Particles");
+  //Load vertices and particles
+  const Particle::Container*  parts=get<Particle::Container>(m_taggerLocation+"/Particles");
+  const RecVertex::Container* verts=get<RecVertex::Container>(RecVertexLocation::Primary);
+  if(msgLevel(MSG::DEBUG)) debug()<<" Nr Vertices: "<< verts->size() 
+                                  <<" Nr Particles: "<<parts->size()<<endreq;
 
-  const RecVertex::Container* verts = get<RecVertex::Container>(RecVertexLocation::Primary);
-  if (msgLevel(MSG::VERBOSE)) verbose() << "  Nr Vertices: "  << verts->size() 
-                                        << "  Nr Particles: " << parts->size() <<endreq;
-  
-  //----------------------------
-  if( ! RecVert ) RecVert = choosePrimary(verts, AXB);
-  if( ! RecVert ) {
-    err() <<"No Reconstructed Vertex!! Skip." <<endreq;
-    return StatusCode::SUCCESS;
-  }    
-  
-  //build a vector of pileup vertices --------------------------
   Vertex::ConstVector allVtx;
   RecVertex::Container::const_iterator iv;
-  RecVertex::ConstVector PileUpVtx(0); //contains all the other primary vtx's
-  for(iv=verts->begin(); iv!=verts->end(); iv++){
-    const Vertex* av=AXB->endVertex();
-    allVtx.push_back(av);
-    if( (*iv) == RecVert ) continue;
-    PileUpVtx.push_back(*iv);
-    if (msgLevel(MSG::VERBOSE)) verbose() <<"Pileup Vtx z=" << (*iv)->position().z()/mm <<endreq;
+  for(iv=verts->begin(); iv!=verts->end(); iv++) {
+    if(msgLevel(MSG::DEBUG)) debug()<<"PV found at z="<<(*iv)->position().z()/mm<<endreq;
+    allVtx.push_back(AXB->endVertex());
   }
 
-  //loop over Particles, preselect taggers ///////////////////preselection
-  double distphi;
-  theTag.setTaggedB( AXB );
-  Particle::Container::const_iterator ip;
-  Particle::ConstVector axdaugh = m_descend->descendants( AXB );
-  axdaugh.push_back( AXB );
-  if( vtags.empty() ) { //tagger candidate list is not provided, build one
-    for ( ip = parts->begin(); ip != parts->end(); ip++ ){
+  //////////////////////////////////////////////////////////////////////////////
+  //choose RecVert PV and pileup vertices taking into account refitting ///////
+  RecVertex RefitRecVert(0);
+  const RecVertex::ConstVector PileUpVtx= choosePrimary(AXB, verts, RecVert, RefitRecVert);
 
-      if( (*ip)->p()/GeV < 2.0 ) continue;               
-      if( (*ip)->momentum().theta() < m_thetaMin ) continue;
-      if( (*ip)->charge() == 0 ) continue;               
-      if( !(*ip)->proto() )      continue;
-      if( !(*ip)->proto()->track() ) continue;
-      if( (*ip)->proto()->track()->type() < 3 )   continue; 
-      if( (*ip)->proto()->track()->type() > 4 )   continue; 
-      if( (*ip)->p()/GeV  > 200 ) continue;
-      if( (*ip)->pt()/GeV >  10 ) continue;
-      if( m_util->isinTree( *ip, axdaugh, distphi ) ) continue ;//exclude signal
-      if( distphi < m_distphi_cut ) continue;
-      verbose() <<" DISTPHI="<<distphi<<endreq;
-
-      //calculate the min IP wrt all pileup vtxs
-
-      double ippu, ippuerr;
-      m_util->calcIP( *ip, PileUpVtx, ippu, ippuerr );
-      //eliminate from vtags all parts coming from a pileup vtx
-      if(ippuerr) if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection
-      verbose() <<" IPPU="<<ippu/ippuerr<<endreq;
-
-      //////////////////////////////////
-      vtags.push_back(*ip);          // store tagger candidate
-      ////////////////////////////////
-
-      if (msgLevel(MSG::DEBUG)) 
-        debug() <<"part ID="<<(*ip)->particleID().pid()
-                <<" p="<<(*ip)->p()/GeV
-                <<" PIDm="<<(*ip)->proto()->info( ProtoParticle::CombDLLmu, 0)
-                <<" PIDe="<<(*ip)->proto()->info( ProtoParticle::CombDLLe, 0)
-                <<" PIDk="<<(*ip)->proto()->info( ProtoParticle::CombDLLk, 0)
-                <<endreq;
+  if( msgLevel(MSG::DEBUG) ) {
+    debug()<<"--> RecVert z=" << RecVert->position().z()/mm <<"  "<<m_ChoosePV<<endreq;
+    if(m_ChoosePV=="RefitPV")
+      debug() <<"-->     refitRecVert z=" << RefitRecVert.position().z()/mm <<endreq;
+    for(RecVertex::ConstVector::const_iterator iv=PileUpVtx.begin();
+        iv!=PileUpVtx.end(); iv++) {
+      debug()<<"--> PileUpPV at z="<<(*iv)->position().z()/mm<<endreq;
     }
-  } else {
-    //tagger candidate list is already provided, it is the user responsibility
-    //to check that there is not a signal B daughter inside...
-    if (msgLevel(MSG::VERBOSE)) verbose()<<"User tagger candidate list of size = "<<vtags.size()<<endreq;
   }
+  
+  ////////////////////////////////////////////////////////
+  //loop over Particles, preselect candidates ///////////
+  theTag.setTaggedB( AXB );
+  if(vtags.empty()) vtags = chooseCandidates(AXB, parts, PileUpVtx);
+  
 
   //AXB is the signal B from selection
   bool isBd = false; if( AXB->particleID().hasDown() )   isBd = true;
@@ -277,7 +234,6 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   if(!sameside) sameside = pionS.decision();
 
   RecHeader* evt = get<RecHeader> (RecHeaderLocation::Default);
-
   if (msgLevel(MSG::DEBUG)) debug() << "BTAGGING TAG   " 
                                     << std::setw(9) << evt->runNumber()
                                     << std::setw(9) << evt->evtNumber()
@@ -294,40 +250,133 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
 
   return StatusCode::SUCCESS;
 }
+//==========================================================================
+StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB ) {
+  Particle::ConstVector p(0);
+  return tag( theTag, AXB, 0, p ) ;
+}
+//==========================================================================
+StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB, 
+                              const RecVertex* RecVert ) {
+  Particle::ConstVector p(0);
+  return tag( theTag, AXB, RecVert, p );
+}
 
-//=========================================================================
-const RecVertex* BTaggingTool::choosePrimary(const RecVertex::Container* verts,
-                                             const Particle* AXB) {
-  
-  const RecVertex* RecVert = 0;
+///=========================================================================
+const RecVertex::ConstVector 
+BTaggingTool::choosePrimary(const Particle* AXB,
+                            const RecVertex::Container* verts,
+                            const RecVertex*& RecVert,
+                            RecVertex& RefitRecVert){
+  bool user_recvert = false;
+  const RecVertex* RecVert_save=0;
+  if( RecVert ) { //PV was given by the user
+    debug()<<"Will use the PV given by the user."<<endreq;
+    RecVert_save = RecVert;
+    user_recvert = true;
+  }
+
+  RecVertex::ConstVector PileUpVtx(0); //will contain all the other primary vtx's
+
+  double kdmin = 1000000;
   RecVertex::Container::const_iterator iv;
-  if (m_ChoosePV == "ChoosePVbyIPs") {
-    
-      double kdmin = 1000000;
-      for(iv=verts->begin(); iv!=verts->end(); iv++){
-        double ip, iperr;
-        m_util->calcIP(AXB, *iv, ip, iperr);
-        if (msgLevel(MSG::VERBOSE)) verbose() << "Vertex IP/s="<<ip/iperr<<endreq;
-        if(iperr) if( fabs(ip/iperr) < kdmin ) {
-          kdmin = fabs(ip/iperr);
-          RecVert = (*iv);
-        }     
+  for(iv=verts->begin(); iv!=verts->end(); iv++){
+    RecVertex newPV(**iv);
+    double var, ip, iperr;
+    if(m_ChoosePV=="RefitPV") { 
+      Particle newPart(*AXB);
+      StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);     
+      if(!sc) { err()<<"ReFitter fails!"<<endreq; continue; }
+      m_util->calcIP(AXB, &newPV, ip, iperr); 
+      var=fabs(ip); 
+    } else if(m_ChoosePV=="PVbyIP") { //cheated sel needs this
+      m_util->calcIP(AXB, *iv, ip, iperr);
+      var=fabs(ip); 	
+    } else if(m_ChoosePV=="PVbyIPs") { 
+      m_util->calcIP(AXB, *iv, ip, iperr);
+      if(!iperr){
+        err()<<"IPerror zero or nan, skip vertex: "<<iperr<<endreq;
+        continue;
       }
-  } else if (m_ChoosePV == "ChoosePVbyIP") {
-    
-      double kdmin = 1000000;
-      for(iv=verts->begin(); iv!=verts->end(); iv++){
-        double ip, iperr;
-        m_util->calcIP(AXB, *iv, ip, iperr);
-        if (msgLevel(MSG::VERBOSE)) verbose() << "Vertex IP="<<ip<<endreq;
-        if( fabs(ip) < kdmin ) {
-          kdmin = fabs(ip);
-          RecVert = (*iv);
-        }     
-      }
-  } else err()<<"Unknown property ChoosePVCriterium: "<<m_ChoosePV<<endreq;
+      var=fabs(ip/iperr); 	
+    } else {
+      err()<<"Invalid option ChoosePVCriterium: "<<m_ChoosePV<<endreq;
+      return PileUpVtx;
+    }
+    if( var < kdmin ) {
+      kdmin = var;
+      RecVert = (*iv);
+      if(m_ChoosePV=="RefitPV") RefitRecVert = newPV;
+    }    
+    if( ! RecVert ) {
+      err() <<"No Reconstructed Vertex! Skip." <<endreq;
+      return PileUpVtx;
+    }    
+  }
 
-  return RecVert;
+  //build a vector of pileup vertices --------------------------
+  for(iv=verts->begin(); iv!=verts->end(); iv++){
+    if( (*iv) == RecVert ) continue;
+    PileUpVtx.push_back(*iv);
+  }
+  //UseReFitPV means that it will use the refitted pV for the ip calculation 
+  //of taggers and SV building. Do not move this line above PileUpVtx building
+  if( !user_recvert ) if( m_UseReFitPV ) if(m_ChoosePV=="RefitPV")
+    RecVert = (&RefitRecVert);
+  //force to use supplied PV from user
+  if( user_recvert ) RecVert = RecVert_save;
+  if( ! RecVert ) {
+    err() <<"No Reconstructed Vertex!! Skip." <<endreq;
+    return PileUpVtx;
+  }    
+
+  return PileUpVtx;
+}
+
+//=============================================================================
+const Particle::ConstVector 
+BTaggingTool::chooseCandidates(const Particle* AXB,
+                               const Particle::Container* parts,
+                               const RecVertex::ConstVector& PileUpVtx) {
+  double distphi;
+  Particle::ConstVector vtags(0);
+  Particle::Container::const_iterator ip;
+  Particle::ConstVector axdaugh = m_descend->descendants( AXB );
+  axdaugh.push_back( AXB );
+  for ( ip = parts->begin(); ip != parts->end(); ip++ ){
+
+    if( (*ip)->p()/GeV < 2.0 ) continue;               
+    if( (*ip)->momentum().theta() < m_thetaMin ) continue;
+    if( (*ip)->charge() == 0 ) continue;               
+    if( !(*ip)->proto() )      continue;
+    if( !(*ip)->proto()->track() ) continue;
+    if( (*ip)->proto()->track()->type() < 3 )   continue; 
+    if( (*ip)->proto()->track()->type() > 4 )   continue; 
+    if( (*ip)->p()/GeV  > 200 ) continue;
+    if( (*ip)->pt()/GeV >  10 ) continue;
+    if( m_util->isinTree( *ip, axdaugh, distphi ) ) continue ;//exclude signal
+    if( distphi < m_distphi_cut ) continue;
+
+    //calculate the min IP wrt all pileup vtxs
+    double ippu, ippuerr;
+    m_util->calcIP( *ip, PileUpVtx, ippu, ippuerr );
+    //eliminate from vtags all parts coming from a pileup vtx
+    if(ippuerr) if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection
+
+    //////////////////////////////////
+    vtags.push_back(*ip);          // store tagger candidate
+    ////////////////////////////////
+
+    if (msgLevel(MSG::DEBUG)) 
+      debug() <<"part ID="<<(*ip)->particleID().pid()
+              <<" p="<<(*ip)->p()/GeV
+              <<" PIDm="<<(*ip)->proto()->info( ProtoParticle::CombDLLmu, 0)
+              <<" PIDe="<<(*ip)->proto()->info( ProtoParticle::CombDLLe, 0)
+              <<" PIDk="<<(*ip)->proto()->info( ProtoParticle::CombDLLk, 0)
+              <<endreq;
+  }
+
+  return vtags;
 }
 
 //=========================================================================
