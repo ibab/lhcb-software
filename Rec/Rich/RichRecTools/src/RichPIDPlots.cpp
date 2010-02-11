@@ -1,4 +1,4 @@
-// $Id: RichPIDPlots.cpp,v 1.10 2009-05-04 13:54:44 jonrob Exp $
+// $Id: RichPIDPlots.cpp,v 1.11 2010-02-11 20:05:28 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -142,7 +142,7 @@ void PIDPlots::plots( const LHCb::Track * track,
   if ( !selected(track,config) ) return;
   
   // Rich Histo ID
-  const RichHistoID hid;
+  const Rich::HistoID hid;
 
   // Number of each type of hypothesis
   //plot1D( (int)hypo, "nPIDsPerHypo", "# PIDs per hypothesis", -1.5, 5.5, 7 );
