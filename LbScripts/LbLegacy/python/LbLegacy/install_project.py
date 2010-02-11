@@ -1884,6 +1884,7 @@ def main():
     global _retry_time, fix_perm
     global show_compatible_configs
     global install_binary
+    global compat_version
 # get arguments
     pname = None
     pversion = None
