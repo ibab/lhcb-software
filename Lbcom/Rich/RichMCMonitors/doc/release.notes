@@ -4,6 +4,9 @@
 ! Purpose     : Monitor algorithms that exclusively use MCEvent data objects
 !-----------------------------------------------------------------------------
 
+! 2010-02-11 - Chris Jones
+ - Adapt to changes in histogram base classes.
+
 !========================== RichMCMonitors v1r7p1 2009-09-03 =================
 ! 2009-09-03 - Marco Cattaneo
  - Remove obsolete file src/RichMCMonitors_dll.cpp

@@ -5,7 +5,7 @@
  * Header file for monitor algorithm RichMCCKPhotonPropAlg
  *
  * CVS Log :-
- * $Id: RichMCCKPhotonPropAlg.cpp,v 1.4 2009-07-30 12:11:13 jonrob Exp $
+ * $Id: RichMCCKPhotonPropAlg.cpp,v 1.5 2010-02-11 19:54:20 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-03
@@ -31,8 +31,8 @@ DECLARE_ALGORITHM_FACTORY( MCCKPhotonPropAlg );
 //=============================================================================
 MCCKPhotonPropAlg::MCCKPhotonPropAlg( const std::string& name,
                                       ISvcLocator* pSvcLocator )
-  : Rich::HistoAlgBase ( name , pSvcLocator ),
-    m_refIndex         ( NULL               ) { }
+  : HistoAlgBase ( name , pSvcLocator ),
+    m_refIndex   ( NULL               ) { }
 
 //=============================================================================
 // Destructor
@@ -45,7 +45,7 @@ MCCKPhotonPropAlg::~MCCKPhotonPropAlg() {}
 StatusCode MCCKPhotonPropAlg::initialize()
 {
   // must be done first
-  const StatusCode sc = RichHistoAlgBase::initialize();
+  const StatusCode sc = HistoAlgBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // tools
@@ -69,7 +69,7 @@ StatusCode MCCKPhotonPropAlg::execute()
     = get<LHCb::MCRichOpticalPhotons> ( LHCb::MCRichOpticalPhotonLocation::Default );
 
   // Rich Histo ID utility class
-  const RichHistoID hid;
+  const Rich::HistoID hid;
 
   //            Radiator          Aerogel  Rich1Gas  Rich2Gas
   const double minPhotEn[]    = { 1.5,     1.5,      1.5     };

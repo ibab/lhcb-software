@@ -5,7 +5,7 @@
  * Header file for monitor algorithm RichMCCKPhotonYieldAlg
  *
  * CVS Log :-
- * $Id: RichMCCKPhotonYieldAlg.cpp,v 1.10 2009-07-30 12:11:13 jonrob Exp $
+ * $Id: RichMCCKPhotonYieldAlg.cpp,v 1.11 2010-02-11 19:54:20 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-03
@@ -118,7 +118,7 @@ StatusCode MCCKPhotonYieldAlg::execute()
   }
 
   // Rich Histo ID utility class
-  const RichHistoID hid;
+  const Rich::HistoID hid;
 
   // ranges for histograms
   const double maxPlength[]  = { 60*Gaudi::Units::mm, 1200*Gaudi::Units::mm, 2500*Gaudi::Units::mm };
@@ -300,7 +300,7 @@ StatusCode MCCKPhotonYieldAlg::finalize()
   info() << lines << endmsg;
 
   // must be called after all other actions
-  return RichHistoAlgBase::finalize();
+  return HistoAlgBase::finalize();
 }
 
 //=============================================================================
