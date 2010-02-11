@@ -3,6 +3,9 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
+! 2010-02-11 - Gerhard Raven
+ - make sure that PatPV3D sets filterPassed to false if vertex fit fails
+   in order to protect downstream code from empty containers...
 
 ! 2010-02-09 - Piotr Morawski
  - modified PVOfflineTools to reconstruct displaced vertices

@@ -72,18 +72,16 @@ StatusCode PatPV3D::execute() {
 
   std::vector<LHCb::RecVertex> rvts;
   StatusCode scfit = m_pvsfit->reconstructMultiPV(rvts);
-  if (scfit != StatusCode::SUCCESS) {
-    return StatusCode::SUCCESS;
+  if (scfit == StatusCode::SUCCESS) {
+      for(std::vector<LHCb::RecVertex>::iterator iv = rvts.begin(); iv != rvts.end(); iv++) {
+        LHCb::RecVertex* vertex = new LHCb::RecVertex(*iv);
+        vertex->setTechnique(LHCb::RecVertex::Primary);
+        m_outputVertices->insert(vertex);
+      }
+  } else {
+      warning() << "reconstructMultiPV failed!" << endmsg;
   }
-
-  for(std::vector<LHCb::RecVertex>::iterator iv = rvts.begin(); iv != rvts.end(); iv++) {
-    LHCb::RecVertex* vertex = new LHCb::RecVertex();
-    *vertex = *iv;
-    vertex->setTechnique(LHCb::RecVertex::Primary);
-    m_outputVertices->insert(vertex);
-  }
-
-  setFilterPassed(!rvts.empty());
+  setFilterPassed(!m_outputVertices->empty());
 
   return StatusCode::SUCCESS;
 }
