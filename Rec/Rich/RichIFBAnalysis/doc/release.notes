@@ -4,6 +4,10 @@
 ! Purpose     : Ross Young
 !-----------------------------------------------------------------------------
 
+! 2010-02-12 - Ross Young
+ - Dark count code added (trigger type check); string + stringstream operations taken out 
+	of execute method; cluster size histograms reduced in range from 300 to 50.
+
 ! 2010-01-31 - Chris Jones
  - Various minor changes for speed and bug fixes.
 

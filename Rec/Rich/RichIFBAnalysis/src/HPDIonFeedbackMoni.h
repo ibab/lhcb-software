@@ -1,4 +1,4 @@
-// $Id: HPDIonFeedbackMoni.h,v 1.3 2010-01-15 22:50:08 ryoung Exp $
+// $Id: HPDIonFeedbackMoni.h,v 1.4 2010-02-12 13:41:07 ryoung Exp $
 #ifndef RICHIFBANALYSIS_HPDIonFeedbackMoni_H
 #define RICHIFBANALYSIS_HPDIonFeedbackMoni_H 1
 
@@ -8,6 +8,8 @@
 #include "RichKernel/IRichPixelClusteringTool.h"
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 #include "RichKernel/RichHistoAlgBase.h"
+//#include "RichRecBase/RichRecHistoAlgBase.h"
+#include "Event/ODIN.h"
 
 namespace Rich
 {
@@ -37,8 +39,13 @@ namespace Rich
 
       virtual StatusCode initialize();    ///< Algorithm initialization
       virtual StatusCode execute   ();    ///< Algorithm execution
-      virtual StatusCode finalize  ();    ///< Algorithm finalisation 
-      
+      virtual StatusCode finalize  ();    ///< Algorithm finalisation
+
+    protected:
+
+        /// Pre-Book all (non-MC) histograms
+        virtual StatusCode prebookHistograms();
+
     private:
 
       //std::vector<IFBrate> m_IFBvect;
@@ -61,11 +68,13 @@ namespace Rich
       unsigned long r1clustersThisEvent;    // Number of non-zero RICH1 clusters in event
       unsigned long r2clustersThisEvent;    // Number of non-zero RICH2 clusters in event
       unsigned int minX, maxX, minY, maxY, binsX, binsY;   // Hitmap limits
-
+      
+      std::map< int, std::string> hidtostring;   // Maps cluster-size histogram title against histogram ID
+    
       bool m_wantIFB;           // To execute clustering. 
       bool m_wantHitmaps;       // To execute plotting of "All-cluster" hitmap and "IFB-cluster" hitmap. CPU-time consuming. 
       bool m_wantQuickHitmap;   // To execute quick plotting of hitmap. If "true" sets m_wantIFB to "false". 
-      bool m_suppresscornpix;   // Suppress corner pixels of an HPD. Used with test pattern trigger on calibration farm
+      bool m_isdark;   // To execute dark count algorithms i.e. suppress corner pixels; check trigger/calibation type
     };
   }
 }

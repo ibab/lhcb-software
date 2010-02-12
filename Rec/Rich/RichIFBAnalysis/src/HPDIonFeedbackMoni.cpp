@@ -1,4 +1,4 @@
-// $Id: HPDIonFeedbackMoni.cpp,v 1.7 2010-01-31 10:56:51 jonrob Exp $
+// $Id: HPDIonFeedbackMoni.cpp,v 1.8 2010-02-12 13:41:07 ryoung Exp $
 // Include files
 
 // from Gaudi
@@ -43,9 +43,9 @@ HPDIonFeedbackMoni::HPDIonFeedbackMoni( const std::string& name,
   declareProperty("IonFeedbackALICE",       m_ionFeedbackCutALICE=5);
   declareProperty("IonFeedbackLHCB",       m_ionFeedbackCutLHCB=5);
   declareProperty("WantIFB",      m_wantIFB = true  );
-  declareProperty("WantHitmaps", m_wantHitmaps = true       );
+  declareProperty("WantHitmaps", m_wantHitmaps = false       );
   declareProperty("WantQuickHitmap",      m_wantQuickHitmap = false  );
-  declareProperty("SuppressCornerPixels", m_suppresscornpix = false );
+  declareProperty("IsDark", m_isdark = false );
 }
 
 //=============================================================================
@@ -58,9 +58,9 @@ HPDIonFeedbackMoni::~HPDIonFeedbackMoni() {}
 //=============================================================================
 StatusCode HPDIonFeedbackMoni::initialize()
 {
-  const StatusCode sc = HistoAlgBase::initialize();
+  const StatusCode sc = Rich::HistoAlgBase::initialize();
   if ( sc.isFailure() ) return sc;
-
+  
   //Tools to get the data and to analyse it for clusters
   acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, 0, true );
   acquireTool( "RichSmartIDTool", m_idTool,            0, true );
@@ -68,7 +68,6 @@ StatusCode HPDIonFeedbackMoni::initialize()
 
   m_nEvts = 0;
   m_nMonitoredEvents = 0;
-  dataset = 0;
   r1clustersThisEvent = 0;
   r2clustersThisEvent = 0;
 
@@ -76,20 +75,76 @@ StatusCode HPDIonFeedbackMoni::initialize()
 }
 
 //=============================================================================
+// Pre-book histograms
+//=============================================================================
+StatusCode HPDIonFeedbackMoni::prebookHistograms()
+{
+  // Book event-counter + cluster occupancy histograms
+  richHisto1D( "Events", "Events", 0,10,10 );
+  richHisto1D( "R1ClusOcc", "R1ClusOcc", 0, 2000, 2000);
+  richHisto1D( "R2ClusOcc", "R2ClusOcc", 0, 2000, 2000);
+
+  // Loop over all RICH1+RICH2 positions and book corresponding cluster-size histograms...
+    for(int rich=1; rich<3; rich++){
+      for(int pan=0; pan<2; pan++){
+        int colmax, rowmax;
+        if(rich==1) {
+          colmax=7;
+          rowmax=14;
+        }
+        else {
+          colmax=9;
+          rowmax=16;
+        }
+        
+        for(int col=0;col<colmax;col++){
+          for(int row=0;row<rowmax;row++){        
+            
+            int hid = (rowmax*col)+row+1+
+              (pan*(rowmax*colmax))+
+              ((rich-1)*(196));     
+ 
+            std::stringstream ss;
+            ss << "R" << rich << "_Pan" << pan << "_Col" << col << "_Row" << row;
+            std::string hpdstr = ss.str();
+            hidtostring.insert( make_pair( hid,hpdstr ) );
+            // Cluster-size histograms
+            richHisto1D( hpdstr, hpdstr, 0, 50, 50);
+          }
+        }
+      }
+    }  // ...end RICH loop
+    
+  return StatusCode::SUCCESS;
+  
+}
+
+//=============================================================================
 // Main execution
 //=============================================================================
 StatusCode HPDIonFeedbackMoni::execute()
 {
-
-  m_nEvts++;
+    
+ m_nEvts++;
   //
   // check if event should be monitored
   //
-  if ( ((int)(m_nEvts/m_interval) % m_MonitorRate)!=0){
+ if ( ((int)(m_nEvts/m_interval) % m_MonitorRate)!=0){
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << "do not monitor event number " << m_nEvts << endmsg;
     return StatusCode::SUCCESS;
   } // if monRate
+
+ // Only execute for dark count measurement
+ if( m_isdark ) {
+   LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
+   double triggerType = odin->triggerType() ;
+   double calibrationType = odin->calibrationType() ;
+   
+   if( triggerType!=7 // Calibration trigger
+       || calibrationType!=0)    // Corner-pixel test pattern (A=0)
+     return StatusCode::SUCCESS;
+ }
 
   const Rich::DAQ::L1Map & allSmartIDs = m_SmartIDDecoder->allRichSmartIDs();
 
@@ -97,11 +152,10 @@ StatusCode HPDIonFeedbackMoni::execute()
   if ( allSmartIDs.empty() ) { return StatusCode::SUCCESS; }
 
   m_nMonitoredEvents++;
-
+  
   // -- increment "Event" histogram by 1
-  std::stringstream ss;
-  ss << "Events_" << dataset;
-  plot1D( 1, ss.str(), ss.str(), 0, 10, 10);
+
+  richHisto1D( "Events" ) -> fill(1);
 
   // --- Loop over L1 boards
   for ( Rich::DAQ::L1Map::const_iterator iL1 = allSmartIDs.begin();
@@ -131,19 +185,20 @@ StatusCode HPDIonFeedbackMoni::execute()
         const unsigned int HPDRow = smartIDHPD.hpdNumInCol();
         const bool aliceMode     = (*iAllSmartIDs).second.header().aliceMode();
 
-
-        if(m_suppresscornpix) {
-          // This should be updated
-          /*const LHCb::RichSmartID::Vector  &pixHits(SuppressCornerPixels(smartIDHits, aliceMode);
+        
+        
+        if(m_isdark) {
+          // Suppress corner pixels...this should be updated
+          /*const LHCb::RichSmartID::Vector  &pixHits(SuppressCornerPixels(smartIDHits, aliceMode);   
             Create new array of pixel hits without corner pixels
-            else const LHCb::RichSmartID::Vector  &pixHits = smartIDHits; */
+            else const LHCb::RichSmartID::Vector  &pixHits = smartIDHits; */  
         }
-
+        
         if(m_wantQuickHitmap){
           ExecuteQuickHitmap(RichNum, smartIDHits);
           m_wantIFB = false;
         }
-
+        
         if(m_wantIFB){
           unsigned int ionFeedbackCut = ( aliceMode ? m_ionFeedbackCutALICE : m_ionFeedbackCutLHCB);
           ExecuteIFB(RichNum, PanNum, HPDCol, HPDRow, ionFeedbackCut, smartIDHits);
@@ -154,29 +209,20 @@ StatusCode HPDIonFeedbackMoni::execute()
   } // ----- End of Loop over L1 boards
 
   if(r1clustersThisEvent>0) {      // If clusters were found in RICH1
-    std::stringstream ss;
-    ss << "R1ClusOcc_" << dataset;
-    plot1D(r1clustersThisEvent,ss.str(),ss.str(),-0.5,3000,3001);
+    richHisto1D( "R1ClusOcc" ) -> fill(r1clustersThisEvent);
     r1clustersThisEvent = 0;
   }
-
+  
   if(r2clustersThisEvent>0) {      // If clusters were found in RICH2
-    std::stringstream ss;
-    ss << "R2ClusOcc_" << dataset;
-    plot1D(r2clustersThisEvent,ss.str(),ss.str(),-0.5,3000,3001);
+    richHisto1D( "R2ClusOcc" ) -> fill(r2clustersThisEvent);
     r2clustersThisEvent = 0;
-  }
-
-  if((m_nEvts%m_interval)==0){       // Increment index at user-defined interval
-    dataset++;
-    debug() << "Evt at dataset increase: " << m_nEvts << endmsg;
   }
 
   return StatusCode::SUCCESS;
   // --------------------------------------------
   // ---------- Event processing over -----------
   // --------------------------------------------
-
+  
 }
 
 //-----------------------------------------------
@@ -191,129 +237,141 @@ void HPDIonFeedbackMoni::ExecuteIFB(const Rich::DetectorType RichNum, const Rich
 
   LHCb::RichSmartID::Vector hitMap(smartIDHits); // need local copy of hits to prevent altering the originals
 
-  const Rich::HPDPixelClusters * clusters = m_clusterTool->findClusters(hitMap);
+  const Rich::HPDPixelClusters * clusters = m_clusterTool->findClusters(hitMap); 
   const Rich::HPDPixelClusters::Cluster::PtnVector& clusVec = clusters->clusters();
-
-  for( Rich::HPDPixelClusters::Cluster::PtnVector::const_iterator iClust =
-         clusVec.begin(); iClust != clusVec.end(); ++iClust)
-  {
-    unsigned int clusterSize = (*(*iClust)).size();
-
-    if(clusterSize>0){     // If a cluster of non-zero pixel size is observed
-      std::stringstream ss;
-      ss << "R" << rich << "_Pan" << (int)PanNum << "_Col" << HPDCol << "_Row" << HPDRow << "_" << dataset;
-      std::string histid = ss.str();
-      //Syntax: (value, ID, title, min, max, bins)
-      plot1D( clusterSize-0.5, histid, histid, 0, 300, 300);
-
-      if(rich==1) r1clustersThisEvent++;      // Increment #RICH1 clusters
-      if(rich==2) r2clustersThisEvent++;      // Increment #RICH1 clusters
-
-
-      // ---Clus--- Note down the cluster for histograms
-
-      if(m_wantHitmaps){   // If we want to plot hitmaps (CPU-intensive!)
-        //std::cout<<"Filled Panels"<<std::endl;
-        const Rich::HPDPixelCluster& pixVec = (*(*iClust)).pixels();
-        //Rich::HPDPixelCluster & pixVec = (*(*iClust)).pixels();
-
-        const Rich::SmartIDGlobalOrdering limits(smartIDHits.front());
-
-        minX = limits.minGlobalPixelX();
-        maxX = limits.maxGlobalPixelX();
-        minY = limits.minGlobalPixelY();
-        maxY = limits.maxGlobalPixelY();
-        binsX = limits.totalNumInGlobalX();
-        binsY = limits.totalNumInGlobalY();
-
-        std::stringstream ssAll, ssIFB;
-        ssAll << "R" << rich << "AllClusHit_" << dataset;
-        ssIFB << "R" << rich << "IFBClusHit_" << dataset;
-        const std::string & histidAll = ssAll.str();
-        const std::string & histidIFB = ssIFB.str();
-
-
-        for( LHCb::RichSmartID::Vector::const_iterator iP =
-               pixVec.smartIDs().begin(); iP != pixVec.smartIDs().end(); ++iP){
-          const Rich::SmartIDGlobalOrdering order(*iP); // ordering object - Chris Jones' plotCoordinate tool
-
-          const std::string RichNum = Rich::text( (*iP).rich() );
-
-          plot2D( order.globalPixelX(), order.globalPixelY(),                 //PlotX, PlotY
-                  histidAll,"Pixel Hit Map - "+RichNum+", All Hits",  //ID, Title
-                  minX-0.5, maxX+0.5,   //minX, maxX
-                  minY-0.5, maxY+0.5,   //minY, maxY
-                  binsX+1, binsY+1 );   //binsX, binsY
-
-          if(clusterSize >= ionfeedbackCut) // If IFB cluster is observed
-          {
-            plot2D( order.globalPixelX(), order.globalPixelY(),
-                    histidIFB, "Pixel Hit Map - "+RichNum+", IFB Cluster Hits",
-                    minX-0.5, maxX+0.5,  //minX, maxX
-                    minY-0.5, maxY+0.5,  //minY, maxY
-                    binsX+1, binsY+1 );  //binsX, binsY
-          }
-        }
-      } // ...if we m_wantHitmaps
-    }
+  
+  int colmax, rowmax;
+  if(rich==1) {
+    colmax=7;
+    rowmax=14;
   }
+  else {
+    colmax=9;
+    rowmax=16;
+  }
+  int hid = (rowmax*HPDCol)+HPDRow+1+
+    ((int)PanNum*(rowmax*colmax))+
+    ((rich-1)*(196));     // Convert position to unique histogram ID for map
 
+  for( Rich::HPDPixelClusters::Cluster::PtnVector::const_iterator iClust =  
+         clusVec.begin(); iClust != clusVec.end(); ++iClust)      // loop over found clusters
+  { 
+        unsigned int clusterSize = (*(*iClust)).size();
+        
+        if(clusterSize>0){     // If a cluster of non-zero pixel size is observed
+          
+          richHisto1D( hidtostring[hid] ) -> fill( clusterSize-0.5 );
+          
+          if(rich==1) r1clustersThisEvent++;      // Increment #RICH1 clusters
+          if(rich==2) r2clustersThisEvent++;      // Increment #RICH1 clusters
+
+
+        // ---Clus--- Note down the cluster for histograms
+                 
+        if(m_wantHitmaps){   // If we want to plot hitmaps (CPU-intensive!)
+         
+          Rich::HPDPixelCluster pixVec = (*(*iClust)).pixels();
+          
+          const Rich::SmartIDGlobalOrdering limits(smartIDHits.front());
+          
+          minX = limits.minGlobalPixelX();
+          maxX = limits.maxGlobalPixelX();
+          minY = limits.minGlobalPixelY();
+          maxY = limits.maxGlobalPixelY();
+          binsX = limits.totalNumInGlobalX();
+          binsY = limits.totalNumInGlobalY();
+
+          std::stringstream ssAll, ssIFB;
+          ssAll << "R" << rich << "AllClusHit";
+          ssIFB << "R" << rich << "IFBClusHit";
+          std::string histidAll = ssAll.str();
+          std::string histidIFB = ssIFB.str();
+
+          for( LHCb::RichSmartID::Vector::const_iterator iP =
+                 pixVec.smartIDs().begin(); iP != pixVec.smartIDs().end(); ++iP){
+            const Rich::SmartIDGlobalOrdering order(*iP); // ordering object - Chris Jones' plotCoordinate tool
+            
+            const std::string RichNum = Rich::text( (*iP).rich() );
+
+            plot2D( order.globalPixelX(), order.globalPixelY(),                 //PlotX, PlotY
+                    histidAll,"Pixel Hit Map - "+RichNum+", All Hits",  //ID, Title
+                    minX-0.5, maxX+0.5,   //minX, maxX
+                    minY-0.5, maxY+0.5,   //minY, maxY
+                    binsX+1, binsY+1 );   //binsX, binsY
+            
+            
+            if(clusterSize >= ionfeedbackCut) // If IFB cluster is observed
+            {
+              plot2D( order.globalPixelX(), order.globalPixelY(),
+                      histidIFB, "Pixel Hit Map - "+RichNum+", IFB Cluster Hits",
+                      minX-0.5, maxX+0.5,  //minX, maxX 
+                      minY-0.5, maxY+0.5,  //minY, maxY
+                      binsX+1, binsY+1 );  //binsX, binsY
+            }
+            
+          } // ...if we m_wantHitmaps
+        }
+        
+        }
+  }
+  
+  
   delete clusters;
-
+        
   return;
 }
+
+          
 
 
 //----------------------------------------
 //Full RICH-array Hitmap Algorithms
 //---------------------------------------
-void HPDIonFeedbackMoni::ExecuteQuickHitmap(const Rich::DetectorType RichNum, 
-                                            const LHCb::RichSmartID::Vector &smartIDHits)
+void HPDIonFeedbackMoni::ExecuteQuickHitmap(const Rich::DetectorType RichNum, const LHCb::RichSmartID::Vector &smartIDHits)
 {
   // This method plots pixel hits on RICHes without clustering
-
-  const int rich = (int)RichNum + 1;
+  int rich = (int)RichNum + 1;
   std::stringstream ss;
-  ss << "R" << rich << "AllHit_" << dataset;
-  const std::string& histid = ss.str();
+  ss << "R" << rich << "AllHit";
+  std::string histid = ss.str();
 
   const Rich::SmartIDGlobalOrdering limits(smartIDHits.front());
 
-  unsigned int minX, maxX, minY, maxY, binsX, binsY;   // Hitmap limits
+  unsigned int minX, maxX, minY, maxY, binsX, binsY;   // Hitmap limits 
   minX = limits.minGlobalPixelX();
   maxX = limits.maxGlobalPixelX();
   minY = limits.minGlobalPixelY();
   maxY = limits.maxGlobalPixelY();
   binsX = limits.totalNumInGlobalX();
   binsY = limits.totalNumInGlobalY();
-
+  
   for( LHCb::RichSmartID::Vector::const_iterator iP =
          smartIDHits.begin(); iP != smartIDHits.end(); ++iP){
     const Rich::SmartIDGlobalOrdering order(*iP); // ordering object - Chris Jones' plotCoordinate tool
 
+   
     plot2D( order.globalPixelX(), order.globalPixelY(),  //PlotX, PlotY
             histid, histid,   //ID, Title
             minX-0.5, maxX+0.5,   //minX, maxX
             minY-0.5, maxY+0.5,   //minY, maxY
             binsX+1, binsY+1 );   //binsX, binsY
   }
-
+  
+  return;
 }
-
+  
 
 //=============================================================================
 // Finalization
 //=============================================================================
 StatusCode HPDIonFeedbackMoni::finalize()
 {
-
+ 
   if(msgLevel(MSG::VERBOSE))
   {
-    verbose() << "Maximum dataset number " << dataset << endmsg;
-    verbose() << "Number of monitored events " << m_nMonitoredEvents << endmsg;
+  verbose() << "Number of monitored events " << m_nMonitoredEvents << endmsg;
   }
 
-  // Must call base class finalize last
   return HistoAlgBase::finalize();
 }
 
