@@ -1,4 +1,4 @@
-// $Id: MuonHit.cpp,v 1.2 2010-02-11 09:29:51 ggiacomo Exp $
+// $Id: MuonHit.cpp,v 1.3 2010-02-12 12:19:58 ggiacomo Exp $
 // Include files
 #include <cmath>
 #include "MuonInterfaces/MuonHit.h"
@@ -210,21 +210,6 @@ std::vector<double> MuonHit::hitTile_Size()
   return hit_size;
 }
 
-/// Store MC truth for this hit 
-StatusCode MuonHit::setHitMCTruth(const LHCb::MCParticle* pp)
-{
-  if( NULL == pp ) return StatusCode::FAILURE;
-  m_pid = pp->particleID().pid();
-
-  if( NULL == pp->mother()) {
-    m_mamy_pid = -999;
-    return StatusCode::FAILURE;
-  }
-
-  m_mamy_pid = pp->mother()->particleID().pid();
-
-  return StatusCode::SUCCESS;
-}
 
 /// return Hit PID
 int MuonHit::hitPID()

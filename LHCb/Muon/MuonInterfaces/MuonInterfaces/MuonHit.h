@@ -1,4 +1,4 @@
-// $Id: MuonHit.h,v 1.1 2010-02-10 19:07:50 ggiacomo Exp $
+// $Id: MuonHit.h,v 1.2 2010-02-12 12:19:58 ggiacomo Exp $
 #ifndef COSMICSMUONHIT_H 
 #define COSMICSMUONHIT_H 1
 
@@ -10,8 +10,6 @@
 #include "Math/Vector3D.h"
 #include "Math/GenVector/VectorUtil.h"
 #include "Math/GenVector/PositionVector3D.h"
-// MC truth
-#include "Event/MCParticle.h"
 
 class MuonLogHit;
 class MuonLogPad;
@@ -49,8 +47,6 @@ public:
   /// add a logical pad to this cluster
   void addPad(MuonLogPad* mp);
 
-  /// associate MC truth
-  StatusCode setHitMCTruth(const LHCb::MCParticle* pp);
   /// store a progressive hit number for debugging
   StatusCode setHitID(const int id);
 
