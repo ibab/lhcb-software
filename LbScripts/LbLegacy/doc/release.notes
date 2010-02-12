@@ -1,3 +1,11 @@
+2010-02-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: 
+	- make the "-p" and "-v" options not necessary: the syntax is 
+	now "python install_project.py [options] <project> <version>.
+	The "-p" and "-v" options are kept for backward compatibility.
+	- factored out the arguments parsing
+
 2010-02-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: 

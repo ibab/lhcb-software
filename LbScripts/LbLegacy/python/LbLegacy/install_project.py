@@ -25,7 +25,7 @@ compat_version = None
 url_dist = 'http://lhcbproject.web.cern.ch/lhcbproject/dist/'
 
 # list of subdirectories created in runInstall
-subdir = ['lcg', 'lhcb', 'contrib', 'html', 'targz', 'tmp']
+site_subdirs = ['lcg', 'lhcb', 'contrib', 'html', 'targz', 'tmp']
 
 # dynamic modules
 
@@ -73,17 +73,12 @@ show_compatible_configs = False
 install_binary = False
 
 #----------------------------------------------------------------------------------
-def usage() :
-    print 'Usage:'
-    print '  python install_project.py -p <project> -v <version> [-b] '
-    print 'version %s - Try "python install_project.py -h" for more information.' % script_version
-    sys.exit()
 
-def help() :
+def usage() :
     print ' install_project.py - version %s:  install a project in the current directory ' % script_version
     print """
     Usage:
-      python install_project.py -p <project> -v <version> [-b| --binary=<bin> ] [-d or --debug] [-m <global|select>]
+      python install_project.py [-b| --binary=<bin> ] [-d or --debug] [-m <global|select>] <project> <version>
 
           $CMTCONFIG  is the binary directory name
       creates log/         to receive log files
@@ -91,11 +86,11 @@ def help() :
               lhcb/        to receive lhcb software
               contrib/     to receive CMT and OpenScientist
               targz/       to receive tar files from the web
-              $CMTCONFIG/  to receive runtime libraries
       get the list of projects to download
       download project sources
       if binaries are required: download project binaries
-      otherwise compile project sources
+      -p                 : name of the project to install (obsolete option)
+      -v                 : version of the project to install (obsolete option)
       -d or --debug      : to print more info
       -l or --list       : to list the <project>_<version>_*.tar.gz files available on the web
       -r or --remove     : remove the <project>/<version>
@@ -104,8 +99,7 @@ def help() :
       -b                 : to import $CMTCONFIG binaries
       --binary=<bin>     : to import another binary (i.e. $CMTCONFIG_dbg on Linux)
                            this triggers a 'cmt broadcast cmt config' of all projects but LCGCMT
-      -f                 : to import source, $CMTCONFIG binaries, $CMTCONFIG_dbg binaries and
-                           to make a 'cmt broadcast cmt config' of all projects but LCGCMT
+      -f                 : to import source, $CMTCONFIG binaries, $CMTCONFIG_dbg binaries
       -n or -nocheck     : no md5 check of the tar balls
       --retry=<nb>       : nb of retries for the download (default=1)
       -C                 : show compatible CMTCONFIGs for that platform
@@ -135,19 +129,17 @@ def initRandSeed():
 _block_count = 0
 _block_size = 0
 _file_size = 0
-_cur_size = 0
 
 def reportHook(bcount, bsize, fsize):
-    global _block_count, _block_size, _file_size, _cur_size
+    global _block_count, _block_size, _file_size
     _block_count = bcount
     _block_size = bsize
     _file_size = fsize
-    _cur_size += bcount * bsize
 
 _retry_time = 120.0
 
 def retrieve(url, dest):
-    global _block_count, _block_size, _file_size, _cur_size
+    global _block_count, _block_size, _file_size
     log = logging.getLogger()
     retrieved = False
     local_retries = nb_retries + 1
@@ -169,12 +161,10 @@ def retrieve(url, dest):
     debugmsglist.append("Block count %d" % _block_count)
     debugmsglist.append("Block size %d" % _block_size)
     debugmsglist.append("File size %d" % _file_size )
-    debugmsglist.append("Retrieved %d" % _cur_size)
     log.debug("\t".join(debugmsglist))
     _block_size = 0
     _block_count = 0
     _file_size = 0
-    _cur_size = 0
 
     return fname, finfo
 
@@ -403,7 +393,7 @@ def createDir(here , logname):
             if os.path.exists(logname):
                 os.rename(logname, logname + '_old')
 
-        for dirnm in subdir:
+        for dirnm in site_subdirs:
             if os.path.isdir(os.path.join(here, dirnm)):
                 log.debug('%s exists in %s ' % (dirnm, here))
             else:
@@ -1875,9 +1865,8 @@ def checkBinaryName(binary):
             sys.exit()
 
     return binary
-#---------------------------------------------------------------------
-def main():
 
+def parseArgs():
     global debug_flag, full_flag, list_flag, remove_flag
     global cmtversion, md5_check, grid_version, nb_retries
     global setup_script, check_only, overwrite_mode
@@ -1885,28 +1874,33 @@ def main():
     global show_compatible_configs
     global install_binary
     global compat_version
-# get arguments
+
+
+
     pname = None
     pversion = None
     binary = None
 
     arguments = sys.argv[1:]
-    if len(sys.argv) == 1:
-        help()
-        sys.exit()
+    
+    if not arguments :
+        print "No enough argument passed"
+        usage()
+        sys.exit(2)
     try:
-        keys, values = getopt.getopt(arguments, 'hdflrbp:v:c:ng:s:C',
+        opts, args = getopt.getopt(arguments, 'hdflrbp:v:c:ng:s:C',
             ['help', 'debug', 'full', 'list', 'remove', 'binary=',
              'project=', 'cmtversion=', 'nocheck',
              'retry=', 'grid=', 'setup-script=', 'check', 'overwrite',
              'compatversion=', 'retrytime=', 'nofixperm', 'version',
              'compatible-configs'])
 
-    except getopt.GetoptError:
-        help()
-        sys.exit()
+    except getopt.GetoptError, err:
+        print str(err)
+        usage()
+        sys.exit(2)
 
-    for key, value in keys:
+    for key, value in opts:
         if key == '--version':
             print script_version
             sys.exit()
@@ -1917,7 +1911,7 @@ def main():
         if key in ('-f', '--full'):
             full_flag = True
         if key in ('-h', '--help'):
-            help()
+            usage()
         if key in ('-l', '--list'):
             list_flag = True
         if key in ('-r', '--remove'):
@@ -1928,11 +1922,10 @@ def main():
             compat_version = value
         if key in ('-v'):
             pversion = value
+            print "Obsolete option. Please use the new syntax."
         if key in ('-p', '--project'):
             pname = value
-            if pname.find("/") != -1 :
-                plist = pname.split("/")
-                pname = "/".join(plist[1:])
+            print "Obsolete option. Please use the new syntax."
         if key == '-b':
             binary = os.environ.get('CMTCONFIG', None)
             install_binary = True
@@ -1957,6 +1950,22 @@ def main():
         if key == '--overwrite':
             overwrite_mode = True
 
+    if not pname and len(args) > 0 :
+        pname = args[0]
+    if pname.find("/") != -1 :
+        plist = pname.split("/")
+        pname = "/".join(plist[1:])
+        
+    if not pversion and len(args) > 1 :
+        pversion = args[1]
+
+    return pname, pversion, binary
+
+#---------------------------------------------------------------------
+def main():
+
+# get arguments
+    pname, pversion, binary = parseArgs()
 
     thelog = logging.getLogger()
     thelog.setLevel(logging.DEBUG)
