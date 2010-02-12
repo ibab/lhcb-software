@@ -79,7 +79,7 @@ StatusCode BeamGasTrigClusterCut::execute()
     }
   } 
   
-  float frUnusedRClusters = nRHits ? ( ( nRHits - nUsedRHits ) / (float)nRHits ) : 0.0001 ;
+  double frUnusedRClusters = nRHits ? ( ( nRHits - nUsedRHits ) / (double)nRHits ) : 0.0001 ;
    
   bool trigPass = false;
   if ( frUnusedRClusters > m_fracUnusedClustersCut ) trigPass = true;
