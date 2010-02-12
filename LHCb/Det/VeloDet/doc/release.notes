@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.220 2010-02-08 14:31:06 krinnert Exp $
+! $Id: release.notes,v 1.221 2010-02-12 16:55:03 cattanem Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!======================== VeloDet v13r9 2010-02-12 ===========================
 ! 2010-02-08 - Kurt Rinnert
  - bug fix in new intersection method: sensor plane normal was defined as
    point, not a vector
