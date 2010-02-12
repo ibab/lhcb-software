@@ -3,6 +3,9 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2010-02-12 - Marco Cattaneo
+ - Change SAM test to test for real data instead of MC, since for MC concept
+   of latest default (SimCond) tag does not make sense
 
 </PRE><H1><A NAME=v36r0p1>2010-02-02 Brunel v36r0p1</A></H1><PRE>
 This version uses projects Gaudi v21r7, LHCb v29r0, Lbcom v8r0, Rec v8r0

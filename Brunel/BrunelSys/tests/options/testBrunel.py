@@ -6,12 +6,8 @@ from Configurables import Brunel
 from Gaudi.Configuration import *
 
 Brunel().EvtMax    = 0
-Brunel().InputType = "DIGI"
-Brunel().WithMC    = True
+Brunel().InputType = "MDF"
 Brunel().Monitors  = ["FPE","SC"]
-
-Brunel().DDDBtag   = "default"
-Brunel().CondDBtag = "default"
 
 # Switch off output
 ApplicationMgr().OutStream = []
