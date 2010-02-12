@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.37 2010-02-02 06:55:56 albrecht Exp $
+# $Id: Hlt1.py,v 1.38 2010-02-12 22:13:30 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.37 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.38 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -32,8 +32,7 @@ from Hlt1Lines.Hlt1HadronForSwimmingLines   import Hlt1HadronForSwimmingLinesCon
 from Hlt1Lines.Hlt1PhotonLines   import Hlt1PhotonLinesConf
 from Hlt1Lines.Hlt1ElectronLines import Hlt1ElectronLinesConf
 from Hlt1Lines.Hlt1CosmicLines   import Hlt1CosmicLinesConf
-from Hlt1Lines.Hlt1MiniBiasLines import Hlt1MiniBiasLinesConf
-from Hlt1Lines.Hlt1NoBiasLines import Hlt1NoBiasLinesConf
+from Hlt1Lines.Hlt1MBLines import Hlt1MBLinesConf
 
 
 
@@ -51,8 +50,7 @@ class Hlt1Conf(LHCbConfigurableUser):
                             , Hlt1PhotonLinesConf
                             , Hlt1ElectronLinesConf
                             , Hlt1CosmicLinesConf
-                            , Hlt1MiniBiasLinesConf
-                            , Hlt1NoBiasLinesConf
+                            , Hlt1MBLinesConf
                             ]
 
    __slots__ = { "ThresholdSettings"            : {} # dictionary decoded in HltThresholdSettings

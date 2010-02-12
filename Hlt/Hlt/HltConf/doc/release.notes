@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.414 2010-02-12 20:27:38 graven Exp $ 
+! $Id: release.notes,v 1.415 2010-02-12 22:13:30 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,6 +6,8 @@
 ! -----------------------------------------------------------------------------
 ! 2010-02-12 - Gerhard Raven
  - update names of beamgas, minibias and nobias 
+ - adopt to merging of Hlt1MiniBias and Hlt1NoBias configurables
+
 ! 2010-02-11 - V. Gligorov
  - Change SoftDiHadron to DiHadronSoft 
 
