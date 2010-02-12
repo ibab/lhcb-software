@@ -108,6 +108,7 @@ private:
   void GetMCStable( const LHCb::MCVertex *, int &, Gaudi::LorentzVector & );
   void SaveGenPartinTuple( const HepMC::GenEvent* );
   void SaveMCPartinTuple( LHCb::MCParticles * );
+  StatusCode SaveGEC( Tuple &,  LHCb::Particle::ConstVector & ); 
 
   //questions
   double WhichMCPrey( const LHCb::Particle * );
@@ -117,10 +118,12 @@ private:
   bool IsNeutrino( const LHCb::MCParticle *);
   bool IsNeutrino( HepMC::GenParticle * );
   bool IsQuark( HepMC::GenParticle * );
-  bool IsAPointInDet( const LHCb::Particle *, 
+  bool IsAPointInDet( const LHCb::Particle *, int mode = 2,
                       double range = 1*Gaudi::Units::mm );
+  bool IsInRFFoil( Gaudi::XYZPoint & );
   bool HasBackwardTracks( const LHCb::Particle * );
   bool HasBackwardTracks( const LHCb::RecVertex * );
+  double HasMuons( const LHCb::Particle * );
   const LHCb::MCParticle * WhichMother( const LHCb::Particle * );
   const LHCb::MCParticle * WhichMother( const LHCb::MCParticle * );
 
@@ -210,9 +213,13 @@ private:
   double m_RMin;              ///< Min dist to the z axis
   double m_RMax;              ///< Max dist to the z axis
   double m_MaxChi2OvNDoF;     ///< Max chi2 of a vertex
+  double m_MuonpT;            ///< Muon with a pT of min m_MuonpT
   double m_DocaMax;           ///< Max distance of closest approach
   unsigned int m_NbCands;     ///< Min nb of desired candidates
   int    m_nTracks ;          ///< Min # of tracks at reconstructed vertex
+
+  Gaudi::Transform3D m_toVeloLFrame; ///< to transform to local velo L frame
+  Gaudi::Transform3D m_toVeloRFrame; ///< to transform to local velo R frame
 
   bool   m_MC;                ///< Retrieve MC infos or not
   std::string m_HepMC;        ///< Retrieve HepMC infos or not
@@ -234,6 +241,23 @@ private:
   HepMC::ThreeVector * kdec2;           // the neutralino MC decay vertex
   HepMC::FourVector dumV1;       // dummy lorentz vector
   HepMC::FourVector dumV2;       // dummy lorentz vector
+
+  struct sortPVdz {
+    double refz; 
+    bool operator() ( const LHCb::RecVertex* first, 
+		      const LHCb::RecVertex* second ) { 
+      
+      return std::abs( first->position().z() - refz ) < 
+	std::abs( second->position().z() - refz );
+    }
+  } SortPVdz;
+  ///To sort PVs with ascending z position 
+  struct sortPVz {
+    bool operator() ( const LHCb::RecVertex* first, 
+		      const LHCb::RecVertex* second ) { 
+      return first->position().z() < second->position().z();
+    }
+  } SortPVz;
 
 };
 

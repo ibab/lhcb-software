@@ -3,6 +3,9 @@
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
+//get the Header of the event
+#include "Event/RecHeader.h"
+
 // local
 #include "RecVertices2Particles.h"
 
@@ -29,6 +32,7 @@ RecVertices2Particles::RecVertices2Particles( const std::string& name,
     , m_nEvents(0)
     , pi(3.1415926)
 {
+  declareProperty("SaveTuple", m_SaveTuple = false );//save prey infos in Tuple
   declareProperty("Prey", m_Prey = "~chi_10" );
   //Bc+ Mass 6.286GeV
   //declareProperty("PreyMinMass", m_PreyMinMass = 6.3*Gaudi::Units::GeV );
@@ -152,6 +156,7 @@ StatusCode RecVertices2Particles::initialize() {
   if( msgLevel(MSG::DEBUG) )
     debug() << "==> Execute the RecVertices2Particles algorithm, event "
 	    << m_nEvents << endmsg;
+  Tuple tuple = nTuple("DisplVertices"); //defines a tuple to save infos
 
   //Check track and Particle content
   //PrintTrackandParticles();
@@ -251,7 +256,15 @@ StatusCode RecVertices2Particles::initialize() {
   if( msgLevel(MSG::DEBUG) )
     debug()<<"# of Preys " << size << endmsg;
   plot( size, "NbofPreys", 0, 20 );
-  
+
+  //Save Preys infos in tuple
+  if( m_SaveTuple ) 
+    if( SavePreysTuple( tuple, RecParts ).isFailure() )
+      warning()<<"Impossible to fill tuple with candidate infos"<<endmsg;
+    
+    
+
+
   //Save Preys from Desktop to the TES.
   desktop()->saveDesktop() ;
 
@@ -582,6 +595,68 @@ bool RecVertices2Particles::RemVtxFromDet( Particle & P ){
 }
 
 //=============================================================================
+// Save Preys infos in tuple
+//=============================================================================
+StatusCode RecVertices2Particles::SavePreysTuple( Tuple & tuple, Particle::ConstVector & RecParts ){
+
+  vector<int>  nboftracks;
+  vector<bool> indets;
+  vector<double> chindof, px, py, pz, e, x, y, z, sumpts;
+  
+  Particle::ConstVector::const_iterator iend = RecParts.end();
+  for( Particle::ConstVector::const_iterator is = RecParts.begin();
+       is < iend; ++is ){
+    const Particle * p = (*is);
+
+    int nbtrks = p->endVertex()->outgoingParticles().size();
+    double chi = p->endVertex()->chi2PerDoF();
+    const Gaudi::XYZPoint & pos = p->endVertex()->position();
+    Gaudi::LorentzVector mom = p->momentum();
+    double sumpt = GetSumPt(p);
+
+    nboftracks.push_back( nbtrks ); chindof.push_back( chi );
+    e.push_back(mom.e());
+    px.push_back(mom.x()); py.push_back(mom.y()); pz.push_back(mom.z());
+    x.push_back(pos.x()); y.push_back(pos.y()); z.push_back(pos.z());
+    Particle dum = *p;
+    indets.push_back( RemVtxFromDet( dum ) ); 
+    sumpts.push_back(sumpt);
+  }
+  const int NbPreyMax = 20;
+  //if( !SaveCaloInfos(tuple)  ) return StatusCode::FAILURE;
+  if( !fillHeader(tuple) ) return StatusCode::FAILURE;
+  tuple->farray( "PreyPX", px.begin(), px.end(), "NbPrey", NbPreyMax );
+  tuple->farray( "PreyPY", py.begin(), py.end(), "NbPrey", NbPreyMax );
+  tuple->farray( "PreyPZ", pz.begin(), pz.end(), "NbPrey", NbPreyMax );
+  tuple->farray( "PreyPE", e.begin(), e.end(), "NbPrey", NbPreyMax );
+  tuple->farray( "PreyXX", x.begin(), x.end(), "NbPrey", NbPreyMax );
+  tuple->farray( "PreyXY", y.begin(), y.end(), "NbPrey", NbPreyMax );
+  tuple->farray( "PreyXZ", z.begin(), z.end(), "NbPrey", NbPreyMax );
+  tuple->farray( "PreySumPt", sumpts.begin(), sumpts.end(), 
+		 "NbPrey", NbPreyMax );
+  tuple->farray( "InDet", indets.begin(),indets.end(), "NbPrey", NbPreyMax );
+  tuple->farray( "PreyNbofTracks", nboftracks.begin(), nboftracks.end(),
+		 "NbPrey", NbPreyMax );
+  tuple->farray( "PreyChindof", chindof.begin(), chindof.end(),
+		 "NbPrey", NbPreyMax );
+  tuple->column( "BLX", m_BeamLine->referencePoint().x() );
+  tuple->column( "BLY", m_BeamLine->referencePoint().y() );
+  
+  return tuple->write();
+}
+
+//============================================================================
+//  Event number 
+//============================================================================
+StatusCode RecVertices2Particles::fillHeader( Tuple & tuple ){
+  const RecHeader* header = 
+    get<RecHeader>(RecHeaderLocation::Default);  
+  //debug() << "Filling Tuple Event " << header->evtNumber() << endmsg ;
+  tuple->column("Event", (int)header->evtNumber());
+  return StatusCode::SUCCESS ;
+}
+
+//=============================================================================
 // Apply some cuts on the Particle or Vertex
 //=============================================================================
 bool RecVertices2Particles::TestMass( Particle & part ){
@@ -614,6 +689,20 @@ double RecVertices2Particles::RFromBL( const Gaudi::XYZPoint& p ){
   //return distance to the intersection point 
   x -= p.x(); y -= p.y();
   return sqrt( x*x + y*y );
+}
+
+//=============================================================================
+// Compute the sum pT of a bunch of track (daughters of a Particle)
+//=============================================================================
+double RecVertices2Particles::GetSumPt( const Particle * p ){
+
+  double sumpt = 0;
+  SmartRefVector<Particle>::const_iterator iend = p->daughters().end();
+  for( SmartRefVector<Particle>::const_iterator i = 
+	 p->daughters().begin(); i != iend; ++i ){
+    sumpt += i->target()->pt();
+  }
+  return sumpt;
 }
 
 //=============================================================================

@@ -60,9 +60,12 @@ private:
   ///Cut on the mass
   bool TestMass( const LHCb::Particle * );
   bool TestMass( LHCb::Particle & );
+  StatusCode SavePreysTuple( Tuple &, LHCb::Particle::ConstVector & );
+  StatusCode fillHeader( Tuple & );
 
   //Geometric tools
   double RFromBL( const Gaudi::XYZPoint& );
+  double GetSumPt( const LHCb::Particle * );
   double VertDistance( const Gaudi::XYZPoint &, const Gaudi::XYZPoint & );
   double Angle( const Gaudi::LorentzVector &, const Gaudi::LorentzVector & );
   double Angle( const Gaudi::XYZVector &, const Gaudi::XYZVector & );
@@ -97,6 +100,7 @@ private:
    ******************************************************************/
   double m_RemVtxFromDet ;    ///< 
   bool   m_KeepLowestZ ;      ///< keep the RV with the lowest Z (particle gun)
+  bool   m_SaveTuple ;        ///< Save candidate infos in a tuple
   /// Where RecVertices are stored on the TES
   std::vector<std::string> m_RVLocation ;
   std::string m_Fitter ;      ///< method for fitting the RecVertex

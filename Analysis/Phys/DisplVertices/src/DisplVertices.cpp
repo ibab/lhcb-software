@@ -87,6 +87,7 @@ DisplVertices::DisplVertices( const std::string& name,
   declareProperty("RMax", m_RMax = 10.*m );
   declareProperty("DistMax", m_DistMax = 10.* m );//Check value.
   declareProperty("MaxChi2OvNDoF", m_MaxChi2OvNDoF = 1000. );
+  declareProperty("MuonpT", m_MuonpT = -1*GeV );
   declareProperty("DocaMax", m_DocaMax = 0.1 * mm);
   declareProperty("NbTracks", m_nTracks = 1 );//~ nb B meson max # of tracks 5
   declareProperty("RCutMethod", m_RCut = "FromUpstreamPV" );
@@ -219,6 +220,39 @@ StatusCode DisplVertices::initialize() {
     m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
   } 
 
+  if(m_SaveTuple){
+    //get the Velo geometry
+    string velo = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/Velo";
+    const IDetectorElement* lefthalv = getDet<IDetectorElement>( velo+"Left" );
+    const IDetectorElement* righthalv = 
+      getDet<IDetectorElement>( velo + "Right" );
+    const IGeometryInfo* halflgeominfo = lefthalv->geometry();
+    const IGeometryInfo* halfrgeominfo = righthalv->geometry();
+    Gaudi::XYZPoint localorigin(0,0,0);
+    Gaudi::XYZPoint leftcenter = lefthalv->geometry()->toGlobal(localorigin);
+    Gaudi::XYZPoint rightcenter = righthalv->geometry()->toGlobal(localorigin);
+    if( msgLevel( MSG::DEBUG ) )
+      debug() <<"Velo global right half center "
+	      << rightcenter <<", left half center "<< lefthalv << endmsg;
+    //matrix to transform to local velo frame
+    m_toVeloRFrame = halfrgeominfo->toLocalMatrix() ;
+    //m_toGlobalFrame = halfgeominfo->toGlobalMatrix();
+    m_toVeloLFrame = halflgeominfo->toLocalMatrix() ;
+
+    //##################33 cross-check
+    Gaudi::XYZPoint dum1(2,0,0);
+    debug()<<"dum1 "<< dum1 <<" in local v frame "<< m_toVeloRFrame*dum1
+	   <<" == " << righthalv->geometry()->toLocal(dum1) << endmsg;
+    Gaudi::XYZPoint dum2(0,2,0);
+    debug()<<"dum2 "<< dum2 <<" in local v frame "<< m_toVeloRFrame*dum2
+	   <<" == " << righthalv->geometry()->toLocal(dum2) << endmsg;
+    Gaudi::XYZPoint dum3(0,0,2);
+    debug()<<"dum3 "<< dum3 <<" in local v frame "<< m_toVeloRFrame*dum3
+	   <<" == " << righthalv->geometry()->toLocal(dum3) << endmsg;
+
+
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -309,7 +343,7 @@ StatusCode DisplVertices::execute() {
 
   vector<int>  nboftracks;
   vector<bool> indets;
-  vector<double> chindof, px, py, pz, e, x, y, z, sumpts;
+  vector<double> chindof, px, py, pz, e, x, y, z, sumpts, muons;
 
   if( msgLevel( MSG::DEBUG ) )
     debug()<<"--------Reconstructed Displ. Vertices --------------"<< endmsg;
@@ -334,17 +368,22 @@ StatusCode DisplVertices::execute() {
     double zpos   = pos.z();
     Gaudi::LorentzVector mom = p->momentum();
     double sumpt = GetSumPt(p);
+    double muon = HasMuons(p);
 
     //Let's go for Prey hunting
     if( msgLevel( MSG::DEBUG ) ){
       debug()<< m_Prey <<" candidate with mass "<< mass/Gaudi::Units::GeV 
 	     <<" GeV, nb of tracks " << nbtrks << ", Chi2/ndof " 
 	     << chi <<", R "<< rho <<", pos of end vtx " 
-	     << pos << endmsg;
+	     << pos;
+      if(muon){
+	debug()<<", has muon with pt "<< muon <<" GeV" << endmsg;
+      } else { debug()<< endmsg; }
     }
     if( mass < m_PreyMinMass || mass > m_PreyMaxMass || 
         nbtrks < m_nTracks || rho <  m_RMin || rho > m_RMax || 
-        abs(zpos) > m_DistMax || sumpt < m_SumPt || chi > m_MaxChi2OvNDoF ){ 
+        abs(zpos) > m_DistMax || sumpt < m_SumPt || chi > m_MaxChi2OvNDoF ||
+	muon < m_MuonpT ){ 
       if( msgLevel( MSG::DEBUG ) )
         debug()<<"Particle do not pass the cuts"<< endmsg; continue; }
 
@@ -356,7 +395,12 @@ StatusCode DisplVertices::execute() {
       e.push_back(mom.e());
       px.push_back(mom.x()); py.push_back(mom.y()); pz.push_back(mom.z());
       x.push_back(pos.x()); y.push_back(pos.y()); z.push_back(zpos);
-      indets.push_back( IsAPointInDet( p ) ); sumpts.push_back(sumpt);
+      sumpts.push_back(sumpt); muons.push_back(muon);
+      double indet = 0;
+      if( IsAPointInDet( p, 2 ) )  indet += 1;
+      if( IsAPointInDet( p, 3, 2 ) )  indet += 10;
+      if( IsAPointInDet( p, 4, 2 ) )  indet += 100;
+      indets.push_back( indet ); 
     }
 
     if( !m_MC ){ setFilterPassed(true); m_ok = true; } 
@@ -389,7 +433,7 @@ StatusCode DisplVertices::execute() {
     tuple->farray( "PreySumPt", sumpts.begin(), sumpts.end(), 
 		   "NbPrey", NbPreyMax );
     tuple->farray( "InDet", indets.begin(),indets.end(), "NbPrey", NbPreyMax );
-    //tuple->column( "PreyPV", PV->position() );
+    tuple->farray( "Muon", muons.begin(), muons.end(), "NbPrey", NbPreyMax );
     tuple->farray( "PreyNbofTracks", nboftracks.begin(), nboftracks.end(),
 		   "NbPrey", NbPreyMax );
     tuple->farray( "PreyChindof", chindof.begin(), chindof.end(),
@@ -399,7 +443,8 @@ StatusCode DisplVertices::execute() {
     tuple->column( "FromMother", m_IsPreyFromMother );
     tuple->column( "BLX", m_BeamLine->referencePoint().x() );
     tuple->column( "BLY", m_BeamLine->referencePoint().y() );
-    if ( !(tuple->write()) ) return StatusCode::FAILURE;
+    if( !(tuple->write()) ) return StatusCode::FAILURE;
+    if( !SaveGEC( tuple, Cands ) ) return StatusCode::FAILURE;
   }
 
   //Save Preys from Desktop to the TES.
@@ -2246,6 +2291,64 @@ void DisplVertices::SaveGenPartinTuple( const HepMC::GenEvent* evt ){
 }
 
 //============================================================================
+// Save in Tuple some Global Event Cut
+//============================================================================
+StatusCode  DisplVertices::SaveGEC( Tuple & tuple,  
+				    Particle::ConstVector & RVs ){
+
+  //Global track cuts
+  double sumPtTracks = 0.;
+  double sumXYTrackfirstStates = 0.;
+
+  //Get forward tracks
+  Tracks* inputTracks = get<Tracks>(TrackLocation::HltForward);
+
+  for(Track::Container::const_iterator itr = inputTracks->begin(); 
+      inputTracks->end() != itr; itr++) {
+    const Track* trk = *itr;
+    double xyfState = sqrt(trk->firstState().x() * trk->firstState().x() +
+			   trk->firstState().y() * trk->firstState().y());
+    sumPtTracks += trk->pt();
+    sumXYTrackfirstStates += xyfState;
+  }
+
+  //Find the upstream PV
+  const RecVertex::Container* primVertices = this->primaryVertices();
+  if((primVertices->size() == 0) && inputTracks->size() == 0)
+    return StatusCode::FAILURE; 
+  vector<const RecVertex*> primVrtcs;
+  for( RecVertex::Container::const_iterator 
+        itPV = primVertices->begin(); primVertices->end() != itPV; ++itPV) {
+    const RecVertex* pvtx = *itPV;
+    primVrtcs.push_back(pvtx);
+  }
+  std::sort( primVrtcs.begin(), primVrtcs.end(), SortPVz );
+  const RecVertex* realPV = *(primVrtcs.begin());
+
+  //Global RV cut
+  double sumSVxyDist = 0.;
+  for( Particle::ConstVector::const_iterator itRV = RVs.begin();
+       RVs.end() != itRV; ++itRV) {
+    const Gaudi::XYZPoint & pos = (*itRV)->endVertex()->position();
+    double distVtcs = VertDistance( realPV->position(), pos );
+    if(distVtcs > .001) 
+      sumSVxyDist += pos.rho();
+  }
+  
+  //Write values in tuple
+  tuple->column( "sumPtTracks", sumPtTracks );
+  tuple->column( "sumXYTrackfirstStates", sumXYTrackfirstStates );
+  tuple->column( "sumSVxyDist", sumSVxyDist );
+
+  if(msgLevel(MSG::DEBUG))
+    debug()<<"Global event values : sumPtTracks "<< sumPtTracks/GeV 
+	   <<" GeV, sumXYTrackfirstStates "<< sumXYTrackfirstStates 
+	   <<" mm, sumSVxyDist "<< sumSVxyDist <<" mm" << endmsg;
+
+  return StatusCode::SUCCESS ;
+}
+
+//============================================================================
 // Does Particle come from a Prey, and from which one ?
 //============================================================================
 double DisplVertices::WhichMCPrey( const Particle * p ){
@@ -2397,20 +2500,25 @@ bool DisplVertices::IsQuark( HepMC::GenParticle * p ){
 //=============================================================================
 //  Remove RV if found to be in detector material
 //
-// if m_RemVtxFromDet = 0  : disabled
-// if m_RemVtxFromDet < 0  : remove reco vtx if in detector material
-// if m_RemVtxFromDet > 0  : remove reco vtx if rad length along z 
-//                           from (decay pos - m_RemVtxFromDet) to 
-//                           (decay pos + m_RemVtxFromDet)  is > threshold
+// mode = 0  : disabled
+// mode = 1  : remove reco vtx if in detector material
+// mode = 2  : remove reco vtx if rad length along momentum 
+//                           from (decay pos - range) to 
+//                           (decay pos + range)  is > threshold
+// mode = 3 : remove reco vtx if rad length along 
+//                             +- range * PositionCovMatrix
+// mode = 4 : 3 but range+3 if in RF foil.
 //
 //=============================================================================
 
-bool DisplVertices::IsAPointInDet( const Particle* P, double range ){
+bool DisplVertices::IsAPointInDet( const Particle* P, int mode, double range ){
+
+  if( mode == 0 ) return false;
 
   const Vertex* RV = P->endVertex();
   double threshold = 1e-10;
 
-  if( range < 0 ){
+  if( mode == 1 ){
 
     IGeometryInfo* start = 0;
     ILVolume::PVolumePath path ;
@@ -2447,7 +2555,7 @@ bool DisplVertices::IsAPointInDet( const Particle* P, double range ){
       return true;
     } 
   } //end of <0 condition
-  else if( range > 0 ){
+  else if( mode == 2 ){
 
     const Gaudi::XYZPoint pos = RV->position();
     const Gaudi::XYZPoint nvec =  Normed( P->momentum(), range );
@@ -2476,11 +2584,76 @@ bool DisplVertices::IsAPointInDet( const Particle* P, double range ){
     }
     
 
-  } //end of >0 condition
+  } //end of 2 condition
+  else if( mode == 3 or mode == 4 ){
+
+    Gaudi::XYZPoint  RVPosition = RV->position();
+    Gaudi::SymMatrix3x3 RVPositionCovMatrix = RV->covMatrix();
+    double sigNx = range*sqrt(RVPositionCovMatrix[0][0]);
+    double sigNy = range*sqrt(RVPositionCovMatrix[1][1]);
+    double sigNz = range*sqrt(RVPositionCovMatrix[2][2]);
+    // Is there material within N*sigma
+    double radlength = 0;
+    if( mode == 4 && IsInRFFoil( RVPosition ) ) range += 3;
+    for (int ix = -1 ; ix<2; ix += 2 ){
+      for (int iy = -1 ; iy<2; iy += 2 ){
+        Gaudi::XYZPoint start( RVPosition.x()+ix*sigNx,
+				    RVPosition.y()+iy*sigNy,
+				    RVPosition.z()+sigNz );
+        Gaudi::XYZPoint end( RVPosition.x()-ix*sigNx,
+			     RVPosition.y()-iy*sigNy,
+			     RVPosition.z()-sigNz );
+	radlength = m_transSvc->distanceInRadUnits( start, end );
+	if(msgLevel(MSG::DEBUG))
+	  debug()<<"Radiation length from "<< start <<" to "
+		 << end <<" : "<< radlength 
+		 <<" [mm]" << endmsg;
+        if( radlength > threshold ){
+	  if(msgLevel(MSG::DEBUG))
+	    debug()<<"RV is too closed to a detector material --> disguarded !"
+		   << endmsg;
+          return true;
+	}
+      }
+    }
+  } // end of 3 cond
 
   return false;
 }
 
+//=============================================================================
+// Is the point in the RF-Foil ?
+//=============================================================================
+bool DisplVertices::IsInRFFoil( Gaudi::XYZPoint & pos){
+  
+  debug()<<"Probing pos "<< pos;
+
+  //move to local Velo half frame
+  if( pos.x() < 0 ){ //right half
+    pos = m_toVeloRFrame * pos;
+    debug()<<", position in local R velo frame "<< pos << endmsg;
+
+    //remove cylinder
+    double r = pos.rho();
+    if( r > 5.5*mm && r < 12*mm ) return true;
+ 
+    //then remove the boxes
+    if( abs(pos.y()) > 5.5*mm && pos.x() < -5*mm && pos.x() > 4*mm ) 
+      return true;
+  } else { //left part
+    pos = m_toVeloLFrame * pos;
+    debug()<<", position in local L velo frame "<< pos << endmsg;
+
+    //remove cylinder
+    double r = pos.rho();
+    if( r > 5.5*mm && r < 12*mm ) return true;
+    
+    //then remove the boxes
+    if( abs(pos.y()) > 5.5*mm && pos.x() < 5*mm && pos.x() > -4*mm ) 
+      return true;
+  }
+  return false;
+}
 
 //=============================================================================
 //  Loop on the daughter track to see if there is a backward track
@@ -2504,6 +2677,27 @@ bool DisplVertices::HasBackwardTracks( const Particle * p ){
     if ( trk->checkFlag( Track::Backward ) ) return true;
   }
   return false;
+}
+
+//============================================================================
+// if particule has a daughter muon, return highest pt
+//============================================================================
+double DisplVertices::HasMuons( const Particle * p ){
+
+  double muonpt = 0;
+  //loop on daughters
+  SmartRefVector<Particle>::const_iterator iend = p->daughters().end();
+  for( SmartRefVector<Particle>::const_iterator i = 
+	 p->daughters().begin(); i != iend; ++i ){
+    //check if tracks could be a muon
+    if( (*i)->proto() == NULL ) continue;
+    if( (*i)->proto()->muonPID() == NULL ) continue;
+    if( !( (*i)->proto()->muonPID()->IsMuonLoose() ) ) continue;
+    double pt = p->pt();    
+    if( pt > muonpt ) muonpt = pt;
+  }
+
+  return muonpt;
 }
 
 //============================================================================
