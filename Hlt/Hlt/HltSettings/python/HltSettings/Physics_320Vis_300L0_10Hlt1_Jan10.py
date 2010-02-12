@@ -135,7 +135,7 @@ class Physics_320Vis_300L0_10Hlt1_Jan10 :
                  'Hlt1L0B1gas',
                  'Hlt1L0B2gas',
                  'Hlt1L0Any',
-                 'Hlt1BeamGas1', 'Hlt1BeamGas2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco', 
+                 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco', 
                  'Hlt1SingleHadron',     'Hlt1SingleHadronViaT',
                  'Hlt1DiHadron',         'Hlt1DiHadronViaT',    'Hlt1DiHadronSoft',
                  'Hlt1SingleMuonNoIPL0', 'Hlt1SingleMuonIPCL0',                    

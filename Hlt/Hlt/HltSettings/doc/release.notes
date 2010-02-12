@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-02-12 - Gerhard Raven
+ - follow name changes
+
 ! 2010-02-11 - Gerhard Raven
  - add beamgas lines to Physics_320Vis_300L0_10Hlt1_Jan10
 
