@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.139 2010-02-09 12:47:38 asatta Exp $
+! $Id: release.notes,v 1.140 2010-02-12 16:50:41 cattanem Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+!========================= MuonDet v9r1 2010-02-12 ==========================
 ! 2010-02-09 - Alessia Satta
  - Add few methods
 
