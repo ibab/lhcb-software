@@ -2573,7 +2573,7 @@ bool DisplVertices::IsAPointInDet( const Particle* P, int mode, double range ){
     
 
   } //end of 2 condition
-  else if( mode == 3 or mode == 4 ){
+  else if( mode == 3 || mode == 4 ){
 
     Gaudi::XYZPoint  RVPosition = RV->position();
     Gaudi::SymMatrix3x3 RVPositionCovMatrix = RV->covMatrix();

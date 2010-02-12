@@ -632,7 +632,7 @@ bool RecVertices2Particles::RemVtxFromDet( Particle & P ){
     
 
   } //end of 2 condition
-  else if( m_RemVtxFromDet == 3 or m_RemVtxFromDet == 4 ){
+  else if( m_RemVtxFromDet == 3 || m_RemVtxFromDet == 4 ){
 
     const Gaudi::XYZPoint  RVPosition = RV->position();
     Gaudi::SymMatrix3x3 RVPositionCovMatrix = RV->covMatrix();
