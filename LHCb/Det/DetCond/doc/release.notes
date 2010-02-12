@@ -4,6 +4,7 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!===================== Det/DetCond v12r10 2010-02-12 =========================
 ! 2010-02-12 - Illya Shapoval
  - Minor change to the CondDB.useLatestTags(DataType) function. Added the
    mode for it to find and set only the latest global tag for a 
