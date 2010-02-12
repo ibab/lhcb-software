@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.109 2010-02-12 20:20:23 graven Exp $
+! $Id: release.notes,v 1.110 2010-02-12 20:22:27 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -11,6 +11,8 @@
 !-----------------------------------------------------------------------------
 ! 2010-02-12 - Gerhard Raven
  - rename Hlt1BeamGas1 into Hlt1BeamGasBeam1 and Hlt1BeamGas2 into Hlt1BeamGasBeam2
+ - rename Hlt1MiniBias and Hlt1NoBias into Hlt1MBMiniBias and Hlt1MBNoBias,
+ - combine Hlt1MiniBias and Hlt1NoBias configuration into a single configurable
 
 ! 2010-02-11 - Gerhard Raven
  - set a rate limit of 25 Hz for the individual beamgas lines
