@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.85 2010-02-11 07:33:02 mtobin Exp $
+! $Id: release.notes,v 1.86 2010-02-12 17:21:02 cattanem Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+!====================== STKernel v1r19 2010-02-12 ===========================
 ! 2010-02-11 - Mark Tobin
  - Fix STKernelDict.xml
 
