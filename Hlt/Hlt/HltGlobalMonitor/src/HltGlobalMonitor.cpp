@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.50 2010-01-30 17:47:10 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.51 2010-02-12 22:18:49 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -10,6 +10,8 @@
 // BOOST
 // ============================================================================
 #include "boost/assign/list_of.hpp"
+#include "boost/algorithm/string/erase.hpp"
+
 // ============================================================================
 // AIDA
 // ============================================================================
@@ -66,9 +68,19 @@ DECLARE_ALGORITHM_FACTORY( HltGlobalMonitor );
 HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : HltBaseAlg ( name , pSvcLocator )
+  , m_currentTime(0)
+  , m_timeSize(0)
+  , m_timeInterval(0)
   , m_startClock(0)
   , m_startEvent(0)
-  , m_currentTime(0), m_gpstimesec(0), m_virtmem(0), m_events(0), m_lastL0TCK(0)
+  , m_virtmem(0)
+  , m_gpstimesec(0)
+  , m_time_ref(0)
+  , m_scanevents(0)
+  , m_totaltime(0)
+  , m_totalmem(0)
+  , m_events(0)
+  , m_lastL0TCK(0)
 {
   declareProperty("ODIN",              m_ODINLocation = LHCb::ODINLocation::Default);
   declareProperty("L0DUReport",        m_L0DUReportLocation = LHCb::L0DUReportLocation::Default);
@@ -79,10 +91,8 @@ HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
   declareProperty("TotalMemory",       m_totalmem   = 3000 );
   declareProperty("TimeSize",          m_timeSize = 120 );   // number of minutes of history (half an hour)
   declareProperty("TimeInterval",      m_timeInterval = 1 ); // binwidth in minutes 
-  declareProperty("DecToGroup",        m_DecToGroup);
-  declareProperty("DecToGroup2",       m_DecToGroup2);
-  declareProperty("GroupLabels",       m_GroupLabels);
-  declareProperty("GroupLabels2",      m_GroupLabels2);
+  declareProperty("DecToGroupHlt1",    m_DecToGroup1);
+  declareProperty("DecToGroupHlt2",    m_DecToGroup2);
 }
 //=============================================================================
 // Destructor
@@ -119,17 +129,27 @@ StatusCode HltGlobalMonitor::initialize() {
   // create a histogram with one bin per Alley
   // the order and the names for the bins are
   // configured in HLTConf/Configuration.py  
-  m_hlt1alley       = book1D("Hlt1 Alleys", "Hlt1 Alleys", -0.5, m_GroupLabels.size()-0.5 , m_GroupLabels.size() );
-  if (!setBinLabels( m_hlt1alley, m_GroupLabels )) {
-    error() << "failed to set binlables on Alley hist" << endmsg;
+
+  std::vector<std::string> hlt1AlleyLabels;
+  for (DecToGroupType::const_iterator i = m_DecToGroup1.begin(); i!=m_DecToGroup1.end(); ++i ) {
+      hlt1AlleyLabels.push_back(i->first);
   }
 
-  m_hlt2alley       = book1D("Hlt2 Alleys", "Hlt2 Alleys", -0.5, m_GroupLabels2.size()-0.5 , m_GroupLabels2.size() );
-  if (!setBinLabels( m_hlt2alley, m_GroupLabels2 )) {
+  m_hlt1Alley       = book1D("Hlt1 Alleys", "Hlt1 Alleys", -0.5, hlt1AlleyLabels.size()-0.5 , hlt1AlleyLabels.size() );
+  if (!setBinLabels( m_hlt1Alley, hlt1AlleyLabels )) {
+    error() << "failed to set binlables on Hlt1 Alley hist" << endmsg;
+  }
+
+  std::vector<std::string> hlt2AlleyLabels;
+  for (DecToGroupType::const_iterator i = m_DecToGroup2.begin(); i!=m_DecToGroup2.end(); ++i ) {
+      hlt2AlleyLabels.push_back(i->first);
+  }
+  m_hlt2Alley       = book1D("Hlt2 Alleys", "Hlt2 Alleys", -0.5, hlt2AlleyLabels.size()-0.5 , hlt2AlleyLabels.size() );
+  if (!setBinLabels( m_hlt2Alley, hlt2AlleyLabels )) {
     error() << "failed to set binlables on Hlt2 Alley hist" << endmsg;
   } 
 
-  std::vector<std::string> labels;
+  std::vector<std::string> hlt1Labels;
   for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
       std::string s = *i;
       std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt1")("Decision"); //TODO: replace with regex with capture
@@ -137,10 +157,10 @@ StatusCode HltGlobalMonitor::initialize() {
      	std::string::size_type k =  s.find(*j);
      	if (k != std::string::npos) s.erase(k,k+j->size());
       }
-      labels.push_back(s);  
-}
+      hlt1Labels.push_back(s);  
+  }
 
-  std::vector<std::string> labels2;
+  std::vector<std::string> hlt2Labels;
   for (std::vector<std::string>::const_iterator i = m_Hlt2Lines.begin(); i!=m_Hlt2Lines.end();++i) {
       std::string s = *i;
       std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt2")("Decision"); //TODO: replace with regex with capture
@@ -148,533 +168,98 @@ StatusCode HltGlobalMonitor::initialize() {
      	std::string::size_type k =  s.find(*j);
      	if (k != std::string::npos) s.erase(k,k+j->size());
       }
-      labels2.push_back(s);  
-}
+      hlt2Labels.push_back(s);  
+  }
 
-  m_hlt1NAcc         = book1D("# positive Hlt1Lines ", -0.5,m_Hlt1Lines.size()+0.5, m_Hlt1Lines.size()+1);
-  m_hlt2NAcc         = book1D("# positive Hlt2Lines ", -0.5,m_Hlt2Lines.size()+0.5, m_Hlt2Lines.size()+1);
-  m_hlt1Inclusive    = book1D("Hlt1Lines accepted events",   -0.5,m_Hlt1Lines.size()-0.5, m_Hlt1Lines.size());
-  m_hlt2Inclusive    = book1D("Hlt2Lines accepted events",   -0.5,m_Hlt2Lines.size()-0.5, m_Hlt2Lines.size());
-
-  if (!setBinLabels( m_hlt1Inclusive,  labels )) {
+  m_hlt1NAcc         = book1D("# positive Hlt1Lines ", -0.5,hlt1Labels.size()+0.5, hlt1Labels.size()+1);
+  m_hlt1Inclusive    = book1D("Hlt1Lines accepted events",   -0.5,hlt1Labels.size()-0.5, hlt1Labels.size());
+  if (!setBinLabels( m_hlt1Inclusive,  hlt1Labels )) {
     error() << "failed to set binlables on inclusive hist" << endmsg;
   }
 
-  if (!setBinLabels( m_hlt2Inclusive,  labels2 )) {
+  m_hlt2NAcc         = book1D("# positive Hlt2Lines ", -0.5,hlt2Labels.size()+0.5, hlt2Labels.size()+1);
+  m_hlt2Inclusive    = book1D("Hlt2Lines accepted events",   -0.5,hlt2Labels.size()-0.5, hlt2Labels.size());
+  if (!setBinLabels( m_hlt2Inclusive,  hlt2Labels )) {
     error() << "failed to set binlables on hlt2 inclusive hist" << endmsg;
   }
   
-  m_hlt1Correlations = book2D("Hlt1Lines Correlations",-0.5,m_Hlt1Lines.size()-0.5,
-                             m_Hlt1Lines.size(),-0.5,m_Hlt1Lines.size()-0.5,
-                             m_Hlt1Lines.size());
-
-  m_hlt2Correlations = book2D("Hlt2Lines Correlations",-0.5,m_Hlt2Lines.size()-0.5,
-                             m_Hlt2Lines.size(),-0.5,m_Hlt2Lines.size()-0.5,
-                             m_Hlt2Lines.size());
-
-   if (!setBinLabels( m_hlt1Correlations, labels, labels )) {
+  m_hlt1Correlations = book2D("Hlt1Lines Correlations",-0.5,hlt1Labels.size()-0.5, hlt1Labels.size()
+                                                      ,-0.5,hlt1Labels.size()-0.5, hlt1Labels.size());
+  if (!setBinLabels( m_hlt1Correlations, hlt1Labels, hlt1Labels )) {
     error() << "failed to set binlables on hlt1 correlation hist" << endmsg;
   }
 
-   if (!setBinLabels( m_hlt2Correlations, labels2, labels2 )) {
+  m_hlt2Correlations = book2D("Hlt2Lines Correlations",-0.5,hlt2Labels.size()-0.5, hlt2Labels.size()
+                                                      ,-0.5,hlt2Labels.size()-0.5, hlt2Labels.size());
+  if (!setBinLabels( m_hlt2Correlations, hlt1Labels, hlt1Labels )) {
     error() << "failed to set binlables on hlt2 correlation hist" << endmsg;
   } 
 
-  m_hlt1AlleysCorrelations      = book2D("Hlt1Alleys Correlations", -0.5, m_GroupLabels.size()-0.5,
-                                          m_GroupLabels.size(), -0.5, m_GroupLabels.size()-0.5,
-                                          m_GroupLabels.size() );
-
-  m_hlt2AlleysCorrelations      = book2D("Hlt2Alleys Correlations", -0.5, m_GroupLabels2.size()-0.5,
-                                          m_GroupLabels2.size(), -0.5, m_GroupLabels2.size()-0.5,
-                                          m_GroupLabels2.size() );
-
-  if (!setBinLabels( m_hlt1AlleysCorrelations, m_GroupLabels, m_GroupLabels )) {
+  m_hlt1AlleysCorrelations      = book2D("Hlt1Alleys Correlations", -0.5, hlt1AlleyLabels.size()-0.5, hlt1AlleyLabels.size()
+                                                                  , -0.5, hlt1AlleyLabels.size()-0.5, hlt1AlleyLabels.size() );
+  if (!setBinLabels( m_hlt1AlleysCorrelations, hlt1AlleyLabels, hlt1AlleyLabels )) {
     error() << "failed to set binlables on Hlt1Alleys Correlation hist" << endmsg;
   }
 
-  if (!setBinLabels( m_hlt2AlleysCorrelations, m_GroupLabels2, m_GroupLabels2 )) {
+  m_hlt2AlleysCorrelations      = book2D("Hlt2Alleys Correlations", -0.5, hlt2AlleyLabels.size()-0.5, hlt2AlleyLabels.size()
+                                                                  , -0.5, hlt2AlleyLabels.size()-0.5, hlt2AlleyLabels.size() );
+  if (!setBinLabels( m_hlt2AlleysCorrelations, hlt2AlleyLabels, hlt2AlleyLabels )) {
     error() << "failed to set binlables on Hlt2Alleys Correlation hist" << endmsg;
   }
 
                     /*One Histogram for each alley*/
-
-    //for hlt1
-    
-  std::vector<std::string> labHlt1L0;
-  std::vector<std::string> labHlt1Lumi;
-  std::vector<std::string> labHlt1Velo;
-  std::vector<std::string> labHlt1XPress;
-  std::vector<std::string> labHlt1Hadron;
-  std::vector<std::string> labHlt1SingleMuon;
-  std::vector<std::string> labHlt1DiMuon;
-  std::vector<std::string> labHlt1Electron;
-  std::vector<std::string> labHlt1Photon;
-  std::vector<std::string> labHlt1PA;
-  std::vector<std::string> labHlt1BeamGas;
-  std::vector<std::string> labHlt1MinBias;
-  std::vector<std::string> labHlt1Other;
-
-  for(std::map<std::string,int>::const_iterator i=m_DecToGroup.begin();i!=m_DecToGroup.end();i++){
-    if((*i).second==0){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt1L0")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
+  for(DecToGroupType::const_iterator i=m_DecToGroup1.begin();i!=m_DecToGroup1.end();++i){
+    std::string alleyName = std::string("Htl1")+i->first+"Alley";
+    m_hlt1Alleys.push_back( book1D(alleyName,   -0.5,i->second.size()-0.5,i->second.size()) );
+    m_hlt1AlleyRates.push_back(&counter(alleyName));
+    declareInfo("COUNTER_TO_RATE["+alleyName+"]", *m_hlt1AlleyRates.back(),i->first+" Alley");
+    std::vector<std::string> strip; 
+    strip.push_back("Decision"); // and of course 'Decision'...
+    strip.push_back("Hlt1");   // in case the above doesn't work, just strip 'Hlt1' 
+    strip.push_back(i->first); // first try to remove alley prefix
+    std::vector<std::string> labels;
+    for (std::vector<std::string>::const_iterator j=i->second.begin();j!=i->second.end();++j) {
+      std::string s = *j;
+      for (std::vector<std::string>::const_iterator k = strip.begin();k!=strip.end();++k) {
+        if (s!=*k) boost::algorithm::erase_all(s,*k);
       }
-      labHlt1L0.push_back(s);
-      m_Hlt1L0.push_back((*i).first);
+      always() << " adding " << s << " for " << *j << " in " << i->first << endmsg;
+      labels.push_back(s);
+      m_hlt1Line2AlleyBin[ *j ] =  std::make_pair( m_hlt1Alleys.size(), labels.size()-1 ); // bind to histogram and bin... _1 will accept
     }
-
-    if((*i).second==1){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt1Lumi")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt1Lumi.push_back(s);
-      m_Hlt1Lumi.push_back((*i).first);
-    }
-
-    if((*i).second==2){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt1Velo")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt1Velo.push_back(s);
-      m_Hlt1Velo.push_back((*i).first);
-    }
-
-    if((*i).second==3){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt1")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt1XPress.push_back(s);
-      m_Hlt1XPress.push_back((*i).first);
-    }
-
-    if((*i).second==4){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt1")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt1Hadron.push_back(s);
-      m_Hlt1Hadron.push_back((*i).first);
-    }
-
-    if((*i).second==5){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt1")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt1SingleMuon.push_back(s);
-      m_Hlt1SingleMuon.push_back((*i).first);
-    }
-
-    if((*i).second==6){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt1DiMuon")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt1DiMuon.push_back(s);
-      m_Hlt1DiMuon.push_back((*i).first);
-    }
-
-    if((*i).second==7){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt1")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt1Electron.push_back(s);
-      m_Hlt1Electron.push_back((*i).first);
-    }
-
-    if((*i).second==8){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt1Photon")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt1Photon.push_back(s);
-      m_Hlt1Photon.push_back((*i).first);
-    }
-
-    if((*i).second==9){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt1")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt1PA.push_back(s);
-      m_Hlt1PA.push_back((*i).first);
-    }
-
-    if((*i).second==10){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt1")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt1BeamGas.push_back(s);
-      m_Hlt1BeamGas.push_back((*i).first);
-    }
-
-    if((*i).second==11){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt1")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt1MinBias.push_back(s);
-      m_Hlt1MinBias.push_back((*i).first);
-    }
-
-    if((*i).second==13){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt1")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt1Other.push_back(s);
-      m_Hlt1Other.push_back((*i).first);
+    if (!setBinLabels( m_hlt1Alleys.back(),labels )) {
+          error() << "failed to set binlables on Hlt1 " << i->first << " Alley hist" << endmsg;
     }
   }
 
-  m_hlt1L0Alley    = book1D("Hlt1 L0 Alley",   -0.5,m_Hlt1L0.size()-0.5, m_Hlt1L0.size());
-
-  if (!setBinLabels( m_hlt1L0Alley,  labHlt1L0 )) {
-    error() << "failed to set binlables on hlt1 L0 alley hist" << endmsg;
-  }
-
-  m_hlt1LumiAlley    = book1D("Hlt1 Lumi Alley",   -0.5,m_Hlt1Lumi.size()-0.5, m_Hlt1Lumi.size());
-
-  if (!setBinLabels( m_hlt1LumiAlley,  labHlt1Lumi )) {
-    error() << "failed to set binlables on hlt1 Lumi alley hist" << endmsg;
-  }
-
-  m_hlt1VeloAlley    = book1D("Hlt1 Velo Alley",   -0.5,m_Hlt1Velo.size()-0.5, m_Hlt1Velo.size());
-
-  if (!setBinLabels( m_hlt1VeloAlley,  labHlt1Velo )) {
-    error() << "failed to set binlables on hlt1 Velo alley hist" << endmsg;
-  }
-
-  m_hlt1XPressAlley    = book1D("Hlt1 XPress Alley",   -0.5,m_Hlt1XPress.size()-0.5, m_Hlt1XPress.size());
-
-  if (!setBinLabels( m_hlt1XPressAlley,  labHlt1XPress )) {
-    error() << "failed to set binlables on hlt1 XPress alley hist" << endmsg;
-  }
-
-  m_hlt1HadronAlley    = book1D("Hlt1 Hadron Alley",   -0.5,m_Hlt1Hadron.size()-0.5, m_Hlt1Hadron.size());
-
-  if (!setBinLabels( m_hlt1HadronAlley,  labHlt1Hadron )) {
-    error() << "failed to set binlables on hlt1 Hadron alley hist" << endmsg;
-  }
-
-  m_hlt1SingleMuonAlley    = book1D("Hlt1 SingleMuon Alley",   -0.5,m_Hlt1SingleMuon.size()-0.5, m_Hlt1SingleMuon.size());
-
-  if (!setBinLabels( m_hlt1SingleMuonAlley,  labHlt1SingleMuon )) {
-    error() << "failed to set binlables on hlt1 SingleMuon alley hist" << endmsg;
-  }
-
-  m_hlt1DiMuonAlley    = book1D("Hlt1 DiMuon Alley",   -0.5,m_Hlt1DiMuon.size()-0.5, m_Hlt1DiMuon.size());
-
-  if (!setBinLabels( m_hlt1DiMuonAlley,  labHlt1DiMuon )) {
-    error() << "failed to set binlables on hlt1 DiMuon alley hist" << endmsg;
-  }
-
-  m_hlt1ElectronAlley    = book1D("Hlt1 Electron Alley",   -0.5,m_Hlt1Electron.size()-0.5, m_Hlt1Electron.size());
-
-  if (!setBinLabels( m_hlt1ElectronAlley,  labHlt1Electron )) {
-    error() << "failed to set binlables on hlt1 Electron alley hist" << endmsg;
-  }
-
-  m_hlt1PhotonAlley    = book1D("Hlt1 Photon Alley",   -0.5,m_Hlt1Photon.size()-0.5, m_Hlt1Photon.size());
-
-  if (!setBinLabels( m_hlt1PhotonAlley,  labHlt1Photon )) {
-    error() << "failed to set binlables on hlt1 Photon alley hist" << endmsg;
-  }
-
-  m_hlt1PAAlley    = book1D("Hlt1 PA Alley",   -0.5,m_Hlt1PA.size()-0.5, m_Hlt1PA.size());
-
-  if (!setBinLabels( m_hlt1PAAlley,  labHlt1PA )) {
-    error() << "failed to set binlables on hlt1 PA alley hist" << endmsg;
-  }
-
-  m_hlt1BeamGasAlley    = book1D("Hlt1 BeamGas Alley",   -0.5,m_Hlt1BeamGas.size()-0.5, m_Hlt1BeamGas.size());
-
-  if (!setBinLabels( m_hlt1BeamGasAlley,  labHlt1BeamGas )) {
-    error() << "failed to set binlables on hlt1 BeamGas alley hist" << endmsg;
-  }
-
-  m_hlt1MinBiasAlley    = book1D("Hlt1 MinBias Alley",   -0.5,m_Hlt1MinBias.size()-0.5, m_Hlt1MinBias.size());
-
-  if (!setBinLabels( m_hlt1MinBiasAlley,  labHlt1MinBias )) {
-    error() << "failed to set binlables on hlt1 MinBias alley hist" << endmsg;
-  }
-
-  m_hlt1OtherAlley    = book1D("Hlt1 Other Alley",   -0.5,m_Hlt1Other.size()-0.5, m_Hlt1Other.size());
-
-  if (!setBinLabels( m_hlt1OtherAlley,  labHlt1Other )) {
-    error() << "failed to set binlables on hlt1 other alley hist" << endmsg;
-  }
-
-     //for hlt2
-
-  std::vector<std::string> labHlt2Topological;
-  std::vector<std::string> labHlt2InclusivePhi;
-  std::vector<std::string> labHlt2SingleMuon;
-  std::vector<std::string> labHlt2DiMuon;
-  std::vector<std::string> labHlt2B2DX;
-  std::vector<std::string> labHlt2B2XGamma;
-  std::vector<std::string> labHlt2B2JpsiX;
-  std::vector<std::string> labHlt2B2XPhi;
-  std::vector<std::string> labHlt2B2HH;
-  std::vector<std::string> labHlt2Express;
-  std::vector<std::string> labHlt2Commissioning;
-  std::vector<std::string> labHlt2DisplVertices;
-  std::vector<std::string> labHlt2Other;
-
-  for(std::map<std::string,int>::const_iterator i=m_DecToGroup2.begin();i!=m_DecToGroup2.end();i++){
-    if((*i).second==0){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt2Topo")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
+  // for hlt2
+  for(DecToGroupType::const_iterator i=m_DecToGroup2.begin();i!=m_DecToGroup2.end();++i){
+    std::string alleyName = std::string("Htl2")+i->first+"Alley";
+    m_hlt2Alleys.push_back( book1D(alleyName, -0.5,i->second.size()-0.5,i->second.size()) );
+    m_hlt2AlleyRates.push_back(&counter(alleyName));
+    declareInfo("COUNTER_TO_RATE["+alleyName+"]", *m_hlt2AlleyRates.back(),i->first+" Alley");
+    std::vector<std::string> strip; 
+    strip.push_back("Decision"); // always remove 'Decision'...
+    strip.push_back("Hlt2");   // and Hlt2
+    strip.push_back(i->first); // finally try to remove alley prefix
+    std::vector<std::string> labels;
+    for (std::vector<std::string>::const_iterator j=i->second.begin();j!=i->second.end();++j) {
+      std::string s = *j;
+      for (std::vector<std::string>::const_iterator k = strip.begin();k!=strip.end();++k) {
+        if (s!=*k) boost::algorithm::erase_all(s,*k);
       }
-       labHlt2Topological.push_back(s);
-       m_Hlt2Topological.push_back((*i).first);
+      labels.push_back(s);
+      always() << " adding " << s << " for " << *j << " in " << i->first << endmsg;
+      m_hlt2Line2AlleyBin[ *j ] =  std::make_pair( m_hlt2Alleys.size(), labels.size()-1 );
     }
-
-    if((*i).second==1){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt2")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt2InclusivePhi.push_back(s);
-      m_Hlt2InclusivePhi.push_back((*i).first);
-    }
-
-    if((*i).second==2){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt2")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt2SingleMuon.push_back(s);
-      m_Hlt2SingleMuon.push_back((*i).first);
-    }
-
-    if((*i).second==3){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt2")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt2DiMuon.push_back(s);
-      m_Hlt2DiMuon.push_back((*i).first);
-    }
-
-    if((*i).second==4){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt2")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt2B2DX.push_back(s);
-      m_Hlt2B2DX.push_back((*i).first);
-    }
-
-    if((*i).second==5){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt2")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt2B2XGamma.push_back(s);
-      m_Hlt2B2XGamma.push_back((*i).first);
-    }
-
-    if((*i).second==6){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt2")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt2B2JpsiX.push_back(s);
-      m_Hlt2B2JpsiX.push_back((*i).first);
-    }
-
-    if((*i).second==7){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt2")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt2B2XPhi.push_back(s);
-      m_Hlt2B2XPhi.push_back((*i).first);
-    }
-
-    if((*i).second==8){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt2")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt2B2HH.push_back(s);
-      m_Hlt2B2HH.push_back((*i).first);
-    }
-
-    if((*i).second==9){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt2")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt2Express.push_back(s);
-      m_Hlt2Express.push_back((*i).first);
-    }
-
-    if((*i).second==10){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt2")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt2Commissioning.push_back(s);
-      m_Hlt2Commissioning.push_back((*i).first);
-    }
-
-    if((*i).second==11){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt2")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt2DisplVertices.push_back(s);
-      m_Hlt2DisplVertices.push_back((*i).first);
-    }
-
-    if((*i).second==13){
-      std::string s = (*i).first;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt2")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      labHlt2Other.push_back(s);
-      m_Hlt2Other.push_back((*i).first);
+    if (!setBinLabels( m_hlt2Alleys.back(),labels )) {
+          error() << "failed to set binlables on Hlt2 " << i->first << " Alley hist" << endmsg;
     }
   }
 
-  m_hlt2TopologicalAlley    = book1D("Hlt2 Topological Alley",   -0.5,m_Hlt2Topological.size()-0.5, m_Hlt2Topological.size());
 
-  if (!setBinLabels( m_hlt2TopologicalAlley, labHlt2Topological )) {
-    error() << "failed to set binlables on hlt2 Topological alley hist" << endmsg;
-  }
 
-  m_hlt2InclusivePhiAlley    = book1D("Hlt2 InclusivePhi Alley",   -0.5,m_Hlt2InclusivePhi.size()-0.5, m_Hlt2InclusivePhi.size());
 
-  if (!setBinLabels( m_hlt2InclusivePhiAlley,  labHlt2InclusivePhi )) {
-    error() << "failed to set binlables on hlt2 InclusivePhi alley hist" << endmsg;
-  }
-
-  m_hlt2SingleMuonAlley    = book1D("Hlt2 SingleMuon Alley",   -0.5,m_Hlt2SingleMuon.size()-0.5, m_Hlt2SingleMuon.size());
-
-  if (!setBinLabels( m_hlt2SingleMuonAlley,  labHlt2SingleMuon )) {
-    error() << "failed to set binlables on hlt2 SingleMuon alley hist" << endmsg;
-  }
-
-  m_hlt2DiMuonAlley    = book1D("Hlt2 DiMuon Alley",   -0.5,m_Hlt2DiMuon.size()-0.5, m_Hlt2DiMuon.size());
-
-  if (!setBinLabels( m_hlt2DiMuonAlley,  labHlt2DiMuon )) {
-    error() << "failed to set binlables on hlt2 DiMuon alley hist" << endmsg;
-  }
-
-  m_hlt2B2DXAlley    = book1D("Hlt2 B2DX Alley",   -0.5,m_Hlt2B2DX.size()-0.5, m_Hlt2B2DX.size());
-
-  if (!setBinLabels( m_hlt2B2DXAlley,  labHlt2B2DX )) {
-    error() << "failed to set binlables on hlt2 B2DX alley hist" << endmsg;
-  }
-
-  m_hlt2B2XGammaAlley    = book1D("Hlt2 B2XGamma Alley",   -0.5,m_Hlt2B2XGamma.size()-0.5, m_Hlt2B2XGamma.size());
-
-  if (!setBinLabels( m_hlt2B2XGammaAlley,  labHlt2B2XGamma )) {
-    error() << "failed to set binlables on hlt2 B2XGamma alley hist" << endmsg;
-  }
-
-  m_hlt2B2JpsiXAlley    = book1D("Hlt2 B2JpsiX Alley",   -0.5,m_Hlt2B2JpsiX.size()-0.5, m_Hlt2B2JpsiX.size());
-
-  if (!setBinLabels( m_hlt2B2JpsiXAlley,  labHlt2B2JpsiX )) {
-    error() << "failed to set binlables on hlt2 B2JpsiX alley hist" << endmsg;
-  }
-
-  m_hlt2B2XPhiAlley    = book1D("Hlt2 B2XPhi Alley",   -0.5,m_Hlt2B2XPhi.size()-0.5, m_Hlt2B2XPhi.size());
-
-  if (!setBinLabels( m_hlt2B2XPhiAlley,  labHlt2B2XPhi )) {
-    error() << "failed to set binlables on hlt2 B2XPhi alley hist" << endmsg;
-  }
-
-  m_hlt2B2HHAlley    = book1D("Hlt2 B2HH Alley",   -0.5,m_Hlt2B2HH.size()-0.5, m_Hlt2B2HH.size());
-
-  if (!setBinLabels( m_hlt2B2HHAlley,  labHlt2B2HH )) {
-    error() << "failed to set binlables on hlt2 B2HH alley hist" << endmsg;
-  }
-
-  m_hlt2ExpressAlley    = book1D("Hlt2 Express Alley",   -0.5,m_Hlt2Express.size()-0.5, m_Hlt2Express.size());
-
-  if (!setBinLabels( m_hlt2ExpressAlley,  labHlt2Express )) {
-    error() << "failed to set binlables on hlt2 Express alley hist" << endmsg;
-  }
-
-  m_hlt2CommissioningAlley    = book1D("Hlt2 Commissioning Alley",   -0.5,m_Hlt2Commissioning.size()-0.5, m_Hlt2Commissioning.size());
-
-  if (!setBinLabels( m_hlt2CommissioningAlley,  labHlt2Commissioning )) {
-    error() << "failed to set binlables on hlt2 Commissioning alley hist" << endmsg;
-  }
-
-  m_hlt2DisplVerticesAlley    = book1D("Hlt2 DisplVertices Alley",   -0.5,m_Hlt2DisplVertices.size()-0.5, m_Hlt2DisplVertices.size());
-
-  if (!setBinLabels( m_hlt2DisplVerticesAlley,  labHlt2DisplVertices )) {
-    error() << "failed to set binlables on hlt2 DisplVertices alley hist" << endmsg;
-  }
-
-  m_hlt2OtherAlley    = book1D("Hlt2 Other Alley",   -0.5,m_Hlt2Other.size()-0.5, m_Hlt2Other.size());
-
-  if (!setBinLabels( m_hlt2OtherAlley,  labHlt2Other )) {
-    error() << "failed to set binlables on hlt2 other alley hist" << endmsg;
-  }
 
 
   m_hltVirtTime  = bookProfile1D("Virtual memory",   0,m_timeSize,int(m_timeSize/m_timeInterval+0.5));
@@ -692,11 +277,6 @@ StatusCode HltGlobalMonitor::initialize() {
 
   declareInfo("COUNTER_TO_RATE[L0Accept]",counter("L0Accept"),"L0Accept");
   declareInfo("COUNTER_TO_RATE[GpsTimeoflast]",m_gpstimesec,"Gps time of last event");
-
-  for (unsigned i=0; i!=m_GroupLabels.size();++i) {
-    m_alley.push_back(&counter(m_GroupLabels.at(i)));
-    declareInfo("COUNTER_TO_RATE["+m_GroupLabels.at(i)+"]", *m_alley.back(),m_GroupLabels.at(i)+" Alley");
-  }
 
   // register for incidents...
   IIncidentSvc* incidentSvc = svc<IIncidentSvc>( "IncidentSvc" );
@@ -792,123 +372,48 @@ void HltGlobalMonitor::monitorHLT1(const LHCb::ODIN*,
   if (hlt==0) return;
 
   ///////////////////////////////////////////////////////////////////////////////
-  std::vector<std::pair<std::string,const LHCb::HltDecReport*> > reps;
+  std::vector<std::pair<std::string,const LHCb::HltDecReport*> > reps; reps.reserve(m_Hlt1Lines.size());
   unsigned nAcc = 0;
-  std::vector<unsigned> nAccAlley(m_GroupLabels.size(),unsigned(0));
+  std::vector<unsigned> nAccAlley(m_hlt1Alleys.size(),unsigned(0));
 
   for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();i++) {
     const LHCb::HltDecReport*  report = hlt->decReport( *i );
     if (report == 0 ) {  
        warning() << "report " << *i << " not found" << endreq;
+       continue;
     }
     reps.push_back( std::make_pair( *i, report ) );
     if (report && report->decision()){
       ++nAcc;
-      ++nAccAlley[m_DecToGroup.find(*i)->second];
+      std::map<std::string,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt1Line2AlleyBin.find(*i);
+      if (j!=m_hlt1Line2AlleyBin.end()) ++nAccAlley[ j->second.first ];
     }
   }
 
-  for (unsigned i=0; i<m_GroupLabels.size();i++) {
-    *m_alley[i] += ( nAccAlley[i] > 0 );
-    fill(m_hlt1alley,i,(nAccAlley[i]>0));
+  for (unsigned i=0; i<m_DecToGroup1.size();i++) {
+    *m_hlt1AlleyRates[i] += ( nAccAlley[i] > 0 );
+    fill(m_hlt1Alley,i,(nAccAlley[i]>0));
   }
 
   fill( m_hlt1NAcc, nAcc, 1.0);  //by how many lines did the current event get accepted?
  
   for (size_t i = 0; i<reps.size();++i) {
-    bool accept = reps[i].second->decision();
+    bool accept = (reps[i].second->decision()!=0);
     fill( m_hlt1Inclusive, i, accept);
     if (!accept) continue;
     if (nAcc==1) fill( m_hlt1Exclusive, i, accept );
     for (size_t j = 0; j<reps.size(); ++j) fill(m_hlt1Correlations,i,j,reps[j].second->decision());
 
            //filling the histograms for each alley
-
-    if((m_DecToGroup.find(reps[i].first)->second)==0){
-      for(size_t k = 0; k < m_Hlt1L0.size(); k++){
-        if(m_Hlt1L0[k]==m_DecToGroup.find(reps[i].first)->first) fill( m_hlt1L0Alley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup.find(reps[i].first)->second)==1){
-      for(size_t k = 0; k < m_Hlt1Lumi.size(); k++){
-        if(m_Hlt1Lumi[k]==m_DecToGroup.find(reps[i].first)->first) fill( m_hlt1LumiAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup.find(reps[i].first)->second)==2){
-      for(size_t k = 0; k < m_Hlt1Velo.size(); k++){
-        if(m_Hlt1Velo[k]==m_DecToGroup.find(reps[i].first)->first) fill( m_hlt1VeloAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup.find(reps[i].first)->second)==3){
-      for(size_t k = 0; k < m_Hlt1XPress.size(); k++){
-        if(m_Hlt1XPress[k]==m_DecToGroup.find(reps[i].first)->first) fill( m_hlt1XPressAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup.find(reps[i].first)->second)==4){
-      for(size_t k = 0; k < m_Hlt1Hadron.size(); k++){
-        if(m_Hlt1Hadron[k]==m_DecToGroup.find(reps[i].first)->first) fill( m_hlt1HadronAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup.find(reps[i].first)->second)==5){
-      for(size_t k = 0; k < m_Hlt1SingleMuon.size(); k++){
-        if(m_Hlt1SingleMuon[k]==m_DecToGroup.find(reps[i].first)->first) fill( m_hlt1SingleMuonAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup.find(reps[i].first)->second)==6){
-      for(size_t k = 0; k < m_Hlt1DiMuon.size(); k++){
-        if(m_Hlt1DiMuon[k]==m_DecToGroup.find(reps[i].first)->first) fill( m_hlt1DiMuonAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup.find(reps[i].first)->second)==7){
-      for(size_t k = 0; k < m_Hlt1Electron.size(); k++){
-        if(m_Hlt1Electron[k]==m_DecToGroup.find(reps[i].first)->first) fill( m_hlt1ElectronAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup.find(reps[i].first)->second)==8){
-      for(size_t k = 0; k < m_Hlt1Photon.size(); k++){
-        if(m_Hlt1Photon[k]==m_DecToGroup.find(reps[i].first)->first) fill( m_hlt1PhotonAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup.find(reps[i].first)->second)==9){
-      for(size_t k = 0; k < m_Hlt1PA.size(); k++){
-        if(m_Hlt1PA[k]==m_DecToGroup.find(reps[i].first)->first) fill( m_hlt1PAAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup.find(reps[i].first)->second)==10){
-      for(size_t k = 0; k < m_Hlt1BeamGas.size(); k++){
-        if(m_Hlt1BeamGas[k]==m_DecToGroup.find(reps[i].first)->first) fill( m_hlt1BeamGasAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup.find(reps[i].first)->second)==11){
-      for(size_t k = 0; k < m_Hlt1MinBias.size(); k++){
-        if(m_Hlt1MinBias[k]==m_DecToGroup.find(reps[i].first)->first) fill( m_hlt1MinBiasAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup.find(reps[i].first)->second)==13){
-      for(size_t k = 0; k < m_Hlt1Other.size(); k++){
-        if(m_Hlt1Other[k]==m_DecToGroup.find(reps[i].first)->first) fill( m_hlt1OtherAlley, k, accept);
-        }
-    }
+    std::string hello = reps[i].first;
+    std::map<std::string,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt1Line2AlleyBin.find( reps[i].first );
+    if (j!=m_hlt1Line2AlleyBin.end()) fill( m_hlt1Alleys[j->second.first], j->second.second, accept );
   }
-
        //filling the histograms for the alleys instead of the lines
-
-  for (unsigned i=0; i<m_GroupLabels.size();i++) {
-    fill(m_hlt1alley,i,(nAccAlley[i]>0));
+  for (unsigned i=0; i<m_DecToGroup1.size();i++) {
+    fill(m_hlt1Alley,i,(nAccAlley[i]>0));
     if(!nAccAlley[i]>0) continue;
-    for(unsigned j=0; j<m_GroupLabels.size();j++){
+    for(unsigned j=0; j<m_DecToGroup1.size();j++){
       fill(m_hlt1AlleysCorrelations,i,j,(nAccAlley[j]>0));
     }
   }
@@ -920,33 +425,34 @@ void HltGlobalMonitor::monitorHLT1(const LHCb::ODIN*,
 void HltGlobalMonitor::monitorHLT2(const LHCb::ODIN*,
                                    const LHCb::L0DUReport*,
                                    const LHCb::HltDecReports* hlt) {
-
-
   if (hlt==0) return;
 
   ///////////////////////////////////////////////////////////////////////////////
-  std::vector<std::pair<std::string,const LHCb::HltDecReport*> > reps;
+  std::vector<std::pair<std::string,const LHCb::HltDecReport*> > reps; reps.reserve(m_Hlt2Lines.size());
   unsigned nAcc = 0;
-  std::vector<unsigned> nAccAlley(m_GroupLabels2.size(),unsigned(0));
+  std::vector<unsigned> nAccAlley(m_DecToGroup2.size(),unsigned(0));
 
   for (std::vector<std::string>::const_iterator i = m_Hlt2Lines.begin(); i!=m_Hlt2Lines.end();i++) {
     const LHCb::HltDecReport*  report = hlt->decReport( *i );
-    if (report == 0 ) {  
+    if (report == 0 ) {
        warning() << "report " << *i << " not found" << endreq;
+       continue;
     }
     reps.push_back( std::make_pair( *i, report ) );
     if (report && report->decision()){
       ++nAcc;
-      ++nAccAlley[m_DecToGroup2.find(*i)->second];
+      std::map<std::string,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt2Line2AlleyBin.find(*i);
+      if (j!=m_hlt2Line2AlleyBin.end()) ++nAccAlley[ j->second.first ];
     }
   }
 
-  for (unsigned i=0; i<m_GroupLabels2.size();i++) {
-    *m_alley[i] += ( nAccAlley[i] > 0 );
+  for (unsigned i=0; i<m_DecToGroup2.size();i++) {
+     *m_hlt2AlleyRates[i] += ( nAccAlley[i] > 0 );
+    fill(m_hlt2Alley,i,(nAccAlley[i]>0));
   } 
 
 
-  fill( m_hlt2NAcc, nAcc, 1.0);  //by how many lines did 1 event get accepted?
+  fill( m_hlt2NAcc, nAcc, 1.0);  //by how many lines did the current event get accepted?
 
   for (size_t i = 0; i<reps.size();++i) {
     bool accept = reps[i].second->decision();
@@ -955,92 +461,17 @@ void HltGlobalMonitor::monitorHLT2(const LHCb::ODIN*,
     if (nAcc==1) fill( m_hlt2Exclusive, i, accept );
     for (size_t j = 0; j<reps.size(); ++j) fill(m_hlt2Correlations,i,j,reps[j].second->decision());
     
-           //filling the histograms for each alley
+    // filling the histograms for each alley
+    std::map<std::string,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt2Line2AlleyBin.find(reps[i].first);
+    if (j!=m_hlt2Line2AlleyBin.end()) fill( m_hlt2Alleys[j->second.first], j->second.second, accept );
 
-    if((m_DecToGroup2.find(reps[i].first)->second)==0){
-      for(size_t k = 0; k < m_Hlt2Topological.size(); k++){
-        if(m_Hlt2Topological[k]==m_DecToGroup2.find(reps[i].first)->first) fill( m_hlt2TopologicalAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup2.find(reps[i].first)->second)==1){
-      for(size_t k = 0; k < m_Hlt2InclusivePhi.size(); k++){
-        if(m_Hlt2InclusivePhi[k]==m_DecToGroup2.find(reps[i].first)->first) fill( m_hlt2InclusivePhiAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup2.find(reps[i].first)->second)==2){
-      for(size_t k = 0; k < m_Hlt2SingleMuon.size(); k++){
-        if(m_Hlt2SingleMuon[k]==m_DecToGroup2.find(reps[i].first)->first) fill( m_hlt2SingleMuonAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup2.find(reps[i].first)->second)==3){
-      for(size_t k = 0; k < m_Hlt2DiMuon.size(); k++){
-        if(m_Hlt2DiMuon[k]==m_DecToGroup2.find(reps[i].first)->first) fill( m_hlt2DiMuonAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup2.find(reps[i].first)->second)==4){
-      for(size_t k = 0; k < m_Hlt2B2DX.size(); k++){
-        if(m_Hlt2B2DX[k]==m_DecToGroup2.find(reps[i].first)->first) fill( m_hlt2B2DXAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup2.find(reps[i].first)->second)==5){
-      for(size_t k = 0; k < m_Hlt2B2XGamma.size(); k++){
-        if(m_Hlt2B2XGamma[k]==m_DecToGroup2.find(reps[i].first)->first) fill( m_hlt2B2XGammaAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup2.find(reps[i].first)->second)==6){
-      for(size_t k = 0; k < m_Hlt2B2JpsiX.size(); k++){
-        if(m_Hlt2B2JpsiX[k]==m_DecToGroup2.find(reps[i].first)->first) fill( m_hlt2B2JpsiXAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup2.find(reps[i].first)->second)==7){
-      for(size_t k = 0; k < m_Hlt2B2XPhi.size(); k++){
-        if(m_Hlt2B2XPhi[k]==m_DecToGroup2.find(reps[i].first)->first) fill( m_hlt2B2XPhiAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup2.find(reps[i].first)->second)==8){
-      for(size_t k = 0; k < m_Hlt2B2HH.size(); k++){
-        if(m_Hlt2B2HH[k]==m_DecToGroup2.find(reps[i].first)->first) fill( m_hlt2B2HHAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup2.find(reps[i].first)->second)==9){
-      for(size_t k = 0; k < m_Hlt2Express.size(); k++){
-        if(m_Hlt2Express[k]==m_DecToGroup2.find(reps[i].first)->first) fill( m_hlt2ExpressAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup2.find(reps[i].first)->second)==10){
-      for(size_t k = 0; k < m_Hlt2Commissioning.size(); k++){
-        if(m_Hlt2Commissioning[k]==m_DecToGroup2.find(reps[i].first)->first) fill( m_hlt2CommissioningAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup2.find(reps[i].first)->second)==11){
-      for(size_t k = 0; k < m_Hlt2DisplVertices.size(); k++){
-        if(m_Hlt2DisplVertices[k]==m_DecToGroup2.find(reps[i].first)->first) fill( m_hlt2DisplVerticesAlley, k, accept);
-      }
-    }
-
-    if((m_DecToGroup2.find(reps[i].first)->second)==13){
-      for(size_t k = 0; k < m_Hlt2Other.size(); k++){
-        if(m_Hlt2Other[k]==m_DecToGroup2.find(reps[i].first)->first) fill( m_hlt2OtherAlley, k, accept);
-      }
-    }
   }
-       //filling the histograms for the alleys instead of the lines
+  //filling the histograms for the alleys instead of the lines
 
-  for (unsigned i=0; i<m_GroupLabels2.size();i++) {
-    fill(m_hlt2alley,i,(nAccAlley[i]>0));
+  for (unsigned i=0; i<m_DecToGroup2.size();i++) {
+    fill(m_hlt2Alley,i,(nAccAlley[i]>0));
     if(!nAccAlley[i]>0) continue;
-    for(unsigned j=0; j<m_GroupLabels2.size();j++){
+    for(unsigned j=0; j<m_DecToGroup2.size();j++){
       fill(m_hlt2AlleysCorrelations,i,j,(nAccAlley[j]>0));
     }
   }
