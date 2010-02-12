@@ -5,6 +5,8 @@
 	now "python install_project.py [options] <project> <version>.
 	The "-p" and "-v" options are kept for backward compatibility.
 	- factored out the arguments parsing
+	- call the --version option to check if there is a more recent
+	version of the script to use.
 
 2010-02-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

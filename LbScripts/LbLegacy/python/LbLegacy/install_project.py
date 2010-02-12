@@ -91,6 +91,7 @@ def usage() :
       if binaries are required: download project binaries
       -p                 : name of the project to install (obsolete option)
       -v                 : version of the project to install (obsolete option)
+      --version          : the version of this very script
       -d or --debug      : to print more info
       -l or --list       : to list the <project>_<version>_*.tar.gz files available on the web
       -r or --remove     : remove the <project>/<version>
@@ -1023,9 +1024,7 @@ def getMySelf():
     getFile(url_dist, 'install_project.py')
     if fix_perm :
         changePermissions('latest_install_project.py', recursive=False)
-    latest_line = readString(new_install, 'script_version')
-    latest_version = latest_line.split("'")[1]
-#    latest_version = os.popen("python %s --version" % new_install).read()[:-1]
+    latest_version = os.popen("python %s --version" % new_install).read()[:-1]
     if script_version < latest_version :
         log.warning("You are running an old version of this script - latest version: %s" % latest_version)
         log.warning("Restarting with the latest one")
