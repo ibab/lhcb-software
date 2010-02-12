@@ -1,4 +1,4 @@
-# $Id: Hlt2B2PhiXLines.py,v 1.4 2009-11-27 12:46:09 pkoppenb Exp $
+# $Id: Hlt2B2PhiXLines.py,v 1.5 2010-02-12 07:41:35 graven Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -34,6 +34,8 @@ class Hlt2B2PhiXLinesConf(HltLinesConfigurableUser) :
                                  , "PhiCombine"
                                  , DecayDescriptor = "phi(1020) -> K+ K-"
                                  , InputLocations = [NoCutsKaons] #[Hlt2GoodKaons]
+                                 , InputPrimaryVertices = "None"
+                                 , UseP2PVRelations = False
                                  , DaughtersCuts = { "K+" : "(PT>%(KaonPtCut)s)"% self.getProps() }
                                  , CombinationCut = "(ADAMASS('phi(1020)')<%(PhiMassWindow)s*MeV)"% self.getProps()
                                  , MotherCut = "(ALL)" #"(M<1100*MeV) & (PT>500*MeV)"

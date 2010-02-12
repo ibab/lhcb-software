@@ -88,6 +88,8 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         filter = Hlt2Member(   FilterDesktop 
                                , "Filter"
                                , Code = "(MM>%(UnbiasedDiMuonMinMass)d*MeV) & (PT>%(UnbiasedDiMuonPt)d*MeV) & (MINTREE('mu-'==ABSID,PT)>%(UnbiasedDiMuonMuPt)d*MeV) & (VFASPF(VCHI2/VDOF)<%(UnbiasedDiMuonVertexChi2)d)" %  self.getProps() 
+                               , InputPrimaryVertices = "None"
+                               , UseP2PVRelations = False
                                , InputLocations  = [ DiMuon ]
                                )
         

@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.110 2010-02-08 09:25:13 graven Exp $
+$Id: release.notes,v 1.111 2010-02-12 07:41:35 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,9 @@ $Id: release.notes,v 1.110 2010-02-08 09:25:13 graven Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2010-02-12 - Gerhard Raven
+ - eliminate some run-time warnings
 
 ! 2010-02-08 - Gerhard Raven
  - use rate-limiting postscale in Express Lines
