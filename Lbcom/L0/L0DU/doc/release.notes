@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.190 2010-02-03 17:41:37 cattanem Exp $
+! $Id: release.notes,v 1.191 2010-02-12 12:41:13 jucogan Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2010-02-12 - Julien Cogan
+ - Add new module (L0Algs) to allow to access the various algorithms used 
+   by L0Conf with their proper name
+ - L0Conf adapted to use L0Algs  
 
 !========================== L0DU v10r1 2010-02-03 =========================
 ! 2010-02-02 - Olivier Deschamps

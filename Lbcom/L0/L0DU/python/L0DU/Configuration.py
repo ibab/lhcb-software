@@ -6,15 +6,10 @@ from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 from Configurables import LHCbConfigurableUser
 
-# Some definitions
-L0CaloFromRawAlgName = "L0CaloFromRaw"
-L0MuonFromRawAlgName = "L0MuonFromRaw"
-L0DUFromRawAlgName   = "L0DUFromRaw"
-
-L0CaloAlgName        = "L0Calo"
-L0MuonAlgName        = "L0Muon"
-PuVetoAlgName        = "L0PuVeto"
-L0DUAlgName          = "L0DU"
+from L0Algs import L0CaloFromRawAlgName , emulateL0Calo   , decodeL0Calo , monitorL0Calo
+from L0Algs import L0MuonFromRawAlgName , emulateL0Muon   , decodeL0Muon , monitorL0Muon
+from L0Algs import L0DUFromRawAlgName   , emulateL0DU     , decodeL0DU   , monitorL0DU
+from L0Algs import                        emulateL0PileUp
 
 ## @class L0Conf
 #  Configurable for the L0 trigger (simulation, emulation, decoding, monitoring and filtering)
@@ -101,9 +96,9 @@ class L0Conf(LHCbConfigurableUser) :
         l0decodingSeq = GaudiSequencer( name )
 
         # L0Calo, L0Muon and L0DU decoding algorithms
-        l0calo = L0CaloFromRawAlg(L0CaloFromRawAlgName)
-        l0muon = L0MuonFromRawAlg(L0MuonFromRawAlgName)
-        l0du   = L0DUFromRawAlg(L0DUFromRawAlgName)
+        l0calo = decodeL0Calo()
+        l0muon = decodeL0Muon()
+        l0du   = decodeL0DU()
         
         # Write on TES
         if writeOnTes is not None:     
@@ -121,11 +116,10 @@ class L0Conf(LHCbConfigurableUser) :
         l0emulatorSeq = GaudiSequencer( name )
 
         # L0Calo, L0Muon, L0PileUp and L0DU emulating algorithms
-        from Configurables import PuVetoAlg, L0CaloAlg, L0MuonAlg, L0DUAlg
-        l0calo   = L0CaloAlg(L0CaloAlgName)
-        l0muon   = L0MuonAlg(L0MuonAlgName)
-        l0pileup = PuVetoAlg(PuVetoAlgName)
-        l0du     = L0DUAlg(L0DUAlgName)
+        l0calo   = emulateL0Calo()
+        l0muon   = emulateL0Muon()
+        l0pileup = emulateL0PileUp()
+        l0du     = emulateL0DU()
 
         # Raw banks
         if writeBanks is not None:
@@ -154,8 +148,7 @@ class L0Conf(LHCbConfigurableUser) :
         l0monitoringSeq = GaudiSequencer( name )
 
         # Build the sequence 
-        from Configurables import L0CaloMonit, L0MuonOnlineMonitor, L0DUReportMonitor 
-        l0monitoringSeq.Members+=[ L0CaloMonit(), L0MuonOnlineMonitor(), L0DUReportMonitor() ]
+        l0monitoringSeq.Members+=[ monitorL0Calo(), monitorL0Muon(), monitorL0DU() ]
         
         return l0monitoringSeq
 
@@ -168,8 +161,7 @@ class L0Conf(LHCbConfigurableUser) :
 
             importOptions("$L0TCK/L0DUConfig.opts")
             # Set up the TCK to use
-            from Configurables import L0DUAlg
-            l0du = L0DUAlg(L0DUAlgName)
+            l0du = emulateL0DU()
             if self.isPropertySet("TCK"):     # Use L0Conf.TCK if set
                 tck = self.getProp("TCK")
                 if l0du.isPropertySet("TCK"):
@@ -210,8 +202,7 @@ class L0Conf(LHCbConfigurableUser) :
                 seq.Members+= [l0simulationSeq ]
 
             if self.getProp("DecodeL0DU"):
-                from Configurables import L0DUFromRawAlg
-                seq.Members+= [ L0DUFromRawAlg(L0DUFromRawAlgName) ]
+                seq.Members+= [ decodeL0DU() ]
 
             if self.getProp("DecodeL0"):
                 seq.Members+= [ self.l0decodingSeq( writeOnTes=True ) ]
@@ -225,8 +216,8 @@ class L0Conf(LHCbConfigurableUser) :
                 seq.Members+= [ self.l0monitoringSeq( ) ]
                 
             if self.getProp("FilterL0FromRaw"):
-                from Configurables import L0DUFromRawAlg, L0Filter
-                seq.Members+= [ L0DUFromRawAlg(L0DUFromRawAlgName) , L0Filter()]
+                from Configurables import L0Filter
+                seq.Members+= [ decodeL0DU() , L0Filter()]
                 
             if self.getProp("FilterL0"):
                 from Configurables import L0Filter
@@ -305,9 +296,9 @@ class L0Conf(LHCbConfigurableUser) :
 
         # Fast decoding of L0DU
         if self.getProp("FastL0DUDecoding"):
-            from Configurables import L0DUFromRawAlg, L0DUFromRawTool
             log.info("Using Fast decoding for L0DU")
-            l0du   = L0DUFromRawAlg(L0DUFromRawAlgName)
+            l0du   = decodeL0DU()
+            from Configurables import  L0DUFromRawTool
             l0du.addTool(L0DUFromRawTool,name = "L0DUFromRawTool")
             l0du.L0DUFromRawTool.FillDataMap         = False
             l0du.L0DUFromRawTool.EncodeProcessorData = False
@@ -317,38 +308,35 @@ class L0Conf(LHCbConfigurableUser) :
 
         # Full decoding of L0Muon    
         if self.getProp("FullL0MuonDecoding"):
-            from Configurables import L0MuonCandidatesFromRaw
             log.info("Activate L0MuonProcCand and L0MuonProcData decoding")
-            l0muon = L0MuonCandidatesFromRaw(L0MuonFromRawAlgName)
+            l0muon = decodeL0Muon()
             l0muon.DAQMode = 1
 
         # Set l0context for the decoding
         if self.isPropertySet("L0DecodingContext"):
-            from Configurables import L0CaloCandidatesFromRaw, L0MuonCandidatesFromRaw, L0DUFromRawAlg
             l0context = self.getProp("L0DecodingContext")
             log.info( "The results of the L0 decoding will be written at location+%s"%(l0context) )
-            L0CaloCandidatesFromRaw(L0CaloFromRawAlgName).L0Context = l0context
-            L0MuonCandidatesFromRaw(L0MuonFromRawAlgName).L0Context = l0context
-            L0DUFromRawAlg(L0DUFromRawAlgName).L0Context            = l0context
+            decodeL0Calo().L0Context = l0context
+            decodeL0Muon().L0Context = l0context
+            decodeL0DU().L0Context   = l0context
         
         # Set l0context for the emulation
         if self.isPropertySet("L0EmulatorContext"):
-            from Configurables import L0CaloAlg, L0MuonAlg, L0DUAlg
             l0context = self.getProp("L0EmulatorContext")
             log.info( "The results of the L0 emulation will be written at location+%s"%(l0context) )
-            L0CaloAlg(L0CaloAlgName).L0Context = l0context
-            L0MuonAlg(L0MuonAlgName).L0Context = l0context
-            L0DUAlg(L0DUAlgName).L0Context     = l0context
+            emulateL0Calo().L0Context = l0context
+            emulateL0Muon().L0Context = l0context
+            emulateL0DU().L0Context   = l0context
         
     def _dataOnDemand(self):
         """Configure the DataOnDemand service for L0."""
         if self.getProp("EnableL0DecodingOnDemand"):
             from Configurables import DataOnDemandSvc
             log.info("L0 on demand activated")
-            DataOnDemandSvc().AlgMap["Trig/L0/MuonCtrl"]   = "L0MuonCandidatesFromRaw/L0MuonFromRaw"                            
-            DataOnDemandSvc().AlgMap["Trig/L0/Calo"]       = "L0CaloCandidatesFromRaw/L0CaloFromRaw"                            
-            DataOnDemandSvc().AlgMap["Trig/L0/FullCalo"]   = "L0CaloCandidatesFromRaw/L0CaloFromRaw"                            
-            DataOnDemandSvc().AlgMap["Trig/L0/L0DUReport"] = "L0DUFromRawAlg/L0DUFromRaw"                            
+            DataOnDemandSvc().AlgMap["Trig/L0/MuonCtrl"]   = "L0MuonCandidatesFromRaw/"+L0MuonFromRawAlgName
+            DataOnDemandSvc().AlgMap["Trig/L0/Calo"]       = "L0CaloCandidatesFromRaw/"+L0CaloFromRawAlgName
+            DataOnDemandSvc().AlgMap["Trig/L0/FullCalo"]   = "L0CaloCandidatesFromRaw/"+L0CaloFromRawAlgName
+            DataOnDemandSvc().AlgMap["Trig/L0/L0DUReport"] = "L0DUFromRawAlg/"+L0DUFromRawAlgName
             if not self.isPropertySet("L0Sequencer"):
                 importOptions("$L0TCK/L0DUConfig.opts")
 
