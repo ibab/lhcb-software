@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-02-12 - Ross Young
+ - In Configuration.py: suppresscornerpixels generalised to IsDark; 
+	2-D IFB hitmaps disabled
+
 ! 2010-02-11 - Chris Jones
  - Adapt to changes in histogramming base classes
  - Remove a few 2D histograms no longer needed.

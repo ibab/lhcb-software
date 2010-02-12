@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.46 2010-01-31 13:49:31 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.47 2010-02-12 14:12:24 ryoung Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -324,13 +324,13 @@ class RichRecQCConf(RichConfigurableUser):
     def ionfeedbackMoni(self, sequence):
         from Configurables import Rich__Mon__HPDIonFeedbackMoni
         RichIFBMon                       = Rich__Mon__HPDIonFeedbackMoni("RichHPDIFBMoni")
-        RichIFBMon.SuppressCornerPixels  = False
+        RichIFBMon.IsDark                = False
         RichIFBMon.MonitorRate           = 1
         RichIFBMon.EventSize             = 3000000
         RichIFBMon.IonFeedbackALICE      = 5
         RichIFBMon.IonFeedbackLHCB       = 5
         RichIFBMon.WantIFB               = True
-        RichIFBMon.WantHitmaps           = True
+        RichIFBMon.WantHitmaps           = False
         RichIFBMon.WantQuickHitmap       = False
         sequence.Members      += [RichIFBMon]        
 
