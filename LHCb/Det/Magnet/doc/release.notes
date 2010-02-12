@@ -4,6 +4,7 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+!====================== Magnet v5r7 2010-02-12 ===============================
 ! 2010-02-08 - Marco Cattaneo
  - Register MagneticFieldSvc with UpdateManagerSvc even in cases when not using
    CondDB. This allows clients to register callbacks transparently even if they
