@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.116 2010-01-29 13:49:14 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.117 2010-02-12 15:44:03 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -38,7 +38,7 @@ class Brunel(LHCbConfigurableUser):
         "EvtMax"          : -1
        ,"SkipEvents"      : 0
        ,"PrintFreq"       : 1
-       ,"DataType"        : "2009"
+       ,"DataType"        : "2010"
        ,"WithMC"          : False
        ,"Simulation"      : False
        ,"RecL0Only"       : False

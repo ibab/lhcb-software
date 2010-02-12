@@ -5,6 +5,7 @@ Purpose: LHCb reconstruction program
 
  - Changes to Configurable: 
    . Remove OTTimeCreator from CheckOTSeq, no longer needed (task 12674)
+   . Changed default DataType to 2010
 
  - Changes to tests:
    . Modify brunel-cosmics.qmt to add a test of writing unpacked DST
@@ -19,6 +20,13 @@ Purpose: LHCb reconstruction program
    . Bug fix in TrackV0Utils (TrackUtils v1r34)
    . Added profiles to OTHitEfficiencyMonitor (TrackMonitor v1r20)
    . MuonID parameters can now be read from database (MuonID v7r7)
+   . TrackMuonMatchMonitor added to MoniTrSeq (TrackMonitor v1r20)
+   . Muodified ST cluster monitor (STMonitors v2r4)
+   . New parameterisation in PatAddTTCoord (PatAlgorithms v3r29)
+   . Changes to RichHPDHotPixelFinder (RichTools HEAD)
+   . Move some info messages to debug (TrackExtrapolators v2r24p2)
+   . Vertex shifts now measured with respect to MC position (PatChecker v3r6)
+   . New default database tags for 2009 (DDDB v1r28)
 
 </PRE><H1><A NAME=v36r0>2010-01-26 Brunel v36r0</A></H1><PRE>
  - Changes to requirements

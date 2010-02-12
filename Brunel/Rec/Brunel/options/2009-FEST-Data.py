@@ -10,6 +10,7 @@ Brunel().EvtMax = 1000
 
 # Use default simulation database tags 
 Brunel().Simulation = True
+Brunel().DataType = "2009"
 
 # Make sure Brunel is configured for MDF data
 if Brunel().getProp("InputType").upper() == "MDF":
