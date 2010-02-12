@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.52 2010-02-12 22:25:35 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.53 2010-02-12 22:27:43 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -191,7 +191,7 @@ StatusCode HltGlobalMonitor::initialize() {
 
   m_hlt2Correlations = book2D("Hlt2Lines Correlations",-0.5,hlt2Labels.size()-0.5, hlt2Labels.size()
                                                       ,-0.5,hlt2Labels.size()-0.5, hlt2Labels.size());
-  if (!setBinLabels( m_hlt2Correlations, hlt1Labels, hlt1Labels )) {
+  if (!setBinLabels( m_hlt2Correlations, hlt2Labels, hlt2Labels )) {
     error() << "failed to set binlables on hlt2 correlation hist" << endmsg;
   } 
 
