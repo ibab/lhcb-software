@@ -1,4 +1,4 @@
-// $Id: Odin.h,v 1.1 2008-09-23 13:13:35 ibelyaev Exp $
+// $Id: Odin.h,v 1.2 2010-02-12 14:17:27 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ODIN_H 
 #define LOKI_ODIN_H 1
@@ -42,6 +42,7 @@ namespace LoKi
     class Run : public LoKi::BasicFunctors<const LHCb::ODIN*>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~Run(){}
       /// MANDATORY: clone method ("virtual constructor")
@@ -65,6 +66,7 @@ namespace LoKi
     class Orbit : public LoKi::BasicFunctors<const LHCb::ODIN*>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~Orbit(){}
       /// MANDATORY: clone method ("virtual constructor")
@@ -88,6 +90,7 @@ namespace LoKi
     class EventType : public LoKi::BasicFunctors<const LHCb::ODIN*>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~EventType(){}
       /// MANDATORY: clone method ("virtual constructor")
@@ -111,6 +114,7 @@ namespace LoKi
     class BunchId : public LoKi::BasicFunctors<const LHCb::ODIN*>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~BunchId(){}
       /// MANDATORY: clone method ("virtual constructor")
@@ -134,6 +138,7 @@ namespace LoKi
     class ErrorBits : public LoKi::BasicFunctors<const LHCb::ODIN*>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~ErrorBits(){}
       /// MANDATORY: clone method ("virtual constructor")
@@ -157,6 +162,7 @@ namespace LoKi
     class TriggerType : public LoKi::BasicFunctors<const LHCb::ODIN*>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~TriggerType(){}
       /// MANDATORY: clone method ("virtual constructor")
@@ -180,6 +186,7 @@ namespace LoKi
     class ReadOutType : public LoKi::BasicFunctors<const LHCb::ODIN*>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~ReadOutType(){}
       /// MANDATORY: clone method ("virtual constructor")
@@ -228,6 +235,7 @@ namespace LoKi
     class BXType : public LoKi::BasicFunctors<const LHCb::ODIN*>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~BXType(){}
       /// MANDATORY: clone method ("virtual constructor")
@@ -251,6 +259,7 @@ namespace LoKi
     class BunchCurrent : public LoKi::BasicFunctors<const LHCb::ODIN*>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~BunchCurrent(){}
       /// MANDATORY: clone method ("virtual constructor")
@@ -274,6 +283,7 @@ namespace LoKi
     class CalibrationStep: public LoKi::BasicFunctors<const LHCb::ODIN*>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~CalibrationStep(){}
       /// MANDATORY: clone method ("virtual constructor")
@@ -309,9 +319,8 @@ namespace LoKi
       { return s << "ODIN_TCK" ; }
       // ======================================================================
     } ;
-
-    /// the derived functions 
-
+    // ========================================================================
+    /// the derived functions
     // ========================================================================
     /** @class InTime 
      *  The trivial predicate whcih checks that the event time is within 
@@ -478,9 +487,9 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace LoKi::Odin
+  } //                                              end of namespace LoKi::Odin
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

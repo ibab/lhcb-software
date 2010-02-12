@@ -1,4 +1,4 @@
-// $Id: LoKiHltDict.h,v 1.4 2008-11-28 17:11:48 ibelyaev Exp $
+// $Id: LoKiHltDict.h,v 1.5 2010-02-12 14:17:28 ibelyaev Exp $
 // ============================================================================
 #ifndef DICT_LOKIDAQDICT_H 
 #define DICT_LOKIDAQDICT_H 1
@@ -18,6 +18,7 @@
 #include "LoKi/Odin.h"
 #include "LoKi/L0.h"
 #include "LoKi/HLT.h"
+#include "LoKi/Prescale.h"
 // ============================================================================
 #include "LoKi/AlgCuts.h" // TEMPORARY
 // ============================================================================

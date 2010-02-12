@@ -1,4 +1,4 @@
-// $Id: OdinCuts.h,v 1.1 2008-09-23 13:13:35 ibelyaev Exp $
+// $Id: OdinCuts.h,v 1.2 2010-02-12 14:17:27 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_O1CUTS_H 
 #define LOKI_O1CUTS_H 1
@@ -8,6 +8,7 @@
 // LoKi
 // ============================================================================
 #include "LoKi/Odin.h"
+#include "LoKi/Prescale.h"
 // ============================================================================
 /** @file
  *  The definition of useful symbols for 'Odin'-functions
@@ -245,6 +246,29 @@ namespace LoKi
      */
     const LoKi::Odin::Orbit                                            ODIN_ORBIT ;
     // ========================================================================
+    /** @typedef ODIN_PRESCALE
+     *  Simple deterministic prescaler.
+     * 
+     *  @code
+     * 
+     *  const ODIN_PRESCALE scale  = ODIN_PRESCALE ( 0.01 , 'some_see_here' ) ;
+     *
+     *  const LHCb::ODIN* odin = ... ;
+     * 
+     *  const bool accept = scale ( odin ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Odin::Prescale
+     *  @see DeterministicPrescaler 
+     *
+     *  The idea & code belongs to Gerhard The Great Raven
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2010-02-12
+     */
+    typedef LoKi::Odin::Prescale                                ODIN_PRESCALE ;
+    // ========================================================================
     /** @var ODIN_ROTYP
      *  Simple accessor to readout type 
      *  @code
@@ -410,9 +434,9 @@ namespace LoKi
      */
     const LoKi::Constant<const LHCb::ODIN*,double>            ODIN_ZERO ( 0 ) ;
     // ========================================================================
-  } // end of namespace LoKi::Cuts 
+  } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================
-} // end of namespace LoKi 
+} //                                                      end of namespace LoKi 
 // ============================================================================
 // The END 
 // ============================================================================

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.8 2010-01-08 13:30:47 ibelyaev Exp $ 
+# $Id: functions.py,v 1.9 2010-02-12 14:17:28 ibelyaev Exp $ 
 # =============================================================================
 ## @file LoKiHlt/functions.py
 #  The full set of useful objects from LoKiHlt library 
@@ -12,7 +12,7 @@
 The full set of useful objects from LoKiHlt library
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl   "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $  "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $  "
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
@@ -191,6 +191,9 @@ ODIN_ONE       = LoKi.Constant( _o1 + ',double') ( 1 )
 
 ## @see LoKi::Cuts::ODIN_ORBIT 
 ODIN_ORBIT     = LoKi.Odin.Orbit  () 
+
+## @see LoKi::Cuts::ODIN_PRESCALE
+ODIN_PRESCALE  = LoKi.Odin.Prescale
 
 ## @see LoKi::Cuts::ODIN_ROTYP
 ODIN_ROTYP     = LoKi.Odin.ReadOutType () 
