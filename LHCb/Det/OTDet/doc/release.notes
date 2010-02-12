@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.127 2010-02-02 15:51:05 wouter Exp $
+! $Id: release.notes,v 1.128 2010-02-12 16:51:44 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
-2010-02-02 - Wouter Hulsbergen
+!========================== OTDet v8r4 2010-02-12 =========================
+! 2010-02-02 - Wouter Hulsbergen
  - Added interface to straw status flags
 
 !========================== OTDet v8r3 2009-10-16 =========================
