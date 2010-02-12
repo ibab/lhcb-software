@@ -1,4 +1,4 @@
-// $Id: STErrorMonitor.h,v 1.6 2010-02-08 14:23:17 mtobin Exp $
+// $Id: STErrorMonitor.h,v 1.7 2010-02-12 14:55:33 mtobin Exp $
 #ifndef STERRORMONITOR_H 
 #define STERRORMONITOR_H 1
 
@@ -41,6 +41,8 @@ private:
   // Job options
   bool m_expertHisto;         ///< Flag to turn off filling of expert histograms
   std::string m_errorLocation;///< Location of STTELL1BoardErrorBanks objects
+  bool m_debug; ///< true if message service level is debug
+  bool m_verbose; ///< true if message service level is verbose
 
   // Book histrograms for online monitoring
   AIDA::IHistogram1D* m_1d_errorBanks;

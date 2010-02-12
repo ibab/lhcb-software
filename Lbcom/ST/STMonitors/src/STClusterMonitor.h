@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.h,v 1.8 2010-02-10 11:33:55 mtobin Exp $
+// $Id: STClusterMonitor.h,v 1.9 2010-02-12 14:55:33 mtobin Exp $
 #ifndef STCLUSTERMONITOR_H 
 #define STCLUSTERMONITOR_H 1
 
@@ -11,12 +11,37 @@ namespace LHCb{
 }
 class ISTSignalToNoiseTool;
 
+// Boost accumulator classes to store MPVs of sectors
+#include <boost/accumulators/accumulators.hpp>
+#include <boost/accumulators/statistics/stats.hpp>
+#include <boost/accumulators/statistics/median.hpp>
+#include <boost/accumulators/statistics/mean.hpp>
+
+// Use root histos to get MPV for sectors (in absence of something better)
+class TH1D;
+
 /** @class STClusterMonitor STClusterMonitor.h
  *  
  *
  *  @author Mark Tobin
  *  @date   2009-03-10
  */
+
+/// Define some typedefs for boost accumulators
+namespace ST {
+
+  // Median of distribution
+  typedef boost::accumulators::accumulator_set
+  <double,boost::accumulators::stats<boost::accumulators::tag::median(boost::accumulators::with_p_square_quantile) > > 
+  MedianAccumulator;
+
+  // Mean of distribution
+  typedef boost::accumulators::accumulator_set
+  <double,boost::accumulators::stats<boost::accumulators::tag::mean(boost::accumulators::immediate) > > 
+  MeanAccumulator;
+
+}
+
 namespace ST
 {
   class STClusterMonitor : public HistoAlgBase {
@@ -44,7 +69,10 @@ namespace ST
 
     /// Fill the hitmaps when required.
     void fillHitMaps(const LHCb::STCluster* cluster);
-    
+
+    /// Fill the cluster mpv map per sector
+    void fillMPVMap();
+
     std::string m_clusterLocation; ///< Input location for clusters
 
     ///< Name of signal to noise tool
@@ -61,6 +89,10 @@ namespace ST
     bool m_debug; ///< true if message service level is debug
     bool m_verbose; ///< true if message service level is verbose
 
+    /// Cuts on the data quality
+    unsigned int m_minNClusters; ///< Cut on minimum number of clusters in the event
+    double m_chargeCut;///< Cut on charge
+    
     unsigned int m_nTELL1s; ///< Number of TELL1 boards expected.
 
     /// Store number of clusters/TELL1 (48 (42) Tell1s, 1->48 (42) for TT (IT))
@@ -92,12 +124,22 @@ namespace ST
 
     /// Hitmaps
     AIDA::IHistogram2D* m_2d_hitmap;///< Cluster hitmap
+    AIDA::IHistogram2D* m_2d_sectorMPVs;///< Sector MPV maps
 
     /// Cut on the bunch ID (distinguish Beam from cosmics)
     std::vector<unsigned int> m_bunchID;
 
     static const unsigned int m_nBinsPerTTSector=16u;///< Number of bins per TT sector in the hitmap (beetle ports)
     static const unsigned int m_nBinsPerITSector=12u;///< Number of bins in each IT sector (beetle ports)
+
+    /// Accumulation of statistics for the MPV per sector
+    std::map<const unsigned int,ST::MedianAccumulator> m_sectorMPVs;
+    std::map<const unsigned int,ST::MeanAccumulator> m_sectorMeans;
+    std::map<const unsigned int,TH1D*> m_1ds_chargeBySector;
+    void resetAccumulators();
+
+    /// Reset rate for accumulators/MPV histograms
+    unsigned int m_resetRate;
 
   };
 } // End of ST namespace

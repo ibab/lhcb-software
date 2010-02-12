@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.19 2010-02-10 11:33:55 mtobin Exp $
+// $Id: STClusterMonitor.cpp,v 1.20 2010-02-12 14:55:33 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -31,6 +31,10 @@
 // AIDA histograms
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
+#include "TH1D.h"
+#include "GaudiUtils/Aida2ROOT.h"
+
+//#include <boost/accumulators/statistics/mean.hpp>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : STClusterMonitor
@@ -74,6 +78,13 @@ ST::STClusterMonitor::STClusterMonitor( const std::string& name,
 
   declareProperty("BunchID",       m_bunchID               );// BunchID 
 
+  /// Some data quality cuts
+  declareProperty("ChargeCut", m_chargeCut=12);//< charge on the cluster
+  declareProperty("MinTotalClusters", m_minNClusters=5);/// cuts on the total number of clusters in the event
+
+  /// Reset rate for histograms/accumulators
+  declareProperty("ResetRate", m_resetRate=1000);
+  
 }
 //=============================================================================
 // Destructor
@@ -116,6 +127,9 @@ StatusCode ST::STClusterMonitor::initialize() {
   // Book histograms
   bookHistograms();
 
+  // Reset the accumulators
+  resetAccumulators();
+
   return StatusCode::SUCCESS;
 }
 
@@ -137,6 +151,12 @@ StatusCode ST::STClusterMonitor::execute() {
   // code goes here  
   monitorClusters();
 
+  // this is where any histograms/couters are reset
+  if(m_resetRate > 0 && counter("Number of events").nEntries()%m_resetRate == 0) {
+    if(m_hitMaps) fillMPVMap();
+    resetAccumulators();
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -146,7 +166,8 @@ StatusCode ST::STClusterMonitor::execute() {
 StatusCode ST::STClusterMonitor::finalize() {
 
   if(m_debug) debug() << "==> Finalize" << endmsg;
-
+  if(m_hitMaps) fillMPVMap();
+  
   return ST::HistoAlgBase::finalize(); 
 }
 
@@ -161,15 +182,19 @@ void ST::STClusterMonitor::monitorClusters() {
     m_nClustersPerTELL1.resize(m_nTELL1s,0);
     LHCb::STClusters* clusters = get<LHCb::STClusters>(m_clusterLocation);
     LHCb::STClusters::const_iterator itClus;
-    // Loop over clusters
+
     const unsigned int nClusters = clusters->size();
     if(m_debug) debug() << "Number of clusters in " << m_clusterLocation 
                         << " is " << nClusters << endmsg;
+
+    if(nClusters < m_minNClusters) return;
 
     m_1d_nClusters->fill(nClusters);
     if(100  < nClusters) {
       m_1d_nClusters_gt_100->fill(nClusters);
     }
+
+    // Loop over clusters
     for(itClus = clusters->begin(); itClus != clusters->end(); ++itClus) {
       const LHCb::STCluster* cluster = (*itClus);
       fillHistograms(cluster);
@@ -190,6 +215,56 @@ void ST::STClusterMonitor::monitorClusters() {
     }
     m_nClustersPerTELL1.clear();
   } else Warning("No clusters found at "+m_clusterLocation, StatusCode::SUCCESS,0).ignore(); // End of cluster exists
+
+}
+//==============================================================================
+// Reset accumulators
+//==============================================================================
+void ST::STClusterMonitor::resetAccumulators() {
+  m_sectorMPVs.clear();
+  m_sectorMeans.clear();
+  std::vector<DeSTSector*>::const_iterator Sectors = tracker()->sectors().begin();
+  for(; Sectors != tracker()->sectors().end(); ++Sectors) {
+    m_sectorMPVs[(*Sectors)->elementID().uniqueSector()] = ST::MedianAccumulator();
+    m_sectorMeans[(*Sectors)->elementID().uniqueSector()] = ST::MeanAccumulator();
+  }
+}
+//================================================================================================================================
+// Fill the MPV cluster maps 
+//================================================================================================================================
+void ST::STClusterMonitor::fillMPVMap() {
+
+  m_2d_sectorMPVs->reset();
+
+  std::vector<DeSTSector*>::const_iterator Sectors = tracker()->sectors().begin();
+  std::map<const unsigned int,ST::MedianAccumulator>::const_iterator iMed = m_sectorMPVs.begin();
+  std::map<const unsigned int,ST::MeanAccumulator>::const_iterator iMean = m_sectorMeans.begin();
+  std::map<const unsigned int,TH1D*>::const_iterator iH = m_1ds_chargeBySector.begin();
+  for(; Sectors != tracker()->sectors().end(); ++Sectors, ++iMed, ++iMean, ++iH) {
+    double mpv = (*iH).second->GetBinCenter((*iH).second->GetMaximumBin());
+    double nEntries = (*iH).second->GetEntries();
+    if(detType() == "TT") {
+      const DeTTSector* ttSector = dynamic_cast<const DeTTSector* >((*Sectors));
+      ST::TTDetectorPlot hitMap("map","map");
+      ST::TTDetectorPlot::Bins bins = hitMap.toBins(ttSector);
+      double xBin = bins.xBin;
+      // Hack to make real x-y distribution plot (not occupancy)
+      for( int yBin = bins.beginBinY; yBin != bins.endBinY; ++yBin ) {
+        m_2d_sectorMPVs->fill(xBin,yBin,mpv);
+      }
+    } else if( detType() == "IT" ) {// Cluster map for IT
+      ST::ITDetectorPlot hitMap("map", "map");
+      ST::ITDetectorPlot::Bins bins = hitMap.toBins((*Sectors)->elementID());
+      // Hack to make real x-y distribution plot (not occupancy)
+      m_2d_sectorMPVs->fill(bins.xBin, bins.yBin, 1.);
+    }
+    if(m_debug) debug() << (*Sectors)->elementID()
+                        << " median=" << boost::accumulators::median((*iMed).second) 
+                        << " mean=" << boost::accumulators::mean((*iMean).second) 
+                        << " mpv=" << mpv << " n=" << nEntries
+                        << endmsg;
+  } // End of sector iterator loop
+
 }
 
 //==============================================================================
@@ -220,8 +295,7 @@ void ST::STClusterMonitor::bookHistograms() {
   m_1d_totalCharge = book1D("Cluster ADC Values", 0., 200., 100);
   if(detType() == "TT" || m_plotBySvcBox) {
     /// list of service boxes  
-    std::vector<std::string>::const_iterator itSvcBoxes = 
-      readoutTool()->serviceBoxes().begin();
+    std::vector<std::string>::const_iterator itSvcBoxes = readoutTool()->serviceBoxes().begin();
     for( ; itSvcBoxes != readoutTool()->serviceBoxes().end(); ++itSvcBoxes) {
       std::string svcBox=(*itSvcBoxes);
       if(detType() == "TT") {
@@ -250,14 +324,29 @@ void ST::STClusterMonitor::bookHistograms() {
   // Book histograms for hitmaps
   if(m_hitMaps) {
     std::string idMap = detType()+" cluster map";
+    std::string idMPVMap = detType()+" Sector MPVs";
     if(detType()=="TT"){// Cluster maps for TT
-    ST::TTDetectorPlot hitMap(idMap, idMap, m_nBinsPerTTSector);
+      ST::TTDetectorPlot hitMap(idMap, idMap, m_nBinsPerTTSector);
       m_2d_hitmap = book2D(hitMap.name(), hitMap.minBinX(), hitMap.maxBinX(), hitMap.nBinX(),
                            hitMap.minBinY(), hitMap.maxBinY(), hitMap.nBinY());
+      ST::TTDetectorPlot MPVMap(idMPVMap, idMPVMap);
+      m_2d_sectorMPVs = book2D(MPVMap.name(), MPVMap.minBinX(), MPVMap.maxBinX(), MPVMap.nBinX(),
+                               MPVMap.minBinY(), MPVMap.maxBinY(), MPVMap.nBinY());
     } else if( detType() == "IT" ) {// Cluster map for IT
       ST::ITDetectorPlot hitMap(idMap, idMap, m_nBinsPerITSector);
       m_2d_hitmap = book2D(hitMap.name(), hitMap.minBinX(), hitMap.maxBinX(), hitMap.nBinX(),
                            hitMap.minBinY(), hitMap.maxBinY(), hitMap.nBinY());
+      ST::ITDetectorPlot MPVMap(idMPVMap, idMPVMap);
+      m_2d_sectorMPVs = book2D(MPVMap.name(), MPVMap.minBinX(), MPVMap.maxBinX(), MPVMap.nBinX(),
+                               MPVMap.minBinY(), MPVMap.maxBinY(), MPVMap.nBinY());
+    }
+    // Create histogram of with total charge for each sector
+    std::vector<DeSTSector*>::const_iterator Sectors = tracker()->sectors().begin();
+    for(; Sectors != tracker()->sectors().end(); ++Sectors) {
+      std::string idh = "charge_$sector"+boost::lexical_cast<std::string>((*Sectors)->elementID().uniqueSector());
+      std::string title = "Total charge in "+(*Sectors)->nickname();
+      m_1ds_chargeBySector[(*Sectors)->elementID().uniqueSector()] 
+        = Gaudi::Utils::Aida2ROOT::aida2root ( book1D("BySector/"+idh,title,0.,100.,100) );
     }
   }
 }
@@ -266,8 +355,18 @@ void ST::STClusterMonitor::bookHistograms() {
 // Fill histograms
 //==============================================================================
 void ST::STClusterMonitor::fillHistograms(const LHCb::STCluster* cluster){
+
   const double totalCharge = cluster->totalCharge();
+  if(totalCharge < m_chargeCut) return;
+  
+  // calculate MPVs
+  m_sectorMPVs[cluster->firstChannel().uniqueSector()](totalCharge); 
+  m_sectorMeans[cluster->firstChannel().uniqueSector()](totalCharge);
+  if(m_hitMaps) {
+    m_1ds_chargeBySector[cluster->firstChannel().uniqueSector()]->Fill(totalCharge);
+  }
   const unsigned int clusterSize = cluster->size();
+
   const unsigned int sourceID = cluster->sourceID();
   unsigned int TELL1ID = (this->readoutTool())->SourceIDToTELLNumber(sourceID);
   m_nClustersPerTELL1[TELL1ID-1] += 1;

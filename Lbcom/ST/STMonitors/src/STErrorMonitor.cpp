@@ -1,4 +1,4 @@
-// $Id: STErrorMonitor.cpp,v 1.13 2010-02-08 14:23:17 mtobin Exp $
+// $Id: STErrorMonitor.cpp,v 1.14 2010-02-12 14:55:33 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -60,6 +60,10 @@ StatusCode STErrorMonitor::initialize()
   StatusCode sc = ST::HistoAlgBase::initialize();
   if (sc.isFailure()) return sc;
 
+  m_debug = msgLevel( MSG::DEBUG );
+  m_verbose = msgLevel( MSG::VERBOSE );
+  if(m_verbose) m_debug = true;
+
   // Get the maximum number of Tell1s to determine number of histogram bin
   m_maxTell1s = (this->readoutTool())->SourceIDToTELLNumberMap().size();
 
@@ -83,9 +87,11 @@ StatusCode STErrorMonitor::initialize()
     labelHistoErrorTypes( m_errorHistos[tellID] );
     // Work out the total number of links for the detector (over-estimate for TT as some links not enabled)
     m_activePorts += nports*noptlinks;
-
   }
-  
+
+  if(detType() == "TT") m_activePorts -= 128;//< Very nastily hardcoded for now.
+
+  if(m_debug) debug() << "Number of active ports in " << detType() << " is " << m_activePorts << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -134,7 +140,7 @@ StatusCode STErrorMonitor::execute()
   for ( ; iterBank != errors->end();  ++iterBank){
 
     // Print out the error bank information
-    if (msgLevel(MSG::DEBUG)) debug() << **iterBank << endmsg;
+    if (m_debug) debug() << **iterBank << endmsg;
 
     // Get the number of the tell1
     unsigned int sourceID = (*iterBank)->Tell1ID();

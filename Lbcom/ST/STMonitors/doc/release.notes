@@ -5,6 +5,14 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-02-10 - Mark Tobin
+ - Changes to STClusterMonitor:
+  - Added some counters to STClusterMonitor.
+  - Added histogram with MPV for each sector.
+  - Added possibility to cut on cluster charge and total number of clusters.
+ - Calculate fraction of errors banks set correctly for TT in STErrorMonitor.
+ - Fixed some indentation in STTAEClusterMonitor.
+
+! 2010-02-10 - Mark Tobin
  - Modified STClusterMonitor to use newest version of ITDetectorPlot.
 
 ! 2010-02-08 - Mark Tobin

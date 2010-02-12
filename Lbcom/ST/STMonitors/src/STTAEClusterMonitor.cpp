@@ -1,4 +1,4 @@
-// $Id: STTAEClusterMonitor.cpp,v 1.12 2009-12-06 13:28:52 mtobin Exp $
+// $Id: STTAEClusterMonitor.cpp,v 1.13 2010-02-12 14:55:33 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -42,27 +42,26 @@ namespace ST {
 // Standard constructor, initializes variables
 //=============================================================================
 ST::STTAEClusterMonitor::STTAEClusterMonitor( const std::string& name,
-                                      ISvcLocator* pSvcLocator)
+                                              ISvcLocator* pSvcLocator)
   : ST::HistoAlgBase ( name , pSvcLocator )
 {
   // Ordered list of cluster locations
-  //  std::vector<std::string> m_clusterDefaultLocations =
   m_clusterLocations =
     boost::assign::list_of("Event/Prev7/Raw/TT/Clusters")
-                          ("Event/Prev6/Raw/TT/Clusters")
-                          ("Event/Prev5/Raw/TT/Clusters") 
-                          ("Event/Prev4/Raw/TT/Clusters")
-                          ("Event/Prev3/Raw/TT/Clusters")
-                          ("Event/Prev2/Raw/TT/Clusters")
-                          ("Event/Prev1/Raw/TT/Clusters")
-                          ("Raw/TT/Clusters")
-                          ("Event/Next1/Raw/TT/Clusters")
-                          ("Event/Next2/Raw/TT/Clusters")
-                          ("Event/Next3/Raw/TT/Clusters")
-                          ("Event/Next4/Raw/TT/Clusters")
-                          ("Event/Next5/Raw/TT/Clusters")
-                          ("Event/Next6/Raw/TT/Clusters")
-                          ("Event/Next7/Raw/TT/Clusters");
+    ("Event/Prev6/Raw/TT/Clusters")
+    ("Event/Prev5/Raw/TT/Clusters") 
+    ("Event/Prev4/Raw/TT/Clusters")
+    ("Event/Prev3/Raw/TT/Clusters")
+    ("Event/Prev2/Raw/TT/Clusters")
+    ("Event/Prev1/Raw/TT/Clusters")
+    ("Raw/TT/Clusters")
+    ("Event/Next1/Raw/TT/Clusters")
+    ("Event/Next2/Raw/TT/Clusters")
+    ("Event/Next3/Raw/TT/Clusters")
+    ("Event/Next4/Raw/TT/Clusters")
+    ("Event/Next5/Raw/TT/Clusters")
+    ("Event/Next6/Raw/TT/Clusters")
+    ("Event/Next7/Raw/TT/Clusters");
   declareProperty( "ClusterLocations", m_clusterLocations);
   // Cuts
   declareProperty("BunchID",       m_bunchID               );// BunchID 
@@ -145,18 +144,18 @@ void ST::STTAEClusterMonitor::bookHistograms() {
         std::string quadrant = svcBox.substr(0,2);
         if(m_histos_ADCsVsSampleByServiceBox.find(quadrant) == m_histos_ADCsVsSampleByServiceBox.end()) {
           m_histos_ADCsVsSampleByServiceBox[quadrant] = 
-	    HistoPair( Gaudi::Utils::Aida2ROOT::aida2root ( book2D("Cluster ADC values vs sampling point "+quadrant,
-								   -m_maxSample, m_maxSample, m_nSamples, 0., 60., 60) ),
-		       bookProfile1D("ADC MPV vs sampling point"+quadrant,
-				     -m_maxSample, m_maxSample, m_nSamples, "", 0., 60.));
+            HistoPair( Gaudi::Utils::Aida2ROOT::aida2root ( book2D("Cluster ADC values vs sampling point "+quadrant,
+                                                                   -m_maxSample, m_maxSample, m_nSamples, 0., 60., 60) ),
+                       bookProfile1D("ADC MPV vs sampling point"+quadrant,
+                                     -m_maxSample, m_maxSample, m_nSamples, "", 0., 60.));
         }
       } // End of TT condition
       if(m_plotBySvcBox) {
         m_histos_ADCsVsSampleByServiceBox[svcBox] = 
-	    HistoPair( Gaudi::Utils::Aida2ROOT::aida2root ( book2D("Cluster ADC values vs sampling point "+svcBox,
-								   -m_maxSample, m_maxSample, m_nSamples, 0., 60., 60) ),
-		       bookProfile1D("ADC MPV vs sampling point "+svcBox,
-				     -m_maxSample, m_maxSample, m_nSamples, "", 0., 60.));
+          HistoPair( Gaudi::Utils::Aida2ROOT::aida2root ( book2D("Cluster ADC values vs sampling point "+svcBox,
+                                                                 -m_maxSample, m_maxSample, m_nSamples, 0., 60., 60) ),
+                     bookProfile1D("ADC MPV vs sampling point "+svcBox,
+                                   -m_maxSample, m_maxSample, m_nSamples, "", 0., 60.));
       }
     } // End of service box loop
   } // End of service box condition
@@ -172,10 +171,10 @@ void ST::STTAEClusterMonitor::bookHistograms() {
       //      std::cout << (*itNames) << std::endl;
       std::string region = (*itNames);
       m_histos_ADCsVsSampleByDetRegion[region] = 
-	HistoPair( Gaudi::Utils::Aida2ROOT::aida2root ( book2D("Cluster ADC values vs sampling point "+region,
-							       -m_maxSample, m_maxSample, m_nSamples, 0., 60., 60) ),
-		   bookProfile1D("ADC MPV vs sampling point "+region,
-				 -m_maxSample, m_maxSample, m_nSamples, "", 0., 60.));
+        HistoPair( Gaudi::Utils::Aida2ROOT::aida2root ( book2D("Cluster ADC values vs sampling point "+region,
+                                                               -m_maxSample, m_maxSample, m_nSamples, 0., 60., 60) ),
+                   bookProfile1D("ADC MPV vs sampling point "+region,
+                                 -m_maxSample, m_maxSample, m_nSamples, "", 0., 60.));
     };
   }
 }
@@ -240,15 +239,15 @@ void ST::STTAEClusterMonitor::monitorClusters() {
 
           // ADC values vs spill
           const double totalCharge = cluster->totalCharge();
-	  if(totalCharge < m_chargeCut) continue;
+          if(totalCharge < m_chargeCut) continue;
           m_2d_ADCsVsSample->fill(sample, totalCharge);
           // Always fill histograms per readout quadrant for TT
           if(detType() == "TT") {
             std::string quadrant = svcBox.substr(0,2);
-	    fillHistogram(m_histos_ADCsVsSampleByServiceBox[quadrant], sample, totalCharge);
+            fillHistogram(m_histos_ADCsVsSampleByServiceBox[quadrant], sample, totalCharge);
           }
           if(m_plotBySvcBox) {
-	    fillHistogram(m_histos_ADCsVsSampleByServiceBox[svcBox], sample, totalCharge);
+            fillHistogram(m_histos_ADCsVsSampleByServiceBox[svcBox], sample, totalCharge);
           }
           if(m_plotByDetRegion) {
             std::string region = cluster->detRegionName();
@@ -274,13 +273,13 @@ void ST::STTAEClusterMonitor::updateMPVHistograms() {
       h1p->reset();
       int nbinsX=h2d->GetNbinsX();
       for(int i=1; i<=nbinsX; ++i) {
-	TH1D* hpy = h2d->ProjectionY("hpy",i,i);
-	if ( !(0.0 < hpy->GetEntries()) ) {
-	  continue;
-	}
-	double sample = h2d->GetXaxis()->GetBinCenter(i);
-	double mpv = hpy->GetBinCenter(hpy->GetMaximumBin());
-	h1p->fill(sample, mpv);
+        TH1D* hpy = h2d->ProjectionY("hpy",i,i);
+        if ( !(0.0 < hpy->GetEntries()) ) {
+          continue;
+        }
+        double sample = h2d->GetXaxis()->GetBinCenter(i);
+        double mpv = hpy->GetBinCenter(hpy->GetMaximumBin());
+        h1p->fill(sample, mpv);
       }
     }
   }
