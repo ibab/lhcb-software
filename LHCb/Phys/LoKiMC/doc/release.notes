@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.77 2010-02-10 17:36:38 ibelyaev Exp $ 
+! $Id: release.notes,v 1.78 2010-02-12 12:45:36 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+! 2010-02-12 - Patrick Koppenburg
+ - Remove dependency on DaVinciMCKernel
 
 ! 2010-02-10 - Vanya Belyaev
 
