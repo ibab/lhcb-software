@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # pylint: disable-msg=E1103,W0141
-_cvs_id = "$Id: SetupProject.py,v 1.32 2010-02-12 09:59:44 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.33 2010-02-12 11:45:56 marcocle Exp $"
 
 import os, sys, re, time
 from xml.sax import parse, ContentHandler
@@ -11,7 +11,7 @@ from tempfile import mkdtemp, mkstemp
 
 from LbConfiguration import createProjectMakefile
 from LbUtils.CVS import CVS2Version
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.32 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.33 $")
 
 # subprocess is available since Python 2.4, but LbUtils guarantees that we can
 # import it also in Python 2.3
@@ -201,7 +201,6 @@ class TemporaryEnvironment:
         done_vars = []
         while old_vars:
             key = old_vars.pop(0)
-            sys.stderr.write("--- %s\n" % key) 
             if key not in self.env:
                 # unset variable
                 if shell_type == 'csh':
@@ -210,7 +209,6 @@ class TemporaryEnvironment:
                     out += 'unset %s\n' % key
                 elif shell_type == 'bat':
                     out += 'set %s=\n' % key
-                sys.stderr.write("--- %s unset\n" % key)
                 done_vars.append(key)
             else:
                 val = self.env[key]
@@ -220,7 +218,6 @@ class TemporaryEnvironment:
                     for group1, group2 in ms:
                         ref_var = group1 or group2
                         if ref_var not in done_vars and ref_var in old_vars:
-                            sys.stderr.write("--- %s uses %s\n" % (key, ref_var))
                             can_be_added = False
                             break
                 if can_be_added:
@@ -231,7 +228,6 @@ class TemporaryEnvironment:
                         out += 'export %s="%s"\n' % (key, self.env[key])
                     elif shell_type == 'bat':
                         out += 'set %s=%s\n' % (key, self.env[key])
-                    sys.stderr.write("--- %s set to %s\n" % (key, self.env[key]))
                     done_vars.append(key)
                 else:
                     old_vars.append(key)
