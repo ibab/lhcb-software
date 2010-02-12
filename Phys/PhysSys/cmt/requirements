@@ -1,23 +1,34 @@
-#$Id: requirements,v 1.213 2010-01-29 12:54:15 jpalac Exp $
+#$Id: requirements,v 1.214 2010-02-12 13:13:34 pkoppenb Exp $
 package PhysSys
-version v9r0
+version v9r1
 
 branches doc cmt
 
 ####################################################################
+use  DaVinciKernel              v8r4     Phys    # Juan Palacios
+use  DaVinciMCKernel            v4r1     Phys    # Juan Palacios
+use  HltInterfaces              v3r1     Kernel  # Gerhard Raven
+use  SelectionLine              v1r0     Kernel  # Gerhard Raven
 
 #===================================================================
-use  PhysConf                   v1r6     Phys   # Patrick Koppenburg, Juan Palacios
-use  ProtoParticleFilter        v1r4     Phys   # Chris Jones
-use  DaVinciTools       	v20r0    Phys   # Juan Palacios
-use  DaVinciTransporter 	v3r9p1   Phys   # Juan Palacios
-use  ParticleMaker      	v5r5     Phys   # Chris Jones
-use  VertexFit			v6r2     Phys   # Yuehong Xie
-use  LoKiFitters                v2r3     Phys   # Vanya Belyaev
-use  DecayTreeFitter            v1r6     Phys   # Wouter Hulsbergen
-use  PhysDict                   v4r1     Phys   # Juan Palacios
-use  SelectionLine              v1r0     Kernel # Gerhard Raven
-use  HltInterfaces              v3r1     Kernel # Gerhard Raven
+use  PhysConf                   v1r6     Phys    # Patrick Koppenburg, Juan Palacios
+use  ProtoParticleFilter        v1r4     Phys    # Chris Jones
+use  DaVinciTools       	v20r0    Phys    # Juan Palacios
+use  DaVinciTransporter 	v3r9p1   Phys    # Juan Palacios
+use  ParticleMaker      	v5r5     Phys    # Chris Jones
+use  VertexFit			v6r2     Phys    # Yuehong Xie
+use  LoKiFitters                v2r3     Phys    # Vanya Belyaev
+use  DecayTreeFitter            v1r6     Phys    # Wouter Hulsbergen
+use  PhysDict                   v4r1     Phys    # Juan Palacios
+
+#===================================================================
+use LoKi                        v8r1     Phys    # Ivan Belyaev
+use LoKiAlgo                    v8r1     Phys    # Ivan Belyaev
+use LoKiAlgoMC                  v8r1     Phys    # Ivan Belyaev
+use LoKiArrayFunctors           v8r8     Phys    # Ivan Belyaev
+use LoKiGenMC                   v8r1     Phys    # Ivan Belyaev
+use LoKiPhys                    v8r13    Phys    # Ivan Belyaev
+use LoKiPhysMC                  v8r6     Phys    # Ivan Belyaev
 
 # Declare this as a container package
 apply_pattern container_package
