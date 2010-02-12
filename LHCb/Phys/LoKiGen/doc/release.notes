@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.81 2010-02-10 17:37:00 ibelyaev Exp $ 
+! $Id: release.notes,v 1.82 2010-02-12 17:10:07 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -14,15 +14,13 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiGen v8r8 2010-02-12 ===========================
 ! 2010-02-10 - Vanya Belyaev
-
  Add new symbols 
-
     GY    LoKi::GenParticles::Rapidity   for evaluation of rapidity  (y)
     GY0   LoKi::GenParticles::Rapidity0  for evaluation of rapidity0 (y_0) 
 
  - cmt/requirements 
-
     version increment to v8r8 
 
 !========================== LoKiGen v8r7 2009-09-02 ===========================
