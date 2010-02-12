@@ -4,6 +4,12 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2010-02-12 - Illya Shapoval
+ - Minor change to the CondDB.useLatestTags(DataType) function. Added the
+   mode for it to find and set only the latest global tag for a 
+   particular DataType, dropping the latest local tags on top of it. 
+   New syntax: CondDB.useLatestTags(DataType,OnlyGlobalTags = False).
+
 ! 2010-02-05 - Marco Clemencic
  - Added the function CondDB.useLatestTags(DataType) to automatically select
    the latest local and global tags for a given data type from the SQLDDDB

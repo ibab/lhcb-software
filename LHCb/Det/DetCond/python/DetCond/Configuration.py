@@ -346,7 +346,7 @@ class CondDB(ConfigurableUser):
         from Configurables       import CondDBEntityResolver
         VFSSvc().FileAccessTools.append(CondDBEntityResolver())
 
-    def useLatestTags(self, DataType):
+    def useLatestTags(self, DataType, OnlyGlobalTags = False):
         """
         Configure the conditions database to use the latest local tags on top of the latest global tag for a given data type.
         """
@@ -357,7 +357,8 @@ class CondDB(ConfigurableUser):
                 raise RuntimeError("Cannot find tags for partition %s, data type %s" % (partition, DataType))
             gt, lts = tags
             self.Tags[partition] = gt
-            self.LocalTags[partition] = lts
+	    if not OnlyGlobalTags:
+                self.LocalTags[partition] = lts
 
 
 # Exported symbols
