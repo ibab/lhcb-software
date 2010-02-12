@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.51 2010-02-12 22:18:49 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.52 2010-02-12 22:25:35 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -223,7 +223,6 @@ StatusCode HltGlobalMonitor::initialize() {
       for (std::vector<std::string>::const_iterator k = strip.begin();k!=strip.end();++k) {
         if (s!=*k) boost::algorithm::erase_all(s,*k);
       }
-      always() << " adding " << s << " for " << *j << " in " << i->first << endmsg;
       labels.push_back(s);
       m_hlt1Line2AlleyBin[ *j ] =  std::make_pair( m_hlt1Alleys.size(), labels.size()-1 ); // bind to histogram and bin... _1 will accept
     }
@@ -249,7 +248,6 @@ StatusCode HltGlobalMonitor::initialize() {
         if (s!=*k) boost::algorithm::erase_all(s,*k);
       }
       labels.push_back(s);
-      always() << " adding " << s << " for " << *j << " in " << i->first << endmsg;
       m_hlt2Line2AlleyBin[ *j ] =  std::make_pair( m_hlt2Alleys.size(), labels.size()-1 );
     }
     if (!setBinLabels( m_hlt2Alleys.back(),labels )) {
