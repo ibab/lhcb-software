@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2010-02-12 - Chris Jones
+ - Adapt to changes in RIchKernel histogramming base classes.
+
 !======================== RichReadout v2r12p1 2009-10-22 =====================
 ! 2009-10-22 - Marco Cattaneo
  - remove obsolete file RichReadout_dll.cpp

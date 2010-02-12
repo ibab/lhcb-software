@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.18 2009-01-20 16:00:55 cattanem Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.19 2010-02-12 07:35:52 jonrob Exp $
 
 // Units
 #include "GaudiKernel/SystemOfUnits.h"
@@ -26,7 +26,7 @@ DECLARE_ALGORITHM_FACTORY( AlgMoni );
 // Standard constructor, initializes variables
 AlgMoni::AlgMoni( const std::string& name,
                   ISvcLocator* pSvcLocator )
-  : RichHistoAlgBase ( name, pSvcLocator ),
+  : HistoAlgBase     ( name, pSvcLocator ),
     m_smartIDTool    ( NULL ),
     m_mcTool         ( NULL ),
     m_richSys        ( NULL ),
@@ -47,7 +47,7 @@ AlgMoni::~AlgMoni() {}
 StatusCode AlgMoni::initialize()
 {
   // Initialize base class
-  const StatusCode sc = RichHistoAlgBase::initialize();
+  const StatusCode sc = HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // get tools
@@ -103,7 +103,7 @@ StatusCode AlgMoni::execute()
   // Histogramming
   PD_GLOBAL_POSITIONS;
   const double maxMult[] = { 5000, 2000 };
-  const RichHistoID hid;
+  const Rich::HistoID hid;
 
   // Loop over all MCRichDigits
   for ( LHCb::MCRichDigits::const_iterator iMcDigit = mcRichDigits->begin();
@@ -420,7 +420,7 @@ void AlgMoni::fillHPDPlots( const PartMap & pmap,
   // histogramming
   PD_LOCAL_POSITIONS_X;
   PD_LOCAL_POSITIONS_Y;
-  const RichHistoID hid;
+  const Rich::HistoID hid;
 
   // count for each RICH
   std::vector<unsigned int> nHPDs(Rich::NRiches,0);
@@ -465,22 +465,22 @@ void AlgMoni::fillHPDPlots( const PartMap & pmap,
               -8*Gaudi::Units::mm, 8*Gaudi::Units::mm, -8*Gaudi::Units::mm, 8*Gaudi::Units::mm, 32, 32 );         
     }
     // plot number of hits
-    plot1D( (*iP).second.size(), plotsDir+"/"+hid(hpdID.rich(),"/nHitsPerHPD"),
+    plot1D( (*iP).second.size(), plotsDir+"/"+hid(hpdID.rich(),"/nHitsPerHPD").id(),
             "# hits per HPD from "+plotsName, 0.5, 200.5, 100 );
     // plot number of digits
-    plot1D( uniqueIDs.size(), plotsDir+"/"+hid(hpdID.rich(),"/nDigsPerHPD"),
+    plot1D( uniqueIDs.size(), plotsDir+"/"+hid(hpdID.rich(),"/nDigsPerHPD").id(),
             "# digits per HPD from "+plotsName, 0.5, 200.5, 100 );
     // position of HPD
     plot2D( hpdLoc.X(), hpdLoc.Y(),
-            plotsDir+"/"+hid(hpdID.rich(),"hitHPDs"), "HPD Hit Map",
+            plotsDir+"/"+hid(hpdID.rich(),"hitHPDs").id(), "HPD Hit Map",
             xMinPDLoc[hpdID.rich()],xMaxPDLoc[hpdID.rich()],
             yMinPDLoc[hpdID.rich()],yMaxPDLoc[hpdID.rich()] );
   }
 
   // number of affected HPD plots
-  plot1D( nHPDs[Rich::Rich1], plotsDir+"/"+hid(Rich::Rich1,"/nHPDsPerEv"),
+  plot1D( nHPDs[Rich::Rich1], plotsDir+"/"+hid(Rich::Rich1,"/nHPDsPerEv").id(),
           "# RICH1 HPDs per event with "+plotsName, -0.5, 20.5, 21 );
-  plot1D( nHPDs[Rich::Rich2], plotsDir+"/"+hid(Rich::Rich2,"/nHPDsPerEv"),
+  plot1D( nHPDs[Rich::Rich2], plotsDir+"/"+hid(Rich::Rich2,"/nHPDsPerEv").id(),
           "# RICH2 HPDs per event with "+plotsName, -0.5, 20.5, 21 );
 }
 
