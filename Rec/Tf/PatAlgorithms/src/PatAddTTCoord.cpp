@@ -1,4 +1,4 @@
-// $Id: PatAddTTCoord.cpp,v 1.7 2010-02-08 16:45:11 decianm Exp $
+// $Id: PatAddTTCoord.cpp,v 1.8 2010-02-12 17:00:26 decianm Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -11,7 +11,7 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatAddTTCoord
 //
-// 2010-02-04 : Michel De Cian, based on Olivier Callot's PatAddTTCoord
+// 2010-02-12 : Michel De Cian, based on Olivier Callot's PatAddTTCoord
 //
 //-----------------------------------------------------------------------------
 
@@ -94,7 +94,17 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track){
    
   double momentum = track.p();
 
-  returnTTClusters(state, myTTHits, chi2, momentum);
+  StatusCode sc = returnTTClusters(state, myTTHits, chi2, momentum);
+
+  if(!sc){
+
+    // ----------------------------------
+    if (  msgLevel( MSG::WARNING ) ) warning() << "--- Received no hits. Will add no hits to long tracks"  << endmsg;
+    // ----------------------------------
+    
+    return StatusCode::SUCCESS;
+  }
+  
 
   for ( PatTTHits::iterator itT = myTTHits.begin(); myTTHits.end() != itT; ++itT ) {
 
