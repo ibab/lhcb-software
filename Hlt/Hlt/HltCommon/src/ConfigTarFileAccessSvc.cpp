@@ -9,11 +9,16 @@
 #include <map>
 #include <algorithm>
 #include <time.h>
+
+#ifndef _WIN32
 #include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
 #include <grp.h>
 #include <sys/stat.h>
+#endif
+
+
 using namespace std;
 
 #include "boost/lexical_cast.hpp"
@@ -26,7 +31,7 @@ namespace fs = boost::filesystem;
 #include "boost/iostreams/slice.hpp"
 #include "boost/iostreams/operations.hpp"
 #include "boost/iostreams/seek.hpp"
-namespace bio = boost::iostreams;
+namespace io = boost::iostreams;
 
 
 
@@ -146,7 +151,7 @@ namespace ConfigTarFileAccessSvc_details {
                 // slice works relative to the current file offset, as it works on an istream...
                 m_file.seekg(0,std::ios_base::beg);
                 // suggest an 8K buffer size as hint -- most config items are smaller than that...
-                bio::copy(bio::slice(m_file,i->second.offset,i->second.size), os, 8192);
+                io::copy(io::slice(m_file,i->second.offset,i->second.size), os, 8192);
                 return true;
             }
             // try to read a gzipped version of the filename
@@ -154,11 +159,11 @@ namespace ConfigTarFileAccessSvc_details {
             if (i!=myIndex.end()) {
                 // slice works relative to the current file offset, as it works on an istream...
                 m_file.seekg(0,std::ios_base::beg);
-                bio::filtering_istream in;
-                in.push(bio::gzip_decompressor());
-                in.push(bio::slice(m_file,i->second.offset,i->second.size));
+                io::filtering_istream in;
+                in.push(io::gzip_decompressor());
+                in.push(io::slice(m_file,i->second.offset,i->second.size));
                 // suggest an 8K buffer size as hint -- most config items are smaller than that...
-                bio::copy(in, os, 8192);
+                io::copy(in, os, 8192);
                 return true;
             }
             return false;
@@ -257,6 +262,8 @@ namespace ConfigTarFileAccessSvc_details {
               std::string bstring = is.str();
               size_t size = bstring.size();
               const char* buffer = bstring.c_str();
+              // TODO: if size exceed the blocksize, perform gzip compression, and see if it reduces the # of blocks...
+              //       if so, write the .gz version instead
 
                if (m_file.tellp()>=0 && m_leof!=m_file.tellp() ) {
                    m_file.seekp(m_leof,ios::beg); // where do we start writing?
@@ -374,7 +381,7 @@ namespace ConfigTarFileAccessSvc_details {
                     assert(info.name == "././@LongLink");
                     // first read the real, untruncated name as data
                     std::ostringstream fname;
-                    bio::copy(bio::slice(m_file,0,info.size), fname);
+                    io::copy(io::slice(m_file,0,info.size), fname);
                     size_t padding = info.size % 512;
                     if (padding!=0) m_file.seekg(512-padding,std::ios::cur);
                     // and now get another header, which contains a truncated name
