@@ -1,21 +1,21 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMADivide.cpp,v 1.7 2010-02-12 14:25:39 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAMultiply.cpp,v 1.1 2010-02-12 14:25:39 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
 
 
-OMADivide::OMADivide(OMAlib* Env) : 
-  OMAHcreatorAlg("Divide", Env) {
+OMAMultiply::OMAMultiply(OMAlib* Env) : 
+  OMAHcreatorAlg("Multiply", Env) {
   m_ninput = 2;
   m_histSetFlag = false;
   m_npars = 2;
   m_parnames.push_back("k1"); m_parDefValues.push_back(1.);
   m_parnames.push_back("k2"); m_parDefValues.push_back(1.);
   m_outHType = OnlineHistDBEnv::SAM;
-  m_doc = "Bin-by-bin ratio of two histograms (k1*h1)/(k2*h2)";
+  m_doc = "Bin-by-bin product of two histograms (k1*h1) * (k2*h2)";
 }
 
-TH1* OMADivide::exec( const std::vector<TH1*> *sources,
+TH1* OMAMultiply::exec( const std::vector<TH1*> *sources,
 			  const std::vector<float> *params,
 			  std::string &outName,
 			  std::string &outTitle,
@@ -53,7 +53,7 @@ TH1* OMADivide::exec( const std::vector<TH1*> *sources,
   }
   if(outHist) {
     outHist->Sumw2();
-    outHist->Divide(okH, allH, k1, k2);
+    outHist->Multiply(okH, allH, k1, k2);
   }
   
   return  outHist;

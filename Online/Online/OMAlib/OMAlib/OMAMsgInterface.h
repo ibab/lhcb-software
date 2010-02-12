@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.h,v 1.20 2010-01-26 14:25:37 ggiacomo Exp $
+// $Id: OMAMsgInterface.h,v 1.21 2010-02-12 14:25:39 ggiacomo Exp $
 #ifndef OMALIB_OMAMSGINTERFACE_H 
 #define OMALIB_OMAMSGINTERFACE_H 1
 
@@ -64,6 +64,7 @@ protected:
   std::string m_taskname;
   std::string m_anaName;
   int m_anaid;  
+  bool m_padcolors;
 
   bool m_msgInit;
   bool m_textLog;

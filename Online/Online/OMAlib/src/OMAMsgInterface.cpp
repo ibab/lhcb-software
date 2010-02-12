@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.28 2010-01-26 14:25:37 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.29 2010-02-12 14:25:39 ggiacomo Exp $
 #include <cstring>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
@@ -12,7 +12,7 @@
 OMAMsgInterface::OMAMsgInterface( OnlineHistDB* HistDB , 
                                   std::string Name) : 
   OMAEnv(HistDB, Name), m_savesetName("") , m_taskname(""), 
-  m_anaName(""), m_anaid(0), m_msgInit(false), m_textLog(false),
+  m_anaName(""), m_anaid(0), m_padcolors(false), m_msgInit(false), m_textLog(false),
   m_doPublish(true), m_logToHistDB(true), m_textLogName(""), m_outs(NULL), 
   m_dimSvc(NULL)
 {
@@ -180,7 +180,7 @@ void OMAMsgInterface::raiseMessage(OMAMessage::OMAMsgLevel level,
   if (msg) {
     if (m_histDB) {
       if(m_histDB->canwrite() && m_logToHistDB) {
-        msg->store();
+        msg->store(m_padcolors);
         m_histDB->commit();
       }
     }

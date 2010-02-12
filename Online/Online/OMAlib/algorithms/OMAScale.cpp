@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAScale.cpp,v 1.6 2010-01-22 09:42:51 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAScale.cpp,v 1.7 2010-02-12 14:25:39 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -8,10 +8,13 @@ OMAScale::OMAScale(OMAlib* Env) :
   OMAHcreatorAlg("Scale", Env) {
   m_ninput = 2;
   m_histSetFlag = false;
-  m_npars = 0;
+  m_npars = 1;
+  m_parnames.push_back("k"); m_parDefValues.push_back(1.);
   m_outHType = OnlineHistDBEnv::SAM;
-  m_doc = "Divide all bins of the first histogram by the content of the first bin of the second histogram.";
-  m_doc += " If the second histogram is equal to the first, the first bin is removed from output";  
+  m_doc = "Divide all bins of the first histogram by the content of the first bin of the second histogram";
+  m_doc += " multiplied by factor k.";
+  m_doc += " If the second histogram is equal to the first, the first bin is removed from output.";  
+  
 }
 
 TH1* OMAScale::exec( const std::vector<TH1*> *sources,
@@ -21,17 +24,13 @@ TH1* OMAScale::exec( const std::vector<TH1*> *sources,
 			  TH1* existingHisto) {
   TH1* out=NULL;
   if (! sourceVerified(sources) ) return out;
-  params=params; // avoid compil. warning
-  if (sources->size() >= 2)
-    out = exec( sources->at(0), sources->at(1), outName, outTitle, existingHisto);
-  return out;
-}
-
-TH1* OMAScale::exec(TH1* H,
-			 TH1* scalefactorH,
-			 std::string &outName,
-			 std::string &outTitle,
-			 TH1* existingHisto) {  
+  if (sources->size() <2) return out;
+  double k=m_parDefValues[0];
+  if (params) {
+    if (params->size()>0) k=params->at(0);
+  }
+  TH1* H = sources->at(0);
+  TH1* scalefactorH = sources->at(1);
   TH1* scaledHist=existingHisto;
   bool copied=false;
   int shift=0;
@@ -57,7 +56,7 @@ TH1* OMAScale::exec(TH1* H,
       scaledHist->SetBinContent(ib-shift,  H->GetBinContent(ib));
     }
   }
-  double normK= scalefactorH->GetBinContent(1);
+  double normK= scalefactorH->GetBinContent(1) * k;
   
   if (scaledHist && normK > 0.)
     scaledHist->Scale(1./normK);

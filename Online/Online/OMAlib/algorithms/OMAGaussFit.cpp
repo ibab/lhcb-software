@@ -1,6 +1,7 @@
-// $Id: OMAGaussFit.cpp,v 1.7 2009-06-11 15:17:31 ggiacomo Exp $
+// $Id: OMAGaussFit.cpp,v 1.8 2010-02-12 14:25:39 ggiacomo Exp $
 
-#include <TH1F.h>
+#include <TH1.h>
+#include <TH2.h>
 #include <TF1.h>
 #include <TMath.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -13,10 +14,12 @@ OMAGaussFit::OMAGaussFit(OMAlib* Env) :
   m_parnames.push_back("MaxMean"); m_parDefValues.push_back(+999999.);
   m_parnames.push_back("MinSigma"); m_parDefValues.push_back(-999999.);
   m_parnames.push_back("MaxSigma"); m_parDefValues.push_back(+999999.);
-  m_ninput = 1;
+  m_ninput = 2;
   m_inputNames.push_back("confidence"); m_inputDefValues.push_back(.95);
+  m_inputNames.push_back("axis");       m_inputDefValues.push_back(1.);
   m_doc = "Fit histogram with a gaussian and check that average and sigma are in the specified ranges";
-  m_doc +=  " with a given normal confidence level (default is 0.95)";
+  m_doc +=  " with a given normal confidence level (default is 0.95).";
+  m_doc +=  " For 2d histograms, fit is performed on X(axis=1) or Y(axis=2) projection.";
 }
 
 void OMAGaussFit::exec(TH1 &Histo,
@@ -25,7 +28,8 @@ void OMAGaussFit::exec(TH1 &Histo,
                        std::vector<float> & input_pars,
                        unsigned int anaID,
                        TH1* Ref) {
-  float confidence=0.95;
+  float confidence=m_inputDefValues[0];
+  int axis=(int) (m_inputDefValues[1]+0.1);
   Ref = NULL; // avoid compil. warning
 
   if( warn_thresholds.size() <m_npars ||  alarm_thresholds.size() <m_npars )
@@ -35,12 +39,25 @@ void OMAGaussFit::exec(TH1 &Histo,
   std::string hname(Histo.GetName());
   OMAMessage::OMAMsgLevel level = OMAMessage::INFO;
  
-  if ( input_pars.size() > 0 )
-    confidence = input_pars[0];
 
-  
-  Histo.Fit("gaus","Q");
-  TF1 *fit = Histo.GetFunction("gaus");
+  if ( input_pars.size() > 0 ) confidence = input_pars[0];
+  if ( input_pars.size() > 1 ) axis = (int) (input_pars[1]+0.1);
+  TH1* h=&Histo;
+  bool h2delete=false;
+  if (Histo.GetDimension() == 2) {
+    // project on requested axis
+    TH2* h2 = dynamic_cast<TH2*>(h);
+    if (!h2) return;
+    if (axis == 2)
+      h = h2->ProjectionY();
+    else 
+      h = h2->ProjectionX();
+    if (!h) return;
+    h2delete=true;
+  }
+
+  h->Fit("gaus","Q");
+  TF1 *fit = h->GetFunction("gaus");
   if (fit) {
     if (false == checkParam( fit,1,
                              alarm_thresholds[0],
@@ -78,6 +95,7 @@ void OMAGaussFit::exec(TH1 &Histo,
                   message.str(), 
                   hname);
   }
+  if (h2delete) h->Delete();
 }
 
 bool OMAGaussFit::checkParam( TF1* fit,

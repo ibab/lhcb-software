@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.20 2009-06-16 17:39:49 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.21 2010-02-12 14:25:39 ggiacomo Exp $
 /*
   Online Monitoring Analysis library
   G. Graziani (INFN Firenze)
@@ -10,6 +10,8 @@
 #include "OnlineHistDB/OnlineHistDB.h"
 #include <TH1.h>
 #include <TFile.h>
+#include <cstdlib>
+
 
 using namespace std;
 
@@ -96,8 +98,8 @@ TH1* OMAlib::findRootHistogram(OnlineHistogram* h,
                                TH1* existingHisto)
 {
   TH1* out=NULL;
+  std::string rootHname = h->rootName();
   if(false == h->isAnaHist()) {
-    std::string rootHname = h->algorithm()+"/"+h->hname();
     out =  (TH1*) f->Get(rootHname.c_str());
     if(!out) { // try w/o algorithm name (bkw compatibility)
       out= (TH1*) f->Get(h->hname().c_str());
@@ -125,7 +127,7 @@ TH1* OMAlib::findRootHistogram(OnlineHistogram* h,
         break;
       }
       else {
-        hh = findRootHistogram(m_histDB->getHistogram(is->c_str()), f, NULL);
+        hh = findRootHistogram(dbhh, f, NULL);
       }
       if (hh) {
         sources.push_back(hh);
@@ -143,7 +145,7 @@ TH1* OMAlib::findRootHistogram(OnlineHistogram* h,
           std::string htitle(h->htitle());
           out = hca->exec(&sources, 
                           &parameters,
-                          h->identifier(), 
+                          rootHname, 
                           htitle,
                           out);
           // delete sources
@@ -155,7 +157,26 @@ TH1* OMAlib::findRootHistogram(OnlineHistogram* h,
       }
     }
   }
-
+  // set bin labels if required
+  if (out) {
+    std::string sopt;
+    if (0 != out->GetXaxis()) {
+      if (h->nXbinlabels() > 0) {
+        for (unsigned int il = 0; il < h->nXbinlabels(); il++) {
+          sopt = h->binlabel(il,0);
+          out->GetXaxis()->SetBinLabel(il+1, sopt.c_str());
+        }
+      }
+    }
+    if (0 != out->GetYaxis()) {
+      if (h->nYbinlabels() > 0) {
+        for (unsigned int il = 0; il < h->nYbinlabels(); il++) {
+          sopt = h->binlabel(il,1);
+          out->GetYaxis()->SetBinLabel(il+1, sopt.c_str());
+        }
+      }
+    }
+  }
   return out;
 }
 
@@ -201,11 +222,16 @@ void OMAlib::doAlgList() {
   m_algorithms["Fit"] = new OMAFit(this);
   m_algorithms["IfbMonitor"] = new OMAIfbMonitor(this);
   m_algorithms["CheckDeadBins"] = new OMACheckDeadBins(this);
+  m_algorithms["CheckErrorBins"] = new OMACheckErrorBins(this);
 
   m_algorithms["Efficiency"] = new OMAEfficiency(this);
   m_algorithms["Divide"] = new OMADivide(this);
   m_algorithms["HMerge"] = new OMAHMerge(this);
   m_algorithms["Scale"] = new OMAScale(this);
+  m_algorithms["Add"] =  new OMAAdd(this);
+  m_algorithms["Multiply"] =  new OMAMultiply(this);
+  m_algorithms["Project"] =  new OMAProject(this);
+  m_algorithms["Rebin"] =  new OMARebin(this);
 
   if (m_histDB) {
     if (m_histDB->canwrite() && false == m_listSynced)
@@ -280,8 +306,9 @@ void OMAlib::doFitFuncList() {
 // check that all algorithms are declared to the DB
 void OMAlib::syncList() {
   if (m_histDB) {
-    if (m_histDB->getAlgListID() >= 0 &&
-        m_histDB->getAlgListID() < OMAconstants::AlgListID) {
+    int dbAlgListID = m_histDB->getAlgListID();
+    if (dbAlgListID >= 0 &&
+        dbAlgListID < OMAconstants::AlgListID) {
       // update DB
       bool ok = true;
       if (m_debug)
@@ -362,9 +389,18 @@ void OMAlib::syncList() {
       if (ok) {
         m_histDB->setAlgListID(OMAconstants::AlgListID);
         m_histDB->commit();
+        m_listSynced = true;
       }
     }
-    m_listSynced = true;
+    else if (dbAlgListID == OMAconstants::AlgListID) {
+      m_listSynced = true;
+    }
+    else if (dbAlgListID > OMAconstants::AlgListID) {
+      cout << " -- OMAlib WARNING: HistDB has an algorithm list more recent than your code --"<<endl;
+      cout << " -- Please update to latest OMAlib to profit of all functionalities         --"<<endl;
+    }
+
+    
   }
 }
 

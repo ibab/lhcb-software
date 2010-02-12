@@ -1,12 +1,19 @@
-! $Id: release.notes,v 1.34 2010-01-26 14:25:37 ggiacomo Exp $
+! $Id: release.notes,v 1.35 2010-02-12 14:25:39 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
-! 20100126
+! 20100211 v2r13
+- new creator algorithms OMAAdd, OMAMultiply, OMAProject, OMARebin
+- add input parameters to OMAScale, OMADivide
+- new check algorithm OMACheckErrorBins to get alarms if one or all histogram bins are above a threshold
+- add axis switch to OMACheckMeanAndSigma, OMAGaussFit
 - warn if reference is requested but not available in analysis
 - add HistDBMsgPersistency option to AnalysisTask for switching off persistency of messages in HistDB
 - add -c option to clear messages in DumpOMAlarms
+- some fixes for analysis of virtual histograms
+- add labels (if requested) to histograms for possible use in alarm messages
+- OMAEfficiency: use Agresti-Coull formula for more sensible binomial errors
 
 ! 20100122 v2r12
 - enforce checks on sources for creator algorithms

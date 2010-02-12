@@ -1,4 +1,5 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAEfficiency.cpp,v 1.6 2010-01-22 09:42:51 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAEfficiency.cpp,v 1.7 2010-02-12 14:25:39 ggiacomo Exp $
+#include <cmath>
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -54,9 +55,21 @@ TH1* OMAEfficiency::exec(TH1* okH,
   }
   if(outHist) {
     outHist->Sumw2();
-    outHist->Divide(okH, allH, 1., 1., "B");
+    //outHist->Divide(okH, allH, 1., 1., "B");
+    // use the score confidence interval Agresti-Coull formula for more reasonable binomial errors  
+    if (okH->GetNbinsX() != allH->GetNbinsX() ||
+        okH->GetNbinsY() != allH->GetNbinsY() ) return NULL;
+    for (int ix=1 ; ix<= allH->GetNbinsX(); ix++) {
+      for (int iy=1 ; iy<= allH->GetNbinsY(); iy++) {
+        double x = okH->GetBinContent(ix,iy);
+        double n = allH->GetBinContent(ix,iy);
+        double pstar= (x+2.)/(n+4.);
+        double error = sqrt(pstar*(1-pstar)/(n+4.));
+        outHist->SetBinContent(ix,iy,pstar);  
+        outHist->SetBinError(ix,iy,error);  
+      }
+    }
   }
-  
   return  outHist;
 }
 
