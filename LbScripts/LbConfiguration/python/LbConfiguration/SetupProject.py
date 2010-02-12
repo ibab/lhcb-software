@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # pylint: disable-msg=E1103,W0141
-_cvs_id = "$Id: SetupProject.py,v 1.33 2010-02-12 11:45:56 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.34 2010-02-12 14:59:46 marcocle Exp $"
 
 import os, sys, re, time
 from xml.sax import parse, ContentHandler
@@ -11,7 +11,7 @@ from tempfile import mkdtemp, mkstemp
 
 from LbConfiguration import createProjectMakefile
 from LbUtils.CVS import CVS2Version
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.33 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.34 $")
 
 # subprocess is available since Python 2.4, but LbUtils guarantees that we can
 # import it also in Python 2.3
@@ -217,6 +217,8 @@ class TemporaryEnvironment:
                     ms = var_re.findall(val)
                     for group1, group2 in ms:
                         ref_var = group1 or group2
+                        if ref_var.startswith('{') and ref_var.endswith('}'):
+                            ref_var = ref_var[1:-1]
                         if ref_var not in done_vars and ref_var in old_vars:
                             can_be_added = False
                             break
