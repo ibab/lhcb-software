@@ -95,23 +95,14 @@ use SiDAQ                 v2r1    Si      # Matt Needham
 # Other stuff
 use MCAssociators         v*      Associators # V. Gligorov
 use DaVinciInterfaces     v2r0    Phys    # Juan Palacios
-use DaVinciKernel         v8r4    Phys    # Juan Palacios
-use DaVinciMCKernel       v4r1    Phys    # Juan Palacios
 use DaVinciTypes          v1r1    Phys    # Juan Palacios
 use HepMCBack             v1r1   Gen     # Gloria Corti, Patrick Robbe
 use LinkerInstances       v3r5    Event   # Thomas Ruf
-use LoKi                  v8r1   Phys    # Ivan Belyaev
-use LoKiAlgo              v8r1   Phys    # Ivan Belyaev
-use LoKiAlgoMC            v8r1   Phys    # Ivan Belyaev
-use LoKiArrayFunctors     v8r8    Phys    # Ivan Belyaev
 use LoKiCore              v9r10   Phys    # Ivan Belyaev
 use LoKiGen               v8r7    Phys    # Ivan Belyaev
-use LoKiGenMC             v8r1   Phys    # Ivan Belyaev
 use LoKiHlt               v2r5    Phys    # Ivan Belyaev
 use LoKiMC                v8r7    Phys    # Ivan Belyaev
 use LoKiNumbers           v8r3p2  Phys    # Ivan Belyaev
-use LoKiPhys              v8r13   Phys    # Ivan Belyaev
-use LoKiPhysMC            v8r6    Phys    # Ivan Belyaev
 use MDF_ROOT              v1r2   DAQ     # Markus Frank
 use PatKernel             v2r3p1  Tf      # Stephanie Hansmann-Menzemer
 use RecInterfaces         v1r0p1  Kernel  # Marco Cattaneo et al.
