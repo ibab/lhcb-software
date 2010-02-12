@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!======================== MCAssociators v1r0 2010-02-12 ======================
 ! 2010-02-09 - Vladimir Gligorov
  - Create new package Associators/MCAssociators to hold the
    MC association code which needs to be shared between Brunel
