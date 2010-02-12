@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.404 2010-02-11 12:59:09 pkoppenb Exp $
+! $Id: release.notes,v 1.405 2010-02-12 17:58:51 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2010-02-12 - Patrick Koppenburg
+ - DaVinci.py : Property "Lumi" was not used. It was impossible to switch lumi off
 
 ! 2010-02-11 - Patrick Koppenburg
  - New property OverruleL0TCK allowing to foce the use of an L0TCK 
