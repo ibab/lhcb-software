@@ -1,23 +1,19 @@
-! $Id: release.notes,v 1.26 2010-02-12 14:17:28 ibelyaev Exp $ 
+! $Id: release.notes,v 1.27 2010-02-12 17:11:09 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiHlt
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiHlt v2r6 2010-02-12 ===========================
 ! 2010-02-12 - Vanya Belyaev
  - LoKi/Prescale.h, Prescale.cpp
-
     new symbol:
-
       ODIN_PRESCALE   LoKi::Odin::Prescale  
-
       Functor implementaion of deteriministic prescaler.
-
       see task #13885 
 
  - cmt/requirements 
-
      version increment to v2r6 
 
 !========================== LoKiHlt v2r5 2010-01-20 ==========================
