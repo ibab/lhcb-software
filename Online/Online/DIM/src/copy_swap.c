@@ -169,7 +169,7 @@ static int check_padding(int curr_bytes, int item_size)
 
 int copy_swap_buffer_out(int format, FORMAT_STR *format_data, void *buff_out, void *buff_in, int size)
 {
-	int num, pad_num, curr_size = 0, curr_out = 0;
+	int num = 0, pad_num = 0, curr_size = 0, curr_out = 0;
 	int next_par_bytes, curr_par_num;
 	
 	if(format){}

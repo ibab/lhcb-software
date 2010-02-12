@@ -1588,7 +1588,7 @@ void print_hash_table()
 {
 	int i;
 	RED_DNS_SERVICE *servp;
-	int n_entries, max_entry_index;
+	int n_entries, max_entry_index = 0;
 	int max_entries = 0;
 
 #ifdef VMS

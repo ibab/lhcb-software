@@ -322,7 +322,7 @@ void InsertDB::doEFF() {
 	      for (k=j->second.begin(); k!=j->second.end(); k++) {	    
 
 	         std::string tname=*k;
-		 std::string::size_type found=NULL;
+		 std::string::size_type found=0;
 		 int fx=1;
 	         if (ip==0) {
 		       doc= "top left: number of accepted events by ODIN per ODIN trigger type.\ntop right: number of accepted events by L0 per L0 trigger alley.\nbottom: number of accepted events by Hlt1 per Hlt1 trigger alley.";
