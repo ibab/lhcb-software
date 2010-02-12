@@ -16,12 +16,12 @@ class DDDBConf(ConfigurableUser):
     ConfigurableUser for the configuration of the detector description.
     """
     __slots__ = { "DbRoot"    : "conddb:/lhcb.xml",
-                  "DataType"  : "2008",
+                  "DataType"  : "2010",
                   "Simulation": False,
                    }
     _propertyDocDct = { 
                        'DbRoot' : """ Root file of the detector description """,
-                       'DataType' : """ Symbolic name for the data type. Allowed values: ["2009","2008","MC09","DC06","Upgrade"] """,
+                       'DataType' : """ Symbolic name for the data type. Allowed values: ["2010", "2009","2008","MC09","DC06","Upgrade"] """,
                        'Simulation' : """ Boolean flag to select the simulation or real-data configuration """,
                        }
     
@@ -112,13 +112,21 @@ class DDDBConf(ConfigurableUser):
                 cdb.Tags[p] = tag
                 log.warning("Default tag requested for partition %s (using %s)", p, tag )
 
+    def __2010_conf__(self):
+        """
+        Default configuration for 2010 data (and MonteCarlo for DDDB)
+        """
+        # Set the tags
+        self.__set_tag__(["DDDB"], "head-20100119")
+        self.__set_tag__(["LHCBCOND"], "head-20100202")
+    
     def __2009_conf__(self):
         """
         Default configuration for 2009 data and corresponding MonteCarlo
         """
         # Set the tags
         self.__set_tag__(["DDDB"], "head-20100119")
-        self.__set_tag__(["LHCBCOND"], "head-20100119")
+        self.__set_tag__(["LHCBCOND"], "head-20100202")
         self.__set_tag__(["SIMCOND"], "sim-20100119-vc-md100")
     
     def __2008_conf__(self):
@@ -174,7 +182,8 @@ class DDDBConf(ConfigurableUser):
         # Backward compatibility Dll to read HepMC 1 record
         ApplicationMgr().Dlls += [ "HepMCBack" ]
     
-    __data_types_handlers__ =  { "2009": __2009_conf__,
+    __data_types_handlers__ =  { "2010": __2010_conf__,
+                                 "2009": __2009_conf__,
                                  "2008": __2008_conf__,
                                  "MC09": __MC09_conf__,
                                  "Upgrade": __Upgrade_conf__,
