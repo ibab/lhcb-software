@@ -1,4 +1,4 @@
-// $Id: L0DUMultiConfigProvider.cpp,v 1.7 2010-02-02 11:27:02 odescham Exp $
+// $Id: L0DUMultiConfigProvider.cpp,v 1.8 2010-02-12 23:40:52 odescham Exp $
 // Include files 
 
 #include<iostream>
@@ -39,6 +39,12 @@ L0DUMultiConfigProvider::L0DUMultiConfigProvider( const std::string& type,
   // preload Config in the initialization phase or load on-Demand
   declareProperty("Preload" , m_preload = false ); 
   declareProperty("registerTCK" , m_list );
+
+
+  if( context().find("Check") != std::string::npos ){
+    m_preload = true;
+  }
+
 }
 //=============================================================================
 // Destructor

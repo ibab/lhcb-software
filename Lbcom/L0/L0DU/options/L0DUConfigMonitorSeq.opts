@@ -7,6 +7,7 @@ L0ConfigMonitor.Members += { "L0DUFromRawAlg/L0DUFromRawMon",
  };
 L0ConfigMonitor.MeasureTime = true;
 
+
 // Decoding :
 L0DUFromRawMon.L0Context = "Monitor";
 L0DUFromRawMon.WriteProcData  = true;

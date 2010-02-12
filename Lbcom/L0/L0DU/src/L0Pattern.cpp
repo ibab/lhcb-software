@@ -1,4 +1,4 @@
-// $Id: L0Pattern.cpp,v 1.4 2010-01-20 17:04:43 odescham Exp $
+// $Id: L0Pattern.cpp,v 1.5 2010-02-12 23:40:52 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -53,7 +53,7 @@ StatusCode L0Pattern::initialize() {
   
   // get the tools
   m_fromRaw   = tool<IL0DUFromRawTool>( m_fromRawTool , m_fromRawTool , this );
-  m_emulator  = tool<IL0DUEmulatorTool>(m_emulatorTool, m_emulatorTool,this);
+  m_emulator  = tool<IL0DUEmulatorTool>(m_emulatorTool, m_emulatorTool);
   m_config    = tool<IL0DUConfigProvider>("L0DUMultiConfigProvider" , m_configTool);
   
 

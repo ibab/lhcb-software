@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.191 2010-02-12 12:41:13 jucogan Exp $
+! $Id: release.notes,v 1.192 2010-02-12 23:40:51 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
@@ -7,6 +7,28 @@
  - Add new module (L0Algs) to allow to access the various algorithms used 
    by L0Conf with their proper name
  - L0Conf adapted to use L0Algs  
+
+! 2010-02-10 Olivier Deschamps
+  - L0ConfigProvider  : 
+    -  hardware-like automatic ordering of ElementaryCondition indices (can be disabled via options for backward-compatibility)
+    -  implement the condition reportSummary mask (from TCK configuration)
+    -  check each configuration against hardware limitations (short notice by default - detailed output can be activated by options)
+    -  use default naming for  predefined-data as defined in L0Event/L0DUBase.h (also in L0DUEmulatorTool and L0DUFromRawTool)
+    -  Detailed check for all configurations can be activated via context() = "CHECK"
+
+
+  - L0DUElementaryData.xml : add new data type in enum (specific for 'RamBCID' data)
+  - L0DUEmulatorTool : 
+     -report only registered condition
+     -protect the decisisons downscaling against multi emulation/event (based on BeginEvent incident)
+        - paranoid protection (use-case : run simulation and emulation for the same TCK in the same job !)
+     - make L0DUEmulatorTool a public tool in L0DUAlg/L0DUFromRawTool/L0DUMultiTrends/L0Pattern/L0DURawBankMonitor
+
+  - requirements :
+    - use L0TCK v3*  (backward-compatible ordering of condition for already simulated data)
+
+  Comes with L0Event and L0TCK v3* changes.
+
 
 !========================== L0DU v10r1 2010-02-03 =========================
 ! 2010-02-02 - Olivier Deschamps

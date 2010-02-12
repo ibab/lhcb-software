@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.cpp,v 1.22 2010-01-31 21:02:49 graven Exp $ // Include files 
+// $Id: L0DUConfigProvider.cpp,v 1.23 2010-02-12 23:40:52 odescham Exp $ // Include files 
 #include "boost/assign/list_of.hpp"
 // from Gaudi
 #include "GaudiKernel/StateMachine.h" 
@@ -26,7 +26,7 @@ namespace {
   static const std::vector<std::string> s_dataFlags = 
     (boost::assign::list_of(std::string("name")),"data","operator");
   static const std::vector<std::string> s_condFlags = 
-    (boost::assign::list_of(std::string("name")),"data","comparator","threshold","index");
+    (boost::assign::list_of(std::string("name")),"data","comparator","threshold","index","reported");
   static const std::vector<std::string> s_chanFlags = 
     (boost::assign::list_of(std::string("name")),"condition","rate","enable","disable","mask","index");
   static const std::vector<std::string> s_trigFlags = 
@@ -57,6 +57,8 @@ L0DUConfigProvider::L0DUConfigProvider( const std::string& type,
   , m_pData(0)
   , m_template(false)
   , m_uptodate(false)
+  , m_reOrder(false)
+  , m_reported(0)
 {
   declareInterface<IL0DUConfigProvider>(this);
   
@@ -72,7 +74,6 @@ L0DUConfigProvider::L0DUConfigProvider( const std::string& type,
   m_sepMap["["] = "]";
   declareProperty( "Separators"              , m_sepMap      )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
   declareProperty( "FullDescription"         , m_detail  = false)->declareUpdateHandler(&L0DUConfigProvider::handler,this);
-
   // TCK from name
   int idx = name.find_last_of(".")+1;
   std::string nam = name.substr(idx,std::string::npos);
@@ -87,6 +88,15 @@ L0DUConfigProvider::L0DUConfigProvider( const std::string& type,
   declareProperty( "TCK"                     , m_tck  = m_template ? format("0x%04X" , LHCb::L0DUTemplateConfig::TCKValue )
                    : nam )->declareUpdateHandler(&L0DUConfigProvider::handler,this);
 
+
+ // expert usage
+  declareProperty("ForceConditionOrdering" , m_forceOrder = false)->declareUpdateHandler(&L0DUConfigProvider::handler,this);
+  declareProperty("HardwareCheckDetail"    , m_check = false)->declareUpdateHandler(&L0DUConfigProvider::handler,this);
+
+  if( context().find("Check") != std::string::npos ){
+    m_detail = true;
+    m_check = true;
+  }
 }
 //============================================================================= 
 // Destructor 
@@ -98,6 +108,9 @@ L0DUConfigProvider::~L0DUConfigProvider() {}
 // finalize 
 //============
 StatusCode L0DUConfigProvider::finalize(){
+
+  info() <<  "--------------- TCK = " << format("0x%04X" , m_tckopts) << "------------------"<<endmsg;
+  configChecker();
   reset();  
   return GaudiTool::finalize();
 }
@@ -173,9 +186,24 @@ StatusCode L0DUConfigProvider::update() {
   std::istringstream is( tck.c_str() );
   is >> std::hex >> m_tckopts  ;
 
+  // init
+  m_condOrder.clear();
+  m_condMax.clear();
+  int num = L0DUBase::NumberOf::Data + L0DUBase::NumberOf::Compounds; // incl. BCID
+  m_condOrder.reserve( num );
+  for(int i=0;i<num;++i){
+    std::vector<LHCb::L0DUElementaryCondition*> temp;
+    m_condOrder.push_back(temp);
+    m_condMax.push_back( 0 );
+  }
+  
+
+
+  info() <<  "--------------- TCK = " << format("0x%04X" , m_tckopts) << "------------------"<<endmsg;
+
   // load predefined elementary data
-  hardcodedData();
-  constantData();
+  predefinedData(); // must be 1st
+  constantData();   // must be 2nd
 
   //=====================================
   if(m_def == "")m_def = "No Description";
@@ -194,7 +222,10 @@ StatusCode L0DUConfigProvider::update() {
   std::string slot = ( "" == rootInTES() ) ? "T0" : rootInTES() ;
   if( slot == "") slot = "T0";
 
+  // The main method
   createConfig(slot);
+
+  configChecker();
 
   m_uptodate = true;
   return StatusCode::SUCCESS;
@@ -204,7 +235,6 @@ StatusCode L0DUConfigProvider::update() {
 //-------------------------------------------
 void L0DUConfigProvider::createConfig(std::string slot){
 
-  
   // create L0DU configuration 
   m_config = new LHCb::L0DUConfig(m_tckopts);
 
@@ -235,7 +265,6 @@ void L0DUConfigProvider::createConfig(std::string slot){
 
 void L0DUConfigProvider::printConfig(LHCb::L0DUConfig config,std::string slot){
   if( slot == "") slot = "T0";
-  //info() <<  "-------------------------------------------------------------"<<endmsg;
   info() << "**** L0DU Config loading : L0TCK = " << format("0x%04X" , config.tck()) << " for slot " 
          << slot << " ==> OK " << endmsg;
   debug() << "              - " << config.data().size()<< " data with "<<endmsg;
@@ -255,47 +284,20 @@ void L0DUConfigProvider::printConfig(LHCb::L0DUConfig config,std::string slot){
 // Predefined data 
 //-----------------
 //=============================================================================
-void L0DUConfigProvider::hardcodedData( ) {
-  using namespace L0DUBase::Conditions;  
+void L0DUConfigProvider::predefinedData( ) {
+  using namespace L0DUBase;  
   
-  // 1- content fields (Et/Pt/Multiplicity) ...
-  predefinedData("Electron(Et)"       , Electron  );
-  predefinedData("Photon(Et)"         , Photon    );    
-  predefinedData("Hadron(Et)"         , Hadron    );  
-  predefinedData("LocalPi0(Et)"       , LocalPi0  );
-  predefinedData("GlobalPi0(Et)"      , GlobalPi0 );
-  predefinedData("Sum(Et)"            , SumEt     );
-  predefinedData("Spd(Mult)"          , SpdMult   );
-  predefinedData("Muon1(Pt)"          , Muon1     );
-  predefinedData("Muon2(Pt)"          , Muon2     );
-  predefinedData("Muon3(Pt)"          , Muon3     );
-  predefinedData("DiMuon(Pt)"         , DiMuon    );
-  predefinedData("PUHits(Mult)"       , PuHits    );
-  predefinedData("PUPeak1(Cont)"      , PuPeak1   );
-  predefinedData("PUPeak2(Cont)"      , PuPeak2   );
-  // 2- addresses Fields
-  predefinedData("Electron(Add)"      , CaloAddress );
-  predefinedData("Photon(Add)"        , CaloAddress );
-  predefinedData("Hadron(Add)"        , CaloAddress );
-  predefinedData("LocalPi0(Add)"      , CaloAddress );
-  predefinedData("GlobalPi0(Add)"     , CaloAddress );
-  predefinedData("Muon1(Add)"         , MuonAddress );
-  predefinedData("Muon2(Add)"         , MuonAddress );
-  predefinedData("Muon3(Add)"         , MuonAddress );
-  predefinedData("PUPeak1(Add)"       , PuPeak1Pos  );
-  predefinedData("PUPeak2(Add)"       , PuPeak2Pos  );
-  // 3 - additional elementary data field (muon sign ... )
-  predefinedData("Muon1(Sgn)"         , MuonSign );
-  predefinedData("Muon2(Sgn)"         , MuonSign );
-  predefinedData("Muon3(Sgn)"         , MuonSign );  
+  int max = NumberOf::Data;
+  for(int i = 0 ; i < max ; ++i){
+    std::string name = PredefinedData::Name[i];
+    LHCb::L0DUElementaryData* data = new LHCb::L0DUElementaryData(i,LHCb::L0DUElementaryData::Predefined,name,"Id",name);
+    m_dataMap[name]= data;
+    debug() << "Predefined Data : " << data->description() << endmsg;
+    m_pData++;
+  }
 }
 
 //=============================================================================
-void L0DUConfigProvider::predefinedData(const std::string& name,const int /*param*/[L0DUBase::Conditions::LastIndex]){
-  LHCb::L0DUElementaryData* data = new LHCb::L0DUElementaryData(m_pData++,LHCb::L0DUElementaryData::Predefined,name,"Id",name);
-  m_dataMap[name]= data;
-  debug() << "Predefined Data : " << data->description() << endmsg;
-}
 
 //---------------
 // Constant data 
@@ -551,7 +553,7 @@ StatusCode L0DUConfigProvider::createConditions(){
     if( data.rfind("RAM") != std::string::npos && data.rfind("(BCID)") != std::string::npos ){
       int idData = m_dataMap.size();
       LHCb::L0DUElementaryData* ramData = 
-        new LHCb::L0DUElementaryData(idData, LHCb::L0DUElementaryData::Constant, data, "Id" , data ) ;
+        new LHCb::L0DUElementaryData(idData, LHCb::L0DUElementaryData::RAMBcid, data, "Id" , data ) ;
       m_dataMap[data]=ramData;
       // TEMP
       int ind = data.rfind("(BCID)");
@@ -564,6 +566,9 @@ StatusCode L0DUConfigProvider::createConditions(){
         return StatusCode::FAILURE;
       }
     }
+
+
+
     
     // Check data consistency
     LHCb::L0DUElementaryData::Map::iterator idata = m_dataMap.find( data );
@@ -617,7 +622,30 @@ StatusCode L0DUConfigProvider::createConditions(){
     str >> threshold ;
 
 
-    // the index (facultatif)
+    // report  (facultatif)  
+    //---------- 
+    std::vector<std::string> reports = Parse("reported", *iconfig);
+    bool reported = true;
+    if( reports.size() > 1 ){
+      error() << "Should be an unique report for the new CONDITION : " 
+              << conditionName << " (found "<< reports.size() << ")" << endmsg;
+      return StatusCode::FAILURE;
+    }else if(reports.size() == 1 ){
+      std::string report = *(reports.begin());
+      std::string uReport(report);
+      std::transform( report.begin() , report.end() , uReport.begin () , ::toupper ) ;
+      if( uReport == "FALSE" ){
+        reported = false;
+        info() << "The condition '" << conditionName << "' is NOT to be reported in L0DUReport " << endmsg;
+      }else if( uReport != "TRUE"){
+        error() << "the CONDITION '" << conditionName << "' report should be True or False" << endmsg;
+        return StatusCode::FAILURE;
+      }
+    }
+    if(reported)debug() << "The condition '" << conditionName << "' is to be reported in L0DUReport " << endmsg;
+
+
+    // the index (facultatif)  
     //---------- 
     int index = id;
     values = Parse("index", *iconfig);
@@ -645,12 +673,18 @@ StatusCode L0DUConfigProvider::createConditions(){
     // create condition (name,data,comparator,threshold)
     LHCb::L0DUElementaryCondition* condition = 
       new LHCb::L0DUElementaryCondition(index , conditionName, idata->second , comp , threshold);
+
+    condition->setReported(reported);
     m_conditionsMap[conditionName]=condition;
     id++;
+
+    if( !conditionCheck( condition ) )return Error( "Condition '" + conditionName +"' check failed",StatusCode::FAILURE);
 
     debug() << "Created Condition : " << condition->description() << endmsg;
 
   }
+  //
+  if( !conditionOrdering() )return StatusCode::FAILURE;
  
   return StatusCode::SUCCESS;
   
@@ -1102,7 +1136,7 @@ std::vector<std::string> L0DUConfigProvider::triggerNameFromData( std::vector<st
   bool hasTrigger = false;
   for(std::vector<std::string>::iterator id = dataList.begin() ; id != dataList.end() ; id++){
     std::string dataName = id->substr(0,2);
-    if( dataName == "Mu" || dataName == "Di" ){ 
+    if( dataName == "Mu" || dataName == "DiMu" ){ 
       name.push_back( "L0Muon" ) ;
       hasTrigger = true;
     } else if( dataName == "El" || dataName == "Ph" || dataName == "Lo" || dataName == "Gl" ){
@@ -1117,3 +1151,264 @@ std::vector<std::string> L0DUConfigProvider::triggerNameFromData( std::vector<st
   return name;
 }
 
+
+bool L0DUConfigProvider::conditionCheck(LHCb::L0DUElementaryCondition* condition){
+  using namespace L0DUBase;
+
+  if (NULL == condition)return false;
+  const LHCb::L0DUElementaryData* data = condition->data();
+  if (NULL == data)return false;
+
+  // check the data consistency
+  std::vector<std::string> dataList;
+  if( !getDataList( data->name() , dataList ) ){
+    warning()<< "Cannot associate the data name '" << data->name() <<"' to any (list of) L0DUElementaryData" << endmsg;
+    return false;
+  }
+
+  int compoundID = CompoundData::None;
+  int dataID = -1;
+  for(std::vector<std::string>::iterator il = dataList.begin() ; il != dataList.end() ; ++il){
+    LHCb::L0DUElementaryData::Map::iterator it = m_dataMap.find( *il );
+    if( it == m_dataMap.end() ){
+      warning() << "data '" << *il <<"' associated to condition '"<< condition->name() << "' not found" << endmsg;
+      return false;
+    }
+    
+    LHCb::L0DUElementaryData* elData = it->second;
+    if( elData->type() != LHCb::L0DUElementaryData::Predefined )continue;
+    dataID = elData->id();    
+
+    if( dataID <0 || dataID > (int)NumberOf::Data){
+      warning() << "data ID not correct : " << dataID << endmsg;
+      return false; 
+    }    
+    int type = L0DUBase::PredefinedData::CompoundType[ dataID ]; 
+    if( compoundID == L0DUBase::CompoundData::None)compoundID = type; 
+    if( type != compoundID )error() << "Compound data does not support inconsistent data" << endmsg; 
+  } 
+
+
+  //
+  unsigned int max   =  0;
+  int order = -1;
+  if( LHCb::L0DUElementaryData::RAMBcid  == data->type() ){
+    order = L0DUBase::RAMBCID::ConditionOrder;
+    max   = L0DUBase::RAMBCID::MaxNumber;
+  }else if( LHCb::L0DUElementaryData::Compound == data->type() && compoundID != CompoundData::None){
+    order = CompoundData::ConditionOrder[ compoundID ];
+    max   = CompoundData::MaxNumber[compoundID];
+  }else if( LHCb::L0DUElementaryData::Predefined == data->type() && dataID != -1 ){
+    order = PredefinedData::ConditionOrder[ dataID ];
+    max   = PredefinedData::MaxNumber[ dataID ];
+  }
+
+
+  if( order < 0 ){
+    warning() << "Cannot associate a condition type to '" << condition->name() << "'" << endmsg;
+    return false;
+  }
+  if( condition->threshold() == 0 && condition->comparator() == ">" ){ // special case for empty register
+    std::vector<LHCb::L0DUElementaryCondition*>::iterator it = m_condOrder[order].begin();
+    m_condOrder[order].insert(it, condition);
+  }else{
+    m_condOrder[ order ].push_back( condition );
+  }
+  m_condMax[ order ]= max;
+  return true;
+};
+
+
+bool L0DUConfigProvider::conditionOrdering(){
+  unsigned int iorder = 0;
+  m_reOrder = false;
+  for( std::vector<std::vector<LHCb::L0DUElementaryCondition*> >::iterator 
+         it = m_condOrder.begin() ; m_condOrder.end() != it; ++it){
+    std::vector<LHCb::L0DUElementaryCondition*> conds = *it;
+    for(std::vector<LHCb::L0DUElementaryCondition*>::iterator itt = conds.begin(); itt != conds.end() ; ++itt){
+      LHCb::L0DUElementaryCondition* condition = *itt;
+
+      debug() << "Configuration "<< format("0x%04X" , m_tckopts )
+              << " Condition '" << condition->name() 
+              << "'  index = " << condition->id()
+              << "   order = " << iorder<< endmsg;
+
+      if( condition->id() != iorder ){
+        m_reOrder = true;
+        if(!m_forceOrder)condition->setId( iorder );
+      }
+      
+      iorder++;
+    }
+  }  
+
+  if(m_reOrder){
+    if( m_forceOrder)
+      warning() << "The conditions ordering (that does not match the hardware) is FORCED" << endmsg;
+    else
+      info() << "The conditions have been re-ordered to match the hardware constraints" << endmsg;
+  }
+
+  if( iorder != m_conditionsMap.size() ){
+    error() << "Failed to re-order all conditions " << iorder << "/" << m_conditionsMap.size() << endmsg;
+    return false;
+  }
+
+
+  // set the reportBit
+  unsigned int reportBit = 0;
+  for(unsigned int ib = 0 ; ib < m_conditionsMap.size(); ++ib){
+    for(LHCb::L0DUElementaryCondition::Map::iterator i=m_conditionsMap.begin();i!=m_conditionsMap.end();i++){
+      LHCb::L0DUElementaryCondition* iCond = i->second;
+      if( iCond->id() != ib )continue;
+      if( iCond->reported() ){
+        iCond->setReportBit( reportBit );
+        reportBit++;
+      }else{
+        iCond->setReportBit( 0 );
+      }
+    }
+  }
+  m_reported = reportBit;
+
+  // check all indices & all reportBits are unique
+  for(LHCb::L0DUElementaryCondition::Map::iterator i=m_conditionsMap.begin();i!=m_conditionsMap.end();i++){
+    LHCb::L0DUElementaryCondition* iCond = i->second;
+    for(LHCb::L0DUElementaryCondition::Map::iterator j=m_conditionsMap.begin();j!=m_conditionsMap.end();j++){
+      LHCb::L0DUElementaryCondition* jCond = j->second;
+      if( iCond == jCond )continue;
+      if( iCond->id() == jCond->id() ){
+        error() << "The condition index MUST be unique : " << iCond->name() << "/" <<jCond->name() <<endmsg;
+        return false;
+      }
+      if( !iCond->reported() || !jCond->reported() )continue;
+      if( iCond->reportBit() == jCond->reportBit() ){
+        error() << "The condition reportBit MUST be unique : " << iCond->name() << "/" <<jCond->name() <<endmsg;
+        return false;
+      }
+    }
+  }
+  
+  return true;
+}
+
+
+
+bool L0DUConfigProvider::configChecker(){
+
+  if(m_conditionsMap.size() == 0 && m_channelsMap.size() == 0)return true;
+  
+  using namespace L0DUBase;
+  // check number of channels
+  double chRate = (double) m_channelsMap.size() / (double) NumberOf::Channels;
+  bool ok  = true;
+
+  if(m_check)info() << "ConfigChecker : channels usage    = "  
+                    <<  m_channelsMap.size() << " / " << NumberOf::Channels  
+                    << " = [" << format("%3.1f", 100.*chRate) << "% ] " << endmsg;
+  if( chRate > 1. ){
+    warning() << "L0DU ConfigChecker : the number of channels exceeds the hardware capabilities " << m_channelsMap.size() 
+              << " / " << NumberOf::Channels << endmsg;
+    ok = false;
+  }
+  
+
+  // check number of conditions
+  double cdRate = (double) m_conditionsMap.size() / (double) NumberOf::Conditions;
+  if(m_check)info() << "ConfigChecker : conditions usage  = "  
+                    <<  m_conditionsMap.size() << " / " << NumberOf::Conditions  
+                    << " = [" << format("%3.1f", 100.*cdRate) << "% ] " << endmsg;
+  if( cdRate > 1. ){
+    warning()  << "L0DU ConfigChecker : the number of conditions exceeds the hardware capabilities " << m_conditionsMap.size() 
+               << " / " << NumberOf::Conditions << endmsg;
+    ok = false;
+  }
+  if( m_conditionsMap.size() > NumberOf::ConditionsInBank ){
+    warning() << "L0DU ConfigChecker : only " << NumberOf::ConditionsInBank << " condition-bits among the " 
+              << m_conditionsMap.size() << " conditions are stored in the L0DU bank from hardware" << endmsg;
+  }
+  if(m_check)info() <<"ConfigChecker : reported conditions : " << m_reported << " / " << m_conditionsMap.size() 
+                    << " / max = " << NumberOf::ConditionsInBank << endmsg;
+  
+  
+
+  // check number of conditions / type
+  unsigned int k = 0;
+  double maxRate = -1.;
+  for( std::vector<std::vector<LHCb::L0DUElementaryCondition*> >::iterator it = m_condOrder.begin();m_condOrder.end()!=it;++it){
+    std::vector<LHCb::L0DUElementaryCondition*> conds = *it;
+    double ctRate = (m_condMax[k] > 0) ? (double) conds.size() / (double) m_condMax[k] : 0;
+    if(ctRate > maxRate)maxRate = ctRate;
+
+
+    if(m_check && conds.size() != 0){
+      std::string name = "??";
+      if( k == L0DUBase::RAMBCID::ConditionOrder){
+        name = L0DUBase::RAMBCID::Name;
+      }else {
+        for(unsigned int i=0;i<L0DUBase::NumberOf::Data;++i){
+          if( k == L0DUBase::PredefinedData::ConditionOrder[ i ])name=L0DUBase::PredefinedData::Name[i];
+        }      
+        for(unsigned int i=0;i<L0DUBase::NumberOf::Compounds;++i){
+          if( k == L0DUBase::CompoundData::ConditionOrder[ i ])name=L0DUBase::CompoundData::Name[i];
+        }
+      }
+      info() << "ConfigChecker : condition usage  [type = " << name << "] :"
+             <<  conds.size()  << " / " << m_condMax[k]  
+             << " = [" << format("%3.1f", 100.*ctRate) << "% ] " << endmsg;
+    }
+    
+
+    if( ctRate > 1.){
+      warning() << "ConfigChecker : number of conditions of type " << k 
+                << " exceeds the hardware capabilities " << conds.size()<< " / " << m_condMax[k] << endmsg;
+      ok = false;
+    }
+    k++; 
+  } 
+
+
+
+  //
+  if(m_check && m_reOrder ){
+    info() << "Hardware-like condition  " ;
+    if( ! m_forceOrder ) info() << "ordering has been restored : "<< endmsg;
+    else info() << "ordering has NOT been applied : " << endmsg;
+    int kk = 0;
+    for( std::vector<std::vector<LHCb::L0DUElementaryCondition*> >::iterator it = m_condOrder.begin();m_condOrder.end()!=it;++it){
+      std::vector<LHCb::L0DUElementaryCondition*> conds = *it;
+      for(std::vector<LHCb::L0DUElementaryCondition*>::iterator itt = conds.begin();itt!=conds.end();++itt){
+        info() << " condition = '" << (*itt)->name() << "' index = " << (*itt)->id()  
+               << " |   hardware  " <<kk<< " |  reported ? "<< (*itt)->reported() << " (reportBit  "<< (*itt)->reportBit() << ")"
+               << endmsg;
+        kk++;
+      }
+    } 
+  }
+
+
+  std::string order = "OK" ;
+
+
+  if( m_reOrder){
+    order = "SWAP";
+    if(m_forceOrder) {
+      ok = false;
+      order +=" (forced)";
+    }else{  
+      order += " (restored)" ;
+    }
+  }
+  if( ok )info() << "The configuration "<< format("0x%04X" , m_tckopts ) <<" matches the hardware limitations " << endmsg;
+  else warning() << "The configuration "<< format("0x%04X" , m_tckopts ) << " DOES NOT match the hardware limitations " << endmsg;
+
+
+
+  info() << "- Usage : Channels ["  << format("%3.1f", 100.*chRate) << "% ]  |  "
+         << "Conditions [" << format("%3.1f", 100.*cdRate) << "% ]; "
+         << "max/type [" << format("%3.1f", 100.*maxRate) << "% ]; "
+         << "order : " << order << " ; "
+         << "reported  : " << m_reported<<"/" << m_conditionsMap.size()
+         << endmsg; 
+  return ok; 
+}

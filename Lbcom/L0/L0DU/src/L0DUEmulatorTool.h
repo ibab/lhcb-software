@@ -1,4 +1,4 @@
-// $Id: L0DUEmulatorTool.h,v 1.5 2009-07-24 16:50:21 odescham Exp $
+// $Id: L0DUEmulatorTool.h,v 1.6 2010-02-12 23:40:52 odescham Exp $
 #ifndef L0DUEMULATORTOOL_H 
 #define L0DUEMULATORTOOL_H 1
 
@@ -10,6 +10,9 @@
 #include "L0Interfaces/IL0ProcessorDataDecoder.h"
 #include "L0Interfaces/IL0CondDBProvider.h"
 #include "GaudiKernel/IEventTimeDecoder.h"
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IIncidentSvc.h" 
+#include "GaudiKernel/Incident.h" 
 
 
 /** @class L0DUEmulatorTool L0DUEmulatorTool.h
@@ -18,7 +21,7 @@
  *  @author Olivier Deschamps
  *  @date   2007-10-10
  */
-class L0DUEmulatorTool : public GaudiTool, virtual public IL0DUEmulatorTool {
+class L0DUEmulatorTool : public GaudiTool, virtual public IL0DUEmulatorTool, virtual public IIncidentListener{ 
 public: 
   /// Standard constructor
   L0DUEmulatorTool( const std::string& type, 
@@ -32,6 +35,12 @@ public:
   StatusCode process(LHCb::L0DUConfig* config, std::vector<std::string> dataLocs);  
   const std::vector<unsigned int> bank(unsigned int version);
   const LHCb::L0DUReport emulatedReport();
+
+
+  virtual void handle(const Incident& /* inc */ ) { 
+    debug() << "IIncident Svc reset" << endmsg;
+    m_begEvent = true ;  
+  } 
   
 protected:
 private:
@@ -55,5 +64,6 @@ private:
   IL0CondDBProvider*        m_condDB;  
   IEventTimeDecoder*        m_odin;
   LHCb::L0DUConfig*         m_config;
+  bool m_begEvent;
 };
 #endif // L0DUEMULATORTOOL_H

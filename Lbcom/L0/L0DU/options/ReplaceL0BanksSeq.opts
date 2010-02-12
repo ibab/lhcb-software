@@ -15,3 +15,9 @@ ReRunL0.Members      = {"L0CaloAlg/L0Calo",       // Produce (NEW) rawBank
 #include "$L0TCK/L0DUConfig.opts"
 
 RemoveL0Banks.bankTypes ={ "L0DU", "L0Calo", "L0Muon" };
+
+
+L0DU.WriteBanks = true;   
+L0Calo.WriteBanks = true;   
+L0Muon.WriteBanks = true;   
+

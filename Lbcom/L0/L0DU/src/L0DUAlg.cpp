@@ -1,4 +1,4 @@
-// $Id: L0DUAlg.cpp,v 1.13 2010-01-29 07:54:33 graven Exp $
+// $Id: L0DUAlg.cpp,v 1.14 2010-02-12 23:40:52 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -83,7 +83,7 @@ StatusCode L0DUAlg::initialize() {
   //----------------------------
   // Get the L0DUAlg emulator tool
   //---------------------------
-  m_emulator = tool<IL0DUEmulatorTool>(m_emulatorType,m_emulatorType,this);
+  m_emulator = tool<IL0DUEmulatorTool>(m_emulatorType,m_emulatorType);
   
   //--------------------------------
   // Get the L0DUAlg configuration tool

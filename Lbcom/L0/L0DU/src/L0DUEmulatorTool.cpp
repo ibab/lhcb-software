@@ -1,4 +1,4 @@
-// $Id: L0DUEmulatorTool.cpp,v 1.13 2010-01-29 10:02:22 odescham Exp $
+// $Id: L0DUEmulatorTool.cpp,v 1.14 2010-02-12 23:40:52 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -29,8 +29,8 @@ L0DUEmulatorTool::L0DUEmulatorTool( const std::string& type,
     m_muCleaning(),
     m_muZeroSup(),
     m_muHighest(),
-    m_muPattern(0)
-
+    m_muPattern(0),
+    m_begEvent(true)
 {
   declareInterface<IL0DUEmulatorTool>(this);
   declareProperty( "MuonCleaning" , m_muCleaning = false);
@@ -49,6 +49,11 @@ StatusCode L0DUEmulatorTool::initialize(){
   debug() << "Initialize  L0EmulatorTool" << endmsg;
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure())return sc;
+
+  // register incident
+  IIncidentSvc* inc = incSvc() ;
+  if ( 0 != inc )inc -> addListener  ( this , IncidentType::BeginEvent ) ;
+
   // get tools
   m_decoder  = tool<IL0ProcessorDataDecoder>("L0ProcessorDataDecoder","L0ProcessorDataDecoder",this);
   m_condDB   = tool<IL0CondDBProvider>("L0CondDBProvider");
@@ -74,28 +79,29 @@ StatusCode L0DUEmulatorTool::process(LHCb::L0DUConfig* config,  std::vector<std:
 //=============================================================================
 StatusCode L0DUEmulatorTool::fillData(){
 
-  m_config->clearDataValue();
+  m_config->clearDataValue(); // reset data + emulation flag
   
   LHCb::L0DUElementaryData::Map& dataMap = m_config->data();
+  using namespace L0DUBase::PredefinedData;
 
-  setDataValue( dataMap["Electron(Et)"] , L0DUBase::Electron::Et        );
-  setDataValue( dataMap["Photon(Et)"]   , L0DUBase::Photon::Et          );
-  setDataValue( dataMap["Hadron(Et)"]   , L0DUBase::Hadron::Et          );
-  setDataValue( dataMap["GlobalPi0(Et)"], L0DUBase::Pi0Global::Et       );
-  setDataValue( dataMap["LocalPi0(Et)"] , L0DUBase::Pi0Local::Et        );
-  setDataValue( dataMap["Sum(Et)"]      , L0DUBase::Sum::Et             );
-  setDataValue( dataMap["Spd(Mult)"]    , L0DUBase::Spd::Mult           );
-  setDataValue( dataMap["PUPeak1(Cont)"], L0DUBase::PileUp::Peak1       );
-  setDataValue( dataMap["PUPeak2(Cont)"], L0DUBase::PileUp::Peak2       );
-  setDataValue( dataMap["PUHits(Mult)"] , L0DUBase::PileUp::Hits        );
-  setDataValue( dataMap["Electron(Add)"], L0DUBase::Electron::Address   );
-  setDataValue( dataMap["Photon(Add)"]  , L0DUBase::Photon::Address     );
-  setDataValue( dataMap["Hadron(Add)"]  , L0DUBase::Hadron::Address     );
-  setDataValue( dataMap["GlobalPi0(Add)"],L0DUBase::Pi0Global::Address  );
-  setDataValue( dataMap["LocalPi0(Add)"] ,L0DUBase::Pi0Local::Address   );
+  setDataValue( dataMap[Name[ElectronEt ]] , L0DUBase::Electron::Et        );
+  setDataValue( dataMap[Name[PhotonEt]]    , L0DUBase::Photon::Et          );
+  setDataValue( dataMap[Name[HadronEt]]    , L0DUBase::Hadron::Et          );
+  setDataValue( dataMap[Name[GlobalPi0Et]] , L0DUBase::Pi0Global::Et       );
+  setDataValue( dataMap[Name[LocalPi0Et]]  , L0DUBase::Pi0Local::Et        );
+  setDataValue( dataMap[Name[SumEt]]       , L0DUBase::Sum::Et             );
+  setDataValue( dataMap[Name[SpdMult]]     , L0DUBase::Spd::Mult           );
+  setDataValue( dataMap[Name[PuPeak1]]     , L0DUBase::PileUp::Peak1       );
+  setDataValue( dataMap[Name[PuPeak2]]     , L0DUBase::PileUp::Peak2       );
+  setDataValue( dataMap[Name[PuHits ]]     , L0DUBase::PileUp::Hits        );
+  setDataValue( dataMap[Name[ElectronAdd]] , L0DUBase::Electron::Address   );
+  setDataValue( dataMap[Name[PhotonAdd]]   , L0DUBase::Photon::Address     );
+  setDataValue( dataMap[Name[HadronAdd]]   , L0DUBase::Hadron::Address     );
+  setDataValue( dataMap[Name[GlobalPi0Add]], L0DUBase::Pi0Global::Address  );
+  setDataValue( dataMap[Name[LocalPi0Add]] , L0DUBase::Pi0Local::Address   );
   // PileUp
-  setDataValue(dataMap["PUPeak1(Add)"]  , L0DUBase::PileUp::Peak1Pos );
-  setDataValue(dataMap["PUPeak2(Add)"]  , L0DUBase::PileUp::Peak2Pos );
+  setDataValue(dataMap[Name[PuPeak1Pos]]   , L0DUBase::PileUp::Peak1Pos );
+  setDataValue(dataMap[Name[PuPeak2Pos]]   , L0DUBase::PileUp::Peak2Pos );
 
 
 
@@ -193,7 +199,7 @@ StatusCode L0DUEmulatorTool::fillData(){
     dataMap["Muon"+num.str()+"(Add)"]->setOperand(add , adScale , adMax);
     dataMap["Muon"+num.str()+"(Sgn)"]->setOperand(sgn , sgScale , sgMax);
   }
-  dataMap["DiMuon(Pt)"]->setOperand( dimuon , ptScale , ptMax*2+1);  
+  dataMap[Name[DiMuonPt]]->setOperand( dimuon , ptScale , ptMax*2+1);  
   if( msgLevel(MSG::VERBOSE))verbose() << "DiMuon OK " << endmsg;
 
   // -------------------------------------
@@ -240,7 +246,7 @@ void L0DUEmulatorTool::setDataValue(LHCb::L0DUElementaryData* l0Data,
                                     const unsigned int  base[L0DUBase::Index::Size]){
   l0Data->setOperand( digit( base ) , scale(base) , max(base)  );
   if( msgLevel(MSG::VERBOSE))
-    verbose() << "Set Data digit " << l0Data->name() << " << " <<digit(base) << " : scale to MeV = " << scale(base) << endmsg;
+    verbose() << "Set Data digit " << l0Data->name() << " : " <<digit(base) << " : scale  = " << scale(base) << endmsg;
 }
 //===========================================================================================================
 StatusCode  L0DUEmulatorTool::dataTree(LHCb::L0DUElementaryData* data, LHCb::L0DUElementaryData::Map dataMap   ){  
@@ -274,9 +280,18 @@ StatusCode  L0DUEmulatorTool::dataTree(LHCb::L0DUElementaryData* data, LHCb::L0D
 StatusCode L0DUEmulatorTool::processing(){
   if(fillData().isFailure())return StatusCode::FAILURE;  
   m_config->setCompleted(true);
-    //
+
+  // downscaling counters updated once per event (paranoid pretection against multi-call of the emulator processing  / event)
+  if( m_begEvent ){
+    m_config->updateCounters( true );
+    m_begEvent = false; 
+  }else { 
+    m_config->updateCounters( false ); // do not increment counters when the config is already emulated for the same event
+  } 
+  m_config->emulate();  // process the actual emulation  @ each processing (no longer onDemand becayse of downscaling)
+
+  // output
   if( msgLevel(MSG::VERBOSE)) {
-    m_config->emulate();  // process the actual emulation when summary is requested - if not will be done on-Demand
     verbose() << "End of processing ... summary : " << endmsg;
     verbose() << m_config->summary() << endmsg;
   }
@@ -287,8 +302,6 @@ StatusCode L0DUEmulatorTool::processing(){
 const LHCb::L0DUReport L0DUEmulatorTool::emulatedReport(){
   m_report.clear();
   m_report.setConfiguration(m_config);
-
-  m_config->emulate();  
   if( !m_config->emulated() ){
     error() << " Report is requested but the emulator has not been processed ... return empty report" << endmsg;
     return m_report;
@@ -309,7 +322,7 @@ const LHCb::L0DUReport L0DUEmulatorTool::emulatedReport(){
 
   for( LHCb::L0DUElementaryCondition::Map::iterator icond = conditionMap.begin() ; icond != conditionMap.end() ; icond++){
     LHCb::L0DUElementaryCondition* condition = (*icond).second ;
-    m_report.setConditionValue(condition->name(), condition->emulatedValue() );
+    if(condition->reported())m_report.setConditionValue(condition->name(), condition->emulatedValue() );
   }
 
   return m_report;

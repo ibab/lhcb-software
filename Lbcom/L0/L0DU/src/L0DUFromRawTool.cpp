@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.28 2010-02-02 21:11:06 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.29 2010-02-12 23:40:52 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -71,7 +71,7 @@ StatusCode L0DUFromRawTool::initialize(){
    if(!m_encode)m_emu = false;
   // get the configuration provider tool
   m_confTool = tool<IL0DUConfigProvider>(m_configType , m_configName);
-  m_emuTool  = tool<IL0DUEmulatorTool>(m_emulatorType, m_emulatorType,this);
+  m_emuTool  = tool<IL0DUEmulatorTool>(m_emulatorType, m_emulatorType);
   m_condDB   = tool<IL0CondDBProvider>("L0CondDBProvider");
 
   // create Empty ProcessorData
@@ -159,7 +159,7 @@ bool L0DUFromRawTool::getL0DUBanksFromRaw( ){
 
 bool L0DUFromRawTool::decoding(int ibank){
 
-
+  using namespace L0DUBase::PredefinedData;
   // ------------------------
   // clear -------------------
   // ------------------------
@@ -238,19 +238,19 @@ bool L0DUFromRawTool::decoding(int ibank){
     m_report.setConditionsValueSummary( word );
     if( !nextData() )return false;
     word = *m_data;
-    encode("PUPeak1(Cont)",  word & 0xFF     , L0DUBase::PileUp::Peak1 );
-    encode("PUPeak1(Add)" , (word>>8) & 0xFF , L0DUBase::PileUp::Peak1Pos );
+    encode(Name[PuPeak1],  word & 0xFF     , L0DUBase::PileUp::Peak1 );
+    encode(Name[PuPeak1Pos] , (word>>8) & 0xFF , L0DUBase::PileUp::Peak1Pos );
     if( !nextData() )return false;
     word = *m_data;
-    encode("PUPeak2(Cont)",  word & 0xFF     , L0DUBase::PileUp::Peak2 );
-    encode("PUPeak2(Add)" , (word>>8) & 0xFF , L0DUBase::PileUp::Peak2Pos );
+    encode(Name[PuPeak2], word & 0xFF     , L0DUBase::PileUp::Peak2 );
+    encode(Name[PuPeak2Pos] , (word>>8) & 0xFF , L0DUBase::PileUp::Peak2Pos );
     if( !nextData() )return false;
     word = *m_data;
-    encode("PUHits(Mult)",  word & 0xFF      , L0DUBase::PileUp::Hits );
+    encode(Name[PuHits],  word & 0xFF      , L0DUBase::PileUp::Hits );
     if( !nextData() )return false;
     word = *m_data;
-    encode("Sum(Et)",  word & 0x3FFF         , L0DUBase::Sum::Et      );
-    encode("Spd(Mult)" , (word>>14) & 0x3FFF , L0DUBase::Spd::Mult    );
+    encode(Name[SumEt],  word & 0x3FFF         , L0DUBase::Sum::Et      );
+    encode(Name[SpdMult] , (word>>14) & 0x3FFF , L0DUBase::Spd::Mult    );
 
     // No TCK mechanism at time of version 1 :  TCK = FFFE assumed
     if(m_warning){
@@ -371,20 +371,20 @@ bool L0DUFromRawTool::decoding(int ibank){
     
     // PGA3 processing
     if( !nextData() )return false;
-    dataMap("Muon1(Pt)" ,(*m_data & 0x0000007F ) >> 0  );
-    dataMap("Muon1(Sgn)",(*m_data & 0x00000080 ) >> 7  );
-    dataMap("Muon2(Pt)" ,(*m_data & 0x00007F00 ) >> 8  );
-    dataMap("Muon2(Sgn)",(*m_data & 0x00008000 ) >> 15 );
-    dataMap("Muon3(Pt)" ,(*m_data & 0x007F0000 ) >> 16 );
-    dataMap("Muon3(Sgn)",(*m_data & 0x00800000 ) >> 23 );
-    dataMap("DiMuon(Pt)",(*m_data & 0xFF000000 ) >> 24 );
+    dataMap(Name[Muon1Pt] ,(*m_data & 0x0000007F ) >> 0  );
+    dataMap(Name[Muon1Sgn],(*m_data & 0x00000080 ) >> 7  );
+    dataMap(Name[Muon2Pt] ,(*m_data & 0x00007F00 ) >> 8  );
+    dataMap(Name[Muon2Sgn],(*m_data & 0x00008000 ) >> 15 );
+    dataMap(Name[Muon3Pt] ,(*m_data & 0x007F0000 ) >> 16 );
+    dataMap(Name[Muon3Sgn],(*m_data & 0x00800000 ) >> 23 );
+    dataMap(Name[DiMuonPt],(*m_data & 0xFF000000 ) >> 24 );
     
     if( !nextData() )return false;
-    dataMap("Muon1(Add)",(*m_data & 0x0000FFFF ) >>0   );
-    dataMap("Muon2(Add)",(*m_data & 0xFFFF0000 ) >>16  );
+    dataMap(Name[Muon1Add],(*m_data & 0x0000FFFF ) >>0   );
+    dataMap(Name[Muon2Add],(*m_data & 0xFFFF0000 ) >>16  );
     
     if( !nextData() )return false;
-    dataMap("Muon3(Add)",(*m_data & 0x0000FFFF)  >> 0  );
+    dataMap(Name[Muon3Add],(*m_data & 0x0000FFFF)  >> 0  );
     m_muCleanPattern             = (*m_data & 0x00FF0000)  >>16;
     if ( msgLevel( MSG::VERBOSE) ){
       verbose() << "-- PGA3 block -------------------------- " << endmsg;
@@ -574,38 +574,38 @@ bool L0DUFromRawTool::decoding(int ibank){
     //PGA2 input data
     if( !nextData() )return false;
     int sumEt0 = (*m_data & 0x00003FFF );             
-    encode("Sum(Et)"        , sumEt0                         , L0DUBase::Sum::Et  );
+    encode(Name[SumEt]        , sumEt0                         , L0DUBase::Sum::Et  );
     m_sumEt[0] = sumEt0;
 
     if ( msgLevel( MSG::VERBOSE) )verbose() << "   -> SumEt[BX=0] = "<< m_sumEt[0] << endmsg;
 
-    encode("Spd(Mult)",(*m_data & 0x0FFFC000 ) >> 14         , L0DUBase::Spd::Mult    );
+    encode(Name[SpdMult],(*m_data & 0x0FFFC000 ) >> 14         , L0DUBase::Spd::Mult    );
     encode("PU(MoreInfo)",(*m_data & 0xF0000000 ) >> 28      , L0DUBase::PileUp::MoreInfo  );
     
     if( !nextData() )return false;
-    encode("Electron(Et)" ,(*m_data & 0x000000FF ) >> 0      , L0DUBase::Electron::Et      );
-    encode("Photon(Et)"   ,(*m_data & 0x0000FF00 ) >> 8      , L0DUBase::Photon::Et        );
-    encode("GlobalPi0(Et)",(*m_data & 0x00FF0000 ) >> 16     , L0DUBase::Pi0Global::Et     );
-    encode("LocalPi0(Et)" ,(*m_data & 0xFF000000 ) >> 24     , L0DUBase::Pi0Local::Et      );
+    encode(Name[ElectronEt] ,(*m_data & 0x000000FF ) >> 0      , L0DUBase::Electron::Et      );
+    encode(Name[PhotonEt]   ,(*m_data & 0x0000FF00 ) >> 8      , L0DUBase::Photon::Et        );
+    encode(Name[GlobalPi0Et],(*m_data & 0x00FF0000 ) >> 16     , L0DUBase::Pi0Global::Et     );
+    encode(Name[LocalPi0Et] ,(*m_data & 0xFF000000 ) >> 24     , L0DUBase::Pi0Local::Et      );
     
     if( !nextData() )return false;
-    encode("Hadron(Et)"   ,(*m_data & 0x000000FF ) >> 0      , L0DUBase::Hadron::Et        );
-    encode("PUPeak1(Cont)",(*m_data & 0x0000FF00 ) >> 8      , L0DUBase::PileUp::Peak1     );
-    encode("PUPeak2(Cont)",(*m_data & 0x00FF0000 ) >> 16     , L0DUBase::PileUp::Peak2     );
-    encode("PUHits(Mult)" ,(*m_data & 0xFF000000 ) >> 24     , L0DUBase::PileUp::Hits      );
+    encode(Name[HadronEt]   ,(*m_data & 0x000000FF ) >> 0      , L0DUBase::Hadron::Et        );
+    encode(Name[PuPeak1],(*m_data & 0x0000FF00 ) >> 8      , L0DUBase::PileUp::Peak1     );
+    encode(Name[PuPeak2],(*m_data & 0x00FF0000 ) >> 16     , L0DUBase::PileUp::Peak2     );
+    encode(Name[PuHits] ,(*m_data & 0xFF000000 ) >> 24     , L0DUBase::PileUp::Hits      );
     
     if( !nextData() )return false;
-    encode("Electron(Add)" ,(*m_data & 0x0000FFFF ) >> 0     , L0DUBase::Electron::Address   );
-    encode("Photon(Add)"   ,(*m_data & 0xFFFF0000 ) >> 16    , L0DUBase::Photon::Address   );
+    encode(Name[ElectronAdd] ,(*m_data & 0x0000FFFF ) >> 0     , L0DUBase::Electron::Address   );
+    encode(Name[PhotonAdd]   ,(*m_data & 0xFFFF0000 ) >> 16    , L0DUBase::Photon::Address   );
     
     if( !nextData() )return false;
-    encode("GlobalPi0(Add)",(*m_data & 0x0000FFFF )          , L0DUBase::Pi0Global::Address );
-    encode("LocalPi0(Add)" ,(*m_data & 0xFFFF0000 ) >> 16    , L0DUBase::Pi0Local::Address  );
+    encode(Name[GlobalPi0Add],(*m_data & 0x0000FFFF )          , L0DUBase::Pi0Global::Address );
+    encode(Name[LocalPi0Add] ,(*m_data & 0xFFFF0000 ) >> 16    , L0DUBase::Pi0Local::Address  );
     
     if( !nextData() )return false;
-    encode("Hadron(Add)"  ,(*m_data & 0x0000FFFF )           , L0DUBase::Hadron::Address );
-    encode("PUPeak1(Add)" ,(*m_data & 0x00FF0000 ) >> 16     , L0DUBase::PileUp::Peak1Pos );
-    encode("PUPeak2(Add)" ,(*m_data & 0xFF000000 ) >> 24     , L0DUBase::PileUp::Peak2Pos );
+    encode(Name[HadronAdd]  ,(*m_data & 0x0000FFFF )           , L0DUBase::Hadron::Address );
+    encode(Name[PuPeak1Pos] ,(*m_data & 0x00FF0000 ) >> 16     , L0DUBase::PileUp::Peak1Pos );
+    encode(Name[PuPeak2Pos] ,(*m_data & 0xFF000000 ) >> 24     , L0DUBase::PileUp::Peak2Pos );
     
     if ( msgLevel( MSG::VERBOSE) )verbose() << "   ... L0Calo & L0PileUp input data decoded ..." <<endmsg;
     

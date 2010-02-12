@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.19 2010-01-29 19:16:40 odescham Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.20 2010-02-12 23:40:52 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -76,7 +76,7 @@ StatusCode L0DURawBankMonitor::initialize() {
   m_fromRaw->fillDataMap();
   m_condDB   = tool<IL0CondDBProvider>("L0CondDBProvider");
   m_odin     = tool<IEventTimeDecoder>("OdinTimeDecoder","OdinDecoder",this);
-  m_emuTool  = tool<IL0DUEmulatorTool>(m_emulatorTool, m_emulatorTool,this);
+  m_emuTool  = tool<IL0DUEmulatorTool>(m_emulatorTool, m_emulatorTool);
   // Spd DAQ tool
   m_spd = tool<ICaloDataProvider>( m_caloTool , "SpdReadoutTool" , this );
 

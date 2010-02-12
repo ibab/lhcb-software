@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.h,v 1.10 2010-01-27 15:13:43 graven Exp $
+// $Id: L0DUConfigProvider.h,v 1.11 2010-02-12 23:40:52 odescham Exp $
 #ifndef L0DUCONFIGPROVIDER_H 
 #define L0DUCONFIGPROVIDER_H 1
 
@@ -98,8 +98,7 @@ private:
 
   void printConfig(LHCb::L0DUConfig config,std::string slot);
   void constantData();
-  void predefinedData(const std::string& ,const int param[L0DUBase::Conditions::LastIndex] );
-  void hardcodedData();
+  void predefinedData();
   StatusCode createData();
   StatusCode createConditions();
   StatusCode createChannels();
@@ -108,7 +107,8 @@ private:
   bool getDataList(const std::string, std::vector<std::string>& );
   std::vector<std::string> triggerNameFromData( std::vector<std::string> );  
   bool configChecker();
-  
+  bool conditionCheck(LHCb::L0DUElementaryCondition* condition);
+  bool conditionOrdering();
 
   //options-defined data/conditions/channels
   LHCb::L0DUElementaryData::Map m_dataMap;
@@ -127,5 +127,12 @@ private:
   long m_tckopts;
   bool m_template; 
   bool m_uptodate;
+  bool m_forceOrder;
+  std::vector<std::vector<LHCb::L0DUElementaryCondition*> > m_condOrder;
+  std::vector<int> m_condMax;
+  bool m_reOrder;
+  bool m_check;
+  unsigned long m_condMask;
+  unsigned int m_reported;
 };
 #endif // L0DUCONFIGPROVIDER_H
