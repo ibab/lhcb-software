@@ -1,8 +1,9 @@
-!$Id: release.notes,v 1.190 2010-02-01 08:37:27 mneedham Exp $
+!$Id: release.notes,v 1.191 2010-02-12 16:53:58 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+!======================== STDet v4r17 2010-02-12 =========================
 ! 2010-02-01 M Needham
  - Protect findTopLevelElement against giving the wrong subdetector
 
