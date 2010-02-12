@@ -789,24 +789,24 @@ def getProjectList(name, version, binary=None):
             gt_sign = fdline.find('>')
             slash_sign = eq_sign + fdline[eq_sign:].find('/')
             source = fdline[eq_sign + 5:slash_sign]
-            file = fdline[slash_sign + 1:gt_sign]
-            project_list[file] = source
-            html_list.append(file)
+            fname = fdline[slash_sign + 1:gt_sign]
+            project_list[fname] = source
+            html_list.append(fname)
 
 
-    for file in project_list.keys():
-        if project_list[file] == "source":
-            pack_ver = getPackVer(file)
+    for fname in project_list.keys():
+        if project_list[fname] == "source":
+            pack_ver = getPackVer(fname)
             if pack_ver[2] != cmtconfig:
-                del project_list[file]
-                html_list.remove(file)
+                del project_list[fname]
+                html_list.remove(fname)
                 if cmtconfig in LbConfiguration.Platform.binary_list:
                     newbin = cmtconfig
                     if LbConfiguration.Platform.isBinaryDbg(newbin) :
                         newbin = LbConfiguration.Platform.getBinaryOpt(newbin)
-                    file = file.replace(pack_ver[2], newbin)
-                project_list[file] = "source"
-                html_list.append(file)
+                    fname = fname.replace(pack_ver[2], newbin)
+                project_list[fname] = "source"
+                html_list.append(fname)
     log.debug('project_list %s' % project_list)
     log.debug('html_list %s' % html_list)
 
@@ -898,33 +898,33 @@ def getProjectTar(tar_list, already_present_list=None):
     this_targz_dir = targz_dir.split(os.pathsep)[0]
 
 
-    for file in tar_list.keys():
+    for fname in tar_list.keys():
         log.info('---------------------------------------------------------------------------------------------------------')
-        if not isInstalled(file) or overwrite_mode :
-            log.debug(file)
-            if tar_list[file] == "source":
-                if file.find('LCGCMT') != -1 or file.find('LCGGrid') != -1 or file.find('LCGGanga') != -1:
+        if not isInstalled(fname) or overwrite_mode :
+            log.debug(fname)
+            if tar_list[fname] == "source":
+                if fname.find('LCGCMT') != -1 or fname.find('LCGGrid') != -1 or fname.find('LCGGanga') != -1:
                     checkWriteAccess(os.path.join(this_lcg_dir, '..'))
                     os.chdir(os.path.join(this_lcg_dir, '..'))
-                elif file.find('GENSER') != -1:
+                elif fname.find('GENSER') != -1:
                     checkWriteAccess(this_lcg_dir)
                     os.chdir(this_lcg_dir)
                 else:
                     checkWriteAccess(this_contrib_dir)
                     os.chdir(this_contrib_dir)
-                getFile(url_dist + 'source/', file)
-            elif tar_list[file] == "system":
-                log.info("Obsolete package %s will not be installed. The Compat project is replacing it" % file)
+                getFile(url_dist + 'source/', fname)
+            elif tar_list[fname] == "system":
+                log.info("Obsolete package %s will not be installed. The Compat project is replacing it" % fname)
             else:
                 checkWriteAccess(this_lhcb_dir)
                 os.chdir(this_lhcb_dir)
-                getFile(url_dist + tar_list[file] + '/', file)
+                getFile(url_dist + tar_list[fname] + '/', fname)
 
 
             # untar the file
-            log.debug('untar file %s' % file)
-            rc = unTarFileInTmp(os.path.join(this_targz_dir, file), os.getcwd(), overwrite=overwrite_mode)
-            pack_ver = getPackVer(file)
+            log.debug('untar file %s' % fname)
+            rc = unTarFileInTmp(os.path.join(this_targz_dir, fname), os.getcwd(), overwrite=overwrite_mode)
+            pack_ver = getPackVer(fname)
             if rc != 0 and (pack_ver[0] != 'LCGGrid' or pack_ver[0] != 'LCGGanga') :
                 removeAll(pack_ver[3])
                 log.info('Cleaning up %s' % pack_ver[3])
@@ -933,7 +933,7 @@ def getProjectTar(tar_list, already_present_list=None):
                 # if it is a ext_lhcb project
                 # create a ext_lhcb project/vers/binary directory
                 # to remember which binary tar file has been untar
-                if file.find('GENSER_v') != -1:
+                if fname.find('GENSER_v') != -1:
                 # the GENSER project as such does not exist anylonger in LCG
                     os.chdir(this_lcg_dir)
                     if not os.path.exists('GENSER'): os.mkdir('GENSER')
@@ -1011,13 +1011,13 @@ def getProjectTar(tar_list, already_present_list=None):
                                 log.debug("linking %s to %s" % (sourcef, targetf))
 
 
-            setInstalled(file)
+            setInstalled(fname)
         else :
-            log.info('%s already installed' % file)
+            log.info('%s already installed' % fname)
             if already_present_list != None:
-                already_present_list.append(tar_list[file])
-    for file in tar_list.keys():
-        pack_ver = getPackVer(file)
+                already_present_list.append(tar_list[fname])
+    for fname in tar_list.keys():
+        pack_ver = getPackVer(fname)
         prj = pack_ver[0]
         if isProjectRegistered(prj) :
             callPostInstallCommand(prj)
@@ -1697,18 +1697,18 @@ def useTarFileModule():
             usetfm = True
     return usetfm
 
-def untarFile(file):
+def untarFile(fname):
     log = logging.getLogger()
 
     retcode = 0
 
-    log.info('%s on %s ' % (file, os.getcwd()))
+    log.info('%s on %s ' % (fname, os.getcwd()))
 
     this_targz_dir = targz_dir.split(os.pathsep)[0]
 
-    filename = os.path.join(this_targz_dir, file)
+    filename = os.path.join(this_targz_dir, fname)
     md5filename = getMD5FileName(filename)
-    htmlfilename = os.path.join(html_dir, getHTMLFileName(file))
+    htmlfilename = os.path.join(html_dir, getHTMLFileName(fname))
     if not os.path.isfile(filename):
         log.warning('%s does not exist' % filename)
         retcode = 1
@@ -1745,7 +1745,7 @@ def untarFile(file):
                         else:
                             tar.extract(tarinfo)
                     else:
-                        if file.find('script') != -1:
+                        if fname.find('script') != -1:
                             j = j + 1
                             tar.extract(tarinfo)
                 except tarfile.ExtractError:
@@ -1772,7 +1772,7 @@ def untarFile(file):
             return retcode
 
         tar.close()
-        log.info('%s - %s entries, untar %s entries ' % (file, i, j))
+        log.info('%s - %s entries, untar %s entries ' % (fname, i, j))
 
     else:
         if sys.platform == 'win32':
