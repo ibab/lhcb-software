@@ -28,20 +28,21 @@
       <copyconstructor/>
       <constructor
         desc = "non default constructor"
-        argList   = "unsigned int id, const std::string name, LHCb::L0DUElementaryData* data ,const std::string 
-comp, unsigned int threshold" 
-        initList  = "m_id(id),m_name(name),m_data(data),m_comparator(comp),m_threshold(threshold)">
+        argList   = "unsigned int id, const std::string name, LHCb::L0DUElementaryData* data ,const std::string comp, unsigned int threshold" 
+        initList  = "m_id(id),m_name(name),m_data(data),m_comparator(comp),m_threshold(threshold),m_reported(true),m_reportBit(id)">
       </constructor>
 
       <attribute name = "id" desc = " L0DU condition index "  type = "unsigned int" />
       <attribute name = "name" desc = " L0DU condition name "  type = "std::string"/>
       <attribute name = "data" desc = " L0DU Elementary data"  type = "LHCb::L0DUElementaryData*" />
       <attribute name = "comparator" desc = " comparator symbol"  type = "std::string" />
-      <attribute name = "threshold" desc = "threshold value (digit)"type = "unsigned int" />
+      <attribute name = "threshold"  desc = "threshold value (digit)"type = "unsigned int" />
+      <attribute name = "reported"   desc = "true if the condition-bit is reported the summaryReport"type = "bool"init="true" />
+      <attribute name = "reportBit" desc = "bit position in the  summaryReport == id() if all conditions are to be reported"type = "int" />
 
 
       <method name      = "emulatedValue" 
-        desc = "Condition value = comparison(data,comparator,threshold)" type  = "bool" >
+        desc = "Condition value = comparaison(data,comparator,threshold)" type  = "bool" >
         <code> return comparison( m_data->digit()  ,m_comparator , m_threshold ); </code>
       </method>
 

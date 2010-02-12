@@ -1,4 +1,4 @@
-// $Id: L0DUChannel.cpp,v 1.7 2010-01-20 15:59:06 odescham Exp $
+// $Id: L0DUChannel.cpp,v 1.8 2010-02-12 23:41:48 odescham Exp $
 // Include files 
 #include <utility>
 #include <string>
@@ -27,15 +27,20 @@ LHCb::L0DUChannel*  LHCb::L0DUChannel::emulate(){
     m_emulatedPreDecision =  m_emulatedPreDecision && (*icond).second->emulatedValue() ;
   }
   // Cyclic counter ('downscaling' procedure)
-  bool accept = false ;  
-  if( m_emulatedPreDecision)m_counter += m_rate;
-  if( m_counter >= LHCb::L0DUCounter::Scale){
-    accept = true ;
-    m_counter -= LHCb::L0DUCounter::Scale; //cyclic counter
+  //bool accept = false ;  
+  if( m_updateCounter){
+    if( m_emulatedPreDecision )m_counter += m_rate;
+    if( m_counter >= LHCb::L0DUCounter::Scale){
+      m_accept = true ;
+      m_counter -= LHCb::L0DUCounter::Scale; //cyclic counter
+    }else{
+      m_accept = false;
+    } 
   }
+  
   // the downscaling procedure takes the final decision
   m_emulatedDecision = false ;
-  if(m_emulatedPreDecision && accept)m_emulatedDecision = true;
+  if(m_emulatedPreDecision && m_accept)m_emulatedDecision = true;
   m_emulated = true;
   return this;
 }

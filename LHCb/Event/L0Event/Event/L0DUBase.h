@@ -1,52 +1,96 @@
-// $Id: L0DUBase.h,v 1.9 2009-07-24 16:53:29 odescham Exp $
+// $Id: L0DUBase.h,v 1.10 2010-02-12 23:41:48 odescham Exp $
 //
 #ifndef      L0MUON_L0DUBASE_H
 #define      L0MUON_L0DUBASE_H 1
+#include <string>
 
 namespace L0DUBase{
   
 
   /*
-    L0DU firmware limitation (as quoted in EDMS-XXXX)
+    L0DU firmware limitations
   */
   namespace NumberOf{
-    static const unsigned int Channels   = 32;
-    static const unsigned int Conditions = 128;
+    static const unsigned int Compounds    = 8;
+    static const unsigned int Data        = 27;
+    static const unsigned int Channels    = 32;
+    static const unsigned int Conditions  =128;
+    static const unsigned int ConditionsInBank  =32;
   }  
-  namespace Conditions{
-    enum Parameters {Order=0, Number , Inputs,  OperatorType, LastIndex }; 
-    static const  int Electron[Conditions::LastIndex]          = {  0 , 10 , 1 , 0 }; // OperatorType 0 = {Id}
-    static const  int Photon[Conditions::LastIndex]            = {  1 ,  6 , 1 , 0 };
-    static const  int GlobalPi0[Conditions::LastIndex]         = {  2 ,  6 , 1 , 0 };
-    static const  int LocalPi0[Conditions::LastIndex]          = {  3 ,  6 , 1 , 0 };
-    static const  int Hadron[Conditions::LastIndex]            = {  4 ,  6 , 1 , 0 };
-    static const  int SumEt[Conditions::LastIndex]             = {  5 ,  4 , 1 , 0 };
-    static const  int SpdMult[Conditions::LastIndex]           = {  6 ,  4 , 1 , 0 };
-    static const  int PuPeak1[Conditions::LastIndex]           = {  7 ,  4 , 1 , 0 };
-    static const  int PuPeak2[Conditions::LastIndex]           = {  8 ,  4 , 1 , 0 };
-    static const  int PuHits[Conditions::LastIndex]            = {  9 ,  4 , 1 , 0 };
-    static const  int PuPeak1Pos[Conditions::LastIndex]        = { 10 ,  1 , 1 , 0 };
-    static const  int PuPeak2Pos[Conditions::LastIndex]        = { 11 ,  1 , 1 , 0 };
-    static const  int Muon1[Conditions::LastIndex]             = { 12 , 10 , 1 , 0 };
-    static const  int Muon2[Conditions::LastIndex]             = { 13 ,  6 , 1 , 0 };
-    static const  int Muon3[Conditions::LastIndex]             = { 14 ,  6 , 1 , 0 };
-    static const  int DiMuon[Conditions::LastIndex]            = { 15 , 10 , 1 , 0 };
-    static const  int BCID[Conditions::LastIndex]              = { 16 ,  4 , 1 , 0 };
-    static const  int CompoundCaloEt[Conditions::LastIndex]    = { 17 ,  4 , 3 , 1 }; // OperatorType 1 = {+/1}
-    static const  int CompoundCaloAdd[Conditions::LastIndex]   = { 18 , 10 , 2 , 2 }; // OperatorType 2 = {&/^}
-    static const  int CompoundPuCont[Conditions::LastIndex]    = { 19 ,  4 , 2 , 1 };
-    static const  int CompoundPuPos[Conditions::LastIndex]     = { 20 ,  2 , 2 , 1 };
-    static const  int CompoundMuonPt[Conditions::LastIndex]    = { 21 ,  4 , 3 , 1 };
-    static const  int CompoundMuonAdd[Conditions::LastIndex]   = { 22 ,  6 , 2 , 2 };
-    static const  int CompoundMuonSign[Conditions::LastIndex]  = { 23 ,  6 , 2 , 1 };
-    // void conditions (only exists for compound data building)
-    static const  int CaloAddress[Conditions::LastIndex]             = { 24 ,  0 , 1 , 0 };
-    static const  int MuonAddress[Conditions::LastIndex]             = { 25 ,  0 , 1 , 0 };
-    static const  int MuonSign[Conditions::LastIndex]                = { 26 ,  0 , 1 , 0 };
 
-  };
+  namespace CompoundData{
+    enum Type {None=0,CaloEt,CaloAdd,PuCont,PuPos,MuonPt,MuonAdd,MuonSgn};
+    static const std::string Name[NumberOf::Compounds] = {"None",
+                                                          "CompoundCaloEt",
+                                                          "CompoundCaloAdd", 
+                                                          "CompoundPuCont",
+                                                          "CompoundPuPos",
+                                                          "CompoundMuonPt",
+                                                          "CompoundMuonAdd",
+                                                          "CompoundMuonSgn"};
+    
+
+    static const unsigned int MaxNumber[NumberOf::Compounds] = { 0, 4, 10, 4, 2, 4, 6, 6 };  
+    static const unsigned int ConditionOrder[NumberOf::Compounds]  = { 0, 18,19,20,21,22,23,24 };  
+    static const unsigned int OperatorType[NumberOf::Compounds]= { 0, 1,2,1,1,1,2,1 };  
+  }
+  
+  namespace PredefinedData{
+    enum Type {ElectronEt=0,PhotonEt, GlobalPi0Et,LocalPi0Et,HadronEt,
+               SumEt,SpdMult,
+               PuPeak1,PuPeak2,
+               PuPeak1Pos,PuPeak2Pos,
+               PuHits,
+               Muon1Pt,Muon2Pt,Muon3Pt,DiMuonPt,
+               ElectronAdd,PhotonAdd,GlobalPi0Add,LocalPi0Add,HadronAdd,
+               Muon1Add,Muon2Add,Muon3Add,
+               Muon1Sgn,Muon2Sgn,Muon3Sgn};
+
+    static const std::string Name[NumberOf::Data]= {
+      "Electron(Et)", "Photon(Et)", "GlobalPi0(Et)", "LocalPi0(Et)","Hadron(Et)","Sum(Et)","Spd(Mult)",
+      "PUPeak1(Cont)","PUPeak2(Cont)","PUPeak1(Pos)","PUPeak2(Pos)","PUHits(Mult)",
+      "Muon1(Pt)","Muon2(Pt)","Muon3(Pt)","DiMuon(Pt)",
+      "Electron(Add)", "Photon(Add)", "GlobalPi0(Add)", "LocalPi0(Add)","Hadron(Add)",
+      "Muon1(Add)","Muon2(Add)","Muon3(Add)",
+      "Muon1(Sgn)","Muon2(Sgn)","Muon3(Sgn)",
+    };
+    static const unsigned int CompoundType[NumberOf::Data]={
+      CompoundData::CaloEt,CompoundData::CaloEt,CompoundData::CaloEt,CompoundData::CaloEt,CompoundData::CaloEt,
+      CompoundData::None,CompoundData::None,
+      CompoundData::PuCont,CompoundData::PuCont,
+      CompoundData::PuPos,CompoundData::PuPos,
+      CompoundData::None,
+      CompoundData::MuonPt,CompoundData::MuonPt,CompoundData::MuonPt,CompoundData::MuonPt,
+      CompoundData::CaloAdd,CompoundData::CaloAdd,CompoundData::CaloAdd,CompoundData::CaloAdd,CompoundData::CaloAdd,
+      CompoundData::MuonAdd,CompoundData::MuonAdd,CompoundData::MuonAdd,
+      CompoundData::MuonSgn,CompoundData::MuonSgn,CompoundData::MuonSgn
+    };
+    static const unsigned int MaxNumber[NumberOf::Data]={8,6,5,5,8,
+                                                         6,6,
+                                                         4,4,
+                                                         2,2,
+                                                         6,
+                                                         8,6,4,8,
+                                                         0,0,0,0,0,
+                                                         0,0,0,
+                                                         0,0,0};
+    
+    static const unsigned int ConditionOrder[NumberOf::Data]={1,2,3,4,5,
+                                                              6,7,
+                                                              8,9,10,
+                                                     11,12,
+                                                              13,14,15,16,
+                                                              // BCID + compoound Data inserted here
+                                                              25,26,27,28,29,
+                                                              30,31,32,
+                                                     33,34,35};  
+    }
+  
   namespace RAMBCID{
     static const unsigned int Max = 255;
+    static const unsigned int ConditionOrder = 17;
+    static const unsigned int MaxNumber = 4;
+    static const std::string  Name = "RamBCID";
   }
   
 
@@ -94,20 +138,20 @@ namespace L0DUBase{
   }
   namespace Muon {
     // from CU
-    namespace Pt1      { static const unsigned int Mask  = 0xFE       , Shift = 1;  };
-    namespace Address1 { static const unsigned int Mask  = 0x7F00     , Shift = 8;  };
+    namespace Pt2      { static const unsigned int Mask  = 0xFE       , Shift = 1;  };
+    namespace Address2 { static const unsigned int Mask  = 0x7F00     , Shift = 8;  };
     namespace BCID0    { static const unsigned int Mask  = 0x8000     , Shift = 15;  };
-    namespace Pt2      { static const unsigned int Mask  = 0xFE0000   , Shift = 17; };
-    namespace Address2 { static const unsigned int Mask  = 0x7F000000 , Shift = 24; };
+    namespace Pt1      { static const unsigned int Mask  = 0xFE0000   , Shift = 17; };
+    namespace Address1 { static const unsigned int Mask  = 0x7F000000 , Shift = 24; };
     namespace BCID1    { static const unsigned int Mask  = 0x80000000 , Shift = 31;  };
     // from SU
-    namespace Pu1      { static const unsigned int Mask  = 0x6       , Shift = 1; }; // PU address
-    namespace Pb1      { static const unsigned int Mask  = 0x78      , Shift = 3; }; // PB address
-    namespace Sign1    { static const unsigned int Mask  = 0x80      , Shift = 7; };
+    namespace Pu2      { static const unsigned int Mask  = 0x6       , Shift = 1; }; // PU address
+    namespace Pb2      { static const unsigned int Mask  = 0x78      , Shift = 3; }; // PB address
+    namespace Sign2    { static const unsigned int Mask  = 0x80      , Shift = 7; };
     namespace BCID     { static const unsigned int Mask  = 0xFE00    , Shift = 9; };
-    namespace Pu2      { static const unsigned int Mask  = 0x60000   , Shift = 17;}; // PU address
-    namespace Pb2      { static const unsigned int Mask  = 0x780000  , Shift = 19;}; // PB address
-    namespace Sign2    { static const unsigned int Mask  = 0x800000  , Shift = 23; };
+    namespace Pu1      { static const unsigned int Mask  = 0x60000   , Shift = 17;}; // PU address
+    namespace Pb1      { static const unsigned int Mask  = 0x780000  , Shift = 19;}; // PB address
+    namespace Sign1    { static const unsigned int Mask  = 0x800000  , Shift = 23; };
     namespace Status   { static const unsigned int Mask  = 0xF0000000, Shift = 28; };
     static const unsigned int AddressSize = 7;
     static const unsigned int BCID0Size = 7;

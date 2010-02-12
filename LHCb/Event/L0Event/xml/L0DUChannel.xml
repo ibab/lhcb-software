@@ -61,11 +61,11 @@
       <constructor 
         desc = "non-default constructor"
         argList   = "int id, const std::string name, const count rate, int decisionType=L0DUDecision::Physics" 
-        initList  = "m_id(id),m_name(name),m_rate(rate),m_decisionType(decisionType),m_counter(0),m_emulatedDecision(false),m_emulatedPreDecision(false),m_emulated(false)">
+        initList  = "m_id(id),m_name(name),m_rate(rate),m_decisionType(decisionType),m_counter(0),m_emulatedDecision(false),m_emulatedPreDecision(false),m_emulated(false),m_updateCounter(true),m_accept(false)">
       </constructor>
       <constructor 
         desc = "default constructor"
-        initList  = "m_id(0),m_name(),m_rate(100),m_decisionType(L0DUDecision::Physics),m_counter(0),m_emulatedDecision(false),m_emulatedPreDecision(false),m_emulated(false)">
+        initList  = "m_id(0),m_name(),m_rate(100),m_decisionType(L0DUDecision::Physics),m_counter(0),m_emulatedDecision(false),m_emulatedPreDecision(false),m_emulated(false),m_updateCounter(true),m_accept(false)">
       </constructor>
 
  
@@ -80,11 +80,13 @@
       <attribute name = "emulatedPreDecision"   desc = "L0DU Channel emulated trigger value (NOT applying downscaling)"   
                  type = "bool" init = "false" setMeth="FALSE" getMeth="FALSE"/>
       <attribute name = "emulated"  desc = "L0DU Channel emulation flag"  type = "bool" init = "false" />
+      <attribute name = "updateCounter"  desc = "enable/disable the downscaling counter"  type = "bool" init = "true" />
+      <attribute name = "accept"  desc = "downscaling decision"  type = "bool" init = "false" setMeth="FALSE" />
       
 
 
       <method name      = "enable" 
-              desc = "is the channel enable (for a given decision type - default is Any)" 
+              desc = "does the channel participate to the global OR'ed decision (for a given decision type - default is Any)" 
               argList = "int mask=L0DUDecision::Any"
               type  = "bool" >
         <code> 

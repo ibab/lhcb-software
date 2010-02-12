@@ -142,6 +142,14 @@
 
 
 
+      <method name  = "updateCounters" argList="bool update=true" desc = "enable/disable all the channels downscaling counters" type  = "void" >
+        <code>
+          for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
+          ((*it).second)->setUpdateCounter(update);
+          }
+        </code>
+      </method>
+
       <method name  = "resetChannelCounters" desc = "reset all channel counters" type  = "void" >
         <code>
           for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){

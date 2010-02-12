@@ -207,7 +207,7 @@
           const LHCb::L0DUChannel::Map&amp; channels = m_configuration->channels();
           LHCb::L0DUChannel::Map::const_iterator it = channels.find( name );
           if( it == channels.end() )return;
-          unsigned int pos = ((*it).second)->id();
+          unsigned int pos = ((*it).second)-&gt;id();
           unsigned int index = pos / 32;
           std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,index); 
           unsigned int summary = m_channelsPreDecisionSummaries[key];
@@ -227,7 +227,7 @@
           const LHCb::L0DUChannel::Map&amp; channels= m_configuration->channels();
           LHCb::L0DUChannel::Map::const_iterator it = channels.find( name );
           if( it == channels.end() )return;
-          unsigned int pos = ((*it).second)->id();
+          unsigned int pos = ((*it).second)-&gt;id();
           unsigned int index = pos / 32;
           std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,index); 
           unsigned int summary = m_channelsDecisionSummaries[key];
@@ -247,7 +247,7 @@
           const LHCb::L0DUElementaryCondition::Map&amp; conditions = m_configuration->conditions();
           LHCb::L0DUElementaryCondition::Map::const_iterator it = conditions.find( name );
           if( it == conditions.end() )return;
-          unsigned int pos = ((*it).second)->id();
+          unsigned int pos = ((*it).second)->reportBit();
           unsigned int index = pos / 32;
           std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,index); 
           unsigned int summary = m_conditionsValueSummaries[key];
@@ -401,7 +401,8 @@
           const LHCb::L0DUElementaryCondition::Map&amp; conditions=m_configuration->conditions();
           LHCb::L0DUElementaryCondition::Map::const_iterator it = conditions.find( name );
           if( it == conditions.end() )return false;
-          const unsigned int pos = ((*it).second)->id();
+          if( !(it-&gt;second)-&gt;reported() )return false;
+          const unsigned int pos = ((*it).second)-&gt;reportBit();
           return conditionValue( pos, bx );
         </code>
       </method>

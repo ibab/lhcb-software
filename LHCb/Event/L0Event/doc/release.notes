@@ -1,7 +1,21 @@
-! $Id: release.notes,v 1.130 2010-01-21 17:41:22 cattanem Exp $
+! $Id: release.notes,v 1.131 2010-02-12 23:41:48 odescham Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
+
+
+! 2010-02-10 Olivier Deschamps
+  - L0DUBase.h  : 
+    - implement hardware limitation data (NumberOf channels/conditions) + default naming, etc ...
+    - fix Muon0/Muon1 swap in each L0MuonProcessor data (no impact, just to please Régis)
+
+  - L0DUElementaryCondition : 
+    - new attributes : m_reported (true when the condition is reported in the report) and m_reportBit (location of the bit in the report)
+
+  - L0DUChannel/L0DUConfig : new method 'updateCounter(s)' to disable the downscaling counters (expert usage)
+
+  - L0DUReport : 
+    - get condition bit according to reportBit
 
 !======================== L0Event v18r0 2010-01-21 ===========================
 ! 2010-01-21 Olivier Deschamps
