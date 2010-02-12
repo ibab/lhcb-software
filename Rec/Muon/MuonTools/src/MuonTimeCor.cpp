@@ -1,4 +1,4 @@
-// $Id: MuonTimeCor.cpp,v 1.2 2010-02-10 09:19:48 asatta Exp $
+// $Id: MuonTimeCor.cpp,v 1.3 2010-02-12 10:10:48 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -144,7 +144,7 @@ StatusCode MuonTimeCor::initialize()
       corList.getline(inbuf,sizeof(inbuf));
       do {
         
-        sscanf(inbuf,"%7c  %*4c %d  %*s %*4c %d %*s  %*4c %d %*s %*4c %d %*s %*4c %d",&ode,&sn1,&sc1,&sn2,&sc2,&cor);
+        sscanf(inbuf,"%7c  %*4c %d  %*s %*4c %d %*s  %*4c %d %*s %*4c %d %*s %*4c %d",ode,&sn1,&sc1,&sn2,&sc2,&cor);
  
         verbose()<<" test "<<ode<<" "<<sn1<<" "<<sc1<<" "<<sn2<<" "<<sc2<<" "<<cor<<endreq;
         
