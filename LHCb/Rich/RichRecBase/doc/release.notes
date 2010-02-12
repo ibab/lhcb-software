@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r26 2010-02-12 ==========================
 ! 2010-01-22 - Chris Jones
  - Update maximum reconstructed CK theta value for aerogel from 290mrad to
    320mrad, to match the observed spectrum from 2009 data
