@@ -10,7 +10,7 @@
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
 __author__  = "Plamen Hopchev phopchev@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -22,7 +22,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
     # steering variables
     __slots__ = { 'L0ChannelBeam1'          : "B1gas" 
                 , 'L0ChannelBeam2'          : "B2gas" 
-                , 'L0ChannelBeamCrossing'   : "Hadron" # ???
+                , 'L0ChannelBeamCrossing'   : "CALO" # ???
                 , 'ZVertexMin'              : -1500.
                 , 'ZVertexMax'              :  1500.
                 , 'BGVtxExclRangeMin'       : -265.
@@ -60,7 +60,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
             Here we expect that nothing has been executed yet,
             so we do our 'own' RZ Tracking first. '''
 
-        name = { 'Beam1': 'BeamGas1', 'Beam2' : 'BeamGas2' }[ whichBeam ]
+        name = 'BeamGas'+whichBeam
 
         ## here we can add different z-ranges for the beam1 and beam2 crossings
         from Configurables import Tf__PatVeloRTracking
