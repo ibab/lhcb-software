@@ -4,8 +4,9 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+!======================== LumiEvent v2r5 2010-02-12 ==========================
 ! 2010-01-28 - Jaap Panman
- Enable an additional lumi bookkeeping method for low lumi conditions 
+ - Enable an additional lumi bookkeeping method for low lumi conditions 
  - add counter value in enum of LumiCounters
  - add enum class LumiMethod to hold values to flag Lumi methods
 
