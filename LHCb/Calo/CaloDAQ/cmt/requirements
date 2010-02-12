@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.50 2010-01-20 14:43:22 cattanem Exp $
+# $Id: requirements,v 1.51 2010-02-12 16:42:39 cattanem Exp $
 # =============================================================================
 # Created    : 2004-12-17
 # Maintainer : Olivier Deschamps
 # =============================================================================
 package           CaloDAQ
-version           v4r17
+version           v4r18
 
 # =============================================================================
 # Structure, i.e. directories to process. 

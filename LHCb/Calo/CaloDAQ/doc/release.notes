@@ -4,7 +4,7 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
-
+!========================== CaloDAQ v4r18 2010-02-12 =========================
 ! 2010-01-30 - Olivier Deschamps
  - CaloL0DataProvider : fix BeginEvent missing re-init
 
