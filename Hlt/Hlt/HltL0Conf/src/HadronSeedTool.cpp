@@ -1,4 +1,4 @@
-// $Id: HadronSeedTool.cpp,v 1.12 2010-01-06 07:43:24 albrecht Exp $
+// $Id: HadronSeedTool.cpp,v 1.13 2010-02-12 20:30:39 graven Exp $
 // Include files 
 
 #include <cmath>
@@ -124,8 +124,8 @@ StatusCode HadronSeedTool::initialize()
 
 StatusCode HadronSeedTool::updateField()
 {
-  if(msgLevel(MSG::INFO)) 
-    info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()<<endmsg;
+  if(msgLevel(MSG::DEBUG)) 
+    debug()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()<<endmsg;
   
   m_fieldOff=false;
   if( fabs(m_magFieldSvc->scaleFactor()) < 0.1 ) {

@@ -108,8 +108,8 @@ StatusCode ElectronSeedTool::initialize()
 
 StatusCode ElectronSeedTool::updateField()
 {
-  if(msgLevel(MSG::INFO)) 
-    info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()<<endmsg;
+  if(msgLevel(MSG::DEBUG)) 
+    debug()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()<<endmsg;
   
   m_fieldOff=false;
   if( fabs(m_magFieldSvc->scaleFactor()) < 0.1 ) {

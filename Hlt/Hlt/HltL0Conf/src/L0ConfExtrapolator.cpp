@@ -1,4 +1,4 @@
-// $Id: L0ConfExtrapolator.cpp,v 1.12 2010-01-11 14:45:34 graven Exp $
+// $Id: L0ConfExtrapolator.cpp,v 1.13 2010-02-12 20:30:39 graven Exp $
 // Include files 
 
 #include <cmath>
@@ -90,8 +90,8 @@ StatusCode L0ConfExtrapolator::initialize()
 
 StatusCode L0ConfExtrapolator::updateField()
 {
-  if(msgLevel(MSG::INFO)) 
-    info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()<<endmsg;
+  if(msgLevel(MSG::DEBUG)) 
+    debug()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()<<endmsg;
 
   m_BscaleFactor = m_magFieldSvc->scaleFactor();
   m_fieldOff=false;

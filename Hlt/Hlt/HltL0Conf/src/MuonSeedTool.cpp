@@ -1,4 +1,4 @@
-// $Id: MuonSeedTool.cpp,v 1.17 2010-01-12 12:57:16 albrecht Exp $
+// $Id: MuonSeedTool.cpp,v 1.18 2010-02-12 20:30:39 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -105,8 +105,8 @@ StatusCode MuonSeedTool::initialize()
 
 StatusCode MuonSeedTool::updateField()
 {
-  if(msgLevel(MSG::INFO)) 
-    info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()<<endmsg;
+  if(msgLevel(MSG::DEBUG)) 
+    debug()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()<<endmsg;
   
   m_fieldOff=false;
   if( fabs(m_magFieldSvc->scaleFactor()) < 0.1 ) {
