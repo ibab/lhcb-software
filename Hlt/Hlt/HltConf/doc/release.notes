@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.413 2010-02-11 11:12:02 gligorov Exp $ 
+! $Id: release.notes,v 1.414 2010-02-12 20:27:38 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2010-02-12 - Gerhard Raven
+ - update names of beamgas, minibias and nobias 
 ! 2010-02-11 - V. Gligorov
  - Change SoftDiHadron to DiHadronSoft 
 
