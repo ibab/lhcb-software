@@ -10,7 +10,7 @@
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
 __author__  = "Plamen Hopchev phopchev@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -28,13 +28,13 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                 , 'BGVtxExclRangeMin'       : -265.
                 , 'BGVtxExclRangeMax'       :  265.
                 , 'ForcedRZVeloFraction'    : 0.001
-                , 'Prescale'                : { 'Hlt1BeamGas1' :                    0.1
-                                              , 'Hlt1BeamGas2' :                    0.1
+                , 'Prescale'                : { 'Hlt1BeamGasBeam1' :                0.1
+                                              , 'Hlt1BeamGasBeam2' :                0.1
                                               , 'Hlt1BeamGasCrossing' :             0.01
                                               , 'Hlt1BeamGasCrossingForcedRZReco' : 0.0001
                                               }
-                , 'Postscale'               : { 'Hlt1BeamGas1' :                    'RATE(25)'
-                                              , 'Hlt1BeamGas2' :                    'RATE(25)'
+                , 'Postscale'               : { 'Hlt1BeamGasBeam1' :                'RATE(25)'
+                                              , 'Hlt1BeamGasBeam2' :                'RATE(25)'
                                               , 'Hlt1BeamGasCrossing' :             'RATE(25)'
                                               , 'Hlt1BeamGasCrossingForcedRZReco' : 'RATE(25)'
                                               }
@@ -64,7 +64,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
 
         ## here we can add different z-ranges for the beam1 and beam2 crossings
         from Configurables import Tf__PatVeloRTracking
-        algRZTracking = Tf__PatVeloRTracking( 'Hlt1%sRZTracking' % name 
+        algRZTracking = Tf__PatVeloRTracking( 'Hlt1RZVeloBeamGas' 
                                            , OutputTracksName = "Hlt/Track/RZVeloBeamGas"
                                            , ZVertexMin  = self.getProp('ZVertexMin')
                                            , ZVertexMax  = self.getProp('ZVertexMax') )
