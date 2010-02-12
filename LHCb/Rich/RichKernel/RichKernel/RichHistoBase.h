@@ -5,7 +5,7 @@
  *  Header file for RICH base class : Rich::HistoBase
  *
  *  CVS Log :-
- *  $Id: RichHistoBase.h,v 1.3 2010-02-11 19:32:28 jonrob Exp $
+ *  $Id: RichHistoBase.h,v 1.4 2010-02-12 16:44:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2009-07-27
@@ -19,9 +19,8 @@
 
 #include "RichKernel/RichCommonBase.h"
 #include "RichKernel/RichHistoID.h"
+#include "RichKernel/RichMap.h"
 #include "RichKernel/RichHashMap.h"
-#include "Kernel/RichDetectorType.h"
-#include "Kernel/RichRadiatorType.h"
 
 // boost
 #include "boost/array.hpp"
@@ -29,7 +28,9 @@
 // AIDA
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
+//#include "AIDA/IHistogram3D.h"
 #include "AIDA/IProfile1D.h"
+#include "AIDA/IProfile2D.h"
 
 namespace Rich
 {
@@ -88,20 +89,6 @@ namespace Rich
 
   private:
 
-    /// Get the full title, including Detector Info
-    inline std::string fullTitle( const Rich::HistogramID & id,
-                                  const std::string &    title ) const
-    {
-      std::string _title("");
-      if ( id.det()  != Rich::InvalidDetector ) _title += Rich::text(id.det())  + " ";
-      if ( id.rad()  != Rich::InvalidRadiator ) _title += Rich::text(id.rad())  + " ";
-      if ( id.side() != Rich::InvalidSide     ) _title += Rich::text(id.side()) + " ";
-      if ( id.pid()  != Rich::Unknown         ) _title += Rich::text(id.pid())  + " ";
-      return _title + title;
-    }
-
-  private:
-
     unsigned int m_nBins1D; ///< Number of bins for 1D histograms
     unsigned int m_nBins2D; ///< Number of bins for 2D histograms
 
@@ -144,10 +131,10 @@ namespace Rich
      * @param title   Histogram title
      * @param lowX    Lower histogram edge in X
      * @param highX   Upper histogram edge in X
-     * @param lowX    Lower histogram edge in Y
-     * @param highX   Upper histogram edge in Y
      * @param binsX   Number of bins in X
-     * @param binsX   Number of bins in Y
+     * @param lowY    Lower histogram edge in Y
+     * @param highY   Upper histogram edge in Y
+     * @param binsY   Number of bins in Y
      *
      * @return Pointer to booked histogram
      */
@@ -176,18 +163,69 @@ namespace Rich
                                      const double            high,
                                      const unsigned long     bins );
 
+    /** Book a 2D profile histogram
+     *
+     * @param id      Histogram identifier
+     * @param title   Histogram title
+     * @param lowX    Lower histogram edge in X
+     * @param highX   Upper histogram edge in X
+     * @param binsX   Number of bins in X
+     * @param lowY    Lower histogram edge in Y
+     * @param highY   Upper histogram edge in Y
+     * @param binsY   Number of bins in Y
+     *
+     * @return Pointer to booked histogram
+     */
+    AIDA::IProfile2D* richProfile2D( const Rich::HistogramID & id,
+                                     const std::string &    title,
+                                     const double             lowX,
+                                     const double            highX,
+                                     const unsigned long     binsX,
+                                     const double             lowY,
+                                     const double            highY,
+                                     const unsigned long     binsY );
+
     //-----------------------------------------------------------------------------------------
 
   private: // Types for histogram lookup
 
+    /** @class HistoMap RichKernel/RichHistoBase.h
+     *
+     *  Private class to implement mapping between RICH classes and histograms
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   2009-07-27
+     */
+    template< class HTYPE >
+    class HistoMap
+    {
+    public:
+      typedef Rich::HashMap < std::string, HTYPE * > StringToHist;
+    private:
+      typedef Rich::Map     < unsigned int, StringToHist > Map;
+    private:
+      Map map;
+    public:
+      inline StringToHist & getmap( const Rich::PackedPIDInfo& info ) 
+      { 
+        return map[info.raw()];
+      }
+    };
+
     /// Mapping between IDs and 1D histogram pointers
-    typedef Rich::HashMap< std::string, AIDA::IHistogram1D * > Map1DH;
+    typedef HistoMap< AIDA::IHistogram1D > Map1DH;
 
     /// Mapping between IDs and 2D histogram pointers
-    typedef Rich::HashMap< std::string, AIDA::IHistogram2D * > Map2DH;
+    typedef HistoMap< AIDA::IHistogram2D > Map2DH;
+
+    /// Mapping between IDs and 2D histogram pointers
+    //typedef HistoMap< AIDA::IHistogram3D > Map3DH;
 
     /// Mapping between IDs and 1D Profile histogram pointers
-    typedef Rich::HashMap< std::string, AIDA::IProfile1D * > Map1DP;
+    typedef HistoMap< AIDA::IProfile1D > Map1DP;
+
+    /// Mapping between IDs and 2D Profile histogram pointers
+    typedef HistoMap< AIDA::IProfile2D > Map2DP;
 
   private:
 
@@ -203,6 +241,9 @@ namespace Rich
     /// 1D Profile map
     Map1DP m_1dpmap;
 
+    /// 2D Profile map
+    Map2DP m_2dpmap;
+
   protected:
 
     //-----------------------------------------------------------------------------------------
@@ -215,10 +256,11 @@ namespace Rich
      */
     inline AIDA::IHistogram1D * richHisto1D( const Rich::HistogramID & id )
     {
-      Map1DH::iterator iH = m_1dhmap.find(id.id());
-      if ( iH == m_1dhmap.end() )
+      typename Map1DH::StringToHist & map = m_1dhmap.getmap(id.packedData());
+      typename Map1DH::StringToHist::iterator iH = map.find(id.id());
+      if ( iH == map.end() )
       {
-        this->Exception( "Cannot find pre-booked histogram '"+id.id()+"'" );
+        this->Exception( "Cannot find pre-booked histogram '"+id.fullid()+"'" );
       }
       return iH->second;
     }
@@ -231,10 +273,11 @@ namespace Rich
      */
     inline AIDA::IHistogram2D * richHisto2D( const Rich::HistogramID & id )
     {
-      Map2DH::iterator iH = m_2dhmap.find(id.id());
-      if ( iH == m_2dhmap.end() )
+      typename Map2DH::StringToHist & map = m_2dhmap.getmap(id.packedData());
+      typename Map2DH::StringToHist::iterator iH = map.find(id.id());
+      if ( iH == map.end() )
       {
-        this->Exception( "Cannot find pre-booked histogram '"+id.id()+"'" );
+        this->Exception( "Cannot find pre-booked histogram '"+id.fullid()+"'" );
       }
       return iH->second;
     }
@@ -247,10 +290,28 @@ namespace Rich
      */
     inline AIDA::IProfile1D * richProfile1D( const Rich::HistogramID & id )
     {
-      Map1DP::iterator iH = m_1dpmap.find(id.id());
-      if ( iH == m_1dpmap.end() )
+      typename Map1DP::StringToHist & map = m_1dpmap.getmap(id.packedData());
+      typename Map1DP::StringToHist::iterator iH = map.find(id.id());
+      if ( iH == map.end() )
       {
-        this->Exception( "Cannot find pre-booked histogram '"+id.id()+"'" );
+        this->Exception( "Cannot find pre-booked histogram '"+id.fullid()+"'" );
+      }
+      return iH->second;
+    }
+
+    /** Access 2D profile histogram by id
+     *
+     * @param id      Histogram identifier
+     *
+     * @return Pointer to booked histogram
+     */
+    inline AIDA::IProfile2D * richProfile2D( const Rich::HistogramID & id )
+    {
+      typename Map2DP::StringToHist & map = m_2dpmap.getmap(id.packedData());
+      typename Map2DP::StringToHist::iterator iH = map.find(id.id());
+      if ( iH == map.end() )
+      {
+        this->Exception( "Cannot find pre-booked histogram '"+id.fullid()+"'" );
       }
       return iH->second;
     }

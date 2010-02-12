@@ -5,7 +5,7 @@
  *  Header file for RICH utility class : Rich::HistogramID
  *
  *  CVS Log :-
- *  $Id: RichHistoID.h,v 1.7 2010-02-11 19:32:28 jonrob Exp $
+ *  $Id: RichHistoID.h,v 1.8 2010-02-12 16:44:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   27/10/2005
@@ -16,14 +16,13 @@
 #define RICHKERNEL_RICHHISTOID_H 1
 
 // STL
-#include <functional>
 #include <string>
 
 // Kernel
-#include "Kernel/RichRadiatorType.h"
-#include "Kernel/RichDetectorType.h"
-#include "Kernel/RichParticleIDType.h"
-#include "Kernel/RichSide.h"
+#include "RichKernel/RichPackedPIDInfo.h"
+
+// Gaudi
+#include "GaudiAlg/HistoID.h"
 
 namespace Rich
 {
@@ -53,54 +52,8 @@ namespace Rich
   class HistogramID
   {
 
-  private:
-
-    /// Form the full ID
-    inline void constructID()
-    {
-      if ( m_pid  != Rich::Unknown         ) { m_id = Rich::text(m_pid)  + "/" + m_id; }
-      if ( m_side != Rich::InvalidSide     ) { m_id = Rich::text(m_side) + "/" + m_id; }
-      if ( m_rad  != Rich::InvalidRadiator ) { m_id = Rich::text(m_rad)  + "/" + m_id; }
-      if ( m_det  != Rich::InvalidDetector ) { m_id = Rich::text(m_det)  + "/" + m_id; }
-    }
-
   public:
-
-    /// Constructor from a string, with no detector information
-    HistogramID( const std::string & id )
-      : m_id   ( id                    ),
-        m_det  ( Rich::InvalidDetector ),
-        m_rad  ( Rich::InvalidRadiator ),
-        m_side ( Rich::InvalidSide     ),
-        m_pid  ( Rich::Unknown         )
-    { }
-
-    /** Constructor with RICH specific information
-     *  @param id    Histogram string ID
-     *  @param det   The RICH detector
-     */
-    HistogramID( const std::string & id,
-                 Rich::DetectorType  det )
-      : m_id   ( Rich::text(det) + "/" + id ),
-        m_det  ( det                   ), 
-        m_rad  ( Rich::InvalidRadiator ),
-        m_side ( Rich::InvalidSide     ), 
-        m_pid  ( Rich::Unknown         )
-    { }
-
-    /** Constructor with RICH specific information
-     *  @param id    Histogram string ID
-     *  @param rad   The radiator medium
-     */
-    HistogramID(  const std::string & id,
-                  Rich::RadiatorType  rad )
-      : m_id   ( Rich::text(rad) + "/" + id ),
-        m_det  ( Rich::InvalidDetector ), 
-        m_rad  ( rad                   ),
-        m_side ( Rich::InvalidSide     ), 
-        m_pid  ( Rich::Unknown         )
-    { }
-
+    
     /** Constructor with RICH specific information
      *  @param id    Histogram string ID
      *  @param det   The RICH detector
@@ -108,73 +61,74 @@ namespace Rich
      *  @param rad   The radiator medium
      *  @param pid   The mass hypothesis
      */
-    HistogramID( const std::string &   id,
-                 Rich::DetectorType   det,
-                 Rich::Side          side,
-                 Rich::RadiatorType   rad = Rich::InvalidRadiator,
-                 Rich::ParticleIDType pid = Rich::Unknown )
-      : m_id   ( id   ), 
-        m_det  ( det  ), 
-        m_rad  ( rad  ),
-        m_side ( side ),
-        m_pid  ( pid  )
-    {
-      constructID();
-    }
-
+    HistogramID( const std::string &         id,
+                 const Rich::DetectorType   det = Rich::InvalidDetector,
+                 const Rich::Side          side = Rich::InvalidSide,
+                 const Rich::RadiatorType   rad = Rich::InvalidRadiator,
+                 const Rich::ParticleIDType pid = Rich::Unknown )
+      : m_id(id), m_data(det,side,rad,pid)
+    { }
+    
     /** Constructor with RICH specific information
      *  @param id    Histogram string ID
      *  @param rad   The radiator medium
      *  @param pid   The mass hypothesis
      */
-    HistogramID( const std::string &   id,
-                 Rich::RadiatorType   rad,
-                 Rich::ParticleIDType pid )
-      : m_id   ( Rich::text(rad) + "/" + Rich::text(pid) + "/" + id ),
-        m_det  ( Rich::InvalidDetector ), 
-        m_rad  ( rad                   ),
-        m_side ( Rich::InvalidSide     ), 
-        m_pid  ( pid                   )
+    HistogramID( const std::string &         id,
+                 const Rich::RadiatorType   rad,
+                 const Rich::ParticleIDType pid = Rich::Unknown )
+      : m_id(id), m_data(Rich::InvalidDetector,Rich::InvalidSide,rad,pid)
     { }
+
+  public:
+
+    /// Access the Detector type
+    inline Rich::DetectorType   det() const { return m_data.det(); }
+    /// Access the radiator medium
+    inline Rich::RadiatorType   rad() const { return m_data.rad(); }
+    /// Access the side of the RICH
+    inline Rich::Side          side() const { return m_data.side(); }
+    /// Access the Particle ID hypothesis
+    inline Rich::ParticleIDType pid() const { return m_data.pid(); }
 
   public:
 
     /// Returns the appropriate histogram ID
     inline const std::string& id() const
-    {
+    {  
       return m_id;
     }
+
+    /// Returns the packed Rich PID info
+    inline const Rich::PackedPIDInfo& packedData() const
+    {  
+      return m_data;
+    }
+
+    /// Returns the appropriate histogram ID
+    std::string fullid() const;
+
+    /// Get the full title, including Detector Info
+    std::string fullTitle( const std::string & title ) const;
+
+  public:
 
     /// implicit conversion to an std::string
     inline operator std::string() const
     {
-      return this->id();
+      return this->fullid();
     }
 
     /// Implicit conversion to a GaudiAlg::HistoID
     inline operator GaudiAlg::HistoID() const
     {
-      return GaudiAlg::HistoID(this->id());
+      return GaudiAlg::HistoID(this->fullid());
     }
-
-  public:
-
-    /// Access the Detector type
-    inline Rich::DetectorType   det() const { return m_det; }
-    /// Access the radiator medium
-    inline Rich::RadiatorType   rad() const { return m_rad; }
-    /// Access the side of the RICH
-    inline Rich::Side          side() const { return m_side; }
-    /// Access the Particle ID hypothesis
-    inline Rich::ParticleIDType pid() const { return m_pid; }
 
   private:
 
-    std::string m_id;           ///< The ID string
-    Rich::DetectorType m_det;   ///< The RICH detector
-    Rich::RadiatorType m_rad;   ///< The radiator medium
-    Rich::Side m_side;          ///< The detector 'side' (up,down,left,right)
-    Rich::ParticleIDType m_pid; ///< The Particle hypothesis
+    std::string m_id;             ///< The ID string
+    Rich::PackedPIDInfo m_data;   ///< Packed Rich Info
 
   };
 
