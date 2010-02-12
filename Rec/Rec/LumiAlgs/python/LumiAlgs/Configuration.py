@@ -84,6 +84,48 @@ class LumiAlgsConf(LHCbConfigurableUser):
         
         return BXMembers
     
+    def fillLowLumiFSR(self):
+        '''
+        fill the low lumi FSR, return a sequence
+        similar to the fillFSR method, but accepts more trigger type and
+        applies the method filter
+        '''
+        from Configurables import ( LumiAccounting,
+                                    HltLumiSummaryDecoder, FilterOnLumiSummary, GaudiSequencer )
+        from Configurables import LoKi__ODINFilter  as ODINFilter
+        # Create sub-sequences according to BXTypes
+        crossings = self.getProp("BXTypes")
+        BXMembers = []
+        for i in crossings:
+            seqMembers=[]
+            seqMembers.append( ODINFilter ( 'FilterLow'+i,
+                                            Code = ' ( ODIN_TRGTYP <= LHCb.ODIN.LumiTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.'+i+' ) ' ))
+            decoder = HltLumiSummaryDecoder('LumiDecode'+i)  # keep the name without "Low" to avoid double execution
+            seqMembers.append( decoder )
+            methodfilter = FilterOnLumiSummary('LumiLowFilter'+i,
+                                               CounterName = "Method",
+                                               ValueName = "L0RateMethod",
+                                               OutputLevel = self.getProp("OutputLevel") )
+            seqMembers.append( methodfilter )
+            
+            accounting = LumiAccounting('LumiLowCount'+i,
+                                        OutputDataContainer = "/FileRecords/LumiLowFSR"+i,
+                                        OutputLevel = self.getProp("OutputLevel") )
+            seqMembers.append( accounting )
+            
+            BXMembers.append( GaudiSequencer('LumiLow'+i+'Seq', 
+                                             Members = seqMembers,
+                                             ModeOR = False,
+                                             ShortCircuit = True,
+                                             MeasureTime = True,
+                                             ))
+            if self.getProp('InputType') == 'DST':
+                    decoder.OutputContainerName='LumiSummaries'
+                    accounting.InputDataContainer='LumiSummaries'
+                    methodfilter.InputDataContainer='LumiSummaries'
+        
+        return BXMembers
+    
     def fillTimeSpanFSR(self):
         '''fill the time span FSR, return a sequence'''
         from Configurables import ( TimeAccounting,
@@ -119,6 +161,11 @@ class LumiAlgsConf(LHCbConfigurableUser):
         odin=createODIN()
         from Configurables import (LumiIntegrateFSR)
         readingFSR=LumiIntegrateFSR("TouchLumiFSR", OutputLevel = self.getProp("OutputLevel") )
+        # this also touches the LumiLow FSRs
+        readingLumiLowFSR=LumiIntegrateFSR("TouchLumiLowFSR",
+                                           FSRName = "LumiLowFSR",
+                                           IntegratorToolName = "LumiLowIntegrator", 
+                                           OutputLevel = self.getProp("OutputLevel") )
         return [ odin, readingFSR]
     
     ## Apply the configuration to the given sequence
@@ -140,21 +187,22 @@ class LumiAlgsConf(LHCbConfigurableUser):
         status=self.getProp("SetFSRStatus")
         
         if inputType == 'MDF' or forced:
-            #create the FSRs
+            # create the FSRs
             
             # Create sub-sequences according to BXTypes
-            BXMembers=self.fillFSR()
-            sequence.Members += BXMembers
+            sequence.Members += self.fillFSR()
+
+            # add other method LumiSummaries
+            sequence.Members += self.fillLowLumiFSR()
             
             if status is None or status=='':
                 #by definition, all raw files are verified
                 status='VERIFIED'
         
-            #create the TimeSpan FSR
-            TimeSpanMembers=self.fillTimeSpanFSR()
-            sequence.Members += TimeSpanMembers
+            # create the TimeSpan FSR
+            sequence.Members += self.fillTimeSpanFSR()
         
-        #create the Event FSR
+        # create the Event FSR
         EvMembers=self.fillEventFSR(status)
 
         #finally configure the sequence

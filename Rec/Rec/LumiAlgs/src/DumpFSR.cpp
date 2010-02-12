@@ -1,4 +1,4 @@
-// $Id: DumpFSR.cpp,v 1.1 2010-01-04 16:31:22 panmanj Exp $
+// $Id: DumpFSR.cpp,v 1.2 2010-02-12 16:56:42 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -39,6 +39,7 @@ DumpFSR::DumpFSR( const std::string& name,
   // expect the data to be written at LHCb::LumiFSRLocation::Default
   declareProperty( "FileRecordLocation" , m_FileRecordName    = "/FileRecords"  );
   declareProperty( "FSRName"            , m_FSRName           = "/LumiFSR"     );
+  declareProperty( "LowFSRName"         , m_LowFSRName        = "/LumiLowFSR"     );
   declareProperty( "EventCountFSRName"  , m_EventCountFSRName = "/EventCountFSR");
   declareProperty( "TimeSpanFSRName"    , m_TimeSpanFSRName   = "/TimeSpanFSR");
 }
@@ -123,6 +124,28 @@ void DumpFSR::dump_file() {
 	LHCb::LumiFSRs::iterator lufsr;
 	for ( lufsr = lumiFSRs->begin(); lufsr != lumiFSRs->end(); lufsr++ ) {
 	  if ( msgLevel(MSG::INFO) ) info() << lumiRecordAddress << ": LumiFSR: " << *(*lufsr) << endmsg;
+	}
+      }
+    }
+  }  
+
+  // make an inventory of the FileRecord store (LowLumi)
+  std::vector< std::string > loAddresses = navigate(fileRecordRoot, m_LowFSRName);
+  for(std::vector< std::string >::iterator iAddr = loAddresses.begin() ; 
+      iAddr != loAddresses.end() ; ++iAddr ){
+    if ( msgLevel(MSG::INFO) ) {
+      info() << "lo address: " << (*iAddr) << endmsg;
+      std::string lumiRecordAddress = *iAddr;
+      // read LumiLowFSR 
+      if ( !exist<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress) ) {
+	if ( msgLevel(MSG::WARNING) ) warning() << lumiRecordAddress << " not found" << endmsg ;
+      } else {
+	if ( msgLevel(MSG::DEBUG) ) verbose() << lumiRecordAddress << " found" << endmsg ;
+	LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress);
+	// look at all LumiFSRs (normally only one)
+	LHCb::LumiFSRs::iterator lufsr;
+	for ( lufsr = lumiFSRs->begin(); lufsr != lumiFSRs->end(); lufsr++ ) {
+	  if ( msgLevel(MSG::INFO) ) info() << lumiRecordAddress << ": LumiLowFSR: " << *(*lufsr) << endmsg;
 	}
       }
     }

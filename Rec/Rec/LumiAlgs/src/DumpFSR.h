@@ -1,4 +1,4 @@
-// $Id: DumpFSR.h,v 1.1 2010-01-04 16:31:22 panmanj Exp $
+// $Id: DumpFSR.h,v 1.2 2010-02-12 16:56:42 panmanj Exp $
 #ifndef DUMPFSR_H 
 #define DUMPFSR_H 1
 
@@ -44,6 +44,7 @@ protected:
   std::string m_rawEventLocation;               // Location where we get the RawEvent
   std::string m_FileRecordName;                 // location of FileRecords
   std::string m_FSRName;                        // specific tag of summary data in FSR
+  std::string m_LowFSRName;                     // specific tag of low lumi summary data in FSR
   std::string m_EventCountFSRName;              // specific tag of event summary data in FSR
   std::string m_TimeSpanFSRName;                // specific tag of event summary data in FSR
   std::string m_current_fname;                  // current file ID string 
