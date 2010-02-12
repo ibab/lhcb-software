@@ -193,6 +193,8 @@ StatusCode DisplVertices::initialize() {
   info() << "Max distance of the vertices "<< m_DistMax <<" mm" << endmsg;
   info() << "Max chi2/ndof of a vertex "<< m_MaxChi2OvNDoF << endmsg;
   info() << "Min sum of daughters's pT "<< m_SumPt << endmsg;
+  if( m_MuonpT )
+    info()<<"At least one muon with pT > "<< m_MuonpT << endmsg;
   info()<< "The radial displacement is ";
   if( m_RCut == "FromUpstreamPV" ){
     info() << "computed with respect to the upstream PV of PV3D." << endmsg;
@@ -238,19 +240,6 @@ StatusCode DisplVertices::initialize() {
     m_toVeloRFrame = halfrgeominfo->toLocalMatrix() ;
     //m_toGlobalFrame = halfgeominfo->toGlobalMatrix();
     m_toVeloLFrame = halflgeominfo->toLocalMatrix() ;
-
-    //##################33 cross-check
-    Gaudi::XYZPoint dum1(2,0,0);
-    debug()<<"dum1 "<< dum1 <<" in local v frame "<< m_toVeloRFrame*dum1
-	   <<" == " << righthalv->geometry()->toLocal(dum1) << endmsg;
-    Gaudi::XYZPoint dum2(0,2,0);
-    debug()<<"dum2 "<< dum2 <<" in local v frame "<< m_toVeloRFrame*dum2
-	   <<" == " << righthalv->geometry()->toLocal(dum2) << endmsg;
-    Gaudi::XYZPoint dum3(0,0,2);
-    debug()<<"dum3 "<< dum3 <<" in local v frame "<< m_toVeloRFrame*dum3
-	   <<" == " << righthalv->geometry()->toLocal(dum3) << endmsg;
-
-
   }
 
   return StatusCode::SUCCESS;
@@ -342,8 +331,7 @@ StatusCode DisplVertices::execute() {
   }
 
   vector<int>  nboftracks;
-  vector<bool> indets;
-  vector<double> chindof, px, py, pz, e, x, y, z, sumpts, muons;
+  vector<double> chindof, px, py, pz, e, x, y, z, sumpts, muons, indets;
 
   if( msgLevel( MSG::DEBUG ) )
     debug()<<"--------Reconstructed Displ. Vertices --------------"<< endmsg;
@@ -397,9 +385,9 @@ StatusCode DisplVertices::execute() {
       x.push_back(pos.x()); y.push_back(pos.y()); z.push_back(zpos);
       sumpts.push_back(sumpt); muons.push_back(muon);
       double indet = 0;
-      if( IsAPointInDet( p, 2 ) )  indet += 1;
-      if( IsAPointInDet( p, 3, 2 ) )  indet += 10;
-      if( IsAPointInDet( p, 4, 2 ) )  indet += 100;
+      if( IsAPointInDet( p, 2 ) ) indet += 1;
+      if( IsAPointInDet( p, 3, 2 ) ) indet += 10;
+      if( IsAPointInDet( p, 4, 2 ) ) indet += 100;
       indets.push_back( indet ); 
     }
 
@@ -443,8 +431,8 @@ StatusCode DisplVertices::execute() {
     tuple->column( "FromMother", m_IsPreyFromMother );
     tuple->column( "BLX", m_BeamLine->referencePoint().x() );
     tuple->column( "BLY", m_BeamLine->referencePoint().y() );
-    if( !(tuple->write()) ) return StatusCode::FAILURE;
     if( !SaveGEC( tuple, Cands ) ) return StatusCode::FAILURE;
+    if( !(tuple->write()) ) return StatusCode::FAILURE;
   }
 
   //Save Preys from Desktop to the TES.
@@ -2301,7 +2289,7 @@ StatusCode  DisplVertices::SaveGEC( Tuple & tuple,
   double sumXYTrackfirstStates = 0.;
 
   //Get forward tracks
-  Tracks* inputTracks = get<Tracks>(TrackLocation::HltForward);
+  Tracks* inputTracks = get<Tracks>(TrackLocation::Default);
 
   for(Track::Container::const_iterator itr = inputTracks->begin(); 
       inputTracks->end() != itr; itr++) {
@@ -2593,7 +2581,7 @@ bool DisplVertices::IsAPointInDet( const Particle* P, int mode, double range ){
     double sigNy = range*sqrt(RVPositionCovMatrix[1][1]);
     double sigNz = range*sqrt(RVPositionCovMatrix[2][2]);
     // Is there material within N*sigma
-    double radlength = 0;
+    double radlength(0);
     if( mode == 4 && IsInRFFoil( RVPosition ) ) range += 3;
     for (int ix = -1 ; ix<2; ix += 2 ){
       for (int iy = -1 ; iy<2; iy += 2 ){
@@ -2626,12 +2614,12 @@ bool DisplVertices::IsAPointInDet( const Particle* P, int mode, double range ){
 //=============================================================================
 bool DisplVertices::IsInRFFoil( Gaudi::XYZPoint & pos){
   
-  debug()<<"Probing pos "<< pos;
+  //debug()<<"Probing pos "<< pos;
 
   //move to local Velo half frame
   if( pos.x() < 0 ){ //right half
     pos = m_toVeloRFrame * pos;
-    debug()<<", position in local R velo frame "<< pos << endmsg;
+    //debug()<<", position in local R velo frame "<< pos << endmsg;
 
     //remove cylinder
     double r = pos.rho();
@@ -2642,7 +2630,7 @@ bool DisplVertices::IsInRFFoil( Gaudi::XYZPoint & pos){
       return true;
   } else { //left part
     pos = m_toVeloLFrame * pos;
-    debug()<<", position in local L velo frame "<< pos << endmsg;
+    //debug()<<", position in local L velo frame "<< pos << endmsg;
 
     //remove cylinder
     double r = pos.rho();

@@ -47,6 +47,8 @@ RecVertices2Particles::RecVertices2Particles( const std::string& name,
   declareProperty("KeepLowestZ", m_KeepLowestZ = false  );
   declareProperty("IsolationDistance", m_Dist = 0.0*mm  );
   declareProperty("RemVtxFromDet", m_RemVtxFromDet = 0  );
+  declareProperty("DetDist", m_DetDist = 1*mm );
+  declareProperty("RemFromRFFoil", m_RemFromRFFoil = false );
   //"", "FromUpstreamPV", "FromBeamLine"
   declareProperty("RCutMethod", m_RCut = "FromUpstreamPV" );
   declareProperty("BeamLineLocation", 
@@ -79,23 +81,38 @@ StatusCode RecVertices2Particles::initialize() {
   m_PreyID = Prey->particleID( ); 
   m_PreyPID = m_PreyID.pid ();
 
+  //Sanity checks
+  if( m_RemFromRFFoil && m_RemVtxFromDet == 4 ){
+    info()<<"RemFromRFFoil = "<< m_RemFromRFFoil <<" and RemVtxFromDet = "
+	  << m_RemVtxFromDet <<" are incompatible. RemFromRFFoil set to false"
+	  << endmsg;
+    m_RemFromRFFoil = false;
+  }
+
   info() << "--------------------------------------------------------"<<endmsg;
   info() <<"RecVertices2Particles takes every RecVertex from "
 	 << m_RVLocation <<" and turns them into Particles if they satisfies "
 	 <<"the following criterias :"<< endmsg ;
   info() <<"RecVertex has no backward tracks"<< endmsg ;
   if(!m_KeepLowestZ) 
-    info() <<"RecVertex has not the lowest z position (PV)"<< endmsg ;
-  if( m_RemVtxFromDet < 0 )
+    info() <<"RecVertex has not the lowest z position (PV)"<< endmsg;
+  if( m_RemFromRFFoil )
+    info()<<"Remove RecVertex if in RF-Foil region"<< endmsg ;
+  if( m_RemVtxFromDet == 1 )
     info()<<"Remove RecVertex if in detector material"<< endmsg;
-  if( m_RemVtxFromDet > 0 )
-    info()<<"Remove RecVertex if closer than " << m_RemVtxFromDet 
-          <<"mm from detector material"<< endmsg;
-  info() <<"Reconstructed Mass of the RecVertex"<< endmsg ;
-  info() <<"Min Mass : " << m_PreyMinMass/GeV <<" GeV"<< endmsg ;
-  info() <<"Max Mass : " << m_PreyMaxMass/GeV <<" GeV"<< endmsg ;
+  if( m_RemVtxFromDet == 2 )
+    info()<<"Remove RecVertex if closer than " << m_DetDist 
+          <<"mm from detector material along momentum"<< endmsg;
+  if( m_RemVtxFromDet == 3 || m_RemVtxFromDet == 4 )
+    info()<<"Remove RecVertex if closer than " << m_DetDist 
+	  <<"*PosCovMatric from detector material"<< endmsg;
+  if( m_RemVtxFromDet == 4 )
+    info()<<"("<< m_DetDist+3 <<" when in RF-Foil region)"<< endmsg;
+  info() <<"Reconstructed Mass of the RecVertex"<< endmsg;
+  info() <<"Min Mass : " << m_PreyMinMass/GeV <<" GeV"<< endmsg;
+  info() <<"Max Mass : " << m_PreyMaxMass/GeV <<" GeV"<< endmsg;
   info() <<"Minimum number of tracks at the RecVertex : "
-	 << m_nTracks <<" tracks."<< endmsg ;
+	 << m_nTracks <<" tracks."<< endmsg;
   info()<< "The radial displacement is ";
   if( m_RCut == "FromUpstreamPV" ){
     info() << "computed with respect to the upstream PV of PV3D." << endmsg;
@@ -130,7 +147,7 @@ StatusCode RecVertices2Particles::initialize() {
     m_lhcbGeo = lhcb->geometry();
 
     // Get Transport Service
-    if( m_RemVtxFromDet > 0 ) 
+    if( m_RemVtxFromDet > 1 ) 
       m_transSvc = svc<ITransportSvc>( "TransportSvc", true  );
   }
 
@@ -142,6 +159,26 @@ StatusCode RecVertices2Particles::initialize() {
     m_BeamLine->setReferencePoint( Gaudi::XYZPoint( 0., 0., 0. ) );
     m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
   } 
+
+  if( m_RemFromRFFoil || m_RemVtxFromDet == 4){
+    //get the Velo geometry
+    string velo = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/Velo";
+    const IDetectorElement* lefthalv = getDet<IDetectorElement>( velo+"Left" );
+    const IDetectorElement* righthalv = 
+      getDet<IDetectorElement>( velo + "Right" );
+    const IGeometryInfo* halflgeominfo = lefthalv->geometry();
+    const IGeometryInfo* halfrgeominfo = righthalv->geometry();
+    Gaudi::XYZPoint localorigin(0,0,0);
+    Gaudi::XYZPoint leftcenter = lefthalv->geometry()->toGlobal(localorigin);
+    Gaudi::XYZPoint rightcenter = righthalv->geometry()->toGlobal(localorigin);
+    if( msgLevel( MSG::DEBUG ) )
+      debug() <<"Velo global right half center "
+	      << rightcenter <<", left half center "<< lefthalv << endmsg;
+    //matrix to transform to local velo frame
+    m_toVeloRFrame = halfrgeominfo->toLocalMatrix() ;
+    //m_toGlobalFrame = halfgeominfo->toGlobalMatrix();
+    m_toVeloLFrame = halflgeominfo->toLocalMatrix() ;
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -232,6 +269,12 @@ StatusCode RecVertices2Particles::initialize() {
     if( !IsIsolated( rv, RV ) ){
       if( msgLevel(MSG::DEBUG) )
         debug() <<"RV is not isolated  --> disguarded !"<< endmsg;
+      continue;
+    }
+
+    if( m_RemFromRFFoil && IsInRFFoil( rv->position() ) ){
+      if( msgLevel(MSG::DEBUG) )
+        debug() <<"RV is in the RF-Foil  --> disguarded !"<< endmsg;
       continue;
     }
 
@@ -397,15 +440,12 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
     Gaudi::SymMatrix4x4 MomCovMatrix = 
       Gaudi::SymMatrix4x4( ROOT::Math::SMatrixIdentity() );
     tmpPart.setMomCovMatrix( MomCovMatrix );
-    Gaudi::SymMatrix3x3 PosCovMatrix = 
-      Gaudi::SymMatrix3x3( ROOT::Math::SMatrixIdentity() );
-    tmpPart.setPosCovMatrix( PosCovMatrix );
+    tmpPart.setPosCovMatrix( rv->covMatrix() );
     Gaudi::Matrix4x3 PosMomCovMatrix;
     tmpPart.setPosMomCovMatrix( PosMomCovMatrix );
 
     //Remove if found to be in detector material
-    if( m_RemVtxFromDet && RemVtxFromDet( tmpPart ) )
-      return false;
+    if( RemVtxFromDet( tmpPart ) ) return false;
     
  
     //Save Rec Particle in the Desktop
@@ -448,7 +488,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
     }
 
     //Remove if found to be in detector material
-    if( m_RemVtxFromDet && RemVtxFromDet( tmpPart ) )
+    if( RemVtxFromDet( tmpPart ) )
       return false;
     
     //Save Rec Particle in the Desktop
@@ -509,20 +549,22 @@ bool RecVertices2Particles::IsIsolated( const RecVertex* rv, RecVertex::ConstVec
 //=============================================================================
 //  Remove RV if found to be in detector material
 //
-// if m_RemVtxFromDet = 0  : disabled
-// if m_RemVtxFromDet < 0  : remove reco vtx if in detector material
-// if m_RemVtxFromDet > 0  : remove reco vtx if rad length along z 
-//                           from (decay pos - m_RemVtxFromDet) to 
-//                           (decay pos + m_RemVtxFromDet)  is > threshold
-//
+//  if = 0  : disabled
+//  if = 1  : remove reco vtx if in detector material
+//  if = 2  : remove reco vtx if rad length from decay pos - DetDist 
+//            to decay pos + DetDist along momentum is > threshold
+//  if = 3 : remove reco vtx if rad length along 
+//                             +- DetDist * PositionCovMatrix
+//  if = 4 : 3 but range+3 if in RF foil.
 //=============================================================================
-
 bool RecVertices2Particles::RemVtxFromDet( Particle & P ){
+
+  if( m_RemVtxFromDet < 1 ) return false;
 
   double threshold = 1e-10;
   const Vertex * RV = P.endVertex();
 
-  if( m_RemVtxFromDet < 0 ){
+  if( m_RemVtxFromDet == 1 ){
 
     IGeometryInfo* start = 0;
     ILVolume::PVolumePath path ;
@@ -559,10 +601,10 @@ bool RecVertices2Particles::RemVtxFromDet( Particle & P ){
       return true;
     } 
   } //end of <0 condition
-  else if( m_RemVtxFromDet > 0 ){
+  else if( m_RemVtxFromDet == 2 ){
 
     const Gaudi::XYZPoint pos = RV->position();
-    const Gaudi::XYZPoint nvec = Normed( P.momentum(), m_RemVtxFromDet );
+    const Gaudi::XYZPoint nvec = Normed( P.momentum(), m_DetDist );
     const Gaudi::XYZPoint start = Minus( pos, nvec );
     const Gaudi::XYZPoint end = Plus( pos, nvec );
 
@@ -589,7 +631,39 @@ bool RecVertices2Particles::RemVtxFromDet( Particle & P ){
     }
     
 
-  } //end of >0 condition
+  } //end of 2 condition
+  else if( m_RemVtxFromDet == 3 or m_RemVtxFromDet == 4 ){
+
+    const Gaudi::XYZPoint  RVPosition = RV->position();
+    Gaudi::SymMatrix3x3 RVPositionCovMatrix = RV->covMatrix();
+    double sigNx = m_DetDist*sqrt(RVPositionCovMatrix[0][0]);
+    double sigNy = m_DetDist*sqrt(RVPositionCovMatrix[1][1]);
+    double sigNz = m_DetDist*sqrt(RVPositionCovMatrix[2][2]);
+    // Is there material within N*sigma
+    double radlength(0);
+    if( m_RemVtxFromDet == 4 && IsInRFFoil( RVPosition ) ) m_DetDist += 3;
+    for (int ix = -1 ; ix<2; ix += 2 ){
+      for (int iy = -1 ; iy<2; iy += 2 ){
+        Gaudi::XYZPoint start( RVPosition.x()+ix*sigNx,
+				    RVPosition.y()+iy*sigNy,
+				    RVPosition.z()+sigNz );
+        Gaudi::XYZPoint end( RVPosition.x()-ix*sigNx,
+			     RVPosition.y()-iy*sigNy,
+			     RVPosition.z()-sigNz );
+	radlength = m_transSvc->distanceInRadUnits( start, end );
+	if(msgLevel(MSG::DEBUG))
+	  debug()<<"Radiation length from "<< start <<" to "
+		 << end <<" : "<< radlength 
+		 <<" [mm]" << endmsg;
+        if( radlength > threshold ){
+	  if(msgLevel(MSG::DEBUG))
+	    debug()<<"RV is too closed to a detector material --> disguarded !"
+		   << endmsg;
+          return true;
+	}
+      }
+    }
+  } // end of 3 and 4 cond
 
   return false;
 }
@@ -600,8 +674,7 @@ bool RecVertices2Particles::RemVtxFromDet( Particle & P ){
 StatusCode RecVertices2Particles::SavePreysTuple( Tuple & tuple, Particle::ConstVector & RecParts ){
 
   vector<int>  nboftracks;
-  vector<bool> indets;
-  vector<double> chindof, px, py, pz, e, x, y, z, sumpts;
+  vector<double> chindof, px, py, pz, e, x, y, z, sumpts, indets;
   
   Particle::ConstVector::const_iterator iend = RecParts.end();
   for( Particle::ConstVector::const_iterator is = RecParts.begin();
@@ -667,6 +740,41 @@ bool RecVertices2Particles::TestMass( Particle & part ){
 bool RecVertices2Particles::TestMass( const Particle * part ){
   double mass = part->measuredMass();
   if( mass > m_PreyMinMass && mass < m_PreyMaxMass ) return true;
+  return false;
+}
+
+//=============================================================================
+// Is the point in the RF-Foil ?
+//=============================================================================
+bool RecVertices2Particles::IsInRFFoil( const Gaudi::XYZPoint & pos){
+  
+  //debug()<<"Probing pos "<< pos;
+
+  Gaudi::XYZPoint posloc;
+  //move to local Velo half frame
+  if( pos.x() < 0 ){ //right half
+    posloc = m_toVeloRFrame * pos;
+    //debug()<<", position in local R velo frame "<< pos << endmsg;
+
+    //remove cylinder
+    double r = posloc.rho();
+    if( r > 5.5*mm && r < 12*mm ) return true;
+ 
+    //then remove the boxes
+    if( abs(posloc.y()) > 5.5*mm && posloc.x() < -5*mm && posloc.x() > 4*mm ) 
+      return true;
+  } else { //left part
+    posloc = m_toVeloLFrame * pos;
+    //debug()<<", position in local L velo frame "<< pos << endmsg;
+
+    //remove cylinder
+    double r = posloc.rho();
+    if( r > 5.5*mm && r < 12*mm ) return true;
+    
+    //then remove the boxes
+    if( abs(posloc.y()) > 5.5*mm && posloc.x() < 5*mm && posloc.x() > -4*mm ) 
+      return true;
+  }
   return false;
 }
 
