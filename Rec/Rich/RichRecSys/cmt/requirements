@@ -2,11 +2,11 @@
 # Created    : 2003-07-01
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.99 2010-01-25 17:23:25 rlambert Exp $
+# $Id: requirements,v 1.100 2010-02-12 16:47:26 jonrob Exp $
 #============================================================================
 
 package           RichRecSys
-version           v3r25
+version           v3r26
 
 # ================ structure ================================================
 branches          cmt doc options python

@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: PhotonCreator.py,v 1.11 2010-01-25 16:38:24 jonrob Exp $"
+__version__ = "$Id: PhotonCreator.py,v 1.12 2010-02-12 16:47:26 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -40,10 +40,13 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
     ## Apply configurations
     def applyConf(self):
 
-        # First data options
+        from Configurables import RichTools
+
+        # First data options. To be removed eventually...
         if "earlyData" in self.getProp("SpecialData") :
             if not self.isPropertySet("SelectionMode") :
                 self.setProp("SelectionMode","Loose")
+                RichTools().photonReco().CKThetaQuartzRefractCorrections = [ -0.004,0,0 ]
 
         # Context
         context = self.getProp("Context")
