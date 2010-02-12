@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.151 2010-02-09 09:06:00 albrecht Exp $"
+__version__ = "$Id: Configuration.py,v 1.152 2010-02-12 22:19:45 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -21,6 +21,7 @@ class HltConf(LHCbConfigurableUser):
     __used_configurables__ = [ Hlt1Conf
                              , Hlt2Conf ]
     __slots__ = { "L0TCK"                          : ''
+                , 'ForceSingleL0Configuration'     : True
                 , "DataType"                       : '2009'
                 , "Verbose"                        : False      # print the generated Hlt sequence
                 , "HistogrammingLevel"             : 'None'     # or 'Line'
@@ -61,11 +62,13 @@ class HltConf(LHCbConfigurableUser):
             log.warning( '## WARNING HLT will assume input data contains L0 TCK %s ##' % L0TCK )
             log.warning( '###############################################################')
             from Hlt1Lines.HltL0Candidates import decodeL0Channels
-            channels = decodeL0Channels( L0TCK )
+            channels = decodeL0Channels( L0TCK , self.getProp('ForceSingleL0Configuration') )
         else :
             log.warning( '##################################################################################################')
             log.warning( '## WARNING You did not inform the HLT configuration what L0 Configuration is used for the input ##')
             log.warning( '## WARNING Will assume some canonical list of L0 Channels                                       ##')
+            log.warning( '## WARNING This may not work, and if it does, it will result in undefined behavior              ##' )
+            log.warning( '## WARNING Please make sure you know what you are doing!!                                       ##' )
             log.warning( '##################################################################################################')
             channels = [ 'Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
         from Hlt1Lines.HltL0Candidates import setupL0Channels
@@ -107,10 +110,12 @@ class HltConf(LHCbConfigurableUser):
         if thresClass : L0TCK = thresClass.L0TCK()
         if self.getProp('L0TCK') :
             if L0TCK != self.getProp('L0TCK') :
-                log.warning( '##############################################################################' )
-                log.warning( '## WARNING You are configuring the HLT to run on top of an L0 configuration ##' )
-                log.warning( '## WARNING which is different then the one it was generated for             ##' )
-                log.warning( '##############################################################################' )
+                log.warning( '####################################################################################' )
+                log.warning( '## WARNING You are configuring the HLT to run on top of an L0 configuration       ##' )
+                log.warning( '## WARNING which is different then the one it was generated for                   ##' )
+                log.warning( '## WARNING This may not work, but if it does, it may result in undefined behavior ##' )
+                log.warning( '## WARNING Please make sure you know what you are doing!!                         ##' )
+                log.warning( '####################################################################################' )
             L0TCK = self.getProp('L0TCK')
         self.defineL0Channels( L0TCK )
         #
@@ -315,48 +320,39 @@ class HltConf(LHCbConfigurableUser):
                                   ("Electron"   , "Hlt1.*Electron.*Decision"),
                                   ("Photon"     , "Hlt1.*Pho.*Decision"),
                                   ("PA"         , "Hlt1(ODIN.*|Tell1Error|Incident)Decision"),
-                                  ("BeamGas"      , "Hlt1BeamGas.*Decision"),
-                                  ("MinBias"      , "Hlt1.*Bias.*Decision"),
-
+                                  ("BeamGas"    , "Hlt1BeamGas.*Decision"),
+                                  ("MinBias"    , "Hlt1MB.*Decision"),
                                   ("Global"     , ".*Global.*"),
                                   ("Other"      , ".*") # add a 'catch all' term to pick up all remaining decisions...
                                 ]
 
         # prepare compiled regex patterns         
         # and a list of names for the Labels  
-        patterns = []
-        group_labels = [] 
+        decision_group_map1 = {}
+        taken = []
         for pos in range(len(alley_string_patterns)):
           (name, pattern_string) = alley_string_patterns[pos]
-          patterns.append(re.compile(pattern_string))
-          group_labels.append(name) 
+          expr = re.compile(pattern_string)
+          decision_group_map1[ name ] = [ i for i in HltGlobalMonitor().Hlt1Decisions if expr.match(i) and i not in taken ]
+          taken += decision_group_map1[ name ]
 
-        # prepare the group map dictionary
-        decision_group_map = {}
-        for decision_name in HltGlobalMonitor().Hlt1Decisions: 
-          for pos in range(len(patterns)):
-            m = patterns[pos].match(decision_name)
-            if m and not decision_name in decision_group_map:
-                decision_group_map[decision_name]=pos
-
-        HltGlobalMonitor().DecToGroup  = decision_group_map
-        HltGlobalMonitor().GroupLabels = group_labels 
+        HltGlobalMonitor().DecToGroupHlt1  = decision_group_map1
 
         # For the HLT2
 
         # the keys are the Labels for the Histograms in the GUI
         # the values are the Pattern Rules to for the Decisions contributing 
 
-        alley_string_patterns2 = [ ("Topological"    , "Hlt2Topo.*Decision"),
-                                   ("InclusivePhi"   , "Hlt2IncPhi.*Decision"),
-                                   ("SingleMuon"     , "Hlt2(Single|IncMuTrack).*Decision"),
+        alley_string_patterns2 = [ ("Topo"     , "Hlt2Topo.*Decision"),
+                                   ("IncPhi"   , "Hlt2IncPhi.*Decision"),
+                                   ("SingleMuon"     , "Hlt2(SingleMuon|IncMuTrack).*Decision"),
                                    ("DiMuon"         , "Hlt2.*DiMuon.*Decision"),
                                    ("B2DX"           , "Hlt2B2D2.*Decision"),
                                    ("B2XGamma"       , "Hlt2.*Gamma.*Decision"),
                                    ("B2JpsiX"        , "Hlt2B.*2Jpsi.*Decision"),
                                    ("B2XPhi"         , "Hlt2B.*2Phi.*Decision"),
                                    ("B2HH"           , "Hlt2B2HH.*Decision"),
-                                   ("Express"        , "Hlt2(ExpressJPsi|BeamHalo).*Decision"),
+                                   ("Express"        , "Hlt2Express.*Decision"),
                                    ("Commissioning"  , "Hlt2(PassThrough|Transparent|Forward|DebugEvent).*Decision"),
                                    ("DisplVertices"  , "Hlt2DisplVertices.*Decision"),
                                    ("Global"         , ".*Global.*"),
@@ -365,23 +361,16 @@ class HltConf(LHCbConfigurableUser):
 
         # prepare compiled regex patterns         
         # and a list of names for the Labels  
-        patterns2 = []
-        group_labels2 = []
+        decision_group_map2 = {}
+        taken = []
         for pos in range(len(alley_string_patterns2)):
           (name, pattern_string) = alley_string_patterns2[pos]
-          patterns2.append(re.compile(pattern_string))
-          group_labels2.append(name) 
+          expr = re.compile(pattern_string)
+          decision_group_map2[ name ] = [ i for i in HltGlobalMonitor().Hlt2Decisions if expr.match(i) and i not in taken ]
+          taken += decision_group_map2[ name ]
 
-        # prepare the group map dictionary 
-        decision_group_map2 = {}
-        for decision_name2 in HltGlobalMonitor().Hlt2Decisions: 
-          for pos in range(len(patterns2)):
-            m = patterns2[pos].match(decision_name2)
-            if m and not decision_name2 in decision_group_map2:
-                decision_group_map2[decision_name2]=pos
+        HltGlobalMonitor().DecToGroupHlt2  = decision_group_map2
 
-        HltGlobalMonitor().DecToGroup2  = decision_group_map2
-        HltGlobalMonitor().GroupLabels2 = group_labels2 
 
         def _disableHistograms(c,filter = lambda x : True) :
             if 'HistoProduce' in c.getDefaultProperties() and filter(c):
