@@ -26,7 +26,7 @@ This is a major Python Module for Bender application
 # =============================================================================
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $' 
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $' 
 # =============================================================================
 
 import os 
@@ -48,8 +48,6 @@ try:
         
 except:
     pass
-
-
 
 ## massive imports of everything 
 from LoKiCore.decorators          import *
@@ -91,18 +89,43 @@ def setData ( files , catalogs = [] ) :
     Define the input data for Bender job:
     
     >>> files    = [ 'file1.dst' , 'file2.dst' ]
+    
     >>> catalogs = ....
+    
     >>> import USERSCRIPT
+    
     >>> USERSCRIPT.setData ( files , catalogs )
     
     """
-    _g = appMgr    () # get or create the application manager
-    if catalogs :     # if catalogs are specified , let Gaudi knows abotu them
-        _f = _g.service('FileCatalog') # get the catalogue service
-        _f.Catalogs = catalogs         # set the list of catalogues 
-    # input data:
-    _e = _g.evtSel () # get the event selector from application manager
-    _e.open ( files ) 
+    from GaudiPython.Bindings import _gaudi
+    
+    if not type ( files    ) is list : files    = [ files    ]
+    if not type ( catalogs ) is list : catalogs = [ catalogs ]
+
+    
+    if not _gaudi :               ## here we deal with configurables!
+        
+        if files :
+            
+            from Bender.DataUtils import extendfile
+            files = [ extendfile ( f ) for f in files ]
+            
+            from Gaudi.Configuration import EventSelector
+            EventSelector ( Input = files )
+            
+        if catalogs :
+            
+            from Gaudi.Configuration import FileCatalog
+            FileCatalog   ( Catalogs = catalogs )
+            
+    else :                        ## here we deal with the actual components
+        
+        if files : 
+            _e = _gaudi.evtSel()
+            _e.open ( files )
+        if catalogs :
+            _f = _gaudi.service ( 'FileCatalog' )
+            _f.Catalogs = catalogs
 
 # =============================================================================
 from Gaudi.Configuration import importOptions

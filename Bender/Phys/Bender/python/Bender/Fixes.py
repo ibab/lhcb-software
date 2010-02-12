@@ -27,7 +27,7 @@ It applies some last-moment (version-dependent) fixes
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $' 
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $' 
 # =============================================================================
     
 ## "at-exit action 
@@ -62,8 +62,6 @@ import GaudiPython.Bindings
 _EvtSel = GaudiPython.Bindings.iEventSelector
 
 if not hasattr ( _EvtSel , '_openNew_') :
-
-    
     
     def _openNew_ ( self, stream, typ = 'POOL_ROOT', opt = 'READ', sel = None, fun = None, collection = None ):
         """
