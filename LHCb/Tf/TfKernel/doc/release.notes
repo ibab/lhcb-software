@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!============================ TfKernel v2r15 2010-02-12 ======================
 ! 2009-01-28 - Wouter Hulsbergen
  - add hitsLocalXRange function to IT/OT/TT hit creator interface
  
