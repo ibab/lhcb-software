@@ -3,7 +3,8 @@
 ! Responsible : Alessia Satta Alessia.Sattaft@cern.ch
 ! =============================================================================
 
-! 2010-02-10 - Giacomo Graziani - v1r1
+!====================== MuonInterfaces v1r0 2010-02-12 ========================
+! 2010-02-10 - Giacomo Graziani
  - move all tool interfaces from MuonTrackRec, and the related classes 
 
 ! 2010-02-09 - Alessia Satta
