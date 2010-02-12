@@ -1,4 +1,4 @@
-// $Id: HltDeltaPTool.cpp,v 1.3 2009-05-30 19:43:58 graven Exp $
+// $Id: HltDeltaPTool.cpp,v 1.4 2010-02-12 07:51:51 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -59,27 +59,25 @@ double  HltDeltaPTool::function(const Track& track)
   std::vector< LHCb::LHCbID >  lista = track.lhcbIDs ();
   MuonTileID tile;
   std::vector<LHCbID>::iterator it; 
-  float ptrack, pancestor, dpop;
   
-  ptrack=track.p();
+  double ptrack=track.p();
   // looping over lhcbIDs
   for(it=lista.end()-1;it>=lista.begin();it--){
-    if(it->isMuon()){
-      MuonTileID tile=it->muonID();
-      const SmartRefVector<Track>& ancestors = track.ancestors();
-      if (msgLevel (MSG::DEBUG)) debug() << " # of ancestors = " << ancestors.size() << endreq;
-      if (ancestors.size() == 0) return 0;
-      pancestor=(*ancestors[0]).p();
-      if(pancestor > 0){
-        // Checking dP/P
-        dpop = (ptrack-pancestor)/ptrack;
-        if (msgLevel (MSG::DEBUG)) debug() << " pTt = " << ptrack << "  pancestor = " << pancestor << " dpop = " << dpop << endreq;
-        if(dpop < m_pCut[4]){
-          int region = tile.region();
-          if(ptrack < m_pCut[region]) return 0;;
-        }
-        return 1;
+    if(!it->isMuon()) continue;
+    const SmartRefVector<Track>& ancestors = track.ancestors();
+    if (msgLevel (MSG::DEBUG)) debug() << " # of ancestors = " << ancestors.size() << endreq;
+    if (ancestors.size() == 0) return 0;
+    double pancestor=(*ancestors[0]).p();
+    if(pancestor > 0){
+      // Checking dP/P
+      double dpop = (ptrack-pancestor)/ptrack;
+      if (msgLevel (MSG::DEBUG)) debug() << " pTt = " << ptrack << "  pancestor = " << pancestor << " dpop = " << dpop << endreq;
+      if(dpop < m_pCut[4]){
+        MuonTileID tile=it->muonID();
+        int region = tile.region();
+        if(ptrack < m_pCut[region]) return 0;;
       }
+      return 1;
     }
   }  
   return 0;

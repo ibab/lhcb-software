@@ -3,6 +3,8 @@
 ! Responsible : Sandra Amato & Alessia Satta
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
+! 2010-02-12 - Gerhard Raven
+ - replace some float with double
 
 !========================== HltMuonAlley v3r0 2009-06-03 ===================
 ! 2009-04-30 - Gerhard Raven

@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.h,v 1.7 2009-04-29 14:18:11 asatta Exp $
+// $Id: HltMuonRec.h,v 1.8 2010-02-12 07:49:12 graven Exp $
 #ifndef HLTMUON_H 
 #define HLTMUON_H 1
 
@@ -47,7 +47,7 @@ public:
   StatusCode detectClone();    
   StatusCode strongCloneKiller();
 
-  void insertMatch(int muon,LHCb::Track* track,float distance);
+  void insertMatch(int muon,LHCb::Track* track,double distance);
 	StatusCode printOut();  
   StatusCode getPads(int station);
   StatusCode createCoordsFromLC(int station);

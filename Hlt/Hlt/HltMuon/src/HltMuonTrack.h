@@ -1,4 +1,4 @@
-// $Id: HltMuonTrack.h,v 1.1 2006-09-27 13:55:23 cattanem Exp $
+// $Id: HltMuonTrack.h,v 1.2 2010-02-12 07:49:12 graven Exp $
 #ifndef HLTMUONTRACK_H 
 #define HLTMUONTRACK_H 1
 
@@ -29,13 +29,13 @@ public:
   bool clone(){if(m_clone>0)return true;
 	else return false;};
 
-float slopeX(int stationFirst,int stationSecond, 
-	float zFirst, float zSecond){
+double slopeX(int stationFirst,int stationSecond, 
+	double zFirst, double zSecond){
 return 
 (m_points[stationFirst].x()-m_points[stationSecond].x())/(zFirst-zSecond);
 };
-float slopeY(int stationFirst,int stationSecond, 
-        float zFirst, float zSecond){
+double slopeY(int stationFirst,int stationSecond, 
+        double zFirst, double zSecond){
 return 
 (m_points[stationFirst].y()-m_points[stationSecond].y())/(zFirst-zSecond);
 };
