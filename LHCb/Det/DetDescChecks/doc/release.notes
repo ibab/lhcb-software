@@ -7,6 +7,7 @@
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
 
+!======================= DetDescChecks v5r2 2010-02-12 =========================
 ! 2010-02-05 - Marco Clemencic
  - Modified LoadDDDB tests to check the latest local tags on top of the latest
    global tag for the requested data type.
