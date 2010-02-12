@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::HPDHotPixelFinder
  *
  * CVS Log :-
- * $Id: RichHPDHotPixelFinder.cpp,v 1.4 2010-02-08 15:53:16 jonrob Exp $
+ * $Id: RichHPDHotPixelFinder.cpp,v 1.5 2010-02-12 16:49:56 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
@@ -125,6 +125,7 @@ void HPDHotPixelFinder::findHotPixels()
       result.id      = iHPDC->first;
       result.message = mess.str();
       result.status  = StatusCode::FAILURE;
+      result.status.ignore(); // To (try and) avoid untested StatusCode warnings
     }
 
   }

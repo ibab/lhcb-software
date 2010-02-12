@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2010-02-12 - Chris Jones
+ - Fix untested StatusCode in HPD hot pixel finder.
+
 !=========================== RichTools v2r28 2009-10-20 ======================
 ! 2009-10-12 - Christopher Rob Jones
  - Protect SnellsLawRefraction against zero intersections in initialize()
