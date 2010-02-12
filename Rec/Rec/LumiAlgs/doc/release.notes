@@ -4,6 +4,11 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-02-12 - Jaap Panman
+ - add treatment of LumiLow FSRs:
+   DumpFSR, Configuration updated
+   FilterOnLumiSummary added
+
 !========================== LumiAlgs v3r2 2010-01-21 =========================
 ! 2010-01-13 - Jaap Panman
  - qmtests: add test 4 and 5: write and read FSR (still a warning message)
