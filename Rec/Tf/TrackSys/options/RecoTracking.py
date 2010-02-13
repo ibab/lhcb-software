@@ -33,39 +33,44 @@ ApplicationMgr().ExtSvc.append("TransportSvc")
 # Which algs to run ?
 trackAlgs = TrackSys().getProp("TrackPatRecAlgorithms")
 
-## Velo tracking
 if "Velo" in trackAlgs :
-   if TrackSys().veloOpen():
-      if TrackSys().beamGas(): 
-        GaudiSequencer("RecoVELOSeq").Members += [ DecodeVeloRawBuffer(),
-                                                   Tf__PatVeloGeneric("PatVeloGeneric"),
-                                                   Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
-      else:
-        GaudiSequencer("RecoVELOSeq").Members += [ DecodeVeloRawBuffer(),
-                                                   Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
-      Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").PointErrorMin = 2*mm;
-      Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").addTool(Tf__PatVeloTrackTool("PatVeloTrackTool"))
-      Tf__PatVeloTrackTool("PatVeloTrackTool").highChargeFract = 0.5;
-   else:
-      GaudiSequencer("RecoVELOSeq").Members += [ DecodeVeloRawBuffer(), Tf__PatVeloRTracking("PatVeloRTracking"),
-                                                 Tf__PatVeloSpaceTracking("PatVeloSpaceTracking"),
-                                                 Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
-      Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").addTool( Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool" )
-      Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").PatVeloSpaceTool.MarkClustersUsed = True;
-   veloClusters = DecodeVeloRawBuffer("DecodeVeloClusters")
-   veloClusters.DecodeToVeloLiteClusters = False;
-   veloClusters.DecodeToVeloClusters     = True;
-   GaudiSequencer("RecoVELOSeq").Members += [ veloClusters ]
-   
-## TT clusters for pattern recognition and track fit
-GaudiSequencer("RecoTTSeq").Members += [ RawBankToSTClusterAlg("CreateTTClusters"),
-                                         RawBankToSTLiteClusterAlg("CreateTTLiteClusters")]
+   GaudiSequencer("RecoDecodingSeq").Members += [ DecodeVeloRawBuffer("DecodeVeloClusters")]
 
-## IT clusters for pattern recognition and track fit
+   veloClusters = DecodeVeloRawBuffer("DecodeVeloClusters")
+   veloClusters.DecodeToVeloLiteClusters = True;
+   veloClusters.DecodeToVeloClusters     = True;
+
+GaudiSequencer("RecoDecodingSeq").Members += [ RawBankToSTClusterAlg("CreateTTClusters"),
+                                                RawBankToSTLiteClusterAlg("CreateTTLiteClusters")]
+
 createITClusters = RawBankToSTClusterAlg("CreateITClusters")
 createITLiteClusters = RawBankToSTLiteClusterAlg("CreateITLiteClusters")
 createITClusters.DetType     = "IT"
 createITLiteClusters.DetType = "IT"
+
+GaudiSequencer("RecoDecodingSeq").Members += [ createITClusters, createITLiteClusters ]
+
+importOptions( "$STTOOLSROOT/options/Brunel.opts" )
+
+
+## Velo tracking
+if "Velo" in trackAlgs :
+   if TrackSys().veloOpen():
+      if TrackSys().beamGas(): 
+        GaudiSequencer("RecoVELOSeq").Members += [ Tf__PatVeloGeneric("PatVeloGeneric"),
+                                                   Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
+      else:
+        GaudiSequencer("RecoVELOSeq").Members += [ Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
+      Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").PointErrorMin = 2*mm;
+      Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").addTool(Tf__PatVeloTrackTool("PatVeloTrackTool"))
+      Tf__PatVeloTrackTool("PatVeloTrackTool").highChargeFract = 0.5;
+   else:
+      GaudiSequencer("RecoVELOSeq").Members += [ Tf__PatVeloRTracking("PatVeloRTracking"),
+                                                 Tf__PatVeloSpaceTracking("PatVeloSpaceTracking"),
+                                                 Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
+      Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").addTool( Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool" )
+      Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").PatVeloSpaceTool.MarkClustersUsed = True;
+
 
 
 ## Special OT decoder for cosmics to merge spills.
@@ -77,9 +82,7 @@ if TrackSys().cosmics():
    from Configurables import TrackInterpolator
    TrackInterpolator().Extrapolator.ExtraSelector = 'TrackSimpleExtraSelector'
    
-GaudiSequencer("RecoITSeq").Members += [ createITClusters, createITLiteClusters ]
 
-importOptions( "$STTOOLSROOT/options/Brunel.opts" )
 
 ## Make sure the default extrapolator and interpolator use simplified material
 if TrackSys().simplifiedGeometry():

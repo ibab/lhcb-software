@@ -4,7 +4,11 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
-!============================ TrackSys v4r29 2009-12-11 ======================! 2009-12-10 - Stephanie Hansmann-Menzemer
+! 2009-02-13 - Stephanie Hansmann-Menzemer 
+ - move all hit decoding/clustering at the beginning of the tracking sequence
+
+!============================ TrackSys v4r29 2009-12-11 ======================
+! 2009-12-10 - Stephanie Hansmann-Menzemer
  - moved headTunign options to RecSys.SpecialData "earlyData"
 
 ! 2009-12-09 - Sascha Stahl

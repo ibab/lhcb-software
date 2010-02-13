@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2009-02-13 - Stephanie Hansmann-Menzemer
+ - modify early data tuning for PatForward and PatDownstream algorithms
 
 ! 2010-02-08 - Michel De Cian
  - Added a new method as interface IAddTTClusterTool had to be changed.

@@ -3,11 +3,11 @@ from Configurables import  PatDownstream
 
 
 if TrackSys().earlyData():       
-    PatDownstream().xPredTol2 = 100.0
-    PatDownstream().TolMatch = 5.5
-    PatDownstream().TolUV = 6.0
-    PatDownstream().maxWindowSize = 100.0
+    PatDownstream().xPredTol2 = 20.0
+    PatDownstream().TolMatch = 3.5
+    PatDownstream().TolUV = 4.0
+    PatDownstream().maxWindowSize = 25.0
     PatDownstream().MaxChisq  = 20.0
-    PatDownstream().MaxDistance = 0.15
-    PatDownstream().deltaP = 3.0
-    PatDownstream().errorZMagnet = 70.0
+    PatDownstream().MaxDistance = 0.3
+    PatDownstream().deltaP = 2.0
+    PatDownstream().errorZMagnet = 30.0
