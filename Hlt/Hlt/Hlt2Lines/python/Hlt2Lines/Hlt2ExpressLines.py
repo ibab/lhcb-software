@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2ExpressLines.py,v 1.6 2010-02-08 09:25:13 graven Exp $
+# $Id: Hlt2ExpressLines.py,v 1.7 2010-02-13 08:03:57 albrecht Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt2 Lines for the express stream
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Johannes Albrecht albrecht@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -54,6 +54,9 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                , 'ExLambdaPiP'             : 3000   # MeV
                , 'ExLambdaPiPt'            :  100   # MeV
                , 'ExLambdaPiIPChi2'        :    9
+               , 'ExLambdaPP'              : 3000   # MeV
+               , 'ExLambdaPPt'             :  100   # MeV
+               , 'ExLambdaPIPChi2'         :    9
                , 'ExKSNu1'                 :    2   
                , 'ExKSMassWinWide'         :  150   # MeV
                , 'ExKSMassWin'             :  100   # MeV
@@ -188,9 +191,13 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                   " & (%(ExLambdaMinDz)d*mm<BPVVDZ)"\
                                   " & (%(ExLambdaMaxDz)d*mm>BPVVDZ)"\
                                   " & (BPVDIRA>%(ExLambdaDira)d) "%  self.getProps()
-                                  , DaughtersCuts = { "p+"  :  "(P>%(ExLambdaPiP)d*MeV)"\
+                                  , DaughtersCuts = { "p+"  :  "(P>%(ExLambdaPP)d*MeV)"\
+                                                      " & (PT>%(ExLambdaPPt)d*MeV)"\
+                                                      " & (MIPCHI2DV(PRIMARY)>%(ExLambdaPIPChi2)d) "%  self.getProps(),
+                                                      "pi-"  :  "(P>%(ExLambdaPiP)d*MeV)"\
                                                       " & (PT>%(ExLambdaPiPt)d*MeV)"\
-                                                      " & (MIPCHI2DV(PRIMARY)>%(ExLambdaPiIPChi2)d) "%  self.getProps() }
+                                                      " & (MIPCHI2DV(PRIMARY)>%(ExLambdaPiIPChi2)d) "%  self.getProps(),
+                                                      }
                                   )
       
       line = Hlt2Line('ExpressLambda'
