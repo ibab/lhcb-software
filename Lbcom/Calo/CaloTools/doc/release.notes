@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.84 2009-11-27 13:40:33 cattanem Exp $
+! $Id: release.notes,v 1.85 2010-02-13 00:34:27 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2010-02-13 - Olivier Deschamps
+	- Track2Calo : switch HeraBExtrapolator to RungeKutta
 
 !========================== CaloTools v5r14 2009-11-27 =========================
 ! 2009-11-17 - Olivier Deschamps

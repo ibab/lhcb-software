@@ -1,4 +1,4 @@
-// $Id: Track2Calo.cpp,v 1.3 2009-05-19 13:48:22 cattanem Exp $
+// $Id: Track2Calo.cpp,v 1.4 2010-02-13 00:34:27 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -39,7 +39,7 @@ Track2Calo::Track2Calo( const std::string& type,
   , m_track          ( NULL )
   , m_det            (){
   declareInterface<ITrack2Calo>(this);
-  declareProperty ( "ExtrapolatorType" , m_extrapolatorType = "TrackHerabExtrapolator" ) ;
+  declareProperty ( "ExtrapolatorType" , m_extrapolatorType = "TrackRungeKuttaExtrapolator" ) ;
   declareProperty ( "Tolerance"        , m_tolerance = 0.01 ) ;
 }
 //=============================================================================
