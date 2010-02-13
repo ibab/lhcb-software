@@ -84,7 +84,7 @@ use XMLSummaryKernel      v1r0    Kernel  # Rob Lambert
 use L0Base                v1r3    L0      # Julien Cogan
 use L0Interfaces          v1r6    L0      # Olivier Deschamps
 use L0MuonKernel          v9r0    L0      # Julien Cogan
-use ProcessorKernel       vv6r0   L0      # Julien Cogan
+use ProcessorKernel       v6r0    L0      # Julien Cogan
 
 use MuonDAQ               v4r7    Muon    # Alessia Satta
 use MuonInterfaces        v1r0    Muon    # Alessia Satta
