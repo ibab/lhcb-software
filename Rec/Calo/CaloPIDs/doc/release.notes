@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.86 2010-02-08 17:36:16 dgolubko Exp $ 
+! $Id: release.notes,v 1.87 2010-02-13 00:36:44 odescham Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
+
+! 2009-11-17 - Olivier Deschamps
+ - PIDs.py : use RungeKutta extrapolator instead of HeraB for HLT processing
 
 ! 2010-02-08 - Dmitry Golubkov
  - CaloID2DLL - optionally read the DLLs from CondDB

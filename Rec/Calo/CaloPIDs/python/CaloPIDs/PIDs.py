@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: PIDs.py,v 1.2 2009-09-01 11:28:12 ibelyaev Exp $
+# $Id: PIDs.py,v 1.3 2010-02-13 00:36:44 odescham Exp $
 # =============================================================================
 ## The major building blocks of Calorimeter PID
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,7 +11,7 @@ The major building blocks of Calorimeter PID
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 from Gaudi.Configuration  import *
 
@@ -44,7 +44,7 @@ def inEcalAcc ( context , enableRecoOnDemand ) :
     if hltContext ( context ) :
         inEcal.addTool ( InEcalAcceptance , 'InECAL' )
         tool = inEcal.InECAL
-        tool.Extrapolator = 'TrackHerabExtrapolator'
+        tool.Extrapolator = 'TrackRungeKuttaExtrapolator'
         inEcal.Tool = tool
         
     return inEcal
@@ -149,17 +149,17 @@ def caloPIDs ( context , enableRecoOnDemand ) :
         #
         inSPD.addTool  ( InSpdAcceptance , 'InSPD' )
         tool = inSPD.InSPD
-        tool.Extrapolator = 'TrackHerabExtrapolator'
+        tool.Extrapolator = 'TrackRungeKuttaExtrapolator'
         inSPD.Tool = tool
         #
         inPRS.addTool  ( InPrsAcceptance , 'InPRS' )
         tool = inPRS.InPRS
-        tool.Extrapolator = 'TrackHerabExtrapolator'
+        tool.Extrapolator = 'TrackRungeKuttaExtrapolator'
         inPRS.Tool = tool
         #
         inHCAL.addTool ( InHcalAcceptance , 'InHCAL' )
         tool = inHCAL.InHCAL
-        tool.Extrapolator = 'TrackHerabExtrapolator'
+        tool.Extrapolator = 'TrackRungeKuttaExtrapolator'
         inHCAL.Tool = tool
         #
         
