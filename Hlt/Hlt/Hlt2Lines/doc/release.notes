@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.113 2010-02-13 08:04:31 albrecht Exp $
+$Id: release.notes,v 1.114 2010-02-13 09:09:47 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -12,6 +12,7 @@ $Id: release.notes,v 1.113 2010-02-13 08:04:31 albrecht Exp $
  - Hlt2InclusiveDiMuonLines: add Drell-Yan lines, 
    name change: Unbiased.. --> DiMuonUnbiased
  - Hlt2ExpressLines.py: add cuts to lambda daughter
+ - Hlt2ExpressLines.py: add ECal and HCal energy cuts to JPsi Tag&Probe
 
 ! 2010-02-12 - Gerhard Raven
  - eliminate some run-time warnings
