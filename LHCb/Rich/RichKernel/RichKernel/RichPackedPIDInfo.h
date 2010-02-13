@@ -5,7 +5,7 @@
  *  Header file for RICH utility class : Rich::PackedPIDInfo
  *
  *  CVS Log :-
- *  $Id: RichPackedPIDInfo.h,v 1.1 2010-02-12 16:55:57 jonrob Exp $
+ *  $Id: RichPackedPIDInfo.h,v 1.2 2010-02-13 13:20:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/02/2010
@@ -29,7 +29,7 @@ namespace Rich
    *  Class that packs the various RICH detector and PID enums into a single
    *  int-like class, that can be used for things like fast map indexing.
    *
-   *  @author Chris Jones
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   12/02/2010
    */
   class PackedPIDInfo
@@ -38,9 +38,9 @@ namespace Rich
   private:
 
     /// Packed PID information
-    union PackedData
+    union Data
     {
-      struct
+      struct Packed
       {
         int rich : 8;   ///< The RICH type
         int rad  : 8;   ///< The radiator type
@@ -48,7 +48,7 @@ namespace Rich
         int pid  : 8;   ///< The Mass Hypothesis
       } packed;         ///< Representation as a packed struct
       unsigned int raw; ///< Representation as an unsigned int
-    };
+    } data; 
 
   public:
 
@@ -64,13 +64,13 @@ namespace Rich
       data.packed.rad = static_cast<int>(rad);
     }
 
-    /// Set the side type
+    /// Set the detector side type
     inline void setSide( const Rich::Side side )
     {
       data.packed.side = static_cast<int>(side);
     }
 
-    /// Set the pid type
+    /// Set the particle mass hypothesis
     inline void setPid( const Rich::ParticleIDType pid )
     {
       data.packed.pid = static_cast<int>(pid);
@@ -96,7 +96,7 @@ namespace Rich
       return static_cast<Rich::Side>(data.packed.side);
     }
 
-    /// Get the pid type
+    /// Get the particle mass hypothesis
     inline Rich::ParticleIDType pid( ) const
     {
       return static_cast<Rich::ParticleIDType>(data.packed.pid);
@@ -107,7 +107,12 @@ namespace Rich
     /// Standard constructor
     PackedPIDInfo( ) { data.raw = 0; }
 
-    /// Constructor from Rich data
+    /** Constructor from Rich data
+     *  @param det  The RICH detector
+     *  @param side The RICH detector side
+     *  @param rad  The radiator media
+     *  @param pid  The Mass Hypothesis
+     */
     PackedPIDInfo( const Rich::DetectorType   det,
                    const Rich::Side          side = Rich::InvalidSide,
                    const Rich::RadiatorType   rad = Rich::InvalidRadiator,
@@ -133,10 +138,6 @@ namespace Rich
     {
       return this->raw();
     }
-
-  private:
-
-    PackedData data; ///< The packed data
 
   };
 

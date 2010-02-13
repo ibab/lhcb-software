@@ -5,7 +5,7 @@
  *  Header file for RICH utility class : Rich::HistogramID
  *
  *  CVS Log :-
- *  $Id: RichHistoID.h,v 1.8 2010-02-12 16:44:33 jonrob Exp $
+ *  $Id: RichHistoID.h,v 1.9 2010-02-13 13:20:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   27/10/2005
@@ -84,10 +84,13 @@ namespace Rich
 
     /// Access the Detector type
     inline Rich::DetectorType   det() const { return m_data.det(); }
+
     /// Access the radiator medium
     inline Rich::RadiatorType   rad() const { return m_data.rad(); }
+
     /// Access the side of the RICH
     inline Rich::Side          side() const { return m_data.side(); }
+
     /// Access the Particle ID hypothesis
     inline Rich::ParticleIDType pid() const { return m_data.pid(); }
 
