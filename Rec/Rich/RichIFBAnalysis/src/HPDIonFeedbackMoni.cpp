@@ -1,4 +1,4 @@
-// $Id: HPDIonFeedbackMoni.cpp,v 1.8 2010-02-12 13:41:07 ryoung Exp $
+// $Id: HPDIonFeedbackMoni.cpp,v 1.9 2010-02-13 12:38:07 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -80,9 +80,9 @@ StatusCode HPDIonFeedbackMoni::initialize()
 StatusCode HPDIonFeedbackMoni::prebookHistograms()
 {
   // Book event-counter + cluster occupancy histograms
-  richHisto1D( "Events", "Events", 0,10,10 );
-  richHisto1D( "R1ClusOcc", "R1ClusOcc", 0, 2000, 2000);
-  richHisto1D( "R2ClusOcc", "R2ClusOcc", 0, 2000, 2000);
+  richHisto1D( HID("Events"), "Events", 0,10,10 );
+  richHisto1D( HID("R1ClusOcc"), "R1ClusOcc", 0, 2000, 2000);
+  richHisto1D( HID("R2ClusOcc"), "R2ClusOcc", 0, 2000, 2000);
 
   // Loop over all RICH1+RICH2 positions and book corresponding cluster-size histograms...
     for(int rich=1; rich<3; rich++){
@@ -106,10 +106,10 @@ StatusCode HPDIonFeedbackMoni::prebookHistograms()
  
             std::stringstream ss;
             ss << "R" << rich << "_Pan" << pan << "_Col" << col << "_Row" << row;
-            std::string hpdstr = ss.str();
+            const std::string& hpdstr = ss.str();
             hidtostring.insert( make_pair( hid,hpdstr ) );
             // Cluster-size histograms
-            richHisto1D( hpdstr, hpdstr, 0, 50, 50);
+            richHisto1D( HID(hpdstr), hpdstr, 0, 50, 50);
           }
         }
       }
@@ -155,7 +155,7 @@ StatusCode HPDIonFeedbackMoni::execute()
   
   // -- increment "Event" histogram by 1
 
-  richHisto1D( "Events" ) -> fill(1);
+  richHisto1D( HID("Events") ) -> fill(1);
 
   // --- Loop over L1 boards
   for ( Rich::DAQ::L1Map::const_iterator iL1 = allSmartIDs.begin();
@@ -209,12 +209,12 @@ StatusCode HPDIonFeedbackMoni::execute()
   } // ----- End of Loop over L1 boards
 
   if(r1clustersThisEvent>0) {      // If clusters were found in RICH1
-    richHisto1D( "R1ClusOcc" ) -> fill(r1clustersThisEvent);
+    richHisto1D( HID("R1ClusOcc") ) -> fill(r1clustersThisEvent);
     r1clustersThisEvent = 0;
   }
   
   if(r2clustersThisEvent>0) {      // If clusters were found in RICH2
-    richHisto1D( "R2ClusOcc" ) -> fill(r2clustersThisEvent);
+    richHisto1D( HID("R2ClusOcc") ) -> fill(r2clustersThisEvent);
     r2clustersThisEvent = 0;
   }
 

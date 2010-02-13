@@ -4,6 +4,9 @@
 ! Purpose     : Ross Young
 !-----------------------------------------------------------------------------
 
+! 2010-02-13 - Chris Jones
+ - Fix compilation problems introduced with last commit
+
 ! 2010-02-12 - Ross Young
  - Dark count code added (trigger type check); string + stringstream operations taken out 
 	of execute method; cluster size histograms reduced in range from 300 to 50.
