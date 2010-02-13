@@ -556,39 +556,44 @@ void DbRootHist::initHistogram()
     if (m_verbosity >= Debug) {
       std::cout << "initializing virtual histogram " << m_identifier << std::endl;
     }
-    std::vector<TH1*> sources(m_anaSources.size());
-    bool sourcesOk = true;
-    for (unsigned int i=0; i< m_anaSources.size(); ++i) {
-      if (m_verbosity >= Debug) {
-        std::cout << "   ->  virtual histogram source " << m_anaSources[i]->identifier() << std::endl;
-      }
-      m_anaSources[i]->initHistogram();
-      sources[i]= m_anaSources[i]->rootHistogram;
-      if (m_anaSources[i]->isEmptyHisto() ) {
-        sourcesOk = false;
-        if (m_verbosity >= Verbose) {
-          std::cout << "source " << m_anaSources[i]->identifier() << " is empty" << std::endl;
+    boost::recursive_mutex::scoped_lock oraLock(*m_oraMutex);
+    if (oraLock) {
+      std::vector<TH1*> sources(m_anaSources.size());
+      bool sourcesOk = true;
+      
+      
+      for (unsigned int i=0; i< m_anaSources.size(); ++i) {
+        if (m_verbosity >= Debug) {
+          std::cout << "   ->  virtual histogram source " << m_anaSources[i]->identifier() << std::endl;
+        }
+        m_anaSources[i]->initHistogram();
+        sources[i]= m_anaSources[i]->rootHistogram;
+        if (m_anaSources[i]->isEmptyHisto() ) {
+          sourcesOk = false;
+          if (m_verbosity >= Verbose) {
+            std::cout << "source " << m_anaSources[i]->identifier() << " is empty" << std::endl;
+          }
         }
       }
-    }
-    OMAHcreatorAlg* creator = dynamic_cast<OMAHcreatorAlg*>
-      (m_analysisLib->getAlg(m_creationAlgorithm));
-    if(creator && sourcesOk) {
-      std::string htitle(onlineHistogram()->htitle());
-      rootHistogram = creator->exec(&sources, &m_parameters,
-                                    m_identifier,
-                                    htitle,
-                                    isEmptyHisto() ? NULL : rootHistogram);
-      beRegularHisto();
-      if (m_verbosity >= Verbose && (!rootHistogram)) { 
-        std::cout<< "creator alg. failed!"<<std::endl;
+      OMAHcreatorAlg* creator = dynamic_cast<OMAHcreatorAlg*>
+        (m_analysisLib->getAlg(m_creationAlgorithm));
+      if(creator && sourcesOk) {
+        std::string htitle(onlineHistogram()->htitle());
+        rootHistogram = creator->exec(&sources, &m_parameters,
+                                      m_identifier,
+                                      htitle,
+                                      isEmptyHisto() ? NULL : rootHistogram);
+        beRegularHisto();
+        if (m_verbosity >= Verbose && (!rootHistogram)) { 
+          std::cout<< "creator alg. failed!"<<std::endl;
+        }
       }
-    }
-    else {
-      if (m_verbosity >= Verbose) {
-        std::cout << "creator alg. or sources not found!" << std::endl;
+      else {
+        if (m_verbosity >= Verbose) {
+          std::cout << "creator alg. or sources not found!" << std::endl;
+        }
+        beEmptyHisto(); 
       }
-      beEmptyHisto(); 
     }
   }
 
