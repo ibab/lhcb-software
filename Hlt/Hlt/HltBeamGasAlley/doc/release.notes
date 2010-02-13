@@ -3,6 +3,9 @@
 ! Responsible : Plamen Hopchev
 ! Purpose     : Decision algorithms for the two HLT beam-gas alleys
 !-----------------------------------------------------------------------------
+! 2010-02-13 Gerhard Raven
+ - do not produce error() message that doesn't flag an error...
+
 ! 2010-02-12 Gerhard Raven
  - change float to double
 

@@ -74,8 +74,10 @@ StatusCode BeamGasTrigCheckL0TracksBXType::execute()
 	debug() << "PatVeloRTracking output container is empty ==> rejecting the event" << endmsg;
 	return StatusCode::SUCCESS; 
       }
+    } else{ 
+        debug() << "PatVeloRTracking output container doesn't exist ==> rejecting the event" << endmsg; 
+        return StatusCode::SUCCESS; 
     }
-    else{ error() << "PatVeloRTracking output container doesn't exist ==> rejecting the event" << endmsg; return StatusCode::SUCCESS; }
   }
   
   
