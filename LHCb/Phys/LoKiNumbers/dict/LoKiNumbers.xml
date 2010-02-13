@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiNumbers.xml,v 1.11 2009-12-06 18:24:22 ibelyaev Exp $ 
+     * $Id: LoKiNumbers.xml,v 1.12 2010-02-13 16:30:32 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The XML seleciton file to build Reflex 
@@ -57,6 +57,13 @@
 
   <class name = "LoKi::Scalers::SkipperV"     />
   <class name = "LoKi::Scalers::Skipper"      />
+
+  <class name = "LoKi::TES::Exists"   >
+    <field name = "m_algorithm" transient = "true"/>
+  </class>
+  <class name = "LoKi::TES::Contains" >
+    <field name = "m_algorithm" transient = "true"/>
+  </class>
   
   <exclusion>
     
@@ -114,6 +121,10 @@
     </class>
 
     <class pattern="LoKi::Scalers::*">
+      <method name="=" />
+    </class>
+
+    <class pattern="LoKi::TES::*">
       <method name="=" />
     </class>
     

@@ -1,4 +1,4 @@
-// $Id: Random.h,v 1.2 2009-12-06 18:20:55 ibelyaev Exp $
+// $Id: Random.h,v 1.3 2010-02-13 16:31:22 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_RANDOM_H 
 #define LOKI_RANDOM_H 1
@@ -47,6 +47,7 @@ namespace LoKi
     class Numbers : public LoKi::BasicFunctors<double>::Function
     {
     public:
+      // ======================================================================
       /// constructor from the numbers 
       Numbers ( const  Rndm::Numbers&  numbers     ) ;
       /// constructor from the generator and the service 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.7 2009-12-06 18:24:22 ibelyaev Exp $ 
+# $Id: functions.py,v 1.8 2010-02-13 16:30:32 ibelyaev Exp $ 
 # =============================================================================
 ## @file LoKiNumbers/functions.py
 #  The full set of useful objects from LoKiNumbers library 
@@ -11,7 +11,7 @@
 Few useful objects from LoKiNumbers library
 """
 __author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ " 
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ " 
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
@@ -70,14 +70,27 @@ XVID      = XV
 
 XVector   = std.vector(_d)
 
+# TES checkers
+
+## @see LoKi::Cuts::EXISTS
+EXISTS    = LoKi.TES.Exists
+## @see LoKi::Cuts::CONTAINS 
+CONTAINS  = LoKi.TES.Contains
 
 # random numbers:
+## @see LoKi::Cuts::XRANDOM 
 XRANDOM   = LoKi.Random.Numbers
+## @see LoKi::Cuts::XRND 
 XRND      = LoKi.Random.Uniform
+## @see LoKi::Cuts::XRNDM
 XRNDM     = XRND  ( 0 , 1 )
+## @see LoKi::Cuts::XGAUS
 XGAUS     = LoKi.Random.Gaussian
+## @see LoKi::Cuts::XGAUSS
 XGAUSS    = XGAUS ( 0 , 1 ) 
+## @see LoKi::Cuts::XRAND_
 XRAND_    = LoKi.Random.Rand
+## @see LoKi::Cuts::XRAND
 XRAND     = LoKi.Random.Rand ( )
 
 # scalers
@@ -89,9 +102,11 @@ XSCALE = LoKi.Scalers.RandomScale
 ## @see LoKi::Cuts::XSKIP
 XSKIP  = LoKi.Scalers.Skipper 
 
+## trivia
 
-## trivia 
+## @see LoKi::Cuts::XEMPTY 
 XEMPTY    = LoKi.Functors.Empty ( 'double' ) ()
+## @see LoKi::Cuts::XSIZE 
 XSIZE     = LoKi.Functors.Size  ( 'double' ) ()
 
 

@@ -1,4 +1,4 @@
-// $Id: LoKiNumbersDict.h,v 1.10 2009-12-06 18:24:22 ibelyaev Exp $
+// $Id: LoKiNumbersDict.h,v 1.11 2010-02-13 16:30:32 ibelyaev Exp $
 // ============================================================================
 #ifndef DICT_LOKINUMBERSDICT_H 
 #define DICT_LOKINUMBERSDICT_H 1
@@ -18,6 +18,7 @@
 #include "LoKi/Random.h"
 #include "LoKi/Scalers.h"
 #include "LoKi/Filters.h"
+#include "LoKi/TES.h"
 // ============================================================================
 /** @file
  *  Simpe file to build the dictionaries for LoKi's functors, which 
