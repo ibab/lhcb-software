@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.112 2010-02-13 07:41:01 albrecht Exp $
+$Id: release.notes,v 1.113 2010-02-13 08:04:31 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -11,6 +11,7 @@ $Id: release.notes,v 1.112 2010-02-13 07:41:01 albrecht Exp $
 ! 2010-02-13 - Johannes Albrecht
  - Hlt2InclusiveDiMuonLines: add Drell-Yan lines, 
    name change: Unbiased.. --> DiMuonUnbiased
+ - Hlt2ExpressLines.py: add cuts to lambda daughter
 
 ! 2010-02-12 - Gerhard Raven
  - eliminate some run-time warnings
