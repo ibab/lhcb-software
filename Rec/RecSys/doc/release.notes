@@ -8,6 +8,8 @@ Purpose: LHCb reconstruction packages.
 </PRE><H1><A NAME=v8r0>2010-01-21 RecSys v8r0</A></H1><PRE>
 This version uses Gaudi v21r7 and LHCb v29r0
 
+- Distinguish between earlyData and 2009 switch for PatPV
+
 - Multiple changes for reprocessing the first data
   Most are activated by the "earlyData" switch
 

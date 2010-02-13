@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.20 2009-12-10 19:04:32 smenzeme Exp $"
+__version__ = "$Id: Configuration.py,v 1.21 2010-02-13 11:32:13 smenzeme Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -31,7 +31,7 @@ class RecSysConf(LHCbConfigurableUser):
                                RichRecSysConf ]
 
     ## Default tracking Sub-detector processing sequence
-    DefaultTrackingSubdets = ["VELO","TT","IT","OT","Tr","Vertex"]
+    DefaultTrackingSubdets = ["Decoding", "VELO","TT","IT","OT","Tr","Vertex"]
     ## Default reconstruction sequence for field-on data
     DefaultSubDetsFieldOn  = DefaultTrackingSubdets+["RICH","CALO","MUON","PROTO"]
     ## Default reconstruction sequence for field-off data
@@ -72,8 +72,11 @@ class RecSysConf(LHCbConfigurableUser):
         if "Vertex" in recoSeq:
             from Configurables import PatPVOffline, TrackV0Finder
             pvAlg = PatPVOffline()
-            if "earlyData" in self.getProp("SpecialData"):
-                importOptions("$PATPVROOT/options/PVLoose.py")
+            if "2009" == self.getProp("DataType"):
+                importOptions("$PATPVROOT/options/PVVeryLoose.py")
+            else:
+                if "earlyData" in self.getProp("SpecialData"):
+                 importOptions("$PATPVROOT/options/PVLoose.py")
             GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
             if self.getProp( "OutputType" ).upper() == "RDST":
                 # Velo tracks not copied to Rec/Track/Best for RDST 
