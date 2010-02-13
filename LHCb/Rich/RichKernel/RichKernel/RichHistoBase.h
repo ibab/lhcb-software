@@ -5,7 +5,7 @@
  *  Header file for RICH base class : Rich::HistoBase
  *
  *  CVS Log :-
- *  $Id: RichHistoBase.h,v 1.4 2010-02-12 16:44:33 jonrob Exp $
+ *  $Id: RichHistoBase.h,v 1.5 2010-02-13 15:10:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2009-07-27
@@ -202,7 +202,7 @@ namespace Rich
     public:
       typedef Rich::HashMap < std::string, HTYPE * > StringToHist;
     private:
-      typedef Rich::Map     < unsigned int, StringToHist > Map;
+      typedef Rich::Map < Rich::PackedPIDInfo::Pack32_t, StringToHist > Map;
     private:
       Map map;
     public:

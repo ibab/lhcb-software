@@ -5,7 +5,7 @@
  *  Header file for RICH utility class : Rich::PackedPIDInfo
  *
  *  CVS Log :-
- *  $Id: RichPackedPIDInfo.h,v 1.2 2010-02-13 13:20:30 jonrob Exp $
+ *  $Id: RichPackedPIDInfo.h,v 1.3 2010-02-13 15:10:47 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/02/2010
@@ -21,6 +21,9 @@
 #include "Kernel/RichParticleIDType.h"
 #include "Kernel/RichSide.h"
 
+// boost
+#include "boost/cstdint.hpp"
+
 namespace Rich
 {
 
@@ -35,6 +38,14 @@ namespace Rich
   class PackedPIDInfo
   {
 
+  public:
+
+    /// Type for 8 bit packed word
+    typedef boost::int8_t   Pack8_t;
+
+    /// Type for 32 bit raw word
+    typedef boost::uint32_t Pack32_t;
+
   private:
 
     /// Packed PID information
@@ -42,12 +53,12 @@ namespace Rich
     {
       struct Packed
       {
-        int rich : 8;   ///< The RICH type
-        int rad  : 8;   ///< The radiator type
-        int side : 8;   ///< The RICH detector 'side'
-        int pid  : 8;   ///< The Mass Hypothesis
+        Pack8_t rich : 8;   ///< The RICH type
+        Pack8_t rad  : 8;   ///< The radiator type
+        Pack8_t side : 8;   ///< The RICH detector 'side'
+        Pack8_t pid  : 8;   ///< The Mass Hypothesis
       } packed;         ///< Representation as a packed struct
-      unsigned int raw; ///< Representation as an unsigned int
+      Pack32_t raw; ///< Representation as an unsigned int
     } data; 
 
   public:
@@ -55,49 +66,49 @@ namespace Rich
     /// Set the detector type
     inline void setDet( const Rich::DetectorType det )
     {
-      data.packed.rich = static_cast<int>(det);
+      data.packed.rich = static_cast<Pack8_t>(det);
     }
 
     /// Set the radiator type
     inline void setRad( const Rich::RadiatorType rad )
     {
-      data.packed.rad = static_cast<int>(rad);
+      data.packed.rad = static_cast<Pack8_t>(rad);
     }
 
     /// Set the detector side type
     inline void setSide( const Rich::Side side )
     {
-      data.packed.side = static_cast<int>(side);
+      data.packed.side = static_cast<Pack8_t>(side);
     }
 
     /// Set the particle mass hypothesis
     inline void setPid( const Rich::ParticleIDType pid )
     {
-      data.packed.pid = static_cast<int>(pid);
+      data.packed.pid = static_cast<Pack8_t>(pid);
     }
 
   public:
 
     /// Get the detector type
-    inline Rich::DetectorType det( ) const
+    inline Rich::DetectorType det() const
     {
       return static_cast<Rich::DetectorType>(data.packed.rich);
     }
 
     /// Get the radiator type
-    inline Rich::RadiatorType rad( ) const
+    inline Rich::RadiatorType rad() const
     {
       return static_cast<Rich::RadiatorType>(data.packed.rad);
     }
 
     /// Get the side type
-    inline Rich::Side side( ) const
+    inline Rich::Side side() const
     {
       return static_cast<Rich::Side>(data.packed.side);
     }
 
     /// Get the particle mass hypothesis
-    inline Rich::ParticleIDType pid( ) const
+    inline Rich::ParticleIDType pid() const
     {
       return static_cast<Rich::ParticleIDType>(data.packed.pid);
     }
@@ -131,13 +142,10 @@ namespace Rich
   public:
 
     /// Return as a raw unsigned int
-    inline unsigned int raw() const { return data.raw; }
+    inline Pack32_t raw() const { return data.raw; }
 
     /// implicit conversion to an int
-    inline operator unsigned int() const
-    {
-      return this->raw();
-    }
+    inline operator Pack32_t() const { return raw(); }
 
   };
 
