@@ -4,7 +4,7 @@
  *
  *  Implementation file for tool : Rich::Rec::FunctionalCKResForRecoTracks
  *
- *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.8 2010-02-11 20:08:22 jonrob Exp $
+ *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.9 2010-02-13 18:29:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -229,48 +229,49 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
           const Rich::HistoID hid;
           MAX_CKTHETA_RAD;
           MIN_CKTHETA_RAD;
+          const std::string tkT = Rich::text(tkType);
           // Versus CK theta
-          profile1D( ckExp, std::sqrt(asymptotErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"asymErrVc").id(),
+          profile1D( ckExp, std::sqrt(asymptotErr), hid(rad,*hypo,tkT+"/asymErrVc"),
                      "Asymptotic CK theta error V CK theta",
                      minCkTheta[rad], maxCkTheta[rad] );
-          profile1D( ckExp, std::sqrt(chromatErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"chroErrVc").id(),
+          profile1D( ckExp, std::sqrt(chromatErr), hid(rad,*hypo,tkT+"/chroErrVc"),
                      "Chromatic CK theta error V CK theta",
                      minCkTheta[rad], maxCkTheta[rad] );
-          profile1D( ckExp, std::sqrt(scattErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"scatErrVc").id(),
+          profile1D( ckExp, std::sqrt(scattErr), hid(rad,*hypo,tkT+"/scatErrVc"),
                      "Scattering CK theta error V CK theta",
                      minCkTheta[rad], maxCkTheta[rad] );
-          profile1D( ckExp, std::sqrt(curvErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"curvErrVc").id(),
+          profile1D( ckExp, std::sqrt(curvErr), hid(rad,*hypo,tkT+"/curvErrVc"),
                      "Curvature CK theta error V CK theta",
                      minCkTheta[rad], maxCkTheta[rad] );
-          profile1D( ckExp, std::sqrt(dirErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"dirErrVc").id(),
+          profile1D( ckExp, std::sqrt(dirErr), hid(rad,*hypo,tkT+"/dirErrVc"),
                      "Track direction CK theta error V CK theta",
                      minCkTheta[rad], maxCkTheta[rad] );
-          profile1D( ckExp, std::sqrt(momErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"momErrVc").id(),
+          profile1D( ckExp, std::sqrt(momErr), hid(rad,*hypo,tkT+"/momErrVc"),
                      "Track momentum CK theta error V CK theta",
                      minCkTheta[rad], maxCkTheta[rad] );
-          profile1D( ckExp, std::sqrt(hypo_res2), Rich::text(tkType)+"/"+hid(rad,*hypo,"overallErrVc").id(),
+          profile1D( ckExp, std::sqrt(hypo_res2), hid(rad,*hypo,tkT+"/overallErrVc"),
                      "Overall CK theta error V CK theta",
                      minCkTheta[rad], maxCkTheta[rad] );
           // Versus momentum
-          profile1D( ptot, std::sqrt(asymptotErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"asymErrVp").id(),
+          profile1D( ptot, std::sqrt(asymptotErr), hid(rad,*hypo,tkT+"/asymErrVp"),
                      "Asymptotic CK theta error V momentum",
                      0, 100 );
-          profile1D( ptot, std::sqrt(chromatErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"chroErrVp").id(),
+          profile1D( ptot, std::sqrt(chromatErr), hid(rad,*hypo,tkT+"/chroErrVp"),
                      "Chromatic CK theta error V momentum",
                      0, 100 );
-          profile1D( ptot, std::sqrt(scattErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"scatErrVp").id(),
+          profile1D( ptot, std::sqrt(scattErr), hid(rad,*hypo,tkT+"/scatErrVp"),
                      "Scattering CK theta error V momentum",
                      0, 100 );
-          profile1D( ptot, std::sqrt(curvErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"curvErrVp").id(),
+          profile1D( ptot, std::sqrt(curvErr), hid(rad,*hypo,tkT+"/curvErrVp"),
                      "Curvature CK theta error V momentum",
                      0, 100 );
-          profile1D( ptot, std::sqrt(dirErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"dirErrVp").id(),
+          profile1D( ptot, std::sqrt(dirErr), hid(rad,*hypo,tkT+"/dirErrVp"),
                      "Track direction CK theta error V momentum",
                      0, 100 );
-          profile1D( ptot, std::sqrt(momErr), Rich::text(tkType)+"/"+hid(rad,*hypo,"momErrVp").id(),
+          profile1D( ptot, std::sqrt(momErr), hid(rad,*hypo,tkT+"/momErrVp"),
                      "Track momentum CK theta error V momentum",
                      0, 100 );
-          profile1D( ptot, std::sqrt(hypo_res2), Rich::text(tkType)+"/"+hid(rad,*hypo,"overallErrVp").id(),
+          profile1D( ptot, std::sqrt(hypo_res2), hid(rad,*hypo,tkT+"/overallErrVp"),
                      "Overall CK theta error V momentum",
                      0, 100 );
         } // do histos
