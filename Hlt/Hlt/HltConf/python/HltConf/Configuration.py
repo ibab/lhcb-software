@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.152 2010-02-12 22:19:45 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.153 2010-02-13 22:36:46 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -294,15 +294,23 @@ class HltConf(LHCbConfigurableUser):
                 else :
                     log.warning( 'Hlt1Line %s not known to ANNSvc??' % i.name() )
 
-
+##################################################################################
+    def groupLines( self, lines , mapping ) :
+        import re
+        groups = {}
+        taken = []
+        for pos in range(len(mapping)):
+          (name, pattern) = mapping[pos]
+          expr = re.compile(pattern)
+          groups[ name ] = [ i for i in lines if expr.match(i) and i not in taken ]
+          taken += groups[ name ]
+        return groups
 
 ##################################################################################
     def configureHltMonitoring(self, lines1, lines2) :
         """
         Hlt Monitoring
-        @todo That's all Hlt1. Shouldn't it go there ?
         """
-        import re
         ## and tell the monitoring what it should expect..
         from Configurables import HltGlobalMonitor
         HltGlobalMonitor().Hlt1Decisions = [ i.decision() for i in lines1 ]
@@ -310,7 +318,8 @@ class HltConf(LHCbConfigurableUser):
        
         # the keys are the Labels for the Histograms in the GUI
         # the values are the Pattern Rules to for the Decisions contributing 
-        alley_string_patterns = [ ("L0"         , "Hlt1L0.*Decision"),
+        HltGlobalMonitor().DecToGroupHlt1  = self.groupLines( HltGlobalMonitor().Hlt1Decisions,
+                                [ ("L0"         , "Hlt1L0.*Decision"),
                                   ("Lumi"       , "Hlt1Lumi.*Decision"),
                                   ("Velo"       , "Hlt1Velo.*Decision"),
                                   ("XPress"     , "Hlt1.*XPress.*Decision"),
@@ -325,26 +334,10 @@ class HltConf(LHCbConfigurableUser):
                                   ("Global"     , ".*Global.*"),
                                   ("Other"      , ".*") # add a 'catch all' term to pick up all remaining decisions...
                                 ]
-
-        # prepare compiled regex patterns         
-        # and a list of names for the Labels  
-        decision_group_map1 = {}
-        taken = []
-        for pos in range(len(alley_string_patterns)):
-          (name, pattern_string) = alley_string_patterns[pos]
-          expr = re.compile(pattern_string)
-          decision_group_map1[ name ] = [ i for i in HltGlobalMonitor().Hlt1Decisions if expr.match(i) and i not in taken ]
-          taken += decision_group_map1[ name ]
-
-        HltGlobalMonitor().DecToGroupHlt1  = decision_group_map1
-
-        # For the HLT2
-
-        # the keys are the Labels for the Histograms in the GUI
-        # the values are the Pattern Rules to for the Decisions contributing 
-
-        alley_string_patterns2 = [ ("Topo"     , "Hlt2Topo.*Decision"),
-                                   ("IncPhi"   , "Hlt2IncPhi.*Decision"),
+                                )
+        HltGlobalMonitor().DecToGroupHlt2 = self.groupLines( HltGlobalMonitor().Hlt2Decisions,
+                                 [ ("Topo"           , "Hlt2Topo.*Decision"),
+                                   ("IncPhi"         , "Hlt2IncPhi.*Decision"),
                                    ("SingleMuon"     , "Hlt2(SingleMuon|IncMuTrack).*Decision"),
                                    ("DiMuon"         , "Hlt2.*DiMuon.*Decision"),
                                    ("B2DX"           , "Hlt2B2D2.*Decision"),
@@ -357,19 +350,8 @@ class HltConf(LHCbConfigurableUser):
                                    ("DisplVertices"  , "Hlt2DisplVertices.*Decision"),
                                    ("Global"         , ".*Global.*"),
                                    ("Other"          , ".*") # add a 'catch all' term to pick up all remaining decisions...
-                                  ]
-
-        # prepare compiled regex patterns         
-        # and a list of names for the Labels  
-        decision_group_map2 = {}
-        taken = []
-        for pos in range(len(alley_string_patterns2)):
-          (name, pattern_string) = alley_string_patterns2[pos]
-          expr = re.compile(pattern_string)
-          decision_group_map2[ name ] = [ i for i in HltGlobalMonitor().Hlt2Decisions if expr.match(i) and i not in taken ]
-          taken += decision_group_map2[ name ]
-
-        HltGlobalMonitor().DecToGroupHlt2  = decision_group_map2
+                                 ]
+                                 )
 
 
         def _disableHistograms(c,filter = lambda x : True) :
