@@ -3,6 +3,8 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+! 2010-02-13 - Johannes Albrecht
+ - follow name change in unbiased dimuon lines
 
 ! 2010-02-12 - Gerhard Raven
  - follow name changes
