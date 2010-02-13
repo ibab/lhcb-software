@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.53 2010-02-12 22:27:43 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.54 2010-02-13 11:06:13 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -224,7 +224,7 @@ StatusCode HltGlobalMonitor::initialize() {
         if (s!=*k) boost::algorithm::erase_all(s,*k);
       }
       labels.push_back(s);
-      m_hlt1Line2AlleyBin[ *j ] =  std::make_pair( m_hlt1Alleys.size(), labels.size()-1 ); // bind to histogram and bin... _1 will accept
+      m_hlt1Line2AlleyBin[ *j ] =  std::make_pair( m_hlt1Alleys.size()-1, labels.size()-1 );
     }
     if (!setBinLabels( m_hlt1Alleys.back(),labels )) {
           error() << "failed to set binlables on Hlt1 " << i->first << " Alley hist" << endmsg;
@@ -248,7 +248,7 @@ StatusCode HltGlobalMonitor::initialize() {
         if (s!=*k) boost::algorithm::erase_all(s,*k);
       }
       labels.push_back(s);
-      m_hlt2Line2AlleyBin[ *j ] =  std::make_pair( m_hlt2Alleys.size(), labels.size()-1 );
+      m_hlt2Line2AlleyBin[ *j ] =  std::make_pair( m_hlt2Alleys.size()-1, labels.size()-1 );
     }
     if (!setBinLabels( m_hlt2Alleys.back(),labels )) {
           error() << "failed to set binlables on Hlt2 " << i->first << " Alley hist" << endmsg;
@@ -384,7 +384,10 @@ void HltGlobalMonitor::monitorHLT1(const LHCb::ODIN*,
     if (report && report->decision()){
       ++nAcc;
       std::map<std::string,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt1Line2AlleyBin.find(*i);
-      if (j!=m_hlt1Line2AlleyBin.end()) ++nAccAlley[ j->second.first ];
+      if (j!=m_hlt1Line2AlleyBin.end()) {
+          assert(j->second.first<nAccAlley.size());
+          ++nAccAlley[ j->second.first ];
+      }
     }
   }
 
@@ -430,7 +433,7 @@ void HltGlobalMonitor::monitorHLT2(const LHCb::ODIN*,
   unsigned nAcc = 0;
   std::vector<unsigned> nAccAlley(m_DecToGroup2.size(),unsigned(0));
 
-  for (std::vector<std::string>::const_iterator i = m_Hlt2Lines.begin(); i!=m_Hlt2Lines.end();i++) {
+  for (std::vector<std::string>::const_iterator i = m_Hlt2Lines.begin(); i!=m_Hlt2Lines.end();++i) {
     const LHCb::HltDecReport*  report = hlt->decReport( *i );
     if (report == 0 ) {
        warning() << "report " << *i << " not found" << endreq;
@@ -440,7 +443,10 @@ void HltGlobalMonitor::monitorHLT2(const LHCb::ODIN*,
     if (report && report->decision()){
       ++nAcc;
       std::map<std::string,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt2Line2AlleyBin.find(*i);
-      if (j!=m_hlt2Line2AlleyBin.end()) ++nAccAlley[ j->second.first ];
+      if (j!=m_hlt2Line2AlleyBin.end()) {
+          assert(j->second.first<nAccAlley.size());
+          ++nAccAlley[ j->second.first ];
+      }
     }
   }
 
