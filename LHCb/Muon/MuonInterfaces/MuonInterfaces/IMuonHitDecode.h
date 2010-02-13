@@ -1,4 +1,4 @@
-// $Id: IMuonHitDecode.h,v 1.1 2010-02-10 19:07:50 ggiacomo Exp $
+// $Id: IMuonHitDecode.h,v 1.2 2010-02-13 11:16:33 ggiacomo Exp $
 #ifndef MUONMONITOR_IMUONHITDECODE_H 
 #define MUONMONITOR_IMUONHITDECODE_H 1
 
@@ -32,10 +32,10 @@ public:
   virtual const std::vector<MuonLogHit*>* hits() = 0;
 
   virtual float tdc2ns(float TDCtime) {
-    return  ( (TDCtime - 7.5) * 25. / 16.)  ;
+    return  (float) ( (TDCtime - 7.5) * 25. / 16.)  ;
   }
   virtual float tdc2ns_diff(float TDCdelta) {
-    return  ( TDCdelta  * 25. / 16.)  ;
+    return  (float) ( TDCdelta  * 25. / 16.)  ;
   }
   // specific for Online Monitoring
   virtual int banksSize(LHCb::RawBank::BankType bankType,  std::vector<int> &sizes) = 0;
