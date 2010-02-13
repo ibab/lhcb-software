@@ -22,11 +22,13 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
     '''
     
     
-    __slots__ = {  'Prescale'                  : {  'Hlt2UnbiasedDiMuon'      :  0.05
-                                                    ,'Hlt2UnbiasedJPsiLow'    :  0.25
-                                                    ,'Hlt2BiasedDiMuonRobust' :  0.01  
-                                                    ,'Hlt2BiasedDiMuonRefined':  0.01
-                                                    ,'Hlt2BiasedDiMuonIP'     :  0.5
+    __slots__ = {  'Prescale'                  : {  'Hlt2UnbiasedDiMuon'         :  0.05
+                                                    ,'Hlt2DiMuonUnbiasedJPsiLow' :  0.25
+                                                    ,'Hlt2BiasedDiMuonRobust'    :  0.01  
+                                                    ,'Hlt2BiasedDiMuonRefined'   :  0.01
+                                                    ,'Hlt2BiasedDiMuonIP'        :  0.5
+                                                    ,'Hlt2DiMuonDY1'             :  0.01
+                                                    ,'Hlt2DiMuonDY2'             :  0.01
                                                     }
 
                    ,'UnbiasedDiMuonMinMass'   : 2900      # MeV
@@ -47,9 +49,19 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                    ,'UnbiasedBmmMinMass'      : 5200      # MeV
                    ,'UnbiasedBmmVertexChi2'   :   20
 
-                   ,'UnbiasedZmmMinMass'      :50000      # MeV
+                   ,'UnbiasedZmmMinMass'      :40000      # MeV
                    ,'UnbiasedZmmPt'           :10000      # MeV
 
+                   ,'DYPt'                    :  500      # MeV
+                   ,'DY1MinMass'              : 2500      # MeV
+                   ,'DY1MaxMass'              : 5000      # MeV
+                   ,'DY2MinMass'              : 5000      # MeV
+                   ,'DY2MaxMass'              :10000      # MeV
+                   ,'DY3MinMass'              :10000      # MeV
+                   ,'DY3MaxMass'              :20000      # MeV
+                   ,'DY4MinMass'              :20000      # MeV
+                   ,'DY4MaxMass'              :40000      # MeV
+                   
                    ,'BiasedSingleMuonPt'      :  700      # MeV
                    ,'BiasedMass'              :  500      # MeV
                    ,'BiasedLMass'             : 1200      # MeV
@@ -87,7 +99,10 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
 
         filter = Hlt2Member(   FilterDesktop 
                                , "Filter"
-                               , Code = "(MM>%(UnbiasedDiMuonMinMass)d*MeV) & (PT>%(UnbiasedDiMuonPt)d*MeV) & (MINTREE('mu-'==ABSID,PT)>%(UnbiasedDiMuonMuPt)d*MeV) & (VFASPF(VCHI2/VDOF)<%(UnbiasedDiMuonVertexChi2)d)" %  self.getProps() 
+                               , Code = "(MM>%(UnbiasedDiMuonMinMass)d*MeV)"\
+                               " & (PT>%(UnbiasedDiMuonPt)d*MeV)"\
+                               " & (MINTREE('mu-'==ABSID,PT)>%(UnbiasedDiMuonMuPt)d*MeV) "\
+                               "& (VFASPF(VCHI2/VDOF)<%(UnbiasedDiMuonVertexChi2)d)" %  self.getProps() 
                                , InputPrimaryVertices = "None"
                                , UseP2PVRelations = False
                                , InputLocations  = [ DiMuon ]
@@ -109,7 +124,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         unbiased J/psi
         '''
-        line.clone( 'UnbiasedJPsi'
+        line.clone( 'DiMuonUnbiasedJPsi'
                     , prescale = self.prescale 
                     , Filter = { 'Code': "(ADMASS('J/psi(1S)')<"+str(self.getProp('UnbiasedJPsiMassWindow'))+"*MeV) "
                                  +"& (PT>"+str(self.getProp('UnbiasedJPsiPt'))+"*MeV) "
@@ -117,14 +132,14 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                  +"& (VFASPF(VCHI2/VDOF)<"+str(self.getProp('UnbiasedJPsiVertexChi2'))+")" }
                     , postscale = self.postscale
                     )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2UnbiasedJPsiDecision":  50201 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonUnbiasedJPsiDecision":  50201 } )
         
 
         #--------------------------------------------
         '''
         unbiased Psi(2S)
         '''
-        line.clone( 'UnbiasedPsi2S'
+        line.clone( 'DiMuonUnbiasedPsi2S'
                     , prescale = self.prescale 
                     , Filter = { 'Code': "(ADMASS(3686.09*MeV)<"+str(self.getProp('UnbiasedPsi2SMassWindow'))+"*MeV) "
                                  +"& (PT>"+str(self.getProp('UnbiasedPsi2SPt'))+"*MeV) "
@@ -132,25 +147,25 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                  +"& (VFASPF(VCHI2/VDOF)<"+str(self.getProp('UnbiasedPsi2SVertexChi2'))+")"}
                     , postscale = self.postscale
                     )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2UnbiasedPsi2SDecision": 50202 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonUnbiasedPsi2SDecision": 50202 } )
         
         #--------------------------------------------
         '''
         unbiased Bmm
         '''
-        line.clone( 'UnbiasedBmm'
+        line.clone( 'DiMuonUnbiasedBmm'
                     , prescale = self.prescale 
                     , Filter = { 'Code': "(MM>"+str(self.getProp('UnbiasedBmmMinMass'))+"*MeV) "
                                  +"& (VFASPF(VCHI2/VDOF)<"+str(self.getProp('UnbiasedBmmVertexChi2'))+")"}
                     , postscale = self.postscale
                     )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2UnbiasedBmmDecision":   50203 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonUnbiasedBmmDecision":   50203 } )
         
         #--------------------------------------------
         '''
         prescaled unbiased J/psi for low rate scenario
         '''
-        line.clone( 'UnbiasedJPsiLow'
+        line.clone( 'DiMuonUnbiasedJPsiLow'
                     , prescale = self.prescale
                     , Filter = { 'Code': "(ADMASS('J/psi(1S)')<"+str(self.getProp('UnbiasedJPsiMassWindow'))+"*MeV) "
                                  +"& (PT>"+str(self.getProp('UnbiasedJPsiPt'))+"*MeV) "
@@ -158,21 +173,76 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                  +"& (VFASPF(VCHI2/VDOF)<"+str(self.getProp('UnbiasedJPsiVertexChi2'))+")" }
                     , postscale = self.postscale
                     )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2UnbiasedJPsiLowDecision":  50204 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonUnbiasedJPsiLowDecision":  50204 } )
         
         #--------------------------------------------
         '''
         unbiased Zmm
         '''
-        line.clone( 'UnbiasedZmm'
+        line.clone( 'DiMuonUnbiasedZmm'
                     , prescale = self.prescale 
                     , Filter = { 'Code': "(MM>"+str(self.getProp('UnbiasedZmmMinMass'))+"*MeV) "
                                  +"& (PT>"+str(self.getProp('UnbiasedZmmPt'))+"*MeV) " }
                     , postscale = self.postscale
                     )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2UnbiasedZmmDecision":   50205 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonUnbiasedZmmDecision":   50205 } )
+        #--------------------------------------------
+        '''
+        unbiased Drell-Yan 1
+        '''
+        line.clone( 'DiMuonDY1'
+                    , prescale = self.prescale 
+                    , Filter = { 'Code': "(MM>"+str(self.getProp('DY1MinMass'))+"*MeV) "\
+                                 " & (MM<"+str(self.getProp('DY1MaxMass'))+"*MeV) "\
+                                 "& (PT>"+str(self.getProp('DYPt'))+"*MeV) " }
+                    , postscale = self.postscale
+                    )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonDY1Decision":   50206 } )
+
+        #--------------------------------------------
+        '''
+        unbiased Drell-Yan 2
+        '''
+        line.clone( 'DiMuonDY2'
+                    , prescale = self.prescale 
+                    , Filter = { 'Code': "(MM>"+str(self.getProp('DY2MinMass'))+"*MeV) "\
+                                 " & (MM<"+str(self.getProp('DY2MaxMass'))+"*MeV) "\
+                                 "& (PT>"+str(self.getProp('DYPt'))+"*MeV) " }
+                    , postscale = self.postscale
+                    )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonDY2Decision":   50207 } )
 
         #----------------------------------------------------------------------------------------
+
+        '''
+        unbiased Drell-Yan 3
+        '''
+        line.clone( 'DiMuonDY3'
+                    , prescale = self.prescale 
+                    , Filter = { 'Code': "(MM>"+str(self.getProp('DY3MinMass'))+"*MeV) "\
+                                 " & (MM<"+str(self.getProp('DY3MaxMass'))+"*MeV) "\
+                                 "& (PT>"+str(self.getProp('DYPt'))+"*MeV) " }
+                    , postscale = self.postscale
+                    )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonDY3Decision":   50208 } )
+
+        #--------------------------------------------
+        '''
+        unbiased Drell-Yan 4
+        '''
+        line.clone( 'DiMuonDY4'
+                    , prescale = self.prescale 
+                    , Filter = { 'Code': "(MM>"+str(self.getProp('DY4MinMass'))+"*MeV) "\
+                                 " & (MM<"+str(self.getProp('DY4MaxMass'))+"*MeV) "\
+                                 "& (PT>"+str(self.getProp('DYPt'))+"*MeV) " }
+                    , postscale = self.postscale
+                    )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonDY4Decision":   50209 } )
+
+
+        
+        #----------------------------------------------------------------------------------------
+        
         '''
         Biased DiMuon Lines
                Leandro de Paula - leandro.de.paula@cern.ch
