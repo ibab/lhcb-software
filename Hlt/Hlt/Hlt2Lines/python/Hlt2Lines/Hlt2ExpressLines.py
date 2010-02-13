@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2ExpressLines.py,v 1.7 2010-02-13 08:03:57 albrecht Exp $
+# $Id: Hlt2ExpressLines.py,v 1.8 2010-02-13 09:09:03 albrecht Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt2 Lines for the express stream
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Johannes Albrecht albrecht@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -116,14 +116,11 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       JPsi from only one muon (tag and probe)
       from StrippingMuIDCalib.py
 
-      TODO J.A. 01.Jan2010:
-      ECal and HCal energy currently not availble
-      comment out for the moment !!!
-
       '''
       from Hlt2SharedParticles.BasicParticles import Muons, NoCutsPions
       from Configurables import CombineParticles
       from HltLine.HltReco import PV3D
+      from Configurables import Hlt2PID
       
      ############################
       # Prompt Jpsi tag-and-probe
@@ -152,9 +149,11 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloEcalE,-10000)>%(ExJPsiTPMinEcalE)d*MeV),1)) &"\
       "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloHcalE,-10000)>%(ExJPsiTPMinHcalE)d*MeV),1)) ) "%  self.getProps()
       
-      child1cuts = tag1cuts# + " & " + probe2cuts
+      child1cuts = tag1cuts + " & " + probe2cuts
       
-      child2cuts = tag2cuts# + " & " + probe1cuts
+      child2cuts = tag2cuts + " & " + probe1cuts
+      
+     
       
       JPsiCombine = Hlt2Member( CombineParticles
                                 , 'JPsiCombine'
@@ -166,10 +165,13 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                 , MotherCut = "( " + child1cuts + " | " + child2cuts + " ) "\
                                 " & (VFASPF(VCHI2/VDOF)<%(ExJPsiTPVChi2)d)"%  self.getProps()
                                 )
+
+      caloProtos = Hlt2PID().hlt2ChargedHadronProtos()
       
       line = Hlt2Line('ExpressJPsiTagProbe'
-                      , prescale = self.prescale 
-                      , algos = [ PV3D, Muons, NoCutsPions, JPsiCombine ]
+                      , prescale = self.prescale
+                      , HLT = "HLT_PASS_RE('Hlt1.*SingleMuon.*Decision')"
+                      , algos = [ PV3D, caloProtos, Muons, NoCutsPions, JPsiCombine ]
                       , postscale = self.postscale
                       )
       
