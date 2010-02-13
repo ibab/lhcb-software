@@ -52,8 +52,6 @@ class Physics_10000Vis_1000L0_40Hlt1_Apr09 :
                  'Hlt1DiMuonNoPVL0Di',
                  'Hlt1DiMuonNoPV2L0',
                  'Hlt1DiMuonNoPVL0Seg',
-                 'Hlt1SingleMuonNoIPL0',
-                 'Hlt1SingleMuonIPCL0',
                  'Hlt1DiMuonNoIPL0Di',
                  'Hlt1DiMuonNoIP2L0',
                  'Hlt1DiMuonNoIPL0Seg',
