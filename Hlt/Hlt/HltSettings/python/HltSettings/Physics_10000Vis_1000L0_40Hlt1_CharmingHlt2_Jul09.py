@@ -100,9 +100,9 @@ class Physics_10000Vis_1000L0_40Hlt1_CharmingHlt2_Jul09( Physics_10000Vis_1000L0
 ## (di)muons : Charming list
 ##
         list.extend( [ 'Hlt2IncMuTrackMid',
-                       'Hlt2UnbiasedJPsi',
-                       'Hlt2UnbiasedPsi2S',
-                       'Hlt2UnbiasedBmm'] )
+                       'Hlt2DiMuonUnbiasedJPsi',
+                       'Hlt2DiMuonUnbiasedPsi2S',
+                       'Hlt2DiMuonUnbiasedBmm'] )
 ##
 ## phi : whole list
 ##

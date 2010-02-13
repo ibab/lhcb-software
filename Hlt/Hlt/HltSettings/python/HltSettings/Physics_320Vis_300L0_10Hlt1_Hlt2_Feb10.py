@@ -74,9 +74,14 @@ class Physics_320Vis_300L0_10Hlt1_Hlt2_Feb10( Physics_320Vis_300L0_10Hlt1_Jan10 
 ##
         list.extend( [ 'Hlt2SingleMuonLow',
                        'Hlt2IncMuTrack',
-                       'Hlt2UnbiasedJPsi',
-                       'Hlt2UnbiasedPsi2S',
-                       'Hlt2UnbiasedBmm',
+                       'Hlt2DiMuonUnbiasedJPsi',
+                       'Hlt2DiMuonUnbiasedPsi2S',
+                       'Hlt2DiMuonUnbiasedBmm',
+                       #'Hlt2DiMuonUnbiasedZmm',
+                       #'Hlt2DiMuonDY1',
+                       #'Hlt2DiMuonDY2',
+                       #'Hlt2DiMuonDY3',
+                       #'Hlt2DiMuonDY4',
                        'Hlt2BiasedDiMuonMass',
                        'Hlt2BiasedDiMuonIP'] )
 ##

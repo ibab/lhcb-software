@@ -96,9 +96,9 @@ class Physics_10000Vis_1000L0_40Hlt1_HadronicHlt2_Jul09( Physics_10000Vis_1000L0
 ## (di)muons : Hadronic list
 ##
         list.extend( [ 'Hlt2IncMuTrackLow',
-                       'Hlt2UnbiasedJPsiLow',
-                       'Hlt2UnbiasedPsi2S',
-                       'Hlt2UnbiasedBmm' ] )
+                       'Hlt2DiMuonUnbiasedJPsiLow',
+                       'Hlt2DiMuonUnbiasedPsi2S',
+                       'Hlt2DiMuonUnbiasedBmm' ] )
 ##
 ## phi : whole list
         from Phi_Nominal import PhiHigh_Nominal

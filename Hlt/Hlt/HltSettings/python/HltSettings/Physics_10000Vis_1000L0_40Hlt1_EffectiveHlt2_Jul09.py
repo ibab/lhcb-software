@@ -123,10 +123,10 @@ class Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09( Physics_10000Vis_1000L
 ##
 ## (di)muons : whole default list
 ##
-        list.extend( [ 'Hlt2UnbiasedJPsi',
-                       'Hlt2UnbiasedPsi2S',
-                       'Hlt2UnbiasedBmm',
-                       'Hlt2UnbiasedJPsiLow',
+        list.extend( [ 'Hlt2DiMuonUnbiasedJPsi',
+                       'Hlt2DiMuonUnbiasedPsi2S',
+                       'Hlt2DiMuonUnbiasedBmm',
+                       'Hlt2DiMuonUnbiasedJPsiLow',
                        'Hlt2BiasedDiMuonMass',
                        'Hlt2BiasedDiMuonIP',                      
                        'Hlt2SingleMuonMid', 
