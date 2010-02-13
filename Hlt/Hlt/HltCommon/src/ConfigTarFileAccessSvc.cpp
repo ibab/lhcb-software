@@ -39,7 +39,6 @@ namespace io = boost::iostreams;
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/StringKey.h"
 
-
 namespace {
 
     struct DefaultFilenameSelector {
@@ -231,17 +230,21 @@ namespace ConfigTarFileAccessSvc_details {
                return m_myGid;
         }
         const char *getUname() const {
+#ifndef _WIN32
                 if (m_uname.empty()) {
                     struct passwd *passwd = getpwuid(getUid());
                     m_uname = ( passwd ? passwd->pw_name : "" );
                 }
+#endif
                 return m_uname.c_str();
         }
         const char *getGname() const {
+#ifndef _WIN32
                 if (m_gname.empty()) {
                     struct group *group = getgrgid(getGid());
                     m_gname = ( group ? group->gr_name : "" );
                 }
+#endif
                 return m_gname.c_str();
         }
 
@@ -292,7 +295,11 @@ namespace ConfigTarFileAccessSvc_details {
                    memset(&header,0,sizeof(header));
                }
                putString(name.c_str(),header.name);
+#ifdef _WIN32
+               putOctal(33060u, header.mode);
+#else
                putOctal( S_IFREG|S_IRUSR|S_IRGRP|S_IROTH, header.mode);
+#endif
                putString( "ustar ",header.magic);
                putString("00", header.version);
                putOctal( getUid(), header.uid);
