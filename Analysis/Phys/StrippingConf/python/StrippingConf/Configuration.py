@@ -20,7 +20,8 @@ class StrippingConf ( object ) :
     def __init__( self,
                   name = "",
                   TES = False,
-                  Streams = [] ) :
+                  Streams = [], 
+                  Settings = None ) :
         
         log.info("Initialising StrippingConf "+ name)
         if name == "" :
@@ -31,6 +32,7 @@ class StrippingConf ( object ) :
         self._streams = []
         self._streamSequencers = []
         self._sequence = None
+        self._settings = Settings
         for stream in Streams :
             self.appendStream(stream)
 	
@@ -89,7 +91,7 @@ class StrippingConf ( object ) :
         corresponding sequencer to _streamSequencers list.
         """
         log.info(self._name+ " appending stream "+ stream.name())
-	stream.createConfigurables( self.TES )
+	stream.createConfigurables( self.TES, self._settings )
 	self._streams.append(stream)
         self._appendSequencer(stream)
         

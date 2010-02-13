@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.39 2010-02-03 17:59:31 jpalac Exp $
+!$Id: release.notes,v 1.40 2010-02-13 10:37:39 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-02-13 - Anton Poluektov 
+ - Added configuration support for settings stored in StrippingSettings
+ - StrippingConfigurableUser class with getProps() method
 
 !========================== StrippingConf v2r0 2010-02-02 ===================
 

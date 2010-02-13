@@ -1,6 +1,7 @@
 #include "Kernel/SelectionLine.h"
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/VectorMap.h" 
+#include "Event/Particle.h" 
 
 class StrippingAlg : public Selection::Line {
     public:
@@ -16,6 +17,8 @@ class StrippingAlg : public Selection::Line {
         std::pair<std::string,unsigned> SetupID();
 
         std::pair<std::string,unsigned> m_id;
+        
+        std::string m_outputLocation;
 
 };
 
@@ -27,7 +30,7 @@ DECLARE_ALGORITHM_FACTORY( StrippingAlg );
 StrippingAlg::StrippingAlg( const std::string& name, ISvcLocator* pSvcLocator )
     : Selection::Line(name,pSvcLocator)
 {
-
+  declareProperty("OutputLocation", m_outputLocation);
 }
 
 StatusCode StrippingAlg::initialize() {
@@ -41,10 +44,22 @@ StatusCode StrippingAlg::initialize() {
 }
 
 unsigned int StrippingAlg::numberOfCandidates() const {
-  return 0 ;
+  int num = 0;
+
+  const LHCb::Particles* parts = 0 ;
+
+  if (exist<LHCb::Particles>(m_outputLocation)){
+    parts = get<LHCb::Particles>(m_outputLocation);
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Selection " << m_outputLocation << " finds " << parts->size()
+                                          << " candidates" << endmsg ;
+    num = parts->size();
+  } else if (msgLevel(MSG::VERBOSE)) verbose() <<  "Selection " 
+                                               << m_outputLocation << " has no particles" << endmsg ;
+
+  return num;
 }
 
-unsigned int StrippingAlg::numberOfCandidates(const Algorithm* algorithm) const{
+unsigned int StrippingAlg::numberOfCandidates(const Algorithm* algorithm) const {
   return 0 ;
 }
 
