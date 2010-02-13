@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.111 2010-02-12 07:41:35 graven Exp $
+$Id: release.notes,v 1.112 2010-02-13 07:41:01 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,9 @@ $Id: release.notes,v 1.111 2010-02-12 07:41:35 graven Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+! 2010-02-13 - Johannes Albrecht
+ - Hlt2InclusiveDiMuonLines: add Drell-Yan lines, 
+   name change: Unbiased.. --> DiMuonUnbiased
 
 ! 2010-02-12 - Gerhard Raven
  - eliminate some run-time warnings
