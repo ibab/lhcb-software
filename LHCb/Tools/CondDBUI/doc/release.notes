@@ -5,6 +5,7 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!===================== Tools/CondDBUI v3r2 2010-02-14 =========================
 ! 2010-02-03 - Marco Clemencic
  - Correctly fixed the bug in CondDBBrowser: cannot add conditions to empty
    folders.
