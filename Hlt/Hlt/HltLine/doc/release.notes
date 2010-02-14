@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.77 2010-02-09 18:57:26 graven Exp $
+! $Id: release.notes,v 1.78 2010-02-14 10:22:41 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+! 2010-02-14 - Gerhard Raven
+ - some cleanup of reco sequences
+
 ! 2010-02-09 - Gerhard Raven for Mariusz Witek
  - update fitter tool configuration for PV2D
 

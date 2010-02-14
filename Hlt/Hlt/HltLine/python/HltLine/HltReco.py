@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.20 2010-02-09 18:57:26 graven Exp $
+# $Id: HltReco.py,v 1.21 2010-02-14 10:22:41 graven Exp $
 # =============================================================================
 ## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -29,7 +29,6 @@
 #
 # which 'skips' PV2D for the daisychaining (but will insert the right configurables)
 #
-# 
 
 __all__ = ( 'PV2D'            # bindMembers instance with algorithms needed to get 'PV2D'
           , 'PV3D'            # bindMembers instance with algorithms needed to get 'PV3D'
@@ -39,7 +38,7 @@ __all__ = ( 'PV2D'            # bindMembers instance with algorithms needed to g
           , 'Seed'            # run Seeding
           , 'SeedKF'
           , 'HltRecoSequence' # Sequencer used after Hlt1, and start of Hlt2
-	  , 'HltSeedSequence' 
+	      , 'HltSeedSequence' 
           )
 #############################################################################################
 # Switches for different reco scenarios
@@ -70,12 +69,11 @@ from Configurables import TrackEventCloneKiller, TrackCloneFinder
 #############################################################################################
 
 ####TODO: split into Hlt1 specific part,
-####      and in the stuff which runs at the Hlt1/Hlt2 boundary,
 ####      and the Hlt2 specific part...
 
 
 #### Velo Tracking
-patVeloR = Tf__PatVeloRTracking('HltRecoRZVelo' , OutputTracksName = "Hlt/Track/RZVelo" ) 
+patVeloR = Tf__PatVeloRTracking('HltRecoRZVelo', OutputTracksName = "Hlt/Track/RZVelo" ) 
 
 recoVelo = Tf__PatVeloSpaceTracking('HltRecoVelo'
                                    , InputTracksName = patVeloR.OutputTracksName
@@ -102,7 +100,7 @@ recoForward.addTool(PatForwardTool, name='PatForwardTool')
 recoForward.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
 
 #### Seeding 
-recoSeeding = PatSeeding('HltSeeding' , OutputTracksName = "Hlt/Track/Seeding") 
+recoSeeding = PatSeeding('HltSeeding', OutputTracksName = "Hlt/Track/Seeding") 
 recoSeeding.addTool(PatSeedingTool, name="PatSeedingTool")
 recoSeeding.PatSeedingTool.UseForward = True
 recoSeeding.PatSeedingTool.ForwardCloneMergeSeg = True
@@ -135,8 +133,6 @@ cloneKiller.CloneFinderTool.RestrictedSearch = True
 
 #### Primary vertex algorithms...
 
-#patPV2D = PatPV2D( 'HltRecoPV2D' , InputTracksName = patVeloR.OutputTracksName
-#                                 , OutputVerticesName = "Hlt/Vertex/PV2D" )  
 patPV2D = PatPV2DFit3D( 'HltRecoPV2D' , InputTracksName = patVeloR.OutputTracksName
                                       , OutputVerticesName = "Hlt/Vertex/PV2D" )  
 patPV2D.addTool(PVOfflineTool, name = 'PVOfflineTool')
@@ -222,13 +218,10 @@ preparePV3DOpen = HltVertexFilter( 'Hlt1PreparePV3DOpen'
 #############################################################################################
 
 from HltDecodeRaw import DecodeVELO
-# first define sequencers for velo tracking
-recoRZVeloTracksSequence = GaudiSequencer( 'HltRecoRZVeloTracksSequence', MeasureTime = True
-                                         , Members = DecodeVELO.members() +  [ patVeloR ] )
 
 # define basic reco sequence, this should be run in any case
 trackRecoSequence = GaudiSequencer( 'HltTrackRecoSequence'
-                                  ,  Members = [  recoRZVeloTracksSequence ,  recoVelo ,  recoVeloGeneral ] )
+                                  ,  Members = DecodeVELO.members() +  [ patVeloR, recoVelo, recoVeloGeneral ] )
 
 # Now we add different algorithms for long track reco based on the different reconstruction scenarios
 # first we want to decide if the seeding should run
@@ -238,9 +231,9 @@ trackRecoSequence = GaudiSequencer( 'HltTrackRecoSequence'
 from HltDecodeRaw import DecodeTT, DecodeIT
 if not RunSeeding:
                     recoCopy.InputLocations = ["Hlt/Track/Forward"]
-                    trackRecoSequence.Members += DecodeTT.members() + DecodeIT.members() + [ recoForward , recoCopy]
+                    trackRecoSequence.Members += DecodeTT.members() + DecodeIT.members() + [ recoForward, recoCopy]
 else:
-                    trackRecoSequence.Members += DecodeTT.members() + DecodeIT.members() + [ recoForward , recoSeeding , recoMatch , recoCopy]
+                    trackRecoSequence.Members += DecodeTT.members() + DecodeIT.members() + [ recoForward, recoSeeding, recoMatch, recoCopy]
 
 #### now we add the fit 
 if RunFastFit    :  trackRecoSequence.Members += [ fastKalman]
@@ -248,30 +241,21 @@ if RunCloneKiller:  trackRecoSequence.Members += [ cloneKiller ]
 
 
 
-hlt1RecoRZVeloTracksSequence = GaudiSequencer( 'Hlt1RecoRZVeloTracksSequence' , MeasureTime = True
-                                             , Members = [ recoRZVeloTracksSequence , prepareRZVelo ] )
-
-recoSeq = GaudiSequencer('HltRecoSequence', MeasureTime = True
-                        , Members = [ trackRecoSequence ] )
 
 from Configurables import DecodeVeloRawBuffer
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
-#Forward1 = bindMembers( None, [ DecodeVELO, patVeloR, recoVelo, recoForward ] )
 PV2D     = bindMembers( None, [ DecodeVELO, patVeloR, patPV2D, preparePV2D ] )
 PV3D     = bindMembers( None, [ DecodeVELO, patVeloR, recoVelo, recoPV3D ] )
 RZVelo   = bindMembers( None, [ DecodeVELO, patVeloR, prepareRZVelo ] )
-#Forward1 = bindMembers( None, [ patVeloR, recoVelo, recoForward ] )
-#PV2D     = bindMembers( None, [ patVeloR, patPV2D, preparePV2D ] )
-#RZVelo   = bindMembers( None, [ patVeloR, prepareRZVelo ] )
 Velo     = bindMembers( None, [                  RZVelo , reco1Velo ] )
 VeloOpen = bindMembers( None, [ DecodeVeloRawBuffer(), recoVeloOpen, prepareVeloOpen ] )
 PV3DOpen = bindMembers( None, [ DecodeVeloRawBuffer(), recoVeloOpen, prepareVeloOpen, recoPV3DOpen, preparePV3DOpen ] )
 Forward  = bindMembers( None, [                                Velo,  recoFwd ] )
 
-# warning: Seed is _not_ selfcontained, and relies on Forward having run...
+# FIXME TODO WARNING: Seed is _not_ selfcontained, and relies on Forward having run...
 Seed     = bindMembers( None, [ recoSeeding, PatDownstream ] )
 SeedKF   = bindMembers( None, [ Seed, FitSeeding ] )
 
 HltSeedSequence = GaudiSequencer("HltSeedSequence", MeasureTime = True, Members = Seed.members() )
-HltRecoSequence = recoSeq
+HltRecoSequence = bindMembers(None, trackRecoSequence.Members )
