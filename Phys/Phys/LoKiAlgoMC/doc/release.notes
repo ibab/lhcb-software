@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.29 2009-01-12 06:51:45 cattanem Exp $ 
+! $Id: release.notes,v 1.30 2010-02-14 20:58:48 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgoMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
+
+! 2010-02-14 - Marco Cattaneo
+ - Add src/Components/HybridMCParticleArrayFilter.cpp, moved from LoKiMC
+   because of dependency in DaVinciMCKernel
+ - Remove obsolete file src/Components/LoKiAlgoMC_load.cpp
 
 !========================== LoKiAlgoMC v8r1 2009-01-12 ========================
 ! 2009-01-10 - Chris Jones
