@@ -47,10 +47,10 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
     __used_configurables__ = [ LumiCounterDefinitionConf ]
 
     __slots__ = { 'TriggerType'            : 'LumiTrigger'  # ODIN trigger type accepted for Lumi
-                , 'L0Channel'              : ['Hadron']     # L0 channels accepted for LowLumi
+                , 'L0Channel'              : ['CALO']     # L0 channels accepted for LowLumi
                 , 'BXTypes'                : ['NoBeam', 'BeamCrossing','Beam1','Beam2']
                 , 'LumiLines'              : ['Count','VDM']
-                , 'EnableReco'             : False 
+                , 'EnableReco'             : True 
                 , 'OutputLevel'            : WARNING
                 }
 
@@ -135,51 +135,54 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         lumiRecoSequence.Members.append(lumiRecoFilterSequence)
         
         # sequence to get TT tracks
-        from Configurables import RawBankToSTClusterAlg
+        from HltLine.HltDecodeRaw import DecodeTT
         from Configurables import TTGenericTracking
+        from Configurables import RawBankToSTClusterAlg
         lumiTTTSequence = Sequence( 'LumiTTTSequence', Members = [] ) # reset, always build the same seq...
         lumiTTTSequence.Members.append( recoScaler )
         lumiTTTSequence.Members.append(
             Sequence('TTTSequence'
-                     , Members  = [ RawBankToSTClusterAlg("lumiTTClusters")
-                                  , TTGenericTracking("lumiTTT",
-                                                      MaxNumClusters = 2000,
-                                                      OutputLocation = 'Hlt/Track/TTIP',
-                                                      WindowCenter = [0,0,0],
-                                                      HalfWindowXSize = 15,
-                                                      HalfWindowYSize = 15,
-                                                      OutputLevel = WARNING,
+                     # , Members  = DecodeTT.members() + [
+                     , Members  = [ RawBankToSTClusterAlg("createTTClusters"),
+                                    TTGenericTracking("lumiTTT"
+                                                     , MaxNumClusters = 2000
+                                                     # , InputData = DecodeTT.members()[0].getProp('clusterLocation') // hardwired to use STClusters, not lite ones...
+                                                     , OutputLocation = 'Hlt/Track/TTIP'
+                                                     , WindowCenter = [0,0,0]
+                                                     , HalfWindowXSize = 15
+                                                     , HalfWindowYSize = 15
+                                                     , OutputLevel = WARNING
                                                       )
                                     ]
                      , MeasureTime = True
                      , ModeOR = True
                      , ShortCircuit = False
                      ) )
-        ## disable for the moement 
-        ## lumiRecoSequence.Members.append(lumiTTTSequence)
+        lumiRecoSequence.Members.append(lumiTTTSequence)
 
         # define histogrammers
-        from Configurables import LumiHistoMaker, LumiHisto2dSPD
-        HistoMembers=[]
-        HistoMembers.append(LumiHistoMaker('Histo'+postfix+BXType,
-                                           InputVariables = createdCounters,
-                                           Thresholds = histoThresholds,
-                                           MaxBins = histoMaxBins,
-                                           OutputLevel = debugOPL
-                                           ))
-        HistoMembers.append(LumiHisto2dSPD('Histo2D'+postfix+BXType,
-                                           HistoTitle=str(postfix+BXType),
-                                           OutputLevel = debugOPL ))
+        #from Configurables import LumiHistoMaker, LumiHisto2dSPD
+        #HistoMembers=[]
+        #HistoMembers.append(LumiHistoMaker('Histo'+postfix+BXType,
+        #                                   InputVariables = createdCounters,
+        #                                   Thresholds = histoThresholds,
+        #                                   MaxBins = histoMaxBins,
+        #                                   OutputLevel = debugOPL
+        #                                   ))
+        #HistoMembers.append(LumiHisto2dSPD('Histo2D'+postfix+BXType,
+        #                                   HistoTitle=str(postfix+BXType),
+        #                                   OutputLevel = debugOPL ))
 
-        lumiHistoSequence = Sequence('LumiHisto'+postfix+BXType +'Seq'
-                                     , Members = HistoMembers
-                                     , ModeOR = True
-                                     , ShortCircuit = False
-                                     , MeasureTime = True
-                                     , OutputLevel = debugOPL
-                                     )
+        #lumiHistoSequence = Sequence('LumiHisto'+postfix+BXType +'Seq'
+        #                             , Members = HistoMembers
+        #                             , ModeOR = True
+        #                             , ShortCircuit = False
+        #                             , MeasureTime = True
+        #                             , OutputLevel = debugOPL
+        #                             )
 
-        return [ lumiRecoSequence, lumiCountSequence, lumiHistoSequence ] 
+        #return [ lumiRecoSequence, lumiCountSequence, lumiHistoSequence ] 
+        return [ lumiRecoSequence, lumiCountSequence ] 
 
 
     def __create_lumi_line__(self, BXType):

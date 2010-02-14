@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.111 2010-02-12 20:49:53 graven Exp $
+! $Id: release.notes,v 1.112 2010-02-14 19:30:27 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -9,6 +9,12 @@
 ! for the production. Commit them AS WELL in branch production200912. 
 !
 !-----------------------------------------------------------------------------
+! 2010-02-14 - Gerhard Raven
+ - remove 2D histograms from lumi lines
+ - add TT reco to lumi
+ - enable 'reco' in lumi
+
+
 ! 2010-02-12 - Gerhard Raven
  - rename Hlt1BeamGas1 into Hlt1BeamGasBeam1 and Hlt1BeamGas2 into Hlt1BeamGasBeam2
  - rename Hlt1MiniBias and Hlt1NoBias into Hlt1MBMiniBias and Hlt1MBNoBias,
