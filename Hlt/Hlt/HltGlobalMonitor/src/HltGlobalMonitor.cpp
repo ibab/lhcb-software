@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.54 2010-02-13 11:06:13 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.55 2010-02-14 10:26:44 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -209,10 +209,10 @@ StatusCode HltGlobalMonitor::initialize() {
 
                     /*One Histogram for each alley*/
   for(DecToGroupType::const_iterator i=m_DecToGroup1.begin();i!=m_DecToGroup1.end();++i){
-    std::string alleyName = std::string("Htl1")+i->first+"Alley";
+    std::string alleyName = std::string("Hlt1 ")+i->first+" Lines";
     m_hlt1Alleys.push_back( book1D(alleyName,   -0.5,i->second.size()-0.5,i->second.size()) );
     m_hlt1AlleyRates.push_back(&counter(alleyName));
-    declareInfo("COUNTER_TO_RATE["+alleyName+"]", *m_hlt1AlleyRates.back(),i->first+" Alley");
+    declareInfo("COUNTER_TO_RATE["+alleyName+"]", *m_hlt1AlleyRates.back(),alleyName);
     std::vector<std::string> strip; 
     strip.push_back("Decision"); // and of course 'Decision'...
     strip.push_back("Hlt1");   // in case the above doesn't work, just strip 'Hlt1' 
@@ -233,10 +233,10 @@ StatusCode HltGlobalMonitor::initialize() {
 
   // for hlt2
   for(DecToGroupType::const_iterator i=m_DecToGroup2.begin();i!=m_DecToGroup2.end();++i){
-    std::string alleyName = std::string("Htl2")+i->first+"Alley";
+    std::string alleyName = std::string("Hlt2 ")+i->first+" Lines";
     m_hlt2Alleys.push_back( book1D(alleyName, -0.5,i->second.size()-0.5,i->second.size()) );
     m_hlt2AlleyRates.push_back(&counter(alleyName));
-    declareInfo("COUNTER_TO_RATE["+alleyName+"]", *m_hlt2AlleyRates.back(),i->first+" Alley");
+    declareInfo("COUNTER_TO_RATE["+alleyName+"]", *m_hlt2AlleyRates.back(),alleyName);
     std::vector<std::string> strip; 
     strip.push_back("Decision"); // always remove 'Decision'...
     strip.push_back("Hlt2");   // and Hlt2
