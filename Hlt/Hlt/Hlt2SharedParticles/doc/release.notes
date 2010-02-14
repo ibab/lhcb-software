@@ -1,9 +1,11 @@
-$Id: release.notes,v 1.70 2010-02-01 09:47:09 graven Exp $
+$Id: release.notes,v 1.71 2010-02-14 14:44:08 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+! 2010-02-14 - Gerhard Raven
+ - follow movement of files from $HLTCONFROOT/options to $HLT2LINESROOT/options
 
 !========================== Hlt2SharedParticles v3r1 2010-02-01 ===================
 ! 2010-01-21 - Johannes Albrecht

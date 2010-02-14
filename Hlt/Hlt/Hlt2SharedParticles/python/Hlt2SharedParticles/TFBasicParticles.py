@@ -87,7 +87,7 @@ Hlt2TFMuonIDSeq = Hlt2TFPID.hlt2Muon()
 ###################################################################
 # TF
 #
-importOptions("$HLTCONFROOT/options/Hlt2TrackFitForTopo.py")
+importOptions("$HLT2LINESROOT/options/Hlt2TrackFitForTopo.py")
 SeqHlt2TFParticlesForTopo = GaudiSequencer('SeqHlt2TFParticlesForTopo') # the sequencer that does the track fit
 ##########################################################################
 #
