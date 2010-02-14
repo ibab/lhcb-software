@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2010-02-14 Wouter Hulsbergen
+ - improvements in OTProjector 
+   - implement new 'prefit' strategy proposed by Tjeerd Ketel
+   - skip drifttimes that are ~2sigma (6ns) outside drifttime spectrum
+   - set 'driftTimeStrategy flag in OTMeasurement
 
 !====================== TrackProjectors v2r26 2009-11-16 =====================
 ! 2009-11-13 Wouter Hulsbergen
