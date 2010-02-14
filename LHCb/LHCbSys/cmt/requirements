@@ -113,7 +113,7 @@ use SimComponents         v2r20   Sim     # Gloria Corti, Marco Cattaneo
 use STKernel              v1r19   ST      # Matt Needham
 use STTELL1Event          v1r9    ST      # Matt Needham
 use CondDBEntityResolver  v5r1    Tools   # In SVN. Marco Clemencic
-use CondDBUI              v3r1    Tools   # In SVN. Marco Clemencic
+use CondDBUI              v3r2    Tools   # In SVN. Marco Clemencic
 use XmlTools              v6r3    Tools   # In SVN. Marco Clemencic
 use TfKernel              v2r15   Tf      # Stephanie Hansmann-Menzemer
 use TrackInterfaces       v4r10   Tr      # Matt Needham
