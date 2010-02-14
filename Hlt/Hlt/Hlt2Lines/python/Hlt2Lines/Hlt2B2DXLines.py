@@ -168,7 +168,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         #   of input particles.
         ###################################################################
         # import options for the track fit
-        importOptions("$HLTCONFROOT/options/Hlt2TrackFitForTopo.py")
+        importOptions("$HLT2LINESROOT/options/Hlt2TrackFitForTopo.py")
         
         
         # Filter for the post-track-fit input particles

@@ -1,7 +1,7 @@
-## $Id: Hlt2CharmLines.py,v 1.2 2010-01-14 12:37:03 spradlin Exp $
+## $Id: Hlt2CharmLines.py,v 1.3 2010-02-14 14:43:11 graven Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-01-14 12:37:03 $'
-__version__ = '$Revision: 1.2 $'
+__date__    = '$Date: 2010-02-14 14:43:11 $'
+__version__ = '$Revision: 1.3 $'
 
 ## ######################################################################
 ## Defines a configurable to define and configure Hlt2 lines for selecting
@@ -310,7 +310,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
 
         tracks = Hlt2PID().hlt2Tracking()
 
-        importOptions("$HLTCONFROOT/options/Hlt2TrackFitForTopo.py")
+        importOptions("$HLT2LINESROOT/options/Hlt2TrackFitForTopo.py")
         tfRecoSeq = GaudiSequencer('SeqHlt2TFParticlesForTopo')
 
         incuts = """(PT> %(ComTFAllTrkPtLL)s *MeV)
@@ -403,7 +403,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         ## Filter post-track fit input particles.
         ###################################################################
         #from Hlt2SharedParticles.TFBasicParticles import TFKaons, TFPions
-        importOptions("$HLTCONFROOT/options/Hlt2TrackFitForTopo.py")
+        importOptions("$HLT2LINESROOT/options/Hlt2TrackFitForTopo.py")
         lclTFInputKaons = self.tfInPartFilter('TopoTFInputKaons', [ 'Hlt2TFKaonsForTopo'] )
         lclTFInputPions = self.tfInPartFilter('TopoTFInputPions', [ 'Hlt2TFPionsForTopo' ] )
 

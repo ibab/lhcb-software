@@ -59,7 +59,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
         decayDesc = ["phi(1020) -> K+ K-"]
 
         # Track fitting and Rich algs setup
-        importOptions("$HLTCONFROOT/options/Hlt2TrackFitForIncPhi.py")
+        importOptions("$HLT2LINESROOT/options/Hlt2TrackFitForIncPhi.py")
 
         ############################################################################
         #    Inclusive Phi selection, robust cuts

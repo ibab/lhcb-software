@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.114 2010-02-13 09:09:47 albrecht Exp $
+$Id: release.notes,v 1.115 2010-02-14 14:43:11 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,10 @@ $Id: release.notes,v 1.114 2010-02-13 09:09:47 albrecht Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+! 2010-02-14 - Gerhard Raven
+ - move files from $HLTCONFROOT/options to $HLT2LINESROOT/options
+   to make them 'more local'
+
 ! 2010-02-13 - Johannes Albrecht
  - Hlt2InclusiveDiMuonLines: add Drell-Yan lines, 
    name change: Unbiased.. --> DiMuonUnbiased

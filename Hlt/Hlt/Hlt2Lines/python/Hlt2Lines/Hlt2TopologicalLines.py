@@ -1,7 +1,7 @@
-## $Id: Hlt2TopologicalLines.py,v 1.27 2010-01-14 12:37:03 spradlin Exp $
+## $Id: Hlt2TopologicalLines.py,v 1.28 2010-02-14 14:43:11 graven Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-01-14 12:37:03 $'
-__version__ = '$Revision: 1.27 $'
+__date__    = '$Date: 2010-02-14 14:43:11 $'
+__version__ = '$Revision: 1.28 $'
 
 ###
 #
@@ -343,7 +343,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         tracks = Hlt2PID().hlt2Tracking()
 
 
-        importOptions("$HLTCONFROOT/options/Hlt2TrackFitForTopo.py")
+        importOptions("$HLT2LINESROOT/options/Hlt2TrackFitForTopo.py")
         tfRecoSeq = GaudiSequencer('SeqHlt2TFParticlesForTopo')
 
         incuts = """(PT> %(ComTFAllTrkPtLL)s *MeV)
@@ -429,7 +429,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ## Filter post-track fit input particles.
         ###################################################################
         #from Hlt2SharedParticles.TFBasicParticles import TFKaons, TFPions
-        importOptions("$HLTCONFROOT/options/Hlt2TrackFitForTopo.py")
+        importOptions("$HLT2LINESROOT/options/Hlt2TrackFitForTopo.py")
         lclTFInputKaons = self.tfInPartFilter('TopoTFInputKaons', [ 'Hlt2TFKaonsForTopo'] )
         lclTFInputPions = self.tfInPartFilter('TopoTFInputPions', [ 'Hlt2TFPionsForTopo' ] )
 
