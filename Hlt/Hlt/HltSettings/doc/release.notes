@@ -3,6 +3,9 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+! 2010-02-14 - Gerhard Raven
+ - remove B2DX lines from 2010 configurations, see https://savannah.cern.ch/bugs/?59641
+
 ! 2010-02-13 - Johannes Albrecht
  - follow name change in unbiased dimuon lines
  - remove duplicate dimuon lines
