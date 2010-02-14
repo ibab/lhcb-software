@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.416 2010-02-12 22:19:45 graven Exp $ 
+! $Id: release.notes,v 1.417 2010-02-14 14:49:35 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2010-02-14 - Gerhard Raven
+ - move options files from HltConf to Hlt2Lines to 'localize' them
+
 ! 2010-02-12 - Gerhard Raven
  - update names of beamgas, minibias and nobias 
  - adopt to merging of Hlt1MiniBias and Hlt1NoBias configurables

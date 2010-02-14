@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.46 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.47 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -98,8 +98,18 @@ class Hlt2Conf(LHCbConfigurableUser):
         """
         MC options for DaVinci 
         """
-        # @todo : make that configurable
-        importOptions( "$HLTCONFROOT/options/HltTrackAssociator.py" )
+        from Configurables import DataOnDemandSvc, TrackAssociator
+
+        DataOnDemandSvc().AlgMap.update(  { 'Link/Hlt/Track/Long': 'TrackAssociator/HltTrackAssociator'
+                                          , 'Link/Hlt/Track/Muons':   'TrackAssociator/HltMuonAssociator'
+                                          , 'Link/Hlt/Track/SeedTT':  'TrackAssociator/HltSeedAssociator'
+                                          , 'Link/Hlt/Track/TFForwardForTopo':  'TrackAssociator/HltTFAssociator'
+                                          } )
+
+        TrackAssociator("HltTrackAssociator").TracksInContainer = "Hlt/Track/Long" 
+        TrackAssociator("HltMuonAssociator").TracksInContainer = "Hlt/Track/Muons" 
+        TrackAssociator("HltSeedAssociator").TracksInContainer = "Hlt/Track/SeedTT"
+        TrackAssociator("HltTFAssociator").TracksInContainer = "Hlt/Track/TFForwardForTopo"
         from Configurables import CaloClusterMCTruth, ChargedPP2MC
         DataOnDemandSvc().AlgMap['/Event/Relations/Hlt/ProtoP/Charged' ] = ChargedPP2MC()
         DataOnDemandSvc().AlgMap['/Event/Relations/Hlt/Calo/Clusters' ] = CaloClusterMCTruth("CaloClusterMCTruthForHlt", Context = 'Hlt')
