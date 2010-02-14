@@ -9,9 +9,11 @@
 #include "TrackInterfaces/ITrackInterpolator.h"
 #include "OTDet/DeOTDetector.h"
 #include "OTDet/DeOTModule.h"
+#include "DetDesc/StaticArray.h"
 #include "OTDAQ/IOTRawBankDecoder.h"
 #include "AIDA/IProfile1D.h"
 #include "AIDA/IHistogram2D.h"
+#include "AIDA/IHistogram1D.h"
 
 #include <boost/lexical_cast.hpp>
 #include <boost/foreach.hpp>
@@ -25,6 +27,7 @@ namespace {
     AIDA::IProfile1D* m_effvsyfrac ;
     AIDA::IProfile1D* m_receffvsyfrac ;
     AIDA::IHistogram2D* m_clustersize ;
+    AIDA::IHistogram1D* m_deltatdc ;
     
     ModuleEfficiencyHistograms(GaudiHistoAlg& alg,  size_t moduleID ) {
       // construct a directory name
@@ -42,6 +45,8 @@ namespace {
       
       m_clustersize = alg.book2D( modulename + "clustersize", 
 				  "clustersize versus slope", -1,1,20,-0.5,10.5,11) ;
+      m_deltatdc = alg.book1D( modulename + "deltatdc", 
+			       "tdc_neighbour - tdc_central for 2-cell clusters",-128,128,256) ;
     }
   } ;
   
@@ -269,14 +274,17 @@ void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
     // monitor 'cluster size'. cluster size is zero if there is no hit in 'closest straw'.
     int closeststraw = int( strawpos[imono] + 0.5 ) ;
     if( 1<=closeststraw && closeststraw <=int(nstraws/2) ) {
-      size_t clustersize = 0 ;
+      StaticArray<LHCb::OTChannelID,128> clusterhits ;
+      LHCb::OTChannelID tmp ;
       for( int istraw = closeststraw; 
-	   istraw<=int(nstraws/2) && m_moduleHitMap[ uniquemodule ].hashit[ istraw + monooffset ] ;
-	   ++istraw) ++clustersize ;
+	   istraw<=int(nstraws/2) && (tmp = m_moduleHitMap[ uniquemodule ].hashit[ istraw + monooffset ]) ;
+	   ++istraw) clusterhits.push_back( tmp ) ;
       for( int istraw = closeststraw-1; 
-	   istraw>=1 && m_moduleHitMap[ uniquemodule ].hashit[ istraw + monooffset ] ;
-	   --istraw) ++clustersize ;
-      modulehist->m_clustersize->fill( localTx, clustersize ) ;
+	   istraw>=1 && (tmp = m_moduleHitMap[ uniquemodule ].hashit[ istraw + monooffset ]) ;
+	   --istraw) clusterhits.push_back( tmp ) ;
+      modulehist->m_clustersize->fill( localTx, clusterhits.size() ) ;
+      if( clusterhits.size() ==2 ) 
+	modulehist->m_deltatdc->fill( double(clusterhits[1].tdcTime()) - double(clusterhits[0].tdcTime()) ) ;
     }
   }
 }
