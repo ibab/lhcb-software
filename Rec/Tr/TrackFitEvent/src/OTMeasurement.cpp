@@ -1,4 +1,4 @@
-// $Id: OTMeasurement.cpp,v 1.21 2008-11-17 07:49:58 mneedham Exp $
+// $Id: OTMeasurement.cpp,v 1.22 2010-02-14 20:54:50 wouter Exp $
 // Include files
 
 // OTDet
@@ -27,7 +27,8 @@ OTMeasurement::OTMeasurement( const LHCb::OTLiteTime& time,
   : Measurement( Measurement::OT, LHCb::LHCbID(time.channel()), &module),
     m_ottime(time),
     m_deltaTimeOfFlight(0),
-    m_ambiguity(ambiguity)
+    m_ambiguity(ambiguity),
+    m_driftTimeStrategy(FitTime)
 {
   this->init();
 }
@@ -39,7 +40,8 @@ OTMeasurement::OTMeasurement( const LHCb::OTLiteTime& time,
   : Measurement( Measurement::OT, LHCb::LHCbID(time.channel()), &module),
     m_ottime(time),
     m_deltaTimeOfFlight(0),
-    m_ambiguity(ambiguity)
+    m_ambiguity(ambiguity),
+    m_driftTimeStrategy(FitTime)
 {
   this->init() ;
 }

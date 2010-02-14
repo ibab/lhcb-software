@@ -19,6 +19,14 @@
       <import name='OTDet/DeOTModule'/>
       <import name='StateVector' soft='FORWARDONLY'/>
 
+      <enum
+	desc = 'Enum for strategy of using drifttime'
+	name = 'DriftTimeStrategy'
+	value = 'DriftTimeIgnored,FitDistance,FitTime,PreFit'
+	access  = 'PUBLIC'
+        strTypConv = 'FALSE' 
+        />
+      
       <constructor
         desc = 'Constructor from an OTLiteTime'>
         <arg type='LHCb::OTLiteTime' name='id' const='TRUE' />
@@ -49,6 +57,11 @@
         type = 'int'
         name = 'ambiguity'
         desc = 'the ambiguity (+1/-1) of the measurement' />
+
+       <attribute
+        type = 'DriftTimeStrategy'
+        name = 'driftTimeStrategy'
+        desc = 'flag that tells how drifttime was used by projector' />
 
       <method
         name   = 'init'
