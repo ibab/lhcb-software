@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.h,v 1.17 2009-09-02 15:38:57 wouter Exp $
+// $Id: TrajOTProjector.h,v 1.18 2010-02-14 20:59:07 wouter Exp $
 #ifndef TRAJOTPROJECTOR_H 
 #define TRAJOTPROJECTOR_H 1
 
@@ -25,6 +25,8 @@ class ITrajPoca;
 class TrajOTProjector : public TrackProjector {
 
 public:
+  /// 
+  enum PrefitStrategy { NoPrefit, SkipDriftTime, TjeerdKetel } ;
 
   /// Project a state-vector onto a measurement
   StatusCode project( const LHCb::StateVector& state, const LHCb::Measurement& meas );
@@ -43,12 +45,12 @@ public:
 protected:
   StatusCode project( const LHCb::StateVector& state, const LHCb::OTMeasurement& meas );
   bool useDriftTime() const { return m_useDriftTime ; }
-  bool skipDriftTimeZeroAmbiguity() const { return m_skipDriftTimeZeroAmbiguity ; }
   bool fitDriftTime() const { return m_fitDriftTime ; }
 private:
   bool m_useDriftTime ;  ///< Use measured drift time 
   bool m_fitDriftTime ;  ///< Fit drift times residuals instead of 'distance' residuals
   bool m_updateAmbiguity ;
-  bool m_skipDriftTimeZeroAmbiguity ;
+  int m_prefitStrategy ;
+  double m_driftTimeTolerance ;
 };
 #endif // TRACKPROJECTORS_TRAJOTPROJECTOR_H

@@ -68,11 +68,14 @@ StatusCode TrajOTCosmicsProjector::project( const LHCb::StateVector& statevector
     double eventt0 = statevector.parameters()[4] ;
     // ugly const-cast to update the measurement's time-of-flight
     (const_cast< LHCb::OTMeasurement&>(meas)).setDeltaTimeOfFlight( tof + eventt0 ) ;
-
+    
     // need to test ambiguity before calling projector!-(
-    bool usedrifttime = useDriftTime() && (!skipDriftTimeZeroAmbiguity() || meas.ambiguity() != 0) ;
     // call the standard projector (which uses the time-of-flight)
     sc = TrajOTProjector::project( statevector, meas ) ;
+    bool usedrifttime = 
+      ( meas.driftTimeStrategy() == LHCb::OTMeasurement::FitTime ||
+	meas.driftTimeStrategy() == LHCb::OTMeasurement::FitDistance ) ;
+    
     // update the projection matrix with the derivative to event-t0.
     if( usedrifttime && m_fitEventT0 ) {
       if ( fitDriftTime() ) {
@@ -83,7 +86,7 @@ StatusCode TrajOTCosmicsProjector::project( const LHCb::StateVector& statevector
 	  // get the drift velocity. for the linearization it is best to
 	  // have something as closest to the truth as possible. that's not
 	  // the drift time. so, instead, we compute the inverse:
-	  double dtdr = meas.module().rtRelation().dtdr( fabs(m_doca) ) ;
+	  double dtdr = meas.module().rtRelation().dtdr( std::abs(m_doca) ) ;
 	  vdrift = 1/dtdr ;
 	}
 	// now we just need to get the sign right. I think that H is MINUS

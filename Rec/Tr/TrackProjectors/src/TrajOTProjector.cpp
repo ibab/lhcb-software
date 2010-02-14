@@ -48,35 +48,56 @@ StatusCode TrajOTProjector::project( const StateVector& statevector,
 StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector, 
                                      const OTMeasurement& meas )
 {
-  // a zero ambiguity may indicate that we should not use the drifttime
-  bool usedrifttime = useDriftTime() && (!skipDriftTimeZeroAmbiguity() || meas.ambiguity() != 0) ;
-
   // call the standard tracjectory-doca projector
   StatusCode sc = TrackProjector::project( statevector, meas ) ;
   
+  OTMeasurement& nonconstmeas = const_cast<OTMeasurement&>(meas) ;
+  nonconstmeas.setDriftTimeStrategy( LHCb::OTMeasurement::DriftTimeIgnored ) ;
+  m_errMeasure = meas.module().cellRadius()/std::sqrt(3.0) ;
+  
+  // Is this a 'prefit'?
+  bool prefit = m_prefitStrategy!=NoPrefit && meas.ambiguity() == 0 ;
+  
   // set the ambiguity "on the fly"
   if( m_updateAmbiguity )
-    (const_cast<OTMeasurement&>(meas)).setAmbiguity( m_doca > 0 ? 1 : -1 ) ;
+    nonconstmeas.setAmbiguity( m_doca > 0 ? 1 : -1 ) ;
   
-  if (usedrifttime) {
-    if(m_fitDriftTime) {
-      const OTDet::RtRelation& rtr = meas.module().rtRelation() ;
+  // check that the drifttime is not out of range
+  double measureddrifttime = meas.driftTime(m_sMeas) ;
+  const OTDet::RtRelation& rtr = meas.module().rtRelation() ;
+  bool gooddrifttime = useDriftTime() &&
+    measureddrifttime > -m_driftTimeTolerance && 
+    measureddrifttime < rtr.tmax() + m_driftTimeTolerance ;
+  
+  if ( gooddrifttime ) {
+    // a zero ambiguity may indicate that we should not use the drifttime
+    if(prefit) {
+      if(m_prefitStrategy==TjeerdKetel) {
+      nonconstmeas.setDriftTimeStrategy( LHCb::OTMeasurement::PreFit ) ;
+      // This is the implementation of a proprosal by Tjeerd: assign
+      // error based on the driftdistance
+      OTDet::RadiusWithError radiusWithError = meas.driftRadiusWithError( m_sMeas  ) ;
+      m_errMeasure = std::sqrt( radiusWithError.val * radiusWithError.val / 3.0 +
+				radiusWithError.err * radiusWithError.err ) ;
+      }
+    } else if(m_fitDriftTime) {
       double radius = std::min( rtr.rmax(), std::abs(m_doca) ) ;
-      OTDet::DriftTimeWithError time = rtr.drifttimeWithError( radius ) ;
-      double dtdr                    = rtr.dtdr( radius ) ;
-      m_residual   = meas.driftTime(m_sMeas) - time.val ;
-      m_errMeasure = time.err ;
+      OTDet::DriftTimeWithError predictedtime = rtr.drifttimeWithError( radius ) ;
+      double dtdr                             = rtr.dtdr( radius ) ;
+      m_residual   = measureddrifttime - predictedtime.val ;
+      m_errMeasure = predictedtime.err ;
       m_H          *= ( meas.ambiguity() * dtdr ) ;
+      nonconstmeas.setDriftTimeStrategy( LHCb::OTMeasurement::FitTime ) ;
     } else {
       OTDet::RadiusWithError radiusWithError(meas.driftRadiusWithError(m_sMeas)) ;
       m_residual = -m_doca + meas.ambiguity() * radiusWithError.val ;
       m_errMeasure = radiusWithError.err ;
-     }
-  } else {
-    m_errMeasure = meas.module().cellRadius()/std::sqrt(3.0) ;
-  }
-  m_errResidual = m_errMeasure ;
+      nonconstmeas.setDriftTimeStrategy( LHCb::OTMeasurement::FitDistance ) ;
+    }
+  } 
   
+  m_errResidual = m_errMeasure ;
+
   return sc;
 }
 
@@ -88,7 +109,7 @@ StatusCode TrajOTProjector::initialize()
   StatusCode sc = TrackProjector::initialize();
   info() << "Use drifttime           = " << m_useDriftTime << endreq ;
   info() << "Fit drifttime residuals = " << m_fitDriftTime << endreq ;
-  info() << "SkipDriftTimeZeroAmbiguity= " << m_skipDriftTimeZeroAmbiguity << endreq ;
+  info() << "Prefit strategy = " << m_prefitStrategy << endreq ;
   return sc;
 }
 
@@ -105,7 +126,8 @@ TrajOTProjector::TrajOTProjector( const std::string& type,
   declareProperty( "UseDrift", m_useDriftTime = true );
   declareProperty( "FitDriftTime", m_fitDriftTime = false );
   declareProperty( "UpdateAmbiguity", m_updateAmbiguity = true ) ;
-  declareProperty( "SkipDriftTimeZeroAmbiguity", m_skipDriftTimeZeroAmbiguity = true );
+  declareProperty( "PrefitStrategy", m_prefitStrategy = TjeerdKetel ) ;
+  declareProperty( "DriftTimeTolerance", m_driftTimeTolerance = 6 ) ;
 }
 
 //-----------------------------------------------------------------------------
