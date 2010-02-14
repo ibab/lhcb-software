@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.115 2010-02-14 14:43:11 graven Exp $
+$Id: release.notes,v 1.116 2010-02-14 21:06:22 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -11,6 +11,8 @@ $Id: release.notes,v 1.115 2010-02-14 14:43:11 graven Exp $
 ! 2010-02-14 - Gerhard Raven
  - move files from $HLTCONFROOT/options to $HLT2LINESROOT/options
    to make them 'more local'
+ - switch off MuonPID in Hlt2TrackFitForTopo.py -- currently it just 
+   produces a warning...
 
 ! 2010-02-13 - Johannes Albrecht
  - Hlt2InclusiveDiMuonLines: add Drell-Yan lines, 

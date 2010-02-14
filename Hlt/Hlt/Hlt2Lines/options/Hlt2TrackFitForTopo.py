@@ -25,24 +25,6 @@ SeqHlt2TFChargedForTopo = GaudiSequencer('SeqHlt2TFChargedForTopo')
 SeqHlt2TFParticlesForTopo.Members += [ SeqHlt2TFChargedForTopo ]
 
 #---------------------------------------------------------------------
-# @todo TEMPORARY kill huge events
-#
-# This shouldn't need to be done in this seqence.  It is done in the main
-# Hlt2 sequence.
-#
-# If it does need to be included in the sequence, it doesn't need to be
-# configured---it is already configured in HltConf/Hlt2Particles.opts
-#---------------------------------------------------------------------
-#from Configurables import NumberOfTracksFilter
-#SeqHlt2TFChargedForTopo.Members += [ NumberOfTracksFilter('NumberOfTracksFilter') ]
-
-#---------------------------------------------------------------------
-# MC truth associated tracks
-#---------------------------------------------------------------------
-#SeqTrueSignalTracks = GaudiSequencer('SeqTrueSignalTracks')
-#SeqHlt2TFChargedForTopo.Members += [ SeqTrueSignalTracks ]     # debug
-
-#---------------------------------------------------------------------
 # TF tracks rather than hacking
 #
 # Modified so that the refit does not modify the existing tracks.
@@ -50,14 +32,13 @@ SeqHlt2TFParticlesForTopo.Members += [ SeqHlt2TFChargedForTopo ]
 from Configurables import TrackEventFitter, TrackMasterFitter
 from Configurables import TrackKalmanFilter, TrackMasterExtrapolator
 Hlt2TFTrackFitForTopo = TrackEventFitter('Hlt2TFTrackFitForTopo')
-SeqHlt2TFChargedForTopo.Members += [ Hlt2TFTrackFitForTopo ]
-
 Hlt2TFTrackFitForTopo.TracksInContainer  = "Hlt/Track/Long"
 Hlt2TFTrackFitForTopo.TracksOutContainer = "Hlt/Track/TFForwardForTopo"
-
 Hlt2TFTrackFitForTopo.addTool(TrackMasterFitter, name = 'Fitter')
 from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
 ConfiguredFastFitter( getattr(Hlt2TFTrackFitForTopo,'Fitter'))
+
+SeqHlt2TFChargedForTopo.Members += [ Hlt2TFTrackFitForTopo ]
 
 #---------------------------------------------------------------------
 # Calo Reco & PIDs --------
@@ -105,22 +86,11 @@ ConfiguredFastFitter( getattr(Hlt2TFTrackFitForTopo,'Fitter'))
 #---------------------------------------------------------------------
 from Configurables import ChargedProtoPAlg, ChargedProtoCombineDLLsAlg, TrackSelector
 Hlt2TFChargedForTopoProtoPAlg = ChargedProtoPAlg('Hlt2TFChargedForTopoProtoPAlg')
-Hlt2TFChargedForTopoProtoCombDLL = ChargedProtoCombineDLLsAlg('Hlt2TFChargedForTopoProtoCombDLL')
-SeqHlt2TFParticlesForTopo.Members += [ Hlt2TFChargedForTopoProtoPAlg
-                                   , Hlt2TFChargedForTopoProtoCombDLL ]
-
 Hlt2TFChargedForTopoProtoPAlg.InputTrackLocation = "Hlt/Track/TFForwardForTopo"
 Hlt2TFChargedForTopoProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/TFChargedForTopo"
 # Clones will not be accepte
 Hlt2TFChargedForTopoProtoPAlg.addTool(TrackSelector, name = 'TrackSelector')
 Hlt2TFChargedForTopoProtoPAlg.TrackSelector.AcceptClones = False
-
-Hlt2TFChargedForTopoProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/TFChargedForTopo"
-
-
-#---------------------------------------------------------------------
-# ProtoParticles
-#---------------------------------------------------------------------
 #Hlt2TFChargedForTopoProtoPAlg.InputRichPIDLocation = "Rec/Rich/HltPIDs"
 Hlt2TFChargedForTopoProtoPAlg.InputMuonPIDLocation = "Hlt/Muon/MuonPID"
 #/ Calo PID
@@ -131,8 +101,11 @@ Hlt2TFChargedForTopoProtoPAlg.UseCaloHcalPID = 1
 Hlt2TFChargedForTopoProtoPAlg.UseCaloBremPID = 1
 #Hlt2TFChargedForTopoProtoPAlg.UseRichPID = 0 # Protos will NOT have any RICH information - HltRichPIDsTFKaonsForTopo will not work
 Hlt2TFChargedForTopoProtoPAlg.UseRichPID = 1  # Use this to add RICH info to the HLT protos, needed for HltRichPIDsTFKaonsForTopo
-Hlt2TFChargedForTopoProtoPAlg.UseMuonPID = 1
+Hlt2TFChargedForTopoProtoPAlg.UseMuonPID = 0
 Hlt2TFChargedForTopoProtoPAlg.UseVeloPID = 0
+
+Hlt2TFChargedForTopoProtoCombDLL = ChargedProtoCombineDLLsAlg('Hlt2TFChargedForTopoProtoCombDLL')
+Hlt2TFChargedForTopoProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/TFChargedForTopo"
 
 
 #/---------------------------------------------------------------------
@@ -142,12 +115,10 @@ from Configurables import NoPIDsParticleMaker
 from Configurables import CombinedParticleMaker, TrackSelector
 from Configurables import ProtoParticleCALOFilter, ProtoParticleMUONFilter
 Hlt2TFPionsForTopo = NoPIDsParticleMaker('Hlt2TFPionsForTopo')
-Hlt2TFKaonsForTopo = NoPIDsParticleMaker('Hlt2TFKaonsForTopo')
-SeqHlt2TFParticlesForTopo.Members += [ Hlt2TFPionsForTopo, Hlt2TFKaonsForTopo ]
-
 Hlt2TFPionsForTopo.Input =  "Hlt/ProtoP/TFChargedForTopo" 
 Hlt2TFPionsForTopo.Particle = "pion"
 
+Hlt2TFKaonsForTopo = NoPIDsParticleMaker('Hlt2TFKaonsForTopo')
 Hlt2TFKaonsForTopo.Input =  "Hlt/ProtoP/TFChargedForTopo" 
 Hlt2TFKaonsForTopo.Particle = "kaon"
 
@@ -166,12 +137,16 @@ Hlt2TFKaonsForTopo.Particle = "kaon"
 # Kaons using RICH HLT reco results
 #---------------------------------------------------------------------
 HltRichPIDsTFKaonsForTopo = CombinedParticleMaker('HltRichPIDsTFKaonsForTopo')
-SeqHlt2TFParticlesForTopo.Members += [ HltRichPIDsTFKaonsForTopo ]
-
 HltRichPIDsTFKaonsForTopo.Input = "Hlt/ProtoP/TFChargedForTopo"
 HltRichPIDsTFKaonsForTopo.Particle = "kaon"
 HltRichPIDsTFKaonsForTopo.addTool(TrackSelector())
 HltRichPIDsTFKaonsForTopo.TrackSelector.TrackTypes = ["Long"]
-HltRichPIDsTFKaonsForTopo.addTool(ProtoParticleCALOFilter('Kaon'))
+HltRichPIDsTFKaonsForTopo.addTool(ProtoParticleCALOFilter, name = 'Kaon')
 HltRichPIDsTFKaonsForTopo.Kaon.Selection = ["RequiresDet='RICH' CombDLL(k-pi)>'-5.0'"]
 
+SeqHlt2TFParticlesForTopo.Members += [ Hlt2TFChargedForTopoProtoPAlg
+                                     , Hlt2TFChargedForTopoProtoCombDLL
+                                     , Hlt2TFPionsForTopo
+                                     , Hlt2TFKaonsForTopo
+                                     , HltRichPIDsTFKaonsForTopo 
+                                     ]
