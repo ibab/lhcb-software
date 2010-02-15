@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.21 2010-02-14 10:22:41 graven Exp $
+# $Id: HltReco.py,v 1.22 2010-02-15 16:00:30 graven Exp $
 # =============================================================================
 ## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -247,7 +247,8 @@ from Configurables import DecodeVeloRawBuffer
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 PV2D     = bindMembers( None, [ DecodeVELO, patVeloR, patPV2D, preparePV2D ] )
 PV3D     = bindMembers( None, [ DecodeVELO, patVeloR, recoVelo, recoPV3D ] )
-RZVelo   = bindMembers( None, [ DecodeVELO, patVeloR, prepareRZVelo ] )
+MinimalRZVelo   = bindMembers( None, [DecodeVELO, patVeloR ] )
+RZVelo   = bindMembers( None, [ MinimalRZVelo, prepareRZVelo ] )
 Velo     = bindMembers( None, [                  RZVelo , reco1Velo ] )
 VeloOpen = bindMembers( None, [ DecodeVeloRawBuffer(), recoVeloOpen, prepareVeloOpen ] )
 PV3DOpen = bindMembers( None, [ DecodeVeloRawBuffer(), recoVeloOpen, prepareVeloOpen, recoPV3DOpen, preparePV3DOpen ] )

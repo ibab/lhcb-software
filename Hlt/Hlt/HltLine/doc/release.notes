@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.78 2010-02-14 10:22:41 graven Exp $
+! $Id: release.notes,v 1.79 2010-02-15 16:00:30 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+! 2010-02-15 - Gerhard Raven
+ - make MinimalVeloRZ available
+
 ! 2010-02-14 - Gerhard Raven
  - some cleanup of reco sequences
 
