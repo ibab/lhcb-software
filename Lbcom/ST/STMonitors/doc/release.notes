@@ -4,6 +4,10 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2010-02-15 - Mark Tobin
+ - Fill MPV histogram with MPV rather than (cut and paste) 1.
+ - Fix axis labelling.
+
 ! 2010-02-10 - Mark Tobin
  - Changes to STClusterMonitor:
   - Added some counters to STClusterMonitor.

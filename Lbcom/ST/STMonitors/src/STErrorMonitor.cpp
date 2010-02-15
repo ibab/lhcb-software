@@ -1,4 +1,4 @@
-// $Id: STErrorMonitor.cpp,v 1.14 2010-02-12 14:55:33 mtobin Exp $
+// $Id: STErrorMonitor.cpp,v 1.15 2010-02-15 12:35:07 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -106,15 +106,15 @@ void STErrorMonitor::labelHistoErrorTypes( AIDA::IHistogram2D* histo ) {
     TAxis* axis = h->GetYaxis() ;     
     if( 0 != axis ) {       
       axis->SetBinLabel( 1, "None" );
-      axis->SetBinLabel( 2, "WrongPCN" );
-      axis->SetBinLabel( 3, "PseudoHeader" );
-      axis->SetBinLabel( 4, "OptLinkNoEvent" );
-      axis->SetBinLabel( 5, "SyncEvtSize" );
+      axis->SetBinLabel( 2, "CorruptedBank" );
+      axis->SetBinLabel( 3, "OptLinkDisabled" );
+      axis->SetBinLabel( 4, "TlkLinkLoss" );
+      axis->SetBinLabel( 5, "OptLinkNoClock" );
       axis->SetBinLabel( 6, "SyncRAMFull" );
-      axis->SetBinLabel( 7, "OptLinkNoClock" );
-      axis->SetBinLabel( 8, "TlkLinkLoss" );
-      axis->SetBinLabel( 9, "OptLinkDisabled" );
-      axis->SetBinLabel(10, "CorruptedBank" );
+      axis->SetBinLabel( 7, "SyncEvtSize" );
+      axis->SetBinLabel( 8, "OptLinkNoEvent" );
+      axis->SetBinLabel( 9, "PseudoHeader" );
+      axis->SetBinLabel(10, "WrongPCN" );
     }       
   }
 }

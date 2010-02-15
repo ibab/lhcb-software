@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.20 2010-02-12 14:55:33 mtobin Exp $
+// $Id: STClusterMonitor.cpp,v 1.21 2010-02-15 12:35:07 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -256,7 +256,7 @@ void ST::STClusterMonitor::fillMPVMap() {
       ST::ITDetectorPlot hitMap("map", "map");
       ST::ITDetectorPlot::Bins bins = hitMap.toBins((*Sectors)->elementID());
       // Hack to make real x-y distribution plot (not occupancy)
-      m_2d_sectorMPVs->fill(bins.xBin, bins.yBin, 1.);
+      m_2d_sectorMPVs->fill(bins.xBin, bins.yBin, mpv);
     }
     if(m_debug) debug() << (*Sectors)->elementID()
                         << " median=" << boost::accumulators::median((*iMed).second) 
