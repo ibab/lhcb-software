@@ -56,7 +56,7 @@ void MonProfile::load2(boost::archive::binary_iarchive  & ar){
   ar & sTitle;
   ar & bBinLabelX;
 
-  msg <<MSG::DEBUG<<"creating MsgStream" << endreq;
+ // msg <<MSG::DEBUG<<"creating MsgStream" << endreq;
   
   if (binSum==0) binSum = new double[(nbinsx+2)];
 

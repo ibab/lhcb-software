@@ -17,11 +17,13 @@ DimInfoServers::~DimInfoServers() {
 }
 
 void DimInfoServers::infoHandler() {
-
+    MsgStream msg(m_processMgr->msgSvc(), name());
+ //  msg << MSG::INFO << "in the DimInfoServers infohandler " << endreq;    
   int tmpStringSize = -1;
   while ( (tmpStringSize = getSize()) <=0 ){usleep(10000);}
 
   std::string value = getString();
+   
 
   m_processMgr->updateServerMap(value, m_serverMap);
 
@@ -64,7 +66,7 @@ void DimInfoServers::print() {
  for (m_it = m_serverMap.begin(); m_it != m_serverMap.end(); ++m_it){
    std::string status = "inactive" ;
    if (m_it->second) status = "active" ;
-   msg << MSG::DEBUG << "The server " << m_it->first << " is " << status << endreq;    
+   msg << MSG::INFO << "The server " << m_it->first << " is " << status << endreq;    
   }
 }
 

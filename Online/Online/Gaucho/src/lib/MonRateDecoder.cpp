@@ -142,7 +142,7 @@ void MonRateDecoder::update(MonRate *monRate) {
                                                                  "/RunNumber"; 
 
   if (!RunNumberexists) {
-    msg << MSG::INFO << "Making runnumber service: "<< RunNumberSvcName.c_str() << endreq;
+    msg << MSG::DEBUG << "Making runnumber service: "<< RunNumberSvcName.c_str() << endreq;
     m_dimSvcRunNumber = new DimService(RunNumberSvcName.c_str(),m_newRunNumber);
     RunNumberexists=true;
   } 
@@ -176,8 +176,12 @@ void MonRateDecoder::update(MonRate *monRate) {
 
   double realDeltaT = (m_newCycleNumber - m_oldCycleNumber)*m_newDesiredDeltaT;
   realDeltaT += (m_newOffsetGpsTimeLastEvInCycle - m_oldOffsetGpsTimeLastEvInCycle);
-
-  msg << MSG::DEBUG << "realDeltaT = " << realDeltaT <<endreq;
+  double tmp = m_newCycleNumber - m_oldCycleNumber;
+  double tmp1 = m_newOffsetGpsTimeLastEvInCycle - m_oldOffsetGpsTimeLastEvInCycle;
+  
+  msg << MSG::DEBUG << "m_newCycleNumber - m_oldCycleNumber = " << tmp1 <<endreq;  
+  msg << MSG::DEBUG << "m_newOffsetGpsTimeLastEvInCycle - m_oldOffsetGpsTimeLastEvInCycle = " << tmp <<endreq;
+  msg << MSG::DEBUG << "realDeltaT = " << realDeltaT << " m_newDesiredDeltaT = " << m_newDesiredDeltaT << endreq;
 
   msg << MSG::DEBUG << "m_oldNumCounters = " << m_oldNumCounters <<endreq;
   msg << MSG::DEBUG << "m_newNumCounters = " << m_newNumCounters <<endreq;
@@ -260,6 +264,47 @@ void MonRateDecoder::update(MonRate *monRate) {
 
 std::string MonRateDecoder::makeServiceName(std::string nameHeader, int counterId, std::string comment)
 {
+  bool finished=false;
+  while (!finished) {
+     std::size_t starpos = comment.find("*");
+     if (starpos != std::string::npos) {
+        comment=comment.substr(0,starpos)+"star"+comment.substr(starpos+1);
+     }  
+     else finished=true;
+  }
+  finished=false;
+  while (!finished) {    
+     std::size_t qmpos = comment.find("?");
+     if (qmpos != std::string::npos) {
+        comment=comment.substr(0,qmpos)+"qm"+comment.substr(qmpos+1);
+     } 
+     else finished=true;
+  }
+  finished=false;
+  while (!finished) {
+     std::size_t cmpos = comment.find(",");
+     if (cmpos != std::string::npos) {
+        comment=comment.substr(0,cmpos)+"cm"+comment.substr(cmpos+1);
+     } 
+     else finished=true;  
+  }
+  finished=false;
+  while (!finished) {
+     std::size_t orpos = comment.find("|");
+     if (orpos != std::string::npos) {
+        comment=comment.substr(0,orpos)+"o"+comment.substr(orpos+1);
+     } 
+     else finished=true;  
+  }
+  finished=false;
+  while (!finished) {     
+     std::size_t exclpos = comment.find("!");
+     if (exclpos != std::string::npos) {
+        comment=comment.substr(0,exclpos)+"excl"+comment.substr(exclpos+1);
+     }  
+     else finished=true;
+  }    
+    
   char * c = new char[comment.length()+1];
   strcpy(c, comment.c_str());
 
