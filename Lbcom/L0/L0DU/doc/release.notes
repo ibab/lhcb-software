@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.192 2010-02-12 23:40:51 odescham Exp $
+! $Id: release.notes,v 1.193 2010-02-15 15:18:50 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================== L0DU v10r2 2010-02-15 =========================
 ! 2010-02-12 - Julien Cogan
  - Add new module (L0Algs) to allow to access the various algorithms used 
    by L0Conf with their proper name
@@ -10,12 +11,14 @@
 
 ! 2010-02-10 Olivier Deschamps
   - L0ConfigProvider  : 
-    -  hardware-like automatic ordering of ElementaryCondition indices (can be disabled via options for backward-compatibility)
-    -  implement the condition reportSummary mask (from TCK configuration)
-    -  check each configuration against hardware limitations (short notice by default - detailed output can be activated by options)
-    -  use default naming for  predefined-data as defined in L0Event/L0DUBase.h (also in L0DUEmulatorTool and L0DUFromRawTool)
-    -  Detailed check for all configurations can be activated via context() = "CHECK"
-
+    - hardware-like automatic ordering of ElementaryCondition indices
+      (can be disabled via options for backward-compatibility)
+    - implement the condition reportSummary mask (from TCK configuration)
+    - check each configuration against hardware limitations
+      (short notice by default - detailed output can be activated by options)
+    - use default naming for  predefined-data as defined in L0Event/L0DUBase.h
+      (also in L0DUEmulatorTool and L0DUFromRawTool)
+    - Detailed check for all configurations can be activated via context() = "CHECK"
 
   - L0DUElementaryData.xml : add new data type in enum (specific for 'RamBCID' data)
   - L0DUEmulatorTool : 
@@ -28,7 +31,6 @@
     - use L0TCK v3*  (backward-compatible ordering of condition for already simulated data)
 
   Comes with L0Event and L0TCK v3* changes.
-
 
 !========================== L0DU v10r1 2010-02-03 =========================
 ! 2010-02-02 - Olivier Deschamps
