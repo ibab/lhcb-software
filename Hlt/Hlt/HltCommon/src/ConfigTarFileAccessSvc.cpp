@@ -16,8 +16,10 @@
 #include <pwd.h>
 #include <grp.h>
 #include <sys/stat.h>
+#else
+  typedef int uid_t;
+  typedef int gid_t;
 #endif
-
 
 using namespace std;
 
