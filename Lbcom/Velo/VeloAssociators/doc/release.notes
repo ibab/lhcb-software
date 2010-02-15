@@ -2,6 +2,10 @@
 ! Responsible : Chris Parkes
 !------------------------------------------------------------------------
 
+!==================== VeloAssociators v2r4 2010-02-15 ===================
+! 2010-02-15 - Marco Cattaneo
+ - Remove obsolete file VeloAssociators_dll.cpp
+
 ! 2010-02-04 - David Hutchcroft
  - Better associate clusters to MCParticles with MCHits from delta rays
  - Prevent the creation of debug messages if the message level is too high
