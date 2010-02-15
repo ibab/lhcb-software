@@ -586,11 +586,26 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
 
     if release :
 # set symlinks in PACK to PACK_v
-        os.chdir(os.path.join(rel_dir, PACK))
-        if os.path.islink('doc') : os.remove('doc')
-        if os.path.islink('requirements') : os.remove('requirements')
-        os.symlink(os.path.join(PACK + '_' + pversion, 'doc'), 'doc')
-        os.symlink(os.path.join(PACK + '_' + pversion, 'requirements'), 'requirements')
+        try :
+            os.chdir(os.path.join(rel_dir, PACK))
+            if os.path.islink('doc') : 
+                os.remove('doc')
+            os.symlink(os.path.join(PACK + '_' + pversion, 'doc'), 'doc')
+            if os.path.islink('requirements') : 
+                os.remove('requirements')
+            os.symlink(os.path.join(PACK + '_' + pversion, 'requirements'), 'requirements')
+        except OSError :
+            log.warning("Failed to create the top links in %s" % os.path.join(rel_dir, PACK))
+            rw_rel_dir = rel_dir.replace(os.sep+"cern.ch"+os.sep, os.sep+".cern.ch"+os.sep)
+            os.chdir(os.path.join(rw_rel_dir, PACK))
+            log.warning("Trying to create the top links in %s" % os.path.join(rw_rel_dir, PACK))
+            if os.path.islink('doc') : 
+                os.remove('doc')
+            os.symlink(os.path.join(PACK + '_' + pversion, 'doc'), 'doc')
+            if os.path.islink('requirements') : 
+                os.remove('requirements')
+            os.symlink(os.path.join(PACK + '_' + pversion, 'requirements'), 'requirements')
+            
 
 #-----------------------------------------------------------------------------------
 if __name__ == "__main__":
