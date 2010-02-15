@@ -5,7 +5,7 @@
  *  Header file for RICH utility class : Rich::HistogramID
  *
  *  CVS Log :-
- *  $Id: RichHistoID.h,v 1.9 2010-02-13 13:20:30 jonrob Exp $
+ *  $Id: RichHistoID.h,v 1.10 2010-02-15 15:58:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   27/10/2005
@@ -53,7 +53,7 @@ namespace Rich
   {
 
   public:
-    
+
     /** Constructor with RICH specific information
      *  @param id    Histogram string ID
      *  @param det   The RICH detector
@@ -67,6 +67,24 @@ namespace Rich
                  const Rich::RadiatorType   rad = Rich::InvalidRadiator,
                  const Rich::ParticleIDType pid = Rich::Unknown )
       : m_id(id), m_data(det,side,rad,pid)
+    { }
+
+    /** Constructor with RICH specific information
+     *  @param id    Histogram string ID
+     *  @param det   The RICH detector
+     *  @param side  The side of the RICH detector
+     *  @param rad   The radiator medium
+     *  @param pid   The mass hypothesis
+     */
+    HistogramID( const std::string &         id,
+                 const Rich::Side          side,
+                 const Rich::RadiatorType   rad = Rich::InvalidRadiator,
+                 const Rich::ParticleIDType pid = Rich::Unknown )
+      : m_id(id), m_data( ( rad == Rich::Rich2Gas ? Rich::Rich2 :
+                            rad == Rich::Rich1Gas ? Rich::Rich1 :
+                            rad == Rich::Aerogel  ? Rich::Rich1 :
+                            Rich::InvalidDetector ),
+                          side, rad, pid )
     { }
     
     /** Constructor with RICH specific information
@@ -117,15 +135,15 @@ namespace Rich
   public:
 
     /// implicit conversion to an std::string
-    inline operator std::string() const
-    {
-      return this->fullid();
+    inline operator std::string() const 
+    { 
+      return fullid(); 
     }
 
     /// Implicit conversion to a GaudiAlg::HistoID
-    inline operator GaudiAlg::HistoID() const
+    inline operator GaudiAlg::HistoID() const 
     {
-      return GaudiAlg::HistoID(this->fullid());
+      return GaudiAlg::HistoID(fullid()); 
     }
 
   private:
