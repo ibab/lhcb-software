@@ -1,8 +1,9 @@
-!  $Id: release.notes,v 1.94 2010-02-09 14:45:56 jucogan Exp $
+!  $Id: release.notes,v 1.95 2010-02-15 15:20:21 cattanem Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !---------------------------------------------------------------------------
 
+!========================= L0Muon v9r0 2010-02-15 ==========================
 ! 2010-02-09 - Julien Cogan
  - fix bug when filling L0MuonError for L0MuonCtrlCand Bank
 
