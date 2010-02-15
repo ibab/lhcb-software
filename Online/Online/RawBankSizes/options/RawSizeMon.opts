@@ -18,3 +18,5 @@ EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xff
 ApplicationMgr.TopAlg                = { "UpdateAndReset","LHCb::RawBankSizes/RawBankSizes" };
 RawBankSizes.number_ofRMS            = 10;
 RawBankSizes.Bins                    = 100;
+#include "/group/online/dataflow/templates/options/RawSize_Detectors.opts"
+#include "/group/online/dataflow/templates/options/RawSize_HistParams.opts"

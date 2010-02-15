@@ -1,0 +1,16 @@
+RawBankSizes.D_L0     = (100,4000.0,8000.0,0,-1,"L0");
+RawBankSizes.D_PRS    = (100,0.0,2000.0,0,-1,"PRS");
+RawBankSizes.D_ECal   = (100,4000.0,8000.0,0,-1,"ECal");
+RawBankSizes.D_HCal   = (100,0.0,4000.0,0,-1,"HCal");
+RawBankSizes.D_Velo   = (100,300000.0,400000.0,0,-1,"Velo");
+RawBankSizes.D_RICH   = (100,0.0,12000.0,0,-1,"RICH");
+RawBankSizes.D_IT     = (100,0.0,20000.0,0,-1,"IT");
+RawBankSizes.D_TT     = (100,0.0,4000.0,0,-1,"TT");
+RawBankSizes.D_OT     = (100,0.0,20000.0,0,-1,"OT");
+RawBankSizes.D_Muon   = (100,0.0,20000.0,0,-1,"Muon");
+RawBankSizes.D_HLT    = (100,0.0,4000.0,0,-1,"HLT");
+RawBankSizes.D_Online = (100,0.0,20000.0,0,-1,"Online");
+RawBankSizes.D_LHCb   = (100,0.0,20000.0,0,-1,"LHCb");
+RawBankSizes.D_Unknown= (100,0.0,20000.0,0,-1,"Unknown");
+RawBankSizes.D_TDET= (100,0.0,20000.0,0,-1,"TDET");
+
