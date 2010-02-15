@@ -162,11 +162,11 @@ StatusCode SaverSvc::initialize() {
     std::string serviceName="";
     if (utgidParts[1]=="MONA0901") {
        processMgr->setFarm("MF");
-       serviceName = m_tmpPart+"_MONA0901_RecAdder_1/RecBrunel/MonitorSvc/monRate/RunNumber";
+       serviceName = m_tmpPart+"_MONA0901_RecAdder_0/RecBrunel/MonitorSvc/monRate/RunNumber";
     }
     else {
        processMgr->setFarm("EFF");
-       serviceName = m_tmpPart+"_Adder_1/GauchoJob/MonitorSvc/monRate/RunNumber"; 
+       serviceName = m_tmpPart+"_Adder_0/GauchoJob/MonitorSvc/monRate/RunNumber"; 
     }
     
     m_runNbSvc = new DimInfoRunNb(serviceName.c_str(),utgidParts[0]);
@@ -273,13 +273,13 @@ StatusCode SaverSvc::finalize() {
   MsgStream msg(msgSvc(), name());
   m_enablePostEvents = false;
   m_finalizing = true;
-  msg << MSG::INFO<< "Save historgams on finalized..... " << endmsg;
+  msg << MSG::INFO<< "Saving histograms on finalize..... " << endmsg;
   // No longer accept incidents!
-  if ( m_incidentSvc ) {
-    m_incidentSvc->removeListener(this);
-    m_incidentSvc->release();
-    m_incidentSvc = 0;
-  }
+ // if ( m_incidentSvc ) {
+ //   m_incidentSvc->removeListener(this);
+ //   m_incidentSvc->release();
+ //   m_incidentSvc = 0;
+//  }
 
   std::vector<ProcessMgr *>::iterator it;
   int i=0;
@@ -291,11 +291,11 @@ StatusCode SaverSvc::finalize() {
   }
   m_processMgr.clear();
  
-  if ( m_pGauchoMonitorSvc ) {
-    m_pGauchoMonitorSvc->undeclareAll(this);
-    m_pGauchoMonitorSvc->release();
-    m_pGauchoMonitorSvc = 0;
-  }
+ // if ( m_pGauchoMonitorSvc ) {
+ //   m_pGauchoMonitorSvc->undeclareAll(this);
+ //   m_pGauchoMonitorSvc->release();
+//    m_pGauchoMonitorSvc = 0;
+//  }
   if (m_runNbSvc) { delete m_runNbSvc; }
   return Service::finalize();
 }
@@ -314,18 +314,20 @@ StatusCode SaverSvc::save(ProcessMgr* processMgr) {
     if (!m_finalizing) processMgr->setrunNumber(m_runNbSvc);
   
     //when the runnumber changes we should stop and restart the dim timer
-    if (processMgr->getrunNumber(false)!=0) {
-       processMgr->dimTimerProcess()->stop();
-       processMgr->write(); 
-       //set the runnumber of the next run
-       if (!m_finalizing) {
-          m_runNb=processMgr->getrunNumber(true);        
-          processMgr->dimTimerProcess()->start(m_refreshTime);
-       }	  
-    }   
-    else processMgr->write();     
-    msg << MSG::DEBUG << "Finished saving histograms in file "<< *fileName << endreq;
-  
+    //only save if the runnumber !=0
+    if (m_runNb!=0) {
+       if (processMgr->getrunNumber(false)!=0) {
+          processMgr->dimTimerProcess()->stop();
+          processMgr->write(); 
+          //set the runnumber of the next run
+          if (!m_finalizing) {
+             m_runNb=processMgr->getrunNumber(true);        
+             processMgr->dimTimerProcess()->start(m_refreshTime);
+          }	  
+       }   
+       else processMgr->write();     
+       msg << MSG::DEBUG << "Finished saving histograms in file "<< *fileName << endreq;
+    } 
   return StatusCode::SUCCESS;
 }
 

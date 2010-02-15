@@ -78,7 +78,17 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   m_timerCycle = m_desiredDeltaTCycle - 1;
   m_firstExecute = true;
   m_dimSvcSaveSetLoc = 0;
-  
+  m_cycleNumber=0;
+  m_runNumber=0;
+  gpstime=0;
+  m_firstCycleNumber=0;
+  m_timeStart=0;
+  m_timeFirstEvInRun=0;
+  m_offsetTimeFirstEvInRun=0;
+  m_timeLastEvInCycle=0;
+  m_offsetTimeLastEvInCycle=0;
+  m_gpsTimeLastEvInCycle=0;
+  m_offsetGpsTimeLastEvInCycle=0;
 }
 
 
@@ -297,7 +307,6 @@ std::pair<std::pair<int, ulonglong>, bool> UpdateAndReset::currentRunNumber() {
 //------------------------------------------------------------------------------
   MsgStream msg( msgSvc(), name() );
   int runNumber=0;
-  gpstime = GauchoTimer::currentTime();
   bool changed = false;
 
   //msg << MSG::DEBUG<< "Reading ODIN Bank. " <<endreq;
@@ -329,8 +338,7 @@ std::pair<std::pair<int, ulonglong>, bool> UpdateAndReset::currentRunNumber() {
          msg << MSG::DEBUG << "ODIN bank not found at location '" << rootInTES() << LHCb::RawEventLocation::Default << endreq;;      
       }
  
-    //  msg << MSG::INFO  << "runnumber " << runNumber << " ctck " << ctck << " tck " << tck << " cgpstime " <<
-    //  cgpstime << " gpstime " << gpstime << endmsg;
+   //   msg << MSG::INFO  << "runnumber " << runNumber << endmsg;
 
     }
 
@@ -341,13 +349,14 @@ std::pair<std::pair<int, ulonglong>, bool> UpdateAndReset::currentRunNumber() {
   }
   else {       
 //    msg << MSG::DEBUG<< "===============> Reading Odin bank is disabled. Then runNumber = 0 and gpsTime = currentTime" <<endreq;
+     gpstime = GauchoTimer::currentTime();
   }
   if ((m_runNumber != runNumber) && (m_runNumber !=0)) {
      changed = true;
      m_eorNumber = m_runNumber;
   }  
   std::pair<int, ulonglong> runNumberGpsTime = std::pair<int, ulonglong>(runNumber, gpstime);
-//  msg << MSG::DEBUG << "old runnumber " << m_runNumber << " new runnumber " << runNumber << " changed " << changed << endreq; 
+//  msg << MSG::INFO << "Gpstime (from currenrunnumber) " << gpstime << endreq; 
   m_runNumber = runNumber;
   
   // return std::pair<int, bool>(runNumber,changed);
@@ -375,10 +384,10 @@ ulonglong UpdateAndReset::gpsTime() {
 //------------------------------------------------------------------------------
   MsgStream msg( msgSvc(), name() );
 
-//  msg << MSG::DEBUG<< "Reading ODIN Bank. " <<endreq;
+
 
   if (0 == m_disableReadOdin) {
-
+   // msg << MSG::INFO<< "time from ODIN Bank: " << gpstime << endreq;
     return gpstime;
   }
 //  else msg << MSG::DEBUG<< "===============> Reading Odin bank is disabled. " <<endreq;
@@ -386,16 +395,16 @@ ulonglong UpdateAndReset::gpsTime() {
   // this is only for test when Odin doesn't work
   ulonglong currentTime = GauchoTimer::currentTime();
 
-  int cycleNumber = (int)currentTime/(m_desiredDeltaTCycle*1000000);
+  ulonglong cycleNumber = currentTime/(m_desiredDeltaTCycle*1000000);
 
-  gpstime = ((ulonglong)cycleNumber)*((ulonglong) m_desiredDeltaTCycle*1000000);
+  ulonglong gpstime1 = (cycleNumber)*((ulonglong) m_desiredDeltaTCycle*1000000);
 
-  return gpstime;
+  return gpstime1;
 }
 
 std::pair<int, bool> UpdateAndReset::currentCycleNumber(ulonglong currentTime) {
   bool changed = false;
-  int cycleNumber = (int)(((double)currentTime)/(m_desiredDeltaTCycle*1000000.00));
+  int cycleNumber = (int)(((double)currentTime)/(m_desiredDeltaTCycle*1000000));
   
   if (m_cycleNumber != cycleNumber ) changed = true;
   return std::pair<int, bool>(cycleNumber,changed);
@@ -410,20 +419,27 @@ void UpdateAndReset::retrieveCycleNumber(int cycleNumber) {
 }
 
 double UpdateAndReset::offsetToBoundary(int cycleNumber, ulonglong time, bool inferior){
-  if (inferior) {
+/*  if (inferior) {
     ulonglong timeIniCycle = ((ulonglong) cycleNumber)*((ulonglong)(m_desiredDeltaTCycle*1000000));
     return ((double)(time - timeIniCycle));
   }
   else {
     ulonglong timeEndCycle = ((ulonglong) (cycleNumber+1))*((ulonglong)(m_desiredDeltaTCycle*1000000));
     return ((double)(time - timeEndCycle));
+  }*/
+    if (inferior) {
+    double timeIniCycle = cycleNumber*m_desiredDeltaTCycle*1000000;
+    return ((double)((double)time - timeIniCycle));
+  }
+  else {
+    double timeEndCycle = (cycleNumber+1)*m_desiredDeltaTCycle*1000000;
+    return ((double)((double)time - timeEndCycle));
   }
 }
 
 void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler) {
   MsgStream msg( msgSvc(), name() );
   ulonglong currentTime = GauchoTimer::currentTime();
-//  msg << MSG::DEBUG << "**********************************************************************" << endreq;
 //  msg << MSG::INFO << "************Updating data " << (currentTime - m_timeStart) << " microseconds after start **********" << endreq;  msg << MSG::DEBUG << "m_runNumber        = " << m_runNumber << endreq;
 //  msg << MSG::INFO << "m_cycleNumber      = " << m_cycleNumber << endreq;
 //  msg << MSG::DEBUG << "m_timeFirstEvInRun      = " << m_timeFirstEvInRun << endreq;
@@ -436,13 +452,14 @@ void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler
 //  msg << MSG::DEBUG << "m_offsetTimeLastEvInCycle     = " << m_offsetTimeLastEvInCycle << endreq;
 //  msg << MSG::DEBUG << "deltaT error = " << m_deltaTCycle - m_desiredDeltaTCycle*1000000 << " microseconds" << endreq;
   
-  if (isFromTimerHandler) m_gpsTimeLastEvInCycle = currentTime; // we can not read ODIN from timerHandler
-  else  m_gpsTimeLastEvInCycle = gpsTime();
-    
+ /* if (isFromTimerHandler) m_gpsTimeLastEvInCycle = currentTime; // we can not read ODIN from timerHandler
+  else  m_gpsTimeLastEvInCycle = gpsTime();*/
+  
+  m_gpsTimeLastEvInCycle = currentTime;  
   m_offsetGpsTimeLastEvInCycle = offsetToBoundary(m_cycleNumber, m_gpsTimeLastEvInCycle, false);
   
-//  msg << MSG::DEBUG << "m_gpsTimeLastEvInCycle  = " << m_gpsTimeLastEvInCycle << endreq;
-//  msg << MSG::DEBUG << "m_offsetGpsTimeLastEvInCycle  = " << m_offsetGpsTimeLastEvInCycle << endreq;
+//  msg << MSG::INFO << "m_gpsTimeLastEvInCycle  = " << m_gpsTimeLastEvInCycle << " current time " << currentTime << " gps time " << gpsTime() << endreq;
+//  msg << MSG::INFO << "m_offsetGpsTimeLastEvInCycle  = " << m_offsetGpsTimeLastEvInCycle << endreq;
 //  msg << MSG::INFO << "TimeLastEvent error = " << (m_timeLastEvInCycle - m_gpsTimeLastEvInCycle) << " microseconds runnumberchanged " << isRunNumberChanged << " disablupdatedata " << m_disableUpdateData << endreq;
  
   if (isRunNumberChanged) {

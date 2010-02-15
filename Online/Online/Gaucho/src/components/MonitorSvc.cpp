@@ -218,7 +218,7 @@ void MonitorSvc::declareInfo(const std::string& name, const int&  var,
         std::pair<std::string, std::string> dimSvcName = registerDimSvc("monRate", "MonR/", this, false);
         if (dimSvcName.second.compare("") == 0) return;
         msg << MSG::DEBUG << "Printing MonRate " << endreq;
-        m_monRate->print();
+       // m_monRate->print();
         msg << MSG::DEBUG << "Creating DimServiceMonObject for MonRate " << endreq;
         m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_monRate);
         m_monRateDeclared = true;
@@ -328,7 +328,7 @@ void MonitorSvc::declareInfo(const std::string& name, const double& var,
         if (dimSvcName.second.compare("") == 0) return;
     //    msg << MSG::DEBUG << "Printing MonRate " << endreq;
      //   m_monRate->print();
-        msg << MSG::INFO << "Creating DimServiceMonObject for MonRate " << endreq;
+      //  msg << MSG::INFO << "Creating DimServiceMonObject for MonRate " << endreq;
         m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_monRate);
         m_monRateDeclared = true;
       }
