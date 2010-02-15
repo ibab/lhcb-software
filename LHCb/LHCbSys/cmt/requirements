@@ -73,7 +73,7 @@ use HistoStrings          v1r0    Kernel  # Vanya Belyaev
 use HltInterfaces         v3r0    Kernel  # Patrick Koppenburg
 use KernelSys             v12r1   Kernel  # Marco Cattaneo
 use LHCbAlgs              v2r33   Kernel  # Marco Cattaneo
-use LHCbKernel            v11r11  Kernel  # Marco Cattaneo
+use LHCbKernel            v11r11p1 Kernel # Marco Cattaneo
 use LHCbMath              v3r16   Kernel  # Juan Palacios
 use MCInterfaces          v1r10   Kernel  # Marco Cattaneo et al.
 use PartProp              v1r6    Kernel  # Vanya Belyaev 
