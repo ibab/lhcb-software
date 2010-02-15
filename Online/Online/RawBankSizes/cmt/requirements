@@ -1,23 +1,33 @@
 package RawBankSizes
-version v1r6
+version v1r7
+
 branches cmt doc src
-use GaudiAlg      v*
-use DAQEvent      v* Event     
-
-include_dirs "$(RAWBANKSIZESROOT)/RawBankSizes"
-
-library RawBankSizes   *.cpp
-
-apply_pattern component_library library=RawBankSizes
-
-#private
-use MDF         v* DAQ
-use Gaucho      v* Online
-use GaudiSvc    v*
+use GaudiKernel v*
+use GaudiSvc v*
+use GaudiAlg v*
+use DAQEvent v* Event
+use OnlineKernel v* Online
+use Gaucho v* Online
+use MDF    v* DAQ
+use Gaucho v* Online
+use GaudiSvc v*
 use GaudiOnline v* Online
 
-# Hack for Gaudi v21r1 to link dictionary on windows
-private
-set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
+include_dirs "$(RAWBANKSIZESROOT)/RawBankSizes"
+#SRC = "$(RAWBANKSIZESROOT)/src"
 
+library RawBankSizes RawBankSizes.cpp Structure.cpp 
+apply_pattern component_library library=RawBankSizes
+
+application MakeOptions MakeOptions.cpp
+macro_append target_MakeOptions
+
+
+action runMakeOptions "$(RAWBANKSIZESROOT)/$(tag)/MakeOptions.exe"
+macro_append constituents " runMakeOptions "
+macro_append runMakeOptions_dependencies " MakeOptions "
+
+action WriteOptions "python $(RAWBANKSIZESROOT)/src/WriteOptions.py"
+macro_append constituents " WriteOptions "
+macro_append WriteOptions_dependencies " runMakeOptions "
 
