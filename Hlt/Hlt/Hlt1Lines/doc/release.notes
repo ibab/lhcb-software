@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.115 2010-02-15 12:34:30 graven Exp $
+! $Id: release.notes,v 1.116 2010-02-15 16:02:04 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -11,6 +11,7 @@
 !-----------------------------------------------------------------------------
 ! 2010-02-15 - Gerhard Raven
  - add L0 channel predicate in beam gas lines
+ - minor tweaks to 'forced RZ Velo' crossing beam gas line
 
 ! 2010-02-15 - Plamen Hopchev 
  - fix typos in Hlt1BeamGasLines

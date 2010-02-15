@@ -10,7 +10,7 @@
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
 __author__  = "Plamen Hopchev phopchev@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -31,11 +31,10 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                 , 'BGVtxExclRangeMax'       :   250.      # only for the Lines for bb BX
                 , 'MaxBinValueCut'          :     4
                 , 'HistoBinWidth'           :    14
-                , 'ForcedRZVeloFraction'    :     0.1
                 , 'Prescale'                : { 'Hlt1BeamGasBeam1' :                1.0
                                               , 'Hlt1BeamGasBeam2' :                1.0
-                                              , 'Hlt1BeamGasCrossing' :             1.0
                                               , 'Hlt1BeamGasCrossingForcedRZReco' : 0.001
+                                              , 'Hlt1BeamGasCrossing' :             1.0
                                               }
                 , 'Postscale'               : { 'Hlt1BeamGasBeam1' :                'RATE(25)'
                                               , 'Hlt1BeamGasBeam2' :                'RATE(25)'
@@ -46,12 +45,11 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
 
 
     def __performRZVelo( self ) :
-        from HltLine.HltReco import RZVelo
+        from HltLine.HltReco import MinimalRZVelo
         from Configurables import DeterministicPrescaler as Scaler
 
         return [ GaudiSequencer( 'BeamGasRZVeloSequencer'
-                               , Members = [ Scaler('BeamGasRZVeloPrescaler', AcceptFraction = self.getProp('ForcedRZVeloFraction') )
-                                           ] + RZVelo.members()
+                               , Members =  MinimalRZVelo.members()
                                , IgnoreFilterPassed = True )            
               ]
 
@@ -170,8 +168,13 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                                 , algos = [ algCheckTracks ] + bgTrigAlgos
                                 , postscale = self.postscale )
 
+        # FIXME: why does 'clone' not get prescaled right??? because the prescale _value_ not the function is cloned...
+        #        hence we repeat prescale and postscale here explicitly...
         line_beamCrossingForcedRZReco = line_beamCrossing.clone( lineName+"ForcedRZReco"
-                                                               , algos = self.__performRZVelo() + bgTrigAlgos )
+                                                               , prescale = self.prescale
+                                                               , algos = self.__performRZVelo() + bgTrigAlgos 
+                                                               , postscale = self.postscale 
+                                                               )
         return line_beamCrossing, line_beamCrossingForcedRZReco
         
     def __apply_configuration__(self) : 
