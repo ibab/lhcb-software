@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.3 2010-02-01 11:42:55 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.4 2010-02-15 07:36:28 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -158,14 +158,16 @@ class MicroDSTWriter(BaseDSTWriter) :
                 print "Copy PV relations ", loc
                 fullLoc = self.dataLocations(sel, loc)
                 cloner = self._copyP2PVRelations(sel,"CopyP2PV_"+loc, fullLoc )
+                clonerType = cloner.ClonerType
                 if copyPV == False :
+                    cloner.ClonerType = 'NONE'
                     if hasattr(sel,'algorithm') :
                         alg = sel.algorithm()
                         refitPVs = False
                         if alg.properties().has_key('ReFitPVs') :
                             refitPVs =  alg.getProp('ReFitPVs')
-                        if not refitPVs :
-                            cloner.ClonerType = "NONE"
+                        if refitPVs :
+                            cloner.ClonerType = clonerType
                 cloners += [cloner]
         return cloners
     
