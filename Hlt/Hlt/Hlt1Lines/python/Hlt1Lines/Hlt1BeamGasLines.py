@@ -10,7 +10,7 @@
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
 __author__  = "Plamen Hopchev phopchev@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -32,9 +32,9 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                 , 'MaxBinValueCut'          :     4
                 , 'HistoBinWidth'           :    14
                 , 'ForcedRZVeloFraction'    :     0.1
-                , 'Prescale'                : { 'Hlt1BeamGasBeam1' :                0.5
-                                              , 'Hlt1BeamGasBeam2' :                0.5
-                                              , 'Hlt1BeamGasCrossing' :             0.05
+                , 'Prescale'                : { 'Hlt1BeamGasBeam1' :                1.0
+                                              , 'Hlt1BeamGasBeam2' :                1.0
+                                              , 'Hlt1BeamGasCrossing' :             1.0
                                               , 'Hlt1BeamGasCrossingForcedRZReco' : 0.001
                                               }
                 , 'Postscale'               : { 'Hlt1BeamGasBeam1' :                'RATE(25)'
