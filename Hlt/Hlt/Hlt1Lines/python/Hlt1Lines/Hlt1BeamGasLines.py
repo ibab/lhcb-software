@@ -10,7 +10,7 @@
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
 __author__  = "Plamen Hopchev phopchev@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -20,18 +20,20 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
 
     # steering variables
-    __slots__ = { 'L0ChannelBeam1'          : "B1gas" 
-                , 'L0ChannelBeam2'          : "B2gas" 
-                , 'L0ChannelBeamCrossing'   : "CALO" # ???
-                , 'ZVertexMin'              : -1500.
-                , 'ZVertexMax'              :  1500.
-                , 'BGVtxExclRangeMin'       : -265.
-                , 'BGVtxExclRangeMax'       :  265.
-                , 'ForcedRZVeloFraction'    : 0.001
-                , 'Prescale'                : { 'Hlt1BeamGasBeam1' :                0.1
-                                              , 'Hlt1BeamGasBeam2' :                0.1
-                                              , 'Hlt1BeamGasCrossing' :             0.01
-                                              , 'Hlt1BeamGasCrossingForcedRZReco' : 0.0001
+    __slots__ = {
+                  'Beam1VtxRangeLow'        : -2000.
+                , 'Beam1VtxRangeUp'         :   600.
+                , 'Beam2VtxRangeLow'        :     0.
+                , 'Beam2VtxRangeUp'         :  2000.
+                , 'BGVtxExclRangeMin'       :  -350.      # These 2 options take effect
+                , 'BGVtxExclRangeMax'       :   250.      # only for the Lines for bb BX
+                , 'MaxBinValueCut'          :     4
+                , 'HistoBinWidth'           :    14
+                , 'ForcedRZVeloFraction'    :     0.1
+                , 'Prescale'                : { 'Hlt1BeamGasBeam1' :                0.2
+                                              , 'Hlt1BeamGasBeam2' :                0.2
+                                              , 'Hlt1BeamGasCrossing' :             0.1
+                                              , 'Hlt1BeamGasCrossingForcedRZReco' : 0.001
                                               }
                 , 'Postscale'               : { 'Hlt1BeamGasBeam1' :                'RATE(25)'
                                               , 'Hlt1BeamGasBeam2' :                'RATE(25)'
@@ -51,29 +53,27 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                                , IgnoreFilterPassed = True )            
               ]
 
-            
-
 
     def __create_beam_empty_line__(self, whichBeam) :
-        ''' Configure the Hlt Line for the case of beam-gas 
-            interaction in a beam1/2 - empty crossing.
-            Here we expect that nothing has been executed yet,
-            so we do our 'own' RZ Tracking first. '''
-
+        ''' Configure the Hlt Line for the cases of b1-empty or
+            empty-b2 crossings. Run RZTracking and VtxCut algo. 
+        '''
+        
         name = 'BeamGas'+whichBeam
 
-        ## here we can add different z-ranges for the beam1 and beam2 crossings
         from Configurables import Tf__PatVeloRTracking
         algRZTracking = Tf__PatVeloRTracking( 'Hlt1RZVeloBeamGas' 
-                                           , OutputTracksName = "Hlt/Track/RZVeloBeamGas"
-                                           , ZVertexMin  = self.getProp('ZVertexMin')
-                                           , ZVertexMax  = self.getProp('ZVertexMax') )
+                                            , OutputTracksName = "Hlt/Track/RZVeloBeamGas"
+                                            , ZVertexMin  = self.getProp(whichBeam+"VtxRangeLow")
+                                            , ZVertexMax  = self.getProp(whichBeam+"VtxRangeUp")
+                                            )
+
         ## last algorithm should have name of line, plus 'Decision'
         from Configurables import BeamGasTrigVertexCut
         algVtxCut = BeamGasTrigVertexCut( 'Hlt1%sDecision' % name
                                         , RZTracksInputLocation = algRZTracking.OutputTracksName
-                                        , MaxBinValueCut     = 5
-                                        , HistoBinWidth      = 10
+                                        , MaxBinValueCut     = self.getProp("MaxBinValueCut")
+                                        , HistoBinWidth      = self.getProp("HistoBinWidth")
                                         , ZExclusionRangeLow = 0.
                                         , ZExclusionRangeUp  = 0.  
                                         , MinCandidates      = 1 #Should be > 0 and <= MaxBinValueCut+1 (by default = 1)
@@ -81,16 +81,15 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
  
         from HltLine.HltLine import Hlt1Line as Line
         from HltLine.HltReco import DecodeVELO
-        from Hlt1Lines.HltL0Candidates import L0Mask, L0Mask2ODINPredicate
-        channel = self.getProp('L0Channel' + whichBeam)
-        mask = L0Mask(channel)
+
         return Line( name
                    , priority = 200
                    , prescale = self.prescale
-                   , ODIN  = L0Mask2ODINPredicate(mask) if mask else 'ODIN_ALL'
-                   , L0DU  = "L0_CHANNEL('%s')" % channel
+                   #, ODIN  = '(ODIN_TRGTYP == LHCb.ODIN.BeamGasTrigger) & (ODIN_BXTYP == LHCb.ODIN.'+whichBeam+')'
+                   , ODIN  = '(ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger) & (ODIN_BXTYP == LHCb.ODIN.'+whichBeam+')'
                    , algos = [ DecodeVELO, algRZTracking, algVtxCut ]
                    , postscale = self.postscale )
+
    
     def __create_beam_crossing_lines__(self) :
         ''' Configure the Hlt Lines for the case of beam-gas interaction 
@@ -116,7 +115,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                                              , FracUnusedClustersCut = 0.27 )
 
         from Configurables import BeamGasTrigExtractClusters
-        algExtractClust = BeamGasTrigExtractClusters( OutputLocation = "Raw/Velo/UnusedRLiteClusters" )
+        algExtractClust = BeamGasTrigExtractClusters( OutputLocation = "Raw/Velo/RLiteClustersBeamGas" )
 
         ### To be checked if these two instantiations are needed ???
         from Configurables import Tf__DefaultVeloRHitManager
@@ -131,31 +130,28 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         algRTracking2 = Tf__PatVeloRTracking(   'Hlt1BeamGasRZVeloSecondPass'
                                             , HitManagerName = hitmgr.name()
                                             , OutputTracksName = "Hlt/Track/RZVeloBeamGas"
-                                            , ZVertexMin  = self.getProp('ZVertexMin')
-                                            , ZVertexMax  = self.getProp('ZVertexMax')
+                                            , ZVertexMin  = self.getProp("Beam1VtxRangeLow")
+                                            , ZVertexMax  = self.getProp("Beam2VtxRangeUp")
                                             )
 
         from Configurables import BeamGasTrigVertexCut
         algVtxCut = BeamGasTrigVertexCut( 'Hlt1%sDecision' % lineName 
                                         , RZTracksInputLocation = algRTracking2.OutputTracksName
-                                        , MaxBinValueCut     = 5
-                                        , HistoBinWidth      = 10
-                                        , ZExclusionRangeLow = -265.
-                                        , ZExclusionRangeUp  =  265.  
+                                        , MaxBinValueCut     = self.getProp("MaxBinValueCut")
+                                        , HistoBinWidth      = self.getProp("HistoBinWidth")
+                                        , ZExclusionRangeLow = self.getProp("BGVtxExclRangeMin")
+                                        , ZExclusionRangeUp  = self.getProp("BGVtxExclRangeMax")
                                         , MinCandidates      = 1 #Should be > 0 and <= MaxBinValueCut+1 (by default = 1)
                                         )
 
         bgTrigAlgos = [ algClusterCut, algExtractClust, algRTracking2, algVtxCut ]
 
         from HltLine.HltLine import Hlt1Line as Line
-        from Hlt1Lines.HltL0Candidates import L0Mask, L0Mask2ODINPredicate
-        channel = self.getProp('L0ChannelBeamCrossing')
-        mask = L0Mask(channel)
         line_beamCrossing = Line( lineName
                                 , priority = 200 
                                 , prescale = self.prescale
-                                , ODIN  = L0Mask2ODINPredicate(mask) if mask else 'ODIN_ALL'
-                                , L0DU  = "L0_CHANNEL('%s')" %  channel
+                                #, ODIN  = '(ODIN_TRGTYP == LHCb.ODIN.BeamGasTrigger) & (ODIN_BXTYP == LHCb.ODIN.BeamCrossing)'
+                                , ODIN  = '(ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger) & (ODIN_BXTYP == LHCb.ODIN.BeamCrossing)'
                                 , algos = [ algCheckTracks ] + bgTrigAlgos
                                 , postscale = self.postscale )
 
