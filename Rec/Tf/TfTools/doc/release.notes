@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!============================ TfTools v1r10 2010-02-15 ========================
 ! 2010-01-28 Wouter Hulsbergen
  - added hitsLocalXRange function to IT/OT/TT hit creators
 
