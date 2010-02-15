@@ -45,7 +45,7 @@ StatusCode BeamGasTrigVertexCut::initialize() {
 
   verbose() << "==> Initialize" << endmsg;
   
-  info() << "========== Algorithm parameters ======"            << endreq
+  debug() << "========== Algorithm parameters ======"            << endreq
          << "RZTracksLocation     = " << m_RZTracksLocation     << endreq   
          << "HistoZRangeLow       = " << m_histoZMin << " mm"   << endreq
          << "HistoZRangeUp        = " << m_histoZMax << " mm"   << endreq
@@ -65,7 +65,6 @@ StatusCode BeamGasTrigVertexCut::initialize() {
 //=============================================================================
 StatusCode BeamGasTrigVertexCut::execute() {
 
-  bool trigDecision  = false;  
   std::vector<double> vect_z_r0;
   vect_z_r0.reserve(200);
   
@@ -76,16 +75,14 @@ StatusCode BeamGasTrigVertexCut::execute() {
   else { error() << "Can't find input tracks" << endmsg; return StatusCode::SUCCESS; }  
   debug() << "Number of tracks in the BG Tracks Container = " << BGtracks->size() << endmsg;
     
-  double z, r, t;  
-  double z_r0 = 0.;
   
   // Fill the vector with the tracks z position at r=0
   for ( LHCb::Tracks::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT ) 
   {  
-    z = (*itT)->firstState().z();
-    r = (*itT)->firstState().x();
-    t = (*itT)->firstState().tx();
-    z_r0 = z - r/t;
+    double z = (*itT)->firstState().z();
+    double r = (*itT)->firstState().x();
+    double t = (*itT)->firstState().tx();
+    double z_r0 = z - r/t;
         
     if ( (z_r0 > m_histoZMin) && (z_r0 < m_histoZMax  ) )
     { 
@@ -95,60 +92,52 @@ StatusCode BeamGasTrigVertexCut::execute() {
   }
   
   // If we have enough entries, search for a peak 
-  if( vect_z_r0.size() >= m_maxCut )
-  {
-    debug() << "\nVect Enetered loop with entries =" << vect_z_r0.size() << endmsg;
+  if( vect_z_r0.size() < m_maxCut ) return StatusCode::SUCCESS;
 
-    std::sort( vect_z_r0.begin(), vect_z_r0.end() );
+  debug() << "\nVect Entered loop with entries =" << vect_z_r0.size() << endmsg;
 
-    std::vector<double>::iterator it_z_r0     = vect_z_r0.begin();
-    std::vector<double>::iterator it_z_r0_end = vect_z_r0.end(); // This is *AFTER* the last element !!!
-    
-    double firstEl, lastEl;
-    double meanOf2Els, effectiveBinWidth;
+  std::sort( vect_z_r0.begin(), vect_z_r0.end() );
 
-    while( it_z_r0 != (it_z_r0_end - m_maxCut + 1) )
-    { 
-      firstEl = *it_z_r0;
-      lastEl  = *(it_z_r0 + m_maxCut - 1);
+  std::vector<double>::iterator it_z_r0     = vect_z_r0.begin();
+  std::vector<double>::iterator it_z_r0_end = vect_z_r0.end(); // This is *AFTER* the last element !!!
+  
+  while( it_z_r0 != (it_z_r0_end - m_maxCut + 1) ) { 
+    double firstEl = *it_z_r0;
+    double lastEl  = *(it_z_r0 + m_maxCut - 1);
 
-      // at every step check if the distance between the first and the 
-      // last track is < m_binWidth; if Yes --> trigger
-      // The histo bin-width is variable: at z=0 it is = m_binWidth, and
-      // increases to 2*m_binWidth at z=2000 mm 
-      meanOf2Els = (firstEl + lastEl)/2;
-      effectiveBinWidth = m_binWidth*( 1 + abs(meanOf2Els)/2000. );
+    // at every step check if the distance between the first and the 
+    // last track is < m_binWidth; if Yes --> trigger
+    // The histo bin-width is variable: at z=0 it is = m_binWidth, and
+    // increases to 2*m_binWidth at z=2000 mm 
+    double meanOf2Els = (firstEl + lastEl)/2;
+    double effectiveBinWidth = m_binWidth*( 1 + std::abs(meanOf2Els)/2000. );
 
-      if ( (lastEl - firstEl) < effectiveBinWidth )
-      {
-        // Trigger!
-	trigDecision = true;
-        debug() << "Vect Triggered Event \n\t start = " << firstEl << "\n\t end = " << lastEl << endmsg;
-    
-	//Fill the candidates container with the tracks with good  z_r0        
-        for ( LHCb::Tracks::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT )
-	{  
-          z = (*itT)->firstState().z();
-          r = (*itT)->firstState().x();
-          t = (*itT)->firstState().tx();
-          z_r0 = z - r/t;
-          if( z_r0 > (firstEl-0.1) && z_r0 < (lastEl+0.1) ) 
-          {  
-            m_trackSelection->push_back( *itT );
-          }
+    if ( (lastEl - firstEl) < effectiveBinWidth ) {
+      // Trigger!
+      debug() << "Vect Triggered Event \n\t start = " << firstEl << "\n\t end = " << lastEl << endmsg;
+  
+      //Fill the candidates container with the tracks with good  z_r0        
+      for ( LHCb::Tracks::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT ) {  
+        double z = (*itT)->firstState().z();
+        double r = (*itT)->firstState().x();
+        double t = (*itT)->firstState().tx();
+        double z_r0 = z - r/t;
+        if( z_r0 > (firstEl-0.1) && z_r0 < (lastEl+0.1) ) {  
+          m_trackSelection->push_back( *itT );
         }
-	
-	debug() << "Number of Objects in the outputSelection = " << m_trackSelection->size() << endmsg;
-
-	if( firstEl > 0 ) m_trigEventsZpositive += 1;
-	else m_trigEventsZnegative += 1;	
-
-	break; // the while loop
       }
-                      
-      ++it_z_r0;
-    }   
-  }  
+  
+      debug() << "Number of Objects in the outputSelection = " << m_trackSelection->size() << endmsg;
+
+      if( firstEl > 0 ) m_trigEventsZpositive += 1;
+      else              m_trigEventsZnegative += 1;	
+
+      break; // the while loop
+    }
+
+    ++it_z_r0;
+  }   
+   
            
   return StatusCode::SUCCESS;
 }
@@ -158,8 +147,8 @@ StatusCode BeamGasTrigVertexCut::execute() {
 //=============================================================================
 StatusCode BeamGasTrigVertexCut::finalize() {
 
-  std::cout << "Number of triggered Events with z<0 and z>0 : " 
-            << m_trigEventsZnegative << "   " << m_trigEventsZpositive << std::endl;
+  debug() << "Number of triggered Events with z<0 and z>0 : " 
+            << m_trigEventsZnegative << "   " << m_trigEventsZpositive << endmsg;
 
   return HltAlgorithm::finalize () ;
 

@@ -3,6 +3,9 @@
 ! Responsible : Plamen Hopchev
 ! Purpose     : Decision algorithms for the two HLT beam-gas alleys
 !-----------------------------------------------------------------------------
+! 2010-02-15 Gerhard Raven
+ - fix compiler warning
+
 ! 2010-02-14 Plamen Hopchev
  - use variable bin-width in BeamGasTrigVtxCut
 
