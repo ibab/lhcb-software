@@ -1,3 +1,8 @@
+2010-02-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/makedoc: create the target directory for the documentation is it doesn't
+	already exists.
+
 2010-02-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: 

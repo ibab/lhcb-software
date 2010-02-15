@@ -225,6 +225,8 @@ class builder :
 
         if tempDir != 'NONE' :   # move the generated files from the temporary dir
             here = os.getcwd()
+            if not os.path.exists(outDir) :
+                os.mkdir(outDir)
             os.chdir(outDir)
             for file in glob.glob( os.path.join(tempDir,'*') ):
                 newFile = os.path.basename(file)
