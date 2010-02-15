@@ -1,4 +1,4 @@
-// $Id: LHCbKernelDict.h,v 1.20 2010-02-15 16:53:08 cattanem Exp $
+// $Id: LHCbKernelDict.h,v 1.21 2010-02-15 21:20:08 cattanem Exp $
 #ifndef DICT_LHCBKERNELDICT_H 
 #define DICT_LHCBKERNELDICT_H 1
 
@@ -70,7 +70,6 @@ namespace {
     std::vector<LHCb::VeloPixChannelID>                 m_std_vector_VeloPixChannelID;
     std::vector<LHCb::LHCbID>::const_iterator           m_std_vector_LHCbID_const_iterator;
     std::map<std::pair<int,unsigned int>,unsigned int>  m_L0DUReport_Summaries;
-    GaudiUtils::VectorMap<  int, int >                  m_extraInfo; // For HltLumiSummary.h, should be in LumiEvent 
     // end instantiations
   };
 }
