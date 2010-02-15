@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.116 2010-02-14 21:06:22 graven Exp $
+$Id: release.notes,v 1.117 2010-02-15 12:27:18 jnardull Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,11 @@ $Id: release.notes,v 1.116 2010-02-14 21:06:22 graven Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2010-02-15 - Jacopo Nardulli
+ - Fix savannah bug 59641. No OR used any longer for the Hlt2 DX lines
+   See also: https://savannah.cern.ch/bugs/?59641
+
 ! 2010-02-14 - Gerhard Raven
  - move files from $HLTCONFROOT/options to $HLT2LINESROOT/options
    to make them 'more local'
