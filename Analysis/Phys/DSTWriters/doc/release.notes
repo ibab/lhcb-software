@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.9 2010-02-11 10:34:41 jpalac Exp $
+!$Id: release.notes,v 1.10 2010-02-15 07:36:44 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! 2010-02-15 - Juan Palacios
+ - python/DSTWriters/MicroDSTWriter.py
+  . Safety: Make sure related PV is not copied in cases where it is a default
+    PV and the selection object doesn't have an 'algorithm' property.
 
 ! 2010-02-11 - Juan Palacios
  - python/DSTWriters/BaseDSTWriter.py
