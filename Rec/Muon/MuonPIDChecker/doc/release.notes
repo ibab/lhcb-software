@@ -2,7 +2,7 @@
 ! Responsible : E. Polycarpo, M. Gandelman
 !----------------------------------------------------------------------------
 
-!====================== MuonPIDChecker v4r1 2010-02-10 ======================
+!====================== MuonPIDChecker v4r1 2010-02-15 ======================
 !2010-02-10 - Helder Lopes
  - Added compatibility with DLL_flag=3 (hyperbolic tangent of distance histos)
  
