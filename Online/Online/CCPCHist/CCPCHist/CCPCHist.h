@@ -1,11 +1,12 @@
 #ifndef CCPCHIST_TAG
 #define CCPCHIST_TAG
-#include "hist_types.h"
+//#include "hist_types.h"
 #define H_IllegalID 1
 
 #ifdef __cplusplus
 class CCPCHisto;
 class CCPCPHisto;
+class CCPCRHisto;
 class CCPCHSys;
 class Histo;
 
@@ -170,6 +171,11 @@ public:
  \param to float array to receive the total number of entries
 */
   int getentries(float *to);
+/*!
+ retriving routine of sum of entries (calls)
+ \param to double array to receive the total number of entries
+*/
+  int getentries(double *to);
 ///
 /// clear the profile histogram
 ///

@@ -26,7 +26,7 @@ int main(void /*int argc, char **argv*/)
     hfill2 (h[3],100*x, 100*y, 1.0);
 #ifdef WIN32
     {
-      int slp = 10;
+      int slp = 1000;
       sleep(slp);
     }
 #else

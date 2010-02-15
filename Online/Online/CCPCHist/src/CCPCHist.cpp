@@ -74,7 +74,7 @@ Histo::Histo(char *name, char *title, int nx, float xmin, float xmax )
   }
    PHisto::PHisto(char *name, char *title, int nx, float xmin, float xmax )
     {
-      m_h = new CCPCPHisto(this, name, title, nx, xmin, xmax);
+      m_h = new CCPCPHisto((Histo*)this, name, title, nx, xmin, xmax);
     }
   PHisto::~PHisto()
   {
@@ -104,6 +104,10 @@ Histo::Histo(char *name, char *title, int nx, float xmin, float xmax )
   {
     return m_h->getentries(to);
   }
+  int PHisto::getentries(double *to)
+  {
+    return m_h->getentries(to);
+  }
 
   void PHisto::clear(void)
   {
@@ -111,7 +115,7 @@ Histo::Histo(char *name, char *title, int nx, float xmin, float xmax )
   }
   void *hccpc_book1(char *name, char *title, int nx, float xmin, float xmax )
   {
-    CCPCHisto *h;
+    void *h;
     h = new CCPCHisto(name,title,nx,xmin,xmax);
     return h;
   }
@@ -124,7 +128,7 @@ Histo::Histo(char *name, char *title, int nx, float xmin, float xmax )
   void *hccpc_book2(char *name, char *title, int nx, float xmin, float xmax, 
              int ny, float ymin, float ymax )
   {
-    CCPCHisto *h;
+    void *h;
     h = new CCPCHisto(name,title,nx,xmin,xmax, ny, ymin,ymax);
     return h;
   }

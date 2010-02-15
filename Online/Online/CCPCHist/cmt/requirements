@@ -3,23 +3,28 @@ package CCPCHist
 branches  cmt doc src
 use GaudiPolicy v*
 use DIM v* Online
-use Boost v* LCG_Interfaces
+use OnlineKernel v* Online
+#use Boost v* LCG_Interfaces
 
-apply_pattern install_more_includes more=CCPCHist
 library       CCPCHist *.cpp
 include_dirs  ../CCPCHist
-macro_append CCPCHist_cflags "" \
-          Linux " -march=i486 "
-macro_append cflags "" \
-          Linux " -march=i486 "
+#macro_append CCPCHist_cflags "" \
+#          Linux " -march=i486 "
+#macro_append cflags "" \
+#          Linux " -march=i486 "
 
-macro_append CCPCHist_cppflags "" \
-          Linux " -march=i486 "
-macro_append cppflags "" \
-          Linux " -march=i486 "
+#macro_append CCPCHist_cppflags "" \
+#          Linux " -march=i486 "
+#macro_append cppflags "" \
+#          Linux " -march=i486 "
 
 application   CCPCtest ../tests/mainprog.cpp
 application   Ctest ../ctests/ctest.cpp
+application   RPCTest ../RPCTest/RPCTest.cpp
+application   InfoTest ../InfoTest/InfoTest.cpp
+application   AddTest ../AddTest/AddTest.cpp
 
+apply_pattern install_more_includes more=CCPCHist
+apply_pattern install_more_includes more=CCPCHist\CCPCHist
 apply_pattern ld_library_path
 apply_pattern linker_library   library=CCPCHist
