@@ -22,12 +22,12 @@ BeamGasTrigVertexCut::BeamGasTrigVertexCut(const std::string& name, ISvcLocator*
                 HltAlgorithm(name, pSvcLocator, false), m_trigEventsZnegative(0), m_trigEventsZpositive(0)	
 {
   declareProperty( "RZTracksInputLocation", m_RZTracksLocation = "Rec/Track/RZVeloBeamGas" );
-  declareProperty( "HistoBinWidth", m_binWidth = 10);
-  declareProperty( "MaxBinValueCut", m_maxCut = 5);
-  declareProperty( "ZExclusionRangeLow", m_zExclusionRangeLow = -265.0);
-  declareProperty( "ZExclusionRangeUp",  m_zExclusionRangeUp  =  265.0);
-  declareProperty( "HistoZRangeLow", m_histoZMin = -1500.0);
-  declareProperty( "HistoZRangeUp",  m_histoZMax =  1500.0);
+  declareProperty( "HistoBinWidth", m_binWidth = 14);
+  declareProperty( "MaxBinValueCut", m_maxCut = 4);
+  declareProperty( "ZExclusionRangeLow", m_zExclusionRangeLow = 0.0);
+  declareProperty( "ZExclusionRangeUp",  m_zExclusionRangeUp  = 0.0);
+  declareProperty( "HistoZRangeLow", m_histoZMin = -2000.0);
+  declareProperty( "HistoZRangeUp",  m_histoZMax =  2000.0);
   declareProperty( "OutputSelection", m_outputSelectionName = name );
 }
 //=============================================================================
@@ -94,9 +94,8 @@ StatusCode BeamGasTrigVertexCut::execute() {
     }  
   }
   
-  // If we have enough entries, look for the entries in the "max bin"
-       
-  if( vect_z_r0.size() > m_maxCut )
+  // If we have enough entries, search for a peak 
+  if( vect_z_r0.size() >= m_maxCut )
   {
     debug() << "\nVect Enetered loop with entries =" << vect_z_r0.size() << endmsg;
 
@@ -105,16 +104,22 @@ StatusCode BeamGasTrigVertexCut::execute() {
     std::vector<double>::iterator it_z_r0     = vect_z_r0.begin();
     std::vector<double>::iterator it_z_r0_end = vect_z_r0.end(); // This is *AFTER* the last element !!!
     
-    while( it_z_r0 != (it_z_r0_end - m_maxCut) )
+    double firstEl, lastEl;
+    double meanOf2Els, effectiveBinWidth;
+
+    while( it_z_r0 != (it_z_r0_end - m_maxCut + 1) )
     { 
-      double firstEl = *it_z_r0;
-      double lastEl  = *(it_z_r0 + m_maxCut);
-      
-      // at every step check if the distance between the first and the (first+m_binWidth)^th
-      // track is < m_binWidth; if Yes --> trigger
-      // !!!TO-DO: modify m_binWidth, depending on the z-position!!!
-      
-      if ((lastEl - firstEl) < m_binWidth)
+      firstEl = *it_z_r0;
+      lastEl  = *(it_z_r0 + m_maxCut - 1);
+
+      // at every step check if the distance between the first and the 
+      // last track is < m_binWidth; if Yes --> trigger
+      // The histo bin-width is variable: at z=0 it is = m_binWidth, and
+      // increases to 2*m_binWidth at z=2000 mm 
+      meanOf2Els = (firstEl + lastEl)/2;
+      effectiveBinWidth = m_binWidth*( 1 + abs(meanOf2Els)/2000. );
+
+      if ( (lastEl - firstEl) < effectiveBinWidth )
       {
         // Trigger!
 	trigDecision = true;
