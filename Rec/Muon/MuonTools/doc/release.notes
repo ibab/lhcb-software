@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.48 2010-02-12 10:10:48 asatta Exp $
+! $Id: release.notes,v 1.49 2010-02-15 13:49:36 rlambert Exp $
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : Alessia Satta Alessia.Sattaft@cern.ch
 ! =============================================================================
+
+!======================== MuonTools v5r1 2010-02-15 =========================
 ! 2010-02-12 - Alessia Satta
  - Fix compilation warnings
 
