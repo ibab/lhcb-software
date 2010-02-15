@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.29 2009-11-22 09:02:32 wouter Exp $
+// $Id: TrackMasterFitter.h,v 1.30 2010-02-15 13:13:00 wouter Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -22,6 +22,7 @@ namespace LHCb {
   class Track ;
   class FitNode ;
   class State ;
+  class TrackFitResult ;
 }
 
 /** @class TrackMasterFitter TrackMasterFitter.h
@@ -90,7 +91,9 @@ private:
   ITrackExtrapolator* extrapolator( LHCb::Track::Types tracktype ) const {
     return tracktype == (LHCb::Track::Velo || LHCb::Track::VeloR) ? m_veloExtrapolator : m_extrapolator ;
   }
-  
+
+  //! check that this was a prefit iteration
+  bool isPrefit( const LHCb::TrackFitResult& fr ) const ;
 private:
 
  

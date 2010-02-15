@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.82 2010-02-01 09:42:07 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.83 2010-02-15 13:13:00 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -23,6 +23,7 @@
 #include "Event/Track.h"
 #include "Event/KalmanFitResult.h"
 #include "Event/FitNode.h"
+#include "Event/OTMeasurement.h"
 #include "Event/State.h"
 #include "TrackKernel/TrackTraj.h"
 
@@ -75,7 +76,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "VeloExtrapolator"    , m_veloExtrapolatorName =
                    "TrackLinearExtrapolator" );
   declareProperty( "FitUpstream"         , m_upstream         = true        );
-  declareProperty( "NumberFitIterations" , m_numFitIter       = 3           );
+  declareProperty( "NumberFitIterations" , m_numFitIter       = 10          );
   declareProperty( "Chi2Outliers"        , m_chi2Outliers     = 9.0         );
   declareProperty( "MaxNumberOutliers"   , m_numOutlierIter   = 2           );
   declareProperty( "StateAtBeamLine"     , m_stateAtBeamLine  = true        );
@@ -103,7 +104,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "MinNumTTHitsForOutlierRemoval",      m_minNumTTHits      = 2 ) ;
   declareProperty( "MinNumTHitsForOutlierRemoval",       m_minNumTHits       = 4 ) ;
   declareProperty( "MinNumMuonHitsForOutlierRemoval",    m_minNumMuonHits    = 4 ) ;
-  declareProperty( "MaxDeltaChiSqConverged",             m_maxDeltaChi2Converged = -1 ) ;
+  declareProperty( "MaxDeltaChiSqConverged",             m_maxDeltaChi2Converged = 0.01 ) ;
 }
 
 //=========================================================================
@@ -241,6 +242,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
       if ( sc.isFailure() ) return failure( "problem updating ref vectors" );
     }
     
+    bool prevwasprefit = isPrefit( *kalfitresult ) ;
     double prevchi2 = track.chi2() ;
     sc = m_trackNodeFitter -> fit( track );
     
@@ -250,10 +252,11 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
                                 << " ref state = (" << nodes.back()->state().stateVector() 
                                 << ") at z= " << nodes.back()->state().z() << endmsg;
     double dchi2 = prevchi2 - track.chi2() ;
-    converged = iter>1 && std::abs(dchi2) < m_maxDeltaChi2Converged * track.nDoF();
+    // require at least 3 iterations, because of the OT prefit.
+    converged = !prevwasprefit && iter>1 && std::abs(dchi2) < m_maxDeltaChi2Converged * track.nDoF();
     
   }
-  kalfitresult->setNIter( iter ) ;
+  kalfitresult->setNIter( iter-1 ) ;
   
   // Outlier removal iterations
   iter = kalfitresult->nOutliers() ;
@@ -826,4 +829,16 @@ StatusCode TrackMasterFitter::initializeRefStates(LHCb::Track& track,
     track.addToStates( newstates ) ;
   }
   return sc ;
+}
+
+bool TrackMasterFitter::isPrefit( const LHCb::TrackFitResult& fr ) const
+{
+  bool rc = false ;
+  BOOST_FOREACH( const LHCb::Node* node, fr.nodes() ) 
+    if( node->hasMeasurement() &&
+	node->measurement().type() == LHCb::Measurement::OT ) {
+      const LHCb::OTMeasurement* otmeas = dynamic_cast<const LHCb::OTMeasurement*>(&(node->measurement())) ;
+      if(otmeas && (rc = otmeas->driftTimeStrategy() == LHCb::OTMeasurement::PreFit ) ) break ;
+    }
+  return rc ;
 }
