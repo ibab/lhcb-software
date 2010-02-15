@@ -1,8 +1,11 @@
-!$Id: release.notes,v 1.59 2010-02-12 22:18:49 graven Exp $
+!$Id: release.notes,v 1.60 2010-02-15 22:14:58 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
+! 2010-02-15 - Gerhard Raven
+ - fix windows compiler warnings
+
 ! 2010-02-12 - Gerhard Raven
  - streamline and generalize code 
 

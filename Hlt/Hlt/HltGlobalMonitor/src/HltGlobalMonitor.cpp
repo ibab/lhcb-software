@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.55 2010-02-14 10:26:44 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.56 2010-02-15 22:14:58 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -407,13 +407,13 @@ void HltGlobalMonitor::monitorHLT1(const LHCb::ODIN*,
 
            //filling the histograms for each alley
     std::string hello = reps[i].first;
-    std::map<std::string,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt1Line2AlleyBin.find( reps[i].first );
-    if (j!=m_hlt1Line2AlleyBin.end()) fill( m_hlt1Alleys[j->second.first], j->second.second, accept );
+    std::map<std::string,std::pair<unsigned,unsigned> >::const_iterator k = m_hlt1Line2AlleyBin.find( reps[i].first );
+    if (k!=m_hlt1Line2AlleyBin.end()) fill( m_hlt1Alleys[k->second.first], k->second.second, accept );
   }
        //filling the histograms for the alleys instead of the lines
   for (unsigned i=0; i<m_DecToGroup1.size();i++) {
     fill(m_hlt1Alley,i,(nAccAlley[i]>0));
-    if(!nAccAlley[i]>0) continue;
+    if(nAccAlley[i]==0) continue;
     for(unsigned j=0; j<m_DecToGroup1.size();j++){
       fill(m_hlt1AlleysCorrelations,i,j,(nAccAlley[j]>0));
     }
@@ -466,15 +466,15 @@ void HltGlobalMonitor::monitorHLT2(const LHCb::ODIN*,
     for (size_t j = 0; j<reps.size(); ++j) fill(m_hlt2Correlations,i,j,reps[j].second->decision());
     
     // filling the histograms for each alley
-    std::map<std::string,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt2Line2AlleyBin.find(reps[i].first);
-    if (j!=m_hlt2Line2AlleyBin.end()) fill( m_hlt2Alleys[j->second.first], j->second.second, accept );
+    std::map<std::string,std::pair<unsigned,unsigned> >::const_iterator k = m_hlt2Line2AlleyBin.find(reps[i].first);
+    if (k!=m_hlt2Line2AlleyBin.end()) fill( m_hlt2Alleys[k->second.first], k->second.second, accept );
 
   }
   //filling the histograms for the alleys instead of the lines
 
   for (unsigned i=0; i<m_DecToGroup2.size();i++) {
     fill(m_hlt2Alley,i,(nAccAlley[i]>0));
-    if(!nAccAlley[i]>0) continue;
+    if(nAccAlley[i]==0) continue;
     for(unsigned j=0; j<m_DecToGroup2.size();j++){
       fill(m_hlt2AlleysCorrelations,i,j,(nAccAlley[j]>0));
     }
