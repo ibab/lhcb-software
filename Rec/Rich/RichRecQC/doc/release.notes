@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r36 2010-02-15 ========================
 ! 2010-02-12 - Ross Young
  - In Configuration.py: suppresscornerpixels generalised to IsDark; 
 	2-D IFB hitmaps disabled
