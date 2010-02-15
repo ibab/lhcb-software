@@ -115,7 +115,7 @@ def ConfiguredEventFitter( Name,
                            LiteClusters = False,
                            ApplyMaterialCorrections = None,
                            StateAtBeamLine = True,
-                           MaxNumberOutliers = 3):
+                           MaxNumberOutliers = 2):
     # make sure the name is unique
     if allConfigurables.get( Name ) :
         raise ValueError, 'ConfiguredEventFitter: instance with name '+Name+' already exists'
@@ -132,7 +132,8 @@ def ConfiguredEventFitter( Name,
                             KalmanSmoother=KalmanSmoother,
                             LiteClusters=LiteClusters,
                             ApplyMaterialCorrections=ApplyMaterialCorrections,
-                            StateAtBeamLine=StateAtBeamLine)
+                            StateAtBeamLine=StateAtBeamLine,
+                            MaxNumberOutliers=MaxNumberOutliers)
     return eventfitter
 
 
@@ -150,7 +151,7 @@ def ConfiguredFastFitter( Name, FieldOff = None, LiteClusters = True,
     if ForceUseDriftTime:
         from Configurables import TrajOTProjector, TrackProjectorSelector
         otprojector = TrajOTProjector('OTFastFitProjector')
-        otprojector.SkipDriftTimeZeroAmbiguity = False
+        otprojector.PrefitStrategy = 1
         fitter.Projector.OT = otprojector
         
     # at some point, need to switch to analytic evaluation
