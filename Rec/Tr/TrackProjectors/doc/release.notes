@@ -4,6 +4,7 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v2r27 2010-02-15 =====================
 ! 2010-02-14 Wouter Hulsbergen
  - improvements in OTProjector 
    - implement new 'prefit' strategy proposed by Tjeerd Ketel
