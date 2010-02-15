@@ -9,6 +9,8 @@ Purpose: LHCb Digitization program
  - Changes to references to reflect changes in Boole v20r3 output:
    . Proper handling of magnetic field (RichDet v13r4)
    . Prepare L0Muon for CondDB access (L0Muon v9r0)
+   . Detailed hardware consistency check of L0TCKs (L0DU v10r2)
+   . Modified ST cluster monitor (STMonitors v2r4)
 
 </PRE><H1><A NAME=v20r2>2010-02-04 Boole v20r2</A></H1></PRE>
  - Changes to Configurable:
