@@ -10,7 +10,7 @@
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
 __author__  = "Plamen Hopchev phopchev@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -90,7 +90,6 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         from Hlt1Lines.HltL0Candidates import L0Mask, L0Mask2ODINPredicate
         mask = L0Mask(channel)
         return Line( name
-                   , priority = 200
                    , prescale = self.prescale
                    , ODIN  = L0Mask2ODINPredicate(mask) 
                    , L0DU  = "L0_CHANNEL('%s')" % channel
@@ -170,7 +169,9 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
 
         # FIXME: why does 'clone' not get prescaled right??? because the prescale _value_ not the function is cloned...
         #        hence we repeat prescale and postscale here explicitly...
+        # NOTE: we remove the 'priority' from the clone to make sure it runs first...
         line_beamCrossingForcedRZReco = line_beamCrossing.clone( lineName+"ForcedRZReco"
+                                                               , priority = None
                                                                , prescale = self.prescale
                                                                , algos = self.__performRZVelo() + bgTrigAlgos 
                                                                , postscale = self.postscale 
