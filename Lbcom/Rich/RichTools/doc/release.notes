@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v2r28p1 2010-02-15 ====================
 ! 2010-02-12 - Chris Jones
  - Fix untested StatusCode in HPD hot pixel finder.
 
