@@ -10,7 +10,7 @@
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
 __author__  = "Plamen Hopchev phopchev@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -20,8 +20,10 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
 
     # steering variables
-    __slots__ = {
-                  'Beam1VtxRangeLow'        : -2000.
+    __slots__ = { 'L0ChannelBeam1'          : "B1gas"
+                , 'L0ChannelBeam2'          : "B2gas"
+                , 'L0ChannelBeamCrossing'   : [ "SPD" , "PU" ]
+                , 'Beam1VtxRangeLow'        : -2000.
                 , 'Beam1VtxRangeUp'         :   600.
                 , 'Beam2VtxRangeLow'        :     0.
                 , 'Beam2VtxRangeUp'         :  2000.
@@ -83,11 +85,17 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
  
         from HltLine.HltLine import Hlt1Line as Line
         from HltLine.HltReco import DecodeVELO
-
+        channel = self.getProp('L0Channel' + whichBeam)
+        ##  Only create an Hlt1 line if the corresponding L0 channel exists...
+        from Hlt1Lines.HltL0Candidates import L0Channels
+        if channel not in L0Channels() : return None
+        from Hlt1Lines.HltL0Candidates import L0Mask, L0Mask2ODINPredicate
+        mask = L0Mask(channel)
         return Line( name
                    , priority = 200
                    , prescale = self.prescale
-                   , ODIN  = '(ODIN_TRGTYP == LHCb.ODIN.BeamGasTrigger) & (ODIN_BXTYP == LHCb.ODIN.'+whichBeam+')'
+                   , ODIN  = L0Mask2ODINPredicate(mask) 
+                   , L0DU  = "L0_CHANNEL('%s')" % channel
                    , algos = [ DecodeVELO, algRZTracking, algVtxCut ]
                    , postscale = self.postscale )
 
@@ -152,10 +160,13 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         bgTrigAlgos = [ algClusterCut, algExtractClust, algRTracking2, algVtxCut ]
 
         from HltLine.HltLine import Hlt1Line as Line
+        from Hlt1Lines.HltL0Candidates import L0Channels
+        channels = [ channel for channel in self.getProp('L0ChannelBeamCrossing') if channel in L0Channels() ]
+        if not channels  : return None
         line_beamCrossing = Line( lineName
                                 , priority = 200 
                                 , prescale = self.prescale
-                                , ODIN  = '(ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger) & (ODIN_BXTYP == LHCb.ODIN.BeamCrossing)'
+                                , L0DU  = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in channels ] )
                                 , algos = [ algCheckTracks ] + bgTrigAlgos
                                 , postscale = self.postscale )
 
