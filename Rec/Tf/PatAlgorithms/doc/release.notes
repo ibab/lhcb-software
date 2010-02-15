@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+!========================= PatAlgorithms v3r29 2010-02-15 ====================
 ! 2009-02-13 - Stephanie Hansmann-Menzemer
  - modify early data tuning for PatForward and PatDownstream algorithms
 
