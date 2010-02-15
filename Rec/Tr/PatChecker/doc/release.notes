@@ -4,6 +4,8 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+
+=========================== PatChecker v3r6 2010-02-15 =======================
 ! 2010-02-11 - Piotr Morawski
 - added additional printout and histos
 - added VELO track counter
