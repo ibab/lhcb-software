@@ -1,3 +1,10 @@
+2010-02-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/cmpPackageWithTrunk: simple script to check if a checked out
+	package is different from the HEAD of the trunk. It process both CVS and
+	Subversion hosted packages and can check all the pacakges in a directory
+	without the need for "cmt broadcast".
+
 2010-01-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/GetPack.py: Moved the list of repositories

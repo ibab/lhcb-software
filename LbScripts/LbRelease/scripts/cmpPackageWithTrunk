@@ -1,0 +1,206 @@
+#!/usr/bin/env python
+
+from LbRelease.rcs import _cvs as cvs, _svn as svn
+from subprocess import Popen, PIPE
+from urlparse import urlparse
+from xml.etree import ElementTree as ET
+import logging
+import os
+
+def get_text(node, path):
+    """
+    Get the text from a node in the XML tree.
+    """
+    t = node.find(path)
+    if t is not None:
+        return t.text
+    return None
+
+def find_package_root(path):
+    """
+    Look for the parent directory of path that is root of a package.
+    Returns None if the specified path is not in a package.
+    """
+    if os.path.exists(os.path.join(path, "cmt", "requirements")):
+        return path
+    else:
+        if not path or path == "/": # break recursion
+            return None
+        else:
+            return find_package_root(os.path.dirname(path))
+
+
+class BaseError(RuntimeError):
+    """Base exception class"""
+    pass
+
+class NotInAPackage(BaseError):
+    """Exception class"""
+    def __init__(self, path):
+        BaseError.__init__(self, path)
+        self.path = path
+    def __str__(self):
+        return "'%s' is not in a package" % self.path
+
+class NotInVersionControl(BaseError):
+    """Exception class"""
+    def __init__(self, path):
+        BaseError.__init__(self, path)
+        self.path = path
+    def __str__(self):
+        return "The directory '%s' is not under version control" % self.path
+
+class BadURL(BaseError):
+    """Exception class"""
+    def __init__(self, url):
+        BaseError.__init__(self, url)
+        self.url = url
+    def __str__(self):
+        return "Cannot understand URL '%s'" % self.url
+
+class BadCVS(BaseError):
+    """Exception class"""
+    def __init__(self, path):
+        BaseError.__init__(self, path)
+        self.path = path
+    def __str__(self):
+        return "Cannot read CVS directory '%s'" % self.path
+
+class Package(object):
+    """
+    Class to detect the properties of a checked out package and compare it with
+    the trunk HEAD version. 
+    """
+    def __init__(self, path = "."):
+        """
+        Collect information about the package including 'path'.
+        """
+        # Root directory of the package
+        self.package_root = find_package_root(os.path.realpath(path))
+        if not self.package_root:
+            raise NotInAPackage(path)
+        
+        # Check the versioning system used
+        if os.path.isdir(os.path.join(self.package_root, ".svn")):
+            self.system = "svn"
+        elif os.path.isdir(os.path.join(self.package_root, "CVS")):
+            self.system = "cvs"
+        else:
+            raise NotInVersionControl(self.package_root)
+        
+        # Extract the informations
+        if self.system == "svn":
+            output, error, retcode = svn("info", "--xml", self.package_root)
+            if retcode:
+                raise RuntimeError(error)
+            info = ET.fromstring(output)
+            # URL of the check-out
+            self.url = get_text(info, "entry/url")
+            # Root of the repository
+            self.root = get_text(info, "entry/repository/root")
+            # Path of the check-out in the repository
+            self.path = self.url[len(self.root):]
+            elems = self.path.lstrip("/").split("/")
+            if len(elems) < 3:
+                raise BadURL(self.url)
+            # Name of the project
+            self.project = elems.pop(0)
+            tree = elems.pop(0)
+            # Version checked out
+            if tree == "tags":
+                self.version = elems.pop()
+            elif tree == "trunk":
+                self.version = "trunk"
+            else:
+                raise BadURL(self.url)
+            if not elems:
+                raise BadURL(self.url)
+            # Name of the package
+            self.package = "/".join(elems)
+        else: # "cvs"
+            try:
+                # Path of the check-out in the repository
+                self.path = open(os.path.join(self.package_root, "CVS", "Repository")).readline().strip()
+                # Root of the repository
+                self.root = open(os.path.join(self.package_root, "CVS", "Root")).readline().strip()
+                # Name of the package
+                self.package = self.path
+            except IOError:
+                raise BadCVS(os.path.join(self.package_root, "CVS"))
+    def _trunkUrl(self):
+        """
+        Return the URL to the trunk in SVN.
+        """
+        if self.system == "svn":
+            if self.version == "trunk":
+                return self.url
+            else:
+                return "/".join([self.root, self.project, "trunk", self.package])
+        else: # "cvs"
+            pass 
+    def cmpWithTrunk(self):
+        """
+        Compare the package with the trunk and print the summary of the changes.
+        """
+        if self.system == "svn":
+            if self.version == "trunk":
+                svn("status", "--show-updates", cwd = self.package_root, stdout = None, stderr = None)
+            else:
+                svn("diff", "--summarize", self.url, self._trunkUrl(), stdout = None, stderr = None)
+        else: # "cvs"
+            cvs("-n", "update", "-A", cwd = self.package_root, stdout = None, stderr = PIPE)
+
+
+def find_all_packages(path):
+    """
+    Locate all the packages in a given directory.
+    """
+    packages = []
+    for root, dirs, files in os.walk(path):
+         if "cmt" in dirs and os.path.isfile(os.path.join(root, "cmt", "requirements")):
+             packages.append(root)
+             continue
+    return packages
+
+# Main function
+if __name__ == "__main__":
+    from optparse import OptionParser
+    from pprint import pformat
+    # Parse command line arguments
+    parser = OptionParser(usage = "%prog [options] [path_to_package ...]")
+    parser.add_option("-d", "--debug",
+                      action = "store_true",
+                      help = "Enable debug output")
+    parser.add_option("--all",
+                      action = "store_true",
+                      help = "Find all the packages under the specified directories")
+    opts, args = parser.parse_args()
+    
+    # enable debug printout
+    if opts.debug:
+        logging.basicConfig(level = logging.DEBUG)
+
+    # use '.' if no path is specified
+    if not args:
+        args = ["."]
+        logging.debug("Using '.' as package path")
+
+    if opts.all:
+        # get all the packages in each specified directory
+        # (maps give a list of lists and sum flattens it) 
+        args = sum(map(find_all_packages, args), [])
+        # side note: sum is not supposed to be used on lists
+
+    # flag to add a banner if more than one package is specified
+    show_package = len(args) > 1
+    # compare each specified path
+    for path in args:
+        try:
+            p = Package(path)
+            logging.debug("Package informations for '%s':\n%s" %
+                          (path, pformat(p.__dict__)))
+            if show_package:
+                print "=== %s ===" % p.package
+            p.cmpWithTrunk()
+        except BaseError, x:
+            print "*** Error:", x
