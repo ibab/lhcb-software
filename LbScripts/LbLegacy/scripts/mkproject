@@ -383,7 +383,8 @@ def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=Tr
         # cmt broadcast gmake
         status,cmtpath = commands.getstatusoutput('cmt show set_value CMTPATH')
         log.info(' CMTPATH= %s '%(cmtpath))
-        str = tbroadcast+' cmt make'
+        str = tbroadcast+' "'
+        str += ' cmt make'
         if parallel_mode:
             ncores = getNumberOfCores()
             if ncores > 1 :
@@ -394,6 +395,7 @@ def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=Tr
             if ncores > 1 :
                 str += " -j %s -l %s" % (ncores, nproc)
         str += " all_groups"
+        str +=+ ' "'
         log.info(' str= %s '%(str))
         rc,output = commands.getstatusoutput(str)
         print output
@@ -445,7 +447,8 @@ def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=Tr
 
         # cmt broadcast gmake tag=$CMTDEB
         os.environ['CMTCONFIG'] = CMTDEB
-        str = tbroadcast+' cmt make'
+        str = tbroadcast + ' "' 
+        str += ' cmt make'
         if parallel_mode:
             ncores = getNumberOfCores()
             if ncores > 1 :
@@ -456,7 +459,7 @@ def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=Tr
             if ncores > 1 :
                 str += " -j %s -l %s " % (ncores, nproc)
         str += " all_groups"
-
+        str += ' "'
         rc,output = commands.getstatusoutput(str)
         os.environ['CMTCONFIG'] = CMTCONFIG
         log.info( output )

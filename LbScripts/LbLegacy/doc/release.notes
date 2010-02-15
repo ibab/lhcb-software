@@ -1,5 +1,6 @@
 2010-02-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/mkproject: fixed the quoting of the argument to "cmt br".
 	* scripts/makedoc: create the target directory for the documentation is it doesn't
 	already exists.
 
