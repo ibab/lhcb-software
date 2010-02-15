@@ -1,0 +1,29 @@
+# Created    : 15/02/2010
+# Maintainer : A. Poluektov
+
+package           StrippingSettings
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc python
+include_path      none
+
+# Used packages. 
+#============================================================================
+use DaVinciKernel        v*     Phys
+use LoKiCore             v*     Phys
+use StrippingConf        v*     Phys
+use StrippingSelections  v*     Phys
+use PhysSelPython        v*     PhysSel
+private
+use LHCbAlgs             v*     Kernel  
+end_private
+
+# Component library building rule
+#============================================================================
+
+# standard patterns
+#============================================================================
+apply_pattern install_python_modules
+#============================================================================

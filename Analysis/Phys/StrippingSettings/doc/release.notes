@@ -1,0 +1,14 @@
+! -----------------------------------------------------------------------------
+! Package     : Phys/StrippingSettings
+! Responsible : Anton Poluektov
+! Purpose     : Configuration of the stripping selections
+! -----------------------------------------------------------------------------
+
+! 2010-02-13  Anton Poluektov
+
+  - Initial release. Only one Default set of settings that configures StrippingPass lines.
+  - tests/ options are moved to this package from StrippingSelections. 
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------
