@@ -17,14 +17,14 @@ class builder :
 #--------------------------------------------------------------------------------
     def __init__(self):
 
-        self.argv0        = "makedoc"
-        self.info         = False
-        self.test         = False
-        self.output       = "/build"
-        self.gaudiRoot    = ""
-        self.cfgFile      = "DoxyFile.cfg"
-        self.dotPath      = "$(LHCBHOME)/bin"
-        self.doxyPath     = "$LHCBHOME/bin/doxygen"
+        self.argv0 = "makedoc"
+        self.info = False
+        self.test = False
+        self.output = "/build"
+        self.gaudiRoot = ""
+        self.cfgFile = "DoxyFile.cfg"
+        self.dotPath = "$(LHCBHOME)/bin"
+        self.doxyPath = "$LHCBHOME/bin/doxygen"
 
 #--------------------------------------------------------------------------------
     def usage(self):
@@ -70,19 +70,19 @@ class builder :
             return
 
         try:
-            keys, values = getopt.getopt(arguments,'hitv:o:',
-                                         ['help','info','test','version','output='])
+            keys, values = getopt.getopt(arguments, 'hitv:o:',
+                                         ['help', 'info', 'test', 'version', 'output='])
 
         except getopt.GetoptError:
             self.usage()
             sys.exit()
 
-        for key,value in keys:
+        for key, value in keys:
             if key in ('-i', '--info'):
                 self.info = True
             if key in ('-h', '--help'):
                 self.usage()
-            if key in ( '-v', '--version'):
+            if key in ('-v', '--version'):
                 print version
                 sys.exit(0)
             if key in ('-t', '--test'):
@@ -93,7 +93,7 @@ class builder :
 
 #--------------------------------------------------------------------------------
     def envChecker(self):
-        if not os.path.exists( self.cfgFile ):
+        if not os.path.exists(self.cfgFile):
             print self.argv0 + ': ' + self.cfgFile + ' does not exist in current directory'
             sys.exit(0)
 
@@ -102,15 +102,15 @@ class builder :
                 print self.argv0 + ': CMTPATH not defined'
                 sys.exit(0)
         else:
-            os.chdir(os.path.join(os.pardir,'cmt'))
-            status,value = commands.getstatusoutput('cmt show set_value CMTPATH')
+            os.chdir(os.path.join(os.pardir, 'cmt'))
+            status, value = commands.getstatusoutput('cmt show set_value CMTPATH')
             if value.find('#CMT>') != -1:
                 CMTPATH = value.split('\n')[1]
             else:
                 CMTPATH = value
             os.environ['CMTPATH'] = CMTPATH
-            os.chdir(os.path.join(os.pardir,'doc'))
-        print ' envChecker - CMTPATH= ',os.environ.get('CMTPATH')
+            os.chdir(os.path.join(os.pardir, 'doc'))
+        print ' envChecker - CMTPATH= ', os.environ.get('CMTPATH')
 
 #--------------------------------------------------------------------------------
 
@@ -119,12 +119,12 @@ class builder :
         gaudiDir = self.gaudiRoot + '/cmt'
         os.chdir(gaudiDir)
         for line in os.popen('cmt show macros native_version').readlines():
-            pack = line[0:line.find('_native')]+'VERS'
+            pack = line[0:line.find('_native')] + 'VERS'
 #      vers = line[line.find('=')+2:len(line)-2]
             native = line.split('=')[0]
             cmtcmd = 'cmt show macro_value ' + native
-            status,vers = commands.getstatusoutput(cmtcmd)
-            if self.info : 
+            status, vers = commands.getstatusoutput(cmtcmd)
+            if self.info :
                 print self.argv0 + ': setting $' + pack + '=' + vers
             os.environ[pack] = vers
 
@@ -147,22 +147,22 @@ class builder :
             for dir in dirs:
                 if dir.find('_') != -1:
                     pack = dir[0:dir.find('_')]
-                    vers = dir[dir.find('_')+1:]
+                    vers = dir[dir.find('_') + 1:]
                     if self.info : print self.argv0 + ': setting $' + pack + 'VERS=' + vers
-                    os.environ[pack+'VERS'] = vers
-                    os.environ[pack+'_HOME'] = path
+                    os.environ[pack + 'VERS'] = vers
+                    os.environ[pack + '_HOME'] = path
 
-                    if pack == 'LCGCMT' : 
+                    if pack == 'LCGCMT' :
                         break
 
                     if pack == 'GAUDI'  :
-                        self.setGaudiRoot(path,vers)
+                        self.setGaudiRoot(path, vers)
                         break
 
                     sysRoot = pack + 'SYSROOT'
-                    if os.environ.has_key( sysRoot ) and self.test:
-                        if self.info : 
-                            print self.argv0 + ': $' + sysRoot + ' already defined as ' + os.environ.get(( sysRoot ))
+                    if os.environ.has_key(sysRoot) and self.test:
+                        if self.info :
+                            print self.argv0 + ': $' + sysRoot + ' already defined as ' + os.environ.get((sysRoot))
 
                     else:
                         if pack == 'LHCB':
@@ -174,17 +174,17 @@ class builder :
                         else:
                             packSys = pack.capitalize() + 'Sys'
 
-                        if os.path.exists(os.path.join(lhcb,pack,pack+'_'+vers, packSys, "cmt")) :
-                            sysPath = os.path.join(lhcb,pack,pack+'_'+vers, packSys)
+                        if os.path.exists(os.path.join(lhcb, pack, pack + '_' + vers, packSys, "cmt")) :
+                            sysPath = os.path.join(lhcb, pack, pack + '_' + vers, packSys)
                         else :
-                            sysPath = os.path.join(lhcb,pack,pack+'_'+vers, packSys, vers)                            
-                        if self.info : 
+                            sysPath = os.path.join(lhcb, pack, pack + '_' + vers, packSys, vers)
+                        if self.info :
                             print self.argv0 + ': setting $' + sysRoot + '=' + sysPath
                         os.environ[sysRoot] = sysPath
                     break
 
 #--------------------------------------------------------------------------------
-    def setGaudiRoot(self,path,vers):
+    def setGaudiRoot(self, path, vers):
         if os.environ.has_key('CMTPROJECTPATH'):
             packSys = 'GaudiRelease'
             root = 'GAUDIRELEASEROOT'
@@ -195,17 +195,17 @@ class builder :
         temp = os.environ.get(root)
         if temp != None and self.test :
             self.gaudiRoot = temp
-            if self.info : 
-                print self.argv0 + ': $'+root+' already defined as ' + temp
+            if self.info :
+                print self.argv0 + ': $' + root + ' already defined as ' + temp
         else:
-            if os.path.exists(os.path.join(path,packSys,"cmt")) :
-                self.gaudiRoot = os.path.join(path,packSys)
+            if os.path.exists(os.path.join(path, packSys, "cmt")) :
+                self.gaudiRoot = os.path.join(path, packSys)
             else :
-                self.gaudiRoot = os.path.join(path,packSys,vers)
-            if self.info : print self.argv0 + ': setting $'+root+'=' + self.gaudiRoot
+                self.gaudiRoot = os.path.join(path, packSys, vers)
+            if self.info : print self.argv0 + ': setting $' + root + '=' + self.gaudiRoot
             os.environ[root] = self.gaudiRoot
         # Since Gaudi v20r3, GAUDI_DOXY_HOME has to be set
-        os.environ['GAUDI_DOXY_HOME'] = os.path.join(self.gaudiRoot,"doc")
+        os.environ['GAUDI_DOXY_HOME'] = os.path.join(self.gaudiRoot, "doc")
 
 #--------------------------------------------------------------------------------
     def docBuilder(self):
@@ -216,42 +216,42 @@ class builder :
         self.extractReleaseNotes()
         if self.info : print
 
-        shutil.copy( self.cfgFile, 'temp.cfg' )
-        outDir  = self.findOutputDir( 'temp.cfg' )
-        tempDir = self.setTempDir( 'temp.cfg' )
+        shutil.copy(self.cfgFile, 'temp.cfg')
+        outDir = self.findOutputDir('temp.cfg')
+        tempDir = self.setTempDir('temp.cfg')
 
         if self.info : print self.argv0 + ': making the doc'
-        os.system( self.doxyPath + ' temp.cfg')
+        os.system(self.doxyPath + ' temp.cfg')
 
         if tempDir != 'NONE' :   # move the generated files from the temporary dir
             here = os.getcwd()
             if not os.path.exists(outDir) :
                 os.mkdir(outDir)
             os.chdir(outDir)
-            for file in glob.glob( os.path.join(tempDir,'*') ):
+            for file in glob.glob(os.path.join(tempDir, '*')):
                 newFile = os.path.basename(file)
                 print 'moving ' + file + ' to ' + os.getcwd() + os.sep + newFile
-                if os.path.exists( newFile ):
-                    shutil.rmtree( newFile )
-                shutil.copytree( file, newFile )
-            shutil.rmtree( tempDir )
+                if os.path.exists(newFile):
+                    shutil.rmtree(newFile)
+                shutil.copytree(file, newFile)
+            shutil.rmtree(tempDir)
             os.chdir(here)
 
         os.remove('temp.cfg')
         if self.info : print
 
 #--------------------------------------------------------------------------------
-    def findOutputDir(self,file='DoxyFile.cfg'):
+    def findOutputDir(self, file='DoxyFile.cfg'):
 
-        if not os.path.exists( file ):
+        if not os.path.exists(file):
             print self.argv0 + ': ' + file + ' does not exist'
             sys.exit(0)
 
         outDir = os.getcwd()
-        theFile = open( file, 'r' )
+        theFile = open(file, 'r')
         for line in theFile:
-            if line.find( 'OUTPUT_DIRECTORY' ) != -1:
-                tempDir = line.split( '=' )[1] % os.environ
+            if line.find('OUTPUT_DIRECTORY') != -1:
+                tempDir = line.split('=')[1] % os.environ
                 tempDir = tempDir.split('\n')[0]
                 # build the output directory with resolving environment of variables
                 outDir = ''
@@ -260,40 +260,40 @@ class builder :
                     if temp.find(')') == -1:
                         outDir += temp
                     else:
-                        env = os.environ.get( temp.split(')')[0] )
+                        env = os.environ.get(temp.split(')')[0])
                         if env == None :
                             print temp.split(')')[0] + " not defined"
                             sys.exit(0)
-                        outDir += env + temp.split(')',2)[1]
+                        outDir += env + temp.split(')', 2)[1]
                 outDir = outDir.strip()
         theFile.close()
 
         return outDir
 
 #--------------------------------------------------------------------------------
-    def setTempDir(self,file='temp.cfg'):
+    def setTempDir(self, file='temp.cfg'):
 
-        if not os.path.exists( file ):
+        if not os.path.exists(file):
             print self.argv0 + ': ' + file + ' does not exist'
             sys.exit(0)
 
 # use a temporary directory for output files, if it is defined
         tempDir = 'NONE'
-        if not os.path.exists( self.output ):
-            if os.path.exists( '/tmp' ):
+        if not os.path.exists(self.output):
+            if os.path.exists('/tmp'):
                 self.output = '/tmp'
 
-        if os.path.exists( self.output ):
-            tempDir = os.path.join(self.output,'lhcbdoc_'+str(random.randint(0,1000000)))
-            os.mkdir( tempDir )
-            print ' writing temporary files to '+tempDir
+        if os.path.exists(self.output):
+            tempDir = os.path.join(self.output, 'lhcbdoc_' + str(random.randint(0, 1000000)))
+            os.mkdir(tempDir)
+            print ' writing temporary files to ' + tempDir
 
-            theFile = open( file, 'r' )
+            theFile = open(file, 'r')
             lines = theFile.readlines()
             theFile.close()
-            lines.append( 'OUTPUT_DIRECTORY = '+tempDir )
-            theFile = open( file, 'w' )
-            theFile.writelines( lines )
+            lines.append('OUTPUT_DIRECTORY = ' + tempDir)
+            theFile = open(file, 'w')
+            theFile.writelines(lines)
             theFile.close()
         else:
             print self.output + ' does not exist, not using a temporary directory'
@@ -314,8 +314,8 @@ class builder :
         if os.path.exists('new_release.notes'):
             os.remove('new_release.notes')
 
-        outFile = file( 'new_release.notes', 'a+' )
-        inFile  = open( rel_notes, 'r' )
+        outFile = file('new_release.notes', 'a+')
+        inFile = open(rel_notes, 'r')
         lines = inFile.readlines()
         found = 0
         for line in lines:
@@ -331,7 +331,7 @@ class builder :
         outFile.close()
 
 #================================================================================
-if ( __name__ == '__main__'):
+if (__name__ == '__main__'):
 
     arguments = sys.argv[1:]
 
@@ -343,10 +343,10 @@ if ( __name__ == '__main__'):
 
     here = os.getcwd()
     link = 'no'
-    if os.path.exists(os.path.join(here,os.pardir,os.pardir,"cmt", "project.cmt")) :
-        os.chdir(os.path.join(here,os.pardir,os.pardir))
+    if os.path.exists(os.path.join(here, os.pardir, os.pardir, "cmt", "project.cmt")) :
+        os.chdir(os.path.join(here, os.pardir, os.pardir))
     else :
-        os.chdir(os.path.join(here,os.pardir,os.pardir,os.pardir))
+        os.chdir(os.path.join(here, os.pardir, os.pardir, os.pardir))
     project_path = os.getcwd()
     print "Project path is %s" % project_path
     if os.path.islink('doc'):
@@ -356,11 +356,11 @@ if ( __name__ == '__main__'):
 
     chk.docBuilder()
     print os.getcwd()
-    
+
 #restore link if any
     os.chdir(here)
-    if link =='yes':
+    if link == 'yes':
         os.chdir(project_path)
-        doc_path = here.replace(project_path+'/','')
-        os.symlink(doc_path,'doc')
+        doc_path = here.replace(project_path + '/', '')
+        os.symlink(doc_path, 'doc')
         os.chdir(here)

@@ -38,7 +38,7 @@ script_name = 'mkproject'
 python_version = sys.version_info[:3]
 core_factor = 1.5
 
-day = time.strftime("%a, %d %b %Y %H:%M:%S",time.localtime())
+day = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
 
 rel_dir = os.getcwd()
 command = '. '
@@ -84,7 +84,7 @@ def help() :
     sys.exit()
 
 #-----------------------------------------------------------------------------------
-def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=True):
+def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=True):
     log = logging.getLogger()
 
     projconf = getProject(pname)
@@ -118,8 +118,8 @@ def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=Tr
         release = ( action.find('r') != -1 )
 
 
-    log.info (' ++++++++++++++++ %s - start mkproject.py version %s '%(day,script_version))
-    log.info (' pname %s pversion %s action %s '%(pname,pversion,action))
+    log.info (' ++++++++++++++++ %s - start mkproject.py version %s ' % (day, script_version))
+    log.info (' pname %s pversion %s action %s ' % (pname, pversion, action))
 
 
     if os.environ.has_key("CMTEXTRATAGS") :
@@ -138,7 +138,7 @@ def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=Tr
     PACK = projconf.NAME()
     if not os.path.exists(PACK):
         os.mkdir(PACK)
-    maindir = os.path.join(PACK,PACK+'_'+pversion)
+    maindir = os.path.join(PACK, PACK + '_' + pversion)
 
 # set packSys: container package 
     packSys = projconf.SteeringPackage()
@@ -150,139 +150,139 @@ def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=Tr
     else :
         CMTDEB = CMTCONFIG
         CMTCONFIG = getBinaryOpt(CMTDEB)
-    
+
 # check space available on $LHCBTAR/PACK
-    os.system('ls -ltr '+os.path.join(os.environ['LHCBTAR'],PACK))
-    os.system('fs lq '+os.path.join(os.environ['LHCBTAR'],PACK))
-    log.warning( "CHECK THE SPACE AVAILABLE FOR (source,optimized and debug version) TAR FILES" )
-    log.warning( "TO ENLARGE THE VOLUME:" )
-    log.warning( "> cd $LHCBTAR/%s; afs_admin sq $PWD <new volume size>" % PACK)
-    log.warning( "============================================================================")
+    os.system('ls -ltr ' + os.path.join(os.environ['LHCBTAR'], PACK))
+    os.system('fs lq ' + os.path.join(os.environ['LHCBTAR'], PACK))
+    log.warning("CHECK THE SPACE AVAILABLE FOR (source,optimized and debug version) TAR FILES")
+    log.warning("TO ENLARGE THE VOLUME:")
+    log.warning("> cd $LHCBTAR/%s; afs_admin sq $PWD <new volume size>" % PACK)
+    log.warning("============================================================================")
 
 # print action list
     print '    action list'
-    print '%s_%s volume will be created if not yet done' % (PACK, pversion) 
-    if new : 
-        print '%s_%s directory will be created' % (PACK, pversion) 
+    print '%s_%s volume will be created if not yet done' % (PACK, pversion)
+    if new :
+        print '%s_%s directory will be created' % (PACK, pversion)
     if get :
         print '%s will be getpack -u -r' % packSys
-    if use : 
-        print 'check cmt show uses output' 
-    if compile : 
-        print '%s will be compiled in %s ' % (packSys, CMTCONFIG) 
-    if debug : 
+    if use :
+        print 'check cmt show uses output'
+    if compile :
+        print '%s will be compiled in %s ' % (packSys, CMTCONFIG)
+    if debug :
         print 'compilation will be done in debug mode'
-    if install : 
-        print 'InstallArea will be built in %s/%s ' % (rel_dir, maindir) 
-    if tar : 
+    if install :
+        print 'InstallArea will be built in %s/%s ' % (rel_dir, maindir)
+    if tar :
         print 'project tar files will be built'
     if glimpse :
-        print 'glimpse index files will be built' 
-    if release : 
+        print 'glimpse index files will be built'
+    if release :
         print 'release area will become public'
-    if doxygen : 
+    if doxygen :
         print 'doxygen documentation will be built'
-    if html : 
+    if html :
         print 'html page will be updated'
-    if web : 
+    if web :
         print 'new html page will be published'
 
 
     if not yes_mode :
         print 'do you agree? [yes|no]'
         next = sys.stdin.readline()
-        if next.lower()[0] == 'n': 
+        if next.lower()[0] == 'n':
             sys.exit('you disagree - STOP')
 
 # set tbroadcast command
-    status,tbroadcast = commands.getstatusoutput('which tbroadcast')
+    status, tbroadcast = commands.getstatusoutput('which tbroadcast')
     # this version of tbroadcast does not work properly: it does not return a meaningful returncode
     # use cmt broadcast for the time being
     tbroadcast = 'cmt br '
-    log.info( 'compile with %s' % tbroadcast )
+    log.info('compile with %s' % tbroadcast)
 
 # get LHCBRELEASES and GAUDISOFT
     LHCBRELEASES = os.environ['LHCb_release_area']
     GAUDISOFT = os.environ['Gaudi_release_area']
 
 # get cmt version, set CMTPROJECTPATH if cmtversion >= v1r18
-    status,cmtversion = commands.getstatusoutput('cmt version')
-    log.info('cmtversion = %s'%(cmtversion))
+    status, cmtversion = commands.getstatusoutput('cmt version')
+    log.info('cmtversion = %s' % (cmtversion))
     if cmtversion.split('r')[1] > 16 and os.environ.has_key('CMTPROJECTPATH'):
         if len(os.environ['CMTPROJECTPATH']) > 1 and os.getcwd() != LHCBRELEASES and os.getcwd() != GAUDISOFT :
             print ' keep the CMTPROJECTPATH set beforehand'
             CMTPROJECTPATH = os.environ['CMTPROJECTPATH']
         else:
             print ' set the CMTPROJECTPATH'
-            CMTPROJECTPATH = GAUDISOFT+os.pathsep+os.environ['LCG_release_area']
-            if PACK!= "GAUDI": CMTPROJECTPATH = LHCBRELEASES+os.pathsep+CMTPROJECTPATH
+            CMTPROJECTPATH = GAUDISOFT + os.pathsep + os.environ['LCG_release_area']
+            if PACK != "GAUDI": CMTPROJECTPATH = LHCBRELEASES + os.pathsep + CMTPROJECTPATH
             os.environ['CMTPROJECTPATH'] = CMTPROJECTPATH
             cmtrun = 'cmt run '
-        log.info( 'CMTPROJECTPATH = %s' % os.environ['CMTPROJECTPATH'])
+        log.info('CMTPROJECTPATH = %s' % os.environ['CMTPROJECTPATH'])
     else:
         CMTPROJECTPATH = ''
         cmtrun = ''
         CMTPATH = ''
         os.environ['CMTPATH'] = CMTPATH
-        log.info('CMTPATH = %s, tbroadcast= %s'%(os.environ['CMTPATH'],tbroadcast))
+        log.info('CMTPATH = %s, tbroadcast= %s' % (os.environ['CMTPATH'], tbroadcast))
 
 #========================== action : new ================================================
     if new :
-        log.info( 'create a new volume')
+        log.info('create a new volume')
     # create the AFS volume if rel_dir = $LHCBRELEASES or $GAUDISOFT
         if rel_dir == os.environ['LHCBRELEASES'] or rel_dir == os.environ['GAUDISOFT']:
             rc = create_volume(pname, pversion)
 
             if not os.path.exists(os.path.join(rel_dir, maindir)):
-                log.error( 'Problem to create the volume - STOP' )
+                log.error('Problem to create the volume - STOP')
                 sys.exit('ERROR - no volume')
 
     # create project directory
         if not os.path.exists(PACK): os.mkdir(PACK)
-        if not os.path.exists(os.path.join(PACK,PACK+'_'+pversion)): os.mkdir(os.path.join(PACK,PACK+'_'+pversion))
+        if not os.path.exists(os.path.join(PACK, PACK + '_' + pversion)): os.mkdir(os.path.join(PACK, PACK + '_' + pversion))
 
 
         if CMTPROJECTPATH == '':
             # create cmt project
-            log.warning( ' no CMTPROJECTPATH : build cmt/project.cmt')
+            log.warning(' no CMTPROJECTPATH : build cmt/project.cmt')
             os.chdir(maindir)
             if not os.path.isdir('cmt'):
                 os.mkdir('cmt')
             else:
                 if os.path.exists('cmt/project.cmt'): os.remove('cmt/project.cmt')
-            out = open('cmt/project.cmt','w+')
-            out.write('project '+PACK+'\n')
-            out.write(bstrategy+'\n')
-            out.write(sstrategy+'\n')
+            out = open('cmt/project.cmt', 'w+')
+            out.write('project ' + PACK + '\n')
+            out.write(bstrategy + '\n')
+            out.write(sstrategy + '\n')
             out.close()
             if bstrategy.find('with_installarea') != -1: install = -1
 
             # getpack <project>Env
-            log.info( 'getpack %sEnv '%(pname) )
+            log.info('getpack %sEnv ' % (pname))
             os.chdir(rel_dir)
-            os.system('getpack -v '+pname+'Env '+pversion)
-            if os.path.exists(os.path.join(pname+'Env',pversion,'CVS')):
-                if not os.path.isfile(os.path.join(pname+'Env',pversion,'CVS','Tag')):
-                    log.error( '%sEnv %s is not tagged.please tag %sEnv '%(pname, pversion, pname) )
-                    log.error( 'then restart mkproject' )
-                    sys.exit('ERROR - '+pname+'Env missing tag')
+            os.system('getpack -v ' + pname + 'Env ' + pversion)
+            if os.path.exists(os.path.join(pname + 'Env', pversion, 'CVS')):
+                if not os.path.isfile(os.path.join(pname + 'Env', pversion, 'CVS', 'Tag')):
+                    log.error('%sEnv %s is not tagged.please tag %sEnv ' % (pname, pversion, pname))
+                    log.error('then restart mkproject')
+                    sys.exit('ERROR - ' + pname + 'Env missing tag')
 
             else:
-                log.error( '%sEnv %s does not exist.Please check %sEnv '%(pname,pversion,pname))
-                log.error( 'then restart mkproject' )
-                sys.exit('ERROR - '+pname+'Env missing version')
+                log.error('%sEnv %s does not exist.Please check %sEnv ' % (pname, pversion, pname))
+                log.error('then restart mkproject')
+                sys.exit('ERROR - ' + pname + 'Env missing version')
         else:
 
-            log.info( ' CMTPROJECTPATH is set : getpack -P %s %s'%(PACK,PACK+'_'+pversion))
-            rc = os.system('getpack -P '+ PACK +' '+PACK+'_'+pversion)
+            log.info(' CMTPROJECTPATH is set : getpack -P %s %s' % (PACK, PACK + '_' + pversion))
+            rc = os.system('getpack -P ' + PACK + ' ' + PACK + '_' + pversion)
             if rc != 0 :
-                log.error( 'cmt/project.cmt is not available for this version %s - STOP'%(pversion) )
-                log.error( 'check the cmtproject/%s tag and restart '%(PACK) )
+                log.error('cmt/project.cmt is not available for this version %s - STOP' % (pversion))
+                log.error('check the cmtproject/%s tag and restart ' % (PACK))
                 sys.exit('no cmt/project.cmt')
             install = -1
 
 # ============================= end new ==============================================
-    log.info( 'set the environment')
+    log.info('set the environment')
 # set the environment
     base_name = 'LHCB'
     if projconf.BaseName() :
@@ -291,34 +291,34 @@ def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=Tr
     if CMTPROJECTPATH == '':
     # use CMTPATH
         if pname == 'Gaudi': packSys = pname
-        os.environ[pname+'_release_area'] = rel_dir
-        os.chdir(os.path.join(rel_dir,pname+'Env',pversion,'cmt'))
-        status,CMTPATH = commands.getstatusoutput('cmt show set_value CMTPATH')
+        os.environ[pname + '_release_area'] = rel_dir
+        os.chdir(os.path.join(rel_dir, pname + 'Env', pversion, 'cmt'))
+        status, CMTPATH = commands.getstatusoutput('cmt show set_value CMTPATH')
         if CMTPATH[0] == ':' : CMTPATH = CMTPATH[1:]
         os.environ['CMTPATH'] = CMTPATH
-        log.info( os.getenv('CMTPATH') )
+        log.info(os.getenv('CMTPATH'))
 
     # check the environment
         if CMTPATH.find(maindir) == -1:
-            log.error( 'CMTPATH %s does not contain the project version %s. Please check %sEnv.'%(CMTPATH,pversion,pname))
-            log.error( 'then restart mkproject' )
-            sys.exit('ERROR - '+pname+'Env wrong version')
+            log.error('CMTPATH %s does not contain the project version %s. Please check %sEnv.' % (CMTPATH, pversion, pname))
+            log.error('then restart mkproject')
+            sys.exit('ERROR - ' + pname + 'Env wrong version')
         else:
             if CMTPATH.split(':')[0].find(maindir) == -1:
-                log.error( ' unsetenv CMTPATH and restart mkproject' )
-                sys.exit('ERROR - '+CMTPATH+' should start with '+maindir)
+                log.error(' unsetenv CMTPATH and restart mkproject')
+                sys.exit('ERROR - ' + CMTPATH + ' should start with ' + maindir)
 
     # get the base_version from <projet>Env
-        os.chdir(os.path.join(rel_dir,pname+'Env',pversion,'cmt'))
-        status,base_version = commands.getstatusoutput('cmt show macro_value '+base_name+'VERS')
-        log.info(' CMTPATH = %s '%(os.environ['CMTPATH']))
+        os.chdir(os.path.join(rel_dir, pname + 'Env', pversion, 'cmt'))
+        status, base_version = commands.getstatusoutput('cmt show macro_value ' + base_name + 'VERS')
+        log.info(' CMTPATH = %s ' % (os.environ['CMTPATH']))
     else:
 
     # use CMTPROJECTPATH
     # get the base_version from project.cmt
-        os.chdir(os.path.join(rel_dir,maindir,'cmt'))
+        os.chdir(os.path.join(rel_dir, maindir, 'cmt'))
         for line in os.popen('cmt show projects').readlines():
-            if line.find(base_name+'_') != -1:
+            if line.find(base_name + '_') != -1:
                 base_version = line.split('_')[1].split(' ')[0]
                 break
 
@@ -326,64 +326,64 @@ def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=Tr
 
 # =========================== action: get =============================================
     if get :
-        log.info( 'getpack -u -r packSys' )
-        os.chdir(os.path.join(rel_dir,maindir))
+        log.info('getpack -u -r packSys')
+        os.chdir(os.path.join(rel_dir, maindir))
     # get packSys, check tag
-        os.system('getpack -u '+packSys+' '+pversion)
-        if os.path.isdir(os.path.join(packSys,pversion,'CVS')):
-            if not os.path.isfile(os.path.join(packSys,pversion,'CVS','Tag')):
-                log.error( '%sSys %s is not tagged. Please check %sSys.'%(pname,pversion,pname))
-                log.error( 'then restart mkproject' )
-                sys.exit('ERROR - '+pname+'Sys not tagged')
+        os.system('getpack -u ' + packSys + ' ' + pversion)
+        if os.path.isdir(os.path.join(packSys, pversion, 'CVS')):
+            if not os.path.isfile(os.path.join(packSys, pversion, 'CVS', 'Tag')):
+                log.error('%sSys %s is not tagged. Please check %sSys.' % (pname, pversion, pname))
+                log.error('then restart mkproject')
+                sys.exit('ERROR - ' + pname + 'Sys not tagged')
 
     # get all packages belonging to the project
-        os.system('getpack -u -r '+packSys+' '+pversion)
+        os.system('getpack -u -r ' + packSys + ' ' + pversion)
         log.info('check out is done ')
 
 # =========================== action: use ===============================================
     if use :
-        log.info( 'run cmt use')
-        os.chdir(os.path.join(rel_dir,maindir,packSys,'cmt'))
+        log.info('run cmt use')
+        os.chdir(os.path.join(rel_dir, maindir, packSys, 'cmt'))
         ko = 0
-        status,output = commands.getstatusoutput('cmt show uses')
+        status, output = commands.getstatusoutput('cmt show uses')
         line = output[:-1]
         print line
         if line.find('Warning') != -1 : ko = 1
         if ko != 0 :
-            log.error( 'remove all warnings before compiling the project')
+            log.error('remove all warnings before compiling the project')
             log.error(line)
-            log.error( 'when all warnings are remove continue' )
+            log.error('when all warnings are remove continue')
             sys.exit('ERROR - cmt show uses failed')
 
         # ========= geant4 ====================
         if packSys == 'Geant4Sys':
         # copy include and source files from the G4 repository
-            os.system(command+os.path.join(rel_dir,maindir,packSys,'cmt','setup'+ext))
-            G4_dir = os.path.join(rel_dir,maindir,pname)
+            os.system(command + os.path.join(rel_dir, maindir, packSys, 'cmt', 'setup' + ext))
+            G4_dir = os.path.join(rel_dir, maindir, pname)
             os.chdir(G4_dir)
-            for line in os.popen('ls -d '+os.path.join('G4*','cmt')).readlines():
-                log.info( line )
-                os.chdir(os.path.join(G4_dir,line.split('\n')[0]))
-                log.info( os.getcwd())
-                os.system(command+'setup'+ext)
+            for line in os.popen('ls -d ' + os.path.join('G4*', 'cmt')).readlines():
+                log.info(line)
+                os.chdir(os.path.join(G4_dir, line.split('\n')[0]))
+                log.info(os.getcwd())
+                os.system(command + 'setup' + ext)
 
         # ========= end geant4 ================
 
 # ======================== action: compilation ========================================
     if compile :
-        log.info( 'compile in optimize mode' )
-        os.chdir(os.path.join(rel_dir,maindir,packSys,'cmt'))
-        log.info('%s compile in optimize %s mode %s %s \n'%(day,os.environ['CMTCONFIG'],packSys,pversion))
+        log.info('compile in optimize mode')
+        os.chdir(os.path.join(rel_dir, maindir, packSys, 'cmt'))
+        log.info('%s compile in optimize %s mode %s %s \n' % (day, os.environ['CMTCONFIG'], packSys, pversion))
 
         # store native version numbers in doc/native.versions
-        native = os.path.join(os.pardir,'doc','native.versions')
+        native = os.path.join(os.pardir, 'doc', 'native.versions')
         if os.path.exists(native): os.remove(native)
-        rc = os.system('cmt show macros config_version -tag=LHCb > '+native)
+        rc = os.system('cmt show macros config_version -tag=LHCb > ' + native)
 
         # cmt broadcast gmake
-        status,cmtpath = commands.getstatusoutput('cmt show set_value CMTPATH')
-        log.info(' CMTPATH= %s '%(cmtpath))
-        str = tbroadcast+' "'
+        status, cmtpath = commands.getstatusoutput('cmt show set_value CMTPATH')
+        log.info(' CMTPATH= %s ' % (cmtpath))
+        str = tbroadcast + ' "'
         str += ' cmt make'
         if parallel_mode:
             ncores = getNumberOfCores()
@@ -395,18 +395,18 @@ def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=Tr
             if ncores > 1 :
                 str += " -j %s -l %s" % (ncores, nproc)
         str += " all_groups"
-        str +=+ ' "'
-        log.info(' str= %s '%(str))
-        rc,output = commands.getstatusoutput(str)
+        str += +' "'
+        log.info(' str= %s ' % (str))
+        rc, output = commands.getstatusoutput(str)
         print output
         if rc == 0:
-            log.info('%s optimize compilation is finished '%(day))
+            log.info('%s optimize compilation is finished ' % (day))
         else:
-            log.error( '%s optimize compilation failed rc= %s - STOP '%(day,rc) )
+            log.error('%s optimize compilation failed rc= %s - STOP ' % (day, rc))
             sys.exit('ERROR - optimize compilation failed')
 
         # if Gauss: build other executables
-        extraexelist = projconf.ExtraExe() 
+        extraexelist = projconf.ExtraExe()
         if extraexelist :
             os.chdir(os.path.join(rel_dir, maindir, projconf.ApplicationPackage(), "cmt"))
             for other in extraexelist.keys() :
@@ -419,7 +419,7 @@ def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=Tr
                     ko = 1
                     break
                 if ko == 0:
-                    log.info('build %s.exe ' % other )
+                    log.info('build %s.exe ' % other)
                     cmd = "%s %s setup%s" % (cmtrun, command, ext)
                     for e in extraexelist[other] :
                         cmd += " -tag_add=%s" % e
@@ -441,13 +441,13 @@ def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=Tr
 
 # ======================= action: compilation in debug mode ====================================
     if debug and projconf.hasBinary():
-        log.info( 'compile in debug mode' )
+        log.info('compile in debug mode')
         os.chdir(os.path.join(rel_dir, maindir, packSys, 'cmt'))
         log.info('%s compile in debug %s mode %s %s \n' % (day, os.environ['CMTDEB'], packSys, pversion))
 
         # cmt broadcast gmake tag=$CMTDEB
         os.environ['CMTCONFIG'] = CMTDEB
-        str = tbroadcast + ' "' 
+        str = tbroadcast + ' "'
         str += ' cmt make'
         if parallel_mode:
             ncores = getNumberOfCores()
@@ -460,13 +460,13 @@ def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=Tr
                 str += " -j %s -l %s " % (ncores, nproc)
         str += " all_groups"
         str += ' "'
-        rc,output = commands.getstatusoutput(str)
+        rc, output = commands.getstatusoutput(str)
         os.environ['CMTCONFIG'] = CMTCONFIG
-        log.info( output )
+        log.info(output)
         if rc == 0:
-            log.info('%s debug compilation is finished '%(day))
+            log.info('%s debug compilation is finished ' % (day))
         else:
-            log.error( '%s debug compilation failed rc= %s - STOP '%(day,rc) )
+            log.error('%s debug compilation failed rc= %s - STOP ' % (day, rc))
             sys.exit('ERROR - debug compilation failed')
 
         log.info('end of compilation in debug mode ')
@@ -477,62 +477,62 @@ def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=Tr
 
 # ======================= action: build tar files ============================================
     if tar :
-        log.info( 'build tar files' )
+        log.info('build tar files')
         os.chdir(rel_dir)
 #        str = os.path.join(script_dir,'mkLHCbtar')+' -p '+pname+' -v '+pversion
-        str = 'mkLHCbtar -p '+pname+' -v '+pversion
+        str = 'mkLHCbtar -p ' + pname + ' -v ' + pversion
         rc = os.system(str)
-        log.info( 'tar source rc = %s' % rc )
+        log.info('tar source rc = %s' % rc)
         if projconf.hasBinary() :
-            rc = os.system(str+' -b '+CMTCONFIG)
-            log.info( 'tar %s rc= %s '%(CMTCONFIG,rc))
-            rc = os.system(str+' -b '+ CMTDEB)
-            log.info( 'tar %s rc= %s '%(CMTDEB,rc) )
+            rc = os.system(str + ' -b ' + CMTCONFIG)
+            log.info('tar %s rc= %s ' % (CMTCONFIG, rc))
+            rc = os.system(str + ' -b ' + CMTDEB)
+            log.info('tar %s rc= %s ' % (CMTDEB, rc))
 
 # ======================= action: run glimpse index ==========================================
     if glimpse :
-        log.info( 'build glimpse index files' )
-        os.chdir(os.path.join(rel_dir,maindir))
-        os.system('cp '+os.path.join(os.environ['LHCb_release_area'],'.glimpse_exclude')+' .')
+        log.info('build glimpse index files')
+        os.chdir(os.path.join(rel_dir, maindir))
+        os.system('cp ' + os.path.join(os.environ['LHCb_release_area'], '.glimpse_exclude') + ' .')
 #        str = os.path.join(script_dir,'glimpseindex')+' -H '+os.getcwd()+' '+os.getcwd()
-        str = 'glimpseindex -H '+os.getcwd()+' '+os.getcwd()
+        str = 'glimpseindex -H ' + os.getcwd() + ' ' + os.getcwd()
         os.system(str)
         os.chdir(rel_dir)
 
 # ======================= action: make the release area public ===============================
     if release :
-        log.info( 'make the release area public')
-        os.chdir(os.path.join(rel_dir,maindir))
+        log.info('make the release area public')
+        os.chdir(os.path.join(rel_dir, maindir))
         str = 'find . -noleaf -type d -print -exec fs setacl {} system:anyuser rl \;'
-        status,output = commands.getstatusoutput(str)
+        status, output = commands.getstatusoutput(str)
         log.info('status = %s' % status)
 
 # ======================= action: build Doxygen documentation ================================
     if doxygen :
-        log.info( 'build doxygen documentation' )
-        os.chdir(os.path.join(rel_dir,maindir,packSys,'doc'))
-        os.system(command+os.path.join(rel_dir,maindir,packSys,'cmt','setup'+ext))
+        log.info('build doxygen documentation')
+        os.chdir(os.path.join(rel_dir, maindir, packSys, 'doc'))
+        os.system(command + os.path.join(rel_dir, maindir, packSys, 'cmt', 'setup' + ext))
         str = 'makedoc'
         os.system(str)
-        os.chdir(os.path.join(rel_dir,maindir))
+        os.chdir(os.path.join(rel_dir, maindir))
         if not os.path.islink('doc'):
-            os.symlink(os.path.join(packSys,'doc'),'doc')
+            os.symlink(os.path.join(packSys, 'doc'), 'doc')
         if not os.path.islink('requirements'):
-            os.symlink(os.path.join(packSys,'cmt','requirements'),'requirements')
+            os.symlink(os.path.join(packSys, 'cmt', 'requirements'), 'requirements')
         os.chdir(rel_dir)
 
 # ======================= action: update the "latest versions" html page =====================
     if html :
         log.info('update the htxt file ')
-        os.chdir(os.path.join(os.environ['LHCb_release_area'],'html'))
-        file = fnmatch.filter(os.listdir(os.getcwd()),pname+'_v*.htxt')
+        os.chdir(os.path.join(os.environ['LHCb_release_area'], 'html'))
+        file = fnmatch.filter(os.listdir(os.getcwd()), pname + '_v*.htxt')
         if len(file) == 1:
-            newfile = pname+'_'+pversion+'.htxt'
+            newfile = pname + '_' + pversion + '.htxt'
             overs = ''
-            fdnew = open(newfile,'w')
+            fdnew = open(newfile, 'w')
             for line in open(file[0]).readlines():
                 newline = line
-                if line.find(PACK+'_') != -1:
+                if line.find(PACK + '_') != -1:
                     overs = line.split('_')[1].split('/')[0]
                     o = overs.split('v')[1].split('r')[0]
                     n = pversion.split('v')[1].split('r')[0]
@@ -541,15 +541,15 @@ def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=Tr
                         oldr = overs.split('r')[1].split('p')[0]
                         newr = pversion.split('r')[1].split('p')[0]
                         if oldr > newr : return
-                    newline = line.replace(overs,pversion)
+                    newline = line.replace(overs, pversion)
                 else:
                     if overs != '':
                         if line.find(overs) != -1 :
-                            newline = line.replace(overs,pversion)
+                            newline = line.replace(overs, pversion)
                         else:
                             if line.find(base_name) != -1 :
-                                obase = line[line.find('_')+1:line.find('<')]
-                                newline = line.replace(obase,base_version)
+                                obase = line[line.find('_') + 1:line.find('<')]
+                                newline = line.replace(obase, base_version)
                             else:
                                 newline = line
                 fdnew.write(newline)
@@ -559,38 +559,38 @@ def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=Tr
 
 # ======================= action: reset the web page =========================================
     if web :
-        log.info( 'rebuild the web page' )
-        os.chdir(os.path.join(os.environ['LHCb_release_area'],'html'))
+        log.info('rebuild the web page')
+        os.chdir(os.path.join(os.environ['LHCb_release_area'], 'html'))
         webfile = 'page.html'
         if os.path.exists(webfile): os.remove(webfile)
 
-        flist = fnmatch.filter(os.listdir(os.getcwd()),'*.htxt')
+        flist = fnmatch.filter(os.listdir(os.getcwd()), '*.htxt')
         flist.sort()
 
-        web = open(webfile,'w')
+        web = open(webfile, 'w')
 
         for line in open('header.txt').readlines():
-            web.write(line+'\n')
+            web.write(line + '\n')
 
         for f in flist:
             for line in open(f).readlines():
                 web.write(line)
 
-        web.write('<HR>Last Update : '+day+'\n')
+        web.write('<HR>Last Update : ' + day + '\n')
 
         for line in open('trailer.txt').readlines():
-            web.write(line+'\n')
+            web.write(line + '\n')
 
         web.close()
         os.chdir(rel_dir)
 
     if release :
 # set symlinks in PACK to PACK_v
-        os.chdir(os.path.join(rel_dir,PACK))
-        if os.path.islink( 'doc') : os.remove('doc')
-        if os.path.islink( 'requirements' ) : os.remove('requirements')
-        os.symlink(os.path.join(PACK+'_'+pversion,'doc'),'doc')
-        os.symlink(os.path.join(PACK+'_'+pversion,'requirements'),'requirements')
+        os.chdir(os.path.join(rel_dir, PACK))
+        if os.path.islink('doc') : os.remove('doc')
+        if os.path.islink('requirements') : os.remove('requirements')
+        os.symlink(os.path.join(PACK + '_' + pversion, 'doc'), 'doc')
+        os.symlink(os.path.join(PACK + '_' + pversion, 'requirements'), 'requirements')
 
 #-----------------------------------------------------------------------------------
 if __name__ == "__main__":
@@ -602,8 +602,8 @@ if __name__ == "__main__":
         help()
         sys.exit()
     try:
-        keys, values = getopt.getopt(arguments,'hyp:v:a:',
-            ['help','yes','project=','version=','action='])
+        keys, values = getopt.getopt(arguments, 'hyp:v:a:',
+            ['help', 'yes', 'project=', 'version=', 'action='])
 
     except getopt.GetoptError:
         print 'wrong arguments'
@@ -620,20 +620,20 @@ if __name__ == "__main__":
     parallel_mode = True
 
 
-    for key,value in keys:
+    for key, value in keys:
         if key in ('-h', '--help'):
             help()
         if key in ('-y', '--yes'):
             yes_mode = True
         if key in ('--not-parallel'):
             parallel_mode = False
-        if key in ( '-v', '--version'):
+        if key in ('-v', '--version'):
             pversion = value
         if key in ('-p', '--project'):
             pname = value
         if key in ('-a', '--action'):
             action = value
-            
+
     thelog = logging.getLogger()
     thelog.setLevel(logging.DEBUG)
     console = logging.StreamHandler()
