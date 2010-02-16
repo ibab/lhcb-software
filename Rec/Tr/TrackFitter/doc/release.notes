@@ -3,6 +3,9 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2010-02-16 - Rob Lambert
+ - Wouter: changed converged criterion in fitter
+
 !=========================== TrackFitter v2r44p1 2010-02-16=================
 ! 2010-02-15 - Wouter Hulsbergen
  - adapted configurable to small change in TrajOTProjector
