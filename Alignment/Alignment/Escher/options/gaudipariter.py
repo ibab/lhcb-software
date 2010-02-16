@@ -29,8 +29,9 @@ for i in range( opts.numiter ) :
         previterdb = '../Iter' + str( i-1 ) + '/Alignment.db'
         theseoptions += ' --aligndb ' + previterdb
     else :
-        for db in opts.aligndb :
-            theseoptions += ' -d ' + db
+        if opts.aligndb :
+            for db in opts.aligndb :
+                theseoptions += ' -d ' + db
 
     # add the remaining options
     for a in args:
@@ -40,9 +41,11 @@ for i in range( opts.numiter ) :
     thiscommand = '$ESCHEROPTS/gaudipar.py' + theseoptions + '>& logfile.txt'
     print 'command: ', thiscommand
     os.system( thiscommand )
-
+    os.system( 'gzip logfile.txt' )
+    # keep only the last version of the derivatives. they take too much space.
+    os.system( 'mv -f myderivatives.dat ..')
     os.chdir(rundir)
 
 # create a single alignlog file
 os.system('rm -f alignlog.txt')
-os.system('cat Iter?/alignlog.txt > alignlog.txt')
+os.system('cat Iter?/alignlog.txt Iter1?/alignlog.txt Iter2?/alignlog.txt > alignlog.txt')
