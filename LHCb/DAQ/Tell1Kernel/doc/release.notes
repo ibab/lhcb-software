@@ -1,6 +1,10 @@
 ! package DAQ/Tell1Kernel
 ! package manager: C.Parkes, T.Szumlak
 !-------------------------------------------------------------------------
+!====================== Tell1Kernel v1r10 2009-10-24 ======================
+! 2010-02-15 - Tomasz Szumlak
+ - move tag for the new release
+ 
 ! 2010-01-13 - Anne Keune
  - changed STTell1Core.h adding more header corrections
 
