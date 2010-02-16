@@ -19,7 +19,7 @@ use  Boost        v*  LCG_Interfaces
 #macro ROOT_config_version "5.21.02"
 #macro ROOT_config_version "5.24.00"
 
-macro Boost_config_version "1.39.0"
+##macro Boost_config_version "1.39.0"
 
 #path_remove LD_LIBRARY_PATH "$(ROOTSYS)/lib"
 #macro     ROOT_home     "/tmp/root"
