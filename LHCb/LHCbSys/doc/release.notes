@@ -4,9 +4,177 @@
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
-- Add new package Associators/MCAssociators
 
-- Add new package Muon/MuonInterfaces
+</PRE><H1><A NAME=v29r1>2010-02-16 LHCbSys v29r1</A></H1><PRE>
+This version uses Gaudi v21r7p1 and LCG_58a
+
+- Packages added in CVS: Associators/MCAssociators - MC associators shared by DaVinci and Brunel
+                         Muon/MuonInterfaces - Interfaces for Muon reconstruction and monitoring
+- Packages removed: Phys/DaVinciKernel     - moved to PHYS project
+                    Phys/DaVinciMCKernel   - moved to PHYS project
+                    Phys/LoKi              - moved to PHYS project
+                    Phys/LoKiAlgo          - moved to PHYS project
+                    Phys/LoKiAlgoMC        - moved to PHYS project
+                    Phys/LoKiArrayFunctors - moved to PHYS project
+                    Phys/LoKiGenMC         - moved to PHYS project
+                    Phys/LoKiPhys          - moved to PHYS project
+                    Phys/LoKiPhysMC        - moved to PHYS project
+- Packages modified: CaloDAQ v4r18, DAQUtils v1r1, DDDB v1r28, DetCond v12r10,
+    DetDescChecks v5r2, Magnet v5r7, MuonDet v9r1, OTDet v8r4, RichDet v13r4,
+    STDet v4r17, VeloDet v13r9, LumiEvent v2r5, L0Event v18r1, RecEvent v2r26,
+    GaudiConf v13r4, LHCbAlgs v2r33, LHCbMath v3r16, L0MuonKernel v9r0,
+    ProcessorKernel v6r0, LoKiGen v8r8, LoKiHlt v2r6, LoKiMC v8r8,
+    RichKernel v7r30, RichRecBase v3r26, STKernel v1r19, CondDBUI v3r2,
+    TfKernel v2r15, TrackInterfaces v4r10
+
+- In CaloDAQ v4r18
+  . CaloL0DataProvider : fix BeginEvent missing re-init
+
+- In DAQUtils v1r1
+  . OdinTypesFilter : protect against missing ODIN bank
+                      (no longer crash and return FilterPassed = false)
+
+- In DDDB v1r28
+  . Changed default tag for 2009 data:
+    o head-20100202         for LHCBCOND
+  . Added default tag for 2010 data, currently same as 2009
+    N.B. As from 2010, no default tag is set for SIMCOND, must be set explicitly
+  . Set default DataType to 2010
+
+- In DetCond v12r10
+  . Added the function CondDB.useLatestTags(DataType,OnlyGlobalTags = False) to
+    automatically select from the SQLDDDB release notes the latest global tag.
+    Optionally (default True), the latest local tags are added on top of the 
+    latest global tag.
+
+- In DetDescChecks v5r2
+  . Modified LoadDDDB tests to check the latest local tags on top of the latest
+    global tag for the requested data type.
+
+- In Magnet v5r7
+  . Register MagneticFieldSvc with UpdateManagerSvc even in cases when not using
+    CondDB. This allows clients to register callbacks transparently even if they
+    will never be called
+
+- In MuonDet v9r1
+  . Add few methods
+
+- In OTDet v8r4
+  . Added interface to straw status flags
+
+- In RichDet v13r4
+  . Change output level to DEBUG for the update of parameters in the HPDs
+  . Correctly handle the presence or absence of magnetic field for the 
+    magnetic field corrections in the HPDs. It's possible to force the use of
+    magnetic corrections using a DDDB parameter
+
+- In STDet v4r17
+  . Protect findTopLevelElement against giving the wrong subdetector
+
+- In VeloDet v13r9
+  . Remove obsolete file VeloDet_dll.cpp
+  . Added residual method that propagates a line to the sensor plane
+  . Improved documentation of residual methods
+
+- In LumiEvent v2r5
+  . Enable an additional lumi bookkeeping method for low lumi conditions 
+  . Add counter value in enum of LumiCounters
+  . Add enum class LumiMethod to hold values to flag Lumi methods
+
+- In L0Event v18r1
+  . L0DUBase.h :
+    o Implement hardware limitation data (Number Of channels/conditions) + 
+      default naming, etc ...
+    o Fix Muon0/Muon1 swap in each L0MuonProcessor data
+  . L0DUElementaryCondition : new attributes:
+    o m_reported (true when the condition is reported in the report)
+    o m_reportBit (location of the bit in the report)
+  . L0DUChannel/L0DUConfig : new method 'updateCounter(s)' to disable the
+    downscaling counters (expert usage)
+  . L0DUReport : get condition bit according to reportBit
+
+- In RecEvent v2r26
+  . Add xml/MuonCluster.xml
+
+- In GaudiConf v13r4
+  . In DigiConf, do not add "/Event/Link/Trig/L0/Calo#1" to .digi and .dst in
+    MC09 case, fixes bug 62725
+
+- In LHCbAlgs v2r33
+  . Add file containing declaration of LbAppInit factory to allow instanciating
+    it directly. It was in LHCbAlgs_dll.cpp that was removed because obsolete.
+  . If DeterministicPrescaler accepts all events, don't print out an Info() 
+    level messages stating this
+
+- In LHCbMath v3r16
+  . LHCbMath/EigenSystem.h(.icpp): fix compilation problmems for Win32 platform
+  . test/TestEigen.cpp: new test/example for EigenSystem
+
+- In L0MuonKernel v9r0
+  . Changes to configure the emulator with the CondDB :
+    o Handling of trigger parameters moved from MuonTriggerUnit to CoreUnits 
+	    using the unit's properties mechanism. 
+    o CoreUnit : trigger parameters applied in the setProperty rather than in 
+      initialize to allow change during job execution
+  . CoreUnit : remove unused ignoreM2 property
+
+- In ProcessorKernel v6r0
+  . Unit : propagate properties of a unit to its daughters
+
+- In LoKiGen v8r8
+  . Add new symbols 
+    GY    LoKi::GenParticles::Rapidity   for evaluation of rapidity  (y)
+    GY0   LoKi::GenParticles::Rapidity0  for evaluation of rapidity0 (y_0) 
+
+- In LoKiHlt v2r6
+  . LoKi/Prescale.h, Prescale.cpp : add new symbol:
+      ODIN_PRESCALE   LoKi::Odin::Prescale  
+      Functor implementaion of deteriministic prescaler, see task #13885 
+
+- In LoKiMC v8r8
+  . Removed HybridMCParticleArrayFilter.cpp, moved to LoKiAlgoMC because of
+    DaVinciMCKernel dependency
+  . Removed dependency on DaVinciMCKernel (task #13906)
+  . Added new symbols 
+    MCY    LoKi::MCParticles::Rapidity   for evaluation of rapidity  (y)
+    MCY0   LoKi::MCParticles::Rapidity0  for evaluation of rapidity0 (y_0) 
+
+- In RichKernel v7r30
+  . Improvements to histograming methods in base classes.
+
+- In RichRecBase v3r26
+  . Update maximum reconstructed CK theta value for aerogel from 290mrad to
+    320mrad, to match the observed spectrum from 2009 data
+
+- In STKernel v1r19
+  . Modified ITDetectorPlot so that it can be configured to display detector per
+    beetle or per beetle port.
+  . Added missing dictionary for ISTNoiseCalculationTool.
+
+- In CondDBUI v3r2
+  . Correctly fixed the bug in CondDBBrowser: cannot add conditions to empty
+    folders.
+  . Some upgrade of tools in the frame of creation the automation procedure
+    for the latest global tag and appropriate on-top local tags usage.
+  . Added python/CondDBUI/Admin/TagsFilter.py script. It analyses the
+    release_notes.xml file (under the given condition of fixed partition name 
+    and data type) to return:
+    o the most recent global tag and the list of all subsequent local tags for it
+    o the list of all global tags.
+    Can be used as a standalone script.
+
+- In TfKernel v2r15
+  . Add hitsLocalXRange function to IT/OT/TT hit creator interface
+
+- In TrackInterfaces v4r10
+  . IAddTTClusterTool:
+    o Added new method which allows to return hits instead of adding them to the
+      track, for compatibility with (unused) AddTTClusterTool in Tf/TrackMatching
+    o Only the relevant methods in PatAddTTCoord have now virtual methods 
+      defined. Causes incompatibility with (unused) 
+  . Added ITrackHitCollector interface - an interface for tools collecting hits
+    around a track, filling a vector of LHCbIDs on return (and optionally
+    provide residuals)
 
 </PRE><H1><A NAME=v29r0>2010-01-23 LHCbSys v29r0</A></H1><PRE>
 This version uses Gaudi v21r7 and LCG_58
