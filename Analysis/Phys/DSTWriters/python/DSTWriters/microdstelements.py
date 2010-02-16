@@ -142,14 +142,16 @@ class _copyPVRelations(CopyWithBranch) :
             print "Copy PV relations ", loc
             fullLoc = dataLocations(sel, loc)
             cloner = _copyP2PVRelations(sel,"CopyP2PV_"+loc, fullLoc)
+            clonerType = cloner.getProp('ClonerType')
             if copyPV == False :
+                cloner.ClonerType = 'NONE'
                 if hasattr(sel,'algorithm') :
                     alg = sel.algorithm()
                     refitPVs = False
                     if alg.properties().has_key('ReFitPVs') :
                         refitPVs =  alg.getProp('ReFitPVs')
-                    if not refitPVs :
-                        cloner.ClonerType = "NONE"
+                    if refitPVs :
+                        cloner.ClonerType = clonerType
             self.setOutputPrefix(cloner)
             cloners += [cloner]
             return cloners
