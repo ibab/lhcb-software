@@ -1,4 +1,4 @@
-// $Id: MuonClusterTool.cpp,v 1.1 2010-02-09 16:02:24 asatta Exp $
+// $Id: MuonClusterTool.cpp,v 1.2 2010-02-16 13:54:09 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -144,11 +144,11 @@ StatusCode MuonClusterTool::mergeStation(int station)
           itcluTwo++){
         if(itcluTwo->second<0)continue;
         
-        bool near=false;
+        bool near1=false;
 
-        near=detectCluster(itcluOne->first,itcluTwo->first);
-        verbose()<<"near "<<near<<endreq;
-        if(near){
+        near1=detectCluster(itcluOne->first,itcluTwo->first);
+        verbose()<<"near "<<near1<<endreq;
+        if(near1){
           (itcluOne->first)->mergeCluster(itcluTwo->first);
           itcluOne->second=1;        
           itcluTwo->second=2;        
@@ -326,7 +326,7 @@ StatusCode MuonClusterTool::SaveOutput(std::string output)
 bool MuonClusterTool::detectCluster(LHCb::MuonCluster* one,
                                    LHCb::MuonCluster* two)
 {
-  bool near=false;
+  bool near1=false;
   const SmartRefVector<LHCb::MuonCoord> coordsOne=one->coords();
   const SmartRefVector<LHCb::MuonCoord> coordsTwo=two->coords();
   verbose()<<coordsOne.size()<<" "<<coordsTwo.size()<<endreq;
@@ -455,7 +455,7 @@ bool MuonClusterTool::detectCluster(LHCb::MuonCluster* one,
     }    
   }
   
-  return near;
+  return near1;
   
 }
 

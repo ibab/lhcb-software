@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.49 2010-02-15 13:49:36 rlambert Exp $
+! $Id: release.notes,v 1.50 2010-02-16 13:54:09 rlambert Exp $
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : Alessia Satta Alessia.Sattaft@cern.ch
 ! =============================================================================
 
-!======================== MuonTools v5r1 2010-02-15 =========================
+!======================== MuonTools v5r1 2010-02-16 =========================
+! 2010-02-16 - Rob Lambert
+ - Fix problem in windows, apparantly 'near' is a keyword
+
 ! 2010-02-12 - Alessia Satta
  - Fix compilation warnings
 
