@@ -173,8 +173,8 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         #   of input particles.
         ###################################################################
         # import options for the track fit
-        importOptions("$HLTCONFROOT/options/Hlt2TrackFitForTopo.py")
-        
+        importOptions("$HLT2LINESROOT/options/Hlt2TrackFitForTopo.py")
+                
         
         # Filter for the post-track-fit input particles
         ###################################################################
@@ -197,14 +197,20 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         
         excode = "(PT>0*MeV)"
-        Filter = Hlt2Member( FilterDesktop
-                             , 'Filter'
-                             , InputLocations = [lclTFInputParticles, KsDDFit]
-                             , Code =  excode
-                             )
+        FilterDXTFParticles = Hlt2Member( FilterDesktop
+                                          , 'FilterDXTFParticles'
+                                          , InputLocations = [lclTFInputParticles]
+                                          , Code =  excode
+                                          )
+
+        FilterKsDD = Hlt2Member( FilterDesktop
+                                 , 'FilterKsDD'
+                                 , InputLocations = [KsDDFit]
+                                 , Code =  excode
+                                 )
         
-        DXTFInputParticles = bindMembers( 'DXTFInputParticles', [ lclTFInputParticles, Filter ] )
-        KS0DXTFInputParticles = bindMembers( 'KS0DXTFInputParticles', [ KsDDFit, Filter ] )
+        DXTFInputParticles = bindMembers( 'DXTFInputParticles', [ lclTFInputParticles, FilterDXTFParticles ] )
+        KS0DXTFInputParticles = bindMembers( 'KS0DXTFInputParticles', [ KsDDFit, FilterKsDD ] )
         
         ################################################################
         # Function to configure post-track-fit common particle combinations
