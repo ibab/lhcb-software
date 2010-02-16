@@ -5,6 +5,71 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v8r1>2010-02-16 RecSys v8r1</A></H1><PRE>
+This version uses Gaudi v21r7p1 and LHCb v29r1
+
+- call different PatPV options for "2009" datatype and/or "earlyData" special data
+
+- Multiple package changes for reprocessing last year's data and preparing for 2010 first data.
+
+
+- Packages updated: Calo/CaloMoniDst v4r4, Calo/CaloPIDs v5r4,  Muon/MuonID v7r7,
+										Muon/MuonPIDChecker v4r1, Muon/MuonTools v5r1, Rec/LumiAlgs v3r3,
+										Rich/RichIFBAnalysis v1r1p1, Rich/RichRecMonitors v2r25, 
+										Rich/RichRecQC v2r36, Rich/RichRecTemplateRings v1r3,
+										Rich/RichRecTools v4r9p2, Rich/RichRecTrackTools v1r16p1,
+                    Rich/RichRecSys v3r26, Tf/PatAlgorithms v3r29, Tf/TfTools v1r10,
+										Tf/TrackMatching v2r27, Tf/TrackSys v4r30, Tr/PatChecker v3r6,
+										Tr/TrackExtrapolators v2r24p2, Tr/TrackFitEvent v4r4,
+										Tr/TrackMonitor v1r20, Tr/TrackProjectors v2r27, Tr/TrackTools v3r26,
+										Tr/TrackUtils v1r34
+
+- In :
+  . 
+
+- In :
+  . 
+
+- In :
+  . 
+
+- In :
+  . 
+
+- In :
+  . 
+
+- In :
+  . 
+
+- In :
+  . 
+
+- In :
+  . 
+
+- In :
+  . 
+
+- In :
+  . 
+
+- In :
+  . 
+
+- In :
+  . 
+
+- In Tr/TrackProjectors v2r27:
+  . improvements in OTProjector, implement new 'prefit', 
+  . skip drifttimes that are ~2sigma (6ns) outside drifttime spectrum
+
+- In Tr/TrackTools v3r26:
+  . add TrackHitCollector tool (collects hits around a track)
+
+- In Tr/TrackUtils v1r34:
+  . added TrackHitAdder, Fixed bug in TrackV0Utils
+
 </PRE><H1><A NAME=v8r0>2010-01-21 RecSys v8r0</A></H1><PRE>
 This version uses Gaudi v21r7 and LHCb v29r0
 
