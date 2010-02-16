@@ -20,7 +20,7 @@ This version uses Gaudi v21r7p1 and LHCb v29r1
 										Rich/RichRecTools v4r9p2, Rich/RichRecTrackTools v1r16p1,
                     Rich/RichRecSys v3r26, Tf/PatAlgorithms v3r29, Tf/TfTools v1r10,
 										Tf/TrackMatching v2r27, Tf/TrackSys v4r30, Tr/PatChecker v3r6,
-										Tr/TrackExtrapolators v2r24p2, Tr/TrackFitEvent v4r4,
+										Tr/TrackExtrapolators v2r24p2, Tr/TrackFitEvent v4r4, Tr/TrackFitter v2r44p1
 										Tr/TrackMonitor v1r20, Tr/TrackProjectors v2r27, Tr/TrackTools v3r26,
 										Tr/TrackUtils v1r34
 
@@ -57,7 +57,7 @@ This version uses Gaudi v21r7p1 and LHCb v29r1
 - In :
   . 
 
-- In :
+- In Tr/TrackMonitor v1r20:
   . 
 
 - In Tr/TrackProjectors v2r27:
