@@ -117,7 +117,7 @@ class genSrcUtils(importUtils.importUtils):
               values.append(name)
           for v in values :
             s += '    case %s::%s : return s << "%s";\n' % ( className, v.ljust(maxLen), v )
-          s += '    default : return s << "ERROR wrong value for enum %s";\n' % enumType
+          s += '    default : return s << "ERROR wrong value " << int(e) << " for enum %s";\n' % enumType
           s += '  }\n'
           s += '}\n\n'
     return s
