@@ -6,6 +6,90 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v8r2>2010-02-16 LbcomSys v8r2</A></H1><PRE>
+This version uses Gaudi v21r7p1 and LHCb v29r1
+
+- Packages modified: CaloTools v5r15, L0DU v10r2, L0Muon v9r0,
+    RichMCMonitors v1r7p2, RichTools v2r28p1, STMonitors v2r4, STTools v3r16,
+    VeloAssociators v2r4
+
+- In CaloTools v5r15
+	. Track2Calo : switch HeraBExtrapolator to RungeKutta
+
+- In L0DU v10r2
+  . Add new module (L0Algs) to allow to access the various algorithms used 
+    by L0Conf with their proper name
+  . L0ConfigProvider  : 
+    o hardware-like automatic ordering of ElementaryCondition indices
+      (can be disabled via options for backward-compatibility)
+    o implement the condition reportSummary mask (from TCK configuration)
+    o check each configuration against hardware limitations
+      (short notice by default - detailed output can be activated by options)
+    o use default naming for  predefined-data as defined in L0Event/L0DUBase.h
+      (also in L0DUEmulatorTool and L0DUFromRawTool)
+    o Detailed check for all configurations can be activated via 
+      context() = "CHECK"
+  . L0DUElementaryData.xml : 
+    add new data type in enum (specific for 'RamBCID' data)
+  . L0DUEmulatorTool : 
+    o report only registered condition
+    o protect the decisisons downscaling against multi emulation/event
+     (based on BeginEvent incident)
+    o make L0DUEmulatorTool a public tool in L0DUAlg, L0DUFromRawTool, 
+      L0DUMultiTrends, L0Pattern, L0DURawBankMonitor
+  . requirements : use L0TCK v3*  
+    (backward-compatible ordering of condition for already  simulated data)
+
+- In L0Muon v9r0
+  . fix bug when filling L0MuonError for L0MuonCtrlCand Bank
+  . Fix compilation warning on Windows (L0MuonOutputs, L0MuonFromRawTrans)
+  . L0MuonAlg : 
+    o set proper protection against missing condition in CondDB
+    o define CondDB conditions and parameters names as algorithm properties 
+  . Trigger parameters and CondDB :
+    o access the FOI values and the procVersion from CondDB
+    o new property : IgnoreCondDB to disable the previous feature if needed
+      (set to true by default until conditions are in default CondDB tags)
+    o remove useless IgnoreM2 property 
+    o set new default for procVersion = 3
+  . Clean up :
+    o remove calls to ChronoStatSvc (L0MuonAlg + L0MuonCandidatesFromRaw)
+    o split the fillOlsFromDigits method into parts:
+      + get the hits from the relevants location
+      + fill the ol registers
+    o L0MuonOutputTool : 
+      + use locations defined in L0Event for BCSU candidates
+      + remove the check using exists<>(location) to avoi conflict with the 
+        data on demand svc.
+
+- In RichMCMonitors v1r7p2
+  . Adapt to changes in histogram base classes.
+
+- In RichTools v2r28p1
+  . Fix untested StatusCode in HPD hot pixel finder.
+
+- In STMonitors v2r4
+  . Changes to STClusterMonitor:
+    o Added some counters to STClusterMonitor.
+    o Added histogram with MPV for each sector.
+    o Added possibility to cut on cluster charge and total number of clusters.
+    o Use newest version of ITDetectorPlot.
+    o Changed binning of some histograms to more realistic range.
+  . Changes to STErrorMonitor:
+    o Calculate fraction of errors banks set correctly for TT.
+    o Added labels to 2D histograms
+    o Added new histogram of error type versus TELL1.
+  . Fixed some indentation in STTAEClusterMonitor.
+
+- In STTools v3r16
+  . Changed to STCMSNoiseCalculationTool to read pedestal from new database
+    structure.
+
+- In VeloAssociators v2r4
+  . Remove obsolete file VeloAssociators_dll.cpp
+  . Better associate clusters to MCParticles with MCHits from delta rays
+  . Prevent the creation of debug messages if the message level is too high
+
 </PRE><H1><A NAME=v8r1>2010-02-04 LbcomSys v8r1</A></H1><PRE>
 This version uses Gaudi v21r7 and LHCb v29r0
 
