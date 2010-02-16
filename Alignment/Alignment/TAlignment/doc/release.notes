@@ -5,7 +5,7 @@ Purpose	: collection of alignment algorithms
 
 ! 2010-02-09 - Wouter Hulsbergen
  - dump most important alignment dofs from AlignUpdateTool
- - fix problem with survey constraitns for alignables that share all det elements with mother alignables
+ - fix problem with survey constraints for alignables that share all det elements with mother alignables
  - configurables: added configurable for T, add 'None' as a valid dof, set survey errors by jop option of AlignChi2ConstraintTool
 
 </PRE><H1><A NAME=v4r7>2010-02-08 TAlignment v4r7</A></H1><PRE> 
