@@ -8,6 +8,9 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+! 2010-02-16 - Rob Lambert
+ - Fix for MuonClusterRec, remove windows warnings by using a vector or vectors instead of an array.
+
 ! 2009-02-10 - v3r0 - GG
 - move data classes and interfaces to Muon/MuonInterfaces
 - add tool for momentum reconstruction MuonTrackMomRec

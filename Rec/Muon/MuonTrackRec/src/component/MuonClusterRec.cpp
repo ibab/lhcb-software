@@ -1,4 +1,4 @@
-// $Id: MuonClusterRec.cpp,v 1.4 2010-02-10 19:20:17 ggiacomo Exp $
+// $Id: MuonClusterRec.cpp,v 1.5 2010-02-16 16:28:58 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -103,15 +103,24 @@ const std::vector<MuonHit*>* MuonClusterRec::clusters(const std::vector<MuonLogP
     int nhits=0;
     std::vector<MuonLogPad*>::const_iterator ipad,jpad,clpad;
     std::map<MuonLogPad*,bool> usedPad;
-    bool searchNeighbours;
+    bool searchNeighbours=true;
 
     clear();
     
 
     //group pads by station
     debug() << "Log. pads before clustering:"<<endmsg;
-    std::vector<MuonLogPad*> stationPads[m_muonDetector->stations()];
-    for (ipad = pads->begin(); ipad != pads->end(); ipad++ ){
+    //make it a vector of vectors, to allow dynamic sizing
+    std::vector< std::vector<MuonLogPad*> > stationPads=
+      std::vector< std::vector<MuonLogPad*> >(m_muonDetector->stations(),std::vector<MuonLogPad*>(0));
+    for (std::vector< std::vector<MuonLogPad*>  >::iterator isP = stationPads.begin(); 
+         isP != stationPads.end(); isP++ )
+    {
+      isP->reserve(pads->size());
+    }
+    
+    for (ipad = pads->begin(); ipad != pads->end(); ipad++ )
+    {
       if(! (*ipad)->truepad() ) continue;
       debug() << "LOGPAD Q"<<((*ipad)->tile()->quarter()+1)<<
         "M"<< ((*ipad)->tile()->station()+1) << "R"<<((*ipad)->tile()->region()+1) <<
@@ -127,8 +136,10 @@ const std::vector<MuonHit*>* MuonClusterRec::clusters(const std::vector<MuonLogP
                << stationPads[station].size() <<endmsg;
         continue;
       }
-      for (ipad = stationPads[station].begin(); ipad != stationPads[station].end(); ipad++ ){
-        if (! usedPad.count(*ipad)) {
+      for (ipad = stationPads[station].begin(); ipad != stationPads[station].end(); ipad++ )
+      {
+        if (! usedPad.count(*ipad)) 
+        {
           // cluster seed
           usedPad[*ipad]=true;
           // correct for time misalig. if requested
@@ -140,16 +151,19 @@ const std::vector<MuonHit*>* MuonClusterRec::clusters(const std::vector<MuonLogP
           m_clusters.push_back(muon_Hit);
           // now search for adjacent pads
           searchNeighbours=true;
-          while (searchNeighbours) {
+          while (searchNeighbours) 
+          {
             searchNeighbours=false;
-            for (jpad = ipad+1; jpad != stationPads[station].end(); jpad++ ){
+            for (jpad = ipad+1; jpad != stationPads[station].end(); jpad++ )
+            {
               if( usedPad.count(*jpad)) continue;
               bool takeit=false;
               int deltaRegion = abs((int)((*ipad)->tile()->region()-(*jpad)->tile()->region()));
               if (deltaRegion > 1) continue; 
               if (deltaRegion == 0) { //same region: use logical position
                 const std::vector<MuonLogPad*>* clPads = muon_Hit->logPads();
-                for (clpad = clPads->begin() ; clpad != clPads->end() ; clpad++) {
+                for (clpad = clPads->begin() ; clpad != clPads->end() ; clpad++) 
+                {
                   if ((*clpad)->tile()->region() != (*jpad)->tile()->region() ) continue;
                   int deltaX = abs(regX((*clpad)->tile())-regX((*jpad)->tile()));
                   int deltaY = abs(regY((*clpad)->tile())-regY((*jpad)->tile()));
