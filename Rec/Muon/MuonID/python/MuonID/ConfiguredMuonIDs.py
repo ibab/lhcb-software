@@ -30,7 +30,7 @@ class ConfiguredMuonIDs():
     if self.debug: print "# SPECIAL DATA=",self.specialData
     
     ## from datatype and version look for module with data. Store extra modules in case desired does not exist
-    mod=[data+"_"+version,data+"_def","DC06_def"]
+    mod=[data+"_"+version,data+"_def","MC09_def"]
     mod = map(lambda x: "Muon_"+x,mod)
 
     if self.debug: print "# \tmods -> ",mod
@@ -38,10 +38,14 @@ class ConfiguredMuonIDs():
     ## check if modules exist and load them
     try: exec("from MuonID import "+mod[0]+" as info")
     except:
-      if debug: print "# WARNING: not available info for DATA=%s,VERSION=%s. Loading default" %(data,version)
+      print "ConfiguredMuonIDs: # WARNING: not available info for DATA=%s,VERSION=%s. Loading default" %(data,version)
       try: exec("from MuonID import "+mod[1]+" as info")
-      except: exec("from MuonID import "+mod[2]+" as info")
+      except: 
+        exec("from MuonID import "+mod[2]+" as info")
 
+    print "ConfiguredMuonIDs: # INFO: Loaded configuration info ", info.FILENAME
+    
+    
     ## set final module with info to be loaded
     self.info=info
     self.info.DEBUG = debug
