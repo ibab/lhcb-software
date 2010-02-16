@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2010-02-16 - Chris Jones
+ - Update Rich::Side text conversion
+
 !===================== LHCbKernel v11r11 2010-01-20 =======================
 ! 2009-12-12 - Wouter Hulsbergen
  - Bug fix in OTChannelID::uniqueSequentialModule (Herve Terrier)
