@@ -5,7 +5,7 @@
  *  Implementation file for enumeration : Rich::Side
  *
  *  CVS Log :-
- *  $Id: RichSide.cpp,v 1.5 2009-08-25 16:09:21 jonrob Exp $
+ *  $Id: RichSide.cpp,v 1.6 2010-02-16 19:27:20 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-19
@@ -55,7 +55,7 @@ std::string Rich::text( const Rich::DetectorType rich, const Rich::Side side )
   }
   else
   {
-    return "Invalid RICH Detector";
+    return Rich::text(side);
   }
 }
 
