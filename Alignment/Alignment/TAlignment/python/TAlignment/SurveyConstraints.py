@@ -34,13 +34,13 @@ class SurveyConstraints( list ):
         AlignChisqConstraintTool().XmlUncertainties += ["Module(PU|).. : 0.02 0.02 0.02 0.000001 0.000001 0.000001",
                                                         "Detector(PU|)..-.. : 0.005 0.005 0.005 0.000001 0.000001 0.000001" ]
         self.append("Velo      : 0 0 0 -0.0001 0 -0.0001 : 0.2 0.2 0.2 0.0001 0.0001 0.0001" )
-        self.append("Velo/Velo(Right|Left) : 0 0 0 0 0 0 : 0.2 0.2 0.2 0.0001 0.0001 0.0001" ) 
+        self.append("Velo/Velo(Right|Left) : 0 0 0 0 0 0 : 10 1 0.2 0.0001 0.0001 0.0001" ) 
         
     def OT( self ) :
         # we don't load OT xml yet. there is no usefull info, since it doesn't have the right structures in geometry.
                 
         # modules
-        self.append("OT/.*?M. : 0 0 0 0 0 0 : 0.05 0.05 0.05 0.00005 0.0005 0.00005")
+        self.append("OT/.*?M. : 0 0 0 0 0 0 : 0.05 0.05 0.05 0.00001 0.00001 0.00001")
 
         # C frames
         self.append("OT/T1X1UASide : -1.43  0.05  0.0  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
