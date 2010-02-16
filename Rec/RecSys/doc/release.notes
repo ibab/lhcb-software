@@ -12,6 +12,8 @@ This version uses Gaudi v21r7p1 and LHCb v29r1
 
 - Multiple package changes for reprocessing last year's data and preparing for 2010 first data.
 
+- added Muon/MuonTrackRec package
+
 
 - Packages updated: Calo/CaloMoniDst v4r4, Calo/CaloPIDs v5r4,  Muon/MuonID v7r7,
 										Muon/MuonPIDChecker v4r1, Muon/MuonTools v5r1, Rec/LumiAlgs v3r3,
@@ -33,17 +35,24 @@ This version uses Gaudi v21r7p1 and LHCb v29r1
 - In :
   . 
 
-- In :
-  . 
+- In Rich/RichRecTrackTools v1r16p1:
+  . Adapt to changes in histogramming base class.
 
-- In :
-  . 
+- In Rich/RichRecSys v3r26:
+  . Add temporary ad hoc correct to aerogel CK theta values for earlyData
 
-- In :
-  . 
+- In Tf/PatAlgorithms v3r29:
+  . modify early data tuning for PatForward and PatDownstream algorithms
+  . changes inkeeping with new interfaces
 
-- In :
-  . 
+- In Tf/TfTools v1r10:
+  . added hitsLocalXRange function to IT/OT/TT hit creators
+
+- In Tf/TrackMatching v2r27:
+  . Change in AddTTClusterTool to reflect change in interface IAddTTClusterTool
+
+- In Tf/TrackSys v4r30:
+  . move all hit decoding/clustering to the beginning of the tracking sequence
 
 - In Tr/PatChecker v3r6:
   . added additional printout and histos
