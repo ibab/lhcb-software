@@ -78,7 +78,7 @@ use RichENNRingFinder    v1r1    Rich # Chris Jones + Ulrich Kerzel
 use RichIFBAnalysis      v1r1p1  Rich # Ross Young, Chris Jones
 
 # Velo
-use VeloRecMonitors      v2r5    Velo # Malcom John, Eduardo Rodrigues
+use VeloRecMonitors      v2r6    Velo # Malcom John, Eduardo Rodrigues
 
 # Setup Python Configurables
 apply_pattern install_python_modules

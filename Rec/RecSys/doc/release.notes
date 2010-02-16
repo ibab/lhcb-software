@@ -21,8 +21,8 @@ This version uses Gaudi v21r7p1 and LHCb v29r1
                     Rich/RichRecSys v3r26, Tf/PatAlgorithms v3r29, Tf/TfTools v1r10,
 										Tf/TrackMatching v2r27, Tf/TrackSys v4r30, Tr/PatChecker v3r6,
 										Tr/TrackExtrapolators v2r24p2, Tr/TrackFitEvent v4r4, Tr/TrackFitter v2r44p1
-										Tr/TrackMonitor v1r20, Tr/TrackProjectors v2r27, Tr/TrackTools v3r26,
-										Tr/TrackUtils v1r34
+										Tr/TrackMonitors v1r20, Tr/TrackProjectors v2r27, Tr/TrackTools v3r26,
+										Tr/TrackUtils v1r34, Velo/RecVeloMonitors v2r6
 
 - In :
   . 
@@ -45,20 +45,23 @@ This version uses Gaudi v21r7p1 and LHCb v29r1
 - In :
   . 
 
-- In :
-  . 
+- In Tr/PatChecker v3r6:
+  . added additional printout and histos
 
-- In :
-  . 
+- In Tr/TrackExtrapolators v2r24p2:
+  . SimplifiedMaterialLocator: move some info messages to debug
 
-- In :
-  . 
+- In Tr/TrackFitEvent v4r4:
+  . added flag for use of driftttime to OTMeasurement
+  . added muon chisquare to KalmanFitResult
 
-- In :
-  . 
+- In Tr/TrackFitter v2r44p1:
+  . Changes in Configurable required for HLT
 
-- In Tr/TrackMonitor v1r20:
-  . 
+- In Tr/TrackMonitors v1r20:
+  . Added TrackMuonMatchMonitor.cpp (.h) to monitor the M1-Track residuals.
+  . Changes in histograms OTHitEfficiencyMonitor and others
+  . ConfiguredTrackMonitors.py updated to include TrackMuonMatchMonitor.cpp
 
 - In Tr/TrackProjectors v2r27:
   . improvements in OTProjector, implement new 'prefit', 
@@ -69,6 +72,11 @@ This version uses Gaudi v21r7p1 and LHCb v29r1
 
 - In Tr/TrackUtils v1r34:
   . added TrackHitAdder, Fixed bug in TrackV0Utils
+
+- In Velo/VeloRecMonitors v2r6:
+  . added filtering of beam-gas to VeloIPResolutionMonitor
+  . bug fix and update residual method to the change in Det/VeloDet 
+  . Add projected angle computation in VeloTrackMoniNT algorithm 
 
 </PRE><H1><A NAME=v8r0>2010-01-21 RecSys v8r0</A></H1><PRE>
 This version uses Gaudi v21r7 and LHCb v29r0
