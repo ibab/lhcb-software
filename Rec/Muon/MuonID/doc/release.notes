@@ -2,6 +2,9 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !-----------------------------------------------------------------------------
 
+! 2010-02-16 - Rob Lambert
+ - MuonIDAlg Fix Windows warning about atanh.
+
 ! 2010-02-16 - Helder Lopes
 - Made MC09 the default configuration file.
 

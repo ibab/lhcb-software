@@ -10,6 +10,7 @@
 // local
 #include "MuonIDAlg.h"
 #include "TF1.h"
+#include <gsl/gsl_math.h>
 
 //boost
 #include <boost/assign/list_of.hpp>
@@ -1399,7 +1400,7 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist(LHCb::MuonPID * pMuid, const double& p
   int pBin=GetPbin(p, region);
   double tanhdist;
     // Calculate tanh(dist). The effetive scale factor is after dividing by tanh^¯1(0.5)
-    tanhdist = tanh(myDist/(*(m_tanhScaleFactors[region]))[pBin]*atanh(0.5));
+    tanhdist = tanh(myDist/(*(m_tanhScaleFactors[region]))[pBin]*gsl_atanh(0.5));
   
   // Calculate Prob(mu) and Prob(non-mu) for a given track;
     ProbMu = calc_ProbMu_tanh(tanhdist, pBin, region );
