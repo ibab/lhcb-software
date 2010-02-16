@@ -74,22 +74,24 @@ class HistStore:
       import os
       outputfile = TFile(filename,"RECREATE")
       for k, o in self.histDict.iteritems():
-         fullname = str(k).replace('/stat','')
-         dirname  = os.path.dirname(fullname)
-         histname = os.path.basename(fullname)
-         #print "dirname=\'", dirname, "\'"
-         #print "histname=\'", histname, "\'"
-         outputfile.cd()
-         curdir = outputfile
-         directories = dirname.split('/')
-         for i in directories:
-            subdir = curdir.GetDirectory(i)
-            if not subdir:
-               curdir.mkdir( i )
+         # skip Calo
+         if not str(k).startswith('/stat/CaloPIDs') :
+            fullname = str(k).replace('/stat/','/')
+            dirname  = os.path.dirname(fullname)
+            histname = os.path.basename(fullname)
+            #print "dirname=\'", dirname, "\'"
+            #print "histname=\'", histname, "\'"
+            outputfile.cd()
+            curdir = outputfile
+            directories = dirname.split('/')
+            for i in directories:
                subdir = curdir.GetDirectory(i)
-            subdir.cd()
-            curdir = subdir
-         o.Write( histname )
+               if not subdir:
+                  curdir.mkdir( i )
+                  subdir = curdir.GetDirectory(i)
+               subdir.cd()
+               curdir = subdir
+            o.Write( histname )
       outputfile.Write()
       outputfile.Close()
 
@@ -112,9 +114,17 @@ class AlignmentTask(Task):
      from GaudiPython.Bindings import AppMgr
      appMgr = AppMgr()
      # ugly: change the algorithm after initialization. otherwise it doesn't work for 'reused' applications.
+     #numeventsPerProc  = opts.numevents / opts.numprocs + 1
+     #numeventsThisProc = numeventsPerProc
+     #if eventoffset is opts.numprocs - 1:
+     #   numeventsThisProc -= opts.numprocs * numeventsPerProc - opts.numevents
+     #appMgr.evtSel().FirstEvent = eventoffset * numeventsPerProc
+     #appMgr.evtSel().reinitialize()
+     #appMgr.run(numeventsThisProc)
      appMgr.algorithm('EscherPrescaler').Offset = eventoffset
      appMgr.algorithm('EscherPrescaler').Interval = opts.numprocs
      appMgr.run(opts.numevents)
+     
      #evt = appMgr.evtsvc()
      #while 0 < 1:>
      # check if there are still valid events
@@ -122,30 +132,36 @@ class AlignmentTask(Task):
      det = appMgr.detsvc()
      alignderivatives = det['AlignDerivativeData']
      #self.output['derivatives'] = copy.deepcopy(alignderivatives)
-     self.output['derivatives'].add( alignderivatives )
+     if alignderivatives : self.output['derivatives'].add( alignderivatives )
      histsvc = appMgr.histsvc()
      self.output['histograms'].collect( histsvc )
                 
   def finalize(self):
-     print 'number of events in derivatives: ', self.output['derivatives'].equations().numEvents()
-     from GaudiPython.Bindings import AppMgr
-     appMgr = AppMgr()
-     # we want to reinitialize, but we don't want to initialize all
-     # the reco algorithms, so we add just the alignment sequence:
-     appMgr.setAlgorithms( [ 'GaudiSequencer/AlignSequence' ] )
-     appMgr.configure()
-     appMgr.initialize()
-     # update the geometry
-     # updatetool = appMgr.toolsvc().create( typ = "Al::AlignUpdateTool", name = "ToolSvc.AlignUpdateTool", interface = "IAlignUpdateTool" )
-     updatetool = appMgr.toolsvc().create( "Al::AlignUpdateTool", interface = "Al::IAlignUpdateTool" )
-     updatetool.process(  self.output['derivatives'].equations(), opts.iter, 1)
-     # now call finalize to write the conditions. there must be a better way.
-     appMgr.finalize()
      # dump the histograms to a file
      self.output['histograms'].dump('histograms.root')
-     # finally create a database layer
-     import os
-     os.system("copy_files_to_db.py -c sqlite_file:Alignment.db/LHCBCOND -s xml")
+
+     numAlignEvents = self.output['derivatives'].equations().numEvents()
+     if numAlignEvents>0 :
+        print 'number of events in derivatives: ', self.output['derivatives'].equations().numEvents()
+        # write the derivative file
+        self.output['derivatives'].equations().writeToFile("myderivatives.dat")
+
+        from GaudiPython.Bindings import AppMgr
+        appMgr = AppMgr()
+        # we want to reinitialize, but we don't want to initialize all
+        # the reco algorithms, so we add just the alignment sequence:
+        appMgr.setAlgorithms( [ 'GaudiSequencer/AlignSequence' ] )
+        appMgr.configure()
+        appMgr.initialize()
+        # update the geometry
+        # updatetool = appMgr.toolsvc().create( typ = "Al::AlignUpdateTool", name = "ToolSvc.AlignUpdateTool", interface = "IAlignUpdateTool" )
+        updatetool = appMgr.toolsvc().create( "Al::AlignUpdateTool", interface = "Al::IAlignUpdateTool" )
+        updatetool.process(  self.output['derivatives'].equations(), opts.iter, 1)
+        # now call finalize to write the conditions. there must be a better way.
+        appMgr.finalize()
+        # finally create a database layer
+        import os
+        os.system("copy_files_to_db.py -c sqlite_file:Alignment.db/LHCBCOND -s xml")
 
 ############################################################################
 
