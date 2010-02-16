@@ -4,6 +4,9 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+! 2010-02-16 - Chris Jones
+ - Improvements to RichHistogramID full IDs and histogram titles
+
 ! 2010-02-12 - Chris Jones
  - CPU optimisation of the previous commit, to speed up histogram lookup.
 

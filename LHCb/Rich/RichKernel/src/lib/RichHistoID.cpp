@@ -21,10 +21,10 @@ std::string
 Rich::HistogramID::fullid() const
 {  
   std::string fid("");
-  if ( det()  != Rich::InvalidDetector ) fid += Rich::text(det())  + "/";
-  if ( rad()  != Rich::InvalidRadiator ) fid += Rich::text(rad())  + "/";
-  if ( side() != Rich::InvalidSide     ) fid += Rich::text(side()) + "/";
-  if ( pid()  != Rich::Unknown         ) fid += Rich::text(pid())  + "/";
+  if      ( rad()  != Rich::InvalidRadiator ) { fid += Rich::text(rad())        + "/"; }
+  else if ( det()  != Rich::InvalidDetector ) { fid += Rich::text(det())        + "/"; }
+  if      ( side() != Rich::InvalidSide     ) { fid += Rich::text(det(),side()) + "/"; }
+  if      ( pid()  != Rich::Unknown         ) { fid += Rich::text(pid())        + "/"; }
   return fid + id();
 }
 
@@ -32,9 +32,9 @@ std::string
 Rich::HistogramID::fullTitle( const std::string & title ) const
 {
   std::string ftitle("");
-  if ( det()  != Rich::InvalidDetector ) ftitle += Rich::text(det())  + " ";
-  if ( rad()  != Rich::InvalidRadiator ) ftitle += Rich::text(rad())  + " ";
-  if ( side() != Rich::InvalidSide     ) ftitle += Rich::text(side()) + " ";
-  if ( pid()  != Rich::Unknown         ) ftitle += Rich::text(pid())  + " ";
+  if      ( rad()  != Rich::InvalidRadiator ) { ftitle += Rich::text(rad())        + " "; }
+  else if ( det()  != Rich::InvalidDetector ) { ftitle += Rich::text(det())        + " "; }
+  if      ( side() != Rich::InvalidSide     ) { ftitle += Rich::text(det(),side()) + " "; }
+  if      ( pid()  != Rich::Unknown         ) { ftitle += Rich::text(pid())        + " "; }
   return ftitle + title;
 }
