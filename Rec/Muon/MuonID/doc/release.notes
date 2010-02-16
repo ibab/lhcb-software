@@ -2,13 +2,13 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !-----------------------------------------------------------------------------
 
+!======================== MuonID v7r7 2010-02-01 ===========================
 ! 2010-02-16 - Rob Lambert
  - MuonIDAlg Fix Windows warning about atanh.
 
 ! 2010-02-16 - Helder Lopes
 - Made MC09 the default configuration file.
 
-!======================== MuonID v7r7 2010-02-01 ===========================
 ! 2010-02-09 - Helder Lopes
 - New DLL_flag=3 method: The closest distance is mapped into [0,1] by 
   hyperbolic tangent, filling histograms, with a conversion factor per 
