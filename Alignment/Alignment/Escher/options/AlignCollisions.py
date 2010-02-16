@@ -46,24 +46,24 @@ from Configurables import TAlignment
 from TAlignment.Alignables import *
 from TAlignment.SurveyConstraints import *
 
-elements = Alignables()
+#elements = Alignables()
 constraints = []
 surveyconstraints = SurveyConstraints()
 
-elements.Velo("Rx")
-elements.VeloRight("Ry")
-#elements.Tracker("Rz")
-elements.TT("TxTy")
-elements.TTHalfLayers("Tx")
-elements.TTHalfModules("TxRz")
-#elements.TTHalfModules("Tx")
+#elements.Velo("Rx")
+#elements.VeloRight("Ry")
+##elements.Tracker("Rz")
+#elements.TT("TxTy")
+#elements.TTHalfLayers("Tx")
+#elements.TTHalfModules("TxRz")
+##elements.ITLayers("Tx")
+##elements.IT("TxTy")
+#elements.ITBoxes("TxTyRz")
 #elements.ITLayers("Tx")
-#elements.IT("TxTy")
-elements.ITBoxes("TxTyRz")
-elements.ITLayers("Tx")
-elements.ITLadders("TxRz")
-elements.OTCFrames("TxTyRz")
-#elements.OTModules("TxRz")
+#elements.ITLadders("TxRz")
+#elements.OTCFrames("Tx")
+#elements.OTCFrameLayers("Ty")
+#elements.OTModules("Tx")
 
 #surveyconstraints.ITBoxes()
 #surveyconstraints.OTCFrames()
@@ -77,18 +77,42 @@ surveyconstraints.All()
 #constraints.append("OTASide : OT/T3VX2ASide : Tx")
 
 # make sure to constrain both q/P and a twist. does this work?
-constraints.append("OT3 : OT/T3VX2.Side : Tx Rz")
-constraints.append("TTHalfLayerAverage : TT..Layer.Side : Tx : total") ;
 
 #constraints.append("ITGlobal : T/IT : Tx Ty : total")
 
+elements = Alignables()
+constraints = []
+#elements += ['/dd/Structure/LHCb/AfterMagnetRegion/T/IT/Station(1|2|3)/(CSide|ASide|Top|Bottom)Box:TxTyTzRz']
+#elements += ['/dd/Structure/LHCb/AfterMagnetRegion/T/IT/Station(1|2|3)/(CSide|ASide|Top|Bottom)Box/Layer.{1,2}:TxTz']
+elements.Velo("None")
+elements.VeloRight("None")
+elements.ITBoxes("TxTyTzRzRyRx")
+elements.ITLayers("Tx")
+elements.ITLadders("TxRz")
+elements.OTCFrames("Tx")
+elements.OTCFrameLayers("Tz")
+elements.OTModules("TxRz")
+elements.TT("TxTyTz")
+#elements.TTBoxes("Tx")
+#elements.TTHalfLayers("Tx")
+elements.TTHalfModules("TxRz")
+#constraints.append("TTHalfLayerAverage : TT..Layer.Side : Tx : total") 
+#constraints.append("OT3Frames : OT/T3VX2.Side : Tx")
+#constraints.append("OT3       : OT/T3VX2      : Tx Ty Tz")
+constraints.append("IT3Top    : IT/Station3/TopBox : Tx Ty Tz Rx Ry Rz")
+constraints.append("IT3Bottom : IT/Station3/BottomBox : Tx Ty Tz Rx Ry Rz")
+constraints.append("IT3A      : IT/Station3/ASideBox : Ty Tz Rx Ry Rz")
+constraints.append("IT3C      : IT/Station3/CSideBox : Ty Tz Rx Ry Rz")
+
+#constraints.append("TTAAverage : TT..LayerASide : Tx : total")
+#constraints.append("TTCAverage : TT..LayerCSide : Tx : total")
 
 print "aligning elements ", elements
 
 TAlignment().ElementsToAlign      = list(elements)
 TAlignment().TrackLocation        = "Rec/Track/AlignTracks"
 # comment following line if one does not want vertex
-#TAlignment().VertexLocation       = "Rec/Vertex/Primary"
+TAlignment().VertexLocation       = "Rec/Vertex/Primary"
 TAlignment().Constraints          = constraints
 TAlignment().SurveyConstraints    = list(surveyconstraints)
 TAlignment().WriteCondSubDetList  = ['Velo','TT','IT','OT']
@@ -98,7 +122,17 @@ TAlignment().MinNumberOfHits = 1
 
 # still set up a track selection
 from Configurables import (GaudiSequencer,TrackListRefiner,TrackListMerger,
-                           TrackSelector,TrackMonitor,ITTrackSelector) 
+                           TrackSelector,TrackMonitor,ITTrackSelector,
+                           TrackHitAdder) 
+from TrackFitter.ConfiguredFitters import *
+
+GaudiSequencer("TrackAddExtraInfoSeq").Members += [
+    TrackHitAdder( "TrackHitAdder",
+                   TrackLocation = "Rec/Track/Best" ),
+    ConfiguredEventFitter("TrackRefitter",
+                          TracksInContainer = "Rec/Track/Best" ) ]
+TrackEventFitter("TrackRefitter").Fitter.UpdateTransport = True
+
 trackFilterSeq = GaudiSequencer("TrackFilterSeq")
 alignSelectorA = TrackListRefiner("AlignSelectorA",
                                   inputLocation = "Rec/Track/Best",
@@ -108,7 +142,7 @@ alignSelectorA.Selector.MaxChi2Cut = 10
 alignSelectorA.Selector.MaxChi2PerDoFMatch = 10
 alignSelectorA.Selector.MaxChi2PerDoFVelo = 5
 alignSelectorA.Selector.MaxChi2PerDoFDownstream = 5
-alignSelectorA.Selector.MinPCut = 5000
+alignSelectorA.Selector.MinPCut = 10000
 alignSelectorA.Selector.TrackTypes = ["Long","Downstream"]
 
 #this one selects specifically overlap tracks. we only take T-tracks with overlaps
@@ -138,7 +172,7 @@ trackFilterSeq.Members.append( TrackListMerger("AlignTrackMerger",
                                                inputLocations= [ "Rec/Track/AlignTracksA", "Rec/Track/AlignTracksB"],
                                                outputLocation = "Rec/Track/AlignTracks") )
 
-from Configurables import TrackCaloMatchMonitor, TrackListRefiner, TrackITOverlapMonitor
+from Configurables import TrackCaloMatchMonitor, TrackListRefiner, TrackITOverlapMonitor, TrackAlignMonitor
 
 longTrackSelector = TrackListRefiner("LongTrackSelector",
                                      inputLocation = "Rec/Track/Best",
@@ -151,53 +185,66 @@ GaudiSequencer("AlignMonitorSeq").Members += [TrackCaloMatchMonitor('TrackEcalMa
                                               TrackCaloMatchMonitor('TrackPrsMatchMonitor'),
                                               longTrackSelector,
                                               TrackITOverlapMonitor("LongTrackITOverlapMonitor",
-                                                                    TrackLocation = "Rec/Track/Long")]
+                                                                    TrackLocation = "Rec/Track/Long"),
+                                              TrackITOverlapMonitor("AlignITOverlapMonitor",
+                                                                    TrackLocation = "Rec/Track/AlignTracks"),
+                                              TrackAlignMonitor("AlignTrackAlignMonitor",
+                                                                TrackLocation = "Rec/Track/AlignTracks")
+                                              ]
+
+
 #from Configurables import OTCalibrationIO
 #GaudiSequencer("RecoOTSeq").Members.append(OTCalibrationIO())
 
-from Configurables import TrackV0Finder, TrackV0Monitor, TrackV0NtupleMonitor
+from Configurables import TrackV0Finder, TrackV0Monitor, TrackV0NtupleMonitor, TrackPVFinder
 
-tweakedV0Finder = TrackV0Finder("TweakedV0Finder",
-                                V0Container = 'Rec/Vertex/TweakedV0',
-                                KsMassCut = 300,
-                                MaxChi2PVConstraint = 1000,
-                                MinDecayLengthSignificance = 5,
-                                AddExtraInfo = True,
-                                ExcludePVTracks = False,
-                                #MinDeltaZ = 20,
-                                #MaxDistanceLong = 10,
-                                #MaxDistanceUpstream = 10,
-                                RejectUpstreamHits = False )
 TrackV0Monitor().FullDetail = True
-TrackV0Finder(KsMassCut = 300,
-              AddExtraInfo = True,
-              ExcludePVTracks = False)
-              
-from Configurables import TrackPVFinder
-GaudiSequencer("RecoVertexSeq").Members.append( TrackPVFinder() )
-GaudiSequencer("MoniTrSeq").Members.append( TrackV0NtupleMonitor(V0Location = 'Rec/Vertex/TweakedV0') )
+#TrackV0Finder(KsMassCut = 300,AddExtraInfo = True,ExcludePVTracks = False)
+TrackV0Finder(AddExtraInfo = True,ExcludePVTracks = False)
 
-from Configurables import NTupleSvc
-ntupleOutputFile = "tuples.root"
-NTupleSvc().Output=["FILE1 DATAFILE='"+ntupleOutputFile+"' TYP='ROOT' OPT='NEW'"]
-
+def TweakFitter( eventfittername ) :
+    from Configurables import TrackEventFitter
+    eventfitter = TrackEventFitter(eventfittername)
+    eventfitter.Fitter.MaxNumberOutliers = 0
+    eventfitter.Fitter.MaxDeltaChiSqConverged = 0.01
+    eventfitter.Fitter.NumberFitIterations = 10
+    eventfitter.Fitter.Chi2Outliers = 25
+        
 def doMyAlignChanges():
     from Configurables import TESCheck
     TESCheck().Stop = False
     TESCheck().Enable = False
-    
-    from Configurables import TrackEventFitter, VeloTrackSelector
-    from TrackFitter.ConfiguredFitters import ConfiguredStraightLineFitter
-    TrackEventFitter('FitMatch').Fitter.MaxNumberOutliers = 0
-    TrackEventFitter('FitSeed').Fitter.MaxNumberOutliers = 0
-    TrackEventFitter('RefitSeed').Fitter.MaxNumberOutliers = 0
-    TrackEventFitter('FitForward').Fitter.MaxNumberOutliers = 0
-    TrackEventFitter('FitVelo').Fitter.MaxNumberOutliers = 0
-    TrackEventFitter('FitVeloTT').Fitter.MaxNumberOutliers = 0
 
-    GaudiSequencer("RecoVertexSeq").Members = [ TrackPVFinder(),
-                                                tweakedV0Finder,
-                                                TrackV0Finder() ]
+    # insert a run filter
+    from Configurables import LoKi__ODINFilter  as ODINFilter
+    odinfilter = ODINFilter("OdinRunFilter",
+                            Code = "ODIN_RUN  != ints( [63757,63948,63700,63702,63948] )")
+    odinfilter.Preambulo += [ "from LoKiCore.functions import *" ]
+    #~ODIN_RUNNUMBER( uints (  63757,63948,63700,63702,63948  ) )" )
+    #badruns = [63757,63948,63700,63702,63948]
+    #odincode = ""
+    #first = True
+    #for i in badruns:
+    #    if not first: odincode += "&"
+    #    first = False
+    #    odincode += "(ODIN_RUNNUMBER!=%d)" % i
+    #odinfilter = ODINFilter("OdinRunFilter",
+    #                        Code = odincode)
+    GaudiSequencer('EscherSequencer').Members.insert(1,odinfilter)
+
+    from Configurables import VeloTrackSelector
+    TweakFitter('FitDownstream')
+    TweakFitter('FitMatch')
+    TweakFitter('FitSeed')
+    TweakFitter('RefitSeed')
+    TweakFitter('FitForward')
+    TweakFitter('FitVelo')
+    TweakFitter('FitVeloTT')
+    TweakFitter('TrackRefitter')
+
+    #GaudiSequencer("RecoVertexSeq").Members = [ TrackPVFinder(),
+                                                #tweakedV0Finder,
+    #                                            TrackV0Finder() ]
 
     # add a filter on Velo tracks
     from Configurables import TrackListFilter
@@ -220,5 +267,9 @@ def doMyAlignChanges():
     from Configurables import TrackHitMapMonitor
     GaudiSequencer("MoniTrSeq").Members.append( TrackHitMapMonitor() )
 
+    from Configurables import STOfflinePosition
+    itClusterPosition = STOfflinePosition('ToolSvc.ITClusterPosition')
+    itClusterPosition.ErrorVec = [0.28, 0.22, 0.35, 0.35]
+    itClusterPosition.APE = 0.1
 
 appendPostConfigAction(doMyAlignChanges)

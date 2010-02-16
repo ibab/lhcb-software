@@ -51,23 +51,49 @@ constraints = []
 surveyconstraints = SurveyConstraints()
 
 elements.Velo("Rx")
+#elements.Velo("None")
 elements.VeloRight("Ry")
 #elements.VeloLeft("RxRy")
-elements.TT("TxTy")
-#elements.TTBoxes("Tx")
+elements.TT("TxTyTz")
+elements.TTBoxes("Tx")
 elements.TTHalfLayers("Tx")
 #elements.TTHalfModules("Tx")
-#elements.ITLayers("Tx")
 #elements.IT("TxTy")
-elements.ITBoxes("TxTyRz")
-elements.OTCFrames("TxTyRz")
-#elements.OTModules("Tx")
+#elements.ITLayers("Tx")
+#elements.T("Ty")
+elements.ITBoxes("TxTyTzRzRy")
+#elements.ITLayers("Tx")
+#elements.ITLadders("Tx")
+elements.OTCFrameLayers("TyTz")
+elements.OTModules("Tx")
 
 #surveyconstraints.ITBoxes()
-surveyconstraints.OT()
-surveyconstraints.TT()
-surveyconstraints.IT()
-surveyconstraints.Velo()
+surveyconstraints.All()
+constraints.append("OT/T3X1U : OT/T3X1U : Tz")
+
+# fix the C frame Y
+if False:
+    elements.OTCFrames("TxTy")
+    surveyconstraints.append("OT/T1X1UASide : -1.43  0.0  0.0  0.0 0.0 0.0 : 0.5 0.0001 0.5 0.0001 0.0001 0.0001")
+    surveyconstraints.append("OT/T1X1UCSide : -0.79  0.0  0.0  0.0 0.0 0.0 : 0.5 0.0001 0.5 0.0001 0.0001 0.0001")
+    surveyconstraints.append("OT/T1VX2ASide : -0.47  0.0 -0.5  0.0 0.0 0.0 : 0.5 0.0001 0.5 0.0001 0.0001 0.0001")
+    surveyconstraints.append("OT/T1VX2CSide : -0.35  0.0 -0.5  0.0 0.0 0.0 : 0.5 0.0001 0.5 0.0001 0.0001 0.0001")
+    surveyconstraints.append("OT/T2X1UASide : -0.27  0.0 -2.5  0.0 0.0 0.0 : 0.5 0.0001 0.5 0.0001 0.0001 0.0001")
+    surveyconstraints.append("OT/T2X1UASide : -0.27  0.0 -2.5  0.0 0.0 0.0 : 0.5 0.0001 0.5 0.0001 0.0001 0.0001")
+    surveyconstraints.append("OT/T2X1UCSide : -0.98  0.0 -2.5  0.0 0.0 0.0 : 0.5 0.0001 0.5 0.0001 0.0001 0.0001")
+    surveyconstraints.append("OT/T2VX2ASide : -1.69  0.0 -3.5  0.0 0.0 0.0 : 0.5 0.0001 0.5 0.0001 0.0001 0.0001")
+    surveyconstraints.append("OT/T2VX2CSide :  0.04  0.0 -3.5  0.0 0.0 0.0 : 0.5 0.0001 0.5 0.0001 0.0001 0.0001")
+    surveyconstraints.append("OT/T3X1UASide : -1.52  0.0  0.0  0.0 0.0 0.0 : 0.5 0.0001 0.5 0.0001 0.0001 0.0001")
+    surveyconstraints.append("OT/T3X1UCSide : -0.04  0.0  0.0  0.0 0.0 0.0 : 0.5 0.0001 0.5 0.0001 0.0001 0.0001")
+    surveyconstraints.append("OT/T3VX2ASide : -1.49  0.0 -2.5  0.0 0.0 0.0 : 0.5 0.0001 0.5 0.0001 0.0001 0.0001")
+    surveyconstraints.append("OT/T3VX2CSide :  0.20  0.0 -2.5  0.0 0.0 0.0 : 0.5 0.0001 0.5 0.0001 0.0001 0.0001")
+else :
+    elements.OTCFrames("Tx")
+
+# we need this because a halflayer and a box are ultimately both
+# defined in terms of the same conditions.
+# constraints.append("TTAAverage : TT..LayerASide : Tx : total")
+# constraints.append("TTCAverage : TT..LayerCSide : Tx : total")
 
 #elements.OTCFrames("TxTy")
 #surveyconstraints.append("/.*?/IT/.*?Layer.{1,2} : Tx : 0.02")
@@ -75,8 +101,13 @@ surveyconstraints.Velo()
 #surveyconstraints.append("Velo : 0 0 0 
 
 # make sure the average layer does not move
-constraints.append("TTHalfLayerAverage : TT..Layer.Side : Tx : total") ;
-constraints.append("ITGlobal : T/IT : Tx Ty : total")
+#constraints.append("TTHalfLayerAverage : TT..Layer.Side : Tx : total") ;
+#constraints.append("ITGlobal : T/IT : Tx Ty : total")
+
+#constraints.append("ITT3A : IT/Station3/ASideBox  : Tz")
+#constraints.append("ITT3C : IT/Station3/CSideBox  : Tz")
+#constraints.append("ITT3T : IT/Station3/TopBox    : Tz")
+#constraints.append("ITT3B : IT/Station3/BottomBox : Tz")
 
 # I want to define the Box by the average of the two double layers
 #elements.ITDoubleLayers("Tx")
@@ -123,13 +154,21 @@ TAlignment().TrackLocation        = "Rec/Track/AlignTracks"
 TAlignment().Constraints          = constraints
 TAlignment().SurveyConstraints    = list(surveyconstraints)
 TAlignment().WriteCondSubDetList  = ['Velo','TT','IT','OT']
-TAlignment().EigenValueThreshold  = 1
+TAlignment().EigenValueThreshold  = -1
 TAlignment().MinNumberOfHits = 5
 
 # still set up a track selection
 from Configurables import (GaudiSequencer,TrackContainerCopy,TrackSelector,
-                           ITTrackSelector,TrackMonitor,TrackListRefiner,TrackListMerger) 
+                           ITTrackSelector,TrackMonitor,TrackListRefiner,TrackListMerger,
+                           TrackHitAdder)
+from TrackFitter.ConfiguredFitters import *
 trackFilterSeq = GaudiSequencer("TrackFilterSeq")
+
+GaudiSequencer("TrackAddExtraInfoSeq").Members += [
+    TrackHitAdder( "TrackHitAdder",
+                   TrackLocation = "Rec/Track/Best" ),
+    ConfiguredEventFitter("TrackRefitter",
+                          TracksInContainer = "Rec/Track/Best" ) ]
 
 alignSelectorA  = TrackListRefiner("AlignSelectorA",
                                    inputLocation = "Rec/Track/Best",
@@ -144,7 +183,7 @@ alignSelectorA.Selector.MaxChi2PerDoFDownstream = 5
 #alignSelectorA.Selector.MaxNVeloHoles = 2
 #alignSelectorA.Selector.,MinNTTHits = 3
 #alignSelectorA.Selector.TrackTypes = ["Long","Ttrack","Downstream","Upstream"]
-alignSelectorA.Selector.TrackTypes = ["Long"]
+alignSelectorA.Selector.TrackTypes = ["Long","Ttrack"]
 
 trackFilterSeq.Members.append( alignSelectorA )
 
@@ -153,20 +192,24 @@ alignSelectorB  = TrackListRefiner("AlignSelectorB",
                                    outputLocation = "Rec/Track/AlignTracksB",
                                    Selector = ITTrackSelector())
 alignSelectorB.Selector.RequireOverlap = True
-alignSelectorB.Selector.MaxChi2Cut = 20
-alignSelectorB.Selector.MaxChi2PerDoFVelo = 3
+alignSelectorB.Selector.MaxChi2Cut = 10
 trackFilterSeq.Members.append( alignSelectorB )
+
+
+#alignSelectorB.OutputLevel = 1
+#alignSelectorB.Selector.MaxChi2PerDoFVelo = 3
 trackFilterSeq.Members.append( TrackListMerger("AlignTrackMerger",
                                                inputLocations= [ "Rec/Track/AlignTracksA", "Rec/Track/AlignTracksB"],
-                                               #inputLocations= [ "Rec/Track/AlignTracksA" ],
+                                               #inputLocations= [ "Rec/Track/AlignTracksB" ],
                                                outputLocation = "Rec/Track/AlignTracks") )
 
 #refine track selection for a few more iterations
-alignSelectorB.Selector.MaxChi2Cut = 10
-alignSelectorB.Selector.MaxChi2PerDoFDownstream = 10
-alignSelectorB.Selector.MaxChi2PerDoFMatch = 10
+#alignSelectorB.Selector.MaxChi2Cut = 10
+#alignSelectorB.Selector.MaxChi2PerDoFDownstream = 10
+#alignSelectorB.Selector.MaxChi2PerDoFMatch = 10
 
-from Configurables import TrackCaloMatchMonitor,TrackFieldOffMatchMonitor
+from Configurables import (TrackCaloMatchMonitor, TrackFieldOffMatchMonitor,
+                           TrackITOverlapMonitor, TrackAlignMonitor)
 GaudiSequencer("AlignMonitorSeq").Members += [TrackCaloMatchMonitor('TrackEcalMatchMonitor'),
                                               TrackCaloMatchMonitor('TrackSpdMatchMonitor'),
                                               TrackCaloMatchMonitor('TrackPrsMatchMonitor'),
@@ -175,7 +218,11 @@ GaudiSequencer("AlignMonitorSeq").Members += [TrackCaloMatchMonitor('TrackEcalMa
                                               TrackFieldOffMatchMonitor("AlignMatchMonitor",
                                                                         MatchTrackLocation = "Rec/Track/AlignTracks",
                                                                         VeloTrackLocation = 'Rec/Track/SelectedVeloOnly',
-                                                                        SeedTrackLocation = 'Rec/Track/SelectedSeed')
+                                                                        SeedTrackLocation = 'Rec/Track/SelectedSeed'),
+                                              TrackITOverlapMonitor("AlignITOverlapMonitor",
+                                                                    TrackLocation = "Rec/Track/AlignTracks"),
+                                              TrackAlignMonitor("AlignTrackAlignMonitor",
+                                                                TrackLocation = "Rec/Track/AlignTracks")
                                               ]
 
 #from Configurables import OTCalibrationIO
@@ -195,6 +242,9 @@ def TweakFitter( eventfitter ) :
     from Configurables import MeasurementProvider
     eventfitter.Fitter.MomentumForScattering  = 10000
     eventfitter.Fitter.MaxNumberOutliers = 0
+    eventfitter.Fitter.MaxDeltaChiSqConverged = 0.01
+    eventfitter.Fitter.NumberFitIterations = 10
+    eventfitter.Fitter.Chi2Outliers = 25
     eventfitter.Fitter.addTool( MeasurementProvider(), name = "MeasProvider")
     #eventfitter.Fitter.MeasProvider.IgnoreTT = True
 
@@ -207,6 +257,7 @@ def doMyAlignChanges():
     TweakFitter( TrackEventFitter('FitVelo') )
     TweakFitter( TrackEventFitter('FitVeloTT') )
     TweakFitter( TrackEventFitter('RefitSeed') )
+    TweakFitter( TrackEventFitter('TrackRefitter') )
     
     # add a filter on Velo tracks
     from Configurables import TrackListFilter
@@ -269,12 +320,17 @@ def doMyAlignChanges():
     tsaSeed = Tf__Tsa__Seed("TsaSeed")
     tsaSeed.addTool(Tf__Tsa__SeedAddHits(), name="SeedAddHits")
     # tolerance if inside box mm
-    tsaSeed.SeedAddHits.tol = 3
+    tsaSeed.SeedAddHits.tol = 5
     # tolerance window make bigger mmm
-    tsaSeed.SeedAddHits.dCut = 1
+    tsaSeed.SeedAddHits.dCut = 2
     # chi-sq cut
-    tsaSeed.SeedAddHits.outlierCutParabola = 5;
-    
+    tsaSeed.SeedAddHits.outlierCutParabola = 5
+
+    from Configurables import STOfflinePosition
+    itClusterPosition = STOfflinePosition('ToolSvc.ITClusterPosition')
+    itClusterPosition.ErrorVec = [0.28, 0.22, 0.35, 0.35]
+    itClusterPosition.APE = 0.1
+
     from Configurables import TrackFieldOffMatchMonitor
 
     seedRefiner = TrackListRefiner("SeedSelector",
