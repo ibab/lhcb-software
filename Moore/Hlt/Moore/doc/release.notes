@@ -4,6 +4,8 @@ Purpose     : LHCb HLT application
 
 ! 2010-02-04 - Gerhard Raven
  - adapt to updated L0 configuration setup
+ - added test for independence of Hlt lines
+ - removed capital letters from names of tests to make qmtest find them
  - bump version v8r6
 
 !========================== Moore v8r5 2009-01-15 ===================

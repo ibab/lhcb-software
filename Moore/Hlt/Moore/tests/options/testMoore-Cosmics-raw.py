@@ -1,15 +1,28 @@
 #!/usr/bin/env gaudirun.py
 
-from Gaudi.Configuration import *
-from Moore.Configuration import *
+import os
+from Gaudi.Configuration import importOptions
+from Moore.Configuration import Moore
+from GaudiConf.Configuration import LHCbApp
 
-Moore().HltType = 'Hlt1' # +Hlt2'
-Moore().EvtMax = 2000
+moore_root = os.path.expandvars("$MOOREROOT")
+importOptions( moore_root + "/options/Moore.py" )
+
+# now reconfigure as needed
+from Configurables import EventSelector
+EventSelector().PrintFreq = 100
+
+Moore().EvtMax = 2000 
 Moore().Simulation = False
 Moore().DataType = '2008'
-Moore().inputFiles= [ 'castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/27804/027804_0000063303.raw' ]
 
-LHCbApp().DDDBtag   = "default"
-LHCbApp().CondDBtag = "default"
+# correct data file
+Moore().inputFiles= [ "castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/27804/027804_0000063303.raw" ]
+#Moore().inputFiles= [ '/data/bfys/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/27804/027804_0000063303.raw' ]
 
-EventSelector().PrintFreq = 100
+Moore().DDDBtag   = "head-20090330"
+Moore().CondDBtag = "head-20090402"
+
+# finally run Moore
+Moore().applyConf()
+print Moore()

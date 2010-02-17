@@ -8,24 +8,21 @@
 #
 # Author: Stephan Nies    
 
-import os, re
+import os
+from Gaudi.Configuration import importOptions
+from Moore.Configuration import Moore
 
-# load the Moore.py executable option script
-main_moore_option_file = os.environ['MOOREROOT'] + '/options/Moore.py'
-f = file(main_moore_option_file)
-main_moore_content = f.read()
-
-# execute all the configuration steps in Moore.py
-# but remove the lines that would start Moore 
-my_moore = re.sub('Moore\(\)\.applyConf\(\)','', main_moore_content)
-my_moore = re.sub('print Moore\(\)','', my_moore)
-exec my_moore 
+moore_root = os.path.expandvars("$MOOREROOT")
+importOptions( moore_root + "/options/Moore.py" )
 
 # now reconfigure as needed
+from Configurables import EventSelector
 EventSelector().PrintFreq = 100
 Moore().EvtMax = 2000 
+
+# correct data file
+Moore().inputFiles = [ '/data/bfys/lhcb/MinBias-L0xHlt1strip/Sim03Reco02-Mbias_%d.mdf'%(i) for i in [ 1, 2 ]  ]
 
 # finally run Moore
 Moore().applyConf()
 print Moore()
-
