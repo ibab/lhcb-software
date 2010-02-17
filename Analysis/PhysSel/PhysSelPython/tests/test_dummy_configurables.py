@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Id: test_dummy_configurables.py,v 1.8 2010-01-28 13:48:38 jpalac Exp $
+#$Id: test_dummy_configurables.py,v 1.9 2010-02-17 13:02:32 jpalac Exp $
 
 import sys
 sys.path.append('../python')
@@ -45,6 +45,23 @@ def test_clone_alg_with_new_InputLocations() :
     assert clone.InputLocations.count('clone0') == 1
     assert clone.InputLocations.count('clone1') == 1
     assert clone.InputLocations.count('clone2') == 1
+
+def test_clone_alg_with_empty_InputLocations() :
+    alg = DummyAlgorithm('Dummy10',
+                         InputLocations = ['loc0', 'loc1'])
+    clone = alg.clone('Clone10',
+                      InputLocations = [])
+
+    assert alg.name() == 'Dummy10'
+    assert len(alg.InputLocations) == 2
+    assert alg.InputLocations.count('loc0') == 1
+    assert alg.InputLocations.count('loc1') == 1
+
+    assert clone.name() == 'Clone10'
+    assert len(clone.InputLocations) == 0
+    assert clone.InputLocations.count('clone0') == 0
+    assert clone.InputLocations.count('clone1') == 0
+    assert clone.InputLocations.count('clone2') == 0
 
 
 '''

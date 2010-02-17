@@ -4,9 +4,19 @@
 #
 import sys
 sys.path.append('../python')
-from PhysSelPython.Wrappers import Selection, AutomaticData, NameError
+from PhysSelPython.Wrappers import Selection, AutomaticData, NameError, NonEmptyInputLocations
 from PhysSelPython.Configurabloids import DummyAlgorithm, DummySequencer
 
+def test_automatic_data() :
+    sel00 = AutomaticData('mySel00', Location = 'Phys/Sel00')
+    assert sel00.name() == 'mySel00'
+    assert sel00.outputLocation() == 'Phys/Sel00'
+
+def test_automatic_data_with_no_name() :
+    sel00 = AutomaticData(Location = 'Phys/Sel00x')
+    assert sel00.name() == 'Sel00x'
+    assert sel00.outputLocation() == 'Phys/Sel00x'
+    
 def test_instantiate_tree(selID='0000') :
     sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
     sel01 = AutomaticData('Sel01', Location = 'Phys/Sel01')
@@ -36,18 +46,6 @@ def test_tree_InputLocations_propagated() :
     assert sel0.alg.InputLocations.count('Phys/Sel00') ==1
     assert sel0.alg.InputLocations.count('Phys/Sel01') ==1
 
-def test_tree_InputLocations_not_duplicated() :
-    
-    sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
-    sel01 = AutomaticData('Sel01', Location = 'Phys/Sel01')
-    alg0 = DummyAlgorithm('Alg002', InputLocations = ['Phys/Sel00', 'Phys/Sel01'])
-    sel0 = Selection('Sel002', Algorithm = alg0,
-                     RequiredSelections = [sel00, sel01])
-    print "algo length ", len(alg0.InputLocations)
-    assert len(alg0.InputLocations) == 2
-    assert len(sel0.alg.InputLocations) == 2
-    assert sel0.alg.InputLocations.count('Phys/Sel00') ==1
-    assert sel0.alg.InputLocations.count('Phys/Sel01') ==1
 
 '''
 #This requires the algorithm to raise. Gaudi algorithms do not seen to do this.
@@ -67,7 +65,7 @@ def test_selection_with_existing_selection_name_raises() :
     
     sel02 = AutomaticData('Sel02', Location = 'Phys/Sel02')
     sel03 = AutomaticData('Sel03', Location = 'Phys/Sel03')
-    alg0 = DummyAlgorithm('Alg003', InputLocations = ['Phys/Sel00', 'Phys/Sel01'])
+    alg0 = DummyAlgorithm('Alg003')
     try :
         sel0 = Selection('Sel003', Algorithm = alg0,
                          RequiredSelections = [sel02, sel03])
@@ -82,7 +80,7 @@ def test_clone_selection_with_existing_selection_name_raises() :
     
     sel02 = AutomaticData('Sel02', Location = 'Phys/Sel02')
     sel03 = AutomaticData('Sel03', Location = 'Phys/Sel03')
-    alg0 = DummyAlgorithm('Alg004', InputLocations = ['Phys/Sel00', 'Phys/Sel01'])
+    alg0 = DummyAlgorithm('Alg004')
     try :
         sel0 = Selection('Sel004', Algorithm = alg0,
                          RequiredSelections = [sel02, sel03])
@@ -117,12 +115,22 @@ def test_clone_selection_with_new_InputLocations() :
 def test_selection_with_name_overlap_doesnt_raise() :
     sel02 = AutomaticData('Sel02', Location = 'Phys/Sel02')
     sel03 = AutomaticData('Sel03', Location = 'Phys/Sel03')
-    alg0 = DummyAlgorithm('Alg005',
-                          InputLocations = ['Phys/Sel00', 'Phys/Sel01'])
+    alg0 = DummyAlgorithm('Alg005')
     sel0 = Selection('Sel005', Algorithm = alg0)
     sel1 = Selection('Sel005Loose', Algorithm = alg0)
     assert sel0.outputLocation() == 'Phys/Sel005'
     assert sel1.outputLocation() == 'Phys/Sel005Loose'
+
+def test_selection_with_InputLocations_set_in_algo_raises() :
+    sel02 = AutomaticData('Sel02', Location = 'Phys/Sel02')
+    sel03 = AutomaticData('Sel03', Location = 'Phys/Sel03')
+    alg0 = DummyAlgorithm('Alg006',
+                          InputLocations = ['Phys/Sel00', 'Phys/Sel01'])
+    try :
+        sel0 = Selection('Sel006', Algorithm = alg0)
+        assert True == False
+    except NonEmptyInputLocations :
+        print 'Caught NonEmptyInputLocations'
 
 def test_clone_selection_with_cloned_alg() :
     pass
