@@ -2,7 +2,10 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !-----------------------------------------------------------------------------
 
-!======================== MuonID v7r7 2010-02-01 ===========================
+!======================== MuonID v7r7 2010-02-17 ===========================
+! 2010-02-17 - Marco Cattaneo
+ - Remove unformatted printout from ConfiguredMuonIDs.py
+
 ! 2010-02-16 - Rob Lambert
  - MuonIDAlg Fix Windows warning about atanh.
 

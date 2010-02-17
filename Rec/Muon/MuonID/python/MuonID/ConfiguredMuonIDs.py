@@ -10,6 +10,7 @@ import os
 import sys
 
 from Gaudi.Configuration import *
+import GaudiKernel.ProcessJobOptions
 
 from Configurables import MuonIDAlg,Chi2MuIDTool,DistMuIDTool
 from Configurables import TrackMasterFitter,IsMuonCandidateC,MakeMuonMeasurements, CLTool, GetArrival
@@ -38,14 +39,15 @@ class ConfiguredMuonIDs():
     ## check if modules exist and load them
     try: exec("from MuonID import "+mod[0]+" as info")
     except:
-      print "ConfiguredMuonIDs: # WARNING: not available info for DATA=%s,VERSION=%s. Loading default" %(data,version)
+      log.warning("ConfiguredMuonIDs: Not available info for DATA=%s,VERSION=%s. Loading default" %(data,version))
       try: exec("from MuonID import "+mod[1]+" as info")
       except: 
         exec("from MuonID import "+mod[2]+" as info")
 
-    print "ConfiguredMuonIDs: # INFO: Loaded configuration info ", info.FILENAME
-    
-    
+    GaudiKernel.ProcessJobOptions.PrintOn()
+    log.info("ConfiguredMuonIDs: Loaded configuration info %s"%info.FILENAME)
+    GaudiKernel.ProcessJobOptions.PrintOff()
+        
     ## set final module with info to be loaded
     self.info=info
     self.info.DEBUG = debug
