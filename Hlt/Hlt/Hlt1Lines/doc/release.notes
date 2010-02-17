@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.116 2010-02-15 16:02:04 graven Exp $
+! $Id: release.notes,v 1.117 2010-02-17 09:23:12 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -9,6 +9,9 @@
 ! for the production. Commit them AS WELL in branch production200912. 
 !
 !-----------------------------------------------------------------------------
+! 2010-02-17 - Gerhard Raven
+ - remove TTGeneric tracking from lumi due to https://savannah.cern.ch/bugs/?62933
+
 ! 2010-02-15 - Gerhard Raven
  - add L0 channel predicate in beam gas lines
  - minor tweaks to 'forced RZ Velo' crossing beam gas line

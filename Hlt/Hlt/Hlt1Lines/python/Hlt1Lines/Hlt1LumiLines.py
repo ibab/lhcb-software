@@ -135,30 +135,31 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         lumiRecoSequence.Members.append(lumiRecoFilterSequence)
         
         # sequence to get TT tracks
-        from HltLine.HltDecodeRaw import DecodeTT
-        from Configurables import TTGenericTracking
-        from Configurables import RawBankToSTClusterAlg
-        lumiTTTSequence = Sequence( 'LumiTTTSequence', Members = [] ) # reset, always build the same seq...
-        lumiTTTSequence.Members.append( recoScaler )
-        lumiTTTSequence.Members.append(
-            Sequence('TTTSequence'
-                     # , Members  = DecodeTT.members() + [
-                     , Members  = [ RawBankToSTClusterAlg("createTTClusters"),
-                                    TTGenericTracking("lumiTTT"
-                                                     , MaxNumClusters = 2000
-                                                     # , InputData = DecodeTT.members()[0].getProp('clusterLocation') // hardwired to use STClusters, not lite ones...
-                                                     , OutputLocation = 'Hlt/Track/TTIP'
-                                                     , WindowCenter = [0,0,0]
-                                                     , HalfWindowXSize = 15
-                                                     , HalfWindowYSize = 15
-                                                     , OutputLevel = WARNING
-                                                      )
-                                    ]
-                     , MeasureTime = True
-                     , ModeOR = True
-                     , ShortCircuit = False
-                     ) )
-        lumiRecoSequence.Members.append(lumiTTTSequence)
+        #  disabled because of https://savannah.cern.ch/bugs/index.php?62933
+        #from HltLine.HltDecodeRaw import DecodeTT
+        #from Configurables import TTGenericTracking
+        #from Configurables import RawBankToSTClusterAlg
+        #lumiTTTSequence = Sequence( 'LumiTTTSequence', Members = [] ) # reset, always build the same seq...
+        #lumiTTTSequence.Members.append( recoScaler )
+        #lumiTTTSequence.Members.append(
+        #    Sequence('TTTSequence'
+        #             # , Members  = DecodeTT.members() + [
+        #             , Members  = [ RawBankToSTClusterAlg("createTTClusters"),
+        #                            TTGenericTracking("lumiTTT"
+        #                                             , MaxNumClusters = 2000
+        #                                             # , InputData = DecodeTT.members()[0].getProp('clusterLocation') // hardwired to use STClusters, not lite ones...
+        #                                             , OutputLocation = 'Hlt/Track/TTIP'
+        #                                             , WindowCenter = [0,0,0]
+        #                                             , HalfWindowXSize = 15
+        #                                             , HalfWindowYSize = 15
+        #                                             , OutputLevel = WARNING
+        #                                              )
+        #                            ]
+        #             , MeasureTime = True
+        #             , ModeOR = True
+        #             , ShortCircuit = False
+        #             ) )
+        #lumiRecoSequence.Members.append(lumiTTTSequence)
 
         # define histogrammers
         #from Configurables import LumiHistoMaker, LumiHisto2dSPD
