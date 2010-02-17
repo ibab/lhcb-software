@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.h,v 1.40 2009-07-31 16:12:52 ibelyaev Exp $ 
+// $Id: DeCalorimeter.h,v 1.41 2010-02-17 23:05:54 odescham Exp $ 
 // ============================================================================
 #ifndef       CALODET_DECALORIMETER_H
 #define       CALODET_DECALORIMETER_H 1
@@ -136,6 +136,9 @@ public:
   // for simulation only
   int           zSupMethod       ()     const { return (int) m_zSupMeth; };
   double        zSupThreshold    ()     const { return m_zSup          ; };
+  double        spdThreshold(const LHCb::CaloCellID& id) const {
+    return ( mipDeposit() != 0 && caloName() == "SpdDet" ) ? cellGain(id)/2./mipDeposit() : 0. ;
+  };
   double        l0Threshold      ()     const { return m_l0Thresh        ; };
   double        mipDeposit       ()     const { return m_mip           ; };
   double        dynamicsSaturation()    const { return m_dyn           ; };
