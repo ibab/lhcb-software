@@ -1,4 +1,4 @@
-// $Id: RawBankSizes.cpp,v 1.9 2010-02-15 16:02:54 jost Exp $
+// $Id: RawBankSizes.cpp,v 1.10 2010-02-17 10:44:32 jost Exp $
 // Include files 
 
 // from Gaudi
@@ -124,12 +124,8 @@ StatusCode RawBankSizes::initialize()
      {
         printf("WARNING: No Histogram Options for Bank %s\n",LHCb::RawBank::typeName( (LHCb::RawBank::BankType) i
         ).c_str());
-        Banks[i].nohist = true;
      }
-     if (m_hparams[i].n_bin == 0)
-     {
-        Banks[i].nohist = true;
-     }
+     Banks[i].nohist = (m_hparams[i].n_bin <= 0);
    }
    for(int i = 0 ; i != (int) LHCb::RawBank::LastType; i++)
    {
