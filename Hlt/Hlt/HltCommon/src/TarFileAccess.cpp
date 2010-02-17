@@ -18,6 +18,11 @@
 #include <pwd.h>
 #include <grp.h>
 #include <sys/stat.h>
+#else 
+  typedef int uid_t;
+  typedef int gid_t;
+  uid_t getuid() { return 0; }
+  gid_t getgid() { return 0; }
 #endif
 using namespace std;
 
