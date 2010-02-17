@@ -51,7 +51,7 @@ void BaseServiceMap::printServiceSet() {
  MsgStream msg(m_processMgr->msgSvc(), name());
  std::set<std::string>::iterator it;
  for (it = m_serviceSet.begin(); it != m_serviceSet.end(); ++it){
-   msg << MSG::INFO << "Service " << *it << endreq;    
+//   msg << MSG::DEBUG << "Service " << *it << endreq;    
   }
 }
 
@@ -59,7 +59,7 @@ void BaseServiceMap::updateMap(std::map<std::string, bool, std::less<std::string
 {
   MsgStream msg(msgSvc(), name());
   
-//  msg << MSG::DEBUG << "verifying if we have the ServiceSet seted" << endreq;
+ // msg << MSG::DEBUG << "verifying if we have the ServiceSet seted" << endreq;
   if (0 == m_serviceSet.size()) return;
 //  msg << MSG::DEBUG << "verifying if current Map is equal to local map " << endreq;
   if (serverMap == m_serverMap) return;
@@ -330,7 +330,7 @@ void BaseServiceMap::insertDimService(const std::string &serviceName, const std:
   }
 
   //monObjectAdder->print();
-  msg << MSG::DEBUG << "creating DimServiceMonObject for Adder : " << groupName << endreq;
+//  msg << MSG::DEBUG << "creating DimServiceMonObject for Adder : " << groupName << endreq;
   DimServiceMonObject *dimServiceMonObjectAdder = new DimServiceMonObject(groupName, monObjectAdder);
 
   m_dimSrv[groupName] = std::pair<DimServiceMonObject*, MonObject*> (dimServiceMonObjectAdder, monObjectAdder);
@@ -671,16 +671,11 @@ void BaseServiceMap::add() {
      std::vector<std::string> utgidParts = Misc::splitString(utgid, "_");
      if (utgidParts[0].find("PART")!= std::string::npos) {
       std::string saversvc = utgidParts[0]+ "_Saver_1/";
+     // DimClient::setDnsNode("hlt01");  
       std::string serviceName=saversvc+"/";
       int commandret=DimClient::sendCommand(serviceName.c_str(),"save_histos");
       if (commandret==1) msg << MSG::DEBUG << "Save_histos command succesfully sent. " << endreq;
     } 
-    if (utgidParts[2].find("RecAdder")!= std::string::npos) {
-      std::string saversvc = utgidParts[0]+ "_MONA0901_RecSaver_0/";
-      std::string serviceName=saversvc+"/";
-      int commandret=DimClient::sendCommand(serviceName.c_str(),"save_histos");
-      if (commandret==1) msg << MSG::DEBUG << "Save_histos command succesfully sent. " << endreq;
-    }     
     endofrun=false; 
   } 
 }

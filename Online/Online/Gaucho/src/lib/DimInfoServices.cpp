@@ -17,15 +17,12 @@ DimInfoServices::~DimInfoServices()
 
 void DimInfoServices::infoHandler()
 {
-  MsgStream msg(m_processMgr->msgSvc(), name());
-//  msg << MSG::INFO << "DimInfoServices alreadydone " << alreadyDone << endreq;    
   if (alreadyDone) return;
 
   int tmpStringSize = -1;
   while ( (tmpStringSize = getSize()) <=0 ){usleep(10000);}
   
   std::string value = getString();
- // msg << MSG::INFO << "value " << value << endreq;  
   m_processMgr->updateServiceSet(value, m_serviceSet);
   //IocSensor::instance().send(m_processMgr->service(), s_createServiceMap , m_processMgr->service());
   //IocSensor::instance().send(m_processMgr->service(), s_updateServiceMap, m_processMgr->dimInfoServers()); //start Timer*/

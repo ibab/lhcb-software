@@ -440,7 +440,8 @@ double UpdateAndReset::offsetToBoundary(int cycleNumber, ulonglong time, bool in
 void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler) {
   MsgStream msg( msgSvc(), name() );
   ulonglong currentTime = GauchoTimer::currentTime();
-//  msg << MSG::INFO << "************Updating data " << (currentTime - m_timeStart) << " microseconds after start **********" << endreq;  msg << MSG::DEBUG << "m_runNumber        = " << m_runNumber << endreq;
+//  msg << MSG::INFO << "************Updating data " << (currentTime - m_timeStart) << " microseconds after start **********" << endreq;  
+//  msg << MSG::DEBUG << "m_runNumber        = " << m_runNumber << endreq;
 //  msg << MSG::INFO << "m_cycleNumber      = " << m_cycleNumber << endreq;
 //  msg << MSG::DEBUG << "m_timeFirstEvInRun      = " << m_timeFirstEvInRun << endreq;
 //  msg << MSG::DEBUG << "m_offsetTimeFirstEvInRun      = " << m_offsetTimeFirstEvInRun << endreq;
@@ -506,7 +507,7 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
   IRegistry* object = rootObject();
   int level = 0;
   std::vector<std::string> idList;
-  msg << MSG::DEBUG << "managing histos list " << list << " reset " << reset << " save " << save << " endofrun " << isFromEndOfRun << endreq;
+//  msg << MSG::DEBUG << "managing histos list " << list << " reset " << reset << " save " << save << " endofrun " << isFromEndOfRun << endreq;
   TFile *f=0;
   m_infoFileStatus = "......this is the file name were we will save histograms...........";
   char timestr[64];
@@ -546,7 +547,7 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
     }	 
    // std::string tmpfile = dirName + "/" + taskName + "-" + timestr + ".root";
    // if (isFromEndOfRun) tmpfile = dirName + "/" + taskName + "-" + timestr + "-EOR.root"; 
-      msg << MSG::DEBUG << "updating infofile status" << endreq;
+   //   msg << MSG::DEBUG << "updating infofile status" << endreq;
     m_infoFileStatus.replace(0, m_infoFileStatus.length(), tmpfile);
    
 
