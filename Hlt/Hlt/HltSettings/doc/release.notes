@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-02-17 - Johannes Albrecht
+ - add Drell-Yan lines to Feb10 threshold setting
+
 ! 2010-02-15 -  Jacopo Nardulli
  - Savannah bug 59641 is fixed. The B2DX lines are re-introduced 
 
