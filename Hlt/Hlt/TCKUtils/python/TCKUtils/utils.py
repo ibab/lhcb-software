@@ -131,14 +131,15 @@ def _updateL0TCK( id, l0tck, label, cas ) :
     importOptions('$L0TCK/L0DUConfig.opts')
     from Configurables import L0DUMultiConfigProvider,L0DUConfigProvider
     if l0tck not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
-             raise KeyError('requested L0 TCK %s is not known'%l0tck) 
+             raise KeyError('requested L0 TCK %s is not known to TCK/L0TCK'%l0tck) 
     configProvider = L0DUConfigProvider('ToolSvc.L0DUConfig.TCK_%s'%l0tck)
     l0config = configProvider.getValuedProperties()
     l0config['TCK'] = l0tck
 
     pc = PropertyConfigSvc( prefetchConfig = [ _digest(id,cas).str() ],
                             ConfigAccessSvc = cas.getFullName() )
-    cte = ConfigTreeEditor( PropertyConfigSvc = pc.getFullName() )
+    cte = ConfigTreeEditor( PropertyConfigSvc = pc.getFullName(), 
+                            ConfigAccessSvc =  cas.getFullName())
 
     appMgr = _appMgr()
     appMgr.createSvc(cas.getFullName())
@@ -172,6 +173,7 @@ def _updateL0TCK( id, l0tck, label, cas ) :
     print 'requested update: %s ' % mods
     newId = cte.updateAndWrite(id,mods,label)
     noderef = cas.readConfigTreeNode( newId )
+    if not noderef : print 'oops, could not find node for %s ' % newId
     top = topLevelAlias( release, hlttype, noderef.get() )
     cas.writeConfigTreeNodeAlias(top)
     print 'wrote ' + str(top.alias()) 
@@ -317,7 +319,8 @@ def _updateProperties(id, updates, label, cas  ) :
     if type(id) == str: id = digest( id )
     pc = PropertyConfigSvc( prefetchConfig = [ id.str() ],
                             ConfigAccessSvc = cas.getFullName() )
-    cte = ConfigTreeEditor( PropertyConfigSvc = pc.getFullName() )
+    cte = ConfigTreeEditor( PropertyConfigSvc = pc.getFullName(),
+                            ConfigAccessSvc = cas.getFullName() )
     # run program...
     appMgr = _appMgr()
     appMgr.createSvc(pc.getFullName())
