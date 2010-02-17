@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.59 2009-07-31 16:12:52 ibelyaev Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.60 2010-02-17 22:31:41 odescham Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
@@ -1279,11 +1279,9 @@ StatusCode DeCalorimeter::updGain(){
   if( m_gain->exists( "L0Correction") ) m_l0Cor =    m_gain->paramAsDoubleVect( "L0Correction" ) ;
   m_activeToTotal = m_gain->exists( "ActiveToTotal") ? m_gain->paramAsDouble( "ActiveToTotal" ) : 1. ;
 
-  // special setting for Spd : the threshold is driven by Et-slope
-  if( m_caloDet == "SpdDet" && m_mip>0 &&m_maxEtSlope.size() >0  ){
-    m_zSup = m_maxEtSlope[0]/2./m_mip;  
-    m_l0Thresh = m_zSup; // Spd is L0 only
-  }
+  // special setting for Spd : 
+  if( m_caloDet == "SpdDet"   )m_l0Thresh = m_zSup; // Spd is L0 only
+  
   
 
   return StatusCode::SUCCESS;
