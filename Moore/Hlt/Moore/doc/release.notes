@@ -9,6 +9,8 @@ Purpose     : LHCb HLT application
  - added test for independence of Hlt lines
  - removed capital letters from names of tests to make qmtest find them
 
+!========================== Moore v8r6 2009-02-05 ===================
+
 ! 2010-02-04 - Gerhard Raven
  - adapt to updated L0 configuration setup
  - bump version v8r6
