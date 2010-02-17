@@ -5,6 +5,7 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+!========================== TCKUtils v1r6p2 2010-02-17 ===================
 ! 2010-02-17 - Gerhard Raven
  - fix bug in passing from updateL0TCK to _updateL0TCK
  - make sure that ConfigTreeNodeEditor always uses the right IConfigAccessScv
