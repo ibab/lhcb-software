@@ -9,6 +9,10 @@ Purpose: LHCb reconstruction program
 
  - Changes to tests:
    . Modify brunel-cosmics.qmt to add a test of writing unpacked DST
+   . Do not run mc09-withtruth-invfield test if mc09-withtruth has failed
+   . In mc09-withtruth and mc09-withtruth-invfield tests, switch off Rich
+     trackless ring monitoring since some differences are expected due to wrong
+     magnetic field corrections in the invfield case
 
  - Changes to references to reflect changes in Brunel v36r1 output:
    . Change in aerogel CK theta range (RichRecBase v3r26, RichRecQC v2r36)
@@ -20,6 +24,7 @@ Purpose: LHCb reconstruction program
    . Added profiles to OTHitEfficiencyMonitor and histograms to OTEffMonitor,
      OTTrackMonitor (TrackMonitor v1r20)
    . MuonID parameters can now be read from database (MuonID v7r7)
+   . Made MuonID MC09 configuration the default (same as 2009) (MuonID v7r7)
    . TrackMuonMatchMonitor added to MoniTrSeq (TrackMonitor v1r20)
    . Muodified ST cluster monitor (STMonitors v2r4)
    . New parameterisation in PatAddTTCoord (PatAlgorithms v3r29)

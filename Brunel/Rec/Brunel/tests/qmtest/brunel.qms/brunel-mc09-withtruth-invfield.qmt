@@ -2,12 +2,15 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="timeout"><integer>1200</integer></argument>
+  <argument name="prerequisites"><set>
+    <tuple><text>brunel.brunel-mc09-withtruth</text><enumeral>PASS</enumeral></tuple>
+  </set></argument>
   <argument name="args"><set>
     <text>$BRUNELROOT/tests/options/testBrunel-defaults.py</text>
     <text>$BRUNELOPTS/Brunel-MC09-WithTruth.py</text>
     <text>$BRUNELOPTS/MC09-Files.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().Histograms="Expert"; Brunel().RecL0Only=True; Brunel().EvtMax=15; from Configurables import RecInit, MagneticFieldSvc; RecInit("BrunelInit").PrintEventTime=True; MagneticFieldSvc().ScaleFactor=1.; </text>
+    <text>from Brunel.Configuration import *; Brunel().Histograms="Expert"; Brunel().RecL0Only=True; Brunel().EvtMax=15; from Configurables import RecInit, MagneticFieldSvc, RichRecQCConf; RecInit("BrunelInit").PrintEventTime=True; MagneticFieldSvc().ScaleFactor=1.; RichRecQCConf().TracklessRingMonitoring=False;</text>
   </set></argument>
   <argument name="reference"><text>../refs/testBrunel-MC09-WithTruth.ref</text></argument>
   <argument name="validator"><text>
@@ -16,7 +19,7 @@ preprocessor = BrunelPreprocessor + \
   LineSkipper(["Requested condDB but using manually set scale factor"]) + \
   LineSkipper(["Map scaled by factor"]) + \
   LineSkipper(["TrackResChecker      INFO Velo/"]) + \
-  LineSkipper(["CheckLongTrack       INFO ALL/"]) 
+  LineSkipper(["CheckLongTrack       INFO ALL/"])
 validateWithReference(preproc = preprocessor)
 </text></argument>
 </extension>
