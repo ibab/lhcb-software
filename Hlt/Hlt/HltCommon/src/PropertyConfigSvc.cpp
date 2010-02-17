@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.27 2010-01-31 21:24:23 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.28 2010-02-17 11:03:07 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -110,7 +110,7 @@ PropertyConfigSvc::PropertyConfigSvc( const string& name, ISvcLocator* pSvcLocat
   , m_accessSvc(0)
   , m_os(0)
 {
-  declareProperty("ConfigAccessSvc", s_accessSvc = "ConfigFileAccessSvc");
+  declareProperty("ConfigAccessSvc", s_accessSvc = "ConfigTarFileAccessSvc");
   declareProperty("prefetchConfig", m_prefetch);
   declareProperty("SkipComponent", m_skip); // do not touch these algorithms configurations, NOR THEIR DEPENDENTS!
   declareProperty("optionsfile", m_ofname);

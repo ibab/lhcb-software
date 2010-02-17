@@ -247,7 +247,7 @@ ConfigTreeEditor::ConfigTreeEditor( const string& type,
   , m_configAccessSvc(0)
 {
   declareInterface<IConfigTreeEditor>(this);
-  declareProperty( "ConfigAccessSvc",  s_configAccessSvc = "ConfigFileAccessSvc"  );
+  declareProperty( "ConfigAccessSvc",  s_configAccessSvc = "ConfigTarFileAccessSvc"  );
   declareProperty( "PropertyConfigSvc",  s_propertyConfigSvc = "PropertyConfigSvc"  );
 }
 //=============================================================================
