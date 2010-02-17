@@ -1,5 +1,5 @@
 f=open("/tmp/banks.in","r")
-g=open("../options/RawSize_HistParams.opts","r+")
+g=open("$(RAWBANKSIZESROOT)/options/RawSize_HistParams.opts","r+")
 banks = f.readlines()
 opts = g.readlines()
 opts.append("shit")
