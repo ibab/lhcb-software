@@ -1,4 +1,5 @@
-// $Id: LumiFlagMethod.cpp,v 1.3 2010-02-09 21:19:47 graven Exp $
+#if 0
+// $Id: LumiFlagMethod.cpp,v 1.4 2010-02-17 15:42:54 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -106,3 +107,4 @@ StatusCode LumiFlagMethod::finalize() {
 }
 
 //=============================================================================
+#endif

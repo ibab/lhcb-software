@@ -4,6 +4,7 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+!========================== HltLuminosity v2r15 2010-02-17 ===================
 ! 2010-01-29 - Jaap Panman
  - add LumiFlagMethod: creates "counter" holding 0 (LumiTrigger); 1 (L0 count)
 
