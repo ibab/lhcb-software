@@ -4,6 +4,7 @@
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
 
+!========================== HltMuon v3r5p4 2010-02-17 ===================
 ! 2010-02-12 - Gerhard Raven
  - replace some float with double
 
