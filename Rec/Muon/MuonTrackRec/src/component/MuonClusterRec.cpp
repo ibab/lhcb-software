@@ -1,4 +1,4 @@
-// $Id: MuonClusterRec.cpp,v 1.5 2010-02-16 16:28:58 rlambert Exp $
+// $Id: MuonClusterRec.cpp,v 1.6 2010-02-17 14:59:29 ggiacomo Exp $
 // Include files 
 
 // from Gaudi
@@ -36,7 +36,7 @@ MuonClusterRec::MuonClusterRec( const std::string& type,
   declareProperty( "PosTool"          , m_posToolName = "MuonDetPosTool");
   declareProperty( "OfflineTimeAlignment", m_offlineTimeAlignment = false );
   declareProperty( "TimeResidualFile" , m_timeResidualFile = "none");
-  declareProperty( "MaxPadsPerStation" , m_maxPadsPerStation = 500);
+  declareProperty( "MaxPadsPerStation" , m_maxPadsPerStation = 1500);
   m_clustersDone = false;
 }
 

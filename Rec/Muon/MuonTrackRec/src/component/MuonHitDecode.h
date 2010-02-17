@@ -1,4 +1,4 @@
-// $Id: MuonHitDecode.h,v 1.9 2010-02-10 19:20:17 ggiacomo Exp $
+// $Id: MuonHitDecode.h,v 1.10 2010-02-17 14:59:29 ggiacomo Exp $
 #ifndef LIB_MUONHITDECODE_H 
 #define LIB_MUONHITDECODE_H 1
 
@@ -44,7 +44,8 @@ public:
   virtual bool lastBX() {return true;}
   virtual LHCb::MuonTileID* tileFromODE(int ODEnumber,
                                         int ODEchannel) {
-    return (0*ODEnumber*ODEchannel);}
+    ODEnumber=ODEchannel;
+    return NULL; }
   virtual int odeIndex(int ODEnumber) {return 0*ODEnumber;}
   virtual int channelsPerQuadrant(int station,
 				  int region) {return 0*station*region;}
@@ -65,10 +66,10 @@ public:
                                           unsigned int r, 
                                           short int io, 
                                           unsigned int ch) 
-  {return (0*q*s*r*io*ch);}
+  { q=s=r=ch;io=0; return NULL;}
   virtual std::string& ecsChamberName(int region,
                                       int chamberNumber) 
-  {int x=region*chamberNumber;x=0;
+  { region=chamberNumber;
     nullstring="";
     return nullstring;}
   virtual bool completeEvent() {return true;}

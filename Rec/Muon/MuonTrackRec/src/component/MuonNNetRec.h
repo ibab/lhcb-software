@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.h,v 1.13 2010-02-10 19:20:17 ggiacomo Exp $
+// $Id: MuonNNetRec.h,v 1.14 2010-02-17 14:59:29 ggiacomo Exp $
 #ifndef MUONNNETREC_H 
 #define MUONNNETREC_H 1
 
@@ -135,8 +135,6 @@ private:
   float m_XtalkRadius;
   /// LHCb tracks output location in TES
   std::string m_trackOutputLoc ;
-  // B field on/off
-  bool m_Bfield;
     
 };
 #endif // MUONNNETREC_H
