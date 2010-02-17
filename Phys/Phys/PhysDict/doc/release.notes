@@ -4,6 +4,8 @@
 ! Purpose     : REFLEX missing dictionaries for various classes
 !-----------------------------------------------------------------------------
 
+!========================== PhysDict v4r2 2010-02-17 =======================
+
 ! 2010-02-17 - Juan Palacios
  - Add dicitonaries for std::vector<LHCb::RecVertex>
  - Increase to v4r2
