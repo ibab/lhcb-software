@@ -1,4 +1,4 @@
-// $Id: STDQSummaryAlg.cpp,v 1.5 2010-02-10 07:32:01 nchiapol Exp $
+// $Id: STDQSummaryAlg.cpp,v 1.6 2010-02-17 14:20:42 nchiapol Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -39,19 +39,22 @@ STDQSummaryAlg::STDQSummaryAlg( const std::string& name,
   declareSTConfigProperty("summaryLocation",m_summaryLocation , STSummaryLocation::TTSummary );
   declareSTConfigProperty("clusterLocation", m_clusterLocation , STClusterLocation::TTClusters);
   declareProperty("writeTxtFile", m_writeTxtFile = true);
-  declareProperty("separator", m_separator = "|");
-  declareProperty("writeTuple", m_writeTuple = true);
-  declareProperty("outputFile",m_outputFileName = "STDQSummary.txt");
+  declareProperty("separator",    m_separator = "|");
+  declareProperty("writeTuple",   m_writeTuple = true);
+  declareProperty("outputFile",   m_outputFileName = "STDQSummary.txt");
+  declareProperty("minADC",       m_minADC = 15);
+  declareProperty("maxADC",       m_maxADC = 45);
 
-  //using namespace boost::assign;
-  //m_txtColumns += "Run", "Events", "Clusters/evt", "#Noise/event",  "Proc Eff", "#Corrupted", "#Missing"; 
   m_txtColumns.push_back("Run");
   m_txtColumns.push_back("Events");
   m_txtColumns.push_back("Clusters/evt");
   m_txtColumns.push_back("#Noise/event");
   m_txtColumns.push_back("Proc Eff");
+  m_txtColumns.push_back("#ErrorBanks");
   m_txtColumns.push_back("#Corrupted");
   m_txtColumns.push_back("#Missing");
+  m_txtColumns.push_back("Charge MPV");
+  m_txtColumns.push_back("Comments");
   
   declareProperty("txtColumns", m_txtColumns);
   
@@ -73,7 +76,7 @@ StatusCode STDQSummaryAlg::initialize()
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
   // zero everthing
-  Counters = new STDQCounters;
+  Counters = new STDQCounters(m_minADC, m_maxADC);
   
   return StatusCode::SUCCESS;
 }
@@ -119,14 +122,16 @@ void STDQSummaryAlg::outputInfo(){
     return;
   }
   
-  DataRow row;
+  STDQCounters::DataRow row;
   row.run        = m_lastRunNumber               ;
   row.event      = Counters->m_event             ;
   row.clus       = mean(Counters->m_sumClusters) ;
   row.noise      = mean(Counters->m_sumNoise)    ;
   row.procEff    = mean(Counters->m_sumEff)      ;
+  row.error      = sum (Counters->m_nError)      ;
   row.corrupted  = sum (Counters->m_nCorrupted)  ;
   row.sumMissing = sum (Counters->m_sumMissing)  ;
+  row.chargeMPV  = Counters->chargeMPV()         ;
   m_dataStorage.push_back(row);
 }
 
@@ -135,7 +140,7 @@ void STDQSummaryAlg::outputInfo(){
 void STDQSummaryAlg::resetCounters(){
   
   delete Counters;
-  Counters = new STDQCounters;
+  Counters = new STDQCounters(m_minADC, m_maxADC);
 }
 
 
@@ -154,6 +159,7 @@ void STDQSummaryAlg::processEvent(const STClusters* clusters, const STSummary* s
   Counters->m_sumNoise    (nClus - nHigh); 
   Counters->m_sumClusters (nClus);
   Counters->m_sumEff      (calculateProcEff(corrupted,recovered)); 
+  Counters->m_nError      (summary->nErrorBanks());
   Counters->m_nCorrupted  (corrupted);
   Counters->m_sumMissing  (missingBanks);
 }
@@ -168,6 +174,7 @@ unsigned int STDQSummaryAlg::countHigh(const STClusters* clusters) const {
   for ( ; iter != clusters->end() ; ++iter){
     const DeSTSector* sector = findSector((*iter)->channelID());
     const double signalToNoise = ((*iter)->totalCharge()/sector->noise((*iter)->channelID()));
+    Counters->addCharge((*iter)->totalCharge());
     if (signalToNoise > m_threshold ) ++nh; 
   }
   return nh;
@@ -203,20 +210,23 @@ void STDQSummaryAlg::writeTxtFile() {
   for (Strings::const_iterator iterS = m_txtColumns.begin() ; iterS != m_txtColumns.end(); ++iterS){
     writeTxtEntry(oFile, *iterS, 12);
   }
-  oFile << m_separator << std::endl;
+  oFile << m_separator << " " << m_separator << std::endl; 
+  //oFile << m_separator << std::endl;
 
   // output to a txt file
-  std::vector<DataRow>::iterator it;
-  std::vector<DataRow>::iterator endIt = m_dataStorage.end();
+  std::vector<STDQCounters::DataRow>::iterator it;
+  std::vector<STDQCounters::DataRow>::iterator endIt = m_dataStorage.end();
   for(it = m_dataStorage.begin(); it < endIt; it++) {
     writeTxtEntry(oFile,it->run        ,12);      
     writeTxtEntry(oFile,it->event      ,12);
     writeTxtEntry(oFile,it->clus       ,12);
     writeTxtEntry(oFile,it->noise      ,12);
     writeTxtEntry(oFile,it->procEff    ,12);
+    writeTxtEntry(oFile,it->error      ,12);
     writeTxtEntry(oFile,it->corrupted  ,12);
     writeTxtEntry(oFile,it->sumMissing ,12);
-    oFile << m_separator << std::endl; 
+    writeTxtEntry(oFile,it->chargeMPV  ,12);
+    oFile << m_separator << " " << m_separator << std::endl; 
   }
 }
 
@@ -225,8 +235,8 @@ void STDQSummaryAlg::writeTxtFile() {
 void STDQSummaryAlg::writeTuple() {
 
   Tuple tuple = nTuple(name());
-  std::vector<DataRow>::iterator it;
-  std::vector<DataRow>::iterator endIt = m_dataStorage.end();
+  std::vector<STDQCounters::DataRow>::iterator it;
+  std::vector<STDQCounters::DataRow>::iterator endIt = m_dataStorage.end();
   for(it = m_dataStorage.begin(); it < endIt; it++) {
     Tuple tuple = nTuple(name());
     tuple->column("run",        it->run        );
@@ -234,8 +244,10 @@ void STDQSummaryAlg::writeTuple() {
     tuple->column("clus",       it->clus       );
     tuple->column("noise",      it->noise      );
     tuple->column("procEff",    it->procEff    );
+    tuple->column("ErrorBanks", it->error      );
     tuple->column("corrupted",  it->corrupted  );
     tuple->column("sumMissing", it->sumMissing );
+    tuple->column("chargeMPV",  it->chargeMPV  );
     tuple->write();
   }
 }

@@ -1,4 +1,4 @@
-// $Id: STDQSummaryAlg.h,v 1.1 2010-02-02 16:40:59 nchiapol Exp $
+// $Id: STDQSummaryAlg.h,v 1.2 2010-02-17 14:20:42 nchiapol Exp $
 #ifndef STDQSummaryAlg_H
 #define STDQSummaryAlg_H 1
 
@@ -14,6 +14,8 @@
 
 #include <fstream>
 #include <string>
+//#include <iomanip>
+//#include <iostream>
 
 #include "Event/STCluster.h"
 #include "Event/STSummary.h"
@@ -75,20 +77,23 @@ private:
   std::string m_clusterLocation;  ///< data location 
  
   /// Struct containing the data collected for one run
-  struct DataRow {
-    int          run;             ///< run number
-    unsigned int event;           ///< number of events
-    double       clus;            ///< mean number of clusters
-    double       noise;           ///< mean number of noise clusters
-    double       procEff;         ///< mean processing efficiency
-    int          corrupted;       ///< total number of corrupted banks
-    int          sumMissing;      ///< total number of missing banks
-  };
+  //struct DataRow {
+  //  int          run;             ///< run number
+  //  unsigned int event;           ///< number of events
+  //  double       clus;            ///< mean number of clusters
+  //  double       noise;           ///< mean number of noise clusters
+  //  double       procEff;         ///< mean processing efficiency
+  //  int          error;           ///< total number of error banks
+  //  int          corrupted;       ///< total number of corrupted banks
+  //  int          sumMissing;      ///< total number of missing banks
+  //  int          chargeMPV;       ///< Most probable charge value
+  //};
   /// temporary storage vector contains data of all events
-  std::vector<DataRow> m_dataStorage;
+  std::vector<STDQCounters::DataRow> m_dataStorage;
   
   /// Class with all boost::accumulators.
   STDQCounters *Counters;
+  int m_minADC, m_maxADC;
 
   bool m_writeTxtFile;
   bool m_writeTuple;              
@@ -105,7 +110,7 @@ private:
 
 template <typename TYPE>
 inline void STDQSummaryAlg::writeTxtEntry(std::ofstream& str,  TYPE data, int width){
-  str << m_separator << " " << std::setw(width) << data << " " ; 
+  str << m_separator << " " << std::setw(width) << std::setiosflags(std::ios_base::fixed) << std::setprecision(2) << data << " " ; 
 }
 
 #endif 
