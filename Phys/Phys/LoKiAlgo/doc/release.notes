@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.54 2010-02-09 18:08:32 ibelyaev Exp $ 
+! $Id: release.notes,v 1.55 2010-02-17 14:55:57 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiAlgo v8r2 2010-02-17 ==========================
 
 ! 2010-02-09 - Vanya Belyaev
 
