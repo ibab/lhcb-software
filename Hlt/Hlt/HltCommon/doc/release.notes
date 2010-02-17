@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v5r18 2010-02-17 ===================
 ! 2010-02-17 - Gerhard Raven
  - make ConfigTarFileAccessSvc default everywhere (instead of ConfigFileAccessSvc)
 
