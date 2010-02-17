@@ -2,10 +2,15 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
-! 2010-02-04 - Gerhard Raven
- - adapt to updated L0 configuration setup
+! 2010-02-17 - Gerhard Raven
+ - switch to use the ConfigTarFileAccessSvc when generating configurations
+
+! 2010-02-17 - Roel Aaij
  - added test for independence of Hlt lines
  - removed capital letters from names of tests to make qmtest find them
+
+! 2010-02-04 - Gerhard Raven
+ - adapt to updated L0 configuration setup
  - bump version v8r6
 
 !========================== Moore v8r5 2009-01-15 ===================

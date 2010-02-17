@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.104 2010-02-04 18:34:41 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.105 2010-02-17 22:42:14 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -327,15 +327,12 @@ class Moore(LHCbConfigurableUser):
     def _generateConfig(self) :
         from HltConf.ThresholdUtils import Name2Threshold
         settings = Name2Threshold(self.getProp('ThresholdSettings'))
-        #importOptions('$L0TCKROOT/options/L0DUConfig.opts')
-        # cannot write (yet) to a tarfile...
-        if self.getProp('TCKpersistency').lower() == 'tarfile' :
-            self.setProp('TCKpersistency','file')
-        # make sure we load as many L0 TCKs as possible...
-        #from Configurables import L0DUMultiConfigProvider
-        #L0DUMultiConfigProvider('L0DUConfig').Preload = True
         svcs = self.getProp("configServices")
         algs = self.getProp("configAlgorithms")
+        if self.getProp('TCKpersistency').lower() == 'tarfile' :
+            self.getConfigAccessSvc().Mode = 'ReadWrite'
+            self.getConfigAccessSvc().OutputLevel = 1
+
         from Configurables import HltGenConfig
         print 'requesting following  svcs: %s ' % svcs
         gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] for i in algs ]
