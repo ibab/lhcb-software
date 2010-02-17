@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.417 2010-02-14 14:49:35 graven Exp $ 
+! $Id: release.notes,v 1.418 2010-02-17 15:25:23 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+!========================== HltConf v6r4 2010-02-17 ===================
+! 2010-02-17 - Gerhard Raven
+ - if no L0TCK defined, do not generate a canonical list of L0 channels
+
 ! 2010-02-14 - Gerhard Raven
  - move options files from HltConf to Hlt2Lines to 'localize' them
 

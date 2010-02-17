@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.153 2010-02-13 22:36:46 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.154 2010-02-17 15:25:23 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -57,6 +57,7 @@ class HltConf(LHCbConfigurableUser):
         """
         Define L0 channels
         """
+        channels = [ ]
         if L0TCK :
             log.warning( '###############################################################')
             log.warning( '## WARNING HLT will assume input data contains L0 TCK %s ##' % L0TCK )
@@ -66,11 +67,9 @@ class HltConf(LHCbConfigurableUser):
         else :
             log.warning( '##################################################################################################')
             log.warning( '## WARNING You did not inform the HLT configuration what L0 Configuration is used for the input ##')
-            log.warning( '## WARNING Will assume some canonical list of L0 Channels                                       ##')
             log.warning( '## WARNING This may not work, and if it does, it will result in undefined behavior              ##' )
             log.warning( '## WARNING Please make sure you know what you are doing!!                                       ##' )
             log.warning( '##################################################################################################')
-            channels = [ 'Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
         from Hlt1Lines.HltL0Candidates import setupL0Channels
         setupL0Channels( channels ) 
 
