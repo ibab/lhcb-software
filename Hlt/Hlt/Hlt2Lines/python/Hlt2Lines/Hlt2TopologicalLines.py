@@ -1,7 +1,7 @@
-## $Id: Hlt2TopologicalLines.py,v 1.28 2010-02-14 14:43:11 graven Exp $
+## $Id: Hlt2TopologicalLines.py,v 1.29 2010-02-17 23:37:05 gligorov Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-02-14 14:43:11 $'
-__version__ = '$Revision: 1.28 $'
+__date__    = '$Date: 2010-02-17 23:37:05 $'
+__version__ = '$Revision: 1.29 $'
 
 ###
 #
@@ -330,21 +330,13 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         # Function to configure a filter for the input particles of the
         #   robust stages of the topological.  It lashes the new FilterDesktop
         #   to a bindMembers with its antecedents.
-        # The argument inputContainer should be a list of input container names.
-        #   When the track fitting sequences are worked out, it should be
-        #   replaced with a bindMember sequences that produces the particles
+        # The argument inputContainer should be 
+        #   a list of bindMember sequences that produces the particles
         #   to filter.
         """
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
         from HltLine.HltReco import PV3D
-        from Configurables import Hlt2PID
-
-        tracks = Hlt2PID().hlt2Tracking()
-
-
-        importOptions("$HLT2LINESROOT/options/Hlt2TrackFitForTopo.py")
-        tfRecoSeq = GaudiSequencer('SeqHlt2TFParticlesForTopo')
 
         incuts = """(PT> %(ComTFAllTrkPtLL)s *MeV)
                     & (P> %(ComTFAllTrkPLL)s *MeV)
@@ -358,8 +350,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction before our cut on IP.
-        ## Require tracking before attempts to fit the tracks.
-        filterSeq = bindMembers( name, [ PV3D, tracks, tfRecoSeq, filter ] )
+        filterSeq = bindMembers( name, [ PV3D] + inputContainers + [filter ] )
 
         return filterSeq
     # }
@@ -428,10 +419,9 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         ## Filter post-track fit input particles.
         ###################################################################
-        #from Hlt2SharedParticles.TFBasicParticles import TFKaons, TFPions
-        importOptions("$HLT2LINESROOT/options/Hlt2TrackFitForTopo.py")
-        lclTFInputKaons = self.tfInPartFilter('TopoTFInputKaons', [ 'Hlt2TFKaonsForTopo'] )
-        lclTFInputPions = self.tfInPartFilter('TopoTFInputPions', [ 'Hlt2TFPionsForTopo' ] )
+        from Hlt2SharedParticles.TFBasicParticles import TFKaons, TFPions
+        lclTFInputKaons = self.tfInPartFilter('TopoTFInputKaons', [ TFKaons ] )
+        lclTFInputPions = self.tfInPartFilter('TopoTFInputPions', [ TFPions ] )
 
         # post-track-fit 2-body combinations
         ###################################################################

@@ -54,12 +54,10 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
         from Configurables import CombineParticles, PhysDesktop
         from Configurables import FilterDesktop
         from Hlt2SharedParticles.GoodParticles import GoodKaons
+	from Hlt2SharedParticles.TFBasicParticles import TFKaons, TFRichKaons
 
         # Some string definitions... 
         decayDesc = ["phi(1020) -> K+ K-"]
-
-        # Track fitting and Rich algs setup
-        importOptions("$HLT2LINESROOT/options/Hlt2TrackFitForIncPhi.py")
 
         ############################################################################
         #    Inclusive Phi selection, robust cuts
@@ -105,7 +103,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                          , DaughtersCuts = { "K+" : TfKaonPtCut+" & "+TfKaonIpsCut }
                                          , CombinationCut = TfPhiMassCut 
                                          , MotherCut = TfPhiVchi2Cut+" & "+TfPhiPtCut
-                                         , InputLocations  = [ "Hlt2IncPhiTFKaons" ]
+                                         , InputLocations  = [ TFKaons ]
                                          )
         Hlt2InclusivePhiTFSB = Hlt2Member( CombineParticles
                                            , "TFCombineSB"
@@ -113,15 +111,12 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                            , DaughtersCuts = { "K+" : TfKaonPtCut+" & "+TfKaonIpsCut }
                                            , CombinationCut = TfPhiMassCutSB 
                                            , MotherCut = TfPhiVchi2Cut+" & "+TfPhiPtCut
-                                           , InputLocations  = [ "Hlt2IncPhiTFKaons" ]
+                                           , InputLocations  = [ TFKaons ]
                                            )
         
         ############################################################################
         #    Inclusive Phi selection, RICH PID
         ############################################################################
-        from Configurables import ChargedProtoParticleAddRichInfo,ChargedProtoCombineDLLsAlg
-        Hlt2IncPhiAddRichInfo = ChargedProtoParticleAddRichInfo('Hlt2IncPhiAddRichInfo')
-        Hlt2IncPhiAddCombInfo = ChargedProtoCombineDLLsAlg('Hlt2IncPhiAddCombInfo')
 
         # Filter on RICH info
         TfKaonRichPidTf = "INGENERATION(('K+'==ABSID) & (PIDK > "+str(self.getProp('TFKaonRichPID'))+"), 1)"
@@ -145,16 +140,13 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                         , algos = [ GoodKaons, 
                                     Hlt2InclusivePhi, 
-                                    GaudiSequencer("Hlt2IncPhiTFParticlesSeq"),
-                                    Hlt2InclusivePhiTF,
-                                    GaudiSequencer("HltRICHReco"),
-                                    Hlt2IncPhiAddRichInfo,
-                                    Hlt2IncPhiAddCombInfo,
+                                    TFKaons,
+				    Hlt2InclusivePhiTF,
+                                    TFRichKaons, 
                                     Hlt2InclusivePhiRich]
                         , postscale = self.postscale
                          )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiDecision" : self.getProp('HltANNSvcID')['IncPhi'] } )
-        
  
         ############################################################################
         #    Inclusive Phi robust only line
@@ -177,8 +169,8 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                         , algos = [ GoodKaons, 
                                     Hlt2InclusivePhi, 
-                                    GaudiSequencer("Hlt2IncPhiTFParticlesSeq"),
-                                    Hlt2InclusivePhiTF]
+                                    TFKaons,
+				    Hlt2InclusivePhiTF]
                         , postscale = self.postscale
                           )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiTrackFitDecision" : self.getProp('HltANNSvcID')['IncPhiTrackFit'] } )
@@ -192,12 +184,10 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                         , algos = [ GoodKaons, 
                                     Hlt2InclusivePhiSB, 
-                                    GaudiSequencer("Hlt2IncPhiTFParticlesSeq"),
-                                    Hlt2InclusivePhiTFSB,
-                                    GaudiSequencer("HltRICHReco"),
-                                    Hlt2IncPhiAddRichInfo,
-                                    Hlt2IncPhiAddCombInfo,
-                                    Hlt2InclusivePhiRichSB]
+                                    TFKaons,
+				    Hlt2InclusivePhiTFSB,
+                                    TFRichKaons,
+				    Hlt2InclusivePhiRichSB]
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiSidebandsDecision" : self.getProp('HltANNSvcID')['IncPhiSidebands'] } )

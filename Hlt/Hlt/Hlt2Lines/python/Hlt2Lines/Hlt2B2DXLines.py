@@ -172,12 +172,10 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         # This largely repeats the work of the robust on a different set
         #   of input particles.
         ###################################################################
-        # import options for the track fit
-        importOptions("$HLT2LINESROOT/options/Hlt2TrackFitForTopo.py")
-                
         
         # Filter for the post-track-fit input particles
         ###################################################################
+        from Hlt2SharedParticles.TFBasicParticles import TFKaons,TFPions
         incuts = """(PT> %(ComTFAllTrkPtLL)s *MeV)
         & (P> %(ComTFAllTrkPLL)s *MeV)
         & (MIPCHI2DV(PRIMARY)> %(ComTFAllTrkPVIPChi2LL)s )
@@ -185,10 +183,10 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         
         filter = Hlt2Member( FilterDesktop
                              , 'Filter'
-                             , InputLocations = ['Hlt2TFPionsForTopo', 'Hlt2TFKaonsForTopo']
+                             , InputLocations = [TFPions,TFKaons]
                              , Code = incuts
                              )
-        lclTFInputParticles = bindMembers('TopoTFIn', [ GaudiSequencer('SeqHlt2TFParticlesForTopo'), filter ])
+        lclTFInputParticles = bindMembers('TopoTFIn', [ TFPions, TFKaons, filter ])
         
         
         ###################################################################

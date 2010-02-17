@@ -36,7 +36,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         FilterNumMuons.MinTracks = 2
         FilterNumMuons.MaxTracks = 2  
         FilterNumMuons.TrackLocations  = [ "Rec/Track/Muon" ]
-        FilterNumMuons.OutputLevel = DEBUG                     
+        FilterNumMuons.OutputLevel = INFO                     
 
        #------------------------------------------------
         
