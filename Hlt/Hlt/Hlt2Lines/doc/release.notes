@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.119 2010-02-17 15:14:31 graven Exp $
+$Id: release.notes,v 1.120 2010-02-17 23:43:33 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,14 @@ $Id: release.notes,v 1.119 2010-02-17 15:14:31 graven Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2010-02-18 - V. Gligorov
+ - Updates to inclusive triggers (Charm,Topo,Phi,B2DX) to follow changes
+   in Hlt2PID. All now use the same fast-fit and instead of configuring
+   their own fast-fit and PID simply pick up the correct particles
+   from TFBasicParticles.
+ - Fix minor bug in Hlt2diphotonDiMuonLines which was causing a large printout
+   from one of the filters.
 
 !========================== Hlt2Lines v2r4 2010-02-17 ===================
 ! 2010-02-16 - Jacopo Nardulli
