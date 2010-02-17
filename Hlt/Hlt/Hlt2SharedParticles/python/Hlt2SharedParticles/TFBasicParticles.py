@@ -14,14 +14,16 @@ from Configurables import ProtoParticleCALOFilter, ProtoParticleMUONFilter
 from Configurables import Hlt2PID
 from GaudiKernel.SystemOfUnits import MeV
 #
-prefix = "HltTF"
-TFTracks = "Hlt/Track/TFForwardForTopo"   # @todo Temporary
+prefix = "Hlt"
+suffix = "Fitted" 
+tracks = "Long"   
+protoloc = "/Event/"+prefix+"/ProtoP/" + suffix + "/Charged"
 ##########################################################################
 #
 # Make the Muons
 #
 Hlt2TFMuons = CombinedParticleMaker("Hlt2TFMuons")
-Hlt2TFMuons.Input =  "/Event/"+prefix+"/ProtoP/Charged"
+Hlt2TFMuons.Input =  protoloc
 Hlt2TFMuons.Particle = "muon"
 Hlt2TFMuons.addTool(ProtoParticleMUONFilter('Muon'))
 Hlt2TFMuons.Muon.Selection = ["RequiresDet='MUON'"]
@@ -33,7 +35,7 @@ Hlt2TFMuons.TrackSelector.TrackTypes = ["Long"]
 #
 Hlt2TFPions = NoPIDsParticleMaker("Hlt2TFPions")
 Hlt2TFPions.Particle =  "pion"
-Hlt2TFPions.Input =  "/Event/"+prefix+"/ProtoP/Charged"
+Hlt2TFPions.Input =  protoloc
 Hlt2TFPions.addTool(TrackSelector())
 Hlt2TFPions.TrackSelector.TrackTypes = ["Long"]
 ##########################################################################
@@ -42,16 +44,25 @@ Hlt2TFPions.TrackSelector.TrackTypes = ["Long"]
 #
 Hlt2TFKaons = NoPIDsParticleMaker("Hlt2TFKaons")
 Hlt2TFKaons.Particle =  "kaon"
-Hlt2TFKaons.Input =  "/Event/"+prefix+"/ProtoP/Charged"
+Hlt2TFKaons.Input =  protoloc
 Hlt2TFKaons.addTool(TrackSelector())
 Hlt2TFKaons.TrackSelector.TrackTypes = ["Long"]
+##########################################################################
+#
+# Make the Rich kaons 
+#
+Hlt2TFRichKaons = CombinedParticleMaker("Hlt2TFRichKaons")
+Hlt2TFRichKaons.Particle =  "kaon"
+Hlt2TFRichKaons.Input = protoloc 
+Hlt2TFRichKaons.addTool(TrackSelector()) 
+Hlt2TFRichKaons.TrackSelector.TrackTypes = ["Long"]
 ##########################################################################
 #
 # Make the electrons
 #
 Hlt2TFElectrons = CombinedParticleMaker("Hlt2TFElectrons")
 Hlt2TFElectrons.Particle =  "electron"
-Hlt2TFElectrons.Input =  "/Event/"+prefix+"/ProtoP/Charged"
+Hlt2TFElectrons.Input =  protoloc
 Hlt2TFElectrons.addTool(ProtoParticleCALOFilter('Electron'))
 Hlt2TFElectrons.Electron.Selection = ["RequiresDet='CALO' CombDLL(e-pi)>'-2.0'"]
 Hlt2TFElectrons.addTool(TrackSelector())
@@ -62,13 +73,25 @@ Hlt2TFElectrons.TrackSelector.TrackTypes = ["Long"]
 # 
 ##########################################################################
 # Need another instance of Hlt2PID
-Hlt2TFPID = Hlt2PID('Hlt2TFPID')
+class Hlt2TFPID(Hlt2PID) :
+    __used_configurables__ = []
+    __slots__ = []
+
+Hlt2TFPID = Hlt2TFPID()
 Hlt2TFPID.Prefix = prefix
-Hlt2TFPID.Hlt2Tracks = TFTracks
+Hlt2TFPID.Suffix = suffix
+Hlt2TFPID.Hlt2Tracks = tracks
+Hlt2TFPID.UseRICH = True
+Hlt2TFPID.UseCALO = False
+Hlt2TFPID.DataType = Hlt2PID().getProp("DataType")
 #
 # Charged protoparticles
 #
 TFChargedProtoMaker = Hlt2TFPID.hlt2ChargedProtos( )
+#
+# hadrons with the RICH
+#
+TFChargedHadronProtoMaker = Hlt2TFPID.hlt2ChargedHadronProtos( )
 ##########################################################################
 #
 # Calo reco
@@ -76,19 +99,14 @@ TFChargedProtoMaker = Hlt2TFPID.hlt2ChargedProtos( )
 #
 # Hlt2TFCaloReco = Hlt2CaloReco('Hlt2TFCaloReco')
 # Hlt2TFCaloReco.Prefix = prefix
-# Hlt2TFCaloReco.Hlt2Tracks = TFTracks
+# Hlt2TFCaloReco.Hlt2Tracks = tracks
 ##
 # Hlt2TFCaloRecoSeq = Hlt2TFCaloReco.hlt2Calo()   # todo can I get that from Hlt2.py ?
 ##########################################################################
 #
 # Muon reco 
 #
-Hlt2TFMuonIDSeq = Hlt2TFPID.hlt2Muon()  
-###################################################################
-# TF
-#
-importOptions("$HLT2LINESROOT/options/Hlt2TrackFitForTopo.py")
-SeqHlt2TFParticlesForTopo = GaudiSequencer('SeqHlt2TFParticlesForTopo') # the sequencer that does the track fit
+TFMuonProtoMaker = Hlt2TFPID.hlt2MuonProtos()  
 ##########################################################################
 #
 # define exported symbols -- these are for available
@@ -97,17 +115,11 @@ SeqHlt2TFParticlesForTopo = GaudiSequencer('SeqHlt2TFParticlesForTopo') # the se
 # from Hlt2SharedParticles.TFBasicParticles import TFMuons
 #
 
-__all__ = ( 'TFMuons', 'TFElectrons', 'TFKaons', 'TFPions', 'TFChargedProtos' )
-
-TFChargedProtos = bindMembers( None, [ SeqHlt2TFParticlesForTopo,
-                                       Hlt2TFMuonIDSeq, TFChargedProtoMaker ] )
+__all__ = ( 'TFMuons', 'TFElectrons', 'TFKaons', 'TFPions', 'TFChargedProtos', 'TFRichKaons' )
 
 #
-# @todo : A bit stupid to require calo reco for this
-# @todo : Charged protos will be split
-#
-TFKaons         = bindMembers( None, [ TFChargedProtos, Hlt2TFKaons ] )
-TFPions         = bindMembers( None, [ TFChargedProtos, Hlt2TFPions ] )
-TFMuons         = bindMembers( None, [ TFChargedProtos, Hlt2TFMuons ] )
-TFElectrons     = bindMembers( None, [ TFChargedProtos, Hlt2TFElectrons ] )  
-
+TFKaons         = bindMembers( None, [ TFChargedProtoMaker, Hlt2TFKaons ] )
+TFPions         = bindMembers( None, [ TFChargedProtoMaker, Hlt2TFPions ] )
+TFMuons         = bindMembers( None, [ TFMuonProtoMaker, Hlt2TFMuons ] )
+TFElectrons     = bindMembers( None, [ TFChargedProtoMaker, Hlt2TFElectrons ] ) #this is buggy for now as no CALO ID yet 
+TFRichKaons     = bindMembers( None, [ TFChargedHadronProtoMaker, Hlt2TFRichKaons ] ) 

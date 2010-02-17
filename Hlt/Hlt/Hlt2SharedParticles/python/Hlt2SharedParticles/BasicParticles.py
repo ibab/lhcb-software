@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
@@ -18,6 +18,11 @@ from Configurables import PhotonMaker, PhotonMakerAlg
 from Configurables import ProtoParticleCALOFilter, ProtoParticleMUONFilter
 from Configurables import Hlt2PID, GaudiSequencer
 from GaudiKernel.SystemOfUnits import MeV
+#
+# These are all based on unfitted tracks
+# No RICH info can be added until the fast-fit is done
+# For particles with RICH info see TFBasicParticles
+#
 ##########################################################################
 # Make the pions
 #
@@ -36,16 +41,6 @@ Hlt2NoCutsKaons.Particle =  "kaon"
 Hlt2NoCutsProtons = Hlt2NoCutsPions.clone("Hlt2NoCutsProtons")
 Hlt2NoCutsProtons.Particle =  "proton" 
 
-##########################################################################
-# Make the RICH kaons
-#
-Hlt2RichPIDsKaons = CombinedParticleMaker("HltRichPIDsKaons")
-Hlt2RichPIDsKaons.Input = "Hlt/ProtoP/Charged" 
-Hlt2RichPIDsKaons.Particle =   "kaon" 
-Hlt2RichPIDsKaons.addTool(TrackSelector)
-Hlt2RichPIDsKaons.TrackSelector.TrackTypes =  [ "Long" ]
-Hlt2RichPIDsKaons.addTool(ProtoParticleCALOFilter('Kaon'))
-Hlt2RichPIDsKaons.Kaon.Selection = [ "RequiresDet='RICH' CombDLL(k-pi)>'-5.0'" ] 
 ##########################################################################
 # Make the Muons
 #
@@ -105,5 +100,4 @@ NoCutsKaons   = bindMembers( None, [ hadronProtos, Hlt2NoCutsKaons ] )
 NoCutsProtons = bindMembers( None, [ hadronProtos, Hlt2NoCutsProtons ] )
 Muons         = bindMembers( None, [ muonProtos , Hlt2Muons ] )
 Electrons     = bindMembers( None, [ caloProtos, Hlt2Electrons ] )
-RichPIDsKaons = bindMembers( None, [ Hlt2RichPIDsKaons ] ) # TODO: add Rich reco as dependency!!!
 Photons       = bindMembers( None, [ NeutralProtos, Hlt2Photons ] )

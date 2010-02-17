@@ -1,9 +1,19 @@
-$Id: release.notes,v 1.72 2010-02-17 15:15:31 graven Exp $
+$Id: release.notes,v 1.73 2010-02-17 23:27:24 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+! 2010-02-18 - V. Gligorov
+ - Major changes to Hlt2PID, BasicParticles, TFBasicParticles. See the individual
+   files for details but the broad points are:
+   . BasicParticles : remove making of RICH Kaons as PID information is not
+                      reliable on unfitted tracks
+   . Hlt2PID : a major rewrite, enforcing naming conventions and dependencies for
+               the tracks, fast-fit, protoparticle makers and PID algorithms.
+               See Savannah 13784 and 12691 for some more details
+   . TFBasicParticles : follow the above changes in Hlt2PID
+
 !========================== Hlt2SharedParticles v3r2 2010-02-17 ===================
 ! 2010-02-14 - Gerhard Raven
  - follow movement of files from $HLTCONFROOT/options to $HLT2LINESROOT/options
