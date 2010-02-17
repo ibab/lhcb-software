@@ -8,4 +8,5 @@
       <method name = "<"/>
     </class>
   </exclusion>
+  <class name = "std::vector<LHCb::RecVertex>" />
 </lcgdict>

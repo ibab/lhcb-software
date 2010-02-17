@@ -1,4 +1,4 @@
-// $Id: PhysDict.h,v 1.9 2009-06-10 13:15:57 jpalac Exp $
+// $Id: PhysDict.h,v 1.10 2010-02-17 14:35:54 jpalac Exp $
 #ifndef DICT_PHYSDICT_H 
 #define DICT_PHYSDICT_H 1
 
@@ -11,7 +11,7 @@
  *  @date   2006-10-02
  */
 #include "Event/HltDecReports.h"
-
+#include "Event/RecVertex.h"
 namespace 
 {
 
@@ -20,6 +20,7 @@ namespace
     std::pair< std::string, LHCb::HltDecReport >               _i1;
     std::vector< std::pair< std::string, LHCb::HltDecReport > > _i2;
     GaudiUtils::VectorMap< std::string, LHCb::HltDecReport >   _i3;
+    std::vector<LHCb::RecVertex> _i4;
   };
   
 }
