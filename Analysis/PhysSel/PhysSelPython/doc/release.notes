@@ -1,9 +1,20 @@
-!$Id: release.notes,v 1.35 2010-02-03 11:01:09 jpalac Exp $
+!$Id: release.notes,v 1.36 2010-02-17 13:03:12 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2010-02-17 - Juan Palacios
+ - python/PhysSelPython/selection.py
+  . DataOnDemand no longer needs name argument. In its absence, name is 
+    trailing part of Location.
+  . Selection raises NonEmptyInputLocations if InputLocations of input 
+    Algorithm are not empty.
+ - tests/seleciton.py
+  . Add tests for the above (chronoligically this step comes first!)
+ - cmt/requirements
+  . Increase version to v4r1
 
 !==================== PhysSel/PhysSelPython v4r0 2010-02-02 ================
 
