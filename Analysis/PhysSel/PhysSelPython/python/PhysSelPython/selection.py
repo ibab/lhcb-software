@@ -1,4 +1,4 @@
-#$Id: selection.py,v 1.8 2010-02-03 08:46:31 jpalac Exp $
+#$Id: selection.py,v 1.9 2010-02-17 13:02:19 jpalac Exp $
 """
 Classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -15,6 +15,7 @@ __all__ = ('DataOnDemand',
            'Selection',
            'FlatSelectionListBuilder',
            'NameError',
+           'NonEmptyInputLocations',
            'update_overlap')
 
 from copy import copy
@@ -30,17 +31,31 @@ class DataOnDemand(object) :
 
     Example: wrap StdLoosePions
 
-    SelStdLoosePions = DataOnDemand('SelStdLoosePions',
-                                    Location = 'Phys/StdLoosePions')
+    >>> SelStdLoosePions = DataOnDemand('SelStdLoosePions',
+                                        Location = 'Phys/StdLoosePions')
+    >>> SelStdLoosePions.outputLocation()
+    'Phys/StdLoosePions'
+    >>> SelStdLoosePions.name()
+    'SelStdLoosePions'
+
+    The first argument is used for the name, but can be omitted:
+
+    >>> SelStdLoosePions = DataOnDemand(Location = 'Phys/StdLoosePions')
+    >>> SelStdLoosePions.name()
+    'StdLoosePions'
     """
 
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
     
     def __init__ (self,
-                  name,
+                  name='',
                   Location = "", 
                   RequiredSelections = [] ) :
-        self._name = name
+        if name == '' :
+            print 'setting name to ' 
+            self._name = Location[Location.rfind('/')+1:]
+        else :
+            self._name = name
         self.requiredSelections = []
         self._location = Location
 
@@ -112,6 +127,8 @@ class Selection(object) :
             print "Selection: Adding Required Selection ", sel.name()
             self.requiredSelections.append(sel)
         self._name = name
+        if len(Algorithm.InputLocations) != 0 :
+            raise NonEmptyInputLocations('InputLocations of input algorithm should not be set!')
         self.alg = Algorithm.clone(self._name, InputLocations = [])
         print "Selection: cloned", type(self.alg) , Algorithm.name(), "to", self.alg.name()
         self._outputBranch = OutputBranch
@@ -263,4 +280,7 @@ def update_overlap(dict0, dict1) :
     return result
 
 class NameError(Exception) :
+    pass
+
+class NonEmptyInputLocations(Exception) :
     pass
