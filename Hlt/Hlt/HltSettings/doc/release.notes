@@ -3,6 +3,8 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+! 2010-02-17 - Gerhard Raven
+ - switch off B2DX lines because of https://savannah.cern.ch/bugs/?62726 (see comment #3)
 
 ! 2010-02-17 - Johannes Albrecht
  - add Drell-Yan lines to Feb10 threshold setting
