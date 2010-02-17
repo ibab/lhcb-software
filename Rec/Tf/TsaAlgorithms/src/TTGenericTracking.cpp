@@ -1,4 +1,7 @@
-// $Id: TTGenericTracking.cpp,v 1.5 2009-11-28 20:56:27 panmanj Exp $
+// $Id: TTGenericTracking.cpp,v 1.6 2010-02-17 12:53:51 raaij Exp $
+
+// boost
+#include <boost/foreach.hpp>
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -132,7 +135,10 @@ StatusCode TTGenericTracking::execute()
   findTTtracks( tracks, hits );
   
   // Skip the rest if there are no tracks
-  if( tracks->size() == 0 ) return StatusCode::SUCCESS;
+  if( tracks->size() == 0 ) {
+    BOOST_FOREACH( const STHit* hit, hits ) delete hit;
+    return StatusCode::SUCCESS;
+  }
   setFilterPassed(true);
 
   // Step 2: Add additional hits to the track
@@ -149,6 +155,7 @@ StatusCode TTGenericTracking::execute()
   info() << "Event " << m_nEvent << " has " << tracks->size() 
          << " track candidate" << ((tracks->size()!=1) ? "s." : ".") << endmsg;
 
+  BOOST_FOREACH( const STHit* hit, hits ) delete hit;
   return StatusCode::SUCCESS;
 }
 
