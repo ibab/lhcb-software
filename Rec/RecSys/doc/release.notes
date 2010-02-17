@@ -26,14 +26,43 @@ This version uses Gaudi v21r7p1 and LHCb v29r1
 										Tr/TrackMonitors v1r20, Tr/TrackProjectors v2r27, Tr/TrackTools v3r26,
 										Tr/TrackUtils v1r34, Velo/RecVeloMonitors v2r6
 
-- In :
-  . 
+- In Calo/CaloMoniDst v4r4:
+  . Replace dependency on DaVinciMCKernel with MCAssociators
+  . CaloEMuMonitor: add more histograms
+  . Minor fixes in CaloEMuChecker, CaloPi0Monitor, CaloMoniAlg, SpdMonitor, CalOEFlowAlg
 
-- In :
-  . 
+- In Calo/CaloPIDs v5r4:
+  . PIDs.py : use RungeKutta extrapolator instead of HeraB for HLT processing
+  . CaloID2DLL - optionally read the DLLs from CondDB
 
-- In :
-  . 
+- In Muon/MuonID v7r7:
+  . New DLL_flag=3 method
+  . Some global MuonID parameters changed.
+
+- In Muon/MuonPIDChecker v4r1:
+  . Added compatibility with DLL_flag=3
+
+- In Muon/MuonTools v5r1:
+  . Add new tools
+
+- In Rec/LumiAlgs v3r3:
+  . add treatment of LumiLow FSRs
+
+- In Rich/RichIFBAnalysis v1r1p1:
+  . Various minor changes for speed and bug fixes
+  . Dark count code added
+
+- In Rich/RichRecMonitors v2r25:
+  . Adapt to changes in histogramming base classes
+
+- In Rich/RichRecQC v2r36:
+  . Many changes for monitoring at the pit and offline
+
+- In Rich/RichRecTemplateRings v1r3:
+  . bugfixes: avoid selecting rings around target radius
+
+- In Rich/RichRecTools v4r9p2:
+  . Adapt to changes in histogramming base classes
 
 - In Rich/RichRecTrackTools v1r16p1:
   . Adapt to changes in histogramming base class.
