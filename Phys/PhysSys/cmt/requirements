@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.214 2010-02-12 13:13:34 pkoppenb Exp $
+#$Id: requirements,v 1.215 2010-02-17 14:44:19 jpalac Exp $
 package PhysSys
 version v9r1
 
@@ -6,7 +6,7 @@ branches doc cmt
 
 ####################################################################
 use  DaVinciKernel              v8r4     Phys    # Juan Palacios
-use  DaVinciMCKernel            v4r1     Phys    # Juan Palacios
+use  DaVinciMCKernel            v4r2     Phys    # Juan Palacios
 use  HltInterfaces              v3r1     Kernel  # Gerhard Raven
 use  SelectionLine              v1r0     Kernel  # Gerhard Raven
 
@@ -19,7 +19,7 @@ use  ParticleMaker      	v5r5     Phys    # Chris Jones
 use  VertexFit			v6r2     Phys    # Yuehong Xie
 use  LoKiFitters                v2r3     Phys    # Vanya Belyaev
 use  DecayTreeFitter            v1r6     Phys    # Wouter Hulsbergen
-use  PhysDict                   v4r1     Phys    # Juan Palacios
+use  PhysDict                   v4r2     Phys    # Juan Palacios
 
 #===================================================================
 use LoKi                        v8r1     Phys    # Ivan Belyaev
