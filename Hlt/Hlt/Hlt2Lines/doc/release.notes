@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.118 2010-02-16 09:29:52 jnardull Exp $
+$Id: release.notes,v 1.119 2010-02-17 15:14:31 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -9,6 +9,7 @@ $Id: release.notes,v 1.118 2010-02-16 09:29:52 jnardull Exp $
 !
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2Lines v2r4 2010-02-17 ===================
 ! 2010-02-16 - Jacopo Nardulli
  - Follow up on fix of savannah bug 59641. See also https://savannah.cern.ch/bugs/?59641
 
