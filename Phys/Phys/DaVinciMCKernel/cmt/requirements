@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.26 2010-02-11 10:55:37 gligorov Exp $
+# $Id: requirements,v 1.27 2010-02-17 14:39:02 jpalac Exp $
 # =============================================================================
 # Created    : 11/10/2006
 # Maintainer : J. Palacios
@@ -7,7 +7,7 @@
 # =============================================================================
 
 package           DaVinciMCKernel
-version           v4r1
+version           v4r2
 
 #============================================================================
 branches          cmt doc dict src options Kernel
