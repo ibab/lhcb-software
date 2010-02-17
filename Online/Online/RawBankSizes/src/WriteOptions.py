@@ -1,5 +1,8 @@
+import os
 f=open("/tmp/banks.in","r")
-g=open("$(RAWBANKSIZESROOT)/options/RawSize_HistParams.opts","r+")
+aaaa = os.getenv("RAWBANKSIZESROOT")
+#print aaaa
+g=open(aaaa+"/options/RawSize_HistParams.opts","r+")
 banks = f.readlines()
 opts = g.readlines()
 opts.append("shit")
