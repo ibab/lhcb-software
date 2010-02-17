@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.117 2010-02-17 09:23:12 graven Exp $
+! $Id: release.notes,v 1.118 2010-02-17 15:03:42 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -11,6 +11,7 @@
 !-----------------------------------------------------------------------------
 ! 2010-02-17 - Gerhard Raven
  - remove TTGeneric tracking from lumi due to https://savannah.cern.ch/bugs/?62933
+ - configure the PV finding in the VELO lines as was done in December
 
 ! 2010-02-15 - Gerhard Raven
  - add L0 channel predicate in beam gas lines

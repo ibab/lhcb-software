@@ -7,7 +7,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
 # =============================================================================
 
 #
@@ -16,11 +16,11 @@ __version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 from HltLine.HltLinesConfigurableUser import *
 
 class Hlt1VeloLinesConf(HltLinesConfigurableUser):
-   __slots__ = { 'Prescale'                   : { 'Hlt1Velo(.Side|TrTr).*' : 0.0001 } 
+   __slots__ = { 'Prescale'                   : { } # 'Hlt1Velo(.Side|TrTr).*' : 0.0001 } 
                , 'MinimumNumberOfRClusters'   : 12 # 4 tracks with 3 hits
                , 'MinimumNumberOfPhiClusters' : 12 # 4 tracks with 3 hits
                , 'MaxNumberOfClusters'        : 450 # 0.5% occupancy
-               , 'MinTrksPerVtx'              : 4   # 4 is the minumum value you can put here  
+               , 'MinTrksPerVtx'              : 2   # 4 is the minumum value you can put here  
                , 'ODIN'                       :"( ODIN_TRGTYP != LHCb.ODIN.LumiTrigger )" # on what trigger types do we run?
                , 'L0DU'                       :"( L0_DECISION )" # on what trigger types do we run?
                }
@@ -98,8 +98,14 @@ class Hlt1VeloLinesConf(HltLinesConfigurableUser):
             pv3D = PatPV3D( 'Hlt1Velo' + side + 'PatPV3D', OutputVerticesName = 'Hlt/Vertex/' + side + 'PV3D')
             pv3D.addTool( PVOfflineTool, name = 'PVOfflineTool')
             pv3D.PVOfflineTool.InputTracks = [tracks]
-            pv3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
             pv3D.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
+            from Configurables import PVSeed3DTool, LSAdaptPV3DFitter
+            pv3D.PVOfflineTool.addTool( PVSeed3DTool )
+            pv3D.PVOfflineTool.PVSeed3DTool.MinCloseTracks = 1 # default is 4
+            pv3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
+            pv3D.PVOfflineTool.addTool( LSAdaptPV3DFitter )
+            pv3D.PVOfflineTool.LSAdaptPV3DFitter.TrackErrorScaleFactor = 2.0
+            pv3D.PVOfflineTool.LSAdaptPV3DFitter.MinTracks = 3 # default is 5
  
             from HltLine.HltDecodeRaw import DecodeVELO
             Line( 'Velo' + side
