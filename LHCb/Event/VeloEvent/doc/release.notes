@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.65 2009-05-29 15:46:10 cattanem Exp $
+! $Id: release.notes,v 1.66 2010-02-17 19:24:40 szumlat Exp $
 ! package Event/VeloEvent
 ! package manager: C.Parkes, T.Szumlak
 !========================================================================
-
+! 2010-02-16 - Tomasz Szumlak
+ - Fix in VeloErrorBank data class - remove creation of EvtInfo object
+   with the new operator, it was an old idea to make some part of the
+   ErrorBank persistent
+ 
 !====================== VeloEvent v16r7p1 2009-05-29 ====================
 ! 2009-05-29 - Marco Cattaneo
  - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 

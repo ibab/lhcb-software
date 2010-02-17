@@ -1,4 +1,4 @@
-// $Id: VeloErrorBank.h,v 1.5 2008-08-26 09:59:45 szumlat Exp $
+// $Id: VeloErrorBank.h,v 1.6 2010-02-17 19:24:39 szumlat Exp $
 #ifndef VELOERRORBANK_H 
 #define VELOERRORBANK_H 1
 
@@ -171,10 +171,7 @@ inline bool VeloErrorBank::isEmpty() const
 //
 inline EvtInfo* VeloErrorBank::evtInfo() const
 {
-  EvtInfo* anInfo=new EvtInfo(m_evtInfoData.key());
-  (*anInfo)=m_evtInfoData;
-  //
-  return ( anInfo );
+  return ( &m_evtInfoData );
 }
 //
 inline VeloTELL1::dataVec VeloErrorBank::errorSources() const
