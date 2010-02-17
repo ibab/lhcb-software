@@ -88,9 +88,12 @@ DisplVertices::DisplVertices( const std::string& name,
   declareProperty("DistMax", m_DistMax = 10.* m );//Check value.
   declareProperty("MaxChi2OvNDoF", m_MaxChi2OvNDoF = 1000. );
   declareProperty("MuonpT", m_MuonpT = -1*GeV );
-  declareProperty("DocaMax", m_DocaMax = 0.1 * mm);
+  declareProperty("DocaMax", m_DocaMax = 0.1 * mm);//Simulate resolution
   declareProperty("NbTracks", m_nTracks = 1 );//~ nb B meson max # of tracks 5
   declareProperty("RCutMethod", m_RCut = "FromUpstreamPV" );
+  declareProperty("RemVtxFromDet", m_RemVtxFromDet = 0  );
+  declareProperty("DetDist", m_DetDist = 1*mm );
+  declareProperty("RemFromRFFoil", m_RemFromRFFoil = false );
   declareProperty("BeamLineLocation", 
 		  m_BLLoc = "HLT/Hlt2LineDisplVertices/BeamLine");
 }
@@ -141,7 +144,7 @@ StatusCode DisplVertices::initialize() {
   m_measProvider = tool<IMeasurementProvider>
     ( "MeasurementProvider","MeasProvider", this );
 
-  if( m_SaveTuple ){
+  if( m_RemVtxFromDet != 0 || m_SaveTuple ){
     //Get detector elements
     IDetectorElement* lhcb = getDet<IDetectorElement>
       ( "/dd/Structure/LHCb/BeforeMagnetRegion/Velo" );
@@ -176,6 +179,15 @@ StatusCode DisplVertices::initialize() {
   }
   m_MotherPreyID = MotherPrey->particleID();
 
+  //Sanity checks
+  if( m_RemFromRFFoil && m_RemVtxFromDet == 4 ){
+    info()<<"RemFromRFFoil = "<< m_RemFromRFFoil <<" and RemVtxFromDet = "
+	  << m_RemVtxFromDet <<" are incompatible. RemFromRFFoil set to false"
+	  << endmsg;
+    m_RemFromRFFoil = false;
+  }
+
+
   info() << "--------------------------------------------------------"<<endmsg;
   info() << "DisplVertices will select " << m_Prey 
 	 << " candidates (ID=" << m_PreyID.pid() <<") ";
@@ -195,6 +207,18 @@ StatusCode DisplVertices::initialize() {
   info() << "Min sum of daughters's pT "<< m_SumPt << endmsg;
   if( m_MuonpT )
     info()<<"At least one muon with pT > "<< m_MuonpT << endmsg;
+  if( m_RemFromRFFoil )
+    info()<<"Not in RF-Foil region"<< endmsg ;
+  if( m_RemVtxFromDet == 1 )
+    info()<<"Not in detector material"<< endmsg;
+  if( m_RemVtxFromDet == 2 )
+    info()<<"Not closer than " << m_DetDist 
+          <<"mm from detector material along momentum"<< endmsg;
+  if( m_RemVtxFromDet == 3 || m_RemVtxFromDet == 4 )
+    info()<<"Not closer than " << m_DetDist 
+	  <<"*PosCovMatric from detector material"<< endmsg;
+  if( m_RemVtxFromDet == 4 )
+    info()<<"("<< m_DetDist+3 <<" when in RF-Foil region)"<< endmsg;
   info()<< "The radial displacement is ";
   if( m_RCut == "FromUpstreamPV" ){
     info() << "computed with respect to the upstream PV of PV3D." << endmsg;
@@ -209,8 +233,8 @@ StatusCode DisplVertices::initialize() {
   }
   info() <<"Min R    : " << m_RMin/mm <<" mm"<< endmsg ;
   info() <<"Max R    : " << m_RMax/mm <<" mm"<< endmsg ;
-  info() << "DisplVertices will also try to reconstruct "<< m_MotherPrey 
-	 <<" into two "<< m_Prey <<" decay."<< endmsg;
+  //info() << "DisplVertices will also try to reconstruct "<< m_MotherPrey 
+	// <<" into two "<< m_Prey <<" decay."<< endmsg;
   info() << "--------------------------------------------------------"<<endmsg;
 
   //Initialize the beam line
@@ -222,7 +246,7 @@ StatusCode DisplVertices::initialize() {
     m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
   } 
 
-  if(m_SaveTuple){
+  if( m_RemFromRFFoil || m_RemVtxFromDet == 4 || m_SaveTuple ){
     //get the Velo geometry
     string velo = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/Velo";
     const IDetectorElement* lefthalv = getDet<IDetectorElement>( velo+"Left" );
@@ -353,7 +377,7 @@ StatusCode DisplVertices::execute() {
     double chi = p->endVertex()->chi2PerDoF();
     const Gaudi::XYZPoint & pos = p->endVertex()->position();
     double rho = GetRFromBL( pos );
-    double zpos   = pos.z();
+    double zpos = pos.z();
     Gaudi::LorentzVector mom = p->momentum();
     double sumpt = GetSumPt(p);
     double muon = HasMuons(p);
@@ -365,13 +389,23 @@ StatusCode DisplVertices::execute() {
 	     << chi <<", R "<< rho <<", pos of end vtx " 
 	     << pos;
       if(muon){
-	debug()<<", has muon with pt "<< muon <<" GeV" << endmsg;
+        debug()<<", has muon with pt "<< muon <<" GeV" << endmsg;
       } else { debug()<< endmsg; }
     }
+    //Is the particle close to the detector material ?
+    if( IsAPointInDet( p, m_RemVtxFromDet, m_DetDist ) ) continue;
+
+    //Is the particle decay vertex in the RF-foil ?
+    if( m_RemFromRFFoil && IsInRFFoil( pos ) ){
+      if( msgLevel( MSG::DEBUG ) )
+        debug()<<"Decay vertex in the RF-foil, particle disguarded"<< endmsg; 
+      continue; 
+    }
+
     if( mass < m_PreyMinMass || mass > m_PreyMaxMass || 
         nbtrks < m_nTracks || rho <  m_RMin || rho > m_RMax || 
         abs(zpos) > m_DistMax || sumpt < m_SumPt || chi > m_MaxChi2OvNDoF ||
-	muon < m_MuonpT ){ 
+        muon < m_MuonpT ){ 
       if( msgLevel( MSG::DEBUG ) )
         debug()<<"Particle do not pass the cuts"<< endmsg; continue; }
 
@@ -2501,7 +2535,7 @@ bool DisplVertices::IsQuark( HepMC::GenParticle * p ){
 
 bool DisplVertices::IsAPointInDet( const Particle* P, int mode, double range ){
 
-  if( mode == 0 ) return false;
+  if( mode < 1 ) return false;
 
   const Vertex* RV = P->endVertex();
   double threshold = 1e-10;
@@ -2586,61 +2620,62 @@ bool DisplVertices::IsAPointInDet( const Particle* P, int mode, double range ){
     for (int ix = -1 ; ix<2; ix += 2 ){
       for (int iy = -1 ; iy<2; iy += 2 ){
         Gaudi::XYZPoint start( RVPosition.x()+ix*sigNx,
-				    RVPosition.y()+iy*sigNy,
-				    RVPosition.z()+sigNz );
+                               RVPosition.y()+iy*sigNy,
+                               RVPosition.z()+sigNz );
         Gaudi::XYZPoint end( RVPosition.x()-ix*sigNx,
-			     RVPosition.y()-iy*sigNy,
-			     RVPosition.z()-sigNz );
-	radlength = m_transSvc->distanceInRadUnits( start, end );
-	if(msgLevel(MSG::DEBUG))
-	  debug()<<"Radiation length from "<< start <<" to "
-		 << end <<" : "<< radlength 
-		 <<" [mm]" << endmsg;
+                             RVPosition.y()-iy*sigNy,
+                             RVPosition.z()-sigNz );
+        radlength = m_transSvc->distanceInRadUnits( start, end );
+        if(msgLevel(MSG::DEBUG))
+          debug()<<"Radiation length from "<< start <<" to "
+                 << end <<" : "<< radlength 
+                 <<" [mm]" << endmsg;
         if( radlength > threshold ){
-	  if(msgLevel(MSG::DEBUG))
-	    debug()<<"RV is too closed to a detector material --> disguarded !"
-		   << endmsg;
+          if(msgLevel(MSG::DEBUG))
+            debug()<<"RV is too closed to a detector material --> disguarded !"
+                   << endmsg;
           return true;
-	}
+        }
       }
     }
   } // end of 3 cond
-
+  
   return false;
 }
 
 //=============================================================================
 // Is the point in the RF-Foil ?
 //=============================================================================
-bool DisplVertices::IsInRFFoil( Gaudi::XYZPoint & pos){
+bool DisplVertices::IsInRFFoil( const Gaudi::XYZPoint & pos){
   
   //debug()<<"Probing pos "<< pos;
-
+  Gaudi::XYZPoint posloc;
   //move to local Velo half frame
   if( pos.x() < 0 ){ //right half
-    pos = m_toVeloRFrame * pos;
+    posloc = m_toVeloRFrame * pos;
     //debug()<<", position in local R velo frame "<< pos << endmsg;
 
     //remove cylinder
-    double r = pos.rho();
+    double r = posloc.rho();
     if( r > 5.5*mm && r < 12*mm ) return true;
  
     //then remove the boxes
-    if( abs(pos.y()) > 5.5*mm && pos.x() < -5*mm && pos.x() > 4*mm ) 
+    if( abs(posloc.y()) > 5.5*mm && posloc.x() < -5*mm && posloc.x() > 4*mm ) 
       return true;
   } else { //left part
-    pos = m_toVeloLFrame * pos;
+    posloc = m_toVeloLFrame * pos;
     //debug()<<", position in local L velo frame "<< pos << endmsg;
 
     //remove cylinder
-    double r = pos.rho();
+    double r = posloc.rho();
     if( r > 5.5*mm && r < 12*mm ) return true;
     
     //then remove the boxes
-    if( abs(pos.y()) > 5.5*mm && pos.x() < 5*mm && pos.x() > -4*mm ) 
+    if( abs(posloc.y()) > 5.5*mm && posloc.x() < 5*mm && posloc.x() > -4*mm ) 
       return true;
   }
   return false;
+
 }
 
 //=============================================================================

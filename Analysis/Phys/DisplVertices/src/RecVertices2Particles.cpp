@@ -147,8 +147,7 @@ StatusCode RecVertices2Particles::initialize() {
     m_lhcbGeo = lhcb->geometry();
 
     // Get Transport Service
-    if( m_RemVtxFromDet > 1 ) 
-      m_transSvc = svc<ITransportSvc>( "TransportSvc", true  );
+    m_transSvc = svc<ITransportSvc>( "TransportSvc", true  );
   }
 
   //Initialize the beam line
@@ -419,7 +418,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
     //if the efficiency is less than 100%, you can work with pion with 
     //default pt of 400MeV. See Hlt2SelHidValley for implementation.
     //double eff = 100.*(double)tmpPart.daughters().size()/
-    //(double)rv->tracks().size();
+    //  (double)rv->tracks().size();
     //plot( eff, "BestTrk2PartEff", 0., 101. );
     //debug()<<"Found "<< Daughters.size() <<" related particles."<< endmsg;
     //Do I really care about the number of tracks found ?
@@ -430,6 +429,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
     tmpPart.setMomentum( mom );
     tmpPart.setMeasuredMass( mom.M() );
     tmpPart.setMeasuredMassErr( 0 );
+
     if( !TestMass( tmpPart ) ){
       if( msgLevel(MSG::DEBUG) )
         debug() <<"Particle did not passed the mass cut --> disguarded !"
@@ -445,9 +445,8 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
     tmpPart.setPosMomCovMatrix( PosMomCovMatrix );
 
     //Remove if found to be in detector material
-    if( RemVtxFromDet( tmpPart ) ) return false;
-    
- 
+    if( IsAPointInDet( tmpPart, m_RemVtxFromDet, m_DetDist ) ) return false;
+
     //Save Rec Particle in the Desktop
     RecParts.push_back( desktop()->keep( &tmpPart ) );
     
@@ -488,8 +487,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
     }
 
     //Remove if found to be in detector material
-    if( RemVtxFromDet( tmpPart ) )
-      return false;
+    if( IsAPointInDet( tmpPart, m_RemVtxFromDet, m_DetDist ) ) return false;
     
     //Save Rec Particle in the Desktop
     RecParts.push_back( desktop()->keep( &tmpPart ) );
@@ -557,14 +555,15 @@ bool RecVertices2Particles::IsIsolated( const RecVertex* rv, RecVertex::ConstVec
 //                             +- DetDist * PositionCovMatrix
 //  if = 4 : 3 but range+3 if in RF foil.
 //=============================================================================
-bool RecVertices2Particles::RemVtxFromDet( Particle & P ){
+bool RecVertices2Particles::IsAPointInDet( const Particle & P, int mode, 
+                                           double range ){
 
-  if( m_RemVtxFromDet < 1 ) return false;
+  if( mode < 1 ) return false;
 
   double threshold = 1e-10;
   const Vertex * RV = P.endVertex();
 
-  if( m_RemVtxFromDet == 1 ){
+  if( mode == 1 ){
 
     IGeometryInfo* start = 0;
     ILVolume::PVolumePath path ;
@@ -601,10 +600,10 @@ bool RecVertices2Particles::RemVtxFromDet( Particle & P ){
       return true;
     } 
   } //end of <0 condition
-  else if( m_RemVtxFromDet == 2 ){
+  else if( mode == 2 ){
 
     const Gaudi::XYZPoint pos = RV->position();
-    const Gaudi::XYZPoint nvec = Normed( P.momentum(), m_DetDist );
+    const Gaudi::XYZPoint nvec = Normed( P.momentum(), range );
     const Gaudi::XYZPoint start = Minus( pos, nvec );
     const Gaudi::XYZPoint end = Plus( pos, nvec );
 
@@ -632,16 +631,16 @@ bool RecVertices2Particles::RemVtxFromDet( Particle & P ){
     
 
   } //end of 2 condition
-  else if( m_RemVtxFromDet == 3 || m_RemVtxFromDet == 4 ){
+  else if( mode == 3 || mode == 4 ){
 
     const Gaudi::XYZPoint  RVPosition = RV->position();
     Gaudi::SymMatrix3x3 RVPositionCovMatrix = RV->covMatrix();
-    double sigNx = m_DetDist*sqrt(RVPositionCovMatrix[0][0]);
-    double sigNy = m_DetDist*sqrt(RVPositionCovMatrix[1][1]);
-    double sigNz = m_DetDist*sqrt(RVPositionCovMatrix[2][2]);
+    double sigNx = range*sqrt(RVPositionCovMatrix[0][0]);
+    double sigNy = range*sqrt(RVPositionCovMatrix[1][1]);
+    double sigNz = range*sqrt(RVPositionCovMatrix[2][2]);
     // Is there material within N*sigma
     double radlength(0);
-    if( m_RemVtxFromDet == 4 && IsInRFFoil( RVPosition ) ) m_DetDist += 3;
+    if( mode == 4 && IsInRFFoil( RVPosition ) ) range += 3;
     for (int ix = -1 ; ix<2; ix += 2 ){
       for (int iy = -1 ; iy<2; iy += 2 ){
         Gaudi::XYZPoint start( RVPosition.x()+ix*sigNx,
@@ -691,8 +690,11 @@ StatusCode RecVertices2Particles::SavePreysTuple( Tuple & tuple, Particle::Const
     e.push_back(mom.e());
     px.push_back(mom.x()); py.push_back(mom.y()); pz.push_back(mom.z());
     x.push_back(pos.x()); y.push_back(pos.y()); z.push_back(pos.z());
-    Particle dum = *p;
-    indets.push_back( RemVtxFromDet( dum ) ); 
+    double indet = 0;
+    if( IsAPointInDet( *p, 2 ) ) indet += 1;
+    if( IsAPointInDet( *p, 3, 2 ) ) indet += 10;
+    if( IsAPointInDet( *p, 4, 2 ) ) indet += 100;
+    indets.push_back( indet );
     sumpts.push_back(sumpt);
   }
   const int NbPreyMax = 20;

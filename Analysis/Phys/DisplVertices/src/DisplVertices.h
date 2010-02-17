@@ -37,7 +37,7 @@
 
 /** @class DisplVertices DisplVertices.h
  *  
- *  @Version 6r0
+ *  @Version 6r3
  *  @author Neal Gauvin
  *  @date  30 june 2009
  */
@@ -120,7 +120,7 @@ private:
   bool IsQuark( HepMC::GenParticle * );
   bool IsAPointInDet( const LHCb::Particle *, int mode = 2,
                       double range = 1*Gaudi::Units::mm );
-  bool IsInRFFoil( Gaudi::XYZPoint & );
+  bool IsInRFFoil( const Gaudi::XYZPoint & );
   bool HasBackwardTracks( const LHCb::Particle * );
   bool HasBackwardTracks( const LHCb::RecVertex * );
   double HasMuons( const LHCb::Particle * );
@@ -217,6 +217,20 @@ private:
   double m_DocaMax;           ///< Max distance of closest approach
   unsigned int m_NbCands;     ///< Min nb of desired candidates
   int    m_nTracks ;          ///< Min # of tracks at reconstructed vertex
+  /*****************************************************************
+   * Remove vtx if in detector material ?
+   * if = 0  : disabled
+   * if = 1  : remove reco vtx if in detector material
+   * if = 2  : remove reco vtx if rad length from decay pos - DetDist 
+   *           to decay pos + DetDist along momentum is > threshold
+   * if = 3 : remove reco vtx if rad length along 
+   *                             +- DetDist * PositionCovMatrix
+   * if = 4 : 3 but range+3 if in RF foil.
+   ******************************************************************/
+  int m_RemVtxFromDet ;    
+  double m_DetDist;           ///< Min distance to det material 
+  //Remove vtx if found in RF-Foil area, based on geometric cuts
+  bool   m_RemFromRFFoil;
 
   Gaudi::Transform3D m_toVeloLFrame; ///< to transform to local velo L frame
   Gaudi::Transform3D m_toVeloRFrame; ///< to transform to local velo R frame

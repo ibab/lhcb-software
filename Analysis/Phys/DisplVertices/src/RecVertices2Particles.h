@@ -56,7 +56,8 @@ private:
   /// Is a vertex isolated from other vertices ?
   bool IsIsolated( const LHCb::RecVertex*, LHCb::RecVertex::ConstVector & );
   ///Is a vertex too close to detector material ?
-  bool RemVtxFromDet( LHCb::Particle & );
+  bool IsAPointInDet( const LHCb::Particle &, int mode = 2,
+                      double range = 1*Gaudi::Units::mm );
   ///Cut on the mass
   bool TestMass( const LHCb::Particle * );
   bool TestMass( LHCb::Particle & );
@@ -103,7 +104,7 @@ private:
    *                             +- DetDist * PositionCovMatrix
    * if = 4 : 3 but range+3 if in RF foil.
    ******************************************************************/
-  double m_RemVtxFromDet ;    
+  int m_RemVtxFromDet ;    
   double m_DetDist;           ///< Min distance to det material 
   //Remove vtx if found in RF-Foil area, based on geometric cuts
   bool   m_RemFromRFFoil;
