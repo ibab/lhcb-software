@@ -3,7 +3,13 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+
 !========================== HltSettings v1r8 2010-02-17 ===================
+! 2010-02-17 - Gerhard Raven
+ - remove BeamGasBeam{1,2} lines from Physics_10000Vis_1000L0_40Hlt1_Apr09, as the 
+   L0 configuration that goes with it (0xDC09) does not have the required L0
+   channels
+
 ! 2010-02-17 - Gerhard Raven
  - switch off B2DX lines because of https://savannah.cern.ch/bugs/?62726 (see comment #3)
 
