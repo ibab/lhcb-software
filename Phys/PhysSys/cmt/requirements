@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.215 2010-02-17 14:44:19 jpalac Exp $
+#$Id: requirements,v 1.216 2010-02-17 14:54:25 jpalac Exp $
 package PhysSys
 version v9r1
 
@@ -24,7 +24,7 @@ use  PhysDict                   v4r2     Phys    # Juan Palacios
 #===================================================================
 use LoKi                        v8r1     Phys    # Ivan Belyaev
 use LoKiAlgo                    v8r1     Phys    # Ivan Belyaev
-use LoKiAlgoMC                  v8r1     Phys    # Ivan Belyaev
+use LoKiAlgoMC                  v8r2     Phys    # Ivan Belyaev
 use LoKiArrayFunctors           v8r8     Phys    # Ivan Belyaev
 use LoKiGenMC                   v8r1     Phys    # Ivan Belyaev
 use LoKiPhys                    v8r13    Phys    # Ivan Belyaev
