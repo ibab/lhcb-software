@@ -439,7 +439,7 @@ def diff( lhs, rhs , cas = ConfigAccessSvc() ) :
 def updateProperties(id,updates,label='', cas = ConfigAccessSvc() ) :
     return execInSandbox( _updateProperties,id,updates,label, cas )
 def updateL0TCK(id, l0tck, label='', cas = ConfigAccessSvc() ) :
-    return execInSandbox( _updateL0TCK, id, l0tck, cas )
+    return execInSandbox( _updateL0TCK, id, l0tck, label, cas )
 def createTCKEntries(d, cas = ConfigAccessSvc() ) :
     return execInSandbox( _createTCKEntries, d, cas )
 def copy( source = ConfigAccessSvc() , target = ConfigDBAccessSvc(ReadOnly=False) ) :
