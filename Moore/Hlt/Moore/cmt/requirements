@@ -1,12 +1,12 @@
 #============================================================================
-# $Id: requirements,v 1.100 2010-02-17 22:55:43 graven Exp $
+# $Id: requirements,v 1.101 2010-02-17 22:57:37 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
 
 #============================================================================
 package Moore
-version v8r6
+version v8r7
 
 branches doc cmt options python
 
@@ -23,7 +23,7 @@ use DDDB                v*      Det         -no_auto_imports
 use ParamFiles          v8r*                -no_auto_imports
 use FieldMap            v5r*                -no_auto_imports
 use HltTCK              v1r*    TCK         -no_auto_imports
-use L0TCK               v3r*    TCK         -no_auto_imports
+use L0TCK               v2r*    TCK         -no_auto_imports
 
 # The rest are needed only to set up environment variables for job options
 # and to give a cmt broadcast dependency for user checked out component packages
