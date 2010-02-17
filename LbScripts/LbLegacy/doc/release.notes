@@ -1,3 +1,8 @@
+2010-02-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: fixed windows attribute for files more
+	agressively. The former method didn't work.
+
 2010-02-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkproject: 

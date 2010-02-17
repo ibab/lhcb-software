@@ -277,6 +277,18 @@ def getGlobalMask():
         log.debug("Read/write permissions according to MYSITEROOT are %04o" % authbits2)
     return globalmask
 
+def fixWinAttrib(dirpath):
+    os.chmod(dirpath, stat.S_IWRITE)
+    if os.path.isdir(dirpath):
+        if os.listdir(dirpath) :
+            here = os.getcwd()
+            os.chdir(dirpath)
+            os.system("attrib -R -A /S /D")
+            os.chdir(here)
+    else :
+        os.system("attrib -R -A %s" % directory)
+    
+
 def changePermissions(directory, recursive=True):
     """ change permissions according to the umask. and the
     MYSITEROOT directory permissions """
@@ -291,25 +303,15 @@ def changePermissions(directory, recursive=True):
             log.debug("Adding read/write permissions %04o to %s" % (authbits, directory))
         addPermissions(authbits, directory, recursive)
     else :
+        log.debug("Adding read/write permissions recursively to %s" % directory)
+        fixWinAttrib(directory)
         if recursive :
-            log.debug("Adding read/write permissions recursively to %s" % directory)
-            os.chmod(directory, stat.S_IWRITE)
             for root, dirs, files in os.walk(directory, topdown=True) :
                 for d in dirs :
-                    os.chmod(os.path.join(root, d), stat.S_IWRITE)
+                    fixWinAttrib(os.path.join(root,d))
                 for f in files :
                     os.chmod(os.path.join(root, f), stat.S_IWRITE)
-        else :
-            log.debug("Adding read/write permissions to %s" % directory)
-            os.chmod(directory, stat.S_IWRITE)
-        if os.path.isdir(directory):
-            if os.listdir(directory) :
-                os.chdir(directory)
-                os.system("attrib -R -A /S /D")
-                os.chdir(here)
-        else :
-            os.system("attrib -R -A %s" % directory)
-
+            
 def checkWriteAccess(directory):
     dirok = True
     log = logging.getLogger()
