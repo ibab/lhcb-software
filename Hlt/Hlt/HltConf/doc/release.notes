@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.418 2010-02-17 15:25:23 graven Exp $ 
+! $Id: release.notes,v 1.419 2010-02-17 23:48:51 gligorov Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2010-02-18 - V. Gligorov
+ - Hlt2.py updated to follow recent changes to Hlt2PID in Hlt2SharedParticles 
+
 !========================== HltConf v6r4 2010-02-17 ===================
 ! 2010-02-17 - Gerhard Raven
  - if no L0TCK defined, do not generate a canonical list of L0 channels

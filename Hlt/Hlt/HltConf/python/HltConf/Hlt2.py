@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.47 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.48 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -54,7 +54,7 @@ class Hlt2Conf(LHCbConfigurableUser):
     __slots__ = {
            "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
          , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
-         , "Hlt2Tracks"                 : "Hlt/Track/Long"
+         , "Hlt2Tracks"                 : "Long"
          , "WithMC"                     : False 
          }
 
