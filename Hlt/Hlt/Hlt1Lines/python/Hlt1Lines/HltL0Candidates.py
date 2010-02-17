@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.12 2010-02-09 21:12:31 graven Exp $
+# $Id: HltL0Candidates.py,v 1.13 2010-02-17 15:11:58 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -193,8 +193,8 @@ def setupL0Channels( channels ) :
     global _l0Channels,_dict
     if _dict or _l0Channels  : raise RunTimeError('HltL0Candidates already initialized -- 2nd call to setupL0Channels...')
     _l0Channels = channels
-    if not _l0Channels:
-        _l0Channels = [ 'Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
+    #if not _l0Channels:
+    #    _l0Channels = [ 'Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
 
     print '# recognized L0 channels: ' + str(_l0Channels)
     # the types are basically hardwired and are thus not likely to change...
@@ -204,7 +204,7 @@ def setupL0Channels( channels ) :
 
 def L0Channels() :
     global _l0Channels
-    if not _l0Channels : raise RunTimeError('HltL0Candidates not initialized -- no call to setupL0Channels...')
+    if _l0Channels == None : raise RunTimeError('HltL0Candidates not initialized -- no call to setupL0Channels...')
     return _l0Channels
 
 def convertL0Candidates(channel) :
