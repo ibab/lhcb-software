@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1MuonLines.py,v 1.9 2010-01-07 10:13:01 albrecht Exp $
+# $Id: Hlt1MuonLines.py,v 1.10 2010-02-18 19:36:25 albrecht Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
 # =============================================================================
 
 
@@ -97,7 +97,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                 , DecodingFromCoord=True )
 
         ### Matching Confirmed T Tracks with VELO
-        from Configurables import PatMatchTool
+        from Configurables import PatMatchTool, PatSeedingTool
         from Configurables import HltTrackUpgradeTool, L0ConfirmWithT, PatConfirmTool
         from HltLine.HltDecodeRaw import DecodeIT, DecodeTT, DecodeVELO
         TMatchV = [ DecodeIT
@@ -110,7 +110,20 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                                                                 nSigmaY=self.getProp('Muon_TConfNSigmaY'),
                                                                                 nSigmaTx=self.getProp('Muon_TConfNSigmaTx'),
                                                                                 nSigmaTy=self.getProp('Muon_TConfNSigmaTy'),
-                                                                                restrictSearch = False) ]
+                                                                                restrictSearch = False
+                                                                                , tools = [ Tool(
+                                                                                PatSeedingTool,
+                                                                                OTNHitsLowThresh=12,
+                                                                                MinTotalPlanes = 7,
+                                                                                MaxMisses = 2,
+                                                                                MaxTrackChi2LowMult=10,
+                                                                                MaxFinalTrackChi2=20,
+                                                                                MaxFinalChi2=30,
+                                                                                MaxTrackChi2=40,
+                                                                                MaxChi2HitIT=10,
+                                                                                MaxChi2HitOT=30
+                                                                                ) ]
+                                                                                ) ]
                                                                ) ] ) ] 
                               , HistoDescriptor = { 'TMuonConfQuality': ( 'Seed track chi2',0.,20.,100) ,
                                                     'TMuonConfQualityBest': ( 'Seed track chi2 Best',0.,20.,100)} )
