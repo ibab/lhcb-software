@@ -4,6 +4,7 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichReadout v2r12p2 2010-02-19 =====================
 ! 2010-02-12 - Chris Jones
  - Adapt to changes in RIchKernel histogramming base classes.
 
