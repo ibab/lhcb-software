@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.164 2010-02-10 18:08:36 pkoppenb Exp $
+# $Id: requirements,v 1.165 2010-02-18 14:54:24 jpalac Exp $
 package AnalysisSys
 version v4r0p1
 
@@ -37,6 +37,7 @@ use AnalysisPython              v1r5     Phys
 #
 # Stripping
 #
+use StrippingAlgs               v1r0   Phys   # Anton Poluektov
 use StrippingConf               v2r0   Phys   # Anton Poluektov
 use StrippingSelections         v1r15  Phys   # Anton Poluektov
 
