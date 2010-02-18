@@ -4,11 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================== HltSettings v1r8 2010-02-18 ===================
 ! 2010-02-18 - Gerhard Raven
  - remove duplicate lines from Physics_10000Vis_1000L0_40Hlt1_Apr09 and 
    Physics_320Vis_300L0_10Hlt1_Aug09
 
-!========================== HltSettings v1r8 2010-02-17 ===================
 ! 2010-02-17 - Gerhard Raven
  - remove BeamGasBeam{1,2} lines from Physics_10000Vis_1000L0_40Hlt1_Apr09, as the 
    L0 configuration that goes with it (0xDC09) does not have the required L0
