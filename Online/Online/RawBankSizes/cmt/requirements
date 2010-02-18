@@ -23,7 +23,7 @@ application MakeOptions MakeOptions.cpp
 macro_append target_MakeOptions
 
 
-action runMakeOptions "$(RAWBANKSIZESROOT)/$(tag)/MakeOptions.exe"
+action runMakeOptions "cmt run $(RAWBANKSIZESROOT)/$(tag)/MakeOptions.exe"
 macro_append constituents " runMakeOptions "
 macro_append runMakeOptions_dependencies " MakeOptions "
 
