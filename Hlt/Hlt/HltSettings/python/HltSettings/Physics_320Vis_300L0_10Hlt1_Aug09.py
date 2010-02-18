@@ -122,6 +122,7 @@ class Physics_320Vis_300L0_10Hlt1_Aug09 :
                  #'Hlt1LumiLowBeamCrossing',
                  #'Hlt1LumiLowBeam1',
                  #'Hlt1LumiLowBeam2',
+                 'Hlt1L0Any',
                  'Hlt1L0Muon',
                  'Hlt1L0DiMuon',
                  'Hlt1L0Muon,lowMult',

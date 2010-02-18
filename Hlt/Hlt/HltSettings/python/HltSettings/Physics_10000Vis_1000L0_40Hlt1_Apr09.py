@@ -66,6 +66,7 @@ class Physics_10000Vis_1000L0_40Hlt1_Apr09 :
                  #'Hlt1BeamGasBeam1',
                  #'Hlt1BeamGasBeam2',
                  #'Hlt1BeamGasCrossing',
+                 'Hlt1L0Any',
                  'Hlt1L0Muon',
                  'Hlt1L0DiMuon',
                  'Hlt1L0Muon,lowMult',

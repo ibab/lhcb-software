@@ -8,6 +8,8 @@
 ! 2010-02-18 - Gerhard Raven
  - remove duplicate lines from Physics_10000Vis_1000L0_40Hlt1_Apr09 and 
    Physics_320Vis_300L0_10Hlt1_Aug09
+ - add Hlt1L0Any to Physics_10000Vis_1000L0_40Hlt1_Apr09 and 
+   Physics_320Vis_300L0_10Hlt1_Aug09
 
 ! 2010-02-17 - Gerhard Raven
  - remove BeamGasBeam{1,2} lines from Physics_10000Vis_1000L0_40Hlt1_Apr09, as the 
