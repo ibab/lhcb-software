@@ -3,6 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v36r1>2010-02-18 Brunel v36r1</A></H1><PRE>
  - Changes to Configurable: 
    . Remove OTTimeCreator from CheckOTSeq, no longer needed (task 12674)
    . Changed default DataType to 2010
