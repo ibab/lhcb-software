@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.56 2010-02-15 22:14:58 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.57 2010-02-18 15:17:30 kvervink Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -149,52 +149,6 @@ StatusCode HltGlobalMonitor::initialize() {
     error() << "failed to set binlables on Hlt2 Alley hist" << endmsg;
   } 
 
-  std::vector<std::string> hlt1Labels;
-  for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
-      std::string s = *i;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt1")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      hlt1Labels.push_back(s);  
-  }
-
-  std::vector<std::string> hlt2Labels;
-  for (std::vector<std::string>::const_iterator i = m_Hlt2Lines.begin(); i!=m_Hlt2Lines.end();++i) {
-      std::string s = *i;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt2")("Decision"); //TODO: replace with regex with capture
-      for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
-     	std::string::size_type k =  s.find(*j);
-     	if (k != std::string::npos) s.erase(k,k+j->size());
-      }
-      hlt2Labels.push_back(s);  
-  }
-
-  m_hlt1NAcc         = book1D("# positive Hlt1Lines ", -0.5,hlt1Labels.size()+0.5, hlt1Labels.size()+1);
-  m_hlt1Inclusive    = book1D("Hlt1Lines accepted events",   -0.5,hlt1Labels.size()-0.5, hlt1Labels.size());
-  if (!setBinLabels( m_hlt1Inclusive,  hlt1Labels )) {
-    error() << "failed to set binlables on inclusive hist" << endmsg;
-  }
-
-  m_hlt2NAcc         = book1D("# positive Hlt2Lines ", -0.5,hlt2Labels.size()+0.5, hlt2Labels.size()+1);
-  m_hlt2Inclusive    = book1D("Hlt2Lines accepted events",   -0.5,hlt2Labels.size()-0.5, hlt2Labels.size());
-  if (!setBinLabels( m_hlt2Inclusive,  hlt2Labels )) {
-    error() << "failed to set binlables on hlt2 inclusive hist" << endmsg;
-  }
-  
-  m_hlt1Correlations = book2D("Hlt1Lines Correlations",-0.5,hlt1Labels.size()-0.5, hlt1Labels.size()
-                                                      ,-0.5,hlt1Labels.size()-0.5, hlt1Labels.size());
-  if (!setBinLabels( m_hlt1Correlations, hlt1Labels, hlt1Labels )) {
-    error() << "failed to set binlables on hlt1 correlation hist" << endmsg;
-  }
-
-  m_hlt2Correlations = book2D("Hlt2Lines Correlations",-0.5,hlt2Labels.size()-0.5, hlt2Labels.size()
-                                                      ,-0.5,hlt2Labels.size()-0.5, hlt2Labels.size());
-  if (!setBinLabels( m_hlt2Correlations, hlt2Labels, hlt2Labels )) {
-    error() << "failed to set binlables on hlt2 correlation hist" << endmsg;
-  } 
-
   m_hlt1AlleysCorrelations      = book2D("Hlt1Alleys Correlations", -0.5, hlt1AlleyLabels.size()-0.5, hlt1AlleyLabels.size()
                                                                   , -0.5, hlt1AlleyLabels.size()-0.5, hlt1AlleyLabels.size() );
   if (!setBinLabels( m_hlt1AlleysCorrelations, hlt1AlleyLabels, hlt1AlleyLabels )) {
@@ -254,10 +208,6 @@ StatusCode HltGlobalMonitor::initialize() {
           error() << "failed to set binlables on Hlt2 " << i->first << " Alley hist" << endmsg;
     }
   }
-
-
-
-
 
 
   m_hltVirtTime  = bookProfile1D("Virtual memory",   0,m_timeSize,int(m_timeSize/m_timeInterval+0.5));
@@ -396,14 +346,9 @@ void HltGlobalMonitor::monitorHLT1(const LHCb::ODIN*,
     fill(m_hlt1Alley,i,(nAccAlley[i]>0));
   }
 
-  fill( m_hlt1NAcc, nAcc, 1.0);  //by how many lines did the current event get accepted?
- 
   for (size_t i = 0; i<reps.size();++i) {
     bool accept = (reps[i].second->decision()!=0);
-    fill( m_hlt1Inclusive, i, accept);
     if (!accept) continue;
-    if (nAcc==1) fill( m_hlt1Exclusive, i, accept );
-    for (size_t j = 0; j<reps.size(); ++j) fill(m_hlt1Correlations,i,j,reps[j].second->decision());
 
            //filling the histograms for each alley
     std::string hello = reps[i].first;
@@ -456,14 +401,9 @@ void HltGlobalMonitor::monitorHLT2(const LHCb::ODIN*,
   } 
 
 
-  fill( m_hlt2NAcc, nAcc, 1.0);  //by how many lines did the current event get accepted?
-
   for (size_t i = 0; i<reps.size();++i) {
     bool accept = reps[i].second->decision();
-    fill( m_hlt2Inclusive, i, accept);
     if (!accept) continue;
-    if (nAcc==1) fill( m_hlt2Exclusive, i, accept );
-    for (size_t j = 0; j<reps.size(); ++j) fill(m_hlt2Correlations,i,j,reps[j].second->decision());
     
     // filling the histograms for each alley
     std::map<std::string,std::pair<unsigned,unsigned> >::const_iterator k = m_hlt2Line2AlleyBin.find(reps[i].first);

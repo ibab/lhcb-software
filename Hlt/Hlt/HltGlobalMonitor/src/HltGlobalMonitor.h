@@ -69,19 +69,11 @@ private:
   AIDA::IHistogram1D* m_L0Hlt2Accept;
   AIDA::IHistogram1D* m_hlt1Alley;
   AIDA::IHistogram1D* m_hlt2Alley;
-  AIDA::IHistogram1D* m_hlt1NAcc;
-  AIDA::IHistogram1D* m_hlt2NAcc;
-  AIDA::IHistogram1D* m_hlt1Inclusive;
-  AIDA::IHistogram1D* m_hlt2Inclusive;
-  AIDA::IHistogram1D* m_hlt1Exclusive;
-  AIDA::IHistogram1D* m_hlt2Exclusive;
 
   AIDA::IProfile1D* m_hltVirtTime;
   AIDA::IHistogram1D* m_hltTime;
   AIDA::IProfile1D* m_hltEventsTime;
 
-  AIDA::IHistogram2D* m_hlt1Correlations;
-  AIDA::IHistogram2D* m_hlt2Correlations;
   AIDA::IHistogram2D* m_hlt1AlleysCorrelations;
   AIDA::IHistogram2D* m_hlt2AlleysCorrelations;
 
