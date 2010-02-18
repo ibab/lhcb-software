@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Configuration.py,v 1.10 2009-12-16 16:48:08 apuignav Exp $
+# $Id: Configuration.py,v 1.11 2010-02-18 20:07:08 ibelyaev Exp $
 # =============================================================================
 # @file  KaliCalo/Configuration.py
 # The basic configuration for Calorimeetr Calibrations 
@@ -36,7 +36,7 @@ The usage is fairly trivial:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $"
 # =============================================================================
 # the only one  "vizible" symbol 
 __all__  = (
@@ -113,6 +113,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
     __used_configurables__ = [
         'OffLineCaloRecoConf' ,
         'OffLineCaloPIDsConf' ,
+        'GlobalRecoConf'      ,
         'DaVinci'
         ]
 
@@ -126,6 +127,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         , 'OtherAlgs'           : []    ## List of "other" algorithms to be run, e.g. electorn calibration
         , 'Mirror'              : False ## Use Albert's trick for combinatorial background evaluation
         , 'Histograms'          : False ## Create monitoring histograms
+        , 'RecoAll'             : False ## Global Recontruction ?
         ## CaloReco Flags:
         , 'UseTracks'           : True  ## Use Tracks for the first pass ?
         , 'UseSpd'              : True  ## Use Spd as neutrality criteria ?
@@ -136,12 +138,13 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         , 'FemtoDST'            : 'KaliPi0.fmDST'       ## The output femto-DST
         ## forwarded to DaVinci & other configurables 
         , 'EvtMax'              :  -1    ## Number of events to run (DaVinci)             
-        , 'DataType'            : 'MC09' ## Data type               (DaVinci)
+        , 'DataType'            : '2009' ## Data type               (DaVinci)
         , 'Hlt'                 : False  ## Hlt type                (DaVinci)
-        , 'Simulation'          : True   ## Simulation              (DaVinci) 
+        , 'Hlt'                 : False  ## Hlt type                (DaVinci)
+        , 'Simulation'          : False  ## Simulation              (DaVinci) 
         , 'MeasureTime'         : True   ## Measure the time for sequencers
         , 'OutputLevel'         : INFO   ## The global output level
-        , 'PrintFreq'           : 100    ## The print frequency
+        , 'PrintFreq'           : 100000 ## The print frequency
         }
     ## documentation lines 
     _propertyDocDct = {
@@ -153,6 +156,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         , 'OtherAlgs'           : """ The list of 'other' algorithm to run, e.g. electron calibration """
         , 'Mirror'              : """ Use Albert's trick for combinatorial background evaluation """ 
         , 'Histograms'          : """ Activate monitoring histograms creation """
+        , 'RecoAll'             : """ Global Reconstruction? """ 
         ## CaloReco flags 
         , 'UseTracks'           : """ Use Tracks for the first pass ? """
         , 'UseSpd'              : """ Use Spd as neutrality criteria ? """
@@ -232,10 +236,11 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         from GlobalReco.GlobalRecoConf import NeutralProtoPAlg
         _log.warning("KaliPi0: \"Light\"-mode is activated for Neutral ProtoParticles") 
         return  NeutralProtoPAlg (
+            "NeutralProtoPMaker"  , 
             LightMode      = True ,                  ## "ligght-mode", no PIDs
             HyposLocations = [ 'Rec/Calo/Photons']   ## only single photons 
             )
-
+    
     ## 4. Specific settings for Photon Maker
     def photons ( self ) : 
         """
@@ -258,12 +263,11 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         photon.UsePhotonID        = False
         photon.ConvertedPhotons   = True 
         photon.UnconvertedPhotons = True 
-        photon.PtCut              = 250 
-        maker.addTool ( PhysDesktop )
+        photon.PtCut              = 250
+        
         maker.InputPrimaryVertices = 'None' ## NB: it saves a lot of CPU time 
-        #maker.PhysDesktop.InputPrimaryVertices = 'None' ## NB: it saves a lot of CPU time 
-        _log.warning("KaliPi0: PID-info is disabled for PhotonMaker") 
-        _log.warning("KaliPi0: Primary Vertices are disabled for StdLooseAllPhotons") 
+        _log.warning ( "KaliPi0: PID-info is disabled for PhotonMaker") 
+        _log.warning ( "KaliPi0: Primary Vertices are disabled for StdLooseAllPhotons") 
         
         return maker 
 
@@ -274,27 +278,25 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         """
         from Configurables import Kali__Pi0, PhysDesktop        
         kali = Kali__Pi0 (
-            "KaliPi0"                                      ,
-            NTupleLUN      = "KALIPI0"                     ,
-            HistoPrint     = True                          ,
-            NTuplePrint    = True                          ,
-            InputLocations = [ 'StdLooseAllPhotons' ]      ,
-            OutputLevel    = self.getProp( 'OutputLevel' ) ,
-            Mirror         = self.getProp( 'Mirror'      ) , 
-            Histograms     = self.getProp( 'Histograms'  )
+            "KaliPi0"                                       ,
+            NTupleLUN      = "KALIPI0"                      ,
+            HistoPrint     = True                           ,
+            NTuplePrint    = True                           ,
+            InputLocations = [ 'StdLooseAllPhotons' ]       ,
+            OutputLevel    = self.getProp ( 'OutputLevel' ) ,
+            Mirror         = self.getProp ( 'Mirror'      ) , 
+            HistoProduce   = self.getProp ( 'Histograms'  )
             )
-        if self.getProp('Mirror' ) :
-            _log.warning("KaliPi0: Albert's trick is   activated") 
+        if self.getProp ('Mirror' ) :
+            _log.warning ("KaliPi0: Albert's trick is   activated") 
         else :
-            _log.warning("KaliPi0: Albert's trick is deactivated") 
-        if self.getProp('Histograms' ) :
-            _log.warning("KaliPi0: Monitoring histograms are   activated") 
+            _log.warning ("KaliPi0: Albert's trick is deactivated") 
+        if self.getProp ( 'Histograms' ) :
+            _log.warning ( "KaliPi0: Monitoring histograms are   activated") 
         else :
-            _log.warning("KaliPi0: Monitoring histograms are deactivated") 
+            _log.warning ( "KaliPi0: Monitoring histograms are deactivated") 
             
-        kali.addTool ( PhysDesktop )
-        desktop = kali.PhysDesktop
-        #desktop.InputPrimaryVertices = 'None'  ## NB: it saves a lot of CPU time!
+        kali.InputPrimaryVertices = 'None'  ## NB: it saves a lot of CPU time!
         _log.warning("KaliPi0: Primary Vertices are disabled for Kali") 
         
         return kali 
@@ -309,28 +311,29 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         return OutputStream (
             'FMDST', 
             ItemList =  [
+            # general 
             "/Event#1"                 ,
             "/Event/DAQ#1"             ,
             "/Event/DAQ/ODIN#1"        ,
-            #
-            "/Event/Rec#1"             ,
-            "/Event/Rec/Track#1"       ,
-            "/Event/Rec/Track/Best#1"  ,
-            "/Event/pRec#1"            ,
-            #
+            # calorimeter 
             "/Event/Raw#1"             , 
             "/Event/Raw/Spd#1"         ,
-            "/Event/Raw/Prs#1"         ,
-            "/Event/Raw/Ecal#1"        ,
-            "/Event/Raw/Hcal#1"        ,
             "/Event/Raw/Spd/Digits#1"  ,
+            "/Event/Raw/Prs#1"         ,
             "/Event/Raw/Prs/Digits#1"  ,
+            "/Event/Raw/Ecal#1"        ,
             "/Event/Raw/Ecal/Digits#1" ,
-            "/Event/Raw/Hcal/Digits#1" 
+            "/Event/Raw/Hcal#1"        ,
+            "/Event/Raw/Hcal/Digits#1" ,
+            # tracks, e.g. for electrons  
+            "/Event/Rec#1"             ,
+            "/Event/Rec/Track#1"       ,
+            "/Event/Rec/Track/Best#1"
             ] ,
+            # 
             Output = "DATAFILE='PFN:%s' TYP='POOL_ROOTTREE' OPT='REC'" % self.getProp('FemtoDST')
-            , AcceptAlgs  = self.getProp('DestroyList')
-            , RequireAlgs =             [ 'Destroyer' ] 
+            , AcceptAlgs  = self.getProp ( 'DestroyList' )
+            , RequireAlgs =              [ 'Destroyer' ] 
             )
 
                 
@@ -369,18 +372,29 @@ class  KaliPi0Conf(LHCbConfigurableUser):
 
         ## 6. The general configuration of DaVinci
         from Configurables import GaudiSequencer,DaVinciInit
-        
+
+
         kaliSeq = GaudiSequencer ( 'KaliSeq' )
         
         kaliSeq.MeasureTime = self.getProp ( 'MeasureTime' )
         kaliSeq.OutputLevel = self.getProp ( 'OutputLevel' )
 
         kaliSeq.Members = [ ]
+        
+        if not not misKali : kaliSeq.Members += [ misKali ] 
+            
+        if self.getProp ( 'RecoAll' ) :
+            from Configurables import GlobalRecoConf
+            kaliReco = GaudiSequencer("KaliReco")
+            kaliSeq.Members += [ kaliReco ] 
+            GlobalRecoConf ( TrackTypes    = [ 'Long'] ,
+                             RecoSequencer = kaliReco  )
+            
+        if not not proto   : kaliSeq.Members += [ proto  ]
+        if not not photon  : kaliSeq.Members += [ photon ]
 
-        if not not misKali : kaliSeq.Members.append ( misKali )
-        if not not proto   : kaliSeq.Members.append ( proto   )
-        if not not photon  : kaliSeq.Members.append ( photon  )
-        kaliSeq.Members.append ( kali   )
+        
+        kaliSeq.Members += [ kali ]
 
         ## collect the actual sequence of algorithms:
         algs = [ kaliSeq ]
@@ -445,14 +459,14 @@ class  KaliPi0Conf(LHCbConfigurableUser):
 
         # unpacking is enabled only for first pass on DST 
         unPack = self.getProp (  'FirstPass' )
-
+        
         dv = DaVinci (
-            UserAlgorithms = algs                         ,
-            DataType       = self.getProp ('DataType'   ) ,
-            Simulation     = self.getProp ('Simulation' ) ,
-            EvtMax         = self.getProp ('EvtMax'     ) ,
-            Hlt            = self.getProp ('Hlt'        ) ,
-            PrintFreq      = self.getProp ('PrintFreq'  ) ,
+            UserAlgorithms = algs                          ,
+            DataType       = self.getProp ( 'DataType'   ) ,
+            Simulation     = self.getProp ( 'Simulation' ) ,
+            EvtMax         = self.getProp ( 'EvtMax'     ) ,
+            Hlt            = self.getProp ( 'Hlt'        ) ,
+            PrintFreq      = self.getProp ( 'PrintFreq'  ) ,
             EnableUnpack   = unPack 
             ) 
 
@@ -460,7 +474,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         fmDST = self.fmDst()
         from Gaudi.Configuration import ApplicationMgr 
         
-        ApplicationMgr( OutStream = [ fmDST ] )     
+        ApplicationMgr ( OutStream = [ fmDST ] )     
             
         ## 8. The configuration of NTuples & Monitoring Histograms   
         from Gaudi.Configuration import NTupleSvc, HistogramPersistencySvc
@@ -469,7 +483,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         NTupleSvc ().Output += [
             "KALIPI0 DATAFILE='%s' TYPE='ROOT' OPT='NEW'" % self.getProp('NTuple')
             ]
-        if ( self.getProp('Histograms') ): 
+        if ( self.getProp ( 'Histograms' ) ): 
           HistogramPersistencySvc ( OutputFile = self.getProp('Histos') ) 
 
 
@@ -481,9 +495,6 @@ def  action ( ) :
     """
     dvInitSeq = getConfigurable('DaVinciInitSeq')
     dvInitSeq.Members = []
-    
-    #dvInit    = getConfigurable('DaVinciInit'   )
-    #dvInitSeq.Members = [ dvInit ]
         
     _log.warning ( 'KaliPi0Conf: DaVinciInitSeq is cleared!')
     
@@ -492,6 +503,18 @@ def  action ( ) :
 ## Important: use Post Config action! 
 appendPostConfigAction ( action )
 
+
+## temporary solve the problem with atexit/__del__ for AppMgr 
+def _KaliAtExit_ () :
+    """
+    Temporary solve the problme with atexit/__del__ for AppMgr 
+    """
+    from GaudiPython.Bindings import _gaudi 
+    if not not _gaudi : _gaudi.exit()
+
+
+import atexit
+atexit.register ( _KaliAtExit_ )
 
 if '__main__' == __name__ :
     print __author__

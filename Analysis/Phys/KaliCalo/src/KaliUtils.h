@@ -1,4 +1,4 @@
-// $Id: KaliUtils.h,v 1.1 2009-10-31 16:59:12 ibelyaev Exp $
+// $Id: KaliUtils.h,v 1.2 2010-02-18 20:07:08 ibelyaev Exp $
 // ============================================================================
 #ifndef KALI_UTILS_H 
 #define KALI_UTILS_H 1
@@ -56,7 +56,7 @@ namespace
     const FROM&           from  ) 
   {
     if ( 0 == gamma ) { return -1 * Gaudi::Units::TeV ; }
-    const LHCb::CaloHypo* h = hypo( gamma ) ;
+    const LHCb::CaloHypo* h = hypo ( gamma ) ;
     if ( 0 == h     ) { return -1 * Gaudi::Units::TeV ; }
     double energy = 0 ;
     typedef LHCb::CaloHypo::Digits Digits ;
@@ -145,7 +145,7 @@ namespace
     return getDigits( *(pp->calo().begin()), digits ) ;
   }
   // ==========================================================================
-} // end of anonymous namespace 
+} //                                                 end of anonymous namespace 
 // ============================================================================
 // The END 
 // ============================================================================

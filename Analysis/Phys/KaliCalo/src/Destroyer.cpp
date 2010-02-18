@@ -1,4 +1,4 @@
-// $Id: Destroyer.cpp,v 1.1 2009-10-31 16:59:12 ibelyaev Exp $
+// $Id: Destroyer.cpp,v 1.2 2010-02-18 20:07:08 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -233,7 +233,7 @@ StatusCode Kali::Destroyer::execute ()
       particles.end  () , 
       std::back_inserter ( protos ) , 
       LoKi::Objects::_ALL_ ) ;
-  counter("# protos" ) += protos . size() ;
+  counter ("# protos" ) += protos . size() ;
   
   // get the tracks:
   LHCb::Track::ConstVector tracks ;
@@ -242,7 +242,7 @@ StatusCode Kali::Destroyer::execute ()
       particles.end  () , 
       std::back_inserter ( tracks ) , 
       LoKi::Objects::_ALL_ ) ;
-  counter("# tracks" ) += tracks . size() ;
+  counter ("# tracks" ) += tracks . size() ;
   
   // collect all hypos 
   typedef std::vector<const LHCb::CaloHypo*> Hypos ;
@@ -256,7 +256,7 @@ StatusCode Kali::Destroyer::execute ()
     const SmartRefVector<LHCb::CaloHypo>& calo = proto->calo() ;
     hypos.insert ( hypos.end() , calo.begin() , calo.end  () ) ;
   }
-  counter("# hypos"  ) += hypos  . size() ;
+  counter ("# hypos"  ) += hypos  . size() ;
   
   // collect all digits: 
   LHCb::CaloDigit::Set digits ;
@@ -266,8 +266,8 @@ StatusCode Kali::Destroyer::execute ()
   {
     getDigits ( *ihypo , digits ) ; 
   }
-  counter("# digits" ) += digits . size() ;
-
+  counter ( "# digits" ) += digits . size() ;
+  
   // ==========================================================================
   // collect digits from tracks 
   // ==========================================================================
@@ -411,16 +411,14 @@ StatusCode Kali::Destroyer::execute ()
   digs.push_back ( d3 ) ;
   Digits* d4 = get<Digits> ( LHCb::CaloDigitLocation::Hcal ) ;
   digs.push_back ( d4 ) ;
-  
+
   size_t size1 = 0 ;
   size_t size2 = 0 ;
   
-  for ( std::vector<Digits*>::iterator ic = digs.begin() ; 
-        digs.end() != ic ; ++ic ) 
+  for ( std::vector<Digits*>::iterator ic = digs.begin() ; digs.end() != ic ; ++ic ) 
   {
     Digits* d = *ic ;
     if ( 0 == d ) { continue ; }
-    //
     //
     size1 += d->size() ;
     //
@@ -432,7 +430,7 @@ StatusCode Kali::Destroyer::execute ()
       //
       if ( digits.empty() ) 
       { 
-        d->clear()       ;               // ATTENTION!
+        d->erase ( ifind , d->end() )  ; // ATTENTION!
         ifind = d->end() ;               // paranoic...
         break            ;               // BREAK  
       } 
@@ -444,22 +442,28 @@ StatusCode Kali::Destroyer::execute ()
       if ( digits.end() != iset ) 
       { 
         ++ifind                 ; // found, keep it
-        digits.erase ( iset   ) ; // erase form original 
+        digits.erase ( iset   ) ; // erase from original 
         continue                ; // go to the next digit
       }
       //
-      d->erase     ( *ifind ) ;
+      const size_t index = ifind - d->begin() ;
+      d->erase ( ifind ) ;
+      ifind = d->begin() + index ;
       //
-      ifind = d->begin() ;
     }
     //
     size2 += d->size() ;
+    //
   }
   
   counter ( "#dig 1"        ) +=               size1 ;
   counter ( "#dig 2"        ) +=               size2 ;
   counter ( "#dig 2/dig 1"  ) += double(size2)/size1 ;
-
+  
+  counter ( "#digs Spd"     ) += d1 -> size() ;
+  counter ( "#digs Prs"     ) += d2 -> size() ;
+  counter ( "#digs Ecal"    ) += d3 -> size() ;
+  counter ( "#digs Hcal"    ) += d4 -> size() ;
 
   return StatusCode::SUCCESS ;        
 }    

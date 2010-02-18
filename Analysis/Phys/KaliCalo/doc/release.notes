@@ -1,11 +1,43 @@
-! $Id: release.notes,v 1.29 2010-02-03 10:50:29 jpalac Exp $ 
+! $Id: release.notes,v 1.30 2010-02-18 20:07:08 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.29 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.30 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
+
+!========================== KaliCalo v3r3 2010-02-18 ==========================
+
+! 2010-02-18 - Vanya Belyaev
+
+
+! 2010-02-18 - Vanya Belyaev
+
+ - Configurable.py
+   
+      Change the default data type & simulation flag.
+      From now the default values are:
+
+            Simulation : False 
+            DataType   : "2009:
+
+      Add possibility to re-recontruct charged particles, 
+      e.g. electrons using flag "RecoAll"
+
+ - Pi0.cpp
+
+     polish a bit the monitoringh stuff.
+     change the type of spd1/spd2 varibales (from 'int' to 'double')
+
+ - Destroyer.cpp
+ 
+      Fix stupid bug...
+
+ - cmt/requirements 
+
+     version increment to v3r3 
+
 
 !========================== KaliCalo v3r2 2010-02-02 ==========================
 

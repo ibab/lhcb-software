@@ -1,4 +1,4 @@
-// $Id: Pi0.cpp,v 1.9 2010-01-06 00:26:39 apuignav Exp $
+// $Id: Pi0.cpp,v 1.10 2010-02-18 20:07:09 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -20,6 +20,7 @@
 // ============================================================================
 #include "LoKi/Algo.h"
 #include "LoKi/ParticleCuts.h"
+#include "LoKi/Photons.h"
 // ============================================================================
 // ICaloDigits4TrackTool
 // ============================================================================
@@ -64,19 +65,27 @@ namespace Kali
           ISvcLocator*       pSvc )            // the pointer to Service Locator 
       : LoKi::Algo ( name , pSvc ) 
         //
-      , m_mirror ( false )
-      , m_histograms ( false )
+      , m_mirror        ( false )
+      , m_spdDigitsTool ( 0 ) 
+      , m_ecal          ( 0 ) 
+        // histograms 
+      , m_h1    ( 0 ) 
+      , m_h2    ( 0 ) 
+      , m_h3    ( 0 ) 
+      , m_h4    ( 0 )
     {
       declareProperty 
         ( "Mirror" , 
           m_mirror , 
           "Flag to activate Albert's trick with backroung estimation" )
         -> declareUpdateHandler ( &Kali::Pi0::mirrorHandler , this ) ;
-      declareProperty 
-        ( "Histograms" , 
-          m_histograms , 
-          "Flag to activate monitoring histograms creation" )
-        -> declareUpdateHandler ( &Kali::Pi0::histogramsHandler , this ) ;
+      //
+      Property* histos = Gaudi::Utils::getProperty ( this , "HistoProduce" ) ;
+      Assert ( 0 != histos , "Unable to get property 'HistoProduce'" ) ;
+      if ( 0 != histos && 0 == histos->updateCallBack() ) 
+      { histos -> declareUpdateHandler ( &Kali::Pi0::histosHandler , this ) ; }
+      //
+      setProperty ( "HistoProduce" , false ) ;
     }
     /// virtual & protected destructor 
     virtual ~Pi0() {}
@@ -104,28 +113,39 @@ namespace Kali
       const Gaudi::XYZPoint& ,
       const Gaudi::XYZPoint& ,
       const int    ) ;
-    double caloEnergy4Photon( const Gaudi::LorentzVector&  p ) ;
+    // ========================================================================
+    double caloEnergy4Photon ( const Gaudi::LorentzVector&  p ) ;
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// setup monitoringhistograms 
+    void setupHistos () ;
     // ========================================================================
   public:
     // ========================================================================
     /// update handler for 'Mirror' property
     void mirrorHandler ( Property& p ) ; // update handler for 'Mirror' property
-    /// update handler for 'Histograms' property
-    void histogramsHandler ( Property& p ) ; // update handler for 'Histograms' property
+    /// update handler for 'HistoProduce' property
+    void histosHandler ( Property& p ) ; // update handler for property
     // ========================================================================
   private:
     // ========================================================================
     bool  m_mirror ;                                     // use Albert's trick? 
-    bool  m_histograms ;                                 // produce moni histos
     // Tool for retrieving SPD digits info
     ICaloDigits4Track*  m_spdDigitsTool ;
     // DeCalorimeter object for ECAL
-    DeCalorimeter*  m_ecal ;
-    // Monitoring histograms
-    AIDA::IHistogram1D* h1 ;
-    AIDA::IHistogram1D* h2 ;
-    AIDA::IHistogram1D* h3 ;
-    AIDA::IHistogram1D* h4 ;
+    DeCalorimeter*      m_ecal ;
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// histogram with all pi0s 
+    AIDA::IHistogram1D* m_h1 ; // histogram with all pi0s 
+    /// histogram with max(eprs1,eprs2)<10 MeV 
+    AIDA::IHistogram1D* m_h2 ; // histogram with max(eprs1,eprs2)<10 MeV 
+    /// histogram with eprs1< 10 MeV , eprs2 >10 MeV 
+    AIDA::IHistogram1D* m_h3 ; // histogram with eprs1< 10 MeV , eprs2 >10 MeV 
+    /// histogram with min(eprs1,eprs2)>10 MeV 
+    AIDA::IHistogram1D* m_h4 ; // histogram with min(eprs1,eprs2)>10 MeV 
     // ========================================================================
   } ;
   // ==========================================================================
@@ -145,18 +165,39 @@ void Kali::Pi0::mirrorHandler ( Property& /* p */ )
   //
 }
 // ============================================================================
-// update handler for 'Histos' property
+// update handler for 'HistoProduce' property
 // ============================================================================
-void Kali::Pi0::histogramsHandler ( Property& /* p */ ) 
+void Kali::Pi0::histosHandler ( Property& /* p */ ) 
 {
   // no action if not initialized yet:
   if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
   //
-  if ( m_histograms ) 
-  { Warning ( "Producing monitoring histograms is   activated", StatusCode::SUCCESS ) ; }
-  else 
-  { Warning ( "Producing monitoring histograms is deactivated!", StatusCode::SUCCESS ) ; }  
+  setupHistos () ;
   //
+}
+// ============================================================================
+// setup monitoring histograms 
+// ============================================================================
+void Kali::Pi0::setupHistos () 
+{
+  using Gaudi::Units::MeV ;
+  
+  if ( produceHistos() ) 
+  {
+    Warning ( "Monitoring histograms are   activated" , StatusCode::SUCCESS ) ; 
+    if ( 0 == m_h1 ) { m_h1 = book ( "mpi0"               , 0 , 250 * MeV , 250 ) ; }
+    if ( 0 == m_h2 ) { m_h2 = book ( "mpi0-Prs_ll_10_MeV" , 0 , 250 * MeV , 250 ) ; }
+    if ( 0 == m_h3 ) { m_h3 = book ( "mpi0-Prs_lg_10_MeV" , 0 , 250 * MeV , 250 ) ; }
+    if ( 0 == m_h4 ) { m_h4 = book ( "mpi0-Prs_gg_10_MeV" , 0 , 250 * MeV , 250 ) ; }
+  }
+  else
+  {
+    Warning ( "Monitoring histograms are deactivated!", StatusCode::SUCCESS ) ; 
+    m_h1 = 0 ;
+    m_h2 = 0 ;
+    m_h3 = 0 ;
+    m_h4 = 0 ;
+  }
 }
 // ============================================================================
 // tuple fill helper function 
@@ -176,27 +217,26 @@ void Kali::Pi0::fillTuple
   const Gaudi::XYZPoint&      point2 ,
   const int                   bkg    )
 {
-    using namespace Gaudi::Units ;
     
     // fill N-tuple
-    tuple -> column ( "p0"   , p1 + p2  / MeV ) ;
-    tuple -> column ( "g1"   , p1       / MeV ) ;
-    tuple -> column ( "g2"   , p2       / MeV ) ;
+    tuple -> column ( "p0"   , p1 + p2  ) ;
+    tuple -> column ( "g1"   , p1       ) ;
+    tuple -> column ( "g2"   , p2       ) ;
     
-    tuple -> column ( "pt"   , p12.Pt() / MeV ) ;
-    tuple -> column ( "pt1"  , p1.Pt()  / MeV ) ;
-    tuple -> column ( "pt2"  , p2.Pt()  / MeV ) ;
+    tuple -> column ( "pt"   , p12.Pt() ) ;
+    tuple -> column ( "pt1"  , p1.Pt()  ) ;
+    tuple -> column ( "pt2"  , p2.Pt()  ) ;
     
     tuple -> column ( "prs1" , prs1e ) ;
     tuple -> column ( "prs2" , prs2e ) ;
     
-    tuple -> column ( "spd1" , (int) (spd1e/3.2) ) ;
-    tuple -> column ( "spd2" , (int) (spd2e/3.2) ) ;
+    tuple -> column ( "spd1" , spd1e ) ;
+    tuple -> column ( "spd2" , spd2e ) ;
     
     tuple -> column ( "ind1" , cell1.index() ) ;
     tuple -> column ( "ind2" , cell2.index() ) ;
     
-    tuple -> column ( "m12"  , p12.M()  / MeV ) ;
+    tuple -> column ( "m12"  , p12.M()        ) ;
     tuple -> column ( "bkg"  , bkg , 0 , 2    ) ;
     
     Gaudi::XYZVector vec = point2 - point1 ;
@@ -205,15 +245,6 @@ void Kali::Pi0::fillTuple
     double dist = (cSize > 0) ? vec.Rho() / cSize : 0 ;
     tuple -> column ( "dist" , dist ) ;
 
-    //Gaudi::XYZVector mom1 = p1.Vect () ;
-    //Gaudi::XYZVector mom2 = p2.Vect () ;
-    //if ( 1 == bkg ) {
-    //  mom2.SetX ( -mom2.X () ) ;
-    //  mom2.SetY ( -mom2.Y () ) ;
-    //}
-    //double cosPhi = mom1.Dot ( mom2 ) / ( mom1.R () * mom2.R () ) ;
-    //tuple -> column ( "cosPhi" , cosPhi ) ;
- 
     tuple -> write () ;
 }
 // ============================================================================
@@ -221,7 +252,7 @@ void Kali::Pi0::fillTuple
 // ============================================================================
 double Kali::Pi0::caloEnergy4Photon( const Gaudi::LorentzVector&  p )
 {
-  typedef std::set<const LHCb::CaloDigit*> SET ;
+  typedef LHCb::CaloDigit::Set SET ;
   SET digits ;
   Gaudi::XYZPoint point( 0 , 0 , 0 ) ;
   Gaudi::XYZVector vector = p.Vect() ;
@@ -229,7 +260,8 @@ double Kali::Pi0::caloEnergy4Photon( const Gaudi::LorentzVector&  p )
   LINE line( point , vector ) ;
   m_spdDigitsTool->collect ( line , digits );
   double e = 0.0 ;
-  for ( SET::const_iterator digit = digits.begin() ; digits.end() != digit ; digit++ ){
+  for ( SET::const_iterator digit = digits.begin() ; 
+        digits.end() != digit ; digit++ ){
     e += (*digit)->e() ;
   } 
   return e ;
@@ -243,18 +275,16 @@ StatusCode Kali::Pi0::initialize  ()                // the proper initialzation
   if ( sc.isFailure() ) { return sc ; }
   //
   if ( m_mirror ) 
-  { Warning ( "Albert's trick for background evaluation is   activated!", StatusCode::SUCCESS ) ; }
+  { Warning ( "Albert's trick         is   activated!", StatusCode::SUCCESS ) ; }
   else 
-  { Warning ( "Albert's trick for background evaluation is deactivated!", StatusCode::SUCCESS ) ; }  
-  //
-  if ( m_histograms ) 
-  { Warning ( "Producing monitoring histograms is   activated", StatusCode::SUCCESS ) ; }
-  else 
-  { Warning ( "Producing monitoring histograms is deactivated!", StatusCode::SUCCESS ) ; }  
+  { Warning ( "Albert's trick         is deactivated!", StatusCode::SUCCESS ) ; }  
+  // 
+  setupHistos() ;
   //
   m_spdDigitsTool = tool<ICaloDigits4Track>( "SpdEnergyForTrack" , this ) ; // Load tool for SPD
   sc = Gaudi::Utils::setProperty ( m_spdDigitsTool , "AddNeighbours" , 1 ) ;
-  if ( sc.isFailure() ) { return sc ; }
+  if ( sc.isFailure() ) 
+  { return Error ( "Unable to configure 'SpdEnergyForTrack' tool", sc ) ; }
   //
   m_ecal = getDet<DeCalorimeter>(DeCalorimeterLocation::Ecal);
   //
@@ -268,8 +298,9 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
   using namespace LoKi         ;
   using namespace LoKi::Types  ;
   using namespace LoKi::Cuts   ;
-  using namespace Gaudi::Units ;
   
+  using Gaudi::Units::MeV ;
+
   LHCb::CaloDataFunctor::DigitFromCalo spd ( "Spd" ) ;
   LHCb::CaloDataFunctor::DigitFromCalo prs ( "Prs" ) ;
   
@@ -280,17 +311,8 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
   
   Tuple tuple = nTuple ( "Pi0-Tuple" ) ;
   
-  typedef std::set<const LHCb::CaloDigit*> SET ;
-  SET digits ;
+  LHCb::CaloDigit::Set digits ;
   
-  if ( m_histograms )
-  {
-    h1 = book ( "mpi0-0"       , 0 , 0.250 , 250 ) ;
-    h2 = book ( "mpi0-1-pt"    , 0 , 0.250 , 250 ) ;
-    h3 = book ( "mpi0-2-spd-1" , 0 , 0.250 , 250 ) ;
-    h4 = book ( "mpi0-3-spd-2" , 0 , 0.250 , 250 ) ;
-  }
-
   typedef std::set<const LHCb::Particle*> Photons ;
   Photons                                 photons ;
   
@@ -299,56 +321,58 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     
     const double              m12 = pi0->mass ( 1 , 2 ) ;
     const LoKi::LorentzVector p12 = pi0->p    ( 1 , 2 ) ;
-
+    
     const LHCb::Particle* g1 = pi0(1) ;
     if ( 0 == g1         ) { continue ; }  // CONTINUE    
-
+    
     const LHCb::Particle* g2 = pi0(2) ;
     if ( 0 == g2         ) { continue ; }  // CONTINUE
     
     // trick with "mirror-background" by Albert Puig
+    
     // invert the first photon :
     const Gaudi::LorentzVector mom1 = g1->momentum() ;
     const Gaudi::LorentzVector mom2 = g2->momentum() ;
+    
     Gaudi::LorentzVector p1 = g1->momentum() ;
     p1.SetPx ( -p1.Px() ) ;
     p1.SetPy ( -p1.Py() ) ;
     const Gaudi::LorentzVector fake = ( p1 + mom2 ) ;
-
+    
     const bool good    =             ( m12      < 350 * MeV && p12.Pt()  > 800 * MeV ) ;
     bool       goodBkg = m_mirror && ( fake.M() < 350 * MeV && fake.Pt() > 800 * MeV ) ;
     
-    if ( m_histograms && 0 != h1 && good ) { h1 -> fill ( m12 / MeV ) ; }
-    
     if ( (!good)  && (!goodBkg) ) { continue ; }   // CONTINUE!!!
     
-    if ( m_histograms && 0 != h2 && good ) { h2 -> fill ( m12 / MeV ) ; }
-    
-    double spd1e = seedEnergyFrom ( g1 , spd ) / MeV ;
-    
+    double spd1e = seedEnergyFrom ( g1 , spd ) ;    
     if ( 0 < spd1e ) { continue ; }
-    if ( m_histograms && 0 != h3 && good ) { h3 -> fill ( m12 / MeV ) ; }
     
-    double spd2e = seedEnergyFrom ( g2 , spd ) / MeV ;
+    double spd2e = seedEnergyFrom ( g2 , spd ) ;
     if ( 0 < spd2e ) { continue ; }
     
-    if ( m_histograms && 0 != h4 && good ) { h4 -> fill ( m12 / MeV ) ; }
-    
-    double prs1e = energyFrom ( g1 , prs ) / MeV ;
-    double prs2e = energyFrom ( g2 , prs ) / MeV ;
-    
+    // order the photons according energy in preshower
+    double prs1e = energyFrom ( g1 , prs ) ;
+    double prs2e = energyFrom ( g2 , prs ) ;    
     if ( prs1e > prs2e ) 
     {
       std::swap ( g1    , g2    ) ;
       std::swap ( prs1e , prs2e ) ; 
     }
-
-    const LHCb::CaloHypo* hypo1 = g1->proto()->calo()[0] ;
-    const LHCb::CaloHypo* hypo2 = g2->proto()->calo()[0] ;
+    
+    if ( good && 0 != m_h1                                         ) { m_h1 -> fill ( m12 ) ; }
+    if ( good && 0 != m_h2 && prs2e < 10 * MeV                     ) { m_h2 -> fill ( m12 ) ; }
+    if ( good && 0 != m_h3 && prs1e < 10 * MeV && prs2e > 10 * MeV ) { m_h3 -> fill ( m12 ) ; }
+    if ( good && 0 != m_h4 &&                     prs1e > 10 * MeV ) { m_h4 -> fill ( m12 ) ; }
+    
+    const LHCb::CaloHypo* hypo1 = hypo ( g1 )  ;
+    if ( 0 == hypo1 ) { continue ; }
+    const LHCb::CaloHypo* hypo2 = hypo ( g2 )  ;
+    if ( 0 == hypo2 ) { continue ; }
+    
     Gaudi::XYZPoint point1( hypo1->position()->x() , hypo1->position()->y() , hypo1->position()->z() );
-        
-    const double spd1e3x3 = caloEnergy4Photon( mom1 ) ;
-    const double spd2e3x3 = caloEnergy4Photon( mom2 ) ;
+    
+    const double spd1e3x3 = caloEnergy4Photon ( mom1 ) ;
+    const double spd2e3x3 = caloEnergy4Photon ( mom2 ) ;
     
     const LHCb::CaloCellID cell1 = cellID( g1 ) ;
     const LHCb::CaloCellID cell2 = cellID( g2 ) ;    
@@ -364,7 +388,7 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
       Gaudi::XYZPoint point2Sym( -hypo2->position()->x() , -hypo2->position()->y() , hypo2->position()->z() );
       fillTuple( tuple , mom1 , mom2 , fake , prs1e , prs2e , spd1e3x3 , spd2e3x3 , cell1 , cell2 , point1 , point2Sym , 1 ) ;
     }
-
+    
     // finally save good photons: 
     photons.insert  ( g1 ) ;
     photons.insert  ( g2 ) ;
