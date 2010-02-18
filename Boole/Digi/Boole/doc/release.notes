@@ -7,6 +7,9 @@ Purpose: LHCb Digitization program
  - Changes to Configurable:
    . Default DataType is now 2010
 
+ - Changes to options:
+   . Add Boole-2010.py, example options for 2010 simulation
+
  - Changes to tests
    . boole.boole-mc09-withtruth now also tests IgnoreFlatSpillover option
 
