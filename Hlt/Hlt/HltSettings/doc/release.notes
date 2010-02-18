@@ -12,6 +12,7 @@
    Physics_320Vis_300L0_10Hlt1_Aug09
  - change L0TCK in Physics_MinBiasL0_PassThroughHlt_09Dec09 from 0x1209 to 0x1309,
    as more data was take with 0x1309
+ -re-enable B2DX after Vava's work on https://savannah.cern.ch/bugs/?62726
    
 
 ! 2010-02-17 - Gerhard Raven

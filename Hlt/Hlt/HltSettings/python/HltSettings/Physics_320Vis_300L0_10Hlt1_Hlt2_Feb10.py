@@ -93,7 +93,7 @@ class Physics_320Vis_300L0_10Hlt1_Hlt2_Feb10( Physics_320Vis_300L0_10Hlt1_Jan10 
 ## B 2DX
 ##
         from B2DX_320Vis import B2DX_320Vis
-        #list.extend( B2DX_320Vis().ActiveHlt2Lines() )
+        list.extend( B2DX_320Vis().ActiveHlt2Lines() )
         
 ##
 ## exclusive : whole list
