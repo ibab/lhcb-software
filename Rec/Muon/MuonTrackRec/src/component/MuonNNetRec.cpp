@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.cpp,v 1.24 2010-02-17 14:59:29 ggiacomo Exp $
+// $Id: MuonNNetRec.cpp,v 1.25 2010-02-18 11:53:25 rlambert Exp $
 
 #include <list>
 
@@ -275,7 +275,7 @@ StatusCode MuonNNetRec::muonNNetMon(){
       
       // cut on neuron length in terms of crossed stations
       
-      if( fabs((*ihH)->station() - (*ihT)->station()) > neuronLength || 
+      if( fabs(double((*ihH)->station() - (*ihT)->station())) > neuronLength || 
          (*ihH)->station() == (*ihT)->station() ) continue;
       if ((*ihH)->station() > (*ihT)->station()) {
         head = *ihH;
