@@ -1,4 +1,4 @@
-// $Id: VeloErrorBank.h,v 1.6 2010-02-17 19:24:39 szumlat Exp $
+// $Id: VeloErrorBank.h,v 1.7 2010-02-18 07:54:54 szumlat Exp $
 #ifndef VELOERRORBANK_H 
 #define VELOERRORBANK_H 1
 
@@ -50,7 +50,7 @@ public:
   unsigned int bunchCounter(const int PPFPGA=0) const;
   unsigned int l0EventID(const int PPFPGA=0) const;
   bool isEmpty() const;
-  EvtInfo* evtInfo() const;
+  const EvtInfo* evtInfo() const;
   VeloTELL1::dataVec errorSources() const;
   unsigned int clusterDataSectionLength(const int PPFPGA=0) const;
   unsigned int adcDataSectionLength(const int PPFPGA=0) const;
@@ -169,7 +169,7 @@ inline bool VeloErrorBank::isEmpty() const
   return ( (m_errorSources.size()==0) ? true : false );
 }
 //
-inline EvtInfo* VeloErrorBank::evtInfo() const
+inline const EvtInfo* VeloErrorBank::evtInfo() const
 {
   return ( &m_evtInfoData );
 }

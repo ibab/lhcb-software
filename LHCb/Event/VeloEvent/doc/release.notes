@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.66 2010-02-17 19:24:40 szumlat Exp $
+! $Id: release.notes,v 1.67 2010-02-18 07:54:54 szumlat Exp $
 ! package Event/VeloEvent
 ! package manager: C.Parkes, T.Szumlak
 !========================================================================
+! 2010-02-17 - Tomasz Szumlak
+ - add const specifier to make the compilator happy
+
 ! 2010-02-16 - Tomasz Szumlak
  - Fix in VeloErrorBank data class - remove creation of EvtInfo object
    with the new operator, it was an old idea to make some part of the
