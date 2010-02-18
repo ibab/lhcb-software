@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.41 2010-02-18 10:49:41 jpalac Exp $
+!$Id: release.notes,v 1.42 2010-02-18 14:59:12 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
@@ -6,10 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2010-02-18 - Juan Palacios
- - src/StrippingAlg.cpp
-  . Get rid of compilation warning.
- - cmt/requirements
-  .Increase version to v2r1.
+ - Moved StrippingAlg and StrippingCheck to Phys/StrippingAlgs.
+ - This package now only contains python code.
+ - Version increased to v3r0
 
 ! 2010-02-13 - Anton Poluektov 
  - Added configuration support for settings stored in StrippingSettings

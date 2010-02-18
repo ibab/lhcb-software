@@ -1,14 +1,14 @@
-# $Id: requirements,v 1.15 2010-02-18 10:49:02 jpalac Exp $ 
+# $Id: requirements,v 1.16 2010-02-18 14:59:12 jpalac Exp $ 
 # =============================================================================
 # Stripping configuration package
 # =============================================================================
 package StrippingConf
-version v2r1
+version v3r0
 
 # =============================================================================
 # ======= the structure =======================================================
 # =============================================================================
-branches cmt doc python src
+branches cmt doc src
 include_path none
 
 # =============================================================================
@@ -26,20 +26,15 @@ use LoKiCore             v*     Phys
 
 use SelectionLine        v*     Kernel
 
-private
-use LHCbAlgs             v*     Kernel  
-end_private
+use StrippingAlgs        v*     Phys
 
 # =============================================================================
-library          StrippingConf    ../src/*.cpp
 
 # =============================================================================
 # ======= the patterns ========================================================
 # =============================================================================
 # macro StrippingConfConfUserModules "StrippingConf.Configuration"
 apply_pattern install_python_modules
-
-apply_pattern component_library library=StrippingConf
 
 # =============================================================================
 
