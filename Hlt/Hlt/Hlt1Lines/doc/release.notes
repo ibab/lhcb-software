@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.120 2010-02-17 15:13:39 graven Exp $
+! $Id: release.notes,v 1.121 2010-02-18 19:38:00 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -10,6 +10,9 @@
 !
 !-----------------------------------------------------------------------------
 !========================== Hlt1Lines v2r2 2010-02-17 ===================
+! 2010-02-18 - Johannes Albrecht
+ - Hlt1MuonLines.py: modify pattern recocuts ("loose tuning for data")
+
 ! 2010-02-17 - Gerhard Raven
  - remove TTGeneric tracking from lumi due to https://savannah.cern.ch/bugs/?62933
  - configure the PV finding in the VELO lines as was done in December
