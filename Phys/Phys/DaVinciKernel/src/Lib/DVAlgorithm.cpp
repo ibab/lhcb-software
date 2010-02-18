@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.69 2010-01-13 14:33:46 graven Exp $
+// $Id: DVAlgorithm.cpp,v 1.70 2010-02-18 08:50:08 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -46,9 +46,6 @@ DVAlgorithm::DVAlgorithm
   //
     , m_massFitterNames       ()
     , m_massFitters           ()
-  //
-    , m_massVertexFitterNames ()
-    , m_massVertexFitters     ()
   //
     , m_lifetimeFitterNames   ()
     , m_lifetimeFitters       ()
@@ -159,10 +156,6 @@ DVAlgorithm::DVAlgorithm
   declareProperty  
     ( "MassFitters"       , m_massFitterNames       , 
       "The mapping of nick/name/type for IMassFit tools"        ) ;
-  //
-  declareProperty  
-    ( "MassVertexFitters" , m_massVertexFitterNames , 
-      "The mapping of nick/name/type for IMassVertexFit tools"  ) ;
   //
   m_lifetimeFitterNames  [ ""     ] = "PropertimeFitter"     ;
   m_lifetimeFitterNames  [ "LoKi" ] = "LoKi::LifetimeFitter" ;

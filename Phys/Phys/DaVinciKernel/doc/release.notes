@@ -1,8 +1,12 @@
-!$Id: release.notes,v 1.337 2010-01-20 17:31:39 cattanem Exp $
+!$Id: release.notes,v 1.338 2010-02-18 08:50:08 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2010-02-18 - Juan Palacios
+ - DVAlgorithm: remove all refetences to IMassVertexFit.
+ - increase version to v8r4
 
 !======================== DaVinciKernel v8r4 2010-01-20 =====================
 ! 2010-01-13 - Gerhard Raven

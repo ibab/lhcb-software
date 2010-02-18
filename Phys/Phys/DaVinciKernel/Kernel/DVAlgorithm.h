@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.47 2010-01-13 14:33:46 graven Exp $ 
+// $Id: DVAlgorithm.h,v 1.48 2010-02-18 08:50:08 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -37,7 +37,6 @@
 #include "Kernel/IRelatedPVFinder.h"
 // ============================================================================
 #include "Kernel/IMassFit.h"
-#include "Kernel/IMassVertexFit.h"
 #include "Kernel/ILifetimeFitter.h"
 #include "Kernel/IDirectionFit.h"
 // ============================================================================
@@ -318,20 +317,6 @@ public:
         m_massFitters     , this ) ; 
   }
   // ==========================================================================
-  /** Accessor for IMassVertexFit tools by name/typename/nickname
-   *  @see IMassVertexFit
-   *  @param name the tool name/typename/nickname
-   *  @return pointer to aquired tool 
-   */
-  inline IMassVertexFit* 
-  massVertexFitter ( const std::string name = "" ) const 
-  {
-    return getTool<IMassVertexFit>
-      ( name              , 
-        m_massVertexFitterNames ,
-        m_massVertexFitters     , this ) ; 
-  }
-  // ==========================================================================
   /** Accessor for ILifetimeFitter tools by name/typename/nickname
    *  @see ILifetimeFitter
    *  @param name the tool name/typename/nickname
@@ -584,11 +569,6 @@ protected:
   ToolMap                                              m_massFitterNames ;
   /// The actual map of "nickname -> tool" for mass-constrained fitters 
   mutable GaudiUtils::VectorMap<std::string,IMassFit*> m_massFitters     ;
-  
-  /// Mapping of "nickname ->type/name" for mass-vertex-constrained fitters 
-  ToolMap                                              m_massVertexFitterNames   ;
-  /// The actual map of "nickname -> tool" for mass-constrained fitters 
-  mutable GaudiUtils::VectorMap<std::string,IMassVertexFit*> m_massVertexFitters ;
   
   /// Mapping of "nickname ->type/name" for lifetime fitters 
   ToolMap                                              m_lifetimeFitterNames   ;
