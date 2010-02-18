@@ -1,4 +1,5 @@
 
+
 //-----------------------------------------------------------------------------
 /** @file RichHPDOccupancyTool.cpp
  *
@@ -185,8 +186,9 @@ HPDOccupancyTool::hpdData( const LHCb::RichSmartID hpdID ) const
   // update occupancies
   if ( m_updateRunningOccs )
   {
+    // Must set to false before call to updateOccupancies() to avoid infinite loop ...
+    m_updateRunningOccs = false; 
     updateOccupancies();
-    m_updateRunningOccs = false;
   }
   // if different HPD, search for new data object
   if ( m_lastHPD != hpdID ) { findHpdData(hpdID); }
@@ -227,6 +229,11 @@ HPDOccupancyTool::updateOccupancies() const
       {
         const Rich::DAQ::HPDInfo & hpdInfo    = iHPDMap->second;
         const LHCb::RichSmartID  & hpdID      = hpdInfo.hpdID();
+
+        // Valid HPD ID
+        if ( ! hpdID.isValid() )          { continue; }
+        // inhibited HPD ?
+        if ( hpdInfo.header().inhibit() ) { continue; }
 
         // Get occupancy HPD data
         HPDData & data = hpdData(hpdID);

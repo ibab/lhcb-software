@@ -4,6 +4,11 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2010-02-18 - Chris Jones
+ - Fix crash when running average is turn on in Rich::HPDOccupancyTool due to
+   and infinite recursive call. Also protect against invalid HPD IDs in the 
+   data (L1 suppressed HPDs etc.).
+
 !=========================== RichTools v2r28p1 2010-02-15 ====================
 ! 2010-02-12 - Chris Jones
  - Fix untested StatusCode in HPD hot pixel finder.
