@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.cpp,v 1.23 2010-02-12 23:40:52 odescham Exp $ // Include files 
+// $Id: L0DUConfigProvider.cpp,v 1.24 2010-02-18 11:16:30 odescham Exp $ // Include files 
 #include "boost/assign/list_of.hpp"
 // from Gaudi
 #include "GaudiKernel/StateMachine.h" 
@@ -1208,12 +1208,12 @@ bool L0DUConfigProvider::conditionCheck(LHCb::L0DUElementaryCondition* condition
     warning() << "Cannot associate a condition type to '" << condition->name() << "'" << endmsg;
     return false;
   }
-  if( condition->threshold() == 0 && condition->comparator() == ">" ){ // special case for empty register
-    std::vector<LHCb::L0DUElementaryCondition*>::iterator it = m_condOrder[order].begin();
-    m_condOrder[order].insert(it, condition);
-  }else{
-    m_condOrder[ order ].push_back( condition );
-  }
+  //  if( condition->threshold() == 0 && condition->comparator() == ">" ){ // special case for empty register
+  //  std::vector<LHCb::L0DUElementaryCondition*>::iterator it = m_condOrder[order].begin();
+  //  m_condOrder[order].insert(it, condition);
+  //}else{
+  m_condOrder[ order ].push_back( condition );
+  //  }
   m_condMax[ order ]= max;
   return true;
 };

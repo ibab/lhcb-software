@@ -1,7 +1,16 @@
-! $Id: release.notes,v 1.193 2010-02-15 15:18:50 cattanem Exp $
+! $Id: release.notes,v 1.194 2010-02-18 11:16:30 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2010-02-18 Olivier Deschamps
+  - bug found in L0DU firmware for 'pathological' condition setting :
+  -> PVSS exported TCK options may not match the actual board configuration when there is several 
+    conditions on the same data and 'data>0' condition is not set first  
+    ('data > 0' corresponds to an empty register)
+  -> adapt L0CUDonfigProvider : no longer special treatment for ordering the 'data>0' condition 
+      => match the actual PGA configuration not the buggy PVSS export ! (PVSS export to be fixed by Regis)
+  -> no impact on existing L0TCK (except maybe 0x1409 used for FEST)  
 
 !========================== L0DU v10r2 2010-02-15 =========================
 ! 2010-02-12 - Julien Cogan
