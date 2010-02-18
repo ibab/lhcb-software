@@ -1,5 +1,5 @@
 package BooleSys
-version v20r2
+version v20r3
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application                      # Maintainer  
-use Boole               v20r2   Digi     # Marco Cattaneo
+use Boole               v20r3   Digi     # Marco Cattaneo
 use DigiAlg             v4r18   Digi  # Marco Cattaneo
 use BooleUMC            v1r0    Digi  # Tomasz Skwarnicki
 
@@ -25,10 +25,10 @@ use MuonMoniDigi        v2r4    Muon  # Alessio Sarti
 use OTSimulation        v4r2    OT    # Jan Amoraal
 
 # Rich
-use RichDigiQC          v3r11   Rich  # Chris Jones
-use RichDigiSys         v1r0    Rich  # Chris Jones
-use RichMCAssociators   v2r7    Rich  # Chris Jones
-use RichReadout         v2r12p1 Rich  # Chris Jones
+use RichDigiQC          v3r11   Rich     # In SVN. Chris Jones
+use RichDigiSys         v1r0    Rich     # In SVN. Chris Jones
+use RichMCAssociators   v2r7    Rich     # In SVN. Chris Jones
+use RichReadout         v2r12p2 Rich     # In SVN. Chris Jones
 
 # Silicon Tracker
 use STDigiAlgorithms    v1r7    ST    # Matt Needham
