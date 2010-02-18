@@ -34,7 +34,7 @@ class Physics_MinBiasL0_PassThroughHlt_Jan10 :
                , 'Hlt1L0Electron' , 'Hlt1L0Photon' , 'Hlt1L0Hadron' , 'Hlt1L0Muon' , 'Hlt1L0DiMuon' , 'Hlt1L0Muon,lowMult' , 'Hlt1L0DiMuon,lowMult'
                , 'Hlt1L0B1gas' , 'Hlt1L0B2gas'
                , 'Hlt1LumiNoBeam','Hlt1LumiBeamCrossing','Hlt1LumiBeam1','Hlt1LumiBeam2'
-               #, 'Hlt1LumiLowNoBeam','Hlt1LumiLowBeamCrossing','Hlt1LumiLowBeam1','Hlt1LumiLowBeam2'
+               , 'Hlt1LumiLowNoBeam','Hlt1LumiLowBeamCrossing','Hlt1LumiLowBeam1','Hlt1LumiLowBeam2'
                , 'Hlt1MBMiniBiasNoBeam','Hlt1MBMiniBiasBeamCrossing','Hlt1MBMiniBiasBeam1','Hlt1MBMiniBiasBeam2'
                , 'Hlt1MBNoBiasNoBeam','Hlt1MBNoBiasBeamCrossing','Hlt1MBNoBiasBeam1','Hlt1MBNoBiasBeam2'
                , 'Hlt1VeloASide','Hlt1VeloCSide'
