@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 import os, sys, shutil
 
+print "to set the Dirac environment, you should run : \n"
+print "setenvProject LHCbDirac\n"
+
+sys.exit(0)
 args = sys.argv
 verbose = '-v' in args
 if verbose:
@@ -15,8 +19,8 @@ else:
     dev = "--dev" in args
     if dev:
         args.remove('--dev')
-        
-    
+
+
 if len(args)>1:
     version = args[1]
 else:
@@ -41,7 +45,7 @@ for o in out:
             sys.exit(1)
         version = v
     elif o.find("Current directory is") == 0:
-        DiracDir = o.split()[3].split("'")[1]        
+        DiracDir = o.split()[3].split("'")[1]
 
 if not os.environ.has_key("CMTPROJECTPATH"):
     print "CMTPROJECTPATH should be defined.."
@@ -105,6 +109,6 @@ for path in projectPaths:
         shutil.copy( os.path.join(releaseDir, "scripts", "DIRACEnvironment.py"), os.path.join(DiracDir,"scripts", "DIRACEnvironment.py"))
         break
 
-if verbose: print "Dirac %s user area successfully set up" % version        
+if verbose: print "Dirac %s user area successfully set up" % version
 
-         
+
