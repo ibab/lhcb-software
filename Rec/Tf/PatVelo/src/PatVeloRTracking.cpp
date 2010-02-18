@@ -1,4 +1,4 @@
-// $Id: PatVeloRTracking.cpp,v 1.10 2010-01-16 19:42:53 dhcroft Exp $
+// $Id: PatVeloRTracking.cpp,v 1.11 2010-02-18 14:12:06 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -75,30 +75,12 @@ namespace Tf {
     //== Get detector element
     m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
-    info() << "========== Algorithm parameters ======"                << endreq
-      << "ZVertexMin           = " << m_zVertexMin << " mm"      << endreq
-      << "ZVertexMax           = " << m_zVertexMax << " mm"      << endreq
-      << "MaxRSlope            = " << m_maxRSlope                << endreq
-      << "RMatchTol            = " << m_rMatchTol  << " * pitch" << endreq
-      << "RExtraTol            = " << m_rExtraTol  << " * pitch" << endreq
-      << "ROverlapTol          = " << m_rOverlapTol<< " * pitch" << endreq
-      << "MaxMissed            = " << m_maxMissed                << endreq
-      << "MinToTag             = " << m_minToTag                 << endreq
-      << "ChargeThreshold      = " << m_chargeThreshold          << endreq
-      << "HighChargeFract      = " << m_highChargeFract          << endreq
-      << "AdjacentSectors      = " << (m_adjacentSectors ? "True" : "False")
-      << endreq
-      << "OnlyForward          = " << (m_onlyForward     ? "True" : "False")
-      << endreq
-      << "OnlyBackward         = " << (m_onlyBackward     ? "True" : "False")
-      << endreq
-      << "OverlapCorrection    = " << (m_OverlapCorrection  ? "True" : "False")
-      << endreq
-      << "======================================"                << endreq;
-
+    if( msgLevel( MSG::DEBUG ) ){
+      debug() << "========" << name() << " initialised ========" << endreq;
+    }
     if ( m_zVertexMin >= m_zVertexMax ){
-      warning() << "No overlap between forward and backward track z ranges" << endmsg;      
-      return StatusCode::FAILURE;
+      return Error("No overlap between forward and backward track z ranges",
+		   StatusCode::FAILURE);
     }
 
     // use the parameters ZVertexMin and MaxRSlope to calculate the z position of 

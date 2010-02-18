@@ -4,6 +4,15 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2010-02-18 - David Hutchcroft
+ - Reduced info level verbosity of PatVeloSpaceTool as per Savannah bug #62728
+ - Also removed the other info level startup methods from R, Space and General
+
+! 2010-02-17 - David Hutchcroft
+ - Improved PatVeloGeneralTracking's finding of tracks crossing between
+   detector halves
+   Changes to PatVeloGeneralTracking.h and .cpp look more extensive than 
+   they are as the code was globally reindented to normalise it
 
 !========================== PatVelo v3r19 2010-01-21 =========================
 ! 2010-01-20 - Kurt Rinnert

@@ -1,4 +1,4 @@
-// $Id: PatVeloTrackTool.cpp,v 1.12 2009-06-24 18:04:35 dhcroft Exp $
+// $Id: PatVeloTrackTool.cpp,v 1.13 2010-02-18 14:12:07 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -56,11 +56,9 @@ namespace Tf {
     m_rHitManager   = tool<PatVeloRHitManager>  ( "Tf::PatVeloRHitManager", m_rHitManagerName );
     m_phiHitManager = tool<PatVeloPhiHitManager>( "Tf::PatVeloPhiHitManager", m_phiHitManagerName );
 
-    info() << "=== Tool " << name() << " param. ==="<< endreq
-      << "PhiAngularTol        = " << m_phiAngularTol       << endreq
-      << "highChargeFract      = " << m_highChargeFract     << endreq
-      << "ChargeThreshold      = " << m_chargeThreshold     << endreq
-      << "================================================="<< endreq;
+    if( msgLevel( MSG::DEBUG ) ){
+      debug() << "=== Tool " << name() << " initialised ==="<< endreq;
+    }
 
     return StatusCode::SUCCESS;
   }
@@ -287,6 +285,17 @@ namespace Tf {
         patTrack->phiCoords()->end() != itC; ++itC ) {
       newTrack->addToLhcbIDs( (*itC)->hit()->lhcbID() );
     }
+    // add "no fit" coords from other side of detector
+    std::vector<PatVeloRHit*>::iterator itR;
+    for ( itR = patTrack->rCoordsNoFit()->begin(); 
+	  patTrack->rCoordsNoFit()->end() != itR; ++itR ) {
+      newTrack->addToLhcbIDs( (*itR)->hit()->lhcbID() );
+    }
+    for ( itC = patTrack->phiCoordsNoFit()->begin(); 
+        patTrack->phiCoordsNoFit()->end() != itC; ++itC ) {
+      newTrack->addToLhcbIDs( (*itC)->hit()->lhcbID() );
+    }
+
     newTrack -> setPatRecStatus( LHCb::Track::PatRecIDs );
     return StatusCode::SUCCESS;
   }

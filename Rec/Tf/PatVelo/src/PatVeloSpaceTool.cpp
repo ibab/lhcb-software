@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTool.cpp,v 1.21 2009-07-20 11:35:32 dhcroft Exp $
+// $Id: PatVeloSpaceTool.cpp,v 1.22 2010-02-18 14:12:06 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -75,21 +75,8 @@ namespace Tf {
 
     m_trackTool = tool<PatVeloTrackTool>("Tf::PatVeloTrackTool", m_trackToolName );
 
-    info() << "========== Tool " << name() << " parameters ======"   << endreq
-      << "FractionFound        = " << m_fractionFound       << endreq
-      << "PhiAngularTol        = " << m_phiAngularTol       << endreq
-      << "PhiMatchTol          = " << m_phiMatchTol         << endreq
-      << "PhiFirstTol          = " << m_phiFirstTol         << endreq
-      << "AdjacentSectors      = " << (m_adjacentSectors ? "True" : "False")
-      << endreq
-      << "FractionPhiMerge     = " << m_fractionPhiMerge    << endreq
-      << "NMissedFirst         = " << m_NMissedFirst        << endreq
-      << "MaxChiSqDof          = " << m_chiSqDofMax         << endreq
-      << "StepError            = " << m_stepError           << endreq
-      << "FullErrorPoints      = " << m_fullErrorPoints     << endreq
-      << "ForwardStepError     = " << m_forwardStepError    << endreq
-      << "======================================"           << endreq;
-
+    if(msgLevel(MSG::DEBUG)) 
+      debug() << "========== Tool " << name() << "====== "<< endreq;
     return StatusCode::SUCCESS;
   }
 
@@ -465,12 +452,12 @@ namespace Tf {
 
     if ( msgLevel( MSG::DEBUG ) &&  
         accepted.size() > 1 ) {
-      MsgStream& msg = info() << "Multiple solutions for same R" << endreq;
+      debug() << "Multiple solutions for same R" << endreq;
       for ( std::vector<PatVeloSpaceTrack*>::iterator itT = accepted.begin(); 
-          accepted.end() != itT; ++itT ) {
+	    accepted.end() != itT; ++itT ) {
         int indx =  itT - accepted.begin();
-        msg << "... track " << indx << " Chisq/dof " << (*itT)->chi2Dof() 
-          << endreq;
+        debug() << "... track " << indx << " Chisq/dof " << (*itT)->chi2Dof() 
+		<< endreq;
       }
     }
 

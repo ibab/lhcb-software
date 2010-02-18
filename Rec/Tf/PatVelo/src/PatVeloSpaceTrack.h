@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTrack.h,v 1.10 2009-06-24 18:04:35 dhcroft Exp $
+// $Id: PatVeloSpaceTrack.h,v 1.11 2010-02-18 14:12:07 dhcroft Exp $
 #ifndef TF_PATVELOSPACETRACK_H
 #define TF_PATVELOSPACETRACK_H 1
 
@@ -71,6 +71,12 @@ namespace Tf {
     /// set the number of expected R clusters (from RZ Track)
     void setNVeloExpected( double nVeloExp ) { m_nVeloExpected = nVeloExp ; }
 
+    /// add a not to fit R coordinate (avoid big chi2 for tracks crossing halves)
+    void addRCoordNoFit( PatVeloRHit* coord ) { m_rCoordNoFit.push_back( coord ); }
+
+    /// add a not to fit Phi coordinate (avoid big chi2 for tracks crossing halves)
+    void addPhiCoordNoFit( PatVeloPhiHit* coord ) { m_phiCoordNoFit.push_back( coord ); }
+
   public:
     // inline getters
     inline double meanZ()           const { return m_meanZ; }
@@ -80,7 +86,11 @@ namespace Tf {
     }
     inline std::vector<PatVeloRHit*>* rCoords()    { return &m_rCoord; };
     inline unsigned int nbCoords()          const  { return m_rCoord.size(); }
+    inline unsigned int nFitCoords() const  { 
+      return m_rCoord.size()+m_phiCoord.size(); }
     inline std::vector<PatVeloPhiHit*>* phiCoords(){ return &m_phiCoord; };
+    inline std::vector<PatVeloRHit*>* rCoordsNoFit()    { return &m_rCoordNoFit; };
+    inline std::vector<PatVeloPhiHit*>* phiCoordsNoFit(){ return &m_phiCoordNoFit; };
     inline bool valid()          const { return m_valid; }
     inline double firstZ()       const { return m_rCoord[0]->z(); }
     inline double rSlope()       const { return m_slope; }
@@ -175,6 +185,9 @@ namespace Tf {
 
     std::vector<PatVeloRHit*>   m_rCoord; ///< The R coords of the track
     std::vector<PatVeloPhiHit*> m_phiCoord; ///< The phi coords of the track
+
+    std::vector<PatVeloRHit*>   m_rCoordNoFit; ///< The R coords of the track (not for fitting)
+    std::vector<PatVeloPhiHit*> m_phiCoordNoFit; ///< The phi coords of the track (not for fitting)
 
     Gaudi::XYZPoint   m_point; ///< a position on the track returned by fit
     double       m_slopeX;     ///< slope dx/dz of the fitted track

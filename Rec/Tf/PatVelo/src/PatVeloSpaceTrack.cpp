@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTrack.cpp,v 1.14 2009-07-20 11:35:32 dhcroft Exp $
+// $Id: PatVeloSpaceTrack.cpp,v 1.15 2010-02-18 14:12:06 dhcroft Exp $
 // Include files 
 
 // local
@@ -350,6 +350,16 @@ namespace Tf {
     
     for ( std::vector<PatVeloPhiHit*>::iterator iPhi = m_phiCoord.begin();
 	  iPhi != m_phiCoord.end() ; ++iPhi ){
+      (*iPhi)->hit()->setStatus(status,true);
+    }
+
+    for ( std::vector<PatVeloRHit*>::iterator iR = m_rCoordNoFit.begin();
+	  iR != m_rCoordNoFit.end() ; ++iR ){
+      (*iR)->hit()->setStatus(status,true);
+    }
+    
+    for ( std::vector<PatVeloPhiHit*>::iterator iPhi = m_phiCoordNoFit.begin();
+	  iPhi != m_phiCoordNoFit.end() ; ++iPhi ){
       (*iPhi)->hit()->setStatus(status,true);
     }
   }
