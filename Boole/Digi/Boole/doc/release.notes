@@ -4,6 +4,9 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
 </PRE><H1><A NAME=v20r3>2010-02-18 Boole v20r3</A></H1></PRE>
+ - Changes to Configurable:
+   . Default DataType is now 2010
+
  - Changes to tests
    . boole.boole-mc09-withtruth now also tests IgnoreFlatSpillover option
 

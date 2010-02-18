@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.67 2010-02-04 16:37:10 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.68 2010-02-18 14:40:29 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -36,7 +36,7 @@ class Boole(LHCbConfigurableUser):
        ,"ProductionMode"      : False 
        ,"OutputLevel"         : INFO 
        ,"DatasetName"         : "Boole"
-       ,"DataType"            : "2009"
+       ,"DataType"            : "2010"
        ,"DDDBtag"             : ""
        ,"CondDBtag"           : ""
        ,"VeloTell1Processing" : True
