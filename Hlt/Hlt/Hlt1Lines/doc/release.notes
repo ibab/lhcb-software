@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.122 2010-02-18 20:16:47 graven Exp $
+! $Id: release.notes,v 1.123 2010-02-18 20:31:05 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -10,6 +10,9 @@
 !
 !-----------------------------------------------------------------------------
 !========================== Hlt1Lines v2r2 2010-02-18 ===================
+! 2010-02-18 - Gerhard Raven
+ - enable Hlt1LumiLow lines
+
 ! 2010-02-18 - Johannes Albrecht
  - Hlt1MuonLines.py: modify pattern recocuts ("loose tuning for data")
 

@@ -12,7 +12,7 @@ from Configurables import ( LumiCountVertices,
                             LumiCountTracks,
                             LumiFromL0DU,
                             LumiCountHltTracks,
-                            #LumiFlagMethod
+                            LumiFlagMethod
                             )
 from Configurables import GaudiSequencer as Sequence
 from Configurables import DeterministicPrescaler as Scaler
@@ -223,7 +223,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         # LumiTrigger lines
         map( self.__create_lumi_line__, self.getProp('BXTypes') )
         # PhysicsTrigger lines
-        # map( self.__create_lumi_low_line__, self.getProp('BXTypes') )
+        map( self.__create_lumi_low_line__, self.getProp('BXTypes') )
 
 
         
