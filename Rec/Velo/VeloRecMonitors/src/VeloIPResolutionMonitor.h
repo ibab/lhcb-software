@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.h,v 1.7 2010-02-01 14:59:29 malexand Exp $
+// $Id: VeloIPResolutionMonitor.h,v 1.8 2010-02-18 16:50:17 malexand Exp $
 #ifndef VELORECMONITORS_VELOIPRESOLUTIONMONITOR_H 
 #define VELORECMONITORS_VELOIPRESOLUTIONMONITOR_H 1
 
@@ -51,8 +51,6 @@ namespace Velo
 
     StatusCode plotInBin(double&, double&, double&, int& );
 
-    bool filterBeamGas( const LHCb::RecVertices* & );
-
     StatusCode plotRMS( std::vector< TH1D* >, TH1D* );
     StatusCode fitGaussAndPlotWidth( std::vector< TH1D* >, TH1D* );
     StatusCode fitDblGaussAndPlotWidth( std::vector< TH1D* >, TH1D* );
@@ -70,9 +68,6 @@ namespace Velo
     const LHCb::Track* m_track;
 
     bool m_requireL0;
-    bool m_filterBeamGas;
-    bool m_useBeamGas;
-    bool m_useCollisions;
 
     bool m_useLogScale;
     bool m_statOverflows;
@@ -115,7 +110,6 @@ namespace Velo
     ITrackExtrapolator* m_trackExtrapolator;
     ToolHandle<ITrackVertexer> m_vertexer;
     IMeasurementProvider* m_measurementProvider;
-    bool m_loadMeasurements;
     ITrackFitter* m_trackFitter;
   
     Tuple m_tuple;

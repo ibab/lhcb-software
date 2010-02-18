@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.cpp,v 1.16 2010-02-08 21:47:57 malexand Exp $
+// $Id: VeloIPResolutionMonitor.cpp,v 1.17 2010-02-18 16:50:17 malexand Exp $
 // Include files
 #include "VeloIPResolutionMonitor.h"
 
@@ -52,7 +52,6 @@ Velo::VeloIPResolutionMonitor::VeloIPResolutionMonitor( const std::string& name,
   : GaudiTupleAlg ( name , pSvcLocator ),
     m_vertexer("TrackVertexer"),
     m_measurementProvider(0),
-    m_loadMeasurements(0),
     m_trackFitter(0),
     m_tuple(0)
 {
@@ -65,7 +64,7 @@ Velo::VeloIPResolutionMonitor::VeloIPResolutionMonitor( const std::string& name,
   declareProperty("InversePTMin",m_InversePTMin = 0.0 );
   declareProperty("InversePTMax",m_InversePTMax = 4.0 );
   declareProperty("NBins",m_nBins = 20 );
-  declareProperty("MinPVnTracks", m_minPVnTracks = 6 );
+  declareProperty("MinPVnTracks", m_minPVnTracks = 8 );
 
   // Set whether to save the underlying histograms used to make the plots of fit results
   declareProperty("SaveUnderlyingHistos",m_saveUnderlyingHistos=true);
@@ -84,9 +83,6 @@ Velo::VeloIPResolutionMonitor::VeloIPResolutionMonitor( const std::string& name,
 
   // Set whether to check if each event has passed L0
   declareProperty("RequireL0", m_requireL0 = false );
-  declareProperty("UseBeamGas", m_useBeamGas = false );
-  declareProperty("UseCollisions", m_useCollisions = true );
-  declareProperty("FilterBeamGas", m_filterBeamGas = true );
 
   // Set whether to refit PVs without the track for which IP is being calculated
   declareProperty("RefitPVs", m_refitPVs = false );
@@ -306,50 +302,7 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
     debug() << "No data at 'Rec/Vertex/Primary'!" << endmsg;
     return StatusCode::SUCCESS;
   }
-  const LHCb::RecVertices* pvs = get<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary);
-  
-  // check that there are PVs made with tracks
-  // this is only necessary for 'earlyData' reconstructed data
-  const LHCb::Track* test(0);
-  for ( LHCb::RecVertices::const_iterator ipv = pvs->begin() ;
-        ipv != pvs->end() ; ++ipv ){
-    if( (*ipv)->tracks().size() != 0 ){
-      test = *((*ipv)->tracks().begin());
-      break;
-    }
-  }
-  if( !test ){
-    debug() << "No PVs with tracks found" << endmsg;
-    return StatusCode::SUCCESS;
-  }
-  
-  // check for measurements & load if necessary
-  debug() << "Checking for track measurements" << endmsg;
-  m_loadMeasurements = (m_filterBeamGas || m_writeTuple) && test->nMeasurements() == 0;
-  debug() << "Load measurements? : " << m_loadMeasurements << endmsg;
-  if( m_loadMeasurements ){
-    debug() << "Loading track measurements" << endmsg;
-    LHCb::RecVertices* newVertices = new LHCb::RecVertices();
-    for ( LHCb::RecVertices::const_iterator ipv = pvs->begin() ;
-          ipv != pvs->end() ; ++ipv ){
-      LHCb::RecVertex* newVertex = (*ipv)->clone();
-      newVertex->clearTracks();
-      for ( SmartRefVector< LHCb::Track >::const_iterator tr = (*ipv)->tracks().begin(); 
-            tr != (*ipv)->tracks().end() ; tr++ ){
-        LHCb::Track* newTrack = (*tr)->clone();
-        m_measurementProvider->load( *newTrack );
-        m_trackFitter->fit( *newTrack );
-        newVertex->addToTracks( (const LHCb::Track*)newTrack );
-      }
-      newVertices->add( newVertex );
-    }
-    pvs = (const LHCb::RecVertices*)newVertices;
-    debug() << "Track Measurements Loaded" << endmsg;
-  }
-  
-  // filter for beam-gas pvs if set to, or default selection of beam-gas & collisions are changed
-  if( m_filterBeamGas || !m_useCollisions || m_useBeamGas )
-    if( !filterBeamGas( pvs ) ) return StatusCode::SUCCESS;
+  const LHCb::RecVertices* pvs = get<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary);  
 
   counter("Events Selected")++;
     
@@ -364,8 +317,18 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
     // Get tracks from current PV & loop
     const SmartRefVector< LHCb::Track > & PVtracks = m_pv->tracks();
 
+    // count number of tracks making this pv that are reconstructed in the velo 
+    unsigned int nVeloTracks(0);
+    for ( SmartRefVector< LHCb::Track >::const_iterator tr = PVtracks.begin(); 
+          tr != PVtracks.end() ; tr++ ){
+      if( (*tr)->type()==Track::Velo || (*tr)->type()==Track::Upstream || (*tr)->type()==Track::Long )
+        nVeloTracks += 1;
+    }
+    
     // can't refit a PV with only one track!
-    if( PVtracks.size() < m_minPVnTracks || (m_refitPVs && PVtracks.size() < 3) ) continue;
+    if( m_refitPVs && PVtracks.size() < 3 ) continue;
+    // apply ntracks cut
+    if( nVeloTracks < m_minPVnTracks && !m_writeTuple ) continue;
     counter("PVs Selected")++;
         
     m_h_TrackMultiplicity->Fill( PVtracks.size() );
@@ -373,17 +336,16 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
     for ( SmartRefVector< LHCb::Track >::const_iterator tr = PVtracks.begin(); 
           tr != PVtracks.end() ; tr++ ){
 
-      // skip 'Velo' type tracks as they have no PT measurement, unless tracks are to be written to tuple
-      if( (*tr)->type() == Track::Velo && !m_writeTuple ) continue;
-
       m_track = &(**tr);
 
       double inversePT;
       if( !m_useLogScale ) inversePT = 1./(m_track->pt()/GeV);
       else inversePT = log10( 1./(m_track->pt()/GeV) );
 
+      // only select Long tracks for reliable PT measurement, unless tracks are to be written to tuple
       // Skip tracks outwith the bin range, unless tuple is to be written, then all tracks are taken
-      if( (inversePT > *(m_bins.rbegin()) || *(m_bins.begin()) > inversePT) && !m_writeTuple ) continue;
+      if( (inversePT > *(m_bins.rbegin()) || *(m_bins.begin()) > inversePT || (*tr)->type() != Track::Long ) 
+          && !m_writeTuple ) continue;
 
       counter("Tracks selected")++;
         
@@ -408,8 +370,8 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
       double ip3d, ip3dsigma, ipx, ipxsigma, ipy, ipysigma;
       calculateIPs( m_pv, m_track, ip3d, ip3dsigma, ipx, ipxsigma, ipy, ipysigma );
 
-      // only make histos for tracks in given PT range
-      if( inversePT < *(m_bins.rbegin()) && *(m_bins.begin()) < inversePT && m_track->type() != LHCb::Track::Velo )
+      // only make histos for Long tracks in given PT range
+      if( inversePT < *(m_bins.rbegin()) && *(m_bins.begin()) < inversePT && m_track->type() == Track::Long )
       {
 
         m_h_InversePTFreq->Fill( inversePT );
@@ -450,6 +412,7 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
         m_tuple->column( "TrackChi2", m_track->chi2() );
         m_tuple->column( "TrackNDOF", m_track->nDoF() );
         m_tuple->column( "PVNTracks", m_pv->tracks().size() );
+        m_tuple->column( "PVNVeloTracks", nVeloTracks );
         m_tuple->column( "PVChi2", m_pv->chi2() );
         m_tuple->column( "PVNDOF", m_pv->nDoF() );
         m_tuple->column( "PVXerr", sqrt( m_pv->covMatrix()(0,0) ) );
@@ -505,17 +468,6 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
     } // close loop over tracks
       
   } // close loop over pvs
-
-  if( m_loadMeasurements ){
-    for ( LHCb::RecVertices::const_iterator ipv = pvs->begin() ;
-          ipv != pvs->end() ; ++ipv ){
-      for ( SmartRefVector< LHCb::Track >::const_iterator tr = (*ipv)->tracks().begin(); 
-            tr != (*ipv)->tracks().end() ; tr++ )
-        delete &(**tr);
-      ( (SmartRefVector<LHCb::Track>)((*ipv)->tracks()) ).clear();
-    }
-    ((LHCb::RecVertices*)pvs)->clear();
-  }  
 
   return StatusCode::SUCCESS;
 }
@@ -653,55 +605,6 @@ StatusCode Velo::VeloIPResolutionMonitor::plotInBin( double& ip3d, double& ipx, 
   
   return StatusCode::SUCCESS;
 }
-
-//====================================================================
-// check if a pv is likely to be created by beam-gas interactions
-//====================================================================
-bool Velo::VeloIPResolutionMonitor::filterBeamGas( const LHCb::RecVertices* &pvs )
-{
-
-  debug() << "Filtering Beam-Gas" << endmsg;
-
-  LHCb::ODIN* odin(0);
-  if (exist<LHCb::ODIN> (LHCb::ODINLocation::Default)){
-    odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
-    if (odin->bunchCrossingType() != ODIN::BeamCrossing ){
-      debug() << "Determined Beam-Gas Event" << endmsg;
-      return m_useBeamGas;
-    }
-    else if( !m_useCollisions ){
-      debug() << "Determined Beam-Crossing Event" << endmsg;
-      return m_useCollisions;
-    }    
-  }
-  else debug() << "No ODIN bank found" << endmsg;
-
-  // require a PV in the collision region (+/- 150mm)
-  unsigned int nPVsInCollisionArea = 0;
-  for ( LHCb::RecVertices::const_iterator ipv = pvs->begin() ;
-        ipv != pvs->end() ; ++ipv ){
-    if( fabs( (*ipv)->position().z() ) < 150*mm ) nPVsInCollisionArea += 1;
-  }
-  
-  // check for long or upstream track with pT > 300MeV
-  // and for a backward track
-  if( !exist<Tracks>(TrackLocation::Default) ) return m_useBeamGas;
-  bool hasLong = false;
-  bool hasBackward = false;
-  Tracks* tracks = get<Tracks>(TrackLocation::Default);
-  for( Tracks::const_iterator tr=tracks->begin(); tr != tracks->end(); ++tr ){
-    if( ((*tr)->type() == Track::Long || (*tr)->type() == Track::Upstream) && (*tr)->pt() > 300*MeV ) hasLong = true;
-    if( (*tr)->flag() == Track::Backward ) hasBackward = true;
-    if( hasBackward && hasLong ) break;
-  }
-  
-  bool isCollision = (nPVsInCollisionArea>0) && hasBackward && hasLong;
-
-  debug() << "Beam-Gas Filtered" << endmsg;
-  return ( ( isCollision && m_useCollisions ) ||
-           ( !odin && !isCollision && m_useBeamGas ) );
-}
-
 
 //=========================================================================
 //  Take the RMS of each of a set of input histos & plot it in an output histo

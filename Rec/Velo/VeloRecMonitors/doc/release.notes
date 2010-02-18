@@ -4,6 +4,11 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2010-02-18 - Michael Alexander
+ - VeloIPResolutionMonitor:
+   - Changed to select only Long tracks (previously Long and Upstream)
+   - Set min no of tracks reconstructed in Velo for a given PV to 8
+
 !======================= VeloRecMonitors v2r6 2010-02-16 =====================
 ! 2010-02-10 - Tomasz Szumlak
  - add projected angle computation
