@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.40 2010-02-13 10:37:39 poluekt Exp $
+!$Id: release.notes,v 1.41 2010-02-18 10:49:41 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-02-18 - Juan Palacios
+ - src/StrippingAlg.cpp
+  . Get rid of compilation warning.
+ - cmt/requirements
+  .Increase version to v2r1.
 
 ! 2010-02-13 - Anton Poluektov 
  - Added configuration support for settings stored in StrippingSettings
