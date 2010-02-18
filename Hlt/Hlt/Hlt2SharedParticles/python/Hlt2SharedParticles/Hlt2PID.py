@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -386,9 +386,9 @@ def _hlt2StagedFastFit(Hlt2Tracks = "Long"
     # But we need to accomodate different kinds of Fitted tracks... 
     Hlt2StagedFastFit.TracksOutContainer =  _trackLocation(prefix,"Track",suffix,Hlt2Tracks)  
 
-    Hlt2StagedFastFit.addTool(TrackMasterFitter, name = 'Fitter'+prefix+suffix)
+    Hlt2StagedFastFit.addTool(TrackMasterFitter, name = 'Fitter')
     from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
-    fitter = ConfiguredFastFitter( getattr(Hlt2StagedFastFit,'Fitter'+prefix+suffix))
+    fitter = ConfiguredFastFitter( getattr(Hlt2StagedFastFit,'Fitter') )
 
     fitter.NodeFitter.BiDirectionalFit = True
     fitter.NodeFitter.Smooth = True
