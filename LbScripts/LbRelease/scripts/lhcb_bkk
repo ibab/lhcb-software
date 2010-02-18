@@ -5,16 +5,38 @@
 #
 
 
-source `which SetupProject.csh` Dirac  > /dev/null
-if $status == 0 then
-   `which dirac-proxy-info` --checkvalid > /dev/null
-   if $status != 0 then
-      lhcb-proxy-init
-      if $status != 0 then
+if ! $?LHCBDIRACSYSROOT then
+  source `which SetupProject.csh` LHCbDirac >&! /dev/null
+  if $SetupProjectStatus != 0 then
+    echo Problem to set the LHCbDirac environment
+    echo Trying Dirac
+    if ! $?DIRACSYSROOT then
+      source `which SetupProject.csh` Dirac >&! /dev/null
+      if $SetupProjectStatus != 0 then
+        echo Problem to set the Dirac environment
         exit 1
+      else
+      	`which dirac-proxy-info` --checkvalid > /dev/null
+   		if $status != 0 then
+      		lhcb-proxy-init
+      		if $status != 0 then
+        		exit 1
+      		endif
+        endif
       endif
-   endif
-   dirac-bookkeeping-gui
+    endif
+  else
+    `which dirac-proxy-info` --checkvalid > /dev/null
+    if $status != 0 then
+       lhcb-proxy-init
+       if $status != 0 then
+         exit 1
+       endif
+    endif
+  endif
 endif
+
+
+dirac-bookkeeping-gui
 
 exit 0
