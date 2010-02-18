@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.154 2010-02-17 15:25:23 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.155 2010-02-18 15:24:07 kvervink Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -319,16 +319,13 @@ class HltConf(LHCbConfigurableUser):
         # the values are the Pattern Rules to for the Decisions contributing 
         HltGlobalMonitor().DecToGroupHlt1  = self.groupLines( HltGlobalMonitor().Hlt1Decisions,
                                 [ ("L0"         , "Hlt1L0.*Decision"),
-                                  ("Lumi"       , "Hlt1Lumi.*Decision"),
+                                  ("LumiBeamGas", "Hlt1(Lumi|BeamGas).*Decision"),
                                   ("Velo"       , "Hlt1Velo.*Decision"),
-                                  ("XPress"     , "Hlt1.*XPress.*Decision"),
                                   ("Hadron"     , "Hlt1.*Hadron.*Decision"),
                                   ("SingleMuon" , "Hlt1.*(SingleMuon|MuTrack).*Decision"),
                                   ("DiMuon"     , "Hlt1.*DiMuon.*Decision"),
-                                  ("Electron"   , "Hlt1.*Electron.*Decision"),
-                                  ("Photon"     , "Hlt1.*Pho.*Decision"),
+                                  ("ECAL"       , "Hlt1.*(Electron|Pho).*Decision"),
                                   ("PA"         , "Hlt1(ODIN.*|Tell1Error|Incident)Decision"),
-                                  ("BeamGas"    , "Hlt1BeamGas.*Decision"),
                                   ("MinBias"    , "Hlt1MB.*Decision"),
                                   ("Global"     , ".*Global.*"),
                                   ("Other"      , ".*") # add a 'catch all' term to pick up all remaining decisions...
@@ -337,7 +334,7 @@ class HltConf(LHCbConfigurableUser):
         HltGlobalMonitor().DecToGroupHlt2 = self.groupLines( HltGlobalMonitor().Hlt2Decisions,
                                  [ ("Topo"           , "Hlt2Topo.*Decision"),
                                    ("IncPhi"         , "Hlt2IncPhi.*Decision"),
-                                   ("SingleMuon"     , "Hlt2(SingleMuon|IncMuTrack).*Decision"),
+                                   ("SingleMuon"     , "Hlt2(Single.*Muon|IncMuTrack).*Decision"),
                                    ("DiMuon"         , "Hlt2.*DiMuon.*Decision"),
                                    ("B2DX"           , "Hlt2B2D2.*Decision"),
                                    ("B2XGamma"       , "Hlt2.*Gamma.*Decision"),
@@ -347,6 +344,8 @@ class HltConf(LHCbConfigurableUser):
                                    ("Express"        , "Hlt2Express.*Decision"),
                                    ("Commissioning"  , "Hlt2(PassThrough|Transparent|Forward|DebugEvent).*Decision"),
                                    ("DisplVertices"  , "Hlt2DisplVertices.*Decision"),
+                                   ("Charm"          , "Hlt2Charm.*Decision"),
+                                   ("B2LLX"          , "Hlt2Bu2(ee|MuMu).*Decision"),
                                    ("Global"         , ".*Global.*"),
                                    ("Other"          , ".*") # add a 'catch all' term to pick up all remaining decisions...
                                  ]
