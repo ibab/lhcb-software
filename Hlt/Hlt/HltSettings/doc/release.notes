@@ -10,6 +10,9 @@
    Physics_320Vis_300L0_10Hlt1_Aug09
  - add Hlt1L0Any to Physics_10000Vis_1000L0_40Hlt1_Apr09 and 
    Physics_320Vis_300L0_10Hlt1_Aug09
+ - change L0TCK in Physics_MinBiasL0_PassThroughHlt_09Dec09 from 0x1209 to 0x1309,
+   as more data was take with 0x1309
+   
 
 ! 2010-02-17 - Gerhard Raven
  - remove BeamGasBeam{1,2} lines from Physics_10000Vis_1000L0_40Hlt1_Apr09, as the 
