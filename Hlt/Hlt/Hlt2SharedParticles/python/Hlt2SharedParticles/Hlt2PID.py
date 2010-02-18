@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -375,9 +375,9 @@ def _hlt2StagedFastFit(Hlt2Tracks = "Long"
     to be used; special cases need to be justified separately
     """
     from Configurables import TrackEventFitter, TrackMasterFitter
-    Hlt2StagedFastFitSeq = GaudiSequencer( "Hlt2StagedFastFitSeq" )
+    Hlt2StagedFastFitSeq = GaudiSequencer( "Hlt2StagedFastFitSeq"+prefix+suffix )
 
-    Hlt2StagedFastFit = TrackEventFitter('Hlt2StagedFastFit')
+    Hlt2StagedFastFit = TrackEventFitter("Hlt2StagedFastFit"+prefix+suffix)
     Hlt2StagedFastFitSeq.Members = [ Hlt2StagedFastFit ]
 
     Hlt2StagedFastFit.TracksInContainer  = _trackLocation(prefix,"Track","",Hlt2Tracks)
@@ -386,9 +386,9 @@ def _hlt2StagedFastFit(Hlt2Tracks = "Long"
     # But we need to accomodate different kinds of Fitted tracks... 
     Hlt2StagedFastFit.TracksOutContainer =  _trackLocation(prefix,"Track",suffix,Hlt2Tracks)  
 
-    Hlt2StagedFastFit.addTool(TrackMasterFitter, name = 'Fitter')
+    Hlt2StagedFastFit.addTool(TrackMasterFitter, name = 'Fitter'+prefix+suffix)
     from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
-    fitter = ConfiguredFastFitter( getattr(Hlt2StagedFastFit,'Fitter'))
+    fitter = ConfiguredFastFitter( getattr(Hlt2StagedFastFit,'Fitter'+prefix+suffix))
 
     fitter.NodeFitter.BiDirectionalFit = True
     fitter.NodeFitter.Smooth = True
