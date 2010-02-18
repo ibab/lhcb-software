@@ -1,4 +1,4 @@
-// $Id: EvtTupleTool.cpp,v 1.1 2010-02-17 11:27:02 ibelyaev Exp $
+// $Id: EvtTupleTool.cpp,v 1.2 2010-02-18 11:46:46 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -27,8 +27,6 @@
 #include "Event/L0DUReport.h"
 #include "Event/HltDecReports.h"
 // ============================================================================
-
-
 namespace LoKi
 {
   // ==========================================================================
@@ -259,6 +257,9 @@ LoKi::Hybrid::EvtTupleTool::EvtTupleTool
   , m_hdr       ( ) 
   , m_void      ( ) 
 {
+  // interface
+  declareInterface<IEventTupleTool> ( this ) ;
+  //
   declareProperty 
     ( "Preambulo"  , 
       m_preambulo  , 

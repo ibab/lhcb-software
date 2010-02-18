@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.28 2010-02-17 11:27:02 ibelyaev Exp $ 
+! $Id: release.notes,v 1.29 2010-02-18 11:46:45 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiHlt
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
+
+! 2010-02-18 - Vanya Belyaev
+
+ - EvtTupleTool: fix a stupid bug (missing declareInterface )
 
 ! 2010-02-17 - Vanya Belyaev
 
