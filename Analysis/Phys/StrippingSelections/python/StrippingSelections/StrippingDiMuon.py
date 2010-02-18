@@ -1,4 +1,4 @@
-# $Id: StrippingDiMuon.py,v 1.3 2010-01-25 20:10:27 gcowan Exp $
+# $Id: StrippingDiMuon.py,v 1.4 2010-02-18 14:14:20 pkoppenb Exp $
 ## #####################################################################
 # A stripping selection for inclusive J/psi(1S) -> mu+ mu- decays
 #
@@ -25,6 +25,7 @@ class StrippingDiMuonConf(LHCbConfigurableUser):
 		,	"JpsiAMLoose":		2700.	# MeV
 		,	"JpsiVCHI2":		20.	# adimensional
 		,	"JpsiVCHI2Loose":	20.	# adimensional
+                ,       "DiMuonFDCHI2" :        10.     # adimensional
 		}
 
     def nominal_line( self ):
@@ -51,7 +52,7 @@ class StrippingDiMuonConf(LHCbConfigurableUser):
                          )
 	Jpsi = Selection("SelDiMuonInc",
                   Algorithm = _Jpsi,
-                  RequiredSelections = [_muons]
+                  RequiredSelections = [ _muons ]
                   )
 	return Jpsi
 	
@@ -71,6 +72,30 @@ class StrippingDiMuonConf(LHCbConfigurableUser):
                   )
 	return Jpsi
 
+#########################################################################################
+# Biased DiMuon adapted from Antonio Perez-Calero, implemented by P. Koppenburg
+#
+    def biasedDiMuon_line( self ):
+        """
+        Biased DiMuon adapted from Antonio Perez-Calero, implemented by P. Koppenburg
+
+        This will need to be tightened
+        
+        @author P. Koppenburg
+        @date 17/2/2010
+        """
+        from StrippingConf.StrippingLine import StrippingLine
+	_muons =  DataOnDemand('stdVeryLooseDiMuon', Location = 'Phys/StdVeryLooseDiMuon')
+        _diMu = FilterDesktop("FilterForB2DiMuon")
+        _diMu.Code = "(MAXTREE('mu+'==ABSID,PT)>1*GeV) & (VFASPF(VCHI2/VDOF)<20) & (BPVVDCHI2> %(DiMuonFDCHI2)s )" % self.getProps()
+
+        s = Selection("SelB2DiMuon",
+                         Algorithm = _diMu,
+                         RequiredSelections = [ _muons ] )
+	ss = SelectionSequence("SeqSelB2DiMuon", TopSelection = s )
+	return StrippingLine('SelB2DiMuonLine', prescale = 1, algos = [ ss ])   
+
+#########################################################################################
     def getProps(self) :
         """
         From HltLinesConfigurableUser
@@ -80,3 +105,4 @@ class StrippingDiMuonConf(LHCbConfigurableUser):
         for (k,v) in self.getDefaultProperties().iteritems() :
             d[k] = getattr(self,k) if hasattr(self,k) else v
         return d
+

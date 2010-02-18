@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.14 $'
+__version__ = '$Revision: 1.15 $'
 
 """
 Bd->K*MuMu selections 
@@ -41,23 +41,39 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
 #####
 # The signal line
 #
+    def _Early_DiMuonFilter(self):
+        """
+        Filtered DiMuon
+        """
+        from Configurables import FilterDesktop
+        Early_loose_DiMuon = FilterDesktop("DiMuon_For_Early_Bd2KstarMuMu", InputLocations = [ "StdVeryLooseDiMuon" ] )
+        Early_loose_DiMuon.Code = "(BPVDIRA> %(IntDIRA)s ) & (2 == NINTREE((ABSID=='mu-') & (TRCHI2DOF< %(TrackChi2)s )))" % self.getProps()
+        return Early_loose_DiMuon
+        
+    def _Early_DiMuon(self):
+        """
+        The bindMembers for the DiMuon
+        """
+        from StrippingConf.StrippingLine import bindMembers
+        from CommonParticles.StdVeryLooseDiMuon import StdVeryLooseDiMuon
+        return bindMembers( None , [ StdVeryLooseDiMuon, self._Early_DiMuonFilter() ] )
+        
     def _Early_Bd(self):
-         """
-         Common Bd for Eraly data selections
-
-         @todo These should be coded in a smarter way.
-         """
-         from Configurables import CombineParticles
-         Early_loose_Bd = CombineParticles("Early_Signal_Bd2KstarMuMu")
-         Early_loose_Bd.InputLocations = ["StdVeryLooseDiMuon", "StdVeryLooseDetachedKst2Kpi"]
-         Early_loose_Bd.DecayDescriptor = "[B0 -> K*(892)0 J/psi(1S)]cc"
-         Early_loose_Bd.DaughtersCuts = {
+        """
+        Common Bd for Eraly data selections
+        
+        @todo These should be coded in a smarter way.
+        """
+        from Configurables import CombineParticles
+        Early_loose_Bd = CombineParticles("Early_Signal_Bd2KstarMuMu")
+        Early_loose_Bd.InputLocations = ["DiMuon_For_Early_Bd2KstarMuMu", "StdVeryLooseDetachedKst2Kpi"]
+        Early_loose_Bd.DecayDescriptor = "[B0 -> K*(892)0 J/psi(1S)]cc"
+        Early_loose_Bd.DaughtersCuts = {
             'K*(892)0':  "(BPVDIRA> %(IntDIRA)s ) & (INTREE((ABSID=='pi+') & (TRCHI2DOF< %(TrackChi2)s ))) & (INTREE((ABSID=='K+') & (TRCHI2DOF< %(TrackChi2)s )))" % self.getProps() 
-          , 'J/psi(1S)': "(BPVDIRA> %(IntDIRA)s ) & (2 == NINTREE((ABSID=='mu-') & (TRCHI2DOF< %(TrackChi2)s )))" % self.getProps()
             }
-         Early_loose_Bd.CombinationCut = "(AM > %(BMassLow)s *MeV) & (ADAMASS('B0') < %(BMassHighWin)s *MeV)"  % self.getProps()
-         Early_loose_Bd.MotherCut = "(VFASPF(VCHI2/VDOF) < %(BVertexCHI2)s ) & (BPVDIRA> %(BDIRA)s ) & (BPVVDCHI2 > %(BFlightCHI2)s ) & (BPVIPCHI2() < %(BIPCHI2)s )"  % self.getProps()
-         return Early_loose_Bd
+        Early_loose_Bd.CombinationCut = "(AM > %(BMassLow)s *MeV) & (ADAMASS('B0') < %(BMassHighWin)s *MeV)"  % self.getProps()
+        Early_loose_Bd.MotherCut = "(VFASPF(VCHI2/VDOF) < %(BVertexCHI2)s ) & (BPVDIRA> %(BDIRA)s ) & (BPVVDCHI2 > %(BFlightCHI2)s ) & (BPVIPCHI2() < %(BIPCHI2)s )"  % self.getProps()
+        return Early_loose_Bd
 
 
     def Early_SignalLine(self):
@@ -67,10 +83,9 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         from StrippingConf.StrippingLine import StrippingLine, StrippingMember       
         from PhysSelPython.Wrappers import DataOnDemand
         from CommonParticles.StdVeryLooseDetachedKstar import StdVeryLooseDetachedKst2Kpi
-        from CommonParticles.StdVeryLooseDiMuon import StdVeryLooseDiMuon
         return StrippingLine('Bd2KstarMuMu_Early_Signal'
                              , prescale = 1
-                             , algos = [ StdVeryLooseDiMuon,
+                             , algos = [ self._Early_DiMuon(),
                                          StdVeryLooseDetachedKst2Kpi,
                                          self._Early_Bd() ]
                              )
@@ -83,17 +98,21 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         The MuMu algorithm for same sign dimuons: clone of standard DiMuon
         """
         from CommonParticles.StdVeryLooseDiMuon import StdVeryLooseDiMuon
-        
+        from StrippingConf.StrippingLine import bindMembers
         # this violates charge
-        return StdVeryLooseDiMuon.clone("SameSignDiMuonForBd2KstarMuMu",
-                                    DecayDescriptor = "[J/psi(1S) -> mu+ mu+]cc")
+        mm = StdVeryLooseDiMuon.clone("ClonedVeryLooseSameSignDiMuon",
+                                      DecayDescriptor = "[J/psi(1S) -> mu+ mu+]cc")
+        fi = self._Early_DiMuonFilter().clone("SameSignDiMuon_For_Early_Bd2KstarMuMu",
+                                              InputLocations = [ "ClonedVeryLooseSameSignDiMuon" ])
+        return bindMembers( None, [ mm, fi ] )
+        
         
     def _Early_SameSignBd(self):
         """
         The Bd algorithm for same sign dimuons : clone of Bd algorithm
         """
         return self._Early_Bd().clone("Early_SameSign_Bd2KstarMuMu",
-                                      InputLocations = ["SameSignDiMuonForBd2KstarMuMu",
+                                      InputLocations = ["SameSignDiMuon_For_Early_Bd2KstarMuMu",
                                                         "StdVeryLooseDetachedKst2Kpi"])
 
     def Early_SameSignLine(self):
@@ -131,9 +150,9 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         The Bd with a wide K*
         """
         algo = self._Early_Bd().clone("Early_WideKstar_Bd2KstarMuMu",
-                                      InputLocations = ["StdVeryLooseDiMuon", "WideKstarForBd2KstarMuMu"])
-        jcuts = algo.DaughtersCuts['J/psi(1S)']
-        jcuts = jcuts+" & (VFASPF(VCHI2/VDOF) < %(IntVertexCHI2Tight)s )" % self.getProps()
+                                      InputLocations = ["DiMuon_For_Early_Bd2KstarMuMu",
+                                                        "WideKstarForBd2KstarMuMu"])
+        jcuts = "(VFASPF(VCHI2/VDOF) < %(IntVertexCHI2Tight)s )" % self.getProps()
         kcuts = algo.DaughtersCuts['K*(892)0']
         kcuts = kcuts+" & (VFASPF(VCHI2/VDOF) < %(IntVertexCHI2Tight)s )" % self.getProps()
         algo.DaughtersCuts = { 'J/psi(1S)' : jcuts,
@@ -148,10 +167,9 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
         The Wide K* line
         """
         from StrippingConf.StrippingLine import StrippingLine, StrippingMember       
-        from CommonParticles.StdVeryLooseDiMuon import StdVeryLooseDiMuon
         return StrippingLine('Bd2KstarMuMu_Early_WideKstar'
                              , prescale = 1
-                             , algos = [ StdVeryLooseDiMuon ,
+                             , algos = [ self._Early_DiMuon() ,
                                          self._Early_WideKstar(),
                                          self._Early_WideKstarBd() ]
                              )
@@ -236,6 +254,24 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
                                          self._Early_eMuBd()]
                              )
 
+####################################################################################################
+# Only the dimuon. Will be prescaled
+#
+    def Early_DiMuonLine(self):
+        """
+        Just the dimuon
+
+        This line will need serious prescaling as soon as we get some non-0 luminosity
+        """
+        from StrippingConf.StrippingLine import StrippingLine, StrippingMember       
+        from PhysSelPython.Wrappers import DataOnDemand
+        from CommonParticles.StdVeryLooseDiMuon import StdVeryLooseDiMuon
+        return StrippingLine('Bd2KstarMuMu_Early_DiMuonOnly'
+                             , prescale = 1
+                             , algos = [ self._Early_DiMuon() ]
+                             )
+
+#
 #
 ####################################################################################################
 # Rob's selections. See RDWG talk, 08.07.2009, Rob Lambert

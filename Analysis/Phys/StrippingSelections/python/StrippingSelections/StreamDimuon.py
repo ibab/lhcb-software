@@ -54,7 +54,8 @@ stream.appendLines( [
 		        StrippingBd2KstarMuMuConf().Early_SameSignLine(),  
 		        StrippingBd2KstarMuMuConf().Early_WideKstarLine(),  
 		        StrippingBd2KstarMuMuConf().Early_NoMuIDLine(),  
-		        StrippingBd2KstarMuMuConf().Early_eMuLine(),  
+		        StrippingBd2KstarMuMuConf().Early_eMuLine(),
+                        StrippingBd2KstarMuMuConf().Early_DiMuonLine(),
 		        StrippingBs2Jpsif0Conf().nominal_line(),  
 		        StrippingBs2Jpsif0Conf().loose_line(),  
 		        StrippingBiasedBs2JpsiPhi.line,  
@@ -65,5 +66,6 @@ stream.appendLines( [
 		        StrippingBu2LLKConf().mmK(),
                         StrippingBc2JpsiMuXConf().MuMu(),
                         StrippingBc2JpsiHConf().MuMu(),
-                        StrippingBc2JpsiHDetachedConf().MuMu()
+                        StrippingBc2JpsiHDetachedConf().MuMu(),
+                        StrippingDiMuonConf().biasedDiMuon_line()
 		    ] )

@@ -1,11 +1,11 @@
-# $Id: StrippingDstarPromptWithD02HH.py,v 1.1 2010-01-05 17:25:58 spradlin Exp $
+# $Id: StrippingDstarPromptWithD02HH.py,v 1.2 2010-02-18 14:14:20 pkoppenb Exp $
 
 __author__ = ['Philip Xing', 'Patrick Spradlin']
 __date__ = '04 January 2010'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
-Configurable for the analysis selections for D*+ -> pi+ D0(h h').
+Configurable for the analysis selections for D*+ -> pi+ D0(h h'').
 
 This configurable uses bindMembers to compose sequences from StrippingMembers
 in the same way that it is used (or perhaps abused) in Hlt2.

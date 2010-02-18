@@ -36,16 +36,10 @@ tag.TupleToolSelResults.Selections = sc.selections()  # Add the list of strippin
 
 from Configurables import DaVinci
 
-from StrippingSelections.StartupOptions import veloNZSKiller, redoPV
-dvinit = GaudiSequencer("DaVinciInitSeq")
-dvinit.Members.insert(0, redoPV() )
-dvinit.Members.insert(0, veloNZSKiller() )
-
 DaVinci().appendToMainSequence( [ sc.sequence() ] )   # Append the stripping selection sequence to DaVinci
 DaVinci().appendToMainSequence( [ tag ] )             # Append the TagCreator to DaVinci
-DaVinci().EvtMax = 100                        # Number of events
+DaVinci().EvtMax = 1000                        # Number of events
 DaVinci().ETCFile = "etc.root"                 # ETC file name
 DaVinci().HistogramFile = "hist.root"
 
-#importOptions("$STRIPPINGSELECTIONSROOT/tests/2008-InclBJpsiMuMu.py")     # Data file
-importOptions("$STRIPPINGSELECTIONSROOT/tests/MC09_Bincl.py")     # Data file
+importOptions("$STRIPPINGSELECTIONSROOT/tests/MC09-MB-L0Hlt1-PFN")     # Data file
