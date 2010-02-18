@@ -1,4 +1,4 @@
-// $Id: MCParticleCuts.h,v 1.14 2010-02-10 17:36:38 ibelyaev Exp $
+// $Id: MCParticleCuts.h,v 1.15 2010-02-18 10:18:29 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCPARTICLECUTS_H 
 #define LOKI_MCPARTICLECUTS_H 1
@@ -643,6 +643,25 @@ namespace LoKi
      */
     const LoKi::MCParticles::Identifier                                  MCID ;
     // ========================================================================
+    /** @typedef MCINANCESTORS 
+     *  Simple predicate to chck the presence of certain criteria 
+     *  within ancestors 
+     *  
+     *  @code
+     * 
+     *   const MCINANCESTOS fromBeauty = MCINANCESTOS  ( BEAUTY )  ;
+     *     
+     *   const MCParticle* p  = ...         ;
+     *
+     *   const bool ok = fromBeauty ( p ) ;
+     *
+     *  @endcode 
+     *  @see LoKi::MCParticles::InAncestors 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2010-02-16
+     */
+    typedef LoKi::MCParticles::InAncestors                      MCINANCESTORS ;
+    // ========================================================================
     /** @typedef MCINTREE
      *  Simple predicate to check the presence of a certain 
      *  particle in the decay tree
@@ -822,6 +841,25 @@ namespace LoKi
      *  @date 2007-06-02
      */
     typedef LoKi::MCParticles::MultTree                            MCMULTTREE ;
+    // ========================================================================
+    /** @typedef MCNINANCESTORS 
+     *  Simple function to count the presence of certain criteria 
+     *  within ancestors 
+     *  
+     *  @code
+     * 
+     *   const MCINANCESTOS fromBeauty = MCINANCESTOS  ( BEAUTY )  ;
+     *     
+     *   const MCParticle* p  = ...         ;
+     *
+     *   const double num = fromBeauty ( p ) ;
+     *
+     *  @endcode 
+     *  @see LoKi::MCParticles::NinAncestors 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2010-02-16
+     */
+    typedef LoKi::MCParticles::NinAncestors                    MCNINANCESTORS ;
     // ========================================================================
     /** @typedef MCNINTREE
      *  Simple function to count a certain particles in the decay tree

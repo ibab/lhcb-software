@@ -1,4 +1,4 @@
-// $Id: MCParticles.cpp,v 1.21 2010-02-10 17:36:38 ibelyaev Exp $
+// $Id: MCParticles.cpp,v 1.22 2010-02-18 10:18:29 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -2269,6 +2269,117 @@ std::ostream& LoKi::MCParticles::DecTree::fillStream( std::ostream& s ) const
   return s << "MCDECTREE( " << m_tree << ")";
 }
 // ============================================================================
+
+
+// ============================================================================
+// constructor from the predicate 
+// ============================================================================
+LoKi::MCParticles::NinAncestors::NinAncestors 
+( const LoKi::MCTypes::MCCuts& cuts ) 
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Function ()
+  , m_cut ( cuts )
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::MCParticles::NinAncestors::~NinAncestors(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::MCParticles::NinAncestors*
+LoKi::MCParticles::NinAncestors::clone() const
+{ return new LoKi::MCParticles::NinAncestors ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one important method 
+// ============================================================================
+LoKi::MCParticles::NinAncestors::result_type 
+LoKi::MCParticles::NinAncestors::operator() 
+  ( LoKi::MCParticles::InAncestors::argument p ) const 
+{ 
+  return nInAncestors ( p ) ; 
+}
+// ============================================================================
+// the actual evaluator 
+// ============================================================================
+int LoKi::MCParticles::NinAncestors::nInAncestors 
+( const LHCb::MCParticle* p ) const 
+{ 
+  if ( 0 == p )
+  {
+    Error ( "LHCb::MCParticle* point to NULL, return 0") ;
+    return 0 ;
+  }
+  int found = 0 ;
+  const LHCb::MCParticle* mother = p->mother() ;
+  while ( 0 != mother ) 
+  {
+    if ( m_cut ( mother ) ) { return ++found  ; }   // COUNT 
+    mother = mother->mother() ;
+  }
+  return found ;
+}
+// ============================================================================
+// OPTIONAL: "SHORT" representation
+// ============================================================================
+std::ostream& 
+LoKi::MCParticles::NinAncestors::fillStream( std::ostream& s ) const 
+{ return s << " MCNINANCESTOS( " << m_cut << " ) " ; }
+
+// ============================================================================
+// constructor from the predicate 
+// ============================================================================
+LoKi::MCParticles::InAncestors::InAncestors 
+( const LoKi::MCTypes::MCCuts& cuts ) 
+  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate ()
+  , m_cut ( cuts )
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::MCParticles::InAncestors::~InAncestors(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::MCParticles::InAncestors*
+LoKi::MCParticles::InAncestors::clone() const
+{ return new LoKi::MCParticles::InAncestors ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one important method 
+// ============================================================================
+LoKi::MCParticles::InAncestors::result_type 
+LoKi::MCParticles::InAncestors::operator() 
+  ( LoKi::MCParticles::InAncestors::argument p ) const 
+{ 
+  return inAncestors ( p ) ; 
+}
+// ============================================================================
+// the actual evaluator 
+// ============================================================================
+bool LoKi::MCParticles::InAncestors::inAncestors 
+( const LHCb::MCParticle* p ) const 
+{ 
+  if ( 0 == p )
+  {
+    Error ( "LHCb::MCParticle* point to NULL, return false") ;
+    return false ;
+  }
+  const LHCb::MCParticle* mother = p->mother() ;
+  while ( 0 != mother ) 
+  {
+    if ( m_cut ( mother ) ) { return true  ; }   // RETURN 
+    //
+    mother = mother->mother() ;                  //  
+  }
+  return false ;
+}
+// ============================================================================
+// OPTIONAL: "SHORT" representation
+// ============================================================================
+std::ostream& 
+LoKi::MCParticles::InAncestors::fillStream( std::ostream& s ) const 
+{ return s << " MCINANCESTOS( " << m_cut << " ) " ; }
+
+
 
 
 // ============================================================================

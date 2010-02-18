@@ -201,6 +201,11 @@ MCSUMTREE  = LoKi.MCParticles.SumTree
 ## @see LoKi::Cuts::MCMULTTREE
 MCMULTTREE = LoKi.MCParticles.MultTree
 
+## @see LoKi::Cuts::MCINANCESTORS 
+MCINANCESTORS  = LoKi.MCParticles.InAncestors
+## @see LoKi::Cuts::MCNINANCESTORS 
+MCNINANCESTORS = LoKi.MCParticles.NinAncestors
+
 ## @see LoKi::Cuts::MCY
 MCY        = LoKi.MCParticles.Rapidity  ()
 ## @see LoKi::Cuts::MCY0
