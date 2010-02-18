@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2010-02-18 - Rob Lambert
+ - Fix ambiguous else warning in AlignChisqConstraintTool.cpp
+
 ! 2010-02-09 - Wouter Hulsbergen
  - dump most important alignment dofs from AlignUpdateTool
  - fix problem with survey constraints for alignables that share all det elements with mother alignables

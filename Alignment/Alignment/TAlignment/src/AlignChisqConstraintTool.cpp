@@ -422,8 +422,10 @@ namespace Al
         AlParameters currentdelta = (*ielem)->currentLocalDelta() ;
         for(int idof=0 ; idof<6; ++idof ) {
           int ipar = (*ielem)->activeParIndex( idof ) ;
-          if( ipar>=0 ) {
-            if( survey->err[idof] > 0 ) {
+          if( ipar>=0 ) 
+          {
+            if( survey->err[idof] > 0 ) 
+            {
               double weight = 1/( survey->err[idof] * survey->err[idof] ) ;
               double residual = survey->par[idof] - currentdelta.parameters()(idof) ;
               halfDChi2DAlpha(ipar) += weight * residual; 
@@ -434,7 +436,9 @@ namespace Al
                      << (*ielem)->name() << " "
                      << currentdelta.parName(idof) << " "
                      << survey->par[idof] << " " << survey->err[idof] << endreq ;
-            } else {
+            } 
+            else 
+            {
               warning() << "No survey constraint for dof: "
                         << (*ielem)->name() << " " << currentdelta.parName(idof) << endreq ;
             }
@@ -463,7 +467,8 @@ namespace Al
         AlParameters currentdelta = (*ielem)->currentLocalDelta() ;
         for(int idof=0 ; idof<6; ++idof ) 
         {
-          if( (*ielem)->dofMask().isActive(idof) ) 
+          if( (*ielem)->dofMask().isActive(idof) )
+          {
             if( survey->err[idof] > 0 ) 
             {
               double weight = 1/( survey->err[idof] * survey->err[idof] ) ;
@@ -483,6 +488,8 @@ namespace Al
               warning() << "No survey constraint for dof: "
                         << (*ielem)->name() << " " << currentdelta.parName(idof) << endreq ;
             }
+          }//end if ielem..isActive
+          
         }
       }
     }
