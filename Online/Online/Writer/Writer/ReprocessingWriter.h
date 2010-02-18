@@ -1,7 +1,9 @@
 #ifndef WRITER_REPROCESSINGWRITER_H
 #define WRITER_REPROCESSINGWRITER_H
 
+#include "RTL/rtl.h"
 #include "MDF/MDFWriter.h"
+#include "CPP/Interactor.h"
 #include "Writer/MDFWriterNet.h"
 #include "GaudiKernel/IIncidentListener.h"
 
@@ -17,6 +19,7 @@ namespace LHCb {
    */
 
   class ReprocessingWriter : public MDFWriter, 
+    public Interactor,
     virtual public INotifyClient,
     virtual public IIncidentListener
     {
@@ -64,11 +67,20 @@ namespace LHCb {
       /// The message stream to log to.
       MsgStream *m_log;
 
+      /// File queue protection lock
+      lib_rtl_lock_t m_flLock;
+
       /// Flag to indicate a CANCEL command was received.
       bool    m_cancel;
 
       /// Returns the run number from an MDF header.
       virtual unsigned int getRunNumber(const void *data, size_t len);
+
+      /// Interactor overload: handle timer interrupts
+      virtual void handle(const Event& ev);
+
+      /// Close files on request
+      void closeFiles(bool force);
 
     public:
       /// Standard Algorithm constructor (delegates to MDFWriter constructor).

@@ -9,7 +9,9 @@
 #include "Writer/Connection.h"
 #include "Writer/ReprocessingWriter.h"
 #include "Writer/Utils.h"
-#include "RTL/rtl.h"
+#include "CPP/Event.h"
+#include "RTL/Lock.h"
+#include "CPP/TimeSensor.h"
 #include "TMD5.h"
 
 #include <stdexcept>
@@ -57,7 +59,8 @@ template <class T> void _delete(T& p) {
 
 /// Standard algorithm constructor
 ReprocessingWriter::ReprocessingWriter(const string& nam, ISvcLocator* pSvc)
-  : MDFWriter(nam, pSvc), m_bufferLength(0), m_currFile(0), m_srvConnection(0), m_rpcObj(0), m_log(0), m_cancel(false)
+  : MDFWriter(nam, pSvc), m_bufferLength(0), m_currFile(0), 
+    m_srvConnection(0), m_rpcObj(0), m_log(0), m_flLock(0), m_cancel(false)
 {
   // This should ideally be provided as a name and not an
   // IP address, so that the round-robin DNS can kick in.
@@ -69,7 +72,7 @@ ReprocessingWriter::ReprocessingWriter(const string& nam, ISvcLocator* pSvc)
   declareProperty("RunFileTimeoutSeconds", m_runFileTimeoutSeconds=30);
   declareProperty("MaxMemBufferMB",        m_memBufferLen=1024);
   declareProperty("MaxQueueSizeBytes",     m_maxQueueSizeBytes=1073741824);
-
+  ::lib_rtl_create_lock(0,&m_flLock);
 }
 
 /// Destructor: Checks if a file is open, and closes it before closing the connection.
@@ -79,31 +82,17 @@ ReprocessingWriter::~ReprocessingWriter()   {
   }
   m_cancel = false;
   _delete(m_log);
+  ::lib_rtl_delete_lock(m_flLock);
 }
 
 /// Algorithm::execute() override, delegates to MDFWriter::execute().
 StatusCode ReprocessingWriter::execute()   {
-  /*
-  long long int max_buff = m_memBufferLen;
-  if ( (max_buff<<20) < m_bufferLength ) {
-    // while ( !m_cancel && ((max_buff<<20) < m_bufferLength) ) {
-    while ( ((max_buff<<20) < m_bufferLength) ) {
-      *m_log << MSG::WARNING << "Memory buffer exceeded " << m_memBufferLen 
-	     << " MBytes. Waiting to empty..." << endmsg;
-      ::lib_rtl_sleep(1000);
-    }
-    if ( m_cancel ) {
-      //    *m_log << "Request cancelled. Possible drop of " << m_memBufferLen << " MBytes." << endmsg;
-      m_cancel = false;
-      // return StatusCode::SUCCESS;
-    }
-  }
-  */
   StatusCode sc = MDFWriter::execute();
   if ( m_currFile ) {
     if ( sc.isSuccess() ) m_currFile->incEvents();
     // Close file if it exceeded file size limit
     if (m_currFile->getBytesWritten() > (m_maxFileSizeMB << 20)) {
+      RTL::Lock file_list_lock(m_flLock);
       closeFile(m_currFile);
       m_openFiles.removeFile(m_currFile);
       _delete(m_currFile);
@@ -112,19 +101,34 @@ StatusCode ReprocessingWriter::execute()   {
   return sc;
 }
 
-/// Close file if it is open, and writes its entry in the Run Database.
-StatusCode ReprocessingWriter::finalize(void)   {
+/// Close files on request
+void ReprocessingWriter::closeFiles(bool force) {
+  RTL::Lock file_list_lock(m_flLock);
   for( File *tmp = m_openFiles.getFirstFile(); tmp; ) {
-    if(tmp->isOpen()) {
+    File* toDelete = 0;
+    if( force && tmp->isOpen() ) {
+      toDelete = tmp;
+    }
+    else if(tmp->getTimeSinceLastWrite() > m_runFileTimeoutSeconds) {
+      *m_log << MSG::INFO << "Close after TIMEOUT:" << *(tmp->getFileName()) << endmsg;
+      toDelete = tmp;
+    }
+    if ( toDelete ) {
       closeFile(tmp);
-      File *toDelete = tmp;
+      // removeFile() returns the next element after the removed one.
       tmp = m_openFiles.removeFile(tmp);
       delete toDelete;
       continue;
     }
     tmp = tmp->getNext();
   }
+}
 
+/// Close file if it is open, and writes its entry in the Run Database.
+StatusCode ReprocessingWriter::finalize(void)   {
+  TimeSensor::instance().remove(this,0);
+  // Unconditionally close all open files
+  closeFiles(true);
   // closeConnection() blocks till everything is flushed.
   m_srvConnection->closeConnection();
   _delete(m_srvConnection);
@@ -150,11 +154,27 @@ StatusCode ReprocessingWriter::initialize(void)   {
     m_srvConnection->initialize();
   }
   catch(const exception& e) {
-    *m_log << MSG::ERROR << "Caught Exception:" << e.what() << endmsg;
+    *m_log << MSG::ERROR << "Writer " << getpid() << " Caught Exception:" << e.what() << endmsg;
     return StatusCode::FAILURE;
+  }
+  if ( m_runFileTimeoutSeconds > 0 ) {
+    *m_log << "Writer " << getpid() << " Started timer to close files." << endmsg;
+    TimeSensor::instance().add(this,m_runFileTimeoutSeconds,0);
   }
   *m_log << "Writer " << getpid() << " Initialized." << endmsg;
   return StatusCode::SUCCESS;
+}
+
+/// Interactor overload: handle
+void ReprocessingWriter::handle(const Event& ev) {
+  switch(ev.eventtype) {
+  case TimeEvent:
+    closeFiles(false);
+    TimeSensor::instance().add(this,m_runFileTimeoutSeconds,0);
+    break;
+  default:
+    break;
+  }
 }
 
 /// IIncidentlistern overload
@@ -217,37 +237,15 @@ StatusCode ReprocessingWriter::writeBuffer(void *const /*fd*/, const void *data,
            << endmsg;
     return StatusCode::SUCCESS;
   }
-
   unsigned int runNumber = getRunNumber(data, len);
   if( m_currFile == 0 || runNumber != m_currFile->getRunNumber() ) {
+    RTL::Lock file_list_lock(m_flLock);
     m_currFile = m_openFiles.getFile(runNumber);
     if(!m_currFile) {
       *m_log << MSG::INFO << "RUN:" << runNumber
-             << ": No file exists. Creating a new one." << endmsg;
+	     << ": No file exists. Creating a new one." << endmsg;
       m_currFile = createAndOpenFile(runNumber);
       m_openFiles.addFile(m_currFile);
-    }
-
-    // This block is entered only in case an event from a previous run
-    // appears after a run has started. This should be relatively infrequent,
-    // and therefore, a good place to check if there are files that have been
-    // lying open since a very long time.
-    //
-    for(File *tmp=m_openFiles.getFirstFile(); tmp; ) {
-      if(tmp->getRunNumber() != runNumber &&
-	 tmp->getTimeSinceLastWrite() > m_runFileTimeoutSeconds) {
-	*m_log << MSG::INFO << "RUN:" << tmp->getRunNumber()
-	       << ": Close after TIMEOUT:"
-	       << *(tmp->getFileName())
-	       << endmsg;
-	File *toDelete = tmp;
-	closeFile(tmp);
-	// removeFile() returns the next element after the removed one.
-	tmp = m_openFiles.removeFile(tmp);
-	delete toDelete;
-	continue;
-      }
-      tmp = tmp->getNext();
     }
   }
 

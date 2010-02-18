@@ -1,8 +1,10 @@
-// $Id: DimRPCFileReader.cpp,v 1.27 2010-01-22 20:36:43 frankb Exp $
+// $Id: DimRPCFileReader.cpp,v 1.28 2010-02-18 18:20:22 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
+#include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/SvcFactory.h"
+#include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/DataIncident.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -222,10 +224,15 @@ StatusCode DimRPCFileReader::run()   {
           info("End of event input reached.");
           break;
         }
+	if ( 0 == pObj->registry()->address() ) {
+          info("Invalid event data: End of event input reached?");
+          break;
+	}
         m_evtCount++;
       }
       time(&m_timerStopProc);
-      m_reply = m_command->encodeResponse(2,m_evtCount);
+      // Bad file: Cannot read input (m_evtCount==0)
+      m_reply = m_command->encodeResponse((m_evtCount==0) ? 0 : 2,m_evtCount);
       ::dis_update_service(m_rpc.first);      
       s_isProcessing = false;
       m_reply = m_idle;
