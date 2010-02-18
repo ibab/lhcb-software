@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.82 2010-02-18 10:18:29 ibelyaev Exp $ 
+! $Id: release.notes,v 1.83 2010-02-18 14:18:51 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,18 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+! 2010-02-18 - Vanya Belyaev
+ 
+- add new symbols
+ 
+     MCFROMDECAYS     LoKi::MCParticles::FromDecays 
+               to check if particle comes 'only from decays'
+     MCFROMXS         LoKi::MCParticles::FromInteractions 
+               to check if particle comes 'from secondary interactions'
+
+     The checks are done using LHCb::MCVertex::MCVertexType, 
+      thus it is "not perfect"
 
 ! 2010-02-18 - Vanya Belyaev
 

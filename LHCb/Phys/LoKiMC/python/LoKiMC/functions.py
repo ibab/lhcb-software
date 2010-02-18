@@ -281,6 +281,12 @@ MCDECNODE   = LoKi.MCParticles.DecNode
 ## @see LoKi::Cuts::MCDECTREE
 MCDECTREE   = LoKi.MCParticles.DecTree
 
+
+## @see LoKi::Cuts::MCFROMDECAYS
+MCFROMDECAYS = LoKi.MCParticles.FromDecays       ()
+## @see LoKi::Cuts::MCFROMXS
+MCFROMXS     = LoKi.MCParticles.FromInteractions ()
+
 # functional part:
 
 ## functional part
