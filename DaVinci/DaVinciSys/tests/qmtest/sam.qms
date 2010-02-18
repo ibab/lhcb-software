@@ -2,6 +2,6 @@
 <!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
 <extension class="explicit_suite.ExplicitSuite" kind="suite">
   <argument name="suite_ids"><set>
-    <text>davincisys</text>
+    <text>davincisys.davincisys</text>
   </set></argument>
 </extension>
