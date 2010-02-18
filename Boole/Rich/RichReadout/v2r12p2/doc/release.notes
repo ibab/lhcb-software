@@ -1,0 +1,230 @@
+!-----------------------------------------------------------------------------
+! Package     : Rich/RichReadout
+! Responsible : Chris Jones
+! Purpose     : Rich Digitisation
+!-----------------------------------------------------------------------------
+
+!======================== RichReadout v2r12p2 2010-02-19 =====================
+! 2010-02-12 - Chris Jones
+ - Adapt to changes in RIchKernel histogramming base classes.
+
+!======================== RichReadout v2r12p1 2009-10-22 =====================
+! 2009-10-22 - Marco Cattaneo
+ - remove obsolete file RichReadout_dll.cpp
+
+! 2009-10-04 - Chris Jones
+ - Work around for crash when RichDetailedFrontEndResponse is deleted.
+   'Solution' is to disable some clean up, so not a long term fix but just 
+    gets things running again with the latest Gaudi version in the nightlies.
+
+!======================== RichReadout v2r12 2009-02-24 =======================
+! 2009-01-20 - Marco Cattaneo
+ - Migrate to LHCb::ParticlePropertySvc
+
+!======================== RichReadout v2r11 2008-11-24 =======================
+! 2008-11-06 - Marco Cattaneo
+ - Fixes for gcc 4.3
+
+! 2008-10-24 - Chris Jones
+ - Remove job options. RICH digitisation configuration now performed by
+   python configurable in new package Rich/RichDigiSys
+
+!======================== RichReadout v2r10 2008-06-05 =======================
+! 2008-06-05 - Chris Jones
+ - Adapt to changes in detector element locations in RichDet
+
+!======================== RichReadout v2r9 2008-02-02 ========================
+! 2008-01-31 - Chris Jones
+ - Improved detailed monitoring algorithm to include plots for HPR reflections
+
+! 2008-01-30 - Chris Jones
+ - Retune the HPD timing numbers
+
+!======================== RichReadout v2r8 2007-11-30 ========================
+! 2007-09-20 - Chris Jones
+ - Updates to allow the time calibrations to be adjusted via options.
+
+!======================== RichReadout v2r7 2007-06-11 ========================
+! 2007-06-11 - Marco Cattaneo
+ - Adapt requirements to new GaudiObjDesc v10r0 pattern
+
+! 2007-05-29 - Marco Cattaneo
+ - Adapt to move of interfaces to MCInterfaces
+ - Remove obsolete RichReadout_Event_load.cpp file
+
+!======================== RichReadout v2r6 2007-04-24 ========================
+! 2007-04-23 - Chris Jones
+ - Adapt to new interface for RichSmartID tool
+
+!======================== RichReadout v2r5 2007-03-20 ========================
+! 2007-03-20 - Marco Cattaneo
+ - Remove obsolete RichReadout_load.cpp file
+
+! 2007-03-20 - Chris Jones
+ - Clean up some unchecked StatusCodes
+ - Remove doxygen namespace comments (now in standalone file)
+
+!======================== RichReadout v2r4 2007-02-06 ========================
+! 2007-02-06 - Marco Cattaneo
+ - Clean up includes
+
+! 2007-02-02 - Chris Jones
+ - Adapt to new RICH namespaces
+
+!======================== RichReadout v2r3 2006-11-06 ========================
+! 2006-11-06 - Marco Cattaneo
+ - Use DECLARE_ALGORITHM_FACTORY macros
+
+! 2006-11-01 - Chris Jones
+ - fix for memory leak at finalise, found by valgrind
+
+!======================== RichReadout v2r2 2006-09-01 ========================
+! 2006-09-01 - Chris Jones
+ - Update to new MCRichDigit class
+
+!======================== RichReadout v2r1 2006-05-09 ========================
+! 2006-05-09 - Marco Cattaneo
+ - Migrate to Gaudi::Units namespace for units
+
+! 2006-04-05 - Chris Jones
+ - Suppress confusing warning method
+
+!======================== RichReadout v2r0p1 2006-04-05 ======================
+! 2006-04-05 - Chris Jones
+ - Suppress warnings about missing RichPixelProperties 
+
+!======================== RichReadout v2r0 2006-03-07 ========================
+! 2006-03-01 - Chris Jones
+ - Adapt to new RichDAQ interface
+
+! 2006-02-22 - Chris Jones
+ - Adapt to new sensDetID info in the mchits
+ - Some additions to the monitor code
+
+! 2006-02-16 - Chris Jones
+ - Various bug fixes
+ - Improvements following changes to MC history flags
+
+! 2006-02-06 - Chris Jones
+ - Some minor cleaups
+ - Add charge sharing to digit history information
+ - Update to get numbering information from RichDet instead of RichDAQ tool
+
+! 2006-02-02 - Chris Jones
+ - Bug fixes following first running tests !
+
+! 2006-01-23 - Chris Jones
+ - Split of MCRichSummedDeposit creation from RichSignal into dedicated 
+   new algorithm RichSummedDeposits. Allows for additional process inbetween.
+ - Add new charge sharing algorithm RichSimpleChargeSharing
+
+! 2006-01-19 - Marco Cattaneo
+ - Adapt to changed location of RichParticleIDType.h
+
+! 2005-12-16 - Chris Jones
+ - Update for LHCb v20r0
+
+!======================== RichReadout v1r14 2005-11-18 =======================
+! 2005-11-15 - Chris Jones
+ - Adapt to new RichDAQ tools
+
+! 2005-10-13 - Chris Jones
+ - Add missing AlgFactory includes
+ - Add more history information to MCRichDigits
+
+! 2005-07-14 - Chris Jones
+ - Add fix to make sure all a bank exists for all Level1 boards.
+   Previously, if a Level 1 board had no hits in any HPD, nothing was saved for
+   that board.
+
+!======================== RichReadout v1r13 2005-06-21 =======================
+! 2005-06-21 - Chris Jones
+ - Adapt to changes in RichKernel base classes and RichToolRegistry
+
+! 2005-06-18 - Chris Jones
+ - Import data objects MCRichDeposit and MCRichSummedDeposit from RichEvent
+
+!======================== RichReadout v1r12 2005-03-08 =======================
+! 2005-03-03 - Chris Jones
+ - Add history information to MCRichDigits.
+
+! 2005-02-20 - Chris Jones
+ - Fix problem with "Next" spillover event + various minor improvements
+
+!======================== RichReadout v1r11 2005-01-17 =======================
+! 2005-01-17 - Marco Cattaneo
+ - Add explicit dependency on DAQEvent (no longer inherited via RichEvent)
+
+! 2005-01-07 - Chris Jones
+ - Adapt to new RichDAQ package
+ - Import algorithm MCRichDigitsToRawBufferAlg
+ - Remove obsolete algorithm RichDigitCreator
+
+!======================== RichReadout v1r10 2004-11-16 =======================
+! 2004-10-27 - Chris Jones
+ - Use RichEvent v8r*
+
+! 2004-07-30 - Chris Jones
+ - Update doxygen comments
+
+! 2004-07-27 - Chris Jones
+ - Minor change to RichSignal algorithm
+
+!========================= RichReadout v1r9 2004-06-17 =======================
+! 2004-06-17 - Chris Jones
+ - Updated includes for new package structure
+
+!========================= RichReadout v1r8 2004-04-20 =======================
+! 2004-04-03 - Chris Jones
+ - Fix service bug in monitor class
+
+!========================= RichReadout v1r7 2004-03-18 =======================
+! 2004-03-14 - Chris Jones
+ - Fix long finalisation time
+ - Adapt to new Gaudi base classes
+
+!========================= RichReadout v1r6 2004-03-15 =======================
+
+! 2004-03-04 - Christopher Rob Jones
+ - Remove fix for energy deposit (Now in GaussRICH since Gauss v14r3)
+
+!========================= RichReadout v1r5 2004-02-05 =======================
+! 2004-01-26 - Chris Jones
+ - Remove SICB specialisations and dependencies (SICB/RiSicbGeom)
+ - Add reading of LHC background stream (disabled in job options until
+   Gauss LHC events are available)
+ - Switch to new detector tools
+
+!========================= RichReadout v1r4 2004-01-07 =======================
+! 2004-01-07 - Marco Cattaneo
+ - Move to Gaudi v14 (use RichEvent v7r* in requirements)
+
+!========================= RichReadout v1r3 2003-12-09 =======================
+! 2003-12-09 - Marco Cattaneo
+ - Remove #include RichKernel/MessageSvcStl.h, obsolete with GAUDI v13
+
+!======================== RichReadout v1r2p1 2003-12-03 ======================
+! 2003-12-03 - Chris Jones
+ - Add to options file configuration for refractive index tool
+
+!========================= RichReadout v1r2 2003-11-26 =======================
+! 2003-11-25 - Chris Jones
+ - Updates for new RichSmartID
+
+!========================= RichReadout v1r1 2003-11-03 =======================
+! 2003-11-03 - Marco Cattaneo
+ - Use RichEvent v6r*
+ - Remove unneccessary include_dirs from requirements file
+
+! 2003-11-02 - Chris Jones
+ - New version supporting HPDs only.
+ - Uses a more realistic treatment of the detector response
+
+!========================= RichReadout v1r0 2003-10-06 =======================
+! 2003-10-01 - Marco Cattaneo
+ - Moved sicb_incident_track.data to ParamFiles package
+
+! 2003-06-19 - Chris Jones
+ - First version in CVS
+ - Supports HPD digitisation for SICB and Gauss data
+ - MaPMT support added - Future updates for Frontend response will be required

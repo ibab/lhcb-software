@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+<package name="RichEvent">
+
+<!-- **************************************************************************
+  * $Id: MCRichDeposit.xml,v 1.5 2006-02-06 12:26:24 jonrob Exp $
+  *****************************************************************************
+  * XML-description of MCRichDeposit class                                    *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2004-06-23                                                        *
+  ************************************************************************* -->
+
+<class 
+        name             = "MCRichDeposit"
+        author           = "Chris Jones   Christopher.Rob.Jones@cern.ch" 
+        desc             = "Energy deposited within a given pixel from a single MCRichHit" 
+        id               = "12410" 
+        location         = "MC/Rich/Deposits"
+        keyedContTypeDef = "TRUE"   
+        stdVectorTypeDef = "TRUE">
+
+        <base name="KeyedObject&lt;int&gt;"/>
+        &KeyedObject;
+
+        <import name="Event/MCRichHit"/>
+        <import name="Event/MCRichDigitHistoryCode"/>
+        <import name="Kernel/RichSmartID"/>
+
+	<constructor 
+		desc     = "Copy constructor. Creates a new MCRichDeposit object with the same information" 
+		initList = "m_smartID(dep-&gt;smartID()), m_energy(dep-&gt;energy()), m_time(dep-&gt;time()), m_history(dep-&gt;history()), m_parentHit(dep-&gt;parentHit())">
+                <arg const="TRUE" inout="BYVALUE" name="dep" type="LHCb::MCRichDeposit*"/>
+                <code/>
+      	</constructor>
+
+        <attribute 
+                name = "smartID"
+                desc = "RichSmartID channel identifier" 
+                type = "LHCb::RichSmartID"
+        />
+          
+        <attribute 
+                name = "energy"
+                desc = "Deposited energy" 
+                type = "double"
+                init = "0"
+        />
+
+        <attribute 
+                desc = "Time of deposit" 
+                name = "time" 
+                type = "double"
+                init = "0"
+        />
+
+        <attribute 
+                name = "history"
+                desc = "Bit-packed history information" 
+                init = "0" 
+                type = "LHCb::MCRichDigitHistoryCode">
+        </attribute>
+           
+        <relation 
+                name = "parentHit" 
+                desc = "Parent MCRichHit" 
+                type = "LHCb::MCRichHit"
+        />
+</class>
+
+</package>
+</gdd>

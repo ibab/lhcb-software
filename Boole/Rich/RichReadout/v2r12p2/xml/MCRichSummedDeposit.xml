@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+<package name="RichEvent">
+
+<!-- **************************************************************************
+  * $Id: MCRichSummedDeposit.xml,v 1.3 2005-12-16 15:13:33 jonrob Exp $
+  *****************************************************************************
+  * XML-description of MCRichSummedDeposit class                              *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2004-06-23                                                        *
+  ************************************************************************* -->
+
+<class 
+        name             = "MCRichSummedDeposit"
+        author           = "Chris Jones   Christopher.Rob.Jones@cern.ch" 
+        desc             = "Combined energy of multiple deposits within one pixel" 
+        id               = "12409" 
+        location         = "MC/Rich/SummedDeposits"  
+        keyedContTypeDef = "TRUE" 
+        stdVectorTypeDef = "TRUE">
+
+        <base name="KeyedObject&lt;LHCb::RichSmartID&gt;"/>
+        &KeyedContainer;
+          
+        <import name="Kernel/RichSmartID"/>
+        <import name="Event/MCRichDeposit"/>
+        <import name="Event/MCRichDigitHistoryCode"/>
+
+        <attribute 
+                name = "summedEnergy"
+                desc = "Combined energy of multiple deposits within a single pixel" 
+                type = "double"
+                init = "0"
+        />
+
+        <attribute 
+                name = "history"
+                desc = "Bit-packed history information" 
+                init = "0" 
+                type = "LHCb::MCRichDigitHistoryCode">
+        </attribute>
+
+        <relation 
+                name         = "deposits"
+                desc         = "MCRichDesposits contributing to this summed energy deposit" 
+                multiplicity = "N"  
+                type         = "LHCb::MCRichDeposit"
+        />
+         
+        <method 
+                name = "addEnergy"
+                desc = "Add to the summed energy" >
+                <arg const = "TRUE" name="energy" type="double"/>
+                <code>
+                   m_summedEnergy += energy;
+                </code>
+        </method>
+        
+</class>
+
+</package>
+</gdd>
