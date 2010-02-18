@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.120 2010-02-17 23:43:33 gligorov Exp $
+$Id: release.notes,v 1.121 2010-02-18 15:23:34 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -9,6 +9,7 @@ $Id: release.notes,v 1.120 2010-02-17 23:43:33 gligorov Exp $
 !
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2Lines v2r4 2010-02-17 ===================
 ! 2010-02-18 - V. Gligorov
  - Updates to inclusive triggers (Charm,Topo,Phi,B2DX) to follow changes
    in Hlt2PID. All now use the same fast-fit and instead of configuring
@@ -17,7 +18,6 @@ $Id: release.notes,v 1.120 2010-02-17 23:43:33 gligorov Exp $
  - Fix minor bug in Hlt2diphotonDiMuonLines which was causing a large printout
    from one of the filters.
 
-!========================== Hlt2Lines v2r4 2010-02-17 ===================
 ! 2010-02-16 - Jacopo Nardulli
  - Follow up on fix of savannah bug 59641. See also https://savannah.cern.ch/bugs/?59641
 
