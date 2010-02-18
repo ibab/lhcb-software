@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.420 2010-02-18 15:23:06 graven Exp $ 
+! $Id: release.notes,v 1.421 2010-02-18 15:33:58 kvervink Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-02-18 - K. Vervink
+ - Configuration.py  Regrouped alleys for HltGlobalMonitor:
+   unused alleys are removed i.e. XPress in Hlt1
+   merged Lumi + BeamGas -> LumiBeamGas
+   merged Electron + Photon ->ECAL
+   defined two new alleys: Charm, B2LLX
+
 !========================== HltConf v6r4 2010-02-17 ===================
 ! 2010-02-18 - V. Gligorov
  - Hlt2.py updated to follow recent changes to Hlt2PID in Hlt2SharedParticles 
