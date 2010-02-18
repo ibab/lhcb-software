@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -378,7 +378,7 @@ def _hlt2StagedFastFit(Hlt2Tracks = "Long"
     Hlt2StagedFastFitSeq = GaudiSequencer( "Hlt2StagedFastFitSeq" )
 
     Hlt2StagedFastFit = TrackEventFitter('Hlt2StagedFastFit')
-    Hlt2StagedFastFitSeq.Members += [ Hlt2StagedFastFit ]
+    Hlt2StagedFastFitSeq.Members = [ Hlt2StagedFastFit ]
 
     Hlt2StagedFastFit.TracksInContainer  = _trackLocation(prefix,"Track","",Hlt2Tracks)
     # Need a rule for the fitted tracks: the default
