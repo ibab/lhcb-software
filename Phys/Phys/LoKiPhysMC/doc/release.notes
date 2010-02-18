@@ -1,9 +1,35 @@
-! $Id: release.notes,v 1.67 2009-12-11 14:18:34 cattanem Exp $ 
+! $Id: release.notes,v 1.68 2010-02-18 11:31:54 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-02-18 - Vanya Belyaev
+
+ - add new component , LoKi::Hybrid::MCTupleTool, 
+
+    simple implementation  of IMCParticleTupleTool interface:
+
+    XXTool.Varibales = {
+
+     ## "name" : "functor" 
+
+     'px' : "MCPX" , 
+
+     'fromB'         : " switch ( MCINANCESTORS ( BEAUTY ) , 1 , 0 ) " , 
+
+     'fromLongLived' : " switch ( MCINANCESTORS ( MCDECNODE ( Nodes.LonvLived ), 1 , 0 ) " ,
+
+     'fromPV' : " 0 == MCNINANCESTORS ( MCDECNODE ( Nodes.LonvLived ) ) " 
+
+    }
+    
+
+
+ - cmt/requirements 
+
+     version increment to v8r7  
 
 !========================== LoKiPhysMC v8r6 2009-12-11 ========================
 ! 2009-12-03 - Vanya Belyaev
