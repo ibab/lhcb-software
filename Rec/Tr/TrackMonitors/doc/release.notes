@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 
+! 2010-02-18 - Alexandr Kozlinskiy
+ - added "FullDetail" property to OTTrackMonitor which controls creation
+   of the 'pitch' histograms. By default this set to 'false' and significantly
+   reduces the number of created histograms.
+
 !========================== TrackMonitors v1r20 2010-02-15 ==================
 ! 2010-02-14 - Wouter Hulsbergen
  - added histogram to look for crosstalk to OTHitEfficiencyMonitor
