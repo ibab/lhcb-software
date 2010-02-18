@@ -1,4 +1,4 @@
-// $Id: MCTupleTool.cpp,v 1.1 2010-02-18 11:31:54 ibelyaev Exp $
+// $Id: MCTupleTool.cpp,v 1.2 2010-02-18 14:51:55 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -316,6 +316,9 @@ void LoKi::Hybrid::MCTupleTool::propHandler ( Property& /* p */ )
   StatusCode sc = initVariables () ;
   Assert ( sc.isSuccess() , "Unable to set 'Variables'"   , sc ) ;
 }
+// ============================================================================
+/// Declaration of the Tool Factory
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,MCTupleTool);
 // ============================================================================
 
 // ============================================================================
