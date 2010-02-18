@@ -1,7 +1,8 @@
 from Configurables import AlignTrTools
 from AlignmentTools.AlignmentToolsConf import Centipede
-from AlignTrTools.AlignTrToolsConf import ( TAConfig, Derivatives )
-import AlignTrTools.Configuration
+from AlignTrTools.AlignTrToolsConf import Derivatives
+from Configurables import TAConfig
+#import AlignTrTools.Configuration
 
 ########################################################
 TAConfig().addTool(Centipede)
