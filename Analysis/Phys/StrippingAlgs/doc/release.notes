@@ -1,0 +1,10 @@
+!$Id: $
+! -----------------------------------------------------------------------------
+! Package     : Phys/StrippingAlgs
+! Responsible : Anton Poluektov
+! Purpose     : Stripping framework c++ component algorithms
+! -----------------------------------------------------------------------------
+
+! 2010-02-18 - Juan Palacios
+ - Imported StrippingAlg and StrippingCheck from Phys/StrippingConf
+
