@@ -1,13 +1,13 @@
-!$Id: release.notes,v 1.62 2010-02-18 15:22:38 kvervink Exp $
+!$Id: release.notes,v 1.63 2010-02-18 16:28:14 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+!========================== HltGlobalMonitor v3r1 2010-02-17 ===================
 ! 2010-02-18 - Kim Vervink
  - unused histograms are removed.
 
-!========================== HltGlobalMonitor v3r1 2010-02-17 ===================
 ! 2010-02-15 - Gerhard Raven
  - fix windows compiler warnings
 
