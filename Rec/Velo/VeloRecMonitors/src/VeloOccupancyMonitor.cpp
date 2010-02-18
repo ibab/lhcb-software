@@ -1,4 +1,4 @@
-// $Id: VeloOccupancyMonitor.cpp,v 1.9 2009-11-16 13:10:39 krinnert Exp $
+// $Id: VeloOccupancyMonitor.cpp,v 1.10 2010-02-18 21:32:15 erodrigu Exp $
 // Include files 
 // -------------
 
@@ -286,7 +286,7 @@ void Velo::VeloOccupancyMonitor::getOdinBank() {
 
   m_odin = 0;
   if (!exist<LHCb::ODIN> (LHCb::ODINLocation::Default)) {
-    info() << "No ODIN bank found. Histograms involving bunch IDs disabled."<< endmsg;
+    debug() << "No ODIN bank found. Histograms involving bunch IDs disabled."<< endmsg;
   } else {
     m_odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
   }

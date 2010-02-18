@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2010-02-18 - Eduardo Rodrigues
+ - VeloOccupancyMonitor: messages for missing ODIN banks downgraded from info
+   to debug!
+
 ! 2010-02-18 - Michael Alexander
  - VeloIPResolutionMonitor:
    - Changed to select only Long tracks (previously Long and Upstream)
