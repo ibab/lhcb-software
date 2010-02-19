@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2010-02-19 - Rob Lambert
+ - fix and/or precedence warning in GetElementsToBeAligned.h
+
 ! 2010-02-18 - Rob Lambert
  - Fix ambiguous else warning in AlignChisqConstraintTool.cpp
 

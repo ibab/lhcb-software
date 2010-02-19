@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.28 2010-02-09 12:59:21 wouter Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.29 2010-02-19 08:54:35 rlambert Exp $
 // Include files
 
 //from STL
@@ -120,8 +120,8 @@ StatusCode GetElementsToBeAligned::initialize() {
     for (Tokenizer::iterator j = split.begin(), jEnd = split.end(); j != jEnd; ++j) tokens.push_back((*j));
     
     if( tokens.size()==2 ) {
-	path = tokens.at(0);
-        dofs = tokens.at(1);
+      path = tokens.at(0);
+      dofs = tokens.at(1);
     } else if (tokens.size()==3) {
       groupElems = true ;
       path = tokens.at(1) ;
@@ -130,8 +130,8 @@ StatusCode GetElementsToBeAligned::initialize() {
       if( groupname.find("Group") != std::string::npos) groupname = path ;
     } else {
       error() << "==> There is something wrong with the specified property Elements: " 
-	      << tokens.size() << std::endl 
-	      << *i << endmsg;
+              << tokens.size() << std::endl 
+              << *i << endmsg;
       return StatusCode::FAILURE;
     }
     
@@ -159,10 +159,10 @@ StatusCode GetElementsToBeAligned::initialize() {
       // Check if token is a valid regular expression, else catch exception and return statuscode failure.
       // Better to stop the program and let the user fix the expression than trying to predict what he/she wants.
       try {
-	ex.assign((*j), boost::regex_constants::icase);
+        ex.assign((*j), boost::regex_constants::icase);
       } catch (boost::bad_expression& exprs) {
-	error() << "==> Error: " << (*j) << " is not a valid regular expression: " << exprs.what() << endmsg;
-	return StatusCode::FAILURE;
+        error() << "==> Error: " << (*j) << " is not a valid regular expression: " << exprs.what() << endmsg;
+        return StatusCode::FAILURE;
       }
       // If valid add expression to list of expressions.
       regexs.push_back(ex);
@@ -174,7 +174,7 @@ StatusCode GetElementsToBeAligned::initialize() {
     // Check that we have found elements to align, else exit gracefully
     if ( detelements.empty() ) {
       error() << "\n ==> Couldn't find any elements that matched the given regular expression! \n"
-	      << " expression=\'" << *i << "\'" << std::endl
+              << " expression=\'" << *i << "\'" << std::endl
               << " ==> The syntax of the property Elements is a list of : \"Group : Regex representing path of det elems : dofs\" \n" 
               << " ==> where group and dofs are optional.\n" 
               << " ==> Check the regular expression and also check if there are no whitespaces.\n" << endmsg;
@@ -201,12 +201,12 @@ StatusCode GetElementsToBeAligned::initialize() {
       while( ielem != alignelements.end() && (*ielem)->name() != groupname) ++ielem ;
       if( ielem != alignelements.end() ) (*ielem)->addElements( detelements ) ;
       else alignelements.push_back(new AlignmentElement(groupname,
-							detelements, index++, dofMask,m_useLocalFrame));
+                                                        detelements, index++, dofMask,m_useLocalFrame));
     }
     else
       for(std::vector<const DetectorElement*>::iterator ielem = detelements.begin() ;
-	  ielem != detelements.end(); ++ielem)
-	alignelements.push_back(new AlignmentElement(*ielem, index++, dofMask,m_useLocalFrame));
+          ielem != detelements.end(); ++ielem)
+        alignelements.push_back(new AlignmentElement(*ielem, index++, dofMask,m_useLocalFrame));
   }
   
   // sort the elements by hierarchy. currently, this just follows the
@@ -229,8 +229,8 @@ StatusCode GetElementsToBeAligned::initialize() {
     for (++jelem ; jelem != alignelements.rend()&&!found; ++jelem) 
       // is 'i' a daughter of 'j'
       if( (*jelem)->isOffspring( **ielem ) ) {
-	(const_cast<AlignmentElement*>((*jelem)))->addDaughter( **ielem) ;
-	found = true ;
+        (const_cast<AlignmentElement*>((*jelem)))->addDaughter( **ielem) ;
+        found = true ;
       }
   }
   
@@ -242,7 +242,7 @@ StatusCode GetElementsToBeAligned::initialize() {
        ielem != alignelements.end(); ++ielem) {
     AlignmentElement::ElementContainer allelements = (*ielem)->elementsInTree() ;
     for (AlignmentElement::ElementContainer::const_iterator idetelem = allelements.begin() ; 
-	 idetelem != allelements.end(); ++idetelem)
+         idetelem != allelements.end(); ++idetelem)
       m_elementMap[*idetelem] = *ielem ;
   }
 
@@ -273,7 +273,7 @@ StatusCode GetElementsToBeAligned::finalize()
 
 
 void GetElementsToBeAligned::getElements(const IDetectorElement* parent, const RegExs& regexs,
-					 size_t depth, std::vector<const DetectorElement*>& detelements) const {
+                                         size_t depth, std::vector<const DetectorElement*>& detelements) const {
   /// loop over children
   for (IDetIter iC = parent->childBegin(), iCend = parent->childEnd(); iC != iCend; ++iC) {
     /// Get path of child
@@ -299,7 +299,7 @@ void GetElementsToBeAligned::getElements(const IDetectorElement* parent, const R
     std::list<boost::regex>::const_iterator iRend = regexs.end();
     /// Loop over list of sub paths and try to match them
     for (std::list<std::string>::const_iterator i = paths.begin(), iEnd = paths.end();
-	 i != iEnd && iR != iRend; ++i) {
+         i != iEnd && iR != iRend; ++i) {
       match = boost::regex_match((*i), (*iR++));
       if (!match) break; /// If it doesn't match break loop. No need to try and match the rest
     }
@@ -317,7 +317,7 @@ void GetElementsToBeAligned::getElements(const IDetectorElement* parent, const R
 }
 
 StatusCode GetElementsToBeAligned::findElements(const std::string& path,
-						std::vector<const AlignmentElement*>& alignelements) const 
+                                                std::vector<const AlignmentElement*>& alignelements) const 
 {
   alignelements.clear() ;
   boost::regex ex ;
@@ -328,8 +328,8 @@ StatusCode GetElementsToBeAligned::findElements(const std::string& path,
     if(!match)
       // if any detector element matches, this is also fine
       for( AlignmentElement::ElementContainer::const_iterator idetelem = (*ialelem)->detelements().begin() ;
-	   idetelem != (*ialelem)->detelements().end() && !match ; ++idetelem) 
-	match = boost::regex_match((*idetelem)->name(),ex) ;
+           idetelem != (*ialelem)->detelements().end() && !match ; ++idetelem) 
+        match = boost::regex_match((*idetelem)->name(),ex) ;
     if(match) alignelements.push_back( *ialelem ) ;
   }
   return StatusCode::SUCCESS ;
@@ -360,9 +360,9 @@ const AlignmentElement* GetElementsToBeAligned::findElement(const LHCb::LHCbID& 
     switch( id.detectorType() ) {
     case LHCb::LHCbID::Velo:
       element = id.isVeloR() ? 
-	static_cast<const DetectorElement*>(velo->rSensor( id.veloID() )) :
-	static_cast<const DetectorElement*>(velo->phiSensor( id.veloID() )) ;
-	break ;
+        static_cast<const DetectorElement*>(velo->rSensor( id.veloID() )) :
+        static_cast<const DetectorElement*>(velo->phiSensor( id.veloID() )) ;
+      break ;
     case LHCb::LHCbID::TT:
       element = tt->findSector( id.stID() );
       break ;

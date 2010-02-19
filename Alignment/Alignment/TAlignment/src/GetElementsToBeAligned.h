@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.h,v 1.16 2010-01-27 21:12:48 wouter Exp $
+// $Id: GetElementsToBeAligned.h,v 1.17 2010-02-19 08:54:36 rlambert Exp $
 #ifndef GETELEMENTSTOBEALIGNED_H
 #define GETELEMENTSTOBEALIGNED_H 1
 
@@ -37,8 +37,8 @@ public:
 
   /// Standard constructor
   GetElementsToBeAligned(const std::string& type,
-			 const std::string& name,
-			 const IInterface* parent);
+                         const std::string& name,
+                         const IInterface* parent);
 
   virtual ~GetElementsToBeAligned( ); ///< Destructor
 
@@ -61,16 +61,17 @@ public:
 
   // Find the list of elements corresponding to a path (which can ba rehulare expression)
   StatusCode findElements(const std::string& path, 
-			  std::vector<const AlignmentElement*>& alignelements) const ; 
+                          std::vector<const AlignmentElement*>& alignelements) const ; 
   // return the time with which the geometry was initialized
   Gaudi::Time initTime() const { return m_initTime ; } 
   // initialize an Al::Equations object
   void initEquations(Al::Equations& ) const ;
+
 private:
   enum e_DoFs {Tx, Ty, Tz, Rx, Ry, Rz};
   
   void getElements(const IDetectorElement* parent, const RegExs& expressions,
-		   size_t depth, std::vector<const DetectorElement*>& detelements) const ;
+                   size_t depth, std::vector<const DetectorElement*>& detelements) const ;
   
   struct ElementSorter
   {
@@ -79,13 +80,18 @@ private:
     // should cover all cases (I hope).
     
     bool operator()(const AlignmentElement* lhs,
-		    const AlignmentElement* rhs) const {
-      return lhs->basename() < rhs->basename() ||
-	(lhs->basename() == rhs->basename() &&
-	 (lhs->detelements().front()->name() < rhs->detelements().front()->name() ||
-	  lhs->detelements().front()->name() == rhs->detelements().front()->name() &&
-	  lhs->elementsInTree().size() > rhs->elementsInTree().size() ) ) ;
-	 //return lhs->basename() < rhs->basename() ||
+                    const AlignmentElement* rhs) const {
+      return (
+              lhs->basename() < rhs->basename() ||
+              (lhs->basename() == rhs->basename() &&
+               (lhs->detelements().front()->name() < rhs->detelements().front()->name() ||
+                (lhs->detelements().front()->name() == rhs->detelements().front()->name() &&
+                 lhs->elementsInTree().size() > rhs->elementsInTree().size())
+                ) 
+               ) 
+              );
+      
+      //return lhs->basename() < rhs->basename() ||
       //	(lhs->basename() == rhs->basename() &&
       //	 lhs->detelements().front()->name() < rhs->detelements().front()->name() ) ;
    
