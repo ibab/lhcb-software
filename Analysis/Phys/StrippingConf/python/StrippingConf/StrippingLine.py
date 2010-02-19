@@ -355,7 +355,7 @@ class StrippingLine(object):
     def isAppended( self ) : 
 	return self._appended
 
-    def createConfigurable( self ) : 
+    def createConfigurable( self, HDRLocation = 'Strip/Phys/DecReports' ) : 
         # check for forbidden attributes
         
         name    = self._name
@@ -418,7 +418,7 @@ class StrippingLine(object):
 
             mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = members ) })
             
-        mdict.update( { 'HltDecReportsLocation' : 'Strip/Phys/DecReports' } )
+        mdict.update( { 'HltDecReportsLocation' : HDRLocation } )
         if (self.outputLocation()) : 
     	    mdict.update( { 'OutputLocation' : "/Event/Strip/" + self.outputLocation() + "/Particles" } )
 #        mdict.update( { 'ANNSvc' : 'StripANNSvc' } )

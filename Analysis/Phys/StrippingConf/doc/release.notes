@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.42 2010-02-18 14:59:12 jpalac Exp $
+!$Id: release.notes,v 1.43 2010-02-19 04:17:41 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-02-19 - Anton Poluektov 
+ - Added HDRLocation argument to StrippingConf. 
+   Location of the stripping HltDecReport. Equals to 'Stip/Phys/DecReports' by default. 
 
 ! 2010-02-18 - Juan Palacios
  - Moved StrippingAlg and StrippingCheck to Phys/StrippingAlgs.

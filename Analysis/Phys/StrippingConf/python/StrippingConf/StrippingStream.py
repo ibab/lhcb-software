@@ -29,7 +29,9 @@ class StrippingStream ( LHCbConfigurableUser ) :
 	    self.lineConfigurables().append(line)
 
 	    
-    def createConfigurables(self, TES = False, Settings = None) :
+    def createConfigurables(self, TES = False, 
+				  HDRLocation = 'Strip/Phys/DecReports', 
+				  Settings = None) :
         from Configurables import StrippingCheck
 
 # First apply settings to configurable lines
@@ -70,7 +72,7 @@ class StrippingStream ( LHCbConfigurableUser ) :
 		self.sequence().Members += [ StrippingCheck(line.name(), 
 				     InputLocation = "/Event/Strip/" + line.outputLocation() + "/Particles") ]
 	    else :  
-		line.createConfigurable()
+		line.createConfigurable( HDRLocation )
 		self.sequence().Members += [ line.configurable() ]
 
 
