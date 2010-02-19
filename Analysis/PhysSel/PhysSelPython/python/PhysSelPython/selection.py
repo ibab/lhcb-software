@@ -1,4 +1,4 @@
-#$Id: selection.py,v 1.10 2010-02-19 10:53:05 jpalac Exp $
+#$Id: selection.py,v 1.11 2010-02-19 11:30:56 jpalac Exp $
 """
 Classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -132,7 +132,9 @@ class Selection(object) :
         if len(Algorithm.InputLocations) != 0 :
             if not compatibleSequences(_outputLocations,
                                        Algorithm.InputLocations) :
-                raise IncompatibleInputLocations('InputLocations of input algorithm incompatible with RequiredSelections!')
+                raise IncompatibleInputLocations('InputLocations of input algorithm incompatible with RequiredSelections!'\
+                                                 '\nInputLocations: '+str(Algorithm.InputLocations)+\
+                                                 '\nRequiredSelections: '+str(_outputLocations))
         self.alg = Algorithm.clone(self._name, InputLocations = [])
         print "Selection: cloned", type(self.alg) , Algorithm.name(), "to", self.alg.name()
         self._outputBranch = OutputBranch
