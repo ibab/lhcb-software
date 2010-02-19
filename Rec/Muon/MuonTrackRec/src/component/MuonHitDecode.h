@@ -1,4 +1,4 @@
-// $Id: MuonHitDecode.h,v 1.10 2010-02-17 14:59:29 ggiacomo Exp $
+// $Id: MuonHitDecode.h,v 1.11 2010-02-19 14:53:44 ggiacomo Exp $
 #ifndef LIB_MUONHITDECODE_H 
 #define LIB_MUONHITDECODE_H 1
 
@@ -54,13 +54,13 @@ public:
   virtual int nPadXvy(int s, int r) {return 0*s*r;}
   virtual int nPadYvx(int s, int r) {return 0*s*r;}
   virtual float padSizeX(int station,			    
-                         int region)  {return 0.*station*region;}
+                         int region)  {return (float)(0.*station*region);}
   virtual float padSizeY(int station,			    
-                         int region)  {return 0.*station*region;}
+                         int region)  {return (float)(0.*station*region);}
   virtual float padSizeXvy(int station,			    
-			   int region)  {return 0.*station*region;}
+                           int region)  {return (float)(0.*station*region);}
   virtual float padSizeYvx(int station,			    
-			   int region)  {return 0.*station*region;}
+                           int region)  {return (float)(0.*station*region);}
   virtual LHCb::MuonTileID* tileFromLogCh(unsigned int q, 
                                           unsigned int s, 
                                           unsigned int r, 

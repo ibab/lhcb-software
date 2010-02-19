@@ -1,4 +1,4 @@
-// $Id: MuonCombRec.cpp,v 1.15 2010-02-19 14:29:48 ggiacomo Exp $
+// $Id: MuonCombRec.cpp,v 1.16 2010-02-19 14:53:44 ggiacomo Exp $
 // Include files 
 #include <fstream>
 
@@ -221,7 +221,7 @@ StatusCode MuonCombRec::initialize() {
   
   // get the z position of stations
   for ( int station=0;station<m_nStation;station++){
-    m_zStations[station] = m_muonDetector->getStationZ(station);
+    m_zStations[station] = (float) (m_muonDetector->getStationZ(station));
     debug()<<"Z of station M"<<station+1<<": "<<m_zStations[station]<<endmsg;
   }
   // <---
@@ -492,8 +492,8 @@ StatusCode MuonCombRec::muonSearch() {
       // merge the x-talk hits if any
       debug()<<"Now merge the x-talk hits to the current seed"<<endmsg;
       
-      float SSx = (*isSS)->x();
-      float SSy = (*isSS)->y();
+      float SSx = (float) ((*isSS)->x());
+      float SSy = (float) ((*isSS)->y());
       float n = 1;
       
       // look for x-talk hits
@@ -515,12 +515,12 @@ StatusCode MuonCombRec::muonSearch() {
             fabs((*isSS)->y()-(*itSSn)->y())<
             0.55*(m_pad_y[keym]+m_pad_y[keyn]))
         {
-          SSx+=(*itSSn)->x();
-          SSy+=(*itSSn)->y();
-        n++;
-        xt_Hits.push_back(*itSSn);
-        seedXTHits.push_back(*itSSn); 
-        candidates[SS].push_back((*itSSn));
+          SSx += (float) ((*itSSn)->x());
+          SSy += (float) ((*itSSn)->y());
+          n++;
+          xt_Hits.push_back(*itSSn);
+          seedXTHits.push_back(*itSSn); 
+          candidates[SS].push_back((*itSSn));
         }
       }
       

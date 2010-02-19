@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.cpp,v 1.26 2010-02-19 14:29:48 ggiacomo Exp $
+// $Id: MuonNNetRec.cpp,v 1.27 2010-02-19 14:53:44 ggiacomo Exp $
 
 #include <list>
 
@@ -367,7 +367,7 @@ StatusCode MuonNNetRec::muonNNetMon(){
     // kill double length neurons if there is a unit length one 
     nl1 = neurons.begin();
     for(; nl1 != neurons.end(); nl1++){
-      (*nl1)->killDoubleLength( m_acut );
+      (*nl1)->killDoubleLength(  (const float) m_acut );
     }
   }
   

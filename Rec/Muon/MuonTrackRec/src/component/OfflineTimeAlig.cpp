@@ -1,4 +1,4 @@
-// $Id: OfflineTimeAlig.cpp,v 1.1 2010-02-11 16:15:46 ggiacomo Exp $
+// $Id: OfflineTimeAlig.cpp,v 1.2 2010-02-19 14:53:44 ggiacomo Exp $
 // Include files
 
 /** 
@@ -44,7 +44,7 @@ namespace OfflineTimeAlig {
           resList.getline(inbuf,sizeof(inbuf));
           sscanf(inbuf,"M%dR%dQ%d %d %d v%d  %f",&s,&r,&q,&nx,&ny,&v,&res);
           long int key = logicalPadKey(q-1, s-1, r-1, nx, ny, v);
-          (*ResMap)[key] = res /25. * 16. ; // convert from ns to TDC units
+          (*ResMap)[key] = (float) (res /25. * 16.) ; // convert from ns to TDC units
         }
       }
       else {
@@ -81,7 +81,7 @@ namespace OfflineTimeAlig {
       if (ResMap->count(key)) {
         d2 = (*ResMap)[key];
       }
-      pad->shiftTimes( -d1, -d2 );
+      pad->shiftTimes( (float) -d1, (float) -d2 );
     }
     else {
       key = logicalPadKey(pad->tile()->quarter(),
@@ -91,7 +91,7 @@ namespace OfflineTimeAlig {
                                         pad->tile()->nY() ,
                                         0);
       if (ResMap->count(key)) {
-        pad->shiftTime(-1. *  (*ResMap)[key]);
+        pad->shiftTime((float)(-1. *  (*ResMap)[key]));
       }
     }
   }
