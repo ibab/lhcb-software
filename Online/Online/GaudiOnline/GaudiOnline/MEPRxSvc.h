@@ -23,9 +23,9 @@
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IMonitorSvc.h"
 #include "GaudiKernel/IHistogramSvc.h"
+#include <GaudiKernel/MonitorSvc.h>
 #include "AIDA/IHistogram1D.h"
 // Online stuff
-#include <Gaucho/IGauchoMonitorSvc.h>
 #include "RTL/rtl.h"
 #include "RTL/types.h"
 #include "NET/IPHeader.h"
