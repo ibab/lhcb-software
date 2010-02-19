@@ -5,6 +5,11 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+! 2010-02-19 - Juan Palacios
+ - src/StrippingAlg.cpp
+  . Remove source of compilation warning: unused parameter as argument to
+    empty function.
+
 ! 2010-02-18 - Juan Palacios
  - Imported StrippingAlg and StrippingCheck from Phys/StrippingConf
 
