@@ -5,9 +5,6 @@
  *
  * Implementation file for class : Rich::HPDOccupancyTool
  *
- * CVS Log :-
- * $Id: RichHPDOccupancyTool.cpp,v 1.2 2009-10-11 16:05:11 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
  */
