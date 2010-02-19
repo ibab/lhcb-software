@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.22 2010-02-15 15:07:43 smenzeme Exp $"
+__version__ = "$Id: Configuration.py,v 1.23 2010-02-19 15:49:28 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -41,14 +41,16 @@ class RecSysConf(LHCbConfigurableUser):
     
     ## Steering options
     __slots__ = {
-        "RecoSequence" : None      # The Sub-detector sequencing. Default is all known
+        "RecoSequence" : None    # The Sub-detector sequencing. Default is all known
        ,"SpecialData"  : []      # Various special data processing options. See KnownSpecialData for all options
-       ,"ExpertHistos":  False   # set to True to write out expert histos
-       ,"Context":     "Offline" # The context within which to run the reco sequences
+       ,"Histograms"   : "OfflineFull" # Type of histograms
+       ,"Context"      : "Offline"     # The context within which to run the reco sequences
        ,"OutputType": ""         # some sequences are different for RDST
        ,"DataType": ""           # Type f data, propagated from application
        ,"OutputLevel" : INFO     # The printout level to use
         }
+
+    def expertHistos(self): return self.getProp("Histograms") == "Expert"
 
     ## Apply the configuration
     def applyConf(self):
@@ -95,7 +97,8 @@ class RecSysConf(LHCbConfigurableUser):
             if seq in recoSeq: DoTracking = True
         if DoTracking:
             trackConf = TrackSys()
-            self.setOtherProps(trackConf,["ExpertHistos","SpecialData","OutputType"])
+            self.setOtherProps(trackConf,["SpecialData","OutputType"])
+            trackConf.ExpertHistos = self.expertHistos()
 
         # RICH
         if "RICH" in recoSeq:
@@ -160,7 +163,7 @@ class RecMoniConf(LHCbConfigurableUser):
     ## Steering options
     __slots__ = {
         "MoniSequence" : None
-       ,"ExpertHistos" : False
+       ,"Histograms"   : "OfflineFull" # Type of histograms
        ,"CheckEnabled" : False
        ,"OutputLevel"  : INFO 
        ,"Context"      : "Offline"
@@ -169,7 +172,7 @@ class RecMoniConf(LHCbConfigurableUser):
 
     _propertyDocDct = { 
         'MoniSequence' : """ List of subdetectors to monitor, default is all known """
-       ,'ExpertHistos' : """ Flags whether to fill expert histos (default False) """
+        ,'Histograms'  : """ Type of histograms """
        ,'CheckEnabled' : """ Flags whether a check sequence (with MC truth) is also enabled (default False) """
        ,'OutputLevel'  : """ The printout level to use (default INFO) """
        ,'Context'      : """ The context within which to run (default 'Offline') """
@@ -179,20 +182,22 @@ class RecMoniConf(LHCbConfigurableUser):
     ## Known monitoring sequences, all run by default
     KnownMoniSubdets        = ["CALO","RICH","MUON","VELO","Tr","OT","ST","PROTO"] 
     KnownExpertMoniSubdets  = KnownMoniSubdets+["TT","IT"]
+
+    def expertHistos(self): return self.getProp("Histograms") == "Expert"
     
     ## Apply the configuration
     def applyConf(self):
 
         # Set up monitoring (i.e. not using MC truth)
         if not self.isPropertySet("MoniSequence"):
-            if self.getProp("ExpertHistos"):
+            if self.expertHistos():
                 moniSeq = self.KnownExpertMoniSubdets
             else:
                 moniSeq = self.KnownMoniSubdets
             self.MoniSequence = moniSeq
         else:
             for seq in self.getProp("MoniSequence"):
-                if self.getProp("ExpertHistos"):
+                if self.expertHistos():
                     if seq not in self.KnownExpertMoniSubdets:
                         log.warning("Unknown subdet '%s' in MoniSequence"%seq)
                 else:
@@ -225,7 +230,7 @@ class RecMoniConf(LHCbConfigurableUser):
             from MuonPIDChecker import ConfigureMuonPIDChecker as mmuon
             mydata =  self.getProp("DataType")
             mymonitconf = mmuon.ConfigureMuonPIDChecker(data = mydata)
-            mymonitconf.configure(mc = False, expertck = self.getProp("ExpertHistos"))
+            mymonitconf.configure(mc = False, expertck = self.expertHistos())
 
         if "ST" in moniSeq :
             from Configurables import ST__STClusterMonitor, GaudiSequencer
@@ -241,12 +246,12 @@ class RecMoniConf(LHCbConfigurableUser):
         # If checking is enabled, all Rich histograms are booked in check sequence
         if "RICH" in moniSeq and not self.getProp("CheckEnabled"):
             from Configurables import GaudiSequencer
-            self.setOtherProps(RichRecQCConf(), ["Context","OutputLevel","DataType","ExpertHistos"])
+            self.setOtherProps(RichRecQCConf(),["Histograms","Context","OutputLevel","DataType"])
             RichRecQCConf().setProp("MoniSequencer", GaudiSequencer("MoniRICHSeq"))
             RichRecQCConf().setProp("WithMC", False)
 
         # Expert histograms
-        if self.getProp("ExpertHistos"):
+        if self.expertHistos():
             if "TT" in moniSeq :
                 from Configurables import ST__STClusterMonitor
                 clusMoni = ST__STClusterMonitor("TTClusterMonitor")
