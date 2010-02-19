@@ -1,5 +1,5 @@
 package MooreSys
-version v8r6
+version v8r7
 
 branches doc cmt
 
@@ -7,9 +7,8 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 
-use  Moore              v8r6     Hlt
+use  Moore              v8r7     Hlt
 
-use  TCKUtils           v1r6p1     Hlt
 
 
 # Declare this as a container package
