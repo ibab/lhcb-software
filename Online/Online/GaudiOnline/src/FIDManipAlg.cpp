@@ -75,7 +75,7 @@ void FIDManipAlg::handle(const Incident& inc)    {
 /// Algorithm execution
 StatusCode FIDManipAlg::execute() {
   FIDManipulator manip(m_location,m_type,msgSvc(),eventSvc());
-  if ( m_debug ) manip.setDebug(m_debug);
+  if ( m_debug > 0 ) manip.setDebug(m_debug);
 
   switch ( m_action )  {
     case UPDATE_DST: {

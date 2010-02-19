@@ -304,7 +304,7 @@ void InsertDB::doEFF() {
               //set up the coordinates of the histograms on the page	   
               double xmargin = 0.03;
               double ymargin = 0.03;
-              int nx = (int) ceil(sqrt(nbofhistosonpage));
+              int nx = (int) ceil(sqrt(float(nbofhistosonpage)));
               int ny = nx;
 
               if (nx <= 0) { nx = 1; }
@@ -547,7 +547,7 @@ void InsertDB::doEFFHltExperts() {
            //set up the coordinates of the histograms on the page	   
            double xmargin = 0.03;
            double ymargin = 0.03;
-           int nx = (int) ceil(sqrt(nbofhistosonpage));
+           int nx = (int) ceil(sqrt(float(nbofhistosonpage)));
            int ny = nx;
 
            if (nx <= 0) { nx = 1; }
@@ -765,7 +765,7 @@ void InsertDB::doMF(std::string monitoringtask) {
 	      int nbofhistosonpage = j->second.size();
               double xmargin = 0.03;
               double ymargin = 0.03;
-              int nx = (int) ceil(sqrt(nbofhistosonpage));
+              int nx = (int) ceil(sqrt(float(nbofhistosonpage)));
               int ny = nx;
 
               if (nx <= 0) { nx = 1; }
