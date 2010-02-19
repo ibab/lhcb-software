@@ -1,10 +1,7 @@
 //-------------------------------------------------------------------------------
 /** @file RichRecoQC.cpp
  *
- *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
- *
- *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.57 2010/02/11 20:01:30 jonrob Exp $
+ *  Implementation file for RICH reconstruction monitor : Rich::Rec::MC::RecoQC
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -106,9 +103,12 @@ StatusCode RecoQC::prebookHistograms()
                  -0.5, 50.5, 51 );
     richHisto1D( HID("totalPhotonsIsolated",*rad),"Photon Yield : Isolated Tracks",
                  -0.5, 50.5, 51 );
-    richHisto2D( HID("photonCkThetaVP",*rad),"Photon Cherenkov Theta V Momentum",
-                 log10(m_trSelector->minPCut()+1), log10(m_trSelector->maxPCut()), nBins2D(),
-                 m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins2D() );
+
+    //richHisto2D( HID("photonCkThetaVP",*rad),"Photon Cherenkov Theta V Momentum",
+    //             log10(m_trSelector->minPCut()+1), log10(m_trSelector->maxPCut()), nBins2D(),
+    //             m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins2D() );
+
+    /*
     for ( Rich::Sides::const_iterator side = Rich::sides().begin();
           side != Rich::sides().end(); ++side )
     {
@@ -119,6 +119,7 @@ StatusCode RecoQC::prebookHistograms()
                      "Av. Reconstructed Ch Theta V Phi : All photons : Isolated Tracks",
                      0.0, 2.0*Gaudi::Units::pi, nBins1D() );
     }
+    */
   }
 
   return StatusCode::SUCCESS;
@@ -234,15 +235,15 @@ StatusCode RecoQC::execute()
       richHisto1D(HID("thetaRec",rad))->fill(thetaRec);
       richHisto1D(HID("phiRec",rad))->fill(phiRec);
       richHisto1D(HID("ckResAll",rad))->fill(deltaTheta);
-      richHisto2D(HID("photonCkThetaVP",rad))->fill(ptotLogGeV,thetaRec);
-      richProfile1D(HID("thetaRecVphiRec",side,rad))->fill( phiRec, thetaRec );
+      //richHisto2D(HID("photonCkThetaVP",rad))->fill(ptotLogGeV,thetaRec);
+      //richProfile1D(HID("thetaRecVphiRec",side,rad))->fill( phiRec, thetaRec );
 
       // isolated segment ?
       if ( isolated )
       {
         richHisto1D(HID("thetaRecIsolated",rad))->fill(thetaRec);
         richHisto1D(HID("ckResAllIsolated",rad))->fill(deltaTheta);
-        richProfile1D(HID("thetaRecVphiRecIsolated",side,rad))->fill( phiRec, thetaRec );
+        //richProfile1D(HID("thetaRecVphiRecIsolated",side,rad))->fill( phiRec, thetaRec );
       }
 
       // MC based plots
