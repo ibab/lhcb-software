@@ -22,7 +22,7 @@ class RichAlignmentConf(RichConfigurableUser):
         ,"NTupleProduce"    : True
         ,"R1NTupleProduce"  : False
         ,"R2NTupleProduce"  : False
-        ,"HistoProduce"     : True
+        ,"Histograms"       : "OfflineFull"
         ,"WithMC"           : False     # set to True to use MC truth
         ,"HistoOutputLevel" : ["OnlyPrebookedMirrors", "OnlyPrebookedMirrors"] # options are: Minimal, OnlyPrebookedMirrors, Full
         ,"MinTrackMomentum" : [ 5, 10 ] # momentum cut in GeV, use -1 for default
@@ -60,7 +60,7 @@ class RichAlignmentConf(RichConfigurableUser):
             RichAlignMoniR1.TrackSelector.MinPCut   = r1MinPCut
 
             RichAlignMoniR1.NTupleProduce = self.getProp("NTupleProduce") and self.getProp("R1NTupleProduce")
-            RichAlignMoniR1.HistoProduce  = self.getProp("HistoProduce")
+            RichAlignMoniR1.HistoProduce  = self.getProp("Histograms") != "None"
 
             if self.getProp("HistoOutputLevel")[0] == "Full" :
                 RichAlignMoniR1.MinimalHistoOutput = False
@@ -99,7 +99,7 @@ class RichAlignmentConf(RichConfigurableUser):
             RichAlignMoniR2.TrackSelector.MinPCut   = r2MinPCut
 
             RichAlignMoniR2.NTupleProduce = self.getProp("NTupleProduce") and self.getProp("R2NTupleProduce")
-            RichAlignMoniR2.HistoProduce  = self.getProp("HistoProduce")
+            RichAlignMoniR2.HistoProduce  = self.getProp("Histograms") != "None"
 
             if self.getProp("HistoOutputLevel")[1] == "Full" :
                 RichAlignMoniR2.MinimalHistoOutput = False

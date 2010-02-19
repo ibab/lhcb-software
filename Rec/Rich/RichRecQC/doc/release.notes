@@ -4,10 +4,15 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-02-19 - Chris Jones
+ - Added support for different levels of histogramming (Online, OfflineFull, 
+   OfflineExpress etc.)
+ -  A few more minor changes to the histogramms produced by RichRecoQC
+
 !======================= RichRecQC v2r36 2010-02-15 ========================
 ! 2010-02-12 - Ross Young
  - In Configuration.py: suppresscornerpixels generalised to IsDark; 
-	2-D IFB hitmaps disabled
+	 2-D IFB hitmaps disabled
 
 ! 2010-02-11 - Chris Jones
  - Adapt to changes in histogramming base classes

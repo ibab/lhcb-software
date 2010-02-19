@@ -26,37 +26,73 @@ class RichRecQCConf(RichConfigurableUser):
     ## Steering options
     __slots__ = {
         "Context": "Offline"  # The context within which to run
-       ,"DataType" : "2008" # Data type, can be ['DC06','2008']
-       ,"RawMonitoring"             : True
-       ,"PidMonitoring"             : True
-       ,"PixelMonitoring"           : True
-       ,"TrackMonitoring"           : True
-       ,"PhotonMonitoring"          : True
-       ,"TracklessRingMonitoring"   : True
-       ,"AlignmentMonitoring"       : True
-       ,"HPDIFBMonitoring"          : True
-       ,"PidMomentumRanges": [ [2,100], [2,10], [10,70], [70,100] ]
-       ,"MinTrackBeta" : [ 0.9999, 0.9999, 0.9999 ]
-       ,"PidTrackTypes":  [ ["Forward","Match"] ]
-       ,"RecoTrackTypes": [ ["Forward","Match"],
-                            ["Forward"],["Match"],["KsTrack"],["VeloTT"],["Seed"] ]
-       ,"EffTrackTypes": [ ["Forward","Match"],
-                           ["Forward"],["Match"],["KsTrack"],["VeloTT"],["Seed"] ]
+       ,"DataType" : "2008" # Data type, can be ['DC06','2008',2009','2010']
        ,"MoniSequencer" : None # The sequencer to add the RICH monitoring algorithms to
-       ,"ExpertHistos" : False  # set to True to write out expert histos
-       ,"ExpertTests" : [ "RichPixelPositions", "HPDHitPlots",
-                          "RichTrackGeometry","RichGhostTracks","RichCKThetaResolution",
-                          "RichTrackResolution","RichPhotonSignal","RichTrackCKResolutions",
-                          "RichPhotonGeometry","PhotonRecoEfficiency","RichPhotonTrajectory",
-                          "RichStereoFitterTests"
-                          #,"RichRayTracingTests"
-                          #,"RichDataObjectChecks"
-                          #,"RichRecoTiming"
-                          ]
+       ,"Monitors" : { "Expert"         : [ "RawMonitoring", "PidMonitoring",
+                                            "PixelMonitoring", "TrackMonitoring",
+                                            "PhotonMonitoring", "TracklessRingAngles",
+                                            "TracklessRingPeakSearch",
+                                            "AlignmentMonitoring", "HPDIFBMonitoring",
+                                            "RichPixelPositions", "HPDHitPlots",
+                                            "RichTrackGeometry","RichGhostTracks",
+                                            "RichCKThetaResolution","RichTrackResolution",
+                                            "RichPhotonSignal","RichTrackCKResolutions",
+                                            "RichPhotonGeometry","PhotonRecoEfficiency",
+                                            "RichPhotonTrajectory","RichStereoFitterTests"
+                                            #,"RichRayTracingTests","RichDataObjectChecks","RichRecoTiming"
+                                            ],
+                       "OfflineFull"    : [ "RawMonitoring", "PidMonitoring",
+                                            "PixelMonitoring", "TrackMonitoring",
+                                            "PhotonMonitoring", "TracklessRingAngles",
+                                            "AlignmentMonitoring", "HPDIFBMonitoring" ],
+                       "OfflineExpress" : [ "RawMonitoring", "PidMonitoring",
+                                            "PixelMonitoring", "TrackMonitoring",
+                                            "PhotonMonitoring", "TracklessRingAngles",
+                                            "AlignmentMonitoring", "HPDIFBMonitoring" ],
+                       "Online"         : [ "RawMonitoring", "PixelMonitoring",
+                                            "PhotonMonitoring", "TracklessRingAngles",
+                                            "AlignmentMonitoring" ],
+                       "None"           : [ ]
+                       }
+       ,"PidMomentumRanges": { "OfflineFull"    : [ [2,100], [2,10], [10,70], [70,100] ],
+                               "OfflineExpress" : [ [2,100], [2,10], [10,70], [70,100] ],
+                               "Online"         : [ [2,100], [2,10], [10,70], [70,100] ]
+                               }
+       ,"MinTrackBeta"     : [ 0.9999, 0.9999, 0.9999 ]
+       ,"PidTrackTypes":  { "Expert"         : [ ["All"],["Forward","Match"],
+                                                 ["Forward"],["Match"],["KsTrack"],["VeloTT"],["Seed"] ],
+                            "OfflineFull"    : [ ["Forward","Match"] ],
+                            "OfflineExpress" : [ ["Forward","Match"] ],
+                            "Online"         : [ ["Forward","Match"] ]
+                            }
+       ,"RecoTrackTypes": { "Expert"         : [ ["All"],["Forward","Match"],
+                                                 ["Forward"],["Match"],
+                                                 ["KsTrack"],["VeloTT"],["Seed"] ],
+                            "OfflineFull"    : [ ["Forward","Match"],
+                                                 ["Forward"],["Match"],
+                                                 ["KsTrack"],["VeloTT"],["Seed"] ],
+                            "OfflineExpress" : [ ["Forward","Match"],
+                                                 ["Forward"],["Match"],
+                                                 ["KsTrack"],["VeloTT"],["Seed"] ],
+                            "Online"         : [ ["Forward","Match"] ]
+                            }
+       ,"EffTrackTypes": { "OfflineFull"    : [ ["Forward","Match"],
+                                                ["Forward"],["Match"],["KsTrack"],
+                                                ["VeloTT"],["Seed"] ],
+                           "OfflineExpress" : [ ["Forward","Match"],
+                                                ["Forward"],["Match"],["KsTrack"],
+                                                ["VeloTT"],["Seed"] ],
+                           "Online"         : [ ["Forward","Match"] ]
+                           }
+       ,"TracklessRingClasses": { "Expert"         : [ "All","Best","Isolated" ],
+                                  "OfflineFull"    : [ "All","Best","Isolated" ],
+                                  "OfflineExpress" : [ "All","Best","Isolated" ],
+                                  "Online"         : [ "Isolated" ],
+                            }
+       ,"Histograms"    : "OfflineFull"
        ,"NTupleProduce" : True
-       ,"HistoProduce"  : True
        ,"WithMC"        : False # set to True to use MC truth
-       ,"OutputLevel"   : INFO    # The output level to set all algorithms and tools to use
+       ,"OutputLevel"   : INFO  # The output level to set all algorithms and tools to use
        ,"EventCuts"     : { }   # Event selection cuts for monitoring. Default no cuts
         }
                 
@@ -65,7 +101,7 @@ class RichRecQCConf(RichConfigurableUser):
         if "NTupleProduce" in mon.properties() :
             mon.NTupleProduce = self.getProp("NTupleProduce")
         if "HistoProduce" in mon.properties() :
-            mon.HistoProduce  = self.getProp("HistoProduce")
+            mon.HistoProduce  = self.getProp("Histograms") != "None"
 
     ## Configure a default monitor algorithm of given type
     def createMonitor(self,type,name,trackType=None,typeSelOnly=False):
@@ -131,21 +167,17 @@ class RichRecQCConf(RichConfigurableUser):
                 evtSel.setProp("Min"+name,cut[0])
                 evtSel.setProp("Max"+name,cut[1])
 
-        # Expert Monitoring
-        if self.getProp("ExpertHistos") :
-            # Extend PID performance monitoring types
-            self.PidTrackTypes += [ ["All"],["Forward","Match"],
-                                    ["Forward"],["Match"],["KsTrack"],["VeloTT"],["Seed"] ]
-            # Extend CK theta resolution plots
-            self.RecoTrackTypes += [ ["All"] ]
-
         # Do we need MC access or not
         if not self.getProp("WithMC") :
             self.toolRegistry().Tools += [ "Rich::MC::NULLMCTruthTool/RichMCTruthTool",
                                            "Rich::Rec::MC::NULLMCTruthTool/RichRecMCTruthTool" ]
+
+        # The list of monitors to run
+        histoSet = self.getProp("Histograms")
+        monitors = self.getProp("Monitors")[histoSet]
             
         # Some monitoring of raw information
-        if self.getProp("RawMonitoring") :
+        if "RawMonitoring" in monitors :
 
             if self.getProp("DataType") not in ["DC06"]:
             
@@ -168,49 +200,55 @@ class RichRecQCConf(RichConfigurableUser):
                 rawSeq.Members += [hotpix]
 
         # RICH data monitoring
-        if self.getProp("PixelMonitoring") :
+        if "PixelMonitoring" in monitors :
             self.pixelPerf(self.newSeq(sequence,"RichPixelMoni"))
 
         # Track monitoring
-        if self.getProp("TrackMonitoring") :
+        if "TrackMonitoring" in monitors :
             self.trackMoni(self.newSeq(sequence,"RichTrackMoni"))
             
         # Reconstruction monitoring
-        if self.getProp("PhotonMonitoring") :
+        if "PhotonMonitoring" in monitors :
             self.recPerf(self.newSeq(sequence,"RichRecoMoni"))
 
         # PID Performance
-        if self.getProp("PidMonitoring") :
+        if "PidMonitoring" in monitors :
             self.pidPerf(self.newSeq(sequence,"RichPIDMoni"))
 
-        # Trackless rings
-        if self.getProp("TracklessRingMonitoring") :
+        # Trackless rings angles
+        if "TracklessRingAngles" in monitors :
             from Configurables import RichRecSysConf
             types = RichRecSysConf().TracklessRingAlgs
             for type in types :
                 self.ringsMoni(type,self.newSeq(sequence,"Rich"+type+"TracklessRingsMoni"))
 
+        # Trackless rings peak search
+        if "TracklessRingPeakSearch" in monitors :
+            from Configurables import RichRecSysConf
+            types = RichRecSysConf().TracklessRingAlgs
+            for type in types :
+                self.ringsPeakSearch(type,self.newSeq(sequence,"Rich"+type+"TracklessRingsPeaks"))
+
         # Alignment monitor
-        if self.getProp("AlignmentMonitoring"):
-            self.setOtherProps(RichAlignmentConf(),["Context","NTupleProduce","HistoProduce","WithMC"])
+        if "AlignmentMonitoring" in monitors :
+            self.setOtherProps(RichAlignmentConf(),["Histograms","Context","NTupleProduce","WithMC"])
             RichAlignmentConf().AlignmentSequencer = self.newSeq(sequence,"RichMirrAlignMoni")
 
         # HPD IFB
-        if self.getProp("HPDIFBMonitoring") :
+        if "HPDIFBMonitoring" in monitors :
             self.ionfeedbackMoni(self.newSeq(sequence,"RichHPDIonFeedback"))
 
         # Expert Monitoring
-        if self.getProp("ExpertHistos") :
-            self.expertMonitoring(self.newSeq(sequence,"RichExpertChecks"))
+        if histoSet == "Expert" :
+            self.expertMonitoring( self.newSeq(sequence,"RichExpertChecks") )
 
     ## standalone ring finder monitors
     def ringsMoni(self,type,sequence):
 
-        from Configurables import ( Rich__Rec__MC__TracklessRingMoni,                            
-                                    Rich__Rec__RingPeakSearch )
+        from Configurables import ( Rich__Rec__MC__TracklessRingMoni )
         
         # Activate histos in the finder algs themselves
-        if self.getProp("ExpertHistos") :
+        if "Expert" == self.getProp("Histograms"):
             if type == "Markov" :
                 from Configurables import RichMarkovRingFinderConf
                 conf = RichMarkovRingFinderConf()
@@ -222,29 +260,28 @@ class RichRecQCConf(RichConfigurableUser):
                 conf = RichTemplateRingFinderConf()
             else :
                 raise RuntimeError("ERROR : Unknown trackless ring finder type")
-            conf.enableHistos( self.getProp("HistoProduce") )
+            conf.enableHistos( True )
 
+        histoSet = self.getProp("Histograms")
+ 
         # Add monitors
-        allMoni = self.createMonitor(Rich__Rec__MC__TracklessRingMoni,type+"RingMoniAll")
-        allMoni.RingLocation = "Rec/Rich/"+type+"/RingsAll"
-        sequence.Members += [allMoni]
-        bestMoni = self.createMonitor(Rich__Rec__MC__TracklessRingMoni,type+"RingMoniBest")
-        bestMoni.RingLocation = "Rec/Rich/"+type+"/RingsBest"
-        sequence.Members += [bestMoni]
-        isoMoni = self.createMonitor(Rich__Rec__MC__TracklessRingMoni,type+"RingMoniIsolated")
-        isoMoni.RingLocation = "Rec/Rich/"+type+"/RingsIsolated"
-        sequence.Members += [isoMoni]
+        for ringclass in self.getProp("TracklessRingClasses")[histoSet] :
+            moni = self.createMonitor(Rich__Rec__MC__TracklessRingMoni,type+"RingMoni"+ringclass)
+            moni.RingLocation = "Rec/Rich/"+type+"/Rings"+ringclass
+            sequence.Members += [moni]
+
+    ## standalone ring finder peak searches
+    def ringsPeakSearch(self,type,sequence):
+
+        from Configurables import ( Rich__Rec__RingPeakSearch )
+
+        histoSet = self.getProp("Histograms")
 
         # Ring peak search
-        allSearch = self.createMonitor(Rich__Rec__RingPeakSearch,type+"RingPeakSearchAll")
-        allSearch.RingLocation = "Rec/Rich/"+type+"/RingsAll"
-        sequence.Members += [allSearch]
-        bestSearch = self.createMonitor(Rich__Rec__RingPeakSearch,type+"RingPeakSearchBest")
-        bestSearch.RingLocation = "Rec/Rich/"+type+"/RingsBest"
-        sequence.Members += [bestSearch]
-        isoSearch = self.createMonitor(Rich__Rec__RingPeakSearch,type+"RingPeakSearchIsolated")
-        isoSearch.RingLocation = "Rec/Rich/"+type+"/RingsIsolated"
-        sequence.Members += [isoSearch]
+        for ringclass in self.getProp("TracklessRingClasses")[histoSet] :
+            search = self.createMonitor(Rich__Rec__RingPeakSearch,type+"RingPeakSearch"+ringclass)
+            search.RingLocation = "Rec/Rich/"+type+"/Rings"+ringclass
+            sequence.Members += [search]
         
     ## Pixel performance monitors
     def pixelPerf(self,sequence):
@@ -260,11 +297,13 @@ class RichRecQCConf(RichConfigurableUser):
 
         from Configurables import ( Rich__Rec__MC__PIDQC )
 
+        histoSet = self.getProp("Histograms")
+
         # Track Types
-        for trackType in self.getProp("PidTrackTypes") :
+        for trackType in self.getProp("PidTrackTypes")[histoSet] :
 
             # Momentum ranges
-            for pRange in self.getProp("PidMomentumRanges") :
+            for pRange in self.getProp("PidMomentumRanges")[histoSet] :
 
                 # Construct the name for this monitor out of the track types
                 # and momentum range
@@ -286,8 +325,10 @@ class RichRecQCConf(RichConfigurableUser):
 
         from Configurables import ( Rich__Rec__MC__TrackSelEff )
 
+        histoSet = self.getProp("Histograms")
+
         # Track Types
-        for trackType in self.getProp("EffTrackTypes") :
+        for trackType in self.getProp("EffTrackTypes")[histoSet] :
 
             # Construct the name for this monitor
             name = "Ri" + self.trackSelName(trackType) + "TrkEff"
@@ -304,8 +345,10 @@ class RichRecQCConf(RichConfigurableUser):
 
         from Configurables import ( Rich__Rec__MC__RecoQC )
 
+        histoSet = self.getProp("Histograms")
+
         # Track Types
-        for trackType in self.getProp("RecoTrackTypes") :
+        for trackType in self.getProp("RecoTrackTypes")[histoSet] :
 
             # Construct the name for this monitor
             name = "RiCKRes" + self.trackSelName(trackType)
@@ -342,12 +385,13 @@ class RichRecQCConf(RichConfigurableUser):
             from Configurables import NTupleSvc
             NTupleSvc().Output += ["RICHTUPLE1 DATAFILE='rich.tuples.root' TYP='ROOT' OPT='NEW'"]
 
-        checks  = self.getProp("ExpertTests")
-        tkTypes = self.getProp("RecoTrackTypes")
+        histoSet = self.getProp("Histograms")
+        checks  = self.getProp("Monitors")[histoSet]
+        tkTypes = self.getProp("RecoTrackTypes")[histoSet]
 
         # Turn on/off histos in CK resolution tool
         if "HistoProduce" in RichTools().ckResolution().properties() :
-            RichTools().ckResolution().HistoProduce = self.getProp("HistoProduce")
+            RichTools().ckResolution().HistoProduce = self.getProp("Histograms") != "None"
 
         check = "RichPixelPositions"
         if check in checks :

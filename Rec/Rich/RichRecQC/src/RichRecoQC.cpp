@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.57 2010-02-11 20:01:30 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.57 2010/02/11 20:01:30 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -80,10 +80,6 @@ StatusCode RecoQC::initialize()
 
 StatusCode RecoQC::prebookHistograms()
 {
-  // limit info
-  const double xLimit[] = { 400, 200, 1400 };
-  const double yLimit[] = { 400, 200, 1400 };
-
   // Loop over radiators
   for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
         rad != Rich::radiators().end(); ++rad )
@@ -95,9 +91,6 @@ StatusCode RecoQC::prebookHistograms()
                  "Rec-Exp Cktheta : All photons : Stereographic Refit : Isolated Tracks",
                  -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D() );
     richHisto1D( HID("thetaRec",*rad), "Reconstructed Ch Theta : All photons",
-                 m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D() );
-    richHisto1D( HID("thetaRecTkWeighted",*rad),
-                 "Reconstructed Ch Theta : All photons : Track Weighted",
                  m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D() );
     richHisto1D( HID("thetaExpect",*rad), "Expected Ch Theta : All Tracks",
                  m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D() );
@@ -116,10 +109,16 @@ StatusCode RecoQC::prebookHistograms()
     richHisto2D( HID("photonCkThetaVP",*rad),"Photon Cherenkov Theta V Momentum",
                  log10(m_trSelector->minPCut()+1), log10(m_trSelector->maxPCut()), nBins2D(),
                  m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins2D() );
-    richProfile1D( HID("avgCKThetaVGloX",*rad), "Average CK theta V Global X in radiator : Isolated Tracks",
-                   -xLimit[*rad], xLimit[*rad], 100 );
-    richProfile1D( HID("avgCKThetaVGloY",*rad), "Average CK theta V Global Y in radiator : Isolated Tracks",
-                   -yLimit[*rad], yLimit[*rad], 100 );
+    for ( Rich::Sides::const_iterator side = Rich::sides().begin();
+          side != Rich::sides().end(); ++side )
+    {
+      richProfile1D( HID("thetaRecVphiRec",*side,*rad),
+                     "Av. Reconstructed Ch Theta V Phi : All photons",
+                     0.0, 2.0*Gaudi::Units::pi, nBins1D() );
+      richProfile1D( HID("thetaRecVphiRecIsolated",*side,*rad),
+                     "Av. Reconstructed Ch Theta V Phi : All photons : Isolated Tracks",
+                     0.0, 2.0*Gaudi::Units::pi, nBins1D() );
+    }
   }
 
   return StatusCode::SUCCESS;
@@ -223,6 +222,8 @@ StatusCode RecoQC::execute()
     {
       LHCb::RichRecPhoton * photon = *iPhot;
 
+      const Rich::Side side = photon->richRecPixel()->panel().panel();
+
       // reconstructed theta
       const double thetaRec = photon->geomPhoton().CherenkovTheta();
       // reconstructed phi
@@ -231,22 +232,18 @@ StatusCode RecoQC::execute()
       const double deltaTheta = thetaRec-thetaExpTrue;
 
       richHisto1D(HID("thetaRec",rad))->fill(thetaRec);
-      richHisto1D(HID("thetaRecTkWeighted",rad))->fill(thetaRec,1.0/(double)segment->richRecPhotons().size());
       richHisto1D(HID("phiRec",rad))->fill(phiRec);
       richHisto1D(HID("ckResAll",rad))->fill(deltaTheta);
       richHisto2D(HID("photonCkThetaVP",rad))->fill(ptotLogGeV,thetaRec);
+      richProfile1D(HID("thetaRecVphiRec",side,rad))->fill( phiRec, thetaRec );
 
       // isolated segment ?
       if ( isolated )
       {
-        richProfile1D(HID("avgCKThetaVGloX",rad))->fill( segment->trackSegment().middlePoint().x(), thetaRec );
-        richProfile1D(HID("avgCKThetaVGloY",rad))->fill( segment->trackSegment().middlePoint().y(), thetaRec );
         richHisto1D(HID("thetaRecIsolated",rad))->fill(thetaRec);
         richHisto1D(HID("ckResAllIsolated",rad))->fill(deltaTheta);
+        richProfile1D(HID("thetaRecVphiRecIsolated",side,rad))->fill( phiRec, thetaRec );
       }
-
-      // CK angle versus X and Y in radiator volume ...
-
 
       // MC based plots
       if ( mcTrackOK && mcRICHOK )
