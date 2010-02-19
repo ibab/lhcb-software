@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.87 2010-02-12 17:58:52 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.88 2010-02-19 17:03:59 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -19,7 +19,7 @@ class DaVinci(LHCbConfigurableUser) :
          "EvtMax"             :  -1             # Number of events to analyse
        , "SkipEvents"         :   0             # Number of events to skip at beginning for file
        , "PrintFreq"          : 100             # The frequency at which to print event numbers
-       , "DataType"           : 'MC09'          # Data type, can be ['DC06','2008','2009', 'MC09'] Forwarded to PhysConf
+       , "DataType"           : ''              # Data type, can be ['DC06','2008','2009', 'MC09', '2010'] Forwarded to PhysConf. MUST be set.
        , "Simulation"         : True            # set to True to use SimCond. Forwarded to PhysConf
        , "DDDBtag"            : "default"       # Tag for DDDB. Default as set in DDDBConf for DataType
        , "CondDBtag"          : "default"       # Tag for CondDB. Default as set in DDDBConf for DataType
@@ -53,7 +53,7 @@ class DaVinci(LHCbConfigurableUser) :
          "EvtMax"             : """ Number of events to analyse """
        , "SkipEvents"         : """ Number of events to skip at beginning for file """
        , "PrintFreq"          : """ The frequency at which to print event numbers """
-       , "DataType"           : """ Data type, can be ['DC06','2008', '2009', 'MC09'] Forwarded to PhysConf, AnalysisConf and LHCbApp """
+       , "DataType"           : """ Data type, can be ['DC06','2008', '2009', 'MC09', '2010'] Forwarded to PhysConf, AnalysisConf and LHCbApp """
 #       , "PackType"           : """ Type of packing for the DST: ['NONE','TES','MDF'] """
        , "Simulation"         : """ set to True to use SimCond. Forwarded to PhysConf """
        , "DDDBtag"            : """ Tag for DDDB. Default as set in DDDBConf for DataType """
@@ -90,6 +90,8 @@ class DaVinci(LHCbConfigurableUser) :
         LumiIntegratorConf,
         LHCbApp           ]
 
+    __known_datatypes__ = [ "DC06", "MC09", "2008", "2009", "2010" ]
+
     ## Known monitoring sequences run by default
     KnownMonitors        = []
 
@@ -104,8 +106,10 @@ class DaVinci(LHCbConfigurableUser) :
         Checks options. Changes a few if needed.
         """
         dataType = self.getProp("DataType")
-        if dataType not in [ "DC06", "2008", "2009", "MC09" ]:
-            raise TypeError( "Invalid dataType '%s'"%dataType )
+        if (not dataType):
+            raise TypeError( "You must set DataType" )
+        if dataType not in self.__known_datatypes__ :
+            raise TypeError( "Invalid DataType '%s'" %dataType )
         inputType = self.getProp( "InputType" ).upper()
         if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST", "MDST" ]:
             raise TypeError( "Invalid inputType '%s'"%inputType )

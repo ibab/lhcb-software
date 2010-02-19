@@ -58,7 +58,7 @@ DaVinci().PrintFreq = 100
 DaVinci().UserAlgorithms = [ dstWriter.sequence(),
                              DumpFSR("dump") ]
 # DaVinci().SkipEvents = 0
-DaVinci().DataType = "2009" # Default is "MC09"
+DaVinci().DataType = "2009" 
 DaVinci().InputType = "DST"
 DaVinci().Simulation   = False
 DaVinci().WriteFSR = False   ##############TODO: not yet connected

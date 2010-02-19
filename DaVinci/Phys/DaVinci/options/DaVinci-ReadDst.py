@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-ReadDst.py,v 1.8 2009-06-03 15:24:49 pkoppenb Exp $
+# $Id: DaVinci-ReadDst.py,v 1.9 2010-02-19 17:03:59 pkoppenb Exp $
 #
 # Options for a typical DaVinci job creating DSTs
 #
@@ -35,7 +35,7 @@ tuple.Decay = "J/psi(1S) -> ^mu+ ^mu-"
 
 DaVinci().EvtMax = -1
 DaVinci().PrintFreq = 1 
-DaVinci().DataType = "2008" # Default is "DC06"
+DaVinci().DataType = "2009" 
 DaVinci().Input = [ "DATAFILE='PFN:Jpsi.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 DaVinci().UserAlgorithms = [  ph, pJpsi, pMC, tuple ]
 DaVinci().TupleFile = "Tuple.root"
