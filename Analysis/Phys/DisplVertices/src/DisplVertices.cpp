@@ -72,7 +72,7 @@ DisplVertices::DisplVertices( const std::string& name,
 {
   declareProperty("MC", m_MC = false );//if work in a MC gen sample
   declareProperty("HepMC", m_HepMC = "" );//if work in a HepMC gen sample
-  declareProperty("SelectForSample", m_SelectForSample = false );
+  declareProperty("SaveOnTES", m_SaveonTES = true );
   declareProperty("SaveTuple", m_SaveTuple = false );//save prey infos in Tuple
   declareProperty("SaveTrigInfos", m_SaveTrigInfos = false );
   declareProperty("Prey", m_Prey = "~chi_10" );
@@ -114,8 +114,6 @@ StatusCode DisplVertices::initialize() {
   if( msgLevel( MSG::DEBUG ) )
     debug() << "==> Initialize the DisplVertices algorithm" << endmsg;
 
-  //SelectForSample needs to get the MC infos
-  if( m_SelectForSample && !m_MC ) m_MC = true;
   if( m_SaveTrigInfos && !m_MC ) m_MC = true;
 
   if( m_SaveTrigInfos )
@@ -409,7 +407,7 @@ StatusCode DisplVertices::execute() {
       if( msgLevel( MSG::DEBUG ) )
         debug()<<"Particle do not pass the cuts"<< endmsg; continue; }
 
-    Cands.push_back( *is );
+    Cands.push_back( p );
     ++m_nPreys;
     //Save infos in tuple !
     if( m_SaveTuple ){
@@ -425,8 +423,11 @@ StatusCode DisplVertices::execute() {
       indets.push_back( indet ); 
     }
 
-    if( !m_MC ){ setFilterPassed(true); m_ok = true; } 
-    if( m_MC ){  //link to MC Prey, it is good ?
+    if( !m_MC ){ 
+      setFilterPassed(true); 
+      m_ok = true;
+      desktop()->keep( p->clone() );
+    } else {  //link to MC Prey, it is good ?
       if( !GetMCPrey( p ) ) return StatusCode::FAILURE;
     }
   }//  <--- end of Prey loop
@@ -470,9 +471,9 @@ StatusCode DisplVertices::execute() {
   }
 
   //Save Preys from Desktop to the TES.
-  if( m_SelectForSample ) desktop()->saveDesktop() ;
+  if( m_SaveonTES ) desktop()->saveDesktop();
   //The following just saves the Particles in the desktop !!
-  //if( m_SelectForSample ) desktop()->saveTrees( m_outputParticles ) ;
+  //if( m_SaveonTES ) desktop()->saveTrees( m_outputParticles ) ;
 
 
   //--------------Mother Reconstruction------------------  
@@ -1714,7 +1715,7 @@ StatusCode DisplVertices::GetMCPrey( const Particle * p ){
     //StudyPreyComposition( p, "Pure" );
 
     //Save Particle in TES !
-    if( m_SelectForSample ){
+    if( m_SaveonTES ){
       Particle * part = new Particle( *p );
       //*part = *p;
       const ParticleID id = m_PreyID;

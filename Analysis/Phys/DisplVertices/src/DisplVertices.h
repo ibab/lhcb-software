@@ -189,7 +189,7 @@ private:
   bool   m_ok ;               // Ok if at least one 95% pure khi is reco.
   bool   m_SaveTuple;         ///<Save prey properties in a tuple 
   bool   m_SaveTrigInfos ;    ///<Save trigger infos in a tuple
-  bool   m_SelectForSample;   ///<Save Event on TES if >=1 khi candidate
+  bool   m_SaveonTES;         ///<Save Event on TES if fires
   int    m_nEvents ;          // number of events
   const double pi ;
   double m_purity ;           ///< Purity of reconstructed neuts

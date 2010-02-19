@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-02-19 - Neal Gauvin
+ - Add possibility to save candidates on TES for DisplVertices
+
 ! 2010-02-17 - Neal Gauvin
  - Add features to DisplVertices and RecVertices2Particles
 
