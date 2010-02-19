@@ -1,4 +1,4 @@
-// $Id: AuxDesktopBase.cpp,v 1.1 2008-01-25 14:42:22 ibelyaev Exp $
+// $Id: AuxDesktopBase.cpp,v 1.2 2010-02-19 16:40:18 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -61,9 +61,45 @@ void LoKi::AuxDesktopBase::loadDesktop() const
   if ( !validDesktop() ) 
   { Error ( "loadDesktop(): unable to load IPhysDesktop!" ) ; }    
 }
+// =============================================================================
+// get "the best related vertex" 
+// =============================================================================
+const LHCb::VertexBase* LoKi::AuxDesktopBase::relatedVertex 
+( const LHCb::Particle* p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Warning ( "relatedVertex: LHCb::Particle* points to NULL, return NULL") ;
+    return 0 ;
+  }
+  //
+  if ( !validDesktop() ) { loadDesktop() ; }
+  Assert ( validDesktop() , "Unable to retrieve PhysDekstop!" ) ;
+  //
+  const LHCb::VertexBase* vertex = desktop()->relatedVertex( p ) ;
+  if ( 0 == vertex ) 
+  { Warning ( "relatedVertex: desktop()->relatedVertex() returns NULL!") ; }
+  //
+  return vertex ;
+}
+// =============================================================================
+// get all primary vertices 
+// =============================================================================
+const LHCb::RecVertex::Container* LoKi::AuxDesktopBase::primaryVertices() const 
+{
+  //
+  if ( !validDesktop() ) { loadDesktop() ; }
+  Assert ( validDesktop() , "Unable to retrieve PhysDekstop!" ) ;
+  //
+  const LHCb::RecVertex::Container* pvs = m_desktop->primaryVertices() ;
+  if ( 0 == pvs ) 
+  { Warning ( "primaryVertices: desktop()->primaryVertices() returns NULL!") ; }
+  //
+  return pvs ;
+}
 
 
-
+ 
 // ============================================================================
 // The END 
 // ============================================================================

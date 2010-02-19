@@ -1,4 +1,4 @@
-// $Id: Particles25.cpp,v 1.1 2009-03-11 17:24:13 ibelyaev Exp $
+// $Id: Particles25.cpp,v 1.2 2010-02-19 16:40:18 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -154,12 +154,8 @@ LoKi::Particles::MaxCosineDirectionAngleDV::operator()
     Error ( "LHCb::Particle* points to NULL, return -1000" ) ;
     return -1000 ;                                                     // RETURN 
   }
-  // load the desktop if needed 
-  if ( !validDesktop() ) { loadDesktop() ; }
-  // check it!
-  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get all primary vertices from desktop
-  const LHCb::RecVertex::Container* primaries = desktop()-> primaryVertices() ;
+  const LHCb::RecVertex::Container* primaries = primaryVertices() ;
   if ( 0 == primaries ) 
   {
     Error ( "LHCb::RecVertex::Container* points to NULL, return -2000" ) ;

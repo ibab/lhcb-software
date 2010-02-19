@@ -1,4 +1,4 @@
-// $Id: Legacy1.cpp,v 1.2 2009-03-10 22:49:57 spradlin Exp $
+// $Id: Legacy1.cpp,v 1.3 2010-02-19 16:40:18 ibelyaev Exp $
 // =============================================================================
 // Include files 
 // =============================================================================
@@ -66,12 +66,8 @@ LoKi::Legacy::DistanceSignificanceWithBestPV::operator()
     Error ( "EndVertex points to NULL, return -1000" ) ;
     return -1000 ;                                                     // RETURN 
   }
-  // load the desktop if needed 
-  if ( !validDesktop() ) { loadDesktop() ; }
-  // check it!
-  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the best related vertex from the desktop and use it 
-  const LHCb::VertexBase* pv = desktop()->relatedVertex ( p ) ;
+  const LHCb::VertexBase* pv = relatedVertex ( p ) ;
   if ( 0 == pv ) 
   {
     Error ( "Related Vertex points to NULL, return -1000" ) ;
@@ -212,12 +208,8 @@ LoKi::Legacy::TrgPointingScoreWithPtWithBestPV::operator()
     Error ( "LHCb::Particle* points to NULL, retuen -1000" ) ;
     return -1000 ;                                                     // RETURN 
   }
-  // load the desktop if needed 
-  if ( !validDesktop() ) { loadDesktop() ; }
-  // check it!
-  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the best vertex from desktop and use it 
-  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  setVertex ( relatedVertex ( p ) ) ;
   //
   return pointing ( p ) ;
 }

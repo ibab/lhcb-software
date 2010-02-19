@@ -1,4 +1,4 @@
-// $Id: Particles20.cpp,v 1.10 2009-08-13 11:27:40 ibelyaev Exp $
+// $Id: Particles20.cpp,v 1.11 2010-02-19 16:40:18 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -134,12 +134,8 @@ LoKi::Particles::CosineDirectionAngleWithTheBestPV::operator()
     Error ( "LHCb::Particle* points to NULL, retuen -1000" ) ;
     return -1000 ;                                                     // RETURN 
   }
-  // load the desktop if needed 
-  if ( !validDesktop() ) { loadDesktop() ; }
-  // check it!
-  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the best vertex from desktop and use it 
-  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  setVertex ( relatedVertex ( p ) ) ;
   //
   return dira ( p ) ;
 }
@@ -175,16 +171,12 @@ LoKi::Particles::ImpParWithTheBestPV::operator()
     Error ( "LHCb::Particle* points to NULL, return -1000" ) ;
     return -1000 ;                                                     // RETURN 
   }
-  // load the desktop if needed 
-  if ( !validDesktop() ) { loadDesktop() ; }
-  // check it!
-  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the IDistanceCalculator from DVAlgorithm 
   if ( 0 == tool() ) { loadTool ( *this , lokiSvc() , m_geo )  ; }
   // check it!
   Assert ( 0 != tool() , "No valid IDistanceCalculator is found" ) ;
   // get the best vertex from desktop and use it 
-  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  setVertex ( relatedVertex ( p ) ) ;
   //
   return ip ( p ) ;
 }
@@ -220,16 +212,12 @@ LoKi::Particles::ImpParChi2WithTheBestPV::operator()
     Error ( "LHCb::Particle* points to NULL, return -1000" ) ;
     return -1000 ;                                                     // RETURN 
   }
-  // load the desktop if needed 
-  if ( !validDesktop() ) { loadDesktop() ; }
-  // check it!
-  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the IDistanceCalculator from DVAlgorithm 
   if ( 0 == tool() ) { loadTool ( *this , lokiSvc() , m_geo )  ; }
   // check it!
   Assert ( 0 != tool() , "No valid IDistanceCalculator is found" ) ;
   // get the best vertex from desktop and use it 
-  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  setVertex ( relatedVertex ( p ) ) ;
   //
   return chi2 ( p ) ;
 }
@@ -756,12 +744,8 @@ LoKi::Particles::VertexDistanceDV::operator()
     Error ( "LHCb::Particle* poiunts to NULL, return InvalidDistance" ) ;
     return LoKi::Constants::InvalidDistance ;                    // RETURN 
   }
-  // load the desktop if needed 
-  if ( !validDesktop() ) { loadDesktop() ; }
-  // check it!
-  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the best vertex from desktop and use it 
-  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  setVertex ( relatedVertex ( p ) ) ;
   //
   return distance ( p ) ;                                           // RETURN 
 }
@@ -795,12 +779,8 @@ LoKi::Particles::VertexSignedDistanceDV::operator()
     Error ( "LHCb::Particle* poiunts to NULL, return InvalidDistance" ) ;
     return LoKi::Constants::InvalidDistance ;                    // RETURN 
   }
-  // load the desktop if needed 
-  if ( !validDesktop() ) { loadDesktop() ; }
-  // check it!
-  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the best vertex from desktop and use it 
-  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  setVertex ( relatedVertex ( p ) ) ;
   //
   return signedDistance ( p ) ;                                      // RETURN 
 }
@@ -834,12 +814,8 @@ LoKi::Particles::VertexDotDistanceDV::operator()
     Error ( "LHCb::Particle* poiunts to NULL, return InvalidDistance" ) ;
     return LoKi::Constants::InvalidDistance ;                    // RETURN 
   }
-  // load the desktop if needed 
-  if ( !validDesktop() ) { loadDesktop() ; }
-  // check it!
-  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the best vertex from desktop and use it 
-  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  setVertex ( relatedVertex ( p ) ) ;
   //
   return distance ( p ) ;                                           // RETURN 
 }
@@ -874,12 +850,8 @@ LoKi::Particles::VertexChi2DistanceDV::operator()
     Error ( "LHCb::Particle* poiunts to NULL, return InvalidDistance" ) ;
     return LoKi::Constants::InvalidDistance ;                    // RETURN 
   }
-  // load the desktop if needed 
-  if ( !validDesktop() ) { loadDesktop() ; }
-  // check it!
-  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the best vertex from desktop and use it 
-  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  setVertex ( relatedVertex ( p ) ) ;
   //
   return chi2 ( p ) ;                                           // RETURN 
 }
@@ -927,12 +899,9 @@ LoKi::Particles::LifeTimeDV::operator()
   if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , m_fit ) ; }
   // check the fitter 
   Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
-  // load the desktop if needed 
-  if ( !validDesktop() ) { loadDesktop() ; }
-  // check it!
-  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
+  //
   // get the vertex from desktop
-  const LHCb::VertexBase* vx = desktop()->relatedVertex ( p ) ;
+  const LHCb::VertexBase* vx = relatedVertex ( p ) ;
   if ( 0 == vx ) 
   {
     Error ( "LHCb::VertexBase* points to NULL, return InvalidTime") ;
@@ -983,12 +952,8 @@ LoKi::Particles::LifeTimeChi2DV::operator()
   if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , fitter() ) ; }
   // check the fitter 
   Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
-  // load the desktop if needed 
-  if ( !validDesktop() ) { loadDesktop() ; }
-  // check it!
-  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the vertex from desktop 
-  const LHCb::VertexBase* vx = desktop()->relatedVertex ( p ) ;
+  const LHCb::VertexBase* vx = relatedVertex ( p ) ;
   if ( 0 == vx ) 
   {
     Error ( "LHCb::VertexBase* points to NULL, return InvalidChi2") ;
@@ -1040,12 +1005,8 @@ LoKi::Particles::LifeTimeSignedChi2DV::operator()
   if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , fitter() ) ; }
   // check the fitter 
   Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
-  // load the desktop if needed 
-  if ( !validDesktop() ) { loadDesktop() ; }
-  // check it!
-  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the vertex from desktop 
-  const LHCb::VertexBase* vx = desktop()->relatedVertex ( p ) ;
+  const LHCb::VertexBase* vx = relatedVertex ( p ) ;
   if ( 0 == vx ) 
   {
     Error ( "LHCb::VertexBase* points to NULL, return InvalidChi2") ;
@@ -1097,12 +1058,8 @@ LoKi::Particles::LifeTimeFitChi2DV::operator()
   if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , fitter() ) ; }
   // check the fitter 
   Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
-  // load the desktop if needed 
-  if ( !validDesktop() ) { loadDesktop() ; }
-  // check it!
-  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the vertex from desktop 
-  const LHCb::VertexBase* vx = desktop()->relatedVertex ( p ) ;
+  const LHCb::VertexBase* vx = relatedVertex ( p ) ;
   if ( 0 == vx ) 
   {
     Error ( "LHCb::VertexBase* points to NULL, return InvalidChi2") ;
@@ -1156,12 +1113,8 @@ LoKi::Particles::LifeTimeErrorDV::operator()
   if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , fitter() ) ; }
   // check the fitter 
   Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
-  // load the desktop if needed 
-  if ( !validDesktop() ) { loadDesktop() ; }
-  // check it!
-  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the vertex from desktop 
-  const LHCb::VertexBase* vx = desktop()->relatedVertex ( p ) ;
+  const LHCb::VertexBase* vx = relatedVertex ( p ) ;
   if ( 0 == vx ) 
   {
     Error ( "LHCb::VertexBase* points to NULL, return InvalidTime") ;
@@ -1211,12 +1164,8 @@ LoKi::Particles::VertexZDistanceWithTheBestPV::operator()
     Error ( "LHCb::Particle::endVertex points to NULL, return InvalidDistance" ) ;
     return LoKi::Constants::InvalidDistance ;                    // RETURN 
   }
-  // load the desktop if needed 
-  if ( !validDesktop() ) { loadDesktop() ; }
-  // check it!
-  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the best vertex from desktop and use it 
-  const LHCb::VertexBase* bpv = desktop() -> relatedVertex ( p ) ; 
+  const LHCb::VertexBase* bpv = relatedVertex ( p ) ; 
   if ( 0 == bpv ) 
   {
     Error ( "Related points to NULL, return InvalidDistance" ) ;
@@ -1263,12 +1212,8 @@ LoKi::Particles::VertexRhoDistanceWithTheBestPV::operator()
     Error ( "LHCb::Particle::endVertex points to NULL, return InvalidDistance" ) ;
     return LoKi::Constants::InvalidDistance ;                    // RETURN 
   }
-  // load the desktop if needed 
-  if ( !validDesktop() ) { loadDesktop() ; }
-  // check it!
-  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the best vertex from desktop and use it 
-  const LHCb::VertexBase* bpv = desktop() -> relatedVertex ( p ) ; 
+  const LHCb::VertexBase* bpv = relatedVertex ( p ) ; 
   if ( 0 == bpv ) 
   {
     Error ( "Related points to NULL, return InvalidDistance" ) ;
@@ -1695,12 +1640,8 @@ LoKi::Particles::TrgPointingScoreWithBestPV::operator()
     Error ( "LHCb::Particle* points to NULL, retuen -1000" ) ;
     return -1000 ;                                                     // RETURN 
   }
-  // load the desktop if needed 
-  if ( !validDesktop() ) { loadDesktop() ; }
-  // check it!
-  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the best vertex from desktop and use it 
-  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  setVertex ( relatedVertex ( p ) ) ;
   //
   return pointing ( p ) ;
 }

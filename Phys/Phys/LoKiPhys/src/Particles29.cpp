@@ -1,4 +1,4 @@
-// $Id: Particles29.cpp,v 1.1 2009-04-30 15:19:57 ibelyaev Exp $
+// $Id: Particles29.cpp,v 1.2 2010-02-19 16:40:18 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -50,13 +50,9 @@ LoKi::Particles::DHCoplanarity::operator()
     Error ("LHCb::Particle points to NULL, return InvalidDistance") ;
     return LoKi::Constants::InvalidDistance ;
   }
-  // load the desktop if needed 
-  if ( !validDesktop() ) { loadDesktop() ; }
-  // check it!
-  Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   //
   // get the best primary vertex
-  const LHCb::VertexBase* pv =  desktop() -> relatedVertex ( p ) ;
+  const LHCb::VertexBase* pv = relatedVertex ( p ) ;
   if ( 0 == pv ) 
   {
     Error ("Best primary Vertex points to NULL, return InvalidDistance") ;

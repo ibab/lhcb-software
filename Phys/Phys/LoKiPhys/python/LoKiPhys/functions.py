@@ -571,6 +571,9 @@ APPLYVERTEXFUNTOENDVERT = VFASPF
 # =============================================================================
 # CONTEXT-DEPENDENT FUNCTORS
 # =============================================================================
+## @see LoKi::Cuts::BPV 
+BPV    = LoKi.Particles.BestPrimaryVertexAdaptor 
+# =============================================================================
 BPVDIRA               = LoKi.Particles.CosineDirectionAngleWithTheBestPV()
 BESTPVCOSPF           = LoKi.Particles.CosineDirectionAngleWithTheBestPV() ## by Vava GLIGOROV
 

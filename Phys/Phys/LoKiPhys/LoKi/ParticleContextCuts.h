@@ -1,4 +1,4 @@
-// $Id: ParticleContextCuts.h,v 1.5 2009-03-11 17:24:12 ibelyaev Exp $
+// $Id: ParticleContextCuts.h,v 1.6 2010-02-19 16:40:18 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLECONTEXTCUTS_H 
 #define LOKI_PARTICLECONTEXTCUTS_H 1
@@ -9,6 +9,7 @@
 // ============================================================================
 #include "LoKi/Particles20.h"
 #include "LoKi/Particles25.h"
+#include "LoKi/Particles32.h"
 // ============================================================================
 /** @file
  *  The file with the collection of "context-dependent" functors 
@@ -1343,10 +1344,22 @@ namespace LoKi
      */
     const LoKi::Particles::TrgPointingScoreWithBestPV  BPVTRGPOINTING ;
     // ========================================================================
-  } // end of namespace LoKi::Cuts 
-} // end of namespace LoKi
+    /** @typedef BPV 
+     *  Adaptor to "best-primary-vertex"
+     *
+     *
+     *  @see LoKi::AuxDesktopBase::relatedVertex 
+     *  @see LoKi::Particles::BestPrimaryVertexAdaptor
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date 2010-02-19
+     */
+    typedef LoKi::Particles::BestPrimaryVertexAdaptor                     BPV ;
+    // ========================================================================
+  } //                                              end of namespace LoKi::Cuts 
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLECONTEXTCUTS_H
 // ============================================================================

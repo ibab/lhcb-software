@@ -1,9 +1,23 @@
-! $Id: release.notes,v 1.129 2010-01-20 17:36:53 cattanem Exp $ 
+! $Id: release.notes,v 1.130 2010-02-19 16:40:18 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-02-19 - Vanya Belyaev
+
+ - new symbol : BPV  LoKi::Particles::BestPrimaryVertexAdaptor, 
+    adaptor to "best-related-priamry-vertex":
+
+       BPV ( VZ ) - z-coordiate of related primary vertex 
+
+ - remove many explicit usage of IPhysDesktop
+
+ - cmt/requirements 
+
+    version increment to v8r14 
+
 
 ! ========================== LoKiPhys v8r13 2010-01-20 ========================
 ! 2010-01-17 - Vanya Belyaev
