@@ -3,9 +3,48 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v20r3>2010-02-19 Boole v20r3</A></H1><PRE>
+This version uses projects Gaudi v21r7p1, LHCb v29r1, Lbcom v8r2
+ and SQLDDDB v5r20, ParamFiles v8r2, FieldMap v5r3, L0TCK v3r1, AppConfig v3r*
+
+Version for initial 2010 3.5 TeV productions. 
+Output needs Brunel v35r8 or later, Brunel v36r0 if decoding L0DU bank
+Needs SQLDDDB v5r19 or later with tags from *-20100202*
+
+ - Changes to configuration:
+   . Default DataType is now 2010 (Boole v20r3)
+   . As from 2010 DataType, SIMCOND tag must be specified (no default) 
+     (DDDB v1r28)
+   . Prepare L0Muon emulator to obtain trigger parameters from CondDB
+     (L0MuonKernel v9r0, L0Muon v9r0)
+
+ - Changes to functionality
+   . Proper emulation of L0DU hardware
+     (L0Event v18r1, L0DU v10r2, needs L0TCK v3r1)
+
+ - New tuning
+   . Better associate clusters to MCParticles with MCHits from delta rays
+     (VeloAssociators v2r4)
+
+ - Bug fixes
+   . Proper handling of magnetic field (RichDet v13r4)
+   . Fix incompatibility issue with DCache server, introduced in Boole v20r1
+     (ROOT 5.26.00b)
+
+ - Monitoring changes
+   . Changes to STClusterMonitor (STMonitors v2r4)
+   . Hardware consistency check of L0TCKs (L0DU v10r2)
+
+ - Changes to example options:
+   . Add Boole-2010.py, example options for 2010 simulation. Uses new options
+     in AppConfig v3r37
+
+ - Changes to tests
+   . boole.boole-mc09-withtruth now also tests IgnoreFlatSpillover option
+
 </PRE><H1><A NAME=v20r2>2010-02-08 Boole v20r2</A></H1><PRE>
 This version uses projects Gaudi v21r7, LHCb v29r0, Lbcom v8r1
- and SQLDDDB v5r20, ParamFiles v8r2, FieldMap v5r3, L0TCK v1r5, AppConfig v3r*
+ and SQLDDDB v5r20, ParamFiles v8r2, FieldMap v5r3, L0TCK v3r0, AppConfig v3r*
 
 Version for 2009 450 GeV productions. 
 Output needs Brunel v35r8 or later, Brunel v36r0 if decoding L0DU bank
