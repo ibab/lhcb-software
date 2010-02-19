@@ -1,4 +1,4 @@
-// $Id: ErrorLog.cpp,v 1.14 2009-10-13 16:07:09 frankb Exp $
+// $Id: ErrorLog.cpp,v 1.15 2010-02-19 15:09:12 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,12 +11,22 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorLog.cpp,v 1.14 2009-10-13 16:07:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorLog.cpp,v 1.15 2010-02-19 15:09:12 frankb Exp $
 
 // Framework include files
 #include <sstream>
 #include <cerrno>
+#ifdef _WIN32
+#include <cstring>
+inline int strcasecmp(const char *s1, const char *s2) {
+  return ::_stricmp(s1, s2);
+}
+inline int strncasecmp(const char *s1, const char *s2, size_t n) {
+  return ::_strnicmp(s1, s2, n);
+}
+#else
 #include <strings.h>
+#endif
 #include "RTL/rtl.h"
 #include "UPI/upidef.h"
 #include "CPP/Event.h"
