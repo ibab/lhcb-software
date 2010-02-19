@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Configuration.py,v 1.11 2010-02-18 20:07:08 ibelyaev Exp $
+# $Id: Configuration.py,v 1.12 2010-02-19 12:03:13 ibelyaev Exp $
 # =============================================================================
 # @file  KaliCalo/Configuration.py
 # The basic configuration for Calorimeetr Calibrations 
@@ -36,7 +36,7 @@ The usage is fairly trivial:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $"
 # =============================================================================
 # the only one  "vizible" symbol 
 __all__  = (
@@ -328,7 +328,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             # tracks, e.g. for electrons  
             "/Event/Rec#1"             ,
             "/Event/Rec/Track#1"       ,
-            "/Event/Rec/Track/Best#1"
+            "/Event/Rec/Track/Best#1"  
             ] ,
             # 
             Output = "DATAFILE='PFN:%s' TYP='POOL_ROOTTREE' OPT='REC'" % self.getProp('FemtoDST')
@@ -393,17 +393,22 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         if not not proto   : kaliSeq.Members += [ proto  ]
         if not not photon  : kaliSeq.Members += [ photon ]
 
-        
         kaliSeq.Members += [ kali ]
 
         ## collect the actual sequence of algorithms:
-        algs = [ kaliSeq ]
+        algs = []
+        
+        if not self.getProp ( 'FirstPass') :
+            from Configurables import Kali__MakeDir
+            algs += [ Kali__MakeDir( 'DirMaker' ) ]
+            
+        algs += [ kaliSeq ]
 
         # run 'Other' algorithms ? 
         if self.getProp('OtherAlgs') : algs += self.getProp('OtherAlgs') 
         
         ## 7. Destroy TES if needed 
-        if self.getProp( 'DestroyTES' ) or self.getProp( 'DestroyList' ) :
+        if self.getProp ( 'DestroyTES' ) or self.getProp ( 'DestroyList' ) :
             from Configurables import Kali__Destroyer
             tesList = [ 'Phys/' + loc + '/Particles' for loc in self.getProp('DestroyList') ]
             destroyer = Kali__Destroyer (
@@ -450,9 +455,9 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             algs += [ destroyer ]
             
         if self.getProp( 'DestroyTES' ) :
-            _log.warning("KaliPi0: TES containers will be destroyed")
+            _log.warning ( "KaliPi0: TES containers will be destroyed" )
         else :
-            _log.warning("KaliPi0: TES containers will be preserved")        
+            _log.warning ( "KaliPi0: TES containers will be preserved" )        
             
 
         from Configurables import DaVinci
@@ -485,6 +490,10 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             ]
         if ( self.getProp ( 'Histograms' ) ): 
           HistogramPersistencySvc ( OutputFile = self.getProp('Histos') ) 
+
+        ## 9. the final decoration
+        from Configurables import DataOnDemandSvc
+        dod = DataOnDemandSvc  ( Dump = True )
 
 
 # =============================================================================

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: KaliPi0.py,v 1.11 2010-02-18 20:07:08 ibelyaev Exp $ 
+# $Id: KaliPi0.py,v 1.12 2010-02-19 12:03:13 ibelyaev Exp $ 
 # =============================================================================
 ## @file  KaliCalo/KaliCaloPi0.py
 #  The basic configuration to (re)run Ecal pi0-calibration
@@ -31,7 +31,7 @@ Or even:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $"
 # =============================================================================
 ## the basic import
 from Gaudi.Configuration    import *
@@ -41,14 +41,15 @@ from Configurables import GaudiSequencer
 
 kali = KaliPi0Conf (
     ## example of the first pass 
-    FirstPass    =  True
-    , UseTracks  =  True 
-    , UseSpd     =  True   
+    ## FirstPass    =  True 
+    FirstPass    =  False 
+    , UseTracks  =  False
+    , UseSpd     =  False     
     , Mirror     =  True
     , Histograms =  True 
     ## 
     , PrintFreq  =  1000
-    , EvtMax     =    -1
+    , EvtMax     =  -1 
     ##
     ##, Simulation = True 
     ##, DataType   = 'MC09' 
@@ -63,12 +64,14 @@ if '__main__' == __name__ :
     print __author__
     print __version__
 
-    import BenderExample.RealData 
+    ## import BenderExample.RealData 
     from GaudiPython.Bindings import AppMgr    
     gaudi = AppMgr()
-
     
-    gaudi.run(10000)
+    evtSel = gaudi.evtSel()
+    evtSel.open('castor:/castor/cern.ch/user/i/ibelyaev/Kali/Pi0_2009_Reco07.fmDST')
+    
+    gaudi.run(-1 )
     
 ##     import GaudiPython.GaudiAlgs
 ##     import GaudiPython.HistoUtils

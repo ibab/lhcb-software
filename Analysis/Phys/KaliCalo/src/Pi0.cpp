@@ -1,4 +1,4 @@
-// $Id: Pi0.cpp,v 1.10 2010-02-18 20:07:09 ibelyaev Exp $
+// $Id: Pi0.cpp,v 1.11 2010-02-19 12:03:13 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,10 +29,6 @@
 // DeCalorimeter
 // ============================================================================
 #include "CaloDet/DeCalorimeter.h"
-// ============================================================================
-// Local 
-// ============================================================================
-#include "KaliUtils.h"
 // ============================================================================
 namespace Kali 
 {
@@ -295,9 +291,10 @@ StatusCode Kali::Pi0::initialize  ()                // the proper initialzation
 // ============================================================================
 StatusCode Kali::Pi0::analyse    ()            // the only one essential method 
 {
-  using namespace LoKi         ;
-  using namespace LoKi::Types  ;
-  using namespace LoKi::Cuts   ;
+  using namespace LoKi          ;
+  using namespace LoKi::Types   ;
+  using namespace LoKi::Cuts    ;
+  using namespace LoKi::Photons ;
   
   using Gaudi::Units::MeV ;
 

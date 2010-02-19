@@ -1,17 +1,22 @@
-! $Id: release.notes,v 1.30 2010-02-18 20:07:08 ibelyaev Exp $ 
+! $Id: release.notes,v 1.31 2010-02-19 12:03:13 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.30 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.31 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
-!========================== KaliCalo v3r3 2010-02-18 ==========================
 
-! 2010-02-18 - Vanya Belyaev
+!========================== KaliCalo v3r3 2010-02-19 ==========================
 
+! 2010-02-19 - Vanya Belyaev
 
+ - fix few bugs , 
+   add MakeDir algorithm 
+   remove KaliUtils 
+
+  
 ! 2010-02-18 - Vanya Belyaev
 
  - Configurable.py

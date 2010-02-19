@@ -1,4 +1,4 @@
-// $Id: Destroyer.cpp,v 1.2 2010-02-18 20:07:08 ibelyaev Exp $
+// $Id: Destroyer.cpp,v 1.3 2010-02-19 12:03:13 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -40,14 +40,15 @@
 // ============================================================================
 #include "LoKi/PhysExtract.h"
 #include "LoKi/Objects.h"
-// ============================================================================
-// Local 
-// ============================================================================
-#include "KaliUtils.h"
+#include "LoKi/Photons.h"
 // ============================================================================
 namespace Kali 
 {
   // ==========================================================================
+  /** @class Destroyer 
+   *  TES destroyer for Kali
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   */
   class Destroyer : public GaudiAlgorithm
   {
     // ========================================================================
@@ -264,7 +265,7 @@ StatusCode Kali::Destroyer::execute ()
   for ( Hypos::const_iterator ihypo = hypos.begin() ; 
         hypos.end() != ihypo ; ++ihypo ) 
   {
-    getDigits ( *ihypo , digits ) ; 
+    LoKi::Photons::getDigits ( *ihypo , digits ) ; 
   }
   counter ( "# digits" ) += digits . size() ;
   
@@ -331,7 +332,7 @@ StatusCode Kali::Destroyer::execute ()
       if ( !r.empty() ) 
       {
         const LHCb::CaloCluster* cluster = r.front().to() ;
-        getDigits ( cluster , trdigits ) ;
+        LoKi::Photons::getDigits ( cluster , trdigits ) ;
       }
     }
     // 1d. collect digits from "the nearest" brem hypo 
@@ -341,7 +342,7 @@ StatusCode Kali::Destroyer::execute ()
       if ( !r.empty() ) 
       {
         const LHCb::CaloHypo* hypo = r.front().to() ;
-        getDigits ( hypo , trdigits ) ;
+        LoKi::Photons::getDigits ( hypo , trdigits ) ;
       }
     }
     // 1.e collect digits from "the nearest" electon hypo 
@@ -351,7 +352,7 @@ StatusCode Kali::Destroyer::execute ()
       if ( !r.empty() ) 
       {
         const LHCb::CaloHypo* hypo = r.front().to() ;
-        getDigits ( hypo , trdigits ) ;
+        LoKi::Photons::getDigits ( hypo , trdigits ) ;
       }
     }
     //
@@ -393,7 +394,7 @@ StatusCode Kali::Destroyer::execute ()
   
   counter ( "#trk 1"        ) +=              trk1 ;
   counter ( "#trk 2"        ) +=              trk2 ;
-  counter ( "#trk 2/trk 1"  ) += double(trk2)/trk1 ;
+  counter ( "#trk 2/trk 1"  ) +=  0 < trk1 ? double(trk2)/trk1 : 1.0 ;
   
   // ==========================================================================
   // destroy digits
