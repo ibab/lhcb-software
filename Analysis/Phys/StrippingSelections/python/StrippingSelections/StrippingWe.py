@@ -22,7 +22,6 @@ _electrons =  DataOnDemand('stdLooseElectrons', Location = 'Phys/StdLooseElectro
 ecut = '(PT>10*GeV)'
 
 _W = FilterDesktop(name
-                    , InputLocations = ["StdLooseElectrons"]
                     , Code = ecut
                                )
                          

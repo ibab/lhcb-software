@@ -22,7 +22,6 @@ _muons =  DataOnDemand('stdLooseMuons', Location = 'Phys/StdLooseMuons')
 mucut = '(PT>10*GeV)'
 
 _W = FilterDesktop(name
-                    , InputLocations = ["StdLooseMuons"]
                     , Code = mucut
                                )
                          
