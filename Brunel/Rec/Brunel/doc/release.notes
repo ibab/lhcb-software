@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2010-02-19 - Chris Jones
+ - Update python Configurable Histogram slot to support new levels
+   of Histogramming  - "None", "Online", "Offlineexpress", 
+   "Offlinefull" and "Expert"
+
 </PRE><H1><A NAME=v36r1>2010-02-18 Brunel v36r1</A></H1><PRE>
  - Changes to Configurable: 
    . Remove OTTimeCreator from CheckOTSeq, no longer needed (task 12674)

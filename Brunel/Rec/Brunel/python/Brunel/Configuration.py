@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.117 2010-02-12 15:44:03 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.118 2010-02-19 15:45:17 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -48,7 +48,7 @@ class Brunel(LHCbConfigurableUser):
        ,"PackType"        : "TES"
        ,"WriteFSR"        : True 
        ,"WriteLumi"       : False 
-       ,"Histograms"      : "Default"
+       ,"Histograms"      : "OfflineFull"
        ,"OutputLevel"     : INFO 
        ,"NoWarnings"      : False 
        ,"ProductionMode"  : False 
@@ -101,7 +101,7 @@ class Brunel(LHCbConfigurableUser):
 
     KnownInputTypes  = [ "MDF",  "DST", "RDST", "XDST", "DIGI", "ETC" ]
     KnownOutputTypes = [ "NONE", "DST", "RDST", "XDST" ]
-    KnownHistograms  = [ "None", "Default", "Expert" ]
+    KnownHistograms  = [ "None", "Online", "Offlineexpress", "Offlinefull", "Expert" ]
 
     def defineGeometry(self):
         # DIGI is always simulation, as is usage of MC truth!
@@ -184,8 +184,6 @@ class Brunel(LHCbConfigurableUser):
 
         # Pass expert checking option to RecSys and RecMoni
         if histOpt == "Expert":
-            RecSysConf().setProp( "ExpertHistos", True )
-            RecMoniConf().setProp( "ExpertHistos", True )
             DstConf().EnablePackingChecks = True
 
         # Use a default histogram file name if not already set
@@ -508,7 +506,8 @@ class Brunel(LHCbConfigurableUser):
             from Configurables import GaudiSequencer
             GaudiSequencer("MCLinksUnpackSeq").Members += [unp]
 
-            self.setOtherProps(RichRecQCConf(), ["Context","OutputLevel","DataType","WithMC"])
+            self.setOtherProps(RichRecQCConf(), ["Histograms","Context","OutputLevel",
+                                                 "DataType","WithMC"] )
             RichRecQCConf().setProp("MoniSequencer", GaudiSequencer("CheckRICHSeq"))
 
         if expert:
@@ -553,9 +552,6 @@ class Brunel(LHCbConfigurableUser):
                 importOptions( "$STDOPTS/PreloadUnits.opts" )
                 importOptions( "$CALOMONIDSTOPTS/CaloChecker.opts" )
 
-            if "RICH" in checkSeq :
-                RichRecQCConf().setProp( "ExpertHistos", True )
-
             if "PROTO" in checkSeq :
                 from Configurables import ( GaudiSequencer, NTupleSvc, ChargedProtoParticleTupleAlg )
                 protoChecker = ChargedProtoParticleTupleAlg("ChargedProtoTuple")
@@ -567,9 +563,9 @@ class Brunel(LHCbConfigurableUser):
     def __apply_configuration__(self):
         
         GaudiKernel.ProcessJobOptions.PrintOff()
-        self.setOtherProps(RecSysConf(),["SpecialData","Context",
+        self.setOtherProps(RecSysConf(),["Histograms","SpecialData","Context",
                                          "OutputType","DataType"])
-        self.setOtherProps(RecMoniConf(),["Context","DataType"])
+        self.setOtherProps(RecMoniConf(),["Histograms","Context","DataType"])
         if self.isPropertySet("RecoSequence") :
             self.setOtherProp(RecSysConf(),"RecoSequence")
         self.defineGeometry()
