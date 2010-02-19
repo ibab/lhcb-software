@@ -1,6 +1,6 @@
 __author__ = 'Fatima Soomro'
 __date__ = '18/12/2009'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -147,7 +147,6 @@ class StrippingB2XGammaConf(LHCbConfigurableUser):
         _pi4Kst = DataOnDemand("pi4Kst", Location = "Phys/StdLoosePions")
 
         LooseKstar2Kpi = CombineParticles ("LooseKstar2Kpi")
-        LooseKstar2Kpi.InputLocations = ["StdLooseKaons", "StdLoosePions"]
         LooseKstar2Kpi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
         LooseKstar2Kpi.DaughtersCuts = { "K+" :  "(MIPCHI2DV(PRIMARY)> %(TrIPchi2Kst)s)"% self.getProps(),"pi-" :  "MIPCHI2DV(PRIMARY)>%(TrIPchi2Kst)s"% self.getProps() }
         LooseKstar2Kpi.CombinationCut = "(ADAMASS('K*(892)0') < %(KstMassWinT)s*MeV)"% self.getProps()

@@ -6,13 +6,13 @@
 
 __author__ = ['Marco Gersabeck']
 __date__ = '03/11/2009'
-__version__ = '$Revision: 1.4 $'
+__version__ = '$Revision: 1.5 $'
 
 __all__ = ('name', 'D0', 'sequence')
 
 from Gaudi.Configuration import *
 from Configurables import CombineParticles
-from PhysSelPython.Wrappers import Selection, SelectionSequence
+from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine, StrippingMember
 
 name = "D2hhNoPID"
@@ -25,12 +25,14 @@ _D0 = CombineParticles( name,
                         DecayDescriptor = "D0 -> K- K+",
                         MotherCut = _D0Cuts,
                         DaughtersCuts = _D0DauCuts,
-                        CombinationCut = _D0CombCut,
-                        InputLocations = [ "Phys/StdNoPIDsKaons" ]
+                        CombinationCut = _D0CombCut
                       )
 
+_stdNoPIDsKaons = DataOnDemand(Location = "Phys/StdNoPIDsKaons" )
+
 D0 = Selection ( "Sel"+name,
-                 Algorithm = _D0
+                 Algorithm = _D0,
+                 RequiredSelections = [_stdNoPIDsKaons]
                )
 
 sequence = SelectionSequence("Seq"+name, TopSelection = D0)

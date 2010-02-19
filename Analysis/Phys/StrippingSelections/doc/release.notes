@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-02-19 - Juan Palacios
+ - Fix a few selections that were unnecessarily setting InputLocations.
+
 ! 2010-02-18 - Patrick Koppenburg
  - Replaced 2008-MinimumBiasDst with MC09-MB-L0Hlt1-PFN.
  - New line in StrippingBd2KstarMuMu : Only the dimuon with standard cuts
