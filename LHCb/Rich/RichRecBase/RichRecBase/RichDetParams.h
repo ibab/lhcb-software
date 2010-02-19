@@ -5,7 +5,7 @@
  * A collection of general parameters for histogramming limits etc.
  *
  * CVS Log :-
- * $Id: RichDetParams.h,v 1.11 2008-06-14 10:39:46 jonrob Exp $
+ * $Id: RichDetParams.h,v 1.11 2008/06/14 10:39:46 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-06-20
@@ -33,9 +33,13 @@ const double ckThetaMax[] = { 0.3, 0.06, 0.06 }
 #define RADIATOR_GLOBAL_POSITIONS_X \
 const double xRadEntGlo[]  = {  420.0,  1500.0,  3500.0 };\
 const double xRadExitGlo[] = {  420.0,  1500.0,  4000.0 }
-#define RADIATOR_GLOBAL_POSITIONS_Y \
-const double yRadEntGlo[]  = {  320.0,  1500.0,  3500.0 };\
+#define RADIATOR_GLOBAL_POSITIONS_Y_ENTRY \
+const double yRadEntGlo[]  = {  320.0,  1500.0,  3500.0 }
+#define RADIATOR_GLOBAL_POSITIONS_Y_EXIT \
 const double yRadExitGlo[] = {  320.0,  1500.0,  4000.0 }
+#define RADIATOR_GLOBAL_POSITIONS_Y \
+ RADIATOR_GLOBAL_POSITIONS_Y_ENTRY;\
+ RADIATOR_GLOBAL_POSITIONS_Y_EXIT
 #define RADIATOR_GLOBAL_POSITIONS_Z \
 const double zRadEntGlo[]  = { 1100.0,   900.0,  9200.0 };\
 const double zRadExitGlo[] = { 1180.0,  2100.0, 12000.0 }
