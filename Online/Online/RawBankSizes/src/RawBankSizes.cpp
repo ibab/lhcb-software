@@ -1,4 +1,4 @@
-// $Id: RawBankSizes.cpp,v 1.10 2010-02-17 10:44:32 jost Exp $
+// $Id: RawBankSizes.cpp,v 1.11 2010-02-19 08:30:43 jost Exp $
 // Include files 
 
 // from Gaudi
@@ -115,7 +115,7 @@ StatusCode RawBankSizes::initialize()
     if( !found) warning() << "Requested bank '" << *it << "' is not a valid name" << endreq;
   }
   
-   for(int i = 0 ; i != (int) LHCb::RawBank::LastType; i++)
+   for(i = 0 ; i != (int) LHCb::RawBank::LastType; i++)
    {
 //     printf("%s %s\n",LHCb::RawBank::typeName( (LHCb::RawBank::BankType) i).c_str(),
 //     m_hparams[i].det.c_str());
@@ -179,7 +179,7 @@ StatusCode RawBankSizes::initialize()
 		   m_totevpar.xmin-totsize.binw,m_totevpar.xmax+totsize.binw);
    declareInfo("TotSize", h_totev,"Total Event Size in Bytes");
    p_banks = histoSvc()->bookProf( "Banksp","Bank Size vs. Bank Number",
-    		 (float)LHCb::RawBank::LastType+1, -1.0, (float)LHCb::RawBank::LastType);
+    		 LHCb::RawBank::LastType+1, -1.0, (float)LHCb::RawBank::LastType);
    declareInfo("Banksp",p_banks,"Bank Size vs. Bank Number");
    for (dethmiter j=m_dethparams.begin();j!=m_dethparams.end();j++)
    {
