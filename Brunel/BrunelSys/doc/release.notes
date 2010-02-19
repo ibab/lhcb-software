@@ -3,16 +3,88 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-! 2010-02-12 - Marco Cattaneo
- - Change SAM test to test for real data instead of MC, since for MC concept
-   of latest default (SimCond) tag does not make sense
+</PRE><H1><A NAME=v36r1>2010-02-19 Brunel v36r1</A></H1><PRE>
+This version uses projects Gaudi v21r7p1, LHCb v29r1, Lbcom v8r2, Rec v8r1
+ and SQLDDDB v5r20, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
+
+This is a production version for initial 2010 simulation and for 2010 data
+taking preparation
+
+Output requires DaVinci v25r0 or later if saving packed DST, DaVinci v24r5p1
+or later otherwise
+
+ - Changes to Configurable: 
+   . Remove OTTimeCreator from CheckOTSeq, no longer needed (task 12674)
+   . Changed default DataType to 2010
+   . New default database tags for 2009 (DDDB v1r28)
+   . Move all decoding and clustering to the start of the tracking sequence
+     (TrackSys v4r30)
+
+ - Persistency changes
+   . Add LumiLowFSR (LumiAlgs v3r3, LumiEvent v2r5)
+
+ - New functionality
+   . MuonID parameters can now be read from database (MuonID v7r7)
+   . New DLL_flag=3 method (MuonID v7r7)
+   . CaloID2DLL - optionally read the DLLs from CondDB (CaloPIDs v5r4)
+
+ - New tuning:
+   . Update maximum reconstructed CK theta value for aerogel from 290mrad to
+     320mrad, to match the observed spectrum from 2009 data (RichRecBase v3r26)
+   . Add temporary ad hoc correction to aerogel CK theta values for earlyData
+     (RichRecSys v3r26)
+   . Made MuonID MC09 configuration the default (same as 2009) (MuonID v7r7)
+   . Latest earlyData tuning for PatDownstream & PatForward (PatAlgorithms v3r29)
+   . New parameterisation in PatAddTTCoord (PatAlgorithms v3r29)
+   . Improvements in TrajOTProjector (TrackProjectors v2r27)
+   . Add PatPVVeryLoose.py for the tuning on 2009 data (RecSys v8r1)
+   . Changes in OT tracking:
+     o Added flag for use of driftttime to OTMeasurement (TrackFitEvent v4r4)
+     o Improvements in OTProjector,implement new 'prefit' (TrackProjectors v2r27)
+     o skip drifttimes that are ~2sigma (6ns) outside drifttime spectrum
+       (TrackProjectors v2r27)
+   . Added muon chisquare to KalmanFitResult (TrackFitEvent v4r4)
+   . Use RungeKutta extrapolator instead of HeraB (CaloPIDs v5r4,CaloTools v5r13)
+
+ - Bug fixes
+   . Bug fix in TrackV0Utils (TrackUtils v1r34)
+   . Proper handling of magnetic field (RichDet v13r4)
+   . Fix incompatibility issue with DCache server, introduced in Boole v20r1
+     (ROOT 5.26.00b)
+   . Added profiles to OTHitEfficiencyMonitor and histograms to OTEffMonitor,
+     OTTrackMonitor (TrackMonitor v1r20)
+   . Avoid selecting rings around target radius (RichRecTemplateRings v1r3)
+   . Fix untested StatusCode in HPD hot pixel finder (RichTools v2r28p1)
+   . Do not add "/Event/Link/Trig/L0/Calo#1" to .dst in MC09 case, fixes bug
+     62725 (GaudiConf v13r4)
+
+ - Monitoring changes:
+   . Updates to SpdMonitor, add histograms in CaloEMuMonitor (CaloMoniDst v4r4)
+   . New Pixel Cluster monitor, remove MC related printout (RichRecQC v2r36)
+   . New histogram per radiator for raw expected CK theta distn (RichRecQC v2r36)
+   . Changes to Rich Alignment histos (RichRecQC v2r36)
+   . TrackMuonMatchMonitor added to MoniTrSeq (TrackMonitor v1r20)
+   . Changes to ST cluster monitor (STMonitors v2r4)
+   . Move some info messages to debug (TrackExtrapolators v2r24p2)
+   . Vertex shifts now measured with respect to MC position (PatChecker v3r6)
+   . Disabled Rich 2D IFB hit maps (RichRecQC v2r36)
+   . Detailed hardware consistency check of L0TCK (L0DU v10r2)
+
+ - Changes to tests:
+   . Modify brunel-cosmics.qmt to add a test of writing unpacked DST
+   . Do not run mc09-withtruth-invfield test if mc09-withtruth has failed
+   . In mc09-withtruth and mc09-withtruth-invfield tests, switch off Rich
+     trackless ring monitoring since some differences are expected due to wrong
+     magnetic field corrections in the invfield case
+   . Change SAM test to test for real data instead of MC, since for MC concept
+     of latest default (SimCond) tag does not make sense
 
 </PRE><H1><A NAME=v36r0p1>2010-02-02 Brunel v36r0p1</A></H1><PRE>
 This version uses projects Gaudi v21r7, LHCb v29r0, Lbcom v8r0, Rec v8r0
  and SQLDDDB v5r18, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
 
 This is a production version for 2009 data reprocessing
-Output requires DaVinci v25r0 or later if saving packed DST, DaVinci v25r5p1
+Output requires DaVinci v25r0 or later if saving packed DST, DaVinci v24r5p1
 or later otherwise
 
  - Bug fixes
