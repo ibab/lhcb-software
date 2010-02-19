@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.88 2010-02-19 09:03:28 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.89 2010-02-19 09:07:55 frankb Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -671,7 +671,7 @@ void MEPRxSvc::freeRx() {
     int rc = rx->spaceRearm(0);  
     if (rc == MBM_NORMAL) {
       RTL::Lock lock2(m_freeDscLock);
-      if (rx->rearmMEPReq()) sendMEPReq(m_MEPsPerMEPReq);
+      //if (rx->rearmMEPReq()) sendMEPReq(m_MEPsPerMEPReq);
       if (rx->m_wasIncomplete) {
 	rx->updateNoshow();
 	rx->m_wasIncomplete = false;
