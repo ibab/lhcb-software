@@ -6,7 +6,7 @@
 
 from Gaudi.Configuration import *
 import GaudiKernel.ProcessJobOptions
-from Configurables import (LHCbConfigurableUser, LHCbApp, TAConfig )
+from Configurables import LHCbConfigurableUser
 
 
 __version__= "$Id: Configuration.py"
@@ -27,6 +27,7 @@ class AlignTrTools( LHCbConfigurableUser ):
          for tool in self.getProp("Tools"):
              print "Configuring tool ", tool
              if tool == "TAConfig":
+                from Configurables import TAConfig 
                 importOptions("$ALIGNTRTOOLSROOT/options/TAConfig.py")
  		TAConfig().Constrain_OT = self.getProp("Constraints")
                 TAConfig().Degrees_of_Freedom = self.getProp("Degrees_of_Freedom")
