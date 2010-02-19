@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.31 2010-02-17 13:02:07 jpalac Exp $
+#$Id: Wrappers.py,v 1.32 2010-02-19 10:53:05 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -34,6 +34,7 @@ from selection import ( Selection,
                         AutomaticData,
                         NameError,
                         NonEmptyInputLocations,
+                        IncompatibleInputLocations,
                         update_overlap,
                         SelSequence                )
 

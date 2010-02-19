@@ -4,7 +4,7 @@
 #
 import sys
 sys.path.append('../python')
-from PhysSelPython.Wrappers import Selection, AutomaticData, NameError, NonEmptyInputLocations
+from PhysSelPython.Wrappers import Selection, AutomaticData, NameError, NonEmptyInputLocations, IncompatibleInputLocations
 from PhysSelPython.Configurabloids import DummyAlgorithm, DummySequencer
 
 def test_automatic_data() :
@@ -121,17 +121,26 @@ def test_selection_with_name_overlap_doesnt_raise() :
     assert sel0.outputLocation() == 'Phys/Sel005'
     assert sel1.outputLocation() == 'Phys/Sel005Loose'
 
-def test_selection_with_InputLocations_set_in_algo_raises() :
+def test_selection_with_different_InputLocations_set_in_algo_raises() :
     sel02 = AutomaticData('Sel02', Location = 'Phys/Sel02')
     sel03 = AutomaticData('Sel03', Location = 'Phys/Sel03')
     alg0 = DummyAlgorithm('Alg006',
                           InputLocations = ['Phys/Sel00', 'Phys/Sel01'])
     try :
-        sel0 = Selection('Sel006', Algorithm = alg0)
+        sel0 = Selection('Sel006', Algorithm = alg0,
+                         RequiredSelections = [sel02, sel03])
         assert True == False
-    except NonEmptyInputLocations :
-        print 'Caught NonEmptyInputLocations'
+    except IncompatibleInputLocations :
+        print 'Caught IncompatibleInputLocations'
 
+def test_selection_with_same_InputLocations_set_in_algo() :
+    sel02 = AutomaticData(Location = 'Phys/Sel02')
+    sel03 = AutomaticData(Location = 'Phys/Sel03')
+    alg0 = DummyAlgorithm('Alg007',
+                          InputLocations = ['Phys/Sel02', 'Phys/Sel03'])
+    sel0 = Selection('Sel007', Algorithm = alg0,
+                     RequiredSelections = [sel02, sel03])
+        
 def test_clone_selection_with_cloned_alg() :
     pass
 

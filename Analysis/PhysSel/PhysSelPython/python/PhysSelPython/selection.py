@@ -1,4 +1,4 @@
-#$Id: selection.py,v 1.9 2010-02-17 13:02:19 jpalac Exp $
+#$Id: selection.py,v 1.10 2010-02-19 10:53:05 jpalac Exp $
 """
 Classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -16,6 +16,7 @@ __all__ = ('DataOnDemand',
            'FlatSelectionListBuilder',
            'NameError',
            'NonEmptyInputLocations',
+           'IncompatibleInputLocations',
            'update_overlap')
 
 from copy import copy
@@ -127,15 +128,18 @@ class Selection(object) :
             print "Selection: Adding Required Selection ", sel.name()
             self.requiredSelections.append(sel)
         self._name = name
+        _outputLocations = [sel.outputLocation() for sel in self.requiredSelections]
         if len(Algorithm.InputLocations) != 0 :
-            raise NonEmptyInputLocations('InputLocations of input algorithm should not be set!')
+            if not compatibleSequences(_outputLocations,
+                                       Algorithm.InputLocations) :
+                raise IncompatibleInputLocations('InputLocations of input algorithm incompatible with RequiredSelections!')
         self.alg = Algorithm.clone(self._name, InputLocations = [])
         print "Selection: cloned", type(self.alg) , Algorithm.name(), "to", self.alg.name()
         self._outputBranch = OutputBranch
         
-        for sel in self.requiredSelections :
-            print "\tAlgo ", self.algName(),  ": adding InputLocation ", sel.outputLocation()
-            self.algorithm().InputLocations += [sel.outputLocation()]
+        for loc in _outputLocations :
+            print "\tAlgo ", self.algName(),  ": adding InputLocation ", loc
+            self.algorithm().InputLocations += [loc]
         print self._name, "Required Selection Algorithms: ", self.requiredSelections
 
     def name(self) :
@@ -279,8 +283,20 @@ def update_overlap(dict0, dict1) :
     for key in overlap_keys : result[key] = dict1[key]
     return result
 
+def compatibleSequences( seq0, seq1) :
+    if len(seq0) != len(seq1) :
+        return False
+    for x in seq0 :
+        if x not in seq1 :
+            return False
+    return True
+
+
+
 class NameError(Exception) :
     pass
 
 class NonEmptyInputLocations(Exception) :
+    pass
+class IncompatibleInputLocations(Exception) :
     pass
