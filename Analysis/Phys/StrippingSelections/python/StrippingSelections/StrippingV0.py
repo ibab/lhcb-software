@@ -59,7 +59,7 @@ Get the list of *ALL* configured lines
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = '2010-01-14'
-__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $'
+__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $'
 # =============================================================================
 
 from Gaudi.Configuration       import *
@@ -112,16 +112,17 @@ class StrippingV0Conf(LHCbConfigurableUser):
 
     """
     __slots__ = { 
-        'Use_noPV_V0'            : True               ## Use V0 for 'no-PV'-events ?
+        'Use_noPV_V0'            : False              ## Use V0 for 'no-PV'-events ?
         , 'Use_Geo_K0S'          : True               ## Use 'Geometrical' selection of K0S
         , 'Use_Geo_Lambda'       : True               ## Use 'Geometrical' selection of Lambda0
-        , 'AddSameSign'          : True               ## Use  same-sign combinations 
+        , 'AddSameSign'          : True               ## Use  same-sign combinations
+        , 'TrackCutSet'          : "NULL"             ## TrackCutsSet to be used
         , 'TrackQuality'         : " TRCHI2DOF < 25 " ## Track quality selection 
         , 'VertexChi2'           : 25                 ## Cut on Vertex chi2-quality
         , 'DeltaMassK0S'         : 100 * MeV          ## Mass-window (half)width for K0S 
         , 'DeltaMassK0S_noPV'    : 100 * MeV          ## Mass-window (half)width for K0S_noPV 
-        , 'DeltaMassLambda'      : 100 * MeV          ## Mass-window (half)width for Lambda 
-        , 'DeltaMassLambda_noPV' : 100 * MeV          ## Mass-window (half)width for Lambda_noPV
+        , 'DeltaMassLambda'      :  50 * MeV          ## Mass-window (half)width for Lambda 
+        , 'DeltaMassLambda_noPV' :  50 * MeV          ## Mass-window (half)width for Lambda_noPV
         , 'MaxZ'                 : 220 * cm           ## Maximal allowed vertex Z-position
         , 'LTimeFitChi2'         : 100                ## Chi2 from LifeTime Fitter 
         , 'CTau'                 :  1  * mm           ## Cut on c*tau
@@ -134,6 +135,7 @@ class StrippingV0Conf(LHCbConfigurableUser):
         , 'Use_Geo_K0S'           : """ Use 'Geometrical' selection of K0S ?     """
         , 'Use_Geo_Lambda'        : """ Use 'Geometrical' selection of Lambda0 ? """ 
         , 'AddSameSign'           : """ Use  same-sign combinations              """
+        , 'TrackCutSet'           : """ 'TrackCutsSet' to be used                """
         , 'TrackQuality'          : """ Track quality selection                  """ 
         , 'VertexChi2'            : """ Cut on Vertex chi2-quality               """ 
         , 'DeltaMassK0S'          : """ Mass-window (half)width for K0S          """ 
@@ -146,8 +148,8 @@ class StrippingV0Conf(LHCbConfigurableUser):
         , 'CTauForDD'             : """ Cut on c*tau cut for DD-case             """
         , 'Monitor'               : """ Activate the monitoring ?                """
         }
-
-
+    
+    
     ## Return the list of all configured stripping lines
     #  @return the list of all configured stripping lines
     def lines   ( self ) :
@@ -155,6 +157,8 @@ class StrippingV0Conf(LHCbConfigurableUser):
         Return the list of all configured stripping lines
         
         """
+
+        
         return self.K0S() + self.Lambda0()
 
     ## create the list of stipping lines for K0S
@@ -163,6 +167,10 @@ class StrippingV0Conf(LHCbConfigurableUser):
         """
         Stripping lines for K0S 
         """
+        
+        from CommonParticles.Utils import DefaultTrackingCuts
+        DefaultTrackingCuts().useCutSet( self.getProp( 'TrackCutSet' ) )
+        
         from Configurables import CombineParticles
         
         StripK0S = CombineParticles("StrippingK0S")
@@ -268,7 +276,6 @@ class StrippingV0Conf(LHCbConfigurableUser):
                 
             lines.append ( line3 ) 
 
-
         return lines 
     
     ## create the list of stipping lines for Lambda0
@@ -277,6 +284,9 @@ class StrippingV0Conf(LHCbConfigurableUser):
         """
         Stripping lines for Lambda0
         """
+        
+        from CommonParticles.Utils import DefaultTrackingCuts
+        DefaultTrackingCuts().useCutSet ( self.getProp ( 'TrackCutSet' ) )
         
         from Configurables import CombineParticles
         
@@ -291,8 +301,7 @@ class StrippingV0Conf(LHCbConfigurableUser):
         StripLambda0.DaughtersCuts   = self._lam0_daughtersCuts () 
         StripLambda0.CombinationCut  = "AM < 1.5 * GeV " 
         StripLambda0.MotherCut       = self._lam0_motherCut     ()
-        StripLambda0.Preambulo       = self._preambulo          () 
-        
+        StripLambda0.Preambulo       = self._preambulo          ()         
 
         if self.getProp ( 'Monitor' ) :
             
@@ -409,8 +418,8 @@ class StrippingV0Conf(LHCbConfigurableUser):
         Define 'MotherCut' for K0S
         """
         cut       = """
-        ( ADMASS ( 'KS0') < %(DeltaMassK0S)g  ) & in_range ( 0 , VFASPF ( VCHI2 ) ,  %(VertexChi2)g  ) &
-        ( VFASPF ( VZ   ) < %(MaxZ)g ) & in_range ( 0 , BPVLTFITCHI2()  ,  %(LTimeFitChi2)g ) &
+        ( ADMASS ( 'KS0') < %(DeltaMassK0S)g  ) & in_range ( 0 , VFASPF ( VCHI2 ) ,  %(VertexChi2)g   ) &
+        ( VFASPF ( VZ   ) < %(MaxZ)g          ) & in_range ( 0 , BPVLTFITCHI2()   ,  %(LTimeFitChi2)g ) &
         ( BPVLTIME()*c_light > switch ( DD , %(CTauForDD)g , %(CTau)g ) ) 
         """
         cut = cut % self.getProps()
@@ -422,8 +431,8 @@ class StrippingV0Conf(LHCbConfigurableUser):
         Define 'MotherCut' for Lambda0
         """
         cut       = """
-        ( ADMASS ( 'Lambda0') < %(DeltaMassLambda)g ) & in_range ( 0 , VFASPF ( VCHI2 ) ,  %(VertexChi2)g ) &
-        ( VFASPF ( VZ   ) < %(MaxZ)g ) & in_range ( 0 , BPVLTFITCHI2()  ,  %(LTimeFitChi2)g ) &
+        ( ADMASS ( 'Lambda0') < %(DeltaMassLambda)g ) & in_range ( 0 , VFASPF ( VCHI2 ) ,  %(VertexChi2)g   ) &
+        ( VFASPF ( VZ       ) < %(MaxZ)g            ) & in_range ( 0 , BPVLTFITCHI2()   ,  %(LTimeFitChi2)g ) &
         ( BPVLTIME()*c_light > switch ( DD , %(CTauForDD)g , %(CTau)g ) ) 
         """
         cut = cut % self.getProps()
@@ -467,9 +476,11 @@ class StrippingV0Conf(LHCbConfigurableUser):
             ## define LL-category of K0S 
             "LL =    CHILDCUT ( ISLONG , 1 ) & CHILDCUT ( ISLONG , 2 ) " ,
             ## define LD-category of K0S 
-            "LD =  ( 1 == NINTREE ( ISLONG ) ) & ( 1 == NINTREE ( ISDOWN ) ) "
+            "LD =  ( 1 == NINTREE ( ISLONG ) ) & ( 1 == NINTREE ( ISDOWN ) ) " , 
+            ## redefine track chi2/nDoF 
+            "TRCHI2DOF  = monitor ( TRCHI2DOF , 'chi2/nDoF' , LoKi.Monitoring.ContextSvc) " 
             ]
-
+        
     def final_cuts ( self , **cuts ) :
         
         _cuts  = "   ( VFASPF( VCHI2 )                         < %(chi2v)g ) "

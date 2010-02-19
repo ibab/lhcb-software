@@ -19,8 +19,18 @@ from StrippingConf.StrippingLine import StrippingLine, StrippingMember
 from CommonParticles.Utils import *
 
 
+_Preambulo  = [
+    ## define DD-category of V0
+    "DD   = CHILDCUT ( ISDOWN , 1 ) & CHILDCUT ( ISDOWN , 2 ) " ,
+    ## define LL-category of V0 
+    "LL   = CHILDCUT ( ISLONG , 1 ) & CHILDCUT ( ISLONG , 2 ) " ,
+    ## define nu_0
+    "NU_0 = CHILD ( MIPDV ( PRIMARY ) , 1 ) * CHILD ( MIPDV ( PRIMARY ) , 2 ) / MIPDV ( PRIMARY )  " ,
+    ## redefine track chi2/nDoF 
+    "TRCHI2DOF  = monitor ( TRCHI2DOF , 'chi2/nDoF' , LoKi.Monitoring.ContextSvc) " 
+    ]
 
-LambdaAllCombineGeo = StrippingMember(
+LambdaAllCombineGeo = StrippingMember (
     CombineParticles
     , 'Combine'    
     , InputLocations  = [ "StdNoPIDsDownPions"   ,
@@ -28,11 +38,13 @@ LambdaAllCombineGeo = StrippingMember(
                           "StdNoPIDsPions"       ,
                           "StdNoPIDsProtons"     ]
     , DecayDescriptor = "[Lambda0 -> p+ pi-]cc"
+    , Preambulo       = _Preambulo 
+    , DaughtersCuts   = { '' : " TRCHI2DOF < 25 "}
     , CombinationCut  = "AM < 1.5 * GeV "
     , MotherCut = """
     ( ADMASS ( 'Lambda0' ) < 100*MeV ) & 
-    ( VFASPF ( VCHI2     ) < 40      ) &
-    ( ( ( CHILD ( MIPDV ( PRIMARY ) , 1 ) * CHILD ( MIPDV ( PRIMARY ) , 2 ) ) / MIPDV ( PRIMARY ) ) > 7.39 * mm ) &
+    ( VFASPF ( VCHI2     ) < 100     ) &
+    ( NU_0 > switch ( LL , 7.39 * mm , switch ( DD , 90 * mm , 33 * mm ) ) ) &
     ( BPVDIRA > 0 ) 
     """
     )
@@ -41,14 +53,16 @@ LambdaAllCombineGeo = StrippingMember(
 KsAllCombineGeo = StrippingMember(
     CombineParticles
     , 'Combine'    
-    ,  InputLocations  = [ "StdNoPIDsDownPions" ,
-                           "StdNoPIDsPions"     ]
-    ,  DecayDescriptor = " KS0 -> pi+ pi- "
-    ,  CombinationCut  = " AM < 1*GeV "                                    
+    , InputLocations  = [ "StdNoPIDsDownPions" ,
+                          "StdNoPIDsPions"     ]
+    , DecayDescriptor = " KS0 -> pi+ pi- "
+    , DaughtersCuts   = { '' : " TRCHI2DOF < 25 "}
+    , Preambulo       = _Preambulo 
+    , CombinationCut  = " AM < 1*GeV "                                    
     , MotherCut = """
     ( ADMASS ( 'KS0'  ) < 100 * MeV ) & 
-    ( VFASPF (  VCHI2 ) <  40       ) & 
-    ( ( ( CHILD ( MIPDV ( PRIMARY ) , 1 ) * CHILD ( MIPDV ( PRIMARY ) , 2 ) ) / MIPDV ( PRIMARY ) ) > 7.39 * mm ) &
+    ( VFASPF (  VCHI2 ) < 100       ) & 
+    ( NU_0 > switch ( LL , 7.39 * mm , switch ( DD , 90 * mm , 33 * mm ) ) ) &
     ( BPVDIRA > 0 ) 
     """
     )
