@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.cpp,v 1.25 2010-02-18 11:53:25 rlambert Exp $
+// $Id: MuonNNetRec.cpp,v 1.26 2010-02-19 14:29:48 ggiacomo Exp $
 
 #include <list>
 
@@ -41,6 +41,7 @@ MuonNNetRec::MuonNNetRec( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
   : GaudiTool ( type, name , parent ),
+    m_momentumTool(NULL),    
     m_muonDetector(NULL)
 {
   declareInterface<IMuonTrackRec>(this);
@@ -135,7 +136,16 @@ StatusCode MuonNNetRec::initialize ()
     return StatusCode::FAILURE;
   }
   // switch off xtalk code if we're doing real clustering
-  if (m_clusterToolName == "MuonClusterRec") m_XTalk=false;
+  //if (m_clusterToolName == "MuonClusterRec") m_XTalk=false;
+
+  if (m_assumeCosmics == false) {
+    //tool for calculating the transverse momentum  
+    m_momentumTool = tool<IMuonTrackMomRec>("MuonTrackMomRec");
+    if(!m_momentumTool){
+      error()<<"error retrieving the momentum rec. tool "<<endreq;
+      return StatusCode::FAILURE;
+    }
+  }
 
   incSvc()->addListener( this, IncidentType::EndEvent );
 
@@ -612,8 +622,18 @@ StatusCode MuonNNetRec::copyToLHCbTracks()
   for ( MTracks::const_iterator t = mTracks->begin(), tEnd = mTracks->end(); t != tEnd; ++t ) {
     /// New track
     Track* track = new Track();
-    
-    m_momentumTool->recMomentum( (*t), track);
+    if (m_assumeCosmics) {
+      Gaudi::XYZPoint trackPos((*t)->bx() + (*t)->sx() * m_muonDetector->getStationZ(0),
+                               (*t)->by() + (*t)->sy() * m_muonDetector->getStationZ(0),
+                               m_muonDetector->getStationZ(0));
+      LHCb::State state( LHCb::StateVector( trackPos,
+                                            Gaudi::XYZVector( (*t)->sx(), (*t)->sy(), 1.0 ), 1./10000.));
+      state.setLocation( LHCb::State::Muon );
+      track->addToStates( state );
+    }
+    else {
+      m_momentumTool->recMomentum( (*t), track);
+    }
     tracks->insert( track );
   }
   debug()<< " copying container to TES"<<endmsg;

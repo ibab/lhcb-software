@@ -1,4 +1,4 @@
-// $Id: MuonCombRec.cpp,v 1.14 2010-02-10 19:20:17 ggiacomo Exp $
+// $Id: MuonCombRec.cpp,v 1.15 2010-02-19 14:29:48 ggiacomo Exp $
 // Include files 
 #include <fstream>
 
@@ -188,8 +188,16 @@ StatusCode MuonCombRec::initialize() {
     error()<<"error retrieving the cluster rec. tool "<<endreq;
     return StatusCode::FAILURE;
   }
+
   // switch off xtalk code if we're doing real clustering
-  if (m_clusterToolName == "MuonClusterRec") m_XTalk=false;
+  //if (m_clusterToolName == "MuonClusterRec") m_XTalk=false;
+
+  //calculate the transverse momentum  
+  m_momentumTool = tool<IMuonTrackMomRec>("MuonTrackMomRec");
+  if(!m_momentumTool){
+    error()<<"error retrieving the momentum rec. tool "<<endreq;
+    return StatusCode::FAILURE;
+  }
 
   // services
 
@@ -301,9 +309,6 @@ StatusCode MuonCombRec::initialize() {
   }
 
 
-
-  //calculate the transverse momentum  
-  m_momentumTool = tool<IMuonTrackMomRec>("MuonTrackMomRec");
 
   // clear all object containers
   clear();
