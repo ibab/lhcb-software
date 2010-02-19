@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.36 2010-02-17 13:03:12 jpalac Exp $
+!$Id: release.notes,v 1.37 2010-02-19 10:53:23 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2010-02-19 - Juan Palacios
+ - python/PhysSelPython/selection.py
+  . Loosen the requirements in Selection input algorithms. Allow algorithms 
+    with InputLocations compatible with those set by RequiredSelections.
+ - tests/seleciton.py
+  . Add tests for the above (chronoligically this step comes first!)
 
 ! 2010-02-17 - Juan Palacios
  - python/PhysSelPython/selection.py
