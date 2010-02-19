@@ -1,4 +1,4 @@
-// $Id: EvtTupleTool.cpp,v 1.2 2010-02-18 11:46:46 ibelyaev Exp $
+// $Id: EvtTupleTool.cpp,v 1.3 2010-02-19 11:52:27 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -291,13 +291,13 @@ LoKi::Hybrid::EvtTupleTool::EvtTupleTool
     -> declareUpdateHandler  ( &LoKi::Hybrid::EvtTupleTool::handleL0DU , this ) ;
   //
   declareProperty 
-    ( "HLT_Variables " , 
+    ( "HLT_Variables"  , 
       m_map_odin       , 
       "The map { 'name' : 'functor'} of variables:  LHCb::HltDecReports-> double " ) 
     -> declareUpdateHandler ( &LoKi::Hybrid::EvtTupleTool::handleHLT , this ) ;
   //
   declareProperty 
-    ( "VOID_Variables " , 
+    ( "VOID_Variables" , 
       m_map_odin       , 
       "The map { 'name' : 'functor'} of variables: void -> double "     ) 
     -> declareUpdateHandler ( &LoKi::Hybrid::EvtTupleTool::handleVOID , this ) ;

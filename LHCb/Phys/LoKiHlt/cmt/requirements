@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.13 2010-02-17 11:27:02 ibelyaev Exp $ 
+# $Id: requirements,v 1.14 2010-02-19 11:52:27 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2008-09-16
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -10,14 +10,15 @@ version           v2r7
 branches          cmt doc src dict python LoKi 
         
 # =============== dependencies ===============================================
-use               LoKiCore v*    Phys 
-use               DAQEvent v*    Event 
-use               L0Event  v*    Event 
-use               HltEvent v*    Event 
+use               LoKiCore          v* Phys 
+use               DAQEvent          v* Event 
+use               L0Event           v* Event 
+use               HltEvent          v* Event 
+use               DaVinciInterfaces v* Phys 
 
 private
-use               GaudiPython   v*    -no_auto_imports
-use               Python        v*    LCG_Interfaces 
+use               GaudiPython       v*    -no_auto_imports
+use               Python            v*    LCG_Interfaces 
 public
 
 # =============== own includes ===============================================
