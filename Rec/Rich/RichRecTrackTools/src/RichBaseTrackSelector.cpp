@@ -32,7 +32,8 @@ DECLARE_TOOL_FACTORY( BaseTrackSelector );
 BaseTrackSelector::BaseTrackSelector( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : RichRecToolBase ( type, name , parent )
+  : RichRecToolBase ( type, name , parent ),
+    m_isoTrack      ( NULL )
 {
   // interface
   declareInterface<IBaseTrackSelector>(this);
@@ -60,6 +61,8 @@ BaseTrackSelector::BaseTrackSelector( const std::string& type,
   declareProperty( "Charge",       m_chargeSel    = 0 );
 
   declareProperty( "AcceptClones", m_acceptClones = false );
+
+  declareProperty( "RejectNonIsolated", m_rejectNonIsolated = false );
 }
 
 //=============================================================================
@@ -75,6 +78,9 @@ StatusCode BaseTrackSelector::initialize()
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
+
+  // Get tools
+  if ( m_rejectNonIsolated ) acquireTool( "RichIsolatedTrack", m_isoTrack );
 
   // print track sel
   printSel(info()) << endmsg;
@@ -122,6 +128,8 @@ MsgStream & BaseTrackSelector::printSel( MsgStream & os ) const
   if ( m_acceptClones   ) os << " clonesOK";
 
   if ( m_chargeSel != 0 ) os << " chargeSel=" << m_chargeSel;
+
+  if ( m_rejectNonIsolated ) os << " IsolatedTracks";
 
   return os;
 }
@@ -229,6 +237,17 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
     }
   }
 
+  // isolation
+  if ( m_rejectNonIsolated )
+  {
+    if ( !m_isoTrack->isIsolated(track) )
+    {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> Isolation Criteria failed" << endmsg;
+      return false;
+    }
+  }
+
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Track selected" << endmsg;
   return true;
 }
@@ -324,6 +343,17 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
         verbose() << " -> Track GhostProbability " << track->ghostProbability() << " failed cut "
                   << m_minGhostProb << " -> " << m_maxGhostProb
                   << endmsg;
+      return false;
+    }
+  }
+
+  // isolation
+  if ( m_rejectNonIsolated )
+  {
+    if ( !m_isoTrack->isIsolated(track) )
+    {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> Isolation Criteria failed" << endmsg;
       return false;
     }
   }

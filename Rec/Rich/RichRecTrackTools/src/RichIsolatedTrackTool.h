@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::IsolatedTrackTool
  *
- *  CVS Log :-
- *  $Id: RichIsolatedTrackTool.h,v 1.4 2009-05-24 16:21:15 jonrob Exp $
- *
  *  @author Susan Haines  Susan.Carol.Haines@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/02/2008
@@ -37,6 +34,8 @@
 
 // Event
 #include "Event/RichRecSegment.h"
+#include "Event/RichRecTrack.h"
+#include "Event/Track.h"
 
 // boost
 #include "boost/assign/list_of.hpp"
@@ -80,6 +79,20 @@ namespace Rich
 
       // Is this segment isolated
       virtual bool isIsolated( const LHCb::RichRecSegment * segment ) const;
+
+      // Is this track isolated
+      virtual bool isIsolated( const LHCb::RichRecTrack * track,
+                               const Rich::ParticleIDType pid ) const;
+
+      // Is this track isolated
+      virtual bool isIsolated( const LHCb::RichRecTrack * track ) const;
+
+      // Is this track isolated
+      virtual bool isIsolated( const LHCb::Track * track,
+                               const Rich::ParticleIDType pid ) const;
+
+      // Is this track isolated
+      virtual bool isIsolated( const LHCb::Track * track ) const;
 
     private:
 

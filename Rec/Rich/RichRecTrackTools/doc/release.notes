@@ -4,6 +4,10 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-02-19 - Chris Jones
+ - Extensions to isolated track tool with new methods for track classes
+ - Add isolation cut to track selector base class
+
 !======================== RichRecTrackTools v1r16p1 2010-02-15 ================
 ! 2010-02-11 - Chris Jones
  - Adapt to changes in histogramming base class.

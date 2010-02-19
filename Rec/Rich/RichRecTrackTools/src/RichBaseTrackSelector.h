@@ -20,6 +20,7 @@
 
 // interfaces
 #include "RichRecBase/IRichBaseTrackSelector.h"
+#include "RichRecBase/IRichIsolatedTrack.h"
 
 // Event model
 #include "Event/Track.h"
@@ -122,6 +123,9 @@ namespace Rich
 
     private: // data
 
+      /// Isolated Track tool
+      const IIsolatedTrack * m_isoTrack;
+
       double m_minChi2Cut; ///< Min chi^2 cut
       double m_maxChi2Cut; ///< Max chi^2 cut
 
@@ -137,6 +141,8 @@ namespace Rich
       int m_chargeSel;     ///< Charge selection (-1=negative,+1=positive,0=all)
 
       bool m_acceptClones; ///< Accept or reject clone tracks
+
+      bool m_rejectNonIsolated; ///< Reject tracks that fail the isolation tool
 
       double m_minCloneCut;   ///< Minimum clone rejection cut
       double m_maxCloneCut;   ///< Maximum clone rejection cut

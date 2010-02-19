@@ -93,6 +93,48 @@ StatusCode IsolatedTrackTool::initialize()
 
 //=============================================================================
 
+bool IsolatedTrackTool::isIsolated( const LHCb::RichRecTrack * track,
+                                    const Rich::ParticleIDType pid ) const
+{
+  for ( LHCb::RichRecTrack::Segments::const_iterator iS = track->richRecSegments().begin();
+        iS != track->richRecSegments().end(); ++iS )
+  {
+    if ( isIsolated(*iS,pid) ) return true;
+  }
+  return false;
+}
+
+bool IsolatedTrackTool::isIsolated( const LHCb::RichRecTrack * track ) const
+{
+  for ( LHCb::RichRecTrack::Segments::const_iterator iS = track->richRecSegments().begin();
+        iS != track->richRecSegments().end(); ++iS )
+  {
+    if ( isIsolated(*iS) ) return true;
+  }
+  return false;
+}
+
+bool IsolatedTrackTool::isIsolated( const LHCb::Track * track,
+                                    const Rich::ParticleIDType pid ) const
+{
+  const LHCb::RichRecTrack * rtrack = richTracks()->object(track->key());
+  return ( rtrack && isIsolated(rtrack,pid) );
+}
+
+bool IsolatedTrackTool::isIsolated( const LHCb::Track * track ) const
+{
+  const LHCb::RichRecTrack * rtrack = richTracks()->object(track->key());
+  return ( rtrack && 
+           ( isIsolated( rtrack, Rich::Electron ) ||
+             isIsolated( rtrack, Rich::Muon     ) ||
+             isIsolated( rtrack, Rich::Pion     ) ||
+             isIsolated( rtrack, Rich::Kaon     ) ||
+             isIsolated( rtrack, Rich::Proton   )  ) 
+           );
+}
+
+//=============================================================================
+
 bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment ) const
 {
   return ( isIsolated( segment, Rich::Electron ) ||
