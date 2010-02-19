@@ -59,7 +59,7 @@ unsigned int StrippingAlg::numberOfCandidates() const {
   return num;
 }
 
-unsigned int StrippingAlg::numberOfCandidates(const Algorithm* algorithm) const {
+unsigned int StrippingAlg::numberOfCandidates(const Algorithm* /*algorithm*/) const {
   return 0 ;
 }
 
