@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction tool : RichTrackSelectorBase
  *
- *  CVS Log :-
- *  $Id: RichTrackSelectorBase.cpp,v 1.16 2009-07-30 11:30:22 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
  */
@@ -67,6 +64,8 @@ namespace Rich
 
       declareProperty( "AcceptClones", m_acceptClones = false );
 
+      declareProperty( "RejectNonIsolated", m_rejectNonIsolated = false );
+
       declareProperty( "MinLikelihood", m_minLL = -100 );
       //declareProperty( "MinLikelihood", m_minLL = boost::numeric::bounds<double>::lowest() );
       declareProperty( "MaxLikelihood", m_maxLL = boost::numeric::bounds<double>::highest() );
@@ -76,7 +75,7 @@ namespace Rich
         ("MinPCut")("MaxPCut")("MinPtCut")("MaxPtCut")
         ("MinChi2Cut")("MaxChi2Cut")("Charge")("MinCloneDistCut")("MaxCloneDistCut")
         ("MinGhostProbCut")("MaxGhostProbCut")
-        ("MinLikelihood")("MaxLikelihood")("AcceptClones");
+        ("MinLikelihood")("MaxLikelihood")("AcceptClones")("RejectNonIsolated");
 
     }
 
@@ -186,7 +185,6 @@ namespace Rich
               }
               if ( !found )
               {
-                //if ( msgLevel(MSG::VERBOSE) )
                 if (msgLevel(MSG::VERBOSE))
                   verbose() << " Adding option " << *iP << " to " << fullname << endmsg;
                 sc = joSvc()->addPropertyToCatalogue( fullname, *(*itP) );

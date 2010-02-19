@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IIsolatedTrack
  *
- *  CVS Log :-
- *  $Id: IRichIsolatedTrack.h,v 1.1 2008-05-09 13:59:20 jonrob Exp $
- *
  *  @author Susan Haines
  *  @author Chris Jones
  *  @date   15/02/2008
@@ -29,6 +26,7 @@
 namespace LHCb
 {
   class RichRecTrack;
+  class RichRecSegment;
   class Track;
 }
 
@@ -60,6 +58,8 @@ namespace Rich
        */
       static const InterfaceID & interfaceID() { return IID_IRichIsolatedTrack; }
 
+    public:
+
       /** Is this segment isolated in the RICH system for the given mass hypothesis
        *  @param[in] segment The track segment
        *  @param[in] pid     The mass hypothesis to consider
@@ -73,6 +73,38 @@ namespace Rich
        *  @return Boolean indicating if the track is isolated or not
        */
       virtual bool isIsolated( const LHCb::RichRecSegment * segment ) const = 0;
+
+    public:
+
+      /** Is this segment isolated in the RICH system for the given mass hypothesis
+       *  @param[in] track The track
+       *  @param[in] pid     The mass hypothesis to consider
+       *  @return Boolean indicating if the track is isolated or not
+       */
+      virtual bool isIsolated( const LHCb::RichRecTrack * track,
+                               const Rich::ParticleIDType pid ) const = 0;
+
+      /** Is this segment isolated in the RICH system for any mass hypothesis
+       *  @param[in] track The track
+       *  @return Boolean indicating if the track is isolated or not
+       */
+      virtual bool isIsolated( const LHCb::RichRecTrack * track ) const = 0;
+
+    public:
+
+      /** Is this segment isolated in the RICH system for the given mass hypothesis
+       *  @param[in] track The track
+       *  @param[in] pid     The mass hypothesis to consider
+       *  @return Boolean indicating if the track is isolated or not
+       */
+      virtual bool isIsolated( const LHCb::Track * track,
+                               const Rich::ParticleIDType pid ) const = 0;
+
+      /** Is this segment isolated in the RICH system for any mass hypothesis
+       *  @param[in] track The track
+       *  @return Boolean indicating if the track is isolated or not
+       */
+      virtual bool isIsolated( const LHCb::Track * track ) const = 0;
 
     };
 

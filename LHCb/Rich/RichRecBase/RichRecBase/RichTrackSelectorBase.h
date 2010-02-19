@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction tool : RichTrackSelectorBase
  *
- *  CVS Log :-
- *  $Id: RichTrackSelectorBase.h,v 1.8 2009-06-10 13:17:28 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
  */
@@ -228,6 +225,8 @@ namespace Rich
       double m_maxGhostProb; ///< maximum ghost probability cut
 
       bool m_acceptClones; ///< Accept or reject clone tracks
+
+      bool m_rejectNonIsolated; ///< Reject tracks that fail the isolation tool
 
       /// list of possible options
       std::vector<std::string> m_jobOpts;
