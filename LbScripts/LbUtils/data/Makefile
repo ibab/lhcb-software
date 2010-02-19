@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.11 2009-10-26 17:49:17 marcocle Exp $
+# $Id: Makefile,v 1.12 2010-02-19 09:21:03 marcocle Exp $
 ################################################################################
 #
 # Generic Makefile for CMT projects.
@@ -106,10 +106,19 @@ else
 logging = enabled
 endif
 
-# -- On Windows we have to remove the 'j' flag from the environment variable MAKEFLAGS.
-#    Note that in MAKEFLAGS, the 'j' options may appear by itself or as 'j 1'
 ifeq ($(platform),windows)
-strip_makeflags = export MAKEFLAGS=$(subst j,,$(subst j 1,,$(MAKEFLAGS))) ;
+# -- On Windows we have to unset the environment variable MAKEFLAGS because the
+#    options to GNU Make are not compatible with NMake.
+#strip_makeflags = export MAKEFLAGS=$(subst j,,$(subst j 1,,$(MAKEFLAGS))) ;
+strip_makeflags = export MAKEFLAGS= ;
+# -- On Windows, NMake ignore the environment variables, so we have to explicitly
+#    pass CMTEXRATAGS and CMTUSERCONTEXT on the command line.
+ifdef CMTEXTRATAGS
+make_extra_flags += CMTEXTRATAGS="$(CMTEXTRATAGS)"
+endif
+ifdef CMTUSERCONTEXT
+make_extra_flags += CMTUSERCONTEXT="$(CMTUSERCONTEXT)"
+endif
 endif
 
 # Fix the separator for environment variables
@@ -166,7 +175,7 @@ ifeq ($(logging),enabled)
 	@+cd $*/cmt ; $(strip_makeflags) \
 	for group in $(call groups,$*) ; do \
 		echo "# Building group $$group" | tee -a build.$(CMTCONFIG).log ; \
-		cmt make $$group 2>&1 | tee -a build.$(CMTCONFIG).log ; export BUILD_RESULT=$$PIPESTATUS ; \
+		cmt make $(make_extra_flags) $$group 2>&1 | tee -a build.$(CMTCONFIG).log ; export BUILD_RESULT=$$PIPESTATUS ; \
 		date >> build.$(CMTCONFIG).log ; \
 		$(Package_failure_handler) \
 	done
@@ -174,7 +183,7 @@ else
 	@+cd $*/cmt ; $(strip_makeflags) \
 	for group in $(call groups,$*) ; do \
 		echo "# Building group $$group"; \
-		cmt make $$group ; export BUILD_RESULT=$$? ; \
+		cmt make $(make_extra_flags) $$group ; export BUILD_RESULT=$$? ; \
 		$(Package_failure_handler) \
 	done
 endif

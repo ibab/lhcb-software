@@ -1,3 +1,7 @@
+2010-02-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* data/Makefile: Improved support for Windows.
+
 2010-02-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/colorgcc_wrap: new script to colorize the gcc output. This is a wrapper that
