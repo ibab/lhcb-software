@@ -3,13 +3,17 @@
 
      @author M.Frank
 """
-__version__ = "$Id: BrunelOnline.py,v 1.18 2009-12-04 16:28:53 frankb Exp $"
+__version__ = "$Id: BrunelOnline.py,v 1.19 2010-02-19 18:35:17 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 import os
 import Configurables as Configs
 import Gaudi.Configuration as Gaudi
 import GaudiKernel
+from GaudiKernel.ProcessJobOptions import PrintOff,InstallRootLoggingHandler,logging
+
+PrintOff(999)
+InstallRootLoggingHandler(level=logging.CRITICAL)
 
 processingType ='DataTaking'
 
