@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.30 2010-02-15 16:01:11 graven Exp $ 
+# $Id: HltLine.py,v 1.31 2010-02-19 22:38:44 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.30 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.31 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -1291,10 +1291,10 @@ class Hlt2Line(object):
         #    L0DU = "L0_DECISION"
         #    L0DU = "L0_ALL" # protects against missing/invalid L0DU 
         if not HLT :
-            #HLT = "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi).*Decision')"
-            #HLT = "HLT_PASS_RE('Hlt1(?!ODIN)(?!Lumi).*Decision')"
-            #HLT = "HLT_PASS_RE('Hlt1(?!L0)(?!Lumi).*Decision')"
-            HLT = "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"
+            #  ODIN and L0 should be 'harmless' as only a small fraction (or small rate)
+            #  VELO on the other hand is dangerous during 'velo open' running...
+            #  and please note the trailing 'Decision' which is there to skip Hlt1Global!
+            HLT = "HLT_PASS_RE('Hlt1(?!Lumi)(?!Velo).*Decision')"
 
         ## 1) clone all arguments
         name  = deepcopy ( name  )
