@@ -283,17 +283,16 @@ def fixWinAttrib(dirpath):
         if os.listdir(dirpath) :
             here = os.getcwd()
             os.chdir(dirpath)
-            os.system("attrib -R -A /S /D")
+            os.system("attrib -R -A -H /S /D")
             os.chdir(here)
     else :
-        os.system("attrib -R -A %s" % directory)
+        os.system("attrib -R -A -H %s" % dirpath)
     
 
 def changePermissions(directory, recursive=True):
     """ change permissions according to the umask. and the
     MYSITEROOT directory permissions """
     log = logging.getLogger()
-    here = os.getcwd()
     if sys.platform != "win32" :
         # add write permissions to the user if needed
         authbits = 0777 - getGlobalMask()
@@ -1622,6 +1621,11 @@ def cleanTarFileTarget(filename, targetlocation):
             os.remove(fp)
 
 
+def safeMove(src, dst):
+    shutil.move(src, dst)
+    if os.path.isdir(dst) and sys.platform.startswith("win32") :
+        fixWinAttrib(dst)
+
 def addSoft(srcdir, dstdir, overwrite=False):
     log = logging.getLogger()
     if overwrite :
@@ -1641,7 +1645,7 @@ def addSoft(srcdir, dstdir, overwrite=False):
                 pdst = os.path.dirname(dst)
                 if not os.path.exists(pdst) :
                     os.makedirs(pdst)
-                shutil.move(src, dst)
+                safeMove(src, dst)
                 dirstoremove.append(d)
         for f in files :
             src = os.path.join(root, f)
@@ -1651,14 +1655,14 @@ def addSoft(srcdir, dstdir, overwrite=False):
                 pdst = os.path.dirname(dst)
                 if not os.path.exists(pdst) :
                     os.makedirs(pdst)
-                shutil.move(src, dst)
+                safeMove(src, dst)
             elif overwrite :
                 if os.path.exists(dst) :
                     os.remove(dst)
                 pdst = os.path.dirname(dst)
                 if not os.path.exists(pdst) :
                     os.makedirs(pdst)
-                shutil.move(src, dst)
+                safeMove(src, dst)
         for d in dirstoremove :
             dirs.remove(d)
 

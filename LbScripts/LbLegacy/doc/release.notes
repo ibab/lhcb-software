@@ -1,3 +1,8 @@
+2010-02-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: added more protection against the windows attributes. Now 
+	removes them recursively in each untarred directory and each move directory. To be sure.
+
 2010-02-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: fixed windows attribute for files more
