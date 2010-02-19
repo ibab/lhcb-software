@@ -23,7 +23,7 @@
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IMonitorSvc.h"
 #include "GaudiKernel/IHistogramSvc.h"
-#include <GaudiKernel/MonitorSvc.h>
+#include <GaudiKernel/IMonitorSvc.h>
 #include "AIDA/IHistogram1D.h"
 // Online stuff
 #include "RTL/rtl.h"
@@ -124,8 +124,8 @@ namespace LHCb  {
     //SourceStatService           *m_statService;
     
     IIncidentSvc*               m_incidentSvc; 
-    //IMonitorSvc*                m_monSvc;
-    IGauchoMonitorSvc*                m_monSvc;
+    IMonitorSvc*                m_monSvc;
+    //IGauchoMonitorSvc*                m_monSvc;
     IHistogramSvc*              m_histSvc;
 
     int                         m_sourceID;

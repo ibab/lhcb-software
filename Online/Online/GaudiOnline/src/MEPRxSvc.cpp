@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.87 2010-01-29 09:27:15 garnierj Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.88 2010-02-19 09:03:28 frankb Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -677,8 +677,8 @@ void MEPRxSvc::freeRx() {
 	rx->m_wasIncomplete = false;
       } else { 
 	resetCounters(m_noShow, m_nSrc);
-	sendMEPReq(m_MEPsPerMEPReq);
       }
+      sendMEPReq(m_MEPsPerMEPReq);
       m_freeDsc.push_back(rx);
     }
     else if (rc != MBM_REQ_CANCEL) {
@@ -742,7 +742,7 @@ StatusCode MEPRxSvc::run() {
       
       static int ncrh = 1;
       if (m_ebState != RUNNING) {
-        m_monSvc->updateAll(false);
+        //m_monSvc->updateAll(false);
         for(RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w)
           forceEvent(w);
         log << MSG::DEBUG << "Exiting from receive loop" << endmsg;
