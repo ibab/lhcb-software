@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.422 2010-02-18 16:25:27 graven Exp $ 
+! $Id: release.notes,v 1.423 2010-02-20 18:19:25 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+
+! 2010-02-20 - Gerhard Raven
+ - add SkipDisabledL0Channels option to HltConf
 
 !========================== HltConf v6r4 2010-02-18 ===================
 ! 2010-02-18 - K. Vervink

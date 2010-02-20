@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.155 2010-02-18 15:24:07 kvervink Exp $"
+__version__ = "$Id: Configuration.py,v 1.156 2010-02-20 18:19:26 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -22,6 +22,7 @@ class HltConf(LHCbConfigurableUser):
                              , Hlt2Conf ]
     __slots__ = { "L0TCK"                          : ''
                 , 'ForceSingleL0Configuration'     : True
+                , 'SkipDisabledL0Channels'         : False
                 , "DataType"                       : '2009'
                 , "Verbose"                        : False      # print the generated Hlt sequence
                 , "HistogrammingLevel"             : 'None'     # or 'Line'
@@ -63,7 +64,9 @@ class HltConf(LHCbConfigurableUser):
             log.warning( '## WARNING HLT will assume input data contains L0 TCK %s ##' % L0TCK )
             log.warning( '###############################################################')
             from Hlt1Lines.HltL0Candidates import decodeL0Channels
-            channels = decodeL0Channels( L0TCK , self.getProp('ForceSingleL0Configuration') )
+            channels = decodeL0Channels( L0TCK 
+                                       , skipDisabled               = self.getProp('SkipDisabledL0Channels')
+                                       , forceSingleL0Configuration = self.getProp('ForceSingleL0Configuration') )
         else :
             log.warning( '##################################################################################################')
             log.warning( '## WARNING You did not inform the HLT configuration what L0 Configuration is used for the input ##')
