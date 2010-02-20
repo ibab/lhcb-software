@@ -19,7 +19,6 @@
   <class name = "IGeomDispCalculator"/>
   <class name = "IJetMaker"/>
   <class name = "ILifetimeFitter"/>
-  <class name = "IMassVertexFit"/>
   <class name = "IMassFit"/>
   <class name = "IOnOffline"/>
   <class name = "IP2VVAngleCalculator"/>

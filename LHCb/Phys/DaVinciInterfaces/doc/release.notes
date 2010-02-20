@@ -4,6 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-02-20 - Marco Cattaneo
+ - Remove it also from dict ans src files.....
+
 ! 2010-02-19 - Juan Palacios
  - Kernel/IMassVertexFit.h
   . Removed. Not implemented and not needed.

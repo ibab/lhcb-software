@@ -1,4 +1,4 @@
-// $Id: DaVinciInterfacesDict.h,v 1.8 2010-01-14 08:00:24 pkoppenb Exp $
+// $Id: DaVinciInterfacesDict.h,v 1.9 2010-02-20 21:18:50 cattanem Exp $
 #ifndef DICT_DAVINCIINTERFACESDICT_H 
 #define DICT_DAVINCIINTERFACESDICT_H 1
 
@@ -30,7 +30,6 @@
 #include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IJetMaker.h"
 #include "Kernel/ILifetimeFitter.h"
-#include "Kernel/IMassVertexFit.h"
 #include "Kernel/IMassFit.h"
 #include "Kernel/IOnOffline.h"
 #include "Kernel/IP2VVAngleCalculator.h"

@@ -1,4 +1,4 @@
-// $Id: DaVinciInterfaces.cpp,v 1.3 2010-01-14 08:10:03 pkoppenb Exp $
+// $Id: DaVinciInterfaces.cpp,v 1.4 2010-02-20 21:18:51 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -14,7 +14,6 @@
 #include "Kernel/IDirectionFit.h"
 #include "Kernel/IVertexFit.h"
 #include "Kernel/IMassFit.h"
-#include "Kernel/IMassVertexFit.h"
 #include "Kernel/IJetMaker.h"
 #include "Kernel/IDistanceCalculator.h"
 #include "Kernel/ISetInputParticles.h"
@@ -36,7 +35,6 @@ IParticleCombiner        :: ~IParticleCombiner        () {}
 IDirectionFit            :: ~IDirectionFit            () {}
 IVertexFit               :: ~IVertexFit               () {}
 IMassFit                 :: ~IMassFit                 () {}
-IMassVertexFit           :: ~IMassVertexFit           () {}
 IJetMaker                :: ~IJetMaker                () {}
 IDistanceCalculator      :: ~IDistanceCalculator      () {}
 ISetInputParticles       :: ~ISetInputParticles       () {}
