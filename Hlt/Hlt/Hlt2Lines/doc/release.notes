@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.122 2010-02-19 16:05:41 fdettori Exp $
+$Id: release.notes,v 1.123 2010-02-20 22:17:19 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -9,12 +9,13 @@ $Id: release.notes,v 1.122 2010-02-19 16:05:41 fdettori Exp $
 !
 !-----------------------------------------------------------------------------
 
-!========================== Hlt2Lines v2r4 2010-02-17 ===================
 ! 2010-02-19 - Francesco Dettori
  - Addition of the file Hlt2Dst2PiD02xx.py
 	 Trigger for D*-> D0(-> mu mu) pi  channel and similars
 	 For reference on these trigger lines see:
    http://indico.cern.ch/conferenceDisplay.py?confId=82193
+
+!========================== Hlt2Lines v2r4 2010-02-18 ===================
 
 ! 2010-02-18 - V. Gligorov
  - Updates to inclusive triggers (Charm,Topo,Phi,B2DX) to follow changes
