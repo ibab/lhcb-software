@@ -25,7 +25,8 @@ inline MsgStream& operator << ( MsgStream& s,
                                 boost::array<TYPE, N>& data )
 {
   for ( typename boost::array<TYPE, N>::const_iterator i = data.begin(); 
-        i != data.end(); ++i ) { s << *i << " "; }
+        i != data.end(); ++i ) 
+  { s << *i << " "; }
   return s;
 }
 
