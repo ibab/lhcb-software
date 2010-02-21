@@ -104,22 +104,6 @@ StatusCode RecoQC::prebookHistograms()
     richHisto1D( HID("totalPhotonsIsolated",*rad),"Photon Yield : Isolated Tracks",
                  -0.5, 50.5, 51 );
 
-    //richHisto2D( HID("photonCkThetaVP",*rad),"Photon Cherenkov Theta V Momentum",
-    //             log10(m_trSelector->minPCut()+1), log10(m_trSelector->maxPCut()), nBins2D(),
-    //             m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins2D() );
-
-    /*
-    for ( Rich::Sides::const_iterator side = Rich::sides().begin();
-          side != Rich::sides().end(); ++side )
-    {
-      richProfile1D( HID("thetaRecVphiRec",*side,*rad),
-                     "Av. Reconstructed Ch Theta V Phi : All photons",
-                     0.0, 2.0*Gaudi::Units::pi, nBins1D() );
-      richProfile1D( HID("thetaRecVphiRecIsolated",*side,*rad),
-                     "Av. Reconstructed Ch Theta V Phi : All photons : Isolated Tracks",
-                     0.0, 2.0*Gaudi::Units::pi, nBins1D() );
-    }
-    */
   }
 
   return StatusCode::SUCCESS;
@@ -167,7 +151,6 @@ StatusCode RecoQC::execute()
 
     // segment momentum
     const double pTot = std::sqrt(segment->trackSegment().bestMomentum().Mag2());
-    const double ptotLogGeV = std::log10(pTot/Gaudi::Units::GeV);
 
     double thetaExpTrue(0.0), resExpTrue(0.0);
     Rich::ParticleIDType mcType = Rich::Pion; // If MC not available, assume pion
@@ -223,8 +206,6 @@ StatusCode RecoQC::execute()
     {
       LHCb::RichRecPhoton * photon = *iPhot;
 
-      const Rich::Side side = photon->richRecPixel()->panel().panel();
-
       // reconstructed theta
       const double thetaRec = photon->geomPhoton().CherenkovTheta();
       // reconstructed phi
@@ -235,15 +216,12 @@ StatusCode RecoQC::execute()
       richHisto1D(HID("thetaRec",rad))->fill(thetaRec);
       richHisto1D(HID("phiRec",rad))->fill(phiRec);
       richHisto1D(HID("ckResAll",rad))->fill(deltaTheta);
-      //richHisto2D(HID("photonCkThetaVP",rad))->fill(ptotLogGeV,thetaRec);
-      //richProfile1D(HID("thetaRecVphiRec",side,rad))->fill( phiRec, thetaRec );
 
       // isolated segment ?
       if ( isolated )
       {
         richHisto1D(HID("thetaRecIsolated",rad))->fill(thetaRec);
         richHisto1D(HID("ckResAllIsolated",rad))->fill(deltaTheta);
-        //richProfile1D(HID("thetaRecVphiRecIsolated",side,rad))->fill( phiRec, thetaRec );
       }
 
       // MC based plots
