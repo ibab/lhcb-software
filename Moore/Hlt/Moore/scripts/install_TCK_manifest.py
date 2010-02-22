@@ -4,13 +4,24 @@ from os import makedirs
 from os.path import exists, dirname
 from sys import argv
 
+def cpManifest(source,target) :
+	target_dir = dirname( target )
+	if exists( source)        : 
+	    print 'copying %s to %s'  %(source,target_dir)
+	    if not exists( target_dir ) : makedirs( target_dir )
+	    copy2( manifest,  target )
+	    return True
+	else:
+	    print 'manifest  ' + manifest + ' does not exist'
+            return False
+
+
 ### use the TCKUtils generated manifest for this version, and copy it 
 ### directly into InstallArea... (if it exists)
 manifest = argv[1]
-target_dir = dirname( argv[2] )
-if exists( manifest)        : 
-    print 'copying ' + manifest + ' to ' + argv[2]
-    if not exists( target_dir ) : makedirs( target_dir )
-    copy2( manifest,  argv[2] )
-else:
-    print 'manifest  ' + manifest + ' does not exist'
+target = argv[2]
+if not cpManifest(manifest,target) :
+    # in case of dev, try without the 'dev' postfix
+    if manifest.endswith('dev') :
+	manifest = manifest.rstrip('dev')
+	cpManifest(manifest,target)
