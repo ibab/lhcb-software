@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.124 2010-02-20 18:21:31 graven Exp $
+! $Id: release.notes,v 1.125 2010-02-22 15:50:59 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -10,6 +10,7 @@
 !
 !-----------------------------------------------------------------------------
  
+!========================== Hlt1Lines v2r2p1 2010-02-21 ===================
 ! 2010-02-18 - Gerhard Raven
  - add () around some terms in the L0 mask predicates..
  - set default prescale of Hlt1Velo.* to 0.001
