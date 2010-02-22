@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.105 2010-02-17 22:42:14 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.106 2010-02-22 09:36:50 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -45,12 +45,14 @@ class Moore(LHCbConfigurableUser):
           "EvtMax":            -1    # Maximum number of events to process
         , "SkipEvents":        0
         , "Simulation":        True # True implies use SimCond
-        , "DataType":          '2009' # Data type, can be [ 'DC06','2008' ]
+        , "DataType":          '2010' # Data type, can be [ 'DC06','2008' ]
         , "DDDBtag" :          'default' # default as set in DDDBConf for DataType
         , "CondDBtag" :        'default' # default as set in DDDBConf for DataType
         , "outputFile" :       '' # output filename
         , "inputFiles" :       [ ] # input
         , "UseTCK"     :       False # use TCK instead of options...
+        , 'ForceSingleL0Configuration' : True # use one single, fixed L0 configuration location (ToolSvc.L0DUConfig)
+        , 'SkipDisabledL0Channels' : False # add Hlt1L0xxx even for disabled L0 channels 
         , "L0"         :       False # run L0
         , "ReplaceL0BanksWithEmulated" : False # rerun L0
         , "CheckOdin"  :       True  # use TCK from ODIN
@@ -415,6 +417,8 @@ class Moore(LHCbConfigurableUser):
                             , 'HistogrammingLevel' 
                             , "EnableLumiEventWriting"
                             , "EnableAcceptIfSlow"
+                            , 'ForceSingleL0Configuration'
+                            , 'SkipDisabledL0Channels'
                             ]
                           )
 

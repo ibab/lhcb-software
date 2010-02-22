@@ -4,6 +4,7 @@ Purpose     : LHCb HLT application
 
 ! 2010-02-22 - Gerhard Raven
  - update default DB snapshot
+ - add ForceSingleL0Configuration and SkipDisabledL0Channels options
 
 ! 2010-02-17 - Gerhard Raven
  - switch to use the ConfigTarFileAccessSvc when generating configurations
