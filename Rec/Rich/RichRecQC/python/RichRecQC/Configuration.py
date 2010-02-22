@@ -28,7 +28,8 @@ class RichRecQCConf(RichConfigurableUser):
         "Context": "Offline"  # The context within which to run
        ,"DataType" : "2008" # Data type, can be ['DC06','2008',2009','2010']
        ,"MoniSequencer" : None # The sequencer to add the RICH monitoring algorithms to
-       ,"Monitors" : { "Expert"         : [ "RawMonitoring", "PidMonitoring",
+       ,"Monitors" : { "Expert"         : [ "L1SizeMonitoring", "DBConsistencyCheck",
+                                            "HotPixelFinder", "PidMonitoring",
                                             "PixelMonitoring", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
                                             "TracklessRingPeakSearch",
@@ -41,15 +42,17 @@ class RichRecQCConf(RichConfigurableUser):
                                             "RichPhotonTrajectory","RichStereoFitterTests"
                                             #,"RichRayTracingTests","RichDataObjectChecks","RichRecoTiming"
                                             ],
-                       "OfflineFull"    : [ "RawMonitoring", "PidMonitoring",
+                       "OfflineFull"    : [ "L1SizeMonitoring", "DBConsistencyCheck",
+                                            "HotPixelFinder", "PidMonitoring",
                                             "PixelMonitoring", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
                                             "AlignmentMonitoring", "HPDIFBMonitoring" ],
-                       "OfflineExpress" : [ "RawMonitoring", "PidMonitoring",
+                       "OfflineExpress" : [ "L1SizeMonitoring", "DBConsistencyCheck",
+                                            "HotPixelFinder", "PidMonitoring",
                                             "PixelMonitoring", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
                                             "AlignmentMonitoring", "HPDIFBMonitoring" ],
-                       "Online"         : [ "RawMonitoring", "PixelMonitoring",
+                       "Online"         : [ "DBConsistencyCheck",
                                             "PhotonMonitoring", "TracklessRingAngles",
                                             "AlignmentMonitoring" ],
                        "None"           : [ ]
@@ -177,21 +180,25 @@ class RichRecQCConf(RichConfigurableUser):
         monitors = self.getProp("Monitors")[histoSet]
             
         # Some monitoring of raw information
-        if "RawMonitoring" in monitors :
+        if self.getProp("DataType") not in ["DC06"]:
 
-            if self.getProp("DataType") not in ["DC06"]:
+            rawSeq = self.newSeq(sequence,"RichRawMoni")
             
-                rawSeq = self.newSeq(sequence,"RichRawMoni")
+            if "L1SizeMonitoring" in monitors :
                 
                 # Data Sizes
                 from Configurables import Rich__DAQ__RawDataSize
                 dataSize = self.createMonitor(Rich__DAQ__RawDataSize,"RichRawDataSize")
                 rawSeq.Members += [dataSize]
 
+            if "DBConsistencyCheck" in monitors :
+
                 # Data base consistency
                 from Configurables import Rich__DAQ__DataDBCheck
                 dbCheck = self.createMonitor(Rich__DAQ__DataDBCheck,"RichRawDataDBCheck")
                 rawSeq.Members += [dbCheck]
+
+            if "HotPixelFinder" in monitors :
 
                 # Hot pixel finder
                 from Configurables import Rich__HPDAnalysisAlg
