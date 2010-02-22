@@ -1,4 +1,4 @@
-// $Id: CtrlSubfarmDisplay.cpp,v 1.7 2009-04-17 13:16:37 frankb Exp $
+// $Id: CtrlSubfarmDisplay.cpp,v 1.8 2010-02-22 13:05:11 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlSubfarmDisplay.cpp,v 1.7 2009-04-17 13:16:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlSubfarmDisplay.cpp,v 1.8 2010-02-22 13:05:11 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -80,6 +80,7 @@ CtrlSubfarmDisplay::~CtrlSubfarmDisplay()  {
 
 /// Display the node information
 void CtrlSubfarmDisplay::showNodes()  {
+  char text[1024];
   Cluster& c = m_cluster;
   MonitorDisplay* disp = m_nodes;
   size_t taskCount=0, missTaskCount=0;
@@ -111,6 +112,30 @@ void CtrlSubfarmDisplay::showNodes()  {
   disp->draw_line_normal("");
   disp->draw_line_bold(" %-12s %8s %5zd/%-7zd %5zd/%-7zd", "Total:", 
                        c.status.c_str(), taskCount, missTaskCount, connCount, missConnCount);
+  disp->draw_line_normal("");
+  disp->draw_line_normal("");
+  for(Cluster::Nodes::const_iterator i=c.nodes.begin(); i!=c.nodes.end();++i) {
+    const Cluster::Node& n = (*i).second;
+    if ( n.projects.size() > 0 ) {
+      disp->draw_line_bold(" %-24s %-16s %-14s %-14s %-14s %-14s %-14s",
+			   "PVSS Summary/Node:", "Project name","Event Mgr","Data Mgr","Dist Mgr","FSM Server","Dev Handler");
+      for(Cluster::Projects::const_iterator q=n.projects.begin(); q != n.projects.end(); ++q)  {
+	const Cluster::PVSSProject& p = *q;
+        ::sprintf(text," %-24s %-16s %-14s %-14s %-14s %-14s %-14s",
+		  n.name.c_str(), p.name.c_str(), 
+		  p.eventMgr ? "RUNNING" : "DEAD",
+		  p.dataMgr  ? "RUNNING" : "DEAD",
+		  p.distMgr  ? "RUNNING" : "DEAD",
+		  p.fsmSrv   ? "RUNNING" : "DEAD",
+		  p.devHdlr  ? "RUNNING" : "DEAD");
+	if ( p.eventMgr && p.dataMgr && p.distMgr )
+	  disp->draw_line_normal(text);
+	else
+	  disp->draw_line_bold(text);
+      }
+    }
+  }
+  disp->draw_line_normal("");
 }
 
 /// Update header information

@@ -1,4 +1,4 @@
-// $Id: CtrlNodeDisplay.cpp,v 1.1 2009-04-17 13:17:04 frankb Exp $
+// $Id: CtrlNodeDisplay.cpp,v 1.2 2010-02-22 13:05:11 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlNodeDisplay.cpp,v 1.1 2009-04-17 13:17:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlNodeDisplay.cpp,v 1.2 2010-02-22 13:05:11 frankb Exp $
 
 // Framework include files
 #include "ROMon/TaskSupervisor.h"
@@ -102,13 +102,13 @@ void CtrlNodeDisplay::update(const void* data) {
           }
           if ( n.projects.size() > 0 ) {
             cnt=0;
-            ::sprintf(txt,"%-15s %-16s %-10s %-10s %-10s %-10s %-10s",
+            ::sprintf(txt,"%-15s %-16s %-14s %-14s %-14s %-14s %-14s",
                       "PVSS Summary:","Project name","Event Mgr","Data Mgr","Dist Mgr","FSM Server","Dev Handler");
             ::scrc_put_chars(m_display,txt,INVERSE|GREEN,++line,1,1);
             for(Cluster::Projects::const_iterator q=n.projects.begin(); q != n.projects.end(); ++q,++cnt)  {
               const Cluster::PVSSProject& p = *q;
               bool ok = p.eventMgr && p.dataMgr && p.distMgr;
-              ::sprintf(txt,"   [%03d]        %-16s %-10s %-10s %-10s %-10s %-10s",cnt,p.name.c_str(), 
+              ::sprintf(txt,"   [%03d]        %-16s %-14s %-14s %-14s %-14s %-14s",cnt,p.name.c_str(), 
                         p.eventMgr ? "RUNNING" : "DEAD",
                         p.dataMgr  ? "RUNNING" : "DEAD",
                         p.distMgr  ? "RUNNING" : "DEAD",
