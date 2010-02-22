@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.166 2010-02-22 13:20:32 jpalac Exp $
+# $Id: requirements,v 1.167 2010-02-22 14:01:38 jpalac Exp $
 package AnalysisSys
 version v4r1
 
@@ -15,7 +15,7 @@ use  DSTWriters                 v1r2p1   Phys   # Juan Palacios
 use  CommonParticles            v6r5     Phys   # Patrick Koppenburg, WGs
 use  FlavourTagging             v11r1    Phys   # Marco Musy
 
-use  DaVinciMonitors            v1r7     Phys   # Patrick Koppenburg
+use  DaVinciMonitors            v1r8     Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r3     Rich   # Chris Jones
 use  DstCalibSel                v1r2p1   Rich   # Andrew Powell
 use  KaliCalo                   v3r3     Phys   # Vanya Belyaev
