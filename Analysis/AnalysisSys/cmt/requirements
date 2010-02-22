@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.165 2010-02-18 14:54:24 jpalac Exp $
+# $Id: requirements,v 1.166 2010-02-22 13:20:32 jpalac Exp $
 package AnalysisSys
-version v4r0p1
+version v4r1
 
 branches doc cmt
 
@@ -8,45 +8,45 @@ branches doc cmt
 ####################################################################
 
 use  AnalysisConf               v1r11    Phys   # Patrick Koppenburg, Juan Palacios
-use  DSTWriters                 v1r2     Phys   # Juan Palacios
+use  DSTWriters                 v1r2p1   Phys   # Juan Palacios
 #===================================================================
 #use  AnalysisDict               v1r0     Phys   # TEMPORARY!
 #===================================================================
 use  CommonParticles            v6r5     Phys   # Patrick Koppenburg, WGs
-use  FlavourTagging             v11r0    Phys   # Marco Musy
+use  FlavourTagging             v11r1    Phys   # Marco Musy
 
 use  DaVinciMonitors            v1r7     Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r3     Rich   # Chris Jones
 use  DstCalibSel                v1r2p1   Rich   # Andrew Powell
-use  KaliCalo                   v3r2     Phys   # Vanya Belyaev
+use  KaliCalo                   v3r3     Phys   # Vanya Belyaev
 ####################################################################
 use  DaVinciMCTools     	v9r25    Phys   # Juan Palacios
-use  DaVinciAssociators         v9r4     Phys   # Vladimir Gligorov
+use  DaVinciAssociators         v9r4p1   Phys   # Vladimir Gligorov
 use  Particle2MCTruth           v2r3p2   Phys   # Juan Palacios
 use  VertexFitCheck             v1r5     Phys   # Yuehong Xie
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
-use  FlavourTaggingChecker      v5r0     Phys   # Marco Musy
+use  FlavourTaggingChecker      v5r1     Phys   # Marco Musy
 use  ParticleMakerChecker       v1r3p2   Phys   # Chris Jones
-use  DecayTreeTuple             v3r0p1   Phys   # Rob Lambert
-use  LoKiJets                   v5r0     Phys   # Victor Coco
-use  DisplVertices              v6r0p3   Phys   # Neal Gauvin
+use  DecayTreeTuple             v3r1     Phys   # Rob Lambert
+use  LoKiJets                   v5r1     Phys   # Victor Coco
+use  DisplVertices              v6r1   Phys   # Neal Gauvin
 ####################################################################
 #
-use PhysSelPython               v4r0     PhysSel
+use PhysSelPython               v4r1     PhysSel
 use AnalysisPython              v1r5     Phys
 #
 # Stripping
 #
 use StrippingAlgs               v1r0   Phys   # Anton Poluektov
-use StrippingConf               v2r0   Phys   # Anton Poluektov
-use StrippingSelections         v1r15  Phys   # Anton Poluektov
+use StrippingConf               v3r0   Phys   # Anton Poluektov
+use StrippingSelections         v1r16  Phys   # Anton Poluektov
 
 ####################################################################
 use  MicroDSTBase        	v1r6p2  MicroDST          # Juan Palacios
 use  MicroDSTInterfaces  	v1r4    MicroDST          # Juan Palacios
 use  MicroDSTTools      	v1r6    MicroDST          # Juan Palacios
 use  MicroDSTAlgorithm   	v3r9    MicroDST          # Juan Palacios
-use  MicroDSTConf               v2r8    MicroDST          # Juan Palacios
+use  MicroDSTConf               v2r9    MicroDST          # Juan Palacios
 
 ####################################################################
 use Analysis            	v8r3p2  Tutorial          # P. Koppenburg
