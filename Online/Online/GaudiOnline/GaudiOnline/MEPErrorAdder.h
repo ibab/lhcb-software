@@ -85,11 +85,15 @@ namespace LHCb  {
     std::vector<std::vector<int64_t> >      	m_rMultipleEvt;
     std::vector<std::vector<int64_t> >      	m_rRxOct;
     std::vector<std::vector<int64_t> >      	m_rRxPkt;
+    std::vector<std::vector<int64_t> >		m_rReadOct; // Read in MEPRx process
     std::vector<std::vector<int64_t> >  	m_rRxEvt;
     std::vector<std::vector<int64_t> >  	m_rRxMEP;
     
     std::vector<int64_t>			m_rTotRxOct;
     std::vector<int64_t>			m_rTotRxPkt;
+    std::vector<int64_t>			m_rBytesNotInPartition; // source not in partition 
+    std::vector<int64_t>			m_rPacketsNotInPartition;
+    std::vector<int64_t>			m_rTotReadOct;
     std::vector<int64_t>			m_rTotRxEvt;
     std::vector<int64_t>			m_rTotRxMEP;
     std::vector<int64_t>			m_rIncEvt;
@@ -112,12 +116,16 @@ namespace LHCb  {
     std::vector<int64_t>        m_multipleEvt;
     std::vector<int64_t>        m_rxOct;
     std::vector<int64_t>       	m_rxPkt;
+    std::vector<int64_t>	m_readOct;
     std::vector<int64_t>        m_rxEvt; 
     std::vector<int64_t>        m_rxMEP; 
 
     //Summed up single counters to send
     int64_t			m_totRxOct;
     int64_t			m_totRxPkt;
+    int64_t			m_bytesNotInPartition;
+    int64_t			m_packetsNotInPartition;
+    int64_t			m_totReadOct;
     int64_t			m_totRxEvt;
     int64_t			m_totRxMEP;
     int64_t			m_incEvt;
@@ -141,11 +149,15 @@ namespace LHCb  {
     std::vector<DimInfo*> 	m_subsMultipleEvt;
     std::vector<DimInfo*> 	m_subsRxOct;
     std::vector<DimInfo*> 	m_subsRxPkt;
+    std::vector<DimInfo*>	m_subsReadOct;
     std::vector<DimInfo*> 	m_subsRxEvt;
     std::vector<DimInfo*> 	m_subsRxMEP;
 
     std::vector<DimInfo*>	m_subsTotRxOct;
     std::vector<DimInfo*>	m_subsTotRxPkt;
+    std::vector<DimInfo*>	m_subsBytesNotInPartition;
+    std::vector<DimInfo*>	m_subsPacketsNotInPartition;
+    std::vector<DimInfo*>	m_subsTotReadOct;
     std::vector<DimInfo*>	m_subsTotRxEvt;
     std::vector<DimInfo*>	m_subsTotRxMEP;
     std::vector<DimInfo*>	m_subsIncEvt;
