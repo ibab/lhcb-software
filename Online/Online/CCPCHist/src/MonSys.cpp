@@ -10,7 +10,7 @@ MonSys::~MonSys()
 void MonSys::addSubSys(CCPCSubSys *ss)
 {
   Subsyslist.insert(Subsyslist.end(),ss);
-  ss->setup((char*)m_name.c_str());
+//  ss->setup((char*)m_name.c_str());
 }
 void MonSys::start()
 {
@@ -62,6 +62,7 @@ MonSys& MonSys::m_instance()
   static MonSys s;
   return s;
 }
+
 MonSys *MonSys::setup(char *n)
 {
   char *nodename;

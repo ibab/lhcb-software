@@ -7,6 +7,7 @@
 #include "CCPCHist.h"
 #include "HistService.h"
 #include "HistServer.h"
+#include "MonSys.h"
 
 #include <math.h>
 #include <iterator>
@@ -957,6 +958,6 @@ void *hccpc_init(char *nam)
       //hsi->start();
       inited =1;
     }
-    return hsi;
+    return &MonSys::m_instance();
   }
 

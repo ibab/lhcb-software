@@ -1,5 +1,5 @@
 #include "../CCPCHist/AddSerializer.h"
-
+#include "stdlib.h"
 //#define AddPtr(ptr,offs) (void*)((char*)ptr +offs)
 
 AddSerializer::AddSerializer(void)

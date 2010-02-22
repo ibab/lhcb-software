@@ -1,3 +1,4 @@
+#include "stdlib.h"
 #include "../CCPCHist/CCPCSerializer.h"
 #include "iCCPCHist.h"
 //typedef std::pair<std::string, CCPCHisto*> SysPair;
@@ -173,9 +174,13 @@ CCPCHisto *CCPCSerializer::findhisto(const char *nam)
 }
 void CCPCSerializer::DeSerializeHist(char *name,void *&ptr)
 {
+  name;
+  ptr;
 }
 void CCPCSerializer::DeSerializeHist(std::vector<std::string> &nams,void *&ptr)
 {
+  nams;
+  ptr;
 }
 
 

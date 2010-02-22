@@ -1,5 +1,5 @@
 package CCPCHist
-
+version v3r0
 branches  cmt doc src
 use GaudiPolicy v*
 use DIM v* Online

@@ -19,6 +19,6 @@ public:
   void setHeader(int hdr){m_hdr=hdr;};
   void setHeader(long long hdr){m_hdr=hdr;};
   void setEORflag(bool val);
-  void HistService::setup(void);
+  void setup(void);
 };
 #endif

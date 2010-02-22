@@ -1,4 +1,4 @@
-#include "CCPCCSys.h"
+#include "CCPCCsys.h"
 //#include "HistServer.h"
 #include "HistService.h"
 #include "HistRPC.h"
@@ -13,7 +13,6 @@ CCPCCSys::CCPCCSys()
   buffersize = 0;
   m_numObjs = 0;
   m_updateTimer = new HistTimer(this);
-  MonSys::m_instance().addSubSys(this);
 }
 CCPCCSys::~CCPCCSys()
 {
@@ -54,6 +53,7 @@ void CCPCCSys::setup (char *n)
   m_EORsvc = new HistService(m_ser,(char*)nam.c_str(),"C",(void*)&mpty,4);
   m_EORsvc->setEORflag(true);
   //m_serv->start(m_name);
+  MonSys::m_instance().addSubSys(this);
   lib_rtl_create_lock(m_name.c_str(),&m_lockid);
   return;
 }
