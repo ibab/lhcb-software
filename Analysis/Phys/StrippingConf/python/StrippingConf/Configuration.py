@@ -20,7 +20,8 @@ class StrippingConf ( object ) :
     def __init__( self,
                   name = "",
                   TES = False,
-                  HDRLocation = 'Strip/Phys/DecReports', 
+                  TESPrefix = 'Strip', 
+                  HDRLocation = 'Phys/DecReports', 
                   Streams = [], 
                   Settings = None ) :
         
@@ -35,6 +36,7 @@ class StrippingConf ( object ) :
         self._sequence = None
         self._settings = Settings
         self._hdrLocation = HDRLocation
+        self._tesPrefix = TESPrefix
         for stream in Streams :
             self.appendStream(stream)
 	
@@ -94,6 +96,7 @@ class StrippingConf ( object ) :
         """
         log.info(self._name+ " appending stream "+ stream.name())
 	stream.createConfigurables( TES = self.TES, 
+				    TESPrefix = self._tesPrefix, 
 				    HDRLocation = self._hdrLocation, 
 				    Settings = self._settings)
 	self._streams.append(stream)

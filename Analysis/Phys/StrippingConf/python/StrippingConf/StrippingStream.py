@@ -30,7 +30,8 @@ class StrippingStream ( LHCbConfigurableUser ) :
 
 	    
     def createConfigurables(self, TES = False, 
-				  HDRLocation = 'Strip/Phys/DecReports', 
+				  TESPrefix = 'Strip', 
+				  HDRLocation = 'Phys/DecReports', 
 				  Settings = None) :
         from Configurables import StrippingCheck
 
@@ -70,11 +71,10 @@ class StrippingStream ( LHCbConfigurableUser ) :
 	for line in self.lines() : 
 	    if TES :
 		self.sequence().Members += [ StrippingCheck(line.name(), 
-				     InputLocation = "/Event/Strip/" + line.outputLocation() + "/Particles") ]
+				     InputLocation = "/Event/" + TESPrefix + "/" + line.outputLocation() + "/Particles") ]
 	    else :  
-		line.createConfigurable( HDRLocation )
+		line.createConfigurable( TESPrefix + "/" + HDRLocation )
 		self.sequence().Members += [ line.configurable() ]
-
 
 
     def lines( self ) :

@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.45 2010-02-22 13:11:18 jpalac Exp $
+!$Id: release.notes,v 1.46 2010-02-22 14:16:31 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-02-22 - Anton Poluektov 
+ - TESPrefix property in StrippingConf. Defaults to 'Strip'. 
+   Is used both to specify the HltDecReport output location (is prepended to already 
+   existing HDRLocation property) in case of DST output and to specify the location 
+   of candidates for SETC output. 
+   HDRLocation now defaults to 'Phys/DecReports'. 
 
 !========================== StrippingConf v3r0 2010-02-22 ===================
 
