@@ -21,6 +21,8 @@ apply_pattern container_package
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
 
+macro_remove cmt_actions_constituents 'runMakeOptions' 
+macro_remove cmt_actions_constituents 'WriteOptions'
 # dummy to avoid warnings...
 tag ONLINE_OVERRULE_MOORE_SETUP
 macro Moore_Dummy_ "" ONLINE_OVERRULE_MOORE_SETUP ""
