@@ -4,6 +4,9 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2010-02-22 - Nicola Chiapolini 
+ - Add first full version of STDQSummaryAlg (and STDQCounters)
+
 !======================= STMonitors v2r4 2010-02-15 ==========================
 ! 2010-02-15 - Mark Tobin
  - Fill MPV histogram with MPV rather than (cut and paste) 1.
