@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.82 2010-02-19 22:38:44 graven Exp $
+! $Id: release.notes,v 1.83 2010-02-22 08:28:02 gligorov Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+! 2010-02-22 - V. Gligorov
+ - Contine the reorganization of Hlt tracking, see Savannah 13784, 12691
+   for details. Major changes in this round
+   . Export MinimalRZVelo from HltReco to allow Hlt2 reconstruction to be
+     moved into Hlt2PID  
+   . Create a new file HltPVs.py which defines the Hlt primary vertex 
+     reconstruction. This correctly picks up the relevant pieces from
+     HltReco and Hlt2PID and speels out the dependencies explicitly. 
+
 ! 2010-02-19 - Gerhard Raven
  - add ?!Velo to the default Hlt2 filter
 

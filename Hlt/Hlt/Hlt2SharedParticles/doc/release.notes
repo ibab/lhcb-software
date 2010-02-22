@@ -1,9 +1,19 @@
-$Id: release.notes,v 1.74 2010-02-18 15:23:50 graven Exp $
+$Id: release.notes,v 1.75 2010-02-22 08:23:17 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+! 2010-02-18 - V. Gligorov
+ - Major changes to Hlt2PID, and minor follow-on changes to BasicParticles
+   and TFBasicParticles. Hlt2PID now contains almost all the Hlt2 specific
+   reconstruction which used to live in HltReco, with the exception of the
+   downstream reconstruction which will move later. Functions hlt2Tracking
+   and hlt2VeloTracking can now be called with the switch getOutput = True 
+   which will tell them to return their output location instead of the sequence,
+   thus eliminating the need for hardcoded track containers in e.g. the
+   topological trigger's global event cut on the number of tracks.  
+
 !========================== Hlt2SharedParticles v3r2 2010-02-18 ===================
 ! 2010-02-18 - V. Gligorov
  - Major changes to Hlt2PID, BasicParticles, TFBasicParticles. See the individual

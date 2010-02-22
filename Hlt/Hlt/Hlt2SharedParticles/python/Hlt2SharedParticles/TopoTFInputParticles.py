@@ -8,7 +8,7 @@
 ##
 from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
-from HltLine.HltReco import PV3D
+from HltLine.HltPVs import PV3D
 from Configurables import FilterDesktop
 
 __all__ = ( 'TopoTFInputParticles' )

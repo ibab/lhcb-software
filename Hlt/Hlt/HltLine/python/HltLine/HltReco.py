@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.22 2010-02-15 16:00:30 graven Exp $
+# $Id: HltReco.py,v 1.23 2010-02-22 08:24:31 gligorov Exp $
 # =============================================================================
 ## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -32,7 +32,8 @@
 
 __all__ = ( 'PV2D'            # bindMembers instance with algorithms needed to get 'PV2D'
           , 'PV3D'            # bindMembers instance with algorithms needed to get 'PV3D'
-          , 'RZVelo'          # bindMembers instance with algorithms needed to get 'RZVelo'
+          , 'MinimalRZVelo'   # bindMembers instance with algorithms needed to get 'MinimalRZVelo' 
+	  , 'RZVelo'          # bindMembers instance with algorithms needed to get 'RZVelo'
           , 'Velo'            # bindMembers instance with algorithms needed to get 'Velo'
           , 'Forward'         # bindMembers instance with algorithms needed to get 'Forward'
           , 'Seed'            # run Seeding
@@ -245,16 +246,20 @@ if RunCloneKiller:  trackRecoSequence.Members += [ cloneKiller ]
 from Configurables import DecodeVeloRawBuffer
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
-PV2D     = bindMembers( None, [ DecodeVELO, patVeloR, patPV2D, preparePV2D ] )
-PV3D     = bindMembers( None, [ DecodeVELO, patVeloR, recoVelo, recoPV3D ] )
+#This is the part which is shared between Hlt1 and Hlt2
 MinimalRZVelo   = bindMembers( None, [DecodeVELO, patVeloR ] )
+#The Hlt1 parts
+PV2D     = bindMembers( None, [ MinimalRZVelo, patPV2D, preparePV2D ] )
 RZVelo   = bindMembers( None, [ MinimalRZVelo, prepareRZVelo ] )
 Velo     = bindMembers( None, [                  RZVelo , reco1Velo ] )
-VeloOpen = bindMembers( None, [ DecodeVeloRawBuffer(), recoVeloOpen, prepareVeloOpen ] )
-PV3DOpen = bindMembers( None, [ DecodeVeloRawBuffer(), recoVeloOpen, prepareVeloOpen, recoPV3DOpen, preparePV3DOpen ] )
 Forward  = bindMembers( None, [                                Velo,  recoFwd ] )
 
+# Debug things for an open VELO
+VeloOpen = bindMembers( None, [ DecodeVeloRawBuffer(), recoVeloOpen, prepareVeloOpen ] )
+PV3DOpen = bindMembers( None, [ DecodeVeloRawBuffer(), recoVeloOpen, prepareVeloOpen, recoPV3DOpen, preparePV3DOpen ] )
+
 # FIXME TODO WARNING: Seed is _not_ selfcontained, and relies on Forward having run...
+PV3D     = bindMembers( None, [ MinimalRZVelo, recoVelo, recoPV3D ] )
 Seed     = bindMembers( None, [ recoSeeding, PatDownstream ] )
 SeedKF   = bindMembers( None, [ Seed, FitSeeding ] )
 
