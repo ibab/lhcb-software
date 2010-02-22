@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-02-22 - Juan PALACIOS
+ - python/StrippingSelections/StrippingB2XGamma.py
+  . Quick fix for incompatible InputLocations problem.
+
 ! 2010-02-19 - Vanya Belyaev
 
  - StrippingV0.py 
