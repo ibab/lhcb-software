@@ -5,6 +5,8 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!==================== StrippingSelections v1r16 2010-02-22 ====================
+
 ! 2010-02-23 - Marcin Kucharczyk
 - Add StrippingDisplVertices line
 
