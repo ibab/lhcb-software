@@ -5,6 +5,8 @@ Purpose     : LHCb HLT application
 ! 2010-02-22 - Gerhard Raven
  - update default DB snapshot
  - add ForceSingleL0Configuration and SkipDisabledL0Channels options
+ - update default conditions DB tags
+ - switch off online-DB heartbeat check when running with RunChangeHandler
 
 ! 2010-02-17 - Gerhard Raven
  - switch to use the ConfigTarFileAccessSvc when generating configurations

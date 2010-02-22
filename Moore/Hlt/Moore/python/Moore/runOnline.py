@@ -17,8 +17,8 @@ def start() :
 
     ### default database setup
     Moore().Simulation = False
-    Moore().CondDBtag = 'hlt-20100202'
-    Moore().DDDBtag   = 'hlt-20100202'
+    Moore().CondDBtag  = 'hlt-20100202'
+    Moore().DDDBtag    = 'hlt-20100120'
     Moore().UseDBSnapshot = True
     Moore().EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough' ] )
 
@@ -32,12 +32,12 @@ def start() :
     ### use old capitalization
     if hasattr(OnlineEnv,'condDBTag') and OnlineEnv.condDBTag :
         Moore().CondDBtag = OnlineEnv.condDBTag
-        Moore().DDDBtag   = OnlineEnv.condDBTag
+        #Moore().DDDBtag   = OnlineEnv.condDBTag
         Moore().UseDBSnapshot = True
     ### canonical capitalization
     if hasattr(OnlineEnv,'CondDBTag') and OnlineEnv.CondDBTag :
         Moore().CondDBtag = OnlineEnv.CondDBTag
-        Moore().DDDBtag   = OnlineEnv.CondDBTag
+        #Moore().DDDBtag   = OnlineEnv.CondDBTag
         Moore().UseDBSnapshot = True
 
     ### pick up lumi trigger rate

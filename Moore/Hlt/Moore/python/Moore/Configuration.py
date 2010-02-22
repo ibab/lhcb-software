@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.106 2010-02-22 09:36:50 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.107 2010-02-22 14:18:08 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -216,7 +216,7 @@ class Moore(LHCbConfigurableUser):
         # if simulation is False, we use DDDB, LHCBCOND and ONLINE
         #                  True          DDDB, SIMCOND
         # (see Det/DetCond's configurable... )
-        dbPartitions = { False : [ "DDDB", "LHCBCOND" , "ONLINE" ]
+        dbPartitions = { False : [ "DDDB", "LHCBCOND", "ONLINE" ]
                        , True :  [ "DDDB", "SIMCOND" ]
                        }
         for part in dbPartitions[ self.getProp('Simulation') ] :
@@ -234,6 +234,7 @@ class Moore(LHCbConfigurableUser):
         MagneticFieldSvc().UseSetCurrent = True
 
         if self.getProp('EnableRunChangeHandler') : 
+            conddb.IgnoreHeartBeat = True
             import OnlineEnv
             online_xml = '%s/%s/online_%%d.xml' % (baseloc, OnlineEnv.PartitionName )
             from Configurables import RunChangeHandlerSvc
