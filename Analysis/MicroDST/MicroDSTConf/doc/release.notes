@@ -1,9 +1,17 @@
-!$Id: release.notes,v 1.39 2009-11-30 17:35:21 jpalac Exp $
+!$Id: release.notes,v 1.40 2010-02-22 13:17:37 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTConf
 ! Responsible : Juan PALACIOS
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
+
+!========================== MicroDSTConf v2r9 2010-02-22 ==================
+
+! 2010-02-22 - Juan PALACIOS
+ - python/MicroDSTConf/MicroDSTWriter.py
+  . Really REMOVED.
+ - cmt/reqirements
+  . Increased to v2r9
 
 !========================== MicroDSTConf v2r8 2009-11-30 ==================
 
