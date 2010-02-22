@@ -1,10 +1,10 @@
-$Id: release.notes,v 1.75 2010-02-22 08:23:17 gligorov Exp $
+$Id: release.notes,v 1.76 2010-02-22 08:25:12 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
-! 2010-02-18 - V. Gligorov
+! 2010-02-22 - V. Gligorov
  - Major changes to Hlt2PID, and minor follow-on changes to BasicParticles
    and TFBasicParticles. Hlt2PID now contains almost all the Hlt2 specific
    reconstruction which used to live in HltReco, with the exception of the
