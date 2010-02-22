@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.103 2010-02-22 08:07:36 graven Exp $
+# $Id: requirements,v 1.104 2010-02-22 19:37:19 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -79,6 +79,9 @@ apply_pattern CallCommand  target=Create_RunMooreOnline
 macro Install_TCK_Manifest_output  "$(CMTINSTALLAREA)/TCK/manifest"
 macro Install_TCK_Manifest_command "python ../scripts/install_TCK_manifest.py $(HLTTCKROOT)/manifest/MOORE_$(version) $(Install_TCK_Manifest_output)"
 apply_pattern CallCommand  target=Install_TCK_Manifest
+
+macro_remove cmt_actions_constituents 'runMakeOptions' 
+macro_remove cmt_actions_constituents 'WriteOptions'
 
 
   apply_pattern QMTest
