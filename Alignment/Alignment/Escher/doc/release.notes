@@ -4,6 +4,10 @@ Package Coordinator : Johan Blouw
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+! 2010-02-22 Johan Blouw:
+ - added the line "use processing v* LCG_Interfaces" to the requirements file
+   for multi-core processing
+
 </PRE><H1><A NAME=v4r5>2010-02-05 Escher v4r5</A></H1><PRE>
  - Johan Blouw tagged the package v4r5 for alignment release v4r6
 ! 2010-02-06 Stefania Vecchi

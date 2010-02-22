@@ -46,28 +46,18 @@ tuple = "FILE1 DATAFILE='"+tupleFile+"' TYP='ROOT' OPT='NEW'"
 NTupleSvc().Output = [ tuple ]
 
 data = [
-    'PFN:/auto/data/krokovny/RAW/2009/058705.dst',
-    'PFN:/auto/data/krokovny/RAW/2009/058709.dst',
-    'PFN:/auto/data/krokovny/RAW/2009/058739.dst',
-    'PFN:/auto/data/krokovny/RAW/2009/058744.dst',
-    'PFN:/auto/data/krokovny/RAW/2009/059051.dst',
-    'PFN:/auto/data/krokovny/RAW/2009/059052.dst',
-    'PFN:/auto/data/krokovny/RAW/2009/059054.dst',
-    'PFN:/auto/data/krokovny/RAW/2009/059075.dst',
-    'PFN:/auto/data/krokovny/RAW/2009/059077.dst',
-    'PFN:/auto/data/krokovny/RAW/2009/059081.dst',
-    'PFN:/auto/data/krokovny/RAW/2009/059088.dst',
-    'PFN:/auto/data/krokovny/RAW/2009/059092.dst',
-    'PFN:/auto/data/krokovny/RAW/2009/059093.dst',
-    'PFN:/auto/data/krokovny/RAW/2009/059096.dst',
-    'PFN:/auto/data/krokovny/RAW/2009/059097.dst',
-    'PFN:/auto/data/krokovny/RAW/2009/059195.dst',
-    'PFN:/auto/data/krokovny/RAW/2009/059198.dst',
-    'PFN:/auto/data/krokovny/RAW/2009/059306.dst',
-    'PFN:/auto/data/krokovny/RAW/2009/059307.dst',
-    'PFN:/auto/data/krokovny/RAW/2009/059565.dst',
-    'PFN:/auto/data/krokovny/RAW/2009/059568.dst'
+    '58739','58744',
+    '59051','59052',
+    '59054','59075',
+    '59077','59081',
+    '59088','59092',
+    '59093','59096',
+    '59097','59195',
+    '59198','59306',
+    '59307','59565',
+    '59568'
     ]
+
 
 EventSelector().Input = []
 for d in data:

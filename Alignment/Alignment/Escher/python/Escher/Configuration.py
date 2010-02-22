@@ -3,7 +3,7 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.16 2010-02-05 16:49:31 jblouw Exp $"
+__version__ = "$Id: Configuration.py,v 1.17 2010-02-22 14:52:29 jblouw Exp $"
 __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
 from Gaudi.Configuration  import *
@@ -27,8 +27,8 @@ class Escher(LHCbConfigurableUser):
     DefaultSequence = [ CountingPrescaler("EscherPrescaler")
                         , "ProcessPhase/Init"
 			, "ProcessPhase/Reco"
-                        , GaudiSequencer("AlignSequence") 
 			, "ProcessPhase/Moni"
+                        , GaudiSequencer("AlignSequence") 
 			]
 
     
@@ -134,13 +134,13 @@ class Escher(LHCbConfigurableUser):
                            PrintFreq = self.getProp("PrintFreq"))
         GaudiSequencer("InitEscherSeq").Members += [ recInit ]
         alignSeq = GaudiSequencer("AlignSequence")
-        from Configurables import TStation
-        ts = TStation()
-        alignSeq.Members.append( ts )
         if  self.getProp("Millepede") :
             self.setProp("Kalman", False )
             log.info("Using Millepede type alignment!")
             self.setProp("Incident", "GlobalMPedeFit")
+            from Configurables import TStation
+            ts = TStation()
+            alignSeq.Members.append( ts )
             if self.getProp("Simulation") or self.getProp("WithMC") or self.getProp("InputType").upper() == 'DIGI':
                from Configurables import Derivatives
                Derivatives().MonteCarlo = True
