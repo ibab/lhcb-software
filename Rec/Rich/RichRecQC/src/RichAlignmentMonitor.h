@@ -110,9 +110,7 @@ namespace Rich
         std::vector<int> m_pTypes;
 
         // histogram output level
-        bool m_minimalHistoOutput;
-        bool m_onlyPrebookedMirrors;
-        bool m_useOnlyIsolatedTracks;
+        int m_histoOutputLevel;
 
         // tools
         const ITrackSelector* m_trSelector;        ///< Track selector

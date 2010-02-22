@@ -24,7 +24,6 @@ class RichAlignmentConf(RichConfigurableUser):
         ,"R2NTupleProduce"  : False
         ,"Histograms"       : "OfflineFull"
         ,"WithMC"           : False     # set to True to use MC truth
-        ,"HistoOutputLevel" : ["OnlyPrebookedMirrors", "OnlyPrebookedMirrors"] # options are: Minimal, OnlyPrebookedMirrors, Full
         ,"MinTrackMomentum" : [ 5, 10 ] # momentum cut in GeV, use -1 for default
         ,"DeltaThetaRange"  : [ 0.01, 0.005 ]
         ,"HPDList"          : [ [], [] ] # list of HPDs for histograms
@@ -36,6 +35,8 @@ class RichAlignmentConf(RichConfigurableUser):
         if not self.isPropertySet("AlignmentSequencer") :
             raise RuntimeError("ERROR : Alignment Sequencer not set")
         sequence = self.getProp("AlignmentSequencer")
+
+        histoLevel = { "Online":0, "OfflineExpress":3, "OfflineFull":2, "Expert":5 }
 
         from Configurables import ( Rich__Rec__MC__AlignmentMonitor )
 
@@ -62,16 +63,7 @@ class RichAlignmentConf(RichConfigurableUser):
             RichAlignMoniR1.NTupleProduce = self.getProp("NTupleProduce") and self.getProp("R1NTupleProduce")
             RichAlignMoniR1.HistoProduce  = self.getProp("Histograms") != "None"
 
-            if self.getProp("HistoOutputLevel")[0] == "Full" :
-                RichAlignMoniR1.MinimalHistoOutput = False
-                RichAlignMoniR1.OnlyPrebookedMirrors = False
-                RichAlignMoniR1.UseOnlyIsolatedTracks = True
-            elif self.getProp("HistoOutputLevel")[0] == "OnlyPrebookedMirrors" :
-                RichAlignMoniR1.MinimalHistoOutput = False
-                RichAlignMoniR1.OnlyPrebookedMirrors = True
-            else :
-                RichAlignMoniR1.MinimalHistoOutput = True
-                RichAlignMoniR1.OnlyPrebookedMirrors = True
+            RichAlignMoniR1.HistoOutputLevel = histoLevel[self.getProp("Histograms")]
 
             # This list is of "popular" mirrors. A longer list is required for full alignment
             RichAlignMoniR1.PreBookHistos = ['0000','0001','0002','0003', '0104','0105','0106','0107',
@@ -101,16 +93,7 @@ class RichAlignmentConf(RichConfigurableUser):
             RichAlignMoniR2.NTupleProduce = self.getProp("NTupleProduce") and self.getProp("R2NTupleProduce")
             RichAlignMoniR2.HistoProduce  = self.getProp("Histograms") != "None"
 
-            if self.getProp("HistoOutputLevel")[1] == "Full" :
-                RichAlignMoniR2.MinimalHistoOutput = False
-                RichAlignMoniR2.OnlyPrebookedMirrors = False
-                RichAlignMoniR2.UseOnlyIsolatedTracks = True
-            elif self.getProp("HistoOutputLevel")[1] == "OnlyPrebookedMirrors" :
-                RichAlignMoniR2.MinimalHistoOutput = False
-                RichAlignMoniR2.OnlyPrebookedMirrors = True
-            else :
-                RichAlignMoniR2.MinimalHistoOutput = True
-                RichAlignMoniR2.OnlyPrebookedMirrors = True
+            RichAlignMoniR2.HistoOutputLevel = histoLevel[self.getProp("Histograms")]
 
             RichAlignMoniR2.HPDList = self.getProp("HPDList")[1]
 

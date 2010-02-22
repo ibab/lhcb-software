@@ -46,9 +46,7 @@ AlignmentMonitor::AlignmentMonitor( const std::string& name,
   declareProperty( "PreBookHistos",        m_preBookHistos );
   declareProperty( "ParticleType",         m_particleType = 2 ); // pion
   declareProperty( "RichDetector",         m_richTemp = 1 ); // default is Rich2
-  declareProperty( "MinimalHistoOutput",   m_minimalHistoOutput = true );
-  declareProperty( "OnlyPrebookedMirrors", m_onlyPrebookedMirrors = true );
-  declareProperty( "UseOnlyIsolatedTracks",m_useOnlyIsolatedTracks = false );
+  declareProperty( "HistoOutputLevel",     m_histoOutputLevel = 0 );
   declareProperty( "HPDList",              m_HPDList );
 }
 
@@ -92,49 +90,58 @@ StatusCode AlignmentMonitor::initialize()
   const std::string RAD = Rich::text(rad);
 
   // prebook histograms
-  book1D( "Un_Amb", "Ambigious/Unambigious photons", -0.5, 1.5, 2 );
-  book1D( "deltaThetaAmb","Ch angle error (Ambiguous photons)", -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
-  book1D( "deltaThetaUnamb","Ch angle error (Unambigous photons)", -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
-  book2D( "dThetavphiRecAll", "dTheta v phi All", 0.0, 2*Gaudi::Units::pi, 20,
-          -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50);
-  book2D( "dThetavphiRecIso", "dTheta v phi Isolated", 0.0, 2*Gaudi::Units::pi, 20,
-          -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50);
+
 
   m_sideHistos.push_back( book2D("dThetavphiRecSide0","dTheta v phi "+ Rich::text( m_rich, Rich::Side(0) ),
                                  0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
   m_sideHistos.push_back( book2D("dThetavphiRecSide1","dTheta v phi "+ Rich::text( m_rich, Rich::Side(1) ),
                                  0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
 
-  m_sideIsolatedHistos.push_back( book2D("dThetavphiRecIsoSide0","dTheta v phi isolated "+ Rich::text( m_rich, Rich::Side(0) ),
-                                         0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
-  m_sideIsolatedHistos.push_back( book2D("dThetavphiRecIsoSide1","dTheta v phi isolated "+ Rich::text( m_rich, Rich::Side(1) ),
-                                         0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
-  // quarter histos
-  m_quarterHistos.push_back( book2D("dThetavphiRecQuart0","dTheta v phi "+ Rich::text( m_rich, Rich::Side(0) )+" Pos",
-                                    0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
-  m_quarterHistos.push_back( book2D("dThetavphiRecQuart1","dTheta v phi "+ Rich::text( m_rich, Rich::Side(0) )+" Neg",
-                                    0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
-  m_quarterHistos.push_back( book2D("dThetavphiRecQuart2","dTheta v phi "+ Rich::text( m_rich, Rich::Side(1) )+" Pos",
-                                    0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
-  m_quarterHistos.push_back( book2D("dThetavphiRecQuart3","dTheta v phi "+ Rich::text( m_rich, Rich::Side(1) )+" Neg",
-                                    0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
-  // pre book mirror combinations
-  /*
-    Since the introduction of python-based configuration, elements of a vector
-    like
-    0000,0103,...
-    in the configurable are no longer interpreted as expected, and therefore the
-    vector of mirror segment combinations is now a comma-separated vector of
-    strings, e.g.
-    '0000','0103',...
-    That vector is defined in
-    /REC/REC_vXrY/Rich/RichRecQC/python/RichRecQC/Alignment.py
-    while here it is m_preBookHistos.
-    See below a second usage of this vector and further explanations therein.
-    Anatoly Solomin 2008-11-01.
-  */
-  if ( !m_minimalHistoOutput )
+  if ( m_histoOutputLevel > 0 )
   {
+    book1D( "Un_Amb", "Ambigious/Unambigious photons", -0.5, 1.5, 2 );
+    book1D( "deltaThetaAmb","Ch angle error (Ambiguous photons)", -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+    book1D( "deltaThetaUnamb","Ch angle error (Unambigous photons)", -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+    book2D( "dThetavphiRecAll", "dTheta v phi All", 0.0, 2*Gaudi::Units::pi, 20,
+            -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50);
+  }
+
+  if ( m_histoOutputLevel > 1 )
+  {
+    book2D( "dThetavphiRecIso", "dTheta v phi Isolated", 0.0, 2*Gaudi::Units::pi, 20,
+            -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50);
+    m_sideIsolatedHistos.push_back( book2D("dThetavphiRecIsoSide0","dTheta v phi isolated "+ Rich::text( m_rich, Rich::Side(0) ),
+                                           0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
+    m_sideIsolatedHistos.push_back( book2D("dThetavphiRecIsoSide1","dTheta v phi isolated "+ Rich::text( m_rich, Rich::Side(1) ),
+                                           0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
+    // quarter histos
+    m_quarterHistos.push_back( book2D("dThetavphiRecQuart0","dTheta v phi "+ Rich::text( m_rich, Rich::Side(0) )+" Pos",
+                                      0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
+    m_quarterHistos.push_back( book2D("dThetavphiRecQuart1","dTheta v phi "+ Rich::text( m_rich, Rich::Side(0) )+" Neg",
+                                      0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
+    m_quarterHistos.push_back( book2D("dThetavphiRecQuart2","dTheta v phi "+ Rich::text( m_rich, Rich::Side(1) )+" Pos",
+                                      0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
+    m_quarterHistos.push_back( book2D("dThetavphiRecQuart3","dTheta v phi "+ Rich::text( m_rich, Rich::Side(1) )+" Neg",
+                                      0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
+  }
+
+  if ( m_histoOutputLevel > 2 )
+  {
+    // pre book mirror combinations
+    /*
+      Since the introduction of python-based configuration, elements of a vector
+      like
+      0000,0103,...
+      in the configurable are no longer interpreted as expected, and therefore the
+      vector of mirror segment combinations is now a comma-separated vector of
+      strings, e.g.
+      '0000','0103',...
+      That vector is defined in
+      /REC/REC_vXrY/Rich/RichRecQC/python/RichRecQC/Alignment.py
+      while here it is m_preBookHistos.
+      See below a second usage of this vector and further explanations therein.
+      Anatoly Solomin 2008-11-01.
+    */
     BOOST_FOREACH( std::string strCombi, m_preBookHistos ) {
       std::string h_id = "dThetavphiRec"+strCombi;
       std::string sph  = strCombi.substr(0,2);
@@ -168,7 +175,7 @@ StatusCode AlignmentMonitor::initialize()
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode AlignmentMonitor::execute() 
+StatusCode AlignmentMonitor::execute()
 {
 
   // Check Status
@@ -179,7 +186,7 @@ StatusCode AlignmentMonitor::execute()
 
   // If any containers are empty, form them
   if ( richTracks()->empty() ) {
-    if ( trackCreator()->newTracks().isFailure() ) 
+    if ( trackCreator()->newTracks().isFailure() )
     {
       return Error( "Problem Making Tracks" );
     }
@@ -187,11 +194,11 @@ StatusCode AlignmentMonitor::execute()
             << " RichRecTracks " << richSegments()->size()
             << " RichRecSegments" << endmsg;
   }
-  if ( msgLevel(MSG::DEBUG) ) 
+  if ( msgLevel(MSG::DEBUG) )
   {
     debug() << " Found " << richTracks()->size() << " tracks" << endmsg;
   }
-  if ( (int)richTracks()->size() > m_maxUsedTracks ) 
+  if ( (int)richTracks()->size() > m_maxUsedTracks )
   {
     debug() << "Found " << richTracks()->size() << ">"
             << m_maxUsedTracks << " max usable tracks, stopping." << endmsg;
@@ -199,7 +206,7 @@ StatusCode AlignmentMonitor::execute()
   }
 
   if ( richPixels()->empty() ) {
-    if ( pixelCreator()->newPixels().isFailure() ) 
+    if ( pixelCreator()->newPixels().isFailure() )
     {
       return Error( "Problem Making Pixels" );
     }
@@ -230,9 +237,10 @@ StatusCode AlignmentMonitor::execute()
     // track selection
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
 
-    plot( sqrt(segment->trackSegment().bestMomentum().Mag2())/Gaudi::Units::GeV, "momentum",
-          "Momentum of seleceted tracks /GeV", 0.0, 150.0 );
-    
+
+    if ( m_histoOutputLevel > 1 ) plot( sqrt(segment->trackSegment().bestMomentum().Mag2())/Gaudi::Units::GeV,
+                                        "momentum", "Momentum of seleceted tracks /GeV", 0.0, 150.0 );
+
     double thetaExpTrue(0.0), thetaExpected(0.0);
     if ( m_useMCTruth ) {
       // Get true beta from true particle type
@@ -285,8 +293,9 @@ StatusCode AlignmentMonitor::execute()
       }
 
       const bool unAmbiguousPhoton = photon->geomPhoton().unambiguousPhoton();
-      plot1D(static_cast<int>(unAmbiguousPhoton), "Un_Amb",
-             "Ambigious/Unambigious photons",-0.5,1.5,2 );
+
+      if ( m_histoOutputLevel > 0 ) plot1D(static_cast<int>(unAmbiguousPhoton), "Un_Amb",
+                                           "Ambigious/Unambigious photons",-0.5,1.5,2 );
 
       if (m_useMCTruth && trueParent ) {
         plot1D( delThetaTrue, "deltaThetaTrueAll", "Ch angle error MC ALL",
@@ -305,23 +314,24 @@ StatusCode AlignmentMonitor::execute()
 
       if ( !unAmbiguousPhoton )
       {
-        plot1D( delTheta, "deltaThetaAmb","Ch angle error (Ambiguous photons)",
-                -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+        if ( m_histoOutputLevel > 0 )
+          plot1D( delTheta, "deltaThetaAmb","Ch angle error (Ambiguous photons)",
+                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
         continue;
       }
 
-      plot1D( delTheta, "deltaThetaUnamb","Ch angle error (Unambigous photons)",
-              -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+      if ( m_histoOutputLevel > 0 )
+        plot1D( delTheta, "deltaThetaUnamb","Ch angle error (Unambigous photons)",
+                -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
 
       int side, side2, quarter;
 
       if ( rich == Rich::Rich1 )
       {
-        plot1D( sphMirNum, "sphMirR1","Sph Mirror Numbers Rich1",-0.5,3.5,4);
-        plot1D( flatMirNum, "fltMirR1","Flat Mirror Numbers Rich1",-0.5,15.5,16);
-
-        if ( !m_minimalHistoOutput )
+        if ( m_histoOutputLevel > 1 )
         {
+          plot1D( sphMirNum, "sphMirR1","Sph Mirror Numbers Rich1",-0.5,3.5,4);
+          plot1D( flatMirNum, "fltMirR1","Flat Mirror Numbers Rich1",-0.5,15.5,16);
           plot2D( gPhoton.sphMirReflectionPoint().x(),gPhoton.sphMirReflectionPoint().y(),
                   "sphMirReflR1", "Spherical Mirror Refl point Rich1",
                   -700, 700, -800, 800, 100, 100);
@@ -335,10 +345,10 @@ StatusCode AlignmentMonitor::execute()
       }
       else
       {
-        plot1D( sphMirNum, "sphMirR2","Sph Mirror Numbers Rich2",-0.5,55.5,56);
-        plot1D( flatMirNum, "fltMirR2","Flat Mirror Numbers Rich2",-0.5,39.5,40);
-        if ( !m_minimalHistoOutput )
+        if ( m_histoOutputLevel > 1 )
         {
+          plot1D( sphMirNum, "sphMirR2","Sph Mirror Numbers Rich2",-0.5,55.5,56);
+          plot1D( flatMirNum, "fltMirR2","Flat Mirror Numbers Rich2",-0.5,39.5,40);
           plot2D( gPhoton.sphMirReflectionPoint().x(),gPhoton.sphMirReflectionPoint().y(),
                   "sphMirReflR2", "Spherical Mirror Refl point Rich2",
                   -1800, 1800, -1500, 1500, 100, 100);
@@ -350,22 +360,27 @@ StatusCode AlignmentMonitor::execute()
         side2 = ( gPhoton.flatMirReflectionPoint().y() > 0.0 ? 0 : 1 );
         quarter = side*2+side2;
       }
+
+      // a separate histogram for each side
+      fill( m_sideHistos[side], phiRec, delTheta, 1 );
+      if ( m_histoOutputLevel > 0 )
+        plot2D( phiRec, delTheta, "dThetavphiRecAll", "dTheta v phi All", 0.0,
+                2*Gaudi::Units::pi, -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50);
+
+      if ( m_histoOutputLevel > 1 ) fill( m_quarterHistos[quarter], phiRec, delTheta, 1 );
+
       // test for isolation
       const bool isolated = m_isoTrack->isIsolated( segment, m_pType );
+      if ( isolated  && m_histoOutputLevel > 1 )
+      {
+        plot2D( phiRec, delTheta, "dThetavphiRecIso", "dTheta v phi Isolated", 0.0,
+                2*Gaudi::Units::pi, -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50);
+        fill( m_sideIsolatedHistos[side], phiRec, delTheta, 1 );
+      }
 
-      plot2D( phiRec, delTheta, "dThetavphiRecAll", "dTheta v phi All", 0.0,
-              2*Gaudi::Units::pi, -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50);
-      if ( isolated ) plot2D( phiRec, delTheta, "dThetavphiRecIso", "dTheta v phi Isolated", 0.0,
-                              2*Gaudi::Units::pi, -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50);
-
-      // and a separate histogram for each side
-      fill( m_sideHistos[side], phiRec, delTheta, 1 );
-      fill( m_quarterHistos[quarter], phiRec, delTheta, 1 );
-
-      if ( isolated ) fill( m_sideIsolatedHistos[side], phiRec, delTheta, 1 );
 
       // for minimal histo output (online) stop here
-      if ( !m_minimalHistoOutput )
+      if ( m_histoOutputLevel > 2 )
       {
         // now for individual mirror combinations
         std::string title = RAD+" Alignment Histogram: Sph " +
@@ -387,7 +402,7 @@ StatusCode AlignmentMonitor::execute()
 
         // depending on options, make plots only for prebooked mirror combimations.
         bool allowMirrorCombi( true );
-        if ( m_onlyPrebookedMirrors )
+        if ( m_histoOutputLevel < 5 )
           // search to see if this mirror combination has been prebooked
           if ( m_preBookHistos.empty() ||
                std::find( m_preBookHistos.begin(),m_preBookHistos.end(), thisCombiNr) == m_preBookHistos.end() )
@@ -399,7 +414,7 @@ StatusCode AlignmentMonitor::execute()
           plot2D( phiRec, delTheta, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
                   -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
 
-          if ( m_useOnlyIsolatedTracks && isolated )
+          if ( m_histoOutputLevel > 3 && isolated )
             plot2D( phiRec, delTheta, hid(rad,h_id+"Iso"), title+" Iso", 0.0, 2*Gaudi::Units::pi,
                     -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
 
@@ -420,14 +435,17 @@ StatusCode AlignmentMonitor::execute()
         }
         // end of filling prebooked and non-prebooked histograms for mirror combinations
 
-        const int hpd = ( m_plotAllHPDs ? Rich::DAQ::HPDIdentifier( gPhoton.smartID() ).number()
-                          : makePlotForHPD(gPhoton.smartID()) );
-
-        if ( hpd != 0 )
+        if ( m_histoOutputLevel > 2 )
         {
-          const std::string hpd_id( "HPD_"+boost::lexical_cast<std::string>(hpd) );
-          plot2D( phiRec, delTheta, "HPDs/"+hpd_id, hpd_id, 0.0, 2*Gaudi::Units::pi,
-                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
+          const int hpd = ( m_plotAllHPDs ? Rich::DAQ::HPDIdentifier( gPhoton.smartID() ).number()
+                            : makePlotForHPD(gPhoton.smartID()) );
+
+          if ( hpd != 0 )
+          {
+            const std::string hpd_id( "HPD_"+boost::lexical_cast<std::string>(hpd) );
+            plot2D( phiRec, delTheta, "HPDs/"+hpd_id, hpd_id, 0.0, 2*Gaudi::Units::pi,
+                    -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
+          }
         }
 
         if ( produceNTuples() )
