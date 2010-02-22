@@ -127,7 +127,6 @@ private:
   double m_maxUnbiasedChisqPerDofGoodTracks;
   int m_granularity;
   size_t m_numEvents;
-  bool fullDetail;
 };
 
 // Declaration of the Algorithm Factory
@@ -146,7 +145,6 @@ OTTrackMonitor::OTTrackMonitor(const std::string& name, ISvcLocator* pSvcLocator
   declareProperty( "MaxUnbiasedChisqPerDofGoodTracks", m_maxUnbiasedChisqPerDofGoodTracks = 2 ) ;
   declareProperty( "Granularity", m_granularity = 1 ) ;
   declareProperty( "RawBankDecoder", m_decoder ) ;
-  declareProperty( "FullDetail", fullDetail = false ) ;
 }
 
 //=============================================================================
@@ -301,7 +299,7 @@ StatusCode OTTrackMonitor::execute()
     // process only fitted tracks with nDoF >= 2
     if(track->fitStatus() != LHCb::Track::Fitted || track->nDoF() < 2) continue;
 
-    if(fullDetail)
+    if(fullDetail())
     {
       std::vector< std::pair<LHCb::OTChannelID, double> > pitchRes = m_pitchtool->calcPitchResiduals(track);
       for(unsigned int i = 0; i < pitchRes.size(); ++i)
