@@ -663,6 +663,18 @@ PBARYON = DECNODE ( PartProp.Nodes.Baryon , True )
 PBEAUTY = DECNODE ( PartProp.Nodes.Beauty , True )
 PCHARM  = DECNODE ( PartProp.Nodes.Charm  , True )
 
+# =============================================================================
+# P->VV angles 
+# =============================================================================
+## @see LoKi::Cuts::COSPOL
+COSPOL   = LoKi.Particles.PolarizationAngle
+## @see LoKi::Cuts::SINCHI
+SINCHI   = LoKi.Particles.SinChi
+## @see LoKi::Cuts::COSCHI
+COSCHI   = LoKi.Particles.CosChi
+## @see LoKi::Cuts::ANGLECHI
+ANGLECHI = LoKi.Particles.AngleChi
+
 
 # vertex separation (for particles) with respect to *all* vertices
 

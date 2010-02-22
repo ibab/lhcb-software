@@ -1,4 +1,4 @@
-// $Id: Particles.h,v 1.17 2009-11-16 11:54:26 ibelyaev Exp $
+// $Id: Particles.h,v 1.18 2010-02-22 09:55:47 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES_H 
 #define LOKI_PARTICLES_H 1
@@ -37,6 +37,7 @@
 #include "LoKi/Particles24.h"
 // ============================================================================
 #include "LoKi/Particles31.h"
+#include "LoKi/Particles33.h"
 // ============================================================================
 /** @file
  *
@@ -54,6 +55,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ===========================================================================
   /** @namespace LoKi::Particles Particles.h LoKi/Particles.h
    *  Namespace with colleciton of "Particle" functions for LoKi
    *
@@ -62,8 +64,11 @@ namespace LoKi
    */
   namespace Particles 
   {
-  }  // end of namespace LoKi::Particles
-} // end of namespace LoKi
+    // ========================================================================
+  } //                                         end of namespace LoKi::Particles
+  // ==========================================================================
+} //                                                      end of namespace LoKi
+// ============================================================================
 
 
 // ============================================================================

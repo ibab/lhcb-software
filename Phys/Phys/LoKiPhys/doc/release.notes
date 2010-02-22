@@ -1,9 +1,29 @@
-! $Id: release.notes,v 1.130 2010-02-19 16:40:18 ibelyaev Exp $ 
+! $Id: release.notes,v 1.131 2010-02-22 09:55:47 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-02-22 - Vanya Belyaev
+
+ - LoKi/Particles33.h, src/Particles33.cpp
+ 
+  new symbols, suitavle for angular analyses:
+
+     COSPOL     LoKi::Particles::PolarizationAngle
+                allows to evalaute the (cosine) polarization angle 
+                of daughter particle.
+
+     SINCHI     LoKi::Particle::SinChi
+                define sin(chi), where chi is the angle between decay planes 
+
+     COSCHI     LoKi::Particle::CosChi
+                define sin(chi), where chi is the angle between decay planes 
+
+     ANGLECHI   LoKi::Particle::AngleChi
+                define chi : the angle between decay planes 
+ 
 
 ! 2010-02-19 - Vanya Belyaev
 
