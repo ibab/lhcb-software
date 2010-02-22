@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.423 2010-02-20 18:19:25 graven Exp $ 
+! $Id: release.notes,v 1.424 2010-02-22 15:53:01 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,8 +6,10 @@
 ! -----------------------------------------------------------------------------
 
 
+!========================== HltConf v6r4p1 2010-02-21 ===================
 ! 2010-02-20 - Gerhard Raven
  - add SkipDisabledL0Channels option to HltConf
+ - add Hlt1MB routing bit
 
 !========================== HltConf v6r4 2010-02-18 ===================
 ! 2010-02-18 - K. Vervink

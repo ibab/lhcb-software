@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.156 2010-02-20 18:19:26 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.157 2010-02-22 15:53:02 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -196,6 +196,7 @@ class HltConf(LHCbConfigurableUser):
                       , 44 : "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
                       , 45 : "HLT_PASS_RE('Hlt1.*Pho.*Decision')"
                       , 46 : "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi).*Decision')"    # I don't like these
+                      , 47 : "HLT_PASS_SUBSTR('Hlt1MB')"
                       # 64--96: Hlt2
                       , 64 : "HLT_PASS('Hlt2Global')"
                       , 65 : "HLT_PASS('Hlt2DebugEventDecision')"
