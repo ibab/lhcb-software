@@ -1,4 +1,4 @@
-// $Id: STDQCounters.h,v 1.2 2010-02-17 14:20:42 nchiapol Exp $
+// $Id: STDQCounters.h,v 1.3 2010-02-22 13:00:37 nchiapol Exp $
 #ifndef STDQCounters_H
 #define STDQCounters_H 1
 
@@ -21,6 +21,7 @@
 //#include <boost/accumulators/statistics/density.hpp>
 
 using namespace boost::accumulators;
+
 
 class STDQCounters {
 
@@ -47,7 +48,10 @@ public:
   Type<int>   ::Counter m_nError;       ///< total number of error banks
   Type<int>   ::Counter m_nCorrupted;   ///< corrupted banks
   Type<int>   ::Counter m_sumMissing;   ///< missing banks
-  
+ 
+  typedef std::vector<std::string> Strings;
+  static Strings m_txtColumns;    ///< text file column headers
+   
   
   /// Struct containing the data collected for one run
   struct DataRow {
@@ -71,6 +75,8 @@ private:
   bool  m_entries;
 };
 
+STDQCounters::Strings STDQCounters::m_txtColumns(0, "");
+
 void STDQCounters::init(int minADC, int maxADC) {
   m_event = 0;
 
@@ -79,6 +85,19 @@ void STDQCounters::init(int minADC, int maxADC) {
   m_maxADC = maxADC;
   m_chargeHist.resize(m_maxADC-m_minADC);
   m_entries = false;
+
+  if (!m_txtColumns.size()) {
+    m_txtColumns.push_back("Run");
+    m_txtColumns.push_back("Events");
+    m_txtColumns.push_back("Clusters/evt");
+    m_txtColumns.push_back("#Noise/event");
+    m_txtColumns.push_back("Proc Eff");
+    m_txtColumns.push_back("#ErrorBanks");
+    m_txtColumns.push_back("#Corrupted");
+    m_txtColumns.push_back("#Missing");
+    m_txtColumns.push_back("Charge MPV");
+    m_txtColumns.push_back("Comments");
+  }
 }
 
 STDQCounters::STDQCounters() {
@@ -103,5 +122,4 @@ int STDQCounters::chargeMPV() {
   return std::distance(m_chargeHist.begin(), std::max_element(m_chargeHist.begin(), m_chargeHist.end()))+m_minADC;
 }   
 
-
-#endif 
+#endif

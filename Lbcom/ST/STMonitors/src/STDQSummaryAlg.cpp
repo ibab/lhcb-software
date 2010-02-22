@@ -1,4 +1,4 @@
-// $Id: STDQSummaryAlg.cpp,v 1.6 2010-02-17 14:20:42 nchiapol Exp $
+// $Id: STDQSummaryAlg.cpp,v 1.7 2010-02-22 13:00:37 nchiapol Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -12,10 +12,6 @@
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
 #include "Kernel/ISTReadoutTool.h"
-
-// BOOST
-//#include <boost/assign/list_of.hpp>
-//#include <boost/assign/std/vector.hpp>
 
 // fstream
 #include <fstream>
@@ -45,19 +41,6 @@ STDQSummaryAlg::STDQSummaryAlg( const std::string& name,
   declareProperty("minADC",       m_minADC = 15);
   declareProperty("maxADC",       m_maxADC = 45);
 
-  m_txtColumns.push_back("Run");
-  m_txtColumns.push_back("Events");
-  m_txtColumns.push_back("Clusters/evt");
-  m_txtColumns.push_back("#Noise/event");
-  m_txtColumns.push_back("Proc Eff");
-  m_txtColumns.push_back("#ErrorBanks");
-  m_txtColumns.push_back("#Corrupted");
-  m_txtColumns.push_back("#Missing");
-  m_txtColumns.push_back("Charge MPV");
-  m_txtColumns.push_back("Comments");
-  
-  declareProperty("txtColumns", m_txtColumns);
-  
   // S/N cut
   declareProperty("threshold", m_threshold = 5);
   
@@ -127,7 +110,7 @@ void STDQSummaryAlg::outputInfo(){
   row.event      = Counters->m_event             ;
   row.clus       = mean(Counters->m_sumClusters) ;
   row.noise      = mean(Counters->m_sumNoise)    ;
-  row.procEff    = mean(Counters->m_sumEff)      ;
+  row.procEff    = floor(mean(Counters->m_sumEff) * 100)/100 ;
   row.error      = sum (Counters->m_nError)      ;
   row.corrupted  = sum (Counters->m_nCorrupted)  ;
   row.sumMissing = sum (Counters->m_sumMissing)  ;
@@ -207,11 +190,10 @@ void STDQSummaryAlg::writeTxtFile() {
   }
   
   // add a header describing each column in the txt file
-  for (Strings::const_iterator iterS = m_txtColumns.begin() ; iterS != m_txtColumns.end(); ++iterS){
+  for (STDQCounters::Strings::const_iterator iterS = STDQCounters::m_txtColumns.begin() ; iterS != STDQCounters::m_txtColumns.end(); ++iterS){
     writeTxtEntry(oFile, *iterS, 12);
   }
-  oFile << m_separator << " " << m_separator << std::endl; 
-  //oFile << m_separator << std::endl;
+  oFile << m_separator << std::endl;
 
   // output to a txt file
   std::vector<STDQCounters::DataRow>::iterator it;

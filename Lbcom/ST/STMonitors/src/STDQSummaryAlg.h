@@ -1,4 +1,4 @@
-// $Id: STDQSummaryAlg.h,v 1.2 2010-02-17 14:20:42 nchiapol Exp $
+// $Id: STDQSummaryAlg.h,v 1.3 2010-02-22 13:00:37 nchiapol Exp $
 #ifndef STDQSummaryAlg_H
 #define STDQSummaryAlg_H 1
 
@@ -103,8 +103,8 @@ private:
 
   double m_threshold;             ///< threshold for signal (S/N)
 
-  typedef std::vector<std::string> Strings;
-  Strings m_txtColumns;           ///< text file column headers
+  //typedef std::vector<std::string> Strings;
+  //Strings m_txtColumns;           ///< text file column headers
 
 };
 
