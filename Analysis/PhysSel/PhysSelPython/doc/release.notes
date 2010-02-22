@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.38 2010-02-22 13:01:54 jpalac Exp $
+!$Id: release.notes,v 1.39 2010-02-22 15:16:13 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2010-02-22 - Juan Palacios
+ - Moved relevant QMTests from AnalysisSys.
+ - cmt/requirements
+  . Increase version to v4r2
+  . Add QMTests
 
 !==================== PhysSel/PhysSelPython v4r1 2010-02-22 ================
 
