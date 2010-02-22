@@ -44,7 +44,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltLine import Hlt2Member
         from HltLine.HltLine import bindMembers
-        from HltLine.HltReco import PV3D
+        from HltLine.HltPVs import PV3D
         from Configurables import HltANNSvc
         from Configurables import CombineParticles, PhysDesktop
         from Configurables import FilterDesktop

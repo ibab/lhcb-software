@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2ExpressLines.py,v 1.8 2010-02-13 09:09:03 albrecht Exp $
+# $Id: Hlt2ExpressLines.py,v 1.9 2010-02-22 08:33:06 gligorov Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt2 Lines for the express stream
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Johannes Albrecht albrecht@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -83,7 +83,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
    
    def __apply_configuration__(self):
       from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
-      from HltLine.HltReco import PV3D
+      from HltLine.HltPVs import PV3D
       from Configurables import HltANNSvc
       from Hlt2SharedParticles.DiMuon import DiMuon
       from Configurables import FilterDesktop
@@ -119,7 +119,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       '''
       from Hlt2SharedParticles.BasicParticles import Muons, NoCutsPions
       from Configurables import CombineParticles
-      from HltLine.HltReco import PV3D
+      from HltLine.HltPVs import PV3D
       from Configurables import Hlt2PID
       
      ############################
@@ -182,7 +182,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       '''
       from Hlt2SharedParticles.BasicParticles import NoCutsPions,NoCutsProtons
       from Configurables import CombineParticles
-      from HltLine.HltReco import PV3D
+      from HltLine.HltPVs import PV3D
      
       LambdaCombine = Hlt2Member( CombineParticles
                                   , "LambdaCombine"
@@ -213,7 +213,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       '''
       from Hlt2SharedParticles.BasicParticles import NoCutsPions,NoCutsProtons
       from Configurables import CombineParticles
-      from HltLine.HltReco import PV3D
+      from HltLine.HltPVs import PV3D
 
       KsCombine = Hlt2Member( CombineParticles
                               , "KsCombine"
@@ -240,7 +240,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       '''
       from Hlt2SharedParticles.BasicParticles import NoCutsKaons
       from Configurables import CombineParticles
-      from HltLine.HltReco import PV3D
+      from HltLine.HltPVs import PV3D
       
       PhiCombine = Hlt2Member( CombineParticles
                                , "PhiCombine"

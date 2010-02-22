@@ -1,4 +1,4 @@
-# $Id: Hlt2B2JpsiXLines.py,v 1.14 2010-02-08 09:25:13 graven Exp $
+# $Id: Hlt2B2JpsiXLines.py,v 1.15 2010-02-22 08:33:06 gligorov Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -240,7 +240,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
 	@author F Rodrigues
 	'''
 	from HltLine.HltLine import Hlt2Line, Hlt2Member
-        from HltLine.HltReco import PV3D
+        from HltLine.HltPVs import PV3D
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
         from Hlt2SharedParticles.Ks import KsLL
@@ -327,7 +327,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         @author F Rodrigues
         '''
         from HltLine.HltLine import Hlt2Line, Hlt2Member
-        from HltLine.HltReco import PV3D
+        from HltLine.HltPVs import PV3D
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
         from Hlt2SharedParticles.V0 import KsDD
@@ -364,7 +364,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         @author F Rodrigues
         '''
         from HltLine.HltLine import Hlt2Line, Hlt2Member
-        from HltLine.HltReco import PV3D
+        from HltLine.HltPVs import PV3D
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
         from Hlt2SharedParticles.V0 import KsDD

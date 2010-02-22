@@ -1,7 +1,7 @@
-## $Id: Hlt2CharmLines.py,v 1.4 2010-02-17 23:37:04 gligorov Exp $
+## $Id: Hlt2CharmLines.py,v 1.5 2010-02-22 08:33:06 gligorov Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-02-17 23:37:04 $'
-__version__ = '$Revision: 1.4 $'
+__date__    = '$Date: 2010-02-22 08:33:06 $'
+__version__ = '$Revision: 1.5 $'
 
 ## ######################################################################
 ## Defines a configurable to define and configure Hlt2 lines for selecting
@@ -254,12 +254,12 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         for i in [ 'LoKiTrigger.decorators' ] :
             if i not in modules : modules.append(i)
 
-        from HltLine.HltReco import HltRecoSequence
+	from Configurables import Hlt2PID
 
         Hlt2TopoKillTooManyInTrkAlg = VoidFilter('Hlt2TopoKillTooManyInTrkAlg'
-                                              , Code = "TrSOURCE('Hlt/Track/Forward') >> (TrSIZE < %(ComRobGEC)s )" % self.getProps()
+                                              , Code = "TrSOURCE('"+Hlt2PID().hlt2Tracking(getOutput=True)+"') >> (TrSIZE < %(ComRobGEC)s )" % self.getProps()
                                               )
-        Hlt2TopoKillTooManyInTrk = bindMembers( None, [ HltRecoSequence, Hlt2TopoKillTooManyInTrkAlg ] )
+        Hlt2TopoKillTooManyInTrk = bindMembers( None, [ Hlt2PID().hlt2Tracking(getOutput=False), Hlt2TopoKillTooManyInTrkAlg ] )
 
         return Hlt2TopoKillTooManyInTrk
     # }
@@ -275,7 +275,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         """
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
-        from HltLine.HltReco import PV3D
+        from HltLine.HltPVs import PV3D
 
         daugcuts = """(PT> %(ComRobAllTrkPtLL)s *MeV)
                       & (P> %(ComRobAllTrkPLL)s *MeV)
@@ -304,7 +304,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         """
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
-        from HltLine.HltReco import PV3D
+        from HltLine.HltPVs import PV3D
 
         incuts = """(PT> %(ComTFAllTrkPtLL)s *MeV)
                     & (P> %(ComTFAllTrkPLL)s *MeV)

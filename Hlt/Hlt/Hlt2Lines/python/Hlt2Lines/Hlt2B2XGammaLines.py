@@ -57,7 +57,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltLine import Hlt2Member
-        from HltLine.HltReco import PV3D
+        from HltLine.HltPVs import PV3D
         from Configurables import HltANNSvc
         from Configurables import CombineParticles, PhysDesktop
         from Configurables import FilterDesktop

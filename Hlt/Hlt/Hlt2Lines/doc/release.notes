@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.123 2010-02-20 22:17:19 graven Exp $
+$Id: release.notes,v 1.124 2010-02-22 08:36:21 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,18 @@ $Id: release.notes,v 1.123 2010-02-20 22:17:19 graven Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2010-02-22 - V. Gligorov
+ - Contine the reorganization of Hlt tracking, see Savannah 13784, 12691
+   for details. Major changes in this round
+   . All Hlt2Lines which specifically asked for primary vertices
+     now pick them up from HltPVs, not HltReco. 
+   . Remove hardcoded track location in topological/charm/b2dx trigger
+     line global event cuts. The correct container is now automatically picked
+     up by asking the Hlt2 reconstruction for it.
+   . Remove hardcoded location of hlt2 velo tracks in the displaced
+     vertex lines, this is also now picked up by asking the Hlt2
+     reconstruction for it.   
 
 ! 2010-02-19 - Francesco Dettori
  - Addition of the file Hlt2Dst2PiD02xx.py
