@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.83 2010-02-22 08:28:02 gligorov Exp $
+! $Id: release.notes,v 1.84 2010-02-22 15:54:35 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
@@ -13,6 +13,7 @@
      reconstruction. This correctly picks up the relevant pieces from
      HltReco and Hlt2PID and speels out the dependencies explicitly. 
 
+!========================== HltLine v3r1p1 2010-02-21 ===================
 ! 2010-02-19 - Gerhard Raven
  - add ?!Velo to the default Hlt2 filter
 
