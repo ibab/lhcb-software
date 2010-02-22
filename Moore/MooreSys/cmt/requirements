@@ -9,6 +9,10 @@ branches doc cmt
 
 use  Moore              v8r7     Hlt
 
+use Hlt1Lines           v2r2p1  Hlt
+use HltConf             v6r4p1  Hlt
+use HltLine             v3r1p1  Hlt
+use HltSettings         v1r8p1  Hlt
 
 
 # Declare this as a container package
