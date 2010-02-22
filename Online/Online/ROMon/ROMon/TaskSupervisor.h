@@ -40,6 +40,8 @@ namespace ROMon {
       { return name==c.name && eventMgr==c.eventMgr && dataMgr==c.dataMgr && distMgr==c.distMgr && fsmSrv==c.fsmSrv && devHdlr==c.devHdlr; }
       bool operator<(const PVSSProject& c) const
       { return name<c.name && eventMgr<c.eventMgr && dataMgr<c.dataMgr && distMgr<c.distMgr && fsmSrv<c.fsmSrv && devHdlr<c.devHdlr;; }
+      bool ok() const {  return eventMgr && dataMgr && distMgr; }
+      static const char* state(bool value) { return value ? "RUNNING" : "DEAD"; }      
       static std::string projectName(const std::string& n);
     };
     typedef std::vector<PVSSProject> Projects;

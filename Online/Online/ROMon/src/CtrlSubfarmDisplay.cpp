@@ -1,4 +1,4 @@
-// $Id: CtrlSubfarmDisplay.cpp,v 1.8 2010-02-22 13:05:11 frankb Exp $
+// $Id: CtrlSubfarmDisplay.cpp,v 1.9 2010-02-22 15:03:44 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlSubfarmDisplay.cpp,v 1.8 2010-02-22 13:05:11 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlSubfarmDisplay.cpp,v 1.9 2010-02-22 15:03:44 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -118,20 +118,13 @@ void CtrlSubfarmDisplay::showNodes()  {
     const Cluster::Node& n = (*i).second;
     if ( n.projects.size() > 0 ) {
       disp->draw_line_bold(" %-24s %-16s %-14s %-14s %-14s %-14s %-14s",
-			   "PVSS Summary/Node:", "Project name","Event Mgr","Data Mgr","Dist Mgr","FSM Server","Dev Handler");
+			   "PVSS Summary/Node:", "Project name","Event Mgr","Data Mgr","Dist Mgr","FSM Server","<Project State>");
       for(Cluster::Projects::const_iterator q=n.projects.begin(); q != n.projects.end(); ++q)  {
 	const Cluster::PVSSProject& p = *q;
         ::sprintf(text," %-24s %-16s %-14s %-14s %-14s %-14s %-14s",
-		  n.name.c_str(), p.name.c_str(), 
-		  p.eventMgr ? "RUNNING" : "DEAD",
-		  p.dataMgr  ? "RUNNING" : "DEAD",
-		  p.distMgr  ? "RUNNING" : "DEAD",
-		  p.fsmSrv   ? "RUNNING" : "DEAD",
-		  p.devHdlr  ? "RUNNING" : "DEAD");
-	if ( p.eventMgr && p.dataMgr && p.distMgr )
-	  disp->draw_line_normal(text);
-	else
-	  disp->draw_line_bold(text);
+		  n.name.c_str(), p.name.c_str(), p.state(p.eventMgr), p.state(p.dataMgr), 
+		  p.state(p.distMgr), p.state(p.fsmSrv), p.ok() ? "RUNNING" : "==NOT RUNNING==");
+	p.ok() ? disp->draw_line_normal(text) : disp->draw_line_bold(text);
       }
     }
   }
