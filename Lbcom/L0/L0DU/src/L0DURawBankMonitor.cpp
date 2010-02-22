@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.20 2010-02-12 23:40:52 odescham Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.21 2010-02-22 11:23:37 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -493,20 +493,27 @@ bool L0DURawBankMonitor::emulatorCheck(LHCb::L0DUConfig* config, int unit, std::
   
   LHCb::L0DUReport report = m_fromRaw->report();
   
-  // Decisions
+  // (pre)Decisions (@TODO use L0DUReport dedicated method report->preDecision() instead of looping over channels)
   int idec = 1;
   int bin = 2;
-  while( idec < LHCb::L0DUDecision::Any){    
-    if(  report.decision( idec ) != config->emulatedDecision( idec ) ){
+  while( idec < LHCb::L0DUDecision::Any){
+    bool dec = false;
+    for(LHCb::L0DUChannel::Map::const_iterator it = channels.begin();it!=channels.end();it++){
+      LHCb::L0DUChannel* channel = (*it).second;
+      if( channel->decisionType() != idec )continue;
+      if( report.channelPreDecision( channel->id() ) )dec=true;
+    }
+    if(  dec != config->emulatedPreDecision(idec) ){
       plot1D( bin-2 ,"Status/L0DU/EmulatorCheck/Decisions/" + Gaudi::Utils::toString(unit), 
               "L0 decision  emulator check (" + txt + ")",-1. , 3  , 4);
       check = false;
-    } 
+    }  
     std::string flag = LHCb::L0DUDecision::Name[ idec ] ;
     if(m_first)ax3->SetBinLabel( bin , flag.c_str() );
     idec = idec << 1;
     bin++;
   }
+  
 
   // Channels
   for(LHCb::L0DUChannel::Map::iterator it = channels.begin();it!=channels.end();it++){
