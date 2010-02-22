@@ -1,6 +1,6 @@
 __author__ = 'Fatima Soomro'
 __date__ = '18/12/2009'
-__version__ = '$Revision: 1.4 $'
+__version__ = '$Revision: 1.5 $'
 
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -121,10 +121,11 @@ class StrippingB2XGammaConf(LHCbConfigurableUser):
             Sel = mySelection.clone("Sel") 
             mylist = Sel.requiredSelections 
             mygamma = mylist[0].clone("myGamma")
-            KstMass =  mylist[1].algorithm().clone("KstMass", CombinationCut ="(ADAMASS('K*(892)0')<%(KstMassWinSB)s*MeV)" % self.getProps() ) # a combineParticles
+            KstMass =  mylist[1].algorithm().clone("KstMass",
+                                                   CombinationCut ="(ADAMASS('K*(892)0')<%(KstMassWinSB)s*MeV)" % self.getProps() ) # a combineParticles
             KstMass.PropertiesPrint = False
             myKst = mylist[1].clone("myKst", Algorithm = KstMass)
-            makeB0 = Sel.algorithm().clone("makeB0")
+            makeB0 = Sel.algorithm().clone("makeB0", InputLocations = [])
             makeB0.PropertiesPrint = False
             Bd2KstGammaWideKstMass = Selection ( "Bd2KstGammaWideKMass"
                                                  ,Algorithm = makeB0
