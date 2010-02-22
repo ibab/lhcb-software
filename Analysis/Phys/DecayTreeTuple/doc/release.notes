@@ -4,6 +4,8 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!========================== DecayTreeTuple v3r1 2010-02-22 ================
+
 ! 2010-02-09 - Patrick Koppenburg
  - TupleToolPrimaries : get PVs from DVAlgorithm by default. Fixes #62588.
  - TupleToolPID : Add Ecal and Calo energies
