@@ -22,7 +22,7 @@ class Physics_320Vis_300L0_10Hlt1_Jan10 :
 
     
     def L0TCK(self) :
-        return '0x1409'
+        return '0x1810' ## alternate ones: 0x1210, 0x1310, 0x1410,0x1510,0x1610,0x1710
 
     def HltType(self) :
         self.verifyType( Physics_320Vis_300L0_10Hlt1_Jan10 )
@@ -33,6 +33,10 @@ class Physics_320Vis_300L0_10Hlt1_Jan10 :
         Returns a dictionary of cuts
         """
         from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
+        from Hlt1Lines.Hlt1LumiLines  import Hlt1LumiLinesConf
+        from Hlt1Lines.Hlt1L0Lines  import Hlt1L0LinesConf
+        from Hlt1Lines.Hlt1VeloLines  import Hlt1VeloLinesConf
+        from Hlt1Lines.Hlt1MBLines  import Hlt1MBLinesConf
         from Hlt1Lines.Hlt1MuonLines           import Hlt1MuonLinesConf
         from Hlt1Lines.Hlt1HadronLines         import Hlt1HadronLinesConf
         from Hlt1Lines.Hlt1HadronViaTLines     import Hlt1HadronViaTLinesConf
@@ -41,13 +45,28 @@ class Physics_320Vis_300L0_10Hlt1_Jan10 :
         from Hlt1Lines.Hlt1VeloLines           import Hlt1VeloLinesConf
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
 
-        return { Hlt1HadronViaTLinesConf : { 'SingleHadronViaT_PTCut'       : 1400
+        return { Hlt1CommissioningLinesConf : { 'Prescale' : { 'Hlt1ODINPhysics'    : 0.0001
+                                                             , 'Hlt1ODINTechnical'  : 0. # @OnlineEnv.AcceptRate
+                                                             , 'Hlt1Tell1Error'     : 0.
+                                                             } 
+                                              }
+               , Hlt1LumiLinesConf          : { 'EnableReco' : True  }
+               , Hlt1L0LinesConf            : { 'Prescale' : { '.*' : 1 } }
+               , Hlt1VeloLinesConf          : { 'L0DU'     : "L0_CHANNEL('CALO')"}
+               , Hlt1MBLinesConf            : { 'Prescale' : { 'Hlt1MBNoBiasNoBeam'        : 0.01
+                                                             , 'Hlt1MBNoBiasBeam1'         : 0.05
+                                                             , 'Hlt1MBNoBiasBeam2'         : 0.01
+                                                             , 'Hlt1MBNoBiasBeamCrossing'  : 0.1
+                                                             , 'Hlt1MBMiniBias.*'          : 0.5
+                                                             } 
+                                              }
+               , Hlt1HadronViaTLinesConf : { 'SingleHadronViaT_PTCut'       : 1400
                                            , 'HadViaTMain_PTCut'            : 1250
                                            , 'HadViaTCompanion_DZCut'       :    1.50
                                            , 'HadViaTCompanion_PTCut'       :  750
                                            , 'HadViaTCompanion_PointingCut' :    0.5
-                                           , 'HadViaTSingle_IPCut'              :    0.14
-					   , 'HadViaTDi_IPCut'                  :    0.07
+                                           , 'HadViaTSingle_IPCut'          :    0.14
+                                           , 'HadViaTDi_IPCut'              :    0.07
                                            }
                , Hlt1HadronLinesConf :     { 'SingleHadron_PTCut'           : 1400
                                            , 'HadSingle_IPCut'              :    0.14
@@ -119,40 +138,30 @@ class Physics_320Vis_300L0_10Hlt1_Jan10 :
         """
         Returns a list of active lines
         """
-        return [ 'Hlt1L0SPD',
-                 'Hlt1L0CALO',
-                 'Hlt1L0MUON',
-                 'Hlt1L0PU',
-                 'Hlt1L0SPD40',
-                 'Hlt1L0PU40',
-                 'Hlt1L0Electron',
-                 'Hlt1L0Photon',
-                 'Hlt1L0Hadron',
-                 'Hlt1L0Muon',
-                 'Hlt1L0DiMuon',
-                 'Hlt1L0Muon,lowMult',
-                 'Hlt1L0DiMuon,lowMult',
-                 'Hlt1L0B1gas',
-                 'Hlt1L0B2gas',
-                 'Hlt1L0Any',
-                 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco', 
-                 'Hlt1SingleHadron',     'Hlt1SingleHadronViaT',
-                 'Hlt1DiHadron',         'Hlt1DiHadronViaT',    'Hlt1DiHadronSoft',
-                 'Hlt1SingleMuonNoIPL0', 'Hlt1SingleMuonIPCL0',                    
-                 'Hlt1DiMuonNoIPL0Di',   'Hlt1DiMuonNoPVL0Di',  'Hlt1DiMuonIPCL0Di',
-                 'Hlt1DiMuonNoIP2L0',    'Hlt1DiMuonNoPV2L0',   'Hlt1DiMuonIPC2L0',
-                 'Hlt1DiMuonNoIPL0Seg' , 'Hlt1DiMuonNoPVL0Seg', 'Hlt1DiMuonIPCL0Seg',
-                 'Hlt1MuTrack',    'Hlt1MuTrack4JPsi',
-                 #'Hlt1MuTrackFitMu',
-                 'Hlt1LumiNoBeam',    'Hlt1LumiBeamCrossing',    'Hlt1LumiBeam1',    'Hlt1LumiBeam2',
-                 'Hlt1LumiLowNoBeam', 'Hlt1LumiLowBeamCrossing', 'Hlt1LumiLowBeam1', 'Hlt1LumiLowBeam2',
-                 'Hlt1SingleElectronNoIP', 'Hlt1SingleElectronWithIP',
-                 'Hlt1ElectronTrackNoIP',  'Hlt1ElectronTrackWithIP',
-                 'Hlt1PhotonTrack',        'Hlt1PhotonTrackFromEle',
-                 'Hlt1PhotonDiTrack',      'Hlt1PhotonDiTrackFromEle',
-                 'Hlt1VeloASide',          'Hlt1VeloCSide',
-                 'Hlt1ODINPhysics',        'Hlt1ODINTechnical',
-                 'Hlt1Tell1Error' ,
-                 'Hlt1Incident']
+        return [ 'Hlt1ODINPhysics',        'Hlt1ODINTechnical', 'Hlt1Tell1Error'
+               , 'Hlt1L0Any'
+               , 'Hlt1L0SPD', 'Hlt1L0CALO', 'Hlt1L0MUON,minbias', 'Hlt1L0PU', 'Hlt1L0SPD40', 'Hlt1L0PU20'
+               , 'Hlt1L0Electron', 'Hlt1L0Photon', 'Hlt1L0Hadron'
+               , 'Hlt1L0Muon', 'Hlt1L0DiMuon', 'Hlt1L0Muon,lowMult', 'Hlt1L0DiMuon,lowMult'
+               , 'Hlt1L0B1gas', 'Hlt1L0B2gas'
+               , 'Hlt1VeloASide',          'Hlt1VeloCSide'
+               , 'Hlt1LumiNoBeam',    'Hlt1LumiBeamCrossing',    'Hlt1LumiBeam1',    'Hlt1LumiBeam2'
+               , 'Hlt1LumiLowNoBeam', 'Hlt1LumiLowBeamCrossing', 'Hlt1LumiLowBeam1', 'Hlt1LumiLowBeam2'
+               , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco'
+               , 'Hlt1MBMiniBiasNoBeam','Hlt1MBMiniBiasBeamCrossing','Hlt1MBMiniBiasBeam1','Hlt1MBMiniBiasBeam2'
+               , 'Hlt1MBNoBiasNoBeam','Hlt1MBNoBiasBeamCrossing','Hlt1MBNoBiasBeam1','Hlt1MBNoBiasBeam2'
+               , 'Hlt1SingleHadron',     'Hlt1SingleHadronViaT'
+               , 'Hlt1DiHadron',         'Hlt1DiHadronViaT',    'Hlt1DiHadronSoft'
+               , 'Hlt1SingleMuonNoIPL0', 'Hlt1SingleMuonIPCL0'                    
+               , 'Hlt1DiMuonNoIPL0Di',   'Hlt1DiMuonNoPVL0Di',  'Hlt1DiMuonIPCL0Di'
+               , 'Hlt1DiMuonNoIP2L0',    'Hlt1DiMuonNoPV2L0',   'Hlt1DiMuonIPC2L0'
+               , 'Hlt1DiMuonNoIPL0Seg' , 'Hlt1DiMuonNoPVL0Seg', 'Hlt1DiMuonIPCL0Seg'
+               , 'Hlt1MuTrack',    'Hlt1MuTrack4JPsi'
+               #'Hlt1MuTrackFitMu',
+               , 'Hlt1SingleElectronNoIP', 'Hlt1SingleElectronWithIP'
+               , 'Hlt1ElectronTrackNoIP',  'Hlt1ElectronTrackWithIP'
+               , 'Hlt1PhotonTrack',        'Hlt1PhotonTrackFromEle'
+               , 'Hlt1PhotonDiTrack',      'Hlt1PhotonDiTrackFromEle'
+               , 'Hlt1Incident']
     
     

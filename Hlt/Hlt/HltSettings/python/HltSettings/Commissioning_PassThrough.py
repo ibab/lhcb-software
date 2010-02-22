@@ -20,16 +20,14 @@ class Commissioning_PassThrough :
 
     def ActiveHlt2Lines(self) :
         """
-        Returns a list of active lines
+        Returns a list of active Hlt2 lines
         """
-        
         return  [ ]
    
     def ActiveHlt1Lines(self) :
         """
-        Returns a list of active lines
+        Returns a list of active Hlt1 lines
         """
-        
         return [ 'Hlt1ODINPhysics','Hlt1ODINTechnical','Hlt1Tell1Error' ]
 
     def Thresholds(self) :

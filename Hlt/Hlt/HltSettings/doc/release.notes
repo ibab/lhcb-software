@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-02-22 - Gerhard Raven
+ - put Physics_320xxx on top of L0 0x1810, update Hlt1L0 lines accordingly
+
 !========================== HltSettings v1r8 2010-02-18 ===================
 ! 2010-02-18 - Gerhard Raven
  - remove duplicate lines from Physics_10000Vis_1000L0_40Hlt1_Apr09 and 

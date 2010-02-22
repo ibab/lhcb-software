@@ -6,9 +6,6 @@ class Physics_320Vis_300L0_10Hlt1_ExpressHlt2_Jan10(  Physics_320Vis_300L0_10Hlt
 
     modified version from Physics_320Vis_300L0_10Hlt1_Aug09.py
 
-    WARNING: Express line output rates are not scaled,
-             don't expect meaningful rates here!
-    
     @date 2010-01-25
     """
     
@@ -24,9 +21,9 @@ class Physics_320Vis_300L0_10Hlt1_ExpressHlt2_Jan10(  Physics_320Vis_300L0_10Hlt
         Returns a list of active lines
         """
         lines = [ 'Hlt2PassThrough'
-                  , 'Hlt2Transparent'
-                  , 'Hlt2DebugEvent'
-                  ]
+                , 'Hlt2Transparent'
+                , 'Hlt2DebugEvent'
+                ]
         from Express_Hlt2_Jan10 import Express_Hlt2_Jan10
         lines.extend( Express_Hlt2_Jan10().ActiveHlt2Lines() )
                                        

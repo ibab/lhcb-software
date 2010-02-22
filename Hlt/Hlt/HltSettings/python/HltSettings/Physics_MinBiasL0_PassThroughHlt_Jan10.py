@@ -16,7 +16,7 @@ class Physics_MinBiasL0_PassThroughHlt_Jan10 :
         return 'Physics_MinBiasL0_PassThroughHlt_Jan10'
 
     def L0TCK(self) :
-        return "0x1409"
+        return "0x1309" # alternate: 0x1209 (no L0PU)
 
     def ActiveHlt2Lines(self) :
         """
@@ -30,14 +30,14 @@ class Physics_MinBiasL0_PassThroughHlt_Jan10 :
         """
         return [ 'Hlt1ODINPhysics','Hlt1ODINTechnical','Hlt1Tell1Error'
                , 'Hlt1L0Any'
-               , 'Hlt1L0SPD' , 'Hlt1L0CALO' , 'Hlt1L0MUON' , 'Hlt1L0PU' , 'Hlt1L0SPD40' , 'Hlt1L0PU40' 
-               , 'Hlt1L0Electron' , 'Hlt1L0Photon' , 'Hlt1L0Hadron' , 'Hlt1L0Muon' , 'Hlt1L0DiMuon' , 'Hlt1L0Muon,lowMult' , 'Hlt1L0DiMuon,lowMult'
-               , 'Hlt1L0B1gas' , 'Hlt1L0B2gas'
+               , 'Hlt1L0MUON' , 'Hlt1L0CALO', 'Hlt1L0PU' 
+               , 'Hlt1VeloASide','Hlt1VeloCSide'
                , 'Hlt1LumiNoBeam','Hlt1LumiBeamCrossing','Hlt1LumiBeam1','Hlt1LumiBeam2'
                , 'Hlt1LumiLowNoBeam','Hlt1LumiLowBeamCrossing','Hlt1LumiLowBeam1','Hlt1LumiLowBeam2'
+               # 0x1309/0x1209 has neither L0 B1gas nor B2gas # , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2'
+               , 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco'
                , 'Hlt1MBMiniBiasNoBeam','Hlt1MBMiniBiasBeamCrossing','Hlt1MBMiniBiasBeam1','Hlt1MBMiniBiasBeam2'
                , 'Hlt1MBNoBiasNoBeam','Hlt1MBNoBiasBeamCrossing','Hlt1MBNoBiasBeam1','Hlt1MBNoBiasBeam2'
-               , 'Hlt1VeloASide','Hlt1VeloCSide'
                ]
 
     def Thresholds(self) :
@@ -56,7 +56,8 @@ class Physics_MinBiasL0_PassThroughHlt_Jan10 :
                                               }
                , Hlt1LumiLinesConf          : { 'EnableReco' : True  }
                , Hlt1L0LinesConf            : { 'Prescale' : { '.*' : 1 } }
-               , Hlt1VeloLinesConf          : { 'Prescale' : { '.*' : 0 } }
+               , Hlt1VeloLinesConf          : { 'Prescale' : { '.*' : 1 }
+                                              , 'L0DU'     : "L0_CHANNEL('CALO')"}
                , Hlt1MBLinesConf            : { 'Prescale' : { 'Hlt1MBNoBiasNoBeam'        : 0.01
                                                              , 'Hlt1MBNoBiasBeam1'         : 0.05
                                                              , 'Hlt1MBNoBiasBeam2'         : 0.01
