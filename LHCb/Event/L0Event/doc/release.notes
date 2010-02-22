@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.132 2010-02-14 08:12:20 cattanem Exp $
+! $Id: release.notes,v 1.133 2010-02-22 11:25:19 odescham Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2010-02-10 Olivier Deschamps
+  - L0DUReport.xml  :  2 new methods : preDecisionFromSummmary(type,bx) and preDecisionValueFromSummary( bx )
+
 !======================== L0Event v18r1 2010-02-14 ===========================
+
 ! 2010-02-10 Olivier Deschamps
   - L0DUBase.h  : 
     - implement hardware limitation data (NumberOf channels/conditions) + default naming, etc ...

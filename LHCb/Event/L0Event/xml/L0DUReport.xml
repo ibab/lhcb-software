@@ -482,6 +482,47 @@
       </method>
 
 
+      <method
+        name="preDecisionFromSummary" 
+        argList="int type=L0DUDecision::Physics, int bx=0"
+        desc="return the L0 predDecision (for a given type) evaluated from the ChannelsDecisionSummaries"
+        type="bool" 
+        const="TRUE">
+        <code> 
+          if(NULL == m_configuration)return false;
+          const LHCb::L0DUChannel::Map&amp; channels = m_configuration->channels();
+          for(LHCb::L0DUChannel::Map::const_iterator it = channels.begin();it!=channels.end();it++){
+           LHCb::L0DUChannel* channel = (*it).second;
+           if( (channel->decisionType() &amp; type) == 0 )continue;
+           if( channelPreDecision( channel->id(),bx  ) )return true;
+          }
+          return false;
+        </code>
+      </method>
+
+
+
+
+      <method
+        name="preDecisionValueFromSummary" 
+        argList="int bx=0"
+        desc="return the L0 predDecision value evaluated from the ChannelsDecisionSummaries"
+        type="bool" 
+        const="TRUE">
+        <code> 
+          int value = 0;
+          if(NULL == m_configuration)return false;
+          const LHCb::L0DUChannel::Map&amp; channels = m_configuration->channels();
+          for(LHCb::L0DUChannel::Map::const_iterator it = channels.begin();it!=channels.end();it++){
+           LHCb::L0DUChannel* channel = (*it).second;
+           int type =  channel->decisionType();
+           if( channelPreDecision( channel->id(),bx  ) )value |= type;
+          }
+          return value;
+        </code>
+      </method>
+
+
 
 
 
