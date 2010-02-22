@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.141 2010-02-05 08:21:02 jpalac Exp $
+! $Id: release.notes,v 1.142 2010-02-22 12:51:14 jpalac Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Vladimir Gligorov
 !==============================================================================
+
+!========================== DaVinciAssociators v9r4p1 2010-02-22 ==============
 
 ! 2010-02-05 - Juan Palacios
  - src/TestLinker.h
