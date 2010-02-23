@@ -221,8 +221,8 @@ StatusCode RecVertices2Particles::initialize() {
 
 
   //Retrieve data Particles from Desktop.
-  Particle::ConstVector Particles = desktop()->particles();
-  int size = Particles.size() ;
+  Particle::ConstVector Parts = desktop()->particles();
+  int size = Parts.size() ;
   if( msgLevel(MSG::DEBUG) )
     debug()<< "Number of Particles in TES " << size << endmsg;
   plot( size,"NbofPartsTES", 0,500 );
@@ -286,7 +286,7 @@ StatusCode RecVertices2Particles::initialize() {
 
     //Turn it into a Particle !
     //Eventually don't keep it if close to/in detector material
-    if( !RecVertex2Particle( rv, Particles, RecParts ) ) continue;
+    if( !RecVertex2Particle( rv, Parts, RecParts ) ) continue;
 
     //Study Prey Composition
     // ***Don't forget to turn on the IMeasurementProvider tool***
@@ -418,7 +418,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
     //if the efficiency is less than 100%, you can work with pion with 
     //default pt of 400MeV. See Hlt2SelHidValley for implementation.
     //double eff = 100.*(double)tmpPart.daughters().size()/
-    //  (double)rv->tracks().size();
+    // (double)rv->tracks().size();
     //plot( eff, "BestTrk2PartEff", 0., 101. );
     //debug()<<"Found "<< Daughters.size() <<" related particles."<< endmsg;
     //Do I really care about the number of tracks found ?

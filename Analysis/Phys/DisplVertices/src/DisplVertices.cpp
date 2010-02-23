@@ -519,12 +519,7 @@ StatusCode DisplVertices::finalize() {
           <<"%"<< endmsg;
   }
   info()<<"-------------------------------------------------------"<< endreq;
-  if( true ){
-    info()<<"#1#"<< m_nPreys << endreq;
-    //info()<<"#2#"<< a1 << endreq;
-    //info()<<"#3#"<< a2 << endreq;
-    //info()<<"#4#"<< a3 << endreq;
-  }
+
   info()<<"Number of reconstructed Mother : " << m_nMother << endreq;
 
   if (NULL!=m_pLinker) delete m_pLinker ; 

@@ -5,7 +5,15 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+
+! 2010-02-23 - Neal Gauvin
+ - Add new algorithm Calibration to simulate the beam calibration
+   Intended only for MC offline simulation.
+   Do not use unless you know what you are doing
+
+
 !==================== Phys/DisplVertices v6r1 2010-02-22 =====================
+
 
 ! 2010-02-19 - Neal Gauvin
  - Add possibility to save candidates on TES for DisplVertices
