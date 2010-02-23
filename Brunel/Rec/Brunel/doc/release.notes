@@ -3,10 +3,17 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2010-02-19 - Chris Jones
- - Update python Configurable Histogram slot to support new levels
-   of Histogramming  - "None", "Online", "Offlineexpress", 
-   "Offlinefull" and "Expert"
+ - Changes to Configurable: 
+   . Update Histogram slot to support new levels of Histogramming  - "None",
+     "Online", "OfflineExpress", "OfflineFull" and "Expert". Note that these
+     levels are now case sensitive.
+
+ - Changes to references to reflect changes in Brunel v36r2 output:
+   . Less info() at initialize step (PatVelo v3r20)
+   . Change track fit convergence criteria and increase max number of 
+     iterations from 3 to 10 (TrackFitter v2r45)
+   . Reduce default set of RichENN histograms (RichRecQC v2r37, RichRecSys v8r2)
+   . Reduce default set of OT histograms (TrackMonitors)
 
 </PRE><H1><A NAME=v36r1>2010-02-18 Brunel v36r1</A></H1><PRE>
  - Changes to Configurable: 

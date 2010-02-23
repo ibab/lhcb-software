@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.118 2010-02-19 15:45:17 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.119 2010-02-23 16:13:26 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -101,7 +101,7 @@ class Brunel(LHCbConfigurableUser):
 
     KnownInputTypes  = [ "MDF",  "DST", "RDST", "XDST", "DIGI", "ETC" ]
     KnownOutputTypes = [ "NONE", "DST", "RDST", "XDST" ]
-    KnownHistograms  = [ "None", "Online", "Offlineexpress", "Offlinefull", "Expert" ]
+    KnownHistograms  = [ "None", "Online", "OfflineExpress", "OfflineFull", "Expert" ]
 
     def defineGeometry(self):
         # DIGI is always simulation, as is usage of MC truth!
@@ -125,7 +125,7 @@ class Brunel(LHCbConfigurableUser):
         if outputType not in self.KnownOutputTypes:
             raise TypeError( "Invalid outputType '%s'"%outputType )
 
-        histOpt = self.getProp("Histograms").capitalize()
+        histOpt = self.getProp("Histograms")
         if histOpt not in self.KnownHistograms:
             raise RuntimeError("Unknown Histograms option '%s'"%histOpt)
 
