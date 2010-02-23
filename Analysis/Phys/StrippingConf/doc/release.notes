@@ -1,11 +1,18 @@
-!$Id: release.notes,v 1.47 2010-02-22 15:01:22 jpalac Exp $
+!$Id: release.notes,v 1.48 2010-02-23 14:14:24 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
-!========================== StrippingConf v3r0 2010-02-22 ===================
+!========================== StrippingConf v3r0 2010-02-23 ===================
+
+! 2010-02-23 - Juan Palacios
+ - python/StrippingConf/StrippingLine.py
+  . StrippingLine can now be built from a Selection object. No longer necesary to build
+    a SelectionSequence.
+ - cmt/requirements
+  . Use PhysSel/PhysSelPyhton.
 
 ! 2010-02-22 - Anton Poluektov 
  - TESPrefix property in StrippingConf. Defaults to 'Strip'. 
