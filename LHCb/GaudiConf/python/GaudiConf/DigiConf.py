@@ -104,7 +104,7 @@ class DigiConf(LHCbConfigurableUser):
         if 'Velo' in dets :
                     writer.ItemList += ["/Event/Link/Raw/Velo/Clusters#1"]
         if 'VeloPix' in dets :
-                    writer.ItemList += ["/Event/Link/VeloPix/Clusters2MCParticles#1"]
+                    writer.ItemList += ["/Event/Link/Raw/VeloPix/Clusters#1"]
         if 'L0' in dets :
                     if self.getProp("DataType") != "MC09":
                         writer.ItemList += ["/Event/Link/Trig/L0/Calo#1"]
@@ -130,7 +130,7 @@ class DigiConf(LHCbConfigurableUser):
         if 'Velo' in dets :
                     writer.ItemList += ["/Event/Link/Raw/Velo/Clusters2MCHits#1"]
         if 'VeloPix' in dets :
-                    writer.ItemList += ["/Event/Link/VeloPix/Clusters2MCHits#1"]
+                    writer.ItemList += ["/Event/Link/Raw/VeloPix/Clusters2MCHits#1"]
         if 'TT' in dets :
                     writer.ItemList += ["/Event/Link/Raw/TT/Clusters2MCHits#1"]
         if 'IT' in dets :
