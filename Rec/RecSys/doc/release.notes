@@ -5,6 +5,9 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+! 2010-02-23 - Rob Lambert
+ - Used Chris' method for VeloRecMonitors histos
+
 ! 2010-02-19 - Chris Jones
  - Add support for different Histogramming levels via a 'Histograms' slot in the
    python Configurables.
