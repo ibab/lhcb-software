@@ -1,4 +1,4 @@
-// $Id: L0DUMultiConfigProvider.cpp,v 1.8 2010-02-12 23:40:52 odescham Exp $
+// $Id: L0DUMultiConfigProvider.cpp,v 1.9 2010-02-23 20:06:08 odescham Exp $
 // Include files 
 
 #include<iostream>
@@ -84,13 +84,14 @@ StatusCode L0DUMultiConfigProvider::initialize(){
 
   // pre-load 'template' configuration
   m_template[slot] = loadConfig( LHCb::L0DUTemplateConfig::Name ,slot );
+  //  info() << "preloading template for slot " << slot << " " << m_template[slot] << endmsg;
 
-  // pre-load TCK configurations if requested (pre-loading for rootInTES slot only)
+  // pre-load TCK configurations if requested (pre-loading for rootInTES slot only) 
   if( m_preload ){    
-    for( std::vector<std::string>::iterator itck = m_list.begin() ; itck != m_list.end() ; ++itck){
-      loadConfig( *itck , slot );
-    }  
-  }
+    for( std::vector<std::string>::iterator itck = m_list.begin() ; itck != m_list.end() ; ++itck){ 
+      loadConfig( *itck , slot ); 
+    }   
+  } 
 
   return StatusCode::SUCCESS;
 }
@@ -116,7 +117,9 @@ LHCb::L0DUConfig*  L0DUMultiConfigProvider::config( long tck ,std::string slot){
   // first : handle the 'template' configuration
   if( tck == LHCb::L0DUTemplateConfig::TCKValue ){
     if( NULL != m_template[slot])return m_template[slot];
-    return loadConfig( LHCb::L0DUTemplateConfig::Name ,slot );
+    LHCb::L0DUConfig* temp = loadConfig( LHCb::L0DUTemplateConfig::Name ,slot );
+    m_template[slot] = temp;
+    return temp;
   }
   
   else if(tck < 0 || tck > 0xFFFF){

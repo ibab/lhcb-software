@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.h,v 1.10 2010-01-29 19:06:20 odescham Exp $
+// $Id: L0DURawBankMonitor.h,v 1.11 2010-02-23 20:06:09 odescham Exp $
 #ifndef L0DURAWBANKMONITOR_H 
 #define L0DURAWBANKMONITOR_H 1
 
@@ -33,7 +33,10 @@ namespace L0DUBase{
                InputData     = 5,
                EmulatorCheck = 6,
                UnknownTCK    = 7,
-               WrongSpdMult  = 8
+               WrongSpdMult  = 8,
+               MissL0Muon    = 9,
+               MissL0Calo    = 10,
+               MissL0PU      = 11
     };
   }
 }

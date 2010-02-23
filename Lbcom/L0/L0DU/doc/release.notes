@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.195 2010-02-22 11:23:37 odescham Exp $
+! $Id: release.notes,v 1.196 2010-02-23 20:06:08 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2010-02-23 Olivier Deschamps
+  - L0DURawBankMonitor : 
+      - check L0Processor banks exist 
+      - report MuonBX misalignement only when L0Muon data is valid +  mask BXID = 3562->3563 (L0Muon reset)
+  - L0DUEmulatorTool : fix abusive protection against multiple emulations per event 
+      (was preventing L0DUMultiTrends and L0ConfigMonitor.opt to run correctly)
+  - L0DUMultiConfigProvider : fix verbose messaging when RootInTES != 'T0' (template for adjacent slots re-built at each call)
 
 ! 2010-02-18 Olivier Deschamps
   - L0DURawBankMonitor : emulator check : compare preDecision instead of decision to avoid fake monitored error due to downscaling effect 

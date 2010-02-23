@@ -1,4 +1,4 @@
-// $Id: L0DUEmulatorTool.h,v 1.6 2010-02-12 23:40:52 odescham Exp $
+// $Id: L0DUEmulatorTool.h,v 1.7 2010-02-23 20:06:08 odescham Exp $
 #ifndef L0DUEMULATORTOOL_H 
 #define L0DUEMULATORTOOL_H 1
 
@@ -40,6 +40,9 @@ public:
   virtual void handle(const Incident& /* inc */ ) { 
     debug() << "IIncident Svc reset" << endmsg;
     m_begEvent = true ;  
+    for (std::map<unsigned int, bool>::iterator it = m_procMap.begin(); m_procMap.end() != it; ++it ){
+      (*it).second = true;
+    }
   } 
   
 protected:
@@ -65,5 +68,6 @@ private:
   IEventTimeDecoder*        m_odin;
   LHCb::L0DUConfig*         m_config;
   bool m_begEvent;
+  std::map<unsigned int,bool> m_procMap;
 };
 #endif // L0DUEMULATORTOOL_H

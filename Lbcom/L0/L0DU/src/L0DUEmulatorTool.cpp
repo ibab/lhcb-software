@@ -1,4 +1,4 @@
-// $Id: L0DUEmulatorTool.cpp,v 1.14 2010-02-12 23:40:52 odescham Exp $
+// $Id: L0DUEmulatorTool.cpp,v 1.15 2010-02-23 20:06:08 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -282,12 +282,15 @@ StatusCode L0DUEmulatorTool::processing(){
   m_config->setCompleted(true);
 
   // downscaling counters updated once per event (paranoid pretection against multi-call of the emulator processing  / event)
-  if( m_begEvent ){
+  
+  std::map<unsigned int,bool>::iterator it = m_procMap.find( m_config->tck() );
+  if( it == m_procMap.end() || (*it).second ){
     m_config->updateCounters( true );
-    m_begEvent = false; 
-  }else { 
-    m_config->updateCounters( false ); // do not increment counters when the config is already emulated for the same event
+    m_procMap[ m_config->tck() ]=false;
+  } else {
+    m_config->updateCounters( false );
   } 
+  
   m_config->emulate();  // process the actual emulation  @ each processing (no longer onDemand becayse of downscaling)
 
   // output

@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.21 2010-02-22 11:23:37 odescham Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.22 2010-02-23 20:06:09 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -91,6 +91,26 @@ StatusCode L0DURawBankMonitor::initialize() {
 StatusCode L0DURawBankMonitor::execute() {
 
   debug() << "==> Execute" << endmsg;
+
+  // check L0Processor banks are produced
+  LHCb::RawEvent* rawEvt = NULL ;
+  bool mOk = false;
+  bool cOk = false;
+  bool pOk = false;
+  if( !exist<LHCb::RawEvent>(  LHCb::RawEventLocation::Default  ) ){
+    Warning("rawEvent not found at location '",StatusCode::SUCCESS).ignore();
+  } else {
+    LHCb::RawEvent* rawEvt= get<LHCb::RawEvent>(   LHCb::RawEventLocation::Default );
+    if( NULL == rawEvt )return Warning("rawEvent points to NULL",StatusCode::SUCCESS);
+    const std::vector<LHCb::RawBank*>* mBanks = &rawEvt->banks(   LHCb::RawBank::L0Muon );
+    const std::vector<LHCb::RawBank*>* cBanks = &rawEvt->banks(   LHCb::RawBank::L0Calo );
+    const std::vector<LHCb::RawBank*>* pBanks = &rawEvt->banks(   LHCb::RawBank::L0MuonProcCand );
+    if( mBanks->size() > 0 )mOk = true;
+    if( cBanks->size() > 0 )cOk = true;
+    if( pBanks->size() > 0 )pOk = true;
+  }
+  
+
 
   // get odin info
   m_odin->getTime();
@@ -254,7 +274,8 @@ StatusCode L0DURawBankMonitor::execute() {
     
     // BXID shift
     fill( histo1D(toHistoID("Status/L0DU/BCID/1")), odBX - m_fromRaw->bcid().first, 1 );
-    fill( histo1D(toHistoID("Status/L0DU/BCID/2")), (0x7F & m_fromRaw->bcid().first) - m_fromRaw->bcid().second , 1 );
+    if( odBX != 3561 && odBX != 3562 && odBX != 3563 && odBX != 0 && mOk)
+      fill( histo1D(toHistoID("Status/L0DU/BCID/2")), (0x7F & m_fromRaw->bcid().first) - m_fromRaw->bcid().second , 1 );
 
     // L0DU Emulator check
     bool check = true;
@@ -300,11 +321,16 @@ StatusCode L0DURawBankMonitor::execute() {
       if(m_warn)Warning(" Status::Warning : L0DU bank monitor summary : -- input data error bit -- "
                         ,StatusCode::SUCCESS).ignore();
     }
-    if( (0x7F & m_fromRaw->bcid().first) != m_fromRaw->bcid().second){
-      fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::BxPGAShift , 1 );
-      if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- PGA2/3 BXID misaligned -- "
-                        ,StatusCode::SUCCESS).ignore();
-      debug() << "BCID L0DU/PGA3 : " <<  (0x7F &m_fromRaw->bcid().first) << " / " << m_fromRaw->bcid().second<< endmsg;
+    if( mOk && (0x7F & m_fromRaw->bcid().first) != m_fromRaw->bcid().second){
+      if( odBX == 3561 || odBX == 3562 || odBX == 3563 || odBX == 0 ){
+        counter("Muon-L0DU misalignment for BX" + Gaudi::Utils::toString( odBX ) ) += 1;
+      }else{  
+        fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::BxPGAShift , 1 );
+        if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- PGA2/3 BXID misaligned -- "
+                          ,StatusCode::SUCCESS).ignore();
+      }
+      debug() << "BCID ODIN/L0DU&0x7F/PGA3 : " << odBX << "/" 
+              <<  (0x7F &m_fromRaw->bcid().first) << " / " << m_fromRaw->bcid().second<< endmsg;
     }
     if( odBX != m_fromRaw->bcid().first){
       fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::BxOdinShift , 1 );
@@ -341,14 +367,26 @@ StatusCode L0DURawBankMonitor::execute() {
     }
     unsigned int nSpdDAQ = 0;
     if( m_spd->ok() )nSpdDAQ = m_spd->adcs().size();
-    if( m_fromRaw->data("Spd(Mult)") != nSpdDAQ ){
+    if( m_fromRaw->data("Spd(Mult)") != nSpdDAQ ){ 
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::WrongSpdMult , 1 );
       if(m_warn)Warning("Status::Warning  : L0DU bank monitor summary : -- Wrong Spd Mult -- ",StatusCode::SUCCESS).ignore();
     }
+    if( !mOk ){
+      fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::MissL0Muon , 1 );
+      if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- L0Muon banks missing -- ",StatusCode::SUCCESS).ignore();
+    }
+    if( !cOk ){
+      fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::MissL0Calo , 1 );
+      if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- L0Calo banks missing -- ",StatusCode::SUCCESS).ignore();
+    }
+    if( !pOk ){
+      fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::MissL0PU , 1 );
+      if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- L0PU banks missing -- ",StatusCode::SUCCESS).ignore();
+    }
   }
   if(m_first)m_first=false;
-  return StatusCode::SUCCESS;
-}
+  return StatusCode::SUCCESS;}
+  
 
 //=============================================================================
 //  Finalize
@@ -414,7 +452,7 @@ void L0DURawBankMonitor::bookHistos() {
     book1D( toHistoID("Status/L0DU/BCID/1") ,  "BCID(ODIN)-BCID(L0DU)" , -15. , 15., 31);
     book1D( toHistoID("Status/L0DU/BCID/2") ,  "BCID(PGA3)-BCID(PGA2)" , -15. , 15., 31);
     // Global summary
-    AIDA::IHistogram1D* histo = book1D( toHistoID("Status/Summary/1")     ,  "L0DU error status summary"       , -1. , 9., 10);
+    AIDA::IHistogram1D* histo = book1D( toHistoID("Status/Summary/1")     ,  "L0DU error status summary"       , -1. , 12., 13);
       TH1D* th1 = Gaudi::Utils::Aida2ROOT::aida2root( histo );        
       TAxis* xAxis = th1->GetXaxis();
       xAxis->SetBinLabel( 1 , "Counter" );
@@ -427,6 +465,9 @@ void L0DURawBankMonitor::bookHistos() {
       xAxis->SetBinLabel( 8 , "Emulator Check" );
       xAxis->SetBinLabel( 9 , "Unknow TCK" );
       xAxis->SetBinLabel( 10 , "SpdMult Error" );
+      xAxis->SetBinLabel( 11 , "No L0Muon"   );
+      xAxis->SetBinLabel( 12 , "No L0Calo"   );
+      xAxis->SetBinLabel( 13 , "No L0PU"     );
       xAxis->LabelsOption( m_lab.c_str() );
     // BXID decision
     book1D( toHistoID("Status/BCID/1")        ,  "BCID for positive decisions"     , 0 , 3565, 3565);
