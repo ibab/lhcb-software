@@ -1,0 +1,12 @@
+<header>
+  <name>Beam Gas LSS 450GeV Beam 1</name>
+  <desc>Beam gas from long straight section at 450GeV for Beam 1</desc>
+  <beam>1</beam>
+  <plane>-1000</plane>
+  <scale>3.3908e19</scale>
+  <energy>450e3</energy>
+  <misc>H2 equivalent measured gas map:
+    ProtLossProbPerTurn = LossRate/(ProtInMachine*MachineFreq) = 5.7803e-15
+    BeamProtInFile = LossSim/ProtLossProbPerTurn = 3.39080e19
+  </misc>
+</header>

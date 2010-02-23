@@ -1,0 +1,12 @@
+<header>
+  <name>Beam Gas LSS 7TeV Beam 1</name>
+  <desc>Beam gas from long straight section at 7TeV for Beam 1</desc>
+  <beam>1</beam>
+  <plane>-1000</plane>
+  <scale>6.3706e17</scale>
+  <energy>7e6</energy>
+  <misc>Simulated composit gas map, early machine:
+    ProtLossProbPerTurn = LossRate/(ProtInMachine*MachineFreq) = 4.7091e-14
+    BeamProtInFile = LossSim/ProtLossProbPerTurn = 6.3706e17
+  </misc>
+</header>
