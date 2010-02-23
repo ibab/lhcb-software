@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.84 2010-02-23 15:42:50 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.85 2010-02-23 15:48:19 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -92,7 +92,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "MakeNodes"      , m_makeNodes = false                   );
   declareProperty( "MakeMeasurements", m_makeMeasurements = false           );
   declareProperty( "MaterialLocator", m_materialLocatorName = "DetailedMaterialLocator");
-  declareProperty( "UpdateTransport", m_updateTransport = false );
+  declareProperty( "UpdateTransport", m_updateTransport = true );
   declareProperty( "UpdateMaterial", m_updateMaterial  = false );
   declareProperty( "MinMomentumELossCorr", m_minMomentumForELossCorr = 10.*Gaudi::Units::MeV );
   declareProperty( "ApplyMaterialCorrections", m_applyMaterialCorrections = true );
