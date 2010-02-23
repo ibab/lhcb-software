@@ -6,6 +6,13 @@ Purpose     : LHCb analysis packages
 </PRE><H1><A NAME=v4r1>2010-02-22 Analysis v4r1 </A></H1><PRE>
 
  - Highlights:
+   * BTaggingTool deals with Refitted PVs (M. Musy)
+   * Add Phys/DisplVertices package (N. Gauvin)
+   * DecayTreeTuple:  add L0, HLT, ODIN TCK information to TISTOS. Get PVs from DVAlgorithm for Primaries. (V. Gligorov, P Koppenburg)
+   * Selection framework: Tighten safety and consistency checks. Raise exceptions when something isn't right. Add QM tests.
+   * StrippingConf split into StrippingAlgs (c++ components) and StrippingConf (python classes) (J Palacios). Support for HltDecReport copying in various locations (A. Poluektov).
+   * New stripping lines in StrippingDisplVertices, StrippingBd2KstarMuMu, StrippingDiMuon, StreamWithPV, StrippingPV.
+   * Various bug fixes and enhancements.
 
 </PRE><H1><A NAME=v4r0p1>2010-02-05 Analysis v4r0p1 </A></H1><PRE>
 
