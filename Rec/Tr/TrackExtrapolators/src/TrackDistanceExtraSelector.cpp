@@ -1,4 +1,4 @@
-// $Id: TrackDistanceExtraSelector.cpp,v 1.7 2009-09-26 11:42:21 smenzeme Exp $
+// $Id: TrackDistanceExtraSelector.cpp,v 1.8 2010-02-23 16:45:10 wouter Exp $
 
 // Include files
 
@@ -54,8 +54,8 @@ StatusCode TrackDistanceExtraSelector::initialize()
   m_longDistanceExtrapolator = tool<ITrackExtrapolator>( m_longDistanceExtrapolatorType,
 							 "LongDistanceExtrapolator", this );
   
-  info() << "Short distance extrapolator: " << m_shortDistanceExtrapolator->type() << endreq ;
-  info() << "Long distance extrapolator: " << m_longDistanceExtrapolator->type() << endreq ;
+  debug() << "Short distance extrapolator: " << m_shortDistanceExtrapolator->type() << endreq ;
+  debug() << "Long distance extrapolator: " << m_longDistanceExtrapolator->type() << endreq ;
   
   return StatusCode::SUCCESS;
 }
