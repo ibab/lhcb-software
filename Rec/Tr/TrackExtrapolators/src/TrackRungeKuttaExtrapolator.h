@@ -18,7 +18,7 @@ class TrackRungeKuttaExtrapolator: public TrackFieldExtrapolatorBase
 public:
   /// enums
   //enum RKScheme { CashKarp, DormandPrince, Fehlberg, BogackiShampine } ;
-  //enum ErrorCode { Success, OutOfTolerance, Curling } ;
+  enum RKErrorCode { RKSuccess, RKOutOfTolerance, RKCurling, RKExceededMaxNumSteps } ;
   
   /// Constructor
   TrackRungeKuttaExtrapolator( const std::string& type, 
@@ -68,8 +68,8 @@ public:
   const RKStatistics& statistics() const { return m_stats ; }
 
 private:
-  bool extrapolate( RKState& state, double zout, RKJacobian* jacobian, std::vector<double>* stepvector=0) const ;
-  bool extrapolateNumericalJacobian( RKState& state, double zout, RKJacobian& jacobian) const ;
+  RKErrorCode extrapolate( RKState& state, double zout, RKJacobian* jacobian, std::vector<double>* stepvector=0) const ;
+  RKErrorCode extrapolateNumericalJacobian( RKState& state, double zout, RKJacobian& jacobian) const ;
 
   void evaluateRKStep( double dz, RKState& pin, RKTrackVector& err, RKCache& cache) const ;
   void evaluateRKStepJacobian( double dz,RKJacobian& jacobian,const RKCache& cache) const ;  

@@ -324,11 +324,11 @@ TrackRungeKuttaExtrapolator::propagate( Gaudi::TrackVector& state,
   rkstate.qop  = state(4) * Gaudi::Units::c_light ;
   rkstate.z    = zin ;
 
-  bool success = m_numericalJacobian && jacobian  
+  RKErrorCode success = m_numericalJacobian && jacobian  
     ? extrapolateNumericalJacobian( rkstate, zout, *jacobian) 
     : extrapolate( rkstate, zout, jacobian) ;
   
-  if( success ) {
+  if( success == RKSuccess ) {
     // translate the state back
     state(0) = rkstate.x() ;
     state(1) = rkstate.y() ;
@@ -351,14 +351,14 @@ TrackRungeKuttaExtrapolator::propagate( Gaudi::TrackVector& state,
       delete jacobian ;
     }
   } else {
-    error() << "RungeKuttaExtrapolator failed." << endreq ;
+    error() << "RungeKuttaExtrapolator failed with code: " << success << endreq ;
   }
   
-  return success ? StatusCode::SUCCESS : StatusCode::FAILURE ;
+  return success==RKSuccess ? StatusCode::SUCCESS : StatusCode::FAILURE ;
 }
 
 
-bool
+TrackRungeKuttaExtrapolator::RKErrorCode
 TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
 					  double zout,
 					  RKJacobian* jacobian,
@@ -380,7 +380,7 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
 
   double absstep = std::min( std::abs(totalStep), m_initialRKStep ) ;
   int direction = totalStep > 0 ? +1 : -1 ;
-  bool laststep = false ;
+  bool laststep = absstep < m_minRKStep ;
   
   //std::cout << "input state vector: " << state.vector << std::endl ;
   //double lasterr(0) ;
@@ -389,8 +389,9 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
   RKTrackVector err, totalErr ;
   RKState       prevstate ;
   RKStatistics  stats ;
-  bool rc = true ;
-  while( rc && std::abs(state.z - zout) > TrackParameters::propagationTolerance ) {
+  RKErrorCode rc = RKSuccess ;
+
+  while( rc==RKSuccess && std::abs(state.z - zout) > TrackParameters::propagationTolerance ) {
     
     // make a single range-kutta step
     prevstate = state ;
@@ -398,7 +399,7 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
 
     // decide if the error is small enough
      
-    // always accept the step is smaller than the minimum step size
+    // always accept the step if it is smaller than the minimum step size
     bool success = (absstep <= m_minRKStep) ;
     if( !success ) {
 
@@ -472,10 +473,13 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
     // final check: bail out for vertical or looping tracks
     if( std::abs( state.tx() ) > m_maxSlope || std::abs( state.ty() ) > m_maxSlope ) {
       Warning("State has very large slope, probably curling. Bailing out.").ignore() ;
-      rc = false ;
+      rc = RKCurling ;
     } else if( std::abs(state.qop * rkcache.stage[0].Bfield.y() ) > m_maxCurvature ) {
       Warning("State has too small curvature radius. Bailing out.").ignore() ;
-      rc = false ;
+      rc = RKCurling ;
+    } else if( stats.numfailedstep + rkcache.step  >= m_maxNumRKSteps ) {
+      Warning("Exceeded max numsteps.").ignore() ;
+      rc = RKExceededMaxNumSteps ;
     }
   }
 
@@ -658,8 +662,7 @@ TrackRungeKuttaExtrapolator::evaluateJacobianDerivatives( const RKState& state,
   
 }
 
-
-bool
+TrackRungeKuttaExtrapolator::RKErrorCode
 TrackRungeKuttaExtrapolator::extrapolateNumericalJacobian( RKState& state,
 							   double zout,
 							   RKJacobian& jacobian) const
@@ -670,8 +673,8 @@ TrackRungeKuttaExtrapolator::extrapolateNumericalJacobian( RKState& state,
   RKState inputstate(state) ;
   std::vector<double> stepvector;
   stepvector.reserve(256) ;
-  bool success = extrapolate(state,zout,&jacobian,&stepvector) ;
-  if ( success ) {
+  RKErrorCode success = extrapolate(state,zout,&jacobian,&stepvector) ;
+  if ( success==RKSuccess ) {
     // now make small changes in tx,ty,qop
     double delta[3] = {0.01,0.01,1e-8} ;
     for(int col=0; col<3; ++col) {
