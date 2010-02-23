@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2010-02-23 - Rob Lambert
+ - Added a configurable for VeloRecMonitors, for use in Brunel
+   The configurable chooses which monitoring algs to run depending on options
+
 ! 2010-02-18 - Eduardo Rodrigues
  - VeloOccupancyMonitor: messages for missing ODIN banks downgraded from info
    to debug!
