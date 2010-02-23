@@ -1,0 +1,26 @@
+#============================================================================
+# Created    : 2007-01-31
+# Maintainer : Magnus Lieng, Gloria Corti
+#============================================================================
+package           LbMIB
+version           v4r1
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src options scripts
+
+# Used packages.
+#============================================================================
+use GaudiAlg       v*
+use GenEvent       v*      Event
+use MIBData        v* 
+
+# Component library building rule
+#============================================================================
+library          LbMIB    ../src/*.cpp  -import=AIDA
+
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=LbMIB
+apply_pattern    install_python_modules
+apply_pattern    install_python_scripts
