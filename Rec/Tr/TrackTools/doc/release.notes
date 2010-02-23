@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2010-02-22 - Wouter Hulsbergen
+ - improve initialization of Long and Downstream tracks in TrackStateInitTool
+ - added some cuts to TrackSelector
+
 !======================== TrackTools v3r26 2010-02-15 ======================
 
 ! 2010-02-01 - Manuel Tobias Schiller
