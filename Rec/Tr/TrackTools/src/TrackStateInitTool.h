@@ -36,6 +36,8 @@
  * @date   2009-03-02
  */
 
+class DeSTDetector ;
+
 static const InterfaceID IID_TrackStateInitTool ( "TrackStateInitTool", 1, 0 );
 
 class TrackStateInitTool : public GaudiTool, virtual public ITrackStateInit
@@ -54,6 +56,7 @@ public:
 
 protected:
   StatusCode createTStationStates(LHCb::Track& track) const;
+  StatusCode createTTState(LHCb::Track& track) const;
   StatusCode createVeloStates(LHCb::Track& track ) const ;
   StatusCode createVeloTTStates(LHCb::Track& track ) const ;
   
@@ -62,9 +65,9 @@ private:
   ITrackFitter* m_veloFitter ;  
   IPatVeloTTFit* m_veloTTFit;
 
-
   ITrackExtrapolator* m_extrapolator;
-  } ;
+  const DeSTDetector* m_ttdetector ;
+} ;
 
 template<class T>
 inline bool LessThanFirst(const T& lhs, const T& rhs)

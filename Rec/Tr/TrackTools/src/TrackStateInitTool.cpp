@@ -1,4 +1,5 @@
 #include "TrackStateInitTool.h"
+#include "STDet/DeSTDetector.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackStateInitTool
@@ -26,16 +27,13 @@ StatusCode TrackStateInitTool::initialize()
   m_veloTTFit = tool<IPatVeloTTFit>("PatVeloTTFit");
   m_extrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator", 
 					    "Extrapolator",this);
+  m_ttdetector = getDet<DeSTDetector>(DeSTDetLocation::location("TT")) ;
   return sc ;
 }
 
 StatusCode TrackStateInitTool::fit( LHCb::Track& track, bool clearStates ) const
 {
 
-
-
-  
-  
   //do nothing  
   if(!clearStates) 
     return StatusCode::SUCCESS;
@@ -82,8 +80,15 @@ StatusCode TrackStateInitTool::fit( LHCb::Track& track, bool clearStates ) const
   if(savedType == LHCb::Track::Long ||
      savedType == LHCb::Track::Downstream ||
      savedType == LHCb::Track::Ttrack){
-      StatusCode sc = createTStationStates( track ) ;
-      if( sc.isFailure() ) Warning("TrackStateInitTool fit T failed",sc,0).ignore();
+    StatusCode sc = createTStationStates( track ) ;
+    if( sc.isFailure() ) Warning("TrackStateInitTool fit T failed",sc,0).ignore();
+    else {
+      if( /* savedType == LHCb::Track::Long || */
+	 savedType == LHCb::Track::Downstream ) {
+	sc = createTTState( track ) ;
+	if( sc.isFailure() ) Warning("TrackStateInitTool fit TT failed",sc,0).ignore();
+      }
+    }
   }
 
   return StatusCode::SUCCESS ;
@@ -100,7 +105,6 @@ StatusCode TrackStateInitTool::createVeloTTStates( LHCb::Track& track) const
     return m_veloTTFit->fitVTT(track);
 }
 
-
 StatusCode TrackStateInitTool::createTStationStates( LHCb::Track& track ) const
 {
   
@@ -112,25 +116,18 @@ StatusCode TrackStateInitTool::createTStationStates( LHCb::Track& track ) const
      track.firstState().location()<=LHCb::State::EndVelo) {
     double qOverP = newStates.begin()->qOverP();
     double errQOverP = newStates.begin()->errQOverP2();
-    for( LHCb::Track::StateContainer::const_iterator istate = track.states().begin();
-	 istate != track.states().end(); ++istate) {
-      if((*istate)->location() <= LHCb::State::EndVelo) {
-	(const_cast<LHCb::State*>(*istate))->setQOverP( qOverP ) ;
-	(const_cast<LHCb::State*>(*istate))->setErrQOverP2(errQOverP) ;
-      }
-      //create TT state
-      if((*istate)->location() == LHCb::State::EndVelo) {
-	LHCb::StateVector statevec( (*istate)->stateVector(), (*istate)->z() ) ;
-	double zpos = StateParameters::ZEndTT ;
-	StatusCode thissc = m_extrapolator->propagate( statevec, zpos, 0, 
-						       LHCb::ParticleID(211)); 
-	LHCb::State newState = LHCb::State( statevec ) ;
-	newState.setLocation(LHCb::State::LocationUnknown);
-	track.addToStates( newState ) ;
-  // job is done, exit the loop
-  break;
-  
-      }
+      
+    // replace the first T state by the extrapolated Velo state
+    const LHCb::State* velottstate = track.states().back() ;
+    LHCb::StateVector statevec( velottstate->stateVector(), velottstate->z() ) ;
+    statevec.setQOverP( qOverP ) ;
+    LHCb::State& tstate = newStates.front() ;
+    m_extrapolator->propagate( statevec, tstate.z(), 0 );
+    tstate.stateVector() = statevec.parameters() ;
+    
+    BOOST_FOREACH( LHCb::State* state, track.states() ) {
+      state->setQOverP( qOverP ) ;
+      state->setErrQOverP2(errQOverP) ;
     }
   }
   
@@ -141,101 +138,127 @@ StatusCode TrackStateInitTool::createTStationStates( LHCb::Track& track ) const
   return success ;
 }
 
-StatusCode TrackStateInitTool::initializeRefStates(LHCb::Track& track,
-						   LHCb::ParticleID pid ) const
-{
-  // given existing states on the track, this tool adds states at fixed
-  // z-positions along the track. if a track state already exists
-  // sufficiently close to the desired state, it will not add the
-  // state.
-  StatusCode sc = StatusCode::SUCCESS ;
 
-  // first fix the momentum of states on the track. need to make sure this works for Velo-TT as well.
-  if( track.states().empty() ) {
-    sc = Error( "Track has no state! Can not fit.", StatusCode::FAILURE );
-  } else {
-    // first need to make sure all states already on track have
-    // reasonable momentum. still needs to check that this works for
-    // velo-TT
+namespace {
+  template<class HitContainer>
+  void fitLine( double z, Gaudi::Vector4& statevector,
+		const HitContainer& hits, bool fixTy)
+  {
+    Gaudi::Vector4 dChi2dX, H ;
+    Gaudi::SymMatrix4x4 d2Chi2dX2 ;
     
-    const LHCb::State& refstate = track.hasStateAt(LHCb::State::AtT) ? *(track.stateAt(LHCb::State::AtT)) :
-      ( track.checkFlag(LHCb::Track::Backward) ? *(track.states().front()) : *(track.states().back())) ;
+    Gaudi::XYZVector d1(statevector(2),statevector(3),1) ;
+    Gaudi::XYZVector p1(statevector(0),statevector(1),z) ;
     
-
-    for( LHCb::Track::StateContainer::const_iterator it = track.states().begin() ;
-         it != track.states().end() ; ++it)
-      const_cast<LHCb::State*>(*it)->setQOverP( refstate.qOverP() ) ;
-    
-    
-    // collect the z-positions where we want the states
-    std::vector<double> zpositions ;
-    if( track.hasT() ) {
-      zpositions.push_back( StateParameters::ZBegT) ;
-      zpositions.push_back( StateParameters::ZEndT ) ;
+    for( typename HitContainer::const_iterator ihit = hits.begin() ;
+	 ihit != hits.end() ; ++ ihit) {
+      typename HitContainer::value_type::Vector d2 = ihit->direction() ;
+      typename HitContainer::value_type::Point  p2 = ihit->beginPoint() ;
+      typename HitContainer::value_type::Vector deltap(p1.x()-p2.x(),p1.y()-p2.y(),p1.z()-p2.z()) ;
+      typename HitContainer::value_type::Vector nvec = d1.Cross( d2 ) ;
+      double n = nvec.R() ;
+      double d = deltap.Dot( nvec) / n ;
+      double dndtx = 1/n * (d2.y() * nvec.z() - d2.z() * nvec.y() ) ;
+      double dndty = 1/n * (d2.z() * nvec.x() - d2.x() * nvec.z() ) ;
+      double dnydtx = - d2.z() ;
+      double dnzdtx =   d2.y() ;    
+      double dddtx = 1/n * ( dnydtx * deltap.y() + dnzdtx * deltap.z() ) - d/(n*n) * dndtx ;
+      double dnxdty =   d2.z() ;
+      double dnzdty = - d2.x() ;
+      double dddty = 1/n * ( dnxdty * deltap.x() + dnzdty * deltap.z() ) - d/(n*n) * dndty ;
+      double dddx  = nvec.x()/n ;
+      double dddy  = nvec.y()/n ;
+      
+      H(0) = dddx ;
+      H(1) = dddy ;
+      H(2) = dddtx ;
+      H(3) = dddty ;
+      
+      dChi2dX += d * H ;
+      for(size_t irow=0; irow<4; ++irow)
+	for(size_t icol=0; icol<=irow; ++icol)
+	  d2Chi2dX2(irow,icol) += H(irow) * H(icol) ;
     }
-    if( track.hasTT() || (track.hasT() && track.hasVelo() ) ) 
-      zpositions.push_back(StateParameters::ZEndTT) ;
-    if( track.hasVelo() )
-      zpositions.push_back(StateParameters::ZEndVelo) ;
     
-    // the following container is going to hold pairs of 'desired'
-    // z-positionds and actual states. the reason for the gymnastics
-    // is that we always want to propagate from the closest availlable
-    // state, but then recursively. this will make the parabolic
-    // approximation reasonably accurate.
-    typedef std::pair<double, const LHCb::State*> ZPosWithState ;
-    typedef std::vector< ZPosWithState > ZPosWithStateContainer ;
-    std::vector< ZPosWithState > states ;
-    // we first add the states we already have
-    for( std::vector<LHCb::State*>::const_iterator it = track.states().begin() ;
-         it != track.states().end() ; ++it) 
-      states.push_back( ZPosWithState((*it)->z(),(*it)) ) ;
-
-    // now add the other z-positions, provided nothing close exists
-    const double maxDistance = 50*Gaudi::Units::cm ;
-    for( std::vector<double>::iterator iz = zpositions.begin() ;
-         iz != zpositions.end(); ++iz) {
-      bool found = false ;
-      for( ZPosWithStateContainer::const_iterator it = states.begin() ;
-           it != states.end()&&!found ; ++it)
-        found = fabs( *iz - it->first ) < maxDistance ;
-      if(!found) states.push_back( ZPosWithState(*iz,0) ) ;
+    if( fixTy ) {
+      Gaudi::SymMatrix3x3 d2Chi2dX2Sub = d2Chi2dX2.Sub<Gaudi::SymMatrix3x3>(0,0) ;
+      d2Chi2dX2Sub.InvertChol() ;
+      for(size_t irow=0; irow<3; ++irow)
+	for(size_t icol=0; icol<3; ++icol)
+	  statevector(irow) -= d2Chi2dX2Sub(irow,icol) * dChi2dX(icol) ;
+    } else {
+      d2Chi2dX2.InvertChol() ;
+      statevector -= d2Chi2dX2 * dChi2dX ;
     }
-    std::sort( states.begin(), states.end(), LessThanFirst<ZPosWithState> ) ;
-    
-    // create the states in between
-    LHCb::Track::StateContainer newstates ;
-    for( ZPosWithStateContainer::iterator it = states.begin();
-         it != states.end() ; ++it) 
-      if( it->second == 0 ) {
-        // find the nearest existing state to it
-        ZPosWithStateContainer::iterator best= states.end() ;
-        for( ZPosWithStateContainer::iterator jt = states.begin();
-             jt != states.end() ; ++jt) 
-          if( it != jt && jt->second
-              && ( best==states.end() || fabs( jt->first - it->first) < fabs( best->first - it->first) ) )
-            best = jt ;
-        
-        assert( best != states.end() ) ;
-        
-        // move from that state to this iterator, using the extrapolator and filling all states in between.
-        int direction = best > it ? -1 : +1 ;
-        LHCb::StateVector statevec( best->second->stateVector(), best->second->z() ) ;
-        for( ZPosWithStateContainer::iterator jt = best+direction ;
-             jt != it+direction ; jt += direction) {
-          StatusCode thissc = m_extrapolator->propagate( statevec, jt->first, 0, pid ) ;
-          LHCb::State* newstate = new LHCb::State( statevec ) ;
-          jt->second = newstate ;
-          newstates.push_back( newstate ) ;
-          if( !thissc.isSuccess() ) {
-            error() << "Problem propagating state in LongTrackReferenceCreator::createReferenceStates" << endmsg ;
-            sc = thissc ;
-          }
-        }
-      }
-    
-    // finally, copy the new states to the track. 
-    track.addToStates( newstates ) ;
   }
-  return sc ;
 }
+
+StatusCode TrackStateInitTool::createTTState(LHCb::Track& track ) const
+{
+  // this routine fits the TT hits to model with only 3 parameters: x, y and tx
+
+  // first get a reference state: if there are velo hits, take the
+  // state end velo, otherwise take a T state
+  LHCb::State* refstate = track.stateAt( LHCb::State::EndVelo ) ;
+  if( refstate==0 ) refstate = &(track.firstState()) ;
+  
+  const double zref=StateParameters::ZEndTT ;
+  LHCb::StateVector statevec( refstate->stateVector(), refstate->z() ) ;
+  Gaudi::TrackMatrix jacobian ;
+  m_extrapolator->propagate( statevec, zref, &jacobian );
+
+  // collect the TT hits
+  std::vector< LHCb::LHCbID > ttids ;
+  BOOST_FOREACH( const LHCb::LHCbID& id, track.lhcbIDs() ) 
+    if( id.isTT() ) ttids.push_back( id ) ;
+
+  // we'll only try something more complicated if there are enough TT hits
+  if( ttids.size() >= 3 ) {
+    
+    double xtt(0) ;
+    typedef Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector> LineHit ;
+    std::vector<LineHit> tthits ;
+    BOOST_FOREACH( const LHCb::LHCbID& id, ttids ) {
+      LHCb::STChannelID ttid = id.stID() ;
+      const DeSTSector* sector = m_ttdetector->findSector(ttid) ;
+      double dxdy, dzdy, xAtYEq0, zAtYEq0, ybegin,  yend ;
+      sector->trajectory( ttid.strip(), 0, dxdy, dzdy, xAtYEq0, zAtYEq0, ybegin,  yend) ;
+      tthits.push_back( LineHit( LineHit::Point(xAtYEq0,0,zAtYEq0),LineHit::Vector(dxdy,1,dzdy) ) ) ;
+      if( !sector->isStereo() ) xtt = xAtYEq0 ;
+    }
+    
+    Gaudi::Vector4 ttstatevec = statevec.parameters().Sub<Gaudi::Vector4>(0) ;
+    //ttstatevec(0) = xtt ;
+    const bool fixTy = true ;
+    fitLine( zref, ttstatevec, tthits, fixTy ) ;
+    for(size_t i=0; i<4; ++i) statevec.parameters()(i) = ttstatevec(i) ;
+    
+    // I have also tried to fix q/p but it simply doesn't help anything.
+
+    // also fix ty: the ty of the seed track fit is actually quite poor.
+    double ty = 
+      (track.states().front()->y() - ttstatevec(1))/
+      (track.states().front()->z() - zref)  ;
+    
+    statevec.setTy ( ty ) ;
+    track.states().front()->setTy(  statevec.ty() ) ;
+  }
+  
+  // now add the TT state
+  LHCb::State ttstate(statevec) ;
+  ttstate.setLocation( LHCb::State::AtTT ) ;
+  ttstate.setCovariance( refstate->covariance() ) ;
+  track.addToStates( ttstate ) ;
+
+  return StatusCode::SUCCESS ;
+}
+
+
+StatusCode TrackStateInitTool::initializeRefStates(LHCb::Track& ,
+						   LHCb::ParticleID) const
+{
+  error() << "TrackStateInitTool::initializeRefStates. Code was copied from TrackMasterFitter. Let's leave it there."
+	  << endreq ;
+  return StatusCode::FAILURE ;
+}
+
