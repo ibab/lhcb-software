@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.24 2010-02-23 13:44:17 rlambert Exp $"
+__version__ = "$Id: Configuration.py,v 1.25 2010-02-23 13:49:58 rlambert Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -218,6 +218,7 @@ class RecMoniConf(LHCbConfigurableUser):
         if "VELO" in moniSeq :
             from Configurables import GaudiSequencer
             self.setOtherProps(VeloRecMonitors(),["Histograms","OutputLevel"])
+            VeloRecMonitors().setProp("MoniSequence", GaudiSequencer("MoniVELOSeq"))
             #importOptions('$VELORECMONITORSROOT/options/BrunelMoni_Velo.py')
 
         if "Tr" in moniSeq :
