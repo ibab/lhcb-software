@@ -1,7 +1,7 @@
 """
 Configuration of the Velo Monitoring Histograms
 """
-__version__ = "$Id: Configuration.py,v 1.3 2010-02-23 13:39:48 rlambert Exp $"
+__version__ = "$Id: Configuration.py,v 1.4 2010-02-23 17:04:13 erodrigu Exp $"
 __author__  = "Rob Lambert"
 
 from Gaudi.Configuration import *
@@ -34,19 +34,14 @@ class VeloRecMonitors(ConfigurableUser):
             if self.getProp("Histograms") in ['Online', 'None']: return
             
             #must be 'OfflineFull', 'OfflineExpress' or 'Expert'
-            #histograms to be added in this mode
-            from Configurables import ( VeloTrackMonitor, VeloClusterMonitor )
-            
+            #histograms to be added in this mode            
             if hasattr( self, "MoniSequence" ):
+                # set by RecMoniConf to GaudiSequencer('MoniVELOSeq')
                 theseq=self.getProp("MoniSequence")
                 if theseq is None:
                     #this is an error, I should throw an exception
                     RuntimeError("Monitoring sequence not set")
                     return
-                vtm=VeloTrackMonitor()
-                vtm.OutputLevel=self.getProp("OutputLevel")
-                vcm=VeloClusterMonitor()
-                vcm.OutputLevel=self.getProp("OutputLevel")
-                theseq.Members+=[ vtm, vcm ]
+                importOptions( '$VELORECMONITORSROOT/options/BrunelMoni_Velo.py' )
         
         return

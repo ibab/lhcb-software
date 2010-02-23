@@ -4,6 +4,12 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2010-02-23 - Eduardo Rodrigues
+ - VeloRecMonitors configurable fixed. Uses the opts file BrunelMoni_Velo.py
+   by default.
+ - BrunelMoni_Velo.py option file improved to use properties set by the
+   VeloRecMonitors configurable
+
 ! 2010-02-23 - Rob Lambert
  - Added a configurable for VeloRecMonitors, for use in Brunel
    The configurable chooses which monitoring algs to run depending on options

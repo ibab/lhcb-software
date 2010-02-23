@@ -6,16 +6,21 @@
 
 from Configurables import GaudiSequencer
 
+from Configurables import VeloRecMonitors
 from Configurables import Velo__VeloClusterMonitor
 from Configurables import Velo__VeloTrackMonitor
 
-GaudiSequencer( 'MoniVELOSeq' ).Members +=\
-                [   Velo__VeloClusterMonitor( 'VeloClusterMonitor' )
-                    , Velo__VeloTrackMonitor  ( 'VeloTrackMonitor'   )
-                    ]
+VCM = Velo__VeloClusterMonitor( 'VeloClusterMonitor' )
+VTM = Velo__VeloTrackMonitor  ( 'VeloTrackMonitor'   )
 
-Velo__VeloClusterMonitor( 'VeloClusterMonitor' ).PropertiesPrint = False
-Velo__VeloTrackMonitor  ( 'VeloTrackMonitor'   ).PropertiesPrint = False
+GaudiSequencer( 'MoniVELOSeq' ).Members += [ VCM, VTM ]
+
+outputLevel = VeloRecMonitors().getProp( 'OutputLevel' )
+
+VCM.OutputLevel     = outputLevel
+VTM.OutputLevel     = outputLevel
+VCM.PropertiesPrint = False
+VTM.PropertiesPrint = False
 
 #TrackUser = Velo__VeloTrackMonitor( 'VeloTrackMonitor' )
 #TrackUser.TrackLocation     = "Rec/Track/Best"
@@ -34,4 +39,5 @@ Velo__VeloTrackMonitor  ( 'VeloTrackMonitor'   ).PropertiesPrint = False
 # or "Rec/Track/Forward" 
 #For biased/unbiased residuals vs momentum change TrackLocation to
 # "Rec/Track/Forward"
+
 ##############################################################################
