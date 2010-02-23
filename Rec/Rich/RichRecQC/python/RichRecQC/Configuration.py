@@ -57,7 +57,8 @@ class RichRecQCConf(RichConfigurableUser):
                                             "AlignmentMonitoring" ],
                        "None"           : [ ]
                        }
-       ,"PidMomentumRanges": { "OfflineFull"    : [ [2,100], [2,10], [10,70], [70,100] ],
+       ,"PidMomentumRanges": { "Expert"         : [ [2,100], [2,10], [10,70], [70,100] ],
+                               "OfflineFull"    : [ [2,100], [2,10], [10,70], [70,100] ],
                                "OfflineExpress" : [ [2,100], [2,10], [10,70], [70,100] ],
                                "Online"         : [ [2,100], [2,10], [10,70], [70,100] ]
                                }
@@ -79,7 +80,10 @@ class RichRecQCConf(RichConfigurableUser):
                                                  ["KsTrack"],["VeloTT"],["Seed"] ],
                             "Online"         : [ ["Forward","Match"] ]
                             }
-       ,"EffTrackTypes": { "OfflineFull"    : [ ["Forward","Match"],
+       ,"EffTrackTypes": { "Expert"         : [ ["Forward","Match"],
+                                                ["Forward"],["Match"],["KsTrack"],
+                                                ["VeloTT"],["Seed"] ],
+                           "OfflineFull"    : [ ["Forward","Match"],
                                                 ["Forward"],["Match"],["KsTrack"],
                                                 ["VeloTT"],["Seed"] ],
                            "OfflineExpress" : [ ["Forward","Match"],
