@@ -4,6 +4,10 @@
 !----------------------------------------------------------------------------
 
 !======================== GaudiConf v13r4 2010-02-12 ========================
+! 2010-02-23 - Marcin Kucharczyk
+ - In DigiConf changed output paths for VeloPix
+
+!======================== GaudiConf v13r4 2010-02-12 ========================
 ! 2010-02-12 - Marco Cattaneo
  - In DigiConf, do not add "/Event/Link/Trig/L0/Calo#1" to .digi and .dst in
    MC09 case, fixes bug 62725
@@ -13,7 +17,7 @@
  - Make QMTest exclusion for changes path to CondDB files more robust
 
 ! 2009-12-17 - Marco Cattaneo
- - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
+e - Add DataType slot to SimConf, DigiConf, DstConf. If DataType is 'DC06',
    SimConf does not add spillover Gen info to output file. Fixes bug 60636   
 
 ! 2009-12-14 - Marcin Kucharczyk
