@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.406 2010-02-19 17:03:59 pkoppenb Exp $
+! $Id: release.notes,v 1.407 2010-02-23 20:46:22 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,8 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+!========================== DaVinci v25r1 2010-02-23 =======================
 
 ! 2010-02-19 - Patrick Koppenburg
  - IMPORTANT CHANGE : There is no default DataType anymore. User MUST
