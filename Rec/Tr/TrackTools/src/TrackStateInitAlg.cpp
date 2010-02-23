@@ -10,17 +10,24 @@ DECLARE_ALGORITHM_FACTORY( TrackStateInitAlg ) ;
 
 TrackStateInitAlg::TrackStateInitAlg( const std::string& name,
 				      ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_trackTool("TrackStateInitTool",this)
 {
   declareProperty("TrackLocation", m_trackLocation = LHCb::TrackLocation::Default);
   declareProperty("ClearStates", clearStates = true);
+  declareProperty("StateInitTool", m_trackTool) ;
 }
 
 StatusCode TrackStateInitAlg::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
-  m_trackTool = tool<ITrackStateInit>( "TrackStateInitTool" );
-  return StatusCode::SUCCESS ;
+  sc = m_trackTool.retrieve() ;
+  return sc ;
+}
+
+StatusCode TrackStateInitAlg::finalize() {
+  m_trackTool.release().ignore() ;
+  return GaudiAlgorithm::finalize() ;
 }
 
 TrackStateInitAlg::~TrackStateInitAlg() {}

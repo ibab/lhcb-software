@@ -1,5 +1,6 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/ToolHandle.h"
 #include "TrackStateInitTool.h"
 
 /** @class TrackStateInitAlg TrackStateInitAlg.h 
@@ -17,10 +18,11 @@ public:
   TrackStateInitAlg(const std::string& name,ISvcLocator* pSvcLocator);
   virtual ~TrackStateInitAlg();
   StatusCode initialize();
+  StatusCode finalize();
   StatusCode execute();
 
 private:
   bool clearStates;
   std::string m_trackLocation;
-  ITrackStateInit* m_trackTool;
+  ToolHandle<ITrackStateInit> m_trackTool;
 } ;
