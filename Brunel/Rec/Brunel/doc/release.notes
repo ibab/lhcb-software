@@ -8,6 +8,11 @@ Purpose: LHCb reconstruction program
      "Online", "OfflineExpress", "OfflineFull" and "Expert". Note that these
      levels are now case sensitive.
 
+ - Changes to tests
+   . Remove obsolete RichRecQC options from mc09-withtruth and 
+     mc09-withtruth-invfield tests. To be revisited, invfield test always fails
+     if Rich ENN monitoring is enabled
+
  - Changes to references to reflect changes in Brunel v36r2 output:
    . Less info() at initialize step (PatVelo v3r20)
    . Change track fit convergence criteria and increase max number of 
