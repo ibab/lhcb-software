@@ -3,6 +3,11 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2010-02-23 - Wouter Hulsbergen
+ - set default value of UpdateTransport to true (temporary)
+ - remove state-at-beamline for tracks without velo and TT hits
+ - added flag to update material corrections in each iteration (default false)
+
 ! 2010-02-16 - Rob Lambert
  - Wouter: changed converged criterion in fitter
 
