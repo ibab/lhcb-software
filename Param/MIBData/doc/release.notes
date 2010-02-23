@@ -4,6 +4,30 @@
 ! Purpose     : Hold source file of input for LbMIB package 
 !-----------------------------------------------------------------------------
 
+!========================== MIBData v3r1 2010-02-23 ==========================
+
+! 2010-02-23 - Magnus LIENG
+ - Created new file structure for data files:
+   "Beam/Energy/Shield/Source/"
+ - Particle source files given the name "PartSource.root"
+ - Source files contain header data derived from "info.xml". For info on this
+   file and format, see Gen/LbMIB. Header data contained in a TDirectory and
+   saved as RooStringVar. Variables saved are:
+     Beam: Beam direction
+     Description: Source file description
+     Energy: Beam energy
+     Misc: Extra info
+     Name: Name of source
+     Plane: Interface plane used for sample
+     Scale: Numper of passing protons represented by the file
+ - Source files contain a TDirectory called Histograms containing various
+   histograms displaying properties of the source file.
+ - Changes in root file format (Header, Histograms) backwards and forwards 
+   compatible. Old files run in the new LbMIB and new files run in the old 
+   LbMIB.
+
+!========================== MIBData v3r0 2009-11-02 ==========================
+
 ! 2009-11-02 - Magnus LIENG
  - Removed (old) data files related to CollimatorSource. They are available at
    /castor/cern.ch/lhcb/background/LHC/2006_Collimators and 

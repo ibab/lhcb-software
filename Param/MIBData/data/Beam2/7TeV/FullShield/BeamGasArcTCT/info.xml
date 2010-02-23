@@ -1,0 +1,13 @@
+<header>
+  <name>Elastic Beam Gas Interactions in Arcs 7TeV Beam 2</name>
+  <desc>Elastic beam gas interactions in the arcs resulting in proton losses on the TCTV at 7TeV for Beam 2</desc>
+  <beam>-1</beam>
+  <plane>19900</plane>
+  <scale>2.6314e17</scale>
+  <energy>7e6</energy>
+  <misc>100 beam lifetime: 
+    ProtLossProbPerTurn = 1/(LifeTime*BunchFreq) = 2.4702e-10,
+    ProtLossFractionOnTct = ProtOnTct/ProtSim = 2.1e-4,
+    BeamProtInFile = LossSim/(ProtLossProbPerTurn*ProtLossFractionOnTct) = 2.6314e17
+  </misc>
+</header>

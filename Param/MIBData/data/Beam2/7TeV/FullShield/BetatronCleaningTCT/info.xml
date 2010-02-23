@@ -1,0 +1,13 @@
+<header>
+  <name>Betatron Cleaning Inefficiency 7TeV Beam 2</name>
+  <desc>Betatron cleaning inefficiecies resulting in proton losses on the TCTV at 7TeV for Beam 2</desc>
+  <beam>-1</beam>
+  <plane>19900</plane>
+  <scale>5.9509e17</scale>
+  <energy>7e6</energy>
+  <misc>Vertical halo, full geometrical orbit, no beam orbit, beam lifetime 30h:
+    ProtLossProbPerTurn = 1/(LifeTime*BunchFreq) = 8.2341e-10,
+    ProtLossFractionOnTct = ProtOnTct/ProtSim = 6.4e-06,
+    BeamProtInFile = LossSim/(ProtLossProbPerTurn*ProtLossFractionOnTct) = 5.9509e17
+  </misc>
+</header>
