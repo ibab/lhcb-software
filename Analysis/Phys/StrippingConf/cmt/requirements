@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.17 2010-02-19 04:17:41 poluekt Exp $ 
+# $Id: requirements,v 1.18 2010-02-23 14:13:59 jpalac Exp $ 
 # =============================================================================
 # Stripping configuration package
 # =============================================================================
@@ -27,6 +27,8 @@ use LoKiCore             v*     Phys
 use SelectionLine        v*     Kernel
 
 use StrippingAlgs        v*     Phys
+
+use PhysSelPython        v*     PhysSel
 
 # =============================================================================
 
