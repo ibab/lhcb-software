@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.83 2010-02-15 13:13:00 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.84 2010-02-23 15:42:50 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -92,8 +92,9 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "MakeNodes"      , m_makeNodes = false                   );
   declareProperty( "MakeMeasurements", m_makeMeasurements = false           );
   declareProperty( "MaterialLocator", m_materialLocatorName = "DetailedMaterialLocator");
-  declareProperty( "UpdateTransport", m_updateTransport = false             );
-  declareProperty( "MinMomentumForTransport", m_minMomentumForELossCorr = 10.*Gaudi::Units::MeV );
+  declareProperty( "UpdateTransport", m_updateTransport = false );
+  declareProperty( "UpdateMaterial", m_updateMaterial  = false );
+  declareProperty( "MinMomentumELossCorr", m_minMomentumForELossCorr = 10.*Gaudi::Units::MeV );
   declareProperty( "ApplyMaterialCorrections", m_applyMaterialCorrections = true );
   declareProperty( "ApplyEnergyLossCorr", m_applyEnergyLossCorrections = true ) ;
   declareProperty( "TransverseMomentumForScattering", m_scatteringPt = 400.*Gaudi::Units::MeV );
@@ -195,7 +196,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     if ( sc.isFailure() )
       return failure( "unable to make nodes from the measurements" );
   } else {
-    sc = updateRefVectors( track ) ;
+    sc = updateRefVectors( track, pid ) ;
     if ( sc.isFailure() )
       return failure( "unable to update the ref vectors" );
   }
@@ -238,7 +239,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     // update reference trajectories with smoothed states
     // TODO: combine this with the projection of the residuals which now resides in TrackKalmanFilter
     if( iter > 1) {
-      sc = updateRefVectors( track );
+      sc = updateRefVectors( track, pid );
       if ( sc.isFailure() ) return failure( "problem updating ref vectors" );
     }
     
@@ -265,7 +266,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     if ( m_debugLevel ) debug() << "Outlier iteration # " << iter << endmsg;
     
     // update reference trajectories with smoothed states
-    sc = updateRefVectors( track );
+    sc = updateRefVectors( track, pid );
     if ( sc.isFailure() ) return failure( "problem updating ref vectors" );
     
     // Call the track fit
@@ -419,7 +420,7 @@ bool TrackMasterFitter::outlierRemoved( Track& track ) const
 //=========================================================================
 // Update the measurements before a refit
 //=========================================================================
-StatusCode TrackMasterFitter::updateRefVectors( Track& track ) const
+StatusCode TrackMasterFitter::updateRefVectors( Track& track, LHCb::ParticleID pid ) const
 { 
   StatusCode sc = StatusCode::SUCCESS ;
   std::vector<Node*>& nodes = track.fitResult()->nodes();
@@ -431,6 +432,12 @@ StatusCode TrackMasterFitter::updateRefVectors( Track& track ) const
   // updated. we can move this code here at some point.
   sc = projectReference( track ) ;
   if( sc.isFailure() ) return failure( "problem projecting reference" ); 
+
+  // update the material using the new ref vectors
+  if(m_applyMaterialCorrections && m_updateMaterial) {
+    sc = updateMaterialCorrections(track,pid) ;
+    if ( sc.isFailure() ) return failure( "problem updating material" ); 
+  }
 
   // update the transport using the new ref vectors
   if(m_updateTransport) {
@@ -545,7 +552,7 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
   }
 
   // At a node for the position at the beamline
-  if ( m_stateAtBeamLine ) {
+  if ( m_stateAtBeamLine && (track.hasTT() || track.hasVelo()) ) {
     const LHCb::State& refstate = *(track.checkFlag(Track::Backward) ? track.states().back() : track.states().front()) ;
     FitNode* node = new FitNode( closestToBeamLine(refstate) );
     node->state().setLocation( State::ClosestToBeam );
@@ -638,7 +645,7 @@ StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track, LHCb
       double tx     = track.firstState().tx() ;
       double ty     = track.firstState().ty() ;
       double slope2 = tx*tx+ty*ty ;
-      double tanth  = std::max(sqrt( slope2/(1+slope2)),1e-4) ;
+      double tanth  = std::max(std::sqrt( slope2/(1+slope2)),1e-4) ;
       scatteringMomentum = m_scatteringPt/tanth ;
     }
     // always allow some scattering
@@ -709,8 +716,8 @@ StatusCode TrackMasterFitter::updateTransport(LHCb::Track& track) const
       if ( std::abs(statevector.qOverP()) > LHCb::Math::lowTolerance ) {
 	double charge = statevector.qOverP() > 0 ? 1 :  -1 ;
 	double momnew = std::max( m_minMomentumForELossCorr,
-				  fabs(1/statevector.qOverP()) + dE ) ;  
-	if ( fabs(momnew) > m_minMomentumForELossCorr )
+				  std::abs(1/statevector.qOverP()) + dE ) ;  
+	if ( std::abs(momnew) > m_minMomentumForELossCorr )
 	  statevector.setQOverP(charge/momnew) ;
       }
 
@@ -788,7 +795,7 @@ StatusCode TrackMasterFitter::initializeRefStates(LHCb::Track& track,
       bool found = false ;
       for( ZPosWithStateContainer::const_iterator it = states.begin() ;
            it != states.end()&&!found ; ++it)
-        found = fabs( *iz - it->first ) < maxDistance ;
+        found = std::abs( *iz - it->first ) < maxDistance ;
       if(!found) states.push_back( ZPosWithState(*iz,0) ) ;
     }
     std::sort( states.begin(), states.end(), LessThanFirst<ZPosWithState> ) ;
@@ -804,7 +811,7 @@ StatusCode TrackMasterFitter::initializeRefStates(LHCb::Track& track,
         for( ZPosWithStateContainer::iterator jt = states.begin();
              jt != states.end() ; ++jt) 
           if( it != jt && jt->second
-              && ( best==states.end() || fabs( jt->first - it->first) < fabs( best->first - it->first) ) )
+              && ( best==states.end() || std::abs( jt->first - it->first) < std::abs( best->first - it->first) ) )
             best = jt ;
         
         assert( best != states.end() ) ;

@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.30 2010-02-15 13:13:00 wouter Exp $
+// $Id: TrackMasterFitter.h,v 1.31 2010-02-23 15:42:50 wouter Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -64,7 +64,7 @@ private:
   bool outlierRemoved( LHCb::Track& track ) const;
 
   //! update the reference vector for each measurement before next iteration
-  StatusCode updateRefVectors( LHCb::Track& track ) const;
+  StatusCode updateRefVectors( LHCb::Track& track, LHCb::ParticleID pid ) const;
 
   //! projectReference state
   StatusCode projectReference( LHCb::Track& track ) const;
@@ -127,6 +127,7 @@ private:
   bool m_makeNodes;
   bool m_makeMeasurements;
   bool m_updateTransport ;            ///< Update the transport matrices between iterations
+  bool m_updateMaterial ;             ///< Update material corrections between iterations
   double m_minMomentumForELossCorr ;  ///< Minimum momentum used in correction for energy loss
   bool m_applyMaterialCorrections ;   ///< Apply material corrections
   bool m_applyEnergyLossCorrections ; ///< Apply material corrections
