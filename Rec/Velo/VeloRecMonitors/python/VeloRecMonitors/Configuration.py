@@ -1,7 +1,7 @@
 """
 Configuration of the Velo Monitoring Histograms
 """
-__version__ = "$Id: Configuration.py,v 1.2 2010-02-23 13:30:41 rlambert Exp $"
+__version__ = "$Id: Configuration.py,v 1.3 2010-02-23 13:39:48 rlambert Exp $"
 __author__  = "Rob Lambert"
 
 from Gaudi.Configuration import *
@@ -11,12 +11,14 @@ class VeloRecMonitors(ConfigurableUser):
         "Histograms"   : "OfflineFull"
         , "MoniSequence": None
         , "KnownHistograms" : ['OfflineFull', 'OfflineExpress', 'Expert', 'Online', 'None']
+        , "OutputLevel": INFO
         }
     
     _propertyDocDct = { 
        'Histograms'       : """ What level of Histogramming to write """
        , "MoniSequence"   : """ The sequence to which to append the monitors"""
        , "KnownHistograms": """what Histograms settings are known """
+       , "OutputLevel"    : """The output level of algs"""
        }
     
     def __apply_configuration__(self):
@@ -41,6 +43,10 @@ class VeloRecMonitors(ConfigurableUser):
                     #this is an error, I should throw an exception
                     RuntimeError("Monitoring sequence not set")
                     return
-                theseq.Members+=[ VeloTrackMonitor(), VeloClusterMonitor() ]
+                vtm=VeloTrackMonitor()
+                vtm.OutputLevel=self.getProp("OutputLevel")
+                vcm=VeloClusterMonitor()
+                vcm.OutputLevel=self.getProp("OutputLevel")
+                theseq.Members+=[ vtm, vcm ]
         
         return
