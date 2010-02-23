@@ -1,7 +1,7 @@
 """
 Configuration of the Velo Monitoring Histograms
 """
-__version__ = "$Id: Configuration.py,v 1.1 2010-02-23 13:23:23 rlambert Exp $"
+__version__ = "$Id: Configuration.py,v 1.2 2010-02-23 13:30:41 rlambert Exp $"
 __author__  = "Rob Lambert"
 
 from Gaudi.Configuration import *
@@ -24,6 +24,7 @@ class VeloRecMonitors(ConfigurableUser):
         if hasattr( self, "Histograms" ):
             
             if self.getProp("Histograms") not in self.getProp("KnownHistograms") :
+                RuntimeError("Unknown Histograms option '%s'"%self.getProp("Histograms"))
                 #this is an error, perhaps it should throw an exception
                 return
             
@@ -38,6 +39,7 @@ class VeloRecMonitors(ConfigurableUser):
                 theseq=self.getProp("MoniSequence")
                 if theseq is None:
                     #this is an error, I should throw an exception
+                    RuntimeError("Monitoring sequence not set")
                     return
                 theseq.Members+=[ VeloTrackMonitor(), VeloClusterMonitor() ]
         
