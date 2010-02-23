@@ -5,7 +5,7 @@
  *  Header file for reconstruction tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: TrackSelector.h,v 1.11 2009-07-06 15:50:02 jonrob Exp $
+ *  $Id: TrackSelector.h,v 1.12 2010-02-23 00:12:09 wouter Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -106,8 +106,14 @@ private:
 
   int m_minNVeloRHits ;    ///< Minimum number of velo R hits
   int m_minNVeloPhiHits ;  ///< Minimum number of velo phi hits
+  int m_maxNVeloHoles ;    ///< Maximum number of missing velo hits 
   int m_minNOTHits ;       ///< Minimum number of OT hits
+  int m_minNTTHits ;       ///< Minimum number of TT hits
 
+  double m_maxChi2Velo ;
+  double m_maxChi2Upstream ;
+  double m_maxChi2Downstream ;
+  double m_maxChi2Match ;
 };
 
 #endif // TRACKTOOLS_TrackSelector_H
