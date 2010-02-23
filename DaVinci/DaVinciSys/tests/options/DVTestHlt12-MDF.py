@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt12-MDF.py,v 1.10 2010-02-02 15:27:58 pkoppenb Exp $
+# $Id: DVTestHlt12-MDF.py,v 1.11 2010-02-23 10:42:45 pkoppenb Exp $
 #
 # Test for Hlt1&2. Test for MDF files.
 #
@@ -17,6 +17,7 @@ from Configurables import GaudiSequencer
 from Configurables import DaVinci
 DaVinci().EvtMax = 10000                       # Number of events
 DaVinci().PrintFreq  = 1                       # Print frequency
+DaVinci().DataType = "2009"
 # DaVinci().Simulation   = False 
 # DaVinci().MoniSequence += [ ReadHltSummary() ]
 ########################################################################
