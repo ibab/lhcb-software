@@ -1,4 +1,4 @@
-## $Id: DVTestInitialise.py,v 1.3 2009-03-24 10:43:22 pkoppenb Exp $
+## $Id: DVTestInitialise.py,v 1.4 2010-02-23 10:33:21 jpalac Exp $
 ## ============================================================================
 ## CVS tag $Name: not supported by cvs2svn $
 ## ============================================================================
@@ -18,7 +18,7 @@ DaVinci().UserAlgorithms = [ ]
 DaVinci().EvtMax = 0 # No running 
 DaVinci().SkipEvents = 0 
 DaVinci().PrintFreq = 1 
-
+DaVinci().DataType = '2009'
 ########################################################################
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
