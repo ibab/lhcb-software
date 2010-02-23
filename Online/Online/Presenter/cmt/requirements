@@ -37,17 +37,11 @@ macro_append ROOT_linkopts " -lThread -lGui -lGraf3d -lGed" \
                libGraf3d.lib libGed.lib libRIO.lib"
 
 #apply_tag ROOT_GE_5_17
-macro_append Boost_linkopts " "
-macro_append Boost_linkopts $(Boost_linkopts_filesystem)
-macro_append Boost_linkopts " "
-macro_append Boost_linkopts $(Boost_linkopts_date_time)
-macro_append Boost_linkopts " "
-macro_append Boost_linkopts $(Boost_linkopts_program_options)
-macro_append Boost_linkopts " "
-macro_append Boost_linkopts $(Boost_linkopts_serialization)
-macro_append Boost_linkopts " "
-macro_append Boost_linkopts $(Boost_linkopts_thread)
-macro_append Boost_linkopts " "
+macro_append Boost_linkopts ' $(Boost_linkopts_filesystem)'
+macro_append Boost_linkopts ' $(Boost_linkopts_date_time)'
+macro_append Boost_linkopts ' $(Boost_linkopts_program_options)'
+macro_append Boost_linkopts ' $(Boost_linkopts_serialization)'
+macro_append Boost_linkopts ' $(Boost_linkopts_thread) '
 ###macro_append Boost_linkopts "" WIN32 "boost_system-vc71-mt-1_39.lib boost_filesystem-vc71-mt-1_39.lib boost_date_time-vc71-mt-1_39.lib boost_program_options-vc71-mt-1_39.lib boost_thread-vc71-mt-1_39.lib"
 
 # Setup cppflags
