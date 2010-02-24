@@ -21,7 +21,7 @@ class Hlt2TFTracking(Hlt2Tracking) :
     __used_configurables__ = []
     __slots__ = []
 
-Hlt2TFTracking = Hlt2TFPID()
+Hlt2TFTracking = Hlt2TFTracking()
 Hlt2TFTracking.Prefix = Hlt2Tracking().getProp("Prefix")
 Hlt2TFTracking.Suffix = HltBiDirectionalKalmanFitSuffix
 Hlt2TFTracking.Hlt2Tracks = Hlt2Tracking().getProp("Hlt2Tracks")
