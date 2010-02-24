@@ -1,4 +1,4 @@
-// $Id: RawBankSizes.cpp,v 1.11 2010-02-19 08:30:43 jost Exp $
+// $Id: RawBankSizes.cpp,v 1.12 2010-02-24 16:48:52 jost Exp $
 // Include files 
 
 // from Gaudi
@@ -194,6 +194,7 @@ StatusCode RawBankSizes::initialize()
       }
       bd->second->h = histoSvc()->book("Total_"+j->first,"Total Size for "+j->first, j->second->n_bin+2,
         j->second->xmin-bd->second->binw,j->second->xmax+bd->second->binw);
+      declareInfo("Total_"+j->first, bd->second->h,"Total Size for "+j->first);
    }
    m_firstevent = true;
    n_ev = 0;
