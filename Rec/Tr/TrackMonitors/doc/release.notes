@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 
+! 2010-02-24 - Wouter Hulsbergen
+  - added 'y-position' histograms to ITOverlapMonitor
+
 ! 2010-02-18 - Alexandr Kozlinskiy
  - added "FullDetail" property to OTTrackMonitor which controls creation
    of the 'pitch' histograms. By default this set to 'false' and significantly
