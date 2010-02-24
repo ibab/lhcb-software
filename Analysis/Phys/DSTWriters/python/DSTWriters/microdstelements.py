@@ -175,7 +175,7 @@ class _copyBackCat(CopyWithBranch) :
         from Configurables import Particle2BackgroundCategoryRelationsAlg
         from Configurables import CopyParticle2BackgroundCategory
         backCatAlg = Particle2BackgroundCategoryRelationsAlg(_personaliseName(sel,'BackCatAlg'))
-        backCatAlg.InputLocations=dataLocations(sel,"")
+        backCatAlg.InputLocations=dataLocations(sel,"Particles")
         cloner =  CopyParticle2BackgroundCategory(_personaliseName(sel, 'CopyP2BackCat'))
         cloner.InputLocations = dataLocations(sel,"P2BCRelations")
         cloner.OutputLevel=4
