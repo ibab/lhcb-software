@@ -53,7 +53,7 @@ MIBackground.MIBSources = ["TimeCorrSource"]
 # Input File Options:
 ##############################################################################
 # Name of source file (Default: "" - MUST be set in options)
-MIBackground.TimeCorrSource.ParticleSourceFile = "$MIBDATAROOT/data/ir8.left.tctv.v.s.totalorbit.14x4600.IRPLANE.root"
+MIBackground.TimeCorrSource.ParticleSourceFile = "$MIBDATAROOT/data/Beam1/7TeV/FullShield/BetatronCleaningTCT/PartSource.root"
 
 ##############################################################################
 # Mode Modifiers:
@@ -83,39 +83,32 @@ MIBackground.TimeCorrSource.EnvelopeSize = 10
 # The following variables are used to choose the point of generation and 
 # direction of the MIB particles. In addition particle timing is calculated.
 
-# Z origin used in input file (Default: -1.*m)
-MIBackground.TimeCorrSource.ZParticleOrigin = -1.0*m
+# Z origin used in input file (Set by source file. Uncomment to override)
+#MIBackground.TimeCorrSource.ZParticleOrigin = -1.0*m
 
-# Z origin at generation (Default: -1.*m)
-MIBackground.TimeCorrSource.ZParticleGen = -1.0*m
+# Particle direction (Set by source file. Uncomment to override)
+#MIBackground.TimeCorrSource.ZDirection = 1
 
-# Particle direction
-MIBackground.TimeCorrSource.ZDirection = 1
+# Beam proton energy (Set by source file. Uncomment to override)
+#MIBackground.TimeCorrSource.BeamEnergy = 7.0*TeV
 
-# MIB source time offset
+# Z origin offset at generation (Default: 0.0*m)
+MIBackground.TimeCorrSource.ZParticleOffset = 0.0*m
+
+# MIB global time offset (Default: 0.0*ns)
 MIBackground.TimeCorrSource.TimeOffset = 0.0*ns
-
-# Beam proton energy
-MIBackground.TimeCorrSource.BeamEnergy = 7.0*TeV
-
 
 ##############################################################################
 # Normalization of source:
 ##############################################################################
-# Scaling (arbitrary and bunch frequency to find particle/bunch since
-#          weights in file are given for 1 sec of running at full current).
-# (Default = 1)
-# The bunch frequency is that of the nominal machine, i.e. 2808 filled bunches
-# with 11.25 kHz bunch revolution frequency. 
-# It correspond to what was used to produce the original input file.
-# The number of protons per bunch to produce the source was 1.15 x 10^11
-# (Default = 31600000)
-MIBackground.TimeCorrSource.ScalingFactor = 1.0
-MIBackground.TimeCorrSource.BunchFrequency = 31.6*megahertz
+# Num protons represented by file (Set by source file. Uncomment to override)
+#MIBackground.TimeCorrSource.ProtonsInFile = 1.0e11
 
-# In tha case of input files that represent something else than 1 sec
-# it is possible to indicate the amount of time it does represent (in sec).
-MIBackground.TimeCorrSource.TimeOfFile = 0.025*s
+# Num protons per bunch simulated
+MIBackground.TimeCorrSource.BunchSize = 1.15e11
+
+# Scaling factor for MIB event production probability
+MIBackground.TimeCorrSource.ScalingFactor = 1.0
 
 ##############################################################################
 # Histogramming (Defalt = false)

@@ -14,6 +14,8 @@
 // ROOT
 #include "TFile.h"
 #include "TTree.h"
+#include "TDirectory.h"
+#include "RooStringVar.h"
 
 /** @class TimeCorrSource TimeCorrSource.h 
  *  
@@ -69,9 +71,10 @@ private:
   std::string m_pSourceFile;
 
   /// Scaling factors
+  double m_overrideSource;
   double m_scalingFactor;
-  double m_timeOfFile;
-  double m_bunchFreq;
+  double m_protInFile;
+  double m_bunchSize;
   double m_luminosity;
   double m_beamEnergy;
 
@@ -84,7 +87,7 @@ private:
 
   /// Timing
   double m_timeOffset;
-  
+
   /// Random number generators
   Rndm::Numbers m_flatGenerator;
   Rndm::Numbers m_poissonGenerator;
@@ -114,8 +117,15 @@ private:
   };
   
   double m_zOrigin;                  ///< Z particle origin in file
+  double m_zGenOff;                  ///< Z particle offset from origin during generation
   double m_zGen;                     ///< Z particle origin generated
   int m_dz;                          ///< Z particle direction 
+
+  /// Defaults
+  int m_dzDef;
+  double m_zOriginDef;
+  double m_protInFileDef;
+  double m_beamEnergyDef;
   
   /// Histograms
   AIDA::IHistogram2D* m_xyDistGen;

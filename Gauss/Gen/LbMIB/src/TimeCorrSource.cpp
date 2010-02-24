@@ -1,4 +1,4 @@
-// $Id: TimeCorrSource.cpp,v 1.7 2009-11-02 14:50:16 mlieng Exp $
+// $Id: TimeCorrSource.cpp,v 1.8 2010-02-24 14:12:44 mlieng Exp $
 // Include files
  
 // from Gaudi
@@ -43,15 +43,22 @@ TimeCorrSource::TimeCorrSource(const std::string& type,
 {
 
   declareInterface<IMIBSource>(this);
+
+  // Set Defaults to check if user has changed options
+  m_dzDef = -999999;
+  m_zOriginDef = -999999.;
+  m_protInFileDef = -999999.;
+  m_beamEnergyDef = -999999.;
   
   // Particle input file
   declareProperty("ParticleSourceFile", m_pSourceFile = "");
 
   // Scaling factors
   declareProperty("ScalingFactor", m_scalingFactor = 1.0);
-  declareProperty("TimeOfFile", m_timeOfFile = 1.0*Gaudi::Units::s);
-  declareProperty("BunchFrequency", m_bunchFreq = 31.6*1000000*Gaudi::Units::hertz);
-  declareProperty("BeamEnergy", m_beamEnergy = 7.0*Gaudi::Units::TeV);
+  declareProperty("ProtonsInFile", m_protInFile = m_protInFileDef);
+  declareProperty("BunchSize", m_bunchSize = 1.15e11);
+  declareProperty("BeamEnergy", m_beamEnergy = m_beamEnergyDef);
+  
 
   // Histogram generation
   declareProperty("GenerationHist", m_genHist = false);
@@ -68,9 +75,9 @@ TimeCorrSource::TimeCorrSource(const std::string& type,
   declareProperty("EnvelopeSize", m_envelopeSize = 10);
 
   // Z origin and direction for particle source file.
-  declareProperty("ZParticleOrigin", m_zOrigin = -1.0*Gaudi::Units::m);
-  declareProperty("ZParticleGen", m_zGen = -1.0*Gaudi::Units::m);
-  declareProperty("ZDirection", m_dz = 1);
+  declareProperty("ZParticleOrigin", m_zOrigin = m_zOriginDef);
+  declareProperty("ZParticleOffset", m_zGenOff = 0.0*Gaudi::Units::m);
+  declareProperty("ZDirection", m_dz = m_dzDef);
 
   // Global timing offset
   declareProperty("TimeOffset", m_timeOffset = 0.0*Gaudi::Units::ns);
@@ -101,11 +108,6 @@ StatusCode TimeCorrSource::initialize() {
     return Error( "File containing the particles not specified" );
   }
 
-  // Check if particle direction is set correctly
-  if ( m_dz != 1 && m_dz != -1) {
-    return Error( "Z direction of flight must be +/-1" );
-  }
-
   // Book histograms
   if ( m_genHist == true ) {
     sc = bookHistos();
@@ -120,6 +122,56 @@ StatusCode TimeCorrSource::initialize() {
   if (m_evtTree == NULL) return Error( "TTree 'Events' not found in input file" ,StatusCode::FAILURE);
   m_partTree = (TTree*)m_rootFile->Get("Particles");
   if (m_partTree == NULL) return Error( "TTree 'Particles' not found in input file" ,StatusCode::FAILURE);
+
+  // Get header info from file
+  info() << "*****************************************************************" << endmsg;
+  if (m_rootFile->Get("Header")){
+    info() << "HEADER" << endmsg;
+    info() << "Sample name:" << endmsg;
+    info() << "  " << ((RooStringVar*)m_rootFile->Get("Header/Name"))->getVal() << endmsg;
+    info() << "Sample description:" << endmsg;
+    info() << "  " << ((RooStringVar*)m_rootFile->Get("Header/Description"))->getVal() << endmsg;
+    info() << "Beam direction:" << endmsg;
+    info() << "  " << ((RooStringVar*)m_rootFile->Get("Header/Beam"))->getVal() << endmsg;
+    info() << "Beam energy:" << endmsg;
+    info() << "  " << ((RooStringVar*)m_rootFile->Get("Header/Energy"))->getVal() << endmsg;
+    info() << "Sample interface plane:" << endmsg;
+    info() << "  " << ((RooStringVar*)m_rootFile->Get("Header/Plane"))->getVal() << endmsg;
+    info() << "Num. protons represented:" << endmsg;
+    info() << "  " << ((RooStringVar*)m_rootFile->Get("Header/Scale"))->getVal() << endmsg;
+    info() << "Additional info:" << endmsg;
+    info() << "  " << ((RooStringVar*)m_rootFile->Get("Header/Misc"))->getVal() << endmsg;
+    info() << "" << endmsg;
+    if (((RooStringVar*)m_rootFile->Get("Header/Beam"))->getVal() != "" && m_dz == m_dzDef){
+      m_dz = atoi(((RooStringVar*)m_rootFile->Get("Header/Beam"))->getVal())==1?1:-1;
+    }
+    if (((RooStringVar*)m_rootFile->Get("Header/Plane"))->getVal() != "" && m_zOrigin == m_zOriginDef){
+      m_zOrigin = atof(((RooStringVar*)m_rootFile->Get("Header/Plane"))->getVal());
+    }
+    if (((RooStringVar*)m_rootFile->Get("Header/Scale"))->getVal() != "" && m_protInFile == m_protInFileDef){
+      m_protInFile = atof(((RooStringVar*)m_rootFile->Get("Header/Scale"))->getVal());
+    }
+    if (((RooStringVar*)m_rootFile->Get("Header/Energy"))->getVal() != "" && m_beamEnergy == m_beamEnergyDef){
+      m_beamEnergy = atof(((RooStringVar*)m_rootFile->Get("Header/Energy"))->getVal());
+    }  
+  }
+  else {
+    info() << "No header data found" << endmsg;
+    info() << "" << endmsg;
+    // If not set: set to default
+    if (m_dz == m_dzDef) {m_dz = 1;}
+    if (m_zOrigin == m_zOriginDef) {m_zOrigin = -1.0*Gaudi::Units::m;}
+    if (m_protInFile == m_protInFileDef) {m_protInFile = 1.0e11;}
+    if (m_beamEnergy == m_beamEnergyDef) {m_beamEnergy = 7.0*Gaudi::Units::TeV;}
+  }
+
+  // Check if particle direction is set correctly
+  if ( m_dz != 1 && m_dz != -1) {
+    return Error( "Z direction of flight must be +/-1" );
+  }
+  
+  // Set Generation point
+  m_zGen = m_zOrigin + m_zGenOff;
   
   // Create envelopes
   sc = createEnvelopes();
@@ -134,11 +186,21 @@ StatusCode TimeCorrSource::initialize() {
   }
 
   sc = m_poissonGenerator.initialize( rSvc,
-       Rndm::Poisson( m_sumOfWeights * m_scalingFactor / m_bunchFreq / m_timeOfFile ) ) ;
+       Rndm::Poisson( m_sumOfWeights*m_scalingFactor/m_protInFile*m_bunchSize ) ) ;
   if ( ! sc.isSuccess() ) {
     return Error( "Cannot initialize Poisson generator", sc ) ;
   }
 
+  info() << "Generator Settings:" << endmsg;
+  info() << "Particles generated at " << m_zGen << " mm in direction " << m_dz 
+         << " with a time offset of " << m_timeOffset << " ns." << endmsg;
+  info() << "Beam energy is set to " << m_beamEnergy/1000. 
+         << " GeV with a bunch size of " << m_bunchSize << " protons" << endmsg;
+  info() << "The average number of background interaction resulting in at least one" << endmsg;
+  info() << "MIB particle at the LHCb per bunch crossing is "
+         << m_sumOfWeights*m_scalingFactor/m_protInFile*m_bunchSize << endmsg;
+  info() << "*****************************************************************" << endmsg;
+  
   return sc ;
 }
 
@@ -309,33 +371,33 @@ StatusCode TimeCorrSource::finalize() {
   // Print counters of how many times particle called and how many
   // empty + summary of conditions
   // Print conditions of generation
-  info() << "********************************************************" 
-         << endmsg;
-  info() << " Used as input file " << m_pSourceFile << endmsg;
-  info() << " With interface plane at z = " << m_zOrigin/Gaudi::Units::m << " m" 
-         << " and with direction dz = " << m_dz << endmsg;
-  info() << " The particles were generated at z = " << m_zGen/Gaudi::Units::m 
-         << " m" << endmsg;
-  if( m_pPerEvt == -1 ) {
-    info() << " Using weight to find number of particles in event" << endmsg;
-    info() << " Sum(weights) of events in file is " << m_sumOfWeights << endmsg;
-    info() << " The file represents " << m_timeOfFile/Gaudi::Units::s << " seconds" << endmsg; 
-    info() << " The resulting weights is " << m_sumOfWeights / m_timeOfFile *Gaudi::Units::hertz
-           << " Hz (i.e. per 1 sec of LHC running)" << endmsg;
-    info() << " Events are generate per bunch with frequency " << m_bunchFreq/Gaudi::Units::hertz
-           << " Hz and scaling factor " << m_scalingFactor << endmsg;
-    info() << "  === Average num of MIB events per generated event is "
-           <<  m_sumOfWeights * m_scalingFactor / m_bunchFreq / m_timeOfFile << endmsg;
-  } else {
-    info() << " Forcing " << m_pPerEvt << " to be generated in each event" 
-           << endmsg;
-  }
-  if( m_fileOffset == -1 ) {
-    info() << " Choosing MIB events randomly" << endmsg;
-  } else {
-    info() << " Picking MIB events from file starting from number "
-           << m_fileOffset << endmsg;
-  }
+  //info() << "********************************************************" 
+  //       << endmsg;
+  //info() << " Used as input file " << m_pSourceFile << endmsg;
+  //info() << " With interface plane at z = " << m_zOrigin/Gaudi::Units::m << " m" 
+  //       << " and with direction dz = " << m_dz << endmsg;
+  //info() << " The particles were generated at z = " << m_zGen/Gaudi::Units::m 
+  //       << " m" << endmsg;
+  //if( m_pPerEvt == -1 ) {
+  //  info() << " Using weight to find number of particles in event" << endmsg;
+  //  info() << " Sum(weights) of events in file is " << m_sumOfWeights << endmsg;
+  //  info() << " The file represents " << m_timeOfFile/Gaudi::Units::s << " seconds" << endmsg; 
+  //  info() << " The resulting weights is " << m_sumOfWeights / m_timeOfFile *Gaudi::Units::hertz
+  //         << " Hz (i.e. per 1 sec of LHC running)" << endmsg;
+  //  info() << " Events are generate per bunch with frequency " << m_bunchFreq/Gaudi::Units::hertz
+  //         << " Hz and scaling factor " << m_scalingFactor << endmsg;
+  //  info() << "  === Average num of MIB events per generated event is "
+  //         <<  m_sumOfWeights * m_scalingFactor / m_bunchFreq / m_timeOfFile << endmsg;
+  //} else {
+  //  info() << " Forcing " << m_pPerEvt << " to be generated in each event" 
+  //         << endmsg;
+  //}
+  //if( m_fileOffset == -1 ) {
+  //  info() << " Choosing MIB events randomly" << endmsg;
+  //} else {
+  //  info() << " Picking MIB events from file starting from number "
+  //         << m_fileOffset << endmsg;
+  //}
   
   return GaudiHistoTool::finalize();  ///< Finalize base class
 
@@ -365,9 +427,9 @@ StatusCode TimeCorrSource::createEnvelopes() {
   m_evtTree->GetEntry(m_counter-1);
   m_sumOfWeights = (double)sumOfWeights;
 
-  info() << "Input file contains " << m_counter 
-         << " interactions. The sum of interaction weight is " 
-         << m_sumOfWeights << endmsg;
+  //info() << "Input file contains " << m_counter 
+  //       << " interactions. The sum of interaction weight is " 
+  //       << m_sumOfWeights << endmsg;
   info() << "Envelopes will consume " 
          << floor(double(sizeof(double)*m_envelopeHolders.size()/1024)) 
          << " kB memory" << endmsg;
