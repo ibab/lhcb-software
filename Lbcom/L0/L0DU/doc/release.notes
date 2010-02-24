@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.196 2010-02-23 20:06:08 odescham Exp $
+! $Id: release.notes,v 1.197 2010-02-24 17:04:08 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================== L0DU v10r3 2010-02-24 =========================
 ! 2010-02-23 Olivier Deschamps
   - L0DURawBankMonitor : 
       - check L0Processor banks exist 
