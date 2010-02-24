@@ -12,6 +12,7 @@ apply_pattern shell_alias script=startNightlies
 
 apply_pattern source_shell_alias script=GaussBench
 apply_pattern source_shell_alias script=BrunelBench
+apply_pattern source_shell_alias script=feicim
 
 
 apply_pattern python_alias script=getpack
