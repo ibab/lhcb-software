@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.89 2009-10-28 14:15:25 jpalac Exp $
+! $Id: release.notes,v 1.90 2010-02-24 15:36:39 jpalac Exp $
 !==============================================================================
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !==============================================================================
+
+! 2010-02-24 - Juan Palacios
+ - Added CopyParticle2BackgroundCategory, MicroDSTAlgorithm to clone a 
+   Particle->backgroundCategory (int) 1D relations table.
+ - cmt/requirements
+  . Increase to v3r10
 
 !========================== MicroDSTAlgorithm v3r9 2009-10-28 =================
 
