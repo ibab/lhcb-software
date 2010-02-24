@@ -23,6 +23,30 @@ class RichRecQCConf(RichConfigurableUser):
     ## Possible used Configurables
     __used_configurables__ = [ RichAlignmentConf ]
 
+    ## Default Histogram set
+    __default_histo_set__ = "OfflineFull"
+
+    ## List of all known monitors. For sanity checks
+    __known_monitors__ = [ "L1SizeMonitoring", "DBConsistencyCheck",
+                           "HotPixelFinder", "PidMonitoring",
+                           "PixelMonitoring", "TrackMonitoring",
+                           "PhotonMonitoring", "TracklessRingAngles",
+                           "TracklessRingPeakSearch",
+                           "AlignmentMonitoring", "HPDIFBMonitoring",
+                           "RichPixelPositions", "HPDHitPlots",
+                           "RichTrackGeometry","RichGhostTracks",
+                           "RichCKThetaResolution","RichTrackResolution",
+                           "RichPhotonSignal","RichTrackCKResolutions",
+                           "RichPhotonGeometry","PhotonRecoEfficiency",
+                           "RichPhotonTrajectory","RichStereoFitterTests",
+                           "RichRayTracingTests","RichDataObjectChecks","RichRecoTiming" ]
+
+    ## Added monitors
+    __added_monitors__ = [ ]
+
+    ## Removed monitors
+    __removed_monitors__ = [ ]
+
     ## Steering options
     __slots__ = {
         "Context": "Offline"  # The context within which to run
@@ -102,6 +126,23 @@ class RichRecQCConf(RichConfigurableUser):
        ,"OutputLevel"   : INFO  # The output level to set all algorithms and tools to use
        ,"EventCuts"     : { }   # Event selection cuts for monitoring. Default no cuts
         }
+
+    ## Get the given option
+    def getHistoOptions(self,optionname):
+        histoset = self.getProp("Histograms")
+        option = self.getProp(optionname)
+        if option.has_key(histoset) :
+            return option[histoset]
+        else :
+            return option[ self.__default_histo_set__ ]
+
+    ## Add a monitor to a given histo set
+    def addMonitor(self,monitor):
+        if monitor not in self.__added_monitors__ : self.__added_monitors__.append(monitor)
+
+    ## Remove a monitor to a given histo set
+    def removeMonitor(self,monitor):
+        if monitor not in self.__removed_monitors__ : self.__removed_monitors__.append(monitor)
                 
     ## Set the histogram and ntuple producing options
     def setHistosTupleOpts(self,mon):
@@ -150,11 +191,35 @@ class RichRecQCConf(RichConfigurableUser):
         if name == "ForwardMatch" or name == "MatchForward" : name = "Long"
         return name
 
+    ## Sanity checks
+    def sanityChecks(self):
+
+        histoset = self.getProp("Histograms")
+
+        # Add additionsl monitors to the list for this histo set
+        for monitor in self.__added_monitors__ :
+            if monitor not in self.Monitors[histoset] : self.Monitors[histoset].append(monitor)
+
+        # Disable any monitors for this histo set
+        for monitor in self.__removed_monitors__ :
+            if monitor in self.Monitors[histoset] : self.Monitors[histoset].remove(monitor)
+
+        # Check sequencer is set
+        if not self.isPropertySet("MoniSequencer") :
+            raise RuntimeError("ERROR : Monitor Sequencer not set")
+
+        # Check the monitor list contains only known monitors
+        for mon in self.getHistoOptions("Monitors"):
+            if mon not in self.__known_monitors__ :
+                raise RuntimeError("Unknown monitor '%s'"%mon)
+
     ## Apply the configuration to the given sequence
     def applyConf(self):
 
-        if not self.isPropertySet("MoniSequencer") :
-            raise RuntimeError("ERROR : Monitor Sequencer not set")
+        ## Sanity checks
+        self.sanityChecks()
+
+        # Sequence to add minotrs to
         sequence = self.getProp("MoniSequencer")
 
         # Set context
@@ -180,9 +245,8 @@ class RichRecQCConf(RichConfigurableUser):
                                            "Rich::Rec::MC::NULLMCTruthTool/RichRecMCTruthTool" ]
 
         # The list of monitors to run
-        histoSet = self.getProp("Histograms")
-        monitors = self.getProp("Monitors")[histoSet]
-            
+        monitors = self.getHistoOptions("Monitors")
+        
         # Some monitoring of raw information
         if self.getProp("DataType") not in ["DC06"]:
 
@@ -250,7 +314,7 @@ class RichRecQCConf(RichConfigurableUser):
             self.ionfeedbackMoni(self.newSeq(sequence,"RichHPDIonFeedback"))
 
         # Expert Monitoring
-        if histoSet == "Expert" :
+        if self.getProp("Histograms") == "Expert" :
             self.expertMonitoring( self.newSeq(sequence,"RichExpertChecks") )
 
     ## standalone ring finder monitors
@@ -276,7 +340,7 @@ class RichRecQCConf(RichConfigurableUser):
         histoSet = self.getProp("Histograms")
  
         # Add monitors
-        for ringclass in self.getProp("TracklessRingClasses")[histoSet] :
+        for ringclass in self.getHistoOptions("TracklessRingClasses") :
             moni = self.createMonitor(Rich__Rec__MC__TracklessRingMoni,type+"RingMoni"+ringclass)
             moni.RingLocation = "Rec/Rich/"+type+"/Rings"+ringclass
             sequence.Members += [moni]
@@ -286,10 +350,8 @@ class RichRecQCConf(RichConfigurableUser):
 
         from Configurables import ( Rich__Rec__RingPeakSearch )
 
-        histoSet = self.getProp("Histograms")
-
         # Ring peak search
-        for ringclass in self.getProp("TracklessRingClasses")[histoSet] :
+        for ringclass in self.getHistoOptions("TracklessRingClasses") :
             search = self.createMonitor(Rich__Rec__RingPeakSearch,type+"RingPeakSearch"+ringclass)
             search.RingLocation = "Rec/Rich/"+type+"/Rings"+ringclass
             sequence.Members += [search]
@@ -308,13 +370,11 @@ class RichRecQCConf(RichConfigurableUser):
 
         from Configurables import ( Rich__Rec__MC__PIDQC )
 
-        histoSet = self.getProp("Histograms")
-
         # Track Types
-        for trackType in self.getProp("PidTrackTypes")[histoSet] :
+        for trackType in self.getHistoOptions("PidTrackTypes") :
 
             # Momentum ranges
-            for pRange in self.getProp("PidMomentumRanges")[histoSet] :
+            for pRange in self.getHistoOptions("PidMomentumRanges") :
 
                 # Construct the name for this monitor out of the track types
                 # and momentum range
@@ -336,10 +396,8 @@ class RichRecQCConf(RichConfigurableUser):
 
         from Configurables import ( Rich__Rec__MC__TrackSelEff )
 
-        histoSet = self.getProp("Histograms")
-
         # Track Types
-        for trackType in self.getProp("EffTrackTypes")[histoSet] :
+        for trackType in self.getHistoOptions("EffTrackTypes") :
 
             # Construct the name for this monitor
             name = "Ri" + self.trackSelName(trackType) + "TrkEff"
@@ -356,10 +414,8 @@ class RichRecQCConf(RichConfigurableUser):
 
         from Configurables import ( Rich__Rec__MC__RecoQC )
 
-        histoSet = self.getProp("Histograms")
-
         # Track Types
-        for trackType in self.getProp("RecoTrackTypes")[histoSet] :
+        for trackType in self.getHistoOptions("RecoTrackTypes") :
 
             # Construct the name for this monitor
             name = "RiCKRes" + self.trackSelName(trackType)
@@ -396,9 +452,8 @@ class RichRecQCConf(RichConfigurableUser):
             from Configurables import NTupleSvc
             NTupleSvc().Output += ["RICHTUPLE1 DATAFILE='rich.tuples.root' TYP='ROOT' OPT='NEW'"]
 
-        histoSet = self.getProp("Histograms")
-        checks  = self.getProp("Monitors")[histoSet]
-        tkTypes = self.getProp("RecoTrackTypes")[histoSet]
+        checks  = self.getHistoOptions("Monitors")
+        tkTypes = self.getHistoOptions("RecoTrackTypes")
 
         # Turn on/off histos in CK resolution tool
         if "HistoProduce" in RichTools().ckResolution().properties() :
