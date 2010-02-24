@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.288 2010-02-03 10:51:57 jpalac Exp $
+! $Id: release.notes,v 1.289 2010-02-24 17:08:02 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2010-02-24 - Juan Palacios
+ - src/Particle2BackgroundCategoryRelationsAlg.h
+  . Move un-necessary includes to .cpp
+ - src/Particle2BackgroundCategoryRelationsAlg.cpp
+  . Change definition of Particle->int table.
+ - cmt/requirements
+  . Increase version to v9r25p1
 
 !========================== DaVinciMCTools v9r25 2010-02-02 ==================
 
