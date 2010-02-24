@@ -227,11 +227,11 @@ void MonH2D::loadObject(){
       i++;
     }
   }
-  if (bBinLabelX){
+  if (bBinLabelY){
     std::vector<std::string>::iterator it;
     int i = 1;
-    for ( it=binLabelX.begin() ; it < binLabelX.end(); it++ ) {
-      m_hist->GetXaxis()->SetBinLabel(i, (*it).c_str());
+    for ( it=binLabelY.begin() ; it < binLabelY.end(); it++ ) {
+      m_hist->GetYaxis()->SetBinLabel(i, (*it).c_str());
       i++;
     }
   }
