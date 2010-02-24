@@ -4,9 +4,9 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.25 2010-02-23 13:49:58 rlambert Exp $"
+__version__ = "$Id: Configuration.py,v 1.26 2010-02-24 15:33:23 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
-
+            
 from LHCbKernel.Configuration import *
 from TrackSys.Configuration   import *
 from RichRecSys.Configuration import *
@@ -45,9 +45,9 @@ class RecSysConf(LHCbConfigurableUser):
        ,"SpecialData"  : []      # Various special data processing options. See KnownSpecialData for all options
        ,"Histograms"   : "OfflineFull" # Type of histograms
        ,"Context"      : "Offline"     # The context within which to run the reco sequences
-       ,"OutputType": ""         # some sequences are different for RDST
-       ,"DataType": ""           # Type f data, propagated from application
-       ,"OutputLevel" : INFO     # The printout level to use
+       ,"OutputType"   : ""            # some sequences are different for RDST
+       ,"DataType"     : ""            # Type f data, propagated from application
+       ,"OutputLevel"  : INFO          # The printout level to use
         }
 
     def expertHistos(self): return self.getProp("Histograms") == "Expert"
@@ -155,7 +155,7 @@ class RecSysConf(LHCbConfigurableUser):
 class RecMoniConf(LHCbConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ CaloMoniDstConf, RichRecQCConf ]
+    __used_configurables__ = [ CaloMoniDstConf, RichRecQCConf, VeloRecMonitors ]
 
     ## Configurables that must be configured before us
     __queried_configurables__ = [ RecSysConf, TrackSys ]
@@ -252,7 +252,11 @@ class RecMoniConf(LHCbConfigurableUser):
             self.setOtherProps(RichRecQCConf(),["Histograms","Context","OutputLevel","DataType"])
             RichRecQCConf().setProp("MoniSequencer", GaudiSequencer("MoniRICHSeq"))
             RichRecQCConf().setProp("WithMC", False)
-
+            #import GaudiKernel.ProcessJobOptions
+            #GaudiKernel.ProcessJobOptions.PrintOn()
+            #log.info(RichRecQCConf())
+            #GaudiKernel.ProcessJobOptions.PrintOff()
+        
         # Expert histograms
         if self.expertHistos():
             if "TT" in moniSeq :
