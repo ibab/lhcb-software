@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.22 2010-02-23 20:06:09 odescham Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.23 2010-02-24 10:28:20 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -93,7 +93,6 @@ StatusCode L0DURawBankMonitor::execute() {
   debug() << "==> Execute" << endmsg;
 
   // check L0Processor banks are produced
-  LHCb::RawEvent* rawEvt = NULL ;
   bool mOk = false;
   bool cOk = false;
   bool pOk = false;
