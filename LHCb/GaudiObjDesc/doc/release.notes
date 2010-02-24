@@ -4,6 +4,11 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+!======================== GaudiObjDesc v11r10p1 2010-02-24 ===================
+! 2010-02-16 - Stefan Roiser
+ - Fix bug #62936: for unknown enums, print the numerical value in the error
+   message
+
 !======================== GaudiObjDesc v11r10 2010-01-20 =====================
 ! 2009-12-11 - Stefan
 - Adding new <class> attribute "defaultdestructor". The default value for it is
