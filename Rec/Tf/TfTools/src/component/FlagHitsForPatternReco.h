@@ -17,7 +17,7 @@
 #include "TfKernel/DefaultVeloPhiHitManager.h"
 #include "GaudiKernel/RndmGenerators.h"
 
-
+#include <cstdlib>
 #include <string>
 #include <vector>
 #include <map>
@@ -30,61 +30,81 @@
 // TTS1L0R4E0.7: TT: Station=1, Layer=0, Region=4 has efficiency 0.7
 // If you skip one granularity this means ALL, e.g:
 // OTS0L2M2E0.7:OT: Station=0, Layer=2, all Quarters, Module=2 has efficiency 0.7
-// OTS0L2Q3E0.7 : OT: Station=0, Layer=2, Quater=3, all modules have efficiency 0.7
+// OTS0L2Q3OTIS2E0.7 : OT: Station=0, Layer=2, Quater=3, all modules OTIS 2 have efficiency 0.7
 
-static const int nTStations = 3;
-static const int nTLayers = 4;
-static const int nModules = 9;
-static const int nQuadrants = 4;
-static const int nITRegions = 4;
-static const int nVeloHalves = 2;
-static const int nVeloTypes = 2;
-static const int nVeloSensors = 23;
-static const int nVeloRegions = 3;
-static const int nTTStations = 2;
-static const int nTTLayers = 2;
-static const int nTTRegions = 12;
+namespace LHCb
+{
+    class OTChannelID;
+}
 
 
+class FlagHitsForPatternReco: public GaudiAlgorithm
+{
+
+        static const unsigned nTStations = 3;
+        static const unsigned nTLayers = 4;
+        static const unsigned nModules = 9;
+        static const unsigned nQuadrants = 4;
+        static const unsigned nITRegions = 4;
+        static const unsigned nVeloHalves = 2;
+        static const unsigned nVeloTypes = 2;
+        static const unsigned nVeloSensors = 23;
+        static const unsigned nVeloRegions = 3;
+        static const unsigned nTTStations = 2;
+        static const unsigned nTTLayers = 2;
+        static const unsigned nTTRegions = 12;
+        static const unsigned nOTOtis = 4;
+
+    public:
 
 
-class FlagHitsForPatternReco: public GaudiAlgorithm {
+        // Constructors and destructor
+        FlagHitsForPatternReco(const std::string& name,
+                               ISvcLocator* pSvcLocator);
+        virtual ~FlagHitsForPatternReco();
 
-public:
-  
+        virtual StatusCode initialize();
 
-  // Constructors and destructor
-  FlagHitsForPatternReco(const std::string& name,
-		      ISvcLocator* pSvcLocator);
-  virtual ~FlagHitsForPatternReco();
+        virtual StatusCode execute();
 
-  virtual StatusCode initialize(); 
+    private:
 
-  virtual StatusCode execute();
+        double m_OTEfficiency[nTStations][nTLayers][nQuadrants][nModules][nOTOtis];
+        double m_ITEfficiency[nTStations][nTLayers][nITRegions];
+        double m_VeloEfficiency[nVeloSensors][nVeloHalves][nVeloTypes][nVeloRegions];
+        double m_TTEfficiency[nTTStations][nTTLayers][nTTRegions];
 
-private:
+        std::vector<std::string> m_effCorrections;
 
-  double m_OTEfficiency[nTStations][nTLayers][nQuadrants][nModules];
-  double m_ITEfficiency[nTStations][nTLayers][nITRegions];
-  double m_VeloEfficiency[nVeloSensors][nVeloHalves][nVeloTypes][nVeloRegions];
-  double m_TTEfficiency[nTTStations][nTTLayers][nTTRegions];
- 
+        const char* beginsWith (const char* input, const char* comp);
 
-  std::vector<std::string> m_effCorrections;
+        void readVeloString(const char* input);
+        void readOTString(const char* input);
+        void readITString(const char* input);
+        void readTTString(const char* input);
+        static int otis(const LHCb::OTChannelID& otid);
 
-  char* beginsWith (char* input, const char* comp);
-  
-  void readVeloString(char* input);
-  void readOTString(char* input);
-  void readITString(char* input);
-  void readTTString(char* input); 
+        Tf::TStationHitManager<PatForwardHit> *  m_tHitManager;
+        Tf::TTStationHitManager<PatTTHit> * m_ttHitManager;
+        Tf::DefaultVeloRHitManager* m_rHitManager;
+        Tf::DefaultVeloPhiHitManager* m_phiHitManager;
+	static inline unsigned long mystrtoul(const char* str, const char*& endptr, int base)
+	{
+	    char *myend;
+	    unsigned long tmp = std::strtoul(str, &myend, base);
+	    endptr = myend;
+	    return tmp;
+	}
+	static inline double mystrtod(const char* str, const char*& endptr)
+	{
+	    char *myend;
+	    double tmp = std::strtod(str, &myend);
+	    endptr = myend;
+	    return tmp;
+	}
 
-  Tf::TStationHitManager<PatForwardHit> *  m_tHitManager; 
-  Tf::TTStationHitManager<PatTTHit> * m_ttHitManager;
-  Tf::DefaultVeloRHitManager* m_rHitManager;
-  Tf::DefaultVeloPhiHitManager* m_phiHitManager;
 
-  mutable Rndm::Numbers m_rndm;
+        mutable Rndm::Numbers m_rndm;
 
 };
 

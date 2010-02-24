@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2010-02-24 - Manuel Tobias Schiller
+ - add OTIS level granularity to FlagHitsForPatternReco
+
 !============================ TfTools v1r10 2010-02-15 ========================
 ! 2010-01-28 Wouter Hulsbergen
  - added hitsLocalXRange function to IT/OT/TT hit creators
