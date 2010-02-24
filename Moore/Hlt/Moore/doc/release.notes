@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2010-02-24 - Gerhard Raven
+ - replace cosmic qmtest with test on 2009 collision data
+
 ! 2010-02-22 - Gerhard Raven
  - update default DB snapshot
  - add ForceSingleL0Configuration and SkipDisabledL0Channels options
