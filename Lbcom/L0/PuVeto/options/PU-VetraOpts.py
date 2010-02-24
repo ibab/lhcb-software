@@ -20,19 +20,19 @@ from GaudiKernel.Configurable import appendPostConfigAction
 from Configurables import Vetra
 vetra = Vetra()
 vetra.DataBanks = 'NONE' #excludes any other algo from Vetra
-vetra.EvtMax = -1
-vetra.HistogramFile = "/calib/trg/l0pus/BeamData/PUVetoAlg_vetra63466.root" 
+vetra.EvtMax = 1000
+vetra.HistogramFile = "/PUVetoAlg_vetra63466.root" 
 # default settings
 LHCbApp().DDDBtag   = 'head-20080905'
 LHCbApp().CondDBtag = 'head-20080905'
 
 from Configurables import PuVetoAlg
 l0PuVeto = PuVetoAlg() 
-l0PuVeto.OutputLevel = 2 
+l0PuVeto.OutputLevel = 3 
 # if in TAE mode...
 #l0PuVeto.RawEventLocation = 'Prev1/DAQ/RawEvent'
-l0PuVeto.OutputFileName = "/calib/trg/l0pus/BeamData/PUVetoAlg_l0PuVeto63466.root"
-l0PuVeto.MakePlots = True
+#l0PuVeto.OutputFileName = "/calib/trg/l0pus/BeamData/PUVetoAlg_l0PuVeto63466.root"
+#l0PuVeto.MakePlots = True
 
 moniL0Pu = GaudiSequencer ( 'Moni_L0PileUp' )
 moniL0Pu.Members = [l0PuVeto]

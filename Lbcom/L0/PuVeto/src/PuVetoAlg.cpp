@@ -50,8 +50,8 @@ PuVetoAlg::PuVetoAlg( const std::string& name,
   
   declareProperty("RawEventLocation", m_rawEventLoc=LHCb::RawEventLocation::Default);
   // comment for committing
-  //declareProperty("OutputFileName", m_OutputFileName = "PUVetoAlg.root" );
-  //declareProperty("MakePlots", m_enablePlots = false );
+//   declareProperty("OutputFileName", m_OutputFileName = "PUVetoAlg.root" );
+//   declareProperty("MakePlots", m_enablePlots = false );
 }
 
 //=============================================================================
@@ -191,15 +191,16 @@ StatusCode PuVetoAlg::initialize() {
   
   // comment in case..
   
-  //if ( m_enablePlots ){
-   // m_OutputFile = new TFile(m_OutputFileName.c_str(), "RECREATE");
-   // m_OutputFile->cd();
+//   if ( m_enablePlots ){
+//     m_OutputFile = new TFile(m_OutputFileName.c_str(), "RECREATE");
+//     m_OutputFile->cd();
+//     m_PUbanksize = new TH1D("L0PUbanksize", "L0PUbanksize", 200, 0., 200.);
    // m_PUvertex1Pos = new TH1D("PrimaryVerticesPos", "PrimaryVerticesPos", 300, -200., 100.);
    // m_PUvertex2Pos = new TH1D("SecondaryVerticesPos", "SecondaryVerticesPos", 300, -200., 100.);
    // m_PUvertex1Height = new TH1D("PrimaryVerticesHeight", "PrimaryVerticesHeight", 100, 0., 100.);
    // m_PUvertex2Height = new TH1D("SecondaryVerticesHeight", "SecondaryVerticesHeight", 100, 0., 100.);
    // m_multiplicity = new TH1D("Multiplicity", "Multiplicity", 512, 0., 512.);
-  //}
+//   }
   
   return StatusCode::SUCCESS;
 }
@@ -256,16 +257,30 @@ StatusCode PuVetoAlg::execute() {
       unsigned int* data = aBank->data();
       unsigned int d = 2; 
       int wordTot = (aBank->size() / (2 * sizeof(unsigned int)));
-      //if (msgLevel(MSG::DEBUG)) debug() << "wordTot = " << wordTot << endmsg;
-      fillPUmap( d, wordTot, data, 34, m_PUhitmap );
-      //now check whether the words must be reversed or not
-      reverseWords( m_PUhitmap );
+//       debug() << "wordTot = " << aBank->size() / 4 << endmsg;
+//       if (m_enablePlots){
+//         m_PUbanksize->Fill(wordTot);
+//       }
+      if (wordTot != 34 ) {
+        info() << "L0PU RawBank has an unexpected size! (size= " << wordTot << ") - event skipped" << endmsg;
+        return StatusCode::SUCCESS;
+      }
+      else{
+        fillPUmap( d, wordTot, data, 34, m_PUhitmap );
+        //now check whether the words must be reversed or not
+        reverseWords( m_PUhitmap );
+      }
     }
     else if ( version == 1 ){ // old bank formatversion from Marko
       unsigned int* ptData = (*itBnk)->data();
       int bankSize = (*itBnk)->size()/4;  //== is in bytes...
       //if (msgLevel(MSG::DEBUG)) debug() << "  Bank " << (*itBnk)->sourceID() << " size " << bankSize << " words" << endreq;
-      while ( 0 < bankSize-- ){
+      if (bankSize != 68){
+        info() << "L0PU RawBank has an unexpected size! (size= " << bankSize << ") - event skipped" << endmsg;
+        return StatusCode::SUCCESS;
+      }
+      else{
+       while ( 0 < bankSize-- ){
         unsigned int cand = (*ptData++);
         while ( 0 != cand ) {
           unsigned int data = cand & 0xFFFF;
@@ -297,6 +312,7 @@ StatusCode PuVetoAlg::execute() {
           //verbose() << endreq;
 	  //if (msgLevel(MSG::DEBUG)) debug() << "m_PUhitmap[" << sensor << "][ " << indx << "] is " << binary( m_PUhitmap[sensor][indx] )<< endmsg;
         }
+       }
       }
     }
 
@@ -425,14 +441,15 @@ StatusCode PuVetoAlg::finalize()
 {
   if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
   
-  //if ( m_enablePlots ){
+//   if ( m_enablePlots ){
+//     m_PUbanksize->Write();
     //m_PUvertex1Pos->Write( );
     //m_PUvertex2Pos->Write( );
     //m_PUvertex1Height->Write( );
     //m_PUvertex2Height->Write( );
     //m_multiplicity->Write( );
     //m_OutputFile->Close();
-  //}
+//   }
   
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
