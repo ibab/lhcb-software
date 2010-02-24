@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2010-02-24 - Wouter Hulsbergen
+ - TrackDistanceExtrapSelector: move info messages to debug
+ - TrackRungeKuttaExtrapolator: improve warning messages.
+
 !======================= TrackExtrapolators v2r24p2 2010-02-15=================
 ! 2010-02-11 - Gerhard Raven
  - SimplifiedMaterialLocator: move some info messages to debug
