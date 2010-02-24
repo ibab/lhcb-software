@@ -5,6 +5,14 @@ Purpose             : LHCb physics analysis application
 
 </PRE><H1><A NAME=v25r1>2010-02-23 DaVinci v25r1. Release for 2010 data taking and for MC09 Re-stripping. </A></H1><PRE>
 
+ * Highlights:
+   * IMPORTANT: DaVinci() no longer has default DataType. Users *must* define this.
+   * HLT lines for 2010 startup.
+   * Kernel and LoKi packages moved to PHYS.
+   * Now stripping selections
+   * B-tagging can use re-fitted PVs
+   * Enhancements to Stripping, Selections frameworks.
+
 Based on Phys v9r1, Analysis v4r1, Rec v8r1, HLT v9r1, Lbcom v8r2, LHCb v29r1, Gaudi v21r7
 
 </PRE><H1><A NAME=v25r0>2010-02-05 DaVinci v25r0. Release for MC09 Re-stripping. </A></H1><PRE>
