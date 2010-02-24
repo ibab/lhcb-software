@@ -4,18 +4,15 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiNumbers v8r4 2010-02-24 =======================
 ! 2010-02-13 - Vanya Belyaev
-
  - add new symbols:
-
        EXISTS    LoKi::TES::Exists   to check existence of object in TES 
        CONTAINS  LoKi::TES::Contains to check existence and size of Container in TES 
-
        The concept belongs to Gerhard The Great Raven 
       
  - cmt/requirements 
     version increment to v8r4 
-
 
 !========================== LoKiNumbers v8r3p2 2009-12-11 =====================
 ! 2009-12-06 - Vanya Belyaev
