@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!============================ TfTools v1r11 2010-02-24 ========================
 ! 2010-02-24 - Manuel Tobias Schiller
  - add OTIS level granularity to FlagHitsForPatternReco
 
