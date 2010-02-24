@@ -19,7 +19,7 @@ This version uses Gaudi v21r7p1 and LHCb v29r2
                     Tf/TfTools v1r11,  Muon/MuonID v7r7p1,
 										Rich/RichRecMonitors v2r26, Rich/RichRecQC v2r37, 
 										Rich/RichRecTrackTools v1r17,
-										Velo/VeloRecMonitors v2r7
+										Velo/VeloRecMonitors v2r7, Muon/MuonTrackRec v3r0p2
 
 - In :
   . 
