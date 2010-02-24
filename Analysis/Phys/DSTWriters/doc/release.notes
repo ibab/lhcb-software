@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.13 2010-02-22 11:54:42 jpalac Exp $
+!$Id: release.notes,v 1.14 2010-02-24 16:27:00 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! 2010-02-24 - Juan Palacios
+ - python/DSTWriters/microdstelements.py
+  . Add callable for BackgroundCategory calculation and cloning.
+ - cmt/requirements
+  . Increase version to v1r3
 
 ! ======================== DSTWriters v1r2p1 2010-02-22 ======================
 
