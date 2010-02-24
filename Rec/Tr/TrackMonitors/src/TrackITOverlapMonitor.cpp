@@ -45,12 +45,15 @@ namespace {
   {
     AIDA::IHistogram1D* resh1 ;
     AIDA::IHistogram1D* hotresh1 ;
+    AIDA::IHistogram1D* dyh1 ;
     DeltaHistogrammer( const std::string& tracktype, 
 		       const std::string& boxtype,
 		       GaudiHistoAlg& parent ) 
     {
       resh1 = parent.book1D(tracktype + "/" + boxtype + "/hitres", boxtype + " dx", -5,5,100) ;
       hotresh1 = parent.book1D(tracktype + "/" + boxtype + "/hotres", boxtype + " dx", -5,5,100) ;
+      dyh1 = parent.book1D(tracktype + "/" + boxtype + "/y", 
+			   boxtype + " y position wrt to sensor edge", -50,350,400) ;
     }
   } ;
 }
@@ -209,7 +212,7 @@ StatusCode TrackITOverlapMonitor::execute()
 	      BOOST_FOREACH( const Tf::STHit* hit, region->hits() ) {
 		double ytrk = refstate.y() + ( hit->zMid() - refstate.z() ) * refstate.ty() ;
 		// this window is a bit large
-		if( hit->isYCompatible(ytrk,20) ) {
+		if( hit->isYCompatible(ytrk,50) ) {
 		  // Juan still has something odd here, so I'll just compute it myself then ...
 		  //double distance = Gaudi::Math::distance( trkline, **ihit ) ;
 		  Gaudi::XYZPointF hitpoint = hit->beginPoint() ;
@@ -238,6 +241,7 @@ StatusCode TrackITOverlapMonitor::execute()
 		    // sign. (some IT layers are rotated)
 		    int sign = hit->yBegin() < hit->yEnd() ? 1 : -1 ;
 		    histos->resh1->fill( sign * distance ) ;
+		    histos->dyh1->fill( ytrk - std::min(hit->yBegin(),hit->yEnd()) ) ;
 		    if( isOnTrack ) histos->hotresh1->fill( sign * distance ) ;
 		    ++numcompatible ;
 		  }
