@@ -4,6 +4,11 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+
+! 2010-02-24 - Nikolai Nikitin
+ - Improved the MS model for the simulation of the CP-effects in the rare
+   semileptonic decays. Fixed a typo in the totally antisymmetric tensor.
+
 !======================= EvtGenExtras v2r2 2009-11-04 ========================
 ! 2009-09-10 - Patrick Robbe
  - fix for gcc4.3 compilation

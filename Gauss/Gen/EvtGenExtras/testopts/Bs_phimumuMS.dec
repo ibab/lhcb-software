@@ -1,0 +1,55 @@
+# $Id: Bs_phimumuMS.dec,v 1.1 2010-02-24 16:37:25 nnikitin Exp $
+#
+#  This is the decay file for the decay BS0 -> PHI(-> K+ K-) MU+ MU-
+#
+# EventType: 13114002 
+#
+# Descriptor: [B_s0 -> (phi(1020) -> K+ K-) mu+ mu-]cc
+#
+# NickName: Bs_phimumuMS
+#
+# Physics: the B_s0 -> phi ell^+ ell^- decay with the transition form factors 
+#          from the paper: D.Melikhov, B.Stech, PRD62, 014006 (2000).
+#
+# Input parameters: mu        - the scale parameter (in GeV's);
+#                   Nf        - number of "effective" flavors (for b-quark Nf=5);
+#                   res_swch  - resonant switching parametr:
+#                                = 0 the resonant contribution switched OFF, 
+#                                = 1 the resonant contribution switched ON;
+#                   ias       - switching parametr for \alpha_s(M_Z) value:
+#                                = 0 PDG 1sigma minimal alpha_s(M_Z), 
+#                                = 1 PDG average value  alpha_s(M_Z), 
+#                                = 2 PDG 1sigma maximal alpha_s(M_Z).
+#                   Wolfenstein parameterization for CKM matrix:
+#                    A 
+#                    lambda 
+#                    barrho
+#                    bareta
+#
+# Tested: Yes
+# By: Nikolai Nikitin (Moscow State Univ.)
+# Date: 27 April 2008
+#
+Define mu 5.0
+Define Nf 5
+Define res_swch 0
+Define ias 1
+Define A 0.88
+Define lambda 0.227
+Define barrho 0.22
+Define bareta 0.34
+#
+Alias      MyPhi   phi
+ChargeConj MyPhi   MyPhi
+#
+Decay B_s0sig
+  1.0000       MyPhi     mu+  mu-   BTOSLLMS mu Nf res_swch ias A lambda barrho bareta;
+Enddecay
+CDecay anti-B_s0sig
+#
+Decay MyPhi
+  1.000        K+        K-                 VSS;
+Enddecay
+#
+End
+

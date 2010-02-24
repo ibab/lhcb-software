@@ -19,8 +19,10 @@
 //
 // Modification history:
 //
-//  N.Nikitin        March 17, 2008                Module created
-//                   June  14, 2008                New equation for As
+//  N.Nikitin        March   17, 2008          Module created
+//                   June    14, 2008          New equation for As
+//                   January 12, 2010          New representation of 
+//                                             the resonant contribution      
 //
 //------------------------------------------------------------------------
 // 
@@ -32,6 +34,7 @@
 // The header file for current class memeber functions description
 #include "EvtGenModels/EvtbTosllWilsCoeffNLO.hh"
 #include <cstdlib>
+
 
 //   **************************************************************
 //   *                                                            *
@@ -485,29 +488,22 @@
  
  
     /*      Coefficient  C_{9V} (in the NDR schime)     * 
-     *   by A.J.Buras and M.Munz, Phys.Rev. D52, 186;   * 
-     *	         see formula (2.10).                    */ 
+     *   by A.J.Buras and M.Munz, Phys.Rev. D52, 186    * 
+     *	        accordint to  the equation (2.10).      */ 
    double EvtbTosllWilsCoeffNLO::C9v(double mu, double Mw, double mt, int Nf, int ias)
 	 { 
 	   double C9; 
 	   double x, eta; 
 	   double asW, asmu; 
 	   double sin2W=0.224;  /* the square of the weak angle */
-           double P00ndr, YY, ZZ, Pee, EE;  
  
 	   x=   pow(mt/Mw, 2.0); 
 	   asW= As(Mw,Nf,ias); 
 	   asmu=As(mu,Nf,ias); 
 	   eta= asW/asmu;
  
-           P00ndr=P0ndr(asW,eta);
-           YY    =Y(x);
-           ZZ    =Z(x);
-           Pee   =Pe(eta);
-           EE    =E(x);
- 
 	   /* C9 */ 
-	   C9=P00ndr+(YY/sin2W)-4.0*ZZ+Pee*EE; 
+	   C9=P0ndr(asW,eta)+(Y(x)/sin2W)-4.0*Z(x)+Pe(eta)*E(x); 
  
 	   return C9; 
 	 } 
@@ -521,28 +517,31 @@
 	   double C10; 
 	   double x; 
 	   double sin2W=0.224;  /* the square of the Winberg angle */ 
-           double YY;
  
 	   x=pow(mt/Mw, 2.0);
 
-           YY=Y(x); 
- 
-	   C10=-YY/sin2W; 
+	   C10=-Y(x)/sin2W; 
  
 	   return C10; 
 	 } 
  
  
-   /*              Re(h(z,\hat s)) by Buras           */ 
-   double EvtbTosllWilsCoeffNLO::Reh(double mu, double m2, double z, double s)
+      /*  The real part of the q\bar q loop contribution    *
+       *                  Re(h(z,\hat s))                   *
+       *      A.J.Buras and M.Munz, Phys.Rev. D52, 186;     * 
+       *	         the equation (2.29).               *
+       *                                                    *
+       *  mu - the scale parameter (GeV);                   *
+       *  mQ - the mass of the u- or c-quark (GeV);         *
+       *  q2 - the square of transition 4-momentum (GeV^2). */ 
+   double EvtbTosllWilsCoeffNLO::Reh(double mu, double mQ, double q2)
 	{ 
-	  double reh, swh; 
-	  double x;        /* Buras variable "x" in (2.29) */ 
+	  double reh, swh;
+	  double x;         /* Buras variable "x" from (2.29) */ 
 	   
-	  x=4.0*pow(z,2.0)/s; 
+	  x=4.0*pow(mQ,2.0)/q2; 
 
-	  reh=-8.0*log(m2/mu)/9.0-8.0*log(z)/9.0;
-	  reh=reh+8.0/27.0+4.0*x/9.0;
+	  reh=8.0/27.0 - 8.0*log(mQ/mu)/9.0 + 4.0*x/9.0;
 
 	  swh=2.0*(2.0+x)*sqrt(fabs(1.0-x))/9.0;
 
@@ -562,12 +561,12 @@
  
  
    /*       Im(h(z,\hat s)) by Buras           */ 
-   double EvtbTosllWilsCoeffNLO::Imh(double z, double s)
+   double EvtbTosllWilsCoeffNLO::Imh(double mQ, double q2)
 	{ 
-	  double x;        /* Buras variable "x" in (2.29) */ 
+	  double x;        /* Buras variable "x" from (2.29) */ 
 	  double imh; 
  
-          x=4.0*pow(z,2.0)/s; 
+          x=4.0*pow(mQ,2.0)/q2; 
  
 	  if(x<=1.0) 
 	    { 
@@ -580,176 +579,378 @@
 	  return imh; 
 	} 
  
- 
-   /*           Re(h(0,\hat s)) by Buras           */ 
-   double EvtbTosllWilsCoeffNLO::Reh0(double mu, double m2, double s)
-      { 
-	double reh0;
-	reh0=8.0/27.0-8.0*log(m2/mu)/9.0-4.0*log(s)/9.0;
-	return reh0;
-      } 
- 
- 
- 
-   /*       Im(h(0,\hat s)) by Buras	   */ 
-   double EvtbTosllWilsCoeffNLO::Imh0(void)
-      { 
-	double imh0; 
- 
-	imh0=4.0*EvtConst::pi/9.0; 
-	return imh0; 
-      } 
- 
- 
-   /*                        REAL PART                                * 
-    * of the resonant hadronic contribution to the C_{9V} coefficient * 
-    *                                                                 * 
-    *       res_swch=0 -- switch OFF of the resonant contribution;   * 
-    *       res_swch=1 -- switch ON  of the resonant contribution.    * 
-    *                                                                 */ 
-   double EvtbTosllWilsCoeffNLO::ReHadd(int res_swch, double q2, double ml)
-      { 
-	 int i;
-	 double RReHadd=0.0; 
-	 double a,b,Znam; 
-	 double Gamma_ll[2];
- 
-	 double alpha_qed=1.0/137.0; 
- 
-	 /* Total branching ratios of J/\psi and \psi^{'}--mesons in GeV-s */ 
-	 double Gamma[]={0.000088, 0.000277}; 
-	 /* The branching fractions for decays V->l^+l^-, i={e,\mu} in GeV--s */ 
-	 double Gamma_ll_e_mu[]={0.000005, 0.000002}; 
-	 /* The branching fractions for decays V->tau^+tau^- in GeV--s */ 
-	 double Gamma_ll_tau[]={0.0, 0.000002}; 
-	 /* Masses of J/\psi and \psi^{'}--mesons */ 
-	 double M[]={3.09688, 3.686}; 
-	  
-	 if(ml<1.0) 
-	   { 
-	     i=0; 
-	     while(i<2) 
-	       { 
-	         Gamma_ll[i]=Gamma_ll_e_mu[i]; 
-		 i++; 
-	       }; 
-	   } 
-	  else 
-	   { 
-	     i=0; 
-	     while(i<2) 
-	       { 
-	         Gamma_ll[i]=Gamma_ll_tau[i]; 
-		 i++; 
-	       }; 
-	   }; 
- 
-	 switch(res_swch) 
-	   { 
-	     case 0: RReHadd=0.0; 
-		     break; 
-	     case 1: i=0; 
-		     RReHadd=0.0; 
-		     while(i<2) 
-		       { 
-			 a=pow(M[i],2.0)-q2; 
-			 b=M[i]*Gamma[i]; 
-			 Znam=pow(a,2.0)+pow(b,2.0); 
-			 Znam=Gamma_ll[i]*M[i]*a/Znam; 
-			 RReHadd=RReHadd+Znam; 
-			 i++; 
-		       }; 
-		     break; 
-	    }; 
- 
-//       The sign plus are corresponded to the relation:   
-//	         \kappa*(3C_1+C_2)=1              
-//       with sign of Wilson coefficien C_2(M_W)=+1 as at work            
-//       A.J.Buras and M.Munz, Phys.Rev. D52, 186.
-	 RReHadd=RReHadd*3.0*EvtConst::pi/pow(alpha_qed, 2.0); 
- 
-	 return RReHadd; 
-      } 
 
- 
-   /*                   IMAGINARY PART                              * 
-    * of the resonant hadronic contribution to the C_9V coefficient * 
-    *                                                               * 
-    *  res_swch -- switching parameter:                             * 
-    *       res_swch=0 -- switch OFF for the resonant contribution; * 
-    *       res_swch=1 -- switch ON for the resonant contribution.  * 
-    *                                                               */ 
-   double EvtbTosllWilsCoeffNLO::ImHadd(int res_swch, double q2, double ml)
-      { 
-	 int i; 
- 
-	 double IImHadd=0.0; 
-	 double a,b,Znam; 
-	 double Gamma_ll[2]; 
- 
-	 double alpha_qed=1.0/137.0; 
- 
-	 /* Total branching ratios of J/\psi and \psi^{'}--mesons in GeV-s */ 
-	 double Gamma[]={0.000088, 0.000277}; 
-	 /* The branching fractions for decays V->l^+l^-, i={e,\mu} in GeV--s */ 
-	 double Gamma_ll_e_mu[]={0.000005, 0.000002}; 
-	 /* The branching fractions for decays V->tau^+tau^- in GeV--s */ 
-	 double Gamma_ll_tau[]={0.0, 0.000002}; 
-	 /* Masses of J/\psi and \psi^{'}--mesons */ 
-	 double M[]={3.09688, 3.686}; 
- 
-         if(ml<1.0) 
-	   { 
-	     i=0; 
-	     while(i<2) 
-	       { 
-	         Gamma_ll[i]=Gamma_ll_e_mu[i]; 
-		 i++; 
-	       }; 
-	   } 
-	  else 
-	   { 
-	     i=0; 
-	     while(i<2) 
-	       { 
-	         Gamma_ll[i]=Gamma_ll_tau[i]; 
-		 i++; 
-	       }; 
-	   }; 
-	    
-	 switch(res_swch) 
-	   { 
-	     case 0: IImHadd=0.0; 
-		     break; 
-	     case 1: i=0; 
-		     IImHadd=0.0; 
-		     while(i<2) 
-		       { 
-			 a=pow(M[i],2.0)-q2; 
-			 b=M[i]*Gamma[i]; 
-			 Znam=pow(a,2.0)+pow(b,2.0); 
-			 Znam=Gamma_ll[i]*M[i]*b/Znam; 
-			 IImHadd=IImHadd+Znam; 
-			 i++; 
-		       }; 
-		     break; 
-	    }; 
+   /*  The real part of the one resonant contribution                     *  
+    *  q2   - the square of transition 4-momentum (GeV^2);                *
+    *  GV   - the decay width of the resonance (GeV);                     *
+    *  GllV - the decay width of the resonance into l^+ l^- - pair (GeV); *
+    *  MV   - the mass of the resonance.                                  */ 
+   double EvtbTosllWilsCoeffNLO::ReResonant(double q2, double GV, double GllV, double MV)
+	{
+	  double reresonant;
+          double resa, resb;
 
-//       The sign plus are corresponded to the relation:   
-//	         \kappa*(3C_1+C_2)=1              
-//       with sign of Wilson coefficien C_2(M_W)=+1 as at work            
-//       A.J.Buras and M.Munz, Phys.Rev. D52, 186. 
-	 IImHadd=IImHadd*3.0*EvtConst::pi/pow(alpha_qed, 2.0); 
- 
-	 return IImHadd; 
-      } 
- 
- 
-       /*            Function omega(s)                      * 
-	* by  A.J.Buras, M.Munz, Phys.Rev.D52 (1995), p189. */ 
-double EvtbTosllWilsCoeffNLO::omega(double s)
+          resa=q2*(MV*MV-q2)*GllV;
+          resb=MV*((MV*MV-q2)*(MV*MV-q2)+MV*MV*GV*GV);
+          reresonant=resa/resb;
+
+          return reresonant;
+        } 
+
+
+   /*  The imaginary part of the one resonant contribution                *  
+    *  q2   - the square of transition 4-momentum (GeV^2);                *
+    *  GV   - the decay width of the resonance (GeV);                     *
+    *  GllV - the decay width of the resonance into l^+ l^- - pair (GeV); *
+    *  MV   - the mass of the resonance.                                  */ 
+   double EvtbTosllWilsCoeffNLO::ImResonant(double q2, double GV, double GllV, double MV)
+	{
+	  double imresonant;
+          double resa, resb;
+
+          resa=q2*GV*GllV;
+          resb=(MV*MV-q2)*(MV*MV-q2)+MV*MV*GV*GV;
+          imresonant=resa/resb;
+
+          return imresonant;
+        } 
+
+
+   /*  The real part of the total q\barq-contribution                     *
+    *                                                                     *
+    *  qflavour = 0 corresponding the u-quark contribution                * 
+    *           = 1 corresponding the c-quark contribution;               *
+    *                                                                     *
+    *  res_swch = 0 the resonant contribution switch OFF                  * 
+    *           = 1 the resonant contribution switch ON;                  * 
+    *                                                                     *
+    *  ias -- switching parameter for Lms[] in the As(..) function.       *
+    *                                                                     * 
+    *  Nf   - number of "effective" flavours (for b-quark Nf=5);          * 
+    *  mu   - the scale parameter (GeV);                                  *
+    *  mQ   - the mass of the u- or c-quark (GeV);                        *  
+    *  q2   - the square of transition 4-momentum (GeV^2);                *
+    *  ml   - the mass of the final leptons (GeV);                        *
+    *  Mw   - the mass of the W--meson (GeV).                             * 
+    *                                                                     */
+   double EvtbTosllWilsCoeffNLO::ReHtot(int qflavour, int res_swch, int ias, int Nf,  
+                                        double mu, double mQ, double q2, 
+                                        double ml, double Mw)
+	{
+	  double rehtot;
+          double rehres, c1, c2;
+          int i;
+
+          /* Total decay widths of the resonances (GeV) */ 
+	  double Gamma[6]; 
+	  /* The decay width of the resonances into l^+ l^- - pair (GeV) */ 
+	  double Gamma_ll[6]; 
+	  /* The mass of the resonances */ 
+	  double M[6];
+
+          double alpha_qed=1.0/137.0;
+
+
+          switch(qflavour) 
+	   { 
+             /* u-quark contribution */
+	     case 0:  switch(res_swch)
+                       {
+                         /* The resonant contribution switch OFF */
+                         case 0:  rehtot=EvtbTosllWilsCoeffNLO::Reh(mu,mQ,q2);
+                                  rehres=0.0;
+                                  break;
+                         /* the resonant contribution switch ON */
+                         case 1:  rehtot=EvtbTosllWilsCoeffNLO::Reh(mu,mQ,q2);
+
+                                  /* \pho */
+                                  M[0]     = 0.7755; /* GeV */
+                                  Gamma[0] = 0.1494; /* GeV */
+                                  /* \omega' */
+                                  M[1]     = 0.7827; /* GeV */
+                                  Gamma[1] = 0.0085; /* GeV */
+
+                                  if(ml < 1.0){
+                                     /* in e^+e^- or mu^+mu^- */
+                                     Gamma_ll[0] = 0.000007;  /* \rho */
+                                     Gamma_ll[1] = 0.0000006; /* \omega  */
+                                   }
+                                  else{
+                                     /* in \tau^+\tau^- */
+                                     Gamma_ll[0] = 0.0;  /* \rho    */
+                                     Gamma_ll[1] = 0.0;  /* \omega  */
+                                   };
+
+                                  c1=EvtbTosllWilsCoeffNLO::C1(mu,Mw,Nf,ias); 
+	                          c2=EvtbTosllWilsCoeffNLO::C2(mu,Mw,Nf,ias); 
+
+                                  i=0;
+                                  rehres = 0.0; 
+	                          while(i<2){
+                                    rehres=rehres+3.0*EvtConst::pi*EvtbTosllWilsCoeffNLO::ReResonant(q2,Gamma[i],Gamma_ll[i],M[i])/(sqrt(2.0)*(3.0*c1+c2)*alpha_qed*alpha_qed);
+ 		                    i++; 
+	                           };
+
+                               /* The sign plus are corresponded to the relation:   
+	                                           \kappa*(3C_1+C_2)=1              
+                                  with sign of Wilson coefficien C_2(M_W)=+1 as at work            
+                                  A.J.Buras and M.Munz, Phys.Rev. D52, 186.             */
+                                  rehtot=rehtot+rehres;
+                                  break;
+                         default: rehtot=0.0;
+                                  rehres=0.0;
+                       }; 
+		      break; 
+             /* c-quark contribution */ 
+	     case 1:  switch(res_swch)
+                       {
+                         /* The resonant contribution switch OFF */
+                         case 0:  rehtot=EvtbTosllWilsCoeffNLO::Reh(mu,mQ,q2);
+                                  rehres=0.0;
+                                  break;
+                         /* the resonant contribution switch ON */
+                         case 1:  rehtot=EvtbTosllWilsCoeffNLO::Reh(mu,mQ,q2);
+
+                                  /* J/psi */
+                                  M[0]     = 3.096916; /* GeV */
+                                  Gamma[0] = 0.000093; /* GeV */
+                                  /* psi' */
+                                  M[1]     = 3.68609;  /* GeV */
+                                  Gamma[1] = 0.000317; /* GeV */
+                                  /* psi(3770) */
+                                  M[2]     = 3.77292;  /* GeV */
+                                  Gamma[2] = 0.0273;   /* GeV */
+                                  /* psi(4040) */
+                                  M[3]     = 4.039;    /* GeV */
+                                  Gamma[3] = 0.08;     /* GeV */
+                                   /* psi(4160) */
+                                  M[4]     = 4.153;    /* GeV */
+                                  Gamma[4] = 0.103;    /* GeV */
+                                   /* psi(4415) */
+                                  M[5]     = 4.421;    /* GeV */
+                                  Gamma[5] = 0.062;    /* GeV */
+
+                                  if(ml < 1.0){
+                                     /* in e^+e^- or mu^+mu^- */
+                                     Gamma_ll[0] = Gamma[0]*0.059;     /* J/psi      */
+                                     Gamma_ll[1] = Gamma[1]*0.0075;    /* psi'       */
+                                     Gamma_ll[2] = Gamma[2]*0.0000097; /* psi(3770)  */
+                                     Gamma_ll[3] = Gamma[3]*0.00001;   /* psi(4040)  */
+                                     Gamma_ll[4] = Gamma[4]*0.0000081; /* psi(4160)  */
+                                     Gamma_ll[5] = Gamma[5]*0.0000094; /* psi(4415)  */
+                                   }
+                                  else{
+                                     /* in \tau^+\tau^- */
+                                     Gamma_ll[0] = 0.0;             /* J/psi */
+                                     Gamma_ll[1] = Gamma[1]*0.003;  /* psi'  */
+                                     Gamma_ll[2] = Gamma[2]*0.0;    /* psi(3770)  */
+                                     Gamma_ll[3] = Gamma[3]*0.0;    /* psi(4040)  */
+                                     Gamma_ll[4] = Gamma[4]*0.0;    /* psi(4160)  */
+                                     Gamma_ll[5] = Gamma[5]*0.0;    /* psi(4415)  */
+                                   };
+
+                                  c1=EvtbTosllWilsCoeffNLO::C1(mu,Mw,Nf,ias); 
+	                          c2=EvtbTosllWilsCoeffNLO::C2(mu,Mw,Nf,ias); 
+
+                                  i=0;
+                                  rehres = 0.0; 
+	                          while(i<6){
+                                    rehres=rehres+3.0*EvtConst::pi*EvtbTosllWilsCoeffNLO::ReResonant(q2,Gamma[i],Gamma_ll[i],M[i])/((3.0*c1+c2)*alpha_qed*alpha_qed);
+ 		                    i++; 
+	                           };
+
+                               /* The sign plus are corresponded to the relation:   
+	                                           \kappa*(3C_1+C_2)=1              
+                                  with sign of Wilson coefficien C_2(M_W)=+1 as at work            
+                                  A.J.Buras and M.Munz, Phys.Rev. D52, 186.             */
+                                  rehtot=rehtot+rehres;
+                                  break;
+                         default: rehtot=0.0;
+                                  rehres=0.0;
+                       }; 
+		      break;
+             default: rehtot=0.0;
+                      rehres=0.0; 
+	   };
+
+          return rehtot;
+        } 
+
+
+
+   /*  The imaginary of the total q\barq-contribution                     *
+    *                                                                     *
+    *  qflavour = 0 corresponding the u-quark contribution                * 
+    *           = 1 corresponding the c-quark contribution;               *
+    *                                                                     *
+    *  res_swch = 0 the resonant contribution switch OFF                  * 
+    *           = 1 the resonant contribution switch ON;                  * 
+    *                                                                     *
+    *  ias -- switching parameter for Lms[] in the As(..) function.       *
+    *                                                                     * 
+    *  Nf   - number of "effective" flavours (for b-quark Nf=5);          * 
+    *  mu   - the scale parameter (GeV);                                  *
+    *  mQ   - the mass of the u- or c-quark (GeV);                        *  
+    *  q2   - the square of transition 4-momentum (GeV^2);                *
+    *  ml   - the mass of the final leptons (GeV);                        *
+    *  Mw   - the mass of the W--meson (GeV).                             * 
+    *                                                                     */
+   double EvtbTosllWilsCoeffNLO::ImHtot(int qflavour, int res_swch, int ias, int Nf,  
+                                        double mu, double mQ, double q2, 
+                                        double ml, double Mw)
+	{
+	  double imhtot;
+          double imhres, c1, c2;
+          int i;
+
+          /* Total decay widths of the resonances (GeV) */ 
+	  double Gamma[6]; 
+	  /* The decay width of the resonances into l^+ l^- - pair (GeV) */ 
+	  double Gamma_ll[6]; 
+	  /* The mass of the resonances */ 
+	  double M[6];
+
+          double alpha_qed=1.0/137.0;
+
+
+          switch(qflavour) 
+	   { 
+             /* u-quark contribution */
+	     case 0:  switch(res_swch)
+                       {
+                         /* The resonant contribution switch OFF */
+                         case 0:  imhtot=EvtbTosllWilsCoeffNLO::Imh(mQ,q2);
+                                  imhres=0.0;
+                                  break;
+                         /* the resonant contribution switch ON */
+                         case 1:  imhtot=EvtbTosllWilsCoeffNLO::Imh(mQ,q2);
+
+                                  /* \pho */
+                                  M[0]     = 0.7755; /* GeV */
+                                  Gamma[0] = 0.1494; /* GeV */
+                                  /* \omega' */
+                                  M[1]     = 0.7827; /* GeV */
+                                  Gamma[1] = 0.0085; /* GeV */
+
+                                  if(ml < 1.0){
+                                     /* in e^+e^- or mu^+mu^- */
+                                     Gamma_ll[0] = 0.000007;  /* \rho */
+                                     Gamma_ll[1] = 0.0000006; /* \omega  */
+                                   }
+                                  else{
+                                     /* in \tau^+\tau^- */
+                                     Gamma_ll[0] = 0.0;  /* \rho    */
+                                     Gamma_ll[1] = 0.0;  /* \omega  */
+                                   };
+
+                                  c1=EvtbTosllWilsCoeffNLO::C1(mu,Mw,Nf,ias); 
+	                          c2=EvtbTosllWilsCoeffNLO::C2(mu,Mw,Nf,ias); 
+
+                                  i=0;
+                                  imhres = 0.0; 
+	                          while(i<2){
+                                    imhres=imhres+3.0*EvtConst::pi*EvtbTosllWilsCoeffNLO::ImResonant(q2,Gamma[i],Gamma_ll[i],M[i])/(sqrt(2.0)*(3.0*c1+c2)*alpha_qed*alpha_qed);
+ 		                    i++; 
+	                           };
+
+                               /* The sign plus are corresponded to the relation:   
+	                                           \kappa*(3C_1+C_2)=1              
+                                  with sign of Wilson coefficien C_2(M_W)=+1 as at work            
+                                  A.J.Buras and M.Munz, Phys.Rev. D52, 186.             */
+                                  imhtot=imhtot+imhres;
+                                  break;
+                         default: imhtot=0.0;
+                                  imhres=0.0;
+                       }; 
+		      break; 
+             /* c-quark contribution */ 
+	     case 1:  switch(res_swch)
+                       {
+                         /* The resonant contribution switch OFF */
+                         case 0:  imhtot=EvtbTosllWilsCoeffNLO::Imh(mQ,q2);
+                                  imhres=0.0;
+                                  break;
+                         /* the resonant contribution switch ON */
+                         case 1:  imhtot=EvtbTosllWilsCoeffNLO::Imh(mQ,q2);
+
+                                  /* J/psi */
+                                  M[0]     = 3.096916; /* GeV */
+                                  Gamma[0] = 0.000093; /* GeV */
+                                  /* psi' */
+                                  M[1]     = 3.68609;  /* GeV */
+                                  Gamma[1] = 0.000317; /* GeV */
+                                  /* psi(3770) */
+                                  M[2]     = 3.77292;  /* GeV */
+                                  Gamma[2] = 0.0273;   /* GeV */
+                                  /* psi(4040) */
+                                  M[3]     = 4.039;    /* GeV */
+                                  Gamma[3] = 0.08;     /* GeV */
+                                   /* psi(4160) */
+                                  M[4]     = 4.153;    /* GeV */
+                                  Gamma[4] = 0.103;    /* GeV */
+                                   /* psi(4415) */
+                                  M[5]     = 4.421;    /* GeV */
+                                  Gamma[5] = 0.062;    /* GeV */
+
+                                  if(ml < 1.0){
+                                     /* in e^+e^- or mu^+mu^- */
+                                     Gamma_ll[0] = Gamma[0]*0.059;     /* J/psi      */
+                                     Gamma_ll[1] = Gamma[1]*0.0075;    /* psi'       */
+                                     Gamma_ll[2] = Gamma[2]*0.0000097; /* psi(3770)  */
+                                     Gamma_ll[3] = Gamma[3]*0.00001;   /* psi(4040)  */
+                                     Gamma_ll[4] = Gamma[4]*0.0000081; /* psi(4160)  */
+                                     Gamma_ll[5] = Gamma[5]*0.0000094; /* psi(4415)  */
+                                   }
+                                  else{
+                                     /* in \tau^+\tau^- */
+                                     Gamma_ll[0] = 0.0;             /* J/psi      */
+                                     Gamma_ll[1] = Gamma[1]*0.003;  /* psi'       */
+                                     Gamma_ll[2] = Gamma[2]*0.0;    /* psi(3770)  */
+                                     Gamma_ll[3] = Gamma[3]*0.0;    /* psi(4040)  */
+                                     Gamma_ll[4] = Gamma[4]*0.0;    /* psi(4160)  */
+                                     Gamma_ll[5] = Gamma[5]*0.0;    /* psi(4415)  */
+                                   };
+
+                                  c1=EvtbTosllWilsCoeffNLO::C1(mu,Mw,Nf,ias); 
+	                          c2=EvtbTosllWilsCoeffNLO::C2(mu,Mw,Nf,ias); 
+
+                                  i=0;
+                                  imhres = 0.0; 
+	                          while(i<6){
+                                    imhres=imhres+3.0*EvtConst::pi*EvtbTosllWilsCoeffNLO::ImResonant(q2,Gamma[i],Gamma_ll[i],M[i])/((3.0*c1+c2)*alpha_qed*alpha_qed);
+ 		                    i++; 
+	                           };
+
+                               /* The sign plus are corresponded to the relation:   
+	                                           \kappa*(3C_1+C_2)=1              
+                                  with sign of Wilson coefficien C_2(M_W)=+1 as at work            
+                                  A.J.Buras and M.Munz, Phys.Rev. D52, 186.             */
+                                  imhtot=imhtot+imhres;
+                                  break;
+                         default: imhtot=0.0;
+                                  imhres=0.0;
+                       }; 
+		      break;
+             default: imhtot=0.0;
+                      imhres=0.0; 
+	   };
+
+          return imhtot;
+        } 
+
+
+
+       /*           Function \omega(\hat s)                 * 
+	* by  A.J.Buras, M.Munz, Phys.Rev.D52 (1995), p189. *
+        *                                                   *
+        * q2 - the square of transition 4-momentum (GeV^2); *
+        * m2 - the mass of the b-quark (GeV).               */ 
+double EvtbTosllWilsCoeffNLO::omega(double q2, double m2)
 	{ 
-	   double oomega; 
+	   double oomega;
+           double s;
+
+           s=q2/(m2*m2); /* see definition in the equation (2.26) */ 
  
            if(s>1.0){
              s=0.999999;
@@ -764,42 +965,48 @@ double EvtbTosllWilsCoeffNLO::omega(double s)
 	   return oomega;
 	}
 
+
  
-       /*         REAL PART of the coefficient C_9V:                * 
-	*           C9 -> C9eff=ReC9eff+i*ImC9eff                   * 
-	*  by  A.J.Buras, M.Munz, Phys.Rev.D52 (1995), p189         * 
-	*                                                           * 
-	*   res_swch -- switching parameter:                        * 
-	* res_swch=0 -- switch OFF for the resonant contribution,   * 
-	* res_swch=1 -- switch ON for the resonant contribution;    * 
-	*                                                           * 
-	*         q2 -- the square of transition 4-momentum;        * 
-        *         M1 -- B-meson mass;                               *
-	*         m2 -- b-quark mass (in the heavy meson M1), GeV;  * 
-	*         mu -- scale parameter, GeV;                       * 
-	*         mc -- c-quark mass, GeV;                          * 
-	*         mt -- t-quark mass, GeV;                          * 
-	*         Mw -- mass of the W--meson, GeV;                  * 
-	*         ml -- leptonic mass, GeV;                         * 
-	*         Nf -- number of "effective" flavors               * 
-	*                          (for b-quark Nf=5);              * 
-	*        ias -- switching parameter for Lms[]               * 
-	*                          in the As(..) function.          * 
-	*                                                           */ 
-double EvtbTosllWilsCoeffNLO::ReC9eff(int res_swch, double q2, double M1, double m2, double mu, 
-	                        double mc, double mt, double Mw, double ml, int Nf, int ias)
+       /*      REAL PART of the effective coefficient C_9V^{eff}:       * 
+	*                                                               * 
+	*  by  A.J.Buras, M.Munz, Phys.Rev.D52 (1995), p189;            *
+        *      F.Kruger, L.M.Sehgal, Phys.Rev.D55 (1997), p.2799.       *
+	*                                                               * 
+        *  decay_id = 0 for b -> q l^+ i^- transitions                  *
+        *             1 for \bar b -> \bar q l^+ l^- transitions;       *
+        *                                                               *
+        *  res_swch = 0 the resonant contribution switch OFF            * 
+        *           = 1 the resonant contribution switch ON;            * 
+        *                                                               *
+        *  ias -- switching parameter for Lms[] in the As(..) function. *
+	*                                                               *
+        *       Nf -- number of "effective" flavors (for b-quark Nf=5); * 
+	*                                                               * 
+	*       q2 -- the square of transition 4-momentum;              * 
+	*       m2 -- b-quark mass (in the heavy meson M1), GeV;        *
+	*       md -- mass of the u- and d-quarks, GeV;                 * 
+        *       mc -- c-quark mass, GeV;                                *
+	*       mu -- scale parameter, GeV;                             * 
+	*       mt -- t-quark mass, GeV;                                * 
+	*       Mw -- mass of the W, GeV;                               * 
+	*       ml -- leptonic mass, GeV;                               * 
+        *                                                               *
+        * Relambda_qu -- Re(V^*_{uq}*V_{ub}/V^*_{tq}*V_{tb}), q={d,s};  *
+        * Imlambda_qu -- Im(V^*_{uq}*V_{ub}/V^*_{tq}*V_{tb}), q={d,s};  *
+	*                                                               */ 
+double EvtbTosllWilsCoeffNLO::ReC9eff(int decay_id, int res_swch, int ias, int Nf,
+                                      double q2, double m2, double md, double mc, 
+                                      double mu, double mt, double Mw, double ml, 
+                                      double Relambda_qu, double Imlambda_qu)
 	 { 
-	   double s;          /* Buras variable "\hat s" in (2.26)      */ 
-	   double z;          /* Buras variable "z"      in (2.26)      */ 
-	   double tilde_eta;  /* Buras variable " \tilde\eta" in (2.33) */ 
-	   double c1,c2,c3,c4,c5,c6,c9,RReHadd,RReC9eff; 
+	   double RReC9eff;
+           double tilde_eta;  /* Buras variable " \tilde\eta" in (2.33) */ 
+	   double c1,c2,c3,c4,c5,c6,c9;
+           double RReh_d,RReh_b,RReHtot_u,IImHtot_u,RReHtot_c,IImHtot_c; 
  
-	   s=q2/pow(M1,2.0); 
-	   z=mc/m2; 
 	   tilde_eta=1.0+EvtbTosllWilsCoeffNLO::As(mu,Nf,ias)
-                        *EvtbTosllWilsCoeffNLO::omega(s)/EvtConst::pi; 
+                        *EvtbTosllWilsCoeffNLO::omega(q2,m2)/EvtConst::pi; 
  
-	   /* Initialisation of the Wilson coefficients */ 
 	   c1=EvtbTosllWilsCoeffNLO::C1(mu,Mw,Nf,ias); 
 	   c2=EvtbTosllWilsCoeffNLO::C2(mu,Mw,Nf,ias); 
 	   c3=EvtbTosllWilsCoeffNLO::C3(mu,Mw,Nf,ias); 
@@ -807,49 +1014,74 @@ double EvtbTosllWilsCoeffNLO::ReC9eff(int res_swch, double q2, double M1, double
 	   c5=EvtbTosllWilsCoeffNLO::C5(mu,Mw,Nf,ias); 
 	   c6=EvtbTosllWilsCoeffNLO::C6(mu,Mw,Nf,ias); 
 	   c9=EvtbTosllWilsCoeffNLO::C9v(mu,Mw,mt,Nf,ias);
-           RReHadd=EvtbTosllWilsCoeffNLO::ReHadd(res_swch,q2,ml); 
- 
-	   RReC9eff=c9*tilde_eta; 
-	   RReC9eff=RReC9eff+(3.0*c1+c2+3.0*c3+c4+3.0*c5+c6)*EvtbTosllWilsCoeffNLO::Reh(mu,m2,z,s); 
-	   RReC9eff=RReC9eff-0.5*(4.0*c3+4.0*c4+3.0*c5+c6)*EvtbTosllWilsCoeffNLO::Reh(mu,m2,1.0,s); 
-	   RReC9eff=RReC9eff-0.5*(c3+3.0*c4)*EvtbTosllWilsCoeffNLO::Reh0(mu,m2,s); 
-	   RReC9eff=RReC9eff+2.0*(3.0*c3+c4+3.0*c5+c6)/9.0; 
- 
-	   RReC9eff=RReC9eff+RReHadd;
 
-           report(NOTICE,"EvtGen") 
-             << "\n =============================================================="
-             << "\n =============================================================="
-             << "\n\n The function EvtbTosllWilsCoeffNLO::ReC9eff(...) passed."
-             << "\n Particle masses:"
-             << "\n q2                = " << q2
-             << "\n leptonic mass  ml = " << ml
-             << "\n c - quark mass mc = " << mc
-             << "\n b - quark mass mb = " << m2
-             << "\n t - quark mass mt = " << mt
-             << "\n W - boson mass Mw = " << Mw
-             << "\n ==============================================================="
-             << "\n Input parameters:"
-             << "\n scale parameter         mu = " << mu
-             << "\n number of flavors       Nf = " << Nf
-             << "\n resonant switching         = " << res_swch
-             << "\n parameter for alpha_s(M_Z) = " << ias
-             << "\n ================================================================"
-             << "\n Wilson Coefficients:"
-             << "\n RReHadd   = " << RReHadd
-             << "\n RReC9eff  = " << RReC9eff
-             << "\n tilde_eta = " << tilde_eta
-             << "\n s         = " << s
-             << "\n c1        = " << c1
-             << "\n c2        = " << c2
-             << "\n c3        = " << c3
-             << "\n c4        = " << c4
-             << "\n c5        = " << c5
-             << "\n c6        = " << c6
-             << "\n c9        = " << c9
-             << "\n ================================================================="
-             << "\n ================================================================="
-             << std::endl;
+           RReh_d   =EvtbTosllWilsCoeffNLO::Reh(mu,md,q2);
+           RReh_b   =EvtbTosllWilsCoeffNLO::Reh(mu,m2,q2);
+           RReHtot_u=EvtbTosllWilsCoeffNLO::ReHtot(0,res_swch,ias,Nf,mu,md,q2,ml,Mw);
+           IImHtot_u=EvtbTosllWilsCoeffNLO::ImHtot(0,res_swch,ias,Nf,mu,md,q2,ml,Mw);
+           RReHtot_c=EvtbTosllWilsCoeffNLO::ReHtot(1,res_swch,ias,Nf,mu,mc,q2,ml,Mw);
+           IImHtot_c=EvtbTosllWilsCoeffNLO::ImHtot(1,res_swch,ias,Nf,mu,mc,q2,ml,Mw);
+ 
+	   RReC9eff=c9*tilde_eta+2.0*(3.0*c3+c4+3.0*c5+c6)/9.0; 
+	   RReC9eff=RReC9eff+(3.0*c1+c2+3.0*c3+c4+3.0*c5+c6)*RReHtot_c;
+	   RReC9eff=RReC9eff-0.5*(4.0*c3+4.0*c4+3.0*c5+c6)*RReh_b;
+	   RReC9eff=RReC9eff-0.5*(c3+3.0*c4)*RReh_d;
+
+           switch(decay_id) 
+	    { 
+             /* b -> q l^+ i^- transitions */
+	     case 0:  RReC9eff=RReC9eff+(3.0*c1+c2)*(Relambda_qu*(RReHtot_c-RReHtot_u) -
+                                                     Imlambda_qu*(IImHtot_c-IImHtot_u));
+                      break;
+             /* \bar b -> \bar q l^+ i^- transitions */
+             case 1:  RReC9eff=RReC9eff+(3.0*c1+c2)*(Relambda_qu*(RReHtot_c-RReHtot_u) +
+                                                     Imlambda_qu*(IImHtot_c-IImHtot_u));
+                      break; 
+	    };
+ 
+
+//           report(NOTICE,"EvtGen") 
+//             << "\n =============================================================="
+//             << "\n =============================================================="
+//             << "\n\n The function EvtbTosllWilsCoeffNLO::ReC9eff(...) passed."
+//             << "\n Particle masses:"
+//             << "\n q2                      = " << q2
+//             << "\n s                       = " << q2/(m2*m2)
+//             << "\n leptonic mass  ml       = " << ml
+//             << "\n u or d - quarks mass md = " << md
+//             << "\n c - quark mass mc       = " << mc
+//             << "\n b - quark mass mb       = " << m2
+//             << "\n t - quark mass mt       = " << mt
+//             << "\n W - boson mass Mw       = " << Mw
+//             << "\n ==============================================================="
+//             << "\n Input parameters:"
+//             << "\n scale parameter         mu = " << mu
+//             << "\n number of flavors       Nf = " << Nf
+//             << "\n resonant switching         = " << res_swch
+//             << "\n decay id                   = " << decay_id
+//             << "\n parameter for alpha_s(M_Z) = " << ias
+//             << "\n Relambda_qu                = " << Relambda_qu
+//             << "\n Imlambda_qu                = " << Imlambda_qu
+//             << "\n ================================================================"
+//             << "\n Wilson Coefficients:"
+//             << "\n c1        = " << c1
+//             << "\n c2        = " << c2
+//             << "\n c3        = " << c3
+//             << "\n c4        = " << c4
+//             << "\n c5        = " << c5
+//             << "\n c6        = " << c6
+//             << "\n c9        = " << c9
+//             << "\n Reh_d     = " << RReh_d
+//             << "\n Reh_b     = " << RReh_b
+//             << "\n ReHtot_u  = " << RReHtot_u
+//             << "\n ReHtot_c  = " << RReHtot_c
+//             << "\n ImHtot_u  = " << IImHtot_u
+//             << "\n ImHtot_c  = " << IImHtot_c
+//             << "\n RReC9eff  = " << RReC9eff
+//             << "\n tilde_eta = " << tilde_eta
+//             << "\n ================================================================="
+//             << "\n ================================================================="
+//             << std::endl;
  
  
 	   return RReC9eff; 
@@ -857,118 +1089,123 @@ double EvtbTosllWilsCoeffNLO::ReC9eff(int res_swch, double q2, double M1, double
 	 } 
  
  
-       /*       IMAGINARY PART of the coefficient C_9V:             * 
-	*           C9 -> C9eff=ReC9eff+i*ImC9eff                   * 
-	*  by  A.J.Buras, M.Munz, Phys.Rev.D52 (1995), p189         * 
-	*                                                           * 
-	*   res_swch -- switching parameter:                        * 
-	* res_swch=0 -- switch OFF for the resonant contribution;   * 
-	* res_swch=1 -- switch ON for the resonant contribution;    * 
-	*                                                           * 
-	*         q2 -- the square of transition 4-momentum;        * 
-        *         M1 -- B-meson mass;                               *
-	*         m2 -- b-quark mass ( in the heavy meson M1), GeV; * 
-	*         mu -- scale parameter, GeV;                       * 
-	*         mc -- c-quark mass, GeV;                          * 
-	*         mt -- t-quark mass, GeV;                          * 
-	*         Mw -- mass of the W--meson, GeV;                  * 
-	*         ml -- leptonic mass, GeV;                         * 
-	*         Nf -- number of "effective" flavors               * 
-	*                          (for b-quark Nf=5);              * 
-	*        ias -- switching parameter for Lms[]               * 
-	*                          in the As(..) function.          * 
-	*                                                           */ 
-double EvtbTosllWilsCoeffNLO::ImC9eff(int res_swch, double q2, double M1, double m2, 
-                        double mu, double mc, double Mw, double ml, int Nf, int ias)
+
+       /*    IMAGINARY PART of the effective coefficient C_9V^{eff}:    * 
+	*                                                               * 
+	*  by  A.J.Buras, M.Munz, Phys.Rev.D52 (1995), p189;            *
+        *      F.Kruger, L.M.Sehgal, Phys.Rev.D55 (1997), p.2799.       *
+	*                                                               * 
+        *  decay_id = 0 for b -> q l^+ i^- transitions                  *
+        *             1 for \bar b -> \bar q l^+ l^- transitions;       *
+        *                                                               *
+        *  res_swch = 0 the resonant contribution switch OFF            * 
+        *           = 1 the resonant contribution switch ON;            * 
+        *                                                               *
+        *  ias -- switching parameter for Lms[] in the As(..) function. *
+	*                                                               *
+        *       Nf -- number of "effective" flavors (for b-quark Nf=5); * 
+	*                                                               * 
+	*       q2 -- the square of transition 4-momentum;              * 
+	*       m2 -- b-quark mass (in the heavy meson M1), GeV;        *
+	*       md -- mass of the u- and d-quarks, GeV;                 * 
+        *       mc -- c-quark mass, GeV;                                *
+	*       mu -- scale parameter, GeV;                             * 
+	*       Mw -- mass of the W, GeV;                               * 
+	*       ml -- leptonic mass, GeV;                               * 
+        *                                                               *
+        * Relambda_qu -- Re(V^*_{uq}*V_{ub}/V^*_{tq}*V_{tb}), q={d,s};  *
+        * Imlambda_qu -- Im(V^*_{uq}*V_{ub}/V^*_{tq}*V_{tb}), q={d,s};  *
+	*                                                               */ 
+double EvtbTosllWilsCoeffNLO::ImC9eff(int decay_id, int res_swch, int ias, int Nf,
+                                      double q2, double m2, double md, double mc, 
+                                      double mu, double Mw, double ml, 
+                                      double Relambda_qu, double Imlambda_qu)
 	 { 
-	   double s;          /* Buras variable "\hat s"in (2.26)    */ 
-	   double z;          /* Buras variable "z" in (2.26)        */ 
-	   double c1,c2,c3,c4,c5,c6,IImHadd,IImC9eff; 
+	   double IImC9eff;
+	   double c1,c2,c3,c4,c5,c6;
+           double IImh_d,IImh_b,RReHtot_u,IImHtot_u,RReHtot_c,IImHtot_c; 
  
-	   s=q2/pow(M1,2.0); 
-	   z=mc/m2; 
- 
-	   /* Initialisation of the Wilson coefficients */ 
 	   c1=EvtbTosllWilsCoeffNLO::C1(mu,Mw,Nf,ias); 
 	   c2=EvtbTosllWilsCoeffNLO::C2(mu,Mw,Nf,ias); 
 	   c3=EvtbTosllWilsCoeffNLO::C3(mu,Mw,Nf,ias); 
 	   c4=EvtbTosllWilsCoeffNLO::C4(mu,Mw,Nf,ias); 
 	   c5=EvtbTosllWilsCoeffNLO::C5(mu,Mw,Nf,ias); 
-	   c6=EvtbTosllWilsCoeffNLO::C6(mu,Mw,Nf,ias);
-           IImHadd=EvtbTosllWilsCoeffNLO::ImHadd(res_swch,q2,ml);
- 
-	   IImC9eff=(3.0*c1+c2+3.0*c3+c4+3.0*c5+c6)*EvtbTosllWilsCoeffNLO::Imh(z,s); 
-	   IImC9eff=IImC9eff-0.5*(4.0*c3+4.0*c4+3.0*c5+c6)*EvtbTosllWilsCoeffNLO::Imh(1.0,s); 
-	   IImC9eff=IImC9eff-0.5*(c3+3.0*c4)*EvtbTosllWilsCoeffNLO::Imh0(); 
- 
-	   IImC9eff=IImC9eff+IImHadd; 
+	   c6=EvtbTosllWilsCoeffNLO::C6(mu,Mw,Nf,ias); 
+
+           IImh_d   =EvtbTosllWilsCoeffNLO::Imh(md,q2);
+           IImh_b   =EvtbTosllWilsCoeffNLO::Imh(m2,q2);
+           RReHtot_u=EvtbTosllWilsCoeffNLO::ReHtot(0,res_swch,ias,Nf,mu,md,q2,ml,Mw);
+           IImHtot_u=EvtbTosllWilsCoeffNLO::ImHtot(0,res_swch,ias,Nf,mu,md,q2,ml,Mw);
+           RReHtot_c=EvtbTosllWilsCoeffNLO::ReHtot(1,res_swch,ias,Nf,mu,mc,q2,ml,Mw);
+           IImHtot_c=EvtbTosllWilsCoeffNLO::ImHtot(1,res_swch,ias,Nf,mu,mc,q2,ml,Mw);
+  
+	   IImC9eff=(3.0*c1+c2+3.0*c3+c4+3.0*c5+c6)*IImHtot_c;
+	   IImC9eff=IImC9eff-0.5*(4.0*c3+4.0*c4+3.0*c5+c6)*IImh_b;
+	   IImC9eff=IImC9eff-0.5*(c3+3.0*c4)*IImh_d;
+
+           switch(decay_id) 
+	    { 
+             /* b -> q l^+ i^- transitions */
+	     case 0:  IImC9eff=IImC9eff+(3.0*c1+c2)*(Relambda_qu*(IImHtot_c-IImHtot_u) +
+                                                     Imlambda_qu*(RReHtot_c-RReHtot_u));
+                      break;
+             /* \bar b -> \bar q l^+ i^- transitions */
+             case 1:  IImC9eff=IImC9eff+(3.0*c1+c2)*(Relambda_qu*(IImHtot_c-IImHtot_u) -
+                                                     Imlambda_qu*(RReHtot_c-RReHtot_u));
+                      break; 
+	    };
  
 	   return IImC9eff; 
  
-	 }
+	 } 
 
 
 
-       /*     Complex representation for the coefficient C_9V:      * 
-	*               C9eff=ReC9eff+i*ImC9eff                     * 
-	*  by  A.J.Buras, M.Munz, Phys.Rev.D52 (1995), p189         * 
-	*                                                           * 
-	*   res_swch -- switching parameter:                        * 
-	* res_swch=0 -- switch OFF for the resonant contribution;   * 
-	* res_swch=1 -- switch ON for the resonant contribution;    * 
-	*                                                           * 
-	*         q2 -- the square of transition 4-momentum;        * 
-	*         m2 -- b-quark mass ( in the heavy meson M1), GeV; * 
-        *         M1 -- B-meson mass;                               *
-	*         mu -- scale parameter, GeV;                       * 
-	*         mc -- c-quark mass, GeV;                          * 
-	*         mt -- t-quark mass, GeV;                          * 
-	*         Mw -- mass of the W--meson, GeV;                  * 
-	*         ml -- leptonic mass, GeV;                         * 
-	*         Nf -- number of "effective" flavors               * 
-	*                          (for b-quark Nf=5);              * 
-	*        ias -- switching parameter for Lms[]               * 
-	*                          in the As(..) function.          * 
-	*                                                           */ 
-EvtComplex EvtbTosllWilsCoeffNLO::GetC9Eff(int res_swch, double q2, double M1, double m2, 
-                                           double mu, double mc, double mt, double Mw, 
-                                           double ml, int Nf, int ias) 
+       /*     Complex representation for the coefficient C_9V:          * 
+        *                                                               * 
+	*  by  A.J.Buras, M.Munz, Phys.Rev.D52 (1995), p189;            *
+        *      F.Kruger, L.M.Sehgal, Phys.Rev.D55 (1997), p.2799.       *
+	*                                                               * 
+        *  decay_id = 0 for b -> q l^+ i^- transitions                  *
+        *             1 for \bar b -> \bar q l^+ l^- transitions;       *
+        *                                                               *
+        *  res_swch = 0 the resonant contribution switch OFF            * 
+        *           = 1 the resonant contribution switch ON;            * 
+        *                                                               *
+        *  ias -- switching parameter for Lms[] in the As(..) function. *
+	*                                                               *
+        *       Nf -- number of "effective" flavors (for b-quark Nf=5); * 
+	*                                                               * 
+	*       q2 -- the square of transition 4-momentum;              * 
+	*       m2 -- b-quark mass (in the heavy meson M1), GeV;        *
+	*       md -- mass of the u- and d-quarks, GeV;                 * 
+        *       mc -- c-quark mass, GeV;                                *
+	*       mu -- scale parameter, GeV;                             * 
+        *       mt -- t-quark mass, GeV;                                *
+	*       Mw -- mass of the W, GeV;                               * 
+	*       ml -- leptonic mass, GeV;                               *
+        *                                                               *
+        * Relambda_qu -- Re(V^*_{uq}*V_{ub}/V^*_{tq}*V_{tb}), q={d,s};  *
+        * Imlambda_qu -- Im(V^*_{uq}*V_{ub}/V^*_{tq}*V_{tb}), q={d,s};  * 
+	*                                                               */ 
+EvtComplex EvtbTosllWilsCoeffNLO::GetC9Eff(int decay_id, int res_swch, int ias, int Nf,
+                                           double q2, double m2, double md, double mc, 
+                                           double mu, double mt, double Mw, double ml, 
+                                           double Relambda_qu, double Imlambda_qu)
         {
            double RReC9eff, IImC9eff;
            EvtComplex unit1(1.0,0.0);
            EvtComplex uniti(0.0,1.0);
            EvtComplex c9eff;
 
-           RReC9eff=EvtbTosllWilsCoeffNLO::ReC9eff(res_swch, q2, M1, m2, mu, mc, mt, Mw, ml, Nf, ias);
-           IImC9eff=EvtbTosllWilsCoeffNLO::ImC9eff(res_swch, q2, M1, m2, mu, mc, Mw, ml, Nf, ias);
+           RReC9eff=EvtbTosllWilsCoeffNLO::ReC9eff(decay_id,res_swch,ias,Nf,
+                                      q2,m2,md,mc,mu,mt,Mw,ml,Relambda_qu,Imlambda_qu);
+           IImC9eff=EvtbTosllWilsCoeffNLO::ImC9eff(decay_id,res_swch,ias,Nf,
+                                      q2,m2,md,mc,mu,Mw,ml,Relambda_qu,Imlambda_qu);
 	                                  
            c9eff=RReC9eff*unit1+IImC9eff*uniti;
            return c9eff;
         }
-
-
-
-       /*     Complex representation for the coefficient C_10A:     *
-        *                    C_10A=ReC_10                           *
-	*  by  A.J.Buras, M.Munz, Phys.Rev.D52 (1995), p189         * 
-	*                                                           * 
-	*         mt -- t-quark mass, GeV;                          * 
-	*         Mw -- mass of the W--meson, GeV;                  *
-        *                                                           */
-EvtComplex EvtbTosllWilsCoeffNLO::GetC10Eff(double mt, double Mw) 
-       {
-          double ReC10;
-          EvtComplex c10eff;
-          EvtComplex unit1(1.0,0.0);
-
-          ReC10=EvtbTosllWilsCoeffNLO::C10a(mt, Mw);     
-
-          c10eff=unit1*ReC10;
-
-          return c10eff;
-       }
-
-
 
 
        /*    Complex representation for the coefficient C7gamma:    * 
@@ -994,4 +1231,27 @@ EvtComplex EvtbTosllWilsCoeffNLO::GetC7Eff(double mu, double Mw, double mt, int 
 
          return c7eff;
        }
+
+
+
+       /*     Complex representation for the coefficient C_10A:     *
+        *                    C_10A=ReC_10                           *
+	*  by  A.J.Buras, M.Munz, Phys.Rev.D52 (1995), p189         * 
+	*                                                           * 
+	*         mt -- t-quark mass, GeV;                          * 
+	*         Mw -- mass of the W--meson, GeV;                  *
+        *                                                           */
+EvtComplex EvtbTosllWilsCoeffNLO::GetC10Eff(double mt, double Mw) 
+       {
+          double ReC10;
+          EvtComplex c10eff;
+          EvtComplex unit1(1.0,0.0);
+
+          ReC10=EvtbTosllWilsCoeffNLO::C10a(mt, Mw);     
+
+          c10eff=unit1*ReC10;
+
+          return c10eff;
+       }
+
 

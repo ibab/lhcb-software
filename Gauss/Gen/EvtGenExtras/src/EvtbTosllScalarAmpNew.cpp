@@ -1,5 +1,4 @@
 //--------------------------------------------------------------------------
-// $Id: EvtbTosllScalarAmpNew.cpp,v 1.2 2009-10-19 16:14:34 robbep Exp $
 //
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -44,6 +43,7 @@
 #include "EvtGenModels/EvtbTosllScalarAmpNew.hh"
 #include <cstdlib>
 
+
 //
 // The main functiom for the amplitude calculation
 //
@@ -77,6 +77,9 @@ void EvtbTosllScalarAmpNew::CalcAmp( EvtParticle *parent,
                                      int res_swch, int ias, 
                                      double CKM_A, double CKM_lambda, 
                                      double CKM_barrho, double CKM_bareta){
+
+//  FILE *mytest;
+
   EvtComplex unit1(1.0,0.0); // real unit
   EvtComplex uniti(0.0,1.0); // imaginary unit
 
@@ -101,8 +104,10 @@ void EvtbTosllScalarAmpNew::CalcAmp( EvtParticle *parent,
   double Mw = 80.403;  // GeV W-boson mass
   double mt = 174.2;   // GeV t-quark mass
 
-  EvtComplex Vtb, Vtq;   // V_{tb} and V_{tq}
-  EvtComplex CKM_factor; // V^*_{tq}*V_{tb}, where q={d,s}
+  EvtComplex Vtb, Vtq, Vub, Vuq;   // V_{tb}, V_{tq}, V_{ub} and V_{uq}
+  EvtComplex CKM_factor;           // V^*_{tq}*V_{tb}, where q={d,s}
+  EvtComplex lambda_qu;            // V^*_{uq}*V_{ub}/V^*_{tq}*V_{tb}, where q={d,s}
+  double Relambda_qu, Imlambda_qu;
 
   EvtId idparent = parent->getId();              // B-meson Id
   EvtId iddaught = parent->getDaug(iP)->getId(); // The pseudoscalar meson Id
@@ -128,7 +133,9 @@ void EvtbTosllScalarAmpNew::CalcAmp( EvtParticle *parent,
      // V_{ts}
      Vtq = unit1*(1.0-0.5*pow(CKM_lambda,2.0)) + 
       pow(CKM_lambda,2.0)*(CKM_barrho*unit1 + CKM_bareta*uniti)/sqrt(1.0-pow(CKM_lambda,2.0));
-     Vtq = -CKM_A*pow(CKM_lambda,2.0)*Vtq;      
+     Vtq = -CKM_A*pow(CKM_lambda,2.0)*Vtq;
+     // V_{us}
+     Vuq = CKM_lambda*unit1;      
   }
 
   if((idparent == EvtPDL::getId(std::string("B+"))&&
@@ -149,8 +156,11 @@ void EvtbTosllScalarAmpNew::CalcAmp( EvtParticle *parent,
       iddaught == EvtPDL::getId(std::string("eta'")))){
      ms = formFactors->getQuarkMass(2); // m_d mass from the dispersion QM 
      // V_{td}
-     Vtq =unit1 - (1.0 - 0.5*pow(CKM_lambda,2.0))*(CKM_barrho*unit1+CKM_bareta*uniti)/sqrt(1.0-pow(CKM_lambda,2.0));
-     Vtq = CKM_A*pow(CKM_lambda,3.0)*Vtq; 
+     Vtq =unit1 - (1.0 - 0.5*pow(CKM_lambda,2.0))*(CKM_barrho*unit1 +
+                                            CKM_bareta*uniti)/sqrt(1.0-pow(CKM_lambda,2.0));
+     Vtq = CKM_A*pow(CKM_lambda,3.0)*Vtq;
+     // V_{ud}
+     Vuq = unit1*(1.0-0.5*pow(CKM_lambda,2.0)-0.125*pow(CKM_lambda,4.0));  
   }
 
   if(ms<0.001){
@@ -160,23 +170,31 @@ void EvtbTosllScalarAmpNew::CalcAmp( EvtParticle *parent,
      ::abort();
   }
  
-  Vtb = unit1*(1.0-0.5*pow(CKM_A*CKM_lambda*CKM_lambda,2.0)); // V_{tb}
-  CKM_factor = conj(Vtq)*Vtb;                                 // V^*_{tq}*V_{tb}
-
+  Vtb = unit1*(1.0-0.5*pow(CKM_A*CKM_lambda*CKM_lambda,2.0));      // V_{tb}
+  Vub = CKM_A*pow(CKM_lambda,3.0)*(CKM_barrho*unit1 - 
+                  CKM_bareta*uniti)/sqrt(1.0-pow(CKM_lambda,2.0)); // V_{ub}
+  
+  CKM_factor = conj(Vtq)*Vtb;                                      // V^*_{tq}*V_{tb}
+  
+  lambda_qu = conj(Vuq)*Vub/CKM_factor;            // V^*_{uq}*V_{ub}/V^*_{tq}*V_{tb}
+  Relambda_qu = real(lambda_qu); 
+  Imlambda_qu = imag(lambda_qu);
 
   double fp, f0, ft;  // B -> P transition form-factors 
 
   // To get the B -> P transition form-factors
   formFactors->getScalarFF(parent->getId(),
                            parent->getDaug(iP)->getId(),
-                           q2, M2, 
-                           fp,f0,ft);
+                           q2,fp,f0,ft);
 
 
   // The Wilson Coefficients preparation according to the paper
   // A.J.Buras, M.Munz, Phys.Rev.D52, p.189 (1995)
   EvtComplex c7gam =  WilsCoeff->GetC7Eff(mu, Mw, mt, Nf, ias);
-  EvtComplex c9eff =  WilsCoeff->GetC9Eff(res_swch, q2, M1, mb, mu, mc, mt, Mw, ml, Nf, ias);
+  EvtComplex c9eff_b2q       = WilsCoeff->GetC9Eff(0,res_swch,ias,Nf,q2,mb,ms,mc,mu,mt,Mw,ml,
+                               Relambda_qu,Imlambda_qu);
+  EvtComplex c9eff_barb2barq = WilsCoeff->GetC9Eff(1,res_swch,ias,Nf,q2,mb,ms,mc,mu,mt,Mw,ml,
+                               Relambda_qu,Imlambda_qu);
   EvtComplex c10a  =  WilsCoeff->GetC10Eff(mt, Mw);
 
   report(NOTICE,"EvtGen") << "\n\n The function EvtbTosllScalarAmpNew::CalcAmp(...) passed."
@@ -204,9 +222,25 @@ void EvtbTosllScalarAmpNew::CalcAmp( EvtParticle *parent,
       << "\n ============================================================================"
       << "\n Wilson Coefficients:"
       << "\n Re(c7gam) = " << real(c7gam) << " Im(c7gam) = " << imag(c7gam)
-      << "\n Re(c9eff) = " << real(c9eff) << " Im(c9eff) = " << imag(c9eff)
+      << "\n Re(c9eff_b2q) = " << real(c9eff_b2q) 
+        << " Im(c9eff_b2q) = " << imag(c9eff_b2q)
+      << "\n Re(c9eff_barb2barq) = " << real(c9eff_barb2barq) 
+        << " Im(c9eff_barb2barq) = " << imag(c9eff_barb2barq)
       << "\n Re(c10a)  = " << real(c10a)  << " Im(c10a)  = " << imag(c10a)
       << std::endl;
+
+//      mytest = fopen("scalaroutput.txt","a");
+//      if(mytest != NULL){									
+//	fprintf(mytest,"%lf\n",q2);	
+//	fclose(mytest);						
+//      } 
+//      else{
+//         report(ERROR,"EvtGen") << "\n Error in writing to file.\n"
+//         << std::endl;
+//	 return;					
+//      }
+
+
 
   // 4- momentum of the B-meson in the the B-meson rest frame
   EvtVector4R p1 = parent->getP4Restframe();
@@ -229,12 +263,13 @@ void EvtbTosllScalarAmpNew::CalcAmp( EvtParticle *parent,
 
 
   // Hadronic matrix element with m_s.NE.0
-  EvtComplex a,b,c,d;
+  EvtComplex a_b2q,a_barb2barq,b_b2q,b_barb2barq,c,d;
   
-  a = c9eff*fp-2.0*c7gam*(hatmb+hatms)*ft/(1.0+hatM2);
+  a_b2q       = c9eff_b2q*fp-2.0*c7gam*(hatmb+hatms)*ft/(1.0+hatM2);
+  a_barb2barq = c9eff_barb2barq*fp-2.0*c7gam*(hatmb+hatms)*ft/(1.0+hatM2);
 
-  b = c9eff*(f0-fp)+2.0*c7gam*(hatmb+hatms)*ft/(1.0+hatM2);
-  b = b*(1-pow(hatM2,2.0))/hats;
+  b_b2q = (c9eff_b2q*(f0-fp)+2.0*c7gam*(hatmb+hatms)*ft/(1.0+hatM2))*(1-pow(hatM2,2.0))/hats;
+  b_barb2barq = (c9eff_barb2barq*(f0-fp)+2.0*c7gam*(hatmb+hatms)*ft/(1.0+hatM2))*(1-pow(hatM2,2.0))/hats;
 
   c = c10a*fp;
 
@@ -271,8 +306,9 @@ void EvtbTosllScalarAmpNew::CalcAmp( EvtParticle *parent,
   if (bmesons.contains(parentID)){
 
     // The amplitude for the decay barB -> barP ell^+ ell^-
+    // (b -> q ell^+ ell^- transition)
 
-    T1 = a*hatP+b*hatq;
+    T1 = a_b2q*hatP+b_b2q*hatq;
 
     T2 = c*hatP+d*hatq;
 
@@ -305,9 +341,10 @@ void EvtbTosllScalarAmpNew::CalcAmp( EvtParticle *parent,
     if (bbarmesons.contains(parentID)) {
 
       // The amplitude for the decay B -> K* ell^+ ell^-
+      // (barb -> barq ell^+ ell^- transition)
 
-      T1 = conj(a)*hatP+conj(b)*hatq;
-      T2 = conj(c)*hatP+conj(d)*hatq;
+      T1 = a_barb2barq*hatP+b_barb2barq*hatq;
+      T2 = c*hatP+d*hatq;
      
 
       lvc11=EvtLeptonVCurrent(lepPlus->spParent(1),

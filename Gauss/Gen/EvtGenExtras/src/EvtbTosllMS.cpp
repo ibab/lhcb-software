@@ -1,6 +1,5 @@
 //--------------------------------------------------------------------------
-// $Id: EvtbTosllMS.cpp,v 1.1 2009-09-19 16:38:13 robbep Exp $
-// 
+//
 // Environment:
 //      This software is part of the EvtGen package developed jointly
 //      for the BaBar and CLEO collaborations.  If you use all or part
@@ -42,9 +41,9 @@ EvtbTosllMS::~EvtbTosllMS() {
 }
 
 
-// The module name specification 
+// The module name specification
 std::string EvtbTosllMS::getName( ) {
-  return "BTOSLLMS" ;     
+  return "BTOSLLMS" ;
 }
 
 
@@ -125,7 +124,7 @@ void EvtbTosllMS::initProbMax(){
   l1num  = getDaug(1);
   l2num  = getDaug(2);
 
-  //  EvtSpinType::spintype mesontype=EvtPDL::getSpinType(getDaug(0));
+  // EvtSpinType::spintype mesontype=EvtPDL::getSpinType(getDaug(0));
 
   double         mu = getArg(0);        // the scale parameter
   int            Nf = (int) getArg(1);  // number of "effective" flavors

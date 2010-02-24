@@ -34,10 +34,10 @@ public:
   double equation9_10(double ff0, double M2, double q2, 
                       double sigma1, double sigma2, int eq_num);
 
-  void getScalarFF(EvtId parent, EvtId daught,double t, double mass, 
+  void getScalarFF(EvtId parent, EvtId daught,double t, 
 		   double& fp,double& f0,double& ft);
 
-  void getVectorFF(EvtId parent, EvtId daught,double t, double mass, 
+  void getVectorFF(EvtId parent, EvtId daught,double t, 
 		   double& a1,double& a2,double& a0, double& v,
 		   double& t1, double& t2, double& t3 );
 

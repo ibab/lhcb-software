@@ -19,10 +19,9 @@
 //
 // Modification history:
 //
-// N.Nikitin (nnikit@mail.cern.ch) April  18,2008    Module created
-// N.Nikitin                       June   04,2008    Add CKM matrix elements
-// N.Nikitin                       Jan    03,2009    Vector meson polarisation modification
-// N.Nikitin                       August 22,2009    Change of sign in Levi-Civita tensor
+// N.Nikitin (nnikit@mail.cern.ch)   April 18,2008    Module created
+// N.Nikitin                         June  04,2008    Add CKM matrix elements
+// N.Nikitin                         Jan   03,2009    Vector meson polarisation modification
 //
 //------------------------------------------------------------------------
 //
@@ -46,6 +45,7 @@
 // The header file for current class memeber functions description
 #include "EvtGenModels/EvtbTosllVectorAmpNew.hh"
 #include <cstdlib>
+
 
 //
 // The main functiom for the amplitude calculation
@@ -81,6 +81,8 @@ void EvtbTosllVectorAmpNew::CalcAmp( EvtParticle *parent,
                                      double CKM_A, double CKM_lambda, 
                                      double CKM_barrho, double CKM_bareta){
 
+  FILE *mytest;
+
   EvtComplex unit1(1.0,0.0); // real unit
   EvtComplex uniti(0.0,1.0); // imaginary unit
 
@@ -106,8 +108,10 @@ void EvtbTosllVectorAmpNew::CalcAmp( EvtParticle *parent,
   double Mw = 80.403;  // GeV W-boson mass
   double mt = 174.2;   // GeV t-quark mass
 
-  EvtComplex Vtb, Vtq;   // V_{tb} and V_{tq}
+  EvtComplex Vtb, Vtq, Vub, Vuq;   // V_{tb}, V_{tq}, V_{ub} and V_{uq}
   EvtComplex CKM_factor; // V^*_{tq}*V_{tb}, where q={d,s}
+  EvtComplex lambda_qu;  // V^*_{uq}*V_{ub}/V^*_{tq}*V_{tb}, where q={d,s}
+  double Relambda_qu, Imlambda_qu;
 
   EvtId idparent = parent->getId();              // B-meson Id
   EvtId iddaught = parent->getDaug(iV)->getId(); // The vector meson Id
@@ -129,7 +133,9 @@ void EvtbTosllVectorAmpNew::CalcAmp( EvtParticle *parent,
      // V_{ts}
      Vtq = unit1*(1.0-0.5*pow(CKM_lambda,2.0)) + 
       pow(CKM_lambda,2.0)*(CKM_barrho*unit1 + CKM_bareta*uniti)/sqrt(1.0-pow(CKM_lambda,2.0));
-     Vtq = -CKM_A*pow(CKM_lambda,2.0)*Vtq; 
+     Vtq = -CKM_A*pow(CKM_lambda,2.0)*Vtq;
+     // V_{us}
+     Vuq = CKM_lambda*unit1; 
   }
 
   if((idparent == EvtPDL::getId(std::string("B+"))&&
@@ -146,8 +152,11 @@ void EvtbTosllVectorAmpNew::CalcAmp( EvtParticle *parent,
       iddaught == EvtPDL::getId(std::string("K*0")))){
      ms = formFactors->getQuarkMass(2); // m_d mass from the dispersion QM 
      // V_{td}
-     Vtq =unit1 - (1.0 - 0.5*pow(CKM_lambda,2.0))*(CKM_barrho*unit1+CKM_bareta*uniti)/sqrt(1.0-pow(CKM_lambda,2.0));
-     Vtq = CKM_A*pow(CKM_lambda,3.0)*Vtq; 
+     Vtq = unit1 - (1.0 - 0.5*pow(CKM_lambda,2.0))*(CKM_barrho*unit1 +
+                                            CKM_bareta*uniti)/sqrt(1.0-pow(CKM_lambda,2.0));
+     Vtq = CKM_A*pow(CKM_lambda,3.0)*Vtq;
+     // V_{ud}
+     Vuq = unit1*(1.0-0.5*pow(CKM_lambda,2.0)-0.125*pow(CKM_lambda,4.0)); 
   }
 
   if(ms<0.001){
@@ -157,8 +166,15 @@ void EvtbTosllVectorAmpNew::CalcAmp( EvtParticle *parent,
      ::abort();
   }
 
-  Vtb = unit1*(1.0-0.5*pow(CKM_A*CKM_lambda*CKM_lambda,2.0)); // V_{tb}
-  CKM_factor = conj(Vtq)*Vtb;                                 // V^*_{tq}*V_{tb}
+  Vtb = unit1*(1.0-0.5*pow(CKM_A*CKM_lambda*CKM_lambda,2.0));      // V_{tb}
+  Vub = CKM_A*pow(CKM_lambda,3.0)*(CKM_barrho*unit1 - 
+                  CKM_bareta*uniti)/sqrt(1.0-pow(CKM_lambda,2.0)); // V_{ub}
+  
+  CKM_factor = conj(Vtq)*Vtb;                                      // V^*_{tq}*V_{tb}
+  
+  lambda_qu = conj(Vuq)*Vub/CKM_factor;            // V^*_{uq}*V_{ub}/V^*_{tq}*V_{tb}
+  Relambda_qu = real(lambda_qu); 
+  Imlambda_qu = imag(lambda_qu);
 
 
   double a1,a2,a0,v,t1,t2,t3;  // B -> V transition form-factors 
@@ -166,14 +182,17 @@ void EvtbTosllVectorAmpNew::CalcAmp( EvtParticle *parent,
   // To get the B -> V transition form-factors
   formFactors->getVectorFF(parent->getId(),
                            parent->getDaug(iV)->getId(),
-                           q2, M2, 
+                           q2, 
                            a1,a2,a0,v,t1,t2,t3);
 
 
   // The Wilson Coefficients preparation according to the paper
   // A.J.Buras, M.Munz, Phys.Rev.D52, p.189 (1995)
   EvtComplex c7gam =  WilsCoeff->GetC7Eff(mu, Mw, mt, Nf, ias);
-  EvtComplex c9eff =  WilsCoeff->GetC9Eff(res_swch, q2, M1, mb, mu, mc, mt, Mw, ml, Nf, ias);
+  EvtComplex c9eff_b2q       = WilsCoeff->GetC9Eff(0,res_swch,ias,Nf,q2,mb,ms,mc,mu,mt,Mw,ml,
+                               Relambda_qu,Imlambda_qu);
+  EvtComplex c9eff_barb2barq = WilsCoeff->GetC9Eff(1,res_swch,ias,Nf,q2,mb,ms,mc,mu,mt,Mw,ml,
+                               Relambda_qu,Imlambda_qu);
   EvtComplex c10a  =  WilsCoeff->GetC10Eff(mt, Mw);
 
   report(NOTICE,"EvtGen") << "\n\n The function EvtbTosllVectorAmpNew::CalcAmp(...) passed."
@@ -205,9 +224,24 @@ void EvtbTosllVectorAmpNew::CalcAmp( EvtParticle *parent,
       << "\n ============================================================================"
       << "\n Wilson Coefficients:"
       << "\n Re(c7gam) = " << real(c7gam) << " Im(c7gam) = " << imag(c7gam)
-      << "\n Re(c9eff) = " << real(c9eff) << " Im(c9eff) = " << imag(c9eff)
+      << "\n Re(c9eff_b2q) = " << real(c9eff_b2q) 
+        << " Im(c9eff_b2q) = " << imag(c9eff_b2q)
+      << "\n Re(c9eff_barb2barq) = " << real(c9eff_barb2barq) 
+        << " Im(c9eff_barb2barq) = " << imag(c9eff_barb2barq)
       << "\n Re(c10a)  = " << real(c10a)  << " Im(c10a)  = " << imag(c10a)
       << std::endl;
+
+      mytest = fopen("output.txt","a");
+      if(mytest != NULL){									
+	fprintf(mytest,"%lf\n",q2);	
+	fclose(mytest);						
+      } 
+      else{
+         report(ERROR,"EvtGen") << "\n Error in writing to file.\n"
+         << std::endl;
+	 return;					
+      }
+
 
 
   // 4- momentum of the B-meson in the the B-meson rest frame
@@ -226,20 +260,21 @@ void EvtbTosllVectorAmpNew::CalcAmp( EvtParticle *parent,
   // Hadronic matrix element coefficients according to the paper
   // A. Ali, A. Salim Safir, Eur.Phys.J.C25, pp.583-601 (2002)
   // with m_s.NE.0
-  EvtComplex a,b,c,d,e,f,g,h;
+  EvtComplex a_b2q, a_barb2barq, b_b2q, b_barb2barq, c_b2q, c_barb2barq, e, f, g, h;
   
-  a = 2.0*c9eff*v/(1.0+hatM2)+4.0*(hatmb+hatms)*c7gam*t1/hats;
+  a_b2q       = 2.0*c9eff_b2q*v/(1.0+hatM2)       + 4.0*(hatmb+hatms)*c7gam*t1/hats;
+  a_barb2barq = 2.0*c9eff_barb2barq*v/(1.0+hatM2) + 4.0*(hatmb+hatms)*c7gam*t1/hats;
 
-  b = c9eff*a1+2.0*(hatmb-hatms)*(1.0-hatM2)*c7gam*t2/hats;
-  b = b*(1.0+hatM2);
+  b_b2q       = (c9eff_b2q*a1      +2.0*(hatmb-hatms)*(1.0-hatM2)*c7gam*t2/hats)*(1.0+hatM2);
+  b_barb2barq = (c9eff_barb2barq*a1+2.0*(hatmb-hatms)*(1.0-hatM2)*c7gam*t2/hats)*(1.0+hatM2);
 
-  c = c9eff*(1.0-hatM2)*a2+2.0*(hatmb-hatms)*(1.0-pow(hatM2,2))*c7gam*t2/hats+
-      2.0*(hatmb-hatms)*c7gam*t3;
-  c = c/(1-pow(hatM2,2));
+  c_b2q       = (c9eff_b2q*(1.0-hatM2)*a2 +
+                 2.0*(hatmb-hatms)*(1.0-pow(hatM2,2))*c7gam*t2/hats +
+                 2.0*(hatmb-hatms)*c7gam*t3)/(1-pow(hatM2,2));
 
-  d = c9eff*(1.0+hatM2)*a1-c9eff*(1.0-hatM2)*a2-2.0*c9eff*hatM2*a0-
-      2.0*(hatmb-hatms)*c7gam*t3;
-  d = d/hats;
+  c_barb2barq = (c9eff_barb2barq*(1.0-hatM2)*a2 +
+                 2.0*(hatmb-hatms)*(1.0-pow(hatM2,2))*c7gam*t2/hats +
+                 2.0*(hatmb-hatms)*c7gam*t3)/(1-pow(hatM2,2));
 
   e = 2.0*c10a*v/(1+hatM2);
 
@@ -247,18 +282,19 @@ void EvtbTosllVectorAmpNew::CalcAmp( EvtParticle *parent,
 
   g = c10a*a2/(1+hatM2);
 
-  h = (1.0+hatM2)*a1-(1.0-hatM2)*a2-2.0*hatM2*a0;
-  h = h*c10a/hats;
+  h = ((1.0+hatM2)*a1-(1.0-hatM2)*a2-2.0*hatM2*a0)*c10a/hats;
 
-  report(ERROR,"EvtGen") << " a = " << a
-                         << " b = " << b
-                         << " c = " << c
-                         << " d = " << d
-                         << " e = " << e
-                         << " f = " << f
-                         << " g = " << g
-                         << " h = " << h
-                         << std::endl;
+//  report(NOTICE,"EvtGen") << " a_b2q       = " << a_b2q
+//                          << " a_barb2barq = " << a_barb2barq
+//                          << " b_b2q       = " << b_b2q
+//                          << " b_barb2barq = " << b_barb2barq
+//                          << " c_b2q       = " << c_b2q
+//                          << " c_barb2barq = " << c_barb2barq
+//                          << " e = " << e
+//                          << " f = " << f
+//                          << " g = " << g
+//                          << " h = " << h
+//                          << std::endl;
          
   // to find ell^+ and ell^- in the B-meson  daughters
   int charge1 = EvtPDL::chg3(parent->getDaug(1)->getId());
@@ -293,12 +329,12 @@ void EvtbTosllVectorAmpNew::CalcAmp( EvtParticle *parent,
 
   if (bmesons.contains(parentID)){
 
-    // The amplitude for the decay barB -> bar V ell^+ ell^-
+    // The amplitude for the decay barB -> barV ell^+ ell^-
+    // (b -> q ell^+ ell^- transition)
 
-    T1 = -a*unit1*dual(EvtGenFunctions::directProd(hatp1,hatp2))
-         -b*uniti*EvtTensor4C::g()
-         +c*uniti*EvtGenFunctions::directProd((hatp1+hatp2),hatp1)
-         +d*uniti*EvtGenFunctions::directProd((hatp1-hatp2),hatp1);
+    T1 = -a_b2q*unit1*dual(EvtGenFunctions::directProd(hatp1,hatp2))
+         -b_b2q*uniti*EvtTensor4C::g()
+         +c_b2q*uniti*EvtGenFunctions::directProd((hatp1+hatp2),hatp1);
 
     T2 = -e*unit1*dual(EvtGenFunctions::directProd(hatp1,hatp2))
          -f*uniti*EvtTensor4C::g()
@@ -343,17 +379,17 @@ void EvtbTosllVectorAmpNew::CalcAmp( EvtParticle *parent,
     if (bbarmesons.contains(parentID)) {
 
     // The amplitude for the decay B -> V ell^+ ell^-
+    // (barb -> barq ell^+ ell^- transition)
 
-    T1 = conj(a)*unit1*dual(EvtGenFunctions::directProd(hatp1,hatp2))
-        -conj(b)*uniti*EvtTensor4C::g()
-        +conj(c)*uniti*EvtGenFunctions::directProd((hatp1+hatp2),hatp1)
-        +conj(d)*uniti*EvtGenFunctions::directProd((hatp1-hatp2),hatp1);
+    T1 =  a_barb2barq*unit1*dual(EvtGenFunctions::directProd(hatp1,hatp2))
+         -b_barb2barq*uniti*EvtTensor4C::g()
+         +c_barb2barq*uniti*EvtGenFunctions::directProd((hatp1+hatp2),hatp1);
 
 
-    T2 = conj(e)*unit1*dual(EvtGenFunctions::directProd(hatp1,hatp2))
-        -conj(f)*uniti*EvtTensor4C::g()
-        +conj(g)*uniti*EvtGenFunctions::directProd((hatp1+hatp2),hatp1)
-        +conj(h)*uniti*EvtGenFunctions::directProd((hatp1-hatp2),hatp1);
+    T2 =  e*unit1*dual(EvtGenFunctions::directProd(hatp1,hatp2))
+         -f*uniti*EvtTensor4C::g()
+         +g*uniti*EvtGenFunctions::directProd((hatp1+hatp2),hatp1)
+         +h*uniti*EvtGenFunctions::directProd((hatp1-hatp2),hatp1);
 
      
       lvc11=EvtLeptonVCurrent(lepPlus->spParent(1),
@@ -394,9 +430,27 @@ void EvtbTosllVectorAmpNew::CalcAmp( EvtParticle *parent,
                              << std::endl;
       ::abort();
     } 
-    
+
   }
 
+    // Test of the signature for Levi-Civita tensor
+//  EvtVector4C Vec0, Vec1, Vec2, Vec3;
+//  EvtTensor4C Ttest;
+//  Vec0.set(1.0,0.0,0.0,0.0);
+//  Vec1.set(0.0,1.0,0.0,0.0);
+//  Vec2.set(0.0,0.0,1.0,0.0);
+//  Vec3.set(0.0,0.0,0.0,1.0);
+//  Ttest=dual(directProd(Vec2,Vec3));
+//  report(NOTICE,"EvtGen") << "\n\n\n e^{0123} =" << Ttest.get(0,1) << std::endl;
+//  report(NOTICE,"EvtGen") << " e^{1023} =" << Ttest.get(1,0) << std::endl;
+//  report(NOTICE,"EvtGen") << " e^{1123} =" << Ttest.get(1,1) << "\n" << std::endl;
+//  EvtVector4C Vtest=Ttest.cont2(Vec1);
+//  for(i=0;i<=3;i++){
+//    report(NOTICE,"EvtGen") << " Vtest =" << Vtest.get(i) << std::endl; 
+//  }
+//  EvtComplex Atest;
+//  Atest=Vec0*Vtest;
+//  report(NOTICE,"EvtGen") << "\n Atest =" << Atest << "\n\n\n" << std::endl;
 
 }
 

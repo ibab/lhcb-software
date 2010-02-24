@@ -59,8 +59,7 @@ double EvtbTosllMSFF::equation9_10(double ff0, double M2, double q2,
 
 
 void EvtbTosllMSFF::getScalarFF(EvtId parent, EvtId daught,
-                                double  t, double  /*M2*/, 
-                                 double& fp,double& f0, double& ft){
+                                 double  t, double& fp,double& f0, double& ft){
 
   int models_counter=0; // counter of the accepted models
 
@@ -247,8 +246,7 @@ void EvtbTosllMSFF::getScalarFF(EvtId parent, EvtId daught,
 
 
 
-void EvtbTosllMSFF::getVectorFF(EvtId parent, EvtId daught,
-                                double t, double /* M2 */, 
+void EvtbTosllMSFF::getVectorFF(EvtId parent, EvtId daught, double t, 
                                  double& a1,double& a2,double& a0, double& v,
                                  double& t1, double& t2, double& t3 ){
 

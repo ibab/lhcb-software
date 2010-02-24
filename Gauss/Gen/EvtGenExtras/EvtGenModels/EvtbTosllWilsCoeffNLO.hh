@@ -14,7 +14,9 @@
 //
 // Modification history:
 //
-//    N.Nikitin           March 27 2008         Module created
+//    N.Nikitin           March   27, 2008         Module created
+//    N.Nikitin           January 12, 2010         New resonant contribution
+//                                                 description
 //
 //------------------------------------------------------------------------
 
@@ -54,22 +56,34 @@ class EvtbTosllWilsCoeffNLO{
   double C9v(double mu, double Mw, double mt, int Nf, int ias);
   double C10a(double mt, double Mw);
 
-  double Reh(double mu, double m2, double z, double s);
-  double Imh(double z, double s);
-  double Reh0(double mu, double m2, double s);
-  double Imh0(void);
-  double ReHadd(int res_swch, double q2, double ml);
-  double ImHadd(int res_swch, double q2, double ml);
-  double omega(double s);
+  double Reh(double mu, double mQ, double q2);
+  double Imh(double mQ, double q2);
 
-  double ReC9eff(int res_swch, double q2, double M1, double m2, double mu, 
-	         double mc, double mt, double Mw, double ml, int Nf, int ias);
-  double ImC9eff(int res_swch, double q2, double M1, double m2, double mu, 
-	         double mc, double Mw, double ml, int Nf, int ias);
+  double ReResonant(double q2, double GV, double GllV, double MV);
+  double ImResonant(double q2, double GV, double GllV, double MV);
 
-  EvtComplex GetC9Eff(int res_swch, double q2, double M1, double m2, double mu, 
-	              double mc, double mt, double Mw, double ml, 
-	              int Nf, int ias);
+
+  double ReHtot(int qflavour, int res_swch, int ias, int Nf, double mu, double mQ, 
+                double q2, double ml, double Mw);
+  double ImHtot(int qflavour, int res_swch, int ias, int Nf, double mu, double mQ, 
+                double q2, double ml, double Mw);
+
+
+  double omega(double q2, double m2);
+
+
+  double ReC9eff(int decay_id, int res_swch, int ias, int Nf, double q2, double m2, 
+                 double md, double mc, double mu, double mt, double Mw, double ml, 
+                 double Relambda_qu, double Imlambda_qu);
+  double ImC9eff(int decay_id, int res_swch, int ias, int Nf, double q2, double m2, 
+                 double md, double mc, double mu, double Mw, double ml, 
+                 double Relambda_qu, double Imlambda_qu);
+
+
+  EvtComplex GetC9Eff(int decay_id, int res_swch, int ias, int Nf,
+                      double q2, double m2, double md, double mc, 
+                      double mu, double mt, double Mw, double ml, 
+                      double Relambda_qu, double Imlambda_qu);
   EvtComplex GetC10Eff(double mt, double Mw);
   EvtComplex GetC7Eff(double mu, double Mw, double mt, int Nf, int ias);
  

@@ -28,11 +28,11 @@ class EvtbTosllFFNew{
  public:
 
   virtual void getScalarFF(EvtId /*parent*/, EvtId /*daught*/,double /*t*/, 
-                           double /* M2 */, double& /*fp*/,double& /*f0*/,
+                           double& /*fp*/,double& /*f0*/,
                            double& /*ft*/) {return;}
 
   virtual void getVectorFF(EvtId /*parent*/, EvtId /*daught*/,double /*t*/, 
-                           double /* M2 */, double& /*a1*/, double& /*a2*/,
+                           double& /*a1*/, double& /*a2*/,
                            double& /*a0*/, double& /*v*/, double& /*t1*/, 
                            double& /*t2*/, double& /*t3*/ ) {return;}
   

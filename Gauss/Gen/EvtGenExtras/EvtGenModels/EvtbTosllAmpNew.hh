@@ -39,13 +39,13 @@ class EvtbTosllAmpNew{
                         double /* CKM_A */, double /* CKM_lambda */, 
                         double /* CKM_barrho */, double /* CKM_bareta */)=0;
   
-  virtual double CalcMaxProb(EvtId /* parnum */, EvtId /* mesnum */, 
+  virtual double CalcMaxProb(EvtId /* parnum */, EvtId /* mesnum */,
                              EvtId /* l1num */,  EvtId /* l2num */,
-                             EvtbTosllFFNew * /* formFactors */, 
-                             EvtbTosllWilsCoeffNLO * /*WilsCoeff */, 
-                             double /* mu */, int /* Nf */, 
-                             int /* res_swch */, int /* ias */, 
-                             double /* CKM_A */, double /* CKM_lambda */, 
+                             EvtbTosllFFNew * /* formFactors */,
+                             EvtbTosllWilsCoeffNLO * /*WilsCoeff */,
+                             double /* mu */, int /* Nf */,
+                             int /* res_swch */, int /* ias */,
+                             double /* CKM_A */, double /* CKM_lambda */,
                              double /* CKM_barrho */, double /* CKM_bareta */) {return 0.0;};
 
   virtual double lambda(double /* a */, double /* b */, double /* c */) {return 0.0;};
