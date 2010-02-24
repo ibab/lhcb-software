@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.506 2010-02-23 17:01:46 jpalac Exp $
+! $Id: release.notes,v 1.507 2010-02-24 10:35:34 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-02-24 - Juan Palacios
+ - src/PhysDesktop.cpp
+  . Temporary fix: Revert from exist<T::Range> to exist<T::Container>. Needs
+    fix to GaudiAlg to work.
 
 ! 2010-02-23 - Juan Palacios
  - src/PhysDesktop.cpp
