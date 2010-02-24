@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.88 2010-02-19 17:03:59 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.89 2010-02-24 15:13:44 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -26,7 +26,7 @@ class DaVinci(LHCbConfigurableUser) :
          # Input
        , "Input"              : []              # Input data. Can also be passed as a second option file.
          # Output
-       , "HistogramFile"      : "DaVinci.root"  # Name of output Histogram file (set to "" to get no output) 
+       , "HistogramFile"      : ""              # Name of output Histogram file (set to "" to get no output) 
        , "TupleFile"          : ""              # Name of output Tuple file
        , "ETCFile"            : ""              # Name of output ETC file
        , "WriteFSR"           : True            # Flags whether to write out an FSR
