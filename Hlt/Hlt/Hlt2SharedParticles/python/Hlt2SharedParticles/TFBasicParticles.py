@@ -39,7 +39,7 @@ Hlt2TFMuons.Input =  protoloc
 Hlt2TFMuons.Particle = "muon"
 Hlt2TFMuons.addTool(ProtoParticleMUONFilter('Muon'))
 Hlt2TFMuons.Muon.Selection = ["RequiresDet='MUON'"]
-Hlt2TFMuons.addTool(TrackSelector())
+Hlt2TFMuons.addTool(TrackSelector)
 Hlt2TFMuons.TrackSelector.TrackTypes = ["Long"]
 ##########################################################################
 #
@@ -48,7 +48,7 @@ Hlt2TFMuons.TrackSelector.TrackTypes = ["Long"]
 Hlt2TFPions = NoPIDsParticleMaker("Hlt2TFPions")
 Hlt2TFPions.Particle =  "pion"
 Hlt2TFPions.Input =  protoloc
-Hlt2TFPions.addTool(TrackSelector())
+Hlt2TFPions.addTool(TrackSelector)
 Hlt2TFPions.TrackSelector.TrackTypes = ["Long"]
 ##########################################################################
 #
@@ -57,7 +57,7 @@ Hlt2TFPions.TrackSelector.TrackTypes = ["Long"]
 Hlt2TFKaons = NoPIDsParticleMaker("Hlt2TFKaons")
 Hlt2TFKaons.Particle =  "kaon"
 Hlt2TFKaons.Input =  protoloc
-Hlt2TFKaons.addTool(TrackSelector())
+Hlt2TFKaons.addTool(TrackSelector)
 Hlt2TFKaons.TrackSelector.TrackTypes = ["Long"]
 ##########################################################################
 #
@@ -66,7 +66,7 @@ Hlt2TFKaons.TrackSelector.TrackTypes = ["Long"]
 Hlt2TFRichKaons = CombinedParticleMaker("Hlt2TFRichKaons")
 Hlt2TFRichKaons.Particle =  "kaon"
 Hlt2TFRichKaons.Input = protoloc 
-Hlt2TFRichKaons.addTool(TrackSelector()) 
+Hlt2TFRichKaons.addTool(TrackSelector) 
 Hlt2TFRichKaons.TrackSelector.TrackTypes = ["Long"]
 ##########################################################################
 #
@@ -77,7 +77,7 @@ Hlt2TFElectrons.Particle =  "electron"
 Hlt2TFElectrons.Input =  protoloc
 Hlt2TFElectrons.addTool(ProtoParticleCALOFilter('Electron'))
 Hlt2TFElectrons.Electron.Selection = ["RequiresDet='CALO' CombDLL(e-pi)>'-2.0'"]
-Hlt2TFElectrons.addTool(TrackSelector())
+Hlt2TFElectrons.addTool(TrackSelector)
 Hlt2TFElectrons.TrackSelector.TrackTypes = ["Long"]
 ##########################################################################
 #
