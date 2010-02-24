@@ -13,6 +13,7 @@
  - remove obsolete MuonCombRec option Bfield
  - fix compilation error on windoz
  - fix momentum rec part in MuonNNetRec
+ - remove more windoz warnings
 
 ! 2010-02-16 - Rob Lambert
  - Fix for MuonClusterRec, remove windows warnings by using a vector or vectors instead of an array.
