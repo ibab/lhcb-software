@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v2r29 2010-02-24 ======================
 ! 2010-02-18 - Chris Jones
  - Fix crash when running average is turn on in Rich::HPDOccupancyTool due to
    and infinite recursive call. Also protect against invalid HPD IDs in the 
