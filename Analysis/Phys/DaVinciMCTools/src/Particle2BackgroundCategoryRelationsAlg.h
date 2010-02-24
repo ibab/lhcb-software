@@ -4,9 +4,8 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "Kernel/IBackgroundCategory.h"          // Interface
-#include "Relations/Relations.h"
-#include "Event/Particle.h"
+
+class IBackgroundCategory;
 
 /** @class Particle2BackgroundCategoryRelationsAlg Particle2BackgroundCategoryRelationsAlg.h
  *  

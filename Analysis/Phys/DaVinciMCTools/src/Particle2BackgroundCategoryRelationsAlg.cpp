@@ -2,6 +2,11 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+#include "Relations/Relations.h"
+//LHCb
+#include "Event/Particle.h"
+// DaVinci
+#include "Kernel/IBackgroundCategory.h"
 // local
 #include "Particle2BackgroundCategoryRelationsAlg.h"
 
@@ -88,8 +93,8 @@ StatusCode Particle2BackgroundCategoryRelationsAlg::backCategoriseParticles(cons
   }
 
   //Make the relations table
-  LHCb::Relation1D<const LHCb::Particle*,int>* catRelations =
-    new LHCb::Relation1D<const LHCb::Particle*, int>( myParticles->size() );
+  LHCb::Relation1D<LHCb::Particle, int>* catRelations =
+    new LHCb::Relation1D<LHCb::Particle, int>( myParticles->size() );
 
   for(LHCb::Particle::Container::const_iterator iP = myParticles->begin(); 
       iP != myParticles->end(); ++iP ){
