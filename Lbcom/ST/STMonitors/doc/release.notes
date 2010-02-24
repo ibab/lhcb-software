@@ -4,6 +4,7 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+!======================= STMonitors v2r5 2010-02-24 ==========================
 ! 2010-02-22 - Nicola Chiapolini 
  - Add first full version of STDQSummaryAlg (and STDQCounters)
 
