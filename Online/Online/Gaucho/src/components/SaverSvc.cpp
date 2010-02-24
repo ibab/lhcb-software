@@ -166,10 +166,11 @@ StatusCode SaverSvc::initialize() {
     }
     else {
        processMgr->setFarm("EFF");
-       serviceName = m_tmpPart+"_Adder_0/GauchoJob/MonitorSvc/monRate/RunNumber"; 
+       serviceName = m_tmpPart+"_Adder_1/GauchoJob/MonitorSvc/monRate/RunNumber"; 
     }
     
     m_runNbSvc = new DimInfoRunNb(serviceName.c_str(),utgidParts[0]);
+  //  msg << MSG::DEBUG << "created runnumber service " << serviceName.c_str() << endreq;
    // m_runNb = processMgr->getrunNumber(false);
        
     std::string *fileName = processMgr->fileNamePointer();
@@ -260,7 +261,7 @@ void SaverSvc::handle(const Incident& inc) {
   std::vector<ProcessMgr *>::iterator it;
   int i=0;
   for (it = m_processMgr.begin(); it < m_processMgr.end(); it++){
-   // m_processMgr[i]->setrunNumber(m_runNbSvc);
+    m_processMgr[i]->setrunNumber(m_runNbSvc);
     IocSensor::instance().send(this, s_saveHistos, *it);
     i++;
   }
@@ -304,15 +305,18 @@ StatusCode SaverSvc::finalize() {
 StatusCode SaverSvc::save(ProcessMgr* processMgr) {
 //------------------------------------------------------------------------------
   MsgStream  msg( msgSvc(), name() );
-    
+ 
     if (processMgr->serviceOwner().compare(s_Saver) != 0 ) {
       msg << MSG::WARNING << "Sorry Only Savers can save." << endreq;
       return StatusCode::SUCCESS;
     }
     std::string *fileName = processMgr->fileNamePointer();
-      
+
+ 
     if (!m_finalizing) processMgr->setrunNumber(m_runNbSvc);
-  
+    if (m_runNb == 0) m_runNb=m_runNbSvc->getRunNb() ;
+    // msg << MSG::INFO << "saving histograms in "<< *fileName << " runnb " << m_runNb << endreq;     
+     //if the runnumber is 0 here, try to get it 
     //when the runnumber changes we should stop and restart the dim timer
     //only save if the runnumber !=0
     if (m_runNb!=0) {
@@ -327,6 +331,9 @@ StatusCode SaverSvc::save(ProcessMgr* processMgr) {
        }   
        else processMgr->write();     
        msg << MSG::DEBUG << "Finished saving histograms in file "<< *fileName << endreq;
+    }
+    else {
+       msg << MSG::DEBUG << "Runnumber unknown. Can't save "<< m_runNb << endreq;    
     } 
   return StatusCode::SUCCESS;
 }
