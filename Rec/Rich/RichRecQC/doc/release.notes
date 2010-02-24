@@ -4,11 +4,12 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r37 2010-02-24 ========================
+
 ! 2010-02-24 - Chris Jones
  - Add a few methods to RichRecQCConf to allow users to easily add or remove 
    monitors to run
 
-!======================= RichRecQC v2r37 2010-02-24 ========================
 ! 2010-02-22 - Chris Jones
  - Disable a few more histograms for OnlineBrunel, since the Adders cannot 
    handle more than a very small number :( ...
