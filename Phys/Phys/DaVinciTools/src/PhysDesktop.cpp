@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.95 2010-02-23 17:02:11 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.96 2010-02-24 10:35:12 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -634,7 +634,8 @@ StatusCode PhysDesktop::getParticles(){
 
     // Retrieve the particles:
     std::string location = (*iloc)+"/Particles";
-    if ( !exist<LHCb::Particle::Range>( location ) ){ 
+    //    if ( !exist<LHCb::Particle::Range>( location ) ){ 
+    if ( !exist<LHCb::Particle::Container>( location ) ){ 
       Info("No particles at location "+location
               +((rootInTES().size()>0)?(" under "+rootInTES()):"") );
       continue ;
@@ -656,7 +657,8 @@ StatusCode PhysDesktop::getParticles(){
     // Retrieve the vertices:
     location = (*iloc)+"/Vertices";
     
-    if (!exist<LHCb::Vertex::Range>( location )) {
+    //    if (!exist<LHCb::Vertex::Range>( location )) {
+    if (!exist<LHCb::Vertex::Container>( location )) {
       Info("No vertices at location "+location
            +((rootInTES().size()>0)?(" under "+rootInTES()):"") );
       continue ; 
