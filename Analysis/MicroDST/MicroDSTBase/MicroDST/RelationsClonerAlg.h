@@ -1,4 +1,4 @@
-// $Id: RelationsClonerAlg.h,v 1.14 2010-02-04 11:24:39 jpalac Exp $
+// $Id: RelationsClonerAlg.h,v 1.15 2010-02-24 15:27:09 jpalac Exp $
 #ifndef MICRODST_RELATIONSCLONERALG_H 
 #define MICRODST_RELATIONSCLONERALG_H 1
 
@@ -70,8 +70,7 @@ namespace MicroDST
       verbose() << "inputTESLocation() is " << inputTESLocation() << endmsg;
 
       if (m_clonerType=="NONE") {
-        sc = this->Warning("ClonerType set to NONE. No cloning of To performed.", 
-                           StatusCode::SUCCESS);
+        debug() <<"ClonerType set to NONE. No cloning of To performed." << endmsg;
       } else {
         m_cloner = tool<CLONER>(m_clonerType, this);
         if (m_cloner) {
