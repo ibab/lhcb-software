@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.67 2010-02-18 07:54:54 szumlat Exp $
+! $Id: release.notes,v 1.68 2010-02-24 15:26:16 cattanem Exp $
 ! package Event/VeloEvent
 ! package manager: C.Parkes, T.Szumlak
 !========================================================================
+
+!====================== VeloEvent v16r8 2010-02-24 ======================
+! 2010-02-24 - Marco Cattaneo
+ - Remove from requirements hack for Gaudi v21r1 to link dictionary on windows
+
 ! 2010-02-17 - Tomasz Szumlak
  - add const specifier to make the compilator happy
 

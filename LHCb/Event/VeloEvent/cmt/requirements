@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.49 2009-05-29 15:46:10 cattanem Exp $
+# $Id: requirements,v 1.50 2010-02-24 15:26:16 cattanem Exp $
 # Maintainer: Chris Parkes, Tomasz Szumlak
 #
 package VeloEvent
 
-version v16r7p1
+version v16r8
 
 branches cmt doc xml VeloEvent
 
@@ -26,9 +26,6 @@ apply_pattern install_more_includes more=VeloEvent
 macro VeloEventObj2Dict_GODflags " -s ../VeloEvent/ " \
       WIN32                       " -s ..\VeloEvent\ "
 apply_pattern god_dictionary files=../xml/*.xml
-
-# Hack for Gaudi v21r1 to link dictionary on windows
-set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
 
 end_private
 
