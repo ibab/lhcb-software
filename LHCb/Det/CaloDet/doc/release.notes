@@ -1,14 +1,18 @@
-! $Id: release.notes,v 1.112 2010-02-17 23:05:55 odescham Exp $ 
+! $Id: release.notes,v 1.113 2010-02-24 15:21:59 cattanem Exp $ 
 ! =============================================================================
 ! Package         : CaloDet   
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
- - src/Lib/DeCalorimeter.cpp : fix bug for m_zSupThreshold and m_triggerThreshold for Spd 
-                               that prevents to run Boole/CaloDigitAlg witha threshold above 1 mip
-                               The threshold is extracted from condDB (and no longer overwritten as etSlope/2/mip for Spd
-                               The actual channel threshold value is given by gain(cellID)/2/mip 
-                               + new method spdThreshold(cellID) that returns the actual thresholds in mip unit for a given channel. 
+!======================== CaloDet v10r4 2010-02-24 ============================
+! 2010-02-17 Olivier Deschamps
+ - src/Lib/DeCalorimeter.cpp : 
+   + fix bug for m_zSupThreshold and m_triggerThreshold for Spd that prevents to
+     run Boole/CaloDigitAlg with a threshold above 1 mip. The threshold is
+     extracted from condDB (and no longer overwritten as etSlope/2/mip for Spd
+     The actual channel threshold value is given by gain(cellID)/2/mip 
+   + new method spdThreshold(cellID) that returns the actual thresholds in mip
+     unit for a given channel. 
 
 !======================== CaloDet v10r3p1 2010-01-23 ==========================
 ! 2010-01-23 - Patrick Robbe
