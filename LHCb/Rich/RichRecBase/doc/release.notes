@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r27 2010-02-24 ==========================
 ! 2010-02-19 - Chris Jones
  - Extend isolated track interface with new methods for LHCb::Track and
    LHCb::RichRecTrack
