@@ -4,6 +4,7 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!====================== RichKernel v7r31 2010-02-24 ====================
 ! 2010-02-16 - Chris Jones
  - Improvements to RichHistogramID full IDs and histogram titles
 
