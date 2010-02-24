@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -51,7 +51,8 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt1Tool   as Tool
         from HltLine.HltLine import hlt1Lines  
         from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
-        from HltLine.HltReco import RZVelo, PV2D
+        from HltLine.HltReco import RZVelo
+        from HltLine.HltPVs  import PV2D
 
         ## alias to get the slot associated to a name
         _cut = lambda x: str(self.getProp(x))

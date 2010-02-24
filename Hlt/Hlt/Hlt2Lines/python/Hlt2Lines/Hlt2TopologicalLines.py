@@ -1,7 +1,7 @@
-## $Id: Hlt2TopologicalLines.py,v 1.30 2010-02-22 08:33:06 gligorov Exp $
+## $Id: Hlt2TopologicalLines.py,v 1.31 2010-02-24 04:20:24 gligorov Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-02-22 08:33:06 $'
-__version__ = '$Revision: 1.30 $'
+__date__    = '$Date: 2010-02-24 04:20:24 $'
+__version__ = '$Revision: 1.31 $'
 
 ###
 #
@@ -286,12 +286,12 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         for i in [ 'LoKiTrigger.decorators' ] :
             if i not in modules : modules.append(i)
 
-        from Configurables import Hlt2PID
+        from Configurables import Hlt2Tracking
 
         Hlt2TopoKillTooManyInTrkAlg = VoidFilter('Hlt2TopoKillTooManyInTrkAlg'
-                                              , Code = "TrSOURCE('"+Hlt2PID().hlt2Tracking(getOutput=True)+"') >> (TrSIZE < %(ComRobGEC)s )" % self.getProps()
+                                              , Code = "TrSOURCE('"+(Hlt2Tracking().hlt2Tracking()).outputSelection()+"') >> (TrSIZE < %(ComRobGEC)s )" % self.getProps()
                                               )
-        Hlt2TopoKillTooManyInTrk = bindMembers( None, [ Hlt2PID().hlt2Tracking(getOutput=False), Hlt2TopoKillTooManyInTrkAlg ] )
+        Hlt2TopoKillTooManyInTrk = bindMembers( None, [ Hlt2Tracking().hlt2Tracking(), Hlt2TopoKillTooManyInTrkAlg ] )
 
         return Hlt2TopoKillTooManyInTrk
     # }

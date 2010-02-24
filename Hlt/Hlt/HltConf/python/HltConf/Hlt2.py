@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.48 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.49 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -26,15 +26,13 @@ from Hlt2Lines.Hlt2DisplVerticesLines   import Hlt2DisplVerticesLinesConf
 from Hlt2Lines.Hlt2CommissioningLines   import Hlt2CommissioningLinesConf
 from Hlt2Lines.Hlt2ExpressLines         import Hlt2ExpressLinesConf
 from Hlt2Lines.Hlt2diphotonDiMuonLines  import Hlt2diphotonDiMuonLinesConf
-
-
+from HltLine.Hlt2Tracking import Hlt2Tracking
 # Define what categories stand for
 # There are the strings used in HltThresholdSettings
 
 
 class Hlt2Conf(LHCbConfigurableUser):
-    from Configurables import Hlt2PID
-    __used_configurables__ = [ Hlt2PID
+    __used_configurables__ = [ Hlt2Tracking
                              , Hlt2TopologicalLinesConf
                              , Hlt2B2DXLinesConf 
                              , Hlt2CharmLinesConf
@@ -54,7 +52,6 @@ class Hlt2Conf(LHCbConfigurableUser):
     __slots__ = {
            "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
          , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
-         , "Hlt2Tracks"                 : "Long"
          , "WithMC"                     : False 
          }
 
@@ -86,9 +83,15 @@ class Hlt2Conf(LHCbConfigurableUser):
 # PID
 #
     def configurePID(self):
-        from Configurables import Hlt2PID
-        Hlt2PID().DataType = self.getProp("DataType")
-        Hlt2PID().Hlt2Tracks = self.getProp("Hlt2Tracks")
+        from HltLine.HltTrackNames import HltSharedTracksPrefix, Hlt2LongTracksName 
+        Hlt2Tracking().DataType = self.getProp("DataType")
+        Hlt2Tracking().Prefix = HltSharedTracksPrefix
+        Hlt2Tracking().Suffix = "" #track fit is off by default
+        Hlt2Tracking().Hlt2Tracks = Hlt2LongTracksName
+        Hlt2Tracking().UseRICH = False
+        Hlt2Tracking().UseCALO = False
+        Hlt2Tracking().DoSeeding = False
+        Hlt2Tracking().DoCloneKilling = False
       
 ###################################################################################
 #

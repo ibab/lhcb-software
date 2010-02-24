@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -66,7 +66,8 @@ class Hlt1HadronForSwimmingLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt1Tool   as Tool
         from HltLine.HltLine import hlt1Lines  
         from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
-        from HltLine.HltReco import RZVelo, PV2D
+        from HltLine.HltReco import RZVelo
+        from HltLine.HltPVs  import PV2D
 
         
         # confirmed track

@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.84 2010-02-22 15:54:35 graven Exp $
+! $Id: release.notes,v 1.85 2010-02-24 04:19:46 gligorov Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+! 2010-02-24 - V. Gligorov
+ - Contine the reorganization of Hlt tracking, see Savannah 13784, 12691
+   for details. Major changes in this round
+   . Move Hlt2PID here and rename it to Hlt2Tracking
+   . Create new file HltTrackNames to hold shared container names
+   . Remove almost everything from HltReco 
+ 
 ! 2010-02-22 - V. Gligorov
  - Contine the reorganization of Hlt tracking, see Savannah 13784, 12691
    for details. Major changes in this round

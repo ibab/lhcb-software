@@ -1,7 +1,7 @@
-## $Id: Hlt2CharmLines.py,v 1.5 2010-02-22 08:33:06 gligorov Exp $
+## $Id: Hlt2CharmLines.py,v 1.6 2010-02-24 04:20:24 gligorov Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-02-22 08:33:06 $'
-__version__ = '$Revision: 1.5 $'
+__date__    = '$Date: 2010-02-24 04:20:24 $'
+__version__ = '$Revision: 1.6 $'
 
 ## ######################################################################
 ## Defines a configurable to define and configure Hlt2 lines for selecting
@@ -254,12 +254,12 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         for i in [ 'LoKiTrigger.decorators' ] :
             if i not in modules : modules.append(i)
 
-	from Configurables import Hlt2PID
+	from Configurables import Hlt2Tracking
 
         Hlt2TopoKillTooManyInTrkAlg = VoidFilter('Hlt2TopoKillTooManyInTrkAlg'
-                                              , Code = "TrSOURCE('"+Hlt2PID().hlt2Tracking(getOutput=True)+"') >> (TrSIZE < %(ComRobGEC)s )" % self.getProps()
+                                              , Code = "TrSOURCE('"+(Hlt2Tracking().hlt2Tracking()).outputSelection()+"') >> (TrSIZE < %(ComRobGEC)s )" % self.getProps()
                                               )
-        Hlt2TopoKillTooManyInTrk = bindMembers( None, [ Hlt2PID().hlt2Tracking(getOutput=False), Hlt2TopoKillTooManyInTrkAlg ] )
+        Hlt2TopoKillTooManyInTrk = bindMembers( None, [ Hlt2Tracking().hlt2Tracking(), Hlt2TopoKillTooManyInTrkAlg ] )
 
         return Hlt2TopoKillTooManyInTrk
     # }

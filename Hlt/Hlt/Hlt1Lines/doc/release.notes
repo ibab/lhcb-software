@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.125 2010-02-22 15:50:59 graven Exp $
+! $Id: release.notes,v 1.126 2010-02-24 04:15:50 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -9,6 +9,10 @@
 ! for the production. Commit them AS WELL in branch production200912. 
 !
 !-----------------------------------------------------------------------------
+
+! 2010-02-24 - V. Gligorov
+ - Follow progress of Savannah tasks 13784 and 12691 by updating Hlt1 lines
+   to get their primary vertices from HltPVs.py and not HltReco.py 
  
 !========================== Hlt1Lines v2r2p1 2010-02-21 ===================
 ! 2010-02-18 - Gerhard Raven

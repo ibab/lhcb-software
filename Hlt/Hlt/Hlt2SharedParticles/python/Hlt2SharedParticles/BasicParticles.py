@@ -8,15 +8,14 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.17 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
-from HltLine.HltReco import HltRecoSequence
 from Configurables import NoPIDsParticleMaker, CombinedParticleMaker, TrackSelector
 from Configurables import PhotonMaker, PhotonMakerAlg
 from Configurables import ProtoParticleCALOFilter, ProtoParticleMUONFilter
-from Configurables import Hlt2PID, GaudiSequencer
+from Configurables import Hlt2Tracking, GaudiSequencer
 from GaudiKernel.SystemOfUnits import MeV
 #
 # These are all based on unfitted tracks
@@ -24,10 +23,22 @@ from GaudiKernel.SystemOfUnits import MeV
 # For particles with RICH info see TFBasicParticles
 #
 ##########################################################################
+#
+# Charged protoparticles -> pulls all the pid
+#
+caloProtos = Hlt2Tracking().hlt2ChargedCaloProtos( )
+muonProtos = Hlt2Tracking().hlt2MuonProtos( )
+hadronProtos = Hlt2Tracking().hlt2ChargedHadronProtos( )
+##########################################################################
+#
+# Neutral protoparticles
+#
+NeutralProtos = Hlt2Tracking().hlt2NeutralProtos()
+##########################################################################
 # Make the pions
 #
 Hlt2NoCutsPions = NoPIDsParticleMaker("Hlt2NoCutsPions")
-Hlt2NoCutsPions.Input =  "Hlt/ProtoP/Charged"
+Hlt2NoCutsPions.Input =  hadronProtos.outputSelection()
 Hlt2NoCutsPions.Particle =  "pion" 
 Hlt2NoCutsPions.WriteP2PVRelations = False
 ##########################################################################
@@ -50,14 +61,14 @@ Hlt2Muons.addTool(ProtoParticleMUONFilter('Muon'))
 Hlt2Muons.Muon.Selection = ["RequiresDet='MUON' IsMuon=True" ]
 Hlt2Muons.addTool(TrackSelector)
 Hlt2Muons.TrackSelector.TrackTypes = ["Long"] 
-Hlt2Muons.Input =  "Hlt/ProtoP/Charged"
+Hlt2Muons.Input =  muonProtos.outputSelection()
 Hlt2Muons.WriteP2PVRelations = False
 ##########################################################################
 # Make the electrons
 #
 Hlt2Electrons = CombinedParticleMaker("Hlt2Electrons")
 Hlt2Electrons.Particle =   "electron" 
-Hlt2Electrons.Input =  "Hlt/ProtoP/Charged" 
+Hlt2Electrons.Input = caloProtos.outputSelection()  
 Hlt2Electrons.addTool(ProtoParticleCALOFilter('Electron'))
 Hlt2Electrons.Electron.Selection = [ "RequiresDet='CALO' CombDLL(e-pi)>'-2.0'" ]
 ##########################################################################
@@ -65,22 +76,11 @@ Hlt2Electrons.Electron.Selection = [ "RequiresDet='CALO' CombDLL(e-pi)>'-2.0'" ]
 #
 Hlt2Photons = PhotonMakerAlg("Hlt2Photons")
 Hlt2Photons.addTool(PhotonMaker)
+#TODO: fix this hardcoding!!!
 Hlt2Photons.PhotonMaker.Input= "Hlt/ProtoP/Neutrals"
 Hlt2Photons.PhotonMaker.ConvertedPhotons = True  
 Hlt2Photons.PhotonMaker.UnconvertedPhotons = True  
 Hlt2Photons.PhotonMaker.PtCut = 200.* MeV 
-##########################################################################
-#
-# Charged protoparticles -> pulls all the pid
-#
-caloProtos = Hlt2PID().hlt2ChargedCaloProtos( )
-muonProtos = Hlt2PID().hlt2MuonProtos( )
-hadronProtos = Hlt2PID().hlt2ChargedHadronProtos( )
-##########################################################################
-#
-# Charged protoparticles
-#
-NeutralProtos = Hlt2PID().hlt2NeutralProtos()
 ##########################################################################
 #
 # 

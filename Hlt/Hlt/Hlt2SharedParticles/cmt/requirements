@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.23 2010-02-17 15:15:31 graven Exp $
+# $Id: requirements,v 1.24 2010-02-24 04:12:02 gligorov Exp $
 # Created    : 2009/04/06
 # Maintainer : P. Koppenburg & G.Raven
 
@@ -18,7 +18,6 @@ use       HltLine     v*  Hlt
 
 # ============================================================================
 # ======= the patterns =======================================================
-macro Hlt2SharedParticlesConfUserModules "Hlt2SharedParticles.Hlt2PID"
 apply_pattern install_python_modules
 #apply_pattern install_python_init
 #apply_pattern install_custom_python_modules

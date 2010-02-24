@@ -63,8 +63,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         
         # debugging options
         debugOPL = self.getProp('OutputLevel')
-        from HltLine.HltReco import PV2D
-
+	from HltLine.HltPVs  import PV2D
         # define reco scaler
         recoScaler = Scaler( 'LumiRecoScaler' ,  AcceptFraction = 1 if self.getProp('EnableReco') else 0 )  
 

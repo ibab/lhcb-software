@@ -11,13 +11,25 @@ from HltLine.HltLine import bindMembers
 from Configurables import NoPIDsParticleMaker, CombinedParticleMaker, TrackSelector
 from Configurables import PhotonMaker, PhotonMakerAlg
 from Configurables import ProtoParticleCALOFilter, ProtoParticleMUONFilter
-from Configurables import Hlt2PID
+from Configurables import Hlt2Tracking
 from GaudiKernel.SystemOfUnits import MeV
 #
-prefix = "Hlt"
-suffix = "Fitted" 
-tracks = "Long"   
-protoloc = "/Event/"+prefix+"/ProtoP/" + suffix + "/Charged"
+from HltLine.HltTrackNames import HltBiDirectionalKalmanFitSuffix
+
+# Need another instance of Hlt2Tracking
+class Hlt2TFTracking(Hlt2Tracking) :
+    __used_configurables__ = []
+    __slots__ = []
+
+Hlt2TFTracking = Hlt2TFPID()
+Hlt2TFTracking.Prefix = Hlt2Tracking().getProp("Prefix")
+Hlt2TFTracking.Suffix = HltBiDirectionalKalmanFitSuffix
+Hlt2TFTracking.Hlt2Tracks = Hlt2Tracking().getProp("Hlt2Tracks")
+Hlt2TFTracking.UseRICH = True
+Hlt2TFTracking.UseCALO = False
+Hlt2TFTracking.DataType = Hlt2Tracking().getProp("DataType")
+
+protoloc = (Hlt2TFTracking.hlt2ChargedProtos()).outputSelection()
 ##########################################################################
 #
 # Make the Muons
@@ -72,26 +84,14 @@ Hlt2TFElectrons.TrackSelector.TrackTypes = ["Long"]
 # Now all PID
 # 
 ##########################################################################
-# Need another instance of Hlt2PID
-class Hlt2TFPID(Hlt2PID) :
-    __used_configurables__ = []
-    __slots__ = []
-
-Hlt2TFPID = Hlt2TFPID()
-Hlt2TFPID.Prefix = prefix
-Hlt2TFPID.Suffix = suffix
-Hlt2TFPID.Hlt2Tracks = tracks
-Hlt2TFPID.UseRICH = True
-Hlt2TFPID.UseCALO = False
-Hlt2TFPID.DataType = Hlt2PID().getProp("DataType")
 #
 # Charged protoparticles
 #
-TFChargedProtoMaker = Hlt2TFPID.hlt2ChargedProtos( )
+TFChargedProtoMaker = Hlt2TFTracking.hlt2ChargedProtos()
 #
 # hadrons with the RICH
 #
-TFChargedHadronProtoMaker = Hlt2TFPID.hlt2ChargedHadronProtos( )
+TFChargedHadronProtoMaker = Hlt2TFTracking.hlt2ChargedHadronProtos( )
 ##########################################################################
 #
 # Calo reco
@@ -106,7 +106,7 @@ TFChargedHadronProtoMaker = Hlt2TFPID.hlt2ChargedHadronProtos( )
 #
 # Muon reco 
 #
-TFMuonProtoMaker = Hlt2TFPID.hlt2MuonProtos()  
+TFMuonProtoMaker = Hlt2TFTracking.hlt2MuonProtos()  
 ##########################################################################
 #
 # define exported symbols -- these are for available

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltPVs.py,v 1.1 2010-02-22 08:24:31 gligorov Exp $
+# $Id: HltPVs.py,v 1.2 2010-02-24 04:18:00 gligorov Exp $
 # =============================================================================
 ## @file HltLine/HltPVs.py
 #  Define the 2D and 3D primary vertex making algorithms for the Hlt
@@ -43,13 +43,14 @@ from Configurables import PatPV2DFit3D, PatPV3D, PVOfflineTool
 # Configure PV algorithms
 #############################################################################################
 from HltReco import MinimalRZVelo
+from HltTrackNames import HltSharedRZVeloTracksName, HltSharedTracksPrefix
 from HltLine import bindMembers
-from Configurables import Hlt2PID
+from Configurables import Hlt2Tracking
 
 #### Primary vertex algorithms...
 
 # Todo: fix hardcoding here
-patPV2D = PatPV2DFit3D( 'HltPVsPV2D' , InputTracksName = "Hlt/Track/RZVelo" 
+patPV2D = PatPV2DFit3D( 'HltPVsPV2D' , InputTracksName = HltSharedTracksPrefix + "/Track/" + HltSharedRZVeloTracksName 
                                       , OutputVerticesName = "Hlt/Vertex/PV2D" )  
 patPV2D.addTool(PVOfflineTool, name = 'PVOfflineTool')
 patPV2D.PVOfflineTool.PVFitterName='LSAdaptPV3DFitter'
@@ -57,7 +58,7 @@ patPV2D.PVOfflineTool.PVFitterName='LSAdaptPV3DFitter'
 
 recoPV3D =  PatPV3D('HltPVsPV3D' )
 recoPV3D.addTool( PVOfflineTool, name = 'PVOfflineTool' )
-recoPV3D.PVOfflineTool.InputTracks = [ Hlt2PID().hlt2VeloTracking(getOutput = True) ]
+recoPV3D.PVOfflineTool.InputTracks = [ (Hlt2Tracking().hlt2VeloTracking()).outputSelection() ]
 
 ##### Hlt selections
 from Configurables import HltVertexFilter
@@ -74,4 +75,4 @@ preparePV2D = HltVertexFilter( 'Hlt1PreparePV2D'
 #############################################################################################
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 PV2D     = bindMembers( None, [ MinimalRZVelo, patPV2D, preparePV2D ] )
-PV3D     = bindMembers( None, [ MinimalRZVelo] + Hlt2PID().hlt2VeloTracking(getOutput = False) + [recoPV3D ] )
+PV3D     = bindMembers( None, (Hlt2Tracking().hlt2VeloTracking()).members() + [recoPV3D ] )

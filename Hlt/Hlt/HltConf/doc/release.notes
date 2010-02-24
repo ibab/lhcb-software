@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.424 2010-02-22 15:53:01 graven Exp $ 
+! $Id: release.notes,v 1.425 2010-02-24 04:23:25 gligorov Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
-
+! 2010-02-24 - V. Gligorov
+ - Follow continued reorganization of Hlt tracking by asking Hlt2.py
+   to spell out explicitly the "vanilla" tracking scenario (forward
+   tracks, no fitting, no RICH, no seeding) when being configured. 
 
 !========================== HltConf v6r4p1 2010-02-21 ===================
 ! 2010-02-20 - Gerhard Raven

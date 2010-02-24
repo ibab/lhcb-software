@@ -1,9 +1,16 @@
-$Id: release.notes,v 1.76 2010-02-22 08:25:12 gligorov Exp $
+$Id: release.notes,v 1.77 2010-02-24 04:13:48 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+! 2010-02-24 - V. Gligorov
+ - Continuing work on Savannah tasks 13784 and 12691. Hlt2PID has moved to
+   HltLine and been renamed to Hlt2Tracking. Updated BasicParticles,
+   TFBasicParticles, and V0 to follow this change. 
+ - Fixed major bug in V0.py which meant that DD K shorts were being made
+   with forward tracks.
+
 ! 2010-02-22 - V. Gligorov
  - Major changes to Hlt2PID, and minor follow-on changes to BasicParticles
    and TFBasicParticles. Hlt2PID now contains almost all the Hlt2 specific
