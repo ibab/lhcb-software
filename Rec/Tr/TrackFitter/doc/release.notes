@@ -3,6 +3,7 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r45 2010-02-24=================
 ! 2010-02-23 - Wouter Hulsbergen
  - set default value of UpdateTransport to true (temporary)
  - remove state-at-beamline for tracks without velo and TT hits
