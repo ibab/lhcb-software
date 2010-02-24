@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.83 2010-02-18 14:18:51 ibelyaev Exp $ 
+! $Id: release.notes,v 1.84 2010-02-24 15:51:56 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,10 +15,9 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiMC v8r9 2010-02-24 ============================
 ! 2010-02-18 - Vanya Belyaev
- 
 - add new symbols
- 
      MCFROMDECAYS     LoKi::MCParticles::FromDecays 
                to check if particle comes 'only from decays'
      MCFROMXS         LoKi::MCParticles::FromInteractions 
@@ -28,17 +27,12 @@
       thus it is "not perfect"
 
 ! 2010-02-18 - Vanya Belyaev
-
  - add new suymbols
-
     MCINANCESTORS   to check the certain condition for ancestors 
     MCNINANCESTORS  to count the certain condition for ancestors 
 
  - cmt/requirements
-
      version incrememet to v8r9 
-
-
 
 !========================== LoKiMC v8r8 2010-02-14 ============================
 ! 2010-02-14 - Marco Cattaneo
