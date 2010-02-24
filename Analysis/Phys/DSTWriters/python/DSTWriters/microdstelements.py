@@ -170,3 +170,14 @@ class _copyHltDecReports(CopyWithBranch) :
         self.setOutputPrefix(cloner)
         return [cloner]
 
+class _copyBackCat(CopyWithBranch) :
+    def __call__(self, sel) :
+        from Configurables import Particle2BackgroundCategoryRelationsAlg
+        from Configurables import CopyParticle2BackgroundCategory
+        backCatAlg = Particle2BackgroundCategoryRelationsAlg(_personaliseName(sel,'BackCatAlg'))
+        backCatAlg.InputLocations=dataLocations(sel,"")
+        cloner =  CopyParticle2BackgroundCategory(_personaliseName(sel, 'CopyP2BackCat'))
+        cloner.InputLocations = dataLocations(sel,"P2BCRelations")
+        cloner.OutputLevel=4
+        self.setOutputPrefix(cloner)
+        return [backCatAlg, cloner]
