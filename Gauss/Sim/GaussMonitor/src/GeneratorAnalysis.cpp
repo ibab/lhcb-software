@@ -1,4 +1,4 @@
-// $Id: GeneratorAnalysis.cpp,v 1.7 2009-10-19 13:55:52 silviam Exp $
+// $Id: GeneratorAnalysis.cpp,v 1.8 2010-02-24 19:02:33 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -183,14 +183,16 @@ StatusCode GeneratorAnalysis::execute() {
           if( (hepMCpart->status() == 1) || (hepMCpart->status() == 888 ) ) {
             primFound = true;
             if( produceHistos() ) { 
-              m_hPrimX->fill( hepMCpart->production_vertex()->position().x()/
-                              Gaudi::Units::mm );
-              m_hPrimY->fill( hepMCpart->production_vertex()->position().y()/
-                              Gaudi::Units::mm );
-              m_hPrimZ->fill( hepMCpart->production_vertex()->position().z()/
-                              Gaudi::Units::mm );
-              m_hPrimZZ->fill( hepMCpart->production_vertex()->position().z()/
-                               Gaudi::Units::mm );
+              if ( hepMCpart -> production_vertex() ) {
+                m_hPrimX->fill( hepMCpart->production_vertex()->position().x()/
+                                Gaudi::Units::mm );
+                m_hPrimY->fill( hepMCpart->production_vertex()->position().y()/
+                                Gaudi::Units::mm );
+                m_hPrimZ->fill( hepMCpart->production_vertex()->position().z()/
+                                Gaudi::Units::mm );
+                m_hPrimZZ->fill( hepMCpart->production_vertex()->position().z()/
+                                 Gaudi::Units::mm );
+              }
             }
             
           }

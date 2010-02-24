@@ -1,4 +1,4 @@
-// $Id: GenMonitorAlg.cpp,v 1.15 2009-12-17 19:29:19 gcorti Exp $
+// $Id: GenMonitorAlg.cpp,v 1.16 2010-02-24 19:02:33 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -86,7 +86,7 @@ StatusCode GenMonitorAlg::initialize() {
 //=============================================================================
 StatusCode GenMonitorAlg::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  debug() << "==> Execute" << endmsg;  
 
   // Initialize counters
   int nParticles(0), nParticlesStable(0);
@@ -128,24 +128,27 @@ StatusCode GenMonitorAlg::execute() {
           if( !primFound ) {
             if( (hepMCpart->status() == 1) || (hepMCpart->status() == 888 ) ) {
               primFound = true;
-              m_hPrimX->fill( hepMCpart->production_vertex()->position().x()/
-                              Gaudi::Units::mm );
-              m_hPrimY->fill( hepMCpart->production_vertex()->position().y()/
-                              Gaudi::Units::mm );
-              m_hPrimZ->fill( hepMCpart->production_vertex()->position().z()/
-                              Gaudi::Units::mm );
-              m_hPrimZV->fill( hepMCpart->production_vertex()->position().z()/
-                               Gaudi::Units::mm );
-              m_hPrimZE->fill( hepMCpart->production_vertex()->position().z()/
-                               Gaudi::Units::mm );
-              m_hPrimT->fill( hepMCpart->production_vertex()->position().t()/
-                               Gaudi::Units::ns );
-              m_hPrimXvsZ->fill( hepMCpart->production_vertex()->position().z()/Gaudi::Units::mm,
-                                 hepMCpart->production_vertex()->position().x()/Gaudi::Units::mm );                
-              m_hPrimYvsZ->fill( hepMCpart->production_vertex()->position().z()/Gaudi::Units::mm,
-                                 hepMCpart->production_vertex()->position().y()/Gaudi::Units::mm );                
-            }
-          } 
+              if ( hepMCpart -> production_vertex() ) {
+                m_hPrimX->fill( hepMCpart->production_vertex()->position().x()/
+                                Gaudi::Units::mm );
+                m_hPrimY->fill( hepMCpart->production_vertex()->position().y()/
+                                Gaudi::Units::mm );
+                m_hPrimZ->fill( hepMCpart->production_vertex()->position().z()/
+                                Gaudi::Units::mm );
+                m_hPrimZV->fill( hepMCpart->production_vertex()->position().z()/
+                                 Gaudi::Units::mm );
+                m_hPrimZE->fill( hepMCpart->production_vertex()->position().z()/
+                                 Gaudi::Units::mm );
+                m_hPrimT->fill( hepMCpart->production_vertex()->position().t()/
+                                Gaudi::Units::ns );
+                m_hPrimXvsZ->fill( hepMCpart->production_vertex()->position().z()/Gaudi::Units::mm,
+                                   hepMCpart->production_vertex()->position().x()/Gaudi::Units::mm );                
+                m_hPrimYvsZ->fill( hepMCpart->production_vertex()->position().z()/Gaudi::Units::mm,
+                                   hepMCpart->production_vertex()->position().y()/Gaudi::Units::mm );                
+              }
+            } 
+          }
+          
           m_hPartP->fill( hepMCpart->momentum().mag()/
                           Gaudi::Units::GeV );
           m_hPartPDG->fill( hepMCpart->pdg_id() );
