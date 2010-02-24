@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v11r11p1 2010-02-24 =====================
 ! 2010-02-16 - Chris Jones
  - Update Rich::Side text conversion
 
