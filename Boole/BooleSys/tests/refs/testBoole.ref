@@ -30,7 +30,7 @@
 # |-UseSpillover        = False
 # |-CondDBtag           = ''
 # |-InitSequence        = ['Data', 'Muon']  (default: [])
-# |-DataType            = '2009'
+# |-DataType            = '2010'
 # |-NoWarnings          = False
 # |-LinkSequence        = ['Velo', 'TT', 'IT', 'OT', 'Tr', 'Rich', 'Calo', 'Muon', 'L0']  (default: [])
 # |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next']  (default: [])
@@ -39,13 +39,10 @@
 # \----- (End of User Boole/Boole) -------------------------------------------------------------------
 # DigiWriter.ItemList    = ['/Event/Gen/Header#1', '/Event/MC/Header#1', '/Event/MC/DigiHeader#1', '/Event/DAQ/RawEvent#1', '/Event/Gen/Collisions#1', '/Event/Gen/HepMCEvents#1', '/Event/pSim/MCVertices#1', '/Event/pSim/MCParticles#1', '/Event/pSim/Rich/DigitSummaries#1', '/Event/MC/Muon/DigitsInfo#1', '/Event/Link/Raw/Velo/Clusters#1', '/Event/Link/Trig/L0/Calo#1', '/Event/Link/Trig/L0/FullCalo#1', '/Event/Link/Raw/TT/Clusters#1', '/Event/Link/Raw/IT/Clusters#1', '/Event/Link/Raw/OT/Times#1', '/Event/Link/Raw/Ecal/Digits#1', '/Event/Link/Raw/Hcal/Digits#1', '/Event/Link/Raw/Muon/Digits#1', '/Event/MC/TrackInfo#1', '/Event/Link/Raw/Velo/Clusters2MCHits#1', '/Event/Link/Raw/TT/Clusters2MCHits#1', '/Event/Link/Raw/IT/Clusters2MCHits#1', '/Event/Link/Raw/OT/Times2MCHits#1']
 # DigiWriter.OptItemList = []
-# WARNING: Default tag requested for partition DDDB (using head-20100119)
-# WARNING: Default tag requested for partition LHCBCOND (using head-20100202)
-# WARNING: Default tag requested for partition SIMCOND (using sim-20100119-vc-md100)
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Boole version v20r0
-                                          running on lxbuild156.cern.ch on Mon Feb 15 17:00:05 2010
+                                          running on lxbuild156.cern.ch on Mon Feb 22 16:34:27 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -57,7 +54,7 @@ EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEv
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.61 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.89 times the speed of a 2.8 GHz Xeon.
 BooleSequencer       INFO Member list: ProcessPhase/Init, ProcessPhase/Digi, ProcessPhase/Link, ProcessPhase/Moni, ProcessPhase/Filter
 Init                 INFO Member list: GaudiSequencer/InitBooleSeq, GaudiSequencer/InitDataSeq, GaudiSequencer/InitMuonSeq
 InitBooleSeq         INFO Member list: BooleInit, GaudiSequencer/SpilloverHandler
@@ -130,8 +127,8 @@ SpdDigit             INFO  MIP deposit    :   2.74 MeV
 SpdDigit             INFO Number of photo-electrons per MIP for    Outer region :   22.00
 SpdDigit             INFO Number of photo-electrons per MIP for   Middle region :   32.00
 SpdDigit             INFO Number of photo-electrons per MIP for    Inner region :   27.00
-SpdDigit             INFO Zero-suppression threshold :   0.58 ADC
-SpdDigit             INFO L0 trigger suppression     :   0.58 ADC
+SpdDigit             INFO Zero-suppression threshold :   0.50 ADC
+SpdDigit             INFO L0 trigger suppression     :   0.50 ADC
 SpdDigit             INFO L0 trigger ADC correction for    Outer region :    1.00
 SpdDigit             INFO L0 trigger ADC correction for   Middle region :    1.00
 SpdDigit             INFO L0 trigger ADC correction for    Inner region :    1.00
@@ -454,7 +451,7 @@ ToolSvc.L0DUCon...   INFO --------------- TCK = 0x10000------------------
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.61 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.89 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
