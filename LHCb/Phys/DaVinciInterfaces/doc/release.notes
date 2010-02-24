@@ -4,8 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+!===================== DaVinciInterfaces v2r1 2010-02-24 =====================
 ! 2010-02-20 - Marco Cattaneo
- - Remove it also from dict ans src files.....
+ - Remove it also from dict and src files.....
 
 ! 2010-02-19 - Juan Palacios
  - Kernel/IMassVertexFit.h
