@@ -54,7 +54,7 @@ bool DimInfoMonObject::createMonObject() {
   if (m_monObject) {delete m_monObject; m_monObject = 0;}
   
   if (!m_dimInfo) {
-    msg << MSG::WARNING << "svcName : " << m_svcName << " has no DimInfo"<< endreq;
+    msg << MSG::DEBUG << "svcName : " << m_svcName << " has no DimInfo"<< endreq;
     return false;
   }
   int tmpStringSize = m_dimInfo->getSize()/sizeof(char);
@@ -98,12 +98,12 @@ bool DimInfoMonObject::createMonObject() {
     if (monObjectBase) {delete monObjectBase; monObjectBase = 0;}
   }
   catch (const std::exception &ex){
-    msg << MSG::WARNING << "std::exception: " << ex.what() << endreq;
+    msg << MSG::DEBUG << "std::exception: " << ex.what() << endreq;
     //msg << MSG::WARNING << "check that the server and client are running in the same plataform: 64 or 32 bits." << endreq;
     return false;
   }  
   catch (...){
-    msg << MSG::WARNING << "unrecognized exception. "<< endreq;
+    msg << MSG::DEBUG << "unrecognized exception. "<< endreq;
     return false;
   } 
   
@@ -114,12 +114,12 @@ bool DimInfoMonObject::loadMonObject(){
   MsgStream msg(msgSvc(), name());
   
   if (!m_dimInfo) {
-    msg << MSG::WARNING << "svcName : " << m_svcName << " has no DimInfo"<< endreq;
+    msg << MSG::DEBUG << "svcName : " << m_svcName << " has no DimInfo"<< endreq;
     return false;
   }
   
   if (!m_monObject) {
-    msg << MSG::WARNING << "svcName : " << m_svcName << " has an uncreated MonObject"<< endreq;
+    msg << MSG::DEBUG << "svcName : " << m_svcName << " has an uncreated MonObject"<< endreq;
     return false;
   }
  // m_monObject->reset(); // <================VERIFICAR ISSO AQUI (ACHO QUE E' DESNECESARIO)
@@ -154,12 +154,12 @@ bool DimInfoMonObject::loadMonObject(){
     if (!m_monObject->serviceActive ()) m_monObject->setServiceActive (true);
   }
   catch (const std::exception &ex){
-    msg << MSG::WARNING << "std::exception: " << ex.what() << endreq;
-    msg << MSG::WARNING << "DimInfo->getData() failed."<< endreq;
+    msg << MSG::DEBUG << "std::exception: " << ex.what() << endreq;
+    msg << MSG::DEBUG << "DimInfo->getData() failed."<< endreq;
     return false;
   }  
   catch (...){
-    msg << MSG::WARNING << "unrecognized exception. "<< endreq;
+    msg << MSG::DEBUG << "unrecognized exception. "<< endreq;
     return false;
   } 
   return true;
