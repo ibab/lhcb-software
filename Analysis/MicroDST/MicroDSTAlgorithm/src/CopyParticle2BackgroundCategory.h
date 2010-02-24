@@ -1,4 +1,4 @@
-// $Id: CopyParticle2BackgroundCategory.h,v 1.1 2010-02-24 15:36:23 jpalac Exp $
+// $Id: CopyParticle2BackgroundCategory.h,v 1.2 2010-02-24 17:02:09 jpalac Exp $
 #ifndef COPYPARTICLE2BACKGROUNDCATEGORY_H 
 #define COPYPARTICLE2BACKGROUNDCATEGORY_H 1
 
@@ -43,7 +43,7 @@
 //=============================================================================
 namespace Particle2BackCat {
   
-  typedef LHCb::Relation1D<const LHCb::Particle*,int> Table;
+  typedef LHCb::Relation1D<LHCb::Particle, int> Table;
 }
 //=============================================================================
 template<> struct Location<Particle2BackCat::Table>
