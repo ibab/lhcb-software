@@ -3,38 +3,38 @@
 
 # Tracks
 
-HltSharedTracksPrefix = "Hlt"
+HltSharedTracksPrefix 			= "Hlt"
 
-HltSharedRZVeloTracksName = "RZVelo"
+HltSharedRZVeloTracksName 		= "RZVelo"
 
-Hlt1TracksPrefix = "Hlt1"
+Hlt1TracksPrefix 			= "Hlt1"
 
-Hlt2TracksPrefix = "Hlt2"
+Hlt2TracksPrefix 			= "Hlt2"
 
-Hlt2VeloTracksName = "Velo"
+Hlt2VeloTracksName 			= "Velo"
 
-Hlt2ForwardTracksName = "Forward"
+Hlt2ForwardTracksName 			= "Forward"
 
-Hlt2MatchTracksName = "Match"
+Hlt2MatchTracksName 			= "Match"
 
-Hlt2LongTracksName = "Long"
+Hlt2LongTracksName 			= "Long"
 
-Hlt2SeedingTracksName = "Seeding"
+Hlt2SeedingTracksName 			= "Seeding"
 
-Hlt2DownstreamTracksName = "SeedTT"
+Hlt2DownstreamTracksName 		= "SeedTT"
 
-HltBiDirectionalKalmanFitSuffix = "BiKalmanFitted"
+HltBiDirectionalKalmanFitSuffix 	= "BiKalmanFitted"
 
-HltUniDirectionalKalmanFitSuffix = "UniKalmanFitted"  
+HltUniDirectionalKalmanFitSuffix 	= "UniKalmanFitted"  
 
 # ProtoParticles
 # These share "prefixes" with the tracks
 
-Hlt2SharedProtoParticleSuffix = "ProtoP"
+Hlt2SharedProtoParticleSuffix 		= "ProtoP"
 
-Hlt2ChargedProtoParticleSuffix = "Charged"
+Hlt2ChargedProtoParticleSuffix 		= "Charged"
 
-Hlt2NeutralProtoParticleSuffix = "Neutral" 
+Hlt2NeutralProtoParticleSuffix 		= "Neutral" 
 
 
 __all__ = (	HltSharedTracksPrefix, 

@@ -9,7 +9,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -130,7 +130,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
 	"""
 	return _hlt2StagedFastFit(Hlt2Tracks = self.getProp("Hlt2Tracks"),
                                  prefix = self.getProp("Prefix"),
-                                 suffix = HltBiDirectionalKalmanFitSuffix ,
+                                 suffix = self.getProp("Suffix") ,
                                  doSeeding = self.getProp("DoSeeding"),
                                  doCloneKilling = self.getProp("DoCloneKilling"))
 #########################################################################################
@@ -395,14 +395,10 @@ def _hlt2ChargedProtos(Hlt2Tracks = Hlt2LongTracksName,
     elif (outputOfHlt2Tracking == Hlt2DownstreamTracksName) :
 	charged.TrackSelector.TrackTypes = [ "Downstream" ]
    
-    # what track type?
-    #Need to allow for fitted tracks
-    if (suffix.find("Fitted") > -1) : 
-	tracks = _hlt2StagedFastFit(Hlt2Tracks, prefix, suffix,doSeeding,doCloneKilling)
-	charged.InputTrackLocation = _hlt2StagedFastFit(Hlt2Tracks, prefix, suffix,doSeeding,doCloneKilling).outputSelection()
-    else : 
-	tracks = _hlt2Tracking(Hlt2Tracks, prefix, suffix,doSeeding,doCloneKilling)
-        charged.InputTrackLocation = _hlt2Tracking(Hlt2Tracks, prefix, suffix,doSeeding,doCloneKilling).outputSelection()
+    # Need to allow for fitted tracks
+    # This is now done inside the staged fast fit based on the suffix passed
+    tracks = _hlt2StagedFastFit(Hlt2Tracks, prefix, suffix,doSeeding,doCloneKilling)
+    charged.InputTrackLocation = _hlt2StagedFastFit(Hlt2Tracks, prefix, suffix,doSeeding,doCloneKilling).outputSelection()
 
     charged.OutputProtoParticleLocation =  chargedProtosOutputLocation
 
@@ -533,7 +529,12 @@ def _hlt2StagedFastFit(Hlt2Tracks = Hlt2LongTracksName
     if (outputOfHlt2Tracking == 'Unknown') :
         _printWarningBeforeDeath()
         return []
-    #
+    #Make the original tracks in case this has not been run already
+    tracks = _hlt2Tracking(Hlt2Tracks, prefix, suffix,doSeeding,doCloneKilling)
+    # Second check: have I actually been asked to fit the tracks?
+    # If not, just return the unfitted tracks
+    if (suffix.find("Fitted") == -1) :
+       return tracks
 
     hlt2StagedFastFitOutputLocation = _trackLocation(prefix,"Track",suffix,Hlt2Tracks)
  
@@ -541,22 +542,19 @@ def _hlt2StagedFastFit(Hlt2Tracks = Hlt2LongTracksName
     Hlt2StagedFastFitSeq = GaudiSequencer( prefix+suffix+outputOfHlt2Tracking+"StagedFastFitSeq" )
     
     Hlt2StagedFastFit = TrackEventFitter(prefix+suffix+outputOfHlt2Tracking+'StagedFastFit')
-    Hlt2StagedFastFitSeq.Members = [ Hlt2StagedFastFit ]
-
     Hlt2StagedFastFit.TracksInContainer  = _hlt2Tracking(Hlt2Tracks, prefix, suffix,doSeeding,doCloneKilling).outputSelection() 
     Hlt2StagedFastFit.TracksOutContainer =  hlt2StagedFastFitOutputLocation  
-
     Hlt2StagedFastFit.addTool(TrackMasterFitter, name = 'Fitter')
+   
+    Hlt2StagedFastFitSeq.Members = [ Hlt2StagedFastFit ]
+    
     from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
     fitter = ConfiguredFastFitter( getattr(Hlt2StagedFastFit,'Fitter'))
-
     fitter.NodeFitter.BiDirectionalFit = True
     fitter.NodeFitter.Smooth = True
     fitter.AddDefaultReferenceNodes = True    # says Wouter
     
     from HltLine import bindMembers
-    #Make the original tracks in case this has not been run already
-    tracks = _hlt2Tracking(Hlt2Tracks, prefix, suffix,doSeeding,doCloneKilling)
     return bindMembers( None, [tracks, Hlt2StagedFastFitSeq] ).setOutputSelection(hlt2StagedFastFitOutputLocation)
 
 #########################################################################################
