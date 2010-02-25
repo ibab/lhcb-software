@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Configuration.py,v 1.12 2010-02-19 12:03:13 ibelyaev Exp $
+# $Id: Configuration.py,v 1.13 2010-02-25 15:01:13 ibelyaev Exp $
 # =============================================================================
 # @file  KaliCalo/Configuration.py
 # The basic configuration for Calorimeetr Calibrations 
@@ -36,7 +36,7 @@ The usage is fairly trivial:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $"
 # =============================================================================
 # the only one  "vizible" symbol 
 __all__  = (
@@ -124,6 +124,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         , 'DestroyTES'          : True  ## Destroy TES containers : List of Input Partcle Containers
         , 'DestroyList'         : ['KaliPi0' ]  ## The list of input TES-location for Destroyer
         , 'Coefficients'        : {}    ## The map of (mis)calibration coefficients
+        , 'PrsCoefficients'     : {}    ## The map of (mis)calibration coefficients for Prs 
         , 'OtherAlgs'           : []    ## List of "other" algorithms to be run, e.g. electorn calibration
         , 'Mirror'              : False ## Use Albert's trick for combinatorial background evaluation
         , 'Histograms'          : False ## Create monitoring histograms
@@ -153,6 +154,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         , 'DestroyTES'          : """ Destroy TES containers """
         , 'DestroyList'         : """ The list of input TES-locations for Destroyer """
         , 'Coefficients'        : """ The map of (mis)calibration coefficients """
+        , 'PrsCoefficients'     : """ The map of (mis)calibration coefficients for Prs """
         , 'OtherAlgs'           : """ The list of 'other' algorithm to run, e.g. electron calibration """
         , 'Mirror'              : """ Use Albert's trick for combinatorial background evaluation """ 
         , 'Histograms'          : """ Activate monitoring histograms creation """
@@ -219,13 +221,23 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         (Optional) CaloDigit (mis)calibration
         
         """
+        lst = []
+        ##
         if self.getProp ( 'Coefficients' ) :
             from Configurables import Kali__MisCalibrateCalo
-            return Kali__MisCalibrateCalo (
+            alg = Kali__MisCalibrateCalo (
                 "KaliEcal" ,
-                Coefficients = self.getProp('Coefficients' )
-                )
-        return None
+                Coefficients = self.getProp('Coefficients' ) )
+            lst += [ alg ]
+        ##
+        if self.getProp ( 'PrsCoefficients' ) :
+            from Configurables import Kali__MisCalibrateCalo
+            alg = Kali__MisCalibrateCalo (
+                "KaliPrs" ,
+                Coefficients = self.getProp('PrsCoefficients' ) )
+            lst += [ alg ]
+        #
+        return lst 
         
     ## 3. "Light-mode" for Neutral ProtoParticles: no PIDs 
     def protos ( self ) :
@@ -381,7 +393,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
 
         kaliSeq.Members = [ ]
         
-        if not not misKali : kaliSeq.Members += [ misKali ] 
+        if not not misKali : kaliSeq.Members += misKali 
             
         if self.getProp ( 'RecoAll' ) :
             from Configurables import GlobalRecoConf

@@ -1,4 +1,4 @@
-// $Id: MisCalibrateCalo.cpp,v 1.6 2009-10-02 11:59:36 ibelyaev Exp $
+// $Id: MisCalibrateCalo.cpp,v 1.7 2010-02-25 15:01:13 ibelyaev Exp $
 // =============================================================================
 // Include files 
 // =============================================================================
@@ -176,7 +176,7 @@ Kali::MisCalibrateCalo::MisCalibrateCalo
   declareProperty 
     ( "Coefficients"  , m_pmap      ,
       "Map of (mis)calibrtaion coefficients" ) 
-    ->declareUpdateHandler(&Kali::MisCalibrateCalo::handleMap , this ) ;
+    -> declareUpdateHandler(&Kali::MisCalibrateCalo::handleMap , this ) ;
 }
 // =============================================================================
 // standard initialization 
