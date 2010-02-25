@@ -262,8 +262,8 @@ StatusCode PuVetoAlg::execute() {
 //         m_PUbanksize->Fill(wordTot);
 //       }
       if (wordTot != 34 ) {
-        info() << "L0PU RawBank has an unexpected size! (size= " << wordTot << ") - event skipped" << endmsg;
-        return StatusCode::SUCCESS;
+        debug() << "L0PU RawBank has an unexpected size! (size= " << wordTot << ") - event skipped" << endmsg;
+	return Warning( "L0PU RawBank has an unexpected size! Event skipped", StatusCode::SUCCESS, 0 );
       }
       else{
         fillPUmap( d, wordTot, data, 34, m_PUhitmap );
@@ -276,8 +276,8 @@ StatusCode PuVetoAlg::execute() {
       int bankSize = (*itBnk)->size()/4;  //== is in bytes...
       //if (msgLevel(MSG::DEBUG)) debug() << "  Bank " << (*itBnk)->sourceID() << " size " << bankSize << " words" << endreq;
       if (bankSize != 68){
-        info() << "L0PU RawBank has an unexpected size! (size= " << bankSize << ") - event skipped" << endmsg;
-        return StatusCode::SUCCESS;
+        debug() << "L0PU RawBank has an unexpected size! (size= " << bankSize << ") - event skipped" << endmsg;
+	return Warning( "L0PU RawBank has an unexpected size! Event skipped", StatusCode::SUCCESS, 0 );
       }
       else{
        while ( 0 < bankSize-- ){
@@ -656,165 +656,135 @@ void PuVetoAlg::fillPUmap( int wordIt, int word_Tot, unsigned int* data_Ptr, int
 	case 2:
 	 (PU_hitmap[0][2]) = *wordPtr;
 	 (PU_hitmap[0][1]) =  *wordPtr2;
-	 wordIt++;
 	 break;
 	case 3:
 	 (PU_hitmap[0][0]) =  *wordPtr;
 	 (PU_hitmap[0][3]) =  *wordPtr2;
-	 wordIt++;
 	 break;
 	case 4:
 	 (PU_hitmap[1][13]) =  *wordPtr;
 	 (PU_hitmap[1][14]) =  *wordPtr2;
-	 wordIt++;
 	 break;
 	case 5:
 	 (PU_hitmap[1][15]) =  *wordPtr;
 	 (PU_hitmap[1][12]) =  *wordPtr2;
-	 wordIt++;
 	 break;
 	case 6:
 	 (PU_hitmap[2][13]) =  *wordPtr;
 	 (PU_hitmap[2][14]) =  *wordPtr2;
-	 wordIt++;
 	 break;
 	case 7:
 	 (PU_hitmap[2][15]) =  *wordPtr;
 	 (PU_hitmap[2][12]) =  *wordPtr2;
-	 wordIt++;      
 	 break;              
 	case 8:
 	 (PU_hitmap[3][2]) =  *wordPtr;
 	 (PU_hitmap[3][1]) =  *wordPtr2;
-	 wordIt++;      
 	 break;     
 	case 9:
 	 (PU_hitmap[3][0]) =  *wordPtr;
 	 (PU_hitmap[3][3]) =  *wordPtr2;  
-	 wordIt++;      
 	 break;     
 	case 10:
 	 (PU_hitmap[0][5]) =  *wordPtr;
 	 (PU_hitmap[0][6]) =  *wordPtr2;
-	 wordIt++;      
 	 break;     
 	case 11:
 	 (PU_hitmap[0][7]) =  *wordPtr;
 	 (PU_hitmap[0][4]) =  *wordPtr2;
-	 wordIt++;      
 	 break;     
 	case 12:
 	 (PU_hitmap[1][10]) =  *wordPtr;
 	 (PU_hitmap[1][9])  =  *wordPtr2;
-	 wordIt++;      
 	 break;     
 	case 13:
 	 (PU_hitmap[1][8])  =  *wordPtr;
 	 (PU_hitmap[1][11]) =  *wordPtr2;
-	 wordIt++;      
 	 break;             
 	case 14:
 	 (PU_hitmap[2][10]) =  *wordPtr;
 	 (PU_hitmap[2][9])  =  *wordPtr2;
-	 wordIt++;      
 	 break;     
 	case 15:
 	 (PU_hitmap[2][8])   =  *wordPtr;
 	 (PU_hitmap[2][11])  =  *wordPtr2;
-	 wordIt++;      
 	 break;     
 	case 16:
 	 (PU_hitmap[3][5]) =  *wordPtr;
 	 (PU_hitmap[3][6]) =  *wordPtr2;
-	 wordIt++;      
 	 break;     
 	case 17:
 	 (PU_hitmap[3][7]) =  *wordPtr;
 	 (PU_hitmap[3][4]) =  *wordPtr2;
-	 wordIt++;      
 	 break;              
 	case 18:
 	 (PU_hitmap[0][10]) =  *wordPtr ;
 	 (PU_hitmap[0][9])  =  *wordPtr2;
-	 wordIt++;      
 	 break;     
 	case 19:
 	 (PU_hitmap[0][8]) =  *wordPtr;
 	 (PU_hitmap[0][11]) =  *wordPtr2;
-	 wordIt++;      
 	 break;     
 	case 20:
 	 (PU_hitmap[1][5]) =  *wordPtr;
 	 (PU_hitmap[1][6]) =  *wordPtr2;
-	 wordIt++;      
 	 break;     
 	case 21:
 	 (PU_hitmap[1][7]) =  *wordPtr;
 	 (PU_hitmap[1][4]) =  *wordPtr2;
-	 wordIt++;      
 	 break;             
 	case 22:
 	 (PU_hitmap[2][5]) =  *wordPtr;
 	 (PU_hitmap[2][6]) =  *wordPtr2;
-	 wordIt++;      
 	 break;     
 	case 23:
 	 (PU_hitmap[2][7]) =  *wordPtr;
 	 (PU_hitmap[2][4]) =  *wordPtr2;
-	 wordIt++;      
 	 break;     
 	case 24:
 	 (PU_hitmap[3][10]) =  *wordPtr;
 	 (PU_hitmap[3][9]) =  *wordPtr2;
-	 wordIt++;      
 	 break;     
 	case 25:
 	 (PU_hitmap[3][8]) =  *wordPtr;
 	 (PU_hitmap[3][11]) =  *wordPtr2;
-	 wordIt++;      
 	 break;              
 	case 26:
 	 (PU_hitmap[0][13]) =  *wordPtr;
 	 (PU_hitmap[0][14]) =  *wordPtr2;
-	 wordIt++;      
 	 break;     
 	case 27:
 	 (PU_hitmap[0][15]) =  *wordPtr;
 	 (PU_hitmap[0][12]) =  *wordPtr2;
-	 wordIt++;      
 	 break;     
 	case 28:
 	 (PU_hitmap[1][2]) =  *wordPtr;
 	 (PU_hitmap[1][1]) =  *wordPtr2;
-	 wordIt++;      
 	 break;     
 	case 29:
 	 (PU_hitmap[1][0]) =  *wordPtr;
 	 (PU_hitmap[1][3]) =  *wordPtr2;
-	 wordIt++;      
 	 break;             
 	case 30:
 	 (PU_hitmap[2][2]) =  *wordPtr;
 	 (PU_hitmap[2][1]) =  *wordPtr2;
-	 wordIt++;      
 	 break;     
 	case 31:
 	 (PU_hitmap[2][0]) =  *wordPtr;
 	 (PU_hitmap[2][3]) =  *wordPtr2;
-	 wordIt++;      
 	 break;     
 	case 32:
 	 (PU_hitmap[3][13]) =  *wordPtr;
 	 (PU_hitmap[3][14]) =  *wordPtr2;
-	 wordIt++;      
 	 break;     
 	case 33:
 	 (PU_hitmap[3][15]) =  *wordPtr;
 	 (PU_hitmap[3][12]) =  *wordPtr2;
-	 wordIt++;      
 	 break;  
-	 
+	default:
+	 wordIt++;
       } // switch case
+      wordIt++;
     } // while "beetle map"  
 }
 //============================================================================
