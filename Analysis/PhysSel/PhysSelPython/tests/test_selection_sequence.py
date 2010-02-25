@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Id: test_selection_sequence.py,v 1.12 2010-02-03 08:28:21 jpalac Exp $
+#$Id: test_selection_sequence.py,v 1.13 2010-02-25 14:09:30 jpalac Exp $
 '''
 Test suite for SelectionSequence class.
 '''
@@ -144,6 +144,9 @@ def test_clone_sequence() :
 
     for sel in [sel01, sel02, sel03]:
         assert sel.algorithm() in ref_algos[len(presels):len(ref_algos)-len(postsels)]
+
+def test_duplicated_entries_removed() :
+    pass
 
 if '__main__' == __name__ :
 

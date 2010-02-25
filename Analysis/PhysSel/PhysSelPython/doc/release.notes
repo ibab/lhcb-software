@@ -1,9 +1,17 @@
-!$Id: release.notes,v 1.40 2010-02-22 15:17:31 jpalac Exp $
+!$Id: release.notes,v 1.41 2010-02-25 14:09:30 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2010-02-25 - Juan Palacios
+ - python/PhysSelPython/selection.py
+  . FlatSelectionListBuilder now removes duplicate entries.
+ - tests/test_selection_components.py
+  . Add tests for standalone selection components.
+ - cmt/requirements
+  . Increase to v4r2
 
 !==================== PhysSel/PhysSelPython v4r1 2010-02-22 ================
 

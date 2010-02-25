@@ -1,4 +1,4 @@
-#$Id: selection.py,v 1.11 2010-02-19 11:30:56 jpalac Exp $
+#$Id: selection.py,v 1.12 2010-02-25 14:09:30 jpalac Exp $
 """
 Classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -53,8 +53,8 @@ class DataOnDemand(object) :
                   Location = "", 
                   RequiredSelections = [] ) :
         if name == '' :
-            print 'setting name to ' 
             self._name = Location[Location.rfind('/')+1:]
+            print 'setting name to ', self._name
         else :
             self._name = name
         self.requiredSelections = []
@@ -263,17 +263,27 @@ class FlatSelectionListBuilder(object) :
         _alg = TopSelection.algorithm()
         self.selectionList = [_alg]
         if (_alg != None) :
-            self.buildSelectionList( TopSelection.requiredSelections )
-
-    def buildSelectionList(self, selections) :
+            self._buildSelectionList( TopSelection.requiredSelections )
+            self.selectionList.reverse()
+            self.selectionList = remove_duplicates(self.selectionList)
+    def _buildSelectionList(self, selections) :
         for sel in selections :
             if type(sel) == DataOnDemand :
                 print "DataOnDemand: do nothing"
             else :
-                self.selectionList.insert(0, sel.algorithm())
-                self.buildSelectionList( sel.requiredSelections )
+                self.selectionList.append(sel.algorithm())
+                self._buildSelectionList( sel.requiredSelections )
 
 
+def remove_duplicates(alg_list) :
+    '''
+    Remove all but the first instance of each algorithm from the list.
+    '''
+    clean_list = []
+    for alg in alg_list :
+        if alg not in clean_list :
+            clean_list.append(alg)
+    return clean_list
 
 def update_overlap(dict0, dict1) :
     '''
