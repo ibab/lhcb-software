@@ -1,6 +1,6 @@
-#$Id: requirements,v 1.217 2010-02-17 14:56:39 jpalac Exp $
+#$Id: requirements,v 1.218 2010-02-25 16:40:28 jpalac Exp $
 package PhysSys
-version v9r1
+version v9r2
 
 branches doc cmt
 
@@ -9,7 +9,7 @@ use  DaVinciKernel              v8r4     Phys    # Juan Palacios
 use  DaVinciMCKernel            v4r2     Phys    # Juan Palacios
 use  HltInterfaces              v3r1     Kernel  # Gerhard Raven
 use  SelectionLine              v1r0     Kernel  # Gerhard Raven
-
+use  SelPy                      v1r0     Phys    # Juan Palacios
 #===================================================================
 use  PhysConf                   v1r6     Phys    # Patrick Koppenburg, Juan Palacios
 use  ProtoParticleFilter        v1r4     Phys    # Chris Jones
