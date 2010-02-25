@@ -1,4 +1,4 @@
-// $Id: VeloPixCluster2MCParticleLinker.cpp,v 1.2 2010-02-22 16:10:49 marcin Exp $
+// $Id: VeloPixCluster2MCParticleLinker.cpp,v 1.3 2010-02-25 12:15:20 marcin Exp $
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // Linker
@@ -27,12 +27,12 @@ VeloPixCluster2MCParticleLinker::VeloPixCluster2MCParticleLinker(
                                  const std::string& name,
                                  ISvcLocator* pSvcLocator)
   : GaudiAlgorithm(name, pSvcLocator),
-    m_asctLocation("VeloPix/Clusters2MCHits")
+    m_asctLocation("Raw/VeloPix/Clusters2MCHits")
 {
   declareProperty("InputData", m_inputData = 
                   "VeloPix/Clusters");
   declareProperty("OutputData", m_outputData = 
-                  "/Event/Link/Raw/VeloPix/Clusters");
+                  "Raw/VeloPix/Clusters");
   declareProperty("AddSpillOverHits", m_addSpillOverHits = false); 
   declareProperty("MinFraction", m_minFrac = 0.2);
   declareProperty("OneRef", m_oneRef = false);
