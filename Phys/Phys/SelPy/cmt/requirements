@@ -9,6 +9,7 @@ version           v1r0
 #============================================================================
 branches          cmt doc python tests
 #============================================================================
+use   GaudiPolicy v*
 use   Python      v* LCG_Interfaces -no_auto_imports
 #============================================================================
 apply_pattern install_python_modules
