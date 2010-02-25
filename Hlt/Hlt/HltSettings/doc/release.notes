@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-02-25 - Johannes Albrecht
+ - Physics_320Vis_300L0_10Hlt1_Jan10: adjust muon preparation cuts
+
 !========================== HltSettings v1r8r1 2010-02-22 ===================
 ! 2010-02-22 - Gerhard Raven
  - put Physics_320xxx on top of L0 0x1810, update Hlt1L0 lines accordingly
