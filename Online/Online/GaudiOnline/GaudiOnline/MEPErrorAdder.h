@@ -76,6 +76,7 @@ namespace LHCb  {
     int				m_allNamesSize;
 
     longlong m_zero;
+    short m_zero32;
 
     //Save all received values from all sources
     std::vector<std::vector<int64_t> >      	m_rBadLenPkt;

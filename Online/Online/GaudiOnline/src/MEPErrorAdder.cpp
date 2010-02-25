@@ -699,7 +699,7 @@ MEPErrorAdder::setupSubs() {
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/rxEvt",m_subFarms[i].c_str());
     	m_subsRxEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/rxMEP",m_subFarms[i].c_str());
-    	m_subsRxEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
+    	m_subsRxMEP[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
 		
 	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totRxOct",m_subFarms[i].c_str());
 	m_subsTotRxOct[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
@@ -715,7 +715,7 @@ MEPErrorAdder::setupSubs() {
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totRxEvt",m_subFarms[i].c_str());
 	m_subsTotRxEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totRxMEP",m_subFarms[i].c_str());
-	m_subsTotRxEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
+	m_subsTotRxMEP[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
       	sprintf(temp,"%s_MEPRxSTAT_1/Runable/incEvt",m_subFarms[i].c_str());
 	m_subsIncEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totBadMEP",m_subFarms[i].c_str());
@@ -733,11 +733,11 @@ MEPErrorAdder::setupSubs() {
     
 	//MDF, from HLT
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/sentEvt",m_subFarms[i].c_str());
-	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
+	m_subsSentEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
      	sprintf(temp,"%s_MEPRxSTAT_1/Runable/sentOct",m_subFarms[i].c_str());
-	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
+	m_subsSentOct[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
      	sprintf(temp,"%s_MEPRxSTAT_1/Runable/sentEvtErr",m_subFarms[i].c_str());
-	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
+	m_subsSentEvtErr[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
  	
 
 	sprintf(temp,"%s_MEPRxSTAT_1/Runable/srcName",m_subFarms[i].c_str());
@@ -803,11 +803,11 @@ MEPErrorAdder::setupSubs() {
 
 	//MDF, from HLT
     	sprintf(temp,"%s%.2i_DiskWR_1/SND_0/BytesOut",m_listenerDnsNode.c_str(),i+1);
-	m_subsSentOct[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
+	m_subsSentOct[i] = new DimInfo(temp,m_updateFrequency,m_zero32,this);
      	sprintf(temp,"%s%.2i_DiskWR_1/SND_0/EventsOut",m_listenerDnsNode.c_str(),i+1);
-	m_subsSentEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
+	m_subsSentEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero32,this);
      	sprintf(temp,"%s%.2i_DiskWR_1/SND_0/ErrorsOut",m_listenerDnsNode.c_str(),i+1);
-	m_subsSentEvtErr[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
+	m_subsSentEvtErr[i] = new DimInfo(temp,m_updateFrequency,m_zero32,this);
      
 	sprintf(temp,"%s%.2i_MEPRx_1/Runable/srcName",m_listenerDnsNode.c_str(),i+1);
 	m_subsSrcName[i] = new DimInfo(temp,m_updateFrequency,(char *)"",this);
