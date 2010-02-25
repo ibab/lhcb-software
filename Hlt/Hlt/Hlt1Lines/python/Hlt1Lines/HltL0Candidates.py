@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.14 2010-02-20 18:21:32 graven Exp $
+# $Id: HltL0Candidates.py,v 1.15 2010-02-25 08:36:11 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -107,7 +107,7 @@ def _converter( channel ) :
     # TODO: check the conditions of the channel, and dispatch based on that
     #       so that we become agnostic to the actual names...
     if channel.upper().find('MUON') != -1 : return _muon(channel)
-    if channel in [ 'SPD','PU','SPD40','PU40','B1gas','B2gas' ] : return { channel : None }
+    if channel in [ 'SPD','PU','SPD40','PU20','PU40','B1gas','B2gas' ] : return { channel : None }
     return _calo(channel)
 
 def _parseMask( mask ) :
