@@ -313,8 +313,9 @@ StatusCode SaverSvc::save(ProcessMgr* processMgr) {
     std::string *fileName = processMgr->fileNamePointer();
 
  
-    if (!m_finalizing) processMgr->setrunNumber(m_runNbSvc);
-    if (m_runNb == 0) m_runNb=m_runNbSvc->getRunNb() ;
+    if (!m_finalizing) { processMgr->setrunNumber(m_runNbSvc);
+        if (m_runNb == 0) m_runNb=m_runNbSvc->getRunNb() ;
+    }
     // msg << MSG::INFO << "saving histograms in "<< *fileName << " runnb " << m_runNb << endreq;     
      //if the runnumber is 0 here, try to get it 
     //when the runnumber changes we should stop and restart the dim timer
