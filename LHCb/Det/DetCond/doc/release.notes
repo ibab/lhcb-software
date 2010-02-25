@@ -4,6 +4,9 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2010-02-25 - Marco Clemencic
+ - Removed the dependency on rx (obsolete).
+
 !===================== Det/DetCond v12r10 2010-02-12 =========================
 ! 2010-02-12 - Illya Shapoval
  - Minor change to the CondDB.useLatestTags(DataType) function. Added the

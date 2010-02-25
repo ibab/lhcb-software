@@ -12,7 +12,6 @@ use           GaudiAlg          v*
 use           COOL              v*      LCG_Interfaces
 use           CORAL             v*      LCG_Interfaces
 use           Boost             v*      LCG_Interfaces
-use           rx                v*      LCG_Interfaces
 use           DetDesc           v*      Det
 
 # This one is for the interface ICondDBInfo
