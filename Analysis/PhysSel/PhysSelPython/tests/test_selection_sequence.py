@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Id: test_selection_sequence.py,v 1.14 2010-02-25 14:13:58 jpalac Exp $
+#$Id: test_selection_sequence.py,v 1.15 2010-02-25 17:01:50 jpalac Exp $
 '''
 Test suite for SelectionSequence class.
 '''
@@ -13,8 +13,8 @@ from PhysSelPython.Wrappers import ( Selection,
                                      SelectionSequence,
                                      AutomaticData,
                                      NameError         )
-from PhysSelPython.Configurabloids import ( DummyAlgorithm,
-                                            DummySequencer  )
+from SelPy.configurabloids import ( DummyAlgorithm,
+                                    DummySequencer  )
 
 
 def test_instantiate_sequencer() :

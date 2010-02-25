@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.32 2010-02-19 10:53:05 jpalac Exp $
+#$Id: Wrappers.py,v 1.33 2010-02-25 16:59:39 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -15,8 +15,11 @@ __all__ = ('DataOnDemand',
            'AutomaticData',
            'Selection',
            'SelectionSequence',
+           'SelSequence'
            'NameError',
-           'SelSequence')
+           'NonEmptyInputLocations',
+           'IncompatibleInputLocations'
+           )
 
 
 _sequencerType = None
@@ -28,15 +31,15 @@ try :
 except :
     print 'WARNING: Gaudi Configurables not found. No default sequencer type defined.'
 
-from selection import ( Selection,
-                        FlatSelectionListBuilder,
-                        DataOnDemand,
-                        AutomaticData,
-                        NameError,
-                        NonEmptyInputLocations,
-                        IncompatibleInputLocations,
-                        update_overlap,
-                        SelSequence                )
+from SelPy.selection import ( Selection,
+                              FlatSelectionListBuilder,
+                              DataOnDemand,
+                              AutomaticData,
+                              NameError,
+                              NonEmptyInputLocations,
+                              IncompatibleInputLocations,
+                              update_overlap,
+                              SelSequence                )
 
 
 class SelectionSequence(SelSequence) :
