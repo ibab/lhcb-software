@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.89 2010-02-24 15:13:44 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.90 2010-02-25 17:13:32 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -20,7 +20,7 @@ class DaVinci(LHCbConfigurableUser) :
        , "SkipEvents"         :   0             # Number of events to skip at beginning for file
        , "PrintFreq"          : 100             # The frequency at which to print event numbers
        , "DataType"           : ''              # Data type, can be ['DC06','2008','2009', 'MC09', '2010'] Forwarded to PhysConf. MUST be set.
-       , "Simulation"         : True            # set to True to use SimCond. Forwarded to PhysConf
+       , "Simulation"         : False           # set to True to use SimCond. Forwarded to PhysConf
        , "DDDBtag"            : "default"       # Tag for DDDB. Default as set in DDDBConf for DataType
        , "CondDBtag"          : "default"       # Tag for CondDB. Default as set in DDDBConf for DataType
          # Input
