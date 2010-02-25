@@ -4,6 +4,11 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+! 2010-02-25 - Marco Clemencic
+ - Added some examples of GiGaExtPhysicsExtender specializations to
+   GaussPhysics_load.cpp. And modified the declaration of the tools to use aliases.
+   (needs GiGa > v19r7)
+
 !====================== GaussPhysics v6r4 2009-11-03 =========================
 ! 2009-10-20- Marcin Kucharczyk
  - Add Hidden Valley pion definition (G4HiddenValley.cpp, G4HiddenValley.h)

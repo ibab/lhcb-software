@@ -1,9 +1,36 @@
-// $Id: GiGaExtPhysics.h,v 1.4 2007-03-26 09:01:39 gcorti Exp $
+// $Id: GiGaExtPhysics.h,v 1.5 2010-02-25 18:04:31 marcocle Exp $
 #ifndef GIGA_GIGAEXTERNALPHYSICSCONSTRUCTOR_H 
 #define GIGA_GIGAEXTERNALPHYSICSCONSTRUCTOR_H 1
 
 // Include files
 #include "GiGa/GiGaPhysicsConstructorBase.h"
+
+/// Class to allow the extension of GiGaExtPhysics via template specialization
+template <class PhysConstr>
+class GiGaExtPhysicsExtender {
+public:
+  /// Method to override in the template specialization to add extra properties
+  //  to GiGaExtPhysics.
+  inline void addPropertiesTo(AlgTool */*tool*/) {
+    // -- to be overridden in a template specialization to declare specific properties.
+    // tool->declareProperty("BooleanProp", m_boolProp = true, "A specific boolean property");
+  }
+  /// Factory function for the actual G4VPhysicsConstructor.
+  //  The specialization should implement it to take care of the special cases,
+  //  like extra parameters.
+  inline PhysConstr *newInstance(const std::string &name, int /*verbosity*/) const {
+    // -- the specialization should implement this method to correctly pass the
+    //    arguments to the "PhysConstr" constructor. By default the default
+    //    constructor is used and the name is passed afterwards.
+    PhysConstr *tmp = new PhysConstr;
+    tmp->SetPhysicsName(name);
+    //tmp->SetVerboseLevel(verbosity);
+    return tmp;
+  }
+private:
+  // -- each specialization must provide the storage for the specific properties
+  // bool m_boolProp;
+};
 
 /** @class GiGaExtPhysics GiGaExtPhysics.h
  *  
@@ -12,12 +39,9 @@
  *  @date   2003-04-06
  */
 
-template <class PHYSCONSTR>
+template <class PhysConstr, class Extender = GiGaExtPhysicsExtender<PhysConstr> >
 class GiGaExtPhysics : public GiGaPhysicsConstructorBase
 {
-  /// actual type of Physics Constructor 
-  typedef PHYSCONSTR PhysConstr ;
-  
 public:
   
   /** accessor to G4VPhysicsConstructor
@@ -30,8 +54,11 @@ public:
   {
     if( 0 == m_phys )
     {
-      m_phys =  new PhysConstr() ;
-      m_phys -> SetPhysicsName( name() );
+      // use the extender to create the new instance, passing the two standard
+      // properties, the extender (if specialized) will pass some specific
+      // arguments to the actual constructor.
+      m_phys = m_extender.newInstance(name(), 1);
+      // m_phys -> SetPhysicsName( name() );
     }
     return m_phys ;
   };
@@ -50,7 +77,10 @@ public:
     const IInterface*  parent )
     : GiGaPhysicsConstructorBase( type , name , parent ) 
       , m_phys ( 0 )
-  {}
+      , m_extender()
+  {
+    m_extender.addPropertiesTo(this); // this add the properties defined in the extender
+  }
   
   /// destructor 
   virtual ~GiGaExtPhysics(){} ;
@@ -59,6 +89,10 @@ private:
   
   // physics constructor itself 
   mutable G4VPhysicsConstructor* m_phys ;
+
+  // Object to allow extended configuration of the G4 classes through template
+  // specialization.
+  Extender m_extender;
 
 };
 

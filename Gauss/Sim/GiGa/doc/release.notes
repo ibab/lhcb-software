@@ -1,10 +1,16 @@
-! $Id: release.notes,v 1.135 2010-01-21 13:21:02 silviam Exp $
+! $Id: release.notes,v 1.136 2010-02-25 18:04:31 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GiGa
 ! Responsible : Gloria CORTI, Vanya BELYAEV
 ! Purpose     : Holds interfaces and base classes plus generic implementation
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
+
+! 2010-02-25 - Marco Clemencic
+ - Modified GiGaExtPhysics to allow extensions through template specialization
+   of a helper class (GiGaExtPhysicsExtender).
+   The default implementation of GiGaExtPhysicsExtender is equivalent to the
+   previous implementation.
 
 !======================= GiGa v19r7 2010-01-21 ===============================
 
