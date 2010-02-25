@@ -782,7 +782,7 @@ void PuVetoAlg::fillPUmap( int wordIt, int word_Tot, unsigned int* data_Ptr, int
 	 (PU_hitmap[3][12]) =  *wordPtr2;
 	 break;  
 	default:
-	 wordIt++;
+	 warning() << "BUG: This warning should never be printed" << endmsg;
       } // switch case
       wordIt++;
     } // while "beetle map"  
