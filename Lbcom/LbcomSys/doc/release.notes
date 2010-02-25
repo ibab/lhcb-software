@@ -6,6 +6,42 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v8r3>2010-02-25 LbcomSys v8r3</A></H1><PRE>
+This version uses Gaudi v21r7p1 and LHCb v29r2
+
+- Packages modified: L0DU v10r3, PuVeto v7r7, RichTools v2r29, STMonitors v2r5
+
+- In L0DU v10r3
+  - L0DURawBankMonitor : 
+    . check L0Processor banks exist 
+    . report MuonBX misalignement only when L0Muon data is valid +  
+      mask BXID = 3562->3563 (L0Muon reset)
+    . emulator check : compare preDecision instead of decision to avoid fake
+      monitored error due to downscaling effect 
+  - L0DUEmulatorTool : fix abusive protection against multiple emulations per
+    event (was preventing L0DUMultiTrends, L0ConfigMonitor.opt to run correctly)
+  - L0DUMultiConfigProvider : fix verbose messaging when RootInTES != 'T0'
+  - bug found in L0DU firmware for 'pathological' condition setting :
+    -> PVSS exported TCK options may not match the actual board configuration 
+       when there are several conditions on the same data and 'data>0' condition
+       is not set first ('data > 0' corresponds to an empty register)
+    -> adapt L0CUDonfigProvider : no longer special treatment for ordering the
+       'data>0' condition 
+       => match the actual PGA configuration not the buggy PVSS export !
+    -> no impact on existing L0TCK (except maybe 0x1409 used for FEST)  
+
+- In PuVeto v7r7
+  . PuVetoAlg fixed to avoid infinite loop on real data: events with a wrong
+    L0PU bank size are skipped and warning is issued.
+
+- In RichTools v2r29
+  . Fix crash when running average is turn on in Rich::HPDOccupancyTool due to
+    and infinite recursive call. Also protect against invalid HPD IDs in the 
+    data (L1 suppressed HPDs etc.).
+
+- In STMonitors v2r5
+  . Add first full version of STDQSummaryAlg (and STDQCounters)
+
 </PRE><H1><A NAME=v8r2>2010-02-16 LbcomSys v8r2</A></H1><PRE>
 This version uses Gaudi v21r7p1 and LHCb v29r1
 

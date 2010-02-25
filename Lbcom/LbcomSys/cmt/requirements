@@ -25,7 +25,7 @@ use L0Calo            v11r0   L0        # Olivier Deschamps, Patrick Robbe
 use L0DU              v10r3   L0        # Olivier Deschamps   
 use L0Muon            v9r0    L0        # Andrei Tsarogorodtsev, Julien Cogan
 use L0MuonMonitor     v1r5    L0        # Julien Cogan
-use PuVeto            v7r6    L0        # Serena Oggero
+use PuVeto            v7r7    L0        # Serena Oggero
 
 # Muon
 use MuonAssociators   v3r2    Muon      # Alessia Satta
