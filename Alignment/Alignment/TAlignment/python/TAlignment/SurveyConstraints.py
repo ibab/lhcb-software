@@ -89,9 +89,7 @@ class SurveyConstraints( list ):
         # boxes
         self.append("TTASide : 0 0 0 0 0 0 : 0.2 0.2 0.2 0.001 0.001 0.001")
         self.append("TTCSide : 0 0 0 0 0 0 : 0.2 0.2 0.2 0.001 0.001 0.001")
-        # global
-        self.append("TT : 0 0 0 0 0 0 : 0.5 0.5 0.5 0.01 0.01 0.01")
-
+ 
     def IT( self ) :
         self += [ self.defaultSurveyDir() + "IT/Detectors.xml" ]
         AlignChisqConstraintTool().XmlUncertainties += [ "ITSystem                   : 1 1 1 0.01 0.01 0.01",
