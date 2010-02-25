@@ -356,7 +356,7 @@ namespace Al
       sc = StatusCode::FAILURE ;
     }
     double errors[6] ;
-    for(int i=0; i<6; ++i) errors[i] = boost::lexical_cast<double>(valuetokens[0]) ;
+    for(int i=0; i<6; ++i) errors[i] = boost::lexical_cast<double>(valuetokens[i]) ;
     // now find all matching elements
     size_t nummatches(0) ;
     for( ConstraintData::iterator it = m_xmldata.begin() ; it != m_xmldata.end(); ++it ) 
@@ -366,11 +366,16 @@ namespace Al
         for(int i=0; i<6; ++i) it->second.err[i] = errors[i] ;
       }
     if( nummatches==0 ) warning() << "Found no matches for xml uncertainty pattern: \'" << pattern << "\'" << endreq ;
+    debug() << "Parsed xml uncertainties for "
+	    << pattern << " with " << nummatches << " matching elements "
+	    << errors[2] << endreq ;
     return sc ;
   }
   
   const AlignChisqConstraintTool::SurveyData* AlignChisqConstraintTool::findSurveyData( const AlignmentElement& element ) const 
   {
+    debug() << "Locating survey data for alignable: "
+	    << element.name() << endreq ;
     const SurveyData* rc(0) ;
     std::string elementname = element.name() ;
     // extract the condition name, but only if this alignable has only one detector element
@@ -391,6 +396,9 @@ namespace Al
           (condname.size()>0 && match(condname, it->first) ) )
         rc = &(it->second) ;
 
+    if( rc ) 
+      debug() << "Found element in explicit constraints: " << rc->name << endreq ;
+
     // if there is only one detelement, we look in the survey database
     if( rc==0 && condname.size()>0 ) {
       XmlData::const_iterator it = m_xmldata.find( condname ) ;
@@ -404,6 +412,9 @@ namespace Al
     
     if( rc==0 ) {
       warning() << "No survey data for alignable: " << element.name() << " " << condname << endreq ;
+    } else {
+      debug() << "found element in xml data: "
+	      << condname << endreq ;
     }
     
     return rc ;
@@ -481,6 +492,7 @@ namespace Al
               debug() << "adding survey constraint: "
                       << (*ielem)->name() << " "
                       << currentdelta.parName(idof) << " "
+		      << survey->name << " "
                       << survey->par[idof] << " " << survey->err[idof] << endreq ;
             } 
             else 
