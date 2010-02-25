@@ -3,6 +3,10 @@
 ! Responsible : Marcin Kucharczyk
 !--------------------------------------------------------------------------
 
+!================= VeloPixAssociators v1r0 2010-02-25 =====================
+! 2010-02-25 Marcin Kucharczyk
+ - Update output paths in the linkers
+
 !================= VeloPixAssociators v1r0 2010-02-22 =====================
 ! 2010-02-22 Marcin Kucharczyk
  - Improve output paths in the linkers
