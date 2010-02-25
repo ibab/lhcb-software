@@ -1,4 +1,4 @@
-// $Id: L0Filter.h,v 1.4 2010-01-28 16:55:23 odescham Exp $
+// $Id: L0Filter.h,v 1.5 2010-02-25 12:37:49 odescham Exp $
 #ifndef L0FILTER_H 
 #define L0FILTER_H 1
 
@@ -43,13 +43,17 @@ public:
 protected:
 
 private:
+  std::string toUpper(std::string str);
+  bool isAnother(std::string tck);
+
   std::string m_l0Location ;              ///< Location of L0 decision
-  std::vector<std::string> m_l0channels ; ///< required channels (Or-ed)
+  std::map<std::string,std::vector<std::string> > m_l0channels ; ///< required (tck,[channels]) (Or-ed)
   std::string m_trig;
   unsigned long m_count;
   unsigned long m_sel;
   int m_mask;
   std::vector<std::string> m_l0triggers;
   bool m_revert;
+  
 };
 #endif // L0FILTER_H

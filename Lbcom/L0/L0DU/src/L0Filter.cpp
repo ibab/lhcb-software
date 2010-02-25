@@ -1,4 +1,4 @@
-// $Id: L0Filter.cpp,v 1.11 2010-01-29 14:16:02 odescham Exp $
+// $Id: L0Filter.cpp,v 1.12 2010-02-25 12:37:49 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -12,6 +12,42 @@
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0Filter
+//
+// L0 decision(s) Filtering
+//
+//  configuration properties:
+//
+//   * FILTERING DECISION : 
+//      - TriggerBit : the decision bit to be used  L0 / TimingTrigger bit / Force bit [def = L0 ]
+//
+//   * IF TriggerBit = "L0"
+//     - Decision mask : Physics=1 / Beam1=2 / Beam2=4 / Any=7 [ def = Physics ]
+//
+//     - orChannels :  select the (TCK-dependent) list of L0channels [ def = {} ]
+//            syntax :   orChannels += { [TCK] : { [CHANNELS] }
+//                       TCK = 'ALL'  or 'OTHER' is allowed
+//                       CHANNEL = 'ANY'  (filter on global decision(mask) ) or 'PASS' (filter anyway) is allowed
+//                eg : orChannels += { "0x1810" : {"CALO","MUON"},
+//                                     "0x2009" : {"ANY"},
+//                                     "OTHER"  : {"PASS} };
+//
+//                     orChannels += { "ALL" : {"PASS} }  ==> NO FILTERING
+//
+//                     orChannels += { "0x1810" : {"PASS} , "OTHER" : {} }  ==> FILTERING on TCK =0x1810
+//
+//
+//
+//
+//     - orSubTriggers : select the list of subTriggers  [ def = {} ]
+//            TCK-independent predefined subTriggers :    'L0Ecal'/'L0Hcal'/'L0Muon'/'Other'
+//            syntax :  orSubTrigger += { "L0Ecal" };  
+//
+//     - if orChannels and orSubTriggers are EMPTIES : filter on global decision ( ==>  orChannels += {"ALL" : {"ANY"} };
+//
+//   
+//
+//
+//    + Revert : revert the filtering (default: event is ACCEPTED according to the filtering criteria )
 //
 // 2007-07-11 : Patrick Koppenburg
 //-----------------------------------------------------------------------------
@@ -30,12 +66,12 @@ L0Filter::L0Filter( const std::string& name,
   ,m_sel(0)
 {
   m_l0channels.clear();
-  declareProperty("L0DULocation", m_l0Location = LHCb::L0DUReportLocation::Default );
-  declareProperty("OrChannels"  , m_l0channels );
-  declareProperty("OrSubTriggers"  , m_l0triggers );
-  declareProperty("TriggerBit"  , m_trig = "L0" ); // decision bit (L0/TTB/FB)
-  declareProperty("L0DecisionMask", m_mask = LHCb::L0DUDecision::Physics ); //L0 decision type (Physics/Beam1/Beam2)
-  declareProperty("Revert"        , m_revert = false );
+  declareProperty("L0DULocation"   , m_l0Location = LHCb::L0DUReportLocation::Default );
+  declareProperty("OrChannels"     , m_l0channels );       // TCK-dependent
+  declareProperty("OrSubTriggers"  , m_l0triggers );       // TCK-independent
+  declareProperty("TriggerBit"     , m_trig = "L0" );      // decision bit (L0/TTB/FB)
+  declareProperty("L0DecisionMask" , m_mask = LHCb::L0DUDecision::Physics ); // L0 decision type (Physics/Beam1/Beam2)
+  declareProperty("Revert"         , m_revert = false );
 }
 //=============================================================================
 // Destructor
@@ -56,18 +92,19 @@ StatusCode L0Filter::initialize() {
     info() << "Will require that the L0DU 'Force Bit' is fired " << endmsg;
   }else if( "L0" == m_trig){
     info() << "Will require that : " << endmsg;
+
     if ( !m_l0channels.empty()) {
-      info() << " - any of : [" ;
-      for ( std::vector<std::string>::const_iterator c = m_l0channels.begin() ; 
+      info() << " - any of : " << endmsg;
+      for (std::map<std::string, std::vector<std::string> >::const_iterator c = m_l0channels.begin() ; 
             c != m_l0channels.end() ; ++c ) {
-        info() << "'" << *c << "' " ;
+        info() << "         -  TKC = " << (*c).first << ": Channels = " << (*c).second << "  " << endmsg;
       }
-      info() << "] L0 channel(s) is passed "<< endmsg;
+      info() << " L0 channel(s) is passed "<< endmsg;
       if ( !m_l0triggers.empty()) info() << " OR " << endmsg;
     }
 
     if ( !m_l0triggers.empty()) {
-      info() << " - any of : [" ;
+      info() << " - any of : ["  ;
       for ( std::vector<std::string>::const_iterator c = m_l0triggers.begin() ; 
             c != m_l0triggers.end() ; ++c ) {
         info() << *c << " " ;
@@ -115,6 +152,11 @@ StatusCode L0Filter::execute() {
 
   const  LHCb::L0DUReport* l0 = get<LHCb::L0DUReport>( loc );
 
+  // current TCK
+  int tck = l0->tck();
+  std::ostringstream sTck("");
+  sTck <<  format("0x%04X" , tck );
+
   
 
   // Timing Trigger decision
@@ -130,18 +172,46 @@ StatusCode L0Filter::execute() {
   if( "L0" != m_trig)return StatusCode::FAILURE;
 
   // standard L0DU decision
+
   if ( !m_l0channels.empty()) {
-    for ( std::vector<std::string>::const_iterator c = m_l0channels.begin() ; 
-          c != m_l0channels.end() ; ++c ) {
-      if (l0->channelDecisionByName(*c)){
-        setFilterPassed( accept );
-        if ( msgLevel(MSG::VERBOSE)) verbose() << "Event is accepted by " 
-                                               << *c << " Channel" << endmsg ;
-      } else if ( msgLevel(MSG::VERBOSE)) verbose() << "Event is not accepted by "
-                                                    << *c << " Channel" << endmsg ; 
+
+    for ( std::map<std::string,std::vector<std::string> >::const_iterator cc = m_l0channels.begin() ; 
+          cc != m_l0channels.end() ; ++cc ) {
+
+      std::string              sT  = (*cc).first;  // TCK
+      std::vector<std::string> sCs = (*cc).second; // [Channels]
+
+      // keep only requested tck
+      bool pass = false;
+      if( sT == sTck.str() )pass = true;   // channel selection applied on the requested TCK
+      if( toUpper( sT ).find("ANY")   != std::string::npos  )pass = true;  // ... on any TCK
+      if( toUpper( sT ).find("ALL")   !=  std::string::npos )pass = true;  // ... on any TCK
+      if( toUpper( sT ).find("OTHER") !=  std::string::npos && isAnother( sTck.str() ) )pass = true;  // .. on each other TCK
+      if( !pass)continue;
+
+      for ( std::vector<std::string>::const_iterator c = sCs.begin(); c != sCs.end() ; ++c ) {
+        std::string ch = *c;
+        
+        if( (toUpper( ch ).find("ANY") != std::string::npos || toUpper( ch ).find("ALL") !=  std::string::npos ) 
+            && l0->decision(m_mask ) ){
+          setFilterPassed(accept);
+          if ( msgLevel(MSG::VERBOSE)) verbose() << "Triggered event pass anyway" << endmsg ;
+          break;
+        }else if (toUpper( ch ).find("PASS") !=  std::string::npos){
+          setFilterPassed(accept) ;
+          if ( msgLevel(MSG::VERBOSE)) verbose() << "Event pass anyway" << endmsg ;
+          break;
+        }
+        else if (l0->channelDecisionByName( ch )){
+          setFilterPassed( accept );
+          if ( msgLevel(MSG::VERBOSE)) verbose() << "Event is accepted by " << ch << " Channel" << endmsg ;
+        } else {
+          if ( msgLevel(MSG::VERBOSE)) verbose() << "Event is not accepted by " << ch << " Channel" << endmsg ; 
+        }
+      }
     }
   }
-
+  
   if ( !m_l0triggers.empty()) {
     for ( std::vector<std::string>::const_iterator c = m_l0triggers.begin() ; 
           c != m_l0triggers.end() ; ++c ) {
@@ -191,3 +261,23 @@ StatusCode L0Filter::finalize() {
 }
 
 //=============================================================================
+
+
+
+std::string L0Filter::toUpper(std::string str){
+  std::string uStr( str );
+  std::transform( str.begin() , str.end() , uStr.begin () , ::toupper ) ;
+  return uStr;
+}
+
+bool L0Filter::isAnother(std::string tck){
+  bool other = true;
+  for ( std::map<std::string,std::vector<std::string> >::const_iterator cc = m_l0channels.begin() ; 
+        cc != m_l0channels.end() ; ++cc ) {  
+    if( tck == (*cc).first ){
+      other = false;
+      break;
+    } 
+  }
+  return other;
+}

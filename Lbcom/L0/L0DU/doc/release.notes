@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.197 2010-02-24 17:04:08 cattanem Exp $
+! $Id: release.notes,v 1.198 2010-02-25 12:37:49 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2010-02-25 Olivier Deschamps
+  - L0Filter : improve L0Filtering (TCK-dependent orChannels)
 
 !========================== L0DU v10r3 2010-02-24 =========================
 ! 2010-02-23 Olivier Deschamps
