@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.44 2010-02-25 16:58:29 jpalac Exp $
+!$Id: release.notes,v 1.45 2010-02-25 17:02:06 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
@@ -21,7 +21,10 @@
  - tests/qmtest/physselpython.qms/test_configurabloids.qmt
  - tests/qmtest/physselpython.qms/test_selection_components.qmt
   . Moved to new Phys/SelPy package
- 
+ - python/PhysSelPython/Wrappers.py
+ - tests/test_selection_sequence.py
+ - tests/test_selection.py
+  . Modified for above changes.
 
 ! 2010-02-25 - Juan Palacios
  - python/PhysSelPython/selection.py
