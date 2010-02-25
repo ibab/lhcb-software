@@ -5,7 +5,7 @@
 import sys
 sys.path.append('../python')
 from PhysSelPython.Wrappers import Selection, AutomaticData, NameError, NonEmptyInputLocations, IncompatibleInputLocations
-from PhysSelPython.Configurabloids import DummyAlgorithm, DummySequencer
+from SelPy.configurabloids import DummyAlgorithm, DummySequencer
 
 def test_automatic_data() :
     sel00 = AutomaticData('mySel00', Location = 'Phys/Sel00')
