@@ -145,7 +145,7 @@ namespace Al
       int offset = (*it)->activeParOffset() ;
       if ( 0<=offset ) {
 	size_t ndof = (*it)->dofMask().nActive() ;
-	size_t N = equations.element(iElem).numHits() ;
+	size_t N = std::max(equations.element(iElem).numHits(),size_t(1)) ;
 	for (ipar = offset; ipar< offset+ndof; ++ipar) {
 	  assert( ipar < size ) ;
 	  if ( halfD2Chi2DAlpha2[ipar][ipar] > 0 ) scale[ipar] = std::sqrt( N / halfD2Chi2DAlpha2[ipar][ipar] ) ;
@@ -491,6 +491,15 @@ namespace Al
       
       if (solved) {
 	double deltaChi2 = solution * halfDChi2dX ; //somewhere we have been a bit sloppy with two minus signs!
+	if( deltaChi2 < 0 ) {
+	  error() << "Serious problem in update: delta-chi2 is negative: " << deltaChi2 << std::endl
+		  << "Will recopute solution without scaling to see what that does! " << endreq ;
+	  covmatrix = halfD2Chi2dX2 ;
+	  solution  = halfDChi2dX ;
+	  solved = m_matrixSolverTool->compute(covmatrix, solution);
+	  deltaChi2 = solution * halfDChi2dX ;
+	}
+	
 	if (printDebug()) {
 	  info() << "Solution = " << solution << endmsg ;
 	  info() << "Covariance = " << covmatrix << endmsg ;
@@ -564,6 +573,9 @@ namespace Al
 	    logmessage << "survey pars: "
 		       << survey.par[0] << " " << survey.par[1] << " " << survey.par[2] << " "
 		       << survey.par[3] << " " << survey.par[4] << " " << survey.par[5] << std::endl ;
+	    logmessage << "survey errors: "
+		       << survey.err[0] << " " << survey.err[1] << " " << survey.err[2] << " "
+		       << survey.err[3] << " " << survey.err[4] << " " << survey.err[5] << std::endl ;
 	    
 	    if (!sc.isSuccess()) error() << "Failed to set alignment condition for " << (*it)->name() << endmsg ;
 	   
