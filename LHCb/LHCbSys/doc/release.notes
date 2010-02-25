@@ -16,6 +16,9 @@ This version uses Gaudi v21r7p1 and LCG_58a
 - The following packages have been moved to the SVN code repository:
   RichKernel, RichRecBase
 
+- In LHCbSys/doc/DoxyFile.cfg
+  . Exclude doc for */RichConverter.*, was breaking doxygen build
+
 - In Tell1Kernel v1r10
   . Changed STTell1Core.h adding more header corrections
 
