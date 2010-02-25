@@ -3,7 +3,7 @@
 # applying configuration of Brunel
 # /***** User Brunel/Brunel **************************************************************************
 # |-DatasetName     = 'Brunel'
-# |-Histograms      = 'Default'
+# |-Histograms      = 'OfflineFull'
 # |-SkipEvents      = 0
 # |-ProductionMode  = False
 # |-PackType        = 'TES'
@@ -33,8 +33,8 @@
 # |-Monitors        = ['FPE', 'SC']  (default: [])
 # \----- (End of User Brunel/Brunel) -----------------------------------------------------------------
 # /***** User RecSysConf/RecSysConf ******************************************************************
-# |-ExpertHistos = False
 # |-DataType     = '2010'
+# |-Histograms   = 'OfflineFull'
 # |-OutputLevel  = 3
 # |-OutputType   = 'DST'
 # |-Context      = 'Offline'
@@ -51,8 +51,8 @@
 # |-TrackPatRecAlgorithms    = []  (default: [])
 # \----- (End of User TrackSys/TrackSys) -------------------------------------------------------------
 # /***** User RecMoniConf/RecMoniConf ****************************************************************
-# |-ExpertHistos = False
 # |-DataType     = '2010'
+# |-Histograms   = 'OfflineFull'
 # |-OutputLevel  = 3
 # |-Context      = 'Offline'
 # |-MoniSequence = None
@@ -61,12 +61,15 @@
 # DstWriter.ItemList=['/Event/Rec/Header#1', '/Event/Rec/Status#1', '/Event/pRec/Track/Best#1', '/Event/pRec/Rich/PIDs#1', '/Event/pRec/Muon/MuonPID#1', '/Event/pRec/Calo/Electrons#1', '/Event/pRec/Calo/Photons#1', '/Event/pRec/Calo/MergedPi0s#1', '/Event/pRec/Calo/SplitPhotons#1', '/Event/pRec/ProtoP/Charged#1', '/Event/pRec/ProtoP/Neutrals#1', '/Event/pRec/Vertex/Primary#1', '/Event/pRec/Vertex/V0#1', '/Event/pRec/Track/Muon#1', '/Event/DAQ/RawEvent#1']
 # DstWriter.OptItemList=['/Event/Phys/Selections#1']
 # No Writer defined for DIGI
+# WARNING: ConfiguredMuonIDs: Not available info for DATA=2010,VERSION=def. Loading default
+# MuonID WARNING: new DLL parameters not tuned for DATA=MC09,VERSION=def. Loading values for DC06
+# ConfiguredMuonIDs: Loaded configuration info M_MC09_def
 # WARNING: Using default tag head-20100119 for partition DDDB
 # WARNING: Using default tag head-20100202 for partition LHCBCOND
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v35r11
-                                          running on lxbuild156.cern.ch on Mon Feb 15 17:09:42 2010
+                                          running on lxbuild156.cern.ch on Thu Feb 25 15:13:29 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -78,7 +81,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.58 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.62 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 BrunelSequencer      INFO Member list: ProcessPhase/Init, GaudiSequencer/LumiSeq, GaudiSequencer/NotPhysicsSeq, GaudiSequencer/PhysicsSeq, ProcessPhase/Output, with context 'Offline'
@@ -144,43 +147,6 @@ RecoDecodingSeq      INFO Member list: DecodeVeloRawBuffer/DecodeVeloClusters, R
 ONLINE_201002        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-201002.db/ONLINE"
 ONLINE_201002        INFO Using TAG ""
 RecoVELOSeq          INFO Member list: Tf::PatVeloRTracking/PatVeloRTracking, Tf::PatVeloSpaceTracking/PatVeloSpaceTracking, Tf::PatVeloGeneralTracking/PatVeloGeneralTracking, with context 'Offline'
-PatVeloRTracking     INFO ========== Algorithm parameters ======
-PatVeloRTracking     INFO ZVertexMin           = -170 mm
-PatVeloRTracking     INFO ZVertexMax           = 120 mm
-PatVeloRTracking     INFO MaxRSlope            = 0.4
-PatVeloRTracking     INFO RMatchTol            = 0.9 * pitch
-PatVeloRTracking     INFO RExtraTol            = 3.5 * pitch
-PatVeloRTracking     INFO ROverlapTol          = 0.6 * pitch
-PatVeloRTracking     INFO MaxMissed            = 1
-PatVeloRTracking     INFO MinToTag             = 4
-PatVeloRTracking     INFO ChargeThreshold      = 15
-PatVeloRTracking     INFO HighChargeFract      = 0.5
-PatVeloRTracking     INFO AdjacentSectors      = False
-PatVeloRTracking     INFO OnlyForward          = False
-PatVeloRTracking     INFO OnlyBackward         = False
-PatVeloRTracking     INFO OverlapCorrection    = True
-PatVeloRTracking     INFO ======================================
-ToolSvc.PatVelo...   INFO === Tool ToolSvc.PatVeloTrackTool param. ===
-ToolSvc.PatVelo...   INFO PhiAngularTol        = 0.005
-ToolSvc.PatVelo...   INFO highChargeFract      = 0.7
-ToolSvc.PatVelo...   INFO ChargeThreshold      = 15
-ToolSvc.PatVelo...   INFO =================================================
-PatVeloSpaceTra...   INFO ========== Tool PatVeloSpaceTracking.PatVeloSpaceTool parameters ======
-PatVeloSpaceTra...   INFO FractionFound        = 0.35
-PatVeloSpaceTra...   INFO PhiAngularTol        = 0.005
-PatVeloSpaceTra...   INFO PhiMatchTol          = 0.11
-PatVeloSpaceTra...   INFO PhiFirstTol          = 0.09
-PatVeloSpaceTra...   INFO AdjacentSectors      = False
-PatVeloSpaceTra...   INFO FractionPhiMerge     = 0.5
-PatVeloSpaceTra...   INFO NMissedFirst         = 4
-PatVeloSpaceTra...   INFO MaxChiSqDof          = 22
-PatVeloSpaceTra...   INFO StepError            = 0.002
-PatVeloSpaceTra...   INFO FullErrorPoints      = 5
-PatVeloSpaceTra...   INFO ForwardStepError     = 0.00035
-PatVeloSpaceTra...   INFO ======================================
-PatVeloSpaceTra...   INFO  TrackSelectorName None
-PatVeloSpaceTra...   INFO       InputTracks  Rec/Track/RZVelo
-PatVeloSpaceTra...   INFO       OutputTracks Rec/Track/Velo
 RecoTTSeq            INFO Member list: , with context 'Offline'
 RecoITSeq            INFO Member list: , with context 'Offline'
 RecoOTSeq            INFO Member list: , with context 'Offline'
@@ -191,28 +157,25 @@ ToolSvc.OTRawBa...   INFO  countsPerBX = 64
 ToolSvc.OTRawBa...   INFO  numberOfBX  = 3
 ToolSvc.OTRawBa...   INFO  timePerBX = 25
 ToolSvc.OTRawBa...   INFO  ForceBankVersion = 255
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c1.an.up.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c2.an.up.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c3.an.up.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c4.an.up.cdf
-MagneticFieldSvc     INFO Map scaled by factor 1 with polarity 1
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c1.vs.down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c2.vs.down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c3.vs.down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c4.vs.down.cdf
+MagneticFieldSvc     INFO Map scaled by factor 1.59769e-06 with polarity -1
 TrackForwardFitSeq   INFO Member list: TrackStateInitAlg/InitForwardFit, TrackEventFitter/FitForward, with context 'Offline'
-MagneticFieldSvc     INFO Map scaled by factor 1 with polarity 1
+MagneticFieldSvc     INFO Map scaled by factor 1.59769e-06 with polarity -1
 ToolSvc.PatTTMa...   INFO Start generation of VeloTT Bdl LUTs
 ToolSvc.PatTTMa...   INFO Generation of VeloTT Bdl LUTs finished
 ToolSvc.PatTTMa...   INFO Start generation of VeloTT deflection LUTs
 ToolSvc.PatTTMa...   INFO Generation of VeloTT deflection LUTs finished
-ToolSvc.TrackSt...   INFO Short distance extrapolator: TrackParabolicExtrapolator
-ToolSvc.TrackSt...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
+ToolSvc.PatTTMa...   INFO  No B field detected.
 ToolSvc.TrajOTP...   INFO Use drifttime           = 1
 ToolSvc.TrajOTP...   INFO Fit drifttime residuals = 0
 ToolSvc.TrajOTP...   INFO Prefit strategy = 2
-FitForward.Fitt...   INFO Short distance extrapolator: TrackParabolicExtrapolator
-FitForward.Fitt...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
 FitForward.Fitter    INFO
 FitForward.Fitter    INFO ============ TrackMasterFitter Settings ===========
 FitForward.Fitter    INFO  Upstream fit
-FitForward.Fitter    INFO  Number of fit iterations: 3
+FitForward.Fitter    INFO  Number of fit iterations: 10
 FitForward.Fitter    INFO  Max 2 outliers removed with outliers at chi2 > 9
 FitForward.Fitter    INFO  State z positions at:
 FitForward.Fitter    INFO  beam line, first/last measurement, default reference positions
@@ -229,12 +192,10 @@ ToolSvc.TsaData...   INFO Max OT cluster size     = 5
 ToolSvc.TsaData...   INFO Max OT module occupancy = 0.4
 ToolSvc.TsaData...   INFO Max ST sector occupancy = 48
 TrackSeedFitSeq      INFO Member list: TrackStateInitAlg/InitSeedFit, TrackEventFitter/FitSeedForMatch, with context 'Offline'
-FitSeedForMatch...   INFO Short distance extrapolator: TrackParabolicExtrapolator
-FitSeedForMatch...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
 FitSeedForMatch...   INFO
 FitSeedForMatch...   INFO ============ TrackMasterFitter Settings ===========
 FitSeedForMatch...   INFO  Upstream fit
-FitSeedForMatch...   INFO  Number of fit iterations: 3
+FitSeedForMatch...   INFO  Number of fit iterations: 10
 FitSeedForMatch...   INFO  Max 2 outliers removed with outliers at chi2 > 9
 FitSeedForMatch...   INFO  State z positions at:
 FitSeedForMatch...   INFO  beam line, first/last measurement, default reference positions
@@ -249,12 +210,10 @@ FitSeedForMatch      INFO
 TrackMatchPatSeq     INFO Member list: TrackMatchVeloSeed/TrackMatch, with context 'Offline'
 ToolSvc.TrackHe...   INFO ExtrapolatorID=5
 TrackMatchFitSeq     INFO Member list: TrackStateInitAlg/InitMatchFit, TrackEventFitter/FitMatch, with context 'Offline'
-FitMatch.Fitter...   INFO Short distance extrapolator: TrackParabolicExtrapolator
-FitMatch.Fitter...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
 FitMatch.Fitter      INFO
 FitMatch.Fitter      INFO ============ TrackMasterFitter Settings ===========
 FitMatch.Fitter      INFO  Upstream fit
-FitMatch.Fitter      INFO  Number of fit iterations: 3
+FitMatch.Fitter      INFO  Number of fit iterations: 10
 FitMatch.Fitter      INFO  Max 2 outliers removed with outliers at chi2 > 9
 FitMatch.Fitter      INFO  State z positions at:
 FitMatch.Fitter      INFO  beam line, first/last measurement, default reference positions
@@ -283,12 +242,10 @@ PatDownstream        INFO ========================================
 PatDownstream        INFO zMagnetParams 5376.8 -3895.12 309.877 85527.9
 PatDownstream        INFO momentumParams 1148.65 961.786 5326.81
 TrackDownstream...   INFO Member list: TrackStateInitAlg/InitDownstreamFit, TrackEventFitter/FitDownstream, with context 'Offline'
-FitDownstream.F...   INFO Short distance extrapolator: TrackParabolicExtrapolator
-FitDownstream.F...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
 FitDownstream.F...   INFO
 FitDownstream.F...   INFO ============ TrackMasterFitter Settings ===========
 FitDownstream.F...   INFO  Upstream fit
-FitDownstream.F...   INFO  Number of fit iterations: 3
+FitDownstream.F...   INFO  Number of fit iterations: 10
 FitDownstream.F...   INFO  Max 2 outliers removed with outliers at chi2 > 9
 FitDownstream.F...   INFO  State z positions at:
 FitDownstream.F...   INFO  beam line, first/last measurement, default reference positions
@@ -312,12 +269,10 @@ PatVeloTT.Fitter     INFO ==================================================
 PatVeloTT            INFO  InputTracksName    = Rec/Track/Velo
 PatVeloTT            INFO  OutputTracksName   = Rec/Track/VeloTT
 TrackVeloTTFitSeq    INFO Member list: TrackStateInitAlg/InitVeloTTFit, TrackEventFitter/FitVeloTT, with context 'Offline'
-FitVeloTT.Fitte...   INFO Short distance extrapolator: TrackParabolicExtrapolator
-FitVeloTT.Fitte...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
 FitVeloTT.Fitter     INFO
 FitVeloTT.Fitter     INFO ============ TrackMasterFitter Settings ===========
 FitVeloTT.Fitter     INFO  Upstream fit
-FitVeloTT.Fitter     INFO  Number of fit iterations: 3
+FitVeloTT.Fitter     INFO  Number of fit iterations: 10
 FitVeloTT.Fitter     INFO  Max 2 outliers removed with outliers at chi2 > 9
 FitVeloTT.Fitter     INFO  State z positions at:
 FitVeloTT.Fitter     INFO  beam line, first/last measurement, default reference positions
@@ -330,12 +285,10 @@ FitVeloTT            INFO   Fitter name              : FitVeloTT.Fitter
 FitVeloTT            INFO ==================================================
 FitVeloTT            INFO
 TrackSeedRefitSeq    INFO Member list: TrackStateInitAlg/InitSeedRefit, TrackEventFitter/RefitSeed, with context 'Offline'
-RefitSeed.Fitte...   INFO Short distance extrapolator: TrackParabolicExtrapolator
-RefitSeed.Fitte...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
 RefitSeed.Fitter     INFO
 RefitSeed.Fitter     INFO ============ TrackMasterFitter Settings ===========
 RefitSeed.Fitter     INFO  Upstream fit
-RefitSeed.Fitter     INFO  Number of fit iterations: 3
+RefitSeed.Fitter     INFO  Number of fit iterations: 10
 RefitSeed.Fitter     INFO  Max 2 outliers removed with outliers at chi2 > 9
 RefitSeed.Fitter     INFO  State z positions at:
 RefitSeed.Fitter     INFO  beam line, first/last measurement, default reference positions
@@ -360,12 +313,10 @@ TrackEventClone...   INFO CompareInSameContainerForwardUpstream : False
 TrackEventClone...   INFO =======================================================
 TrackEventClone...   INFO
 TrackVeloFitSeq      INFO Member list: TrackPrepareVelo, TrackEventFitter/FitVelo, TrackContainerCopy/CopyVelo, with context 'Offline'
-FitVelo.Fitter....   INFO Short distance extrapolator: TrackParabolicExtrapolator
-FitVelo.Fitter....   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
 FitVelo.Fitter       INFO
 FitVelo.Fitter       INFO ============ TrackMasterFitter Settings ===========
 FitVelo.Fitter       INFO  Upstream fit
-FitVelo.Fitter       INFO  Number of fit iterations: 3
+FitVelo.Fitter       INFO  Number of fit iterations: 10
 FitVelo.Fitter       INFO  Max 2 outliers removed with outliers at chi2 > 9
 FitVelo.Fitter       INFO  State z positions at:
 FitVelo.Fitter       INFO  beam line, first/last measurement, default reference positions
@@ -383,12 +334,6 @@ FindTrackClones      INFO Will build clone table for z=[0, 990, 9450]mm at 'Rec/
 FindTrackClones      INFO Max Kullbeck Liebler Distance = 5000
 TrackEraseExtra...   INFO Member list: TrackEraseExtraInfo, with context 'Offline'
 RecoVertexSeq        INFO Member list: PatPVOffline, TrackV0Finder, with context 'Offline'
-PatPVOffline.PV...   INFO Short distance extrapolator: TrackParabolicExtrapolator
-PatPVOffline.PV...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
-TrackV0Finder.T...   INFO Short distance extrapolator: TrackParabolicExtrapolator
-TrackV0Finder.T...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
-TrackV0Finder.T...   INFO Short distance extrapolator: TrackParabolicExtrapolator
-TrackV0Finder.T...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
 RecoRICHSeq          INFO Member list: GaudiSequencer/RichRecInitOfflineSeq, GaudiSequencer/RichOfflineENNRingFinderSeq, GaudiSequencer/RichOfflinePIDSeq, with context 'Offline'
 RichRecInitOffl...   INFO Member list: Rich::Rec::Initialise/CheckProcOfflineStatus, GaudiSequencer/RichOfflinePixelsSeq, GaudiSequencer/RichOfflineTracksSeq, GaudiSequencer/RichOfflinePhotonsSeq, with context 'Offline'
 RichOfflinePixe...   INFO Member list: Rich::DAQ::RawBufferToRichDigitsAlg/DecodeRawRichOffline, Rich::Rec::Initialise/CreateOfflinePixels, with context 'Offline'
@@ -555,8 +500,6 @@ MuonIDAlg            INFO MuonIDAlg v7r7
 MuonIDAlg            INFO ==> Initialise: Input tracks in: Rec/Track/Best
 MuonIDAlg            INFO                 Output MuonPID in: Rec/Muon/MuonPID
 MuonIDAlg            INFO  dllFlag=1 -----> DLL  new (binned-integrated method)
-MuonIDAlg.myMuI...   INFO Short distance extrapolator: TrackParabolicExtrapolator
-MuonIDAlg.myMuI...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
 MuonIDAlg.myMuI...   INFO
 MuonIDAlg.myMuI...   INFO ============ TrackMasterFitter Settings ===========
 MuonIDAlg.myMuI...   INFO  Downstream fit
@@ -565,8 +508,6 @@ MuonIDAlg.myMuI...   INFO  Max 0 outliers removed with outliers at chi2 > 9
 MuonIDAlg.myMuI...   INFO  State z positions at:
 MuonIDAlg.myMuI...   INFO  first/last measurement
 MuonIDAlg.myMuI...   INFO ==================================================
-MuonIDAlg.myMuI...   INFO Short distance extrapolator: TrackParabolicExtrapolator
-MuonIDAlg.myMuI...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
 RecoPROTOSeq         INFO Member list: GaudiSequencer/ChargedProtoParticles, GaudiSequencer/NeutralProtoParticles, with context 'Offline'
 ChargedProtoPar...   INFO Member list: ChargedProtoParticleMaker/ChargedProtoPMaker, ChargedProtoParticleAddEcalInfo/ChargedProtoPAddEcal, ChargedProtoParticleAddBremInfo/ChargedProtoPAddBrem, ChargedProtoParticleAddHcalInfo/ChargedProtoPAddHcal, ChargedProtoParticleAddPrsInfo/ChargedProtoPAddPrs, ChargedProtoParticleAddSpdInfo/ChargedProtoPAddSpd, ChargedProtoParticleAddVeloInfo/ChargedProtoPAddVeloDEDX, with context 'Offline'
 ChargedProtoPAd...   INFO VELO dE/dx charge parameters : normalisation = 47.1 ratio = 0.6
@@ -602,8 +543,6 @@ ElectronMatchMon     INFO HistoTopDir set to 'CaloMoniDst/'
 BremMatchMon         INFO HistoTopDir set to 'CaloMoniDst/'
 CaloPIDMon           INFO HistoTopDir set to 'CaloMoniDst/'
 CaloPIDsMoni         INFO Member list: CaloClusterMatchMonitor/PhotonMatchMon, CaloHypoMatchMonitor/ElectronMatchMon, CaloHypoMatchMonitor/BremMatchMon, CaloEMuMonitor/CaloPIDMon, with context 'Offline'
-CaloPIDMon.Trac...   INFO Short distance extrapolator: TrackParabolicExtrapolator
-CaloPIDMon.Trac...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
 MoniRICHSeq          INFO Member list: GaudiSequencer/RichRawMoni, GaudiSequencer/RichPixelMoni, GaudiSequencer/RichTrackMoni, GaudiSequencer/RichRecoMoni, GaudiSequencer/RichPIDMoni, GaudiSequencer/RichENNTracklessRingsMoni, GaudiSequencer/RichMirrAlignMoni, GaudiSequencer/RichHPDIonFeedback, with context 'Offline'
 RichRawMoni          INFO Member list: Rich::DAQ::RawDataSize/RichRawDataSize, Rich::DAQ::DataDBCheck/RichRawDataDBCheck, Rich::HPDAnalysisAlg/RichHotPixels, with context 'Offline'
 RichHotPixels        INFO Loading HPD Analysis tools : [RichHotPixelFinder]
@@ -649,7 +588,7 @@ RiPIDMonLong10T...   INFO  Match       : P = 1.00e+01->7.00e+01 GeV : Pt = 0.00e
 RiPIDMonLong70T...   INFO Track Selection : [Forward, Match]
 RiPIDMonLong70T...   INFO  Forward     : P = 7.00e+01->1.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
 RiPIDMonLong70T...   INFO  Match       : P = 7.00e+01->1.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
-RichENNTrackles...   INFO Member list: Rich::Rec::MC::TracklessRingMoni/ENNRingMoniAll, Rich::Rec::MC::TracklessRingMoni/ENNRingMoniBest, Rich::Rec::MC::TracklessRingMoni/ENNRingMoniIsolated, Rich::Rec::RingPeakSearch/ENNRingPeakSearchAll, Rich::Rec::RingPeakSearch/ENNRingPeakSearchBest, Rich::Rec::RingPeakSearch/ENNRingPeakSearchIsolated, with context 'Offline'
+RichENNTrackles...   INFO Member list: Rich::Rec::MC::TracklessRingMoni/ENNRingMoniAll, Rich::Rec::MC::TracklessRingMoni/ENNRingMoniBest, Rich::Rec::MC::TracklessRingMoni/ENNRingMoniIsolated, with context 'Offline'
 RichMirrAlignMoni    INFO Member list: Rich::Rec::MC::AlignmentMonitor/RichAlignMoniR1, Rich::Rec::MC::AlignmentMonitor/RichAlignMoniR2, with context 'Offline'
 RichAlignMoniR1...   INFO Track Selection : [Match, Forward]
 RichAlignMoniR1...   INFO  Match       : P = 5.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
@@ -663,11 +602,7 @@ MuonPIDMonitor       INFO initialize:: ======> Monitor Performance of IsMuonLoos
 MuonPIDMonitor       INFO initialize:: ======> Monitor Performance of (binned+integrated) DLL
 MoniVELOSeq          INFO Member list: Velo::VeloClusterMonitor/VeloClusterMonitor, Velo::VeloTrackMonitor/VeloTrackMonitor, with context 'Offline'
 MoniTrSeq            INFO Member list: TrackMonitor, TrackVertexMonitor, TrackFitMatchMonitor, TrackV0Monitor, TrackDiMuonMonitor, TrackAlignMonitor, TrackCaloMatchMonitor/TrackEcalMatchMonitor, TrackCaloMatchMonitor/TrackSpdMatchMonitor, TrackCaloMatchMonitor/TrackPrsMatchMonitor, TrackMuonMatchMonitor, with context 'Offline'
-ToolSvc.TrackMa...   INFO Short distance extrapolator: TrackParabolicExtrapolator
-ToolSvc.TrackMa...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
 MoniOTSeq            INFO Member list: OTTrackMonitor, OTHitEfficiencyMonitor, OTTimeMonitor, with context 'Offline'
-ToolSvc.TrackIn...   INFO Short distance extrapolator: TrackParabolicExtrapolator
-ToolSvc.TrackIn...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
 MoniSTSeq            INFO Member list: ST::STClusterMonitor/TTClusterMonitor, ST::STClusterMonitor/ITClusterMonitor, with context 'Offline'
 MoniPROTOSeq         INFO Member list: ChargedProtoParticleMoni/ChargedProtoPMoni, with context 'Offline'
 Output               INFO Member list: GaudiSequencer/OutputDSTSeq, with context 'Offline'
@@ -788,12 +723,12 @@ RiMatchTrkEff     SUCCESS Booked 15 Histogram(s) : 1D=10 1DProf=5
 RiKsTrackTrkEff   SUCCESS Booked 15 Histogram(s) : 1D=10 1DProf=5
 RiVeloTTTrkEff    SUCCESS Booked 15 Histogram(s) : 1D=10 1DProf=5
 RiSeedTrkEff      SUCCESS Booked 15 Histogram(s) : 1D=10 1DProf=5
-RiCKResLong       SUCCESS Booked 42 Histogram(s) : 1D=33 2D=3 1DProf=6
-RiCKResForward    SUCCESS Booked 42 Histogram(s) : 1D=33 2D=3 1DProf=6
-RiCKResMatch      SUCCESS Booked 42 Histogram(s) : 1D=33 2D=3 1DProf=6
-RiCKResKsTrack    SUCCESS Booked 42 Histogram(s) : 1D=33 2D=3 1DProf=6
-RiCKResVeloTT     SUCCESS Booked 42 Histogram(s) : 1D=33 2D=3 1DProf=6
-RiCKResSeed       SUCCESS Booked 42 Histogram(s) : 1D=33 2D=3 1DProf=6
+RiCKResLong       SUCCESS Booked 30 Histogram(s) : 1D=30
+RiCKResForward    SUCCESS Booked 30 Histogram(s) : 1D=30
+RiCKResMatch      SUCCESS Booked 30 Histogram(s) : 1D=30
+RiCKResKsTrack    SUCCESS Booked 30 Histogram(s) : 1D=30
+RiCKResVeloTT     SUCCESS Booked 30 Histogram(s) : 1D=30
+RiCKResSeed       SUCCESS Booked 30 Histogram(s) : 1D=30
 RiPIDMonLong2To100WARNING NO ENTRIES -> PID table skipped ...
 RiPIDMonLong2To10 WARNING NO ENTRIES -> PID table skipped ...
 RiPIDMonLong10To70WARNING NO ENTRIES -> PID table skipped ...
@@ -801,11 +736,8 @@ RiPIDMonLong70T...WARNING NO ENTRIES -> PID table skipped ...
 ENNRingMoniAll    SUCCESS Booked 12 Histogram(s) : 1D=12
 ENNRingMoniBest   SUCCESS Booked 12 Histogram(s) : 1D=12
 ENNRingMoniIsol...SUCCESS Booked 12 Histogram(s) : 1D=12
-ENNRingPeakSear...SUCCESS Booked 1 Histogram(s) : 1D=1
-ENNRingPeakSear...SUCCESS Booked 1 Histogram(s) : 1D=1
-ENNRingPeakSear...SUCCESS Booked 1 Histogram(s) : 1D=1
-RichAlignMoniR1   SUCCESS Booked 29 Histogram(s) : 1D=3 2D=26
-RichAlignMoniR2   SUCCESS Booked 183 Histogram(s) : 1D=3 2D=180
+RichAlignMoniR1   SUCCESS Booked 13 Histogram(s) : 1D=3 2D=10
+RichAlignMoniR2   SUCCESS Booked 13 Histogram(s) : 1D=3 2D=10
 RichHPDIFBMoni    SUCCESS Booked 487 Histogram(s) : 1D=487
 MuonPIDMonitor       INFO ------------------------Total MuonPID Efficiencies (%)----------------------
 MuonPIDMonitor       INFO ----------------------------------------------------------------------------
@@ -868,7 +800,7 @@ ToolSvc.Offline...SUCCESS  #WARNINGS   = 1        Message = 'No pixels produced'
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.58 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.62 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1150,9 +1082,6 @@ TimingAuditor.T...   INFO      RichENNTracklessRingsMoni|     0.000 |     0.000 
 TimingAuditor.T...   INFO       ENNRingMoniAll          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       ENNRingMoniBest         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       ENNRingMoniIsolated     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ENNRingPeakSearchAll    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ENNRingPeakSearchBest   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       ENNRingPeakSearchIsolate|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      RichMirrAlignMoni        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RichAlignMoniR1         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RichAlignMoniR2         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
