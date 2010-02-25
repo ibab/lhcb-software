@@ -5,6 +5,78 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v29r2>2010-02-25 LHCbSys v29r2</A></H1><PRE>
+This version uses Gaudi v21r7p1 and LCG_58a
+
+- Packages modified: Tell1Kernel v1r10, CaloDet v10r4, L0Event v18r2,
+    VeloEvent v16r8, GaudiConf v13r4p1, GaudiObjDesc v11r10p1,
+    LHCbKernel v11r11p1, DaVinciInterfaces v2r1, LoKiCore v9r11, LoKiHlt v2r7,
+    LoKiMC v8r9, LoKiNumbers v8r4, RichKernel v7r31, RichRecBase v3r27
+
+- The following packages have been moved to the SVN code repository:
+  RichKernel, RichRecBase
+
+- In Tell1Kernel v1r10
+  . Changed STTell1Core.h adding more header corrections
+
+- In CaloDet v10r4
+  . src/Lib/DeCalorimeter.cpp : 
+    + fix bug for m_zSupThreshold and m_triggerThreshold for Spd that prevents to
+      run Boole/CaloDigitAlg with a threshold above 1 mip
+    + new method spdThreshold(cellID) that returns the actual thresholds in mip
+      unit for a given channel. 
+
+- In L0Event v18r2
+  . L0DUReport.xml  :  2 new methods : preDecisionFromSummmary(type,bx) 
+                                       preDecisionValueFromSummary( bx )
+
+- In VeloEvent v16r8
+  . Remove from requirements hack for Gaudi v21r1 to link dictionary on windows
+  . Fix in VeloErrorBank data class - remove creation of EvtInfo object with new
+    operator, it was an old idea to make some part of the ErrorBank persistent
+
+- In GaudiConf v13r4p1
+  . In DigiConf, changed output paths for VeloPix linkers
+
+- In GaudiObjDesc v11r10p1
+  . Fix bug #62936: for unknown enums, print the numerical value in the error
+    message
+
+- In LHCbKernel v11r11p1
+  . Update Rich::Side text conversion
+
+- In DaVinciInterfaces v2r1
+  . Kernel/IMassVertexFit.h removed. Not implemented and not needed.
+
+- In LoKiCore v9r11
+  . In LoKi/TES.h & TES.cpp, new "void"-functors:
+    EXISTS    LoKi::TES::Exists   to check existence of object in TES 
+    CONTAINS  LoKi::TES::Contains to check existence and size of Container in TES
+
+- In LoKiHlt v2r7
+  . Add new tuple tool: LoKi::Hybrid::EvtTupelTool 
+
+- In LoKiMC v8r9
+  . add new symbols:
+     MCFROMDECAYS    to check if particle comes 'only from decays'
+     MCFROMXS        to check if particle comes 'from secondary interactions'
+     MCINANCESTORS   to check the certain condition for ancestors 
+     MCNINANCESTORS  to count the certain condition for ancestors 
+
+- In LoKiNumbers v8r4
+  . add new symbols:
+    EXISTS    LoKi::TES::Exists   to check existence of object in TES 
+    CONTAINS  LoKi::TES::Contains to check existence and size of Container in TES
+
+- In RichKernel v7r31
+  . Improvements to RichHistogramID full IDs and histogram titles
+  . CPU optimisation to speed up histogram lookup.
+
+- In RichRecBase v3r27
+  . Extend isolated track interface with new methods for LHCb::Track and
+    LHCb::RichRecTrack
+  . Extend RichTrackSelectorBase with new flag to apply track isolation cuts
+
 </PRE><H1><A NAME=v29r1>2010-02-16 LHCbSys v29r1</A></H1><PRE>
 This version uses Gaudi v21r7p1 and LCG_58a
 
