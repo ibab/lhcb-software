@@ -3,6 +3,55 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v36r2>2010-02-26 Brunel v36r2</A></H1><PRE>
+This version uses projects Gaudi v21r7p1, LHCb v29r2, Lbcom v8r3, Rec v8r2
+ and SQLDDDB v5r20, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
+
+This is a production version for 2010 data taking preparation and for 2009 data
+reprocessing
+
+Output requires DaVinci v25r0 or later if saving packed DST, DaVinci v24r5p1
+or later otherwise
+
+ - Changes to Configuration: 
+   . Added support for various histogramming levels, via Brunel().Histograms
+     slot. Possible values: "None", "Online", "OfflineExpress", "OfflineFull",
+     "Expert". Note that these levels are now case sensitive.
+     (RichRecQC v2r37, VeloRecMonitors v2r7, RecSys v8r2, Brunel v36r2)
+
+ - New tuning
+   . Better general tracking in overlap region when misaligned (PatVelo v3r20)
+   . New tuning of track fit:
+     o Change track fit convergence criteria and increase max number of 
+       iterations from 3 to 10 (TrackFitter v2r45)
+     o Changed default value of UpdateTransport to true (TrackFitter v2r45)
+     o Improved TrackStateInitTool for long, downstream tracks (TrackTools v2r27)
+    (see <a href="http://indico.cern.ch/getFile.py/access?contribId=2&resId=0&materialId=slides&confId=85503">talk</a> at TIM meeting on 2010-02-25)
+
+ - Bug fixes
+   . Fix bug #63402, infinite loop that could happen when decoding PuVeto data
+     (PuVeto v7r7)
+
+ - Monitoring changes
+   . Less info() at initialize step (PatVelo v3r20)
+   . Moved some info messages to debug; improved error reports for RK
+     (TrackExtrapolators v2r25)
+   . Optimisation of Rich histogram access (RichKernel v7r31)
+   . Reduced default set of RichENN histograms (RichRecQC v2r37)
+   . Reduced histograms produced in "Online" case 
+     (RichRecQC v2r37, VeloRecMonitors v2r7)
+   . Reduced default set of OT histograms (TrackMonitors)
+
+ - Changes to tests
+   . Update RichRecQC options in mc09-withtruth and mc09-withtruth-invfield tests
+   . In brunel-fest09.qmt, test also Brunel().Histograms="Online";
+   . In brunelmdfrdst.qmt, test also Brunel().Histograms="OfflineExpress";
+   . In brunel-mc09-stripping.qmt, test also Brunel().Histograms="None";
+   . In all tests, ignore changes in magnetic field map scale factor or
+     polarity (initial value depends on "now" value in latest online snapshot)
+
+
+
 </PRE><H1><A NAME=v36r1>2010-02-19 Brunel v36r1</A></H1><PRE>
 This version uses projects Gaudi v21r7p1, LHCb v29r1, Lbcom v8r2, Rec v8r1
  and SQLDDDB v5r20, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
