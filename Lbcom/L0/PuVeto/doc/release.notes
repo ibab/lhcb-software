@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.64 2010-02-25 14:18:05 serena Exp $
+! $Id: release.notes,v 1.65 2010-02-25 15:37:34 cattanem Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Serena Oggero
 !-------------------------------------------------------------------------
 
+!======================== PuVeto v7r7 2010-02-25 =========================
 ! 2010-02-25 - Serena Oggero
  - PuVetoAlg improved (to give a warning for events with a wrong L0PU bank 
    size)
