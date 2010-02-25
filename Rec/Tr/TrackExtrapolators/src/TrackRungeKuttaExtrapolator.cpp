@@ -1,6 +1,7 @@
 #include "TrackRungeKuttaExtrapolator.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/ToolFactory.h"
+#include <sstream>
 
 //
 //
@@ -324,18 +325,16 @@ TrackRungeKuttaExtrapolator::propagate( Gaudi::TrackVector& state,
   rkstate.qop  = state(4) * Gaudi::Units::c_light ;
   rkstate.z    = zin ;
 
+  StatusCode sc = StatusCode::SUCCESS ;
   RKErrorCode success = m_numericalJacobian && jacobian  
     ? extrapolateNumericalJacobian( rkstate, zout, *jacobian) 
     : extrapolate( rkstate, zout, jacobian) ;
-  
   if( success == RKSuccess ) {
     // translate the state back
     state(0) = rkstate.x() ;
     state(1) = rkstate.y() ;
     state(2) = rkstate.tx() ;
     state(3) = rkstate.ty() ;
-    //   debug() << "zin, zout, result: " 
-    // 	 << zin << " " << zout << " " << state << endreq ;
 
     if( transMat ) {
       *transMat = Gaudi::TrackMatrix() ;
@@ -351,10 +350,12 @@ TrackRungeKuttaExtrapolator::propagate( Gaudi::TrackVector& state,
       delete jacobian ;
     }
   } else {
-    error() << "RungeKuttaExtrapolator failed with code: " << success << endreq ;
+    std::stringstream str ;
+    str << "RungeKuttaExtrapolator failed with code: " << success ;
+    sc = Warning(str.str(),StatusCode::FAILURE,0) ;
   }
   
-  return success==RKSuccess ? StatusCode::SUCCESS : StatusCode::FAILURE ;
+  return sc ;
 }
 
 
@@ -472,13 +473,15 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
 
     // final check: bail out for vertical or looping tracks
     if( std::abs( state.tx() ) > m_maxSlope || std::abs( state.ty() ) > m_maxSlope ) {
-      Warning("State has very large slope, probably curling. Bailing out.").ignore() ;
+      debug() << "State has very large slope, probably curling: tx, ty = "
+	      << state.tx() << ", " << state.ty() << endreq ;
       rc = RKCurling ;
     } else if( std::abs(state.qop * rkcache.stage[0].Bfield.y() ) > m_maxCurvature ) {
-      Warning("State has too small curvature radius. Bailing out.").ignore() ;
+      debug() << "State has too small curvature radius: "
+	      << state.qop * rkcache.stage[0].Bfield.y() << endreq ;
       rc = RKCurling ;
     } else if( stats.numfailedstep + rkcache.step  >= m_maxNumRKSteps ) {
-      Warning("Exceeded max numsteps.").ignore() ;
+      debug() << "Exceeded max numsteps. " << endreq ;
       rc = RKExceededMaxNumSteps ;
     }
   }
