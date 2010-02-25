@@ -32,7 +32,7 @@ This version uses Gaudi v21r7p1 and LHCb v29r2
 
 - In PuVeto v7r7
   . PuVetoAlg fixed to avoid infinite loop on real data: events with a wrong
-    L0PU bank size are skipped and warning is issued.
+    L0PU bank size are skipped and warning is issued (fix for bug # 63402)
 
 - In RichTools v2r29
   . Fix crash when running average is turn on in Rich::HPDOccupancyTool due to

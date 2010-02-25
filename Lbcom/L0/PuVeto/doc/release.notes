@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.65 2010-02-25 15:37:34 cattanem Exp $
+! $Id: release.notes,v 1.66 2010-02-25 15:42:26 cattanem Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Serena Oggero
 !-------------------------------------------------------------------------
@@ -10,7 +10,7 @@
 
 ! 2010-02-24 - Serena Oggero
  - PuVetoAlg fixed to avoid infinite loop on real data: events with a wrong
-   L0PU bank size are skipped
+   L0PU bank size are skipped (fix for bug # 63402)
 
 !======================== PuVeto v7r6 2010-02-03 =========================
 ! 2010-02-02 - Serena Oggero
