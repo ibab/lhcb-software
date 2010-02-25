@@ -19,7 +19,7 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1L0GlobalPi0Decision"               :   18,
     "Hlt1L0LocalPi0Decision"                :   19,
     "Hlt1L0PUDecision"                      :   20,
-    "Hlt1L0PU40Decision"                    :   21,
+    "Hlt1L0PU20Decision"                    :   21,
     "Hlt1L0SPDDecision"                     :   22,
     "Hlt1L0SPD40Decision"                   :   23,
     "Hlt1L0B1gasDecision"                   :   24,
