@@ -97,6 +97,11 @@ class Physics_320Vis_300L0_10Hlt1_Jan10 :
                                            , 'DiMuon_MassCut'               : 2500
                                            , 'DiMuonIP_MassCut'             :  800
                                            , 'DiMuon_IPCut'                 :    0.00
+                                           , 'Muon_DeltaPCut'               :   -1 
+                                           , 'Muon_TConfNSigmaX'            :   10 
+                                           , 'Muon_TConfNSigmaY'            :   10 
+                                           , 'Muon_TConfNSigmaTx'           :   10 
+                                           , 'Muon_TConfNSigmaTy'           :   10 
                                            , 'Muon_FitChiCut'               :  999.
                                            , 'Muon_FitMuChi2Cut'            :  999.
                                            , 'MuTrackMuPt'                  :  750
