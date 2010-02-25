@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.42 2010-02-25 14:13:11 jpalac Exp $
+!$Id: release.notes,v 1.43 2010-02-25 14:17:26 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
@@ -9,7 +9,7 @@
  - python/PhysSelPython/selection.py
   . FlatSelectionListBuilder now removes duplicate entries.
  - tests/test_selection_components.py,
- - tests/qmtest/physselpython.qms/test_selection_components.py
+ - tests/qmtest/physselpython.qms/test_selection_components.qmt
   . Add tests for standalone selection components.
  - cmt/requirements
   . Increase to v4r2
