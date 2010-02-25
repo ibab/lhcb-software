@@ -5,6 +5,7 @@ Purpose	: collection of alignment algorithms
 
 ! 2010-02-25 - Wouter Hulsbergen
  - fix killer bug in AlignChisqConstraintTool: all xml errors were set to error on Tx
+ - fix bug in SurveyConstraints.xml: global TT constraint was overwriting values read from xml
 
 ! 2010-02-19 - Rob Lambert
  - fix and/or precedence warning in GetElementsToBeAligned.h
