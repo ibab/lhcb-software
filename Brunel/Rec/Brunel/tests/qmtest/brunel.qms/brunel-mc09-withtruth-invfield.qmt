@@ -10,14 +10,14 @@
     <text>$BRUNELOPTS/Brunel-MC09-WithTruth.py</text>
     <text>$BRUNELOPTS/MC09-Files.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().Histograms="Expert"; Brunel().RecL0Only=True; Brunel().EvtMax=15; from Configurables import RecInit, MagneticFieldSvc; RecInit("BrunelInit").PrintEventTime=True; MagneticFieldSvc().ScaleFactor=1.;</text>
+    <text>from Brunel.Configuration import *; Brunel().Histograms="Expert"; Brunel().RecL0Only=True; Brunel().EvtMax=15; from Configurables import RecInit, RichRecQCConf, MagneticFieldSvc; RecInit("BrunelInit").PrintEventTime=True; MagneticFieldSvc().ScaleFactor=1.; RichRecQCConf().removeMonitor("TracklessRingAngles")</text>
   </set></argument>
   <argument name="reference"><text>../refs/testBrunel-MC09-WithTruth.ref</text></argument>
   <argument name="validator"><text>
 from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
 preprocessor = BrunelPreprocessor + \
   LineSkipper(["Requested condDB but using manually set scale factor"]) + \
-  LineSkipper(["Map scaled by factor"]) + \
+  LineSkipper(["ToolSvc.Offline...   INFO     Rich1Gas"]) + \
   LineSkipper(["TrackResChecker      INFO Velo/"]) + \
   LineSkipper(["CheckLongTrack       INFO ALL/"])
 validateWithReference(preproc = preprocessor)

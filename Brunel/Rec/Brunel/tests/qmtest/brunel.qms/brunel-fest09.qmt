@@ -5,7 +5,7 @@
     <text>$BRUNELOPTS/Brunel-Default.py</text>
     <text>$BRUNELOPTS/2009-FEST-Data.py</text>
     <text>--option</text>
-    <text>from Configurables import Brunel,LHCbApp; Brunel().EvtMax=100; Brunel().ProductionMode=True; LHCbApp().TimeStamp=False </text>
+    <text>from Configurables import Brunel,LHCbApp; Brunel().EvtMax=100; Brunel().ProductionMode=True; LHCbApp().TimeStamp=False; Brunel().Histograms="Online";</text>
   </set></argument>
   <argument name="reference"><text>../refs/testBrunel-FEST09.ref</text></argument>
   <argument name="validator"><text>

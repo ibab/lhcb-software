@@ -3,23 +3,30 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v36r2>2010-02-26 Brunel v36r2</A></H1><PRE>
  - Changes to Configurable: 
    . Update Histogram slot to support new levels of Histogramming  - "None",
      "Online", "OfflineExpress", "OfflineFull" and "Expert". Note that these
      levels are now case sensitive.
 
  - Changes to tests
-   . Remove obsolete RichRecQC options from mc09-withtruth and 
-     mc09-withtruth-invfield tests. To be revisited, invfield test always fails
-     if Rich ENN monitoring is enabled
+   . Update RichRecQC options in mc09-withtruth and mc09-withtruth-invfield tests
+   . In brunel-fest09.qmt, test also Brunel().Histograms="Online";
+   . In brunelmdfrdst.qmt, test also Brunel().Histograms="OfflineExpress";
+   . In brunel-mc09-stripping.qmt, test also Brunel().Histograms="None";
+   . In all tests, ignore changes in magnetic field map scale factor or
+     polarity (initial value depends on "now" value in latest online snapshot)
 
  - Changes to references to reflect changes in Brunel v36r2 output:
    . Less info() at initialize step (PatVelo v3r20)
    . Change track fit convergence criteria and increase max number of 
      iterations from 3 to 10 (TrackFitter v2r45)
+   . Changed default value of UpdateTransport to true (TrackFitter v2r45)
    . Reduce default set of RichENN histograms (RichRecQC v2r37, RichRecSys v8r2)
    . Reduce default set of OT histograms (TrackMonitors)
-
+   . Moved some info messages to debug; improved error reports for RK
+     (TrackExtrapolators v2r25)
+ 
 </PRE><H1><A NAME=v36r1>2010-02-18 Brunel v36r1</A></H1><PRE>
  - Changes to Configurable: 
    . Remove OTTimeCreator from CheckOTSeq, no longer needed (task 12674)
