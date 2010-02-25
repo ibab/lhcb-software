@@ -1,0 +1,10 @@
+!$Id :$
+!-----------------------------------------------------------------------------
+! Package     : Phys/SelPy
+! Responsible : Juan Palacios
+! Purpose     : Pure python core components for Selection "Framework".
+!-----------------------------------------------------------------------------
+
+! 2010-02-25 - Juan Palacios
+ - import module selection.py and Configurabloids.py into python/SelPy.
+ - import py.tests and qmtests.
