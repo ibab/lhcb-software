@@ -4,6 +4,10 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2010-02-25 - Patrick Robbe
+ - Pythia8Production.cpp: translates correct status code into LHCb
+   status codes
+
 !========================= LbPythia8 v2r0 2008-08-25 =========================
 ! 2008-07-25 - Patrick Robbe
  - move to HEPMc 2

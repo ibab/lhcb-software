@@ -1,4 +1,4 @@
-// $Id: Pythia8Production.cpp,v 1.7 2008-07-24 22:25:02 robbep Exp $
+// $Id: Pythia8Production.cpp,v 1.8 2010-02-25 20:18:38 robbep Exp $
 
 // Include files
 
@@ -514,17 +514,28 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
   //Convert from Pythia8 format to HepMC format
   HepMC::I_Pythia8 conversion ;
 
-  if (!(conversion.fill_next_event(m_pythia->event, theEvent))) 
+  if (!(conversion.fill_next_event( *m_pythia , theEvent ))) 
     return Error( "Cannot convert Pythia8 event to HepMC" ) ;
   
   // Now convert to LHCb units:
   for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
         p != theEvent -> particles_end() ; ++p ) {
-    if ((*p) -> status() > 0) { (*p) -> set_status(1);
-    } else {
-      if ((*p) -> status() < -69) (*p) -> set_status(2);
-      else (*p) -> set_status(3);
+    //    if ((*p) -> status() > 0) { (*p) -> set_status(1);
+    //    } else {
+    //      if ((*p) -> status() < -69) (*p) -> set_status(2);
+    //      else (*p) -> set_status(3);
+    //    }
+
+    int status = (*p) -> status() ;
+
+    switch ( status ) {
+    case 1: (*p) -> set_status( LHCb::HepMCEvent::StableInProdGen ) ; break ;
+    case 2: (*p) -> set_status( LHCb::HepMCEvent::DecayedByProdGen ) ; break ;
+    default:
+      (*p) -> set_status( LHCb::HepMCEvent::DocumentationParticle ) ; break ;
+      break ;
     }
+
     (*p) -> set_momentum( HepMC::FourVector( 
                            (*p) -> momentum().px() * Gaudi::Units::GeV ,
                            (*p) -> momentum().py() * Gaudi::Units::GeV , 
@@ -539,10 +550,11 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
     newPos.setX( (*v) -> position().x() ) ;
     newPos.setY( (*v) -> position().y() ) ;
     newPos.setZ( (*v) -> position().z() ) ;
-    newPos.setT( ( (*v) -> position().t() * Gaudi::Units::mm ) / Gaudi::Units::c_light ) ;    
+    newPos.setT( ( (*v) -> position().t() * Gaudi::Units::mm ) 
+                 / Gaudi::Units::c_light ) ;    
     (*v) -> set_position( newPos ) ;
   }
-
+  
   return sc;
 }
 // ============================================================================
