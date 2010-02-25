@@ -4,6 +4,10 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+!========================== DigiEvent v2r15 2010-02-25 =======================
+| 2010-02-25 Marcin Kucharczyk
+  - Update container location for VeloPixCluster 
+ 
 !========================== DigiEvent v2r15 2010-01-20 =======================
 ! 2010-01-06 - Victor Coco
  - VeloPixLiteCluster :hard code masks since putting them as member increase

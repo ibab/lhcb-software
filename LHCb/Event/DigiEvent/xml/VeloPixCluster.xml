@@ -7,7 +7,7 @@
    desc="This class represents VeloPix cluster of pixel hits"
    id="4504"
    name="VeloPixCluster">
-   <location name="VeloPixClusterLocation"   place="Rec/VeloPix/Clusters"   />
+   <location name="VeloPixClusterLocation"   place="Raw/VeloPix/Clusters"   />
    <import name="Kernel/VeloPixChannelID"/>
    <import name="Event/VeloPixLiteCluster"/>
    <template name="KeyedObjectDict" t1="LHCb::VeloPixChannelID"/>
