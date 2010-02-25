@@ -1,9 +1,27 @@
-!$Id: release.notes,v 1.43 2010-02-25 14:17:26 jpalac Exp $
+!$Id: release.notes,v 1.44 2010-02-25 16:58:29 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2010-02-25 - Juan Palacios
+
+ * Major changes. Pure, standalone python components moved to Phys/SelPy in
+   the PHYS project. Associated py.tests and qmtests moved also. Changes are 
+   transparent to users.
+
+ * Increase to v5r0.
+ 
+ - python/PhysSelPython/selection.py
+ - python/PhysSelPython/Configurabloids.py
+  . Moved to Phys/SelPy module SelPy.
+ - tests/test_dummy_configurables.py
+ - tests/test_selection_components.py
+ - tests/qmtest/physselpython.qms/test_configurabloids.qmt
+ - tests/qmtest/physselpython.qms/test_selection_components.qmt
+  . Moved to new Phys/SelPy package
+ 
 
 ! 2010-02-25 - Juan Palacios
  - python/PhysSelPython/selection.py
