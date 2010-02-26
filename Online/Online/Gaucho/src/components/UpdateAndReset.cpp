@@ -232,6 +232,7 @@ StatusCode UpdateAndReset::execute() {
     m_firstCycleNumber = currentCycleNumber(GauchoTimer::currentTime()).first;
     //only do this for the first event, so we have a runnumber
     m_runNumber = currentRunNumber().first.first;
+   // if (0==m_disableMonRate)  m_pGauchoMonitorSvc->declareMonRateComplement(m_runNumber, m_triggerConfigurationKey, m_cycleNumber, m_deltaTCycle, m_offsetTimeFirstEvInRun, m_offsetTimeLastEvInCycle, m_offsetGpsTimeLastEvInCycle);
    // msg << MSG::INFO << "Trigger Configuration Key " << m_triggerConfigurationKey << endreq;
   }
   return StatusCode::SUCCESS;
@@ -356,7 +357,7 @@ std::pair<std::pair<int, ulonglong>, bool> UpdateAndReset::currentRunNumber() {
      m_eorNumber = m_runNumber;
   }  
   std::pair<int, ulonglong> runNumberGpsTime = std::pair<int, ulonglong>(runNumber, gpstime);
-//  msg << MSG::INFO << "Gpstime (from currenrunnumber) " << gpstime << endreq; 
+ // msg << MSG::INFO << "Gpstime (from currenrunnumber) " << gpstime << " (from GauchoTimer: ) " << GauchoTimer::currentTime() << endreq; 
   m_runNumber = runNumber;
   
   // return std::pair<int, bool>(runNumber,changed);
@@ -419,29 +420,28 @@ void UpdateAndReset::retrieveCycleNumber(int cycleNumber) {
 }
 
 double UpdateAndReset::offsetToBoundary(int cycleNumber, ulonglong time, bool inferior){
-/*  if (inferior) {
+  if (inferior) {
     ulonglong timeIniCycle = ((ulonglong) cycleNumber)*((ulonglong)(m_desiredDeltaTCycle*1000000));
     return ((double)(time - timeIniCycle));
   }
   else {
     ulonglong timeEndCycle = ((ulonglong) (cycleNumber+1))*((ulonglong)(m_desiredDeltaTCycle*1000000));
     return ((double)(time - timeEndCycle));
-  }*/
-    if (inferior) {
+  }
+/*    if (inferior) {
     double timeIniCycle = cycleNumber*m_desiredDeltaTCycle*1000000;
     return ((double)((double)time - timeIniCycle));
   }
   else {
     double timeEndCycle = (cycleNumber+1)*m_desiredDeltaTCycle*1000000;
     return ((double)((double)time - timeEndCycle));
-  }
+  }*/
 }
 
 void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler) {
   MsgStream msg( msgSvc(), name() );
   ulonglong currentTime = GauchoTimer::currentTime();
-//  msg << MSG::INFO << "************Updating data " << (currentTime - m_timeStart) << " microseconds after start **********" << endreq;  
-//  msg << MSG::DEBUG << "m_runNumber        = " << m_runNumber << endreq;
+//  msg << MSG::INFO << "************Updating data " << (currentTime - m_timeStart) << " microseconds after start **********" << endreq;  msg << MSG::DEBUG << "m_runNumber        = " << m_runNumber << endreq;
 //  msg << MSG::INFO << "m_cycleNumber      = " << m_cycleNumber << endreq;
 //  msg << MSG::DEBUG << "m_timeFirstEvInRun      = " << m_timeFirstEvInRun << endreq;
 //  msg << MSG::DEBUG << "m_offsetTimeFirstEvInRun      = " << m_offsetTimeFirstEvInRun << endreq;
@@ -453,8 +453,8 @@ void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler
 //  msg << MSG::DEBUG << "m_offsetTimeLastEvInCycle     = " << m_offsetTimeLastEvInCycle << endreq;
 //  msg << MSG::DEBUG << "deltaT error = " << m_deltaTCycle - m_desiredDeltaTCycle*1000000 << " microseconds" << endreq;
   
- /* if (isFromTimerHandler) m_gpsTimeLastEvInCycle = currentTime; // we can not read ODIN from timerHandler
-  else  m_gpsTimeLastEvInCycle = gpsTime();*/
+//  if (isFromTimerHandler) m_gpsTimeLastEvInCycle = currentTime; // we can not read ODIN from timerHandler
+//  else  m_gpsTimeLastEvInCycle = gpsTime();
   
   m_gpsTimeLastEvInCycle = currentTime;  
   m_offsetGpsTimeLastEvInCycle = offsetToBoundary(m_cycleNumber, m_gpsTimeLastEvInCycle, false);
@@ -507,7 +507,7 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
   IRegistry* object = rootObject();
   int level = 0;
   std::vector<std::string> idList;
-//  msg << MSG::DEBUG << "managing histos list " << list << " reset " << reset << " save " << save << " endofrun " << isFromEndOfRun << endreq;
+  msg << MSG::DEBUG << "managing histos list " << list << " reset " << reset << " save " << save << " endofrun " << isFromEndOfRun << endreq;
   TFile *f=0;
   m_infoFileStatus = "......this is the file name were we will save histograms...........";
   char timestr[64];
@@ -547,7 +547,7 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
     }	 
    // std::string tmpfile = dirName + "/" + taskName + "-" + timestr + ".root";
    // if (isFromEndOfRun) tmpfile = dirName + "/" + taskName + "-" + timestr + "-EOR.root"; 
-   //   msg << MSG::DEBUG << "updating infofile status" << endreq;
+      msg << MSG::DEBUG << "updating infofile status" << endreq;
     m_infoFileStatus.replace(0, m_infoFileStatus.length(), tmpfile);
    
 
