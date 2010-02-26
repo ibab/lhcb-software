@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.31 2010-02-19 22:38:44 graven Exp $ 
+# $Id: HltLine.py,v 1.32 2010-02-26 14:27:30 jpalac Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.31 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.32 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -97,7 +97,7 @@ from Configurables import HltVertexToTracks      as VertexToTracks
 from Configurables import HltAddPhotonToVertex   as AddPhotonToVertex
 from Configurables import Hlt__Line              as Line
 from Configurables import HltCopySelection_LHCb__Particle_ as HltCopyParticleSelection
-
+from SelPy.selection import FlatSelectionListBuilder
 
 ## Convention: the name of 'Filter' algorithm inside HltLine
 def filterName   ( line , level = 'Hlt1') :
@@ -578,6 +578,13 @@ class bindMembers (object) :
         # do NOT update the current outputselection if
         # the new member doesn't have one...
         if alg.outputSelection() : self._outputsel = alg.outputSelection()
+
+    def _handle_Selection(self, line, alg) :
+        members = FlatSelectionListBuilder(alg).selectionList
+        for a in members :
+            self._members += [a]
+        self._outputsel = alg.outputLocation()
+
 
     # if Hlt2Member, ask it to creats a configurable instance for this line..
     # then it's bussines as usual..
