@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.86 2010-02-26 05:02:08 gligorov Exp $
+! $Id: release.notes,v 1.87 2010-02-26 14:27:45 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2010-02-26 - Juan Palacios
+ - python/HltLine/HltLine.py
+  . Add necessary code to build HltLine from Selection object.
+ - cmt/requirements
+  . Increase version to v3r2.
+  . Use new package Phys/SelPy. Requires PHYS > v9r1.
 
 ! 2010-02-26 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691. Major changes 
