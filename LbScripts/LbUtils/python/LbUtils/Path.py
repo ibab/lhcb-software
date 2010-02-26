@@ -1,12 +1,10 @@
-# $Id: Path.py,v 1.2 2010-01-13 12:51:36 marcocle Exp $
+# $Id: Path.py,v 1.3 2010-02-26 19:28:48 hmdegaud Exp $
 """ module for path walk utilities """
 
-import logging
 import os
 import sys
 
 class Path(object):
-    _varname = None
     def __init__(self, varname=None):
         if varname :
             self._varname = varname
@@ -35,52 +33,45 @@ class Path(object):
         return self._sublevel
     def varName(self):
         return self._varname
-    def setVarName(cls, varname):
-        cls._varname = varname
-    setVarName = classmethod(setVarName)
+    def setVarName(self, varname):
+        self._varname = varname
 
 class ExePath(Path):
-    _varname = "PATH"
-    def __init__(self, varname=None):
-        super(ExePath, self).__init__(varname)
+    def __init__(self):
+        super(ExePath, self).__init__("PATH")
 
 class LibPath(Path):
-    if sys.platform != "win32" :
-        _varname = "LD_LIBRARY_PATH"
-    else : 
-        _varname = "PATH"
-    def __init__(self, varname=None):
+    def __init__(self):
+        if sys.platform != "win32" :
+            varname = "LD_LIBRARY_PATH"
+        else : 
+            varname = "PATH"
         super(LibPath, self).__init__(varname)
         
 
 class PyPath(Path):
-    _varname = "PYTHONPATH"
     def __init__(self, varname):
-        super(PyPath, self).__init__(varname)
+        super(PyPath, self).__init__("PYTHONPATH")
         self.addPatSep(".")
         self.enableSubLevel()
         
 class OptSearchPath(PyPath):
-    _varname = "JOBOPTSEARCHPATH"
-    def __init__(self, varname):
-        super(OptSearchPath, self).__init__(varname)
+    def __init__(self):
+        super(OptSearchPath, self).__init__("JOBOPTSEARCHPATH")
         self.addPatSep(".")
         self.enableSubLevel()
 
 class HelpPath(Path):
-    _varname = "HPATH"
     def __init__(self, varname):
-        super(HelpPath, self).__init__(varname)
+        super(HelpPath, self).__init__("HPATH")
         
 class CMTPath(Path):
-    _varname = "CMTPATH"
-    def __init__(self, varname):
-        super(CMTPath, self).__init__(varname)
+    def __init__(self):
+        super(CMTPath, self).__init__("CMTPATH")
         
 class CMTProjectPath(Path):
-    _varname = "CMTPROJECTPATH"
-    def __init__(self, varname):
-        super(CMTProjectPath, self).__init__(varname)
+    def __init__(self):
+        super(CMTProjectPath, self).__init__("CMTPROJECTPATH")
 
 
 def multiPathJoin(path, subdir):

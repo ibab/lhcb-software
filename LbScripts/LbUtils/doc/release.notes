@@ -1,3 +1,8 @@
+2010-02-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/createTarBall: Removed.
+	* python/LbUtils/Tar.py: added core functions for the tarball creation and update
+
 2010-02-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* data/Makefile: Improved support for Windows.

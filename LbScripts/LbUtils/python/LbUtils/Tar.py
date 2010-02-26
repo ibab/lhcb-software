@@ -110,6 +110,91 @@ def createTarBall(dirname, filename, binary=None, binary_list=[],
     
     tarf.close()
 
+def openTar(filename, tar_mode="r"):
+    log = logging.getLogger()
+    if filename.endswith(".tar.gz") :
+        tar_mode += ":gz"
+    elif filename.endswith(".tar.bz2") :
+        tar_mode += ":bz2"
+    elif filename.endswith(".tar") :
+        pass
+    else :
+        log.error("No such tar format. Using plain tar uncompressed")
+    tarf = tarfile.open(filename, tar_mode)
+    
+    return tarf
+
+def listTarBallObjects(dirname, pathfilter=None, prefix=None):
+    if dirname[-1] != os.sep :
+        dirname += os.sep
+    
+    for root, dirs, files in os.walk(dirname, topdown=True) :
+        relroot = root.replace(dirname,"")
+        objs = files + dirs
+        for o in objs :
+            fullo = os.path.join(root, o)
+            relo  = os.path.join(relroot, o)
+            if prefix :
+                relo = os.path.join(prefix, relo)
+            if pathfilter :
+                if pathfilter(relo) :
+                    yield fullo, relo
+            else :
+                yield fullo, relo
+
+def updateTarBallFromFilter(srcdirs, filename, pathfilter=None,
+                            prefix=None, dereference=False):
+    log = logging.getLogger()
+    if not os.path.exists(filename) :
+        createTarBallFromFilter(srcdirs, filename, pathfilter, prefix, dereference, update=False)
+    else :
+        tarf = openTar(filename, tar_mode="r")
+        tmpdir = TempDir("updateTarballFromFilter")
+        tarf.extractall(tmpdir.getName())
+        extracted_objs = [ x[1] for x in listTarBallObjects(tmpdir.getName()) ]
+        tarf.close()
+        tobeupdated = False
+        if prefix :
+            dstprefix = os.path.join(tmpdir.getName(), prefix)
+            if not os.path.exists(dstprefix) :
+                os.makedirs(dstprefix)
+        else :
+            dstprefix = tmpdir.getName()
+        for dirname in srcdirs :
+            for y in listTarBallObjects(dirname, pathfilter, prefix) :
+                if y[1] not in extracted_objs :
+                    tobeupdated = True
+                    src = y[0]
+                    dst = os.path.join(dstprefix, y[1])
+                    if not dereference and os.path.islink(src) :
+                        linkto = os.readlink(src)
+                        os.symlink(linkto, dst)
+                    elif os.path.isdir(src) :
+                        os.mkdir(dst)
+                    else :
+                        copy2(src, dst)
+        if tobeupdated :
+            log.debug("Updating tarball %s" % filename)
+            createTarBallFromFilter([tmpdir.getName()], filename, pathfilter,
+                                    prefix=None, dereference=dereference, update=False)
+
+def createTarBallFromFilter(srcdirs, filename, pathfilter=None, 
+                            prefix=None, dereference=False, update=False):
+    log = logging.getLogger()
+    if not update :
+        tarf = openTar(filename, tar_mode="w")
+        keep_tar = False
+        for dirname in srcdirs :
+            for fullo, relo in listTarBallObjects(dirname, pathfilter, prefix) :
+                keep_tar = True
+                tarf.add(fullo, relo, recursive=False)
+        tarf.close()
+        if not keep_tar :
+            log.warning("%s file is empty. Removing it." % filename)
+            os.remove(filename)
+    else :
+        updateTarBallFromFilter(srcdirs, filename, pathfilter, prefix, dereference)
+
 def getTarFileName(basename, binaryname=None, tar_type="gz", dirname=None):
     if binaryname :
         binm = binaryname
