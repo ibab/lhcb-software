@@ -1,7 +1,7 @@
 package LHCbSys
 version v29r2
 
-branches doc cmt
+branches doc cmt test
 
 #===============================================================
 # LHCb packages visible to all applications
@@ -125,3 +125,6 @@ apply_pattern container_package
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
+
+# Allow the generation of QMTests
+apply_pattern QMTest
