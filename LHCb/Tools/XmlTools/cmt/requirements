@@ -1,7 +1,7 @@
 # $Id: requirements,v 1.26 2009-05-04 15:04:10 ocallot Exp $ 
 # =============================================================================
 package       XmlTools
-version       v6r3
+version       v6r3p1
 
 # =========== structure =======================================================
 branches      XmlTools doc cmt src

@@ -4,8 +4,6 @@
 
 // Include files
 #include "XmlTools/IXmlEntityResolver.h"
-#ifndef WIN32
-#include "XmlTools/IXmlParserSvc.h" // breaks gccxml on Windows
-#endif
+#include "XmlTools/IXmlParserSvc.h"
 
 #endif // DICT_XMLTOOLSDICT_H

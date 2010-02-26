@@ -4,6 +4,10 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+! 2010-02-26 - Marco Cattaneo
+ - Put back dictionary IXmlParserSvc on Windows, has been excluded in 2007
+   because at the time it broke gccxml...
+
 !======================== XmlTools v6r3 2009-05-07 ===========================
 ! 2009-05-04 - Olivier Callot
  - Single instantiation of MsgStream. Methods a la GaudiAlgorutm to print.
