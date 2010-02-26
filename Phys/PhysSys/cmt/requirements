@@ -1,11 +1,11 @@
-#$Id: requirements,v 1.218 2010-02-25 16:40:28 jpalac Exp $
+#$Id: requirements,v 1.219 2010-02-26 19:58:34 jpalac Exp $
 package PhysSys
 version v9r2
 
 branches doc cmt
 
 ####################################################################
-use  DaVinciKernel              v8r4     Phys    # Juan Palacios
+use  DaVinciKernel              v8r5     Phys    # Juan Palacios
 use  DaVinciMCKernel            v4r2     Phys    # Juan Palacios
 use  HltInterfaces              v3r1     Kernel  # Gerhard Raven
 use  SelectionLine              v1r0     Kernel  # Gerhard Raven
@@ -13,7 +13,7 @@ use  SelPy                      v1r0     Phys    # Juan Palacios
 #===================================================================
 use  PhysConf                   v1r6     Phys    # Patrick Koppenburg, Juan Palacios
 use  ProtoParticleFilter        v1r4     Phys    # Chris Jones
-use  DaVinciTools       	v20r0    Phys    # Juan Palacios
+use  DaVinciTools       	v20r1    Phys    # Juan Palacios
 use  DaVinciTransporter 	v3r9p1   Phys    # Juan Palacios
 use  ParticleMaker      	v5r5     Phys    # Chris Jones
 use  VertexFit			v6r2     Phys    # Yuehong Xie
@@ -27,8 +27,8 @@ use LoKiAlgo                    v8r2     Phys    # Ivan Belyaev
 use LoKiAlgoMC                  v8r2     Phys    # Ivan Belyaev
 use LoKiArrayFunctors           v8r8     Phys    # Ivan Belyaev
 use LoKiGenMC                   v8r1     Phys    # Ivan Belyaev
-use LoKiPhys                    v8r13    Phys    # Ivan Belyaev
-use LoKiPhysMC                  v8r6     Phys    # Ivan Belyaev
+use LoKiPhys                    v8r14    Phys    # Ivan Belyaev
+use LoKiPhysMC                  v8r7     Phys    # Ivan Belyaev
 
 # Declare this as a container package
 apply_pattern container_package
