@@ -14,13 +14,17 @@ This version uses Gaudi v21r7p1 and LHCb v29r2
   'Histograms' slot in the python Configurables. Used by RICH and VELO moni
 
 
-- Packages updated: Tf/PatVelo v3r20, Tf/TsaAlgorithms v3r16, 
+- Packages updated: Muon/MuonID v7r7p1,
+										Tf/PatVelo v3r20, Tf/TsaAlgorithms v3r16, 
 										Tr/TrackExtrapolators v2r25, Tr/TrackFitter v2r45, 
 										Tr/TrackMonitors v1r21, Tr/TrackTools v3r27
-                    Tf/TfTools v1r11,  Muon/MuonID v7r7p1,
+                    Tf/TfTools v1r11,  
 										Rich/RichRecMonitors v2r26, Rich/RichRecQC v2r37, 
 										Rich/RichRecTrackTools v1r17,
 										Velo/VeloRecMonitors v2r7, Muon/MuonTrackRec v3r0p2
+
+- In Muon/MuonID v7r7p1:
+  . fix to requirements file
 
 - In Tf/PatVelo v3r20:
   . Reduced info level verbosity of PatVeloSpaceTool
@@ -50,9 +54,6 @@ This version uses Gaudi v21r7p1 and LHCb v29r2
 
 - In Tf/TfTools v1r11:
   . add OTIS level granularity to FlagHitsForPatternReco
-
-- In Muon/MuonID v7r7p1:
-  . fix to requirements file
 
 - In Rich/RichRecMonitors v2r26:
   . Add some plots moved from RichRecQC
