@@ -3,6 +3,9 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2010-02-26 - Rob Lambert
+ - Added configuration.qmt to instantiate all configurables
+
 </PRE><H1><A NAME=v36r2>2010-02-26 Brunel v36r2</A></H1><PRE>
 This version uses projects Gaudi v21r7p1, LHCb v29r2, Lbcom v8r3, Rec v8r2
  and SQLDDDB v5r20, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
