@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.508 2010-02-26 19:49:38 jpalac Exp $
+! $Id: release.notes,v 1.509 2010-02-26 21:32:03 graven Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
 !========================== DaVinciTools v20r1 2010-02-26 ===================
+
+! 2010-02-26 - Gerhard Raven
+ - CombineParticles: lower output level of 2nd warning for too much combinatorics
 
 ! 2010-02-24 - Juan Palacios
  - src/PhysDesktop.cpp
