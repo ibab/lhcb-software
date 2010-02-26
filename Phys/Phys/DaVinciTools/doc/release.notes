@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.507 2010-02-24 10:35:34 jpalac Exp $
+! $Id: release.notes,v 1.508 2010-02-26 19:49:38 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v20r1 2010-02-26 ===================
 
 ! 2010-02-24 - Juan Palacios
  - src/PhysDesktop.cpp
@@ -14,7 +16,7 @@
   . get Particle::Range and Vertex::Range instead of Particle::Container* and
     Vertex::Container*.
  - cmt/requirements
-  . Increase version to v21r1
+  . Increase version to v20r1
 
 !========================== DaVinciTools v20r0 2010-01-29 ===================
 
