@@ -87,7 +87,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         if( self.getProp('RCutMethod') == "FromUpstreamPV" ):
             line = Hlt2Line('DisplVertices'
                             , prescale = self.prescale
-                            , algos = [ PV3D, Hlt2PatPV3D, NoCutsPions, Hlt2LineDisplVertices]
+                            , algos = [ PV3D(), Hlt2PatPV3D, NoCutsPions, Hlt2LineDisplVertices]
                             , postscale = self.postscale
                             )
         else :

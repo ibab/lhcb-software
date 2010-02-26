@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -90,7 +90,7 @@ class Hlt1HadronForSwimmingLinesConf(HltLinesConfigurableUser) :
 
             from HltLine.HltDecodeRaw import DecodeIT
             conf =  l0.members()  + [ RZVelo
-                                    , PV2D.ignoreOutputSelection()
+                                    , PV2D().ignoreOutputSelection()
                                     , Member ( 'MoveVerticesForSwimming','Move2DPVFS',InputSelection = 'PV2D',OutputSelection = 'PV2DSW')
 				    , Member ( 'SelectTracksForSwimming','SelectRZVeloFS',InputSelection = 'RZVelo', OutputSelection = 'RZVeloSW')   
                                     , Member ( 'TF' ,'RZVelo'
@@ -148,7 +148,7 @@ class Hlt1HadronForSwimmingLinesConf(HltLinesConfigurableUser) :
         #------------------------------------
         def companion(type=""):
             OutputOfConfirmation = confirmation(type).outputSelection()
-            comp = [ RZVelo , PV2D.ignoreOutputSelection()
+            comp = [ RZVelo , PV2D().ignoreOutputSelection()
                 , Member ( 'TU', 'UVelo' , InputSelection = 'RZVeloSW', RecoName = 'Velo')
                 , Member ( 'TF', '1UVelo'
                            , FilterDescriptor = ['MatchIDsFraction_%s,<,0.9' %OutputOfConfirmation ]
@@ -168,7 +168,7 @@ class Hlt1HadronForSwimmingLinesConf(HltLinesConfigurableUser) :
         #---------------------
         def dihadron(type=""):
             OutputOfConfirmation = confirmation(type).outputSelection()
-            dih = [ PV2D.ignoreOutputSelection()
+            dih = [ PV2D().ignoreOutputSelection()
                 , Member ( 'TF' , 'DiHadronIP' ,
                             InputSelection = '%s' %OutputOfConfirmation,
                             FilterDescriptor = [ 'IP_PV2DSW,||>,%s'% self.getProp(type+"HadDi_IPCut")],
@@ -203,7 +203,7 @@ class Hlt1HadronForSwimmingLinesConf(HltLinesConfigurableUser) :
         # afterburn of a line with tracks
         #--------------------------------
         def afterburn():
-            after = [ PV2D.ignoreOutputSelection()
+            after = [ PV2D().ignoreOutputSelection()
                 , Member ( 'TU' , 'FitTrack' , RecoName = "FitTrack", callback = setupHltFastTrackFit )
                 , Member ( 'TF' , '1FitTrack' ,
                            FilterDescriptor = ["FitIP_PV2DSW,||>,%s"%self.getProp('HadSingle_IPCut')],
@@ -222,7 +222,7 @@ class Hlt1HadronForSwimmingLinesConf(HltLinesConfigurableUser) :
         # afterburn of a line with vertices
         #-------------------
         def vafterburn(type=""):
-            vafter =  [ PV2D.ignoreOutputSelection()
+            vafter =  [ PV2D().ignoreOutputSelection()
                 , Member ( 'VU', 'FitTrack',   RecoName = 'FitTrack', callback = setupHltFastTrackFit )
                 , Member ( 'VF', '1FitTrack',
                            FilterDescriptor = [ 'FitVertexMinIP_PV2DSW,||>,%s'%self.getProp(type+'HadDi_IPCut')],

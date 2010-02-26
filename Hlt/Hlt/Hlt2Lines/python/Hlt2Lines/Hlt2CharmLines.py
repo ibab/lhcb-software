@@ -1,7 +1,7 @@
-## $Id: Hlt2CharmLines.py,v 1.6 2010-02-24 04:20:24 gligorov Exp $
+## $Id: Hlt2CharmLines.py,v 1.7 2010-02-26 04:56:17 gligorov Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-02-24 04:20:24 $'
-__version__ = '$Revision: 1.6 $'
+__date__    = '$Date: 2010-02-26 04:56:17 $'
+__version__ = '$Revision: 1.7 $'
 
 ## ######################################################################
 ## Defines a configurable to define and configure Hlt2 lines for selecting
@@ -257,9 +257,9 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
 	from Configurables import Hlt2Tracking
 
         Hlt2TopoKillTooManyInTrkAlg = VoidFilter('Hlt2TopoKillTooManyInTrkAlg'
-                                              , Code = "TrSOURCE('"+(Hlt2Tracking().hlt2Tracking()).outputSelection()+"') >> (TrSIZE < %(ComRobGEC)s )" % self.getProps()
+                                              , Code = "TrSOURCE('"+(Hlt2Tracking().hlt2PrepareTracks()).outputSelection()+"') >> (TrSIZE < %(ComRobGEC)s )" % self.getProps()
                                               )
-        Hlt2TopoKillTooManyInTrk = bindMembers( None, [ Hlt2Tracking().hlt2Tracking(), Hlt2TopoKillTooManyInTrkAlg ] )
+        Hlt2TopoKillTooManyInTrk = bindMembers( None, [ Hlt2Tracking().hlt2PrepareTracks(), Hlt2TopoKillTooManyInTrkAlg ] )
 
         return Hlt2TopoKillTooManyInTrk
     # }
@@ -287,7 +287,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction before our cut on IP.
-        filterSeq = bindMembers( name, [ PV3D ] + inputSeq + [ filter ] )
+        filterSeq = bindMembers( name, [ PV3D() ] + inputSeq + [ filter ] )
 
         return filterSeq
     # }
@@ -319,7 +319,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
 
         ## Require the PV3D reconstruction before our cut on IP.
         ## Require tracking before attempts to fit the tracks.
-        filterSeq = bindMembers( name, [ PV3D] + inputContainers + [filter] )
+        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter] )
 
         return filterSeq
     # }

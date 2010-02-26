@@ -31,6 +31,6 @@ Hlt2GoodPions.InputLocations = [ NoCutsPions.outputSelection()]
 
 __all__ = ( 'GoodKaons','GoodPions' )
 
-GoodKaons = bindMembers( None, [ NoCutsKaons, PV3D, Hlt2GoodKaons ] )
-GoodPions = bindMembers( None, [ NoCutsPions, PV3D, Hlt2GoodPions ] )
+GoodKaons = bindMembers( None, [ NoCutsKaons, PV3D(), Hlt2GoodKaons ] )
+GoodPions = bindMembers( None, [ NoCutsPions, PV3D(), Hlt2GoodPions ] )
 

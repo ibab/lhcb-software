@@ -146,25 +146,25 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
         DstLine = Hlt2Line('Dst2PiD02PiPi'    # Also wide mass box line for Dst-> pi ( D0 -> pipi)
                            , prescale = self.postscale
                            , postscale = self.postscale
-                           , algos = [ NoCutsPions, PV3D, D2PiPiComb , Dst2D0PiComb ]
+                           , algos = [ NoCutsPions, PV3D(), D2PiPiComb , Dst2D0PiComb ]
                            )
         
         D0SBline_pp = DstLine.clone('Dst2PiD02PiPiD0SB'
                                     , postscale = self.postscale
-                                    , algos = [ NoCutsPions, PV3D, D2PiPiComb , Dst2D0PiComb ]
+                                    , algos = [ NoCutsPions, PV3D(), D2PiPiComb , Dst2D0PiComb ]
                                     , DstD0Pi = { "InputLocations" : [D2PiPiComb, NoCutsPions],
                                                   "MotherCut" : dstcomb_dstcut_tight % self.getProps() }
                                     )
         
         DMSBline_pp = DstLine.clone('Dst2PiD02PiPiDMSB'
-                                    , algos = [ NoCutsPions, PV3D, D2PiPiComb , Dst2D0PiComb ]
+                                    , algos = [ NoCutsPions, PV3D(), D2PiPiComb , Dst2D0PiComb ]
                                     , PiPi = { "CombinationCut" : d0comb_combcut_tight % self.getProps() }
                                     , DstD0Pi = { "InputLocations" : [D2PiPiComb, NoCutsPions] }
                                     )
         
         Signalline_pp = DstLine.clone('Dst2PiD02PiPiSignal'
                                       , postscale = self.postscale
-                                      , algos = [ NoCutsPions, PV3D, D2PiPiComb , Dst2D0PiComb ]
+                                      , algos = [ NoCutsPions, PV3D(), D2PiPiComb , Dst2D0PiComb ]
                                       , PiPi = { "CombinationCut" : d0comb_combcut_tight % self.getProps() }
                                       , DstD0Pi = { "InputLocations" : [D2PiPiComb, NoCutsPions],
                                                     "MotherCut" : dstcomb_dstcut_tight % self.getProps() }
@@ -175,25 +175,25 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
         #
         # Mu Mu combinations 
         DstLine_mm = DstLine.clone('Dst2PiD02MuMu'
-                                   , algos = [ NoCutsPions, Muons, PV3D, D2MuMuComb , Dst2D0PiComb ]
+                                   , algos = [ NoCutsPions, Muons, PV3D(), D2MuMuComb , Dst2D0PiComb ]
                                    , DstD0Pi = { "InputLocations" : [D2MuMuComb, NoCutsPions] }
                                    )
         
         D0SBline_mm = DstLine.clone('Dst2PiD02MuMuD0SB'
-                                    , algos = [ NoCutsPions, Muons, PV3D, D2MuMuComb , Dst2D0PiComb ]
+                                    , algos = [ NoCutsPions, Muons, PV3D(), D2MuMuComb , Dst2D0PiComb ]
                                     , DstD0Pi = { "InputLocations" : [D2MuMuComb, NoCutsPions] ,
                                                   "MotherCut" : dstcomb_dstcut_tight % self.getProps() }
                                     )
         
         DMSBline_mm = DstLine.clone('Dst2PiD02MuMuDMSB'
-                                    , algos = [ NoCutsPions, Muons, PV3D, D2MuMuComb , Dst2D0PiComb ]
+                                    , algos = [ NoCutsPions, Muons, PV3D(), D2MuMuComb , Dst2D0PiComb ]
                                     , MuMu = { "CombinationCut" : d0comb_combcut_tight % self.getProps() }
                                     , DstD0Pi = { "InputLocations" : [D2MuMuComb, NoCutsPions] }
                                     )
         
         Signalline_mm = DstLine.clone('Dst2PiD02MuMuSignal'
                                       , postscale = self.postscale
-                                      , algos = [ NoCutsPions, Muons, PV3D, D2MuMuComb , Dst2D0PiComb ]
+                                      , algos = [ NoCutsPions, Muons, PV3D(), D2MuMuComb , Dst2D0PiComb ]
                                       , MuMu = { "CombinationCut" : d0comb_combcut_tight % self.getProps() }
                                       , DstD0Pi = { "InputLocations" : [D2MuMuComb, NoCutsPions],
                                                     "MotherCut" : dstcomb_dstcut_tight % self.getProps() }
@@ -205,44 +205,44 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
         # Pi Mu and K Mu combinations for Mis-ID studies
         # (No need to be divided in different mass regions)
         DstLine_pm = DstLine.clone('Dst2PiD02PiMu'
-                                   , algos = [ NoCutsPions, Muons, PV3D, D2PiMuComb , Dst2D0PiComb ]
+                                   , algos = [ NoCutsPions, Muons, PV3D(), D2PiMuComb , Dst2D0PiComb ]
                                    , DstD0Pi = { "InputLocations" : [D2PiMuComb, NoCutsPions] }
                                    )
 
         DstLine_km = DstLine.clone('Dst2PiD02KMu'
-                                   , algos = [ NoCutsPions, Muons, NoCutsKaons, PV3D, D2KMuComb , Dst2D0PiComb ]
+                                   , algos = [ NoCutsPions, Muons, NoCutsKaons, PV3D(), D2KMuComb , Dst2D0PiComb ]
                                    , DstD0Pi = { "InputLocations" : [D2KMuComb, NoCutsPions] }
                                    )
         ################################################################################
         #
         # K Pi combinations
         DstLine_kp = DstLine.clone('Dst2PiD02KPi'
-                                   , algos = [ NoCutsPions, NoCutsKaons, PV3D, D2KPiComb , Dst2D0PiComb ]
+                                   , algos = [ NoCutsPions, NoCutsKaons, PV3D(), D2KPiComb , Dst2D0PiComb ]
                                    , DstD0Pi = { "InputLocations" : [D2KPiComb, NoCutsPions] }
                                    )
         
         D0SBline_kp = DstLine.clone('Dst2PiD02KPiD0SB'
-                                    , algos = [ NoCutsPions, NoCutsKaons, PV3D, D2KPiComb , Dst2D0PiComb ]
+                                    , algos = [ NoCutsPions, NoCutsKaons, PV3D(), D2KPiComb , Dst2D0PiComb ]
                                     , DstD0Pi = { "InputLocations" : [D2KPiComb, NoCutsPions],
                                                   "MotherCut" : dstcomb_dstcut_tight % self.getProps() }
                                     )
         
         DMSBline_kp = DstLine.clone('Dst2PiD02KPiDMSB'
-                                    , algos = [ NoCutsPions, NoCutsKaons, PV3D, D2KPiComb , Dst2D0PiComb ]
+                                    , algos = [ NoCutsPions, NoCutsKaons, PV3D(), D2KPiComb , Dst2D0PiComb ]
                                     , KPi = { "CombinationCut" : d0comb_combcut_tight % self.getProps() }
                                     , DstD0Pi = { "InputLocations" : [D2KPiComb, NoCutsPions] }
                                     )
         
         Signalline_kp = DstLine.clone('Dst2PiD02KPiSignal'
                                       , postscale = self.postscale
-                                      , algos = [ NoCutsPions, NoCutsKaons, PV3D, D2KPiComb , Dst2D0PiComb ]
+                                      , algos = [ NoCutsPions, NoCutsKaons, PV3D(), D2KPiComb , Dst2D0PiComb ]
                                       , KPi = { "CombinationCut" : d0comb_combcut_tight % self.getProps() }
                                       , DstD0Pi = { "InputLocations" : [D2KPiComb, NoCutsPions],
                                                     "MotherCut" : dstcomb_dstcut_tight % self.getProps() }
                                       )
         
 ##         DstLine_emu = DstLine.clone('Dst2PiD02EMu'
-##                                     , algos = [ NoCutsPions, Electrons, Muons, PV3D, D2EMuComb , Dst2D0PiComb ]
+##                                     , algos = [ NoCutsPions, Electrons, Muons, PV3D(), D2EMuComb , Dst2D0PiComb ]
 ##                                     , DstD0Pi = { "InputLocations" : [D2EMuComb, NoCutsPions] }
 ##                                     )
         

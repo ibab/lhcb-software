@@ -1,9 +1,13 @@
-$Id: release.notes,v 1.77 2010-02-24 04:13:48 gligorov Exp $
+$Id: release.notes,v 1.78 2010-02-26 04:55:36 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+! 2010-02-26 - V. Gligorov
+ - Continuing work on Savannah tasks 13784 and 12691.
+   Various minor changes, spelling out of dependencies, etc.  
+ 
 ! 2010-02-24 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691. Hlt2PID has moved to
    HltLine and been renamed to Hlt2Tracking. Updated BasicParticles,

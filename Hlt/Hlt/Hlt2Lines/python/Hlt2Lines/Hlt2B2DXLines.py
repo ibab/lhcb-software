@@ -49,6 +49,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.TopoTFInputParticles import TopoTFInputParticles
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.V0 import KsDDFit
+	from HltLine.HltPVs import PV3D
 
         ###################################################################
         # Absorb the shared particle reconstruction into this configurable.
@@ -65,9 +66,9 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
             if i not in modules : modules.append(i)
             
             Hlt2KillTooManyDXIPFilter = VoidFilter('Hlt2KillTooManyDXIP'
-                                             , Code = "TrSOURCE('"+(Hlt2Tracking().hlt2Tracking()).outputSelection()+"') >> (TrSIZE < %(ComRobGEC)s )" % self.getProps()
+                                             , Code = "TrSOURCE('"+(Hlt2Tracking().hlt2PrepareTracks()).outputSelection()+"') >> (TrSIZE < %(ComRobGEC)s )" % self.getProps()
                                              )
-            Hlt2KillTooManyDXIP = bindMembers( None, [Hlt2Tracking().hlt2Tracking(), Hlt2KillTooManyDXIPFilter])
+            Hlt2KillTooManyDXIP = bindMembers( None, [Hlt2Tracking().hlt2PrepareTracks(), Hlt2KillTooManyDXIPFilter])
             
         ###################################################################
         # Construct a combined sequence for the input particles to the robust
@@ -119,8 +120,8 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                                          , CombinationCut = combcuts
                                          , MotherCut = parentcuts
                                          )
-                
-            RobustNBody = bindMembers( name, inputSeq + [ combineDXNBody ] )
+            #explicitly demand the PV reco because we are paranoid    
+            RobustNBody = bindMembers( name, [PV3D()] + inputSeq + [ combineDXNBody ] )
             return RobustNBody
                 
                     
@@ -160,7 +161,8 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                                  , InputLocations = inputSeq
                                  , Code = codestr
                                  )
-            filterSeq = bindMembers(name, inputSeq + [ filter ])
+	    #explicitly require the primary vertex as we are paranoid
+            filterSeq = bindMembers(name, [PV3D()] + inputSeq + [ filter ])
             return filterSeq
             
         Robust3BodySeq = RobustFilter('Robust3BodySeq', [Robust3Body])
@@ -186,7 +188,8 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                              , InputLocations = [TFPions,TFKaons]
                              , Code = incuts
                              )
-        lclTFInputParticles = bindMembers('TopoTFIn', [ TFPions, TFKaons, filter ])
+        #explicitly require the primary vertex as we are paranoid
+        lclTFInputParticles = bindMembers('TopoTFIn', [ PV3D(), TFPions, TFKaons, filter ])
         
         
         ###################################################################
@@ -237,8 +240,8 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                                          , CombinationCut = combcuts
                                          , MotherCut = parentcuts
                                          )
-            
-            TFNBody = bindMembers( name, inputSeq + [ combineDXNBody ] )
+            #explicitly require the primary vertex as we are paranoid
+            TFNBody = bindMembers( name, [PV3D()] + inputSeq + [ combineDXNBody ] )
             return TFNBody
         
         ################################################################### 
@@ -250,7 +253,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         ###################################################################
          
         TF2BodyWithKs = tfCombine(  name = 'TF2BodyWithKs'
-                                    , inputSeq = [ KS0DXTFInputParticles ]
+                                    , inputSeq = [ KS0DXTFInputParticles, DXTFInputParticles ]
                                     , decayDesc = ["K*(892)0 -> KS0 pi+","K*(892)0 -> KS0 pi-","K*(892)0 -> KS0 K+","K*(892)0 -> KS0 K-"]
                                     , extracuts = { 'CombinationCut' : "(AMINDOCA('LoKi::TrgDistanceCalculator')< %(ComTFPairMinDocaUL)s )" % self.getProps() }
                                     )

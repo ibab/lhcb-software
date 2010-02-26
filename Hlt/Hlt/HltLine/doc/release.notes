@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.85 2010-02-24 04:19:46 gligorov Exp $
+! $Id: release.notes,v 1.86 2010-02-26 05:02:08 gligorov Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2010-02-26 - V. Gligorov
+ - Continuing work on Savannah tasks 13784 and 12691. Major changes 
+   in this round
+   . Create HltVertexNames to complement HltTrackNames
+   . Add new symbols to HltTrackNames. Move the "rules" which define
+     track and protoparticle containers from Hlt2Tracking to
+     HltTrackNames
+   . Make PV2D and PV3D functions to isolate one from the other
+
 ! 2010-02-24 - V. Gligorov
  - Contine the reorganization of Hlt tracking, see Savannah 13784, 12691
    for details. Major changes in this round

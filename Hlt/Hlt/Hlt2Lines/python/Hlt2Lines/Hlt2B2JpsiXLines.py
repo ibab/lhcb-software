@@ -1,4 +1,4 @@
-# $Id: Hlt2B2JpsiXLines.py,v 1.15 2010-02-22 08:33:06 gligorov Exp $
+# $Id: Hlt2B2JpsiXLines.py,v 1.16 2010-02-26 04:56:17 gligorov Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -271,7 +271,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('Bd2JpsiMuMuKsLLBiased'
 		        , prescale = self.prescale
                    	, postscale = self.postscale	
-                        , algos = [   Jpsi2MuMu, PV3D, filterJpsi
+                        , algos = [   Jpsi2MuMu, PV3D(), filterJpsi
                                        , KsLL,      filterKS
                                        , combineB
                                        ]
@@ -351,7 +351,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('Bd2JpsiMuMuKsDDBiased'
                         , prescale = self.prescale
                    	, postscale = self.postscale
-                        ,  algos = [   Jpsi2MuMu , PV3D, filterJpsi
+                        ,  algos = [   Jpsi2MuMu , PV3D(), filterJpsi
                                        , KsDD
                                        , combineB
                                        ]
@@ -395,7 +395,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('Bd2JpsiMuMuKsDDUnbiased'
                    	, prescale = self.prescale
                    	, postscale = self.postscale
-                        ,  algos = [   Jpsi2MuMu, PV3D, filterJpsi
+                        ,  algos = [   Jpsi2MuMu, PV3D(), filterJpsi
                                        , KsDD, filterKS
                                        , combineB
                                        ]

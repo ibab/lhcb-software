@@ -12,8 +12,18 @@ from Configurables import ( LumiCountVertices,
                             LumiFromL0DU,
                             LumiCountHltTracks
                             )
-from Configurables import LHCbConfigurableUser
+from Configurables  import LHCbConfigurableUser
 
+# We import the track and vertex names from
+# HltTrackNames and HltVertexNames
+#
+from HltLine.HltTrackNames import _trackLocation, HltSharedTracksPrefix, HltGlobalTrackLocation
+from HltLine.HltTrackNames import HltSharedRZVeloTracksName, HltMuonTracksName  
+from HltLine.HltVertexNames import _vertexLocation, HltSharedVerticesPrefix, HltGlobalVertexLocation
+from HltLine.HltVertexNames import Hlt2DPrimaryVerticesName, Hlt3DPrimaryVerticesName
+#
+# TODO : make this inherit the relevant tracking configurables
+#        instead, once configuration issues are resolved
 
 class LumiCounterDefinitionConf(LHCbConfigurableUser) :
   __slots__ = {
@@ -23,12 +33,12 @@ class LumiCounterDefinitionConf(LHCbConfigurableUser) :
   ####### counter definition...
   def defineCounters( self ):
     self.Definition  = {
-      'RZVelo'   : [LumiCountTracks   , True    , 'Hlt/Track/RZVelo',   5,  200],
-      'Muon'     : [LumiCountTracks   , False   , 'Hlt/Track/Muons' ,   5,  200],
-      'TTIP'     : [LumiCountTracks   , True    , 'Hlt/Track/TTIP'  ,   5,  100],
-      'TTMIB'    : [LumiCountTracks   , False   , 'Hlt/Track/TTMIB' ,   5,  100],
-      'PV2D'     : [LumiCountVertices , True    , 'Hlt/Vertex/PV2D' ,   1,   20],
-      'PV3D'     : [LumiCountVertices , False   , 'Hlt/Vertex/PV3D' ,   1,   20],
+      'RZVelo'   : [LumiCountTracks   , True    , _trackLocation(HltSharedTracksPrefix,HltGlobalTrackLocation,"",HltSharedRZVeloTracksName),   5,  200],
+      'Muon'     : [LumiCountTracks   , False   , _trackLocation(HltSharedTracksPrefix,HltGlobalTrackLocation,"",HltMuonTracksName) ,   5,  200],
+      'TTIP'     : [LumiCountTracks   , True    , 'Hlt/Track/TTIP'  ,   5,  100], #TODO : define in HltTrackNames 
+      'TTMIB'    : [LumiCountTracks   , False   , 'Hlt/Track/TTMIB' ,   5,  100], #TODO : define in HltTrackNames
+      'PV2D'     : [LumiCountVertices , True    , _vertexLocation(HltSharedVerticesPrefix, HltGlobalVertexLocation, Hlt2DPrimaryVerticesName) ,   1,   20],
+      'PV3D'     : [LumiCountVertices , False   , _vertexLocation(HltSharedVerticesPrefix, HltGlobalVertexLocation, Hlt3DPrimaryVerticesName) ,   1,   20],
       'RZVeloBW' : [LumiCountHltTracks, True    , 'RZVeloBW'        ,   5,  200],
       'SPDMult'  : [LumiFromL0DU      , True    , 'Spd(Mult)'       ,   6,  500],
       'PUMult'   : [LumiFromL0DU      , True    , 'PUHits(Mult)'    ,   3,  200],

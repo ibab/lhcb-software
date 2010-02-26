@@ -1,4 +1,4 @@
-# $Id: Hlt2B2PhiXLines.py,v 1.6 2010-02-22 08:33:06 gligorov Exp $
+# $Id: Hlt2B2PhiXLines.py,v 1.7 2010-02-26 04:56:17 gligorov Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -53,5 +53,5 @@ class Hlt2B2PhiXLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('Bs2PhiPhi'
                         , prescale = self.prescale
                         , postscale = self.postscale
-                        , algos = [NoCutsKaons, phiCombine, PV3D, BsCombine]
+                        , algos = [NoCutsKaons, phiCombine, PV3D(), BsCombine]
                         )

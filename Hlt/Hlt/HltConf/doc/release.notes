@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.425 2010-02-24 04:23:25 gligorov Exp $ 
+! $Id: release.notes,v 1.426 2010-02-26 04:46:08 gligorov Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-10-26 - V. Gligorov
+ - Follow developments in HltLine.HltPVs. Default reconstruction
+   now makes Forward tracks in container Hlt2/Track/Unfitted/Forward.  
+   See Savannah tasks 13784/12691 for details.
+
 ! 2010-02-24 - V. Gligorov
  - Follow continued reorganization of Hlt tracking by asking Hlt2.py
    to spell out explicitly the "vanilla" tracking scenario (forward

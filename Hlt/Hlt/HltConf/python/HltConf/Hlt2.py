@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.49 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.50 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -83,11 +83,12 @@ class Hlt2Conf(LHCbConfigurableUser):
 # PID
 #
     def configurePID(self):
-        from HltLine.HltTrackNames import HltSharedTracksPrefix, Hlt2LongTracksName 
+        from HltLine.HltTrackNames import Hlt2TracksPrefix, HltUnfittedTracksSuffix, Hlt2ForwardTracksName 
         Hlt2Tracking().DataType = self.getProp("DataType")
-        Hlt2Tracking().Prefix = HltSharedTracksPrefix
-        Hlt2Tracking().Suffix = "" #track fit is off by default
-        Hlt2Tracking().Hlt2Tracks = Hlt2LongTracksName
+        Hlt2Tracking().Prefix = Hlt2TracksPrefix
+        Hlt2Tracking().FastFitType = HltUnfittedTracksSuffix #track fit is off by default
+        Hlt2Tracking().Hlt2Tracks = Hlt2ForwardTracksName
+        Hlt2Tracking().DoFastFit = False
         Hlt2Tracking().UseRICH = False
         Hlt2Tracking().UseCALO = False
         Hlt2Tracking().DoSeeding = False
@@ -125,6 +126,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         """
         Hlt2 configuration
         """
+        print 'CONFIGURING HLT2!!!!'
         Hlt2 = Sequence("Hlt2", Context = 'HLT',ModeOR=True,ShortCircuit=False) 
         if Hlt2 not in Sequence("Hlt").Members : Sequence("Hlt").Members += [ Hlt2 ]
         # reco

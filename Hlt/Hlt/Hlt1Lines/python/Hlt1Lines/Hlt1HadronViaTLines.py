@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -119,7 +119,7 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
                     , Hlt1HadronViaTTUTConf
                     , Member ( 'TF' , 'TConf' , FilterDescriptor = ['ptAtOrigin,>,'+PTCut])
 		            , RZVelo
-                    , PV2D.ignoreOutputSelection()
+                    , PV2D().ignoreOutputSelection()
                     , DecodeTT
                     , Member ( 'TF' , 'VeloRZTMatch' , FilterDescriptor = ['RZVeloTMatch_%TFTConf,<,'+VTMatchCut]) 
                     , Member ( 'TU', 'Velo',  RecoName = 'Velo')
@@ -151,7 +151,7 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
             OutputOfConfirmation = confirmation(type).outputSelection() 
             IP2Cut = _cut(type+"HadViaTDi_IPCut")
             comp = [ RZVelo 
-                   , PV2D.ignoreOutputSelection()
+                   , PV2D().ignoreOutputSelection()
                    , Member ( 'TU', 'UVelo' , RecoName = 'Velo')
                    , Member ( 'TF', '1UVelo'
                            , FilterDescriptor = ['MatchIDsFraction_%s,<,0.9' %OutputOfConfirmation]
@@ -169,7 +169,7 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
             OutputOfConfirmation = confirmation(type).outputSelection()
             PT2Cut = _cut(type+"HadViaTCompanion_PTCut")
             IP3Cut = _cut(type+"HadViaTDi_IPCut")
-            dih = [ PV2D.ignoreOutputSelection()
+            dih = [ PV2D().ignoreOutputSelection()
                 , Member ( 'TF', 'DiHadronViaTIP', InputSelection = '%s' %OutputOfConfirmation
                            , FilterDescriptor = [ 'IP_PV2D,||>,'+IP3Cut]
                            )

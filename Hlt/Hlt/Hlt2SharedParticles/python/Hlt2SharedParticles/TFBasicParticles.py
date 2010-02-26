@@ -23,62 +23,12 @@ class Hlt2TFTracking(Hlt2Tracking) :
 
 Hlt2TFTracking = Hlt2TFTracking()
 Hlt2TFTracking.Prefix = Hlt2Tracking().getProp("Prefix")
-Hlt2TFTracking.Suffix = HltBiDirectionalKalmanFitSuffix
+Hlt2TFTracking.FastFitType = HltBiDirectionalKalmanFitSuffix
 Hlt2TFTracking.Hlt2Tracks = Hlt2Tracking().getProp("Hlt2Tracks")
+Hlt2TFTracking.DoFastFit = True
 Hlt2TFTracking.UseRICH = True
 Hlt2TFTracking.UseCALO = False
 Hlt2TFTracking.DataType = Hlt2Tracking().getProp("DataType")
-
-protoloc = (Hlt2TFTracking.hlt2ChargedProtos()).outputSelection()
-##########################################################################
-#
-# Make the Muons
-#
-Hlt2TFMuons = CombinedParticleMaker("Hlt2TFMuons")
-Hlt2TFMuons.Input =  protoloc
-Hlt2TFMuons.Particle = "muon"
-Hlt2TFMuons.addTool(ProtoParticleMUONFilter('Muon'))
-Hlt2TFMuons.Muon.Selection = ["RequiresDet='MUON'"]
-Hlt2TFMuons.addTool(TrackSelector)
-Hlt2TFMuons.TrackSelector.TrackTypes = ["Long"]
-##########################################################################
-#
-# Make the pions
-#
-Hlt2TFPions = NoPIDsParticleMaker("Hlt2TFPions")
-Hlt2TFPions.Particle =  "pion"
-Hlt2TFPions.Input =  protoloc
-Hlt2TFPions.addTool(TrackSelector)
-Hlt2TFPions.TrackSelector.TrackTypes = ["Long"]
-##########################################################################
-#
-# Make the kaons
-#
-Hlt2TFKaons = NoPIDsParticleMaker("Hlt2TFKaons")
-Hlt2TFKaons.Particle =  "kaon"
-Hlt2TFKaons.Input =  protoloc
-Hlt2TFKaons.addTool(TrackSelector)
-Hlt2TFKaons.TrackSelector.TrackTypes = ["Long"]
-##########################################################################
-#
-# Make the Rich kaons 
-#
-Hlt2TFRichKaons = CombinedParticleMaker("Hlt2TFRichKaons")
-Hlt2TFRichKaons.Particle =  "kaon"
-Hlt2TFRichKaons.Input = protoloc 
-Hlt2TFRichKaons.addTool(TrackSelector) 
-Hlt2TFRichKaons.TrackSelector.TrackTypes = ["Long"]
-##########################################################################
-#
-# Make the electrons
-#
-Hlt2TFElectrons = CombinedParticleMaker("Hlt2TFElectrons")
-Hlt2TFElectrons.Particle =  "electron"
-Hlt2TFElectrons.Input =  protoloc
-Hlt2TFElectrons.addTool(ProtoParticleCALOFilter('Electron'))
-Hlt2TFElectrons.Electron.Selection = ["RequiresDet='CALO' CombDLL(e-pi)>'-2.0'"]
-Hlt2TFElectrons.addTool(TrackSelector)
-Hlt2TFElectrons.TrackSelector.TrackTypes = ["Long"]
 ##########################################################################
 #
 # Now all PID
@@ -106,7 +56,58 @@ TFChargedHadronProtoMaker = Hlt2TFTracking.hlt2ChargedHadronProtos( )
 #
 # Muon reco 
 #
-TFMuonProtoMaker = Hlt2TFTracking.hlt2MuonProtos()  
+TFMuonProtoMaker = Hlt2TFTracking.hlt2MuonProtos()
+##########################################################################
+#
+# Make the Muons
+#
+Hlt2TFMuons = CombinedParticleMaker("Hlt2TFMuons")
+Hlt2TFMuons.Input =  TFMuonProtoMaker.outputSelection()
+Hlt2TFMuons.Particle = "muon"
+Hlt2TFMuons.addTool(ProtoParticleMUONFilter('Muon'))
+Hlt2TFMuons.Muon.Selection = ["RequiresDet='MUON'"]
+Hlt2TFMuons.addTool(TrackSelector)
+Hlt2TFMuons.TrackSelector.TrackTypes = ["Long"]
+##########################################################################
+#
+# Make the pions
+#
+Hlt2TFPions = NoPIDsParticleMaker("Hlt2TFPions")
+Hlt2TFPions.Particle =  "pion"
+Hlt2TFPions.Input =  TFChargedProtoMaker.outputSelection()
+Hlt2TFPions.addTool(TrackSelector)
+Hlt2TFPions.TrackSelector.TrackTypes = ["Long"]
+##########################################################################
+#
+# Make the kaons
+#
+Hlt2TFKaons = NoPIDsParticleMaker("Hlt2TFKaons")
+Hlt2TFKaons.Particle =  "kaon"
+Hlt2TFKaons.Input =  TFChargedProtoMaker.outputSelection()
+Hlt2TFKaons.addTool(TrackSelector)
+Hlt2TFKaons.TrackSelector.TrackTypes = ["Long"]
+##########################################################################
+#
+# Make the Rich kaons 
+#
+Hlt2TFRichKaons = CombinedParticleMaker("Hlt2TFRichKaons")
+Hlt2TFRichKaons.Particle =  "kaon"
+Hlt2TFRichKaons.Input = TFChargedHadronProtoMaker.outputSelection() 
+Hlt2TFRichKaons.addTool(TrackSelector) 
+Hlt2TFRichKaons.TrackSelector.TrackTypes = ["Long"]
+##########################################################################
+#
+# Make the electrons
+#
+Hlt2TFElectrons = CombinedParticleMaker("Hlt2TFElectrons")
+Hlt2TFElectrons.Particle =  "electron"
+# TODO : this is temporary until the CALO PID is fixed! 
+Hlt2TFElectrons.Input =  TFChargedProtoMaker.outputSelection()
+######## 
+Hlt2TFElectrons.addTool(ProtoParticleCALOFilter('Electron'))
+Hlt2TFElectrons.Electron.Selection = ["RequiresDet='CALO' CombDLL(e-pi)>'-2.0'"]
+Hlt2TFElectrons.addTool(TrackSelector)
+Hlt2TFElectrons.TrackSelector.TrackTypes = ["Long"]
 ##########################################################################
 #
 # define exported symbols -- these are for available

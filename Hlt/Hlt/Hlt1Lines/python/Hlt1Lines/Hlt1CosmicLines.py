@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Stephan Nies & Jesko Merkel " 
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *

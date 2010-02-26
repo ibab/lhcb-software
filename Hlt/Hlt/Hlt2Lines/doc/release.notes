@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.125 2010-02-24 04:21:31 gligorov Exp $
+$Id: release.notes,v 1.126 2010-02-26 04:57:27 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,11 @@ $Id: release.notes,v 1.125 2010-02-24 04:21:31 gligorov Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2010-02-26 - V. Gligorov
+ - Continuing work on Savannah tasks 13784 and 12691. Minor changes
+   to follow developments in HltLine and Hlt2SharedParticles, in
+   particular continuing with the removal of hardcoded track containers. 
 
 ! 2010-02-24 - V. Gligorov
  - Contine the reorganization of Hlt tracking, see Savannah 13784, 12691

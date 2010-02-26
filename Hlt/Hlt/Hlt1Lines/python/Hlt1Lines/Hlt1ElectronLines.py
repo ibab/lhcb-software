@@ -58,7 +58,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                                   , DecodeIT
                                   , Member ( 'TU', 'TConf', RecoName = 'TEleConf',
                                              tools = [ Tool( HltTrackUpgradeTool, tools = [ Tool( L0ConfirmWithT,'L0ConfirmWithT/TEleConf', particleType = 2 ) ] ) ] )
-                                  , RZVelo, PV2D.ignoreOutputSelection()
+                                  , RZVelo, PV2D().ignoreOutputSelection()
                                   , Member ( 'TF', 'RZVelo', FilterDescriptor = [ 'RZVeloTMatch_%TUTConf,||<,60.' ] )
                                   , Member ( 'TU', 'Velo', RecoName = 'Velo' )
                                   , DecodeVELO, DecodeTT
@@ -92,7 +92,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                                   , DecodeIT
                                   , Member ( 'TU', 'TConf', RecoName = 'TEleConf',
                                              tools = [ Tool( HltTrackUpgradeTool, tools = [ Tool( L0ConfirmWithT, 'L0ConfirmWithT/TEleConf',  particleType = 2 ) ] ) ] )
-                                  , RZVelo, PV2D.ignoreOutputSelection()
+                                  , RZVelo, PV2D().ignoreOutputSelection()
                                   , Member ( 'TF', 'RZVelo', FilterDescriptor = [ 'RZVeloTMatch_%TUTConf,||<,60.' ] )
                                   , Member ( 'TU', 'Velo', RecoName = 'Velo' )
                                   , DecodeVELO, DecodeTT

@@ -10,7 +10,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $'
 # =============================================================================
 
 
@@ -66,7 +66,7 @@ class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
                                , HistogramUpdatePeriod = 0
                                , HistoDescriptor = { 'IsPhoton' : ('IsPhoton',-2.,2.,400), 'IsPhotonBest' : ('IsPhotonBest',-2.,2.,400)}
                                )
-                      , RZVelo, PV2D.ignoreOutputSelection(), Velo
+                      , RZVelo, PV2D().ignoreOutputSelection(), Velo
                       , Member ('TF', 'Velo'
                                , FilterDescriptor = ['IP_PV2D,||>,'+str(self.getProp('Track_IPCut'))]
                                , HistogramUpdatePeriod = 0

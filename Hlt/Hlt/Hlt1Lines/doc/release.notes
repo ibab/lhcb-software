@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.126 2010-02-24 04:15:50 gligorov Exp $
+! $Id: release.notes,v 1.127 2010-02-26 04:46:35 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -9,6 +9,11 @@
 ! for the production. Commit them AS WELL in branch production200912. 
 !
 !-----------------------------------------------------------------------------
+
+! 2010-10-26 - V. Gligorov
+ - Follow developments in HltLine.HltPVs. PV2D is now a function
+   to prevent premature initialization of the Hlt2 reconstruction.
+   See Savannah tasks 13784/12691 for details.
 
 ! 2010-02-24 - V. Gligorov
  - Follow progress of Savannah tasks 13784 and 12691 by updating Hlt1 lines

@@ -143,7 +143,7 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
 # OLD                         ,  algos = [ DiElectron, GoodKaons , combineB ]
                           ,  algos = [ DiElectron,
                                        TFElectrons,
-                                       PV3D,
+                                       PV3D(),
                                        combineEE,
                                        TFKaons,
                                        combineB ]
@@ -198,24 +198,24 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
         #
         line_M.clone('Bu2MuMuK'
                      , prescale = self.prescale
-                     , algos = [ DiMuon, TFMuons, PV3D,combineMM, TFKaons, line_M._algos[-1] ]  # 'Bu' ]
+                     , algos = [ DiMuon, TFMuons, PV3D(),combineMM, TFKaons, line_M._algos[-1] ]  # 'Bu' ]
                      , Bu = { 'InputLocations' :  [ TFKaons, combineMM ]} 
                      )
         line_S.clone('Bu2MuMuKSignal'
                      , prescale = 1
-                     , algos = [ DiMuon, TFMuons,PV3D, combineMM, TFKaons, line_S._algos[-1] ] # 'Bu' ]
+                     , algos = [ DiMuon, TFMuons,PV3D(), combineMM, TFKaons, line_S._algos[-1] ] # 'Bu' ]
                      , MM = { "CombinationCut" : "(AM<3*GeV)" } # don't change that (tightens combcut and hence overwrites
                      , Bu = { 'InputLocations' :  [ TFKaons, combineMM ]} 
                      )
         line_J.clone('Bu2MuMuKJpsi'
                      , prescale = self.prescale
-                     , algos = [ DiMuon, TFMuons, PV3D,combineMM, TFKaons, line_J._algos[-1] ]# 'Bu' ]
+                     , algos = [ DiMuon, TFMuons, PV3D(),combineMM, TFKaons, line_J._algos[-1] ]# 'Bu' ]
                      , MM = {  "CombinationCut" : "(ADAMASS('J/psi(1S)')< %(JpsiMassWindow)s *MeV)" % self.getProps() } 
                      , Bu = {'InputLocations' :  [ TFKaons, combineMM ]} 
                      )
         line_H.clone('Bu2MuMuKHighMass'
                      , prescale = self.prescale
-                     , algos = [ DiMuon, TFMuons, PV3D,combineMM, TFKaons, line_H._algos[-1] ]# 'Bu' ]
+                     , algos = [ DiMuon, TFMuons, PV3D(),combineMM, TFKaons, line_H._algos[-1] ]# 'Bu' ]
                      , Bu = {'InputLocations' :  [ TFKaons, combineMM ]} 
                      )
         

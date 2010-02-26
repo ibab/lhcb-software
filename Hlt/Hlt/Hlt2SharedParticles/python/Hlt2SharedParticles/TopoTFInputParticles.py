@@ -25,5 +25,5 @@ Hlt2TopoTFInputParticles.InputLocations  = [ "Hlt2TFPionsForTopo","Hlt2TFKaonsFo
 
 
 TopoTFInputParticles = bindMembers( None, [ GaudiSequencer('SeqHlt2TFParticlesForTopo'),
-                                            PV3D, Hlt2TopoTFInputParticles ] )
+                                            PV3D(), Hlt2TopoTFInputParticles ] )
 

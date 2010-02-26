@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2ExpressLines.py,v 1.10 2010-02-24 04:20:24 gligorov Exp $
+# $Id: Hlt2ExpressLines.py,v 1.11 2010-02-26 04:56:17 gligorov Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt2 Lines for the express stream
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Johannes Albrecht albrecht@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -171,7 +171,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       line = Hlt2Line('ExpressJPsiTagProbe'
                       , prescale = self.prescale
                       , HLT = "HLT_PASS_RE('Hlt1.*SingleMuon.*Decision')"
-                      , algos = [ PV3D, caloProtos, Muons, NoCutsPions, JPsiCombine ]
+                      , algos = [ PV3D(), caloProtos, Muons, NoCutsPions, JPsiCombine ]
                       , postscale = self.postscale
                       )
       
@@ -204,7 +204,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       
       line = Hlt2Line('ExpressLambda'
                       , prescale = self.prescale 
-                      , algos = [ PV3D, NoCutsPions, NoCutsProtons, LambdaCombine ]
+                      , algos = [ PV3D(), NoCutsPions, NoCutsProtons, LambdaCombine ]
                       , postscale = self.postscale
                       )
       #--------------------------------------------
@@ -227,7 +227,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       
       line = Hlt2Line('ExpressKS'
                       , prescale = self.prescale 
-                      , algos = [ PV3D, NoCutsPions, KsCombine]
+                      , algos = [ PV3D(), NoCutsPions, KsCombine]
                       , postscale = self.postscale
                       )
       #--------------------------------------------
@@ -275,7 +275,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       
       line = Hlt2Line('ExpressDs2PhiPi'
                       , prescale = self.prescale 
-                      , algos = [ PV3D, NoCutsPions, NoCutsKaons, PhiCombine, DsCombine]
+                      , algos = [ PV3D(), NoCutsPions, NoCutsKaons, PhiCombine, DsCombine]
                       , postscale = self.postscale
                       )
       
