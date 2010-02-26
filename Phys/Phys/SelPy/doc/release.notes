@@ -6,5 +6,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-02-25 - Juan Palacios
+ - Fix tests. Were importing from PhysSelPython.
+
+! 2010-02-25 - Juan Palacios
  - import module selection.py and Configurabloids.py into python/SelPy.
  - import py.tests and qmtests.

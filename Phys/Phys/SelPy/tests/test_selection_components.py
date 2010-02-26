@@ -9,8 +9,8 @@ __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 import sys
 sys.path.append('../python')
 
-from PhysSelPython.Configurabloids import DummyAlgorithm
-from PhysSelPython.selection import FlatSelectionListBuilder, Selection, AutomaticData
+from SelPy.configurabloids import DummyAlgorithm
+from SelPy.selection import FlatSelectionListBuilder, Selection, AutomaticData
 
 class SelectionTree(object) :
     sel000 = Selection('0.00000', Algorithm = DummyAlgorithm('Alg0.00000'),

@@ -3,7 +3,7 @@
 
 import sys
 sys.path.append('../python')
-from PhysSelPython.Configurabloids import *
+from SelPy.configurabloids import *
 
 def test_instantiate_ConfigurableGenerator() :
     confMap = ConfigurableGenerator()
