@@ -88,3 +88,6 @@ apply_pattern container_package
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
+
+# Allow the generation of the SAM QMTest
+apply_pattern QMTest
