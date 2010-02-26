@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.62 2010-01-11 14:54:27 wouter Exp $
+// $Id: DeSTSector.cpp,v 1.63 2010-02-26 09:25:24 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -323,6 +323,7 @@ void DeSTSector::setNoise(const std::vector<double>& values)
     std::vector<double>& reference =
       aCon -> param< std::vector< double > >( "SectorNoise" );
     reference.assign( values.begin(), values.end() );
+    m_noiseValues = values; 
   }
 } 
 
@@ -340,6 +341,7 @@ void DeSTSector::setNoise(const std::vector<double>& values)
     std::vector<double>& reference =
       aCon -> param< std::vector< double > >( "cmNoise" );
     reference.assign( values.begin(), values.end() );
+    m_cmModeValues = values;
   }
 } 
 
@@ -356,6 +358,7 @@ void DeSTSector::setNoise(const std::vector<double>& values)
     std::vector<double>& reference =
       aCon -> param< std::vector< double > >( "electronsPerADC" );
     reference.assign( values.begin(), values.end() );
+    m_electronsPerADC = values;
   }
 } 
 
