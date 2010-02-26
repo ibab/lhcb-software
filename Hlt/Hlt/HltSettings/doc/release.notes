@@ -7,7 +7,7 @@
 ! 2010-02-26 - Johannes Albrecht
  - Commisioning_OTCosmics: bring settings up to date
  - Physics_320Vis_300L0_10Hlt1_Jan10: revert changes from yesterday
- - 	
+ - Physics_320Vis_300L0_10Hlt1_Feb10: initial release of Miriams new tuning, added open TConf search windows	
 
 ! 2010-02-25 - Johannes Albrecht
  - Physics_320Vis_300L0_10Hlt1_Jan10: adjust muon preparation cuts
