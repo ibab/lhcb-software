@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Id: test_selection_sequence.py,v 1.15 2010-02-25 17:01:50 jpalac Exp $
+#$Id: test_selection_sequence.py,v 1.16 2010-02-26 13:15:39 jpalac Exp $
 '''
 Test suite for SelectionSequence class.
 '''
@@ -16,6 +16,29 @@ from PhysSelPython.Wrappers import ( Selection,
 from SelPy.configurabloids import ( DummyAlgorithm,
                                     DummySequencer  )
 
+
+class SelectionTree(object) :
+    sel000 = Selection('0.00000', Algorithm = DummyAlgorithm('Alg0.00000'),
+                       RequiredSelections = [])
+    sel001 = Selection('0.00001', Algorithm = DummyAlgorithm('Alg0.00001'),
+                       RequiredSelections = [])
+    sel002 = Selection('0.00002', Algorithm = DummyAlgorithm('Alg0.00002'),
+                       RequiredSelections = [])
+    sel003 = Selection('0.00003', Algorithm = DummyAlgorithm('Alg0.00003'),
+                       RequiredSelections = [])
+    
+    sel100 = Selection('1.00000', Algorithm = DummyAlgorithm('Alg1.00000'),
+                       RequiredSelections = [sel000, sel001])
+    
+    sel101 = Selection('1.00001', Algorithm = DummyAlgorithm('Alg1.00001'),
+                       RequiredSelections = [sel002, sel003])
+    
+    sel200 = Selection('2.00000', Algorithm = DummyAlgorithm('Alg2.00000'),
+                       RequiredSelections = [sel100, sel101])
+
+    selSeq = SelectionSequence('Seq06', TopSelection = sel200)
+    algs = selSeq.algos
+    alg_names = [a.name() for a in algs]
 
 def test_instantiate_sequencer() :
     sel00 = AutomaticData('Sel00', Location = 'Phys/Sel00')
@@ -144,6 +167,74 @@ def test_clone_sequence() :
 
     for sel in [sel01, sel02, sel03]:
         assert sel.algorithm() in ref_algos[len(presels):len(ref_algos)-len(postsels)]
+
+def test_order_line() :
+
+    
+    sel000 = Selection('0.0000', Algorithm = DummyAlgorithm('Alg0.0000'),
+                      RequiredSelections = [])
+    sel001 = Selection('0.0001', Algorithm = DummyAlgorithm('Alg0.0001'),
+                      RequiredSelections = [sel000])
+    sel101 = Selection('1.0000', Algorithm = DummyAlgorithm('Alg1.0000'),
+                      RequiredSelections = [sel001])
+    sel102 = Selection('1.0001', Algorithm = DummyAlgorithm('Alg1.0001'),
+                      RequiredSelections = [sel101])
+    sel203 = Selection('2.0000', Algorithm = DummyAlgorithm('Alg2.000'),
+                      RequiredSelections = [sel102])
+
+    selSeq = SelectionSequence('Seq04', TopSelection = sel203)
+    algs = selSeq.algos
+    assert [a.name() for a in algs] == ['0.0000', '0.0001', '1.0000', '1.0001', '2.0000']
+
+def test_order_tree() :
+
+    alg_names = SelectionTree.alg_names
+    
+    assert alg_names.index('0.00000') < alg_names.index('1.00000')
+    assert alg_names.index('0.00001') < alg_names.index('1.00000')
+    assert alg_names.index('0.00002') < alg_names.index('1.00001')
+    assert alg_names.index('0.00003') < alg_names.index('1.00001')
+    assert alg_names.index('1.00000') < alg_names.index('2.00000')
+    assert alg_names.index('1.00001') < alg_names.index('2.00000')
+
+
+def test_remove_duplicates() :
+    
+    sel000 = SelectionTree.sel000
+    sel001 = SelectionTree.sel001
+    sel002 = SelectionTree.sel002
+    sel003 = SelectionTree.sel003
+
+    sel100 = Selection('1.10000', Algorithm = DummyAlgorithm('Alg1.10000'),
+                       RequiredSelections = [sel000, sel001, sel002])
+    
+    sel101 = Selection('1.10001', Algorithm = DummyAlgorithm('Alg1.10001'),
+                       RequiredSelections = [sel001, sel002, sel003])
+    
+    sel200 = Selection('2.10000', Algorithm = DummyAlgorithm('Alg2.10000'),
+                       RequiredSelections = [sel100, sel101])
+
+    selSeq =  SelectionSequence('Seq07', TopSelection = sel200)
+    algs = selSeq.algos
+    alg_names = [a.name() for a in algs]
+
+    assert len(algs) == 7
+    assert alg_names.count('0.00000') == 1
+    assert alg_names.count('0.00001') == 1
+    assert alg_names.count('0.00002') == 1
+    assert alg_names.count('0.00003') == 1
+    assert alg_names.count('1.10000') == 1
+    assert alg_names.count('1.10001') == 1
+    assert alg_names.count('2.10000') == 1
+    
+    assert alg_names.index('0.00000') < alg_names.index('1.10000')
+    assert alg_names.index('0.00001') < alg_names.index('1.10000')
+    assert alg_names.index('0.00002') < alg_names.index('1.10000')
+    assert alg_names.index('0.00001') < alg_names.index('1.10001')
+    assert alg_names.index('0.00002') < alg_names.index('1.10001')
+    assert alg_names.index('0.00003') < alg_names.index('1.10001')
+    assert alg_names.index('1.10000') < alg_names.index('2.10000')
+    assert alg_names.index('1.10001') < alg_names.index('2.10000')
 
 if '__main__' == __name__ :
 
