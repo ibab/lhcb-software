@@ -25,7 +25,7 @@ use ExampleGaucho     v3r3     Online
 # Does not work on WIN32
 # use FarmMonitor     v1r0     Online
 use Gaucho            v6r23    Online
-use GaudiOnline       v2r39    Online
+use GaudiOnline       v2r40    Online
 use GaudiSerialize    v0r7     Online
 use GaudiUPI          v1r12    Online
 #use Hugin            v1r6     Online
