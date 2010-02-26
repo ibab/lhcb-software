@@ -8,27 +8,48 @@ Purpose: LHCb reconstruction packages.
 </PRE><H1><A NAME=v8r1>2010-02-24 RecSys v8r2</A></H1><PRE>
 This version uses Gaudi v21r7p1 and LHCb v29r2
 
-- A production version, with few patches, to improve tracking, and reduce the number of online histos
+- A few critical patches, improve tracking, reduce the number of online histos
 
-- Add support in RecSysConf for different Histogramming levels via a 'Histograms' slot in the
-	python Configurables. In RICH and VELO monitors
+- Add support in RecSysConf for different Histogramming levels via a 
+  'Histograms' slot in the python Configurables. Used by RICH and VELO moni
 
 
-- Packages updated: Tf/PatVelo v3r20, Tf/TsaAlgorithms v3r16, Tr/TrackExtrapolators v2r25,
-                    Tr/TrackFitter v2r45, Tr/TrackMonitors v1r21, Tr/TrackTools v3r27
+- Packages updated: Tf/PatVelo v3r20, Tf/TsaAlgorithms v3r16, 
+										Tr/TrackExtrapolators v2r25, Tr/TrackFitter v2r45, 
+										Tr/TrackMonitors v1r21, Tr/TrackTools v3r27
                     Tf/TfTools v1r11,  Muon/MuonID v7r7p1,
 										Rich/RichRecMonitors v2r26, Rich/RichRecQC v2r37, 
 										Rich/RichRecTrackTools v1r17,
 										Velo/VeloRecMonitors v2r7, Muon/MuonTrackRec v3r0p2
 
-- In :
-  . 
+- In Tf/PatVelo v3r20:
+  . Reduced info level verbosity of PatVeloSpaceTool
+  . Improved PatVeloGeneralTracking's finding of tracks
 
-- In :
-  . 
+- In Tf/TsaAlgorithms v3r16:
+  . fixed memory leak in TTGenericTracking::execute
 
-- In :
-  . 
+- In Tr/TrackExtrapolators v2r25:
+  . TrackDistanceExtrapSelector: move info messages to debug
+  . TrackRungeKuttaExtrapolator: improve warning messages.
+
+- In Tr/TrackFitter v2r45:
+  . fixed prefit flag in fastfitter configuration
+  . Significant improvements to fitter, and refitting
+  . UpdateTransport now true by default
+  . changed converged criterion in fitter
+  . remove state-at-beamline for tracks without velo and TT hits
+
+- In Tr/TrackMonitors v1r21:
+  . added 'y-position' histograms to ITOverlapMonitor
+  . added "FullDetail" property to OTTrackMonitor, reduces histograms
+
+- In Tr/TrackTools v3r27:
+  . improve initialization of Long and Downstream tracks in TrackStateInitTool
+  . added some cuts to TrackSelector
+
+- In Tf/TfTools v1r11:
+  . add OTIS level granularity to FlagHitsForPatternReco
 
 - In Muon/MuonID v7r7p1:
   . fix to requirements file
@@ -44,7 +65,9 @@ This version uses Gaudi v21r7p1 and LHCb v29r2
   . Extensions to isolated track tool with new methods for track classes
 
 - In Velo/VeloRecMonitors v2r7:
-  .
+  . Added a configurable for VeloRecMonitors, for use in Brunel
+  . The configurable chooses which monitoring algs to run depending on options
+  . Reduced histos in VeloIPResolutionMonitor + info in VeloOccupancyMonitor
 
 </PRE><H1><A NAME=v8r1>2010-02-16 RecSys v8r1</A></H1><PRE>
 This version uses Gaudi v21r7p1 and LHCb v29r1
