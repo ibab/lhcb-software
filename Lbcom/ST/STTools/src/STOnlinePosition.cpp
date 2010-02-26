@@ -1,4 +1,4 @@
-// $Id: STOnlinePosition.cpp,v 1.14 2009-08-08 10:51:05 mneedham Exp $
+// $Id: STOnlinePosition.cpp,v 1.15 2010-02-26 09:08:10 mneedham Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -61,7 +61,7 @@ ISTClusterPosition::Info STOnlinePosition::estimate( const LHCb::STCluster*
   theInfo.strip = theChan;
   theInfo.fractionalPosition = interStripPos;
   theInfo.fractionalError = error(aCluster->size());
-
+  theInfo.clusterSize = aCluster->size();
   return theInfo;
 }
 
@@ -87,7 +87,7 @@ STOnlinePosition::estimate(const SmartRefVector<LHCb::STDigit>& digits) const
   theInfo.strip = theChan;
   theInfo.fractionalPosition = interStripPos;
   theInfo.fractionalError = error(digits.size());
-
+  theInfo.clusterSize = digits.size();
   return theInfo;
 }
 

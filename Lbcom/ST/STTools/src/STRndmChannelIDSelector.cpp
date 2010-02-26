@@ -1,4 +1,4 @@
-// $Id: STRndmChannelIDSelector.cpp,v 1.1 2009-03-14 09:16:34 mneedham Exp $
+// $Id: STRndmChannelIDSelector.cpp,v 1.2 2010-02-26 09:08:10 mneedham Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -21,7 +21,7 @@ STRndmChannelIDSelector::STRndmChannelIDSelector( const std::string& type,
   ST::ToolBase(type, name, parent),
   m_uniformDist( (IRndmGen*)0 )
 {
-  declareProperty("FractionToReject", m_fractionToReject = 0.005); 
+  declareProperty("FractionToReject", m_fractionToReject = 0.0); 
   declareInterface<ISTChannelIDSelector>(this);
 }
 

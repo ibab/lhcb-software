@@ -1,4 +1,4 @@
-// $Id: STOfflinePosition.cpp,v 1.18 2009-07-24 12:15:31 mneedham Exp $
+// $Id: STOfflinePosition.cpp,v 1.19 2010-02-26 09:08:10 mneedham Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -11,6 +11,7 @@
 
 // Boost
 #include <boost/assign/std/vector.hpp>
+#include <boost/foreach.hpp>
 
 // Mathematical tools
 #include <math.h>
@@ -58,6 +59,14 @@ StatusCode STOfflinePosition::initialize()
 {
   StatusCode sc = ST::ToolBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
+
+  info() << "APE set to " << m_APE << endmsg;
+  info() << "Error Vec ";
+  BOOST_FOREACH(double val, m_errorVec) {
+    info() << val <<  " " ;
+  } 
+  info() << endmsg;
+
 
   // Add incident at begin of each event
   if( m_mergeClusters ) incSvc()->addListener( this, IncidentType::BeginEvent );
