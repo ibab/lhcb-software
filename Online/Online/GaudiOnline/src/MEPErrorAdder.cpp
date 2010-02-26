@@ -60,14 +60,15 @@ MEPErrorAdder::MEPErrorAdder(const std::string& nam, ISvcLocator* svc)
   //declareProperty("runInfoDnsNode",	m_runInfoDnsNode = "");					// DIM_DNS_NODE for RunInfo, if other than listenerDnsNode  
 
   //Options for sum over subfarm
-  declareProperty("nrSubNodes",         m_nrSubNodes =4);			         	//Number of nodes per subfarm
+  declareProperty("nrSubNodes",         m_nrSubNodes =20);			         	//Number of nodes per subfarm
   
   declareProperty("nSrc",               m_nSrc=1);						//Numer of TELL1 sources this partition have
   
   m_allNames = NULL;
   m_allNamesSize = 0;
   m_zero = 0;
-  
+  m_zero32 = 0;
+  m_zerof = 0; 
 }
 
 MEPErrorAdder::~MEPErrorAdder() {
@@ -239,6 +240,10 @@ MEPErrorAdder::removeSubs() {
     delete m_subsSentEvt[i];
     delete m_subsSentOct[i];
     delete m_subsSentEvtErr[i];
+    delete m_subsNetworkMonitor[i];
+    delete m_subsDroppedFrac[i];
+    delete m_subsErrorFrac[i];
+    delete m_subsFrameErrorFrac[i];
 
     delete m_subsSrcName[i];
   }	 
@@ -269,6 +274,10 @@ MEPErrorAdder::removeSubs() {
   m_subsSentEvt.clear();
   m_subsSentOct.clear();
   m_subsSentEvtErr.clear();
+  m_subsNetworkMonitor.clear();
+  m_subsDroppedFrac.clear();
+  m_subsErrorFrac.clear();
+  m_subsFrameErrorFrac.clear();
 
   m_subsSrcName.clear();
 
@@ -351,6 +360,22 @@ MEPErrorAdder::ReceiveSingleService_32(DimInfo * curr, DimInfo * subs, int64_t &
 
 }
 
+bool
+MEPErrorAdder::ReceiveSingleService_float(DimInfo * curr, DimInfo * subs, float &rValue, float &sValue) {
+
+  // Return false if not the correct service
+  if (curr != subs) return false;
+
+  float data = *((float*) curr->getData());
+  float diff = data - rValue;	//Value to add/subtract
+  
+  rValue = data;	// saved value
+  sValue += diff;	// Change value
+
+  return true;
+
+}
+
 /** DimInfoHandler function
  */
 void
@@ -403,6 +428,29 @@ MEPErrorAdder::infoHandler() {
         if (ReceiveSingleService_32(curr,m_subsSentEvt[i], m_rSentEvt[i], m_sentEvt)) break;
         if (ReceiveSingleService_32(curr,m_subsSentOct[i], m_rSentOct[i], m_sentOct)) break;
         if (ReceiveSingleService_32(curr,m_subsSentEvtErr[i], m_rSentEvtErr[i], m_sentEvtErr)) break;         
+    }
+
+    // Network Manager subscriptions
+    if (m_sumPartition) {
+    	if (ReceiveSingleService_float(curr,m_subsDroppedFrac[i], m_rDroppedFrac[i], m_droppedFrac)) break;
+    	if (ReceiveSingleService_float(curr,m_subsErrorFrac[i], m_rErrorFrac[i], m_errorFrac)) break;
+    	if (ReceiveSingleService_float(curr,m_subsFrameErrorFrac[i], m_rFrameErrorFrac[i], m_frameErrorFrac)) break;
+    } else {
+	if (curr == m_subsNetworkMonitor[i]) {
+	    if (curr->getSize()/sizeof(float)<18) break;
+
+  	    float * data = ((float*) curr->getData());
+            // Interesting values in array; Rx Error Frac: 8, Rx Dropped Frac: 9, Rx Frame Error Frac : 11
+	    m_errorFrac += (data[8] - m_rErrorFrac[i]);
+	    m_droppedFrac += (data[9] - m_rDroppedFrac[i]);
+	    m_frameErrorFrac += (data[11] - m_rFrameErrorFrac[i]);
+
+	    m_rErrorFrac[i] = data[8];
+	    m_rDroppedFrac[i] = data[9];
+	    m_rFrameErrorFrac[i] = data[11];
+	
+	    break;
+	}
     }
 
     if (curr == m_subsSrcName[i]) {
@@ -559,6 +607,10 @@ MEPErrorAdder::resetRemSingleCounters() {
   m_rSentOct.resize(m_nrServices,0);
   m_rSentEvtErr.resize(m_nrServices,0);
  
+  m_rDroppedFrac.resize(m_nrServices,0);
+  m_rErrorFrac.resize(m_nrServices,0);
+  m_rFrameErrorFrac.resize(m_nrServices,0);
+
   return 0;
 }
 
@@ -584,6 +636,10 @@ MEPErrorAdder::publishSingleCounters() {
   PUBCNT(sentEvt,	     "Events sent from HLT (MDF)");
   PUBCNT(sentOct,            "Bytes sent from HLT");
   PUBCNT(sentEvtErr,	     "Number of event send errors from HLT");
+
+  PUBCNT(droppedFrac,	     "Dropped packets (fraction)");
+  PUBCNT(errorFrac,          "Erroneous packets (fraction)");
+  PUBCNT(frameErrorFrac,     "Frame Errors (fraction)");
 
   return 0;
 }
@@ -668,6 +724,11 @@ MEPErrorAdder::setupSubs() {
   m_subsSentOct.resize(m_nrServices,NULL);
   m_subsSentEvtErr.resize(m_nrServices,NULL);
 
+  m_subsNetworkMonitor.resize(m_nrServices,NULL);
+  m_subsDroppedFrac.resize(m_nrServices,NULL);
+  m_subsErrorFrac.resize(m_nrServices,NULL);
+  m_subsFrameErrorFrac.resize(m_nrServices,NULL);
+
   m_subsSrcName.resize(m_nrServices,NULL);
 
   // Reset arrays for remembering received values
@@ -738,7 +799,13 @@ MEPErrorAdder::setupSubs() {
 	m_subsSentOct[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
      	sprintf(temp,"%s_MEPRxSTAT_1/Runable/sentEvtErr",m_subFarms[i].c_str());
 	m_subsSentEvtErr[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
- 	
+
+	sprintf(temp,"%s_MEPRxSTAT_1/Runable/droppedFrac",m_subFarms[i].c_str());
+	m_subsDroppedFrac[i] = new DimInfo(temp,m_updateFrequency,m_zerof,this);
+	sprintf(temp,"%s_MEPRxSTAT_1/Runable/errorFrac",m_subFarms[i].c_str());
+	m_subsErrorFrac[i] = new DimInfo(temp,m_updateFrequency,m_zerof,this);
+	sprintf(temp,"%s_MEPRxSTAT_1/Runable/frameErrorFrac",m_subFarms[i].c_str()); 	
+	m_subsFrameErrorFrac[i] = new DimInfo(temp,m_updateFrequency,m_zerof,this);
 
 	sprintf(temp,"%s_MEPRxSTAT_1/Runable/srcName",m_subFarms[i].c_str());
 	m_subsSrcName[i] = new DimInfo(temp,m_updateFrequency,(char *)"",this);
@@ -809,6 +876,9 @@ MEPErrorAdder::setupSubs() {
      	sprintf(temp,"%s%.2i_DiskWR_1/SND_0/ErrorsOut",m_listenerDnsNode.c_str(),i+1);
 	m_subsSentEvtErr[i] = new DimInfo(temp,m_updateFrequency,m_zero32,this);
      
+	sprintf(temp,"/FMC/%s%.2i/net/ifs/details/net_02/data",m_listenerDnsNode.c_str(),i+1);
+	m_subsNetworkMonitor[i] = new DimInfo(temp,m_updateFrequency,m_zerof,this);
+
 	sprintf(temp,"%s%.2i_MEPRx_1/Runable/srcName",m_listenerDnsNode.c_str(),i+1);
 	m_subsSrcName[i] = new DimInfo(temp,m_updateFrequency,(char *)"",this);
  

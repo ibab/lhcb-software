@@ -77,6 +77,7 @@ namespace LHCb  {
 
     longlong m_zero;
     short m_zero32;
+    float m_zerof;
 
     //Save all received values from all sources
     std::vector<std::vector<int64_t> >      	m_rBadLenPkt;
@@ -108,6 +109,10 @@ namespace LHCb  {
     std::vector<int64_t>			m_rSentEvt;
     std::vector<int64_t>			m_rSentOct;
     std::vector<int64_t>			m_rSentEvtErr;
+
+    std::vector<float>				m_rDroppedFrac;
+    std::vector<float> 				m_rErrorFrac;
+    std::vector<float>				m_rFrameErrorFrac;
 
     //Summed up vectors to send
     std::vector<int64_t>        m_badLenPkt;
@@ -141,6 +146,9 @@ namespace LHCb  {
     int64_t			m_sentOct;
     int64_t			m_sentEvtErr;
 
+    float			m_droppedFrac;
+    float			m_errorFrac;
+    float			m_frameErrorFrac;
 
     //Subscriptions
     std::vector<DimInfo*> 	m_subsBadLenPkt;
@@ -173,6 +181,11 @@ namespace LHCb  {
     std::vector<DimInfo*>	m_subsSentOct;
     std::vector<DimInfo*>	m_subsSentEvtErr;
 
+    std::vector<DimInfo*>	m_subsNetworkMonitor;
+    std::vector<DimInfo*>	m_subsDroppedFrac;
+    std::vector<DimInfo*>	m_subsFrameErrorFrac;
+    std::vector<DimInfo*>	m_subsErrorFrac;
+
     std::vector<DimInfo*>	m_subsSrcName;
 
     DimInfo*			m_subsSubFarms;			//For partiton mode, look if partition setup changes
@@ -197,6 +210,7 @@ namespace LHCb  {
     bool ReceiveArrayService(DimInfo * curr, DimInfo * subs,  std::vector<int64_t> &rArray, std::vector<int64_t> &sArray);
     bool ReceiveSingleService(DimInfo * curr, DimInfo * subs, int64_t &rValue, int64_t &sValue);
     bool ReceiveSingleService_32(DimInfo * curr, DimInfo * subs, int64_t &rValue, int64_t &sValue);
+    bool ReceiveSingleService_float(DimInfo * curr, DimInfo * subs, float &rValue, float &sValue);
 
     MsgStream                   m_log;
   };
