@@ -151,7 +151,7 @@ def ConfiguredFastFitter( Name, FieldOff = None, LiteClusters = True,
     if ForceUseDriftTime:
         from Configurables import TrajOTProjector, TrackProjectorSelector
         otprojector = TrajOTProjector('OTFastFitProjector')
-        otprojector.PrefitStrategy = 1
+        otprojector.PrefitStrategy = 0
         fitter.Projector.OT = otprojector
         
     # at some point, need to switch to analytic evaluation
