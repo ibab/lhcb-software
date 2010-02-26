@@ -1,7 +1,7 @@
 package LbcomSys
 version v8r3
 
-branches doc cmt
+branches doc cmt tests
 
 #===============================================================
 # LHCb packages shared by Boole and other applications
@@ -67,3 +67,6 @@ apply_pattern container_package
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
+
+# Allow the generation of QMTests
+apply_pattern QMTest
