@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.cpp,v 1.29 2009-02-13 18:37:29 janos Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.30 2010-02-26 14:54:15 nserra Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -30,6 +30,7 @@
 #include "boost/lambda/lambda.hpp"
 #include <boost/assign/std/vector.hpp>
 #include <boost/assign/list_of.hpp>
+
 
 /** @file MCOTDepositCreator.cpp 
  *
@@ -72,7 +73,7 @@ MCOTDepositCreator::MCOTDepositCreator(const std::string& name,
   declareProperty("SpillVector"            , m_spillVector                                   );
   declareProperty("SpillTimes"             , m_spillTimes                                    );
   declareProperty("AddCrosstalk"           , m_addCrossTalk           = true                 );
-  declareProperty("CrossTalkLevel"         , m_crossTalkLevel         = 0.025                );
+  declareProperty("CrossTalkLevel"         , m_crossTalkLevel         = 0.005                );
   declareProperty("AddNoise"               , m_addNoise               = true                 );
   declareProperty("AddDoublePulse"         , m_addDoublePulse         = true                 );
   declareProperty("DoublePulseTime"        , m_doublePulseTime        = 30.0*Gaudi::Units::ns);
@@ -88,6 +89,10 @@ MCOTDepositCreator::~MCOTDepositCreator()
 StatusCode MCOTDepositCreator::initialize()
 {
   
+
+
+  
+
   StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
@@ -118,6 +123,9 @@ StatusCode MCOTDepositCreator::initialize()
   sc = m_flat.initialize( randSvc() , Rndm::Flat( 0.0, 1.0) );
   if ( sc.isFailure() ) return Error( "Failed to initialize flat random number generator", sc );
 
+    
+
+
   // construct container names once
   std::vector<std::string>::const_iterator iSpillName = m_spillVector.begin();
   while (iSpillName!=m_spillVector.end()){
@@ -133,6 +141,7 @@ StatusCode MCOTDepositCreator::initialize()
 
 StatusCode MCOTDepositCreator::execute(){
 
+
   // execute once per event
   // reserve some space
   m_deposits.reserve(6000);
@@ -145,12 +154,19 @@ StatusCode MCOTDepositCreator::execute(){
   if (m_addCrossTalk) {
     if (msgLevel(MSG::DEBUG)) debug() << "Number of deposits before adding XTalk = "
                                       << m_deposits.size() << endmsg;
+
+    
     addCrossTalk();
     //if (sc.isFailure()) return Error("problems applying crosstalk", sc ); 
     if (msgLevel(MSG::DEBUG))debug() << "Number of deposits after adding XTalk = "
-                                     << m_deposits.size() << endmsg;
+                                   << m_deposits.size() << endmsg;
+
+
+    
+
   }
-  
+
+
   // add random noise
   if (m_addNoise) {
     if (msgLevel(MSG::DEBUG)) debug() << "Number of deposits before adding noise = "
@@ -232,7 +248,13 @@ void MCOTDepositCreator::makeDeposits() const
             /// Apply single cell efficiency cut
             /// Currently per station; but I can imagine we want to do it per module or straw
             bool accept = false;
-            m_singleCellEffVector[toolIndex]->calculate( deposit, accept );
+            
+            // Calculate the path through a cell in 3D, using the slope
+            Gaudi::XYZVector slopes = module->geometry()->toLocal(Gaudi::XYZVector(aMCHit->dxdz(),
+                                                                                  aMCHit->dydz(), 1.0));
+
+            m_singleCellEffVector[toolIndex]->calculate( deposit, (slopes.y()/slopes.z()), accept );
+
             if ( accept ) {
               /// Smear deposit in time
               const double sigmaT   = (module->rtRelation()).drifttimeError(deposit->driftDistance());

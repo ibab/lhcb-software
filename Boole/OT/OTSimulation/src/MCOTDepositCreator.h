@@ -1,10 +1,11 @@
-// $Id: MCOTDepositCreator.h,v 1.14 2008-05-28 20:07:31 janos Exp $
+// $Id: MCOTDepositCreator.h,v 1.15 2010-02-26 14:54:15 nserra Exp $
 #ifndef OTSIMULATION_MCOTDEPOSITCREATOR_H
 #define OTSIMULATION_MCOTDEPOSITCREATOR_H 1
 
 // Gaudi
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
+
 
 // forward declarations
 class IOTEffCalculator;
@@ -85,6 +86,8 @@ private:
   double                   m_doublePulseProbability; ///< Double pulse probability
   mutable Rndm::Numbers    m_flat;                   ///< Flat random dist for crosstalk & double pulses
   mutable Rndm::Numbers    m_gauss;                  ///< Gauss random dist
+
+
 };
 
 #endif // OTSIMULATION_MCOTDEPOSITCREATOR_H

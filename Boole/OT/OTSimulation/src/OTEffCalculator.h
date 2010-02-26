@@ -1,4 +1,4 @@
-// $Id: OTEffCalculator.h,v 1.7 2007-06-27 15:22:24 janos Exp $
+// $Id: OTEffCalculator.h,v 1.8 2010-02-26 14:54:15 nserra Exp $
 #ifndef OTSIMULATION_OTEFFCALCULATOR_H
 #define OTSIMULATION_OTEFFCALCULATOR_H 1
 
@@ -46,12 +46,12 @@ public:
   virtual StatusCode initialize();
 
   /// tool 'operation' - returns false if hit is to be killed 
-  void calculate(LHCb::MCOTDeposit* aDeposit, bool& accept) const;
+  void calculate(LHCb::MCOTDeposit* aDeposit, const double slope, bool& accept) const;
   
 private:
 
   /// parameterization of efficiency
-  double effParamFunc(const double radius) const;
+  double effParamFunc(const double driftDistance, double slope) const;
 
   SmartIF<IRndmGen> m_genEff;  ///< smart interface to generator
   double m_cellRadius;         ///< cell size - should go elsewhere

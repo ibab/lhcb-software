@@ -1,4 +1,4 @@
-// $Id: IOTEffCalculator.h,v 1.3 2007-06-27 15:22:24 janos Exp $
+// $Id: IOTEffCalculator.h,v 1.4 2010-02-26 14:54:15 nserra Exp $
 #ifndef OTSIMULATION_IOTEFFCALCULATOR_H 
 #define OTSIMULATION_IOTEFFCALCULATOR_H 1
 
@@ -25,7 +25,7 @@ public:
   static const InterfaceID& interfaceID() { return IID_IOTEffCalculator; }
   
   /// Actual operator function
-  virtual void calculate( LHCb::MCOTDeposit* aDeposit, bool& accept) const = 0;
+  virtual void calculate( LHCb::MCOTDeposit* aDeposit, double slope, bool& accept) const = 0;
 
 };
 
