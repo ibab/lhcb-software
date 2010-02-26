@@ -1,4 +1,4 @@
-// $Id: GaussPhysics_load.cpp,v 1.16 2010-02-25 18:04:31 marcocle Exp $
+// $Id: GaussPhysics_load.cpp,v 1.17 2010-02-26 10:56:34 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h" 
@@ -48,39 +48,39 @@
 
 // Declaration of the External Physics list Factories
 typedef GiGaExtPhysics< G4DecayPhysics > DecayFactory;
-DECLARE_TYPEDEF_TOOL_FACTORY( DecayFactory );
+DECLARE_TOOL_FACTORY( DecayFactory );
 
 typedef GiGaExtPhysics< G4EmStandardPhysics_option1 > EmStdOpt1PhysFactory;
-DECLARE_TYPEDEF_TOOL_FACTORY( EmStdOpt1PhysFactory );
+DECLARE_TOOL_FACTORY( EmStdOpt1PhysFactory );
 typedef GiGaExtPhysics< G4EmStandardPhysics_option2 > EmStdOpt2PhysFactory;
-DECLARE_TYPEDEF_TOOL_FACTORY( EmStdOpt2PhysFactory );
+DECLARE_TOOL_FACTORY( EmStdOpt2PhysFactory );
 typedef GiGaExtPhysics< G4EmStandardPhysics > EmStdPhysFactory;
-DECLARE_TYPEDEF_TOOL_FACTORY( EmStdPhysFactory );
+DECLARE_TOOL_FACTORY( EmStdPhysFactory );
 
 typedef GiGaExtPhysics< G4EmExtraPhysics > EmExtraPhysFactory;
-DECLARE_TYPEDEF_TOOL_FACTORY( EmExtraPhysFactory );
+DECLARE_TOOL_FACTORY( EmExtraPhysFactory );
 
 typedef GiGaExtPhysics< G4IonPhysics > IonPhysFactory;
-DECLARE_TYPEDEF_TOOL_FACTORY( IonPhysFactory );
+DECLARE_TOOL_FACTORY( IonPhysFactory );
 typedef GiGaExtPhysics< G4QStoppingPhysics > QStopPhysFactory;
-DECLARE_TYPEDEF_TOOL_FACTORY( QStopPhysFactory );
+DECLARE_TOOL_FACTORY( QStopPhysFactory );
 typedef GiGaExtPhysics< G4HadronElasticPhysics > HadElPhysFactory;
-DECLARE_TYPEDEF_TOOL_FACTORY( HadElPhysFactory );
+DECLARE_TOOL_FACTORY( HadElPhysFactory );
 typedef GiGaExtPhysics< G4NeutronTrackingCut > NeuTrkCutFactory;
-DECLARE_TYPEDEF_TOOL_FACTORY( NeuTrkCutFactory );
+DECLARE_TOOL_FACTORY( NeuTrkCutFactory );
 
 typedef GiGaExtPhysics< HadronPhysicsLHEP > HadPhysLHEPFactory;
-DECLARE_TYPEDEF_TOOL_FACTORY( HadPhysLHEPFactory );
+DECLARE_TOOL_FACTORY( HadPhysLHEPFactory );
 
 typedef GiGaExtPhysics< HadronPhysicsQGSP > HadPhysQGSPFactory;
-DECLARE_TYPEDEF_TOOL_FACTORY( HadPhysQGSPFactory );
+DECLARE_TOOL_FACTORY( HadPhysQGSPFactory );
 typedef GiGaExtPhysics< HadronPhysicsQGSP_BERT_HP > HadPhysQGSP_BERT_HPFactory;
-DECLARE_TYPEDEF_TOOL_FACTORY( HadPhysQGSP_BERT_HPFactory );
+DECLARE_TOOL_FACTORY( HadPhysQGSP_BERT_HPFactory );
 
 typedef GiGaExtPhysics< HadronPhysicsQGSC > HadPhysQGSCFactory;
-DECLARE_TYPEDEF_TOOL_FACTORY( HadPhysQGSCFactory );
+DECLARE_TOOL_FACTORY( HadPhysQGSCFactory );
 typedef GiGaExtPhysics< HadronPhysicsQGSC_EFLOW > HadPhysQGSC_EFLOWFactory;
-DECLARE_TYPEDEF_TOOL_FACTORY( HadPhysQGSC_EFLOWFactory );
+DECLARE_TOOL_FACTORY( HadPhysQGSC_EFLOWFactory );
 
 // =========== Specialized extensions to GiGaExtPhysics ===========
 template <>

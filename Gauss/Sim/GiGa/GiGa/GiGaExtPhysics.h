@@ -1,4 +1,4 @@
-// $Id: GiGaExtPhysics.h,v 1.5 2010-02-25 18:04:31 marcocle Exp $
+// $Id: GiGaExtPhysics.h,v 1.6 2010-02-26 10:56:34 marcocle Exp $
 #ifndef GIGA_GIGAEXTERNALPHYSICSCONSTRUCTOR_H 
 #define GIGA_GIGAEXTERNALPHYSICSCONSTRUCTOR_H 1
 
@@ -39,7 +39,7 @@ private:
  *  @date   2003-04-06
  */
 
-template <class PhysConstr, class Extender = GiGaExtPhysicsExtender<PhysConstr> >
+template <class PhysConstr>
 class GiGaExtPhysics : public GiGaPhysicsConstructorBase
 {
 public:
@@ -92,7 +92,7 @@ private:
 
   // Object to allow extended configuration of the G4 classes through template
   // specialization.
-  Extender m_extender;
+  GiGaExtPhysicsExtender<PhysConstr> m_extender;
 
 };
 
