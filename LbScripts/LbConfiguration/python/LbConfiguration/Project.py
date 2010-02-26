@@ -25,10 +25,12 @@ class ProjectBaseConf(object):
     def __init__(self, projectname):
         """ default constructor """
         self._name = projectname
+        self._release_area = None
         if os.environ.has_key("LHCBRELEASES") :
             self._release_area = os.environ["LHCBRELEASES"]
-        else :
-            self._release_area = None
+        self._dist_loc = None
+        if os.environ.has_key("LHCBTAR") :
+            self._dist_loc = os.environ["LHCBTAR"]
     def Name(self):
         """ return original name """
         return self._name
@@ -42,6 +44,10 @@ class ProjectBaseConf(object):
         self._release_area = release_area
     def ReleaseArea(self):
         return self._release_area
+    def setDistLocation(self, dist_loc):
+        self._dist_loc = dist_loc
+    def DistLocation(self):
+        return self._dist_loc
     def __str__(self):
         """ return string representation for printing """
         rep = ""
@@ -164,6 +170,8 @@ class ProjectConf(ProjectBaseConf):
 
         return tbname
 
+    def releasePrefix(self, version):
+        return os.path.join(self.NAME(), "_".join([self.NAME(),version]) )
     def enableHasBinary(self):
         """ enable binary nature of the project """
         self._hasbinary = True

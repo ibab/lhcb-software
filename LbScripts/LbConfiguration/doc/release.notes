@@ -1,3 +1,8 @@
+2010-02-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Platform.py: 
+	* python/LbConfiguration/Project.py: added informations for the tarball creation
+
 2010-02-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/AllProjectsSetup.py: 
