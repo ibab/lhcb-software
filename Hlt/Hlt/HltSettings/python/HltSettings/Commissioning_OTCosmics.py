@@ -7,13 +7,24 @@ class Commissioning_OTCosmics :
     @author S.Nies, J.Merkel 
     @date 2009-10-22
     """
-    
-    
-    def HltType(self) :
-        return 'CosmicOT'
+    __all__ = ( 'ActiveHlt1Lines', 'ActiveHlt2Lines', 'Thresholds','L0TCK' )
+
+    def verifyType(self,ref) :
+        # verify self.ActiveLines is still consistent with
+        # our types self.ActiveHlt2Lines and self.ActiveHlt1Lines...
+        # so we can force that classes which inherit from us
+        # and overrule either ActiveHlt.Lines also overrule
+        # HltType...
+        if ( self.ActiveHlt1Lines() != ref.ActiveHlt1Lines(self)  or
+             self.ActiveHlt2Lines() != ref.ActiveHlt2Lines(self) ) :
+            raise RuntimeError('Must update HltType when modifying ActiveHlt.Lines()')
+
+    def HltType(self) :  
+        self.verifyType( Commissioning_OTCosmics )
+        return          'Commissioning_OTCosmics'
 
     def L0TCK(self) :
-        return None
+        return '0x1409'#None
 
     def ActiveHlt2Lines(self) :
         """
@@ -31,7 +42,13 @@ class Commissioning_OTCosmics :
         """
         Returns a dictionary of cuts
         """
-        from Hlt1Lines.HltCosmicLines  import HltCosmicLinesConf
-        return { HltCosmicLinesConf : { 'Prescale' : { 'Hlt1CosmicOT'  : 1.
+        from Hlt1Lines.Hlt1CosmicLines  import Hlt1CosmicLinesConf
+        return { Hlt1CosmicLinesConf : { 'Prescale' : { 'Hlt1CosmicOT'  : 1.
                                       }              } 
                }
+
+def ActiveHlt2Lines(self) :
+        """
+        Returns a list of active lines
+        """
+        return []
