@@ -1,0 +1,70 @@
+#!/usr/bin/env python
+# $Id: buildTar,v 1.1 2010-02-26 19:29:18 hmdegaud Exp $
+""" Don't forget about the description """
+
+from LbRelease.TarBall import buildTar
+from LbUtils.Script import Script
+from LbUtils.CVS import CVS2Version
+
+import logging
+import sys
+import os
+
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.1 $")
+
+
+    
+class BuildTarScript(Script):
+    _version = __version__    
+    _description = __doc__
+    def defineOpts(self):
+        parser = self.parser
+        parser.set_defaults(output_dir=None)
+        parser.add_option("-o", "--output-dir",
+                          help = "define the output directory for the created tarballs" \
+                          "[default: the LHCBTAR directory for the project]")
+        parser.set_defaults(exclude=[])
+        parser.add_option("-e", "--exclude",
+                          action = "append",
+                          help = "add exclude glob pattern to the file/dir paths")
+        parser.set_defaults(top_dir=None)
+        parser.add_option("-t","--top-dir",
+                          help = "define the top directory of the path to be tarballed." \
+                          "[default: the release directory of the project]")
+        parser.set_defaults(overwrite=False)
+        parser.add_option("--overwrite",
+                          action = "store_true",
+                          help = "remove the tarball before attempting to create it [default: %default]")
+        parser.set_defaults(overwrite_shared=False)
+        parser.add_option("--overwrite-shared",
+                          action = "store_true",
+                          help = "remove the shared tarball before attempting to create it [default: %default]")
+        parser.set_defaults(update=False)
+        parser.add_option("-u","--update",
+                          action = "store_true",
+                          help = "update the tarball instead of creating it [default: %default]")
+        parser.set_defaults(cmtconfig=[])
+        parser.add_option("-c", "--cmtconfig",
+                           action = "append",
+                           help = "add cmtconfig the list of target tarballs [default: all supported cmtconfigs are tried]")
+
+    def main(self):
+        log = logging.getLogger()
+        args = self.args
+        opts = self.options
+        if len(args) < 2 :
+            log.error("Not enough arguments")
+            sys.exit(1)
+        else :
+            project   = args[0]
+            version   = args[1]
+
+        buildTar(project, version, opts.cmtconfig, 
+                 opts.top_dir, opts.output_dir, 
+                 opts.overwrite, opts.overwrite_shared, opts.update)
+        
+        return 0
+
+if __name__ == '__main__':
+    s = BuildTarScript(usage="%prog [options] project version cmtconfig")
+    sys.exit(s.run())

@@ -1,3 +1,8 @@
+2010-02-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/buildTar: New file.
+	* python/LbRelease/TarBall.py: new script/module to create LHCb tarballs.
+
 2010-02-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/cmpPackageWithTrunk: simple script to check if a checked out
