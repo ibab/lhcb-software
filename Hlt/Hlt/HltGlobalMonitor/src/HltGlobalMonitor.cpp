@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.58 2010-02-27 22:15:33 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.59 2010-02-27 22:25:12 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -320,7 +320,7 @@ void HltGlobalMonitor::monitorHLT1(const LHCb::ODIN*,
   if (hlt==0) return;
 
   ///////////////////////////////////////////////////////////////////////////////
-  std::vector<std::pair<std::string,const LHCb::HltDecReport*> > reps; reps.reserve(m_Hlt1Lines.size());
+  std::vector<std::pair<Gaudi::StringKey,const LHCb::HltDecReport*> > reps; reps.reserve(m_Hlt1Lines.size());
   unsigned nAcc = 0;
   std::vector<unsigned> nAccAlley(m_hlt1Alleys.size(),unsigned(0));
 
@@ -330,10 +330,11 @@ void HltGlobalMonitor::monitorHLT1(const LHCb::ODIN*,
        warning() << "report " << *i << " not found" << endreq;
        continue;
     }
-    reps.push_back( std::make_pair( *i, report ) );
+    Gaudi::StringKey key(*i);
+    reps.push_back( std::make_pair( key, report ) );
     if (report && report->decision()){
       ++nAcc;
-      std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt1Line2AlleyBin.find(*i);
+      std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt1Line2AlleyBin.find(key);
       if (j!=m_hlt1Line2AlleyBin.end()) {
           assert(j->second.first<nAccAlley.size());
           ++nAccAlley[ j->second.first ];
@@ -351,7 +352,6 @@ void HltGlobalMonitor::monitorHLT1(const LHCb::ODIN*,
     if (!accept) continue;
 
            //filling the histograms for each alley
-    std::string hello = reps[i].first;
     std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> >::const_iterator k = m_hlt1Line2AlleyBin.find( reps[i].first );
     if (k!=m_hlt1Line2AlleyBin.end()) fill( m_hlt1Alleys[k->second.first], k->second.second, accept );
   }
@@ -374,7 +374,7 @@ void HltGlobalMonitor::monitorHLT2(const LHCb::ODIN*,
   if (hlt==0) return;
 
   ///////////////////////////////////////////////////////////////////////////////
-  std::vector<std::pair<std::string,const LHCb::HltDecReport*> > reps; reps.reserve(m_Hlt2Lines.size());
+  std::vector<std::pair<Gaudi::StringKey,const LHCb::HltDecReport*> > reps; reps.reserve(m_Hlt2Lines.size());
   unsigned nAcc = 0;
   std::vector<unsigned> nAccAlley(m_DecToGroup2.size(),unsigned(0));
 
@@ -384,10 +384,11 @@ void HltGlobalMonitor::monitorHLT2(const LHCb::ODIN*,
        warning() << "report " << *i << " not found" << endreq;
        continue;
     }
-    reps.push_back( std::make_pair( *i, report ) );
+    Gaudi::StringKey key(*i);
+    reps.push_back( std::make_pair( key, report ) );
     if (report && report->decision()){
       ++nAcc;
-      std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt2Line2AlleyBin.find(*i);
+      std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt2Line2AlleyBin.find(key);
       if (j!=m_hlt2Line2AlleyBin.end()) {
           assert(j->second.first<nAccAlley.size());
           ++nAccAlley[ j->second.first ];
