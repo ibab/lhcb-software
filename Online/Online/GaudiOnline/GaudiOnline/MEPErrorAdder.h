@@ -76,7 +76,7 @@ namespace LHCb  {
     int				m_allNamesSize;
 
     longlong m_zero;
-    short m_zero32;
+    int m_zero32;
     float m_zerof;
 
     //Save all received values from all sources
