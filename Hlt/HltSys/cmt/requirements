@@ -8,7 +8,7 @@ use Hlt2Lines           v2r4    Hlt   # Patrick Koppenburg, Vava Gligorov, Gerha
 use Hlt2SharedParticles v3r2    Hlt   # Patrick Koppenburg, Gerhard Raven
 use HltBase             v8r1    Hlt   # Gerhard Raven
 use HltBeamGasAlley     v2r3    Hlt   # Plamen Hopchev
-use HltCommon           v5r18   Hlt   # Gerhard Raven
+use HltCommon           v5r19   Hlt   # Gerhard Raven
 use HltConf             v6r4p1  Hlt   # Vanya Belyaev, Gerhard Raven
 use HltCosmics          v1r0p2  Hlt   # Stephan Nies
 use HltDisplVertices    v1r5p1  Hlt   # Neil Gauvin
