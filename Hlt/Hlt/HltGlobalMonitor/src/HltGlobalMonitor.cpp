@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.57 2010-02-18 15:17:30 kvervink Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.58 2010-02-27 22:15:33 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -333,7 +333,7 @@ void HltGlobalMonitor::monitorHLT1(const LHCb::ODIN*,
     reps.push_back( std::make_pair( *i, report ) );
     if (report && report->decision()){
       ++nAcc;
-      std::map<std::string,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt1Line2AlleyBin.find(*i);
+      std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt1Line2AlleyBin.find(*i);
       if (j!=m_hlt1Line2AlleyBin.end()) {
           assert(j->second.first<nAccAlley.size());
           ++nAccAlley[ j->second.first ];
@@ -352,7 +352,7 @@ void HltGlobalMonitor::monitorHLT1(const LHCb::ODIN*,
 
            //filling the histograms for each alley
     std::string hello = reps[i].first;
-    std::map<std::string,std::pair<unsigned,unsigned> >::const_iterator k = m_hlt1Line2AlleyBin.find( reps[i].first );
+    std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> >::const_iterator k = m_hlt1Line2AlleyBin.find( reps[i].first );
     if (k!=m_hlt1Line2AlleyBin.end()) fill( m_hlt1Alleys[k->second.first], k->second.second, accept );
   }
        //filling the histograms for the alleys instead of the lines
@@ -387,7 +387,7 @@ void HltGlobalMonitor::monitorHLT2(const LHCb::ODIN*,
     reps.push_back( std::make_pair( *i, report ) );
     if (report && report->decision()){
       ++nAcc;
-      std::map<std::string,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt2Line2AlleyBin.find(*i);
+      std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> >::const_iterator j = m_hlt2Line2AlleyBin.find(*i);
       if (j!=m_hlt2Line2AlleyBin.end()) {
           assert(j->second.first<nAccAlley.size());
           ++nAccAlley[ j->second.first ];
@@ -406,7 +406,7 @@ void HltGlobalMonitor::monitorHLT2(const LHCb::ODIN*,
     if (!accept) continue;
     
     // filling the histograms for each alley
-    std::map<std::string,std::pair<unsigned,unsigned> >::const_iterator k = m_hlt2Line2AlleyBin.find(reps[i].first);
+    std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> >::const_iterator k = m_hlt2Line2AlleyBin.find(reps[i].first);
     if (k!=m_hlt2Line2AlleyBin.end()) fill( m_hlt2Alleys[k->second.first], k->second.second, accept );
 
   }

@@ -8,6 +8,7 @@
 #include "boost/function.hpp" 
 
 #include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/StringKey.h"
 #include "HltBase/HltBaseAlg.h"
 
 /** @class HltGlobalMonitor HltGlobalMonitor.h
@@ -50,8 +51,8 @@ private:
   DecToGroupType m_DecToGroup1;
   DecToGroupType m_DecToGroup2;
 
-  std::map<std::string,std::pair<unsigned,unsigned> > m_hlt1Line2AlleyBin; // index in m_hlt1Alleys, m_hlt1AlleyRates , followed by binnumber inside alley
-  std::map<std::string,std::pair<unsigned,unsigned> > m_hlt2Line2AlleyBin;
+  std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> > m_hlt1Line2AlleyBin; // index in m_hlt1Alleys, m_hlt1AlleyRates , followed by binnumber inside alley
+  std::map<Gaudi::StringKey,std::pair<unsigned,unsigned> > m_hlt2Line2AlleyBin;
   std::vector<AIDA::IHistogram1D*> m_hlt1Alleys;
   std::vector<AIDA::IHistogram1D*> m_hlt2Alleys;
   std::vector<StatEntity*>  m_hlt1AlleyRates;
