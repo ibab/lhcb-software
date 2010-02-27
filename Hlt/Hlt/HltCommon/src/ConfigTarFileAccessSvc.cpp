@@ -147,6 +147,7 @@ namespace ConfigTarFileAccessSvc_details {
         {
                 m_file.open(m_name.c_str(), mode | ios::in | ios::binary );
         }
+        bool good() const { return m_file.good(); }
         bool dump(const std::string& name,ostream& os) {
             const map<Gaudi::StringKey,Info>& myIndex = getIndex();
             map<Gaudi::StringKey,Info>::const_iterator i = myIndex.find(name);
@@ -503,8 +504,13 @@ StatusCode ConfigTarFileAccessSvc::initialize() {
                      :  (m_mode == "Truncate" ) ? ( ios::in | ios::out | ios::trunc )
                      :                              ios::in ;
 
+  info() << " opening " << m_name << " in mode " << m_mode << endmsg;
   m_file.reset( new TarFile(m_name,mode) );
-  info() << " opened " << m_name << " in mode " << m_mode << endmsg;
+  if (!m_file->good()) {
+        error() << " Failed to open " << m_name << " in mode " << m_mode << endmsg;
+        // refuse to continue...
+        return StatusCode::FAILURE;
+  }
 
   return status;
 }
