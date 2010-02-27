@@ -1,4 +1,4 @@
-// $Id: SelectionLine.cpp,v 1.2 2010-01-18 15:44:53 graven Exp $
+// $Id: SelectionLine.cpp,v 1.3 2010-02-27 09:08:24 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -235,10 +235,10 @@ StatusCode Selection::Line::initialize() {
   //        depth count larger, we fill bin at current position..
   
   //== Create the monitoring histograms
-  m_errorHisto = book1D(name()+" error",name()+" error",-0.5,7.5,8);
-  m_timeHisto  = book1D(name()+" walltime",name()+" log(wall time/ms)",-3,6);
-  m_stepHisto  = book1D(name()+" rejection stage", name()+ " rejection stage",-0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
-  m_candHisto  = bookProfile1D(name()+" passing candidates",-0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
+  m_errorHisto = book1D("error",name()+" error",-0.5,7.5,8);
+  m_timeHisto  = book1D("walltime",name()+" log(wall time/ms)",-3,6);
+  m_stepHisto  = book1D("rejection stage", name()+ " rejection stage",-0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
+  m_candHisto  = bookProfile1D("candidates accepted", name()+" candidates accepted",-0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
   // if possible, add labels to axis...
   // Remove common part of the name for easier label reading (assumes name is suff. descriptive)
   std::vector<std::string> stepLabels;
