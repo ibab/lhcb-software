@@ -4,6 +4,11 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v5r19 2010-02-27 ===================
+! 2010-02-27 - Gerhard Raven
+ - Check in ConfigTarFileAccess that requested file is 'good'
+ - Make Hlt::TrackFilter support a list of predicates
+
 !========================== HltCommon v5r18 2010-02-17 ===================
 ! 2010-02-17 - Gerhard Raven
  - make ConfigTarFileAccessSvc default everywhere (instead of ConfigFileAccessSvc)
