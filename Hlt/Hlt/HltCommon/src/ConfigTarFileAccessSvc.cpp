@@ -29,7 +29,9 @@ namespace fs = boost::filesystem;
 
 #include "boost/iostreams/filtering_stream.hpp"
 #include "boost/iostreams/copy.hpp"
+#ifndef _WIN32
 #include "boost/iostreams/filter/gzip.hpp"
+#endif
 #include "boost/iostreams/slice.hpp"
 #include "boost/iostreams/operations.hpp"
 #include "boost/iostreams/seek.hpp"
@@ -156,6 +158,7 @@ namespace ConfigTarFileAccessSvc_details {
                 io::copy(io::slice(m_file,i->second.offset,i->second.size), os, 8192);
                 return true;
             }
+#ifndef _WIN32
             // try to read a gzipped version of the filename
             i = myIndex.find(name+".gz");
             if (i!=myIndex.end()) {
@@ -168,6 +171,7 @@ namespace ConfigTarFileAccessSvc_details {
                 io::copy(in, os, 8192);
                 return true;
             }
+#endif
             return false;
         }
 
