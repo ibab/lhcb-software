@@ -162,6 +162,6 @@ class Physics_320Vis_300L0_10Hlt1_Jan10 :
                , 'Hlt1ElectronTrackNoIP',  'Hlt1ElectronTrackWithIP'
                , 'Hlt1PhotonTrack',        'Hlt1PhotonTrackFromEle'
                , 'Hlt1PhotonDiTrack',      'Hlt1PhotonDiTrackFromEle'
-               , 'Hlt1Incident']
-    
+               , 'Hlt1Incident'
+               ]
     

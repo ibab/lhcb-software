@@ -4,6 +4,12 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-02-27 - Gerhard Raven
+ - add some lines back into Physics_320Vis_300L0_10Hlt1_Feb10
+ - put Physics_320Vis_300L0_10Hlt1_Hlt2_Feb10 and
+   Physics_320Vis_300L0_10Hlt1_ExpressHlt2_Feb10 
+   on top of Physics_320Vis_300L0_10Hlt1_Feb10
+
 ! 2010-02-26 - Johannes Albrecht
  - Commisioning_OTCosmics: bring settings up to date
  - Physics_320Vis_300L0_10Hlt1_Jan10: revert changes from yesterday

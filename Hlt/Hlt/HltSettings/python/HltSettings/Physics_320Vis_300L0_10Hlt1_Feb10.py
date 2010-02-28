@@ -10,19 +10,19 @@ class Physics_320Vis_300L0_10Hlt1_Feb10 :
     
     __all__ = ( 'ActiveHlt1Lines', 'ActiveHlt2Lines', 'Thresholds','L0TCK' )
 
-#    def verifyType(self,ref) :
+    def verifyType(self,ref) :
         # verify self.ActiveLines is still consistent with
         # our types self.ActiveHlt2Lines and self.ActiveHlt1Lines...
         # so we can force that classes which inherit from us
         # and overrule either ActiveHlt.Lines also overrule
         # HltType...
-#        if ( self.ActiveHlt1Lines() != ref.ActiveHlt1Lines(self)  or
-#             self.ActiveHlt2Lines() != ref.ActiveHlt2Lines(self) ) :
-#            raise RuntimeError('Must update HltType when modifying ActiveHlt.Lines()')
+        if ( self.ActiveHlt1Lines() != ref.ActiveHlt1Lines(self)  or
+             self.ActiveHlt2Lines() != ref.ActiveHlt2Lines(self) ) :
+            raise RuntimeError('Must update HltType when modifying ActiveHlt.Lines()')
 
     
     def L0TCK(self) :
-        return '0x1610'
+        return '0x1810'
 
     def HltType(self) :
         self.verifyType( Physics_320Vis_300L0_10Hlt1_Feb10 )
@@ -115,47 +115,29 @@ class Physics_320Vis_300L0_10Hlt1_Feb10 :
         """
         Returns a list of active lines
         """
-        return [ 'Hlt1SingleHadron',
-                 'Hlt1DiHadron',
-                 'Hlt1SingleMuonNoIPL0',
-                 'Hlt1SingleMuonIPCL0',                    
-                 'Hlt1DiMuonNoIPL0Di',
-                 'Hlt1DiMuonNoIP2L0',
-                 'Hlt1DiMuonNoIPL0Seg',
-                 'Hlt1DiMuonIPCL0Di',
-                 'Hlt1DiMuonIPC2L0',
-                 'Hlt1DiMuonIPCL0Seg',
-                 'Hlt1DiMuonNoPVL0Di',
-                 'Hlt1DiMuonNoPV2L0',
-                 'Hlt1DiMuonNoPVL0Seg',
-                 'Hlt1MuTrack',
-                 ##'Hlt1MuTrackFitMu',
-                 'Hlt1MuTrack4JPsi',
-                 ##'Hlt1LumiNoBeam',
-                 ##'Hlt1LumiBeamCrossing',
-                 ##'Hlt1LumiBeam1',
-                 ##'Hlt1LumiBeam2',
-                 ##'Hlt1L0Muon',
-                 ##'Hlt1L0DiMuon',
-                 ##'Hlt1L0Muon,lowMult',
-                 ##'Hlt1L0DiMuon,lowMult',
-                 ##'Hlt1L0Electron',
-                 ##'Hlt1L0Photon',
-                 ##'Hlt1L0Hadron',
-                 'Hlt1SingleElectronWithIP',
-                 'Hlt1SingleElectronNoIP',
-                 'Hlt1ElectronTrackWithIP',
-                 'Hlt1ElectronTrackNoIP',
-                 'Hlt1PhotonTrack',
-                 'Hlt1PhotonTrackFromEle',
-                 'Hlt1PhotonDiTrack',
-                 'Hlt1PhotonDiTrackFromEle'#,
-                 ##'Hlt1VeloASide',
-                 ##'Hlt1VeloCSide',
-                 ##'Hlt1AlignVelo',
-                 ##'Hlt1XPress',
-                 ##'Hlt1ODINPhysics',
-                 ##'Hlt1ODINTechnical',
-                 ##'Hlt1Tell1Error' ,
-                 ##'Hlt1Incident'
-                 ]
+        return [ 'Hlt1ODINPhysics',        'Hlt1ODINTechnical', 'Hlt1Tell1Error'
+               , 'Hlt1L0Any'
+               , 'Hlt1L0SPD', 'Hlt1L0CALO', 'Hlt1L0MUON,minbias', 'Hlt1L0PU', 'Hlt1L0SPD40', 'Hlt1L0PU20'
+               , 'Hlt1L0Electron', 'Hlt1L0Photon', 'Hlt1L0Hadron'
+               , 'Hlt1L0Muon', 'Hlt1L0DiMuon', 'Hlt1L0Muon,lowMult', 'Hlt1L0DiMuon,lowMult'
+               , 'Hlt1L0B1gas', 'Hlt1L0B2gas'
+               , 'Hlt1VeloASide', 'Hlt1VeloCSide'
+               , 'Hlt1LumiNoBeam',    'Hlt1LumiBeamCrossing',    'Hlt1LumiBeam1',    'Hlt1LumiBeam2'
+               , 'Hlt1LumiLowNoBeam', 'Hlt1LumiLowBeamCrossing', 'Hlt1LumiLowBeam1', 'Hlt1LumiLowBeam2'
+               , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco'
+               , 'Hlt1MBMiniBiasNoBeam','Hlt1MBMiniBiasBeamCrossing','Hlt1MBMiniBiasBeam1','Hlt1MBMiniBiasBeam2'
+               , 'Hlt1MBNoBiasNoBeam','Hlt1MBNoBiasBeamCrossing','Hlt1MBNoBiasBeam1','Hlt1MBNoBiasBeam2'
+               , 'Hlt1SingleHadron',     'Hlt1SingleHadronViaT'
+               , 'Hlt1DiHadron',         'Hlt1DiHadronViaT',    'Hlt1DiHadronSoft'
+               , 'Hlt1SingleMuonNoIPL0', 'Hlt1SingleMuonIPCL0'
+               , 'Hlt1DiMuonNoIPL0Di',  'Hlt1DiMuonNoPVL0Di', 'Hlt1DiMuonIPCL0Di'
+               , 'Hlt1DiMuonNoIP2L0',   'Hlt1DiMuonNoPV2L0',  'Hlt1DiMuonIPC2L0'
+               , 'Hlt1DiMuonNoIPL0Seg' , 'Hlt1DiMuonNoPVL0Seg', 'Hlt1DiMuonIPCL0Seg'
+               , 'Hlt1MuTrack', 'Hlt1MuTrack4JPsi'
+               #'Hlt1MuTrackFitMu',
+               , 'Hlt1SingleElectronNoIP', 'Hlt1SingleElectronWithIP'
+               , 'Hlt1ElectronTrackNoIP', 'Hlt1ElectronTrackWithIP'
+               , 'Hlt1PhotonTrack', 'Hlt1PhotonTrackFromEle'
+               , 'Hlt1PhotonDiTrack', 'Hlt1PhotonDiTrackFromEle'
+               , 'Hlt1Incident'
+               ]
