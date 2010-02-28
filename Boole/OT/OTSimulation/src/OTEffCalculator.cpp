@@ -1,4 +1,4 @@
-// $Id: OTEffCalculator.cpp,v 1.15 2010-02-28 11:22:51 nserra Exp $
+// $Id: OTEffCalculator.cpp,v 1.16 2010-02-28 11:56:25 nserra Exp $
 
 // Gaudi files
 #include "GaudiKernel/SmartIF.h"
@@ -96,7 +96,7 @@ double OTEffCalculator::effParamFunc(const double driftDistance, const double sl
 
 }
 
-void OTEffCalculator::calculate(MCOTDeposit* aDeposit, double slope, bool& accept) const
+void OTEffCalculator::calculate(MCOTDeposit* aDeposit, const double slope, bool& accept) const
 {
   // get a random number
   double testVal = m_genEff->shoot();

@@ -1,4 +1,4 @@
-// $Id: OTEffCalculator.h,v 1.8 2010-02-26 14:54:15 nserra Exp $
+// $Id: OTEffCalculator.h,v 1.9 2010-02-28 11:56:25 nserra Exp $
 #ifndef OTSIMULATION_OTEFFCALCULATOR_H
 #define OTSIMULATION_OTEFFCALCULATOR_H 1
 
@@ -51,7 +51,7 @@ public:
 private:
 
   /// parameterization of efficiency
-  double effParamFunc(const double driftDistance, double slope) const;
+  double effParamFunc(const double driftDistance, const double slope) const;
 
   SmartIF<IRndmGen> m_genEff;  ///< smart interface to generator
   double m_cellRadius;         ///< cell size - should go elsewhere
