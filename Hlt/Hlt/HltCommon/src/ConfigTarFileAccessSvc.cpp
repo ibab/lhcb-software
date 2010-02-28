@@ -19,8 +19,6 @@
 #else
   typedef int uid_t;
   typedef int gid_t;
-  uid_t getuid() { return 0; }
-  gid_t getgid() { return 0; }
 #endif
 
 using namespace std;
@@ -227,11 +225,15 @@ namespace ConfigTarFileAccessSvc_details {
            return val;
         }
         uid_t getUid() const {
+#ifndef _WIN32
                if (m_myUid==0) m_myUid = getuid();
+#endif
                return m_myUid;
         }
         gid_t getGid() const {
+#ifndef _WIN32
                if (m_myGid==0) m_myGid = getgid();
+#endif
                return m_myGid;
         }
         const char *getUname() const {
