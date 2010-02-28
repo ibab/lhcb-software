@@ -1,4 +1,4 @@
-// $Id: OTEffCalculator.cpp,v 1.14 2010-02-26 14:54:15 nserra Exp $
+// $Id: OTEffCalculator.cpp,v 1.15 2010-02-28 11:22:51 nserra Exp $
 
 // Gaudi files
 #include "GaudiKernel/SmartIF.h"
@@ -22,7 +22,6 @@
  *  @date   19-09-2000
  */
 
-using namespace std;
 
 using namespace LHCb;
 
