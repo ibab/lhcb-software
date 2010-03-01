@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.447 2010-02-23 14:46:22 jpalac Exp $
+# $Id: requirements,v 1.448 2010-03-01 13:51:00 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
 
 #============================================================================
 package           DaVinci
-version           v25r1
+version           v25r2
 
 # Structure, i.e. directories to process. 
 #============================================================================

@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.90 2010-02-25 17:13:32 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.91 2010-03-01 13:51:00 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -113,9 +113,10 @@ class DaVinci(LHCbConfigurableUser) :
         inputType = self.getProp( "InputType" ).upper()
         if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST", "MDST" ]:
             raise TypeError( "Invalid inputType '%s'"%inputType )
-        # DST packing, not for  DC06
-#        if ( self.getProp("DataType") == "DC06" ):
-#            self.setProp('PackType', 'NONE') 
+        if ( dataType in [ "DC06", "MC09" ] ):
+            if not self.getProp("Simulation"):
+                log.warning("Setting Simulation = True for "+dataType)
+                self.setProp("Simulation",True)
         if ( self.getProp("Simulation") & ( inputType != "MDF" ) & (inputType != "DIGI") & (inputType != "MDST") ):
             redo = self.getProp("RedoMCLinks")
             if ( self.getProp("DataType")=="DC06" ) and ( not redo ):
