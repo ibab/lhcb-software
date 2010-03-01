@@ -1,4 +1,4 @@
-// $Id: PrimaryVertexChecker.cpp,v 1.4 2010-02-11 08:46:19 pmorawsk Exp $
+// $Id: PrimaryVertexChecker.cpp,v 1.5 2010-03-01 15:27:45 pmorawsk Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -668,7 +668,7 @@ StatusCode PrimaryVertexChecker::finalize() {
   const AIDA::IHistogram1D* pully = histo( HistoID(1032) ) ;
   const AIDA::IHistogram1D* dz = histo( HistoID(1023) ) ;
   const AIDA::IHistogram1D* pullz = histo( HistoID(1033) ) ;
-  if( dz && pullz ) {
+  if( dx ) {
     info() << "      ---------------------------------------" << endreq;
     info() << "dx:    "
 	   << format( "mean =  %5.3f +/- %5.3f, RMS =  %5.3f +/- %5.3f",
@@ -796,7 +796,7 @@ void PrimaryVertexChecker::count_reconstructible_mc_particles(std::vector<MCPVIn
 
       LHCb::MCParticle* pmcp = *imcp;
 
-      if(pmcp->particleID().threeCharge() != 0  &&  trInfo.hasVelo(pmcp)) {
+      if(pmcp->particleID().threeCharge() != 0  &&  (!m_requireVelo || trInfo.hasVelo(pmcp))) {
 
         double dv2 = (avtx->position() - pmcp->originVertex()->position()).Mag2();
         if(dv2 < 0.0000001 && pmcp->p() > 100.* Gaudi::Units::MeV) {
