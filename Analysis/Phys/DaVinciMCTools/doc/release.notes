@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.289 2010-02-24 17:08:02 jpalac Exp $
+! $Id: release.notes,v 1.290 2010-03-01 22:09:19 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2010-03-01 - V. Gligorov
+ - BackgroundCategory : fix unprotected dereference
 
 ! 2010-02-24 - Juan Palacios
  - src/Particle2BackgroundCategoryRelationsAlg.h

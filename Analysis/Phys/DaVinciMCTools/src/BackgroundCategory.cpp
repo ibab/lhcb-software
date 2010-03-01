@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.60 2010-01-13 13:05:02 cattanem Exp $
+// $Id: BackgroundCategory.cpp,v 1.61 2010-03-01 22:07:05 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -1240,10 +1240,17 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
       if(NULL == m_calo2MC)
         Exception("Something failed when making the calo->MC associators. Bye!");
       // associating neutral is done here :
-      const LHCb::MCParticle* mcp = m_calo2MC->from(*iP)->findMCOrBest( (*iP)->particleID() , m_caloWeight );
-      verbose() << "Neutral Calo MC associated : PID = " << mcp->particleID().pid() 
-                << " | quality  : " << m_calo2MC->quality(mcp) << endmsg;
-      associated_mcparts.push_back( mcp );
+
+      if (m_calo2MC->from(*iP)) {
+      	const LHCb::MCParticle* mcp = m_calo2MC->from(*iP)->findMCOrBest( (*iP)->particleID() , m_caloWeight );
+        if (mcp) {	
+     	  verbose() << "Neutral Calo MC associated : PID = " << mcp->particleID().pid() 
+                    << " | quality  : " << m_calo2MC->quality(mcp) << endmsg;
+        }	
+        associated_mcparts.push_back( mcp );
+      } else {
+        associated_mcparts.push_back( NULL );
+      }
 
       // and should be removed below ...
     }
