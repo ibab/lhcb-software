@@ -95,7 +95,7 @@ static __inline__ unsigned long long rdtsc(void)
 
 #endif
 #elif _WIN32
-static __inline__ unsigned long long int rdtsc()   {  return 0;   }
+static inline unsigned long long int rdtsc()   {  return 0;   }
 #endif // linux
 
 } // namespace MEPRxSys
