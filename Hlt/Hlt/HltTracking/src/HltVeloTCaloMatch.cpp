@@ -1,4 +1,4 @@
-// $Id: HltVeloTCaloMatch.cpp,v 1.2 2009-10-07 06:38:33 graven Exp $
+// $Id: HltVeloTCaloMatch.cpp,v 1.3 2010-03-01 20:28:50 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -54,7 +54,7 @@ StatusCode HltVeloTCaloMatch::initialize() {
   
   if (m_doRematch2D) {
     m_rematchTool = tool<ITrackBiFunctionTool>("HltRZVeloTCaloMatch");
-    Assert(m_rematchTool," Not able tocreate rematch 2D-TCalo tool");
+    Assert(m_rematchTool!=0," Not able tocreate rematch 2D-TCalo tool");
   }
   
   return sc;

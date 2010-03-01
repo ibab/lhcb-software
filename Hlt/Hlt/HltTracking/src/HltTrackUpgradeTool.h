@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.h,v 1.18 2009-10-08 19:17:13 graven Exp $
+// $Id: HltTrackUpgradeTool.h,v 1.19 2010-03-01 20:28:50 graven Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADETOOL_H 
 #define HLTTRACKING_HLTTRACKUPGRADETOOL_H 1
 
@@ -60,13 +60,13 @@ public:
   
   std::vector<Tf::IStationSelector*> view(const LHCb::Track& seed)
   {
-    Assert(m_viewTool,"view() method no implemented for this reco!");
+    Assert(m_viewTool!=0,"view() method not implemented for this reco!");
     return m_viewTool->view(seed);
   }
   
   std::vector<LHCb::LHCbID> lhcbIDsInView(const LHCb::Track& seed)
   {
-    Assert(m_viewTool,"view() method no implemented for this reco!");
+    Assert(m_viewTool!=0,"view() method not implemented for this reco!");
     return m_viewTool->lhcbIDsInView(seed);
   }
 

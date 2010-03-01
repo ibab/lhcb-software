@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.39 2010-02-11 16:24:53 graven Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.40 2010-03-01 20:28:50 graven Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -200,7 +200,7 @@ StatusCode HltTrackUpgradeTool::setReco(const std::string& key)
     }
   }
   
-  Assert(m_tool," setReco() not able to create tool "+toolName);
+  Assert(m_tool!=0," setReco() failed to create tool "+toolName);
 
   // m_timer = tool<ISequencerTimerTool>("SequencerTimerTool");
   m_timer->increaseIndent();
