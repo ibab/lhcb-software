@@ -8,7 +8,7 @@ Purpose: LHCb Digitization program
    . Fix bug preventing Spd threshold to be larger or equal to 1 mip in
      CaloDigitAlg (CaloDet v10r4)
    . Change default of STRndmChannelIDSelector (STTools v3r17)
-   . Tune xtalk level, improved cell efficiency (OTSimulation v4r2)
+   . Tune xtalk level, improved cell efficiency (OTSimulation v5r0)
 
 </PRE><H1><A NAME=v20r3>2010-02-18 Boole v20r3</A></H1></PRE>
  - Changes to Configurable:
