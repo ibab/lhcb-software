@@ -3,6 +3,30 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v21r0>2010-03-02 Boole v21r0</A></H1><PRE>
+This version uses projects Gaudi v21r7p1, LHCb v29r2, Lbcom v8r3
+ and SQLDDDB v5r20, ParamFiles v8r2, FieldMap v5r3, L0TCK v3r1, AppConfig v3r*
+
+Development version for tuning of 2010 simulation. 
+Output needs Brunel v35r8 or later, Brunel v36r0 if decoding L0DU bank
+Needs SQLDDDB v5r19 or later with tags from *-20100202*
+
+ - New tuning
+   . Change default of STRndmChannelIDSelector: list of dead channels is now
+     taken from SimCond, so random inefficieny no longer applied (STTools v3r17)
+   . Tune xtalk level, improved cell efficiency (OTSimulation v5r0)
+     (see <a href="http://indico.cern.ch/getFile.py/access?contribId=3&resId=0&materialId=paper&confId=82511">talk</a> at PPM on 2010-02-22)
+   . Improve consistency checks in L0DU emulation (L0DU v10r3)
+
+ - Persistency changes
+   . Improve output paths in the VeloPix linkers
+     (VeloPixAssociators v1r1, GaudiConf v13r4p1)
+
+ - Bug fixes
+   . Fix bug preventing Spd threshold to be larger or equal to 1 mip in
+     CaloDigitAlg (CaloDet v10r4)
+
+
 </PRE><H1><A NAME=v20r3>2010-02-19 Boole v20r3</A></H1><PRE>
 This version uses projects Gaudi v21r7p1, LHCb v29r1, Lbcom v8r2
  and SQLDDDB v5r20, ParamFiles v8r2, FieldMap v5r3, L0TCK v3r1, AppConfig v3r*

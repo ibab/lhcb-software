@@ -1,5 +1,5 @@
 package BooleSys
-version v20r3
+version v21r0
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application                      # Maintainer  
-use Boole               v20r3   Digi     # Marco Cattaneo
+use Boole               v21r0   Digi     # Marco Cattaneo
 use DigiAlg             v4r18   Digi  # Marco Cattaneo
 use BooleUMC            v1r0    Digi  # Tomasz Skwarnicki
 
@@ -22,7 +22,7 @@ use MuonBackground      v2r10   Muon  # Alessia Satta
 use MuonMoniDigi        v2r4    Muon  # Alessio Sarti
 
 # Outer Tracker
-use OTSimulation        v4r2    OT    # Jan Amoraal
+use OTSimulation        v5r0    OT    # Jan Amoraal
 
 # Rich
 use RichDigiQC          v3r11   Rich     # In SVN. Chris Jones
@@ -35,9 +35,10 @@ use STDigiAlgorithms    v1r7    ST    # Matt Needham
 
 # VeloPix
 use VeloPixAlgorithms   v1r0    VeloPix  # Marcin Kucharczyk
-use VeloPixAssociators  v1r0    VeloPix  # Marcin Kucharczyk
+use VeloPixAssociators  v1r1    VeloPix  # Marcin Kucharczyk
 
 # Packages from other projects updated temporarily in this release
+use STTools v3r17 ST
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
