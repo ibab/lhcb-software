@@ -22,6 +22,22 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
                     , ODIN = '( ODIN_BXTYP == LHCb.ODIN.%s ) & (ODIN_TRGTYP == LHCb.ODIN.%s)' % ( BXType, self.getProp('NoBiasTriggerType') )
                     , postscale = self.postscale
                     ) 
+    def __create_microbias_line__(self) :
+        from HltLine.HltReco import MinimalRZVelo
+        from HltLine.HltLine import Hlt1Member as Member
+        return Line ( 'MBMicroBias'
+                    , prescale = self.prescale
+                    , ODIN = '( ODIN_BXTYP == LHCb.ODIN.BeamCrossing ) & (ODIN_TRGTYP == LHCb.ODIN.%s)' % ( self.getProp('NoBiasTriggerType') )
+                    , algos = [ MinimalRZVelo
+                              , Member( 'Hlt::TrackFilter','All'
+                                      , Code = [ 'TrALL' ]
+                                      , InputSelection = 'TES:%s' % MinimalRZVelo.outputSelection()
+                                      , OutputSelection = '%Decision'
+                                      ) 
+                              ]
+                    , postscale = self.postscale
+                    ) 
+
     def __create_minibias_line__(self, BXType):
         '''
         returns an Hlt1 "Line" including input and output filter
@@ -40,3 +56,5 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
         for i in self.getProp('BXTypes') :
             self.__create_minibias_line__(i)
             self.__create_nobias_line__(i)
+
+        self.__create_microbias_line__()
