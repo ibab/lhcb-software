@@ -1,8 +1,16 @@
-!$Id: release.notes,v 1.339 2010-02-26 19:39:51 jpalac Exp $
+!$Id: release.notes,v 1.340 2010-03-01 18:11:27 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2010-03-01 - Juan Palacios
+ - Kernel/DVAlgorithm.h
+  . Add template<class T> bool container_exist(const std::string&) function.
+    Temporary fix that allows to check for existence of T::Container or
+    T::Range.
+ - cmt/requirements
+  . Increase version to v8r5.
 
 !======================== DaVinciKernel v8r5 2010-01-26 =====================
 
