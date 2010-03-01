@@ -17,10 +17,12 @@ public:
   StatusCode execute();
   
 private:
-  boost::uint32_t         m_initial;      // initial seed unique to this instance (computed from the name)
   double                  m_accFrac;      // fraction of input events to accept...
+  boost::uint32_t         m_acc;          // integer representation of the above
+  boost::uint32_t         m_initial;      // initial seed unique to this instance (computed from the name)
   StatEntity*             m_counter;
 
-  bool accept(const LHCb::ODIN& odin) const ;
+  inline bool accept(const LHCb::ODIN& odin) const ;
+  void update(Property&) ;
 
 };

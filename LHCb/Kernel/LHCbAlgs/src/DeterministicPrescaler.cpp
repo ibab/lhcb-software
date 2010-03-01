@@ -73,14 +73,25 @@ DECLARE_ALGORITHM_FACTORY( DeterministicPrescaler );
 
 DeterministicPrescaler::DeterministicPrescaler(const std::string& name, ISvcLocator* pSvcLocator) :
     GaudiAlgorithm(name, pSvcLocator) 
+  , m_acc(boost::integer_traits<uint32_t>::const_max)
   , m_initial(0)
   , m_counter(0)
 {
-  declareProperty( "AcceptFraction" , m_accFrac = 1 ) ;
+  declareProperty( "AcceptFraction" , m_accFrac = 1 )->declareUpdateHandler( &DeterministicPrescaler::update, this);
 }
 
 DeterministicPrescaler::~DeterministicPrescaler( )
 {
+}
+
+void 
+DeterministicPrescaler::update(Property&) 
+{
+    m_acc = ( m_accFrac<=0 ? 0 
+            : m_accFrac>=1 ? boost::integer_traits<uint32_t>::const_max 
+            : boost::uint32_t( m_accFrac*boost::integer_traits<uint32_t>::const_max ) 
+            );
+    debug() << "frac: " << m_accFrac << " acc: 0x" << std::hex << m_acc << endmsg;
 }
 
 StatusCode
@@ -94,7 +105,9 @@ DeterministicPrescaler::initialize()
 
   if (msgLevel(MSG::DEBUG)) debug() << " generated initial value " << m_initial << endmsg;
   
-  if (m_accFrac<1) info() << "Prescaling events; keeping " << m_accFrac << " of events " << endmsg;
+  if (m_acc!=boost::integer_traits<uint32_t>::const_max)  {
+      info() << "Prescaling events; keeping " << m_accFrac << " of events " << endmsg;
+  }
   return sc;
 }
 
@@ -114,16 +127,15 @@ DeterministicPrescaler::accept(const LHCb::ODIN& odin)  const
 
   // at this point, we assume 'x' to be uniformly distributed in [0,0xffffffff]
   // (and yes, this was verified to be sufficiently true on a sample of 10K MC events ;-)
-
-  // note that an IEEE754 double has 57 bits of fraction, which is enough precision
-  // to cover the entire dynamic range of an uint32_t
-  return double(x) < m_accFrac*boost::integer_traits<uint32_t>::const_max;
+  return x < m_acc;
 }
 
 StatusCode
 DeterministicPrescaler::execute()
 {
-  bool acc =  ( m_accFrac>0 && accept( *get<LHCb::ODIN> ( LHCb::ODINLocation::Default )));
+  bool acc =(    ( m_acc == boost::integer_traits<uint32_t>::const_max ) 
+              || ( m_acc !=0 && accept( *get<LHCb::ODIN> ( LHCb::ODINLocation::Default )))
+            );
   setFilterPassed(acc);
   *m_counter += acc;
   if (msgLevel(MSG::DEBUG)) debug() << (acc?"Accepted":"Rejected") << endmsg ;
