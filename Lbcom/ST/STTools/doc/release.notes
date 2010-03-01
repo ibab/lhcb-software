@@ -2,15 +2,12 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
-
+!=========================== STTools v3r17 2010-03-01 =========================
 ! 2010-02-26 M Needham
- - Change default of STRndmChannelIDSelector.to kill no clusters
+ - Change default of STRndmChannelIDSelector to kill no clusters
  - Add STSmearedPosition tool
 
-
-
 !=========================== STTools v3r16 2010-02-15 =========================
-
 ! 2010-02-08 Mark Tobin
  - Changed to STCMSNoiseCalculationTool to read pedestal from new database
    structure.
