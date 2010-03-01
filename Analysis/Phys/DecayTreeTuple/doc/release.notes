@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-03-01 - Rob Lambert
+ - TupleToolPrimaries : never get PVs from DVAlg, fixes #14187
+ - DecayTreeTupleBase : Finalise TupleToolDecay instances, fixes #63124
+
 !========================== DecayTreeTuple v3r1 2010-02-22 ================
 
 ! 2010-02-09 - Patrick Koppenburg

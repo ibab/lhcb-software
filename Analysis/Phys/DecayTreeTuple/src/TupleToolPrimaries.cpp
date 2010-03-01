@@ -1,4 +1,4 @@
-// $Id: TupleToolPrimaries.cpp,v 1.7 2010-02-09 09:40:49 pkoppenb Exp $
+// $Id: TupleToolPrimaries.cpp,v 1.8 2010-03-01 11:47:34 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -74,11 +74,11 @@ TupleToolPrimaries::TupleToolPrimaries( const std::string& type,
 					const std::string& name,
 					const IInterface* parent )
   : TupleToolBase ( type, name , parent )
-  , m_dva(0)
+  //, m_dva(0)
 {
   declareInterface<IEventTupleTool>(this);
   declareProperty("InputLocation", m_pvLocation = "" , 
-                  "PV location to be used. If empty, take context-dependent default");
+                  "PV location to be used. If empty, take default");
   
 }
 
@@ -93,8 +93,8 @@ StatusCode TupleToolPrimaries::initialize(){
     m_pvLocation = oo->primaryVertexLocation();
     debug() << "Will be looking for PVs at " << m_pvLocation << endmsg ;
   } 
-  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
-  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);
+  //m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  //if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);
 
   return StatusCode::SUCCESS;
 }
@@ -110,8 +110,8 @@ StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple )
   std::vector<const flat*> refPvs;
 
   const RecVertex::Container* PV = 0 ;
-  if ( ""==m_pvLocation ) PV = m_dva->primaryVertices();   // default
-  else if (exist<RecVertex::Container>(m_pvLocation)){     // user given
+  //if ( ""==m_pvLocation ) PV = m_dva->primaryVertices();   // default
+  if (exist<RecVertex::Container>(m_pvLocation)){     // user given
     PV = get<RecVertex::Container>(m_pvLocation);
   }
   if (0!=PV){

@@ -1,4 +1,4 @@
-// $Id: TupleToolPrimaries.h,v 1.6 2010-02-09 09:40:49 pkoppenb Exp $
+// $Id: TupleToolPrimaries.h,v 1.7 2010-03-01 11:47:34 rlambert Exp $
 #ifndef JBOREL_TUPLETOOLPRIMARIES_H
 #define JBOREL_TUPLETOOLPRIMARIES_H 1
 
@@ -38,7 +38,7 @@ public:
 
 private:
   std::string m_pvLocation ; ///<  PV location to be used. If empty, take context-dependent default
-  DVAlgorithm* m_dva;
+  //DVAlgorithm* m_dva;
 
 };
 #endif // JBOREL_TUPLETOOLPRIMARIES_H

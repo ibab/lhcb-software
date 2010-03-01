@@ -1,4 +1,4 @@
-// $Id: DecayTreeTupleBase.cpp,v 1.14 2010-01-13 13:04:27 pkoppenb Exp $
+// $Id: DecayTreeTupleBase.cpp,v 1.15 2010-03-01 11:47:34 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -71,6 +71,14 @@ StatusCode DecayTreeTupleBase::execute() {
 StatusCode DecayTreeTupleBase::finalize() {
 
   if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
+  //the DecayTools are explicitly initialized, and should be explicitly finalized/released
+  for(std::vector<TupleToolDecay*>::iterator di=m_decays.begin(); di!=m_decays.end(); di++)
+  {
+    (*di)->finalize();
+    //(*di)->release();
+    
+  }
+  
   return DVAlgorithm::finalize(); 
 }
 //=============================================================================
