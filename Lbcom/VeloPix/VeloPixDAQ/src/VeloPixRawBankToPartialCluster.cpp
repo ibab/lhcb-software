@@ -1,4 +1,4 @@
-// $Id: VeloPixRawBankToLiteCluster.cpp,v 1.2 2010-03-01 10:51:28 cocov Exp $
+// $Id: VeloPixRawBankToPartialCluster.cpp,v 1.1 2010-03-01 10:51:28 cocov Exp $
 // Include files:
 // GSL
 #include "gsl/gsl_math.h"
@@ -9,64 +9,66 @@
 #include "Kernel/FastClusterContainer.h"
 // Event
 #include "Event/VeloPixLiteCluster.h"
+#include "Event/VeloPixCluster.h"
 #include "Event/RawEvent.h"
 // VeloPixelDet
 #include "VeloPixDet/DeVeloPix.h"
 // Local
 #include "VeloPixClusterWord.h"
 #include "VeloPixRawBankDecoder.h"
-#include "VeloPixRawBankToLiteCluster.h"
+#include "VeloPixRawBankToPartialCluster.h"
 
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : VeloPixRawBankToLiteCluster
+// Implementation file for class : VeloPixRawBankToPartialCluster
 //
-// 2009-12-27 : Marcin Kucharczyk
+// 2010-02-24 : Victor Coco
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(VeloPixRawBankToLiteCluster);
+DECLARE_ALGORITHM_FACTORY(VeloPixRawBankToPartialCluster);
 
 //=============================================================================
 // Constructor
 //=============================================================================
-VeloPixRawBankToLiteCluster::VeloPixRawBankToLiteCluster(const std::string& name,
+VeloPixRawBankToPartialCluster::VeloPixRawBankToPartialCluster(const std::string& name,
                                                  ISvcLocator* pSvcLocator)
   : GaudiAlgorithm(name, pSvcLocator)
 {
   declareProperty("RawEventLocation", m_rawEventLocation =
                   LHCb::RawEventLocation::Default);
   declareProperty("ClusterLocation", m_clusterLocation = 
-                  VeloPixLiteClusterLocation::Default);
+                  "VeloPix/MinimalClustersFromRaw");
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloPixRawBankToLiteCluster::~VeloPixRawBankToLiteCluster(){};
+VeloPixRawBankToPartialCluster::~VeloPixRawBankToPartialCluster(){};
 
 //=============================================================================
 // Initialisation
 //=============================================================================
-StatusCode VeloPixRawBankToLiteCluster::initialize() {
+StatusCode VeloPixRawBankToPartialCluster::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if(sc.isFailure()) return sc;
   m_isDebug = msgLevel(MSG::DEBUG);
   m_isVerbose = msgLevel(MSG::VERBOSE);
   if(m_isDebug) debug() << "==> Initialise" << endmsg;
+  m_veloPixelDet = getDet<DeVeloPix>(DeVeloPixLocation::Default);
   return StatusCode::SUCCESS;
 };
 
 //=============================================================================
 //  Execution
 //=============================================================================
-StatusCode VeloPixRawBankToLiteCluster::execute() {
+StatusCode VeloPixRawBankToPartialCluster::execute() {
   if(m_isDebug) debug() << "==> Execute" << endmsg;
   // Make new clusters container
-  VeloPixLiteCluster::VeloPixLiteClusters* clusCont =
-                      new VeloPixLiteCluster::VeloPixLiteClusters();
-  //clusCont->reserve()//could be good to eval that...
+  VeloPixCluster::Container* clusCont =
+                      new VeloPixCluster::Container();
+  put(clusCont, m_clusterLocation);
   // Retrieve the RawEvent
   if(!exist<RawEvent>(m_rawEventLocation)){
     return Warning("Failed to find raw data", StatusCode::SUCCESS,1);
@@ -77,26 +79,22 @@ StatusCode VeloPixRawBankToLiteCluster::execute() {
   if(sc.isFailure()){
     return Error("Problems in decoding, event skipped", sc);
   }
-  std::sort(clusCont->begin(),clusCont->end(),SiDataFunctor::Less_by_Channel< LHCb::VeloPixLiteCluster >());
-  put(clusCont, m_clusterLocation);
-  return sc;
 
+  return sc;
 };
 
 
 //=============================================================================
 // Decode RawBanks
 //=============================================================================
-StatusCode VeloPixRawBankToLiteCluster::decodeRawBanks(RawEvent* rawEvt,
-                     VeloPixLiteCluster::VeloPixLiteClusters* clusCont) const
+StatusCode VeloPixRawBankToPartialCluster::decodeRawBanks(RawEvent* rawEvt,
+                     VeloPixCluster::Container* clusCont) const
 {
   const std::vector<RawBank*>& tBanks = rawEvt->banks(LHCb::RawBank::VeloPix);
   if(tBanks.size() == 0) {
     Warning("No VeloPix RawBanks found");
     return StatusCode::SUCCESS;
   }
-  // VeloPixLiteCluster::VeloPixLiteClusters* clusCont_tmp;
-  
   // Loop over VeloPix RawBanks  
   int nrClu = 0;
   std::vector<RawBank*>::const_iterator iterBank;
@@ -105,17 +103,22 @@ StatusCode VeloPixRawBankToLiteCluster::decodeRawBanks(RawEvent* rawEvt,
     // Get sensor number
     unsigned int sensor = (*iterBank)->sourceID();
     // Decoder
-    VeloPixRawBankDecoder<VeloPixClusterWord> decoder((*iterBank)->data());
+    VeloPixRawBankDecoder<VeloPixPatternWord> decoderPattern((*iterBank)->data());
+    VeloPixRawBankDecoder<VeloPixClusterWord> decoderCluster((*iterBank)->data());
     // Get version of the bank
     unsigned int bankVersion = (*iterBank)->version();
     debug() << "Decoding bank version " << bankVersion << endmsg;
     // Decode lite clusters
     VeloPixRawBankDecoder<VeloPixClusterWord>::pos_iterator iterClu =
-                                                            decoder.posBegin();
-    for(;iterClu != decoder.posEnd(); ++iterClu) {
-      createLiteCluster(sensor,*iterClu,clusCont);
+                                                            decoderCluster.posBegin();
+    VeloPixRawBankDecoder<VeloPixPatternWord>::pos_iterator iterPat =
+                                                            decoderPattern.posBegin();
+    for(;iterClu != decoderCluster.posEnd(); ++iterClu) {
+      createPartialCluster(sensor,*iterClu,*iterPat,clusCont);
+      if (iterPat != decoderPattern.posEnd()) ++iterPat;
     }
   } 
+
   return StatusCode::SUCCESS;
 }
 
@@ -123,10 +126,11 @@ StatusCode VeloPixRawBankToLiteCluster::decodeRawBanks(RawEvent* rawEvt,
 //=============================================================================
 // Create liteCluster
 //=============================================================================
-void VeloPixRawBankToLiteCluster::createLiteCluster(
+void VeloPixRawBankToPartialCluster::createPartialCluster(
                      unsigned int sensor,
                      VeloPixClusterWord aWord,
-                     VeloPixLiteCluster::VeloPixLiteClusters* clusCont) const 
+                     VeloPixPatternWord aPattern,
+                     VeloPixCluster::Container* clusCont) const 
 {
   LHCb::VeloPixChannelID achan;
   achan.setSensor(sensor);
@@ -134,16 +138,27 @@ void VeloPixRawBankToLiteCluster::createLiteCluster(
   std::pair<unsigned int,unsigned int> xyFract;
   xyFract.first  = aWord.xFract();
   xyFract.second = aWord.yFract();
-  const VeloPixLiteCluster newCluster(achan,aWord.totValue(),xyFract,
+  const VeloPixLiteCluster newLiteCluster(achan,aWord.totValue(),xyFract,
                                       aWord.hasIsLong());    
-  clusCont->push_back(newCluster);
+  LHCb::VeloPixChannelID achan_central;
+  achan_central.setSensor(sensor);
+  achan_central.setPixel( aPattern.pixel());
+  // achan_central.set();
 
+  const std::vector< std::pair< LHCb::VeloPixChannelID, int > >  vectorCHID;
+
+  VeloPixCluster* newCluster = new VeloPixCluster(newLiteCluster,vectorCHID);
+  //newCluster.setLCluster(newLiteCluster);
+  clusCont->insert(newCluster,achan_central);
+  //if (achan_central.pixel() == 23 )always()<<"found the 23 "<<newLiteCluster.channelID().pixel()<<" "<<achan_central.channelID()<<endmsg;
+  
+  if (newLiteCluster.channelID().pixel()!=newCluster->channelID().pixel())info()<<"Barycenter channelID different from central channelID"<<endmsg;
   return;
 }
 
 
 //============================================================================
-StatusCode VeloPixRawBankToLiteCluster::finalize() {
+StatusCode VeloPixRawBankToPartialCluster::finalize() {
 
   return GaudiAlgorithm::finalize();
 
