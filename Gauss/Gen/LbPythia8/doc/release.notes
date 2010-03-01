@@ -4,6 +4,10 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2010-03-01 - Patrick Robbe
+ - Pythia8Production.cpp: set generated_mass in HepMC event record with 
+   MeV units.
+
 ! 2010-02-25 - Patrick Robbe
  - Pythia8Production.cpp: translates correct status code into LHCb
    status codes

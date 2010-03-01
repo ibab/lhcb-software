@@ -1,4 +1,4 @@
-// $Id: Pythia8Production.cpp,v 1.8 2010-02-25 20:18:38 robbep Exp $
+// $Id: Pythia8Production.cpp,v 1.9 2010-03-01 13:11:54 robbep Exp $
 
 // Include files
 
@@ -507,8 +507,7 @@ StatusCode Pythia8Production::setupForcedFragmentation( const int
 /// PYTHIA -> HEPEVT -> HEPMC 
 // ============================================================================
 StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    , 
-                                        LHCb::GenCollision * 
-                                        /*theCollision*/ ){
+                                        LHCb::GenCollision * theCollision ){
   StatusCode sc = StatusCode::SUCCESS ;
   
   //Convert from Pythia8 format to HepMC format
@@ -542,6 +541,7 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
                            (*p) -> momentum().pz() * Gaudi::Units::GeV , 
                            (*p) -> momentum().e() * Gaudi::Units::GeV )
                          );
+    (*p) -> set_generated_mass( (*p)-> generated_mass() * Gaudi::Units::GeV ) ;
   }
   
   for ( HepMC::GenEvent::vertex_iterator v = theEvent -> vertices_begin() ;
@@ -554,7 +554,11 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
                  / Gaudi::Units::c_light ) ;    
     (*v) -> set_position( newPos ) ;
   }
+
+  hardProcessInfo( theCollision ) ;
   
+  theEvent -> set_signal_process_id( m_pythia -> info.codeSub() ) ;
+
   return sc;
 }
 // ============================================================================
