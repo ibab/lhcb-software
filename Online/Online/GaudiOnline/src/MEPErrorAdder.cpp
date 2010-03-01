@@ -163,6 +163,7 @@ MEPErrorAdder::readRunInfo(DimInfo* dim) {
 		// No subfarms
 		m_log << MSG::WARNING << "Partition " << m_partitionName << " have no subfarms" << endmsg;
 		m_nrSubFarms = 0;
+		m_nrServices = 0;
 		return 1;
         }
 
@@ -178,6 +179,7 @@ MEPErrorAdder::readRunInfo(DimInfo* dim) {
   	}
 	m_log << MSG::INFO << "Subfarms in partition " << m_partitionName << ": " << printSubfarms << endmsg;
 	m_nrSubFarms = m_subFarms.size();
+	m_nrServices = m_nrSubFarms;
 
 	return 0;
 }
@@ -566,6 +568,34 @@ MEPErrorAdder::resetAllCounters() {
   return 0;
 }
 
+int
+MEPErrorAdder::resetSingleCounters() {
+  m_totRxOct = 0;
+  m_totRxPkt = 0;
+  m_bytesNotInPartition = 0;
+  m_packetsNotInPartition = 0;
+  m_totReadOct = 0;
+  m_totRxEvt = 0;
+  m_totRxMEP = 0;
+  m_incEvt = 0;
+  m_totBadMEP = 0;
+  m_totMEPReq = 0;
+  m_totMEPReqPkt = 0;
+  m_numMEPRecvTimeouts = 0;
+  m_notReqPkt = 0;
+  m_totWrongPartID = 0;
+
+  m_sentEvt = 0;
+  m_sentOct = 0;
+  m_sentEvtErr = 0;
+
+  m_droppedFrac = 0;
+  m_errorFrac = 0;
+  m_frameErrorFrac = 0;
+
+  return 0;
+}
+
 /** Reset all 2D arrays, they keep track of received values
  */
 int
@@ -916,7 +946,8 @@ MEPErrorAdder::resetPublishedServices(int nSrc) {
 /** Called when RunInfo setup changes, i.e. subfarms in partition changes
  *
  *  Will remove all subscriptions, update the list of subfarms, and setup 
- "  the subscriptions for the new subfarm list.
+ *  the subscriptions for the new subfarm list.
+ *  Published counters also reset
  *
  */
 int
@@ -931,6 +962,12 @@ MEPErrorAdder::changeSubFarms(DimInfo* dim) {
 
   // Read RunInfo again to update subfarm list
   readRunInfo(dim);
+  
+  // Reset all counters
+  resetAllCounters();
+  resetSingleCounters();
+  resetRemSingleCounters();
+  resetRem2DCounters();
 
   // Setup subscriptions again from all new subfarms
   m_log << MSG::DEBUG << "Setting up subscriptions again..." << endmsg;

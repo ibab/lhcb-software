@@ -197,6 +197,7 @@ namespace LHCb  {
     void infoHandler();    
     int setupCounters();
     int resetAllCounters();
+    int resetSingleCounters();
     int resetRem2DCounters();
     int resetRemSingleCounters();
     int publishSingleCounters();
