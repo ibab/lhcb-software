@@ -14,7 +14,11 @@ Needs SQLDDDB v5r19 or later with tags from *-20100202*
  - New tuning
    . Change default of STRndmChannelIDSelector: list of dead channels is now
      taken from SimCond, so random inefficieny no longer applied (STTools v3r17)
-   . Tune xtalk level, improved cell efficiency (OTSimulation v5r0)
+   . Major retuning of OT digitization (OTSimulation v5r0)
+     o Changed 3D path length in the cell efficiency
+     o Fix the effective ionization density for matching the data in the cell
+       efficiency 
+     o Fix the level of cross talk to match data 2.5% --> 0.5%
      (see <a href="http://indico.cern.ch/getFile.py/access?contribId=3&resId=0&materialId=paper&confId=82511">talk</a> at PPM on 2010-02-22)
    . Improve consistency checks in L0DU emulation (L0DU v10r3)
 
