@@ -2,11 +2,12 @@
 ! Package manager : Jan Amoraal
 !--------------------------------------------------------------------------
 
-!====================== OTSimulation v4r2 2010-02-26 ======================
+!====================== OTSimulation v5r0 2010-03-01 ======================
 ! 2010-02-26 - Nicola Serra
-- Changed 3D path lenght in the cell efficiency
-- Fix the effective ionization density for matching the data in the cell efficeincy 
-- Fix the level of cross talk to match data 2.5% --> 0.5%
+ - Changed 3D path length in the cell efficiency
+ - Fix the effective ionization density for matching the data in the cell
+   efficiency 
+ - Fix the level of cross talk to match data 2.5% --> 0.5%
 
 !====================== OTSimulation v4r2 2009-05-12 ======================
 ! 2009-04-27 - Jan Amoraal
