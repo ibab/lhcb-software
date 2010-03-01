@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.59 2010-02-27 22:25:12 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.60 2010-03-01 20:32:46 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -325,6 +325,7 @@ void HltGlobalMonitor::monitorHLT1(const LHCb::ODIN*,
   std::vector<unsigned> nAccAlley(m_hlt1Alleys.size(),unsigned(0));
 
   for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();i++) {
+    //TODO: augment HltDecReport to avoid doing 'find'
     const LHCb::HltDecReport*  report = hlt->decReport( *i );
     if (report == 0 ) {  
        warning() << "report " << *i << " not found" << endreq;
