@@ -18,6 +18,18 @@ _log.setLevel( logging.INFO )
 # COOL application
 _app = None
 
+
+def payloadSpecEq(pl1, pl2):
+    if len(pl1) != len(pl2):
+        return False
+    pl1k, pl2k = pl1.keys(), pl2.keys()
+    for k in pl1k:
+        if not k in pl2k:
+            return False
+        if pl1[k] != pl2[k]:
+            return False
+    return True
+
 def diff( originalDB, modifiedDB, diffDB,
           nodeName = "/",
           since = cool.ValidityKeyMin,
@@ -93,8 +105,8 @@ def diff( originalDB, modifiedDB, diffDB,
                     # compare folder metadata
                     # if ( orig_folder.folderSpecification() !=
                     #      dest_folder.folderSpecification() ):
-                    if ( orig_folder.payloadSpecification() !=
-                         dest_folder.payloadSpecification()
+                    if ( not payloadSpecEq(orig_folder.payloadSpecification(),
+                                           dest_folder.payloadSpecification())
                          ) or (
                          orig_folder.versioningMode() !=
                          dest_folder.versioningMode() ):

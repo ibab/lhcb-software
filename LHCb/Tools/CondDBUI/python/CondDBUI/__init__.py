@@ -1701,6 +1701,17 @@ def copy( sourceDb, targetDb,
         targetDb = CondDB(targetDb,create_new_db=True,readOnly=False).db
     PyCoolCopy.copy(sourceDb, targetDb, nodeName, since, until, channels, tags)
 
+def payloadSpecEq(pl1, pl2):
+    if len(pl1) != len(pl2):
+        return False
+    pl1k, pl2k = pl1.keys(), pl2.keys()
+    for k in pl1k:
+        if not k in pl2k:
+            return False
+        if pl1[k] != pl2[k]:
+            return False
+    return True
+
 def merge( sourceDB, targetDB,
            nodeName = "/",
            since = cool.ValidityKeyMin,
@@ -1745,8 +1756,8 @@ def merge( sourceDB, targetDB,
                 # compare folder metadata
                 # if ( orig_folder.folderSpecification() !=
                 #      dest_folder.folderSpecification() ):
-                if ( src_folder.payloadSpecification() !=
-                     tgt_folder.payloadSpecification()
+                if ( not payloadSpecEq( src_folder.payloadSpecification(),
+		                        tgt_folder.payloadSpecification())
                      ) or (
                      src_folder.versioningMode() !=
                      tgt_folder.versioningMode() ):

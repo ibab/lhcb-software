@@ -112,7 +112,7 @@ and for a short message for the release notes.""")
                       help = "alias for --contributor"
                       )
     parser.add_option("-t","--datatypes", type = "string",
-                      help = "List of data types new global tag is intended for."
+                      help = "Coma separated string (without spaces) of data types the new local tag is intended for."
                       )
     parser.add_option("-n","--dry-run", action = "store_true",
                       help = "Skip the actual commit to database and the update of release notes."
