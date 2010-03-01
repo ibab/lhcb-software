@@ -18,6 +18,7 @@ include_dirs "$(RAWBANKSIZESROOT)/RawBankSizes"
 library RawBankSizes RawBankSizes.cpp Structure.cpp 
 apply_pattern component_library library=RawBankSizes
 
+private
 application MakeOptions MakeOptions.cpp
 macro_append target_MakeOptions
 
@@ -29,4 +30,4 @@ macro_append runMakeOptions_dependencies " MakeOptions "
 action WriteOptions "python $(RAWBANKSIZESROOT)/src/WriteOptions.py"
 macro_append constituents " WriteOptions "
 macro_append WriteOptions_dependencies " runMakeOptions "
-
+end_private
