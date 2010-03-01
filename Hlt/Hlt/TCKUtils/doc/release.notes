@@ -5,6 +5,9 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+! 2010-03-01 - Gerhard Raven
+ - transmit exceptions out of sandbox, to the parent
+
 !========================== TCKUtils v1r6p3 2010-02-27 ===================
 ! 2010-02-27 - Gerhard Raven
  - replace custom sandboxing with the use of processing
