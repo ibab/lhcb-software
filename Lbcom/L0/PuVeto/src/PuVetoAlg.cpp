@@ -231,90 +231,69 @@ StatusCode PuVetoAlg::execute() {
   std::vector<LHCb::RawBank*>::const_iterator itBnk;
   for ( itBnk = bank.begin() ; bank.end() != itBnk ; itBnk++ ) {
     LHCb::RawBank* aBank = *itBnk;
-    int version = aBank->version();
-    debug() << "Bank version is " << version << endmsg;
+    if( RawBank::MagicPattern != aBank->magic() ) {
+      debug() << "magic number is " << aBank->magic() << "; event skipped!" << endmsg;
+      return Warning( "L0PU RawBank has an unexpected magic number!", StatusCode::SUCCESS, 0 );
+    }
+    else{
+      int version = aBank->version();
+      debug() << "Bank version is " << version << endmsg;
     
-    if ( version == 2 ){ // current bank format
-    debug() << "----- TotMult " << m_totMult<< endreq ;
-      /*
-      // need the official PU decoder from Velo/VeloDAQ in the Boole sequence!
-      // get binary ZS clusters
-      if( !exist<LHCb::VeloClusters>(m_PUclusterContZS) ){
-        return Error( " ==> There is no PUClusters in ZS TES location" );
-      } else {
-        debug() << "I get the ZS PUClusters!" << endmsg;
-        m_rawPUClustersZS = get<LHCb::VeloClusters>(m_PUclusterContZS);
-      }
-      int contSize = m_rawPUClustersZS->size();
-      debug() <<  "ZS clusters size: " << contSize << endmsg;
-      if(!contSize){
-        return Warning( "Empty cluster container! - Skipping trigger emulator", StatusCode::SUCCESS );
-      }
-      */
-      //  
+      if ( version == 2 ){ // current bank format
+        debug() << "----- TotMult " << m_totMult<< endreq ;
         
-    
-      unsigned int* data = aBank->data();
-      unsigned int d = 2; 
-      int wordTot = (aBank->size() / (2 * sizeof(unsigned int)));
-//       debug() << "wordTot = " << aBank->size() / 4 << endmsg;
+        unsigned int* data = aBank->data();
+        unsigned int d = 2; 
+        int wordTot = (aBank->size() / (2 * sizeof(unsigned int)));
 //       if (m_enablePlots){
 //         m_PUbanksize->Fill(wordTot);
 //       }
-      if (wordTot != 34 ) {
-        debug() << "L0PU RawBank has an unexpected size! (size= " << wordTot << ") - event skipped" << endmsg;
-	return Warning( "L0PU RawBank has an unexpected size! Event skipped", StatusCode::SUCCESS, 0 );
-      }
-      else{
-        fillPUmap( d, wordTot, data, 34, m_PUhitmap );
-        //now check whether the words must be reversed or not
-        reverseWords( m_PUhitmap );
-      }
-    }
-    else if ( version == 1 ){ // old bank formatversion from Marko
-      unsigned int* ptData = (*itBnk)->data();
-      int bankSize = (*itBnk)->size()/4;  //== is in bytes...
-      //if (msgLevel(MSG::DEBUG)) debug() << "  Bank " << (*itBnk)->sourceID() << " size " << bankSize << " words" << endreq;
-      if (bankSize != 68){
-        debug() << "L0PU RawBank has an unexpected size! (size= " << bankSize << ") - event skipped" << endmsg;
-	return Warning( "L0PU RawBank has an unexpected size! Event skipped", StatusCode::SUCCESS, 0 );
-      }
-      else{
-       while ( 0 < bankSize-- ){
-        unsigned int cand = (*ptData++);
-        while ( 0 != cand ) {
-          unsigned int data = cand & 0xFFFF;
-          cand = cand >> 16;
-          unsigned int sensor = data >> 14;
-          unsigned int sfired = data & 0x3FFF;
-
-          short unsigned int clnum = (short unsigned int) sfired / 4;
-          short unsigned int indx = (short unsigned int) clnum / 32; 
-          //32 bits per (unsigned) int
-          // replace with sizeof()*8 at some point
-          //if (msgLevel(MSG::DEBUG)) debug() << format( "Data %4x sensor%2d strip%4d clnum%3d indx%3d ",
-          //                       data, sensor, sfired, clnum, indx );
-
-          if ( MSG::VERBOSE <= msgLevel() ) {
-            verbose() << format( "Data %4x sensor%2d strip%4d clnum%3d indx%3d ",
-                                 data, sensor, sfired, clnum, indx );
-          }
- 
-          if (!getBit(clnum%32,m_PUhitmap[sensor][indx])) {
-            setBit(clnum%32,m_PUhitmap[sensor][indx]); // 32 here again!
-            m_totMult++;
-            //verbose() << " added.";
-            if (msgLevel(MSG::DEBUG)) debug() << " added." << endreq;
-          } else {
-            //verbose() << " exists.";
-	    if (msgLevel(MSG::DEBUG)) debug() << " exists." << endreq;
-          }
-          //verbose() << endreq;
-	  //if (msgLevel(MSG::DEBUG)) debug() << "m_PUhitmap[" << sensor << "][ " << indx << "] is " << binary( m_PUhitmap[sensor][indx] )<< endmsg;
+        if (wordTot != 34 ) {
+          debug() << "L0PU RawBank has an unexpected size! (size= " << wordTot << ") - event skipped" << endmsg;
+	  return Warning( "L0PU RawBank has an unexpected size! Event skipped", StatusCode::SUCCESS, 0 );
         }
-       }
+        else{
+          fillPUmap( d, wordTot, data, 34, m_PUhitmap );
+          //now check whether the words must be reversed or not
+          reverseWords( m_PUhitmap );
+        }
       }
-    }
+      else if ( version == 1 ){ // old bank formatversion from Marko
+        unsigned int* ptData = (*itBnk)->data();
+        int bankSize = (*itBnk)->size()/4;  //== is in bytes...
+        while ( 0 < bankSize-- ){
+          unsigned int cand = (*ptData++);
+          while ( 0 != cand ) {
+            unsigned int data = cand & 0xFFFF;
+            cand = cand >> 16;
+            unsigned int sensor = data >> 14;
+            unsigned int sfired = data & 0x3FFF;
+  
+            short unsigned int clnum = (short unsigned int) sfired / 4;
+            short unsigned int indx = (short unsigned int) clnum / 32; 
+            //32 bits per (unsigned) int
+            // replace with sizeof()*8 at some point
+            //if (msgLevel(MSG::DEBUG)) debug() << format( "Data %4x sensor%2d strip%4d clnum%3d indx%3d ",
+            //                       data, sensor, sfired, clnum, indx );
+  
+            if ( MSG::VERBOSE <= msgLevel() ) {
+              verbose() << format( "Data %4x sensor%2d strip%4d clnum%3d indx%3d ",
+                                   data, sensor, sfired, clnum, indx );
+            }
+   
+            if (!getBit(clnum%32,m_PUhitmap[sensor][indx])) {
+              setBit(clnum%32,m_PUhitmap[sensor][indx]); // 32 here again!
+              m_totMult++;
+              //verbose() << " added.";
+            } else {
+              //verbose() << " exists.";
+            }
+            //verbose() << endreq;
+	    //if (msgLevel(MSG::DEBUG)) debug() << "m_PUhitmap[" << sensor << "][ " << indx << "] is " << binary( m_PUhitmap[sensor][indx] )<< endmsg;
+          }
+        }
+      }
+    } // magic number check
 
   } // loop on banks
 

@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.66 2010-02-25 15:42:26 cattanem Exp $
+! $Id: release.notes,v 1.67 2010-03-01 19:40:32 serena Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Serena Oggero
 !-------------------------------------------------------------------------
 
+! 2010-03-01 - Serena Oggero
+ - PuVetoAlg: bug fix for backward compatibility (no bank-size check on 
+   older bank version 1) + magic number check
+   
 !======================== PuVeto v7r7 2010-02-25 =========================
 ! 2010-02-25 - Serena Oggero
  - PuVetoAlg improved (to give a warning for events with a wrong L0PU bank 
