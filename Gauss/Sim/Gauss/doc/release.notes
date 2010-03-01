@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2010-03-01 - Patrick Robbe
+ - Configurable.py: transmit beam settings to Pythia8 when used as a 
+   production tool.
+
 !========================= Gauss v38r3 2010-02-05 ============================
 ! 2010-02-05 - Gloria CORTI
  - Update with the latest database tags options/Gauss-DEV.py

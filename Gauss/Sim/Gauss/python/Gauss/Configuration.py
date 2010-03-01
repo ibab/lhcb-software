@@ -1,7 +1,7 @@
 """
 High level configuration tools for Gauss
 """
-__version__ = "$Id: Configuration.py,v 1.26 2010-01-20 20:31:48 silviam Exp $"
+__version__ = "$Id: Configuration.py,v 1.27 2010-03-01 13:09:25 robbep Exp $"
 __author__  = "Gloria Corti <Gloria.Corti@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -346,7 +346,7 @@ class Gauss(LHCbConfigurableUser):
 
             genSequence = GaudiSequencer("GeneratorSlot" + self.slotName(slot) + "Seq" )
             genMoniSeq = GaudiSequencer("GenMonitor" + slot )
-            genSequence.Members += [ genMoniSeq ]  
+            genSequence.Members += [ genMoniSeq ]
 
             TESLocation = "/Event/"+self.slot_(slot)+"Gen/HepMCEvents"
             genMoniSeq.Members += [
@@ -1078,6 +1078,15 @@ class Gauss(LHCbConfigurableUser):
         ecmInGeV = 2*pInGeV
         txtECM = "upcom ecm "+str(ecmInGeV)
         gen_t0.Special.BcVegPyProduction.BcVegPyCommands += [ txtECM ]
+        # for Pythia8 usage (Minimum Bias):
+        from Configurables import Pythia8Production
+        gen_t0.MinimumBias.addTool(Pythia8Production,name="Pythia8Production")
+        gen_t0.MinimumBias.Pythia8Production.addTool(CollidingBeams,
+                                                     name="CollidingBeams")
+        gen_t0.MinimumBias.Pythia8Production.CollidingBeams.BeamMomentum = beamMom
+        gen_t0.MinimumBias.Pythia8Production.CollidingBeams.HorizontalCrossingAngle = angle
+        gen_t0.MinimumBias.Pythia8Production.CollidingBeams.Emittance = emittance
+        gen_t0.MinimumBias.Pythia8Production.CollidingBeams.BetaStar = betaStar
         # Only signal events
         gen_t0.addTool(StandAloneDecayTool,name="StandAloneDecayTool")
         gen_t0.StandAloneDecayTool.addTool(PythiaProduction,
@@ -1124,7 +1133,7 @@ class Gauss(LHCbConfigurableUser):
         self.configureGen( SpillOverSlots )
         self.configureSim( SpillOverSlots )
         self.configureMoni( SpillOverSlots ) #(expert or default)
-        
+
 
     ##
     ##
