@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.48 2010-02-18 08:50:08 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.49 2010-03-01 18:11:16 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -39,6 +39,8 @@
 #include "Kernel/IMassFit.h"
 #include "Kernel/ILifetimeFitter.h"
 #include "Kernel/IDirectionFit.h"
+//
+ #include  <boost/type_traits/remove_pointer.hpp> 
 // ============================================================================
 /** @class DVAlgorithm DVAlgorithm.h Kernel/DVAlgorithm.h
  *  Base Class for DaVinci Selection Algorithms:
@@ -430,6 +432,18 @@ public:
   inline const LHCb::ParticleProperty* pid ( const LHCb::ParticleID& p ) const ;
   // ==========================================================================  
 protected:
+
+
+  template<class T> 
+  bool container_exist(const std::string& location) 
+  {
+    typedef typename boost::remove_pointer<typename T::value_type>::type ContainedType;
+    return exist<T>(location) ||
+      exist<typename ContainedType::Container>(location) || 
+      exist<typename ContainedType::Range>(location);
+    
+  }
+  
   
   /** helper protected function to load the tool on-demand  
    *  @param name name of tool
