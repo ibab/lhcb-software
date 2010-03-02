@@ -38,8 +38,8 @@ class Physics_320Vis_300L0_10Hlt1_Feb10 :
         from Hlt1Lines.Hlt1ElectronLines       import Hlt1ElectronLinesConf
         from Hlt1Lines.Hlt1PhotonLines         import Hlt1PhotonLinesConf
         from Hlt1Lines.Hlt1VeloLines           import Hlt1VeloLinesConf
-        from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
+        from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
 
         return { Hlt1HadronLinesConf : {  'SingleHadron_PTCut' : 1400
                                          , 'HadSingle_IPCut' : 0.14
@@ -97,13 +97,15 @@ class Physics_320Vis_300L0_10Hlt1_Feb10 :
                                           , 'MuTrackMuChi24JPsi' : 999.
                                           , 'MuTrackTrChi24JPsi' : 999.
                                           }
+                 , Hlt1MBLinesConf :      { 'Prescale' : { 'Hlt1MBMicroBias.*' : 0. } } # To be modified during clone
+                 , Hlt1VeloLinesConf :    { 'ODIN'     : '( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )' 
+                                          , 'L0DU'     : '( L0_DECISION )'
+                                          , 'Prescale' : { 'Hlt1Velo.*' : 0.001 }       # To be modified during clone
+                                          }
                  , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 1.
-                                                                 , 'Hlt2Forward'      : 0. # first needs a check that /Hlt/Track/Long actually exists..
-                                                                 , 'Hlt2DebugEvent'   : 0.0001
-                                                                 }              }
-                 ,Hlt1MBLinesConf :{ 'Prescale' : { 'Hlt1MBMicroBiasRZVelo' : 0
-                                                    ,'Hlt1MBMicroBiasTStation' : 0}
-                                     }
+                                                               , 'Hlt2Forward'      : 0. # first needs a check that /Hlt/Track/Long actually exists..
+                                                               , 'Hlt2DebugEvent'   : 0.0001
+                                                               }              }
                  
                  }
     
