@@ -25,18 +25,35 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
     def __create_microbias_line__(self) :
         from HltLine.HltReco import MinimalRZVelo
         from HltLine.HltLine import Hlt1Member as Member
-        return Line ( 'MBMicroBiasRZVelo'
-                    , prescale = self.prescale
-                    , ODIN = '( ODIN_BXTYP == LHCb.ODIN.BeamCrossing ) & (ODIN_TRGTYP <= LHCb.ODIN.LumiTriggers)'
-                    , algos = [ MinimalRZVelo
-                              , Member( 'Hlt::TrackFilter','All'
-                                      , Code = [ 'TrALL' ]
-                                      , InputSelection = 'TES:%s' % MinimalRZVelo.outputSelection()
-                                      , OutputSelection = '%Decision'
-                                      ) 
-                              ]
-                    , postscale = self.postscale
-                    ) 
+        Line ( 'MBMicroBiasRZVelo'
+               , prescale = self.prescale
+               , ODIN = '( ODIN_BXTYP == LHCb.ODIN.BeamCrossing ) & (ODIN_TRGTYP <= LHCb.ODIN.LumiTrigger)'
+               , algos = [ MinimalRZVelo
+                           , Member( 'Hlt::TrackFilter','All'
+                                     , Code = [ 'TrALL' ]
+                                     , InputSelection = 'TES:%s' % MinimalRZVelo.outputSelection()
+                                     , OutputSelection = '%Decision'
+                                     ) 
+                           ]
+               , postscale = self.postscale
+               ) 
+
+        from HltLine.HltReco import Hlt1Seeding
+        return Line ( 'MBMicroBiasTStation'
+                      , prescale = self.prescale
+                      , ODIN = '( ODIN_BXTYP == LHCb.ODIN.BeamCrossing ) & (ODIN_TRGTYP <= LHCb.ODIN.LumiTrigger)'
+                      , algos = [ Hlt1Seeding
+                                  , Member( 'Hlt::TrackFilter','All'
+                                            , Code = [ 'TrALL' ]
+                                            , InputSelection = 'TES:%s' % Hlt1Seeding.outputSelection()
+                                            , OutputSelection = '%Decision'
+                                            ) 
+                                  ]
+                      , postscale = self.postscale
+                      )
+    
+    
+    
 
     def __create_minibias_line__(self, BXType):
         '''
