@@ -25,9 +25,9 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
     def __create_microbias_line__(self) :
         from HltLine.HltReco import MinimalRZVelo
         from HltLine.HltLine import Hlt1Member as Member
-        return Line ( 'MBMicroBias'
+        return Line ( 'MBMicroBiasRZVelo'
                     , prescale = self.prescale
-                    , ODIN = '( ODIN_BXTYP == LHCb.ODIN.BeamCrossing ) & (ODIN_TRGTYP == LHCb.ODIN.%s)' % ( self.getProp('NoBiasTriggerType') )
+                    , ODIN = '( ODIN_BXTYP == LHCb.ODIN.BeamCrossing ) & (ODIN_TRGTYP <= LHCb.ODIN.LumiTriggers)'
                     , algos = [ MinimalRZVelo
                               , Member( 'Hlt::TrackFilter','All'
                                       , Code = [ 'TrALL' ]

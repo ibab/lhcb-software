@@ -127,6 +127,7 @@ class Physics_320Vis_300L0_10Hlt1_Feb10 :
                , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco'
                , 'Hlt1MBMiniBiasNoBeam','Hlt1MBMiniBiasBeamCrossing','Hlt1MBMiniBiasBeam1','Hlt1MBMiniBiasBeam2'
                , 'Hlt1MBNoBiasNoBeam','Hlt1MBNoBiasBeamCrossing','Hlt1MBNoBiasBeam1','Hlt1MBNoBiasBeam2'
+               , 'Hlt1MBMicroBias'
                , 'Hlt1SingleHadron',     'Hlt1SingleHadronViaT'
                , 'Hlt1DiHadron',         'Hlt1DiHadronViaT',    'Hlt1DiHadronSoft'
                , 'Hlt1SingleMuonNoIPL0', 'Hlt1SingleMuonIPCL0'

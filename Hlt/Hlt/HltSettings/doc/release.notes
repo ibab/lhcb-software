@@ -4,6 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-03-02 - Gerhard Raven
+ - add VeloRZ microbias line
 !========================== HltSettings v1r9 2010-02-28 ===================
 ! 2010-02-27 - Gerhard Raven
  - add some lines back into Physics_320Vis_300L0_10Hlt1_Feb10
