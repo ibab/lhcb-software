@@ -1,12 +1,12 @@
 #============================================================================
-# $Id: requirements,v 1.104 2010-02-22 19:37:19 graven Exp $
+# $Id: requirements,v 1.105 2010-03-02 12:59:12 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
 
 #============================================================================
 package Moore
-version v8r7
+version v8r8
 
 branches doc cmt options python
 
@@ -37,16 +37,16 @@ use GaudiPython         v*                  -no_auto_imports
 use L0Interfaces        v*    L0            -no_auto_imports
 
 #-- Lbcom packages 
+use PuVeto              v7r7p1  L0
 use LbcomSys            v*                  -no_auto_imports
 
 #-- Rec packages 
 use RecSys              v*                  -no_auto_imports
 
 #-- HLT packages 
-use Hlt1Lines           v2r2p1  Hlt
-use HltConf             v6r4p1  Hlt
-use HltLine             v3r1p1  Hlt
-use HltSettings         v1r8p1  Hlt
+use Hlt1Lines           v2r3    Hlt
+use HltLine             v3r2    Hlt
+use HltSettings         v1r10   Hlt
 use HltSys              v*                  -no_auto_imports
 
 #-- Phys packages 

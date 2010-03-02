@@ -2,12 +2,16 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+!========================== Moore v8r8 2009-03-02 ===================
 ! 2010-03-02 - Gerhard Raven
  - update conditions DB setup
 
 ! 2010-02-24 - Gerhard Raven
  - replace cosmic qmtest with test on 2009 collision data
  - replace DC06 qmtest with MC09 
+
+
+!========================== Moore v8r7 2009-02-22 ===================
 
 ! 2010-02-22 - Gerhard Raven
  - update default DB snapshot
