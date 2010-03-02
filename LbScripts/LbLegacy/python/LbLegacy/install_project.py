@@ -1395,6 +1395,8 @@ def createBaseDirs(pname, pversion):
         if os.environ.has_key("VO_LHCB_SW_DIR") :
             candidate_dir = os.path.join(os.environ["VO_LHCB_SW_DIR"], "lib")
             if os.path.isdir(candidate_dir) :
+                log.warning("Using no MYSITEROOT defined. Using MYSITEROOT=$VO_LHCB_SW_DIR/lib")
+                log.warning("With VO_LHCB_SW_DIR=%s" % candidate_dir)
                 mysiteroot = candidate_dir
 
     if not mysiteroot :
