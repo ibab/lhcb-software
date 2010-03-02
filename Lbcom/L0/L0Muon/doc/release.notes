@@ -1,7 +1,10 @@
-!  $Id: release.notes,v 1.95 2010-02-15 15:20:21 cattanem Exp $
+!  $Id: release.notes,v 1.96 2010-03-02 10:59:09 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !---------------------------------------------------------------------------
+
+! 2010-03-02 - Julien Cogan
+ - L0MuonOutputs : add protection against wrong magic pattern in RAW banks. 
 
 !========================= L0Muon v9r0 2010-02-15 ==========================
 ! 2010-02-09 - Julien Cogan

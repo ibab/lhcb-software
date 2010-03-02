@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.31 2010-02-09 14:45:56 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.32 2010-03-02 10:59:09 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -139,6 +139,12 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
       if (error_bank[srcID]) {
         ctrlCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::ErrorBank);
       }
+      if( LHCb::RawBank::MagicPattern != (*itBnk)->magic() ) {
+        // report an error and return without decoding
+        ctrlCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::Corrupted);
+        Error("L0MuonCtrlCand :  Magic pattern is wrong",StatusCode::FAILURE,50).ignore();
+        continue;
+      }
       int size = (*itBnk)->size()/4;
       if (size==0) {
         ctrlCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::Empty);
@@ -219,6 +225,12 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
         if (error_bank[srcID]) {
           procCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::ErrorBank);
         }
+        if( LHCb::RawBank::MagicPattern != (*itBnk)->magic() ) {
+          // report an error and return without decoding
+          procCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::Corrupted);
+          Error("L0MuonProcCand :  Magic pattern is wrong",StatusCode::FAILURE,50).ignore();
+          continue;
+        }
         int size = (*itBnk)->size()/4;
         if (size==0) {
           procCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::Empty);
@@ -277,6 +289,12 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
         int srcID = (*itBnk)->sourceID();
         if (error_bank[srcID]) {
           procDataStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::ErrorBank);
+        }
+        if( LHCb::RawBank::MagicPattern != (*itBnk)->magic() ) {
+          // report an error and return without decoding
+          procDataStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::Corrupted);
+          Error("L0MuonProcData :  Magic pattern is wrong",StatusCode::FAILURE,50).ignore();
+          continue;
         }
         int size = (*itBnk)->size()/4;
         if (size==0) {
