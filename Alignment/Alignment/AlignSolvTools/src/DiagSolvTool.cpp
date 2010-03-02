@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.cpp,v 1.19 2010-03-02 15:55:26 wouter Exp $
+// $Id: DiagSolvTool.cpp,v 1.20 2010-03-02 16:01:38 wouter Exp $
 // Include files 
 
 #include <stdio.h>
@@ -47,7 +47,7 @@ DiagSolvTool::DiagSolvTool( const std::string& type,
   declareProperty( "EigenValueThreshold", m_eigenValueThreshold = -1 ) ;
   declareProperty( "WriteMonNTuple",par_writentp=false);
   declareProperty( "ApplyScaling", m_applyScaling=false) ;
-  declareProperty( "MinEigenModeChisquare", m_minEigenModeChisquare = 0 ) ;
+  declareProperty( "MinEigenModeChisquare", m_minEigenModeChisquare = -1 ) ;
 }
 
 //=============================================================================
@@ -183,7 +183,7 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
     if( m_eigenValueThreshold > 0 )
       for( size_t i=0; i<N; i++) 
 	keepEigenValue[i] = std::abs(w[i]) > m_eigenValueThreshold ||
-	  D[i]*D[i]/w[i] > m_minEigenModeChisquare ;
+	  ( m_minEigenModeChisquare >0 && D[i]*D[i]/w[i] > m_minEigenModeChisquare ) ;
 
     double sumchisqrejected(0), sumchisqaccepted(0) ;
     size_t numrejected(0) ;
