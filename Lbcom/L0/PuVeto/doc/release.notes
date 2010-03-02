@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.67 2010-03-01 19:40:32 serena Exp $
+! $Id: release.notes,v 1.68 2010-03-02 10:42:05 graven Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Serena Oggero
 !-------------------------------------------------------------------------
 
+!======================== PuVeto v7r7p1 2010-03-02 =========================
 ! 2010-03-01 - Serena Oggero
  - PuVetoAlg: bug fix for backward compatibility (no bank-size check on 
    older bank version 1) + magic number check
