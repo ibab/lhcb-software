@@ -6,7 +6,7 @@
 #============================================================================
 
 package RichPIDMerge
-version v2r7p1
+version v2r7p2
 
 # ================ structure ================================================
 branches src cmt doc options

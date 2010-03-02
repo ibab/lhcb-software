@@ -4,6 +4,9 @@
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
 
+! 2010-03-02 - Chris Jones
+ - Add code to allow the version of the final RichPIDs to be set via options
+
 !======================= RichPIDMerge v2r7p1 2009-09-03 ======================
 ! 2009-09-03 - Marco Cattaneo
  - Remove obsolete file src/RichPIDMerge_dll.cpp

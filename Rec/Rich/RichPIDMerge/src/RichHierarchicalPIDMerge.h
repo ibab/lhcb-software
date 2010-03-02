@@ -71,6 +71,9 @@ namespace Rich
       /// Flag to turn on/off the fulling of summary information into the ProcStat object
       bool m_fillProcStat;
 
+      /// PID version
+      unsigned int m_PIDversion;
+
     };
 
   }

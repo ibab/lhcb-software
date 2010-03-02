@@ -60,6 +60,9 @@ HierarchicalPIDMerge::HierarchicalPIDMerge( const std::string& name,
   // fill procstat
   declareProperty( "FillProcStat", m_fillProcStat );
 
+  // version
+  declareProperty( "PIDVersion", m_PIDversion = 0 );
+
 }
 
 // Destructor
@@ -98,8 +101,10 @@ StatusCode HierarchicalPIDMerge::execute()
     put( newPIDs, m_richPIDLocation );
   }
 
-  // Locate the processing status object
-  
+  // PID version
+  newPIDs->setVersion(m_PIDversion);
+
+  // Locate the processing status object  
   LHCb::ProcStatus * procStat = ( m_fillProcStat ? get<LHCb::ProcStatus>(m_procStatLocation) : NULL );
   if ( procStat && procStat->aborted() )
   {
