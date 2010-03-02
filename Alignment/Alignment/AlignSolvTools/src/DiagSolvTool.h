@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.h,v 1.10 2009-08-16 14:16:23 wouter Exp $
+// $Id: DiagSolvTool.h,v 1.11 2010-03-02 15:55:26 wouter Exp $
 #ifndef ALIGNSOLVTOOLS_DIAGSOLVTOOL_H 
 #define ALIGNSOLVTOOLS_DIAGSOLVTOOL_H 1
 
@@ -48,6 +48,7 @@ private:
   size_t m_numberOfPrintedEigenvalues ;
   bool m_applyScaling ;
   double m_eigenValueThreshold ;
+  double m_minEigenModeChisquare ;
   size_t par_modcut;
   bool par_writentp;
   

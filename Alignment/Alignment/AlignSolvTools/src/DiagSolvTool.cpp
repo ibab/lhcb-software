@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.cpp,v 1.18 2009-08-16 14:16:23 wouter Exp $
+// $Id: DiagSolvTool.cpp,v 1.19 2010-03-02 15:55:26 wouter Exp $
 // Include files 
 
 #include <stdio.h>
@@ -47,6 +47,7 @@ DiagSolvTool::DiagSolvTool( const std::string& type,
   declareProperty( "EigenValueThreshold", m_eigenValueThreshold = -1 ) ;
   declareProperty( "WriteMonNTuple",par_writentp=false);
   declareProperty( "ApplyScaling", m_applyScaling=false) ;
+  declareProperty( "MinEigenModeChisquare", m_minEigenModeChisquare = 0 ) ;
 }
 
 //=============================================================================
@@ -61,6 +62,7 @@ StatusCode DiagSolvTool::initialize()
 {
   StatusCode sc = GaudiTupleTool::initialize() ;
   info() << "EigenValueThreshold = " << m_eigenValueThreshold << endreq ;
+  info() << "MinEigenModeChisquare = " << m_minEigenModeChisquare << endreq ;
   info() << "WriteMonNTuple = " << par_writentp << endreq ;
   return sc ;
 }
@@ -145,8 +147,16 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
     for(size_t ipar = 0; ipar<N; ++ipar) sortedev[ipar] = w[ipar] ;
     std::sort(sortedev.begin(),sortedev.end(),SortByAbs<double>()) ;
     for(size_t ipar = 0; ipar<m_numberOfPrintedEigenvalues && ipar<N; ++ipar) 
-      logmessage << sortedev[ipar]*scale << ", " ;
-    logmessage << "]" ;
+      logmessage << sortedev[ipar]*scale << (( ipar<N-1) ? "," : "]") ;
+    logmessage << std::endl ;
+
+    // find the smallest eigenvalue and dump the corresponding eigenvector
+    size_t imin(0) ;
+    for(size_t ipar = 1; ipar<N; ++ipar) 
+      if( std::abs(w[ipar]) < std::abs(w[imin]) ) imin = ipar ;
+    logmessage << "Eigenvector for smallest eigenvalue: [ " ;
+    for(size_t ipar = 0; ipar<N; ++ipar) logmessage << z[imin][ipar] << (( ipar<N-1) ? "," : "]") ;
+    
     info() << logmessage.str() << endmsg ;
   }
   
@@ -159,8 +169,7 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
 
     //   Compute bigvector in diagonal basis
     AlVec D(N);
- 
-   
+    
     D = z*m_bigvector;
     //Warning: with GSL, the definition of z is transposed:
     //D = z.T()*m_bigvector; 
@@ -173,14 +182,28 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
     // or cut by value (constraints have large negative value, so the 'abs' should do)
     if( m_eigenValueThreshold > 0 )
       for( size_t i=0; i<N; i++) 
-	keepEigenValue[i] = std::abs(w[i]) > m_eigenValueThreshold ;
-    
+	keepEigenValue[i] = std::abs(w[i]) > m_eigenValueThreshold ||
+	  D[i]*D[i]/w[i] > m_minEigenModeChisquare ;
+
+    double sumchisqrejected(0), sumchisqaccepted(0) ;
+    size_t numrejected(0) ;
     for( size_t i=0; i<N; i++) 
-      if( !keepEigenValue[i] )
+      if( !keepEigenValue[i] ) {
 	info() << "Rejecting eigenvalue: val = " << w[i]
 	       << " chisq = " << D[i]*D[i]/w[i] << endreq ;
-    info() << "Number of rejected eigenvalues: "
-	   << std::count( keepEigenValue.begin(), keepEigenValue.end(), false) << endreq ;
+	++numrejected ;
+	sumchisqrejected += D[i]*D[i]/w[i] ;
+      } else {
+	sumchisqaccepted += D[i]*D[i]/w[i] ;
+	if( std::abs(w[i]) < m_eigenValueThreshold )
+	  info() << "Accepting eigenvalue: val = " << w[i]
+		 << " chisq = " << D[i]*D[i]/w[i] << endreq ;
+      }
+    
+    info() << "Number / total chi2 of rejected eigenvalues: "
+	   << numrejected << " " << sumchisqrejected << endreq ;
+    info() << "Total chi2 of accepted eigenvalues: "
+	   << sumchisqaccepted << endreq ;
     
     // reset the input
     for( size_t i=0; i<N; i++) {
