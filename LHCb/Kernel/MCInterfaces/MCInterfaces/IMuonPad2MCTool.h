@@ -1,4 +1,4 @@
-// $Id: IMuonPad2MCTool.h,v 1.2 2007-06-29 12:07:18 cattanem Exp $
+// $Id: IMuonPad2MCTool.h,v 1.3 2010-03-02 09:49:16 asatta Exp $
 #ifndef IMUONPAD2MCTOOL_H 
 #define IMUONPAD2MCTOOL_H 1
 
@@ -29,17 +29,14 @@ public:
   static const InterfaceID& interfaceID() { return IID_IMuonPad2MCTool; }
 
 
-  virtual LHCb::MCParticle* Pad2MC(LHCb::MuonTileID value, 
-std::vector<LHCb::MuonTileID>& list_digit)=0;
+  virtual LHCb::MCParticle* Pad2MC(LHCb::MuonTileID value)=0;
 
 
   
-  virtual bool isXTalk(LHCb::MuonTileID value, LHCb::MCParticle*& pp,
-std::vector<LHCb::MuonTileID>& list_digit)=0;
+  virtual bool isXTalk(LHCb::MuonTileID value, LHCb::MCParticle*& pp)=0;
 //  virtual LHCb::MCParticle* PadXtalk2MC(LHCb::MuonTileID value, 
 //std::vector<LHCb::MuonTileID> list)=0;
-  virtual LHCb::MCParticle* PadNoXtalk2MC(LHCb::MuonTileID value, 
-std::vector<LHCb::MuonTileID>& list_digit)=0;
+  virtual LHCb::MCParticle* PadNoXtalk2MC(LHCb::MuonTileID value)=0;
 protected:
 
 private:

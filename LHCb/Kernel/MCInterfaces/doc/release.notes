@@ -3,6 +3,8 @@
 ! Responsible : Marco Cattaneo
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
+! 2010-03-02 - Alessia Satta
+ - Changes in IMuonPad2MCTool interface
 
 !==================== MCInterfaces v1r10 2009-11-13 ==========================
 ! 2009-11-13 - Marco Cattaneo
