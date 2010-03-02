@@ -1,8 +1,19 @@
-! $Id: release.notes,v 1.509 2010-02-26 21:32:03 graven Exp $
+! $Id: release.notes,v 1.510 2010-03-02 14:05:31 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-03-02 - Juan Palacios
+ - src/FilterDesktop.cpp
+  . Remove all Clone* properties. Filtered particles are no longer cloned, 
+    pointers are put in LHCb::Particles::Selection container in AlgName+"/Particles"
+ - src/PVRelatorAlg.h
+  . i_get now checks existence of T::Container OR T::Range.
+ - src/PVRelatorAlg.cpp
+  . Use Particle::Range and Vertex::Range.
+ - cmt/requirements
+  . Increase version to v20r2.
 
 !========================== DaVinciTools v20r1 2010-02-26 ===================
 
