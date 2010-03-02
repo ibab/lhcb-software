@@ -683,7 +683,7 @@ void RawDataFormatTool::decodeToSmartIDs( const LHCb::RawBank & bank,
 {
 
   // Check magic code for general data couurption
-  if ( RawBank::MagicPattern != bank.magic() )
+  if ( LHCb::RawBank::MagicPattern != bank.magic() )
   {
     Error( "Magic Pattern mis-match" ).ignore();
   }
