@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.25 2009-02-13 18:19:23 janos Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.26 2010-03-02 12:02:03 akozlins Exp $
 // Include files
 #include <algorithm>
 #include <sstream>
@@ -414,7 +414,13 @@ StatusCode OTRawBankDecoder::decodeGolHeaders(const LHCb::RawEvent& event) const
     
     for (std::vector<LHCb::RawBank*>::const_iterator  ibank = OTBanks.begin();
          ibank != OTBanks.end() ; ++ibank) {
-      
+
+      if( LHCb::RawBank::MagicPattern != (*ibank)->magic() )
+      {
+        Error("Wrong 'magic' value: skip decoding this RawBank.", StatusCode::FAILURE, 0).ignore();
+        continue;
+      }
+
       // Report the bank size and version
       if (msgLevel(MSG::DEBUG))
         debug() << "OT Bank sourceID= " << (*ibank)->sourceID() 
@@ -520,6 +526,13 @@ StatusCode OTRawBankDecoder::decode( OTDAQ::RawEvent& otrawevent ) const
   bool decodingerror(false) ;
   for (std::vector<LHCb::RawBank*>::const_iterator  ibank = banks.begin();
        ibank != banks.end() ; ++ibank) {
+
+    if( LHCb::RawBank::MagicPattern != (*ibank)->magic() )
+    {
+      Error("Wrong 'magic' value: skip decoding this RawBank.", StatusCode::FAILURE, 0).ignore();
+      continue;
+    }
+
     const unsigned int* idata = (*ibank)->data() ;
     otbankcontainer.push_back( OTDAQ::RawBank( (*ibank)->version(), (*ibank)->size(),
 					       OTDAQ::OTSpecificHeader(*idata))) ;
