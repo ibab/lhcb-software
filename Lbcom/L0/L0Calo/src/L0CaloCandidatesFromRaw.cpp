@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRaw.cpp,v 1.19 2009-10-29 10:50:58 robbep Exp $
+// $Id: L0CaloCandidatesFromRaw.cpp,v 1.20 2010-03-02 10:04:18 robbep Exp $
 // Include files 
 // local
 #include "L0CaloCandidatesFromRaw.h"
@@ -82,7 +82,7 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
 
     rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default ) ;
     const std::vector<LHCb::RawBank*>& banks = 
-      rawEvt->banks( LHCb::RawBank::L0Calo );
+      rawEvt -> banks( LHCb::RawBank::L0Calo );
     
     // check presence of error bank
     const std::vector< LHCb::RawBank* > * errBanks = 
@@ -107,6 +107,12 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
       data.reserve( banks.size() ) ;
       for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = banks.begin(); 
             banks.end() != itBnk; ++itBnk ) {
+        if ( LHCb::RawBank::MagicPattern != (*itBnk) -> magic() ) {
+          Error( "L0Calo Bank source has bad magic pattern" ).ignore() ;
+          readoutStatus.addStatus( (*itBnk) -> sourceID() , 
+                                   LHCb::RawBankReadoutStatus::Corrupted ) ;
+          continue ;
+        }
 
         data.push_back( std::vector< unsigned int >( (*itBnk) -> begin< unsigned int >() ,
                                                      (*itBnk) -> end< unsigned int >() ) ) ;
