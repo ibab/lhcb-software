@@ -1,12 +1,9 @@
-! $Id: release.notes,v 1.89 2010-03-02 10:34:07 albrecht Exp $
+! $Id: release.notes,v 1.90 2010-03-02 10:55:20 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
-
-! 2010-03-02 - Johannes Albrecht
- - HltReco.py: add Hlt1 seeding sequence
 
 ! 2010-02-26 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691. Major changes 
@@ -32,6 +29,10 @@
    . Create a new file HltPVs.py which defines the Hlt primary vertex 
      reconstruction. This correctly picks up the relevant pieces from
      HltReco and Hlt2PID and speels out the dependencies explicitly. 
+
+!========================== HltLine v3r2  2010-03-02 ===================
+! 2010-03-02 - Johannes Albrecht
+ - HltReco.py: add Hlt1 seeding sequence
 
 !========================== HltLine v3r1p1 2010-02-26 ===================
 ! 2010-02-26 - Juan Palacios
