@@ -4,6 +4,7 @@
 
 ! 2010-02-22 - Wouter Hulsbergen
  - fixed v3r0 after migration of files to another package
+ - added cut on eigenmode chisquare in DiagSolvTool
 
 !=========================== AlignSolvTools v3r0 2009-07-06 ==================
 
