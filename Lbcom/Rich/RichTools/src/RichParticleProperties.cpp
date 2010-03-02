@@ -104,11 +104,12 @@ StatusCode Rich::ParticleProperties::initialize()
     for ( std::vector<std::string>::const_iterator iS = m_pidTypesJO.begin();
           iS != m_pidTypesJO.end(); ++iS )
     {
-      if      ( "electron" == *iS ) { m_pidTypes.push_back(Rich::Electron); }
-      else if ( "muon" == *iS     ) { m_pidTypes.push_back(Rich::Muon); }
-      else if ( "pion" == *iS     ) { m_pidTypes.push_back(Rich::Pion); hasPion = true; }
-      else if ( "kaon" == *iS     ) { m_pidTypes.push_back(Rich::Kaon); }
-      else if ( "proton" == *iS   ) { m_pidTypes.push_back(Rich::Proton); }
+      if      ( "electron"       == *iS ) { m_pidTypes.push_back(Rich::Electron); }
+      else if ( "muon"           == *iS ) { m_pidTypes.push_back(Rich::Muon); }
+      else if ( "pion"           == *iS ) { m_pidTypes.push_back(Rich::Pion); hasPion = true; }
+      else if ( "kaon"           == *iS ) { m_pidTypes.push_back(Rich::Kaon); }
+      else if ( "proton"         == *iS ) { m_pidTypes.push_back(Rich::Proton); }
+      else if ( "belowThreshold" == *iS ) { m_pidTypes.push_back(Rich::BelowThreshold); }
       else
       {
         return Error( "Unknown particle type from options " + *iS );

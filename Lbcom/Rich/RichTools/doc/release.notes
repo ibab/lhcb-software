@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2010-03-02 - Chris Jones
+ - Add support "Below Threshold" Particle ID type.
+
 !=========================== RichTools v2r29 2010-02-24 ======================
 ! 2010-02-18 - Chris Jones
  - Fix crash when running average is turn on in Rich::HPDOccupancyTool due to
