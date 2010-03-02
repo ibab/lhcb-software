@@ -1,8 +1,10 @@
-// $Id: PVRelatorAlg.h,v 1.8 2009-08-31 20:48:31 jpalac Exp $
+// $Id: PVRelatorAlg.h,v 1.9 2010-03-02 14:04:12 jpalac Exp $
 #ifndef PVRELATORALG_H 
 #define PVRELATORALG_H 1
 
 // Include files
+// boost
+ #include  <boost/type_traits/remove_pointer.hpp> 
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
@@ -86,7 +88,10 @@ private:
   inline T* 
   i_get(const std::string& location) const
   {
-    return (exist<T>( location )) ? get<T>( location ) : 0 ;
+    typedef typename boost::remove_pointer<typename T::value_type>::type ContainedType;
+    const bool exists = 
+      exist<ContainedType::Container>( location ) || exist<T>(location);
+    return exists ? get<T>( location ) : 0 ;
   }
 
   Particle2Vertex::WTable* table() const;
