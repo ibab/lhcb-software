@@ -10,7 +10,6 @@ use GaudiKernel        v*
 # Packages needed to resolve external dependencies at run time
 use Python             v*    LCG_Interfaces -no_auto_imports
 use HepMC              v*    LCG_Interfaces -no_auto_imports
-use processing         v*    LCG_Interfaces
 
 #-- Database
 use DDDB               v*    Det            -no_auto_imports
