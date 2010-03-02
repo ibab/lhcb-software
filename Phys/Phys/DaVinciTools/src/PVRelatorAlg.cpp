@@ -1,4 +1,4 @@
-// $Id: PVRelatorAlg.cpp,v 1.10 2009-08-31 20:48:31 jpalac Exp $
+// $Id: PVRelatorAlg.cpp,v 1.11 2010-03-02 14:04:47 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -112,8 +112,8 @@ StatusCode PVRelatorAlg::execute() {
 Particle2Vertex::WTable* PVRelatorAlg::table() const
 {
 
-  typedef LHCb::Particle::Container Particles;
-  typedef LHCb::RecVertex::Container Vertices;
+  typedef LHCb::Particle::Range Particles;
+  typedef LHCb::RecVertex::Range Vertices;
   typedef Particle2Vertex::LightWTable RelTable;  
 
   const Particles* particles = i_get<Particles>(m_particleInputLocation);
