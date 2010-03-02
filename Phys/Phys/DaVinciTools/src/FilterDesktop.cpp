@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.9 2009-12-18 10:30:36 ibelyaev Exp $
+// $Id: FilterDesktop.cpp,v 1.10 2010-03-02 14:04:57 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -42,7 +42,8 @@ using namespace LoKi ;
 // ============================================================================
 /** @class FilterDesktop 
  *  LoKi/Bender "Hybrid" (re)implementation of simple algorithm with 
- *  filters the input particles ("FilterDesktop")
+ *  filters the input particles ("FilterDesktop"). Stores pointers to the 
+ *  selected input particles, as defined by InputLocations.
  *
  *  The important properties (in addtion to the base class' properties)
  *    - "Factory"   : the type/name of LoKi/Bender 'hybrid' factory
@@ -52,9 +53,6 @@ using namespace LoKi ;
  *    - "InputPlotsPath"   : THS path for 'input' plots 
  *    - "OutputPlotsTool"  : the type/name of PlotTool for 'output' particles 
  *    - "OutputPlotsPath"  : THS path for 'output' plots 
- *    - "CloneFinalStates" : ? 
- *    - "CloneDaughetrs"   : ? 
- *    - "CloneTree"        : ? 
  *
  *  The important counters (in addition to counters form DVAlgorithm)
  *    - "#inputs"    : number of inptu particles 
@@ -202,10 +200,6 @@ protected:
     , m_outputPlotsTool  ( "LoKi::Hybrid::PlotTool/OutputPlots" )
     , m_outputPlots      (  0  )
     , m_outputPlotsPath  ( "O" + name  )
-  // cloning rules:
-    , m_cloneFinalStates ( false ) 
-    , m_cloneDaughters   ( false ) 
-    , m_cloneTree        ( false )
       // update?
     , m_to_be_updated1   ( true ) 
     , m_to_be_updated2   ( true ) 
@@ -272,10 +266,7 @@ protected:
         m_postMonitorCode  , 
         "The code used for (post)monitoring of output particles" )
       -> declareUpdateHandler ( &FilterDesktop::updateHandler1 , this ) ;
-    //
-    declareProperty ( "CloneFinalState" , m_cloneFinalStates ) ;
-    declareProperty ( "CloneDaughters"  , m_cloneDaughters   ) ;
-    declareProperty ( "CloneTree"       , m_cloneTree        ) ;
+
     // 
     StatusCode sc = setProperty ( "HistoProduce" , false ) ;
     Assert ( sc.isSuccess() , "Could not reset property HistoProduce" ) ;
@@ -446,11 +437,6 @@ private:
   /// the THS path for the output plots 
   std::string m_outputPlotsPath ;                    // the output plots path 
   //
-  // cloning rules:
-  //
-  bool m_cloneFinalStates ;
-  bool m_cloneDaughters   ;
-  bool m_cloneTree        ;
   // ==========================================================================
   /// the flag to indicate the nesessity of update 
   bool m_to_be_updated1 ; // the flag to indicate the nesessity of update 
@@ -493,11 +479,9 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
   //
   // copy the lines from the previous implementation 
   //
-  LHCb::Particle::ConstVector accepted  ;
-  accepted.reserve ( particles.size () ) ;
-  LHCb::Particle::ConstVector daughters ;
+  LHCb::Particle::Selection* accepted = new LHCb::Particle::Selection;
+  put(accepted, desktop()->getOutputLocation()+"/Particles");
   //
-  unsigned int nPass = 0  ;
   StatEntity& cnt = counter ( "efficiency" ) ;
   //
   for ( LHCb::Particle::ConstVector::const_iterator ip = particles.begin() ; 
@@ -509,30 +493,15 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
     // some statistics 
     cnt += decision ;
     if  ( !decision ) { continue ; }                       // CONTINUE
-    // statistics 
-    ++nPass ;                     // statistics 
     //
-    if (!m_cloneFinalStates && !m_cloneDaughters) 
-    { accepted.push_back ( p ) ; }
-    // 
-    if ( m_cloneTree || m_cloneFinalStates || m_cloneDaughters)
-    {
-      daughters.clear() ;
-      if      ( m_cloneDaughters   ) { daughters = p->daughtersVector ()           ; }
-      else if ( m_cloneTree        ) { daughters = descendants()->descendants( p ) ; }
-      else if ( m_cloneFinalStates ) { daughters = descendants()->finalStates( p ) ; }
-      // 
-      accepted.insert ( accepted.end() , daughters.begin() , daughters.end() ) ;
-    }
+    accepted->push_back ( p ) ;
     //
-  }  
-  // clone the selected particles & trees 
-  StatusCode sc = desktop()->cloneTrees(accepted);
-  if ( sc.isFailure() ) { return Error ("Error from desktop()::clone", sc )  ; }
+  }
+
   // make the final plots 
   if ( produceHistos () && 0 != m_outputPlots ) 
   {
-    sc = m_outputPlots -> fillPlots ( accepted ) ;
+    StatusCode sc = m_outpuPlots -> fillPlots ( *accepted ) ;
     if ( sc.isFailure () ) 
     { return Error ( "Error from Output Plots tool", sc ) ; }
   }
@@ -542,10 +511,10 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
   { m_postMonitor ( particles ) ; }
 
   /// make the filter decision
-  setFilterPassed ( !accepted.empty() );
+  setFilterPassed ( !accepted->empty() );
   // some statistics 
   counter ( "#input"  ) += particles.size() ;
-  counter ( "#passed" ) += nPass            ;
+  counter ( "#passed" ) += accepted->size() ;
   //
   return StatusCode::SUCCESS;
 }
