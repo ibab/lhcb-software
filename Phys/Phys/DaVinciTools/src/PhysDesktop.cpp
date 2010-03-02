@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.97 2010-03-02 14:04:12 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.98 2010-03-02 17:06:55 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -733,14 +733,25 @@ StatusCode PhysDesktop::getInputRelations(std::vector<std::string>::const_iterat
 // To make sure each DVAlgorithm always writes out something
 //=============================================================================
 StatusCode PhysDesktop::writeEmptyContainerIfNeeded(){
+  if (msgLevel(MSG::DEBUG)) debug() << "Saving empty containers at " << m_outputLocn << endmsg ;
   StatusCode sc = StatusCode::SUCCESS;
-  if ((!exist<LHCb::Particles>(m_outputLocn+"/Particles")) || 
-      (!exist<LHCb::Vertices>(m_outputLocn+"/Vertices"))){
-    LHCb::Particle::ConstVector pEmpty;
-    LHCb::Vertex::ConstVector vEmpty;
-    sc = saveDesktop(pEmpty,vEmpty);
+
+  if (! ( exist<LHCb::Particle::Container>(m_outputLocn+"/Particles") ||
+          exist<LHCb::Particle::Selection>(m_outputLocn+"/Particles") ) ) {  
+    saveParticles(LHCb::Particle::ConstVector());
+  }
+  
+  if  (sc.isFailure() ) return sc;
+  
+  if (! ( exist<LHCb::Vertex::Container>(m_outputLocn+"/Vertices") ||
+          exist<LHCb::Vertex::Selection>(m_outputLocn+"/Vertices") ) ) {  
+    saveVertices(LHCb::Vertex::ConstVector());
+  }
+
+  if  (sc.isSuccess() ) {
     if (msgLevel(MSG::DEBUG)) debug() << "Saved empty containers at " << m_outputLocn << endmsg ;
-  }  
+  }
+  
   return sc ;
 }
 //=============================================================================
