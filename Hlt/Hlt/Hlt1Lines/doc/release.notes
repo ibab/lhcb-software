@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.132 2010-03-02 11:23:52 gligorov Exp $
+! $Id: release.notes,v 1.133 2010-03-02 12:42:06 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -13,6 +13,19 @@
  - Follow developments in Savannah tasks 13784/12691. Change Hlt/Track
    to Hlt1/Track to obey naming convention in HLT.
 
+! 2010-10-26 - V. Gligorov
+ - Follow developments in HltLine.HltPVs. PV2D is now a function
+   to prevent premature initialization of the Hlt2 reconstruction.
+   See Savannah tasks 13784/12691 for details.
+
+! 2010-02-24 - V. Gligorov
+ - Follow progress of Savannah tasks 13784 and 12691 by updating Hlt1 lines
+   to get their primary vertices from HltPVs.py and not HltReco.py 
+
+!========================== Hlt1Lines v2r3 2010-03-02 ===================
+! 2010-03-02 - Gerhard Raven
+ - simplify/unify creation of microbias lines
+
 ! 2010-03-02 - Johannes Albrecht
  - add micro bias line using T-tracks
 
@@ -22,15 +35,6 @@
 
 ! 2010-02-26 - Johannes Albrecht
  - Hlt1CosmicLines: remove L0 decision requirement
-
-! 2010-10-26 - V. Gligorov
- - Follow developments in HltLine.HltPVs. PV2D is now a function
-   to prevent premature initialization of the Hlt2 reconstruction.
-   See Savannah tasks 13784/12691 for details.
-
-! 2010-02-24 - V. Gligorov
- - Follow progress of Savannah tasks 13784 and 12691 by updating Hlt1 lines
-   to get their primary vertices from HltPVs.py and not HltReco.py 
  
 !========================== Hlt1Lines v2r2p1 2010-02-21 ===================
 ! 2010-02-18 - Gerhard Raven

@@ -22,38 +22,20 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
                     , ODIN = '( ODIN_BXTYP == LHCb.ODIN.%s ) & (ODIN_TRGTYP == LHCb.ODIN.%s)' % ( BXType, self.getProp('NoBiasTriggerType') )
                     , postscale = self.postscale
                     ) 
-    def __create_microbias_line__(self) :
-        from HltLine.HltReco import MinimalRZVelo
+    def __create_microbias_line__(self, name, tracking) :
         from HltLine.HltLine import Hlt1Member as Member
-        Line ( 'MBMicroBiasRZVelo'
+        Line ( 'MBMicroBias%s' % name 
                , prescale = self.prescale
-               , ODIN = '( ODIN_BXTYP == LHCb.ODIN.BeamCrossing ) & (ODIN_TRGTYP <= LHCb.ODIN.LumiTrigger)'
-               , algos = [ MinimalRZVelo
+               , ODIN = '( ODIN_BXTYP == LHCb.ODIN.BeamCrossing ) & (ODIN_TRGTYP == LHCb.ODIN.LumiTrigger)'
+               , algos = [ tracking
                            , Member( 'Hlt::TrackFilter','All'
                                      , Code = [ 'TrALL' ]
-                                     , InputSelection = 'TES:%s' % MinimalRZVelo.outputSelection()
+                                     , InputSelection = 'TES:%s' % tracking.outputSelection()
                                      , OutputSelection = '%Decision'
                                      ) 
                            ]
                , postscale = self.postscale
                ) 
-
-        from HltLine.HltReco import Hlt1Seeding
-        return Line ( 'MBMicroBiasTStation'
-                      , prescale = self.prescale
-                      , ODIN = '( ODIN_BXTYP == LHCb.ODIN.BeamCrossing ) & (ODIN_TRGTYP <= LHCb.ODIN.LumiTrigger)'
-                      , algos = [ Hlt1Seeding
-                                  , Member( 'Hlt::TrackFilter','All'
-                                            , Code = [ 'TrALL' ]
-                                            , InputSelection = 'TES:%s' % Hlt1Seeding.outputSelection()
-                                            , OutputSelection = '%Decision'
-                                            ) 
-                                  ]
-                      , postscale = self.postscale
-                      )
-    
-    
-    
 
     def __create_minibias_line__(self, BXType):
         '''
@@ -74,4 +56,6 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
             self.__create_minibias_line__(i)
             self.__create_nobias_line__(i)
 
-        self.__create_microbias_line__()
+        from HltLine.HltReco import MinimalRZVelo, Hlt1Seeding
+        self.__create_microbias_line__('RZVelo',MinimalRZVelo)
+        self.__create_microbias_line__('TStation',Hlt1Seeding)
