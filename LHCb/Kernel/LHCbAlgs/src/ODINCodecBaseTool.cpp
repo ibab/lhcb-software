@@ -72,7 +72,8 @@ LHCb::ODIN* ODINCodecBaseTool::i_decode(const LHCb::RawBank* bank, LHCb::ODIN* o
   }
 
   // Check bank type
-  Assert(bank->type() == LHCb::RawBank::ODIN, "Wrong raw bank type");
+  Assert(bank->type() == LHCb::RawBank::ODIN, "Wrong ODIN raw bank type");
+  Assert(bank->magic() == LHCb::RawBank::MagicPattern, "Magic pattern mismatch in ODIN raw bank");
 
   // Validate bank version
   const unsigned int version = bank->version();
@@ -222,7 +223,7 @@ LHCb::RawBank* ODINCodecBaseTool::i_encode(const LHCb::ODIN *odin) {
   data[LHCb::ODIN::Word7] = (unsigned int) ( ((odin->detectorStatus() << LHCb::ODIN::DetectorStatusBits) & LHCb::ODIN::DetectorStatusMask) |
                                              ((odin->errorBits() << LHCb::ODIN::ErrorBits) & LHCb::ODIN::ErrorMask) );
 
-  // This conversion is needed to be able to disentagle the enum internal (C) representation
+  // This conversion is needed to be able to disentangle the enum internal (C) representation
   // from the hardware ODIN bit codes.
   int triggerType = 0;
   switch (odin->triggerType()) {
