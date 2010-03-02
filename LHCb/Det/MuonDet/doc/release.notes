@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.140 2010-02-12 16:50:41 cattanem Exp $
+! $Id: release.notes,v 1.141 2010-03-02 09:41:08 asatta Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+! 2010-03-02 - Alessia Satta
+ - Improve coords - strips matching (MuonDAQHelper)
 !========================= MuonDet v9r1 2010-02-12 ==========================
 ! 2010-02-09 - Alessia Satta
  - Add few methods

@@ -1,4 +1,4 @@
-// $Id: MuonDAQHelper.cpp,v 1.14 2010-02-11 09:31:36 asatta Exp $
+// $Id: MuonDAQHelper.cpp,v 1.15 2010-03-02 09:41:08 asatta Exp $
 // Include files
 
 #include "GaudiKernel/SmartDataPtr.h"
@@ -1579,6 +1579,12 @@ StatusCode MuonDAQHelper::findStrips(LHCb::MuonTileID pad,
   for(int ilay=0;ilay<num_lay;ilay++){
     MuonLayout lay(m_layoutX[ilay][station*4+region],
                    m_layoutY[ilay][station*4+region]);
+    if(lay==pad.layout()){
+      strips[0]=pad.containerID(lay);
+      strips[1]=null;
+      return StatusCode::SUCCESS;
+    }
+   
     strips[ilay]=pad.containerID (lay);
   }
   return StatusCode::SUCCESS;
