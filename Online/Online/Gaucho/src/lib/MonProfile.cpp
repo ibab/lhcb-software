@@ -246,6 +246,12 @@ void MonProfile::loadObject(){
 
 void MonProfile::splitObject(){
   //need some protection here
+  if (!m_profile) {
+     isLoaded = false;
+     MsgStream msg = createMsgStream();
+     msg << MSG::WARNING << "Null pointer m_profile. MonProfile can not be not loaded."<< endreq;
+     return;
+  } 
   try {
      FriendOfTProfile * fot = (FriendOfTProfile *)m_profile; 
   
@@ -309,13 +315,13 @@ void MonProfile::splitObject(){
    }
   catch (const std::exception &ex){
     MsgStream msg = createMsgStream();
-    msg << MSG::WARNING << "std::exception: " << ex.what() << ". MonProfile not loaded." << endreq;
+    msg << MSG::WARNING << "std::exception: " << ex.what() << ". MonProfile can not be loaded." << endreq;
     isLoaded = false;
     return;
   }  
   catch (...){
     MsgStream msg = createMsgStream();
-    msg << MSG::WARNING << "unrecognized exception. MonProfile not loaded."<< endreq;
+    msg << MSG::WARNING << "unrecognized exception. MonProfile can not be loaded."<< endreq;
     isLoaded = false;
   }     
 }
