@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.29 2010-02-12 23:40:52 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.30 2010-03-02 16:36:49 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -183,6 +183,14 @@ bool L0DUFromRawTool::decoding(int ibank){
     m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Missing);
     return false;
   }
+
+  // Check Magic pattern
+  if( LHCb::RawBank::MagicPattern != bank->magic() ) {
+    Error("Bad MagicPattern",StatusCode::SUCCESS).ignore();
+    m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::BadMagicPattern);
+    return false;
+  }
+
 
 
   // ------------------------

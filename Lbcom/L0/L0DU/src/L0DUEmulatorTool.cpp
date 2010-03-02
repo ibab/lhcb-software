@@ -1,4 +1,4 @@
-// $Id: L0DUEmulatorTool.cpp,v 1.15 2010-02-23 20:06:08 odescham Exp $
+// $Id: L0DUEmulatorTool.cpp,v 1.16 2010-03-02 16:36:49 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -65,13 +65,21 @@ StatusCode L0DUEmulatorTool::initialize(){
 //=============================================================================
 StatusCode L0DUEmulatorTool::process(LHCb::L0DUConfig* config,  LHCb::L0ProcessorDatas* datas){
   m_config = config;
-  if(!m_decoder -> setL0ProcessorData(datas))return StatusCode::FAILURE;
+  //  if(!m_decoder -> setL0ProcessorData(datas))return StatusCode::FAILURE;
+  if(!m_decoder -> setL0ProcessorData(datas)){
+    Warning("L0ProcessorData decoder failed",StatusCode::SUCCESS).ignore();
+    counter("Error with Processor data")+=1;
+  }  
   return processing();
 }
 
 StatusCode L0DUEmulatorTool::process(LHCb::L0DUConfig* config,  std::vector<std::string> dataLocs){
   m_config = config;
-  if(!m_decoder -> setL0ProcessorData(dataLocs))return StatusCode::FAILURE;
+  //  if(!m_decoder -> setL0ProcessorData(dataLocs))return StatusCode::FAILURE;
+  if(!m_decoder -> setL0ProcessorData(dataLocs)){
+    Warning("L0ProcessorData decoder failed",StatusCode::SUCCESS).ignore();
+    counter("Error with Processor data")+=1;
+}  
   return processing();
 }
 

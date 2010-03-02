@@ -1,4 +1,4 @@
-// $Id: L0ProcessorDataDecoder.cpp,v 1.4 2009-09-17 12:14:50 odescham Exp $
+// $Id: L0ProcessorDataDecoder.cpp,v 1.5 2010-03-02 16:36:49 odescham Exp $
 // ============================================================================
 
 // from Gaudi
@@ -60,7 +60,7 @@ bool L0ProcessorDataDecoder::setL0ProcessorData(std::vector<LHCb::L0ProcessorDat
   for(std::vector<LHCb::L0ProcessorDatas*>::iterator it=datass.begin();datass.end()!=it;it++){
     LHCb::L0ProcessorDatas* datas = *it;
     if(NULL == datas){
-      warning() << "Data container points to NULL " << endmsg;
+      Warning("Data container points to NULL ",StatusCode::SUCCESS).ignore();
       m_ok = false;
       break;
     }
@@ -83,7 +83,7 @@ bool L0ProcessorDataDecoder::setL0ProcessorData(std::vector<std::string> dataLoc
   m_ok=true;
   for(std::vector<std::string>::iterator it=dataLocs.begin();dataLocs.end()!=it;it++){
     if( !exist<LHCb::L0ProcessorDatas>( *it ) ){
-      warning() << "L0ProcessorData container not found at " << *it << endmsg;
+      Warning("L0ProcessorData container not found at " + *it , StatusCode::SUCCESS).ignore();
       m_ok=false;
       break;
     }
@@ -115,11 +115,11 @@ double L0ProcessorDataDecoder::value( const unsigned int base[L0DUBase::Index::S
 
 unsigned long L0ProcessorDataDecoder::digit( const unsigned int base[L0DUBase::Index::Size]){
   
-  if(!m_ok)return 0;
+  //  if(!m_ok)return 0;
 
   LHCb::L0ProcessorData* fiber = m_dataContainer->object( base[ L0DUBase::Index::Fiber ]  )  ;
   if( 0 == fiber ){ 
-    warning() << "Fiber "<< base[ L0DUBase::Index::Fiber ] <<" not found " << endmsg;
+    Warning("Fiber "+ Gaudi::Utils::toString(base[ L0DUBase::Index::Fiber ]) +" not found ",StatusCode::SUCCESS).ignore();
     m_ok=false;
     return 0;
   }
@@ -129,7 +129,7 @@ unsigned long L0ProcessorDataDecoder::digit( const unsigned int base[L0DUBase::I
   if( L0DUBase::Fiber::Empty != base[ L0DUBase::Index::Fiber2 ]  ) {
     LHCb::L0ProcessorData* fiber2= m_dataContainer->object( base[ L0DUBase::Index::Fiber2 ]  )  ;
     if( 0 == fiber2 ){ 
-      error() << "Data ( " << base << " ) not found in the container " << endmsg;
+      Warning("Data ( " + Gaudi::Utils::toString(base) + " ) not found in the container ",StatusCode::SUCCESS).ignore();
       m_ok=false;
       return 0;
     }

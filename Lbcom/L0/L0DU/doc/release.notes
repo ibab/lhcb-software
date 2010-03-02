@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.198 2010-02-25 12:37:49 odescham Exp $
+! $Id: release.notes,v 1.199 2010-03-02 16:36:49 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2010-03-01 Olivier Deschamps
+  - L0ProcessorDecoder/L0DUEmulatorTool : no longer return Failure when processor data is missing. Process anyway with NULL-input (+lot of warnings)
 
 ! 2010-02-25 Olivier Deschamps
   - L0Filter : improve L0Filtering (TCK-dependent orChannels)
@@ -10,7 +13,7 @@
 ! 2010-02-23 Olivier Deschamps
   - L0DURawBankMonitor : 
       - check L0Processor banks exist 
-      - report MuonBX misalignement only when L0Muon data is valid +  mask BXID = 3562->3563 (L0Muon reset)
+      - report MuonBX misalignement only when L0Muon data is valid +  mask BXID = 3561->3563 (L0Muon reset)
   - L0DUEmulatorTool : fix abusive protection against multiple emulations per event 
       (was preventing L0DUMultiTrends and L0ConfigMonitor.opt to run correctly)
   - L0DUMultiConfigProvider : fix verbose messaging when RootInTES != 'T0' (template for adjacent slots re-built at each call)
