@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.cpp,v 1.23 2008-11-28 10:38:18 asatta Exp $
+// $Id: MuonRawBuffer.cpp,v 1.24 2010-03-02 10:52:07 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -247,11 +247,16 @@ StatusCode MuonRawBuffer::getTileAndTDC(std::vector<std::pair<LHCb::MuonTileID,u
 
 StatusCode  MuonRawBuffer::decodeTileAndTDCDC06(const RawBank* rawdata){
 
+   if( RawBank::MagicPattern != rawdata->magic() ) {
+     error()<<"magic pattern not correct in muon bank "<<endreq;
+     return StatusCode::FAILURE;
+   }
+
    unsigned int chIterator=0;
-  const unsigned char* it=rawdata->begin<unsigned char>();    
-  short skip=0;
+   const unsigned char* it=rawdata->begin<unsigned char>();    
+   short skip=0;
   
-  unsigned int tell1Number=(rawdata)->sourceID();
+   unsigned int tell1Number=(rawdata)->sourceID();
    if(tell1Number>=m_M1Tell1){
     //how many pads ?
     const short * itPad=rawdata->begin<short>();
@@ -527,6 +532,13 @@ StatusCode MuonRawBuffer::decodePadsV1(const LHCb::RawBank* r)
 
 StatusCode MuonRawBuffer::decodePadsDC06(const LHCb::RawBank* r)
 {
+
+if( RawBank::MagicPattern != r->magic() ) {
+    error()<<"magic pattern not correct in muon bank "<<endreq;
+    return StatusCode::FAILURE;
+  }
+
+
   const short * it=r->begin<short>();    
   if((unsigned int)(r)->sourceID()>=m_M1Tell1){
     unsigned int tell=(unsigned int)(r)->sourceID();      
@@ -836,6 +848,10 @@ StatusCode  MuonRawBuffer::decodeNZSupp(const LHCb::RawBank* r){
 
   verbose()<<" start decoding "<<endreq;
   unsigned int tell1Num=(r)->sourceID();
+  if( RawBank::MagicPattern != r->magic() ) {
+    error()<<"magic pattern not correct in muon bank "<<endreq;
+    return StatusCode::FAILURE;
+  }
 
   
   if(tell1Num>MuonDAQHelper_maxTell1Number)return StatusCode::FAILURE;
@@ -1072,6 +1088,11 @@ StatusCode MuonRawBuffer::getNZSupp( LHCb::RawEvent* raw,
 
 StatusCode MuonRawBuffer::checkBankSize(const LHCb::RawBank* rawdata)
 {  
+  if( RawBank::MagicPattern != rawdata->magic() ) {
+    error()<<"magic pattern not correct in muon bank "<<endreq;
+    return StatusCode::FAILURE;
+  }
+
   const unsigned short * it=rawdata->begin<unsigned short>();
   unsigned int tell1Number=(rawdata)->sourceID();
   int bank_size=rawdata->size();
