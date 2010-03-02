@@ -1,4 +1,4 @@
-// $Id: MuonPad2MCTool.h,v 1.3 2007-05-29 14:46:29 cattanem Exp $
+// $Id: MuonPad2MCTool.h,v 1.4 2010-03-02 09:51:26 asatta Exp $
 #ifndef MUONPAD2MCTOOL_H 
 #define MUONPAD2MCTOOL_H 1
 
@@ -8,6 +8,7 @@
 #include "MCInterfaces/IMuonPad2MCTool.h"            // Interface
 
 #include "MuonDet/DeMuonDetector.h"
+#include "MuonDet/MuonDAQHelper.h"
 
 /** @class MuonPad2MCTool MuonPad2MCTool.h
  *  
@@ -25,22 +26,19 @@ public:
   virtual ~MuonPad2MCTool( ); ///< Destructor
   StatusCode initialize();
   StatusCode finalize();
-  LHCb::MCParticle* Pad2MC(LHCb::MuonTileID value,
-                             std::vector<LHCb::MuonTileID>& list_digit);
+  LHCb::MCParticle* Pad2MC(LHCb::MuonTileID value);
   
-  bool isXTalk(LHCb::MuonTileID value,LHCb::MCParticle*& pp,
-                       std::vector<LHCb::MuonTileID>& list_digit);
+  bool isXTalk(LHCb::MuonTileID value,LHCb::MCParticle*& pp);
 //  virtual LHCb::MCParticle* PadXtalk2MC(LHCb::MuonTileID value,
 //                                  std::vector<LHCb::MuonTileID>  & 
 //                                        list_digit);
-  LHCb::MCParticle* PadNoXtalk2MC(LHCb::MuonTileID value,
-                                    std::vector<LHCb::MuonTileID>& list_digit);
+  LHCb::MCParticle* PadNoXtalk2MC(LHCb::MuonTileID value);
 
 protected:
 
 private:
-  StatusCode XtalkStrip(LHCb::MuonTileID tile,LHCb::MCParticle*& pp,std::vector<LHCb::MuonTileID>& list_digit);
-   StatusCode XtalkPad(LHCb::MuonTileID tile,LHCb::MCParticle*& pp,std::vector<LHCb::MuonTileID>& list_digit);
+  StatusCode XtalkStrip(LHCb::MuonTileID tile,LHCb::MCParticle*& pp);
+   StatusCode XtalkPad(LHCb::MuonTileID tile,LHCb::MCParticle*& pp);
   
  DeMuonDetector*   m_muonDetector;
 

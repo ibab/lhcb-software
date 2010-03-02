@@ -1,4 +1,4 @@
-// $Id: MuonPad2MCTool.cpp,v 1.2 2007-01-15 16:42:36 cattanem Exp $
+// $Id: MuonPad2MCTool.cpp,v 1.3 2010-03-02 09:51:26 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -59,8 +59,7 @@ StatusCode MuonPad2MCTool::finalize() {
 
 
 
-MCParticle* MuonPad2MCTool::PadNoXtalk2MC(LHCb::MuonTileID tile,
-                                   std::vector<LHCb::MuonTileID>& list_digit)
+MCParticle* MuonPad2MCTool::PadNoXtalk2MC(LHCb::MuonTileID tile)
 {
   MCParticle* pp=NULL;
   MCParticle* pplink=NULL;
@@ -72,24 +71,27 @@ MCParticle* MuonPad2MCTool::PadNoXtalk2MC(LHCb::MuonTileID tile,
   
   bool first=true;
   bool second=false;
-  
-  for(iDigit = list_digit.begin(); iDigit != list_digit.end(); iDigit++){
-    MuonTileID digitile=(*iDigit);
-    if((digitile.intercept(tile)).isValid()){
-      //     info()<<" find the digit corresponding to tile "<<first<<endreq;
-      pplink = myLink.first( digitile );
-      //info()<<pp<<endreq;
-      if(first){
-        ppfirst=pplink;
-        first=false;
-      }else{
-        second=true;
-        
-        if(pplink!=NULL&&pplink==ppfirst) return pplink;       
-      }
+  LHCb::MuonTileID strips[2]={0,0};
+  StatusCode sc=m_muonDetector->getDAQInfo()->findStrips(tile,strips);  
+  if(sc.isFailure())return pp;
+  if(strips[0].isValid()){
+    pplink=myLink.first(strips[0]);
+    if(first){
+      ppfirst=pplink;
+      first=false;
+    }    
+  }
+  if(strips[1].isValid()){
+    pplink=myLink.first(strips[1]);
+    if(first){
+      ppfirst=pplink;
+      first=false;
+      if(pplink!=NULL) return pplink;       
+    }else{
+      second=true;
+      if(pplink!=NULL&&pplink==ppfirst) return pplink;
     }
   }
-  
   if(!second){
     if(ppfirst!=NULL){
       pp=ppfirst; 
@@ -100,8 +102,7 @@ MCParticle* MuonPad2MCTool::PadNoXtalk2MC(LHCb::MuonTileID tile,
   
 }
 
-MCParticle* MuonPad2MCTool::Pad2MC(LHCb::MuonTileID tile,
-                                   std::vector<LHCb::MuonTileID>& list_digit)
+MCParticle* MuonPad2MCTool::Pad2MC(LHCb::MuonTileID tile)
 {
   MCParticle* pp=NULL;
   MCParticle* pplink=NULL;
@@ -111,43 +112,42 @@ MCParticle* MuonPad2MCTool::Pad2MC(LHCb::MuonTileID tile,
   if(myLink.notFound())info()<<" my link not found "<<endmsg;
   std::vector<LHCb::MuonTileID>::iterator iDigit;
   
+  LHCb::MuonTileID strips[2]={0,0};
+  StatusCode sc=m_muonDetector->getDAQInfo()->findStrips(tile,strips);  
+  if(sc.isFailure())return pp;
   
-  for(iDigit = list_digit.begin(); iDigit != list_digit.end(); iDigit++){
-    MuonTileID digitile=(*iDigit);
-    if((digitile.intercept(tile)).isValid()){
-        //   info()<<" find the digit corresponding to tile "<<endreq;
-      pplink = myLink.first( digitile );
+  if(strips[0].isValid())
+  {
+    pplink = myLink.first( strips[0] );
  //info()<<" find the digit corresponding to tile "<<pplink<<endreq;
-      if(pplink!=NULL){
-        if(pplink->particleID().abspid()==13)return pplink;
-      }
-      
-      if(pplink!=NULL)pp=pplink;
-      
-    }
+    if(pplink!=NULL){
+      if(pplink->particleID().abspid()==13)return pplink;
+    }      
+    if(pplink!=NULL)pp=pplink;      
+    
   }
+  
   return pp;
   
 }
 
-bool MuonPad2MCTool::isXTalk(LHCb::MuonTileID tile,MCParticle*& pp,
-                       std::vector<LHCb::MuonTileID>& list_digit){
+bool MuonPad2MCTool::isXTalk(LHCb::MuonTileID tile,MCParticle*& pp){
 
    bool xt=false;   
    if(tile.station()==0){
-     XtalkPad(tile,pp,list_digit);
+     XtalkPad(tile,pp);
      if(pp!=NULL) xt=true;
    }else if(tile.station()==3&&tile.region()==0){
-     XtalkPad(tile,pp,list_digit);
+     XtalkPad(tile,pp);
      // if(pp!=NULL)info()<<"found a muon "<<pp->particleID().pid()<<endreq;
      if(pp!=NULL) xt=true;
      
    }else if(tile.station()==4&&tile.region()==0){
-     XtalkPad(tile,pp,list_digit);
+     XtalkPad(tile,pp);
      if(pp!=NULL) xt=true;
 
    }else {
-     XtalkStrip(tile,pp,list_digit);
+     XtalkStrip(tile,pp);
      if(pp!=NULL) xt=true;
    }
    return xt;
@@ -156,7 +156,7 @@ bool MuonPad2MCTool::isXTalk(LHCb::MuonTileID tile,MCParticle*& pp,
 
 
 
-StatusCode MuonPad2MCTool::XtalkPad(MuonTileID tile,MCParticle*& pp,std::vector<LHCb::MuonTileID>& list_digit)
+StatusCode MuonPad2MCTool::XtalkPad(MuonTileID tile,MCParticle*& pp)
 {
   IntLink* link=get<IntLink>(LHCb::MCMuonDigitLocation::MCMuonDigit + "Info");
   if(link){
@@ -171,19 +171,19 @@ StatusCode MuonPad2MCTool::XtalkPad(MuonTileID tile,MCParticle*& pp,std::vector<
       MuonTileID bottom=tile.neighbourID(0,-1);
       MuonTileID left=tile.neighbourID(-1,0);
       MuonTileID rigth=tile.neighbourID(1,0);
-      if(top.isValid())pp=Pad2MC(top,list_digit);
+      if(top.isValid())pp=Pad2MC(top);
       if(pp!=NULL){
         if(abs(pp->particleID().pid())==13)return StatusCode::SUCCESS;
       }
-      if(bottom.isValid())pp=Pad2MC(bottom,list_digit);
+      if(bottom.isValid())pp=Pad2MC(bottom);
       if(pp!=NULL){   
         if(abs(pp->particleID().pid())==13)return StatusCode::SUCCESS;  
       }                
-      if(left.isValid()) pp=Pad2MC(left,list_digit);
+      if(left.isValid()) pp=Pad2MC(left);
       if(pp!=NULL){   
         if(abs(pp->particleID().pid())==13)return StatusCode::SUCCESS;
       }
-      if(rigth.isValid())pp=Pad2MC(rigth,list_digit);
+      if(rigth.isValid())pp=Pad2MC(rigth);
       if(pp!=NULL){
         if(abs(pp->particleID().pid())==13)return StatusCode::SUCCESS;
       }
@@ -196,7 +196,7 @@ StatusCode MuonPad2MCTool::XtalkPad(MuonTileID tile,MCParticle*& pp,std::vector<
 
 
 
-StatusCode MuonPad2MCTool::XtalkStrip(MuonTileID tile,MCParticle*& pp,std::vector<LHCb::MuonTileID>& list_digit)
+StatusCode MuonPad2MCTool::XtalkStrip(MuonTileID tile,MCParticle*& pp)
 {
   MuonTileID uno;
   MuonTileID due;
@@ -222,19 +222,19 @@ StatusCode MuonPad2MCTool::XtalkStrip(MuonTileID tile,MCParticle*& pp,std::vecto
       MuonTileID bottom=uno.neighbourID(0,-1);
       MuonTileID left=uno.neighbourID(-1,0);
       MuonTileID rigth=uno.neighbourID(1,0);
-      if(top.isValid())pp=Pad2MC(top,list_digit);
+      if(top.isValid())pp=Pad2MC(top);
       if(pp!=NULL){
         if(abs(pp->particleID().pid())==13)return StatusCode::SUCCESS;
       }
-      if(bottom.isValid())pp=Pad2MC(bottom,list_digit);
+      if(bottom.isValid())pp=Pad2MC(bottom);
       if(pp!=NULL){
         if(abs(pp->particleID().pid())==13)return StatusCode::SUCCESS;
       }
-      if(left.isValid())pp=Pad2MC(left,list_digit);
+      if(left.isValid())pp=Pad2MC(left);
       if(pp!=NULL){
         if(abs(pp->particleID().pid())==13)return StatusCode::SUCCESS;
       }
-      if(rigth.isValid())pp=Pad2MC(rigth,list_digit);
+      if(rigth.isValid())pp=Pad2MC(rigth);
       if(pp!=NULL){
         if(abs(pp->particleID().pid())==13)return StatusCode::SUCCESS;
       }
@@ -249,19 +249,19 @@ StatusCode MuonPad2MCTool::XtalkStrip(MuonTileID tile,MCParticle*& pp,std::vecto
       MuonTileID bottom=due.neighbourID(0,-1);
       MuonTileID left=due.neighbourID(-1,0);
       MuonTileID rigth=due.neighbourID(1,0);  
-      if(top.isValid())pp=Pad2MC(top,list_digit);
+      if(top.isValid())pp=Pad2MC(top);
       if(pp!=NULL){
         if(abs(pp->particleID().pid())==13)return StatusCode::SUCCESS;
       }
-      if(bottom.isValid())pp=Pad2MC(bottom,list_digit);
+      if(bottom.isValid())pp=Pad2MC(bottom);
       if(pp!=NULL){
         if(abs(pp->particleID().pid())==13)return StatusCode::SUCCESS;
       }
-      if(left.isValid())pp=Pad2MC(left,list_digit);
+      if(left.isValid())pp=Pad2MC(left);
       if(pp!=NULL){
         if(abs(pp->particleID().pid())==13)return StatusCode::SUCCESS;
       }
-      if(rigth.isValid())pp=Pad2MC(rigth,list_digit);
+      if(rigth.isValid())pp=Pad2MC(rigth);
       if(pp!=NULL){
         if(abs(pp->particleID().pid())==13)return StatusCode::SUCCESS;
       }
