@@ -386,7 +386,7 @@ namespace Rich
               {
                 std::ostringstream mess;
                 mess << "Empty HPD data block : L0ID = " << (*iHPD).second.header().l0ID();
-                Warning( mess.str(), StatusCode::SUCCESS, 3 ).ignore();
+                Warning( mess.str(), StatusCode::SUCCESS, 0 ).ignore();
               }
 
             } // loop over HPDs
