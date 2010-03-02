@@ -1,10 +1,10 @@
 project DAVINCI
 
-use HLT      HLT_v9r1
-use PHYS     PHYS_v9r1
-use ANALYSIS ANALYSIS_v4r1
-use REC      REC_v8r1
-use LBCOM    LBCOM_v8r2
+use HLT      HLT_v9r2
+use PHYS     PHYS_HEAD
+use ANALYSIS ANALYSIS_HEAD
+use REC      REC_v8r2
+use LBCOM    LBCOM_v8r3
 
 build_strategy with_installarea
 setup_strategy root
