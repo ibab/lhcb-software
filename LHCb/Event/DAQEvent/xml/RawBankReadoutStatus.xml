@@ -33,7 +33,8 @@
         Tell1Error = 128,  
         ErrorBank  = 256,  
         MissingStatus = 512,  
-        Unknown    = 1024 ' 
+        BadMagicPattern  = 1024,
+        Unknown    = 2048 ' 
         access = 'PUBLIC' />
       <!-- 'Unknown' MUST BE THE LAST ITEM -->
 
