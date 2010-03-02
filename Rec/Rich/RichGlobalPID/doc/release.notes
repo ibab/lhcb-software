@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2010-03-02 - Chris Jones
+ - Minor change to enable support for PID'ing "Below Threshold" types
+
 !======================= RichGlobalPID v3r10p4 2009-10-20 ====================
 ! 2009-10-02 - Chris Jones
  - Suppress warning messages about empty track or pixel containers so 0 

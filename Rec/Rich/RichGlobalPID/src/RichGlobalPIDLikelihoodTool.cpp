@@ -633,7 +633,7 @@ LikelihoodTool::deltaLogLikelihood( LHCb::RichRecTrack * track,
 
         // update signal numbers
         const double tmpOldSig =
-          (*iPhoton)->expPixelSignalPhots( (*iPhoton)->richRecTrack()->currentHypothesis() );
+          m_photonSig->predictedPixelSignal( *iPhoton, (*iPhoton)->richRecTrack()->currentHypothesis() );
         oldSig += tmpOldSig;
         newSig += ( (*iPhoton)->richRecTrack() != track ? tmpOldSig :
                     m_photonSig->predictedPixelSignal( *iPhoton, newHypo ) );
