@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.26 2009-10-27 10:11:26 odescham Exp $
+// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.27 2010-03-02 17:35:35 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -167,6 +167,7 @@ const std::vector<LHCb::L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs ( LHCb::RawBank
 
 bool CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
   if(NULL == bank)return false;
+  if( LHCb::RawBank::MagicPattern != bank->magic() )return false;// do not decode when MagicPattern is bad
   unsigned int* data = bank->data();
   int size           = bank->size()/4;  // in bytes in the header
   int version        = bank->version();

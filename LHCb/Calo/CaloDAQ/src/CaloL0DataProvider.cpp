@@ -207,6 +207,7 @@ bool CaloL0DataProvider::decodeTell1 (int source) {
 //==================================
 bool CaloL0DataProvider::decodeBank( LHCb::RawBank* bank ){
   if(NULL == bank)return false;
+  if( LHCb::RawBank::MagicPattern != bank->magic() )return false;// do not decode when MagicPattern is bad
   // Get bank info
   unsigned int* data = bank->data();
   int size           = bank->size()/4;  // Bank size is in bytes
@@ -365,6 +366,7 @@ bool CaloL0DataProvider::decodeBank( LHCb::RawBank* bank ){
 bool CaloL0DataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
 
   if(NULL == bank)return false;
+  if( LHCb::RawBank::MagicPattern != bank->magic() )return false;// do not decode when MagicPattern is bad
 
 
   unsigned int* data = bank->data();

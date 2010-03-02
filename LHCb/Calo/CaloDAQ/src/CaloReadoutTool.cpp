@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.42 2009-10-14 11:35:45 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.43 2010-03-02 17:35:35 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -131,14 +131,17 @@ bool CaloReadoutTool::getCaloBanksFromRaw( ) {
   }
 
   
-  // check banks integrity
-
+  // check banks integrity + Magic pattern
   std::vector<int> sources;
   for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); itB != m_banks->end() ; ++itB ) {
     if(NULL == *itB)continue;
     sources.push_back( (*itB)->sourceID() );
-  }  
-
+    if( LHCb::RawBank::MagicPattern != (*itB)->magic() ) {
+      Error("Bad MagicPattern for sourceID " + Gaudi::Utils::toString( (*itB)->sourceID()),StatusCode::SUCCESS).ignore();
+      m_status.addStatus( (*itB)->sourceID() , LHCb::RawBankReadoutStatus::BadMagicPattern);
+    }  
+  }
+  
   if(m_packed){  // TELL1 format : 1 source per TELL1
     const std::vector<Tell1Param>& tell1s = m_calo->tell1Params();
     for(std::vector<Tell1Param>::const_iterator itt = tell1s.begin() ; itt != tell1s.end() ; itt++){

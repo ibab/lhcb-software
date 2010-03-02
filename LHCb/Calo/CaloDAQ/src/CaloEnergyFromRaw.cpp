@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.30 2009-10-27 10:11:26 odescham Exp $
+// $Id: CaloEnergyFromRaw.cpp,v 1.31 2010-03-02 17:35:35 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -219,6 +219,7 @@ const std::vector<LHCb::CaloDigit>&  CaloEnergyFromRaw::digits ( ) {
 //=============================================================================
 bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
   if(NULL == bank)return false;
+  if( LHCb::RawBank::MagicPattern != bank->magic() )return false;// do not decode when MagicPattern is bad
   // Get bank info
   unsigned int* data = bank->data();
   int size           = bank->size()/4;  // Bank size is in bytes

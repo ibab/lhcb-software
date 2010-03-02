@@ -227,11 +227,9 @@ bool CaloDataProvider::decodeTell1 (int source) {
   int sourceID  ;
 
   
-  for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
-       itB != m_banks->end() ; ++itB ) {
+  for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); itB != m_banks->end() ; ++itB ) {
     sourceID       = (*itB)->sourceID();
     if( source >= 0 && source != sourceID )continue;
-
     found = true;
 
     if(checkSrc( sourceID ))continue;
@@ -256,6 +254,7 @@ bool CaloDataProvider::decodeTell1 (int source) {
 //==================================
 bool CaloDataProvider::decodeBank( LHCb::RawBank* bank ){
   if(NULL == bank)return false;
+  if( LHCb::RawBank::MagicPattern != bank->magic() )return false;// do not decode when MagicPattern is bad
   // Get bank info
   unsigned int* data = bank->data();
   int size           = bank->size()/4;  // Bank size is in bytes
@@ -506,6 +505,7 @@ bool CaloDataProvider::decodeBank( LHCb::RawBank* bank ){
 bool CaloDataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
   
   if(NULL == bank)return false;
+  if( LHCb::RawBank::MagicPattern != bank->magic() )return false;// do not decode when MagicPattern is bad
 
   unsigned int* data = bank->data();
   int size           = bank->size()/4;  // size in byte

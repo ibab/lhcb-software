@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.31 2010-01-20 11:50:32 odescham Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.32 2010-03-02 17:35:35 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -153,6 +153,7 @@ const LHCb::Calo::PrsSpdFiredCells& CaloTriggerBitsFromRaw::prsSpdCells (  LHCb:
 //=========================================================================
 bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
   if(NULL == bank)return false;
+  if( LHCb::RawBank::MagicPattern != bank->magic() )return false;// do not decode when MagicPattern is bad
   unsigned int* data = bank->data();
   int size           = bank->size()/4;  // size in byte
   int version        = bank->version();
