@@ -36,7 +36,7 @@ RawBankReadoutStatusMonitor::RawBankReadoutStatusMonitor( const std::string& nam
   m_degree = 0;
   unsigned int word = 1;
   m_labels.push_back( "Counter" );
-  while( word != LHCb::RawBankReadoutStatus::Unknown ){
+  while( word <= LHCb::RawBankReadoutStatus::Unknown ){
     LHCb::RawBankReadoutStatus::Status stat = (LHCb::RawBankReadoutStatus::Status) word;
     std::stringstream slabel("");
     slabel << stat ;

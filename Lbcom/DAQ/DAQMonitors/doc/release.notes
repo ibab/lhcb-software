@@ -4,6 +4,10 @@
 ! Purpose     : Monitors for DAQ event objects
 !-----------------------------------------------------------------------------
 
+! 2010-02-03 - Olivier Deschamps
+ - RawBankReadoutStatusMonitor : fix missing bin for the last status item ('Unknown')
+
+
 !=========================  DAQMonitors v1r1 2010-02-03 ======================
 ! 2010-01-28 - Olivier Deschamps
  - new monitoring algo : TriggerTypeCounter provides event counter per
