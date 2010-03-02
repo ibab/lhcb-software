@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.10 2010-03-02 14:04:57 jpalac Exp $
+// $Id: FilterDesktop.cpp,v 1.11 2010-03-02 14:55:20 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -501,7 +501,7 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
   // make the final plots 
   if ( produceHistos () && 0 != m_outputPlots ) 
   {
-    StatusCode sc = m_outpuPlots -> fillPlots ( *accepted ) ;
+    StatusCode sc = m_outputPlots -> fillPlots ( *accepted ) ;
     if ( sc.isFailure () ) 
     { return Error ( "Error from Output Plots tool", sc ) ; }
   }
