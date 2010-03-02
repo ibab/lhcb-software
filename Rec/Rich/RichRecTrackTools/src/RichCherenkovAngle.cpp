@@ -77,6 +77,8 @@ CherenkovAngle::avgCherenkovTheta( LHCb::RichRecSegment * segment,
                                    const Rich::ParticleIDType id,
                                    const bool useEmittedSpectrum ) const
 {
+  // protect against the below threshold case
+  if ( id == Rich::BelowThreshold ) return 0;
 
   if ( !segment->averageCKTheta().dataIsValid(id) )
   {
@@ -137,6 +139,9 @@ double CherenkovAngle::avCKRingRadiusLocal( LHCb::RichRecSegment * segment,
                                             const Rich::ParticleIDType id,
                                             const unsigned int nSamples ) const
 {
+  // protect against the below threshold case
+  if ( id == Rich::BelowThreshold ) return 0;
+
   if ( !segment->averageCKRadiusLocal().dataIsValid(id) )
   {
     computeRadii(segment,nSamples);

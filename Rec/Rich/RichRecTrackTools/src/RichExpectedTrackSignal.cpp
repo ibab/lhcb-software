@@ -71,6 +71,8 @@ StatusCode ExpectedTrackSignal::initialize()
 double ExpectedTrackSignal::nEmittedPhotons ( LHCb::RichRecSegment * segment,
                                               const Rich::ParticleIDType id ) const
 {
+  // protect against the below threshold case
+  if ( id == Rich::BelowThreshold ) return 0;
 
   if ( !segment->nEmittedPhotons().dataIsValid(id) )
   {
@@ -107,6 +109,8 @@ double ExpectedTrackSignal::nEmittedPhotons ( LHCb::RichRecSegment * segment,
 double ExpectedTrackSignal::nDetectablePhotons (  LHCb::RichRecSegment * segment,
                                                   const Rich::ParticleIDType id ) const
 {
+  // protect against the below threshold case
+  if ( id == Rich::BelowThreshold ) return 0;
 
   if ( !segment->nDetectablePhotons().dataIsValid(id) )
   {
@@ -145,7 +149,10 @@ double ExpectedTrackSignal::nDetectablePhotons (  LHCb::RichRecSegment * segment
 
 double
 ExpectedTrackSignal::nSignalPhotons (  LHCb::RichRecSegment * segment,
-                                       const Rich::ParticleIDType id ) const {
+                                       const Rich::ParticleIDType id ) const 
+{
+  // protect against the below threshold case
+  if ( id == Rich::BelowThreshold ) return 0;
 
   if ( !segment->nSignalPhotons().dataIsValid( id ) )
   {
@@ -200,6 +207,9 @@ double
 ExpectedTrackSignal::avgSignalPhotEnergy( LHCb::RichRecSegment * segment,
                                           const Rich::ParticleIDType id ) const
 {
+  // protect against the below threshold case
+  if ( id == Rich::BelowThreshold ) return 0;
+
   // First set a 'rough' guess using the emitted energy
   //segment->trackSegment().setAvPhotonEnergy( avgEmitPhotEnergy(segment) );
 
@@ -319,8 +329,11 @@ double
 ExpectedTrackSignal::nSignalPhotons ( LHCb::RichRecTrack * track,
                                       const Rich::ParticleIDType id ) const
 {
+  // protect against the below threshold case
+  if ( id == Rich::BelowThreshold ) return 0;
 
-  if ( !track->nSignalPhotons().dataIsValid(id) ) {
+  if ( !track->nSignalPhotons().dataIsValid(id) ) 
+  {
     double signal = 0;
     for ( LHCb::RichRecTrack::Segments::iterator segment =
             track->richRecSegments().begin();
@@ -337,8 +350,12 @@ ExpectedTrackSignal::nSignalPhotons ( LHCb::RichRecTrack * track,
 double
 ExpectedTrackSignal::nObservableSignalPhotons ( LHCb::RichRecTrack * track,
                                                 const Rich::ParticleIDType id ) const
-{
-  if ( !track->nObservableSignalPhotons().dataIsValid(id) ) {
+{  
+  // protect against the below threshold case
+  if ( id == Rich::BelowThreshold ) return 0;
+
+  if ( !track->nObservableSignalPhotons().dataIsValid(id) ) 
+  {
     double signal = 0;
     for ( LHCb::RichRecTrack::Segments::iterator segment =
             track->richRecSegments().begin();
@@ -356,7 +373,11 @@ double
 ExpectedTrackSignal::nScatteredPhotons ( LHCb::RichRecTrack * track,
                                          const Rich::ParticleIDType id ) const
 {
-  if ( !track->nScatteredPhotons().dataIsValid(id) ) {
+  // protect against the below threshold case
+  if ( id == Rich::BelowThreshold ) return 0;
+
+  if ( !track->nScatteredPhotons().dataIsValid(id) ) 
+  {
     double signal = 0;
     for ( LHCb::RichRecTrack::Segments::iterator segment =
             track->richRecSegments().begin();
@@ -374,7 +395,11 @@ double
 ExpectedTrackSignal::nObservableScatteredPhotons ( LHCb::RichRecTrack * track,
                                                    const Rich::ParticleIDType id ) const
 {
-  if ( !track->nObservableScatteredPhotons().dataIsValid(id) ) {
+  // protect against the below threshold case
+  if ( id == Rich::BelowThreshold ) return 0;
+  
+  if ( !track->nObservableScatteredPhotons().dataIsValid(id) ) 
+  {
     double signal = 0;
     for ( LHCb::RichRecTrack::Segments::iterator segment =
             track->richRecSegments().begin();
@@ -399,7 +424,11 @@ double
 ExpectedTrackSignal::nEmittedPhotons ( LHCb::RichRecTrack * track,
                                        const Rich::ParticleIDType id ) const
 {
-  if ( !track->nEmittedPhotons().dataIsValid(id) ) {
+  // protect against the below threshold case
+  if ( id == Rich::BelowThreshold ) return 0;
+
+  if ( !track->nEmittedPhotons().dataIsValid(id) ) 
+  {
     double signal = 0.0;
     for ( LHCb::RichRecTrack::Segments::iterator segment =
             track->richRecSegments().begin();
@@ -417,7 +446,11 @@ double
 ExpectedTrackSignal::nDetectablePhotons ( LHCb::RichRecTrack * track,
                                           const Rich::ParticleIDType id ) const
 {
-  if ( !track->nDetectablePhotons().dataIsValid(id) ) {
+  // protect against the below threshold case
+  if ( id == Rich::BelowThreshold ) return 0;
+
+  if ( !track->nDetectablePhotons().dataIsValid(id) )
+  {
     double signal = 0;
     for ( LHCb::RichRecTrack::Segments::iterator segment =
             track->richRecSegments().begin();
@@ -519,6 +552,9 @@ bool
 ExpectedTrackSignal::aboveThreshold( LHCb::RichRecSegment * segment,
                                      const Rich::ParticleIDType type ) const
 {
+  // protect against the below threshold case
+  if ( type == Rich::BelowThreshold ) return false;
+
   // Geometrical track segment
   const LHCb::RichTrackSegment & tkSeg = segment->trackSegment();
 
@@ -549,6 +585,9 @@ bool
 ExpectedTrackSignal::aboveThreshold( LHCb::RichRecTrack * track,
                                      const Rich::ParticleIDType type ) const
 {
+  // protect against the below threshold case
+  if ( type == Rich::BelowThreshold ) return false;
+
   // loop over segments
   for ( LHCb::RichRecTrack::Segments::iterator segment = track->richRecSegments().begin();
         segment != track->richRecSegments().end();
@@ -564,6 +603,9 @@ ExpectedTrackSignal::aboveThreshold( LHCb::RichRecTrack * track,
                                      const Rich::ParticleIDType type,
                                      const Rich::RadiatorType radiator ) const
 {
+  // protect against the below threshold case
+  if ( type == Rich::BelowThreshold ) return false;
+
   // loop over segments
   for ( LHCb::RichRecTrack::Segments::iterator segment = track->richRecSegments().begin();
         segment != track->richRecSegments().end();

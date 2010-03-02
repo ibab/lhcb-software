@@ -29,6 +29,9 @@
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichKernel/IRichParticleProperties.h"
 
+// Kernel
+#include "RichKernel/RichMap.h"
+
 namespace Rich
 {
   namespace Rec

@@ -40,12 +40,10 @@ BaseTrSegMakerFromRecoTracks( const std::string& type,
   m_deBeam[Rich::Rich2] = NULL;
 
   // JOs
-
   m_checkBeamP[Rich::Aerogel]  = false;
   m_checkBeamP[Rich::Rich1Gas] = true;
   m_checkBeamP[Rich::Rich2Gas] = false;
   declareProperty( "CheckBeamPipe", m_checkBeamP );
-
   declareProperty( "UseRadiators",  m_usedRads   );
 }
 

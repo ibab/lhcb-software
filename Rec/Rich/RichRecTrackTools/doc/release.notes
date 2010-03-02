@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-03-02 - Chris Jones
+ - Add support for "BelowThreshold" particle ID types
+
 !======================== RichRecTrackTools v1r17 2010-02-24 ================
 ! 2010-02-19 - Chris Jones
  - Extensions to isolated track tool with new methods for track classes

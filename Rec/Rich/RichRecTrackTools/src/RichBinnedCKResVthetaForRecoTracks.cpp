@@ -93,6 +93,8 @@ double
 BinnedCKResVthetaForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
                                                    const Rich::ParticleIDType id ) const
 {
+  // protect against the below threshold case
+  if ( id == Rich::BelowThreshold ) return 0;
 
   if ( !segment->ckThetaResolution().dataIsValid(id) )
   {
@@ -106,7 +108,7 @@ BinnedCKResVthetaForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segmen
 
       // find the smallest, successfully calculated resolution
       double res(999999), tmp_res(0);
-      bool OK[Rich::NParticleTypes];
+      Rich::Map<Rich::ParticleIDType,bool> OK;
       Rich::Particles::const_iterator hypo;
       for ( hypo = m_pidTypes.begin(); hypo != m_pidTypes.end(); ++hypo )
       {
@@ -117,16 +119,19 @@ BinnedCKResVthetaForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segmen
       // give each hypo that was OK, the smallest resolution
       for ( hypo = m_pidTypes.begin(); hypo != m_pidTypes.end(); ++hypo )
       {
-        segment->setCKThetaResolution( *hypo, OK[*hypo] ? static_cast<LHCb::RichRecSegment::FloatType>(res) : 0.0f );
+        if ( *hypo != Rich::BelowThreshold )
+          segment->setCKThetaResolution( *hypo, OK[*hypo] ? 
+                                         static_cast<LHCb::RichRecSegment::FloatType>(res) : 0.0f );
       }
 
       if ( msgLevel(MSG::VERBOSE) )
       {
         for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
               hypo != m_pidTypes.end(); ++hypo )
-        {
-          verbose() << "Segment " << segment->key() << " : " << *hypo
-                    << " ckRes=" << segment->ckThetaResolution( *hypo ) << endmsg;
+        { 
+          if ( *hypo != Rich::BelowThreshold )
+            verbose() << "Segment " << segment->key() << " : " << *hypo
+                      << " ckRes=" << segment->ckThetaResolution( *hypo ) << endmsg;
         }
       }
 

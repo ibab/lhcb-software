@@ -127,6 +127,8 @@ double
 FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
                                                  const Rich::ParticleIDType id ) const
 {
+  // Protect against the non-physical below threshold hypothesis
+  if ( Rich::BelowThreshold == id ) return 0;
 
   if ( !segment->ckThetaResolution().dataIsValid(id) )
   {

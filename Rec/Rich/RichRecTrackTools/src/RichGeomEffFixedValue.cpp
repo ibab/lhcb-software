@@ -77,6 +77,8 @@ double
 GeomEffFixedValue::geomEfficiency ( LHCb::RichRecSegment * segment,
                                     const Rich::ParticleIDType id ) const
 {
+  // Protect against the non-physical below threshold hypothesis
+  if ( Rich::BelowThreshold == id ) return 0;
 
   if ( !segment->geomEfficiency().dataIsValid(id) )
   {
@@ -133,6 +135,8 @@ double
 GeomEffFixedValue::geomEfficiencyScat ( LHCb::RichRecSegment * segment,
                                         const Rich::ParticleIDType id ) const
 {
+  // Protect against the non-physical below threshold hypothesis
+  if ( Rich::BelowThreshold == id ) return 0;
 
   if ( !segment->geomEfficiencyScat().dataIsValid(id) )
   {
