@@ -7,12 +7,27 @@ Purpose: LHCb Alignment packages.
          components.
 
 </PRE><H1><A NAME=v4r7>2010-02-05 AlignmentSys v4r7</A></H1><PRE>
+- removed packages:
+  Alignment/AlignT2Velo
+
 - updated packages: 
   Alignment/AlignTrTools		v4r6p1
+  Alignment/AlignSolvTools  v3r1
+	Alignment/Escher					v4r6
   Alignment/TAlignment			v4r8
+  Calibration/OTCalibration v1r5
+  
 
 - In Alignment/AlignTrTools	v4r6p1:
   . Fix in TAConfig.py to import TAConfig from the right place
+
+- In Alignment/AlignSolvTools  v3r1:
+  . fixed v3r0 after migration of files to another package
+  . added cut on eigenmode chisquare in DiagSolvTool
+
+- In Alignment/Escher	v4r6:
+  . added the line "use processing v* LCG_Interfaces" to the requirements file
+   for multi-core processing
 
 - In Alignment/TAlignment	v4r8:
 	. fix killer bug in AlignChisqConstraintTool
@@ -21,6 +36,9 @@ Purpose: LHCb Alignment packages.
   . dump most important alignment dofs from AlignUpdateTool
   . fix problem with survey constraints
   . configurables: added configurable for T, add 'None' as a valid dof
+
+- In Calibration/OTCalibration v1r5:
+  . Fix for sqrt(int) in windows nightlies
 
 </PRE><H1><A NAME=v4r6>2010-02-05 AlignmentSys v4r6</A></H1><PRE>
 - updated packages:
