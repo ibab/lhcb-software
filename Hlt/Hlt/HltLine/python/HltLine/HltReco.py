@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.24 2010-02-24 04:18:00 gligorov Exp $
+# $Id: HltReco.py,v 1.25 2010-03-02 10:33:03 albrecht Exp $
 # =============================================================================
 ## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -33,6 +33,7 @@
 __all__ = ('MinimalRZVelo'   # bindMembers instance with algorithms needed to get 'MinimalRZVelo' 
           , 'RZVelo'          # bindMembers instance with algorithms needed to get 'RZVelo'
           , 'Velo'            # bindMembers instance with algorithms needed to get 'Velo'
+          , 'Hlt1Seeding'
           )
 #############################################################################################
 # Import Configurables
@@ -123,6 +124,15 @@ MinimalRZVelo   = bindMembers( None, [DecodeVELO, patVeloR ] )
 #The Hlt1 parts
 RZVelo   = bindMembers( None, [ MinimalRZVelo, prepareRZVelo ] )
 Velo     = bindMembers( None, [                  RZVelo , reco1Velo ] )
+
+
+from Configurables import PatSeeding
+from HltDecodeRaw import DecodeIT
+Hlt1Seeding = bindMembers( None, [ DecodeIT,
+                                   PatSeeding('Hlt1MBSeeding'
+                                              ,OutputTracksName = 'Hlt1/Tracks/Seeding')
+                                   ] )
+
 
 # Debug things for an open VELO
 VeloOpen = bindMembers( None, [ DecodeVeloRawBuffer(), recoVeloOpen, prepareVeloOpen ] )
