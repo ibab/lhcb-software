@@ -104,11 +104,13 @@ int open_sock_udp(std::string &errmsg, int port)
     errmsg = "bind";
     goto drop_out;
   }
+#ifdef linux
   if (setsockopt(s, SOL_SOCKET, SO_TIMESTAMP, 
 			     &on, sizeof(on))) {
     errmsg = "setsockopt SO_TIMESTAMP";
     goto shut_out;
   }
+#endif
 shut_out:
   ::shutdown(s, SHUT_RD);
 drop_out:  
@@ -145,11 +147,13 @@ int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname,
     errmsg = "setsockopt SO_RCVBUF";
     goto shut_out;
   }
+#ifdef linux
   if (setsockopt(retSockFd, SOL_SOCKET, SO_TIMESTAMP, 
 			     &on, sizeof(on))) {
     errmsg = "setsockopt SO_TIMESTAMP";
     goto shut_out;
   }
+#endif
   if (myaddr == INADDR_NONE) { 
 #ifdef linux
     sprintf(netdev_name, netdev < 0 ? "lo" : "eth%d", netdev);           
