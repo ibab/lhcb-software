@@ -107,10 +107,14 @@ TabulatedSignalDetectionEff::ckRing( LHCb::RichRecSegment * segment,
 
   LHCb::RichRecRing * newRing = NULL;
 
+  // protect against below threshold case
+  if ( Rich::BelowThreshold == hypo ) return newRing;
+
   // Cherenkov theta for this segment/hypothesis combination
   // using emitted photon spectra (to avoid a circular information dependency)
   const double ckTheta = m_ckAngle->avgCherenkovTheta( segment, hypo, true );
-  debug() << " -> Making new CK ring : theta = " << ckTheta << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << " -> Making new CK ring : theta = " << ckTheta << endmsg;
   if ( ckTheta > 0 )
   {
     // make a ring object
@@ -142,6 +146,9 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
                                                   const Rich::ParticleIDType hypo,
                                                   const double energy ) const
 {
+  // protect against below threshold case
+  if ( Rich::BelowThreshold == hypo ) return 0;
+
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Computing detection efficiency for " << segment << " " << hypo
             << " photon energy=" << energy << endmsg;

@@ -188,14 +188,16 @@ void BackgroundEstiAvHPD::fillExpectedSignalMap( const LHCb::RichRecTrack * trac
       // Current best hypothesis for this track
       const Rich::ParticleIDType id = (*segment)->richRecTrack()->currentHypothesis();
 
+      // skip tracks below threshold, as they for sure contribute nothing to the signal
+      if ( Rich::BelowThreshold == id ) continue;
+
       // Expected detectable emitted photons for this segment
       const double detPhots = m_tkSignal->nDetectablePhotons(*segment,id);
 
       // Tally total expected hits for each PD
       LHCb::RichRecSegment::PDGeomEffs & hypoMap = (*segment)->geomEfficiencyPerPD( id );
       for ( LHCb::RichRecSegment::PDGeomEffs::iterator iPD = hypoMap.begin();
-            iPD != hypoMap.end();
-            ++iPD )
+            iPD != hypoMap.end(); ++iPD )
       {
         const Rich::DetectorType rich = (*segment)->trackSegment().rich();
         const double sig = detPhots * iPD->second; // expected signal for this PD

@@ -99,6 +99,8 @@ double GeomTool::trackPixelHitSep2( const LHCb::RichRecSegment * segment,
 double GeomTool::hpdPanelAcceptance( LHCb::RichRecSegment * segment,
                                      const Rich::ParticleIDType id ) const
 {
+  // Protect against below threshold case
+  if ( Rich::BelowThreshold == id ) return 0;
 
   // ==============================================
   // CRJ : NB : Method still under construction !!

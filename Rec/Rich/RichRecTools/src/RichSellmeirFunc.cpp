@@ -132,6 +132,9 @@ double SellmeirFunc::photonsInEnergyRange( const LHCb::RichRecSegment * segment,
                                            const double botEn,
                                            const double topEn ) const
 {
+  // protect against below threshold case
+  if ( Rich::BelowThreshold == id ) return 0;
+
   // Some parameters of the segment
   const double momentum = std::sqrt(segment->trackSegment().bestMomentum().Mag2());
   const double length   = segment->trackSegment().pathLength();

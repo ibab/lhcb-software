@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2010-03-02 - Chris Jones
+ - Add support for BelowThreshold PID types
+
 !===================== RichRecTools v4r9p2 2010-02-15 =========================
 ! 2010-02-11 - Chris Jones
  - Adapt to changes in histogramming base classes.
