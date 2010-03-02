@@ -1,4 +1,4 @@
-// $Id: PVRelatorAlg.cpp,v 1.11 2010-03-02 14:04:47 jpalac Exp $
+// $Id: PVRelatorAlg.cpp,v 1.12 2010-03-02 14:56:25 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -116,17 +116,22 @@ Particle2Vertex::WTable* PVRelatorAlg::table() const
   typedef LHCb::RecVertex::Range Vertices;
   typedef Particle2Vertex::LightWTable RelTable;  
 
-  const Particles* particles = i_get<Particles>(m_particleInputLocation);
-
-  const Vertices* vertices = i_get<Vertices>(m_PVInputLocation);
-
   Particle2Vertex::WTable* table = new Particle2Vertex::WTable();
 
-  if (0==particles || 0==vertices) return table;
+  if ( !i_exist_range< LHCb::Particle>(m_particleInputLocation) || 
+       !i_exist_range< LHCb::RecVertex>(m_PVInputLocation) ) return table;
 
-  for (Particles::const_iterator iPart = particles->begin();
-       iPart != particles->end(); ++ iPart) {
-    const RelTable bestPVTable = m_pvRelator->relatedPVs(*iPart, *vertices);
+  Particles particles = get<Particles>(m_particleInputLocation);
+  Vertices vertices = get<Vertices>(m_PVInputLocation);
+
+  if (particles.empty() || vertices.empty()) return table;
+
+  for (Particles::const_iterator iPart = particles.begin();
+       iPart != particles.end(); ++ iPart) {
+    const RelTable bestPVTable = 
+      m_pvRelator->relatedPVs(*iPart, 
+                              LHCb::VertexBase::ConstVector(vertices.begin(), 
+                                                            vertices.end()));
 
     const RelTable::Range range = bestPVTable.relations();
 
@@ -178,7 +183,7 @@ Particle2Vertex::WTable* PVRelatorAlg::tableFromTable() const
                                             << vertices.size() 
                                             << " related vertices" << endmsg;
 
-    const RelTable bestPVTable = m_pvRelator->relatedPVs(*iPart, vertices);
+    const RelTable bestPVTable = m_pvRelator->relatedPVs(*iPart, LHCb::VertexBase::ConstVector(vertices.begin(), vertices.end()));
 
     const RelTable::Range rel = bestPVTable.relations();
 
