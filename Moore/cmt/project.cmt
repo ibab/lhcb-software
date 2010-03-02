@@ -1,9 +1,9 @@
 project MOORE
 
-use PHYS    PHYS_v9r1
-use HLT     HLT_v9r1
-use LBCOM	LBCOM_v8r2
-use REC		REC_v8r1
+use PHYS    PHYS_v9r2
+use HLT     HLT_v9r2
+use LBCOM	LBCOM_v8r3
+use REC		REC_v8r2
 use ONLINE  ONLINE_v4r37
 
 container       MooreSys
