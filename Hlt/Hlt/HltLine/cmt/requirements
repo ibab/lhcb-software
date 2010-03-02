@@ -3,7 +3,7 @@
 # Maintainer : Gerhard Raven 
 #============================================================================
 package           HltLine
-version           v3r2
+version           v3r3
 # Structure
 #============================================================================
 branches          cmt doc src python
@@ -34,6 +34,5 @@ apply_pattern    component_library library=HltLine
 
 # =============================================================================
 # ======= the patterns ========================================================
-#macro HltLineUserModules "HltConf.HltLinesConfigurableUser HltConf.Hlt2Tracking"
-macro HltLineUserModules "HltConf.HltLinesConfigurableUser"
+macro HltLineUserModules "HltConf.HltLinesConfigurableUser HltConf.Hlt2Tracking"
 apply_pattern install_python_modules
