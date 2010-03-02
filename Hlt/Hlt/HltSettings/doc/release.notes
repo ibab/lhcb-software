@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-03-02 - Johannes Albrecht
+ - add T-Station micro bias line, adapt naming and scale them to 0
+
 ! 2010-03-02 - Gerhard Raven
  - add VeloRZ microbias line
 !========================== HltSettings v1r9 2010-02-28 ===================
