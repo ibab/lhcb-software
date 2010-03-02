@@ -682,64 +682,74 @@ void RawDataFormatTool::decodeToSmartIDs( const LHCb::RawBank & bank,
                                           L1Map & decodedData ) const
 {
 
-  // Check this is a RICH bank
-  if ( bank.type() != LHCb::RawBank::Rich )
+  // Check magic code for general data couurption
+  if ( RawBank::MagicPattern != bank.magic() )
   {
-    Exception( "BankType is not RICH : type = " +
-               boost::lexical_cast<std::string>(bank.type()) );
+    Error( "Magic Pattern mis-match" ).ignore();
   }
+  else
+  { // All OK so decode
 
-  // Get L1 ID
-  const Level1HardwareID L1ID ( bank.sourceID() );
-
-  // Is the RICH this L1 ID is for active ?
-  const Rich::DetectorType rich = m_richSys->richDetector(L1ID);
-  if ( rich == Rich::InvalidDetector )
-  {
-    std::ostringstream mess;
-    mess << "L1 bank " << L1ID << " has an invalid RICH detector mapping -> Bank skipped";
-    Warning( mess.str() ).ignore();
-  }
-  else if ( m_richIsActive[rich] )
-  {
-
-    // if configured, dump raw event before decoding
-    if      ( msgLevel(MSG::VERBOSE) ) { dumpRawBank( bank, verbose() ); }
-    else if ( m_dumpBanks            ) { dumpRawBank( bank, info()    ); }
-
-    // Get bank version
-    const BankVersion version = bankVersion( bank );
-
-    // Flag tool as having been used this event
-    m_hasBeenCalled = true;
-
-    // Count decoded L1IDs
-    ++m_l1IdsDecoded[ L1ID ];
-
-    // Now, delegate the work to a version of the decoding appropriate to the version
-
-    if ( version == LHCb5 ) // latest version
+    // Check this is a RICH bank
+    if ( bank.type() != LHCb::RawBank::Rich )
     {
-      decodeToSmartIDs_2007(bank,decodedData);
+      Exception( "BankType is not RICH : type = " +
+                 boost::lexical_cast<std::string>(bank.type()) );
     }
-    else if ( version == LHCb3 || version == LHCb4 ) // RICH 2006 Testbeam
-    {
-      decodeToSmartIDs_2006TB(bank,decodedData);
-    }
-    else if ( version == LHCb0 ||
-              version == LHCb1 ||
-              version == LHCb2 )  // DC04 or DC06
-    {
-      decodeToSmartIDs_DC0406(bank,decodedData);
-    }
-    else // Some problem ...
+
+    // Get L1 ID
+    const Level1HardwareID L1ID ( bank.sourceID() );
+
+    // Is the RICH this L1 ID is for active ?
+    const Rich::DetectorType rich = m_richSys->richDetector(L1ID);
+    if ( rich == Rich::InvalidDetector )
     {
       std::ostringstream mess;
-      mess << "Unknown RICH L1 version number " << version;
-      Exception( mess.str() );
+      mess << "L1 bank " << L1ID << " has an invalid RICH detector mapping -> Bank skipped";
+      Warning( mess.str() ).ignore();
     }
+    else if ( m_richIsActive[rich] )
+    {
 
-  } // active RICH
+      // if configured, dump raw event before decoding
+      if      ( msgLevel(MSG::VERBOSE) ) { dumpRawBank( bank, verbose() ); }
+      else if ( m_dumpBanks            ) { dumpRawBank( bank, info()    ); }
+
+      // Get bank version
+      const BankVersion version = bankVersion( bank );
+
+      // Flag tool as having been used this event
+      m_hasBeenCalled = true;
+
+      // Count decoded L1IDs
+      ++m_l1IdsDecoded[ L1ID ];
+
+      // Now, delegate the work to a version of the decoding appropriate to the version
+
+      if ( version == LHCb5 ) // latest version
+      {
+        decodeToSmartIDs_2007(bank,decodedData);
+      }
+      else if ( version == LHCb3 || version == LHCb4 ) // RICH 2006 Testbeam
+      {
+        decodeToSmartIDs_2006TB(bank,decodedData);
+      }
+      else if ( version == LHCb0 ||
+                version == LHCb1 ||
+                version == LHCb2 )  // DC04 or DC06
+      {
+        decodeToSmartIDs_DC0406(bank,decodedData);
+      }
+      else // Some problem ...
+      {
+        std::ostringstream mess;
+        mess << "Unknown RICH L1 version number " << version;
+        Exception( mess.str() );
+      }
+
+    } // active RICH
+
+  } // magic OK
 
 }
 
@@ -849,7 +859,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
             std::ostringstream mess;
             mess << "L1 board " << L1ID << " : Ingress "
                  << ingressWord.ingressID() << " HPD " << *iHPD << " is HARDWARE suppressed";
-            Warning( mess.str(), StatusCode::SUCCESS, 1 ).ignore();
+            Warning( mess.str(), StatusCode::SUCCESS, 0 ).ignore();
           }
 
           // Try to add a new HPDInfo to map
@@ -1070,7 +1080,7 @@ void RawDataFormatTool::suppressHotPixels( const LHCb::RichSmartID& hpdID,
           const Rich::DAQ::Level1Input l1Input     = m_richSys->level1InputNum(hpdID);
           // Print warning
           std::ostringstream mess;
-          mess << "L1HardID=" << l1ID << " L1Input=" << l1Input 
+          mess << "L1HardID=" << l1ID << " L1Input=" << l1Input
                << " L0ID=" << l0ID << " " << *iID << " is software SUPPRESSED";
           Warning( mess.str(), StatusCode::SUCCESS );
         }
