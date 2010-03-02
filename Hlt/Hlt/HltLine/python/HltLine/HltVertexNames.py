@@ -1,6 +1,6 @@
 # A module to hold the hardcoded names of vertices in the Hlt
 # and rules for deriving containers from them  
-
+__author__  = "V. Gligorov vladimir.gligorov@cern.ch"
 ########################################################################
 # Globals
 ########################################################################
@@ -20,16 +20,15 @@ HltSharedVerticesPrefix 		= HltSharedTracksPrefix
 Hlt1VerticesPrefix 			= Hlt1TracksPrefix
 Hlt2VerticesPrefix 			= Hlt2TracksPrefix
 #
-# names of vertex types (these go into the vertices field of _vertexLocation 
-# and _protosLocation)
+# names of vertex types (these go into the vertices field of _vertexLocation)
 #
 Hlt2DPrimaryVerticesName		= "PV2D"
 Hlt3DPrimaryVerticesName		= "PV3D"
 #  
 ########################################################################
-# The rules for generating vertex and proto particle containers
+# The rules for generating vertex containers
 ########################################################################
-# For vertices, the format is e.g. Hlt2/Track/Unfitted/Forward 
+# For vertices, the format is e.g. Hlt/Vertices/PV2D 
 #
 def _vertexLocation(prefix,type,vertices):
     return prefix + "/" + type + "/" + vertices

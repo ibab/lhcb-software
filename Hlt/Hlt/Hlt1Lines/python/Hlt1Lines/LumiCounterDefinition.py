@@ -18,9 +18,10 @@ from Configurables  import LHCbConfigurableUser
 # HltTrackNames and HltVertexNames
 #
 from HltLine.HltTrackNames import _trackLocation, HltSharedTracksPrefix, HltGlobalTrackLocation
-from HltLine.HltTrackNames import HltSharedRZVeloTracksName, HltMuonTracksName  
+from HltLine.HltTrackNames import HltSharedRZVeloTracksName, HltMuonTracksName, HltUnfittedTracksSuffix  
 from HltLine.HltVertexNames import _vertexLocation, HltSharedVerticesPrefix, HltGlobalVertexLocation
 from HltLine.HltVertexNames import Hlt2DPrimaryVerticesName, Hlt3DPrimaryVerticesName
+#from HltLine.HltReco import MinimalRZVelo
 #
 # TODO : make this inherit the relevant tracking configurables
 #        instead, once configuration issues are resolved
@@ -33,8 +34,8 @@ class LumiCounterDefinitionConf(LHCbConfigurableUser) :
   ####### counter definition...
   def defineCounters( self ):
     self.Definition  = {
-      'RZVelo'   : [LumiCountTracks   , True    , _trackLocation(HltSharedTracksPrefix,HltGlobalTrackLocation,"",HltSharedRZVeloTracksName),   5,  200],
-      'Muon'     : [LumiCountTracks   , False   , _trackLocation(HltSharedTracksPrefix,HltGlobalTrackLocation,"",HltMuonTracksName) ,   5,  200],
+      'RZVelo'   : [LumiCountTracks   , True    , "Hlt/Track/RZVelo",   5,  200],
+      'Muon'     : [LumiCountTracks   , False   , "Hlt2/Track/Unfitted/Forward/Muon" ,   5,  200], #TODO: remove!!!
       'TTIP'     : [LumiCountTracks   , True    , 'Hlt/Track/TTIP'  ,   5,  100], #TODO : define in HltTrackNames 
       'TTMIB'    : [LumiCountTracks   , False   , 'Hlt/Track/TTMIB' ,   5,  100], #TODO : define in HltTrackNames
       'PV2D'     : [LumiCountVertices , True    , _vertexLocation(HltSharedVerticesPrefix, HltGlobalVertexLocation, Hlt2DPrimaryVerticesName) ,   1,   20],

@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.50 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.51 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -26,14 +26,31 @@ from Hlt2Lines.Hlt2DisplVerticesLines   import Hlt2DisplVerticesLinesConf
 from Hlt2Lines.Hlt2CommissioningLines   import Hlt2CommissioningLinesConf
 from Hlt2Lines.Hlt2ExpressLines         import Hlt2ExpressLinesConf
 from Hlt2Lines.Hlt2diphotonDiMuonLines  import Hlt2diphotonDiMuonLinesConf
+#
+# The tracking configurations
+#
 from HltLine.Hlt2Tracking import Hlt2Tracking
+#
+from HltLine.Hlt2TrackingConfigurations import setHlt2UnfittedForwardTracking 
+from HltLine.Hlt2TrackingConfigurations import setHlt2BiKalmanFittedRICHForwardTracking
+from HltLine.Hlt2TrackingConfigurations import setHlt2UnfittedDownstreamTracking
+from HltLine.Hlt2TrackingConfigurations import setHlt2BiKalmanFittedDownstreamTracking
+#
+from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+from HltLine.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedRICHForwardTracking
+from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedDownstreamTracking
+from HltLine.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
 # Define what categories stand for
 # There are the strings used in HltThresholdSettings
 
 
 class Hlt2Conf(LHCbConfigurableUser):
-    __used_configurables__ = [ Hlt2Tracking
-                             , Hlt2TopologicalLinesConf
+    __used_configurables__ = [ Hlt2Tracking 
+			     , Hlt2UnfittedForwardTracking
+			     , Hlt2BiKalmanFittedRICHForwardTracking
+			     , Hlt2UnfittedDownstreamTracking
+			     , Hlt2BiKalmanFittedDownstreamTracking	
+			     , Hlt2TopologicalLinesConf
                              , Hlt2B2DXLinesConf 
                              , Hlt2CharmLinesConf
                              , Hlt2InclusiveDiMuonLinesConf
@@ -83,16 +100,13 @@ class Hlt2Conf(LHCbConfigurableUser):
 # PID
 #
     def configurePID(self):
-        from HltLine.HltTrackNames import Hlt2TracksPrefix, HltUnfittedTracksSuffix, Hlt2ForwardTracksName 
-        Hlt2Tracking().DataType = self.getProp("DataType")
-        Hlt2Tracking().Prefix = Hlt2TracksPrefix
-        Hlt2Tracking().FastFitType = HltUnfittedTracksSuffix #track fit is off by default
-        Hlt2Tracking().Hlt2Tracks = Hlt2ForwardTracksName
-        Hlt2Tracking().DoFastFit = False
-        Hlt2Tracking().UseRICH = False
-        Hlt2Tracking().UseCALO = False
-        Hlt2Tracking().DoSeeding = False
-        Hlt2Tracking().DoCloneKilling = False
+
+	from HltLine.HltTrackNames import Hlt2TracksPrefix       
+
+	setHlt2UnfittedForwardTracking(Hlt2TracksPrefix,self.getProp("DataType"),Hlt2UnfittedForwardTracking())
+	setHlt2BiKalmanFittedRICHForwardTracking(Hlt2TracksPrefix,self.getProp("DataType"),Hlt2BiKalmanFittedRICHForwardTracking())
+	setHlt2UnfittedDownstreamTracking(Hlt2TracksPrefix,self.getProp("DataType"),Hlt2UnfittedDownstreamTracking())
+	setHlt2BiKalmanFittedDownstreamTracking(Hlt2TracksPrefix,self.getProp("DataType"),Hlt2BiKalmanFittedDownstreamTracking())
       
 ###################################################################################
 #

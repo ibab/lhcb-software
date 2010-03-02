@@ -1,6 +1,6 @@
 # A module to hold the hardcoded names of tracks/protoparticles in the Hlt
 # and rules for deriving containers from them  
-
+__author__  = "V. Gligorov vladimir.gligorov@cern.ch"
 ########################################################################
 # Globals
 ########################################################################
@@ -8,7 +8,7 @@
 # protoparticles into .../ProtoP/...
 HltGlobalTrackLocation 			= "Track"
 HltGlobalProtoPLocation			= "ProtoP"
-
+#
 ########################################################################
 # Tracks
 ########################################################################
@@ -39,6 +39,9 @@ HltUnfittedTracksSuffix			= "Unfitted"
 HltBiDirectionalKalmanFitSuffix 	= "BiKalmanFitted"
 HltUniDirectionalKalmanFitSuffix 	= "UniKalmanFitted"  
 #
+# The recognised track types for the Hlt2 Tracking
+Hlt2TrackingRecognizedTrackTypes = [Hlt2ForwardTracksName, Hlt2LongTracksName, Hlt2DownstreamTracksName] 
+#
 ########################################################################
 # ProtoParticles
 ########################################################################
@@ -64,19 +67,76 @@ HltSharedMuonIDSuffix			= "MuonPID"
 #  
 ########################################################################
 # The rules for generating track and proto particle containers
+# These rules apply to HLT2 TODO: add rule for HLT1 usable from Hlt1Units
 ########################################################################
 # For tracks, the format is e.g. Hlt2/Track/Unfitted/Forward 
 #
-def _trackLocation(prefix,type,fastFitType,tracks):
-    if (fastFitType == "") : return prefix + "/" + type + "/" + tracks
-    else : return prefix + "/" + type + "/" + fastFitType + "/" + tracks
+# First of all we have the "base" track location for the VeloRZ,
+# Velo, Forward, Seeding, SeedTT, and Match tracks. These track
+# locations are never directly an input to a protoparticle
+# or particle maker and by definition have no "fast-fit" run
+#
+def _baseTrackLocation(prefix,tracks) :
+    return prefix + "/" + HltGlobalTrackLocation + "/" + tracks 
+#
+# Next the "short" track location for the derived tracks
+# This function checks that the track asked for by the Hlt2Tracking instance
+# is in the recognised track types, and returns "Unknown" or the correct
+# suffix based on the configuration of the Hlt2Tracking. 
+#
+def _shortTrackLocation(trackingType) :
+    if (trackingType.getProp("Hlt2Tracks") not in Hlt2TrackingRecognizedTrackTypes) :
+        return "Unknown"
+    elif (trackingType.getProp("Hlt2Tracks") == Hlt2LongTracksName) :
+        if trackingType.getProp("DoSeeding") : 
+            return Hlt2LongTracksName
+        else : 
+            return Hlt2ForwardTracksName
+    elif (trackingType.getProp("Hlt2Tracks") == Hlt2ForwardTracksName) :
+        if trackingType.getProp("DoSeeding") :
+            return Hlt2LongTracksName
+        else :
+            return Hlt2ForwardTracksName
+    elif (trackingType.getProp("Hlt2Tracks") == Hlt2DownstreamTracksName) :
+        return Hlt2DownstreamTracksName
+#
+# Now the "long" track location, for the tracks which will be used to
+# make particles, protoparticles, etc.  
+# 
+def _trackLocation(trackingType):
+    if (trackingType.getProp("FastFitType") == "") : return trackingType.getProp("Prefix") + "/" + HltGlobalTrackLocation + "/" + _shortTrackLocation(trackingType)
+    else : return trackingType.getProp("Prefix") + "/" + HltGlobalTrackLocation + "/" + trackingType.getProp("FastFitType") + "/" + _shortTrackLocation(trackingType)
 #
 # For protos, the format is e.g. Hlt2/ProtoP/Unfitted/Charged/Forward 
 #   
-def _protosLocation(prefix,type,fastFitType,tracks):
-    if (fastFitType == "") : return prefix +"/" + HltGlobalProtoPLocation + "/" + type + "/" + tracks
-    else :              return prefix +"/" + HltGlobalProtoPLocation + "/" + fastFitType + "/" + type + "/" + tracks
-
+def _protosLocation(trackingType,protosType):
+    if (trackingType.getProp("FastFitType") == "") : return trackingType.getProp("Prefix") + "/" + HltGlobalProtoPLocation + "/" + protosType +  _shortTrackLocation(trackingType)
+    else : return trackingType.getProp("Prefix") + "/" + HltGlobalProtoPLocation + "/" + trackingType.getProp("FastFitType") + "/" + protosType + _shortTrackLocation(trackingType)
+#
+# The trackified Muon ID location
+#
+def _trackifiedMuonIDLocation(trackingType) :
+    if (trackingType.getProp("FastFitType") == "") : 
+        return trackingType.getProp("Prefix") + "/" + HltGlobalTrackLocation + "/" + _shortTrackLocation(trackingType) + "/"+ HltMuonTracksName
+    else : 
+        return trackingType.getProp("Prefix") + "/" + HltGlobalTrackLocation + "/" + trackingType.getProp("FastFitType") + "/" + _shortTrackLocation(trackingType) + "/"+ HltMuonTracksName
+#
+# The trackified AllMuon ID location
+# 
+def _trackifiedAllMuonIDLocation(trackingType) :
+    if (trackingType.getProp("FastFitType") == "") : 
+        return trackingType.getProp("Prefix") + "/" + HltGlobalTrackLocation + "/" + _shortTrackLocation(trackingType) + "/"+ HltAllMuonTracksName
+    else : 
+        return trackingType.getProp("Prefix") + "/" + HltGlobalTrackLocation + "/" + trackingType.getProp("FastFitType") + "/" + _shortTrackLocation(trackingType) + "/"+ HltAllMuonTracksName
+#
+# The MuonID objects themselves
+#
+def _muonIDLocation(trackingType) :
+    if (trackingType.getProp("FastFitType") == "")  : 
+        return trackingType.getProp("Prefix") + "/" + HltSharedMuonIDPrefix + "/" + _shortTrackLocation(trackingType) + "/" + HltSharedMuonIDSuffix
+    else : 
+        return trackingType.getProp("Prefix") + "/" + HltSharedMuonIDPrefix + "/" + trackingType.getProp("FastFitType") + "/" + _shortTrackLocation(trackingType) + "/" + HltSharedMuonIDSuffix
+#
 __all__ = (	
 		#
 		# The strings
@@ -109,6 +169,11 @@ __all__ = (
 		#
 		# The functions
 		#
+		_baseTrackLocation,
+		_shortTrackLocation,
 		_trackLocation,
-		_protosLocation
+		_protosLocation,
+		_trackifiedMuonIDLocation,
+		_trackifiedAllMuonIDLocation,
+		_muonIDLocation
 	  ) 

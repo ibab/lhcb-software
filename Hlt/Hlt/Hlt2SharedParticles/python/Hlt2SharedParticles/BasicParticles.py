@@ -8,32 +8,34 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.17 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.18 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
 from Configurables import NoPIDsParticleMaker, CombinedParticleMaker, TrackSelector
 from Configurables import PhotonMaker, PhotonMakerAlg
 from Configurables import ProtoParticleCALOFilter, ProtoParticleMUONFilter
-from Configurables import Hlt2Tracking, GaudiSequencer
+from Configurables import GaudiSequencer
 from GaudiKernel.SystemOfUnits import MeV
 #
 # These are all based on unfitted tracks
 # No RICH info can be added until the fast-fit is done
 # For particles with RICH info see TFBasicParticles
 #
+from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
 ##########################################################################
 #
 # Charged protoparticles -> pulls all the pid
 #
-caloProtos = Hlt2Tracking().hlt2ChargedCaloProtos( )
-muonProtos = Hlt2Tracking().hlt2MuonProtos( )
-hadronProtos = Hlt2Tracking().hlt2ChargedHadronProtos( )
+caloProtos = Hlt2UnfittedForwardTracking.hlt2ChargedCaloProtos( )
+muonProtos = Hlt2UnfittedForwardTracking.hlt2MuonProtos( )
+hadronProtos = Hlt2UnfittedForwardTracking.hlt2ChargedHadronProtos( )
 ##########################################################################
 #
 # Neutral protoparticles
 #
-NeutralProtos = Hlt2Tracking().hlt2NeutralProtos()
+NeutralProtos = Hlt2UnfittedForwardTracking.hlt2NeutralProtos()
 ##########################################################################
 # Make the pions
 #

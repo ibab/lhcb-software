@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Hlt1Units.py,v 1.1 2009-07-15 16:24:05 ibelyaev Exp $ 
+# $Id: Hlt1Units.py,v 1.2 2010-03-02 11:23:22 gligorov Exp $ 
 # =============================================================================
 ## @file HltConf/Hlt1Units.py
 #  Collection of utilities for dealing with Hlt1 "units"
@@ -26,7 +26,7 @@ See:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     ## upgrade 
@@ -317,7 +317,7 @@ def trUpgrader ( name ) :
 # =============================================================================
 VeloCalo = LoKi.Hlt1.MatchConf  (
     "HltVeloTCaloMatch"            ,                   ##               "Tool"
-    "Hlt/Track/VeloCalo"           ,                   ##          "TESOutput"
+    "Hlt1/Track/VeloCalo"           ,                   ##          "TESOutput"
     LHCb.Track.Velo                ,                   ##          "TrackType"
     True                           ,                   ##        "TransferIDs"
     True                           ,                   ##  "TransferAncestors"
@@ -327,7 +327,7 @@ VeloCalo = LoKi.Hlt1.MatchConf  (
 # =============================================================================
 VeloTDist = LoKi.Hlt1.MatchConf  (
     "HltMatchTVeloTracks"          ,                   ##               "Tool"
-    "Hlt/Track/VeloTDist"          ,                   ##          "TESOutput"
+    "Hlt1/Track/VeloTDist"          ,                   ##          "TESOutput"
     LHCb.Track.Long                ,                   ##          "TrackType"
     True                           ,                   ##        "TransferIDs"
     True                           ,                   ##  "TransferAncestors"
@@ -337,7 +337,7 @@ VeloTDist = LoKi.Hlt1.MatchConf  (
 # =============================================================================
 VeloT = LoKi.Hlt1.MatchConf  (
     "PatMatchTool"                 ,                   ##               "Tool"
-    "Hlt/Track/VeloT"              ,                   ##          "TESOutput"
+    "Hlt1/Track/VeloT"              ,                   ##          "TESOutput"
     LHCb.Track.Long                ,                   ##          "TrackType"
     True                           ,                   ##        "TransferIDs"
     True                           ,                   ##  "TransferAncestors"

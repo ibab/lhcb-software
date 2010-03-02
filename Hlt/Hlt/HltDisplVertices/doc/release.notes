@@ -4,6 +4,10 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2010-03-02 - V. Gligorov
+ - Follow developments in Savannah tasks 13784/12691. Retrieve tracks automatically
+   from the appropriate HLT2 tracking object.
+
 !========================== HltDisplVertices v1r5p1 2010-02-17 ===================
 ! 2010-Feb-10 - Neal Gauvin
  - fix bug in HltDisplVerticesDEV.cpp for proper compilation on Windows.

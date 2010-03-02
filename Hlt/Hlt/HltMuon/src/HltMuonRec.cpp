@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.cpp,v 1.17 2009-11-18 13:19:45 dgolubko Exp $
+// $Id: HltMuonRec.cpp,v 1.18 2010-03-02 11:19:18 gligorov Exp $
 // Include files 
 
 #include <algorithm>
@@ -37,7 +37,7 @@ HltMuonRec::HltMuonRec( const std::string& name,
   declareProperty( "MeasureTime"   , m_measureTime   = true );
   declareProperty( "CloneKiller"   , m_cloneKiller   = true );
   declareProperty( "OutputMuonTracksName" ,
-                   m_outputMuonTracksName="Hlt/Tracks/MuonSeg");
+                   m_outputMuonTracksName="Hlt1/Track/MuonSeg");
   declareProperty("DecodingFromCoord", m_decodingFromCoord = true );
   declareProperty("DoPrepareMuonSeg", m_doPrepareMuonSeg = true);
 }

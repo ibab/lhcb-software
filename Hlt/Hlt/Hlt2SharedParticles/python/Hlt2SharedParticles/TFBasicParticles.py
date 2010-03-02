@@ -11,24 +11,12 @@ from HltLine.HltLine import bindMembers
 from Configurables import NoPIDsParticleMaker, CombinedParticleMaker, TrackSelector
 from Configurables import PhotonMaker, PhotonMakerAlg
 from Configurables import ProtoParticleCALOFilter, ProtoParticleMUONFilter
-from Configurables import Hlt2Tracking
 from GaudiKernel.SystemOfUnits import MeV
 #
-from HltLine.HltTrackNames import HltBiDirectionalKalmanFitSuffix
+from HltLine.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedRICHForwardTracking
 
-# Need another instance of Hlt2Tracking
-class Hlt2TFTracking(Hlt2Tracking) :
-    __used_configurables__ = []
-    __slots__ = []
+Hlt2BiKalmanFittedRICHForwardTracking = Hlt2BiKalmanFittedRICHForwardTracking()
 
-Hlt2TFTracking = Hlt2TFTracking()
-Hlt2TFTracking.Prefix = Hlt2Tracking().getProp("Prefix")
-Hlt2TFTracking.FastFitType = HltBiDirectionalKalmanFitSuffix
-Hlt2TFTracking.Hlt2Tracks = Hlt2Tracking().getProp("Hlt2Tracks")
-Hlt2TFTracking.DoFastFit = True
-Hlt2TFTracking.UseRICH = True
-Hlt2TFTracking.UseCALO = False
-Hlt2TFTracking.DataType = Hlt2Tracking().getProp("DataType")
 ##########################################################################
 #
 # Now all PID
@@ -37,11 +25,11 @@ Hlt2TFTracking.DataType = Hlt2Tracking().getProp("DataType")
 #
 # Charged protoparticles
 #
-TFChargedProtoMaker = Hlt2TFTracking.hlt2ChargedProtos()
+TFChargedProtoMaker = Hlt2BiKalmanFittedRICHForwardTracking.hlt2ChargedProtos()
 #
 # hadrons with the RICH
 #
-TFChargedHadronProtoMaker = Hlt2TFTracking.hlt2ChargedHadronProtos( )
+TFChargedHadronProtoMaker = Hlt2BiKalmanFittedRICHForwardTracking.hlt2ChargedHadronProtos( )
 ##########################################################################
 #
 # Calo reco
@@ -56,7 +44,7 @@ TFChargedHadronProtoMaker = Hlt2TFTracking.hlt2ChargedHadronProtos( )
 #
 # Muon reco 
 #
-TFMuonProtoMaker = Hlt2TFTracking.hlt2MuonProtos()
+TFMuonProtoMaker = Hlt2BiKalmanFittedRICHForwardTracking.hlt2MuonProtos()
 ##########################################################################
 #
 # Make the Muons

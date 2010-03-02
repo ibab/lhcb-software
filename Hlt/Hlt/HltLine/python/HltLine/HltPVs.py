@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltPVs.py,v 1.3 2010-02-26 04:58:39 gligorov Exp $
+# $Id: HltPVs.py,v 1.4 2010-03-02 11:09:11 gligorov Exp $
 # =============================================================================
 ## @file HltLine/HltPVs.py
 #  Define the 2D and 3D primary vertex making algorithms for the Hlt
@@ -38,25 +38,25 @@ __all__ = ( 'PV2D'            # bindMembers instance with algorithms needed to g
 #############################################################################################
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
-from Configurables import PatPV2DFit3D, PatPV3D, PVOfflineTool
 #############################################################################################
 # Configure PV algorithms
 #############################################################################################
-from HltReco import MinimalRZVelo
-from HltTrackNames import HltSharedRZVeloTracksName, HltSharedTracksPrefix, _trackLocation
+from HltTrackNames import HltSharedRZVeloTracksName, HltSharedTracksPrefix, _baseTrackLocation
 from HltLine import bindMembers
-from Configurables import Hlt2Tracking
-from Configurables import HltVertexFilter
 from HltVertexNames import HltSharedVerticesPrefix,Hlt1VerticesPrefix,Hlt2VerticesPrefix
 from HltVertexNames import Hlt2DPrimaryVerticesName, Hlt3DPrimaryVerticesName,_vertexLocation
-from HltTrackNames import HltGlobalTrackLocation
 from HltVertexNames import HltGlobalVertexLocation
 
 #### Primary vertex algorithms...
 
 def PV2D() :
+
+	from Configurables import PatPV2DFit3D, PVOfflineTool
+	from HltReco import MinimalRZVelo
+	from Configurables import HltVertexFilter
+
 	# Todo: fix hardcoding here
-	patPV2D = PatPV2DFit3D( 'HltPVsPV2D' , InputTracksName = _trackLocation(HltSharedTracksPrefix, HltGlobalTrackLocation,"", HltSharedRZVeloTracksName) 
+	patPV2D = PatPV2DFit3D( 'HltPVsPV2D' , InputTracksName = MinimalRZVelo.outputSelection()
                                       , OutputVerticesName = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,Hlt2DPrimaryVerticesName) )  
 	patPV2D.addTool(PVOfflineTool, name = 'PVOfflineTool')
 	patPV2D.PVOfflineTool.PVFitterName='LSAdaptPV3DFitter'
@@ -76,9 +76,13 @@ def PV2D() :
 
 def PV3D() :
 
+	from Configurables import PatPV3D
+        from Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+	from Configurables import PVOfflineTool 
+
 	recoPV3D =  PatPV3D('HltPVsPV3D' )
 	recoPV3D.addTool( PVOfflineTool, name = 'PVOfflineTool' )
-	recoPV3D.PVOfflineTool.InputTracks = [ (Hlt2Tracking().hlt2VeloTracking()).outputSelection() ]
+	recoPV3D.PVOfflineTool.InputTracks = [ (Hlt2UnfittedForwardTracking().hlt2VeloTracking()).outputSelection() ]
 	recoPV3D.OutputVerticesName = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,Hlt3DPrimaryVerticesName) 
 
-	return bindMembers( None, [ Hlt2Tracking().hlt2VeloTracking(), recoPV3D ] )
+	return bindMembers( None, [ Hlt2UnfittedForwardTracking().hlt2VeloTracking(), recoPV3D ] )

@@ -1,4 +1,4 @@
-// $Id: HltTrackMatch.cpp,v 1.17 2009-11-27 08:54:38 albrecht Exp $
+// $Id: HltTrackMatch.cpp,v 1.18 2010-03-02 11:24:29 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -88,7 +88,7 @@ void HltTrackMatch::recoConfiguration() {
   m_recoConf.add("VeloCalo/TransferAncestor",true);
   m_recoConf.add("VeloCalo/TransferInfo",false);
   m_recoConf.add("VeloCalo/TrackType", (int) LHCb::Track::Velo);
-  m_recoConf.add("VeloCalo/TESOutput", std::string("Hlt/Track/VeloCalo"));
+  m_recoConf.add("VeloCalo/TESOutput", std::string("Hlt1/Track/VeloCalo"));
   m_recoConf.add("VeloCalo/Quality",std::string("VeloCalo3DChi2"));
   m_recoConf.add("VeloCalo/Quality2",std::string(""));
   
@@ -98,7 +98,7 @@ void HltTrackMatch::recoConfiguration() {
   m_recoConf.add("VeloTDist/TransferAncestor",true);
   m_recoConf.add("VeloTDist/TransferInfo",false);
   m_recoConf.add("VeloTDist/TrackType", (int) LHCb::Track::Long);
-  m_recoConf.add("VeloTDist/TESOutput", std::string("Hlt/Track/VeloTDist"));
+  m_recoConf.add("VeloTDist/TESOutput", std::string("Hlt1/Track/VeloTDist"));
   m_recoConf.add("VeloTDist/Quality",std::string("deltaX"));
   m_recoConf.add("VeloTDist/Quality2",std::string("deltaY"));
 
@@ -108,7 +108,7 @@ void HltTrackMatch::recoConfiguration() {
   m_recoConf.add("VeloT/TransferAncestor",true);
   m_recoConf.add("VeloT/TransferInfo",true);
   m_recoConf.add("VeloT/TrackType", (int) LHCb::Track::Long);
-  m_recoConf.add("VeloT/TESOutput", std::string("Hlt/Track/VeloT")); //TODO
+  m_recoConf.add("VeloT/TESOutput", std::string("Hlt1/Track/VeloT")); //TODO
   m_recoConf.add("VeloT/Quality",std::string("chi2_PatMatch"));
   m_recoConf.add("VeloT/Quality2",std::string(""));
 }

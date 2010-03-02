@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2ExpressLines.py,v 1.11 2010-02-26 04:56:17 gligorov Exp $
+# $Id: Hlt2ExpressLines.py,v 1.12 2010-03-02 11:12:40 gligorov Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt2 Lines for the express stream
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Johannes Albrecht albrecht@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -120,8 +120,9 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       from Hlt2SharedParticles.BasicParticles import Muons, NoCutsPions
       from Configurables import CombineParticles
       from HltLine.HltPVs import PV3D
-      from Configurables import Hlt2Tracking
-      
+      from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+      Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()	     
+ 
      ############################
       # Prompt Jpsi tag-and-probe
      #############################
@@ -166,7 +167,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                 " & (VFASPF(VCHI2/VDOF)<%(ExJPsiTPVChi2)d)"%  self.getProps()
                                 )
 
-      caloProtos = Hlt2Tracking().hlt2ChargedHadronProtos()
+      caloProtos = Hlt2UnfittedForwardTracking.hlt2ChargedHadronProtos()
       
       line = Hlt2Line('ExpressJPsiTagProbe'
                       , prescale = self.prescale

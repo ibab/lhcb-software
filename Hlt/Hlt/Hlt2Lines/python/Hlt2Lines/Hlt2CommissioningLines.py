@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2CommissioningLines.py,v 1.18 2010-02-26 04:56:17 gligorov Exp $
+# $Id: Hlt2CommissioningLines.py,v 1.19 2010-03-02 11:12:40 gligorov Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning 
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.18 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.19 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -36,8 +36,10 @@ class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
             )
 
         from Configurables import HltCopySelection_LHCb__Track_ as HltCopyTrackSelection
-        from Configurables import Hlt2Tracking
-        tracks = Hlt2Tracking().hlt2PrepareTracks()
+        from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+        Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
+
+	tracks = Hlt2UnfittedForwardTracking.hlt2PrepareTracks()
         Line('Forward', prescale = self.prescale, postscale = self.postscale
             , algos = [ tracks,
                         HltCopyTrackSelection( 'Hlt2ForwardDecision' 

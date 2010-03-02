@@ -1,11 +1,16 @@
-! $Id: release.notes,v 1.426 2010-02-26 04:46:08 gligorov Exp $ 
+! $Id: release.notes,v 1.427 2010-03-02 11:18:48 gligorov Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
-! 2010-10-26 - V. Gligorov
+! 2010-03-02 - V. Gligorov
+ - Follow developments in Savannah tasks 13784/12691. HltSelReportsMaker
+   now correctly picks up unfitted Muon ID objects and Hlt2.py correctly
+   configures the Hlt2 reconstruction.
+
+! 2010-02-26 - V. Gligorov
  - Follow developments in HltLine.HltPVs. Default reconstruction
    now makes Forward tracks in container Hlt2/Track/Unfitted/Forward.  
    See Savannah tasks 13784/12691 for details.

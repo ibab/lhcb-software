@@ -1,4 +1,4 @@
-// $Id: HltPrepareMuonSeg.cpp,v 1.8 2008-12-19 17:34:24 graven Exp $
+// $Id: HltPrepareMuonSeg.cpp,v 1.9 2010-03-02 11:22:18 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -27,7 +27,7 @@ HltPrepareMuonSeg::HltPrepareMuonSeg( const std::string& name,
   , m_selections(*this)
 {
   declareProperty("OutputMuonTracksName"   ,
-                  m_outputMuonTracksName = "Hlt/Tracks/ConfirmedTMuon");
+                  m_outputMuonTracksName = "Hlt1/Track/ConfirmedTMuon");
   m_selections.declareProperties();
 
 }

@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.90 2010-03-02 10:55:20 graven Exp $
+! $Id: release.notes,v 1.91 2010-03-02 11:11:31 gligorov Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2010-03-02 - V. Gligorov
+ - Continuing work on Savannah tasks 13784 and 12691. Major changes
+   in this round
+   . Create Hlt2TrackingConfigurations which now holds all the 
+     tracking configurations which are known to Hlt2
+   . Modify Hlt2Tracking and HltTrackNames so that both creation
+     and retrieval of track containers is done in the same way
+     by passing the concrete instance of the tracking to the
+     relevant function in HltTrackNames
 
 ! 2010-02-26 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691. Major changes 

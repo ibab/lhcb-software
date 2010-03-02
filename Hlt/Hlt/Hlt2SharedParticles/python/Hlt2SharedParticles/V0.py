@@ -17,40 +17,19 @@ from HltKshort.HltKshort import createHltV0DD, createHltV0LL, createHltV0DDFit
 # We need a new instance of the Hlt2Tracking configurable
 # once for the fitted and once for the unfitted 
 #
-from HltLine.HltTrackNames import Hlt2DownstreamTracksName, HltBiDirectionalKalmanFitSuffix
+from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedDownstreamTracking 
+from HltLine.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
+from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking  
 
-from Configurables import Hlt2Tracking
-class Hlt2V0Tracking(Hlt2Tracking) :
-    __used_configurables__ = []
-    __slots__ = []
-
-Hlt2V0Tracking = Hlt2V0Tracking()
-Hlt2V0Tracking.Prefix = Hlt2Tracking().getProp("Prefix")
-Hlt2V0Tracking.FastFitType = Hlt2Tracking().getProp("FastFitType")
-Hlt2V0Tracking.Hlt2Tracks = Hlt2DownstreamTracksName
-Hlt2V0Tracking.DoFastFit = Hlt2Tracking().getProp("DoFastFit")
-Hlt2V0Tracking.UseRICH = False
-Hlt2V0Tracking.UseCALO = False
-Hlt2V0Tracking.DataType = Hlt2Tracking().getProp("DataType")
-
-class Hlt2TFV0Tracking(Hlt2Tracking) :
-    __used_configurables__ = []
-    __slots__ = []
-
-Hlt2TFV0Tracking = Hlt2TFV0Tracking()
-Hlt2TFV0Tracking.Prefix = Hlt2Tracking().getProp("Prefix")
-Hlt2TFV0Tracking.FastFitType = HltBiDirectionalKalmanFitSuffix
-Hlt2TFV0Tracking.Hlt2Tracks = Hlt2DownstreamTracksName
-Hlt2TFV0Tracking.DoFastFit = True
-Hlt2TFV0Tracking.UseRICH = False
-Hlt2TFV0Tracking.UseCALO = False
-Hlt2TFV0Tracking.DataType = Hlt2Tracking().getProp("DataType")
+Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
+Hlt2UnfittedDownstreamTracking = Hlt2UnfittedDownstreamTracking()
+Hlt2BiKalmanFittedDownstreamTracking = Hlt2BiKalmanFittedDownstreamTracking()
 
 #---------------------------------------------------------------------
 # Special case for Vzero particles  @todo TO BE REVISED
 #---------------------------------------------------------------------
 
-Hlt2V0LL = createHltV0LL( 'Hlt2V0LL', input = (Hlt2Tracking().hlt2PrepareTracks()).outputSelection() )
+Hlt2V0LL = createHltV0LL( 'Hlt2V0LL', input = (Hlt2UnfittedForwardTracking.hlt2PrepareTracks()).outputSelection() )
 
 Hlt2KsLLParticles = HltV0ParticleMakerAlg('Hlt2KsLLParticles')
 Hlt2KsLLParticles.V0Location = Hlt2V0LL.OutputVertexContainer
@@ -59,7 +38,7 @@ Hlt2KsLLParticles.MakeKs = True
 Hlt2KsLLParticles.MakeLambda = False 
 Hlt2KsLLParticles.InputLocations = [ NoCutsPions.outputSelection() ]
 # Must specify the protoparticles location to propagate dependencies correctly!
-Hlt2KsLLParticles.ProtoParticlesLocation = (Hlt2Tracking().hlt2ChargedHadronProtos()).outputSelection()
+Hlt2KsLLParticles.ProtoParticlesLocation = (Hlt2UnfittedForwardTracking.hlt2ChargedHadronProtos()).outputSelection()
 
 Hlt2V0DD = createHltV0DD( 'Hlt2V0DD' )
 Hlt2KsDDParticles = HltV0ParticleMakerAlg("Hlt2KsDDParticles")
@@ -68,14 +47,14 @@ Hlt2KsDDParticles.RefitVertex = True
 Hlt2KsDDParticles.MakeKs = True
 Hlt2KsDDParticles.MakeLambda = False
 # Must specify the protoparticles location to propagate dependencies correctly!
-Hlt2KsDDParticles.ProtoParticlesLocation = (Hlt2V0Tracking.hlt2ChargedHadronProtos()).outputSelection()
+Hlt2KsDDParticles.ProtoParticlesLocation = (Hlt2UnfittedDownstreamTracking.hlt2ChargedHadronProtos()).outputSelection()
 
 #Hlt2V0DDFit = Hlt2V0DD.clone("Hlt2V0DDFit")
-#Hlt2V0DDFit.InputTrackContainer = (Hlt2TFV0Tracking.hlt2PrepareTracks()).outputSelection()
+#Hlt2V0DDFit.InputTrackContainer = (Hlt2BiKalmanFittedDownstreamTracking.hlt2PrepareTracks()).outputSelection()
 #Hlt2V0DDFit.OutputVertexContainer = "Hlt/Vertex/KsDDFit"
 
 Hlt2V0DDFit = createHltV0DDFit( 'Hlt2V0DDFit')
-Hlt2V0DDFit.InputTrackContainer = (Hlt2TFV0Tracking.hlt2PrepareTracks()).outputSelection()
+Hlt2V0DDFit.InputTrackContainer = (Hlt2BiKalmanFittedDownstreamTracking.hlt2PrepareTracks()).outputSelection()
 Hlt2V0DDFit.OutputVertexContainer = "Hlt/Vertex/KsDDFit"
 
 Hlt2KsDDFitParticles = HltV0ParticleMakerAlg("Hlt2KsDDFitParticles")
@@ -84,7 +63,7 @@ Hlt2KsDDFitParticles.RefitVertex = True
 Hlt2KsDDFitParticles.MakeKs = True
 Hlt2KsDDFitParticles.MakeLambda = False
 # Must specify the protoparticles location to propagate dependencies correctly!
-Hlt2KsDDFitParticles.ProtoParticlesLocation = (Hlt2TFV0Tracking.hlt2ChargedHadronProtos()).outputSelection()
+Hlt2KsDDFitParticles.ProtoParticlesLocation = (Hlt2BiKalmanFittedDownstreamTracking.hlt2ChargedHadronProtos()).outputSelection()
 
 ###@TODO/@FIXME there are no Protons...
 #Hlt2LambdaLLParticles = HltV0ParticleMakerAlg('Hlt2LambdaLLParticles')
@@ -95,13 +74,13 @@ Hlt2KsDDFitParticles.ProtoParticlesLocation = (Hlt2TFV0Tracking.hlt2ChargedHadro
 #Hlt2LambdaLLParticles.InputLocations = [ NoCutsPions.outputSelection() 
 #                                       , Protons.outputSelection()
 #                                       ]
-#Hlt2LambdaLLParticles.ProtoParticlesLocation = (Hlt2TFV0Tracking.hlt2ChargedHadronProtos()).outputSelection()
+#Hlt2LambdaLLParticles.ProtoParticlesLocation = (Hlt2BiKalmanFittedDownstreamTracking.hlt2ChargedHadronProtos()).outputSelection()
 
 
 #LambdaLL = bindMembers(None, [ NoCutsPions, Protons, Hlt2V0LL, Hlt2LambdaLLParticles ] )
 KsLL     = bindMembers(None, [ NoCutsPions, Hlt2V0LL, Hlt2KsLLParticles ] )
-KsDD     = bindMembers(None, [ Hlt2V0Tracking.hlt2PrepareTracks(), Hlt2V0Tracking.hlt2ChargedHadronProtos(), Hlt2V0DD, Hlt2KsDDParticles ] )
-KsDDFit  = bindMembers(None, [ Hlt2TFV0Tracking.hlt2PrepareTracks(), Hlt2TFV0Tracking.hlt2ChargedHadronProtos(), Hlt2V0DDFit, Hlt2KsDDFitParticles] )
+KsDD     = bindMembers(None, [ Hlt2UnfittedDownstreamTracking.hlt2PrepareTracks(), Hlt2UnfittedDownstreamTracking.hlt2ChargedHadronProtos(), Hlt2V0DD, Hlt2KsDDParticles ] )
+KsDDFit  = bindMembers(None, [ Hlt2BiKalmanFittedDownstreamTracking.hlt2PrepareTracks(), Hlt2BiKalmanFittedDownstreamTracking.hlt2ChargedHadronProtos(), Hlt2V0DDFit, Hlt2KsDDFitParticles] )
 
 
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.27 2010-03-02 10:51:48 graven Exp $
+# $Id: HltReco.py,v 1.28 2010-03-02 11:09:11 gligorov Exp $
 # =============================================================================
 ## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -33,23 +33,19 @@
 __all__ = ('MinimalRZVelo'   # bindMembers instance with algorithms needed to get 'MinimalRZVelo' 
           , 'RZVelo'          # bindMembers instance with algorithms needed to get 'RZVelo'
           , 'Velo'            # bindMembers instance with algorithms needed to get 'Velo'
-          , 'Hlt1Seeding'
+	  , 'Hlt1Seeding'
           )
 #############################################################################################
 # Import Configurables
 #############################################################################################
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
-from Configurables import PatPV2DFit3D, PatPV3D, PatForward, PatForwardTool
-from Configurables import Tf__PatVeloGeneric, Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking, Tf__PatVeloSpaceTool, Tf__PatVeloGeneralTracking
+from Configurables import PatPV3D
+from Configurables import Tf__PatVeloGeneric, Tf__PatVeloRTracking, Tf__PatVeloGeneralTracking
 from Configurables import PVOfflineTool
 from Configurables import HltTrackFilter, HltVertexFilter, HltTrackUpgrade
 from HltLine import bindMembers
-from Configurables import TrackEventFitter, TrackMasterFitter, TrackKalmanFilter, TrackMasterExtrapolator  #@gk for TrackFit
-from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
-from Configurables import PatSeeding, PatSeedingTool, PatMatch, CreateFastTrackCollection #@gk for PatSeeding
-from Configurables import PatDownstream
-from Configurables import TrackEventCloneKiller, TrackCloneFinder
+from Configurables import PatSeeding, PatSeedingTool
 
 #############################################################################################
 # Configure pattern recognition algorithms
@@ -60,10 +56,10 @@ from Configurables import TrackEventCloneKiller, TrackCloneFinder
 
 #This is the one unavoidable piece of hardcoding since this is the piece
 #shared between Hlt1 and Hlt2
-from HltTrackNames import HltSharedRZVeloTracksName, HltSharedTracksPrefix  
+from HltTrackNames import HltSharedRZVeloTracksName, HltSharedTracksPrefix, _baseTrackLocation  
 
 #### Velo Tracking
-patVeloR = Tf__PatVeloRTracking('HltRecoRZVelo', OutputTracksName = HltSharedTracksPrefix+"/Track/"+HltSharedRZVeloTracksName ) 
+patVeloR = Tf__PatVeloRTracking('HltRecoRZVelo', OutputTracksName = _baseTrackLocation(HltSharedTracksPrefix,HltSharedRZVeloTracksName) ) 
 
 #We have a choice of which 3D Velo tracking (sans upgrading of 2D tracks) to use...
 recoVeloOpen = Tf__PatVeloGeneric("PatVeloGeneric", Output = "Hlt/Track/VeloOpen")
@@ -125,14 +121,12 @@ MinimalRZVelo   = bindMembers( None, [DecodeVELO, patVeloR ] )
 RZVelo   = bindMembers( None, [ MinimalRZVelo, prepareRZVelo ] )
 Velo     = bindMembers( None, [                  RZVelo , reco1Velo ] )
 
-
 from Configurables import PatSeeding
 from HltDecodeRaw import DecodeIT
 Hlt1Seeding = bindMembers( None, [ DecodeIT,
                                    PatSeeding('Hlt1MBSeeding'
                                               ,OutputTracksName = 'Hlt1/Tracks/Seeding')
                                    ] )
-
 
 # Debug things for an open VELO
 VeloOpen = bindMembers( None, [ DecodeVeloRawBuffer(), recoVeloOpen, prepareVeloOpen ] )

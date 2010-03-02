@@ -1,9 +1,15 @@
-$Id: release.notes,v 1.78 2010-02-26 04:55:36 gligorov Exp $
+$Id: release.notes,v 1.79 2010-03-02 11:14:56 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+! 2010-03-02 - V. Gligorov
+ - Continuing work on Savannah tasks 13784 and 12691.
+   Major change is that the files BasicParticles etc. no longer
+   define instances of the reconstruction, they pick up valid instances
+   from Hlt2TrackingConfigurations 
+
 ! 2010-02-26 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691.
    Various minor changes, spelling out of dependencies, etc.  

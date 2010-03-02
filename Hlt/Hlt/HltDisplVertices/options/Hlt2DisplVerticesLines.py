@@ -61,6 +61,9 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.BasicParticles import NoCutsPions
         from HltLine.HltReco import PV3D
 
+	from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+        Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
+
         #######################################################################
         # Eventually get primary vertices
         DVSeq = []
@@ -72,7 +75,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2PatPV3D = PatPV3D("Hlt2DisplVerticesV3D")
         DVSeq.append( Hlt2PatPV3D )
         Hlt2PatPV3D.addTool(PVOfflineTool)
-        Hlt2PatPV3D.PVOfflineTool.InputTracks = ["Hlt/Track/Velo"]
+        Hlt2PatPV3D.PVOfflineTool.InputTracks = [(Hlt2UnfittedForwardTracking.hlt2VeloTracking()).outputSelection()]
         Hlt2PatPV3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
         Hlt2PatPV3D.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
         Hlt2PatPV3D.PVOfflineTool.addTool(PVSeed3DTool)

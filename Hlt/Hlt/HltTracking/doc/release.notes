@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.96 2010-03-01 20:28:49 graven Exp $
+!$Id: release.notes,v 1.97 2010-03-02 11:24:50 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2010-03-02 - V. Gligorov
+ - Follow developments in Savannah tasks 13784/12691. Change Hlt/Tracks
+   to Hlt1/Track to obey naming convention in HLT.
+
 ! 2010-03-01 - Gerhard Raven
  - fix windows compiler warnings
 

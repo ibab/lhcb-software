@@ -53,13 +53,14 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         from Configurables import PatPV3D, PVOfflineTool, PVSeed3DTool, LSAdaptPV3DFitter, Hlt2DisplVertices, Hlt2DisplVerticesDEV
         from Hlt2SharedParticles.BasicParticles import NoCutsPions
         from HltLine.HltPVs import PV3D
-        from Configurables import Hlt2Tracking
-        
+	from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+        Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()       
+ 
         # Run PatPV3D
         Hlt2PatPV3D = PatPV3D("Hlt2DisplVerticesV3D")
         Hlt2PatPV3D.addTool(PVOfflineTool)
         #Get the correct input location automatically from the Hlt2 reconstruction instead of hardocoding
-        Hlt2PatPV3D.PVOfflineTool.InputTracks = [(Hlt2Tracking().hlt2VeloTracking()).outputSelection()]
+        Hlt2PatPV3D.PVOfflineTool.InputTracks = [(Hlt2UnfittedForwardTracking.hlt2VeloTracking()).outputSelection()]
         Hlt2PatPV3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
         Hlt2PatPV3D.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
         Hlt2PatPV3D.PVOfflineTool.addTool(PVSeed3DTool)
