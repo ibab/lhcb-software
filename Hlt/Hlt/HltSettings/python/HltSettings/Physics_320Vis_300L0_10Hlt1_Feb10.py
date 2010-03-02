@@ -39,6 +39,7 @@ class Physics_320Vis_300L0_10Hlt1_Feb10 :
         from Hlt1Lines.Hlt1PhotonLines         import Hlt1PhotonLinesConf
         from Hlt1Lines.Hlt1VeloLines           import Hlt1VeloLinesConf
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
+        from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
 
         return { Hlt1HadronLinesConf : {  'SingleHadron_PTCut' : 1400
                                          , 'HadSingle_IPCut' : 0.14
@@ -100,6 +101,9 @@ class Physics_320Vis_300L0_10Hlt1_Feb10 :
                                                                  , 'Hlt2Forward'      : 0. # first needs a check that /Hlt/Track/Long actually exists..
                                                                  , 'Hlt2DebugEvent'   : 0.0001
                                                                  }              }
+                 ,Hlt1MBLinesConf :{ 'Prescale' : { 'Hlt1MBMicroBiasRZVelo' : 0
+                                                    ,'Hlt1MBMicroBiasTStation' : 0}
+                                     }
                  
                  }
     
@@ -127,7 +131,7 @@ class Physics_320Vis_300L0_10Hlt1_Feb10 :
                , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco'
                , 'Hlt1MBMiniBiasNoBeam','Hlt1MBMiniBiasBeamCrossing','Hlt1MBMiniBiasBeam1','Hlt1MBMiniBiasBeam2'
                , 'Hlt1MBNoBiasNoBeam','Hlt1MBNoBiasBeamCrossing','Hlt1MBNoBiasBeam1','Hlt1MBNoBiasBeam2'
-               , 'Hlt1MBMicroBias'
+               , 'Hlt1MBMicroBiasRZVelo', 'Hlt1MBMicroBiasTStation'
                , 'Hlt1SingleHadron',     'Hlt1SingleHadronViaT'
                , 'Hlt1DiHadron',         'Hlt1DiHadronViaT',    'Hlt1DiHadronSoft'
                , 'Hlt1SingleMuonNoIPL0', 'Hlt1SingleMuonIPCL0'
