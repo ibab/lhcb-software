@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.107 2010-02-22 14:18:08 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.108 2010-03-02 07:59:06 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -79,6 +79,7 @@ class Moore(LHCbConfigurableUser):
         , "RunOnline"         : False
         , "UseDBSnapshot"     : True
         , "DBSnapshotDirectory" : "/group/online/hlt/conditions"
+        , 'IgnoreDBHeartBeat'  : False
         , 'EnableTimeOutCatcher' : False
         , 'TimeOutThreshold'  : 10000  # milliseconds before giving up, and directing event to time out stream
         , 'TimeOutBits'       : 0x200
@@ -233,8 +234,9 @@ class Moore(LHCbConfigurableUser):
         from Configurables import MagneticFieldSvc
         MagneticFieldSvc().UseSetCurrent = True
 
+        conddb.IgnoreHeartBeat = self.getProp('IgnoreDBHeartBeat') 
+
         if self.getProp('EnableRunChangeHandler') : 
-            conddb.IgnoreHeartBeat = True
             import OnlineEnv
             online_xml = '%s/%s/online_%%d.xml' % (baseloc, OnlineEnv.PartitionName )
             from Configurables import RunChangeHandlerSvc

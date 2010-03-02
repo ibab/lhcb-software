@@ -17,9 +17,10 @@ def start() :
 
     ### default database setup
     Moore().Simulation = False
-    Moore().CondDBtag  = 'hlt-20100202'
     Moore().DDDBtag    = 'hlt-20100120'
+    Moore().CondDBtag  = 'hlt-20100202'
     Moore().UseDBSnapshot = True
+    Moore().IgnoreDBHeartBeat = True
     Moore().EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough' ] )
 
     if OnlineEnv.PartitionName == 'FEST' :
