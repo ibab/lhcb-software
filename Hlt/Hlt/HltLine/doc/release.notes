@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.88 2010-02-27 13:08:28 graven Exp $
+! $Id: release.notes,v 1.89 2010-03-02 10:34:07 albrecht Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2010-03-02 - Johannes Albrecht
+ - HltReco.py: add Hlt1 seeding sequence
 
 ! 2010-02-26 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691. Major changes 
