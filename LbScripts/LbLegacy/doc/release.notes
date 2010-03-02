@@ -1,3 +1,8 @@
+2010-03-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: added the possibility to fall back on $VO_LHCB_SW_DIR/lib if 
+	the MYSITEROOT variable is not defined.
+
 2010-02-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: added more protection against the windows attributes. Now 

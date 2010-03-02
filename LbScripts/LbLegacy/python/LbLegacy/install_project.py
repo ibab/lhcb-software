@@ -1387,32 +1387,42 @@ def createBaseDirs(pname, pversion):
 
     log = logging.getLogger()
 
+    mysiteroot = None
     # removes the trailing "/" at the end of the path
     if os.environ.has_key("MYSITEROOT") :
         mysiteroot = os.environ["MYSITEROOT"]
-        path_list = []
-        for p in  mysiteroot.split(os.pathsep) :
-            while p.endswith(os.sep) :
-                p = p[:-1]
-            path_list.append(p)
-        mysiteroot = os.pathsep.join(path_list)
-        os.environ["MYSITEROOT"] = mysiteroot
-        if mysiteroot.find(os.pathsep) != -1 :
-            multiple_mysiteroot = True
-        mypath = os.path.realpath(mysiteroot.split(os.pathsep)[0])
-        thispwd = os.path.realpath(os.getcwd())
-        if sys.platform == 'win32' :
-            if mypath.upper() != thispwd.upper() :
-                log.warning("Using the directory %s for installation" % mypath)
-                os.chdir(mypath)
-        else:
-            if mypath != thispwd :
-                log.warning("Using the directory %s for installation" % mypath)
-                os.chdir(mypath)
-
     else:
-        #print 'please set $MYSITEROOT before running the python script'
+        if os.environ.has_key("VO_LHCB_SW_DIR") :
+            candidate_dir = os.path.join(os.environ["VO_LHCB_SW_DIR"], "lib")
+            if os.path.isdir(candidate_dir) :
+                mysiteroot = candidate_dir
+
+    if not mysiteroot :
         sys.exit('please set $MYSITEROOT == $INSTALLDIR:$MYSITEROOT before running the python script \n')
+
+    path_list = []
+    for p in  mysiteroot.split(os.pathsep) :
+        while p.endswith(os.sep) :
+            p = p[:-1]
+        path_list.append(p)
+    if len(path_list) > 1 :
+        multiple_mysiteroot = True
+    else :
+        multiple_mysiteroot = False
+    mysiteroot = os.pathsep.join(path_list)
+    os.environ["MYSITEROOT"] = mysiteroot
+
+        
+    mypath = os.path.realpath(mysiteroot.split(os.pathsep)[0])
+    thispwd = os.path.realpath(os.getcwd())
+    if sys.platform == 'win32' :
+        if mypath.upper() != thispwd.upper() :
+            log.warning("Using the directory %s for installation" % mypath)
+            os.chdir(mypath)
+    else:
+        if mypath != thispwd :
+            log.warning("Using the directory %s for installation" % mypath)
+            os.chdir(mypath)
 
 
     log_dir = _multiPathJoin(mysiteroot, "log")
@@ -1422,6 +1432,7 @@ def createBaseDirs(pname, pversion):
     html_dir = _multiPathJoin(mysiteroot, "html")
     bootscripts_dir = _multiPathJoin(mysiteroot, "bootscripts")
     targz_dir = _multiPathJoin(mysiteroot, "targz")
+
     if sys.platform != "win32" :
         tmp_dir = _multiPathJoin(mysiteroot, os.path.join("tmp", os.environ["USER"]))
     else :
