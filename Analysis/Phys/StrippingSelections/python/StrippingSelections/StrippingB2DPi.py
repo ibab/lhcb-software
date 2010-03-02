@@ -145,7 +145,7 @@ StripSelD2KPiPi0.MotherCut = Dcut+" & (BPVDIRA>0) & (P>3000*MeV)"
 StrippingSelD2hhhh = CombineParticles("StrippingSelD2hhhh")
 StrippingSelD2hhhh.InputLocations = ["StdNoPIDsKaons", "StdNoPIDsPions"]
 StrippingSelD2hhhh.DecayDescriptors  = ["[D0 -> K- pi+ pi- pi+]cc","[D0 -> K+ pi- pi- pi+]cc","[D0 -> K+ K- pi+ pi-]cc"]
-StrippingSelD2hhhh.DaughtersCuts = { "K+"        : Daughtercut,"pi+"        : Daughtercut}
+StrippingSelD2hhhh.DaughtersCuts = { "K+"        : Daughtercut+ "& (PT>400*MeV)","pi+"        : Daughtercut+ "& (PT>400*MeV)"}
 StrippingSelD2hhhh.CombinationCut =  Dcombcut
 StrippingSelD2hhhh.MotherCut = Dcut+" & (BPVDIRA>0) & (P>3000*MeV)"
 

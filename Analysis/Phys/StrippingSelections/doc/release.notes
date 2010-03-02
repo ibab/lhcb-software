@@ -5,6 +5,10 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-03-02 - Jacopo Nardulli
+- Tighter cuts for the D->4h combinations in the B2DX stripping.
+  Response to https://savannah.cern.ch/bugs/?63702
+
 !==================== StrippingSelections v1r16 2010-02-22 ====================
 
 ! 2010-02-23 - Marcin Kucharczyk
