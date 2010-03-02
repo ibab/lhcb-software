@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.129 2010-03-01 21:09:20 graven Exp $
+! $Id: release.notes,v 1.130 2010-03-02 08:27:40 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -11,6 +11,7 @@
 !-----------------------------------------------------------------------------
 ! 2010-03-01 - Gerhard Raven
  - add RZVelo microbias trigger line
+ - remove hera-b extrapolator setting
 
 ! 2010-02-26 - Johannes Albrecht
  - Hlt1CosmicLines: remove L0 decision requirement

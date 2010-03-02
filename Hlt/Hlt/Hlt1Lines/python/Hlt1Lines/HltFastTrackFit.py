@@ -16,6 +16,3 @@ def setupHltFastTrackFit( fit ) :
     fit.addTool( TrackMasterFitter, name = 'Fit')
     from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
     ConfiguredFastFitter( getattr(fit,'Fit') )
-    # for good measure, we throw this one in as well...
-    from Configurables import TrackHerabExtrapolator
-    TrackHerabExtrapolator().extrapolatorID = 4
