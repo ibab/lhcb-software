@@ -4,6 +4,9 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-03-02 - Chris Jones
+ - Add support for BelowThreshold particle ID types.
+
 !======================= RichRecPhotonTools v1r6p1 2009-09-03 ================
 ! 2009-09-03 - Marco Cattaneo
  - Remove obsolete file src/RichRecPhotonTools_dll.cpp

@@ -84,6 +84,9 @@ double
 PhotonSignalGaussProb::predictedPixelSignal( LHCb::RichRecPhoton * photon,
                                              const Rich::ParticleIDType id ) const
 {
+  // Protect against below threshold hypothesis
+  if ( id == Rich::BelowThreshold ) return 0;
+
   if ( !photon->expPixelSignalPhots().dataIsValid(id) )
   {
     using namespace boost::numeric;
@@ -132,6 +135,9 @@ double
 PhotonSignalGaussProb::signalProb( LHCb::RichRecPhoton * photon,
                                    const Rich::ParticleIDType id ) const
 {
+  // Protect against below threshold hypothesis
+  if ( id == Rich::BelowThreshold ) return 0;
+
   // Expected Cherenkov theta angle
   const double thetaExp = m_ckAngle->avgCherenkovTheta(photon->richRecSegment(),id);
   if ( thetaExp < 0.000001 ) return 0.0;
@@ -152,6 +158,9 @@ double
 PhotonSignalGaussProb::scatterProb( LHCb::RichRecPhoton * photon,
                                     const Rich::ParticleIDType id ) const
 {
+  // Protect against below threshold hypothesis
+  if ( id == Rich::BelowThreshold ) return 0;
+
   if ( Rich::Aerogel == photon->richRecSegment()->trackSegment().radiator() )
   {
 
