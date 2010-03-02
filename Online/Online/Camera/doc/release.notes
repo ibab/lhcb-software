@@ -4,6 +4,10 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2010-03-02 - Nicola Mangiafave
+- In /src/CameraTool: added automatic setting of message rate based on user
+setting and message size.
+
 ! 2010-02-04 - Nicola Mangiafave
 - In /src/: fixed warning messages from compilation.
 

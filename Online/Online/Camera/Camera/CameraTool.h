@@ -1,4 +1,4 @@
-// $Id: CameraTool.h,v 1.7 2010-02-03 10:43:44 nmangiaf Exp $
+// $Id: CameraTool.h,v 1.8 2010-03-02 14:27:54 nmangiaf Exp $
 #ifndef CAMERATOOL_H
 #define CAMERATOOL_H 1
 
@@ -17,6 +17,7 @@
 // from std
 #include <string>
 #include <vector>
+#include <map>
 
 // Forward declarations
 class client;
@@ -38,6 +39,8 @@ class DimCommand;
  *           will have no action and just return success.
  *  @author Claus Buszello
  *  @date   2007-05-30
+ *  @author Nicola Mangiafave
+ *  @date   2010-02-26
  */
 
 class CameraTool : public GaudiTool,
@@ -78,7 +81,7 @@ public:
    * Sends a message both to Camera and to PVSS.
    * Sends to Camera all the information that has been added via Append functions since the last SendAndClear.
    * The first three parameters refer to Camera, the last three refer to PVSS
-   * \param  c_l Message level. 1,2,3,4,5 represent info, warning, error messages respectively. 
+   * \param  c_l Message level. 1,2,3 represent info, warning, error messages respectively. 
    * \param  c_who Used to identify the sender of the message. Typically set to the name of the
    *           submitting algorithm.
    * \param  c_what One line message summary to send, briefly describing reason for the message.
@@ -87,16 +90,18 @@ public:
    * \param  p_who Used to identify the sender of the message. Typically set to the name of the
    *           submitting algorithm.
    * \param  p_what One line message summary to send, briefly describing reason for the message.
+   * \param  messagePeriod Minimal number of seconds between two identical messages.
    * \return int Returns 1.
    */
    int SendAndClear(MessageLevel c_l,const std::string& c_who,const std::string& c_what, 
-                    MessageLevel p_l,const std::string& p_who,const std::string& p_what);
+                    MessageLevel p_l,const std::string& p_who,const std::string& p_what, 
+                    int messagePeriod = 0);
 
   /*!
    * Sends a message both to Camera and to PVSS. It additionally sends to Camera a time stamp.
    * Sends to Camera all the information that has been added via Append functions since the last SendAndClear.
    * The first three parameters refer to Camera, the last three refer to PVSS
-   * \param  c_l Message level. 1,2,3,4,5 represent info, warning, error messages respectively. 
+   * \param  c_l Message level. 1,2,3 represent info, warning, error messages respectively. 
    * \param  c_who Used to identify the sender of the message. Typically set to the name of the
    *           submitting algorithm.
    * \param  c_what One line message summary to send, briefly describing reason for the message.
@@ -105,10 +110,12 @@ public:
    * \param  p_who Used to identify the sender of the message. Typically set to the name of the
    *           submitting algorithm.
    * \param  p_what One line message summary to send, briefly describing reason for the message.
+   * \param  messagePeriod Minimal number of seconds between two identical messages.
    * \return int Returns 1.
    */
   int SendAndClearTS(MessageLevel c_l,const std::string& c_who,const std::string& c_what, 
-                     MessageLevel p_l,const std::string& p_who,const std::string& p_what);
+                     MessageLevel p_l,const std::string& p_who,const std::string& p_what, 
+                     int messagePeriod = 0);
   /*!
    * Sends all the information that has been added via Append functions since the last SendAndClear.
    * \param  o_l Message level. 1,2,3,4,5 represent info, warning, error, warning_PVSS and error_PVSS
@@ -118,9 +125,11 @@ public:
    * \param  o_who Used to identify the sender of the message. Typically set to the name of the
    *           submitting algorithm.
    * \param  o_what One line message summary to send, briefly describing reason for the message.
+   * \param  messagePeriod Minimal number of seconds between two identical messages.
    * \return int Returns 1.
    */
-  int SendAndClear(MessageLevel o_l,const std::string& o_who,const std::string& o_what);
+  int SendAndClear(MessageLevel o_l,const std::string& o_who,const std::string& o_what, 
+                   int messagePeriod = 0);
   
   /*!
    * Wrapper for the SendAndClear function, it additionally sends a time stamp with the message.
@@ -132,9 +141,11 @@ public:
    * \param  who Used to identify the sender of the message. Typically set to the name of the
    *           submitting algorithm.
    * \param  what One line message summary to send, briefly describing reason for the message.
+   * \param  messagePeriod Minimal number of seconds between two identical messages.
    * \return int Returns 1.
    */
-  int SendAndClearTS(MessageLevel l,const std::string& who,const std::string& what);
+  int SendAndClearTS(MessageLevel l,const std::string& who,const std::string& what, 
+                     int messagePeriod = 0);
 
   /*!
    * Adds a ROOT 2D histogram of doubles to be sent by CAMERA.
@@ -218,25 +229,75 @@ private:
   MessageLevel m_ErrorPVSS; ///! Ex. if ErrorPVSS = ICameraTool::INFO at a message with camera message level = INFO will correspond a PVSS message with ERROR level.
   std::string m_ERROR_PVSS; ///! Property for m_ErrorPVSS. It's a string, i.e. if you want ErrorPVSS = ICameraTool::INFO you need ERROR_PVSS = "INFO"
   bool m_skipCameraToPVSSFlag; ///! skip the CameraToPVSS call in SendAndClear(MessageLevel l,const std::string& o_who,const std::string& o_what)
-  std::string m_message; ///!message to be sent to PVSS
+  std::string m_message; ///! Message to be sent to PVSS
+  int m_messagePeriod; ///! Minimal number of seconds between two identical messages.
+  std::map<std::string, std::map<std::string, std::vector<int> > > m_MessageOwnerLevelMap; ///! Keys: message owner (who) + message level (l), Values: m_MessageBodyMap. 
+  std::map<std::string, std::vector<int> > m_MessageBodyMap; ///! Keys: message body with no numbers (StripMessage(what)), Values: vetor[0]=time last message received, vector[1]=number of previous messages aborthed.
+  bool m_MessageRateCheckFlag; ///! if true the message rate is checked
+  time_t m_currentTime; ///! Time arrival of the last message.
+  int m_HistoToEntries; ///! Numbers of entries equivalent to the size filled by an histogram (318 KB).
+  int m_MaxTextEntries; ///! Maximum number of entries in a text only appended message. Calculated by considering a message period of 5 seconds.
+  /*!
+   * It removes the number from the message body (what).
+   * 
+   * \param  what One line message summary to send, briefly describing reason for the message.
+   * \return std::string Returns the string what without numbers.
+   */
+  std::string StripMessage(std::string what);
+  /*!
+   * It checks the rate at which the message is sent. If the previous identical message 
+   * was sent less than m_messagePeriod seconds before, the message must not be sent and the attached 
+   * extended info are deleted. The number of eliminated messages is reported in the extra info of the 
+   * next identical message sent.
+   * N.B.: Two messages are identical if they have the same 1 and who plus what 
+   * must differ only by numbers.
+   * 
+   * \param  l Message level. 1,2,3,4,5 represent info, warning, error messages respectively. 
+   * \param  who Used to identify the sender of the message. Typically set to the name of the
+   *           submitting algorithm.
+   * \param  what One line message summary to send, briefly describing reason for the message.
+   * \param  messagePeriod Minimal number of seconds between two identical messages.
+   * \param  IsPVSSMessageFlag If true that's a PVSS message ==> no extrainfo is appended.
+   * \return int Returns true if the message must be sent, false if it must not.
+   */
+  bool MessageRateCheck(MessageLevel l, std::string who, std::string what, 
+                        int messagePeriod, bool IsPVSSMessageFlag = false);
   /*!
    * Given a MessageLevel (int) it gives back the corresponding text suited for PVSS messages.
+   *
+   * \param  l Message level. 1,2,3,4,5 represent info, warning, error messages respectively. 
+   * \return std::string Returns the corresponding text suited for PVSS messages.
    *
    */
   std::string NumToTextMessage(MessageLevel l);
   /*!
-   * Replaces m_msgLev, m_who and m_what with the 3 parameters
+   * Replaces m_msgLev, m_who and m_what with the 3 parameters.
+   *
+   * \param  l Message level. 1,2,3,4,5 represent info, warning, error messages respectively. 
+   * \param  who Used to identify the sender of the message. Typically set to the name of the
+   *           submitting algorithm.
+   * \param  what One line message summary to send, briefly describing reason for the message.
    *
    */
   void ReplaceMessageParameters(MessageLevel l, std::string who, std::string what);
   /*!
    * Replaces m_msgLev, m_who, m_what with, m_PVSSmsgLev, m_PVSSwho and m_what with the 6 parameters
-   *
+   * \param  l Message level. 1, 2, 3 represent info, warning, error messages respectively. 
+   * \param  who Used to identify the sender of the message. Typically set to the name of the
+   *           submitting algorithm.
+   * \param  what One line message summary to send, briefly describing reason for the message.
+   * \param  PVSSl Message level. 4, 5 represent warning_PVSS, error_PVSS messages respectively. 
+   * \param  PVSSwho Used to identify the sender of the message. Typically set to the name of the
+   *           submitting algorithm.
+   * \param  PVSSwhat One line message summary to send, briefly describing reason for the message.
    */
   void ReplaceMessageParameters(MessageLevel l, std::string who, std::string what, MessageLevel PVSSl, std::string PVSSwho, std::string PVSSwhat);
   /*!
    * Replaces m_PVSSmsgLev, m_PVSSwho and m_PVSSwhat with the 3 parameters
-   *
+   * \param  PVSSl Message level. 4, 5 represent warning_PVSS, error_PVSS messages respectively. 
+   * \param  PVSSwho Used to identify the sender of the message. Typically set to the name of the
+   *           submitting algorithm.
+   * \param  PVSSwhat One line message summary to send, briefly describing reason for the message.
    */
   void ReplacePVSSMessageParameters(MessageLevel PVSSl, std::string PVSSwho, std::string PVSSwhat);
   /*!
@@ -260,13 +321,13 @@ private:
    * \param  what One line message summary to send, briefly describing reason for the message.
    * \return int Returns 1.
    */
-  int CameraToPVSS(MessageLevel l, std::string who, std::string what);
+  int CameraToPVSS(MessageLevel l, std::string who, std::string what, int messagePeriod = 0);
   /*!
    * Sends the message to PVSS. This function is used internally, the users should use SendAndClear or 
    * SendAndClearTS. The parameters are m_PVSSmsgLev, m_PVSSwho and m_PVSSwhat.
    *
    */
-  int SendToPVSS();
+  int SendToPVSS(int messagePeriod = 0);
 };
 
 #endif

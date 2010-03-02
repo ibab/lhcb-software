@@ -1,4 +1,4 @@
-// $Id: ICameraTool.h,v 1.4 2010-02-03 10:43:44 nmangiaf Exp $
+// $Id: ICameraTool.h,v 1.5 2010-03-02 14:27:55 nmangiaf Exp $
 #ifndef RICHKERNEL_ICAMERATOOL_H 
 #define RICHKERNEL_ICAMERATOOL_H 1
 
@@ -43,8 +43,10 @@ public:
                      };
 
 
-  virtual int SendAndClear(MessageLevel o_l,const std::string& o_who,const std::string& o_what)=0;
-  virtual int SendAndClearTS(MessageLevel l,const std::string& who,const std::string& what)=0; 
+  virtual int SendAndClear(MessageLevel o_l,const std::string& o_who,const std::string& o_what, 
+                           int messagePeriod = 0)=0;
+  virtual int SendAndClearTS(MessageLevel l,const std::string& who,const std::string& what, 
+                             int messagePeriod = 0)=0; 
 
   virtual int Append(TH2D * H,const char *opts=NULL)=0;
   virtual int Append(TH1D * H,const char *opts=NULL)=0;
@@ -62,10 +64,12 @@ public:
                                     MessageLevel error_PVSS = ICameraTool::ERROR)=0;
 
   virtual int SendAndClear(MessageLevel c_l,const std::string& c_who,const std::string& c_what, 
-                           MessageLevel p_l,const std::string& p_who,const std::string& p_what)=0;
+                           MessageLevel p_l,const std::string& p_who,const std::string& p_what, 
+                           int messagePeriod = 0)=0;
 
   virtual int SendAndClearTS(MessageLevel c_l,const std::string& c_who,const std::string& c_what, 
-                             MessageLevel p_l,const std::string& p_who,const std::string& p_what)=0;
+                             MessageLevel p_l,const std::string& p_who,const std::string& p_what, 
+                             int messagePeriod = 0)=0;
 
 };
 
