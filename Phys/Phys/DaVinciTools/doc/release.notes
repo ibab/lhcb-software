@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.513 2010-03-03 13:06:36 jpalac Exp $
+! $Id: release.notes,v 1.514 2010-03-03 15:10:56 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
 ! 2010-03-03 - Juan Palacios
+ - src/FilterDekstop.cpp
+  . Implement writeEmptyContainerIfNeeded().
  - src/GenericParticle2PVRelator.h
   . Use LHCb::RecVertex::Range
  - src/FilterDekstop.cpp
