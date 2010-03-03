@@ -1,0 +1,26 @@
+#!/bin/bash
+. /group/online/dataflow/scripts/nodeMonitors.sh
+export UTGID=${HOST}/StorageMon/$$;
+export DIM_DNS_NODE=ecs03
+directory=`dirname $0`
+. ${directory}/cleanEnviron.sh DISPLAY TERM HOST DIM_DNS_NODE
+eval `${directory}/internal/getMonOpts.sh $*`
+if test "${help}" = "1";
+    then
+    `which gentest.exe` libROMon.so romon_storage -help;
+elif test "${terminal_type}" = "gnome";
+    then
+    export UTGID=${UTGID}
+    gnome-terminal --sm-disable \
+	--disable-factory \
+	--hide-menubar \
+	--geometry=107x45 \
+	--title="Storage ---- STORECTL01  ----  UTGID:${UTGID} " \
+	-e "`which gentest.exe` libROMon.so romon_storage $*" &
+else
+    xterm -ls -132 \
+	-geometry 107x45 \
+	-title "Storage ---- STORECTL01  ----  UTGID:${UTGID} " \
+	-e "export UTGID=${UTGID}; exec -a ${UTGID} \
+	`which gentest.exe` libROMon.so romon_storage $*" &
+fi;

@@ -1,0 +1,4 @@
+#!/bin/sh
+. /group/online/dataflow/scripts/preamble.sh
+. /group/online/dataflow/scripts/exportDisplay.sh $*
+xterm  -ls -132 -geometry 80x24 -title ${HOST}/TANMonitor -e "exec -a TanMonitor `which gentest.exe` libOnlineKernel.so tanmon -c" &

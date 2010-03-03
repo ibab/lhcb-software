@@ -1,0 +1,2 @@
+#!/bin/bash
+. `dirname $0`/farmMon -all -xml -dense -taskmon

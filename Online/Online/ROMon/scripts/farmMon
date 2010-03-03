@@ -1,12 +1,11 @@
 #!/bin/bash
 args=$*;
-###. /group/online/dataflow/scripts/nodeMonitors.sh
+. /group/online/dataflow/scripts/nodeMonitors.sh
 directory=`dirname $0`
-. ${directory}/setup.${CMTCONFIG}.vars
 export DIM_DNS_NODE=ecs03
-####. ${directory}/cleanEnviron.sh DISPLAY TERM HOST DIM_DNS_NODE ROMONROOT
+. ${directory}/cleanEnviron.sh DISPLAY TERM HOST DIM_DNS_NODE ROMONROOT
 #
-#eval `${directory}/internal/getMonOpts.sh $args`
+eval `${directory}/internal/getMonOpts.sh $args`
 export UTGID=${HOST}/FarmMon/$$;
 if test "${help}" = "1";
     then
