@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.49 2010-03-01 18:11:16 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.50 2010-03-03 14:57:20 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -524,6 +524,8 @@ protected:
     //
     return t ;                                               // RETURN 
   } ;
+
+  virtual StatusCode writeEmptyContainerIfNeeded() ;
   
 private:
 

@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.70 2010-02-18 08:50:08 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.71 2010-03-03 14:57:20 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -385,7 +385,7 @@ StatusCode DVAlgorithm::sysExecute ()
   
   // Make sure each DVAlgorithm has written out something
   if ( !m_avoidEmptyOutput ) 
-  { sc = desktop()->writeEmptyContainerIfNeeded(); }
+  { sc = this->writeEmptyContainerIfNeeded(); }
   else 
   { verbose() << "Avoiding mandatory output" << endmsg ; }
 
@@ -398,6 +398,11 @@ void DVAlgorithm::setFilterPassed  (  bool    state  )
   this->Algorithm::setFilterPassed(state); 
   m_setFilterCalled = true;
   return;
+}
+// ============================================================================
+StatusCode DVAlgorithm::writeEmptyContainerIfNeeded() 
+{
+  return desktop()->writeEmptyContainerIfNeeded();
 }
 // ============================================================================
 const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p) const
