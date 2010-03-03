@@ -37,7 +37,7 @@ template <typename T> static void resetCounters(T& cnt,size_t len) {
 template <typename T> static void reset2DCounters(T& cnt, size_t len1, size_t len2) {
   cnt.resize(len1);
   for (unsigned int i=0; i< len1; i++) {
-    cnt[i].resize(len2,0);
+    resetCounters(cnt[i],len2);
   }
 }
 
@@ -432,18 +432,18 @@ MEPErrorAdder::infoHandler() {
 	    if (curr->getSize()/sizeof(int64_t)<16) break;
 
   	    int64_t * data = ((int64_t*) curr->getData());
-            // Interesting values in array; rx bytes: 1, rx packets/frames: 2, Rx Errorss: 3, Rx Dropped: 4, Rx Frame Error: 6
-	    m_nifRxOct += (data[1] - m_rNifRxOct[i]);
-	    m_nifRxPkt += (data[2] - m_rNifRxPkt[i]);
-	    m_nifRxError += (data[3] - m_rNifRxError[i]);
-	    m_nifRxDropped += (data[4] - m_rNifRxDropped[i]);
-	    m_nifRxFrameError += (data[6] - m_rNifRxFrameError[i]);
+            // Interesting values in array; rx bytes: 0, rx packets/frames: 1, Rx Errorss: 2, Rx Dropped: 3, Rx Frame Error: 5
+	    m_nifRxOct += (data[0] - m_rNifRxOct[i]);
+	    m_nifRxPkt += (data[1] - m_rNifRxPkt[i]);
+	    m_nifRxError += (data[2] - m_rNifRxError[i]);
+	    m_nifRxDropped += (data[3] - m_rNifRxDropped[i]);
+	    m_nifRxFrameError += (data[5] - m_rNifRxFrameError[i]);
 
-	    m_rNifRxOct[i] = data[1];
-	    m_rNifRxPkt[i] = data[2];
-	    m_rNifRxError[i] = data[3];
-	    m_rNifRxDropped[i] = data[4];
-	    m_rNifRxFrameError[i] = data[6];
+	    m_rNifRxOct[i] = data[0];
+	    m_rNifRxPkt[i] = data[1];
+	    m_rNifRxError[i] = data[2];
+	    m_rNifRxDropped[i] = data[3];
+	    m_rNifRxFrameError[i] = data[5];
 	
 	    break;
 	}
@@ -614,30 +614,30 @@ MEPErrorAdder::resetRem2DCounters() {
  */
 int
 MEPErrorAdder::resetRemSingleCounters() {
-  m_rTotRxOct.resize(m_nrServices,0);
-  m_rTotRxPkt.resize(m_nrServices,0);
-  m_rBytesNotInPartition.resize(m_nrServices,0);
-  m_rPacketsNotInPartition.resize(m_nrServices,0);
-  m_rTotReadOct.resize(m_nrServices,0);
-  m_rTotRxEvt.resize(m_nrServices,0);
-  m_rTotRxMEP.resize(m_nrServices,0);
-  m_rIncEvt.resize(m_nrServices,0);
-  m_rTotBadMEP.resize(m_nrServices,0);
-  m_rTotMEPReq.resize(m_nrServices,0);
-  m_rTotMEPReqPkt.resize(m_nrServices,0);
-  m_rNumMEPRecvTimeouts.resize(m_nrServices,0);
-  m_rNotReqPkt.resize(m_nrServices,0);
-  m_rTotWrongPartID.resize(m_nrServices,0);
+  resetCounters(m_rTotRxOct,m_nrServices);
+  resetCounters(m_rTotRxPkt,m_nrServices);
+  resetCounters(m_rBytesNotInPartition,m_nrServices);
+  resetCounters(m_rPacketsNotInPartition,m_nrServices);
+  resetCounters(m_rTotReadOct,m_nrServices);
+  resetCounters(m_rTotRxEvt,m_nrServices);
+  resetCounters(m_rTotRxMEP,m_nrServices);
+  resetCounters(m_rIncEvt,m_nrServices);
+  resetCounters(m_rTotBadMEP,m_nrServices);
+  resetCounters(m_rTotMEPReq,m_nrServices);
+  resetCounters(m_rTotMEPReqPkt,m_nrServices);
+  resetCounters(m_rNumMEPRecvTimeouts,m_nrServices);
+  resetCounters(m_rNotReqPkt,m_nrServices);
+  resetCounters(m_rTotWrongPartID,m_nrServices);
 
-  m_rSentEvt.resize(m_nrServices,0); 
-  m_rSentOct.resize(m_nrServices,0);
-  m_rSentEvtErr.resize(m_nrServices,0);
+  resetCounters(m_rSentEvt,m_nrServices); 
+  resetCounters(m_rSentOct,m_nrServices);
+  resetCounters(m_rSentEvtErr,m_nrServices);
  
-  m_rNifRxOct.resize(m_nrServices,0);
-  m_rNifRxPkt.resize(m_nrServices,0);
-  m_rNifRxDropped.resize(m_nrServices,0);
-  m_rNifRxError.resize(m_nrServices,0);
-  m_rNifRxFrameError.resize(m_nrServices,0);
+  resetCounters(m_rNifRxOct,m_nrServices);
+  resetCounters(m_rNifRxPkt,m_nrServices);
+  resetCounters(m_rNifRxDropped,m_nrServices);
+  resetCounters(m_rNifRxError,m_nrServices);
+  resetCounters(m_rNifRxFrameError,m_nrServices);
 
   return 0;
 }
@@ -917,17 +917,21 @@ MEPErrorAdder::setupSubs() {
 	std::string ipn;	// ip
 	int dnr;		// device nr
 	for (dnr=0;dnr<10;dnr++) {
-		sprintf(temp,"/FMC/%s/net/ifs/details/total/net_0%i/data",m_listenerDnsNode.c_str(),dnr);
+		sprintf(temp,"/FMC/%s%.2i/net/ifs/details/total/net_%.2i/data",m_listenerDnsNode.c_str(),i+1,dnr);
 		DimCurrentInfo getdevice(temp,(char *)"");
+		int subsize = getdevice.getSize();
+		if (subsize<130) continue;
 		// find ip number
-		servcont = getdevice.getString()+32;
-		for (int j=0;j<3;j++,servcont+=strlen(servcont)+1);
+		servcont = getdevice.getString()+128;
+		int tm = 128;
+		for (int j=0;j<3&&tm<subsize;j++,tm+=strlen(servcont)+1,servcont+=strlen(servcont)+1);
+		if (tm>=subsize) continue;
 		ipn = servcont;
 		// check ip number
 		if (ipn.substr(0,3)=="192") break;
 	}
-	sprintf(temp,"/FMC/%s%.2i/net/ifs/details/net_0%.2i/data",m_listenerDnsNode.c_str(),i+1,dnr);
-	m_subsNetworkMonitor[i] = new DimInfo(temp,m_updateFrequency,m_zerof,this);
+	sprintf(temp,"/FMC/%s%.2i/net/ifs/details/total/net_%.2i/data",m_listenerDnsNode.c_str(),i+1,dnr);
+	m_subsNetworkMonitor[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
 
 	sprintf(temp,"%s%.2i_MEPRx_1/Runable/srcName",m_listenerDnsNode.c_str(),i+1);
 	m_subsSrcName[i] = new DimInfo(temp,m_updateFrequency,(char *)"",this);
