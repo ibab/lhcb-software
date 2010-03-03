@@ -99,9 +99,15 @@ class Physics_320Vis_300L0_10Hlt1_Feb10 :
                                           }
                  , Hlt1MBLinesConf :      { 'Prescale' : { 'Hlt1MBMicroBias.*' : 0. } } # To be modified during clone
                  , Hlt1VeloLinesConf :    { 'ODIN'     : '( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )' 
-                                          , 'L0DU'     : '( L0_DECISION )'
+                                          , 'L0DU'     : "( L0_CHANNEL('CALO') )"
                                           , 'Prescale' : { 'Hlt1Velo.*' : 0.001 }       # To be modified during clone
                                           }
+                 , Hlt1CommissioningLinesConf : { 'Prescale' :   { 'Hlt1ODINPhysics'    : 0.000001
+                                                                 , 'Hlt1ODINTechnical'  : 0.000001 # @OnlineEnv.AcceptRate
+                                                                 , 'Hlt1Tell1Error'     : 1
+                                                                 } 
+                                                , 'Postscale' : { 'Hlt1Tell1Error' : 'RATE(1)' }
+                                                }
                  , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 1.
                                                                , 'Hlt2Forward'      : 0. # first needs a check that /Hlt/Track/Long actually exists..
                                                                , 'Hlt2DebugEvent'   : 0.0001
