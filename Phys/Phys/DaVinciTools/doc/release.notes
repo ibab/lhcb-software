@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.511 2010-03-02 17:07:12 jpalac Exp $
+! $Id: release.notes,v 1.512 2010-03-03 12:48:27 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-03-03 - Juan Palacios
+ - src/PhysDekstop.cpp
+  . Make FilterDesktop write out end vertices to LHCb::Vertex::Selection in 
+    AlgoName+"/Vertices", mimicking previous behaviour.
 
 ! 2010-03-02 - Juan Palacios
  - src/PhysDekstop.cpp
