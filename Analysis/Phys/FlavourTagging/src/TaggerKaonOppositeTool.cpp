@@ -77,6 +77,7 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
 
     double pidk=(*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 );
+
     if(pidk < m_PID_k_cut ) continue;
     if(pidk==0 || pidk==-1000.0) continue;
 
@@ -96,19 +97,16 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
     m_util->calcIP(*ipart, RecVert, IP, IPerr);
     if(!IPerr) continue;
     double IPsig = fabs(IP/IPerr);
-    debug() << " Kaon P="<< P <<" Pt="<< Pt << " IPsig=" << IPsig 
-            << " IP=" << IP <<endreq;
+    //fatal() << " Kaon P="<< P/GeV <<" Pt="<< Pt/GeV << " IPsig=" << IPsig 
+    //        << " IP=" << IP <<" tsa="<< tsa<<" pidk="<<pidk<<" pidp="<<pidproton<<endreq;
 
     if(IPsig > m_IPs_cut_kaon ) if(fabs(IP)< m_IP_cut_kaon)  {
       const Track* track = (*ipart)->proto()->track();
       double lcs = track->chi2PerDoF();
 
-      if( ( track->type()==Track::Long 
-            && lcs<m_lcs_kl && fabs(IP)<m_IP_kl ) 
-          || 
-          ( track->type()==Track::Upstream 
-            && lcs<m_lcs_ku && fabs(IP)<m_IP_ku ) ) {
-        
+      if((track->type()==Track::Long && lcs<m_lcs_kl && fabs(IP)<m_IP_kl ) 
+	 || 
+	 (track->type()==Track::Upstream && lcs<m_lcs_ku && fabs(IP)<m_IP_ku )){
         ncand++;
         if( Pt > ptmaxk ) { 
           ikaon = (*ipart);

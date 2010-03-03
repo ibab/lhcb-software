@@ -345,6 +345,7 @@ BTaggingTool::chooseCandidates(const Particle* AXB,
   axdaugh.push_back( AXB );
   for ( ip = parts->begin(); ip != parts->end(); ip++ ){
 
+    //debug()<<" aaaaa1 "<<(*ip)->p()/GeV<<"  "<<(*ip)->particleID().pid()<<endreq;
     if( (*ip)->p()/GeV < 2.0 ) continue;               
     if( (*ip)->momentum().theta() < m_thetaMin ) continue;
     if( (*ip)->charge() == 0 ) continue;               
@@ -355,14 +356,17 @@ BTaggingTool::chooseCandidates(const Particle* AXB,
     if( (*ip)->p()/GeV  > 200 ) continue;
     if( (*ip)->pt()/GeV >  10 ) continue;
     if( m_util->isinTree( *ip, axdaugh, distphi ) ) continue ;//exclude signal
+    //debug()<<"                aaaaa2 distphi="<< distphi <<endreq;
     if( distphi < m_distphi_cut ) continue;
 
     //calculate the min IP wrt all pileup vtxs
     double ippu, ippuerr;
     m_util->calcIP( *ip, PileUpVtx, ippu, ippuerr );
+    //if(ippuerr) debug()<<"                aaaaa3 ippu="<< ippu/ippuerr <<endreq;
     //eliminate from vtags all parts coming from a pileup vtx
     if(ippuerr) if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection
 
+    //debug()<<"                        aaaaa4 STORED " <<endreq;
     //////////////////////////////////
     vtags.push_back(*ip);          // store tagger candidate
     ////////////////////////////////

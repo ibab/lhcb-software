@@ -77,7 +77,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
 
-    if(! (*ipart)->proto()->info(ProtoParticle::InAccEcal, false) ) continue;
+    if(! (*ipart)->proto()->info(ProtoParticle::RichPIDStatus, 0) ) continue;
     double pidk=(*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 );
     double pidp=(*ipart)->proto()->info( ProtoParticle::CombDLLp, -1000.0 ); 
 
@@ -88,8 +88,6 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if(pidk < m_KaonSPID_kS_cut ) continue;
     if(pidk - pidp < m_KaonSPID_kpS_cut ) continue;
 
-    debug()<<"           candidate accepted"<<(*ipart)->p()/GeV <<endreq;
-
 
     double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_kaonS )  continue;
@@ -97,7 +95,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double P  = (*ipart)->p();
     if( P < m_P_cut_kaonS )  continue;
 
-    //calculate signed IP wrt RecVert
+   //calculate signed IP wrt RecVert
     double IP, IPerr;
     m_util->calcIP(*ipart, RecVert, IP, IPerr);
     if(!IPerr) continue;
@@ -105,10 +103,12 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if(fabs(IPsig) > m_IP_cut_kaonS) continue;
 
     double deta  = fabs(log(tan(ptotB.Theta()/2.)/tan(asin(Pt/P)/2.)));
+    debug()<<"     deta="<<deta <<endreq;
     if(deta > m_etacut_kaonS) continue;
 
     double dphi  = fabs((*ipart)->momentum().Phi() - ptotB.Phi()); 
     if(dphi>3.1416) dphi=6.2832-dphi;
+    debug()<<"     dphi="<<dphi <<endreq;
     if(dphi > m_phicut_kaonS) continue;
 
     Gaudi::LorentzVector pm  = (*ipart)->momentum();
@@ -116,7 +116,6 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     Gaudi::LorentzVector pmK ( pm.Px(),pm.Py(),pm.Pz(), E);
 
     double dQ    = (ptotB+pmK).M() - ptotB.M();
-
     debug()<<"kS dQ="<<dQ<<"  "<<((ptotB+(*ipart)->momentum()).M())
 	   <<"  "<< ptotB.M()<<endreq;
 
