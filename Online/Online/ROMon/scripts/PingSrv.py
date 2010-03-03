@@ -2,7 +2,6 @@
 export UTGID
 runit()
 {
-#exec -a ${UTGID} /usr/bin/python <</EOF
 /usr/bin/python <</EOF
 import os, sys, socket, SimpleXMLRPCServer
 class PingSrv:
