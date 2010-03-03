@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-03-03 - Patrick Koppenburg
+ - Add head_PreFitMass in vebose mode (task #14256)
+
 ! 2010-03-01 - Rob Lambert
  - TupleToolPrimaries : never get PVs from DVAlg, fixes #14187
  - DecayTreeTupleBase : Finalise TupleToolDecay instances, fixes #63124

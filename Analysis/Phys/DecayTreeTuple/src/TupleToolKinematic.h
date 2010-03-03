@@ -1,4 +1,4 @@
-// $Id: TupleToolKinematic.h,v 1.2 2010-01-26 15:39:26 rlambert Exp $
+// $Id: TupleToolKinematic.h,v 1.3 2010-03-03 14:26:34 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLKINEMATIC_H
 #define JBOREL_TUPLETOOLKINEMATIC_H 1
 
@@ -15,13 +15,16 @@
  * - head_PT : transverse momentum
  * - head_P[E|X|Y|Z] : four vector momentum
  * - head_MM : measured mass (or assigned mass in case of 'basic' particle
- * - head_M : mass caclulated from momentum four-vector
+ * - head_M : mass calculated from momentum four-vector
  * - head_MMERR : error on the measured mass (only for non-basic parts)
  *
  * if Verbose:
  *
  * - head_REFP[X|Y|Z]: one point the particle momentum extrapolation
      goes through
+ * - head_PreFitMass: Mass of 4-vectors of daughters, not yet extrapolated
+ *   to the head decay vertex (only for composites). This is the quantity
+ *   used in ADAMASS or AM in CombineParticles.CombinationCut
  *
  * \sa DecayTreeTuple
  *
@@ -41,6 +44,9 @@ public:
 			   , const LHCb::Particle*
 			   , const std::string&
 			   , Tuples::Tuple& );
+  
+  double preFitMass(const LHCb::Particle*) const ;
+
 };
 
 #endif // JBOREL_TUPLETOOLKINEMATIC_H
