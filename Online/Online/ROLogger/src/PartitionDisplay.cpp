@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.17 2008-11-19 11:09:39 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.18 2010-03-03 14:47:12 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionDisplay.h"
@@ -272,7 +272,7 @@ void PartitionDisplay::handle(const Event& ev) {
         case 2:
           upic_write_message2("Replace cmd %d",cmd);
           val = m_items[cmd].first = ::strcmp(s_enableDisableResult,s_enable[0])==0;
-          ::upic_replace_param_line(m_id,cmd,setupParams(m_items[cmd].second,val).c_str(),"");
+          ::upic_replace_param_line(m_id,cmd,setupParams(m_items[cmd].second,val==0?false:true).c_str(),"");
           ::upic_set_cursor(ev.menu_id,cmd,ev.param_id);
           ioc.send(m_msg,val ? CMD_DISCONNECT_CLUSTER : CMD_CONNECT_CLUSTER,new string(m_items[cmd].second));
           break;
