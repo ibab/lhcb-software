@@ -1,3 +1,7 @@
+2010-03-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/generateLogin: fixed detectection of the prod link in the generated wrapper scripts.
+
 2010-02-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Platform.py: 

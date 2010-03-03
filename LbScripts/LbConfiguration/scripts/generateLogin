@@ -342,36 +342,51 @@ def getProdLink(targetlocation):
     parent = os.path.dirname(targetlocation)
     gparent = os.path.dirname(parent)
     proddir = os.path.join(gparent, "prod")
-    if os.path.exists(proddir) and os.path.dirname(gparent) == "LBSCRIPTS":
+    if os.path.basename(gparent) == "LBSCRIPTS":
         prodlink = proddir
     return prodlink
 
 def generateGroupLogin(targetlocation, shell, version="", mysiteroot=None, building=False):
     script = os.path.join(_scripts_dir, "group_login.%s" % shell)
     prodlink = getProdLink(targetlocation)
+    prodlocation = None
     if prodlink :
-        targetlocation = os.path.join(os.path.dirname(prodlink), "${lbvers}")
+        prodlocation = os.path.join(os.path.dirname(prodlink), "${lbvers}", "InstallArea")
     f = open(script, "w")
     content = ""
     if shell == "sh" :
         content += """
-if [ ! -e ${HOME}/.oldLHCBLoginscript ]; then
+if [[ ! -e ${HOME}/.oldLHCBLoginscript ]]; then
   lbvers=prod
-  if [ -e ${HOME}/.devLHCBLoginscript ]; then
+  if [[ -e ${HOME}/.devLHCBLoginscript ]]; then
     lbvers=dev
   fi
-  if [ -n "$LB_BANNER" ]; then
+  if [[ -n "$LB_BANNER" ]]; then
     cat ${LB_BANNER}
     rm -f ${LB_BANNER}
     unset LB_BANNER
-  else
-    . %s/scripts/LbLogin.sh --quiet "$@"
+  else"""
+        if prodlocation :
+            content += """
+    if [[ -e %s/scripts/LbLogin.sh ]]; then
+      . %s/scripts/LbLogin.sh --quiet "$@"
+    else
+      if [[ -e %s/scripts/LbLogin.sh ]]; then
+        . %s/scripts/LbLogin.sh --quiet "$@"
+      fi  
+    fi""" % (prodlocation, prodlocation, targetlocation, targetlocation)
+        else :
+            content += """
+    if [[ -e %s/scripts/LbLogin.sh ]]; then
+      . %s/scripts/LbLogin.sh --quiet "$@"
+    fi""" % (targetlocation, targetlocation)
+        content += """
   fi
   export LBLOGIN_DONE=yes
   unset lbvers
 fi
 
-""" % targetlocation
+""" 
     elif shell == "csh" :
         content += """
 if ( ! -e ${HOME}/.oldLHCBLoginscript ) then
@@ -383,45 +398,88 @@ if ( ! -e ${HOME}/.oldLHCBLoginscript ) then
     cat ${LB_BANNER}
     rm -f ${LB_BANNER}
     unsetenv LB_BANNER
-  else
-    source %s/scripts/LbLogin.csh --quiet ${*:q}
+  else"""
+        if prodlocation :
+            content += """
+    if ( -e %s/scripts/LbLogin.csh ) then 
+      source %s/scripts/LbLogin.csh --quiet ${*:q}
+    else
+      if ( -e %s/scripts/LbLogin.csh ) then 
+        source %s/scripts/LbLogin.csh --quiet ${*:q}
+      endif  
+    endif""" % (prodlocation, prodlocation, targetlocation, targetlocation)
+        else :
+            content += """
+    if ( -e %s/scripts/LbLogin.csh ) then 
+      source %s/scripts/LbLogin.csh --quiet ${*:q}
+    endif""" % (targetlocation, targetlocation)
+        content += """
   endif
   setenv LBLOGIN_DONE yes
   unset lbvers
 endif 
 
-""" % targetlocation
+""" 
     elif shell == "bat" :
         content += "call %s\scripts\LbLogin.bat --quiet %%*" % targetlocation
         
     f.write(content)
     f.close()
-    
+    fixNative(script)
     
 def generateGroupShell(targetlocation, shell, version="", mysiteroot=None, building=False):
     script = os.path.join(_scripts_dir,"group_shell.%s" % shell)
     prodlink = getProdLink(targetlocation)
+    prodlocation = None
     if prodlink :
-        targetlocation = os.path.join(os.path.dirname(prodlink), "${lbvers}")
+        prodlocation = os.path.join(os.path.dirname(prodlink), "${lbvers}", "InstallArea")
     f = open(script, "w")
     content = ""
     if shell == "sh" :
         content += """
-if [ ! -e ${HOME}/.oldLHCBLoginscript ]; then
+if [[ ! -e ${HOME}/.oldLHCBLoginscript ]]; then
   lbvers=prod
-  if [ -e ${HOME}/.devLHCBLoginscript ]; then
+  if [[ -e ${HOME}/.devLHCBLoginscript ]]; then
     lbvers=dev
   fi
-  if [ -n "$LBLOGIN_DONE" ]; then
-    . %s/InstallArea/scripts/LbLogin.sh --silent "$@" >& /dev/null
+  if [[ -n "$LBLOGIN_DONE" ]]; then"""
+        if prodlocation :
+            content += """
+    if [[ -e %s/scripts/LbLogin.sh ]]; then
+      . %s/scripts/LbLogin.sh --silent "$@" >& /dev/null
+    else
+      if [[ -e %s/scripts/LbLogin.sh ]]; then
+        . %s/scripts/LbLogin.sh --silent "$@" >& /dev/null
+      fi
+    fi""" % (prodlocation, prodlocation, targetlocation, targetlocation)
+        else :
+            content += """
+    if [[ -e %s/scripts/LbLogin.sh ]]; then
+      . %s/scripts/LbLogin.sh --silent "$@" >& /dev/null
+    fi""" % (targetlocation, targetlocation)
+        content += """
   else
-    export LB_BANNER=`mktemp`
-    . %s/scripts/LbLogin.sh --quiet "$@" >> ${LB_BANNER}
+    export LB_BANNER=`mktemp`"""
+        if prodlocation :
+            content += """
+    if [[ -e %s/scripts/LbLogin.sh ]]; then
+      . %s/scripts/LbLogin.sh --quiet "$@" >> ${LB_BANNER}
+    else
+      if [[ -e %s/scripts/LbLogin.sh ]]; then
+        . %s/scripts/LbLogin.sh --quiet "$@" >> ${LB_BANNER}
+      fi
+    fi""" % (prodlocation, prodlocation, targetlocation, targetlocation)
+        else :
+            content += """
+    if [[ -e %s/scripts/LbLogin.sh ]]; then
+      . %s/scripts/LbLogin.sh --quiet "$@" >> ${LB_BANNER}
+    fi""" % (targetlocation, targetlocation)
+        content += """
   fi
   unset lbvers
 fi 
              
-""" % (targetlocation, targetlocation)
+"""
     
     elif shell == "csh" :
         content += """
@@ -430,20 +488,49 @@ if ( ! -e ${HOME}/.oldLHCBLoginscript ) then
   if ( -e ${HOME}/.devLHCBLoginscript ) then
     set lbvers=dev
   endif
-  if ( $?LBLOGIN_DONE ) then
-    source %s/scripts/LbLogin.csh --silent ${*:q} >& /dev/null
+  if ( $?LBLOGIN_DONE ) then"""
+        if prodlocation :
+            content += """
+    if ( -e %s/scripts/LbLogin.csh ) then
+      source %s/scripts/LbLogin.csh --silent ${*:q} >& /dev/null
+    else
+      if ( -e %s/scripts/LbLogin.csh ) then
+        source %s/scripts/LbLogin.csh --silent ${*:q} >& /dev/null
+      endif
+    endif""" % (prodlocation, prodlocation, targetlocation, targetlocation)
+        else :
+            content += """
+    if ( -e %s/scripts/LbLogin.csh ) then
+      source %s/scripts/LbLogin.csh --silent ${*:q} >& /dev/null
+    endif""" % (targetlocation, targetlocation)
+        content += """ 
   else
-    setenv LB_BANNER `mktemp`
-    source %s/scripts/LbLogin.csh --quiet ${*:q} >! ${LB_BANNER}
+    setenv LB_BANNER `mktemp`"""
+        if prodlocation :
+            content += """
+    if ( -e %s/scripts/LbLogin.csh ) then
+      source %s/scripts/LbLogin.csh --quiet ${*:q} >! ${LB_BANNER}
+    else
+      if ( -e %s/scripts/LbLogin.csh ) then
+        source %s/scripts/LbLogin.csh --quiet ${*:q} >! ${LB_BANNER}
+      endif
+    endif""" % (prodlocation, prodlocation, targetlocation, targetlocation)
+        else :
+            content += """
+    if ( -e %s/scripts/LbLogin.csh ) then
+      source %s/scripts/LbLogin.csh --quiet ${*:q} >! ${LB_BANNER}
+    endif""" % (targetlocation, targetlocation)
+        content += """
   endif
   unset lbvers
 endif 
 
-""" % (targetlocation, targetlocation )
+"""
     elif shell == "bat" :
         content += "call %s\scripts\LbLogin.bat --silent %%*" % targetlocation
     f.write(content)
     f.close()
+    fixNative(script)
 
 def generateGroupWrappers(targetlocation, shell, version="", mysiteroot=None, building=False):
     generateGroupLogin(targetlocation, shell, version, mysiteroot, building)
@@ -452,44 +539,102 @@ def generateGroupWrappers(targetlocation, shell, version="", mysiteroot=None, bu
 def generateMainWrapper(targetlocation, shell, version="", mysiteroot=None, building=False):
     script = os.path.join(_scripts_dir, "LHCb.%s" % shell)
     prodlink = getProdLink(targetlocation)
+    prodlocation = None
     if prodlink :
-        targetlocation = os.path.join(os.path.dirname(prodlink), "${lbvers}")
+        prodlocation = os.path.join(os.path.dirname(prodlink), "${lbvers}", "InstallArea")
     f = open(script, "w")
     content = ""
     if shell == "sh" :
         content += """
 if [[ -e ${HOME}/.useLHCBLoginscript ]]; then
   lbvers=prod
-  if [ -e ${HOME}/.devLHCBLoginscript ]; then
+  if [[ -e ${HOME}/.devLHCBLoginscript ]]; then
     lbvers=dev
-  fi
-  . %s/scripts/group_shell.sh "$@"
-  if [[ -o login || -n "$LB_BANNER" ]] ; then
-    . %s/scripts/group_login.sh "$@"
+  fi"""
+        if prodlocation :
+            content += """
+  if [[ -e %s/scripts/group_shell.sh ]]; then
+    . %s/scripts/group_shell.sh "$@"
+  else
+    if [[ -e %s/scripts/group_shell.sh ]]; then
+      . %s/scripts/group_shell.sh "$@"
+    fi
+  fi""" % (prodlocation, prodlocation, targetlocation, targetlocation)
+        else :
+            content += """
+  if [[ -e %s/scripts/group_shell.sh ]]; then
+    . %s/scripts/group_shell.sh "$@"
+  fi""" % (targetlocation, targetlocation)
+        content += """
+  if [[ -o login || -n "$LB_BANNER" ]]; then"""
+        if prodlocation :
+            content += """
+    if [[ -e %s/scripts/group_login.sh ]]; then
+      . %s/scripts/group_login.sh "$@"
+    else
+      if [[ -e %s/scripts/group_login.sh ]]; then
+        . %s/scripts/group_login.sh "$@"
+      fi
+    fi""" % (prodlocation, prodlocation, targetlocation, targetlocation)
+        else :
+            content += """
+    if [[ -e %s/scripts/group_login.sh ]]; then
+      . %s/scripts/group_login.sh "$@"
+    fi""" % (targetlocation, targetlocation)
+        content += """
   fi
   unset lbvers
 fi
 
-""" % (targetlocation, targetlocation)
+"""
     elif shell == "csh" :
         content += """
 if (  -e ${HOME}/.useLHCBLoginscript ) then
   set lbvers=prod
   if ( -e ${HOME}/.devLHCBLoginscript ) then
     set lbvers=dev
-  endif
-  source %s/scripts/group_shell.csh ${*:q}
-  if ($?loginsh  || $?LB_BANNER) then
-    source %s/scripts/group_login.csh ${*:q}
+  endif"""
+        if prodlocation :
+            content += """
+  if ( -e %s/scripts/group_shell.csh ) then
+    source %s/scripts/group_shell.csh ${*:q}
+  else
+    if ( -e %s/scripts/group_shell.csh ) then
+      source %s/scripts/group_shell.csh ${*:q}
+    endif
+  endif""" % (prodlocation, prodlocation, targetlocation, targetlocation)
+        else :
+            content += """
+  if ( -e %s/scripts/group_shell.csh ) then
+    source %s/scripts/group_shell.csh ${*:q}
+  endif""" % (targetlocation, targetlocation)
+        content += """
+  if ($?loginsh  || $?LB_BANNER) then"""
+        if prodlocation :
+            content += """
+    if ( -e %s/scripts/group_login.csh ) then
+      source %s/scripts/group_login.csh ${*:q}
+    else
+      if ( -e %s/scripts/group_login.csh ) then
+        source %s/scripts/group_login.csh ${*:q}
+      endif
+    endif""" % (prodlocation, prodlocation, targetlocation, targetlocation)
+        else :
+            content += """
+    if ( -e %s/scripts/group_login.csh ) then
+      source %s/scripts/group_login.csh ${*:q}
+    endif""" % (targetlocation, targetlocation)
+        content += """
   endif
   unset lbvers
 endif     
         
-""" % (targetlocation, targetlocation)
+"""
     elif shell == "bat" :
         content += "call %s\scripts\group_login.bat %%*" % targetlocation
     f.write(content)
     f.close()
+    fixNative(script)
 
 
 def generateLogins(version, targetlocation=None, scripts=None, 
@@ -518,9 +663,6 @@ if __name__ == '__main__':
     targetlocation = None
     scripts = None
     parser = OptionParser()
-    parser.set_defaults(login_version="v*")
-    parser.add_option("--login-version", dest="login_version",
-                      help="pass in the version of the login [default %default]")
     parser.set_defaults(mysiteroot=None)
     parser.add_option("-m", "--mysiteroot", dest="mysiteroot",
                   help="defines the main site location")
@@ -554,12 +696,14 @@ if __name__ == '__main__':
         cmtprojpathlist.insert(0, os.path.join(opts.mysiteroot, "lhcb"))
         os.environ["LHCBPROJECTPATH"] = os.pathsep.join(cmtprojpathlist)
     
-
-    version = opts.login_version
+    if len(args) < 1 :
+        sys.exit("Error must have at least 1 argument (the version)")
     if len(args) > 0 :
-        targetlocation = os.path.realpath(args[0])
+        version = args[0]
     if len(args) > 1 :
-        scripts = args[1:]
+        targetlocation = os.path.realpath(args[1])
+    if len(args) > 2 :
+        scripts = args[2:]
         
     generateLogins(version, targetlocation, scripts, opts.mysiteroot, opts.building,
                    opts.withoutpython, opts.withoutcache,
