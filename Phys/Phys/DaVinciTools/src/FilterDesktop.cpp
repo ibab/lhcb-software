@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.11 2010-03-02 14:55:20 jpalac Exp $
+// $Id: FilterDesktop.cpp,v 1.12 2010-03-03 12:48:19 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -481,6 +481,8 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
   //
   LHCb::Particle::Selection* accepted = new LHCb::Particle::Selection;
   put(accepted, desktop()->getOutputLocation()+"/Particles");
+  LHCb::Particle::Vertex* vertices = new LHCb::Vertex::Selection;
+  put(accepted, desktop()->getOutputLocation()+"/Vertices");
   //
   StatEntity& cnt = counter ( "efficiency" ) ;
   //
@@ -495,6 +497,7 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
     if  ( !decision ) { continue ; }                       // CONTINUE
     //
     accepted->push_back ( p ) ;
+    vertices->push_back( p->endVertex() );
     //
   }
 
