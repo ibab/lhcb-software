@@ -832,15 +832,15 @@ MEPErrorAdder::setupSubs() {
      	sprintf(temp,"%s_MEPRxSTAT_1/Runable/sentEvtErr",m_subFarms[i].c_str());
 	m_subsSentEvtErr[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
 
-	sprintf(temp,"%s_MEPRxSTAT_1/Runable/NifRxOct",m_subFarms[i].c_str());
+	sprintf(temp,"%s_MEPRxSTAT_1/Runable/nifRxOct",m_subFarms[i].c_str());
 	m_subsNifRxOct[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
-	sprintf(temp,"%s_MEPRxSTAT_1/Runable/NifRxPkt",m_subFarms[i].c_str());
+	sprintf(temp,"%s_MEPRxSTAT_1/Runable/nifRxPkt",m_subFarms[i].c_str());
 	m_subsNifRxPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
-	sprintf(temp,"%s_MEPRxSTAT_1/Runable/NifRxDropped",m_subFarms[i].c_str());
+	sprintf(temp,"%s_MEPRxSTAT_1/Runable/nifRxDropped",m_subFarms[i].c_str());
 	m_subsNifRxDropped[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
-	sprintf(temp,"%s_MEPRxSTAT_1/Runable/NifRxError",m_subFarms[i].c_str());
+	sprintf(temp,"%s_MEPRxSTAT_1/Runable/nifRxError",m_subFarms[i].c_str());
 	m_subsNifRxError[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
-	sprintf(temp,"%s_MEPRxSTAT_1/Runable/NifRxFrameError",m_subFarms[i].c_str()); 	
+	sprintf(temp,"%s_MEPRxSTAT_1/Runable/nifRxFrameError",m_subFarms[i].c_str()); 	
 	m_subsNifRxFrameError[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
 
 	sprintf(temp,"%s_MEPRxSTAT_1/Runable/srcName",m_subFarms[i].c_str());
