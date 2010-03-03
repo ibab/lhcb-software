@@ -1,4 +1,4 @@
-// $Id: PrepareVeloFullRawBuffer.cpp,v 1.8 2009-11-17 17:55:01 szumlat Exp $
+// $Id: PrepareVeloFullRawBuffer.cpp,v 1.9 2010-03-03 21:03:20 szumlat Exp $
 // Include files 
 #include <stdexcept>
 #include <exception>
@@ -37,7 +37,6 @@ PrepareVeloFullRawBuffer::PrepareVeloFullRawBuffer( const std::string& name,
     m_sensors ( ),
     m_veloADCData ( 0 ),
     m_veloPedestals ( 0 ),
-//    m_veloADCDataContainer ( VeloFullBankLocation::Default ),
     m_veloPedestalsContainer ( VeloFullBankLocation::Pedestals ),
     m_adcBankPresent ( false ),
     m_pedBankPresent ( false )
@@ -151,6 +150,11 @@ StatusCode PrepareVeloFullRawBuffer::getRawBanks()
     debug()<< "VeloFull bank detected of size: " << fullBanks.size() <<endmsg;
     for(bIt=fullBanks.begin(); bIt!=fullBanks.end(); bIt++){
       LHCb::RawBank* aBank=(*bIt);
+      // protection against wrong magic pattern
+      if(LHCb::RawBank::MagicPattern!=aBank->magic()){
+        debug()<< " --> Bank with source ID: " << (aBank->sourceID())
+               << " is corrupted! " <<endmsg;
+      }
       // get the sensor number == sourceID
       int sensor=aBank->sourceID();
       debug()<< " sensor number: " << sensor <<endmsg;

@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.19 2009-11-16 07:05:16 cattanem Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.20 2010-03-03 21:03:20 szumlat Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -147,6 +147,9 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
 
     const LHCb::RawBank* rb = *bi;
 
+    // --> protect against corrupted banks
+    if(LHCb::RawBank::MagicPattern!=rb->magic()) return ( StatusCode::FAILURE );
+
     const DeVeloSensor* sensor = m_velo->sensorByTell1Id(static_cast<unsigned int>(rb->sourceID()));
     if (!sensor) {
       error() << "Could not map source ID "          
@@ -182,6 +185,10 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
        ++bi) {
     
     const LHCb::RawBank* rb = *bi;
+
+    // --> protect against corrupted banks
+    if(LHCb::RawBank::MagicPattern!=rb->magic()) return ( StatusCode::FAILURE );
+
     const SiDAQ::buffer_word* rawBank = static_cast<const SiDAQ::buffer_word*>(rb->data());
 
     const DeVeloSensor* sensor = m_velo->sensorByTell1Id(static_cast<unsigned int>(rb->sourceID()));

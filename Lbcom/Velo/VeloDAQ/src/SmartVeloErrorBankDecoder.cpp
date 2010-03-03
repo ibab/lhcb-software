@@ -1,4 +1,4 @@
-// $Id: SmartVeloErrorBankDecoder.cpp,v 1.7 2009-11-25 07:31:12 krinnert Exp $
+// $Id: SmartVeloErrorBankDecoder.cpp,v 1.8 2010-03-03 21:03:20 szumlat Exp $
 // Include files 
 
 // from Gaudi
@@ -128,6 +128,10 @@ StatusCode SmartVeloErrorBankDecoder::cacheErrorRawBanks()
     ITPair data;
     for(bIt=errorBank.begin(); bIt!=errorBank.end(); ++bIt){
       LHCb::RawBank* aBank=(*bIt);
+
+      // --> protect against corrupted banks
+      if(LHCb::RawBank::MagicPattern!=aBank->magic()) return ( StatusCode::FAILURE );
+
       // get the sensor number == sourceID if there is no full data
       unsigned int tell1=aBank->sourceID();
       m_bankLength[tell1]=aBank->size();

@@ -139,9 +139,11 @@ StatusCode DecodePileUpData::decode() {
   // NZS PU decode
   LHCb::RawBank::BankType type = LHCb::RawBank::BankType(PuTell1::LOPU_NZS);
   const std::vector<LHCb::RawBank*> banksNZS = m_rawEvent->banks(type); //bank name not defined yet!
+
   if ( banksNZS.size() != 0 )
   {
-    decodePileUpBinaryNZS(banksNZS);
+    StatusCode nzsBinDecoder=decodePileUpBinaryNZS(banksNZS);
+    nzsBinDecoder.ignore();
     debug() << " decode() : NZS bank decoded " << endmsg;
   }
   else info() << " NZS bank empty " << endmsg;
@@ -150,7 +152,8 @@ StatusCode DecodePileUpData::decode() {
   const std::vector<LHCb::RawBank*> banks = m_rawEvent->banks(LHCb::RawBank::L0PU); 
   if ( banks.size() != 0 )
   {
-    decodePileUpBinary(banks); 
+    StatusCode binDecoder=decodePileUpBinary(banks); 
+    binDecoder.ignore();
     debug() << " decode() : ZS bank decoded " << endmsg;
   }
   else info() << " ZS bank empty " << endmsg;
@@ -169,6 +172,10 @@ StatusCode DecodePileUpData::decodePileUpBinary( const std::vector<LHCb::RawBank
     
     debug() << "************************ decodePileUpBinary ***********" << counter << "********" << endmsg;
     LHCb::RawBank* aBank = *bi;
+
+    // --> protect against corrupted banks
+    if(LHCb::RawBank::MagicPattern!=aBank->magic()) continue;
+
     unsigned int* data = aBank->data(); //point at the beginning of data body, header already skipped
     unsigned int* dataPtr = data;
 
@@ -191,6 +198,9 @@ StatusCode DecodePileUpData::decodePileUpBinaryNZS( const std::vector<LHCb::RawB
   {
     debug() << "************************ decodePileUpBinaryNZS *********************" << endmsg;
     LHCb::RawBank* aBank = *bnzs;
+
+    // --> protect against corrupted banks
+    if(LHCb::RawBank::MagicPattern!=aBank->magic()) continue;
 
     unsigned int* data = (aBank->data()); //point at the beginning of data body skipping the header
     //loop on PP FPGA's

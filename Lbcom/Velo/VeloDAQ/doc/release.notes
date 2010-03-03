@@ -2,6 +2,8 @@
 ! Package     : VeloDAQ
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
+! 2010-03-03 - Tomasz Szumlak
+ - add protection against corrupted banks in Velo decoders
 
 !=========================  VeloDAQ v4r12 2009-11-27 ======================
 ! 2009-11-25 - Kurt Rinnert
