@@ -26,7 +26,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt1Member as Member
         Line ( 'MBMicroBias%s' % name 
                , prescale = self.prescale
-               , ODIN = '( ODIN_BXTYP == LHCb.ODIN.BeamCrossing ) & (ODIN_TRGTYP == LHCb.ODIN.LumiTrigger)'
+               , ODIN = '(ODIN_TRGTYP == LHCb.ODIN.LumiTrigger)'
                , algos = [ tracking
                            , Member( 'Hlt::TrackFilter','All'
                                      , Code = [ 'TrALL' ]

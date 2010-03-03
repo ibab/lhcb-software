@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.133 2010-03-02 12:42:06 graven Exp $
+! $Id: release.notes,v 1.134 2010-03-03 17:17:11 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -9,6 +9,9 @@
 ! for the production. Commit them AS WELL in branch production200912. 
 !
 !-----------------------------------------------------------------------------
+! 2010-03-03 - Gerhard Raven
+ - remove beamcrossing requirement from microbias lines
+
 ! 2010-03-02 - V. Gligorov
  - Follow developments in Savannah tasks 13784/12691. Change Hlt/Track
    to Hlt1/Track to obey naming convention in HLT.
