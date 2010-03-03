@@ -173,7 +173,7 @@ private:
   void GetCaloInfos( std::string, Tuple &, double En = 0., double Et = 0.);
   void GetCaloInfos( std::string, double En = 0., double Et = 0.);
   StatusCode SaveCaloInfos( Tuple & );
-  StatusCode SaveTrigInfinTuple();
+  StatusCode SaveTrigInfinTuple( Tuple & );
   StatusCode fillHeader( Tuple & );
   StatusCode ReconstructMother( LHCb::Particle::ConstVector & );
 

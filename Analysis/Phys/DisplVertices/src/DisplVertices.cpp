@@ -114,7 +114,6 @@ StatusCode DisplVertices::initialize() {
   if( msgLevel( MSG::DEBUG ) )
     debug() << "==> Initialize the DisplVertices algorithm" << endmsg;
 
-  if( m_SaveTrigInfos && !m_MC ) m_MC = true;
 
   if( m_SaveTrigInfos )
     m_tisTos = tool<ITriggerTisTos>("TriggerTisTos",this);
@@ -277,7 +276,6 @@ StatusCode DisplVertices::execute(){
     debug() << "==> Execute the DisplVertices algorithm, event "<< m_nEvents 
             << endmsg;
   setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
-  Tuple tuple = nTuple("DisplVertices"); //defines a tuple to save infos
 
   //------------------Some Studies------------------
   //StudyPV(); return StatusCode::SUCCESS;  //PV Properties
@@ -318,8 +316,10 @@ StatusCode DisplVertices::execute(){
   if(false) Resolution();
 
   //---------------------------------------------  
-  if( m_SaveTrigInfos ){
-    if( SaveTrigInfinTuple().isFailure() )
+  if( m_SaveTrigInfos && !m_SaveTuple ){
+    Tuple tuple = nTuple("Trigger");
+    if( fillHeader( tuple ).isFailure() || 
+        SaveTrigInfinTuple( tuple ).isFailure() )
       Warning("Not being able to save trigger infos in tuple !");
   }
 
@@ -421,6 +421,7 @@ StatusCode DisplVertices::execute(){
       if( IsAPointInDet( p, 3, 2 ) ) indet += 10;
       if( IsAPointInDet( p, 4, 2 ) ) indet += 100;
       indets.push_back( indet ); 
+      if( !m_MC ) m_purities.push_back( 0. );
     }
 
     Particle * clone = new Particle( *p );
@@ -440,9 +441,10 @@ StatusCode DisplVertices::execute(){
   if( msgLevel( MSG::DEBUG ) )
     debug() << "Nb of " << m_Prey <<" candidates "<< Cands.size() << endmsg;
 
-
+  
   //Save nTuples
   if( m_SaveTuple ){
+    Tuple tuple = nTuple("DisplVertices");
     const int NbPreyMax = 20;
     //if( !SaveCaloInfos(tuple)  ) return StatusCode::FAILURE;
     if( !fillHeader(tuple) ) return StatusCode::FAILURE;
@@ -461,12 +463,14 @@ StatusCode DisplVertices::execute(){
 		   "NbPrey", NbPreyMax );
     tuple->farray( "PreyChindof", chindof.begin(), chindof.end(),
 		   "NbPrey", NbPreyMax );
-    if(m_MC) tuple->farray( "PreyPurity", m_purities.begin(), m_purities.end(),
-			    "NbPrey", NbPreyMax );
-    tuple->column( "FromMother", m_IsPreyFromMother );
+    tuple->farray( "PreyPurity", m_purities.begin(), m_purities.end(),
+                   "NbPrey", NbPreyMax );
+    if( !m_SaveTrigInfos ) tuple->column( "FromMother", m_IsPreyFromMother );
     tuple->column( "BLX", m_BeamLine->referencePoint().x() );
     tuple->column( "BLY", m_BeamLine->referencePoint().y() );
     if( !SaveGEC( tuple, Cands ) ) return StatusCode::FAILURE;
+    if( m_SaveTrigInfos && !SaveTrigInfinTuple( tuple ) ) 
+      return StatusCode::FAILURE;
     if( !(tuple->write()) ) return StatusCode::FAILURE;
   }
 
@@ -1582,19 +1586,19 @@ StatusCode DisplVertices::GetMCInfos() {
     if( (*i)->particleID().abspid() == m_PreyID.abspid() ){
       if( (*i)->endVertices().size() < 1 ) continue;
       if( (*i)->mother() != NULL ){
-	if( (*i)->mother()->particleID().abspid() == m_MotherPreyID.abspid() )
-	  m_IsPreyFromMother = true;
+        if( (*i)->mother()->particleID().abspid() == m_MotherPreyID.abspid() )
+          m_IsPreyFromMother = true;
       }
       //PV is set to be the Prey parent.
       if( MCPV == NULL ) MCPV = (*i)->primaryVertex ();
       SmartRefVector< LHCb::MCVertex >::const_iterator vtx = 
-	(*i)->endVertices().begin();
+        (*i)->endVertices().begin();
       Gaudi::XYZPoint pos = (*vtx)->position();
       m_MCPos.push_back( pos ); 
       if( msgLevel( MSG::DEBUG ) ){
-	debug()<< "MC "<< m_Prey <<" mass "
-	       << (*i)->virtualMass()/GeV 
-	       <<" GeV, pos of end vtx " << pos << endmsg;
+        debug()<< "MC "<< m_Prey <<" mass "
+               << (*i)->virtualMass()/GeV 
+               <<" GeV, pos of end vtx " << pos << endmsg;
       } 
       if(true) GetMCStable( static_cast<const MCVertex*>(*vtx), "MCPrey" );
       if(false) GetMCStable( static_cast<const MCVertex*>(*vtx) );
@@ -1603,52 +1607,52 @@ StatusCode DisplVertices::GetMCInfos() {
   //Find the Kshort and save infos in tuple
   if(false){
     for( MCParticle::Vector::iterator i = mcparts->begin(); 
-	 i != iend; ++i ){
+         i != iend; ++i ){
       if( (*i)->particleID().abspid() == 310 ){
-	double eta = (*i)->momentum().eta();
-	if( eta < 1.8 || eta > 4.9 ) continue;
-	if( (*i)->endVertices().size() < 1 ) continue;
-	SmartRefVector< LHCb::MCVertex >::const_iterator vtx = 
-	  (*i)->endVertices().begin();
-	Gaudi::XYZPoint pos = (*vtx)->position();
-	m_MCPos.push_back( pos ); 
-	debug()<< "MC K_S mass " << (*i)->virtualMass()/GeV 
-	       <<" GeV, pos of end vtx " << pos << endmsg; 
-	if(true) GetMCStable( static_cast<const MCVertex*>(*vtx) );
+        double eta = (*i)->momentum().eta();
+        if( eta < 1.8 || eta > 4.9 ) continue;
+        if( (*i)->endVertices().size() < 1 ) continue;
+        SmartRefVector< LHCb::MCVertex >::const_iterator vtx = 
+          (*i)->endVertices().begin();
+        Gaudi::XYZPoint pos = (*vtx)->position();
+        m_MCPos.push_back( pos ); 
+        debug()<< "MC K_S mass " << (*i)->virtualMass()/GeV 
+               <<" GeV, pos of end vtx " << pos << endmsg; 
+        if(true) GetMCStable( static_cast<const MCVertex*>(*vtx) );
       }
     }
   }
-
+  
   //Study nboftracks,pt, mass and IP to PV of PV tracks
   if( msgLevel(MSG::DEBUG) )
     debug()<<"MC Primary Vertex : " << MCPV->position() << endmsg;
   if(false) GetMCStable( MCPV, "MCPV" );
-
+  
   // get all Monte Carlo vertices from TES and save SV:
   const MCVertex::Container* mcvertices = get<MCVertex::Container> 
     ( MCVertexLocation::Default ) ;
   int size = 0;//= mcvertices->size();
   //debug()<<"There are "<< size << " MC vertices." << endmsg;
   // select all Monte Carlo  Primary Vertices:
-
+  
   m_MCSVPos.clear();
   MCVertex::Container::const_iterator imcend = 	mcvertices->end();
   for ( MCVertex::Container::const_iterator imc = mcvertices->begin() ; 
-	imcend != imc ; ++imc ) 
-    {
-      if (  (*imc)->isPrimary() && (*imc) != MCPV ) {
-	debug() << "MC Secondary interaction  Vertex : " 
-		<< (*imc)->position() << endmsg;
-	m_MCSVPos.push_back( (*imc)->position() );
-	++size;
-      } else {
-	//debug() << "Non-PV         : " << (*imc)->position() << endmsg;
-      }
+        imcend != imc ; ++imc ) 
+  {
+    if (  (*imc)->isPrimary() && (*imc) != MCPV ) {
+      debug() << "MC Secondary interaction  Vertex : " 
+              << (*imc)->position() << endmsg;
+      m_MCSVPos.push_back( (*imc)->position() );
+      ++size;
+    } else {
+      //debug() << "Non-PV         : " << (*imc)->position() << endmsg;
     }
+  }
   if( msgLevel( MSG::DEBUG ) )
     debug()<<"There are "<< size + 1<< " PV vertices." << endmsg;
-
-
+  
+  
   return StatusCode::SUCCESS;
 }
 //============================================================================
@@ -3188,10 +3192,7 @@ void DisplVertices::GetCaloInfos( string CaloType, Tuple & tuple,
 //  Save trigger and event infos in a tuple
 //  To find out the alleys, TriggerMonitor.py with hlt2 = True
 //=============================================================================
-StatusCode DisplVertices::SaveTrigInfinTuple(){
-
-  Tuple tuple = nTuple("Trigger");
-  if( !fillHeader( tuple ) ) return StatusCode::FAILURE;
+StatusCode DisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
 
   if( m_tisTos == NULL ) return Error("m_tisTos not initialized");
 
@@ -3204,11 +3205,13 @@ StatusCode DisplVertices::SaveTrigInfinTuple(){
   const HepMCEvent* event = *ie ;  //get first MC event in a collision
   const HepMC::GenEvent* theEvent = event->pGenEvt();
   HepMC::GenEvent::particle_const_iterator p;
-  bool higgs = false;
+  bool mother = false;
   for( p= theEvent->particles_begin(); p!= theEvent->particles_end();++p){
-    if( (*p)->pdg_id() == 25 ){ higgs = true; break; }
+    if( abs((*p)->pdg_id()) == m_MotherPreyID.abspid() ){ 
+      mother = true; break; 
+    }
   }
-  tuple->column( "Higgs", higgs );
+  tuple->column( "FromMother", mother );
 
   //Was a prey reconstructed ?
   //tuple->column( "Reco", m_ok );
@@ -3275,7 +3278,7 @@ StatusCode DisplVertices::SaveTrigInfinTuple(){
   //vector<string> allConfiguredTrgLines = decReports->decisionNames();
   //debug() << *decReports << endmsg;
   
-  return tuple->write();
+  return StatusCode::SUCCESS;
 }
 
 //============================================================================
