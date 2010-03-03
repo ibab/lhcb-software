@@ -1,4 +1,4 @@
-// $Id: CameraTool.cpp,v 1.13 2010-03-02 14:27:55 nmangiaf Exp $
+// $Id: CameraTool.cpp,v 1.14 2010-03-03 08:42:47 nmangiaf Exp $
 // Include files
 
 // local
@@ -60,6 +60,8 @@ CameraTool::CameraTool( const std::string& type,
                       // archiving_space = 30 Gb, average_n_messages = 5,
                       // where n_bytes_per_entry = 130 and m_messagePeriod = 5 
                       // The actual result is 890, arbitrarely rescaled to 500.
+  , m_MaxNMessagesPerAlg(10000)
+                      // The maximum size for a map is way bigger (18446744073709551615)
 {
   declareInterface<ICameraTool>(this);
   declareProperty("ServerName",m_servername="127.0.0.1");
@@ -368,14 +370,46 @@ std::string CameraTool::StripMessage(std::string what){
 bool CameraTool::MessageRateCheck(MessageLevel l, std::string who, std::string what, 
                                   int messagePeriod, bool IsPVSSMessageFlag){
   time_t currentTime  = time(NULL);
+  // Keys setting
   std::string key1;
   if(!IsPVSSMessageFlag)key1 = who + NumToTextMessage(l);
   else key1 = "PVSSMESSAGE" + who + NumToTextMessage(l);
   std::string key2 = StripMessage(what);
   if((int)m_MessageOwnerLevelMap[key1][key2].size() == 0){ // First time the message has been sent.
-    m_MessageOwnerLevelMap[key1][key2].push_back((int)currentTime); // Time of arrival.
-    m_MessageOwnerLevelMap[key1][key2].push_back(0); // Number of previous suppressed messages.
-    return true;
+    // Check on map size:
+    // Check if the size of the map is getting near the maximum allowed size = m_MaxNMessagesPerAlg.
+    // If this is the case it means there are a lot of messages that are almost identical 
+    // except for a small change in the text. 
+    // The message period of all messages in m_MessageOwnerLevelMap[key1] will be m_messagePeriod.
+    if( (int)m_MessageOwnerLevelMap[key1].size()  < m_MaxNMessagesPerAlg){
+      m_MessageOwnerLevelMap[key1][key2].push_back((int)currentTime); // Time of arrival.
+      m_MessageOwnerLevelMap[key1][key2].push_back(0); // Number of previous suppressed messages.
+      // Save the time of the last message sent for the given key1:
+      if(m_MessageOwnerLevelMap[key1]["LAST MESSAGE"].size() == 0)
+        m_MessageOwnerLevelMap[key1]["LAST MESSAGE"].push_back((int)currentTime);
+      return true;
+    }
+    else if( (currentTime - m_MessageOwnerLevelMap[key1]["LAST MESSAGE"][0] ) 
+             > (m_messagePeriod - 1)){ // The message must be sent at the m_messagePeriod period.
+      if(!IsPVSSMessageFlag){
+        std::ostringstream attachMsg;
+        attachMsg << "CAMERA INFORMATION: Some of the messages from " 
+                  << who
+                  << " will be sent at a rate of 1 every "
+                  << m_messagePeriod <<" seconds. "
+                  << "That's because the algorithm is sending many similar "
+                  << "messages with slightly different text.";
+        Append("TEXT",attachMsg.str().c_str());
+      }
+      // Save the time of the last message sent for the given key1:
+      m_MessageOwnerLevelMap[key1]["LAST MESSAGE"][0] = (int)currentTime;
+      return true;
+    }
+    else { // The message must not be sent.
+      m_out.reset();
+      m_lastHistoNum = 0;
+      return false;
+    }
   }
   else { // The message has been sent previously.
     int oldTime = m_MessageOwnerLevelMap[key1][key2][0];
@@ -389,8 +423,10 @@ bool CameraTool::MessageRateCheck(MessageLevel l, std::string who, std::string w
                   << "in the last " << messagePeriod + 1 <<" seconds.";
         Append("TEXT",attachMsg.str().c_str());
       }
-      m_MessageOwnerLevelMap[key1][key2][0] = currentTime;
+      m_MessageOwnerLevelMap[key1][key2][0] = (int)currentTime;
       m_MessageOwnerLevelMap[key1][key2][1] = 0;
+      // Save the time of the last message sent for the given key1:
+      m_MessageOwnerLevelMap[key1]["LAST MESSAGE"][0] = (int)currentTime;
       return true;
     }
     else { // The message must not be sent.

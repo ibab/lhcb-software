@@ -4,16 +4,20 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2010-03-03 - Nicola Mangiafave
+- In /src/CameraTool: added automatic message rate setting for changing text 
+  messages.
+
 ! 2010-03-02 - Nicola Mangiafave
 - In /src/CameraTool: added automatic setting of message rate based on user
-setting and message size.
+  setting and message size.
 
 ! 2010-02-04 - Nicola Mangiafave
 - In /src/: fixed warning messages from compilation.
 
 ! 2010-02-02 - Nicola Mangiafave
 - In CameraTool: it's now able to send messages to both Camera and the DIM
-server (i.e. to PVSS).
+  server (i.e. to PVSS).
 
 =============== v1r13 ===============
 
@@ -22,7 +26,7 @@ server (i.e. to PVSS).
 
 ! 2010-01-14 - Nicola Mangiafave
 - In CameraTool: eliminated the automatic change of data directory with run
-changes to avoid dependences of the Online package to the LHCb package. 
+  changes to avoid dependences of the Online package to the LHCb package. 
 
 =============== v1r12 ===============
 

@@ -1,4 +1,4 @@
-// $Id: CameraTool.h,v 1.8 2010-03-02 14:27:54 nmangiaf Exp $
+// $Id: CameraTool.h,v 1.9 2010-03-03 08:42:46 nmangiaf Exp $
 #ifndef CAMERATOOL_H
 #define CAMERATOOL_H 1
 
@@ -237,6 +237,7 @@ private:
   time_t m_currentTime; ///! Time arrival of the last message.
   int m_HistoToEntries; ///! Numbers of entries equivalent to the size filled by an histogram (318 KB).
   int m_MaxTextEntries; ///! Maximum number of entries in a text only appended message. Calculated by considering a message period of 5 seconds.
+  int m_MaxNMessagesPerAlg; ///! Maximum number of different messages an algorithm can send. (different == the text in the message body is different, the numbers in the message body are not checked).
   /*!
    * It removes the number from the message body (what).
    * 
