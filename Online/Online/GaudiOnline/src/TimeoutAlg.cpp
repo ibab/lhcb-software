@@ -1,4 +1,4 @@
-// $Id: TimeoutAlg.cpp,v 1.6 2009-12-03 19:01:02 frankb Exp $
+// $Id: TimeoutAlg.cpp,v 1.7 2010-03-03 13:16:49 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/Algorithm.h" 
@@ -49,9 +49,16 @@ namespace LHCb  {
     
     /// Flag to print backtrace
     bool          m_printTrace;
+
+    static      vector<TimeoutAlg*> m_handlers;
+
 #ifdef _WIN32
+    /// Start new timer 
     void startTimer() {}
+    /// Stop current timer if running
     void stopTimer() {}
+    /// Initialize signal handling
+    void init_sigaction() {}
     // fake, to avoid a lot ifdefs in the code
     int m_me;
 #else
@@ -60,8 +67,6 @@ namespace LHCb  {
     sigset_t    m_blockMask;
     struct sigaction m_sigact;
     struct sigaction m_oldact;
-
-    static      vector<TimeoutAlg*> m_handlers;
 
     /** @class ExceptionTracer
      */
@@ -146,6 +151,15 @@ namespace LHCb  {
 	m_me = 0;
       }
     }
+
+    /// Initialize signal handling
+    void init_sigaction() {
+      ::memset(&m_sigact,0,sizeof(m_sigact));
+      m_sigact.sa_handler = timeoutHandler;
+      ::sigemptyset(&m_sigact.sa_mask);
+      ::sigaction(SIGALRM,&m_sigact,&m_oldact);
+    }
+
 #endif
 
   public:
@@ -187,10 +201,7 @@ namespace LHCb  {
       m_incidentSvc->addListener(this,m_cancelIncident);
       m_incidentSvc->addListener(this,"DAQ_TIMEOUT");
       declareInfo("TimeoutCount",m_timeoutCount=0,"Number of timeouts processed");
-      ::memset(&m_sigact,0,sizeof(m_sigact));
-      m_sigact.sa_handler = timeoutHandler;
-      ::sigemptyset(&m_sigact.sa_mask);
-      ::sigaction(SIGALRM,&m_sigact,&m_oldact);
+      init_sigaction();
       return sc;
     }
 
