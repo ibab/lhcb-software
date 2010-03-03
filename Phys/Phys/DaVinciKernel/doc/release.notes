@@ -1,8 +1,14 @@
-!$Id: release.notes,v 1.340 2010-03-01 18:11:27 jpalac Exp $
+!$Id: release.notes,v 1.341 2010-03-03 14:57:32 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2010-03-03 - Juan Palacios
+ - DVAlgorithm
+  . Add protected virtual method StatusCode writeEmptyContainerIfNeeded()
+    to allow derived classes to chose which type of container to store for
+    "empty" events.
 
 ! 2010-03-01 - Juan Palacios
  - Kernel/DVAlgorithm.h
@@ -10,7 +16,7 @@
     Temporary fix that allows to check for existence of T::Container or
     T::Range.
  - cmt/requirements
-  . Increase version to v8r5.
+  . Increase version to v8r6.
 
 !======================== DaVinciKernel v8r5 2010-01-26 =====================
 
