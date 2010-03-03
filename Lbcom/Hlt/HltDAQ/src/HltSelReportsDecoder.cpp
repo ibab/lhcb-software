@@ -1,4 +1,4 @@
-// $Id: HltSelReportsDecoder.cpp,v 1.4 2010-01-07 14:54:35 gligorov Exp $
+// $Id: HltSelReportsDecoder.cpp,v 1.5 2010-03-03 03:56:04 tskwarni Exp $
 // Include files 
 #include "boost/format.hpp"
 
@@ -115,6 +115,10 @@ StatusCode HltSelReportsDecoder::execute() {
   for( std::vector<RawBank*>::const_iterator hltselreportsRawBankP=hltselreportsRawBanks.begin();
 	 hltselreportsRawBankP!=hltselreportsRawBanks.end(); ++hltselreportsRawBankP ){    
     const RawBank* hltselreportsRawBank = *hltselreportsRawBankP;
+    if( hltselreportsRawBank->magic() != RawBank::MagicPattern ){
+      Error(" HltSelReports RawBank has wrong magic number. Skipped ",StatusCode::SUCCESS, 20 );
+      continue;
+    }
     unsigned int sourceId = hltselreportsRawBank->sourceID();
     if( sourceId < hltselreportsRawBanks.size() ){
       orderedBanks[sourceId]= hltselreportsRawBank;

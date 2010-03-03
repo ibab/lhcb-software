@@ -1,4 +1,4 @@
-// $Id: HltDecReportsDecoder.cpp,v 1.2 2010-01-07 14:54:41 gligorov Exp $
+                                          // $Id: HltDecReportsDecoder.cpp,v 1.3 2010-03-03 03:56:04 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -127,8 +127,11 @@ StatusCode HltDecReportsDecoder::execute() {
     Warning(" More then one HltDecReports RawBanks in RawEvent. Will only process the first one. " ,StatusCode::SUCCESS, 20 );
   }
   const RawBank* hltdecreportsRawBank = hltdecreportsRawBanks.front();
+  if( hltdecreportsRawBank->magic() != RawBank::MagicPattern ){
+    return Error(" HltDecReports RawBank has wrong magic number. Return without decoding.",StatusCode::FAILURE );
+  }
   if( hltdecreportsRawBank->version() > kVersionNumber ){
-    Error(
+    return Error(
 " HltDecReports RawBank version # is larger then the known ones.... cannot decode, use newer version." ,StatusCode::FAILURE );
   }
   if( hltdecreportsRawBank->sourceID() != kSourceID ){

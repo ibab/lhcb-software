@@ -1,4 +1,4 @@
-// $Id: HltVertexReportsDecoder.cpp,v 1.3 2010-01-07 14:54:58 gligorov Exp $
+// $Id: HltVertexReportsDecoder.cpp,v 1.4 2010-03-03 03:56:04 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -99,6 +99,9 @@ StatusCode HltVertexReportsDecoder::execute() {
     Warning(" More then one HltVertexReports RawBanks in RawEvent. Will process only the first one. ",StatusCode::SUCCESS, 20 );
   }
   const RawBank* hltvertexReportsRawBank = *(hltVertexReportsRawBanks.begin());
+  if( hltvertexReportsRawBank->magic() != RawBank::MagicPattern ){
+    return Error(" HltVertexReports RawBank has wrong magic number. Return without decoding.",StatusCode::FAILURE );
+  }
   const unsigned int bankVersionNumber = hltvertexReportsRawBank->version();  
   if( bankVersionNumber > kVersionNumber ){
     std::ostringstream mess;

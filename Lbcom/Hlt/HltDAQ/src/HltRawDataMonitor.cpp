@@ -1,4 +1,4 @@
-// $Id: HltRawDataMonitor.cpp,v 1.2 2010-01-07 14:54:48 gligorov Exp $
+// $Id: HltRawDataMonitor.cpp,v 1.3 2010-03-03 03:56:04 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -152,6 +152,10 @@ StatusCode HltRawDataMonitor::fillRawBank()
   for( std::vector<RawBank*>::const_iterator hltselreportsRawBankP=hltselreportsRawBanks.begin();
 	 hltselreportsRawBankP!=hltselreportsRawBanks.end(); ++hltselreportsRawBankP ){    
     const RawBank* hltselreportsRawBank = *hltselreportsRawBankP;
+    if( hltselreportsRawBank->magic() != RawBank::MagicPattern ){
+      Error(" HltSelReports RawBank has wrong magic number. Skipped ",StatusCode::SUCCESS, 20 );
+      continue;
+    }
     unsigned int sourceId = hltselreportsRawBank->sourceID();
     if( sourceId < hltselreportsRawBanks.size() ){
       orderedBanks[sourceId]= hltselreportsRawBank;
