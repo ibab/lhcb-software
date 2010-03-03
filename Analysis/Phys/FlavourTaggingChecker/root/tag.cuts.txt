@@ -1,0 +1,91 @@
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  //
+  //THIS A TEXT FILE!
+  //REMEMBER, the "=" sign needs spaces around it, no need of , ; or ""
+  //
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DATA
+
+   this is the file name that you want to run (LAST ONE IS TAKEN)
+   datafile = dati/v24r2/bsdspi
+   datafile = dati/v24r2/bsjpsiphi
+   datafile = dati/v24r2/bsjpsiphi_nu3
+   datafile = dati/v24r2/bujpsik_nu3
+   datafile = dati/v24r2/bsdspi_nu3
+   datafile = dati/v24r2/bdjpsiks_nu3
+
+   datafile = dati/v24r5/bdstarmunu
+
+   datafile = dati/v25r0/bdjpsikstar
+   datafile = dati/v25r0/bsdspi_nu3
+   datafile = dati/v25r0/bsjpsif0
+   datafile = dati/v25r0/bsdspi
+   datafile = dati/v25r0/bdstarmunu
+
+   datafile = dati/v25r0/bsdspi
+
+   datafile = .
+
+   datafile = dati/v25r0/bsdspi/bsdspi_64.root
+
+   datafile = dati/v25r2/bsdspi
+
+
+   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> STEERING
+   param1 = 0
+   param2 = 0
+
+   NNetTrain = none                  //NNet taggers: "mu" "e" "k" "kS" "pS" "vtx"
+   mlptype   = MultiLayerPerceptron  //TMVA or MultiLayerPerceptron
+
+   Nmax             = 10000000
+   IsControlChannel = 0; //take as the true flavour the reconsted B
+   cheatID = 0;     // Perfect ID with MC truth
+   cheatP  = 0;     // Perfect  P and Pt of tracks
+   useDV   = 1;     // Read only outcome from C++ decision
+   DBG     = 0;     // Debug mode
+
+
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MC09 nu=1 cuts
+  //Taggers common selection cuts 
+   IPPU_cut = 3.0, distPhi_cut = 0.005;
+  //dilution binning range for omega combination
+   ProbMin    = 0.55;
+   omegascale = 0.06, omegamaxbin = 0.36;
+
+  //muons -------------
+   Muon_Pt_cut = 1.1, Muon_P_cut = 0; 
+   lcs_m_cut   = 2.0;
+   PID_m_cut   = 0.0;
+
+  //elect -------------
+   Ele_Pt_cut   = 1.2, Ele_P_cut = 0;
+   VeloChargeMin = 0.0, VeloChargeMax = 1.3, Ele_EoverP_cut = 0.85;
+   lcs_e_cut  = 3.0; 
+   Ele_ghost_cut = -999;
+   PID_e_cut  = 4.0;
+
+  //OS kaons -------------
+   Kaon_Pt_cut = 0.4, Kaon_P_cut = 4.0,  Kaon_IP_cut = 3.8, Kaon_IPRAW_cut = 1.5;
+   lcs_k_ups_cut = 2.0, lcs_k_long_cut = 2.5 , Kaon_ghost_prob_cut = -14 ;
+   PID_k_cut     = 0.0, PID_kp_cut     = -1.0;
+
+  //cuts x Same Side tagging Kaons -------------
+   KaonSame_Pt_cut  = 0.45, KaonSame_P_cut   = 4,   KaonSame_IP_cut = 3.0;
+   KaonSame_Phi_cut = 1.1,  KaonSame_Eta_cut = 1.0, KaonSame_dQ_cut = 1.6;
+   lcs_kS_cut = 2.0;
+   PID_kS_cut = 1.0, PID_kpS_cut = -1.0;
+
+  //cuts x Same Side tagging Pions -------------
+   PionSame_Pt_cut = 0.6, PionSame_P_cut   = 5, PionSame_IP_cut = 2.8;
+   PionSame_dQ_cut = 3.0, PionSame_dQ2_cut = 1.5;
+   PionSame_PIDNoK_cut = 3, PionSame_PIDNoP_cut = 10.0;
+   Pion_ghost_prob_cut = -25;
+   lcs_pS_cut   = 3.0;
+   ProbMin_pion = 0.55;
+
+  //weight of Vch in tagging decision -------------
+   VchPowerK = 0.35, MinimumVCharge = 0.15;
+   m_P0 = 5.255669e-01, m_P1 = -3.251661e-01, m_Gt075 = 0.35;
+   wSameSign2 = 0.4141, wSameSignMoreThan2 = 0.3250;
+   ProbMinVtx = 0.52;
+  //>>>>>>>>>>>>>>>>>>>>>>>>

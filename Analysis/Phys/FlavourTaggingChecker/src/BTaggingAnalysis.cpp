@@ -125,7 +125,8 @@ StatusCode BTaggingAnalysis::execute() {
     
   //----------------------------------------------------------------------
   long L0Decision = -1;
-  long HLTDecision = 0;
+  long HLT1Decision = 0;
+  long HLT2Decision = 0;
   if(m_requireTrigger){
     if( !exist<L0DUReport>(L0DUReportLocation::Default) ) {
       err() << "L0DUReport not found in " 
@@ -137,11 +138,13 @@ StatusCode BTaggingAnalysis::execute() {
     if( exist<HltDecReports>( HltDecReportsLocation::Default ) ){ 
       const HltDecReports* decReports = 
         get<HltDecReports>( HltDecReportsLocation::Default );
-      HLTDecision = decReports->decReport("HltGlobal") ? 
-        decReports->decReport("HltGlobal")->decision() : 0 ;
+      HLT1Decision = decReports->decReport("Hlt1Global") ? 
+        decReports->decReport("Hlt1Global")->decision() : 0 ;
+      HLT2Decision = decReports->decReport("Hlt2Global") ? 
+        decReports->decReport("Hlt2Global")->decision() : 0 ;
     }
   } 
-  long trigger = HLTDecision*10 + L0Decision;
+  long trigger = HLT2Decision*100 +HLT1Decision*10 + L0Decision;
   debug()<<"trig: "<<trigger<<endreq;
   tuple -> column ("trig", trigger);
     
@@ -469,11 +472,12 @@ StatusCode BTaggingAnalysis::execute() {
   debug() << "-------- Tagging Candidates: " << vtags.size() <<endreq;
 
   ///------------------------------------------------------- Fill Tagger info
-  std::vector<float> pID, pP, pPt, pphi, pch, pip, piperr, pip_r, piperr_r, pipPU;
-  std::vector<float> ptrtyp, plcs, ptsal, pdistPhi, pveloch, pEOverP, 
-    pPIDe, pPIDm, pPIDk, pPIDp,pPIDfl;
-  std::vector<float> pMCID, pMCP, pMCPt, pMCphi, pMCz, 
-    pmothID, pancID, pbFlag, pxFlag, pvFlag;
+  std::vector<float> pID(0), pP(0), pPt(0), pphi(0), pch(0), pip(0), 
+    piperr(0), pip_r(0), piperr_r(0), pipPU(0);
+  std::vector<float> ptrtyp(0), plcs(0), ptsal(0), pdistPhi(0), pveloch(0), 
+    pEOverP(0), pPIDe(0), pPIDm(0), pPIDk(0), pPIDp(0),pPIDfl(0);
+  std::vector<float> pMCID, pMCP, pMCPt, pMCphi, pMCz(0), 
+    pmothID(0), pancID(0), pbFlag(0), pxFlag(0), pvFlag(0);
 
   for( ip = vtags.begin(); ip != vtags.end(); ip++ ) {
 
@@ -625,6 +629,11 @@ StatusCode BTaggingAnalysis::execute() {
     //---------------
   }
 
+  if(pID.size() > 199 || sigID.size() > 9) {
+    warning()<<"Bursting array limit of 200.  "<<pID.size()<<endreq;
+    return StatusCode::SUCCESS;
+  }
+
   debug()<<"writing ntuple"<<endreq;
   tuple -> farray ("sID",     sigID, "M", 10);
   tuple -> farray ("sMothID", sigMothID, "M", 10);
@@ -768,9 +777,11 @@ BTaggingAnalysis::chooseParticles(const Particle::ConstVector& parts,
   //loop over Particles, preselect tags 
   double distphi;
   Particle::ConstVector vtags(0);
-  Particle::ConstVector::const_iterator ip;
+  Particle::ConstVector::const_iterator ip, jp;
   for ( ip = parts.begin(); ip != parts.end(); ip++){
 
+    //debug()<<" bbbbb1 "<<(*ip)->p()/1000
+    //	   <<"  "<<(*ip)->particleID().pid()<<endreq;
     if( (*ip)->p() < 2000 ) continue;  
     if( (*ip)->momentum().theta()  < m_thetaMin ) continue;   
     if( (*ip)->charge() == 0 ) continue;                
@@ -781,17 +792,31 @@ BTaggingAnalysis::chooseParticles(const Particle::ConstVector& parts,
     if( (*ip)->p()  > 200000 ) continue;
     if( (*ip)->pt() >  10000 ) continue;
     if( m_util->isinTree(*ip, axdaugh, distphi) ) continue ; 
+    //debug()<<"               bbbbb2 distphi="<< distphi <<endreq;
     if( distphi < m_distphi_cut ) continue;
 
     //calculate the min IP wrt all pileup vtxs
     double ippu, ippuerr;
     m_util->calcIP( *ip, PileUpVtx, ippu, ippuerr );
+    //if(ippuerr) debug()<<"                bbbbb3 ippu="<< ippu/ippuerr <<endreq;
     //eliminate from vtags all parts coming from a pileup vtx
-    if(ippuerr) if( ippu/ippuerr < m_IPPU_cut ) continue; //preselection
 
+    //if(ippuerr) if( ippu/ippuerr < m_IPPU_cut ) continue; //preselection
+
+    bool dup=false;
     Particle::ConstVector::const_iterator ik;
-    for ( ik = vtags.begin(); ik != vtags.end(); ik++)
-      if((*ik)->proto() == (*ip)->proto() ) continue;//kill duplicates
+    for ( ik = ip+1; ik != parts.end(); ik++) {
+      if((*ik)->proto() == (*ip)->proto() 
+	 && (*ip)->particleID().abspid()==211) { 
+	dup=true; 
+	//debug()<<"                        bbbbb3a killed pion" 
+	       <<(*ip)->particleID().pid()<<endreq;
+	break; 
+      }
+    }
+    if(dup) continue;//kill parts duplicated as pions
+
+    //debug()<<"                        bbbbb4 STORED " <<endreq;
 
     ///////////////////////////////////////
     vtags.push_back(*ip);               // Fill container of candidates

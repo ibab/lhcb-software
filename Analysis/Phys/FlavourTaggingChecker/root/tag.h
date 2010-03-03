@@ -23,10 +23,64 @@ float ghrate_m(0),gherror_m(0),ghrate_e(0),gherror_e(0);
 int nrTisTis(0),nrTosTos(0),nrTisTos(0),nrTosTis(0),nrTob(0);
 int n2trackR=0, n2trackW=0, ntrackR=0, ntrackW=0;
 bool isBs(0), DBG(0);
+double nsele(0);
 
-double nsele = *(new double(0));
 
 //functions////////////////////////////////////////////////////////////////
+TString readString(TString varname) {
+
+  ifstream indata; 
+  indata.open("tag.cuts.txt"); // opens the file
+  if(!indata) { // file couldn't be opened
+      cerr << "Error: tag.cuts.txt could not be opened" << endl;
+      exit(1);
+  }
+  TString a, egual, value="";
+  while ( !indata.eof() ) { // keep reading until end-of-file
+   indata >> a;
+      if(a==varname) {
+	indata >> egual;
+	if(egual!= "=") {cout<<"missing spaced = sign after "<<a<<endl;exit(1);}
+	indata >> value;
+      }
+  }
+  indata.close();
+  if(value=="") {
+    cout<<"Input "<<varname<<" not found in tag.cuts.txt! Stop.\n";
+    exit(1);
+  }
+  return value;
+}
+double read(TString varname) {
+  
+  ifstream indata; // indata is like cin
+  indata.open("tag.cuts.txt"); // opens the file
+  if(!indata) { // file couldn't be opened
+      cerr << "Error: tag.cuts.txt could not be opened" << endl;
+      exit(1);
+  }
+  double dvalue=-12345;
+  TString a, egual, value;
+  while ( !indata.eof() ) { // keep reading until end-of-file
+   indata >> a;
+      if(a==varname) {
+	indata >> egual;
+	if(egual!= "=") {cout<<"missing spaced = sign after "<<a<<endl;exit(1);}
+	indata >> value;
+	dvalue = atof(value);
+	//cout<<"... Using cut on "<< varname<<" = "<<dvalue<<endl;
+      }
+  }
+  indata.close();
+  if(dvalue==-12345) {
+    cout<<"Input "<<varname<<" not found in tag.cuts.txt! Stop.\n";
+    exit(1);
+  }
+  //cout << "End-of-file reached.." << endl;
+  return dvalue;
+}
+
+//////////////////////////////////////////////////////////////////////////
 bool isD(int id) {
   
   int aid = abs(id);
@@ -156,8 +210,7 @@ double calc_dQ(const TLorentzVector& BSpart, const TLorentzVector& ipart) {
 }
 
 ////////////////////////////////////////////////////////////////////////
-void calculateOmega(TH1F* rh, TH1F* wh, TH1F* omega){ 
-
+void calculateOmega(TH1F* rh, TH1F* wh, TH1F* omega){ //used by plot_omega()
   for(int i=1; i!=rh->GetNbinsX(); ++i) {
     double r = rh->GetBinContent(i);
     double w = wh->GetBinContent(i);
@@ -175,6 +228,7 @@ void calculateOmega(TH1F* rh, TH1F* wh, TH1F* omega){
 
 ////////////////////////////////////////////////////////////////////////
 TH1F* plot_omega(TH1F* rh, TH1F* wh, TString name, int opts=1){ 
+  //opts is the polinomial degree.
 
   TCanvas* c= (TCanvas*)gROOT->GetListOfCanvases()->FindObject("c");  
   c->Clear(); 
@@ -227,12 +281,12 @@ TH1F* plot_omega(TH1F* rh, TH1F* wh, TString name, int opts=1){
 }
 
 ////////////////////////////////////////////////////////////////////////
-TH1F* calculateEffEff(TString name, TH1F* rh,  TH1F* wh, 
+TH1F* calculateEffEff(const TH1F* rh, const TH1F* wh, 
 		      TString direction="left2right" ){ 
 
   TH1F* effeff = new TH1F(*rh);
   effeff->Reset();
-  effeff->SetName(name);
+  effeff->SetName("heffec");
 
   for(int i=1; i!=rh->GetNbinsX(); ++i) {
 
@@ -247,12 +301,12 @@ TH1F* calculateEffEff(TString name, TH1F* rh,  TH1F* wh,
 	rtag += rh->GetBinContent(j);
 	wtag += wh->GetBinContent(j);
       }
-    } else cout<<"Error: unknown option "<<direction<<endl;
+    } else cout<<"calculateEffEff Error: unknown option "<<direction<<endl;
 
     if(rtag) if(wtag) {
       double utag = nsele-rtag-wtag;              // untagged
       double omtag = wtag/(rtag+wtag);
-      double eftag = (rtag+wtag)/nsele;           // tagging efficiency
+      double eftag = (rtag+wtag)/nsele;// tagging efficiency
       double epsil = eftag*pow(1-2*omtag,2);      // effective efficiency
       if(rtag<wtag) epsil= -epsil;
       double epsilerr = sqrt((pow(rtag - wtag,2)*
@@ -263,47 +317,9 @@ TH1F* calculateEffEff(TString name, TH1F* rh,  TH1F* wh,
       effeff->SetBinError(i, epsilerr*100);
     }
   }
-  rh->SetMinimum(0);
-  wh->SetMinimum(0);
+  effeff->SetMinimum(0);
 
   return effeff;
-}
-
-////////////////////////////////////////////////////////////////////////
-void calculateEffEff(double nsele, TH1F* rh, TH1F* wh, TH1F* effeff, 
-		     TString direction="left2right" ){ 
-
-  for(int i=1; i!=rh->GetNbinsX(); ++i) {
-
-    double rtag=0, wtag=0;
-    if(direction == "left2right") {
-      for(int j=i; j!=rh->GetNbinsX()+1; j++)  { 
-	rtag += rh->GetBinContent(j);
-	wtag += wh->GetBinContent(j);
-      }
-    } else if(direction == "right2left") {
-      for(int j=1; j!=i+1; j++)  { 
-	rtag += rh->GetBinContent(j);
-	wtag += wh->GetBinContent(j);
-      }
-    } else cout<<"Error: unknown option "<<direction<<endl;
-
-    if(rtag) if(wtag) {
-      double utag = nsele-rtag-wtag;              // untagged
-      double omtag = wtag/(rtag+wtag);
-      double eftag = (rtag+wtag)/nsele;           // tagging efficiency
-      double epsil = eftag*pow(1-2*omtag,2);      // effective efficiency
-      if(rtag<wtag) epsil= -epsil;
-      double epsilerr = sqrt((pow(rtag - wtag,2)*
-			      (-(pow(rtag - wtag,2)*(rtag +wtag))+nsele
-			       *(pow(rtag,2) +14*rtag*wtag+ pow(wtag,2))))
-			     /(pow(rtag+wtag+utag,3)*pow(rtag + wtag,3)));
-      effeff->SetBinContent(i, epsil*100);
-      effeff->SetBinError(i, epsilerr*100);
-    }
-  }
-  rh->SetMinimum(0);
-  wh->SetMinimum(0);
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -331,7 +347,7 @@ float PrintPerformance(){
   if(den_e) cout<<  "Elec        = "<<ghrate_e<<" +- "<<gherror_e<<endl;
   if(den_k) cout<<  "Kaon_opp    = "<<ghrate_k<<" +- "<<gherror_k<<endl;
   if(nghost_kS && den_kS)
-            cout<<  "Kaon_same   = "<<ghrate_kS<<" +- "<<gherror_kS<<endl;
+    cout<<  "Kaon_same   = "<<ghrate_kS<<" +- "<<gherror_kS<<endl;
   cout <<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
   cout <<setprecision(2)<<"PID purity (in r+w), and efficiency (P>5GeV)\n";
   if(den_m) cout <<"muon:       "<<(nidm/den_m*100)
@@ -451,7 +467,7 @@ void PrintAdvance(int n, float nmax) {
 //   float r= float(n)/int(nmax/56.);
 //   if(r-int(r)==0.) cout<<"\b=>"<<flush;
 // }
-bool waitandstop() {
+bool wait() {
   cout<<"--> Hit return to continue.  ";
   char *s = new char[1];
   char *bb = fgets(s, 1, stdin); bb=0;

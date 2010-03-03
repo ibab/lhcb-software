@@ -3,6 +3,8 @@
  *---  DRAW PLOTS -------------------------------------------
  *-----------------------------------------------------------*/
 gROOT->Reset();
+gROOT->ProcessLine(".L tag.h+"); //load some functions defined there
+
 /* Example
 TFile *f2 = new TFile("dati/dc06/set5/bsdsp.root")
 TNtuple *t1 = (TNtuple*)f2->Get("1")
@@ -23,9 +25,13 @@ c->SetFrameBorderMode(0);
 c->SetFillColor(10);
 gStyle->SetOptStat(0);
 
-goto jump;
+//goto jump;
 
 c->Clear(); c->Divide(1,2);
+TH1F* hom = plot_omega(hright,  hwrong,  "ip"); 
+c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
+
+
 TH1F* hom = plot_omega(homphi_mu_r,  homphi_mu_w,  "mu_distphi"); 
 c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
 
@@ -35,21 +41,6 @@ c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
 TH1F* hom = plot_omega(homphi_kS_r,  homphi_kS_w,  "kS_distphi"); 
 c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
 
-TH1F* hom = plot_omega(homphi_vtx1_r,  homphi_vtx1_w,  "vtx1_distphi"); 
-c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
-
-TH1F* hom = plot_omega(homphi_vtx2_r,  homphi_vtx2_w,  "vtx2_distphi"); 
-c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
-
-TH1F* hom = plot_omega(homphi_vtx3_r,  homphi_vtx3_w,  "vtx3_distphi"); 
-c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
-
-
-
-// c->Clear(); c->Divide(1,2);
-// c->cd(1); h80.DrawNormalized(); h80_3.SetLineColor(kRed); h80_3.DrawNormalized("same");
-// c->cd(2); h81.DrawNormalized(); h81_3.SetLineColor(kRed); h81_3.DrawNormalized("same");
-// c->Print("pics/conf_1.gif");
 c->cd();c->Update();cout<<"--> Hit return to continue ";gets(s);if(*s=='q')return;
 c->Clear(); c->Divide(1,2);
 c->cd(1); h82.DrawNormalized(); h82_3.SetLineColor(kRed); h82_3.DrawNormalized("same");

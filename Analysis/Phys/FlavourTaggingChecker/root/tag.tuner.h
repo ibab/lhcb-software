@@ -57,7 +57,7 @@ double MLP_muon(std::vector<double>& par, double& rnet) {
   double out= 1.0-pol(rnet, 9.610658e-01, -9.336494e-01);// <=========NU=1
   
   if(DBG) {
-    cout<<"after  "<<" "<<par.at(0)<<"  "<<par.at(2)<<"  "<<par.at(3)
+    cout<<"mu after  "<<" "<<par.at(0)<<"  "<<par.at(2)<<"  "<<par.at(3)
 	<<"  "<<par.at(4)<<"  "<<par.at(8)<<par.at(9)<<"  "<<par.at(1)<<endl;
     cout<<"mu rnet="<<rnet<<"  pn="<<out<<endl;
   }
@@ -74,7 +74,7 @@ double MLP_ele(std::vector<double>& par, double& rnet) {
   double out=1.0-pol(rnet, 7.353325e-01, -6.463841e-01);// <========= NU=1
  
   if(DBG) {
-    cout<<"after  "<<" "<<par.at(0)<<"  "<<par.at(2)<<"  "<<par.at(3)<<"  "
+    cout<<"ele after  "<<" "<<par.at(0)<<"  "<<par.at(2)<<"  "<<par.at(3)<<"  "
 	<<par.at(4)<<"  "<<par.at(8)<<"  "<<par.at(9)<<"  "<<par.at(1)<<endl;
     cout<<"ele rnet="<<rnet<<"  pn="<<out<<endl;
   }
@@ -90,7 +90,7 @@ double MLP_kaon(std::vector<double>& par, double& rnet) {
   double out= 1.0-pol(rnet, 9.149897e-01, -8.646468e-01);// <=========NU=1
 
   if(DBG) {
-    cout<<"after  "<<" "<<par.at(0)<<"  "<<par.at(2)<<"  "<<par.at(3)<<"  "
+    cout<<"kOppo after  "<<" "<<par.at(0)<<"  "<<par.at(2)<<"  "<<par.at(3)<<"  "
       <<par.at(4)<<"  "<<par.at(8)<<"  "<<par.at(9)<<"  "<<par.at(1)<<endl;
   cout<<"k rnet="<<rnet<<"  pn="<<out<<endl;
   }
@@ -108,7 +108,7 @@ double MLP_kaonS(std::vector<double>& par, double& rnet) {
   double out=1.0-pol(rnet, 9.845081e-01, -9.742343e-01);// <=========NU=1
  
   if(DBG) {
-  cout<<"after  "<<par.at(0)<<"  "<<par.at(2)<<"  "<<par.at(3)<<"  "
+  cout<<"kS after  "<<par.at(0)<<"  "<<par.at(2)<<"  "<<par.at(3)<<"  "
       <<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)<<"  "<<par.at(7)<<"  "
       <<par.at(8)<<"  "<<par.at(9)<<"  "<<par.at(1)<<endl;
   cout<<"kS rnet="<<rnet<<"  pn="<<out<<endl;
@@ -126,7 +126,7 @@ double MLP_pionS(std::vector<double>& par, double& rnet) {
   double out=1.0-pol(rnet, 1.222453, -1.369672 );// <=========NU=1
 
   if(DBG) {
-  cout<<"after  "<<par.at(0)<<"  "<<par.at(2)<<"  "<<par.at(3)<<"  "
+  cout<<"pS after  "<<par.at(0)<<"  "<<par.at(2)<<"  "<<par.at(3)<<"  "
       <<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)<<"  "<<par.at(7)<<"  "
       <<par.at(8)<<"  "<<par.at(9)<<"  "<<par.at(1)<<endl;
   cout<<"pS rnet="<<rnet<<"  pn="<<out<<endl;
@@ -191,8 +191,8 @@ void MultiLayerPerceptronTuning(TString NNetTrain){
 	<<"  for =2-tracks, omega= "<<1-float(n2trackR)/(n2trackR+n2trackW)<<"\n"
 	<<"  for >2 tracks, omega= "<<1-float(ntrackR)/(ntrackR+ntrackW)<<"\n";
   }
-  if(NNetTrain!="") {
-    cout<<"\n* 1. Now quit, set NNetTrain=\"\" and rerun on the same data!"<<endl;
+  if(NNetTrain!="none") {
+    cout<<"\n* 1. Now quit, set NNetTrain=\"none\" and rerun on the same data!"<<endl;
     cout<<"* 2. Then update the fitted values into pn[i]."<<endl;
     cout<<"* 3. Finally rerun and look at your combined performance\n"<<endl;
     return;
@@ -378,3 +378,38 @@ double Classify (const TString& type, const TString& tagger,
   return -1;
 }
 //=====================================================================
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <dirent.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+std::vector<TString> getFiles(string dir) {
+
+  std::vector<TString> filelist(0);
+  ifstream fin;
+  string filepath;
+  DIR *dp;
+  struct dirent *dirp;
+  struct stat filestat;
+
+  dp = opendir( dir.c_str() );
+  if (dp == NULL) {
+    cout << "Error opening " << dir << endl;
+    return filelist;
+  }
+  while ((dirp = readdir( dp ))) {
+    filepath = dir + "/" + dirp->d_name;
+    // If the file is a directory (or is in some way invalid) we'll skip it 
+    if (stat( filepath.c_str(), &filestat )) continue;
+    if (S_ISDIR( filestat.st_mode ))         continue;
+    const char* astr = "root";//check that filepath word contains root
+    const char* conroot = strstr( filepath.c_str(), astr );
+    if( !conroot ) continue;
+    //cout<<conroot<<"file  "<<filepath<<endl;
+    filelist.push_back(filepath);
+  }
+  closedir( dp );
+  return filelist;
+}

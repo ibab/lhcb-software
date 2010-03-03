@@ -34,6 +34,9 @@
    Float_t         RVx;
    Float_t         RVy;
    Float_t         RVz;
+   Float_t         RVx_r;
+   Float_t         RVy_r;
+   Float_t         RVz_r;
    Float_t         tau;
    Float_t         tauErr;
    Float_t         ctChi2;
@@ -64,6 +67,8 @@
    Float_t         ch[200];
    Float_t         ip[200];
    Float_t         iperr[200];
+   Float_t         ip_r[200];
+   Float_t         iperr_r[200];
    Float_t         ipPU[200];
    Float_t         trtyp[200];
    Float_t         lcs[200];
@@ -122,6 +127,9 @@
    mytagging->SetBranchAddress("RVx",&RVx);
    mytagging->SetBranchAddress("RVy",&RVy);
    mytagging->SetBranchAddress("RVz",&RVz);
+   mytagging->SetBranchAddress("RVx_r",&RVx_r);
+   mytagging->SetBranchAddress("RVy_r",&RVy_r);
+   mytagging->SetBranchAddress("RVz_r",&RVz_r);
    mytagging->SetBranchAddress("tau",&tau);
    mytagging->SetBranchAddress("tauErr",&tauErr);
    mytagging->SetBranchAddress("ctChi2",&ctChi2);
@@ -152,6 +160,8 @@
    mytagging->SetBranchAddress("ch",ch);
    mytagging->SetBranchAddress("ip",ip);
    mytagging->SetBranchAddress("iperr",iperr);
+   mytagging->SetBranchAddress("ip_r",ip_r);
+   mytagging->SetBranchAddress("iperr_r",iperr_r);
    mytagging->SetBranchAddress("ipPU",ipPU);
    mytagging->SetBranchAddress("trtyp",trtyp);
    mytagging->SetBranchAddress("lcs",lcs);

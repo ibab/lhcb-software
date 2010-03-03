@@ -1,10 +1,103 @@
 
+  //INPUT DATA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  TString froot = readString("datafile");
+  std::vector<TString> filelist(0);
+  const char* astr1 = froot.Data();
+  const string astr2(astr1);
+  filelist = getFiles(astr2);
+  if(filelist.size()==0) filelist.push_back(froot);
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 
+
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   gROOT->Reset();
+  TString rootsubdir = "";
   TFile fhisto("tag.root","RECREATE");
   if(rootsubdir != "") { fhisto.mkdir(rootsubdir); fhisto.cd(rootsubdir); } 
+
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  float param1  = read("param1");
+  float param2  = read("param2");
+
+  TString NNetTrain = readString("NNetTrain");
+  TString mlptype   = readString("mlptype");
   cout<<"Using "<<mlptype<<endl;
 
-  //create tree of nnet variables:
+  float Nmax=read("Nmax");
+  cout<<"\nUsing parameters = "<<param1<<"  "<<param2<<endl;
+  initmva_mu=initmva_e=initmva_k=initmva_kS=initmva_pS=true;
+
+  bool IsControlChannel = read("IsControlChannel"); 
+  bool cheatID = read("cheatID");
+  bool cheatP  = read("cheatP");     
+  bool useDV   = read("useDV");     
+  DBG          = read("DBG");     
+
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  //Taggers common selection cuts 
+  float IPPU_cut   = read("IPPU_cut");
+  float distPhi_cut= read("distPhi_cut");
+  //dilution binning range for omega combination
+  float  ProbMin     = read("ProbMin");
+  double omegamaxbin = read("omegamaxbin");
+  double omegascale  = read("omegascale");
+
+  //muons -------------
+  float Muon_Pt_cut= read("Muon_Pt_cut"), Muon_P_cut = read("Muon_P_cut"); 
+  float lcs_m_cut  = read("lcs_m_cut");
+  float PID_m_cut  = read("PID_m_cut");
+
+  //elect -------------
+  float Ele_Pt_cut     = read("Ele_Pt_cut"),    Ele_P_cut     = read("Ele_P_cut");
+  float VeloChargeMin  = read("VeloChargeMin"), VeloChargeMax = read("VeloChargeMax");
+  float Ele_EoverP_cut = read("Ele_EoverP_cut");
+  float lcs_e_cut      = read("lcs_e_cut"); 
+  float Ele_ghost_cut  = read("Ele_ghost_cut");
+  float PID_e_cut     =  read("PID_e_cut");
+
+  //OS kaons -------------
+  float Kaon_Pt_cut= read("Kaon_Pt_cut"), Kaon_P_cut= read("Kaon_P_cut"), 
+        Kaon_IP_cut= read("Kaon_IP_cut"), Kaon_IPRAW_cut= read("Kaon_IPRAW_cut");
+  float lcs_k_ups_cut = read("lcs_k_ups_cut"), lcs_k_long_cut= read("lcs_k_long_cut"), 
+        Kaon_ghost_prob_cut= read("Kaon_ghost_prob_cut");
+  float PID_k_cut    = read("PID_k_cut"), 
+        PID_kp_cut   = read("PID_kp_cut");
+
+  //cuts x Same Side tagging Kaons -------------
+  float KaonSame_Pt_cut= read("KaonSame_Pt_cut"), KaonSame_P_cut = read("KaonSame_P_cut"), 
+        KaonSame_IP_cut = read("KaonSame_IP_cut");
+  float KaonSame_Phi_cut= read("KaonSame_Phi_cut"), KaonSame_Eta_cut= read("KaonSame_Eta_cut"), 
+        KaonSame_dQ_cut = read("KaonSame_dQ_cut");
+  float lcs_kS_cut = read("lcs_kS_cut");
+  float PID_kS_cut = read("PID_kS_cut"), PID_kpS_cut = read("PID_kpS_cut");
+
+  //cuts x Same Side tagging Pions -------------
+  float PionSame_Pt_cut = read("PionSame_Pt_cut"), 
+        PionSame_P_cut  = read("PionSame_P_cut"), PionSame_IP_cut= read("PionSame_IP_cut");
+  float PionSame_dQ_cut = read("PionSame_dQ_cut"), PionSame_dQ2_cut= read("PionSame_dQ2_cut");
+  float PionSame_PIDNoK_cut = read("PionSame_PIDNoK_cut"), 
+        PionSame_PIDNoP_cut = read("PionSame_PIDNoP_cut");
+  float Pion_ghost_prob_cut = read("Pion_ghost_prob_cut");
+  float lcs_pS_cut  = read("lcs_pS_cut");
+  float ProbMin_pion= read("ProbMin_pion");
+
+  //weight of Vch in tagging decision -------------
+  float VchPowerK= read("VchPowerK"), MinimumVCharge= read("MinimumVCharge");
+  float m_P0 = read("m_P0"), m_P1 = read("m_P1"), m_Gt075 = read("m_Gt075");
+  float wSameSign2 = read("wSameSign2"), wSameSignMoreThan2 = read("wSameSignMoreThan2");
+  float ProbMinVtx = read("ProbMinVtx");
+  //>>>>>>>>>>>>>>>>>>>>>>>>
+
+  //>>>>>>>>>>>>>>>>>>>>>>>>//>>>>>>>>>>>>>>>>>>>>>>>> inits
+  int nB531=0, nB521=0, nB511=0, nBother=0, nBanti=0, ntrig=0;
+  nsele=nlm=nllm=nle=nlle=nlk=nlkS=nllk=nllkS=nidm=nide=nidk=nidkS=
+    nghost_m=nghost_e=nghost_k=nghost_kS=0; 
+  int ntruemu=0, ntrueel=0, ntruekO=0, ntruekS=0;
+  int ntruemutag=0, ntrueeltag=0, ntruekOtag=0, ntruekStag=0;
+  int ndirect_mu=0,ndirect_el=0,nbc_mu=0,nbc_el=0,nbc_kO=0,nbc_kS=0;
+  for(int i=0; i<20; ++i) {nrt[i]=0; nwt[i]=0; nrtag[i]=0; nwtag[i]=0;}
+  std::vector<TString>::iterator ifile; int nfile = 0;
+
+  //>>>>>>>>>>>>>>>>>>>>>>>>//create tree of nnet variables:
   TTree *nntrain = new TTree("nntrain", "tree neural net");
   Int_t iscorrect,tagger;
   nntrain->Branch("iscorrect",&iscorrect, "iscorrect/I");
@@ -20,7 +113,7 @@
   nntrain->Branch("nkrec",  &nkrec,   "nkrec/F");
   nntrain->Branch("ncand",  &ncand,   "ncand/F");
 
-  //create  histograms
+  //>>>>>>>>>>>>>>>>>>>>>>>>//create  histograms
   TH1F* h5    = new TH1F("h5","BSmass ",100, 5.2, 5.5);
 
   TH1F* h6    = new TH1F("h6","B pT ",100, 0.0, 30.);
@@ -135,276 +228,159 @@
   float x1=0, x2=5  ; //pt
   TH1F* hr_mu_pt = new TH1F("hr_mu_pt","pt right tags", 50, x1, x2);
   TH1F* hw_mu_pt = new TH1F("hw_mu_pt","pt wrong tags", 50, x1, x2);
-//  TH1F* ho_mu_pt = new TH1F("ho_mu_pt","pt omega",      50, x1, x2);
-  TH1F* he_mu_pt = new TH1F("he_mu_pt","pt effective efficiency", 50, x1, x2);
   x1=0; x2=70 ; //p
   TH1F* hr_mu_p = new TH1F("hr_mu_p","p right tags", 50, x1, x2);
   TH1F* hw_mu_p = new TH1F("hw_mu_p","p wrong tags", 50, x1, x2);
-//  TH1F* ho_mu_p = new TH1F("ho_mu_p","p omega",      50, x1, x2);
-  TH1F* he_mu_p = new TH1F("he_mu_p","p effective efficiency", 50, x1, x2);
   x1=0; x2=50  ; //ip/s
   TH1F* hr_mu_ips = new TH1F("hr_mu_ips","ips right tags", 50, x1, x2);
   TH1F* hw_mu_ips = new TH1F("hw_mu_ips","ips wrong tags", 50, x1, x2);
-//  TH1F* ho_mu_ips = new TH1F("ho_mu_ips","ips omega",      50, x1, x2);
-  TH1F* he_mu_ips = new TH1F("he_mu_ips","ips effective efficiency", 50, x1, x2);
   x1=0; x2=100  ; //ippu
   TH1F* hr_mu_ippu = new TH1F("hr_mu_ippu","ippu right tags", 50, x1, x2);
   TH1F* hw_mu_ippu = new TH1F("hw_mu_ippu","ippu wrong tags", 50, x1, x2);
-//  TH1F* ho_mu_ippu = new TH1F("ho_mu_ippu","ippu omega",      50, x1, x2);
-  TH1F* he_mu_ippu = new TH1F("he_mu_ippu","ippu effective efficiency", 50, x1, x2);
+
   x1=0; x2=5   ; //LCS
   TH1F* hr_mu_lcs = new TH1F("hr_mu_lcs","lcs right tags", 50, x1, x2);
   TH1F* hw_mu_lcs = new TH1F("hw_mu_lcs","lcs wrong tags", 50, x1, x2);
-//  TH1F* ho_mu_lcs = new TH1F("ho_mu_lcs","lcs omega",      50, x1, x2);
-  TH1F* he_mu_lcs = new TH1F("he_mu_lcs","lcs effective efficiency", 50, x1, x2);
   x1=-5, x2=20; // PID
   TH1F* hr_mu_pid = new TH1F("hr_mu_pid","pid right tags", 50, x1, x2);
   TH1F* hw_mu_pid = new TH1F("hw_mu_pid","pid wrong tags", 50, x1, x2);
-//  TH1F* ho_mu_pid = new TH1F("ho_mu_pid","pid omega",      50, x1, x2);
-  TH1F* he_mu_pid = new TH1F("he_mu_pid","pid effective efficiency", 50, x1, x2);
   x1=-35; x2=0 ;// tsal ghost likel
   TH1F* hr_mu_tsal = new TH1F("hr_mu_tsal","tsal right tags", 50, x1, x2);
   TH1F* hw_mu_tsal = new TH1F("hw_mu_tsal","tsal wrong tags", 50, x1, x2);
-//  TH1F* ho_mu_tsal = new TH1F("ho_mu_tsal","tsal omega",      50, x1, x2);
-  TH1F* he_mu_tsal = new TH1F("he_mu_tsal","tsal effective efficiency", 50, x1, x2);
+
   x1=0; x2=100;//N mult
   TH1F* hr_mu_mult = new TH1F("hr_mu_mult","mult right tags", 50, x1, x2);
   TH1F* hw_mu_mult = new TH1F("hw_mu_mult","mult wrong tags", 50, x1, x2);
-//  TH1F* ho_mu_mult = new TH1F("ho_mu_mult","mult omega",      50, x1, x2);
-  TH1F* he_mu_mult = new TH1F("he_mu_mult","mult effective efficiency", 50, x1, x2);
+
   x1=1; x2=21  ; //ncands
   TH1F* hr_mu_ncand = new TH1F("hr_mu_ncand","ncand right tags", 50, x1, x2);
   TH1F* hw_mu_ncand = new TH1F("hw_mu_ncand","ncand wrong tags", 50, x1, x2);
-//  TH1F* ho_mu_ncand = new TH1F("ho_mu_ncand","ncand omega",      50, x1, x2);
-  TH1F* he_mu_ncand = new TH1F("he_mu_ncand","ncand effective efficiency", 50, x1, x2);
+
 
   //ELECTRON
   x1=0; x2=5  ; //pt
   TH1F* hr_ele_pt = new TH1F("hr_ele_pt","pt right tags", 50, x1, x2);
   TH1F* hw_ele_pt = new TH1F("hw_ele_pt","pt wrong tags", 50, x1, x2);
-//  TH1F* ho_ele_pt = new TH1F("ho_ele_pt","pt omega",      50, x1, x2);
-  TH1F* he_ele_pt = new TH1F("he_ele_pt","pt effective efficiency", 50, x1, x2);
   x1=0; x2=70 ; //p
   TH1F* hr_ele_p = new TH1F("hr_ele_p","p right tags", 50, x1, x2);
   TH1F* hw_ele_p = new TH1F("hw_ele_p","p wrong tags", 50, x1, x2);
-//  TH1F* ho_ele_p = new TH1F("ho_ele_p","p omega",      50, x1, x2);
-  TH1F* he_ele_p = new TH1F("he_ele_p","p effective efficiency", 50, x1, x2);
   x1=0; x2=50  ; //ip/s
   TH1F* hr_ele_ips = new TH1F("hr_ele_ips","ips right tags", 50, x1, x2);
   TH1F* hw_ele_ips = new TH1F("hw_ele_ips","ips wrong tags", 50, x1, x2);
-//  TH1F* ho_ele_ips = new TH1F("ho_ele_ips","ips omega",      50, x1, x2);
-  TH1F* he_ele_ips = new TH1F("he_ele_ips","ips effective efficiency", 50, x1, x2);
   x1=0; x2=100  ; //ippu
   TH1F* hr_ele_ippu = new TH1F("hr_ele_ippu","ippu right tags", 50, x1, x2);
   TH1F* hw_ele_ippu = new TH1F("hw_ele_ippu","ippu wrong tags", 50, x1, x2);
-//  TH1F* ho_ele_ippu = new TH1F("ho_ele_ippu","ippu omega",      50, x1, x2);
-  TH1F* he_ele_ippu = new TH1F("he_ele_ippu","ippu effective efficiency", 50, x1, x2);
   x1=0; x2=5   ; //LCS
   TH1F* hr_ele_lcs = new TH1F("hr_ele_lcs","lcs right tags", 50, x1, x2);
   TH1F* hw_ele_lcs = new TH1F("hw_ele_lcs","lcs wrong tags", 50, x1, x2);
-//  TH1F* ho_ele_lcs = new TH1F("ho_ele_lcs","lcs omega",      50, x1, x2);
-  TH1F* he_ele_lcs = new TH1F("he_ele_lcs","lcs effective efficiency", 50, x1, x2);
   x1=-5, x2=20; // PID
   TH1F* hr_ele_pid = new TH1F("hr_ele_pid","pid right tags", 50, x1, x2);
   TH1F* hw_ele_pid = new TH1F("hw_ele_pid","pid wrong tags", 50, x1, x2);
-//  TH1F* ho_ele_pid = new TH1F("ho_ele_pid","pid omega",      50, x1, x2);
-  TH1F* he_ele_pid = new TH1F("he_ele_pid","pid effective efficiency", 50, x1, x2);
   x1=-35; x2=0 ;// tsal ghost likel
   TH1F* hr_ele_tsal = new TH1F("hr_ele_tsal","tsal right tags", 50, x1, x2);
   TH1F* hw_ele_tsal = new TH1F("hw_ele_tsal","tsal wrong tags", 50, x1, x2);
-//  TH1F* ho_ele_tsal = new TH1F("ho_ele_tsal","tsal omega",      50, x1, x2);
-  TH1F* he_ele_tsal = new TH1F("he_ele_tsal","tsal effective efficiency", 50, x1, x2);
   x1=0; x2=100;//N mult
   TH1F* hr_ele_mult = new TH1F("hr_ele_mult","mult right tags", 50, x1, x2);
   TH1F* hw_ele_mult = new TH1F("hw_ele_mult","mult wrong tags", 50, x1, x2);
-//  TH1F* ho_ele_mult = new TH1F("ho_ele_mult","mult omega",      50, x1, x2);
-  TH1F* he_ele_mult = new TH1F("he_ele_mult","mult effective efficiency", 50, x1, x2);
   x1=1; x2=21  ; //ncands
   TH1F* hr_ele_ncand = new TH1F("hr_ele_ncand","ncand right tags", 50, x1, x2);
   TH1F* hw_ele_ncand = new TH1F("hw_ele_ncand","ncand wrong tags", 50, x1, x2);
-//  TH1F* ho_ele_ncand = new TH1F("ho_ele_ncand","ncand omega",      50, x1, x2);
-  TH1F* he_ele_ncand = new TH1F("he_ele_ncand","ncand effective efficiency", 50, x1, x2);
   x1=0; x2=3; //ele veloch
-//  TH1F* hr_ele_veloch = new TH1F("hr_ele_veloch","veloch right tags", 50, x1, x2);
-//  TH1F* hw_ele_veloch = new TH1F("hw_ele_veloch","veloch wrong tags", 50, x1, x2);
-//  TH1F* ho_ele_veloch = new TH1F("ho_ele_veloch","veloch omega",      50, x1, x2);
-//  TH1F* he_ele_veloch = new TH1F("he_ele_veloch","veloch effective efficiency", 50, x1, x2);
   x1=0; x2=2; //ele EoverP
-//  TH1F* hr_ele_EoverP = new TH1F("hr_ele_EoverP","EoverP right tags", 50, x1, x2);
-//  TH1F* hw_ele_EoverP = new TH1F("hw_ele_EoverP","EoverP wrong tags", 50, x1, x2);
-//  TH1F* ho_ele_EoverP = new TH1F("ho_ele_EoverP","EoverP omega",      50, x1, x2);
-//  TH1F* he_ele_EoverP = new TH1F("he_ele_EoverP","EoverP effective efficiency", 50, x1, x2);
 
   //KAON OPPO
   x1=0; x2=5  ; //pt
   TH1F* hr_k_pt = new TH1F("hr_k_pt","pt right tags", 50, x1, x2);
   TH1F* hw_k_pt = new TH1F("hw_k_pt","pt wrong tags", 50, x1, x2);
-//  TH1F* ho_k_pt = new TH1F("ho_k_pt","pt omega",      50, x1, x2);
-  TH1F* he_k_pt = new TH1F("he_k_pt","pt effective efficiency", 50, x1, x2);
   x1=0; x2=70 ; //p
   TH1F* hr_k_p = new TH1F("hr_k_p","p right tags", 50, x1, x2);
   TH1F* hw_k_p = new TH1F("hw_k_p","p wrong tags", 50, x1, x2);
-//  TH1F* ho_k_p = new TH1F("ho_k_p","p omega",      50, x1, x2);
-  TH1F* he_k_p = new TH1F("he_k_p","p effective efficiency", 50, x1, x2);
   x1=0; x2=50  ; //ip/s
   TH1F* hr_k_ips = new TH1F("hr_k_ips","ips right tags", 50, x1, x2);
   TH1F* hw_k_ips = new TH1F("hw_k_ips","ips wrong tags", 50, x1, x2);
-//  TH1F* ho_k_ips = new TH1F("ho_k_ips","ips omega",      50, x1, x2);
-  TH1F* he_k_ips = new TH1F("he_k_ips","ips effective efficiency", 50, x1, x2);
   x1=0; x2=100  ; //ippu
   TH1F* hr_k_ippu = new TH1F("hr_k_ippu","ippu right tags", 50, x1, x2);
   TH1F* hw_k_ippu = new TH1F("hw_k_ippu","ippu wrong tags", 50, x1, x2);
-//  TH1F* ho_k_ippu = new TH1F("ho_k_ippu","ippu omega",      50, x1, x2);
-  TH1F* he_k_ippu = new TH1F("he_k_ippu","ippu effective efficiency", 50, x1, x2);
   x1=0; x2=5   ; //LCS
   TH1F* hr_k_lcs = new TH1F("hr_k_lcs","lcs right tags", 50, x1, x2);
   TH1F* hw_k_lcs = new TH1F("hw_k_lcs","lcs wrong tags", 50, x1, x2);
-//  TH1F* ho_k_lcs = new TH1F("ho_k_lcs","lcs omega",      50, x1, x2);
-  TH1F* he_k_lcs = new TH1F("he_k_lcs","lcs effective efficiency", 50, x1, x2);
   x1=-5, x2=95; // PID
   TH1F* hr_k_pid = new TH1F("hr_k_pid","pid right tags", 50, x1, x2);
   TH1F* hw_k_pid = new TH1F("hw_k_pid","pid wrong tags", 50, x1, x2);
-//  TH1F* ho_k_pid = new TH1F("ho_k_pid","pid omega",      50, x1, x2);
-  TH1F* he_k_pid = new TH1F("he_k_pid","pid effective efficiency", 50, x1, x2);
   x1=-35; x2=0 ;// tsal ghost likel
   TH1F* hr_k_tsal = new TH1F("hr_k_tsal","tsal right tags", 50, x1, x2);
   TH1F* hw_k_tsal = new TH1F("hw_k_tsal","tsal wrong tags", 50, x1, x2);
-//  TH1F* ho_k_tsal = new TH1F("ho_k_tsal","tsal omega",      50, x1, x2);
-  TH1F* he_k_tsal = new TH1F("he_k_tsal","tsal effective efficiency", 50, x1, x2);
   x1=0; x2=100;//N mult
   TH1F* hr_k_mult = new TH1F("hr_k_mult","mult right tags", 50, x1, x2);
   TH1F* hw_k_mult = new TH1F("hw_k_mult","mult wrong tags", 50, x1, x2);
-//  TH1F* ho_k_mult = new TH1F("ho_k_mult","mult omega",      50, x1, x2);
-  TH1F* he_k_mult = new TH1F("he_k_mult","mult effective efficiency", 50, x1, x2);
   x1=1; x2=21  ; //ncands
   TH1F* hr_k_ncand = new TH1F("hr_k_ncand","ncand right tags", 50, x1, x2);
   TH1F* hw_k_ncand = new TH1F("hw_k_ncand","ncand wrong tags", 50, x1, x2);
-//  TH1F* ho_k_ncand = new TH1F("ho_k_ncand","ncand omega",      50, x1, x2);
-  TH1F* he_k_ncand = new TH1F("he_k_ncand","ncand effective efficiency", 50, x1, x2);
 
   //KAON SAME
   x1=0; x2=5  ; //pt
   TH1F* hr_kS_pt = new TH1F("hr_kS_pt","pt right tags", 50, x1, x2);
   TH1F* hw_kS_pt = new TH1F("hw_kS_pt","pt wrong tags", 50, x1, x2);
-//  TH1F* ho_kS_pt = new TH1F("ho_kS_pt","pt omega",      50, x1, x2);
-  TH1F* he_kS_pt = new TH1F("he_kS_pt","pt effective efficiency", 50, x1, x2);
   x1=0; x2=70 ; //p
   TH1F* hr_kS_p = new TH1F("hr_kS_p","p right tags", 50, x1, x2);
   TH1F* hw_kS_p = new TH1F("hw_kS_p","p wrong tags", 50, x1, x2);
-//  TH1F* ho_kS_p = new TH1F("ho_kS_p","p omega",      50, x1, x2);
-  TH1F* he_kS_p = new TH1F("he_kS_p","p effective efficiency", 50, x1, x2);
   x1=0; x2=15  ; //ip/s
   TH1F* hr_kS_ips = new TH1F("hr_kS_ips","ips right tags", 50, x1, x2);
   TH1F* hw_kS_ips = new TH1F("hw_kS_ips","ips wrong tags", 50, x1, x2);
-//  TH1F* ho_kS_ips = new TH1F("ho_kS_ips","ips omega",      50, x1, x2);
-  TH1F* he_kS_ips = new TH1F("he_kS_ips","ips effective efficiency", 50, x1, x2);
   x1=0; x2=100  ; //ippu
   TH1F* hr_kS_ippu = new TH1F("hr_kS_ippu","ippu right tags", 50, x1, x2);
   TH1F* hw_kS_ippu = new TH1F("hw_kS_ippu","ippu wrong tags", 50, x1, x2);
-//  TH1F* ho_kS_ippu = new TH1F("ho_kS_ippu","ippu omega",      50, x1, x2);
-  TH1F* he_kS_ippu = new TH1F("he_kS_ippu","ippu effective efficiency", 50, x1, x2);
+
   x1=0; x2=5   ; //LCS
   TH1F* hr_kS_lcs = new TH1F("hr_kS_lcs","lcs right tags", 50, x1, x2);
   TH1F* hw_kS_lcs = new TH1F("hw_kS_lcs","lcs wrong tags", 50, x1, x2);
-//  TH1F* ho_kS_lcs = new TH1F("ho_kS_lcs","lcs omega",      50, x1, x2);
-  TH1F* he_kS_lcs = new TH1F("he_kS_lcs","lcs effective efficiency", 50, x1, x2);
   x1=-5, x2=95; // PID
   TH1F* hr_kS_pid = new TH1F("hr_kS_pid","pid right tags", 50, x1, x2);
   TH1F* hw_kS_pid = new TH1F("hw_kS_pid","pid wrong tags", 50, x1, x2);
-//  TH1F* ho_kS_pid = new TH1F("ho_kS_pid","pid omega",      50, x1, x2);
-  TH1F* he_kS_pid = new TH1F("he_kS_pid","pid effective efficiency", 50, x1, x2);
   x1=-35; x2=0 ;// tsal ghost likel
   TH1F* hr_kS_tsal = new TH1F("hr_kS_tsal","tsal right tags", 50, x1, x2);
   TH1F* hw_kS_tsal = new TH1F("hw_kS_tsal","tsal wrong tags", 50, x1, x2);
-//  TH1F* ho_kS_tsal = new TH1F("ho_kS_tsal","tsal omega",      50, x1, x2);
-  TH1F* he_kS_tsal = new TH1F("he_kS_tsal","tsal effective efficiency", 50, x1, x2);
+
   x1=0; x2=100;//N mult
   TH1F* hr_kS_mult = new TH1F("hr_kS_mult","mult right tags", 50, x1, x2);
   TH1F* hw_kS_mult = new TH1F("hw_kS_mult","mult wrong tags", 50, x1, x2);
-//  TH1F* ho_kS_mult = new TH1F("ho_kS_mult","mult omega",      50, x1, x2);
-  TH1F* he_kS_mult = new TH1F("he_kS_mult","mult effective efficiency", 50, x1, x2);
+
   x1=1; x2=21  ; //ncands
   TH1F* hr_kS_ncand = new TH1F("hr_kS_ncand","ncand right tags", 50, x1, x2);
   TH1F* hw_kS_ncand = new TH1F("hw_kS_ncand","ncand wrong tags", 50, x1, x2);
-//  TH1F* ho_kS_ncand = new TH1F("ho_kS_ncand","ncand omega",      50, x1, x2);
-  TH1F* he_kS_ncand = new TH1F("he_kS_ncand","ncand effective efficiency", 50, x1, x2);
   x1=0, x2=5  ; //dphi
-//  TH1F* hr_kS_dphi = new TH1F("hr_kS_dphi","dphi right tags", 50, x1, x2);
-//  TH1F* hw_kS_dphi = new TH1F("hw_kS_dphi","dphi wrong tags", 50, x1, x2);
-//  TH1F* ho_kS_dphi = new TH1F("ho_kS_dphi","dphi omega",      50, x1, x2);
-//  TH1F* he_kS_dphi = new TH1F("he_kS_dphi","dphi effective efficiency", 50, x1, x2);
-  x1=0, x2=5  ; //deta
-//  TH1F* hr_kS_deta = new TH1F("hr_kS_deta","deta right tags", 50, x1, x2);
-//  TH1F* hw_kS_deta = new TH1F("hw_kS_deta","deta wrong tags", 50, x1, x2);
-//  TH1F* ho_kS_deta = new TH1F("ho_kS_deta","deta omega",      50, x1, x2);
-//  TH1F* he_kS_deta = new TH1F("he_kS_deta","deta effective efficiency", 50, x1, x2);
-  x1=0, x2=5  ; //dq
-//  TH1F* hr_kS_dq = new TH1F("hr_kS_dq","dq right tags", 50, x1, x2);
-//  TH1F* hw_kS_dq = new TH1F("hw_kS_dq","dq wrong tags", 50, x1, x2);
-//  TH1F* ho_kS_dq = new TH1F("ho_kS_dq","dq omega",      50, x1, x2);
-//  TH1F* he_kS_dq = new TH1F("he_kS_dq","dq effective efficiency", 50, x1, x2);
 
   //PION SAME
   x1=0; x2=5  ; //pt
   TH1F* hr_pS_pt = new TH1F("hr_pS_pt","pt right tags", 50, x1, x2);
   TH1F* hw_pS_pt = new TH1F("hw_pS_pt","pt wrong tags", 50, x1, x2);
-//  TH1F* ho_pS_pt = new TH1F("ho_pS_pt","pt omega",      50, x1, x2);
-  TH1F* he_pS_pt = new TH1F("he_pS_pt","pt effective efficiency", 50, x1, x2);
   x1=0; x2=70 ; //p
   TH1F* hr_pS_p = new TH1F("hr_pS_p","p right tags", 50, x1, x2);
   TH1F* hw_pS_p = new TH1F("hw_pS_p","p wrong tags", 50, x1, x2);
-//  TH1F* ho_pS_p = new TH1F("ho_pS_p","p omega",      50, x1, x2);
-  TH1F* he_pS_p = new TH1F("he_pS_p","p effective efficiency", 50, x1, x2);
   x1=0; x2=15  ; //ip/s
   TH1F* hr_pS_ips = new TH1F("hr_pS_ips","ips right tags", 50, x1, x2);
   TH1F* hw_pS_ips = new TH1F("hw_pS_ips","ips wrong tags", 50, x1, x2);
-//  TH1F* ho_pS_ips = new TH1F("ho_pS_ips","ips omega",      50, x1, x2);
-  TH1F* he_pS_ips = new TH1F("he_pS_ips","ips effective efficiency", 50, x1, x2);
   x1=0; x2=100  ; //ippu
   TH1F* hr_pS_ippu = new TH1F("hr_pS_ippu","ippu right tags", 50, x1, x2);
   TH1F* hw_pS_ippu = new TH1F("hw_pS_ippu","ippu wrong tags", 50, x1, x2);
-//  TH1F* ho_pS_ippu = new TH1F("ho_pS_ippu","ippu omega",      50, x1, x2);
-  TH1F* he_pS_ippu = new TH1F("he_pS_ippu","ippu effective efficiency", 50, x1, x2);
+
   x1=0; x2=5   ; //LCS
   TH1F* hr_pS_lcs = new TH1F("hr_pS_lcs","lcs right tags", 50, x1, x2);
   TH1F* hw_pS_lcs = new TH1F("hw_pS_lcs","lcs wrong tags", 50, x1, x2);
-//  TH1F* ho_pS_lcs = new TH1F("ho_pS_lcs","lcs omega",      50, x1, x2);
-  TH1F* he_pS_lcs = new TH1F("he_pS_lcs","lcs effective efficiency", 50, x1, x2);
   x1=-5, x2=95; // PID
   TH1F* hr_pS_pid = new TH1F("hr_pS_pid","pid right tags", 50, x1, x2);
   TH1F* hw_pS_pid = new TH1F("hw_pS_pid","pid wrong tags", 50, x1, x2);
-//  TH1F* ho_pS_pid = new TH1F("ho_pS_pid","pid omega",      50, x1, x2);
-  TH1F* he_pS_pid = new TH1F("he_pS_pid","pid effective efficiency", 50, x1, x2);
   x1=-35; x2=0 ;// tsal ghost likel
   TH1F* hr_pS_tsal = new TH1F("hr_pS_tsal","tsal right tags", 50, x1, x2);
   TH1F* hw_pS_tsal = new TH1F("hw_pS_tsal","tsal wrong tags", 50, x1, x2);
-//  TH1F* ho_pS_tsal = new TH1F("ho_pS_tsal","tsal omega",      50, x1, x2);
-  TH1F* he_pS_tsal = new TH1F("he_pS_tsal","tsal effective efficiency", 50, x1, x2);
+
   x1=0; x2=100;//N mult
   TH1F* hr_pS_mult = new TH1F("hr_pS_mult","mult right tags", 50, x1, x2);
   TH1F* hw_pS_mult = new TH1F("hw_pS_mult","mult wrong tags", 50, x1, x2);
-//  TH1F* ho_pS_mult = new TH1F("ho_pS_mult","mult omega",      50, x1, x2);
-  TH1F* he_pS_mult = new TH1F("he_pS_mult","mult effective efficiency", 50, x1, x2);
+
   x1=1; x2=21  ; //ncands
   TH1F* hr_pS_ncand = new TH1F("hr_pS_ncand","ncand right tags", 50, x1, x2);
   TH1F* hw_pS_ncand = new TH1F("hw_pS_ncand","ncand wrong tags", 50, x1, x2);
-//  TH1F* ho_pS_ncand = new TH1F("ho_pS_ncand","ncand omega",      50, x1, x2);
-  TH1F* he_pS_ncand = new TH1F("he_pS_ncand","ncand effective efficiency", 50, x1, x2);
-  x1=0, x2=5  ; //dphi
-//  TH1F* hr_pS_dphi = new TH1F("hr_pS_dphi","dphi right tags", 50, x1, x2);
-//  TH1F* hw_pS_dphi = new TH1F("hw_pS_dphi","dphi wrong tags", 50, x1, x2);
-//  TH1F* ho_pS_dphi = new TH1F("ho_pS_dphi","dphi omega",      50, x1, x2);
-//  TH1F* he_pS_dphi = new TH1F("he_pS_dphi","dphi effective efficiency", 50, x1, x2);
-  x1=0, x2=5  ; //deta
-//  TH1F* hr_pS_deta = new TH1F("hr_pS_deta","deta right tags", 50, x1, x2);
-//  TH1F* hw_pS_deta = new TH1F("hw_pS_deta","deta wrong tags", 50, x1, x2);
-//  TH1F* ho_pS_deta = new TH1F("ho_pS_deta","deta omega",      50, x1, x2);
-//  TH1F* he_pS_deta = new TH1F("he_pS_deta","deta effective efficiency", 50, x1, x2);
-  x1=0, x2=5  ; //dq
-//  TH1F* hr_pS_dq = new TH1F("hr_pS_dq","dq right tags", 50, x1, x2);
-//  TH1F* hw_pS_dq = new TH1F("hw_pS_dq","dq wrong tags", 50, x1, x2);
-//  TH1F* ho_pS_dq = new TH1F("ho_pS_dq","dq omega",      50, x1, x2);
-//  TH1F* he_pS_dq = new TH1F("he_pS_dq","dq effective efficiency", 50, x1, x2);
 
   x1=0; x2=1;
   TH1F* homphi_mu_r = new TH1F("homphi_mu_r","w(dphi)", 50, x1, x2);
@@ -416,9 +392,12 @@
   TH1F* homphi_kS_r = new TH1F("homphi_kS_r","w(dphi)", 50, x1, x2);
   TH1F* homphi_kS_w = new TH1F("homphi_kS_w","w(dphi)", 50, x1, x2);
 
+  TH1F* hrefit1 = new TH1F("hrefit1","hrefit1", 50, -1, 2);
+  TH1F* hrefit2 = new TH1F("hrefit2","hrefit2", 50, -1, 2);
 
+
+  x1=3; x2=8;
   TH1F* hright = new TH1F("hright","right tags", 50, x1, x2);
   TH1F* hwrong = new TH1F("hwrong","wrong tags", 50, x1, x2);
-  TH1F* homega = new TH1F("homega","omega",      50, x1, x2);
-  TH1F* heffec = new TH1F("heffec","effective efficiency", 50, x1, x2);
+TH1F* heffec ;//= new TH1F("heffec","effective efficiency(cut)", 50, x1, x2);
   TString direction="left2right";

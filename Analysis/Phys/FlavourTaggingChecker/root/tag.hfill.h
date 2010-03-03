@@ -194,7 +194,7 @@
 // 	//double dQ_asKaon = calc_dQ(BSpart, 
 // 	//	   build4V(P[ikaonS],Pt[ikaonS],phi[ikaonS], 321) );
 // 	//double IPsig = fabs(ip[ikaonS]/iperr[ikaonS]);
-//  	double var = PIDk[ikaonS];
+//  	double var = ip_r[ikaonS]/iperr_r[ikaonS];
 //  	 if( itag[ 4 ]==TrueTag ) hright->Fill(var); else hwrong->Fill(var);
 //       }
 //       if(bele) { 
@@ -202,11 +202,11 @@
 // 	double var = PIDe[iele];
 // 	if( itag[ 2 ]==TrueTag ) hright->Fill(var); else hwrong->Fill(var);
 //       }
-//       if(bkaon) { 
-// 	//direction="right2left";
-// 	double var = distPhi[ikaon];
-//  	 if( itag[ 3 ]==TrueTag ) hright->Fill(var); else hwrong->Fill(var);
-//       }
+      if(bkaon) { 
+	//direction="right2left";
+	double var = ip[ikaon]/iperr[ikaon];
+ 	 if( itag[ 3 ]==TrueTag ) hright->Fill(var); else hwrong->Fill(var);
+      }
 
 
 
@@ -229,8 +229,6 @@
       if(catt==4){if(iosc>0) h3041->Fill(Btime);else h3042->Fill(Btime);}
       if(catt==5){if(iosc>0) h3051->Fill(Btime);else h3052->Fill(Btime);}
       if(catt!=0){if(iosc>0) h3061->Fill(Btime);else h3062->Fill(Btime);}
-
-
 
       //counting
       if(bmuon>0  && abs(MCID[imuon])==13)  nidm++; //pid purity
@@ -262,7 +260,7 @@
       if(bkaonS>0&& abs(MCID[ikaonS])== 321 && xFlag[ikaonS]!=0 ) nbc_kS++;
 
 
-     double var=BSpart.Pt();
+      double var=BSpart.Pt();
       if(bkaonS||bpionS){
 	if(itag[4]==TrueTag) h6rSS->Fill(var); else h6wSS->Fill(var);
       }
@@ -273,35 +271,37 @@
 
       if(useDV) {
 	tagdecision=Tag; catt=TagCat;
-// 	int  bmuon, bele, bkaon, bsame, bvtx;
-// 	decode(Taggers, bmuon, bele, bkaon, bsame, bvtx);
-// 	if(bmuon) { bmuon -= 2; itag[1]=bmuon; }
-// 	if(bele)  { bele  -= 2; itag[2]=bele;  }
-// 	if(bkaon) { bkaon -= 2; itag[3]=bkaon; }
-// 	if(bsame) { bsame -= 2; itag[4]=bsame; }
-// 	if(bvtx)  { bvtx  -= 2; itag[5]=bvtx;  }
-// 	if(DBG) if(Tag) cout<<Taggers<<"\n"<<bmuon<<" "<<bele
-// 			    <<" "<<bkaon<<" "<<bsame<<" "<<bvtx<<endl;
+	for(int i=0; i<T; ++i) {
+	  if(TaggerDecision[i]==0) continue;
+	  if(TaggerType[i]==2) itag[1] = (int) TaggerDecision[i];
+	  else if(TaggerType[i]==3) itag[2] = (int) TaggerDecision[i];
+	  else if(TaggerType[i]==4) itag[3] = (int) TaggerDecision[i];
+	  else if(TaggerType[i]==5) itag[4] = (int) TaggerDecision[i];
+	  else if(TaggerType[i]==6) itag[4] = (int) TaggerDecision[i];
+	  else if(TaggerType[i]==10)itag[5] = (int) TaggerDecision[i];
+	}
       } 
 
       if(tagdecision) { 
         if(tagdecision==TrueTag) nrt[catt]++; else nwt[catt]++;
       }
-      for(int k=1; k<6; ++k)
+
+      for(int k=1; k<6; ++k) {
 	if(itag[k]) { 
 	  if( itag[k] == TrueTag ) nrtag[k]++; else nwtag[k]++; 
 	}
+      }
 
       if(DBG)if(Tag!=tagdecision || TagCat!=catt) {
 	int offtag_mu=0, offtag_e=0, offtag_k=0, offtag_SS=0, offtag_vtx=0;
-	for(int i=0; i<10; ++i) {
+	for(int i=0; i<T; ++i) {
 	  if(TaggerDecision[i]==0) continue;
 	  if(TaggerType[i]==2) offtag_mu = (int) TaggerDecision[i];
-	  if(TaggerType[i]==3) offtag_e  = (int) TaggerDecision[i];
-	  if(TaggerType[i]==4) offtag_k  = (int) TaggerDecision[i];
-	  if(TaggerType[i]==5) offtag_SS = (int) TaggerDecision[i];
-	  if(TaggerType[i]==6) offtag_SS = (int) TaggerDecision[i];
-	  if(TaggerType[i]==10)offtag_vtx= (int) TaggerDecision[i];
+	  else if(TaggerType[i]==3) offtag_e  = (int) TaggerDecision[i];
+	  else if(TaggerType[i]==4) offtag_k  = (int) TaggerDecision[i];
+	  else if(TaggerType[i]==5) offtag_SS = (int) TaggerDecision[i];
+	  else if(TaggerType[i]==6) offtag_SS = (int) TaggerDecision[i];
+	  else if(TaggerType[i]==10)offtag_vtx= (int) TaggerDecision[i];
 	}
 
 	cout <<"--------------- Taggers Summary"<<endl;

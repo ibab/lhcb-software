@@ -1,4 +1,4 @@
-// $Id: BTaggingAnalysis.h,v 1.22 2010-02-11 18:39:15 musy Exp $
+// $Id: BTaggingAnalysis.h,v 1.23 2010-03-03 16:49:13 musy Exp $
 #ifndef USER_BTAGGINGANALYSIS_H 
 #define USER_BTAGGINGANALYSIS_H 1
 
@@ -69,7 +69,7 @@ class BTaggingAnalysis : public DVAlgorithm {
   
 
   std::string m_SVtype, m_veloChargeName, 
-    m_TagLocation, m_BHypoCriterium, m_ChoosePV ;
+    m_TagLocation, m_BHypoCriterium, m_ChoosePV, m_taggerLocation ;
   IPrintMCDecayTreeTool*     m_debug;
   ICaloElectron*             m_electron;
   IForcedBDecayTool*         m_forcedBtool;

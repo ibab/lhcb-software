@@ -28,7 +28,7 @@ location = "Phys/CheatedSelection"
 
 tag = BTagging("BTagging")
 tag.InputLocations = [ location ]
-tag.OutputLevel    = 2
+tag.OutputLevel    = 4
 tag.addTool( PhysDesktop )
 tag.PhysDesktop.OutputLevel = 4
 
@@ -49,13 +49,17 @@ tagcheck.OutputLevel = 3
 # BTaggingAnalysis ntuple creation
 
 tagana = BTaggingAnalysis("BTaggingAnalysis")
-tagana.InputLocations = [ location , "Phys/TaggingPions" ]
+tagana.InputLocations = [ location, 
+                          "Phys/TaggingElectrons",
+                          "Phys/TaggingMuons",
+                          "Phys/TaggingPions" 
+                          ]
 tagana.TagOutputLocation =  location + "/FlavourTags"
 
 tagana.ChoosePVCriterium = "PVbyIP"  #needed by CheatedSel   
 tagana.RequireTisTos = False
 
-tagana.OutputLevel = 3
+tagana.OutputLevel = 4
 
 tagana.addTool( PhysDesktop )
 tagana.PhysDesktop.OutputLevel = 4
@@ -75,7 +79,7 @@ MessageSvc().Format  = "% F%30W%S%7W%R%T %0W%M"
 
 DaVinci().EvtMax     = 200                         # Number of events
 DaVinci().SkipEvents = 0                           # Events to skip
-DaVinci().PrintFreq  = 1
+DaVinci().PrintFreq  = 10
 DaVinci().TupleFile     = "analysis.root"     # Ntuple
 DaVinci().HistogramFile = "DVHistos.root"     # Histogram file
 

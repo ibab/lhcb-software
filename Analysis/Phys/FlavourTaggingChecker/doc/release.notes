@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.77 2010-02-22 12:53:18 jpalac Exp $
+! $Id: release.notes,v 1.78 2010-03-03 16:49:12 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+
+! 2010-02-11 - Marco Musy
+  - synchronize ntuple content with the output of BTaggingTool
+    tiny differences O(1%) in taggers still exist, will be investigated.
+  - bug fixing in ip of pileup vertices.
+  - protect ntuple from overflow.
+  - update of /root analysis utility
+  . raise to v5r2
+
 
 !========================== FlavourTaggingChecker v5r1 2010-02-22 ============
 

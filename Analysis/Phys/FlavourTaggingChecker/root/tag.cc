@@ -1,124 +1,50 @@
 #include "tag.h"
 #include "tag.tuner.h"
 
-void tag( TString froot="none", 
-	  float param1=0.0, float param2=0.0 ) {
-	     
-  float Nmax=100000000;
-  std::vector<TString> filelist;
-  if(froot=="none") {gROOT->ProcessLine(".x tag.C"); return;}
-  cout<<"\nUsing parameters = "<<param1<<"  "<<param2<<endl;
-  initmva_mu=initmva_e=initmva_k=initmva_kS=initmva_pS=true;
+/*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> HOW TO RUN:
+SetupProject Gaudi ROOT
+alias compile_tag="g++ tag.cc -o tag.exe `root-config --libs` \
+-lMLP -lTMVA -lGpad -I`root-config --incdir`"
+alias run_tag="compile_tag && ./tag.exe"
 
-  //INPUT DATA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  TString rootsubdir = "";
-  //#include "dati/mc09/v23r2/bujpsik/bujpsik.h"
-  //#include "dati/mc09/v23r2/bdkpi/bdkpi.h"
-  //#include "/export/data/a/musy/dati/tag/mc09/v24r2/bsdspi/bsdspi.h"
-  //#include "dati/mc09/v24r2/bsjpsiphi/bsjpsiphi.h"
-  //#include "dati/mc09/v24r5/bdstarmunu/bdstarmunu.h"
+compile_tag && ./tag.exe
+root -l tag.C
 
-  //#include "dati/mc09/v24r2/bsjpsiphi_nu3/bsjpsiphi_nu3.h"
-  //#include "dati/mc09/v24r2/bujpsik_nu3/bujpsik_nu3.h"
-  //#include "dati/mc09/v24r2/bsdspi_nu3/bsdspi_nu3.h"
-  //#include "dati/mc09/v24r2/bdjpsiks_nu3/bdjpsiks_nu3.h"
-  filelist.push_back(froot);
-  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 
+tag.cuts.txt contains the input directory of data and tagging cuts
+tag.exe fills histograms in tag.root, then tag.C reads them.
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
 
-  bool IsControlChannel = 0; //take as the true flavour the reconsted B
-  bool cheatID = 0;     // Perfect ID with MC truth
-  bool cheatP  = 0;     // Perfect  P and Pt of tracks
-  bool useDV   = 0;     // Read only outcome from C++ decision
-  bool redoPID = 1;     // Redo PID
-  DBG          = 0;     // Debug mode
+int main(){
 
-  //NNet commands
-  std::string NNetTrain = "";// NNet taggers: "mu" "e" "k" "kS" "pS" "vtx"
-  TString mlptype= "MultiLayerPerceptron";//TMVA or MultiLayerPerceptron
-
-  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MC09 nu=1
-  //Taggers common selection cuts 
-  float IPPU_cut= 3.0, distPhi_cut= 0.005;
-  //dilution binning range for omega combination
-  float  ProbMin    = 0.55;
-  double omegascale = 0.06, omegamaxbin = 0.36;
-
-  //muons -------------
-  float Muon_Pt_cut= 1.1, Muon_P_cut= 0; 
-  float lcs_m_cut  = 2.0;
-  float PID_m_cut  = 0.0;
-
-  //elect -------------
-  float Ele_Pt_cut   = 1.2, Ele_P_cut= 0;
-  float VeloChargeMin= 0.0, VeloChargeMax= 1.3, Ele_EoverP_cut = 0.85;
-  float lcs_e_cut  = 3.0; 
-  float Ele_ghost_cut = -999;
-  float PID_e_cut  = 4.0;
-
-  //OS kaons -------------
-  float Kaon_Pt_cut= 0.4, Kaon_P_cut= 4.0, Kaon_IP_cut= 3.8, Kaon_IPRAW_cut= 1.5;
-  float lcs_k_ups_cut = 2.0, lcs_k_long_cut= 2.5, Kaon_ghost_prob_cut= -14;
-  float PID_k_cut     = 0.0, PID_kp_cut   = -1.0;
-
-  //cuts x Same Side tagging Kaons -------------
-  float KaonSame_Pt_cut= 0.45, KaonSame_P_cut = 4, KaonSame_IP_cut = 3.0;
-  float KaonSame_Phi_cut= 1.1, KaonSame_Eta_cut= 1.0, KaonSame_dQ_cut = 1.6;
-  float lcs_kS_cut = 2.0;
-  float PID_kS_cut = 1.0, PID_kpS_cut = -1.0;
-
-  //cuts x Same Side tagging Pions -------------
-  float PionSame_Pt_cut = 0.6, PionSame_P_cut  = 5, PionSame_IP_cut= 2.8;
-  float PionSame_dQ_cut = 3.0, PionSame_dQ2_cut= 1.5;
-  float PionSame_PIDNoK_cut = 3, PionSame_PIDNoP_cut = 10.0;
-  float Pion_ghost_prob_cut = -25;
-  float lcs_pS_cut  = 3.0;
-  float ProbMin_pion= 0.55;
-
-  //weight of Vch in tagging decision -------------
-  float VchPowerK= 0.35, MinimumVCharge= 0.15;
-  float m_P0 = 5.255669e-01, m_P1 = -3.251661e-01, m_Gt075 = 0.35;
-  float wSameSign2 = 0.4141, wSameSignMoreThan2 = 0.3250;
-  float ProbMinVtx = 0.52;
-  //>>>>>>>>>>>>>>>>>>>>>>>>
-
+  //load initial values of cuts and init variables
 #include "tag.hdef.h"
 
   //FILE LOOP>>>>>>>>>>>>>>>>>>>>>>>>+++++++++++++++++++++++++++++++++++++++
-  int nB531=0, nB521=0, nB511=0, nBother=0, nBanti=0, ntrig=0;
-  nsele=nlm=nllm=nle=nlle=nlk=nlkS=nllk=nllkS=nidm=nide=nidk=nidkS=
-    nghost_m=nghost_e=nghost_k=nghost_kS=0; 
-  int ntruemu=0, ntrueel=0, ntruekO=0, ntruekS=0;
-  int ntruemutag=0, ntrueeltag=0, ntruekOtag=0, ntruekStag=0;
-  int ndirect_mu=0,ndirect_el=0,nbc_mu=0,nbc_el=0,nbc_kO=0,nbc_kS=0;
-  for(int i=0; i<20; ++i) {nrt[i]=0; nwt[i]=0; nrtag[i]=0; nwtag[i]=0;}
-  std::vector<TString>::iterator ifile; int nfile = 0;
-
-  for(ifile=filelist.begin(); ifile!=filelist.end(); ++ifile, ++nfile ){
-    TFile* f = new TFile(*ifile); if(!f) return;
+  for(ifile=filelist.begin(); ifile!=filelist.end() && nsele<Nmax; ++ifile,++nfile ){
+    TFile* f = new TFile(*ifile); if(!f) return 0;
     TTree* mytagging = (TTree*) gDirectory->Get("BTaggingAnalysis/mytagging");
-    TTree* tagging = 0;
+    if(!mytagging) mytagging = (TTree*) gDirectory->Get("tagging");
     if(!mytagging) {
-      tagging = (TTree*) gDirectory->Get("tagging");
-      if(!tagging) cout<<"\nNo tagging tree found."<<endl;
-      mytagging=tagging;
+      cout<<"\nNo tagging tree found for "<<(*ifile)<<" skipped!"<<endl;
+      continue;
     }
-#include "tag.inc.h"
+#include "tag.inc.h" // define variables in entuple
 
     // EVENT LOOP //////////////////////////////////////////////////
-    float Nevt = std::min( (float)mytagging->GetEntries(), Nmax);
+    float Nevt = mytagging->GetEntries();
     cout<<(int)Nevt<<"\t evts in "<<(*ifile)<<endl;
-    for (int ievt=0; ievt<Nevt; ievt++){
+    for (int ievt=0; ievt<Nevt && nsele<Nmax; ievt++){
       mytagging->GetEntry(ievt); //fill ntp branches
       PrintAdvance(ievt,Nevt);
 
       //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
       // GENERAL CUTS TO SELECT EVENTS FOR STUDY PURPOSES
-      //if(ievt>110 ) break;
       if( trig == 0 ) continue;
       if( bkgCat!=0 && bkgCat!=50 && bkgCat!=10 ) continue;
       //if(BOP<144) continue;
       //if(BSID>0) continue; //flavour dependence
       //if( kType != 68 ) continue;
+      //if( krec != 1 ) continue;
       //if( TrueTag == -1 ) continue;
       //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -128,9 +54,6 @@ void tag( TString froot="none",
 
       for (int ii=0; ii<M; ii++){
 	int bid = (int) abs(sID[ii]);
-	//FORCE CORRECT RECO
-	//if(bid<500) if(fabs(sP[ii]-sMCP[ii])/sMCP[ii]>0.10) {BSID=0; break;}
-
 	if(bid==531 || bid==511 || bid==521) {
 	  if( IsControlChannel ) TrueTag = sID[ii]>0? 1 : -1 ;////TrueTag REDEF!!!
 	  BSID = (int) sID[ii];
@@ -143,7 +66,7 @@ void tag( TString froot="none",
 	}
       }	
       if(!BSID) {
-	//cout<<"B does not exist! Skip event."<< endl; 
+	cout<<"Signal B does not exist! Skip event."<< endl; 
 	continue;
       }
       nsele++;
@@ -174,7 +97,7 @@ void tag( TString froot="none",
       h88->Fill(krec);
       //************************
 
-      //inits
+      //event inits ----------------------------
       int imuon,iele,ikaon,ikaonS,ipionS, vflagged=0;
       imuon=iele=ikaon=ikaonS=ipionS=0;
       bool bmuon,bele,bkaon,bkaonS,bpionS;
@@ -183,23 +106,35 @@ void tag( TString froot="none",
       ptmaxm=ptmaxe=ptmaxk=ptmaxkS=ptmaxpS=-999;
       double WeigVch=0, norm=0;
       float ncand_mu=0, ncand_ele=0, ncand_k=0, ncand_kS=0, ncand_pS=0; 
-	
+      int tagdecision=0, catt=0, Ntracks=0;
+      double pnsum=0.5, pnsum_a=0.5, pnsum_b=0.5, rnet=0;
+      std::vector<double> NNinputs(10),pn;
+      std::vector<int> itag;
+      for( int j=0; j<6; ++j ) {pn.push_back(0.50); itag.push_back(0);}
+      if(useDV) goto fill; //skip useless calculation
+      for (int i=0; i<N; i++) { 
+	bool dup=false;
+	for (int j=i+1; j<N; j++) if(P[i]==P[j]) dup= true;
+	if (!dup) if(ipPU[i]>IPPU_cut) if(distPhi[i]>distPhi_cut) ++Ntracks; 
+      }
+
       //- loop over N : select candidate m, e, K ---------------------------->
       for (int i=0; i<N; i++) {
-    
+	bool dup=false;
+	for (int j=i+1; j<N; j++) if(P[i]==P[j]) dup= true;
+	if (dup) continue;
+
 	//Plots of PID//
 	int ismu, muNSH, inHcal, iflag_e, iflag_m, iflag_k;
 	decode((int)PIDfl[i], ismu, muNSH, inHcal, iflag_e, iflag_m, iflag_k );
 
 	//OVERWRITE ID
-	if ( redoPID ){
-	  ID[i] = 211 * ch[i];
-	  if( iflag_e==1 && PIDe[i] > PID_e_cut ) ID[i] = -11 * ch[i];
-	  if( iflag_k==1 && PIDk[i] > PID_k_cut 
-	      &&  PIDk[i]-PIDp[i]   > PID_kp_cut) ID[i] = 321 * ch[i];
-	  if( iflag_m==1 && PIDm[i] > PID_m_cut ) ID[i] = -13 * ch[i];
-	}
-
+	ID[i] = 211 * ch[i];
+	if( iflag_e==1 && PIDe[i] > PID_e_cut ) ID[i] = -11 * ch[i];
+	if( iflag_k==1 && PIDk[i] > PID_k_cut 
+	    &&  PIDk[i]-PIDp[i]   > PID_kp_cut) ID[i] = 321 * ch[i];
+	if( iflag_m==1 && PIDm[i] > PID_m_cut ) ID[i] = -13 * ch[i];
+	
 	//CHEATING:
 	if( cheatID  ) { 
 	  ID[i]=MCID[i];
@@ -273,16 +208,16 @@ void tag( TString froot="none",
 	if(abs(MCID[i])==321&& bFlag[i]==0&& xFlag[i]!=0) ntruekS++;
 
 	//INCLUSIVE PID mode
-	if( muNSH==0 && ismu==1 && PIDm[i] > PID_m_cut ) 
+	if( muNSH==0 && ismu && PIDm[i] > PID_m_cut ) 
 	  if(Pt[i] > Muon_Pt_cut) 
 	    if(P[i] > Muon_P_cut) 
 	      if( ( trtyp[i] == 3 || trtyp[i] == 7 ) && lcs[i]<lcs_m_cut) {
 		ncand_mu++;
+		  if(DBG) cout<<"accepted muoncand "<<endl;
 		if( Pt [i]> ptmaxm ) { //Pt ordering
 		  bmuon = true;
 		  imuon = i;
 		  ptmaxm = Pt[i];
-		  if(DBG) cout<<"accepted muoncand pt="<<ptmaxm<<endl;
 		}
 	      }
 	// selects OS electron tag      
@@ -294,51 +229,55 @@ void tag( TString froot="none",
 		  if( EOverP[i] > Ele_EoverP_cut || EOverP[i]<-100 ) 
 		    if( veloch[i]>VeloChargeMin && veloch[i]<VeloChargeMax ){ 
 		      ncand_ele++;
+		      if(DBG) cout<<"accepted elecand "<<endl;
 		      if( Pt[i] > ptmaxe ) { //Pt ordering
 			bele = true;
 			iele = i;
 			ptmaxe = Pt[i];
-			if(DBG) cout<<"accepted elecand pt="<<ptmaxe<<endl;
 		      }
 		    }
 
 	// selects OS kaon tag
 	if( PIDk[i]!=0 && PIDk[i]>PID_k_cut && 
-	    PIDk[i]-PIDp[i]>PID_kp_cut ) 
+	    PIDk[i]-PIDp[i]>PID_kp_cut )  
 	  if(Pt[i] > Kaon_Pt_cut)
-	    if(P[i]  > Kaon_P_cut)
+	    if(P[i]  > Kaon_P_cut) {
+	      hrefit1->Fill( ip_r[i]/iperr_r[i] - IPsig );
 	      if(IPsig > Kaon_IP_cut) 
 		if(fabs(ip[i])< Kaon_IPRAW_cut) 
 		  if(tsal[i]>Kaon_ghost_prob_cut)
 		    if(( trtyp[i]==4 && lcs[i]<lcs_k_ups_cut  ) ||
 		       ((trtyp[i]==3 || trtyp[i]==7 ) && lcs[i]<lcs_k_long_cut)){
 		      ncand_k++;
+		      if(DBG) cout<<"accepted kcand "<<endl;
 		      if( Pt[i] > ptmaxk ) { //Pt ordering
 			bkaon = true;
 			ikaon = i;
 			ptmaxk = Pt[i]; 
-			if(DBG) cout<<"accepted kcand pt="<<ptmaxk<<endl;
 		      }
 		    }
+	    }
 	// selects SS kaon tag
 	if( isBs ) { 
 	  if( PIDk[i]!=0 && PIDk[i]> PID_kS_cut && 
 	      PIDk[i]-PIDp[i]> PID_kpS_cut )
 	    if(Pt[i] > KaonSame_Pt_cut) 
 	      if(P[i]> KaonSame_P_cut) 
-		if(IPsig < KaonSame_IP_cut)
-		  if(dphi < KaonSame_Phi_cut)
-		    if(deta < KaonSame_Eta_cut)
-		      if(dQ_asKaon < KaonSame_dQ_cut)
+		if(dphi < KaonSame_Phi_cut)
+		  if(deta < KaonSame_Eta_cut)
+		    if(dQ_asKaon < KaonSame_dQ_cut) {
+		      hrefit2->Fill( ip_r[i]/iperr_r[i] - IPsig );
+		      if(IPsig < KaonSame_IP_cut)
 			if( lcs[i] < lcs_kS_cut ) {
 			  ncand_kS++;
+			  if(DBG) cout<<"accepted kScand"<<endl;
 			  if( Pt[i] > ptmaxkS ) { //Pt ordering
 			    bkaonS = true;
 			    ikaonS = i;
 			    ptmaxkS = Pt[i];
-			    if(DBG) cout<<"accepted kScand pt="<<ptmaxkS<<endl;
 			  }
 			}
+		    }
 	}	
 	// selects SS pion tag
 	if( isBd || isBu ) {
@@ -355,19 +294,18 @@ void tag( TString froot="none",
 		      if(dQ_asPion < PionSame_dQ_cut ) 
 			if((trtyp[i]==3 || trtyp[i]==7) && lcs[i]<lcs_pS_cut){
 			  ncand_pS++;
+			  if(DBG) cout<<"accepted pScand "<<endl;
 			  if( Pt[i] > ptmaxpS ) { //Pt ordering
 			    bpionS = true;
 			    ipionS = i;
 			    ptmaxpS = Pt[i];
-			    if(DBG) cout<<"accepted pScand pt="<<ptmaxpS<<endl;
 			  }
 			}
 	}
       } //end of loop on parts <---
       //extra cut for pions SS candidates
       if(bpionS) {
-	double dQp=calc_dQ(BSpart,
-			   build4V(P[ipionS],Pt[ipionS],phi[ipionS],211));
+	double dQp=calc_dQ(BSpart,build4V(P[ipionS],Pt[ipionS],phi[ipionS],211));
 	if( dQp > PionSame_dQ2_cut ) {bpionS=false; ipionS=0;}
       }
 
@@ -376,8 +314,6 @@ void tag( TString froot="none",
       if(fabs(WeigVch) < MinimumVCharge ) WeigVch = 0;
 
       //--- itag is the individual B-flavour guess of each separate tagger:
-      std::vector<int> itag;
-      for( int j=0; j<6; ++j ) itag.push_back(0);
       if( bmuon ) itag[1]= (int) -ch[imuon];
       if( bele  ) itag[2]= (int) -ch[iele];
       if( bkaon ) itag[3]= (int) -ch[ikaon];
@@ -390,7 +326,7 @@ void tag( TString froot="none",
       //************************************
       //  fill NNet Branch and NNinputs    *
       //************************************
-      if( NNetTrain != "" ) {
+      if( NNetTrain != "none" ) {
 	int tag=0, j=0, thisncand=0;
 	if(NNetTrain == "mu") { j=imuon;  tag=itag[1]; thisncand= (int)ncand_mu; }
 	if(NNetTrain == "e")  { j=iele;   tag=itag[2]; thisncand= (int)ncand_ele;}
@@ -400,7 +336,7 @@ void tag( TString froot="none",
 	if(tag) {
 	  iscorrect = (tag == TrueTag) ? 1 : 0 ; 
 	  std::vector<double> NNinputs(10);
-	  NNinputs.at(0) = N;
+	  NNinputs.at(0) = Ntracks;
 	  NNinputs.at(1) = BSpart.Vect().Perp();
 	  NNinputs.at(2) = P[j];
   	  NNinputs.at(3) = Pt[j];
@@ -432,12 +368,8 @@ void tag( TString froot="none",
 
   
       //--- Combine tags: -----------------------------------------
-      double pnsum_a, pnsum_b, rnet=0;
-      std::vector<double> NNinputs(10),pn;
-      for( int j=0; j!=6; j++ ) pn.push_back(0.50);
-      
       if(bmuon) {      
-	NNinputs.at(0) = N;
+	NNinputs.at(0) = Ntracks;
 	NNinputs.at(1) = BSpart.Vect().Perp();
 	NNinputs.at(2) = P[imuon];
 	NNinputs.at(3) = Pt[imuon];
@@ -452,7 +384,7 @@ void tag( TString froot="none",
       }
 
       if(bele) {
-	NNinputs.at(0) = N;
+	NNinputs.at(0) = Ntracks;
 	NNinputs.at(1) = BSpart.Vect().Perp();
 	NNinputs.at(2) = P[iele];
 	NNinputs.at(3) = Pt[iele];
@@ -465,7 +397,7 @@ void tag( TString froot="none",
       }
 
       if(bkaon) {
-	NNinputs.at(0) = N;
+	NNinputs.at(0) = Ntracks;
 	NNinputs.at(1) = BSpart.Vect().Perp();
 	NNinputs.at(2) = P[ikaon];
 	NNinputs.at(3) = Pt[ikaon];
@@ -483,7 +415,7 @@ void tag( TString froot="none",
 	double ang = asin(Pt[ikaonS]/P[ikaonS]);
 	double deta= log(tan(BSpart.Theta()/2.))-log(tan(ang/2.));
 	double dphi= fabs(phi[ikaonS]-BSpart.Phi()); if(dphi>3.1415)dphi=6.283-dphi;
-	NNinputs.at(0) = N;
+	NNinputs.at(0) = Ntracks;
 	NNinputs.at(1) = BSpart.Vect().Perp();
 	NNinputs.at(2) = P[ikaonS];
 	NNinputs.at(3) = Pt[ikaonS];
@@ -506,7 +438,7 @@ void tag( TString froot="none",
 	double ang = asin((Pt[ipionS])/(P[ipionS]));
 	double deta= log(tan(BSpart.Theta()/2.))-log(tan(ang/2.));
 	double dphi= fabs(phi[ipionS]-BSpart.Phi()); if(dphi>3.1415)dphi=6.283-dphi;
-	NNinputs.at(0) = N;
+	NNinputs.at(0) = Ntracks;
 	NNinputs.at(1) = BSpart.Vect().Perp();
 	NNinputs.at(2) = P[ipionS];
 	NNinputs.at(3) = Pt[ipionS];
@@ -545,9 +477,6 @@ void tag( TString froot="none",
       }
 
       //make decision
-      int tagdecision=0, catt=0;
-      pnsum_a= 0.50;             //hypothesis of truetag=+1
-      pnsum_b= 0.50;             //hypothesis of truetag=-1
       for( int i = 1; i != 6; i++ ) {
 	double mtag = itag[i];
 	pnsum_a *= ((1-mtag)/2+mtag* pn[i] ); // p
@@ -557,7 +486,7 @@ void tag( TString froot="none",
       }      
       if(pnsum_a > pnsum_b) tagdecision = +1;
       if(pnsum_a < pnsum_b) tagdecision = -1;
-      double pnsum = max(pnsum_a,pnsum_b) /(pnsum_a + pnsum_b);
+      pnsum = max(pnsum_a,pnsum_b) /(pnsum_a + pnsum_b);
 
       //throw away poorly significant tags
       if(pnsum < ProbMin) {
@@ -577,6 +506,7 @@ void tag( TString froot="none",
      
       //****************************
       //Fill standard control plots
+    fill:
 #include "tag.hfill.h"
 
       
@@ -585,7 +515,7 @@ void tag( TString froot="none",
     f->Close();
   }//end of files
     
-  if(NNetTrain=="") {
+  if(NNetTrain=="none") if(!useDV) {
     cout<<"\nFraction in event sample of true particles from B:"<<endl;
     cout<<"mu= "<<float(ntruemu)/nsele*100
 	<< "%\t (sel. as tagger:"<<float(ntruemutag)/nsele*100<<"%)"<<endl;
@@ -606,15 +536,16 @@ void tag( TString froot="none",
   }
 
   //*********Fill some other event histos:
-  calculateOmega (hright, hwrong, homega);
+  heffec = calculateEffEff (hright, hwrong, direction);
 
   ///////////////////////////////////////////////////////////////////////
   double tp=0; 
-  std::vector<double> dummy(10); Classify("TMVA", "finalize", dummy, tp);
+  std::vector<double> dummy(10); 
+  Classify("TMVA", "finalize", dummy, tp);
   fhisto.Write(); fhisto.Close();
 
   //*********Dump things:
-  if(NNetTrain=="") {
+  if(NNetTrain=="none") {
     tp = PrintPerformance();
   } else {
     if(mlptype=="TMVA") TMVATuning( NNetTrain );
@@ -623,12 +554,7 @@ void tag( TString froot="none",
   }
   if(useDV) cout<<"*** Warning: result from DaVinci is shown only!"<<endl;
 
-  gROOT->cd(); 
-  if(NNetTrain=="") gROOT->ProcessLine(".x tag.C");
-  else if(mlptype=="TMVA") gROOT->ProcessLine(".x TMVAGui.C");
-
-  cout<<endl;
-  return;
+  return 0;
 }
 ////////// THE END
 
