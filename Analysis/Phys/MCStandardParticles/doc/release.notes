@@ -6,6 +6,13 @@
 !
 !-----------------------------------------------------------------------------
 
+!====================== MCStandardParticles v1r3 2010-03-03 ==================
+
+! 2010-03-03 - Juan PALACIOS
+ - cmt/requirements
+  . Use GaudiPolicy
+  . Increase version to v1r3
+
 !====================== MCStandardParticles v1r2 2006-10-04 ==================
 
 ! 2006-09-29 - Juan PALACIOS
