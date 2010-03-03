@@ -1,4 +1,4 @@
-// $Id: GenericParticle2PVRelator.h,v 1.15 2009-09-03 15:18:19 jpalac Exp $
+// $Id: GenericParticle2PVRelator.h,v 1.16 2010-03-03 13:06:23 jpalac Exp $
 #ifndef GENERICPARTICLE2PVRELATOR_H 
 #define GENERICPARTICLE2PVRELATOR_H 1
 
@@ -86,16 +86,12 @@ public:
   }
 
   const Particle2Vertex::LightWTable relatedPVs(const LHCb::Particle* particle,
-                                               const std::string& PVLocation) const
+                                                const std::string& PVLocation) const
   {
-    LHCb::RecVertex::Container* PVs = get<LHCb::RecVertices>( PVLocation );
+    LHCb::RecVertex::Range PVs = get<LHCb::RecVertex::Range>( PVLocation );
     
-    if (0!=PVs) {
-      return relatedPVs(particle, PVs->begin(), PVs->end() );
-    } else {
-      Error("No LHcb::RecVertex::Container found at "+PVLocation).ignore();
-    }
-    return Particle2Vertex::LightWTable();
+    return relatedPVs(particle, PVs.begin(), PVs.end() );
+
   }
 
   virtual const LHCb::VertexBase* relatedPV(const LHCb::Particle* particle,
@@ -125,14 +121,8 @@ public:
   virtual const LHCb::VertexBase* relatedPV(const LHCb::Particle* particle,
                                             const std::string& PVLocation) const
   {
-    LHCb::RecVertex::Container* PVs = get<LHCb::RecVertices>( PVLocation );
-    
-    if (0!=PVs) {
-      return relatedPV(particle, PVs->begin(), PVs->end() );
-    } else {
-      Error("No LHcb::RecVertex::Container found at "+PVLocation).ignore();
-    }
-    return 0;
+    LHCb::RecVertex::Range PVs = get<LHCb::RecVertex::Range>( PVLocation );    
+    return relatedPV(particle, PVs.begin(), PVs.end() );
   }
   
 
