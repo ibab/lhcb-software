@@ -3,7 +3,7 @@
 
      @author M.Frank
 """
-__version__ = "$Id: BrunelOnline.py,v 1.19 2010-02-19 18:35:17 frankb Exp $"
+__version__ = "$Id: BrunelOnline.py,v 1.20 2010-03-03 15:08:46 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 import os
@@ -86,7 +86,8 @@ def patchBrunel(true_online_version):
   brunel.CondDBtag = "sim-20090112"
   brunel.WriteFSR  = False # This crashes Jaap's stuff
   brunel.Simulation = True
-
+  brunel.Histograms = 'Online'
+  
   if true_online_version:
     brunel.OutputLevel    = 4
     brunel.PrintFreq      = -1
