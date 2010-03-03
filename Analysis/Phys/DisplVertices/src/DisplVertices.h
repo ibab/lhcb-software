@@ -97,7 +97,7 @@ private:
   std::string Print( HepMC::FourVector );
 
   StatusCode GetMCInfos();
-  StatusCode GetMCPrey( const LHCb::Particle * );
+  bool GetMCPrey( const LHCb::Particle * );
   void GetMCStable( const LHCb::MCVertex *, std::string );
   void GetMCStable( const LHCb::MCVertex * );
   void GetMCStable( const LHCb::MCParticle *, const Gaudi::XYZPoint &, 
@@ -213,6 +213,7 @@ private:
   double m_RMin;              ///< Min dist to the z axis
   double m_RMax;              ///< Max dist to the z axis
   double m_MaxChi2OvNDoF;     ///< Max chi2 of a vertex
+  double m_PurityMin;         ///< Min purity requested, MC set on
   double m_MuonpT;            ///< Muon with a pT of min m_MuonpT
   double m_DocaMax;           ///< Max distance of closest approach
   unsigned int m_NbCands;     ///< Min nb of desired candidates

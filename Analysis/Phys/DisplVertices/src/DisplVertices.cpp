@@ -46,7 +46,7 @@ DECLARE_ALGORITHM_FACTORY( DisplVertices );
 // Standard constructor, initializes variables
 //=============================================================================
 DisplVertices::DisplVertices( const std::string& name,
-                ISvcLocator* pSvcLocator)
+                              ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
     , m_pLinker()
     , m_vFit(0)
@@ -68,8 +68,7 @@ DisplVertices::DisplVertices( const std::string& name,
     , MCPV(0)
     , m_PreyID(0)
     , m_MotherPreyID(0)
-    , m_IsPreyFromMother(false)
-{
+    , m_IsPreyFromMother(false){
   declareProperty("MC", m_MC = false );//if work in a MC gen sample
   declareProperty("HepMC", m_HepMC = "" );//if work in a HepMC gen sample
   declareProperty("SaveOnTES", m_SaveonTES = true );
@@ -88,6 +87,7 @@ DisplVertices::DisplVertices( const std::string& name,
   declareProperty("DistMax", m_DistMax = 10.* m );//Check value.
   declareProperty("MaxChi2OvNDoF", m_MaxChi2OvNDoF = 1000. );
   declareProperty("MuonpT", m_MuonpT = -1*GeV );
+  declareProperty("PurityMin", m_PurityMin = 100 );
   declareProperty("DocaMax", m_DocaMax = 0.1 * mm);//Simulate resolution
   declareProperty("NbTracks", m_nTracks = 1 );//~ nb B meson max # of tracks 5
   declareProperty("RCutMethod", m_RCut = "FromUpstreamPV" );
@@ -184,7 +184,7 @@ StatusCode DisplVertices::initialize() {
 	  << endmsg;
     m_RemFromRFFoil = false;
   }
-
+  if( m_PurityMin < 1.1 ) m_MC = true;
 
   info() << "--------------------------------------------------------"<<endmsg;
   info() << "DisplVertices will select " << m_Prey 
@@ -270,14 +270,13 @@ StatusCode DisplVertices::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode DisplVertices::execute() {
+StatusCode DisplVertices::execute(){
 
   ++m_nEvents;
   if( msgLevel( MSG::DEBUG ) )
     debug() << "==> Execute the DisplVertices algorithm, event "<< m_nEvents 
-	    << endmsg;
+            << endmsg;
   setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
-  m_ok = false ;
   Tuple tuple = nTuple("DisplVertices"); //defines a tuple to save infos
 
   //------------------Some Studies------------------
@@ -330,7 +329,7 @@ StatusCode DisplVertices::execute() {
       Particles* BL = get<Particles>( m_BLLoc );      
       m_BeamLine = *(BL->begin());
       if( msgLevel(MSG::DEBUG) )
-	debug()<<"Beam line position "<< m_BeamLine->referencePoint()
+        debug()<<"Beam line position "<< m_BeamLine->referencePoint()
 	       <<" direction " << m_BeamLine->momentum() << endmsg;
     } else {
       warning()<<"No Beam line found at "<< m_BLLoc << endmsg;
@@ -405,10 +404,11 @@ StatusCode DisplVertices::execute() {
         abs(zpos) > m_DistMax || sumpt < m_SumPt || chi > m_MaxChi2OvNDoF ||
         muon < m_MuonpT ){ 
       if( msgLevel( MSG::DEBUG ) )
-        debug()<<"Particle do not pass the cuts"<< endmsg; continue; }
+        debug()<<"Particle do not pass the cuts"<< endmsg; 
+      continue; 
+    }
+    if( m_MC && !GetMCPrey( p ) ) continue;
 
-    Cands.push_back( p );
-    ++m_nPreys;
     //Save infos in tuple !
     if( m_SaveTuple ){
       nboftracks.push_back( nbtrks ); chindof.push_back( chi );
@@ -423,13 +423,10 @@ StatusCode DisplVertices::execute() {
       indets.push_back( indet ); 
     }
 
-    if( !m_MC ){ 
-      setFilterPassed(true); 
-      m_ok = true;
-      desktop()->keep( p->clone() );
-    } else {  //link to MC Prey, it is good ?
-      if( !GetMCPrey( p ) ) return StatusCode::FAILURE;
-    }
+    Particle * clone = new Particle( *p );
+    clone->setParticleID( m_PreyID );
+    Cands.push_back( desktop()->keep( clone ) );
+
   }//  <--- end of Prey loop
 
   if( Cands.size() < m_NbCands ){
@@ -437,6 +434,9 @@ StatusCode DisplVertices::execute() {
       debug() << "Insufficent number of candidates !"<< endmsg;
     return StatusCode::SUCCESS;
   }
+  setFilterPassed(true); 
+  m_nPreys += Cands.size();
+
   if( msgLevel( MSG::DEBUG ) )
     debug() << "Nb of " << m_Prey <<" candidates "<< Cands.size() << endmsg;
 
@@ -1654,7 +1654,7 @@ StatusCode DisplVertices::GetMCInfos() {
 //============================================================================
 // Get purity and number of associated tracks of prey
 //============================================================================
-StatusCode DisplVertices::GetMCPrey( const Particle * p ){
+bool DisplVertices::GetMCPrey( const Particle * p ){
   
   //Compute "purity" of the prey. Purity is defined as the number of
   //associated tracks from a prey over the total number of 
@@ -1696,28 +1696,17 @@ StatusCode DisplVertices::GetMCPrey( const Particle * p ){
     debug()<< m_Prey <<" purity " << purity 
 	   <<" Nb of associated trks "<< nbassfromaPrey <<endmsg;
 
-  if( purity < m_maxunpure ) {
+  //if( purity < m_maxunpure ) {
     //Study the composition
     //StudyPreyComposition( p, "Unpure" );
-  }
+  //}
 
-  if( purity > m_maxmixed ) {
-    setFilterPassed(true); m_ok = true;  
-    plot( nbassfromaPrey, "PreyNbofTrueMCTrk", 0, 20 );
-    plot( p->measuredMass()/1000., "PreyMass", 0., 80. );
+  //if( purity > m_maxmixed ){
+  //plot( nbassfromaPrey, "PreyNbofTrueMCTrk", 0, 20 );
+  //plot( p->measuredMass()/1000., "PreyMass", 0., 80. );
 
     //Study the composition
     //StudyPreyComposition( p, "Pure" );
-
-    //Save Particle in TES !
-    if( m_SaveonTES ){
-      Particle * part = new Particle( *p );
-      //*part = *p;
-      const ParticleID id = m_PreyID;
-      part->setParticleID( id );//Set the ID
-//       m_outputParticles->insert( part );
-      desktop()->keep( part );
-    }
 
     //Resolution of the prey reconstructed vertex
     //if( p->endVertex()->position().z() > 200. ) 
@@ -1734,8 +1723,12 @@ StatusCode DisplVertices::GetMCPrey( const Particle * p ){
 
     //Study dispersion of Prey tracks :
     //StudyDispersion( p );
-  }
-  return StatusCode::SUCCESS;
+  //} 
+
+  if( m_PurityMin < 1.01 && purity < m_PurityMin ){
+    return false;  
+  } else return true;
+  return true;
 }
 
 //============================================================================
@@ -3218,9 +3211,9 @@ StatusCode DisplVertices::SaveTrigInfinTuple(){
   tuple->column( "Higgs", higgs );
 
   //Was a prey reconstructed ?
-  tuple->column( "Reco", m_ok );
-  if( msgLevel(MSG::DEBUG) && m_ok ) 
-    debug()<<"Event has a reconstructed prey !"<< endmsg;
+  //tuple->column( "Reco", m_ok );
+  //if( msgLevel(MSG::DEBUG) && m_ok ) 
+  //debug()<<"Event has a reconstructed prey !"<< endmsg;
  
   //Get L0 info and save decision in tuple
   if (!exist<L0DUReport>( L0DUReportLocation::Default )){

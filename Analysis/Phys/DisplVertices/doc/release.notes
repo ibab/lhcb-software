@@ -5,6 +5,8 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-03-03 - Neal Gauvin
+ - Fix important bug in DisplVertices
 
 ! 2010-02-23 - Neal Gauvin
  - Add new algorithm Calibration to simulate the beam calibration
