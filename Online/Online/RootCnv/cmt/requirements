@@ -17,12 +17,12 @@ apply_pattern reflex_dictionary dictionary=RootCnv \
 library     RootCnv ../src/*.cpp ../$(tag)/dict/RootCnv/*.cpp
 # macro_append  RootCnv_dependencies RootCnvGen
 apply_pattern component_library library=RootCnv
-# Hack for Gaudi v21r1 to link dictionary on windows
 
 private
 use GaudiExamples v*
+use LHCbSys v*
 set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
 macro_append cppflags " -O0 "
 
-macro_append ROOT_linkopts " -lCintex -lRIO -lMathCore " target-winxp " libCintex.lib libRIO.lib libMathCore.lib "
+macro_append ROOT_linkopts " -lCintex -lRIO -lTree -lTreePlayer -lMathCore " target-winxp " libCintex.lib libRIO.lib libMathCore.lib "
 macro_append ROOT_cppflags '' target-winxp '-FI"$(ROOTSYS)/include/w32pragma.h"'

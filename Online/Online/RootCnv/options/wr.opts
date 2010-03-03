@@ -4,8 +4,8 @@ ApplicationMgr.TopAlg      = { "WriteAlg", "ReadAlg" };
 EventSelector.PrintFreq    = 1;
 ApplicationMgr.EvtSel      = "NONE"; // do not use any event input
 RootDst.ItemList           = { "/Event#999" } ;
-RootDst.Output             = "DATAFILE='PFN:data/ROOTIO.dst' SVC='RootCnvSvc' OPT='RECREATE'";
-RootDst.Output             = "DATAFILE='PFN:castor:/castor/cern.ch/user/f/frankb/data/ROOTIO.dst' SVC='RootCnvSvc' OPT='RECREATE'";
+RootDst.Output             = "DATAFILE='PFN:castor:/castor/cern.ch/user/f/frankb/data/ROOTIO2.dst' SVC='RootCnvSvc' OPT='RECREATE'";
 ApplicationMgr.EvtMax      = 100000;
-RootDst.Output             = "DATAFILE='PFN:data/ROOTIO_2.dst' SVC='RootCnvSvc' OPT='RECREATE'";
-ApplicationMgr.EvtMax      = 600;
+//RootDst.Output             = "DATAFILE='PFN:data/ROOTIO_2.dst' SVC='RootCnvSvc' OPT='RECREATE'";
+RootDst.Output             = "DATAFILE='PFN:data/ROOTIO.dst' SVC='RootCnvSvc' OPT='RECREATE'";
+//ApplicationMgr.EvtMax      = 600;

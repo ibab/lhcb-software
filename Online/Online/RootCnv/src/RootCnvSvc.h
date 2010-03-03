@@ -1,4 +1,4 @@
-// $Id: RootCnvSvc.h,v 1.1 2010-01-11 17:14:49 frankb Exp $
+// $Id: RootCnvSvc.h,v 1.2 2010-03-03 14:30:47 frankb Exp $
 //====================================================================
 //	RootCnvSvc definition
 //--------------------------------------------------------------------
@@ -7,25 +7,30 @@
 //====================================================================
 #ifndef GAUDIROOT_GAUDIROOTCNVSVC_H
 #define GAUDIROOT_GAUDIROOTCNVSVC_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootCnvSvc.h,v 1.1 2010-01-11 17:14:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootCnvSvc.h,v 1.2 2010-03-03 14:30:47 frankb Exp $
 
 // Framework include files
 #include "GaudiKernel/ConversionSvc.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/ClassID.h"
 
+#include <map>
+
 // Forward declarations
 class IDataManagerSvc;
 class IIncidentSvc;
 class TClass;
 
+/*
+ * Gaudi namespace declaration
+ */
 namespace Gaudi {
+
+  // Forward declarations
   class IIODataManager;
   class IDataConnection;
   class RootDataConnection;
-}
 
-namespace Gaudi {
   /** @class RootCnvSvc RootCnvSvc.h src/RootCnvSvc.h
    *
    * Description:
@@ -38,7 +43,9 @@ namespace Gaudi {
    */
   class RootCnvSvc : public ConversionSvc  {
   protected:
+    typedef std::map<std::string,int> AccessList;
     typedef std::vector<DataObject*> Objects;
+
     /// Services needed for proper operation: Data Manager
     IDataManagerSvc*            m_dataMgr;
     /// Reference to the I/O data manager
@@ -49,19 +56,34 @@ namespace Gaudi {
     Gaudi::RootDataConnection*  m_current;
     /// Flag to enable incidents on FILE_OPEN
     bool                        m_incidentEnabled;
+    /// Collect read statistics and print it at on finalize
+    bool                        m_statistics;
     /// Share files ? If set to YES, files will not be closed on finalize
     std::string                 m_shareFiles;
+    /// Property: ROOT section name
     std::string                 m_section;
-    /// Objects to be saved to data file
-    Objects                     m_objects;
-
-    TClass*                     m_classRefs;
-    TClass*                     m_classDO;
+    /// Property: Switch between reference type (in same tree (default) or not)
     int                         m_refTypes;
+    /// Property: ROOT TTree cache size
+    int                         m_cacheSize;
+    /// Property: ROOT TTree number of learn entries
+    int                         m_learnEntries;
+    /// Property: AutoFlush parameter for ROOT TTree (Number of events between auto flushes)
+    int                         m_autoFlush;
+    /// Property: Enable TTree IOperfStats if not empty; otherwise perf stat file name
+    std::string                 m_ioPerfStats;
+    /// Access list, used if statistics about accessed leaves is required.
+    AccessList                  m_accesses;
+    /// TClass pointer to reference class
+    TClass*                     m_classRefs;
+    /// TClass pointer to DataObject class
+    TClass*                     m_classDO;
 
+    /// Helper: Get TClass for a given DataObject pointer
     TClass* getClass(DataObject* pObject);
 
   public:
+
     /// Standard constructor
     RootCnvSvc(const std::string& name, ISvcLocator* svc);
 
@@ -89,6 +111,8 @@ namespace Gaudi {
     StatusCode connectDatabase(const std::string& dataset, int mode, RootDataConnection** con);
 
   public:
+
+    /// Access default section (Tree) name
     const std::string& section() const { return m_section; }
 
     /// ConversionSvc overload: initialize Db service

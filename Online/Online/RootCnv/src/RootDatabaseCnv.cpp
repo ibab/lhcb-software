@@ -1,4 +1,4 @@
-// $Id: RootDatabaseCnv.cpp,v 1.1 2010-01-11 17:14:49 frankb Exp $
+// $Id: RootDatabaseCnv.cpp,v 1.2 2010-03-03 14:30:47 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootDatabaseCnv
@@ -40,6 +40,7 @@ RootDatabaseCnv::createObj(IOpaqueAddress* pAddr, DataObject*& refpObj)  {
   StatusCode status = StatusCode::FAILURE;
   MsgStream log(msgSvc(), "RootDatabaseCnv");
   if ( pAddr ) {
+    RootDataConnection* con = 0;
     IRegistry* pReg = pAddr->registry();
     const unsigned long* ipars = pAddr->ipar();
     const std::string*   spars = pAddr->par();
@@ -54,6 +55,7 @@ RootDatabaseCnv::createObj(IOpaqueAddress* pAddr, DataObject*& refpObj)  {
     status = StatusCode::SUCCESS;
     std::string cntName = containerName(pReg);
     if ( create ) {
+      m_dbMgr->connectDatabase(fname,IDataConnection::CREATE,&con).ignore();
       status = saveDescription(fname, cntName, "File containing statistics results.","", clid);
       if ( status.isSuccess() )  {
         log << MSG::INFO << "Opened NEW Database file:"
@@ -61,6 +63,7 @@ RootDatabaseCnv::createObj(IOpaqueAddress* pAddr, DataObject*& refpObj)  {
       }
     }
     else if ( update )  {
+      m_dbMgr->connectDatabase(fname,IDataConnection::UPDATE,&con).ignore();
       status = saveDescription(fname, cntName, "File containing statistics results.","", clid);
       if ( status.isSuccess() )  {
         log << MSG::INFO << "Connect to existing Database file:"
@@ -68,14 +71,14 @@ RootDatabaseCnv::createObj(IOpaqueAddress* pAddr, DataObject*& refpObj)  {
       }
     }
     else if ( read ) {
+      status = m_dbMgr->connectDatabase(fname,IDataConnection::READ,&con);
       if ( status.isSuccess() )  {
-	RootDataConnection* con = 0;
         log << MSG::INFO << "Connect to existing Database file:"
-            << fname << " as " << oname << " for READ" << endmsg;
-	m_dbMgr->connectDatabase(fname, IDataConnection::READ, &con).ignore();
+	    << fname << " as " << oname << " for READ" << endmsg;
       }
     }
     else if ( recrea )  {
+      m_dbMgr->connectDatabase(fname,IDataConnection::RECREATE,&con).ignore();
       status = saveDescription(fname, cntName, "File containing statistics results.","", clid);
       if ( status.isSuccess() )  {
         log << MSG::INFO << "Recreate Database file:" << fname << " as " << oname << endmsg;

@@ -1,16 +1,17 @@
-// $Id: RootAddress.h,v 1.2 2010-01-13 18:34:21 frankb Exp $
+// $Id: RootAddress.h,v 1.3 2010-03-03 14:30:47 frankb Exp $
 //====================================================================
 //	RootAddress.h
 //--------------------------------------------------------------------
 //
 //	Author     : M.Frank
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootAddress.h,v 1.2 2010-01-13 18:34:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootAddress.h,v 1.3 2010-03-03 14:30:47 frankb Exp $
 #ifndef ROOTCNV_RootAddress_H
 #define ROOTCNV_RootAddress_H
 
 // Framework include files
 #include "GaudiKernel/GenericAddress.h"
+#include "RootDataConnection.h"
 #include "RootSelect.h"
 
 class TTree;
@@ -44,7 +45,7 @@ namespace Gaudi {
 		 unsigned long ip1=0,
 		 unsigned long ip2=0)
       : GenericAddress(svc,clid,p1,p2,ip1,ip2), select(0), connection(0), section(0)    {}
-  
+
     /// Standard Destructor
     virtual ~RootAddress() {
       if ( select ) delete select;

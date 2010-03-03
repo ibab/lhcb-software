@@ -1,4 +1,4 @@
-// $Id: RootNTupleCnv.cpp,v 1.2 2010-01-13 18:34:21 frankb Exp $
+// $Id: RootNTupleCnv.cpp,v 1.3 2010-03-03 14:30:47 frankb Exp $
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  RootNTupleCnv
@@ -253,6 +253,9 @@ RootNTupleCnv::createObj(IOpaqueAddress* pAddr, DataObject*& refpObject)   {
 	  }
 	}
 	if ( status.isSuccess() )  {
+	  MsgStream err(msgSvc(),"NTupleCnv");
+	  err << MSG::DEBUG << "Created N-tuple with description:"
+	      << par_val << endl;
 	  rpA->connection = con;
 	  rpA->section = tree;
 	  refpObject  = nt;

@@ -1,4 +1,4 @@
-// $Id: RootCnvSvc.cpp,v 1.2 2010-01-13 18:34:21 frankb Exp $
+// $Id: RootCnvSvc.cpp,v 1.3 2010-03-03 14:30:47 frankb Exp $
 //====================================================================
 //	RootCnvSvc implementation
 //--------------------------------------------------------------------
@@ -35,6 +35,7 @@
 // ROOT include files
 #include "TROOT.h"
 #include "TClass.h"
+#include "TTree.h"
 #include "TBranch.h"
 
 using namespace std;
@@ -94,6 +95,11 @@ RootCnvSvc::RootCnvSvc(CSTR nam, ISvcLocator* svc)
   declareProperty("EnableIncident",   m_incidentEnabled  = false);
   declareProperty("Section",          m_section = "E");
   declareProperty("RefTypes",         m_refTypes = 1);
+  declareProperty("CacheSize",        m_cacheSize = 10000000);
+  declareProperty("AutoFlush",        m_autoFlush = 100);
+  declareProperty("LearnEntries",     m_learnEntries = 10);
+  declareProperty("IOPerfStats",      m_ioPerfStats);
+  declareProperty("ReadStatistics",   m_statistics = false);
 }
 
 // Small routine to issue exceptions
@@ -129,13 +135,22 @@ StatusCode RootCnvSvc::initialize()  {
   if ( 0 == m_classRefs )
     return error("Unable to load class description for ObjectRefs");
   //gDebug = 2;
+  m_accesses.clear();
+  m_accesses["LoadTree"] = 0;
   return S_OK;
 }
 
 /// Finalize the Db data persistency service
 StatusCode RootCnvSvc::finalize()    {
+  MsgStream log(msgSvc(), name());
+  if ( m_statistics ) {
+    log << MSG::ALWAYS << "====================== Access list content:" << m_accesses.size() << endmsg;
+    for(AccessList::const_iterator a=m_accesses.begin(); a!=m_accesses.end();++a) {
+      log << MSG::ALWAYS << left << setw(40) << (*a).first+":" << right << setw(8) << (*a).second << endmsg;
+    }
+  }
+  m_accesses.clear();
   if ( m_ioMgr )  {
-    MsgStream log(msgSvc(), name());
     if ( ::toupper(m_shareFiles[0]) != 'Y' )  {
       IIODataManager::Connections cons = m_ioMgr->connections(this);
       for(IIODataManager::Connections::iterator i=cons.begin(); i != cons.end(); ++i)  {
@@ -241,14 +256,16 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
   try {
     IDataConnection* c = m_ioMgr->connection(dataset);
     bool fire_incident = false;
+    bool enable_stats = false;
     if ( !c )  {
-      auto_ptr<IDataConnection> connection(new RootDataConnection(this,dataset));
+      auto_ptr<IDataConnection> connection(new RootDataConnection(this,dataset,m_cacheSize,m_learnEntries));
       StatusCode sc = (mode != IDataConnection::READ)
 	? m_ioMgr->connectWrite(connection.get(),IDataConnection::IoType(mode),"ROOT_TREE")
 	: m_ioMgr->connectRead(false,connection.get());
       c = sc.isSuccess() ? m_ioMgr->connection(dataset) : 0;
       if ( c )   {
 	fire_incident = m_incidentEnabled && (0 != (mode&(IDataConnection::UPDATE|IDataConnection::READ)));
+	enable_stats  = !m_ioPerfStats.empty() && 0 != (mode&IDataConnection::READ);
 	connection.release();
       }
       else  {
@@ -258,6 +275,7 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
     RootDataConnection* pc = dynamic_cast<RootDataConnection*>(c);
     if ( pc )  {
       if ( !pc->isConnected() ) pc->connectRead();
+      if ( enable_stats ) pc->enableStatistics(m_section,m_ioPerfStats);
       *con = pc;
       pc->resetAge();
     }
@@ -319,6 +337,22 @@ StatusCode RootCnvSvc::i__createRep(DataObject* pObj, IOpaqueAddress*& refpAddr)
     if ( b ) {
       b->SetAddress(&pObj);
       DataObjectPush push(pObj);
+      long evt = b->GetEntries();
+      if ( evt>0 && (evt%m_autoFlush)==0 ) {
+	if ( p[1]=="/Event" ) {
+	  if ( (evt%m_autoFlush)==0 ) {
+	    b->GetTree()->SetEntries(evt);
+	  }
+	  if ( evt == m_autoFlush ) {
+	    b->GetTree()->SetAutoFlush(m_autoFlush);
+	    b->GetTree()->SetEntries(evt);
+	    b->GetTree()->OptimizeBaskets(40000000,1.,"D");
+	  }
+	  else if ( (evt%m_autoFlush)==0 ) {
+	    b->GetTree()->FlushBaskets();
+	  }
+	}
+      }
       int nb = b->Fill();
       if ( nb > 1 || (pObj->clID() == CLID_DataObject && nb==1) ) {
 	unsigned long ip[2] = {0,b->GetEntries()-1};
@@ -383,12 +417,33 @@ StatusCode RootCnvSvc::i__createObj(IOpaqueAddress* pA, DataObject*& refpObj)  {
     if ( sc.isSuccess() ) {
       TBranch* b = con->getBranch(m_section,par[1]);
       ipar[0] = (unsigned long)con;
-      if ( b ) {
+      if ( b ) { // ROOT_CONTENT
 	TClass* cl = gROOT->GetClass(b->GetClassName(),kTRUE);
 	if ( cl ) {
+	  TTree* t = b->GetTree();
 	  DataObject* pObj = (DataObject*)cl->New();
 	  b->SetAddress(&pObj);
 	  DataObjectPush push(pObj);
+	  if ( Long64_t(ipar[1]) != t->GetReadEntry() ) {
+#if 0 
+	    cout << "Loading tree " << b->GetName() 
+		 << " entry:" << ipar[1] 
+		 << " " << b->GetReadEntry() 
+		 << " " << t->GetReadEntry() << endl;
+#endif
+	    if ( m_statistics ) ++m_accesses["LoadTree"];
+	    t->LoadTree(Long64_t(ipar[1]));
+	  }
+	  if ( m_statistics ) {
+	    AccessList::iterator i=m_accesses.find(par[1]);
+	    if ( i != m_accesses.end() ) {
+	      ++((*i).second);
+	    }
+	    else {
+	      m_accesses.insert(make_pair(par[1],0));
+	    }
+	  }
+	  //cout << "Loading " << par[1] << " " << par[0] << endl;
 	  int nb = b->GetEntry(ipar[1]);
 	  if ( nb > 1 || (pObj->clID() == CLID_DataObject && nb==1) ) {
 	    refpObj = pObj;
@@ -397,6 +452,7 @@ StatusCode RootCnvSvc::i__createObj(IOpaqueAddress* pA, DataObject*& refpObj)  {
 	  delete pObj;
 	}
       }
+      error("Failed to open container "+par[1]);
     }
   }
   return S_FAIL;
@@ -427,6 +483,7 @@ StatusCode RootCnvSvc::i__fillObjRefs(IOpaqueAddress* pA, DataObject* pObj) {
 	  LinkManager* mgr = pObj->linkMgr();
 	  for(vector<int>::const_iterator i=refs.links.begin(); i!=refs.links.end();++i) {
 	    mgr->addLink(con->getPath(*i),0);
+	    //cout << "Add link " << con->getPath(*i) << endl;
 	  }
 	  for(size_t j=0, n=refs.refs.size(); j<n; ++j)  {
 	    const RootRef& r = refs.refs[j];
@@ -435,6 +492,7 @@ StatusCode RootCnvSvc::i__fillObjRefs(IOpaqueAddress* pA, DataObject* pObj) {
 	    npar[2] = con->getLink(r.link);
 	    nipar[0] = 0;
 	    nipar[1] = r.entry;
+	    //cout << "Add leaf " << npar[1] << " " << npar[0] << endl;
 	    StatusCode sc = addressCreator()->createAddress(r.svc,r.clid,npar,nipar,nPA);
 	    if ( sc.isSuccess() ) {
 	      sc = m_dataMgr->registerAddress(pR,npar[2],nPA);

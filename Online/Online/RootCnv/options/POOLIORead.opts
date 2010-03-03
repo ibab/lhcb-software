@@ -10,8 +10,8 @@ EventSelector.FirstEvent   = 1;
 PoolDbCacheSvc.OutputLevel = 4;
 ChronoStatSvc.OutputLevel  = 4;
 
-EventSelector.Input  = { "DATAFILE='PFN:data/POOLIO.dst'  TYP='POOL_ROOT' OPT='READ'" };
 EventSelector.Input  = { "DATAFILE='PFN:castor:/castor/cern.ch/user/f/frankb/data/POOLIO_2.dst' TYP='POOL_ROOT' OPT='READ'" };
+EventSelector.Input  = { "DATAFILE='PFN:data/POOLIO.dst'  TYP='POOL_ROOT' OPT='READ'" };
 EventSelector.Input  = { "DATAFILE='PFN:castor:/castor/cern.ch/user/f/frankb/data/POOLIO.dst' TYP='POOL_ROOT' OPT='READ'" };
 FileCatalog.Catalogs += { "xmlcatalog_file:POOLIO.xml" } ;
 ApplicationMgr.AuditAlgorithms = True ;

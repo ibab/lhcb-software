@@ -4,7 +4,9 @@ ApplicationMgr.EvtMax               = -1 ;
 ApplicationMgr.Histogrampersistency = "NONE";
 #include "GaudiPoolDbRoot.opts"
 ApplicationMgr.ExtSvc += { "TagCollectionSvc/EvtTupleSvc" };
-EvtTupleSvc.Output   = {"EvtColl DATAFILE='PFN:data/POOLIO.tags' OPT='RECREATE' TYP='POOL_ROOTTREE'" };
+EvtTupleSvc.Output   = {"EvtColl DATAFILE='PFN:data/POOLIO_castor.tags' OPT='RECREATE' TYP='POOL_ROOTTREE'" };
+EvtTupleSvc.Output   = {"EvtColl DATAFILE='PFN:data/POOLIO_local.tags' OPT='RECREATE' TYP='POOL_ROOTTREE'" };
+EventSelector.Input  = {"DATAFILE='PFN:castor:/castor/cern.ch/user/f/frankb/data/POOLIO.dst'   TYP='POOL_ROOT' OPT='READ'" };
 EventSelector.Input  = {"DATAFILE='PFN:data/POOLIO.dst'   TYP='POOL_ROOT' OPT='READ'" };
 FileCatalog.Catalogs = { "xmlcatalog_file:POOLIO.xml" } ;
 ReadAlg.OutputLevel        = 4;
