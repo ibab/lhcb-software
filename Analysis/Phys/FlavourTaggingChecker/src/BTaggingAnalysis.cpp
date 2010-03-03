@@ -810,7 +810,7 @@ BTaggingAnalysis::chooseParticles(const Particle::ConstVector& parts,
 	 && (*ip)->particleID().abspid()==211) { 
 	dup=true; 
 	//debug()<<"                        bbbbb3a killed pion" 
-	       <<(*ip)->particleID().pid()<<endreq;
+	//	       <<(*ip)->particleID().pid()<<endreq;
 	break; 
       }
     }
