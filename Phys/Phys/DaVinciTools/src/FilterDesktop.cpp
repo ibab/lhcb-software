@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.13 2010-03-03 13:06:11 jpalac Exp $
+// $Id: FilterDesktop.cpp,v 1.14 2010-03-03 15:10:48 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -308,6 +308,25 @@ public:
   // ==========================================================================
   /// general flag to switch on/off the monitoring
   bool monitor() const { return m_monitor ; }
+  // ==========================================================================
+protected:
+  StatusCode writeEmptyContainerIfNeeded() 
+  {
+    const std::string& loc = desktop()->getOutputLocation();
+
+    if (msgLevel(MSG::DEBUG)) debug() << "Saving empty containers at " 
+                                      << loc << endmsg ;
+
+    if (!exist<LHCb::Particle::Selection>(loc + "/Particles") ) {  
+      LHCb::Particle::Selection* dummy = new LHCb::Particle::Selection;
+      put(dummy, loc + "/Particles");
+    }
+    if (!exist<LHCb::Vertex::Selection>(loc+"/Vertices") ) {  
+      LHCb::Vertex::Selection* dummy = new LHCb::Vertex::Selection;
+      put(dummy, loc + "/Vertices");
+    }
+    return StatusCode::SUCCESS;
+  }
   // ==========================================================================
 private:
   // ==========================================================================
