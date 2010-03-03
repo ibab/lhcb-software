@@ -243,9 +243,11 @@ MEPErrorAdder::removeSubs() {
     delete m_subsSentOct[i];
     delete m_subsSentEvtErr[i];
     delete m_subsNetworkMonitor[i];
-    delete m_subsDroppedFrac[i];
-    delete m_subsErrorFrac[i];
-    delete m_subsFrameErrorFrac[i];
+    delete m_subsNifRxOct[i];
+    delete m_subsNifRxPkt[i];
+    delete m_subsNifRxDropped[i];
+    delete m_subsNifRxError[i];
+    delete m_subsNifRxFrameError[i];
 
     delete m_subsSrcName[i];
   }	 
@@ -277,9 +279,11 @@ MEPErrorAdder::removeSubs() {
   m_subsSentOct.clear();
   m_subsSentEvtErr.clear();
   m_subsNetworkMonitor.clear();
-  m_subsDroppedFrac.clear();
-  m_subsErrorFrac.clear();
-  m_subsFrameErrorFrac.clear();
+  m_subsNifRxOct.clear();
+  m_subsNifRxPkt.clear();
+  m_subsNifRxDropped.clear();
+  m_subsNifRxError.clear();
+  m_subsNifRxFrameError.clear();
 
   m_subsSrcName.clear();
 
@@ -362,22 +366,6 @@ MEPErrorAdder::ReceiveSingleService_32(DimInfo * curr, DimInfo * subs, int64_t &
 
 }
 
-bool
-MEPErrorAdder::ReceiveSingleService_float(DimInfo * curr, DimInfo * subs, float &rValue, float &sValue) {
-
-  // Return false if not the correct service
-  if (curr != subs) return false;
-
-  float data = *((float*) curr->getData());
-  float diff = data - rValue;	//Value to add/subtract
-  
-  rValue = data;	// saved value
-  sValue += diff;	// Change value
-
-  return true;
-
-}
-
 /** DimInfoHandler function
  */
 void
@@ -434,22 +422,28 @@ MEPErrorAdder::infoHandler() {
 
     // Network Manager subscriptions
     if (m_sumPartition) {
-    	if (ReceiveSingleService_float(curr,m_subsDroppedFrac[i], m_rDroppedFrac[i], m_droppedFrac)) break;
-    	if (ReceiveSingleService_float(curr,m_subsErrorFrac[i], m_rErrorFrac[i], m_errorFrac)) break;
-    	if (ReceiveSingleService_float(curr,m_subsFrameErrorFrac[i], m_rFrameErrorFrac[i], m_frameErrorFrac)) break;
+    	if (ReceiveSingleService(curr,m_subsNifRxOct[i], m_rNifRxOct[i], m_nifRxOct)) break;
+    	if (ReceiveSingleService(curr,m_subsNifRxPkt[i], m_rNifRxPkt[i], m_nifRxPkt)) break;
+    	if (ReceiveSingleService(curr,m_subsNifRxDropped[i], m_rNifRxDropped[i], m_nifRxDropped)) break;
+    	if (ReceiveSingleService(curr,m_subsNifRxError[i], m_rNifRxError[i], m_nifRxError)) break;
+    	if (ReceiveSingleService(curr,m_subsNifRxFrameError[i], m_rNifRxFrameError[i], m_nifRxFrameError)) break;
     } else {
 	if (curr == m_subsNetworkMonitor[i]) {
-	    if (curr->getSize()/sizeof(float)<18) break;
+	    if (curr->getSize()/sizeof(int64_t)<16) break;
 
-  	    float * data = ((float*) curr->getData());
-            // Interesting values in array; Rx Error Frac: 8, Rx Dropped Frac: 9, Rx Frame Error Frac : 11
-	    m_errorFrac += (data[8] - m_rErrorFrac[i]);
-	    m_droppedFrac += (data[9] - m_rDroppedFrac[i]);
-	    m_frameErrorFrac += (data[11] - m_rFrameErrorFrac[i]);
+  	    int64_t * data = ((int64_t*) curr->getData());
+            // Interesting values in array; rx bytes: 1, rx packets/frames: 2, Rx Errorss: 3, Rx Dropped: 4, Rx Frame Error: 6
+	    m_nifRxOct += (data[1] - m_rNifRxOct[i]);
+	    m_nifRxPkt += (data[2] - m_rNifRxPkt[i]);
+	    m_nifRxError += (data[3] - m_rNifRxError[i]);
+	    m_nifRxDropped += (data[4] - m_rNifRxDropped[i]);
+	    m_nifRxFrameError += (data[6] - m_rNifRxFrameError[i]);
 
-	    m_rErrorFrac[i] = data[8];
-	    m_rDroppedFrac[i] = data[9];
-	    m_rFrameErrorFrac[i] = data[11];
+	    m_rNifRxOct[i] = data[1];
+	    m_rNifRxPkt[i] = data[2];
+	    m_rNifRxError[i] = data[3];
+	    m_rNifRxDropped[i] = data[4];
+	    m_rNifRxFrameError[i] = data[6];
 	
 	    break;
 	}
@@ -589,9 +583,11 @@ MEPErrorAdder::resetSingleCounters() {
   m_sentOct = 0;
   m_sentEvtErr = 0;
 
-  m_droppedFrac = 0;
-  m_errorFrac = 0;
-  m_frameErrorFrac = 0;
+  m_nifRxOct = 0;
+  m_nifRxPkt = 0;
+  m_nifRxDropped = 0;
+  m_nifRxError = 0;
+  m_nifRxFrameError = 0;
 
   return 0;
 }
@@ -637,9 +633,11 @@ MEPErrorAdder::resetRemSingleCounters() {
   m_rSentOct.resize(m_nrServices,0);
   m_rSentEvtErr.resize(m_nrServices,0);
  
-  m_rDroppedFrac.resize(m_nrServices,0);
-  m_rErrorFrac.resize(m_nrServices,0);
-  m_rFrameErrorFrac.resize(m_nrServices,0);
+  m_rNifRxOct.resize(m_nrServices,0);
+  m_rNifRxPkt.resize(m_nrServices,0);
+  m_rNifRxDropped.resize(m_nrServices,0);
+  m_rNifRxError.resize(m_nrServices,0);
+  m_rNifRxFrameError.resize(m_nrServices,0);
 
   return 0;
 }
@@ -667,9 +665,11 @@ MEPErrorAdder::publishSingleCounters() {
   PUBCNT(sentOct,            "Bytes sent from HLT");
   PUBCNT(sentEvtErr,	     "Number of event send errors from HLT");
 
-  PUBCNT(droppedFrac,	     "Dropped packets (fraction)");
-  PUBCNT(errorFrac,          "Erroneous packets (fraction)");
-  PUBCNT(frameErrorFrac,     "Frame Errors (fraction)");
+  PUBCNT(nifRxOct,	     "NIF received bytes");
+  PUBCNT(nifRxPkt,	     "NIF received frames");
+  PUBCNT(nifRxDropped,	     "NIF rx dropped frames");
+  PUBCNT(nifRxError,         "NIF receive errors");
+  PUBCNT(nifRxFrameError,    "NIF receive frame errors");
 
   return 0;
 }
@@ -755,9 +755,11 @@ MEPErrorAdder::setupSubs() {
   m_subsSentEvtErr.resize(m_nrServices,NULL);
 
   m_subsNetworkMonitor.resize(m_nrServices,NULL);
-  m_subsDroppedFrac.resize(m_nrServices,NULL);
-  m_subsErrorFrac.resize(m_nrServices,NULL);
-  m_subsFrameErrorFrac.resize(m_nrServices,NULL);
+  m_subsNifRxOct.resize(m_nrServices,NULL);
+  m_subsNifRxPkt.resize(m_nrServices,NULL);
+  m_subsNifRxDropped.resize(m_nrServices,NULL);
+  m_subsNifRxError.resize(m_nrServices,NULL);
+  m_subsNifRxFrameError.resize(m_nrServices,NULL);
 
   m_subsSrcName.resize(m_nrServices,NULL);
 
@@ -830,12 +832,16 @@ MEPErrorAdder::setupSubs() {
      	sprintf(temp,"%s_MEPRxSTAT_1/Runable/sentEvtErr",m_subFarms[i].c_str());
 	m_subsSentEvtErr[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
 
-	sprintf(temp,"%s_MEPRxSTAT_1/Runable/droppedFrac",m_subFarms[i].c_str());
-	m_subsDroppedFrac[i] = new DimInfo(temp,m_updateFrequency,m_zerof,this);
-	sprintf(temp,"%s_MEPRxSTAT_1/Runable/errorFrac",m_subFarms[i].c_str());
-	m_subsErrorFrac[i] = new DimInfo(temp,m_updateFrequency,m_zerof,this);
-	sprintf(temp,"%s_MEPRxSTAT_1/Runable/frameErrorFrac",m_subFarms[i].c_str()); 	
-	m_subsFrameErrorFrac[i] = new DimInfo(temp,m_updateFrequency,m_zerof,this);
+	sprintf(temp,"%s_MEPRxSTAT_1/Runable/NifRxOct",m_subFarms[i].c_str());
+	m_subsNifRxOct[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
+	sprintf(temp,"%s_MEPRxSTAT_1/Runable/NifRxPkt",m_subFarms[i].c_str());
+	m_subsNifRxPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
+	sprintf(temp,"%s_MEPRxSTAT_1/Runable/NifRxDropped",m_subFarms[i].c_str());
+	m_subsNifRxDropped[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
+	sprintf(temp,"%s_MEPRxSTAT_1/Runable/NifRxError",m_subFarms[i].c_str());
+	m_subsNifRxError[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
+	sprintf(temp,"%s_MEPRxSTAT_1/Runable/NifRxFrameError",m_subFarms[i].c_str()); 	
+	m_subsNifRxFrameError[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
 
 	sprintf(temp,"%s_MEPRxSTAT_1/Runable/srcName",m_subFarms[i].c_str());
 	m_subsSrcName[i] = new DimInfo(temp,m_updateFrequency,(char *)"",this);
@@ -866,7 +872,7 @@ MEPErrorAdder::setupSubs() {
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/rxEvt",m_listenerDnsNode.c_str(),i+1);
     	m_subsRxEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/rxMEP",m_listenerDnsNode.c_str(),i+1);
-    	m_subsRxEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
+    	m_subsRxMEP[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
 
 	sprintf(temp,"%s%.2i_MEPRxIPCnt/TotBytes",m_listenerDnsNode.c_str(),i+1);
 	m_subsTotRxOct[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
@@ -882,7 +888,7 @@ MEPErrorAdder::setupSubs() {
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totRxEvt",m_listenerDnsNode.c_str(),i+1);
 	m_subsTotRxEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
      	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totRxMEP",m_listenerDnsNode.c_str(),i+1);
-	m_subsTotRxEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
+	m_subsTotRxMEP[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
      	sprintf(temp,"%s%.2i_MEPRx_1/Runable/incEvt",m_listenerDnsNode.c_str(),i+1);
 	m_subsIncEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totBadMEP",m_listenerDnsNode.c_str(),i+1);
@@ -905,8 +911,22 @@ MEPErrorAdder::setupSubs() {
 	m_subsSentEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero32,this);
      	sprintf(temp,"%s%.2i_DiskWR_1/SND_0/ErrorsOut",m_listenerDnsNode.c_str(),i+1);
 	m_subsSentEvtErr[i] = new DimInfo(temp,m_updateFrequency,m_zero32,this);
-     
-	sprintf(temp,"/FMC/%s%.2i/net/ifs/details/net_02/data",m_listenerDnsNode.c_str(),i+1);
+
+	// To subscribe to the nifSrv DIM service, we need to know the device name (net_0X) corresponding to eth1
+	char * servcont;	// get service contents
+	std::string ipn;	// ip
+	int dnr;		// device nr
+	for (dnr=0;dnr<10;dnr++) {
+		sprintf(temp,"/FMC/%s/net/ifs/details/total/net_0%i/data",m_listenerDnsNode.c_str(),dnr);
+		DimCurrentInfo getdevice(temp,(char *)"");
+		// find ip number
+		servcont = getdevice.getString()+32;
+		for (int j=0;j<3;j++,servcont+=strlen(servcont)+1);
+		ipn = servcont;
+		// check ip number
+		if (ipn.substr(0,3)=="192") break;
+	}
+	sprintf(temp,"/FMC/%s%.2i/net/ifs/details/net_0%.2i/data",m_listenerDnsNode.c_str(),i+1,dnr);
 	m_subsNetworkMonitor[i] = new DimInfo(temp,m_updateFrequency,m_zerof,this);
 
 	sprintf(temp,"%s%.2i_MEPRx_1/Runable/srcName",m_listenerDnsNode.c_str(),i+1);
