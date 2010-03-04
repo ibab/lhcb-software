@@ -194,6 +194,9 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
     if not os.path.exists(pardir) :
         os.makedirs(pardir)
     
+    if os.environ.has_key("CMTEXTRATAGS") :
+        del os.environ["CMTEXTRATAGS"]
+    
     os.environ["CMTCONFIG"] = "slc4_ia32_gcc34"
     llsargs = []
     llsargs.append("--silent")
@@ -663,6 +666,9 @@ if __name__ == '__main__':
     targetlocation = None
     scripts = None
     parser = OptionParser()
+    parser.set_defaults(login_version="v*")
+    parser.add_option("--login-version", dest="login_version",
+                      help="pass in the version of the login [default %default]")
     parser.set_defaults(mysiteroot=None)
     parser.add_option("-m", "--mysiteroot", dest="mysiteroot",
                   help="defines the main site location")
@@ -696,14 +702,12 @@ if __name__ == '__main__':
         cmtprojpathlist.insert(0, os.path.join(opts.mysiteroot, "lhcb"))
         os.environ["LHCBPROJECTPATH"] = os.pathsep.join(cmtprojpathlist)
     
-    if len(args) < 1 :
-        sys.exit("Error must have at least 1 argument (the version)")
+
+    version = opts.login_version
     if len(args) > 0 :
-        version = args[0]
+        targetlocation = os.path.realpath(args[0])
     if len(args) > 1 :
-        targetlocation = os.path.realpath(args[1])
-    if len(args) > 2 :
-        scripts = args[2:]
+        scripts = args[1:]
         
     generateLogins(version, targetlocation, scripts, opts.mysiteroot, opts.building,
                    opts.withoutpython, opts.withoutcache,

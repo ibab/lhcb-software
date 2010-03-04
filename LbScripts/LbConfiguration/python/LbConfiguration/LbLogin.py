@@ -57,7 +57,7 @@ from LbUtils.Path import multiPathGet, multiPathGetFirst, multiPathJoin
 import logging
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.73 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.74 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -189,6 +189,15 @@ class LbLoginScript(SourceScript):
                           action="callback",
                           callback=_userAreaScripts_cb,
                           help="Enable the usage of the user release area for the setup of the scripts. Use with care. [default: %default]")
+        parser.set_defaults(use_cmtextratags=False)
+        parser.add_option("--dont-use-cmtextratags",
+                          dest="use_cmtextratags",
+                          action="store_false",
+                          help="prevent the usage of CMTEXTRATAGS during the LbScripts setup [default]")
+        parser.add_option("--use-cmtextratags",
+                          dest="use_cmtextratags",
+                          action="store_true",
+                          help="use CMTEXTRATAGS during the LbScripts setup")
 
 #-----------------------------------------------------------------------------------
 
@@ -757,6 +766,10 @@ class LbLoginScript(SourceScript):
 
 
             log.debug("Arguments to SetupProject: %s" % " ".join(setupprojargs))
+            
+            if not opts.use_cmtextratags :
+                if os.environ.has_key("CMTEXTRATAGS") :
+                    del os.environ["CMTEXTRATAGS"]
 
             SetupProject().main(setupprojargs)
 
