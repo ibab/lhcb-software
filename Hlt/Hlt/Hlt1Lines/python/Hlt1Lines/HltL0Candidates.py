@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.15 2010-02-25 08:36:11 graven Exp $
+# $Id: HltL0Candidates.py,v 1.16 2010-03-04 14:04:36 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -180,13 +180,14 @@ def L0Mask( channel ) :
 
 def L0Mask2ODINPredicate( mask ) :
     _predicate = { 'Disable'              : 'ODIN_NONE'
-                 , 'Physics'              : '( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
+                 , 'Physics'              : 'ODIN_ALL'
                  , 'Beam1'                : '( ODIN_BXTYP == LHCb.ODIN.Beam1 )'
-                 , 'Physics+Beam1'        : '( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )|( ODIN_BXTYP == LHCb.ODIN.Beam1 )'
+                 , 'Physics+Beam1'        : 'ODIN_ALL'
                  , 'Beam2'                : '( ODIN_BXTYP == LHCb.ODIN.Beam2 )'
-                 , 'Physics+Beam2'        : '( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )|( ODIN_BXTYP == LHCb.ODIN.Beam2 )'
-                 , 'Beam1+Beam2'          : '( ODIN_BXTYP == LHCb.ODIN.Beam1        )|( ODIN_BXTYP == LHCb.ODIN.Beam2 )'
-                 , 'Physics+Beam1+Beam2'  : '( ODIN_BXTYP != LHCb.ODIN.NoBeam )' }
+                 , 'Physics+Beam2'        : 'ODIN_ALL'
+                 , 'Beam1+Beam2'          : '( ODIN_BXTYP == LHCb.ODIN.Beam1 )|( ODIN_BXTYP == LHCb.ODIN.Beam2 )'
+                 , 'Physics+Beam1+Beam2'  : 'ODIN_ALL'
+                 }
     return _predicate[mask]
 
 def setupL0Channels( channels ) :
