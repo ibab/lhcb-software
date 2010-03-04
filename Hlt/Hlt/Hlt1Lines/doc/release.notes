@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.136 2010-03-04 14:04:35 graven Exp $
+! $Id: release.notes,v 1.137 2010-03-04 14:05:21 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -10,14 +10,6 @@
 !
 !-----------------------------------------------------------------------------
 
-! 2010-03-04 - Gerhard Raven
- - prefix algorithm names in Hlt1BeamGasLines with Hlt1BeamGas where appropriate
- - replace BeamGasTrigCheckL0TracksBXType with an equivalent VoidFilter
- - update L0 mask -> ODIN predicate: as soon as 'physics' set, use ODIN_ALL
- - remove ODIN predicate from Hlt1Incident, add a RATE(1) postscaler
-
-! 2010-03-03 - Gerhard Raven
- - remove beamcrossing requirement from microbias lines
 
 ! 2010-03-02 - V. Gligorov
  - Follow developments in Savannah tasks 13784/12691. Change Hlt/Track
@@ -35,7 +27,16 @@
  - Follow progress of Savannah tasks 13784 and 12691 by updating Hlt1 lines
    to get their primary vertices from HltPVs.py and not HltReco.py 
 
-!========================== Hlt1Lines v2r3 2010-03-02 ===================
+!========================== Hlt1Lines v2r3 2010-03-04 ===================
+! 2010-03-04 - Gerhard Raven
+ - prefix algorithm names in Hlt1BeamGasLines with Hlt1BeamGas where appropriate
+ - replace BeamGasTrigCheckL0TracksBXType with an equivalent VoidFilter
+ - update L0 mask -> ODIN predicate: as soon as 'physics' set, use ODIN_ALL
+ - remove ODIN predicate from Hlt1Incident, add a RATE(1) postscaler
+
+! 2010-03-03 - Gerhard Raven
+ - remove beamcrossing requirement from microbias lines
+
 ! 2010-03-02 - Gerhard Raven
  - simplify/unify creation of microbias lines
 
