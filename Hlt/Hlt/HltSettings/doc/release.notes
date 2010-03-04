@@ -4,10 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================== HltSettings v1r10 2010-03-04 ===================
 ! 2010-03-03 - Gerhard Raven
  - make Hlt1Velo.* run on L0 CALO triggers
  - remove BeamCrossing requirement from micro bias lines
-!========================== HltSettings v1r10 2010-03-02 ===================
 
 ! 2010-03-02 - Johannes Albrecht
  - add T-Station microbias line, adapt naming and scale them to 0
