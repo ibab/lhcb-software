@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.91 2010-03-01 13:51:00 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.92 2010-03-04 16:24:43 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -170,13 +170,14 @@ class DaVinci(LHCbConfigurableUser) :
         
         # Phys
         inputType = self.getProp( "InputType" ).upper()
-        if (( inputType != "MDF" ) & (inputType != "DIGI")) :
-            physinit = PhysConf().initSequence()         # PhysConf initSequence
-            init.Members += [ physinit ]
-            # Analysis
-            AnalysisConf().RedoMCLinks = self.getProp("RedoMCLinks") 
-            analysisinit = AnalysisConf().initSequence()
-            init.Members += [ analysisinit ]
+        if inputType != 'MDST' :
+            if (( inputType != "MDF" ) & (inputType != "DIGI")) :
+                physinit = PhysConf().initSequence()         # PhysConf initSequence
+                init.Members += [ physinit ]
+                # Analysis
+                AnalysisConf().RedoMCLinks = self.getProp("RedoMCLinks") 
+                analysisinit = AnalysisConf().initSequence()
+                init.Members += [ analysisinit ]
 
 
 ################################################################################
@@ -369,7 +370,8 @@ class DaVinci(LHCbConfigurableUser) :
             CaloDstUnPackConf ( Enable       = True )
             if self.getProp("Simulation") :
                 DstConf().setProp("SimType","Full")
-            
+        return inputType
+    
 ################################################################################
 # Ntuple files
 #
@@ -511,12 +513,13 @@ class DaVinci(LHCbConfigurableUser) :
         self.checkOptions()
         self.configureSubPackages()
         importOptions("$STDOPTS/PreloadUnits.opts") # to get units in .opts files
-        self.configureInput()
+        inputType = self.configureInput()
         # start with init
         self.initSeq()
-        self.l0()
-        self.hlt()
-        self.decReports()
+        if inputType != 'MDST' :
+            self.l0()
+            self.hlt()
+            self.decReports()
         self.defineMonitors()
         self.defineEvents()
         self.defineInput()
