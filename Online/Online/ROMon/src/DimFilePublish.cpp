@@ -1,4 +1,4 @@
-// $Id: DimFilePublish.cpp,v 1.1 2010-03-03 19:37:09 frankb Exp $
+// $Id: DimFilePublish.cpp,v 1.2 2010-03-04 08:22:02 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/DimFilePublish.cpp,v 1.1 2010-03-03 19:37:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/DimFilePublish.cpp,v 1.2 2010-03-04 08:22:02 frankb Exp $
 
 #include <string>
 #include <ctime>
@@ -49,12 +49,12 @@ namespace ROMon {
 #include <iostream>
 
 // Framework includes
-//#include "dic.h"
 #include "dis.hxx"
 #include "RTL/rtl.h"
 #include <sys/stat.h>
 #ifdef _WIN32
 #include <io.h>
+#define O_RDONLY _O_RDONLY
 #else
 #include <fcntl.h>
 #endif
