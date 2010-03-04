@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.17 2008-11-06 14:02:18 cattanem Exp $
+#// $Id: VeloSim.h,v 1.18 2010-03-04 18:28:35 dhcroft Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -119,7 +119,7 @@ private:
   /// Added noise of a strip from strip capacitance
   double noiseValue(double noiseSigma);
   /// Noise to add to an otherwise empty strip from strip capacitance
-  double noiseValueTail(double noiseSigma);
+  double noiseValueTail(double noiseSigma, double threshold);
   void CMSim(); ///< Common mode simulation
   void deadStrips(); ///< Simulate random dead strips
   void finalProcess(); ///<remove any MCFEs with charge below abs(threshold)
@@ -162,12 +162,18 @@ private:
   double ran_inv_E2(double Emin, double Emax); ///<random numbers from 1/E^2
   /// Random numbers from a gaussian tail
   double ran_gaussian_tail(const double a, const double sigma);
-  /// threshold charge to make VeloFE from strip in ADC counts
+  /// threshold charge to make VeloFE from strip in ADC counts next to a signal
   double m_thresholdADC;
   /// threshold charge in electrons = m_thresholdADC*m_electronsPerADC
   double m_threshold;
-  /// probability to add noise tail to otherwise empty strip
+  /// threshold charge to make an isolated VeloFE from strip in ADC counts
+  double m_thresholdADCSingle;
+  /// threshold charge in electrons = m_thresholdADC*m_electronsPerADC
+  double m_thresholdSingle;
+  /// probability to add noise tail to otherwise empty strip next to signal
   double m_noiseTailProb;
+  /// probability to add noise tail to otherwise empty strip, isolated
+  double m_noiseTailProbSingle;
   /// sqrt(2*m_kT/m_biasVoltage) is the expected diffusion width
   double m_kT;
   /// voltage applied to (over)depleted the sensor

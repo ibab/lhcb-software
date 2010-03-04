@@ -4,6 +4,15 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2010-03-04 - David Hutchcroft
+ - Changed simulation to match 2009 collision data and TELL1 style cluster 
+   maker, gain is lower 601 ADC per electron instead of 442 and smaller noise
+ - Added an optimisation to only make isolated MCVeloFEs if they could start a
+   cluster, still use inclusion threshold for FEs next to an FE with signal
+ - Change timing curve to match data from tests on the cold detector
+ - Fix simulation of NZS data to generate gaussian noise not gaussian tail
+   noise
+
 !===================== VeloSimulation v3r6p1 2008-11-21 ======================
 ! 2008-11-06 - Marco Cattaneo
  - Fix for gcc 4.3
