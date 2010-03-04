@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.134 2010-03-03 17:17:11 graven Exp $
+! $Id: release.notes,v 1.135 2010-03-04 10:20:24 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -9,6 +9,10 @@
 ! for the production. Commit them AS WELL in branch production200912. 
 !
 !-----------------------------------------------------------------------------
+! 2010-03-04 - Gerhard Raven
+ - prefix algorithm names in Hlt1BeamGasLines with Hlt1BeamGas where appropriate
+ - replace BeamGasTrigCheckL0TracksBXType with an equivalent VoidFilter
+
 ! 2010-03-03 - Gerhard Raven
  - remove beamcrossing requirement from microbias lines
 
@@ -16,7 +20,10 @@
  - Follow developments in Savannah tasks 13784/12691. Change Hlt/Track
    to Hlt1/Track to obey naming convention in HLT.
 
-! 2010-10-26 - V. Gligorov
+! 2010-02-25 - Gerhard Raven
+ - do not require L0_DECISION in OT cosmic line
+
+! 2010-02-26 - V. Gligorov
  - Follow developments in HltLine.HltPVs. PV2D is now a function
    to prevent premature initialization of the Hlt2 reconstruction.
    See Savannah tasks 13784/12691 for details.

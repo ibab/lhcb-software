@@ -10,7 +10,7 @@
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
 __author__  = "Plamen Hopchev phopchev@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -46,7 +46,6 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
 
     def __performRZVelo( self ) :
         from HltLine.HltReco import MinimalRZVelo
-        from Configurables import DeterministicPrescaler as Scaler
 
         return [ GaudiSequencer( 'BeamGasRZVeloSequencer'
                                , Members =  MinimalRZVelo.members()
@@ -107,31 +106,28 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         lineName = "BeamGasCrossing"
 
         ### To check the existence of tracks !!!
-        #First need to have a 'TrEXISTS' predicate...
-        #algCheckRZVelo = VoidFilter('RequireRZVelo' , Code = "TrSOURCE('Hlt/Track/RZVelo') >> (TrSIZE > 0)"
-
-        from Configurables import BeamGasTrigCheckL0TracksBXType
-        algCheckTracks = BeamGasTrigCheckL0TracksBXType( ChechBXType     = False
-                                                       , CheckL0Decision = False
-                                                       , CheckTracks     = True
-                                                       , OutputLevel     = FATAL
-                                                       )  
+        from HltLine.HltReco import MinimalRZVelo
+        from Configurables import LoKi__VoidFilter as VoidFilter
+        algCheckTracks = VoidFilter('Hlt1BeamGasRequireRZVelo' , Code = "CONTAINS('%s') > 0" % MinimalRZVelo.outputSelection() )
         
         from Configurables import BeamGasTrigClusterCut
-        algClusterCut = BeamGasTrigClusterCut( SensorsBegin = 22
+        algClusterCut = BeamGasTrigClusterCut( 'Hlt1BeamGasTrigClusterCut'
+                                             , SensorsBegin = 22
                                              , SensorsEnd   = 39
                                              , FracUnusedClustersCut = 0.27 )
 
         from Configurables import BeamGasTrigExtractClusters
-        algExtractClust = BeamGasTrigExtractClusters( OutputLocation = "Raw/Velo/RLiteClustersBeamGas" )
+        algExtractClust = BeamGasTrigExtractClusters( 'Hlt1BeamGasTrigExtractClusters'
+                                                    , OutputLocation = "Raw/Velo/RLiteClustersBeamGas"
+                                                    )
 
         ### To be checked if these two instantiations are needed ???
         from Configurables import Tf__DefaultVeloRHitManager
-        defmgr = Tf__DefaultVeloRHitManager( "UnusedRClustersDefaultVeloRHitManager"
+        defmgr = Tf__DefaultVeloRHitManager( "Hlt1BeamGasUnusedRClustersDefaultVeloRHitManager"
                                            , LiteClusterLocation = algExtractClust.OutputLocation )
 
         from Configurables import Tf__PatVeloRHitManager
-        hitmgr = Tf__PatVeloRHitManager( "UnusedRCluserPatVeloRHitManager"
+        hitmgr = Tf__PatVeloRHitManager( "Hlt1BeamGasUnusedRCluserPatVeloRHitManager"
                                        , DefaultHitManagerName= defmgr.name()  )
 
         from Configurables import Tf__PatVeloRTracking
