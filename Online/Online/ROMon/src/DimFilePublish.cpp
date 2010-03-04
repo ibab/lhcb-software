@@ -1,4 +1,4 @@
-// $Id: DimFilePublish.cpp,v 1.2 2010-03-04 08:22:02 frankb Exp $
+// $Id: DimFilePublish.cpp,v 1.3 2010-03-04 16:46:25 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/DimFilePublish.cpp,v 1.2 2010-03-04 08:22:02 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/DimFilePublish.cpp,v 1.3 2010-03-04 16:46:25 frankb Exp $
 
 #include <string>
 #include <ctime>
@@ -55,9 +55,8 @@ namespace ROMon {
 #ifdef _WIN32
 #include <io.h>
 #define O_RDONLY _O_RDONLY
-#else
-#include <fcntl.h>
 #endif
+#include <fcntl.h>
 
 using namespace ROMon;
 using namespace std;
