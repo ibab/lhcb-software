@@ -1,4 +1,4 @@
-// $Id: PatPV2DFit3D.cpp,v 1.5 2010-01-20 13:46:49 rlambert Exp $
+// $Id: PatPV2DFit3D.cpp,v 1.6 2010-03-04 09:43:33 pmorawsk Exp $
 // Include files
 
 // from Gaudi
@@ -45,7 +45,8 @@ PatPV2DFit3D::PatPV2DFit3D( const std::string& name,
     m_pvSeedTool(0),
     m_inputTracksName(""),
     m_outputVerticesName(""),
-    m_pvsfit(0)
+    m_pvsfit(0),
+    m_timer(0)
 {
   declareProperty( "maxNumPv"        , m_maxNumPv      = 10             );
   declareProperty( "maxIter"         , m_maxIter       =  3             );
@@ -54,6 +55,7 @@ PatPV2DFit3D::PatPV2DFit3D( const std::string& name,
   declareProperty( "minBackQualityPV", m_minBackQualityPV =   2         );
   declareProperty( "dzQualityPV"     , m_dzQualityPV      =  20.*Gaudi::Units::mm     );
   declareProperty( "SaveSeedsAsPV"   , m_saveSeedsAsPV    =  false      );
+  declareProperty( "MeasureTime"     , m_measureTime      =  false      );
   declareProperty( "InputTracksName"    , m_inputTracksName     =  LHCb::TrackLocation::RZVelo);
   declareProperty( "OutputVerticesName" , m_outputVerticesName  =  LHCb::RecVertexLocation::Velo2D );
   
@@ -112,7 +114,18 @@ StatusCode PatPV2DFit3D::initialize() {
   }
   
   setProduceHistos(false);
-  
+//   std::cout << "XXXXXXXXXXXXXX2" << std::endl;
+  if (m_measureTime){
+    m_timer = tool<ISequencerTimerTool>( "SequencerTimerTool", this );
+    m_timer->increaseIndent();
+    m_timePrep  = m_timer->addTimer("getting tracks");
+    m_timeHist  = m_timer->addTimer("producing histos");
+    m_timeIns   = m_timer->addTimer("inserting reconstructed vertices");
+    m_timeFit   = m_timer->addTimer("fitting vertices");
+    m_timeTrMod = m_timer->addTimer("modyfing tracks");
+    m_timer->decreaseIndent();
+  }
+
   return StatusCode::SUCCESS;
 };
 
@@ -121,7 +134,7 @@ StatusCode PatPV2DFit3D::initialize() {
 //=============================================================================
 StatusCode PatPV2DFit3D::execute() {
   debug() << "==> Execute" << endmsg;
-
+  if (m_measureTime) m_timer->start(m_timePrep);
   m_inputTracks   = get<LHCb::Tracks>( m_inputTracksName );
 
 
@@ -143,9 +156,11 @@ StatusCode PatPV2DFit3D::execute() {
 //   int nTracks = m_inputTracks.size();
   if (nTracks > m_sTracks.size()) addTracks(nTracks - m_sTracks.size());
   std::vector<const LHCb::Track*> rtracks;
+  if (m_measureTime) m_timer->stop(m_timePrep);
 
   int iTrack = 0;
   for (std::vector<LHCb::Track*>::const_iterator itT = m_inputTracks->begin(); m_inputTracks->end() != itT; itT++ ) {
+    if (m_measureTime) m_timer->start(m_timeTrMod);
     LHCb::Track* pTr2d = (*itT);
 
     if (pTr2d->checkFlag( LHCb::Track::Invalid ))   continue;
@@ -214,11 +229,14 @@ StatusCode PatPV2DFit3D::execute() {
       travec_3d.push_back(m_sTracks[iTrack]);
     }
     iTrack++;
+    if (m_measureTime) m_timer->stop(m_timeTrMod);
   }
+  if (m_measureTime) m_timer->start(m_timeFit);
   std::vector<LHCb::RecVertex> rvts;
   StatusCode scfit = m_pvsfit->reconstructMultiPVFromTracks(rtracks,rvts);
+  if (m_measureTime) m_timer->stop(m_timeFit);
   if (scfit == StatusCode::SUCCESS) {
-
+    if (m_measureTime) m_timer->start(m_timeIns);
     // insert reconstructed vertices
      for(std::vector<LHCb::RecVertex>::iterator iv = rvts.begin(); iv != rvts.end(); iv++) {
        LHCb::RecVertex* vertex = new LHCb::RecVertex();
@@ -245,8 +263,9 @@ StatusCode PatPV2DFit3D::execute() {
        }
        m_outputVertices->insert(vertex);
      }
+     if (m_measureTime) m_timer->stop(m_timeIns);
   }
-
+  if (m_measureTime) m_timer->start(m_timeHist);
   if( produceHistos() ){
      for(std::vector<LHCb::RecVertex>::iterator iv = rvts.begin(); iv != rvts.end(); iv++) {
        double xv = iv->position().x();
@@ -257,6 +276,7 @@ StatusCode PatPV2DFit3D::execute() {
        plot1D(rv,"PV2DFit3DVertexTransversePosition", 0,1,200);       
      }
   }
+  if (m_measureTime) m_timer->stop(m_timeHist);
 
   setFilterPassed(!rvts.empty());
 

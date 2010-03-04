@@ -3,6 +3,13 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
+
+! 2010-03-04 - Piotr Morawski
+ - modified LSAdaptPVFitter so it could be used insead of SimplePVFitter
+ - added PVSeed3DOfflineTool
+ - added timer in PatPV2DFit3D
+ - changed fitter and seeding in PVVeryLoose.py
+
 !============================= PatPV v3r13 2010-02-15 ======================
 ! 2010-02-13 - Stephanie Hansmann-Menzemer
  - add PatPVVeryLoose options

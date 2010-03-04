@@ -1,4 +1,4 @@
-// $Id: LSAdaptPVFitter.cpp,v 1.12 2010-01-27 14:15:58 rlambert Exp $
+// $Id: LSAdaptPVFitter.cpp,v 1.13 2010-03-04 09:43:33 pmorawsk Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -43,6 +43,12 @@ LSAdaptPVFitter::LSAdaptPVFitter(const std::string& type,
   declareProperty("maxDeltaZ", m_maxDeltaZ = 0.0005 * Gaudi::Units::mm);
   // Value of the Tukey's weight to accept a track
   declareProperty("acceptTrack", m_acceptTrack = 0.00001);
+  // Maximmum z spread of tracks
+  declareProperty("zMaxSpread", m_zMaxSpread = 30.0 * Gaudi::Units::mm);
+  // Max chi2 track to accept track in PV fit
+  declareProperty("trackMaxChi2", m_trackMaxChi2 = 9.);
+  // Min number of iterations
+  declareProperty("minIter", m_minIter = 3);
 }
 
 //=========================================================================
@@ -69,7 +75,9 @@ StatusCode LSAdaptPVFitter::initialize()
     m_minTr = 3;  
     warning() << "MinTracks parameter set to 3" << endreq;
   }
-  
+
+  m_trackChi = std::sqrt(m_trackMaxChi2);
+
   return StatusCode::SUCCESS;
 }
 
@@ -95,7 +103,7 @@ StatusCode LSAdaptPVFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
   std::vector<const LHCb::Track*>::const_iterator itr;
   for(itr = rTracks.begin(); itr != rTracks.end(); itr++) {    
     const LHCb::Track* track = *itr;
-    if ( !(track->hasVelo()) ) continue;
+//     if ( !(track->hasVelo()) ) continue;
     addTrackForPV(track, m_pvTracks, seedPoint.z()).ignore();
   }
   
@@ -122,6 +130,7 @@ StatusCode LSAdaptPVFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
       debug() << "Too few tracks to fit PV" << endmsg;
     }
     vtx = pvVertex.primVtx;
+    vtx.clearTracks();
     vtx.setTechnique(LHCb::RecVertex::Primary);
     return StatusCode::FAILURE;
   }
@@ -160,7 +169,7 @@ StatusCode LSAdaptPVFitter::fit(LHCb::RecVertex& vtx,
   bool converged = false;
   int nbIter = 0;
   // Iteration loop. Require at least 3 iterations to reach final weight.
-  while( (nbIter < 2) || (!converged && nbIter < m_Iterations) ) 
+  while( (nbIter < m_minIter) || (!converged && nbIter < m_Iterations) )
   {
     if(msgLevel(MSG::DEBUG)) {
       debug() <<"Iteration nr: " << nbIter << endmsg;
@@ -265,8 +274,8 @@ void LSAdaptPVFitter::initVertex(PVTracks& pvTracks, PVVertex& pvVtx,
     verbose() << "initVertex method" << endmsg;
   }
   double zseed = seedPoint.z();
-  double startzs = zseed - 30.0 * Gaudi::Units::mm;
-  double endzs = zseed + 30.0 * Gaudi::Units::mm;
+  double startzs = zseed - m_zMaxSpread * Gaudi::Units::mm;
+  double endzs = zseed + m_zMaxSpread * Gaudi::Units::mm;
   int nTracks = 0;
   PVTracks::iterator pvTrack;
   for(pvTrack = pvTracks.begin(); pvTracks.end() != pvTrack; pvTrack++) {
@@ -529,8 +538,9 @@ void LSAdaptPVFitter::setChi2(LHCb::RecVertex& vtx,
 //=============================================================================
 double LSAdaptPVFitter::getTukeyWeight(double trchi2, int iter)
 {
-  double ctrv = 9. - 3. * iter;
-  if (ctrv < 3.) ctrv = 3.;
+  if (iter<1 ) return 1.;
+  double ctrv = m_trackChi * (m_minIter -  iter);
+  if (ctrv < m_trackChi) ctrv = m_trackChi;
   double cT2 = trchi2 / (ctrv*ctrv);
   double weight = 0.;
   if(cT2 < 1.) {

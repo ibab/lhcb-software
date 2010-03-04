@@ -1,4 +1,4 @@
-// $Id: LSAdaptPVFitter.h,v 1.6 2010-01-27 14:15:58 rlambert Exp $
+// $Id: LSAdaptPVFitter.h,v 1.7 2010-03-04 09:43:33 pmorawsk Exp $
 #ifndef LSADAPTPVFITTER_H
 #define LSADAPTPVFITTER_H 1
 // from Gaudi
@@ -30,10 +30,15 @@ public:
 private:
   int    m_minTr;         // Minimum number of tracks to make a vertex
   int    m_Iterations;    // Number of iterations for minimisation
+  int    m_minIter;       // iterate at least m_minIter times
   double m_maxChi2;       // Chi2 of completely wrong tracks
   double m_extrapRCut;    // Radius after which one uses full extrapolator
   double m_maxDeltaZ;     // Fit convergence condition
   double m_acceptTrack;   // Value of the Tukey's weight to accept a track
+  double m_zMaxSpread;    // Maximmum z spread of tracks
+  double m_trackMaxChi2;  // maximum chi2 track to accept track in PV fit
+  double m_trackChi;      // sqrt of m_trackMaxChi2
+
   PVTracks m_pvTracks;
   // Extrapolators
   ITrackExtrapolator* m_linExtrapolator;   // Linear extrapolator

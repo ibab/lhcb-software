@@ -2,18 +2,22 @@
 from Configurables import PatPVOffline
 from Configurables import PVOfflineTool, SimplePVSeedTool, SimplePVFitter
 
-loosePVSeedTool = SimplePVSeedTool("SimplePVSeedTool")
-looseLSAdaptPVFitter = SimplePVFitter("SimplePVFitter")
-looseLSAdaptPVFitter.MinTracks = 3
-
+loosePVSeedTool      = PVSeed3DOfflineTool("PVSeed3DOfflineTool")
+looseLSAdaptPVFitter = LSAdaptPVFitter("LSAdaptPVFitter")
+looseLSAdaptPVFitter.MinTracks    = 3
+looseLSAdaptPVFitter.acceptTrack  = 0.000000000001
+looseLSAdaptPVFitter.trackMaxChi2 = 25.
+looseLSAdaptPVFitter.zMaxSpread   = 1000.
+looseLSAdaptPVFitter.minIter      = 3
+   
 loosePVOfflineTool = PVOfflineTool("PVOfflineTool")
 loosePVOfflineTool.RequireVelo = False
-loosePVOfflineTool.PVFitterName = "SimplePVFitter"
-loosePVOfflineTool.PVSeedingName = "SimplePVSeedTool"
+loosePVOfflineTool.PVFitterName = "LSAdaptPVFitter"
+loosePVOfflineTool.PVSeedingName = "PVSeed3DOfflineTool"
 
 
-loosePVOfflineTool.addTool(loosePVSeedTool, "SimplePVSeedTool")
-loosePVOfflineTool.addTool(looseLSAdaptPVFitter, "SimplePVFitter")
+loosePVOfflineTool.addTool(loosePVSeedTool, "PVSeed3DOfflineTool")
+loosePVOfflineTool.addTool(looseLSAdaptPVFitter, "LSAdaptPVFitter")
 
 loosePVOffline = PatPVOffline("PatPVOffline")
 loosePVOffline.addTool(loosePVOfflineTool, "PVOfflineTool")

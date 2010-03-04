@@ -1,4 +1,4 @@
-// $Id: PatPV2DFit3D.h,v 1.5 2010-01-11 10:10:48 witekma Exp $
+// $Id: PatPV2DFit3D.h,v 1.6 2010-03-04 09:43:33 pmorawsk Exp $
 #ifndef PATPV2DFIT3D_H
 #define PATPV2DFIT3D_H 1
 
@@ -11,6 +11,7 @@
 #include "Event/RecVertex.h"
 
 #include "TrackInterfaces/IPVOfflineTool.h"
+#include "GaudiAlg/ISequencerTimerTool.h"
 
 /** @class PatPV2DFit3D PatPV2DFit3D.h
  *  PV reconstruction in 2D
@@ -62,5 +63,13 @@ private:
   std::string m_outputVerticesName;
 
   IPVOfflineTool* m_pvsfit;    // PV fitting tool
+  ISequencerTimerTool* m_timer;
+
+  int m_timeHist;
+  int m_timeIns;
+  int m_timeFit;
+  int m_timeTrMod;
+  int m_timePrep;
+  bool m_measureTime;
 };
 #endif // PATPV2DFIT3D_H
