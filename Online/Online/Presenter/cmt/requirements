@@ -30,7 +30,8 @@ use  Boost        v*  LCG_Interfaces
 #set cintBootstrap_cintflags " -I$(Boost_home)/include/boost-$(Boost_file_version) -p "
 document rootcint cintBootstrap cintBootstrap.h
 
-macro_append includes " -I$(PRESENTERROOT)/inc -I$(PRESENTERROOT)/src" WIN32 " -I$(PRESENTERROOT)/inc -I$(PRESENTERROOT)/src"
+macro_append includes " -I$(PRESENTERROOT)/inc -I$(PRESENTERROOT)/src" \
+  WIN32               " -I$(PRESENTERROOT)/inc -I$(PRESENTERROOT)/src"
 
 macro_append ROOT_linkopts " -lThread -lGui -lGraf3d -lGed" \
   WIN32 " libThread.lib libGui.lib libGpad.lib libHist.lib libGraf.lib \
@@ -42,7 +43,7 @@ macro_append Boost_linkopts ' $(Boost_linkopts_date_time)'
 macro_append Boost_linkopts ' $(Boost_linkopts_program_options)'
 macro_append Boost_linkopts ' $(Boost_linkopts_serialization)'
 macro_append Boost_linkopts ' $(Boost_linkopts_thread) '
-###macro_append Boost_linkopts "" WIN32 "boost_system-vc71-mt-1_39.lib boost_filesystem-vc71-mt-1_39.lib boost_date_time-vc71-mt-1_39.lib boost_program_options-vc71-mt-1_39.lib boost_thread-vc71-mt-1_39.lib"
+macro_append Boost_linkopts ' $(Boost_linkopts_system) '
 
 # Setup cppflags
 #macro_append cppflags " -pedantic-errors -Wno-long-long -Weffc++ "
