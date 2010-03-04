@@ -39,7 +39,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltTrackUpgradeTool
         from Configurables import L0ConfirmWithT
         from HltLine.HltReco import RZVelo, Velo
-        from HltLine.HltPVs  import PV2D
+        from HltLine.HltReco import PV2D
         from HltLine.HltDecodeRaw import DecodeIT, DecodeTT, DecodeVELO, DecodeECAL
         from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
 
@@ -58,7 +58,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                                   , DecodeIT
                                   , Member ( 'TU', 'TConf', RecoName = 'TEleConf',
                                              tools = [ Tool( HltTrackUpgradeTool, tools = [ Tool( L0ConfirmWithT,'L0ConfirmWithT/TEleConf', particleType = 2 ) ] ) ] )
-                                  , RZVelo, PV2D().ignoreOutputSelection()
+                                  , RZVelo, PV2D.ignoreOutputSelection()
                                   , Member ( 'TF', 'RZVelo', FilterDescriptor = [ 'RZVeloTMatch_%TUTConf,||<,60.' ] )
                                   , Member ( 'TU', 'Velo', RecoName = 'Velo' )
                                   , DecodeVELO, DecodeTT
@@ -71,7 +71,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
 
         companionTrackWithIP  = [ Velo
                                   , Member ( 'TF', 'CompanionVelo',
-                                             FilterDescriptor = [ 'IP_PV2D,||[],'+str(self.getProp('EleIP_IPCut')), 'DOCA_%TFVeloT,<,0.2' ]
+                                             FilterDescriptor = [ 'IP_PV2D,||>,'+str(self.getProp('EleIP_IPCut')), 'DOCA_%TFVeloT,<,0.2' ]
                                             , HistogramUpdatePeriod = 0
                                             , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
                                             )
@@ -92,7 +92,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                                   , DecodeIT
                                   , Member ( 'TU', 'TConf', RecoName = 'TEleConf',
                                              tools = [ Tool( HltTrackUpgradeTool, tools = [ Tool( L0ConfirmWithT, 'L0ConfirmWithT/TEleConf',  particleType = 2 ) ] ) ] )
-                                  , RZVelo, PV2D().ignoreOutputSelection()
+                                  , RZVelo, PV2D.ignoreOutputSelection()
                                   , Member ( 'TF', 'RZVelo', FilterDescriptor = [ 'RZVeloTMatch_%TUTConf,||<,60.' ] )
                                   , Member ( 'TU', 'Velo', RecoName = 'Velo' )
                                   , DecodeVELO, DecodeTT
@@ -170,13 +170,11 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                  , prescale = self.prescale
                  , L0DU = "L0_CHANNEL('Electron')"
                  , algos = [ convertL0Candidates('Electron') ] + prepareElectronNoIP + companionTrackNoIP 
-                         + [ Member ( 'VF', 'VertexCut'
-                                    , FilterDescriptor = [ 'VertexPointing_PV2D,<,0.5', 'VertexDz_PV2D,>,0.' ]
-                                    )
-                           , DecodeECAL
+                         + [ DecodeECAL
                            , Member ( 'VU', 'RadCor' , RecoName = 'RadCor', tools = [ Tool( HltTrackUpgradeTool ) ] )
                            , Member ( 'VF', 'MassCut'
-                                    , FilterDescriptor = [ 'VertexDiElectronMass,[],'+str(self.getProp('DiEle_LowMassCut'))+','+str(self.getProp('DiEle_HighMassCut')) ]
+                                    , FilterDescriptor = [ 'VertexDiElectronMass,>,%s'%self.getProp('DiEle_LowMassCut') ] + (
+                                                         [ 'VertexDiElectronMass,<,%s'% self.getProp('DiEle_HighMassCut') ] if self.getProp('DiEle_HighMassCut') > 0 else [] )
                                     , HistogramUpdatePeriod = 0
                                     , HistoDescriptor = { 'VertexDiElectronMass':('VertexDiElectronMass',0.,3.,100), 'VertexDiElectronMassBest':('VertexDiElectronMassBest',0.,3.,100) }
                                     , OutputSelection = '%Decision'

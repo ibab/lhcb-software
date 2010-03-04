@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1MuonLines.py,v 1.12 2010-02-26 04:42:48 gligorov Exp $
+# $Id: Hlt1MuonLines.py,v 1.13 2010-03-04 22:56:26 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
 # =============================================================================
 
 
@@ -75,7 +75,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
         ,'MuTrackAngle4JPsiLow'     : 0.02
         ,'MuTrackAngle4JPsiHigh'    : 0.30
         ,'MuTrackDimuMass4JPsiLow'  : 2900.
-        ,'MuTrackDimuMass4JPsiHigh' : 3300.
+        ,'MuTrackDimuMass4JPsiHigh' : 0
         ,'MuTrackMuChi24JPsi'       : 4.
         ,'MuTrackTrChi24JPsi'       : 8.
         }
@@ -90,7 +90,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
         from Hlt1Lines.HltL0Candidates import convertL0Candidates, L0Channels
         from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
         from HltLine.HltReco import RZVelo, Velo
-	from HltLine.HltPVs  import PV2D
+        from HltLine.HltReco import PV2D
 
         # It already Prepare the muon segments with proper error calling the tool MuonSeedTool
         RecoMuonSeg = HltMuonRec('HltRecoMuonSeg'
@@ -176,7 +176,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                    )
                         ]
         # single track with IP cut
-        FastFitWithIP = [ PV2D().ignoreOutputSelection()
+        FastFitWithIP = [ PV2D.ignoreOutputSelection()
                           , Member ( 'TU' , 'FitTrack' , RecoName = 'FitTrack', callback = setupHltFastTrackFit
                                      , HistoDescriptor = { 'FitTrackQuality': ( 'Track Fit Chi2 / ndf',0.,50.,100),
                                                            'FitTrackQualityBest': ( 'lowest track Fit Chi2 / ndf',0.,50.,100) }  
@@ -207,7 +207,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                   , FilterDescriptor = ['FitVertexMaxChi2OverNdf,<,'+str(self.getProp('Muon_FitChiCut'))])
                          ]
         # vertex (two tracks) with IP cut
-        FastFitVtxWithIP = [ PV2D().ignoreOutputSelection()
+        FastFitVtxWithIP = [ PV2D.ignoreOutputSelection()
                            , Member( 'VU' , 'FitTrack' ,      RecoName = 'FitTrack', callback = setupHltFastTrackFit)
                            , Member( 'VF','IP'
                                    ,  FilterDescriptor = [ 'FitVertexMinIP_PV2D,||>,'+str(self.getProp('DiMuon_IPCut')) ])
@@ -332,7 +332,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                     , prescale = self.prescale
                                     , L0DU = "L0_CHANNEL('%(L0SingleMuon)s')"%self.getProps()
                                     , algos = [ MuonPrep
-                                                , PV2D().ignoreOutputSelection()
+                                                , PV2D.ignoreOutputSelection()
                                                 , Member ( 'TF', 'PT'
                                                            , FilterDescriptor = ['PT,>,'+str(self.getProp('MuonIP_PtCut')) ])
                                                 ] + FastFitWithIP 
@@ -595,7 +595,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                                              'PTBest': ( 'L0+T+Velo confirmed muon highest PT',0.,15000.,400)}
                                        #, OutputLevel=2
                                        )
-                             , PV2D().ignoreOutputSelection()  #// 2D PV only if any muon passes pt filter 
+                             , PV2D.ignoreOutputSelection()  #// 2D PV only if any muon passes pt filter 
                              , Member( 'TF','MuonIP' # // Select Muons with IP
                                        , HistogramUpdatePeriod = 0
                                        , FilterDescriptor = ['IP_PV2D,||>,'+str(self.getProp('MuTrackMuIP')) ]
@@ -636,8 +636,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                        , RecoName = 'Forward'
                                        )
                              , Member( 'VF', 'VertexPt' # // Select vertices if Pt
-                                       , FilterDescriptor = ['VertexTrack1PT,>,'+str(self.getProp('MuTrackMuPt')),
-                                                             'VertexTrack2PT,>,'+str(self.getProp('MuTrackTrPt'))]
+                                       , FilterDescriptor = [ 'VertexTrack2PT,>,'+str(self.getProp('MuTrackTrPt'))]
                                        , HistogramUpdatePeriod = 0
                                        , HistoDescriptor = {'VertexTrack2PT': ('Forward companion track PT',0.,15000.,400),
                                                             'VertexTrack2PTBest': ('Forward companion track highest PT',0.,15000.,400)}
@@ -671,26 +670,13 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                              , Member ( 'VF', 'Decision' # // Final filter, redo all cuts with improved tracking
                                         , OutputSelection = '%Decision'
                                         , HistogramUpdatePeriod = 0
-                                        , FilterDescriptor = ['FitVertexTrack1IP_PV2D,||>,'+str(self.getProp('MuTrackMuIP')),
-                                                              'FitVertexTrack2IP_PV2D,||>,'+str(self.getProp('MuTrackTrIP')),
-                                                              'FitVertexDOCA,<,'+str(self.getProp('MuTrackDoca')),
-                                                              'FitVertexAngle,>,0.',
-                                                              'FitVertexDz_PV2D,>,'+str(self.getProp('MuTrackDZ')),
-                                                              'FitVertexTrack1PT,>,'+str(self.getProp('MuTrackMuPt')),
-                                                              'FitVertexTrack2PT,>,'+str(self.getProp('MuTrackTrPt')),
-                                                              'FitVertexDimuonMass,>,'+str(self.getProp('MuTrackDimuMass')),
-                                                              'FitVertexPointing_PV2D,<,'+str(self.getProp('MuTrackPoint'))
-                                                              ]
+                                        , FilterDescriptor = [ 'FitVertexTrack1IP_PV2D,||>,'+str(self.getProp('MuTrackMuIP'))
+                                                             , 'FitVertexTrack2IP_PV2D,||>,'+str(self.getProp('MuTrackTrIP'))
+                                                             ]
                                         , HistoDescriptor = {'FitVertexTrack1IP_PV2D': ( 'Fitted muon track IP to PV2D',0.,10.,400),
                                                              'FitVertexTrack1IP_PV2DBest': ( 'Highest fitted muon track IP to PV2D',0.,10.,400),
                                                              'FitVertexTrack2IP_PV2D': ( 'Fitted companion track IP to PV2D',0.,10.,400),
                                                              'FitVertexTrack2IP_PV2DBest': ( 'Highest fitted companion track IP to PV2D',0.,10.,400),
-                                                             'FitVertexDOCA': ('DOCA of fitted muon and companion tracks',0.,4.,400),
-                                                             'FitVertexDOCABest': ( 'Lowest DOCA of fitted muon and companion tracks',0.,1.,200),
-                                                             'FitVertexDz_PV2D': ( 'Muon+companion fitted tracks vertex Dz to PV2D',-20.,80.,100),
-                                                             'FitVertexDz_PV2DBest': ( 'Highest muon+companion fitted tracks vertex Dz to PV2D',-20.,80.,100),
-                                                             'FitVertexPointing_PV2D': ( 'Fitted muon+companion tracks vertex pointing to PV2D',0.,1.,100),
-                                                             'FitVertexPointing_PV2DBest': ( 'Lowest fitted muon+companion tracks vertex pointing to PV2D',0.,1.,100)
                                                              }
                                         )
                              ]
@@ -710,7 +696,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
 ##                                             , FilterDescriptor = ['PT,>,'+str(self.getProp('MuTrackMuPt'))]
 ##                                             , HistoDescriptor = { 'PT': ( 'PT',0.,6000.,400), 'PTBest': ( 'PTBest',0.,6000.,400)}
 ##                                             )
-##                                   , PV2D().ignoreOutputSelection()  #// 2D PV only if any muon passes pt filter 
+##                                   , PV2D.ignoreOutputSelection()  #// 2D PV only if any muon passes pt filter 
 ##                                   , Member( 'TF','MuonIP' # // Select Muons with IP
 ##                                             , HistogramUpdatePeriod = 0
 ##                                             , FilterDescriptor = ['IP_PV2D,||>,'+str(self.getProp('MuTrackMuIP')) ]
@@ -839,9 +825,9 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                                                  'VertexTrack2PTBest': ('Forward companion track highest PT',0.,15000.,400)}
                                             )
                                   , Member( 'VF', 'VertexMass' # // Select vertices if mass
-                                            , FilterDescriptor = ['VertexDimuonMass,>,'+str(self.getProp('MuTrackDimuMass4JPsiLow')),
-                                                                  'VertexDimuonMass,<,'+str(self.getProp('MuTrackDimuMass4JPsiHigh'))
-                                                                  ]
+                                            , FilterDescriptor =[ 'VertexDimuonMass,>,%s' %self.getProp('MuTrackDimuMass4JPsiLow') ] + (
+                                                                [ 'VertexDimuonMass,<,%s' %self.getProp('MuTrackDimuMass4JPsiHigh') ] if self.getProp('MuTrackDimuMass4JPsiHigh') > 0 else [ ] 
+                                                                )
                                             , HistogramUpdatePeriod = 0
                                             , HistoDescriptor = {'VertexDimuonMass': ('Muon+track pair inv. mass as dimuon',0.,10000.,200),
                                                                  'VertexDimuonMassBest': ('Highest muon+track pair inv. mass as dimuon',0.,10000.,200)
@@ -861,14 +847,13 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                              )
                                   , Member ( 'VF', 'Decision' # // Final filter redo cuts
                                              , OutputSelection = '%Decision'
-                                             , FilterDescriptor = ['FitVertexDOCA,<,'+str(self.getProp('MuTrackDoca4JPsi')),
-                                                                   'FitVertexAngle,>,'+str(self.getProp('MuTrackAngle4JPsiLow')),
-                                                                   'FitVertexAngle,<,'+str(self.getProp('MuTrackAngle4JPsiHigh')),
-                                                                   'FitVertexTrack1PT,>,'+str(self.getProp('MuTrackMuPt4JPsi')),
-                                                                   'FitVertexTrack2PT,>,'+str(self.getProp('MuTrackTrPt4JPsi')),
-                                                                   'FitVertexDimuonMass,>,'+str(self.getProp('MuTrackDimuMass4JPsiLow')),
-                                                                   'FitVertexDimuonMass,<,'+str(self.getProp('MuTrackDimuMass4JPsiHigh'))
-                                                                   ]
+                                             , FilterDescriptor = ['FitVertexDOCA,<,%s'%self.getProp('MuTrackDoca4JPsi'),
+                                                                   'FitVertexAngle,>,%s'%self.getProp('MuTrackAngle4JPsiLow'),
+                                                                   'FitVertexAngle,<,%s'%self.getProp('MuTrackAngle4JPsiHigh'),
+                                                                   'FitVertexTrack1PT,>,%s'%self.getProp('MuTrackMuPt4JPsi'),
+                                                                   'FitVertexTrack2PT,>,%s'%self.getProp('MuTrackTrPt4JPsi'),
+                                                                   'FitVertexDimuonMass,>,%s'%self.getProp('MuTrackDimuMass4JPsiLow') 
+                                                                  ] + ( [ 'FitVertexDimuonMass,<,%s'%self.getProp('MuTrackDimuMass4JPsiHigh') ] if self.getProp('MuTrackDimuMass4JPsiHigh')  > 0 else [])
                                              , HistoDescriptor = {'FitVertexDOCA': ('DOCA of fitted muon and companion tracks',0.,4.,400),
                                                                   'FitVertexDOCABest': ( 'Lowest DOCA of fitted muon and companion tracks',0.,1.,200),
                                                                   'FitVertexAngle': ( 'Angle at Velo between muon and companion fitted tracks',0.,1.5,100),

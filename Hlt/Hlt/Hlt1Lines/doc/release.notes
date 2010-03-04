@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.137 2010-03-04 14:05:21 graven Exp $
+! $Id: release.notes,v 1.138 2010-03-04 22:56:26 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -28,6 +28,11 @@
    to get their primary vertices from HltPVs.py and not HltReco.py 
 
 !========================== Hlt1Lines v2r3 2010-03-04 ===================
+! 2010-03-04 - Gerhard Raven
+ - updates to Hlt1MuonLines and Hlt1ElectronLines as discussed in
+    https://savannah.cern.ch/task/?14164
+
+
 ! 2010-03-04 - Gerhard Raven
  - prefix algorithm names in Hlt1BeamGasLines with Hlt1BeamGas where appropriate
  - replace BeamGasTrigCheckL0TracksBXType with an equivalent VoidFilter
