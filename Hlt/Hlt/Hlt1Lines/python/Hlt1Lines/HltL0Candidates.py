@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.16 2010-03-04 14:04:36 graven Exp $
+# $Id: HltL0Candidates.py,v 1.17 2010-03-04 22:42:34 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -177,6 +177,10 @@ def L0Mask( channel ) :
     global _dict,_l0Masks
     if channel not in _dict.keys() : raise KeyError('Unknown L0 channel requested: %s -- check that this channel is included in requested L0 configuration...'%channel)
     return _l0Masks[channel]
+
+
+### From Olivier Deschamps:
+### ODIN-L0  decision =     (L0-bit0)   OR  (L0-bit1 and ODIN.BeamCrossing=Beam1) OR (L0-bit2 and ODIN.BeamCrossing=Beam2)
 
 def L0Mask2ODINPredicate( mask ) :
     _predicate = { 'Disable'              : 'ODIN_NONE'
