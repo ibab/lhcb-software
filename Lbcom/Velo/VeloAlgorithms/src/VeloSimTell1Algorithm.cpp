@@ -1,4 +1,4 @@
-// $Id: VeloSimTell1Algorithm.cpp,v 1.3 2009-12-18 08:12:33 szumlat Exp $
+// $Id: VeloSimTell1Algorithm.cpp,v 1.4 2010-03-04 18:29:54 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -380,8 +380,8 @@ StatusCode VeloSimTell1Algorithm::inputStream(LHCb::VeloTELL1Datas* inVec) const
 {
   debug()<< " ==> dataStatus() " <<endmsg;
   if(inVec->empty()){
-    Error("Input stream is empty!");
-    return ( StatusCode::FAILURE );
+    debug() << "Input stream is empty!" << endmsg;
+    return StatusCode::FAILURE; // no data but this is not always an error
   }else{
     return ( StatusCode::SUCCESS);
   }

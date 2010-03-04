@@ -1,4 +1,4 @@
-// $Id: VeloTell1DataProcessor.cpp,v 1.3 2009-12-18 08:12:33 szumlat Exp $
+// $Id: VeloTell1DataProcessor.cpp,v 1.4 2010-03-04 18:29:54 dhcroft Exp $
 // Include files
 // from STL
 #include <vector>
@@ -43,8 +43,6 @@ VeloTell1DataProcessor::VeloTell1DataProcessor( const std::string& name,
     m_simADCs ( VeloTELL1DataLocation::SimADCs ),
     m_adcs ( 0 ),
     m_buffer ( ALL_STRIPS ),
-    m_adcScale ( 128 ),
-    m_elScale ( 56608. ),
     m_isDebug ( msgLevel( MSG::DEBUG ) ),
     m_innerBuffer ( INNER_STR_ALL ),
     m_outerBuffer ( SENSOR_STRIPS - INNER_STR_ALL ),
@@ -52,7 +50,12 @@ VeloTell1DataProcessor::VeloTell1DataProcessor( const std::string& name,
     m_outerStrips ( ),
     m_innerDummy ( ),
     m_outerDummy ( )
-{ }
+{
+  // make the ADC in e- = (ADC_max)/(e_max) parameters tunable
+  // default is set to e- per ADC = 601. tuned to 2009 data
+  declareProperty("ElectronsFullScale", m_elScale = 76950.);
+  declareProperty("ADCsFullScale", m_adcScale = 128 );
+}
 //=============================================================================
 // Destructor
 //=============================================================================

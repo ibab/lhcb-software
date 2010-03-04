@@ -2,6 +2,11 @@
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2010-03-04 - David Hutchcroft
+ - Change electrons per ADC to 601 (was 442) to match VeloSim changes
+ - Reduce Warning/Error messages to debug if there is a sensor with no 
+   MCVeloFEs, does happen now with VeloSim optimisation
+
 !===================== VeloAlgorithms v5r1 2010-01-21 =====================
 ! 2009-12-17 - Tomasz Szumlak
  - change signatures of two methods from:  

@@ -1,4 +1,4 @@
-// $Id: VeloRawClustersMoni.cpp,v 1.10 2009-12-18 08:12:33 szumlat Exp $
+// $Id: VeloRawClustersMoni.cpp,v 1.11 2010-03-04 18:29:54 dhcroft Exp $
 
 // Include files 
 
@@ -188,8 +188,8 @@ StatusCode VeloRawClustersMoni::rawVeloClusterMonitor()
   //
   int contSize=m_rawClusters->size();
   if(!contSize){
-    return Warning( "Empty cluster container! - Skiping monitor",
-                    StatusCode::SUCCESS );
+    debug() <<"Empty cluster container! - Skiping monitor" << endmsg;
+    return StatusCode::SUCCESS;
   }
   m_nRawClusters+=double(contSize);
   m_nRawClusters2+=double(contSize*contSize);
