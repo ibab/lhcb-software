@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.127 2010-03-02 11:13:23 gligorov Exp $
+$Id: release.notes,v 1.128 2010-03-04 10:50:25 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,9 @@ $Id: release.notes,v 1.127 2010-03-02 11:13:23 gligorov Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2010-03-04 - Gerhard Raven
+ - fix typo in Hlt2Forward
 
 ! 2010-03-02 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691. Minor changes

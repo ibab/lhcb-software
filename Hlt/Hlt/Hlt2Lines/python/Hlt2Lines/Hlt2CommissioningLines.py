@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2CommissioningLines.py,v 1.19 2010-03-02 11:12:40 gligorov Exp $
+# $Id: Hlt2CommissioningLines.py,v 1.20 2010-03-04 10:50:25 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning 
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.19 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -20,7 +20,7 @@ from HltLine.HltLinesConfigurableUser import *
 class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
 
    __slots__ = { 'Prescale' : { 'Hlt2PassThrough'  : 0.0001 
-                              , 'Hlt2Forward'      : 0. # first needs a check that /Hlt/Track/Long actually exists..
+                              , 'Hlt2Forward'      : 0.0001
                               , 'Hlt2DebugEvent'   : 0.0001
                               }
                }
@@ -37,13 +37,11 @@ class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
 
         from Configurables import HltCopySelection_LHCb__Track_ as HltCopyTrackSelection
         from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
-        Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
-
-	tracks = Hlt2UnfittedForwardTracking.hlt2PrepareTracks()
+        tracks = Hlt2UnfittedForwardTracking().hlt2PrepareTracks()
         Line('Forward', prescale = self.prescale, postscale = self.postscale
             , algos = [ tracks,
                         HltCopyTrackSelection( 'Hlt2ForwardDecision' 
-                                             , InputSelection = 'TES:/'+tracks.outputSelection() # careful! needs info from Hlt2Tracking!!
+                                             , InputSelection = 'TES:'+tracks.outputSelection() # careful! needs info from Hlt2Tracking!!
                                              )
                       ]
             )
