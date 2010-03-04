@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.32 2010-02-26 14:27:30 jpalac Exp $ 
+# $Id: HltLine.py,v 1.33 2010-03-04 23:07:32 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.32 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.33 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -1567,7 +1567,7 @@ def len1 ( line ) :
     which is thw length from the last '\n'-symbol 
     """
     _i = line.rfind('\n')
-    return len(line) if _i < 0 else len(line) - _i
+    return len(line) if _i < 0 else len(line) - ( _i + 1 )
 
 ## the major properties/attributes  
 _hlt1_props_   = [ 'AcceptFraction'    , 

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.91 2010-03-02 11:11:31 gligorov Exp $
+! $Id: release.notes,v 1.92 2010-03-04 23:07:33 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
@@ -40,7 +40,10 @@
      reconstruction. This correctly picks up the relevant pieces from
      HltReco and Hlt2PID and speels out the dependencies explicitly. 
 
-!========================== HltLine v3r2  2010-03-02 ===================
+!========================== HltLine v3r2  2010-03-04 ===================
+! 2010-03-04 - Gerhard Raven
+ - fix off-by-one in pretty printing of HltLines
+
 ! 2010-03-02 - Johannes Albrecht
  - HltReco.py: add Hlt1 seeding sequence
 
