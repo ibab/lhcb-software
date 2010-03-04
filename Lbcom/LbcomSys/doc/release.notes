@@ -6,6 +6,9 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+! 2010-03-04 - Rob Lambert
+ - Added tests to instantiate configurables
+
 </PRE><H1><A NAME=v8r3>2010-02-25 LbcomSys v8r3</A></H1><PRE>
 This version uses Gaudi v21r7p1 and LHCb v29r2
 
