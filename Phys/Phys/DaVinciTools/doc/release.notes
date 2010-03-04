@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.514 2010-03-03 15:10:56 jpalac Exp $
+! $Id: release.notes,v 1.515 2010-03-04 08:24:00 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-03-04 - Juan Palacios
+ - src/FilterDekstop.cpp
+  . Bug fix: was writing Particle container to Vertex location!
 
 ! 2010-03-03 - Juan Palacios
  - src/FilterDekstop.cpp
