@@ -1,4 +1,4 @@
-// $Id: RawBankSizes.cpp,v 1.12 2010-02-24 16:48:52 jost Exp $
+// $Id: RawBankSizes.cpp,v 1.13 2010-03-04 08:35:44 frankb Exp $
 // Include files 
 
 // from Gaudi
@@ -8,7 +8,8 @@
 #include <utility>
 #include "RawBankSizes.h"
 #include "GaudiOnline/OnlineService.h"
-#include "Event/ODIN.h"
+#include "MDF/OnlineRunInfo.h"
+//#include "Event/ODIN.h"
 
 // local
 
@@ -127,7 +128,7 @@ StatusCode RawBankSizes::initialize()
      }
      Banks[i].nohist = (m_hparams[i].n_bin <= 0);
    }
-   for(int i = 0 ; i != (int) LHCb::RawBank::LastType; i++)
+   for(i = 0 ; i != (int) LHCb::RawBank::LastType; i++)
    {
 	  int idx;
 	  idx = i;
@@ -243,9 +244,11 @@ StatusCode RawBankSizes::execute()
 	    bnkid = (*ib)->type();
 		  if (bnkid == LHCb::RawBank::ODIN)
 		  {
-			  unsigned int *dat = (*ib)->data();
-			  LHCb::ODIN::TriggerType tt = (LHCb::ODIN::TriggerType)((dat[LHCb::ODIN::Word8] & LHCb::ODIN::TriggerTypeMask)>>16);
-			  nolumi = (tt != LHCb::ODIN::LumiTrigger);
+		    //unsigned int *dat = (*ib)->data();
+		    //LHCb::ODIN::TriggerType tt = (LHCb::ODIN::TriggerType)((dat[LHCb::ODIN::Word8] & LHCb::ODIN::TriggerTypeMask)>>16);
+		    //nolumi = (tt != LHCb::ODIN::LumiTrigger);
+		    const OnlineRunInfo* dat = (*ib)->begin<OnlineRunInfo>();
+		    nolumi = (dat->triggerType != 2); // 2 = LumiTrigger
 		  }
 		  int  id;
 		  id = bnkid;
