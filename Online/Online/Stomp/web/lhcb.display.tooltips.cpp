@@ -37,8 +37,14 @@ var init_tooltips = function(body) {
   }
   tip.set = function(obj,text) {
     //alert('set tooltip:'+text);
-    obj.onmouseout  = function() { tooltips.hide(); }
-    obj.onmouseover = function() { tooltips.show(event,this.tip); }
+    if ( _isInternetExplorer() ) {
+      obj.onmouseout  = function() { tooltips.hide(); }
+      obj.onmouseover = function() { tooltips.show(event,this.tip); }
+    }
+    else {
+      obj.onmouseout  = function(event) { tooltips.hide(); }
+      obj.onmouseover = function(event) { tooltips.show(event,this.tip); }
+    }
     obj.tip = text;
   }
   return tip;

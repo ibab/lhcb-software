@@ -1,5 +1,37 @@
 /* <style type="text/css"> */
 
+.Arial10pt  {
+    color:            #000000;
+    border:           none;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        10px;
+    font-weight:      normal;
+}
+
+.Arial12pt  {
+    color:            #000000;
+    border:           none;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        12px;
+    font-weight:      normal;
+}
+
+.Arial14pt  {
+    color:            #000000;
+    border:           none;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        14px;
+    font-weight:      normal;
+}
+
+.Arial16pt  {
+    color:            #000000;
+    border:           none;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        16px;
+    font-weight:      normal;
+}
+
 .NewsPage  {
     background-color: #FFFFFF;
     color:            #000000;
@@ -240,18 +272,19 @@
 }
                   	  
 .tooltip {
-  font-size:           10px;
-  font-family:         Arial, Helvetica, sans-serif;
-  border:              solid 1px #666666; 
-  width:               270px; 
-  padding:             1px;
-  position:            absolute; 
-  z-index:             100;
-  visibility:          hidden; 
-  color:#333333; top:20px;
-  left:90px; 
-  background-color:#ffffcc;
+  font-size:             10px;
+  font-family:           Arial, Helvetica, sans-serif;
+  border:                solid 1px #666666; 
+  width:                 270px; 
+  padding:               1px;
+  position:              absolute; 
+  z-index:               100;
+  visibility:            hidden; 
+  color:                 #333333; top:20px;
+  left:                  90px; 
+  background-color:      #ffffcc;
   layer-background-color:#ffffcc;
+  text-align:            left;
 }
 
 /* </STYLE>  */

@@ -367,8 +367,9 @@ var BcmStatus = function(msg,chart,sensors)   {
     var tb = document.createElement('tbody');
     var tr, td, c, d = new Date();
 
-    tab.width ='100%';
-    tb.width  = '100%';
+    tab.className = tb.className = 'MonitorPage';
+    tab.width = tb.width = '100%';
+    tab.style.fontSize = '90%';
 
     this.heading = document.createElement('tr');
     var cell = Cell(lhcb_online_picture()+'&nbsp;LHCb BCM Status',2,'MonitorBigHeader');
@@ -380,6 +381,8 @@ var BcmStatus = function(msg,chart,sensors)   {
     this.head_date.id = 'current_time';
     this.head_date.style.width = '360px';
     this.heading.appendChild(this.head_date);
+    this.heading.onclick = function() { document.location = "http://lhcb.cern.ch";};
+    tooltips.set(this.heading,'LHCb bcm summary<br>Click to go to LHCb home page');
     tb.appendChild(this.heading);
 
     this.timerHandler = function() {document.getElementById('current_time').innerHTML = (new Date()).toString(); }
@@ -489,5 +492,6 @@ var bcm_body = function()  {
   else {
     setTimeout(function(){document.getElementsByTagName('body')[0].onload1(); },4000);
   }
+  body.style.cursor = 'default';
 }
 if ( _debugLoading ) alert('Script lhcb.display.detstatus.cpp loaded successfully');

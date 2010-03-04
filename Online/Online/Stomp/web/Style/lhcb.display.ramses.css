@@ -4,25 +4,34 @@
   font-family:         Arial, Helvetica, sans-serif;
   border:              solid 1px #111111; 
   padding:             1px;
-  color:#000000; top:20px;
+  color:               #000000; top:20px;
   left:90px; 
-  background-color:#ffffcc;
+  background-color:    #ffffcc;
 }
 .Average {
   font-size:           12px;
   font-family:         Arial, Helvetica, sans-serif;
   border:              solid 1px #111111; 
   padding:             1px;
-  color:#000000; top:20px;
+  color:               #000000; top:20px;
   left:90px; 
-  background-color:#bbbbcc;
+  background-color:    #bbbbcc;
 }
 .Sensor {
   font-size:           14px;
   font-weight:         bold;
   font-family:         Arial, Helvetica, sans-serif;
-  border:              none; 
+  border:              none;
   color:               #000000;
+}
+.RamsesItem {
+  font-size:           14px;
+  font-weight:         bold;
+  font-family:         Arial, Helvetica, sans-serif;
+  border:              solid 1px #999999;
+  /* border:              solid 3px #66FF99; */
+  color:               #000000;
+  background-color:    #eeeeee;
 }
 .MonitorBigHeader  {
     text-align:       left;

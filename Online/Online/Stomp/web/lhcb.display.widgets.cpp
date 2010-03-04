@@ -69,7 +69,7 @@ if ( !lhcb.widgets ) {
     tab.width     = '100%';
     tab.height    = '120px';
 
-    tab.energy       = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Energy',null,"%7.1f GeV");
+    tab.energy       = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Energy',null,"%7.0f GeV");
     //tab.intensity1   = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Intensity.Beam1.totalIntensity',null,"%9.2e");
     //tab.intensity2   = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Intensity.Beam2.totalIntensity',null,"%9.2e");
     //tab.lifetime1    = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Intensity.Beam1.primitiveLifetime',null,"%7.2f");
@@ -105,14 +105,14 @@ if ( !lhcb.widgets ) {
     tb.appendChild(tr);
     tr.appendChild(Cell('Intensity [e]:',null,'MonitorDataHeader'));
     tr.appendChild(tab.intensity1);
-    tr.appendChild(Cell('&lt;1 Beam 2&gt;',null,'Text-Center'));
+    tr.appendChild(Cell('&larr;1 Beam 2&rarr;',null,'Text-Center'));
     tr.appendChild(tab.intensity2);
 
     tr = document.createElement('tr');
     tb.appendChild(tr);
     tr.appendChild(Cell('Lifetime [h]:',null,'MonitorDataHeader'));
     tr.appendChild(tab.lifetime1);
-    tr.appendChild(Cell('&lt;1 Beam 2&gt;',null,'Text-Center'));
+    tr.appendChild(Cell('&larr;1 Beam 2&rarr;',null,'Text-Center'));
     tr.appendChild(tab.lifetime2);
 
     tr = document.createElement('tr');
@@ -224,6 +224,11 @@ if ( !lhcb.widgets ) {
     tab.width = '100%';
 
     tab.comments   = StyledItem('lbWeb.shiftComments',null,null);
+    tab.comments.conversion = function(data) {
+      return data.replace(/\n/g,'<BR>');
+    }
+    tab.comments.style.fontWeight = 'normal';
+
     tr = document.createElement('tr');
     tb.appendChild(tr);
     tr.appendChild(Cell('Shift comments:',null,'MonitorDataHeader'));
@@ -496,6 +501,63 @@ if ( !lhcb.widgets ) {
     tab.appendChild(tb);
     return tab;
   }
-  
+
+  /// Create Cell item containing the TTC prepulse information
+  lhcb.widgets.rf2ttcPrepulses = function() {
+    var item = StyledItem('lbWeb.RF2TTC/rf2ttc.Parameter.Readings.DIP.INJECTION_PREPULSE','Text-Right',null);
+    item.conversion = function(v) { return (v=='TRUE') ? 'Yes' : 'No'; };
+    return item;
+  }
+
+  /// Create Cell item containing the TTC clock status
+  lhcb.widgets.rf2ttcStatus = function() {
+    var item = StyledItem('lbWeb.RF2TTC/rf2ttc.Parameter.Settings.Errors.FREQ_STATUS',null,null);
+    item.conversion = function(v) {  return (v=='TRUE') ? 'Clock OK' : 'Bad Clock'; }
+    return item
+  }
+
+  /// Create Cell item containing the TTC clock state
+  lhcb.widgets.rf2ttcState = function() {
+    var item = StyledItem('lbWeb.RF2TTC/rf2ttc.State.RunState',null,null);
+    item.data = 3;
+    item.conversion = function(state) {
+      this.data = state;
+      if(state == 3 || state == 5)    //state Ready or Running
+	return 'Ready';
+      else if(state == 1 || state == 2) // Not Ready or Configuring
+        return 'Not Ready';
+      return 'Off';
+    }
+    return item
+  }
+
+  /// Create Cell item containing the TTC clock type. Requires the state for interpretation!
+  lhcb.widgets.rf2ttcSource = function(st) {
+    var item = StyledItem('lbWeb.RF2TTC/rf2ttc.Parameter.Settings.Selection.SELECT_SOURCE','Text-Right',null);
+    item.State  = st;
+    item.State.data = 3;
+    item.conversion = function(source)  {
+      var state = state = this.State.data;
+      if(state == 3 || state == 5) {  //state Ready or Running
+	if(source == 0)
+	  return 'Int. LHCb clock'; 
+	else if (source == 1)
+          return 'Ext. LHC clock: locked on RF Ref'; 
+	else if (source == 2)
+          return 'Ext. LHC clock: locked on Beam 1'; 
+	else if (source == 3)
+          return 'Ext. LHC clock: locked on Beam 2';
+      }
+      else if(state == 1 || state == 2) // Not Ready or Configuring
+        return 'Not configured';
+      else if(state == 0)
+        return 'Problem with the clock';
+      else if(state == -1)
+        return 'No Clock Monitoring';
+      return 'System not used or PVSS project not connected';
+    }
+    return item;
+  }
   if ( _debugLoading ) alert('Script lhcb.display.widgets.cpp loaded successfully');
+  //alert('Script lhcb.display.widgets.cpp loaded successfully');
 }

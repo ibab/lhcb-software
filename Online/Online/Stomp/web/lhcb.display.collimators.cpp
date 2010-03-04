@@ -340,8 +340,12 @@ var Collimators = function(msg)   {
     var d = new Date();
 
     tab.className = tb.className = 'MonitorPage';
+    tab.style.fontSize = '90%';
+
     this.heading = document.createElement('tr');
     var cell = Cell(lhcb_online_picture()+'&nbsp;LHCb Collimator Monitor',1,'MonitorBigHeader');
+    tooltips.set(cell,'The collimators around LHCb<br>Click to see LHC summary page');
+    cell.onclick     = function() { document.location = "http://lhcb.cern.ch";};
     cell.style.textAlign = 'left';
     this.heading.appendChild(cell);
     this.head_date = Cell(d.toString(),1,'MonitorTinyHeader');
@@ -360,6 +364,8 @@ var Collimators = function(msg)   {
     td = document.createElement('td');
     td.colSpan = 2;
     td.appendChild(this.LHC_header());
+    tooltips.set(td,'LHC status<br>Click to see summary page.');
+    td.onclick     = function() { document.location = "lhcb.display.htm?type=lhc";};
     tr.appendChild(td);
     
     tr = document.createElement('tr');

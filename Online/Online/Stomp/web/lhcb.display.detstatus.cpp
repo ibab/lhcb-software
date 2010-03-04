@@ -56,6 +56,7 @@ var DetStatus = function(msg)   {
   table.appendChild(table.body);
 
   table.LHCb_HT_header = lhcb.widgets.LHCb_HT_header;
+  tooltips.set(table.LHCb_HT_header,'HT summary state of the LHCb subdetector');
 
   table.hv_conf = function(val) {
     var v = val.split('/',4);
@@ -79,6 +80,7 @@ var DetStatus = function(msg)   {
     this['hvTrips'+nam] = StyledItem('lbWeb.LHCb.HT.Trips.'+nam,null,null);
     tr.appendChild(this['hvState'+nam]);
     tr.appendChild(this['hvTrips'+nam]);
+    tooltips.set(tr,'HT state of the '+nam+' subdetector');
     return tr;
   }
 
@@ -90,6 +92,7 @@ var DetStatus = function(msg)   {
     var tb = document.createElement('tbody');
     var tr = document.createElement('tr');
 
+    //tooltips.set(tab,'HT state of the LHCb subdetectors');
     tab.className = tb.className  = 'MonitorPage';
     tab.height    = '120px';
     tr.appendChild(Cell('Subdetector',1,'MonitorDataHeader'));
@@ -119,6 +122,8 @@ var DetStatus = function(msg)   {
     tb = document.createElement('tbody');
 
     tab.className = tb.className = 'MonitorPage';
+    tooltips.set(tab,'Brief overview information<br>of the LHCb magnet status<br>Click to see magnet page.');    
+    tab.onclick = function() { document.location = "lhcb.display.htm?type=magnet";};
 
     tr = document.createElement('tr');
     tr.appendChild(c=Cell('Magnet Status:',null,'MonitorDataHeader'));
@@ -192,6 +197,8 @@ var DetStatus = function(msg)   {
     var c, tb, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
 
+    tooltips.set(tab,'Background summary<br>Click to access BCM information');
+    tab.onclick = function() { document.location = "lhcb.display.htm?type=bcm&sensors=1";};
     tab.className = tb.className   = 'MonitorPage';
     tr = document.createElement('tr');
     tr.appendChild(c=Cell('Background Status:',7,'MonitorDataHeader'));
@@ -236,14 +243,26 @@ var DetStatus = function(msg)   {
     var tr = document.createElement('tr');
     var cell = Cell('LHC clock:',null,'MonitorDataHeader');
 
+    tooltips.set(tab,'TTC clock information<br>Click to see LHC status');
+    tab.onclick = function() { document.location = "lhcb.display.htm?type=lhc";};
+    this.lhcPrepulses   = lhcb.widgets.rf2ttcPrepulses();
+    this.lhcClockState  = lhcb.widgets.rf2ttcState()
+    this.lhcClock       = lhcb.widgets.rf2ttcSource(this.lhcClockState);
+
     tab.className = tb.className   = 'MonitorPage';
     tr.appendChild(cell);
     cell.style.width = '25%';
-    this.lhcClock = StyledItem('lbWeb.LHC.Clock',null,null);
     tr.appendChild(this.lhcClock);
-    tr.appendChild(Cell('Last measured:',null,null));
-    this.lhcClockReading = StyledItem('lbWeb.LHC.LastClockReading',null,null);
-    tr.appendChild(this.lhcClockReading);
+    this.lhcClock.colSpan = 3;
+    tb.appendChild(tr);
+
+    tr = document.createElement('tr');
+    tr.appendChild(cell=Cell('Clock state:',null,'MonitorDataHeader'));
+    tr.appendChild(this.lhcClockState);
+    this.lhcClockState.style.width = '25%';
+    tr.appendChild(cell=Cell('Prepulses:',null,'MonitorDataHeader'));
+    tr.appendChild(this.lhcPrepulses);
+    this.lhcPrepulses.style.width = '25%';
     tb.appendChild(tr);
 
     tab.appendChild(tb);
@@ -258,6 +277,7 @@ var DetStatus = function(msg)   {
     var tr = document.createElement('tr');
     var cell = Cell('Velo position:',1,'MonitorDataHeader');
 
+    tooltips.set(tab,'Velo position summary');    
     tab.className = tb.className   = 'MonitorPage';
     cell.style.width = '25%';
     // Velo position
@@ -277,6 +297,7 @@ var DetStatus = function(msg)   {
     tb = document.createElement('tbody');
     tab.className = tb.className   = 'MonitorPage';
 
+    tooltips.set(tab,'Cooling information summary<br>for various subdetectors');    
     // Velo position
     this.itCoolingAlarms  = StyledItem('lbWeb.CaV/ItPlant.Actual.alarm', null, null);
     this.otCoolingAlarms  = StyledItem('lbWeb.CaV/OtPlant.Actual.alarm', null, null);
@@ -355,7 +376,8 @@ var DetStatus = function(msg)   {
 
     this.subscribeItem(this.lastMagnetReading);
     this.subscribeItem(this.lhcClock);
-    this.subscribeItem(this.lhcClockReading);
+    this.subscribeItem(this.lhcClockState);
+    this.subscribeItem(this.lhcPrepulses);
 
     this.subscribeItem(this.magnetPolarity);
     this.subscribeItem(this.magnetCurrent);
@@ -395,19 +417,22 @@ var DetStatus = function(msg)   {
     var tb = document.createElement('tbody');
     var t1, tb1, tr1, td1, d = new Date();
 
+    tab.className = tb.className = 'MonitorPage';
     tab.width = tb.width  = '100%';
+    tab.style.fontSize = '90%';
+
     this.heading = document.createElement('tr');
-    var cell = Cell('LHCb Detector Status',1,'MonitorBigHeader');
+    var cell = Cell(lhcb_online_picture()+'&nbsp;LHCb Detector Status',1,'MonitorBigHeader');
     cell.style.textAlign = 'left';
-    //cell.style.width = '360px';
+    cell.onclick = function() { document.location = "http://lhcb.cern.ch";};
+    this.heading.appendChild(cell);
+    cell = Cell('',1,null);
     this.heading.appendChild(cell);
     this.head_date    = Cell(d.toString(),1,'MonitorTinyHeader');
     this.head_date.id = 'current_time';
     this.head_date.textAlign = 'right';
-    //this.head_date.style.width = '50%';
     this.heading.appendChild(this.head_date);
-    this.head_pic = Cell(lhcb_online_picture(),1,null);
-    this.heading.appendChild(this.head_pic);
+    tooltips.set(this.heading,'LHCb status summary:<br>-- High voltage status<br>-- Magnet status<br>-- TTC status<br>-- Background status<br>-- Velo and cooling status<br>Click to go to LHCb home page');
     tb.appendChild(this.heading);
 
     this.timerHandler = function() {document.getElementById('current_time').innerHTML = (new Date()).toString(); }
@@ -424,10 +449,10 @@ var DetStatus = function(msg)   {
     t1.style.border = tb1.style.border = 'none';
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
-    td1.appendChild(this.LHCb_HT_header());
+    td1.appendChild(cell=this.LHCb_HT_header());
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
-    td1.appendChild(this.LHCb_HT_summary());
+    td1.appendChild(cell=this.LHCb_HT_summary());
 
     // Right hand of the display
     tr.appendChild(td=document.createElement('td'));
@@ -435,7 +460,6 @@ var DetStatus = function(msg)   {
     t1.appendChild(tb1=document.createElement('tbody'));
     t1.className = tb1.className = 'MonitorPage';
     t1.style.border = tb1.style.border = 'none';
-    //td.style.width = '50%';
     td.colSpan = 2;
 
     tb1.appendChild(tr1=document.createElement('tr'));
@@ -500,6 +524,7 @@ var detstatus_body = function()  {
   selector.build();
   selector.subscribe();
   selector.provider.start();
+  body.style.cursor = 'default';
 }
 
 if ( _debugLoading ) alert('Script lhcb.display.detstatus.cpp loaded successfully');

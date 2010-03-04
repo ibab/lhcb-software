@@ -332,42 +332,11 @@ var LHCStatus = function(msg)   {
 
     tb.appendChild(tr);
 
-    this.lhcClock        = StyledItem('lbWeb.RF2TTC/rf2ttc.Parameter.Settings.Errors.FREQ_STATUS','Text-Right',null);
-    this.lhcClock.conversion = function(v) {  return (v=='TRUE') ? 'Clock OK' : 'Bad Clock'; }
-    this.rf2ttcPrePulses = StyledItem('lbWeb.RF2TTC/rf2ttc.Parameter.Readings.DIP.INJECTION_PREPULSE','Text-Right',null);
-    this.rf2ttcPrePulses.conversion = function(v) { return (v=='TRUE') ? 'Yes' : 'No'; }
-    this.rf2ttcSource    = StyledItem('lbWeb.RF2TTC/rf2ttc.Parameter.Settings.Selection.SELECT_SOURCE','Text-Right',null);
-    this.rf2ttcRunState  = StyledItem('lbWeb.RF2TTC/rf2ttc.State.RunState',null,null);
-    this.rf2ttcSource.State = this.rf2ttcRunState;
-    this.rf2ttcSource.State.data = 3;
-    this.rf2ttcRunState.conversion = function(state) {
-      this.data = state;
-      if(state == 3 || state == 5)    //state Ready or Running
-	return 'Ready';
-      else if(state == 1 || state == 2) // Not Ready or Configuring
-        return 'Not Ready';
-      return 'Off';
-    }
-    this.rf2ttcSource.conversion = function(source)  {
-      var state = state = this.State.data;
-      if(state == 3 || state == 5) {  //state Ready or Running
-	if(source == 0)
-	  return 'Int. LHCb clock'; 
-	else if (source == 1)
-          return 'Ext. LHC clock: locked on RF Ref'; 
-	else if (source == 2)
-          return 'Ext. LHC clock: locked on Beam 1'; 
-	else if (source == 3)
-          return 'Ext. LHC clock: locked on Beam 2';
-      }
-      else if(state == 1 || state == 2) // Not Ready or Configuring
-        return 'Not configured';
-      else if(state == 0)
-        return 'Problem with the clock';
-      else if(state == -1)
-        return 'No Clock Monitoring';
-      return 'System not used or PVSS project not connected';
-    }
+    this.lhcClock            = lhcb.widgets.rf2ttcStatus();
+    this.rf2ttcPrePulses     = lhcb.widgets.rf2ttcPrepulses();
+    this.rf2ttcRunState      = lhcb.widgets.rf2ttcState();
+    this.rf2ttcSource        = lhcb.widgets.rf2ttcSource(this.rf2ttcRunState);
+
     tr.appendChild(c=Cell('LHC Timing:',null,'MonitorDataHeaderRED'));
     c.style.width = '20%';
     tr.appendChild(this.rf2ttcSource);
@@ -420,7 +389,7 @@ var LHCStatus = function(msg)   {
 
     tr.appendChild(c=Cell('RunState:',null,'MonitorDataHeader'));
     c.style.width='15%';
-    this.runState.style.width='15%';
+    this.runState.style.width='20%';
     this.runState.style.textAlign='center';
     tr.appendChild(this.runState);
 

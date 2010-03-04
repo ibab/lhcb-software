@@ -35,6 +35,7 @@ var MagnetStatus = function(msg)   {
 
     tab.width = '100%';
     tab.className = tb.className = 'MonitorPage';
+    tooltips.set(tab,'Magnet status summary information');
 
     tr = document.createElement('tr');
     tr.appendChild(c=Cell('Magnet Status:',null,'MonitorDataHeaderRED'));
@@ -92,6 +93,7 @@ var MagnetStatus = function(msg)   {
 
     tab.style.width = tb.style.width = '100%';
     tab.className = tb.className = 'MonitorPage';
+    tooltips.set(tab,'Sensor status and values');
 
     this.magnetTemp0   = StyledItem('lbWeb.LbMagnet.BSensor0.Temp','Text-Center','%7.2f &#186;C');
     this.magnetField0  = StyledItem('lbWeb.LbMagnet.BSensor0.Babs','Text-Center','%7.4f');
@@ -317,8 +319,9 @@ var MagnetStatus = function(msg)   {
     var tb = document.createElement('tbody');
     var t1, tb1, tr1, td1, d = new Date();
 
-    tab.width = tb.width  = '100%';
     tab.className = tb.className = 'MonitorPage';
+    tab.width = tb.width  = '100%';
+    tab.style.fontSize = '90%';
 
     this.heading = document.createElement('tr');
     var cell = Cell('<IMG src="'+_fileBase+'/Images/LHCb/Magnet.jpg" width="100"></IMG>&nbsp;LHCb Magnet Status',1,'MonitorBigHeader');
@@ -331,6 +334,8 @@ var MagnetStatus = function(msg)   {
     this.heading.appendChild(this.head_date);
     this.head_pic = Cell(lhcb_online_picture(),1,null);
     this.heading.appendChild(this.head_pic);
+    this.heading.onclick = function() { document.location = "http://lhcb.cern.ch";};
+    tooltips.set(this.heading,'LHCb magnet status page<br>Click to go to LHCb home page');
     tb.appendChild(this.heading);
 
     this.timerHandler = function() {document.getElementById('current_time').innerHTML = (new Date()).toString(); }
@@ -403,6 +408,7 @@ var magnet_body = function()  {
   selector.build();
   selector.subscribe();
   selector.provider.start();
+  body.style.cursor = 'default';
 }
 
 if ( _debugLoading ) alert('Script lhcb.display.detstatus.cpp loaded successfully');
