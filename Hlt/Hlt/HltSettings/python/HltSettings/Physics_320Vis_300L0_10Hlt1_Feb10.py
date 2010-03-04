@@ -61,6 +61,7 @@ class Physics_320Vis_300L0_10Hlt1_Feb10 :
                                             , 'EleIP_IPCut'            : 0.12
                                             , 'EleIPCompanion_PtCut'   : 2300
                                             , 'EleCompanion_PtCut'     : 4750
+                                            , 'DiEle_HighMassCut'      : -1 # only applied if >0
                                             }
                  , Hlt1MuonLinesConf : {  'DiMuon_SumPtCut' : 320.0
                                           , 'Muon_DeltaPCut'               :   -1 
@@ -93,7 +94,7 @@ class Physics_320Vis_300L0_10Hlt1_Feb10 :
                                           , 'MuTrackAngle4JPsiLow' : 0.02
                                           , 'MuTrackAngle4JPsiHigh' : 0.3
                                           , 'MuTrackDimuMass4JPsiLow' : 2900
-                                          , 'MuTrackDimuMass4JPsiHigh' : 3300
+                                          , 'MuTrackDimuMass4JPsiHigh' : -1 # <= 0 implies 'remove cut'
                                           , 'MuTrackMuChi24JPsi' : 999.
                                           , 'MuTrackTrChi24JPsi' : 999.
                                           }
