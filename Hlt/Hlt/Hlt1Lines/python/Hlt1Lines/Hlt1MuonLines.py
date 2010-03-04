@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1MuonLines.py,v 1.13 2010-03-04 22:56:26 graven Exp $
+# $Id: Hlt1MuonLines.py,v 1.14 2010-03-04 22:59:59 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
 # =============================================================================
 
 
@@ -90,7 +90,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
         from Hlt1Lines.HltL0Candidates import convertL0Candidates, L0Channels
         from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
         from HltLine.HltReco import RZVelo, Velo
-        from HltLine.HltReco import PV2D
+	from HltLine.HltPVs  import PV2D
 
         # It already Prepare the muon segments with proper error calling the tool MuonSeedTool
         RecoMuonSeg = HltMuonRec('HltRecoMuonSeg'
@@ -176,7 +176,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                    )
                         ]
         # single track with IP cut
-        FastFitWithIP = [ PV2D.ignoreOutputSelection()
+        FastFitWithIP = [ PV2D().ignoreOutputSelection()
                           , Member ( 'TU' , 'FitTrack' , RecoName = 'FitTrack', callback = setupHltFastTrackFit
                                      , HistoDescriptor = { 'FitTrackQuality': ( 'Track Fit Chi2 / ndf',0.,50.,100),
                                                            'FitTrackQualityBest': ( 'lowest track Fit Chi2 / ndf',0.,50.,100) }  
@@ -207,7 +207,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                   , FilterDescriptor = ['FitVertexMaxChi2OverNdf,<,'+str(self.getProp('Muon_FitChiCut'))])
                          ]
         # vertex (two tracks) with IP cut
-        FastFitVtxWithIP = [ PV2D.ignoreOutputSelection()
+        FastFitVtxWithIP = [ PV2D().ignoreOutputSelection()
                            , Member( 'VU' , 'FitTrack' ,      RecoName = 'FitTrack', callback = setupHltFastTrackFit)
                            , Member( 'VF','IP'
                                    ,  FilterDescriptor = [ 'FitVertexMinIP_PV2D,||>,'+str(self.getProp('DiMuon_IPCut')) ])
@@ -332,7 +332,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                     , prescale = self.prescale
                                     , L0DU = "L0_CHANNEL('%(L0SingleMuon)s')"%self.getProps()
                                     , algos = [ MuonPrep
-                                                , PV2D.ignoreOutputSelection()
+                                                , PV2D().ignoreOutputSelection()
                                                 , Member ( 'TF', 'PT'
                                                            , FilterDescriptor = ['PT,>,'+str(self.getProp('MuonIP_PtCut')) ])
                                                 ] + FastFitWithIP 
@@ -595,7 +595,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                                              'PTBest': ( 'L0+T+Velo confirmed muon highest PT',0.,15000.,400)}
                                        #, OutputLevel=2
                                        )
-                             , PV2D.ignoreOutputSelection()  #// 2D PV only if any muon passes pt filter 
+                             , PV2D().ignoreOutputSelection()  #// 2D PV only if any muon passes pt filter 
                              , Member( 'TF','MuonIP' # // Select Muons with IP
                                        , HistogramUpdatePeriod = 0
                                        , FilterDescriptor = ['IP_PV2D,||>,'+str(self.getProp('MuTrackMuIP')) ]
@@ -696,7 +696,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
 ##                                             , FilterDescriptor = ['PT,>,'+str(self.getProp('MuTrackMuPt'))]
 ##                                             , HistoDescriptor = { 'PT': ( 'PT',0.,6000.,400), 'PTBest': ( 'PTBest',0.,6000.,400)}
 ##                                             )
-##                                   , PV2D.ignoreOutputSelection()  #// 2D PV only if any muon passes pt filter 
+##                                   , PV2D().ignoreOutputSelection()  #// 2D PV only if any muon passes pt filter 
 ##                                   , Member( 'TF','MuonIP' # // Select Muons with IP
 ##                                             , HistogramUpdatePeriod = 0
 ##                                             , FilterDescriptor = ['IP_PV2D,||>,'+str(self.getProp('MuTrackMuIP')) ]
