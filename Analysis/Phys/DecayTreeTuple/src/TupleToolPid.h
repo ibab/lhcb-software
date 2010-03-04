@@ -1,4 +1,4 @@
-// $Id: TupleToolPid.h,v 1.3 2010-01-26 15:39:26 rlambert Exp $
+// $Id: TupleToolPid.h,v 1.4 2010-03-04 14:02:03 xieyu Exp $
 #ifndef JBOREL_TUPLETOOLPID_H
 #define JBOREL_TUPLETOOLPID_H 1
 
@@ -24,6 +24,14 @@
  *
  *  @author Jeremie Borel
  *  @date   2007-11-07
+ *
+ * Add more info: 
+ * -hasRich:  proto->richPID()!=0
+ * -hasCalo:  proto->calo().size()>0
+ * -hasMuon:  proto->muonPID()!=0
+ * -isMuon:   proto->muonPID->IsMuon()
+ *  
+ *  @data   2010-03-04
  */
 class TupleToolPid : public TupleToolBase, virtual public IParticleTupleTool {
 public:

@@ -1,4 +1,4 @@
-// $Id: TupleToolPid.cpp,v 1.5 2010-02-09 09:40:49 pkoppenb Exp $
+// $Id: TupleToolPid.cpp,v 1.6 2010-03-04 14:02:03 xieyu Exp $
 // Include files
 
 // from Gaudi
@@ -72,6 +72,25 @@ StatusCode TupleToolPid::fill( const Particle*
 			     ,proto->info(LHCb::ProtoParticle::CaloEcalE,-10000.));
       test &= tuple->column( prefix+"_CaloHcalE"
 			     ,proto->info(LHCb::ProtoParticle::CaloHcalE,-10000.));
+
+      bool hasMuon = false;
+      bool isMuon = false;
+      const MuonPID * muonPID = proto->muonPID();
+      if(muonPID) {
+        hasMuon = true;
+        isMuon = muonPID->IsMuon();
+      }
+      test &= tuple->column( prefix+"_hasMuon", hasMuon);
+      test &= tuple->column( prefix+"_isMuon", isMuon);
+
+      bool hasRich = false;
+      if(proto->richPID()) hasRich = true;
+      test &= tuple->column( prefix+"_hasRich", hasRich);
+
+      bool hasCalo = false;
+      if(proto->calo().size()>0) hasCalo = true;
+      test &= tuple->column( prefix+"_hasCalo", hasCalo);
+
       
       return StatusCode(test);
     }

@@ -3,6 +3,9 @@
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+! 2010-03-04 - Yuehong Xie
+- TupleToolPID : Add hasRich, hasCalo, hasMuona nd isMuon
+
 
 ! 2010-03-03 - Patrick Koppenburg
  - Add head_PreFitMass in vebose mode (task #14256)
