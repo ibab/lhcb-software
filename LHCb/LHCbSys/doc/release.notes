@@ -5,6 +5,9 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+! 2010-03-04 - Rob Lambert
+ - added tests for configurables
+
 </PRE><H1><A NAME=v29r2>2010-02-25 LHCbSys v29r2</A></H1><PRE>
 This version uses Gaudi v21r7p1 and LCG_58a
 
