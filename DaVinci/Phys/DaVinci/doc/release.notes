@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.410 2010-03-01 13:51:00 pkoppenb Exp $
+! $Id: release.notes,v 1.411 2010-03-04 16:25:09 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -9,8 +9,13 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-03-04 - Juan Palacios
+ - DaVinci configurable:
+  . Remove most of initSeq() and all of l0(), hlt() and decReports() when 
+    InputType = 'MDST'
+
 ! 2010-03-01 - Patrick Koppenburg
- - Enfore Simulation = True for DataType MC09 and DC06
+ - Enforce Simulation = True for DataType MC09 and DC06
 
 ! 2010-02-25 - Patrick Koppenburg
  - Changed default value of Simulation to false
