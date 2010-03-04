@@ -227,6 +227,11 @@ StatusCode PIDQC::execute()
       {
         // Get true track type from MC
         mcpid = m_mcTruth->mcParticleType(track);
+        if ( !m_ignoreMCThres && mcpid == Rich::Unknown )
+        {
+          debug() << "Track has no MC -> Ghost therefore below threshold :-" << endmsg;
+          mcpid = Rich::BelowThreshold;
+        } 
         if ( mcpid != Rich::Unknown &&
              !m_ignoreMCThres &&
              !iPID->isAboveThreshold(mcpid) )
@@ -552,25 +557,27 @@ void PIDQC::print( MsgStream & msg,
   if ( iPID->usedRich2Gas() ) { msg << " " << Rich::Rich2Gas; }
   msg << endmsg
       << "  Threshold   = ";
-  {for ( int ipid = 0; ipid < Rich::NParticleTypes; ++ipid ) {
-    const Rich::ParticleIDType pid = static_cast<Rich::ParticleIDType>(ipid);
-    const std::string T = iPID->isAboveThreshold(pid) ? "T" : "F";
+  for ( Rich::Particles::const_iterator ipid = Rich::particles().begin();
+        ipid != Rich::particles().end(); ++ipid )
+  {
+    const std::string T = iPID->isAboveThreshold(*ipid) ? "T" : "F";
     msg << T << " ";
-  }}
+  }
   msg << endmsg
-      << "  Dlls        = "
-      << boost::format(m_sF)%(iPID->particleDeltaLL(Rich::Electron)) << " "
-      << boost::format(m_sF)%(iPID->particleDeltaLL(Rich::Muon)) << " "
-      << boost::format(m_sF)%(iPID->particleDeltaLL(Rich::Pion)) << " "
-      << boost::format(m_sF)%(iPID->particleDeltaLL(Rich::Kaon)) << " "
-      << boost::format(m_sF)%(iPID->particleDeltaLL(Rich::Proton))
-      << endmsg
+      << "  Dlls        =";
+  for ( Rich::Particles::const_iterator ipid = Rich::particles().begin();
+        ipid != Rich::particles().end(); ++ipid )
+  {
+    msg << " " << boost::format(m_sF)%(iPID->particleDeltaLL(*ipid));
+  }
+  msg << endmsg
       << "  Prob(r/n)   = ";
-  {for ( int ipid = 0; ipid < Rich::NParticleTypes; ++ipid ) {
-    const Rich::ParticleIDType pid = static_cast<Rich::ParticleIDType>(ipid);
-    msg << boost::format(m_sF)%(iPID->particleRawProb(pid))
-        << "/" << boost::format(m_sF)%(iPID->particleNormProb(pid)) << " ";
-  }}
+  for ( Rich::Particles::const_iterator ipid = Rich::particles().begin();
+        ipid != Rich::particles().end(); ++ipid )
+  {
+    msg << boost::format(m_sF)%(iPID->particleRawProb(*ipid))
+        << "/" << boost::format(m_sF)%(iPID->particleNormProb(*ipid)) << " ";
+  }
   msg << endmsg
       << "  RecoPID     = " << pid << endmsg;
   msg << "  MCID        = " << mcpid << endmsg;
