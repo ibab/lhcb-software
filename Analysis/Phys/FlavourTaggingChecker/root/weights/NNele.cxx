@@ -1,4 +1,4 @@
-#include "weights/NNele.h"
+#include "NNele.h"
 #include <cmath>
 
 double NNele::value(int index,double in0,double in1,double in2,double in3,double in4,double in5,double in6) {

@@ -3,8 +3,7 @@
 
 /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> HOW TO RUN:
 SetupProject Gaudi ROOT
-alias compile_tag="g++ tag.cc -o tag.exe `root-config --libs` \
--lMLP -lTMVA -lGpad -I`root-config --incdir`"
+alias compile_tag "g++ tag.cc -o tag.exe `root-config --libs` -lMLP -lTMVA -lGpad -I`root-config --incdir`"
 alias run_tag="compile_tag && ./tag.exe"
 
 compile_tag && ./tag.exe

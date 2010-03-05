@@ -1,4 +1,4 @@
-#include "weights/NNkaon.h"
+#include "NNkaon.h"
 #include <cmath>
 
 double NNkaon::value(int index,double in0,double in1,double in2,double in3,double in4,double in5,double in6) {

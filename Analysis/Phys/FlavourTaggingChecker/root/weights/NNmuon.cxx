@@ -1,4 +1,4 @@
-#include "weights/NNmuon.h"
+#include "NNmuon.h"
 #include <cmath>
 
 double NNmuon::value(int index,double in0,double in1,double in2,double in3,double in4,double in5,double in6) {
