@@ -1,4 +1,4 @@
-// $Id: DimFilePublish.cpp,v 1.3 2010-03-04 16:46:25 frankb Exp $
+// $Id: DimFilePublish.cpp,v 1.4 2010-03-05 13:34:46 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/DimFilePublish.cpp,v 1.3 2010-03-04 16:46:25 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/DimFilePublish.cpp,v 1.4 2010-03-05 13:34:46 frankb Exp $
 
 #include <string>
 #include <ctime>
@@ -145,8 +145,10 @@ int DimFilePublish::monitor() {
       ::lib_rtl_sleep(m_delay);
     }
     catch(exception& e) {
+      cout << "DimFilePublish::monitor> Exception:" << e.what() << endl;
     }
     catch(...) {
+      cout << "DimFilePublish::monitor> Unhandled exception" << endl;
     }
   }
   return 1;

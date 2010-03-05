@@ -4,18 +4,11 @@ branches cmt doc src
 
 use GaudiKernel  v* 
 use GaudiAlg     v*
-use DIM          v* Online
-use OnlineKernel v* Online
-use Gaucho       v* Online
 use GaudiAud     v*
+use DIM          v* Online
+use Gaucho       v* Online
+use OnlineKernel v* Online
 use OnlineHistDB v* Online
 
 library InsertDB ../src/InsertDB.cpp ../src/InsertDB.h 
-private
-macro_append InsertDB_shlibflags "-lGaucho"
-
 apply_pattern    component_library library=InsertDB
-
-
-
-
