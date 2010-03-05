@@ -874,9 +874,9 @@ MEPErrorAdder::setupSubs() {
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/rxMEP",m_listenerDnsNode.c_str(),i+1);
     	m_subsRxMEP[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
 
-	sprintf(temp,"%s%.2i_MEPRxIPCnt/TotBytes",m_listenerDnsNode.c_str(),i+1);
+	sprintf(temp,"%s%.2i_MEPRxIPCnt/TotalBytes",m_listenerDnsNode.c_str(),i+1);
 	m_subsTotRxOct[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
-    	sprintf(temp,"%s%.2i_MEPRxIPCnt/TotPackets",m_listenerDnsNode.c_str(),i+1);
+    	sprintf(temp,"%s%.2i_MEPRxIPCnt/TotalPackets",m_listenerDnsNode.c_str(),i+1);
 	m_subsTotRxPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
 	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totRxOct",m_listenerDnsNode.c_str(),i+1);
 	m_subsTotReadOct[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
