@@ -66,6 +66,8 @@ public:
   double *binErr;
   
   bool bBinLabelX;
+  bool baxisLabelX;
+  bool baxisLabelY;
   
   int m_fDimension;
   //double m_fIntegral;
@@ -81,10 +83,13 @@ public:
 
   bool isLoaded;
   bool objectCreated;
+
+  
   /**********/
 private:
   std::vector<std::string> binLabelX;
-  
+  std::string m_axisLabelX;
+  std::string m_axisLabelY;
 
 };
 

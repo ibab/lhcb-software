@@ -15,6 +15,10 @@ MonObject(msgSvc, source, version)
   binCont = 0;
   binErr = 0;
   m_fSumw2 = 0;  
+  m_axisLabelX="";
+  m_axisLabelY="";
+  baxisLabelX="false";
+  baxisLabelY="false"; 
 }
   
 MonH2D::~MonH2D(){
@@ -58,7 +62,9 @@ void MonH2D::load2(boost::archive::binary_iarchive  & ar){
   ar & sTitle;
   ar & bBinLabelX;
   ar & bBinLabelY;
-
+  ar & baxisLabelX;
+  ar & baxisLabelY;
+  
   if (binCont == 0) binCont = new double[(nbinsx+2)*(nbinsy+2)];
 
   for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
@@ -87,6 +93,14 @@ void MonH2D::load2(boost::archive::binary_iarchive  & ar){
       binLabelY.push_back(labelY);
     }
   }
+
+  if (baxisLabelX){
+      ar & m_axisLabelX;
+  }
+  if (baxisLabelY){
+      ar & m_axisLabelY;
+  }
+
 
   ar & m_fDimension;
   //ar & m_fIntegral;
@@ -130,7 +144,9 @@ void MonH2D::save3(boost::archive::binary_oarchive  & ar){
   ar & sTitle;
   ar & bBinLabelX;
   ar & bBinLabelY;
-
+  ar & baxisLabelX;
+  ar & baxisLabelY;
+  
   for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     ar & binCont[i];
   }
@@ -165,6 +181,14 @@ void MonH2D::save3(boost::archive::binary_oarchive  & ar){
       ar & labelY;
     }
   }
+  
+  if (baxisLabelX){
+      ar & m_axisLabelX;
+  }
+  if (baxisLabelY){
+      ar & m_axisLabelY;
+  }  
+  
   ar & m_fDimension;
   //ar & m_fIntegral;
   ar & m_fMaximum;
@@ -250,6 +274,12 @@ void MonH2D::loadObject(){
       i++;
     }
   }
+  
+  
+  if (baxisLabelX) m_hist->GetXaxis()->SetTitle(m_axisLabelX.c_str());
+      
+  if (baxisLabelY) m_hist->GetYaxis()->SetTitle(m_axisLabelY.c_str());
+  
 
   fot->fDimension = m_fDimension;
   //ar & fot->fIntegral = m_fIntegral;
@@ -330,6 +360,13 @@ void MonH2D::splitObject(){
       binLabelY.push_back(m_hist->GetYaxis()->GetBinLabel(i));
     }
   }
+  
+  m_axisLabelX = m_hist->GetXaxis()->GetTitle();
+  if (m_axisLabelX.length() > 0) baxisLabelX = true;
+      
+  m_axisLabelY = m_hist->GetYaxis()->GetTitle();
+  if (m_axisLabelY.length() > 0) baxisLabelY = true;
+
 
   m_fDimension = fot->fDimension;
   //m_fIntegral = fot->fIntegral;
@@ -428,6 +465,17 @@ void MonH2D::combine(MonObject * H){
       binLabelY.push_back(labelY);
     }
   }
+  
+  baxisLabelX = HH->baxisLabelX;
+  if (baxisLabelX) {
+     m_axisLabelX= HH->m_axisLabelX;
+  }   
+      
+  baxisLabelY = HH->baxisLabelY;
+  if (baxisLabelY) {
+     m_axisLabelY= HH->m_axisLabelY;
+  }  
+  
 }
 
 void MonH2D::copyFrom(MonObject * H){
@@ -486,6 +534,18 @@ void MonH2D::copyFrom(MonObject * H){
       binLabelY.push_back(labelY);
     }
   }
+  
+  baxisLabelX = HH->baxisLabelX;
+  if (baxisLabelX) {
+     m_axisLabelX= HH->m_axisLabelX;
+  }   
+      
+  baxisLabelY = HH->baxisLabelY;
+  if (baxisLabelY) {
+     m_axisLabelY= HH->m_axisLabelY;
+  }  
+  
+  
 
   m_fDimension = HH->m_fDimension;
   m_fMaximum = HH->m_fMaximum;
@@ -585,6 +645,17 @@ void MonH2D::print(){
     msgStream << endreq;
     msgStream <<MSG::INFO<<"*************************************"<<endreq;
   }
+  
+  
+  if (baxisLabelX) {
+    msgStream <<MSG::INFO<<  "X axis label: " << m_axisLabelX << endreq;
+  }   
+      
+  if (baxisLabelY) {
+    msgStream <<MSG::INFO<<  "Y axis label: "<<  m_axisLabelY << endreq;
+  }  
+  
+  
   msgStream <<MSG::INFO<<"Dimension="<< m_fDimension << endreq;
   //msgStream <<MSG::INFO <<"Integral="<< m_fIntegral << endreq;
   msgStream <<MSG::INFO<<"Maximum="<< m_fMaximum << endreq;

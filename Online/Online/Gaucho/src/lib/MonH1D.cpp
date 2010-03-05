@@ -15,6 +15,10 @@ MonObject(msgSvc, source, version)
   binCont = 0;
   binErr = 0;
   m_fSumw2 = 0;  
+  m_axisLabelX="";
+  m_axisLabelY="";
+  baxisLabelX="false";
+  baxisLabelY="false";
 }
 
 MonH1D::~MonH1D(){
@@ -51,7 +55,9 @@ void MonH1D::load2(boost::archive::binary_iarchive  & ar){
   ar & sName;
   ar & sTitle;
   ar & bBinLabelX;
-  
+  ar & baxisLabelX;
+  ar & baxisLabelY;
+    
   if (binCont == 0 ) binCont = new double[(nbinsx+2)];
     
   for (int i = 0; i < (nbinsx+2) ; ++i){
@@ -71,6 +77,13 @@ void MonH1D::load2(boost::archive::binary_iarchive  & ar){
       ar & labelX;
       binLabelX.push_back(labelX);
     }
+  }
+
+  if (baxisLabelX){
+      ar & m_axisLabelX;
+  }
+  if (baxisLabelY){
+      ar & m_axisLabelY;
   }
 
   ar & m_fDimension;
@@ -106,6 +119,8 @@ void MonH1D::save3(boost::archive::binary_oarchive  & ar){
   ar & sName;
   ar & sTitle;
   ar & bBinLabelX;
+  ar & baxisLabelX;
+  ar & baxisLabelY;
   
   for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binCont[i];
@@ -118,6 +133,14 @@ void MonH1D::save3(boost::archive::binary_oarchive  & ar){
       std::string labelX = binLabelX[i];
       ar & labelX;
     }
+  }
+
+
+  if (baxisLabelX){
+      ar & m_axisLabelX;
+  }
+  if (baxisLabelY){
+      ar & m_axisLabelY;
   }
 
   ar & m_fDimension;
@@ -192,6 +215,11 @@ void MonH1D::loadObject(){
     }
   }
 
+  if (baxisLabelX) m_hist->GetXaxis()->SetTitle(m_axisLabelX.c_str());
+      
+  if (baxisLabelY) m_hist->GetYaxis()->SetTitle(m_axisLabelY.c_str());
+
+
   fot->fDimension = m_fDimension;
   //ar & fot->fIntegral = m_fIntegral;
   fot->fMaximum = m_fMaximum;
@@ -249,6 +277,13 @@ void MonH1D::splitObject(){
       binLabelX.push_back(m_hist->GetXaxis()->GetBinLabel(i));
     }
   }
+  
+  m_axisLabelX = m_hist->GetXaxis()->GetTitle();
+  if (m_axisLabelX.length() > 0) baxisLabelX = true;
+      
+  m_axisLabelY = m_hist->GetYaxis()->GetTitle();
+  if (m_axisLabelY.length() > 0) baxisLabelY = true;
+  
 
   m_fDimension = fot->fDimension;
   //m_fIntegral = fot->fIntegral;
@@ -323,6 +358,16 @@ void MonH1D::combine(MonObject * H){
     }
   }
   
+   baxisLabelX = HH->baxisLabelX;
+  if (baxisLabelX) {
+     m_axisLabelX= HH->m_axisLabelX;
+  }   
+      
+  baxisLabelY = HH->baxisLabelY;
+  if (baxisLabelY) {
+     m_axisLabelY= HH->m_axisLabelY;
+  }  
+  
   if (m_fSumSize == HH->m_fSumSize){
     for (int i=0 ; i < m_fSumSize; ++i) {
       m_fSumw2[i] += HH->m_fSumw2[i];
@@ -372,6 +417,17 @@ void MonH1D::copyFrom(MonObject * H){
       binLabelX.push_back(labelX);
     }
   }
+
+  baxisLabelX = HH->baxisLabelX;
+  if (baxisLabelX) {
+     m_axisLabelX= HH->m_axisLabelX;
+  }   
+      
+  baxisLabelY = HH->baxisLabelY;
+  if (baxisLabelY) {
+     m_axisLabelY= HH->m_axisLabelY;
+  }  
+  
 
   m_fDimension = HH->m_fDimension;
   m_fMaximum = HH->m_fMaximum;
@@ -451,6 +507,17 @@ void MonH1D::print(){
     msgStream << endreq;
     msgStream <<MSG::INFO<<"*************************************"<<endreq;
   }
+  
+    
+  if (baxisLabelX) {
+    msgStream <<MSG::INFO<<  "X axis label: " << m_axisLabelX << endreq;
+  }   
+      
+  if (baxisLabelY) {
+    msgStream <<MSG::INFO<<  "Y axis label: "<<  m_axisLabelY << endreq;
+  }   
+  
+  
   msgStream <<MSG::INFO<<"Dimension="<< m_fDimension << endreq;
   //msgStream <<MSG::INFO<<"Integral="<< m_fIntegral << endreq;
   msgStream <<MSG::INFO<<"Maximum="<< m_fMaximum << endreq;

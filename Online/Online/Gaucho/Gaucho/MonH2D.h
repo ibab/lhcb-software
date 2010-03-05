@@ -66,7 +66,9 @@ public:
 
   bool bBinLabelX;
   bool bBinLabelY;
-
+  bool baxisLabelX;
+  bool baxisLabelY;
+  
   double *binCont;
   double *binErr;
 
@@ -90,6 +92,8 @@ public:
 
   bool isLoaded;
   bool objectCreated;
+  std::string m_axisLabelX;
+  std::string m_axisLabelY;
   /**********/
 private:
   std::vector<std::string> binLabelX;
