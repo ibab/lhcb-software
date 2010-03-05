@@ -1,4 +1,4 @@
-// $Id: PVSeed3DOfflineTool.cpp,v 1.1 2010-03-04 09:43:33 pmorawsk Exp $
+// $Id: PVSeed3DOfflineTool.cpp,v 1.2 2010-03-05 10:23:35 pmorawsk Exp $
 // Include files
 
 // STL
@@ -62,7 +62,7 @@ void PVSeed3DOfflineTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
   std::vector<const LHCb::Track*>::iterator it;
   //  std::cout <<  "nr of tracks " << inputTracks.size() << std::endl;
   for ( it = inputTracks.begin(); it != inputTracks.end(); it++ ) {
-    const LHCb::Track* ptr = (*it);
+//     const LHCb::Track* ptr = (*it);
     //    std::cout <<  "z of track " <<  ptr->firstState().z() << std::endl;
     //    std::cout << *ptr << std::endl;
   }

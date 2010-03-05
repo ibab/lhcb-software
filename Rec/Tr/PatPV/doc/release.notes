@@ -4,6 +4,9 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2010-03-05 - Piotr Morawski
+ - corrected error in PVVerryLoose.py and warning in PVSeed3DOfflineTool
+
 ! 2010-03-04 - Piotr Morawski
  - modified LSAdaptPVFitter so it could be used insead of SimplePVFitter
  - added PVSeed3DOfflineTool
