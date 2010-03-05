@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.31 2010-02-24 15:48:28 cattanem Exp $ 
+! $Id: release.notes,v 1.32 2010-03-05 14:19:18 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiHlt
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiHlt v2r7p1 2010-03-05 ===========================
+! 2010-03-05 - Gerhard Raven
+ - add an explicit check whether an L0 channel is not masked.
+   If so, do not add it to the list of channels allowed to accept 
 
 !========================== LoKiHlt v2r7 2010-02-24 ===========================
 ! 2010-02-19 - Vanya Belyaev

@@ -1,4 +1,4 @@
-// $Id: L0.cpp,v 1.4 2010-01-08 13:30:47 ibelyaev Exp $
+// $Id: L0.cpp,v 1.5 2010-03-05 14:19:18 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -218,7 +218,7 @@ LoKi::L0::ConditionValue::operator()
   // sanity check:
   if ( channels().empty() ) 
   { 
-    Error ( "empty list of channels, return false" ) ;
+    //Error ( "empty list of channels, return false" ) ;
     return false ;                                                    // RETURN 
   }
   
@@ -330,7 +330,7 @@ LoKi::L0::ChannelDecision::operator()
       }
       const LHCb::L0DUChannel* channel = ifind->second ;
       Assert ( 0 != channel , "LHCb::L0DUChannel* points to NULL" ) ;
-      addChannel ( channel -> id() ) ;
+      if (channel->decisionType()!=0) addChannel ( channel -> id() ) ;
     }
     // store the tck of successful configuration 
     setTckPrev ( a -> tck () ) ;
@@ -339,10 +339,10 @@ LoKi::L0::ChannelDecision::operator()
   // sanity check:
   if ( channels().empty() ) 
   { 
-    Error ( "empty list of channels, return false" ) ;
+    //Error ( "empty list of channels, return false" ) ;
     return false ;                                                    // RETURN 
   }
-  
+ 
   // loop over the defined channels 
   for ( Channels::const_iterator ic = channels().begin() ; 
         channels().end() != ic ; ++ic ) 
@@ -409,7 +409,7 @@ LoKi::L0::ChannelPreDecision::operator()
       }
       const LHCb::L0DUChannel* channel = ifind->second ;
       Assert ( 0 != channel , "LHCb::L0DUChannel* points to NULL" ) ;
-      addChannel ( channel -> id() ) ;
+      if (channel->decisionType()!=0) addChannel ( channel -> id() ) ;
     }    
     // store the tck of successful configuration 
     setTckPrev ( a -> tck () ) ;
@@ -418,7 +418,7 @@ LoKi::L0::ChannelPreDecision::operator()
   // sanity check:
   if ( channels().empty() ) 
   { 
-    Error ( "empty list of channels, return false" ) ;
+    //Error ( "empty list of channels, return false" ) ;
     return false ;                                                    // RETURN 
   }
   
@@ -552,8 +552,10 @@ LoKi::L0::ChannelDecisionSubString::operator()
       if ( std::string::npos == ic->first.find ( substr() ) ) { continue ; }
       const LHCb::L0DUChannel* channel = ic->second ;
       Assert ( 0 != channel , "LHCb::L0DUChannel* points to NULL" ) ;
-      addChannel ( channel -> id() ) ;
-      addName    ( ic->first       ) ;
+      if (channel->decisionType()!=0)  {
+          addChannel ( channel -> id() ) ;
+          addName    ( ic->first       ) ;
+      }
     }
     // store the tck of successful configuration 
     setTckPrev ( a -> tck () ) ;
@@ -562,7 +564,7 @@ LoKi::L0::ChannelDecisionSubString::operator()
   // sanity check:
   if ( channels().empty() ) 
   { 
-    Error ( "empty list of channels, return false" ) ;
+    //Error ( "empty list of channels, return false" ) ;
     return false ;                                                    // RETURN 
   }
   
@@ -615,8 +617,10 @@ LoKi::L0::ChannelDecisionRegex::operator()
       if ( !boost::regex_match ( ic->first , expression() ) ) { continue ; }
       const LHCb::L0DUChannel* channel = ic->second ;
       Assert ( 0 != channel , "LHCb::L0DUChannel* points to NULL" ) ;
-      addChannel ( channel -> id() ) ;
-      addName    ( ic->first       ) ;
+      if (channel->decisionType()!=0)  {
+          addChannel ( channel -> id() ) ;
+          addName    ( ic->first       ) ;
+      }
     }
     // store the tck of successful configuration 
     setTckPrev ( a -> tck () ) ;
@@ -625,7 +629,7 @@ LoKi::L0::ChannelDecisionRegex::operator()
   // sanity check:
   if ( channels().empty() ) 
   { 
-    Error ( "empty list of channels, return false" ) ;
+    //Error ( "empty list of channels, return false" ) ;
     return false ;                                                    // RETURN 
   }
   
@@ -678,8 +682,10 @@ LoKi::L0::ChannelPreDecisionSubString::operator()
       if ( std::string::npos == ic->first.find ( substr() ) ) { continue ; }
       const LHCb::L0DUChannel* channel = ic->second ;
       Assert ( 0 != channel , "LHCb::L0DUChannel* points to NULL" ) ;
-      addChannel ( channel -> id() ) ;
-      addName    ( ic -> first     ) ;
+      if (channel->decisionType()!=0)  {
+          addChannel ( channel -> id() ) ;
+          addName    ( ic -> first     ) ;
+      }
     }
     // store the tck of successful configuration 
     setTckPrev ( a -> tck () ) ;
@@ -688,7 +694,7 @@ LoKi::L0::ChannelPreDecisionSubString::operator()
   // sanity check:
   if ( channels().empty() ) 
   { 
-    Error ( "empty list of channels, return false" ) ;
+    //Error ( "empty list of channels, return false" ) ;
     return false ;                                                    // RETURN 
   }
   
@@ -739,8 +745,10 @@ LoKi::L0::ChannelPreDecisionRegex::operator()
       if ( !boost::regex_match ( ic->first , expression() ) ) { continue ; }
       const LHCb::L0DUChannel* channel = ic->second ;
       Assert ( 0 != channel , "LHCb::L0DUChannel* points to NULL" ) ;
-      addChannel ( channel -> id() ) ;
-      addName    ( ic->first       ) ;
+      if (channel->decisionType()!=0)  {
+          addChannel ( channel -> id() ) ;
+          addName    ( ic->first       ) ;
+      }
     }
     // store the tck of successful configuration 
     setTckPrev ( a -> tck () ) ;
@@ -749,7 +757,7 @@ LoKi::L0::ChannelPreDecisionRegex::operator()
   // sanity check:
   if ( channels().empty() ) 
   { 
-    Error ( "empty list of channels, return false" ) ;
+    //Error ( "empty list of channels, return false" ) ;
     return false ;                                                    // RETURN 
   }
   
@@ -800,8 +808,10 @@ LoKi::L0::TriggerDecisionSubString::operator()
       if ( std::string::npos == ic->first.find ( substr() ) ) { continue ; }
       const LHCb::L0DUChannel* channel = ic->second ;
       Assert ( 0 != channel , "LHCb::L0DUChannel* points to NULL" ) ;
-      addChannel ( channel -> id() ) ;
-      addName    ( ic -> first     ) ;
+      if (channel->decisionType()!=0)  {
+          addChannel ( channel -> id() ) ;
+          addName    ( ic -> first     ) ;
+      }
     }
     // store the tck of successful configuration 
     setTckPrev ( a -> tck () ) ;
@@ -810,7 +820,7 @@ LoKi::L0::TriggerDecisionSubString::operator()
   // sanity check:
   if ( names().empty() ) 
   { 
-    Error ( "empty list of triggers for pattern '" + substr() + "', return false" ) ;
+    //Error ( "empty list of triggers for pattern '" + substr() + "', return false" ) ;
     return false ;                                                    // RETURN 
   }
 
@@ -860,8 +870,10 @@ LoKi::L0::TriggerDecisionRegex::operator()
       if ( !boost::regex_match ( ic->first , expression()  ) )  { continue ; }
       const LHCb::L0DUChannel* channel = ic->second ;
       Assert ( 0 != channel , "LHCb::L0DUChannel* points to NULL" ) ;
-      addChannel ( channel -> id() ) ;
-      addName    ( ic -> first     ) ;
+      if (channel->decisionType()!=0)  {
+        addChannel ( channel -> id() ) ;
+        addName    ( ic -> first     ) ;
+      }
     }
     // store the tck of successful configuration 
     setTckPrev ( a -> tck () ) ;
@@ -870,7 +882,7 @@ LoKi::L0::TriggerDecisionRegex::operator()
   // sanity check:
   if ( names().empty() ) 
   { 
-    Error ( "empty list of triggers for pattern '" + substr() + "', return false" ) ;
+    //Error ( "empty list of triggers for pattern '" + substr() + "', return false" ) ;
     return false ;                                                    // RETURN 
   }
   
