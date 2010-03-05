@@ -1,3 +1,8 @@
+2010-03-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: fixed the behavior of -q and
+	added a --silent option.
+
 2010-03-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: make the usage of CMTEXTRATAGS optional before the 

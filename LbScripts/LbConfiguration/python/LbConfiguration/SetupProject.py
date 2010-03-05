@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # pylint: disable-msg=E1103,W0141
-_cvs_id = "$Id: SetupProject.py,v 1.34 2010-02-12 14:59:46 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.35 2010-03-05 11:48:28 marcocle Exp $"
 
 import os, sys, re, time
 from xml.sax import parse, ContentHandler
@@ -11,7 +11,7 @@ from tempfile import mkdtemp, mkstemp
 
 from LbConfiguration import createProjectMakefile
 from LbUtils.CVS import CVS2Version
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.34 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.35 $")
 
 # subprocess is available since Python 2.4, but LbUtils guarantees that we can
 # import it also in Python 2.3
@@ -1132,8 +1132,11 @@ class SetupProject:
         parser.add_option("--use-grid", action="store_true",
                           help = "Enable auto selection of LHCbGrid project")
 
-        parser.add_option("-q", "--silent", action="store_true",
+        parser.add_option("-q", "--quiet", action="store_true",
                           help = "Removes message printout during setup")
+
+        parser.add_option("--silent", action="store_true",
+                          help = "Avoid any printout (even errors)")
 
         parser.add_option("--keep-CMTPROJECTPATH", action="store_true",
                           help = "Do not override the value of the environment variable CMTPROJECTPATH")
@@ -1208,6 +1211,7 @@ class SetupProject:
                             overriding_projects = [],
                             auto_override = True,
                             use_grid = False,
+                            quiet=False,
                             silent=False,
                             keep_CMTPROJECTPATH=False,
                             no_user_area=False,
@@ -1227,7 +1231,7 @@ class SetupProject:
         for _p,v,_n,d in versions:
             if v not in vers_locs:
                 vers_locs[v] = d
-        if not self.opts.silent :
+        if not self.opts.quiet :
             for v in SortVersions(vers_locs.keys()):
                 output += 'echo %s in %s\n' % (v,vers_locs[v])
         self._write_script(output)
@@ -1413,7 +1417,7 @@ class SetupProject:
         lines = []
         errors = []
         if self.context_path:
-            if not self.opts.silent :
+            if not self.opts.quiet :
                 lines.append("echo Using CMTUSERCONTEXT = '%s'"%self.context_path)
             # unset CMTUSERCONTEXT in case of future calls
             del new_env['CMTUSERCONTEXT']
@@ -1444,10 +1448,16 @@ class SetupProject:
         # Process commmand line options
         self.parse_args(args = args)
 
+        # If the option --silent is specified, --quiet is implied
+        if self.opts.silent:
+            self.opts.quiet = True
+
         # set level of log messages
-        if not self.opts.silent :
+        if not self.opts.quiet :
             self._logger.level = self.loglevel
-        else :
+        elif self.opts.silent:
+            self._logger.level = ALWAYS + 10 # do not even print ALWAYS messages
+        else: # quiet but not silent
             self._logger.level = ERROR
         log.level = self.loglevel
 
@@ -1616,7 +1626,7 @@ class SetupProject:
         script = "" # things we need to append to the setup script (like aliases)
         messages = [] # lines to print (feedback)
         if not self.build_env: # this part is needed only if we do not ask for build only env
-            if not self.opts.silent:
+            if not self.opts.quiet:
                 self._always("Configuring %s" % self.project_info)
             tmp_dir = self._prepare_tmp_local_project()
             try:
@@ -1720,7 +1730,7 @@ class SetupProject:
 
         output_script = self.environment.gen_script(self.shell)
         output_script += script
-        if not self.opts.silent :
+        if not self.opts.quiet :
             for m in messages:
                 output_script += 'echo "%s"\n' % m
         if self.opts.touch_logfile:
