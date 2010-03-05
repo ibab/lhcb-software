@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.13 2010-01-29 12:49:25 jpalac Exp $
+! $Id: release.notes,v 1.14 2010-03-05 10:51:24 pkoppenb Exp $
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
+
+! 2010-03-05 - Patrick Koppenburg
+ - ReadRoutingBits : Throw an exception when there is not exactly 1 bank
+ - Improved code thanks to Gerhard
 
 !============ Kernel/HltInterfaces v3r1 2010-01-29 ============================
 
