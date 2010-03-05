@@ -1,4 +1,4 @@
-// $Id: BTaggingTool.h,v 1.23 2010-02-11 18:35:45 musy Exp $
+// $Id: BTaggingTool.h,v 1.24 2010-03-05 15:54:18 jpalac Exp $
 #ifndef USER_BTAGGINGTOOL_H 
 #define USER_BTAGGINGTOOL_H 1
 
@@ -57,13 +57,13 @@ private:
 
   const LHCb::RecVertex::ConstVector
   choosePrimary(const LHCb::Particle* AXB,
-                const LHCb::RecVertex::Container* verts, 
+                const LHCb::RecVertex::Range& verts, 
                 const LHCb::RecVertex*& RecVert,
                 LHCb::RecVertex& RefitRecVert);
 
   const LHCb::Particle::ConstVector 
   chooseCandidates(const LHCb::Particle* AXB,
-                   const LHCb::Particle::Container* parts,
+                   const LHCb::Particle::Range& parts,
                    const LHCb::RecVertex::ConstVector& PileUpVtx);
 
   ITaggingUtils* m_util;

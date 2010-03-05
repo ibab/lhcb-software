@@ -52,24 +52,25 @@ StatusCode BTagging::execute() {
 void BTagging::performTagging(const std::string & location) 
 {
   //look in location where Selection has put the B candidates
-  if(!exist<LHCb::Particles>(location+"/Particles")){
+  if(!exist<LHCb::Particle::Container>(location+"/Particles") &&
+     !exist<LHCb::Particle::Selection>(location+"/Particles") ){
     debug()<<("No selection found in "+ location+"/Particles")<<endreq;
     return;
   }
   
-  const Particle::Container* parts = get<Particle::Container>( location+"/Particles" );
-  if( !parts || parts->empty() ) {
+  const Particle::Range parts = get<Particle::Range>( location+"/Particles" );
+  if( parts.empty() ) {
     Warning("No particles found at "+ location+"/Particles", 
             StatusCode::SUCCESS,10).ignore();
     return;
   }
   
-  verbose() << " Will tag "<< parts->size() << " B hypos!" <<endreq;
+  verbose() << " Will tag "<< parts.size() << " B hypos!" <<endreq;
 
   //-------------- loop on signal B candidates from selection
   FlavourTags*  tags = new FlavourTags;
-  Particle::Container::const_iterator icandB;
-  for ( icandB = parts->begin(); icandB != parts->end(); icandB++){
+  Particle::Range::const_iterator icandB;
+  for ( icandB = parts.begin(); icandB != parts.end(); icandB++){
     if((*icandB)->particleID().hasBottom()) {
       debug() << "About to tag candidate B of mass=" 
               << (*icandB)->momentum().M()/GeV <<" GeV"<<endreq;

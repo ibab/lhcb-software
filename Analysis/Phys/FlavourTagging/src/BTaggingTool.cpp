@@ -125,14 +125,14 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   }
 
   //Load vertices and particles
-  const Particle::Container*  parts=get<Particle::Container>(m_taggerLocation+"/Particles");
-  const RecVertex::Container* verts=get<RecVertex::Container>(RecVertexLocation::Primary);
-  if(msgLevel(MSG::DEBUG)) debug()<<" Nr Vertices: "<< verts->size() 
-                                  <<" Nr Particles: "<<parts->size()<<endreq;
+  const Particle::Range  parts=get<Particle::Range>(m_taggerLocation+"/Particles");
+  const RecVertex::Range verts=get<RecVertex::Range>(RecVertexLocation::Primary);
+  if(msgLevel(MSG::DEBUG)) debug()<<" Nr Vertices: "<< verts.size() 
+                                  <<" Nr Particles: "<<parts.size()<<endreq;
 
   Vertex::ConstVector allVtx;
-  RecVertex::Container::const_iterator iv;
-  for(iv=verts->begin(); iv!=verts->end(); iv++) {
+  RecVertex::Range::const_iterator iv;
+  for(iv=verts.begin(); iv!=verts.end(); iv++) {
     if(msgLevel(MSG::DEBUG)) debug()<<"PV found at z="<<(*iv)->position().z()/mm<<endreq;
     allVtx.push_back(AXB->endVertex());
   }
@@ -265,7 +265,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
 ///=========================================================================
 const RecVertex::ConstVector 
 BTaggingTool::choosePrimary(const Particle* AXB,
-                            const RecVertex::Container* verts,
+                            const RecVertex::Range& verts,
                             const RecVertex*& RecVert,
                             RecVertex& RefitRecVert){
   bool user_recvert = false;
@@ -279,8 +279,8 @@ BTaggingTool::choosePrimary(const Particle* AXB,
   RecVertex::ConstVector PileUpVtx(0); //will contain all the other primary vtx's
 
   double kdmin = 1000000;
-  RecVertex::Container::const_iterator iv;
-  for(iv=verts->begin(); iv!=verts->end(); iv++){
+  RecVertex::Range::const_iterator iv;
+  for(iv=verts.begin(); iv!=verts.end(); iv++){
     RecVertex newPV(**iv);
     double var, ip, iperr;
     if(m_ChoosePV=="RefitPV") { 
@@ -315,7 +315,7 @@ BTaggingTool::choosePrimary(const Particle* AXB,
   }
 
   //build a vector of pileup vertices --------------------------
-  for(iv=verts->begin(); iv!=verts->end(); iv++){
+  for(iv=verts.begin(); iv!=verts.end(); iv++){
     if( (*iv) == RecVert ) continue;
     PileUpVtx.push_back(*iv);
   }
@@ -336,14 +336,14 @@ BTaggingTool::choosePrimary(const Particle* AXB,
 //=============================================================================
 const Particle::ConstVector 
 BTaggingTool::chooseCandidates(const Particle* AXB,
-                               const Particle::Container* parts,
+                               const Particle::Range& parts,
                                const RecVertex::ConstVector& PileUpVtx) {
   double distphi;
   Particle::ConstVector vtags(0);
-  Particle::Container::const_iterator ip;
+  Particle::Range::const_iterator ip;
   Particle::ConstVector axdaugh = m_descend->descendants( AXB );
   axdaugh.push_back( AXB );
-  for ( ip = parts->begin(); ip != parts->end(); ip++ ){
+  for ( ip = parts.begin(); ip != parts.end(); ip++ ){
 
     //debug()<<" aaaaa1 "<<(*ip)->p()/GeV<<"  "<<(*ip)->particleID().pid()<<endreq;
     if( (*ip)->p()/GeV < 2.0 ) continue;               
