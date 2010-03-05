@@ -12,7 +12,7 @@ static int scr_mouse_handler(SCR::Pasteboard* /* pb */,int key,int x,int y) {
   static unsigned int click = 0;
   unsigned int now=RTL::SysTime::now(), diff = now-click;
   Event* ev = new Event(0,ScrMouseEvent);
-  new(ev->get<void>()) MouseEvent(key,x,y,-1U);
+  new(ev->get<void>()) MouseEvent(key,x,y,~0x0);
   ::wtc_insert(WT_FACILITY_SCR_MOUSE,ev);
   if ( diff<300 && click != 0 ) {
     ev = new Event(0,ScrMouseEvent);
