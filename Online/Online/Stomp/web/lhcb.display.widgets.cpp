@@ -2,6 +2,22 @@ if ( !lhcb.widgets ) {
 
   lhcb.widgets = new Object();
   
+  /// Set document location to LHCb DAQ status page
+  lhcb.widgets.goto_lhcb_page = function(name) {
+    var item = function() {    document.location = this.url; }
+    item.url =  "lhcb.display.htm?type="+name;
+    return item;
+  }
+  /// Set document location to LHCb DAQ status page
+  lhcb.widgets.goto_lhcb_daq_page = function() {
+    document.location =  "lhcb.display.htm?type=status&system=LHCb";
+  }
+  /// Set document location to LHC operations page
+  lhcb.widgets.goto_lhc_operations_page = function() {
+    document.location =  "http://op-webtools.web.cern.ch/op-webtools/vistar/vistars.php?usr=LHC3";
+  }
+
+
   /** Build table with summary of the LHC
    *   
    * @return Reference to HTML table containing all data items of this widget

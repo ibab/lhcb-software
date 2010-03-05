@@ -5,8 +5,6 @@ _loadScript('lhcb.display.widgets.cpp');
 _loadFile('lhcb.display.general','css');
 _loadFile('lhcb.display.fsm','css');
 
-
-
 var LHCStatus = function(msg)   {
   var tr, td, tb, tab;
   table           = document.createElement('table');
@@ -158,8 +156,7 @@ var LHCStatus = function(msg)   {
     c.style.width='10%';
     this.magnetPolarity = StyledItem('lbWeb.lbHyst.Polarity',null,null);
     this.magnetPolarity.conversion = function(data) {
-      if ( data>0 )
-	return '+&nbsp;(Down)';
+      if ( data>0 ) return '+&nbsp;(Down)';
       return '-&nbsp;(Up)';
     }
 
@@ -378,6 +375,7 @@ var LHCStatus = function(msg)   {
     this.veloInject.conversion = function(data) { return data>0 ? 'Injection allowed' : 'Injection VETO ON'; }
     this.veloMoveDevs.conversion = function(data) { return data>0 ? 'No movable devices allowed' : 'Movable devices allowed'; }
     this.veloMoveDevs.colSpan = 2;
+
     tr = document.createElement('tr');
     tb.appendChild(tr);
 
@@ -396,7 +394,6 @@ var LHCStatus = function(msg)   {
     tr.appendChild(c=Cell('L0 rate:',null,'MonitorDataHeader'));
     c.style.width='10%';
     tr.appendChild(this.l0Rate);
-
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
@@ -453,6 +450,8 @@ var LHCStatus = function(msg)   {
     tb.appendChild(tr);
 
     tab.appendChild(tb);
+    tooltips.set(tab,'Trigger setup and status<br>Click to go to DAQ page');
+    tab.onclick = lhcb.widgets.goto_lhcb_daq_page;
     return tab;
   }
 
@@ -507,6 +506,8 @@ var LHCStatus = function(msg)   {
     tr.appendChild(this.richCoolingFaults);
 
     tab.appendChild(tb);
+    tooltips.set(tab,'Hardware status<br>Click to go to hardware status page');
+    tab.onclick     = function() { document.location = "lhcb.display.htm?type=detstatus";};
     return tab;
   }
 
@@ -618,6 +619,8 @@ var LHCStatus = function(msg)   {
     cell.style.textAlign = 'left';
     cell.style.width = '60%';
     this.heading.appendChild(cell);
+    tooltips.set(cell,'LHC status summary.<br>Click to see LHC operations page');
+    cell.onclick = lhcb.widgets.goto_lhc_operations_page;
     this.head_date    = Cell(d.toString(),1,'MonitorTinyHeader');
     this.head_date.id = 'current_time';
     this.head_date.textAlign = 'right';
@@ -643,18 +646,25 @@ var LHCStatus = function(msg)   {
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
     td1.appendChild(this.LHC_Operations_Info());
+    tooltips.set(td1,'LHC operations information<br>Click to see LHC operations page');
+    td1.onclick = lhcb.widgets.goto_lhc_operations_page;
     //-------------------------------------------------
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
     td1.appendChild(this.Clock_summary());
+    tooltips.set(td1,'TTC clock information');
     //-------------------------------------------------
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
     td1.appendChild(this.TED_summary());
+    tooltips.set(td1,'LHCb run status<br>Click to see collimator and TED information.');
+    td1.onclick = function() { document.location = "lhcb.display.htm?type=collimators";};
     //-------------------------------------------------
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
     td1.appendChild(this.Background_summary());
+    tooltips.set(td1,'LHCb background status<br>Click to see BCM information.');
+    td1.onclick = function() { document.location = "lhcb.display.htm?type=bcm&sensors=1";};
     //-------------------------------------------------
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
@@ -672,18 +682,25 @@ var LHCStatus = function(msg)   {
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
     td1.appendChild(this.Experiment_summary(this.logger));
+    td1.onclick = lhcb.widgets.goto_lhcb_daq_page;
+    tooltips.set(td1,'Experiment status<br>Click to go to DAQ page');
     //-------------------------------------------------
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
     td1.appendChild(this.Trigger_summary(this.logger));
+    td1.onclick = lhcb.widgets.goto_lhcb_daq_page;
+    tooltips.set(td1,'LHCb trigger status<br>Click to see full run status information.');
     //-------------------------------------------------
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
     td1.appendChild(this.Magnet_summary());
+    tooltips.set(td1,'Brief overview information<br>of the LHCb magnet status<br>Click to see magnet page.');    
+    td1.onclick = function() { document.location = "lhcb.display.htm?type=magnet";};
     //-------------------------------------------------
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
-    td1.appendChild(this.Cooling_summary());
+    td1.appendChild(cell=this.Cooling_summary());
+    tooltips.set(td1,'Cooling information summary<br>for various subdetectors');    
     //-------------------------------------------------
     tb.appendChild(tr);
     // Finally add suggestions text
@@ -727,6 +744,7 @@ var lhc_body = function()  {
   selector.build();
   selector.subscribe();
   selector.provider.start();
+  body.style.cursor = 'default';
 }
 
 if ( _debugLoading ) alert('Script lhcb.display.detstatus.cpp loaded successfully');

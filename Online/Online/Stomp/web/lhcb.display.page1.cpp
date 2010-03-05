@@ -73,6 +73,7 @@ var Page1 = function(msg, sys)   {
     cell.onmouseout  = function() { document.body.style.cursor="default";     };
     cell.onmouseover = function() { document.body.style.cursor="pointer";     };
     cell.onclick     = function() { document.location = "http://lhcb.cern.ch";};
+    tooltips.set(cell,'LHCb page1:<br>General status information of<br>-- the LHC collider and<br>-- the LHCb experiment<br>Click to go to home page');
     this.heading.appendChild(cell);
     this.head_date = Cell(d.toString(),1,'MonitorTinyHeader');
     this.head_date.textAlign = 'right';
@@ -80,7 +81,6 @@ var Page1 = function(msg, sys)   {
     this.head_date.style.width = '360px';
     this.heading.appendChild(this.head_date);
     tb.appendChild(this.heading);
-    tooltips.set(this.heading,'LHCb page1:<br>General status information of<br>-- the LHC collider and<br>-- the LHCb experiment<br>Click to go to home page');
 
     this.timerHandler = function() {document.getElementById('current_time').innerHTML = (new Date()).toString(); }
     setInterval(this.timerHandler,2000);
@@ -92,14 +92,14 @@ var Page1 = function(msg, sys)   {
     td.appendChild(this.LHC_header=lhcb.widgets.LHC_header());
     td.style.width = '50%';
     tooltips.set(td,'LHC status summary.<br>Click to see LHC operations page');
-    td.onclick     = function() { document.location = "http://op-webtools.web.cern.ch/op-webtools/vistar/vistars.php?usr=LHC3";};
+    td.onclick     = lhcb.widgets.goto_lhc_operations_page;
     tr.appendChild(td);
     
     td = document.createElement('td');
     td.style.height = '100%';
     td.appendChild(this.LHCb_header=lhcb.widgets.Det_Run_header(this.system,this.logger));
     tooltips.set(td,'LHCb run status<br>Click to see full run status information.');
-    td.onclick     = function() { document.location = "lhcb.display.htm?type=status&system=LHCb";};
+    td.onclick = lhcb.widgets.goto_lhcb_daq_page;
     tr.appendChild(td);
     
     
