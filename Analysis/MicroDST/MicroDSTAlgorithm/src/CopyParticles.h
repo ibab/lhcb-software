@@ -1,10 +1,10 @@
-// $Id: CopyParticles.h,v 1.16 2009-04-30 15:43:48 jpalac Exp $
+// $Id: CopyParticles.h,v 1.17 2010-03-05 19:00:07 jpalac Exp $
 #ifndef COPYPARTICLES_H 
 #define COPYPARTICLES_H 1
 
 // Include files
 // from MicroDST
-#include "MicroDST/KeyedContainerClonerAlg.h"
+#include "MicroDST/ContainerClonerAlg.h"
 #include <MicroDST/ICloneParticle.h>
 #include "MicroDST/BindType2ClonerDef.h"
 // from LHCb
@@ -59,6 +59,6 @@ template<> struct Location<LHCb::Particle>
 };
 const std::string Location<LHCb::Particle>::Default = LHCb::ParticleLocation::Production;
 //=============================================================================
-typedef MicroDST::KeyedContainerClonerAlg<LHCb::Particle> CopyParticles;
+typedef MicroDST::ContainerClonerAlg<LHCb::Particle> CopyParticles;
 DECLARE_NAMED_ALGORITHM_FACTORY( CopyParticles, CopyParticles )
 #endif // COPYPRIMARYVERTICES_H
