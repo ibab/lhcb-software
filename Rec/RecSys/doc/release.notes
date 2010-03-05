@@ -5,6 +5,10 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+! 2010-03-05 - Chris Jones
+ - Configuration changes needed to adapt to the RICH changes to support
+   multiple recosntruction Configurations in the same job.
+
 ! 2010-03-04 - Rob Lambert
  - Added tests to iinstantiate all configurables
 

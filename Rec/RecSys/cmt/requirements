@@ -8,77 +8,77 @@ branches cmt doc python tests
 #=======================================================
 
 # Calorimeter                         # Maintainer
-use CaloMoniDst          v4r4    Calo # Olivier Deschamps
-use CaloPIDs             v5r4  	 Calo # Victor Egorychev, Vanya Belyaev
-use CaloReco             v5r3    Calo # Olivier Deschamps
+use CaloMoniDst  HEAD  Calo # Olivier Deschamps
+use CaloPIDs  HEAD  Calo # Victor Egorychev, Vanya Belyaev
+use CaloReco  HEAD  Calo # Olivier Deschamps
 
 # Muon
-use MuonID               v7r7p1  Muon # Erica Polycarpo, Miriam Gandelman
-use MuonPIDChecker       v4r1    Muon # Erica Polycarpo, Miriam Gandelman
-use MuonTrackAlign       v1r8    Muon # Silvia Pozzi
-use MuonTrackRec         v3r0p2  Muon # Giacomo Graziani
+use MuonID  HEAD  Muon # Erica Polycarpo, Miriam Gandelman
+use MuonPIDChecker  HEAD  Muon # Erica Polycarpo, Miriam Gandelman
+use MuonTrackAlign  HEAD  Muon # Silvia Pozzi
+use MuonTrackRec  HEAD  Muon # Giacomo Graziani
 
 # Non sub-detector specific components
-use GlobalReco           v6r31   Rec  # Chris Jones
-use LumiAlgs             v3r3    Rec  # Jaap Panman
-use RecAlgs              v1r8    Rec  # Marco Cattaneo
-use RecUtils             v1r5    Rec  # Juan Palacios, Patrick Koppenburg
+use GlobalReco  HEAD  Rec  # Chris Jones
+use LumiAlgs  HEAD  Rec  # Jaap Panman
+use RecAlgs  HEAD  Rec  # Marco Cattaneo
+use RecUtils  HEAD  Rec  # Juan Palacios, Patrick Koppenburg
 
 # Rich
-use RichGlobalPID        v3r10p4 Rich # Chris Jones
-use RichMarkovRingFinder v2r8p1  Rich # Chris Jones
-use RichPIDMerge         v2r7p1  Rich # Chris Jones
-use RichRecAlgorithms    v2r17   Rich # Chris Jones
-use RichRecMCAlgorithms  v1r3p2  Rich # Chris Jones
-use RichRecMCTools       v2r25p1 Rich # Chris Jones
-use RichRecMonitors      v2r26   Rich # Chris Jones
-use RichRecPhotonTools   v1r6p1  Rich # Chris Jones
-use RichRecQC            v2r37   Rich # Chris Jones
-use RichRecStereoTools   v1r6p1  Rich # Chris Jones
-use RichRecSys           v3r26   Rich # Chris Jones
-use RichRecTemplateRings v1r3    Rich # Sajan Easo
-use RichRecTools         v4r9p2  Rich # Chris Jones
-use RichRecTrackTools    v1r17   Rich # Chris Jones
+use RichGlobalPID  HEAD  Rich # Chris Jones
+use RichMarkovRingFinder  HEAD  Rich # Chris Jones
+use RichPIDMerge  HEAD  Rich # Chris Jones
+use RichRecAlgorithms  HEAD  Rich # Chris Jones
+use RichRecMCAlgorithms  HEAD  Rich # Chris Jones
+use RichRecMCTools  HEAD  Rich # Chris Jones
+use RichRecMonitors  HEAD  Rich # Chris Jones
+use RichRecPhotonTools  HEAD  Rich # Chris Jones
+use RichRecQC  HEAD  Rich # Chris Jones
+use RichRecStereoTools  HEAD  Rich # Chris Jones
+use RichRecSys  HEAD  Rich # Chris Jones
+use RichRecTemplateRings  HEAD  Rich # Sajan Easo
+use RichRecTools  HEAD  Rich # Chris Jones
+use RichRecTrackTools  HEAD  Rich # Chris Jones
 
 # Tf packages: Track Pattern Recognition
-use PatAlgorithms        v3r29   Tf   # Stephanie Hansmann-Menzemer
-use PatVelo              v3r20   Tf   # David Hutchcroft
-use PatVeloTT            v3r10   Tf   # Mariusz Witek
-use TrackMatching        v2r27   Tf   # Eduardo Rodrigues
-use TrackSys             v4r30   Tf   # Stephanie Hansmann-Menzemer 
-use TsaAlgorithms        v3r16   Tf   # Matt Needham
+use PatAlgorithms  HEAD  Tf   # Stephanie Hansmann-Menzemer
+use PatVelo  HEAD  Tf   # David Hutchcroft
+use PatVeloTT  HEAD  Tf   # Mariusz Witek
+use TrackMatching  HEAD  Tf   # Eduardo Rodrigues
+use TrackSys  HEAD  Tf   # Stephanie Hansmann-Menzemer 
+use TsaAlgorithms  HEAD  Tf   # Matt Needham
 
 # Tr packages: Track Fit & Pattern Reco Validation with MonteCarlo
-use PatChecker           v3r6    Tr   # Olivier Callot, David Hutchcroft
-use PatFitParams         v4r0    Tr   # Olivier Callot
-use TrackAssociators     v2r7    Tr   # Eduardo Rodrigues, Edwin Bos
-use TrackCheckers        v4r10   Tr   # Eduardo Rodrigues
-use TrackExtrapolators   v2r25   Tr   # Eduardo Rodrigues
-use TrackFitEvent        v4r4    Tr   # Eduardo Rodrigues
-use TrackFitter          v2r45   Tr   # Eduardo Rodrigues
-use TrackIdealPR         v2r19   Tr   # Eduardo Rodrigues
-use TrackMCTools         v2r24   Tr   # Eduardo Rodrigues
-use TrackMonitors        v1r21   Tr   # Wouter Hulsbergen, Stephanie Menzemer
-use TrackProjectors      v2r27   Tr   # Wouter Hulsbergen
-use TrackTools           v3r27   Tr   # Eduardo Rodrigues
-use TrackUtils           v1r34   Tr   # Eduardo Rodrigues
+use PatChecker  HEAD  Tr   # Olivier Callot, David Hutchcroft
+use PatFitParams  HEAD  Tr   # Olivier Callot
+use TrackAssociators  HEAD  Tr   # Eduardo Rodrigues, Edwin Bos
+use TrackCheckers  HEAD  Tr   # Eduardo Rodrigues
+use TrackExtrapolators  HEAD  Tr   # Eduardo Rodrigues
+use TrackFitEvent  HEAD  Tr   # Eduardo Rodrigues
+use TrackFitter  HEAD  Tr   # Eduardo Rodrigues
+use TrackIdealPR  HEAD  Tr   # Eduardo Rodrigues
+use TrackMCTools  HEAD  Tr   # Eduardo Rodrigues
+use TrackMonitors  HEAD  Tr   # Wouter Hulsbergen, Stephanie Menzemer
+use TrackProjectors  HEAD  Tr   # Wouter Hulsbergen
+use TrackTools  HEAD  Tr   # Eduardo Rodrigues
+use TrackUtils  HEAD  Tr   # Eduardo Rodrigues
 
 # Tf packages: Track Pattern Recognition
-use TfTools              v1r11   Tf   # Stephanie Hansmann-Menzemer
-use TrackSeeding         v1r4p2  Tf   # Eduardo Rodrigues, Henk Jan Bulten
+use TfTools  HEAD  Tf   # Stephanie Hansmann-Menzemer
+use TrackSeeding  HEAD  Tf   # Eduardo Rodrigues, Henk Jan Bulten
 
 # Primary Vertex Finder
-use PatPV                v3r13    Tr   # Mariusz Witek
+use PatPV  HEAD  Tr   # Mariusz Witek
 
 # Muon
-use MuonTools            v5r1    Muon # Alessia Satta
+use MuonTools  HEAD  Muon # Alessia Satta
 
 # Rich
-use RichENNRingFinder    v1r1    Rich # Chris Jones + Ulrich Kerzel
-use RichIFBAnalysis      v1r1p1  Rich # Ross Young, Chris Jones
+use RichENNRingFinder  HEAD  Rich # Chris Jones + Ulrich Kerzel
+use RichIFBAnalysis  HEAD  Rich # Ross Young, Chris Jones
 
 # Velo
-use VeloRecMonitors      v2r7    Velo # Malcom John, Eduardo Rodrigues
+use VeloRecMonitors  HEAD  Velo # Malcom John, Eduardo Rodrigues
 
 # Setup Python Configurables
 apply_pattern install_python_modules

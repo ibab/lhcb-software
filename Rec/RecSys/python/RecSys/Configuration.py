@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.26 2010-02-24 15:33:23 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.27 2010-03-05 16:28:56 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
             
 from LHCbKernel.Configuration import *
@@ -23,12 +23,16 @@ from Configurables import ProcessPhase, CaloMoniDstConf, RichRecQCConf, VeloRecM
 #  @date   15/08/2008
 class RecSysConf(LHCbConfigurableUser):
 
+    ## Name used for RICH reconstruction configurable
+    richRecConfName = "RichOfflineRec"
+
     ## Possible used Configurables
     __used_configurables__ = [ GlobalRecoConf      ,
                                TrackSys            ,
                                OffLineCaloPIDsConf ,
                                OffLineCaloRecoConf ,
-                               RichRecSysConf ]
+                               (RichRecSysConf,richRecConfName)
+                               ]
 
     ## Default tracking Sub-detector processing sequence
     DefaultTrackingSubdets = ["Decoding", "VELO","TT","IT","OT","Tr","Vertex"]
@@ -93,7 +97,7 @@ class RecSysConf(LHCbConfigurableUser):
 
         # Tracking (Should make it more fine grained ??)
         DoTracking = False
-        for seq in self.DefaultTrackingSubdets:
+        for seq in self.DefaultTrackingSubdets :
             if seq in recoSeq: DoTracking = True
         if DoTracking:
             trackConf = TrackSys()
@@ -102,20 +106,30 @@ class RecSysConf(LHCbConfigurableUser):
 
         # RICH
         if "RICH" in recoSeq:
-            richConf = RichRecSysConf()
+            
+            seq = GaudiSequencer("RecoRICHSeq")
+            # Create the top level Conf object and set some general options
+            richConf = RichRecSysConf(self.richRecConfName)
             self.setOtherProps(richConf,["SpecialData","Context","OutputLevel"])
-            richConf.RecoSequencer = GaudiSequencer("RecoRICHSeq")
+            # Set the sequencer the RICH reco algs should be added to
+            richConf.RecoSequencer = seq
+            # Input Tracks (would be better to not hard code this. Get from TrackSys ??)
+            richConf.trackConfig().InputTracksLocation = "Rec/Track/Best"
+            # Output PID Location
+            richConf.RichPIDLocation = "Rec/Rich/PIDs"
+            # Printout
+            import GaudiKernel.ProcessJobOptions
+            GaudiKernel.ProcessJobOptions.PrintOn()
+            log.info(richConf)
+            GaudiKernel.ProcessJobOptions.PrintOff()     
             
         # CALO
         if "CALO" in recoSeq:
             
             seq  = GaudiSequencer ( 'RecoCALOSeq' )
-
             reco = GaudiSequencer ( 'CaloRecoSeq' )
             pids = GaudiSequencer ( 'CaloPIDsSeq' )
-
             seq.Members = [ reco , pids ]
-
             
             caloConf = OffLineCaloRecoConf(
                 Sequence           = reco                           ,
@@ -154,8 +168,13 @@ class RecSysConf(LHCbConfigurableUser):
 #  @date   15/10/2009
 class RecMoniConf(LHCbConfigurableUser):
 
+    ## Name used for RICH Monitoring configurable
+    richMoniConfName = "OfflineRichMoni"
+
     ## Possible used Configurables
-    __used_configurables__ = [ CaloMoniDstConf, RichRecQCConf, VeloRecMonitors ]
+    __used_configurables__ = [ CaloMoniDstConf,
+                               (RichRecQCConf,richMoniConfName),
+                               VeloRecMonitors ]
 
     ## Configurables that must be configured before us
     __queried_configurables__ = [ RecSysConf, TrackSys ]
@@ -249,13 +268,15 @@ class RecMoniConf(LHCbConfigurableUser):
         # If checking is enabled, all Rich histograms are booked in check sequence
         if "RICH" in moniSeq and not self.getProp("CheckEnabled"):
             from Configurables import GaudiSequencer
-            self.setOtherProps(RichRecQCConf(),["Histograms","Context","OutputLevel","DataType"])
-            RichRecQCConf().setProp("MoniSequencer", GaudiSequencer("MoniRICHSeq"))
-            RichRecQCConf().setProp("WithMC", False)
-            #import GaudiKernel.ProcessJobOptions
-            #GaudiKernel.ProcessJobOptions.PrintOn()
-            #log.info(RichRecQCConf())
-            #GaudiKernel.ProcessJobOptions.PrintOff()
+            conf = RichRecQCConf(self.richMoniConfName)
+            self.setOtherProps(conf,["Histograms","Context","OutputLevel","DataType"])
+            conf.setProp("MoniSequencer", GaudiSequencer("MoniRICHSeq"))
+            conf.setProp("WithMC", False)
+            conf.RichPIDLocation = "Rec/Rich/PIDs"
+            import GaudiKernel.ProcessJobOptions
+            GaudiKernel.ProcessJobOptions.PrintOn()
+            log.info(conf)
+            GaudiKernel.ProcessJobOptions.PrintOff()
         
         # Expert histograms
         if self.expertHistos():
