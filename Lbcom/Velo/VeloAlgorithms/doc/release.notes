@@ -2,6 +2,9 @@
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2010-03-05 - David Hutchcroft
+ - Fixed unchecked StatusCodes and a Windows compilation warning
+
 ! 2010-03-04 - David Hutchcroft
  - Change electrons per ADC to 601 (was 442) to match VeloSim changes
  - Reduce Warning/Error messages to debug if there is a sensor with no 

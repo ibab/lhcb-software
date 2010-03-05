@@ -1,4 +1,4 @@
-// $Id: VeloSimTell1ClusterMaker.cpp,v 1.4 2009-12-18 08:12:33 szumlat Exp $
+// $Id: VeloSimTell1ClusterMaker.cpp,v 1.5 2010-03-05 16:46:31 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -154,7 +154,8 @@ StatusCode VeloSimTell1ClusterMaker::execute() {
         return StatusCode::SUCCESS;
       } 
       engineStatus=createAndConfigureEngines();
-      if(m_forceEnable) this->setIsEnable(m_zsProcessEnable);
+      engineStatus.ignore(); // might not check statuscode later
+      if(m_forceEnable) this->setIsEnable(static_cast<bool>(m_zsProcessEnable));
       if(isEnable()){
         info()<< " --> Algorithm " << (this->algoName())
               << " of type: " << (this->algoType())
@@ -165,6 +166,7 @@ StatusCode VeloSimTell1ClusterMaker::execute() {
       }
     }
     StatusCode rawEvtStatus=createRawEvent();
+    rawEvtStatus.ignore(); // fix unchecked status code is dataStatus is bad
     if(isEnable()&&(m_eventNumber>convergenceLimit())&&engineStatus.isSuccess()){
       StatusCode dataStatus=getData();
       StatusCode cluMakerStatus;
