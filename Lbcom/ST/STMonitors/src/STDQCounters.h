@@ -1,4 +1,4 @@
-// $Id: STDQCounters.h,v 1.3 2010-02-22 13:00:37 nchiapol Exp $
+// $Id: STDQCounters.h,v 1.4 2010-03-05 13:51:03 nchiapol Exp $
 #ifndef STDQCounters_H
 #define STDQCounters_H 1
 
@@ -91,7 +91,7 @@ void STDQCounters::init(int minADC, int maxADC) {
     m_txtColumns.push_back("Events");
     m_txtColumns.push_back("Clusters/evt");
     m_txtColumns.push_back("#Noise/event");
-    m_txtColumns.push_back("Proc Eff");
+    m_txtColumns.push_back("Proc InEff");
     m_txtColumns.push_back("#ErrorBanks");
     m_txtColumns.push_back("#Corrupted");
     m_txtColumns.push_back("#Missing");

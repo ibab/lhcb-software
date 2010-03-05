@@ -1,4 +1,4 @@
-// $Id: STDQSummaryAlg.cpp,v 1.7 2010-02-22 13:00:37 nchiapol Exp $
+// $Id: STDQSummaryAlg.cpp,v 1.8 2010-03-05 13:51:03 nchiapol Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -40,6 +40,9 @@ STDQSummaryAlg::STDQSummaryAlg( const std::string& name,
   declareProperty("outputFile",   m_outputFileName = "STDQSummary.txt");
   declareProperty("minADC",       m_minADC = 15);
   declareProperty("maxADC",       m_maxADC = 45);
+  declareProperty("fpPrecision",  m_fpPrecision = 2);
+
+
 
   // S/N cut
   declareProperty("threshold", m_threshold = 5);
@@ -110,7 +113,7 @@ void STDQSummaryAlg::outputInfo(){
   row.event      = Counters->m_event             ;
   row.clus       = mean(Counters->m_sumClusters) ;
   row.noise      = mean(Counters->m_sumNoise)    ;
-  row.procEff    = floor(mean(Counters->m_sumEff) * 100)/100 ;
+  row.procEff    = 1-mean(Counters->m_sumEff)    ;
   row.error      = sum (Counters->m_nError)      ;
   row.corrupted  = sum (Counters->m_nCorrupted)  ;
   row.sumMissing = sum (Counters->m_sumMissing)  ;
@@ -189,9 +192,10 @@ void STDQSummaryAlg::writeTxtFile() {
     return;
   }
   
+  oFile <<  std::setprecision(m_fpPrecision); 
   // add a header describing each column in the txt file
   for (STDQCounters::Strings::const_iterator iterS = STDQCounters::m_txtColumns.begin() ; iterS != STDQCounters::m_txtColumns.end(); ++iterS){
-    writeTxtEntry(oFile, *iterS, 12);
+    writeTxtEntry(oFile, *iterS);
   }
   oFile << m_separator << std::endl;
 
@@ -199,15 +203,19 @@ void STDQSummaryAlg::writeTxtFile() {
   std::vector<STDQCounters::DataRow>::iterator it;
   std::vector<STDQCounters::DataRow>::iterator endIt = m_dataStorage.end();
   for(it = m_dataStorage.begin(); it < endIt; it++) {
-    writeTxtEntry(oFile,it->run        ,12);      
-    writeTxtEntry(oFile,it->event      ,12);
-    writeTxtEntry(oFile,it->clus       ,12);
-    writeTxtEntry(oFile,it->noise      ,12);
-    writeTxtEntry(oFile,it->procEff    ,12);
-    writeTxtEntry(oFile,it->error      ,12);
-    writeTxtEntry(oFile,it->corrupted  ,12);
-    writeTxtEntry(oFile,it->sumMissing ,12);
-    writeTxtEntry(oFile,it->chargeMPV  ,12);
+    writeTxtEntry(oFile,it->run        );      
+    writeTxtEntry(oFile,it->event      );
+    writeTxtEntry(oFile,it->clus       );
+    writeTxtEntry(oFile,it->noise      );
+    if (fabs(it->procEff) < 1e-20) {
+      writeTxtEntry(oFile, 0);
+    } else {
+      writeTxtEntrySci(oFile,it->procEff );
+    }
+    writeTxtEntry(oFile,it->error      );
+    writeTxtEntry(oFile,it->corrupted  );
+    writeTxtEntry(oFile,it->sumMissing );
+    writeTxtEntry(oFile,it->chargeMPV  );
     oFile << m_separator << " " << m_separator << std::endl; 
   }
 }

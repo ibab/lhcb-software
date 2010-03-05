@@ -1,4 +1,4 @@
-// $Id: STDQSummaryAlg.h,v 1.3 2010-02-22 13:00:37 nchiapol Exp $
+// $Id: STDQSummaryAlg.h,v 1.4 2010-03-05 13:51:03 nchiapol Exp $
 #ifndef STDQSummaryAlg_H
 #define STDQSummaryAlg_H 1
 
@@ -69,7 +69,9 @@ private:
   
   /// write data-value to text stream (used by writeTxtFile())
   template <typename TYPE>
-    void writeTxtEntry(std::ofstream& str, TYPE data, int width);
+    void writeTxtEntry(std::ofstream& str, TYPE data);
+  template <typename TYPE>
+    void writeTxtEntrySci(std::ofstream& str, TYPE data);
 
   
   int m_lastRunNumber;            ///< RunNumber of last event
@@ -96,21 +98,24 @@ private:
   int m_minADC, m_maxADC;
 
   bool m_writeTxtFile;
-  bool m_writeTuple;              
+  bool m_writeTuple;
   std::string m_outputFileName;   ///< filename for the text file
   std::string m_separator;        ///< column separator in text file
-
+  int  m_fpPrecision;             ///< precision of floating point numbers in text file
 
   double m_threshold;             ///< threshold for signal (S/N)
-
   //typedef std::vector<std::string> Strings;
   //Strings m_txtColumns;           ///< text file column headers
 
 };
 
 template <typename TYPE>
-inline void STDQSummaryAlg::writeTxtEntry(std::ofstream& str,  TYPE data, int width){
-  str << m_separator << " " << std::setw(width) << std::setiosflags(std::ios_base::fixed) << std::setprecision(2) << data << " " ; 
+inline void STDQSummaryAlg::writeTxtEntry(std::ofstream& str,  TYPE data){
+  str << m_separator << " " << std::fixed << data << " " ; 
+}
+template <typename TYPE>
+inline void STDQSummaryAlg::writeTxtEntrySci(std::ofstream& str,  TYPE data){
+  str << m_separator << " " << std::scientific << data << " " ; 
 }
 
 #endif 
