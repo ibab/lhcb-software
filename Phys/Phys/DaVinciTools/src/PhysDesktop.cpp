@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.99 2010-03-05 08:33:22 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.100 2010-03-05 12:56:25 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -357,8 +357,10 @@ const LHCb::RecVertex* PhysDesktop::keep( const LHCb::RecVertex* keptV ){
 //=============================================================================
 void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) const 
 {
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Save Particles to TES " << endmsg;
-
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "Saving "<< pToSave.size() << " Particles to TES " << endmsg;
+  }
+  
   LHCb::Particles* particlesToSave = new LHCb::Particles();
   const std::string location( m_outputLocn+"/Particles");
   put(particlesToSave,location);
@@ -374,7 +376,7 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
     // Check if this was already in a Gaudi container (hence in TES)
     if (  !DaVinci::inTES(*icand) ) {
       if (msgLevel(MSG::VERBOSE)) printOut("  Saving", (*icand));
-      particlesToSave->insert((LHCb::Particle*)*icand); // convert to non-const
+      if (0!=*icand) particlesToSave->insert((LHCb::Particle*)*icand); // convert to non-const
       // store the related PV and the table. All relaitons and PVs should
       // already be "kept". On;y do it if PV is not in TES.
       const LHCb::VertexBase* vb = i_relatedVertexFromTable(*icand);
@@ -386,7 +388,7 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
       if (msgLevel(MSG::VERBOSE)) printOut("Skipping", (*icand));
     }
   }
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Saving " << particlesToSave->size()
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Saved " << particlesToSave->size()
                                         << " new particles in " << location << " from " << pToSave.size()
                                         << " total particles in desktop " << endmsg;
 
@@ -404,6 +406,10 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
 void PhysDesktop::saveVertices(const LHCb::Vertex::ConstVector& vToSave) const 
 {
 
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "Saving "<< vToSave.size() << " Vertices to TES " << endmsg;
+  }
+
   LHCb::Vertices* verticesToSave = new LHCb::Vertices();
 
   const std::string location(m_outputLocn+"/Vertices");
@@ -413,13 +419,17 @@ void PhysDesktop::saveVertices(const LHCb::Vertex::ConstVector& vToSave) const
   for( v_iter iver = vToSave.begin(); iver != vToSave.end(); iver++ ) {
     // Check if this was already in a Gaudi container (hence in TES)
     if( !DaVinci::inTES(*iver) ) {
-      verticesToSave->insert((LHCb::Vertex*)*iver); // insert non-const
+      if (0!=(*iver)) verticesToSave->insert((LHCb::Vertex*)*iver); // insert non-const
     }
   }
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Saving " << verticesToSave->size()
-                                        << " new vertices in " << location << " from " << vToSave.size()
-                                        << " vertices in desktop " << endmsg;
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "Saved " << verticesToSave->size()
+              << " new vertices in " << location << " from " << vToSave.size()
+              << " from " << vToSave.size()
+              << " total veritices in desktop " << endmsg;
+  }
+  
   
 }
 //=============================================================================
