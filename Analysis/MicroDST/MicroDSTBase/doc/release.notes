@@ -1,10 +1,18 @@
-!$Id: release.notes,v 1.42 2010-02-24 15:27:22 jpalac Exp $
+!$Id: release.notes,v 1.43 2010-03-05 18:57:58 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+! 2010-03-05 - Juan Palacios
+ - Added MicroDST/ContainerClonerAlg.h
+  . For cloning generic TES containers via T::Range. Temporary duplication
+    of KeyedContainerClonerAlg.
+ - MicroDSTCommon
+  . added method inline const typename T::Container* copyContainer to clone
+    container elements from a T::Range.
 
 ! 2010-02-24 - Juan Palacios
  - Added MicroDST/RelationsFromClonerAlg.h
