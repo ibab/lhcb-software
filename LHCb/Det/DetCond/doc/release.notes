@@ -4,6 +4,10 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2010-03-05 - Marco Clemencic
+ - Fixed a problem in the CondDB configurable for the usage of Oracle in the
+   PIT.
+
 ! 2010-02-25 - Marco Clemencic
  - Removed the dependency on rx (obsolete).
 

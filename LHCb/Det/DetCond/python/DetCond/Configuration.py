@@ -12,7 +12,8 @@ from Configurables import ( CondDBAccessSvc,
                             CondDBCnvSvc,
                             CondDBSQLiteCopyAccSvc,
                             CondDBLogger,
-                            COOLConfSvc )
+                            COOLConfSvc,
+                            ApplicationMgr )
 
 import os, re
 
