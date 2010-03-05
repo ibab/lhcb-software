@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.33 2010-03-04 18:28:35 dhcroft Exp $
+// $Id: VeloSim.cpp,v 1.34 2010-03-05 16:29:55 dhcroft Exp $
 // Include files
 // STL
 #include <string>
@@ -153,7 +153,7 @@ StatusCode VeloSim::initialize() {
   std::vector<DeVeloSensor*>::const_iterator sens = 
     m_veloDet->rPhiSensorsBegin();
   int maxStrips= (*sens)->numberOfStrips();
-  int hitNoiseAverage= 2.*m_noiseTailProb*maxStrips;
+  double hitNoiseAverage= 2.*m_noiseTailProb*maxStrips;
   StatusCode sc3 = m_poissonDist.initialize(randSvc(), 
 					    Rndm::Poisson(hitNoiseAverage));
   if(!sc3){
