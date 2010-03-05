@@ -430,7 +430,6 @@ StatusCode SLICEReaderSvc::run()
         else msgLog << MSG::ERROR << WHERE << "File reading procedure failed" << endmsg;
         return sc;
     }   
- 
     msgLog << MSG::ALWAYS << "Reader: End of run" << endmsg; 
     return StatusCode::SUCCESS;
 }

@@ -343,3 +343,44 @@ extern "C" int pyhlt_test_run(int /* ac  */, char** /* av */)  {
 
   return 0;
 }
+
+
+extern "C" int qmtest_mepinj(int /* ac  */, char** /* av */)  {
+  string groot = ::getenv("GAUDIONLINEROOT");
+  string main_opts = "-main="+groot+"/options/Main.opts";
+  string out = "";//"/dev/null";
+  string host = RTL::nodeNameShort();
+  Process* p[2] = {0,0};
+  ProcessGroup pg;
+  const char *injclass[] =CLASS1("MEPInjectorQMTest.opts");
+  const char *readclass[] =CLASS1("ReaderSvcQMTest.opts");
+  std::vector<std::string> args;
+
+  Process::setDebug(true);  
+  Process* injproc=new Process("MEPInj_0",  command(),injclass,out.c_str());
+  Process* readproc=new Process("Reader_0",  command(),readclass,out.c_str());
+  cout << "Starting processes ..... " << endl;
+  
+  injproc->start();
+  ::lib_rtl_sleep(3500);
+  readproc->start();
+
+  ::lib_rtl_sleep(3500);
+
+  cout << "Stopping processes ..... " << endl;
+
+  ::lib_rtl_sleep(3000);
+
+  readproc->stop();
+  ::lib_rtl_sleep(1000);
+  injproc->stop();
+  ::lib_rtl_sleep(1000);
+
+  readproc->wait(Process::WAIT_BLOCK);
+  injproc->wait(Process::WAIT_BLOCK); 
+
+  cout << "All processes finished work.. " << endl;
+  ::lib_rtl_sleep(1000);
+
+  return 0;
+}

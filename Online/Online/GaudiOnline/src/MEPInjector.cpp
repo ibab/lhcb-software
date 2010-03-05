@@ -103,6 +103,8 @@ typedef union {
     } part;
 } EventHdr_t;
 
+
+
 // Streambuffer manages correctly the memory, reallocating if need more than it currently has, and freeing once the streambuffer is destroyed, i.e. in the end of the program because the streambuffer is an attribute of the MEPInjector
 // This function also sets the real size of the MEP in the first 4 bytes of the buffer, but the MEPEvent constructor of encodeMEP function sets it to 0 ... before to set it back to the same value
 static void *extendBuffer(void *p, size_t len) {
@@ -112,9 +114,6 @@ static void *extendBuffer(void *p, size_t len) {
     *pui = len;
     return s->data();
 }
-
-
-
 
 /** Extended service constructor. 
 */
@@ -175,6 +174,7 @@ MEPInjector::MEPInjector(const std::string & name, ISvcLocator * pSvcLocator):Se
 
     declareProperty("LocalTest", m_LocalTest = false);
     declareProperty("TestPort", m_TestPort = 45678);
+    declareProperty("TestLimit", m_TestLimit = 50);
 
     m_InjState = NOT_READY;
 }
@@ -789,9 +789,9 @@ StatusCode MEPInjector::getEvent(int nbEv) {
                         msgLog << MSG::DEBUG << WHERE << "Trigger Type 4: PERA event selected" << endmsg;
                         bmid = m_EventBuffers[PERA];
                         break;
+
                 default : msgLog << MSG::ERROR << WHERE << "Odin trigger type decoding error" << endmsg;
                         return StatusCode::FAILURE;
-            
             } 
         }
 
@@ -1112,6 +1112,10 @@ StatusCode MEPInjector::injectorProcessing() {
 
     StatusCode sc = StatusCode::RECOVERABLE;
     while ((sc.isSuccess() || sc.isRecoverable()) && m_InjState == RUNNING ) {
+        if(m_LocalTest && m_TotEvtsSent >= m_TestLimit) {
+            msgLog << MSG::INFO << WHERE << "Test finished" << endmsg;
+            break;
+        }
         if(!m_AutoMode && sc.isRecoverable()) {
             /// Selects an available HLT node.
             if(!m_gotHLT) {
@@ -1121,7 +1125,7 @@ StatusCode MEPInjector::injectorProcessing() {
                     continue;
                 }
                 if(sc.isFailure()) {
-                    ERRMSG(msgLog, " Selecting a HLT");
+                    ERRMSG(msgLog, "Selecting a HLT failed");
                     return StatusCode::FAILURE;
                 }
                 m_gotHLT = true;
@@ -1136,18 +1140,22 @@ StatusCode MEPInjector::injectorProcessing() {
                     continue;
                 }
                 if(sc.isFailure()) {
-                    ERRMSG(msgLog, " Copying data from Odin MEP");
+                    ERRMSG(msgLog, " Copying data from Odin MEP failed");
                     return StatusCode::FAILURE;
                 }
                 m_gotOdin = true;
             } 
         }
         /// Make all MEPs and send them.
-        sc = readThenSend();
-
+        sc = readThenSend(); 
     }
-
-    msgLog << MSG::DEBUG << WHERE << endmsg;
+    if(sc.isFailure()) {
+        ERRMSG(msgLog, "End of run due to error");
+        msgLog << MSG::INFO << WHERE << pthread_self() << ", pid:"<< getpid()<< endmsg;
+        return StatusCode::FAILURE;
+    }
+    else 
+        msgLog << MSG::INFO << WHERE << "End of run " << endmsg;
  
     return StatusCode::SUCCESS;
 }
@@ -1165,7 +1173,8 @@ StatusCode MEPInjector::readThenSend() {
 
 
     /// Get an event. 
-    sc = getEvent(nbEv); 
+    sc = getEvent(nbEv);
+ 
     if(sc.isRecoverable()) {
         msgLog << MSG::INFO << WHERE << "End of injection : exiting readEvent" << endmsg;
         return StatusCode::RECOVERABLE;
@@ -1285,7 +1294,7 @@ StatusCode MEPInjector::readThenSend() {
                 StatusCode sc; 
                 sc = getHLTInfo();
                 if(sc.isRecoverable()) {
-                    msgLog << MSG::DEBUG << WHERE << "Could not get a HLT destination" << endmsg;
+                    msgLog << MSG::INFO << WHERE << "Could not get a HLT destination" << endmsg;
                     return sc;
                 }
     
@@ -1297,7 +1306,7 @@ StatusCode MEPInjector::readThenSend() {
     
                 sc = getOdinInfo();
                 if(sc.isRecoverable()) {
-                    msgLog << MSG::DEBUG << WHERE << "Could not get a TFC information" << endmsg;
+                    msgLog << MSG::INFO << WHERE << "Could not get a TFC information" << endmsg;
                     return sc;
                 }
     
@@ -1718,14 +1727,34 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me) {
     // Case of local test, fragmentation is managed by the kernel
     if(m_LocalTest) {
         int n=0;
-        n = MEPRxSys::send_msg(m_ToHLTSock, addrTo, 0, datagram, iDatagramSize, 0);
+        struct sockaddr_in dest;
+        struct in_addr adr;
+        adr.s_addr = addrTo;
+        dest.sin_family=AF_INET;
+        dest.sin_port = htons(m_TestPort);
+        dest.sin_addr=adr; 
+
+        struct iphdr *hdr = (struct iphdr *) datagram;
+        hdr->saddr = tell1IP; //inet_addr(srcAddr);
+        hdr->daddr = addrTo; //inet_addr(destAddr);
+        hdr->version = 4;
+        hdr->ihl = 5;
+        hdr->ttl = 4;
+        hdr->protocol = m_MEPProto;
+
+
+        n = sendto(m_ToHLTSock, (void*) datagram, iDatagramSize, 0, (const sockaddr *)
+                      &dest, sizeof(dest));
+//        n = MEPRxSys::send_msg(m_ToHLTSock, addrTo, htons(m_TestPort), datagram, iDatagramSize, 0);
         if (n == (int) iDatagramSize) {
             m_TotMEPsTx++;
             m_TotBytesTx += MEPSize;
             return StatusCode::SUCCESS;
         }   
         if (n == -1) {
-            ERRMSG(msgLog, " MEP sending ");
+            std::string strerr="MEP sending" + errno;
+            ERRMSG(msgLog, strerr);
+            perror("send_msg");
             return StatusCode::FAILURE;
         }
         ERRMSG(msgLog, " MEP corrupted on send! Sent length:" + n);
@@ -2519,7 +2548,7 @@ StatusCode MEPInjector::run() {
     m_InjState = RUNNING;
 
     sc = StatusCode::SUCCESS; 
-    while(sc.isSuccess() && m_InjState == RUNNING) {
+    while(sc.isSuccess() && m_InjState == RUNNING && (!m_LocalTest || (m_LocalTest && m_TestLimit >= m_TotEvtsSent))) {
          sc=injectorProcessing();
     }
 /*
