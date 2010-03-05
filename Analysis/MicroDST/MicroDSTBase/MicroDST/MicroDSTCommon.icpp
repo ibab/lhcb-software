@@ -1,4 +1,4 @@
-// $Id: MicroDSTCommon.icpp,v 1.13 2009-08-31 13:21:21 jpalac Exp $
+// $Id: MicroDSTCommon.icpp,v 1.14 2010-03-05 18:57:24 jpalac Exp $
 //-----------------------------------------------------------------------------
 // Implementation file for templated methods of class : MicroDSTCommon
 //
@@ -105,6 +105,49 @@ const T* MicroDSTCommon<PBASE>::copyKeyedContainer( const std::string& from,
 
   if (0!=clones) {
     this->verbose() << "copyKeyedContainer copied  " << data->size() 
+                    << " elements from " << from 
+                    << " into " << outputTESLocation(from)
+                    <<", size " << clones->size() << endmsg;
+  } else {
+    this->Warning("CopyKeyedContainer failed to clone "+ from,
+                  StatusCode::FAILURE, 1).ignore();
+  }
+
+
+  return  clones; 
+
+}
+//=============================================================================
+template <class PBASE>
+template <class T, class ContainedItemCloner >
+const typename T::Container* MicroDSTCommon<PBASE>::copyContainer( const std::string& from,
+                                                                   ContainedItemCloner* cloner    ) 
+{
+  this->verbose() << "now store container for location " << from << endmsg;
+
+  if ( (!exist<typename T::Container>(from)) && 
+       (!exist<typename T::Selection>(from))    )   {
+    this->Warning("copyContainer found no data at "+from, 
+                  StatusCode::FAILURE, 1).ignore();
+    return 0;
+  }
+  
+  typename T::Range data = PBASE:: template get<typename T::Range>(from);
+
+  if (data.empty()) {
+    this->Warning("copyKeyedContainer found no data at "+from, 
+                  StatusCode::FAILURE, 1).ignore();
+    return 0;
+  }
+
+  for (typename T::Range::const_iterator i = data.begin(); i != data.end(); ++i) {
+    cloner->operator()(*i);
+  }
+
+  typename T::Container* clones = getOutputContainer<typename T::Container>( outputTESLocation(from) );
+
+  if (0!=clones) {
+    this->verbose() << "copyKeyedContainer copied  " << data.size() 
                     << " elements from " << from 
                     << " into " << outputTESLocation(from)
                     <<", size " << clones->size() << endmsg;

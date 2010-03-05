@@ -1,4 +1,4 @@
-// $Id: MicroDSTCommon.h,v 1.7 2009-08-20 07:50:37 jpalac Exp $
+// $Id: MicroDSTCommon.h,v 1.8 2010-03-05 18:57:24 jpalac Exp $
 #ifndef MICRODST_MICRODSTCOMMON_H 
 #define MICRODST_MICRODSTCOMMON_H 1
 
@@ -90,6 +90,15 @@ public:
   template <class T, class ContainedItemCloner >
   inline const T* copyKeyedContainer( const std::string& from, 
                                       ContainedItemCloner* cloner    ) ;
+
+  /**
+   *
+   * @author Juan Palacios juancho@nikhef.nl
+   */
+  template <class T, class ContainedItemCloner >
+  inline const typename T::Container* copyContainer( const std::string& from, 
+                                                     ContainedItemCloner* cloner    ) ;
+
 
   /**
    *
