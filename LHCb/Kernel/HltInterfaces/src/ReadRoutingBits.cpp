@@ -1,4 +1,4 @@
-// $Id: ReadRoutingBits.cpp,v 1.2 2009-11-10 17:09:22 pkoppenb Exp $
+// $Id: ReadRoutingBits.cpp,v 1.3 2010-03-05 10:51:24 pkoppenb Exp $
 // Include files 
 
 #include "Kernel/ReadRoutingBits.h"
@@ -20,7 +20,6 @@ namespace Hlt {
     std::vector<unsigned int> yes ;
     boost::dynamic_bitset<unsigned int> x = readRoutingBits(rawEvent);
     for ( std::vector<unsigned int>::const_iterator j = relevantBits.begin() ; j != relevantBits.end() ; ++j){
-      //      if (msgLevel(MSG::VERBOSE)) verbose()
       if ( x[*j] ) yes.push_back(*j); // accepted
     }
     return yes ;
@@ -33,31 +32,43 @@ namespace Hlt {
                                              const unsigned int relevantMax){
     std::vector<unsigned int> yes ;
     boost::dynamic_bitset<unsigned int> x = readRoutingBits(rawEvent);
+    std::cout << "Fired routing bits from " << relevantMin 
+                 << " to " << relevantMax << " are : " ;
     for ( unsigned int j = relevantMin ; j <= relevantMax ; ++j){
-      if ( x[j] ) yes.push_back(j); // accepted
+      if ( x[j] ){
+        yes.push_back(j); // accepted
+        std::cout << j << " (" << x[j] << ") "  ;
+      }
     }
+    std::cout << std::endl ;
     return yes ;
   };
 //=========================================================================
-//  read routing bits and return as bitset
+//  read routing bits and return as bitset 
 //=========================================================================
-  boost::dynamic_bitset<unsigned int> readRoutingBits(LHCb::RawEvent* rawEvent){
+  boost::dynamic_bitset<unsigned int> readRoutingBits(LHCb::RawEvent*
+                                                      rawEvent){
     if (!rawEvent){
       throw GaudiException("Cannot find RawEvent","Hlt::readRoutingBits",StatusCode::FAILURE);
     }
     const unsigned int size = 3 ;
-    const unsigned int byte = 8 ;
-    boost::dynamic_bitset<unsigned int> x(byte*sizeof(unsigned int));
     const std::vector<LHCb::RawBank*>& banks = rawEvent->banks(LHCb::RawBank::HltRoutingBits);
-    if (banks.size()!=1) return x ;
+    //    std::cout << banks.size() << std::endl ;
+    if (banks.empty()) {
+      throw GaudiException("There is no routing bits banks. Please make sure you run the trigger",
+                           "Hlt::readRoutingBits", StatusCode::FAILURE);
+    }
+    if (banks.size()>1) {
+      throw GaudiException("There are >1 routing bits banks. Please remove the original before re-running the trigger",
+                           "Hlt::readRoutingBits", StatusCode::FAILURE);
+    }
+    if( LHCb::RawBank::MagicPattern != banks.front()->magic() ) {
+      throw GaudiException("Wrong magic in HltRoutingBits","Hlt::readRoutingBits",StatusCode::FAILURE);
+    } 
+    std::cout << banks.front()->size() << std::endl ;
     if (banks.front()->size()!=size*sizeof(unsigned int)) {
       throw GaudiException("RawBank wrong size","Hlt::readRoutingBits",StatusCode::FAILURE);
     }
-    const unsigned int *data = banks.front()->data();
-    x.append(data[0]);
-    x.append(data[1]);
-    x.append(data[2]);
-    return x ;
-  }
-  
+    return boost::dynamic_bitset<unsigned int>(banks.front()->begin<unsigned int>(), banks.front()->end<unsigned int>());
+  } 
 }
