@@ -80,13 +80,13 @@ class RichMarkovRingFinderConf(RichConfigurableUser):
                 maxhits    = self.getProp("MaxHitsInPanel")
                 maxhpdhits = self.getProp("MaxHitsInHPD")
 
-                # Ring locations
-                AllRingsLoc  = "Rec/Rich/Markov/RingsAll"
-                BestRingsLoc = "Rec/Rich/Markov/RingsBest"
-                IsoRingsLoc  = "Rec/Rich/Markov/RingsIsolated"
-
                 # context
                 cont = self.getProp("Context")
+
+                # Ring locations
+                AllRingsLoc  = "Rec/Rich/Markov/"+cont+"/RingsAll"
+                BestRingsLoc = "Rec/Rich/Markov/"+cont+"/RingsBest"
+                IsoRingsLoc  = "Rec/Rich/Markov/"+cont+"/RingsIsolated"
 
                 setOutLevel = self.isPropertySet("OutputLevel")
                 level = self.getProp("OutputLevel")

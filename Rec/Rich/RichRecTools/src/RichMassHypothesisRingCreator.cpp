@@ -44,7 +44,7 @@ MassHypothesisRingCreator( const std::string& type,
 
   // Define job option parameters
   // context specific defaults
-  if ( context() == "HLT" || context() == "Hlt" )
+  if ( contextContains("HLT") )
   {
     //                    Aero   R1Gas  R2Gas
     m_maxPoint = list_of  (50)   (50)   (50)  ;
@@ -56,7 +56,7 @@ MassHypothesisRingCreator( const std::string& type,
     m_minPoint = list_of  (100)  (100)  (100) ;
   }
   declareProperty( "RingsLocation",
-                   m_ringLocation = LHCb::RichRecRingLocation::SegmentHypoRings );
+                   m_ringLocation = contextSpecificTES(LHCb::RichRecRingLocation::SegmentHypoRings) );
   declareProperty( "MaxRingPoints", m_maxPoint  );
   declareProperty( "MinRingPoints", m_minPoint  );
   declareProperty( "CheckBeamPipe", m_checkBeamPipe = true );

@@ -53,7 +53,7 @@ class RichAlignmentConf(RichConfigurableUser):
 
             # Track selector
             trselname = "TrackSelector"
-            RichAlignMoniR1.addTool( RichTools().trackSelector(trselname), name=trselname )
+            RichAlignMoniR1.addTool( self.richTools().trackSelector(trselname), name=trselname )
 
             RichAlignMoniR1.TrackSelector.TrackAlgs = [ "Match","Forward" ]
             r1MinPCut = self.getProp("MinTrackMomentum")[0]
@@ -83,7 +83,7 @@ class RichAlignmentConf(RichConfigurableUser):
 
             # Track selector
             trselname = "TrackSelector"
-            RichAlignMoniR2.addTool( RichTools().trackSelector(trselname), name=trselname )
+            RichAlignMoniR2.addTool( self.richTools().trackSelector(trselname), name=trselname )
 
             RichAlignMoniR2.TrackSelector.TrackAlgs = [ "Match","Forward" ]
             r2MinPCut = self.getProp("MinTrackMomentum")[1]

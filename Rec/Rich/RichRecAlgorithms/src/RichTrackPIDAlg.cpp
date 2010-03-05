@@ -31,16 +31,8 @@ TrackPIDAlg::TrackPIDAlg( const std::string& name,
     m_trSelector       ( NULL )
 {
   // Context specific track locations
-  if ( context() == "HLT" || context() == "Hlt" )
-  {
-    m_trTracksLocation = LHCb::TrackLocation::HltForward;
-  }
-  else
-  {
-    m_trTracksLocation = LHCb::TrackLocation::Default;
-  }
   declareProperty( "PIDToolName", m_pidToolName = "RichPIDTool" );
-  declareProperty( "TracksLocation", m_trTracksLocation );
+  declareProperty( "TracksLocation", m_trTracksLocation = "" );
   declareProperty( "NTracksAtOnce",  m_nAtOnce = 1 );
 }
 
@@ -51,6 +43,9 @@ StatusCode TrackPIDAlg::initialize()
 {
   const StatusCode sc = RichRecAlgBase::initialize();
   if ( sc.isFailure() ) return sc;
+
+  if ( m_trTracksLocation.empty() )
+  { return Error( "Input track location is not set" ); }
 
   // load tools
   acquireTool( m_pidToolName,   m_pidTool          );

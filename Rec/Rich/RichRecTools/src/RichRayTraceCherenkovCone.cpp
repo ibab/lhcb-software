@@ -40,7 +40,7 @@ RayTraceCherenkovCone::RayTraceCherenkovCone( const std::string& type,
   // Define interface for this tool
   declareInterface<IRayTraceCherenkovCone>(this);
   // JOs
-  if ( context() == "HLT" || context() == "Hlt" )
+  if ( contextContains("HLT") )
   {
     //                    Aero   R1Gas  R2Gas           
     m_nBailout = list_of  (10)   (15)   (20) ;

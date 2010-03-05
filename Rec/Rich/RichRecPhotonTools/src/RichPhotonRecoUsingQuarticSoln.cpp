@@ -4,9 +4,6 @@
  *
  * Implementation file for class : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
- * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.10 2009-07-30 11:20:00 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
  * @date 2003-11-14
@@ -52,22 +49,12 @@ PhotonRecoUsingQuarticSoln( const std::string& type,
   // Initialise
   m_deBeam[Rich::Rich1] = NULL;
   m_deBeam[Rich::Rich2] = NULL;
-  
-  // context specific defaults
-  if ( context() == "HLT" || context() == "Hlt" )
-  {
-    m_nQits = list_of (3) (3) (3) ;
-  }
-  else // offline
-  { 
-    m_nQits = list_of (3) (3) (3) ;
-  }
 
   // job options
   declareProperty( "FindUnambiguousPhotons",    m_testForUnambigPhots         );
   declareProperty( "UseMirrorSegmentAllignment", m_useAlignedMirrSegs         );
   declareProperty( "AssumeFlatSecondaries",     m_forceFlatAssumption = false );
-  declareProperty( "NQuarticIterationsForSecMirrors", m_nQits                 );
+  declareProperty( "NQuarticIterationsForSecMirrors", m_nQits = list_of(3)(3)(3) );
   declareProperty( "UseSecondaryMirrors",                m_useSecMirs = true  );
   declareProperty( "RejectAmbiguousPhotons",       m_rejectAmbigPhots         );
   declareProperty( "CheckBeamPipe", m_checkBeamPipe );

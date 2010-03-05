@@ -31,28 +31,13 @@ void Rich::Rec::GlobalPID::CommonBase<PBASE>::initConstructor()
   m_GPIDs        = NULL;
   m_procStat     = NULL;
   m_richPartProp = NULL;
-  if      ( this->context() == "Offline" )
-  {
-    m_richGPIDName = "RichGloPID";
-    m_richGPIDTrackLocation   = LHCb::RichGlobalPIDTrackLocation::Offline;
-    m_richGPIDLocation        = LHCb::RichGlobalPIDLocation::Offline;
-  }
-  else if ( this->context() == "HLT" )
-  {
-    m_richGPIDName = "RichGloHltPID";
-    m_richGPIDTrackLocation   = LHCb::RichGlobalPIDTrackLocation::HLT;
-    m_richGPIDLocation        = LHCb::RichGlobalPIDLocation::HLT;
-  }
-  else
-  {
-    m_richGPIDTrackLocation   = LHCb::RichGlobalPIDTrackLocation::Default;
-    m_richGPIDLocation        = LHCb::RichGlobalPIDLocation::Default;
-    m_richGPIDName            = "RichGloPID";
-  }
-
-  this->declareProperty( "RichGlobalPIDTrackLocation", m_richGPIDTrackLocation );
-  this->declareProperty( "RichGlobalPIDLocation", m_richGPIDLocation );
-  this->declareProperty( "GlobalName", m_richGPIDName );
+  this->declareProperty( "RichGlobalPIDTrackLocation", 
+                         m_richGPIDTrackLocation = 
+                         this->contextSpecificTES(LHCb::RichGlobalPIDTrackLocation::Default) );
+  this->declareProperty( "RichGlobalPIDLocation", 
+                         m_richGPIDLocation = 
+                         this->contextSpecificTES(LHCb::RichGlobalPIDLocation::Default) );
+  this->declareProperty( "GlobalName", m_richGPIDName = "RichGloPID"+this->context() );
   this->declareProperty( "ProcStatusLocation",
                          m_procStatLocation = LHCb::ProcStatusLocation::Default );
 }

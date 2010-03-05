@@ -45,12 +45,6 @@ class RichGlobalPIDConfig(RichConfigurableUser):
        ,"OutputLevel"   : INFO    # The output level to set all algorithms and tools to use
         }
 
-    ## Make an instance of an algortithm
-    def makeRichAlg(self,type,name):
-        alg = type(name)
-        if self.isPropertySet("OutputLevel") : alg.OutputLevel = self.getProp("OutputLevel")
-        return alg 
-
     ## Initialize 
     def initialize(self):
         # default values

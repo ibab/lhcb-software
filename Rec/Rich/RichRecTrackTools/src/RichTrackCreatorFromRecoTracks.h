@@ -115,9 +115,6 @@ namespace Rich
       /// Flag to turn on the creation of the RichRecRings for the segment mass hypotheses
       bool m_buildHypoRings;
 
-      /// Debug object to force creator to only make one track per event
-      bool m_makeOneTrack;
-
     };
 
   }

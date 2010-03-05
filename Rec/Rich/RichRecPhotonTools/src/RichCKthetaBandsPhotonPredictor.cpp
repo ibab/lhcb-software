@@ -56,7 +56,7 @@ CKthetaBandsPhotonPredictor( const std::string& type,
   m_sepGMax    =    list_of  (342)   (75)    (130)   ;
   m_minXlocal  =    list_of  (-1*mm) (-1*mm) (-1*mm) ;
   m_minYlocal  =    list_of  (-1*mm) (-1*mm) (-1*mm) ;
-  if ( context() == "HLT" || context() == "Hlt" )
+  if ( contextContains("HLT") )
   {
     m_nSigma   =    list_of  (4.5)   (4.5)   (10.5)  ;
   }

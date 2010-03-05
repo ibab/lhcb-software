@@ -4,6 +4,11 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-03-05 - Chris Jones
+ - Various changes to support the configuration of multiple reconstruction 
+   sequences in the same application. Needed to support neccessary changes in 
+   HLT2.
+
 ! 2010-03-04 - Chris Jones
  - Update RichPIDQC to support BelowThreshold DLL values if activated in the 
    reconstruction and particle PID algorithms.

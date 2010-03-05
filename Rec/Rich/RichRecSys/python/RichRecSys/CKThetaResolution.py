@@ -23,7 +23,7 @@ class CKThetaResolutionConfig(RichConfigurableUser):
     #
     def applyConf(self):
 
-        ckRes = RichTools().ckResolution()
+        ckRes = self.richTools().ckResolution()
         if ckRes.getType() == "Rich::Rec::BinnedCKResVthetaForRecoTracks" :
             self.setBinnedProperties(ckRes)
         elif ckRes.getType() == "Rich::Rec::InterpCKResVthetaForRecoTracks" :

@@ -27,22 +27,13 @@ StatusCreator::StatusCreator( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
   : RichRecToolBase      ( type, name, parent ),
-    m_status             ( NULL ),
-    m_richStatusLocation ( LHCb::RichRecStatusLocation::Default )
+    m_status             ( NULL )
 {
-
+  // interface
   declareInterface<IStatusCreator>(this);
-
-  if ( context() == "Offline" )
-  {
-    m_richStatusLocation = LHCb::RichRecStatusLocation::Offline;
-  }
-  else if ( context() == "HLT" )
-  {
-    m_richStatusLocation = LHCb::RichRecStatusLocation::HLT;
-  }
-  declareProperty( "RichRecStatusLocation", m_richStatusLocation );
-
+  // JOs
+  declareProperty( "RichRecStatusLocation", 
+                   m_richStatusLocation = contextSpecificTES(LHCb::RichRecStatusLocation::Default) );
 }
 
 StatusCode StatusCreator::initialize()

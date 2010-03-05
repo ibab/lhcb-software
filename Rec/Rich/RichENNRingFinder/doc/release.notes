@@ -4,6 +4,11 @@
 ! Purpose     : Uses an elastic Neural Network to do ring finding without tracks
 !-------------------------------------------------------------------------------
 
+! 2010-03-05 - Chris Jones
+ - Various changes to the python Configurables to support the configuration of
+   multiple reconstruction sequences in the same application. Needed to
+   support neccessary changes in HLT2.
+
 !=================== Rich/RichENNRingFinder v1r1 2009-06-19 ====================
 ! 2009-06-19 - Chris Jones
  - Fixes for runtime differences between 32 and 64 bit

@@ -20,13 +20,14 @@ class RichSegmentCreatorConf(RichConfigurableUser):
 
     ## Steering options
     __slots__ = {
-        "Context" : "Offline"  # The context within which to run
+        "Context"     : "Offline"  # The context within which to run
        ,"EnergyBins"  : None
        ,"OutputLevel" : INFO    # The output level to set all algorithms and tools to use
         }
 
     ## Initialize 
     def initialize(self):
+        
         ## Default number of energy bins for each radiator
         self.setRichDefaults( "EnergyBins", { "Offline" : [ 5, 5, 5 ],
                                               "HLT"     : [ 2, 2, 2 ] } )

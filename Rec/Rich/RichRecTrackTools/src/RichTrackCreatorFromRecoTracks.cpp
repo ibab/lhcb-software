@@ -32,7 +32,6 @@ TrackCreatorFromRecoTracks( const std::string& type,
     m_massHypoRings        ( NULL ),
     m_segMaker             ( NULL ),
     m_signal               ( NULL ),
-    m_trTracksLocation     ( LHCb::TrackLocation::Default   ),
     m_trSegToolNickName    ( "RichTrSegMakerFromRecoTracks" ),
     m_allDone              ( false ),
     m_buildHypoRings       ( false )
@@ -41,18 +40,10 @@ TrackCreatorFromRecoTracks( const std::string& type,
   // declare interface for this tool
   declareInterface<ITrackCreator>(this);
 
-  // Context specific track locations
-  if ( context() == "HLT" || context() == "Hlt" )
-  {
-    m_trTracksLocation = LHCb::TrackLocation::HltForward;
-  }
-
   // job options
   declareProperty( "TracksLocation",           m_trTracksLocation   );
   declareProperty( "BuildMassHypothesisRings", m_buildHypoRings     );
   declareProperty( "TrackSegmentTool",         m_trSegToolNickName  );
-
-  declareProperty( "MakeOneTrack", m_makeOneTrack = false );
 
 }
 
@@ -61,6 +52,9 @@ StatusCode TrackCreatorFromRecoTracks::initialize()
   // Sets up various tools and services
   const StatusCode sc = TrackCreatorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
+
+  if ( m_trTracksLocation.empty() )
+  { return Error( "Input Track location is not set" ); }
 
   // Acquire instances of tools
   acquireTool( "RichExpectedTrackSignal", m_signal         );
@@ -82,15 +76,14 @@ StatusCode TrackCreatorFromRecoTracks::newTracks() const
     m_allDone = true;
 
     // Iterate over all reco tracks, and create new RichRecTracks
-    richTracks()->reserve( nInputTracks() );
     const LHCb::Tracks * tracks = trTracks();
     if ( tracks )
     {
+      richTracks()->reserve( nInputTracks() );
       for ( LHCb::Tracks::const_iterator track = tracks->begin();
             track != tracks->end(); ++track )
       {
-        LHCb::RichRecTrack * tmpTrack = newTrack( *track );
-        if ( m_makeOneTrack && tmpTrack ) { Warning("Only making ONE track").ignore(); break; }
+        newTrack( *track );
       }
     }
 

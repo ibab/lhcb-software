@@ -4,6 +4,11 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2010-03-05 - Chris Jones
+ - Various changes to support the configuration of multiple reconstruction 
+   sequences in the same application. Needed to support neccessary changes in 
+   HLT2.
+
 ! 2010-03-02 - Chris Jones
  - Minor change to enable support for PID'ing "Below Threshold" types
 

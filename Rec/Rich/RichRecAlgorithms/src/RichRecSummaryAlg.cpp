@@ -34,16 +34,9 @@ SummaryAlg::SummaryAlg( const std::string& name,
     m_summaryLoc   ( LHCb::RichSummaryTrackLocation::Default ),
     m_nSigma       ( Rich::NRadiatorTypes, 1 )
 {
-  if      ( context() == "Offline" )
-  {
-    m_summaryLoc = LHCb::RichSummaryTrackLocation::Offline;
-  }
-  else if ( context() == "HLT"     )
-  {
-    m_summaryLoc = LHCb::RichSummaryTrackLocation::HLT;
-  }
   // job opts
-  declareProperty( "SummaryLocation", m_summaryLoc );
+  declareProperty( "SummaryLocation", 
+                   m_summaryLoc = contextSpecificTES(LHCb::RichSummaryTrackLocation::Default) );
   declareProperty( "PhotonNSigma",    m_nSigma );
 }
 

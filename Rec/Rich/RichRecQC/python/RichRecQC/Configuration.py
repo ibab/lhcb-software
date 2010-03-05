@@ -21,7 +21,7 @@ from DDDB.Configuration import DDDBConf
 class RichRecQCConf(RichConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ RichAlignmentConf ]
+    __used_configurables__ = [ (RichAlignmentConf,None) ]
 
     ## Default Histogram set
     __default_histo_set__ = "OfflineFull"
@@ -125,6 +125,7 @@ class RichRecQCConf(RichConfigurableUser):
        ,"WithMC"        : False # set to True to use MC truth
        ,"OutputLevel"   : INFO  # The output level to set all algorithms and tools to use
        ,"EventCuts"     : { }   # Event selection cuts for monitoring. Default no cuts
+       ,"RichPIDLocation" : "Rec/Rich/PIDs" # Location of RichPID data objects to monitor
         }
 
     ## Get the given option
@@ -157,7 +158,7 @@ class RichRecQCConf(RichConfigurableUser):
         self.setHistosTupleOpts(mon)
         if self.isPropertySet("OutputLevel") : mon.OutputLevel = self.getProp("OutputLevel")
         if trackType != None :
-            mon.addTool( RichTools().trackSelector(nickname="TrackSelector",private=True) )
+            mon.addTool( self.richTools().trackSelector(nickname="TrackSelector",private=True), name="TrackSelector" )
             if trackType != ["All"] : mon.TrackSelector.TrackAlgs = trackType
         if typeSelOnly :
             bigvalue = 1e+30
@@ -388,6 +389,9 @@ class RichRecQCConf(RichConfigurableUser):
                 pidMon.TrackSelector.MinPCut = pRange[0]
                 pidMon.TrackSelector.MaxPCut = pRange[1]
 
+                # RichPID location
+                pidMon.InputPIDs = self.getProp("RichPIDLocation")
+
                 # Add to sequence
                 sequence.Members += [pidMon]
 
@@ -456,8 +460,8 @@ class RichRecQCConf(RichConfigurableUser):
         tkTypes = self.getHistoOptions("RecoTrackTypes")
 
         # Turn on/off histos in CK resolution tool
-        if "HistoProduce" in RichTools().ckResolution().properties() :
-            RichTools().ckResolution().HistoProduce = self.getProp("Histograms") != "None"
+        if "HistoProduce" in self.richTools().ckResolution().properties() :
+            self.richTools().ckResolution().HistoProduce = self.getProp("Histograms") != "None"
 
         check = "RichPixelPositions"
         if check in checks :
@@ -530,9 +534,9 @@ class RichRecQCConf(RichConfigurableUser):
         check = "PhotonRecoEfficiency"
         if check in checks :
 
-            RichTools().toolRegistry().Tools += [ "Rich::Rec::PhotonCreator/ForcedRichPhotonCreator" ]
-            RichTools().toolRegistry().Tools += [ "Rich::Rec::PhotonRecoUsingQuarticSoln/ForcedPhotonReco" ]
-            RichTools().toolRegistry().Tools += [ "Rich::Rec::SimplePhotonPredictor/ForcedRichPhotonPredictor" ]
+            self.richTools().toolRegistry().Tools += [ "Rich::Rec::PhotonCreator/ForcedRichPhotonCreator" ]
+            self.richTools().toolRegistry().Tools += [ "Rich::Rec::PhotonRecoUsingQuarticSoln/ForcedPhotonReco" ]
+            self.richTools().toolRegistry().Tools += [ "Rich::Rec::SimplePhotonPredictor/ForcedRichPhotonPredictor" ]
 
             context = self.getProp("Context")
 

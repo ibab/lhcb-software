@@ -32,11 +32,6 @@ class RichPixelCreatorConfig(RichConfigurableUser):
        ,"OutputLevel"   : INFO    # The output level to set all algorithms and tools to use
         }
 
-    ## @brief Set OutputLevel 
-    def setOutputLevel(self,conponent):
-        if self.isPropertySet("OutputLevel") :
-            conponent.OutputLevel = self.getProp("OutputLevel")
-
     ## @brief Check the configuration is OK
     #
     def checkConfiguration(self):
@@ -52,7 +47,7 @@ class RichPixelCreatorConfig(RichConfigurableUser):
         context = self.getProp("Context")
 
         # Pixel Creator
-        pixmaker = RichTools().pixelCreator()
+        pixmaker = self.richTools().pixelCreator()
         pixmaker.UseDetectors  = self.getProp("Detectors")
         pixmaker.DoBookKeeping = self.getProp("BookKeeping")
 

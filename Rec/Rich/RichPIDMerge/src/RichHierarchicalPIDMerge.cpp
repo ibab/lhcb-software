@@ -27,29 +27,14 @@ DECLARE_ALGORITHM_FACTORY( HierarchicalPIDMerge );
 // Standard constructor, initializes variables
 HierarchicalPIDMerge::HierarchicalPIDMerge( const std::string& name,
                                             ISvcLocator* pSvcLocator )
-  : Rich::AlgBase ( name , pSvcLocator ),
-    m_richPIDLocation       ( LHCb::RichPIDLocation::Default ),
-    m_richGlobalPIDLocation ( LHCb::RichGlobalPIDLocation::Default ),
-    m_fillProcStat          ( true )
+  : Rich::AlgBase ( name , pSvcLocator )
 {
-
-  if      ( context() == "Offline" )
-  {
-    m_richPIDLocation = LHCb::RichPIDLocation::Offline;
-    m_richGlobalPIDLocation = LHCb::RichGlobalPIDLocation::Offline;
-    m_fillProcStat = true;
-  }
-  else if ( context() == "HLT" || context() == "Hlt" )
-  {
-    m_richPIDLocation = LHCb::RichPIDLocation::HLT;
-    m_richGlobalPIDLocation = LHCb::RichGlobalPIDLocation::HLT;
-    m_fillProcStat = false;
-  }
 
   // Output location in TDS for RichPIDs
   declareProperty( "OutputPIDLocation", m_richPIDLocation );
   // Input location in TDS for RichGlobalPIDs
-  declareProperty( "InputGlobalPIDLocation", m_richGlobalPIDLocation );
+  declareProperty( "InputGlobalPIDLocation", 
+                   m_richGlobalPIDLocation = contextSpecificTES(LHCb::RichGlobalPIDLocation::Default) );
   // Location of processing status object in TES
   declareProperty( "ProcStatusLocation",
                    m_procStatLocation = LHCb::ProcStatusLocation::Default );
@@ -57,8 +42,8 @@ HierarchicalPIDMerge::HierarchicalPIDMerge( const std::string& name,
   // Flags to turn on/off various PID results
   declareProperty( "UseGlobalPIDs",    m_useGlobalPIDs = true  );
 
-  // fill procstat
-  declareProperty( "FillProcStat", m_fillProcStat );
+  // fill ProcStat
+  declareProperty( "FillProcStat", m_fillProcStat = !contextContains("HLT") );
 
   // version
   declareProperty( "PIDVersion", m_PIDversion = 0 );
@@ -75,7 +60,8 @@ StatusCode HierarchicalPIDMerge::initialize()
   const StatusCode sc = Rich::AlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  // Add any customisations here
+  if ( m_richPIDLocation.empty() )
+  { return Error( "Output RichPID Location is not set" ); }
 
   return sc;
 }

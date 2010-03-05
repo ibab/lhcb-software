@@ -43,18 +43,9 @@ SegmentCreator::SegmentCreator ( const std::string& type,
   declareInterface<ISegmentCreator>(this);
 
   // Define job option parameters
-
   declareProperty( "EnergyBins", m_binsEn );
-
-  if      ( context() == "Offline" )
-  {
-    m_richRecSegmentLocation = LHCb::RichRecSegmentLocation::Offline;
-  }
-  else if ( context() == "HLT" )
-  {
-    m_richRecSegmentLocation = LHCb::RichRecSegmentLocation::HLT;
-  }
-  declareProperty( "RichRecSegmentLocation", m_richRecSegmentLocation );
+  declareProperty( "RichRecSegmentLocation", 
+                   m_richRecSegmentLocation = contextSpecificTES(LHCb::RichRecSegmentLocation::Default) );
 
 }
 

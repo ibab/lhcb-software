@@ -30,14 +30,8 @@ TrackSelEff::TrackSelEff( const std::string& name,
                           ISvcLocator* pSvcLocator )
   : Rich::Rec::HistoAlgBase ( name, pSvcLocator ),
     m_richRecMCTruth        ( NULL ),
-    m_trSelector            ( NULL ),
-    m_trTracksLocation      ( LHCb::TrackLocation::Default )
+    m_trSelector            ( NULL )
 {
-  // Context specific track locations
-  if ( context() == "HLT" || context() == "Hlt" )
-  {
-    m_trTracksLocation = LHCb::TrackLocation::HltForward;
-  }
   // JOs
   declareProperty( "MCParticleAssocWeight", m_mcAssocWeight = 0.75 );
   // reset defaults in base class
@@ -99,55 +93,67 @@ StatusCode TrackSelEff::execute()
   // Event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
-  // Get the raw input tracks
-  if ( !exist<LHCb::Tracks>(m_trTracksLocation) )
-  {
-    return Warning("No Tracks at "+m_trTracksLocation,StatusCode::SUCCESS);
-  }
-  const LHCb::Tracks * trTracks = get<LHCb::Tracks>( m_trTracksLocation );
-
   // Make sure all tracks and segments have been formed
   if ( trackCreator()->newTracks().isFailure() )
     return Error( "Problem creating RichRecTracks" );
 
+  // Pre-loop over RICH tracks to get the raw Track containers
+  std::set<std::string> trackLocs;
+  for ( LHCb::RichRecTracks::const_iterator iT = richTracks()->begin();
+        iT != richTracks()->end(); ++iT )
+  {
+    // get location of associated track container
+    const std::string contLoc = objectLocation( (*iT)->parentTrack()->parent() );
+    if ( !contLoc.empty() ) trackLocs.insert(contLoc);
+  }
+
   // Is MC available
   const bool mcTrackOK = m_richRecMCTruth->trackToMCPAvailable();
 
-  // Loop over the raw tracks
-  unsigned int nGhost(0), nReal(0), nGhostR(0), nRealR(0);
-  for ( LHCb::Tracks::const_iterator iT = trTracks->begin();
-        iT != trTracks->end(); ++iT )
+  // Loop over raw track locations
+  for ( std::set<std::string>::const_iterator iLoc = trackLocs.begin();
+        iLoc != trackLocs.end(); ++iLoc )
   {
-    // Track OK ?
-    if ( !(*iT) ) { Warning("Null Track"); continue; }
-    // Is the raw track selected for this monitor
-    if ( !m_trSelector->trackSelected(*iT) ) continue;
+    // Load these tracks
+    const LHCb::Tracks * trTracks = get<LHCb::Tracks>( *iLoc );
 
-    // Does this track have a RichRecTrack associated ?
-    const LHCb::RichRecTrack * rTrack = richTracks()->object((*iT)->key());
+    // Loop over the raw tracks
+    unsigned int nGhost(0), nReal(0), nGhostR(0), nRealR(0);
+    for ( LHCb::Tracks::const_iterator iT = trTracks->begin();
+          iT != trTracks->end(); ++iT )
+    {
+      // Track OK ?
+      if ( !(*iT) ) { Warning("Null Track"); continue; }
+      // Is the raw track selected for this monitor
+      if ( !m_trSelector->trackSelected(*iT) ) continue;
 
-    // Ghost ?
-    const LHCb::MCParticle * mcP = ( mcTrackOK ?
-                                     m_richRecMCTruth->mcParticle(*iT,m_mcAssocWeight) : NULL );
+      // Does this track have a RichRecTrack associated ?
+      const LHCb::RichRecTrack * rTrack = richTracks()->object((*iT)->key());
+
+      // Ghost ?
+      const LHCb::MCParticle * mcP = ( mcTrackOK ?
+                                       m_richRecMCTruth->mcParticle(*iT,m_mcAssocWeight) : NULL );
+      if ( mcTrackOK )
+      {
+        if ( mcP ) { ++nReal; } else { ++nGhost; }
+        if ( rTrack ) { if ( mcP ) { ++nRealR; } else { ++nGhostR; } }
+      }
+
+      fillTrackPlots( *iT, rTrack, "All/" );
+      if ( mcTrackOK )
+        fillTrackPlots( *iT, rTrack, mcP ? "Real/" : "Ghost/" );
+
+    } // loop over tracks
+
     if ( mcTrackOK )
     {
-      if ( mcP ) { ++nReal; } else { ++nGhost; }
-      if ( rTrack ) { if ( mcP ) { ++nRealR; } else { ++nGhostR; } }
+      plot1D( nReal,  "nRealTracks",  "# Real (MC Matched) Tracks / Event",      -0.5, 200.5, 201 );
+      plot1D( nGhost, "nGhostTracks", "# Ghost (Not MC Matched) Tracks / Event", -0.5, 200.5, 201 );
+      plot1D( nRealR,  "nRealRichTracks",  "# Real (MC Matched) Rich Tracks / Event",      -0.5, 200.5, 201 );
+      plot1D( nGhostR, "nGhostRichTracks", "# Ghost (Not MC Matched) Rich Tracks / Event", -0.5, 200.5, 201 );
     }
 
-    fillTrackPlots( *iT, rTrack, "All/" );
-    if ( mcTrackOK )
-      fillTrackPlots( *iT, rTrack, mcP ? "Real/" : "Ghost/" );
-
-  } // loop over tracks
-
-  if ( mcTrackOK )
-  {
-    plot1D( nReal,  "nRealTracks",  "# Real (MC Matched) Tracks / Event",      -0.5, 200.5, 201 );
-    plot1D( nGhost, "nGhostTracks", "# Ghost (Not MC Matched) Tracks / Event", -0.5, 200.5, 201 );
-    plot1D( nRealR,  "nRealRichTracks",  "# Real (MC Matched) Rich Tracks / Event",      -0.5, 200.5, 201 );
-    plot1D( nGhostR, "nGhostRichTracks", "# Ghost (Not MC Matched) Rich Tracks / Event", -0.5, 200.5, 201 );
-  }
+  } // loop over track locations
 
   return StatusCode::SUCCESS;
 }

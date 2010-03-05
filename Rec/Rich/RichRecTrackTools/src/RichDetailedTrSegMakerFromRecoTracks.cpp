@@ -48,7 +48,7 @@ DetailedTrSegMakerFromRecoTracks( const std::string& type,
   using namespace Gaudi::Units;
 
   // context specific defaults
-  if ( context() == "HLT" || context() == "Hlt" )
+  if ( contextContains("HLT") )
   {
     m_trExt1Name   = "TrackFastParabolicExtrapolator";    
     m_trExt2Name   = "TrackLinearExtrapolator";

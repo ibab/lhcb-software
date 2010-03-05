@@ -31,19 +31,11 @@ SummaryCKResMoni::SummaryCKResMoni( const std::string& name,
   : HistoAlgBase        ( name, pSvcLocator ),
     m_richPartProp      ( 0 ),
     m_richRecMCTruth    ( 0 ),
-    m_summaryLoc        ( LHCb::RichSummaryTrackLocation::Default ),
     m_minBeta           ( Rich::NRadiatorTypes, 0.999 )
 {
-  if      ( context() == "Offline" )
-  {
-    m_summaryLoc = LHCb::RichSummaryTrackLocation::Offline;
-  }
-  else if ( context() == "HLT" )
-  {
-    m_summaryLoc = LHCb::RichSummaryTrackLocation::HLT;
-  }
   // Declare job options
-  declareProperty( "SummaryLocation",   m_summaryLoc );
+  declareProperty( "SummaryLocation",   
+                   m_summaryLoc = contextSpecificTES(LHCb::RichSummaryTrackLocation::Default) );
   declareProperty( "MinBeta",           m_minBeta    );
   // histo ranges
   declareProperty( "CKResHistoRange",

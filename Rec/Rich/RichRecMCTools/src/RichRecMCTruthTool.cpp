@@ -38,7 +38,7 @@ MCTruthTool::MCTruthTool( const std::string& type,
   declareInterface<Rich::Rec::MC::IMCTruthTool>(this);
 
   // Context specific track locations
-  if ( context() == "HLT" )
+  if ( contextContains("HLT") )
   {
     m_trLoc      = "/Event/"+LHCb::TrackLocation::HltForward;
     m_otherTrLoc = "/Event/"+LHCb::TrackLocation::Default;

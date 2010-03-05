@@ -4,6 +4,11 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+! 2010-03-05 - Chris Jones
+ - Various changes to support the configuration of multiple reconstruction 
+   sequences in the same application. Needed to support neccessary changes in 
+   HLT2.
+
 !===================== RichRecAlgorithms v2r17 2009-10-20 ====================
 ! 2009-09-04 - Chris Jones
  - Improve event selection algorithm by including both Min and Max cuts

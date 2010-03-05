@@ -19,17 +19,12 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
 
     ## Default options
     __slots__ = {
-        "Context": "Offline" # The context within which to run
-       ,"Radiators":  [] # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
+        "Context"       : "Offline" # The context within which to run
+       ,"Radiators"     : [] # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
        ,"SelectionMode" : "Tight"
-       ,"SpecialData"  : [] 
+       ,"SpecialData"   : [] 
        ,"OutputLevel"   : INFO # The output level to set all algorithms and tools to use
         }
-
-## @brief Set OutputLevel 
-    def setOutputLevel(self,conponent):
-        if self.isPropertySet("OutputLevel") :
-            conponent.OutputLevel = self.getProp("OutputLevel")
 
     ## Initialize 
     def initialize(self):
@@ -46,7 +41,7 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
         if "earlyData" in self.getProp("SpecialData") :
             if not self.isPropertySet("SelectionMode") :
                 self.setProp("SelectionMode","Loose")
-                RichTools().photonReco().CKThetaQuartzRefractCorrections = [ -0.004,0,0 ]
+                self.richTools().photonReco().CKThetaQuartzRefractCorrections = [ -0.004,0,0 ]
 
         # Context
         context = self.getProp("Context")
@@ -56,7 +51,7 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
         
         # -----------------------------------------------------------------------
         # Photon maker
-        creator = RichTools().photonCreator()
+        creator = self.richTools().photonCreator()
 
         # OutputLevel
         self.setOutputLevel(creator)
@@ -65,16 +60,13 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
         # Photon predictor (a.k.a. pre-selection)
 
         # Configure creator with the correct predictor
-        creator.addTool( RichTools().photonPredictor(), name = "Predictor" )
+        creator.addTool( self.richTools().photonPredictor(), name = "Predictor" )
  
         # -----------------------------------------------------------------------
         # Photon reconstruction (i.e. calculating the CK theta/phi values)
 
-        photonreco_nickname = "PhotonParams"
-        reco = RichTools().photonReco(photonreco_nickname)
-
         # Configure creator with the correct reco tool
-        creator.addTool( reco, name = photonreco_nickname )
+        creator.addTool( self.richTools().photonReco(), name = "PhotonParams" )
 
         # -----------------------------------------------------------------------
 

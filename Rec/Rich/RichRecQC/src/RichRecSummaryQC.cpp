@@ -31,7 +31,6 @@ SummaryQC::SummaryQC( const std::string& name,
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_richPartProp      ( 0 ),
     m_richRecMCTruth    ( 0 ),
-    m_summaryLoc        ( LHCb::RichSummaryTrackLocation::Default ),
     m_nEvts             ( 0 ),
     m_nTracks           ( 0 ),
     m_nSegments         ( Rich::NRadiatorTypes, 0 ),
@@ -39,16 +38,9 @@ SummaryQC::SummaryQC( const std::string& name,
     m_nPhotons          ( Rich::NRadiatorTypes, 0 ),
     m_nTruePhotons      ( Rich::NRadiatorTypes, 0 )
 {
-  if      ( context() == "Offline" )
-  {
-    m_summaryLoc = LHCb::RichSummaryTrackLocation::Offline;
-  }
-  else if ( context() == "HLT" )
-  {
-    m_summaryLoc = LHCb::RichSummaryTrackLocation::HLT;
-  }
   // Declare job options
-  declareProperty( "SummaryLocation",   m_summaryLoc );
+  declareProperty( "SummaryLocation",   
+                   m_summaryLoc = contextSpecificTES(LHCb::RichSummaryTrackLocation::Default) );
   declareProperty( "MinBeta",           m_minBeta   = 0.999 );
 }
 

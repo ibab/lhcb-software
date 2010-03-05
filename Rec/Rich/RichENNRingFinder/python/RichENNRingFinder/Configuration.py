@@ -95,13 +95,13 @@ class RichENNRingFinderConf(RichConfigurableUser):
                 maxhits    = self.getProp("MaxHitsInPanel")
                 maxhpdhits = self.getProp("MaxHitsInHPD")
 
-                # Ring locations
-                AllRingsLoc  = "Rec/Rich/ENN/RingsAll"
-                BestRingsLoc = "Rec/Rich/ENN/RingsBest"
-                IsoRingsLoc  = "Rec/Rich/ENN/RingsIsolated"
-
                 # context
                 cont = self.getProp("Context")
+
+                # Ring locations
+                AllRingsLoc  = "Rec/Rich/ENN/"+cont+"/RingsAll"
+                BestRingsLoc = "Rec/Rich/ENN/"+cont+"/RingsBest"
+                IsoRingsLoc  = "Rec/Rich/ENN/"+cont+"/RingsIsolated"
 
                 setOutLevel = self.isPropertySet("OutputLevel")
                 level = self.getProp("OutputLevel")

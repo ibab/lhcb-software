@@ -4,6 +4,11 @@
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
 
+! 2010-03-05 - Chris Jones
+ - Various changes to support the configuration of multiple reconstruction 
+   sequences in the same application. Needed to support neccessary changes in 
+   HLT2.
+
 ! 2010-03-02 - Chris Jones
  - Add code to allow the version of the final RichPIDs to be set via options
 

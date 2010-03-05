@@ -4,6 +4,11 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2010-03-05 - Chris Jones
+ - Various changes to support the configuration of multiple reconstruction 
+   sequences in the same application. Needed to support neccessary changes in 
+   HLT2.
+
 !====================== RichRecMCTools v2r25p1 2009-10-20 =====================
 ! 2009-09-29 - Christopher Rob Jones
  - Fix untested StatusCodes

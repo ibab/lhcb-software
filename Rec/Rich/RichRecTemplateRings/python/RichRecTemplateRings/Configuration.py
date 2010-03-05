@@ -41,9 +41,9 @@ class RichTemplateRingFinderConf(RichConfigurableUser):
         cont = self.getProp("Context")
 
         # Ring locations
-        AllRingsLoc  = "Rec/Rich/Template/RingsAll"
-        BestRingsLoc = "Rec/Rich/Template/RingsBest"
-        IsoRingsLoc  = "Rec/Rich/Template/RingsIsolated"
+        AllRingsLoc  = "Rec/Rich/Template/"+cont+"/RingsAll"
+        BestRingsLoc = "Rec/Rich/Template/"+cont+"/RingsBest"
+        IsoRingsLoc  = "Rec/Rich/Template/"+cont+"/RingsIsolated"
 
         setOutLevel = self.isPropertySet("OutputLevel")
         level = self.getProp("OutputLevel")

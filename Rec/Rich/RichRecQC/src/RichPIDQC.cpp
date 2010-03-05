@@ -28,22 +28,13 @@ DECLARE_ALGORITHM_FACTORY( PIDQC );
 PIDQC::PIDQC( const std::string& name,
               ISvcLocator* pSvcLocator )
   : Rich::Rec::HistoAlgBase ( name, pSvcLocator ),
-    m_pidTDS           ( LHCb::RichPIDLocation::Default ),
+    m_pidTDS           ( "" ),
     m_trSelector       ( NULL ),
     m_mcTruth          ( NULL ),
     m_mcPselector      ( NULL ),
     m_requiredRads     ( Rich::NRadiatorTypes ),
     m_sF               ( "%7.3f" )
 {
-
-  if      ( context() == "Offline" )
-  {
-    m_pidTDS = LHCb::RichPIDLocation::Offline;
-  }
-  else if ( context() == "HLT" || context() == "Hlt" )
-  {
-    m_pidTDS = LHCb::RichPIDLocation::HLT;
-  }
 
   // Declare job options
   declareProperty( "InputPIDs",   m_pidTDS );
@@ -73,6 +64,11 @@ StatusCode PIDQC::initialize()
   // Initialize base class
   const StatusCode sc = Rich::Rec::HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
+
+  if ( m_pidTDS.empty() )
+  {
+    return Error( "RichPID location is not set" );
+  }
 
   acquireTool( "TrackSelector", m_trSelector, this );
 

@@ -15,6 +15,10 @@
 #ifndef RICHRECQC_RichTrackSelEffMoni_H
 #define RICHRECQC_RichTrackSelEffMoni_H 1
 
+// STL
+#include <string>
+#include <set>
+
 // base class
 #include "RichRecBase/RichRecHistoAlgBase.h"
 
@@ -77,9 +81,6 @@ namespace Rich
 
         /// Track selector
         const ITrackSelector * m_trSelector;
-
-        /// Input location of Tracks in TES
-        std::string m_trTracksLocation;
 
         /// MCParticle association weight
         double m_mcAssocWeight;
