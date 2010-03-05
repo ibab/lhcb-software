@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.165 2010-03-03 16:34:13 musy Exp $
+! $Id: release.notes,v 1.166 2010-03-05 15:54:34 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2010-03-05 - Juan Palacios
+ - src/BTagging.cpp, src/BTaggingTool.cpp, src/BTaggingTool.h
+  . Modify to deal with T::Range.
 
 ! 2010-03-03 - Marco Musy
  - fix a bug on the definition of ip pileup vertex affectin koppo and ksame
