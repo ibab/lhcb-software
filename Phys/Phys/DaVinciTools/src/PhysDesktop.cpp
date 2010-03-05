@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.98 2010-03-02 17:06:55 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.99 2010-03-05 08:33:22 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -634,8 +634,8 @@ StatusCode PhysDesktop::getParticles(){
 
     // Retrieve the particles:
     std::string location = (*iloc)+"/Particles";
-    if ( !(exist<LHCb::Particle::Range>( location ) ||
-           exist<LHCb::Particle::Container>( location ) ) ) { 
+    if ( ! exist<LHCb::Particle::Selection>( location ) &&
+         ! exist<LHCb::Particle::Container>( location )    ) { 
       Info("No particles at location "+location
               +((rootInTES().size()>0)?(" under "+rootInTES()):"") );
       continue ;
@@ -657,8 +657,8 @@ StatusCode PhysDesktop::getParticles(){
     // Retrieve the vertices:
     location = (*iloc)+"/Vertices";
     
-    if ( !(exist<LHCb::Vertex::Range>( location ) ||
-           exist<LHCb::Vertex::Container>( location ) ) ) { 
+    if ( ! exist<LHCb::Vertex::Selection>( location ) &&
+         ! exist<LHCb::Vertex::Container>( location )    ) { 
       Info("No vertices at location "+location
            +((rootInTES().size()>0)?(" under "+rootInTES()):"") );
       continue ; 
@@ -736,15 +736,15 @@ StatusCode PhysDesktop::writeEmptyContainerIfNeeded(){
   if (msgLevel(MSG::DEBUG)) debug() << "Saving empty containers at " << m_outputLocn << endmsg ;
   StatusCode sc = StatusCode::SUCCESS;
 
-  if (! ( exist<LHCb::Particle::Container>(m_outputLocn+"/Particles") ||
-          exist<LHCb::Particle::Selection>(m_outputLocn+"/Particles") ) ) {  
+  if (! exist<LHCb::Particle::Container>(m_outputLocn+"/Particles") &&
+      ! exist<LHCb::Particle::Selection>(m_outputLocn+"/Particles")    ) {  
     saveParticles(LHCb::Particle::ConstVector());
   }
   
   if  (sc.isFailure() ) return sc;
   
-  if (! ( exist<LHCb::Vertex::Container>(m_outputLocn+"/Vertices") ||
-          exist<LHCb::Vertex::Selection>(m_outputLocn+"/Vertices") ) ) {  
+  if (! exist<LHCb::Vertex::Container>(m_outputLocn+"/Vertices") &&
+      ! exist<LHCb::Vertex::Selection>(m_outputLocn+"/Vertices")    )  {  
     saveVertices(LHCb::Vertex::ConstVector());
   }
 
