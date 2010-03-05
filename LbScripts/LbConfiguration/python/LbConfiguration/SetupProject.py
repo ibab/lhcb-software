@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # pylint: disable-msg=E1103,W0141
-_cvs_id = "$Id: SetupProject.py,v 1.35 2010-03-05 11:48:28 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.36 2010-03-05 11:51:52 marcocle Exp $"
 
 import os, sys, re, time
 from xml.sax import parse, ContentHandler
@@ -11,7 +11,7 @@ from tempfile import mkdtemp, mkstemp
 
 from LbConfiguration import createProjectMakefile
 from LbUtils.CVS import CVS2Version
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.35 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.36 $")
 
 # subprocess is available since Python 2.4, but LbUtils guarantees that we can
 # import it also in Python 2.3
@@ -316,10 +316,17 @@ def FindProjectVersions(project, search_path, user_area = None):
     versions = [] # container of the results
     # Look into user_area for projects (without version directory)
     if user_area and os.path.isdir(user_area):
+        user_projects = [d for d in os.listdir(user_area)
+                         if isProject(os.path.join(user_area,d))]
         # look for projects with names starting with <project>
-        candidates = [d for d in os.listdir(user_area)
-                        if isProject(os.path.join(user_area,d)) and
-                           d.startswith(project)]
+        candidates = [d for d in user_projects
+                      if d.startswith(project)]
+        # If there is no user project with the given name, try to use the
+        # correct case for the project
+        if not candidates:
+            prj = FixProjectCase(project)
+            candidates = [d for d in user_projects
+                          if d.startswith(prj)]
         # extract 'fake' version informations
         for c in candidates:
             if c == project:

@@ -2,6 +2,8 @@
 
 	* python/LbConfiguration/SetupProject.py: fixed the behavior of -q and
 	added a --silent option.
+	Fixed an inconsistency in the behavior between user area and release area
+	when the case of the project on the command line is wrong.
 
 2010-03-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
