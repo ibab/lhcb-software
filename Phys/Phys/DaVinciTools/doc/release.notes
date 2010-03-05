@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.516 2010-03-05 08:33:07 jpalac Exp $
+! $Id: release.notes,v 1.517 2010-03-05 12:56:40 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
@@ -8,6 +8,7 @@
  - src/PhysDekstop.cpp
   . Fix logic of checking for presence of Particle and Vertex containers, both
     for access and for writing of empty containers.
+  . Add protections against trying to store null pointers.
 
 ! 2010-03-04 - Juan Palacios
  - src/FilterDekstop.cpp
