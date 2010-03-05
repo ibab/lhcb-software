@@ -1,0 +1,64 @@
+// 
+// SliceReaderSvc.opts
+// $Id: MEPInjectorQMTest.opts,v 1.1 2010-03-05 15:54:20 garnierj Exp $
+//#include "$ONLINETASKSROOT/options/OnlineEnvironment.opts"
+//#include "/group/online/dataflow/options/FEST/Injector_Info.opts"
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.Dlls                  = { "MDF", "GaudiOnline", "Gaucho"};
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::MEPInjector/Injector";
+ApplicationMgr.SvcOptMapping =  { "LHCb::OnlineRunable/EmptyEventLoop" , "LHCb::MEPInjector/Injector" };
+ApplicationMgr.ExtSvc                = { "IncidentSvc"  };
+ApplicationMgr.ExtSvc		     += { "MonitorSvc" };
+ApplicationMgr.OutputLevel = 5;
+Injector.OutputLevel = 3;
+MessageSvc.OutputLevel= 3;
+
+///////////////////////////////////////////////////////////////////////////////
+//                               My options                                  //
+///////////////////////////////////////////////////////////////////////////////
+Injector.HLTNodes = {"127.0.0.1"};//@OnlineEnv.Injector_Nodes;
+Injector.Tell1Boards = {
+  "192.169.11.80", "vetellc30", "",
+  "192.169.10.3", "tttell03", "",
+  "192.169.12.4", "ottella04", "",
+  "192.169.9.5", "mutellc05", "",
+  "192.169.14.4", "r1ukl104", ""
+};
+
+//@OnlineEnv.Tell1Boards;
+Injector.OdinIf = "127.0.0.1";//@OnlineEnv.Injector_odinIF_Name;  //inj01-d2
+Injector.HLTIf = "127.0.0.1";//@OnlineEnv.Injector_farmIF_Name;   //inj01-d1
+Injector.OdinIPAddr = "127.0.0.1";//@OnlineEnv.Injector_ODIN_REQ_Name;     //tfcodinxx-d1
+//OnlineEnv.Injector_ODIN_REQ_IP not used because computed from the first one
+//OnlineEnv.Injector_odinIF_IP not used for same reason
+//OnlineEnv.Injector_farmIF_IP not used for same reason
+//XXX Change sightly the injector source to use the options and optimize some stuff and names mapping and convention
+Injector.PartitionID=98303;//@OnlineEnv.PartitionID;
+
+/// Not useful params
+Injector.TimeOut = 1000;  //milliseconds
+
+Injector.AutoMode = true;
+Injector.HLTIPAddrTo = "127.0.0.1"; //Still used in Automode
+Injector.LocalTest=true;
+Injector.TestPort=45198;
+Injector.TestLimit=50;
+
+Injector.ARPME = false;
+
+Injector.BufferNames = {"PERA"}; //@OnlineEnv.Injector_Readers;
+
+Injector.BufferOptions = {
+ "-s=10000", 
+ "-e=100",
+ "-u=20",
+ "-b=15", 
+ "-f"
+};
+
+Injector.Requirements         = {
+"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+};
+
