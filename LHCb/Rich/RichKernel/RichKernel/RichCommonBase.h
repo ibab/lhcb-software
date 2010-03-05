@@ -212,7 +212,7 @@ namespace Rich
      */
     inline const Rich::IToolRegistry * toolRegistry() const
     {
-      if (!m_toolReg)
+      if ( !m_toolReg )
       {
         m_toolReg =
           this -> template tool < IToolRegistry > ( "Rich::ToolRegistry", m_regName );
@@ -222,6 +222,15 @@ namespace Rich
 
     /// Pointer to Job Options Service
     IJobOptionsSvc* joSvc() const;
+
+    /// String matching on context()
+    bool contextContains( const std::string & str ) const;
+
+    /** Generate a context specific TES location for the given Default location
+     *  @param loc The Default TES location
+     *  @return The context specific TES location for the input location
+     */
+    std::string contextSpecificTES( const std::string & loc ) const;
 
   private: // private methods
 

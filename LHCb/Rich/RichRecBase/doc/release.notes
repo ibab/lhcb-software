@@ -4,6 +4,11 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2010-03-05 - Chris Jones
+ - Various changes to C++ and python to support the configuration of
+   multiple reconstruction sequences in the same application. Needed to
+   support neccessary changes in HLT2.
+
 ! 2010-03-02 - Chris Jones
  - Supress the warning message from the pixel creator base class about
    empty HPD data blocks to give 0 instances during running, and instead to

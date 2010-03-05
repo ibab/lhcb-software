@@ -36,7 +36,6 @@ namespace Rich
         m_smartIDTool          ( NULL               ),
         m_rayTrace             ( NULL               ),
         m_tracks               ( 0                  ),
-        m_richRecTrackLocation ( LHCb::RichRecTrackLocation::Default ),
         m_Nevts                ( 0                  ),
         m_bookKeep             ( true               ),
         m_traceModeRad         ( Rich::NRadiatorTypes,
@@ -46,17 +45,11 @@ namespace Rich
       // Define the interface
       declareInterface<ITrackCreator>(this);
 
-      if      ( context() == "Offline" )
-      {
-        m_richRecTrackLocation = LHCb::RichRecTrackLocation::Offline;
-      }
-      else if ( context() == "HLT" || context() == "Hlt" )
-      {
-        m_richRecTrackLocation = LHCb::RichRecTrackLocation::HLT;
-      }
-
       // job options
       declareProperty( "DoBookKeeping", m_bookKeep );
+      declareProperty( "RichRecTrackLocation", 
+                       m_richRecTrackLocation = contextSpecificTES(LHCb::RichRecTrackLocation::Default),
+                       "The TES location for the transient RichRecTrack objects" );
 
     }
 
@@ -65,6 +58,9 @@ namespace Rich
       // base class initilize
       const StatusCode sc = Rich::Rec::ToolBase::initialize();
       if ( sc.isFailure() ) { return sc; }
+
+      if ( m_richRecTrackLocation.empty() )
+      { return Error( "RichRecTrack location is undefined. Please set" ); }
 
       if ( msgLevel(MSG::DEBUG) )
       {

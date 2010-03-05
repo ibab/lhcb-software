@@ -14,6 +14,8 @@
 
 // STL
 #include <sstream>
+#include <string>
+#include <algorithm>
 
 // local
 #include "RichKernel/RichCommonBase.h"
@@ -206,5 +208,31 @@ bool Rich::CommonBase<PBASE>::setProperties( const std::string & name ) const
 {
   return ( this->my_setToolProperty<StringProperty> ( name , "Context"     ) &&
            this->my_setToolProperty<StringProperty> ( name , "OutputLevel" ) );
+}
+//=============================================================================
+
+//=============================================================================
+// Sets Properties
+//=============================================================================
+template <class PBASE>
+bool Rich::CommonBase<PBASE>::contextContains( const std::string & str ) const
+{
+  std::string data = this->context();
+  std::transform( data.begin(), data.end(), data.begin(), ::toupper );
+  return ( data.find(str) != std::string::npos );
+}
+//=============================================================================
+
+//=============================================================================
+// Generate a context specific TES location for the given Default location
+//=============================================================================
+template <class PBASE>
+std::string 
+Rich::CommonBase<PBASE>::contextSpecificTES( const std::string & loc ) const
+{
+  const int slash = loc.find_last_of( "/" );
+  return ( slash>0 && !this->context().empty() ? 
+           loc.substr(0,slash) + "/" +
+           this->context() + "/" + loc.substr(slash+1) : loc );
 }
 //=============================================================================

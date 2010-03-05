@@ -38,9 +38,8 @@ namespace Rich
         m_ckAngle               ( NULL ),
         m_ckRes                 ( NULL ),
         m_richPartProp          ( NULL ),
-        m_Nevts                 ( 0 ),
+        m_Nevts                 ( 0    ),
         m_photons               ( NULL ),
-        m_richRecPhotonLocation ( LHCb::RichRecPhotonLocation::Default ),
         m_photCount             ( Rich::NRadiatorTypes, 0 ),
         m_photCountLast         ( Rich::NRadiatorTypes, 0 )
     {
@@ -53,18 +52,20 @@ namespace Rich
       m_minCKtheta     = list_of (0.075) (0.005) (0.005) ;
       m_maxCKtheta     = list_of (0.320) (0.075) (0.035) ;
       m_minPhotonProb  = list_of (1e-15) (1e-15) (1e-15) ;
-      if ( context() == "HLT" || context() == "Hlt" )
+      if ( contextContains("HLT") )
       {
-        m_richRecPhotonLocation = LHCb::RichRecPhotonLocation::HLT;
         m_nSigma = list_of (3.5) (2.8) (3.0) ;
       
       }
       else // Offline settings
       {
-        m_richRecPhotonLocation = LHCb::RichRecPhotonLocation::Offline;
         m_nSigma = list_of (3.8) (3.3) (3.3) ;
       }
+
       // set properties
+      declareProperty( "RichRecPhotonLocation", 
+                       m_richRecPhotonLocation = contextSpecificTES(LHCb::RichRecPhotonLocation::Default),
+                       "The TES location for the transient RichRecPhoton objects" );
       declareProperty( "DoBookKeeping", m_bookKeep = true,
                        "Turn on/off the book keeping of which pixels have been made" );
       declareProperty( "PhotonPredictor", m_photPredName = "RichPhotonPredictor",
@@ -86,6 +87,10 @@ namespace Rich
       const StatusCode sc = RichRecToolBase::initialize();
       if ( sc.isFailure() ) { return sc; }
 
+      if ( m_richRecPhotonLocation.empty() )
+      {
+        return Error( "RichRecPhoton location is undefined. Please set" );
+      }
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "RichRecPhoton location : " << m_richRecPhotonLocation << endmsg;

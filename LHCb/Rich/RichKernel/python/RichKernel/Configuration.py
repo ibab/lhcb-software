@@ -23,11 +23,18 @@ class RichConfigurableUser(LHCbConfigurableUser):
     ## Context specific defaultvalues for each property
     _context_defaults_ = { }
 
+    ## @brief Create and return an instance of the RichTools() Configurable for the current Context
+    #  @return the RichTools object
+    def richTools(self):
+        from Configurables import RichTools
+        tools = RichTools(LHCbConfigurableUser.getProp(self,"Context")+"ToolRegistry")
+        return tools
+
     ## @brief Returns the Rich Tool registry configuration object for the current context
     #  @return The tool registry configuration object
     def toolRegistry(self) :
         from Configurables import RichTools
-        return RichTools().toolRegistry()
+        return self.richTools().toolRegistry()
 
     ## @brief Checks in a given property is properly configured for all three RICH radiators
     #  @param option The option name to check
@@ -60,15 +67,44 @@ class RichConfigurableUser(LHCbConfigurableUser):
             value = getattr(self,option)
             foundValue = value != None
         if False == foundValue:
-            key = LHCbConfigurableUser.getProp(self,"Context")+":"+option
+            context = LHCbConfigurableUser.getProp(self,"Context").upper()
+            if context.find("HLT")     != -1 : key = "HLT"
+            if context.find("OFFLINE") != -1 : key = "Offline"
+            key = key+":"+option
             if self._context_defaults_.has_key(key) :
                 value = self._context_defaults_[key]
             else:
                 value = LHCbConfigurableUser.getProp(self,option)
-            #else:
-            #    value = LHCbConfigurableUser.getProp(self,option)
-        #print self.name,"[",option,"] =",value
         return value
+
+    ## @brief Access to an instance of a CU with the correct name
+    def getRichCU(self,type,shared=False):
+        if shared :
+            cu = type()
+        else:
+            name = self._instanceName(type)
+            cu = type(name)
+        return cu
+
+    ## Set the output level for the given component
+    def setOutputLevel(self,component):
+        if self.isPropertySet("OutputLevel") :
+            level =  self.getProp("OutputLevel")
+            component.OutputLevel = level
+
+    ## Make an instance of an algortithm
+    def makeRichAlg(self,type,name):
+        alg = type(name)
+        self.setOutputLevel(alg)
+        return alg
+
+    ## Printout Configuration
+    def printInfo(self,conf):
+        import GaudiKernel.ProcessJobOptions
+        GaudiKernel.ProcessJobOptions.PrintOn()
+        log.info(conf)
+        GaudiKernel.ProcessJobOptions.PrintOff()
+
 
 # ----------------------------------------------------------------------------------
 
@@ -95,12 +131,6 @@ class RichTools(RichConfigurableUser):
         "OutputLevel"          : INFO
         }
 
-    ## Set the output level for the given component
-    def setOutputLevel(self,component):
-        if self.isPropertySet("OutputLevel") :
-            #print "Setting OutputLevel", self.getProp("OutputLevel"), "for", component.name()
-            component.OutputLevel = self.getProp("OutputLevel")
-
     ## Initialize 
     def initialize(self):
         # default values
@@ -122,10 +152,10 @@ class RichTools(RichConfigurableUser):
     #  @param private  Make a private or public tool instance
     #  @return The newly created tool configurable
     def __makeRichTool(self,tooltype,nickname,private=False):
+        context = self.getProp("Context")
         if private:
-            tool = tooltype(nickname)
+            tool = tooltype(context+nickname)
         else:
-            context = self.getProp("Context")
             tool = tooltype("ToolSvc."+context+"_"+nickname)
         self.toolRegistry().Tools += [tool.getType()+"/"+nickname]
         self.setOutputLevel(tool)
@@ -345,8 +375,7 @@ class RichTools(RichConfigurableUser):
 
     ## @brief Raw Event encode/decode tool
     def rawDecoder(self):
-        return self.smartIDTool().RawDecoder
-        
+        return self.smartIDTool().RawDecoder        
 
 # ----------------------------------------------------------------------------------
 

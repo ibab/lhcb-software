@@ -4,6 +4,11 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+! 2010-03-05 - Chris Jones
+ - Various changes to C++ and python to support the configuration of
+   multiple reconstruction sequences in the same application. Needed to
+   support neccessary changes in HLT2.
+
 !====================== RichKernel v7r31 2010-02-24 ====================
 ! 2010-02-16 - Chris Jones
  - Improvements to RichHistogramID full IDs and histogram titles
