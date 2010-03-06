@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2010-03-06 - Chris Jones
+ - Remove the obsolete monolithic ChargedProtoPAlg
+
 !========================== GlobalReco v6r31 2010-01-19 ======================
 ! 2010-1-18 - Chris Jones
  - Always set MuonPID SmartRef in ChargedProtoParticleAddMuonInfo when 
