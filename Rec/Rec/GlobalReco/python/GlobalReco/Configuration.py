@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.10 2009-12-11 13:44:00 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.11 2010-03-06 12:01:53 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -114,3 +114,51 @@ class GlobalRecoConf(LHCbConfigurableUser):
             velo.OutputLevel = level
             #combine.OutputLevel = level
             neutral.OutputLevel = level
+
+## @class GlobalRecoChecks
+#  Configurable for the Global PID reconstruction MC based checking
+#  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
+#  @date   26/02/2010
+class GlobalRecoChecks(LHCbConfigurableUser):
+    
+    ## Options
+    __slots__ = { "Sequencer"   : None    # The sequencer to add monitors to
+                 ,"OutputLevel" : INFO    # The printout level to use
+                  }
+
+    ## Apply the configuration to the given sequence
+    def applyConf(self):
+
+        if not self.isPropertySet("Sequencer"):
+            raise RuntimeError("ERROR : Sequencer not set")
+            
+        protoSeq = self.getProp("Sequencer")
+
+        from Configurables import ( NTupleSvc, ChargedProtoParticleTupleAlg,
+                                    ChargedProtoParticleAddRichInfo,
+                                    ChargedProtoParticleAddMuonInfo,
+                                    ChargedProtoCombineDLLsAlg )
+
+        # Runs these to make sure ProtoParticles have full information available
+        addrich = ChargedProtoParticleAddRichInfo("CheckChargedProtoPAddRich")
+        addmuon = ChargedProtoParticleAddMuonInfo("CheckChargedProtoPAddMuon")
+        combine = ChargedProtoCombineDLLsAlg("CheckChargedProtoPCombDLLs")
+
+        # The ntuple maker
+        protoChecker = ChargedProtoParticleTupleAlg("ChargedProtoTuple")
+        protoChecker.NTupleLUN = "PROTOTUPLE"
+
+        # Fill sequence
+        protoSeq.Members += [addrich,addmuon,combine,protoChecker]
+
+        # The output ntuple ROOT file
+        NTupleSvc().Output += ["PROTOTUPLE DATAFILE='protoparticles.tuples.root' TYP='ROOT' OPT='NEW'"]
+
+        # Set output levels
+        if self.isPropertySet("OutputLevel"):
+            level = self.getProp("OutputLevel")
+            addrich.OutputLevel = level
+            addmuon.OutputLevel = level
+            combine.OutputLevel = level
+            protoChecker.OutputLevel = level
+            
