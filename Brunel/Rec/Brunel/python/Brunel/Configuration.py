@@ -3,13 +3,13 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.119 2010-02-23 16:13:26 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.120 2010-03-06 15:38:44 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys, RecMoniConf,
-                            GaudiSequencer, RichRecQCConf, DstConf, LumiAlgsConf, L0Conf )
+                            GaudiSequencer, RichRecQCConf, DstConf, LumiAlgsConf, L0Conf, GlobalRecoChecks )
 
 ## @class Brunel
 #  Configurable for Brunel application
@@ -19,7 +19,7 @@ class Brunel(LHCbConfigurableUser):
 
     ## Possible used Configurables
     __used_configurables__ = [ TrackSys, RecSysConf, RecMoniConf, RichRecQCConf,
-                               LHCbApp, DstConf, LumiAlgsConf, L0Conf ]
+                               LHCbApp, DstConf, LumiAlgsConf, L0Conf, GlobalRecoChecks ]
 
     ## Default init sequences
     DefaultInitSequence     = ["Reproc", "Brunel"]
@@ -553,11 +553,9 @@ class Brunel(LHCbConfigurableUser):
                 importOptions( "$CALOMONIDSTOPTS/CaloChecker.opts" )
 
             if "PROTO" in checkSeq :
-                from Configurables import ( GaudiSequencer, NTupleSvc, ChargedProtoParticleTupleAlg )
-                protoChecker = ChargedProtoParticleTupleAlg("ChargedProtoTuple")
-                protoChecker.NTupleLUN = "PROTOTUPLE"
-                GaudiSequencer("CheckPROTOSeq").Members += [protoChecker]
-                NTupleSvc().Output += ["PROTOTUPLE DATAFILE='protoparticles.tuples.root' TYP='ROOT' OPT='NEW'"]
+                from Configurables import GaudiSequencer
+                self.setOtherProps(GlobalRecoChecks(),["OutputType"])
+                GlobalRecoChecks().Sequencer = GaudiSequencer("CheckPROTOSeq")
 
     ## Apply the configuration
     def __apply_configuration__(self):
