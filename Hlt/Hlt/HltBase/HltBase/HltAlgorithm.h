@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.46 2010-03-06 15:21:13 graven Exp $
+// $Id: HltAlgorithm.h,v 1.47 2010-03-06 22:24:11 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -7,6 +7,40 @@
 #include "HltBase/HltBaseAlg.h"
 #include "HltBase/HltSelection.h"
 #include "boost/utility.hpp"
+#include "boost/type_traits/integral_constant.hpp"
+#include <boost/mpl/if.hpp>
+
+
+template <typename T> struct has_range        : boost::false_type { };
+template < > struct has_range<LHCb::Track>    : boost::true_type { };
+template < > struct has_range<LHCb::Particle> : boost::true_type { };
+
+template <typename T>
+struct fill_range {
+
+      inline static StatusCode execute(T* selection, GaudiAlgorithm& parent) {
+        selection->clean(); //TODO: check if/why this is needed??
+        typedef typename T::candidate::Range range_type;
+        range_type obj = parent.get<range_type>( parent.evtSvc(), selection->id().str() );
+        //TODO: make HltSelection work with const objects...
+        selection->reserve( obj.size() );
+        for (typename range_type::iterator i = obj.begin();i!=obj.end();++i) { selection->push_back( const_cast<typename T::candidate_type*>(*i) ); }
+        selection->setDecision( !selection->empty() ); // force it processed...
+        return StatusCode::SUCCESS;
+      }
+};
+
+template <typename T>
+struct fill_container {
+      inline static StatusCode execute(T* selection, GaudiAlgorithm& parent) {
+        selection->clean(); //TODO: check if/why this is needed??
+        typedef typename T::candidate_type::Container  container_type;
+        container_type *obj = parent.get<container_type>( parent.evtSvc(), selection->id().str() );
+        selection->insert(selection->end(),obj->begin(),obj->end());
+        selection->setDecision( !selection->empty() ); // force it processed...
+        return StatusCode::SUCCESS;
+      }
+};
 
 /** @class HltAlgorithm 
  *  
@@ -154,28 +188,25 @@ private:
 
 
 
+
   template<typename T>
   class TESSelectionCallBack : boost::noncopyable, public CallBack {
+          
   public:
       TESSelectionCallBack(const Gaudi::StringKey& key,GaudiAlgorithm &parent) 
        : m_selection(new T(key)),m_parent(parent) 
       { }
       ~TESSelectionCallBack() { delete m_selection; }
       const T *selection() const { return m_selection; }
+
       StatusCode execute() {
-        typedef std::vector<const typename T::candidate_type*> ConstVector ;
-        typedef Gaudi::Range_<ConstVector> range_type;
-        // TODO: does not work, as fullTESLocation is private...
-        //container_type *obj = SmartDataPtr<container_type>( m_parent.evtSvc(), m_parent.fullTESLocation( m_selection.id().str().substr(4), true ) );
-        // if (obj==0) { }
-        range_type obj = m_parent.get<range_type>( m_parent.evtSvc(), m_selection->id().str() );
-        m_selection->clean(); //TODO: check if/why this is needed??
-        //TODO: make HltSelection work with const objects...
-        m_selection->reserve( obj.size() );
-        for (typename range_type::iterator i = obj.begin();i!=obj.end();++i) { m_selection->push_back( const_cast<typename T::candidate_type*>(*i) ); }
-        // m_selection->insert(m_selection->end(),obj.begin(),obj.end());
-        m_selection->setDecision( !m_selection->empty() ); // force it processed...
-        return StatusCode::SUCCESS;
+
+          typedef typename boost::mpl::if_< has_range<T>
+                              , fill_range<T>
+                              , fill_container<T>
+                              >::type impl_t;
+
+          return impl_t::execute(m_selection,m_parent);
       }
   private:
       T*  m_selection;
@@ -185,4 +216,5 @@ private:
   std::vector<CallBack*> m_callbacks;
 
 };
+
 #endif // HLTBASE_HLTALGORITHM_H
