@@ -1,4 +1,4 @@
-// $Id: HltSelection.h,v 1.15 2009-12-23 17:59:47 graven Exp $
+// $Id: HltSelection.h,v 1.16 2010-03-06 15:21:13 graven Exp $
 #ifndef HLTBASE_HLTSELECTION_H 
 #define HLTBASE_HLTSELECTION_H 1
 
@@ -84,6 +84,7 @@ namespace Hlt
     typedef typename container_type::const_iterator  const_iterator;
     typedef typename container_type::const_reference const_reference;
     typedef typename container_type::reference       reference;
+    void reserve(size_t s) { m_candidates.reserve(s); }
     bool empty() const { return m_candidates.empty(); }
     size_type size() const { return m_candidates.size(); }
     reference front() { return m_candidates.front(); }
@@ -94,7 +95,7 @@ namespace Hlt
     iterator end()   { return m_candidates.end(); }
     void push_back(T* t) { m_candidates.push_back(t); }
     template <typename ITER> void insert(iterator i, ITER begin, ITER end) { m_candidates.insert(i,begin,end); }
-    iterator erase(iterator begin, iterator end)  { return m_candidates.erase(begin,end); }
+    template <typename ITER> ITER erase(ITER begin, ITER end)  { return m_candidates.erase(begin,end); }
     // ========================================================================
   public:
     // ========================================================================    

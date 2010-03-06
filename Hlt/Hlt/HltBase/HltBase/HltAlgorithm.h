@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.45 2010-01-25 09:28:01 graven Exp $
+// $Id: HltAlgorithm.h,v 1.46 2010-03-06 15:21:13 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -152,28 +152,34 @@ private:
     virtual StatusCode execute()  = 0;
   };
 
+
+
   template<typename T>
   class TESSelectionCallBack : boost::noncopyable, public CallBack {
   public:
-      TESSelectionCallBack(const Gaudi::StringKey& key,HltAlgorithm &parent) 
+      TESSelectionCallBack(const Gaudi::StringKey& key,GaudiAlgorithm &parent) 
        : m_selection(new T(key)),m_parent(parent) 
       { }
       ~TESSelectionCallBack() { delete m_selection; }
       const T *selection() const { return m_selection; }
       StatusCode execute() {
-        typedef typename T::candidate_type::Container  container_type;
+        typedef std::vector<const typename T::candidate_type*> ConstVector ;
+        typedef Gaudi::Range_<ConstVector> range_type;
         // TODO: does not work, as fullTESLocation is private...
         //container_type *obj = SmartDataPtr<container_type>( m_parent.evtSvc(), m_parent.fullTESLocation( m_selection.id().str().substr(4), true ) );
         // if (obj==0) { }
-        container_type *obj = m_parent.get<container_type>( m_parent.evtSvc(), m_selection->id().str() );
+        range_type obj = m_parent.get<range_type>( m_parent.evtSvc(), m_selection->id().str() );
         m_selection->clean(); //TODO: check if/why this is needed??
-        m_selection->insert(m_selection->end(),obj->begin(),obj->end());
+        //TODO: make HltSelection work with const objects...
+        m_selection->reserve( obj.size() );
+        for (typename range_type::iterator i = obj.begin();i!=obj.end();++i) { m_selection->push_back( const_cast<typename T::candidate_type*>(*i) ); }
+        // m_selection->insert(m_selection->end(),obj.begin(),obj.end());
         m_selection->setDecision( !m_selection->empty() ); // force it processed...
         return StatusCode::SUCCESS;
       }
   private:
       T*  m_selection;
-      HltAlgorithm& m_parent;
+      GaudiAlgorithm& m_parent;
   };
 
   std::vector<CallBack*> m_callbacks;

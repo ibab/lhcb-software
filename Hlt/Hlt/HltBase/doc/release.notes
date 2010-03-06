@@ -3,6 +3,8 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2010-03-06 - Gerhard Raven
+ - add support for Ranges
 
 !========================== HltBase v8r1 2010-02-01 ===================
 ! 2010-01-31 - Gerhard Raven
