@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.47 2010-03-06 22:24:11 graven Exp $
+// $Id: HltAlgorithm.h,v 1.48 2010-03-07 16:01:50 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -8,23 +8,27 @@
 #include "HltBase/HltSelection.h"
 #include "boost/utility.hpp"
 #include "boost/type_traits/integral_constant.hpp"
-#include <boost/mpl/if.hpp>
+#include "boost/iterator/transform_iterator.hpp"
+#include "boost/mpl/if.hpp"
+#include "boost/lambda/bind.hpp"
+#include "boost/lambda/casts.hpp"
 
 
-template <typename T> struct has_range        : boost::false_type { };
-template < > struct has_range<LHCb::Track>    : boost::true_type { };
-template < > struct has_range<LHCb::Particle> : boost::true_type { };
+template <typename T> struct has_selection                 : boost::false_type {};
+template <>           struct has_selection<LHCb::Track>    : boost::true_type  {};
+template <>           struct has_selection<LHCb::Particle> : boost::true_type  {};
 
 template <typename T>
 struct fill_range {
-
       inline static StatusCode execute(T* selection, GaudiAlgorithm& parent) {
         selection->clean(); //TODO: check if/why this is needed??
-        typedef typename T::candidate::Range range_type;
+        typedef typename T::candidate_type::Range range_type;
         range_type obj = parent.get<range_type>( parent.evtSvc(), selection->id().str() );
         //TODO: make HltSelection work with const objects...
-        selection->reserve( obj.size() );
-        for (typename range_type::iterator i = obj.begin();i!=obj.end();++i) { selection->push_back( const_cast<typename T::candidate_type*>(*i) ); }
+        selection->insert( selection->end()
+                         , boost::make_transform_iterator( obj.begin(),  boost::lambda::ll_const_cast<typename T::candidate_type>(boost::lambda::_1) )
+                         , boost::make_transform_iterator( obj.end(),    boost::lambda::ll_const_cast<typename T::candidate_type>(boost::lambda::_1) )
+                         );
         selection->setDecision( !selection->empty() ); // force it processed...
         return StatusCode::SUCCESS;
       }
@@ -36,7 +40,10 @@ struct fill_container {
         selection->clean(); //TODO: check if/why this is needed??
         typedef typename T::candidate_type::Container  container_type;
         container_type *obj = parent.get<container_type>( parent.evtSvc(), selection->id().str() );
-        selection->insert(selection->end(),obj->begin(),obj->end());
+        selection->insert( selection->end()
+                         , obj->begin()
+                         , obj->end()
+                         );
         selection->setDecision( !selection->empty() ); // force it processed...
         return StatusCode::SUCCESS;
       }
@@ -200,8 +207,7 @@ private:
       const T *selection() const { return m_selection; }
 
       StatusCode execute() {
-
-          typedef typename boost::mpl::if_< has_range<T>
+          typedef typename boost::mpl::if_< has_selection<T>
                               , fill_range<T>
                               , fill_container<T>
                               >::type impl_t;
