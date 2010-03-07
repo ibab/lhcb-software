@@ -3,6 +3,15 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to tests
+   . Pick up histogram setting options from AppConfig
+   . Exclude Rich refractive index updates from comparisons wih reference
+
+- Changes to references to reflect changes in Brunel v36r3 output:
+   . Printout APE values from STOfflinePositionTool (STTools v3r17)
+   . Suppress warning message about empty HPD data blocks
+     (RichRecBase v3r27p1)
+
 </PRE><H1><A NAME=v36r2>2010-02-26 Brunel v36r2</A></H1><PRE>
  - Changes to Configurable: 
    . Update Histogram slot to support new levels of Histogramming  - "None",

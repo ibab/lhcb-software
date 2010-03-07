@@ -5,6 +5,7 @@ preprocessor = LHCbPreprocessor + \
   LineSkipper(["MagneticFieldSvc     INFO Map scaled by factor"]) + \
   LineSkipper(["MagneticFieldSvc     INFO Opened magnetic field file"]) + \
   LineSkipper(["ToolSvc.PatTTMa...   INFO  No B field detected."]) + \
+  LineSkipper(["Gas       INFO Refractive index update triggered : Pressure ="]) + \
   LineSkipper(["INFO MuonIDAlg v"]) + \
   LineSkipper(["Delta Memory for the event exceeds 3*sigma"]) + \
   LineSkipper(["AfterMagnetRegion/"]) + \
