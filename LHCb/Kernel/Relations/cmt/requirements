@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.30 2009-09-14 14:02:09 ibelyaev Exp $
+# $Id: requirements,v 1.31 2010-03-07 12:39:45 ibelyaev Exp $
 # =============================================================================
 package Relations
 author  Vanya.Belyaev
 manager Vanya.Belyaev
-version v5r9
+version v5r9p1
 # =============================================================================
 
 # ============= structure =====================================================
@@ -27,7 +27,7 @@ apply_pattern     reflex_dictionary                                 \
 # ============== constituents =================================================
 library          RelationsLib    *.cpp
 application      RelationsTests  -check ../tests/RelationsTest.cpp
-macro_append RelationsTests_dependencies RelationsLib
+macro_append     RelationsTests_dependencies RelationsLib
  
 # ============== patterns =====================================================
 apply_pattern    linker_library    library=RelationsLib
