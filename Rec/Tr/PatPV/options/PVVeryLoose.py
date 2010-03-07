@@ -1,6 +1,6 @@
 # loose quality conditions for PV vertex (for Collisions09)
 from Configurables import PatPVOffline, PVSeed3DOfflineTool
-from Configurables import PVOfflineTool, SimplePVSeedTool, SimplePVFitter
+from Configurables import PVOfflineTool, SimplePVSeedTool, SimplePVFitter, LSAdaptPVFitter
 
 loosePVSeedTool      = PVSeed3DOfflineTool("PVSeed3DOfflineTool")
 looseLSAdaptPVFitter = LSAdaptPVFitter("LSAdaptPVFitter")

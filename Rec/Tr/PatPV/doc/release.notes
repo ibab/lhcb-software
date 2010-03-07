@@ -3,6 +3,8 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
+! 2010-03-06 - Stephanie Hansmann-Menzemer
+ - fix in PVVeryLoose.py
 
 ! 2010-03-05 - Piotr Morawski
  - corrected error in PVVerryLoose.py and warning in PVSeed3DOfflineTool
