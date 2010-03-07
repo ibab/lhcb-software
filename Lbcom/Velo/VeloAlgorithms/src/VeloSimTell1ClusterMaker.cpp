@@ -1,4 +1,4 @@
-// $Id: VeloSimTell1ClusterMaker.cpp,v 1.5 2010-03-05 16:46:31 dhcroft Exp $
+// $Id: VeloSimTell1ClusterMaker.cpp,v 1.6 2010-03-07 14:28:52 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -140,13 +140,13 @@ StatusCode VeloSimTell1ClusterMaker::execute() {
     } 
     prepareEngineForValidation();
     StatusCode rawEvtStatus=createRawEvent();
-    StatusCode exitStatus;
     if(rawEvtStatus.isSuccess()){
-      exitStatus=validationRun();
+      return (validationRun());
     }
-    return ( exitStatus );
+    return StatusCode::SUCCESS;
   }else{
-    StatusCode engineStatus;
+    StatusCode engineStatus(StatusCode::SUCCESS); // explicitly set to default
+    engineStatus.setChecked(); // might not check statuscode later
     if(!isInitialized()){
       StatusCode initStatus =  INIT();
       if ( !initStatus ) {
@@ -154,8 +154,9 @@ StatusCode VeloSimTell1ClusterMaker::execute() {
         return StatusCode::SUCCESS;
       } 
       engineStatus=createAndConfigureEngines();
-      engineStatus.ignore(); // might not check statuscode later
-      if(m_forceEnable) this->setIsEnable(static_cast<bool>(m_zsProcessEnable));
+      if(m_forceEnable) { // fix int -> bool warning on Windows
+	this->setIsEnable(m_zsProcessEnable != 0 ? true : false);
+      }
       if(isEnable()){
         info()<< " --> Algorithm " << (this->algoName())
               << " of type: " << (this->algoType())
@@ -166,14 +167,12 @@ StatusCode VeloSimTell1ClusterMaker::execute() {
       }
     }
     StatusCode rawEvtStatus=createRawEvent();
-    rawEvtStatus.ignore(); // fix unchecked status code is dataStatus is bad
     if(isEnable()&&(m_eventNumber>convergenceLimit())&&engineStatus.isSuccess()){
       StatusCode dataStatus=getData();
-      StatusCode cluMakerStatus;
       if(dataStatus.isSuccess()&&rawEvtStatus.isSuccess()){
         dataStatus=inputStream(inputData());
         if(dataStatus.isSuccess()){
-          cluMakerStatus=runClusterMaker();
+	  StatusCode cluMakerStatus=runClusterMaker();
           if(cluMakerStatus.isSuccess()){ 
             fillAndWriteRawEvent();
           }else{
