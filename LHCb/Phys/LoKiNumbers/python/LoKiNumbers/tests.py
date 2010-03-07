@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py,v 1.9 2009-12-06 18:24:22 ibelyaev Exp $
+# $Id: tests.py,v 1.10 2010-03-07 18:12:16 ibelyaev Exp $
 # =============================================================================
 ## @file
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -50,11 +50,14 @@ print 'inp >> ~equal_to  ( X , 1 )  :%s' % ( inp >> ~equal_to ( X , 1 ) )
 print 'inp >>  equal_to  ( X , [ 1 , 2, 3 ] )  :%s' % ( inp >>  equal_to ( X , [ 1 , 2, 3] ) )
 print 'inp >> ~equal_to  ( X , [ 1 , 2, 3 ] )  :%s' % ( inp >> ~equal_to ( X , [ 1 , 2, 3] ) )
 
-print 'inp >>  ( X == doubles (   1 , 2, 3   ) ) :%s' % ( inp >> ( X == doubles(  1 , 2, 3 ) ) )
-print 'inp >>  ( X != doubles ( [ 1 , 2, 3 ] ) ) :%s' % ( inp >> ( X != doubles([ 1 , 2, 3]) ) ) 
+print 'inp >>  ( X == ( 1. , 2  , 3 ) ) :%s' % ( inp >> ( X ==  ( 1. , 2  , 3 ) ) ) 
+print 'inp >>  ( X != [ 1  , 2. , 3 ] ) :%s' % ( inp >> ( X !=  [ 1  , 2. , 3 ] ) )  
 
-print 'inp >>  ( X == ints    (   1 , 2, 3   ) ) :%s' % ( inp >> ( X == ints (  1 , 2, 3 ) ) )
-print 'inp >>  ( X != ints    ( [ 1 , 2, 3 ] ) ) :%s' % ( inp >> ( X != ints ([ 1 , 2, 3]) ) ) 
+print 'inp >>  ( X == ( 1 , 2, 3 ) ) :%s' % ( inp >> ( X == ( 1 , 2, 3 ) ) )
+print 'inp >>  ( X != [ 1 , 2, 3 ] ) :%s' % ( inp >> ( X != [ 1 , 2, 3 ] ) )  
+
+print 'inp >>  in_list ( X ,   1 , 2, 3   ) ) :%s' % ( inp >>  in_list ( X ,   1 , 2, 3 ) )
+print 'inp >> ~in_list ( X , [ 1 , 2, 3 ] ) ) :%s' % ( inp >> ~in_list ( X , [ 1 , 2, 3 ] ) )
 
 
 # =============================================================================

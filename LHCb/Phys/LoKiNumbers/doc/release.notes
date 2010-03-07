@@ -4,6 +4,15 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+! 2010-03-07 - Vanya Belyaev
+
+ - use new comparisons & functions fo LoKicore 
+
+ - cmt/requirements
+
+   version increment to v8r5 
+
+
 !========================== LoKiNumbers v8r4 2010-02-24 =======================
 ! 2010-02-13 - Vanya Belyaev
  - add new symbols:
