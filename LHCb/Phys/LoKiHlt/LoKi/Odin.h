@@ -1,9 +1,13 @@
-// $Id: Odin.h,v 1.2 2010-02-12 14:17:27 ibelyaev Exp $
+// $Id: Odin.h,v 1.3 2010-03-07 18:06:19 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ODIN_H 
 #define LOKI_ODIN_H 1
 // ============================================================================
 // Include files
+// ============================================================================
+// STD & STL
+// ============================================================================
+#include <utility>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -307,6 +311,7 @@ namespace LoKi
     class TrgConfKey: public LoKi::BasicFunctors<const LHCb::ODIN*>::Function
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~TrgConfKey(){}
       /// MANDATORY: clone method ("virtual constructor")
@@ -366,6 +371,59 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
+    /** @class EvtNumber
+     *  Simple predicate to check the event number 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2010-03-07
+     */
+    class EvtNumber : public LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate 
+    {
+    public:
+      // ======================================================================
+      /// the actual type for event_type
+      typedef ulonglong                      event_type ;
+      /// the actual type of event list
+      typedef std::vector<event_type>        EventList  ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from the run number 
+      EvtNumber ( const event_type evt    ) ;
+      /// constructor from the run range 
+      EvtNumber ( const event_type begin , 
+                  const event_type end    ) ;
+      /// constructor from event list
+      EvtNumber ( const EventList& events ) ;
+      /// constructor from event list
+      EvtNumber ( const std::vector<unsigned int>& events ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~EvtNumber() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual EvtNumber* clone() const ;
+      /// MANDATORY: The only one essential method:
+      virtual result_type operator() ( argument o ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      EvtNumber() ;                      // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      Flag           m_flag  ;
+      /// the event number 
+      event_type     m_evt   ;                            // the event number 
+      /// the range: begin 
+      event_type     m_begin ;                            // the range: begin 
+      /// the range: end
+      event_type     m_end   ;                            // the range: end 
+      /// the event list 
+      EventList      m_evts  ;                            // the event list 
+      // ======================================================================
+    };
+    // ========================================================================
     /** @class RunNumber 
      *  The trivial predicate which checks the run number, 
      *  or range of run numbers or list of run numbers 
@@ -385,9 +443,9 @@ namespace LoKi
       /// constructor from the run list
       RunNumber ( const std::vector<unsigned int>& runs ) ;
       /// MANDATORY: virtual destructor 
-      virtual ~RunNumber() {}
+      virtual ~RunNumber() ;
       /// MANDATORY: clone method ("virtual constructor")
-      virtual RunNumber* clone() const { return new RunNumber(*this) ; }
+      virtual RunNumber* clone() const ;
       /// MANDATORY: The only one essential method:
       virtual result_type operator() ( argument o ) const ;
       /// OPTIONAL: the nice printout 
@@ -405,6 +463,65 @@ namespace LoKi
       unsigned int              m_begin ;
       unsigned int              m_end   ;
       std::vector<unsigned int> m_runs  ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class RunEvtNumber 
+     *  The trivial predicate which checks (Run,Event)-identifiers
+     *  @see LoKi::Cuts::ODIN_RUNEVT
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-06-16
+     */
+    class RunEvtNumber : public LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate
+    {
+    public:
+      // ======================================================================
+      /// the actual type of run-number 
+      typedef unsigned int                                         run_type   ;
+      /// the actual type of event-number  
+      typedef ulonglong                                            evt_type   ;
+      /// the actual type of run-event pair 
+      typedef std::pair<run_type,evt_type>                         RunEvtPair ;
+      // the actual type of run-event list 
+      typedef std::vector<RunEvtPair>                              RunEvtList ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from the run/event number 
+      RunEvtNumber ( const run_type    run     , 
+                     const evt_type    evt     ) ;
+      /// constructor from the run/event number 
+      RunEvtNumber ( const RunEvtPair& runevt  ) ;
+      /// constructor from the run/event range 
+      RunEvtNumber ( const RunEvtPair& begin   , 
+                     const RunEvtPair& end     ) ;
+      /// constructor from the run-event  list
+      RunEvtNumber ( const RunEvtList& runevts ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~RunEvtNumber() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual RunEvtNumber* clone() const ;
+      /// MANDATORY: The only one essential method:
+      virtual result_type operator() ( argument o ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      RunEvtNumber() ;                   // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      Flag                      m_flag      ;
+      /// the run-event pair
+      RunEvtPair                m_runevt    ;           //   the run-event pair 
+      /// the range: begin 
+      RunEvtPair                m_begin     ;           //     the range: begin 
+      /// the range: end 
+      RunEvtPair                m_end       ;           //       the range: end 
+      /// the run-event list 
+      RunEvtList                m_runevts   ;           //   the run-event list 
       // ======================================================================
     } ;
     // ========================================================================

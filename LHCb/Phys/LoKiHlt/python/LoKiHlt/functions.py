@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.9 2010-02-12 14:17:28 ibelyaev Exp $ 
+# $Id: functions.py,v 1.10 2010-03-07 18:06:20 ibelyaev Exp $ 
 # =============================================================================
 ## @file LoKiHlt/functions.py
 #  The full set of useful objects from LoKiHlt library 
@@ -12,7 +12,7 @@
 The full set of useful objects from LoKiHlt library
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl   "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $  "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $  "
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
@@ -204,6 +204,12 @@ ODIN_RUN       = LoKi.Odin.Run ()
 ## @see LoKi::Cuts::ODIN_RUNNUMBER 
 ODIN_RUNNUMBER = LoKi.Odin.RunNumber 
 
+## @see LoKi::Cuts::ODIN_EVTNUMBER 
+ODIN_EVTNUMBER = LoKi.Odin.EvtNumber 
+
+## @see LoKi::Cuts::ODIN_RUNEVTNUMBER 
+ODIN_RUNEVTNUMBER = LoKi.Odin.RunEvtNumber 
+
 ## @see LoKi::Cuts::ODIN_TCK
 ODIN_TCK       = LoKi.Odin.TrgConfKey () 
 
@@ -278,6 +284,80 @@ HLT_TRUE     =    LoKi.Constant ( _hlt + ',bool'   ) ( True  )
 ## @see LoKi::Cuts::HLT_ZERO
 HLT_ZERO     =    LoKi.Constant ( _hlt + ',double' ) ( 0 )
 
+
+# =========================================================================
+## helper function to define properly ODIN_EVTNUMBER predicate
+#  @see LoKi::Cuts::ODIN_EVTNUMBER
+#  @see LoKi::Odin::EvtNumber
+#  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+#  @date 2010-03-07
+def odin_events ( arg1 , *args ) :
+    """
+    Helper function to define properly ODIN_EVTNUMBER predicate
+    """
+    
+    if   0 == len ( args ) and issubclass ( type(arg1) , ( int , long ) ) : 
+        return ODIN_EVTNUMBER ( arg1 )
+    elif 1 == len ( args ) :
+        if issubclass ( type(arg1) , ( int , long ) ) :
+            arg2=args[0]
+            if issubclass ( type(arg2) , ( int , long ) ) :
+                return ODIN_EVTNUMBER ( arg1 , arg2 )
+        raise TypeError ("invalid signature") 
+                        
+    from LoKiCore.functions import ullongs    
+    evts = ullongs ( arg1 , *args )
+    
+    return ODIN_EVTNUMBER ( evts )
+
+# =========================================================================
+## helper function to define properly ODIN_RUNNUMBER predicate
+#  @see LoKi::Cuts::ODIN_RUNNUMBER
+#  @see LoKi::Odin::RunNumber
+#  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+#  @date 2010-03-07
+def odin_runs ( arg1 , *args ) :
+    """
+    Helper function to define properly ODIN_RUNNUMBER predicate
+    """
+    
+    if   0 == len ( args ) and issubclass ( type(arg1) , ( int , long ) ) : 
+        return ODIN_RUNNUMBER ( arg1 )
+    elif 1 == len ( args ) :
+        if issubclass ( type(arg1) , ( int , long ) ) :
+            arg2=args[0]
+            if issubclass ( type(arg2) , ( int , long ) ) :
+                return ODIN_RUNNUMBER ( arg1 , arg2 )
+        raise TypeError ("invalid signature") 
+                        
+    from LoKiCore.functions import uints
+    evts = uints ( arg1 , *args )
+    
+    return ODIN_RUNNUMBER ( evts )
+
+
+# =========================================================================
+## helper function to define properly ODIN_RUNEVTNUMBER predicate
+#  @see LoKi::Cuts::ODIN_RUNEVTNUMBER
+#  @see LoKi::Odin::RunEvtNumber
+#  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+#  @date 2010-03-07
+def odin_runevts ( arg1 ) :
+    """
+    Helper function to define properly ODIN_RUNEVTNUMBER predicate
+    """
+    _rep = ODIN_RUNEVTNUMBER.RunEvtPair
+    _rel = ODIN_RUNEVTNUMBER.RunEvtList
+
+    if issubclass ( type ( arg1 ) , _rel ) :
+        return ODIN_RUNEVTNUMBER ( arg1 )
+    
+    rel = _rel()
+    for a in arg1 :
+        rel.push_back( _rep( a[0] , a[1] ) ) 
+        
+    return ODIN_RUNEVTNUMBER( rel )
+    
 
 
 # =============================================================================
