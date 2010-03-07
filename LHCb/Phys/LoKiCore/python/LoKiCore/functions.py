@@ -88,6 +88,7 @@ def scale ( s , sf ) :
 #  @code
 #
 #    >>> cut = equal_to ( TrTYPE , LHCb.Track.Long )
+
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 def equal_to  ( f  , v , *args ) :
@@ -97,19 +98,26 @@ def equal_to  ( f  , v , *args ) :
     but it should be more efficient 
 
     >>> cut = equal_to ( TrTYPE , LHCb.Track.Long )
+    >>> cut = equal_to ( TrTYPE , LHCb.Track.Long , LHCb.Track.Upstream )
+
+    >>> lst = [ .... ] 
+    >>> cut = equal_to ( TrTYPE , lst )
+    
     
     """
-    if not args : 
-        if   hasattr ( f , '__equal_to__' ) :
-            if type ( v ) is list : v == doubles ( v ) 
-            return f.__equal_to__ ( v ) 
-        elif hasattr ( v , '__equal_to__' ) :
-            if type ( f ) is list : f == doubles ( f ) 
-            return v.__equal_to__ ( f )
-        # use the generic version:
-        return f == v
-    v = doubles ( v , args )
-    return equal_to ( f , v ) 
+    if args :
+        v = doubles ( v , *args )
+        return equal_to ( f , v )
+    
+    if   hasattr ( f , '__equal_to__' ) :
+        if list == type ( v )  : v = doubles ( v )
+        return f.__equal_to__ ( v ) 
+    elif hasattr ( v , '__equal_to__' ) :
+        if list == type ( f )  : f = doubles ( f ) 
+        return v.__equal_to__ ( f )
+    
+    # use the generic version:
+    return f == v
 
 # =============================================================================
 ##    Create 'in-range' predicate, that checks the valeu of
@@ -142,6 +150,31 @@ def in_range ( low , fun , high ) :
 inRange  = in_range
 in_Range = in_range
 
+# ==============================================================================
+## Create 'in-list' preducate, that checks the value of certain function
+#  is within the list
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#  @date   2009-11-21
+def in_list ( fun , lst , *args ) :
+    """
+    Create 'in-list' preducate, that checks the value of certain function
+    is within the list
+
+    >>> fun = ... # get the function
+    >>> cut = in_list ( fun ,   1 , 2, 3, 4 , 5   ) ## construct the predicate 
+    >>> cut = in_list ( fun , [ 1 , 2, 3, 4 , 5 ] ) ## construct the predicate 
+    >>> cut = in_list ( fun , ( 1 , 2, 3, 4 , 5 ) ) ## construct the predicate 
+    
+    """
+    if issubclass ( type(lst) , ( tuple , list ) ) or args :  
+        vct = vct_from_list ( lst , *args ) 
+        return fun.__in_list__ ( vct )
+    return fun.__in_list__ ( lst , *args )
+
+## fitto 
+inList  = in_list
+in_List = in_list 
 # =============================================================================
 ## Get the number of children for the object.
 def nChildren ( o )  :
@@ -613,14 +646,13 @@ def strings ( arg1 , *args ) :
     from LoKiCore.decorators import std
     _vt = std.vector('std::string')
     vct = _vt () 
-    if 0 != len( args ) :
-        vct.push_back ( arg1 )
-        for a in args : vct.push_back ( a )
-        return vct
-    if list == type( arg1 )  :
-        for a in arg1 : vct.push_back ( a )
-        return vct
-    vct.push_back ( arg1 )
+    #
+    if issubclass ( type ( arg1 ) , ( list , tuple ) ) :
+        for a in arg1 : vct.push_back ( a    )
+    else :              vct.push_back ( arg1 ) 
+    #
+    for a in args : vct.push_back ( a )
+    #
     return vct 
 
 # =============================================================================
@@ -637,14 +669,13 @@ def doubles ( arg1 , *args ) :
     from LoKiCore.decorators import std
     _vt = std.vector('double')
     vct = _vt () 
-    if 0 != len( args ) :
-        vct.push_back ( arg1 )
-        for a in args : vct.push_back ( a )
-        return vct
-    if list == type( arg1 )  :
-        for a in arg1 : vct.push_back ( a )
-        return vct
-    vct.push_back ( arg1 )
+    #
+    if issubclass ( type ( arg1 ) , ( list , tuple ) ) :
+        for a in arg1 : vct.push_back ( a    )
+    else :              vct.push_back ( arg1 ) 
+    #
+    for a in args : vct.push_back ( a )
+    #
     return vct 
 
 # =============================================================================
@@ -660,15 +691,15 @@ def ints ( arg1 , *args ) :
     """
     from LoKiCore.decorators import std
     _vt = std.vector('int')
-    vct = _vt () 
-    if 0 != len( args ) :
-        vct.push_back ( arg1 )
-        for a in args : vct.push_back ( a )
-        return vct
-    if list == type( arg1 )  :
-        for a in arg1 : vct.push_back ( a )
-        return vct
-    vct.push_back ( arg1 )
+    vct = _vt ()
+    #
+    #
+    if issubclass ( type ( arg1 ) , ( list , tuple ) ) :
+        for a in arg1 : vct.push_back ( a    )
+    else :              vct.push_back ( arg1 ) 
+    #
+    for a in args : vct.push_back ( a )
+    #
     return vct 
 
 # =============================================================================
@@ -684,56 +715,152 @@ def uints ( arg1 , *args ) :
     """
     from LoKiCore.decorators import std
     _vt = std.vector('unsigned int')
-    vct = _vt () 
-    if 0 != len( args ) :
-        vct.push_back ( arg1 )
-        for a in args : vct.push_back ( a )
-        return vct
-    if list == type( arg1 )  :
-        for a in arg1 : vct.push_back ( a )
-        return vct
-    vct.push_back ( arg1 )
+    vct = _vt ()
+    #
+    if issubclass ( type ( arg1 ) , ( list , tuple ) ) :
+        for a in arg1 : vct.push_back ( a    )
+    else :              vct.push_back ( arg1 ) 
+    #
+    for a in args : vct.push_back ( a )
+    #
     return vct 
 
 # =============================================================================
-## Create the predicate which efficiently checks the equality of the
-#   function to some predefined value. Logically it is just 'operator==',
-#    but it should be more efficient 
-#
-#  @code
-#
-#    >>> cut = equal_to ( TrTYPE , LHCb.Track.Long )
-
-#  @endcode
-#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-def equal_to  ( f  , v , *args ) :
+## construct std::vector<long long> from the arguments 
+def llongs ( arg1 , *args ) :
     """
-    Create the predicate which efficiently checks the equality of the
-    function to some predefined value. Logically it is just 'operator==',
-    but it should be more efficient 
-
-    >>> cut = equal_to ( TrTYPE , LHCb.Track.Long )
-    >>> cut = equal_to ( TrTYPE , LHCb.Track.Long , LHCb.Track.Upstream )
-
-    >>> lst = [ .... ] 
-    >>> cut = equal_to ( TrTYPE , lst )
+    Construct the std::vector<long long> from the arguments
     
+    >>> v1 = llongs ( 1 )
+    >>> v2 = llongs ( 1 , 1 , 10  )
+    >>> v3 = llongs ( [ 1 , 2 , 3 ] )
     
     """
-    if args :
-        v = doubles ( v , *args )
-        return equal_to ( f , v )
-    
-    if   hasattr ( f , '__equal_to__' ) :
-        if list == type ( v )  : v = doubles ( v )
-        return f.__equal_to__ ( v ) 
-    elif hasattr ( v , '__equal_to__' ) :
-        if list == type ( f )  : f = doubles ( f ) 
-        return v.__equal_to__ ( f )
-    
-    # use the generic version:
-    return f == v
+    from LoKiCore.decorators import std
+    _vt = std.vector('long long')
+    vct = _vt ()
+    #
+    #
+    if issubclass ( type ( arg1 ) , ( list , tuple ) ) :
+        for a in arg1 : vct.push_back ( a    )
+    else :              vct.push_back ( arg1 ) 
+    #
+    for a in args : vct.push_back ( a )
+    #
+    return vct 
 
+# =============================================================================
+## construct std::vector<unsigned long long> from the arguments 
+def ullongs ( arg1 , *args ) :
+    """
+    Construct the std::vector<unsigned long long> from the arguments
+    
+    >>> v1 = ullongs ( 1 )
+    >>> v2 = ullongs ( 1 , 1 , 10  )
+    >>> v3 = ullongs ( [ 1 , 2 , 3 ] )
+    
+    """
+    from LoKiCore.decorators import std
+    _vt = std.vector('unsigned long long')
+    vct = _vt ()
+    #
+    #
+    if issubclass ( type ( arg1 ) , ( list , tuple ) ) :
+        for a in arg1 : vct.push_back ( a    )
+    else :              vct.push_back ( arg1 ) 
+    #
+    for a in args : vct.push_back ( a )
+    #
+    return vct 
+
+# =============================================================================
+## check the presence of at leatst one string argument:
+def _has_string ( arg1 , *args ) :
+    ##
+    if issubclass ( type ( arg1 ) , ( list , tuple ) ) :
+        for a in arg1 :
+            if issubclass ( type(a) , str ) : return True
+    ## 
+    for a in args :
+        if issubclass ( type(a) , str ) : return True
+    ##
+    return False
+
+## ============================================================================
+## check the presence of at leatst one float argument:
+def _has_float ( arg1 , *args ) :
+    ##
+    if issubclass ( type ( arg1 ) , ( list , tuple ) ) :
+        for a in arg1 :
+            if   issubclass ( type(a) , float ) : return True
+            ##elif issubclass ( type(a) , long  ) :
+            ##    if a >  2**64                 : return True 
+            ##    if a < -2**64                 : return True 
+    ## 
+    for a in args :
+        if   issubclass ( type(a) , float ) : return True
+        ##elif issubclass ( type(a) , long  ) :
+        ##    if a >  2**64                 : return True 
+        ##    if a < -2**64                 : return True 
+    ##
+    return False 
+## ============================================================================
+def _has_long ( arg1 , *args ) :
+    ##
+    if issubclass ( type ( arg1 ) , ( list , tuple ) ) :
+        for a in arg1 :
+            if issubclass ( type ( a ) , ( int ,long ) ) :
+                if a >=  2**32 : return True
+                if a <= -2**32 : return True
+    ## 
+    for a in args :
+        if issubclass ( type ( a ) , ( int , long ) ) : 
+            if a >=  2**32 : return True
+            if a <= -2**32 : return True
+    ##
+    return False
+## ============================================================================
+def _has_nega ( arg1 , *args ) :
+    ##
+    if issubclass ( type ( arg1 ) , ( list , tuple ) ) :
+        for a in arg1 :
+            if a < 0 : return True
+    ## 
+    for a in args :
+        if a < 0 : return True
+    ##
+    return False 
+    
+# =============================================================================
+## convert the "list" into C++ vector of primitives 
+def vct_from_list  ( lst , *args ) :
+    
+    ## at leats one string?
+    if _has_string ( lst , *args ) : return strings ( lst , *args )
+    
+    ## at least one double?
+    if _has_float  ( lst , *args ) : return doubles ( lst , *args )
+    ##
+    _hn = _has_nega ( lst , *args )
+    ##
+    ok = True 
+    try : 
+        if _hn : return ints    ( lst , *args )
+        else   : return uints   ( lst , *args )
+    except TypeError :
+        ok = False
+        print ' Error here: ', lst, args  
+        pass
+    ##
+    if _has_long ( lst , *args ) or not ok : 
+        try : 
+            if _hn : return llongs  ( lst , *args )
+            else   : return ullongs ( lst , *args )
+        except TypeError      : pass
+    ## 
+    return doubles ( lst , *args )
+    
+        
 # =============================================================================
 # The END
 # =============================================================================

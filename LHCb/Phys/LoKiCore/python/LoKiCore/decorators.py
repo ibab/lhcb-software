@@ -24,6 +24,8 @@ LHCb = _global.LHCb
 LoKi.RangeBase_
 LoKi.KeeperBase
 
+from LoKiCore.functions import vct_from_list
+
 # =============================================================================
 ## simple function to provide the iteration over LoKi's range objects
 def _iter_1_ ( self ) :
@@ -309,6 +311,8 @@ def decorateFunctionOps ( funcs , opers ) :
             
             Uses:\n
             """
+            if issubclass ( type(a) , ( list, tuple ) ) :
+                a = vct_from_list ( a ) 
             return opers.__cpp_eq__   (s,a)
         _eq_   . __doc__  += opers.__cpp_eq__   . __doc__
     elif hasattr ( opers , '__eq__' ) :        
@@ -322,6 +326,8 @@ def decorateFunctionOps ( funcs , opers ) :
             
             Uses:\n
             """
+            if issubclass ( type(a) , ( list, tuple ) ) :
+                a = vct_from_list ( a ) 
             return opers.__eq__   (s,a)
         _eq_   . __doc__  += opers.__eq__   . __doc__
         
@@ -338,6 +344,8 @@ def decorateFunctionOps ( funcs , opers ) :
             
             Uses:\n
             """
+            if issubclass ( type(a) , ( list, tuple ) ) :
+                a = vct_from_list ( a )
             return opers.__cpp_ne__   (s,a)
         _ne_   . __doc__  += opers.__cpp_ne__   . __doc__
     elif hasattr ( opers , '__ne__' ) :        
@@ -351,6 +359,8 @@ def decorateFunctionOps ( funcs , opers ) :
             
             Uses:\n
             """
+            if issubclass ( type(a) , ( list, tuple ) ) :
+                a = vct_from_list ( a )
             return opers.__ne__   (s,a)
         _ne_   . __doc__  += opers.__ne__   . __doc__
             
@@ -842,12 +852,31 @@ def decorateFunctionOps ( funcs , opers ) :
             Create the predicate which checks if  the function value 'in range'
 
             >>> fun  = ... 
-            >>> cut  = in_range ( fun , -1 , 1000 )
+            >>> cut  = in_range ( -1 , fun , 1000 )
 
             """
             return opers.__in_range__ ( fun , low , high ) 
         _in_range_ . __doc__ += opers.__in_range__ .  __doc__ 
-        
+
+
+    # "in_list"
+    if hasattr ( opers , '__in_list__' ) :
+        def _in_list_ ( fun , lst , *args ) :
+            """
+            Create the predicate which checks if  the function value 'in-list'
+
+            >>> fun  = ... 
+            >>> cut  = in_list ( fun , -1 , 1000 , 34253 )
+            >>> cut  = in_list ( fun , [ -1 , 1000 , 3412] )
+
+            """
+            if issubclass ( type(lst) , ( tuple , list ) ) or args :
+                vct = vct_from_list ( lst , *args ) 
+                return opers.__in_list__ ( fun , vct )
+            #
+            return opers.__in_list__ ( fun , lst )    
+        _in_list_ . __doc__ += opers.__in_list__ .  __doc__ 
+
     # 'yields'
     if hasattr ( opers , '__yields__' ) :
         def _yields_ ( s ) :
@@ -1054,6 +1083,7 @@ def decorateFunctionOps ( funcs , opers ) :
         if _monitor_         : fun . __monitor__         = _monitor_   #
         if _equal_to_        : fun . __equal_to__        = _equal_to_  #
         if _in_range_        : fun . __in_range__        = _in_range_  #
+        if _in_list_         : fun . __in_list__         = _in_list_   #
         
         # functional part:
         if _yields_          : fun . __yields__          = _yields_           #

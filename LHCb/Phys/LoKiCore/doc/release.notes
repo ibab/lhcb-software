@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.176 2010-02-24 15:42:24 cattanem Exp $ 
+! $Id: release.notes,v 1.177 2010-03-07 18:10:50 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,37 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2010-03-07 - Vanya Belyaev
+
+ - add the helper function 
+
+       in_list         ( the typical usage:  " in_list ( PID , [11, 13] ) ")
+
+  Decorate properly equality and non-equality, now one can do :
+         
+      ODIN_RUN == [1,2,3,4]
+
+      ODIN_RUN != [1,2,3,4]
+
+      in_range ( 20 , ODIN_RUN , 3425 ) 
+     ~in_range ( 20 , ODIN_RUN , 3425 ) 
+
+      in_list  ( ODIN_RUN , [1,2,3,4] ) 
+     ~in_list  ( ODIN_RUN , [1,2,3,4] ) 
+
+      in_list  ( ODIN_RUN ,  1,2,3,4  ) 
+     ~in_list  ( ODIN_RUN ,  1,2,3,4  ) 
+        
+ - re-code the lines for creation of STL-containers form python lists
+   the generic function is: 
+
+       vct_from_list 
+
+ - cmt/requirements 
+
+       version increment to v9r12 
+
 
 ! =========================== LoKiCore v9r11 2010-02-24 =======================
 ! 2010-02-13 - Vanya Belyaev

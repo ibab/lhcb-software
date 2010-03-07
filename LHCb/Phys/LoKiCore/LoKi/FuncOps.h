@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.25 2009-12-06 18:20:55 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.26 2010-03-07 18:10:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -65,11 +65,14 @@ namespace LoKi
       static Cut __eq__     ( const Func&  fun1 , 
                               const unsigned int fun2 ) { return fun1 == fun2 ; }
       //
-      static Cut __eq__     ( const Func&                fun1 , 
-                              const std::vector<double>& fun2 ) 
+      static Cut __eq__     ( const Func&                     fun1 , 
+                              const std::vector<double>&      fun2 ) 
       { return fun1 == fun2 ; }
-      static Cut __eq__     ( const Func&                fun1 , 
-                              const std::vector<int>&    fun2 ) 
+      static Cut __eq__     ( const Func&                      fun1 , 
+                              const std::vector<int>&          fun2 ) 
+      { return fun1 == fun2 ; }
+      static Cut __eq__     ( const Func&                      fun1 , 
+                              const std::vector<unsigned int>& fun2 ) 
       { return fun1 == fun2 ; }
       //
       static Cut __ne__     ( const Func&  fun1 , 
@@ -81,11 +84,14 @@ namespace LoKi
       static Cut __ne__     ( const Func&  fun1 , 
                               const unsigned int fun2 ) { return fun1 != fun2 ; }
       //
-      static Cut __ne__     ( const Func&                fun1 , 
-                              const std::vector<double>& fun2 ) 
+      static Cut __ne__     ( const Func&                      fun1 , 
+                              const std::vector<double>&       fun2 ) 
       { return fun1 != fun2 ; }
-      static Cut __ne__     ( const Func&                fun1 , 
-                              const std::vector<int>&    fun2 ) 
+      static Cut __ne__     ( const Func&                      fun1 , 
+                              const std::vector<int>&          fun2 ) 
+      { return fun1 != fun2 ; }
+      static Cut __ne__     ( const Func&                      fun1 , 
+                              const std::vector<unsigned int>& fun2 ) 
       { return fun1 != fun2 ; }
       //
       static Fun __add__    ( const Func&  fun1 , 
@@ -288,11 +294,14 @@ namespace LoKi
       static Cut __equal_to__ ( const Func&   fun  , 
                                 const Func&   fun1 ) { return fun == fun1 ; }
       //
-      static Cut __equal_to__ ( const Func&                fun1 , 
-                                const std::vector<double>& fun2 ) 
+      static Cut __equal_to__ ( const Func&                      fun1 , 
+                                const std::vector<double>&       fun2 ) 
       { return fun1 == fun2 ; }
-      static Cut __equal_to__ ( const Func&                fun1 , 
-                                const std::vector<int>&    fun2 ) 
+      static Cut __equal_to__ ( const Func&                      fun1 , 
+                                const std::vector<int>&          fun2 ) 
+      { return fun1 == fun2 ; }
+      static Cut __equal_to__ ( const Func&                      fun1 , 
+                                const std::vector<unsigned int>& fun2 ) 
       { return fun1 == fun2 ; }
       // ======================================================================
       // InRange 
@@ -326,6 +335,19 @@ namespace LoKi
       {
         return LoKi::inRange ( low , fun , high ) ;
       }
+      // ======================================================================
+      // InList 
+      static Cut __in_list__ ( const Func&                      fun  , 
+                               const std::vector<double>&       fun2 ) 
+      { return fun == fun2 ; }
+      // InList 
+      static Cut __in_list__ ( const Func&                      fun  , 
+                               const std::vector<int>&          fun2 ) 
+      { return fun == fun2 ; }
+      // InList 
+      static Cut __in_list__ ( const Func&                      fun  , 
+                               const std::vector<unsigned int>& fun2 ) 
+      { return fun == fun2 ; }
       // ======================================================================
     } ;
     // ========================================================================
