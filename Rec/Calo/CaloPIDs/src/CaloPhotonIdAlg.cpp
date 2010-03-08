@@ -1,4 +1,4 @@
-// $Id: CaloPhotonIdAlg.cpp,v 1.1 2010-03-08 01:31:34 odescham Exp $
+// $Id: CaloPhotonIdAlg.cpp,v 1.2 2010-03-08 13:11:45 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -131,9 +131,9 @@ StatusCode CaloPhotonIdAlg::initialize() {
   std::string seed = m_seed     ? "true"  : "false";
   std::string line = m_extrapol ? "true"  : "false";
   std::string neig = m_neig     ? "true" : "false";
-  m_toCalo->_setProperty("Seed", seed );
-  m_toCalo->_setProperty("PhotonLine", line);
-  m_toCalo->_setProperty("AddNeighbors",neig);
+  m_toCalo->_setProperty("Seed", seed ).ignore();
+  m_toCalo->_setProperty("PhotonLine", line).ignore();
+  m_toCalo->_setProperty("AddNeighbors",neig).ignore();
   
 
   // Check data consistency
