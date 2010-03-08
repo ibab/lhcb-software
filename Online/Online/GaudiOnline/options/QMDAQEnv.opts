@@ -1,0 +1,14 @@
+#pragma print on
+
+QMDAQEnv.SrcTestPort=45198;
+QMDAQEnv.DestTestPort=45144;
+
+
+QMDAQEnv.IPSrc = {
+  "192.169.11.80", "vetellc30", "",
+  "192.169.10.3", "tttell03", "",
+  "192.169.12.4", "ottella04", "",
+  "192.169.9.5", "mutellc05", "",
+  "192.169.14.4", "r1ukl104", ""
+
+};        // IP addresses of the data sources (TELL1, UKL1, ODIN)  
