@@ -1,4 +1,4 @@
-// $Id: NeutralProtoPAlg.cpp,v 1.21 2010-03-08 01:46:40 odescham Exp $
+// $Id: NeutralProtoPAlg.cpp,v 1.22 2010-03-08 13:16:43 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -97,9 +97,9 @@ StatusCode NeutralProtoPAlg::initialize(){
   // Spd/Prs matching based on CaloHypo2Calo :
   m_toCalo = tool<ICaloHypo2Calo>("CaloHypo2Calo", "CaloHypo2Calo" , this );
   // Warning : the algorithm settings overwrite the tool settings #TODO delegate to a dedicated tool ALL cluster parameters
-  m_toCalo->_setProperty("Seed", "false" );
-  m_toCalo->_setProperty("PhotonLine", "true");
-  m_toCalo->_setProperty("AddNeighbors","false");
+  m_toCalo->_setProperty("Seed", "false" ).ignore();
+  m_toCalo->_setProperty("PhotonLine", "true").ignore();
+  m_toCalo->_setProperty("AddNeighbors","false").ignore();
 
 
   return sc;
