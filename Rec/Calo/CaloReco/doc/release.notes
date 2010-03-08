@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.170 2010-03-08 01:19:38 odescham Exp $
+! $Id: release.notes,v 1.171 2010-03-08 09:42:22 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2010-03-08 - Marco Cattaneo
+ - Remove build time dependency on CaloPIDs from Configuration.py
 
 ! 2010-03-08 - Olivier Deschamps
  - Configurables : 

@@ -9,7 +9,7 @@ Configurable for Calorimeter Reconstruction
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $"
 # =============================================================================
 __all__ = (
     'HltCaloRecoConf'     ,
@@ -34,8 +34,6 @@ from Reconstruction           import ( clusterReco    ,
                                        electronReco   ,
                                        mergedPi0Reco  ) 
 
-from Configurables            import CaloDigitConf
-from Configurables            import CaloPIDsConf
 from Configurables            import GaudiSequencer
 
 import logging
@@ -110,6 +108,7 @@ class CaloRecoConf(LHCbConfigurableUser):
     }
     
     ## used configurables 
+    from Configurables import CaloDigitConf
     __used_configurables__ = (
         (CaloDigitConf,None) ,
         )
@@ -357,6 +356,7 @@ class CaloProcessor( CaloRecoConf ):
         }
     
     ## used configurables 
+    from Configurables import CaloPIDsConf
     __used_configurables__ = (
         (CaloPIDsConf,None ),
         )
