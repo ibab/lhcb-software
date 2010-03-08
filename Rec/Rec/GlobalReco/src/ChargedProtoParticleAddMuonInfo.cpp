@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoParticleAddMuonInfo
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleAddMuonInfo.cpp,v 1.6 2010-03-08 01:46:40 odescham Exp $
+ * $Id: ChargedProtoParticleAddMuonInfo.cpp,v 1.7 2010-03-08 21:51:08 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
@@ -132,7 +132,7 @@ void ChargedProtoParticleAddMuonInfo::updateMuon( LHCb::ProtoParticle * proto ) 
   // reference to MuonPID object
   proto->setMuonPID( muonPID );
 
-  // check Loose IsMuon flag - Reject non-muons
+  // check Loose IsMuonLoose flag - Reject non-muons
   if ( !muonPID->IsMuonLoose() ) 
   {
     if ( msgLevel(MSG::VERBOSE) )
