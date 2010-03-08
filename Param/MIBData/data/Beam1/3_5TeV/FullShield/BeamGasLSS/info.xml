@@ -2,7 +2,7 @@
   <name>Beam Gas LSS 3.5TeV Beam 1</name>
   <desc>Beam gas from long straight section at 3.5TeV for Beam 1</desc>
   <beam>1</beam>
-  <plane>-1000</plane>
+  <plane>-2100</plane>
   <scale>2.9780e19</scale>
   <energy>3.5e6</energy>
   <misc>H2 equivalent measured gas map:

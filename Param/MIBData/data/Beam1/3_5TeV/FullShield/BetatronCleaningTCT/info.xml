@@ -2,7 +2,7 @@
   <name>Betatron Cleaning Inefficiency 3.5TeV Beam 1</name>
   <desc>Betatron cleaning inefficiecies resulting in proton losses on the TCTH at 3.5TeV for Beam 1</desc>
   <beam>1</beam>
-  <plane>-1000</plane>
+  <plane>-2100</plane>
   <scale>6.0116e17</scale>
   <energy>3.5e6</energy>
   <misc>Horizontal halo, beam lifetime 30h
