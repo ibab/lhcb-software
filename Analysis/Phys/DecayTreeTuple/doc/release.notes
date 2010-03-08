@@ -3,6 +3,9 @@
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+
+!========================== DecayTreeTuple v3r2 2010-03-08 ================
+
 ! 2010-03-04 - Yuehong Xie
 - TupleToolPID : Add hasRich, hasCalo, hasMuona nd isMuon
 
