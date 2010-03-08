@@ -1,4 +1,4 @@
-// $Id: BlindVertexFitter.cpp,v 1.1.1.1 2008-02-20 15:48:44 ibelyaev Exp $
+// $Id: BlindVertexFitter.cpp,v 1.2 2010-03-08 11:35:35 ibelyaev Exp $
 // ============================================================================
 // Incldue files 
 // ============================================================================
@@ -18,7 +18,23 @@
 // ============================================================================
 class BlindVertexFitter : public LoKi::VertexFitter 
 {
+  // ==========================================================================
   friend class ToolFactory<BlindVertexFitter> ;
+  // ==========================================================================
+public:
+  // ==========================================================================
+  virtual StatusCode initialize() 
+  {
+    StatusCode sc = LoKi::VertexFitter::initialize () ;
+    if ( sc.isFailure() ) { return sc ; }
+    //
+    warning() 
+      << "'BlindVertexFitter' is the obsolete name, to be removed *soon*. "
+      << "Please, use 'LoKi::VertexFitter' instead" 
+      << endmsg ;
+    return StatusCode::SUCCESS ;
+  }
+  // ==========================================================================
 protected:
   // ==========================================================================
   /// standard constructor 

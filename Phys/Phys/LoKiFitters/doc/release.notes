@@ -1,9 +1,24 @@
-! $Id: release.notes,v 1.26 2010-01-29 12:45:08 jpalac Exp $ 
+! $Id: release.notes,v 1.27 2010-03-08 11:35:35 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiFitters
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
+
+! 2010-03-08 - Vanya Belyaev
+
+ - src/VertexFitter.cpp
+
+    fix the stupid bug/type in service name 
+
+ - src/BlindVertexFitter.cpp
+
+    add warning message at initialization 
+
+ - cmt/requirements 
+
+     version increment to v2r4 
+
 
 !========================== LoKiFitters v2r3 2010-01-29 ===================
 

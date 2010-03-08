@@ -1,4 +1,4 @@
-// $Id: VertexFitter.cpp,v 1.7 2010-01-04 16:50:56 ibelyaev Exp $
+// $Id: VertexFitter.cpp,v 1.8 2010-03-08 11:35:35 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -497,6 +497,7 @@ LoKi::VertexFitter::VertexFitter
   declareInterface <IVertexFit>        ( this ) ;
   declareInterface <IParticleCombiner> ( this ) ;
   declareInterface <IParticleReFitter> ( this ) ;
+  //
   declareProperty ( "MaxIterations"    , m_nIterMaxI   ) ;
   declareProperty ( "MaxIterForAdd"    , m_nIterMaxII  ) ;
   declareProperty ( "MaxIterForRemove" , m_nIterMaxIII ) ;
@@ -515,7 +516,7 @@ StatusCode LoKi::VertexFitter::initialize()
   svc<IService>( "LoKiSvc" , true ) ;
   
   // get particle property service 
-  m_ppSvc = svc<LHCb::IParticlePropertySvc> ( "LHCb::PareticlePpropertySvc" , true );
+  m_ppSvc = svc<LHCb::IParticlePropertySvc> ( "LHCb::ParticlePropertySvc" , true );
   // validate  
   sc = m_longLived.validate ( m_ppSvc ) ;
   if ( sc.isFailure() ) 
