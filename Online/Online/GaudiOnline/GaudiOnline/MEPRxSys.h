@@ -44,6 +44,7 @@ namespace MEPRxSys {
   int send_msg_arb_source(int raw_socket, u_int8_t proto, u_int32_t srcAddr, u_int32_t destAddr, void *buf, int len, u_int16_t datagramID);
   int rx_poll(int sockfd, int msec);
   int open_sock_udp(std::string &errmsg, int port);
+  int send_udp(int udp_socket, u_int16_t port, u_int32_t dstAddr, void* buf, int len);
  
 	
 //MSF: usleep is a (unprotected!!!!!) define by DIM !!!!
