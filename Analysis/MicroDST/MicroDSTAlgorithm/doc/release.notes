@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.91 2010-03-05 19:00:18 jpalac Exp $
+! $Id: release.notes,v 1.92 2010-03-08 11:32:54 jpalac Exp $
 !==============================================================================
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !==============================================================================
+
+!========================== MicroDSTAlgorithm v3r10 2010-03-08 ================
 
 ! 2010-03-05 - Juan Palacios
  - src/CopyParticles.h, src/CopyPrimaryVertices.h
