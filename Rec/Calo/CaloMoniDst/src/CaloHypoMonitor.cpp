@@ -1,4 +1,4 @@
-// $Id: CaloHypoMonitor.cpp,v 1.12 2009-12-11 17:07:40 odescham Exp $
+// $Id: CaloHypoMonitor.cpp,v 1.13 2010-03-08 01:38:28 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -90,7 +90,7 @@ protected:
 
     m_multMax = 150;
     m_multBin =  50;
-    
+    setInputData( LHCb::CaloAlgUtils::CaloHypoLocation( name , context() ) );
   }
   /// destructor (virtual and protected)
   virtual ~CaloHypoMonitor() {}

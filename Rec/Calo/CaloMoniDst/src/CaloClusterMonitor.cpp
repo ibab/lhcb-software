@@ -1,4 +1,4 @@
-// $Id: CaloClusterMonitor.cpp,v 1.12 2009-08-05 17:40:24 ibelyaev Exp $
+// $Id: CaloClusterMonitor.cpp,v 1.13 2010-03-08 01:38:28 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -77,6 +77,7 @@ protected:
 
     m_multMax = 200;
     m_multBin = 100;
+    setInputData( LHCb::CaloAlgUtils::CaloClusterLocation( name, context() ) );
 
   }
   /// destructor (virtual and protected)

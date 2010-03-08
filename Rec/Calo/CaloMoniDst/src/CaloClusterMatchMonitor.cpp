@@ -1,4 +1,4 @@
-// $Id: CaloClusterMatchMonitor.cpp,v 1.10 2009-04-24 13:44:08 cattanem Exp $
+// $Id: CaloClusterMatchMonitor.cpp,v 1.11 2010-03-08 01:38:28 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -76,9 +76,9 @@ protected:
    */
   CaloClusterMatchMonitor( const std::string &name, ISvcLocator *pSvcLocator )
     : CaloMoniAlg( name, pSvcLocator )
-  { setInputData( "Rec/Calo/ClusterMatch" );
-    addToInputs( LHCb::CaloClusterLocation::Ecal );
-    addToInputs( LHCb::CaloClusterLocation::EcalSplit );
+  { setInputData( LHCb::CaloAlgUtils::CaloIdLocation("ClusterMatch",context() ) );
+    addToInputs( LHCb::CaloAlgUtils::CaloClusterLocation(name,context() ) );
+    addToInputs( LHCb::CaloAlgUtils::CaloSplitClusterLocation( context() ) );
   }
   /// destructor (virtual and protected)
   virtual ~CaloClusterMatchMonitor() {};
@@ -135,7 +135,9 @@ StatusCode CaloClusterMatchMonitor::execute()
         hFill1( "5", relation->weight() );
       }
     } // end of loop over clusters
-  } // end of loop over conainers
+    counter("Monitor " + *input) += clusters->size();
+  } // end of loop over containers
+  counter("Monitor " + inputData() )+= table->relations().size();
   return StatusCode::SUCCESS;
 }
 

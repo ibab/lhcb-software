@@ -1,9 +1,8 @@
-// $Id: CaloMoniAlg.cpp,v 1.12 2010-02-06 15:30:23 odescham Exp $
+// $Id: CaloMoniAlg.cpp,v 1.13 2010-03-08 01:38:28 odescham Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-
 // local
 #include "CaloMoniAlg.h"
 
@@ -89,20 +88,11 @@ CaloMoniAlg::CaloMoniAlg( const std::string& name,
   m_areas.push_back("Inner");  
   
   //set default detectorName
-  int index = name.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
-  m_detData = name.substr( index, 4 ); 
-  if ( name.substr(index,3) == "Prs" ) {
-    m_detData = "Prs";
+  m_detData = LHCb::CaloAlgUtils::CaloNameFromAlg( name );
+  if ( m_detData == "Prs" ) 
     m_energyMax = 300.* Gaudi::Units::MeV;
-  }  
-  if ( name.substr(index,3) == "Spd" ) {
-    m_detData = "Spd";
-    m_energyMax = 10.* Gaudi::Units::MeV;
-  }
-  if( m_detData != "Ecal" && 
-     m_detData != "Hcal" &&  
-     m_detData != "Prs"  &&  
-     m_detData != "Spd")m_detData = "Ecal";
+  if ( m_detData == "Spd" ) 
+    m_energyMax = 10.* Gaudi::Units::MeV;  
   
 }
 //=============================================================================

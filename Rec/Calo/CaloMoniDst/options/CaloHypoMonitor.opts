@@ -8,7 +8,7 @@ CaloHypoMon.Members    += { "CaloHypoMonitor/ElectronMon"
 ResolvedPi0Mon.PhotonPtFilter = 500.*MeV;
 
 // Moning of different Hypotheses
-ElectronMon.Input    = "Rec/Calo/Electrons";
-PhotonMon.Input      = "Rec/Calo/Photons";
-MergedPi0Mon.Input   = "Rec/Calo/MergedPi0s";
-SplitPhotonMon.Input = "Rec/Calo/SplitPhotons";
+//ElectronMon.Input    = "Rec/Calo/Electrons";
+//PhotonMon.Input      = "Rec/Calo/Photons";
+//MergedPi0Mon.Input   = "Rec/Calo/MergedPi0s";
+//SplitPhotonMon.Input = "Rec/Calo/SplitPhotons";

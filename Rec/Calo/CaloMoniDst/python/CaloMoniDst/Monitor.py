@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Monitor.py,v 1.2 2009-09-01 11:11:20 ibelyaev Exp $
+# $Id: Monitor.py,v 1.3 2010-03-08 01:38:28 odescham Exp $
 # =============================================================================
 ## The major building blocks of Calorimeter Monitoring
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,7 +11,7 @@ The major building blocks of Calorimeter Monitoring
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'digitsMoni'     , 
@@ -123,11 +123,13 @@ def clustersMoni ( context ) :
                      context                 )
     
     alg1.histoList = [ "1", "2" , "3" , "4" , "7" , "8" ,  "9" ]
-    
-    alg1.Input = 'Rec/Calo/EcalClusters'
-    alg2.Input = 'Rec/Calo/EcalSplitClusters'
 
-    alg.Members = [ alg1 , alg2 ]
+#    delegate to CaloAlgUtils  
+#    alg1.Input = 'Rec/Calo/EcalClusters'
+#    alg2.Input = 'Rec/Calo/EcalSplitClusters'
+
+#    alg.Members = [ alg1 , alg2 ]
+    alg.Members = [ alg1 ] ## do not monitor splitCluster so far
     
     setTheProperty ( alg , 'Context' , context )
     
@@ -161,11 +163,11 @@ def hyposMoni ( context ) :
                      'MergedPi0Mon'   ,
                      context          )
 
-
-    alg1.Input = 'Rec/Calo/Electrons'
-    alg2.Input = 'Rec/Calo/Photons'
-    alg3.Input = 'Rec/Calo/SplitPhotons'
-    alg4.Input = 'Rec/Calo/MergedPi0s'
+    # Delegate I/O to CaloAlgUtils
+#    alg1.Input = 'Rec/Calo/Electrons'
+#    alg2.Input = 'Rec/Calo/Photons'
+#    alg3.Input = 'Rec/Calo/SplitPhotons'
+#    alg4.Input = 'Rec/Calo/MergedPi0s'
 
 
     alg1 .histoList = [ "1", "2" , "3" , "7" , "8" , "9" , "10" , "11" ]
@@ -208,6 +210,27 @@ def pi0sMoni ( context ) :
     return alg
 
 # =============================================================================
+## Define pi0 monitoring
+def protosMoni ( context ) :
+    """    
+    Define protoElectron monitoring
+    
+    """
+    
+    from Configurables import  CaloProtoElectronMonitor
+
+    alg = getAlgo  ( CaloProtoElectronMonitor   ,
+                     'ProtoElectronMon' ,
+                     context          )
+    
+
+    alg.histoList = [ "All" ]
+
+    setTheProperty ( alg , 'Context' , context )
+    
+    return alg
+
+# =============================================================================
 ## define CaloPIDs monitoring
 def pidsMoni ( context ) :
     """
@@ -235,15 +258,13 @@ def pidsMoni ( context ) :
                      'CaloPIDMon'             ,
                      context                  )
 
-
-    alg1.Input  =   'Rec/Calo/ClusterMatch'
-    alg1.Inputs = [ 'Rec/Calo/EcalClusters' ]
-    
-    alg2.Input  =   'Rec/Calo/ElectronMatch'
-    alg2.Inputs = [ 'Rec/Calo/Electrons'    ]
-    
-    alg3.Input  =   'Rec/Calo/BremMatch'
-    alg3.Inputs = [ 'Rec/Calo/Photons'      ]
+    ## Delegate I/O to CaloAlgUtils
+#    alg1.Input  =   'Rec/Calo/ClusterMatch'
+#    alg1.Inputs = [ 'Rec/Calo/EcalClusters' ]    
+#    alg2.Input  =   'Rec/Calo/ElectronMatch'
+#    alg2.Inputs = [ 'Rec/Calo/Electrons'    ]    
+#    alg3.Input  =   'Rec/Calo/BremMatch'
+#    alg3.Inputs = [ 'Rec/Calo/Photons'      ]
     
     
     alg.Members = [ alg1 , alg2 , alg3 , alg4 ]

@@ -9,7 +9,7 @@ Confurable for Calorimeter Monitoring
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__  = (
     'CaloMoniDstConf',
@@ -30,7 +30,9 @@ from CaloMoniDst.Monitor      import ( digitsMoni     ,
                                        clustersMoni   , 
                                        hyposMoni      ,
                                        pi0sMoni       ,
-                                       pidsMoni       )
+                                       pidsMoni       ,
+                                       protosMoni
+                                       )
 
 # =============================================================================
 ## @class CaloMoniDstConf
@@ -55,7 +57,9 @@ class CaloMoniDstConf(LHCbConfigurableUser):
                                    'Clusters' ,
                                    'Hypos'    ,
                                    'Pi0s'     ,
-                                   'PIDs'     ] ##
+                                   'Protos'   ,
+                                   'PIDs'     
+                                   ] ##
         }
     
     ## configure monitoring of Digits
@@ -105,6 +109,15 @@ class CaloMoniDstConf(LHCbConfigurableUser):
         
         return cmp
 
+    ## configure pi0 monitoring 
+    def protos ( self ) :
+        """
+        Configure Protos monitoring
+        """
+        cmp = protosMoni ( self.Context )
+        
+        return cmp
+
     
     ## configure PID monitoring 
     def pids ( self ) :
@@ -142,6 +155,7 @@ class CaloMoniDstConf(LHCbConfigurableUser):
         if 'Clusters'   in monList : addAlgs ( seq , self.clusters   () ) 
         if 'Hypos'      in monList : addAlgs ( seq , self.hypos      () )
         if 'Pi0s'       in monList : addAlgs ( seq , self.pi0s       () )
+        if 'Protos'     in monList : addAlgs ( seq , self.protos       () )
         if 'PIDs'       in monList : addAlgs ( seq , self.pids       () )
         
         setTheProperty ( seq , 'Context'     , self.Context )

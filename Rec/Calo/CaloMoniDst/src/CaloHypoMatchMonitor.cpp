@@ -1,4 +1,4 @@
-// $Id: CaloHypoMatchMonitor.cpp,v 1.9 2009-04-24 13:44:08 cattanem Exp $
+// $Id: CaloHypoMatchMonitor.cpp,v 1.10 2010-03-08 01:38:28 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -77,7 +77,12 @@ protected:
    *  @param   pSvcLocator pointer to service locator
    */
   CaloHypoMatchMonitor( const std::string &name, ISvcLocator *pSvcLocator )
-    : CaloMoniAlg( name, pSvcLocator ) {}
+    : CaloMoniAlg( name, pSvcLocator ) {
+
+    setInputData( LHCb::CaloAlgUtils::CaloIdLocation(name,context() ) );
+    addToInputs( LHCb::CaloAlgUtils::CaloHypoLocation(name,context() ) );
+   
+}
   /// destructor (virtual and protected)
   virtual ~CaloHypoMatchMonitor() {}
 private:
@@ -132,7 +137,9 @@ StatusCode CaloHypoMatchMonitor::execute()
       { hFill1( "5", relation->weight() );
       }
     } // end of loop over hypos 
+    counter("Monitor " + *input) += hypos->size();
   } // end of loop over containers 
+  counter("Monitor " + inputData() )+= table->relations().size();
   return StatusCode::SUCCESS;
 }
 

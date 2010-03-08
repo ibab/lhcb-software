@@ -54,10 +54,7 @@ protected:
     
     declareProperty( "Spectrum", m_spectrum = false); // activate spectrum per channel histogramming
 
-    if(detData()     == "Ecal" ){setInputData( LHCb::CaloDigitLocation::Ecal );}
-    else if(detData()== "Hcal" ){setInputData( LHCb::CaloDigitLocation::Hcal );}    
-    else if(detData()== "Prs"  ){setInputData( LHCb::CaloDigitLocation::Prs  );}
-    else if(detData()== "Spd"  ){setInputData( LHCb::CaloDigitLocation::Spd  );}
+    setInputData( LHCb::CaloAlgUtils::CaloDigitLocation( name ) );
   }
   /// destructor (virtual and protected)
   virtual ~CaloDigitMonitor() {}
@@ -104,6 +101,10 @@ StatusCode CaloDigitMonitor::initialize(){
   hBook2(  "7", "Energy-weighted digit position x vs y " + inputData(),m_xMin, m_xMax, m_xBin, m_yMin, m_yMax, m_yBin);
 
   info() << detData() << " digits from " << inputData() << endmsg;
+
+
+
+
   
   return StatusCode::SUCCESS;
 }

@@ -8,6 +8,7 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "CaloUtils/Calo2Dview.h"
+#include "CaloUtils/CaloAlgUtils.h"
 #include "Kernel/CaloCellID.h"
 #include "GaudiKernel/HashMap.h"
 #include "AIDA/IAxis.h"
@@ -80,12 +81,14 @@ public:
   inline void fillCounters(std::string unit){
     //info() << "filling " << unit << " " << m_count <<  endmsg  ;
     fill(h1[unit], m_count , 1);
+    counter("Monitor " + inputData() ) += m_count;
     if( m_splitSides ){
       for(unsigned int i = 0;i < 2 ;++i){
         std::string side = (i==0) ? "C-side" : "A-side";
         if( m_scount[i] == 0 )continue;
         GaudiAlg::HistoID id(side + "/"+unit);
         fill(h1[id], m_scount[i] , 1);
+        counter("Monitor (" + side +")" + inputData() ) += m_scount[i];
       }    
     }
     else if( m_split ){
@@ -95,6 +98,7 @@ public:
         if( !validArea( area )||  m_mcount[i] == 0)continue;
         GaudiAlg::HistoID id(area + "/"+unit);
         fill(h1[id], m_mcount[i] , 1);
+        counter("Monitored (" + area +")" + inputData() ) += m_mcount[i];
       }    
     }
   }
