@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.413 2010-03-08 18:11:10 pkoppenb Exp $
+! $Id: release.notes,v 1.414 2010-03-08 18:12:48 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -9,10 +9,10 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v25r2 2010-03-08 =======================
+
 ! 2010-03-08 - Patrick Koppenburg
  - Add a bankKiller to remove Hlt banks if they are already in the data
-
-!========================== DaVinci v25r2 2010-03-08 =======================
 
 ! 2010-03-04 - Juan Palacios
  - DaVinci configurable:
@@ -22,7 +22,6 @@
 ! 2010-03-01 - Patrick Koppenburg
  - Enforce Simulation = True for DataType MC09 and DC06
 
->>>>>>> 1.412
 ! 2010-02-25 - Patrick Koppenburg
  - Changed default value of Simulation to false
 
