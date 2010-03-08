@@ -5,6 +5,8 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!==================== StrippingSelections v1r17 2010-03-08 ====================
+
 ! 2010-03-08 - Jacopo Nardulli
 - Change names in the B2DXStripping NoErrors file: python/StrippingSelections/StrippingB2DPiNoErrors.py 
   They were conflicting with the names in the python/StrippingSelections/StrippingB2DPi.py file	  
