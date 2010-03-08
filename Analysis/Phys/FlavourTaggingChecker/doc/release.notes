@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.78 2010-03-03 16:49:12 musy Exp $
+! $Id: release.notes,v 1.79 2010-03-08 11:26:59 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
 
+!========================== FlavourTaggingChecker v5r2 2010-03-08 ============
 
 ! 2010-02-11 - Marco Musy
   - synchronize ntuple content with the output of BTaggingTool
