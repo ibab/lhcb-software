@@ -1,7 +1,7 @@
 """
 High level configuration tools for Gauss
 """
-__version__ = "$Id: Configuration.py,v 1.27 2010-03-01 13:09:25 robbep Exp $"
+__version__ = "$Id: Configuration.py,v 1.28 2010-03-08 17:37:20 silviam Exp $"
 __author__  = "Gloria Corti <Gloria.Corti@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -68,7 +68,7 @@ class Gauss(LHCbConfigurableUser):
        ,"DetectorSim"       : {"VELO":['Velo','PuVeto'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1','Rich2'], "CALO":['Spd','Prs','Ecal','Hcal'], "MUON":['Muon'],"MAGNET": True }
        ,"DetectorMoni"      : {"VELO":['Velo','PuVeto'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1','Rich2'], "CALO":['Spd','Prs','Ecal','Hcal'], "MUON":['Muon'],"MAGNET": True }
        ,"SpilloverPaths"    : []
-       ,"PhysicsList"       : "LHEP"
+       ,"PhysicsList"       : {"Em":'Opt1', "Hadron":'LHEP', "GeneralPhys":True, "LHCbPhys":True}
        ,"DeltaRays"         : True
        ,"Phases"            : ["Generator","Simulation"] # The Gauss phases to include in the SIM file
        ,"BeamMomentum"      : 5.0*SystemOfUnits.TeV
@@ -95,7 +95,7 @@ class Gauss(LHCbConfigurableUser):
        ,"DetectorSim"    : """ Dictionary specifying the detectors to simulated (should be in geometry): """
        ,"DetectorMoni"   : """ Dictionary specifying the detectors to monitor (should be simulated) :"""
        ,'SpilloverPaths' : """ Spillover paths to fill: [] means no spillover, otherwise put ['Next', 'Prev', 'PrevPrev'] """
-       ,'PhysicsList'    : """ Name of physics list to be passed ['LHEP','QGSP'] """
+       ,'PhysicsList'    : """ Name of physics modules to be passed 'Em':['Std','Opt1,'Opt2','Opt3'], 'GeneralPhys':[True,False], 'Hadron':['LHEP','QGSP','QGSP_BERT','QGSP_BERT_HP','FTFP_BERT'], 'LHCbPhys': [True,False] """
        ,"DeltaRays"      : """ Simulation of delta rays enabled (default True) """
        ,'Phases'         : """ List of phases to run (Generator, Simulation) """
        ,'Output'         : """ Output: [ 'NONE', 'SIM'] (default 'SIM') """
@@ -697,25 +697,11 @@ class Gauss(LHCbConfigurableUser):
          """
          Set up the configuration for the G4 settings: physics list, cuts and actions
          """
-
-         physList = self.getProp("PhysicsList")
-         ## Physics list and cuts
-         giga = GiGa()
-         giga.addTool( GiGaPhysListModular("ModularPL") , name="ModularPL" ) 
-         giga.PhysicsList = "GiGaPhysListModular/ModularPL"
-         ecut = 5.0 * SystemOfUnits.mm
-         if not self.getProp("DeltaRays"):
-             ecut = 10000.0 * SystemOfUnits.m
-         print 'Ecut value =', ecut
-         giga.ModularPL.CutForElectron = ecut
-         giga.ModularPL.CutForPositron = 5.0 * SystemOfUnits.mm 
-         giga.ModularPL.CutForGamma    = 5.0 * SystemOfUnits.mm
-
-         ## Check here that the physics list is allowed
-         physListOpts = "$GAUSSOPTS/PhysList-"+physList+".opts"
-         importOptions( physListOpts )
-
+         ## setup the Physics list and the productions cuts
+         self.setPhysList()
+         
          ## Mandatory G4 Run action
+         giga = GiGa()
          giga.addTool( GiGaRunActionSequence("RunSeq") , name="RunSeq" )
          giga.RunAction = "GiGaRunActionSequence/RunSeq"
          giga.RunSeq.addTool( TrCutsRunAction("TrCuts") , name = "TrCuts" )
@@ -1227,6 +1213,102 @@ class Gauss(LHCbConfigurableUser):
             VeloPostMC09 = 2
 
         return VeloPostMC09
+    ##
+    ##
+    def setPhysList( self ):
+
+        giga = GiGa()
+        giga.addTool( GiGaPhysListModular("ModularPL") , name="ModularPL" ) 
+        giga.PhysicsList = "GiGaPhysListModular/ModularPL"
+        gmpl = giga.ModularPL
+
+        ## set production cuts 
+        ecut = 5.0 * SystemOfUnits.mm
+        if not self.getProp("DeltaRays"):
+            ecut = 10000.0 * SystemOfUnits.m
+        print 'Ecut value =', ecut
+        gmpl.CutForElectron = ecut
+        gmpl.CutForPositron = 5.0 * SystemOfUnits.mm 
+        gmpl.CutForGamma    = 5.0 * SystemOfUnits.mm
+
+        ## set up the physics list
+        hadronPhys = self.getProp('PhysicsList')['Hadron']
+        emPhys     = self.getProp('PhysicsList')['Em']
+        lhcbPhys   = self.getProp('PhysicsList')['LHCbPhys']
+        genPhys    = self.getProp('PhysicsList')['GeneralPhys']
+
+        def gef(name):
+            import Configurables
+            return getattr(Configurables, "GiGaExtPhysics_%s_" % name)
+        def addConstructor(template, name):
+            gmpl.addTool(gef(template), name = name)
+            gmpl.PhysicsConstructors.append(getattr(gmpl, name))
+        
+        ## --- EM physics: 
+        if  (emPhys == "Opt1"):
+            addConstructor("G4EmStandardPhysics_option1", "EmOpt1Physics")
+        elif(emPhys == "Opt2"):
+            addConstructor("G4EmStandardPhysics_option2", "EmOpt2Physics")
+        elif(emPhys == "Opt3"):
+            addConstructor("G4EmStandardPhysics_option3", "EmOpt3Physics")
+        elif(emPhys == "Std"):
+            addConstructor("G4EmStandardPhysics", "EmPhysics")
+        else:
+            raise RuntimeError("Unknown Em PhysicsList chosen ('%s')"%emPhys)
+            
+        ## --- general  physics (common to all PL): 
+        if (genPhys == True):
+        ## Decays
+            addConstructor("G4DecayPhysics", "DecayPhysics" )
+        ## EM physics: Synchroton Radiation & gamma,electron-nuclear Physics
+            addConstructor("G4EmExtraPhysics", "EmExtraPhysics")
+        ## Hadron physics: Hadron elastic scattering
+            addConstructor("G4HadronElasticPhysics", "ElasticPhysics")
+        ## Ions physics
+            addConstructor("G4IonPhysics", "IonPhysics")
+        elif (genPhys == False):
+            log.warning("The general physics (Decays, hadron elastic, ion ...) is disabled")
+        else:        
+            raise RuntimeError("Unknown setting for GeneralPhys PhysicsList chosen ('%s')"%genPhys)
+
+        ## --- Hadron physics:
+        if  (hadronPhys == "LHEP"):
+            addConstructor("HadronPhysicsLHEP", "LHEPPhysics")
+        elif(hadronPhys == "QGSP"):
+            addConstructor("HadronPhysicsQGSP", "QGSPPhysics")
+            addConstructor("G4QStoppingPhysics", "QStoppingPhysics")
+            addConstructor("G4NeutronTrackingCut", "NeutronTrkCut")
+        elif(hadronPhys == "QGSP_BERT"):
+            addConstructor("HadronPhysicsQGSP_BERT", "QGSP_BERTPhysics")
+            addConstructor("G4QStoppingPhysics", "QStoppingPhysics")
+            addConstructor("G4NeutronTrackingCut", "NeutronTrkCut")
+        elif(hadronPhys == "QGSP_BERT_HP"):
+            addConstructor("HadronPhysicsQGSP_BERT_HP", "QGSP_BERT_HPPhysics")
+            addConstructor("G4QStoppingPhysics", "QStoppingPhysics")
+            # overwrite the defaut value of the HighPrecision property of the 
+            # G4HadronElasticPhysics constructor
+            gmpl.ElasticPhysics.HighPrecision = True
+            #gmpl.ElasticPhysics.OutputLevel = VERBOSE
+        elif(hadronPhys == "FTFP_BERT"):
+            addConstructor("HadronPhysicsFTFP_BERT", "FTFP_BERTPhysics")
+            addConstructor("G4QStoppingPhysics", "QStoppingPhysics")
+            addConstructor("G4NeutronTrackingCut", "NeutronTrkCut")
+        else:
+            raise RuntimeError("Unknown Hadron PhysicsList chosen ('%s')"%hadronPhys)
+
+
+        ## --- LHCb specific physics: 
+        if  (lhcbPhys == True):
+        ## LHCb specific RICH processes
+            gmpl.PhysicsConstructors.append("GiGaPhysConstructorOp")
+            gmpl.PhysicsConstructors.append("GiGaPhysConstructorHpd")
+        ## LHCb particles unknown to default Geant4
+            gmpl.PhysicsConstructors.append("GiGaPhysUnknownParticles")
+        elif (lhcbPhys == False):
+            log.warning("The lhcb-related physics (RICH processed, UnknowParticles) is disabled")
+        else:        
+            raise RuntimeError("Unknown setting for LHCbPhys PhysicsList chosen ('%s')"%lhcbPhys)
+
     ##
     ##
     ## Apply the configuration

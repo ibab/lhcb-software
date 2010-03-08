@@ -4,6 +4,17 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2010-03-08 - Silvia Miglioranzi
+ - Modified the Configurable "PhysicsList". Previously only 'LHEP' 
+   and 'QGSP' options were used to steer the entire PhysicsList. 
+   Now more options are available to construct the physics to be simulated:
+   'Em'         :['Std','Opt1,'Opt2','Opt3']
+   'GeneralPhys':[True,False]
+   'Hadron'     :['LHEP','QGSP','QGSP_BERT','QGSP_BERT_HP','FTFP_BERT']
+   'LHCbPhys'   :[True,False]
+
+   The PhysList-*.opts have now been replaced by a method inside Configuration.py.
+
 ! 2010-03-01 - Patrick Robbe
  - Configurable.py: transmit beam settings to Pythia8 when used as a 
    production tool.
