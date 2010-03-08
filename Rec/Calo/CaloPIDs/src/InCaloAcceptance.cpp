@@ -1,4 +1,4 @@
-// $Id: InCaloAcceptance.cpp,v 1.9 2009-08-05 17:35:33 ibelyaev Exp $
+// $Id: InCaloAcceptance.cpp,v 1.10 2010-03-08 01:31:34 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -53,7 +53,8 @@ InCaloAcceptance::InCaloAcceptance
   declareProperty ( "UseFiducial" , m_fiducial ) ;
   //
   _setProperty     ( "Extrapolator" , 
-                     "TrackMasterExtrapolator/Master" ) ; 
+                     "TrackRungeKuttaExtrapolator/Master" ) ; 
+  //                     "TrackMasterExtrapolator/Master" ) ; 
   //
 }
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: CaloSingleGammaTool.cpp,v 1.5 2010-01-13 12:57:52 cattanem Exp $
+// $Id: CaloSingleGammaTool.cpp,v 1.6 2010-03-08 01:31:34 odescham Exp $
 // ===========================================================================
 // Include files
 // GaudiKernel
@@ -113,31 +113,52 @@ double CaloSingleGammaTool::likelihood(const LHCb::CaloHypo* hypo )  const
 
   double lhood=0.;
 
-  if( 0 == hypo ) Exception( " const CaloHypo* points to NULL! " );
+  if( 0 == hypo ){
+    Warning("CaloHypo points to NULL",StatusCode::SUCCESS ).ignore();
+    counter("Null hypo")+=1;
+    return -999999.;
+  }
+
 
   if( hypo->clusters().size() ==1 ) {
     
     const SmartRef<LHCb::CaloCluster> cluster=*(hypo->clusters()).begin();
     
-    if( cluster->entries().empty() ) Exception( " Corresponding CaloCluster is empty! " );
+    if( cluster->entries().empty() ){ 
+      Warning("Empty entries",StatusCode::SUCCESS ).ignore();
+      counter("Empty entries")+=1;
+      return -999999.;
+    }
+
     
     LHCb::CaloCluster::Entries::const_iterator iseed = 
       LHCb::ClusterFunctors::
       locateDigit( cluster->entries().begin() ,  
                    cluster->entries().end  () ,  
                    LHCb::CaloDigitStatus::SeedCell  ) ;
-    if( cluster->entries().end() == iseed ) Exception( " The Seed Cell is not found! ");
+    if( cluster->entries().end() == iseed ){ 
+      Warning("Empty entries",StatusCode::SUCCESS ).ignore();
+      counter("Empty entries")+=1;
+      return -999999.;
+    }
+
+
     ///
     const LHCb::CaloDigit* seed = iseed->digit();
-    if( 0 == seed ) Exception( " The Seed Digit points to NULL! ");
+    if( 0 == seed ) {
+      Warning("NULL seed",StatusCode::SUCCESS ).ignore();
+      counter("Null seed")+=1;
+      return -999999.;
+    }
+
     //
     
     const LHCb::CaloPosition *pos = hypo->position() ;
     
     // fix by V.B.  Many thanks to G.Corti . 
-    if( 0 == pos ) 
-    {
-      Warning(" likelihood(): CaloPosition* points to NULL").ignore();
+    if( 0 == pos ){
+      Warning(" likelihood(): CaloPosition* points to NULL",StatusCode::SUCCESS).ignore();
+      counter(" Null CaloPosition*")+=1;
       return lhood ;
     }
     
@@ -205,6 +226,28 @@ double CaloSingleGammaTool::likelihood(const LHCb::CaloHypo* hypo )  const
 double CaloSingleGammaTool::operator() (const LHCb::CaloHypo* hypo ) const 
 { 
   return likelihood(hypo);
+};
+
+double CaloSingleGammaTool::likelihood(const LHCb::ProtoParticle* pp )  const
+{
+  // Get the relevant information - basic checks
+  
+  if( 0 == pp ){
+      Warning("NULL ProtoP",StatusCode::SUCCESS ).ignore();
+      counter("Null protop")+=1;
+      return -999999.;
+  }
+
+  SmartRef<LHCb::CaloHypo> hypo;
+  SmartRefVector<LHCb::CaloHypo>::const_iterator hypolist;
+  for (hypolist=pp->calo().begin(); hypolist!=pp->calo().end(); hypolist++){
+    if((*hypolist)->hypothesis()==LHCb::CaloHypo::Photon) { hypo = (*hypolist) ; }
+  }
+  return likelihood(hypo);
+}
+double CaloSingleGammaTool::operator() (const LHCb::ProtoParticle* pp ) const 
+{ 
+  return likelihood(pp);
 };
 
 

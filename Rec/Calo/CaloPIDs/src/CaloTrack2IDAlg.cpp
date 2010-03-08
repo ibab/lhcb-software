@@ -1,4 +1,4 @@
-// $Id: CaloTrack2IDAlg.cpp,v 1.6 2009-08-21 16:49:45 odescham Exp $
+// $Id: CaloTrack2IDAlg.cpp,v 1.7 2010-03-08 01:31:34 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -59,7 +59,7 @@ CaloTrack2IDAlg::CaloTrack2IDAlg
 
    // context-dependent default track container 
   m_inputs.clear();
-  m_inputs.push_back(  LHCb::CaloAlgUtils::TrackLocation( context() ) );
+  m_inputs = LHCb::CaloAlgUtils::TrackLocations( context() ) ;
 } ;
 // ============================================================================
 /// standard algorithm initilization
@@ -147,10 +147,6 @@ StatusCode CaloTrack2IDAlg::execute ()
     { energy += link->to() / Gaudi::Units::GeV ; }
   }
   
+  counter (Gaudi::Utils::toString( m_inputs )+" ==> "+ m_output ) += table->i_relations().size();
   return StatusCode::SUCCESS ;
 } ;
-// ============================================================================
-
-// ============================================================================
-// The END 
-// ============================================================================

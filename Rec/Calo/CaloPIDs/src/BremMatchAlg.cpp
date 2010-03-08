@@ -1,4 +1,4 @@
-// $Id: BremMatchAlg.cpp,v 1.10 2009-08-21 16:49:45 odescham Exp $
+// $Id: BremMatchAlg.cpp,v 1.11 2010-03-08 01:31:33 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -90,8 +90,8 @@ StatusCode BremMatchAlg::execute ()
   put ( table , m_output ) ;
   
   // perform the actual jobs 
-  return doTheJob<LHCb::CaloHypo,Table>( table ) ;
+  StatusCode sc =  doTheJob<LHCb::CaloHypo,Table>( table ) ;
+  counter (Gaudi::Utils::toString( m_tracks )+ "->" 
+            +  Gaudi::Utils::toString( m_calos ) + "=>" + m_output ) += table->i_relations().size() ;
+  return sc;
 } 
-// ============================================================================
-// The END 
-// ============================================================================

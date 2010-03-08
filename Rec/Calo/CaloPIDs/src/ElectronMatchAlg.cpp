@@ -1,8 +1,11 @@
-// $Id: ElectronMatchAlg.cpp,v 1.6 2009-08-21 16:49:45 odescham Exp $
+// $Id: ElectronMatchAlg.cpp,v 1.7 2010-03-08 01:31:34 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2009/08/21 16:49:45  odescham
+// implement generic context-dependent TES I/O
+//
 // Revision 1.5  2009/08/05 17:35:33  ibelyaev
 //  add CaloPIDs configurables
 //
@@ -110,8 +113,8 @@ StatusCode ElectronMatchAlg::execute ()
   put ( table , m_output ) ;
   
   //  perform the actual jobs 
-  return doTheJob<LHCb::CaloHypo,Table>( table ) ;  
+  StatusCode sc =  doTheJob<LHCb::CaloHypo,Table>( table ) ;  
+  counter (Gaudi::Utils::toString( m_tracks )+ "->" 
+            +  Gaudi::Utils::toString( m_calos ) + "=>" + m_output ) += table->i_relations().size() ;
+  return sc;  
 } 
-// ============================================================================
-// The END 
-// ============================================================================

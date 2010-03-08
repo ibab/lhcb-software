@@ -1,8 +1,11 @@
-// $Id: CaloChi22ID.cpp,v 1.5 2009-09-10 10:47:05 odescham Exp $
+// $Id: CaloChi22ID.cpp,v 1.6 2010-03-08 01:31:33 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2009/09/10 10:47:05  odescham
+// add protection + reduce verbosity
+//
 // Revision 1.4  2009/08/21 16:49:45  odescham
 // implement generic context-dependent TES I/O
 //
@@ -50,7 +53,7 @@ CaloChi22ID::CaloChi22ID( const std::string& name,
   declareProperty ( "CutOff" , m_large  ) ;
   // context-dependent default track container 
   m_tracks.clear();
-  m_tracks.push_back(  LHCb::CaloAlgUtils::TrackLocation( context() ) );
+  m_tracks =  LHCb::CaloAlgUtils::TrackLocations( context() ) ;
 } ;
 // ============================================================================
 /// algorithm execution 
@@ -67,6 +70,9 @@ StatusCode CaloChi22ID::execute()
   Table* output = new Table ( input->relations().size() + 10 ) ;
   put ( output , m_output ) ;
   // perform the actual jobs 
-  return doTheJob( input , output ) ;
+  StatusCode sc = doTheJob( input , output ) ;
+  counter (Gaudi::Utils::toString( m_tracks) +  "->" 
+            + m_input + "=>" + m_output) += output->i_relations().size() ;
+  return sc;
 } ;
 // =============================================================================

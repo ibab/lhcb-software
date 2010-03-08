@@ -1,9 +1,34 @@
-! $Id: release.notes,v 1.88 2010-02-15 13:39:10 rlambert Exp $ 
+! $Id: release.notes,v 1.89 2010-03-08 01:31:33 odescham Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
+
+
+
+! 2010-03-08 - Olivier Deschamps
+ - Configurables : 
+   - adapt to changes in CaloKernel/ConfUtils
+   - make all component context-dependent
+   - add few slots (SkipNeutral, SkipCharged )
+   - add new components for neutral PIDs
+
+
+ - options :
+   - clean options (remove obsolete) -> options directory is now empty
+
+ - src :
+   - new algorithm CaloPhotonIdALg : produce <Hypo,Likelihood> relation table -> NeutralProtoPALg
+   - use TrackRungeKuttaExtrapolator by default everywhere
+   - add counters to monitor algorithms I/O 
+
+ - TODO : 
+   - CaloPIDsConf : split the sequence by CaloPIDs technique and add PIDsList configuration (to be synchronized with CaloReclo/Processor)
+
+
+! 2010-02-28 - Olivier Deschamps
+  - PhotonMatchAlg : remove forgotten lines overwritting the context dependent TES I/O
 
 !========================== CaloPIDs v5r4 2010-02-15 =========================
 ! 2009-11-17 - Olivier Deschamps

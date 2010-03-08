@@ -40,7 +40,9 @@ public:
   virtual StatusCode finalize   ();
   virtual const LHCb::CaloHypo::Hypothesis& hypothesis () const ; 
   virtual double operator() (const LHCb::CaloHypo* cluster ) const ;
+  virtual double operator() (const LHCb::ProtoParticle* pp ) const ;
   virtual double likelihood (const LHCb::CaloHypo* hypo ) const ;
+  virtual double likelihood (const LHCb::ProtoParticle* pp ) const ;
   
 
 protected:

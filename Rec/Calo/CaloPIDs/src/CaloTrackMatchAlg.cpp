@@ -1,6 +1,6 @@
-// $Id: CaloTrackMatchAlg.cpp,v 1.4 2009-08-21 16:49:45 odescham Exp $
+// $Id: CaloTrackMatchAlg.cpp,v 1.5 2010-03-08 01:31:34 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -38,7 +38,7 @@ CaloTrackMatchAlg::CaloTrackMatchAlg
   declareProperty ( "Threshold" , m_threshold ) ;
   // context-dependent default track container 
   m_tracks.clear();
-  m_tracks.push_back(  LHCb::CaloAlgUtils::TrackLocation( context() ) );
+  m_tracks = LHCb::CaloAlgUtils::TrackLocations( context() ) ;
 }
 // ============================================================================
 /// standard algorithm itinialization

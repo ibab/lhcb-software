@@ -9,11 +9,12 @@ Configurable for Calorimeter PID
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__   = (
     'HltCaloPIDsConf'     ,
-    'OffLineCaloPIDsConf' 
+    'OffLineCaloPIDsConf' ,
+    'CaloPIDsConf'
     )
 # =============================================================================
 
@@ -47,15 +48,33 @@ class CaloPIDsConf(LHCbConfigurableUser):
         , 'EnablePIDsOnDemand' : False       # enable Reco-On-Demand
         ##
         , 'DataType'           : 'MC09'      # Data type  
+        , 'TrackLocations'     : []          # track locations to be used (default use CaloAlgUtils default)
+        , 'SkipNeutrals'       : False       # skip neutralID (already run in CaloRecoConf by default)
+        , 'SkipCharged'        : False       # skip chargedID 
         }
     
-    ## Configure recontruction of Calo Charged  PIDs 
+    ## Configure recontruction of Calo Charged  PIDs  
     def caloPIDs ( self ) :
         """
         Configure recontruction of Calo Charged  PIDs 
         """
+
+        ## confuse configurable on purpose 
+        _locs = self.getProp ( 'TrackLocations'    ) 
+        _elocs = [] 
+        for l in _locs :
+            if l.find( '/Event/' )  != 0 :
+                l = '/Event/' + l
+            _elocs.append( l )
+
+
+
         cmp = caloPIDs ( self.getProp( 'Context'            )  ,
-                         self.getProp( 'EnablePIDsOnDemand' )  ) 
+                         self.getProp( 'EnablePIDsOnDemand' )  ,
+                         _elocs  ,
+                         self.getProp('SkipNeutrals'),
+                         self.getProp('SkipCharged')
+                         ) 
         log.info ('Configured Calo PIDs           : %s ' % cmp.name()  )
         ##
         return cmp 
@@ -75,6 +94,7 @@ class CaloPIDsConf(LHCbConfigurableUser):
         log.info ( 'Apply Calo PIDs Configuration ')
 
         self.checkConfiguration()
+
         
         pids = self.caloPIDs()
         
@@ -104,10 +124,6 @@ class CaloPIDsConf(LHCbConfigurableUser):
         else:
             hsvc.Input += [ "CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs_DC09_v1.root' TYP='ROOT'" ]
 
-        if hltContext ( self.getProp('Context')  ) : 
-            importOptions("$CALOPIDSROOT/options/HltPhotonPDF.opts")
-        else :
-            importOptions("$CALOPIDSROOT/options/PhotonPDF.opts")
                     
         if self.getProp( 'EnablePIDsOnDemand')  :
             log.info ( printOnDemand () ) 

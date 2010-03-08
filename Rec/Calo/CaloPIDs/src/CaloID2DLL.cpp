@@ -1,8 +1,11 @@
-// $Id: CaloID2DLL.cpp,v 1.9 2010-02-08 17:36:16 dgolubko Exp $
+// $Id: CaloID2DLL.cpp,v 1.10 2010-03-08 01:31:33 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.9 $
+// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.10 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2010/02/08 17:36:16  dgolubko
+// add reading of the DLLs from CondDB
+//
 // Revision 1.8  2009/09/10 10:47:05  odescham
 // add protection + reduce verbosity
 //
@@ -238,6 +241,8 @@ StatusCode CaloID2DLL::execute()
   } ;
   /// MANDATORY: i_sort after i_push 
   table->i_sort() ;
+
+  counter (m_input + "=>" + m_output ) += table->i_relations().size() ;
 
   return StatusCode::SUCCESS;
 } ;

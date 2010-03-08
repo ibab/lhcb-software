@@ -1,8 +1,11 @@
-// $Id: PhotonMatchAlg.cpp,v 1.6 2009-08-21 16:49:45 odescham Exp $
+// $Id: PhotonMatchAlg.cpp,v 1.7 2010-03-08 01:31:34 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2009/08/21 16:49:45  odescham
+// implement generic context-dependent TES I/O
+//
 // Revision 1.5  2009/08/05 17:35:34  ibelyaev
 //  add CaloPIDs configurables
 //
@@ -69,19 +72,6 @@ protected:
     _setProperty ( "Calos"     , Gaudi::Utils::toString ( inputs )   ) ;
     _setProperty ( "Output"    , CaloIdLocation( "ClusterMatch" , context() ) );
     _setProperty ( "Filter"    , CaloIdLocation( "InEcal"    , context() ) );
-
-
-    if( "HLT" == context() ){
-      Inputs inputs = Inputs ( 1 , LHCb::CaloClusterLocation::EcalHlt    ) ;
-      _setProperty ( "Calos"     , Gaudi::Utils::toString ( inputs )     ) ;
-      _setProperty ( "Output"    , LHCb::CaloIdLocation::ClusterMatchHlt ) ;
-      _setProperty ( "Filter"    , LHCb::CaloIdLocation::InEcalHlt       ) ;      
-    }else{      
-      Inputs inputs = Inputs ( 1 , LHCb::CaloClusterLocation::Ecal  ) ;
-      _setProperty ( "Calos"     , Gaudi::Utils::toString ( inputs )  ) ;
-      _setProperty ( "Output"    , LHCb::CaloIdLocation::ClusterMatch ) ;
-      _setProperty ( "Filter"    , LHCb::CaloIdLocation::InEcal       ) ;
-    }
     
     _setProperty ( "Tool"      , "CaloPhotonMatch/PhotonMatch" ) ;
     _setProperty ( "Threshold" , "1000"                        ) ;
@@ -121,8 +111,8 @@ StatusCode PhotonMatchAlg::execute ()
   put ( table , m_output ) ;
   
   // perform the actual jobs 
-  return doTheJob<LHCb::CaloCluster,Table>( table ) ;
+  StatusCode sc = doTheJob<LHCb::CaloCluster,Table>( table ) ;
+  counter (Gaudi::Utils::toString( m_tracks )+ "->"+Gaudi::Utils::toString( m_calos ) 
+           + "=>" + m_output  ) += table->i_relations().size() ;
+  return sc;
 } 
-// ============================================================================
-// The END 
-// ============================================================================

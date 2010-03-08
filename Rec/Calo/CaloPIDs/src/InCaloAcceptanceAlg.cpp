@@ -1,4 +1,4 @@
-// $Id: InCaloAcceptanceAlg.cpp,v 1.8 2009-09-10 10:47:05 odescham Exp $
+// $Id: InCaloAcceptanceAlg.cpp,v 1.9 2010-03-08 01:31:34 odescham Exp $
 // ============================================================================
 // Boost 
 // ============================================================================
@@ -38,7 +38,7 @@ InCaloAcceptanceAlg::InCaloAcceptanceAlg
   declareProperty ( "Tool"        , m_toolName ) ;
   // context-dependent default track container 
   m_inputs.clear();
-  m_inputs.push_back(  LHCb::CaloAlgUtils::TrackLocation( context() ) );
+  m_inputs = LHCb::CaloAlgUtils::TrackLocations( context() ) ;
 }
 // ============================================================================
 // algorithm initialization 
@@ -105,7 +105,8 @@ StatusCode InCaloAcceptanceAlg::execute()
     counter ( "#tracks" ) += nTracks ;
     counter ( "#accept" ) += nAccept ;
     counter ( "#links"  ) += table->i_relations().size() ;
+    counter (Gaudi::Utils::toString(m_inputs) + "=>" + m_output ) += table->i_relations().size() ;
   }
-  
+    
   return StatusCode::SUCCESS ;
 }

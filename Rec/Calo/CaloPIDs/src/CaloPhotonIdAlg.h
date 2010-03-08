@@ -1,58 +1,42 @@
-#ifndef CALOPHOTONESTIMATORTOOL_H
-#define CALOPHOTONESTIMATORTOOL_H 1
+// $Id: CaloPhotonIdAlg.h,v 1.1 2010-03-08 01:31:34 odescham Exp $
+#ifndef CALOPHOTONIDALG_H 
+#define CALOPHOTONIDALG_H 1
+
 // Include files
-// Gaudi
-#include "GaudiAlg/GaudiTool.h"
-// Math
-#include "GaudiKernel/Point3DTypes.h"
-#include "GaudiKernel/Vector3DTypes.h"
-#include "LHCbMath/Line.h"
-#include "LHCbMath/GeomFun.h"
-// CaloInterfaces
-#include "CaloInterfaces/ICaloHypoLikelihood.h"
-// Event
+// from Gaudi
+#include "GaudiAlg/GaudiAlgorithm.h"
+// from LHCb
+#include "CaloUtils/CaloAlgUtils.h"
 #include "Event/Track.h"
-#include "Event/CaloCluster.h"
-// Associator
+#include "CaloUtils/Calo2Track.h"
+#include "CaloInterfaces/ICaloHypo2Calo.h"
+#include "Relations/Relation1D.h"
 #include "Relations/IRelationWeighted.h"
+#include "CaloUtils/ClusterFunctors.h"
+#include "CaloUtils/CaloMomentum.h"
+#include "boost/static_assert.hpp"
 
-/** @class CaloPhotonEstimatorTool CaloPhotonEstimatorTool.h
+/** @class CaloPhotonIdAlg CaloPhotonIdAlg.h
+ *  
  *
- *  Photon Selection Tool
- *  (LHCb 2004-03)
- *
- *  @author Frederic Machefert frederic.machefert@in2p3.fr
- *  @date   2004-15-04
+ *  @author Olivier Deschamps
+ *  @date   2010-02-27
  */
+class CaloPhotonIdAlg : public GaudiAlgorithm {
+public: 
+  /// Standard constructor
+  CaloPhotonIdAlg( const std::string& name, ISvcLocator* pSvcLocator );
 
-// Forward declarations
-class DeCalorimeter   ;
-namespace LHCb {
-  class CaloHypo;
-}
+  virtual ~CaloPhotonIdAlg( ); ///< Destructor
 
-class CaloPhotonEstimatorTool :  public         GaudiTool,
-                                 virtual public ICaloHypoLikelihood{
-public:
-  CaloPhotonEstimatorTool
-  ( const std::string& type   ,
-    const std::string& name   ,
-    const IInterface*  parent );
-
-  virtual ~CaloPhotonEstimatorTool();
-
-  virtual StatusCode initialize ();
-  virtual StatusCode finalize   ();
-  virtual const LHCb::CaloHypo::Hypothesis& hypothesis () const ;
-  
-  virtual double operator() (const LHCb::CaloHypo* hypo ) const ;
-  virtual double likelihood (const LHCb::CaloHypo* hypo ) const ;
-
-  virtual double operator() (const LHCb::ProtoParticle* hypo ) const ;
-  virtual double likelihood (const LHCb::ProtoParticle* hypo ) const ;
-
+  virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
+
+private:
+  double likelihood (const LHCb::CaloHypo* hypo ) const ;
   inline unsigned int bin(const double value,
                           const std::vector<double> vect) const {
     unsigned int index=0;
@@ -60,52 +44,28 @@ protected:
     while ((index<vect.size()) && (value>=vect[ index ])) {index++;}
     return index;
   }
-
   double evalChi2(const LHCb::CaloCluster*) const ;
-  double evalChi2(const LHCb::ProtoParticle*) const ;
-  
-  void evalParam(const LHCb::CaloHypo* ,
-                   double &,
-		   double &,
-		   double &, 
-		   double &,
-		   double &,
-		   unsigned int &) const ;
-					       
-  double evalLikelihood(double ,
-			double ,
-			double ,
-			double ,
-			double ,
-			double ,
-			unsigned int ) const ;				       
+  void evalParam(const LHCb::CaloHypo* ,double &,double &,double &,double &,double &,unsigned int &) const ;					       
+  double evalLikelihood(double ,double ,double ,double ,double ,double ,unsigned int ) const ;				       
  private:
 
-// Detector Information
-  DeCalorimeter *m_detEcal;
-  DeCalorimeter *m_detPrs;
-  DeCalorimeter *m_detSpd;
 
-  std::string m_nameOfECAL;
-  std::string m_nameOfPRS;
-  std::string m_nameOfSPD;
 
-  Gaudi::Plane3D m_planeEcal     ;
-  Gaudi::Plane3D m_planePrs      ;
-  Gaudi::Plane3D m_planeSpd      ;
-
-  // Hypothesis
-  LHCb::CaloHypo::Hypothesis       m_hypothesis;
-
-  // use tracking
-  bool m_tracking;
+  bool m_tracking;   // use tracking
+  bool m_extrapol;
+  bool m_seed;
+  bool m_neig;
   
   // Relations 
-  mutable LHCb::Calo2Track::IClusTrTable*  m_table  ;
   std::string      m_tableLocation ;
+  // 
+  ICaloHypo2Calo* m_toCalo;
 
-//Vertex
-  Gaudi::XYZPoint m_vertex    ;
+
+  std::string m_type;
+  std::vector<std::string> m_inputs;
+  std::string m_output;
+
 
 // Photon Pdf
 
@@ -168,11 +128,6 @@ protected:
   Data                m_backgrSeedData_2     ;
   Data                m_backgrSeedSpdData_2  ;
 
-  bool                m_extrapol;
- };
 
-#endif // CALOPHOTONESTIMATORTOOL_H
-
-
-
-
+};
+#endif // CALOPHOTONIDALG_H
