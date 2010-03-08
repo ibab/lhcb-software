@@ -226,6 +226,7 @@ def decorateFunctionOps ( funcs , opers ) :
     _monitor_   = None 
     _equal_to_  = None 
     _in_range_  = None 
+    _in_list_   = None 
 
     _yields_          = None
     _process_         = None

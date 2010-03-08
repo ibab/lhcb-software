@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.177 2010-03-07 18:10:50 ibelyaev Exp $ 
+! $Id: release.notes,v 1.178 2010-03-08 11:22:17 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2010-03-08 - Vanya Belyaev
+
+ - python/LoKiCore/decorators.py 
+
+    fix a bug 
 
 ! 2010-03-07 - Vanya Belyaev
 
