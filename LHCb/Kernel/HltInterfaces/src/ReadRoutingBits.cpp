@@ -1,4 +1,4 @@
-// $Id: ReadRoutingBits.cpp,v 1.4 2010-03-08 16:10:51 pkoppenb Exp $
+// $Id: ReadRoutingBits.cpp,v 1.5 2010-03-08 16:47:44 pkoppenb Exp $
 // Include files 
 
 #include "Kernel/ReadRoutingBits.h"
@@ -37,10 +37,10 @@ namespace Hlt {
     for ( unsigned int j = relevantMin ; j <= relevantMax ; ++j){
       if ( x[j] ){
         yes.push_back(j); // accepted
-        std::cout << j << " (" << x[j] << ") "  ;
+        //        std::cout << j << " (" << x[j] << ") "  ;
       }
     }
-    std::cout << std::endl ;
+    //    std::cout << std::endl ;
     return yes ;
   };
 //=========================================================================
@@ -65,7 +65,7 @@ namespace Hlt {
     if( LHCb::RawBank::MagicPattern != banks.front()->magic() ) {
       throw GaudiException("Wrong magic in HltRoutingBits","Hlt::readRoutingBits",StatusCode::FAILURE);
     } 
-    std::cout << banks.front()->size() << std::endl ;
+    //    std::cout << banks.front()->size() << std::endl ;
     if (banks.front()->size()!=size*sizeof(unsigned int)) {
       throw GaudiException("RawBank wrong size","Hlt::readRoutingBits",StatusCode::FAILURE);
     }
