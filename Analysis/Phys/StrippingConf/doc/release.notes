@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.48 2010-02-23 14:14:24 jpalac Exp $
+!$Id: release.notes,v 1.49 2010-03-08 13:29:13 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+!========================== StrippingConf v3r0p1 2010-03-08 =================
+
+! 2010-03-08 - Juan Palacios
+ - Remove src/StrippingAlg and src/Strippingcheck, somehow these remained
+   in CVS.
+ - Increase version to v3r0p1
 
 !========================== StrippingConf v3r0 2010-02-23 ===================
 
