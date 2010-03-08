@@ -91,10 +91,12 @@ StatusCode bankKiller::execute() {
       LHCb::RawBank::BankType bankType = LHCb::RawBank::LastType;
       for( unsigned int ibank = 0 ; ibank < (unsigned int) LHCb::RawBank::LastType ; ++ibank){
         bankType = (LHCb::RawBank::BankType) ibank;
-        if( *ityp == LHCb::RawBank::typeName( bankType ) )break;
+        if( *ityp == LHCb::RawBank::typeName( bankType ) ){
+          // kill all banks of this type
+          killBankType( bankType, true );
+          break;
+        }
       }
-      // kill al banks of this type
-      killBankType( bankType, true );
     }
   }
   return StatusCode::SUCCESS;
