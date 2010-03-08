@@ -350,7 +350,6 @@ extern "C" int qmtest_mepinj(int /* ac  */, char** /* av */)  {
   string main_opts = "-main="+groot+"/options/Main.opts";
   string out = "";//"/dev/null";
   string host = RTL::nodeNameShort();
-  Process* p[2] = {0,0};
   ProcessGroup pg;
   const char *injclass[] =CLASS1("MEPInjectorQMTest.opts");
   const char *readclass[] =CLASS1("ReaderSvcQMTest.opts");
