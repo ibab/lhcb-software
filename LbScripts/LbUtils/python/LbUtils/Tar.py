@@ -1,6 +1,7 @@
 """ various function to manipulate tarballs """
 
 from LbUtils.File import copyTree, isFilePathExcluded, copyStat
+from LbUtils.Lock import Lock2
 from LbUtils.Temporary import TempDir
 from LbUtils.Links import fixLinks
 from shutil import copy2
@@ -120,9 +121,16 @@ def openTar(filename, tar_mode="r"):
         pass
     else :
         log.error("No such tar format. Using plain tar uncompressed")
+    lock = Lock2(filename)
+    lock.lock(force=False)
     tarf = tarfile.open(filename, tar_mode)
     
-    return tarf
+    return tarf, lock
+
+def closeTar(tarf, lock, filename=None):
+    tarf.close()
+    lock.unlock()
+
 
 def listTarBallObjects(dirname, pathfilter=None, prefix=None):
     if dirname[-1] != os.sep :
@@ -148,11 +156,11 @@ def updateTarBallFromFilter(srcdirs, filename, pathfilter=None,
     if not os.path.exists(filename) :
         createTarBallFromFilter(srcdirs, filename, pathfilter, prefix, dereference, update=False)
     else :
-        tarf = openTar(filename, tar_mode="r")
+        tarf, lock = openTar(filename, tar_mode="r")
         tmpdir = TempDir("updateTarballFromFilter")
         tarf.extractall(tmpdir.getName())
         extracted_objs = [ x[1] for x in listTarBallObjects(tmpdir.getName()) ]
-        tarf.close()
+        closeTar(tarf, lock, filename)
         tobeupdated = False
         if prefix :
             dstprefix = os.path.join(tmpdir.getName(), prefix)
@@ -182,13 +190,13 @@ def createTarBallFromFilter(srcdirs, filename, pathfilter=None,
                             prefix=None, dereference=False, update=False):
     log = logging.getLogger()
     if not update :
-        tarf = openTar(filename, tar_mode="w")
+        tarf, lock = openTar(filename, tar_mode="w")
         keep_tar = False
         for dirname in srcdirs :
             for fullo, relo in listTarBallObjects(dirname, pathfilter, prefix) :
                 keep_tar = True
                 tarf.add(fullo, relo, recursive=False)
-        tarf.close()
+        closeTar(tarf, lock, filename)
         if not keep_tar :
             log.warning("%s file is empty. Removing it." % filename)
             os.remove(filename)

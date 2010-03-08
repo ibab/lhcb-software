@@ -1,3 +1,8 @@
+2010-03-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Lock.py: added new lock functions 
+	* python/LbUtils/Tar.py: added locking at tarball creation.
+
 2010-02-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/createTarBall: Removed.

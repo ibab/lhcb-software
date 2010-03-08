@@ -92,3 +92,167 @@ class Lock(object):
                 ret = os.system(c)
                 if ret != 0:
                     return ret
+                
+                
+##########################################################
+# A set of object for providing simple, cross-platform file locking
+
+class Lock2Error(IOError):
+    """The generic error for locking - it is a subclass of ``IOError``."""
+
+class Lock2(object):
+    """A simple file lock, compatible with windows and Unixes."""
+
+    def __init__(self, filename, timeout=5, step=0.1):
+        """
+        Create a ``Lock`` object on file ``filename``
+        
+        ``timeout`` is the time in seconds to wait before timing out, when
+        attempting to acquire the lock.
+        
+        ``step`` is the number of seconds to wait in between each attempt to
+        acquire the lock.
+        
+        """
+        self.timeout = timeout
+        self.step = step
+        self.filename = filename
+        self.locked = False
+
+    def lock(self, force=True):
+        """
+        Lock the file for access by creating a directory of the same name (plus
+        a trailing underscore).
+        
+        The file is only locked if you use this class to acquire the lock
+        before accessing.
+        
+        If ``force`` is ``True`` (the default), then on timeout we forcibly
+        acquire the lock.
+        
+        If ``force`` is ``False``, then on timeout a ``Lock2Error`` is raised.
+        """
+        if self.locked:
+            raise Lock2Error('%s is already locked' % self.filename)
+        t = 0
+        name = self._mungedname()
+        while t < self.timeout:
+            t += self.step
+            try:
+                if os.path.isdir(name):
+                    raise os.error
+                else:
+                    os.mkdir(name)
+            except os.error, err:
+                time.sleep(self.step)
+            else:
+                self.locked = True
+                return
+        if force:
+            self.locked = True
+        else:
+            raise Lock2Error('Failed to acquire lock on %s' % self.filename)
+
+    def unlock(self, ignore=True):
+        """
+        Release the lock.
+        
+        If ``ignore`` is ``True`` and removing the lock directory fails, then
+        the error is surpressed. (This may happen if the lock was acquired
+        via a timeout.)
+        """
+        if not self.locked:
+            raise Lock2Error('%s is not locked' % self.filename)
+        self.locked = False
+        try:
+            os.rmdir(self._mungedname())
+        except os.error, err:
+            if not ignore:
+                raise Lock2Error('unlocking appeared to fail - %s' %
+                    self.filename)
+
+    def _mungedname(self):
+        """
+        Override this in a subclass if you want to change the way ``Lock2`` 
+        creates the directory name.
+        """
+        return self.filename + '_'
+
+    def __del__(self):
+        """Auto unlock when object is deleted."""
+        if self.locked:
+            self.unlock()
+
+class Lock2File(Lock2):
+    """
+    A file like object with an exclusive lock, whilst it is open.
+    
+    The lock is provided by the ``Lock2`` class, which creates a directory
+    with the same name as the file (plus a trailing underscore), to indicate
+    that the file is locked.
+    
+    This is simple and cross platform, with some limitations :
+    
+        * Unusual process termination could result in the directory
+          being left.
+        * The process acquiring the lock must have permission to create a
+          directory in the same location as the file.
+        * It only locks the file against other processes that attempt to
+          acquire a lock using ``Lock2File`` or ``Lock2``.
+    """
+
+    def __init__(self, filename, mode='r', bufsize=-1, timeout=5, step=0.1,
+        force=True):
+        """
+        Create a file like object that is locked (using the ``Lock2`` class)
+        until it is closed.
+        
+        The file is only locked against another process that attempts to
+        acquire a lock using ``Lock2`` (or ``Lock2File``).
+        
+        The lock is released automatically when the file is closed.
+        
+        The filename, mode and bufsize arguments have the same meaning as for
+        the built in function ``open``.
+        
+        The timeout and step arguments have the same meaning as for a ``Lock2``
+        object.
+        
+        The force argument has the same meaning as for the ``Lock2.lock`` method.
+        
+        A ``Lock2File`` object has all the normal ``file`` methods and
+        attributes.
+        """
+        Lock2.__init__(self, filename, timeout, step)
+        # may raise an error if lock is ``False``
+        self.lock(force)
+        # may also raise an error
+        self._file = open(filename, mode, bufsize)
+
+    def close(self, ignore=True):
+        """
+        close the file and release the lock.
+        
+        ignore has the same meaning as for ``Lock2.unlock``
+        """
+        self._file.close()
+        self.unlock(ignore)
+
+    def __getattr__(self, name):
+        """delegate appropriate method/attribute calls to the file."""
+        return getattr(self._file, name)
+
+    def __setattr__(self, name, value):
+        """Only allow attribute setting that don't clash with the file."""
+        if not '_file' in self.__dict__:
+            Lock2.__setattr__(self, name, value)
+        elif hasattr(self._file, name):
+            return setattr(self._file, name, value)
+        else:
+            Lock2.__setattr__(self, name, value)
+
+    def __del__(self):
+        """Auto unlock (and close file) when object is deleted."""
+        if self.locked:
+            self.unlock()
+            self._file.close()
