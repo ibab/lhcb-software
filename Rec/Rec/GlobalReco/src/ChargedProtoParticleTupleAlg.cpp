@@ -5,7 +5,7 @@
  * Implemenrtation file for algorithm ChargedProtoParticleTupleAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleTupleAlg.cpp,v 1.7 2009-09-29 17:20:36 jonrob Exp $
+ * $Id: ChargedProtoParticleTupleAlg.cpp,v 1.8 2010-03-08 21:52:24 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-15
@@ -101,14 +101,14 @@ StatusCode ChargedProtoParticleTupleAlg::execute()
     sc = sc && tuple->column( "TrackHistory",    track->history()    );
 
     // rich
-    //const LHCb::RichPID * rpid = proto->richPID();
-    LHCb::RichPID tmpRPID;
+    static LHCb::RichPID tmpRPID;
     tmpRPID.setPidResultCode( static_cast<int>(proto->info(LHCb::ProtoParticle::RichPIDStatus,0)) );
     sc = sc && tuple->column( "RichDLLe",      proto->info ( LHCb::ProtoParticle::RichDLLe,  0 ) );
     sc = sc && tuple->column( "RichDLLmu",     proto->info ( LHCb::ProtoParticle::RichDLLmu, 0 ) );
     sc = sc && tuple->column( "RichDLLpi",     proto->info ( LHCb::ProtoParticle::RichDLLpi, 0 ) );
     sc = sc && tuple->column( "RichDLLk",      proto->info ( LHCb::ProtoParticle::RichDLLk,  0 ) );
-    sc = sc && tuple->column( "RichDLLp",      proto->info ( LHCb::ProtoParticle:: RichDLLp,  0 ) );
+    sc = sc && tuple->column( "RichDLLp",      proto->info ( LHCb::ProtoParticle::RichDLLp,  0 ) );
+    //sc = sc && tuple->column( "RichDLLbt",     proto->info ( LHCb::ProtoParticle::RichDLLbt, 0 ) );
     sc = sc && tuple->column( "RichUsedAero",  tmpRPID.usedAerogel()  );
     sc = sc && tuple->column( "RichUsedR1Gas", tmpRPID.usedRich1Gas() );
     sc = sc && tuple->column( "RichUsedR2Gas", tmpRPID.usedRich2Gas() );
@@ -119,12 +119,14 @@ StatusCode ChargedProtoParticleTupleAlg::execute()
     sc = sc && tuple->column( "RichAbovePrThres", tmpRPID.protonHypoAboveThres() );
 
     // muon
-    //const LHCb::MuonPID * mpid = proto->muonPID();
+    static LHCb::MuonPID tmpMPID;
+    tmpMPID.setStatus( static_cast<int>(proto->info(LHCb::ProtoParticle::MuonPIDStatus,0)) );
     sc = sc && tuple->column( "MuonBkgLL",    proto->info ( LHCb::ProtoParticle::MuonBkgLL, 0 ) );
     sc = sc && tuple->column( "MuonMuLL",     proto->info ( LHCb::ProtoParticle::MuonMuLL,  0 ) );
     sc = sc && tuple->column( "MuonNShared",  proto->info ( LHCb::ProtoParticle::MuonNShared, 0 ) );
-    sc = sc && tuple->column( "MuonIsMuon",   proto->hasInfo( LHCb::ProtoParticle::MuonPIDStatus ) );
-    sc = sc && tuple->column( "MuonInAcc",    proto->info ( LHCb::ProtoParticle::InAccMuon, false ) );
+    sc = sc && tuple->column( "MuonIsLooseMuon", tmpMPID.IsMuonLoose() );
+    sc = sc && tuple->column( "MuonIsMuon",      tmpMPID.IsMuon() );
+    sc = sc && tuple->column( "MuonInAcc",  proto->info ( LHCb::ProtoParticle::InAccMuon, false ) );
 
     // calo
     sc = sc && tuple->column( "InAccSpd",   proto->info ( LHCb::ProtoParticle::InAccSpd,  false ) );
