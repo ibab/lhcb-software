@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.89 2010-03-08 01:31:33 odescham Exp $ 
+! $Id: release.notes,v 1.90 2010-03-08 01:43:08 odescham Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
@@ -20,6 +20,7 @@
 
  - src :
    - new algorithm CaloPhotonIdALg : produce <Hypo,Likelihood> relation table -> NeutralProtoPALg
+      -> remove obsolete CaloPhotonEstimatorTool and CaloSingleGammaTool
    - use TrackRungeKuttaExtrapolator by default everywhere
    - add counters to monitor algorithms I/O 
 
