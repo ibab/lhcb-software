@@ -1,4 +1,4 @@
-// $Id: ICaloHypo2Calo.h,v 1.3 2009-04-16 16:08:44 odescham Exp $
+// $Id: ICaloHypo2Calo.h,v 1.4 2010-03-08 01:51:02 odescham Exp $
 #ifndef ICALOHYPO2CALO_H 
 #define ICALOHYPO2CALO_H 1
 
@@ -14,7 +14,7 @@
 #include "GaudiKernel/IAlgTool.h"
 // forward declaration
 
-static const InterfaceID IID_ICaloHypo2Calo ( "ICaloHypo2Calo", 1, 1 );
+static const InterfaceID IID_ICaloHypo2Calo ( "ICaloHypo2Calo", 1, 2 );
 
 /** @class ICaloHypo2Calo ICaloHypo2Calo.h
  *  
@@ -47,6 +47,7 @@ public:
   virtual int multiplicity(LHCb::CaloCluster  fromCluster, std::string toCalo)=0;
   virtual int multiplicity(LHCb::CaloHypo   fromHypo     , std::string toCalo)=0;
   virtual int multiplicity()=0;
+  virtual StatusCode _setProperty(const std::string&, const std::string&)=0;
 
 protected:
 
