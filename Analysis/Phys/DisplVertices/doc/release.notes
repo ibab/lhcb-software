@@ -5,6 +5,8 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+!==================== Phys/DisplVertices v6r2 2010-03-08 =====================
+
 ! 2010-03-03 - Neal Gauvin
  - Fix important bug in DisplVertices
 
