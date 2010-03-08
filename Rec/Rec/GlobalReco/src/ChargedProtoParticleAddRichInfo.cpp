@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoParticleAddRichInfo
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleAddRichInfo.cpp,v 1.2 2009-09-03 11:09:22 jonrob Exp $
+ * $Id: ChargedProtoParticleAddRichInfo.cpp,v 1.3 2010-03-08 01:46:40 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
@@ -88,6 +88,7 @@ StatusCode ChargedProtoParticleAddRichInfo::execute()
     updateRICH(*iProto);
 
   }
+  counter(m_richPath + " ==> " + m_protoPath )+= protos->size();
 
   return StatusCode::SUCCESS;
 }

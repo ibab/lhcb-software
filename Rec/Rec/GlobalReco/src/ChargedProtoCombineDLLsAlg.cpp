@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.22 2009-09-03 11:09:22 jonrob Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.23 2010-03-08 01:46:40 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -171,6 +171,7 @@ StatusCode ChargedProtoCombineDLLsAlg::execute()
     }
 
   } // loop over protos
+  counter("CombineDLL ==> " + m_protoPath )+= protos->size();
 
   return StatusCode::SUCCESS;
 }

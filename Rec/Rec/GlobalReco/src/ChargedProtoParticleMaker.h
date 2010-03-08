@@ -5,7 +5,7 @@
  * Header file for algorithm ChargedProtoParticleMaker
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleMaker.h,v 1.1 2009-08-29 20:37:19 jonrob Exp $
+ * $Id: ChargedProtoParticleMaker.h,v 1.2 2010-03-08 01:46:40 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
@@ -54,8 +54,8 @@ private: // data
   /// Location of the ProtoParticles in the TES
   std::string m_protoPath;
 
-  /// Location in TES of input Tracks
-  std::string m_tracksPath;
+  /// Locations in TES of input Tracks
+  std::vector<std::string> m_tracksPath;
 
   /// Track selector type
   std::string m_trSelType;

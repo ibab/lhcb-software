@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoParticleAddSpdInfo
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleAddSpdInfo.cpp,v 1.1 2009-08-29 20:37:18 jonrob Exp $
+ * $Id: ChargedProtoParticleAddSpdInfo.cpp,v 1.2 2010-03-08 01:46:40 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
@@ -39,11 +39,9 @@ ChargedProtoParticleAddSpdInfo( const std::string& name,
   using namespace LHCb::CaloIdLocation;
   using namespace LHCb::CaloAlgUtils;
 
-  m_protoPath   = PathFromContext( context() ,
-                                   LHCb::ProtoParticleLocation::Charged ,
-                                   LHCb::ProtoParticleLocation::HltCharged );
-  m_inSpdPath   = PathFromContext( context() , InSpd        , InSpdHlt        );
-  m_spdEPath    = PathFromContext( context() , SpdE         , SpdEHlt         );
+  m_protoPath   = LHCb::ProtoParticleLocation::Charged ;
+  m_inSpdPath   = PathFromContext( context() , InSpd  );
+  m_spdEPath    = PathFromContext( context() , SpdE   );
 
   declareProperty("ProtoParticleLocation"      , m_protoPath       );
   declareProperty("InputInSpdLocation"         , m_inSpdPath       );
@@ -83,6 +81,7 @@ StatusCode ChargedProtoParticleAddSpdInfo::execute()
     // replace the muon information
     addSpd(*iProto);
   }
+  counter("SpdPIDs("+context()+") ==> " + m_protoPath )+= protos->size();
 
   return StatusCode::SUCCESS;
 }

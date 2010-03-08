@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoParticleMaker
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleMaker.cpp,v 1.2 2009-09-03 11:09:22 jonrob Exp $
+ * $Id: ChargedProtoParticleMaker.cpp,v 1.3 2010-03-08 01:46:40 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
@@ -31,15 +31,16 @@ ChargedProtoParticleMaker::ChargedProtoParticleMaker( const std::string& name,
 {
 
   // context specific locations
+  m_tracksPath.clear();
   if ( context() == "HLT" || context() == "Hlt" )
   {
-    m_tracksPath = LHCb::TrackLocation::HltForward;
+    m_tracksPath.push_back(LHCb::TrackLocation::HltForward);
     m_protoPath  = LHCb::ProtoParticleLocation::HltCharged;
     m_trSelType  = "TrackSelector";
   }
   else
   {
-    m_tracksPath = LHCb::TrackLocation::Default;
+    m_tracksPath.push_back(LHCb::TrackLocation::Default);
     m_protoPath  = LHCb::ProtoParticleLocation::Charged;
     m_trSelType  = "DelegatingTrackSelector";
   }
@@ -78,18 +79,6 @@ StatusCode ChargedProtoParticleMaker::initialize()
 //=============================================================================
 StatusCode ChargedProtoParticleMaker::execute()
 {
-  // Load the Track objects (manditory - should be there for each event)
-  if ( !exist<LHCb::Tracks>(m_tracksPath) )
-  {
-    setFilterPassed(false);
-    return Warning( "No Tracks at '"+m_tracksPath+"'", StatusCode::SUCCESS );
-  }
-  const LHCb::Tracks * tracks = get<LHCb::Tracks>( m_tracksPath );
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "Successfully loaded " << tracks->size()
-            << " Tracks from " << m_tracksPath << endmsg;
-  }
 
   // ProtoParticle container
   LHCb::ProtoParticles * protos = NULL;
@@ -108,45 +97,60 @@ StatusCode ChargedProtoParticleMaker::execute()
     put ( protos, m_protoPath );
   }
 
-  // Loop over tracks
-  for ( LHCb::Tracks::const_iterator iTrack = tracks->begin();
-        iTrack != tracks->end(); ++iTrack )
-  {
-
-    // Select tracks
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << "Trying Track " << (*iTrack)->key() << endmsg;
-    if ( !m_trSel->accept(**iTrack) ) continue;
-    if ( msgLevel(MSG::VERBOSE) )
-    {
-      verbose() << " -> Track selected " << (*iTrack)->key() << endmsg;
-      verbose() << " -> Track type " << (*iTrack)->type() << endmsg;
-      verbose() << " -> Track flag " << (*iTrack)->flag() << endmsg;
-      verbose() << " -> Track charge " << (*iTrack)->charge() << endmsg;
+  // Loop over tracks container
+  setFilterPassed(false);
+  for(std::vector<std::string>::const_iterator c = m_tracksPath.begin() ; m_tracksPath.end() != c ; ++ c){
+    const std::string loc = *c;
+    // Load the Track objects (manditory - should be there for each event)
+    if ( !exist<LHCb::Tracks>(loc) ){
+      Warning( "No Tracks at '"+loc+"'", StatusCode::SUCCESS ).ignore();
+      continue;
     }
-
-    // Make a proto-particle
-    LHCb::ProtoParticle* proto = new LHCb::ProtoParticle();
-
-    // Insert into container, with same key as Track
-    protos->insert( proto, (*iTrack)->key() );
-
-    // Set track reference
-    proto->setTrack( *iTrack );
-
-    // Add minimal track info
-    proto->addInfo( LHCb::ProtoParticle::TrackChi2PerDof, (*iTrack)->chi2PerDoF() );
-    proto->addInfo( LHCb::ProtoParticle::TrackNumDof,     (*iTrack)->nDoF()       );
-    proto->addInfo( LHCb::ProtoParticle::TrackHistory,    (*iTrack)->history()    );
-    proto->addInfo( LHCb::ProtoParticle::TrackType,       (*iTrack)->type()       );
-
-    if ( msgLevel(MSG::VERBOSE) )
+    setFilterPassed(true);
+    const LHCb::Tracks * tracks = get<LHCb::Tracks>( loc  );
+    if ( msgLevel(MSG::DEBUG) )debug() << "Successfully loaded " << tracks->size() << " Tracks from " << loc << endmsg;  
+    
+    int count = 0;
+    // Loop over tracks
+    for ( LHCb::Tracks::const_iterator iTrack = tracks->begin();
+          iTrack != tracks->end(); ++iTrack )
     {
-      verbose() << " -> Created ProtoParticle : " << *proto << endmsg;
-    }
 
+      // Select tracks
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << "Trying Track " << (*iTrack)->key() << endmsg;
+      if ( !m_trSel->accept(**iTrack) ) continue;
+      if ( msgLevel(MSG::VERBOSE) )
+      {
+        verbose() << " -> Track selected " << (*iTrack)->key() << endmsg;
+        verbose() << " -> Track type " << (*iTrack)->type() << endmsg;
+        verbose() << " -> Track flag " << (*iTrack)->flag() << endmsg;
+        verbose() << " -> Track charge " << (*iTrack)->charge() << endmsg;
+      }
+      
+      // Make a proto-particle
+      LHCb::ProtoParticle* proto = new LHCb::ProtoParticle();
+      
+      // Insert into container, with same key as Track
+      protos->insert( proto, (*iTrack)->key() );
+      
+      // Set track reference
+      proto->setTrack( *iTrack );
+      
+      // Add minimal track info
+      proto->addInfo( LHCb::ProtoParticle::TrackChi2PerDof, (*iTrack)->chi2PerDoF() );
+      proto->addInfo( LHCb::ProtoParticle::TrackNumDof,     (*iTrack)->nDoF()       );
+      proto->addInfo( LHCb::ProtoParticle::TrackHistory,    (*iTrack)->history()    );
+      proto->addInfo( LHCb::ProtoParticle::TrackType,       (*iTrack)->type()       );
+      
+      if ( msgLevel(MSG::VERBOSE) )
+      {
+        verbose() << " -> Created ProtoParticle : " << *proto << endmsg;
+      }
+      count++;
+    }
+    counter(loc +" ==> " + m_protoPath )+= count;
   }
-
   // return
   return StatusCode::SUCCESS;
 }

@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoParticleAddEcalInfo
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleAddEcalInfo.cpp,v 1.2 2009-09-03 11:09:22 jonrob Exp $
+ * $Id: ChargedProtoParticleAddEcalInfo.cpp,v 1.3 2010-03-08 01:46:40 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
@@ -44,14 +44,15 @@ ChargedProtoParticleAddEcalInfo( const std::string& name,
 
   using namespace LHCb::Calo2Track;
   using namespace LHCb::CaloIdLocation;
-  m_inEcalPath        =  LHCb::CaloAlgUtils::PathFromContext( context() , InEcal       , InEcalHlt       );
-  m_electronMatchPath =  LHCb::CaloAlgUtils::PathFromContext( context() , ElectronMatch, ElectronMatchHlt);
-  m_clusterMatchPath  =  LHCb::CaloAlgUtils::PathFromContext( context() , ClusterMatch , ClusterMatchHlt );
-  m_ecalChi2Path      =  LHCb::CaloAlgUtils::PathFromContext( context() , EcalChi2     , EcalChi2Hlt     );
-  m_ecalEPath         =  LHCb::CaloAlgUtils::PathFromContext( context() , EcalE        , EcalEHlt        );
-  m_clusterChi2Path   =  LHCb::CaloAlgUtils::PathFromContext( context() , ClusChi2     , ClusChi2Hlt     );
-  m_ecalPIDePath      =  LHCb::CaloAlgUtils::PathFromContext( context() , EcalPIDe     , EcalPIDeHlt     );
-  m_ecalPIDmuPath     =  LHCb::CaloAlgUtils::PathFromContext( context() , EcalPIDmu    , EcalPIDmuHlt    );
+  m_protoPath         =  LHCb::ProtoParticleLocation::Charged ;
+  m_inEcalPath        =  LHCb::CaloAlgUtils::PathFromContext( context() , InEcal        );
+  m_electronMatchPath =  LHCb::CaloAlgUtils::PathFromContext( context() , ElectronMatch );
+  m_clusterMatchPath  =  LHCb::CaloAlgUtils::PathFromContext( context() , ClusterMatch  );
+  m_ecalChi2Path      =  LHCb::CaloAlgUtils::PathFromContext( context() , EcalChi2      );
+  m_ecalEPath         =  LHCb::CaloAlgUtils::PathFromContext( context() , EcalE         );
+  m_clusterChi2Path   =  LHCb::CaloAlgUtils::PathFromContext( context() , ClusChi2      );
+  m_ecalPIDePath      =  LHCb::CaloAlgUtils::PathFromContext( context() , EcalPIDe      );
+  m_ecalPIDmuPath     =  LHCb::CaloAlgUtils::PathFromContext( context() , EcalPIDmu     );
   declareProperty("InputInEcalLocation"        , m_inEcalPath         );
   declareProperty("InputElectronMatchLocation" , m_electronMatchPath  );
   declareProperty("InputClusterMatchLocation"  , m_clusterMatchPath   );
@@ -61,15 +62,6 @@ ChargedProtoParticleAddEcalInfo( const std::string& name,
   declareProperty("InputEcalPIDeLocation"      , m_ecalPIDePath       );
   declareProperty("InputEcalPIDmuLocation"     , m_ecalPIDmuPath      );
 
-  // context specific locations
-  if ( context() == "HLT" || context() == "Hlt" )
-  {
-    m_protoPath  = LHCb::ProtoParticleLocation::HltCharged;
-  }
-  else
-  {
-    m_protoPath  = LHCb::ProtoParticleLocation::Charged;
-  }
 
   // ProtoParticles
   declareProperty( "ProtoParticleLocation", m_protoPath );
@@ -122,6 +114,7 @@ StatusCode ChargedProtoParticleAddEcalInfo::execute()
     // replace the muon information
     addEcal(*iProto);
   }
+  counter("EcalPIDs("+context()+") ==> " + m_protoPath )+= protos->size();
 
   return StatusCode::SUCCESS;
 }

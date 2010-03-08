@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoParticleAddMuonInfo
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleAddMuonInfo.cpp,v 1.5 2010-01-18 17:40:40 jonrob Exp $
+ * $Id: ChargedProtoParticleAddMuonInfo.cpp,v 1.6 2010-03-08 01:46:40 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
@@ -84,6 +84,7 @@ StatusCode ChargedProtoParticleAddMuonInfo::execute()
     // replace the muon information
     updateMuon(*iProto);
   }
+  counter(m_muonPath + " ==> " + m_protoPath )+= protos->size();
 
   return StatusCode::SUCCESS;
 }

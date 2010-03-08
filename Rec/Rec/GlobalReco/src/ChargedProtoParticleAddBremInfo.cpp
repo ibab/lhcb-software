@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoParticleAddBremInfo
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleAddBremInfo.cpp,v 1.1 2009-08-29 20:37:18 jonrob Exp $
+ * $Id: ChargedProtoParticleAddBremInfo.cpp,v 1.2 2010-03-08 01:46:40 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
@@ -41,13 +41,11 @@ ChargedProtoParticleAddBremInfo( const std::string& name,
   using namespace LHCb::CaloIdLocation;
   using namespace LHCb::CaloAlgUtils;
 
-  m_inBremPath      = PathFromContext( context() , InBrem     , InBremHlt     );
-  m_bremMatchPath   = PathFromContext( context() , BremMatch  , BremMatchHlt  );
-  m_bremChi2Path    = PathFromContext( context() , BremChi2   , BremChi2Hlt   );
-  m_bremPIDePath    = PathFromContext( context() , BremPIDe   , BremPIDeHlt   );
-  m_protoPath       = PathFromContext( context() , 
-                                       LHCb::ProtoParticleLocation::Charged ,
-                                       LHCb::ProtoParticleLocation::HltCharged );  
+  m_inBremPath      = PathFromContext( context() , InBrem      );
+  m_bremMatchPath   = PathFromContext( context() , BremMatch   );
+  m_bremChi2Path    = PathFromContext( context() , BremChi2    );
+  m_bremPIDePath    = PathFromContext( context() , BremPIDe    );
+  m_protoPath       = LHCb::ProtoParticleLocation::Charged ;  
 
   declareProperty("InputInBremLocation"        , m_inBremPath       );
   declareProperty("InputBremMatchLocation"     , m_bremMatchPath    );
@@ -89,6 +87,7 @@ StatusCode ChargedProtoParticleAddBremInfo::execute()
     // replace the muon information
     addBrem(*iProto);
   }
+  counter("BremPIDs("+context()+") ==> " + m_protoPath )+= protos->size();
 
   return StatusCode::SUCCESS;
 }
