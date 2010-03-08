@@ -6,7 +6,7 @@ Provides a set of handles for LCG Nightlies "builders" generated automatically
 for LHCb projects to start get, config, install, make, and test cmt actions.
 """
 
-import sys
+import os, sys
 try:
     from functions import *
 except ImportError:
@@ -24,6 +24,8 @@ if __name__ == '__main__':
     if len(sys.argv) <3:
         printUsage()
         sys.exit()
+    if 'PWD' in os.environ:
+        del os.environ['PWD']
     function = {
                  'config' : config,
                  'get' : get,

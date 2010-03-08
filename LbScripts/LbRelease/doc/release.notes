@@ -1,3 +1,10 @@
+2010-03-08  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/Nightlies/functions.py: changes in builders' commands
+	for Windows; unification of the build procedure (Linux and Windows)
+	* python/LbRelease/Nightlies/setup.py: local drives E:, F: for Windows
+	* python/LbRelease/Nightlies/actionLauncher.py: unset of PWD variable
+
 2010-02-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/buildTar: New file.

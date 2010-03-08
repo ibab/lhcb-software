@@ -37,6 +37,16 @@ def _fixPerms(path):
     except OSError:
         pass
 
+def dirSize(dirPath): # in MB
+    if not os.path.exists(dirPath):
+        return None
+    folder_size = 0.
+    for (path, dirs, files) in os.walk(dirPath):
+        for file in files:
+            filename = os.path.join(path, file)
+            folder_size += os.path.getsize(filename)
+    return (folder_size/(1024*1024.0))
+
 def rmtree(path, ignore_errors=False, onerror=None):
     """ change permissions of all files and directories and call shutil.rmtree """
     _fixPerms(path)
@@ -312,10 +322,8 @@ def readRequirementsFile(filename, withHat=False):
     """
     previousDir = os.getcwd()
     os.chdir(os.path.dirname(filename))
-    f1 = os.path.basename(filename)
-    f2 = f1 + '_filtered'
-    os.system(cmtCommand + ' filter ' + f1 + ' ' + f2)
-    readerfile = file(f2,'r')
+    os.system(cmtCommand + ' filter ' + filename + ' ' + filename + '_filtered')
+    readerfile = file(filename + '_filtered', 'r')
     reader = readerfile.readlines()
     readerfile.close()
     #TODO: erase filtered file
@@ -406,19 +414,18 @@ def generateBuilders(slot, projectNames, minusj, minusl):
             os.makedirs(os.path.join(destPath, pdir, 'cmt') )
             f = file(os.path.join(destPath, pdir, 'cmt', 'requirements'), 'w')
             f.write('package %s\n' % pdir)
+            f.write('version v1r0\n')
             f.write('macro packageName "%s"\n' % p)
             f.write('use LbScriptsSys\n')
             f.write('use Python v* LCG_Interfaces\n')
             lines = """
 action pkg_get "cmt show tags ; mkdir -p logs ; %(launcher)s get %(packageName)s 2>&1 | tee -a logs/$(package)_$(CMTCONFIG)_get.log" \
-       WIN32 " ( if not exist logs mkdir logs ) && %(launcher)s get %(packageName)s "
-action pkg_config " %(launcher)s config %(packageName)s 2>&1" \
-       WIN32 " %(launcher)s config %(packageName)s"
-action pkg_make " %(lbLinux)s %(launcher)s make %(packageName)s %(minusjvalue)d %(minuslvalue)d 2>&1 ; exit 0" \
-       WIN32 " %(lbWin)s %(launcher)s make %(packageName)s %(minusjvalue)d %(minuslvalue)d 2>&1 "
-action pkg_install " %(launcher)s install %(packageName)s 2>&1" \
-       WIN32 " %(launcher)s install %(packageName)s 2>&1 "
-action pkg_test " %(launcher)s test %(packageName)s 2>&1" \
+       WIN32 " ( if not exist logs mkdir logs ) & %(launcher)s get %(packageName)s 2>&1 | tee -a logs/$(package)_$(CMTCONFIG)_get.log & true"
+action pkg_config " %(launcher)s config %(packageName)s 2>&1 | cat"
+action pkg_make " %(lbLinux)s %(launcher)s make %(packageName)s %(minusjvalue)d %(minuslvalue)d 2>&1 ; true" \
+       WIN32    " %(lbWin)s   %(launcher)s make %(packageName)s %(minusjvalue)d %(minuslvalue)d 2>&1 & true"
+action pkg_install " %(launcher)s install %(packageName)s 2>&1 | cat"
+action pkg_test " %(launcher)s test %(packageName)s 2>&1 " \
        WIN32 " "
     """ % { "launcher" : "runpy LbRelease.Nightlies.actionLauncher",
             "packageName" : p,
@@ -602,10 +609,12 @@ def make(slotName, projectName, minusj, minusl):
         return
     else:
         # removing rubbish from log file
-        os.system('echo "(removing log here)" >> ' + os.sep.join(['logs', os.environ.get('CMTCONFIG', '')])+'.log')
         os.chdir(generatePath(slot, project, 'TAG', projectName))
-        logFileToBeRemoved = file(os.sep.join(['logs', os.environ.get('CMTCONFIG', '')])+'.log', 'w')
-        logFileToBeRemoved.close()
+        try:
+            logFileToBeRemoved = file(os.sep.join(['logs', os.environ.get('CMTCONFIG', '')])+'.log', 'w')
+            logFileToBeRemoved.close()
+        except:
+            pass
     changeEnvVariables()
 
     os.chdir(generatePath(slot, project, 'SYSPACKAGECMT', projectName))
@@ -635,51 +644,42 @@ def make(slotName, projectName, minusj, minusl):
     configuration.system('printenv | sort')
     configuration.system('echo "' + '*'*80 + '"')
 
-    if systemType == 'windows':
-        makeCmd = '%s make' % (cmtCommand)
-        if 'CMTEXTRATAGS' in os.environ and len(os.environ['CMTEXTRATAGS'])>0:                # append
-            makeCmd += ' CMTEXTRATAGS=%(CMTEXTRATAGS)s ' % os.environ
-        cmtCmdForBroadcast = '%s all_groups' % (makeCmd,)
-        fullCmd = '%s br - "%s"' % (cmtCommand, cmtCmdForBroadcast)
-        configuration.system(fullCmd)
-        install(slotName, projectName)
-    else:
-        if os.path.exists(os.sep.join(['..','..', 'Makefile'])) and minusj > 1:
-            os.chdir(os.sep.join(['..']*2))
-            if 'use-distcc' in os.environ.get('CMTEXTRATAGS', '') or 'force-distcc' in os.environ.get('CMTEXTRATAGS', ''):
-                usedistcc = '-j'
-            else:
-                usedistcc = ''
-            if 'CMTEXTRATAGS' in os.environ and len(os.environ['CMTEXTRATAGS'])>0:
-                os.environ['CMTEXTRATAGS'] = 'no-pyzip,'+os.environ.get('CMTEXTRATAGS', '')
-            else:
-                os.environ['CMTEXTRATAGS'] = 'no-pyzip'
-            configuration.system('make %s -k -j%d -l%d Package_failure_policy=ignore > make.%s.log' % (usedistcc, minusj, minusl, os.environ['CMTCONFIG']) )
-            os.chdir(generatePath(slot, project, 'TAG', projectName))
-            logFiles = []
-            for r, d, f in os.walk("."):
-                if r == ".": continue
-                elif "cmt" in d: d[:] = ["cmt"]
-                else:
-                    if "build.%(CMTCONFIG)s.log" % os.environ in f:
-                        logFiles.append((os.stat(os.path.join(r, "build.%(CMTCONFIG)s.log" % os.environ)).st_mtime, os.path.join(r, "build.%(CMTCONFIG)s.log" % os.environ)))
-            logFiles.sort()
-            for x in logFiles:
-                print "-"*80
-                print "Logfile:", x[1]
-                print "-"*80
-                print file(x[1], 'r').read()
+    if os.path.exists(os.sep.join(['..','..', 'Makefile'])):
+        os.chdir(os.sep.join(['..']*2))
+        if 'use-distcc' in os.environ.get('CMTEXTRATAGS', '') or 'force-distcc' in os.environ.get('CMTEXTRATAGS', ''):
+            usedistcc = '-j'
         else:
-            makeCmd = '%s make %s' % (cmtCommand, minusjcmd)
-            if slot.getQuickMode() is not None : makeCmd += ' QUICK=' + str(slot.getQuickMode())  # append
-            if 'CMTEXTRATAGS' in os.environ and len(os.environ['CMTEXTRATAGS'])>0:                # prepend
-                makeCmd = 'CMTEXTRATAGS=no-pyzip,%(CMTEXTRATAGS)s ' % os.environ + makeCmd
+            usedistcc = ''
+        if 'CMTEXTRATAGS' in os.environ and len(os.environ['CMTEXTRATAGS'])>0:
+            os.environ['CMTEXTRATAGS'] = 'no-pyzip,'+os.environ.get('CMTEXTRATAGS', '')
+        else:
+            os.environ['CMTEXTRATAGS'] = 'no-pyzip'
+        configuration.system('make %s -k -j%d -l%d Package_failure_policy=ignore logging=enabled > make.%s.log' % (usedistcc, minusj, minusl, os.environ['CMTCONFIG']) )
+        os.chdir(generatePath(slot, project, 'TAG', projectName))
+        logFiles = []
+        for r, d, f in os.walk("."):
+            if r == ".": continue
+            elif "cmt" in d: d[:] = ["cmt"]
             else:
-                makeCmd = 'CMTEXTRATAGS=no-pyzip ' + makeCmd
-            cmtCmdForBroadcast = '%s all ; %s tests' % (makeCmd, makeCmd)
-            fullCmd = '%s br - "%s"' % (cmtCommand, cmtCmdForBroadcast)
-            configuration.system('echo "COMMAND: ' + fullCmd.replace('"','\\"') + '"')
-            configuration.system(fullCmd)
+                if "build.%(CMTCONFIG)s.log" % os.environ in f:
+                    logFiles.append((os.stat(os.path.join(r, "build.%(CMTCONFIG)s.log" % os.environ)).st_mtime, os.path.join(r, "build.%(CMTCONFIG)s.log" % os.environ)))
+        logFiles.sort()
+        for x in logFiles:
+            print "-"*80
+            print "Logfile:", x[1]
+            print "-"*80
+            print file(x[1], 'r').read()
+    else:
+        makeCmd = '%s make %s' % (cmtCommand, minusjcmd)
+        if slot.getQuickMode() is not None : makeCmd += ' QUICK=' + str(slot.getQuickMode())  # append
+        if 'CMTEXTRATAGS' in os.environ and len(os.environ['CMTEXTRATAGS'])>0:                # prepend
+            makeCmd = 'CMTEXTRATAGS=no-pyzip,%(CMTEXTRATAGS)s ' % os.environ + makeCmd
+        else:
+            makeCmd = 'CMTEXTRATAGS=no-pyzip ' + makeCmd
+        cmtCmdForBroadcast = '%s all ; %s tests' % (makeCmd, makeCmd)
+        fullCmd = '%s br - "%s"' % (cmtCommand, cmtCmdForBroadcast)
+        configuration.system('echo "COMMAND: ' + fullCmd.replace('"','\\"') + '"')
+        configuration.system(fullCmd)
     configuration.system('echo "' + '*'*80 + '"')
     configuration.system('echo "Build finished: '+ time.strftime('%c', time.localtime()) +'"')
 
@@ -813,11 +813,11 @@ def get(slotName, projectName):
     changesMadeDict = previousChangesMade.copy()
     changesMadeDict.update(changesMade)
 
-    os.chdir(generatePath(slot, project, 'TAG', projectName))
-    #requirementsFilesList = os.popen('find . -type f -name requirements | grep -v "^./' + projectName + 'Sys/cmt/requirements"').readlines()
+    parentDir = generatePath(slot, project, 'TAG', projectName)
+    os.chdir(parentDir)
     requirementsFilesList = []
     for x in sysPackageRF.keys():
-        fileNameTmp = os.path.join(x.replace('/', os.sep), 'cmt', 'requirements')
+        fileNameTmp = os.sep.join([parentDir, x.replace('/', os.sep), 'cmt', 'requirements'])
         if os.path.exists(fileNameTmp):
             requirementsFilesList.append(fileNameTmp)
         else:
