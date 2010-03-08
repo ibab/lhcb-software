@@ -1,4 +1,4 @@
-// $Id: Calo2Track.h,v 1.5 2008-06-30 08:36:27 odescham Exp $
+// $Id: Calo2Track.h,v 1.6 2010-03-08 02:01:18 odescham Exp $
 #ifndef CALO2TRACK_H 
 #define CALO2TRACK_H 1
 
@@ -47,8 +47,14 @@ namespace LHCb {
     const std::string HcalPIDe      = "Rec/Calo/HcalPIDe";
     const std::string EcalPIDmu     = "Rec/Calo/EcalPIDmu";
     const std::string HcalPIDmu     = "Rec/Calo/HcalPIDmu";
+    // Neutral ID DLLs
+    const std::string PhotonID      = "Rec/Calo/PhotonID" ;
+    const std::string MergedID      = "Rec/Calo/MergedID" ;
+    const std::string PhotonFromMergedID      = "Rec/Calo/PhotonFromMergedID" ;
+    
 
-    // =================== Hlt locations ============== 
+
+    // =================== Hlt locations ============== DEPRECATED : use CaloAlgUtils::pathFromContext instead !!
 
     // Calo-Track matching tables   : IRelationWeighted< CaloCluster/Hypo , Track , float > 
     const std::string ClusterMatchHlt  = "Hlt/Calo/ClusterMatch";
@@ -76,6 +82,10 @@ namespace LHCb {
     const std::string HcalPIDeHlt      = "Hlt/Calo/HcalPIDe";
     const std::string EcalPIDmuHlt     = "Hlt/Calo/EcalPIDmu";
     const std::string HcalPIDmuHlt     = "Hlt/Calo/HcalPIDmu";
+    // PhotonID DLL
+    const std::string HltPhotonID         = "Hlt/Calo/PhotonID" ;
+    const std::string HltMergedID         = "Hlt/Calo/MergedID" ;
+    const std::string HltPhotonFromMergedID      = "Hlt/Calo/PhotonFromMergedID" ;
   };
   namespace Calo2Track {
     typedef IRelationWeighted< LHCb::CaloCluster , LHCb::Track , float >             IClusTrTable;
@@ -87,6 +97,7 @@ namespace LHCb {
     typedef IRelationWeighted2D< LHCb::Track , LHCb::CaloCluster , float >           ITrClusTable2D;
     typedef IRelationWeighted2D< LHCb::CaloHypo , LHCb::Track , float >              IHypoTrTable2D;
     typedef IRelationWeighted2D< LHCb::Track , LHCb::CaloHypo , float >              ITrHypoTable2D;
+    typedef IRelation< LHCb::CaloHypo , float >                                      IHypoEvalTable;
 
     typedef IRelation< LHCb::Track , float >                                         ITrEvalTable;
     typedef IRelation< LHCb::Track , bool  >                                         ITrAccTable;

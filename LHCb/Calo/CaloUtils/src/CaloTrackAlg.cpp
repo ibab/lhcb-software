@@ -1,8 +1,9 @@
-// $Id: CaloTrackAlg.cpp,v 1.9 2008-06-30 08:36:27 odescham Exp $
+// $Id: CaloTrackAlg.cpp,v 1.10 2010-03-08 02:01:19 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
 #include "Event/Track.h"
+#include "CaloUtils/CaloAlgUtils.h"
 #include "CaloUtils/CaloTrackAlg.h"
 // ============================================================================
 /** @file 
@@ -34,7 +35,7 @@ CaloTrackAlg::CaloTrackAlg
   _setProperty ( "CheckTracks" , "true" ) ;
   std::vector<int> stat;
   stat.push_back( LHCb::Track::Fitted);
-  if( "HLT" == context() )stat.push_back( LHCb::Track::FitStatusUnknown);
+  if( LHCb::CaloAlgUtils::hltContext(context()) )stat.push_back( LHCb::Track::FitStatusUnknown);
   setProperty ( "AcceptedFitStatus" , stat).ignore();
 } ;
 // ============================================================================
