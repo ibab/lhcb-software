@@ -111,6 +111,7 @@ int open_sock_udp(std::string &errmsg, int port)
     goto shut_out;
   }
 #endif
+  return s;
 shut_out:
   ::shutdown(s, SHUT_RD);
 drop_out:  
@@ -287,6 +288,7 @@ int send_msg(int sockfd, u_int32_t addr, u_int8_t protocol, void *buf, int len, 
            (const struct sockaddr *) &sinaddr, sizeof(sinaddr)));
 
 #else
+//Sends only raw IP messages
 int send_msg(int sockfd, u_int32_t addr, u_int8_t protocol, void *buf, int len, int /* flags */) {
   struct IOVec bufs(buf, len);  
   struct MsgHdr msg(&bufs, 1);
@@ -336,6 +338,23 @@ send_msg_arb_source(int raw_socket, u_int8_t proto, u_int32_t srcAddr, u_int32_t
     exit(errno);
   }
 #endif
+  return n;
+}
+
+int
+send_udp(int udp_socket, u_int16_t port, u_int32_t dstAddr, void* buf, int len) {
+  int n=0;
+  #ifndef _WIN32
+  struct sockaddr_in dest;
+  struct in_addr adr;
+  adr.s_addr = dstAddr;
+  dest.sin_family=AF_INET;
+  dest.sin_port = htons(port);
+  dest.sin_addr=adr;
+
+  n = sendto(udp_socket, buf, len, 0, (const sockaddr *) &dest, sizeof(dest));
+  //Let the user manage the errors
+  #endif
   return n;
 }
 
