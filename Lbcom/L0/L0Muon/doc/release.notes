@@ -1,7 +1,10 @@
-!  $Id: release.notes,v 1.97 2010-03-08 14:14:40 jucogan Exp $
+!  $Id: release.notes,v 1.98 2010-03-08 14:18:15 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !---------------------------------------------------------------------------
+
+! 2010-03-08 - Julien Cogan
+ - Add implementation of L0MuonOLErrorTool and L0MuonInputTool
 
 ! 2010-03-04 - Julien Cogan
  - Adapt to change in CondDB (L0MuonAlg)
