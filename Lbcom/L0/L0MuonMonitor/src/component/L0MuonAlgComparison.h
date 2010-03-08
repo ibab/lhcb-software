@@ -1,4 +1,4 @@
-// $Id: L0MuonAlgComparison.h,v 1.5 2008-11-07 16:31:53 jucogan Exp $
+// $Id: L0MuonAlgComparison.h,v 1.6 2010-03-08 15:04:10 jucogan Exp $
 #ifndef COMPONENT_L0MUONALGCOMPARISON_H 
 #define COMPONENT_L0MUONALGCOMPARISON_H 1
 
@@ -53,6 +53,7 @@ private:
   L0MuonCandHistos*     m_candHistosPU0;
   L0MuonCandHistos*     m_candHistosPU1;
 
-
+  bool m_diff;
+  
 };
 #endif // COMPONENT_L0MUONALGCOMPARISON_H

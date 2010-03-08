@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.27 2010-03-08 15:00:33 jucogan Exp $
+! $Id: release.notes,v 1.28 2010-03-08 15:04:10 jucogan Exp $
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
 !--------------------------------------------------------------------------
 
 ! 2010-03-08 - Julien Cogan
+ - L0MuonAlgComparison : implement a light mode if Online property is set
  - L0MuonMonitorBase : 
 	- new helper functions : getL0MuonPads, olsErrorSummary, activeTS
   - new properties : Prescale & Online

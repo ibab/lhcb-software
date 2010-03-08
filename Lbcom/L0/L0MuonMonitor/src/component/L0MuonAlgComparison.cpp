@@ -1,4 +1,4 @@
-// $Id: L0MuonAlgComparison.cpp,v 1.7 2008-11-07 16:31:53 jucogan Exp $
+// $Id: L0MuonAlgComparison.cpp,v 1.8 2010-03-08 15:04:10 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -49,15 +49,19 @@ StatusCode L0MuonAlgComparison::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  m_candHistosPU0    = tool<L0MuonCandHistos>( "L0MuonCandHistos", "PUCand_only0", this);
-  m_candHistosPU1    = tool<L0MuonCandHistos>( "L0MuonCandHistos", "PUCand_only1", this);
+  m_h_online = book1D("Hard_Vs_Soft",-0.5,2.5,3);
+  
+  if (!m_online) {
+    m_candHistosPU0    = tool<L0MuonCandHistos>( "L0MuonCandHistos", "PUCand_only0", this);
+    m_candHistosPU1    = tool<L0MuonCandHistos>( "L0MuonCandHistos", "PUCand_only1", this);
 
-  if (!m_shortnames) m_candHistosPU0->setHistoDir("L0MuonComparison");
-  m_candHistosPU0->bookHistos(384,m_shortnames);
-  if (!m_shortnames) m_candHistosPU1->setHistoDir("L0MuonComparison");
-  m_candHistosPU1->bookHistos(384,m_shortnames);
+    if (!m_shortnames) m_candHistosPU0->setHistoDir("L0MuonComparison");
+    m_candHistosPU0->bookHistos(384,m_shortnames);
+    if (!m_shortnames) m_candHistosPU1->setHistoDir("L0MuonComparison");
+    m_candHistosPU1->bookHistos(384,m_shortnames);
  
-  for (int i=0; i<NCounters; ++i) m_counters[i]=0;
+    for (int i=0; i<NCounters; ++i) m_counters[i]=0;
+  }
   
   return StatusCode::SUCCESS;
 }
@@ -67,9 +71,12 @@ StatusCode L0MuonAlgComparison::initialize() {
 //=============================================================================
 StatusCode L0MuonAlgComparison::execute() {
   
+  if (m_rnd()>m_prescale) return StatusCode::SUCCESS;
+
   debug() << "==> Execute" << endmsg;
   StatusCode sc;
-
+  m_diff=false;
+  
   ++m_counters[TOTAL];
   if (excludedBx()) return StatusCode::SUCCESS;
   if (!selectedTrigger()) return StatusCode::SUCCESS;
@@ -80,7 +87,8 @@ StatusCode L0MuonAlgComparison::execute() {
   // Loop over time slots
   for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
     setProperty("RootInTes",L0Muon::MonUtilities::timeSlot(*it_ts));
-
+    bool histo= (!m_online);
+    
     if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
     
     ++m_counters[BUNCHES];
@@ -100,7 +108,7 @@ StatusCode L0MuonAlgComparison::execute() {
     //   }
     
     debug()<<"Verifying -- PU :"<<endmsg;
-    sc = compare(LHCb::L0MuonCandidateLocation::PU,true,*it_ts);
+    sc = compare(LHCb::L0MuonCandidateLocation::PU,histo);
     if(sc==StatusCode::FAILURE) {
       return Error("Failed to compare candidates at "+LHCb::L0MuonCandidateLocation::PU+" ... abort"
                    ,StatusCode::SUCCESS,100);
@@ -108,6 +116,10 @@ StatusCode L0MuonAlgComparison::execute() {
 
   } // End of loop over time slots
   
+  fill(m_h_online,0.,1.);
+  if (m_diff) fill(m_h_online,2.,1.);
+  else fill(m_h_online,1.,1.);
+
   return StatusCode::SUCCESS;
 }
 
@@ -161,6 +173,7 @@ StatusCode L0MuonAlgComparison::compare(std::string location, bool histo, int ts
       } 
     }
     if (!found) {
+      m_diff=true;
       cands_only0->add((*it0));
       ++m_counters[NOT_FOUND];
       sc = StatusCode::FAILURE;
@@ -196,6 +209,7 @@ StatusCode L0MuonAlgComparison::compare(std::string location, bool histo, int ts
       } 
     }
     if (!found) {
+      m_diff=true;
       cands_only1->add((*it1));
       ++m_counters[ADDITIONAL];
       sc = StatusCode::FAILURE;
