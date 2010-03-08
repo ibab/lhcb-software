@@ -10,7 +10,7 @@
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
 __author__  = "Plamen Hopchev phopchev@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -42,15 +42,6 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                                               , 'Hlt1BeamGasCrossingForcedRZReco' : 'RATE(25)'
                                               }
                 } 
-
-
-    def __performRZVelo( self ) :
-        from HltLine.HltReco import MinimalRZVelo
-
-        return [ GaudiSequencer( 'BeamGasRZVeloSequencer'
-                               , Members =  MinimalRZVelo.members()
-                               , IgnoreFilterPassed = True )            
-              ]
 
 
     def __create_beam_empty_line__(self, whichBeam) :
@@ -166,10 +157,11 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         # FIXME: why does 'clone' not get prescaled right??? because the prescale _value_ not the function is cloned...
         #        hence we repeat prescale and postscale here explicitly...
         # NOTE: we remove the 'priority' from the clone to make sure it runs first...
+        from HltLine.HltReco import MinimalRZVelo
         line_beamCrossingForcedRZReco = line_beamCrossing.clone( lineName+"ForcedRZReco"
                                                                , priority = None
                                                                , prescale = self.prescale
-                                                               , algos = self.__performRZVelo() + bgTrigAlgos 
+                                                               , algos = [ MinimalRZVelo ] + bgTrigAlgos 
                                                                , postscale = self.postscale 
                                                                )
         return line_beamCrossing, line_beamCrossingForcedRZReco

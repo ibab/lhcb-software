@@ -48,13 +48,13 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
 
     __slots__ = { 'TriggerType'            : 'LumiTrigger'  # ODIN trigger type accepted for Lumi
                 , 'L0Channel'              : ['CALO']     # L0 channels accepted for LowLumi
-                , 'BXTypes'                : ['NoBeam', 'BeamCrossing','Beam1','Beam2']
                 , 'LumiLines'              : ['Count','VDM']
                 , 'EnableReco'             : True 
+                , 'Prescale'               : { 'Hlt1Lumi' : 'RATE(1000)' }
                 , 'OutputLevel'            : WARNING
                 }
 
-    def __create_lumi_algos__(self, BXType, postfix=''):
+    def __create_lumi_algos__(self, postfix=''):
         '''
         returns algorithm sequences for Hlt1 Lumi Lines
         '''
@@ -63,7 +63,8 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         
         # debugging options
         debugOPL = self.getProp('OutputLevel')
-	from HltLine.HltPVs  import PV2D
+        from HltLine.HltReco import PV2D
+
         # define reco scaler
         recoScaler = Scaler( 'LumiRecoScaler' ,  AcceptFraction = 1 if self.getProp('EnableReco') else 0 )  
 
@@ -79,7 +80,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                     , MeasureTime = True)
 
         # define empty sequence to collect counters
-        seqCountName = 'LumiCount'+postfix+BXType
+        seqCountName = 'LumiCount'+postfix
         lumiCountSequence = Sequence(seqCountName +'Seq'
                                     , ModeOR = True
                                     , ShortCircuit = False
@@ -108,10 +109,10 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                 histoThresholds.extend( [threshold] )
                 histoMaxBins.extend( [bins] )
                 if debugOPL <= DEBUG:
-                    print '# DEBUG   : Hlt1LumiLines::HistoMaker:', postfix+BXType, key, threshold, bins
+                    print '# DEBUG   : Hlt1LumiLines::HistoMaker:', postfix, key, threshold, bins
                 
         lumiRecoSequence.Members.append( Sequence('LumiTrackRecoSequence' ,
-                                                   Members = [  recoScaler ] + PV2D().members(),
+                                                   Members = [  recoScaler ] + PV2D.members(),
                                                    MeasureTime = True ) ) 
 
         # filter to get backward tracks (make sure it always passes by wrapping inside a sequence)
@@ -163,17 +164,17 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         # define histogrammers
         #from Configurables import LumiHistoMaker, LumiHisto2dSPD
         #HistoMembers=[]
-        #HistoMembers.append(LumiHistoMaker('Histo'+postfix+BXType,
+        #HistoMembers.append(LumiHistoMaker('Histo'+postfix
         #                                   InputVariables = createdCounters,
         #                                   Thresholds = histoThresholds,
         #                                   MaxBins = histoMaxBins,
         #                                   OutputLevel = debugOPL
         #                                   ))
-        #HistoMembers.append(LumiHisto2dSPD('Histo2D'+postfix+BXType,
-        #                                   HistoTitle=str(postfix+BXType),
+        #HistoMembers.append(LumiHisto2dSPD('Histo2D'+postfix
+        #                                   HistoTitle=str(postfix),
         #                                   OutputLevel = debugOPL ))
 
-        #lumiHistoSequence = Sequence('LumiHisto'+postfix+BXType +'Seq'
+        #lumiHistoSequence = Sequence('LumiHisto'+postfix+'Seq'
         #                             , Members = HistoMembers
         #                             , ModeOR = True
         #                             , ShortCircuit = False
@@ -185,20 +186,20 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         return [ lumiRecoSequence, lumiCountSequence ] 
 
 
-    def __create_lumi_line__(self, BXType):
+    def __create_lumi_line__(self ):
         '''
         returns an Hlt1 "Line" including input filter, reconstruction sequence and counting
         adds histogramming
         '''
         from HltLine.HltLine import Hlt1Line   as Line
-        return Line ( 'Lumi'+BXType
+        return Line ( 'Lumi'
                     , prescale = self.prescale
-                    , ODIN = ' ( ODIN_TRGTYP == LHCb.ODIN.%s ) & ( ODIN_BXTYP == LHCb.ODIN.%s)' % ( self.getProp('TriggerType'), BXType )
-                    , algos = self.__create_lumi_algos__( BXType, '' )
+                    , ODIN = ' ( ODIN_TRGTYP == LHCb.ODIN.%s ) ' % ( self.getProp('TriggerType') )
+                    , algos = self.__create_lumi_algos__( '' )
                     , postscale = self.postscale
                     ) 
 
-    def __create_lumi_low_line__(self, BXType):
+    def __create_lumi_low_line__(self ):
         '''
         returns an Hlt1 "Line" including input filter, reconstruction sequence and counting
         adds histogramming
@@ -206,11 +207,11 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         postfix = 'Low'
         from HltLine.HltLine import Hlt1Line   as Line
         l0du = ' | '.join( [ (" ( L0_CHANNEL('%s') ) "%(x)) for x in  self.getProp('L0Channel') ] )
-        return Line ( 'Lumi'+postfix+BXType
+        return Line ( 'Lumi'+postfix
                     , prescale = self.prescale
-                    , ODIN = ' ( ODIN_TRGTYP <= LHCb.ODIN.%s ) & ( ODIN_BXTYP == LHCb.ODIN.%s)' % ( self.getProp('TriggerType'), BXType )
+                    #not needed... , ODIN = ' ( ODIN_TRGTYP <= LHCb.ODIN.%s ) ' % ( self.getProp('TriggerType') )
                     , L0DU  = l0du
-                    , algos = self.__create_lumi_algos__( BXType, postfix )
+                    , algos = self.__create_lumi_algos__( postfix )
                     , postscale = self.postscale
                     ) 
 
@@ -220,9 +221,9 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         '''
         from HltLine.HltLine import Hlt1Line   as Line
         # LumiTrigger lines
-        map( self.__create_lumi_line__, self.getProp('BXTypes') )
+        self.__create_lumi_line__()
         # PhysicsTrigger lines
-        map( self.__create_lumi_low_line__, self.getProp('BXTypes') )
+        self.__create_lumi_low_line__()
 
 
         
