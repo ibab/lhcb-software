@@ -438,7 +438,7 @@ double UpdateAndReset::offsetToBoundary(int cycleNumber, ulonglong time, bool in
   }*/
 }
 
-void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler) {
+void UpdateAndReset::updateData(bool isRunNumberChanged, bool /* isFromTimerHandler */) {
   MsgStream msg( msgSvc(), name() );
   ulonglong currentTime = GauchoTimer::currentTime();
 //  msg << MSG::INFO << "************Updating data " << (currentTime - m_timeStart) << " microseconds after start **********" << endreq;  msg << MSG::DEBUG << "m_runNumber        = " << m_runNumber << endreq;
