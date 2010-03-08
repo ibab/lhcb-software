@@ -1,4 +1,4 @@
-// $Id: L0MuonOnlineMonitor.cpp,v 1.17 2009-02-20 09:15:10 jucogan Exp $
+// $Id: L0MuonOnlineMonitor.cpp,v 1.18 2010-03-08 15:09:52 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -137,6 +137,18 @@ StatusCode L0MuonOnlineMonitor::execute() {
   
   int bid_ts0=-1;
 
+  if (m_fullMonitoring) { // If full monitoring
+    //Run info
+    sc = m_info->setProperty( "RootInTES", rootInTES() );
+    if ( sc==StatusCode::SUCCESS ) {
+      sc = m_info->getInfo();
+      if ( sc==StatusCode::SUCCESS ) {
+        m_info->fillHistos();
+        bid_ts0 = m_info->bunchId();
+      }
+    }
+  }
+  
   // Loop over time slots
   for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
 
@@ -147,49 +159,42 @@ StatusCode L0MuonOnlineMonitor::execute() {
     
     std::string location;
 
-    int bid=-1;
     
+    int bid=-1;
+    if (bid_ts0>-1) bid=bid_ts0+(*it_ts);
+
     if (m_fullMonitoring) { // If full monitoring
-
-
-      //Run info
-      sc = m_info->setProperty( "RootInTES", rootInTES() );
-      if ( sc==StatusCode::SUCCESS ) {
-        sc = m_info->getInfo();
-        if ( sc==StatusCode::SUCCESS ) {
-          m_info->fillHistos();
-          bid = m_info->bunchId();
-          if (0==(*it_ts)) bid_ts0=m_info->bunchId();
-        }
-      }
-
-      // Error
+    
+    // Error
       sc = m_error->setProperty( "RootInTES", rootInTES() );
       if ( sc==StatusCode::SUCCESS ) {
         m_error->fillHistos();
       }
     
-      // Get L0Muon Hits
+      // Get L0Muon Tiles
       std::vector<LHCb::MuonTileID> l0muontiles;
       sc = getL0MuonTiles(l0muontiles);
       if (sc==StatusCode::SUCCESS) {
-
-        // Build logical channels 
-        std::vector<LHCb::MuonTileID> l0muonpads;
-        L0Muon::MonUtilities::makePads(l0muontiles,l0muonpads);
-
-        // Physical channels histos
+        // Logical channels histos
         m_channelsHistos->fillHistos(l0muontiles,*it_ts);
-
+//         std::vector<LHCb::MuonTileID> l0muonpads_2;
+//         L0Muon::MonUtilities::makePads(l0muontiles,l0muonpads_2);
+//         // Logical pads histos
+//         m_padsHistos->fillHistos(l0muonpads_2,*it_ts);
+      }
+   
+      // Build logical channels 
+      std::vector<LHCb::MuonTileID> l0muonpads;
+      sc = getL0MuonPads(l0muonpads);
+      if (sc==StatusCode::SUCCESS) {
         // Logical channels histos
         m_padsHistos->fillHistos(l0muonpads,*it_ts);
-
         // Multiplicity
         for (std::vector<LHCb::MuonTileID>::iterator itpad=l0muonpads.begin(); itpad<l0muonpads.end();++itpad){
           ++npad[itpad->station()];
         }
       }
-
+      
     } // End if full monitoring
 
     // Candidates
@@ -212,7 +217,6 @@ StatusCode L0MuonOnlineMonitor::execute() {
   if (m_fullMonitoring) {
     // Multiplicity
     m_padsHistos->fillHistos(npad);
-  
   }
 
   // Candidates

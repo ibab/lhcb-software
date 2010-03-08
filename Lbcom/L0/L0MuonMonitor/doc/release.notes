@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.29 2010-03-08 15:07:35 jucogan Exp $
+! $Id: release.notes,v 1.30 2010-03-08 15:09:53 jucogan Exp $
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
 !--------------------------------------------------------------------------
 
 ! 2010-03-08 - Julien Cogan
+ - L0MuonOnlineMonitor : improvements + bug fixe (get odin info only for 
+   central time slice)
  - L0MuonMuonComp : new output format, imporve handling of pdm
  - L0MuonAlgComparison : implement a light mode if Online property is set
  - L0MuonMonitorBase : 
