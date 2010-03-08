@@ -63,7 +63,8 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         
         # debugging options
         debugOPL = self.getProp('OutputLevel')
-	from HltLine.HltPVs  import PV2D
+        from HltLine.HltReco import PV2D
+
         # define reco scaler
         recoScaler = Scaler( 'LumiRecoScaler' ,  AcceptFraction = 1 if self.getProp('EnableReco') else 0 )  
 
@@ -111,7 +112,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                     print '# DEBUG   : Hlt1LumiLines::HistoMaker:', postfix, key, threshold, bins
                 
         lumiRecoSequence.Members.append( Sequence('LumiTrackRecoSequence' ,
-                                                   Members = [  recoScaler ] + PV2D().members(),
+                                                   Members = [  recoScaler ] + PV2D.members(),
                                                    MeasureTime = True ) ) 
 
         # filter to get backward tracks (make sure it always passes by wrapping inside a sequence)
@@ -198,7 +199,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                     , postscale = self.postscale
                     ) 
 
-    def __create_lumi_low_line__(self ):
+    def __create_lumi_low_line__(self, BXType ):
         '''
         returns an Hlt1 "Line" including input filter, reconstruction sequence and counting
         adds histogramming
@@ -206,11 +207,11 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         postfix = 'Low'
         from HltLine.HltLine import Hlt1Line   as Line
         l0du = ' | '.join( [ (" ( L0_CHANNEL('%s') ) "%(x)) for x in  self.getProp('L0Channel') ] )
-        return Line ( 'Lumi'+postfix
+        return Line ( 'Lumi'+postfix+BXType
                     , prescale = self.prescale
-                    #not needed... , ODIN = ' ( ODIN_TRGTYP <= LHCb.ODIN.%s ) ' % ( self.getProp('TriggerType') )
+                    , ODIN = ' ( ODIN_BXTYP == LHCb.ODIN.%s ) ' % BXType
                     , L0DU  = l0du
-                    , algos = self.__create_lumi_algos__( postfix )
+                    , algos = self.__create_lumi_algos__( postfix+BXType )
                     , postscale = self.postscale
                     ) 
 
@@ -222,7 +223,8 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         # LumiTrigger lines
         self.__create_lumi_line__()
         # PhysicsTrigger lines
-        self.__create_lumi_low_line__()
+        map( self.__create_lumi_low_line__, ['NoBeam', 'BeamCrossing','Beam1','Beam2'] )
+
 
 
         

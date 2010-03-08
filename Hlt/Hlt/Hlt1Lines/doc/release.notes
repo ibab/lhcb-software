@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.139 2010-03-08 12:43:50 graven Exp $
+! $Id: release.notes,v 1.140 2010-03-08 13:01:24 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -14,6 +14,7 @@
  - merge the various lines split on bunch type.
  - rate limit lumi input rate at 1KHz.
  - simplify RZ velo reco setup in Hlt1BeamGasLines
+ - resplit lumilow
 
 ! 2010-03-02 - V. Gligorov
  - Follow developments in Savannah tasks 13784/12691. Change Hlt/Track
