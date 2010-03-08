@@ -88,7 +88,8 @@ namespace LHCb {
     bool m_NeedOTConv;
 
     bool m_LocalTest;   /*To tell to run locally for testing. */
-    int m_TestPort;
+    int m_DestTestPort;
+    int m_SrcTestPort;
     int m_TestLimit;
 
     int m_InitialCredits;

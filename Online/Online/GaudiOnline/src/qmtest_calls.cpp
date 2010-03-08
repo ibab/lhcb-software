@@ -350,16 +350,25 @@ extern "C" int qmtest_mepinj(int /* ac  */, char** /* av */)  {
   string main_opts = "-main="+groot+"/options/Main.opts";
   string out = "";//"/dev/null";
   string host = RTL::nodeNameShort();
-  ProcessGroup pg;
   const char *injclass[] =CLASS1("MEPInjectorQMTest.opts");
   const char *readclass[] =CLASS1("ReaderSvcQMTest.opts");
+  const char *meprxclass[] =CLASS1("MEPRxQMTest.opts");
+//  const char *mepinitclass[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runMepBuffer()");
+  const char *mepinitclass[] =CLASS1("MEPInitQMTest.opts");
   std::vector<std::string> args;
 
-  Process::setDebug(true);  
+  Process::setDebug(true);
+  Process* mepinitproc=new Process("MEPInit_0",  command(),mepinitclass,out.c_str()); 
+  Process* meprxproc=new Process("MEPRx_0", command(), meprxclass, out.c_str());
   Process* injproc=new Process("MEPInj_0",  command(),injclass,out.c_str());
   Process* readproc=new Process("Reader_0",  command(),readclass,out.c_str());
   cout << "Starting processes ..... " << endl;
-  
+
+  mepinitproc->start();
+  ::lib_rtl_sleep(3500);
+ 
+  meprxproc->start();
+ 
   injproc->start();
   ::lib_rtl_sleep(3500);
   readproc->start();
@@ -374,9 +383,16 @@ extern "C" int qmtest_mepinj(int /* ac  */, char** /* av */)  {
   ::lib_rtl_sleep(1000);
   injproc->stop();
   ::lib_rtl_sleep(1000);
+  meprxproc->stop();
+  ::lib_rtl_sleep(1000); 
+  mepinitproc->stop();
+  ::lib_rtl_sleep(1000); 
+  
 
   readproc->wait(Process::WAIT_BLOCK);
   injproc->wait(Process::WAIT_BLOCK); 
+  meprxproc->wait(Process::WAIT_BLOCK);
+  mepinitproc->wait(Process::WAIT_BLOCK);
 
   cout << "All processes finished work.. " << endl;
   ::lib_rtl_sleep(1000);

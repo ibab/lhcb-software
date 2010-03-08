@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.89 2010-02-19 09:07:55 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.90 2010-03-08 18:24:44 garnierj Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -455,12 +455,14 @@ int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid, u_int64_t tsc,
   m_hdrtsc = tsc;
   u_int64_t bodytsc, bodyrxtim; 
   std::string errstr;
+
   int len = MEPRxSys::recv_msg(sockfd, (u_int8_t*)e->data + m_brx + 4, 
 			       MAX_R_PACKET, 0, &bodytsc, &bodyrxtim, errstr);
   if (len < 0) {
     ERRMSG(m_log,"failed to receive message");
     return MEP_ADD_ERROR;
-  }    
+  }   
+
   MEPHdr *newhdr = (MEPHdr*) ((u_int8_t*)e->data + m_brx + 4 + IP_HEADER_LEN);
   m_parent->m_rxOct[srcid] += len;
   m_parent->m_totRxOct += len;
@@ -497,6 +499,9 @@ void MEPRQCommand::commandHandler(void) {
 MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
 : Service(nam, svc), m_ebState(NOT_READY), m_incidentSvc(0)
 {
+  declareProperty("LocalTest",        m_LocalTest = false);
+  declareProperty("DestTestPort",         m_DestTestPort = 45199);
+  declareProperty("SrcTestPort",         m_SrcTestPort = 45198);
   declareProperty("MEPBuffers",       m_MEPBuffers = 4);
   declareProperty("ethInterface",     m_ethInterface = -1);
   declareProperty("IPNameOdin",       m_IPNameOdin = "");
@@ -697,6 +702,7 @@ void MEPRxSvc::forceEvent(RXIT &dsc) {
 // IRunable implementation: Run the object
 StatusCode MEPRxSvc::run() {
   MsgStream log(msgSvc(), "MEPRx"); // message stream is NOT thread-safe
+
   RXIT rxit;
   MEPRx *rx;
   u_int8_t hdr[HDR_LEN];
@@ -767,6 +773,7 @@ StatusCode MEPRxSvc::run() {
     ageEvents();
     u_int64_t tsc, rxtim;
     std::string errstr;
+
     int len = MEPRxSys::recv_msg(m_dataSock, hdr, HDR_LEN, MEPRX_PEEK, &tsc, 
 				 &rxtim, errstr);
     if (len < 0) {
@@ -774,6 +781,7 @@ StatusCode MEPRxSvc::run() {
         ERRMSG(log,"recvmsg");
       continue;
     }
+    
     if (errstr != "") {
       log << MSG::DEBUG << errstr << endmsg;
     }
@@ -1026,13 +1034,20 @@ StatusCode MEPRxSvc::releaseRx() {
 int MEPRxSvc::openSocket(int protocol) {
   std::string msg;
   int retSock;
-  if ((retSock = MEPRxSys::open_sock(protocol, 
+
+  if(m_LocalTest) {
+      retSock = MEPRxSys::open_sock_udp(msg, m_DestTestPort);
+  }
+  else
+  {
+     retSock = MEPRxSys::open_sock(protocol, 
                           m_sockBuf,
                           m_ethInterface,
                           m_rxIPAddr, 
                           m_dynamicMEPRequest, 
-                          msg)) < 0) 
-  {
+                          msg);
+  }
+  if(retSock < 0) {
     MsgStream log(msgSvc(),"MEPRx");
     ERRMSG(log,msg);
   }
@@ -1204,7 +1219,7 @@ StatusCode MEPRxSvc::initialize()  {
     return error("Failed to initialize service base class.");
   else if ( !checkProperties().isSuccess() )  
     return error("Failed to check properties.");
-  else if ((m_mepSock = openSocket(MEP_REQ_TOS)) < 0)
+  else if ( !m_LocalTest && ((m_mepSock = openSocket(MEP_REQ_TOS)) < 0))
     return error("Failed to open socket: MEP_REQ_TOS");
   else if ((m_dataSock = openSocket(m_IPProtoIn)) < 0)
     return error("Failed to open socket: IPProtoIn");

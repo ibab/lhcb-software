@@ -173,7 +173,9 @@ MEPInjector::MEPInjector(const std::string & name, ISvcLocator * pSvcLocator):Se
     declareProperty("NeedOTConv", m_NeedOTConv = 0);
 
     declareProperty("LocalTest", m_LocalTest = false);
-    declareProperty("TestPort", m_TestPort = 45678);
+    declareProperty("DestTestPort", m_DestTestPort = 45199);
+    declareProperty("SrcTestPort",         m_SrcTestPort = 45198);
+ 
     declareProperty("TestLimit", m_TestLimit = 50);
 
     m_InjState = NOT_READY;
@@ -447,7 +449,7 @@ StatusCode MEPInjector::initialize() {
         m_HLTStrIPAddrTo = "127.0.0.1";
 
         /// Open the raw socket for IP header management.
-        if ((m_ToHLTSock =  MEPRxSys::open_sock_udp(errmsg, m_TestPort)) < 0)    {
+        if ((m_ToHLTSock =  MEPRxSys::open_sock_udp(errmsg, m_SrcTestPort)) < 0)    {
             ERRMSG(msgLog, "Failed to open socket:" + errmsg);
             return StatusCode::FAILURE;
         }
@@ -1113,7 +1115,7 @@ StatusCode MEPInjector::injectorProcessing() {
     StatusCode sc = StatusCode::RECOVERABLE;
     while ((sc.isSuccess() || sc.isRecoverable()) && m_InjState == RUNNING ) {
         if(m_LocalTest && m_TotEvtsSent >= m_TestLimit) {
-            msgLog << MSG::INFO << WHERE << "Test finished" << endmsg;
+            msgLog << MSG::INFO << WHERE << "Test finished, "<< m_TotEvtsSent << " events sent out of "<< m_TestLimit << " requested." << endmsg;
             break;
         }
         if(!m_AutoMode && sc.isRecoverable()) {
@@ -1727,12 +1729,6 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me) {
     // Case of local test, fragmentation is managed by the kernel
     if(m_LocalTest) {
         int n=0;
-        struct sockaddr_in dest;
-        struct in_addr adr;
-        adr.s_addr = addrTo;
-        dest.sin_family=AF_INET;
-        dest.sin_port = htons(m_TestPort);
-        dest.sin_addr=adr; 
 
         struct iphdr *hdr = (struct iphdr *) datagram;
         hdr->saddr = tell1IP; //inet_addr(srcAddr);
@@ -1743,12 +1739,13 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me) {
         hdr->protocol = m_MEPProto;
 
 
-        n = sendto(m_ToHLTSock, (void*) datagram, iDatagramSize, 0, (const sockaddr *)
-                      &dest, sizeof(dest));
-//        n = MEPRxSys::send_msg(m_ToHLTSock, addrTo, htons(m_TestPort), datagram, iDatagramSize, 0);
+        n = MEPRxSys::send_udp(m_ToHLTSock, m_DestTestPort, addrTo, (void*) datagram, iDatagramSize);
+
+//        n = sendto(m_ToHLTSock, (void*) datagram, iDatagramSize, 0, (const sockaddr *)
+//                      &dest, sizeof(dest));
         if (n == (int) iDatagramSize) {
             m_TotMEPsTx++;
-            m_TotBytesTx += MEPSize;
+            m_TotBytesTx += MEPSize; 
             return StatusCode::SUCCESS;
         }   
         if (n == -1) {
@@ -2548,7 +2545,7 @@ StatusCode MEPInjector::run() {
     m_InjState = RUNNING;
 
     sc = StatusCode::SUCCESS; 
-    while(sc.isSuccess() && m_InjState == RUNNING && (!m_LocalTest || (m_LocalTest && m_TestLimit >= m_TotEvtsSent))) {
+    while(sc.isSuccess() && m_InjState == RUNNING && (!m_LocalTest || (m_LocalTest && m_TestLimit > m_TotEvtsSent))) {
          sc=injectorProcessing();
     }
 /*

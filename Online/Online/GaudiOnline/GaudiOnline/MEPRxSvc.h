@@ -77,6 +77,11 @@ namespace LHCb  {
   protected:
     enum EvtBuilderState { NOT_READY, READY, RUNNING, STOPPED };
 
+    bool m_LocalTest;   /*To tell to run locally for testing. */
+    int m_DestTestPort;     /*udp test ports */
+    int m_SrcTestPort;
+
+
     char                       *m_allNames;
     int                         m_dataSock; /* Raw socket for receiving data.*/
     int                         m_mepSock;  /* Raw socket to send MEP requests.*/

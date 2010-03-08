@@ -353,6 +353,7 @@ send_udp(int udp_socket, u_int16_t port, u_int32_t dstAddr, void* buf, int len) 
   dest.sin_addr=adr;
 
   n = sendto(udp_socket, buf, len, 0, (const sockaddr *) &dest, sizeof(dest));
+
   //Let the user manage the errors
   #endif
   return n;
