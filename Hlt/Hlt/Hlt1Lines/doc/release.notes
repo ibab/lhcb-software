@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.140 2010-03-08 13:01:24 graven Exp $
+! $Id: release.notes,v 1.141 2010-03-08 19:23:12 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -10,18 +10,10 @@
 !
 !-----------------------------------------------------------------------------
 
-! 2010-03-08 - Gerhard Raven
- - merge the various lines split on bunch type.
- - rate limit lumi input rate at 1KHz.
- - simplify RZ velo reco setup in Hlt1BeamGasLines
- - resplit lumilow
 
 ! 2010-03-02 - V. Gligorov
  - Follow developments in Savannah tasks 13784/12691. Change Hlt/Track
    to Hlt1/Track to obey naming convention in HLT.
-
-! 2010-02-25 - Gerhard Raven
- - do not require L0_DECISION in OT cosmic line
 
 ! 2010-02-26 - V. Gligorov
  - Follow developments in HltLine.HltPVs. PV2D is now a function
@@ -32,11 +24,19 @@
  - Follow progress of Savannah tasks 13784 and 12691 by updating Hlt1 lines
    to get their primary vertices from HltPVs.py and not HltReco.py 
 
-!========================== Hlt1Lines v2r3 2010-03-04 ===================
+!========================== Hlt1Lines v2r3 2010-03-08 ===================
+! 2010-03-08 - Gerhard Raven
+ - merge the various lines split on bunch type.
+ - rate limit lumi input rate at 1KHz.
+ - simplify RZ velo reco setup in Hlt1BeamGasLines
+ - resplit lumilow
+
+! 2010-02-25 - Gerhard Raven
+ - do not require L0_DECISION in OT cosmic line
+
 ! 2010-03-04 - Gerhard Raven
  - updates to Hlt1MuonLines and Hlt1ElectronLines as discussed in
     https://savannah.cern.ch/task/?14164
-
 
 ! 2010-03-04 - Gerhard Raven
  - prefix algorithm names in Hlt1BeamGasLines with Hlt1BeamGas where appropriate
