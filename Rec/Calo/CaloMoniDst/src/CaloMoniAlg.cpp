@@ -1,4 +1,4 @@
-// $Id: CaloMoniAlg.cpp,v 1.13 2010-03-08 01:38:28 odescham Exp $
+// $Id: CaloMoniAlg.cpp,v 1.14 2010-03-08 14:56:15 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -76,8 +76,8 @@ CaloMoniAlg::CaloMoniAlg( const std::string& name,
   m_histoList.push_back( "All" );
   StatusCode sc=setProperty( "HistoTopDir", "CaloMoniDst/" );
   sc.isSuccess() ? 
-    info() << "HistoTopDir set to 'CaloMoniDst/' " << endmsg :
-    info() << "HistoTopDir setProperty failed " << endmsg ;      
+    debug() << "HistoTopDir set to 'CaloMoniDst/' " << endmsg :
+    warning() << "HistoTopDir setProperty failed " << endmsg ;      
 
   // Areas
   m_nAreas = 1 << (CaloCellCode::BitsArea +1);

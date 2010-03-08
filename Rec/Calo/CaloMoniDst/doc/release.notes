@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.73 2010-03-08 01:38:27 odescham Exp $ 
+! $Id: release.notes,v 1.74 2010-03-08 14:56:14 odescham Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+! 2010-03-08 - Olivier Deschamps
+  - adapt CaloPhotonChecker to change in CaloPIDs
+  
+  @TODO : review checkers (use CaloMCTools ...)
 
 ! 2010-03-08 - Olivier Deschamps
  - make use of CaloAlgUtils to define context-dependent TES inputs

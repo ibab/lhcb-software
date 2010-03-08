@@ -6,6 +6,7 @@
 // Relations 
 // ============================================================================
 #include "Relations/IRelationWeighted.h"
+#include "Relations/IRelation.h"
 //#include "Relations/IAssociatorWeighted.h"
 // ============================================================================
 // Event 
@@ -20,7 +21,7 @@
 // forward declarations
 class ICaloHypoLikelyhood;
 class DeCalorimeter;
-class IIncidentSvc    ;
+class IIncidentSvc;
 
 
 /** @class CaloPhotonChecker CaloPhotonChecker.h
@@ -28,7 +29,7 @@ class IIncidentSvc    ;
  *  Photon Selection Monitoring
  *  (LHCb 2004-03)
  *
- *  @author Frédéric Machefert frederic.machefert@in2p3.fr
+ *  @author Frederic Machefert frederic.machefert@in2p3.fr
  *  @date   2004-15-04
  */
 
@@ -73,22 +74,20 @@ protected:
 
   // destructor
   virtual ~CaloPhotonChecker() {}
-
-  std::vector<AIDA::IHistogram1D*> defHisto1d(const unsigned int,
+  std::vector<AIDA::IHistogram2D*> defHisto(const unsigned int,
                                       const double, const double,
                                       const unsigned int,
-                                      const std::string, const std::string,
-                                      const unsigned int);
-
-  inline unsigned int bin(const double value,const std::vector<double> vect) const {
-    unsigned int index=0;
-    if (value>=vect[ vect.size()-1 ]) {return vect.size();}
-    while ((index<vect.size()) && (value>=vect[ index ])) {index++;}
-    return index;
-  }
+                                      const std::string);
+				      
+  inline double transform(double e){
+    const double epsilon=1.e-10;
+    if (e<epsilon) return 0.;
+    double val=log(1.35914*e)-6.21461;
+    if (val>5.5) return 5.5;
+    return  val;
+  } 
 
 private:
-
   unsigned int m_nEvents;
   unsigned int m_nCandidats;
   unsigned int m_nPhotons;
@@ -99,34 +98,31 @@ private:
   DeCalorimeter* m_ecal;
   DeCalorimeter* m_spd;
   DeCalorimeter* m_prs;
+  
   Gaudi::Plane3D m_ecalPlane;
   Gaudi::Plane3D m_prsPlane;
   Gaudi::Plane3D m_spdPlane;
-  double         m_zConv     ;
-
-
-
-  std::string m_TrTableName;
-  std::string m_MCTableName;
+  
+  double         m_zConv;
+  unsigned int   m_area;
 
   // Tools
-  std::string    m_hypotoolType;
-  std::string    m_hypotoolName;
-  ICaloHypoLikelihood* m_hypotool;
-
+  std::string m_IDTableName;
+  std::string m_TrTableName;
+  std::string m_MCTableName;  
+  
   // Particle Properties
-  std::string                      m_gammaName                     ;
-  LHCb::ParticleID                       m_gammaID                       ;
-  std::string                      m_pi0Name                       ;
-  LHCb::ParticleID                       m_pi0ID                         ;
+  std::string      m_gammaName;
+  LHCb::ParticleID m_gammaID;
+  std::string      m_pi0Name;
+  LHCb::ParticleID m_pi0ID;
 
 
   // histogramming related variables
   bool                m_pdf;
-  std::vector<double> m_ebin;
   std::vector<double> m_prsbin;
   std::vector<double> m_chi2bin;
-  std::vector<double> m_shapebin;
+  std::vector<double> m_seedbin;
 
 
   // Signal/background definitions
@@ -171,19 +167,19 @@ private:
   std::vector<double> m_lh_recsig_nospd;
   std::vector<double> m_lh_recbkg_nospd;
 
-  std::vector<AIDA::IHistogram1D*>    m_signalEPrs     ;
-  std::vector<AIDA::IHistogram1D*>    m_backgrEPrs     ;
-  std::vector<AIDA::IHistogram1D*>    m_signalChi2     ;
-  std::vector<AIDA::IHistogram1D*>    m_backgrChi2     ;
-  std::vector<AIDA::IHistogram1D*>    m_signalShape     ;
-  std::vector<AIDA::IHistogram1D*>    m_backgrShape     ;
+  std::vector<AIDA::IHistogram2D*>    m_signalEPrs2D     ;
+  std::vector<AIDA::IHistogram2D*>    m_backgrEPrs2D     ;
+  std::vector<AIDA::IHistogram2D*>    m_signalChi22D     ;
+  std::vector<AIDA::IHistogram2D*>    m_backgrChi22D     ;
+  std::vector<AIDA::IHistogram2D*>    m_signalSeed2D     ;
+  std::vector<AIDA::IHistogram2D*>    m_backgrSeed2D     ;
 
-  std::vector<AIDA::IHistogram1D*>    m_signalEPrsSpd     ;
-  std::vector<AIDA::IHistogram1D*>    m_backgrEPrsSpd     ;
-  std::vector<AIDA::IHistogram1D*>    m_signalChi2Spd     ;
-  std::vector<AIDA::IHistogram1D*>    m_backgrChi2Spd     ;
-  std::vector<AIDA::IHistogram1D*>    m_signalShapeSpd     ;
-  std::vector<AIDA::IHistogram1D*>    m_backgrShapeSpd     ;
+  std::vector<AIDA::IHistogram2D*>    m_signalEPrsSpd2D     ;
+  std::vector<AIDA::IHistogram2D*>    m_backgrEPrsSpd2D     ;
+  std::vector<AIDA::IHistogram2D*>    m_signalChi2Spd2D     ;
+  std::vector<AIDA::IHistogram2D*>    m_backgrChi2Spd2D     ;
+  std::vector<AIDA::IHistogram2D*>    m_signalSeedSpd2D     ;
+  std::vector<AIDA::IHistogram2D*>    m_backgrSeedSpd2D     ;
 };
 
 #endif // CALOPHOTONCHECKER_H
