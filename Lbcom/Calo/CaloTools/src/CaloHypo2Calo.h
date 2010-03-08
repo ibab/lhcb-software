@@ -1,4 +1,4 @@
-// $Id: CaloHypo2Calo.h,v 1.3 2009-04-16 16:09:01 odescham Exp $
+// $Id: CaloHypo2Calo.h,v 1.4 2010-03-08 01:58:39 odescham Exp $
 #ifndef CALOHYPO2CALO_H 
 #define CALOHYPO2CALO_H 1
 
@@ -42,7 +42,9 @@ public:
   int multiplicity(LHCb::CaloCluster  fromCluster, std::string toCalo);
   int multiplicity(){return m_count;};
   void setCalos(std::string from, std::string to){Calo2Calo::setCalos(from,to); };
- 
+  // external setting
+  StatusCode  _setProperty(const std::string& p,const std::string& v){return  setProperty(p,v);};
+  
 
 protected:
 
