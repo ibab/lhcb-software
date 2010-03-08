@@ -1,4 +1,4 @@
-// $Id: CaloClusterCovarianceAlg.cpp,v 1.12 2009-08-21 16:48:11 odescham Exp $ 
+// $Id: CaloClusterCovarianceAlg.cpp,v 1.13 2010-03-08 01:19:40 odescham Exp $ 
 //  ===========================================================================
 #define CALORECO_CALOCLUSTERCOVARIANCEALG_CPP 1 
 /// ===========================================================================
@@ -210,6 +210,7 @@ StatusCode CaloClusterCovarianceAlg::execute()
     }
   }
   
+  counter ( "#Clusters from '" + m_inputData  + "'") += clusters->size() ;
   return StatusCode::SUCCESS ;
 };
 

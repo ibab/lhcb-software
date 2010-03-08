@@ -1,4 +1,4 @@
-// $Id: CaloSinglePhotonAlg.cpp,v 1.17 2009-08-21 16:48:11 odescham Exp $
+// $Id: CaloSinglePhotonAlg.cpp,v 1.18 2010-03-08 01:19:40 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -162,8 +162,7 @@ StatusCode CaloSinglePhotonAlg::initialize()
         tool<ICaloClusterSelector>( *item , this );
       m_selectors.push_back( selector );
     }
-    if ( m_selectors.empty() ) 
-    { info() << "No Cluster Selection     tools are specified!" << endmsg ; }
+    if ( m_selectors.empty() ){ info() << "No Cluster Selection     tools are specified!" << endmsg ; }
   }
   { // locate correction tools
     for( Names::const_iterator item = m_correctionsTypeNames.begin() ;
@@ -173,8 +172,7 @@ StatusCode CaloSinglePhotonAlg::initialize()
         tool<ICaloHypoTool>( *item , this );
       m_corrections.push_back( correction );
     }
-    if ( m_corrections.empty() ) 
-    { info() << "No Hypo    Correction(1) tools are specified!" << endmsg ; }
+    if ( m_corrections.empty() ){ info() << "No Hypo    Correction(1) tools are specified!" << endmsg ; }
   }
   { // locate other hypo  tools
     for( Names::const_iterator item = m_hypotoolsTypeNames.begin() ;
@@ -184,8 +182,7 @@ StatusCode CaloSinglePhotonAlg::initialize()
         tool<ICaloHypoTool>( *item , this );
       m_hypotools.push_back(  hypotool  );
     }
-    if ( m_hypotools.empty() ) 
-    { info() << "No Hypo    Processing(1) tools are specified!" << endmsg ; }
+    if ( m_hypotools.empty() ){ info() << "No Hypo    Processing(1) tools are specified!" << endmsg ; }
   }
   { // locate correction tools
     for( Names::const_iterator item = m_correctionsTypeNames2.begin() ;
@@ -195,19 +192,15 @@ StatusCode CaloSinglePhotonAlg::initialize()
         tool<ICaloHypoTool>( *item , this );
       m_corrections2.push_back( correction );
     }
-    if ( m_corrections2.empty() ) 
-    { info() << "No Hypo    Correction(2) tools are specified!" << endmsg ; }
+    if ( m_corrections2.empty() ){ info() << "No Hypo    Correction(2) tools are specified!" << endmsg ; }
   }
   { // locate other hypo  tools
-    for( Names::const_iterator item = m_hypotoolsTypeNames2.begin() ;
-         m_hypotoolsTypeNames2.end() != item ; ++item )
-    {
+    for( Names::const_iterator item = m_hypotoolsTypeNames2.begin() ;m_hypotoolsTypeNames2.end() != item ; ++item ){
       ICaloHypoTool*  hypotool         = 
         tool<ICaloHypoTool>( *item , this );
       m_hypotools2.push_back(  hypotool  );
     }
-    if ( m_hypotools2.empty() ) 
-    { info () << "No Hypo    Processing(2) tools are specified!" << endmsg ; }
+    if ( m_hypotools2.empty() ){ info () << "No Hypo    Processing(2) tools are specified!" << endmsg ; }
   }
   ///
   return StatusCode::SUCCESS;
@@ -338,7 +331,7 @@ CaloSinglePhotonAlg::execute()
           << hypos->size()  << "/" << clusters->size()
           << endmsg ;
   
-  counter ( "#photons" ) += hypos->size() ;
+  counter ( m_inputData + "=>" + m_outputData  ) += hypos->size() ;
   
   return StatusCode::SUCCESS;
 }

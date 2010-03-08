@@ -1,7 +1,7 @@
 
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Corrections.py,v 1.2 2009-08-10 12:55:39 ibelyaev Exp $ 
+# $Id: Corrections.py,v 1.3 2010-03-08 01:19:39 odescham Exp $ 
 # =============================================================================
 ## @file CaloReco/Corrections.py
 #  Set of E/S/L-correction parameters
@@ -14,7 +14,7 @@
 Set of Calo E/S/L-correction parameters
 """
 # =============================================================================
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__  = (
     'eCorrection'  , ## E-corretions 

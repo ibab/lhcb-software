@@ -1,8 +1,11 @@
-// $Id: CaloElectronAlg.h,v 1.7 2009-08-13 16:04:42 jonrob Exp $
+// $Id: CaloElectronAlg.h,v 1.8 2010-03-08 01:19:40 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2009/08/13 16:04:42  jonrob
+// add missing include
+//
 // Revision 1.6  2008/06/30 15:36:33  odescham
 // prepare for HLT processing
 //

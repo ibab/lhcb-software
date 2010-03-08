@@ -1,8 +1,11 @@
-// $Id: ClusterSpreadTool.h,v 1.5 2009-05-10 15:20:36 ibelyaev Exp $
+// $Id: ClusterSpreadTool.h,v 1.6 2010-03-08 01:19:40 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2009/05/10 15:20:36  ibelyaev
+//  improve the numerical stability & add more statistical printout
+//
 //
 // ============================================================================
 #ifndef CALORECO_CLUSTERSPREADTOOL_H 

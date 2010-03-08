@@ -5,15 +5,17 @@
 #  @date 2008-07-17
 # =============================================================================
 """
-Confurable for Calorimeter Reconstruction
+Configurable for Calorimeter Reconstruction
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $"
 # =============================================================================
 __all__ = (
     'HltCaloRecoConf'     ,
-    'OffLineCaloRecoConf'     
+    'OffLineCaloRecoConf' ,
+    'CaloRecoConf',
+    'CaloProcessor'
     )
 # =============================================================================
 
@@ -24,13 +26,17 @@ from CaloKernel.ConfUtils     import ( addAlgs        ,
                                        printOnDemand  ,
                                        prntCmp        ,
                                        hltContext     , 
-                                       setTheProperty )
+                                       setTheProperty ,
+                                       getAlgo
+                                       )
 from Reconstruction           import ( clusterReco    , 
                                        photonReco     ,
                                        electronReco   ,
                                        mergedPi0Reco  ) 
 
 from Configurables            import CaloDigitConf
+from Configurables            import CaloPIDsConf
+from Configurables            import GaudiSequencer
 
 import logging
 _log = logging.getLogger ('CaloReco')
@@ -62,8 +68,18 @@ class CaloRecoConf(LHCbConfigurableUser):
         , 'ForceDigits'         : True       # Force digits recontruction to be run with Clusters
         , 'CreateADCs'          : False      # Create Calo-ADCs
         , 'UseTracks'           : True       # Use Tracks as Neutrality Criteria 
-        , 'UseSpd'              : False      # Use Spd as Neutrailty Criteria
+        , 'UseSpd'              : False      # Use Spd as Neutrality Criteria
+        , 'UsePrs'              : False      # Use Prs to select Neutral clusters
+        , 'UseTracksE'          : True       # Use Tracks as Charge  Criteria 
+        , 'UseSpdE'             : True       # Use Spd as Charge Criteria
+        , 'UsePrsE'             : True       # Use Prs to select Charged clusters
+        , 'UseTracksM'          : True       # Use Tracks for MergedPi0s-ID
+        , 'CaloStandalone'      : False      # useTrackX = false + usePrs/Spd = true
+        , 'NeutralID'           : True       # Apply neutralID
         , 'EnableRecoOnDemand'  : False      # Enable Reco-On-Demand
+        , 'TrackLocations'      : []         # Track locations (Neutral/Charged cluster selection with UseTrack(E) )
+        , 'SkipNeutrals'        : False
+        , 'SkipCharged'         : False
         ##
         }
     ## documentation lines 
@@ -79,13 +95,23 @@ class CaloRecoConf(LHCbConfigurableUser):
         , 'CreateADCs'         : """ Create Calo-ADCs """ 
         , 'UseTracks'          : """ Use Tracks as Neutrality criterion """ 
         , 'UseSpd'             : """ Use Spd as Neutrality criterion """ 
+        , 'UsePrs'             : """ Use Prs as  EM criterion for neutrals """ 
+        , 'UseTracksE'         : """ Use Tracks as Charge criterion """ 
+        , 'UseSpdE'            : """ Use Spd as Charge criterion """ 
+        , 'UsePrsE'            : """ Use Prs as  EM criterion for charged """ 
+        , 'UseTracksM'         : """ Use Tracks for MergedPi0s-ID """
+        , 'CaloStandalone'     : """ UseTrackX = false + usePrs/Spd = true """ 
+        , 'NeutralID'          : """ Apply neutralID """ 
         , 'EnableRecoOnDemand' : """ Enable Reco-On-Demand """ 
+        , 'TrackLocations'     : """ TrackLocations (Photon/Electron selection)""" 
+        , 'SkipNeutrals'       : """ Skip Neutral reco components in RecList""" 
+        , 'SkipCharged'        : """ Skip Charged reco components in RecList"""
         ##
     }
     
     ## used configurables 
     __used_configurables__ = (
-        CaloDigitConf ,
+        (CaloDigitConf,None) ,
         )
     
     ## configure processing of Digits
@@ -106,7 +132,7 @@ class CaloRecoConf(LHCbConfigurableUser):
             'Offline'                        ,  
             #self.getProp ('Context'           ) ,
             self.getProp ('EnableRecoOnDemand') ,
-            self.getProp ('CreateADCs'        )
+            self.getProp ('CreateADCs'        ) 
             )
     
     ## Configure reconstruction of Ecal Clusters
@@ -130,10 +156,32 @@ class CaloRecoConf(LHCbConfigurableUser):
         """
         Define the reconstruction of Photons
         """
+
+        ## confuse configurable on purpose 
+        _locs = self.getProp ( 'TrackLocations'    )
+        _elocs = []
+        for l in _locs :
+            if l.find( '/Event/' )  != 0 :
+                l = '/Event/' + l
+            _elocs.append( l )
+
+
+        uTracks = self.getProp ( 'UseTracks'      ) 
+        uSpd = self.getProp ( 'UseSpd'            ) 
+        uPrs = self.getProp ( 'UsePrs'            ) 
+        if self.getProp('CaloStandalone') :
+            uTracks = False
+            uSpd    = True
+            uPrs    = True
+            
         cmp = photonReco   ( self.getProp ( 'Context'           ) ,
                              self.getProp ( 'EnableRecoOnDemand') ,
-                             self.getProp ( 'UseTracks'         ) ,
-                             self.getProp ( 'UseSpd'            ) )
+                             uTracks,
+                             uSpd,
+                             uPrs,
+                             _elocs,
+                            self.getProp ( 'NeutralID'         ) 
+                             )
         _log.info ('Configured Single Photons Reco : %s ' % cmp.name()  )
         ##
         return cmp
@@ -143,8 +191,33 @@ class CaloRecoConf(LHCbConfigurableUser):
         """
         Configure recontruction of Electrons
         """
+
+        ## confuse configurable on purpose 
+        _locs = self.getProp ( 'TrackLocations'    )
+        _elocs = []
+        for l in _locs :
+            if l.find( '/Event/' )  != 0 :
+                l = '/Event/' + l
+            _elocs.append( l )
+
+
+
+        uTracks = self.getProp ( 'UseTracksE'      ) 
+        uSpd = self.getProp ( 'UseSpdE'            ) 
+        uPrs = self.getProp ( 'UsePrsE'            ) 
+        if self.getProp('CaloStandalone') :
+            uTracks = False
+            uSpd    = True
+            uPrs    = True
+
+
         cmp = electronReco ( self.getProp( 'Context'            ) ,
-                             self.getProp( 'EnableRecoOnDemand' ) ) 
+                             self.getProp( 'EnableRecoOnDemand' ) ,
+                             uTracks,
+                             uSpd,
+                             uPrs,
+                             _elocs )
+
         _log.info ('Configured Electron Hypos Reco : %s ' % cmp.name()  )
         ##
         return cmp
@@ -154,8 +227,19 @@ class CaloRecoConf(LHCbConfigurableUser):
         """
         Configure recontruction of Merged Pi0
         """
+
+        uTracks = self.getProp ( 'UseTracksM'        )
+        if self.getProp('CaloStandalone') :
+            uTracks = False
+        
+
         cmp = mergedPi0Reco ( self.getProp ( 'Context'            ) ,
-                              self.getProp ( 'EnableRecoOnDemand' ) )
+                              self.getProp ( 'EnableRecoOnDemand' ) ,
+                              False ,
+                              self.getProp ( 'NeutralID'         )  ,
+                              uTracks
+                              )
+
         _log.info ('Configured Merged Pi0     Reco : %s ' % cmp.name()  )
         ##
         return cmp
@@ -180,15 +264,18 @@ class CaloRecoConf(LHCbConfigurableUser):
         _log.info ( self )
 
         recList = self.getProp ( 'RecList') 
+        skipNeutrals = self.getProp('SkipNeutrals')
+        skipCharged  = self.getProp('SkipCharged')
 
         seq     = []
         
         if 'Digits'     in recList : addAlgs ( seq , self.digits     () ) 
         if 'Clusters'   in recList : addAlgs ( seq , self.clusters   () ) 
-        if 'Photons'    in recList : addAlgs ( seq , self.photons    () )
-        if 'MergedPi0s' in recList or 'SplitPhotons' in recList :
-            addAlgs ( seq , self.mergedPi0s () )
-        if 'Electrons'  in recList : addAlgs ( seq , self.electrons  () )
+        if not skipNeutrals :
+            if 'Photons'    in recList : addAlgs ( seq , self.photons    () )
+            if 'MergedPi0s' in recList or 'SplitPhotons' in recList : addAlgs ( seq , self.mergedPi0s () )
+        if not skipCharged :
+            if 'Electrons'  in recList : addAlgs ( seq , self.electrons  () )
         
         setTheProperty ( seq , 'Context'     , self.getProp ( 'Context'     ) )
         setTheProperty ( seq , 'OutputLevel' , self.getProp ( 'OutputLevel' ) )
@@ -246,6 +333,256 @@ class OffLineCaloRecoConf(CaloRecoConf):
         if hltContext ( self.getProp( 'Context' ) ) :
             raise AttributeError, 'Invalid context for OffLineCaloRecoConf'
         
+
+
+
+
+# =============================================================================
+class CaloProcessor( CaloRecoConf ):
+    """
+    Class/Configurable to define the Full calorimeter reconstruction
+    """
+
+## -- re-use CaloRecoConf and add caloPIDs and ProtoP [double-inheritance fails due to conflicts]
+
+   ## define the additional slots
+    __slots__ = {
+        'CaloReco'           : True , ## process CaloReco part
+        'CaloPIDs'           : True , ## process CaloPID part
+        'EnableOnDemand'     : False, ## overwrite EnableRecoOnDemand & EnablePIDsOnDemand
+        'NeutralProtoLocation':'',
+        'ChargedProtoLocation':'',
+        'CaloSequencer'       : None,
+        'ProtoSequencer'      : None
+        }
+    
+    ## used configurables 
+    __used_configurables__ = (
+        (CaloPIDsConf,None ),
+        )
+
+
+    ## Configure recontruction of Calo Charged  PIDs (copy-past from CaloPIDs)
+    def caloPIDs ( self ) :
+
+        from CaloPIDs.PIDs import caloPIDs
+
+        ## confuse configurable on purpose 
+        _locs = self.getProp ( 'TrackLocations'    )
+        _elocs = []
+        for l in _locs :
+            if l.find( '/Event/' )  != 0 :
+                l = '/Event/' + l
+            _elocs.append( l )
+
+            
+        CaloPIDsConf(            
+            Context            = self.getProp ('Context'       ) ,
+            EnablePIDsOnDemand = self.getProp ('EnableOnDemand') ,
+            MeasureTime        = self.getProp ('MeasureTime'   ) ,
+            TrackLocations     = _elocs ,
+            SkipNeutrals       = self.getProp('SkipNeutrals'),
+            SkipCharged        = self.getProp('SkipCharged')
+            )        
+        
+        cmp = caloPIDs ( self.getProp( 'Context'            )  ,
+                         self.getProp( 'EnableOnDemand' )  ,
+                         _elocs,
+                         self.getProp('SkipNeutrals'),
+                         self.getProp('SkipCharged')
+                         )
+        log.info ('Configured Calo PIDs           : %s ' % cmp.name()  )
+        ##
+        return cmp 
+
+    def caloSequence ( self,   tracks=[]  ) :
+        seq  = GaudiSequencer ( 'CaloRecoPIDs' + self.getName() )
+        conf = CaloProcessor(self.getName() )
+        conf.setProp("CaloSequencer", seq)
+        conf.setProp("Context", self.getName() )
+        conf.setProp("TrackLocations", tracks)        
+        return seq
+    def protoSequence ( self,   tracks=[]  ) :
+        seq  = GaudiSequencer ( 'CaloProtoPUpdate' + self.getName() )
+        conf = CaloProcessor(self.getName() )
+        conf.setProp("ProtoSequencer", seq)
+        conf.setProp("Context", self.getName() )
+        conf.setProp("TrackLocations", tracks)        
+        return seq
+    def sequence ( self,   tracks=[]  ) :
+        seq  = GaudiSequencer ( 'CaloProcessor' + self.getName() )
+        conf = CaloProcessor(self.getName() )
+        conf.setProp("Sequence", seq)
+        conf.setProp("Context", self.getName() )
+        conf.setProp("TrackLocations", tracks)        
+        return seq
+
+        
+    def applyConf ( self ) :
+        
+        _log.info ('Apply configuration for  full calo processing ')
+        _log.info ( self )
+        from Configurables import ( GaudiSequencer,
+                                    ChargedProtoParticleAddEcalInfo,
+                                    ChargedProtoParticleAddBremInfo,
+                                    ChargedProtoParticleAddHcalInfo,
+                                    ChargedProtoParticleAddPrsInfo,
+                                    ChargedProtoParticleAddSpdInfo,
+                                    ChargedProtoParticleMaker
+                                    )
+
+        fullSeq     = []
+
+
+        # overwrite Reco & PID onDemand
+        dod = self.getProp('EnableOnDemand')
+        self.setProp('EnableRecoOnDemand',dod)
+
+        ## define the calo sequence
+        caloSeq     = []
+        doReco = self.getProp('CaloReco')
+        doPIDs = self.getProp('CaloPIDs')
+        skipNeutrals = self.getProp('SkipNeutrals')
+        skipCharged  = self.getProp('SkipCharged')
+        context = self.getProp('Context')
+
+        # CaloReco sequence
+        recoSeq = getAlgo( GaudiSequencer , "CaloRecoSeq" , context ) 
+        recList = self.getProp ( 'RecList')         
+        if 'Digits'     in recList : addAlgs ( recoSeq , self.digits     () ) 
+        if 'Clusters'   in recList : addAlgs ( recoSeq , self.clusters   () ) 
+        if not skipNeutrals :
+            if 'Photons'    in recList : addAlgs ( recoSeq , self.photons    () )
+            if 'MergedPi0s' in recList or 'SplitPhotons' in recList : addAlgs ( recoSeq , self.mergedPi0s () )
+        if not skipCharged :
+            if 'Electrons'  in recList : addAlgs ( recoSeq , self.electrons  () )
+
+        # CaloPIDs sequence
+        pidSeq = getAlgo( GaudiSequencer , "CaloPIDsSeq" , context ) 
+        addAlgs ( pidSeq , self.caloPIDs  () )
+                
+        # update CaloSequence
+        if doReco :
+            addAlgs ( caloSeq , recoSeq  )
+        if doPIDs        :
+            addAlgs ( caloSeq , pidSeq )            
+
+
+        ## propagate the global properties
+        setTheProperty ( caloSeq , 'Context'     , self.getProp ( 'Context'     ) )
+        setTheProperty ( caloSeq , 'OutputLevel' , self.getProp ( 'OutputLevel' ) )
+        setTheProperty ( caloSeq , 'MeasureTime' , self.getProp ( 'MeasureTime' ) )
+
+
+
+        ######## ProtoParticle update ##########
+        protoSeq     = []
+
+        #  ProtoParticle locations
+        nloc = self.getProp('NeutralProtoLocation')
+        cloc = self.getProp('ChargedProtoLocation')
+        # try automatic location if not explicit for HLT's sequence
+        if hltContext ( self.getProp('Context') ) :
+            if nloc == '' : 
+                if nloc.find('/') == -1 :
+                    nloc = context + '/ProtoP/Neutrals'
+                else :
+                    nloc = context.replace('/','/ProtoP/',1)+ '/Neutrals'
+            if cloc == '' : 
+                if cloc.find('/') == -1 :
+                    cloc = context + '/ProtoP/Charged'
+                else :
+                    cloc = context.replace('/','/ProtoP/',1)+ '/Charged'
+
+        # Confuse Configurable
+        if cloc != '':
+            if cloc.find( '/Event/' ) != 0 :
+                cloc = '/Event/' + cloc
+
+        if nloc != '':
+            if nloc.find( '/Event/' ) != 0 :
+                nloc = '/Event/' + nloc
+        
+
+        # ChargedProtoParticle
+        if not self.getProp('SkipCharged') :
+            ecal = getAlgo( ChargedProtoParticleAddEcalInfo,"ChargedProtoPAddEcal", context)
+            brem = getAlgo( ChargedProtoParticleAddBremInfo,"ChargedProtoPAddBrem", context)
+            hcal = getAlgo( ChargedProtoParticleAddHcalInfo,"ChargedProtoPAddHcal", context)
+            prs  = getAlgo( ChargedProtoParticleAddPrsInfo ,"ChargedProtoPAddPrs" , context)
+            spd  = getAlgo( ChargedProtoParticleAddSpdInfo ,"ChargedProtoPAddSpd" , context)            
+            # ChargedProtoP Maker on demand (not in any sequencer)
+            maker = getAlgo( ChargedProtoParticleMaker, "ChargedProtoMaker" , context, cloc , dod )
+            if cloc != '' :
+                maker.OutputProtoParticleLocation = cloc
+
+        ## confuse configurable on purpose 
+            _locs = self.getProp ( 'TrackLocations'    )
+            _elocs = []
+            for l in _locs :
+                if l.find( '/Event/' )  != 0 :
+                    l = '/Event/' + l
+                _elocs.append( l )
+
+            if _elocs : 
+                maker.InputTrackLocation = _elocs
+            
+            # location
+            if cloc != '' :
+                ecal.ProtoParticleLocation = cloc
+                brem.ProtoParticleLocation = cloc
+                hcal.ProtoParticleLocation = cloc
+                prs.ProtoParticleLocation = cloc
+                spd.ProtoParticleLocation = cloc            
+            # Fill the sequence
+            cpSeq = getAlgo( GaudiSequencer , "ChargedProtoPCaloUpdateSeq", context )
+            cpSeq.Members += [ ecal,brem,hcal,prs,spd ]
+            addAlgs(protoSeq , cpSeq )
+
+        # NeutralProtoParticleProtoP components        
+        if not self.getProp('SkipNeutrals') :
+            from Configurables import NeutralProtoPAlg
+            neutral = getAlgo( NeutralProtoPAlg,"NeutralProtoPMaker", context)
+            # location
+            if nloc != '' :
+                neutral.ProtoParticleLocation = nloc
+            # fill the sequence
+            addAlgs(protoSeq, neutral )
+
+
+        ## propagate the global properties
+        setTheProperty ( protoSeq , 'Context'     , self.getProp ( 'Context'     ) )
+        setTheProperty ( protoSeq , 'OutputLevel' , self.getProp ( 'OutputLevel' ) )
+        setTheProperty ( protoSeq , 'MeasureTime' , self.getProp ( 'MeasureTime' ) )
+
+        # Full sequence
+        addAlgs( fullSeq, caloSeq )
+        addAlgs( fullSeq, protoSeq )
+        
+            
+        
+        ## define the sequencers
+        if self.isPropertySet('Sequence') :
+            main = self.getProp('Sequence') 
+            addAlgs  ( main , fullSeq ) 
+            _log.info ('Configure main Calo processing Sequence  : %s '% main.name() )
+            _log.info ( prntCmp ( main ) ) 
+
+        if self.isPropertySet('CaloSequencer') :
+            calo = self.getProp('CaloSequencer') 
+            addAlgs  ( calo , caloSeq ) 
+
+        if self.isPropertySet('ProtoSequencer') :
+            proto = self.getProp('ProtoSequencer') 
+            addAlgs  ( proto , protoSeq ) 
+
+
+
+        if self.getProp( 'EnableOnDemand' )  :
+            _log.info ( printOnDemand () ) 
+
+
+
 # =============================================================================
 if '__main__' == __name__ :
     print __doc__
@@ -253,7 +590,3 @@ if '__main__' == __name__ :
     print __version__
     
             
-# =============================================================================
-# The END
-# =============================================================================
-

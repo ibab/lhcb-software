@@ -1,8 +1,0 @@
-
-
-// Tools and correctors
-HltElectronRec.HypoTools        = { "CaloExtraDigits/SpdPrsExtraE"           } ;
-HltElectronRec.CorrectionTools2   = { "CaloECorrection/ECorrection"      } ;
-HltElectronRec.CorrectionTools2  += { "CaloSCorrection/SCorrection"      } ;
-HltElectronRec.CorrectionTools2  += { "CaloLCorrection/LCorrection"      } ;
-

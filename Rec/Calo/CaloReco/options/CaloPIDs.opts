@@ -1,1 +1,0 @@
-HistogramDataSvc.Input +=   { "CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs_DC09_v1.root' TYP='ROOT'" } ;

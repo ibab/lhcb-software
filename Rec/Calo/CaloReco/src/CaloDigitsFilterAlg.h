@@ -1,8 +1,11 @@
-// $Id: CaloDigitsFilterAlg.h,v 1.5 2008-06-30 15:36:33 odescham Exp $
+// $Id: CaloDigitsFilterAlg.h,v 1.6 2010-03-08 01:19:40 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2008/06/30 15:36:33  odescham
+// prepare for HLT processing
+//
 // Revision 1.4  2006/05/30 09:42:02  odescham
 // first release of the CaloReco migration
 //

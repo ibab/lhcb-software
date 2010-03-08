@@ -1,4 +1,4 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.27 2009-08-21 16:48:11 odescham Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.28 2010-03-08 01:19:40 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -145,8 +145,7 @@ StatusCode CaloMergedPi0Alg::initialize()
   { return Error("Could not initialize the base class!",sc);}
 
   //
-  if(m_createClusterOnly)warning() << "only SplitClusters to be produced" 
-                                   << endmsg;
+  if(m_createClusterOnly)info() << "only SplitClusters to be produced" << endmsg;
   
   // locate tools
   for ( Names::const_iterator it = m_toolTypeNames.begin() ;
@@ -1064,9 +1063,9 @@ StatusCode CaloMergedPi0Alg::execute()
     debug() << "post-processing cleaning" << endmsg;
   }
 
-  counter ( "#merged"  ) += pi0s   -> size() ;
-  counter ( "#photons" ) += phots  -> size() ;
-  counter ( "#clusters") += clusts -> size() ;
+  counter ( m_inputData + "=>" + m_outputData )         += pi0s   -> size() ;
+  counter ( m_inputData + "=>" + m_nameOfSplitPhotons)  += phots  -> size() ;
+  counter ( m_inputData + "=>" + m_nameOfSplitClusters) += clusts -> size() ;
 
   // delete (empty) container* if not on TES 
   if(m_createClusterOnly){

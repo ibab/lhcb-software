@@ -1,4 +1,4 @@
-// $Id: CaloSelectNeutralClusterWithTracks.cpp,v 1.3 2009-08-21 16:48:11 odescham Exp $
+// $Id: CaloSelectNeutralClusterWithTracks.cpp,v 1.4 2010-03-08 01:19:40 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -49,9 +49,7 @@ CaloSelectNeutralClusterWithTracks::CaloSelectNeutralClusterWithTracks
   //
   declareProperty ("Table"      , m_tableLocation ) ;
   declareProperty ("MinChi2"    , m_chi2cut       ) ;
-  m_tableLocation = LHCb::CaloAlgUtils::PathFromContext( context() , 
-                                                         LHCb::CaloIdLocation::ClusterMatch ,
-                                                         LHCb::CaloIdLocation::ClusterMatchHlt);
+  m_tableLocation = LHCb::CaloAlgUtils::CaloIdLocation( "ClusterMatch", context() );
 };
 // ============================================================================
 

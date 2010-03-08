@@ -1,4 +1,4 @@
-// $Id: CellularAutomatonAlg.cpp,v 1.7 2009-08-21 16:48:11 odescham Exp $
+// $Id: CellularAutomatonAlg.cpp,v 1.8 2010-03-08 01:19:40 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -177,10 +177,9 @@ StatusCode CellularAutomatonAlg::execute()
   if(m_tool->iterations() < m_passMin)m_passMin = m_tool->iterations();
   if(m_tool->iterations() > m_passMax)m_passMax = m_tool->iterations();
   
-  counter ( "#clusters") += output->size() ;
+  counter ( "#clusters => '" + m_outputData + "'" ) += output->size() ;
   
-  if ( msgLevel( MSG::DEBUG) )
-  {
+  if ( msgLevel( MSG::DEBUG) ){
     debug() << "Built " << clusters.size() <<" cellular automaton clusters  with " 
             << m_tool->iterations() << " iterations" <<endmsg;
     debug() << " ----------------------- Cluster List : " << endmsg;

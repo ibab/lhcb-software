@@ -1,4 +1,4 @@
-// $Id: CaloHypoAlg.cpp,v 1.10 2009-08-21 16:48:11 odescham Exp $
+// $Id: CaloHypoAlg.cpp,v 1.11 2010-03-08 01:19:40 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -138,10 +138,8 @@ StatusCode CaloHypoAlg::execute()
     if( sc.isFailure() ) 
     { Error("Error from the Tool! skip hypo!",sc).ignore() ; continue ; }  
   }
+
+  counter ( "#Hypos from '" + m_inputData +"'") += hypos->size() ;
   //
   return StatusCode::SUCCESS ;
 }
-// ============================================================================
-// The END 
-// ============================================================================
-

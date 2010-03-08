@@ -1,6 +1,6 @@
-// $Id: Brunel.opts,v 1.27 2009-09-16 16:13:28 odescham Exp $ 
+// $Id: Brunel.opts,v 1.28 2010-03-08 01:19:39 odescham Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.27 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.28 $ 
 // ============================================================================
 
 /** @file
@@ -67,11 +67,20 @@ CaloPIDs.Members +=
   { 
     // 3D Matching	
 		"GaudiSequencer/CaloMatch"
-    // Energy Deposit along track path
-    ,"GaudiSequencer/CaloEnergy"
-    // CaloID DLL's
-    ,"GaudiSequencer/CaloDLLs"
+      // Energy Deposit along track path
+      ,"GaudiSequencer/CaloEnergy"
+      // CaloID DLL's
+      ,"GaudiSequencer/CaloDLLs"
+      // Neutral IDs
+      ,"GaudiSequencer/NeutralPIDs"
   } ;
+
+NeutralPIDs.Members += {
+  "CaloPhotonIdAlg/PhotonID",
+  "CaloPhotonIdAlg/MergedID",
+  "CaloPhotonIdAlg/SplitPhotonID"
+}
+
 CaloMatch.Members +=
   {
     "ElectronMatchAlg/ElectronMatch"
@@ -100,7 +109,7 @@ CaloDLLs.Members +=
   };
 
 //#include "$CALORECOOPTS/CaloPIDs.opts" // Histogram file defined in RecSysConf()
-
+#include "$CALORECOOPTS/NeutralPIDs.opts"
 
 CaloDigits.MeasureTime     = true ;
 CaloClusters.MeasureTime   = true ;

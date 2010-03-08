@@ -1,4 +1,4 @@
-// $Id: CaloSharedCellAlg.cpp,v 1.10 2009-08-21 16:48:11 odescham Exp $ 
+// $Id: CaloSharedCellAlg.cpp,v 1.11 2010-03-08 01:19:40 odescham Exp $ 
 // ===========================================================================
 // Include files
 // from GaudiKernel
@@ -187,6 +187,10 @@ StatusCode CaloSharedCellAlg::execute()
     if( sc.isFailure() )
     { return Error("Could not redistribute the energy!"); }
   }
+
+
+  counter ( "#Clusters from '" + m_inputData +"'") += clusters->size() ;
+  
   ///
   return StatusCode::SUCCESS;
   ///  

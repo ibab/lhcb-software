@@ -1,9 +1,43 @@
-! $Id: release.notes,v 1.169 2009-11-13 12:47:21 rlambert Exp $
+! $Id: release.notes,v 1.170 2010-03-08 01:19:38 odescham Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+
+! 2010-03-08 - Olivier Deschamps
+ - Configurables : 
+   - adapt to changes in CaloKernel/ConfUtils
+   - make all component context-dependent
+   - add few slots (SkipNeutral, usePrs, ...)
+   - new CU : 
+     - CaloProcessor() : produce CaloRecoPID / Calo-ProtoPUpdate / Full sequencers for a given track location(s)
+     - fully instantiable
+     - to be used for HLT2's processings
+     - syntax  examples :
+        from Configurables import CaloProcessor
+        _tracks = ['Rec/Track/Best]
+        CaloProcessor('Repro').sequence( _tracks )   ## returns a full (Reco/Pid/ProtoUpdate) sequence for context = 'Repro'
+        CaloProcessor('Hlt2/Fitted').caloSequence( _tracks )   ## returns the calo (Reco/Pid) sequence for context = 'Hlt2/Fitted'
+        CaloProcessor('Hlt2').protoSequence(_tracks) ## return the proto Update sequence for context = 'Hlt2'
+        CaloProcessor('Partial', SkipNeutrals = True , CaloPIDs = False ).sequence() ## return Charged Reco only for default track locations
+
+
+   - properly configure SplitCluster on-demand
+   - add missing 'CaloStandalone' mode
+
+ - options :
+   - clean options (remove obsolete)
+   - add temporarly NeutralPIDs.opts (config to be passed via condD asap)
+
+ - src :
+   - CaloSelectCluster : add Et cut
+
+ - TODO : 
+   - Configurables : special Hlt's settings to speed up the processing (Cluster Et cut , Et cut of electron before track match, ...)
+   - CaloProcessor() CU : split ProtoP update by CaloPID technique (to be synchronized with CaloPIDsConf)
+   - CellularAutomaton : EtCut + level !=0 to be active simultaneously
 
 !========================== CaloReco v5r3  2009-11-13 =========================
 ! 2009-11-13 - Rob Lambert

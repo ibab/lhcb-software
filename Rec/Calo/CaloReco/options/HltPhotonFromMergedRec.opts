@@ -1,5 +1,0 @@
-//HltPhotonFromMergedRec.InputData =   "Hlt/Calo/SplitPhotons"        ;
-HltPhotonFromMergedRec.HypoType = "SplitPhotons";
-HltPhotonFromMergedRec.Tools    += { "CaloECorrection/ECorrection" };   // Ecorrection
-HltPhotonFromMergedRec.Tools    += { "CaloSCorrection/SCorrection" };   // Scorrection
-HltPhotonFromMergedRec.Tools    += { "CaloLCorrection/LCorrection" };   // Lcorrection
