@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.92 2010-03-04 16:24:43 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.93 2010-03-08 18:11:10 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -241,7 +241,10 @@ class DaVinci(LHCbConfigurableUser) :
             physFilter = HltRoutingBitsFilter( "PhysFilter", RequireMask = [ 0x0, 0x4, 0x0 ] )  # make sure lumi events are ignored
             hltDVSeq = GaudiSequencer("RunHltInDaVinci")  # 
             hltSeq = GaudiSequencer("Hlt")         # catch the Hlt sequence to make sur it's run first
-            hltDVSeq.Members = [ physFilter, hltSeq ]
+            from Configurables import bankKiller
+            log.warning("Running Hlt. If there are already banks written by Hlt in the data, they will be removed.") 
+            bk = bankKiller('KillHltBanks', BankTypes = [ "HltRoutingBits", "HltSelReports", "HltVertexReports", "HltDecReports", "HltLumiSummary" ])
+            hltDVSeq.Members = [ physFilter, bk, hltSeq ]
             ApplicationMgr().TopAlg += [ hltDVSeq ]  
             log.info("Will run Hlt")
             log.info( HltConf() )

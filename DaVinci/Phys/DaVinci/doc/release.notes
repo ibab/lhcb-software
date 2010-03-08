@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.412 2010-03-08 11:45:36 jpalac Exp $
+! $Id: release.notes,v 1.413 2010-03-08 18:11:10 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2010-03-08 - Patrick Koppenburg
+ - Add a bankKiller to remove Hlt banks if they are already in the data
 
 !========================== DaVinci v25r2 2010-03-08 =======================
 
@@ -19,6 +22,7 @@
 ! 2010-03-01 - Patrick Koppenburg
  - Enforce Simulation = True for DataType MC09 and DC06
 
+>>>>>>> 1.412
 ! 2010-02-25 - Patrick Koppenburg
  - Changed default value of Simulation to false
 
