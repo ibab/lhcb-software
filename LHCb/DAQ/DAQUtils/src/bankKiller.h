@@ -14,6 +14,12 @@
 
 /** @class bankKiller bankKiller.h   
  *
+ *   Killer of raw event banks.
+ *
+ *   Input: 
+ *    - BankTypes : list of bank names to be killed or saved
+ *    - DefaultIsKill : Main behaviour switch. If false (default), kill only given banks. If true, kill all BUT given banks.
+ *
  *    @author: Olivier Deschamps
  *    @date:   O6 Septembre 2006
  */
@@ -30,12 +36,14 @@ class bankKiller : public GaudiAlgorithm {
   virtual StatusCode execute   ();
   
  protected:
+  ///. kill all banks of given type
   void  killBankType( LHCb::RawBank::BankType bankType, 
-		      bool warningmsg ); // kill all banks of given type
+		      bool warningmsg ); 
   
  private:   
-  std::vector< std::string > m_bankTypes;
-  bool m_defaultIsKill;
+  std::vector< std::string > m_bankTypes;  ///< List of bank names
+  /// Main behaviour switch. If false (default), kill only given banks. If true, kill all BUT given banks.
+  bool m_defaultIsKill ;                   
   LHCb::RawEvent* m_rawEvt;
 };
 #endif //    BANKKILLER_H

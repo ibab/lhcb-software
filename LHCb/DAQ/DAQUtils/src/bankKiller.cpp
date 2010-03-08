@@ -23,8 +23,9 @@ bankKiller::bankKiller( const std::string& name, ISvcLocator* pSvcLocator)
     ,m_bankTypes()
 {
 
-  declareProperty("BankTypes"     , m_bankTypes      ) ;
-  declareProperty("DefaultIsKill" , m_defaultIsKill = false  ) ;
+  declareProperty("BankTypes"     , m_bankTypes, "List of bank names"    ) ;
+  declareProperty("DefaultIsKill" , m_defaultIsKill = false, 
+                  "Main behaviour switch. If false (default), kill only given banks. If true, kill all BUT given banks." ) ;
 
 };
 
