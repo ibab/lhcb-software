@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.47 2009-10-28 14:32:35 jpalac Exp $
+!$Id: release.notes,v 1.48 2010-03-08 10:47:42 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2010-03-08 - Juan Palacios
+ - options/TestMicroDSTMakeNewConf.py -> options/TestMicroDSTMake.py
+ - options/TestMicroDSTMakeNewConf.py
+  . Now use new DSTWriters fragments. Writes MicroDST for single selection.
+ - cmt/requirements
+  . Increase to v2r12.
 
 !======================= Ex/MicroDSTExample v2r11 2009-10-28 =================
 
