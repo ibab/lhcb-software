@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.128 2010-03-04 10:50:25 graven Exp $
+$Id: release.notes,v 1.129 2010-03-08 00:15:55 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,10 @@ $Id: release.notes,v 1.128 2010-03-04 10:50:25 graven Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2010-03-07 - V. Gligorov
+ - Continuing work on Savannah tasks 13784 and 12691. Remove obsolete
+   import of TopoTFInputParticles
 
 ! 2010-03-04 - Gerhard Raven
  - fix typo in Hlt2Forward

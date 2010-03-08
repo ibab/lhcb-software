@@ -46,7 +46,6 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import bindMembers
         from Configurables import FilterDesktop,CombineParticles
         from Hlt2SharedParticles.GoodParticles import GoodPions, GoodKaons
-        from Hlt2SharedParticles.TopoTFInputParticles import TopoTFInputParticles
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.V0 import KsDDFit
 	from HltLine.HltPVs import PV3D
