@@ -151,7 +151,6 @@ extern "C" int rtl_test_process_sleep(int argc, char** argv) {
   if ( argc > 1 ) {
     int nsec;
     ::sscanf(argv[1],"%d",&nsec);
-    ::lib_rtl_sleep(10*nsec);
     ::printf("%-12s Process starting...\n",nam);
     ::printf("%-12s arg0:%s\n",nam,argv[0]);
     ::printf("%-12s arg1:%s\n",nam,argv[1]);
@@ -174,6 +173,7 @@ extern "C" int rtl_test_sub_processes(int, char** ) {
   cmd += "/";
   cmd += ::getenv("CMTCONFIG");
   cmd += "/test.exe";
+  ::lib_rtl_signal_log(false);
   Process::setDebug(true);
   pg.add(p1=new Process("SLEEPER_1",cmd.c_str(),a1,"/dev/null"));
   pg.start();
@@ -193,7 +193,7 @@ extern "C" int rtl_test_sub_processes(int, char** ) {
   pg.add(p6=new Process("SLEEPER_6",cmd.c_str(),a6));
   time_t start = ::time(0);
   pg.start();
-  ::lib_rtl_sleep(200);
+  ::lib_rtl_sleep(100);
   cout << "Stop process " << p2->name() << endl;
   p2->stop();
   ::lib_rtl_sleep(100);
@@ -206,11 +206,11 @@ extern "C" int rtl_test_sub_processes(int, char** ) {
   pg.wait();
   pg.removeAll();
   time_t stop = ::time(0);
-  if ( ::fabs(float(stop-start)) >= 6E0 ) {
+  if ( ::fabs(float(stop-start)) < 30E0 ) {
     cout << "All processes ended" << endl;
   }
   else {
-    cout << "Subprocess execution failed." << endl;
+    cout << "Subprocess execution failed:" << ::fabs(float(stop-start)) << "seconds." << endl;
   }
   return 0;
 }

@@ -150,6 +150,11 @@ int Process::kill()    {
   return sendSignal(SIGKILL);
 }
 
+/// Interrupt the process (SIGINT)
+int Process::interrupt()    {
+  return sendSignal(SIGINT);
+}
+
 /// Wait for process to terminate
 int Process::wait(int flag)    {
 #ifdef __linux

@@ -104,6 +104,8 @@ extern "C" {
   /// enable intercpets
   int lib_rtl_enable_intercept();
 
+  /// Set signal handling output level
+  void lib_rtl_signal_log(int value);
   /// Declare exit handler
   int lib_rtl_declare_exit(int (*hdlr)(void*) ,void* param);
   /// Remove exit handler. Argument must match declaration by pointer !

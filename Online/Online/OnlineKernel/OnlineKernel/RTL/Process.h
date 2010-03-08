@@ -82,6 +82,8 @@ namespace RTL {
     virtual int stop();
     /// Kill the process (SIGKILL)
     virtual int kill();
+    /// Interrupt the process (SIGINT)
+    virtual int interrupt();
     /// Wait for process to terminate
     virtual int wait(int flag=WAIT_NOBLOCK);
   };

@@ -88,15 +88,14 @@ namespace RTL {
     void install(int num, const string& name, struct sigaction& action);
     static void handler(int signum, siginfo_t *info,void * );
   };
-
+  static bool s_exit_handler_print = true;
   static ExitSignalHandler& s_RTL_ExitSignalHandler = ExitSignalHandler::instance();
 }
 extern "C" void* lib_rtl_exithandler_instance() {
   return &RTL::s_RTL_ExitSignalHandler;
 }
 
-
-RTL::ExitSignalHandler::ExitSignalHandler() {
+RTL::ExitSignalHandler::ExitSignalHandler()  {
   struct sigaction new_action;
   sigemptyset(&new_action.sa_mask);
   new_action.sa_handler   = 0;
@@ -145,8 +144,10 @@ void RTL::ExitSignalHandler::handler(int signum, siginfo_t *info, void *ptr) {
     __sighandler_t old = (*i).second.second.sa_handler;
     func_desc<void (*)(int)> dsc0(old);
     func_desc<void (*)(int,siginfo_t*, void*)> dsc(dsc0.ptr);
-    ::lib_rtl_output(LIB_RTL_ERROR,"RTL:Handled signal: %d [%s] Old action:%p\n",
-		     info->si_signo,(*i).second.first.c_str(),dsc.ptr);
+    if ( s_exit_handler_print ) {
+      ::lib_rtl_output(LIB_RTL_ERROR,"RTL:Handled signal: %d [%s] Old action:%p\n",
+		       info->si_signo,(*i).second.first.c_str(),dsc.ptr);
+    }
     if ( old && old != SIG_IGN ) {
       dsc.fun(signum,info,ptr);
       //::_exit(signum);
@@ -155,6 +156,11 @@ void RTL::ExitSignalHandler::handler(int signum, siginfo_t *info, void *ptr) {
       ::_exit(0);
     }
   }
+}
+
+/// Set signal handling output level
+extern "C" void lib_rtl_signal_log(int value) {
+  RTL::s_exit_handler_print = (value!=0);
 }
 
 #elif _WIN32
