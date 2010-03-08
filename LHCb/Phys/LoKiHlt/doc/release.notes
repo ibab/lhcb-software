@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.33 2010-03-07 18:06:19 ibelyaev Exp $ 
+! $Id: release.notes,v 1.34 2010-03-08 08:00:36 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiHlt
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
+
+! 2010-03-08 - Vanya Belyaev
+
+ - fix for Win32 platform
 
 ! 2010-03-07 - Vanya Belyaev
 

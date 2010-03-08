@@ -1,4 +1,4 @@
-// $Id: Odin.cpp,v 1.2 2010-03-07 18:06:20 ibelyaev Exp $
+// $Id: Odin.cpp,v 1.3 2010-03-08 08:00:36 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -109,9 +109,9 @@ LoKi::Odin::RunNumber::~RunNumber(){}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
-LoKi::Odin::RunNumber::RunNumber*
-LoKi::Odin::RunNumber::RunNumber::clone() const 
-{ return new LoKi::Odin::RunNumber::RunNumber(*this) ; }
+LoKi::Odin::RunNumber*
+LoKi::Odin::RunNumber::clone() const 
+{ return new LoKi::Odin::RunNumber ( *this ) ; }
 // ============================================================================
 // MANDATORY: The only one essential method:
 // ============================================================================
@@ -363,9 +363,9 @@ LoKi::Odin::EvtNumber::~EvtNumber(){}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
-LoKi::Odin::EvtNumber::EvtNumber*
-LoKi::Odin::EvtNumber::EvtNumber::clone() const 
-{ return new LoKi::Odin::EvtNumber::EvtNumber(*this) ; }
+LoKi::Odin::EvtNumber*
+LoKi::Odin::EvtNumber::clone() const 
+{ return new LoKi::Odin::EvtNumber(*this) ; }
 // ============================================================================
 // MANDATORY: The only one essential method:
 // ============================================================================
