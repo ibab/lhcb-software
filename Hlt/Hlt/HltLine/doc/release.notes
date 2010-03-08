@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.92 2010-03-04 23:07:33 graven Exp $
+! $Id: release.notes,v 1.93 2010-03-08 00:06:23 gligorov Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2010-03-07 - V. Gligorov
+ - Continuing work on Savannah tasks 13784 and 12691. Clean up the tracking
+   sequenes in Hlt2Tracking; each subsequence now returns a self-sufficient
+   bindMembers instance. Move all creation of the sequences to the apply
+   configuration method and fill list of used configurables in order to
+   apply the configuration in the correct order.
 
 ! 2010-03-02 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691. Major changes

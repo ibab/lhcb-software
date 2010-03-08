@@ -10,77 +10,77 @@ from HltTrackNames import HltBiDirectionalKalmanFitSuffix,Hlt2DownstreamTracksNa
 # Hlt2Tracking
 #
 class Hlt2UnfittedForwardTracking(Hlt2Tracking) :
-        __used_configurables__ = []
+        #__used_configurables__ = []
         __slots__ = []
 #
 class Hlt2BiKalmanFittedRICHForwardTracking(Hlt2Tracking) :
-	__used_configurables__ = []
+	#__used_configurables__ = []
 	__slots__ = []
 #
 class Hlt2UnfittedDownstreamTracking(Hlt2Tracking) :
-	__used_configurables__ = []
+	#__used_configurables__ = []
 	__slots__ = []
 #
 class Hlt2BiKalmanFittedDownstreamTracking(Hlt2Tracking) :
-    __used_configurables__ = []
-    __slots__ = []
+	#__used_configurables__ = []
+	__slots__ = []
 #
 # The "vanilla" configuration, no track fitting, no RICH
 # PID, no seeding, no CALO PID for charged hadrons 
 #
 def setHlt2UnfittedForwardTracking(prefix,dataType,Hlt2UnfittedForwardTracking) :
         
-	Hlt2UnfittedForwardTracking.DataType = dataType
-        Hlt2UnfittedForwardTracking.Prefix = prefix
-        Hlt2UnfittedForwardTracking.FastFitType = HltUnfittedTracksSuffix #track fit is off by default
-        Hlt2UnfittedForwardTracking.Hlt2Tracks = Hlt2ForwardTracksName
-        Hlt2UnfittedForwardTracking.DoFastFit = False
-        Hlt2UnfittedForwardTracking.UseRICH = False
-        Hlt2UnfittedForwardTracking.UseCALO = False
-        Hlt2UnfittedForwardTracking.DoSeeding = False
-        Hlt2UnfittedForwardTracking.DoCloneKilling = False
+	Hlt2UnfittedForwardTracking.setProp("DataType",		dataType		)
+        Hlt2UnfittedForwardTracking.setProp("Prefix",		prefix			)
+        Hlt2UnfittedForwardTracking.setProp("FastFitType",	HltUnfittedTracksSuffix )
+        Hlt2UnfittedForwardTracking.setProp("Hlt2Tracks",	Hlt2ForwardTracksName	)
+        Hlt2UnfittedForwardTracking.setProp("DoFastFit",	False			)
+        Hlt2UnfittedForwardTracking.setProp("UseRICH",		False			)
+        Hlt2UnfittedForwardTracking.setProp("UseCALO",		False			)
+        Hlt2UnfittedForwardTracking.setProp("DoSeeding",	False			)
+        Hlt2UnfittedForwardTracking.setProp("DoCloneKilling",	False			)
 #
 # With track fitting and RICH PID, but no seeding
 # and no CALO PID for charged hadrons
 #
 def setHlt2BiKalmanFittedRICHForwardTracking(prefix,dataType,Hlt2BiKalmanFittedRICHForwardTracking) :
 
-	Hlt2BiKalmanFittedRICHForwardTracking.Prefix = prefix
-	Hlt2BiKalmanFittedRICHForwardTracking.FastFitType = HltBiDirectionalKalmanFitSuffix
-	Hlt2BiKalmanFittedRICHForwardTracking.Hlt2Tracks = Hlt2ForwardTracksName
-	Hlt2BiKalmanFittedRICHForwardTracking.DoFastFit = True
-	Hlt2BiKalmanFittedRICHForwardTracking.UseRICH = True
-	Hlt2BiKalmanFittedRICHForwardTracking.UseCALO = False
-	Hlt2BiKalmanFittedRICHForwardTracking.DataType = dataType
-	Hlt2BiKalmanFittedRICHForwardTracking.DoSeeding = False
-	Hlt2BiKalmanFittedRICHForwardTracking.DoCloneKilling = False
+	Hlt2BiKalmanFittedRICHForwardTracking.setProp("Prefix",		prefix				)
+	Hlt2BiKalmanFittedRICHForwardTracking.setProp("FastFitType",	HltBiDirectionalKalmanFitSuffix	)
+	Hlt2BiKalmanFittedRICHForwardTracking.setProp("Hlt2Tracks",	Hlt2ForwardTracksName		)
+	Hlt2BiKalmanFittedRICHForwardTracking.setProp("DoFastFit",	True				)
+	Hlt2BiKalmanFittedRICHForwardTracking.setProp("UseRICH",	True				)
+	Hlt2BiKalmanFittedRICHForwardTracking.setProp("UseCALO",	False				)
+	Hlt2BiKalmanFittedRICHForwardTracking.setProp("DataType",	dataType			)
+	Hlt2BiKalmanFittedRICHForwardTracking.setProp("DoSeeding",	False				)
+	Hlt2BiKalmanFittedRICHForwardTracking.setProp("DoCloneKilling",	False				)
 #
 # Now for the Downstream tracks, but no track fit. RICH and CALO PID
 # information off, makes downstream tracks ONLY
 #
 def setHlt2UnfittedDownstreamTracking(prefix,dataType,Hlt2UnfittedDownstreamTracking) :
 
-	Hlt2UnfittedDownstreamTracking.Prefix = prefix
-	Hlt2UnfittedDownstreamTracking.FastFitType = HltUnfittedTracksSuffix
-	Hlt2UnfittedDownstreamTracking.Hlt2Tracks = Hlt2DownstreamTracksName
-	Hlt2UnfittedDownstreamTracking.DoFastFit = False
-	Hlt2UnfittedDownstreamTracking.UseRICH = False
-	Hlt2UnfittedDownstreamTracking.UseCALO = False
-	Hlt2UnfittedDownstreamTracking.DataType = dataType
-	Hlt2UnfittedDownstreamTracking.DoSeeding = True
-	Hlt2UnfittedDownstreamTracking.DoCloneKilling = False
+	Hlt2UnfittedDownstreamTracking.setProp("Prefix",	prefix			)
+	Hlt2UnfittedDownstreamTracking.setProp("FastFitType",	HltUnfittedTracksSuffix	)
+	Hlt2UnfittedDownstreamTracking.setProp("Hlt2Tracks",	Hlt2DownstreamTracksName)
+	Hlt2UnfittedDownstreamTracking.setProp("DoFastFit",	False			)
+	Hlt2UnfittedDownstreamTracking.setProp("UseRICH",	False			)
+	Hlt2UnfittedDownstreamTracking.setProp("UseCALO",	False			)
+	Hlt2UnfittedDownstreamTracking.setProp("DataType",	dataType		)
+	Hlt2UnfittedDownstreamTracking.setProp("DoSeeding",	True			)
+	Hlt2UnfittedDownstreamTracking.setProp("DoCloneKilling",False			)
 #
 # Now the Downstream tracks with the bidirectional Kalman fit.
 # RICH and CALO PID information off, makes downstream tracks ONLY
 #
 def setHlt2BiKalmanFittedDownstreamTracking(prefix,dataType,Hlt2BiKalmanFittedDownstreamTracking) :
 
-	Hlt2BiKalmanFittedDownstreamTracking.Prefix = prefix
-        Hlt2BiKalmanFittedDownstreamTracking.FastFitType = HltBiDirectionalKalmanFitSuffix
-        Hlt2BiKalmanFittedDownstreamTracking.Hlt2Tracks = Hlt2DownstreamTracksName
-        Hlt2BiKalmanFittedDownstreamTracking.DoFastFit = True
-        Hlt2BiKalmanFittedDownstreamTracking.UseRICH = False
-        Hlt2BiKalmanFittedDownstreamTracking.UseCALO = False
-        Hlt2BiKalmanFittedDownstreamTracking.DataType = dataType
-        Hlt2BiKalmanFittedDownstreamTracking.DoSeeding = True
-        Hlt2BiKalmanFittedDownstreamTracking.DoCloneKilling = False
+	Hlt2BiKalmanFittedDownstreamTracking.setProp("Prefix",		prefix				)
+        Hlt2BiKalmanFittedDownstreamTracking.setProp("FastFitType",	HltBiDirectionalKalmanFitSuffix	)
+        Hlt2BiKalmanFittedDownstreamTracking.setProp("Hlt2Tracks",	Hlt2DownstreamTracksName	)
+        Hlt2BiKalmanFittedDownstreamTracking.setProp("DoFastFit",	True				)
+        Hlt2BiKalmanFittedDownstreamTracking.setProp("UseRICH",		False				)
+        Hlt2BiKalmanFittedDownstreamTracking.setProp("UseCALO",		False				)
+        Hlt2BiKalmanFittedDownstreamTracking.setProp("DataType",	dataType			)
+        Hlt2BiKalmanFittedDownstreamTracking.setProp("DoSeeding",	True				)
+        Hlt2BiKalmanFittedDownstreamTracking.setProp("DoCloneKilling",	False				)
