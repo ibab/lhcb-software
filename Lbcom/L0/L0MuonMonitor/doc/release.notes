@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.26 2009-06-17 06:27:57 cattanem Exp $
+! $Id: release.notes,v 1.27 2010-03-08 15:00:33 jucogan Exp $
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
 !--------------------------------------------------------------------------
+
+! 2010-03-08 - Julien Cogan
+ - L0MuonMonitorBase : 
+	- new helper functions : getL0MuonPads, olsErrorSummary, activeTS
+  - new properties : Prescale & Online
 
 !========================== L0MuonMonitor v1r5 2009-06-17 =================
 ! 2009-05-28 - Julien Cogan

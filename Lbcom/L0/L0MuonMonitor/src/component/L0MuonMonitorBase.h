@@ -1,10 +1,13 @@
-// $Id: L0MuonMonitorBase.h,v 1.6 2008-11-07 16:31:53 jucogan Exp $
+// $Id: L0MuonMonitorBase.h,v 1.7 2010-03-08 15:00:34 jucogan Exp $
 #ifndef COMPONENT_L0MUONMONITORBASE_H 
 #define COMPONENT_L0MUONMONITORBASE_H 1
 
 // Include files
+#include <fstream>
+
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
+#include "GaudiKernel/RndmGenerators.h"
 #include "Kernel/MuonTileID.h"
 
 #include "MuonKernel/MuonSystemLayout.h"
@@ -30,11 +33,15 @@ public:
 protected:
 
   void olsErrorSummary(MsgStream & msg) const;
+  void olsErrorSummary(std::ofstream & fout) const;
   
   StatusCode getL0MuonTiles(std::vector<LHCb::MuonTileID> & l0muontiles);
+  StatusCode getL0MuonPads(std::vector<LHCb::MuonTileID> & l0muonpads);
   StatusCode getL0MuonTilesTAE(std::vector<std::pair<LHCb::MuonTileID,int > > & l0muontiles);
   StatusCode getL0MuonPadsTAE(std::vector<std::pair<LHCb::MuonTileID,int > > & l0muonpads);
 
+  void activeTS(std::vector<int> & active_slots);
+  
   StatusCode getOlsInError(std::vector<LHCb::MuonTileID> & ols);
 
   StatusCode storeOlsInError();
@@ -49,8 +56,14 @@ protected:
   bool exclusiveBx(); //Return true if the current Bx is in the list of exclusive  
   bool selectedTrigger();
 
-  bool m_shortnames; // Use shortname for histograms created by the monitoring tools  
+  AIDA::IHistogram1D * m_h_online; /// Error counters
 
+  bool m_shortnames; // Use shortname for histograms created by the monitoring tools  
+  bool m_online;     /// Online mode (light output)
+
+  double m_prescale; // Prescaling: fraction of events to process
+  Rndm::Numbers  m_rnd;
+  
   std::vector<int> m_time_slots;
   std::vector<int> m_stations;
   std::vector<int> m_quarters;

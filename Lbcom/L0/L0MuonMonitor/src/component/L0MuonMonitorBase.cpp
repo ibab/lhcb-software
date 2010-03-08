@@ -1,8 +1,10 @@
-// $Id: L0MuonMonitorBase.cpp,v 1.9 2009-02-20 09:15:10 jucogan Exp $
+// $Id: L0MuonMonitorBase.cpp,v 1.10 2010-03-08 15:00:34 jucogan Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/IRndmGen.h"
+#include "GaudiKernel/IRndmGenSvc.h"
 
 
 #include "Kernel/MuonLayout.h"
@@ -60,7 +62,10 @@ L0MuonMonitorBase::L0MuonMonitorBase( const std::string& name,
   declareProperty( "TriggerType"  , m_triggerType = -1);
 
   declareProperty( "ShortNames", m_shortnames = true);
+
+  declareProperty( "Prescale" , m_prescale = 1.);
   
+  declareProperty( "Online"  , m_online = true);
 }
 
 //=============================================================================
@@ -78,6 +83,11 @@ StatusCode L0MuonMonitorBase::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   setLayouts();
+
+  sc = m_rnd.initialize(randSvc(), Rndm::Flat(0.,1.));
+  if ( !sc.isSuccess() ) {
+    return sc;
+  }
   
   return StatusCode::SUCCESS;
 }
@@ -103,6 +113,17 @@ StatusCode L0MuonMonitorBase::finalize() {
 }
 
 //=============================================================================
+
+void L0MuonMonitorBase::activeTS(std::vector<int> & active_slots)
+{
+  // get list of active time slots in TAE
+  active_slots.clear();
+  for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
+    setProperty("RootInTes",L0Muon::MonUtilities::timeSlot(*it_ts));
+    if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
+    active_slots.push_back(*it_ts);
+  }
+}
 
 StatusCode L0MuonMonitorBase::getOlsInError(std::vector<LHCb::MuonTileID> & ols)
 {
@@ -226,7 +247,28 @@ void L0MuonMonitorBase::olsErrorSummary(MsgStream & msg) const{
        <<"\t ol= "<<ol.toString()
        <<"\t : "<<nerrors<<" errors"<<endmsg;
   }
-  msg<<"---";
+  msg<<"---"<<endmsg;
+
+}
+
+void L0MuonMonitorBase::olsErrorSummary(std::ofstream &fout) const{
+
+  fout<<"--- L0Muon input optical links error summary : "<<m_err_ols_stored.size()<<" errors detected"<<"\n";
+  std::map<LHCb::MuonTileID,int>::const_iterator itol;
+  for (itol=m_err_ols_stored.begin(); itol!=m_err_ols_stored.end(); ++itol) {
+    LHCb::MuonTileID ol=itol->first;
+    int nerrors=itol->second;
+    LHCb::MuonTileID mid_board=MuonLayout(1,1).contains(ol);
+    int ipb=mid_board.region()*3+mid_board.nY()*2+mid_board.nX()-1;
+    LHCb::MuonTileID mid_pu=ol.containerID(MuonLayout(2,2));
+    int ipu=(mid_pu.nY()%2)*2+(mid_pu.nX()%2);
+    
+    fout<<"-- "<<"Q"<<(ol.quarter()+1)<<" M"<<(ol.station()+1)<<" R"<<(ol.region()+1)
+       <<" PB"<<ipb<<" PU"<<ipu
+       <<"\t ol= "<<ol.toString()
+       <<"\t : "<<nerrors<<" errors"<<"\n";
+  }
+  fout<<"---"<<"\n";
 
 }
 
@@ -262,6 +304,53 @@ StatusCode L0MuonMonitorBase::getL0MuonTiles(std::vector<LHCb::MuonTileID> & l0m
   {
     std::stringstream errstr("");
     errstr<<"getL0MuonTiles : L0MuonDatas not found @"<<rootInTES()<<"/"<<LHCb::L0MuonDataLocation::Default+context();
+    return Warning(errstr.str(),StatusCode::FAILURE,5);
+  }
+  return sc;
+}
+
+StatusCode L0MuonMonitorBase::getL0MuonPads(std::vector<LHCb::MuonTileID> & l0muonpads)
+{
+
+  l0muonpads.clear();
+
+  StatusCode sc=StatusCode::SUCCESS;
+
+  std::string location = LHCb::L0MuonDataLocation::Default +context();
+  if (  exist<LHCb::L0MuonDatas>(location ) ) 
+  {
+    LHCb::L0MuonDatas* pdatas = get<LHCb::L0MuonDatas>( location );
+    LHCb::L0MuonDatas::const_iterator itdata;
+    for (itdata = pdatas->begin() ; itdata!=pdatas->end() ; ++itdata){
+      LHCb::MuonTileID mkey = (*itdata)->key();    
+      std::vector<LHCb::MuonTileID> ols = (*itdata)->ols();
+      if (ols.size()>0) {
+        std::vector<LHCb::MuonTileID> tiles;
+        for (std::vector<LHCb::MuonTileID>::iterator itol=ols.begin(); itol!=ols.end(); ++itol){
+          if (!itol->isValid()){
+            info()<<"PU "<<mkey.toString()<<" tile is not valid : "<<itol->toString()<<endreq;
+          }
+
+          if (!quarterInUse(itol->quarter())) continue;
+          if (!regionInUse(itol->region())  ) continue;
+          if (!stationInUse(itol->station())) continue;
+            
+          tiles.push_back(*itol);
+        }
+        std::vector<LHCb::MuonTileID> pads;
+        L0Muon::MonUtilities::makePads(tiles,pads);
+        debug()<<"PU "<<mkey.toString()<<" # of tiles "<<tiles.size()<<"# of pads "<<pads.size()<<endreq;
+        for (std::vector<LHCb::MuonTileID>::iterator itpads=pads.begin(); itpads<pads.end(); ++itpads) {
+          l0muonpads.push_back(*itpads);
+        }
+        //l0muonpads.insert(l0muonpads.end(),pads.begin(),pads.end());
+      }
+    }
+  } 
+  else 
+  {
+    std::stringstream errstr("");
+    errstr<<"getL0muonPads : L0MuonDatas not found @"<<rootInTES()<<"/"<<LHCb::L0MuonDataLocation::Default+context();
     return Warning(errstr.str(),StatusCode::FAILURE,5);
   }
   return sc;
