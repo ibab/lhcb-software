@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoParticleAddRichInfo
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleAddRichInfo.cpp,v 1.3 2010-03-08 01:46:40 odescham Exp $
+ * $Id: ChargedProtoParticleAddRichInfo.cpp,v 1.4 2010-03-08 21:51:56 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
@@ -152,11 +152,12 @@ void ChargedProtoParticleAddRichInfo::updateRICH( ProtoParticle * proto ) const
   proto->setRichPID( richPID );
 
   // Store the raw RICH PID info
-  proto->addInfo( LHCb::ProtoParticle::RichDLLe,  richPID->particleDeltaLL(Rich::Electron) );
-  proto->addInfo( LHCb::ProtoParticle::RichDLLmu, richPID->particleDeltaLL(Rich::Muon) );
-  proto->addInfo( LHCb::ProtoParticle::RichDLLpi, richPID->particleDeltaLL(Rich::Pion) );
-  proto->addInfo( LHCb::ProtoParticle::RichDLLk,  richPID->particleDeltaLL(Rich::Kaon) );
-  proto->addInfo( LHCb::ProtoParticle::RichDLLp,  richPID->particleDeltaLL(Rich::Proton) );
+  proto->addInfo( LHCb::ProtoParticle::RichDLLe,   richPID->particleDeltaLL(Rich::Electron) );
+  proto->addInfo( LHCb::ProtoParticle::RichDLLmu,  richPID->particleDeltaLL(Rich::Muon) );
+  proto->addInfo( LHCb::ProtoParticle::RichDLLpi,  richPID->particleDeltaLL(Rich::Pion) );
+  proto->addInfo( LHCb::ProtoParticle::RichDLLk,   richPID->particleDeltaLL(Rich::Kaon) );
+  proto->addInfo( LHCb::ProtoParticle::RichDLLp,   richPID->particleDeltaLL(Rich::Proton) );
+  //proto->addInfo( LHCb::ProtoParticle::RichDLLbt,  richPID->particleDeltaLL(Rich::BelowThreshold) );
 
   // Store History
   proto->addInfo( LHCb::ProtoParticle::RichPIDStatus, richPID->pidResultCode() );
