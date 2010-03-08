@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.290 2010-03-01 22:09:19 gligorov Exp $
+! $Id: release.notes,v 1.291 2010-03-08 11:25:29 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v9r25p1 2010-03-08 ================
 
 ! 2010-03-01 - V. Gligorov
  - BackgroundCategory : fix unprotected dereference
