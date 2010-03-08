@@ -10,16 +10,19 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
 
     __slots__ = { 'MiniBiasL0Channels'     : ['CALO'] #'Hadron'
                 , 'BXTypes'                : ['NoBeam', 'BeamCrossing','Beam1','Beam2']
-                , 'Prescale'               : { 'Hlt1MBNoBias' : 'RATE(100)' }
+                , 'MaxNoBiasRate'          : 100.
                 }
 
     def __create_nobias_line__(self ):
         '''
         returns an Hlt1 "Line" including input and output filter
         '''
+        from Configurables import LoKi__Hybrid__HltFactory as HltFactory
+        for i in [ 'LoKiCore.functions', 'LoKiNumbers.sources' ] :
+            if i not in HltFactory('ToolSvc.HltFactory').Modules : HltFactory('ToolSvc.HltFactory').Modules += [ i ]
         return Line ( 'MBNoBias'
                     , prescale = self.prescale
-                    , ODIN = '(ODIN_TRGTYP == LHCb.ODIN.LumiTrigger)'
+                    , ODIN = 'scale( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger , RATE(%s)) ' % ( self.getProp('MaxNoBiasRate') )
                     , postscale = self.postscale
                     ) 
     def __create_microbias_line__(self, name, tracking) :

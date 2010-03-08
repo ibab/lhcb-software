@@ -50,7 +50,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                 , 'L0Channel'              : ['CALO']     # L0 channels accepted for LowLumi
                 , 'LumiLines'              : ['Count','VDM']
                 , 'EnableReco'             : True 
-                , 'Prescale'               : { 'Hlt1Lumi' : 'RATE(1000)' }
+                , 'MaxRate'                : 1000.
                 , 'OutputLevel'            : WARNING
                 }
 
@@ -63,7 +63,8 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         
         # debugging options
         debugOPL = self.getProp('OutputLevel')
-	from HltLine.HltPVs  import PV2D
+        from HltLine.HltReco import PV2D
+
         # define reco scaler
         recoScaler = Scaler( 'LumiRecoScaler' ,  AcceptFraction = 1 if self.getProp('EnableReco') else 0 )  
 
@@ -111,7 +112,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                     print '# DEBUG   : Hlt1LumiLines::HistoMaker:', postfix, key, threshold, bins
                 
         lumiRecoSequence.Members.append( Sequence('LumiTrackRecoSequence' ,
-                                                   Members = [  recoScaler ] + PV2D().members(),
+                                                   Members = [  recoScaler ] + PV2D.members(),
                                                    MeasureTime = True ) ) 
 
         # filter to get backward tracks (make sure it always passes by wrapping inside a sequence)
@@ -191,9 +192,12 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         adds histogramming
         '''
         from HltLine.HltLine import Hlt1Line   as Line
+        from Configurables import LoKi__Hybrid__HltFactory as HltFactory
+        for i in [ 'LoKiCore.functions', 'LoKiNumbers.sources' ] :
+            if i not in HltFactory('ToolSvc.HltFactory').Modules : HltFactory('ToolSvc.HltFactory').Modules += [ i ]
         return Line ( 'Lumi'
                     , prescale = self.prescale
-                    , ODIN = ' ( ODIN_TRGTYP == LHCb.ODIN.%s ) ' % ( self.getProp('TriggerType') )
+                    , ODIN = 'scale( ODIN_TRGTYP == LHCb.ODIN.%s , RATE(%s)) ' % ( self.getProp('TriggerType'), self.getProp('MaxRate') )
                     , algos = self.__create_lumi_algos__( '' )
                     , postscale = self.postscale
                     ) 

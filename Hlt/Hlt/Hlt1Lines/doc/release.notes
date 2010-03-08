@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.141 2010-03-08 19:23:12 graven Exp $
+! $Id: release.notes,v 1.142 2010-03-08 22:09:38 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -30,6 +30,7 @@
  - rate limit lumi input rate at 1KHz.
  - simplify RZ velo reco setup in Hlt1BeamGasLines
  - resplit lumilow
+ - smarter input rate limiting 
 
 ! 2010-02-25 - Gerhard Raven
  - do not require L0_DECISION in OT cosmic line
