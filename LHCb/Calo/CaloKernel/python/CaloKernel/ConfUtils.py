@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: ConfUtils.py,v 1.3 2009-10-10 12:24:58 ibelyaev Exp $
+# $Id: ConfUtils.py,v 1.4 2010-03-08 01:56:45 odescham Exp $
 # =============================================================================
 ## Useful utulities for building Calo-configurables 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,7 +11,7 @@ Trivial module with few helper utilities to build  Calo-configurables
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
     'hltContext'     ,              ##    trivial function to check HLT context
@@ -51,7 +51,8 @@ def hltContext ( context , hlt = 'HLT') :
     >>> print hltContext ( context )
 
     """
-    return hlt.upper() == context.upper()
+    _cont = context
+    return  _cont.upper().find( 'HLT' ) != -1
 
     
 # =============================================================================
@@ -134,6 +135,7 @@ def addAlgs  ( seq , algs ) :
     if list == type(seq)   :
         seq.append ( algs )
         return
+
     seq.Members.append ( algs )
 
 # =============================================================================
@@ -142,25 +144,39 @@ __caloOnDemand = {}
 
 # =============================================================================
 ##  Configure Data-On-Demand service
-def onDemand ( location , alg ) :
+def onDemand ( location , alg , context = '' ) :
     """
     Configure Data-On-Demand service
 
     >>> alg = ...       # get the algorithm
     >>> tes = ...       # get TES-location
-
-    >>>  onDemand ( tes , alg )
+    >>> context = ...   # get the context 
+    >>>  onDemand ( tes , alg , context )
     
     """
     if not location : return
-    
+
+    _loc = location 
+    ## Context- dependent alg name and TES path
     _alg = alg.getFullName()
+    _cont = context
+    if ( '' != context and 'OFFLINE' != _cont.upper() ) :
+        _pref = context +"/"
+        _loc = _loc.replace( 'Rec/' ,  _pref ,1)
+        _suf = 'For' + context.replace('/','_')
+        if _alg.find( _suf ) == -1 :
+            _alg +=  _suf
+    
+
     
     dod = DataOnDemandSvc()
 
-    _locs = [ location ]
-    if 0 != location.find ( '/Event/') : _locs.append ( '/Event/' + location )
+
+    _locs = [ _loc ]
+    if 0 != _loc.find ( '/Event/') : _locs.append ( '/Event/' + _loc )
+
     
+    ## location
     for l in _locs :
         if dod.AlgMap.has_key ( l ) :
             prev = dod.AlgMap[ l ]
@@ -169,10 +185,10 @@ def onDemand ( location , alg ) :
             prev = __caloOnDemand[ l ]
             if prev != _alg : log.warning ('Calo-On-Demand: replace action for location "%s" from "%s" to "%s" ' % ( l , prev , _alg ) )
             
-    log.debug ('Data-On-Demand: define the action for location "%s" to be "%s"' % ( location , _alg ) )
-    dod.AlgMap     .update ( { location : _alg } ) 
-    log.debug ('Calo-On-Demand: define the action for location "%s" to be "%s"' % ( location , _alg ) )
-    __caloOnDemand .update ( { location : _alg } ) 
+    log.debug ('Data-On-Demand: define the action for location "%s" to be "%s"' % ( _loc , _alg ) )
+    dod.AlgMap     .update ( { _loc : _alg } ) 
+    log.debug ('Calo-On-Demand: define the action for location "%s" to be "%s"' % ( _loc , _alg ) )
+    __caloOnDemand .update ( { _loc : _alg } ) 
 
 # =============================================================================
 def caloOnDemand () :
@@ -192,17 +208,15 @@ def getAlgo ( typ , name , context , location = None , enable = True ) :
     Get the algorithm by type & name, & configure Data-On-Demand 
     
     """
-    if hltContext ( context ) :
-        
-        if -1 == name.find ('Hlt' ) and -1 == name.find('HLT') :
-            name = "Hlt" + name
-            
-        if location and -1 == location.find('Hlt/') : 
-            location = location.replace ('Rec/','Hlt/')
-                
-    alg = typ ( name )
+    _cont = context
+    _name = name
+    if '' != context and 'OFFLINE' != _cont.upper() : 
+        _name += 'For' + context.replace('/','_')
+    
+    alg = typ ( _name )
     if _hasProp ( alg , 'Context' )  : setattr ( alg , 'Context' , context ) 
-    if location and enable : onDemand ( location , alg ) 
+    if location and enable :
+        onDemand ( location , alg , context) 
     return alg 
 
 
@@ -232,7 +246,3 @@ def printOnDemand () :
 # =============================================================================
 if '__main__' == __name__ :
     print __doc__
-    
-# =============================================================================
-# The END 
-# =============================================================================

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.47 2009-10-16 11:46:19 cattanem Exp $
+! $Id: release.notes,v 1.48 2010-03-08 01:56:45 odescham Exp $
 ! =============================================================================
 ! Package     : CaloKernel
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -6,6 +6,11 @@
 ! The package contains the general Calo Kernel classes and utilities,
 ! which are essentially independent from Detector and Event models
 ! =============================================================================
+
+! 2010-03-08 - Olivier Deschamps
+ - CaloKernel/ConfUtils.py
+   - getAlgo() / onDemand() : flexible context-dependent instance naming + TES pathes (not longer Offline/Hlt only)
+   - update hltContext()
 
 !======================= CaloKernel v6r1 2009-10-16 ===========================
 ! 2009-10-10 - Vanya Belyaev
