@@ -7,6 +7,7 @@
 
 ! 2010-03-08 - Gerhard Raven
  - Add Physics_MinBiasL0_PassThroughHlt_Feb10
+ - Adapt existing settings to the merging of Hlt1LumiLines
 
 !========================== HltSettings v1r10 2010-03-04 ===================
 ! 2010-03-04 - Gerhard Raven

@@ -32,7 +32,7 @@ class Physics_MinBiasL0_PassThroughHlt_Jan10 :
                , 'Hlt1L0Any'
                , 'Hlt1L0MUON' , 'Hlt1L0CALO', 'Hlt1L0PU' 
                , 'Hlt1VeloASide','Hlt1VeloCSide'
-               , 'Hlt1LumiNoBeam','Hlt1LumiBeamCrossing','Hlt1LumiBeam1','Hlt1LumiBeam2'
+               , 'Hlt1Lumi'
                , 'Hlt1LumiLowNoBeam','Hlt1LumiLowBeamCrossing','Hlt1LumiLowBeam1','Hlt1LumiLowBeam2'
                # 0x1309/0x1209 has neither L0 B1gas nor B2gas # , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2'
                , 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco'

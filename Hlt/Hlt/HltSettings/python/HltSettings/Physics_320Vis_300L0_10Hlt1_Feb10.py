@@ -101,7 +101,7 @@ class Physics_320Vis_300L0_10Hlt1_Feb10 :
                  , Hlt1MBLinesConf :      { 'Prescale' : { 'Hlt1MBMicroBias.*' : 0. } } # To be modified during clone
                  , Hlt1VeloLinesConf :    { 'ODIN'     : '( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )' 
                                           , 'L0DU'     : "( L0_CHANNEL('CALO') )"
-                                          , 'Prescale' : { 'Hlt1Velo.*' : 0.001 }       # To be modified during clone
+                                          , 'Prescale' : { 'Hlt1Velo.*' : 0. }       # To be modified during clone
                                           }
                  , Hlt1CommissioningLinesConf : { 'Prescale' :   { 'Hlt1ODINPhysics'    : 0.000001
                                                                  , 'Hlt1ODINTechnical'  : 0.000001 # @OnlineEnv.AcceptRate
@@ -135,11 +135,10 @@ class Physics_320Vis_300L0_10Hlt1_Feb10 :
                , 'Hlt1L0Muon', 'Hlt1L0DiMuon', 'Hlt1L0Muon,lowMult', 'Hlt1L0DiMuon,lowMult'
                , 'Hlt1L0B1gas', 'Hlt1L0B2gas'
                , 'Hlt1VeloASide', 'Hlt1VeloCSide'
-               , 'Hlt1LumiNoBeam',    'Hlt1LumiBeamCrossing',    'Hlt1LumiBeam1',    'Hlt1LumiBeam2'
-               , 'Hlt1LumiLowNoBeam', 'Hlt1LumiLowBeamCrossing', 'Hlt1LumiLowBeam1', 'Hlt1LumiLowBeam2'
+               , 'Hlt1Lumi'
+               , 'Hlt1LumiLowBeam1' , 'Hlt1LumiLowBeam2' , 'Hlt1LumiLowBeamCrossing' , 'Hlt1LumiLowNoBeam'
                , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco'
-               , 'Hlt1MBMiniBiasNoBeam','Hlt1MBMiniBiasBeamCrossing','Hlt1MBMiniBiasBeam1','Hlt1MBMiniBiasBeam2'
-               , 'Hlt1MBNoBiasNoBeam','Hlt1MBNoBiasBeamCrossing','Hlt1MBNoBiasBeam1','Hlt1MBNoBiasBeam2'
+               , 'Hlt1MBNoBias' # , 'Hlt1MBMiniBias'
                , 'Hlt1MBMicroBiasRZVelo', 'Hlt1MBMicroBiasTStation'
                , 'Hlt1SingleHadron',     'Hlt1SingleHadronViaT'
                , 'Hlt1DiHadron',         'Hlt1DiHadronViaT',    'Hlt1DiHadronSoft'

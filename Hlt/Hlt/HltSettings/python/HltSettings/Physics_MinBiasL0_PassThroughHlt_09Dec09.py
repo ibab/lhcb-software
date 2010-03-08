@@ -30,7 +30,7 @@ class Physics_MinBiasL0_PassThroughHlt_09Dec09 :
         """
         return [ 'Hlt1ODINPhysics','Hlt1ODINTechnical','Hlt1Tell1Error'
                , 'Hlt1L0Any', 'Hlt1L0MUON','Hlt1L0CALO'
-               , 'Hlt1LumiNoBeam','Hlt1LumiBeamCrossing','Hlt1LumiBeam1','Hlt1LumiBeam2'
+               , 'Hlt1Lumi'
                , 'Hlt1VeloASide','Hlt1VeloCSide'
                ]
 

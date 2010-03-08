@@ -145,7 +145,7 @@ class Physics_320Vis_300L0_10Hlt1_Jan10 :
                , 'Hlt1L0Muon', 'Hlt1L0DiMuon', 'Hlt1L0Muon,lowMult', 'Hlt1L0DiMuon,lowMult'
                , 'Hlt1L0B1gas', 'Hlt1L0B2gas'
                , 'Hlt1VeloASide',          'Hlt1VeloCSide'
-               , 'Hlt1LumiNoBeam',    'Hlt1LumiBeamCrossing',    'Hlt1LumiBeam1',    'Hlt1LumiBeam2'
+               , 'Hlt1Lumi'
                , 'Hlt1LumiLowNoBeam', 'Hlt1LumiLowBeamCrossing', 'Hlt1LumiLowBeam1', 'Hlt1LumiLowBeam2'
                , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 'Hlt1BeamGasCrossing', 'Hlt1BeamGasCrossingForcedRZReco'
                , 'Hlt1MBMiniBiasNoBeam','Hlt1MBMiniBiasBeamCrossing','Hlt1MBMiniBiasBeam1','Hlt1MBMiniBiasBeam2'
