@@ -1,4 +1,4 @@
-// $Id: GiGaExtPhysics.h,v 1.6 2010-02-26 10:56:34 marcocle Exp $
+// $Id: GiGaExtPhysics.h,v 1.7 2010-03-08 17:58:53 silviam Exp $
 #ifndef GIGA_GIGAEXTERNALPHYSICSCONSTRUCTOR_H 
 #define GIGA_GIGAEXTERNALPHYSICSCONSTRUCTOR_H 1
 
@@ -57,7 +57,13 @@ public:
       // use the extender to create the new instance, passing the two standard
       // properties, the extender (if specialized) will pass some specific
       // arguments to the actual constructor.
-      m_phys = m_extender.newInstance(name(), 1);
+
+      int verb = outputLevel();
+      if      (verb == MSG::DEBUG)    { verb = 1 ;} 
+      else if (verb == MSG::VERBOSE)  { verb = 2 ;} 
+      else                            { verb = 0 ;} 
+
+      m_phys = m_extender.newInstance(name(), verb);
       // m_phys -> SetPhysicsName( name() );
     }
     return m_phys ;

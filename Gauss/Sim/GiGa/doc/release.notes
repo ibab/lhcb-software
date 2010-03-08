@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.137 2010-02-26 10:56:34 marcocle Exp $
+! $Id: release.notes,v 1.138 2010-03-08 17:59:26 silviam Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GiGa
 ! Responsible : Gloria CORTI, Vanya BELYAEV
 ! Purpose     : Holds interfaces and base classes plus generic implementation
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
+
+! 2010-03-08 - Silvia Miglioranzi
+ - Modified GiGaExtPhysics to set the verbose level of the Physics constructor 
+   as the tool verbose level.
 
 ! 2010-02-26 - Marco Clemencic
  - Removed second template argument in GiGaExtPhysics for backward compatibility.
