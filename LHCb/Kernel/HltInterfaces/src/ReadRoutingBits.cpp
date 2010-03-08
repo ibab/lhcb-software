@@ -1,4 +1,4 @@
-// $Id: ReadRoutingBits.cpp,v 1.3 2010-03-05 10:51:24 pkoppenb Exp $
+// $Id: ReadRoutingBits.cpp,v 1.4 2010-03-08 16:10:51 pkoppenb Exp $
 // Include files 
 
 #include "Kernel/ReadRoutingBits.h"
@@ -32,8 +32,8 @@ namespace Hlt {
                                              const unsigned int relevantMax){
     std::vector<unsigned int> yes ;
     boost::dynamic_bitset<unsigned int> x = readRoutingBits(rawEvent);
-    std::cout << "Fired routing bits from " << relevantMin 
-                 << " to " << relevantMax << " are : " ;
+    //    std::cout << "Fired routing bits from " << relevantMin 
+    //             << " to " << relevantMax << " are : " ;
     for ( unsigned int j = relevantMin ; j <= relevantMax ; ++j){
       if ( x[j] ){
         yes.push_back(j); // accepted

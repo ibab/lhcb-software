@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.15 2010-03-05 10:52:05 pkoppenb Exp $
+! $Id: release.notes,v 1.16 2010-03-08 16:10:51 pkoppenb Exp $
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
+
+! 2010-03-08 - Patrick Koppenburg
+ - Remove cout statement that sneked into cvs
 
 ! 2010-03-05 - Patrick Koppenburg
  - ReadRoutingBits : Throw an exception when there is not exactly 1 bank (#63745)
