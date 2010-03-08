@@ -6,6 +6,7 @@
 
 ! 2010-03-08 - Patrick Koppenburg
  - Add doxygen comments for bankKiller
+ - Reduce verbosity (Warning...) 
 
 !========================= DAQUtils v1r1 2010-02-12 ==========================
 ! 2010-01-28 - Olivier Deschamps
