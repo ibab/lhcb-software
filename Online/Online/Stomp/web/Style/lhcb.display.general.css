@@ -34,7 +34,7 @@
 
 .ShiftComments  {
     color:            #000000;
-    border:           solid;
+    border-bottom:    solid;
     border-width:     1px;
     border-color:     #000000;
     font-family:      Arial, Helvetica, sans-serif;
