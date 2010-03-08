@@ -56,7 +56,6 @@ public:
   StatusCode initialize();
   StatusCode finalize();
   StatusCode execute();
-
     
 private:
 
@@ -73,8 +72,8 @@ private:
 
   // CondDB
   bool m_ignoreCondDB;                ///< Flag to ignore the CondDB 
-  std::string m_conditionNameCB;      ///< Name of the condition of the Controller board
-  std::string m_conditionNamePB;      ///< Name of the condition of the Processing board
+  std::string m_conditionNameVersion; ///< Name of the condition of the Controller board
+  std::string m_conditionNameFOI;     ///< Name of the condition of the Processing board
   std::string m_parameterNameFOIx;    ///< Name of the parameter with FOIx in CondDB  
   std::string m_parameterNameFOIy;    ///< Name of the parameter with FOIy in CondDB  
   std::string m_parameterNameVersion; ///< Name of the parameter with emulator version in CondDB  
@@ -93,6 +92,7 @@ private:
   bool m_debug;                       ///< Flag to turn on debug mode for L0MuonKernel
   
   // Algorithm's properties
+  bool m_enableTAE;                   ///< Enable TAE mode 
   int  m_inputSource;                 ///< Specify where to take the input data for the processing
                                       ///<  - 0: from Muon output
                                       ///<  - 1: from the input of the processor (extracted form L0Muon itself) 
@@ -109,17 +109,18 @@ private:
   MuonSystemLayout m_stripV;   ///< horizontal strip layout for the whole MuonSystem
 
   int m_totEvent; ///< Event counter
+  int m_totBx ;   ///< Tot number of time slices processed
 
   IMuonRawBuffer* m_muonBuffer;  ///< Interface to muon raw buffer 
 
   Condition * m_l0CondCtrl ;  ///< Pointer to the L0 Controller board conditions 
   Condition * m_l0CondProc ;  ///< Pointer to the L0 Processing board conditions
 
-  /// Call back function to check the controller board condition database content  
-  StatusCode updateL0CondCtrl() ;
+  /// Call back function to check the Version condition database content  
+  StatusCode updateL0CondVersion() ;
 
-  /// Call back function to check the processing board condition database content  
-  StatusCode updateL0CondProc() ;
+  /// Call back function to check the FOI condition database content  
+  StatusCode updateL0CondFOI() ;
 
   static inline int hard2softFOIConversion(int sta) 
   {
@@ -132,30 +133,9 @@ private:
     }
   }
 
-  static inline std::string timeSlot(int bx)  {
-    std::string ts;
-    switch (bx) {
-    case -7 : return "Prev7/";
-    case -6 : return "Prev6/";
-    case -5 : return "Prev5/";
-    case -4 : return "Prev4/";
-    case -3 : return "Prev3/";
-    case -2 : return "Prev2/";
-    case -1 : return "Prev1/";
-    case  0 : return "";
-    case  1 : return "Next1/";
-    case  2 : return "Next2/";
-    case  3 : return "Next3/";
-    case  4 : return "Next4/";
-    case  5 : return "Next5/";
-    case  6 : return "Next6/";
-    case  7 : return "Next7/";
-    default : return "Unknown";
-    };
+  // TAE
+  std::map<int,std::string> m_tae_items;  ///< Definitions of tae slots
 
-  };
-
-  std::vector<int> m_time_slots;
 
 };
 

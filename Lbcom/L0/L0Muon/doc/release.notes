@@ -1,7 +1,11 @@
-!  $Id: release.notes,v 1.96 2010-03-02 10:59:09 jucogan Exp $
+!  $Id: release.notes,v 1.97 2010-03-08 14:14:40 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !---------------------------------------------------------------------------
+
+! 2010-03-04 - Julien Cogan
+ - Adapt to change in CondDB (L0MuonAlg)
+ - Better handling of TAE event (L0MuonCandidatesFromRaw & L0MuonAlg)
 
 ! 2010-03-02 - Julien Cogan
  - L0MuonOutputs : add protection against wrong magic pattern in RAW banks. 

@@ -21,7 +21,6 @@ public:
   StatusCode finalize();
   StatusCode execute();
   StatusCode dumpErrors();
-  StatusCode tae_bunches(std::vector<std::string> &bunches);
   
 private:
 
@@ -29,7 +28,8 @@ private:
   int m_procVersion;                  // Emulator version
   std::string  m_configfile;          // Config file name
   int m_mode;                         // Output mode (defin the bank to be decoded)
-  bool m_disableTAE;                  // Flag to disable the decoding of TAE event
+  bool m_disableTAE;                  // Flag to disable the decoding of TAE event (obsolete, for backward compatibility)
+  bool m_enableTAE;                   ///< Enable TAE mode
 
   // For output to RawEvent, TES or L0ProcessorDatas
   L0MuonOutputs* m_outputTool;
@@ -39,29 +39,8 @@ private:
   int m_totBx ;     // Tot number of time slices processed
   int m_errorEvent ; // Number of events where there is a difference between the reprocessing and the raw data
   
-  static inline std::string timeSlot(int bx)
-  {
-    std::string ts;
-    switch (bx) {
-    case -7 : return "Prev7/";
-    case -6 : return "Prev6/";
-    case -5 : return "Prev5/";
-    case -4 : return "Prev4/";
-    case -3 : return "Prev3/";
-    case -2 : return "Prev2/";
-    case -1 : return "Prev1/";
-    case  0 : return "";
-    case  1 : return "Next1/";
-    case  2 : return "Next2/";
-    case  3 : return "Next3/";
-    case  4 : return "Next4/";
-    case  5 : return "Next5/";
-    case  6 : return "Next6/";
-    case  7 : return "Next7/";
-    default : return "Unknown";
-    };
-    
-  };
+  // TAE
+  std::map<int,std::string> m_tae_items;  ///< Definitions of tae slots
     
 };
 

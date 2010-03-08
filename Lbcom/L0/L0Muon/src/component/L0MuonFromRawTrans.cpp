@@ -1,4 +1,4 @@
-// $Id: L0MuonFromRawTrans.cpp,v 1.17 2010-02-08 11:03:00 jucogan Exp $
+// $Id: L0MuonFromRawTrans.cpp,v 1.18 2010-03-08 14:14:40 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -86,7 +86,7 @@ StatusCode L0MuonFromRawTrans::execute() {
   // Loop over time slots
   for (int bx=-7; bx<8; ++bx){
 
-    setProperty("RootInTes",timeSlot(bx));  
+    setProperty("RootInTES",timeSlot(bx));  
     if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
 
     sc = decodeRawBanks();

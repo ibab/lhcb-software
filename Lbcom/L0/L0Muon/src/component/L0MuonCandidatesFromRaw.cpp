@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.25 2010-02-04 22:55:35 jucogan Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.26 2010-03-08 14:14:40 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -68,6 +68,27 @@ StatusCode L0MuonCandidatesFromRaw::initialize()
   m_totBx = 0;
   m_errorEvent = 0;
 
+  m_enableTAE = !m_disableTAE;
+  
+  // TAE slots names
+  if (m_enableTAE){
+    m_tae_items[-7] = "Prev7/";
+    m_tae_items[-6] = "Prev6/";
+    m_tae_items[-5] = "Prev5/";
+    m_tae_items[-4] = "Prev4/";
+    m_tae_items[-3] = "Prev3/";
+    m_tae_items[-2] = "Prev2/";
+    m_tae_items[-1] = "Prev1/";
+    m_tae_items[ 0] = "";
+    m_tae_items[ 1] = "Next1/";
+    m_tae_items[ 2] = "Next2/";
+    m_tae_items[ 3] = "Next3/";
+    m_tae_items[ 4] = "Next4/";
+    m_tae_items[ 5] = "Next5/";
+    m_tae_items[ 6] = "Next6/";
+    m_tae_items[ 7] = "Next7/";
+  }
+
   if( msgLevel(MSG::DEBUG) ) {
     debug()<<"Output mode = "<< m_mode;
     if (m_mode>0) {
@@ -94,26 +115,30 @@ StatusCode L0MuonCandidatesFromRaw::execute()
 
   StatusCode sc;
 
-  // TAE window
-  std::vector<std::string> bunches;
-  if (m_disableTAE) {
-    bunches.push_back("");
-  } else {
-    sc=tae_bunches(bunches);
-    if( msgLevel(MSG::VERBOSE) ) verbose() << "Looping over "<<bunches.size()<<" bunches" << endmsg;
+  int tae_size = 0;
+  if (m_enableTAE) {
+    if (exist<LHCb::ODIN>(LHCb::ODINLocation::Default,false)) {
+      // TAE size from odin
+      LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default,false);
+      tae_size = int(odin->timeAlignmentEventWindow());
+    } else {
+      Warning("ODIN not found at "+LHCb::ODINLocation::Default+", TAE mode requested but not used"
+              ,StatusCode::FAILURE,50).ignore();
+    }
   }
 
-  // Loop over time slots of TAE window
-  for (std::vector<std::string>::iterator itbunches=bunches.begin(); itbunches<bunches.end(); ++itbunches) {
-    if (!m_disableTAE) {
-      sc=setProperty("RootInTes",(*itbunches));
-      if (sc.isFailure()) return Error("Can not set RootInTes ",StatusCode::SUCCESS,10);
+  int ntae = 0;
+  for (int itae = -1*tae_size; itae<=tae_size; ++itae){
+    std::string rootInTes = m_tae_items[itae];
+
+    sc = setProperty("RootInTES",rootInTes);
+    if( sc.isFailure() ) return Error( "Unable to set RootInTES property of L0MuonAlg", sc );
+
+    if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) {
+      Warning("RawEvent not found; RootInTES is "+rootInTes,StatusCode::SUCCESS,50).ignore();
+      continue;
     }
     
-    if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
-
-    if( msgLevel(MSG::VERBOSE) ) verbose() << "decoding event ... "<<(*itbunches) << endmsg;
-
     sc = m_outputTool->setProperty( "RootInTES", rootInTES() );
     if ( sc.isFailure() ) continue;// error printed already by GaudiAlgorithm
 
@@ -179,7 +204,9 @@ StatusCode L0MuonCandidatesFromRaw::execute()
 
     ++m_totBx;
 
+    ++ntae;
   } // End of loop over time slots
+  if (ntae==0) return Error("No valid time slice found",StatusCode::SUCCESS,50);
   
   //   svc->chronoStop("L0MuonCandidatesFromRaw Execute");
   //   svc->chronoDelta("L0MuonCandidatesFromRaw Execute", IChronoStatSvc::KERNEL);
@@ -209,26 +236,3 @@ StatusCode L0MuonCandidatesFromRaw::finalize()
   
   return L0FromRawBase::finalize();  // must be called after all other actions
 }
-
-
-StatusCode L0MuonCandidatesFromRaw::tae_bunches(std::vector<std::string> &bunches)
-{
-  
-  bunches.clear();
-  if( exist<LHCb::ODIN>( LHCb::ODINLocation::Default) ){
-    LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
-    int tae_window = odin->timeAlignmentEventWindow();
-    for (int it = -1*tae_window ; it<=tae_window ; ++it){
-      bunches.push_back( timeSlot(it) );
-    }
-  } else {
-    return Warning("Fail to get ODIN - can not determine the tae window - no time slot will be decoded"
-                   ,StatusCode::SUCCESS,10);
-  }
-  
-    
-  return StatusCode::SUCCESS;
-  
-}
-
-

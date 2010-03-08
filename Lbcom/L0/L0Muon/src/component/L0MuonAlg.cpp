@@ -1,4 +1,4 @@
-// $Id: L0MuonAlg.cpp,v 1.29 2010-02-08 11:03:00 jucogan Exp $
+// $Id: L0MuonAlg.cpp,v 1.30 2010-03-08 14:14:40 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -13,6 +13,7 @@
 #include "GaudiKernel/AlgFactory.h"
 
 // from Event
+#include "Event/ODIN.h"
 #include "Event/MuonDigit.h"
 #include "Event/L0MuonData.h"
 
@@ -33,10 +34,7 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   , m_l0CondProc( 0 )
 {
 
-  std::vector<int> time_slots;
-  //  for (int i=-7;i<=7;++i) time_slots.push_back(i);
-  time_slots.push_back(0);
-  declareProperty( "TimeSlots"  , m_time_slots = time_slots);
+  declareProperty( "EnableTAE" , m_enableTAE = false  );
 
   m_muonBuffer = 0;
 
@@ -55,11 +53,11 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   m_foiYSize.push_back(1); // 4-> Yfoi in M5
 
   declareProperty("IgnoreCondDB"         , m_ignoreCondDB         = true);
-  declareProperty("ConditionNameCB"      , m_conditionNameCB      = "Conditions/Online/L0MUON/Q1/CB");
-  declareProperty("ConditionNamePB"      , m_conditionNamePB      = "Conditions/Online/L0MUON/Q1/PB1");
-  declareProperty("ParameterNameFOIx"    , m_parameterNameFOIx    = "PU0_FOIX");
-  declareProperty("ParameterNameFOIy"    , m_parameterNameFOIy    = "PU0_FOIY");
-  declareProperty("ParameterNameVersion" , m_parameterNameVersion = "versionEMUL");
+  declareProperty("ConditionNameCB"      , m_conditionNameFOI     = "Conditions/Online/L0MUON/Q1/FOI");
+  declareProperty("ConditionNamePB"      , m_conditionNameVersion = "Conditions/Online/L0MUON/Q1/Versions");
+  declareProperty("ParameterNameFOIx"    , m_parameterNameFOIx    = "FOIX");
+  declareProperty("ParameterNameFOIy"    , m_parameterNameFOIy    = "FOIY");
+  declareProperty("ParameterNameVersion" , m_parameterNameVersion = "EMUL");
 
   declareProperty("Version"        , m_version = 3 );
 
@@ -91,6 +89,25 @@ StatusCode L0MuonAlg::initialize()
   // Set the layouts used to fill the OLs
   setLayouts();
 
+  // TAE slots names
+  if (m_enableTAE){
+    m_tae_items[-7] = "Prev7/";
+    m_tae_items[-6] = "Prev6/";
+    m_tae_items[-5] = "Prev5/";
+    m_tae_items[-4] = "Prev4/";
+    m_tae_items[-3] = "Prev3/";
+    m_tae_items[-2] = "Prev2/";
+    m_tae_items[-1] = "Prev1/";
+    m_tae_items[ 0] = "";
+    m_tae_items[ 1] = "Next1/";
+    m_tae_items[ 2] = "Next2/";
+    m_tae_items[ 3] = "Next3/";
+    m_tae_items[ 4] = "Next4/";
+    m_tae_items[ 5] = "Next5/";
+    m_tae_items[ 6] = "Next6/";
+    m_tae_items[ 7] = "Next7/";
+  }
+
   // Instanciate the MuonTrigger Units and Registers
   L0Muon::RegisterFactory::selectInstance(0);
   std::string xmlFileName = L0MuonUtils::SubstituteEnvVarInPath(m_configfile);
@@ -112,23 +129,23 @@ StatusCode L0MuonAlg::initialize()
   if ( !m_ignoreCondDB )  {
     // Configure CondDB
     // - processor version 
-    if (this->exist<Condition>(detSvc() , m_conditionNameCB , false) ) {
-      debug() << "CondDB: accessing "<<m_conditionNameCB<< endmsg ;
-      registerCondition( m_conditionNameCB ,
+    if (this->exist<Condition>(detSvc() , m_conditionNameVersion , false) ) {
+      debug() << "CondDB: accessing "<<m_conditionNameVersion<< endmsg ;
+      registerCondition( m_conditionNameVersion ,
                          m_l0CondCtrl ,
-                         &L0MuonAlg::updateL0CondCtrl ) ;
+                         &L0MuonAlg::updateL0CondVersion ) ;
     } else {
-      error() << "CondDB: cannot access "<<m_conditionNameCB<< endmsg ;
+      error() << "CondDB: cannot access "<<m_conditionNameVersion<< endmsg ;
       error() << "Emulation will run with the processor version defined in options." << endmsg ;
     }
     // - FOI 
-    if (this->exist<Condition>(detSvc() , m_conditionNamePB , false ) ){
-      debug() << "CondDB : accessing "<<m_conditionNamePB<< endmsg ;
-      registerCondition( m_conditionNamePB ,
+    if (this->exist<Condition>(detSvc() , m_conditionNameFOI , false ) ){
+      debug() << "CondDB : accessing "<<m_conditionNameFOI<< endmsg ;
+      registerCondition( m_conditionNameFOI ,
                          m_l0CondProc ,
-                         &L0MuonAlg::updateL0CondProc ) ;
+                         &L0MuonAlg::updateL0CondFOI ) ;
     } else {
-      error() << "CondDB: cannot access "<<m_conditionNamePB<< endmsg ;
+      error() << "CondDB: cannot access "<<m_conditionNameFOI<< endmsg ;
       error() << "Emulation will run with the FOI defined in options." << endmsg ;
     }
   }
@@ -144,6 +161,7 @@ StatusCode L0MuonAlg::initialize()
   m_outputTool =  tool<L0MuonOutputs>( "L0MuonOutputs" , "OutputTool" , this );
 
   m_totEvent = 0;
+  m_totBx = 0;
 
   return StatusCode::SUCCESS;
 }
@@ -164,13 +182,29 @@ StatusCode L0MuonAlg::execute()
 
   StatusCode sc;
 
-  // Loop over time slots
-  for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
+  int tae_size = 0;
+  if (m_enableTAE) {
+    if (exist<LHCb::ODIN>(LHCb::ODINLocation::Default,false)) {
+      // TAE size from odin
+      LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default,false);
+      tae_size = int(odin->timeAlignmentEventWindow());
+    } else {
+      Warning("ODIN not found at "+LHCb::ODINLocation::Default+", TAE mode requested but not used"
+              ,StatusCode::FAILURE,50).ignore();
+    }
+  }
+  
+  int ntae=0;
+  for (int itae = -1*tae_size; itae<=tae_size; ++itae){
+    std::string rootInTes = m_tae_items[itae];
 
-    sc = setProperty("RootInTes",timeSlot(*it_ts));
-    if( sc.isFailure() ) return Error( "Unable to set RootInTES property of L0MuonAlg", sc );
+    sc = setProperty("RootInTES",rootInTes);
+    if( sc.isFailure() ) return Error( "Unable to set RootInTES property of L0MuonAlg",StatusCode::SUCCESS,50);
 
-    if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
+    if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) {
+      Warning("RawEvent not found; RootInTES is "+rootInTes,StatusCode::SUCCESS,50).ignore();
+      continue;
+    }
 
     // Set rootInTES to point to the current TimeSlot
     sc = m_outputTool->setProperty( "RootInTES", rootInTES() );
@@ -231,8 +265,11 @@ StatusCode L0MuonAlg::execute()
     if( msgLevel(MSG::DEBUG) ) debug() << "Postexecution of MuonKernel units ..." << endreq;
     m_muontriggerunit->postexecute();
 
+    ++m_totBx;
+    ++ntae;
   } // End of loop over time slots
-
+  if (ntae==0) return Error("No valid time slice found",StatusCode::SUCCESS,50);
+  
   //svc->chronoStop("L0MuonTrigger Execute");
   //svc->chronoDelta("L0MuonTrigger Execute", IChronoStatSvc::KERNEL);
   //if( MSG::DEBUG >= log.level() ) svc->chronoPrint("L0MuonTrigger Execute");
@@ -259,6 +296,8 @@ StatusCode L0MuonAlg::finalize()
   info() << "- ========> Final summary of the L0Muon trigger (emulator) <========"<<endmsg;
   info() << "- Total number of events processed           : "
          <<format("%8d",m_totEvent)<<endmsg;
+  info() << "- Total number of bunch crossings processed  : "
+         <<format("%8d",m_totBx)<<endmsg;
   m_outputTool->statTot(info());
   info() << "- ------------------------------------------------------------------"<<endmsg;
 
@@ -585,31 +624,26 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
   return StatusCode::SUCCESS;
 }
 
-StatusCode L0MuonAlg::updateL0CondProc()
+StatusCode L0MuonAlg::updateL0CondFOI()
 {
 
   if ( ! m_l0CondProc -> exists( m_parameterNameFOIx ) ) {
     Warning("FOIX parameter does not exist in DB").ignore() ;
     Warning("Use default FOIX").ignore() ;
   } else {
-    std::vector<int> cond_foix =m_l0CondProc -> paramAsIntVect( m_parameterNameFOIx ) ;
-    if (cond_foix.size()!=2) {
-      Warning("FOIX parameter has wrong size").ignore() ;
-      Warning("Use default FOIX").ignore() ;
-    } else {
-      m_foiXSize.clear();
-      int sta = 0;
-      for (std::vector<int>::iterator it = cond_foix.begin(); it<cond_foix.end() ; ++it) {
-        int ifoi = (*it);
-        for (int j=1; j>=0; --j) {
-          int hardFOI = ( ( ifoi>>(j*4) ) & 0xF );
-          int softFOI = hardFOI * hard2softFOIConversion(sta);
-          m_foiXSize.push_back( softFOI );
-          ++sta;
-        }
-        if (sta==2) m_foiXSize.push_back( 0 ); // M3
-        ++sta; 
+    int condFOI =m_l0CondProc -> paramAsInt( m_parameterNameFOIx ) ;
+    m_foiXSize.clear();
+    int sta = 0;
+    for (int i=0; i<2; ++i) {
+      for (int ii=0; ii<2; ++ii) {
+        int j = 12-4*(i*2+ii);
+        int hardFOI = ( ( condFOI>>j ) & 0xF );
+        int softFOI = hardFOI * hard2softFOIConversion(sta);
+        m_foiXSize.push_back( softFOI );
+        ++sta;
       }
+      if (sta==2) m_foiXSize.push_back( 0 ); // M3
+      ++sta; 
     }
   }
 
@@ -617,23 +651,18 @@ StatusCode L0MuonAlg::updateL0CondProc()
     Warning("FOIY parameter does not exist in DB").ignore() ;
     Warning("Use default FOIY").ignore() ;
   } else {
-    std::vector<int> cond_foiy =m_l0CondProc -> paramAsIntVect( m_parameterNameFOIy ) ;
-    if (cond_foiy.size()!=2) {
-      Warning("FOIY parameter has wrong size").ignore() ;
-      Warning("Use default FOIY").ignore() ;
-    } else {
-      m_foiYSize.clear();
-      int sta = 0;
-      for (std::vector<int>::iterator it = cond_foiy.begin(); it<cond_foiy.end() ; ++it) {
-        int ifoi = (*it);
-        for (int j=1; j>=0; --j) {
-          int FOI = ( ( ifoi>>(j*4) ) & 0xF );
-          m_foiYSize.push_back( FOI );
-          ++sta;
-        }
-        if (sta==2) m_foiYSize.push_back( 0 ); // M3
-        ++sta; 
+    int condFOI =m_l0CondProc -> paramAsInt( m_parameterNameFOIy ) ;
+    m_foiYSize.clear();
+    int sta = 0;
+    for (int i=0; i<2; ++i) {
+      for (int ii=0; ii<2; ++ii) {
+        int j = 12-4*(i*2+ii);
+        int FOI = ( ( condFOI>>j ) & 0xF );
+        m_foiYSize.push_back( FOI );
+        ++sta;
       }
+      if (sta==2) m_foiYSize.push_back( 0 ); // M3
+      ++sta; 
     }
   }
 
@@ -643,14 +672,14 @@ StatusCode L0MuonAlg::updateL0CondProc()
   return StatusCode::SUCCESS;
 }
 
-StatusCode L0MuonAlg::updateL0CondCtrl()
+StatusCode L0MuonAlg::updateL0CondVersion()
 {
   if ( ! m_l0CondCtrl -> exists( m_parameterNameVersion ) ) {
     Warning("Q1CB0.versionEMUL parameter does not exist in DB").ignore() ;
     Warning("Use default processor version").ignore() ;
   } else {
-    std::string s_version = m_l0CondCtrl -> paramAsString( "Q1CB0.versionEMUL" ) ;
-    m_version = atoi( s_version.c_str() );
+    std::string s_version = m_l0CondCtrl -> paramAsString( m_parameterNameVersion ) ;
+    m_version = int(atof( s_version.c_str() ));
   }
 
   // Set the properties of the MuonTriggerUnit
@@ -658,3 +687,4 @@ StatusCode L0MuonAlg::updateL0CondCtrl()
   
   return StatusCode::SUCCESS;
 }
+
