@@ -54,8 +54,14 @@ int L0Muon::ProcCandErrors::decodingError() const {
 }
 
 int L0Muon::ProcCandErrors::hardwareError() const {
-  return ( ((errJ.value()<<12)&0x00001000) + ((errK.value()<<8)&0x00000100) 
-           + ((errH.value()<<4)&0x000000F0) + ( (errF.value()<<0)&0x0000000F) );
+  int error=0;
+  error|=((errJ.value()<<12)&0x00001000);
+  error|=((errK.value()<< 8)&0x00000100); 
+  error|=((errH.value()<< 4)&0x000000F0);
+  error|=((errF.value()<< 0)&0x0000000F);
+  if (l0_B_Id.inError())       error|=0x00002000;
+  if (l0EventNumber.inError()) error|=0x00000200;
+  return error;
 }
 
 

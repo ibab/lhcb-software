@@ -4,6 +4,12 @@
 ! Purpose     : 
 !------------------------------------------------------------------------------
 
+! 2010-02-24 - Julien Cogan
+ - Add 2 bits in the hardware error word of ProcCand and CtrlCand data to
+   flag L0_B_Id and L0EventNumber inconsistency
+ - Change convention for the CtrlCand hardware error word to match the one
+   of ProcCand (swap J & K)
+
 !============================ L0MuonKernel v9r0 2010-02-12 ==================== 
 ! 2010-02-04 - Julien Cogan
  - Changes to use configure the emulator with the CondDB :

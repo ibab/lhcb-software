@@ -66,8 +66,10 @@ int L0Muon::CtrlCandErrors::hardwareError() const {
   int error=0;
   if (ctrl_bcid[0].inError()) error|=((ctrl_bcid[0].value()<< 0)&0x000F);
   if (ctrl_bcid[1].inError()) error|=((ctrl_bcid[1].value()<< 4)&0x00F0);
-  error|=((errJ.value()<< 8)&0x0100);
-  error|=((errK.value()<<12)&0x1000);
+  error|=((errJ.value()<< 8)&0x1000);
+  error|=((errK.value()<<12)&0x0100);
+  if (l0_B_Id.inError())       error|=0x2000;
+  if (l0EventNumber.inError()) error|=0x0200;
   return error;
 }
 
