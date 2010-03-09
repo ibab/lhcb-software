@@ -54,25 +54,25 @@ class CKThetaResolutionConfig(RichConfigurableUser):
         gEff.NormaliseRes = True
 
         # CRJ Need to find a better way to handle this
-        gEff.NAerogelResBins = [ (0,0.13), (0.13,0.18), (0.18,0.23), (0.23,1) ]
+        gEff.NAerogelResBins  = [ (0,0.13), (0.13,0.18), (0.18,0.23), (0.23,1) ]
         gEff.NRich1GasResBins = [ (0,0.0275), (0.0275,0.047), (0.047,1) ]
         gEff.NRich2GasResBins = [ (0,0.018), (0.018,0.026), (0.026,1) ]
         
-        gEff.ForwardAerogelRes = [ 0.00524541, 0.0038708, 0.00267393, 0.0023797 ]
+        gEff.ForwardAerogelRes  = [ 0.00524541, 0.0038708, 0.00267393, 0.0023797 ]
         gEff.ForwardRich1GasRes = [ 0.00172102, 0.00150918, 0.00138705 ]
         gEff.ForwardRich2GasRes = [ 0.000977774, 0.0008275, 0.000685761 ]
         
-        gEff.KsTrackAerogelRes = [ 0.00560132, 0.00401517, 0.00301323, 0.00271771 ]
+        gEff.KsTrackAerogelRes  = [ 0.00560132, 0.00401517, 0.00301323, 0.00271771 ]
         gEff.KsTrackRich1GasRes = [ 0.0022413, 0.00174685, 0.00156123 ]
         gEff.KsTrackRich2GasRes = [ 0.000967986, 0.000855588, 0.00068772 ]
         
-        gEff.MatchAerogelRes = [ 0.00590846, 0.00379323, 0.00264066, 0.00239153 ]
+        gEff.MatchAerogelRes  = [ 0.00590846, 0.00379323, 0.00264066, 0.00239153 ]
         gEff.MatchRich1GasRes = [ 0.00184286, 0.00150318, 0.00138152 ]
         gEff.MatchRich2GasRes = [ 0.000989144, 0.000831526, 0.000671958 ]
         
-        gEff.SeedRich2GasRes = [ 0.00233702, 0.00111318, 0.000935434 ]
+        gEff.SeedRich2GasRes  = [ 0.00233702, 0.00111318, 0.000935434 ]
         
-        gEff.VeloTTAerogelRes = [ 0.0172506, 0.0378092, 0.00961744, 0.00272289 ]
+        gEff.VeloTTAerogelRes  = [ 0.0172506, 0.0378092, 0.00961744, 0.00272289 ]
         gEff.VeloTTRich1GasRes = [ 0.00245855, 0.00339135, 0.00169416 ]
         
         # Following are needed for MC data, when it is possible that a reco track type is
@@ -84,7 +84,7 @@ class CKThetaResolutionConfig(RichConfigurableUser):
         gEff.VeloTTRich2GasRes = [ 0.00245855, 0.00339135, 0.00169416  ]
         
         # MCRichTrack options
-        gEff.MCRichTrackAerogelRes = [ 0.00524541, 0.0038708, 0.00267393, 0.0023797 ]
+        gEff.MCRichTrackAerogelRes  = [ 0.00524541, 0.0038708, 0.00267393, 0.0023797 ]
         gEff.MCRichTrackRich1GasRes = [ 0.00172102, 0.00150918, 0.00138705 ]
         gEff.MCRichTrackRich2GasRes = [ 0.000977774, 0.0008275, 0.000685761 ]
 
