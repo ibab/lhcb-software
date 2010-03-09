@@ -3,6 +3,7 @@
 import sys, platform, os
 import re
 import logging
+
 # CMTCONFIG extraction
 
 def isNewStyleBinary(cmtconfig):
@@ -187,7 +188,7 @@ def pathMatch(path, cmtconfig, shared=False):
     return selected 
 
 def pathFilter(pathlist, cmtconfig, shared=False):
-    return ( p for p in pathlist if pathMatch(p, cmtconfig, shared) )
+    return [ p for p in pathlist if pathMatch(p, cmtconfig, shared) ]
 
 # supported shells
 supported_shells = ["csh", "sh", "bat"]
