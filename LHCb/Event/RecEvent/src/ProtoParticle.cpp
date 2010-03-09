@@ -1,4 +1,4 @@
-// $Id: ProtoParticle.cpp,v 1.9 2009-11-20 16:36:37 jonrob Exp $
+// $Id: ProtoParticle.cpp,v 1.10 2010-03-09 18:39:17 jonrob Exp $
 
 #include <algorithm>
 
@@ -77,6 +77,7 @@ LHCb::ProtoParticle::removeRichInfo()
   erased += this->eraseInfo( LHCb::ProtoParticle::RichDLLpi );
   erased += this->eraseInfo( LHCb::ProtoParticle::RichDLLk );
   erased += this->eraseInfo( LHCb::ProtoParticle::RichDLLp );
+  erased += this->eraseInfo( LHCb::ProtoParticle::RichDLLbt );
   erased += this->eraseInfo( LHCb::ProtoParticle::RichPIDStatus );
   // Set RichPID pointer to NULL
   this->setRichPID(NULL);

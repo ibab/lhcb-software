@@ -46,6 +46,7 @@
         <enumval name="RichDLLk"       value="103"  desc="The RICH delta log likelihood value for the kaon hypothesis"/>
         <enumval name="RichDLLp"       value="104"  desc="The RICH delta log likelihood value for the proton hypothesis"/>
         <enumval name="RichPIDStatus"  value="105"  desc="The RichPID bit packed PID status word"/>
+        <enumval name="RichDLLbt"      value="106"  desc="The RICH delta log likelihood value for the 'Below Threshold' hypothesis"/>
 
         <enumval name="MuonMuLL"       value="200"  desc="The log likelihood from the MUON system for the ProtoParticle to be a muon"/>
         <enumval name="MuonBkgLL"      value="201"  desc="The log likelihood from the MUON system for the ProtoParticle to be background"/>
@@ -53,11 +54,11 @@
         <enumval name="MuonPIDStatus"  value="203"  desc="The MuonPID bit packed PID status word"/>
         <enumval name="InAccMuon"      value="204"  desc="Acceptance flag for MUON system"/>
 
-        <enumval name="InAccSpd"   value="300"  desc="Acceptance flag for Spd-based  CaloID (charged)"/>
-        <enumval name="InAccPrs"   value="301"  desc="Acceptance flag for Prs-based  CaloID (charged)"/>
-        <enumval name="InAccEcal"  value="302"  desc="Acceptance flag for Ecal-based CaloID (charged)"/>
-        <enumval name="InAccHcal"  value="303"  desc="Acceptance flag for Hcal-based CaloID (charged)"/>
-        <enumval name="InAccBrem"  value="304"  desc="Acceptance flag for Brem-based CaloID (charged)"/>
+        <enumval name="InAccSpd"           value="300"  desc="Acceptance flag for Spd-based  CaloID (charged)"/>
+        <enumval name="InAccPrs"           value="301"  desc="Acceptance flag for Prs-based  CaloID (charged)"/>
+        <enumval name="InAccEcal"          value="302"  desc="Acceptance flag for Ecal-based CaloID (charged)"/>
+        <enumval name="InAccHcal"          value="303"  desc="Acceptance flag for Hcal-based CaloID (charged)"/>
+        <enumval name="InAccBrem"          value="304"  desc="Acceptance flag for Brem-based CaloID (charged)"/>
         <enumval name="CaloTrMatch"        value="310"  desc="CaloID estimator : 2D chi2 for Track/CaloCluster matching (neutral + charged)"/>
         <enumval name="CaloElectronMatch"  value="311"  desc="CaloID estimator : 3D chi2 for Track/CaloHypo(e) matching (charged)"/>
         <enumval name="CaloBremMatch"      value="312"  desc="CaloID estimator : 3D chi2 for Track/CaloHypo(Brem) (charged)"/>

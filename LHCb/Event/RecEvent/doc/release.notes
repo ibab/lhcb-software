@@ -1,9 +1,12 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.137 2010-02-12 16:57:17 cattanem Exp $
+! $Id: release.notes,v 1.138 2010-03-09 18:39:17 jonrob Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+! 2010-03-09 - Chris Jones
+ - Add Rich Below Threshold DLL values
 
 !========================= RecEvent v2r26 2010-02-12 =========================
 ! 2010-02-09 - Alessia Satta

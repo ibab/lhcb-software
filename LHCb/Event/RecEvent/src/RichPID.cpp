@@ -5,7 +5,7 @@
  *  Implementation file for class : RichPID
  *
  *  CVS Log :-
- *  $Id: RichPID.cpp,v 1.5 2008-08-18 18:50:01 jonrob Exp $
+ *  $Id: RichPID.cpp,v 1.6 2010-03-09 18:39:17 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    2002-06-10
@@ -34,12 +34,13 @@ bool LHCb::RichPID::isAboveThreshold(const Rich::ParticleIDType type) const
 {
   switch ( type )
   {
-  case Rich::Pion        :  return this->pionHypoAboveThres();
-  case Rich::Electron    :  return this->electronHypoAboveThres();
-  case Rich::Muon        :  return this->muonHypoAboveThres();
-  case Rich::Kaon        :  return this->kaonHypoAboveThres();
-  case Rich::Proton      :  return this->protonHypoAboveThres();
-  default                :  return false;
+  case Rich::Pion           :  return this->pionHypoAboveThres();
+  case Rich::Electron       :  return this->electronHypoAboveThres();
+  case Rich::Muon           :  return this->muonHypoAboveThres();
+  case Rich::Kaon           :  return this->kaonHypoAboveThres();
+  case Rich::Proton         :  return this->protonHypoAboveThres();
+  case Rich::BelowThreshold :  return false;
+  default                   :  return false;
   }
 }
 
@@ -53,7 +54,7 @@ void LHCb::RichPID::setAboveThreshold(const Rich::ParticleIDType type,
   case Rich::Muon        :  this->setMuonHypoAboveThres(flag);
   case Rich::Kaon        :  this->setKaonHypoAboveThres(flag);
   case Rich::Proton      :  this->setProtonHypoAboveThres(flag);
-  default                :  return;
+  default                :  return; // Covers Rich::BelowThreshold
   }
 }
 
