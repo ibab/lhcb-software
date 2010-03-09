@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Reconstruction.py,v 1.9 2010-03-08 01:19:39 odescham Exp $
+# $Id: Reconstruction.py,v 1.10 2010-03-09 18:16:43 odescham Exp $
 # =============================================================================
 ## The major building blocks of Calorimeter Reconstruction
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,7 +11,7 @@ The major building blocks of Calorimeter Reconstruction
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $"
 # =============================================================================
 __all__ = (
     'clustersReco'   , 
@@ -402,7 +402,7 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
         pmID =  PhotonFromMergedID( context, enableRecoOnDemand, useTracks )
         idSeq.Members = [ mID, pmID ]  
         #idSeq.Members = [ mID ]  
-        addAlgs ( seq , mID ) 
+        addAlgs ( seq , idSeq ) 
 
     # propagate the context
     setTheProperty ( seq , 'Context' , context )

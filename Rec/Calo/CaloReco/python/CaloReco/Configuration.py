@@ -9,7 +9,7 @@ Configurable for Calorimeter Reconstruction
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $"
 # =============================================================================
 __all__ = (
     'HltCaloRecoConf'     ,
@@ -54,7 +54,7 @@ class CaloRecoConf(LHCbConfigurableUser):
    ## define the slots
     __slots__ = {
         ##
-        "Context"              : "Offline"   # The context to run
+        "Context"              : ''          # The context to run (default = offline)
         , "MeasureTime"        : True        # Measure the time for sequencers
         , "OutputLevel"        : INFO        # The global output level
         ##
@@ -75,7 +75,7 @@ class CaloRecoConf(LHCbConfigurableUser):
         , 'UsePrsE'             : True       # Use Prs to select Charged clusters
         , 'UseTracksM'          : True       # Use Tracks for MergedPi0s-ID
         , 'CaloStandalone'      : False      # useTrackX = false + usePrs/Spd = true
-        , 'NeutralID'           : True       # Apply neutralID
+        , 'NeutralID'           : False      # Apply neutralID (CaloPIDs is in charge + problems with onDemand to be fixed)
         , 'EnableRecoOnDemand'  : False      # Enable Reco-On-Demand
         , 'TrackLocations'      : []         # Track locations (Neutral/Charged cluster selection with UseTrack(E) )
         , 'SkipNeutrals'        : False
@@ -353,7 +353,9 @@ class CaloProcessor( CaloRecoConf ):
         'NeutralProtoLocation':'',
         'ChargedProtoLocation':'',
         'CaloSequencer'       : None,
-        'ProtoSequencer'      : None
+        'ProtoSequencer'      : None,
+        'NeutralProtoSequencer'  : None,
+        'ChargedProtoSequencer'  : None
         }
     
     ## used configurables 
@@ -399,22 +401,69 @@ class CaloProcessor( CaloRecoConf ):
         seq  = GaudiSequencer ( 'CaloRecoPIDs' + self.getName() )
         conf = CaloProcessor(self.getName() )
         conf.setProp("CaloSequencer", seq)
-        conf.setProp("Context", self.getName() )
+        context = self.getProp('Context')
+        if context == '' :
+            conf.setProp("Context", self.getName() )
+        
         conf.setProp("TrackLocations", tracks)        
         return seq
-    def protoSequence ( self,   tracks=[]  ) :
+    def protoSequence ( self,   tracks=[] , protoPrefix = '' ) :
         seq  = GaudiSequencer ( 'CaloProtoPUpdate' + self.getName() )
         conf = CaloProcessor(self.getName() )
         conf.setProp("ProtoSequencer", seq)
-        conf.setProp("Context", self.getName() )
+        if self.getProp('Context') == '' : 
+            conf.setProp("Context", self.getName() )
         conf.setProp("TrackLocations", tracks)        
+        if protoPrefix != '' :
+            nloc = protoPrefix + '/Neutrals'
+            cloc = protoPrefix + '/Charged'
+            nloc = nloc.replace('//', '/')
+            cloc = cloc.replace('//', '/')
+            conf.setProp("ChargedProtoLocation",cloc)
+            conf.setProp("NeutralProtoLocation",nloc)            
         return seq
-    def sequence ( self,   tracks=[]  ) :
+    def chargedProtoSequence ( self,   tracks=[] , protoPrefix = '' ) :
+        seq  = GaudiSequencer ( 'CaloChargedProtoPUpdate' + self.getName() )
+        conf = CaloProcessor(self.getName() )
+        conf.setProp("ChargedProtoSequencer", seq)
+        if self.getProp('Context') == '' : 
+            conf.setProp("Context", self.getName() )
+        conf.setProp("TrackLocations", tracks)        
+        if protoPrefix != '' :
+            cloc = protoPrefix
+            if protoPrefix.find('/Charged') == -1 :
+                cloc = protoPrefix + '/Charged'
+                cloc = cloc.replace('//', '/')
+            conf.setProp("ChargedProtoLocation",cloc)
+        return seq
+    def neutralProtoSequence ( self,   tracks=[] , protoPrefix = '' ) :
+        seq  = GaudiSequencer ( 'CaloNeutralProtoPUpdate' + self.getName() )
+        conf = CaloProcessor(self.getName() )
+        conf.setProp("NeutralProtoSequencer", seq) 
+        if self.getProp('Context') == '' : 
+            conf.setProp("Context", self.getName() )
+        conf.setProp("TrackLocations", tracks)        
+        if protoPrefix != '' :
+            nloc = protoPrefix
+            if protoPrefix.find('/Neutrals') == -1 :
+                nloc = protoPrefix + '/Neutrals'
+                nloc = nloc.replace('//', '/')
+            conf.setProp("NeutralProtoLocation",nloc)            
+        return seq
+    def sequence ( self,   tracks=[], protoPrefix = ''  ) :
         seq  = GaudiSequencer ( 'CaloProcessor' + self.getName() )
         conf = CaloProcessor(self.getName() )
         conf.setProp("Sequence", seq)
-        conf.setProp("Context", self.getName() )
+        if self.getProp('Context') == '' : 
+            conf.setProp("Context", self.getName() )
         conf.setProp("TrackLocations", tracks)        
+        if protoPrefix != '' :
+            nloc = protoPrefix + '/Neutrals'
+            cloc = protoPrefix + '/Charged'
+            nloc = nloc.replace('//', '/')
+            cloc = cloc.replace('//', '/')
+            conf.setProp("ChargedProtoLocation",cloc)
+            conf.setProp("NeutralProtoLocation",nloc)            
         return seq
 
         
@@ -477,7 +526,8 @@ class CaloProcessor( CaloRecoConf ):
 
         ######## ProtoParticle update ##########
         protoSeq     = []
-
+        cProtoSeq    = []
+        nProtoSeq    = []
         #  ProtoParticle locations
         nloc = self.getProp('NeutralProtoLocation')
         cloc = self.getProp('ChargedProtoLocation')
@@ -538,6 +588,7 @@ class CaloProcessor( CaloRecoConf ):
             cpSeq = getAlgo( GaudiSequencer , "ChargedProtoPCaloUpdateSeq", context )
             cpSeq.Members += [ ecal,brem,hcal,prs,spd ]
             addAlgs(protoSeq , cpSeq )
+            addAlgs(cProtoSeq, [ecal,brem,hcal,prs,spd] )
 
         # NeutralProtoParticleProtoP components        
         if not self.getProp('SkipNeutrals') :
@@ -548,12 +599,21 @@ class CaloProcessor( CaloRecoConf ):
                 neutral.ProtoParticleLocation = nloc
             # fill the sequence
             addAlgs(protoSeq, neutral )
+            addAlgs(nProtoSeq, neutral )
 
 
         ## propagate the global properties
         setTheProperty ( protoSeq , 'Context'     , self.getProp ( 'Context'     ) )
         setTheProperty ( protoSeq , 'OutputLevel' , self.getProp ( 'OutputLevel' ) )
         setTheProperty ( protoSeq , 'MeasureTime' , self.getProp ( 'MeasureTime' ) )
+
+        setTheProperty ( nProtoSeq , 'Context'     , self.getProp ( 'Context'     ) )
+        setTheProperty ( nProtoSeq , 'OutputLevel' , self.getProp ( 'OutputLevel' ) )
+        setTheProperty ( nProtoSeq , 'MeasureTime' , self.getProp ( 'MeasureTime' ) )
+
+        setTheProperty ( cProtoSeq , 'Context'     , self.getProp ( 'Context'     ) )
+        setTheProperty ( cProtoSeq , 'OutputLevel' , self.getProp ( 'OutputLevel' ) )
+        setTheProperty ( cProtoSeq , 'MeasureTime' , self.getProp ( 'MeasureTime' ) )
 
         # Full sequence
         addAlgs( fullSeq, caloSeq )
@@ -577,6 +637,13 @@ class CaloProcessor( CaloRecoConf ):
             addAlgs  ( proto , protoSeq ) 
 
 
+        if self.isPropertySet('ChargedProtoSequencer') :
+            cproto = self.getProp('ChargedProtoSequencer') 
+            addAlgs  ( cproto , cProtoSeq ) 
+
+        if self.isPropertySet('NeutralProtoSequencer') :
+            nproto = self.getProp('NeutralProtoSequencer') 
+            addAlgs  ( nproto , nProtoSeq ) 
 
         if self.getProp( 'EnableOnDemand' )  :
             _log.info ( printOnDemand () ) 

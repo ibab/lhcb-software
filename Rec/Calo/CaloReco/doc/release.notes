@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.172 2010-03-09 07:40:31 cattanem Exp $
+! $Id: release.notes,v 1.173 2010-03-09 18:16:42 odescham Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2010-03-10 - Olivier Deschamps
+ - CaloProcessor CU : 
+    - add neutralProtoSequence() + chargedProtoSequence
+    -  all sequence() : add ProtoPrefixLocation as argument
+    - Context have the priority over instanceName when set. If not Context = instance
+    - problem with NeutralID OnDemand : neutralID activated only in CaloPIDs
+
+
 
 ! 2010-03-09 - Marco Cattaneo
  - In requirements, add dependencies on Calo/CaloPIDs and Calo/CaloDAQ, due to
