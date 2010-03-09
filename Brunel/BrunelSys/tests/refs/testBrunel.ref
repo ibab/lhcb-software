@@ -68,8 +68,8 @@
 # WARNING: Using default tag head-20100202 for partition LHCBCOND
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v35r11
-                                          running on lxbuild156.cern.ch on Thu Feb 25 15:13:29 2010
+                                                   Welcome to Brunel version v36r2
+                                          running on lxbuild156.cern.ch on Tue Mar  9 11:49:43 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -144,8 +144,8 @@ HcalFillRawBuffer    INFO Data coding type 1
 RemoveHcalPacke...SUCCESS bankKiller : all banks of type 'HcalPacked' will be removed.
 Reco                 INFO Member list: GaudiSequencer/RecoDecodingSeq, GaudiSequencer/RecoVELOSeq, GaudiSequencer/RecoTTSeq, GaudiSequencer/RecoITSeq, GaudiSequencer/RecoOTSeq, GaudiSequencer/RecoTrSeq, GaudiSequencer/RecoVertexSeq, GaudiSequencer/RecoRICHSeq, GaudiSequencer/RecoCALOSeq, GaudiSequencer/RecoMUONSeq, GaudiSequencer/RecoPROTOSeq, with context 'Offline'
 RecoDecodingSeq      INFO Member list: DecodeVeloRawBuffer/DecodeVeloClusters, RawBankToSTClusterAlg/CreateTTClusters, RawBankToSTLiteClusterAlg/CreateTTLiteClusters, RawBankToSTClusterAlg/CreateITClusters, RawBankToSTLiteClusterAlg/CreateITLiteClusters, with context 'Offline'
-ONLINE_201002        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-201002.db/ONLINE"
-ONLINE_201002        INFO Using TAG ""
+ONLINE_201003        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-201003.db/ONLINE"
+ONLINE_201003        INFO Using TAG ""
 RecoVELOSeq          INFO Member list: Tf::PatVeloRTracking/PatVeloRTracking, Tf::PatVeloSpaceTracking/PatVeloSpaceTracking, Tf::PatVeloGeneralTracking/PatVeloGeneralTracking, with context 'Offline'
 RecoTTSeq            INFO Member list: , with context 'Offline'
 RecoITSeq            INFO Member list: , with context 'Offline'
@@ -172,6 +172,10 @@ ToolSvc.PatTTMa...   INFO  No B field detected.
 ToolSvc.TrajOTP...   INFO Use drifttime           = 1
 ToolSvc.TrajOTP...   INFO Fit drifttime residuals = 0
 ToolSvc.TrajOTP...   INFO Prefit strategy = 2
+ToolSvc.STOffli...   INFO APE set to 0
+ToolSvc.STOffli...   INFO Error Vec 0.196 0.147 0.177 0.037
+ToolSvc.ITClust...   INFO APE set to 0
+ToolSvc.ITClust...   INFO Error Vec 0.189 0.117 0.166 0.037
 FitForward.Fitter    INFO
 FitForward.Fitter    INFO ============ TrackMasterFitter Settings ===========
 FitForward.Fitter    INFO  Upstream fit
@@ -343,8 +347,8 @@ DeRichSystem         INFO Update triggered for HPD numbering maps
 DeRichSystem         INFO Built mappings for  7 L1 and 196 HPDs in Rich1
 DeRichSystem         INFO Built mappings for  8 L1 and 288 HPDs in Rich2
 DecodeRawRichOf...   INFO Will only decode Raw Buffer -> No RichDigits produced
-Rich1/Rich1Gas       INFO Refractive index update triggered : Pressure = 0.967973 bar Temperature = 295.773 K
-Rich2/Rich2Gas       INFO Refractive index update triggered : Pressure = 0.971438 bar Temperature = 291.892 K
+Rich1/Rich1Gas       INFO Refractive index update triggered : Pressure = 0.974154 bar Temperature = 293.315 K
+Rich2/Rich2Gas       INFO Refractive index update triggered : Pressure = 0.973312 bar Temperature = 294.016 K
 ToolSvc.Offline...   INFO # ray tracing attempts before bailout = [50, 50, 50]
 ToolSvc.Offline...   INFO Particle types considered = [electron, muon, pion, kaon, proton]
 ToolSvc.Offline...   INFO Particle types considered = [electron, muon, pion, kaon, proton]
