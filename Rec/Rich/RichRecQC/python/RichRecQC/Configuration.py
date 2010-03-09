@@ -307,8 +307,9 @@ class RichRecQCConf(RichConfigurableUser):
 
         # Alignment monitor
         if "AlignmentMonitoring" in monitors :
-            self.setOtherProps(RichAlignmentConf(),["Histograms","Context","NTupleProduce","WithMC"])
-            RichAlignmentConf().AlignmentSequencer = self.newSeq(sequence,"RichMirrAlignMoni")
+            conf = self.getRichCU(RichAlignmentConf)
+            self.setOtherProps(conf,["Histograms","Context","NTupleProduce","WithMC"])
+            conf.AlignmentSequencer = self.newSeq(sequence,"RichMirrAlignMoni")
 
         # HPD IFB
         if "HPDIFBMonitoring" in monitors :
