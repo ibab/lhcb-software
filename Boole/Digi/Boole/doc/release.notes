@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Changes to references to reflect changes in Boole v21r1 output:
+   . New tuning of noise and gain in Velo, to match 2009 data
+     (VeloSimulation v3r8, VeloAlgorithms v5r2)
+
 </PRE><H1><A NAME=v21r0>2010-03-02 Boole v21r0</A></H1></PRE>
  - Changes to references to reflect changes in Boole v21r0 output:
    . Fix bug preventing Spd threshold to be larger or equal to 1 mip in
