@@ -18,26 +18,26 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
     #------------------------
     # Don't touch my variables!
 
-    __slots__ = { 'ComRobAllTrkPtLL'        : 300        # in MeV
+    __slots__ = { 'ComRobAllTrkPtLL'        : 200        # in MeV
                   , 'ComRobAllTrkPLL'         : 2000       # in MeV
-                  , 'ComRobAllTrkPVIPLL'      : 0.05       # in mm
-                  , 'ComRobPairMinDocaUL'     : 0.10       # in mm
+                  , 'ComRobAllTrkPVIPLL'      : 0.125       # in mm
+                  , 'ComRobPairMinDocaUL'     : 0.05       # in mm
                   , 'ComRobPairMaxDocaUL'     : 1          # in mm
-                  , 'ComRobTrkMaxPtLL'        : 1500       # in MeV
-                  , 'ComRobVtxPVDispLL'       : 2          # in mm
+                  , 'ComRobTrkMaxPtLL'        : 1000       # in MeV
+                  , 'ComRobVtxPVDispLL'       : 2.0        # in mm
                   , 'ComRobVtxPVRDispLL'      : 0.2        # in mm
                   , 'ComRobUseGEC'            : True       # do or do not 
                   , 'ComRobGEC'               : 120        # max number of tracks
-                  , 'ComTFAllTrkPtLL'         : 300        # in MeV
+                  , 'ComTFAllTrkPtLL'         : 200        # in MeV
                   , 'ComTFAllTrkPLL'          : 2000       # in MeV
                   , 'ComTFAllTrkPVIPChi2LL'   : 9          # unitless
                   , 'ComTFAllTrkChi2UL'       : 10         # unitless
-                  , 'ComTFPairMinDocaUL'      : 0.10       # in mm
+                  , 'ComTFPairMinDocaUL'      : 0.05       # in mm
                   , 'ComTFPairMaxDocaUL'      : 1          # in mm
-                  , 'ComTFTrkMaxPtLL'         : 1500       # in MeV
-                  , 'ComTFVtxPVDispChi2LL'    : 169        # unitless
-                  , 'ComTFVtxPVDDispChi2LL'   : 100        # for the D: unitless
-                  , 'RobustCoplanUL'          : 0.02       # in mm
+                  , 'ComTFTrkMaxPtLL'         : 1000       # in MeV
+                  , 'ComTFVtxPVDispChi2LL'    : 196        # unitless
+                  , 'ComTFVtxPVDDispChi2LL'   : 121        # for the D: unitless
+                  , 'RobustCoplanUL'          : 0.5        # in mm
                   }
 
     def __apply_configuration__(self) :
@@ -412,8 +412,35 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('B2D2hhKstarReq4BodyWithoutKsBroadMW', prescale = self.prescale , algos = [ Robust4BodySeq, B2D2hhKstarPhiWithoutKsSeqMWFilter], postscale = self.postscale)
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarReq4BodyWithoutKsBroadMWDecision" : 52410 } )
 
-        #Robust Lines
-        line = Hlt2Line('B2D2XRobust3Body', prescale = 0.001 , algos = [ Robust3BodySeq], postscale = self.postscale)
+        #Robust monitoring Lines
+        line = Hlt2Line('B2D2XRobust3Body', prescale = self.prescale , algos = [ Robust3BodySeq], postscale = 0.001)
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2XRobust3BodyDecision" : 52420 } )
-        line = Hlt2Line('B2D2XRobust4Body', prescale = 0.001 , algos = [ Robust4BodySeq], postscale = self.postscale)
+        line = Hlt2Line('B2D2XRobust4Body', prescale = self.prescale , algos = [ Robust4BodySeq], postscale = 0.001)
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2XRobust4BodyDecision" : 52430 } )
+
+
+        # Post TF monitoring lines
+        line = Hlt2Line('B2D2hhBachelorReq3BodyWithKsSignal', prescale = 0.001 , algos = [ B2D2hhBachelorWithKsSeqSignalFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhBachelorReq3BodyWithKsSignalDecision" : 52500 } )
+        line = Hlt2Line('B2D2hhhBachelorReq3BodyWithKsSignal', prescale = 0.001 , algos = [ B2D2hhhBachelorWithKsSeqSignalFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorReq3BodyWithKsSignalDecision" : 52510 } )
+        line = Hlt2Line('B2D2hhKstarReq3BodyWithKsSignal', prescale = 0.001 , algos = [ B2D2hhKstarPhiWithKsSeqSignalFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarReq3BodyWithKsSignalDecision" : 52520 } )
+        line = Hlt2Line('B2D2hhBachelorReq3BodyWithoutKsSignal', prescale = 0.001 , algos = [ B2D2hhBachelorWithoutKsSeqSignalFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhBachelorReq3BodyWithoutKsSignalDecision" : 52530 } )
+        line = Hlt2Line('B2D2hhhBachelorReq3BodyWithoutKsSignal', prescale = 0.001 , algos = [ B2D2hhhBachelorWithoutKsSeqSignalFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorReq3BodyWithoutKsSignalDecision" : 52540 } )
+        line = Hlt2Line('B2D2hhKstarReq3BodyWithoutKsSignal', prescale = 0.001 , algos = [ B2D2hhKstarPhiWithoutKsSeqSignalFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarReq3BodyWithoutKsSignalDecision" : 52550 } )
+        line = Hlt2Line('B2D2hhBachelorReq3BodyWithKsBroadMW', prescale = 0.001 , algos = [ B2D2hhBachelorWithKsSeqMWFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhBachelorReq3BodyWithKsBroadMWDecision" : 52560 } )
+        line = Hlt2Line('B2D2hhhBachelorReq3BodyWithKsBroadMW', prescale = 0.001 , algos = [ B2D2hhhBachelorWithKsSeqMWFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorReq3BodyWithKsBroadMWDecision" : 52570 } )
+        line = Hlt2Line('B2D2hhKstarReq3BodyWithKsBroadMW', prescale = 0.001 , algos = [ B2D2hhKstarPhiWithKsSeqMWFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarReq3BodyWithKsBroadMWDecision" : 52580 } )
+        line = Hlt2Line('B2D2hhBachelorReq3BodyWithoutKsBroadMW', prescale = 0.001 , algos = [ B2D2hhBachelorWithoutKsSeqMWFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhBachelorReq3BodyWithoutKsBroadMWDecision" : 52590 } )
+        line = Hlt2Line('B2D2hhhBachelorReq3BodyWithoutKsBroadMW', prescale = 0.001 , algos = [ B2D2hhhBachelorWithoutKsSeqMWFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorReq3BodyWithoutKsBroadMWDecision" : 52600 } )
+        line = Hlt2Line('B2D2hhKstarReq3BodyWithoutKsBroadMW', prescale = 0.001 , algos = [ B2D2hhKstarPhiWithoutKsSeqMWFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarReq3BodyWithoutKsBroadMWDecision" : 52610 } )

@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.129 2010-03-08 00:15:55 gligorov Exp $
+$Id: release.notes,v 1.130 2010-03-09 15:37:13 jnardull Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,12 @@ $Id: release.notes,v 1.129 2010-03-08 00:15:55 gligorov Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2010-03-09 - J. Nardulli
+ - Working on Savannah task 14212 for the B2DX lines.
+   Cut values as by the talk given by P. Spradlin on 20/11/2009
+   Configuration is reduction factor 50/no Topo 4 bodies 
+   Added the post-TF monitoring lines.
 
 ! 2010-03-07 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691. Remove obsolete
