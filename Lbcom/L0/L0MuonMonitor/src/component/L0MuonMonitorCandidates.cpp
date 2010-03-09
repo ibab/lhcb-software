@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitorCandidates.cpp,v 1.2 2010-03-09 09:25:41 jucogan Exp $
+// $Id: L0MuonMonitorCandidates.cpp,v 1.3 2010-03-09 16:31:34 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -6,11 +6,6 @@
 #include "Kernel/MuonTileID.h"
 #include "Event/ODIN.h"
 #include "Event/L0MuonCandidate.h"
-
-// ROOT
-#include "GaudiUtils/Aida2ROOT.h"
-#include "TH1D.h"
-#include "TAxis.h"
 
 // local
 #include "L0MuonMonitorCandidates.h"
@@ -73,7 +68,9 @@ StatusCode L0MuonMonitorCandidates::initialize() {
     m_tae_items[ 7] = "Next7/";
   }
 
-
+  // Tools
+  m_ovfTool = tool<IL0MuonOverflowTool> ("L0MuonOverflowTool","CandMonOverflowTool",this);
+  
   // Book histos
   std::string title_prefix = "Final_Candidates_";
   if (m_allCandidates) title_prefix = "All_Candidates_";
@@ -90,6 +87,11 @@ StatusCode L0MuonMonitorCandidates::initialize() {
   int ygrid =  8;
   m_seedX = book1D(title_prefix+"seed_density_X",-16.*xgrid,16.*xgrid,32*xgrid);
   m_seedY = book1D(title_prefix+"seed_density_Y",-16.*ygrid,16.*ygrid,32*ygrid);
+  
+  if (!m_allCandidates)
+    m_ovf = book1D(title_prefix+"Number of overflows",+0.5,4.5,4);
+  else
+    m_ovf = book1D(title_prefix+"Number of overflows",+0.5,192.5,192);
 
   return StatusCode::SUCCESS;
 }
@@ -114,11 +116,22 @@ StatusCode L0MuonMonitorCandidates::execute() {
   }
 
   int ncands = 0;
+  int novfs = 0;
 
   int ntae = 0;
   for (int itae = -1*tae_size; itae<=tae_size; ++itae){
     std::string rootInTes = m_tae_items[itae];
 
+    if (!m_allCandidates){
+      std::vector<int> quarters;
+      sc = m_ovfTool -> getQuarters(quarters,rootInTes);
+      novfs += quarters.size();
+    } else {
+      std::vector<LHCb::MuonTileID> pus;
+      sc = m_ovfTool -> getPUs(pus,rootInTes);
+      novfs += pus.size();
+    }
+  
     sc=setProperty("RootInTES",rootInTes);
     if (sc.isFailure()) return Error("Can not set RootInTES ... abort",StatusCode::SUCCESS,50);
 
@@ -164,6 +177,7 @@ StatusCode L0MuonMonitorCandidates::execute() {
   if (ntae==0) return Error( "No valid time slice found",StatusCode::SUCCESS,20);
 
   fill(m_multi,ncands,1.);
+  fill(m_ovf,novfs,1.);
 
   return StatusCode::SUCCESS;
 }

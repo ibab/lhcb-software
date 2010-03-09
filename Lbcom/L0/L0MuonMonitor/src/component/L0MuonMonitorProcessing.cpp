@@ -1,10 +1,15 @@
-// $Id: L0MuonMonitorProcessing.cpp,v 1.1 2010-03-08 15:12:53 jucogan Exp $
+// $Id: L0MuonMonitorProcessing.cpp,v 1.2 2010-03-09 16:31:34 jucogan Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "Event/ODIN.h"
 #include "Event/L0MuonCandidate.h"
+
+// ROOT
+#include "GaudiUtils/Aida2ROOT.h"
+#include "TH1D.h"
+#include "TAxis.h"
 
 // local
 #include "L0MuonMonitorProcessing.h"
@@ -65,6 +70,12 @@ StatusCode L0MuonMonitorProcessing::initialize() {
 
   // Histogram
   m_summary = book1D("Summary_of_L0Muon_processing_errors",-0.5,1.5,2);
+
+  TH1D * hist = Gaudi::Utils::Aida2ROOT::aida2root( m_summary );
+  if (hist==0) return Error("Can not get TH1D for PT_GeV",StatusCode::SUCCESS);
+  TAxis* axis = hist -> GetXaxis();
+  axis -> SetBinLabel(1,"Processed");
+  axis -> SetBinLabel(2,"Bad");
 
   return StatusCode::SUCCESS;
 }

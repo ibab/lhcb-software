@@ -1,9 +1,14 @@
-// $Id: L0MuonMonitorInput.cpp,v 1.1 2010-03-08 15:12:53 jucogan Exp $
+// $Id: L0MuonMonitorInput.cpp,v 1.2 2010-03-09 16:31:34 jucogan Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "Event/ODIN.h"
+
+// ROOT
+#include "GaudiUtils/Aida2ROOT.h"
+#include "TH1D.h"
+#include "TAxis.h"
 
 // local
 #include "L0MuonMonitorInput.h"
@@ -63,13 +68,19 @@ StatusCode L0MuonMonitorInput::initialize() {
   }
   
   // Tools
-  m_muonBuffer  = tool<IMuonRawBuffer>    ("MuonRawBuffer"    ,"InputMonMuonTool"   ,this);
-  m_inputTool   = tool<IL0MuonInputTool>  ("L0MuonInputTool"  ,"InputMonL0MuonTool" ,this);
-  m_olerrorTool = tool<IL0MuonOLErrorTool>("L0MuonOLErrorTool","InputMonOLErrorTool",this); 
+  m_muonBuffer  = tool<IMuonRawBuffer>    ("MuonRawBuffer"    ,"InputMuonTool"   ,this);
+  m_inputTool   = tool<IL0MuonInputTool>  ("L0MuonInputTool"  ,"InputL0MuonTool" ,this);
+  m_olerrorTool = tool<IL0MuonOLErrorTool>("L0MuonOLErrorTool","InputOLErrorTool",this); 
 
   // Histogram
   m_summary = book1D("Summary_of_L0Muon_input_errors",-0.5,1.5,2);
 
+  TH1D * hist = Gaudi::Utils::Aida2ROOT::aida2root( m_summary );
+  if (hist==0) return Error("Can not get TH1D for PT_GeV",StatusCode::SUCCESS);
+  TAxis* axis = hist -> GetXaxis();
+  axis -> SetBinLabel(1,"Processed");
+  axis -> SetBinLabel(2,"Bad");
+  
   return StatusCode::SUCCESS;
 }
 

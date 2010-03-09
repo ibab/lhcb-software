@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitorError.cpp,v 1.1 2010-03-08 15:12:53 jucogan Exp $
+// $Id: L0MuonMonitorError.cpp,v 1.2 2010-03-09 16:31:34 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -8,6 +8,11 @@
 #include "Event/ODIN.h"
 #include "Event/L0MuonError.h"
 #include "Event/RawBankReadoutStatus.h"
+
+// ROOT
+#include "GaudiUtils/Aida2ROOT.h"
+#include "TH1D.h"
+#include "TAxis.h"
 
 // local
 #include "L0MuonMonitorError.h"
@@ -46,47 +51,231 @@ StatusCode L0MuonMonitorError::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  // Book histograms
+  // Book histograms and set labels 
   char buf[4096];
+  TH1D * hist;
+
+  // Summary
   m_summary = book1D("Summary_of_L0Muon_errors",-0.5,5.5,6);
-  for (int iq = 0; iq < NQuarters; ++iq){
+  hist = Gaudi::Utils::Aida2ROOT::aida2root( m_summary );
+  if (hist==0) Error("Can not get TH1D for Summary_of_L0Muon_errors",StatusCode::SUCCESS).ignore();
+  else{
+    TAxis* axis = hist -> GetXaxis();
+    axis -> SetBinLabel(1,"Processed");
+    axis -> SetBinLabel(2,"Tx");
+    axis -> SetBinLabel(3,"Sync");
+    axis -> SetBinLabel(4,"de-rnd");
+    axis -> SetBinLabel(5,"tell1");
+    axis -> SetBinLabel(6,"decoding");
+  }
+  
+  for (int iq = 0; iq < NQuarters; ++iq){ // loop over quarters
+
+    // Transmission 
     sprintf(buf,"Summary_of_transmission_errors_Q%d",iq+1);
     m_tx_summary[iq] = book1D(buf,-0.5,12.5,13);
+    hist = Gaudi::Utils::Aida2ROOT::aida2root( m_tx_summary[iq] );
+    if (hist==0) Error("Can not get TH1D for Summary_of_transmission_errors_Qi",StatusCode::SUCCESS).ignore();
+    else{
+      TAxis* axis = hist -> GetXaxis();
+      for (int ipb=0; ipb<12; ++ipb){
+        sprintf(buf,"PB%d",ipb);
+        axis -> SetBinLabel(ipb+1,buf);
+      }
+      axis -> SetBinLabel(13,"CB");
+    }
+
+    // Synchronisation
     sprintf(buf,"Summary_of_synchronisation_errors_Q%d",iq+1);
     m_sync_summary[iq] = book1D(buf,-0.5,12.5,13);
+    hist = Gaudi::Utils::Aida2ROOT::aida2root( m_sync_summary[iq] );
+    if (hist==0) Error("Can not get TH1D for Summary_of_synchronisation_errors_Qi",StatusCode::SUCCESS).ignore();
+    else{
+      TAxis* axis = hist -> GetXaxis();
+      for (int ipb=0; ipb<12; ++ipb){
+        sprintf(buf,"PB%d",ipb);
+        axis -> SetBinLabel(ipb+1,buf);
+      }
+      axis -> SetBinLabel(13,"CB");
+    }
+    
+    // Derandomizer
     sprintf(buf,"Summary_of_derandomiser_errors_Q%d",iq+1);
     m_derandom_summary[iq] = book1D(buf,-0.5,11.5,12);
-  }
-
-  m_sync_ctrl_src = book1D("CU-SU_synchronisation_error",-0.5,3.5,4);
-
-  for (int iq = 0; iq < NQuarters; ++iq){
-    sprintf(buf,"Internal_error_TELL1_Q%d",iq+1);
-    m_tell1_int_src[iq] = book1D(buf,-0.5,23.5,24);
-    sprintf(buf,"Reference_error_TELL1_Q%d",iq+1);
-    m_tell1_ref_src[iq] = book1D(buf,-0.5,23.5,24);
-  }
-  sprintf(buf,"Internal_error_TELL1_Q12");
-  m_tell1_int_src[4] = book1D(buf,-0.5,23.5,24);
-  sprintf(buf,"Reference_error_TELL1_Q12");
-  m_tell1_ref_src[4] = book1D(buf,-0.5,23.5,24);
-  sprintf(buf,"Internal_error_TELL1_Q34");
-  m_tell1_int_src[5] = book1D(buf,-0.5,23.5,24);
-  sprintf(buf,"Reference_error_TELL1_Q34");
-  m_tell1_ref_src[5] = book1D(buf,-0.5,23.5,24);
-
-  m_decoding_src = book1D("Decoding_error",-0.5,9.5,10);
-  for (int iq = 0; iq < NQuarters; ++iq){
-    for (int ibcsu = 0; ibcsu < NBCSUs; ++ibcsu){
-      sprintf(buf,"BCSU_error_Q%dPB%d",iq+1,ibcsu);
-      m_bcsu_src[iq][ibcsu] = book1D(buf,-0.5,12.5,13);
-      for (int ipu=0; ipu < NPUs ; ++ipu) {
-        sprintf(buf,"PU_error_Q%dPB%dPU%d",iq+1,ibcsu,ipu);
-        m_pu_src[iq][ibcsu][ipu] = book1D(buf,-0.5,23.5,24);
+    hist = Gaudi::Utils::Aida2ROOT::aida2root( m_derandom_summary[iq] );
+    if (hist==0) Error("Can not get TH1D for Summary_of_derandomiser_errors_Qi",StatusCode::SUCCESS).ignore();
+    else{
+      TAxis* axis = hist -> GetXaxis();
+      for (int ipb=0; ipb<12; ++ipb){
+        sprintf(buf,"PB%d",ipb);
+        axis -> SetBinLabel(ipb+1,buf);
       }
     }
+
+  } // end of loop over quarters
+
+  // CU-SU synchro
+  m_sync_ctrl_src = book1D("CU-SU_synchronisation_error",-0.5,3.5,4);
+  hist = Gaudi::Utils::Aida2ROOT::aida2root( m_sync_ctrl_src );
+  if (hist==0) Error("Can not get TH1D for CU-SU_synchronisation_error",StatusCode::SUCCESS).ignore();
+  else{
+    TAxis* axis = hist -> GetXaxis();
+    for (int iq=0; iq<4; ++iq){
+      sprintf(buf,"Q%d",(iq+1));
+      axis -> SetBinLabel(iq+1,buf);
+    }
   }
+
+  for (int iq = 0; iq < NQuarters; ++iq){ // loop over quarters
+
+    // Internal_error_TELL1 (PB)
+    sprintf(buf,"Internal_error_TELL1_Q%d",iq+1);
+    m_tell1_int_src[iq] = book1D(buf,-0.5,23.5,24);
+    hist = Gaudi::Utils::Aida2ROOT::aida2root( m_tell1_int_src[iq] );
+    if (hist==0) Error("Can not get TH1D for Internal_error_TELL1_Qi",StatusCode::SUCCESS).ignore();
+    else{
+      TAxis* axis = hist -> GetXaxis();
+      for (int ipb=0; ipb<12; ++ipb){
+        sprintf(buf,"PB%d_J",ipb);
+        axis -> SetBinLabel(ipb*2+1,buf);
+        sprintf(buf,"PB%d_K",ipb);
+        axis -> SetBinLabel(ipb*2+2,buf);
+      }
+    }
+
+    // Reference_error_TELL1 (PB)
+    sprintf(buf,"Reference_error_TELL1_Q%d",iq+1);
+    m_tell1_ref_src[iq] = book1D(buf,-0.5,23.5,24);
+    hist = Gaudi::Utils::Aida2ROOT::aida2root( m_tell1_ref_src[iq] );
+    if (hist==0) Error("Can not get TH1D for Reference_error_TELL1_Qi",StatusCode::SUCCESS).ignore();
+    else{
+      TAxis* axis = hist -> GetXaxis();
+      for (int ipb=0; ipb<12; ++ipb){
+        sprintf(buf,"PB%d_J",ipb);
+        axis -> SetBinLabel(ipb*2+1,buf);
+        sprintf(buf,"PB%d_K",ipb);
+        axis -> SetBinLabel(ipb*2+2,buf);
+      }
+    }
+  }  // end of loop over quarters
+
+  for (int is=0; is<2; ++is) { // loop over A and C sides
+
+    // Internal_error_TELL1 (CB)
+    sprintf(buf,"Internal_error_TELL1_Q%d%d",(2*is)+1,(2*is)+2);
+    m_tell1_int_src[4+is] = book1D(buf,-0.5,3.5,4);
+    hist = Gaudi::Utils::Aida2ROOT::aida2root( m_tell1_int_src[4+is] );
+    if (hist==0) Error("Can not get TH1D for Internal_error_TELL1_Qij",StatusCode::SUCCESS).ignore();
+    else{
+      TAxis* axis = hist -> GetXaxis();
+      for (int icb=0; icb<2; ++icb){
+        sprintf(buf,"CB_%d_J",icb);
+        axis -> SetBinLabel(icb*2+1,buf);
+        sprintf(buf,"CB_%d_K",icb);
+        axis -> SetBinLabel(icb*2+2,buf);
+      }
+    }
     
+    // Reference_error_TELL1 (CB)
+    sprintf(buf,"Reference_error_TELL1_Q%d%d",(2*is)+1,(2*is)+2);
+    m_tell1_ref_src[4+is] = book1D(buf,-0.5,3.5,4);
+    hist = Gaudi::Utils::Aida2ROOT::aida2root( m_tell1_ref_src[4+is] );
+    if (hist==0) Error("Can not get TH1D for Reference_error_TELL1_Qij",StatusCode::SUCCESS).ignore();
+    else{
+      TAxis* axis = hist -> GetXaxis();
+      for (int icb=0; icb<2; ++icb){
+        sprintf(buf,"CB_%d_J",icb);
+        axis -> SetBinLabel(icb*2+1,buf);
+        sprintf(buf,"CB_%d_K",icb);
+        axis -> SetBinLabel(icb*2+2,buf);
+      }
+    }
+
+  } // end of loop over A and C sides
+
+  // Decoding
+  m_decoding_src = book1D("Decoding_error",-0.5,9.5,10);
+  hist = Gaudi::Utils::Aida2ROOT::aida2root( m_decoding_src );
+  if (hist==0) Error("Can not get TH1D for Decoding_error",StatusCode::SUCCESS).ignore();
+  else{
+    TAxis* axis = hist -> GetXaxis();
+    axis -> SetBinLabel(1,"CtrlCandQ12");
+    axis -> SetBinLabel(2,"CtrlCandQ34");
+    for (int iq = 0; iq < 4; ++iq){
+      sprintf(buf,"ProcCandQ%d",iq+1);
+      axis -> SetBinLabel(3+iq,buf);
+    }
+    for (int iq = 0; iq < 4; ++iq){
+      sprintf(buf,"ProcDataQ%d",iq+1);
+      axis -> SetBinLabel(7+iq,buf);
+    }
+  }
+  
+  for (int iq = 0; iq < NQuarters; ++iq){  // loop over quarters
+
+    for (int ibcsu = 0; ibcsu < NBCSUs; ++ibcsu){ // loop over processing boards
+
+      // BCSU
+      sprintf(buf,"BCSU_error_Q%dPB%d",iq+1,ibcsu);
+      m_bcsu_src[iq][ibcsu] = book1D(buf,-0.5,12.5,13);
+      hist = Gaudi::Utils::Aida2ROOT::aida2root( m_bcsu_src[iq][ibcsu] );
+      if (hist==0) Error("Can not get TH1D for BCSU_error_QiPBj",StatusCode::SUCCESS).ignore();
+      else{
+        TAxis* axis = hist -> GetXaxis();
+        axis -> SetBinLabel(1,"BCSU_bcid");
+        for (int ipu = 0; ipu < 4; ++ipu){
+          sprintf(buf,"PU%d_bcid",ipu);
+          axis -> SetBinLabel(2+ipu,buf);
+        }
+        for (int ipu = 0; ipu < 4; ++ipu){
+          sprintf(buf,"PU%d_H",ipu);
+          axis -> SetBinLabel(6+ipu,buf);
+        }
+        for (int ipu = 0; ipu < 4; ++ipu){
+          sprintf(buf,"PU%d_F",ipu);
+          axis -> SetBinLabel(10+ipu,buf);
+        }
+      }
+
+      for (int ipu=0; ipu < NPUs ; ++ipu) { // loop over PU
+        // PU
+        sprintf(buf,"PU_error_Q%dPB%dPU%d",iq+1,ibcsu,ipu);
+        m_pu_src[iq][ibcsu][ipu] = book1D(buf,-0.5,23.5,24);
+        hist = Gaudi::Utils::Aida2ROOT::aida2root( m_pu_src[iq][ibcsu][ipu] );
+        if (hist==0) Error("Can not get TH1D for PU_error_QiPBjPUk",StatusCode::SUCCESS).ignore();
+        else{
+          TAxis* axis = hist -> GetXaxis();
+          axis -> SetBinLabel(1,"PAR_X");
+          axis -> SetBinLabel(2,"PAR_H");
+          for (int i=0;i<5;++i){
+            sprintf(buf,"PAR_BP%d",i);
+            axis -> SetBinLabel(3+i,buf);
+          }
+          axis -> SetBinLabel(8,"-");
+          for (int i=0;i<2;++i){
+            sprintf(buf,"SER_V%d",i);
+            axis -> SetBinLabel(9+i,buf);
+          }
+          for (int i=0;i<6;++i){
+            sprintf(buf,"SER_BP%d",i);
+            axis -> SetBinLabel(11+i,buf);
+          }
+          axis -> SetBinLabel(17,"M1a");
+          axis -> SetBinLabel(18,"M1b");
+          axis -> SetBinLabel(19,"M2a");
+          axis -> SetBinLabel(20,"M2b");
+          axis -> SetBinLabel(21,"M3a");
+          axis -> SetBinLabel(22,"M3b");
+          axis -> SetBinLabel(23,"M4");
+          axis -> SetBinLabel(24,"M5");
+        }
+
+      } // end of loop over PU
+
+    } // end of loop over processing boards
+
+  } // end of loop over quarters
+
   return StatusCode::SUCCESS;
 }
 

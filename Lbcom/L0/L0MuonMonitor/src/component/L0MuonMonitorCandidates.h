@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitorCandidates.h,v 1.1 2010-03-08 15:12:53 jucogan Exp $
+// $Id: L0MuonMonitorCandidates.h,v 1.2 2010-03-09 16:31:34 jucogan Exp $
 #ifndef COMPONENT_L0MUONMONITORCANDIDATES_H 
 #define COMPONENT_L0MUONMONITORCANDIDATES_H 1
 
@@ -6,6 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 
+#include "L0Interfaces/IL0MuonOverflowTool.h"
 
 /** @class L0MuonMonitorCandidates L0MuonMonitorCandidates.h component/L0MuonMonitorCandidates.h
  *  
@@ -38,11 +39,14 @@ private:
   AIDA::IHistogram1D * m_multi;
   AIDA::IHistogram1D * m_seedX;
   AIDA::IHistogram1D * m_seedY;
+  AIDA::IHistogram1D * m_ovf;
 
 private:
 
   std::string m_location; ///< Location of the candidates in TES
   std::map<int,std::string> m_tae_items;  // Definitions of tae slots
-  
+
+  IL0MuonOverflowTool * m_ovfTool; // Overflow of candidates
+   
 };
 #endif // COMPONENT_L0MUONMONITORCANDIDATES_H

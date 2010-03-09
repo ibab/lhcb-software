@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitorData.cpp,v 1.1 2010-03-08 15:12:53 jucogan Exp $
+// $Id: L0MuonMonitorData.cpp,v 1.2 2010-03-09 16:31:34 jucogan Exp $
 // Include files 
 #include <sstream>
 
@@ -104,7 +104,7 @@ StatusCode L0MuonMonitorData::initialize() {
     
   }
       
-  m_inputTool   = tool<IL0MuonInputTool>  ("L0MuonInputTool"  ,"InputMonL0MuonTool" ,this);
+  m_inputTool   = tool<IL0MuonInputTool>  ("L0MuonInputTool"  ,"DataMonL0MuonTool" ,this);
 
   return StatusCode::SUCCESS;
 }

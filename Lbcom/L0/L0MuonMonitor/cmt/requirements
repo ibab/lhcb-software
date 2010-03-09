@@ -13,6 +13,7 @@ use L0Event       v*    Event
 use MuonDAQ       v*    Muon
 use MuonDet       v*    Det
 use GaudiAlg      v*
+use GaudiUtils    v*
 
 
 # =========== constituents =====================================================
