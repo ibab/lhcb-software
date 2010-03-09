@@ -1,11 +1,14 @@
-!$Id: release.notes,v 1.49 2010-03-08 11:33:40 jpalac Exp $
+!$Id: release.notes,v 1.50 2010-03-09 16:02:39 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
 
-!======================= Ex/MicroDSTExample v2r12 2010-03-08 =================
+!======================= Ex/MicroDSTExample v2r12 2010-03-09 =================
+
+! 2010-03-09 - Juan Palacios
+ - Added scripts/MicroDSTRooFitExample.py
 
 ! 2010-03-08 - Juan Palacios
  - options/TestMicroDSTMakeNewConf.py -> options/TestMicroDSTMake.py
