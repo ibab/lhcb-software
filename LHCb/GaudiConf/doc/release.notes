@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2010-003-09 - Chris Jones
+ - Update RichPID packing version
+
 !======================== GaudiConf v13r4p1 2010-02-24 ======================
 ! 2010-02-23 - Marcin Kucharczyk
  - In DigiConf changed output paths for VeloPix
