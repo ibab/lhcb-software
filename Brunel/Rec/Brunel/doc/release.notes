@@ -11,6 +11,8 @@ Purpose: LHCb reconstruction program
    . Printout APE values from STOfflinePositionTool (STTools v3r17)
    . Suppress warning message about empty HPD data blocks
      (RichRecBase v3r27p1)
+   . Minor changes to monitoring output (RichRecQC v2r37p1)
+   . Fixed small bug in PrimaryVertexChecker (PatChecker v3r7)
 
 </PRE><H1><A NAME=v36r2>2010-02-26 Brunel v36r2</A></H1><PRE>
  - Changes to Configurable: 
