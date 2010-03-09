@@ -66,9 +66,6 @@ namespace Rich
       // Initialize method
       StatusCode initialize();
 
-      // Finalize method
-      StatusCode finalize();
-
     public: // methods (and doxygen comments) inherited from public interface
 
       // Photon resolution
@@ -104,6 +101,9 @@ namespace Rich
 
       /// Particle ID types to consider in the photon creation checks
       Rich::Particles m_pidTypes;
+
+      /// Overall factors for each radiator
+      std::vector<double> m_scale;
 
     };
 

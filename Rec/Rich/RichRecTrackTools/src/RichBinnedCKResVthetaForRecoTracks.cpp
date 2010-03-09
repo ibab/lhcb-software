@@ -29,7 +29,8 @@ BinnedCKResVthetaForRecoTracks ( const std::string& type,
                                  const IInterface* parent )
   : RichRecToolBase ( type, name, parent ),
     m_ckAngle       ( NULL ),
-    m_richPartProp  ( NULL )
+    m_richPartProp  ( NULL ),
+    m_scale         ( Rich::NRadiatorTypes, 1.0 )
 {
 
   declareInterface<ICherenkovResolution>(this);
@@ -63,6 +64,9 @@ BinnedCKResVthetaForRecoTracks ( const std::string& type,
   // Normalise the resolutions
   declareProperty( "NormaliseRes", m_normalise = true );
 
+  // Global scale factors
+  declareProperty( "ScaleFactor", m_scale );
+
 }
 
 StatusCode BinnedCKResVthetaForRecoTracks::initialize()
@@ -81,12 +85,6 @@ StatusCode BinnedCKResVthetaForRecoTracks::initialize()
   info() << "Particle types considered = " << m_pidTypes << endmsg;
 
   return sc;
-}
-
-StatusCode BinnedCKResVthetaForRecoTracks::finalize()
-{
-  // Execute base class method
-  return Rich::Rec::ToolBase::finalize();
 }
 
 double
@@ -170,12 +168,6 @@ BinnedCKResVthetaForRecoTracks::ckThetaResolution_Imp( LHCb::RichRecSegment * se
   // Reference to track ID object
   const RichTrackID & tkID = segment->richRecTrack()->trackID();
 
-  // Check track parent type is Track
-  //if ( Rich::Rec::TrackParent::Track != tkID.parentType() )
-  // {
-  //  Exception( "Track parent type is not 'Track'" );
-  // }
-
   res = 0;
   bool OK(false);
 
@@ -212,14 +204,15 @@ BinnedCKResVthetaForRecoTracks::ckThetaResolution_Imp( LHCb::RichRecSegment * se
     {
       if ( thetaExp >= iBins->first && thetaExp < iBins->second )
       {
-        res = *iData;
+        res = *iData * m_scale[rad];
         OK = true;
         break;
       }
     }
     if ( !OK )
     {
-      Error( "Failed to find binned CK resolution for : " + Rich::text(rad) + " " + Rich::text(type) ).ignore();
+      Error( "Failed to find binned CK resolution for : " + 
+             Rich::text(rad) + " " + Rich::text(type) ).ignore();
     }
 
   }
