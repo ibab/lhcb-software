@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.32 2010-03-08 15:39:23 jucogan Exp $
+! $Id: release.notes,v 1.33 2010-03-09 09:25:40 jucogan Exp $
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
 !--------------------------------------------------------------------------
+
+! 2010-03-09 - Julien Cogan
+ - fix compilation errors on Windows
 
 ! 2010-03-08 - Julien Cogan
  - Add dependency to L0/L0Muon (requirements)

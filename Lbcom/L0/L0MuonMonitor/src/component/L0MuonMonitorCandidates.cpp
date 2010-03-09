@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitorCandidates.cpp,v 1.1 2010-03-08 15:12:53 jucogan Exp $
+// $Id: L0MuonMonitorCandidates.cpp,v 1.2 2010-03-09 09:25:41 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -73,6 +73,8 @@ StatusCode L0MuonMonitorCandidates::initialize() {
     m_tae_items[ 7] = "Next7/";
   }
 
+
+  // Book histos
   std::string title_prefix = "Final_Candidates_";
   if (m_allCandidates) title_prefix = "All_Candidates_";
 
@@ -146,12 +148,12 @@ StatusCode L0MuonMonitorCandidates::execute() {
       double weight = 1./f;
       for (int ix=X*f; ix<X*f+f; ++ix){
         double x = ix+0.5;
-        if ( (qua==2) or (qua==3) ) x = -x;
+        if ( (qua==2) || (qua==3) ) x = -x;
         fill(m_seedX,x,weight);
       }
       for (int iy=Y*f; iy<Y*f+f; ++iy){
         double y = iy+0.5;
-        if ( (qua==1) or (qua==2) ) y = -y;
+        if ( (qua==1) || (qua==2) ) y = -y;
         fill(m_seedY,y,weight);
       }
     }

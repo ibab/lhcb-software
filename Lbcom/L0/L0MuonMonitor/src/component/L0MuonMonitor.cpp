@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitor.cpp,v 1.14 2009-02-20 09:15:10 jucogan Exp $
+// $Id: L0MuonMonitor.cpp,v 1.15 2010-03-09 09:25:41 jucogan Exp $
 // Include files 
 
 #include <math.h>
@@ -206,7 +206,7 @@ StatusCode L0MuonMonitor::execute() {
 
     // Run info
     name = "L0EventNumber";
-    fill(histo1D(name),event&0xFFF,1,name);
+    fill(histo1D(name),int(event&0xFFF),1,name);
     name = "L0_B_Id";
     fill(histo1D(name),bunch,1,name);
 
@@ -329,10 +329,10 @@ StatusCode L0MuonMonitor::finalize() {
 
 StatusCode L0MuonMonitor::compareTiles(std::vector<std::pair<LHCb::MuonTileID,double > > & tiles_and_deltaT) {
 
-  static int ievt=0;
+  static long ievt=0;
   if (exist<LHCb::RecHeader> (LHCb::RecHeaderLocation::Default)) {
     LHCb::RecHeader* evt = get<LHCb::RecHeader> (LHCb::RecHeaderLocation::Default);
-    ievt = evt->evtNumber();
+    ievt = long(evt->evtNumber());
   } else {
     ++ievt;
   }

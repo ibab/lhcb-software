@@ -1,4 +1,4 @@
-// $Id: L0MuonInfoHistos.cpp,v 1.5 2009-02-04 15:12:02 marcocle Exp $
+// $Id: L0MuonInfoHistos.cpp,v 1.6 2010-03-09 09:25:41 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -83,7 +83,7 @@ StatusCode L0MuonInfoHistos::getInfo(){
   m_errStatus=(info->status()>>2)&0x3;
   m_ovfStatus=(info->status()>>0)&0x3;
 
-  int event = (odin->eventNumber()&0xFFF) ;
+  int event = int(odin->eventNumber()&0xFFF) ;
   int bunch = odin->bunchId();
   
   m_error=false;
