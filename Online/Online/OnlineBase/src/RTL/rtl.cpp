@@ -56,6 +56,8 @@ namespace RTL  {
     static void execute();
     static vector<EXHDEF>& exitHandlers();
   };
+
+  static bool s_RTL_exit_handler_print = true;
 }
 
 static int exit_status;
@@ -88,7 +90,6 @@ namespace RTL {
     void install(int num, const string& name, struct sigaction& action);
     static void handler(int signum, siginfo_t *info,void * );
   };
-  static bool s_exit_handler_print = true;
   static ExitSignalHandler& s_RTL_ExitSignalHandler = ExitSignalHandler::instance();
 }
 extern "C" void* lib_rtl_exithandler_instance() {
@@ -144,7 +145,7 @@ void RTL::ExitSignalHandler::handler(int signum, siginfo_t *info, void *ptr) {
     __sighandler_t old = (*i).second.second.sa_handler;
     func_desc<void (*)(int)> dsc0(old);
     func_desc<void (*)(int,siginfo_t*, void*)> dsc(dsc0.ptr);
-    if ( s_exit_handler_print ) {
+    if ( s_RTL_exit_handler_print ) {
       ::lib_rtl_output(LIB_RTL_ERROR,"RTL:Handled signal: %d [%s] Old action:%p\n",
 		       info->si_signo,(*i).second.first.c_str(),dsc.ptr);
     }
@@ -156,11 +157,6 @@ void RTL::ExitSignalHandler::handler(int signum, siginfo_t *info, void *ptr) {
       ::_exit(0);
     }
   }
-}
-
-/// Set signal handling output level
-extern "C" void lib_rtl_signal_log(int value) {
-  RTL::s_exit_handler_print = (value!=0);
 }
 
 #elif _WIN32
@@ -196,6 +192,11 @@ const char* RTL::errorString(int status)  {
   return s;
 }
 #endif
+
+/// Set signal handling output level
+extern "C" void lib_rtl_signal_log(int value) {
+  RTL::s_RTL_exit_handler_print = (value!=0);
+}
 
 const char* RTL::errorString()  {
   return errorString(lib_rtl_get_error());
