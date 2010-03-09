@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2010-03-09 - Chris Jones
+ - Add option to set the RichPID version
+
 ! 2010-03-05 - Chris Jones
  - Various changes to support the configuration of multiple reconstruction 
    sequences in the same application. Needed to support neccessary changes in 

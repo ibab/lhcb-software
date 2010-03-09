@@ -58,14 +58,16 @@ class RichRecSysConf(RichConfigurableUser):
        ,"SpecialData"  : []       # Various special data processing options. See KnownSpecialData in RecSys for all options
        ,"RecoSequencer" : None    # The sequencer to add the RICH reconstruction algorithms to
        ,"OutputLevel"   : INFO    # The output level to set all algorithms and tools to use
-       ,"RichPIDLocation" : ""  # Output RichPID Location
+       ,"RichPIDLocation" : ""    # Output RichPID Location
+       ,"PIDVersion"      : 1     # Default PID version
         }
 
     ## Initialize 
     def initialize(self):
         
         # default values
-        self.setRichDefault("Particles","Offline",["electron","muon","pion","kaon","proton"])
+        self.setRichDefault("Particles","Offline",["electron","muon","pion","kaon",
+                                                   "proton","belowThreshold"])
         self.setRichDefault("Particles","HLT",    ["pion","kaon"])
         self.setRichDefault("Radiators","Offline",[ "Aerogel", "Rich1Gas", "Rich2Gas" ])
         self.setRichDefault("Radiators","HLT",    [ "Aerogel", "Rich1Gas", "Rich2Gas" ])
@@ -272,6 +274,7 @@ class RichRecSysConf(RichConfigurableUser):
             from Configurables import Rich__Rec__HierarchicalPIDMerge
             pidMerge = self.makeRichAlg(Rich__Rec__HierarchicalPIDMerge,"Merge"+cont+"RichPIDs")
             pidMerge.OutputPIDLocation = self.getProp("RichPIDLocation")
+            pidMerge.PIDVersion = self.getProp("PIDVersion")
             pidSeq.Members += [pidMerge]
         
         #-----------------------------------------------------------------------------
