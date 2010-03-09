@@ -154,36 +154,40 @@ public:
    *  For a given R on the HPD cathode returns the R on the anode.
    *  @return A pointer to the demagnification function for R(R)
    */
-  inline const Rich::TabulatedFunction1D* demagnification_RtoR() const
+  inline const Rich::TabulatedFunction1D* demagnification_RtoR( int field=0 ) const
   {
-    return m_demagMapR;
+    const unsigned int index = ( field > 0 ? 1 : 0 );
+    return m_demagMapR[index];
   }
 
   /** Retrieves the demagnification interpolation function for the HPD phi coordinate.
    *  For a given R on the HPD cathode returns the phi on the anode.
    *  @return A pointer to the demagnification function for phi(R)
    */
-  inline const Rich::TabulatedFunction1D* demagnification_RtoPhi() const
+  inline const Rich::TabulatedFunction1D* demagnification_RtoPhi( int field=0 ) const
   {
-    return m_demagMapPhi;
+    const unsigned int index = ( field > 0 ? 1 : 0 );
+    return m_demagMapPhi[index];
   }
 
   /** Retrieves the magnification interpolation function for the HPD R coordinate.
    *  For a given R on the HPD anode returns the R on the cathode.
    *  @return A pointer to the magnification function for R(R)
    */
-  inline const Rich::TabulatedFunction1D* magnification_RtoR() const
+  inline const Rich::TabulatedFunction1D* magnification_RtoR( int field=0 ) const
   {
-    return m_magMapR;
+    const unsigned int index = ( field > 0 ? 1 : 0 );
+    return m_magMapR[index];
   }
 
   /** Retrieves the magnification interpolation function for the HPD phi coordinate.
    *  For a given R on the HPD anode returns the phi on the cathode.
    *  @return A pointer to the magnification function for phi(R)
    */
-  inline const Rich::TabulatedFunction1D* magnification_RtoPhi() const
+  inline const Rich::TabulatedFunction1D* magnification_RtoPhi( int field=0 ) const
   {
-    return m_magMapPhi;
+    const unsigned int index = ( field > 0 ? 1 : 0 );
+    return m_magMapPhi[index];
   }
 
   // Anatoly Solomin 2007-10-26
@@ -294,10 +298,10 @@ private: // functions
   StatusCode magnifyToGlobal( Gaudi::XYZPoint& detectPoint, bool photoCathodeSide ) const;
 
   /// Initialise the interpolators for demagnification (cathode to anode)
-  StatusCode fillHpdDemagTable( );
+  StatusCode fillHpdDemagTable( unsigned int  field );
 
   /// Initialise the interpolators for magnification (anode to cathode)
-  StatusCode fillHpdMagTable( );
+  StatusCode fillHpdMagTable( unsigned int  field );
 
   double Delta_Phi(const double, const double);
   double mag(const double , const double);
@@ -328,16 +332,20 @@ private: // data
   /// term, and element[1] the non-linear term for small corrections.
   double m_deMagFactor[2];
 
-  Rich::TabulatedFunction1D* m_demagMapR;   ///< Interpolated function for HPD R for demagnification
-  Rich::TabulatedFunction1D* m_demagMapPhi; ///< Interpolated function for HPD phi for demagnification
-  Rich::TabulatedFunction1D* m_magMapR;     ///< Interpolated function for HPD R for magnification
-  Rich::TabulatedFunction1D* m_magMapPhi;   ///< Interpolated function for HPD phi for magnification
+  /// Interpolated function for HPD R for demagnification
+  std::vector<Rich::TabulatedFunction1D*> m_demagMapR;
+  /// Interpolated function for HPD phi for demagnification
+  std::vector<Rich::TabulatedFunction1D*> m_demagMapPhi;
+  /// Interpolated function for HPD R for magnification
+  std::vector<Rich::TabulatedFunction1D*> m_magMapR;
+  /// Interpolated function for HPD phi for magnification
+  std::vector<Rich::TabulatedFunction1D*> m_magMapPhi;
 
   ///< Interpolated property for HPD quantum efficiency
   const Rich::TabulatedProperty1D* m_hpdQuantumEffFunc;
 
   /// Demagnification parameters condition
-  SmartRef<Condition> m_demagCond;
+  std::vector< SmartRef<Condition> > m_demagConds;
 
   /// binary flags; 1 for update of demag param, 2 for update of geometry; 6 for new hpdQE
   std::bitset<7> flags;

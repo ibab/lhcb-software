@@ -55,14 +55,18 @@ DeRichHPD::DeRichHPD(const std::string & name):
   m_pvWindow          ( NULL ),
   m_windowSolid       ( NULL ),
   m_kaptonSolid       ( NULL ),
-  m_demagMapR         ( NULL ),
-  m_demagMapPhi       ( NULL ),
-  m_magMapR           ( NULL ),
-  m_magMapPhi         ( NULL ),
   m_hpdQuantumEffFunc ( NULL ),
   m_refactParams      ( 4,  0),
   m_magFieldSvc       ( NULL )
-{ }
+{
+  for (unsigned int field=0; field<2; ++field)
+  {
+    m_demagMapR.push_back( NULL );
+    m_demagMapPhi.push_back( NULL );
+    m_magMapR.push_back( NULL );
+    m_magMapPhi.push_back( NULL );
+  }
+}
 
 //=============================================================================
 // Destructor
@@ -78,10 +82,14 @@ DeRichHPD::~DeRichHPD()
 //=============================================================================
 void DeRichHPD::cleanUpInterps()
 {
-  if ( m_demagMapR )   { delete m_demagMapR;   m_demagMapR   = NULL; }
-  if ( m_demagMapPhi ) { delete m_demagMapPhi; m_demagMapPhi = NULL; }
-  if ( m_magMapR )     { delete m_magMapR;     m_magMapR     = NULL; }
-  if ( m_magMapPhi )   { delete m_magMapPhi;   m_magMapPhi   = NULL; }
+  for (unsigned int field=0; field<2; ++field)
+  {
+    if ( m_demagMapR[field] )   { delete m_demagMapR[field];   m_demagMapR[field]   = NULL; }
+    if ( m_demagMapPhi[field] ) { delete m_demagMapPhi[field]; m_demagMapPhi[field] = NULL; }
+    if ( m_magMapR[field] )     { delete m_magMapR[field];     m_magMapR[field]     = NULL; }
+    if ( m_magMapPhi[field] )   { delete m_magMapPhi[field];   m_magMapPhi[field]   = NULL; }
+  }
+
   if ( m_hpdQuantumEffFunc && flags[6] )
   {
     delete m_hpdQuantumEffFunc; m_hpdQuantumEffFunc = NULL;
@@ -266,10 +274,14 @@ StatusCode DeRichHPD::initialize ( )
 
   // Magnetic Distortions
   // Make interpolators
-  m_demagMapR   = new Rich::TabulatedFunction1D();
-  m_demagMapPhi = new Rich::TabulatedFunction1D();
-  m_magMapR     = new Rich::TabulatedFunction1D();
-  m_magMapPhi   = new Rich::TabulatedFunction1D();
+  for (unsigned int field=0; field<2; ++field)
+  {
+    m_demagMapR[field]   = new Rich::TabulatedFunction1D();
+    m_demagMapPhi[field] = new Rich::TabulatedFunction1D();
+    m_magMapR[field]     = new Rich::TabulatedFunction1D();
+    m_magMapPhi[field]   = new Rich::TabulatedFunction1D();
+  }
+
 
   //if(m_UseRandomBField) init_mm();
   msg << MSG::DEBUG<< "Current set is UseBFieldTestMap="<<m_UseBFieldTestMap
@@ -278,13 +290,32 @@ StatusCode DeRichHPD::initialize ( )
     //<< " within:"<<m_RandomBFieldMinimum<<"-"<<m_RandomBFieldMaximum
       << endmsg;
 
-  if ( hasCondition( "DemagParameters" ) ) {
-    m_demagCond = condition( "DemagParameters" );
-    updMgrSvc()->registerCondition(this, m_demagCond.path(),
+  if ( hasCondition( "DemagParametersFieldNegative" ) )
+  {
+    m_demagConds.push_back( condition( "DemagParametersFieldNegative" ));
+    updMgrSvc()->registerCondition(this, m_demagConds[0].path(),
                                    &DeRichHPD::updateDemagProperties );
+
+    m_demagConds.push_back( condition( "DemagParametersFieldPositive" ));
+    updMgrSvc()->registerCondition(this, m_demagConds[1].path(),
+                                   &DeRichHPD::updateDemagProperties );
+
+    msg << MSG::DEBUG << "Found DemagParameters for positive and negative field" << endmsg;
   }
-  else {
-    m_demagCond = 0;
+  else
+  {
+    if ( hasCondition( "DemagParameters" ) )
+    {
+      m_demagConds.push_back( condition( "DemagParameters" ));
+      m_demagConds.push_back( condition( "DemagParameters" ));
+      updMgrSvc()->registerCondition(this, m_demagConds[0].path(),
+                                     &DeRichHPD::updateDemagProperties );
+    }
+    else
+    {
+      m_demagConds.push_back( SmartRef<Condition>() );
+      m_demagConds.push_back( SmartRef<Condition>() );
+    }
   }
 
   sc = updMgrSvc()->update(this);
@@ -402,19 +433,24 @@ StatusCode DeRichHPD::updateDemagProperties()
   // print the message the following times.
   flags[1] = true;
 
-  // Initialise the demagnifcation
-  StatusCode sc = fillHpdDemagTable();
-  if (!sc) {
-    fatal() << "Could not initialise demagnification table for HPD:" << m_number <<endmsg;
-    return sc;
+  StatusCode sc;
+  for (unsigned int field=0; field<2; ++field)
+  {
+    // Initialise the demagnifcation
+    sc = fillHpdDemagTable(field);
+    if (!sc) {
+      fatal() << "Could not initialise demagnification table for HPD:" << m_number <<endmsg;
+      return sc;
+    }
+
+    // Initialise the magnification
+    sc = fillHpdMagTable(field);
+    if (!sc) {
+      fatal() << "Could not initialise magnification table for HPD:" << m_number <<endmsg;
+      return sc;
+    }
   }
 
-  // Initialise the magnification
-  sc = fillHpdMagTable();
-  if (!sc) {
-    fatal() << "Could not initialise magnification table for HPD:" << m_number <<endmsg;
-    return sc;
-  }
 
   return sc;
 }
@@ -422,10 +458,10 @@ StatusCode DeRichHPD::updateDemagProperties()
 //=========================================================================
 //  fillHpdDemagTable
 //=========================================================================
-StatusCode DeRichHPD::fillHpdDemagTable()
+StatusCode DeRichHPD::fillHpdDemagTable(unsigned int field)
 {
   const std::string paraLoc = "hpd"+boost::lexical_cast<std::string>(m_number)+"_sim";
-  const std::vector<double> & coeff_sim = m_demagCond->paramVect<double>(paraLoc);
+  const std::vector<double> & coeff_sim = m_demagConds[field]->paramVect<double>(paraLoc);
 
   SmartDataPtr<TabulatedProperty> dem(dataSvc(), XmlHpdDemagPath+"Sim_"+
                                       boost::lexical_cast<std::string>(m_number));
@@ -496,8 +532,8 @@ StatusCode DeRichHPD::fillHpdDemagTable()
 
   }
 
-  m_demagMapR   -> initInterpolator ( tableR   );
-  m_demagMapPhi -> initInterpolator ( tablePhi );
+  m_demagMapR[field]   -> initInterpolator ( tableR   );
+  m_demagMapPhi[field] -> initInterpolator ( tablePhi );
 
   return StatusCode::SUCCESS;
 }
@@ -505,10 +541,10 @@ StatusCode DeRichHPD::fillHpdDemagTable()
 //=========================================================================
 //  fillHpdMagTable
 //=========================================================================
-StatusCode DeRichHPD::fillHpdMagTable( )
+StatusCode DeRichHPD::fillHpdMagTable( unsigned int field )
 {
   const std::string paraLoc = "hpd"+boost::lexical_cast<std::string>(m_number)+"_rec";
-  const std::vector<double> & coeff_rec = m_demagCond->paramVect<double>(paraLoc);
+  const std::vector<double> & coeff_rec = m_demagConds[field]->paramVect<double>(paraLoc);
 
   // working data tables, used to initialise the interpolators
   std::map<double,double> tableR, tablePhi;
@@ -557,8 +593,8 @@ StatusCode DeRichHPD::fillHpdMagTable( )
 
   }
 
-  m_magMapR   -> initInterpolator( tableR   );
-  m_magMapPhi -> initInterpolator( tablePhi );
+  m_magMapR[field]   -> initInterpolator( tableR   );
+  m_magMapPhi[field] -> initInterpolator( tablePhi );
 
   return StatusCode::SUCCESS;
 }
@@ -571,12 +607,14 @@ StatusCode DeRichHPD::magnifyToGlobal( Gaudi::XYZPoint& detectPoint,
 {
   const double rAnode = detectPoint.R();
   bool isMagnetOn = ( m_magFieldSvc->scaleFactor() > 0.5 || m_UseHpdMagDistortions );
+  const int field = m_magFieldSvc->polarity();
+  //info() << m_magFieldSvc->scaleFactor() << " polarity:" << m_magFieldSvc->polarity() << endmsg;
 
   // chose method to use for the rCathode
   double rCathode =
     ( isMagnetOn ?
       // use magnetic distortion
-      magnification_RtoR()->value( rAnode ) :
+      magnification_RtoR(field)->value( rAnode ) :
 
       // use "old" demagnification
       // To go from the cathode to the anode Ra = Rc*(-d0 + d1*Rc)
@@ -602,7 +640,7 @@ StatusCode DeRichHPD::magnifyToGlobal( Gaudi::XYZPoint& detectPoint,
   double xWindow(0.0), yWindow(0.0);
   if ( isMagnetOn )
   {
-    const double result_phi = magnification_RtoPhi()->value( rAnode );
+    const double result_phi = magnification_RtoPhi(field)->value( rAnode );
 
     double anodePhi = std::atan2( detectPoint.Y(), detectPoint.X() );
     if ( detectPoint.Y() < 0 ) anodePhi += Gaudi::Units::twopi;

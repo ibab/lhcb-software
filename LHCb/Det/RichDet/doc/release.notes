@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2010-03-09 - Antonis Papanestis
+ - Allow the use of different demagnification parameters for positive and negative 
+   magnetic field
+
 !======================== RichDet v13r4 2010-02-12 ===========================
 ! 2010-02-03 - Antonis Papanestis
  - Change output level to DEBUG for the update of parameters in the HPDs
