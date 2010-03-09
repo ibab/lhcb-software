@@ -1,7 +1,10 @@
-!  $Id: release.notes,v 1.98 2010-03-08 14:18:15 jucogan Exp $
+!  $Id: release.notes,v 1.99 2010-03-09 16:21:31 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !---------------------------------------------------------------------------
+
+! 2010-03-09 - Julien Cogan
+ - Add implementation of L0MuonOverflowTool
 
 ! 2010-03-08 - Julien Cogan
  - Add implementation of L0MuonOLErrorTool and L0MuonInputTool
