@@ -1,4 +1,4 @@
-// $Id: PackedRichPID.cpp,v 1.7 2009-12-12 12:17:20 jonrob Exp $
+// $Id: PackedRichPID.cpp,v 1.8 2010-03-09 18:35:20 jonrob Exp $
 
 // local
 #include "Event/PackedRichPID.h"
@@ -15,7 +15,8 @@ void RichPIDPacker::pack( const DataVector & pids,
                           PackedDataVector & ppids ) const
 {
   ppids.data().reserve( pids.size() );
-  if ( 0 == ppids.packingVersion() )
+  if ( 0 == ppids.packingVersion() ||
+       1 == ppids.packingVersion() )
   {
     for ( DataVector::const_iterator iD = pids.begin();
           iD != pids.end(); ++iD )
@@ -24,11 +25,13 @@ void RichPIDPacker::pack( const DataVector & pids,
       ppids.data().push_back( PackedData() );
       PackedData & ppid = ppids.data().back();
       ppid.pidResultCode = (int)pid.pidResultCode();
-      ppid.dllEl = m_pack.deltaLL( pid.particleDeltaLL(Rich::Electron) );
-      ppid.dllMu = m_pack.deltaLL( pid.particleDeltaLL(Rich::Muon)     );
-      ppid.dllPi = m_pack.deltaLL( pid.particleDeltaLL(Rich::Pion)     );
-      ppid.dllKa = m_pack.deltaLL( pid.particleDeltaLL(Rich::Kaon)     );
-      ppid.dllPr = m_pack.deltaLL( pid.particleDeltaLL(Rich::Proton)   );
+      ppid.dllEl = m_pack.deltaLL( pid.particleDeltaLL(Rich::Electron)       );
+      ppid.dllMu = m_pack.deltaLL( pid.particleDeltaLL(Rich::Muon)           );
+      ppid.dllPi = m_pack.deltaLL( pid.particleDeltaLL(Rich::Pion)           );
+      ppid.dllKa = m_pack.deltaLL( pid.particleDeltaLL(Rich::Kaon)           );
+      ppid.dllPr = m_pack.deltaLL( pid.particleDeltaLL(Rich::Proton)         );
+      if ( 0 != ppids.packingVersion() )
+        ppid.dllBt = m_pack.deltaLL( pid.particleDeltaLL(Rich::BelowThreshold) );
       if ( NULL != pid.track() )
       {
         ppid.track = m_pack.reference( &ppids,
@@ -49,7 +52,8 @@ void RichPIDPacker::unpack( const PackedDataVector & ppids,
                             DataVector       & pids ) const
 {
   pids.reserve( ppids.data().size() );
-  if ( 0 == ppids.packingVersion() )
+  if ( 0 == ppids.packingVersion() ||
+       1 == ppids.packingVersion() )
   {
     for ( PackedDataVector::Vector::const_iterator iD = ppids.data().begin();
           iD != ppids.data().end(); ++iD )
@@ -60,11 +64,13 @@ void RichPIDPacker::unpack( const PackedDataVector & ppids,
       pids.add( pid );
       // Fill data from packed object
       pid->setPidResultCode( ppid.pidResultCode );
-      pid->setParticleDeltaLL( Rich::Electron, (float)m_pack.deltaLL(ppid.dllEl) );
-      pid->setParticleDeltaLL( Rich::Muon,     (float)m_pack.deltaLL(ppid.dllMu) );
-      pid->setParticleDeltaLL( Rich::Pion,     (float)m_pack.deltaLL(ppid.dllPi) );
-      pid->setParticleDeltaLL( Rich::Kaon,     (float)m_pack.deltaLL(ppid.dllKa) );
-      pid->setParticleDeltaLL( Rich::Proton,   (float)m_pack.deltaLL(ppid.dllPr) );
+      pid->setParticleDeltaLL( Rich::Electron,       (float)m_pack.deltaLL(ppid.dllEl) );
+      pid->setParticleDeltaLL( Rich::Muon,           (float)m_pack.deltaLL(ppid.dllMu) );
+      pid->setParticleDeltaLL( Rich::Pion,           (float)m_pack.deltaLL(ppid.dllPi) );
+      pid->setParticleDeltaLL( Rich::Kaon,           (float)m_pack.deltaLL(ppid.dllKa) );
+      pid->setParticleDeltaLL( Rich::Proton,         (float)m_pack.deltaLL(ppid.dllPr) );
+      if ( 0 != ppids.packingVersion() )
+        pid->setParticleDeltaLL( Rich::BelowThreshold, (float)m_pack.deltaLL(ppid.dllBt) );
       if ( -1 != ppid.track )
       {
         int hintID(0), key(0);

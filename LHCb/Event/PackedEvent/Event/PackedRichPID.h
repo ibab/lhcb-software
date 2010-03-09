@@ -1,4 +1,4 @@
-// $Id: PackedRichPID.h,v 1.4 2009-12-12 12:17:20 jonrob Exp $
+// $Id: PackedRichPID.h,v 1.5 2010-03-09 18:35:20 jonrob Exp $
 #ifndef EVENT_PACKEDRICHPID_H
 #define EVENT_PACKEDRICHPID_H 1
 
@@ -32,12 +32,15 @@ namespace LHCb
     /// Default constructor
     PackedRichPID()
       : pidResultCode(0),
-        track(-1)
+        dllEl(0),dllMu(0),dllPi(0),dllKa(0),dllPr(0),
+        track(-1),
+        dllBt(0)
     {}
 
-    int pidResultCode;
+    int pidResultCode;                      
     int dllEl,dllMu,dllPi,dllKa,dllPr;
-    int track;
+    int track;          
+    int dllBt;
 
   };
 
