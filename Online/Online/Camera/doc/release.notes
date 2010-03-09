@@ -4,6 +4,11 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+=============== v1r15 ===============
+
+! 2010-03-09 - Nicola Mangiafave
+- Changed version to v1r15.
+
 ! 2010-03-03 - Nicola Mangiafave
 - In /src/CameraTool: added automatic message rate setting for changing text 
   messages.
@@ -11,6 +16,8 @@
 ! 2010-03-02 - Nicola Mangiafave
 - In /src/CameraTool: added automatic setting of message rate based on user
   setting and message size.
+
+=============== v1r14 ===============
 
 ! 2010-02-04 - Nicola Mangiafave
 - In /src/: fixed warning messages from compilation.
