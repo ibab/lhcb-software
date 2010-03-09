@@ -212,6 +212,7 @@ class DstConf(LHCbConfigurableUser):
 
         richpidpack = DataPacking__Pack_LHCb__RichPIDPacker_( name               = "PackRichPIDs",
                                                               AlwaysCreateOutput = alwaysCreate )
+        richpidpack.PackingVersion = 1 # For want of a better place, put here for the moment ...
         muonpidpack = DataPacking__Pack_LHCb__MuonPIDPacker_( name               = "PackMuonPIDs",
                                                               AlwaysCreateOutput = alwaysCreate )
         packDST.Members += [ richpidpack, muonpidpack ]
