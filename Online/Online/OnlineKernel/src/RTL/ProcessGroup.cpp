@@ -151,6 +151,7 @@ extern "C" int rtl_test_process_sleep(int argc, char** argv) {
   if ( argc > 1 ) {
     int nsec;
     ::sscanf(argv[1],"%d",&nsec);
+    ::lib_rtl_sleep(100*nsec);
     ::printf("%-12s Process starting...\n",nam);
     ::printf("%-12s arg0:%s\n",nam,argv[0]);
     ::printf("%-12s arg1:%s\n",nam,argv[1]);
@@ -166,9 +167,9 @@ extern "C" int rtl_test_process_sleep(int argc, char** argv) {
 extern "C" int rtl_test_sub_processes(int, char** ) {
   Process* p1, *p2, *p3, *p4, *p5, *p6;
   ProcessGroup pg;
-  const char *a1[]={"rtl_test_process_sleep","2",0}, *a2[]={"rtl_test_process_sleep","3",0};
-  const char *a3[]={"rtl_test_process_sleep","4",0}, *a4[]={"rtl_test_process_sleep","5",0};
-  const char *a5[]={"rtl_test_process_sleep","6",0}, *a6[]={"rtl_test_process_sleep","7",0};
+  const char *a1[]={"rtl_test_process_sleep","4",0}, *a2[]={"rtl_test_process_sleep","5",0};
+  const char *a3[]={"rtl_test_process_sleep","6",0}, *a4[]={"rtl_test_process_sleep","7",0};
+  const char *a5[]={"rtl_test_process_sleep","8",0}, *a6[]={"rtl_test_process_sleep","9",0};
   string cmd = ::getenv("ONLINEKERNELROOT");
   cmd += "/";
   cmd += ::getenv("CMTCONFIG");
@@ -176,24 +177,16 @@ extern "C" int rtl_test_sub_processes(int, char** ) {
   ::lib_rtl_signal_log(false);
   Process::setDebug(true);
   pg.add(p1=new Process("SLEEPER_1",cmd.c_str(),a1,"/dev/null"));
-  pg.start();
-  ::lib_rtl_sleep(100);
   pg.add(p2=new Process("SLEEPER_2",cmd.c_str(),a2));
   pg.start();
-  ::lib_rtl_sleep(100);
   pg.add(p3=new Process("SLEEPER_3",cmd.c_str(),a3,"/dev/null"));
-  pg.start();
-  ::lib_rtl_sleep(100);
   pg.add(p4=new Process("SLEEPER_4",cmd.c_str(),a4));
   pg.start();
-  ::lib_rtl_sleep(100);
   pg.add(p5=new Process("SLEEPER_5",cmd.c_str(),a5,"/dev/null"));
-  pg.start();
-  ::lib_rtl_sleep(100);
   pg.add(p6=new Process("SLEEPER_6",cmd.c_str(),a6));
-  time_t start = ::time(0);
   pg.start();
-  ::lib_rtl_sleep(100);
+  time_t start = ::time(0);
+  ::lib_rtl_sleep(4000);
   cout << "Stop process " << p2->name() << endl;
   p2->stop();
   ::lib_rtl_sleep(100);
@@ -202,7 +195,7 @@ extern "C" int rtl_test_sub_processes(int, char** ) {
   ::lib_rtl_sleep(100);
   cout << "Stop process " << p6->name() << endl;
   p6->stop();
-  ::lib_rtl_sleep(100);
+  ::lib_rtl_sleep(15000);
   pg.wait();
   pg.removeAll();
   time_t stop = ::time(0);
