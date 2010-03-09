@@ -4,6 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2010-03-09 - Patrick Robbe
+ - pythia6/xsectionPsiStar.F: fix bug in return value of the function which
+   was undefined
+
 !========================== GENSER v6r1 2009-12-04 ===========================
 ! 2009-11-30 - Gloria CORTI
  - In the LHAPDF LCG_Generators distribution the data files directory path has 
