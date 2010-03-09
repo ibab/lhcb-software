@@ -5,7 +5,7 @@
  *  Header file for RICH particle ID enumeration : RichParticleIDType
  *
  *  CVS Log :-
- *  $Id: RichParticleIDType.h,v 1.3 2009-05-15 15:48:03 jonrob Exp $
+ *  $Id: RichParticleIDType.h,v 1.4 2010-03-09 18:28:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -24,8 +24,8 @@
 namespace Rich 
 {
 
-  /// Number of RICH particle types
-  static const int NParticleTypes = 5;
+  /// Number of RICH particle types (Electron, Muon, Pion, Kaon, Proton and 'Below Threshold')
+  static const int NParticleTypes = 6;
 
   //--------------------------------------------------------------------------
   /** @enum ParticleIDType
