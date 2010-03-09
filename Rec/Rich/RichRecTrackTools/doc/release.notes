@@ -4,6 +4,11 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-03-09 - Chris Jones
+ - Add a global scale factor for each radiator to the binned CK resolution
+   tool, to allow a more easy quick overall scaling of the resolution via
+   job options.
+
 ! 2010-03-05 - Chris Jones
  - Various changes to support the configuration of multiple reconstruction 
    sequences in the same application. Needed to support neccessary changes in 

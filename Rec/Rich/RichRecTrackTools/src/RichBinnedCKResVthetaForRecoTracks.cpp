@@ -27,7 +27,7 @@ BinnedCKResVthetaForRecoTracks::
 BinnedCKResVthetaForRecoTracks ( const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent )
-  : RichRecToolBase ( type, name, parent ),
+  : ToolBase        ( type, name, parent ),
     m_ckAngle       ( NULL ),
     m_richPartProp  ( NULL ),
     m_scale         ( Rich::NRadiatorTypes, 1.0 )
@@ -72,7 +72,7 @@ BinnedCKResVthetaForRecoTracks ( const std::string& type,
 StatusCode BinnedCKResVthetaForRecoTracks::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = Rich::Rec::ToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -204,7 +204,7 @@ BinnedCKResVthetaForRecoTracks::ckThetaResolution_Imp( LHCb::RichRecSegment * se
     {
       if ( thetaExp >= iBins->first && thetaExp < iBins->second )
       {
-        res = *iData * m_scale[rad];
+        res = (*iData) * m_scale[rad];
         OK = true;
         break;
       }
