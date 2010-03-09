@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.27 2010-03-05 16:28:56 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.28 2010-03-09 18:53:57 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
             
 from LHCbKernel.Configuration import *
@@ -50,7 +50,7 @@ class RecSysConf(LHCbConfigurableUser):
        ,"Histograms"   : "OfflineFull" # Type of histograms
        ,"Context"      : "Offline"     # The context within which to run the reco sequences
        ,"OutputType"   : ""            # some sequences are different for RDST
-       ,"DataType"     : ""            # Type f data, propagated from application
+       ,"DataType"     : ""            # Type of data, propagated from application
        ,"OutputLevel"  : INFO          # The printout level to use
         }
 
