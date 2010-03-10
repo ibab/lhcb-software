@@ -1,4 +1,4 @@
-// $Id: DaVinciInterfaces.cpp,v 1.4 2010-02-20 21:18:51 cattanem Exp $
+// $Id: DaVinciInterfaces.cpp,v 1.5 2010-03-10 13:14:27 giampi Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -19,6 +19,7 @@
 #include "Kernel/ISetInputParticles.h"
 #include "Kernel/IPrintDecay.h"
 #include "Kernel/ICheckSelResults.h"
+#include "Kernel/IIsolation.h"
 
 // ============================================================================
 /** @file
@@ -41,6 +42,7 @@ ISetInputParticles       :: ~ISetInputParticles       () {}
 IPrintDecay              :: ~IPrintDecay              () {}
 ICheckSelResults         :: ~ICheckSelResults         () {}
 IDecodeSimpleDecayString :: ~IDecodeSimpleDecayString () {}
+IIsolation               :: ~IIsolation               () {}
 
 // ============================================================================
 // The END 

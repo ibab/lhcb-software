@@ -4,6 +4,14 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-03-10 - Giampiero Mancinelli
+ - Kernel/IIsolation.h
+  . Added an interface for particle isolation tools.
+
+! 2010-03-10 - Giampiero Mancinelli
+ - src/DavinciInterfaces.cpp
+  . Changes for the particle isolation tool interface.
+
 !===================== DaVinciInterfaces v2r1 2010-02-24 =====================
 ! 2010-02-20 - Marco Cattaneo
  - Remove it also from dict and src files.....
