@@ -1,7 +1,11 @@
 """ AFS helper for directories """
 
-import re
+
+from LbUtils.Lock import Lock2
+
+import re, os
 from subprocess import Popen, PIPE, STDOUT
+from time import sleep
 
 class NotInAFS(Exception):
     """ Exception for non AFS directories """
@@ -65,6 +69,10 @@ class Directory(object):
                 tmpdir = "/".join(tmpdir.split("/")[:-1])
                 if not tmpdir:
                     tmpdir = "/"
+                    
+    def flush(self):
+        Popen(["fs", "flush", "-path", self._name], stdout=STDOUT, stderr=STDOUT)
+        
         
 
                     
@@ -102,6 +110,48 @@ def isAFSDir(dirpath):
         tmpdir.ID()
     except NotInAFS :
         return False
+    except OSError :
+        return False
     else:
         return True
 
+def isAFSFile(filepath):
+    parent = os.path.dirname(filepath)
+    isafs = False
+    if isAFSDir(parent) :
+        isafs = True
+    return isafs
+
+def isAFSPath(path):
+    if os.path.isdir(path) :
+        return isAFSDir(path)
+    else :
+        return isAFSFile(path)
+
+
+def flushPath(path, delay=1.0):
+    if isAFSPath(path) :
+        Popen(["fs", "flush", "-path", path])
+    if delay :
+        sleep(delay)
+
+class AFSLock(Lock2):
+    def lock(self, force=True):
+        flushPath(self.filename)
+        name = self._mungedname()
+        if os.path.exists(name) :
+            flushPath(name)
+        else :
+            flushPath(os.path.dirname(name))
+        super(AFSLock, self).lock(force)
+    def unlock(self, ignore=True):
+        flushPath(self.filename)
+        name = self._mungedname()
+        if os.path.exists(name) :
+            flushPath(name)
+        else :
+            flushPath(os.path.dirname(name))
+        super(AFSLock, self).unlock(ignore)
+
+class AFSLockFile(AFSLock):
+    pass

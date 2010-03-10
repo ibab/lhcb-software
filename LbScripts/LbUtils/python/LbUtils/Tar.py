@@ -1,7 +1,7 @@
 """ various function to manipulate tarballs """
 
 from LbUtils.File import copyTree, isFilePathExcluded, copyStat
-from LbUtils.Lock import Lock2
+from LbUtils.afs.directory import AFSLock
 from LbUtils.Temporary import TempDir
 from LbUtils.Links import fixLinks
 from shutil import copy2
@@ -121,7 +121,7 @@ def openTar(filename, tar_mode="r"):
         pass
     else :
         log.error("No such tar format. Using plain tar uncompressed")
-    lock = Lock2(filename)
+    lock = AFSLock(filename)
     lock.lock(force=False)
     tarf = tarfile.open(filename, tar_mode)
     
