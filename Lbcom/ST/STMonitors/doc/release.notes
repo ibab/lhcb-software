@@ -4,6 +4,9 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2010-03-10 - Mark Tobin
+ - Changed MPV map histogram to 2D profile.
+ - add algorithm to dump ADCs to an ntuple.
 
 ! 2010-03-03 - Nicola Chiapolini 
  - Improved STDQSummaryAlg's text output

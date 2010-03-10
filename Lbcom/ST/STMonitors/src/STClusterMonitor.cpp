@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.21 2010-02-15 12:35:07 mtobin Exp $
+// $Id: STClusterMonitor.cpp,v 1.22 2010-03-10 14:41:23 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -31,6 +31,7 @@
 // AIDA histograms
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
+#include "AIDA/IProfile2D.h"
 #include "TH1D.h"
 #include "GaudiUtils/Aida2ROOT.h"
 
@@ -79,8 +80,9 @@ ST::STClusterMonitor::STClusterMonitor( const std::string& name,
   declareProperty("BunchID",       m_bunchID               );// BunchID 
 
   /// Some data quality cuts
-  declareProperty("ChargeCut", m_chargeCut=12);//< charge on the cluster
-  declareProperty("MinTotalClusters", m_minNClusters=5);/// cuts on the total number of clusters in the event
+  declareProperty("ChargeCut", m_chargeCut=0);//< charge on the cluster
+  declareProperty("MinTotalClusters", m_minNClusters=0);/// cuts on the total number of clusters in the event
+  declareProperty("MinMPVCharge",m_minMPVCharge=8.);//< Cut on the charge of the cluster when calculating MPV
 
   /// Reset rate for histograms/accumulators
   declareProperty("ResetRate", m_resetRate=1000);
@@ -234,7 +236,7 @@ void ST::STClusterMonitor::resetAccumulators() {
 //================================================================================================================================
 void ST::STClusterMonitor::fillMPVMap() {
 
-  m_2d_sectorMPVs->reset();
+  m_2dp_sectorMPVs->reset();
 
   std::vector<DeSTSector*>::const_iterator Sectors = tracker()->sectors().begin();
   std::map<const unsigned int,ST::MedianAccumulator>::const_iterator iMed = m_sectorMPVs.begin();
@@ -250,13 +252,13 @@ void ST::STClusterMonitor::fillMPVMap() {
       double xBin = bins.xBin;
       // Hack to make real x-y distribution plot (not occupancy)
       for( int yBin = bins.beginBinY; yBin != bins.endBinY; ++yBin ) {
-        m_2d_sectorMPVs->fill(xBin,yBin,mpv);
+        m_2dp_sectorMPVs->fill(xBin,yBin,mpv);
       }
     } else if( detType() == "IT" ) {// Cluster map for IT
       ST::ITDetectorPlot hitMap("map", "map");
       ST::ITDetectorPlot::Bins bins = hitMap.toBins((*Sectors)->elementID());
       // Hack to make real x-y distribution plot (not occupancy)
-      m_2d_sectorMPVs->fill(bins.xBin, bins.yBin, mpv);
+      m_2dp_sectorMPVs->fill(bins.xBin, bins.yBin, mpv);
     }
     if(m_debug) debug() << (*Sectors)->elementID()
                         << " median=" << boost::accumulators::median((*iMed).second) 
@@ -272,9 +274,9 @@ void ST::STClusterMonitor::fillMPVMap() {
 //==============================================================================
 void ST::STClusterMonitor::bookHistograms() {
   // filled in monitor clusters
-  m_1d_nClusters = book1D("Number of clusters",0.,5000.,500);
-  m_1d_nClusters_gt_100 = book1D("Number of clusters (N > 100)", 0., 5000.,
-                                 500);
+  m_1d_nClusters = book1D("Number of clusters",0.,20000.,2000);
+  m_1d_nClusters_gt_100 = book1D("Number of clusters (N > 100)", 0., 20000.,
+                                 2000);
   m_2d_nClustersVsTELL1 = book2D("Number of clusters per TELL1", 0.5, 
                                  m_nTELL1s+0.5, m_nTELL1s, 0.,100., 50);
 
@@ -330,15 +332,15 @@ void ST::STClusterMonitor::bookHistograms() {
       m_2d_hitmap = book2D(hitMap.name(), hitMap.minBinX(), hitMap.maxBinX(), hitMap.nBinX(),
                            hitMap.minBinY(), hitMap.maxBinY(), hitMap.nBinY());
       ST::TTDetectorPlot MPVMap(idMPVMap, idMPVMap);
-      m_2d_sectorMPVs = book2D(MPVMap.name(), MPVMap.minBinX(), MPVMap.maxBinX(), MPVMap.nBinX(),
-                               MPVMap.minBinY(), MPVMap.maxBinY(), MPVMap.nBinY());
+      m_2dp_sectorMPVs = bookProfile2D(MPVMap.name(), MPVMap.minBinX(), MPVMap.maxBinX(), MPVMap.nBinX(),
+                                       MPVMap.minBinY(), MPVMap.maxBinY(), MPVMap.nBinY());
     } else if( detType() == "IT" ) {// Cluster map for IT
       ST::ITDetectorPlot hitMap(idMap, idMap, m_nBinsPerITSector);
       m_2d_hitmap = book2D(hitMap.name(), hitMap.minBinX(), hitMap.maxBinX(), hitMap.nBinX(),
                            hitMap.minBinY(), hitMap.maxBinY(), hitMap.nBinY());
       ST::ITDetectorPlot MPVMap(idMPVMap, idMPVMap);
-      m_2d_sectorMPVs = book2D(MPVMap.name(), MPVMap.minBinX(), MPVMap.maxBinX(), MPVMap.nBinX(),
-                               MPVMap.minBinY(), MPVMap.maxBinY(), MPVMap.nBinY());
+      m_2dp_sectorMPVs = bookProfile2D(MPVMap.name(), MPVMap.minBinX(), MPVMap.maxBinX(), MPVMap.nBinX(),
+                                       MPVMap.minBinY(), MPVMap.maxBinY(), MPVMap.nBinY());
     }
     // Create histogram of with total charge for each sector
     std::vector<DeSTSector*>::const_iterator Sectors = tracker()->sectors().begin();
@@ -358,12 +360,13 @@ void ST::STClusterMonitor::fillHistograms(const LHCb::STCluster* cluster){
 
   const double totalCharge = cluster->totalCharge();
   if(totalCharge < m_chargeCut) return;
-  
   // calculate MPVs
-  m_sectorMPVs[cluster->firstChannel().uniqueSector()](totalCharge); 
-  m_sectorMeans[cluster->firstChannel().uniqueSector()](totalCharge);
-  if(m_hitMaps) {
-    m_1ds_chargeBySector[cluster->firstChannel().uniqueSector()]->Fill(totalCharge);
+  if(totalCharge > m_minMPVCharge) { 
+    m_sectorMPVs[cluster->firstChannel().uniqueSector()](totalCharge); 
+    m_sectorMeans[cluster->firstChannel().uniqueSector()](totalCharge);
+    if(m_hitMaps) {
+      m_1ds_chargeBySector[cluster->firstChannel().uniqueSector()]->Fill(totalCharge);
+    }
   }
   const unsigned int clusterSize = cluster->size();
 
