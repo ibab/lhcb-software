@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-03-11 - V. Gligorov
+ - Continuing work on Savannah tasks 13784 and 12691. Change vertex naming
+   convention in HltVertexMaker to Hlt1/Vertex
+
 !========================== HltCommon v5r19 2010-02-27 ===================
 ! 2010-02-27 - Gerhard Raven
  - Check in ConfigTarFileAccess that requested file is 'good'

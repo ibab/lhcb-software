@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.37 2010-01-13 13:28:53 cattanem Exp $
+// $Id: HltVertexMaker.cpp,v 1.38 2010-03-10 23:21:22 gligorov Exp $
 // Include files 
 
 
@@ -153,7 +153,7 @@ StatusCode HltVertexMaker<Selections>::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "HltVertexMaker: Execute" << endmsg;
 
   RecVertices* overtices = new RecVertices();
-  put(overtices,"Hlt/Vertex/"+m_selections.output()->id().str());
+  put(overtices,"Hlt1/Vertex/"+m_selections.output()->id().str());
 
   size_t nCombinations(0);
   for (HltVertexMaker_details::combinatorics_engine combinations = combine();!combinations.end();++combinations) {
