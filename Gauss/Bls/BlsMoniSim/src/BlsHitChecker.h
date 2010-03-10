@@ -1,4 +1,4 @@
-// $Id: BlsHitChecker.h,v 1.1.1.1 2009-10-30 08:30:10 vtalanov Exp $
+// $Id: BlsHitChecker.h,v 1.1.1.2 2010-03-10 17:38:47 vtalanov Exp $
 #ifndef BLSHITCHECKER_H 
 #define BLSHITCHECKER_H 1
 
@@ -15,7 +15,7 @@
  *  
  *
  *  @author Vadim Talanov
- *  @date   2009-10-26
+ *  @date   2010-02-06
  */
 
 class BlsHitChecker : public GaudiTupleAlg {
@@ -33,40 +33,42 @@ protected:
 
 private:
 
-   LHCb::MCHits* m_blsMCHits;
-     std::string m_blsHitsLocation;
-            bool m_blsAOn;
-            bool m_blsCOn;
-     std::string m_blsHTitlePrefix;
-          double m_blsHEntryXMin;
-          double m_blsHEntryXMax;
-  unsigned short m_blsHEntryXNbins;
-          double m_blsHEntryYMin;
-          double m_blsHEntryYMax;
-  unsigned short m_blsHEntryYNbins;
-          double m_blsHEntryZMin;
-          double m_blsHEntryZMax;
-  unsigned short m_blsHEntryZNbins;
-          double m_blsHEntryTimeOffset;
-          double m_blsHEntryTimeMin;
-          double m_blsHEntryTimeMax;
-  unsigned short m_blsHEntryTimeNbins;
-          double m_blsHTrackEnDepMin;
-          double m_blsHTrackEnDepMax;
-  unsigned short m_blsHTrackEnDepNbins;
-          double m_blsHTrackLengthMin;
-          double m_blsHTrackLengthMax;
-  unsigned short m_blsHTrackLengthNbins;
-          double m_blsHEventNumTracksMin;
-          double m_blsHEventNumTracksMax;
-  unsigned short m_blsHEventNumTracksNbins;
-          double m_blsHEventNumMin;
-          double m_blsHEventNumMax;
-  unsigned short m_blsHEventNumNbins;
+  LHCb::MCHits* m_blsMCHits;
+    std::string m_blsHitsLocation;
+           bool m_blsAOn;
+           bool m_blsCOn;
+    std::string m_blsHTitlePrefix;
 
-   unsigned long m_blsHits;
-   unsigned long m_blsTracks;
-    typedef std::multimap < const LHCb::MCParticle*,
+         double m_blsHEntryXMin;
+         double m_blsHEntryXMax;
+  unsigned long m_blsHEntryXNbins;
+         double m_blsHEntryYMin;
+         double m_blsHEntryYMax;
+  unsigned long m_blsHEntryYNbins;
+         double m_blsHEntryZMin;
+         double m_blsHEntryZMax;
+  unsigned long m_blsHEntryZNbins;
+         double m_blsHEntryTimeOffset;
+         double m_blsHEntryTimeMin;
+         double m_blsHEntryTimeMax;
+  unsigned long m_blsHEntryTimeNbins;
+         double m_blsHTrackEnDepMin;
+         double m_blsHTrackEnDepMax;
+  unsigned long m_blsHTrackEnDepNbins;
+         double m_blsHTrackLengthMin;
+         double m_blsHTrackLengthMax;
+  unsigned long m_blsHTrackLengthNbins;
+         double m_blsHEventNumTracksMin;
+         double m_blsHEventNumTracksMax;
+  unsigned long m_blsHEventNumTracksNbins;
+         double m_blsHEventNumMin;
+         double m_blsHEventNumMax;
+  unsigned long m_blsHEventNumNbins;
+
+  unsigned long m_blsHits;
+  unsigned long m_blsTracks;
+
+   typedef std::multimap < const LHCb::MCParticle*,
                             LHCb::MCHit* >
                             t_blsMCParticle2MCHitMultimap;
 

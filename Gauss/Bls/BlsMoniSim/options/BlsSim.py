@@ -6,11 +6,6 @@
 from Gauss.Configuration import *
 from Gaudi.Configuration import *
 
-#-- Use the appropriate local tag as the BLS are not in an MC09 global tag
-#
-from Configurables import CondDB
-CondDB().LocalTags = { "DDDB":["bls-20090826"] }
-
 #-- Switch on the LHCb upstream geometry
 #
 importOptions('$GAUSSOPTS/BeforeVeloGeometry.py')

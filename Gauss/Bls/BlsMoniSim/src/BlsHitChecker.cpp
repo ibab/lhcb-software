@@ -1,4 +1,4 @@
-// $Id: BlsHitChecker.cpp,v 1.1.1.1 2009-10-30 08:30:10 vtalanov Exp $
+// $Id: BlsHitChecker.cpp,v 1.1.1.2 2010-03-10 17:38:47 vtalanov Exp $
 // Include files 
 
 // from Gaudi
@@ -17,7 +17,7 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : BlsHitChecker
 //
-// 2009-10-26 : Vadim Talanov
+// 2010-02-06 : Vadim Talanov
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -129,13 +129,17 @@ StatusCode BlsHitChecker::execute() {
   } // end of: if ( ! exist < LHCb::MCHits > ( m_blsHitsLocation ) )
   // Get MC hits in the scintillator volume of BLSs
   m_blsMCHits = get < LHCb::MCHits > ( m_blsHitsLocation );
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "m_blsHitsLocation: "
-            << m_blsMCHits->size()
-            << " hit(s) found" << endmsg;
   // Just return if the number of hits in all BLSs is zero
   if ( 0 == m_blsMCHits->size() )
     return StatusCode::SUCCESS;
+  // Get event header for event number (also used much later)
+  const LHCb::MCHeader* myMCHeader =
+    get < LHCb::MCHeader > ( LHCb::MCHeaderLocation::Default );
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "m_blsHitsLocation: "
+            << m_blsMCHits->size()
+            << " hit(s) found at event no. "
+            << myMCHeader->evtNumber() << endmsg;
   // Define a multimap for Particle/Hit pairs
   t_blsMCParticle2MCHitMultimap myMultimap;
   // Loop over all hits got from m_blsHitsLocation
@@ -181,6 +185,14 @@ StatusCode BlsHitChecker::execute() {
         ( t_blsMCParticle2MCHitMultimap::value_type ( myMCParticle, *It ) );
     } // end of: if ( ( (*It)->entry().x() > 0 && m_blsCOn ) ||
   } // end of: for ( LHCb::MCHits::iterator It = m_blsMCHits->begin();
+  // Just return if no hits were found in a particular BLS
+  if ( myMultimap.empty() ) {
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "No hits in this BLS found at event no. "
+              << myMCHeader->evtNumber()
+              << endmsg;
+    return StatusCode::SUCCESS;
+  } // end of: if ( myMultimap.empty() ) {
   // Calculate hits/tracks and energy deposited in event
   unsigned short myEventNumHits = 0;
   unsigned short myEventNumTracks = 0;
@@ -211,7 +223,8 @@ StatusCode BlsHitChecker::execute() {
         debug() << "Particle2Hit map: "
                 << myMCParticle << " "
                 << myMCHit << " "
-                << myMCHit->energy()/Gaudi::Units::MeV
+                << myMCHit->energy()/Gaudi::Units::MeV << " "
+                << myMCHit->time()/Gaudi::Units::ns
                 << endmsg;
       } // end of: if ( msgLevel(MSG::DEBUG) )
       // Add properties for current hit (== step) to track
@@ -296,10 +309,14 @@ StatusCode BlsHitChecker::execute() {
   } // end of: for ( t_blsMCParticle2MCHitMultimap::iterator anIt
   // If DEBUG is switched on
   if ( msgLevel(MSG::DEBUG) ) {
-    debug() << "Hits/Tracks: "
+    debug() << "Event no. "
+            << myMCHeader->evtNumber()
+            << ": Hits/Tracks = "
             << myEventNumHits
             << "/"
             << myEventNumTracks
+            << ", EnDep = "
+            << myEventEnDep/Gaudi::Units::MeV
             << endmsg;
   } // end of: if ( msgLevel(MSG::DEBUG) )
   // Make histograms for a per event quantities
@@ -331,8 +348,6 @@ StatusCode BlsHitChecker::execute() {
   m_blsHits += myEventNumHits;
   m_blsTracks += myEventNumTracks;
   // Plot global per run quantities
-  const LHCb::MCHeader* myMCHeader =
-    get < LHCb::MCHeader > ( LHCb::MCHeaderLocation::Default );
   myTitle = m_blsHTitlePrefix
       + "Number of hits in event";
   plot( myMCHeader->evtNumber(),
