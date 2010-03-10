@@ -14,6 +14,8 @@ class TGedPatternSelect;
 class TGLineWidthComboBox;
 class TGColorSelect;
 class TGLineStyleComboBox;
+class TGListBox ;
+class TGComboBox ;
 
 class ElogDialog : public TGTransientFrame
 {
@@ -46,6 +48,8 @@ private:
   TGTextEntry        *m_systemTextEntry;
   TGTextEntry        *m_subjectTextEntry;
   TGTextEdit         *m_messageTextEntry;
+
+  TGComboBox *m_logbookListBox ;
 
   ClassDef(ElogDialog, 0);
 };
