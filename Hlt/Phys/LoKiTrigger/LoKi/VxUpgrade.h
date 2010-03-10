@@ -1,4 +1,4 @@
-// $Id: VxUpgrade.h,v 1.2 2009-12-23 10:37:34 graven Exp $
+// $Id: VxUpgrade.h,v 1.3 2010-03-10 23:20:04 gligorov Exp $
 // ============================================================================
 #ifndef LOKI_VXUPGRADE_H 
 #define LOKI_VXUPGRADE_H 1
@@ -47,7 +47,7 @@ namespace LoKi
         const LoKi::Hlt1::VxCreator&   creator   =
         LoKi::Hlt1::VxCreator ()                 ,//            vertex creator  
         const std::string&             location  = 
-        "Hlt/Vertex/VertexUpgradeBank"  ) ; //   location of upgraded vertices
+        "Hlt1/Vertex/VertexUpgradeBank"  ) ; //   location of upgraded vertices
       /** constructor from all configuration parameters 
        *  @param output  the output selection name 
        *  @param config  the tool configuration 

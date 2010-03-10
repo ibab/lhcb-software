@@ -1,4 +1,4 @@
-// $Id: VxMaker.cpp,v 1.3 2009-12-23 10:37:35 graven Exp $
+// $Id: VxMaker.cpp,v 1.4 2010-03-10 23:19:56 gligorov Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -374,7 +374,7 @@ LoKi::Hlt1::VxMaker::operator() () const
   Assert ( 0 != m_alg , "GaudiAlgorithm* points to NULL!" ) ;
   
   Vertices* overtices = new Vertices() ;
-  m_alg->put ( overtices , "Hlt/Vertex/" + m_sink.selName() ) ;
+  m_alg->put ( overtices , "Hlt1/Vertex/" + m_sink.selName() ) ;
   
   
   // get the first set of tracks
