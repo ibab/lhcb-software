@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-03-10 - Patrick Koppenburg
+ - Remove Physics_320Vis_300L0_10Hlt1_Jan10 as it is buggy and not used
+   Use Feb10 settings intead
 
 !========================== HltSettings v1r10 2010-03-08 ===================
 ! 2010-03-08 - Gerhard Raven
