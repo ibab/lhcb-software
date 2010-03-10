@@ -685,7 +685,10 @@ void RawDataFormatTool::decodeToSmartIDs( const LHCb::RawBank & bank,
   // Check magic code for general data couurption
   if ( LHCb::RawBank::MagicPattern != bank.magic() )
   {
-    Error( "Magic Pattern mis-match" ).ignore();
+    std::ostringstream mess;
+    mess << "Magic Pattern mis-match : Expected " << LHCb::RawBank::MagicPattern
+         << " Obtained " << bank.magic();
+    Error( mess.str() ).ignore();
   }
   else
   { // All OK so decode
