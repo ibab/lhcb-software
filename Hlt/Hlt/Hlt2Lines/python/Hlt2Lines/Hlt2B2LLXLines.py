@@ -90,7 +90,7 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
         #
         # CombineEE : make fitted dielectron
         #
-        from Hlt2SharedParticles.TFBasicParticles import TFElectrons
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectrons
         #
         combineEE = Hlt2Member( CombineParticles                               # type
                               , "EE"                                           # name -- to be bound to the line name: Hlt2LineNameFilter
@@ -98,14 +98,14 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
                               , DaughtersCuts = { "e-" : leptoncut }
                               , CombinationCut = llcombcut
                               , MotherCut = llcut
-                              , InputLocations = [ TFElectrons ]
+                              , InputLocations = [ BiKalmanFittedElectrons ]
                               )
         
         ###################################################################
         #
         # CombineMM : make fitted dimuon
         #
-        from Hlt2SharedParticles.TFBasicParticles import TFMuons
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedMuons
         #
         combineMM = Hlt2Member( CombineParticles                               # type
                               , "MM"                                           # name -- to be bound to the line name: Hlt2LineNameFilter
@@ -113,21 +113,21 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
                               , DaughtersCuts = { "mu-" : leptoncut }
                               , CombinationCut = llcombcut
                               , MotherCut = llcut
-                              , InputLocations = [ TFMuons ]
+                              , InputLocations = [ BiKalmanFittedMuons ]
                               )
         
         ###################################################################
         #
         # CombineBu : apply hard cuts
         #
-        from Hlt2SharedParticles.TFBasicParticles import TFKaons
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons
         combineB = Hlt2Member( CombineParticles                               # type
                              , "Bu"                                           # name -- to be bound to the line name: Hlt2LineNameFilter
                              , DecayDescriptor = "[ B+ -> J/psi(1S) K+ ]cc"
                              , DaughtersCuts = { "K+" : kaoncut }
                              , CombinationCut = combcut
                              , MotherCut = bcut
-                             , InputLocations = [ TFKaons, combineEE ]
+                             , InputLocations = [ BiKalmanFittedKaons, combineEE ]
                              )
 #        from Configurables import PrintHeader
 #        DEBUGPrintHeader1 = PrintHeader("DEBUGPrintHeader1")
@@ -142,10 +142,10 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
                           , prescale = self.prescale
 # OLD                         ,  algos = [ DiElectron, GoodKaons , combineB ]
                           ,  algos = [ DiElectron,
-                                       TFElectrons,
+                                       BiKalmanFittedElectrons,
                                        PV3D(),
                                        combineEE,
-                                       TFKaons,
+                                       BiKalmanFittedKaons,
                                        combineB ]
                           , postscale = self.postscale
                           )
@@ -198,25 +198,25 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
         #
         line_M.clone('Bu2MuMuK'
                      , prescale = self.prescale
-                     , algos = [ DiMuon, TFMuons, PV3D(),combineMM, TFKaons, line_M._algos[-1] ]  # 'Bu' ]
-                     , Bu = { 'InputLocations' :  [ TFKaons, combineMM ]} 
+                     , algos = [ DiMuon, BiKalmanFittedMuons, PV3D(),combineMM, BiKalmanFittedKaons, line_M._algos[-1] ]  # 'Bu' ]
+                     , Bu = { 'InputLocations' :  [ BiKalmanFittedKaons, combineMM ]} 
                      )
         line_S.clone('Bu2MuMuKSignal'
                      , prescale = 1
-                     , algos = [ DiMuon, TFMuons,PV3D(), combineMM, TFKaons, line_S._algos[-1] ] # 'Bu' ]
+                     , algos = [ DiMuon, BiKalmanFittedMuons,PV3D(), combineMM, BiKalmanFittedKaons, line_S._algos[-1] ] # 'Bu' ]
                      , MM = { "CombinationCut" : "(AM<3*GeV)" } # don't change that (tightens combcut and hence overwrites
-                     , Bu = { 'InputLocations' :  [ TFKaons, combineMM ]} 
+                     , Bu = { 'InputLocations' :  [ BiKalmanFittedKaons, combineMM ]} 
                      )
         line_J.clone('Bu2MuMuKJpsi'
                      , prescale = self.prescale
-                     , algos = [ DiMuon, TFMuons, PV3D(),combineMM, TFKaons, line_J._algos[-1] ]# 'Bu' ]
+                     , algos = [ DiMuon, BiKalmanFittedMuons, PV3D(),combineMM, BiKalmanFittedKaons, line_J._algos[-1] ]# 'Bu' ]
                      , MM = {  "CombinationCut" : "(ADAMASS('J/psi(1S)')< %(JpsiMassWindow)s *MeV)" % self.getProps() } 
-                     , Bu = {'InputLocations' :  [ TFKaons, combineMM ]} 
+                     , Bu = {'InputLocations' :  [ BiKalmanFittedKaons, combineMM ]} 
                      )
         line_H.clone('Bu2MuMuKHighMass'
                      , prescale = self.prescale
-                     , algos = [ DiMuon, TFMuons, PV3D(),combineMM, TFKaons, line_H._algos[-1] ]# 'Bu' ]
-                     , Bu = {'InputLocations' :  [ TFKaons, combineMM ]} 
+                     , algos = [ DiMuon, BiKalmanFittedMuons, PV3D(),combineMM, BiKalmanFittedKaons, line_H._algos[-1] ]# 'Bu' ]
+                     , Bu = {'InputLocations' :  [ BiKalmanFittedKaons, combineMM ]} 
                      )
         
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bu2eeKDecision" : 50060 } )   # whole prescaled box

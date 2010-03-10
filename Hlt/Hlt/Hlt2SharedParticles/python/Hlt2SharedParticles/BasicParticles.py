@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.18 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.19 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
@@ -35,7 +35,7 @@ hadronProtos = Hlt2UnfittedForwardTracking.hlt2ChargedHadronProtos( )
 #
 # Neutral protoparticles
 #
-NeutralProtos = Hlt2UnfittedForwardTracking.hlt2NeutralProtos()
+neutralProtos = Hlt2UnfittedForwardTracking.hlt2NeutralProtos()
 ##########################################################################
 # Make the pions
 #
@@ -78,8 +78,7 @@ Hlt2Electrons.Electron.Selection = [ "RequiresDet='CALO' CombDLL(e-pi)>'-2.0'" ]
 #
 Hlt2Photons = PhotonMakerAlg("Hlt2Photons")
 Hlt2Photons.addTool(PhotonMaker)
-#TODO: fix this hardcoding!!!
-Hlt2Photons.PhotonMaker.Input= "Hlt/ProtoP/Neutrals"
+Hlt2Photons.PhotonMaker.Input = neutralProtos.outputSelection()
 Hlt2Photons.PhotonMaker.ConvertedPhotons = True  
 Hlt2Photons.PhotonMaker.UnconvertedPhotons = True  
 Hlt2Photons.PhotonMaker.PtCut = 200.* MeV 
@@ -97,9 +96,9 @@ Hlt2Photons.PhotonMaker.PtCut = 200.* MeV
 
 __all__ = ( 'NoCutsPions', 'NoCutsKaons', 'NoCutsProtons', 'Muons', 'RichPIDsKaons', 'Electrons', 'Photons' )
 
-NoCutsPions   = bindMembers( None, [ hadronProtos, Hlt2NoCutsPions ] )
-NoCutsKaons   = bindMembers( None, [ hadronProtos, Hlt2NoCutsKaons ] )
-NoCutsProtons = bindMembers( None, [ hadronProtos, Hlt2NoCutsProtons ] )
-Muons         = bindMembers( None, [ muonProtos , Hlt2Muons ] )
-Electrons     = bindMembers( None, [ caloProtos, Hlt2Electrons ] )
-Photons       = bindMembers( None, [ NeutralProtos, Hlt2Photons ] )
+NoCutsPions   = bindMembers( None, [ hadronProtos	, 	Hlt2NoCutsPions 	] )
+NoCutsKaons   = bindMembers( None, [ hadronProtos	, 	Hlt2NoCutsKaons 	] )
+NoCutsProtons = bindMembers( None, [ hadronProtos	, 	Hlt2NoCutsProtons 	] )
+Muons         = bindMembers( None, [ muonProtos		, 	Hlt2Muons 		] )
+Electrons     = bindMembers( None, [ caloProtos		, 	Hlt2Electrons 		] )
+Photons       = bindMembers( None, [ neutralProtos	, 	Hlt2Photons 		] )

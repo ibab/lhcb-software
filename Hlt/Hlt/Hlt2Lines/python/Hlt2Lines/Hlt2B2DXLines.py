@@ -180,7 +180,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         
         # Filter for the post-track-fit input particles
         ###################################################################
-        from Hlt2SharedParticles.TFBasicParticles import TFKaons,TFPions
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons,BiKalmanFittedPions
         incuts = """(PT> %(ComTFAllTrkPtLL)s *MeV)
         & (P> %(ComTFAllTrkPLL)s *MeV)
         & (MIPCHI2DV(PRIMARY)> %(ComTFAllTrkPVIPChi2LL)s )
@@ -188,11 +188,11 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         
         filter = Hlt2Member( FilterDesktop
                              , 'Filter'
-                             , InputLocations = [TFPions,TFKaons]
+                             , InputLocations = [BiKalmanFittedPions,BiKalmanFittedKaons]
                              , Code = incuts
                              )
         #explicitly require the primary vertex as we are paranoid
-        lclTFInputParticles = bindMembers('TopoTFIn', [ PV3D(), TFPions, TFKaons, filter ])
+        lclTFInputParticles = bindMembers('TopoTFIn', [ PV3D(), BiKalmanFittedPions, BiKalmanFittedKaons, filter ])
         
         
         ###################################################################

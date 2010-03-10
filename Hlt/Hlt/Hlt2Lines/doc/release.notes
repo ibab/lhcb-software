@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.130 2010-03-09 15:37:13 jnardull Exp $
+$Id: release.notes,v 1.131 2010-03-10 23:15:26 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,10 @@ $Id: release.notes,v 1.130 2010-03-09 15:37:13 jnardull Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2010-03-11 - V. Gligorov
+ - Continuing work on Savannah tasks 13784 and 12691. Follow changes
+   in HltLine, Hlt2SharedParticles.
 
 ! 2010-03-09 - J. Nardulli
  - Working on Savannah task 14212 for the B2DX lines.

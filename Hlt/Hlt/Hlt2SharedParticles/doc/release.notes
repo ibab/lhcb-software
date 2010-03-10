@@ -1,9 +1,14 @@
-$Id: release.notes,v 1.79 2010-03-02 11:14:56 gligorov Exp $
+$Id: release.notes,v 1.80 2010-03-10 23:17:12 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2010-03-11 - V. Gligorov
+ - Continuing work on Savannah tasks 13784 and 12691. Renamed TFBasicParticles
+   to TrackFittedBasicParticles, other changes to follow HltLine.
+
 ! 2010-03-02 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691.
    Major change is that the files BasicParticles etc. no longer

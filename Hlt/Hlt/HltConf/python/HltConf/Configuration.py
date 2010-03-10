@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.158 2010-03-02 11:16:50 gligorov Exp $"
+__version__ = "$Id: Configuration.py,v 1.159 2010-03-10 23:17:32 gligorov Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -245,8 +245,7 @@ class HltConf(LHCbConfigurableUser):
 	# What we are doing is to let the SelReportsMaker know where the "trackified" muonID objects
 	# live directly from the tracking in question and the "rule" for computing their location 
         from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
-	from HltLine.HltTrackNames import _trackifiedMuonIDLocation
-	HltSelReportsMaker().HltMuonTrackLocation = _trackifiedMuonIDLocation(Hlt2UnfittedForwardTracking())
+	HltSelReportsMaker().HltMuonTrackLocation = Hlt2UnfittedForwardTracking()._trackifiedMuonIDLocation()
 	veto = [ 'TES:Trig/L0/FullCalo' ,   'TES:Trig/L0/MuonCtrl'
                , 'TES:Hlt/Vertex/ASidePV3D','TES:Hlt/Vertex/CSidePV3D' , 'TES:Hlt/Track/Long', 'TES:Hlt/Track/Forward',   'TES:Hlt/Track/RZVelo',    'TES:Hlt/Track/Velo'
                , 'TES:Hlt/Vertex/PV2D' 

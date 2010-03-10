@@ -17,7 +17,7 @@ from Configurables  import LHCbConfigurableUser
 # We import the track and vertex names from
 # HltTrackNames and HltVertexNames
 #
-from HltLine.HltTrackNames import _trackLocation, HltSharedTracksPrefix, HltGlobalTrackLocation
+from HltLine.HltTrackNames import HltSharedTracksPrefix, HltGlobalTrackLocation
 from HltLine.HltTrackNames import HltSharedRZVeloTracksName, HltMuonTracksName, HltUnfittedTracksSuffix  
 from HltLine.HltVertexNames import _vertexLocation, HltSharedVerticesPrefix, HltGlobalVertexLocation
 from HltLine.HltVertexNames import Hlt2DPrimaryVerticesName, Hlt3DPrimaryVerticesName
@@ -35,11 +35,9 @@ class LumiCounterDefinitionConf(LHCbConfigurableUser) :
   def defineCounters( self ):
     self.Definition  = {
       'RZVelo'   : [LumiCountTracks   , True    , "Hlt/Track/RZVelo",   5,  200],
-      'Muon'     : [LumiCountTracks   , False   , "Hlt2/Track/Unfitted/Forward/Muon" ,   5,  200], #TODO: remove!!!
       'TTIP'     : [LumiCountTracks   , True    , 'Hlt/Track/TTIP'  ,   5,  100], #TODO : define in HltTrackNames 
       'TTMIB'    : [LumiCountTracks   , False   , 'Hlt/Track/TTMIB' ,   5,  100], #TODO : define in HltTrackNames
-      'PV2D'     : [LumiCountVertices , True    , _vertexLocation(HltSharedVerticesPrefix, HltGlobalVertexLocation, Hlt2DPrimaryVerticesName) ,   1,   20],
-      'PV3D'     : [LumiCountVertices , False   , _vertexLocation(HltSharedVerticesPrefix, HltGlobalVertexLocation, Hlt3DPrimaryVerticesName) ,   1,   20],
+      'PV2D'     : [LumiCountVertices , True    , _vertexLocation(HltSharedVerticesPrefix, HltGlobalVertexLocation, Hlt2DPrimaryVerticesName) ,   1,   20], #TODO: get from PV2D
       'RZVeloBW' : [LumiCountHltTracks, True    , 'RZVeloBW'        ,   5,  200],
       'SPDMult'  : [LumiFromL0DU      , True    , 'Spd(Mult)'       ,   6,  500],
       'PUMult'   : [LumiFromL0DU      , True    , 'PUHits(Mult)'    ,   3,  200],

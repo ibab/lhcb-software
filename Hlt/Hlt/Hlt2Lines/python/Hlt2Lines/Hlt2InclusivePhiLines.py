@@ -54,7 +54,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
         from Configurables import CombineParticles, PhysDesktop
         from Configurables import FilterDesktop
         from Hlt2SharedParticles.GoodParticles import GoodKaons
-	from Hlt2SharedParticles.TFBasicParticles import TFKaons, TFRichKaons
+	from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons, BiKalmanFittedRichKaons
 
         # Some string definitions... 
         decayDesc = ["phi(1020) -> K+ K-"]
@@ -103,7 +103,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                          , DaughtersCuts = { "K+" : TfKaonPtCut+" & "+TfKaonIpsCut }
                                          , CombinationCut = TfPhiMassCut 
                                          , MotherCut = TfPhiVchi2Cut+" & "+TfPhiPtCut
-                                         , InputLocations  = [ TFKaons ]
+                                         , InputLocations  = [ BiKalmanFittedKaons ]
                                          )
         Hlt2InclusivePhiTFSB = Hlt2Member( CombineParticles
                                            , "TFCombineSB"
@@ -111,7 +111,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                            , DaughtersCuts = { "K+" : TfKaonPtCut+" & "+TfKaonIpsCut }
                                            , CombinationCut = TfPhiMassCutSB 
                                            , MotherCut = TfPhiVchi2Cut+" & "+TfPhiPtCut
-                                           , InputLocations  = [ TFKaons ]
+                                           , InputLocations  = [ BiKalmanFittedKaons ]
                                            )
         
         ############################################################################
@@ -140,9 +140,9 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                         , algos = [ GoodKaons, 
                                     Hlt2InclusivePhi, 
-                                    TFKaons,
+                                    BiKalmanFittedKaons,
 				    Hlt2InclusivePhiTF,
-                                    TFRichKaons, 
+                                    BiKalmanFittedRichKaons, 
                                     Hlt2InclusivePhiRich]
                         , postscale = self.postscale
                          )
@@ -169,7 +169,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                         , algos = [ GoodKaons, 
                                     Hlt2InclusivePhi, 
-                                    TFKaons,
+                                    BiKalmanFittedKaons,
 				    Hlt2InclusivePhiTF]
                         , postscale = self.postscale
                           )
@@ -184,9 +184,9 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                         , algos = [ GoodKaons, 
                                     Hlt2InclusivePhiSB, 
-                                    TFKaons,
+                                    BiKalmanFittedKaons,
 				    Hlt2InclusivePhiTFSB,
-                                    TFRichKaons,
+                                    BiKalmanFittedRichKaons,
 				    Hlt2InclusivePhiRichSB]
                         , postscale = self.postscale
                         )

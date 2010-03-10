@@ -1,7 +1,7 @@
-## $Id: Hlt2TopologicalLines.py,v 1.33 2010-03-02 11:12:40 gligorov Exp $
+## $Id: Hlt2TopologicalLines.py,v 1.34 2010-03-10 23:14:53 gligorov Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-03-02 11:12:40 $'
-__version__ = '$Revision: 1.33 $'
+__date__    = '$Date: 2010-03-10 23:14:53 $'
+__version__ = '$Revision: 1.34 $'
 
 ###
 #
@@ -62,7 +62,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                 , 'ComTFVtxPVDispChi2LL'    : 100        # unitless
                 , 'RobustPointingUL'        : 0.20       # unitless
                 , 'TFPointUL'               : 0.10       # unitless
-                , 'Prescale'                : {'Hlt2TopoTF2BodySA' : 0.001
+                , 'Prescale'                : {'Hlt2TopoTF2BodySA' : 1.00
                                                , 'Hlt2TopoTF3BodySA' : 0.001
                                                , 'Hlt2TopoTF4BodySA' : 0.001
                                               }
@@ -420,9 +420,9 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         ## Filter post-track fit input particles.
         ###################################################################
-        from Hlt2SharedParticles.TFBasicParticles import TFKaons, TFPions
-        lclTFInputKaons = self.tfInPartFilter('TopoTFInputKaons', [ TFKaons ] )
-        lclTFInputPions = self.tfInPartFilter('TopoTFInputPions', [ TFPions ] )
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons, BiKalmanFittedPions
+        lclTFInputKaons = self.tfInPartFilter('TopoTFInputKaons', [ BiKalmanFittedKaons ] )
+        lclTFInputPions = self.tfInPartFilter('TopoTFInputPions', [ BiKalmanFittedPions ] )
 
         # post-track-fit 2-body combinations
         ###################################################################

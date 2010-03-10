@@ -1,7 +1,7 @@
-## $Id: Hlt2CharmLines.py,v 1.8 2010-03-02 11:12:40 gligorov Exp $
+## $Id: Hlt2CharmLines.py,v 1.9 2010-03-10 23:14:53 gligorov Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-03-02 11:12:40 $'
-__version__ = '$Revision: 1.8 $'
+__date__    = '$Date: 2010-03-10 23:14:53 $'
+__version__ = '$Revision: 1.9 $'
 
 ## ######################################################################
 ## Defines a configurable to define and configure Hlt2 lines for selecting
@@ -396,9 +396,9 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         ## Filter post-track fit input particles.
         ###################################################################
-        from Hlt2SharedParticles.TFBasicParticles import TFKaons, TFPions
-        lclTFInputKaons = self.tfInPartFilter('TopoTFInputKaons', [ TFKaons] )
-        lclTFInputPions = self.tfInPartFilter('TopoTFInputPions', [ TFPions] )
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons, BiKalmanFittedPions
+        lclTFInputKaons = self.tfInPartFilter('TopoTFInputKaons', [ BiKalmanFittedKaons] )
+        lclTFInputPions = self.tfInPartFilter('TopoTFInputPions', [ BiKalmanFittedPions] )
 
 
         ###################################################################

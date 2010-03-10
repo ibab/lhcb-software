@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltPVs.py,v 1.4 2010-03-02 11:09:11 gligorov Exp $
+# $Id: HltPVs.py,v 1.5 2010-03-10 23:12:21 gligorov Exp $
 # =============================================================================
 ## @file HltLine/HltPVs.py
 #  Define the 2D and 3D primary vertex making algorithms for the Hlt
@@ -56,8 +56,11 @@ def PV2D() :
 	from Configurables import HltVertexFilter
 
 	# Todo: fix hardcoding here
+	#
+	output2DVertices = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,Hlt2DPrimaryVerticesName)
+	#
 	patPV2D = PatPV2DFit3D( 'HltPVsPV2D' , InputTracksName = MinimalRZVelo.outputSelection()
-                                      , OutputVerticesName = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,Hlt2DPrimaryVerticesName) )  
+                                      , OutputVerticesName = output2DVertices )  
 	patPV2D.addTool(PVOfflineTool, name = 'PVOfflineTool')
 	patPV2D.PVOfflineTool.PVFitterName='LSAdaptPV3DFitter'
 
@@ -80,9 +83,11 @@ def PV3D() :
         from Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
 	from Configurables import PVOfflineTool 
 
+	output3DVertices = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,Hlt3DPrimaryVerticesName)
+
 	recoPV3D =  PatPV3D('HltPVsPV3D' )
 	recoPV3D.addTool( PVOfflineTool, name = 'PVOfflineTool' )
 	recoPV3D.PVOfflineTool.InputTracks = [ (Hlt2UnfittedForwardTracking().hlt2VeloTracking()).outputSelection() ]
-	recoPV3D.OutputVerticesName = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,Hlt3DPrimaryVerticesName) 
+	recoPV3D.OutputVerticesName = output3DVertices
 
 	return bindMembers( None, [ Hlt2UnfittedForwardTracking().hlt2VeloTracking(), recoPV3D ] )

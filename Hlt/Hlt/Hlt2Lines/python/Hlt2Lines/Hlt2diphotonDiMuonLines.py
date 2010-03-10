@@ -26,7 +26,6 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         # Get the muon tracks straight from the HLT reconstruction
         # TODO: check that this does what it is supposed to do
 	from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
-	from HltLine.HltTrackNames import _trackifiedMuonIDLocation 
         from Configurables import CombineParticles, FilterDesktop, NumberOfTracksFilter
 
         #-------------------------------------------
@@ -39,7 +38,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         FilterNumMuons = NumberOfTracksFilter("FilterNumMuons")
         FilterNumMuons.MinTracks = 2
         FilterNumMuons.MaxTracks = 2  
-        FilterNumMuons.TrackLocations  = [ _trackifiedMuonIDLocation(Hlt2UnfittedForwardTracking()) ]
+        FilterNumMuons.TrackLocations  = [ Hlt2UnfittedForwardTracking()._trackifiedMuonIDLocation() ]
         FilterNumMuons.OutputLevel = INFO                     
 
        #------------------------------------------------

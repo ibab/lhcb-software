@@ -6,8 +6,9 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.51 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.52 $"
 # =============================================================================
+import types
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import GaudiSequencer as Sequence
@@ -31,25 +32,25 @@ from Hlt2Lines.Hlt2diphotonDiMuonLines  import Hlt2diphotonDiMuonLinesConf
 #
 from HltLine.Hlt2Tracking import Hlt2Tracking
 #
-from HltLine.Hlt2TrackingConfigurations import setHlt2UnfittedForwardTracking 
-from HltLine.Hlt2TrackingConfigurations import setHlt2BiKalmanFittedRICHForwardTracking
-from HltLine.Hlt2TrackingConfigurations import setHlt2UnfittedDownstreamTracking
-from HltLine.Hlt2TrackingConfigurations import setHlt2BiKalmanFittedDownstreamTracking
-#
-from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking 
 from HltLine.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedRICHForwardTracking
 from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedDownstreamTracking
 from HltLine.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
+from HltLine.Hlt2TrackingConfigurations import Hlt2UniKalmanFittedForwardTracking 
+from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedLongTracking 
+from HltLine.Hlt2TrackingConfigurations import setDataTypeForTracking
 # Define what categories stand for
 # There are the strings used in HltThresholdSettings
 
 
 class Hlt2Conf(LHCbConfigurableUser):
-    __used_configurables__ = [ Hlt2Tracking 
-			     , Hlt2UnfittedForwardTracking
-			     , Hlt2BiKalmanFittedRICHForwardTracking
-			     , Hlt2UnfittedDownstreamTracking
-			     , Hlt2BiKalmanFittedDownstreamTracking	
+    __used_configurables__ = [ (Hlt2Tracking 	, "Hlt2UnfittedForwardTracking"			)
+			     , (Hlt2Tracking	, "Hlt2BiKalmanFittedRICHForwardTracking"	)
+			     , (Hlt2Tracking	, "Hlt2UnfittedDownstreamTracking"		)
+			     , (Hlt2Tracking	, "Hlt2BiKalmanFittedDownstreamTracking"	) 
+			     , (Hlt2Tracking	, "Hlt2BiKalmanFittedForwardTracking"		)
+			     , (Hlt2Tracking	, "Hlt2UniKalmanFittedForwardTracking"		)
+			     , (Hlt2Tracking	, "Hlt2UnfittedLongTracking"			)	 
 			     , Hlt2TopologicalLinesConf
                              , Hlt2B2DXLinesConf 
                              , Hlt2CharmLinesConf
@@ -60,7 +61,7 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2B2PhiXLinesConf
                              , Hlt2B2XGammaLinesConf
                              , Hlt2B2HHLinesConf
-                             # , Hlt2B2LLXLinesConf                         # DO NOT RUN UNTIL CALO IS FIXED
+                             , Hlt2B2LLXLinesConf                         
                              , Hlt2DisplVerticesLinesConf
                              , Hlt2CommissioningLinesConf
                              , Hlt2ExpressLinesConf
@@ -91,23 +92,34 @@ class Hlt2Conf(LHCbConfigurableUser):
         #
         from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
         for i in self.__used_configurables__ :
+	    # Time for some python magic
+	    if type(i) is tuple : # if we are dealing with a named instance in the used configurables
+		i, i_name = i # copy what is done in GaudiKernel/Configurable.py 
             if not issubclass(i,HltLinesConfigurableUser) : continue
             from ThresholdUtils import setThresholds
             setThresholds(ThresholdSettings,i)
        
 ###################################################################################
 #
-# PID
+# Reconstruction
 #
-    def configurePID(self):
+    def configureReconstruction(self):
 
-	from HltLine.HltTrackNames import Hlt2TracksPrefix       
+	definedtrackings = []
+	# Pass the data type to the various tracking configurations
+	definedtrackings	+= [	Hlt2UnfittedForwardTracking()		]
+	definedtrackings	+= [	Hlt2BiKalmanFittedRICHForwardTracking()	]
+	definedtrackings	+= [	Hlt2UnfittedDownstreamTracking()	]
+	definedtrackings	+= [	Hlt2BiKalmanFittedDownstreamTracking()	]
+	definedtrackings	+= [	Hlt2UniKalmanFittedForwardTracking()	]
+	definedtrackings	+= [	Hlt2UnfittedLongTracking()		]
 
-	setHlt2UnfittedForwardTracking(Hlt2TracksPrefix,self.getProp("DataType"),Hlt2UnfittedForwardTracking())
-	setHlt2BiKalmanFittedRICHForwardTracking(Hlt2TracksPrefix,self.getProp("DataType"),Hlt2BiKalmanFittedRICHForwardTracking())
-	setHlt2UnfittedDownstreamTracking(Hlt2TracksPrefix,self.getProp("DataType"),Hlt2UnfittedDownstreamTracking())
-	setHlt2BiKalmanFittedDownstreamTracking(Hlt2TracksPrefix,self.getProp("DataType"),Hlt2BiKalmanFittedDownstreamTracking())
-      
+        # And now we have to, for each of the configurables we just created, 
+	# tell it the data type and tell it to use all the Hlt2 lines...
+	from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
+	from Gaudi.Configuration import ConfigurableUser
+	for thistracking in definedtrackings :
+		setDataTypeForTracking(thistracking,self.getProp("DataType"))
 ###################################################################################
 #
 # MC
@@ -146,7 +158,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         # reco
         if self.getProp('WithMC'): self.withMC()
         # set Hlt2 PID
-        self.configurePID()
+        self.configureReconstruction()
         # lines
         self.hlt2Lines(Hlt2)
         
