@@ -4,6 +4,11 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-03-10 - Patrick Robbe
+ - Add interface to ShiftDB to be able to retrieve the name of
+   the data manager on shift: ShiftDB.cpp/ShiftDB.h
+ - ElogDialog.cpp: retrieve the name of the data manager on shift
+
 ! 2010-02-09 - Olivier Callot
  - Add an optional Subject to Elog, for SD logbooks
  - Minor cleanup in the related code.
