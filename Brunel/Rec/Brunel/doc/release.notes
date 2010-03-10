@@ -13,6 +13,12 @@ Purpose: LHCb reconstruction program
      (RichRecBase v3r27p1)
    . Minor changes to monitoring output (RichRecQC v2r37p1)
    . Fixed small bug in PrimaryVertexChecker (PatChecker v3r7)
+   . Add support for below Threshold Rich PID type (various Rich packages)
+   . Restructure Calo configurables (CaloPIDs v5r5, CaloReco v5r4)
+   . Add NeutralPIDs Calo PID sequence (CaloPIDs v5r5)
+   . Changes to Calo monitoring (add ProtoElectronMon, remove 
+     EcalSplitClusterMon, less verbose initialization) (CaloMoniDst v4r4)
+   . Modiication to structure of PV fit tools (PatPV v3r14)
 
 </PRE><H1><A NAME=v36r2>2010-02-26 Brunel v36r2</A></H1><PRE>
  - Changes to Configurable: 
