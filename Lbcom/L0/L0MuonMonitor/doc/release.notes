@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.34 2010-03-09 16:31:34 jucogan Exp $
+! $Id: release.notes,v 1.35 2010-03-10 08:58:18 jucogan Exp $
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
 !--------------------------------------------------------------------------
+
+! 2010-03-10 - Julien Cogan
+ - fix compilation errors on Windows (again)
 
 ! 2010-03-09 - Julien Cogan
  - Histogram overflow in L0MuonMonitorCandidates

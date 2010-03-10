@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitorData.cpp,v 1.2 2010-03-09 16:31:34 jucogan Exp $
+// $Id: L0MuonMonitorData.cpp,v 1.3 2010-03-10 08:58:18 jucogan Exp $
 // Include files 
 #include <sstream>
 
@@ -152,21 +152,21 @@ StatusCode L0MuonMonitorData::execute() {
       double weight = 1./f;
       for (int ix=X*f; ix<X*f+f; ++ix){
         double x = ix+0.5;
-        if ( (qua==2) or (qua==3) ) x = -x;
+        if ( (qua==2) || (qua==3) ) x = -x;
         fill(m_padsX[sta],x,weight);
       }
       for (int iy=Y*f; iy<Y*f+f; ++iy){
         double y = iy+0.5;
-        if ( (qua==1) or (qua==2) ) y = -y;
+        if ( (qua==1) || (qua==2) ) y = -y;
         fill(m_padsY[sta],y,weight);
       }
   
       if ( fullDetail() ) {
         double weight2 = 1./(1.*f*f);
         double x = X+0.5;
-        if ( (qua==2) or (qua==3) ) x = -x;
+        if ( (qua==2) || (qua==3) ) x = -x;
         double y = Y+0.5;
-        if ( (qua==1) or (qua==2) ) y = -y;
+        if ( (qua==1) || (qua==2) ) y = -y;
         fill(m_pads[sta][reg],x*f,y*f,weight2);
       }
       
