@@ -1,10 +1,10 @@
-! $Id: release.notes,v 1.518 2010-03-10 13:21:42 giampi Exp $
+! $Id: release.notes,v 1.519 2010-03-10 13:25:06 giampi Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
-! 2010-03-04 - Giampiero Mancinelli
+! 2010-03-10 - Giampiero Mancinelli
  - src/IsolationTwoBody[.h,.cpp]
   . First implementation of an isolation tools for two body decays.
 
