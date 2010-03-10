@@ -1,4 +1,4 @@
-// $Id: L0MuonMuonComp.cpp,v 1.5 2010-03-08 15:07:35 jucogan Exp $
+// $Id: L0MuonMuonComp.cpp,v 1.6 2010-03-10 09:08:50 jucogan Exp $
 // Include files 
 
 #include <math.h>
@@ -521,7 +521,7 @@ bool L0MuonMuonComp::diffL0MuonAndMuon(std::vector<std::pair<LHCb::MuonTileID,in
 
     // Ignore hit at the border of the TAE
     //info() << "itl0muon->second "<<itl0muon->second<<" tmin,max"<<ts_min<<" , "<<ts_max<<endmsg;
-    if ( (m_tae_ignore_border) and ( (itl0muon->second>=ts_max) or (itl0muon->second<=ts_min)) ) continue ;
+    if ( (m_tae_ignore_border) && ( (itl0muon->second>=ts_max) || (itl0muon->second<=ts_min)) ) continue ;
     //info() << "itl0muon->second OK"<<endmsg;
     
     LHCb::MuonTileID l0mid=itl0muon->first;
@@ -550,7 +550,7 @@ bool L0MuonMuonComp::diffL0MuonAndMuon(std::vector<std::pair<LHCb::MuonTileID,in
     // Remove the muon hit if matched to a l0muon hit 
     if (muon_pos<muontiles.end()) {
       muontiles.erase(muon_pos);
-      if ( (m_use_central_finetime) and ( (finetime<3) or (finetime>12)) ) continue ;
+      if ( (m_use_central_finetime) && ( (finetime<3) || (finetime>12)) ) continue ;
     }
 
     std::pair<LHCb::MuonTileID,int> tdt = std::pair<LHCb::MuonTileID,int> (l0mid,deltaT);
@@ -608,10 +608,10 @@ bool L0MuonMuonComp::diffL0MuonAndMuon(std::vector<std::pair<LHCb::MuonTileID,in
   for (itmuon=muontiles.begin();itmuon<muontiles.end();++itmuon){
 
     // Ignore hit at the border of the TAE
-    if ((m_tae_ignore_border) and ( ((itmuon->second).first>=ts_max) or ((itmuon->second).first<=ts_min)) ) continue ;
+    if ((m_tae_ignore_border) && ( ((itmuon->second).first>=ts_max) || ((itmuon->second).first<=ts_min)) ) continue ;
 
     // Ignore non-central hit in the TS
-    if ( (m_use_central_finetime) and ( ((itmuon->second).second<3) or ((itmuon->second).second>12)) ) continue ;
+    if ( (m_use_central_finetime) && ( ((itmuon->second).second<3) || ((itmuon->second).second>12)) ) continue ;
     
     LHCb::MuonTileID mid=itmuon->first;
     
