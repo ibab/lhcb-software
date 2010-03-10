@@ -7,6 +7,7 @@ branches doc cmt
 use  DaVinci                 	v25r1   Phys
 use  PuVeto                     v7r7p1  L0
 use  LoKiFitters                v2r4    Phys
+use  HltSettings                v1r9p1  Hlt
 #  
 # Declare this as a container package
 apply_pattern container_package
