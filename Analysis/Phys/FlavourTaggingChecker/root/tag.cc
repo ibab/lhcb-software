@@ -179,8 +179,8 @@ int main(){
         double dQ_asPion = calc_dQ(BSpart, build4V(P[i],Pt[i],phi[i], 211) );
 
         if(DBG) {
-          cout<<BOLD<< "--- trtyp="<<trtyp[i] << " ID="<<ID[i]<<setprecision(4)
-              << " P="<<P[i] << " Pt="<<Pt[i] << " lcs="<<lcs[i] <<ENDC<<endl;
+          cout<< "--- trtyp="<<trtyp[i] << " ID="<<ID[i]<<setprecision(4)
+              << " P="<<P[i] << " Pt="<<Pt[i] << " lcs="<<lcs[i] <<endl;
           cout<< "    deta="<<deta<< " dphi="<<dphi 
               << " dQ="<< (isBs? dQ_asKaon:dQ_asPion) <<endl;
           cout<<"    IPs="<<IPsig<<" IPPU="<<" NSH="<<muNSH<<endl;

@@ -23,7 +23,7 @@
    cheatID = 0      // Perfect ID with MC truth
    cheatP  = 0      // Perfect  P and Pt of tracks
    useDV   = 0      // Read only outcome from C++ decision
-   DBG     = 1      // Debug mode
+   DBG     = 0      // Debug mode
    IsControlChannel = 0  //take as the true flavour the reconsted B
 
    NNetTrain = none                 //NNet taggers: "mu" "e" "k" "kS" "pS" "vtx"
