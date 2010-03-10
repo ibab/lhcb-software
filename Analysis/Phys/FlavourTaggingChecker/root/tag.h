@@ -2,10 +2,7 @@
 #include "TCanvas.h"
 #include "TFile.h"
 #include "TNtuple.h"
-#include "TStyle.h"
-#include "TProfile.h"
 #include "TGraphErrors.h"
-#include "TGraph2DErrors.h"
 #include "TF1.h"
 #include "TH2F.h"
 #include "TVector3.h"
@@ -13,6 +10,7 @@
 #include "TROOT.h"
 
 // global variables
+double nsele(0);
 string CombTechnique="NNet";
 double nrt[20],nwt[20],nrtag[20],nwtag[20];
 float nlm(0),nllm(0),nle(0),nlle(0),nlk(0),nlkS(0),nllk(0),nllkS(0),nidm(0)
@@ -22,8 +20,16 @@ float ghrate_kS(0),gherror_kS(0);
 float ghrate_m(0),gherror_m(0),ghrate_e(0),gherror_e(0);
 int nrTisTis(0),nrTosTos(0),nrTisTos(0),nrTosTis(0),nrTob(0);
 int n2trackR=0, n2trackW=0, ntrackR=0, ntrackW=0;
-bool isBs(0), DBG(0);
-double nsele(0);
+int ntruemu=0, ntrueel=0, ntruekO=0, ntruekS=0;
+int ntruemutag=0, ntrueeltag=0, ntruekOtag=0, ntruekStag=0;
+int ndirect_mu=0,ndirect_el=0,nbc_mu=0,nbc_el=0,nbc_kO=0,nbc_kS=0;
+int isBs(0), DBG(0), askL0(0), askHlt1(0), askHlt2(0);
+string ROJO("\x1b[91m"),ROJO2("\x1b[31m"), VERDE("\x1b[32m"), AMARILLO("\x1b[33m"),
+  AZUL("\x1b[94m"),AZULCLARO("\x1b[36m"), VIOLETA("\x1b[95m"),SUBROJO("\x1b[101m"),
+  SUBVERDE("\x1b[102m"), SUBAMARILLO("\x1b[103m"), SUBAZUL("\x1b[104m"), 
+  SUBVIOLETA("\x1b[105m"),SUBBLANCO("\x1b[107m"),BLANCO("\x1b[37m"), 
+  BOLD("\x1b[1m"),ENDC("\x1b[m"),FAINT("\x1b[2m"),UNDERLINE("\x1b[4m"),
+  BLINK("\x1b[5m"),CLEARSCREEN("\x1b[2J"), DEL1L("\x1b[2A\n\n");
 
 
 //functions////////////////////////////////////////////////////////////////
@@ -322,8 +328,73 @@ TH1F* calculateEffEff(const TH1F* rh, const TH1F* wh,
   return effeff;
 }
 
+//======================================================================
+void decode(const int flags, int& a, int& b, int& c) {
+  a = int(float(flags)/100);
+  b = int(float(flags-100*a)/10);
+  c = int(float(flags-100*a-10000*b)/1);
+}
+void decode(const int flags, int& a, int& b, int& c, int& d, int& e, int& f){
+  a = int(float(flags)/100000);
+  b = int(float(flags-100000*a)/10000);
+  c = int(float(flags-100000*a-10000*b)/1000);
+  d = int(float(flags-100000*a-10000*b-1000*c)/100);
+  e = int(float(flags-100000*a-10000*b-1000*c-100*d)/10);
+  f = int(float(flags-100000*a-10000*b-1000*c-100*d-10*e)/1);
+}
+void PrintAdvance(int n, float nmax) {
+  if(!n) cout<<ROJO2<<" |<<<<<<<<<<<<<<  ";
+  float r= float(n)/int(nmax/15.);
+  if(r==int(r)) cout<<ROJO2<<"\b\b| \b"<<flush<<ENDC;
+}
+
+bool wait() {
+  cout<<"--> Hit return to continue.  ";
+  char *s = new char[1];
+  char *bb = fgets(s, 1, stdin); bb=0;
+  if(*s=='q' || *s=='.') { delete s; return true; }
+  cout<<endl; delete s;
+  return false;
+}
+
+//======================================================================
+double pol(double x, double a0, 
+	   double a1=0.0, double a2=0.0, double a3=0.0, double a4=0.0) {
+  double res = a0;
+  if(a1) res += a1*x;
+  if(a2) res += a2*x*x;
+  if(a3) res += a3*x*x*x;
+  if(a4) res += a4*x*x*x*x;
+  return res;
+}
+
 ////////////////////////////////////////////////////////////////////////
 float PrintPerformance(){ 
+   
+  if(nsele==0) cout<<"No events selected.\n";
+  if(nsele==0) return 0;
+  if(ntruekO) {
+    cout <<BOLD<<
+      "\n=========================================================\n";
+    cout<<"Fraction in event sample of true particles from B:"<<endl;
+    cout<<ENDC<<setprecision(3)<<"mu= "<<float(ntruemu)/nsele*100
+	<< "%\t (sel. as tagger:"<<float(ntruemutag)/nsele*100<<"%)"<<endl;
+    cout<<"el= "<<float(ntrueel)/nsele*100
+	<< "%\t (sel. as tagger:"<<float(ntrueeltag)/nsele*100<<"%)"<<endl;
+    cout<<"kO= "<<float(ntruekO)/nsele*100
+	<< "%\t (sel. as tagger:"<<float(ntruekOtag)/nsele*100<<"%)"<<endl;
+    if(isBs)cout<<"kS= "<<float(ntruekS)/nsele*100
+	<< "%\t (sel. as tagger:"<<float(ntruekStag)/nsele*100<<"%)"<<endl;
+    cout<<BOLD<<"Fraction in tagger sample of:\n"<<ENDC;
+    cout<<"b->mu= "<<int(float(ndirect_mu)/(nrtag[1]+nwtag[1])*100)<<"%\t";
+    cout<<"b->c->mu= "<<int(float(nbc_mu)/(nrtag[1]+nwtag[1])*100)<<"%\n";
+    cout<<"b->e = "<<int(float(ndirect_el)/(nrtag[2]+nwtag[2])*100)<<"%\t";
+    cout<<"b->c->e = "<<int(float(nbc_el)/(nrtag[2]+nwtag[2])*100)<<"%\n";
+    cout<<"b->K = "<<int(float(nbc_kO)/(nrtag[3]+nwtag[3])*100)<<"%\t";
+    if(isBs)cout<<"b->Ksame= "<<int(float(nbc_kS)/(nrtag[4]+nwtag[4])*100)<<"%";
+    cout<<BOLD<<"\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<ENDC;
+  }
+
   // calculate effective efficiency in various categories
   double rtt=0, wtt=0;
   double rtag,wtag,utag;
@@ -334,33 +405,36 @@ float PrintPerformance(){
   float den_k = (float) (nrtag[3]+nwtag[3]);
   float den_kS= (float) (nrtag[4]+nwtag[4]);
 
-  if(den_m) ghrate_m = nghost_m/den_m*100;
-  if(den_m) gherror_m= sqrt(nghost_m)/den_m*100;
-  if(den_e) ghrate_e = nghost_e/den_e*100;
-  if(den_e) gherror_e= sqrt(nghost_e)/den_e*100;
-  if(den_k) ghrate_k = nghost_k/den_k*100;
-  if(den_k) gherror_k= sqrt(nghost_k)/den_k*100;
-  if(den_kS)ghrate_kS = nghost_kS/den_kS*100;
-  if(den_kS)gherror_kS= sqrt(nghost_kS)/den_kS*100;
+  if(ntruekO) {
+    if(den_m) ghrate_m = nghost_m/den_m*100;
+    if(den_m) gherror_m= sqrt(nghost_m)/den_m*100;
+    if(den_e) ghrate_e = nghost_e/den_e*100;
+    if(den_e) gherror_e= sqrt(nghost_e)/den_e*100;
+    if(den_k) ghrate_k = nghost_k/den_k*100;
+    if(den_k) gherror_k= sqrt(nghost_k)/den_k*100;
+    if(den_kS)ghrate_kS = nghost_kS/den_kS*100;
+    if(den_kS)gherror_kS= sqrt(nghost_kS)/den_kS*100;
 
-  if(den_m) cout<<"\nMuon Ghosts = "<<ghrate_m<<" +- "<<gherror_m<<endl;
-  if(den_e) cout<<  "Elec        = "<<ghrate_e<<" +- "<<gherror_e<<endl;
-  if(den_k) cout<<  "Kaon_opp    = "<<ghrate_k<<" +- "<<gherror_k<<endl;
-  if(nghost_kS && den_kS)
-    cout<<  "Kaon_same   = "<<ghrate_kS<<" +- "<<gherror_kS<<endl;
-  cout <<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-  cout <<setprecision(2)<<"PID purity (in r+w), and efficiency (P>5GeV)\n";
-  if(den_m) cout <<"muon:       "<<(nidm/den_m*100)
-		 <<"       "<<(nllm/nlm*100)<<endl;
-  if(den_e) cout <<"elec:       "<<(nide/den_e*100)
-		 <<"       "<<(nlle/nle*100)<<endl;
-  if(den_k) cout <<"kaon:       "<<(nidk/den_k*100)
-		 <<"       "<<(nllk/nlk*100)<<endl;
-  if(isBs)if(den_kS)cout <<"kaonS:      "<<(nidkS/den_kS*100)
-			 <<"       "<<(nllkS/nlkS*100)<<endl;
-  cout<< "=========================================================\n";
-  cout<< " Category            EFF.          Etag         Wrong TF"
-      << "      r       w\n";
+    if(den_m) cout<<"\nMuon Ghosts = "<<ghrate_m<<" +- "<<gherror_m<<" %"<<endl;
+    if(den_e) cout<<  "Elec        = "<<ghrate_e<<" +- "<<gherror_e<<" %"<<endl;
+    if(den_k) cout<<  "Kaon_opp    = "<<ghrate_k<<" +- "<<gherror_k<<" %"<<endl;
+    if(nghost_kS && den_kS)
+      cout<<  "Kaon_same   = "<<ghrate_kS<<" +- "<<gherror_kS<<" %"<<endl;
+    cout <<BOLD<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+    cout <<setprecision(3)<<"PID purity (in r+w), and efficiency (P>5GeV)\n"<<ENDC;
+    if(den_m) cout <<"muon:       "<<(nidm/den_m*100)
+		   <<"       "<<(nllm/nlm*100)<<" %"<<endl;
+    if(den_e) cout <<"elec:       "<<(nide/den_e*100)
+		   <<"       "<<(nlle/nle*100)<<" %"<<endl;
+    if(den_k) cout <<"kaon:       "<<(nidk/den_k*100)
+		   <<"       "<<(nllk/nlk*100)<<" %"<<endl;
+    if(isBs && den_kS)
+      cout <<"kaonS:      "<<(nidkS/den_kS*100)
+	   <<"       "<<(nllkS/nlkS*100)<<" %"<<endl;
+  }
+  cout<<BOLD<<"\n=========================================================";
+  cout<< "\n Category            EFF.          Etag         Wrong TF"
+      << FAINT <<"      r       w\n"<<ENDC;
 
   for( int it=1; it < 19; it++ ) {
     rtag = wtag = 0; 
@@ -377,13 +451,14 @@ float PrintPerformance(){
     if(it==10) cats =  "    k + ks";
     if(it==11) cats =  "   mu+k+ks";
     if(it==12) cats =  "    e+k+ks";
-    if(it==13) { cats =  "  OS muons"; rtag = nrtag[1]; wtag = nwtag[1]; }
-    if(it==14) { cats =  "  OS elect"; rtag = nrtag[2]; wtag = nwtag[2]; }
-    if(it==15) { cats =  "  OS kaons"; rtag = nrtag[3]; wtag = nwtag[3]; }
-    if(it==16) { cats =  "  SS pions"; rtag= nrtag[4]; wtag= nwtag[4]; }
+    if(it==13){cats =  "  OS muons"; rtag = nrtag[1]; wtag = nwtag[1]; }
+    if(it==14){cats =  "  OS elect"; rtag = nrtag[2]; wtag = nwtag[2]; }
+    if(it==15){cats =  "  OS kaons"; rtag = nrtag[3]; wtag = nwtag[3]; }
+    if(it==16){cats =  "  SS pions"; rtag= nrtag[4]; wtag= nwtag[4]; }
     if(isBs)if(it==16){cats ="  SS kaons"; rtag= nrtag[4]; wtag= nwtag[4]; }
-    if(it==17) { cats =  "  VertexCh"; rtag = nrtag[5]; wtag = nwtag[5]; }
+    if(it==17){cats =  "  VertexCh"; rtag = nrtag[5]; wtag = nwtag[5]; }
     if(CombTechnique=="NNet" && it<13) cats =  "  NNet    "; 
+    if(CombTechnique=="PID"  && it<13) cats =  "  PID     "; 
     else if(it==13) 
       cout<<"---------------------------------------------------------\n";
 
@@ -407,7 +482,6 @@ float PrintPerformance(){
     //errors on efficiency and omega
     double eftag_err= sqrt((rtag*utag + utag*wtag)/nsele)/nsele;
     double omtag_err= sqrt( rtag*wtag /(rtag+wtag) ) / (rtag+wtag);
-
     epsilerr = sqrt((pow(rtag - wtag,2)*
                      (-(pow(rtag - wtag,2)*(rtag +wtag))+nsele
                       *(pow(rtag,2) +14*rtag*wtag+ pow(wtag,2))))
@@ -416,13 +490,13 @@ float PrintPerformance(){
 
     //PRINT: ----------------------------------
     cout.setf(ios::fixed);
-    if(it<13) cout<<setw(2)<< it; else cout<<"**";
-    cout<< cats
+    if(it<13) cout<<VIOLETA<<setw(2)<< it; else cout<<AZUL<<"**";
+    cout<<BOLD<< cats<<setprecision(2)
         <<" "<<setw(8)<< epsil*100 << "+-" << epsilerr*100 
         <<" "<<setw(8)<< eftag*100 << "+-" <<eftag_err*100
         <<" "<<setw(8)<< omtag*100 << "+-" <<omtag_err*100
-        <<" "<<setw(7)<< (int) rtag
-        <<" "<<setw(7)<< (int) wtag
+        <<" "<<ENDC<<FAINT<<setw(7)<< (int) rtag
+        <<" "<<setw(7)<< (int) wtag<<ENDC
 	<< endl;
   }
 
@@ -437,53 +511,13 @@ float PrintPerformance(){
 
   cout << "---------------------------------------------------------\n";
   cout << "Tagging efficiency =  "<<setw(5)
-       << ef_tot*100 << " +/- "<<eftot_err*100<< " %"<< endl;       
+       << ef_tot*100 << " +- "<<eftot_err*100<< " %"<< endl;       
   cout << "Wrong Tag fraction =  "<<setw(5)
-       << avw_invert*100 << " +/- " <<avw_invert_err*100 << " %"<< endl;
-  cout << "EFFECTIVE COMB. TE =  "<<setw(5)
-       << effe_tot*100 << " +/- "<<epsilerrtot*100<< " %"
-       << "     (Total events= "<<setw(5) << int(nsele) <<")"<< endl;
-  cout << "=========================================================\n\n";
+       << avw_invert*100 << " +- " <<avw_invert_err*100 << " %"<< endl;
+  cout << ROJO <<BOLD<< "EFFECTIVE COMB. TE =  "<<setw(5)
+       << effe_tot*100 << " +- "<<epsilerrtot*100<< " %" <<ENDC<<FAINT
+       << "    (Total events = " << int(nsele) <<")"<<ENDC<< endl;
+  cout <<BOLD<< 
+    "=========================================================\n\n"<<ENDC;
   return effe_tot*100;
 }
-
-//======================================================================
-void decode(const int flags, int& a, int& b, int& c, int& d, int& e, int& f) {
-  a = int(float(flags)/100000);
-  b = int(float(flags-100000*a)/10000);
-  c = int(float(flags-100000*a-10000*b)/1000);
-  d = int(float(flags-100000*a-10000*b-1000*c)/100);
-  e = int(float(flags-100000*a-10000*b-1000*c-100*d)/10);
-  f = int(float(flags-100000*a-10000*b-1000*c-100*d-10*e)/1);
-}
-
-//======================================================================
-void PrintAdvance(int n, float nmax) {
-  if(!n) cout<<"|------------------|";
-  float r= float(n)/int(nmax/20.);
-  if(r==int(r)) cout<<"\b\b| \b"<<flush;
-}
-// void PrintAdvance(int n, float nmax) {
-//   float r= float(n)/int(nmax/56.);
-//   if(r-int(r)==0.) cout<<"\b=>"<<flush;
-// }
-bool wait() {
-  cout<<"--> Hit return to continue.  ";
-  char *s = new char[1];
-  char *bb = fgets(s, 1, stdin); bb=0;
-  if(*s=='q' || *s=='.') { delete s; return true; }
-  cout<<endl; delete s;
-  return false;
-}
-
-//======================================================================
-double pol(double x, double a0, 
-	   double a1=0.0, double a2=0.0, double a3=0.0, double a4=0.0) {
-  double res = a0;
-  if(a1) res += a1*x;
-  if(a2) res += a2*x*x;
-  if(a3) res += a3*x*x*x;
-  if(a4) res += a4*x*x*x*x;
-  return res;
-}
-

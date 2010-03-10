@@ -1,119 +1,7 @@
-
-  //INPUT DATA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  TString froot = readString("datafile");
-  std::vector<TString> filelist(0);
-  const char* astr1 = froot.Data();
-  const string astr2(astr1);
-  filelist = getFiles(astr2);
-  if(filelist.size()==0) filelist.push_back(froot);
-  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 
-
-  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  gROOT->Reset();
-  TString rootsubdir = "";
-  TFile fhisto("tag.root","RECREATE");
-  if(rootsubdir != "") { fhisto.mkdir(rootsubdir); fhisto.cd(rootsubdir); } 
-
-  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  float param1  = read("param1");
-  float param2  = read("param2");
-
-  TString NNetTrain = readString("NNetTrain");
-  TString mlptype   = readString("mlptype");
-  cout<<"Using "<<mlptype<<endl;
-
-  float Nmax=read("Nmax");
-  cout<<"\nUsing parameters = "<<param1<<"  "<<param2<<endl;
-  initmva_mu=initmva_e=initmva_k=initmva_kS=initmva_pS=true;
-
-  bool IsControlChannel = read("IsControlChannel"); 
-  bool cheatID = read("cheatID");
-  bool cheatP  = read("cheatP");     
-  bool useDV   = read("useDV");     
-  DBG          = read("DBG");     
-
-  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  //Taggers common selection cuts 
-  float IPPU_cut   = read("IPPU_cut");
-  float distPhi_cut= read("distPhi_cut");
-  //dilution binning range for omega combination
-  float  ProbMin     = read("ProbMin");
-  double omegamaxbin = read("omegamaxbin");
-  double omegascale  = read("omegascale");
-
-  //muons -------------
-  float Muon_Pt_cut= read("Muon_Pt_cut"), Muon_P_cut = read("Muon_P_cut"); 
-  float lcs_m_cut  = read("lcs_m_cut");
-  float PID_m_cut  = read("PID_m_cut");
-
-  //elect -------------
-  float Ele_Pt_cut     = read("Ele_Pt_cut"),    Ele_P_cut     = read("Ele_P_cut");
-  float VeloChargeMin  = read("VeloChargeMin"), VeloChargeMax = read("VeloChargeMax");
-  float Ele_EoverP_cut = read("Ele_EoverP_cut");
-  float lcs_e_cut      = read("lcs_e_cut"); 
-  float Ele_ghost_cut  = read("Ele_ghost_cut");
-  float PID_e_cut     =  read("PID_e_cut");
-
-  //OS kaons -------------
-  float Kaon_Pt_cut= read("Kaon_Pt_cut"), Kaon_P_cut= read("Kaon_P_cut"), 
-        Kaon_IP_cut= read("Kaon_IP_cut"), Kaon_IPRAW_cut= read("Kaon_IPRAW_cut");
-  float lcs_k_ups_cut = read("lcs_k_ups_cut"), lcs_k_long_cut= read("lcs_k_long_cut"), 
-        Kaon_ghost_prob_cut= read("Kaon_ghost_prob_cut");
-  float PID_k_cut    = read("PID_k_cut"), 
-        PID_kp_cut   = read("PID_kp_cut");
-
-  //cuts x Same Side tagging Kaons -------------
-  float KaonSame_Pt_cut= read("KaonSame_Pt_cut"), KaonSame_P_cut = read("KaonSame_P_cut"), 
-        KaonSame_IP_cut = read("KaonSame_IP_cut");
-  float KaonSame_Phi_cut= read("KaonSame_Phi_cut"), KaonSame_Eta_cut= read("KaonSame_Eta_cut"), 
-        KaonSame_dQ_cut = read("KaonSame_dQ_cut");
-  float lcs_kS_cut = read("lcs_kS_cut");
-  float PID_kS_cut = read("PID_kS_cut"), PID_kpS_cut = read("PID_kpS_cut");
-
-  //cuts x Same Side tagging Pions -------------
-  float PionSame_Pt_cut = read("PionSame_Pt_cut"), 
-        PionSame_P_cut  = read("PionSame_P_cut"), PionSame_IP_cut= read("PionSame_IP_cut");
-  float PionSame_dQ_cut = read("PionSame_dQ_cut"), PionSame_dQ2_cut= read("PionSame_dQ2_cut");
-  float PionSame_PIDNoK_cut = read("PionSame_PIDNoK_cut"), 
-        PionSame_PIDNoP_cut = read("PionSame_PIDNoP_cut");
-  float Pion_ghost_prob_cut = read("Pion_ghost_prob_cut");
-  float lcs_pS_cut  = read("lcs_pS_cut");
-  float ProbMin_pion= read("ProbMin_pion");
-
-  //weight of Vch in tagging decision -------------
-  float VchPowerK= read("VchPowerK"), MinimumVCharge= read("MinimumVCharge");
-  float m_P0 = read("m_P0"), m_P1 = read("m_P1"), m_Gt075 = read("m_Gt075");
-  float wSameSign2 = read("wSameSign2"), wSameSignMoreThan2 = read("wSameSignMoreThan2");
-  float ProbMinVtx = read("ProbMinVtx");
   //>>>>>>>>>>>>>>>>>>>>>>>>
+  //DEFINE HERE YOUR HISTOS
+  //>>>>>>>>>>>>>>>>>>>>>>>
 
-  //>>>>>>>>>>>>>>>>>>>>>>>>//>>>>>>>>>>>>>>>>>>>>>>>> inits
-  int nB531=0, nB521=0, nB511=0, nBother=0, nBanti=0, ntrig=0;
-  nsele=nlm=nllm=nle=nlle=nlk=nlkS=nllk=nllkS=nidm=nide=nidk=nidkS=
-    nghost_m=nghost_e=nghost_k=nghost_kS=0; 
-  int ntruemu=0, ntrueel=0, ntruekO=0, ntruekS=0;
-  int ntruemutag=0, ntrueeltag=0, ntruekOtag=0, ntruekStag=0;
-  int ndirect_mu=0,ndirect_el=0,nbc_mu=0,nbc_el=0,nbc_kO=0,nbc_kS=0;
-  for(int i=0; i<20; ++i) {nrt[i]=0; nwt[i]=0; nrtag[i]=0; nwtag[i]=0;}
-  std::vector<TString>::iterator ifile; int nfile = 0;
-
-  //>>>>>>>>>>>>>>>>>>>>>>>>//create tree of nnet variables:
-  TTree *nntrain = new TTree("nntrain", "tree neural net");
-  Int_t iscorrect,tagger;
-  nntrain->Branch("iscorrect",&iscorrect, "iscorrect/I");
-  nntrain->Branch("tagger", &tagger,  "tagger/I");
-  nntrain->Branch("mult",   &mult,    "mult/F");
-  nntrain->Branch("ptB",    &ptB,     "ptB/F");
-  nntrain->Branch("partP",  &partP,   "partP/F");
-  nntrain->Branch("partPt", &partPt,  "partPt/F");
-  nntrain->Branch("IPPV",   &IPPV,    "IPPV/F");
-  nntrain->Branch("nndeta", &nndeta,  "nndeta/F");
-  nntrain->Branch("nndphi", &nndphi,  "nndphi/F");
-  nntrain->Branch("nndq",   &nndq,    "nndq/F");
-  nntrain->Branch("nkrec",  &nkrec,   "nkrec/F");
-  nntrain->Branch("ncand",  &ncand,   "ncand/F");
-
-  //>>>>>>>>>>>>>>>>>>>>>>>>//create  histograms
   TH1F* h5    = new TH1F("h5","BSmass ",100, 5.2, 5.5);
 
   TH1F* h6    = new TH1F("h6","B pT ",100, 0.0, 30.);
@@ -399,5 +287,135 @@
   x1=3; x2=8;
   TH1F* hright = new TH1F("hright","right tags", 50, x1, x2);
   TH1F* hwrong = new TH1F("hwrong","wrong tags", 50, x1, x2);
-TH1F* heffec ;//= new TH1F("heffec","effective efficiency(cut)", 50, x1, x2);
+  TH1F* heffec ;//= new TH1F("heffec","effective efficiency(cut)", 50, x1, x2);
   TString direction="left2right";
+
+
+
+
+
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  //>>>>>>>>>>>>>>>>>>>>>>>>//create tree of nnet variables:
+  TTree *nntrain = new TTree("nntrain", "tree neural net");
+  Int_t iscorrect,tagger;
+  nntrain->Branch("iscorrect",&iscorrect, "iscorrect/I");
+  nntrain->Branch("tagger", &tagger,  "tagger/I");
+  nntrain->Branch("mult",   &mult,    "mult/F");
+  nntrain->Branch("ptB",    &ptB,     "ptB/F");
+  nntrain->Branch("partP",  &partP,   "partP/F");
+  nntrain->Branch("partPt", &partPt,  "partPt/F");
+  nntrain->Branch("IPPV",   &IPPV,    "IPPV/F");
+  nntrain->Branch("nndeta", &nndeta,  "nndeta/F");
+  nntrain->Branch("nndphi", &nndphi,  "nndphi/F");
+  nntrain->Branch("nndq",   &nndq,    "nndq/F");
+  nntrain->Branch("nkrec",  &nkrec,   "nkrec/F");
+  nntrain->Branch("ncand",  &ncand,   "ncand/F");
+
+
+  //input data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  TString froot = readString("datafile");
+  std::vector<TString> filelist(0);
+  const char* astr1 = froot.Data();
+  const string astr2(astr1);
+  filelist = getFiles(astr2);
+  if(filelist.size()==0) filelist.push_back(froot);
+
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  gROOT->Reset();
+  TString rootsubdir = "";
+  TFile fhisto("tag.root","RECREATE");
+  if(rootsubdir != "") { fhisto.mkdir(rootsubdir); fhisto.cd(rootsubdir); }
+
+  //>>>>>>>>>>>>>>>>>>>>>>>>//>>>>>>>>>>>>>>>>>>>>>>>> inits
+  int nB531=0, nB521=0, nB511=0, nBother=0, nBanti=0, ntrig=0;
+  nsele=nlm=nllm=nle=nlle=nlk=nlkS=nllk=nllkS=nidm=nide=nidk=nidkS=
+    nghost_m=nghost_e=nghost_k=nghost_kS=0; 
+  for(int i=0; i<20; ++i) {nrt[i]=0; nwt[i]=0; nrtag[i]=0; nwtag[i]=0;}
+  std::vector<TString>::iterator ifile; int nfile = 0;
+
+  //read cuts and properties from file:
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  TString NNetTrain = readString("NNetTrain");
+  TString mlptype   = readString("mlptype");
+
+  int trigHlt2, trigHlt1, trigL0;
+  askL0  =(int)read("askL0");
+  askHlt1=(int)read("askHlt1");
+  askHlt2=(int)read("askHlt2");
+
+  float Nmax=read("Nmax"); if(Nmax==-1) Nmax=10000000;
+
+  float param  = read("param");
+  if(param != -1) 
+    cout<<BOLD<<ROJO<<"Using internal param = "<<param<<ENDC<<endl;
+  initmva_mu=initmva_e=initmva_k=initmva_kS=initmva_pS=true;
+
+  bool IsControlChannel = read("IsControlChannel"); 
+  bool cheatID = read("cheatID");
+  bool cheatP  = read("cheatP");     
+  bool useDV   = read("useDV");     
+  DBG          = (bool)read("DBG");     
+
+  if(useDV)cout<<ROJO<<"Using results of DaVinci src/FlavourTagging!\n"<<ENDC;
+  cout<<VERDE<<"Using "<<mlptype
+  <<", Triggers required: "<<ENDC<<SUBVERDE
+  <<(askL0?" L0 ":"")
+  <<(askHlt1?" Hlt1 ":"")
+  <<(askHlt2?" Hlt2 ":"")
+  <<(( !askL0 && !askHlt1 && !askHlt2)?" none ":"")
+  <<ENDC<<endl;
+
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  //Taggers common selection cuts 
+  float IPPU_cut   = read("IPPU_cut");
+  float distPhi_cut= read("distPhi_cut");
+  //dilution binning range for omega combination
+  float  ProbMin     = read("ProbMin");
+  double omegamaxbin = read("omegamaxbin");
+  double omegascale  = read("omegascale");
+
+  //muons -------------
+  float Muon_Pt_cut= read("Muon_Pt_cut"), Muon_P_cut = read("Muon_P_cut"); 
+  float lcs_m_cut  = read("lcs_m_cut");
+  float PID_m_cut  = read("PID_m_cut");
+
+  //elect -------------
+  float Ele_Pt_cut     = read("Ele_Pt_cut"),    Ele_P_cut     = read("Ele_P_cut");
+  float VeloChargeMin  = read("VeloChargeMin"), VeloChargeMax = read("VeloChargeMax");
+  float Ele_EoverP_cut = read("Ele_EoverP_cut");
+  float lcs_e_cut      = read("lcs_e_cut"); 
+  float Ele_ghost_cut  = read("Ele_ghost_cut");
+  float PID_e_cut     =  read("PID_e_cut");
+
+  //OS kaons -------------
+  float Kaon_Pt_cut= read("Kaon_Pt_cut"), Kaon_P_cut= read("Kaon_P_cut"), 
+        Kaon_IP_cut= read("Kaon_IP_cut"), Kaon_IPRAW_cut= read("Kaon_IPRAW_cut");
+  float lcs_k_ups_cut = read("lcs_k_ups_cut"), lcs_k_long_cut= read("lcs_k_long_cut"), 
+        Kaon_ghost_prob_cut= read("Kaon_ghost_prob_cut");
+  float PID_k_cut    = read("PID_k_cut"), 
+        PID_kp_cut   = read("PID_kp_cut");
+
+  //cuts x Same Side tagging Kaons -------------
+  float KaonSame_Pt_cut= read("KaonSame_Pt_cut"), KaonSame_P_cut = read("KaonSame_P_cut"), 
+        KaonSame_IP_cut = read("KaonSame_IP_cut");
+  float KaonSame_Phi_cut= read("KaonSame_Phi_cut"), KaonSame_Eta_cut= read("KaonSame_Eta_cut"), 
+        KaonSame_dQ_cut = read("KaonSame_dQ_cut");
+  float lcs_kS_cut = read("lcs_kS_cut");
+  float PID_kS_cut = read("PID_kS_cut"), PID_kpS_cut = read("PID_kpS_cut");
+
+  //cuts x Same Side tagging Pions -------------
+  float PionSame_Pt_cut = read("PionSame_Pt_cut"), 
+        PionSame_P_cut  = read("PionSame_P_cut"), PionSame_IP_cut= read("PionSame_IP_cut");
+  float PionSame_dQ_cut = read("PionSame_dQ_cut"), PionSame_dQ2_cut= read("PionSame_dQ2_cut");
+  float PionSame_PIDNoK_cut = read("PionSame_PIDNoK_cut"), 
+        PionSame_PIDNoP_cut = read("PionSame_PIDNoP_cut");
+  float Pion_ghost_prob_cut = read("Pion_ghost_prob_cut");
+  float lcs_pS_cut  = read("lcs_pS_cut");
+  float ProbMin_pion= read("ProbMin_pion");
+
+  //weight of Vch in tagging decision -------------
+  float VchPowerK= read("VchPowerK"), MinimumVCharge= read("MinimumVCharge");
+  float m_P0 = read("m_P0"), m_P1 = read("m_P1"), m_Gt075 = read("m_Gt075");
+  float wSameSign2 = read("wSameSign2"), wSameSignMoreThan2 = read("wSameSignMoreThan2");
+  float ProbMinVtx = read("ProbMinVtx");
+  //>>>>>>>>>>>>>>>>>>>>>>>>

@@ -1,49 +1,33 @@
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   //
   //THIS A TEXT FILE!
-  //REMEMBER, the "=" sign needs spaces around it, no need of , ; or ""
+  //REMEMBER, the "=" sign needs spaces around it, no need of ,;""
   //
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DATA
-
    this is the file name that you want to run (LAST ONE IS TAKEN)
-   datafile = dati/v24r2/bsdspi
-   datafile = dati/v24r2/bsjpsiphi
-   datafile = dati/v24r2/bsjpsiphi_nu3
-   datafile = dati/v24r2/bujpsik_nu3
-   datafile = dati/v24r2/bsdspi_nu3
-   datafile = dati/v24r2/bdjpsiks_nu3
-
-   datafile = dati/v24r5/bdstarmunu
-
-   datafile = dati/v25r0/bdjpsikstar
-   datafile = dati/v25r0/bsdspi_nu3
-   datafile = dati/v25r0/bsjpsif0
-   datafile = dati/v25r0/bsdspi
-   datafile = dati/v25r0/bdstarmunu
-
-   datafile = dati/v25r0/bsdspi
 
    datafile = .
-
-   datafile = dati/v25r0/bsdspi/bsdspi_64.root
-
-   datafile = dati/v25r2/bsdspi
+   datafile = /afs/cern.ch/user/m/musy/public
+   datafile = /afs/cern.ch/user/m/musy/public/analysis.root
 
 
-   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> STEERING
-   param1 = 0
-   param2 = 0
+   //>>>>>>>>>>>>>>>>>>>>>> STEERING >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-   NNetTrain = none                  //NNet taggers: "mu" "e" "k" "kS" "pS" "vtx"
-   mlptype   = MultiLayerPerceptron  //TMVA or MultiLayerPerceptron
+   askL0   = 0      // Trigger 
+   askHlt1 = 0 
+   askHlt2 = 0 
 
-   Nmax             = 10000000
-   IsControlChannel = 0; //take as the true flavour the reconsted B
-   cheatID = 0;     // Perfect ID with MC truth
-   cheatP  = 0;     // Perfect  P and Pt of tracks
-   useDV   = 1;     // Read only outcome from C++ decision
-   DBG     = 0;     // Debug mode
+   Nmax    = 10000     // events to run, -1=all
+   param   = -1     // a user internal value to play with
 
+   cheatID = 0      // Perfect ID with MC truth
+   cheatP  = 0      // Perfect  P and Pt of tracks
+   useDV   = 0      // Read only outcome from C++ decision
+   DBG     = 1      // Debug mode
+   IsControlChannel = 0  //take as the true flavour the reconsted B
+
+   NNetTrain = none                 //NNet taggers: "mu" "e" "k" "kS" "pS" "vtx"
+   mlptype   = MultiLayerPerceptron //TMVA or MultiLayerPerceptron
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MC09 nu=1 cuts
   //Taggers common selection cuts 

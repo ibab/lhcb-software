@@ -451,9 +451,9 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> column ("RVx",   RecVert->position().x()/Gaudi::Units::mm);
   tuple -> column ("RVy",   RecVert->position().y()/Gaudi::Units::mm);
   tuple -> column ("RVz",   RecVert->position().z()/Gaudi::Units::mm);
-  tuple -> column ("RVx_r", RefitRecVert.position().x()/Gaudi::Units::mm);
-  tuple -> column ("RVy_r", RefitRecVert.position().y()/Gaudi::Units::mm);
-  tuple -> column ("RVz_r", RefitRecVert.position().z()/Gaudi::Units::mm);
+//   tuple -> column ("RVx_r", RefitRecVert.position().x()/Gaudi::Units::mm);
+//   tuple -> column ("RVy_r", RefitRecVert.position().y()/Gaudi::Units::mm);
+//   tuple -> column ("RVz_r", RefitRecVert.position().z()/Gaudi::Units::mm);
 
   //lifetime fitter
   double ct=0., ctErr=0., ctChi2=0.;
@@ -503,10 +503,10 @@ StatusCode BTaggingAnalysis::execute() {
     ptsal.push_back(track->likelihood());
     
     //calculate signed IP wrt RecVert
-    double IP, IPerr, IP_r, IPerr_r;
+    double IP, IPerr, IP_r=0, IPerr_r=0;
     if(!(axp->particleID().hasBottom())) {
       m_util->calcIP(axp, RecVert, IP, IPerr);
-      m_util->calcIP(axp, &RefitRecVert, IP_r, IPerr_r);
+      //m_util->calcIP(axp, &RefitRecVert, IP_r, IPerr_r);
     }
     //calculate min IP wrt all pileup vtxs 
     double IPPU = 10000;
@@ -659,8 +659,8 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> farray ("ch",      pch, "N", 200);
   tuple -> farray ("ip",      pip, "N", 200);
   tuple -> farray ("iperr",   piperr, "N", 200);
-  tuple -> farray ("ip_r",    pip_r, "N", 200);
-  tuple -> farray ("iperr_r", piperr_r, "N", 200);
+//   tuple -> farray ("ip_r",    pip_r, "N", 200);
+//   tuple -> farray ("iperr_r", piperr_r, "N", 200);
   tuple -> farray ("ipPU",    pipPU, "N", 200);
   tuple -> farray ("trtyp",   ptrtyp, "N", 200);
   tuple -> farray ("lcs",     plcs, "N", 200);
@@ -748,14 +748,14 @@ BTaggingAnalysis::choosePrimary(const Particle* AXB,
       kdmin = var;
       RecVert = (*iv);
 
-      RecVertex newPV(**iv);
-      Particle newPart(*AXB);
-      StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);     
-      if(!sc) { 
-        err()<<"ReFitter fails!"<<endreq; 
-        continue; 
-      } else RefitRecVert = newPV;
-
+//       RecVertex newPV(**iv);
+//       Particle newPart(*AXB);
+//       StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);     
+//       if(!sc) { 
+//         err()<<"ReFitter fails!"<<endreq; 
+//         continue; 
+//       } else RefitRecVert = newPV;
+      debug()<<"RefitRecVert z="<<RefitRecVert.position().z()<<endreq;
     }    
   }
 
@@ -779,44 +779,37 @@ BTaggingAnalysis::chooseParticles(const Particle::ConstVector& parts,
   Particle::ConstVector vtags(0);
   Particle::ConstVector::const_iterator ip, jp;
   for ( ip = parts.begin(); ip != parts.end(); ip++){
-
-    //debug()<<" bbbbb1 "<<(*ip)->p()/1000
-    //	   <<"  "<<(*ip)->particleID().pid()<<endreq;
+    
+    const ProtoParticle* proto = (*ip)->proto();
+    if( ! (*ip)->proto() )  continue;
     if( (*ip)->p() < 2000 ) continue;  
     if( (*ip)->momentum().theta()  < m_thetaMin ) continue;   
     if( (*ip)->charge() == 0 ) continue;                
-    if( !(*ip)->proto() )      continue;
-    if( !(*ip)->proto()->track() ) continue;
-    if( (*ip)->proto()->track()->type() < 3 ) continue; 
-    if( (*ip)->proto()->track()->type() > 4 ) continue; 
+    if( ! proto->track() )     continue;
+    if( proto->track()->type() < 3 ) continue; 
+    if( proto->track()->type() > 4 ) continue; 
     if( (*ip)->p()  > 200000 ) continue;
     if( (*ip)->pt() >  10000 ) continue;
     if( m_util->isinTree(*ip, axdaugh, distphi) ) continue ; 
-    //debug()<<"               bbbbb2 distphi="<< distphi <<endreq;
     if( distphi < m_distphi_cut ) continue;
 
     //calculate the min IP wrt all pileup vtxs
     double ippu, ippuerr;
     m_util->calcIP( *ip, PileUpVtx, ippu, ippuerr );
-    //if(ippuerr) debug()<<"                bbbbb3 ippu="<< ippu/ippuerr <<endreq;
     //eliminate from vtags all parts coming from a pileup vtx
-
-    //if(ippuerr) if( ippu/ippuerr < m_IPPU_cut ) continue; //preselection
+    if(ippuerr) if( ippu/ippuerr < m_IPPU_cut ) continue; //preselection
 
     bool dup=false;
-    Particle::ConstVector::const_iterator ik;
-    for ( ik = ip+1; ik != parts.end(); ik++) {
-      if((*ik)->proto() == (*ip)->proto() 
-	 && (*ip)->particleID().abspid()==211) { 
-	dup=true; 
-	//debug()<<"                        bbbbb3a killed pion" 
-	//	       <<(*ip)->particleID().pid()<<endreq;
-	break; 
+    if((*ip)->particleID().abspid()==211) { 
+      Particle::ConstVector::const_iterator ik;
+      for ( ik = ip+1; ik != parts.end(); ik++) {
+	if((*ik)->proto() == proto) { 
+	  dup=true; 
+	  break; 
+	}
       }
     }
-    if(dup) continue;//kill parts duplicated as pions
-
-    //debug()<<"                        bbbbb4 STORED " <<endreq;
+    if(dup) continue; //kill parts duplicated as pions
 
     ///////////////////////////////////////
     vtags.push_back(*ip);               // Fill container of candidates

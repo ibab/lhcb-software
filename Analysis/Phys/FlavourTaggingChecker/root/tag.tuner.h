@@ -411,5 +411,6 @@ std::vector<TString> getFiles(string dir) {
     filelist.push_back(filepath);
   }
   closedir( dp );
+  std::sort(filelist.begin(), filelist.end());
   return filelist;
 }
