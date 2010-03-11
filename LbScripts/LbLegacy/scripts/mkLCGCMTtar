@@ -104,11 +104,15 @@ def get_base_project(native_version):
     Name = NAME.lower().capitalize()
     if Name == "Lhcbdirac" :
         Name == "LHCbDirac"
-    if NAME == 'LCGCMT': Name = 'LCG'
-    if NAME == 'LHCBGRID' : Name = 'LHCbGrid'
+    if NAME == 'LCGCMT': 
+        Name = 'LCG'
+    if NAME == 'LHCBGRID' : 
+        Name = 'LHCbGrid'
     NameSys = Name+'Sys'
-    if Name == 'Gaudi': NameSys = Name+'Release'
-    if Name == 'LCG' : NameSys = Name+'_Release'
+    if Name == 'Gaudi': 
+        NameSys = Name+'Release'
+    if Name == 'LCG' : 
+        NameSys = Name+'_Release'
     release_area = Name+'_release_area'
     if os.path.isdir(os.path.join(os.environ[release_area],Name+'Env',version)):
         os.chdir(os.path.join(os.environ[release_area],Name+'Env',version,'cmt'))

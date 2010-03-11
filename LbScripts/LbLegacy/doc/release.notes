@@ -1,3 +1,7 @@
+2010-03-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkLCGCMTtar: fixed tabulations.
+
 2010-03-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: added the possibility to fall back on $VO_LHCB_SW_DIR/lib if 
