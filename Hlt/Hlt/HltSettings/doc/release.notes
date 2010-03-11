@@ -10,7 +10,7 @@
 
 ! 2010-03-10 - Patrick Koppenburg
  - Remove Physics_320Vis_300L0_10Hlt1_Jan10 as it is buggy and not used
-   Use Feb10 settings intead
+   Use Feb10 settings instead
  - Rename Physics_320Vis_300L0_10Hlt1_ExpressHlt2_Jan10 to Feb10
  - Remove Physics_MinBiasL0_PassThroughHlt_Jan10 
 
