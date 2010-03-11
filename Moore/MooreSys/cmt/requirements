@@ -15,7 +15,7 @@ use HltLine             v3r2    Hlt
 use Hlt1Lines           v2r3    Hlt
 use HltConf             v6r5    Hlt
 use HltGlobalMonitor    v3r2    Hlt
-use HltSettings         v1r10   Hlt
+use HltSettings         v1r11   Hlt
 
 
 # Declare this as a container package
