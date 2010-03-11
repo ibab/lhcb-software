@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.159 2010-03-10 23:17:32 gligorov Exp $"
+__version__ = "$Id: Configuration.py,v 1.160 2010-03-11 22:26:22 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -474,7 +474,7 @@ class HltConf(LHCbConfigurableUser):
         define end sequence (mostly for persistence + monitoring)
         """
         from Configurables       import GaudiSequencer as Sequence
-        from Configurables       import HltGlobalMonitor
+        from Configurables       import HltGlobalMonitor, HltL0GlobalMonitor, HltODINGlobalMonitor
         from Configurables       import bankKiller
         from Configurables       import LoKi__HDRFilter   as HltFilter
         from Configurables       import HltSelReportsMaker, HltSelReportsWriter
@@ -495,7 +495,7 @@ class HltConf(LHCbConfigurableUser):
         # note: the following is a list and not a dict, as we depend on the order of iterating through it!!!
         from Configurables import Hlt__Line as Line
         _list = ( ( "EnableHltRoutingBits"   , [ HltRoutingBitsWriter ] )
-                , ( "EnableHltGlobalMonitor" , [ HltGlobalMonitor ] )
+                , ( "EnableHltGlobalMonitor" , [ HltGlobalMonitor,HltL0GlobalMonitor,HltODINGlobalMonitor ] )
                 , ( "SkipHltRawBankOnRejectedEvents", [ lambda : Line('Hlt1Global') ] )
                 # , ( "SkipHltRawBankOnRejectedEvents", [ lambda : 'Hlt1Global' ] ) # TODO: fwd Moore.WriterRequires (which is a list...)
                 , ( "EnableHltDecReports"    , [ HltDecReportsWriter ] )
