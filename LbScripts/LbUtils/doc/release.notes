@@ -1,6 +1,11 @@
 2010-03-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbUtils/File.py: added md5 sum computation and check.
+	* python/LbUtils/Lock.py: flush and sync before closing the
+	lock file.
+	* python/LbUtils/File.py: 
+	- added md5 sum computation and check.
+	- flush and sync the md5 files before closing them.
+	- added optional buffer size for the md5 sum computation.
 
 2010-03-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

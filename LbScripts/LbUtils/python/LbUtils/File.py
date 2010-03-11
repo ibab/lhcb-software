@@ -139,15 +139,20 @@ def checkEmptyFiles(topdir, filterfunc=None, extlist=None):
     return good
 
 
-def computeMD5Sum(fname):
-    m = md5.new()
+def computeMD5Sum(fname, buffer_size=2**13):
     lock = AFSLock(fname)
     lock.lock(force=False)
     f = open(fname, "rb")
-    buf = f.read(2 ** 13)
-    while(buf):
-        m.update(buf)
-        buf = f.read(2 ** 13)
+    if buffer_size :
+        m = md5.new()
+        buf = f.read(buffer_size)
+        while(buf):
+            m.update(buf)
+            buf = f.read(buffer_size)
+    else :
+        m = md5.new(f.read())
+    f.flush()
+    os.fsync(f.fileno())
     f.close()
     lock.unlock()
     return m.hexdigest()
@@ -174,6 +179,8 @@ def createMD5File(fname, md5fname, targetname=None):
 
     mdf = open(md5fname, "w")
     mdf.write("%s  %s" % (md5sum, targetname))
+    mdf.flush()
+    os.fsync(mdf.fileno())
     mdf.close()
     lock.unlock()
 
@@ -189,7 +196,11 @@ def getMD5Info(md5fname):
     lock.lock(force=False)
     f = open(md5fname, "r")
     for line in f.readlines():
+        if line.endswith("\n") :
+            line = line[:-1]
         refmd5sum, iname = line.split("  ")[0:2]
+    f.flush()
+    os.fsync(f.fileno())
     f.close()
     lock.unlock()
     return refmd5sum, iname

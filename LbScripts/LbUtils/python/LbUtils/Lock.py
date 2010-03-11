@@ -235,6 +235,8 @@ class Lock2File(Lock2):
         
         ignore has the same meaning as for ``Lock2.unlock``
         """
+        self._file.flush()
+        os.fsync(self._file.fileno())
         self._file.close()
         self.unlock(ignore)
 
