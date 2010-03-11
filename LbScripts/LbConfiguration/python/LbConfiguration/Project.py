@@ -217,6 +217,15 @@ def getProject(projectname):
     else:
         raise ProjectConfException, "No such project configuration"
 
+def isProject(projectname):
+    isproject = True
+    try :
+        getProject(projectname)
+    except ProjectConfException :
+        isproject = False
+    return isproject
+
+
 def getProjectList():
     return project_list
 

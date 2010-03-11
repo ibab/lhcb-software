@@ -2,7 +2,7 @@
 #@PydevCodeAnalysisIgnore
 
 import logging
-import sys
+import sys, os
 
 # ------------------------------------------------------------------------------------
 # list of unversioned data projects
@@ -37,6 +37,12 @@ class PackageConf(object):
         self._hat = None
         self._project = None
         self._tarballname = None
+        self._release_area = None
+        if os.environ.has_key("LHCBRELEASES") :
+            self._release_area = os.environ["LHCBRELEASES"]
+        if os.environ.has_key("LHCBTAR") :
+            self._dist_loc = os.environ["LHCBTAR"]
+        self._dereference_tar = False
     def Name(self):
         return self._name
     def name(self):
@@ -59,6 +65,14 @@ class PackageConf(object):
             raise PackageConfException
     def project(self):
         return self._project
+    def setReleaseArea(self, release_area):
+        self._release_area = release_area
+    def ReleaseArea(self):
+        return self._release_area
+    def setDistLocation(self, dist_loc):
+        self._dist_loc = dist_loc
+    def DistLocation(self):
+        return self._dist_loc
     def tarBallName(self, version=None, full=False):
         tbname = "_".join([self._project, self.FullName().replace("/", "_")])
         if version :
@@ -66,6 +80,29 @@ class PackageConf(object):
             if full :
                 tbname += ".tar.gz"
         return tbname
+    def TarBallDir(self):
+        return os.path.join(self.DistLocation(), self._project.upper())
+    def releasePrefix(self, version=None):
+        prefix = None
+        if self.hat() :
+            prefix = os.path.join(self.project(), self.hat(), self.Name() )
+        else :
+            prefix = os.path.join(self.project(), self.Name() )
+        if version :
+            prefix = os.path.join(prefix, version)
+        return prefix
+            
+    def md5FileName(self, version=None):
+        mfname = self.tarBallName(version, full=False)
+        mfname += ".md5"
+        return mfname
+    def dereferenceTar(self):
+        return self._dereference_tar
+    def enableDereferenceTar(self):
+        self._dereference_tar = True
+    def disableDereferenceTar(self):
+        self._dereference_tar = False
+
     
 package_list = []
 for _pak in package_names:
@@ -82,6 +119,14 @@ def getPackage(packagename):
         return pj
     else:
         raise PackageConfException, "No such package configuration"
+
+def isPackage(packagename):
+    ispackage = True
+    try :
+        getPackage(packagename)
+    except PackageConfException :
+        ispackage = False
+    return ispackage
 
 def getPackageList(projectname=None, hatname=None):
     plist = package_list
@@ -135,6 +180,7 @@ MCatNLOData.setProject("PARAM")#IGNORE:E0602
 LHCbBkg.setProject("PARAM")#IGNORE:E0602
 
 Geant4Files.setProject("PARAM")#IGNORE:E0602
+Geant4Files.disableDereferenceTar()#IGNORE:E0602
 
 MIBData.setProject("PARAM")#IGNORE:E0602
 
