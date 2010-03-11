@@ -1,8 +1,6 @@
 #ifndef HLTGLOBALMONITOR_H 
 #define HLTGLOBALMONITOR_H 1
 
-#include "Event/ODIN.h"
-#include "Event/L0DUReport.h"
 #include "Event/HltDecReports.h"
 
 #include "boost/function.hpp" 
@@ -34,10 +32,8 @@ public:
   void handle(const Incident&);
 
 private:
-  void monitorODIN(const LHCb::ODIN*,const LHCb::L0DUReport*,const LHCb::HltDecReports*);
-  void monitorL0DU(const LHCb::ODIN*,const LHCb::L0DUReport*,const LHCb::HltDecReports*);
-  void monitorHLT1 (const LHCb::ODIN*,const LHCb::L0DUReport*,const LHCb::HltDecReports*);
-  void monitorHLT2 (const LHCb::ODIN*,const LHCb::L0DUReport*,const LHCb::HltDecReports*);
+  void monitorHLT1 (const LHCb::HltDecReports*);
+  void monitorHLT2 (const LHCb::HltDecReports*);
   void monitorMemory();
   void storeTrend(AIDA::IProfile1D*, double);
   template <typename T> T* fetch(const std::string& location) {
@@ -60,14 +56,8 @@ private:
   std::vector<std::string>  m_Hlt1Lines;
   std::vector<std::string>  m_Hlt2Lines;
 
-  std::string m_ODINLocation;
-  std::string m_L0DUReportLocation;
   std::string m_HltDecReportsLocation;
 
-  AIDA::IHistogram1D* m_odin;
-  AIDA::IHistogram1D* m_L0Input;
-  AIDA::IHistogram1D* m_L0Hlt1Accept;
-  AIDA::IHistogram1D* m_L0Hlt2Accept;
   AIDA::IHistogram1D* m_hlt1Alley;
   AIDA::IHistogram1D* m_hlt2Alley;
 
@@ -84,14 +74,12 @@ private:
   longlong m_startClock; // in microseconds
   longlong m_startEvent; // in microseconds
   long m_virtmem; 
-  int m_gpstimesec;
+  //  int m_gpstimesec;
   int m_time_ref;
   int m_scanevents;
   int m_totaltime;
   int m_totalmem;
   int m_events;
-
-  unsigned int m_lastL0TCK;
 
 };
 #endif // HLTGLOBALMONITOR_H

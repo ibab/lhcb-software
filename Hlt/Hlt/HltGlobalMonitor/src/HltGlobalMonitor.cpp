@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.60 2010-03-01 20:32:46 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.61 2010-03-11 15:52:46 albrecht Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -74,16 +74,13 @@ HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
   , m_startClock(0)
   , m_startEvent(0)
   , m_virtmem(0)
-  , m_gpstimesec(0)
+  //  , m_gpstimesec(0)
   , m_time_ref(0)
   , m_scanevents(0)
   , m_totaltime(0)
   , m_totalmem(0)
   , m_events(0)
-  , m_lastL0TCK(0)
 {
-  declareProperty("ODIN",              m_ODINLocation = LHCb::ODINLocation::Default);
-  declareProperty("L0DUReport",        m_L0DUReportLocation = LHCb::L0DUReportLocation::Default);
   declareProperty("HltDecReports",     m_HltDecReportsLocation = LHCb::HltDecReportsLocation::Default);
   declareProperty("Hlt1Decisions",     m_Hlt1Lines );
   declareProperty("Hlt2Decisions",     m_Hlt2Lines );
@@ -106,26 +103,8 @@ StatusCode HltGlobalMonitor::initialize() {
   StatusCode sc = HltBaseAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  m_gpstimesec=0;
+  //  m_gpstimesec=0;
   m_startClock = System::currentTime( System::microSec );
-  
-
-  m_L0Input         = book1D("L0 channel",-0.5,18.5,19);
-  // this code may break when the enums are no longer directly exposing the hardware
-  m_odin            = book1D("ODIN trigger type",  "ODIN trigger Type ",-0.5, 7.5, 8);
-  std::vector<std::pair<unsigned,std::string> > odinLabels = boost::assign::list_of< std::pair<unsigned,std::string> >
-                (ODIN::PhysicsTrigger,    "Physics")
-                (ODIN::BeamGasTrigger,    "BeamGas")
-                (ODIN::LumiTrigger,       "Lumi")
-                (ODIN::TechnicalTrigger,  "Technical")
-                (ODIN::AuxiliaryTrigger,  "Auxiliary")
-                (ODIN::NonZSupTrigger,    "NonZSup")
-                (ODIN::TimingTrigger,     "Timing")
-                (ODIN::CalibrationTrigger,"Calibration");
-   if (!setBinLabels( m_odin, odinLabels )) {
-    error() << "failed to set binlables on ODIN hist" << endmsg;
-  }
-
   // create a histogram with one bin per Alley
   // the order and the names for the bins are
   // configured in HLTConf/Configuration.py  
@@ -223,8 +202,8 @@ StatusCode HltGlobalMonitor::initialize() {
   declareInfo("COUNTER_TO_RATE[elapsed time]", m_currentTime, "Elapsed time");
   
 
-  declareInfo("COUNTER_TO_RATE[L0Accept]",counter("L0Accept"),"L0Accept");
-  declareInfo("COUNTER_TO_RATE[GpsTimeoflast]",m_gpstimesec,"Gps time of last event");
+  //  declareInfo("COUNTER_TO_RATE[L0Accept]",counter("L0Accept"),"L0Accept");
+  //  declareInfo("COUNTER_TO_RATE[GpsTimeoflast]",m_gpstimesec,"Gps time of last event");
 
   // register for incidents...
   IIncidentSvc* incidentSvc = svc<IIncidentSvc>( "IncidentSvc" );
@@ -250,17 +229,13 @@ void HltGlobalMonitor::handle ( const Incident& incident ) {
 //=============================================================================
 StatusCode HltGlobalMonitor::execute() {  
 
-  LHCb::ODIN*         odin = fetch<LHCb::ODIN>( LHCb::ODINLocation::Default);
-  LHCb::L0DUReport*   l0du = fetch<LHCb::L0DUReport>( m_L0DUReportLocation );
   LHCb::HltDecReports* hlt = fetch<LHCb::HltDecReports>( m_HltDecReportsLocation );
-
-  monitorODIN(odin,l0du,hlt);
-  monitorL0DU(odin,l0du,hlt);
-  monitorHLT1(odin,l0du,hlt);
-  monitorHLT2(odin,l0du,hlt);
-
- if(  (m_events)%m_scanevents ==0) monitorMemory();
-
+  
+  monitorHLT1(hlt);
+  monitorHLT2(hlt);
+  
+  if(  (m_events)%m_scanevents ==0) monitorMemory();
+  
   counter("#events")++;
   m_events++;
 
@@ -269,52 +244,7 @@ StatusCode HltGlobalMonitor::execute() {
 }
 
 //==============================================================================
-void HltGlobalMonitor::monitorODIN(const LHCb::ODIN* odin,
-                                   const LHCb::L0DUReport*,
-                                   const LHCb::HltDecReports* hlt) {
-  if (odin == 0 ) return;
-  unsigned long long gpstime=odin->gpsTime();
-  if (msgLevel(MSG::DEBUG)) debug() << "gps time" << gpstime << endreq;
-  m_gpstimesec=int(gpstime/1000000-904262401); //@TODO: is this still OK with ODIN v6?
-  counter("ODIN::Lumi")    += (odin->triggerType()==ODIN::LumiTrigger);
-  counter("ODIN::NotLumi") += (odin->triggerType()!=ODIN::LumiTrigger);
-  fill(m_odin, odin->triggerType(), 1.);
-  if ( hlt == 0 ) return;
-
-
-}
-
-//==============================================================================
-void HltGlobalMonitor::monitorL0DU(const LHCb::ODIN*,
-                                   const LHCb::L0DUReport* l0du,
-                                   const LHCb::HltDecReports* ) {
-  if (l0du == 0) return;
-
-  counter("L0Accept") += l0du->decision();
-  counter("L0Forced") += l0du->forceBit();
-
-  if (!l0du->decision()) return;
-
-  LHCb::L0DUChannel::Map channels = l0du->configuration()->channels();
-  for(LHCb::L0DUChannel::Map::iterator i = channels.begin();i!=channels.end();++i){
-      fill( m_L0Input, i->second->id(), l0du->channelDecision( i->second->id() ) );
-  }
-
-  unsigned int L0TCK = l0du->tck();
-  if (L0TCK != m_lastL0TCK && m_L0Input!=0) {
-      std::vector< std::pair<unsigned, std::string> > labels;
-      for(LHCb::L0DUChannel::Map::iterator i = channels.begin();i!=channels.end();++i){
-        labels.push_back(std::make_pair( i->second->id(), i->first ));
-      }
-      setBinLabels( m_L0Input, labels );
-      m_lastL0TCK = L0TCK;
-  }
-};
-
-//==============================================================================
-void HltGlobalMonitor::monitorHLT1(const LHCb::ODIN*,
-                                   const LHCb::L0DUReport*,
-                                   const LHCb::HltDecReports* hlt) {
+void HltGlobalMonitor::monitorHLT1(const LHCb::HltDecReports* hlt) {
 
 
   if (hlt==0) return;
@@ -343,10 +273,10 @@ void HltGlobalMonitor::monitorHLT1(const LHCb::ODIN*,
     }
   }
 
-  for (unsigned i=0; i<m_DecToGroup1.size();i++) {
-    *m_hlt1AlleyRates[i] += ( nAccAlley[i] > 0 );
-    fill(m_hlt1Alley,i,(nAccAlley[i]>0));
-  }
+  // for (unsigned i=0; i<m_DecToGroup1.size();i++) {
+//     *m_hlt1AlleyRates[i] += ( nAccAlley[i] > 0 );
+//     //fill(m_hlt1Alley,i,(nAccAlley[i]>0));
+//   }
 
   for (size_t i = 0; i<reps.size();++i) {
     bool accept = (reps[i].second->decision()!=0);
@@ -358,6 +288,7 @@ void HltGlobalMonitor::monitorHLT1(const LHCb::ODIN*,
   }
        //filling the histograms for the alleys instead of the lines
   for (unsigned i=0; i<m_DecToGroup1.size();i++) {
+    *m_hlt1AlleyRates[i] += ( nAccAlley[i] > 0 );
     fill(m_hlt1Alley,i,(nAccAlley[i]>0));
     if(nAccAlley[i]==0) continue;
     for(unsigned j=0; j<m_DecToGroup1.size();j++){
@@ -369,9 +300,7 @@ void HltGlobalMonitor::monitorHLT1(const LHCb::ODIN*,
 
 //==============================================================================
 
-void HltGlobalMonitor::monitorHLT2(const LHCb::ODIN*,
-                                   const LHCb::L0DUReport*,
-                                   const LHCb::HltDecReports* hlt) {
+void HltGlobalMonitor::monitorHLT2(const LHCb::HltDecReports* hlt) {
   if (hlt==0) return;
 
   ///////////////////////////////////////////////////////////////////////////////
@@ -396,11 +325,10 @@ void HltGlobalMonitor::monitorHLT2(const LHCb::ODIN*,
       }
     }
   }
-
-  for (unsigned i=0; i<m_DecToGroup2.size();i++) {
-     *m_hlt2AlleyRates[i] += ( nAccAlley[i] > 0 );
-    fill(m_hlt2Alley,i,(nAccAlley[i]>0));
-  } 
+  //   for (unsigned i=0; i<m_DecToGroup2.size();i++) {
+//      *m_hlt2AlleyRates[i] += ( nAccAlley[i] > 0 );
+//      //    fill(m_hlt2Alley,i,(nAccAlley[i]>0));
+//   } 
 
 
   for (size_t i = 0; i<reps.size();++i) {
@@ -415,6 +343,7 @@ void HltGlobalMonitor::monitorHLT2(const LHCb::ODIN*,
   //filling the histograms for the alleys instead of the lines
 
   for (unsigned i=0; i<m_DecToGroup2.size();i++) {
+    *m_hlt2AlleyRates[i] += ( nAccAlley[i] > 0 );
     fill(m_hlt2Alley,i,(nAccAlley[i]>0));
     if(nAccAlley[i]==0) continue;
     for(unsigned j=0; j<m_DecToGroup2.size();j++){
