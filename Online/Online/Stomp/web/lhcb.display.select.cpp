@@ -1,3 +1,8 @@
+var lhcb = null;
+var _lhcb = function() {
+  if ( lhcb == null ) lhcb = new Object();
+  return lhcb;
+}
 var _isInternetExplorer = function() 
 {  return navigator.appName == "Microsoft Internet Explorer"; }
 var _debugLoading = false;

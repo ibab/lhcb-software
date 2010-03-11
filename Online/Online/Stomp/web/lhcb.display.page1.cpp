@@ -1,6 +1,7 @@
 _loadScript('lhcb.display.tooltips.cpp');
 _loadScript('lhcb.display.items.cpp');
 _loadScript('lhcb.display.widgets.cpp');
+_loadScript('lhcb.display.zoom.cpp');
 _loadFile('lhcb.display.general','css');
 _loadFile('lhcb.display.fsm','css');
 
@@ -61,7 +62,7 @@ var Page1 = function(msg, sys)   {
   table.build = function() {
     var tab = document.createElement('table');
     var tb = document.createElement('tbody');
-    var d = new Date();
+    var tr, d = new Date();
 
     tab.className = tb.className = 'MonitorPage';
     tab.style.fontSize = '90%';
@@ -75,16 +76,34 @@ var Page1 = function(msg, sys)   {
     cell.onclick     = function() { document.location = "http://lhcb.cern.ch";};
     tooltips.set(cell,'LHCb page1:<br>General status information of<br>-- the LHC collider and<br>-- the LHCb experiment<br>Click to go to home page');
     this.heading.appendChild(cell);
+
+    var sub_tab  = document.createElement('table');
+    var sub_body = document.createElement('tbody');
+    tr = document.createElement('tr');
+    sub_tab.width=sub_body.width="100%";
     this.head_date = Cell(d.toString(),1,'MonitorTinyHeader');
     this.head_date.textAlign = 'right';
     this.head_date.id = 'current_time';
-    this.head_date.style.width = '360px';
-    this.heading.appendChild(this.head_date);
+    this.head_date.style.width = '100%';
+    tr.appendChild(this.head_date);
+    cell = Cell('A<sup>+</sup>',1,'MonitorDataHeader');
+    cell.onclick     = function() { zoom_increaseFontSize();};
+    tooltips.set(cell,'Increase font size');
+    tr.appendChild(cell);
+    cell = Cell('A<sup>-</sup>',1,'MonitorDataHeader');
+    cell.onclick     = function() { zoom_decreaseFontSize();};
+    tooltips.set(cell,'Decrease font size');
+    tr.appendChild(cell);
+    sub_body.appendChild(tr);
+    sub_tab.appendChild(sub_body);
+    cell = Cell('',1,'MonitorTinyHeader');
+    cell.appendChild(sub_tab);
+    this.heading.appendChild(cell);
     tb.appendChild(this.heading);
 
     this.timerHandler = function() {document.getElementById('current_time').innerHTML = (new Date()).toString(); }
-    setInterval(this.timerHandler,2000);
-    
+    setInterval(this.timerHandler,5000);
+
     tr = document.createElement('tr');
     tb.appendChild(tr);
     
@@ -160,6 +179,7 @@ var page1_body = function()  {
   var prt  = the_displayObject['external_print'];
   var msg  = the_displayObject['messages'];
   var sys  = the_displayObject['system'];
+  var siz  = the_displayObject['size']
   var body = document.getElementsByTagName('body')[0];
   var tips = init_tooltips(body);
   var selector;
@@ -177,6 +197,10 @@ var page1_body = function()  {
   selector.provider = new DataProvider(selector.logger);
   selector.provider.topic = '/topic/status';
   selector.build();
+
+  if ( _isInternetExplorer() ) zoom_changeFontSizeEx(2);
+  else  zoom_changeFontSizeEx(0);
+  if ( siz != null ) zoom_changeFontSizeEx(siz);
   selector.subscribe();
   selector.provider.start();
   body.style.cursor = 'default';

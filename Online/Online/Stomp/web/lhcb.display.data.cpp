@@ -498,8 +498,7 @@ var dataProviderReset = function() {
   }
 }
 
-var lhcb = new Object();
-lhcb.setup = function(show_log) {
+_lhcb().setup = function(show_log) {
   var body = document.getElementsByTagName('body')[0];
   lhcb.data = new Object();
   lhcb.logWindow = document.createElement('div');
