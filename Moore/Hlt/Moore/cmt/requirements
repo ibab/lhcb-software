@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.107 2010-03-05 14:23:41 graven Exp $
+# $Id: requirements,v 1.108 2010-03-11 22:28:43 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -48,6 +48,7 @@ use Hlt1Lines           v2r3    Hlt
 use HltLine             v3r2    Hlt
 use HltSettings         v1r10   Hlt
 use HltConf             v6r4p2  Hlt
+use HltGlobalMonitor    v3r2    Hlt
 use HltSys              v*                  -no_auto_imports
 
 #-- Phys packages 
