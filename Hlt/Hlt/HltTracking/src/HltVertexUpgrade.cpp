@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.cpp,v 1.20 2009-12-03 10:14:28 graven Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.21 2010-03-11 11:45:26 gligorov Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -36,7 +36,7 @@ HltVertexUpgrade::HltVertexUpgrade( const std::string& name,
   declareProperty("TransferExtraInfo", m_transferExtraInfo = true);
   
   declareProperty( "TESOutputVerticesName",  
-                   m_TESOutputVerticesName = "Hlt/Vertex/VertexUpgradeBank");
+                   m_TESOutputVerticesName = "Hlt1/Vertex/VertexUpgradeBank");
 
   m_selections.declareProperties();
 };

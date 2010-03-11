@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.97 2010-03-02 11:24:50 gligorov Exp $
+!$Id: release.notes,v 1.98 2010-03-11 11:46:17 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2010-03-11 - V. Gligorov
+ - Continuing work on Savannah tasks 13784 and 12691. Change vertex naming
+   convention in HltVertexUpgrade to Hlt1/Vertex
 
 ! 2010-03-02 - V. Gligorov
  - Follow developments in Savannah tasks 13784/12691. Change Hlt/Tracks
