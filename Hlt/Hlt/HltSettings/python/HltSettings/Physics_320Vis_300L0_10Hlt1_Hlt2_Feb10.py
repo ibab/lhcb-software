@@ -38,9 +38,18 @@ class Physics_320Vis_300L0_10Hlt1_Hlt2_Feb10( Physics_320Vis_300L0_10Hlt1_Feb10 
         """
         # return [ 'Hlt2PassThrough', 'Hlt2Transparent','Hlt2Forward','Hlt2DebugEvent']
         list = Physics_320Vis_300L0_10Hlt1_Feb10.ActiveHlt2Lines(self)
+        list.extend( self.ExplicitHlt2Lines() )
+        return list
+        
+
+    def ExplicitHlt2Lines(self):
+        """
+        List of Hlt2 lines
+        """
 ##
 ## topo : leave out 4-body lines
 ##
+        list = []
         list.extend( [ 'Hlt2Topo2BodySA',
                   #'Hlt2Topo4BodySA',
                   'Hlt2Topo3BodySA',
@@ -108,4 +117,3 @@ class Physics_320Vis_300L0_10Hlt1_Hlt2_Feb10( Physics_320Vis_300L0_10Hlt1_Feb10 
         list.extend( Express_Hlt2_Jan10().ActiveHlt2Lines() )
 ##
         return list
-        
