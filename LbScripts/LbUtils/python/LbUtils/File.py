@@ -1,8 +1,11 @@
 #@PydevCodeAnalysisIgnore
 """ manipulation of files and directories module """
 
+from LbUtils.afs.directory import AFSLock
+
 from shutil import copy2
 
+import md5
 import logging
 import fnmatch
 import stat
@@ -134,3 +137,83 @@ def checkEmptyFiles(topdir, filterfunc=None, extlist=None):
         good = False
                 
     return good
+
+
+def computeMD5Sum(fname):
+    m = md5.new()
+    lock = AFSLock(fname)
+    lock.lock(force=False)
+    f = open(fname, "rb")
+    buf = f.read(2 ** 13)
+    while(buf):
+        m.update(buf)
+        buf = f.read(2 ** 13)
+    f.close()
+    lock.unlock()
+    return m.hexdigest()
+
+def checkMD5Sum(fname, md5sum):
+    good = False
+    loc_md5sum = computeMD5Sum(fname)
+    if loc_md5sum == md5sum :
+        good = True
+    return good
+
+def createMD5File(fname, md5fname, targetname=None):
+    """ create a md5 sum file from fname
+    @param fname: initial file name to be processed
+    @param md5fname: name of the create md5 sum file
+    @param targetname: name of the file to appear in the md5 sum file  
+    """
+    md5sum = computeMD5Sum(fname)
+    if not targetname :
+        targetname = fname
+
+    lock = AFSLock(md5fname)
+    lock.lock(force=False)
+
+    mdf = open(md5fname, "w")
+    mdf.write("%s  %s" % (md5sum, targetname))
+    mdf.close()
+    lock.unlock()
+
+
+def getMD5Info(md5fname):
+    """ return the internal information of a md5 file
+    @param md5fname: the md5 sum file  
+    @return: the md5 sum and the internal name of the summed up file
+    """
+    refmd5sum = None
+    iname = None
+    lock = AFSLock(md5fname)
+    lock.lock(force=False)
+    f = open(md5fname, "r")
+    for line in f.readlines():
+        refmd5sum, iname = line.split("  ")[0:2]
+    f.close()
+    lock.unlock()
+    return refmd5sum, iname
+
+def checkMD5File(md5fname, fname=None):
+    """ Check the md5 sum file
+    @param md5fname: file containing the checksum and the filename
+    @param fname: optional override of the file name in the md5 sum file
+    @param checkfilename: if the fname is passed check that the internal name
+    is equal to it 
+    """
+    refmd5sum, iname = getMD5Info(md5fname)
+    if not fname:
+        fname = iname
+    if not os.path.exists(fname) :
+        fname = os.path.join(os.path.dirname(md5fname), fname)
+        
+    return checkMD5Sum(fname, refmd5sum)
+    
+def checkMD5Info(md5fname, target_name):
+    """ check the md5 file informations. It checks the md5sum and the target
+    name as well
+    @param md5fname: the md5 sum file to be checked
+    @param target_name: the internal target name  
+    """
+    iname = getMD5Info(md5fname)[1]
+    return (checkMD5File(md5fname) and (target_name == iname))
