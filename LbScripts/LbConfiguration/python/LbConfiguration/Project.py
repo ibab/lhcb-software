@@ -169,6 +169,11 @@ class ProjectConf(ProjectBaseConf):
                 tbname += ".tar.gz"
 
         return tbname
+    def md5FileName(self, version=None, cmtconfig=None):
+        log = logging.getLogger()
+        mfname = self.tarBallName(version, cmtconfig, full=False)
+        mfname += ".md5"
+        return mfname
 
     def releasePrefix(self, version):
         return os.path.join(self.NAME(), "_".join([self.NAME(),version]) )
