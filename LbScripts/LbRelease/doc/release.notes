@@ -3,7 +3,10 @@
 	* scripts/checkTar: New file.
 	* cmt/requirements: 
 	* python/LbRelease/TarBall.py: 
+	  - added the guessing of the version if it was not provided
+	  - fixed the tarball location by using proj.TarBallDir.
 	* scripts/buildTar: added md5 sum calculation and check for the tarballs
+	
 
 2010-03-08  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 

@@ -4,6 +4,7 @@ Generic Tar Ball module
 from LbConfiguration.Project import getProject
 from LbConfiguration.Platform import pathBinaryMatch, pathSharedMatch
 from LbConfiguration.Platform import binary_list
+from LbConfiguration.Version import getVersionsFromDir
 from LbUtils.Tar import createTarBallFromFilter
 from LbUtils.Temporary import TempDir
 from LbUtils.File import createMD5File, checkMD5Info
@@ -90,7 +91,7 @@ def generateMD5(project, version, cmtconfig=None, input_dir=None):
     log = logging.getLogger()
     prj_conf = getProject(project)
     if not input_dir :
-        input_dir = prj_conf.DistLocation()
+        input_dir = prj_conf.TarBallDir()
     filename = os.path.join(input_dir, prj_conf.tarBallName(version, cmtconfig, full=True))
     if os.path.exists(filename) :
         md5fname = os.path.join(input_dir, prj_conf.md5FileName(version, cmtconfig))
@@ -104,16 +105,21 @@ def generateMD5(project, version, cmtconfig=None, input_dir=None):
     else :
         log.warning("The file %s doesn't exist. Skipping md5 creation." % filename)
 
-def buildTar(project, version, cmtconfig=None, 
+def buildTar(project, version=None, cmtconfig=None, 
              top_dir=None, output_dir=None, 
              overwrite=False, overwrite_shared=False, update=False,
-             md5=True):
+             md5=True, html=True):
     log = logging.getLogger()
     prj_conf = getProject(project)
     if not top_dir :
         top_dir = prj_conf.ReleaseArea()
     if not output_dir :
-        output_dir = prj_conf.DistLocation()
+        output_dir = prj_conf.TarBallDir()
+    if not version :
+        pattern = "%s_*" % prj_conf.NAME()
+        maindir = os.path.join(top_dir, prj_conf.NAME())
+        version = str(getVersionsFromDir(maindir, pattern, reverse=True)[0])
+        log.debug("Guessed version for %s is %s" % (prj_conf.Name(), version))
     if not cmtconfig :
         cmtconfig = binary_list
         if overwrite :
@@ -157,12 +163,16 @@ def buildTar(project, version, cmtconfig=None,
         if md5 :
             generateMD5(project, version, None, output_dir)
 
-def checkMD5(project, version, cmtconfig=None, input_dir=None):
+def checkMD5(project, version=None, cmtconfig=None, input_dir=None):
     log = logging.getLogger()
     prj_conf = getProject(project)
     good = False
     if not input_dir :
-        input_dir = prj_conf.DistLocation()
+        input_dir = prj_conf.TarBallDir()
+    if not version :
+        pattern = "%s_*" % prj_conf.NAME()
+        version = str(getVersionsFromDir(input_dir, pattern, reverse=True)[0])
+        log.debug("Guessed version for %s is %s" % (prj_conf.Name(), version))
     filename = os.path.join(input_dir, prj_conf.tarBallName(version, cmtconfig, full=True))
     if os.path.exists(filename) :
         md5fname = os.path.join(input_dir, prj_conf.md5FileName(version, cmtconfig))
@@ -183,14 +193,20 @@ def checkMD5(project, version, cmtconfig=None, input_dir=None):
         good = True
     return good
 
-def checkTar(project, version, cmtconfig=None, input_dir=None, 
+def checkTar(project, version=None, cmtconfig=None, input_dir=None, 
              keep_going=False):
+    log = logging.getLogger()
     prj_conf = getProject(project)
     good = True
     if not input_dir :
-        input_dir = prj_conf.DistLocation()
+        input_dir = prj_conf.TarBallDir()
+    if not version :
+        pattern = "%s_*" % prj_conf.NAME()
+        version = str(getVersionsFromDir(input_dir, pattern, reverse=True)[0])
+        log.debug("Guessed version for %s is %s" % (prj_conf.Name(), version))
     if not cmtconfig :
         cmtconfig = binary_list
+
     for c in cmtconfig :
         status = checkMD5(project, version, c, input_dir)
         if not status :
