@@ -42,7 +42,7 @@ AdderSvc::~AdderSvc() {}
 
 StatusCode AdderSvc::initialize() {
   StatusCode sc = Service::initialize(); // must be executed first
- // lib_rtl_sleep(1000);
+  lib_rtl_sleep(1000);
   MsgStream msg(msgSvc(), name());
   if ( !sc.isSuccess() )  {
     msg << MSG::ERROR << "Cannot initialize service base class." << endmsg;
@@ -68,8 +68,12 @@ StatusCode AdderSvc::initialize() {
   }
 //  msg << MSG::DEBUG << "m_nodeName " << m_nodeName << " m_farm " << m_farm << endreq;
   if (m_nodeName.size() == 8) adderType = "First Level"; 
-  else if ((m_nodeName.size() == 6)&&((m_nodeName.substr(0,4)!="PART")||(m_farm=="MF"))) adderType = "Second Level"; 
-  else if ((m_nodeName.size() == 6)&&((m_nodeName.substr(0,4)=="PART")||(m_farm=="MF"))) adderType = "Third Level"; 
+  else if ((m_nodeName.size() == 6)&&((m_nodeName.substr(0,4)!="PART")||(m_farm=="MF"))) {
+    lib_rtl_sleep(10000);
+    adderType = "Second Level"; }
+  else if ((m_nodeName.size() == 6)&&((m_nodeName.substr(0,4)=="PART")||(m_farm=="MF"))) {
+    lib_rtl_sleep(20000);
+  adderType = "Third Level"; }
   else {
     msg << MSG::ERROR << "This is not an Adder because the nodeName do not correspond at any case" << endreq;
     msg << MSG::ERROR << "1rst level ==> HLTA0101" << endreq;
@@ -215,7 +219,7 @@ void AdderSvc::handle(const Event&  ev) {
 //    msg << MSG::DEBUG << " End PostEvent to UpdateServiceMap " << endreq;
   }
   else if(s_updateSvcMapFromInfoService == ev.type) {
-//    msg << MSG::DEBUG << " We are inside a PostEvent to UpdateServiceMapFromInfoService " << endreq;
+   // msg << MSG::INFO << " We are inside a PostEvent to UpdateServiceMapFromInfoService event: " << ev.type << endreq;
    // std::pair<ProcessMgr*, std::set<std::string> >* data = (std::pair<ProcessMgr*, std::set<std::string> >*) ev.data;
    // std::set<std::string> serviceSet = data->second;
 

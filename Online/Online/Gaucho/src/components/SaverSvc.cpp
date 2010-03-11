@@ -162,14 +162,12 @@ StatusCode SaverSvc::initialize() {
     std::string serviceName="";
     if (utgidParts[1]=="MONA0901") {
        processMgr->setFarm("MF");
-       serviceName = m_tmpPart+"_MONA0901_RecAdder_0/RecBrunel/MonitorSvc/monRate/RunNumber";
     }
     else {
        processMgr->setFarm("EFF");
-       serviceName = m_tmpPart+"_Adder_1/GauchoJob/MonitorSvc/monRate/RunNumber"; 
     }
-    
-    m_runNbSvc = new DimInfoRunNb(serviceName.c_str(),utgidParts[0]);
+    serviceName = m_tmpPart+"_Adder_1/GauchoJob/MonitorSvc/monRate/RunNumber"; 
+    m_runNbSvc = new DimInfoRunNb(serviceName.c_str(),utgidParts[0]);  
   //  msg << MSG::DEBUG << "created runnumber service " << serviceName.c_str() << endreq;
    // m_runNb = processMgr->getrunNumber(false);
        
@@ -331,7 +329,7 @@ StatusCode SaverSvc::save(ProcessMgr* processMgr) {
           }	  
        }   
        else processMgr->write();     
-       msg << MSG::DEBUG << "Finished saving histograms in file "<< *fileName << endreq;
+       msg << MSG::INFO << "Finished saving histograms in file "<< *fileName << endreq;
     }
     else {
        msg << MSG::DEBUG << "Runnumber unknown. Can't save "<< m_runNb << endreq;    
