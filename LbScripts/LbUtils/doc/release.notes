@@ -1,5 +1,7 @@
 2010-03-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbUtils/Tar.py: added a check on the existence of the directories
+	to be tarred.
 	* python/LbUtils/Lock.py: flush and sync before closing the
 	lock file.
 	* python/LbUtils/File.py: 

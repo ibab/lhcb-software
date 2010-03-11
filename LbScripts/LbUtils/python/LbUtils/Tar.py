@@ -153,8 +153,9 @@ def listTarBallObjects(dirname, pathfilter=None, prefix=None):
 def updateTarBallFromFilter(srcdirs, filename, pathfilter=None,
                             prefix=None, dereference=False):
     log = logging.getLogger()
+    status = 0
     if not os.path.exists(filename) :
-        createTarBallFromFilter(srcdirs, filename, pathfilter, prefix, dereference, update=False)
+        status = createTarBallFromFilter(srcdirs, filename, pathfilter, prefix, dereference, update=False)
     else :
         tarf, lock = openTar(filename, tar_mode="r")
         tmpdir = TempDir("updateTarballFromFilter")
@@ -168,6 +169,13 @@ def updateTarBallFromFilter(srcdirs, filename, pathfilter=None,
                 os.makedirs(dstprefix)
         else :
             dstprefix = tmpdir.getName()
+        srcexist = False
+        for dirname in srcdirs:
+            if os.path.exists(dirname) :
+                srcexist = True
+                break
+        if not srcexist :
+            return 1
         for dirname in srcdirs :
             for y in listTarBallObjects(dirname, pathfilter, prefix) :
                 if y[1] not in extracted_objs :
@@ -183,15 +191,25 @@ def updateTarBallFromFilter(srcdirs, filename, pathfilter=None,
                         copy2(src, dst)
         if tobeupdated :
             log.debug("Updating tarball %s" % filename)
-            createTarBallFromFilter([tmpdir.getName()], filename, pathfilter,
+            status = createTarBallFromFilter([tmpdir.getName()], filename, pathfilter,
                                     prefix=None, dereference=dereference, update=False)
+    return status
 
 def createTarBallFromFilter(srcdirs, filename, pathfilter=None, 
                             prefix=None, dereference=False, update=False):
     log = logging.getLogger()
+    status = 0
     if not update :
         tarf, lock = openTar(filename, tar_mode="w")
         keep_tar = False
+        srcexist = False
+        for dirname in srcdirs:
+            if os.path.exists(dirname) :
+                srcexist = True
+                break
+        if not srcexist :
+            os.remove(filename)
+            return 1
         for dirname in srcdirs :
             for fullo, relo in listTarBallObjects(dirname, pathfilter, prefix) :
                 keep_tar = True
@@ -201,7 +219,8 @@ def createTarBallFromFilter(srcdirs, filename, pathfilter=None,
             log.warning("%s file is empty. Removing it." % filename)
             os.remove(filename)
     else :
-        updateTarBallFromFilter(srcdirs, filename, pathfilter, prefix, dereference)
+        status = updateTarBallFromFilter(srcdirs, filename, pathfilter, prefix, dereference)
+    return status
 
 def getTarFileName(basename, binaryname=None, tar_type="gz", dirname=None):
     if binaryname :
