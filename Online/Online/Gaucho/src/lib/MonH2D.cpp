@@ -17,8 +17,19 @@ MonObject(msgSvc, source, version)
   m_fSumw2 = 0;  
   m_axisLabelX="";
   m_axisLabelY="";
+  bBinLabelX="false";
+  bBinLabelY="false";
   baxisLabelX="false";
   baxisLabelY="false"; 
+  nbinsx=0;
+  nbinsy=0;
+  Xmin=0;
+  Xmax=0;
+  Ymin=0;
+  Ymax=0;
+  nEntries=0;
+  sName="";
+  sTitle="";
 }
   
 MonH2D::~MonH2D(){

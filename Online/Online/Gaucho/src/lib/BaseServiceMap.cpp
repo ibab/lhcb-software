@@ -108,7 +108,7 @@ void BaseServiceMap::includeServerInMaps(const std::string &serverName) {
 
   for (svcSetIt = m_serviceSet.begin(); svcSetIt != m_serviceSet.end(); ++svcSetIt) {
 //    msg << MSG::DEBUG << "Service " << *svcSetIt << endreq;    
-    insertDimInfo(*svcSetIt, serverName);
+    insertDimInfo(*svcSetIt, serverName);    
   }
 
   for (svcSetIt = m_serviceSet.begin(); svcSetIt != m_serviceSet.end(); ++svcSetIt) {
@@ -199,11 +199,12 @@ void BaseServiceMap::loadDimInfo(const std::string &serviceName, const std::stri
 //  msg << MSG::DEBUG << "creating MonObject in DimInfoMonObject " << termSvcName << endreq;
   
   bool created = false;  
-  int maxtries=100;
+  int maxtries=5;
+  //reduced this to avoid Adder timeout on stoprun in RecFarm; before was mxtries=10, nsleep 10.
   int tries=0;
   while (!created) {
     created = m_dimInfo[groupName][elementName]->createMonObject();  
-    usleep(10);
+    usleep(1);
     tries++;
     if (tries > maxtries) break;
   }

@@ -19,7 +19,7 @@ DimInfoServers::~DimInfoServers() {
 void DimInfoServers::infoHandler() {
 
   int tmpStringSize = -1;
-  while ( (tmpStringSize = getSize()) <=0 ){usleep(10000);}
+  while ( (tmpStringSize = getSize()) <=0 ){usleep(1000);}
 
   std::string value = getString();
 
