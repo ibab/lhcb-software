@@ -1,14 +1,15 @@
-!$Id: release.notes,v 1.64 2010-03-11 15:56:35 albrecht Exp $
+!$Id: release.notes,v 1.65 2010-03-11 22:12:46 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
- - Johannes Albrecht
+!========================== HltGlobalMonitor v3r2 2010-03-11 ===================
+! 1020-03-11 - Johannes Albrecht
  - major restructuring: HltGlobalMonitor independent from L0, ODIN
 			HltL0GlobalMonitor monitors L0
 			HltODINGlobalMonitor monitors ODIN
-  fix bug that Hlt1 and Hlt2 alley histos were doubly filled
+ - fix bug that Hlt1 and Hlt2 alley histos were doubly filled
 
 !========================== HltGlobalMonitor v3r1 2010-02-17 ===================
 ! 2010-02-18 - Kim Vervink
