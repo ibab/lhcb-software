@@ -1,4 +1,4 @@
-// $Id: L0MuonMuonComp.cpp,v 1.6 2010-03-10 09:08:50 jucogan Exp $
+// $Id: L0MuonMuonComp.cpp,v 1.7 2010-03-11 08:11:25 jucogan Exp $
 // Include files 
 
 #include <math.h>
@@ -574,7 +574,7 @@ bool L0MuonMuonComp::diffL0MuonAndMuon(std::vector<std::pair<LHCb::MuonTileID,in
         m_tiles_mismatch[l0mid]+=1;
         i_mismatch+=1;
       } 
-      if ( deltaT!=0 and deltaT!=-15){
+      if ( (deltaT!=0) && (deltaT!=-15) ){
         // muon tile is not on time with the l0muon tile
         std::map<LHCb::MuonTileID,int>::iterator itiles_not_aligned =m_tiles_not_aligned.find(l0mid);
         if (itiles_not_aligned==m_tiles_not_aligned.end()) m_tiles_not_aligned[l0mid]=0;
@@ -588,7 +588,7 @@ bool L0MuonMuonComp::diffL0MuonAndMuon(std::vector<std::pair<LHCb::MuonTileID,in
         m_tiles_missing_in_muon[l0mid]+=1;
         i_missing_in_muon+=1;
       } 
-      if ( (!mismatch_found) and (!centered) ) {
+      if ( (!mismatch_found) && (!centered) ) {
         // muon tile and l0muon tile are there and on time but not on the central bunch crossing
         std::map<LHCb::MuonTileID,int>::iterator itiles_not_centered=m_tiles_not_centered.find(l0mid);
         if (itiles_not_centered==m_tiles_not_centered.end()) m_tiles_not_centered[l0mid]=0;
