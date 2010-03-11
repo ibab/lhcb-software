@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.cpp,v 1.24 2009-11-23 16:57:30 pkoppenb Exp $
+// $Id: OnOfflineTool.cpp,v 1.25 2010-03-11 09:50:47 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -40,7 +40,7 @@ OnOfflineTool::OnOfflineTool( const std::string& type,
   , m_offlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2")
   , m_onlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIP_OnlineDistanceCalculatorName_/OnlineP2PVWithIP")
   , m_offlineTESTrunk("Phys")
-  , m_onlineTESTrunk("HLT")
+  , m_onlineTESTrunk("Hlt2")
 {
   
   declareInterface<IOnOffline>(this);

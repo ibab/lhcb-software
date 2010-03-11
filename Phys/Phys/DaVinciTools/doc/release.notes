@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.519 2010-03-10 13:25:06 giampi Exp $
+! $Id: release.notes,v 1.520 2010-03-11 09:50:47 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-03-11 - Patrick Koppenburg
+ - Change Hlt container from /Event/HLT to /Event/Hlt2 for task #13784
+ - Increment to v21r0
 
 ! 2010-03-10 - Giampiero Mancinelli
  - src/IsolationTwoBody[.h,.cpp]
