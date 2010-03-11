@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.22 2010-03-10 14:41:23 mtobin Exp $
+// $Id: STClusterMonitor.cpp,v 1.23 2010-03-11 09:27:28 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -31,7 +31,6 @@
 // AIDA histograms
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
-#include "AIDA/IProfile2D.h"
 #include "TH1D.h"
 #include "GaudiUtils/Aida2ROOT.h"
 
@@ -236,7 +235,8 @@ void ST::STClusterMonitor::resetAccumulators() {
 //================================================================================================================================
 void ST::STClusterMonitor::fillMPVMap() {
 
-  m_2dp_sectorMPVs->reset();
+  m_2d_sectorMPVs->reset();
+  m_2d_sectorMPVsNorm->reset();
 
   std::vector<DeSTSector*>::const_iterator Sectors = tracker()->sectors().begin();
   std::map<const unsigned int,ST::MedianAccumulator>::const_iterator iMed = m_sectorMPVs.begin();
@@ -252,13 +252,15 @@ void ST::STClusterMonitor::fillMPVMap() {
       double xBin = bins.xBin;
       // Hack to make real x-y distribution plot (not occupancy)
       for( int yBin = bins.beginBinY; yBin != bins.endBinY; ++yBin ) {
-        m_2dp_sectorMPVs->fill(xBin,yBin,mpv);
+        m_2d_sectorMPVs->fill(xBin,yBin,mpv);
+        m_2d_sectorMPVsNorm->fill(xBin,yBin,1.);
       }
     } else if( detType() == "IT" ) {// Cluster map for IT
       ST::ITDetectorPlot hitMap("map", "map");
       ST::ITDetectorPlot::Bins bins = hitMap.toBins((*Sectors)->elementID());
       // Hack to make real x-y distribution plot (not occupancy)
-      m_2dp_sectorMPVs->fill(bins.xBin, bins.yBin, mpv);
+      m_2d_sectorMPVs->fill(bins.xBin, bins.yBin, mpv);
+      m_2d_sectorMPVsNorm->fill(bins.xBin, bins.yBin, 1.);
     }
     if(m_debug) debug() << (*Sectors)->elementID()
                         << " median=" << boost::accumulators::median((*iMed).second) 
@@ -332,15 +334,19 @@ void ST::STClusterMonitor::bookHistograms() {
       m_2d_hitmap = book2D(hitMap.name(), hitMap.minBinX(), hitMap.maxBinX(), hitMap.nBinX(),
                            hitMap.minBinY(), hitMap.maxBinY(), hitMap.nBinY());
       ST::TTDetectorPlot MPVMap(idMPVMap, idMPVMap);
-      m_2dp_sectorMPVs = bookProfile2D(MPVMap.name(), MPVMap.minBinX(), MPVMap.maxBinX(), MPVMap.nBinX(),
-                                       MPVMap.minBinY(), MPVMap.maxBinY(), MPVMap.nBinY());
+      m_2d_sectorMPVs = book2D(MPVMap.name(), MPVMap.minBinX(), MPVMap.maxBinX(), MPVMap.nBinX(),
+                               MPVMap.minBinY(), MPVMap.maxBinY(), MPVMap.nBinY());
+      m_2d_sectorMPVsNorm = book2D(MPVMap.name()+" Normalisation", MPVMap.minBinX(), MPVMap.maxBinX(), MPVMap.nBinX(),
+				   MPVMap.minBinY(), MPVMap.maxBinY(), MPVMap.nBinY());
     } else if( detType() == "IT" ) {// Cluster map for IT
       ST::ITDetectorPlot hitMap(idMap, idMap, m_nBinsPerITSector);
       m_2d_hitmap = book2D(hitMap.name(), hitMap.minBinX(), hitMap.maxBinX(), hitMap.nBinX(),
                            hitMap.minBinY(), hitMap.maxBinY(), hitMap.nBinY());
       ST::ITDetectorPlot MPVMap(idMPVMap, idMPVMap);
-      m_2dp_sectorMPVs = bookProfile2D(MPVMap.name(), MPVMap.minBinX(), MPVMap.maxBinX(), MPVMap.nBinX(),
-                                       MPVMap.minBinY(), MPVMap.maxBinY(), MPVMap.nBinY());
+      m_2d_sectorMPVs = book2D(MPVMap.name(), MPVMap.minBinX(), MPVMap.maxBinX(), MPVMap.nBinX(),
+                               MPVMap.minBinY(), MPVMap.maxBinY(), MPVMap.nBinY());
+      m_2d_sectorMPVsNorm = book2D(MPVMap.name()+" Normalisation", MPVMap.minBinX(), MPVMap.maxBinX(), MPVMap.nBinX(),
+				   MPVMap.minBinY(), MPVMap.maxBinY(), MPVMap.nBinY());
     }
     // Create histogram of with total charge for each sector
     std::vector<DeSTSector*>::const_iterator Sectors = tracker()->sectors().begin();
@@ -360,6 +366,7 @@ void ST::STClusterMonitor::fillHistograms(const LHCb::STCluster* cluster){
 
   const double totalCharge = cluster->totalCharge();
   if(totalCharge < m_chargeCut) return;
+  
   // calculate MPVs
   if(totalCharge > m_minMPVCharge) { 
     m_sectorMPVs[cluster->firstChannel().uniqueSector()](totalCharge); 

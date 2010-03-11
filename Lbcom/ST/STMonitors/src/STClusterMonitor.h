@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.h,v 1.10 2010-03-10 14:41:23 mtobin Exp $
+// $Id: STClusterMonitor.h,v 1.11 2010-03-11 09:27:28 mtobin Exp $
 #ifndef STCLUSTERMONITOR_H 
 #define STCLUSTERMONITOR_H 1
 
@@ -125,7 +125,8 @@ namespace ST
 
     /// Hitmaps
     AIDA::IHistogram2D* m_2d_hitmap;///< Cluster hitmap
-    AIDA::IProfile2D* m_2dp_sectorMPVs;///< Sector MPV maps
+    AIDA::IHistogram2D* m_2d_sectorMPVs;///< Sector MPV maps
+    AIDA::IHistogram2D* m_2d_sectorMPVsNorm;///< Use to normalize the MPV distribution in the history mode of the presenter
 
     /// Cut on the bunch ID (distinguish Beam from cosmics)
     std::vector<unsigned int> m_bunchID;
