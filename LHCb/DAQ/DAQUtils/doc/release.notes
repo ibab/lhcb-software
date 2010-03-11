@@ -4,6 +4,9 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+! 2010-03-11 - Patrick Koppenburg
+ - Add .ignire() to all Warning()
+
 ! 2010-03-08 - Patrick Koppenburg
  - bankKiller: 
   . Bug fix: when a bank name with  typo was given it killed the last bank

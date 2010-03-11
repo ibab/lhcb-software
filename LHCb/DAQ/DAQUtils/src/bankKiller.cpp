@@ -113,7 +113,7 @@ void  bankKiller::killBankType( LHCb::RawBank::BankType bankType,
     if (warningmsg) {
       std::stringstream s("");
       s<< " No bank of type '" << bankTypeName		<< "' has been found - nothing to be removed";
-      Warning(s.str(),StatusCode::SUCCESS,0);
+      Warning(s.str(),StatusCode::SUCCESS,0).ignore();
     }
     return;
   }
@@ -128,7 +128,7 @@ void  bankKiller::killBankType( LHCb::RawBank::BankType bankType,
     if( !success && warningmsg){
       if (msgLevel(MSG::DEBUG)) debug() << "The bank " << * itB << " of type '" << bankTypeName 
                                         << "' has not been found to be removed " << endmsg;
-      Warning("The bank of type '"+bankTypeName+"' has not been found",StatusCode::SUCCESS,0);
+      Warning("The bank of type '"+bankTypeName+"' has not been found",StatusCode::SUCCESS,0).ignore();
     }
   }
   if (msgLevel(MSG::DEBUG)) debug() << "All banks of type '" << bankTypeName 
