@@ -48,6 +48,8 @@ class ProjectBaseConf(object):
         self._dist_loc = dist_loc
     def DistLocation(self):
         return self._dist_loc
+    def TarBallDir(self):
+        return os.path.join(self.DistLocation(), self.NAME())
     def __str__(self):
         """ return string representation for printing """
         rep = ""
@@ -170,7 +172,6 @@ class ProjectConf(ProjectBaseConf):
 
         return tbname
     def md5FileName(self, version=None, cmtconfig=None):
-        log = logging.getLogger()
         mfname = self.tarBallName(version, cmtconfig, full=False)
         mfname += ".md5"
         return mfname

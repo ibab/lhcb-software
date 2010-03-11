@@ -1,8 +1,10 @@
 """ LHCb version style definition and massaging """
-# $Id: Version.py,v 1.4 2009-12-21 16:29:10 hmdegaud Exp $
+# $Id: Version.py,v 1.5 2010-03-11 13:47:34 hmdegaud Exp $
+
+from fnmatch import fnmatch
 
 import re
-
+import os
 
 # This is the version style used in the releases: vXrY[pZ]
 _txt_version_style = r'v([0-9]+)r([0-9]+)(?:p([0-9]+))?'
@@ -91,4 +93,17 @@ def sortStrings(strlist, versiontype=CoreVersion, safe=False, reverse=False):
         versionlist.reverse()
     return [ x[1] for x in versionlist ]
         
-    
+def getVersionsFromDir(dirname, pattern=None, versiontype=CoreVersion, reverse=False):
+    strlist = []
+    for o in os.listdir(dirname) :
+        if pattern :
+            if fnmatch(o, pattern) :
+                strlist.append(o)
+        else :
+            strlist.append(o)
+    versionlist = [ extractVersion(s, versiontype=versiontype) for s in strlist ]
+    versionlist = [ v for v in versionlist if v ]
+    versionlist.sort()
+    if reverse :
+        versionlist.reverse()
+    return versionlist
