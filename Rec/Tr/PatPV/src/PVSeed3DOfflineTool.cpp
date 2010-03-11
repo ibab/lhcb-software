@@ -1,4 +1,4 @@
-// $Id: PVSeed3DOfflineTool.cpp,v 1.2 2010-03-05 10:23:35 pmorawsk Exp $
+// $Id: PVSeed3DOfflineTool.cpp,v 1.3 2010-03-11 21:23:39 witekma Exp $
 // Include files
 
 // STL
@@ -207,7 +207,7 @@ StatusCode PVSeed3DOfflineTool::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  return GaudiTool::finalize();
+  return StatusCode::SUCCESS;
 
 }
 //=============================================================================
