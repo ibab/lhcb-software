@@ -24,3 +24,7 @@ apply_pattern python_alias script=webArchiveRelease
 apply_pattern python_alias script=tag_package
 
 
+apply_pattern python_alias script=buildTar
+apply_pattern python_alias script=checkTar
+
+

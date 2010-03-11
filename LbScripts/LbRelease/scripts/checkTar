@@ -1,0 +1,52 @@
+#!/usr/bin/env python
+# $Id: checkTar,v 1.1 2010-03-11 10:33:56 hmdegaud Exp $
+""" Don't forget about the description """
+
+from LbRelease.TarBall import checkTar
+from LbUtils.Script import Script
+from LbUtils.CVS import CVS2Version
+
+import logging
+import sys
+
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.1 $")
+
+class CheckTarScript(Script):
+    _version = __version__    
+    _description = __doc__
+    def defineOpts(self):
+        parser = self.parser
+        parser.set_defaults(input_dir=None)
+        parser.add_option("-i", "--input-dir",
+                          help = "define the input directory for the created tarballs" \
+                          "[default: the LHCBTAR directory for the project]")
+        parser.set_defaults(keep_going=False)
+        parser.add_option("-k", "--keep-going",
+                          action = "store_true",
+                          help = "define the input directory for the created tarballs" \
+                          "[default: %default]")
+        parser.set_defaults(cmtconfig=[])
+        parser.add_option("-c", "--cmtconfig",
+                           action = "append",
+                           help = "add cmtconfig the list of target tarballs [default: all supported cmtconfigs are tried]")
+
+    def main(self):
+        log = logging.getLogger()
+        args = self.args
+        opts = self.options
+        if len(args) < 2 :
+            log.error("Not enough arguments")
+            sys.exit(1)
+        else :
+            project   = args[0]
+            version   = args[1]
+
+        if not checkTar(project, version, opts.cmtconfig, opts.input_dir, 
+                        opts.keep_going) :
+            return 1
+
+        return 0
+
+if __name__ == '__main__':
+    s = CheckTarScript(usage="%prog [options] path")
+    sys.exit(s.run())

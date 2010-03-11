@@ -6,6 +6,7 @@ from LbConfiguration.Platform import pathBinaryMatch, pathSharedMatch
 from LbConfiguration.Platform import binary_list
 from LbUtils.Tar import createTarBallFromFilter
 from LbUtils.Temporary import TempDir
+from LbUtils.File import createMD5File, checkMD5Info
 
 from fnmatch import fnmatch
 
@@ -72,7 +73,7 @@ class BinaryTarBall(TarBall):
 def projectFilter(path, cmtconfig=None):
     exclude_file_list = ["install.history", "core.*", "*.pyc", "*.pyo", ".glimpse_*",
                          "*.o", "lib*.a", "*.obj" ]
-    exclude_dir_list = ["html", "Visal"]
+    exclude_dir_list = ["html", "Visual"]
 
     exclude_list = [ os.path.join("*", x) for x in exclude_file_list]
     exclude_list += [ os.path.join("*", x, "*") for x in exclude_dir_list]
@@ -85,10 +86,28 @@ def projectFilter(path, cmtconfig=None):
     else :
         return pathSharedMatch(path)
 
+def generateMD5(project, version, cmtconfig=None, input_dir=None):
+    log = logging.getLogger()
+    prj_conf = getProject(project)
+    if not input_dir :
+        input_dir = prj_conf.DistLocation()
+    filename = os.path.join(input_dir, prj_conf.tarBallName(version, cmtconfig, full=True))
+    if os.path.exists(filename) :
+        md5fname = os.path.join(input_dir, prj_conf.md5FileName(version, cmtconfig))
+        targetname = os.path.basename(filename)
+        if os.path.exists(md5fname) :
+            os.remove(md5fname)
+            log.info("Replacing %s for %s" % (md5fname, filename))
+        else :
+            log.info("Creating %s for %s" % (md5fname, filename))                
+        createMD5File(filename, md5fname, targetname)
+    else :
+        log.warning("The file %s doesn't exist. Skipping md5 creation." % filename)
 
 def buildTar(project, version, cmtconfig=None, 
              top_dir=None, output_dir=None, 
-             overwrite=False, overwrite_shared=False, update=False):
+             overwrite=False, overwrite_shared=False, update=False,
+             md5=True):
     log = logging.getLogger()
     prj_conf = getProject(project)
     if not top_dir :
@@ -113,6 +132,8 @@ def buildTar(project, version, cmtconfig=None,
             log.info("Creating %s with %s" % (filename, ", ".join(srcdirs)) )        
         createTarBallFromFilter(srcdirs, filename, pathfilter,
                                 prefix=prefix, dereference=False, update=update)
+        if md5 :
+            generateMD5(project, version, c, output_dir)
 
     filename = os.path.join(output_dir, prj_conf.tarBallName(version, cmtconfig=None, full=True))
     pathfilter = projectFilter
@@ -124,6 +145,8 @@ def buildTar(project, version, cmtconfig=None,
             log.info("Creating %s with %s" % (filename, ", ".join(srcdirs)) )            
         createTarBallFromFilter(srcdirs, filename, pathfilter,
                             prefix=prefix, dereference=False, update=False)        
+        if md5 :
+            generateMD5(project, version, None, output_dir)
     else :
         if os.path.exists(filename) :
             log.info("Updating %s with %s" % (filename, ", ".join(srcdirs)) )
@@ -131,9 +154,53 @@ def buildTar(project, version, cmtconfig=None,
             log.info("Creating %s with %s" % (filename, ", ".join(srcdirs)) )
         createTarBallFromFilter(srcdirs, filename, pathfilter,
                             prefix=prefix, dereference=False, update=True)
-    
+        if md5 :
+            generateMD5(project, version, None, output_dir)
 
+def checkMD5(project, version, cmtconfig=None, input_dir=None):
+    log = logging.getLogger()
+    prj_conf = getProject(project)
+    good = False
+    if not input_dir :
+        input_dir = prj_conf.DistLocation()
+    filename = os.path.join(input_dir, prj_conf.tarBallName(version, cmtconfig, full=True))
+    if os.path.exists(filename) :
+        md5fname = os.path.join(input_dir, prj_conf.md5FileName(version, cmtconfig))
+        target_name = os.path.basename(filename)
+        if os.path.exists(md5fname) :
+            log.info("Checking %s for %s" % (md5fname, filename))
+            if checkMD5Info(md5fname, target_name) :
+                log.info("The file %s is OK" % md5fname)
+                good = True
+            else :
+                log.error("The file %s is wrong" % md5fname)
+                good = False
+        else :
+            log.error("The file %s doesn't exist" % md5fname)
+            good = False                
+    else :
+        log.warning("The file %s doesn't exist. Skipping md5 check." % filename)
+        good = True
+    return good
 
+def checkTar(project, version, cmtconfig=None, input_dir=None, 
+             keep_going=False):
+    prj_conf = getProject(project)
+    good = True
+    if not input_dir :
+        input_dir = prj_conf.DistLocation()
+    if not cmtconfig :
+        cmtconfig = binary_list
+    for c in cmtconfig :
+        status = checkMD5(project, version, c, input_dir)
+        if not status :
+            good = False 
+            if not keep_going and not good:
+                return good
+    status = checkMD5(project, version, None, input_dir)
+    if not status :
+        good = False
+    return good
 
 if __name__ == '__main__':
     pass
