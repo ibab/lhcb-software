@@ -5,6 +5,9 @@
 //#include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
+//Use ODIN
+//#include "Event/ODIN.h"
+
 //Trigger decisions
 #include "Event/L0DUReport.h"
 #include "Event/HltDecReports.h"
@@ -3289,7 +3292,24 @@ StatusCode DisplVertices::fillHeader( Tuple& tuple ){
     get<LHCb::RecHeader>(LHCb::RecHeaderLocation::Default);  
   //debug() << "Filling Tuple Event " << header->evtNumber() << endmsg ;
   tuple->column("Event", (int)header->evtNumber());
+  tuple->column("Run", (int)header->runNumber());
   return StatusCode::SUCCESS ;
+  
+//   LHCb::ODIN * odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
+//   if( odin ){
+//     //tuple->column("Event", odin->eventNumber()); //ulonglong !
+//     tuple->column("Run", odin->runNumber());
+//     tuple->column("BunchID", odin->bunchId());
+//     tuple->column("BunchCurrent", odin->bunchCurrent());
+//     //tuple->column("GpsTime", (double)odin->gpsTime()); //ulonglong !
+//     //tuple->column("EventTime", odin->eventTime() );
+//     tuple->column("OrbitNumber", odin->orbitNumber());
+    
+//   } else {
+//     Warning("Can't get LHCb::ODINLocation::Default");
+//   }
+
+
 }
 
 //============================================================================

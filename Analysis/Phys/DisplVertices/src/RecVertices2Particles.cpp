@@ -728,6 +728,7 @@ StatusCode RecVertices2Particles::fillHeader( Tuple & tuple ){
     get<RecHeader>(RecHeaderLocation::Default);  
   //debug() << "Filling Tuple Event " << header->evtNumber() << endmsg ;
   tuple->column("Event", (int)header->evtNumber());
+  tuple->column("Run", (int)header->runNumber());
   return StatusCode::SUCCESS ;
 }
 
