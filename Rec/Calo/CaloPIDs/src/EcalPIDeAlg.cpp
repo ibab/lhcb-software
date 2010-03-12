@@ -1,8 +1,11 @@
-// $Id: EcalPIDeAlg.cpp,v 1.5 2009-08-21 16:49:45 odescham Exp $
+// $Id: EcalPIDeAlg.cpp,v 1.6 2010-03-12 21:51:40 dgolubko Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2009/08/21 16:49:45  odescham
+// implement generic context-dependent TES I/O
+//
 // Revision 1.4  2008/06/30 15:37:34  odescham
 // prepare for HLT processing
 //
@@ -50,9 +53,16 @@ protected:
     _setProperty ( "nMlong" , Gaudi::Utils::toString(  100 * Gaudi::Units::GeV ) );
     _setProperty ( "nMdown" , Gaudi::Utils::toString(  100 * Gaudi::Units::GeV ) );
     _setProperty ( "nMTtrack" , Gaudi::Utils::toString(  100 * Gaudi::Units::GeV ) );
-    _setProperty ( "HistogramL" , "CaloPIDs/CALO/ECALPIDE/h3" ) ;
-    _setProperty ( "HistogramD" , "CaloPIDs/CALO/ECALPIDE/h5" ) ;
-    _setProperty ( "HistogramT" , "CaloPIDs/CALO/ECALPIDE/h6" ) ;
+
+    _setProperty ( "HistogramL"     , "DLL_Long" ) ;
+    _setProperty ( "HistogramD"     , "DLL_Downstream" ) ;
+    _setProperty ( "HistogramT"     , "DLL_Ttrack" ) ;
+    _setProperty ( "ConditionName"  , "Conditions/ParticleID/Calo/EcalPIDe" ) ;
+
+
+    _setProperty ( "HistogramL_THS" , "CaloPIDs/CALO/ECALPIDE/h3" ) ;
+    _setProperty ( "HistogramD_THS" , "CaloPIDs/CALO/ECALPIDE/h5" ) ;
+    _setProperty ( "HistogramT_THS" , "CaloPIDs/CALO/ECALPIDE/h6" ) ;
     _setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
                   ( LHCb::Track::Long       ,
                     LHCb::Track::Ttrack     ,

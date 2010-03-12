@@ -1,4 +1,4 @@
-// $Id: CaloID2DLL.h,v 1.6 2010-02-08 17:36:16 dgolubko Exp $
+// $Id: CaloID2DLL.h,v 1.7 2010-03-12 21:51:40 dgolubko Exp $
 // ============================================================================
 #ifndef CALOPIDS_CALOID2DLL_H 
 #define CALOPIDS_CALOID2DLL_H 1
@@ -91,6 +91,12 @@ protected:
   std::string             m_title_tt    ; ///< histogram title TTrack
   std::string             m_title_ut    ; ///< histogram title upstr
   std::string             m_title_vt    ; ///< histogram title velo
+
+  std::string             m_title_lt_ths; ///< histogram title long if DLLs are read from a root file via THS
+  std::string             m_title_dt_ths; ///< histogram title down if DLLs are read from a root file via THS
+  std::string             m_title_tt_ths; ///< histogram title TTrack if DLLs are read from a root file via THS
+  std::string             m_title_ut_ths; ///< histogram title upstr if DLLs are read from a root file via THS
+  std::string             m_title_vt_ths; ///< histogram title velo if DLLs are read from a root file via THS
 
   double                  m_pScale_lt   ; ///< scale for mom long
   double                  m_pScale_dt   ; ///< scale for mom down

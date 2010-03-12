@@ -1,8 +1,11 @@
-// $Id: BremPIDeAlg.cpp,v 1.7 2009-08-21 16:49:45 odescham Exp $
+// $Id: BremPIDeAlg.cpp,v 1.8 2010-03-12 21:51:40 dgolubko Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2009/08/21 16:49:45  odescham
+// implement generic context-dependent TES I/O
+//
 // Revision 1.6  2008/06/30 15:37:34  odescham
 // prepare for HLT processing
 //
@@ -56,9 +59,16 @@ protected:
     _setProperty ( "nMlong" , Gaudi::Utils::toString(  50 * Gaudi::Units::GeV ) );
     _setProperty ( "nMvelo" , Gaudi::Utils::toString(  50 * Gaudi::Units::GeV ) );
     _setProperty ( "nMupstr" , Gaudi::Utils::toString(  50 * Gaudi::Units::GeV ) );
-    _setProperty ( "HistogramU" , "CaloPIDs/CALO/BREMPIDE/h3" ) ;
-    _setProperty ( "HistogramL" , "CaloPIDs/CALO/BREMPIDE/h3" ) ;
-    _setProperty ( "HistogramV" , "CaloPIDs/CALO/BREMPIDE/h3" ) ;
+
+    _setProperty ( "HistogramU"     , "DLL_Long" ) ;
+    _setProperty ( "HistogramL"     , "DLL_Long" ) ;
+    _setProperty ( "HistogramV"     , "DLL_Long" ) ;
+    _setProperty ( "ConditionName"  , "Conditions/ParticleID/Calo/BremPIDe" ) ;
+
+
+    _setProperty ( "HistogramU_THS" , "CaloPIDs/CALO/BREMPIDE/h3" ) ;
+    _setProperty ( "HistogramL_THS" , "CaloPIDs/CALO/BREMPIDE/h3" ) ;
+    _setProperty ( "HistogramV_THS" , "CaloPIDs/CALO/BREMPIDE/h3" ) ;
     // track types 
     _setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
                    ( LHCb::Track::Velo     ,

@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.90 2010-03-08 01:43:08 odescham Exp $ 
+! $Id: release.notes,v 1.91 2010-03-12 21:51:40 dgolubko Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+! 2010-03-12 - Dmitry Golubkov
+ - CaloID2DLL - enable CondDB by default, add protection if the Condition is missing
+ - BremPIDeAlg, EcalPIDeAlg, EcalPIDmuAlg, HcalPIDeAlg, HcalPIDmuAlg, PrsPIDeAlg - set default Condition and histogram names
 
 
 ! 2010-03-08 - Olivier Deschamps
