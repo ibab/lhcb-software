@@ -1,4 +1,4 @@
-// $Id: L0MuonAlg.cpp,v 1.30 2010-03-08 14:14:40 jucogan Exp $
+// $Id: L0MuonAlg.cpp,v 1.31 2010-03-12 13:59:48 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -53,10 +53,10 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   m_foiYSize.push_back(1); // 4-> Yfoi in M5
 
   declareProperty("IgnoreCondDB"         , m_ignoreCondDB         = true);
-  declareProperty("ConditionNameCB"      , m_conditionNameFOI     = "Conditions/Online/L0MUON/Q1/FOI");
+  declareProperty("ConditionNameCB"      , m_conditionNameFOI     = "Conditions/Online/L0MUON/Q1/SoftFOI");
   declareProperty("ConditionNamePB"      , m_conditionNameVersion = "Conditions/Online/L0MUON/Q1/Versions");
-  declareProperty("ParameterNameFOIx"    , m_parameterNameFOIx    = "FOIX");
-  declareProperty("ParameterNameFOIy"    , m_parameterNameFOIy    = "FOIY");
+  declareProperty("ParameterNameFOIx"    , m_parameterNameFOIx    = "SoftFOIX");
+  declareProperty("ParameterNameFOIy"    , m_parameterNameFOIy    = "SoftFOIY");
   declareProperty("ParameterNameVersion" , m_parameterNameVersion = "EMUL");
 
   declareProperty("Version"        , m_version = 3 );
@@ -135,8 +135,8 @@ StatusCode L0MuonAlg::initialize()
                          m_l0CondCtrl ,
                          &L0MuonAlg::updateL0CondVersion ) ;
     } else {
-      error() << "CondDB: cannot access "<<m_conditionNameVersion<< endmsg ;
-      error() << "Emulation will run with the processor version defined in options." << endmsg ;
+      warning() << "CondDB: cannot access "<<m_conditionNameVersion<< endmsg ;
+      warning() << "Emulation will run with the processor version defined in options." << endmsg ;
     }
     // - FOI 
     if (this->exist<Condition>(detSvc() , m_conditionNameFOI , false ) ){
@@ -145,8 +145,8 @@ StatusCode L0MuonAlg::initialize()
                          m_l0CondProc ,
                          &L0MuonAlg::updateL0CondFOI ) ;
     } else {
-      error() << "CondDB: cannot access "<<m_conditionNameFOI<< endmsg ;
-      error() << "Emulation will run with the FOI defined in options." << endmsg ;
+      warning() << "CondDB: cannot access "<<m_conditionNameFOI<< endmsg ;
+      warning() << "Emulation will run with the FOI defined in options." << endmsg ;
     }
   }
   
@@ -628,42 +628,30 @@ StatusCode L0MuonAlg::updateL0CondFOI()
 {
 
   if ( ! m_l0CondProc -> exists( m_parameterNameFOIx ) ) {
-    Warning("FOIX parameter does not exist in DB").ignore() ;
-    Warning("Use default FOIX").ignore() ;
+    Error(m_parameterNameFOIx+" parameter does not exist in DB").ignore() ;
+    Error("Use default FOIX").ignore() ;
   } else {
     int condFOI =m_l0CondProc -> paramAsInt( m_parameterNameFOIx ) ;
     m_foiXSize.clear();
-    int sta = 0;
-    for (int i=0; i<2; ++i) {
-      for (int ii=0; ii<2; ++ii) {
-        int j = 12-4*(i*2+ii);
-        int hardFOI = ( ( condFOI>>j ) & 0xF );
-        int softFOI = hardFOI * hard2softFOIConversion(sta);
-        m_foiXSize.push_back( softFOI );
-        ++sta;
-      }
-      if (sta==2) m_foiXSize.push_back( 0 ); // M3
-      ++sta; 
-    }
+    m_foiXSize.push_back( (condFOI>>12) & 0xF ); // M1
+    m_foiXSize.push_back( (condFOI>>8 ) & 0xF ); // M2
+    m_foiXSize.push_back( 0 );                   // M3
+    m_foiXSize.push_back( (condFOI>>4 ) & 0xF ); // M4
+    m_foiXSize.push_back( (condFOI>>0 ) & 0xF ); // M5
   }
 
   if ( ! m_l0CondProc -> exists( m_parameterNameFOIy ) ) {
-    Warning("FOIY parameter does not exist in DB").ignore() ;
-    Warning("Use default FOIY").ignore() ;
+    Error(m_parameterNameFOIy+" parameter does not exist in DB").ignore() ;
+    Error("Use default FOIY").ignore() ;
   } else {
     int condFOI =m_l0CondProc -> paramAsInt( m_parameterNameFOIy ) ;
     m_foiYSize.clear();
-    int sta = 0;
-    for (int i=0; i<2; ++i) {
-      for (int ii=0; ii<2; ++ii) {
-        int j = 12-4*(i*2+ii);
-        int FOI = ( ( condFOI>>j ) & 0xF );
-        m_foiYSize.push_back( FOI );
-        ++sta;
-      }
-      if (sta==2) m_foiYSize.push_back( 0 ); // M3
-      ++sta; 
-    }
+    m_foiYSize.clear();
+    m_foiYSize.push_back( (condFOI>>12) & 0xF ); // M1
+    m_foiYSize.push_back( (condFOI>>8 ) & 0xF ); // M2
+    m_foiYSize.push_back( 0 );                   // M3
+    m_foiYSize.push_back( (condFOI>>4 ) & 0xF ); // M4
+    m_foiYSize.push_back( (condFOI>>0 ) & 0xF ); // M5
   }
 
   // Set the properties of the MuonTriggerUnit
@@ -675,8 +663,8 @@ StatusCode L0MuonAlg::updateL0CondFOI()
 StatusCode L0MuonAlg::updateL0CondVersion()
 {
   if ( ! m_l0CondCtrl -> exists( m_parameterNameVersion ) ) {
-    Warning("Q1CB0.versionEMUL parameter does not exist in DB").ignore() ;
-    Warning("Use default processor version").ignore() ;
+    Error("Q1CB0.versionEMUL parameter does not exist in DB").ignore() ;
+    Error("Use default processor version").ignore() ;
   } else {
     std::string s_version = m_l0CondCtrl -> paramAsString( m_parameterNameVersion ) ;
     m_version = int(atof( s_version.c_str() ));

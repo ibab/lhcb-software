@@ -1,7 +1,10 @@
-!  $Id: release.notes,v 1.99 2010-03-09 16:21:31 jucogan Exp $
+!  $Id: release.notes,v 1.100 2010-03-12 13:59:48 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !---------------------------------------------------------------------------
+
+! 2010-03-12 - Julien Cogan
+ - Change in CondDB (L0MuonAlg), use new condition (SoftFOI) 
 
 ! 2010-03-09 - Julien Cogan
  - Add implementation of L0MuonOverflowTool
