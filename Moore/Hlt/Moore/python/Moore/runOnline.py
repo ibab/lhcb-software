@@ -18,7 +18,7 @@ def start() :
     ### default database setup
     Moore().Simulation = False
     Moore().DDDBtag    = 'hlt-20100120'
-    Moore().CondDBtag  = 'hlt-20100202'
+    Moore().CondDBtag  = 'hlt-20100303'
     Moore().UseDBSnapshot = True
     Moore().IgnoreDBHeartBeat = True
     Moore().EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough' ] )
