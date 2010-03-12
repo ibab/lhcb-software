@@ -1,31 +1,47 @@
 #!/usr/bin/env python
 # =============================================================================
-## The most trivial Bender-based : HelloWorld example
+## @file BenderExample/HelloWorld.py
+#  The most trivial Bender-based : HelloWorld example
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
-#  <b>"Python-based Interactive Environment for Smart and Friendly 
-#   Physics Analysis"</b>
+#  <b>``Python-based Interactive Environment for Smart and Friendly 
+#   Physics Analysis''</b>
 #
 #  The package has been designed with the kind help from
 #  Pere MATO and Andrey TSAREGORODTSEV. 
 #  And it is based on the 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
-#  "C++ ToolKit for Smart and Friendly Physics Analysis"
+#  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
 #  with the campain of Dr.O.Callot et al.: 
-#  "No Vanya's lines are allowed in LHCb/Gaudi software."
+#  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @date 2006-10-12
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # =============================================================================
 """
-The most trivial Bender-based  'Hello,World' example
+The most trivial Bender-based  ``Hello,World'' example
+
+This file is a part of BENDER project:
+``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
+
+The project has been designed with the kind help from
+Pere MATO and Andrey TSAREGORODTSEV. 
+
+And it is based on the 
+LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
+
+By usage of this code one clearly states the disagreement 
+with the campain of Dr.O.Callot et al.: 
+``No Vanya's lines are allowed in LHCb/Gaudi software.''
+
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ "
+__date__    = " 2006-10-12 "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ "
 # =============================================================================
 ## import everything from Bender 
 from Bender.Main import * 
@@ -48,19 +64,28 @@ class HelloWorld(Algo) :
     
 # =============================================================================
 ## configure the job
-def configure ( **args ) :
+def configure ( datafiles , catalogs = [] ) :
     """
     Configure the job
-    """
-    
-    from Configurables import DaVinci
-    
+    """    
+    ##
+    ## Static Configuration (``Configurables'')
+    ##
+        
+    from Configurables import DaVinci    
     daVinci = DaVinci (
         DataType   = 'DC06' , # default  
         Simulation = True   ) 
     
-    ## get or create the Application Manager
-    gaudi = appMgr()
+    ## define the input data 
+    setData ( datafiles , catalogs ) 
+    
+    ##
+    ## Dynamic Configuration: Jump into the wonderful world of GaudiPython 
+    ##
+    
+    ## get the actual application manager (create if needed)
+    gaudi = appMgr() 
     
     ## create local algorithm:
     hello = HelloWorld ('Hello')
@@ -68,28 +93,31 @@ def configure ( **args ) :
     ## set it as main algorithm to be executed 
     gaudi.setAlgorithms ( hello )
     
-    ## get input data 
-    import LoKiExample.Bs2Jpsiphi_mm_data as input 
-    evtSel = gaudi.evtSel()    
-    evtSel.open ( input.Files ) 
-    evtSel.PrintFreq = 1    
-    
     return SUCCESS                                          # RETURN 
 
 # =============================================================================
 ## job steering 
 if __name__ == '__main__' :
     
-    ## print own documentation string
-    print __doc__
+    ## make printout of the own documentations 
+    print '*'*120
+    print                      __doc__
+    print ' Author  : %s ' %   __author__    
+    print ' Version : %s ' %   __version__
+    print ' Date    : %s ' %   __date__
+    print ' dir(%s) : %s ' % ( __name__    , dir() )
+    print '*'*120  
     
     ## configure the job:
-    configure ()
+    configure ( [
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000311_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000322_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"]
+                )
     
     ## run the job
     run(50)
     
-
+    
 # =============================================================================
 # The END 
 # =============================================================================

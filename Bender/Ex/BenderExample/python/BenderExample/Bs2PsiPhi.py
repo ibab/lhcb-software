@@ -1,33 +1,49 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PsiPhi.py,v 1.11 2010-03-12 13:26:45 ibelyaev Exp $ 
+# $Id: Bs2PsiPhi.py,v 1.12 2010-03-12 16:41:13 ibelyaev Exp $ 
 # =============================================================================
-## The simple Bender-based example for Bs-> Jpsi phi selection
+## @file BEnderExample/Bs2PsiPhi.py
+#  The simple Bender-based example for Bs-> Jpsi phi selection
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
-#  <b>"Python-based Interactive Environment for Smart and Friendly 
-#   Physics Analysis"</b>
+#  <b>``Python-based Interactive Environment for Smart and Friendly 
+#   Physics Analysis''</b>
 #
 #  The package has been designed with the kind help from
 #  Pere MATO and Andrey TSAREGORODTSEV. 
 #  And it is based on the 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
-#  "C++ ToolKit for Smart and Friendly Physics Analysis"
+#  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
 #  with the campain of Dr.O.Callot et al.: 
-#  "No Vanya's lines are allowed in LHCb/Gaudi software."
+#  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @date 2006-10-12
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 """
 The simple Bender-based example for Bs-> Jpsi phi selection
+
+This file is a part of BENDER project:
+``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
+
+The project has been designed with the kind help from
+Pere MATO and Andrey TSAREGORODTSEV. 
+
+And it is based on the 
+LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
+
+By usage of this code one clearly states the disagreement 
+with the campain of Dr.O.Callot et al.: 
+``No Vanya's lines are allowed in LHCb/Gaudi software.''
+
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $ "
+__date__    = "2006-10-12"
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $ "
 # =============================================================================
 ## import everything from bender 
 from Bender.All                import *
@@ -41,11 +57,6 @@ class Bs2PsiPhi(AlgoMC) :
     Simple class for Bs -> Psi Phi
     """
     
-    ## standard constructor
-    def __init__ ( self , name = 'Bs2PsiPhi' , **kwargs ) :
-        """ standard constructor """ 
-        return AlgoMC.__init__ ( self , name , **kwargs )
-
     ## standard mehtod for analyses
     def analyse( self ) :
         """ standard method for analyses """
@@ -198,36 +209,46 @@ class Bs2PsiPhi(AlgoMC) :
         
         return SUCCESS                                           # RETURN 
     
+    ## finalize & print histos 
+    def finalize ( self ) :
+        """
+        Finalize & print histos         
+        """
+        histos = self.Histos()
+        for key in histos :
+            h = histos[key]
+            if hasattr ( h , 'dump' ) : print h.dump(50,30,True)
+        return AlgoMC.finalize ( self )
     
 # =============================================================================
 ## configure the job
-def configure ( **args ) :
-    """ Configure the job """
+def configure ( datafiles , catalogs = [] ) :
+    """
+    Configure the job
+    """
+    ##
+    ## Static Configuration 
+    ##
     
-    from Configurables import NTupleSvc, HistogramPersistencySvc, DaVinci, EventSelector
-    
+    from Configurables import DaVinci
     daVinci = DaVinci (
         DataType   = 'MC09'      , # default  
         Simulation = True
         )
     
+    from Configurables import HistogramPersistencySvc
     HistogramPersistencySvc ( OutputFile = 'Bs2PsiPhi_Histos.root' ) 
+    
+    from Configurables import NTupleSvc
     NTupleSvc ( Output = [ "PsiPhi DATAFILE='Bs2PsiPhi_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
     
-    EventSelector ( 
-        PrintFreq = 100 ,
-        Input = [
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000514_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000515_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000516_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000517_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000518_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000519_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000520_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000521_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000522_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000523_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"]
-        )
+    ## define input data 
+    setData  ( datafiles , catalogs )
+    
+    ##
+    ## Dynamic Configuration: Jump into the wonderful world of GaudiPython 
+    ##
+    
     ## get the actual application manager (create if needed)
     gaudi = appMgr()
     
@@ -249,8 +270,7 @@ def configure ( **args ) :
     
     ## if runs locally at CERN lxplus 
     gaudi.setAlgorithms( [alg] ) ## gaudi.addAlgorithm ( alg ) 
-    
-    
+        
     return SUCCESS 
     
 # =============================================================================
@@ -258,14 +278,30 @@ def configure ( **args ) :
 if __name__ == '__main__' :
 
     ## make printout of the own documentations 
-    print __doc__
+    print '*'*120
+    print                      __doc__
+    print ' Author  : %s ' %   __author__    
+    print ' Version : %s ' %   __version__
+    print ' Date    : %s ' %   __date__
+    print ' dir(%s) : %s ' % ( __name__    , dir() )
+    print '*'*120  
     
     ## configure the job:
-    configure()
-
+    configure( [ 
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000514_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000515_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000516_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000517_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000518_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000519_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000520_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000521_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000522_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000523_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"]
+               )
+    
     ## run the job
-    run(500)
-
+    run(501)
 
 # =============================================================================
 # The END 
