@@ -12,6 +12,9 @@
 
   <class name  = "LHCb::RichTrackSegment"              />
 
+  <class name  = "Rich::DAQ::NumericType<unsigned int>" />
+  <class name  = "Rich::DAQ::NumericType<ulonglong>"    />
+
   <class name  = "Rich::DAQ::Level0ID"                 />
   <class name  = "Rich::DAQ::Level1HardwareID"         />
   <class name  = "Rich::DAQ::Level1LogicalID"          />

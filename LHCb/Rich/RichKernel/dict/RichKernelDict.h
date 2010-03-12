@@ -36,10 +36,20 @@ namespace
 {
   struct _Instantiations 
   {
-    Rich::IAddBackground::HPDBackgrounds   obj_1;
-    Rich::IGenericHPDAnalysisTool::Result  obj_2;
-    Rich::IGenericHPDAnalysisTool::Results obj_3;
-
+    Rich::IAddBackground::HPDBackgrounds         obj_1;
+    Rich::IGenericHPDAnalysisTool::Result        obj_2;
+    Rich::IGenericHPDAnalysisTool::Results       obj_3;
+    Rich::DAQ::Level0ID                          obj_4;
+    Rich::DAQ::EventID                           obj_5;
+    Rich::DAQ::BXID                              obj_6;
+    Rich::DAQ::Level1LogicalID                   obj_7;
+    Rich::DAQ::Level1HardwareID                  obj_8;
+    Rich::DAQ::L1IngressID                       obj_9;
+    Rich::DAQ::L1InputWithinIngress              obj_10;
+    Rich::DAQ::Level1Input                       obj_11;
+    Rich::DAQ::HPDHardwareID                     obj_12;
+    Rich::DAQ::HPDL1InputID                      obj_13;
+    Rich::DAQ::HPDCopyNumber                     obj_14;
   };
 }
 
