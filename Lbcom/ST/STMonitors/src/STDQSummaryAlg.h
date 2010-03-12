@@ -1,4 +1,4 @@
-// $Id: STDQSummaryAlg.h,v 1.4 2010-03-05 13:51:03 nchiapol Exp $
+// $Id: STDQSummaryAlg.h,v 1.5 2010-03-12 09:07:00 nchiapol Exp $
 #ifndef STDQSummaryAlg_H
 #define STDQSummaryAlg_H 1
 
@@ -48,7 +48,7 @@ private:
   void outputInfo();
 
   /// reset all counters (delets and recreates Counters)
-  void resetCounters();
+  void resetCounters(Gaudi::Time time);
 
   /// get data from event and add to Counters
   void processEvent(const LHCb::STClusters* clusters, 
@@ -78,18 +78,6 @@ private:
   std::string m_summaryLocation;  ///< data location
   std::string m_clusterLocation;  ///< data location 
  
-  /// Struct containing the data collected for one run
-  //struct DataRow {
-  //  int          run;             ///< run number
-  //  unsigned int event;           ///< number of events
-  //  double       clus;            ///< mean number of clusters
-  //  double       noise;           ///< mean number of noise clusters
-  //  double       procEff;         ///< mean processing efficiency
-  //  int          error;           ///< total number of error banks
-  //  int          corrupted;       ///< total number of corrupted banks
-  //  int          sumMissing;      ///< total number of missing banks
-  //  int          chargeMPV;       ///< Most probable charge value
-  //};
   /// temporary storage vector contains data of all events
   std::vector<STDQCounters::DataRow> m_dataStorage;
   

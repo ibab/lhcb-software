@@ -1,4 +1,4 @@
-// $Id: STDQCounters.h,v 1.4 2010-03-05 13:51:03 nchiapol Exp $
+// $Id: STDQCounters.h,v 1.5 2010-03-12 09:07:00 nchiapol Exp $
 #ifndef STDQCounters_H
 #define STDQCounters_H 1
 
@@ -42,6 +42,7 @@ public:
 
   /** Counters */
   unsigned int m_event;                 ///< number of events
+  std::string  m_RunDate;               ///< date of this run
   Type<int>   ::Counter m_sumClusters;  ///< total clusters
   Type<int>   ::Counter m_sumNoise;     ///< noise clusters
   Type<double>::Counter m_sumEff;       ///< processing efficiency
@@ -56,6 +57,7 @@ public:
   /// Struct containing the data collected for one run
   struct DataRow {
     int          run;             ///< run number
+    std::string  runDate;
     unsigned int event;           ///< number of events
     double       clus;            ///< mean number of clusters
     double       noise;           ///< mean number of noise clusters
@@ -87,7 +89,8 @@ void STDQCounters::init(int minADC, int maxADC) {
   m_entries = false;
 
   if (!m_txtColumns.size()) {
-    m_txtColumns.push_back("Run");
+    m_txtColumns.push_back("RunNr");
+    m_txtColumns.push_back("RunDate");
     m_txtColumns.push_back("Events");
     m_txtColumns.push_back("Clusters/evt");
     m_txtColumns.push_back("#Noise/event");

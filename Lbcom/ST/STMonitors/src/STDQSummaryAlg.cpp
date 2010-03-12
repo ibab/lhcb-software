@@ -1,4 +1,4 @@
-// $Id: STDQSummaryAlg.cpp,v 1.8 2010-03-05 13:51:03 nchiapol Exp $
+// $Id: STDQSummaryAlg.cpp,v 1.9 2010-03-12 09:07:00 nchiapol Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -15,6 +15,8 @@
 
 // fstream
 #include <fstream>
+
+#include "boost/lexical_cast.hpp"
 
 DECLARE_ALGORITHM_FACTORY( STDQSummaryAlg );
 
@@ -86,7 +88,7 @@ StatusCode STDQSummaryAlg::execute(){
     // new run output and reset
     if (m_lastRunNumber != -1) {
       outputInfo();
-      resetCounters();
+      resetCounters(odin->eventTime());
     }
     m_lastRunNumber = run;
   }
@@ -110,6 +112,7 @@ void STDQSummaryAlg::outputInfo(){
   
   STDQCounters::DataRow row;
   row.run        = m_lastRunNumber               ;
+  row.runDate    = Counters->m_RunDate           ;
   row.event      = Counters->m_event             ;
   row.clus       = mean(Counters->m_sumClusters) ;
   row.noise      = mean(Counters->m_sumNoise)    ;
@@ -123,10 +126,15 @@ void STDQSummaryAlg::outputInfo(){
 
 
 
-void STDQSummaryAlg::resetCounters(){
+void STDQSummaryAlg::resetCounters(Gaudi::Time time){
   
   delete Counters;
   Counters = new STDQCounters(m_minADC, m_maxADC);
+
+  Counters->m_RunDate  = boost::lexical_cast<std::string>(time.year(0));
+  Counters->m_RunDate += "-"+boost::lexical_cast<std::string>(time.month(0)+1);
+  Counters->m_RunDate += "-"+boost::lexical_cast<std::string>(time.day(0));
+  
 }
 
 
@@ -204,6 +212,7 @@ void STDQSummaryAlg::writeTxtFile() {
   std::vector<STDQCounters::DataRow>::iterator endIt = m_dataStorage.end();
   for(it = m_dataStorage.begin(); it < endIt; it++) {
     writeTxtEntry(oFile,it->run        );      
+    writeTxtEntry(oFile,it->runDate    );      
     writeTxtEntry(oFile,it->event      );
     writeTxtEntry(oFile,it->clus       );
     writeTxtEntry(oFile,it->noise      );
@@ -230,10 +239,11 @@ void STDQSummaryAlg::writeTuple() {
   for(it = m_dataStorage.begin(); it < endIt; it++) {
     Tuple tuple = nTuple(name());
     tuple->column("run",        it->run        );
+//    tuple->column("runDate",    it->runDate    );
     tuple->column("event",      it->event      );
     tuple->column("clus",       it->clus       );
     tuple->column("noise",      it->noise      );
-    tuple->column("procEff",    it->procEff    );
+    tuple->column("procInEff",  it->procEff    );
     tuple->column("ErrorBanks", it->error      );
     tuple->column("corrupted",  it->corrupted  );
     tuple->column("sumMissing", it->sumMissing );

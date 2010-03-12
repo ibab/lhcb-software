@@ -4,6 +4,9 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2010-03-12 - Nicola Chiapolini
+ - Added column for RunDate to STDQSummaryAlg's text output
+
 ! 2010-03-11 - Mark Tobin
  - Added new 2d histogram to normalise MPV map as profile2d is not supported by
  the MonitorSvc yet.
