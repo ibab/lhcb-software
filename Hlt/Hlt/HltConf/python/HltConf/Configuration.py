@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.162 2010-03-11 22:47:29 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.163 2010-03-12 13:36:12 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -28,6 +28,7 @@ class HltConf(LHCbConfigurableUser):
                 , "HistogrammingLevel"             : 'None'     # or 'Line'
                 , "ThresholdSettings"              : ''         #  select a predefined set of settings, eg. 'Effective_Nominal'
                 , "EnableHltGlobalMonitor"         : True
+                , "EnableHltL0GlobalMonitor"       : True
                 , "EnableHltDecReports"            : True
                 , "EnableHltSelReports"            : True
                 , "EnableHltVtxReports"            : True
@@ -474,7 +475,7 @@ class HltConf(LHCbConfigurableUser):
         define end sequence (mostly for persistence + monitoring)
         """
         from Configurables       import GaudiSequencer as Sequence
-        from Configurables       import HltGlobalMonitor, HltL0GlobalMonitor, HltODINGlobalMonitor
+        from Configurables       import HltGlobalMonitor, HltL0GlobalMonitor
         from Configurables       import bankKiller
         from Configurables       import LoKi__HDRFilter   as HltFilter
         from Configurables       import HltSelReportsMaker, HltSelReportsWriter
@@ -487,7 +488,9 @@ class HltConf(LHCbConfigurableUser):
         sets = self.settings()
         if sets and hasattr(sets,'StripEndSequence') and getattr(sets,'StripEndSequence') :
             log.warning('### Setting requests stripped down HltEndSequence ###')
+            #  TODO: check not explicitly set if so, provide warning....
             self.EnableHltGlobalMonitor = False
+            self.EnableHltL0GlobalMonitor = False # TODO: allow it to be switch on / off...
             self.EnableHltSelReports    = False
             self.EnableHltVtxReports    = False
             self.EnableLumiEventWriting = False
@@ -495,7 +498,8 @@ class HltConf(LHCbConfigurableUser):
         # note: the following is a list and not a dict, as we depend on the order of iterating through it!!!
         from Configurables import Hlt__Line as Line
         _list = ( ( "EnableHltRoutingBits"   , [ HltRoutingBitsWriter ] )
-                , ( "EnableHltGlobalMonitor" , [ HltGlobalMonitor,HltL0GlobalMonitor,HltODINGlobalMonitor ] )
+                , ( "EnableHltGlobalMonitor" , [ HltGlobalMonitor ] )
+                , ( "EnableHltL0GlobalMonitor" ,[ HltL0GlobalMonitor] )
                 , ( "SkipHltRawBankOnRejectedEvents", [ lambda : Line('Hlt1Global') ] )
                 # , ( "SkipHltRawBankOnRejectedEvents", [ lambda : 'Hlt1Global' ] ) # TODO: fwd Moore.WriterRequires (which is a list...)
                 , ( "EnableHltDecReports"    , [ HltDecReportsWriter ] )
