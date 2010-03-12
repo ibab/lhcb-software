@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatch.h,v 1.9 2009-03-20 17:57:43 vegorych Exp $
+// $Id: CaloTrackMatch.h,v 1.10 2010-03-12 23:54:19 odescham Exp $
 // ============================================================================
 #ifndef CALOUTILS_CALOTRACKMATCH_H 
 #define CALOUTILS_CALOTRACKMATCH_H 1
@@ -113,20 +113,17 @@ protected:
     //         m2.inverted() && m2.ok()     , 
     //         "chi2(): invalid data are detected " ) ;
 
-    if (  !m1.inverted() || !m1.ok() || 
-	  !m2.inverted() || !m2.ok() )
-      { 
-	Warning(  "chi2(): invalid data are detected - return bad chi2" );
-	return 99999999. ; 
-      }
+    if (  !m1.inverted() || !m1.ok() || !m2.inverted() || !m2.ok() ){ 
+      Warning(  "chi2(): invalid data are detected - return bad chi2" );
+      return 99999999. ; 
+    }
 
 
     // local storage to avoid the dynamic allocation 
     static Matrix s_cov ;
     // evaluate the overall covariance matrix 
     s_cov = m1.matrix() +  m2.matrix() ;
-    if ( !s_cov.Invert() ) 
-    { 
+    if ( !s_cov.Invert() ){ 
       Warning(  "chi2(): can not invert the matrix - return bad chi2" ) ; 
       return 99999999. ; 
     }
@@ -139,6 +136,7 @@ protected:
       ROOT::Math::Similarity ( pm - m1.params() , m1.matrix() ) +
       ROOT::Math::Similarity ( pm - m2.params() , m2.matrix() ) ;
   };
+
   /// get 2D-infomration form CaloPosition 
   inline StatusCode fill 
   ( const LHCb::CaloPosition& c , Match_<2>& match ) const 

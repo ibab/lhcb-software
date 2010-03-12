@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.150 2010-03-08 02:01:19 odescham Exp $
+! $Id: release.notes,v 1.151 2010-03-12 23:54:19 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2010-03-13
+  - CaloAlgUtils : track location is either 'offline' or 'hlt' depending on context by default 
+  CaloReco Configurable to apply specific location
+
 
 ! 2010-02-25 - Olivier Deschamps
   - CaloAlgUtils/Calo2Track : improvements in generic context-dependent TES locations  

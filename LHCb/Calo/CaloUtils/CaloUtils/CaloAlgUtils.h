@@ -42,6 +42,10 @@ namespace LHCb{
         int index = def.find_first_of("/") +1 ;
         loc =  context + "/" + def.substr(index, std::string::npos  );
       }      
+
+      // to be synchronized with ConfUtils
+      //      if( 0 != context.find("/Event/") && 0 == context.find("/") )
+      //        loc = loc.substr(1,std::string::npos);
       return loc;
     }
     // Default location for CaloObject as function of detector and possibly context
