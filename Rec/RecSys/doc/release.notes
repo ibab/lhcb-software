@@ -7,7 +7,7 @@ Purpose: LHCb reconstruction packages.
 
 ! 2010-03-05 - Chris Jones
  - Configuration changes needed to adapt to the RICH changes to support
-   multiple recosntruction Configurations in the same job.
+   multiple reconstruction configurations in the same job.
 
 ! 2010-03-04 - Rob Lambert
  - Added tests to iinstantiate all configurables

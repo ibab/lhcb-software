@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.28 2010-03-09 18:53:57 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.29 2010-03-12 13:53:49 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
             
 from LHCbKernel.Configuration import *
@@ -120,7 +120,7 @@ class RecSysConf(LHCbConfigurableUser):
             # Printout
             import GaudiKernel.ProcessJobOptions
             GaudiKernel.ProcessJobOptions.PrintOn()
-            log.info(richConf)
+            log.debug(richConf)
             GaudiKernel.ProcessJobOptions.PrintOff()     
             
         # CALO
@@ -275,7 +275,7 @@ class RecMoniConf(LHCbConfigurableUser):
             conf.RichPIDLocation = "Rec/Rich/PIDs"
             import GaudiKernel.ProcessJobOptions
             GaudiKernel.ProcessJobOptions.PrintOn()
-            log.info(conf)
+            log.debug(conf)
             GaudiKernel.ProcessJobOptions.PrintOff()
         
         # Expert histograms
