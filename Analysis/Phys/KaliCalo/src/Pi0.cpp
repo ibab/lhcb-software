@@ -1,4 +1,4 @@
-// $Id: Pi0.cpp,v 1.11 2010-02-19 12:03:13 ibelyaev Exp $
+// $Id: Pi0.cpp,v 1.12 2010-03-12 12:12:57 apuignav Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -215,7 +215,7 @@ void Kali::Pi0::fillTuple
 {
     
     // fill N-tuple
-    tuple -> column ( "p0"   , p1 + p2  ) ;
+    tuple -> column ( "p0"   , p12      ) ;
     tuple -> column ( "g1"   , p1       ) ;
     tuple -> column ( "g2"   , p2       ) ;
     

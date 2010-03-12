@@ -1,11 +1,18 @@
-! $Id: release.notes,v 1.33 2010-03-08 11:24:06 jpalac Exp $ 
+! $Id: release.notes,v 1.34 2010-03-12 12:12:57 apuignav Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.33 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.34 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
+
+! 2010-03-12 - Albert Puig
+
+ - Pi0.cpp
+     Corrected what was put in the ntuple as pi0 momentum. The sum of photon
+     momenta, as done previously, returned a bad pi0 momentum for background.
+     Changed to use p12 directly, which is correct in case of background.
 
 !========================== KaliCalo v4r0 2010-03-08 ==========================
 
