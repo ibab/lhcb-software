@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2010-03-12 - Chris Jones
+ - Add support for the RICH BelowThreshold DLL values
+ - Add IsMuonLoose to charged ProtoParticle ntuple
+
 ! 2010-03-08 - Olivier Deschamps
  - NeutralProtoPALg : remove obsolete tools + get neutral ID from relation table
     -> first step toward a more modular NeutralProtoP processing

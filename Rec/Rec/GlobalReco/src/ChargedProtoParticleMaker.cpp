@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoParticleMaker
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleMaker.cpp,v 1.3 2010-03-08 01:46:40 odescham Exp $
+ * $Id: ChargedProtoParticleMaker.cpp,v 1.4 2010-03-12 14:01:51 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
@@ -99,16 +99,23 @@ StatusCode ChargedProtoParticleMaker::execute()
 
   // Loop over tracks container
   setFilterPassed(false);
-  for(std::vector<std::string>::const_iterator c = m_tracksPath.begin() ; m_tracksPath.end() != c ; ++ c){
-    const std::string loc = *c;
+  for ( std::vector<std::string>::const_iterator c = m_tracksPath.begin() ;
+        m_tracksPath.end() != c ; ++c )
+  {
+    // track location
+    const std::string& loc = *c;
+
     // Load the Track objects (manditory - should be there for each event)
-    if ( !exist<LHCb::Tracks>(loc) ){
+    if ( !exist<LHCb::Tracks>(loc) )
+    {
       Warning( "No Tracks at '"+loc+"'", StatusCode::SUCCESS ).ignore();
       continue;
     }
+
     setFilterPassed(true);
     const LHCb::Tracks * tracks = get<LHCb::Tracks>( loc  );
-    if ( msgLevel(MSG::DEBUG) )debug() << "Successfully loaded " << tracks->size() << " Tracks from " << loc << endmsg;  
+    if ( msgLevel(MSG::DEBUG) ) 
+      debug() << "Successfully loaded " << tracks->size() << " Tracks from " << loc << endmsg;  
     
     int count = 0;
     // Loop over tracks

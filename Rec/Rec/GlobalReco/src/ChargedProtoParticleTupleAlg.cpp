@@ -5,7 +5,7 @@
  * Implemenrtation file for algorithm ChargedProtoParticleTupleAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleTupleAlg.cpp,v 1.8 2010-03-08 21:52:24 jonrob Exp $
+ * $Id: ChargedProtoParticleTupleAlg.cpp,v 1.9 2010-03-12 13:58:28 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-15
@@ -108,7 +108,7 @@ StatusCode ChargedProtoParticleTupleAlg::execute()
     sc = sc && tuple->column( "RichDLLpi",     proto->info ( LHCb::ProtoParticle::RichDLLpi, 0 ) );
     sc = sc && tuple->column( "RichDLLk",      proto->info ( LHCb::ProtoParticle::RichDLLk,  0 ) );
     sc = sc && tuple->column( "RichDLLp",      proto->info ( LHCb::ProtoParticle::RichDLLp,  0 ) );
-    //sc = sc && tuple->column( "RichDLLbt",     proto->info ( LHCb::ProtoParticle::RichDLLbt, 0 ) );
+    sc = sc && tuple->column( "RichDLLbt",     proto->info ( LHCb::ProtoParticle::RichDLLbt, 0 ) );
     sc = sc && tuple->column( "RichUsedAero",  tmpRPID.usedAerogel()  );
     sc = sc && tuple->column( "RichUsedR1Gas", tmpRPID.usedRich1Gas() );
     sc = sc && tuple->column( "RichUsedR2Gas", tmpRPID.usedRich2Gas() );
