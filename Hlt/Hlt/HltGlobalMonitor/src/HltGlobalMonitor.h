@@ -1,6 +1,7 @@
 #ifndef HLTGLOBALMONITOR_H 
 #define HLTGLOBALMONITOR_H 1
 
+#include "Event/ODIN.h"
 #include "Event/HltDecReports.h"
 
 #include "boost/function.hpp" 
@@ -32,6 +33,7 @@ public:
   void handle(const Incident&);
 
 private:
+  void monitorODIN(const LHCb::ODIN*);
   void monitorHLT1 (const LHCb::HltDecReports*);
   void monitorHLT2 (const LHCb::HltDecReports*);
   void monitorMemory();
@@ -57,6 +59,8 @@ private:
   std::vector<std::string>  m_Hlt2Lines;
 
   std::string m_HltDecReportsLocation;
+  std::string m_ODINLocation;
+  AIDA::IHistogram1D* m_odin;
 
   AIDA::IHistogram1D* m_hlt1Alley;
   AIDA::IHistogram1D* m_hlt2Alley;
@@ -74,7 +78,7 @@ private:
   longlong m_startClock; // in microseconds
   longlong m_startEvent; // in microseconds
   long m_virtmem; 
-  //  int m_gpstimesec;
+  int m_gpstimesec;
   int m_time_ref;
   int m_scanevents;
   int m_totaltime;

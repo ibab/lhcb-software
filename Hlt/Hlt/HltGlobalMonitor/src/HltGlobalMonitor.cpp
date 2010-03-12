@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.61 2010-03-11 15:52:46 albrecht Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.62 2010-03-12 12:49:58 albrecht Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -74,13 +74,14 @@ HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
   , m_startClock(0)
   , m_startEvent(0)
   , m_virtmem(0)
-  //  , m_gpstimesec(0)
+  , m_gpstimesec(0)
   , m_time_ref(0)
   , m_scanevents(0)
   , m_totaltime(0)
   , m_totalmem(0)
   , m_events(0)
 {
+  declareProperty("ODIN",              m_ODINLocation = LHCb::ODINLocation::Default);
   declareProperty("HltDecReports",     m_HltDecReportsLocation = LHCb::HltDecReportsLocation::Default);
   declareProperty("Hlt1Decisions",     m_Hlt1Lines );
   declareProperty("Hlt2Decisions",     m_Hlt2Lines );
@@ -103,7 +104,21 @@ StatusCode HltGlobalMonitor::initialize() {
   StatusCode sc = HltBaseAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  //  m_gpstimesec=0;
+  m_odin            = book1D("ODIN trigger type",  "ODIN trigger Type ",-0.5, 7.5, 8);
+  std::vector<std::pair<unsigned,std::string> > odinLabels = boost::assign::list_of< std::pair<unsigned,std::string> >
+    (ODIN::PhysicsTrigger,    "Physics")
+    (ODIN::BeamGasTrigger,    "BeamGas")
+    (ODIN::LumiTrigger,       "Lumi")
+    (ODIN::TechnicalTrigger,  "Technical")
+    (ODIN::AuxiliaryTrigger,  "Auxiliary")
+    (ODIN::NonZSupTrigger,    "NonZSup")
+    (ODIN::TimingTrigger,     "Timing")
+    (ODIN::CalibrationTrigger,"Calibration");
+  if (!setBinLabels( m_odin, odinLabels )) {
+    error() << "failed to set binlables on ODIN hist" << endmsg;
+  }
+
+  m_gpstimesec=0;
   m_startClock = System::currentTime( System::microSec );
   // create a histogram with one bin per Alley
   // the order and the names for the bins are
@@ -202,8 +217,8 @@ StatusCode HltGlobalMonitor::initialize() {
   declareInfo("COUNTER_TO_RATE[elapsed time]", m_currentTime, "Elapsed time");
   
 
-  //  declareInfo("COUNTER_TO_RATE[L0Accept]",counter("L0Accept"),"L0Accept");
-  //  declareInfo("COUNTER_TO_RATE[GpsTimeoflast]",m_gpstimesec,"Gps time of last event");
+  //declareInfo("COUNTER_TO_RATE[L0Accept]",counter("L0Accept"),"L0Accept");
+  declareInfo("COUNTER_TO_RATE[GpsTimeoflast]",m_gpstimesec,"Gps time of last event");
 
   // register for incidents...
   IIncidentSvc* incidentSvc = svc<IIncidentSvc>( "IncidentSvc" );
@@ -230,7 +245,9 @@ void HltGlobalMonitor::handle ( const Incident& incident ) {
 StatusCode HltGlobalMonitor::execute() {  
 
   LHCb::HltDecReports* hlt = fetch<LHCb::HltDecReports>( m_HltDecReportsLocation );
-  
+  LHCb::ODIN*         odin = fetch<LHCb::ODIN>( LHCb::ODINLocation::Default);
+ 
+  monitorODIN(odin);
   monitorHLT1(hlt);
   monitorHLT2(hlt);
   
@@ -241,6 +258,18 @@ StatusCode HltGlobalMonitor::execute() {
 
   return StatusCode::SUCCESS;
   
+}
+
+//==============================================================================
+void HltGlobalMonitor::monitorODIN(const LHCb::ODIN* odin) {
+  if (odin == 0 ) return;
+  unsigned long long gpstime=odin->gpsTime();
+  if (msgLevel(MSG::DEBUG)) debug() << "gps time" << gpstime << endreq;
+  m_gpstimesec=int(gpstime/1000000-904262401); //@TODO: is this still OK with ODIN v6?
+  counter("ODIN::Lumi")    += (odin->triggerType()==ODIN::LumiTrigger);
+  counter("ODIN::NotLumi") += (odin->triggerType()!=ODIN::LumiTrigger);
+  fill(m_odin, odin->triggerType(), 1.);
+  return;
 }
 
 //==============================================================================
