@@ -1,4 +1,4 @@
-// $Id: CaloClusterizationTool.cpp,v 1.9 2009-11-05 22:37:14 dgolubko Exp $
+// $Id: CaloClusterizationTool.cpp,v 1.10 2010-03-12 23:44:24 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -160,6 +160,8 @@ CaloClusterizationTool::CaloClusterizationTool( const std::string& type,
   : GaudiTool ( type, name , parent )  
   , m_withET           ( false )
   , m_ETcut            ( -10. * Gaudi::Units::GeV)
+  , m_release (false)
+  , m_pass(0)
 {
   // eTcut
   declareProperty ( "withET" , m_withET ) ;
@@ -181,12 +183,11 @@ StatusCode CaloClusterizationTool::initialize()
 }
 
 template <class TYPE>
-StatusCode CaloClusterizationTool::_clusterize
-( std::vector<LHCb::CaloCluster*>&       clusters     ,
-  const TYPE& hits, const DeCalorimeter* m_detector   , 
-  const std::vector<LHCb::CaloCellID>&   _cell_list   , 
-  const unsigned int                     m_neig_level )
-{
+StatusCode CaloClusterizationTool::_clusterize( std::vector<LHCb::CaloCluster*>&       clusters     ,
+                                                const TYPE& hits, 
+                                                const DeCalorimeter* m_detector   , 
+                                                const std::vector<LHCb::CaloCellID>&   _cell_list   , 
+                                                const unsigned int                     m_neig_level ){
   
   //
   m_cellSelector.setSelector(m_used);  
@@ -263,8 +264,7 @@ StatusCode CaloClusterizationTool::_clusterize
     // fill with the data
     size_t index = 0 ;
 
-    for( LHCb::CaloDigits::const_iterator ihit = 
-           hits.begin() ; hits.end() != ihit ; ++ihit , ++index ){
+    for( LHCb::CaloDigits::const_iterator ihit =hits.begin() ; hits.end() != ihit ; ++ihit , ++index ){
       const LHCb::CaloDigit* digit   = *ihit ;
       if ( 0 == digit ) { continue ; }  // CONTINUE !!! 
       CelAutoTaggedCell& taggedCell = *(local_cells.begin() + index ) ;

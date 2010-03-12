@@ -1,4 +1,4 @@
-// $Id: CaloSharedCellAlg.cpp,v 1.11 2010-03-08 01:19:40 odescham Exp $ 
+// $Id: CaloSharedCellAlg.cpp,v 1.12 2010-03-12 23:44:24 odescham Exp $ 
 // ===========================================================================
 // Include files
 // from GaudiKernel
@@ -129,8 +129,7 @@ StatusCode CaloSharedCellAlg::execute()
     output = new Clusters();
     put( output , m_outputData );
     // make a copy 
-    for( Clusters::const_iterator i = clusters->begin() ;
-         clusters->end() != i ; ++i )
+    for( Clusters::const_iterator i = clusters->begin() ; clusters->end() != i ; ++i )
     { if( 0 != *i ) { output->insert( (*i)->clone() ) ; } }
   }
   else { output = clusters; } ///< update existing sequence
@@ -145,49 +144,50 @@ StatusCode CaloSharedCellAlg::execute()
   StatusCode scc = table.load( output->begin() , output->end  () , cutOff ) ;
   if(scc.isFailure())warning()<<"Unable to load the table"<<endmsg;
   
+  // sort digit by energy in order the subsequent processing is pointer address independent !
+  std::vector<const LHCb::CaloDigit*> reOrder;
+  for( Table::Map::iterator entry = table.map().begin() ; table.map().end() != entry ; ++entry ){
+    const LHCb::CaloDigit* dig = entry->first ;
+    reOrder.push_back( dig );
+  }
+  LHCb::CaloDataFunctor::Less_by_Energy<const LHCb::CaloDigit*> Cmp;
+  std::stable_sort    ( reOrder.begin(), reOrder.end  () ,LHCb::CaloDataFunctor::inverse( Cmp ) ) ;
+  
+
   /// loop over all digits in the table  
-  for( Table::Map::iterator entry = table.map().begin() ; 
-       table.map().end() != entry ; ++entry ) 
-  {
+  for( std::vector<const LHCb::CaloDigit*>::const_iterator idig = reOrder.begin() ; reOrder.end() != idig ; ++idig ){    
+    Table::Map::iterator entry = table.map().find( *idig );
+    if( entry == table.map().end() ) continue;
     const LHCb::CaloDigit* dig = entry->first ;
     /// ignore  artificial zeros  
     if( 0 == dig ) { continue; }
     
     StatusCode sc = StatusCode::SUCCESS; 
-    if      ( m_useSumEnergy &&  !m_useDistance )
-    {    
-      sc = summedEnergyAlgorithm   
-        ( entry->second   , m_numIterations ) ; 
+    if      ( m_useSumEnergy &&  !m_useDistance ){    
+      sc = summedEnergyAlgorithm ( entry->second   , m_numIterations  ) ; // do not apply weights at this stage 
     }
-    else if ( !m_useSumEnergy && !m_useDistance )
-    { 
-      sc = seedEnergyAlgorithm     
-        ( entry->second   , SeedCell        ) ; 
+    else if ( !m_useSumEnergy && !m_useDistance ){ 
+      sc = seedEnergyAlgorithm( entry->second   , SeedCell ) ; 
     }
-    else if ( m_useSumEnergy &&   m_useDistance )
-    { 
-      sc = summedDistanceAlgorithm 
-        ( entry->second   , 
-          detector        ,
-          dig->cellID()   , 
-          m_showerSizes   ,
-          m_numIterations                   ) ; 
+    else if ( m_useSumEnergy &&   m_useDistance ){ 
+      sc = summedDistanceAlgorithm( entry->second   , 
+                                    detector        ,
+                                    dig->cellID()   , 
+                                    m_showerSizes   ,
+                                    m_numIterations  ) ; 
     }
-    else if ( !m_useSumEnergy &&  m_useDistance )
-    { 
-      sc = seedDistanceAlgorithm   
-        ( entry->second   ,
-          detector        ,
-          SeedCell        ,
-          dig->cellID()   ,
-          m_showerSizes                     ) ;
+    else if ( !m_useSumEnergy &&  m_useDistance ){ 
+      sc = seedDistanceAlgorithm( entry->second   ,
+                                  detector        ,
+                                  SeedCell        ,
+                                  dig->cellID()   ,
+                                  m_showerSizes                    ) ;
     }
     else { return Error("Funny condition :-)) "); }
     ///
-    if( sc.isFailure() )
-    { return Error("Could not redistribute the energy!"); }
+    if( sc.isFailure() ){ return Error("Could not redistribute the energy!"); }
   }
-
+  
 
   counter ( "#Clusters from '" + m_inputData +"'") += clusters->size() ;
   
