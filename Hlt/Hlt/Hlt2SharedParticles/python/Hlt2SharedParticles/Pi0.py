@@ -17,7 +17,7 @@ Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
 #
 # Neutral protoparticles
 #
-neutralProtos = Hlt2UnfittedForwardTracking.hlt2neutralProtos()
+neutralProtos = Hlt2UnfittedForwardTracking.hlt2NeutralProtos()
 ##########################################################################
 # Make the pi0
 #
