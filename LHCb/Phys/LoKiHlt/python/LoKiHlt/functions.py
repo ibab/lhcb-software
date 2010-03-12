@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.10 2010-03-07 18:06:20 ibelyaev Exp $ 
+# $Id: functions.py,v 1.11 2010-03-12 12:23:55 ibelyaev Exp $ 
 # =============================================================================
 ## @file LoKiHlt/functions.py
 #  The full set of useful objects from LoKiHlt library 
@@ -12,7 +12,7 @@
 The full set of useful objects from LoKiHlt library
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl   "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $  "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $  "
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
@@ -91,7 +91,14 @@ L0_CONDITION     = LoKi.L0.ConditionValue
 L0_DATA          = LoKi.L0.DataValue
 
 ## @see LoKi::Cuts::L0_DECISION
-L0_DECISION      = LoKi.L0.Decision ()
+L0_DECISION         = LoKi.L0.Decision
+## @see LoKi::Cuts::L0_DECISION_PHYSICS 
+L0_DECISION_PHYSICS = LoKi.L0.Decision( LHCb.L0DUDecision.Physics ) 
+## @see LoKi::Cuts::L0_DECISION_BEAM1
+L0_DECISION_BEAM1   = LoKi.L0.Decision( LHCb.L0DUDecision.Beam1   ) 
+## @see LoKi::Cuts::L0_DECISION_BEAM2
+L0_DECISION_BEAM2   = LoKi.L0.Decision( LHCb.L0DUDecision.Beam2   ) 
+
 
 ## @see LoKi::Cuts::L0_DIGIT
 L0_DIGIT         = LoKi.L0.DataDigit
@@ -119,7 +126,14 @@ L0_SUMET         = LoKi.L0.SumEt
 L0_SUMET0        = LoKi.L0.SumEt ( 0 ) 
 
 ## @see LoKi::Cuts::L0_SUMDECISION
-L0_SUMDECISION   = LoKi.L0.SumDecision () 
+L0_SUMDECISION          = LoKi.L0.SumDecision  
+## @see LoKi::Cuts::L0_SUMDECISION_PHYSICS 
+L0_SUMDECISION_PHYSICS  = LoKi.L0.SumDecision ( LHCb.L0DUDecision.Physics )
+## @see LoKi::Cuts::L0_SUMDECISION_BEAM1 
+L0_SUMDECISION_BEAM1    = LoKi.L0.SumDecision ( LHCb.L0DUDecision.Beam1   )
+## @see LoKi::Cuts::L0_SUMDECISION_BEAM2
+L0_SUMDECISION_BEAM2    = LoKi.L0.SumDecision ( LHCb.L0DUDecision.Beam2   )
+
 
 ## @see LoKi::Cuts::L0_TCK
 L0_TCK           = LoKi.L0.Tck ()

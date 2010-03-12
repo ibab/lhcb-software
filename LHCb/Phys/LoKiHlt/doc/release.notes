@@ -1,9 +1,27 @@
-! $Id: release.notes,v 1.34 2010-03-08 08:00:36 ibelyaev Exp $ 
+! $Id: release.notes,v 1.35 2010-03-12 12:23:55 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiHlt
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
+
+! 2010-03-12 - Vanya Belyaev
+
+ - major change in L0_(SUM)DECISION, dollowing the changes 
+     in LHCb::L0DUReport
+ 
+  from now both L0_DECISION and L0_DUMDECISION are *types* 
+  new predefined instances have been introduces:
+
+    L0_DECISION_PHYSICS      
+    L0_DECISION_BEAM1 
+    L0_DECISION_BEAM2 
+    L0_SUMDECISION_PHYSICS 
+    L0_SUMDECISION_BEAM1 
+    L0_SUMDECISION_BEAM2 
+
+  NOTE: It can break some existing code 
+
 
 ! 2010-03-08 - Vanya Belyaev
 

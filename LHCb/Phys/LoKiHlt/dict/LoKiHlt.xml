@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiHlt.xml,v 1.8 2010-02-12 14:17:28 ibelyaev Exp $ 
+     * $Id: LoKiHlt.xml,v 1.9 2010-03-12 12:23:55 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The XML seleciton file to build Reflex 
@@ -65,6 +65,8 @@
   <class name=            "LoKi::Interface<IAlgorithm>"   />
   <class name="std::vector<LoKi::Interface<IAlgorithm> >" />
   
+  <enum name="LHCb::L0DUDecision::Type" />
+ 
   <exclusion>
     
     <class name="LoKi::HLT::HasSelection::Names"   />

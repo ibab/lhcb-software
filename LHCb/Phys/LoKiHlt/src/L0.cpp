@@ -1,4 +1,4 @@
-// $Id: L0.cpp,v 1.5 2010-03-05 14:19:18 graven Exp $
+// $Id: L0.cpp,v 1.6 2010-03-12 12:23:55 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -113,15 +113,23 @@ LoKi::L0::DataDigit::operator()
 
 
 // ============================================================================
-// MANDATORY: the only one essential method 
+// constructor from decision mask 
 // ============================================================================
-LoKi::L0::SumDecision::result_type 
-LoKi::L0::SumDecision::operator() 
-  ( LoKi::L0::SumDecision::argument a ) const 
-{ 
-  Assert ( 0 != a , "L0DUReport* point to NULL!" ) ;
-  return a -> decisionFromSummary () ; 
+LoKi::L0::Decision::Decision ( const int mask ) 
+  : LoKi::BasicFunctors<const LHCb::L0DUReport*>::Predicate () 
+  , m_mask ( mask ) 
+{
 }
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::L0::Decision::~Decision(){}
+// ============================================================================
+// MANDATORY: clone method ('virtual constructor') 
+// ============================================================================
+LoKi::L0::Decision*
+LoKi::L0::Decision::clone() const
+{ return new LoKi::L0::Decision ( *this ) ; }
 // ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
@@ -130,8 +138,68 @@ LoKi::L0::Decision::operator()
   ( LoKi::L0::Decision::argument a ) const 
 { 
   Assert ( 0 != a , "L0DUReport* point to NULL!" ) ;
-  return a -> decision () ; 
+  return a -> decision ( m_mask ) ; 
 }
+// ============================================================================
+// OPTIONAL: the nice printout 
+// ============================================================================
+std::ostream& LoKi::L0::Decision::fillStream ( std::ostream& s ) const 
+{
+  switch ( m_mask ) 
+  {
+  case LHCb::L0DUDecision::Physics :
+    return s << " L0_DECISION_PHYSICS " ;
+  case LHCb::L0DUDecision::Beam1   :
+    return s << " L0_DECISION_BEAM1 "   ;
+  case LHCb::L0DUDecision::Beam2   :
+    return s << " L0_DECISION_BEAM2 "   ;
+  case LHCb::L0DUDecision::Disable :
+    return s << " L0_DECISION_DISABLE " ;
+  default:
+    return s << " L0_DECISION( " << m_mask << ") " ; 
+  }
+  return s << " L0_DECISION( " << m_mask << ") " ; 
+}
+// ============================================================================
+
+// ============================================================================
+// constructor from decision mask 
+// ============================================================================
+LoKi::L0::SumDecision::SumDecision ( const int mask , 
+                                     const int bx   ) 
+  : LoKi::BasicFunctors<const LHCb::L0DUReport*>::Predicate () 
+  , m_mask ( mask ) 
+  , m_bx   ( bx   ) 
+{}
+
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::L0::SumDecision::result_type 
+LoKi::L0::SumDecision::operator() 
+  ( LoKi::L0::SumDecision::argument a ) const 
+{ 
+  Assert ( 0 != a , "L0DUReport* point to NULL!" ) ;
+  return a -> decisionFromSummary ( m_mask , m_bx ) ; 
+}
+// ============================================================================
+// OPTIONAL: the nice printout 
+// ============================================================================
+std::ostream& LoKi::L0::SumDecision::fillStream ( std::ostream& s ) const 
+{ 
+  if      ( 0 == m_bx && LHCb::L0DUDecision::Physics == m_mask ) 
+  { return s << " L0_SUMDECISION_PHYSICS "; }
+  else if ( 0 == m_bx && LHCb::L0DUDecision::Beam1   == m_mask ) 
+  { return s << " L0_SUMDECISION_BEAM1   "; }
+  else if ( 0 == m_bx && LHCb::L0DUDecision::Beam2   == m_mask ) 
+  { return s << " L0_SUMDECISION_BEAM2   "; }
+  //
+  return s << " L0_SUMDECISION ( " << m_mask << " , " << m_bx << " ) " ;
+}
+
+
+
+
 // ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
@@ -249,14 +317,6 @@ std::ostream& LoKi::L0::ConditionValue::fillStream ( std::ostream& s ) const
 
 // ============================================================================
 // OPTIONAL: the nice printout 
-// ============================================================================
-std::ostream& LoKi::L0::SumDecision::fillStream ( std::ostream& s ) const 
-{ return s << "L0_SUMDECISION" ; }
-// ============================================================================
-// OPTIONAL: the nice printout 
-// ============================================================================
-std::ostream& LoKi::L0::Decision::fillStream ( std::ostream& s ) const 
-{ return s << "L0_DECISION" ; }
 // ============================================================================
 // OPTIONAL: the nice printout 
 // ============================================================================

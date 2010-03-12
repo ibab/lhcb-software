@@ -1,4 +1,4 @@
-// $Id: L0.h,v 1.5 2010-01-08 13:30:47 ibelyaev Exp $
+// $Id: L0.h,v 1.6 2010-03-12 12:23:55 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_L0_H 
 #define LOKI_L0_H 1
@@ -164,9 +164,12 @@ namespace LoKi
     };
     // ========================================================================
     /** @class SumDecision
-     *  check the decision form the summary
+     *  check the decision from the summary
      *  @see LHCb::L0DUReport::decisionFromSummary
      *  @see LoKi::Cuts::L0_SUMDECISION 
+     *  @see LoKi::Cuts::L0_SUMDECISION_PHYSICS  
+     *  @see LoKi::Cuts::L0_SUMDECISION_BEAM1  
+     *  @see LoKi::Cuts::L0_SUMDECISION_BEAM2
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */     
@@ -175,6 +178,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// constructor from decision mask 
+      SumDecision ( const int mask , const int bx = 0 ) ;
       /// MANDATORY: virtual destructor 
       virtual ~SumDecision () {}
       /// MANDATORY: clone method ('virtual constructor') 
@@ -185,12 +190,27 @@ namespace LoKi
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================      
+    private:
+      // ======================================================================      
+      /// the default constructor is disabled 
+      SumDecision () ;                  // the default constructor is disabled 
+      // ======================================================================      
+    private:
+      // ======================================================================      
+      /// the decision type 
+      int m_mask ; //  the decision type 
+      /// ? 
+      int m_bx   ;  // ? 
+      // ======================================================================      
     };
     // ========================================================================
     /** @class Decision
      *  check the L0-decision
      *  @see LHCb::L0DUReport::decision
      *  @see LoKi::Cuts::L0_DECISION 
+     *  @see LoKi::Cuts::L0_DECISION_PHYSICS  
+     *  @see LoKi::Cuts::L0_DECISION_BEAM1  
+     *  @see LoKi::Cuts::L0_DECISION_BEAM2
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */     
@@ -199,16 +219,27 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// constructor from decision mask 
+      Decision ( const int mask ) ;
       /// MANDATORY: virtual destructor 
-      virtual ~Decision () {}
+      virtual ~Decision () ;
       /// MANDATORY: clone method ('virtual constructor') 
-      virtual  Decision* clone () const 
-      { return new Decision ( *this ) ; }
+      virtual  Decision* clone () const ;
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ( argument a ) const ;
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================      
+    private:
+      // ======================================================================      
+      /// the default constructor is disbaled 
+      Decision() ;                      // the default constructor is disabled 
+      // ======================================================================      
+    private:
+      // ======================================================================
+      /// the decision mask 
+      int m_mask ;                                         // the decision mask 
+      // ======================================================================
     };
     // ========================================================================
     /** @class ForceBit

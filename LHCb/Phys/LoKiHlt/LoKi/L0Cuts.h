@@ -1,4 +1,4 @@
-// $Id: L0Cuts.h,v 1.2 2010-01-08 13:30:47 ibelyaev Exp $
+// $Id: L0Cuts.h,v 1.3 2010-03-12 12:23:55 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_L0CUTS_H 
 #define LOKI_L0CUTS_H 1
@@ -147,23 +147,100 @@ namespace LoKi
      */
     typedef  LoKi::L0::DataValue                                      L0_DATA ;
     // ========================================================================
-    /** @var L0_DECISION
-     *  Simple accessor to 'global decision''
+    /** @typedef L0_DECISION
+     *  Simple accessor to LHCb::L0DUReport::decision 
      * 
      *  @code 
      * 
+     *   const L0_DECISION decision = L0_DECISION ( 4) ;
+     *
      *   const LHCb::L0DUReport* l0 = ... ;
      * 
-     *   bool decision = L0_DECISION ( l0 ) ;
+     *   bool ok = decision ( l0 ) ;
      *
      *  @endcode 
      *
      *  @see LoKi::L0::Decision
      *  @see LHCb::L0DUReport::decision
+     *  @see LHCb::L0DUDecision
+     *  @see LoKi::Cuts::L0_DECISION_PHYSICS 
+     *  @see LoKi::Cuts::L0_DECISION_BEAM1
+     *  @see LoKi::Cuts::L0_DECISION_BEAM2 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */
-    const LoKi::L0::Decision                                      L0_DECISION ;
+    typedef LoKi::L0::Decision                                    L0_DECISION ;
+    // ========================================================================
+    /** @var L0_DECISION_BEAM1
+     *  Simple accessor to LHCb::L0DUReport::decision 
+     * 
+     *  @code 
+     * 
+     *
+     *   const LHCb::L0DUReport* l0 = ... ;
+     * 
+     *   bool ok = L0_DECISION_BEAM1 ( l0 ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::L0::Decision
+     *  @see LoKi::Cuts::L0_DECISION
+     *  @see LoKi::Cuts::L0_DECISION_PHYSICS 
+     *  @see LoKi::Cuts::L0_DECISION_BEAM2 
+     *  @see LHCb::L0DUReport::decision
+     *  @see LHCb::L0DUDecision
+     *  @see LHCb::L0DUDecision::Beam1
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-19
+     */
+    const LoKi::L0::Decision  L0_DECISION_BEAM1 ( LHCb::L0DUDecision::Beam1 ) ;
+    // ========================================================================
+    /** @var L0_DECISION_BEAM2
+     *  Simple accessor to LHCb::L0DUReport::decision 
+     * 
+     *  @code 
+     * 
+     *
+     *   const LHCb::L0DUReport* l0 = ... ;
+     * 
+     *   bool ok = L0_DECISION_BEAM2 ( l0 ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::L0::Decision
+     *  @see LoKi::Cuts::L0_DECISION
+     *  @see LoKi::Cuts::L0_DECISION_PHYSICS 
+     *  @see LoKi::Cuts::L0_DECISION_BEAM1
+     *  @see LHCb::L0DUReport::decision
+     *  @see LHCb::L0DUDecision
+     *  @see LHCb::L0DUDecision::Beam2
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-19
+     */
+    const LoKi::L0::Decision  L0_DECISION_BEAM2 ( LHCb::L0DUDecision::Beam2 ) ;
+    // ========================================================================
+    /** @var L0_DECISION_PHYSICS 
+     *  Simple accessor to LHCb::L0DUReport::decision 
+     * 
+     *  @code 
+     * 
+     *   const LHCb::L0DUReport* l0 = ... ;
+     * 
+     *   bool ok = L0_DECISION_PHYSICS ( l0 ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::L0::Decision
+     *  @see LoKi::Cuts::L0_DECISION
+     *  @see LoKi::Cuts::L0_DECISION_BEAM1
+     *  @see LoKi::Cuts::L0_DECISION_BEAM2
+     *  @see LHCb::L0DUReport::decision
+     *  @see LHCb::L0DUDecision
+     *  @see LHCb::L0DUDecision::Physics 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-19
+     */
+    const LoKi::L0::Decision L0_DECISION_PHYSICS ( LHCb::L0DUDecision::Physics );
     // ========================================================================
     /** @typedef L0_DIGIT
      *  Simple accessor to 'dataDigit' for L0 
@@ -245,23 +322,94 @@ namespace LoKi
      */
     const LoKi::L0::SumEt                                           L0_SUMET0 ;
     // ========================================================================
-    /** @var L0_SUMDECISON
+    /** @typedef L0_SUMDECISION
      *  Simple accessor to 'decison form summary'
+     * 
+     *  @code 
+     * 
+     *   const L0_SUMDECISION  dec = L0SUMDECISON ( mask , bx ) ;
+     *   const LHCb::L0DUReport* l0 = ... ;
+     * 
+     *   bool decision = dec ( l0 ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::L0::SumDecision
+     *  @see LoKi::Cuts::L0_SUMDECISION_PHYSICS
+     *  @see LoKi::Cuts::L0_SUMDECISION_BEAM1
+     *  @see LoKi::Cuts::L0_SUMDECISION_BEAM2
+     *  @see LHCb::L0DUReport::decisionFromSummary
+     *  @see LHCb::L0DUDecision::Type 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-19
+     */
+    typedef LoKi::L0::SumDecision                               L0_SUMDECISION ;
+    // ========================================================================
+    /** @var L0_SUMDECISION_BEAM1 
+     *  Simple accessor to 'decison from summary'
      * 
      *  @code 
      * 
      *   const LHCb::L0DUReport* l0 = ... ;
      * 
-     *   bool decision = L0_SUMDECISION ( l0 ) ;
+     *   bool decision = L0_SUMDECISION_BEAM1 ( l0 ) ;
      *
      *  @endcode 
      *
      *  @see LoKi::L0::SumDecision
-     *  @see LHCb::L0DUReport::decisionFroSummary
+     *  @see LoKi::Cuts::L0_SUMDECISION
+     *  @see LoKi::Cuts::L0_SUMDECISION_PHYSICS
+     *  @see LoKi::Cuts::L0_SUMDECISION_BEAM2
+     *  @see LHCb::L0DUReport::decisionFromSummary
+     *  @see LHCb::L0DUDecision::Beam1
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-19
      */
-    const LoKi::L0::SumDecision                                L0_SUMDECISION ;
+    const LoKi::L0::SumDecision L0_SUMDECISION_BEAM1 ( LHCb::L0DUDecision::Beam1 ) ;
+    // ========================================================================
+    /** @var L0_SUMDECISION_BEAM2 
+     *  Simple accessor to 'decison from summary'
+     * 
+     *  @code 
+     * 
+     *   const LHCb::L0DUReport* l0 = ... ;
+     * 
+     *   bool decision = L0_SUMDECISION_BEAM2 ( l0 ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::L0::SumDecision
+     *  @see LoKi::Cuts::L0_SUMDECISION
+     *  @see LoKi::Cuts::L0_SUMDECISION_PHYSICS
+     *  @see LoKi::Cuts::L0_SUMDECISION_BEAM1
+     *  @see LHCb::L0DUReport::decisionFromSummary
+     *  @see LHCb::L0DUDecision::Beam2
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-19
+     */
+    const LoKi::L0::SumDecision L0_SUMDECISION_BEAM2 ( LHCb::L0DUDecision::Beam2 ) ;
+    // ========================================================================
+    /** @var L0_SUMDECISION_PHYSICS
+     *  Simple accessor to 'decison from summary'
+     * 
+     *  @code 
+     * 
+     *   const LHCb::L0DUReport* l0 = ... ;
+     * 
+     *   bool decision = L0_SUMDECISION_PHYSICS ( l0 ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::L0::SumDecision
+     *  @see LoKi::Cuts::L0_SUMDECISION
+     *  @see LoKi::Cuts::L0_SUMDECISION_BEAM1
+     *  @see LoKi::Cuts::L0_SUMDECISION_BEAM2
+     *  @see LHCb::L0DUReport::decisionFromSummary
+     *  @see LHCb::L0DUDecision::Physics
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-19
+     */
+    const LoKi::L0::SumDecision L0_SUMDECISION_PHYSICS ( LHCb::L0DUDecision::Physics) ;
     // ========================================================================
     /** @var L0_TCK
      *  Simple accessor to 'trigger configuration key'
