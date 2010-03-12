@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PsiPhi.py,v 1.10 2010-01-12 10:58:34 ibelyaev Exp $ 
+# $Id: Bs2PsiPhi.py,v 1.11 2010-03-12 13:26:45 ibelyaev Exp $ 
 # =============================================================================
 ## The simple Bender-based example for Bs-> Jpsi phi selection
 #
@@ -27,7 +27,7 @@ The simple Bender-based example for Bs-> Jpsi phi selection
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $ "
 # =============================================================================
 ## import everything from bender 
 from Bender.All                import *
@@ -264,7 +264,7 @@ if __name__ == '__main__' :
     configure()
 
     ## run the job
-    run(5000)
+    run(500)
 
 
 # =============================================================================

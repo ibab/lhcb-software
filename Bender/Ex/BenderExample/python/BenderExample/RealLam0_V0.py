@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# ===========================================================================# ==========================================================================================
+# =============================================================================
 ## @file BenderExample/RealLam0_V0.py
 #
 #  The script to analyse the Lambda0 from the V0-stripping
@@ -33,8 +33,8 @@ __date__     = "2010-02-10"
 __version__  = "CVS Tag $Name: not supported by cvs2svn $, verison $Release:$"
 # ===========================================================================================
 import ROOT                           ## needed to produce/visualize the histograms
-from   Bender.Main         import *   ## import all bender goodies 
 import LHCbMath.Types                 ## easy access to various geometry routines 
+from   Bender.Main         import *   ## import all bender goodies 
 from   Gaudi.Configuration import *   ## needed for job configuration
 
 from   GaudiKernel.SystemOfUnits     import GeV, MeV, mm, cm 
@@ -79,7 +79,13 @@ class Lam0(Algo) :
             return self.Warning ( 'No Lambdas are found' , SUCCESS )
         
         self.nlam2 += lams.size()
-
+        
+        primaries = self.vselect ( 'pv' , ISPRIMARY  )
+        if primaries.empty() :
+            return self.Warning ( 'No primary vertices are found in algo' , SUCCESS )
+        
+        mips   = MIPCHI2 ( primaries , self.geo() )
+        
         odin = self.get('DAQ/ODIN')
         runNum = odin.runNumber   ()
         evtNum = odin.eventNumber () 
@@ -131,8 +137,19 @@ class Lam0(Algo) :
             tup.column ( 'trgtype' , odin.triggerType() )
             
             ## get the related primary vertex 
-            bpv = self.bestPV ( lam )
+            bpv  = self.bestPV  ( lam )
+            bpv2 = self.bestPV2 ( primaries , lam )
             
+            if   not     bpv2 and     not bpv :
+                self.Warning('NpPV: both vertices are nulls ', SUCCESS )
+            elif not not bpv2 and not not bpv :
+                if bpv != bpv2 : 
+                    self.Warning('NpPV: both vertices are OK ', SUCCESS )
+                    print ' PV-1' , bpv  .key() , bpv  .position()
+                    print ' PV-2' , bpv2 .key() , bpv2 .position()
+            else :
+                self.Error ('NpPV: something very bad happens here', SUCCESS )
+                
             if not not bpv :
                 _ltime  = LTIME        ( self.ltfitter , bpv )
                 _ltchi2 = LTIMEFITCHI2 ( self.ltfitter , bpv )
@@ -145,11 +162,10 @@ class Lam0(Algo) :
                 self.Warning( 'No best-PV is found!', SUCCESS )
                 continue 
 
-            mips   = IPCHI2 ( bpv , self.geo() )
+            ##mips   = IPCHI2 ( bpv , self.geo() )
             
             mips1 = mips ( p  ) 
             mips2 = mips ( pi )
-
             
             if   long1 and long2 :
                 self.plot ( m , 'Lambda0 - mass, LL-2', 1.05 , 1.25 ) 
@@ -166,7 +182,6 @@ class Lam0(Algo) :
             
             if   down1 and down2 and ltime < 10 * mm : continue
             elif                     ltime <  1 * mm : continue 
-
             
             tup.column ( "p0"    , P  ( lam ) / GeV ) 
             tup.column ( "p1"    , P  ( p   ) / GeV ) 
@@ -229,6 +244,22 @@ class Lam0(Algo) :
                     
         return SUCCESS 
 
+
+    def bestPV2( self , pvs , p ) :
+        """
+        Find 'the best associated' primary vertex'
+        
+        """
+        pv   = None
+        chi2 = 1.e+100
+        fun  = VIPCHI2 ( p , self.geo() ) 
+        for v in pvs :
+            val = fun ( v )
+            if 0 <= val < chi2 :
+                chi2 = val
+                pv   = v
+        return pv
+
     
     def tupPV ( self , tup , pv ) :
         """
@@ -246,6 +277,7 @@ class Lam0(Algo) :
             chi2   = VCHI2 ( pv )
             tracks = pv.tracks()
             for t in tracks :
+                if not t : continue 
                 pts.push_back ( t.pt   () )
                 typ.push_back ( t.type () )
                 if t.pt () < ptmin : ptmin = t.pt()
@@ -302,7 +334,6 @@ def configure ( datafiles , catalogs = [] ) :
         'Lam0'             ,   ## Algorithm name
         NTupleLUN = 'LAM0' ,   ## Logical unit for output file with N-tuples
         ## 
-        InputPrimaryVertices = '/Event/Strip/Rec/Vertex/Primary', 
         InputLocations = [ '/Event/Strip/Phys/StrippingLambda0' ] ## input particles 
         )
     
@@ -324,7 +355,13 @@ if '__main__' == __name__ :
     configure ( [] )
 
     gaudi = appMgr()
-        
+    
+    import atexit
+    atexit.register ( gaudi.exit ) 
+    
+    evtSel = gaudi.evtSel()
+    evtSel.open('/castor/cern.ch/user/p/pkoppenb/DATA2009/000000.V0.dst') 
+    
     run ( -1 )
     
     myalg = gaudi.algorithm ( 'Lam0' )

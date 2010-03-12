@@ -28,7 +28,7 @@ The simple Bender-based example: find recontructed D0 -> mumu candidates
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -159,7 +159,7 @@ if __name__ == '__main__' :
     configure()
 
     ## run the job
-    run(5000)
+    run(500)
     
 
 # =============================================================================

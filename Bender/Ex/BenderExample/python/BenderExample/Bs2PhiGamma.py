@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PhiGamma.py,v 1.6 2010-01-12 10:58:34 ibelyaev Exp $ 
+# $Id: Bs2PhiGamma.py,v 1.7 2010-03-12 13:26:45 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/Bs2PhiGamma.py
 #
@@ -33,7 +33,7 @@ claimed by Victor Yakovenko (LAL)
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $"
 # =============================================================================
 from Bender.MainMC import * 
 import GaudiKernel.SystemOfUnits as Units
@@ -174,7 +174,7 @@ def configure() :
 if '__main__' == __name__ :
 
     configure()
-    run(1000) 
+    run(500) 
 
 # =============================================================================
 # The END 

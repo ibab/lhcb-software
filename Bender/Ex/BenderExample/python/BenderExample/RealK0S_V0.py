@@ -33,8 +33,8 @@ __date__     = "2010-02-10"
 __version__  = "CVS Tag $Name: not supported by cvs2svn $, verison $Release:$"
 # ===========================================================================================
 import ROOT                           ## needed to produce/visualize the histograms
-from   Bender.Main         import *   ## import all bender goodies 
 import LHCbMath.Types                 ## easy access to various geometry routines 
+from   Bender.Main         import *   ## import all bender goodies 
 from   Gaudi.Configuration import *   ## needed for job configuration
 
 from   GaudiKernel.SystemOfUnits     import GeV, MeV, mm, cm 
@@ -79,7 +79,12 @@ class Ks(Lam0) :
             return self.Warning ( 'No K0S are found' , SUCCESS )
         
         self.nks1 += kss.size()
-
+        
+        primaries = self.vselect ( 'pv' , ISPRIMARY  )
+        if primaries.empty() :
+            return self.Warning ( 'No primary vertices are found' , SUCCESS )
+        
+        mips   = MIPCHI2 ( primaries , self.geo() )
 
         odin = self.get('DAQ/ODIN')
         runNum = odin.runNumber   ()
@@ -129,7 +134,19 @@ class Ks(Lam0) :
             tup.column ( 'trgtype' , odin.triggerType() )
             
             ## get the related primary vertex 
-            bpv = self.bestPV ( ks )
+            bpv  = self.bestPV ( ks )
+            bpv2 = self.bestPV2 ( primaries , ks  )
+            
+            if   not     bpv2 and     not bpv :
+                self.Warning('NpPV: both vertices are nulls ', SUCCESS )
+            elif not not bpv2 and not not bpv :
+                if bpv != bpv2 : 
+                    self.Warning('NpPV: both vertices are OK ', SUCCESS )
+                    print ' PV-1' , bpv  .key() , bpv  .position()
+                    print ' PV-2' , bpv2 .key() , bpv2 .position()
+            else :
+                self.Error ('NpPV: something very bad happens here', SUCCESS )
+ 
             
             if not not bpv :
                 _ltime  = LTIME        ( self.ltfitter , bpv )
@@ -143,7 +160,7 @@ class Ks(Lam0) :
                 self.Warning( 'No best-PV is found!', SUCCESS )
                 continue 
 
-            mips   = IPCHI2 ( bpv , self.geo() )
+            ##mips   = IPCHI2 ( bpv , self.geo() )
             
             mips1 = mips ( pi1 ) 
             mips2 = mips ( pi2 )
@@ -249,12 +266,10 @@ def configure ( datafiles , catalogs = [] ) :
         'Ks'              ,   ## Algorithm name
         NTupleLUN = 'K0S' ,   ## Logical unit for output file with N-tuples
         ## 
-        InputPrimaryVertices = '/Event/Strip/Rec/Vertex/Primary', 
         InputLocations = [ '/Event/Strip/Phys/StrippingK0S' ] ## input particles 
         )
     
     gaudi.setAlgorithms ( [ alg ] ) 
-    ## gaudi.setAlgorithms ( [] ) 
     
     return SUCCESS 
 
@@ -266,13 +281,16 @@ if '__main__' == __name__ :
     
     EventSelector( PrintFreq = 1000 )
 
-    
-    import BenderExample.V0Stripping
-    
     configure ( [] )
 
     gaudi = appMgr()
     
+    import atexit
+    atexit.register ( gaudi.exit ) 
+    
+    evtSel = gaudi.evtSel()
+    evtSel.open('/castor/cern.ch/user/p/pkoppenb/DATA2009/000000.V0.dst') 
+
     run ( -1 )
     
     myalg = gaudi.algorithm ( 'Ks' )
