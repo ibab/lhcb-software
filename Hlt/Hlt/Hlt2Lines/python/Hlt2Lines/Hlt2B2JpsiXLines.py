@@ -1,4 +1,4 @@
-# $Id: Hlt2B2JpsiXLines.py,v 1.16 2010-02-26 04:56:17 gligorov Exp $
+# $Id: Hlt2B2JpsiXLines.py,v 1.17 2010-03-12 13:24:47 gligorov Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -59,6 +59,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
         from Hlt2SharedParticles.BasicParticles import NoCutsKaons
+	from HltLine.HltPVs import PV3D
         from Configurables import CombineParticles
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsiPhiPrescaledDecision" : 50375 } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsiPhiDetachedDecision" : 50376 } )
@@ -83,7 +84,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('Bs2JpsiPhiPrescaled'
                         , prescale = self.prescale
                         , postscale = self.postscale
-                        , algos = [Jpsi2MuMu, NoCutsKaons, phiCombine, BsCombine]
+                        , algos = [Jpsi2MuMu, NoCutsKaons, phiCombine, PV3D(), BsCombine]
                         )
 
         # Now do the detached 
@@ -91,7 +92,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line.clone('Bs2JpsiPhiDetached'
                    , prescale = self.prescale
                    , postscale = self.postscale
-                   , algos = [Jpsi2MuMu, NoCutsKaons, phiCombine, BsCombine]
+                   , algos = [Jpsi2MuMu, NoCutsKaons, phiCombine, PV3D(), BsCombine]
                    , BsCombine = {"MotherCut": BsCuts + "& (BPVLTIME()>%(BsLifetimeCut)s*ps)"%self.getProps() }
                    )
 
