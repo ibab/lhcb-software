@@ -4,6 +4,9 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+! 2010-03-13 - Mariusz Witek
+ - spped up HltRadCorTool
+
 !========================== HltEcalAlley v2r3p1 2010-01-11 ===================
 ! 2009-12-23 - Gerhard Raven
  - move #include around to facilitate HltBase/stringKey -> GaudiKernel/StringKey migration
