@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2010-03-13 - Mariusz Witek
+- Bug fix in pattern recognition (found by Adam Webber). 
+  Too many TT hits assigned to VeloTT track and passed to track fit.
+
 !========================== PatVeloTT v3r10 2010-01-21 ======================
 ! 2010-01-18 - Stephanie Hansmann-Menzemer
 - make VeloTT algorithm aware of ignore flag of HitBase

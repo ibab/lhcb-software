@@ -1,4 +1,4 @@
-// $Id: PatVTTTrack.h,v 1.7 2009-04-06 06:42:27 cattanem Exp $
+// $Id: PatVTTTrack.h,v 1.8 2010-03-13 16:29:36 witekma Exp $
 #ifndef PATVTTTRACK_H
 #define PATVTTTRACK_H 1
 
@@ -273,7 +273,7 @@
 
             if(n > 0){
               if(sameLayerTol < itE->distance() - stationsLocalHits[planeCode].front()->distance()){
-                failStaTol = true;
+                failLayTol = true;
                 break;
               } // tolerance
             }
@@ -313,18 +313,18 @@
                   << endmsg;
             }
 
-            // List of local hits without more than 2 on the same layer:
+            // List of local hits. Not more than 2 on the same layer. 
+            // TODO. Decrease to 1 per layer. 2 per layer is historical for TT with overlaping sensors.
             myLocalHits.clear();
 
-            LocalHitIterators it;
-            LocalHitIterators itLast = itStoreE;
-            itLast++; // to have the last element in loop for
-
-            for(it = itStoreB; itLast != it; ++it){
-              // Flag LocalHits used in a four layers fired solution
-              if(nLayersFired == 4) it->setInFourLayersSolution(true);
-              myLocalHits.push_back(it);
-            } // it
+            std::vector<LocalHitIterators>::const_iterator it;
+            for (int j=0; j!=4; ++j ){
+                for (it = stationsLocalHits[j].begin(); it != stationsLocalHits[j].end(); ++it){
+                    
+                    if(nLayersFired == 4) (*it)->setInFourLayersSolution(true);
+                    myLocalHits.push_back(*it);
+                }
+            }
 
             LocalHitsLists.push_back(myLocalHits);
           } // foundSolution
