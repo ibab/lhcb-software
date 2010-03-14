@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PsiPhi.py,v 1.12 2010-03-12 16:41:13 ibelyaev Exp $ 
+# $Id: Bs2PsiPhi.py,v 1.13 2010-03-14 17:05:03 ibelyaev Exp $ 
 # =============================================================================
 ## @file BEnderExample/Bs2PsiPhi.py
 #  The simple Bender-based example for Bs-> Jpsi phi selection
@@ -43,7 +43,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = "2006-10-12"
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $ "
 # =============================================================================
 ## import everything from bender 
 from Bender.All                import *
@@ -232,7 +232,7 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType   = 'MC09'      , # default  
+        DataType   = 'MC09'      ,
         Simulation = True
         )
     

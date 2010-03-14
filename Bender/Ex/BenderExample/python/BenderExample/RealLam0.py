@@ -7,19 +7,19 @@
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
-#  <b>"Python-based Interactive Environment for Smart and Friendly 
-#   Physics Analysis"</b>
+#  <b>``Python-based Interactive Environment for Smart and Friendly 
+#   Physics Analysis''</b>
 #
 #  The package has been designed with the kind help from
 #  Pere MATO and Andrey TSAREGORODTSEV. 
 #  And it is based on the 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
-#  "C++ ToolKit for Smart and Friendly Physics Analysis"
+#  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
 #  with the campain of Dr.O.Callot et al.: 
-#  "No Vanya's lines are allowed in LHCb/Gaudi software."
-#
+#  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+
 #  @author Alexander KOZLINSKY  akozlins@gmail.com
 #  @author Thomas    BAUER       thomas@nikhef.nl
 #  @author Vanya     BELYAEV    vanya@nikhef.nl
@@ -29,10 +29,24 @@
 A little bit modified version of original script by Alexander KOZLINSKY and
 Thomas BAUER to look for Lambda0 -> p pi- peak on real data
 
+This file is a part of BENDER project:
+``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
+
+The project has been designed with the kind help from
+Pere MATO and Andrey TSAREGORODTSEV. 
+
+And it is based on the 
+LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
+
+By usage of this code one clearly states the disagreement 
+with the campain of Dr.O.Callot et al.: 
+``No Vanya's lines are allowed in LHCb/Gaudi software.''
+
 """
 # ===========================================================================================
-__author__   = "Alexander KOZLINSKY, Thomas BAUER & Vanya BELYAEV "
-__version__  = "CVS Tag $Name: not supported by cvs2svn $, verison $Release:$"
+__author__   = " Alexander KOZLINSKY, Thomas BAUER & Vanya BELYAEV "
+__date__     = " 2009-12-?? "
+__version__  = " CVS Tag $Name: not supported by cvs2svn $, verison $Release:$"
 # ===========================================================================================
 import ROOT                           ## needed to produce/visualize the histograms
 import LHCbMath.Types                 ## easy access to various geometry routines 
@@ -440,7 +454,7 @@ class Lam0(AlgoMC) :
         
         names = self.tistos.triggerSelectionNames('Hlt1L0CALODecision')
 
-        print 'NAMES: ' , [ n for n in names ]
+        ## print 'NAMES: ' , [ n for n in names ]
         
         trg   = self.tistos.selectionTisTos ( names )
         
@@ -465,21 +479,30 @@ class Lam0(AlgoMC) :
         tup.column ( 'spd1'           , num1       )
 
         return SUCCESS
-
     
+    ## finalize & print histos 
+    def finalize ( self ) :
+        """
+        Finalize & print histos         
+        """
+        histos = self.Histos()
+        for key in histos :
+            h = histos[key]
+            if hasattr ( h , 'dump' ) : print h.dump(50,30,True)
+        return AlgoMC.finalize ( self )
+  
 # =============================================================================
 ## configure the job 
 def configure ( datafiles , catalogs = [] ) :
     """
     Job configuration 
     """
-        
-    from Configurables           import DaVinci       ## needed for job configuration
-    from Configurables           import EventSelector ## needed for job configuration 
-    from GaudiConf.Configuration import FileCatalog   ## needed for job configuration 
-    from GaudiConf.Configuration import NTupleSvc     ## needed for job configuration 
-
-
+    
+    ##
+    ## 1. Static configuration using "Configurables"
+    ##
+    
+    from Configurables           import DaVinci   
     davinci = DaVinci (
         DataType      = '2009' ,
         Simulation    = False  ,
@@ -488,15 +511,12 @@ def configure ( datafiles , catalogs = [] ) :
         HistogramFile = 'RealLam0_Histos.root' 
         )
     
-    if datafiles : 
-        EventSelector (
-            Input     = datafiles
-            )
-
+    from GaudiConf.Configuration import NTupleSvc
     NTupleSvc (
         Output = [ "LAM0 DATAFILE='RealLambda_GR.root' TYPE='ROOT' OPT='NEW'" ]
         )
     
+    ## trigger-related stuff, many thanks to Thomas Ruf
     
     from Configurables import  ( DataOnDemandSvc         ,
                                  HltDecReportsDecoder    ,
@@ -510,12 +530,21 @@ def configure ( datafiles , catalogs = [] ) :
     dod.AlgMap[ "Hlt/DecReports"   ] = HltDecReportsDecoder(OutputLevel = 4)
     dod.AlgMap[ "Hlt/SelReports"   ] = HltSelReportsDecoder(OutputLevel = 4)
     dod.AlgMap[ "Hlt/VertexReports"] = HltVertexReportsDecoder( OutputLevel = 4)
-  
+    
     from Configurables import TriggerTisTos
     TriggerTisTos  ( TriggerInputWarnings = True ) 
-
-    gaudi = appMgr()
     
+    ## define the input data:
+    setData ( datafiles , catalogs )
+    
+    ##
+    ## 2. Jump into the wonderful world of the actual Gaudi components!
+    ## 
+    
+    ## get the actual application manager (create if needed)
+    gaudi = appMgr() 
+    
+    ## create local algorithm:
     alg = Lam0(
         'Lam0'             ,   ## Algorithm name
         NTupleLUN = 'LAM0' ,   ## Logical unit for output file with N-tuples 
@@ -530,40 +559,44 @@ def configure ( datafiles , catalogs = [] ) :
     
     return SUCCESS 
 
-
 # =============================================================================
 # The actual job steering
 if '__main__' == __name__ :
-
-    from Configurables  import EventSelector
     
-    EventSelector( PrintFreq = 1000 )
-
+    ## make printout of the own documentations 
+    print '*'*120
+    print                      __doc__
+    print ' Author  : %s ' %   __author__    
+    print ' Version : %s ' %   __version__
+    print ' Date    : %s ' %   __date__
+    print ' dir(%s) : %s ' % ( __name__    , dir() )
+    print '*'*120  
+    
     import BenderExample.Data2009Reco07
 
-    configure ( [] )
-
-    gaudi = appMgr()
-
-##     evtSel = gaudi.evtSel()
+    ##
+    ## "regular data"
+    ##
+    
+    from Gaudi.Configuration import EventSelector 
+    files  = EventSelector().Input
+    files.reverse() 
+    configure ( files )
+    
+    ##  
+    ##   few "special" runs 
+    ##
+    
 ##     prefix = '/castor/cern.ch/grid/lhcb/data/2009/DST/'
 ##     _files = [ '00005845/0000/00005845_00000057_1.dst' ,
 ##                '00005845/0000/00005845_00000058_1.dst' ,
 ##                '00005844/0000/00005844_00000003_1.dst' ,
 ##                '00005845/0000/00005845_00000049_1.dst' ]
 ##     files = [ prefix + f for f in _files ]
-##     evtSel.open ( files )
+##     configure  (files ) 
     
-    run ( -1 )
-    
-    myalg = gaudi.algorithm ( 'Lam0' )
+    run ( 1000 )
 
-    import GaudiPython.HistoUtils
-    histos = myalg.Histos()
-    for (k,h) in histos.items() :
-        if hasattr ( h , 'dump' ) :
-            print h.dump ( 50 , 25 , False )
-        
 
 # =============================================================================
 # The END 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# ==========================================================================================
+# =============================================================================
 ## @file BenderExample/RealLam0.py
 #
 #  A little bit modified version of original script by Alexander KOZLINSKY  and
@@ -7,31 +7,46 @@
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
-#  <b>"Python-based Interactive Environment for Smart and Friendly 
-#   Physics Analysis"</b>
+#  <b>``Python-based Interactive Environment for Smart and Friendly 
+#   Physics Analysis''</b>
 #
 #  The package has been designed with the kind help from
 #  Pere MATO and Andrey TSAREGORODTSEV. 
 #  And it is based on the 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
-#  "C++ ToolKit for Smart and Friendly Physics Analysis"
+#  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
 #  with the campain of Dr.O.Callot et al.: 
-#  "No Vanya's lines are allowed in LHCb/Gaudi software."
+#  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @author Alexander KOZLINSKY  akozlins@gmail.com
 #  @author Thomas    BAUER       thomas@nikhef.nl
 #  @author Vanya     BELYAEV    vanya@nikhef.nl
-# ===========================================================================================
+# =============================================================================
 """
 
 A little bit modified version of original script by Alexander KOZLINSKY and
 Thomas BAUER to look for Lambda0 -> p pi- peak on real data
 
+This file is a part of BENDER project:
+``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
+
+The project has been designed with the kind help from
+Pere MATO and Andrey TSAREGORODTSEV. 
+
+And it is based on the 
+LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
+
+By usage of this code one clearly states the disagreement 
+with the campain of Dr.O.Callot et al.: 
+``No Vanya's lines are allowed in LHCb/Gaudi software.''
+
+
 """
 # ===========================================================================================
 __author__   = "Alexander KOZLINSKY, Thomas BAUER & Vanya BELYAEV "
+__date__     = " 2009-12-?? "
 __version__  = "CVS Tag $Name: not supported by cvs2svn $, verison $Release:$"
 # ===========================================================================================
 import ROOT                           ## needed to produce/visualize the histograms
@@ -195,36 +210,30 @@ class Lam0MC ( Lam0 ) :
             
             self.plot  ( MCPT ( p ) / GeV , 'MCpt for Lambda ' , 0 , 5 , 500 )
 
-
         ## subselect for true decays only 
-            mclams = self.mcselect (
-                'mclamdec' ,
-                mclams     ,
-                decay & fromDecays & ~fromLong & ~fromXs ) 
+        mclams = self.mcselect (
+            'mclamdec' ,
+            mclams     ,
+            decay & fromDecays & ~fromLong & ~fromXs ) 
             
         if mclams.empty() : return self.Warning('No MC-lambdas (2)', SUCCESS ) 
 
         self.trueLam0 = MCTRUTH ( self.mcTruth() , mclams ) 
-
 
         return Lam0.analyse ( self )
 
 
 # =============================================================================
 ## configure the job 
-def configure ( datafiles                     ,
-                catalogs = []                 ,
-                tupfile  = 'RealLam0_MC.root' ) :
+def configure ( datafiles        ,
+                catalogs = []  ) :
     """
     Job configuration 
     """
-    from Configurables           import DaVinci       ## needed for job configuration
     from GaudiConf.Configuration import NTupleSvc     ## needed for job configuration 
     from Configurables import GaudiSequencer
-    from Configurables import DataOnDemandSvc
     
-    dod = DataOnDemandSvc( Dump = True )
-    
+    from Configurables           import DaVinci       ## needed for job configuration
     davinci = DaVinci (
         DataType      = '2009' ,
         Simulation    = True   ,
@@ -240,34 +249,39 @@ def configure ( datafiles                     ,
         UserAlgorithms = [ GaudiSequencer('Hlt') ] 
         )
     
-    if datafiles : 
-        from Configurables           import EventSelector
-        EventSelector ( Input = datafiles )
-        
-    if catalogs :
-        from GaudiConf.Configuration import FileCatalog  
-        FileCatalog ( Catalogs = catalogs )
-
-    tupfile =  "LAM0 DATAFILE='%s' TYPE='ROOT' OPT='NEW'" % tupfile 
-    NTupleSvc ( Output = [ tupfile ] )
+    NTupleSvc ( Output = [
+        "LAM0 DATAFILE='RealLam0_MC.root' TYPE='ROOT' OPT='NEW'" 
+        ] )
     
-    ## 
     ## trigger-related stuff, many thanks to Thomas Ruf 
-    ##
+
         
     from Configurables import TriggerTisTos
     TriggerTisTos  ( TriggerInputWarnings = True ) 
 
+    from Configurables import DataOnDemandSvc    
+    dod = DataOnDemandSvc( Dump = True )
+    
     from Configurables import HltConf,L0Conf
     hltconf       = HltConf()
     hltconf.L0TCK = '0x1309'
     hltconf.ThresholdSettings = 'Physics_MinBiasL0_PassThroughHlt_09Dec09'
     L0Conf ( TCK = '0x1309' ) 
     
-    ## end of configuration
+    ## end of trigger configuration
+
+    ## define the input data:
+    setData ( datafiles , catalogs )
     
-    gaudi = appMgr()
+    ##
+    ## 2. Jump into the wonderful world of the actual Gaudi components!
+    ## 
     
+    ## get the actual application manager (create if needed)
+    gaudi = appMgr() 
+
+    
+    ## create local algorithm:
     alg = Lam0MC(
         'Lam0'                   ,   ## Algorithm name
         NTupleLUN      = 'LAM0'  ,   ## Logical unit for output file with N-tuples
@@ -287,72 +301,48 @@ def configure ( datafiles                     ,
 # The actual job steering
 if '__main__' == __name__ :
     
-    import sys
-    
-    iL = int ( sys.argv[1] )
-    iR = int ( sys.argv[2] )
-    files = []
-    
-    from Configurables  import EventSelector    
-    EventSelector( PrintFreq = 1000 )
+    ## make printout of the own documentations 
+    print '*'*120
+    print                      __doc__
+    print ' Author  : %s ' %   __author__    
+    print ' Version : %s ' %   __version__
+    print ' Date    : %s ' %   __date__
+    print ' dir(%s) : %s ' % ( __name__    , dir() )
+    print '*'*120
 
-##     import BenderExample.MC2009_9
-##     files = EventSelector().Input 
-    
-##     print  80*'*'
-##     print  ' ARGV  : %s '    %  sys.argv
-##     print  ' RANGE : %d/%d ' % ( iL , iR )
-##     print  ' FILES : %d '    % len ( files )
-##     iR = min ( iR , len ( files ) )
-##     files = files [ iL : iR ]
-##     print  ' FILES : %d '    % len ( files )
-##     for f in files : print f 
-##     print  80*'*'
-    
-    tupfile = 'RealLam0_MC_MAS_PN%d.root' % iL 
-    
-    configure (
-        files                                  , 
-        catalogs = [
-        'xmlcatalog_file:local.xml'            ,
-        'xmlcatalog_file:Sim04Reco03-XDST.xml' ,
-        'xmlcatalog_file:Sim04Reco03-DST.xml'  
-        ] ,
-        tupfile = tupfile 
-        )
-    
-    gaudi = appMgr()
 
+    ## 'regular' Monte Carlo 
+    ## import BenderExample.MC2009_9
+    ## files = EventSelector().Input 
+    
     ## 
-    ## Manuel 
+    ## Manuel's hit-massaged Monte-Carlo  
     ## 
-    evtSel = gaudi.evtSel()
     pattern = '/castor/cern.ch/user/m/mschille/%d/%d/outputdata/Brunel.dst'
-    files = []
-    
+    files = []    
     ##for job in ( 179 , ) :  ## STD 
     ##for job in ( 180 , ) :  ## STD - 1*RMS       
     for job in ( 181 , ) :    ## STD + 1*RMS 
-        for subjob in range ( iL , min ( iR , 75 ) ) :
-            
+        for subjob in range ( 0 , 75 ) :
             if subjob in ( 47 , 48 , 49 ) : continue 
-            
             f = pattern % ( job , subjob )
             files.append ( f )
 
-    
-    print ' INPUT FILES: '
-    for f in files : print f        
-    evtSel.open ( files ) 
-    
-    run ( -1 ) 
-    
-    myalg = gaudi.algorithm ( 'Lam0' )
-    import GaudiPython.HistoUtils   
-    histos = myalg.Histos()
-    for (k,h) in histos.items() :
-        if hasattr ( h , 'dump' ) :
-            print h.dump ( 50 , 25 , False )
+    for f in files :
+        print ' INPUT', f
+        
+    ## configure 
+    configure (
+        files   ,
+        catalogs = [
+        'xmlcatalog_file:local.xml'            ,
+        'xmlcatalog_file:$BENDEREXAMPLEROOT/options/Sim04Reco03-XDST.xml' ,
+        'xmlcatalog_file:$BENDEREXAMPLEROOT/options/BenderExample/Sim04Reco03-DST.xml' 
+        ] 
+        )
+            
+    run ( 1000 )
+
 
     
 # =============================================================================

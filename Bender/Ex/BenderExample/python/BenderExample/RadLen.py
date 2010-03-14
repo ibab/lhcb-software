@@ -1,33 +1,50 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RadLen.py,v 1.3 2010-01-22 14:26:01 ibelyaev Exp $ 
+# $Id: RadLen.py,v 1.4 2010-03-14 17:05:03 ibelyaev Exp $ 
 # =============================================================================
-## The simple Bender-based example for radiation lenth studies 
+## @file BenderExample/RadLen.py
+#
+#  The simple Bender-based example for radiation lenth studies 
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
-#  <b>"Python-based Interactive Environment for Smart and Friendly 
-#   Physics Analysis"</b>
+#  <b>``Python-based Interactive Environment for Smart and Friendly 
+#   Physics Analysis''</b>
 #
 #  The package has been designed with the kind help from
 #  Pere MATO and Andrey TSAREGORODTSEV. 
 #  And it is based on the 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
-#  "C++ ToolKit for Smart and Friendly Physics Analysis"
+#  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
 #  with the campain of Dr.O.Callot et al.: 
-#  "No Vanya's lines are allowed in LHCb/Gaudi software."
+#  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @date 2006-10-12
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 """
-The simple Bender-based example for radiation length studies 
+The simple Bender-based example for radiation length studies
+
+This file is a part of BENDER project:
+``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
+
+The project has been designed with the kind help from
+Pere MATO and Andrey TSAREGORODTSEV. 
+
+And it is based on the 
+LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
+
+By usage of this code one clearly states the disagreement 
+with the campain of Dr.O.Callot et al.: 
+``No Vanya's lines are allowed in LHCb/Gaudi software.''
+
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
+__date__    = " 2006-10-12 "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ "
 # =============================================================================
 ## import everything from bender 
 from   Bender.All                  import *
@@ -44,14 +61,6 @@ class RadLen(AlgoMC) :
     Simple class for radiation length studies
     """
     
-    ## standard constructor
-    def __init__ ( self , name = 'RadLen' , **args ) :
-        """
-        standard constructor
-        """ 
-        AlgoMC.__init__ ( self , name , **args )
-        self.ievent = 0 
-
     ## standard algorithm initialization
     def initialize ( self ) :
         """
@@ -69,8 +78,7 @@ class RadLen(AlgoMC) :
         self.iTrSvc = iTrSvc
         return SUCCESS 
             
-        
-        
+            
     ## standard mehtod for analyses
     def analyse( self ) :
         """
@@ -161,14 +169,15 @@ class RadLen(AlgoMC) :
             nt2 . column ( 'mat' , mat )  ## x / X0 
             
             nt2 . write () 
-
-        
         
         return SUCCESS 
-
-
+        
+    ## evaluate the radiation length using Transport Service 
     def radLen ( self , point1 , vct , z ) :
-
+        """
+        Evaluate the radiation length using Transport Service
+        """
+        
         deltaZ  = z - point1.Z()
         newVct  = Gaudi.XYZVector ( vct )
         newVct *=  ( deltaZ  / newVct.Z() ) 
@@ -177,66 +186,82 @@ class RadLen(AlgoMC) :
 
         return self.iTrSvc.distanceInRadUnits ( point1 , point2 )
 
-        
-
-                 
+                        
 # =============================================================================
 ## configure the job
-def configure ( **args ) :
+def configure ( datafiles , catalogs = [] ) :
     """ Configure the job """
     
     
+    ##
+    ## Static configuration using "Configurables"
+    ##
+    
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType   = 'DC06' , # default  
+        DataType   = 'MC09' ,
         Simulation = True   ) 
     
-    
     from Configurables import HistogramPersistencySvc 
-    HistogramPersistencySvc ( OutputFile = 'RadLen_Histos.root' ) 
-    from Configurables import NTupleSvc 
-    NTupleSvc ( Output = [ "RADLEN DATAFILE='RadLen_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
-
+    HistogramPersistencySvc ( OutputFile = 'RadLen_Histos.root' )
     
-    from Configurables import ApplicationMgr
-    ApplicationMgr().ExtSvc += [ 'TransportSvc' ]
-
+    from Configurables import NTupleSvc 
+    NTupleSvc ( Output = [
+        "RADLEN DATAFILE='RadLen_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
+    
+    ## define/set the input data 
+    setData ( datafiles , catalogs )
+    
+    ##
+    ## jump into the world of the actual Gaudi components!
+    ## 
+    
+    ## get the actual application manager (create if needed)
+    gaudi = appMgr() 
     
     ## get the actual application manager (create if needed)
     gaudi = appMgr()
     
     ## create local algorithm:
     alg = RadLen(
+        'RadLen'                   ,
         HistoPrint     = True      ,
         NTupleLUN      = 'RADLEN'  , 
         PP2MCs         = [ 'Relations/Rec/ProtoP/Charged'] , 
         InputLocations = [ 'StdNoPIDsPions' ]
         )
-
-    ## get the application manager (create if needed)
-    gaudi = appMgr()
     
     ##gaudi.addAlgorithm ( alg ) 
     gaudi.setAlgorithms ( [alg] ) 
-    
-    ## get input data 
-    import LoKiExample.Bs2Jpsiphi_mm_data as input 
-    evtSel = gaudi.evtSel()    
-    evtSel.open ( input.Files ) 
-    evtSel.PrintFreq = 100
-    
     
     return SUCCESS 
 
 # =============================================================================
 ## job steering 
 if __name__ == '__main__' :
-
+    
     ## make printout of the own documentations 
-    print __doc__
+    print '*'*120
+    print                      __doc__
+    print ' Author  : %s ' %   __author__    
+    print ' Version : %s ' %   __version__
+    print ' Date    : %s ' %   __date__
+    print ' dir(%s) : %s ' % ( __name__    , dir() )
+    print '*'*120
     
     ## configure the job:
-    configure()
+    configure( [
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000514_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000515_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000516_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000517_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000518_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000519_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000520_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000521_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000522_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005135/0000/00005135_00000523_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"]
+        )
 
     ## run the job
     run(500)

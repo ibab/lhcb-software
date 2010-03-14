@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: AP.py,v 1.4 2010-03-12 16:41:11 ibelyaev Exp $ 
+# $Id: AP.py,v 1.5 2010-03-14 17:05:03 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/AP.py
 #
@@ -45,7 +45,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = "2009-09-01"
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ "
 # =============================================================================
 ## import everything from Bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -166,6 +166,10 @@ def configure ( datafiles , catalogs = [] ) :
     Configure the job
     """
     
+    ##
+    ## Static configuration using "Configurables"
+    ##
+    
     from Configurables import DaVinci    
     daVinci = DaVinci (
         DataType   = 'MC09' , 
@@ -182,9 +186,10 @@ def configure ( datafiles , catalogs = [] ) :
     setData ( datafiles , catalogs )
     
     ##
-    ## jump into the world of the actual Gaudi components!
+    ## jump into the wonderful world of the actual Gaudi components!
     ## 
     
+    ## get the actual application manager (create if needed)
     gaudi = appMgr() 
     
     ## create local algorithm:

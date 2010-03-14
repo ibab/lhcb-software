@@ -6,18 +6,18 @@
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
-#  <b>"Python-based Interactive Environment for Smart and Friendly 
-#   Physics Analysis"</b>
+#  <b>``Python-based Interactive Environment for Smart and Friendly 
+#   Physics Analysis''</b>
 #
 #  The package has been designed with the kind help from
 #  Pere MATO and Andrey TSAREGORODTSEV. 
 #  And it is based on the 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
-#  "C++ ToolKit for Smart and Friendly Physics Analysis"
+#  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
 #  with the campain of Dr.O.Callot et al.: 
-#  "No Vanya's lines are allowed in LHCb/Gaudi software."
+#  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2010-02-10
@@ -25,6 +25,19 @@
 """
 
 The script to analyse the Lambda0 from the V0-stripping
+
+This file is a part of BENDER project:
+``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
+
+The project has been designed with the kind help from
+Pere MATO and Andrey TSAREGORODTSEV. 
+
+And it is based on the 
+LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
+
+By usage of this code one clearly states the disagreement 
+with the campain of Dr.O.Callot et al.: 
+``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
 """
 # ===========================================================================================
@@ -138,31 +151,16 @@ class Lam0(Algo) :
             
             ## get the related primary vertex 
             bpv  = self.bestPV  ( lam )
-            bpv2 = self.bestPV2 ( primaries , lam )
-            
-            if   not     bpv2 and     not bpv :
-                self.Warning('NpPV: both vertices are nulls ', SUCCESS )
-            elif not not bpv2 and not not bpv :
-                if bpv != bpv2 : 
-                    self.Warning('NpPV: both vertices are OK ', SUCCESS )
-                    print ' PV-1' , bpv  .key() , bpv  .position()
-                    print ' PV-2' , bpv2 .key() , bpv2 .position()
-            else :
-                self.Error ('NpPV: something very bad happens here', SUCCESS )
-                
-            if not not bpv :
-                _ltime  = LTIME        ( self.ltfitter , bpv )
-                _ltchi2 = LTIMEFITCHI2 ( self.ltfitter , bpv )
-                
-                ltime  = _ltime  ( lam ) * c_light
-                ltchi2 = _ltchi2 ( lam )
-                pvz    = VZ ( bpv )
-                
-            else :
+            if not bpv :
                 self.Warning( 'No best-PV is found!', SUCCESS )
-                continue 
-
-            ##mips   = IPCHI2 ( bpv , self.geo() )
+                continue
+            
+            _ltime  = LTIME        ( self.ltfitter , bpv )
+            _ltchi2 = LTIMEFITCHI2 ( self.ltfitter , bpv )
+            
+            ltime  = _ltime  ( lam ) * c_light
+            ltchi2 = _ltchi2 ( lam )
+            pvz    = VZ ( bpv )
             
             mips1 = mips ( p  ) 
             mips2 = mips ( pi )
@@ -182,7 +180,7 @@ class Lam0(Algo) :
             
             if   down1 and down2 and ltime < 10 * mm : continue
             elif                     ltime <  1 * mm : continue 
-            
+
             tup.column ( "p0"    , P  ( lam ) / GeV ) 
             tup.column ( "p1"    , P  ( p   ) / GeV ) 
             tup.column ( "p2"    , P  ( pi  ) / GeV ) 
@@ -235,6 +233,9 @@ class Lam0(Algo) :
 
             self.plot ( m , 'p pi mass 5', 1.05 , 1.25 ) 
             
+            if  min ( mips1 , mips2 ) < 25  : continue
+            if  ltchi2 > 49                 : continue
+            
             if   long1 and long2 :
                 self.plot ( m , 'Lambda0 mass, LL' , 1.05 , 1.25 , 200 )    
             elif down1 and down2 :
@@ -243,22 +244,6 @@ class Lam0(Algo) :
                 self.plot ( m , 'Lambda0 mass, LD' , 1.05 , 1.25 , 200 )
                     
         return SUCCESS 
-
-
-    def bestPV2( self , pvs , p ) :
-        """
-        Find 'the best associated' primary vertex'
-        
-        """
-        pv   = None
-        chi2 = 1.e+100
-        fun  = VIPCHI2 ( p , self.geo() ) 
-        for v in pvs :
-            val = fun ( v )
-            if 0 <= val < chi2 :
-                chi2 = val
-                pv   = v
-        return pv
 
     
     def tupPV ( self , tup , pv ) :
@@ -297,6 +282,18 @@ class Lam0(Algo) :
         tup.farray ( 'trtyp'   , typ   , 'nTrk' , 100 ) 
                      
         return SUCCESS 
+    
+    ## finalize & print histos 
+    def finalize ( self ) :
+        """
+        Finalize & print histos         
+        """
+        histos = self.Histos()
+        for key in histos :
+            h = histos[key]
+            if hasattr ( h , 'dump' ) : print h.dump(50,30,True)
+        return Algo.finalize ( self )
+
 
 # =============================================================================
 ## configure the job 
@@ -304,32 +301,35 @@ def configure ( datafiles , catalogs = [] ) :
     """
     Job configuration 
     """
-        
-    from Configurables           import DaVinci       ## needed for job configuration
-    from Configurables           import EventSelector ## needed for job configuration 
-    from GaudiConf.Configuration import FileCatalog   ## needed for job configuration 
-    from GaudiConf.Configuration import NTupleSvc     ## needed for job configuration 
 
-
+    ##
+    ## 1. Static configuration using "Configurables"
+    ##
+    
+    from Configurables           import DaVinci    
     davinci = DaVinci (
         DataType      = '2009' ,
         Simulation    = False  ,
         PrintFreq     = 1000   ,
-        EvtMax        = -1     , 
         HistogramFile = 'RealLam0_V0_Histos.root' 
         )
     
-    if datafiles : 
-        EventSelector (
-            Input     = datafiles
-            )
-
+    from GaudiConf.Configuration import NTupleSvc   
     NTupleSvc (
-        Output = [ "LAM0 DATAFILE='RealLambda_V0.root' TYPE='ROOT' OPT='NEW'" ]
+        Output = [ "LAM0 DATAFILE='RealLam0_V0.root' TYPE='ROOT' OPT='NEW'" ]
         )
     
-    gaudi = appMgr()
+    ## define the input data:
+    setData ( datafiles , catalogs )
     
+    ##
+    ## 2. Jump into the wonderful world of the actual Gaudi components!
+    ## 
+    
+    ## get the actual application manager (create if needed)
+    gaudi = appMgr() 
+    
+    ## create local algorithm:
     alg = Lam0(
         'Lam0'             ,   ## Algorithm name
         NTupleLUN = 'LAM0' ,   ## Logical unit for output file with N-tuples
@@ -346,32 +346,19 @@ def configure ( datafiles , catalogs = [] ) :
 # The actual job steering
 if '__main__' == __name__ :
 
-    from Configurables  import EventSelector
+    ## make printout of the own documentation
+    print '*'*120
+    print                      __doc__
+    print ' Author  : %s ' %   __author__    
+    print ' Version : %s ' %   __version__
+    print ' Date    : %s ' %   __date__
+    print ' dir(%s) : %s ' % ( __name__    , dir() )
+    print '*'*120  
     
-    EventSelector( PrintFreq = 1000 )
-
-    import BenderExample.V0Stripping
-     
-    configure ( [] )
-
-    gaudi = appMgr()
-    
-    import atexit
-    atexit.register ( gaudi.exit ) 
-    
-    evtSel = gaudi.evtSel()
-    evtSel.open('/castor/cern.ch/user/p/pkoppenb/DATA2009/000000.V0.dst') 
+    configure ('/castor/cern.ch/user/p/pkoppenb/DATA2009/000000.V0.dst') 
     
     run ( -1 )
     
-    myalg = gaudi.algorithm ( 'Lam0' )
-
-    import GaudiPython.HistoUtils
-    histos = myalg.Histos()
-    for (k,h) in histos.items() :
-        if hasattr ( h , 'dump' ) :
-            print h.dump ( 50 , 25 , False )
-        
 
 # =============================================================================
 # The END 

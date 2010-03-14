@@ -1,36 +1,51 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RealMip.py,v 1.3 2010-01-22 14:26:01 ibelyaev Exp $
+# $Id: RealMip.py,v 1.4 2010-03-14 17:05:03 ibelyaev Exp $
 # =============================================================================
 # @file BenderExample/RealMip.py
 #
-# An attempt to find mip on real data 
+# An attempt to find mip on real data
+#
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
-#  <b>"Python-based Interactive Environment for Smart and Friendly 
-#   Physics Analysis"</b>
+#  <b>``Python-based Interactive Environment for Smart and Friendly 
+#   Physics Analysis''</b>
 #
 #  The package has been designed with the kind help from
 #  Pere MATO and Andrey TSAREGORODTSEV. 
 #  And it is based on the 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
-#  "C++ ToolKit for Smart and Friendly Physics Analysis"
+#  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
 #  with the campain of Dr.O.Callot et al.: 
-#  "No Vanya's lines are allowed in LHCb/Gaudi software."
+#  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 # @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # @date 2009-11-25
 # ============================================================================
 """
 
-An attempt to find mip on real data 
+An attempt to find mip on real data
+
+This file is a part of BENDER project:
+``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
+
+The project has been designed with the kind help from
+Pere MATO and Andrey TSAREGORODTSEV. 
+
+And it is based on the 
+LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
+
+By usage of this code one clearly states the disagreement 
+with the campain of Dr.O.Callot et al.: 
+``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
 """
 # ============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__date__    = " 2009-11-25 "
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # ============================================================================
 ## import all needed stuff:
 import ROOT                           ## needed to produce/visualize the histograms
@@ -76,8 +91,7 @@ class RealMip(Algo) :
     """
     
     def initialize ( self ) :
-        
-        
+                
         sc = Algo.initialize ( self )
         if sc.isFailure() : return sc
         
@@ -86,7 +100,6 @@ class RealMip(Algo) :
         self.tPrs  = self.tool( ICaloDigits4Track , 'PrsEnergyForTrack:PUBLIC'  ) 
 
         return SUCCESS
-
     
     ## the major analysis method 
     def analyse  (self ) :
@@ -94,9 +107,7 @@ class RealMip(Algo) :
         The major analysis method
         """
 
-
         tup = self.nTuple ( 'RealMip')
-
         
         ## get tracks and count them!
         
@@ -106,8 +117,6 @@ class RealMip(Algo) :
         
         self.plot ( tracks.size() , '#tracks' , 0 , 50 )
         
-        ## tup.column ( 'nTracks' , tracks.size() )
-
         
         nE = []
         eE = []
@@ -119,6 +128,8 @@ class RealMip(Algo) :
         ## loop over all tracks
         for track in tracks :
             
+            if track.p() < 3 * GeV             : continue
+            if LHCb.Track.Long != track.type() : continue 
             
             nEcal , eEcal = self.treat ( track , self.tEcal )
             nHcal , eHcal = self.treat ( track , self.tHcal )
@@ -132,7 +143,7 @@ class RealMip(Algo) :
             eH += [ eHcal ]
             eE += [ ePrs  ]
 
-            ## energy in Calorimeters 
+            ## energy in Calorimeters
             self.plot ( eEcal , 'e Ecal' , 0 , 4000 ,  50 )
             self.plot ( eHcal , 'e Hcal' , 0 , 4000 ,  50 )
             self.plot ( ePrs  , 'e Prs'  , 0 ,  100 ,  50 )
@@ -143,9 +154,12 @@ class RealMip(Algo) :
             self.plot ( nPrs  , 'n Prs'  , 0 , 50 ,  50 )
 
             ## energy in Calorimeters 
-            if nEcal > 0 : self.plot ( eEcal , 'e1 Ecal' , 0 , 4000 ,  50 )
-            if nHcal > 0 : self.plot ( eHcal , 'e1 Hcal' , 0 , 4000 ,  50 )
-            if nPrs  > 0 : self.plot ( ePrs  , 'e1 Prs'  , 0 ,  100 ,  50 )
+            if nEcal > 0 and eEcal < 4000 :
+                self.plot ( eEcal , 'e1 Ecal' , 0 , 4000 ,  50 )
+            if nHcal > 0 and eHcal < 4000 :
+                self.plot ( eHcal , 'e1 Hcal' , 0 , 4000 ,  50 )
+            if nPrs  > 0 and ePrs  <  100 :
+                self.plot ( ePrs  , 'e1 Prs'  , 0 ,  100 ,  50 )
 
             tup.column ( 'eEcal' , float( eEcal )  )
             tup.column ( 'eHcal' , float( eHcal )  )
@@ -169,8 +183,6 @@ class RealMip(Algo) :
                 self.plot ( eEcal , 'mip in Ecal' , 0 , 4000 ,  50 )
 
                 
-
-
         return SUCCESS 
     
     def treat ( self , track , tool ) :
@@ -182,7 +194,7 @@ class RealMip(Algo) :
         
         if hasattr ( track , 'proto' ) : return self.treat ( track.proto() , tool )
         if hasattr ( track , 'track' ) : return self.treat ( track.track() , tool )
-        
+
         digits = LHCb.CaloDigit.Set()
 
         sc = tool.collect ( track , digits )
@@ -191,46 +203,46 @@ class RealMip(Algo) :
         
         return ( digits.size() , ene ( digits ) )
     
-                          
+    ## finalize & print histos 
+    def finalize ( self ) :
+        """
+        Finalize & print histos         
+        """
+        histos = self.Histos()
+        for key in histos :
+            h = histos[key]
+            if hasattr ( h , 'dump' ) : print h.dump(50,30,True)
+        return Algo.finalize ( self )                      
 
 # =============================================================================
 ## the actual job configuration
-def configure ( datafiles ) :
+def configure ( datafiles , catalogs = [] ) :
     """
     The actual job configuration
     """
-    from Configurables           import DaVinci       ## needed for job configuration
-    from Configurables           import EventSelector ## needed for job configuration 
-    from GaudiConf.Configuration import FileCatalog   ## needed for job configuration 
-    from GaudiConf.Configuration import NTupleSvc     ## needed for job configuration 
     
-    # The main configurable 
+    ##
+    ## 1. Static configuration using "Configurables"
+    ##
+
+    from Configurables   import DaVinci
     davinci = DaVinci (
         DataType      = '2009' ,             ## NB:    2k+9
         Simulation    = False  ,             ## NB:   *REAL DATA*
-        EvtMax        = -1     ,             ## all events in the input files 
         HistogramFile = 'RealMip_Histos.root' 
         )
 
-    if datafiles : 
-        EventSelector (
-            PrintFreq = 100       , 
-            Input     = datafiles 
-            )
-    
-    FileCatalog (
-        Catalogs = [ 'xmlcatalog_file:RealDataRec2.xml' ]
-        )
-    
+    from GaudiConf.Configuration import NTupleSvc
     NTupleSvc (
         Output = [
         "MIP DATAFILE='RealMip.root' TYPE='ROOT' OPT='NEW'"
         ]
         )
 
-
-    from Configurables import EcalEnergyForTrack , HcalEnergyForTrack , PrsEnergyForTrack
-
+    from Configurables import ( EcalEnergyForTrack ,
+                                HcalEnergyForTrack ,
+                                PrsEnergyForTrack  ) 
+    
     for t in ( EcalEnergyForTrack ,
                HcalEnergyForTrack ,
                PrsEnergyForTrack  ) : 
@@ -239,15 +251,14 @@ def configure ( datafiles ) :
             Extrapolator    = 'TrackMasterExtrapolator' , 
             PropertiesPrint = True                      )
 
-    ## end of static configurtaion
+    ##
+    ## 2. Jump into the wonderful world of the actual Gaudi components!
+    ## 
     
-    ## instantiate application manager
-    gaudi = appMgr()
-
+    ## get the actual application manager (create if needed)
+    gaudi = appMgr() 
     
-    ## start of dynamic configuration 
-    
-    ## instantiate my algorithm
+    ## create local algorithm:
     alg = RealMip(
         'Mip'        ,
         NTupleLUN = 'MIP' 
@@ -255,43 +266,31 @@ def configure ( datafiles ) :
     
     gaudi.setAlgorithms ( [ alg ] ) 
     
-
     return SUCCESS 
-
 
 # =============================================================================
 ## the actual job steering     
 if '__main__' == __name__ :
     
-    print __doc__
-    print __author__
-    print __version__
-    
-    configure ( [] )
+    ## make printout of the own documentations 
+    print '*'*120
+    print                      __doc__
+    print ' Author  : %s ' %   __author__    
+    print ' Version : %s ' %   __version__
+    print ' Date    : %s ' %   __date__
+    print ' dir(%s) : %s ' % ( __name__    , dir() )
+    print '*'*120  
 
-    gaudi = appMgr()
-    
-    evtsel = gaudi.evtSel()
-    
-    from BenderExample.JuanFiles2009 import files
+    ##
+    ## "regular data"
+    ##
+    import BenderExample.Data2009Reco07    
+    from Gaudi.Configuration import EventSelector 
+    files  = EventSelector().Input
+    files.reverse() 
+    configure ( files )
 
-    evtsel.open ( files )
-    
-    run ( -1 )
-
-    import GaudiPython.HistoUtils
-    
-    alg = gaudi.algorithm ( 'Mip' )
-    
-    histos = alg.Histos()
-    for key in histos :
-        histo = histos[key]
-        if hasattr ( histo , 'dump' ) :
-            print histo.dump( 40 , 20 )
-        if hasattr ( histo , 'Draw' ) :  
-            histo.Draw(  histo.title() + '.gif' )
-            histo.Draw(  histo.title() + '.eps' )
-            
+    run ( 2000 )
     
 # ============================================================================
 # The END 

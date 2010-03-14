@@ -1,20 +1,51 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RealPi0.py,v 1.4 2010-01-22 14:26:01 ibelyaev Exp $
+# $Id: RealPi0.py,v 1.5 2010-03-14 17:05:03 ibelyaev Exp $
 # =============================================================================
 # @file BenderExampele/RealPi0.py
-# Attempt to recontruct pi0 on real data 
+#
+# Attempt to recontruct pi0 on real data
+#
+#  This file is a part of 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
+#  <b>``Python-based Interactive Environment for Smart and Friendly 
+#   Physics Analysis''</b>
+#
+#  The package has been designed with the kind help from
+#  Pere MATO and Andrey TSAREGORODTSEV. 
+#  And it is based on the 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
+#  ``C++ ToolKit for Smart and Friendly Physics Analysis''
+#
+#  By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+#
 # @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # @date 2009-11-25
 # ============================================================================
 """
 
-Attempt to recontruct pi0 on real data 
+Attempt to recontruct pi0 on real data
+
+This file is a part of BENDER project:
+``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
+
+The project has been designed with the kind help from
+Pere MATO and Andrey TSAREGORODTSEV. 
+
+And it is based on the 
+LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
+
+By usage of this code one clearly states the disagreement 
+with the campain of Dr.O.Callot et al.: 
+``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
 """
 # ============================================================================
-__author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
+__author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
+__date__    = " 2009-11-25 "
+__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ "
 # ============================================================================
 ## import all needed stuff:
 import ROOT                           ## needed to produce/visualize the histograms
@@ -43,23 +74,19 @@ class RealPi0(Algo) :
     """
 
     def initialize ( self ) :
-
         
         sc = Algo.initialize ( self )
         if sc.isFailure() : return sc 
 
         self.beamLine = Gaudi.Math.XYZLine ( Gaudi.Math.XYZPoint (0,0,0) ,
                                              Gaudi.Math.XYZVector(0,0,1) )
-
         return SUCCESS
-
     
     ## the major analysis method 
     def analyse  (self ) :
         """
         The major analysis method
         """
-
         
         clusters = self.get ( 'Rec/Calo/EcalClusters' )
         photons  = self.get ( 'Rec/Calo/Photons'      )
@@ -111,85 +138,53 @@ class RealPi0(Algo) :
                       
         return SUCCESS 
 
+    ## finalize & print histos 
+    def finalize ( self ) :
+        """
+        Finalize & print histos         
+        """
+        histos = self.Histos()
+        for key in histos :
+            h = histos[key]
+            if hasattr ( h , 'dump' ) : print h.dump(50,30,True)
+        return Algo.finalize ( self )
+  
+
 
 # =============================================================================
 ## the actual job configuration
-def configure ( datafiles ) :
+def configure ( datafiles , catalogs = [] ) :
     """
     The actual job configuration
     """
-    from Configurables           import DaVinci       ## needed for job configuration
-    from Configurables           import EventSelector ## needed for job configuration 
-    from GaudiConf.Configuration import FileCatalog   ## needed for job configuration 
-    from GaudiConf.Configuration import NTupleSvc     ## needed for job configuration 
     
-    # the main configurable 
+    ##
+    ## 1. Static configuration using "Configurables"
+    ##
+    
+    from Configurables           import DaVinci    
     davinci = DaVinci (
-        DataType   = '2009' ,             ## NB:    2k+9
-        Simulation = False  ,             ## NB:   *REAL DATA*
-        EvtMax     = -1     ,             ## all eventts in the input files
+        DataType     = '2009' ,             ## NB:    2k+9
+        Simulation   = False  ,             ## NB:   *REAL DATA*
         HistogramFile = 'RealPi0_Histos.root' ,
-        EnableUnpack = False 
         )
     
-    EventSelector (
-        PrintFreq = 10        , 
-        Input     = datafiles 
-        )
-    
-    FileCatalog (
-        Catalogs = [ 'xmlcatalog_file:RealDataRec2.xml' ]
-        )
-    
+    from GaudiConf.Configuration import NTupleSvc  
     NTupleSvc (
         Output = [
         "PI0 DATAFILE='RealPi0_Tuples.root' TYPE='ROOT' OPT='NEW'"
         ]
         )
-
-    from Configurables import OffLineCaloRecoConf
     
-    OffLineCaloRecoConf (
-        EnableRecoOnDemand = True  ,
-        UseTracks          = False ,        
-        UseSpd             = True  
-        )
+    ## define the input data:
+    setData ( datafiles , catalogs )
     
-    from Configurables import NeutralProtoPAlg
-    NeutralProtoPAlg (
-        LightMode      = True ,                  ## "light-mode", no PIDs
-        HyposLocations = [ 'Rec/Calo/Photons']   ## only single photons 
-        )
+    ##
+    ## 2. Jump into the wonderful world of the actual Gaudi components!
+    ## 
     
-    from Configurables import PhotonMaker, PhotonMakerAlg, PhysDesktop 
-    
-    maker =  PhotonMakerAlg (
-        'StdLooseAllPhotons' ,
-        DecayDescriptor = 'Gamma'
-        )
-    
-    maker.addTool ( PhotonMaker , name = 'PhotonMaker' )
-    photon = maker.PhotonMaker
-    photon.UseCaloTrMatch     = False
-    photon.UseCaloDepositID   = False
-    photon.UseShowerShape     = False
-    photon.UseClusterMass     = False
-    photon.UsePhotonID        = False
-    
-    photon.ConvertedPhotons   = True 
-    photon.UnconvertedPhotons = True 
-    ## photon.PtCut              = 200
-    
-    photon.PropertiesPrint = True
-    
-    maker.InputPrimaryVertices = "None" ## NB: it saves a lot of CPU time 
-
-    ## end of static configuration
-    
-    ## instantiate application manager
-    gaudi = appMgr()
-    
-    ## start of dynamic configuration 
+    ## get the actual application manager (create if needed)
+    gaudi = appMgr() 
     
     ## instantiate my algorithm
     alg = RealPi0(
@@ -198,10 +193,8 @@ def configure ( datafiles ) :
         InputLocations = [ 'StdLooseAllPhotons' ] 
         )
     
-    gaudi.setAlgorithms ( [
-        'NeutralProtoPAlg' , alg ] ) 
+    gaudi.setAlgorithms ( [ alg ] ) 
     
-
     return SUCCESS 
 
 
@@ -209,44 +202,39 @@ def configure ( datafiles ) :
 ## the actual job steering     
 if '__main__' == __name__ :
     
-    print __doc__
-    print __author__
-    print __version__
+    ## make printout of the own documentations 
+    print '*'*120
+    print                      __doc__
+    print ' Author  : %s ' %   __author__    
+    print ' Version : %s ' %   __version__
+    print ' Date    : %s ' %   __date__
+    print ' dir(%s) : %s ' % ( __name__    , dir() )
+    print '*'*120  
     
-    input = []
+    import BenderExample.Data2009Reco07
     
-    configure ( input )
+    ##
+    ## "regular data"
+    ##
     
-    gaudi = appMgr()
-
-    evtSel = gaudi.evtsel()
-
-
-    from BenderExample.JuanFiles2009 import files
+    from Gaudi.Configuration import EventSelector 
+    files  = EventSelector().Input
+    files.reverse() 
+    configure ( files )
     
-    evtSel.open( files )
+    ##  
+    ##   few "special" runs 
+    ##
     
-    run ( -1 )
-
-    import GaudiPython.HistoUtils
+##     prefix = '/castor/cern.ch/grid/lhcb/data/2009/DST/'
+##     _files = [ '00005845/0000/00005845_00000057_1.dst' ,
+##                '00005845/0000/00005845_00000058_1.dst' ,
+##                '00005844/0000/00005844_00000003_1.dst' ,
+##                '00005845/0000/00005845_00000049_1.dst' ]
+##     files = [ prefix + f for f in _files ]
+##     configure  (files ) 
     
-    alg = gaudi.algorithm ( 'RealPi0' )
-    
-    histos = alg.Histos()
-    for key in histos :
-        histo = histos[key]
-        if hasattr ( histo , 'dump' ) :
-            print 'KEY:', key 
-            print histo.dump( 50 , 20 )
-        if hasattr ( histo , 'Draw' ) :  
-            histo.Draw(  histo.title() + '.gif' )
-            histo.Draw(  histo.title() + '.eps' )
-        if 'gamma gamma 2' == key :
-            
-            from KaliCalo.Pi0HistoFit import fitPi0Histo, pi0FitFun
-            
-            print fitPi0Histo ( histo , 0.050 , 0.300 ) 
-    
+    run ( 1000 )
     
 # ============================================================================
 # The END 
