@@ -41,7 +41,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 __date__    = "2004-07-11"
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $'
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $'
 __all__     = ()
 # =============================================================================
     
@@ -144,12 +144,15 @@ if not hasattr ( _EvtSel , '_openNew_') :
 
     _EvtSel._openNew_ = _openNew_
     _EvtSel.open      = _openNew_
-                        
 
+
+## Decorate iDataSvc with proper dir/ls methods '
+import AnalysisPython.Dir 
 
 print '*'*120
 print 'Bender.Fixes: 1. add custom "atexit" handler'
 print 'Bender.Fixes: 2. decorate iEventSelector to open RAW/MDF & CASTOR -files'
+print 'Bender.Fixes: 3. decorate iDataSvc with proper "dir/ls" methods '
 print '*'*120
 
 # =============================================================================

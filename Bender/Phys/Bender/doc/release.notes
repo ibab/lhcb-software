@@ -1,14 +1,23 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.48 2010-02-12 15:37:18 ibelyaev Exp $
+! $Id: release.notes,v 1.49 2010-03-14 17:08:34 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.48 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.49 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : Python-based environment for Physics Analysis 
 ! -----------------------------------------------------------------------------
 
+
+! ==================== Phys/Bender v14r0 2010-03-14 ===========================
+
+! 2010-03-14 - Vanya Belyaev
+
+ - major update of all related functionality.
+
+     the goal: to prepare "Grid-friendly" verison of Bender
+ 
 ! 2010-02-12 - Vanya Belyaev
 
  - Bender.Main.py 
@@ -17,7 +26,7 @@
 
  - cmt/requirements 
 
-     version incrment to v13r1 
+     version incrment to v14r0 
 
 ! ==================== Phys/Bender v13r0 2010-02-10 ===========================
 

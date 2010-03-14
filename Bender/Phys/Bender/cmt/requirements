@@ -1,17 +1,18 @@
-# $Id: requirements,v 1.70 2010-02-12 15:37:18 ibelyaev Exp $ 
+# $Id: requirements,v 1.71 2010-03-14 17:08:34 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2002-11-02
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           Bender
-version           v13r1
+version           v14r0
 
 # ============================================================================
 branches          cmt doc python
 
 # =============== dependencies ================================================
-use               DaVinci      v*  Phys 	
-use               GaudiPython  v*  	
+use               DaVinci        v*  Phys
+use               AnalysisPython v*  Phys 
+use               GaudiPython    v*  	
 
 # =============== standard patterns ===========================================
 apply_pattern install_python_modules 

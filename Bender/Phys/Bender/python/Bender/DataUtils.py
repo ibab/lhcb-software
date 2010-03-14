@@ -42,7 +42,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2010-02-12"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 __all__     = ( 'externdfile' , )
 # =============================================================================
 ## Helper function to 'extend' the short file name
@@ -60,9 +60,9 @@ def extendfile ( filename ) :
     ##
     pattern = "DATAFILE='%s' %s OPT='READ'"
     typ     = "TYPE='POOL_ROOTTREE'"
-    if 0 <= filename.find ( 'mdf' ) : type = "SVC='LHCb::MDFSelector'"
-    if 0 <= filename.find ( 'raw' ) : type = "SVC='LHCb::MDFSelector'"
-    return pattern %  ( filename , type )
+    if 0 <= filename.find ( '.mdf' ) : typ = "SVC='LHCb::MDFSelector'"
+    if 0 <= filename.find ( '.raw' ) : typ = "SVC='LHCb::MDFSelector'"
+    return pattern %  ( filename , typ )
 
 # =============================================================================
 if __name__ == '__main__' :

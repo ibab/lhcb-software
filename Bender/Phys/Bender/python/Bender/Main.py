@@ -40,7 +40,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 __date__    = "2004-07-11"
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $' 
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $' 
 # =============================================================================
 
 import os 
@@ -166,9 +166,15 @@ def setData ( files , catalogs = [] ) :
     """
     from GaudiPython.Bindings import _gaudi
     
-    if not type ( files    ) in ( list , tuple ) : files    = [ files    ]
-    if not type ( catalogs ) is ( list , tuple ) : catalogs = [ catalogs ]
-
+    if   type ( files    ) is str   : files    =      [ files    ]
+    elif type ( files    ) is tuple : files    = list ( files    ) 
+    if   type ( catalogs ) is str   : catalogs =      [ catalogs ]    
+    elif type ( catalogs ) is tuple : catalogs = list ( catalogs )
+    
+    if not issubclass ( type ( files    ) , list ) :
+        files    = [ f for f in files    ] 
+    if not issubclass ( type ( catalogs ) , list ) :
+        catalogs = [ c for c in catalogs ] 
     
     if not _gaudi :               ## here we deal with configurables!
         
@@ -182,6 +188,8 @@ def setData ( files , catalogs = [] ) :
             
         if catalogs :
             
+            from Gaudi.Configuration import Gaudi__MultiFileCatalog as FileCatalog
+            FileCatalog   ( Catalogs = catalogs )
             from Gaudi.Configuration import FileCatalog
             FileCatalog   ( Catalogs = catalogs )
             
