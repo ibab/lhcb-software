@@ -240,12 +240,17 @@ namespace Rich
       EventID( const EventID& id ) 
         : NumericType<ulonglong> ( id.data()       ), 
           m_nActiveBits          ( id.activeBits() ) { }
-      /// Constructor from information
+      /// Constructor from value and number of bits
       template<class NUMTYPE>
-      explicit EventID ( const NUMTYPE   id,
-                         const ShortType aBits = 8*sizeof(NUMTYPE) )
+      EventID ( const NUMTYPE   id,
+                const ShortType aBits )
         : NumericType<ulonglong> ( (ulonglong)id ),
           m_nActiveBits          ( aBits         ) { }
+      /// Constructor from value
+      template<class NUMTYPE>
+      explicit EventID ( const NUMTYPE id )
+        : NumericType<ulonglong> ( (ulonglong)id     ),
+          m_nActiveBits          ( 8*sizeof(NUMTYPE) ) { }
       /// Return the number of active bits
       inline ShortType activeBits() const { return m_nActiveBits; }
       /// Set the number of active bits
@@ -294,10 +299,15 @@ namespace Rich
       BXID( const BXID& id ) 
         : NumericType<LongType> ( id.data()       ), 
           m_nActiveBits         ( id.activeBits() ) { }
-      /// Constructor from information
+      /// Constructor from value
       template<class NUMTYPE>
-      explicit BXID ( const NUMTYPE   id,
-                      const ShortType aBits = 8*sizeof(NUMTYPE) )
+      explicit BXID ( const NUMTYPE id ) 
+        : NumericType<LongType> ( (LongType)id      ),
+          m_nActiveBits         ( 8*sizeof(NUMTYPE) ) { }
+      /// Constructor from value and number of bits
+      template<class NUMTYPE>
+      BXID ( const NUMTYPE   id,
+             const ShortType aBits )
         : NumericType<LongType> ( (LongType)id ),
           m_nActiveBits         ( aBits        ) { }
       /// Return the number of active bits
