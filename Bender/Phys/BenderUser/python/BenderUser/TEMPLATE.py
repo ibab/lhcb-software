@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: TEMPLATE.py,v 1.5 2010-03-14 17:15:48 ibelyaev Exp $ 
+# $Id: TEMPLATE.py,v 1.6 2010-03-14 17:34:34 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  This a template file for the Bender-based scriopt/module
@@ -45,7 +45,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = " Do not forget your name here "
 __date__    = " 20??-??-?? " 
-__verison__ = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.5 $"
+__verison__ = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.6 $"
 # =============================================================================
 ## import all nesessary stuff from Bender
 from Bender.MainMC import * 
@@ -121,10 +121,8 @@ if __name__ == '__main__' :
     print '*'*120
     
     ## configure the job:
+    # configure ( ... )
     
-    ## configure the job:
-    configure ( ... )
-
     ## run the job
     run(1000)
 
