@@ -1,9 +1,22 @@
-! $Id: release.notes,v 1.69 2010-02-26 19:57:10 jpalac Exp $ 
+! $Id: release.notes,v 1.70 2010-03-14 13:35:56 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-03-14 - Vanya Belyaev
+
+ - src/MatchObj.cpp
+
+    - do not try to "use" ProtoParticles & Tracks, 
+      if no corresponidg MC-tables are provided
+
+    It is minor fix, but very important for usage with MicroDST  
+
+- cmt/requirements
+
+     verision increment to v8r8 
 
 !========================== LoKiPhysMC v8r7 2010-02-26 ========================
 

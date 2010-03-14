@@ -1,8 +1,11 @@
-// $Id: MCMatchObj.cpp,v 1.6 2009-03-12 12:54:13 ibelyaev Exp $
+// $Id: MCMatchObj.cpp,v 1.7 2010-03-14 13:35:56 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2009/03/12 12:54:13  ibelyaev
+// MCMatchObj: speed-up drastically Monte Carlo truth matching
+//
 // 
 // ============================================================================
 // Include files
@@ -80,23 +83,35 @@ bool LoKi::MCMatchObj::match
   if ( matchInTables
        ( m_tableP2MCW  , particle , mcparticle  ) ) { return true ; } // RETURN
   
-  // check for the protoparticle 
-  const LHCb::ProtoParticle* proto = particle->proto() ;
-  if ( 0 != proto )  
-  {
-    // 3) ProtoParticle -> MCParticle with weight 
-    if ( matchInTables 
-         ( m_tablePP2MC    , proto , mcparticle ) ) { return true ; } // RETURN
-    // check for the track 
-    const LHCb::Track* track = proto->track() ;
-    if ( 0 != track ) 
+  // check ProtoParticle? 
+  if ( !m_tablePP2MC .empty () )
+  { 
+    // check for the protoparticle 
+    const LHCb::ProtoParticle* proto = particle->proto() ;
+    if ( 0 != proto )  
     {
-      // 4) Track->MCParticle 
-      if ( matchInTables
-           ( m_tableT2MC   , track , mcparticle ) ) { return true ; } // RETURN
-      // 5) Track->MCParticle with weight 
-      if ( matchInTables
-           ( m_tableT2MCW  , track , mcparticle ) ) { return true ; } // RETURN
+      // 3) ProtoParticle -> MCParticle with weight 
+      if ( matchInTables 
+           ( m_tablePP2MC    , proto , mcparticle ) ) { return true ; } // RETURN
+    }
+  }
+  //
+  if ( !m_tableT2MC .empty () || !m_tableT2MCW  .empty () ) 
+  {
+    const LHCb::ProtoParticle* proto = particle->proto() ;
+    if ( 0 != proto ) 
+    {
+      // check for the track 
+      const LHCb::Track* track = proto->track() ;
+      if ( 0 != track ) 
+      {
+        // 4) Track->MCParticle 
+        if ( matchInTables
+             ( m_tableT2MC   , track , mcparticle ) ) { return true ; } // RETURN
+        // 5) Track->MCParticle with weight 
+        if ( matchInTables
+             ( m_tableT2MCW  , track , mcparticle ) ) { return true ; } // RETURN
+      }
     }
   }
   
