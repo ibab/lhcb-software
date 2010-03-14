@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.9 2009-05-14 17:54:47 ibelyaev Exp $ 
+! $Id: release.notes,v 1.10 2010-03-14 17:15:48 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/BenderUser
 ! Responsible : Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
 ! Purpose     : Template Package for Bender-based analysis algorithms 
 ! -----------------------------------------------------------------------------
+
+! ====================== Phys/BenderUser v14r0 2010-03-14 ===================== 
+
+! 2010-03-14 - Vanya Belyaev
+ - update the template 
 
 ! ====================== Phys/BenderUser v12r0 2009-05-14 ===================== 
 

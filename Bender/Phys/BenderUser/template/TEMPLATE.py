@@ -1,18 +1,51 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: TEMPLATE.py,v 1.3 2009-03-04 12:59:26 ibelyaev Exp $ 
+# $Id: TEMPLATE.py,v 1.4 2010-03-14 17:15:48 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  This a template file for the Bender-based scriopt/module
+#
+#
+#  This file is a part of 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
+#  <b>``Python-based Interactive Environment for Smart and Friendly 
+#   Physics Analysis''</b>
+#
+#  The package has been designed with the kind help from
+#  Pere MATO and Andrey TSAREGORODTSEV. 
+#  And it is based on the 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
+#  ``C++ ToolKit for Smart and Friendly Physics Analysis''
+#
+#  By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+#
+#
 #  @author ...
 #  @date   ...
 # =============================================================================
 """
 This a template file for the Bender-based scriopt/module
+
+This file is a part of BENDER project:
+``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
+
+The project has been designed with the kind help from
+Pere MATO and Andrey TSAREGORODTSEV. 
+
+And it is based on the 
+LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
+
+By usage of this code one clearly states the disagreement 
+with the campain of Dr.O.Callot et al.: 
+``No Vanya's lines are allowed in LHCb/Gaudi software.''
+
 """
 # =============================================================================
 __author__  = " Do not forget your name here "
-__verison__ = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.3 $"
+__date__    = " 20??-??-?? " 
+__verison__ = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.4 $"
 # =============================================================================
 ## import all nesessary stuff from Bender
 from Bender.MainMC import * 
@@ -22,13 +55,6 @@ class Tempate(AlgoMC) :
     """
     This is the template algorithm 
     """        
-    ## standard constructor
-    def __init__ ( self , name = 'Template' ) :
-        """
-        Standard constructor
-        """ 
-        return AlgoMC.__init__ ( self , name )
-
     
    ## standard mehtod for analyses
     def analyse( self ) :
@@ -40,35 +66,45 @@ class Tempate(AlgoMC) :
 
 # =============================================================================
 ## job configuration:
-def configure ( **args ) :
+def configure ( datafiles , catalogs = [] ) :
     """
     Configure the job
     """
     
+    ##
+    ## 1. Static configuration using "Configurables"
+    ##
+    
     from Configurables import DaVinci
-    
     DaVinci (
-        DataType   = 'DC06'     , # default  
-        Simulation = True       ,
-        HltType    = '' ) 
+        DataType   = '2009' , 
+        Simulation = False  ) 
     
-    from Gaudi.Configuration import NTupleSvc, HistogramPersistencySvc
+    from Gaudi.Configuration import HistogramPersistencySvc
     HistogramPersistencySvc ( OutputFile = 'TEMPLATE_histos.root' )
+    
+    from Gaudi.Configuration import NTupleSvc
     NTupleSvc ( Output = [ "FILE1 DATAFILE='TEMPLATE.root' OPT='NEW' TYP='ROOT'" ] )
    
+
+    ## define/set the input data 
+    setData ( datafiles , catalogs )
     
-    ## get/create application manager
+    ##
+    ## jump into the wonderful world of the actual Gaudi components!
+    ## 
+    
+    ## get the actual application manager (create if needed)
     gaudi = appMgr() 
     
-    
-    #
-    # perform some specific configuration 
-    #
+    ## create local algorithm:
 
-    ## get the input data
-    import BenderExample.data_Bs2Jpsiphi_mm as input 
+    ## alg = Template( .... )
     
-
+    ## gaudi.addAlgorithm ( alg ) 
+    ## gaudi.setAlgorithms( [alg] )
+    
+    
     return SUCCESS
 
 # =============================================================================
@@ -76,10 +112,18 @@ def configure ( **args ) :
 if __name__ == '__main__' :
 
     ## make printout of the own documentations 
-    print __doc__
+    print '*'*120
+    print                      __doc__
+    print ' Author  : %s ' %   __author__    
+    print ' Version : %s ' %   __version__
+    print ' Date    : %s ' %   __date__
+    print ' dir(%s) : %s ' % ( __name__    , dir() )
+    print '*'*120
     
     ## configure the job:
-    configure()
+    
+    ## configure the job:
+    configure ( ... )
 
     ## run the job
     run(1000)
