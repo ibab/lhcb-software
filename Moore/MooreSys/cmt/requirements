@@ -9,13 +9,9 @@ branches doc cmt
 
 use  Moore              v8r8    Hlt
 
+use Hlt1Lines           v2r3p1  Hlt
 use LoKiHlt             v2r7p1  Phys
 use PuVeto              v7r7p1  L0
-use HltLine             v3r2    Hlt
-use Hlt1Lines           v2r3    Hlt
-use HltConf             v6r5    Hlt
-use HltGlobalMonitor    v3r2    Hlt
-use HltSettings         v1r11   Hlt
 
 
 # Declare this as a container package
