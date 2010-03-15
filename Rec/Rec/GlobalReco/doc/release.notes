@@ -7,9 +7,9 @@
 ! 2010-03-15 - Chris Jones
  - Turn back on adding the RICH, CALO and CombinedDLLs to the ProtoParticles, 
    as it has proved to cause a few problems downstream, for instance in the
-   CALO monitoring. It needs to be decided if they will be wiped again before
-   saving to the DSTs. This also seems to cause a few headaches downstream
-   (analysis in python) so I am tempted to not wipe them.
+   CALO monitoring. The information can if need be be wiped before saving
+   to DSTs by running ChargedProtoParticleRemovePIDInfo in the appropriate 
+   place.
 
 ! 2010-03-12 - Chris Jones
  - Add support for the RICH BelowThreshold DLL values
