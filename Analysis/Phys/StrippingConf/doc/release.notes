@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.49 2010-03-08 13:29:13 jpalac Exp $
+!$Id: release.notes,v 1.50 2010-03-15 13:40:02 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-03-15 - Juan Palacios
+ - cmt/requirements
+  . Use Phys/SelPy instead of PhysSel/PhysSelPython.
+  . Increase to v3r1
+ - python/StrippingConf/StrippingLine.py
+  . Use SelPy.selection instead of deprecated PhysSelPython.selection
 
 !========================== StrippingConf v3r0p1 2010-03-08 =================
 
