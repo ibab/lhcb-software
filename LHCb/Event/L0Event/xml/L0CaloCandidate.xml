@@ -3,16 +3,20 @@
 <gdd>
   <package name="L0Event">
     <class 
-      author = "Olivier Callot" 
-      desc   = "This class represents the input from the calorimeter to the L0 trigger" 
-      id     = "6001" 
-      name   = "L0CaloCandidate">
+      author           = "Olivier Callot" 
+      desc             = "This class represents the input from the calorimeter to the L0 trigger" 
+      id               = "6001" 
+      name             = "L0CaloCandidate"
+      stdVectorTypeDef = "TRUE">
       <base name="ContainedObject"/>
       &ContainedObject;
       <import name="Kernel/CaloCellID"/>
       <import name="GaudiKernel/Point3DTypes.h"/>
       <import name="GaudiKernel/MsgStream"/>
       <import name="string" std="TRUE"/>
+
+      <import name="GaudiKernel/NamedRange"/>
+      <import name="GaudiKernel/SharedObjectsContainer"/>
 
       <location name="Default" place="Trig/L0/Calo"/>
       <location name="Full"    place="Trig/L0/FullCalo"/>
@@ -33,7 +37,21 @@
       <attribute desc="Transverse energy" name="et" setMeth="FALSE" type="double"/>
       <attribute desc="Position" name="position" setMeth="FALSE" type="Gaudi::XYZPoint"/>
       <attribute desc="Tolerance on x/y position = 1/2 cell size" name="posTol" setMeth="FALSE" type="double"/>
-  
+      
+      <typedef 
+	  type   = "SharedObjectsContainer&lt;LHCb::L0CaloCandidate&gt;"
+	  def    = "Selection"
+	  desc   = "For defining SharedObjectContainer"
+	  access = "PUBLIC"
+	  />
+      
+      <typedef 
+	  type = "Gaudi::NamedRange_&lt;ConstVector&gt;"
+	  def  = "Range"
+	  desc = "For accessing a list of L0CaloCandidates which is either a SharedObjectContainer, a KeyedContainer or a ConstVector"
+	  access = "PUBLIC"
+	  />
+      
       <method const="TRUE" desc="Print on MsgStream" name="fillStream" type="MsgStream&amp;">
 	<arg name="msg" type="MsgStream" />
       </method>

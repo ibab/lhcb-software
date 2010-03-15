@@ -3,13 +3,35 @@
 <gdd>
   <package name='L0Event' >
 
-    <class name='L0MuonCandidate' id='6002' author='A. Tsaregorodtsev' desc='L0Muon trigger candidate'>
+    <class name='L0MuonCandidate' 
+	   id  ='6002' 
+	   author='A. Tsaregorodtsev' 
+	   desc='L0Muon trigger candidate'
+	   stdVectorTypeDef = "TRUE">
       <desc> *  representing the output of the L0Muon trigger processor.</desc>
       <base name='KeyedObject&lt;int&gt;'/>
       &KeyedObject;
       <import name="Kernel/MuonTileID"/>
       <import name="string" std="TRUE"/>
       <import name="vector" std="TRUE"/>
+
+      <import name="GaudiKernel/NamedRange"/>
+      <import name="GaudiKernel/SharedObjectsContainer"/>
+      
+      <typedef 
+	  type   = "SharedObjectsContainer&lt;LHCb::L0MuonCandidate&gt;"
+	  def    = "Selection"
+	  desc   = "For defining SharedObjectContainer"
+	  access = "PUBLIC"
+	  />
+      
+      <typedef 
+	  type = "Gaudi::NamedRange_&lt;ConstVector&gt;"
+	  def  = "Range"
+	  desc = "For accessing a list of L0MuonCandidates which is either a SharedObjectContainer, a KeyedContainer or a ConstVector"
+	  access = "PUBLIC"
+	  />
+      
       <location name="Default"  place="Trig/L0/MuonCtrl"/>
       <location name="Ctrl"     place="Trig/L0/MuonCtrl"/>
       <location name="CtrlBCSU" place="Trig/L0/MuonCtrlBCSU"/>

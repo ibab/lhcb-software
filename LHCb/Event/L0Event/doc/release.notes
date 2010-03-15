@@ -1,7 +1,16 @@
-! $Id: release.notes,v 1.134 2010-02-24 15:23:32 cattanem Exp $
+! $Id: release.notes,v 1.135 2010-03-15 11:13:51 ibelyaev Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
+
+! 2010-03-15 - Vanya Belyaev
+
+ - L0CaloCandidate, L0MuonCandidate
+    add typedef T::Selection and T::Range (needed for Hlt) 
+
+ - cmt/requirements   
+    version increment to v18r3 
+
 
 !======================== L0Event v18r2 2010-02-24 ===========================
 ! 2010-02-22 Olivier Deschamps
