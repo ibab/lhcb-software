@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.33 2010-03-04 23:07:32 graven Exp $ 
+# $Id: HltLine.py,v 1.34 2010-03-15 13:57:13 gligorov Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.33 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.34 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -530,7 +530,8 @@ class bindMembers (object) :
                         for i in getattr(alg,'Members') : _list += _OutputLocationsGetter(i) 
                         return _list
                     if hasattr(alg,'OutputLocation') : return [ getattr(alg,'OutputLocation') ] 
-                    if hasattr(alg,'OutputTracksName') : return [ getattr(alg,'OutputTracksName') ] 
+                    if hasattr(alg,'OutputTracksName') : return [ getattr(alg,'OutputTracksName') ]
+		    if hasattr(alg,'MatchOutput') : return [ getattr(alg,'MatchOutput') ] 
                     return [ alg.name() ]
             for i in self._members: 
                  known_inputs += _OutputLocationsGetter(i)
