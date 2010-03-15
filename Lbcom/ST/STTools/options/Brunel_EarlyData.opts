@@ -1,0 +1,11 @@
+// New tune (March 2010)
+
+ToolSvc.ITClusterPosition.LinSharingCorr2 = 0.61;
+ToolSvc.ITClusterPosition.CubicSharingCorr2 = 7.4;
+ToolSvc.ITClusterPosition.LinSharingCorr4 = 0.63;
+ToolSvc.ITClusterPosition.DetType = "IT";
+ToolSvc.ItClusterPosition.ErrorVec = {0.28, 0.20, 0.3, 0.2}
+ToolSvc.ItClusterPosition.APE = 0.05
+
+ToolSvc.STClusterPosition.ErrorVec = {0.289, 0.339, 0.322, 0.459}
+ToolSvc.STClusterPosition.APE = 0.197 // corresponds to 36 um			  
