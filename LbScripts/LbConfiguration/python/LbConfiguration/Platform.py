@@ -507,4 +507,27 @@ class NativeMachine:
         natconf = getConfig(architecture=mach, platformtype=osflav, 
                             compiler=comp, debug=debug)
         return natconf
-
+    def DiracPlatform(self):
+        platformlist = [ platform.system(), platform.machine() ]
+        if self.OSType() == "Linux" :
+            # get version of highest libc installed
+            if self.arch() == "64":
+                lib = '/lib64'
+            else:
+                lib = '/lib'
+            libs = []
+            for l in os.listdir( lib ):
+                if l.find('libc-') == 0 or l.find('libc.so') == 0 : 
+                    libs.append( os.path.join(lib, l) )
+            libs.sort()
+            platformlist.append( '-'.join( platform.libc_ver(libs[-1])) )
+        elif self.OSType() == "Darwin" :
+            platformlist.append( '.'.join(platform.mac_ver()[0].split( "." )[:2]) )
+        elif self.OSType() == "Windows" :
+            platformlist.append(platform.win32_ver()[0])
+        else :
+            platformlist.append( platform.release() )
+            
+            
+        platformstr = "_".join(platformlist)
+        return platformstr
