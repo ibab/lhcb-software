@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.520 2010-03-11 09:50:47 pkoppenb Exp $
+! $Id: release.notes,v 1.521 2010-03-15 13:20:14 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-03-15 - Juan Palacios
+ - src/recparser.icpp
+  . Supress gcc 4.3 warning 'deprecated conversion from string constant to char*'
 
 ! 2010-03-11 - Patrick Koppenburg
  - Change Hlt container from /Event/HLT to /Event/Hlt2 for task #13784
