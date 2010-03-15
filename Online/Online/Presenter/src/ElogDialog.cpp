@@ -52,14 +52,12 @@ void ElogDialog::setParameters( std::string& logbook, std::string& username,
 }
 
 void ElogDialog::ok() {
-
-  *m_logbook  =  m_logbookListBox->GetTextEntry()->GetDisplayText().Data();
+  if ( 0 !=  m_logbookListBox->GetTextEntry() ) *m_logbook  =  m_logbookListBox->GetTextEntry()->GetDisplayText().Data();
   *m_username =  m_usernameTextEntry->GetDisplayText().Data();
   *m_system   =  m_systemTextEntry->GetDisplayText().Data();
-  *m_subject  =  m_subjectTextEntry->GetDisplayText().Data();
+  if ( 0 != m_subjectTextEntry ) *m_subject  =  m_subjectTextEntry->GetDisplayText().Data();
   *m_message  =  m_messageTextEntry->GetText()->AsString();
   *m_isOK     = 1;
-  
   CloseWindow();
 }
 void ElogDialog::build() {
@@ -132,6 +130,7 @@ void ElogDialog::build() {
   m_logbookListBox -> MoveResize( xBeg + xSize, yBeg, xInputSize, 22); 
   yBeg += yStep ;
 
+  m_subjectTextEntry = 0;
   if ( "-none-" != *m_subject ) {
     TGLabel* m_subjectLabel = new TGLabel(elogFrame,"Subject: ");
     m_subjectLabel->SetTextJustify(36);
