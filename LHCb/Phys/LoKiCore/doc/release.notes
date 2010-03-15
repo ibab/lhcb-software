@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.178 2010-03-08 11:22:17 ibelyaev Exp $ 
+! $Id: release.notes,v 1.179 2010-03-15 15:21:55 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,26 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2010-03-15 - Vanya Belyaev
+
+ - resurrect the access to doxygen documentation:
+
+     from  LoKiCore.doxygenurl import getURL, browse
+
+     >>> symbol = ...
+
+     >>> getURL ( symbol ) 
+
+
+ - provide new functions for automatic building of documentations
+
+    from LoKiCore.decorators import getSymbols, buildDoc 
+
+     >>> i,t = getSymbols ( modules ) 
+     >>> docs = buildDoc ( i , t ) 
+
+  
 
 ! 2010-03-08 - Vanya Belyaev
 

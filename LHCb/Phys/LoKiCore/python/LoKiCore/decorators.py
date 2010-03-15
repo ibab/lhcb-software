@@ -95,12 +95,16 @@ LoKi.KeeperBase  .__getslice__ = _slice_
 # =============================================================================
 ## get from the module all types inheriting from the given base
 def getInherited ( name , base ) :
-    " Get from the module all types inheriting from the given base "
-    if not issubclass ( base.__class__ , type ) : base = base.__class__ 
+    """
+    Get from the module all types inheriting from the given base
+    """
+    if not issubclass ( base.__class__ , type ) : base = base.__class__
+    ##
     import sys,types,sets
     result = sets.Set()
     # get the whole content of the module:
-    _mod = sys.modules[name].__dict__
+    _mod = {}
+    if sys.modules.has_key ( name ) : _mod = sys.modules[name].__dict__
     # loop over the module members:
     for key in _mod :
         item = _mod[key]
@@ -108,6 +112,134 @@ def getInherited ( name , base ) :
         if not issubclass ( item.__class__  ,  type ) : item = item.__class__ 
         if     issubclass ( item            ,  base ) : result.add ( item )
     return result                                           ## RETURN
+
+# =============================================================================
+## get from the module all types inheriting from the given base
+def getInherited2 ( name , base ) :
+    """
+    Get from the module all types inheriting from the given base
+    """
+    if not issubclass ( base.__class__ , type ) : base = base.__class__
+    ##
+    import sys
+    # get the whole content of the module:
+    _mod = {}
+    if sys.modules.has_key ( name ) : _mod = sys.modules[name].__dict__
+    # loop over the module members:
+    instances = {}
+    types     = {}
+    for key in _mod :
+        item = _mod[key]
+        if not hasattr    ( item , '__class__'      ) : continue
+        ok = False 
+        if not issubclass ( item.__class__  ,  type ) :
+            ok   = True 
+            item = item.__class__ 
+        if     issubclass ( item            ,  base ) :
+            if ok : instances[key] = item
+            else  : types    [key] = item 
+            
+    return (instances,types)                                         ## RETURN
+
+# =============================================================================
+## get the signature of the functor 
+def getSignature ( functor ) :
+    """
+    Get the signature of the functor
+    """
+    bases = list ( functor.__bases__ )
+    based = [ functor ] + bases
+    for base in bases :
+        name = base.__name__
+        pattern = 'LoKi::Functor<'
+        pos = name.find( pattern ) 
+        if 0 <= pos :
+            args = name[pos+len(pattern):-1]
+            pat2 = 'LoKi::Holder<'
+            pos2 = args.find ( pat2 )
+            if 0 > pos2 : return tuple( args.split ( ',' ) )
+            args    = args[pos2+len(pat2):]
+            args    = args.split(',')
+            args[1] = args[1][:-1]
+            return tuple( args )
+        
+    return None
+
+# =============================================================================
+def buildDoc ( instances ,
+               ftypes    ) :
+    
+    from LoKiCore.doxygenurl import getURL, searchURL , lbglimpse 
+
+    docs = {}
+    
+    for key in instances :
+
+        _type = instances[key]
+
+        print '1: KEY/TYPE' , key, _type 
+        line  = { 'Symbol'     :  key   ,
+                  'Instance'   :  True  ,
+                  'Type'       :  _type ,
+                  'Signature'  : getSignature ( _type ) ,
+                  'URL1'       :  searchURL ( 'LoKi::Cuts::' + key ) , 
+                  'URL2'       :  getURL    ( _type ) ,
+                  'Lbglimpse1' :  lbglimpse ( 'LoKi::Cuts::' + key ) ,
+                  'Lbglimpse2' :  lbglimpse ( _type                ) }
+        
+        docs[key] = line
+        
+    for key in ftypes :
+        
+        _type = ftypes [key]
+        
+        print '2: KEY/TYPE' , key, _type 
+        
+        line  = { 'Symbol'     :  key   ,
+                  'Instance'   :  False ,
+                  'Type'       :  _type ,
+                  'Signature'  : getSignature ( _type ) ,
+                  'URL1'       :  searchURL ( 'LoKi::Cuts::' + key ) , 
+                  'URL2'       :  getURL    ( _type ) ,
+                  'Lbglimpse1' :  lbglimpse ( 'LoKi::Cuts::' + key ) ,
+                  'Lbglimpse2' :  lbglimpse ( _type                ) }
+        
+        docs[key] = line
+        
+    return docs 
+
+# =============================================================================
+def getSymbols ( modules = [] ) :
+    """
+    Get all symbols form the list of modules 
+    """
+    if not modules :
+        modules = ( 'LoKiCore.decorators'          ,
+                    'LoKiNumbers.decorators'       ,
+                    'LoKiGen.decorators'           ,
+                    'LoKiMC.decorators'            ,
+                    'LoKiGenMC.decorators'         ,
+                    'LoKiPhys.decorators'          ,
+                    'LoKiPhysMC.decorators'        ,
+                    'LoKiAlgo.decorators'          ,
+                    'LoKiAlgoMC.decorators'        ,
+                    'LoKiArrayFunctors.decorators' ,
+                    'LoKiTrigger.decorators'       ,
+                    'LoKiHlt.decorators'           ,
+                    'LoKiHlt.algorithms'           ) 
+                    
+    if  not issubclass ( type(modules) , ( list , tuple )  ) :
+        return getSymbols ( [ modules ] )
+    
+    instances = {}
+    types     = {}
+    for module in modules :
+        i,t = getInherited2 ( module , LoKi.AuxFunBase )
+        instances.update ( i )
+        types.update     ( t )
+        
+    return ( instances , types )
+    
 # =============================================================================
 ## Decorate the functions using the proper adapters 
 def decorateCalls ( funcs , calls ) :
