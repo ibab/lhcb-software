@@ -1,3 +1,8 @@
+#ifdef __GNUC__
+#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 2)
+#pragma GCC diagnostic ignored "-Wwrite-strings"
+#endif
+#endif
 #ifndef lint
 static char const 
 yyrcsid[] = "$FreeBSD: src/usr.bin/yacc/skeleton.c,v 1.28 2000/01/17 02:04:06 bde Exp $";
@@ -520,6 +525,8 @@ yyloop:
 #endif
         if (yyssp >= yysslim && yygrowstack())
         {
+
+
             goto yyoverflow;
         }
         *++yyssp = yystate = yytable[yyn];
