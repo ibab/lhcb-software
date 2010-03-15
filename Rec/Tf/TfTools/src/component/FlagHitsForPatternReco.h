@@ -74,7 +74,14 @@ class FlagHitsForPatternReco: public GaudiAlgorithm
         double m_VeloEfficiency[nVeloSensors][nVeloHalves][nVeloTypes][nVeloRegions];
         double m_TTEfficiency[nTTStations][nTTLayers][nTTRegions];
 
-        std::vector<std::string> m_effCorrections;
+	double m_OTSmearing[nTStations][nTLayers][nQuadrants][nModules][nOTOtis];
+        double m_ITSmearing[nTStations][nTLayers][nITRegions];
+        double m_VeloSmearing[nVeloSensors][nVeloHalves][nVeloTypes][nVeloRegions];
+        double m_TTSmearing[nTTStations][nTTLayers][nTTRegions];
+
+
+        std::vector<std::string> m_effCorrections; 
+	std::vector<std::string> m_misCorrections;
 
         const char* beginsWith (const char* input, const char* comp);
 
@@ -82,6 +89,12 @@ class FlagHitsForPatternReco: public GaudiAlgorithm
         void readOTString(const char* input);
         void readITString(const char* input);
         void readTTString(const char* input);
+
+	void readVeloStringSmearing(const char* input);
+        void readOTStringSmearing(const char* input);
+        void readITStringSmearing(const char* input);
+        void readTTStringSmearing(const char* input);
+
         static int otis(const LHCb::OTChannelID& otid);
 
         Tf::TStationHitManager<PatForwardHit> *  m_tHitManager;
@@ -105,6 +118,7 @@ class FlagHitsForPatternReco: public GaudiAlgorithm
 
 
         mutable Rndm::Numbers m_rndm;
+	mutable Rndm::Numbers m_rndmG;
 
 };
 

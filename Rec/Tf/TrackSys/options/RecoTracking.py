@@ -50,8 +50,10 @@ createITLiteClusters.DetType = "IT"
 
 GaudiSequencer("RecoDecodingSeq").Members += [ createITClusters, createITLiteClusters ]
 
-importOptions( "$STTOOLSROOT/options/Brunel.opts" )
-
+if TrackSys().earlyData():  
+   importOptions( "$STTOOLSROOT/options/Brunel_EarlyData.opts" )
+else:
+   importOptions( "$STTOOLSROOT/options/Brunel.opts" )
 
 ## Velo tracking
 if "Velo" in trackAlgs :
