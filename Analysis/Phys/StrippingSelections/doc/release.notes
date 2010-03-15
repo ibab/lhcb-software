@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-03-15 - Neal Gauvin
+ - Adapt StrippingDisplVertices to bug-fixed DisplVertices.cpp
+
 ! 2010-03-15 - Patrick Koppenburg
  - Added SimpleBd2KstarMuMu Line to Bd2KstaMuMu
  - v1r18
