@@ -1,6 +1,6 @@
 __author__ = 'Patrick Koppenburg, Rob Lambert, Mitesh Patel'
 __date__ = '21/01/2009'
-__version__ = '$Revision: 1.15 $'
+__version__ = '$Revision: 1.16 $'
 
 """
 Bd->K*MuMu selections 
@@ -17,6 +17,7 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
     """
     
     __slots__ = { 
+# standard selection
                    'BMassLow'           : 5050       # MeV, low mass cut
                 ,  'BMassHighWin'       :  500       # MeV, high mass window
                 ,  'BMassMedWin'        :  300       # MeV, high mass window
@@ -33,6 +34,9 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
                 ,  'IntVertexCHI2Tight' : 36         # adimentional
                 ,  'IntFlightCHI2'      : 9          # adimentional
                 ,  'TrackChi2'          : 10         # adimentional
+# simple selection
+                ,  'SimpleDiMuonPT'     : 500        # MeV
+                ,  'SimpleBdFDChi2'     : 100        # adimentional1
                    }
 
 ####################################################################################################
@@ -271,6 +275,42 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
                              , algos = [ self._Early_DiMuon() ]
                              )
 
+
+####################################################################################################
+#
+#
+    def simplestLine( self ):
+        """
+        Very simple line based on TWO cuts!
+        
+        @author P. Koppenburg
+        @date 25/2/2010
+        """
+        from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+        from StrippingConf.StrippingLine import StrippingLine
+        from Configurables import FilterDesktop, CombineParticles
+        
+	_muons =  DataOnDemand('stdVeryLooseDiMuon', Location = 'Phys/StdVeryLooseDiMuon')
+	_kstar =  DataOnDemand('stdVeryLooseDetachedKst2Kpi', Location = 'Phys/StdVeryLooseDetachedKst2Kpi')
+
+        _diMu = FilterDesktop("FilterForSimpleBd2KstarMuMu")
+        _diMu.Code = "(PT > %(SimpleDiMuonPT)s *GeV)" % self.getProps()
+        _sd = Selection("SelFilterForSimpleBd2KstarMuMu",
+                       Algorithm = _diMu,
+                       RequiredSelections = [ _muons ] )
+
+        _comb = CombineParticles("SimpleBd2KstarMuMu",
+                                 DecayDescriptor = "[B0 -> J/psi(1S) K*(892)0 ]cc" ,
+                                 CombinationCut = "(ADAMASS('B0') < %(BMassMedWin)s *MeV)"  % self.getProps(),
+                                 MotherCut = "(VFASPF(VCHI2/VDOF) < %(IntVertexCHI2Tight)s ) & ( BPVVDCHI2 > %(SimpleBdFDChi2)s )" % self.getProps() )
+        
+        _sb = Selection("SelSimpleBd2KstarMuMu",
+                       Algorithm = _comb,
+                       RequiredSelections = [ _sd, _kstar ] )
+	ss = SelectionSequence("SeqSelSimpleBd2KstarMuMu", TopSelection = _sb )
+	return StrippingLine('SimpleBd2KstarMuMu', prescale = 1, algos = [ ss ])   
+
+
 #
 #
 ####################################################################################################
@@ -383,6 +423,11 @@ class StrippingBd2KstarMuMuConf(LHCbConfigurableUser):
                                                          self._ForNominal_Bd2KstarMuMu_Low() ]
                                              )
 
+#
+#
+####################################################################################################
+#
+#
     def getProps(self) :
         """
         From HltLinesConfigurableUser
