@@ -18,7 +18,12 @@ Purpose: LHCb reconstruction program
    . Add NeutralPIDs Calo PID sequence (CaloPIDs v5r5)
    . Changes to Calo monitoring (add ProtoElectronMon, remove 
      EcalSplitClusterMon, less verbose initialization) (CaloMoniDst v4r4)
-   . Modiication to structure of PV fit tools (PatPV v3r14)
+   . Modification to structure of PV fit tools (PatPV v3r14)
+   . Enable CondDB by default in CaloID2DLL (CaloPIDs v5r5)
+   . Fix non-reproducible processing in CaloSharedCellAlg (CaloReco v5r4)
+   . PatVeloTT pattern recognition bug fix (PatVeloTT v3r11)
+   . Verbosity changes in bankKiller (DAQUtils v1r2)
+   . New default LHCbCond tag for 2009 and 2010 data (DDDB v1r29)
 
 </PRE><H1><A NAME=v36r2>2010-02-26 Brunel v36r2</A></H1><PRE>
  - Changes to Configurable: 

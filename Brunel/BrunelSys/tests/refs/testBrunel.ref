@@ -58,141 +58,18 @@
 # |-MoniSequence = None
 # |-CheckEnabled = False
 # \----- (End of User RecMoniConf/RecMoniConf) -------------------------------------------------------
-# /***** User RichRecSysConf/RichOfflineRec **********************************************************
-# |-Radiators               = None
-# |-PreloadTracks           = False
-# |-MakeSummaryObjects      = False
-# |-PreloadRawEvent         = False
-# |-RecoSequencer           = <GaudiSequencer/RecoRICHSeq at 0x1dd6a560>  (default: None)
-# |-InitTracks              = True
-# |-TracklessRingAlgs       = ['ENN']  (default: ['ENN'])
-# |-OutputLevel             = 3
-# |-InitPixels              = True
-# |-Particles               = None
-# |-UseCaloMomentumTracks   = False
-# |-ConfigureTools          = True
-# |-ConfigureAlgs           = True
-# |-Context                 = 'Offline'
-# |-RichPIDLocation         = 'Rec/Rich/PIDs'  (default: '')
-# |-InitPhotons             = True
-# |-SpecialData             = []  (default: [])
-# |-HpdRandomBackgroundProb = -1.0
-# |-PidConfig               = 'FullGlobal'
-# |-CheckProcStatus         = True
-# |-PIDVersion              = 1
-# \----- (End of User RichRecSysConf/RichOfflineRec) -------------------------------------------------
 # WARNING: ConfiguredMuonIDs: Not available info for DATA=2010,VERSION=def. Loading default
 # MuonID WARNING: new DLL parameters not tuned for DATA=MC09,VERSION=def. Loading values for DC06
 # ConfiguredMuonIDs: Loaded configuration info M_MC09_def
-# /***** User RichTrackCreatorConfig/RichOfflineRec_RichTrackCreatorConfig ***************************
-# |-Context             = 'Offline'
-# |-TrackTypes          = ['Forward', 'Match', 'Seed', 'VeloTT', 'KsTrack']
-# |                     (default: ['Forward', 'Match', 'Seed', 'VeloTT', 'KsTrack'])
-# |-TrackCuts           = {}  (default: {})
-# |-OutputLevel         = 3
-# |-Radiators           = [True, True, True]  (default: [True, True, True])
-# |-InputTracksLocation = 'Rec/Track/Best'  (default: '')
-# |-SpecialData         = []  (default: [])
-# \----- (End of User RichTrackCreatorConfig/RichOfflineRec_RichTrackCreatorConfig) ------------------
-# /***** User RichPixelCreatorConfig/RichOfflineRec_RichPixelCreatorConfig ***************************
-# |-UseClustersAsPixels    = [False, False]  (default: [False, False])
-# |-Detectors              = [True, True]  (default: [True, True])
-# |-OutputLevel            = 3
-# |-FindClusters           = True
-# |-PixelCleaning          = 'None'
-# |-Context                = 'Offline'
-# |-MaxHotPixelClusterSize = [10, 8]  (default: [10, 8])
-# |-BookKeeping            = False
-# \----- (End of User RichPixelCreatorConfig/RichOfflineRec_RichPixelCreatorConfig) ------------------
-# /***** User RichPhotonCreatorConfig/RichOfflineRec_RichPhotonCreatorConfig *************************
-# |-Radiators     = [True, True, True]  (default: [])
-# |-SelectionMode = 'Tight'
-# |-OutputLevel   = 3
-# |-SpecialData   = []  (default: [])
-# |-Context       = 'Offline'
-# \----- (End of User RichPhotonCreatorConfig/RichOfflineRec_RichPhotonCreatorConfig) ----------------
-# /***** User CKThetaResolutionConfig/RichOfflineRec_CKThetaResolutionConfig *************************
-# |-Context = 'Offline'
-# \----- (End of User CKThetaResolutionConfig/RichOfflineRec_CKThetaResolutionConfig) ----------------
-# /***** User RichTools/OfflineToolRegistry **********************************************************
-# |-SignalDetEffType    = None
-# |-PhotonPredictorType = None
-# |-OutputLevel         = 3
-# |-PixelCreatorType    = None
-# |-TrSegMakerType      = None
-# |-Context             = 'Offline'
-# |-TrackCreatorType    = None
-# |-CkResType           = None
-# |-PhotonRecoType      = None
-# |-TrackSelectorType   = None
-# |-GeomEffType         = None
-# |-PhotonCreatorType   = None
-# \----- (End of User RichTools/OfflineToolRegistry) -------------------------------------------------
-# /***** User RichENNRingFinderConf/RichOfflineRec_RichENNRingFinderConf *****************************
-# |-AssociateToSegments = True
-# |-Sequencer           = <GaudiSequencer/RichOfflineENNRingFinderSeq at 0x1e62d540>  (default: None)
-# |-OutputLevel         = 3
-# |-MaxHitsInPanel      = [200, 400, 400]  (default: [200, 400, 400])
-# |-MaxHitsInHPD        = [30, 50, 50]  (default: [30, 50, 50])
-# |-Context             = 'Offline'
-# |-Panels              = ['Rich1GasTop', 'Rich1GasBottom', 'Rich2GasLeft', 'Rich2GasRight']
-# |                     (default: ['Rich1GasTop', 'Rich1GasBottom', 'Rich2GasLeft', 'Rich2GasRight'])
-# \----- (End of User RichENNRingFinderConf/RichOfflineRec_RichENNRingFinderConf) --------------------
-# /***** User RichGlobalPIDConfig/RichOfflineRec_RichGlobalPIDConfig *********************************
-# |-NIterations          = 0
-# |-FinalDLLCheck        = [False, True, True, True]  (default: [False, True, True, True])
-# |-InitTools            = True
-# |-MinSignalForNoLLCalc = None
-# |-MaxTrackChangesPerIt = None
-# |-OutputLevel          = 3
-# |-PidSequencer         = <GaudiSequencer/RichOfflineGPIDSeq at 0x1e659010>  (default: None)
-# |-TrackFreezeOutDLL    = None
-# |-TrackForceChangeDLL  = None
-# |-InitAlgorithms       = True
-# |-MaxUsedPixels        = 12000
-# |-Mode                 = 'Full'
-# |-Context              = 'Offline'
-# |-LikelihoodThreshold  = None
-# \----- (End of User RichGlobalPIDConfig/RichOfflineRec_RichGlobalPIDConfig) ------------------------
 # DstWriter.ItemList=['/Event/Rec/Header#1', '/Event/Rec/Status#1', '/Event/pRec/Track/Best#1', '/Event/pRec/Rich/PIDs#1', '/Event/pRec/Muon/MuonPID#1', '/Event/pRec/Calo/Electrons#1', '/Event/pRec/Calo/Photons#1', '/Event/pRec/Calo/MergedPi0s#1', '/Event/pRec/Calo/SplitPhotons#1', '/Event/pRec/ProtoP/Charged#1', '/Event/pRec/ProtoP/Neutrals#1', '/Event/pRec/Vertex/Primary#1', '/Event/pRec/Vertex/V0#1', '/Event/pRec/Track/Muon#1', '/Event/DAQ/RawEvent#1']
 # DstWriter.OptItemList=['/Event/Phys/Selections#1']
 # No Writer defined for DIGI
-# /***** User RichSegmentCreatorConf/RichOfflineRec_RichTrackCreatorConfig_RichSegmentCreatorConf *****
-# |-EnergyBins  = None
-# |-OutputLevel = 3
-# |-Context     = 'Offline'
-# \----- (End of User RichSegmentCreatorConf/RichOfflineRec_RichTrackCreatorConfig_RichSegmentCreatorConf) -----
-# /***** User RichRecQCConf/OfflineRichMoni **********************************************************
-# |-TracklessRingClasses = {'OfflineExpress': ['All', 'Best', 'Isolated'], 'OfflineFull': ['All', 'Best', 'Isolated'], 'Expert': ['All', 'Best', 'Isolated'], 'Online': ['Isolated']}
-# |                      (default: {'Online': ['Isolated'], 'OfflineFull': ['All', 'Best', 'Isolated'], 'Expert': ['All', 'Best', 'Isolated'], 'OfflineExpress': ['All', 'Best', 'Isolated']})
-# |-EventCuts            = {}  (default: {})
-# |-MoniSequencer        = <GaudiSequencer/MoniRICHSeq at 0x1ecb88a0>  (default: None)
-# |-DataType             = '2010'
-# |-WithMC               = False  (default: False)
-# |-Histograms           = 'OfflineFull'
-# |-OutputLevel          = 3
-# |-PidTrackTypes        = {'OfflineExpress': [['Forward', 'Match']], 'OfflineFull': [['Forward', 'Match']], 'Expert': [['All'], ['Forward', 'Match'], ['Forward'], ['Match'], ['KsTrack'], ['VeloTT'], ['Seed']], 'Online': [['Forward', 'Match']]}
-# |                      (default: {'Online': [['Forward', 'Match']], 'OfflineFull': [['Forward', 'Match']], 'Expert': [['All'], ['Forward', 'Match'], ['Forward'], ['Match'], ['KsTrack'], ['VeloTT'], ['Seed']], 'OfflineExpress': [['Forward', 'Match']]})
-# |-PidMomentumRanges    = {'OfflineExpress': [[2, 100], [2, 10], [10, 70], [70, 100]], 'OfflineFull': [[2, 100], [2, 10], [10, 70], [70, 100]], 'Expert': [[2, 100], [2, 10], [10, 70], [70, 100]], 'Online': [[2, 100], [2, 10], [10, 70], [70, 100]]}
-# |                      (default: {'Online': [[2, 100], [2, 10], [10, 70], [70, 100]], 'OfflineFull': [[2, 100], [2, 10], [10, 70], [70, 100]], 'Expert': [[2, 100], [2, 10], [10, 70], [70, 100]], 'OfflineExpress': [[2, 100], [2, 10], [10, 70], [70, 100]]})
-# |-NTupleProduce        = True
-# |-Context              = 'Offline'
-# |-RichPIDLocation      = 'Rec/Rich/PIDs'  (default: 'Rec/Rich/PIDs')
-# |-EffTrackTypes        = {'OfflineExpress': [['Forward', 'Match'], ['Forward'], ['Match'], ['KsTrack'], ['VeloTT'], ['Seed']], 'OfflineFull': [['Forward', 'Match'], ['Forward'], ['Match'], ['KsTrack'], ['VeloTT'], ['Seed']], 'Expert': [['Forward', 'Match'], ['Forward'], ['Match'], ['KsTrack'], ['VeloTT'], ['Seed']], 'Online': [['Forward', 'Match']]}
-# |                      (default: {'Online': [['Forward', 'Match']], 'OfflineFull': [['Forward', 'Match'], ['Forward'], ['Match'], ['KsTrack'], ['VeloTT'], ['Seed']], 'Expert': [['Forward', 'Match'], ['Forward'], ['Match'], ['KsTrack'], ['VeloTT'], ['Seed']], 'OfflineExpress': [['Forward', 'Match'], ['Forward'], ['Match'], ['KsTrack'], ['VeloTT'], ['Seed']]})
-# |-MinTrackBeta         = [0.99990000000000001, 0.99990000000000001, 0.99990000000000001]
-# |                      (default: [0.99990000000000001, 0.99990000000000001, 0.99990000000000001])
-# |-Monitors             = {'None': [], 'OfflineExpress': ['L1SizeMonitoring', 'DBConsistencyCheck', 'HotPixelFinder', 'PidMonitoring', 'PixelMonitoring', 'TrackMonitoring', 'PhotonMonitoring', 'TracklessRingAngles', 'AlignmentMonitoring', 'HPDIFBMonitoring'], 'OfflineFull': ['L1SizeMonitoring', 'DBConsistencyCheck', 'HotPixelFinder', 'PidMonitoring', 'PixelMonitoring', 'TrackMonitoring', 'PhotonMonitoring', 'TracklessRingAngles', 'AlignmentMonitoring', 'HPDIFBMonitoring'], 'Expert': ['L1SizeMonitoring', 'DBConsistencyCheck', 'HotPixelFinder', 'PidMonitoring', 'PixelMonitoring', 'TrackMonitoring', 'PhotonMonitoring', 'TracklessRingAngles', 'TracklessRingPeakSearch', 'AlignmentMonitoring', 'HPDIFBMonitoring', 'RichPixelPositions', 'HPDHitPlots', 'RichTrackGeometry', 'RichGhostTracks', 'RichCKThetaResolution', 'RichTrackResolution', 'RichPhotonSignal', 'RichTrackCKResolutions', 'RichPhotonGeometry', 'PhotonRecoEfficiency', 'RichPhotonTrajectory', 'RichStereoFitterTests'], 'Online': ['DBConsistencyCheck', 'PhotonMonitoring', 'TracklessRingAngles', 'AlignmentMonitoring']}
-# |                      (default: {'None': [], 'Online': ['DBConsistencyCheck', 'PhotonMonitoring', 'TracklessRingAngles', 'AlignmentMonitoring'], 'OfflineFull': ['L1SizeMonitoring', 'DBConsistencyCheck', 'HotPixelFinder', 'PidMonitoring', 'PixelMonitoring', 'TrackMonitoring', 'PhotonMonitoring', 'TracklessRingAngles', 'AlignmentMonitoring', 'HPDIFBMonitoring'], 'Expert': ['L1SizeMonitoring', 'DBConsistencyCheck', 'HotPixelFinder', 'PidMonitoring', 'PixelMonitoring', 'TrackMonitoring', 'PhotonMonitoring', 'TracklessRingAngles', 'TracklessRingPeakSearch', 'AlignmentMonitoring', 'HPDIFBMonitoring', 'RichPixelPositions', 'HPDHitPlots', 'RichTrackGeometry', 'RichGhostTracks', 'RichCKThetaResolution', 'RichTrackResolution', 'RichPhotonSignal', 'RichTrackCKResolutions', 'RichPhotonGeometry', 'PhotonRecoEfficiency', 'RichPhotonTrajectory', 'RichStereoFitterTests'], 'OfflineExpress': ['L1SizeMonitoring', 'DBConsistencyCheck', 'HotPixelFinder', 'PidMonitoring', 'PixelMonitoring', 'TrackMonitoring', 'PhotonMonitoring', 'TracklessRingAngles', 'AlignmentMonitoring', 'HPDIFBMonitoring']})
-# |-RecoTrackTypes       = {'OfflineExpress': [['Forward', 'Match'], ['Forward'], ['Match'], ['KsTrack'], ['VeloTT'], ['Seed']], 'OfflineFull': [['Forward', 'Match'], ['Forward'], ['Match'], ['KsTrack'], ['VeloTT'], ['Seed']], 'Expert': [['All'], ['Forward', 'Match'], ['Forward'], ['Match'], ['KsTrack'], ['VeloTT'], ['Seed']], 'Online': [['Forward', 'Match']]}
-# |                      (default: {'Online': [['Forward', 'Match']], 'OfflineFull': [['Forward', 'Match'], ['Forward'], ['Match'], ['KsTrack'], ['VeloTT'], ['Seed']], 'Expert': [['All'], ['Forward', 'Match'], ['Forward'], ['Match'], ['KsTrack'], ['VeloTT'], ['Seed']], 'OfflineExpress': [['Forward', 'Match'], ['Forward'], ['Match'], ['KsTrack'], ['VeloTT'], ['Seed']]})
-# \----- (End of User RichRecQCConf/OfflineRichMoni) -------------------------------------------------
 # WARNING: Using default tag head-20100119 for partition DDDB
-# WARNING: Using default tag head-20100202 for partition LHCBCOND
+# WARNING: Using default tag head-20100303 for partition LHCBCOND
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v35r9
-                                          running on lxbuild135.cern.ch on Wed Mar 10 13:36:57 2010
+                                          running on lxbuild135.cern.ch on Mon Mar 15 14:16:05 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -204,7 +81,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.49 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.88 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 BrunelSequencer      INFO Member list: ProcessPhase/Init, GaudiSequencer/LumiSeq, GaudiSequencer/NotPhysicsSeq, GaudiSequencer/PhysicsSeq, ProcessPhase/Output, with context 'Offline'
@@ -250,7 +127,7 @@ COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
 DDDB                 INFO Using TAG "head-20100119"
 LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND             INFO Using TAG "head-20100202"
+LHCBCOND             INFO Using TAG "head-20100303"
 PrsSpdFillRawBu...   INFO Data coding type 2
 RemovePrsPacked...SUCCESS bankKiller : all banks of type 'PrsPacked' will be removed.
 EcalBanksHandler     INFO Member list: CheckCaloBank/EcalCheckBanks, CaloZSupAlg/EcalADCs, CaloTriggerAdcsFromRawAlg/EcalTrigFromRaw, CaloFillRawBuffer/EcalFillRawBuffer, bankKiller/RemoveEcalPackedBanks, with context 'Offline'
@@ -616,12 +493,17 @@ EcalChi22ID          INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clon
 BremChi22ID          INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clone'  'Backward' ] Accepted FitStatus: [ 'Fitted' ]; Accepted Types: [ 'Velo'  'Long'  'Upstream' ]; Rejected History: [];
 ClusChi22ID          INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clone'  'Backward' ] Accepted FitStatus: [ 'Fitted' ]; Accepted Types: [ 'Long'  'Ttrack'  'Downstream' ]; Rejected History: [];
 PrsPIDe              INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clone'  'Backward' ] Accepted FitStatus: [ 'Fitted' ]; Accepted Types: [ 'Long'  'Ttrack'  'Downstream' ]; Rejected History: [];
-RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r2/data/CaloPIDs_DC09_v1.root" for reading
+PrsPIDe              INFO init with CondDB, m_conditionName = Conditions/ParticleID/Calo/PrsPIDe
 EcalPIDe             INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clone'  'Backward' ] Accepted FitStatus: [ 'Fitted' ]; Accepted Types: [ 'Long'  'Ttrack'  'Downstream' ]; Rejected History: [];
+EcalPIDe             INFO init with CondDB, m_conditionName = Conditions/ParticleID/Calo/EcalPIDe
 BremPIDe             INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clone'  'Backward' ] Accepted FitStatus: [ 'Fitted' ]; Accepted Types: [ 'Velo'  'Long'  'Upstream' ]; Rejected History: [];
+BremPIDe             INFO init with CondDB, m_conditionName = Conditions/ParticleID/Calo/BremPIDe
 HcalPIDe             INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clone'  'Backward' ] Accepted FitStatus: [ 'Fitted' ]; Accepted Types: [ 'Long'  'Ttrack'  'Downstream' ]; Rejected History: [];
+HcalPIDe             INFO init with CondDB, m_conditionName = Conditions/ParticleID/Calo/HcalPIDe
 EcalPIDmu            INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clone'  'Backward' ] Accepted FitStatus: [ 'Fitted' ]; Accepted Types: [ 'Long'  'Ttrack'  'Downstream' ]; Rejected History: [];
+EcalPIDmu            INFO init with CondDB, m_conditionName = Conditions/ParticleID/Calo/EcalPIDmu
 HcalPIDmu            INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clone'  'Backward' ] Accepted FitStatus: [ 'Fitted' ]; Accepted Types: [ 'Long'  'Ttrack'  'Downstream' ]; Rejected History: [];
+HcalPIDmu            INFO init with CondDB, m_conditionName = Conditions/ParticleID/Calo/HcalPIDmu
 NeutralPIDs          INFO Member list: CaloPhotonIdAlg/PhotonID, CaloPhotonIdAlg/MergedID, CaloPhotonIdAlg/PhotonFromMergedID, with context 'Offline'
 RecoMUONSeq          INFO Member list: MuonRec, GaudiSequencer/MuonIDSeq, with context 'Offline'
 MuonIDSeq            INFO Member list: MuonIDAlg, with context 'Offline'
@@ -912,7 +794,7 @@ ToolSvc.Offline...SUCCESS  #WARNINGS   = 1        Message = 'No pixels produced'
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.49 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.88 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
