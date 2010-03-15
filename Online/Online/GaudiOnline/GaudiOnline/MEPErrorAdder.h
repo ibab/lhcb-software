@@ -219,7 +219,6 @@ namespace LHCb  {
     bool ReceiveArrayService(DimInfo * curr, DimInfo * subs,  std::vector<int64_t> &rArray, std::vector<int64_t> &sArray);
     bool ReceiveSingleService(DimInfo * curr, DimInfo * subs, int64_t &rValue, int64_t &sValue);
     bool ReceiveSingleService_32(DimInfo * curr, DimInfo * subs, int64_t &rValue, int64_t &sValue);
-    bool ReceiveSingleService_float(DimInfo * curr, DimInfo * subs, float &rValue, float &sValue);
 
     MsgStream                   m_log;
   };

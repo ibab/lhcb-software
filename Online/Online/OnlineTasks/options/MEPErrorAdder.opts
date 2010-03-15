@@ -19,7 +19,7 @@ Runable.sumPartition	= FALSE;
 //Runable.sumPartition    = TRUE;
 
 //Options for subFarm sum
-Runable.nrSubNodes	= 20;
+Runable.nrSubNodes	= 60;
 
 MessageSvc.OutputLevel = 3;
 

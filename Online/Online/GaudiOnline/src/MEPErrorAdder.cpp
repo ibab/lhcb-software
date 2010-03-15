@@ -60,7 +60,7 @@ MEPErrorAdder::MEPErrorAdder(const std::string& nam, ISvcLocator* svc)
   //declareProperty("runInfoDnsNode",	m_runInfoDnsNode = "");					// DIM_DNS_NODE for RunInfo, if other than listenerDnsNode  
 
   //Options for sum over subfarm
-  declareProperty("nrSubNodes",         m_nrSubNodes =20);			         	//Number of nodes per subfarm
+  declareProperty("nrSubNodes",         m_nrSubNodes =60);			         	//Number of nodes per subfarm
   
   declareProperty("nSrc",               m_nSrc=1);						//Numer of TELL1 sources this partition have
   
