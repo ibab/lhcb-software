@@ -248,7 +248,6 @@ private:
   int    m_PreyPID ;          ///< PID of the prey (for MC and Gen use)
   std::string m_MotherPrey ;  ///< LHCb Name of the mother of the prey
   LHCb::ParticleID m_MotherPreyID;  // PDG ID of this particle
-  int    m_MotherPreyPID ;          ///< PID of the mother (for MC and Gen use)
   bool   m_IsPreyFromMother ;       ///< Is the Prey from the given Mother ?
 
   //Dummy things for HepMC

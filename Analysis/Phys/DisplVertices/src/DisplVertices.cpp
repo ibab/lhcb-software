@@ -6,7 +6,7 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 //Use ODIN
-//#include "Event/ODIN.h"
+#include "Event/ODIN.h"
 
 //Trigger decisions
 #include "Event/L0DUReport.h"
@@ -312,7 +312,7 @@ StatusCode DisplVertices::execute(){
 
   //------------------Get the (upstream) Primary Vertex------------------
   GetUpstreamPV();
-  if( msgLevel( MSG::DEBUG ) )
+  if( msgLevel( MSG::DEBUG ) && PV != NULL )
     debug() << "Upstream PV Position : " << PV->position() << endmsg ;
   //StudyDgtsIP( PV ); //Study the IP to PV of the daughters
   //Study resolution of the reconstructed PV
@@ -3064,10 +3064,12 @@ double DisplVertices::GetRFromBL( const Gaudi::XYZPoint& p ){
 void DisplVertices::GetUpstreamPV(){
 
   const RecVertex::Container * PVs = desktop()->primaryVertices();
-  double tmp = 1000;
   PV = NULL;
+  if( PVs == NULL ) return;
+  double tmp = 1000;
+
   for ( RecVertex::Container::const_iterator i = PVs->begin(); 
-	i != PVs->end() ; ++i ){
+        i != PVs->end() ; ++i ){
     double z = (*i)->position().z();
     if( z < tmp ){
       tmp = z;
@@ -3210,7 +3212,8 @@ StatusCode DisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
   HepMC::GenEvent::particle_const_iterator p;
   bool mother = false;
   for( p= theEvent->particles_begin(); p!= theEvent->particles_end();++p){
-    if( abs((*p)->pdg_id()) == m_MotherPreyID.abspid() ){ 
+    unsigned int pid = abs((*p)->pdg_id());
+    if( pid == m_MotherPreyID.abspid() ){ 
       mother = true; break; 
     }
   }
@@ -3293,10 +3296,13 @@ StatusCode DisplVertices::fillHeader( Tuple& tuple ){
   //debug() << "Filling Tuple Event " << header->evtNumber() << endmsg ;
   tuple->column("Event", (int)header->evtNumber());
   tuple->column("Run", (int)header->runNumber());
-  return StatusCode::SUCCESS ;
+
   
-//   LHCb::ODIN * odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
-//   if( odin ){
+  LHCb::ODIN * odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
+  if( odin ){
+    //NoBeam = 0, Beam1 = 1, Beam2 = 2, BeamCrossing = 3
+    tuple->column("Event", 
+                  static_cast<unsigned int>( odin->bunchCrossingType()  ) );
 //     //tuple->column("Event", odin->eventNumber()); //ulonglong !
 //     tuple->column("Run", odin->runNumber());
 //     tuple->column("BunchID", odin->bunchId());
@@ -3304,11 +3310,21 @@ StatusCode DisplVertices::fillHeader( Tuple& tuple ){
 //     //tuple->column("GpsTime", (double)odin->gpsTime()); //ulonglong !
 //     //tuple->column("EventTime", odin->eventTime() );
 //     tuple->column("OrbitNumber", odin->orbitNumber());
-    
-//   } else {
-//     Warning("Can't get LHCb::ODINLocation::Default");
-//   }
+  
+  if( msgLevel( MSG::DEBUG ) && false )
+    debug() <<"Reading of ODIN banks : Event nb "<< odin->eventNumber() 
+            <<" Run nb "<< odin->runNumber() <<" BunchID "<< odin->bunchId() 
+            <<" BunchCurrent "<< odin->bunchCurrent() <<" GpsTime "
+            << odin->gpsTime() <<" EventTime " << odin->eventTime() 
+            <<" OrbitNumber "<< odin->orbitNumber() <<" Bunch Crossing Type " 
+            << odin->bunchCrossingType() << endmsg;
+  
+  
+  } else {
+    Warning("Can't get LHCb::ODINLocation::Default");
+  }
 
+  return StatusCode::SUCCESS ;
 
 }
 
