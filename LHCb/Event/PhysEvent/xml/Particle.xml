@@ -26,7 +26,7 @@
       <import name="GaudiKernel/Vector4DTypes.h"/>
       <import name="GaudiKernel/GenericMatrixTypes.h"/>
       <import name="GaudiKernel/SymmetricMatrixTypes.h"/>
-      <import name="GaudiKernel/Range"/>
+      <import name="GaudiKernel/NamedRange"/>
       <import name="GaudiKernel/SharedObjectsContainer"/>
       <import name="Kernel/ParticleID"/>
 
@@ -46,7 +46,7 @@
 	  />
 
       <typedef
-	  type   = "Gaudi::Range_&lt;ConstVector&gt;"
+	  type   = "Gaudi::NamedRange_&lt;ConstVector&gt;"
 	  def    = "Range"
 	  desc   = "For uniform access to containers in TES (KeyedContainer,SharedContainer) "
 	  access = "PUBLIC"

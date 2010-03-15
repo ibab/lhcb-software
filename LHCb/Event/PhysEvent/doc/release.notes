@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.151 2010-01-20 16:49:37 cattanem Exp $
+! $Id: release.notes,v 1.152 2010-03-15 11:16:07 ibelyaev Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
+
+! 2010-03-15 - Vanya Belyaev
+
+ - change definitions of T:Range form Range_<...> to NamedRange_<...>
+
+ - cmt/requirements 
+    version increment to v11r12 
+
 
 !======================== PhysEvent v11r11 2010-01-20 =======================
 ! 2010-01-12 - Juan PALACIOS

@@ -17,7 +17,7 @@
       id="802"
       >
       <import name="Event/VertexBase.h"/>
-      <import name="GaudiKernel/Range"/>
+      <import name="GaudiKernel/NamedRange"/>
       <import name="GaudiKernel/SharedObjectsContainer"/>
       <import name="Particle" soft="TRUE"/>
 
@@ -36,7 +36,7 @@
 	  />
 
       <typedef
-	  type   = "Gaudi::Range_&lt;ConstVector&gt;"
+	  type   = "Gaudi::NamedRange_&lt;ConstVector&gt;"
 	  def    = "Range"
 	  desc   = "For uniform access to containers in TES (KeyedContainer,SharedContainer) "
 	  access = "PUBLIC"
