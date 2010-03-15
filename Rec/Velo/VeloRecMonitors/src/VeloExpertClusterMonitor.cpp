@@ -1,4 +1,4 @@
-// $Id: VeloExpertClusterMonitor.cpp,v 1.11 2009-11-23 14:06:36 jmylroie Exp $
+// $Id: VeloExpertClusterMonitor.cpp,v 1.12 2010-03-15 09:05:34 jmylroie Exp $
 // Include files// from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/AlgFactory.h" 
@@ -97,7 +97,7 @@ StatusCode Velo::VeloExpertClusterMonitor::initialize() {
     sprintf( htitle, "adc_cluster_sen_%03i", no );
     const GaudiAlg::HistoID title = htitle;
     
-    m_adc_hist[i][0] = book1D( name, title, 0, 100, 1000 );
+    m_adc_hist[i][0] = book1D( name, title, 0, 100, 100 );
   
     
     sprintf( hname, "ontrack/non_corr/adc/adc_cluster_sen_%03i", no );
@@ -105,13 +105,13 @@ StatusCode Velo::VeloExpertClusterMonitor::initialize() {
     sprintf( htitle, "adc_cluster_sen_%03i", no );
     const GaudiAlg::HistoID on_title = htitle;
     
-    m_adc_hist[i][1] = book1D( on_name, on_title, 0, 100, 1000 );
+    m_adc_hist[i][1] = book1D( on_name, on_title, 0, 100, 100 );
     
     sprintf( hname, "ontrack/corr/adc/adc_cluster_sen_%03i", no );
     const GaudiAlg::HistoID corr_name = hname;
     sprintf( htitle, "adc_cluster_sen_%03i", no );
     const GaudiAlg::HistoID corr_title = htitle;
-    m_adc_hist[i][2] = book1D( corr_name, corr_title, 0, 100, 1000 );
+    m_adc_hist[i][2] = book1D( corr_name, corr_title, 0, 100, 100 );
     
   }
   

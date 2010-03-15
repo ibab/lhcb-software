@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2010-03-15 - James Mylroie-Smith
+ - in VeloExpertClusterMonitor reduced binning of plots
+
 !======================= VeloRecMonitors v2r7 2010-02-24 =====================
 ! 2010-02-24 - Eduardo Rodrigues
  - VeloRecMonitors configurable now defines the monitoring sequence in it
