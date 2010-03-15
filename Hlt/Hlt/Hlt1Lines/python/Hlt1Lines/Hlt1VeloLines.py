@@ -7,7 +7,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
 # =============================================================================
 
 #
@@ -22,8 +22,8 @@ class Hlt1VeloLinesConf(HltLinesConfigurableUser):
                , 'MinimumNumberOfPhiClusters' : 12 # 4 tracks with 3 hits
                , 'MaxNumberOfClusters'        : 450 # 0.5% occupancy
                , 'MinTrksPerVtx'              : 2   # 4 is the minumum value you can put here  
-               , 'ODIN'                       : None
-               , 'L0DU'                       : None
+               , 'ODIN'                       : ""
+               , 'L0DU'                       : ""
                }
 
    def __apply_configuration__(self):
