@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.146 2010-03-15 12:33:32 graven Exp $
+! $Id: release.notes,v 1.147 2010-03-15 13:53:56 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -9,6 +9,9 @@
 ! for the production. Commit them AS WELL in branch production200912. 
 !
 !-----------------------------------------------------------------------------
+
+! 2010-03-15 - V. Gligorov
+ - Implement change in LoKi Hybrid filters from L0_DECISION to L0_DECISION_PHYSICS. 
 
 ! 2010-03-11 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691. Remove Hlt2 containers

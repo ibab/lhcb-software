@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.430 2010-03-11 22:26:22 graven Exp $ 
+! $Id: release.notes,v 1.431 2010-03-15 13:54:48 gligorov Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+
+! 2010-03-15 - V. Gligorov
+ - Implement change in LoKi Hybrid filters from L0_DECISION to L0_DECISION_PHYSICS.
 
 ! 2010-03-11 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691. Changes to configuration

@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
 # =============================================================================
 
 import Gaudi.Configuration 
@@ -263,6 +263,6 @@ class Hlt1HadronForSwimmingLinesConf(HltLinesConfigurableUser) :
         #Line('SoftDiHadronForSwimming'
         #    , prescale = self.prescale
         #     , postscale = self.postscale
-        #     , L0DU = "L0_DECISION"
+        #     , L0DU = "L0_DECISION_PHYSICS"
         #     , algos = [confirmation('Soft')]+companion('Soft')+dihadron('Soft')+vafterburn('Soft')
         #     )

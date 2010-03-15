@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -38,7 +38,7 @@ class Hlt1L0LinesConf(HltLinesConfigurableUser) :
                  )
         #  How to deal with the MASKing ???
         #  Actually, we don't have to -- ODIN will do this 'upstream' of us ;-)
-        Line('L0Any' ,  L0DU = 'L0_DECISION' 
+        Line('L0Any' ,  L0DU = 'L0_DECISION_PHYSICS' 
             , prescale = self.prescale
             , postscale = self.postscale
             )
