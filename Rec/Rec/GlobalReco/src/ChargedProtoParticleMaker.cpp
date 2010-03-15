@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoParticleMaker
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleMaker.cpp,v 1.4 2010-03-12 14:01:51 jonrob Exp $
+ * $Id: ChargedProtoParticleMaker.cpp,v 1.5 2010-03-15 16:47:36 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
@@ -149,6 +149,8 @@ StatusCode ChargedProtoParticleMaker::execute()
       proto->addInfo( LHCb::ProtoParticle::TrackNumDof,     (*iTrack)->nDoF()       );
       proto->addInfo( LHCb::ProtoParticle::TrackHistory,    (*iTrack)->history()    );
       proto->addInfo( LHCb::ProtoParticle::TrackType,       (*iTrack)->type()       );
+      proto->addInfo( LHCb::ProtoParticle::TrackP,          (*iTrack)->p()          );
+      proto->addInfo( LHCb::ProtoParticle::TrackPt,         (*iTrack)->pt()         );
       
       if ( msgLevel(MSG::VERBOSE) )
       {

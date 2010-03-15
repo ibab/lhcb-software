@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.11 2010-03-06 12:01:53 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.12 2010-03-15 16:47:36 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -79,8 +79,8 @@ class GlobalRecoConf(LHCbConfigurableUser):
         charged.TrackSelector.TrackTypes = tracktypes
         for type in tracktypes : self.setupTypeTrackSelector( type, charged.TrackSelector )
         # Add PID information
-        #rich = ChargedProtoParticleAddRichInfo("ChargedProtoPAddRich")
-        #muon = ChargedProtoParticleAddMuonInfo("ChargedProtoPAddMuon")
+        rich = ChargedProtoParticleAddRichInfo("ChargedProtoPAddRich")
+        muon = ChargedProtoParticleAddMuonInfo("ChargedProtoPAddMuon")
         ecal = ChargedProtoParticleAddEcalInfo("ChargedProtoPAddEcal")
         brem = ChargedProtoParticleAddBremInfo("ChargedProtoPAddBrem")
         hcal = ChargedProtoParticleAddHcalInfo("ChargedProtoPAddHcal")
@@ -88,10 +88,16 @@ class GlobalRecoConf(LHCbConfigurableUser):
         spd  = ChargedProtoParticleAddSpdInfo("ChargedProtoPAddSpd")
         velo = ChargedProtoParticleAddVeloInfo("ChargedProtoPAddVeloDEDX")
         # Fill the Combined DLL information in the charged protoparticles
-        #combine = ChargedProtoCombineDLLsAlg("ChargedProtoPCombDLLs")
+        combine = ChargedProtoCombineDLLsAlg("ChargedProtoPCombDLLs")
         # Fill the sequence
         cseq.Members += [ charged,ecal,brem,hcal,prs,spd,velo ]
-        #cseq.Members += [ rich,muon,combine ]
+        cseq.Members += [ rich,muon,combine ]
+
+        # Test NNs
+        #from Configurables import ChargedProtoANNPIDAlg
+        #electronNN = ChargedProtoANNPIDAlg("ElectronNNPID")
+        #electronNN.Configuration = "GlobalPID_electron_ANN.txt"
+        #cseq.Members += [electronNN]
         
         # Neutrals
         from Configurables import NeutralProtoPAlg
@@ -104,15 +110,15 @@ class GlobalRecoConf(LHCbConfigurableUser):
         if self.isPropertySet("OutputLevel"):
             level = self.getProp("OutputLevel")
             charged.OutputLevel = level
-            #rich.OutputLevel = level
-            #muon.OutputLevel = level
+            rich.OutputLevel = level
+            muon.OutputLevel = level
             ecal.OutputLevel = level
             brem.OutputLevel = level
             hcal.OutputLevel = level
             prs.OutputLevel = level
             spd.OutputLevel = level
             velo.OutputLevel = level
-            #combine.OutputLevel = level
+            combine.OutputLevel = level
             neutral.OutputLevel = level
 
 ## @class GlobalRecoChecks
@@ -124,6 +130,7 @@ class GlobalRecoChecks(LHCbConfigurableUser):
     ## Options
     __slots__ = { "Sequencer"   : None    # The sequencer to add monitors to
                  ,"OutputLevel" : INFO    # The printout level to use
+                 ,"Context":    "Offline" # The context within which to run
                   }
 
     ## Apply the configuration to the given sequence
@@ -133,6 +140,7 @@ class GlobalRecoChecks(LHCbConfigurableUser):
             raise RuntimeError("ERROR : Sequencer not set")
             
         protoSeq = self.getProp("Sequencer")
+        protoSeq.Context = self.getProp("Context")
 
         from Configurables import ( NTupleSvc, ChargedProtoParticleTupleAlg,
                                     ChargedProtoParticleAddRichInfo,
@@ -140,25 +148,33 @@ class GlobalRecoChecks(LHCbConfigurableUser):
                                     ChargedProtoCombineDLLsAlg )
 
         # Runs these to make sure ProtoParticles have full information available
-        addrich = ChargedProtoParticleAddRichInfo("CheckChargedProtoPAddRich")
-        addmuon = ChargedProtoParticleAddMuonInfo("CheckChargedProtoPAddMuon")
-        combine = ChargedProtoCombineDLLsAlg("CheckChargedProtoPCombDLLs")
+        #addrich = ChargedProtoParticleAddRichInfo("CheckChargedProtoPAddRich")
+        #addmuon = ChargedProtoParticleAddMuonInfo("CheckChargedProtoPAddMuon")
+        #combine = ChargedProtoCombineDLLsAlg("CheckChargedProtoPCombDLLs")
 
         # The ntuple maker
         protoChecker = ChargedProtoParticleTupleAlg("ChargedProtoTuple")
         protoChecker.NTupleLUN = "PROTOTUPLE"
 
         # Fill sequence
-        protoSeq.Members += [addrich,addmuon,combine,protoChecker]
+        #protoSeq.Members += [addrich,addmuon,combine]
+        protoSeq.Members += [protoChecker]
 
         # The output ntuple ROOT file
         NTupleSvc().Output += ["PROTOTUPLE DATAFILE='protoparticles.tuples.root' TYP='ROOT' OPT='NEW'"]
 
+        # ANN training ntuple
+        #from Configurables import ( ChargedProtoANNPIDTrainingTuple )
+        #annTuple = ChargedProtoANNPIDTrainingTuple("ChargedProtoPIDANNTuple")
+        #annTuple.NTupleLUN = "ANNPIDTUPLE"
+        #protoSeq.Members += [annTuple]
+        #NTupleSvc().Output += ["ANNPIDTUPLE DATAFILE='ProtoPIDANN.tuples.root' TYP='ROOT' OPT='NEW'"]
+
         # Set output levels
         if self.isPropertySet("OutputLevel"):
             level = self.getProp("OutputLevel")
-            addrich.OutputLevel = level
-            addmuon.OutputLevel = level
-            combine.OutputLevel = level
+            #addrich.OutputLevel = level
+            #addmuon.OutputLevel = level
+            #combine.OutputLevel = level
             protoChecker.OutputLevel = level
             

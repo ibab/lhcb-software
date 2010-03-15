@@ -5,7 +5,7 @@
  * Implemenrtation file for algorithm ChargedProtoParticleTupleAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleTupleAlg.cpp,v 1.9 2010-03-12 13:58:28 jonrob Exp $
+ * $Id: ChargedProtoParticleTupleAlg.cpp,v 1.10 2010-03-15 16:47:36 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-15
@@ -93,12 +93,12 @@ StatusCode ChargedProtoParticleTupleAlg::execute()
     // reco variables
 
     // some track info
-    sc = sc && tuple->column( "TrackP",          track->p()          );
-    sc = sc && tuple->column( "TrackPt",         track->pt()         );
-    sc = sc && tuple->column( "TrackChi2PerDof", track->chi2PerDoF() );
-    sc = sc && tuple->column( "TrackNumDof",     track->nDoF()       );
-    sc = sc && tuple->column( "TrackType",       track->type()       );
-    sc = sc && tuple->column( "TrackHistory",    track->history()    );
+    sc = sc && tuple->column( "TrackP",          proto->info ( LHCb::ProtoParticle::TrackP,  0 ) );
+    sc = sc && tuple->column( "TrackPt",         proto->info ( LHCb::ProtoParticle::TrackPt, 0 ) );
+    sc = sc && tuple->column( "TrackChi2PerDof", proto->info ( LHCb::ProtoParticle::TrackChi2PerDof, 0 ) );
+    sc = sc && tuple->column( "TrackNumDof",     proto->info ( LHCb::ProtoParticle::TrackNumDof, 0 ) );
+    sc = sc && tuple->column( "TrackType",       proto->info ( LHCb::ProtoParticle::TrackType, 0 ) );
+    sc = sc && tuple->column( "TrackHistory",    proto->info ( LHCb::ProtoParticle::TrackHistory, 0 ) );
 
     // rich
     static LHCb::RichPID tmpRPID;

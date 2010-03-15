@@ -320,7 +320,7 @@ private: // inline methods
   // returns the poison error
   inline double poisError( const double top, const double bot ) const
   {
-    return sqrt((top/bot)*(1.-top/bot)/bot);
+    return std::sqrt((top/bot)*(1.-top/bot)/bot);
   }
 
   // test the cut
