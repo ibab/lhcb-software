@@ -52,7 +52,11 @@ void ElogDialog::setParameters( std::string& logbook, std::string& username,
 }
 
 void ElogDialog::ok() {
-  if ( 0 !=  m_logbookListBox->GetTextEntry() ) *m_logbook  =  m_logbookListBox->GetTextEntry()->GetDisplayText().Data();
+  TGTextLBEntry * logbook_entry = 
+    dynamic_cast< TGTextLBEntry * >( m_logbookListBox->GetSelectedEntry() ) ;
+
+  if ( 0 != logbook_entry ) *m_logbook  = logbook_entry -> GetText() -> Data();
+
   *m_username =  m_usernameTextEntry->GetDisplayText().Data();
   *m_system   =  m_systemTextEntry->GetDisplayText().Data();
   if ( 0 != m_subjectTextEntry ) *m_subject  =  m_subjectTextEntry->GetDisplayText().Data();

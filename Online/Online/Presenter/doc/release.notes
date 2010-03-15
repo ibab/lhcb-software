@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-03-15 - Patrick Robbe
+ - ElogDialog.cpp: retrieve text of list box via "GetSelectedEntry" function
+
 ! 2010-03-15 - Olivier Callot
  - Increased the size of the page comment window. Attempt to make it resizeable failed...
  - Integrated differently the retrieval of the Data Manager name: Only in LHCb partition so
