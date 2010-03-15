@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.121 2010-03-15 17:37:20 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.122 2010-03-15 17:39:00 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -350,8 +350,6 @@ class Brunel(LHCbConfigurableUser):
                 TESCheck().Inputs = ["Link/Rec/Track/Best"]
             InitReprocSeq.Members.append( "EventNodeKiller" )
             EventNodeKiller().Nodes  = [ "pRec", "Rec", "Raw", "Link/Rec" ]
-            EventNodeKiller().Nodes += [ "/Event/pRec", "/Event/Rec",
-                                         "/Event/Raw", "/Event/Link/Rec" ]
 
         if inputType == "ETC":
             from Configurables import  TagCollectionSvc
