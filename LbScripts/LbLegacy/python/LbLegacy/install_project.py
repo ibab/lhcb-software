@@ -193,12 +193,16 @@ def registerPostInstallCommand(project, command, dirname=None):
 def callPostInstallCommand(project):
     log = logging.getLogger()
     projcmds = _postinstall_commands.get(project, None)
+    here = None
     if projcmds :
         for c in projcmds :
             if c[1] :
+                here = os.getcwd()
                 os.chdir(c[1])
             os.system("%s" % c[0])
             log.info("Executing PostInstall for %s: \"%s\" in %s" % (project, c[0], c[1]))
+            if here :
+                os.chdir(here)
     else :
         log.debug("Project %s has no postinstall command" % project)
 
@@ -969,6 +973,18 @@ def getProjectTar(tar_list, already_present_list=None):
                             if fix_perm :
                                 changePermissions(os.path.join('EXTRAPACKAGES', f), recursive=True)
                             shutil.rmtree(extradir, ignore_errors=True)
+                    try :
+                        from LbConfiguration.Project import getProject
+                        prj = getProject(pack_ver[0])
+                        if prj :
+                            cmtcontainer = os.path.join(pack_ver[3], prj.SteeringPackage(), "cmt")
+                            postinstallscr = os.path.join(cmtcontainer, "PostInstall.py")
+                            if os.path.exists(os.path.join(postinstallscr)) :
+                                registerPostInstallCommand(pack_ver[0], 
+                                                           "python %s" % postinstallscr,
+                                                           cmtcontainer)
+                    except ImportError:
+                        pass
                 if pack_ver[0] == "LBSCRIPTS" :
                     genlogscript = os.path.join(pack_ver[3], "InstallArea", "scripts", "generateLogin")
                     log.debug("Running: %s --without-python --no-cache -m %s --login-version=%s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))

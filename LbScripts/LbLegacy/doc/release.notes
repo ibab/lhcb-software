@@ -1,3 +1,8 @@
+2010-03-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: added the possibility to call a post install script. This
+	script must be a python script and is locatated at <Project>Sys/cmt/PostInstall.py.
+
 2010-03-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLCGCMTtar: fixed tabulations.
