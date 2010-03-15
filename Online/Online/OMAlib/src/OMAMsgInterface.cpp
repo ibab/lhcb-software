@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.29 2010-02-12 14:25:39 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.30 2010-03-15 18:00:50 ggiacomo Exp $
 #include <cstring>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
@@ -123,16 +123,18 @@ void OMAMsgInterface::refreshMessageList(std::string& TaskName) {
         kept=false;
         lowerAlarm( (**iM) );
         unpublishMessage(*iM);
-        if (m_histDB->canwrite() && m_logToHistDB) 
-          (*iM)->remove();
+        if (m_histDB) {
+          if (m_histDB->canwrite() && m_logToHistDB) {
+            (*iM)->remove();
+            m_histDB->commit();
+          }
+        }
         delete (*iM);
         iM = m_MessageStore.erase(iM);
       }
     }
     if (kept) iM++;
   }
-  if(m_histDB->canwrite() && m_logToHistDB)
-    m_histDB->commit();
 }
 
 

@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.35 2010-02-12 14:25:39 ggiacomo Exp $
+! $Id: release.notes,v 1.36 2010-03-15 18:00:50 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
+
+! 20100315
+- bug fix in OMAMsgInterface (avoid crashes when not using histDB)
 
 ! 20100211 v2r13
 - new creator algorithms OMAAdd, OMAMultiply, OMAProject, OMARebin

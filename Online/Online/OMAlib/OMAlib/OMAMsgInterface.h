@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.h,v 1.21 2010-02-12 14:25:39 ggiacomo Exp $
+// $Id: OMAMsgInterface.h,v 1.22 2010-03-15 18:00:50 ggiacomo Exp $
 #ifndef OMALIB_OMAMSGINTERFACE_H 
 #define OMALIB_OMAMSGINTERFACE_H 1
 
@@ -41,7 +41,10 @@ public:
   void raiseMessage(OMAMessage::OMAMsgLevel level,
                     std::string& message,
                     std::string& histogramName,
-                    std::string& AnalysisName);  
+                    std::string& AnalysisName) {
+    setAnaName(AnalysisName);
+    raiseMessage(level,message,histogramName);
+  }
   /// set current analysis id for messages
   inline void setAnaId(int id) {m_anaid = id;}
   /// set current analysis name for messages
