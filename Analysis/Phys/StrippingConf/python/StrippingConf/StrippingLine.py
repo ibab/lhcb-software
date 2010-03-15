@@ -18,7 +18,7 @@ from Configurables import DeterministicPrescaler as Scaler
 from Configurables import LoKi__L0Filter    as L0Filter
 from Configurables import LoKi__HDRFilter   as HDRFilter
 from Configurables import LoKi__ODINFilter  as ODINFilter
-from PhysSelPython.selection import FlatSelectionListBuilder
+from SelPy.selection import FlatSelectionListBuilder
 #from Configurables import HltCopySelection_LHCb__Particle_ as HltCopyParticleSelection
 
 ## Convention: the name of 'Filter' algorithm inside StrippingLine
