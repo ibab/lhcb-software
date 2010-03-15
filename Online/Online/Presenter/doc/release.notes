@@ -4,6 +4,13 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-03-15 - Olivier Callot
+ - Increased the size of the page comment window. Attempt to make it resizeable failed...
+ - Integrated differently the retrieval of the Data Manager name: Only in LHCb partition so
+   moved to PresenterMainFrame.cpp
+ - Changed long lines to avoid messages when saving files using LHCb emacs
+ - Better messages when the histogram is not accessible in the log file
+
 ! 2010-03-10 - Patrick Robbe
  - Add interface to ShiftDB to be able to retrieve the name of
    the data manager on shift: ShiftDB.cpp/ShiftDB.h

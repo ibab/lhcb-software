@@ -81,6 +81,7 @@
 
 #include "Elog.h"
 #include "ElogDialog.h"
+#include "ShiftDB.h"
 
 using namespace pres;
 using namespace std;
@@ -559,7 +560,7 @@ void PresenterMainFrame::buildGUI()
     m_toolBar->AddButton(this, m_savePageToDatabaseButton, 0);
     m_savePageToDatabaseButton->SetState(kButtonDisabled);
     m_savePageToDatabaseButton->Connect("Clicked()", "PresenterMainFrame",
-                                        this, "savePageToHistogramDB()");                                                                       
+                                        this, "savePageToHistogramDB()");
   
     // Auto n x n layout
     const TGPicture* automaticLayout16pic = picpool->GetPicture("automaticLayout16",
@@ -1010,24 +1011,25 @@ void PresenterMainFrame::buildGUI()
                                                                   kLHintsExpandX |
                                                                   kLHintsExpandY,
                                                                   0, 0, 0, 0));
+
   // Info dock
     m_mainCanvasInfoDock = new TGDockableFrame(centralPageFrame);
   //  m_pageDock->SetWindowName("LHCb Presenter Page");
     m_mainCanvasInfoDock->SetWindowName("LHCb Presenter Information");
+
+    int commentSize = 120;
   
     m_mainCanvasInfoDock->EnableUndock(true);
     m_mainCanvasInfoDock->EnableHide(true);
-    m_mainCanvasInfoDock->Resize(600, 90);
+    m_mainCanvasInfoDock->Resize(600, commentSize+10);
   
-  
+   
     TGGroupFrame* mainCanvasInfoGroupFrame = new TGGroupFrame(m_mainCanvasInfoDock,
                                                              TGString("Page Comments"),
-                                                             kVerticalFrame |
-                                                             kFixedHeight);
+                                                             kVerticalFrame );
     m_mainCanvasInfoDock->AddFrame(mainCanvasInfoGroupFrame,
                                new TGLayoutHints(kLHintsTop |
-                                                 kLHintsExpandX|
-                                                 kLHintsExpandY,
+                                                 kLHintsExpandX,
                                                  0, 0, 0, 0));
   
   //  TGCanvas* fCanvas652 = new TGCanvas(mainCanvasInfoGroupFrame, 220, 243);
@@ -1057,9 +1059,10 @@ void PresenterMainFrame::buildGUI()
   //   fTextEdit515->MoveResize(2,2,486,62);
   
   
-      m_pageDescriptionView = new TGTextView(mainCanvasInfoGroupFrame, 600, 80);
+      m_pageDescriptionView = new TGTextView(mainCanvasInfoGroupFrame, 600, commentSize);
       //fTextEdit523->LoadFile("TxtEdit523");
-      mainCanvasInfoGroupFrame->AddFrame(m_pageDescriptionView, new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX | kLHintsExpandY,2,2,2,2));
+      mainCanvasInfoGroupFrame->AddFrame(m_pageDescriptionView, new TGLayoutHints( kLHintsLeft | kLHintsTop | 
+                                                                                   kLHintsExpandX | kLHintsExpandY,2,2,2,2));
   //    fTextEdit523->Layout();
                                                                    
   //    fTextEdit523->MoveResize(2, 2, 600, 80);
@@ -1906,14 +1909,26 @@ void PresenterMainFrame::reportToLog()
   if (false == m_logBookConfig.empty()) {  
 
     ElogDialog* elogDialog = new ElogDialog(this, 646, 435 );
-    // Default vlues. Could be improved by retrieveing the DM name, and the system from teh plot name/group?
+    // Default values. 
     std::string logbook  = "Shift";
     std::string username = "Data Manager";
-    std::string system   = m_currentPartition; // "LHCb";
+    std::string system   = m_currentPartition;;
     std::string subject  = "";
     std::string message  = "See attached plot.";
     int         isOK     = 0;
-    
+
+    //== In LHCb partition, get the Data Manager name, extract the system from the SHIFTS page and remove subject
+    if ( "LHCb" == m_currentPartition ) {
+      //== get name of Data Manager on shift
+      ShiftDB shiftdb ;
+      username =  shiftdb.getCurrentDataManager().c_str();
+      if ( "/Shift/" == m_currentPageName.substr(0, 7) ) {
+        system = m_currentPageName.substr( 7 );
+        system = system.substr( 0, system.find( ':' ));
+      }
+      subject = "-none-";
+    }    
+
     elogDialog->setParameters( logbook, username, system, subject, message, isOK );
     
     TString pageName;
@@ -3477,7 +3492,8 @@ void PresenterMainFrame::partitionSelectorComboBoxHandler(int partitionNumber)
       }
     }
   } else {
-    std::string partition_entry(dynamic_cast<TGTextLBEntry*>(m_partitionSelectorComboBox->GetSelectedEntry())->GetText()->GetString());    
+    std::string partition_entry( dynamic_cast<TGTextLBEntry*>(m_partitionSelectorComboBox->GetSelectedEntry())
+                                 ->GetText()->GetString() );    
     m_currentPartition = partition_entry;  
   }
   if (isConnectedToHistogramDB() && (false == m_currentPageName.empty()) && (false == m_loadingPage)) {
@@ -4246,7 +4262,8 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
     rw_timePoint = timePoint;
     rw_pastDuration = pastDuration;
 
-    std::string history_entry(dynamic_cast<TGTextLBEntry*>(m_historyIntervalComboBox->GetSelectedEntry())->GetText()->GetString());
+    std::string history_entry( dynamic_cast<TGTextLBEntry*>(m_historyIntervalComboBox->GetSelectedEntry())
+                               ->GetText()->GetString() );
 
     if (0 != m_archive &&
         ((History == m_presenterMode) || (EditorOffline == m_presenterMode))) {
@@ -4385,7 +4402,8 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
               xup  = ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->xmax;
               yup  = ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->ymax;
   
-              if(((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->isOverlap()) { // histogram must be overdrawn on previous hist: look for the corresponding TPad
+              // histogram must be overdrawn on previous hist: look for the corresponding TPad
+              if(((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->isOverlap()) { 
                 OnlineHistoOnPage *mother = ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->getOverlap();
                 std::vector<DbRootHist*>::iterator prevh;
                 DbRootHist* dbRootHist = NULL;
@@ -4431,7 +4449,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
           }
            if ( (s_CNT == (*drawOpt_dbHistosOnPageIt)->histogramType()) &&
                 (true == currentTCK_service.empty()) ) {
-              HistogramIdentifier histogramIdentifier = HistogramIdentifier((*drawOpt_dbHistosOnPageIt)->identifier());                  
+              HistogramIdentifier histogramIdentifier = HistogramIdentifier((*drawOpt_dbHistosOnPageIt)->identifier());
               if (histogramIdentifier.isPlausible()) {
                 currentTCK_service = s_adder + histogramIdentifier.taskName() + s_slash + 
                                histogramIdentifier.algorithmName() + s_slash +
@@ -5088,15 +5106,17 @@ void PresenterMainFrame::about()
             std::string("Histogram Database version: ") << OnlineHistDBEnv_constants::version << std::endl <<
             std::string("Histogram Database schema: ") << OnlineHistDBEnv_constants::DBschema << std::endl <<
             std::string("Analysis Library version: ")  << OMAconstants::version << std::endl <<
-            std::string("Connected to Histogram Database: ") << (isConnectedToHistogramDB()? std::string("yes") : std::string("no")) << std::endl;
+            std::string("Connected to Histogram Database: ") 
+         << (isConnectedToHistogramDB()? std::string("yes") : std::string("no")) << std::endl;
   if (0 != m_histogramDB) {
-     config << std::string("Write access to Histogram Database: ") << (canWriteToHistogramDB()? std::string("yes") : std::string("no")) << std::endl <<
-     
+     config << std::string("Write access to Histogram Database: ") 
+            << (canWriteToHistogramDB()? std::string("yes") : std::string("no")) << std::endl <<
                std::string("Reference histograms directory: ") << m_referencePath << std::endl <<
                std::string("Savesets directory: ") << m_savesetPath << std::endl <<
-               
-               std::string("DB Reference histograms directory: ") << dynamic_cast<OnlineHistDBEnv*>(m_histogramDB)->refRoot() << std::endl <<
-               std::string("DB Savesets directory: ") << dynamic_cast<OnlineHistDBEnv*>(m_histogramDB)->savesetsRoot() << std::endl;
+               std::string("DB Reference histograms directory: ") << dynamic_cast<OnlineHistDBEnv*>(m_histogramDB)->refRoot() 
+            << std::endl <<
+               std::string("DB Savesets directory: ") << dynamic_cast<OnlineHistDBEnv*>(m_histogramDB)->savesetsRoot() 
+            << std::endl;
   }
   if (Batch != m_presenterMode) {
     new TGMsgBox(fClient->GetRoot(), this, "LHCb Presenter",

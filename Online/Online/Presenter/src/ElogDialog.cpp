@@ -20,7 +20,6 @@
 
 #include "ElogDialog.h"
 #include "PresenterMainFrame.h"
-#include "ShiftDB.h"
 
 using namespace pres;
 
@@ -86,14 +85,12 @@ void ElogDialog::build() {
 
   TGTextButton* okButton = new TGTextButton(elogFrame,"Send to Elog");
   okButton->SetTextJustify(36);
-  //okButton->Resize( xButtonSize, yButtonSize );
   elogFrame->AddFrame(okButton, layout );
   okButton->MoveResize( xBeg + xSize, yButtonPos, xButtonSize, yButtonSize );
   okButton->Connect("Clicked()", "ElogDialog", this, "ok()");
 
   TGTextButton*  cancelButton = new TGTextButton(elogFrame,"Cancel");
   cancelButton->SetTextJustify(36);
-  //cancelButton->->Resize( xButtonSize, yButtonSize );
   elogFrame->AddFrame(cancelButton, layout );
   cancelButton->MoveResize( xBeg+xSize+xSize, yButtonPos, xButtonSize, yButtonSize );
   cancelButton->Connect("Clicked()", "ElogDialog", this, "CloseWindow()");
@@ -105,11 +102,7 @@ void ElogDialog::build() {
   m_usernameTextEntry = new TGTextEntry(elogFrame, new TGTextBuffer(15), -1);
   m_usernameTextEntry->SetMaxLength(255);
   m_usernameTextEntry->SetAlignment(kTextLeft);
-
-  // Set by default the name of the datamanager on shift
-  ShiftDB shiftdb ;
-  m_usernameTextEntry -> SetText( shiftdb.getCurrentDataManager().c_str() ) ;
-  //  m_usernameTextEntry->SetText( (*m_username).c_str() );
+  m_usernameTextEntry->SetText( (*m_username).c_str() );
   elogFrame->AddFrame(m_usernameTextEntry, layout );
   m_usernameTextEntry->MoveResize( xBeg + xSize, yBeg, xInputSize, 22);
   yBeg += yStep;
@@ -119,22 +112,19 @@ void ElogDialog::build() {
   elogFrame->AddFrame( m_logbookLabel, layout );
   m_logbookLabel->MoveResize( xBeg, yBeg, xSize, 20);
 
-  // List box of all possible logbook sections
+  // List box of all meaningful logbook names.
   m_logbookListBox = new TGComboBox( elogFrame ) ;
   m_logbookListBox -> AddEntry( "Shift"        , 1 ) ;
-  m_logbookListBox -> AddEntry( "Piquet calls" , 2 ) ;
-  m_logbookListBox -> AddEntry( "Shift-Test"   , 3 ) ;
-  m_logbookListBox -> AddEntry( "LHCb-Test"    , 4 ) ;
-  m_logbookListBox -> AddEntry( "Online"       , 5 ) ;
+  m_logbookListBox -> AddEntry( "VELO"         , 2 ) ;
+  m_logbookListBox -> AddEntry( "ST"           , 3 ) ;
+  m_logbookListBox -> AddEntry( "OT"           , 4 ) ;
+  m_logbookListBox -> AddEntry( "RICH"         , 5 ) ;
   m_logbookListBox -> AddEntry( "CALO"         , 6 ) ;
   m_logbookListBox -> AddEntry( "MUON"         , 7 ) ;
-  m_logbookListBox -> AddEntry( "OT"           , 8 ) ;
-  m_logbookListBox -> AddEntry( "RICH"         , 9 ) ;
-  m_logbookListBox -> AddEntry( "ST"           , 10 ) ;
-  m_logbookListBox -> AddEntry( "VELO"         , 11 ) ;
-  m_logbookListBox -> AddEntry( "L0 Trigger"   , 12 ) ;
-  m_logbookListBox -> AddEntry( "PileUp"       , 13 ) ;
-  m_logbookListBox -> AddEntry( "HLT Trigger"  , 14 ) ;
+  m_logbookListBox -> AddEntry( "L0 Trigger"   , 8 ) ;
+  m_logbookListBox -> AddEntry( "PileUp"       , 9 ) ;
+  m_logbookListBox -> AddEntry( "HLT Trigger"  , 10 ) ;
+  m_logbookListBox -> AddEntry( "Online"       , 11 ) ;
 
   m_logbookListBox -> Select( 1 , kFALSE ) ;
 
@@ -142,25 +132,19 @@ void ElogDialog::build() {
   m_logbookListBox -> MoveResize( xBeg + xSize, yBeg, xInputSize, 22); 
   yBeg += yStep ;
 
-  //  m_logbookTextEntry = new TGTextEntry(elogFrame, new TGTextBuffer(15), -1);
-  //  m_logbookTextEntry->SetMaxLength(255);
-  //  m_logbookTextEntry->SetAlignment(kTextLeft);
-  //  m_logbookTextEntry->SetText( (*m_logbook).c_str() );
-  //  elogFrame->AddFrame( m_logbookTextEntry, layout );
-  //  m_logbookTextEntry->MoveResize( xBeg + xSize, yBeg, xInputSize, 22);
-  //  yBeg += yStep;
-
-  TGLabel* m_subjectLabel = new TGLabel(elogFrame,"Subject (not for Shift): ");
-  m_subjectLabel->SetTextJustify(36);
-  elogFrame->AddFrame(m_subjectLabel, layout );
-  m_subjectLabel->MoveResize( xBeg, yBeg, xSize, 18);
-  m_subjectTextEntry = new TGTextEntry(elogFrame, new TGTextBuffer(15), -1);
-  m_subjectTextEntry->SetMaxLength(255);
-  m_subjectTextEntry->SetAlignment(kTextLeft);
-  m_subjectTextEntry->SetText( (*m_subject).c_str() );
-  elogFrame->AddFrame(m_subjectTextEntry, layout );
-  m_subjectTextEntry->MoveResize( xBeg + xSize, yBeg, xInputSize, 22);
-  yBeg += yStep;
+  if ( "-none-" != *m_subject ) {
+    TGLabel* m_subjectLabel = new TGLabel(elogFrame,"Subject: ");
+    m_subjectLabel->SetTextJustify(36);
+    elogFrame->AddFrame(m_subjectLabel, layout );
+    m_subjectLabel->MoveResize( xBeg, yBeg, xSize, 18);
+    m_subjectTextEntry = new TGTextEntry(elogFrame, new TGTextBuffer(15), -1);
+    m_subjectTextEntry->SetMaxLength(255);
+    m_subjectTextEntry->SetAlignment(kTextLeft);
+    m_subjectTextEntry->SetText( (*m_subject).c_str() );
+    elogFrame->AddFrame(m_subjectTextEntry, layout );
+    m_subjectTextEntry->MoveResize( xBeg + xSize, yBeg, xInputSize, 22);
+    yBeg += yStep;
+  }  
 
   TGLabel* m_systemLabel = new TGLabel(elogFrame,"System : ");
   m_systemLabel->SetTextJustify(36);

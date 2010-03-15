@@ -460,7 +460,10 @@ void DbRootHist::initHistogram()
             }
           } else {
           // cannot get sources from DIM
-          if (m_retryInit == 1) { beEmptyHisto(); }
+          if (m_retryInit == 1) { 
+            std::cout << "Failed to load " << m_dimServiceName << std::endl;
+            beEmptyHisto(); 
+          }
         }
       }
     } else if (s_pfixMonProfile == m_histogramType ||
@@ -535,22 +538,29 @@ void DbRootHist::initHistogram()
             rootHistogram->AddDirectory(kFALSE); }
             rootHistogram->SetName(m_histoRootName);
         } else {
-          if (m_retryInit == 1) {beEmptyHisto(); }
+          if (m_retryInit == 1) {
+            std::cout << "Failed to load " << m_dimServiceName.c_str() << std::endl;
+            beEmptyHisto(); 
+          }
         }
     }
     // cannot get sources from DIM
     if (m_dimBrowser && (m_retryInit > 0)) {
-      m_dimServiceName = assembleCurrentDimServiceName();
+      std::string newName =assembleCurrentDimServiceName();
       if (m_verbosity >= Verbose) {
         std::cout << "DB DIM field invalid, retrying init using "
-                  << m_dimServiceName << std::endl;
+                  << newName << std::endl;
       }      
-     
-      --m_retryInit;
-      if (m_verbosity >= Verbose) {
-        std::cout << "retrying Init." << std::endl;
+      if ( !newName.empty() ) {
+        m_dimServiceName = newName;
+        --m_retryInit;
+        if (m_verbosity >= Verbose) {
+          std::cout << "retrying Init with " << m_dimServiceName << std::endl;
+        }
+        initHistogram();
+      } else {
+        std::cout << "failed to find DIM service '" << m_dimServiceName << "'" << std::endl;
       }
-      initHistogram();
     }
   } else if (m_isAnaHist && m_anaSources.size() > 0) { // analib hist
     if (m_verbosity >= Debug) {
@@ -592,6 +602,7 @@ void DbRootHist::initHistogram()
         if (m_verbosity >= Verbose) {
           std::cout << "creator alg. or sources not found!" << std::endl;
         }
+        std::cout << "Failed for virtual histogram " << m_anaSources[0]->identifier() << std::endl;
         beEmptyHisto(); 
       }
     }
@@ -611,6 +622,10 @@ void DbRootHist::initHistogram()
       std::cout << "Histogram " << m_identifier << " empty after Fill" << std::endl;
     }
   } else {
+    if ( m_onlineHistogram && 0 == m_retryInit ) {
+      std::cout << "DIM histo '" << m_onlineHistogram->dimServiceName() << "' = '" 
+                << m_dimServiceName << "' not found" << std::endl;
+    }
     beEmptyHisto(); 
   }  
 }
@@ -861,8 +876,9 @@ void DbRootHist::fillHistogram()
       if (s_pfixMonH2D == m_histogramType) { //  || s_CNT == m_histogramType
         if ((TH2D::Class() == rootHistogram->IsA()) &&
             m_histogramImage) {
-          m_histogramImage->SetImage((const Double_t *)((TH2D*)rootHistogram)->GetArray(), ((TH2D*)rootHistogram)->GetNbinsX() + 2,
-                      ((TH2D*)rootHistogram)->GetNbinsY() + 2, m_prettyPalette); //  gWebImagePalette, gHistImagePalette
+          m_histogramImage->SetImage( (const Double_t *)((TH2D*)rootHistogram)->GetArray(), 
+                                      ((TH2D*)rootHistogram)->GetNbinsX() + 2,
+                                      ((TH2D*)rootHistogram)->GetNbinsY() + 2, m_prettyPalette); 
         }
       }      
   } else if (m_isAnaHist && m_anaSources.size()>0)  {
@@ -1476,7 +1492,8 @@ bool DbRootHist::saveTH1ToDB(TPad* pad)
 }
 
 
-void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xup, double yup, bool fastHitMapDraw, TPad* overlayOnPad)
+void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xup, double yup, 
+                      bool fastHitMapDraw, TPad* overlayOnPad)
 {
   m_fastHitmapPlot = fastHitMapDraw;
   TPad* pad=overlayOnPad;
