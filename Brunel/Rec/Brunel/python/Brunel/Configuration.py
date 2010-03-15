@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.120 2010-03-06 15:38:44 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.121 2010-03-15 17:37:20 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -349,7 +349,9 @@ class Brunel(LHCbConfigurableUser):
                 InitReprocSeq.Members.append( "TESCheck" )
                 TESCheck().Inputs = ["Link/Rec/Track/Best"]
             InitReprocSeq.Members.append( "EventNodeKiller" )
-            EventNodeKiller().Nodes = [ "pRec", "Rec", "Raw", "Link/Rec" ]
+            EventNodeKiller().Nodes  = [ "pRec", "Rec", "Raw", "Link/Rec" ]
+            EventNodeKiller().Nodes += [ "/Event/pRec", "/Event/Rec",
+                                         "/Event/Raw", "/Event/Link/Rec" ]
 
         if inputType == "ETC":
             from Configurables import  TagCollectionSvc
@@ -429,6 +431,11 @@ class Brunel(LHCbConfigurableUser):
             from Configurables import ProcessPhase
             ProcessPhase("Output").DetectorList += [ "DST" ]
             GaudiSequencer("OutputDSTSeq").Members += [ trackFilter ]
+
+            # Remove some PID information from ProtoParticles
+            from Configurables import ChargedProtoParticleRemovePIDInfo
+            protoPidClean = ChargedProtoParticleRemovePIDInfo("ProtoParticlePIDClean")
+            GaudiSequencer("OutputDSTSeq").Members += [ protoPidClean ]
 
             if packType != "NONE":
                 # Add the sequence to pack the DST containers

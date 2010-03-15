@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2010-03-15 - Chris Jones
+ - Add cleaning of PID information from charged ProtoParticles before saving
+   to (r)DSTs.
+
 - Changes to tests
    . Pick up histogram setting options from AppConfig
    . Exclude Rich refractive index updates from comparisons wih reference
