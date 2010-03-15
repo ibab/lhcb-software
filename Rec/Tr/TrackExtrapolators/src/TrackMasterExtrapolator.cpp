@@ -1,4 +1,4 @@
-// $Id: TrackMasterExtrapolator.cpp,v 1.34 2009-03-08 17:31:54 smenzeme Exp $
+// $Id: TrackMasterExtrapolator.cpp,v 1.35 2010-03-15 12:47:24 smenzeme Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -51,7 +51,7 @@ TrackMasterExtrapolator::TrackMasterExtrapolator( const std::string& type,
   declareProperty( "ThickMSCorrectionTool",
                    m_thickmstoolname  = "StateThickMSCorrectionTool" );
   declareProperty( "GeneralDedxToolName",
-                   m_dedxtoolname     = "StateSimpleBetheBlochEnergyCorrectionTool" );
+                   m_dedxtoolname     = "StateDetailedBetheBlochEnergyCorrectionTool" );
   declareProperty( "ElectronDedxCorrectionTool",
                    m_elecdedxtoolname = "StateElectronEnergyCorrectionTool" );
   //for electrons

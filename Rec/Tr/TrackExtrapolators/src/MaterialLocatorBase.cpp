@@ -17,7 +17,7 @@ MaterialLocatorBase::MaterialLocatorBase(const std::string& type,
     m_elecdedxtool("StateElectronEnergyCorrectionTool")
 {
   declareInterface<IMaterialLocator>(this);
-  declareProperty( "GeneralDedxToolName" , m_dedxtoolname="StateSimpleBetheBlochEnergyCorrectionTool");
+  declareProperty( "GeneralDedxToolName" , m_dedxtoolname="StateDetailedBetheBlochEnergyCorrectionTool");
 
 }
 

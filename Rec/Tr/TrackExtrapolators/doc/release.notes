@@ -3,6 +3,8 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
+! 2010-03-15 - Stephanie Hansmann-Menzemer
+ - switch on the use auf DetailedBetheBloch model per default
 
 !======================= TrackExtrapolators v2r25 2010-02-24=================
 ! 2010-02-24 - Wouter Hulsbergen
