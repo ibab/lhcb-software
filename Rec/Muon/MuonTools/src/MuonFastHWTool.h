@@ -1,4 +1,4 @@
-// $Id: MuonFastHWTool.h,v 1.1 2010-02-09 16:02:24 asatta Exp $
+// $Id: MuonFastHWTool.h,v 1.2 2010-03-15 11:37:36 asatta Exp $
 #ifndef MUONFASTHWTOOL_H 
 #define MUONFASTHWTOOL_H 1
 
@@ -74,6 +74,10 @@ return m_padInCh[station*4+region][layout][I2C][feb];
 private:
   int getPadChIndex(LHCb::MuonTileID tile);
   StatusCode getGlobalIndex(LHCb::MuonTileID tile,int &result,int& index,int& lay);
+
+
+  void setI2CFeb(int xmin, int xmax, int ymin, int ymax,int offsetX,int index,int lay,int d, int c,LHCb::MuonTileID  tilePart);
+
   
   // Number of stations
   int m_stationNumber;

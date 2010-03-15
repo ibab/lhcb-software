@@ -1,4 +1,4 @@
-// $Id: MuonFastHWTool.cpp,v 1.1 2010-02-09 16:02:24 asatta Exp $
+// $Id: MuonFastHWTool.cpp,v 1.2 2010-03-15 11:37:36 asatta Exp $
 // Include files 
 #include "boost/assign/list_of.hpp"
 
@@ -337,10 +337,12 @@ void MuonFastHWTool::initFEB()
  
  
   //info()<<"      qui "<<endreq;
-  
+  int station=-1;
+  int region=-1;
+
   std::vector< MuonLayout> myLayout;
-  for (int station=0;station<5;station++){
-    for (int region=0;region<4;region++){
+  for (station=0;station<5;station++){
+    for (region=0;region<4;region++){
 
       int NLogicalMap = m_muonDetector->getLogMapInRegion(station,region);
 
@@ -538,8 +540,8 @@ void MuonFastHWTool::initFEB()
   int d=-1;
   int c=-1;
   int qua=0;
-  int station=-1;
-  int region=-1;
+  station=-1;
+  region=-1;
   
   MuonTileID tileInC;
 
@@ -557,241 +559,82 @@ void MuonFastHWTool::initFEB()
   //info()<<" M1R1 "<<offsetX<<endreq;
   
   d=0;  c=0;
-  for(int ii=8;ii<12;ii++){
-    for(int j=6;j<8;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC); 
-      fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  
-  d=0;  c=1;
-  for(int ii=4;ii<8;ii++){
-    for(int j=6;j<8;j++){
-      tileInC.setX(ii+offsetX);  
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  d=0;  c=2;
-  for(int ii=0;ii<4;ii++){ 
-    for(int j=6;j<8;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(8,12,6,8,offsetX,index,lay,d,c,tileInC);  
 
+  d=0;  c=1;
+  setI2CFeb(4,8,6,8,offsetX,index,lay,d,c,tileInC);  
+
+  d=0;  c=2;
+  setI2CFeb(0,4,6,8,offsetX,index,lay,d,c,tileInC);
 
   d=0;  c=3;
-  for(int ii=4;ii<12;ii++){
-    for(int j=5;j<6;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  d=0;  c=4;
-  for(int ii=0;ii<4;ii++){
-    for(int j=5;j<6;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }   
-  for(int ii=8;ii<12;ii++){
-    for(int j=4;j<5;j++){
-      tileInC.setX(ii+offsetX);  
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  d=0;  c=5;
-  for(int ii=0;ii<8;ii++){
-    for(int j=4;j<5;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(4,12,5,6,offsetX,index,lay,d,c,tileInC);  
 
+  d=0;  c=4;
+  setI2CFeb(0,4,5,6,offsetX,index,lay,d,c,tileInC);  
+  setI2CFeb(8,12,4,5,offsetX,index,lay,d,c,tileInC);  
+
+  d=0;  c=5;
+  setI2CFeb(0,8,4,5,offsetX,index,lay,d,c,tileInC);  
 
 
   d=1;  c=0;
-  for(int ii=0;ii<8;ii++){
-    for(int j=3;j<4;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(0,8,3,4,offsetX,index,lay,d,c,tileInC);  
+
   d=1;  c=1;
-  for(int ii=8;ii<12;ii++){
-    for(int j=3;j<4;j++){
-      tileInC.setX(ii+offsetX);  
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  for(int ii=0;ii<4;ii++){
-    for(int j=2;j<3;j++){ 
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }  
+  setI2CFeb(8,12,3,4,offsetX,index,lay,d,c,tileInC);  
+  setI2CFeb(0,4,2,3,offsetX,index,lay,d,c,tileInC);  
+
   d=1;  c=2;
-  for(int ii=4;ii<12;ii++){
-    for(int j=2;j<3;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(4,12,2,3,offsetX,index,lay,d,c,tileInC);  
+
   d=1;  c=3;
-  for(int ii=0;ii<4;ii++){
-    for(int j=0;j<2;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(0,4,0,2,offsetX,index,lay,d,c,tileInC);  
+
   d=1;  c=4;
-  for(int ii=4;ii<8;ii++){
-    for(int j=0;j<2;j++){
-      tileInC.setX(ii+offsetX);  
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(4,8,0,2,offsetX,index,lay,d,c,tileInC);  
+
   d=1;  c=5;
-  for(int ii=8;ii<12;ii++){    
-    for(int j=0;j<2;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-   d=2;  c=0;
-  for(int ii=12;ii<16;ii++){   
-    for(int j=0;j<2;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(8,12,0,2,offsetX,index,lay,d,c,tileInC);  
+ 
+  d=2;  c=0;
+  setI2CFeb(12,16,0,2,offsetX,index,lay,d,c,tileInC);  
     
   d=2;  c=1;
-  for(int ii=16;ii<20;ii++){
-    for(int j=0;j<2;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-   d=2;  c=2;
-  for(int ii=20;ii<24;ii++){
-    for(int j=0;j<2;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(16,20,0,2,offsetX,index,lay,d,c,tileInC);  
+  d=2;  c=2;
+  setI2CFeb(20,24,0,2,offsetX,index,lay,d,c,tileInC);  
       
   d=2;  c=3;
-  for(int ii=12;ii<20;ii++){
-    for(int j=2;j<3;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  } 
+  setI2CFeb(12,20,2,3,offsetX,index,lay,d,c,tileInC);  
 
- d=2;  c=4;
-  for(int ii=20;ii<24;ii++){
-    for(int j=2;j<3;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }   
+  d=2;  c=4;
+  setI2CFeb(20,24,2,3,offsetX,index,lay,d,c,tileInC);  
+  setI2CFeb(12,16,3,4,offsetX,index,lay,d,c,tileInC);  
 
-  for(int ii=12;ii<16;ii++){
-    for(int j=3;j<4;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  } 
   d=2;  c=5;
-  for(int ii=16;ii<24;ii++){
-    for(int j=3;j<4;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(16,24,3,4,offsetX,index,lay,d,c,tileInC);  
 
   d=3;  c=0;
-  for(int ii=16;ii<24;ii++){   
-    for(int j=4;j<5;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  d=3;  c=1;
-  for(int ii=12;ii<16;ii++){   
-    for(int j=4;j<5;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(16,24,4,5,offsetX,index,lay,d,c,tileInC);  
 
-  for(int ii=20;ii<24;ii++){
-    for(int j=5;j<6;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+
+  d=3;  c=1;
+  setI2CFeb(12,16,4,5,offsetX,index,lay,d,c,tileInC);  
+  setI2CFeb(20,24,5,6,offsetX,index,lay,d,c,tileInC);
 
   d=3;  c=2;
-  for(int ii=12;ii<20;ii++){
-    for(int j=5;j<6;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }   
+  setI2CFeb(12,20,5,6,offsetX,index,lay,d,c,tileInC);  
+
   d=3;  c=3;
-  for(int ii=20;ii<24;ii++){
-    for(int j=6;j<8;j++){   
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }  
-   d=3;  c=4;
-  for(int ii=16;ii<20;ii++){
-    for(int j=6;j<8;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-   d=3;  c=5;
-  for(int ii=12;ii<16;ii++){
-    for(int j=6;j<8;j++){
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(20,24,6,8,offsetX,index,lay,d,c,tileInC);  
 
+  d=3;  c=4;
+  setI2CFeb(16,20,6,8,offsetX,index,lay,d,c,tileInC);  
 
+  d=3;  c=5;
+  setI2CFeb(12,16,6,8,offsetX,index,lay,d,c,tileInC);  
+ 
 
   //info()<<" step 3"<<endreq;
 
@@ -812,106 +655,43 @@ void MuonFastHWTool::initFEB()
   d=0;  c=0;
 
 
-  d=0;  c=0;
-  for(int ii=0;ii<4;ii++){
-    for(int j=3;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  d=0;  c=1;
-  for(int ii=0;ii<4;ii++){
-    for(int j=2;j<3;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);     
-    }
-  }
-  d=0;  c=2;
-  for(int ii=0;ii<4;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);     
-    }
-  }
+  d=0;  c=0;  
+  setI2CFeb(0,4,3,4,offsetX,index,lay,d,c,tileInC); 
+  
+  d=0;  c=1; 
+  setI2CFeb(0,4,2,3,offsetX,index,lay,d,c,tileInC); 
+
+  d=0;  c=2;  
+  setI2CFeb(0,4,1,2,offsetX,index,lay,d,c,tileInC); 
+ 
   d=0;  c=3;
-  for(int ii=0;ii<4;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(0,4,0,1,offsetX,index,lay,d,c,tileInC);
 
-
-  d=1;  c=0;
-  for(int ii=4;ii<6;ii++){
-    for(int j=0;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  d=1;  c=1;
-  for(int ii=6;ii<8;ii++){
-    for(int j=0;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  d=1;  c=0; 
+  setI2CFeb(4,6,0,2,offsetX,index,lay,d,c,tileInC); 
+  
+  d=1;  c=1; 
+  setI2CFeb(6,8,0,2,offsetX,index,lay,d,c,tileInC);
 
   d=1;  c=2;
-  for(int ii=8;ii<10;ii++){
-    for(int j=0;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  d=1;  c=3;
-  for(int ii=10;ii<12;ii++){
-    for(int j=0;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
+  setI2CFeb(8,10,0,2,offsetX,index,lay,d,c,tileInC); 
+  
+  d=1;  c=3; 
+  setI2CFeb(10,12,0,2,offsetX,index,lay,d,c,tileInC); 
+  
   d=1;  c=4;
-  for(int ii=12;ii<14;ii++){
-    for(int j=0;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
-  d=1;  c=5;
-  for(int ii=14;ii<16;ii++){
-    for(int j=0;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(12,14,0,2,offsetX,index,lay,d,c,tileInC); 
+  
+  d=1;  c=5; 
+  setI2CFeb(14,16,0,2,offsetX,index,lay,d,c,tileInC); 
+  
 
-  d=1;  c=6;
-  for(int ii=16;ii<18;ii++){
-    for(int j=0;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  d=1;  c=7;
-  for(int ii=18;ii<20;ii++){
-    for(int j=0;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
+  d=1;  c=6;  
+  setI2CFeb(16,18,0,2,offsetX,index,lay,d,c,tileInC); 
+  
+  d=1;  c=7;  
+  setI2CFeb(18,20,0,2,offsetX,index,lay,d,c,tileInC); 
+ 
 
 
 
@@ -919,109 +699,41 @@ void MuonFastHWTool::initFEB()
 
   //first daisy chain cardiac
 
-  d=2;  c=0;
-  for(int ii=20;ii<24;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
-  d=2;  c=1;
-  for(int ii=20;ii<24;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
-  d=2;  c=2;
-  for(int ii=20;ii<24;ii++){
-    for(int j=2;j<3;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  d=2;  c=3;
-  for(int ii=20;ii<24;ii++){
-    for(int j=3;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
+  d=2;  c=0; 
+  setI2CFeb(20,24,0,1,offsetX,index,lay,d,c,tileInC); 
 
+  d=2;  c=1; 
+  setI2CFeb(20,24,1,2,offsetX,index,lay,d,c,tileInC);
 
+  d=2;  c=2;  
+  setI2CFeb(20,24,2,3,offsetX,index,lay,d,c,tileInC); 
 
+  d=2;  c=3; 
+  setI2CFeb(20,24,3,4,offsetX,index,lay,d,c,tileInC); 
 
   d=3;  c=0;
-  for(int ii=18;ii<20;ii++){
-    for(int j=2;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  d=3;  c=1;
-  for(int ii=16;ii<18;ii++){
-    for(int j=2;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(18,20,2,4,offsetX,index,lay,d,c,tileInC); 
 
-  d=3;  c=2;
-  for(int ii=14;ii<16;ii++){
-    for(int j=2;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  d=3;  c=1;  
+  setI2CFeb(16,18,2,4,offsetX,index,lay,d,c,tileInC);
+
+  d=3;  c=2; 
+  setI2CFeb(14,16,2,4,offsetX,index,lay,d,c,tileInC);
+
   d=3;  c=3;
-  for(int ii=12;ii<14;ii++){
-    for(int j=2;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  d=3;  c=4;
-  for(int ii=10;ii<12;ii++){
-    for(int j=2;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);     
-    }
-  }
+  setI2CFeb(12,14,2,4,offsetX,index,lay,d,c,tileInC);
 
-  d=3;  c=5;
-  for(int ii=8;ii<10;ii++){
-    for(int j=2;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);     
-    }
-  }
+  d=3;  c=4;
+  setI2CFeb(10,12,2,4,offsetX,index,lay,d,c,tileInC); 
+
+  d=3;  c=5; 
+  setI2CFeb(8,10,2,4,offsetX,index,lay,d,c,tileInC);
 
   d=3;  c=6;
-  for(int ii=6;ii<8;ii++){
-    for(int j=2;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);      
-    }
-  }
-  d=3;  c=7;
-  for(int ii=4;ii<6;ii++){
-    for(int j=2;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);     
-    }
-  }
+  setI2CFeb(6,8,2,4,offsetX,index,lay,d,c,tileInC); 
+
+  d=3;  c=7; 
+  setI2CFeb(4,6,2,4,offsetX,index,lay,d,c,tileInC); 
 
   //M1R3
 
@@ -1035,107 +747,40 @@ void MuonFastHWTool::initFEB()
   
   offsetX=m_padInChLayout[index*2+lay].xGrid();
   
-  d=0;  c=0;
-  for(int ii=0;ii<4;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  d=0;  c=0; 
+  setI2CFeb(0,4,0,1,offsetX,index,lay,d,c,tileInC); 
+ 
   d=0;  c=1;
-  for(int ii=4;ii<8;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(4,8,0,1,offsetX,index,lay,d,c,tileInC);
+  
   d=0;  c=2;
-  for(int ii=8;ii<12;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(8,12,0,1,offsetX,index,lay,d,c,tileInC);
+  
   d=0;  c=3;
-  for(int ii=12;ii<16;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
-  d=0;  c=4;
-  for(int ii=16;ii<20;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
+  setI2CFeb(12,16,0,1,offsetX,index,lay,d,c,tileInC);
+  
+  d=0;  c=4; 
+  setI2CFeb(16,20,0,1,offsetX,index,lay,d,c,tileInC);
 
-  d=0;  c=5;
-  for(int ii=20;ii<24;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  d=0;  c=5; 
+  setI2CFeb(20,24,0,1,offsetX,index,lay,d,c,tileInC);
 
-  d=1;  c=0;
-  for(int ii=20;ii<24;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  d=1;  c=0; 
+  setI2CFeb(20,24,1,2,offsetX,index,lay,d,c,tileInC);
+  
   d=1;  c=1;
-  for(int ii=16;ii<20;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(16,20,1,2,offsetX,index,lay,d,c,tileInC);
+  
   d=1;  c=2;
-  for(int ii=12;ii<16;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  d=1;  c=3;
-  for(int ii=8;ii<12;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);      
-    }
-  }
-  d=1;  c=4;
-  for(int ii=4;ii<8;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  d=1;  c=5;
-  for(int ii=0;ii<4;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-
-
-
+  setI2CFeb(12,16,1,2,offsetX,index,lay,d,c,tileInC);
+  
+  d=1;  c=3; 
+  setI2CFeb(8,12,1,2,offsetX,index,lay,d,c,tileInC);
+  
+  d=1;  c=4; 
+  setI2CFeb(4,8,1,2,offsetX,index,lay,d,c,tileInC);
+  
+  d=1;  c=5; setI2CFeb(0,4,1,2,offsetX,index,lay,d,c,tileInC);
 
   //M1R4
   station=0; region=3; lay=0;  
@@ -1150,45 +795,15 @@ void MuonFastHWTool::initFEB()
   
   //first daisy chain cardiac
   d=0;  c=0;
-  
-  for(int ii=0;ii<4;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);     
-    }
-  }
+  setI2CFeb(0,4,0,1,offsetX,index,lay,d,c,tileInC);
+
   d=0;  c=1;
-  for(int ii=4;ii<8;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
+  setI2CFeb(4,8,0,1,offsetX,index,lay,d,c,tileInC);
+
   d=0;  c=2;
-  for(int ii=8;ii<12;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
-  
-  
-
-
-
-
-
-
-
-
+  setI2CFeb(8,12,0,1,offsetX,index,lay,d,c,tileInC);
+ 
   // info()<<" finita M1 1"<<endreq;
-
-
-
-
 
     //fill one by one the list of tiles for cardiac
   //M2R1
@@ -1202,56 +817,23 @@ void MuonFastHWTool::initFEB()
   offsetX=m_padInChLayout[index*2+lay].xGrid();
 
   d=0;  c=0;
-  for(int ii=0;ii<8;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  d=0;  c=1;
-  for(int ii=8;ii<16;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
-  d=0;  c=2;
-  for(int ii=16;ii<24;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
+  setI2CFeb(0,8,0,1,offsetX,index,lay,d,c,tileInC);
   
+  d=0;  c=1;
+  setI2CFeb(8,16,0,1,offsetX,index,lay,d,c,tileInC);
+ 
+  d=0;  c=2;
+  setI2CFeb(16,24,0,1,offsetX,index,lay,d,c,tileInC);
+    
   d=0;  c=3;
-  for(int ii=24;ii<32;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
+  setI2CFeb(24,32,0,1,offsetX,index,lay,d,c,tileInC);
+ 
   d=0;  c=4;
-  for(int ii=32;ii<40;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
+  setI2CFeb(32,40,0,1,offsetX,index,lay,d,c,tileInC);
+  
   d=0;  c=5;
-  for(int ii=40;ii<48;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
-
-
+  setI2CFeb(40,48,0,1,offsetX,index,lay,d,c,tileInC);
+  
   station=1; region=0; lay=1;  
   index=station*4+region;
   tileInC.setStation(station);
@@ -1265,84 +847,31 @@ void MuonFastHWTool::initFEB()
   lay=1;
  
   d=0;  c=0;
-  for(int ii=0;ii<4;ii++){
-    for(int j=0;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(0,4,0,2,offsetX,index,lay,d,c,tileInC);
 
   d=0;  c=1;
-  for(int ii=0;ii<4;ii++){
-    for(int j=2;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
-
+  setI2CFeb(0,4,2,4,offsetX,index,lay,d,c,tileInC);
+ 
   d=0;  c=2;
-  for(int ii=0;ii<4;ii++){
-    for(int j=4;j<6;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
-
-  d=0;  c=3;
-  for(int ii=0;ii<4;ii++){
-    for(int j=6;j<8;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
-
+  setI2CFeb(0,4,4,6,offsetX,index,lay,d,c,tileInC);
+ 
+  d=0;  c=3; 
+  setI2CFeb(0,4,6,8,offsetX,index,lay,d,c,tileInC);
+  
   lay=1;
 
   d=1;  c=3;
-  for(int ii=4;ii<8;ii++){
-    for(int j=0;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-
-  d=1;  c=2;
-  for(int ii=4;ii<8;ii++){
-    for(int j=2;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-
-  d=1;  c=1;
-  for(int ii=4;ii<8;ii++){
-    for(int j=4;j<6;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-
-  d=1;  c=0;
-  for(int ii=4;ii<8;ii++){
-    for(int j=6;j<8;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
-
-
-
-
-
-
+  setI2CFeb(4,8,0,2,offsetX,index,lay,d,c,tileInC);
+  
+  d=1;  c=2; 
+  setI2CFeb(4,8,2,4,offsetX,index,lay,d,c,tileInC);
+  
+  d=1;  c=1; 
+  setI2CFeb(4,8,4,6,offsetX,index,lay,d,c,tileInC);
+ 
+  d=1;  c=0; 
+  setI2CFeb(4,8,6,8,offsetX,index,lay,d,c,tileInC);
+  
     //fill one by one the list of tiles for cardiac
   //M2R2
   station=1; region=1; lay=0;  
@@ -1357,55 +886,23 @@ void MuonFastHWTool::initFEB()
   
   //first daisy chain cardiac
   
-  d=0;  c=0;
-  for(int ii=0;ii<8;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
+  d=0;  c=0; 
+  setI2CFeb(0,8,0,1,offsetX,index,lay,d,c,tileInC);
+
   d=0;  c=1;
-  for(int ii=8;ii<16;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
+  setI2CFeb(8,16,0,1,offsetX,index,lay,d,c,tileInC);
+
   d=0;  c=2;
-  for(int ii=16;ii<24;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);     
-    }
-  }
-  
-  d=0;  c=3;
-  for(int ii=24;ii<32;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);      
-    }
-  }
+  setI2CFeb(16,24,0,1,offsetX,index,lay,d,c,tileInC);
+
+  d=0;  c=3; 
+  setI2CFeb(24,32,0,1,offsetX,index,lay,d,c,tileInC);
+
   d=0;  c=4;
-  for(int ii=32;ii<40;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
-  d=0;  c=5;
-  for(int ii=40;ii<48;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);     
-    }
-  }
+  setI2CFeb(32,40,0,1,offsetX,index,lay,d,c,tileInC);
+
+  d=0;  c=5; 
+  setI2CFeb(40,48,0,1,offsetX,index,lay,d,c,tileInC);
 
   //lay  1
 
@@ -1423,81 +920,29 @@ void MuonFastHWTool::initFEB()
   
 
   d=0;  c=0;
-  for(int ii=0;ii<2;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
-
-  d=0;  c=1;
-  for(int ii=0;ii<2;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
-
-  d=0;  c=2;
-  for(int ii=0;ii<2;ii++){
-    for(int j=2;j<3;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-
-  d=0;  c=3;
-  for(int ii=0;ii<2;ii++){
-    for(int j=3;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(0,2,0,1,offsetX,index,lay,d,c,tileInC);
+  d=0;  c=1; 
+  setI2CFeb(0,2,1,2,offsetX,index,lay,d,c,tileInC);
+  d=0;  c=2;  
+  setI2CFeb(0,2,2,3,offsetX,index,lay,d,c,tileInC); 
+  d=0;  c=3; 
+  setI2CFeb(0,2,3,4,offsetX,index,lay,d,c,tileInC);
 
   lay=1;
   d=1;
   
 
-  d=1;  c=3;
-  for(int ii=2;ii<4;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
+  d=1;  c=3; 
+  setI2CFeb(2,4,0,1,offsetX,index,lay,d,c,tileInC);
 
-  d=1;  c=2;
-  for(int ii=2;ii<4;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);        fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  d=1;  c=2; 
+  setI2CFeb(2,4,1,2,offsetX,index,lay,d,c,tileInC);
 
-  d=1;  c=1;
-  for(int ii=2;ii<4;ii++){
-    for(int j=2;j<3;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);     
-    }
-  }
+  d=1;  c=1; 
+  setI2CFeb(2,4,2,3,offsetX,index,lay,d,c,tileInC);
 
-  d=1;  c=0;
-  for(int ii=2;ii<4;ii++){
-    for(int j=3;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);      
-    }
-  }
-
+  d=1;  c=0; 
+  setI2CFeb(2,4,3,4,offsetX,index,lay,d,c,tileInC);
 
     //fill one by one the list of tiles for cardiac
   //M2R3
@@ -1514,113 +959,45 @@ void MuonFastHWTool::initFEB()
   //first daisy chain cardiac
   
   
-  d=0;  c=0;
-  for(int ii=0;ii<8;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  d=0;  c=1;
-  for(int ii=8;ii<16;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
+  d=0;  c=0; 
+  setI2CFeb(0,8,0,1,offsetX,index,lay,d,c,tileInC);
+  
+  d=0;  c=1; 
+  setI2CFeb(8,16,0,1,offsetX,index,lay,d,c,tileInC);
+
   d=0;  c=2;
-  for(int ii=16;ii<24;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(16,24,0,1,offsetX,index,lay,d,c,tileInC);
+   
+  d=0;  c=3; 
+  setI2CFeb(24,32,0,1,offsetX,index,lay,d,c,tileInC);
   
-  d=0;  c=3;
-  for(int ii=24;ii<32;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
-  d=0;  c=4;
-  for(int ii=32;ii<40;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
+  d=0;  c=4; 
+  setI2CFeb(32,40,0,1,offsetX,index,lay,d,c,tileInC);
+ 
   d=0;  c=5;
-  for(int ii=40;ii<48;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
-  
+  setI2CFeb(40,48,0,1,offsetX,index,lay,d,c,tileInC);
+   
   //second daisy chain cardiac
   d=1;  
   
   d=1;  c=5;
-  for(int ii=0;ii<8;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
-  d=1;  c=4;
-  for(int ii=8;ii<16;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(0,8,1,2,offsetX,index,lay,d,c,tileInC);
+
+  d=1;  c=4; 
+  setI2CFeb(8,16,1,2,offsetX,index,lay,d,c,tileInC);
+ 
   d=1;  c=3;
-  for(int ii=16;ii<24;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(16,24,1,2,offsetX,index,lay,d,c,tileInC);
+    
+  d=1;  c=2; 
+  setI2CFeb(24,32,1,2,offsetX,index,lay,d,c,tileInC);
   
-  d=1;  c=2;
-  for(int ii=24;ii<32;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
-  d=1;  c=1;
-  for(int ii=32;ii<40;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
-  d=1;  c=0;
-  for(int ii=40;ii<48;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
+  d=1;  c=1; 
+  setI2CFeb(32,40,1,2,offsetX,index,lay,d,c,tileInC);
   
-
-
-
-
+  d=1;  c=0; 
+  setI2CFeb(40,48,1,2,offsetX,index,lay,d,c,tileInC);
+  
   //M2R4
   station=1; region=3; lay=0;  
   index=station*4+region;
@@ -1632,39 +1009,18 @@ void MuonFastHWTool::initFEB()
   offsetX=m_padInChLayout[index*2+lay].xGrid();
     
   //first daisy chain cardiac
-  d=0;  c=0;
+  d=0;  c=0; 
+  setI2CFeb(0,8,0,1,offsetX,index,lay,d,c,tileInC);
   
-
-  for(int ii=0;ii<8;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
-  d=0;  c=1;
-  for(int ii=8;ii<16;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
+  d=0;  c=1; 
+  setI2CFeb(8,16,0,1,offsetX,index,lay,d,c,tileInC);
+ 
   d=0;  c=2;
-  for(int ii=16;ii<24;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(16,24,0,1,offsetX,index,lay,d,c,tileInC);
   
 
 
 
-
-
-    //fill one by one the list of tiles for cardiac
   //M3R1
   station=2; region=0; lay=0;  
   index=station*4+region;
@@ -1676,56 +1032,23 @@ void MuonFastHWTool::initFEB()
   offsetX=m_padInChLayout[index*2+lay].xGrid();
 
   d=0;  c=0;
-  for(int ii=0;ii<8;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
-  d=0;  c=1;
-  for(int ii=8;ii<16;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
-  d=0;  c=2;
-  for(int ii=16;ii<24;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }  
-  }
+  setI2CFeb(0,8,0,1,offsetX,index,lay,d,c,tileInC);
   
+  d=0;  c=1;
+  setI2CFeb(8,16,0,1,offsetX,index,lay,d,c,tileInC);
+ 
+  d=0;  c=2;
+  setI2CFeb(16,24,0,1,offsetX,index,lay,d,c,tileInC);
+    
   d=0;  c=3;
-  for(int ii=24;ii<32;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
+  setI2CFeb(24,32,0,1,offsetX,index,lay,d,c,tileInC);
+ 
   d=0;  c=4;
-  for(int ii=32;ii<40;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
+  setI2CFeb(32,40,0,1,offsetX,index,lay,d,c,tileInC);
+  
   d=0;  c=5;
-  for(int ii=40;ii<48;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
-
-
+  setI2CFeb(40,48,0,1,offsetX,index,lay,d,c,tileInC);
+  
   station=2; region=0; lay=1;  
   index=station*4+region;
   tileInC.setStation(station);
@@ -1739,85 +1062,32 @@ void MuonFastHWTool::initFEB()
   lay=1;
  
   d=0;  c=0;
-  for(int ii=0;ii<4;ii++){
-    for(int j=0;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
+  setI2CFeb(0,4,0,2,offsetX,index,lay,d,c,tileInC);
 
   d=0;  c=1;
-  for(int ii=0;ii<4;ii++){
-    for(int j=2;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-
+  setI2CFeb(0,4,2,4,offsetX,index,lay,d,c,tileInC);
+ 
   d=0;  c=2;
-  for(int ii=0;ii<4;ii++){
-    for(int j=4;j<6;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
-
-  d=0;  c=3;
-  for(int ii=0;ii<4;ii++){
-    for(int j=6;j<8;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-
+  setI2CFeb(0,4,4,6,offsetX,index,lay,d,c,tileInC);
+ 
+  d=0;  c=3; 
+  setI2CFeb(0,4,6,8,offsetX,index,lay,d,c,tileInC);
+  
   lay=1;
 
   d=1;  c=3;
-  for(int ii=4;ii<8;ii++){
-    for(int j=0;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }  
-  }
-
-  d=1;  c=2;
-  for(int ii=4;ii<8;ii++){
-    for(int j=2;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
-
-  d=1;  c=1;
-  for(int ii=4;ii<8;ii++){
-    for(int j=4;j<6;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-
-  d=1;  c=0;
-  for(int ii=4;ii<8;ii++){
-    for(int j=6;j<8;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
-
-
-
-
-
-
-    //fill one by one the list of tiles for cardiac
+  setI2CFeb(4,8,0,2,offsetX,index,lay,d,c,tileInC);
+  
+  d=1;  c=2; 
+  setI2CFeb(4,8,2,4,offsetX,index,lay,d,c,tileInC);
+  
+  d=1;  c=1; 
+  setI2CFeb(4,8,4,6,offsetX,index,lay,d,c,tileInC);
+ 
+  d=1;  c=0; 
+  setI2CFeb(4,8,6,8,offsetX,index,lay,d,c,tileInC);
+  
+    
   //M3R2
   station=2; region=1; lay=0;  
   index=station*4+region;
@@ -1831,55 +1101,26 @@ void MuonFastHWTool::initFEB()
   
   //first daisy chain cardiac
   
-  d=0;  c=0;
-  for(int ii=0;ii<8;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
+  d=0;  c=0; 
+  setI2CFeb(0,8,0,1,offsetX,index,lay,d,c,tileInC);
+
   d=0;  c=1;
-  for(int ii=8;ii<16;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
+  setI2CFeb(8,16,0,1,offsetX,index,lay,d,c,tileInC);
+
   d=0;  c=2;
-  for(int ii=16;ii<24;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
-  
-  d=0;  c=3;
-  for(int ii=24;ii<32;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
+  setI2CFeb(16,24,0,1,offsetX,index,lay,d,c,tileInC);
+
+  d=0;  c=3; 
+  setI2CFeb(24,32,0,1,offsetX,index,lay,d,c,tileInC);
+
   d=0;  c=4;
-  for(int ii=32;ii<40;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  d=0;  c=5;
-  for(int ii=40;ii<48;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(32,40,0,1,offsetX,index,lay,d,c,tileInC);
+
+  d=0;  c=5; 
+  setI2CFeb(40,48,0,1,offsetX,index,lay,d,c,tileInC);
+
+  //lay  1
+
   station=2; region=1; lay=1;  
   index=station*4+region;
   tileInC.setStation(station);
@@ -1894,81 +1135,29 @@ void MuonFastHWTool::initFEB()
   
 
   d=0;  c=0;
-  for(int ii=0;ii<2;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
-
-  d=0;  c=1;
-  for(int ii=0;ii<2;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-
-  d=0;  c=2;
-  for(int ii=0;ii<2;ii++){
-    for(int j=2;j<3;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
-
-  d=0;  c=3;
-  for(int ii=0;ii<2;ii++){
-    for(int j=3;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(0,2,0,1,offsetX,index,lay,d,c,tileInC);
+  d=0;  c=1; 
+  setI2CFeb(0,2,1,2,offsetX,index,lay,d,c,tileInC);
+  d=0;  c=2;  
+  setI2CFeb(0,2,2,3,offsetX,index,lay,d,c,tileInC); 
+  d=0;  c=3; 
+  setI2CFeb(0,2,3,4,offsetX,index,lay,d,c,tileInC);
 
   lay=1;
   d=1;
   
 
-  d=1;  c=3;
-  for(int ii=2;ii<4;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
+  d=1;  c=3; 
+  setI2CFeb(2,4,0,1,offsetX,index,lay,d,c,tileInC);
 
-  d=1;  c=2;
-  for(int ii=2;ii<4;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
+  d=1;  c=2; 
+  setI2CFeb(2,4,1,2,offsetX,index,lay,d,c,tileInC);
 
-  d=1;  c=1;
-  for(int ii=2;ii<4;ii++){
-    for(int j=2;j<3;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
+  d=1;  c=1; 
+  setI2CFeb(2,4,2,3,offsetX,index,lay,d,c,tileInC);
 
-  d=1;  c=0;
-  for(int ii=2;ii<4;ii++){
-    for(int j=3;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
-
+  d=1;  c=0; 
+  setI2CFeb(2,4,3,4,offsetX,index,lay,d,c,tileInC);
 
     //fill one by one the list of tiles for cardiac
   //M3R3
@@ -1985,113 +1174,45 @@ void MuonFastHWTool::initFEB()
   //first daisy chain cardiac
   
   
-  d=0;  c=0;
-  for(int ii=0;ii<8;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
-  d=0;  c=1;
-  for(int ii=8;ii<16;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  d=0;  c=0; 
+  setI2CFeb(0,8,0,1,offsetX,index,lay,d,c,tileInC);
+  
+  d=0;  c=1; 
+  setI2CFeb(8,16,0,1,offsetX,index,lay,d,c,tileInC);
+
   d=0;  c=2;
-  for(int ii=16;ii<24;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
+  setI2CFeb(16,24,0,1,offsetX,index,lay,d,c,tileInC);
+   
+  d=0;  c=3; 
+  setI2CFeb(24,32,0,1,offsetX,index,lay,d,c,tileInC);
   
-  d=0;  c=3;
-  for(int ii=24;ii<32;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
-  d=0;  c=4;
-  for(int ii=32;ii<40;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
+  d=0;  c=4; 
+  setI2CFeb(32,40,0,1,offsetX,index,lay,d,c,tileInC);
+ 
   d=0;  c=5;
-  for(int ii=40;ii<48;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  
+  setI2CFeb(40,48,0,1,offsetX,index,lay,d,c,tileInC);
+   
   //second daisy chain cardiac
   d=1;  
   
   d=1;  c=5;
-  for(int ii=0;ii<8;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  d=1;  c=4;
-  for(int ii=8;ii<16;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
+  setI2CFeb(0,8,1,2,offsetX,index,lay,d,c,tileInC);
+
+  d=1;  c=4; 
+  setI2CFeb(8,16,1,2,offsetX,index,lay,d,c,tileInC);
+ 
   d=1;  c=3;
-  for(int ii=16;ii<24;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
+  setI2CFeb(16,24,1,2,offsetX,index,lay,d,c,tileInC);
+    
+  d=1;  c=2; 
+  setI2CFeb(24,32,1,2,offsetX,index,lay,d,c,tileInC);
   
-  d=1;  c=2;
-  for(int ii=24;ii<32;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
-  d=1;  c=1;
-  for(int ii=32;ii<40;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  d=1;  c=0;
-  for(int ii=40;ii<48;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
+  d=1;  c=1; 
+  setI2CFeb(32,40,1,2,offsetX,index,lay,d,c,tileInC);
   
-
-
-
-
+  d=1;  c=0; 
+  setI2CFeb(40,48,1,2,offsetX,index,lay,d,c,tileInC);
+  
   //M3R4
   station=2; region=3; lay=0;  
   index=station*4+region;
@@ -2103,32 +1224,19 @@ void MuonFastHWTool::initFEB()
   offsetX=m_padInChLayout[index*2+lay].xGrid();
     
   //first daisy chain cardiac
-  d=0;  c=0;
+  d=0;  c=0; 
+  setI2CFeb(0,8,0,1,offsetX,index,lay,d,c,tileInC);
+  
+  d=0;  c=1; 
+  setI2CFeb(8,16,0,1,offsetX,index,lay,d,c,tileInC);
+ 
+  d=0;  c=2;
+  setI2CFeb(16,24,0,1,offsetX,index,lay,d,c,tileInC);
   
 
-  for(int ii=0;ii<8;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
-  d=0;  c=1;
-  for(int ii=8;ii<16;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
-  d=0;  c=2;
-  for(int ii=16;ii<24;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
+
+
+
 
   //fill one by one the list of tiles for cardiac
   //M4R1
@@ -2145,172 +1253,49 @@ void MuonFastHWTool::initFEB()
   //first daisy chain cardiac
   d=0;  c=0;
   
-
-  for(int ii=0;ii<6;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
-  for(int ii=4;ii<6;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-
+  setI2CFeb(0,6,0,1,offsetX,index,lay,d,c,tileInC);
+  setI2CFeb(4,6,1,2,offsetX,index,lay,d,c,tileInC);
 
   d=0;  c=1;
-  for(int ii=0;ii<4;ii++){
-    for(int j=1;j<3;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
+  setI2CFeb(0,4,1,3,offsetX,index,lay,d,c,tileInC);
+
   d=0;  c=2;
-  for(int ii=4;ii<6;ii++){
-    for(int j=2;j<3;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  for(int ii=0;ii<6;ii++){
-    for(int j=3;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
+  setI2CFeb(4,6,2,3,offsetX,index,lay,d,c,tileInC);
+  setI2CFeb(0,6,3,4,offsetX,index,lay,d,c,tileInC);
   
   d=0;  c=3;
-  for(int ii=0;ii<6;ii++){
-    for(int j=4;j<5;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
-  for(int ii=4;ii<6;ii++){
-    for(int j=5;j<6;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
-
-
+  setI2CFeb(0,6,4,5,offsetX,index,lay,d,c,tileInC);
+  setI2CFeb(4,6,5,6,offsetX,index,lay,d,c,tileInC);
 
   d=0;  c=4;
-  for(int ii=0;ii<4;ii++){
-    for(int j=5;j<7;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
+  setI2CFeb(0,4,5,7,offsetX,index,lay,d,c,tileInC);
     
   d=0;  c=5;
-  for(int ii=4;ii<6;ii++){
-    for(int j=6;j<7;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(4,6,6,7,offsetX,index,lay,d,c,tileInC);
+  setI2CFeb(0,6,7,8,offsetX,index,lay,d,c,tileInC);
 
-  for(int ii=0;ii<6;ii++){
-    for(int j=7;j<8;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
   d=1;  c=0;
-
-  for(int ii=6;ii<8;ii++){
-    for(int j=6;j<7;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
-
-  for(int ii=6;ii<12;ii++){
-    for(int j=7;j<8;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
+  setI2CFeb(6,8,6,7,offsetX,index,lay,d,c,tileInC);
+  setI2CFeb(6,12,7,8,offsetX,index,lay,d,c,tileInC);
 
   d=1;  c=1;
-  for(int ii=8;ii<12;ii++){
-    for(int j=5;j<7;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
-
+  setI2CFeb(8,12,5,7,offsetX,index,lay,d,c,tileInC);
 
   d=1;  c=2;
-  for(int ii=6;ii<12;ii++){
-    for(int j=4;j<5;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  for(int ii=6;ii<8;ii++){
-    for(int j=5;j<6;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
+  setI2CFeb(6,12,4,5,offsetX,index,lay,d,c,tileInC);
+  setI2CFeb(6,8,5,6,offsetX,index,lay,d,c,tileInC);
+
   d=1;  c=3;
-  for(int ii=6;ii<8;ii++){
-    for(int j=2;j<3;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
-  for(int ii=6;ii<12;ii++){
-    for(int j=3;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
-   d=1;  c=4;
-  for(int ii=8;ii<12;ii++){
-    for(int j=1;j<3;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
+  setI2CFeb(6,8,2,3,offsetX,index,lay,d,c,tileInC);
+  setI2CFeb(6,12,3,4,offsetX,index,lay,d,c,tileInC);
+
+  d=1;  c=4;
+  setI2CFeb(8,12,1,3,offsetX,index,lay,d,c,tileInC);
+
   d=1;c=5;
+  setI2CFeb(6,12,0,1,offsetX,index,lay,d,c,tileInC);
+  setI2CFeb(6,8,1,2,offsetX,index,lay,d,c,tileInC);
   
-  for(int ii=6;ii<12;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
-  for(int ii=6;ii<8;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
 
   //fill one by one the list of tiles for cardiac
   //M4R2
@@ -2325,57 +1310,20 @@ void MuonFastHWTool::initFEB()
     
   //first daisy chain cardiac
   d=0;  c=0;
-  
 
-  for(int ii=0;ii<2;ii++){
-    for(int j=0;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
+  setI2CFeb(0,2,0,4,offsetX,index,lay,d,c,tileInC);
   d=0;  c=1;
-  for(int ii=2;ii<4;ii++){
-    for(int j=0;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
+  setI2CFeb(2,4,0,4,offsetX,index,lay,d,c,tileInC);
   d=0;  c=2;
-  for(int ii=4;ii<6;ii++){
-    for(int j=0;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(4,6,0,4,offsetX,index,lay,d,c,tileInC);
   
   d=0;  c=3;
-  for(int ii=6;ii<8;ii++){
-    for(int j=0;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
+  setI2CFeb(6,8,0,4,offsetX,index,lay,d,c,tileInC);
   d=0;  c=4;
-  for(int ii=8;ii<10;ii++){
-    for(int j=0;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
+  setI2CFeb(8,10,0,4,offsetX,index,lay,d,c,tileInC);
     
   d=0;  c=5;
-  for(int ii=10;ii<12;ii++){
-    for(int j=0;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
+  setI2CFeb(10,12,0,4,offsetX,index,lay,d,c,tileInC);
   //M4R3
   station=3; region=2; lay=0;  
   index=station*4+region;
@@ -2389,56 +1337,25 @@ void MuonFastHWTool::initFEB()
   //first daisy chain cardiac
   d=0;  c=0;
   
+  setI2CFeb(0,4,0,1,offsetX,index,lay,d,c,tileInC);
 
-  for(int ii=0;ii<4;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
   d=0;  c=1;
-  for(int ii=4;ii<8;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
+  setI2CFeb(4,8,0,1,offsetX,index,lay,d,c,tileInC);
+  
   d=0;  c=2;
-  for(int ii=8;ii<12;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
+  setI2CFeb(8,12,0,1,offsetX,index,lay,d,c,tileInC);
+  
   
   d=0;  c=3;
-  for(int ii=8;ii<12;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
+  setI2CFeb(8,12,1,2,offsetX,index,lay,d,c,tileInC);
+  
   d=0;  c=4;
-  for(int ii=4;ii<8;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
+  setI2CFeb(4,8,1,2,offsetX,index,lay,d,c,tileInC);
+
     
   d=0;  c=5;
-  for(int ii=0;ii<4;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
+  setI2CFeb(0,4,1,2,offsetX,index,lay,d,c,tileInC);
+
   //fill one by one the list of tiles for cardiac
   //M4R4
   station=3; region=3; lay=0;  
@@ -2453,35 +1370,17 @@ void MuonFastHWTool::initFEB()
   
   //first daisy chain cardiac
   d=0;  c=0;
- 
+  setI2CFeb(0,2,0,1,offsetX,index,lay,d,c,tileInC);
 
-  for(int ii=0;ii<2;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
   d=0;  c=1;
-  for(int ii=2;ii<4;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(2,4,0,1,offsetX,index,lay,d,c,tileInC);
+  
   d=0;  c=2;
-  for(int ii=4;ii<6;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
+  setI2CFeb(4,6,0,1,offsetX,index,lay,d,c,tileInC);
+  
   
 
-
-  //fill one by one the list of tiles for cardiac
+ //fill one by one the list of tiles for cardiac
   //M5R1
   station=4; region=0; lay=0;  
   index=station*4+region;
@@ -2491,175 +1390,54 @@ void MuonFastHWTool::initFEB()
   tileInC.setLayout(m_padInChLayout[index*2+lay]);
   
   offsetX=m_padInChLayout[index*2+lay].xGrid();
-    
+  
+  
   //first daisy chain cardiac
   d=0;  c=0;
   
-  for(int ii=0;ii<6;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
-  for(int ii=4;ii<6;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-
+  setI2CFeb(0,6,0,1,offsetX,index,lay,d,c,tileInC);
+  setI2CFeb(4,6,1,2,offsetX,index,lay,d,c,tileInC);
 
   d=0;  c=1;
-  for(int ii=0;ii<4;ii++){
-    for(int j=1;j<3;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(0,4,1,3,offsetX,index,lay,d,c,tileInC);
+
   d=0;  c=2;
-  for(int ii=4;ii<6;ii++){
-    for(int j=2;j<3;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
-  for(int ii=0;ii<6;ii++){
-    for(int j=3;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
+  setI2CFeb(4,6,2,3,offsetX,index,lay,d,c,tileInC);
+  setI2CFeb(0,6,3,4,offsetX,index,lay,d,c,tileInC);
   
   d=0;  c=3;
-  for(int ii=0;ii<6;ii++){
-    for(int j=4;j<5;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
-  for(int ii=4;ii<6;ii++){
-    for(int j=5;j<6;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
-
-
+  setI2CFeb(0,6,4,5,offsetX,index,lay,d,c,tileInC);
+  setI2CFeb(4,6,5,6,offsetX,index,lay,d,c,tileInC);
 
   d=0;  c=4;
-  for(int ii=0;ii<4;ii++){
-    for(int j=5;j<7;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
+  setI2CFeb(0,4,5,7,offsetX,index,lay,d,c,tileInC);
     
   d=0;  c=5;
-  for(int ii=4;ii<6;ii++){
-    for(int j=6;j<7;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
+  setI2CFeb(4,6,6,7,offsetX,index,lay,d,c,tileInC);
+  setI2CFeb(0,6,7,8,offsetX,index,lay,d,c,tileInC);
 
-  for(int ii=0;ii<6;ii++){
-    for(int j=7;j<8;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
   d=1;  c=0;
-
-  for(int ii=6;ii<8;ii++){
-    for(int j=6;j<7;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
-
-  for(int ii=6;ii<12;ii++){
-    for(int j=7;j<8;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(6,8,6,7,offsetX,index,lay,d,c,tileInC);
+  setI2CFeb(6,12,7,8,offsetX,index,lay,d,c,tileInC);
 
   d=1;  c=1;
-  for(int ii=8;ii<12;ii++){
-    for(int j=5;j<7;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-
+  setI2CFeb(8,12,5,7,offsetX,index,lay,d,c,tileInC);
 
   d=1;  c=2;
-  for(int ii=6;ii<12;ii++){
-    for(int j=4;j<5;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-  for(int ii=6;ii<8;ii++){
-    for(int j=5;j<6;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
+  setI2CFeb(6,12,4,5,offsetX,index,lay,d,c,tileInC);
+  setI2CFeb(6,8,5,6,offsetX,index,lay,d,c,tileInC);
+
   d=1;  c=3;
-  for(int ii=6;ii<8;ii++){
-    for(int j=2;j<3;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
-  for(int ii=6;ii<12;ii++){
-    for(int j=3;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
-   d=1;  c=4;
-  for(int ii=8;ii<12;ii++){
-    for(int j=1;j<3;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);  fillTileParameter(tileInC,lay,d,c);     
-    }
-  }
+  setI2CFeb(6,8,2,3,offsetX,index,lay,d,c,tileInC);
+  setI2CFeb(6,12,3,4,offsetX,index,lay,d,c,tileInC);
+
+  d=1;  c=4;
+  setI2CFeb(8,12,1,3,offsetX,index,lay,d,c,tileInC);
+
   d=1;c=5;
+  setI2CFeb(6,12,0,1,offsetX,index,lay,d,c,tileInC);
+  setI2CFeb(6,8,1,2,offsetX,index,lay,d,c,tileInC);
   
-  for(int ii=6;ii<12;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
-  for(int ii=6;ii<8;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
 
   //fill one by one the list of tiles for cardiac
   //M5R2
@@ -2671,60 +1449,23 @@ void MuonFastHWTool::initFEB()
   tileInC.setLayout(m_padInChLayout[index*2+lay]);
   
   offsetX=m_padInChLayout[index*2+lay].xGrid();
-   
+    
   //first daisy chain cardiac
   d=0;  c=0;
- 
 
-  for(int ii=0;ii<2;ii++){
-    for(int j=0;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(0,2,0,4,offsetX,index,lay,d,c,tileInC);
   d=0;  c=1;
-  for(int ii=2;ii<4;ii++){
-    for(int j=0;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(2,4,0,4,offsetX,index,lay,d,c,tileInC);
   d=0;  c=2;
-  for(int ii=4;ii<6;ii++){
-    for(int j=0;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(4,6,0,4,offsetX,index,lay,d,c,tileInC);
   
   d=0;  c=3;
-  for(int ii=6;ii<8;ii++){
-    for(int j=0;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);   fillTileParameter(tileInC,lay,d,c);    
-    }
-  }
+  setI2CFeb(6,8,0,4,offsetX,index,lay,d,c,tileInC);
   d=0;  c=4;
-  for(int ii=8;ii<10;ii++){
-    for(int j=0;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
+  setI2CFeb(8,10,0,4,offsetX,index,lay,d,c,tileInC);
     
   d=0;  c=5;
-  for(int ii=10;ii<12;ii++){
-    for(int j=0;j<4;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(10,12,0,4,offsetX,index,lay,d,c,tileInC);
   //M5R3
   station=4; region=2; lay=0;  
   index=station*4+region;
@@ -2738,56 +1479,25 @@ void MuonFastHWTool::initFEB()
   //first daisy chain cardiac
   d=0;  c=0;
   
+  setI2CFeb(0,4,0,1,offsetX,index,lay,d,c,tileInC);
 
-  for(int ii=0;ii<4;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);      fillTileParameter(tileInC,lay,d,c); 
-    }
-  }
   d=0;  c=1;
-  for(int ii=4;ii<8;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(4,8,0,1,offsetX,index,lay,d,c,tileInC);
+  
   d=0;  c=2;
-  for(int ii=8;ii<12;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
+  setI2CFeb(8,12,0,1,offsetX,index,lay,d,c,tileInC);
+  
   
   d=0;  c=3;
-  for(int ii=8;ii<12;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(8,12,1,2,offsetX,index,lay,d,c,tileInC);
+  
   d=0;  c=4;
-  for(int ii=4;ii<8;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);     fillTileParameter(tileInC,lay,d,c);  
-    }
-  }
+  setI2CFeb(4,8,1,2,offsetX,index,lay,d,c,tileInC);
+
     
   d=0;  c=5;
-  for(int ii=0;ii<4;ii++){
-    for(int j=1;j<2;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
+  setI2CFeb(0,4,1,2,offsetX,index,lay,d,c,tileInC);
+
   //fill one by one the list of tiles for cardiac
   //M5R4
   station=4; region=3; lay=0;  
@@ -2798,43 +1508,22 @@ void MuonFastHWTool::initFEB()
   tileInC.setLayout(m_padInChLayout[index*2+lay]);
   
   offsetX=m_padInChLayout[index*2+lay].xGrid();
-  
+ 
   
   //first daisy chain cardiac
   d=0;  c=0;
-  
-  for(int ii=0;ii<2;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);       fillTileParameter(tileInC,lay,d,c);
-    }
-  }
+  setI2CFeb(0,2,0,1,offsetX,index,lay,d,c,tileInC);
+
   d=0;  c=1;
-  for(int ii=2;ii<4;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      m_padInCh[index][lay][d][c].push_back(tileInC);    fillTileParameter(tileInC,lay,d,c);   
-    }
-  }
+  setI2CFeb(2,4,0,1,offsetX,index,lay,d,c,tileInC);
+  
   d=0;  c=2;
-  for(int ii=4;ii<6;ii++){
-    for(int j=0;j<1;j++){      
-      tileInC.setX(ii+offsetX);
-      tileInC.setY(j);
-      (m_padInCh[index][lay][d][c]).push_back(tileInC);     
-      fillTileParameter(tileInC,lay,d,c);
-      
-    }
-  }
+  setI2CFeb(4,6,0,1,offsetX,index,lay,d,c,tileInC);
   
-  
-
-
-
- 
 }
+
+
+
 
 int MuonFastHWTool::getPadChIndex(MuonTileID tile)
 {
@@ -2966,3 +1655,21 @@ Outtile.setY(YGlob);
 return Outtile;
 }
  
+  void MuonFastHWTool::setI2CFeb(int xmin, int xmax, 
+                                 int ymin, int ymax,
+                                 int offsetX,int index,
+                                 int lay,int d, int c,
+                                 LHCb::MuonTileID tilePart)
+{
+  for(int ii=xmin;ii<xmax;ii++){
+    for(int j=ymin;j<ymax;j++){      
+      tilePart.setX(ii+offsetX);
+      tilePart.setY(j);
+      m_padInCh[index][lay][d][c].push_back(tilePart); 
+      fillTileParameter(tilePart,lay,d,c);  
+    }
+  }
+
+
+}
+
