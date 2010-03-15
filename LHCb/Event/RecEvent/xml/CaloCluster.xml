@@ -5,7 +5,7 @@
 <gdd>
   <package name="RecEvent">
 <!-- **************************************************************************
-  * $Id: CaloCluster.xml,v 1.6 2009-07-24 16:49:00 odescham Exp $
+  * $Id: CaloCluster.xml,v 1.7 2010-03-15 11:17:54 ibelyaev Exp $
   *****************************************************************************
   * XML-description of CaloCluster class                                      *
   * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
@@ -14,77 +14,93 @@
 
 
 <class
- name   = "CaloCluster"
- desc   = "Calorimeter Cluster"
- id     = "&CLID_CaloCluster;"
- author = "Vanya Belyaev Ivan.Belyaev@itep.ru"
->
-<desc> *
- *
- *  The class represents the cluster in calorimeter as a 
- *  collection of connected and tagged cells.
- *
- *</desc>
-<import name = "vector" std="TRUE"       />
-<import name = "Event/CaloClusterEntry"  />
-<import name = "Event/CaloPosition"      />
-
-&KeyedObject;
-<base   name = "KeyedObject&lt;int&gt;" />
-
-<location name = "Default"   place = "Rec/Calo/Clusters"          />
-<location name = "Ecal"      place = "Rec/Calo/EcalClusters"      />
-<location name = "Hcal"      place = "Rec/Calo/HcalClusters"      />
-<location name = "EcalSplit" place = "Rec/Calo/EcalSplitClusters" />
-<location name = "DefaultHlt"   place = "Hlt/Calo/Clusters"          />
-<location name = "EcalHlt"      place = "Hlt/Calo/EcalClusters"      />
-<location name = "HcalHlt"      place = "Hlt/Calo/HcalClusters"      />
-<location name = "EcalSplitHlt" place = "Hlt/Calo/EcalSplitClusters" />
-<location name = "EcalHlt1"      place = "Hlt1/Calo/EcalClusters"      />
-
-<typedef
- def    = "Base"
- type   = "KeyedObject&lt;int&gt;"
- desc   = "Shortcut for own base class "
- access = "PROTECTED"
-/>
-&KeyedObject;
-
- <enum 
-   desc="CaloCluster type" 
-   name="Type" 
-   value=" Undefined = 0, Invalid, CellularAutomaton, Area3x3, Area2x3x3"
-   access="PUBLIC"
- />
- 
-<typedef
- def    = "Entry"
- type   = "LHCb::CaloClusterEntry"
- desc   = "The shortcut for CaloClusterEntry class"
- access = "PUBLIC"
-/>
-
-<typedef
- def    = "Entries"
- type   = "std::vector&lt;LHCb::CaloClusterEntry&gt;"
- desc   = "Container with references to digits"
- access = "PUBLIC"
-/> 
- 
-<typedef
- def    = "Digits"
- type   = "LHCb::CaloCluster::Entries"
- desc   = "The shortcut for container of CaloClusterEntry object"
- access = "PUBLIC"
-/>
-
-<typedef
- def    = "Position"
- type   = "LHCb::CaloPosition"
- desc   = "The shortcut for CaloPosition type"
- access = "PUBLIC"
-/>
-
+    name             = "CaloCluster"
+    desc             = "Calorimeter Cluster"
+    id               = "&CLID_CaloCluster;"
+    author           = "Vanya Belyaev Ivan.Belyaev@itep.ru"
+    stdVectorTypeDef = "TRUE"
+    >
+  <desc> *
+  *
+  *  The class represents the cluster in calorimeter as a 
+  *  collection of connected and tagged cells.
+  *
+  *</desc>
+  <import name = "vector" std="TRUE"       />
+  <import name = "Event/CaloClusterEntry"  />
+  <import name = "Event/CaloPosition"      />
+  <import name = "GaudiKernel/NamedRange"/>
+  <import name = "GaudiKernel/SharedObjectsContainer"/>
+  &KeyedObject;
+  <base   name = "KeyedObject&lt;int&gt;" />
+  
+  <location name = "Default"   place = "Rec/Calo/Clusters"          />
+  <location name = "Ecal"      place = "Rec/Calo/EcalClusters"      />
+  <location name = "Hcal"      place = "Rec/Calo/HcalClusters"      />
+  <location name = "EcalSplit" place = "Rec/Calo/EcalSplitClusters" />
+  <location name = "DefaultHlt"   place = "Hlt/Calo/Clusters"          />
+  <location name = "EcalHlt"      place = "Hlt/Calo/EcalClusters"      />
+  <location name = "HcalHlt"      place = "Hlt/Calo/HcalClusters"      />
+  <location name = "EcalSplitHlt" place = "Hlt/Calo/EcalSplitClusters" />
+  <location name = "EcalHlt1"      place = "Hlt1/Calo/EcalClusters"      />
+  
+  <typedef 
+      type   = "SharedObjectsContainer&lt;LHCb::CaloCluster&gt;"
+      def    = "Selection"
+      desc   = "For defining SharedObjectContainer"
+      access = "PUBLIC"
+      />
+  
+  <typedef 
+      type = "Gaudi::NamedRange_&lt;ConstVector&gt;"
+      def  = "Range"
+      desc = "For accessing a list of CaloClusters which is either a SharedObjectContainer, a KeyedContainer or a ConstVector"
+      access = "PUBLIC"
+      />
+  
+  <typedef
+      def    = "Base"
+      type   = "KeyedObject&lt;int&gt;"
+      desc   = "Shortcut for own base class "
+      access = "PROTECTED"
+      />
+  &KeyedObject;
+  
+  <enum 
+      desc="CaloCluster type" 
+      name="Type" 
+      value=" Undefined = 0, Invalid, CellularAutomaton, Area3x3, Area2x3x3"
+      access="PUBLIC"
+      />
+  
+  <typedef
+      def    = "Entry"
+      type   = "LHCb::CaloClusterEntry"
+      desc   = "The shortcut for CaloClusterEntry class"
+      access = "PUBLIC"
+      />
+  
+  <typedef
+      def    = "Entries"
+      type   = "std::vector&lt;LHCb::CaloClusterEntry&gt;"
+      desc   = "Container with references to digits"
+      access = "PUBLIC"
+      /> 
+  
+  <typedef
+      def    = "Digits"
+      type   = "LHCb::CaloCluster::Entries"
+      desc   = "The shortcut for container of CaloClusterEntry object"
+      access = "PUBLIC"
+      />
+  
+  <typedef
+      def    = "Position"
+      type   = "LHCb::CaloPosition"
+      desc   = "The shortcut for CaloPosition type"
+      access = "PUBLIC"
+      />
+  
 <constructor
  desc     = "Default constructor"
  initList = "Base (    ) , m_type ( LHCb::CaloCluster::Undefined ) , m_seed() , m_entries() , m_position () "

@@ -13,12 +13,12 @@
       keyedContTypeDef="TRUE"
       id="811"
       >
-
+      
       <typedef
-        type="GaudiUtils::VectorMap&lt;int,double&gt;"
-        def="ExtraInfo"
-        desc="User information"
-        access="PUBLIC"
+	  type="GaudiUtils::VectorMap&lt;int,double&gt;"
+	  def="ExtraInfo"
+	  desc="User information"
+	  access="PUBLIC"
 	/>
 
       <import name="GaudiKernel/SystemOfUnits.h"/>
@@ -36,26 +36,26 @@
         value="Primary=100"
         access="PUBLIC"
 	/>
-
+      
       <constructor
-        argList="VertexBase rhs"
-        desc="Copy constructor"
-        initList="KeyedObject&lt;int&gt;(), m_position(rhs.m_position), m_covMatrix(rhs.m_covMatrix), m_chi2(rhs.m_chi2), m_nDoF(rhs.m_nDoF), m_extraInfo(rhs.m_extraInfo)"
-	/>
-
+	  argList="VertexBase rhs"
+	  desc="Copy constructor"
+	  initList="KeyedObject&lt;int&gt;(), m_position(rhs.m_position), m_covMatrix(rhs.m_covMatrix), m_chi2(rhs.m_chi2), m_nDoF(rhs.m_nDoF), m_extraInfo(rhs.m_extraInfo)"
+	  />
+      
       <constructor
-        argList="int key"
-        explicit = "TRUE"
-        desc="create a vertex with a selected key"
-        initList="KeyedObject&lt;int&gt;( key ), m_position(0.0, 0.0, -1*Gaudi::Units::km), m_covMatrix(), m_chi2(-1.0), m_nDoF(-1), m_extraInfo()"
-	/>
-
+	  argList="int key"
+	  explicit = "TRUE"
+	  desc="create a vertex with a selected key"
+	  initList="KeyedObject&lt;int&gt;( key ), m_position(0.0, 0.0, -1*Gaudi::Units::km), m_covMatrix(), m_chi2(-1.0), m_nDoF(-1), m_extraInfo()"
+	  />
+      
       <constructor
-        argList="const Gaudi::XYZPoint&amp; point"
-        desc="Constructor from a point"
-        initList="KeyedObject&lt;int&gt;(), m_position(point), m_covMatrix(), m_chi2(-1.0), m_nDoF(-1), m_extraInfo()"
-	/>
-
+	  argList="const Gaudi::XYZPoint&amp; point"
+	  desc="Constructor from a point"
+	  initList="KeyedObject&lt;int&gt;(), m_position(point), m_covMatrix(), m_chi2(-1.0), m_nDoF(-1), m_extraInfo()"
+	  />
+      
       <method
         name="clone"
         desc="Clone vertex"

@@ -5,20 +5,19 @@
 <!--- Author  : Juan PALACIOS -->
 <!--- Created : 2006-07-17 -->
 
-
 <gdd>
   <package name = "RecEvent">
-
+    
     <class
-      author = "Juan Palacios"
-      desc = "Base class from which all vertices are derived"
-      name = "RecVertex"
-      stdVectorTypeDef="TRUE"
-      keyedContTypeDef = "TRUE"
-      id = "10030"
-      >
-
-      <import name="GaudiKernel/Range"/>
+	author = "Juan Palacios"
+	desc = "Base class from which all vertices are derived"
+	name = "RecVertex"
+	stdVectorTypeDef="TRUE"
+	keyedContTypeDef = "TRUE"
+	id = "10030"
+	>
+      
+      <import name="GaudiKernel/NamedRange"/>
       <import name="GaudiKernel/SharedObjectsContainer"/>
       <import name="Event/Track.h"/>
       <import name = "Event/VertexBase.h"/>
@@ -31,9 +30,9 @@
 	  desc   = "Container type for shared PVs (without ownership)"
 	  access = "PUBLIC"
 	  />
-
+      
       <typedef
-	  type   = "Gaudi::Range_&lt;ConstVector&gt;"
+	  type   = "Gaudi::NamedRange_&lt;ConstVector&gt;"
 	  def    = "Range"
 	  desc   = "For uniform access to containers in TES (KeyedContainer,SharedContainer) "
 	  access = "PUBLIC"

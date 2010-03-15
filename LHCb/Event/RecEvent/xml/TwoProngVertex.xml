@@ -6,32 +6,48 @@
 <!DOCTYPE gdd SYSTEM 'gdd.dtd'>
 <gdd>
   <package name='RecEvent'>
-
-<!-- ================ TwoProngVertex class definition ================ -->
-
+    
+    <!-- ================ TwoProngVertex class definition ================ -->
+    
     <class
-      name        = 'TwoProngVertex'
-      author      = 'Wouter Hulsbergen, Sean Brisbane'
-      desc        = 'TwoProngVertex for use in V0 finding and tracking monitoring'
-      stdVectorTypeDef="TRUE"
-      keyedContTypeDef = "TRUE"
-      id = '10040'
-      serializers = 'TRUE'>
-
+	name        = 'TwoProngVertex'
+	author      = 'Wouter Hulsbergen, Sean Brisbane'
+	desc        = 'TwoProngVertex for use in V0 finding and tracking monitoring'
+	stdVectorTypeDef="TRUE"
+	keyedContTypeDef = "TRUE"
+	id = '10040'
+	serializers = 'TRUE'>
+      
       <location name= "Default"
-	place="LHCb::RecVertexLocation::V0"
-	noQuote="TRUE"
-	/>
-
+		place="LHCb::RecVertexLocation::V0"
+		noQuote="TRUE"
+		/>
+      
       <base name='LHCb::RecVertex'/>
       &KeyedObject;
+      <import name='GaudiKernel/NamedRange'/>
+      <import name="GaudiKernel/SharedObjectsContainer"/>
       <import name='Event/RecVertex'/>
       <import name='Event/TrackTypes'/>
       <import name='GaudiKernel/Vector4DTypes'/>
       <import name='Kernel/ParticleID'/>
       <import name='Track' soft='FORWARDONLY'/>
       <import name='LHCbMath/MatrixTransforms'/>
-
+      
+      <typedef 
+	  type   = "SharedObjectsContainer&lt;LHCb::TwoProngVertex&gt;"
+	  def    = "Selection"
+	  desc   = "For defining SharedObjectContainer"
+	  access = "PUBLIC"
+	  />
+      
+      <typedef 
+	  type = "Gaudi::NamedRange_&lt;ConstVector&gt;"
+	  def  = "Range"
+	  desc = "For accessing a list of L0CaloCandidates which is either a SharedObjectContainer, a KeyedContainer or a ConstVector"
+	  access = "PUBLIC"
+	  />
+      
       <enum
         desc="Additional information assigned to this V0. Contains Impact parameter information"
         name="additionalInfo"

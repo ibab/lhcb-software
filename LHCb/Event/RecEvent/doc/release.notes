@@ -1,9 +1,16 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.138 2010-03-09 18:39:17 jonrob Exp $
+! $Id: release.notes,v 1.139 2010-03-15 11:17:54 ibelyaev Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+! 2010-03-15 - Vanya Belyaev
+
+ - RecVertex,TwoProngVertex,CValoHypo,CaloCluster
+
+    add T::Selection & T::Range    (for "blind" access to data)
+
 
 ! 2010-03-09 - Chris Jones
  - Add Rich Below Threshold DLL values
