@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-03-16 - Yuehong Xie
+ - Added Verbose momentum information at origin vertex position for basic particles
+   in TupleToolKinematic.
+
 ! 2010-03-16 - Rob Lambert
  - Fixed missed commit in TupleToolTriggerBase and TupleToolTrigger
    TupleToolTriggerBase: Initialize, compile triggerList to look for

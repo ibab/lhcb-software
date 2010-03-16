@@ -1,4 +1,4 @@
-// $Id: TupleToolKinematic.h,v 1.3 2010-03-03 14:26:34 pkoppenb Exp $
+// $Id: TupleToolKinematic.h,v 1.4 2010-03-16 13:23:19 xieyu Exp $
 #ifndef JBOREL_TUPLETOOLKINEMATIC_H
 #define JBOREL_TUPLETOOLKINEMATIC_H 1
 
@@ -22,15 +22,18 @@
  *
  * - head_REFP[X|Y|Z]: one point the particle momentum extrapolation
      goes through
- * - head_PreFitMass: Mass of 4-vectors of daughters, not yet extrapolated
+ * - head_PreFitMass: Mass of 4-vectors of daughters, not yet extrapolated
  *   to the head decay vertex (only for composites). This is the quantity
  *   used in ADAMASS or AM in CombineParticles.CombinationCut
+ * - prefix_AtVtx_P[X|Y|Z]: momentum information of basic particles at 
+ *   origin vertex position  
  *
  * \sa DecayTreeTuple
  *
  *  @author Jeremie Borel
  *  @date   2007-11-07
  */
+class IParticleTransporter;
 class TupleToolKinematic : public TupleToolBase, virtual public IParticleTupleTool {
 public:
   /// Standard constructor
@@ -46,6 +49,13 @@ public:
 			   , Tuples::Tuple& );
   
   double preFitMass(const LHCb::Particle*) const ;
+
+  StatusCode initialize();
+
+private:
+
+  IParticleTransporter* m_transporter;
+  std::string m_transporterName;
 
 };
 
