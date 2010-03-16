@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.522 2010-03-16 08:17:04 pkoppenb Exp $
+! $Id: release.notes,v 1.523 2010-03-16 13:50:42 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-03-16 - Juan Palacios
+ -  src/FilterDesktop.cpp
+  . Fix some confusing debug messages and add some more.
 
 ! 2010-03-16 - Patrick Koppenburg
  - src/DecodeSimpleDecayString.cpp : Do not accept single daughter decay descriptors
