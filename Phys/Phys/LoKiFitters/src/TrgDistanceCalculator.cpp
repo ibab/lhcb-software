@@ -1,4 +1,4 @@
-// $Id: TrgDistanceCalculator.cpp,v 1.2 2009-05-16 15:53:19 ibelyaev Exp $
+// $Id: TrgDistanceCalculator.cpp,v 1.3 2010-03-16 12:31:27 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -336,7 +336,7 @@ namespace LoKi
     /** Calculate the projected distance 
      *
      *  \f$s=\frac{\left(\vec{\mathbf{v}}\vec{\mathbf{p}}
-     *     \right)}{\left|\vec{\mathbf{p}}\right|}\f,$
+     *     \right)}{\left|\vec{\mathbf{p}}\right|}\f$
      *  where vector \f$\vec{\mathbf{v}}\f$ i a vector from 
      *  the primary to the secondary vertex: 
      *    \f$\vec{\mathbf{v}}=\vec{\mathbf{x}}_{d}-\vec{\mathbf{x}}_{pv}\f$,
@@ -365,7 +365,7 @@ namespace LoKi
     /** Calculate the projected distance 
      *
      *  \f$s=\frac{\left(\vec{\mathbf{v}}\vec{\mathbf{p}}
-     *     \right)}{\left|\vec{\mathbf{p}}\right|}\f,$
+     *     \right)}{\left|\vec{\mathbf{p}}\right|}\f$
      *  where vector \f$\vec{\mathbf{v}}\f$ i a vector from 
      *  the primary to the secondary vertex: 
      *    \f$\vec{\mathbf{v}}=\vec{\mathbf{x}}_{d}-\vec{\mathbf{x}}_{pv}\f$,
@@ -484,7 +484,7 @@ namespace LoKi
     /** Calculate the projected distance 
      *
      *  \f$s=\frac{\left(\vec{\mathbf{v}}\vec{\mathbf{p}}
-     *     \right)}{\left|\vec{\mathbf{p}}\right|}\f,$
+     *     \right)}{\left|\vec{\mathbf{p}}\right|}\f$
      *  where vector \f$\vec{\mathbf{v}}\f$ is a vector from 
      *  the primary to the secondary vertex: 
      *    \f$\vec{\mathbf{v}}=\vec{\mathbf{x}}_{d}-\vec{\mathbf{x}}_{pv}\f$,
