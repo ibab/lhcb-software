@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.48 2010-03-07 16:01:50 graven Exp $
+// $Id: HltAlgorithm.h,v 1.49 2010-03-16 13:26:54 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -16,18 +16,19 @@
 
 template <typename T> struct has_selection                 : boost::false_type {};
 template <>           struct has_selection<LHCb::Track>    : boost::true_type  {};
+template <>           struct has_selection<LHCb::RecVertex>: boost::true_type  {};
 template <>           struct has_selection<LHCb::Particle> : boost::true_type  {};
 
 template <typename T>
-struct fill_range {
+struct fill_from_range {
       inline static StatusCode execute(T* selection, GaudiAlgorithm& parent) {
         selection->clean(); //TODO: check if/why this is needed??
         typedef typename T::candidate_type::Range range_type;
         range_type obj = parent.get<range_type>( parent.evtSvc(), selection->id().str() );
         //TODO: make HltSelection work with const objects...
         selection->insert( selection->end()
-                         , boost::make_transform_iterator( obj.begin(),  boost::lambda::ll_const_cast<typename T::candidate_type>(boost::lambda::_1) )
-                         , boost::make_transform_iterator( obj.end(),    boost::lambda::ll_const_cast<typename T::candidate_type>(boost::lambda::_1) )
+                         , boost::make_transform_iterator( obj.begin(),  boost::lambda::ll_const_cast<typename T::candidate_type*>(boost::lambda::_1) )
+                         , boost::make_transform_iterator( obj.end(),    boost::lambda::ll_const_cast<typename T::candidate_type*>(boost::lambda::_1) )
                          );
         selection->setDecision( !selection->empty() ); // force it processed...
         return StatusCode::SUCCESS;
@@ -35,7 +36,7 @@ struct fill_range {
 };
 
 template <typename T>
-struct fill_container {
+struct fill_from_container {
       inline static StatusCode execute(T* selection, GaudiAlgorithm& parent) {
         selection->clean(); //TODO: check if/why this is needed??
         typedef typename T::candidate_type::Container  container_type;
@@ -109,7 +110,7 @@ public:
   // register an output selection of no candidates
   Hlt::Selection& registerSelection(const Gaudi::StringKey& key) {
         Hlt::Selection* tsel = new Hlt::Selection(key);
-        registerOutput(tsel);
+        registerOutput(tsel).ignore();
         return *tsel;
   }
 
@@ -117,7 +118,7 @@ public:
   template <typename T>
   Hlt::TSelection<T>& registerTSelection(const Gaudi::StringKey& key) {
         Hlt::TSelection<T>* tsel = new Hlt::TSelection<T>(key);
-        registerOutput(tsel);
+        registerOutput(tsel).ignore();
         return *tsel;
   }
 
@@ -208,10 +209,9 @@ private:
 
       StatusCode execute() {
           typedef typename boost::mpl::if_< has_selection<T>
-                              , fill_range<T>
-                              , fill_container<T>
+                              , fill_from_range<T>
+                              , fill_from_container<T>
                               >::type impl_t;
-
           return impl_t::execute(m_selection,m_parent);
       }
   private:
