@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.15 2010-03-04 08:23:52 jpalac Exp $
+// $Id: FilterDesktop.cpp,v 1.16 2010-03-16 11:46:57 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -314,14 +314,15 @@ protected:
   {
     const std::string& loc = desktop()->getOutputLocation();
 
-    if (msgLevel(MSG::DEBUG)) debug() << "Saving empty containers at " 
-                                      << loc << endmsg ;
-
     if (!exist<LHCb::Particle::Selection>(loc + "/Particles") ) {  
+      if (msgLevel(MSG::DEBUG)) debug() << "Saving empty container at " 
+                                        << loc + "/Particles"<< endmsg ;
       LHCb::Particle::Selection* dummy = new LHCb::Particle::Selection;
       put(dummy, loc + "/Particles");
     }
-    if (!exist<LHCb::Vertex::Selection>(loc+"/Vertices") ) {  
+    if (!exist<LHCb::Vertex::Selection>(loc+"/Vertices") ) {
+      if (msgLevel(MSG::DEBUG)) debug() << "Saving empty container at " 
+                                        << loc + "/Vertices"<< endmsg ;
       LHCb::Vertex::Selection* dummy = new LHCb::Vertex::Selection;
       put(dummy, loc + "/Vertices");
     }
@@ -519,6 +520,10 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
     vertices->push_back( p->endVertex() );
     //
   }
+
+  if (msgLevel(MSG::DEBUG)) debug() << "Saved " << accepted->size()
+                                    << " Particles in " 
+                                    << desktop()->getOutputLocation()+"/Particles" << endmsg ;
 
   // make the final plots 
   if ( produceHistos () && 0 != m_outputPlots ) 
