@@ -16,6 +16,7 @@ LOG_FORMAT = "%(levelname)s: (%(name)s) %(message)s"
 
 _coolApp = None
 def coolApp():
+    global _coolApp
     if _coolApp is None:
         from PyCool import cool
         # Initialize COOL Application
