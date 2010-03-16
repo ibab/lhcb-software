@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Rich/RichHPDImageAnalysis
+! Responsible : Thomas BLAKE
+! Purpose     : HPD image analysis from accumulated hit maps
+!-----------------------------------------------------------------------------
+
+! 2010-03-16 - Thomas BLAKE
+ - First commit of RichHPDImageAnalysis
+		- RichHPDImageSummary.cpp: calculates average image centre in pixels

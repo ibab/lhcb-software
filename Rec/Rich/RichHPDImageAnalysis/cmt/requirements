@@ -1,0 +1,39 @@
+#============================================================================
+# Created    : 2010-02-18
+# Maintainer : Thomas BLAKE
+#============================================================================
+
+package           RichHPDImageAnalysis
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+
+branches          cmt doc src python
+
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+
+use RichRecBase         v*    Rich
+use AIDA                v* LCG_Interfaces
+use ROOT                v* LCG_Interfaces
+use GaudiUtils          v*
+
+
+include_path      none
+#============================================================================
+# Component library building rule
+#============================================================================
+library          RichHPDImageAnalysis    ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+
+macro_append RichHPDImageAnalysis_shlibflags "$(Boost_linkopts_serialization) -lHist -lGraf -lGraf3d -lGpad -lRint -lPostscript -lMatrix -lPhysics -lm -ldl -rdynamic -lMinuit2" \
+  WIN32 " libHist.lib libGraf.lib libGraf3d.lib libGpad.lib libRint.lib libPostscript.lib libMatrix.lib libPhysics.lib libMinuit2.lib"
+
+
+apply_pattern    component_library library=RichHPDImageAnalysis
