@@ -38,7 +38,7 @@ MBNoBiasLine  = StrippingLine( "MBNoBias"
 # Mini bias line
 #-----------------------------------------------------------------
 MBMiniBiasLine  = StrippingLine( "Hlt1L0Any"
-                                 , HLT = "HLT_PASS('Hlt1MBMiniBiasDecision')"
+                                 , HLT = "(HLT_PASS_RE('Hlt1L0Any.*L0Decision'))" 
                                  , checkPV = False
                                  , prescale = 1
                                  , postscale = 1)

@@ -15,8 +15,8 @@ from LHCbKernel.Configuration import *
 class StrippingPassConf(LHCbConfigurableUser):
 
     __slots__ = { 
-                   'PassPrescale'       : 1.       # adimentional 
-                ,  'PhysPrescale'       : 1.       # adimentional
+                   'PassPrescale'       : 0.001       # adimentional 
+                ,  'PhysPrescale'       : 0.001       # adimentional
                    }
 
     def passLine( self ) : 
