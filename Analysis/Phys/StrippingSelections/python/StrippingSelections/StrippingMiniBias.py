@@ -16,37 +16,33 @@ for i in [ 'LoKiTrigger.decorators' ] :
 #----------------------------------------------------------------------
 #Here we require at least one  reconstructed best track in the event 
 
+#-----------------------------------------------------------------
+# Microbias line
+#-----------------------------------------------------------------
+MBMicroBiasLine  = StrippingLine( "MBMicroBias"
+                                  , HLT = "HLT_PASS_RE('Hlt1MBMicro.*Decision')"
+                                  , checkPV = False
+                                  , prescale = 1
+                                  , postscale = 1)
 
-TrackFilter = VoidFilter('TrackFilter', Code = "TrSOURCE('Rec/Track/Best') >>(TrSIZE )>1 ")
-
-#Tracking information line
-TrackLine = StrippingLine( "TrackLine" 
-                                         , algos = [TrackFilter]
-                                         , checkPV = False 
-                                         , prescale = 1
-                                         , postscale = 1 )
-#----------------------------------------------------------------------
-#Here we require at least one reconstructed Primary Vertex per event.
-VertexFilter = VoidFilter(  'VertexFilter', Code = "RVSOURCE('Rec/Vertex/Primary') >> (RVSIZE > 0 )")
-#Vertex information line
-VertexLine = StrippingLine( "VertexLine" 
-                                         , algos = [VertexFilter]
-					 , checkPV = 1	 
-                                         , prescale = 1
-                                         , postscale = 1 )
-
-#----------------------------------------------------------------------
-L0MinBiasLine = StrippingLine( "L0MinBiasLine" 
-                                , L0DU = "L0_CHANNEL('CALO')"
+#-----------------------------------------------------------------
+# No bias line
+#-----------------------------------------------------------------
+MBNoBiasLine  = StrippingLine( "MBNoBias"
+                               , HLT = "HLT_PASS('Hlt1MBNoBiasDecision')"
                                , checkPV = False
                                , prescale = 1
                                , postscale = 1)
 
+#-----------------------------------------------------------------
+# Mini bias line
+#-----------------------------------------------------------------
+MBMiniBiasLine  = StrippingLine( "Hlt1L0Any"
+                                 , HLT = "HLT_PASS('Hlt1MBMiniBiasDecision')"
+                                 , checkPV = False
+                                 , prescale = 1
+                                 , postscale = 1)
 
-#Little note: for  TCK = 0x2009
-#The "CALO" channel --> [HCAL > 25 and SPD > 2]
 
-
-		  
 # End StrippingMiniBias.py
 
