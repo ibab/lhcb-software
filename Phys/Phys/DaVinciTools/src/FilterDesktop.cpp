@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.16 2010-03-16 11:46:57 jpalac Exp $
+// $Id: FilterDesktop.cpp,v 1.17 2010-03-16 15:09:13 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -517,7 +517,10 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
     if  ( !decision ) { continue ; }                       // CONTINUE
     //
     accepted->push_back ( p ) ;
-    vertices->push_back( p->endVertex() );
+    if (p->endVertex() ) {
+      vertices->push_back( p->endVertex() ); 
+    }
+    
     //
   }
 
