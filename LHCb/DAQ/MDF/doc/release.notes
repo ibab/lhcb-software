@@ -6,6 +6,11 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+!========================= MDF v3r23 2010-03-15 ==============================
+! 2009-12-13  Markus Frank
+ - Fix bug in TAE event decoding, where every 0xFFFF*Packing_factor events
+   the TAE events were not correctly placed in the TES (reported by O.Dechamps).
+
 !========================= MDF v3r22 2009-12-13 ==============================
 ! 2009-12-13  Markus Frank
  - Fix bug in 64 bit I/O routines handling large files (> 2GB)
