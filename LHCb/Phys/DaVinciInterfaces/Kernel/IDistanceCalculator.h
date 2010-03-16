@@ -1,4 +1,4 @@
-// $Id: IDistanceCalculator.h,v 1.4 2009-12-01 17:18:33 pkoppenb Exp $
+// $Id: IDistanceCalculator.h,v 1.5 2010-03-16 12:38:29 ibelyaev Exp $
 // ============================================================================
 #ifndef DAVINCIKERNEL_IDISTANCECALCULATOR_H 
 #define DAVINCIKERNEL_IDISTANCECALCULATOR_H 1
@@ -123,8 +123,9 @@ public:
    *  @param particle (input)  pointer to the particle 
    *  @param vertex   (input)  pointer to the vertex 
    *  @param imppar   (output) the value of impact parameter ("distance") 
-   *  @param chi2     (output) the chi2-value for the impact parameter. It is defined as the increase 
-   *                  of the chi2 of the PV vertex fit when one adds the track into the vertex. 
+   *  @param chi2     (output) the chi2-value for the impact parameter. 
+   *                  It is defined as the increase of the chi2 of the PV 
+   *                  vertex fit when one adds the track into the vertex. 
    *                  It behaves almost like (IP/IP_error)^2
    *  @return status code 
    */
@@ -138,7 +139,8 @@ public:
   // ==========================================================================
 public:
   // ==========================================================================
-  /** @defgroup ParticlePoint Methods to evaluate distances between "particle" and "fixed point"
+  /** @defgroup ParticlePoint Methods to evaluate distances between
+   *                          "particle" and "fixed point"
    *
    *  @{
    */
@@ -146,7 +148,8 @@ public:
   /** the basic method for the evaluation of the impact parameter ("distance")
    *  vector of the particle with respect to some vertex. 
    * 
-   *  The impact parameter is defined as the length of the vector form the fixed point 
+   *  The impact parameter is defined as the length of the 
+   *  vector form the fixed point 
    *  to the nearest point on the particle trajectory:
    *
    *  \f[  \vec{i} = \vec{\mathbf{v}}_{p} - \vec{\mathbf{v}}_{0} - 
@@ -184,16 +187,18 @@ public:
     double&                 imppar   ) const = 0 ;
   // ==========================================================================
   /** the basic method for the evaluation of the impact parameter ("distance")
-   *  of the particle with respect to some vertex and its \f$\chi^2\f$-significance
+   *  of the particle with respect to some vertex and 
+   *  its \f$\chi^2\f$-significance
    * 
-   *  The impact parameter is defined as the length of the vector form the fixed point 
+   *  The impact parameter is defined as the length of 
+   *  the vector from the fixed point 
    *  to the nearest point on the particle trajectory:
    *
    *  \f[  \vec{i} = \vec{\mathbf{v}}_{p} - \vec{\mathbf{v}}_{0} - 
    *               \vec{\mathbf{p}}\frac{\left(\vec{\mathbf{v}}_{p}-
    *                \vec{\mathbf{v}}_{0}\right)\vec{\mathbf{p}}}
    *                {\vec{\mathbf{p}}^2}, \f]
-   *  where the particle trakjectory is parameterized as
+   *  where the particle trajectory is parameterized as
    *  \f$\vec{\mathbf{v}}\left(t\right)=\vec{\mathbf{v}}_{p}+\vec{\mathbf{p}}t\f$, 
    *  and \f$\vec{\mathbf{v}}_{0}\f$ stands for the position of the fixed point.
    *
@@ -219,8 +224,9 @@ public:
    *  @param particle (input)  pointer to the particle 
    *  @param point    (input) the fixed point 
    *  @param imppar   (output) the value of impact parameter ("distance") 
-   *  @param chi2     (output) the chi2-value for the impact parameter. It is defined as the increase
-   *                  of the chi2 of the PV vertex fit when one adds the track into the vertex.
+   *  @param chi2     (output) the chi2-value for the impact parameter. 
+   *                  It is defined as the increase of the chi2 of the PV 
+   *                  vertex fit when one adds the track into the vertex.
    *                  It behaves almost like (IP/IP_error)^2               
    *  @return status code 
    */
@@ -245,7 +251,8 @@ public:
    *  \f$\vec{\mathbf{d}}\f$:
    *
    *  \f[ \vec{\mathbf{d}} = \vec{\mathbf{v}}_2 - \vec{\mathbf{v}}_1,\f] 
-   *  where  \f$\vec{\mathbf{v}}_1\f$ and \f$\vec{\mathbf{v}}_1\f$ are positions
+   *  where  \f$\vec{\mathbf{v}}_1\f$ 
+   *  and \f$\vec{\mathbf{v}}_1\f$ are positions
    *  of the first and the second vertices 
    *
    *  @code 
@@ -315,7 +322,8 @@ public:
   // ==========================================================================
 public:
   // ==========================================================================
-  /** @defgroup VertexPoint Methods to evaluate distances between a vertex and a fixed point 
+  /** @defgroup VertexPoint Methods to evaluate distances between 
+   *                                  a vertex and a fixed point 
    *
    *  @{
    */
@@ -364,7 +372,7 @@ public:
    *
    *  \f[ \vec{\mathbf{d}} = \vec{\mathbf{v}} - \vec{\mathbf{p}},\f] 
    *  where  \f$\vec{\mathbf{v}}\f$ and \f$\vec{\mathbf{v}}\f$ are positions
-   *  of the veretx and the fixed point 
+   *  of the vertex and the fixed point 
    *
    *  @code 
    *
@@ -398,7 +406,8 @@ public:
   // ==========================================================================
 public:
   // ==========================================================================
-  /** @defgroup ParticleParticle Methods to evaluate distances between two particles 
+  /** @defgroup ParticleParticle Methods to evaluate distances 
+   *                                        between two particles 
    *
    *  @{
    */
@@ -439,7 +448,7 @@ public:
    *  aka "distance of the closest approach" and also its 
    *   \f$\chi^2\f$ for separation significance 
    *
-   *  The distance is defined as the the shortest legth vector between 
+   *  The distance is defined as the the shortest length vector between 
    *  the point on the first trajectory and the point on the second 
    *  trajectory
    *  
@@ -572,8 +581,8 @@ public:
   // ==========================================================================
 protected:
   // ==========================================================================
-  /// virtual and protected desctructor 
-  virtual ~IDistanceCalculator() ;         // virtual and protected desctrustor 
+  /// virtual and protected destructor 
+  virtual ~IDistanceCalculator() ;         // virtual and protected destrustor 
   // ==========================================================================  
 };
 // ============================================================================

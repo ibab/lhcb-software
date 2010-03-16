@@ -4,6 +4,10 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2010-03-16 - Vanya Belyaev
+
+ - Kernel/IDistanceCalculator.h fix LaTeX/doxygen 
+
 ! 2010-03-10 - Giampiero Mancinelli
  - Kernel/IIsolation.h
   . Added an interface for particle isolation tools.
