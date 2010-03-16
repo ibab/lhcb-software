@@ -5,7 +5,7 @@
  *  Header file for track find class Tf::LineHit
  *
  *  CVS Log :-
- *  $Id: LineHit.h,v 1.11 2009-09-25 19:15:56 smenzeme Exp $
+ *  $Id: LineHit.h,v 1.12 2010-03-16 08:24:31 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -62,6 +62,12 @@ namespace Tf
 
     /** Access the value of global z coordinate at the point y=0 for this LineHit */
     inline double zAtYEq0() const { return m_zAtYEq0 ; }
+
+    /** Setter for value of global x coordinate at the point y=0 for this LineHit */
+    inline void setXAtYEq0( const double xAtYEq0 ) const { m_xAtYEq0 = xAtYEq0 ; }
+
+    /** Setter for value of global z coordinate at the point y=0 for this LineHit */
+    inline void setZAtYEq0( const double zAtYEq0) const  { m_zAtYEq0 = zAtYEq0; }
 
     /** Access the value of dx/dy  for this LineHit */
     inline double dxDy()    const { return m_dxdy ; }
@@ -155,8 +161,8 @@ namespace Tf
     double m_dzdy ;     ///< The dz/dy value
     double m_ybegin ;   ///< The y value at the start point of the line
     double m_yend ;     ///< The y value at the end point of the line
-    double m_xAtYEq0 ;  ///< The value of x at the point y=0
-    double m_zAtYEq0 ;  ///< The value of z at the point y=0
+    mutable double m_xAtYEq0 ;  ///< The value of x at the point y=0
+    mutable double m_zAtYEq0 ;  ///< The value of z at the point y=0
 
   };
 

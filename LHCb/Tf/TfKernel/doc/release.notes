@@ -3,6 +3,8 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+! 2010-03-15 - Stephanie Hansmann-Menzemer
+ - add setXAtYEq0 method to the LineHit class
 
 !============================ TfKernel v2r15 2010-02-12 ======================
 ! 2009-01-28 - Wouter Hulsbergen
