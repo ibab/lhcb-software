@@ -3,6 +3,10 @@
 ! Responsible : Tracking 'A-Team' for the moment ... Then someone else.
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+
+! 2010-03-16 - Marco Cattaneo
+ - Remove obsolete file TfTools_dll.cpp
+
 ! 2010-03-14 - Stephanie Hansmann-Menzemer
  - add hit smearing to FlagHitsForPatternReco
 
