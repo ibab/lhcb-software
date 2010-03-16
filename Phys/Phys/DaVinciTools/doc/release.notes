@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.521 2010-03-15 13:20:14 jpalac Exp $
+! $Id: release.notes,v 1.522 2010-03-16 08:17:04 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-03-16 - Patrick Koppenburg
+ - src/DecodeSimpleDecayString.cpp : Do not accept single daughter decay descriptors
+   . Solves bug #64357
 
 ! 2010-03-15 - Juan Palacios
  - src/recparser.icpp

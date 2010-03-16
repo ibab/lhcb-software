@@ -1,4 +1,4 @@
-// $Id: DecodeSimpleDecayString.cpp,v 1.16 2010-01-14 08:03:01 pkoppenb Exp $
+// $Id: DecodeSimpleDecayString.cpp,v 1.17 2010-03-16 08:17:04 pkoppenb Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -105,6 +105,13 @@ StatusCode DecodeSimpleDecayString::setDescriptor(const std::string& descriptor)
       << m_descriptor << endmsg ;  
   sc = splitDescriptor(m_descriptor, m_mother, m_daughters); // split
   if ( sc.isFailure() ) return sc ;
+  if ( m_daughters.size() < 2 ){
+    error() << "Mother: " << m_mother << ", " << m_daughters.size()
+           << " daughters: " << m_daughters << endmsg ;  
+    error() << "Seen DecayDescriptor : " << m_descriptor << endmsg ;
+    error() << "There must be at least 2 daughters. Use FilterDesktop to filter single Particles." << endmsg ;
+    return StatusCode::FAILURE ;
+  }
   if (msgLevel(MSG::DEBUG)) debug() << "Mother: " << m_mother << ", " << m_daughters.size()
       << " daughters: " << m_daughters << endmsg ;  
   if ( m_iscc ) {
@@ -175,7 +182,7 @@ StatusCode DecodeSimpleDecayString::buildPIDs
     int pid ;
     sc = PID(*id, pid);
     if ( ! sc.isSuccess() ) return sc ;
-    daughters.push_back( pid);
+    daughters.push_back( pid );
   }
 
   return StatusCode::SUCCESS ;
@@ -292,7 +299,7 @@ StatusCode DecodeSimpleDecayString::getDecay
   //
   decay.setMother     ( m_mother    ) ;
   decay.setDaughters  ( m_daughters ) ;
-  //
+   //
   return decay.validate ( m_ppSvc ) ;
 }
 // ==========================================================================
