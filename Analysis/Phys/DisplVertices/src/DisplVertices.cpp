@@ -974,7 +974,7 @@ void DisplVertices::StudyDispersion( const LHCb::Particle * p1,
 void DisplVertices::StudyEoverNbTrk(){
 
   double PtMin = 1*GeV;
-  double E = 0.; double ET = 0.;
+  double E, ET;
   int nblong = 0, nbhighpt = 0;
   int nbdown = 0;
 
@@ -3301,7 +3301,7 @@ StatusCode DisplVertices::fillHeader( Tuple& tuple ){
   LHCb::ODIN * odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
   if( odin ){
     //NoBeam = 0, Beam1 = 1, Beam2 = 2, BeamCrossing = 3
-    tuple->column("Event", 
+    tuple->column("BXType", 
                   static_cast<unsigned int>( odin->bunchCrossingType()  ) );
 //     //tuple->column("Event", odin->eventNumber()); //ulonglong !
 //     tuple->column("Run", odin->runNumber());
