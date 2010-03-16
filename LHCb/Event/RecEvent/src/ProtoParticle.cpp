@@ -1,6 +1,10 @@
-// $Id: ProtoParticle.cpp,v 1.10 2010-03-09 18:39:17 jonrob Exp $
+// $Id: ProtoParticle.cpp,v 1.11 2010-03-16 08:41:28 jonrob Exp $
 
+// STL
 #include <algorithm>
+
+// Gaudi
+#include "GaudiKernel/GaudiException.h"
 
 // local
 #include "Event/ProtoParticle.h"
@@ -29,7 +33,7 @@ std::ostream& LHCb::ProtoParticle::fillStream( std::ostream & s ) const
   return s << " ] }";
 }
 
-LHCb::ProtoParticle::ExtraInfo::size_type 
+LHCb::ProtoParticle::ExtraInfo::size_type
 LHCb::ProtoParticle::clearCalo( const LHCb::CaloHypo::Hypothesis & hypo )
 {
   using namespace boost::lambda;
@@ -39,16 +43,16 @@ LHCb::ProtoParticle::clearCalo( const LHCb::CaloHypo::Hypothesis & hypo )
 
   // Find hypos to remove
   const SmartRefVector<LHCb::CaloHypo>::iterator iHypoRemove =
-    std::remove_if ( m_calo.begin(), m_calo.end(), 
+    std::remove_if ( m_calo.begin(), m_calo.end(),
                      bind( &LHCb::CaloHypo::hypothesis, _1 ) == hypo );
-  
+
   // remove selected hypos
   if ( m_calo.end() != iHypoRemove )
   {
     removed = m_calo.end() - iHypoRemove;
     m_calo.erase ( iHypoRemove , m_calo.end() );
   }
-  
+
   // return number of hypos removed
   return removed;
 }
@@ -192,3 +196,75 @@ LHCb::ProtoParticle::removeVeloInfo()
   return erased;
 }
 
+LHCb::ProtoParticle::additionalInfo
+LHCb::ProtoParticle::convertExtraInfo(const std::string& name)
+{
+  if ( "NoPID"             == name ) { return LHCb::ProtoParticle::NoPID;     }
+  if ( "RichDLLe"          == name ) { return LHCb::ProtoParticle::RichDLLe;  }
+  if ( "RichDLLmu"         == name ) { return LHCb::ProtoParticle::RichDLLmu; }
+  if ( "RichDLLpi"         == name ) { return LHCb::ProtoParticle::RichDLLpi; }
+  if ( "RichDLLk"          == name ) { return LHCb::ProtoParticle::RichDLLk;  }
+  if ( "RichDLLp"          == name ) { return LHCb::ProtoParticle::RichDLLp;  }
+  if ( "RichPIDStatus"     == name ) { return LHCb::ProtoParticle::RichPIDStatus; }
+  if ( "RichDLLbt"         == name ) { return LHCb::ProtoParticle::RichDLLbt; }
+  if ( "MuonMuLL"          == name ) { return LHCb::ProtoParticle::MuonMuLL; }
+  if ( "MuonBkgLL"         == name ) { return LHCb::ProtoParticle::MuonBkgLL; }
+  if ( "MuonNShared"       == name ) { return LHCb::ProtoParticle::MuonNShared; }
+  if ( "MuonPIDStatus"     == name ) { return LHCb::ProtoParticle::MuonPIDStatus; }
+  if ( "InAccMuon"         == name ) { return LHCb::ProtoParticle::InAccMuon; }
+  if ( "InAccSpd"          == name ) { return LHCb::ProtoParticle::InAccSpd; }
+  if ( "InAccPrs"          == name ) { return LHCb::ProtoParticle::InAccPrs; }
+  if ( "InAccEcal"         == name ) { return LHCb::ProtoParticle::InAccEcal; }
+  if ( "InAccHcal"         == name ) { return LHCb::ProtoParticle::InAccHcal; }
+  if ( "InAccBrem"         == name ) { return LHCb::ProtoParticle::InAccBrem; }
+  if ( "CaloTrMatch"       == name ) { return LHCb::ProtoParticle::CaloTrMatch; }
+  if ( "CaloElectronMatch" == name ) { return LHCb::ProtoParticle::CaloElectronMatch; }
+  if ( "CaloBremMatch"     == name ) { return LHCb::ProtoParticle::CaloBremMatch; }
+  if ( "CaloChargedSpd"    == name ) { return LHCb::ProtoParticle::CaloChargedSpd; }
+  if ( "CaloChargedPrs"    == name ) { return LHCb::ProtoParticle::CaloChargedPrs; }
+  if ( "CaloChargedEcal"   == name ) { return LHCb::ProtoParticle::CaloChargedEcal; }
+  if ( "CaloDepositID"     == name ) { return LHCb::ProtoParticle::CaloDepositID; }
+  if ( "ShowerShape"       == name ) { return LHCb::ProtoParticle::ShowerShape; }
+  if ( "ClusterMass"       == name ) { return LHCb::ProtoParticle::ClusterMass; }
+  if ( "CaloNeutralSpd"    == name ) { return LHCb::ProtoParticle::CaloNeutralSpd; }
+  if ( "CaloNeutralPrs"    == name ) { return LHCb::ProtoParticle::CaloNeutralPrs; }
+  if ( "CaloNeutralEcal"   == name ) { return LHCb::ProtoParticle::CaloNeutralEcal; }
+  if ( "CaloSpdE"          == name ) { return LHCb::ProtoParticle::CaloSpdE; }
+  if ( "CaloPrsE"          == name ) { return LHCb::ProtoParticle::CaloPrsE; }
+  if ( "CaloEcalE"         == name ) { return LHCb::ProtoParticle::CaloEcalE; }
+  if ( "CaloHcalE"         == name ) { return LHCb::ProtoParticle::CaloHcalE; }
+  if ( "CaloEcalChi2"      == name ) { return LHCb::ProtoParticle::CaloEcalChi2; }
+  if ( "CaloBremChi2"      == name ) { return LHCb::ProtoParticle::CaloBremChi2; }
+  if ( "CaloClusChi2"      == name ) { return LHCb::ProtoParticle::CaloClusChi2; }
+  if ( "CaloTrajectoryL"   == name ) { return LHCb::ProtoParticle::CaloTrajectoryL; }
+  if ( "EcalPIDe"          == name ) { return LHCb::ProtoParticle::EcalPIDe; }
+  if ( "PrsPIDe"           == name ) { return LHCb::ProtoParticle::PrsPIDe; }
+  if ( "BremPIDe"          == name ) { return LHCb::ProtoParticle::BremPIDe; }
+  if ( "HcalPIDe"          == name ) { return LHCb::ProtoParticle::HcalPIDe; }
+  if ( "HcalPIDmu"         == name ) { return LHCb::ProtoParticle::HcalPIDmu; }
+  if ( "EcalPIDmu"         == name ) { return LHCb::ProtoParticle::EcalPIDmu; }
+  if ( "PhotonID"          == name ) { return LHCb::ProtoParticle::PhotonID; }
+  if ( "VeloCharge"        == name ) { return LHCb::ProtoParticle::VeloCharge; }
+  if ( "TrackChi2PerDof"   == name ) { return LHCb::ProtoParticle::TrackChi2PerDof; }
+  if ( "TrackNumDof"       == name ) { return LHCb::ProtoParticle::TrackNumDof; }
+  if ( "TrackType"         == name ) { return LHCb::ProtoParticle::TrackType; }
+  if ( "TrackHistory"      == name ) { return LHCb::ProtoParticle::TrackHistory; }
+  if ( "TrackP"            == name ) { return LHCb::ProtoParticle::TrackP; }
+  if ( "TrackPt"           == name ) { return LHCb::ProtoParticle::TrackPt; }
+  if ( "CombDLLe"          == name ) { return LHCb::ProtoParticle::CombDLLe; }
+  if ( "CombDLLmu"         == name ) { return LHCb::ProtoParticle::CombDLLmu; }
+  if ( "CombDLLpi"         == name ) { return LHCb::ProtoParticle::CombDLLpi; }
+  if ( "CombDLLk"          == name ) { return LHCb::ProtoParticle::CombDLLk; }
+  if ( "CombDLLp"          == name ) { return LHCb::ProtoParticle::CombDLLp; }
+  if ( "ProbNNe"           == name ) { return LHCb::ProtoParticle::ProbNNe; }
+  if ( "ProbNNmu"          == name ) { return LHCb::ProtoParticle::ProbNNmu; }
+  if ( "ProbNNpi"          == name ) { return LHCb::ProtoParticle::ProbNNpi; }
+  if ( "ProbNNk"           == name ) { return LHCb::ProtoParticle::ProbNNk; }
+  if ( "ProbNNp"           == name ) { return LHCb::ProtoParticle::ProbNNp; }
+  if ( "LastGlobal"        == name ) { return LHCb::ProtoParticle::LastGlobal; }
+
+  // if get here something bad happened
+  throw GaudiException ( "Unknown enum name "+name,
+                         "*LHCb::ProtoParticle*", StatusCode::FAILURE );
+  return (LHCb::ProtoParticle::additionalInfo)0; // value unimportant ...
+}

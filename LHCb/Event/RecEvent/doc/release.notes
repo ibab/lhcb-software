@@ -1,16 +1,19 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.139 2010-03-15 11:17:54 ibelyaev Exp $
+! $Id: release.notes,v 1.140 2010-03-16 08:41:28 jonrob Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2010-03-16 - Chris Jones
+ - Add a new method to ProtoParticle to convert an extra info string into
+   the corresponding enum
+ - Add enums for TrackP and TrackPt
+ - Add enums for future combined PID probability vales
+
 ! 2010-03-15 - Vanya Belyaev
-
  - RecVertex,TwoProngVertex,CValoHypo,CaloCluster
-
     add T::Selection & T::Range    (for "blind" access to data)
-
 
 ! 2010-03-09 - Chris Jones
  - Add Rich Below Threshold DLL values
