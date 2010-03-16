@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.523 2010-03-16 13:50:42 jpalac Exp $
+! $Id: release.notes,v 1.524 2010-03-16 15:09:30 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
@@ -7,6 +7,7 @@
 ! 2010-03-16 - Juan Palacios
  -  src/FilterDesktop.cpp
   . Fix some confusing debug messages and add some more.
+  . Test if Particle's endVertex is != 0 before adding to Vertices container.
 
 ! 2010-03-16 - Patrick Koppenburg
  - src/DecodeSimpleDecayString.cpp : Do not accept single daughter decay descriptors
