@@ -19,7 +19,8 @@ from PyQt4.QtGui import (QApplication, QMainWindow, QMessageBox,
 
 from Ui_MainWindow import Ui_MainWindow
 
-from CondDBUI import CondDB, PyCoolCopy
+from CondDBUI import CondDB
+import PyCoolCopy
 
 from Models import *
 from Dialogs import *

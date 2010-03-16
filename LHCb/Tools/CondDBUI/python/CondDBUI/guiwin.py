@@ -1,6 +1,7 @@
 from PyQt4 import Qt, Qt3Support
 import CondDBUI, guitree, guidialogs, guiextras
 import os, shelve
+import PyCoolCopy
 
 ####################################################
 #                   Main Window                    #
@@ -269,7 +270,7 @@ class myWindow(Qt.QMainWindow):
         '''
         if self.bridge:
             # Compatibility check with COOL 1.3.2:
-            if 'append' not in dir(CondDBUI.PyCoolCopy):
+            if 'append' not in dir(PyCoolCopy):
                 self.dialogSliceDB.buttonAppend.setEnabled(False)
 
             try:
@@ -285,11 +286,11 @@ class myWindow(Qt.QMainWindow):
                     objList = self.dialogSliceDB.objectList
                     selectionList = []
                     for o in objList:
-                        s = CondDBUI.PyCoolCopy.Selection(o['path'], long(o['since']), long(o['until']), tags = o['tag'])
+                        s = PyCoolCopy.Selection(o['path'], long(o['since']), long(o['until']), tags = o['tag'])
                         selectionList.append(s)
-                    copyTool = CondDBUI.PyCoolCopy.PyCoolCopy(self.bridge.db)
+                    copyTool = PyCoolCopy.PyCoolCopy(self.bridge.db)
                     # reduce the verbosity of PyCoolCopy
-                    CondDBUI.PyCoolCopy.log.setLevel( CondDBUI.PyCoolCopy.logging.WARNING )
+                    PyCoolCopy.log.setLevel( PyCoolCopy.logging.WARNING )
                     if self.dialogSliceDB.do_copy:
                         copyTool.copy(connectString, selectionList)
                     else:
