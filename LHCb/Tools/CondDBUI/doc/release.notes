@@ -5,6 +5,11 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2010-03-16 - Marco Clemencic
+ - Modified the Python module CondDBUI to require PyCool at run-time only for
+   the functions that really need it.
+   It allows to use the other utilities (like the tag filters) without PyCool.
+
 ! 2010-03-02 - Illya Shapoval
  - Fixed the bug in database diffing and merging procedures to correctly process 
    cases with multiple payloads. 

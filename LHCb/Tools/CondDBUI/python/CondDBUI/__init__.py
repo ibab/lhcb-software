@@ -14,26 +14,27 @@ import os, md5, random, sys, re, time, datetime
 
 LOG_FORMAT = "%(levelname)s: (%(name)s) %(message)s"
 
-import PyCoolCopy
-from PyCool import cool
-import PyCool
-
-# Initialize COOL Application
-_app = cool.Application()
-
-if 'CORAL_LFC_BASEDIR' in os.environ and 'LFC_HOST' in os.environ and not 'COOL_IGNORE_LFC' in os.environ:
-    # Load CORAL LFCReplicaService into the context of cool::Application
-    LFCRepSvcName = "CORAL/Services/LFCReplicaService"
-    if hasattr(_app,"loadComponent"):
-        _app.loadComponent(LFCRepSvcName)
-    elif  hasattr(_app,"connectionSvc") and hasattr(_app.connectionSvc(),"configuration"):
-        _app.connectionSvc().configuration().setLookupService(LFCRepSvcName)
-        _app.connectionSvc().configuration().setAuthenticationService(LFCRepSvcName)
-    del LFCRepSvcName
-
-# disable CORAL time-out thread
-_app.connectionSvc().configuration().disablePoolAutomaticCleanUp()
-_app.connectionSvc().configuration().setConnectionTimeOut(0)
+_coolApp = None
+def coolApp():
+    if _coolApp is None:
+        from PyCool import cool
+        # Initialize COOL Application
+        _coolApp = cool.Application()
+    
+        if 'CORAL_LFC_BASEDIR' in os.environ and 'LFC_HOST' in os.environ and not 'COOL_IGNORE_LFC' in os.environ:
+            # Load CORAL LFCReplicaService into the context of cool::Application
+            LFCRepSvcName = "CORAL/Services/LFCReplicaService"
+            if hasattr(_coolApp,"loadComponent"):
+                _coolApp.loadComponent(LFCRepSvcName)
+            elif  hasattr(_coolApp,"connectionSvc") and hasattr(_coolApp.connectionSvc(),"configuration"):
+                _coolApp.connectionSvc().configuration().setLookupService(LFCRepSvcName)
+                _coolApp.connectionSvc().configuration().setAuthenticationService(LFCRepSvcName)
+            del LFCRepSvcName
+        
+        # disable CORAL time-out thread
+        _coolApp.connectionSvc().configuration().disablePoolAutomaticCleanUp()
+        _coolApp.connectionSvc().configuration().setConnectionTimeOut(0)
+    return _coolApp
 
 #########################################################################################
 #                                    Tag Class                                          #
@@ -289,7 +290,7 @@ class CondDB(object):
         self.readOnly = readOnly
 
         # Opening the Database access
-        dbsvc = _app.databaseService()
+        dbsvc = coolApp().databaseService()
         try:
             self.db = dbsvc.openDatabase(self.connectionString, self.readOnly)
         except Exception, details:
@@ -321,7 +322,7 @@ class CondDB(object):
             none
         '''
         # Opening the Database access
-        dbsvc = _app.databaseService()
+        dbsvc = coolApp().databaseService()
         try:
             self.db = dbsvc.createDatabase(connectionString)
         except Exception, details:
@@ -348,6 +349,7 @@ class CondDB(object):
            (i.e. if the node is a multi version folder OR if it is a folderset or does not
            exist).
         '''
+        from PyCool import cool
         assert self.db != None, "Database not connected !"
         if self.db.existsFolder(path):
             folder = self.db.getFolder(path)
@@ -365,6 +367,7 @@ class CondDB(object):
            (i.e. if the node is a single version folder OR if it is a folderset or does not
            exist).
         '''
+        from PyCool import cool
         assert self.db != None, "Database not connected !"
         if self.db.existsFolder(path):
             folder = self.db.getFolder(path)
@@ -411,6 +414,7 @@ class CondDB(object):
         outputs:
             dictionary; the contents of the attribute list
         '''
+        from PyCool import cool
         assert self.db != None, "No database connected !"
         if self.db.existsFolder(path):
             folder = self.db.getFolder(path)
@@ -477,6 +481,7 @@ class CondDB(object):
             The first two integers are the since and until values of the interval of validity. The
             third integer is the channel ID, and the last integer is the insertion time.
         '''
+        from PyCool import cool
         assert self.db != None, "No database connected !"
         if channelID != None:
             channelSelection = cool.ChannelSelection(channelID)
@@ -627,6 +632,7 @@ class CondDB(object):
         outputs:
             md5 object; result from the md5 check sum.
         '''
+        from PyCool import cool
         assert self.db != None, "No database connected !"
         # retrieve the list of nodes to check
         if self.db.existsFolderSet(path):
@@ -757,6 +763,7 @@ class CondDB(object):
         outputs:
             none
         '''
+        from PyCool import cool
         assert self.db != None, "No database connected !"
         assert not self.readOnly , "The database is in Read Only mode."
         if self.db.existsFolder(path):
@@ -829,6 +836,7 @@ class CondDB(object):
         outputs:
             none
         '''
+        from PyCool import cool
         assert self.db != None, "No database connected !"
         assert not self.readOnly , "The database is in Read Only mode."
         if self.db.existsFolder(path):
@@ -859,6 +867,7 @@ class CondDB(object):
         outputs:
             none
         '''
+        from PyCool import cool
         assert self.db != None, "No database connected !"
         assert not self.readOnly , "The database is in Read Only mode."
         if reserved != None:
@@ -921,6 +930,7 @@ class CondDB(object):
         outputs:
             none
         '''
+        from PyCool import cool
         assert self.db != None, "No database connected !"
         assert not self.readOnly , "The database is in Read Only mode."
         # Check if the ancestor tag really exists.
@@ -1266,7 +1276,7 @@ class CondDB(object):
         outputs:
             none
         '''
-        dbsvc = _app.databaseService()
+        dbsvc = coolApp().databaseService()
         try:
             dbsvc.dropDatabase(connectionString)
         except Exception, details:
@@ -1296,6 +1306,7 @@ class CondDB(object):
         outputs:
             none
         '''
+        from PyCool import cool
         assert self.db != None, "No database connected !"
         assert not self.readOnly , "The database is in Read Only mode."
         if storageType == 'NODE':
@@ -1366,6 +1377,7 @@ class CondDB(object):
         outputs:
             none
         '''
+        from PyCool import cool
         assert self.db != None, "No database connected !"
         assert not self.readOnly , "The database is in Read Only mode."
         if self.db.existsFolder(path):
@@ -1473,6 +1485,7 @@ class ValidityKeyWrapper:
         return self.__long__()
     
     def __long__(self):
+        from PyCool import cool
         try:
             ns = int(time.mktime(self.value.timetuple())*1e9) + self.ns
             if ns < cool.ValidityKeyMin:
@@ -1487,6 +1500,7 @@ class ValidityKeyWrapper:
                 raise
     
     def __str__(self):
+        from PyCool import cool
         if self.toValidityKey() == cool.ValidityKeyMax:
             return '+inf'
         s = str(self.value)
@@ -1686,15 +1700,25 @@ def _fix_xml(xml_data,folderset_path):
 
 def copy( sourceDb, targetDb,
           nodeName = '/',
-          since = cool.ValidityKeyMin,
-          until = cool.ValidityKeyMax,
-          channels = cool.ChannelSelection.all(),
+          since = None,
+          until = None,
+          channels = None,
           tags = []
           ):
     """
     Wrapper around PyCoolCopy.copy needed because PyCoolCopy does not support yet
     LFCReplicaSvc.
     """
+    # set defaults
+    from PyCool import cool
+    if since is None:
+        since = cool.ValidityKeyMin
+    if until is None:
+        until = cool.ValidityKeyMax
+    if channels is None:
+        channels = cool.ChannelSelection.all()
+    
+    import PyCoolCopy
     if type(sourceDb) is str:
         sourceDb = CondDB(sourceDb).db
     if type(targetDb) is str:
@@ -1714,9 +1738,9 @@ def payloadSpecEq(pl1, pl2):
 
 def merge( sourceDB, targetDB,
            nodeName = "/",
-           since = cool.ValidityKeyMin,
-           until = cool.ValidityKeyMax,
-           channels = cool.ChannelSelection.all(),
+           since = None,
+           until = None,
+           channels = None,
            originalTAG = ""
            ):
     """
@@ -1731,6 +1755,16 @@ def merge( sourceDB, targetDB,
     _log = logging.getLogger( "CondDBUI.merge" )
     _log.setLevel( logging.INFO )
 
+    # set defaults
+    from PyCool import cool
+    if since is None:
+        since = cool.ValidityKeyMin
+    if until is None:
+        until = cool.ValidityKeyMax
+    if channels is None:
+        channels = cool.ChannelSelection.all()
+    
+    import PyCool
     from PyCoolDiff import CondDBDiffError
     
     src = CondDB(sourceDB)

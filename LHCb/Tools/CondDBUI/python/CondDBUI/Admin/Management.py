@@ -11,8 +11,6 @@ __all__ = []
 import os, shutil, errno, tempfile
 
 import CondDBUI
-import CondDBUI.PyCoolDiff
-from PyCool import cool
 
 from _internals import _assertNoFile, MakeDBFromFiles, log
 
@@ -47,8 +45,8 @@ def _isSQLite(path):
 __all__.append("prepareChangesDB")
 def prepareChangesDB(srcpath, partition, reftag, usertag = "HEAD", destdir = None,
                      two_pass_diff = True,
-                     since = cool.ValidityKeyMin,
-                     until = cool.ValidityKeyMax):
+                     since = None,
+                     until = None):
     """Given an input path, produces a database with only the differences that
     have to be added to the DB.
     If two_pass_diff is True (default), the difference is computed against the
@@ -56,6 +54,12 @@ def prepareChangesDB(srcpath, partition, reftag, usertag = "HEAD", destdir = Non
     the minimal set of differences.
     Returns the COOL connection string to the created DB.
     """
+    from PyCool import cool
+    if since is None:
+        since = cool.ValidityKeyMin
+    if until is None:
+        until = cool.ValidityKeyMax
+    import CondDBUI.PyCoolDiff
     if destdir is None:
         destdir = os.getcwd()
     changesfn = _SQLiteFileName(destdir, partition + "_changes")
