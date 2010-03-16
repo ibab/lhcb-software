@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.h,v 1.11 2010-01-26 15:39:27 rlambert Exp $
+// $Id: TupleToolTrigger.h,v 1.12 2010-03-16 01:11:28 rlambert Exp $
 #ifndef JBOREL_TUPLETOOLTRIGGER_H
 #define JBOREL_TUPLETOOLTRIGGER_H 1
 
@@ -22,10 +22,10 @@
  * L0Decision_xxx : LHCb::L0DUReport->channelDecisionByName(xxx)
  *  
  * If \b VerboseHlt1 = true
- * Hlt1_xxx_Decision : filled
+ * Hlt1_xxx_Decision : filled ... [ -1, 0, 1 ] = [not run, decision false, decision true]
  * 
  * If \b VerboseHlt2 = true
- * Hlt2_xxx_Decision : filled
+ * Hlt2_xxx_Decision : filled ... [ -1, 0, 1 ] = [not run, decision false, decision true]
  * 
  * Verbose flag is a shortcut to turn all verbosity on.
  *  

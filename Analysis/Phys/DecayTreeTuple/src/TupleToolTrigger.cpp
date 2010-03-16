@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.cpp,v 1.18 2010-01-26 15:39:27 rlambert Exp $
+// $Id: TupleToolTrigger.cpp,v 1.19 2010-03-16 01:11:28 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -170,22 +170,26 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & 
     
     for ( std::vector<std::string>::const_iterator n = names.begin() ; n!= names.end() ; ++n)
     {
-      bool found = false ;
+      int found = -1 ;
+      if (msgLevel(MSG::DEBUG))  debug() << " In verbose HLT, Trying to fill  " << (*n)   << endmsg; 
       // individual Hlt trigger lines
       for(LHCb::HltDecReports::Container::const_iterator it=decReports->begin();
           it!=decReports->end();++it)
       {
+        if (msgLevel(MSG::VERBOSE))  verbose() << " Hlt trigger name= " << it->first  << endmsg;
         if ( ( it->first == *n ) )
         {
           if (msgLevel(MSG::DEBUG))  debug() << " Hlt trigger name= " << it->first  
                                              << " decision= " << it->second.decision() << endmsg;
           found = it->second.decision() ;
+          //only print all the names if output level is verbose otherwise this is a waste of time
+          if(!msgLevel(MSG::VERBOSE)) break;
         }
       }
       if (msgLevel(MSG::VERBOSE)) verbose() << "Added " << *n << " " << found 
                                             << " to " << nsel << endmsg ;
       bool isDecision = ( n->find("Decision") == n->length()-8  ) ; // 8 is length of Decision
-      if (isDecision && found) nsel++ ;
+      if (isDecision && found>0) nsel++ ;
       //if (isDecision || m_allSteps)
       //{
       if ( ! tuple->column(prefix+*n, found ) ) return StatusCode::FAILURE;

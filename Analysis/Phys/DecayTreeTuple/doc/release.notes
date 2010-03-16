@@ -4,6 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2010-03-16 - Rob Lambert
+ - Fixed missed commit in TupleToolTriggerBase and TupleToolTrigger
+   TupleToolTriggerBase: Initialize, compile triggerList to look for
+   TupleToolTrigger:  fill '-1' if requested trigger is not in reports
+
 !========================== DecayTreeTuple v3r2 2010-03-08 ================
 
 ! 2010-03-04 - Yuehong Xie

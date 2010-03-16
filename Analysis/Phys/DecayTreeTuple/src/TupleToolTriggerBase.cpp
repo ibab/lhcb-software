@@ -76,6 +76,13 @@ StatusCode TupleToolTriggerBase::initialize( )
   if(isVerbose()) m_verboseL0=m_verboseHlt1=m_verboseHlt2=true;
   bool iv=(m_verboseL0||m_verboseHlt1||m_verboseHlt2);
   
+  if(m_triggerList.size() != 0 && !iv)
+  {
+    
+    warning() << "You have set a list of triggers to look for, but not asked for verbose mode ... OK, but this is weird! "
+              << endmsg;
+  }
+  
   if(m_triggerList.size() == 0 && !m_useAutomaticTriggerList && iv )
   {
     warning() << "You have not set a list of triggers to look for, so verbose has no meaning. " 
@@ -96,8 +103,10 @@ StatusCode TupleToolTriggerBase::initialize( )
               << "This will not work if the triggers change in the data you are looking at" << endmsg;
   }
   
-  if(iv && !m_collateTriggerList) m_collateTriggerList=(m_useAutomaticTriggerList || m_triggerList.size() == 0);
+  //bug, missing this line
+  if(m_triggerList.size() != 0) compileMyList(m_triggerList);
   
+  if(iv && !m_collateTriggerList) m_collateTriggerList=(m_useAutomaticTriggerList || m_triggerList.size() == 0);
   
   return sc;
 }
@@ -156,6 +165,7 @@ StatusCode TupleToolTriggerBase::fill( const LHCb::Particle* M
   //setup and check automatic filling mode
   if(m_useAutomaticTriggerList)  test &= autoListMode();
   
+  
   //keep track of a list of all triggers for printing at the end
   if(m_collateTriggerList) if(!checkAutoList()) appendToList();
   
@@ -170,7 +180,7 @@ StatusCode TupleToolTriggerBase::fill(Tuples::Tuple& tuple )
 {
   if(msgLevel(MSG::DEBUG)) debug() << "fill tuple "
                                    << "m_collateTriggerList " << m_collateTriggerList 
-                                   << "m_useAutomaticTriggerList" << m_useAutomaticTriggerList
+                                   << " m_useAutomaticTriggerList " << m_useAutomaticTriggerList
                                    << endmsg;
   bool test=true;
   test &= fillBasic(tuple);
@@ -206,9 +216,9 @@ StatusCode TupleToolTriggerBase::autoListMode()
 bool TupleToolTriggerBase::compileAutoList()
 {
   
-  boost::regex l0("Hlt1L0.*Decision");
-  boost::regex hlt1("Hlt1[^L0]*Decision");//Not to save the L0 stuff twice!
-  boost::regex hlt2("Hlt2.*Decision");
+  //boost::regex l0("Hlt1L0.*Decision");
+  //boost::regex hlt1("Hlt1[^L0]*Decision");//Not to save the L0 stuff twice!
+  //boost::regex hlt2("Hlt2.*Decision");
   
   m_hlt1_init = svc<IANNSvc>("ANNDispatchSvc")->keys("Hlt1SelectionID");
   m_hlt1_all=m_hlt1_init;
@@ -238,6 +248,9 @@ bool TupleToolTriggerBase::compileAutoList()
 bool TupleToolTriggerBase::compileMyList(const std::vector<std::string>& list)
 {
   
+  if(msgLevel(MSG::DEBUG)) debug() << "compiling List "
+                                   << endmsg;
+  
   boost::regex l0("Hlt1L0.*Decision");
   boost::regex hlt1("Hlt1[^L0]*Decision");
   boost::regex hlt2("Hlt2.*Decision");
@@ -257,6 +270,21 @@ bool TupleToolTriggerBase::compileMyList(const std::vector<std::string>& list)
     {
       m_hlt2.push_back(*s);
     }
+  }
+  
+  
+  if(msgLevel(MSG::DEBUG))
+  { 
+     debug() << " ==== L0 ==== " << endmsg;
+     for (std::vector<std::string>::const_iterator s=m_l0.begin();s != m_l0.end();++s) debug() << " " << (*s);
+     debug() <<endmsg;
+     debug() << " ==== HLT1 ==== " << endmsg;
+     for (std::vector<std::string>::const_iterator s=m_hlt1.begin();s != m_hlt1.end();++s) debug() << " " << (*s);
+     debug() <<endmsg;
+     debug() << " ==== HLT2 ==== " << endmsg;
+     for (std::vector<std::string>::const_iterator s=m_hlt2.begin();s != m_hlt2.end();++s) debug() << " " << (*s);
+     debug() <<endmsg;
+     debug() << " ==== Compiled list ====" << endmsg;
   }
   
   return true;
