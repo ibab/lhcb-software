@@ -4,6 +4,7 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!===================== Det/DetCond v12r11 2010-03-17 =========================
 ! 2010-03-17 - Marco Clemencic
  - Changes to the CondDB configurable
    - in the online environment (Online == True) the IgnoreHeartBeat property is
