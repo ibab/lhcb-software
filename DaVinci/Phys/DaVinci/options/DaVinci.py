@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci.py,v 1.44 2010-03-15 15:59:39 pkoppenb Exp $
+# $Id: DaVinci.py,v 1.45 2010-03-17 17:18:28 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -15,12 +15,6 @@ from Configurables import GaudiSequencer
 
 ########################################################################
 ################ First define all things to run ########################
-########################################################################
-########################################################################
-#
-# If you want to import .opts options, do this first
-#
-importOptions("$STDOPTS/PreloadUnits.opts")
 ########################################################################
 #
 # Some preselection. This defines a GaudiSequencer.
