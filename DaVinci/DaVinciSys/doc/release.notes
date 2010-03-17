@@ -3,7 +3,10 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
-</PRE><H1><A NAME=v25r1>2010-03-08 DaVinci v25r1. Release for March 2010 software tutorials. </A></H1><PRE>
+</PRE><H1><A NAME=v25r2p1>2010-03-17 DaVinci v25r2p1. Patch release for Early 2010 data stripping. </A></H1><PRE>
+  Based on v9r2p1 and with updated StrippingSelections and DaVinciMonitors
+
+</PRE><H1><A NAME=v25r2>2010-03-08 DaVinci v25r2. Release for March 2010 software tutorials. </A></H1><PRE>
 
 </PRE><H1><A NAME=v25r1>2010-02-23 DaVinci v25r1. Release for 2010 data taking and for MC09 Re-stripping. </A></H1><PRE>
 
