@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.53 2009-10-08 15:20:47 asatta Exp $
+// $Id: DeMuonDetector.cpp,v 1.54 2010-03-17 16:10:43 cattanem Exp $
 
 // Include files
 #include "MuonChamberLayout.h"
@@ -666,7 +666,7 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
       myFE.setLayer(gapCnt/2);
 
       for(int iDm = 0; iDm<4; iDm++){  
-        myVec.at(iDm) = iDm%2 ? myVec.at(iDm)*2*dy : myVec.at(iDm)*2*dx;
+        myVec.at(iDm) = iDm%2 ? myVec.at(iDm)*2*(float)dy : myVec.at(iDm)*2*(float)dx;
         //Added resolution effect
         if(fabs(myVec.at(iDm)) < 0.0001) myVec.at(iDm) = 0;
       }
