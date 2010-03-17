@@ -888,7 +888,11 @@ class SubversionCmd(RevisionControlSystem):
         self._assertModule(module, isProject)
         trunkUrl, _ = self._computePaths(module, "trunk", isProject)
         versionUrl, _ = self._computePaths(module, version, isProject)
-        _, _, retcode = _svn("copy", trunkUrl, versionUrl, stdout = None, stderr = None)
+        _, _, retcode = _svn("copy",
+                             "-m", "Tagging %s %s as %s" % ({True: "project",
+                                                             False: "package"}[isProject],
+                                                            module, version),
+                             trunkUrl, versionUrl, stdout = None, stderr = None)
         return retcode
     
     

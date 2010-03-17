@@ -1,3 +1,8 @@
+2010-03-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/rcs.py: use a default message when tagging packages in
+	Subversion.
+
 2010-03-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/checkTar: New file.
