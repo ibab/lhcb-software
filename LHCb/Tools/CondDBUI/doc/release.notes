@@ -5,6 +5,7 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!===================== Tools/CondDBUI v3r3 2010-03-17 =========================
 ! 2010-03-16 - Marco Clemencic
  - Modified the Python module CondDBUI to require PyCool at run-time only for
    the functions that really need it.
