@@ -3,7 +3,7 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.17 2010-02-22 14:52:29 jblouw Exp $"
+__version__ = "$Id: Configuration.py,v 1.18 2010-03-17 16:44:12 jblouw Exp $"
 __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
 from Gaudi.Configuration  import *
@@ -138,38 +138,11 @@ class Escher(LHCbConfigurableUser):
             self.setProp("Kalman", False )
             log.info("Using Millepede type alignment!")
             self.setProp("Incident", "GlobalMPedeFit")
-            from Configurables import TStation
-            ts = TStation()
-            alignSeq.Members.append( ts )
-            if self.getProp("Simulation") or self.getProp("WithMC") or self.getProp("InputType").upper() == 'DIGI':
-               from Configurables import Derivatives
-               Derivatives().MonteCarlo = True
-            if "VELO" in self.getProp("Detectors") : # generate the proper tracking sequence depending on which detectors one wants to align            
-               TrackSys.TrackPatRecAlgorithms = ["PatSeed"]
-               log.info("Aligning VELO")
-               va = VeloAlignment()
-               va.ElementsToAlign = [ self.getProp( "AlignmentLevel" ) ]
-               va.Sequencer = GaudiSequencer("VeloAlignSeq")
-               alignSeq.Members.append( va.Sequencer )
-            if "OT" in self.getProp("Detectors") or "ot" in self.getProp("Detectors"):
-	       log.info("Aligning OT")
-               TrackSys.TrackPatRecAlgorithms = ["PatSeed"]
-               GaudiSequencer("RecoRICHSeq").Enable = False 
-               GaudiSequencer("RecoVELOSeq").Enable = False
-	       GaudiSequencer("RecoTTSeq").Enable = False
-	       GaudiSequencer("RecoITSeq").Enable = True
-               log.info("Escher: initalizing TAlignment!")
-               
-               ProcessPhase("Align").DetectorList += ["OT"]
-               ta = TAlignment()
-               ta.DoF = self.getProp("DoF")
-	       ta.Constraints = self.getProp("Constraints")
-               ta.skipBigCluster = self.getProp("skipBigCluster")
-               ta.Method = "Millepede"
- 	       ta.TrackLocation = self.getProp("TrackContainer")
-	       ta.Detectors =  self.getProp("Detectors")
-               ta.Sequencer = GaudiSequencer("MpedeAlignSeq")
-               alignSeq.Members.append(ta.Sequencer)
+	    ta = TAlignment()
+            ta.Method = "Millepede"
+            ta.Sequencer = GaudiSequencer("MpedeAlignSeq")
+            alignSeq.Members.append( ta.Sequencer )
+
         if self.getProp("Kalman") :
 	    log.info("Using Kalman style alignment!")
             self.setProp("Incident", "UpdateConstants")
