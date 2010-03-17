@@ -4,6 +4,7 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!====================== RichKernel v7r32 2010-03-17 ====================
 ! 2010-03-12 - Chris Jones
  - Some fixes for missing items in the python dictionary
 
