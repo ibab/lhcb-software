@@ -1,8 +1,9 @@
-!$Id: release.notes,v 1.192 2010-02-26 09:25:24 mneedham Exp $
+!$Id: release.notes,v 1.193 2010-03-17 16:30:55 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+!======================== STDet v4r18 2010-03-17 =========================
 ! 2010-02-26 M Needham
  - Bug fix in noise update methods [local cache not updated] 
 
