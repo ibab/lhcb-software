@@ -1,15 +1,14 @@
-! $Id: release.notes,v 1.70 2010-03-07 12:39:45 ibelyaev Exp $ 
+! $Id: release.notes,v 1.71 2010-03-17 17:19:47 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
-!-----------------------------------------------------------------------------
+!------------------------------------------------------------------------------
 
+!====================== Relations v5r9p1 2010-03-17 ===========================
 ! 2010-03-07 - Vanya Belyaev
-
  - remove Relations.cpp: 
-
-    emptry file that causes warnings for Win32 platform
+    empty file that causes warnings for Win32 platform
  
  - verison increment to v5r9p1 
 
