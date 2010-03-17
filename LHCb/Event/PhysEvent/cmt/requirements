@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.89 2010-01-03 11:02:02 ibelyaev Exp $
+# $Id: requirements,v 1.90 2010-03-17 16:56:58 cattanem Exp $
 # Created      : 20/06/2001
 # Maintainer   : P. Koppenburg
 #
 package           PhysEvent
-version           v11r11
+version           v11r12
 
 # Structure, i.e. directories to process. 
 #============================================================================
