@@ -10,7 +10,7 @@
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
 __author__  = "Plamen Hopchev phopchev@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -51,12 +51,17 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         
         name = 'BeamGas'+whichBeam
 
-        from Configurables import Tf__PatVeloRTracking
-        algRZTracking = Tf__PatVeloRTracking( 'Hlt1RZVeloBeamGas'+whichBeam 
-                                            , OutputTracksName = "Hlt/Track/RZVeloBeamGas"
-                                            , ZVertexMin  = self.getProp(whichBeam+"VtxRangeLow")
-                                            , ZVertexMax  = self.getProp(whichBeam+"VtxRangeUp")
-                                            )
+        from Configurables import ( Tf__PatVeloRTracking,
+                                    Tf__PatVeloRHitManager )
+            
+        rm = Tf__PatVeloRHitManager( name + 'RHitManager',
+                                     DefaultHitManagerName = name + 'DefaultVeloRHitManager' )
+
+        algRZTracking = Tf__PatVeloRTracking( 'Hlt1RZVeloBeamGas'+whichBeam,
+                                              OutputTracksName = "Hlt/Track/RZVeloBeamGas",
+                                              ZVertexMin  = self.getProp(whichBeam+"VtxRangeLow"),
+                                              ZVertexMax  = self.getProp(whichBeam+"VtxRangeUp"),
+                                              HitManagerName = rm.splitName()[ -1 ] )
 
         ## last algorithm should have name of line, plus 'Decision'
         from Configurables import BeamGasTrigVertexCut
