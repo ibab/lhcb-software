@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.cpp,v 1.27 2010-02-19 14:53:44 ggiacomo Exp $
+// $Id: MuonNNetRec.cpp,v 1.28 2010-03-17 11:06:57 ggiacomo Exp $
 
 #include <list>
 
@@ -630,6 +630,13 @@ StatusCode MuonNNetRec::copyToLHCbTracks()
                                             Gaudi::XYZVector( (*t)->sx(), (*t)->sy(), 1.0 ), 1./10000.));
       state.setLocation( LHCb::State::Muon );
       track->addToStates( state );
+      std::vector<MuonHit*> hits  = (*t)->getHits();
+      for ( std::vector<MuonHit*>::const_iterator h = hits.begin(); h != hits.end(); ++h ){
+        const std::vector<LHCb::MuonTileID*> Tiles = (*h)->getLogPadTiles();
+        for (std::vector<LHCb::MuonTileID*>::const_iterator it = Tiles.begin(); it!= Tiles.end(); ++it){
+          track->addToLhcbIDs( (LHCb::LHCbID) ( **it ) );
+        }
+      }
     }
     else {
       m_momentumTool->recMomentum( (*t), track);
