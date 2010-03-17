@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: DVMonitorDst.py,v 1.3 2009-11-24 10:00:33 pkoppenb Exp $
+# $Id: DVMonitorDst.py,v 1.4 2010-03-17 18:44:33 pkoppenb Exp $
 #
 # syntax: gaudirun.py $DAVINCIMONITORSROOT/options/DVMonitorDst.py
 #
@@ -23,10 +23,10 @@ DaVinci().HistogramFile = "DVMonitors.root"
 # Most of this will be configured from Dirac
 #
 ##############################################################################
-DaVinci().EvtMax = 1000
+DaVinci().EvtMax = -1
 DaVinci().DataType = "2009" # Default is "DC06"
 DaVinci().Simulation = True
 DaVinci().InputType = "RDST"
 EventSelector().Input   = [
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2009/RDST/00004937/0000/00004937_00000001_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'"]
+    "DATAFILE='PFN:castor:/castor/cern.ch/user/p/pkoppenb/Stripping/Brunel-100000ev.rdst' TYP='POOL_ROOTTREE' OPT='READ'"]
     

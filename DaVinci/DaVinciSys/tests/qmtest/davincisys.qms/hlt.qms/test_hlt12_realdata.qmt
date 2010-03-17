@@ -8,7 +8,7 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-HltGlobalMonitor                                            SUCCESS Number of counters : 32
+HltGlobalMonitor                                            SUCCESS Number of counters : 30
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "#events"                                       |      1000 |       1000 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  | "Hlt1 DiMuon Lines"                             |      1000 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
@@ -38,8 +38,6 @@ HltGlobalMonitor                                            SUCCESS Number of co
  | "Hlt2 Other Lines"                              |      1000 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
  | "Hlt2 SingleMuon Lines"                         |      1000 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
  | "Hlt2 Topo Lines"                               |      1000 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
- |*"L0Accept"                                      |      1000 |       1000 |(  100.000 +- 0.100000 )%|   -------   |   -------   |
- | "L0Forced"                                      |      1000 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
  | "ODIN::Lumi"                                    |      1000 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
  | "ODIN::NotLumi"                                 |      1000 |       1000 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 """, stdout, result, causes, signature_offset = 0)

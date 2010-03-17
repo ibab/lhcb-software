@@ -18,9 +18,7 @@ importOptions( "$DAVINCIMONITORSROOT/options/DaVinciMonitoring.py")
 #
 from StrippingConf.Configuration import StrippingConf
 from StrippingSelections.Streams import allStreams
-from StrippingSelections import StreamMiniBias
 
-#sc = StrippingConf( Streams = noMB )
 sc = StrippingConf( Streams = allStreams )
 ##############################################################################
 #

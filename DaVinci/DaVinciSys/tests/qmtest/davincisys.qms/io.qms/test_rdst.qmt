@@ -8,13 +8,8 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-Jpsi2MuPiMoni     SUCCESS Number of counters : 5
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"# Accepted Mothers"                            |        12 |         12 |(  100.000 +- 8.33333  )%|   -------   |   -------   |
- |*"# Accepted Mothers in Peak"                    |         2 |          2 |(  100.000 +- 50.0000  )%|   -------   |   -------   |
- |*"# Accepted Mothers in Sidebands"               |         9 |          9 |(  100.000 +- 11.1111  )%|   -------   |   -------   |
- | "# Mothers"                                     |        12 |         12 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
- |*"#accept"                                       |        10 |         10 |(  100.000 +- 10.0000  )%|   -------   |   -------   |
+EventLoopMgr         INFO No more events in event selection 
+ApplicationMgr       INFO Application Manager Stopped successfully
 """, stdout, result, causes, signature_offset = 0)
 countErrorLines({"FATAL":0})
 </text></argument>

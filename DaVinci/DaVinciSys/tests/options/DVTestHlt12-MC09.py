@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt12-MC09.py,v 1.10 2010-03-05 10:58:05 pkoppenb Exp $
+# $Id: DVTestHlt12-MC09.py,v 1.11 2010-03-17 18:44:33 pkoppenb Exp $
 #
 # Test for Hlt1&2. This should be identical to Hlt1 except for the Hlt settings
 #
@@ -36,7 +36,7 @@ DaVinci().ReplaceL0BanksWithEmulated = True
 # a D* stream file from the first MC09 MB stripping 
 #
 EventSelector().Input   = [
-"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DSTAR.DST/00005436/0000/00005436_00000003_1.dstar.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+"   DATAFILE='/castor/cern.ch/grid/lhcb/MC/MC09/L0HLT1.DST/00005781/0000/00005781_00000757_1.l0hlt1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 #
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 

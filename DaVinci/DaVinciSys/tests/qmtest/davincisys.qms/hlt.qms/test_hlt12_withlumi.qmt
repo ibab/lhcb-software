@@ -9,15 +9,15 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
- |*"46:HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi).*Dec|      9439 |          9 |(0.0953491 +- 0.0317679)%|   -------   |   -------   |
+ |*"46:HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi).*Dec|      1100 |          4 |( 0.363636 +- 0.181487 )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "Hlt1")
 findReferenceBlock("""
- |*"66:HLT_PASS_RE('Hlt2(?!Transparent).*Decision')|      9439 |          9 |(0.0953491 +- 0.0317679)%|   -------   |   -------   |
+ |*"66:HLT_PASS_RE('Hlt2(?!Transparent).*Decision')|      1100 |       1100 |(  100.000 +- 0.0909091)%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "Hlt2")
 findReferenceBlock("""
 L0Pass                                                      SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#passed"                                       |      9439 |         98 |(  1.03825 +- 0.104333 )%|   -------   |   -------   |
+ |*"#passed"                                       |      1100 |       1100 |(  100.000 +- 0.0909091)%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "L0")
 countErrorLines({"FATAL":0})
 </text></argument>
