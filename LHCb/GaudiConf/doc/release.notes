@@ -3,8 +3,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!======================== GaudiConf v13r4p2 2010-03-17 ======================
 ! 2010-003-09 - Chris Jones
- - Update RichPID packing version
+ - Update RichPID packing version to 1
 
 !======================== GaudiConf v13r4p1 2010-02-24 ======================
 ! 2010-02-23 - Marcin Kucharczyk
