@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r34 2010-03-17 ==========================
 ! 2010-03-02 - Marco Clemencic
  - Added check of the Magic Pattern in the ODIN bank decoding
    (ODINCodecBaseTool::i_decode).
