@@ -1,13 +1,18 @@
 package DaVinciSys
-version v25r2
+version v25r2p1
 
 branches doc cmt
 
 #=======================================================
 use  DaVinci                 	v25r2   Phys
+
 use  PuVeto                     v7r7p1  L0
 use  LoKiFitters                v2r4    Phys
-use  HltSettings                v1r9p1  Hlt
+use  Hlt1Lines                  v2r3p1  Hlt
+use  DaVinciMonitors            v1r9    Phys
+use  DisplVertices              v6r3    Phys
+use  StrippingSelections        v1r18   Phys
+
 #  
 # Declare this as a container package
 apply_pattern container_package
