@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.524 2010-03-16 15:09:30 jpalac Exp $
+! $Id: release.notes,v 1.525 2010-03-17 08:40:26 giampi Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+! 2010-03-17 - Giampiero Mancinelli
+ - src/IsolationTwoBody[.h,.cpp]
+  . removed the isolation tools
 
 ! 2010-03-16 - Juan Palacios
  -  src/FilterDesktop.cpp
