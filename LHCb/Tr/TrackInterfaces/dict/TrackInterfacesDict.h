@@ -39,6 +39,7 @@
 #include "TrackInterfaces/ITrajFitter.h"
 #include "TrackInterfaces/IVeloExpectation.h"
 #include "TrackInterfaces/IVeloClusterPosition.h"
+#include "TrackInterfaces/IVeloPixClusterPosition.h"
 #include "TrackInterfaces/IPitchResTool.h"
 
 #endif // DICT_TRACKINTERFACESDICT_H
