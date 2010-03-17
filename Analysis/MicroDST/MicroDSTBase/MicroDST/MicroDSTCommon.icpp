@@ -1,4 +1,4 @@
-// $Id: MicroDSTCommon.icpp,v 1.14 2010-03-05 18:57:24 jpalac Exp $
+// $Id: MicroDSTCommon.icpp,v 1.15 2010-03-17 12:53:19 jpalac Exp $
 //-----------------------------------------------------------------------------
 // Implementation file for templated methods of class : MicroDSTCommon
 //
@@ -135,7 +135,7 @@ const typename T::Container* MicroDSTCommon<PBASE>::copyContainer( const std::st
   typename T::Range data = PBASE:: template get<typename T::Range>(from);
 
   if (data.empty()) {
-    this->Warning("copyKeyedContainer found no data at "+from, 
+    this->Warning("copyContainer found no data at "+from, 
                   StatusCode::FAILURE, 1).ignore();
     return 0;
   }
@@ -147,12 +147,12 @@ const typename T::Container* MicroDSTCommon<PBASE>::copyContainer( const std::st
   typename T::Container* clones = getOutputContainer<typename T::Container>( outputTESLocation(from) );
 
   if (0!=clones) {
-    this->verbose() << "copyKeyedContainer copied  " << data.size() 
+    this->verbose() << "copyContainer copied  " << data.size() 
                     << " elements from " << from 
                     << " into " << outputTESLocation(from)
                     <<", size " << clones->size() << endmsg;
   } else {
-    this->Warning("CopyKeyedContainer failed to clone "+ from,
+    this->Warning("copyContainer failed to clone "+ from,
                   StatusCode::FAILURE, 1).ignore();
   }
 
@@ -237,12 +237,12 @@ template <class T, class ContainedItemCloner >
 const T* MicroDSTCommon<PBASE>::copyKeyedContainer( const T* from, T* to    ) 
 {
   if (!from || !from ) return 0;
-  this->verbose() << "copyContainer output container size " << to->size() 
+  this->verbose() << "copyKeyedContainer output container size " << to->size() 
             << endmsg;
   std::for_each(from->begin(), from->end(), 
                 ContainedItemCloner(to) );
 
-  this->verbose() << "copyContainer copied # elements into output container: " 
+  this->verbose() << "copyKeyedContainer copied # elements into output container: " 
             << to->size() << endmsg;
 
   return to;
