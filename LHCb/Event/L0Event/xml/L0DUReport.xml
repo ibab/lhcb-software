@@ -518,7 +518,7 @@
            int type =  channel->decisionType();
            if( channelPreDecision( channel->id(),bx  ) )value |= type;
           }
-          return value;
+          return ((value!=0) ? true : false);
         </code>
       </method>
 
