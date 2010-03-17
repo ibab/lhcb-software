@@ -1,17 +1,17 @@
-! $Id: release.notes,v 1.151 2010-03-12 23:54:19 odescham Exp $
+! $Id: release.notes,v 1.152 2010-03-17 14:05:28 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+!========================== CaloUtils v8r12 2010-03-17 ========================
 ! 2010-03-13
-  - CaloAlgUtils : track location is either 'offline' or 'hlt' depending on context by default 
-  CaloReco Configurable to apply specific location
-
+  - CaloAlgUtils : track location is either 'offline' or 'hlt' depending on
+      context by default CaloReco Configurable to apply specific location
 
 ! 2010-02-25 - Olivier Deschamps
-  - CaloAlgUtils/Calo2Track : improvements in generic context-dependent TES locations  
+  - CaloAlgUtils/Calo2Track : improvements in generic context-dependent TES
+                              locations  
   - CaloTrackAlg : accept unknown fitted status if hltContext(context())
-
 
 !========================== CaloUtils v8r11 2010-01-20 ========================
 ! 2010-01-14 - Victor Egorychev
