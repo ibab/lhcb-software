@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.179 2010-03-15 15:21:55 ibelyaev Exp $ 
+! $Id: release.notes,v 1.180 2010-03-17 17:31:52 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,6 +15,7 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! =========================== LoKiCore v9r12 2010-03-17 =======================
 ! 2010-03-15 - Vanya Belyaev
 
  - resurrect the access to doxygen documentation:
