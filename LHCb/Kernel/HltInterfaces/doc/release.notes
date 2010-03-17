@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.16 2010-03-08 16:10:51 pkoppenb Exp $
+! $Id: release.notes,v 1.17 2010-03-17 17:05:00 cattanem Exp $
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
+!============ Kernel/HltInterfaces v3r2 2010-03-17 ============================
 ! 2010-03-08 - Patrick Koppenburg
  - Remove cout statement that sneked into cvs
 
@@ -11,7 +12,6 @@
  - Improved code thanks to Gerhard
 
 !============ Kernel/HltInterfaces v3r1 2010-01-29 ============================
-
 ! 2009-12-04 - Gerhard Raven
  - move IHltReferenceClockSvc out of HltBase and into HltInterfaces
  - and remove it again: it has been renamed IReferenceRate, and moved to LHCbKernel
