@@ -1,10 +1,11 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.140 2010-03-16 08:41:28 jonrob Exp $
+! $Id: release.notes,v 1.141 2010-03-17 16:58:09 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r27 2010-03-17 =========================
 ! 2010-03-16 - Chris Jones
  - Add a new method to ProtoParticle to convert an extra info string into
    the corresponding enum
