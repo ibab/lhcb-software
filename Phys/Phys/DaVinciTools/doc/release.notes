@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.525 2010-03-17 08:40:26 giampi Exp $
+! $Id: release.notes,v 1.526 2010-03-17 12:48:02 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-03-17 - Juan Palacios
+ - src/FilterDesktop.cpp
+  . Revert to writing out containers. But only clone accepted particles
+    and their end vertices, by-passing the complicated machinery of the
+    PhysDesktop.
+
 ! 2010-03-17 - Giampiero Mancinelli
  - src/IsolationTwoBody[.h,.cpp]
   . removed the isolation tools
