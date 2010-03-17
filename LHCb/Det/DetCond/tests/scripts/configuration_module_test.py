@@ -131,6 +131,100 @@ class DetCondConfigurationTest(unittest.TestCase):
                 self.assertEqualsConfig(reader.Alternatives[k], orig_dict[k])
             else:
                 self.assertEqualsConfig(reader.Alternatives[k], alternative)
+
+    def test_030_heartbeat(self):
+        """HeartBeat condition (off-line, Oracle, default)"""
+        self.CondDB.Online = False
+        self.CondDB.UseOracle = True
+        applyConfigurableUsers()
         
+        hbc = allConfigurables["ONLINE"].getProp("HeartBeatCondition")
+        
+        self.assertEquals(hbc, "/Conditions/Online/LHCb/Tick")
+        
+    def test_031_heartbeat(self):
+        """HeartBeat condition (off-line, Oracle, ignore)"""
+        self.CondDB.Online = False
+        self.CondDB.UseOracle = True
+        self.CondDB.IgnoreHeartBeat = True
+        applyConfigurableUsers()
+        
+        hbc = allConfigurables["ONLINE"].getProp("HeartBeatCondition")
+        
+        self.assertEquals(hbc, "")
+    
+    def test_032_heartbeat(self):
+        """HeartBeat condition (off-line, SQLite, default)"""
+        self.CondDB.Online = False
+        self.CondDB.UseOracle = False
+        applyConfigurableUsers()
+        
+        online = allConfigurables["ONLINE"]
+        for conf in online.Readers[:-1]:
+            conf = allConfigurables[eval(conf.split(':')[0]).split("/")[1]]
+            self.assertEquals(conf.getProp("HeartBeatCondition"), "")
+        conf = online.Readers[-1]
+        conf = allConfigurables[eval(conf.split(':')[0]).split("/")[1]]
+        self.assertEquals(conf.getProp("HeartBeatCondition"), "/Conditions/Online/LHCb/Tick")
+        
+    def test_033_heartbeat(self):
+        """HeartBeat condition (off-line, SQLite, ignore)"""
+        self.CondDB.Online = False
+        self.CondDB.UseOracle = False
+        self.CondDB.IgnoreHeartBeat = True
+        applyConfigurableUsers()
+        
+        online = allConfigurables["ONLINE"]
+        for conf in online.Readers:
+            conf = allConfigurables[eval(conf.split(':')[0]).split("/")[1]]
+            self.assertEquals(conf.getProp("HeartBeatCondition"), "")
+        
+    def test_040_heartbeat(self):
+        """HeartBeat condition (on-line, Oracle, not ignore)"""
+        self.CondDB.Online = True
+        self.CondDB.UseOracle = True
+        self.CondDB.IgnoreHeartBeat = False
+        applyConfigurableUsers()
+        
+        hbc = allConfigurables["ONLINE"].getProp("HeartBeatCondition")
+        
+        self.assertEquals(hbc, "/Conditions/Online/LHCb/Tick")
+        
+    def test_041_heartbeat(self):
+        """HeartBeat condition (on-line, Oracle, default)"""
+        self.CondDB.Online = True
+        self.CondDB.UseOracle = True
+        applyConfigurableUsers()
+        
+        hbc = allConfigurables["ONLINE"].getProp("HeartBeatCondition")
+        
+        self.assertEquals(hbc, "")
+    
+    def test_042_heartbeat(self):
+        """HeartBeat condition (on-line, SQLite, not ignore)"""
+        self.CondDB.Online = True
+        self.CondDB.UseOracle = False
+        self.CondDB.IgnoreHeartBeat = False
+        applyConfigurableUsers()
+        
+        online = allConfigurables["ONLINE"]
+        for conf in online.Readers[:-1]:
+            conf = allConfigurables[eval(conf.split(':')[0]).split("/")[1]]
+            self.assertEquals(conf.getProp("HeartBeatCondition"), "")
+        conf = online.Readers[-1]
+        conf = allConfigurables[eval(conf.split(':')[0]).split("/")[1]]
+        self.assertEquals(conf.getProp("HeartBeatCondition"), "/Conditions/Online/LHCb/Tick")
+        
+    def test_043_heartbeat(self):
+        """HeartBeat condition (on-line, SQLite, default)"""
+        self.CondDB.Online = True
+        self.CondDB.UseOracle = False
+        applyConfigurableUsers()
+        
+        online = allConfigurables["ONLINE"]
+        for conf in online.Readers:
+            conf = allConfigurables[eval(conf.split(':')[0]).split("/")[1]]
+            self.assertEquals(conf.getProp("HeartBeatCondition"), "")
+
 if __name__ == '__main__':
     unittest.main(testRunner = unittest.TextTestRunner(stream=sys.stdout,verbosity=2))

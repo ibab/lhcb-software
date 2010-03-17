@@ -34,6 +34,7 @@ class CondDB(ConfigurableUser):
                   "DisableLFC"  : False,
                   "Online"      : False,
                   "IgnoreHeartBeat": False,
+                  "HeartBeatCondition" : "/Conditions/Online/LHCb/Tick",
                   }
     _propertyDocDct = { 
                        'Tags' : """ Dictionary of tags (partition:tag) to use for the COOL databases """,
@@ -48,6 +49,7 @@ class CondDB(ConfigurableUser):
                        'DisableLFC' : """ Do not use LFC lookup even if we are connecting to Oracle """,
                        'Online' : """ Flag to activate configuration options specific for the Online environment """,
                        'IgnoreHeartBeat' : """ Do not set the HeartBeatCondition for the Online partition """,
+                       'HeartBeatCondition' : """ Location of the heart-beat condition in the database """,
                        }
     LAYER = 0
     ALTERNATIVE = 1
@@ -274,9 +276,12 @@ class CondDB(ConfigurableUser):
         if tags:
             log.warning("Cannot set the tag for partitions %r", tags.keys()) 
         
+        # In the Online environment, IgnoreHeartBeat should be defaulted to True
+        if self.getProp("Online"):
+            self._properties["IgnoreHeartBeat"].setDefault(True)
         if not self.getProp("IgnoreHeartBeat"):
             if isinstance(partition["ONLINE"], CondDBAccessSvc):
-                partition["ONLINE"].HeartBeatCondition = "/Conditions/Online/LHCb/Tick"
+                self.propagateProperty("HeartBeatCondition", partition["ONLINE"])
             elif isinstance(partition["ONLINE"], CondDBTimeSwitchSvc):
                 # Add the heart beat conditions to the latest snapshot only since the
                 # others are limited but valid by construction.
@@ -284,7 +289,7 @@ class CondDB(ConfigurableUser):
                     latest = partition["ONLINE"].Readers[-1]
                     config = allConfigurables[eval(latest.split(':')[0]).split("/")[1]]
                     if isinstance(config, CondDBAccessSvc):
-                        config.HeartBeatCondition = "/Conditions/Online/LHCb/Tick"
+                        self.propagateProperty("HeartBeatCondition", config)
         
         if not self.getProp("Simulation"):
             # Standard configurations

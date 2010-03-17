@@ -4,6 +4,13 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2010-03-17 - Marco Clemencic
+ - Changes to the CondDB configurable
+   - in the online environment (Online == True) the IgnoreHeartBeat property is
+     defaulted to True
+   - added the property HeartBeatCondition to set the location of the heart-beat
+     condition
+
 ! 2010-03-05 - Marco Clemencic
  - Fixed a problem in the CondDB configurable for the usage of Oracle in the
    PIT.
