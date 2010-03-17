@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: DaVinciMonitoring.py,v 1.6 2010-03-17 16:25:02 ggiacomo Exp $
+# $Id: DaVinciMonitoring.py,v 1.7 2010-03-17 18:23:23 pkoppenb Exp $
 #
 # syntax: gaudirun.py $DAVINCIMONITORSROOT/options/DVMonitorDst.py
 #
@@ -30,6 +30,10 @@ importOptions( "$DAVINCIMONITORSROOT/options/RichCalib.py" )
 #importOptions( "$DAVINCIMONITORSROOT/options/MuonPidLaCalib.py" ) 
 importOptions( "$DAVINCIMONITORSROOT/options/MuIDMonitor.py" ) 
 
-inputType = DaVinci().getProp( "InputType" ).upper()
-if ( inputType == "DST") :
-    importOptions( "$DAVINCIMONITORSROOT/options/MuonAlignmentMonitor.py" ) 
+def checkDST():
+    inputType = DaVinci().getProp( "InputType" ).upper()
+    if ( inputType == "DST") :
+        importOptions( "$DAVINCIMONITORSROOT/options/MuonAlignmentMonitor.py" ) 
+
+appendPostConfigAction(checkDST)
+
