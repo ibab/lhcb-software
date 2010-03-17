@@ -25,6 +25,8 @@
       <location name="Downstream" place="Rec/Track/Downstream"/>
       <location name="Tsa"        place="Rec/Track/Tsa"/>
       <location name="Muon"       place="Rec/Track/Muon"/>
+      <location name="VeloPix"    place="Rec/Track/VeloPix"/>
+      <location name="VeloPixTT"     place="Rec/Track/VeloPixTT"/>
 
       <location name="HltSeed"       place="Hlt/Track/Seed"/>
       <location name="HltRZVelo"     place="Hlt/Track/RZVelo"/>
@@ -35,6 +37,8 @@
       <location name="HltDownstream" place="Hlt/Track/Downstream"/>
       <location name="HltTsa"        place="Hlt/Track/Tsa"/>
       <location name="HltMuon"       place="Hlt/Track/Muon"/>
+      <location name="HltVeloPix"    place="Hlt/Track/VeloPix"/>
+      <location name="HltVeloPixTT"  place="Hlt/Track/VeloPixTT"/>
 
       <location name="CaloCosmicsForward"       place="Calo/Track/Forward"/>
       <location name="CaloCosmicsBackward"      place="Calo/Track/Backward"/>
@@ -81,6 +85,7 @@
         <enumval name = "PatMatch"       value="16" desc="track produced with the PatMatch pattern recognition"/>
         <enumval name = "PatDownstream"  value="17" desc="track produced with the PatDownstream pattern recognition"/>
         <enumval name = "TTGeneric"      value="18" desc="track produced with the TTGenericTracking algorithm"/>
+	<enumval name = "PatVeloPixCheated" value="19" desc="track produced with the CheatedVeloPixPat algorithm"/>
       </enum>
 
       <enum
@@ -110,6 +115,7 @@
         <enumval name = "Muon"        desc="muon track"/>
         <enumval name = "Calo"        desc="calo cosmics track"/>
         <enumval name = "TT"          desc="TT track"/>
+        <enumval name = "VeloPix"     desc="VELO PIXEL track"/>
       </enum>
 
       <enum
@@ -965,6 +971,20 @@
           || type() == Track::Upstream 
           || type() == Track::Long) hasVPart = true;
           return hasVPart;
+        </code>
+      </method>
+
+      <method
+        type    = 'bool'
+        name    = 'hasVeloPix'
+        desc    = 'Check if track is of a type that goes thro VeloPix'
+        const   = 'TRUE'>
+        <code>
+          bool hasVPPart = false;
+          if (type() == Track::VeloPix 
+          || type() == Track::Upstream 
+          || type() == Track::Long) hasVPPart = true;
+          return hasVPPart;
         </code>
       </method>
 

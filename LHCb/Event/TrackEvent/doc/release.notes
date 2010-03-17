@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2010-03-17 - Victor Coco
+ - Added enum value related to VeloPix in Track and Measurment
+
 !======================= TrackEvent v5r3 2010-01-20 ==========================
 ! 2009-12-17 - Wouter Hulsbergen
  - Added typedef for gaudi::range in Track
