@@ -4,6 +4,9 @@ Package Coordinator : Johan Blouw
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+! 2010-03-17 Wouter Hulsbergen
+ - added "apply_tag NEEDS_PYCOOL" to requirements
+
 </PRE><H1><A NAME=v4r6>2010-03-03 Escher v4r6</A></H1><PRE>
 ! 2010-02-22 Johan Blouw:
  - added the line "use processing v* LCG_Interfaces" to the requirements file
