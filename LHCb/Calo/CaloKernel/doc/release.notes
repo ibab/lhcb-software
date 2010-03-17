@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.48 2010-03-08 01:56:45 odescham Exp $
+! $Id: release.notes,v 1.49 2010-03-17 14:02:40 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloKernel
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -7,9 +7,11 @@
 ! which are essentially independent from Detector and Event models
 ! =============================================================================
 
+!======================= CaloKernel v6r2 2010-03-17 ===========================
 ! 2010-03-08 - Olivier Deschamps
  - CaloKernel/ConfUtils.py
-   - getAlgo() / onDemand() : flexible context-dependent instance naming + TES pathes (not longer Offline/Hlt only)
+   - getAlgo() / onDemand() : flexible context-dependent instance naming + 
+                              TES pathes (not longer Offline/Hlt only)
    - update hltContext()
 
 !======================= CaloKernel v6r1 2009-10-16 ===========================
