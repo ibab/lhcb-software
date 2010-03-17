@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.32 2010-02-06 11:45:45 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.33 2010-03-17 16:42:02 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -2865,7 +2865,7 @@ the coordinate system of the object (e.g. module)
 *****************************************************************************/
   StatusCode TAConfig::PrintParameters( std::vector<double> &ali_par , int iteration) {
     // Alternative:
-    info() << " --->  alipar.size = " << ali_par.size() << endreq;
+    debug() << " --->  alipar.size = " << ali_par.size() << endreq;
 
     for(unsigned i=0;i<ali_par.size();i++){
       info() <<i<< " param of prev iter = "<< m_prevAlipar[i] << " param of this iter = "<< ali_par[i];
@@ -2884,32 +2884,32 @@ the coordinate system of the object (e.g. module)
     //  int cnt_rnk  = -1;
     unsigned cnt = 0;
     for ( ; t != m_C_pos.end(); ++t ) {
-      info() << "--------------------------------------------------------------------------------------"<<endreq;
-      info() << "Parameter name = " << t->first << " || rank = " << t->second  << " ,m_nAlignObj=" << m_nAlignObj 
+      debug() << "--------------------------------------------------------------------------------------"<<endreq;
+      debug() << "Parameter name = " << t->first << " || rank = " << t->second  << " ,m_nAlignObj=" << m_nAlignObj 
               << ", cnt = " << cnt << endreq;
       
       if ( m_dof[0] ){ 
-        info() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
+        debug() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
         cnt++;
       }
       if ( m_dof[1] ){
-        info() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
+        debug() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
         cnt++;
       }
       if ( m_dof[2] ){
-        info() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
+        debug() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
         cnt++; 
       }
       if ( m_dof[3] ){
-        info() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
+        debug() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
         cnt++; 
       }
       if ( m_dof[4] ){
-        info() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
+        debug() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
         cnt++; 
       }
       if ( m_dof[5] ){
-        info() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
+        debug() << "cnt="<<cnt<< " ali_par["<<t->second+cnt*m_nAlignObj<<"]=" << ali_par[t->second+cnt*m_nAlignObj]<<endreq; 
         cnt++; 
       }
       cnt=0;
@@ -2933,7 +2933,7 @@ the coordinate system of the object (e.g. module)
 
       //       info() << "Rnk = "<<t->second << " name " << t->first << endreq
       //              << " alignment param     = " <<  ali_par[t->second+cnt*m_nAlignObj] << endreq 
-      info()<< " prev : transl.(loc) = "  <<std::setw(15) <<  shiftlocal 
+      debug()<< " prev : transl.(loc) = "  <<std::setw(15) <<  shiftlocal 
             << " prev : rotation (loc)= " <<std::setw(15) <<   rotlocal << endreq 
             << " prev : transl.(glo) = "  <<std::setw(15) <<  shiftGlobal 
             << " prev : rotation (glo)= " <<std::setw(15) <<   rotGlobal <<endreq
@@ -2961,7 +2961,7 @@ the coordinate system of the object (e.g. module)
         for(; i != m_RnkZAngle.end(); i++){
           if((i->first == t->second) ) {
             thisStereo = (i->second).second;
-            info() <<"t->second "<< t->second << " III rank = " << i->first << " zpos = " 
+            debug() <<"t->second "<< t->second << " III rank = " << i->first << " zpos = " 
                    << (i->second).first  << " stereo "<< (i->second).second<<endreq; 
           }
         }
@@ -3080,7 +3080,7 @@ the coordinate system of the object (e.g. module)
       
  
       
-      info() << " final Translation vector: " << translation  
+      debug() << " final Translation vector: " << translation  
              << " final Rotation vector   : " << rotation << endreq
              << " pivot point             : " << pivot << endreq
              <<"------------------------------------------------------"<<endreq;
@@ -3107,7 +3107,7 @@ the coordinate system of the object (e.g. module)
       std::vector<double> pivotnew = pivot;
       DetDesc::getZYXTransformParameters(deltalocalnew, shiftlocalnew, rotlocalnew,pivot);
       DetDesc::getZYXTransformParameters(deltaGlobalnew, shiftGlobalnew, rotGlobalnew,pivot);           
-      info() << " new : pivot          " <<std::setw(15) << pivotnew << endreq
+      debug() << " new : pivot          " <<std::setw(15) << pivotnew << endreq
              << " new : transl.(loc) = "  <<std::setw(15) <<  shiftlocalnew 
              << " new : rotation (loc)= " <<std::setw(15) <<   rotlocalnew << endreq 
              << " new : transl.(glo) = "  <<std::setw(15) <<  shiftGlobalnew 

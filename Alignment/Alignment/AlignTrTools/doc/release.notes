@@ -4,6 +4,14 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+! 2010-03-17 - Johan Blouw
+ - modifed Configuration.py so that it does not rely anymore on 
+   python files in the option directory.
+ - modified ATrackSelector code so that it generates a more homogenous track distribution
+ - modifed  python/AlignTrTools/Configuration.py to reflect changes in source code
+ - removed some debug statements from TAConfig code.
+
+
 </PRE><H1><A NAME=v4r6p1>2010-03-03 AlignTrTools v4r6p1 </A></H1><PRE>
 ! 2010-02-18 - Rob Lambert
  - Fix in TAConfig.py to import TAConfig from the right place

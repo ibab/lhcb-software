@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : ATrackSelector
  *
  *  CVS Log :-
- *  $Id: ATrackSelector.h,v 1.6 2010-02-05 16:47:54 jblouw Exp $
+ *  $Id: ATrackSelector.h,v 1.7 2010-03-17 16:42:02 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   31/09/2006
@@ -18,6 +18,7 @@
 #include "AlignmentInterfaces/IATrackSelectorTool.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
 #include "TrackInterfaces/ITrackCaloMatch.h"
+#include "TrackInterfaces/ITrackExtrapolator.h"
 
 #include <string>
 
@@ -66,6 +67,7 @@ class ATrackSelector : public GaudiTool,
 		    int& nTThits);
  private :
    bool uniformTD( const LHCb::OTChannelID & );
+   bool yCut( const LHCb::Track & );
    inline int uniqueLayer(const LHCb::OTChannelID& channelID) const {
        return (channelID.station() - 1) * 4 + channelID.layer();
      };
@@ -75,12 +77,15 @@ class ATrackSelector : public GaudiTool,
    inline int uniqueModule(const LHCb::OTChannelID& channelID) const {
        return uniqueQuarter(channelID) * 9 + channelID.module() - 1;
      };
-   
  private:
    //Interfaces:
    IATrackSelectorTool* m_trackselector;    
+   ITrackExtrapolator* m_extrapolator;
    ITrackCaloMatch *m_trackenergy;    
-   
+
+   void PrintUniformTD();
+   bool Unify( const LHCb::Track&  );
+   bool uniformCut( int & );
    double m_minChi2Cut; // Min chi^2 cut
    double m_minPCut;    // Min p cut
    double m_minPtCut;    // Min pt cut
@@ -91,6 +96,8 @@ class ATrackSelector : public GaudiTool,
    double m_minITHitCut;    // Min hit cut
    double m_minOTHitCut;    // Min hit cut
    double m_minTTHitCut;    // Min hit cut
+   double m_yMaxCut;
+   double m_yMinCut;
    bool m_weights; // attempt to create uniform track distrubution in (OT)
    int m_uniCut; // module IDs larger than m_uniCut will be uniformed.
    double m_energyMinCut;    // Min energy cut
