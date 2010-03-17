@@ -17,10 +17,8 @@ from Configurables  import LHCbConfigurableUser
 # We import the track and vertex names from
 # HltTrackNames and HltVertexNames
 #
-from HltLine.HltTrackNames import HltSharedTracksPrefix, HltGlobalTrackLocation
-from HltLine.HltTrackNames import HltSharedRZVeloTracksName, HltMuonTracksName, HltUnfittedTracksSuffix  
-from HltLine.HltVertexNames import _vertexLocation, HltSharedVerticesPrefix, HltGlobalVertexLocation
-from HltLine.HltVertexNames import Hlt2DPrimaryVerticesName, Hlt3DPrimaryVerticesName
+from HltTracking.HltVertexNames import _vertexLocation, HltSharedVerticesPrefix, HltGlobalVertexLocation
+from HltTracking.HltVertexNames import Hlt2DPrimaryVerticesName
 #from HltLine.HltReco import MinimalRZVelo
 #
 # TODO : make this inherit the relevant tracking configurables

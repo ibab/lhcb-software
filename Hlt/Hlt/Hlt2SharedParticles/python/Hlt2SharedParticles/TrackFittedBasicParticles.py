@@ -16,14 +16,12 @@ from Configurables import PhotonMaker, PhotonMakerAlg
 from Configurables import ProtoParticleCALOFilter, ProtoParticleMUONFilter
 from GaudiKernel.SystemOfUnits import MeV
 #
-from HltLine.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedRICHForwardTracking
-#
+from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedRICHForwardTracking
 Hlt2BiKalmanFittedRICHForwardTracking 	= Hlt2BiKalmanFittedRICHForwardTracking()
 #
 # Now the downstream tracking
 #
-from HltLine.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
-#
+from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
 Hlt2BiKalmanFittedDownstreamTracking 	= Hlt2BiKalmanFittedDownstreamTracking()
 ##########################################################################
 #

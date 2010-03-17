@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltPVs.py,v 1.5 2010-03-10 23:12:21 gligorov Exp $
+# $Id: HltPVs.py,v 1.1 2010-03-17 22:40:11 gligorov Exp $
 # =============================================================================
-## @file HltLine/HltPVs.py
+## @file HltTracking/HltPVs.py
 #  Define the 2D and 3D primary vertex making algorithms for the Hlt
 #  @author V. Gligorov vladimir.gligorov@cern.ch
 #  @date 2010-02-21
@@ -11,7 +11,7 @@
 # the (ordered) list of (configurables corresponding to the) algorithms needed to 
 # obtain the Hlt1 selection 'PV2D' can be obtained by doing 
 #
-#   from HltLine.HltPVs import PV2D
+#   from HltTracking.HltPVs import PV2D
 #   PV2D.members() 
 #
 # in addition, the 'outputselection' of the last member can be 
@@ -42,7 +42,7 @@ from Configurables import GaudiSequencer
 # Configure PV algorithms
 #############################################################################################
 from HltTrackNames import HltSharedRZVeloTracksName, HltSharedTracksPrefix, _baseTrackLocation
-from HltLine import bindMembers
+from HltLine.HltLine import bindMembers
 from HltVertexNames import HltSharedVerticesPrefix,Hlt1VerticesPrefix,Hlt2VerticesPrefix
 from HltVertexNames import Hlt2DPrimaryVerticesName, Hlt3DPrimaryVerticesName,_vertexLocation
 from HltVertexNames import HltGlobalVertexLocation
@@ -75,7 +75,7 @@ def PV2D() :
                                                     }
                              , OutputSelection   = "PV2D" )
 
-	return bindMembers( None, [ MinimalRZVelo, patPV2D, preparePV2D ] )
+	return bindMembers( "HltPVsPV2DSeq", [ MinimalRZVelo, patPV2D, preparePV2D ] )
 
 def PV3D() :
 
@@ -90,4 +90,4 @@ def PV3D() :
 	recoPV3D.PVOfflineTool.InputTracks = [ (Hlt2UnfittedForwardTracking().hlt2VeloTracking()).outputSelection() ]
 	recoPV3D.OutputVerticesName = output3DVertices
 
-	return bindMembers( None, [ Hlt2UnfittedForwardTracking().hlt2VeloTracking(), recoPV3D ] )
+	return bindMembers( "HltPVsPV3DSeq", [ Hlt2UnfittedForwardTracking().hlt2VeloTracking(), recoPV3D ] )

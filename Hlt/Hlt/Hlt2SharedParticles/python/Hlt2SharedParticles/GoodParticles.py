@@ -8,7 +8,7 @@
 ##
 from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
-from HltLine.HltPVs import PV3D, PV2D
+from HltTracking.HltPVs import PV3D, PV2D
 from Configurables import FilterDesktop
 from Hlt2SharedParticles.BasicParticles import NoCutsKaons, NoCutsPions
 ##########################################################################

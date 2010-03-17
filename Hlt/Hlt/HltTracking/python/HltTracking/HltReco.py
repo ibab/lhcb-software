@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.29 2010-03-10 23:12:21 gligorov Exp $
+# $Id: HltReco.py,v 1.1 2010-03-17 22:40:11 gligorov Exp $
 # =============================================================================
-## @file HltLine/HltReco.py
+## @file HltTracking/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
 #  @author Gerhard Raven Gerhard.Raven@nikhef.nl
 #  @date 2009-04-03
@@ -11,7 +11,7 @@
 # the (ordered) list of (configurables corresponding to the) algorithms needed to 
 # obtain the Hlt1 selection 'PV2D' can be obtained by doing 
 #
-#   from HltLine.HltReco import PV2D
+#   from HltTracking.HltReco import PV2D
 #   PV2D.members() 
 #
 # in addition, the 'outputselection' of the last member can be 
@@ -44,7 +44,7 @@ from Configurables import PatPV3D
 from Configurables import Tf__PatVeloGeneric, Tf__PatVeloRTracking, Tf__PatVeloGeneralTracking
 from Configurables import PVOfflineTool
 from Configurables import HltTrackFilter, HltVertexFilter, HltTrackUpgrade
-from HltLine import bindMembers
+from HltLine.HltLine import bindMembers
 from Configurables import PatSeeding, PatSeedingTool
 
 #############################################################################################
@@ -109,7 +109,7 @@ reco1Velo = HltTrackUpgrade( 'Hlt1RecoVelo'
 # Define the reconstruction sequence 
 #############################################################################################
 
-from HltDecodeRaw import DecodeVELO
+from HltLine.HltDecodeRaw import DecodeVELO
 from Configurables import DecodeVeloRawBuffer
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
@@ -120,7 +120,7 @@ RZVelo   = bindMembers( None, [ MinimalRZVelo, prepareRZVelo ] )
 Velo     = bindMembers( None, [                  RZVelo , reco1Velo ] )
 
 from Configurables import PatSeeding
-from HltDecodeRaw import DecodeIT
+from HltLine.HltDecodeRaw import DecodeIT
 Hlt1Seeding = bindMembers( None, [ DecodeIT,
                                    PatSeeding('Hlt1MBSeeding'
                                               ,OutputTracksName = _baseTrackLocation(Hlt1TracksPrefix,Hlt1SeedingTracksName))

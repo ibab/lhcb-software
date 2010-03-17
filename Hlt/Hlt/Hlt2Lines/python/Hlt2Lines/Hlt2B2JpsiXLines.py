@@ -1,4 +1,4 @@
-# $Id: Hlt2B2JpsiXLines.py,v 1.17 2010-03-12 13:24:47 gligorov Exp $
+# $Id: Hlt2B2JpsiXLines.py,v 1.18 2010-03-17 22:29:47 gligorov Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -59,7 +59,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
         from Hlt2SharedParticles.BasicParticles import NoCutsKaons
-	from HltLine.HltPVs import PV3D
+	from HltTracking.HltPVs import PV3D
         from Configurables import CombineParticles
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsiPhiPrescaledDecision" : 50375 } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsiPhiDetachedDecision" : 50376 } )
@@ -241,7 +241,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
 	@author F Rodrigues
 	'''
 	from HltLine.HltLine import Hlt2Line, Hlt2Member
-        from HltLine.HltPVs import PV3D
+        from HltTracking.HltPVs import PV3D
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
         from Hlt2SharedParticles.Ks import KsLL
@@ -328,7 +328,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         @author F Rodrigues
         '''
         from HltLine.HltLine import Hlt2Line, Hlt2Member
-        from HltLine.HltPVs import PV3D
+        from HltTracking.HltPVs import PV3D
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
         from Hlt2SharedParticles.V0 import KsDD
@@ -365,7 +365,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         @author F Rodrigues
         '''
         from HltLine.HltLine import Hlt2Line, Hlt2Member
-        from HltLine.HltPVs import PV3D
+        from HltTracking.HltPVs import PV3D
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
         from Hlt2SharedParticles.V0 import KsDD

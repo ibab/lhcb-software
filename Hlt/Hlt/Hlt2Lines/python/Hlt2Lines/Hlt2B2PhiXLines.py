@@ -1,4 +1,4 @@
-# $Id: Hlt2B2PhiXLines.py,v 1.7 2010-02-26 04:56:17 gligorov Exp $
+# $Id: Hlt2B2PhiXLines.py,v 1.8 2010-03-17 22:29:47 gligorov Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -23,7 +23,7 @@ class Hlt2B2PhiXLinesConf(HltLinesConfigurableUser) :
 
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line, Hlt2Member
-        from HltLine.HltPVs import PV3D
+        from HltTracking.HltPVs import PV3D
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.BasicParticles import NoCutsKaons
         from Configurables import CombineParticles

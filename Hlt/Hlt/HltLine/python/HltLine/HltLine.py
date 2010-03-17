@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.34 2010-03-15 13:57:13 gligorov Exp $ 
+# $Id: HltLine.py,v 1.35 2010-03-17 22:35:39 gligorov Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.34 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.35 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -1367,7 +1367,7 @@ class Hlt2Line(object):
             members = _members
             if last.getType() in needsCopy :
                 members += [ HltCopyParticleSelection( decisionName( line, 'Hlt2')
-                                                     , InputSelection = 'TES:/Event/HLT/%s/Particles'%last.getName()
+                                                     , InputSelection = 'TES:/Event/Hlt2/%s/Particles'%last.getName()
                                                      , OutputSelection = decisionName(line, 'Hlt2')) ]
             mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Hlt2' ) , Members = members ) })
         # final cloning of all parameters:

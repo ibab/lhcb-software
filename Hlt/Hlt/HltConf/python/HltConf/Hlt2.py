@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.52 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.53 $"
 # =============================================================================
 import types
 from Gaudi.Configuration import *
@@ -30,15 +30,15 @@ from Hlt2Lines.Hlt2diphotonDiMuonLines  import Hlt2diphotonDiMuonLinesConf
 #
 # The tracking configurations
 #
-from HltLine.Hlt2Tracking import Hlt2Tracking
+from HltTracking.Hlt2Tracking import Hlt2Tracking
 #
-from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking 
-from HltLine.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedRICHForwardTracking
-from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedDownstreamTracking
-from HltLine.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
-from HltLine.Hlt2TrackingConfigurations import Hlt2UniKalmanFittedForwardTracking 
-from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedLongTracking 
-from HltLine.Hlt2TrackingConfigurations import setDataTypeForTracking
+from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking 
+from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedRICHForwardTracking
+from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedDownstreamTracking
+from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
+from HltTracking.Hlt2TrackingConfigurations import Hlt2UniKalmanFittedForwardTracking 
+from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedLongTracking 
+from HltTracking.Hlt2TrackingConfigurations import setDataTypeForTracking
 # Define what categories stand for
 # There are the strings used in HltThresholdSettings
 

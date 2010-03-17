@@ -1,7 +1,7 @@
-## $Id: Hlt2TopologicalLines.py,v 1.34 2010-03-10 23:14:53 gligorov Exp $
+## $Id: Hlt2TopologicalLines.py,v 1.35 2010-03-17 22:29:47 gligorov Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-03-10 23:14:53 $'
-__version__ = '$Revision: 1.34 $'
+__date__    = '$Date: 2010-03-17 22:29:47 $'
+__version__ = '$Revision: 1.35 $'
 
 ###
 #
@@ -286,7 +286,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         for i in [ 'LoKiTrigger.decorators' ] :
             if i not in modules : modules.append(i)
 
-	from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+	from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
         Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
 
         Hlt2TopoKillTooManyInTrkAlg = VoidFilter('Hlt2TopoKillTooManyInTrkAlg'
@@ -308,7 +308,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         """
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
-        from HltLine.HltPVs import PV3D
+        from HltTracking.HltPVs import PV3D
 
         daugcuts = """(PT> %(ComRobAllTrkPtLL)s *MeV)
                       & (P> %(ComRobAllTrkPLL)s *MeV)
@@ -337,7 +337,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         """
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
-        from HltLine.HltPVs import PV3D
+        from HltTracking.HltPVs import PV3D
 
         incuts = """(PT> %(ComTFAllTrkPtLL)s *MeV)
                     & (P> %(ComTFAllTrkPLL)s *MeV)

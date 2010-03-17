@@ -34,5 +34,5 @@ apply_pattern    component_library library=HltLine
 
 # =============================================================================
 # ======= the patterns ========================================================
-macro HltLineUserModules "HltConf.HltLinesConfigurableUser HltConf.Hlt2Tracking"
+macro HltLineUserModules "HltConf.HltLinesConfigurableUser"
 apply_pattern install_python_modules

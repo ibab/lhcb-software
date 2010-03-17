@@ -1,4 +1,4 @@
-// $Id: HltAddPhotonToVertex.cpp,v 1.4 2008-12-29 16:20:59 graven Exp $
+// $Id: HltAddPhotonToVertex.cpp,v 1.5 2010-03-17 22:33:39 gligorov Exp $
 // Include files 
 
 
@@ -55,7 +55,7 @@ StatusCode HltAddPhotonToVertex::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "HltAddPhotonToVertex: Execute" << endmsg;
 
   RecVertices* overtices = new RecVertices();
-  put(overtices,"Hlt/Vertex/"+m_selections.output()->id().str());
+  put(overtices,"Hlt1/Vertex/"+m_selections.output()->id().str());
 
   if (( m_selections.input<1>()->empty() || m_selections.input<2>()->empty() )) {
     if ( msgLevel(MSG::DEBUG)  ) debug() << " no tracks or no vertices to run on  " << endreq;

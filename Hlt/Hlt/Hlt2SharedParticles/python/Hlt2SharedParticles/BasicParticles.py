@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.19 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
@@ -22,7 +22,7 @@ from GaudiKernel.SystemOfUnits import MeV
 # No RICH info can be added until the fast-fit is done
 # For particles with RICH info see TFBasicParticles
 #
-from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
 Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
 ##########################################################################
 #

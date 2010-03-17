@@ -25,7 +25,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.BasicParticles import Muons
         # Get the muon tracks straight from the HLT reconstruction
         # TODO: check that this does what it is supposed to do
-	from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+	from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
         from Configurables import CombineParticles, FilterDesktop, NumberOfTracksFilter
 
         #-------------------------------------------

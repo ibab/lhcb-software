@@ -38,8 +38,8 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
         from Hlt1Lines.HltL0Candidates import convertL0Candidates
         from Configurables import HltTrackUpgradeTool
         from Configurables import L0ConfirmWithT
-        from HltLine.HltReco import RZVelo, Velo
-        from HltLine.HltPVs  import PV2D
+        from HltTracking.HltReco import RZVelo, Velo
+        from HltTracking.HltPVs  import PV2D
         from HltLine.HltDecodeRaw import DecodeIT, DecodeTT, DecodeVELO, DecodeECAL
         from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
 

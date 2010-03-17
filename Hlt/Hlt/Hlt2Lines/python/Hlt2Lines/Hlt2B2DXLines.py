@@ -48,7 +48,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.GoodParticles import GoodPions, GoodKaons
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.V0 import KsDDFit
-	from HltLine.HltPVs import PV3D
+	from HltTracking.HltPVs import PV3D
 
         ###################################################################
         # Absorb the shared particle reconstruction into this configurable.
@@ -61,7 +61,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
         modules =  CoreFactory('CoreFactory').Modules
         
-	from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+	from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
 	Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
 	
 
@@ -88,9 +88,9 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                              , Code = daugcuts
                              )
         if self.getProp('ComRobUseGEC') :
-            lclInputParticles = bindMembers( 'DXInputParticles', [ Hlt2KillTooManyDXIP, GoodKaons, filter ] )
+            lclInputParticles = bindMembers( 'DXInputParticles', [ Hlt2KillTooManyDXIP, GoodKaons, PV3D(), filter ] )
         else :
-            lclInputParticles = bindMembers( 'DXInputParticles', [GoodKaons, filter ] )
+            lclInputParticles = bindMembers( 'DXInputParticles', [GoodKaons, PV3D(), filter ] )
                 
                 
                 
@@ -124,7 +124,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                                          , MotherCut = parentcuts
                                          )
             #explicitly demand the PV reco because we are paranoid    
-            RobustNBody = bindMembers( name, [PV3D()] + inputSeq + [ combineDXNBody ] )
+            RobustNBody = bindMembers( name, inputSeq + [ PV3D(), combineDXNBody ] )
             return RobustNBody
                 
                     
@@ -165,7 +165,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                                  , Code = codestr
                                  )
 	    #explicitly require the primary vertex as we are paranoid
-            filterSeq = bindMembers(name, [PV3D()] + inputSeq + [ filter ])
+            filterSeq = bindMembers(name, inputSeq + [ filter ])
             return filterSeq
             
         Robust3BodySeq = RobustFilter('Robust3BodySeq', [Robust3Body])
@@ -192,7 +192,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                              , Code = incuts
                              )
         #explicitly require the primary vertex as we are paranoid
-        lclTFInputParticles = bindMembers('TopoTFIn', [ PV3D(), BiKalmanFittedPions, BiKalmanFittedKaons, filter ])
+        lclTFInputParticles = bindMembers('TopoTFIn', [ BiKalmanFittedPions, BiKalmanFittedKaons, PV3D(), filter ])
         
         
         ###################################################################
@@ -244,7 +244,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                                          , MotherCut = parentcuts
                                          )
             #explicitly require the primary vertex as we are paranoid
-            TFNBody = bindMembers( name, [PV3D()] + inputSeq + [ combineDXNBody ] )
+            TFNBody = bindMembers( name, inputSeq + [ PV3D(), combineDXNBody ] )
             return TFNBody
         
         ################################################################### 

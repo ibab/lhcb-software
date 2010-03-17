@@ -14,12 +14,16 @@ from HltLine.HltLine import bindMembers
 from HltKshort.HltKshort import createHltV0DD, createHltV0LL, createHltV0DDFit
 
 #
+# TODO : this file is obsolete and should be removed!
+#
+
+#
 # We need a new instance of the Hlt2Tracking configurable
 # once for the fitted and once for the unfitted 
 #
-from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedDownstreamTracking 
-from HltLine.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
-from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking  
+from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedDownstreamTracking 
+from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
+from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking  
 
 Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
 Hlt2UnfittedDownstreamTracking = Hlt2UnfittedDownstreamTracking()

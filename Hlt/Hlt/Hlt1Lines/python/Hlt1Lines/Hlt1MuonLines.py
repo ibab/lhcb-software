@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1MuonLines.py,v 1.14 2010-03-04 22:59:59 graven Exp $
+# $Id: Hlt1MuonLines.py,v 1.15 2010-03-17 22:28:01 gligorov Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $"
 # =============================================================================
 
 
@@ -89,8 +89,8 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt1Tool   as Tool
         from Hlt1Lines.HltL0Candidates import convertL0Candidates, L0Channels
         from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
-        from HltLine.HltReco import RZVelo, Velo
-	from HltLine.HltPVs  import PV2D
+        from HltTracking.HltReco import RZVelo, Velo
+	from HltTracking.HltPVs  import PV2D
 
         # It already Prepare the muon segments with proper error calling the tool MuonSeedTool
         RecoMuonSeg = HltMuonRec('HltRecoMuonSeg'

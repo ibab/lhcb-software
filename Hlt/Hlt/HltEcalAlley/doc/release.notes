@@ -4,6 +4,11 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+
+! 2010-03-17 - V. Gligorov
+ - Continuing work on Savannah tasks #12691,13784. Update naming convention for
+   Hlt1 objects.
+
 ! 2010-03-13 - Mariusz Witek
  - spped up HltRadCorTool
 

@@ -10,7 +10,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $'
 # =============================================================================
 
 
@@ -39,8 +39,8 @@ class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
         from Configurables import HltAntiEleConf
         from Configurables import L0ConfirmWithT
         from Configurables import PatConfirmTool
-        from HltLine.HltReco import RZVelo, Velo
-	from HltLine.HltPVs  import PV2D
+        from HltTracking.HltReco import RZVelo, Velo
+	from HltTracking.HltPVs  import PV2D
         from HltLine.HltDecodeRaw import DecodeIT, DecodeECAL
         from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
 

@@ -4,6 +4,11 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+
+! 2010-03-17 - V. Gligorov
+ - Continuing work on Savannah tasks #12691,13784.
+   Follow movement of code from HltLine to HltTracking.
+
 ! 2010-03-02 - V. Gligorov
  - Follow developments in Savannah tasks 13784/12691. Retrieve tracks automatically
    from the appropriate HLT2 tracking object.

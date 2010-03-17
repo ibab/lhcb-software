@@ -57,6 +57,6 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
         self.__create_minibias_line__()
         self.__create_nobias_line__()
 
-        from HltLine.HltReco import MinimalRZVelo, Hlt1Seeding
+        from HltTracking.HltReco import MinimalRZVelo, Hlt1Seeding
         self.__create_microbias_line__('RZVelo',MinimalRZVelo)
         self.__create_microbias_line__('TStation',Hlt1Seeding)

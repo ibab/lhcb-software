@@ -1,11 +1,20 @@
-! $Id: release.notes,v 1.95 2010-03-15 13:58:38 gligorov Exp $
+! $Id: release.notes,v 1.96 2010-03-17 22:39:41 gligorov Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
-
-
+! 2010-03-17 - V. Gligorov
+ - Continuing work on Savannah tasks #12691,13784.
+   Move reconstruciton code to HltTracking, including 
+     HltPVs
+     HltReco
+     Hlt2Tracking
+     Hlt2TrackingConfigurations
+     HltTrackNames
+     HltVertexNames
+   Tell HltLine about the output location of the Match reconstruction.
+ 
 ! 2010-03-15 - V. Gligorov
  - Update HltLine to tell it about where the Match reconstruction puts its
    output tracks.

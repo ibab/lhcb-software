@@ -52,8 +52,8 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltANNSvc
         from Configurables import PatPV3D, PVOfflineTool, PVSeed3DTool, LSAdaptPV3DFitter, Hlt2DisplVertices, Hlt2DisplVerticesDEV
         from Hlt2SharedParticles.BasicParticles import NoCutsPions
-        from HltLine.HltPVs import PV3D
-	from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+        from HltTracking.HltPVs import PV3D
+	from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
         Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()       
  
         # Run PatPV3D

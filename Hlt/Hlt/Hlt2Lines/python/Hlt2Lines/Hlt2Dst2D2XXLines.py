@@ -47,7 +47,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltLine import Hlt2Member
-        from HltLine.HltPVs import PV3D
+        from HltTracking.HltPVs import PV3D
         from Configurables import HltANNSvc
         from Configurables import CombineParticles, PhysDesktop
         from Configurables import FilterDesktop

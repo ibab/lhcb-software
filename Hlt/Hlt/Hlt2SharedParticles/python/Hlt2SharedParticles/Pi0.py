@@ -10,7 +10,7 @@ from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
 from Configurables import PhotonMaker, ResolvedPi0Maker, MergedPi0Maker
 from GaudiKernel.SystemOfUnits import MeV
-from HltLine.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
 
 Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
 ##########################################################################
