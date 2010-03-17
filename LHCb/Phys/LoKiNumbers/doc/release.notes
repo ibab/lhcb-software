@@ -4,6 +4,7 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiNumbers v8r5 2010-03-17 =======================
 ! 2010-03-07 - Vanya Belyaev
 
  - use new comparisons & functions fo LoKicore 
