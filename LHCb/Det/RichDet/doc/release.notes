@@ -4,9 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v14r0 2010-03-17 ===========================
 ! 2010-03-09 - Antonis Papanestis
- - Allow the use of different demagnification parameters for positive and negative 
-   magnetic field
+ - Allow the use of different demagnification parameters for positive and 
+   negative magnetic field
 
 !======================== RichDet v13r4 2010-02-12 ===========================
 ! 2010-02-03 - Antonis Papanestis
