@@ -1,4 +1,4 @@
-// $Id: DecodeRawBankToClusters.cpp,v 1.16 2009-06-06 12:00:04 krinnert Exp $
+// $Id: DecodeRawBankToClusters.cpp,v 1.17 2010-03-17 18:33:19 krinnert Exp $
 
 #include <vector>
 #include <algorithm>
@@ -18,6 +18,9 @@ unsigned int VeloDAQ::decodeRawBankToClustersV2(
 {
   // construct new raw decoder, implicitely decodes header
   VeloRawBankDecoder decoder(bank);
+
+  // only decode banks without errors
+  if ( decoder.hasError() ) { return 0; }
 
   // make sure we have enough capacity in the container
   // to avoid unnecessary relocations
@@ -89,6 +92,9 @@ unsigned int VeloDAQ::decodeRawBankToClustersV3(
 {
   // construct new raw decoder, implicitely decodes header
   VeloRawBankDecoder decoder(bank);
+
+  // only decode banks without errors
+  if ( decoder.hasError() ) { return 0; }
 
   // make sure we have enough capacity in the container
   // to avoid unnecessary relocations

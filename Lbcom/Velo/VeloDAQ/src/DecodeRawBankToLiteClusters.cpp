@@ -1,4 +1,4 @@
-// $Id: DecodeRawBankToLiteClusters.cpp,v 1.5 2006-08-16 17:28:53 krinnert Exp $
+// $Id: DecodeRawBankToLiteClusters.cpp,v 1.6 2010-03-17 18:33:19 krinnert Exp $
 
 #include "VeloDet/DeVeloSensor.h"
 
@@ -13,6 +13,9 @@ unsigned int VeloDAQ::decodeRawBankToLiteClusters (
 {
   // construct new raw decoder, implicitely decodes header
   VeloRawBankDecoder decoder(bank);
+
+  // only decode banks without errors
+  if ( decoder.hasError() ) { return 0; }
 
   // decode the clusterpositions, create lite clusters and
   // append them to the container

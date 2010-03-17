@@ -2,6 +2,9 @@
 ! Package     : VeloDAQ
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
+! 2010-03-17 - Kurt Rinnert
+ - ZS banks are no longer decoded when the TELL1 has set the error flag
+
 ! 2010-03-03 - Tomasz Szumlak
  - add protection against corrupted banks in Velo decoders
 

@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.20 2010-03-03 21:03:20 szumlat Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.21 2010-03-17 18:33:19 krinnert Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -186,6 +186,9 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
     
     const LHCb::RawBank* rb = *bi;
 
+    // a priory we assume the byte count is correct
+    byteCount = rb->size();
+
     // --> protect against corrupted banks
     if(LHCb::RawBank::MagicPattern!=rb->magic()) return ( StatusCode::FAILURE );
 
@@ -213,7 +216,6 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
       case VeloDAQ::v3:
         VeloDAQ::decodeRawBankToClustersV3(rawBank,sensor,m_assumeChipChannelsInRawBuffer,clusters,byteCount,errorMsg);
         if ( !errorMsg.empty() ) {
-          //error() << errorMsg << endmsg;
           unsigned int msgCount = 0;
           if ( msgLevel(MSG::DEBUG) ) msgCount = 10;
           Warning(errorMsg, StatusCode::SUCCESS, msgCount).ignore();
