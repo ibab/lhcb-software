@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.17 2010-03-16 15:09:13 jpalac Exp $
+// $Id: FilterDesktop.cpp,v 1.18 2010-03-17 12:47:44 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -314,16 +314,16 @@ protected:
   {
     const std::string& loc = desktop()->getOutputLocation();
 
-    if (!exist<LHCb::Particle::Selection>(loc + "/Particles") ) {  
+    if (!exist<LHCb::Particle::Container>(loc + "/Particles") ) {  
       if (msgLevel(MSG::DEBUG)) debug() << "Saving empty container at " 
                                         << loc + "/Particles"<< endmsg ;
-      LHCb::Particle::Selection* dummy = new LHCb::Particle::Selection;
+      LHCb::Particle::Container* dummy = new LHCb::Particle::Container;
       put(dummy, loc + "/Particles");
     }
-    if (!exist<LHCb::Vertex::Selection>(loc+"/Vertices") ) {
+    if (!exist<LHCb::Vertex::Container>(loc+"/Vertices") ) {
       if (msgLevel(MSG::DEBUG)) debug() << "Saving empty container at " 
                                         << loc + "/Vertices"<< endmsg ;
-      LHCb::Vertex::Selection* dummy = new LHCb::Vertex::Selection;
+      LHCb::Vertex::Container* dummy = new LHCb::Vertex::Container;
       put(dummy, loc + "/Vertices");
     }
     return StatusCode::SUCCESS;
@@ -496,12 +496,10 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
     if ( sc.isFailure () ) 
     { return Error ( "Error from Input Plots tool", sc ) ; }
   }
-  //
-  // copy the lines from the previous implementation 
-  //
-  LHCb::Particle::Selection* accepted = new LHCb::Particle::Selection;
+
+  LHCb::Particle::Container* accepted = new LHCb::Particle::Container;
   put(accepted, desktop()->getOutputLocation()+"/Particles");
-  LHCb::Vertex::Selection* vertices = new LHCb::Vertex::Selection;
+  LHCb::Vertex::Container* vertices = new LHCb::Vertex::Container;
   put(vertices, desktop()->getOutputLocation()+"/Vertices");
   //
   StatEntity& cnt = counter ( "efficiency" ) ;
@@ -516,9 +514,14 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
     cnt += decision ;
     if  ( !decision ) { continue ; }                       // CONTINUE
     //
-    accepted->push_back ( p ) ;
-    if (p->endVertex() ) {
-      vertices->push_back( p->endVertex() ); 
+    LHCb::Particle* clone = p->clone();
+    if (clone) {
+      accepted->insert ( clone ) ;
+      if (clone->endVertex() ) {
+        LHCb::Vertex* clonedVertex = (clone->endVertex())->clone();
+        clone->setEndVertex(clonedVertex);
+        vertices->insert( clonedVertex ); 
+      }
     }
     
     //
@@ -529,12 +532,12 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
                                     << desktop()->getOutputLocation()+"/Particles" << endmsg ;
 
   // make the final plots 
-  if ( produceHistos () && 0 != m_outputPlots ) 
-  {
-    StatusCode sc = m_outputPlots -> fillPlots ( *accepted ) ;
-    if ( sc.isFailure () ) 
-    { return Error ( "Error from Output Plots tool", sc ) ; }
-  }
+   if ( produceHistos () && 0 != m_outputPlots ) 
+   {
+     StatusCode sc = m_outputPlots -> fillPlots ( LHCb::Particle::ConstVector(accepted->begin(), accepted->end()) ) ;
+     if ( sc.isFailure () ) 
+     { return Error ( "Error from Output Plots tool", sc ) ; }
+   }
   
   // monitor output (if required) 
   if ( monitor() && !m_postMonitorCode.empty() ) 
