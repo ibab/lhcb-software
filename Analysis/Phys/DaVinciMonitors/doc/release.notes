@@ -4,7 +4,8 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
-! 2010-03-17 - Giacomo Graziani
+!!========================== DaVinciMonitors v1r9 2010-03-17 ===================
+ 2010-03-17 - Giacomo Graziani
  - call MuonAlignmentMonitor only or DST (doesn't work on RDST)
 
 !========================== DaVinciMonitors v1r8 2010-02-22 ==================
