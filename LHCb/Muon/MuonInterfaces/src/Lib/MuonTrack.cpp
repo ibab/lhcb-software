@@ -1,4 +1,4 @@
-// $Id: MuonTrack.cpp,v 1.1 2010-02-10 19:07:50 ggiacomo Exp $
+// $Id: MuonTrack.cpp,v 1.2 2010-03-17 10:31:07 ggiacomo Exp $
 #define MUONTRACKRECNMSPC
 #include "MuonInterfaces/MuonTrack.h"
 #include "MuonInterfaces/MuonLogPad.h"
@@ -22,11 +22,11 @@ namespace MuonTrackRec {
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-MuonTrack::MuonTrack() : m_chi2x(-1.), m_chi2y(-1.), 
+MuonTrack::MuonTrack() : m_isClone(false), m_chi2x(-1.), m_chi2y(-1.), 
                          m_sx(-1.), m_bx(-1.), m_sy(-1.), m_by(-1.),
                          m_errsx(-1.), m_errbx(-1.), m_covbsx(-1.),
                          m_errsy(-1.), m_errby(-1.), m_covbsy(-1.),
-                         m_t0(-1.), m_sigmat(-1.), 
+                         m_t0(-1.), m_errt0(-1), m_sigmat(-1.), 
                          m_speed(0.), m_sigmaspeed(0.), 
                          m_speedFitted(false), 
                          m_trackP(0.), m_trackPt(0.),
