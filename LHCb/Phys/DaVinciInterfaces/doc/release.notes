@@ -3,6 +3,13 @@
 ! Responsible : Juan Palacios
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
+! 2010-03-17 - Giampiero Mancinelli
+ - Kernel/IIsolation.h
+  . removed
+
+! 2010-03-17 - Giampiero Mancinelli
+ - src/DavinciInterfaces.cpp
+  . reverted changes for the particle isolation tool interface.
 
 ! 2010-03-16 - Vanya Belyaev
 
