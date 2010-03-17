@@ -1,4 +1,4 @@
-// $Id: XmlMuonODECnv.cpp,v 1.9 2008-07-12 06:15:40 asatta Exp $
+// $Id: XmlMuonODECnv.cpp,v 1.10 2010-03-17 16:19:10 cattanem Exp $
 // Include files 
 
 #include <vector>
@@ -147,7 +147,7 @@ XmlMuonODECnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
     dataObj->initialize(ODENumberValue,regionNumberValue);    
     //if(sc.isFailure())return sc;
     dataObj->setECSName(ODEECSNameValue);
-    //msg<<MSG::INFO<<" ECS Name "<<ODEECSNameValue<<endreq;
+    //msg<<MSG::INFO<<" ECS Name "<<ODEECSNameValue<<endmsg;
     
     const std::string tsLayoutXString =
       dom2Std (childElement->getAttribute (TSLayoutXString));

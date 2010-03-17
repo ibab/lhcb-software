@@ -1,4 +1,4 @@
-// $Id: MuonBasicGeometry.cpp,v 1.7 2007-06-08 15:34:00 asatta Exp $
+// $Id: MuonBasicGeometry.cpp,v 1.8 2010-03-17 16:19:07 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -24,17 +24,17 @@
 MuonBasicGeometry::MuonBasicGeometry(IDataProviderSvc* detSvc ,
                                      IMessageSvc * msgSvc ) {
   MsgStream log(msgSvc, "MuonBasicGeometry");
-  //log << MSG::INFO << "%%% " << "muon geom" << endreq;
+  //log << MSG::INFO << "%%% " << "muon geom" << endmsg;
   
   SmartDataPtr<DetectorElement> muonSystem(detSvc,DeMuonLocation::Default); 
-  // log << MSG::INFO << "%%% " << muonSystem->name() << endreq;
+  // log << MSG::INFO << "%%% " << muonSystem->name() << endmsg;
   m_stationNumber=0; 
   m_regionNumber=4;   
   if(muonSystem){
-    //log << MSG::INFO << "%%% " << muonSystem->name() << endreq;    
+    //log << MSG::INFO << "%%% " << muonSystem->name() << endmsg;    
   }
   else{
-    // log << MSG::INFO << "%%%  muon system null"  << endreq;
+    // log << MSG::INFO << "%%%  muon system null"  << endmsg;
   }
   
   IDetectorElement::IDEContainer::iterator itStation;  
@@ -45,11 +45,11 @@ MuonBasicGeometry::MuonBasicGeometry(IDataProviderSvc* detSvc ,
                                         (*itStation)->name());
   if(!muStation){
    log << MSG::ERROR << "Could not read station"
-       <<(*itStation)->name() <<endreq;      
+       <<(*itStation)->name() <<endmsg;      
   }
-  //log << MSG::INFO << "+ " << muStation->name() << endreq;
+  //log << MSG::INFO << "+ " << muStation->name() << endmsg;
   std::string stationName=findName(muStation->name(),DeMuonLocation::Default); 
-  //log << MSG::INFO << "+++ " << stationName << endreq;
+  //log << MSG::INFO << "+++ " << stationName << endmsg;
    
   m_stationNumber=m_stationNumber+1;
   numsta.push_back(stationName);

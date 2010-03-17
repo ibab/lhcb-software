@@ -1,4 +1,4 @@
-// $Id: XmlMuonL1BoardCnv.cpp,v 1.5 2008-04-16 08:36:48 cattanem Exp $
+// $Id: XmlMuonL1BoardCnv.cpp,v 1.6 2010-03-17 16:19:09 cattanem Exp $
 // Include files 
 
 #include <string>
@@ -162,17 +162,17 @@ XmlMuonL1BoardCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
     std::vector<long> ODEListValue;
     StatusCode sc=splitList(ODEList,ODEListValue);
     if(sc.isFailure())return sc;  
-    msg<<MSG::DEBUG<<" read in "<<ODEList<<endreq;
+    msg<<MSG::DEBUG<<" read in "<<ODEList<<endmsg;
     if(ODEListValue.size()!=NumLink){
       msg<<MSG::ERROR<<
-        " something wrong in Tell1 - ODE connectiom description "<<endreq;
+        " something wrong in Tell1 - ODE connectiom description "<<endmsg;
       return StatusCode::FAILURE;
     }
     for( unsigned int i =0; i<NumLink;i++){
-      msg<<MSG::DEBUG<<" link "<<i<<" ODE "<<ODEListValue[i]<<endreq;
-      msg<<MSG::DEBUG<<" ODEList length "<<ODEList.size()<<" "<<ODEListValue.size()<<endreq;
+      msg<<MSG::DEBUG<<" link "<<i<<" ODE "<<ODEListValue[i]<<endmsg;
+      msg<<MSG::DEBUG<<" ODEList length "<<ODEList.size()<<" "<<ODEListValue.size()<<endmsg;
       dataObj->setLinkConnection(i,ODEListValue[i]);      
-      //      msg<<MSG::INFO<<" ode "<<i<<" "<<ODEListValue[i]<<endreq;
+      //      msg<<MSG::INFO<<" ode "<<i<<" "<<ODEListValue[i]<<endmsg;
       if(ODEListValue[i]>0){        
       }else{        
       }      
@@ -184,12 +184,12 @@ XmlMuonL1BoardCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
     
     for(unsigned int i=0; i < nodeChildren->getLength(); ++i){   
       msg << MSG::VERBOSE << "Processing child "<<
-        dom2Std(nodeChildren->item(i)->getNodeName())<<endreq;
+        dom2Std(nodeChildren->item(i)->getNodeName())<<endmsg;
       if(dom2Std(nodeChildren->item(i)->getNodeName()) == 
          dom2Std(ODEReferenceString)){
         
         msg << MSG::VERBOSE << "Processing element "
-            << dom2Std(ODEReferenceString) <<" "<<iODE<< endreq;
+            << dom2Std(ODEReferenceString) <<" "<<iODE<< endmsg;
         xercesc::DOMNamedNodeMap* attributes =      
           nodeChildren->item(i)->getAttributes();
         xercesc::DOMNode* odeNode = attributes->
@@ -203,14 +203,14 @@ XmlMuonL1BoardCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
         //      xmlAddr = createAddressForHref (OdeReference, 5, address);
         //      msg << MSG::VERBOSE << " location : " << xmlAddr->par()[0]
         //          << " entryName : " << xmlAddr->par()[1]
-      //          << " isString : " << xmlAddr->ipar()[0] << endreq;      
+      //          << " isString : " << xmlAddr->ipar()[0] << endmsg;      
       //      msg << MSG::DEBUG << "Processing element "
       //   << OdeReference << " "<<entryName<< " "<<location 
-      //   <<" "<<location1<<" "<<dataObj->name()<<endreq;
+      //   <<" "<<location1<<" "<<dataObj->name()<<endmsg;
       dataObj->addODE(ODEListValue[iODE],
                            OdeReference.substr(poundPosition + 1));
       msg << MSG::VERBOSE <<ODEListValue[iODE]<<" "<<
-        OdeReference.substr(poundPosition + 1)<<endreq;
+        OdeReference.substr(poundPosition + 1)<<endmsg;
       iODE++;
       
     }
@@ -218,7 +218,7 @@ XmlMuonL1BoardCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
     else if(dom2Std(nodeChildren->item(i)->getNodeName()) == 
             dom2Std(TSLayoutString)){
       msg << MSG::VERBOSE << "Processing element "<<
-        dom2Std(TSLayoutString)<<endreq;
+        dom2Std(TSLayoutString)<<endmsg;
       
       xercesc::DOMNamedNodeMap* attributes =      
         nodeChildren->item(i)->getAttributes();
@@ -238,7 +238,7 @@ XmlMuonL1BoardCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
       long TSYValue = atol(dom2Std (TSLayoutYNode
                                      ->getNodeValue()).c_str()); ;
 	msg<<MSG::VERBOSE<<"layout "<<TSXValue<<" "<<TSYValue<<
-        " "<<TSRegionValue<<endreq;	
+        " "<<TSRegionValue<<endmsg;	
       dataObj->addLayout(TSRegionValue,TSXValue,TSYValue);
       
     }

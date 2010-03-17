@@ -1,11 +1,6 @@
-// $Id: DeMuonChamber.cpp,v 1.19 2009-10-05 10:15:01 asatta Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-//
+// $Id: DeMuonChamber.cpp,v 1.20 2010-03-17 16:19:06 cattanem Exp $
 // ============================================================================
 #define MUONDET_DEMUONCHAMBER_CPP 1
-// ============================================================================
 
 // Include files
 #include "MuonDet/DeMuonChamber.h"
@@ -51,7 +46,7 @@ StatusCode DeMuonChamber::initialize()
 {
   StatusCode sc = DetectorElement::initialize();
   if( sc.isFailure() ) { 
-    msgStream() << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
+    msgStream() << MSG::ERROR << "Failure to initialize DetectorElement" << endmsg;
     return sc ; 
   }
   int sta(0),reg(0),chm(0); 
@@ -80,7 +75,7 @@ StatusCode DeMuonChamber::initialize()
 
   // for now with MWPCs and RPCs this is a good formula
   setGridName(m_chmbGrid);
-  //msgStream()<<MSG::INFO<<" test ale "<<name <<" "<<sta<<" "<<reg<<" "<<chm<<endreq;
+  //msgStream()<<MSG::INFO<<" test ale "<<name <<" "<<sta<<" "<<reg<<" "<<chm<<endmsg;
   return sc;
 }
 
@@ -102,7 +97,7 @@ IPVolume* DeMuonChamber::getFirstGasGap(){
     pos=lvolname.find_last_of("/");
     std::string mystring=lvolname.substr(pos+1);
  
-    //msg<<MSG::ERROR<<"test del nome "<<mystring<<endreq;
+    //msg<<MSG::ERROR<<"test del nome "<<mystring<<endmsg;
     if(mystring=="lvGasGap"){
       //loop un variys gap layer to get the real gas gap volume
       ILVolume::PVolumes::const_iterator pvGapIterator;
@@ -129,7 +124,7 @@ IPVolume* DeMuonChamber::getGasGap(int number){
     pos=lvolname.find_last_of("/");
     std::string mystring=lvolname.substr(pos+1);
     
-    //msg<<MSG::ERROR<<"test del nome "<<mystring<<endreq;
+    //msg<<MSG::ERROR<<"test del nome "<<mystring<<endmsg;
     if(mystring=="lvGasGap"){
       //loop un variys gap layer to get the real gas gap volume
       ILVolume::PVolumes::const_iterator pvGapIterator;
@@ -160,7 +155,7 @@ IPVolume* DeMuonChamber::getGasGapLayer(int number){
     pos=lvolname.find_last_of("/");
     std::string mystring=lvolname.substr(pos+1);
     
-    //msg<<MSG::ERROR<<"test del nome "<<mystring<<endreq;
+    //msg<<MSG::ERROR<<"test del nome "<<mystring<<endmsg;
     if(mystring=="lvGasGap"){
       if(loopnumber==number) return (*pvIterator);
       loopnumber++;
@@ -187,7 +182,7 @@ StatusCode  DeMuonChamber::isPointInGasGap(Gaudi::XYZPoint pointInChamber,Gaudi:
     pos=lvolname.find_last_of("/");
     std::string mystring=lvolname.substr(pos+1);
     
-    //msg<<MSG::ERROR<<"test del nome "<<mystring<<endreq;
+    //msg<<MSG::ERROR<<"test del nome "<<mystring<<endmsg;
     if(mystring=="lvGasGap"){
       //loop un variys gap layer to get the real gas gap volume
       ILVolume::PVolumes::const_iterator pvGapIterator;
@@ -240,7 +235,7 @@ int DeMuonChamber::getGasGapNumber(){
     pos=lvolname.find_last_of("/");
     std::string mystring=lvolname.substr(pos+1);
     
-    //msg<<MSG::ERROR<<"test del nome "<<mystring<<endreq;
+    //msg<<MSG::ERROR<<"test del nome "<<mystring<<endmsg;
     if(mystring=="lvGasGap"){
       //loop un variys gap layer to get the real gas gap volume
       ILVolume::PVolumes::const_iterator pvGapIterator;

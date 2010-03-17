@@ -1,4 +1,4 @@
-// $Id: MuonDAQHelper.cpp,v 1.15 2010-03-02 09:41:08 asatta Exp $
+// $Id: MuonDAQHelper.cpp,v 1.16 2010-03-17 16:19:09 cattanem Exp $
 // Include files
 
 #include "GaudiKernel/SmartDataPtr.h"
@@ -144,7 +144,7 @@ StatusCode MuonDAQHelper::initDAQMaps()
   msgStream()<<MSG::DEBUG<<" step 1 "<<endmsg;
   //init Tell1 Number and link in Tell1
   for(int station=0;station<5;station++){
-    // debug()<<"station number "<<station<<endreq;
+    // debug()<<"station number "<<station<<endmsg;
     std::string cablingBasePath=getBasePath(station);
     std::string cablingPath=cablingBasePath+"Cabling";
     SmartDataPtr<MuonStationCabling>  cabling(m_detSvc, cablingPath);
@@ -174,15 +174,15 @@ StatusCode MuonDAQHelper::initDAQMaps()
       std::string L1path=cablingBasePath+
         cabling->getL1Name(L1Board);
       SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1path);
-      msgStream()<<MSG::DEBUG<<" tell1 "<<L1path<<endreq;
+      msgStream()<<MSG::DEBUG<<" tell1 "<<L1path<<endmsg;
       m_tellPerStation[station].push_back(l1->L1Number());
 
       for(unsigned int i=0;i<MuonDAQHelper_linkNumber;i++){
-        msgStream()<<MSG::DEBUG<<" link "<<i<<" "<<l1->getLinkConnection(i)<<endreq;
+        msgStream()<<MSG::DEBUG<<" link "<<i<<" "<<l1->getLinkConnection(i)<<endmsg;
 
         (m_linkInTell1[Tell1Counter]).push_back(l1->getLinkConnection(i));
         msgStream()<<MSG::DEBUG<<" test Tell1Counter "<<
-          (m_linkInTell1[Tell1Counter])[i]<<endreq;
+          (m_linkInTell1[Tell1Counter])[i]<<endmsg;
 
       }
       Tell1Counter++;
@@ -192,7 +192,7 @@ StatusCode MuonDAQHelper::initDAQMaps()
   //check the ODE board number
   unsigned int ODENumber=0;
   for(int station=0;station<5;station++){
-    msgStream()<<MSG::DEBUG<<"station number "<<station<<endreq;
+    msgStream()<<MSG::DEBUG<<"station number "<<station<<endmsg;
     std::string cablingBasePath=getBasePath(station);
     std::string cablingPath=cablingBasePath+"Cabling";
     SmartDataPtr<MuonStationCabling>  cabling(m_detSvc, cablingPath);
@@ -233,11 +233,11 @@ StatusCode MuonDAQHelper::initDAQMaps()
   if(sc.isFailure())return sc;
   //  sc=checkMapConsistency();
   if(sc.isFailure()){
-    msgStream()<<MSG::WARNING<<"Map Consistency check failed"<<endreq;
+    msgStream()<<MSG::WARNING<<"Map Consistency check failed"<<endmsg;
     return sc;
   }else
   {
-    msgStream()<<MSG::DEBUG<<" test sucessful"<<endreq;
+    msgStream()<<MSG::DEBUG<<" test sucessful"<<endmsg;
   }
 
   return StatusCode::SUCCESS;
@@ -250,7 +250,7 @@ StatusCode MuonDAQHelper::initTELL1Maps()
 
   int Tell1Number=0;
   for(int station=0;station<5;station++){
-    msgStream()<<MSG::DEBUG<<"station number "<<station<<endreq;
+    msgStream()<<MSG::DEBUG<<"station number "<<station<<endmsg;
     std::string cablingBasePath=getBasePath(station);
     std::string cablingPath=cablingBasePath+"Cabling";
     SmartDataPtr<MuonStationCabling>  cabling(m_detSvc, cablingPath);
@@ -263,7 +263,7 @@ StatusCode MuonDAQHelper::initTELL1Maps()
     for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){
 
 
-      msgStream()<<MSG::DEBUG<<"L1 number "<<cabling->getL1Name(0)<<endreq;
+      msgStream()<<MSG::DEBUG<<"L1 number "<<cabling->getL1Name(0)<<endmsg;
       std::string L1path=cablingBasePath+
         cabling->getL1Name(L1Board);
       SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1path);
@@ -299,19 +299,19 @@ StatusCode MuonDAQHelper::initTELL1Maps()
           unsigned int digitOffSetY=0;
           SmartDataPtr<MuonTSMap>  TSMap(m_detSvc,TSPath);
           int i=0;
-          msgStream()<<MSG::DEBUG<<TSPath<<endreq;
+          msgStream()<<MSG::DEBUG<<TSPath<<endmsg;
           m_TUSize[station][region]=TSMap->synchChSize();
 
           for(int isynch=0;isynch<TSMap->synchChSize();isynch++){
             msgStream()<<MSG::DEBUG<<" TS "<<isynch<<" "<<
-              TSMap->synchChUsed(isynch)<<endreq;
+              TSMap->synchChUsed(isynch)<<endmsg;
             ODE_channels++;
 
             if(TSMap->synchChUsed(isynch)){
 
 
               //          for(int i=0;i<TSMap->numberOfOutputSignal();i++){
-              //msg<<MSG::INFO<<"cabling base 2 "<<cablingBasePath<<endreq;
+              //msg<<MSG::INFO<<"cabling base 2 "<<cablingBasePath<<endmsg;
               unsigned int layout=TSMap->layoutOutputChannel(i);
               unsigned int  layoutX=TSMap->gridXLayout(layout);
               unsigned int  layoutY=TSMap->gridYLayout(layout);
@@ -325,7 +325,7 @@ StatusCode MuonDAQHelper::initTELL1Maps()
               // if(station==1&&region==0&&quadrant==3)
               // {
               //   msgStream()<<MSG::VERBOSE<<ODE_channels<<" "
-              //         <<isynch<<" "<<  digitX<< " "<<digitY<<endreq;
+              //         <<isynch<<" "<<  digitX<< " "<<digitY<<endmsg;
               //
               // }
 
@@ -369,7 +369,7 @@ StatusCode MuonDAQHelper::initODEMaps()
 
   unsigned int countL1=0;
   for(int station=0;station<5;station++){
-    msgStream()<<MSG::DEBUG<<"station number "<<station<<endreq;
+    msgStream()<<MSG::DEBUG<<"station number "<<station<<endmsg;
     std::string cablingBasePath=getBasePath(station);
     std::string cablingPath=cablingBasePath+"Cabling";
     SmartDataPtr<MuonStationCabling>  cabling(m_detSvc, cablingPath);
@@ -380,7 +380,7 @@ StatusCode MuonDAQHelper::initODEMaps()
 
     msgStream()<<MSG::DEBUG<<" station "<<station<<endmsg;
     for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){
-      msgStream()<<MSG::DEBUG<<"L1 number "<<cabling->getL1Name(0)<<endreq;
+      msgStream()<<MSG::DEBUG<<"L1 number "<<cabling->getL1Name(0)<<endmsg;
       std::string L1path=cablingBasePath+
         cabling->getL1Name(L1Board);
       SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1path);
@@ -419,7 +419,7 @@ StatusCode MuonDAQHelper::initODEMaps()
 
             if(TSMap->synchChUsed(isynch)){
               //for(int i=0;i<TSMap->numberOfOutputSignal();i++){
-              //msg<<MSG::INFO<<"cabling base 2 "<<cablingBasePath<<endreq;
+              //msg<<MSG::INFO<<"cabling base 2 "<<cablingBasePath<<endmsg;
               unsigned int layout=TSMap->layoutOutputChannel(i);
               unsigned int  layoutX=TSMap->gridXLayout(layout);
               unsigned int  layoutY=TSMap->gridYLayout(layout);
@@ -432,7 +432,7 @@ StatusCode MuonDAQHelper::initODEMaps()
                                   quadrant,digitX,digitY);
               m_mapTileInODE[odenum-1].push_back(muontile);
               msgStream()<<MSG::DEBUG<<m_mapTileInODE[odenum-1].size()<<" "<<
-                muontile<<endreq;
+                muontile<<endmsg;
 
               m_mapTileInODEDC06[odenum-1].push_back(muontile);
               i++;
@@ -444,7 +444,7 @@ StatusCode MuonDAQHelper::initODEMaps()
         }
       }
       m_ODENumberInTell1[countL1]=totODE;
-      msgStream()<<MSG::DEBUG<<" number "<<countL1<<" "<<totODE<<endreq;
+      msgStream()<<MSG::DEBUG<<" number "<<countL1<<" "<<totODE<<endmsg;
 
       countL1++;
     }
@@ -464,7 +464,7 @@ StatusCode MuonDAQHelper::initReverseMaps()
 
   unsigned int L1Count=0;
   m_TotODEBoard=0;
-  msgStream()<<MSG::DEBUG<<" qui "<<endreq;
+  msgStream()<<MSG::DEBUG<<" qui "<<endmsg;
 
   for(int station=0;station<5;station++){
     msgStream()<<MSG::DEBUG<<"station number "<<station<<endmsg;
@@ -493,7 +493,7 @@ StatusCode MuonDAQHelper::initReverseMaps()
       for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
         std::string ODEpath=cablingBasePath
           +l1->getODEName(ODEBoard);
-        msgStream()<<MSG::DEBUG<<L1Board<<" ode "<<ODEBoard<<" "<<ODEpath<<endreq;
+        msgStream()<<MSG::DEBUG<<L1Board<<" ode "<<ODEBoard<<" "<<ODEpath<<endmsg;
 
         SmartDataPtr<MuonODEBoard>  ode(m_detSvc,ODEpath);
         if( 0 == ode ) {
@@ -562,14 +562,14 @@ StatusCode MuonDAQHelper::initReverseMaps()
         m_ODENameEnd[station][region][quadrant]=ODEEnd;
         ODEStart=ODEEnd;
         msgStream()<<MSG::DEBUG<<" ff "<<m_ODENameStart[0][0][0]<<" "<<
-          station<<" "<<region<<" "<<quadrant<<endreq;
+          station<<" "<<region<<" "<<quadrant<<endmsg;
       }
 
 
     }
   }
 
-  msgStream()<<MSG::DEBUG<<" exit "<<endreq;
+  msgStream()<<MSG::DEBUG<<" exit "<<endmsg;
 
   return StatusCode::SUCCESS;
 
@@ -591,12 +591,12 @@ StatusCode MuonDAQHelper::initializeLUTCrossing()
   int countTell1=m_M1Tell1;
 
   for(int station=1;station<5;station++){
-    //debug()<<"station number "<<station<<endreq;
+    //debug()<<"station number "<<station<<endmsg;
     std::string cablingBasePath=getBasePath(station);
     std::string cablingPath=cablingBasePath+"Cabling";
     SmartDataPtr<MuonStationCabling>  cabling(m_detSvc, cablingPath);
     for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){
-      //debug()<<"L1 number "<<cabling->getL1Name(0)<<endreq;
+      //debug()<<"L1 number "<<cabling->getL1Name(0)<<endmsg;
       std::string L1path=cablingBasePath+
         cabling->getL1Name(L1Board);
       SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1path);
@@ -620,7 +620,7 @@ StatusCode MuonDAQHelper::initializeLUTCrossing()
           unsigned int digitOffSetX=0;
           unsigned int digitOffSetY=0;
           SmartDataPtr<MuonTSMap>  TSMap(m_detSvc,TSPath);
-          //debug()<<"trigger sector "<<TSPath<<endreq;
+          //debug()<<"trigger sector "<<TSPath<<endmsg;
           if(TS==0){
             FirstTSMap=static_cast<MuonTSMap*>( TSMap);
 
@@ -629,7 +629,7 @@ StatusCode MuonDAQHelper::initializeLUTCrossing()
           std::vector<LHCb::MuonTileID> digitInTS;
           std::vector<LHCb::MuonTileID> wrongdigitInTS;
           for(int i=0;i<TSMap->numberOfOutputSignal();i++){
-            //msg<<MSG::INFO<<"cabling base 2 "<<cablingBasePath<<endreq;
+            //msg<<MSG::INFO<<"cabling base 2 "<<cablingBasePath<<endmsg;
             unsigned int layout=TSMap->layoutOutputChannel(i);
             unsigned int  layoutX=TSMap->gridXLayout(layout);
             unsigned int  layoutY=TSMap->gridYLayout(layout);
@@ -683,7 +683,7 @@ std::vector<LHCb::MuonTileID> MuonDAQHelper::DoPadDC06(std::vector<
     int NY=TS->gridYLayout(0);
     int Nsub=NX*NY;
 
-    //debug()<<"number NX NY "<<NX<<" "<<NY<<endreq;
+    //debug()<<"number NX NY "<<NX<<" "<<NY<<endmsg;
     int maxPads=TS->gridXLayout(0)*TS->gridYLayout(1);
     list_of_pads.reserve(maxPads);
     LHCb::MuonTileID t;
@@ -692,7 +692,7 @@ std::vector<LHCb::MuonTileID> MuonDAQHelper::DoPadDC06(std::vector<
     }
     // work on sub sector
     if(Nsub>8){
-      // err()<<"error the dimensioning of the TS subsector is wrong "<<endreq;
+      // err()<<"error the dimensioning of the TS subsector is wrong "<<endmsg;
       return list_of_pads;
 
     }
@@ -709,14 +709,14 @@ std::vector<LHCb::MuonTileID> MuonDAQHelper::DoPadDC06(std::vector<
         (TS->gridXLayout(TS->layoutOutputChannel(index))/NX);
       int my=TS->gridYOutputChannel(index)/
         (TS->gridYLayout(TS->layoutOutputChannel(index))/NY);
-      //debug()<<" digit "<<index<<" "<<mx<<" "<<my<<" "<<*it<<endreq;
+      //debug()<<" digit "<<index<<" "<<mx<<" "<<my<<" "<<*it<<endmsg;
       int Msub=mx+my*NX;
       // horizntal o vertical?
       bool horizontal=false;
       if(TS->layoutOutputChannel(index)==0)horizontal=true;
       if(horizontal)horiz[Msub].push_back(*it);
       else hvert[Msub].push_back(*it);
-      //debug()<<" horizontal ? "<<     horizontal<<endreq;
+      //debug()<<" horizontal ? "<<     horizontal<<endmsg;
     }
     // now the address of fired pads..
     for(int i=0;i<Nsub;i++){
@@ -724,18 +724,18 @@ std::vector<LHCb::MuonTileID> MuonDAQHelper::DoPadDC06(std::vector<
       std::vector<unsigned int>::iterator itx;
       std::vector<unsigned int>::iterator ity;
       //debug
-      //debug()<<" sub matrix "<<i<<endreq;
+      //debug()<<" sub matrix "<<i<<endmsg;
       //debug()<<" horizontal sequence ";
       for(itx=horiz[i].begin();
           itx<horiz[i].end();itx++){
         //debug()<<*itx<<" ";
       }
-      //debug()<<endreq;
+      //debug()<<endmsg;
       //debug()<<" vertical sequence ";
       for(ity=hvert[i].begin();ity<hvert[i].end();ity++){
         //debug()<<*ity<<" ";
       }
-      //debug()<<endreq;
+      //debug()<<endmsg;
       //end debug
       unsigned int y_index=0;
       unsigned int subY=i/NX;
@@ -751,13 +751,13 @@ std::vector<LHCb::MuonTileID> MuonDAQHelper::DoPadDC06(std::vector<
             itx<horiz[i].end();itx++,x_index++){
           unsigned int address=offsetX+x_index+
             (offsetY+y_index)*(TS->gridXLayout(0));
-          //debug()<<" result of the address "<<address<<endreq;
+          //debug()<<" result of the address "<<address<<endmsg;
           LHCb::MuonTileID padTile=tileY.intercept(*itx);
           list_of_pads[address]=padTile;
           //debug()<<" TS dec "<<address<<" "<<
           //      padTile.layout()<<" "<<padTile.station()<<" "<<
           //  padTile.region()<<" "<<padTile.quarter()<<" "<<
-          //  padTile.nX()<<" "<<padTile.nY()<<" "<<endreq;
+          //  padTile.nX()<<" "<<padTile.nY()<<" "<<endmsg;
 
         }
       }
@@ -776,7 +776,7 @@ std::vector<LHCb::MuonTileID> MuonDAQHelper::DoPadDC06(std::vector<
     for(it=digit.begin();it<digit.end();it++,index++){
       unsigned int address=index;
       list_of_pads[address]=*it;
-      // debug()<<" result of the address "<<address<<endreq;
+      // debug()<<" result of the address "<<address<<endmsg;
     }
   }
   return list_of_pads;
@@ -806,7 +806,7 @@ std::vector<LHCb::MuonTileID> MuonDAQHelper::DoPadV1(std::vector<LHCb::
   if(station==3&&region==0)wrongFirmware=true;
   if(station==4&&region==0)wrongFirmware=true;
   msgStream()<<MSG::DEBUG<<" st reg wrong "<<station<<" "<<region<<" "<<
-    wrongFirmware<<endreq;
+    wrongFirmware<<endmsg;
 
   if(TS->numberOfLayout()==2){
     for(it=digit.begin();it<digit.end();it++){
@@ -848,12 +848,12 @@ std::vector<LHCb::MuonTileID> MuonDAQHelper::DoPadV1(std::vector<LHCb::
     }
     std::stable_sort(doubleList.begin(),doubleList.end(),SortPairTileInTU());
     list_of_pads.clear();
-    msgStream()<<MSG::DEBUG<<" after reordering "<<endreq;
+    msgStream()<<MSG::DEBUG<<" after reordering "<<endmsg;
 
     std::vector<std::pair<LHCb::MuonTileID,LHCb::MuonTileID> >::iterator iPair;
     for(iPair=doubleList.begin();iPair!=doubleList.end();iPair++){
       std::pair<LHCb::MuonTileID,LHCb::MuonTileID> tilePair=*iPair;
-      msgStream()<<MSG::DEBUG<<tilePair.second<<endreq;
+      msgStream()<<MSG::DEBUG<<tilePair.second<<endmsg;
 
       list_of_pads.push_back(tilePair.second);
 
@@ -944,15 +944,15 @@ LHCb::MuonTileID MuonDAQHelper::getPadInTell1V1(unsigned int Tell1_num,
 
 LHCb::MuonTileID  MuonDAQHelper::findTS(LHCb::MuonTileID digit)
 {
-  //msgStream()<<MSG::INFO<<" enter "<<endreq;
-  //msgStream()<<MSG::INFO<<digit<<endreq;
+  //msgStream()<<MSG::INFO<<" enter "<<endmsg;
+  //msgStream()<<MSG::INFO<<digit<<endmsg;
   unsigned int station=digit.station();
 
   unsigned int region=digit.region();
 
   // get TS layout in region from L1
   unsigned int index=station*16+region*4;
-  //msgStream()<<MSG::INFO<<m_L1Name.size()<<endreq;
+  //msgStream()<<MSG::INFO<<m_L1Name.size()<<endmsg;
 
   std::string L1path=m_L1Name[index];
   //  msgStream()<<MSG::INFO<<L1path<<" "<<station<<" "<<region<<endmsg;
@@ -996,21 +996,21 @@ unsigned int MuonDAQHelper::findDigitInTS(std::string TSPath,
     }
   }
   //  msgStream()<<MSG::INFO<<"layout "<<layout<<" "<<gridx<<" "<<gridy<<endmsg;
-  //msgStream()<<MSG::INFO<<TSTile<<endreq;
+  //msgStream()<<MSG::INFO<<TSTile<<endmsg;
 
   //for(int i=0;i<TS->numberOfOutputSignal();i++){
   unsigned int ch_no_hole=0;
 
   for(int i=0;i<TS->synchChSize();i++){
     //  msgStream()<<MSG::INFO<<TS->synchChSize()<<" "<<ch_no_hole<<" "<<
-    //TS->synchChUsed(i)<<endreq;
+    //TS->synchChUsed(i)<<endmsg;
 
     if(TS->synchChUsed(i))
     {
       //     msgStream()<<MSG::INFO<<" TS loop "<<
       //TS->layoutOutputChannel(ch_no_hole)<<" "<<
       //TS->gridXOutputChannel(ch_no_hole)<<" "<<
-      // TS->gridYOutputChannel(ch_no_hole)<<endreq;
+      // TS->gridYOutputChannel(ch_no_hole)<<endmsg;
 
       if(TS->layoutOutputChannel(ch_no_hole)==layout){
         if((unsigned int)TS->gridXOutputChannel(ch_no_hole)==gridx){
@@ -1157,7 +1157,7 @@ long MuonDAQHelper::channelsInL1BeforeODE(std::string L1Path,
   SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1Path);
   //  long station=l1->getStation();
 
-  msgStream()<<MSG::DEBUG<<L1Path<<" "<<ODENumber<<" "<<hole<<endreq;
+  msgStream()<<MSG::DEBUG<<L1Path<<" "<<ODENumber<<" "<<hole<<endmsg;
 
   return  192*(findODEPosition(L1Path, ODENumber,hole));
 
@@ -1172,10 +1172,10 @@ unsigned int MuonDAQHelper::DAQaddressInL1(LHCb::MuonTileID digitTile,
   ODEAdd=DAQaddressInODE(digitTile,L1Number,ODENumber,hole);
   std::string L1Path=findL1(digitTile);
   //  unsigned int ODEPos=findODEPosition(L1Path,ODENumber,hole);
-  msgStream()<<MSG::DEBUG<<" check "<<hole<<" "<<L1Path<<" "<<ODENumber<<endreq;
+  msgStream()<<MSG::DEBUG<<" check "<<hole<<" "<<L1Path<<" "<<ODENumber<<endmsg;
 
   unsigned int chToAdd=channelsInL1BeforeODE(L1Path,ODENumber,false);
-  msgStream()<<MSG::DEBUG<<" ch add "<<chToAdd+ODEAdd<<endreq;
+  msgStream()<<MSG::DEBUG<<" ch add "<<chToAdd+ODEAdd<<endmsg;
   return chToAdd+ODEAdd;
 
 
@@ -1247,26 +1247,26 @@ std::vector<unsigned int> MuonDAQHelper::padsinTS(
   std::vector<unsigned int> list_of_pads;
   //maxPads=0;
   SmartDataPtr<MuonTSMap>  TS(m_detSvc,TSPath);
-  msgStream()<<MSG::DEBUG<<"----- start a trigger sector cross ---------"<<endreq;
-  msgStream()<<MSG::DEBUG<<TSPath<<" "<<TS->numberOfOutputSignal()<<endreq;
+  msgStream()<<MSG::DEBUG<<"----- start a trigger sector cross ---------"<<endmsg;
+  msgStream()<<MSG::DEBUG<<TSPath<<" "<<TS->numberOfOutputSignal()<<endmsg;
   msgStream()<<MSG::DEBUG<<" seq ";
   std::vector<unsigned int>::iterator idebug;
   for(idebug=TSDigit.begin();idebug<TSDigit.end();idebug++){
     msgStream()<<MSG::DEBUG<<" "<<*idebug;
   }
-  msgStream()<<MSG::DEBUG<<endreq;
+  msgStream()<<MSG::DEBUG<<endmsg;
 
   if(TS->numberOfLayout()==2){
     //how many subsector????
     int NX=TS->gridXLayout(1);
     int NY=TS->gridYLayout(0);
     int Nsub=NX*NY;
-    //debug()<<"number NX NY "<<NX<<" "<<NY<<endreq;
+    //debug()<<"number NX NY "<<NX<<" "<<NY<<endmsg;
     //maxPads=TS->gridXLayout(0)*TS->gridYLayout(1);
     // work on sub sector
     if(Nsub>8){
       msgStream()<<MSG::ERROR<<
-        "error the dimensioning of the TS subsector is wrong "<<endreq;
+        "error the dimensioning of the TS subsector is wrong "<<endmsg;
       return list_of_pads;
 
     }
@@ -1286,16 +1286,16 @@ std::vector<unsigned int> MuonDAQHelper::padsinTS(
         (TS->gridXLayout(TS->layoutOutputChannel(index))/NX);
       int my=TS->gridYOutputChannel(index)/
         (TS->gridYLayout(TS->layoutOutputChannel(index))/NY);
-      //debug()<<" digit "<<index<<" "<<mx<<" "<<my<<" "<<*it<<endreq;
+      //debug()<<" digit "<<index<<" "<<mx<<" "<<my<<" "<<*it<<endmsg;
       int Msub=mx+my*NX;
       // horizntal o vertical?
       bool horizontal=false;
       if(TS->layoutOutputChannel(index)==0)horizontal=true;
       if(horizontal)horiz[Msub].push_back(*it);
       else hvert[Msub].push_back(*it);
-      // debug()<<" horizontal ? "<<     horizontal<<endreq;
+      // debug()<<" horizontal ? "<<     horizontal<<endmsg;
     }
-    msgStream()<<MSG::DEBUG<<" after h/v "<<endreq;
+    msgStream()<<MSG::DEBUG<<" after h/v "<<endmsg;
 
 
     // now the address of fired pads..
@@ -1304,7 +1304,7 @@ std::vector<unsigned int> MuonDAQHelper::padsinTS(
       std::vector<unsigned int>::iterator itx;
       std::vector<unsigned int>::iterator ity;
       //debug
-      msgStream()<<MSG::DEBUG<<" sub matrix "<<i<<endreq;
+      msgStream()<<MSG::DEBUG<<" sub matrix "<<i<<endmsg;
       //debug()<<" horizontal sequence ";
 
       // for(itx=horiz[i].begin();
@@ -1312,13 +1312,13 @@ std::vector<unsigned int> MuonDAQHelper::padsinTS(
       // {
       //  debug()<<*itx<<" ";
       //}
-      //debug()<<endreq;
+      //debug()<<endmsg;
       //debug()<<" vertical sequence ";
 
       //for(ity=hvert[i].begin();ity<hvert[i].end();ity++){
       //  debug()<<*ity<<" ";
       //}
-      //debug()<<endreq;
+      //debug()<<endmsg;
       //end debug
       unsigned int y_index=0;
       unsigned int subY=i/NX;
@@ -1335,7 +1335,7 @@ std::vector<unsigned int> MuonDAQHelper::padsinTS(
             if(*itx!=0){
               unsigned int address=offsetX+x_index+
                 (offsetY+y_index)*(TS->gridXLayout(0));
-              //debug()<<" result of the address "<<address<<endreq;
+              //debug()<<" result of the address "<<address<<endmsg;
 
               list_of_pads.push_back(address);
             }
@@ -1350,7 +1350,7 @@ std::vector<unsigned int> MuonDAQHelper::padsinTS(
     for(it=TSDigit.begin();it<TSDigit.end();it++,index++){
       unsigned int address=index;
       if(*it!=0){list_of_pads.push_back(address);
-        //      debug()<<" result of the address "<<address<<endreq;
+        //      debug()<<" result of the address "<<address<<endmsg;
       }
     }
   }
@@ -1382,7 +1382,7 @@ StatusCode MuonDAQHelper::checkMapConsistency()
       for(int ilay=0;ilay<num_lay;ilay++){
         MuonLayout lay(m_layoutX[ilay][station*4+region],
                        m_layoutY[ilay][station*4+region]);
-        msgStream()<<MSG::VERBOSE<<num_lay<<" "<<lay<<" "<<station<<" "<<region<<endreq;
+        msgStream()<<MSG::VERBOSE<<num_lay<<" "<<lay<<" "<<station<<" "<<region<<endmsg;
 
         for(int quadrant=0;quadrant<4;quadrant++){
           for(int x=0;x<m_layoutX[ilay][station*4+region];x++){
@@ -1397,7 +1397,7 @@ StatusCode MuonDAQHelper::checkMapConsistency()
                                    quadrant,x+m_layoutX[ilay][station*4+region],
                                    y+m_layoutY[ilay][station*4+region]);
               msgStream()<<MSG::VERBOSE<<
-                muontile1<<" "<<muontile2<<" "<<muontile3<<endreq;
+                muontile1<<" "<<muontile2<<" "<<muontile3<<endmsg;
 
               long L1Number=0;
               long ODENumber=0;
@@ -1412,7 +1412,7 @@ StatusCode MuonDAQHelper::checkMapConsistency()
                     muontile1)||
                   !((m_mapTileInODEDC06[ODENumber-1])
                     [DigitOutputPositionInODE]==muontile1)){
-                msgStream()<<MSG::ERROR<<" failed test "<<muontile1<<endreq;
+                msgStream()<<MSG::ERROR<<" failed test "<<muontile1<<endmsg;
 
                 return StatusCode::FAILURE;
               }
@@ -1425,7 +1425,7 @@ StatusCode MuonDAQHelper::checkMapConsistency()
                     muontile2)||
                   !((m_mapTileInODEDC06[ODENumber-1])
                     [DigitOutputPositionInODE]==muontile2)){
-                msgStream()<<MSG::ERROR<<" failed test "<<muontile2<<endreq;
+                msgStream()<<MSG::ERROR<<" failed test "<<muontile2<<endmsg;
 
                 return StatusCode::FAILURE;
               }
@@ -1438,7 +1438,7 @@ StatusCode MuonDAQHelper::checkMapConsistency()
                     muontile3)||
                   !((m_mapTileInODEDC06[ODENumber-1])
                     [DigitOutputPositionInODE]==muontile3)){
-                msgStream()<<MSG::ERROR<<" failed test "<<muontile2<<endreq;
+                msgStream()<<MSG::ERROR<<" failed test "<<muontile2<<endmsg;
 
                 return StatusCode::FAILURE;
               }
@@ -1804,7 +1804,7 @@ LHCb::MuonTileID MuonDAQHelper::getPadTileInODE(std::string ODEName, int firstCh
 region--;
 station--;
 quadrant--; 
-msgStream()<<MSG::DEBUG<<" debug "<<station<<" "<<region<<" "<<quadrant<<endreq;
+msgStream()<<MSG::DEBUG<<" debug "<<station<<" "<<region<<" "<<quadrant<<endmsg;
 
   int odeStart=m_ODENameStart[station][region][quadrant];
   int odeEnd=m_ODENameEnd[station][region][quadrant];
@@ -1814,13 +1814,13 @@ msgStream()<<MSG::DEBUG<<" debug "<<station<<" "<<region<<" "<<quadrant<<endreq;
   int odeNumber=-1;
   
   for(int ode=odeStart+1;ode<odeEnd+1;ode++){
-msgStream()<<MSG::DEBUG<<ODEName<<" debug ode "<<m_ODENameInECS[ode]<<endreq;
+msgStream()<<MSG::DEBUG<<ODEName<<" debug ode "<<m_ODENameInECS[ode]<<endmsg;
     if(m_ODENameInECS[ode]==ODEName){
       odeNumber=ode;      
       break;      
     }    
   }
-msgStream()<<MSG::DEBUG<<" debug ode "<<odeNumber<<endreq;
+msgStream()<<MSG::DEBUG<<" debug ode "<<odeNumber<<endmsg;
 
 MuonTileID firstTile;
 firstTile= m_mapTileInODE[odeNumber-1][firstChannel];

@@ -1,10 +1,16 @@
-! $Id: release.notes,v 1.141 2010-03-02 09:41:08 asatta Exp $
+! $Id: release.notes,v 1.142 2010-03-17 16:19:05 cattanem Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+!========================= MuonDet v9r2 2010-03-17 ==========================
+! 2010-03-17 - Marco Cattaneo
+ - Fix Windows compilation warning
+ - Replace all endreq by endmsg
+
 ! 2010-03-02 - Alessia Satta
  - Improve coords - strips matching (MuonDAQHelper)
+
 !========================= MuonDet v9r1 2010-02-12 ==========================
 ! 2010-02-09 - Alessia Satta
  - Add few methods

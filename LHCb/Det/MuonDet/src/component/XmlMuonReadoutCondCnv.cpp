@@ -1,4 +1,4 @@
-// $Id: XmlMuonReadoutCondCnv.cpp,v 1.10 2006-12-14 13:27:07 ranjard Exp $
+// $Id: XmlMuonReadoutCondCnv.cpp,v 1.11 2010-03-17 16:19:10 cattanem Exp $
 
 // Include files
 #include <vector>
@@ -163,7 +163,7 @@ XmlMuonReadoutCondCnv::i_fillSpecificObj (xercesc::DOMElement* childElement,
   const XMLCh* tagName = childElement->getNodeName();
 
   log << MSG::DEBUG << "Processing element "
-      << dom2Std(tagName) << endreq;
+      << dom2Std(tagName) << endmsg;
   /*
         <!--
              ReadoutType      : either Anode or Cathode (must be defined)
@@ -251,23 +251,23 @@ XmlMuonReadoutCondCnv::i_fillSpecificObj (xercesc::DOMElement* childElement,
     
     if ( !((rType == "Anode") || (rType == "Cathode")) ) {
       log << MSG::WARNING << "Readout type claimed to be "
-          << rType << endreq;
+          << rType << endmsg;
       return StatusCode::FAILURE;
     }
 
     log << MSG::DEBUG << "ReadoutType "
-        << rType <<endreq;
+        << rType <<endmsg;
     log << MSG::DEBUG << "Efficiency "
-        << eff  <<endreq;
+        << eff  <<endmsg;
 
     // index is the number of the readout
     int index;
     StatusCode sc = dataObj->addReadout(rType,index);
     if( sc.isFailure() ){
-      log << MSG::WARNING << "Failed to create a new readout" << endreq;
+      log << MSG::WARNING << "Failed to create a new readout" << endmsg;
     }
 
-    log << MSG::DEBUG << "Readout index is :" << index << endreq;
+    log << MSG::DEBUG << "Readout index is :" << index << endmsg;
 
     dataObj->setEfficiency(  atof(eff.c_str()), index);
     dataObj->setSyncDrift(    atof(syncD.c_str()), index);
@@ -295,7 +295,7 @@ XmlMuonReadoutCondCnv::i_fillSpecificObj (xercesc::DOMElement* childElement,
   } else {
     // Unknown tag, a warning message could be issued here
     log << MSG::WARNING << "Can not interpret specific type :"
-        << dom2Std(tagName) << endreq;
+        << dom2Std(tagName) << endmsg;
   }
   return StatusCode::SUCCESS;
 }
@@ -312,8 +312,8 @@ XmlMuonReadoutCondCnv::setClusterSizes(MuonReadoutCond* dataObj,
   // need to split clSzX and clPrX into component parts 
   // should be a comma seperated list
   
-  log << MSG::DEBUG << "Cluster size (X) " << clSzX << endreq;
-  log << MSG::DEBUG << "Cluster Prob (X) " << clPrX << endreq;
+  log << MSG::DEBUG << "Cluster size (X) " << clSzX << endmsg;
+  log << MSG::DEBUG << "Cluster Prob (X) " << clPrX << endmsg;
   
   std::string::size_type cPos = clSzX.find(',');
   std::string sCurr;
@@ -338,21 +338,21 @@ XmlMuonReadoutCondCnv::setClusterSizes(MuonReadoutCond* dataObj,
   
   if(clProb.size() != clSize.size()){
     log << MSG::ERROR << "Found "<< clProb.size() 
-        << " probabilities and " << clSize.size() << " sizes (X)" << endreq;
+        << " probabilities and " << clSize.size() << " sizes (X)" << endmsg;
     return StatusCode::FAILURE;
   }
   unsigned int i;
   for(i=0; i < clProb.size(); ++i){
     dataObj->addClusterX(clSize[i],clProb[i],index);
     log << MSG::DEBUG << "Clusters (X) " << clSize[i]
-        << ","<< clProb[i] << endreq;
+        << ","<< clProb[i] << endmsg;
   }
   
   clSize.clear();
   clProb.clear();
 
-  log << MSG::DEBUG << "Cluster size (Y) " << clSzY << endreq;
-  log << MSG::DEBUG << "Cluster Prob (Y) " << clPrY << endreq;
+  log << MSG::DEBUG << "Cluster size (Y) " << clSzY << endmsg;
+  log << MSG::DEBUG << "Cluster Prob (Y) " << clPrY << endmsg;
   
   cPos = clSzY.find(',');
   while( cPos != std::string::npos ){
@@ -374,13 +374,13 @@ XmlMuonReadoutCondCnv::setClusterSizes(MuonReadoutCond* dataObj,
   
   if(clProb.size() != clSize.size()){
     log << MSG::ERROR << "Found "<< clProb.size() 
-        << " probabilities and " << clSize.size() << " sizes (X)" << endreq;
+        << " probabilities and " << clSize.size() << " sizes (X)" << endmsg;
     return StatusCode::FAILURE;
   }
   for(i=0; i<clProb.size(); ++i){
     dataObj->addClusterY(clSize[i],clProb[i],index);
     log << MSG::DEBUG << "Clusters (Y) " << clSize[i]
-        << ","<< clProb[i] << endreq;
+        << ","<< clProb[i] << endmsg;
   }
   return StatusCode::SUCCESS;
 }
@@ -397,8 +397,8 @@ XmlMuonReadoutCondCnv::setJitterVector(MuonReadoutCond* dataObj,
   // need to split clSzX and clPrX into component parts 
   // should be a comma seperated list
   
-  log << MSG::DEBUG << "Jitter Min " << jitterMin << endreq;
-  log << MSG::DEBUG << "jitter Max " << jitterMax << endreq;
+  log << MSG::DEBUG << "Jitter Min " << jitterMin << endmsg;
+  log << MSG::DEBUG << "jitter Max " << jitterMax << endmsg;
   
   std::string::size_type cPos = jitterValues.find(',');
   std::string sCurr;

@@ -1,4 +1,4 @@
-// $Id: XmlMuonCablingCnv.cpp,v 1.8 2008-04-09 15:20:04 cattanem Exp $
+// $Id: XmlMuonCablingCnv.cpp,v 1.9 2010-03-17 16:19:09 cattanem Exp $
 // Include files 
 
 #include <string>
@@ -87,7 +87,7 @@ XmlMuonCablingCnv::XmlMuonCablingCnv(ISvcLocator* svc):
 XmlUserConditionCnv<MuonStationCabling> (svc)
  {
     MsgStream msg(msgSvc(), "XmlMuonCablingCnv");
-    msg<<MSG::VERBOSE<<" start muon cabling"<<endreq;
+    msg<<MSG::VERBOSE<<" start muon cabling"<<endmsg;
     
     CablingString= xercesc::XMLString::transcode("MuonStationCabling");
     SupportString= xercesc::XMLString::transcode("SupportPath");
@@ -114,7 +114,7 @@ XmlMuonCablingCnv::~XmlMuonCablingCnv() {
 StatusCode XmlMuonCablingCnv::updateRep (IOpaqueAddress* /* pAddress */,
                                          DataObject*     /* pObject  */ ){
  MsgStream msg(msgSvc(), "XmlMuonCablingCnv");
- msg<<MSG::INFO<<" number of L1 "<<endreq;
+ msg<<MSG::INFO<<" number of L1 "<<endmsg;
  return StatusCode::SUCCESS;
 };
 
@@ -137,7 +137,7 @@ XmlMuonCablingCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
     long l1NumberValue=atol(l1NumberString.c_str());
     StatusCode sc=dataObj->update(l1NumberValue);
     if(sc.isFailure())return sc;	
-    msg<<MSG::DEBUG<<" number of L1 "<<l1NumberValue<<endreq;
+    msg<<MSG::DEBUG<<" number of L1 "<<l1NumberValue<<endmsg;
     xercesc::DOMNodeList* nodeChildren = childElement->getChildNodes();
     unsigned int i;
     for(i=0; i < nodeChildren->getLength(); ++i){
@@ -152,7 +152,7 @@ XmlMuonCablingCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
         std::string entryName = "/" + L1Reference.substr(poundPosition + 1);
         sc=dataObj->addL1Name(L1Reference.substr(poundPosition + 1));
         if(sc.isFailure())return sc;	
-        msg<<MSG::DEBUG<<"name of L1 "<<L1Reference.substr(poundPosition + 1)<<endreq;        
+        msg<<MSG::DEBUG<<"name of L1 "<<L1Reference.substr(poundPosition + 1)<<endmsg;        
       }
     }
     

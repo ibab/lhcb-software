@@ -1,6 +1,4 @@
-// $Id: DeMuonRegion.cpp,v 1.11 2009-09-14 08:58:36 jonrob Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: DeMuonRegion.cpp,v 1.12 2010-03-17 16:19:07 cattanem Exp $
 // ============================================================================
 
 // Include files
@@ -29,7 +27,7 @@ StatusCode DeMuonRegion::initialize()
 {
   StatusCode sc = DetectorElement::initialize();
   if( sc.isFailure() ) { 
-    msgStream() << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
+    msgStream() << MSG::ERROR << "Failure to initialize DetectorElement" << endmsg;
     return sc ; 
   }
 

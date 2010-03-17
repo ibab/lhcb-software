@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.54 2010-03-17 16:10:43 cattanem Exp $
+// $Id: DeMuonDetector.cpp,v 1.55 2010-03-17 16:19:06 cattanem Exp $
 
 // Include files
 #include "MuonChamberLayout.h"
@@ -51,11 +51,11 @@ const CLID& DeMuonDetector::clID () const
 StatusCode DeMuonDetector::initialize()
 {
 
-  msgStream() << MSG::VERBOSE << "Initializing the detector" <<endreq;
+  msgStream() << MSG::VERBOSE << "Initializing the detector" <<endmsg;
 
   StatusCode sc = DetectorElement::initialize();
   if( sc.isFailure() ) {
-    msgStream() << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
+    msgStream() << MSG::ERROR << "Failure to initialize DetectorElement" << endmsg;
     return sc ;
   }
 
@@ -79,7 +79,7 @@ msgStream()<<MSG::VERBOSE<<" ecco qui 111 "<<
 m_stationBox[0][0]<<" "<<
 m_stationBox[0][1]<<" "<<
 m_stationBox[0][2]<<" "<<
-m_stationBox[0][3]<<" "<<endreq;
+m_stationBox[0][3]<<" "<<endmsg;
   //Initialize vectors containing Detector informations
   CountDetEls();
   //  delete tLay;
@@ -141,7 +141,7 @@ StatusCode DeMuonDetector::Hit2GapNumber(Gaudi::XYZPoint myPoint,
 
 
   if(!isIn) { 
-    msgStream() << MSG::ERROR << "Gap not found! " <<endreq;
+    msgStream() << MSG::ERROR << "Gap not found! " <<endmsg;
     
   }
   return sc;
@@ -226,7 +226,7 @@ if(debug)std::cout<<chamberNumber<<" "<<regNum<<std::endl;
         } else {
           msgStream() << MSG::WARNING
                       << "Could not find Geometry info of a given chamber!"
-                      <<endreq;
+                      <<endmsg;
         }
       }
 
@@ -245,7 +245,7 @@ if(debug)std::cout<<chamberNumber<<" "<<regNum<<std::endl;
   if(!isIn) {
     msgStream() << MSG::DEBUG <<
       "Smart seek didn't work. Perform loop on all chambers :( !!! "
-                <<endreq;
+                <<endmsg;
     int msta(0),mreg(0),mchm(0);
     //Getting stations
     IDetectorElement::IDEContainer::const_iterator itSt;
@@ -275,7 +275,7 @@ if(debug)std::cout<<chamberNumber<<" "<<regNum<<std::endl;
                 //mchm;
                 regNum = mreg;
                 msgStream() << MSG::DEBUG << "Hit found in chamber C: " <<
-                  chamberNumber<<" , R: "<<regNum<<" ,S: "<<station<<endreq;
+                  chamberNumber<<" , R: "<<regNum<<" ,S: "<<station<<endmsg;
                 return sc;
               }
               mchm++;
@@ -546,7 +546,7 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
     if(chamberNumber != chamberNumber1 || regNum != regNum1) {
       msgStream() << MSG::ERROR <<
         "Hit entry and exit are in different chambers! Returning a void list."
-                  <<endreq;
+                  <<endmsg;
       return tmpPair;
     }
   } else {
@@ -577,7 +577,7 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
 
  //  if(!myGap) {
   if(!isIn) {
-  msgStream() << MSG::DEBUG <<"Could not find the gap. Returning a void list."<<endreq;
+  msgStream() << MSG::DEBUG <<"Could not find the gap. Returning a void list."<<endmsg;
     m_hitNotInGap++;	 
     return tmpPair;
   }
@@ -632,17 +632,17 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
       mod_yen = (-new_entry.y()+dy)/(2*dy);
       mod_xex = (-new_exit.x()+dx)/(2*dx);
       mod_yex = (-new_exit.y()+dy)/(2*dy);
-       msgStream()<<MSG::INFO<<" Should never enter here "<<endreq;
+       msgStream()<<MSG::INFO<<" Should never enter here "<<endmsg;
     }else if(lowerleft.x()>lowerright.x()&&(lowerleft.y()<upperleft.y())){
       mod_xen = (-new_entry.x()+dx)/(2*dx);
       mod_yen = (new_entry.y()+dy)/(2*dy);
       mod_xex = (-new_exit.x()+dx)/(2*dx);
       mod_yex = (new_exit.y()+dy)/(2*dy);  
-      msgStream()<<MSG::INFO<<" Should never enter here "<<endreq;
+      msgStream()<<MSG::INFO<<" Should never enter here "<<endmsg;
     }
   } else {
   msgStream()  << MSG::ERROR <<"Null chamber dimensions. Returning a void list."<<
-      endreq; 
+      endmsg; 
     return tmpPair;
   }
 
@@ -675,7 +675,7 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
     }
   } else {
       msgStream()<<  MSG::ERROR <<
-	"No grid found. Returning a void list."<<endreq; 
+	"No grid found. Returning a void list."<<endmsg; 
     return tmpPair;
   }
   return myPair;
@@ -689,7 +689,7 @@ StatusCode DeMuonDetector::Tile2XYZ(LHCb::MuonTileID tile,
   StatusCode sc = StatusCode::FAILURE;
 
   //Ask the chamber Layout about the tile.
-  msgStream() << MSG::DEBUG <<"Calling Tile2XYZpos method!"<<endreq;
+  msgStream() << MSG::DEBUG <<"Calling Tile2XYZpos method!"<<endmsg;
 
   sc = m_chamberLayout->Tile2XYZpos(tile,x,dx,y,dy,z,dz);
 
@@ -766,9 +766,9 @@ void DeMuonDetector::fillGeoInfo()
 
       IDetectorElement::IDEContainer::iterator itRg=(*itSide)->childBegin();
       region=0;
-      if(debug)msgStream()<<MSG::INFO<<" station "<<station<<endreq;
+      if(debug)msgStream()<<MSG::INFO<<" station "<<station<<endmsg;
       for(itRg=(*itSide)->childBegin(); itRg<(*itSide)->childEnd(); itRg++){
-        if(debug)msgStream()<<MSG::INFO<<" region "<<region<<endreq;
+        if(debug)msgStream()<<MSG::INFO<<" region "<<region<<endmsg;
         IDetectorElement::IDEContainer::iterator itCh=(*itRg)->childBegin();
         //        DeMuonRegion* reg=dynamic_cast<DeMuonRegion*> (*itRg);
         for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
@@ -796,7 +796,7 @@ void DeMuonDetector::fillGeoInfo()
                 if(!((*pvGapIterator)->lvolume()->sdName().empty())){
                   if(debug)msgStream()<<MSG::ERROR<<
                              " in quale gao siamo "<<
-                             (*pvGapIterator)->lvolume()->name()<<endreq;
+                             (*pvGapIterator)->lvolume()->name()<<endmsg;
                   const ILVolume* geoGap=(*pvGapIterator)->lvolume();
                   //Retrieve the chamber box dimensions  
                   const SolidBox *box = dynamic_cast<const SolidBox *>
@@ -843,7 +843,7 @@ void DeMuonDetector::fillGeoInfo()
           }
           int maps=(theGrid->getMapGrid()).size()/2;
           m_LogMapPerRegion[station*4+region]=maps;
-          if(debug)msgStream()<<MSG::INFO<<" red and maps "<<nreadout<<" "<<maps<<endreq;
+          if(debug)msgStream()<<MSG::INFO<<" red and maps "<<nreadout<<" "<<maps<<endmsg;
           if(nreadout==1)
           {
             for( int i = 0; i<maps;i++){
@@ -854,7 +854,7 @@ void DeMuonDetector::fillGeoInfo()
               m_LogMapMergey[i][station*4+region]=
                 (theGrid->getMapGrid())[i*2+1];
               if(debug)msgStream()<<MSG::INFO<<" red and maps "<<i<<" "<< m_LogMapRType[i][station*4+region]<<" "<<
-                m_LogMapMergex[i][station*4+region]<<" "<<m_LogMapMergey[i][station*4+region]<<endreq;
+                m_LogMapMergex[i][station*4+region]<<" "<<m_LogMapMergey[i][station*4+region]<<endmsg;
             }
           }else if(nreadout==2){
             for( int i = 0; i<maps;i++){
@@ -865,7 +865,7 @@ void DeMuonDetector::fillGeoInfo()
               m_LogMapMergey[i][station*4+region]=
                 (theGrid->getMapGrid())[i*2+1];
               if(debug)msgStream()<<MSG::INFO<<" red and maps "<<i<<" "<< m_LogMapRType[i][station*4+region]<<" "<<
-                m_LogMapMergex[i][station*4+region]<<" "<<m_LogMapMergey[i][station*4+region]<<endreq;
+                m_LogMapMergex[i][station*4+region]<<" "<<m_LogMapMergey[i][station*4+region]<<endmsg;
             }
           }
 
@@ -1055,14 +1055,14 @@ void DeMuonDetector::fillGeoArray()
   MuonLayout layoutOuter=m_chamberLayout->layout(3);
   int station=0;
   msgStream()<<MSG::DEBUG<< "layout inner "<<
-    layoutInner.xGrid()<<" "<<  layoutInner.yGrid()<<endreq;
+    layoutInner.xGrid()<<" "<<  layoutInner.yGrid()<<endmsg;
 
   msgStream()<<MSG::DEBUG<< "layout outer "<<
-    layoutOuter.xGrid()<<" "<<  layoutOuter.yGrid()<<endreq;
+    layoutOuter.xGrid()<<" "<<  layoutOuter.yGrid()<<endmsg;
 
   for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
     //get the dimensions of the inner rectangular
-    if(debug)msgStream()<<MSG::INFO<<" inside loop "<<endreq;
+    if(debug)msgStream()<<MSG::INFO<<" inside loop "<<endmsg;
     double minX=100000;
     double minY=100000;
     for(unsigned int nx=0;nx<layoutInner.xGrid();nx++){
@@ -1085,9 +1085,9 @@ void DeMuonDetector::fillGeoArray()
         Gaudi::XYZPoint glob3= geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZPoint(dx,-dy,0)));
         Gaudi::XYZPoint glob4= geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZPoint(dx,dy,0)));
 	if(debug)msgStream()<<MSG::ERROR<< 
-myGapVol->toMother(Gaudi::XYZPoint(-dx,-dy,0))<<endreq;
+myGapVol->toMother(Gaudi::XYZPoint(-dx,-dy,0))<<endmsg;
 	
-if(debug)msgStream()<<MSG::ERROR<<geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZPoint(-dx,-dy,0)))<<endreq;
+if(debug)msgStream()<<MSG::ERROR<<geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZPoint(-dx,-dy,0)))<<endmsg;
         if(fabs(glob1.y())<minY)minY=fabs(glob1.y());      
         if(fabs(glob2.y())<minY)minY=fabs(glob2.y());      
         if(fabs(glob3.y())<minY)minY=fabs(glob3.y());      
@@ -1127,7 +1127,7 @@ if(debug)msgStream()<<MSG::ERROR<<geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZP
     m_stationBox[station][0]=minX;
     m_stationBox[station][1]=minY;
     //now the dimsnion of the outer parr...
-    if(debug)msgStream()<<MSG::INFO<<" min size "<<minX<<" "<<minY<<endreq;
+    if(debug)msgStream()<<MSG::INFO<<" min size "<<minX<<" "<<minY<<endmsg;
     double maxX=0;
     double maxY=0;
     for(unsigned int nx=0;nx<2*layoutOuter.xGrid();nx++){
@@ -1200,7 +1200,7 @@ if(debug)msgStream()<<MSG::ERROR<<geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZP
       " "<<m_stationBox[station][1]<<
       " station  outer "<<station<<" "<<
       m_stationBox[station][2]<<
-      " "<<m_stationBox[station][3]<<endreq;
+      " "<<m_stationBox[station][3]<<endmsg;
 
     station++;
   }
@@ -1255,7 +1255,7 @@ DetectorElement* DeMuonDetector::Tile2Station(LHCb::MuonTileID aTile)
 
   SmartDataPtr<DetectorElement> station(m_detSvc, stationPath);
   if( !station ) {
-    msgStream() << MSG::INFO << "Error in retrieving DetectorElement!" << endreq;
+    msgStream() << MSG::INFO << "Error in retrieving DetectorElement!" << endmsg;
   }
   return station;
 }
@@ -1290,7 +1290,7 @@ DetectorElement* DeMuonDetector::Hit2Station(Gaudi::XYZPoint myPoint)
 
   SmartDataPtr<DetectorElement> station(m_detSvc, stationPath);
   if( !station ) {
-    msgStream() << MSG::INFO << "Error in retrieving DetectorElement!" << endreq;
+    msgStream() << MSG::INFO << "Error in retrieving DetectorElement!" << endmsg;
   }
   return station;
 }
@@ -1306,7 +1306,7 @@ DeMuonChamber* DeMuonDetector::Hit2Chamber(Gaudi::XYZPoint myPoint)
                                              istat,
                                              ChmbPtr);
   if(sc!=StatusCode::SUCCESS) {
-    msgStream() << MSG::ERROR << "Error calling Pos2StChamberPointer function!" << endreq;
+    msgStream() << MSG::ERROR << "Error calling Pos2StChamberPointer function!" << endmsg;
   }
   return ChmbPtr;
 }
