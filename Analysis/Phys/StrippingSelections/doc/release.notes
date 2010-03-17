@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingSelections v1r18 2010-03-17 ===================
+! 2010-03-17 - Patrick Koppenburg
+ - Add DisplVertices to StreaEW
+ - Add lineD2KKP_A_NoPID_Sig and lineD2KKP_A_NoPID_Bkg to stream Charm
+
 ! 2010-03-16 - Patrick Koppenburg
  - Adapt MB lines to 2010 Hlt1 settings
 
