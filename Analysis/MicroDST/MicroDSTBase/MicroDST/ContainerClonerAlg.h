@@ -1,4 +1,4 @@
-// $Id: ContainerClonerAlg.h,v 1.1 2010-03-05 18:57:45 jpalac Exp $
+// $Id: ContainerClonerAlg.h,v 1.2 2010-03-17 12:51:20 jpalac Exp $
 #ifndef MICRODST_CONTAINERCLONERALG_H 
 #define MICRODST_CONTAINERCLONERALG_H 1
 
@@ -83,7 +83,7 @@ public:
       const std::string outputLocation = 
         this->outputTESLocation( inputLocation );
         
-      verbose() << "Going to clone KeyedContainer from " << inputLocation
+      verbose() << "Going to clone Container from " << inputLocation
                 << " into " << outputLocation << endmsg;
 
       const typename T::Container* cont = 
@@ -92,7 +92,12 @@ public:
       if (0==cont) {
         Warning("Unable clone or get container from "+ inputLocation,
                 StatusCode::FAILURE, 10).ignore();
+      } else {
+        verbose() <<"Cloned Container " << outputLocation 
+                  << " has " << cont->size() 
+                  << " elements." << endmsg;
       }
+      
     }
 
     setFilterPassed(true);
