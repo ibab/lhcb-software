@@ -3,6 +3,11 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
+
+!========================== MuonDAQ v4r8 2010-03-17 ==========================
+! 2010-03-17 - Marco Cattaneo
+ - In requirements, remove hack for Gaudi v21r1 to link dictionary on Windows
+
 ! 2010-03-02 - Alessia Satta
  - Add protection (magic pattern)
 

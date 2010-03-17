@@ -1,5 +1,5 @@
 package MuonDAQ
-version v4r7
+version v4r8
 
 # ================ structure ===========================================
 branches src Event MuonDAQ cmt doc
@@ -27,7 +27,3 @@ apply_pattern reflex_dictionary                                    \
               headerfiles=$(MUONDAQROOT)/dict/MuonDAQDict.h        \
               selectionfile=$(MUONDAQROOT)/dict/MuonDAQDict.xml    \
               options="-U__MINGW32__ -DBOOST_DISABLE_ASSERTS"
-
-# Hack for Gaudi v21r1 to link dictionary on windows
-private
-set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
