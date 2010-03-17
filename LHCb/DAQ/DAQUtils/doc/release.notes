@@ -4,8 +4,9 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+!========================= DAQUtils v1r2 2010-03-17 ==========================
 ! 2010-03-11 - Patrick Koppenburg
- - Add .ignire() to all Warning()
+ - Add .ignore() to all Warning()
 
 ! 2010-03-08 - Patrick Koppenburg
  - bankKiller: 
