@@ -5,7 +5,7 @@
  * Header file for tool TrackVelodEdxCharge
  *
  * CVS Log :-
- * $Id: TrackVelodEdxCharge.h,v 1.3 2008-02-08 07:37:58 cattanem Exp $
+ * $Id: TrackVelodEdxCharge.h,v 1.4 2010-03-17 12:24:09 dhcroft Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 18/07/2006
@@ -68,7 +68,8 @@ public:
 
 public:
 
-  // Returns the estimated number of tracks in the VELO for the given
+  /// Returns the scaled truncated mean of the ADCs for Velo measurements to check for double tracks
+  /// nTrk the number of estimated particles that contributed dEdx to this track in the VELO
   StatusCode nTracks( const LHCb::Track * track,
                       double & nTks ) const;
 
@@ -79,8 +80,8 @@ private: // definitions etc.
 
 private: // data
 
-  double m_Normalisation; ///< average charge for a track
-  double m_Ratio;         ///< Ratio to exclude high signals in velocluster
+  double m_Normalisation; ///< Expected average charge for a single track
+  double m_Ratio;         ///< Fraction of cluster considered (1-Ratio highest clusters are discarded)
 };
 
 #endif // TRACKTOOLS_TrackVelodEdxCharge_H

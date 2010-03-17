@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2010-03-17 - David Hutchcroft
+ - retune dEdx in velo to match 2009 data and improve Doxygen comments for 
+   TrackVelodEdxCharge
+
 !======================== TrackTools v3r27 2010-02-24 ======================
 ! 2010-02-22 - Wouter Hulsbergen
  - improve initialization of Long and Downstream tracks in TrackStateInitTool
