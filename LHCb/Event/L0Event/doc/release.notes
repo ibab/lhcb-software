@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.136 2010-03-17 16:51:39 cattanem Exp $
+! $Id: release.notes,v 1.137 2010-03-17 21:30:50 raaij Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
 !======================== L0Event v18r3 2010-03-17 ===========================
+! 2010-03-17 - Roel Aaij
+ - Fix warning of missing dictionaries when writing L0DUConfig or L0DUReport
+   to file.
+
 ! 2010-03-17 - Marco Cattaneo
  - Fix Windows compilation warning in L0DUReport.xml
 
