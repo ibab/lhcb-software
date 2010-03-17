@@ -2,6 +2,7 @@ Package         : OTDAQ
 Package manager : J.Amoraal
 !------------------------------------------------------------------------------
 
+!======================= OTDAQ v7r7 2010-03-17 ================================
 ! 2010-03-01 - Alexandr Kozlinskiy
  - Added check for RawBank::magic in OTRawBankDecoder
 
