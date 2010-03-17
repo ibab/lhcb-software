@@ -1,5 +1,5 @@
 package DAQEvent
-version v9r0
+version v9r1
 
 use GaudiKernel v*
 branches cmt doc Event src xml
