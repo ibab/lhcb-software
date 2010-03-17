@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : TStation
  *
  *  CVS Log :-
- *  $Id: TStation.cpp,v 1.6 2010-02-05 17:07:38 jblouw Exp $
+ *  $Id: TStation.cpp,v 1.7 2010-03-17 16:37:54 jblouw Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -55,16 +55,24 @@ StatusCode TStation::initialize() {
 
   // Acquire the track selection tool
   info() << "create track selection tool" << endreq;
+  info() << "Using " << m_OTTrackLocation << " to select OTTracks from " << m_inputcontainer << endreq;
+
   m_trackselection = tool<IATrackSelectorTool>( "ATrackSelector");
   m_trackselection->initialize();
+
+  m_trackenergy = tool<ITrackCaloMatch>( "TrackCaloMatch" );
+  setHistoTopDir("OT/");
+  CaloEnergy = book( "CaloEnergy", "Calorimeter energy on track", 0.0, 12000.0 );
+
   return sc;
 }
 
 StatusCode TStation::execute() {
+  setHistoTopDir("OT/");
+  Tracks* inCont = get<Tracks>(m_inputcontainer);
   ITTracks = new Tracks();
   OTTracks = new Tracks();
   XTracks = new Tracks();
-  Tracks* inCont = get<Tracks>(m_inputcontainer);
   if ( ITTracks->size() > 0 ) ITTracks->clear();
   if ( OTTracks->size() > 0 ) OTTracks->clear();
   if ( XTracks->size() > 0 ) XTracks->clear();
@@ -75,6 +83,10 @@ StatusCode TStation::execute() {
      Track* aTrack = *iterT;
 //     int OThits = 0, IThits = 0;
      if ( m_trackselection->accept( *aTrack ) ) {
+         double energy = m_trackenergy->energy( *aTrack );
+         if ( energy > 0.0 ) 
+	    fill(CaloEnergy, energy, 1.0);
+         debug() << "Energy = " << energy << " on track type " << aTrack->TypesToString(aTrack->type()) << endreq;
 //       int hot = 0;
 //       hot = m_trackselection->traversesIT( *aTrack, OThits, IThits );
 // //      if ( hot == 10 ) debug() << "Error: found " << OThits << " OThits on track and " << IThits << " IThits." << endreq;

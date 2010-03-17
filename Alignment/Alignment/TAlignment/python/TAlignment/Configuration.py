@@ -66,31 +66,31 @@ class TAlignment( LHCbConfigurableUser ):
         if  mainseq.name() == "" :
             mainseq = GaudiSequencer("Align")
             
-        import  TAlignment.TAlignmentConf 
-        if self.getProp("Method") == 'Millepede' and "OT" in self.getProp("Detectors"):
-            self.setProp("Incident", 'GlobalMPedeFit')
-            importOptions("$TALIGNMENTROOT/options/GAlign.py")
-            ga = TAlignment.TAlignmentConf.GAlign() 
-            print "Adding ", ga.name(), " to sequence ", mainseq.name()
-            mainseq.Members += [ga]
-            self.setProp("WriteCondSubDetList", self.getProp("Detectors"))
-	    listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
-            if listOfCondToWrite:
-               mainseq.Members.append( self.writeSeq( listOfCondToWrite ) )
-            if len( self.getProp("TrackLocation") ) == 0 :
-                raise RuntimeError("ERROR: no track container defined!")
-            ga.InputContainer = self.getProp("TrackLocation")
-            ga.skipBigCluster = self.getProp("skipBigCluster")
-            from Configurables import AlignTrTools
-	    AlignTrTools().Constraints = self.getProp("Constraints")
-	    AlignTrTools().Degrees_of_Freedom = self.getProp("DoF")
-            if len( ga.Detectors ) == 0:
-                ga.Detectors = self.getProp("Detectors")
+        if self.getProp("Method") == 'Millepede' and "OT" in self.getProp("WriteCondSubDetList"):
+	    print "******* setting up Milledede style alignment ******"
+	    self.setProp("Incident", 'GlobalMPedeFit')
+	    self.GAlignSeq()
                     
 	if self.getProp("Method") == 'Kalman' :
             print "****** setting up Kalman type alignment!"
             self.setProp("Incident", 'UpdateConstants')
             self.sequencers()
+
+    def GAlignSeq( self ):
+	from Configurables import (TStation)
+	from TAlignment import GAlignConf
+	alseq = self.getProp("Sequencer")
+	alseq.MeasureTime = True
+	alseq.Members.append( TStation() )
+	print "Adding ", TStation().name(), " to sequence ", alseq.name()
+	GAlignConf.GAlignConf().Sequencer = self.getProp("Sequencer")
+	GAlignConf.GAlignConf().InputContainer = self.getProp("TrackLocation")
+	ga = GAlignConf.GAlignConf()
+#	alseq.Members.append( ga )
+#        listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
+#        if listOfCondToWrite:
+#           alseq.Members.append( self.writeSeq( listOfCondToWrite ) )
+	ga.configure()
 
     def getProp( self, name ) :
         if hasattr (self, name) :

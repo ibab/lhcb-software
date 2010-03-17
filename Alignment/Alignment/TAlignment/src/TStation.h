@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment algorithm: TAlignment
  *
  *  CVS Log :-
- *  $Id: TStation.h,v 1.3 2007-04-25 14:35:45 jblouw Exp $
+ *  $Id: TStation.h,v 1.4 2010-03-17 16:37:54 jblouw Exp $
  *
  *  @author J. Blouw  Johan.Blouw@cern.ch
  *  @author M.Needham Matt.Needham@cern.ch
@@ -17,7 +17,12 @@
 
 
 
+#include "GaudiUtils/Aida2ROOT.h"
+#include "TH1.h"
+
+#include "TrackInterfaces/ITrackCaloMatch.h"
 #include "AlignmentInterfaces/IATrackSelectorTool.h"
+
 #include <string>
 
 // GaudiKernel
@@ -63,6 +68,10 @@ public:
   std::string m_XTrackLocation; 
   
   IATrackSelectorTool* m_trackselection;
+  ITrackCaloMatch *m_trackenergy;
+
+  
+  AIDA::IHistogram1D* CaloEnergy;
 
   LHCb::Tracks* ITTracks;
   LHCb::Tracks* OTTracks;
