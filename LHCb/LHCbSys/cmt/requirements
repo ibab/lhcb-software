@@ -10,7 +10,7 @@ branches doc cmt test
 #                                         Maintainer
 use MCAssociators         v1r0    Associators # V. Gligorov
 
-use CaloDAQ               v4r18   Calo    # Olivier Deschamps
+use CaloDAQ               v4r19   Calo    # Olivier Deschamps
 use CaloInterfaces        v7r18   Calo    # Olivier Deschamps
 use CaloKernel            v6r2    Calo    # Olivier Deschamps
 use CaloUtils             v8r12   Calo    # Olivier Deschamps
@@ -70,7 +70,7 @@ use GaudiObjDesc          v11r10p1
 
 # Kernel packages
 use HistoStrings          v1r0    Kernel  # Vanya Belyaev 
-use HltInterfaces         v3r1    Kernel  # Patrick Koppenburg
+use HltInterfaces         v3r2    Kernel  # Patrick Koppenburg
 use KernelSys             v12r1   Kernel  # Marco Cattaneo
 use LHCbAlgs              v2r34   Kernel  # Marco Cattaneo
 use LHCbKernel            v11r12  Kernel  # Marco Cattaneo
@@ -86,12 +86,12 @@ use L0Interfaces          v1r7    L0      # Olivier Deschamps
 use L0MuonKernel          v9r1    L0      # Julien Cogan
 use ProcessorKernel       v6r0    L0      # Julien Cogan
 
-use MuonDAQ               v4r7    Muon    # Alessia Satta
+use MuonDAQ               v4r8    Muon    # Alessia Satta
 use MuonInterfaces        v1r0    Muon    # Alessia Satta
 
 # L1/Raw buffer encoding and decoding
 use DAQSys                v6r0    DAQ     # Marco Cattaneo
-use OTDAQ                 v7r6    OT      # Wouter Hulsbergen
+use OTDAQ                 v7r7    OT      # Wouter Hulsbergen
 use SiDAQ                 v2r1    Si      # Matt Needham
 
 # Other stuff
