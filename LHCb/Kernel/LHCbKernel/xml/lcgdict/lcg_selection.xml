@@ -22,6 +22,7 @@
   <class name="MuonLayout"/>
   <class name="std::auto_ptr<LHCb::Trajectory>"/>
   <class pattern ="LHCb::SiPositionInfo<*>"/>
+  <class pattern ="LHCb::PixelPositionInfo<*>"/>
   <class pattern ="GaudiUtils::VectorMap<*>"/>
 <!--- Next should really be in L0Event, is an L0DUReport return type -->
   <class name ="std::map<std::pair<int,unsigned int>,unsigned int>"/>

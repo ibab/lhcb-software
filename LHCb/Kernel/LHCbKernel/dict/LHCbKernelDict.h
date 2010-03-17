@@ -1,4 +1,4 @@
-// $Id: LHCbKernelDict.h,v 1.21 2010-02-15 21:20:08 cattanem Exp $
+// $Id: LHCbKernelDict.h,v 1.22 2010-03-17 14:34:12 cocov Exp $
 #ifndef DICT_LHCBKERNELDICT_H 
 #define DICT_LHCBKERNELDICT_H 1
 
@@ -22,6 +22,7 @@
 #include "Kernel/LineTraj.h"
 #include "Kernel/ParabolaTraj.h"
 #include "Kernel/SiPositionInfo.h"
+#include "Kernel/PixelPositionInfo.h"
 
 #include "Kernel/IAlgorithmCorrelations.h"
 #include "Kernel/IBdlTool.h"
@@ -64,7 +65,7 @@ namespace {
     std::auto_ptr<LHCb::Trajectory>                     m_auto_ptr_Trajectory;
     LHCb::SiPositionInfo<LHCb::STChannelID>             m_SiPositionInfo_STChannelID;
     LHCb::SiPositionInfo<LHCb::VeloChannelID>           m_SiPositionInfo_VeloChannelID;
-    LHCb::SiPositionInfo<LHCb::VeloPixChannelID>        m_SiPositionInfo_VeloPixChannelID;
+    LHCb::PixelPositionInfo<LHCb::VeloPixChannelID>     m_PixelPositionInfo_VeloPixChannelID;
     std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>          m_std_pair_XYZPoint_XYZPoint;
     std::vector<LHCb::VeloChannelID>                    m_std_vector_VeloChannelID;
     std::vector<LHCb::VeloPixChannelID>                 m_std_vector_VeloPixChannelID;
