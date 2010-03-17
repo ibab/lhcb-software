@@ -4,6 +4,7 @@
   <class name    = "IL0DUConfigProvider"           />
   <class name    = "IL0DUEmulatorTool"             />
   <class name    = "IL0DUFromRawTool"              />
+  <class name    = "IL0MuonOverflowTool"           />
   <class name    = "IL0ProcessorDataDecoder"       />
 
 </lcgdict>

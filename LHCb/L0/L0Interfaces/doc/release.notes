@@ -3,6 +3,10 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!====================== L0Interfaces v1r7 2010-03-17 ==========================
+! 2010-03-17 - Marco Cattaneo
+ - Add new interface to dictionary
+
 ! 2010-03-09 - Julien Cogan
  - Add a new tool interface to get L0Muon overflow of candidates
 
