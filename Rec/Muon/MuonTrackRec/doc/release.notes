@@ -1,3 +1,4 @@
+
 !-----------------------------------------------------------------------------
 ! Package     : Muon/MuonTrackRec
 ! Responsible : Giovanni Passaleva / Giacomo Graziani
@@ -8,10 +9,10 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
-!======================== MuonTrackRec v3r0p2 2010-02-24 ===========================
-
 ! 2010-03-17 - GG
  - put LHCbIDs into Tracks also when assuming cosmic tracks
+
+!======================== MuonTrackRec v3r0p2 2010-02-24 ===========================
 
 ! 2010-02-24 - GG
  - remove more windoz warnings
