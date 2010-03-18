@@ -1,6 +1,7 @@
+
 ########################################################################
 #
-# $Id: DVTestHlt12-MDF.py,v 1.11 2010-02-23 10:42:45 pkoppenb Exp $
+# $Id: DVTestHlt12-MDF.py,v 1.12 2010-03-18 11:37:06 pkoppenb Exp $
 #
 # Test for Hlt1&2. Test for MDF files.
 #
@@ -32,6 +33,8 @@ from Configurables import HltCorrelations
 DaVinci().MoniSequence = [ HltCorrelations() ]
 EventSelector().Input   = [
     "   DATA='PFN:castor:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/47910/047910_0000000001.raw' SVC='LHCb::MDFSelector'" ]
+DaVinci().CondDBtag = "default"
+DaVinci().DDDBtag = "default"
 
 ########################################################################
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"

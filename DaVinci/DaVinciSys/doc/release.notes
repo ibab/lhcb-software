@@ -4,7 +4,9 @@ Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
 </PRE><H1><A NAME=v25r2p1>2010-03-17 DaVinci v25r2p1. Patch release for Early 2010 data stripping. </A></H1><PRE>
-  Based on v9r2p1 and with updated StrippingSelections and DaVinciMonitors
+  Based on Hlt v9r2p1 and with updated StrippingSelections and DaVinciMonitors
+
+	Warning : for 2009 and 2010 data types (real and MC) user MUST provide the approriate data base tags 
 
 </PRE><H1><A NAME=v25r2>2010-03-08 DaVinci v25r2. Release for March 2010 software tutorials. </A></H1><PRE>
 
@@ -42,7 +44,7 @@ Based on Phys v8r14, Analysis v3r14, Rec v7r12, HLT v8r1, Lbcom v7r11, LHCb v28r
 
  * Highlights:
    * Re-tuned PV finder
-   * Flavour tagging tuned for MC09 simulaiton.
+   * Flavour tagging tuned for MC09 simulation.
    * Add di-electron to CommonParticles
    * Bu->eeK stripping line.
    * Bunch crossing ID available in TupleEventInfo
