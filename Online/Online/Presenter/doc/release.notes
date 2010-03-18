@@ -4,6 +4,11 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2010-03-18 - Patrick Robbe
+ - ShiftDB.cpp: retrieve names of people on shift calling scripts via
+   the shiftdb web interface, instead of direct OCCI calles
+ - requirements: remove extra OCCI dependance
+
 ! 2010-03-15 - Patrick Robbe
  - ElogDialog.cpp: retrieve text of list box via "GetSelectedEntry" function
 

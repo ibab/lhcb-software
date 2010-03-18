@@ -59,5 +59,3 @@ application presenter " $(PRESENTERROOT)/$(tag)/dict/*.cpp ParallelWait.cpp \
                                      DatabasePagePathDialog.cpp MonRateRace.cpp \
                                      PresenterMainFrame.cpp presenter.cpp "
 macro_append presenter_dependencies " cintBootstrap "
-
-macro_append Presenter_linkopts " -locci " WIN32 " oraocci10.lib  " 
