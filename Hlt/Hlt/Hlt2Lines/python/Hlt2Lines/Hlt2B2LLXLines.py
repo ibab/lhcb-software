@@ -75,7 +75,7 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
         leptoncut = "(PT> %(LeptonPT)s *MeV)" % self.getProps()
         #
         ### dilepton mass cut 
-        llcombcut   = "(AM < %(SignalBUpperMass)s *MeV) & (APT < %(DiLeptonPT)s)" % self.getProps()
+        llcombcut   = "(AM < %(SignalBUpperMass)s *MeV) & (APT > %(DiLeptonPT)s)" % self.getProps()
         #
         ### dilepton cut (VFASPF(VCHI2/VDOF)<9)
         llcut   = "(VFASPF(VCHI2/VDOF)<9) & (BPVVDCHI2> %(DiLeptonFDCHI2)s ) & (BPVIPCHI2() > %(DiLeptonIPCHI2)s )"  % self.getProps()
