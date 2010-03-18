@@ -16,6 +16,7 @@
 #include "OTDet/DeOTModule.h"
 #include "OTDAQ/IOTRawBankDecoder.h"
 #include "AIDA/IHistogram1D.h"
+#include "AIDA/IProfile1D.h"
 
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
@@ -38,6 +39,9 @@ class OTTrackMonitor: public GaudiHistoAlg
   static const int HIST_GOOD_RESIDUAL_PULL = 8 + 5;
 private:
   AIDA::IHistogram1D* hists[12][16];
+  AIDA::IHistogram2D* histXY[12];
+  AIDA::IHistogram2D* histRT[12];
+  AIDA::IProfile1D* histAverageTimeResidualVsY[12] ;
 
   AIDA::IProfile1D* profileTimeResidualVsModule;
   AIDA::IProfile1D* profileResidualVsModule;
@@ -57,9 +61,6 @@ private:
   AIDA::IHistogram1D* histModuleOutlierOccupancy;
   AIDA::IHistogram1D* histOtisHitOccupancy;
   AIDA::IHistogram1D* histOtisHotOccupancy;
-
-  AIDA::IHistogram2D* histXY[12];
-  AIDA::IHistogram2D* histRT[12];
 
   AIDA::IHistogram1D* histAverageTimeResidual;
   AIDA::IHistogram2D* histAverageTimeResidualVsMomentum;
@@ -177,6 +178,8 @@ void OTTrackMonitor::bookHists(int index, const std::string& prefix)
     -3000, 3000, 20, -3000, 3000, 20);
   histRT[index] = book2D(prefix + "rt", "drifttime versus unbiased distance",
     -cellRadius, cellRadius, 50, -25, 75, 50);
+  histAverageTimeResidualVsY[index] = bookProfile1D(prefix + "avtimeresvsy", "average time residual versus y", 
+						    0, 2000, 40) ;
 }
 
 //=============================================================================
@@ -436,6 +439,8 @@ StatusCode OTTrackMonitor::execute()
         fill(profileTimeResidualVsDistance, std::abs(trackDistance), drifttimeResidual, 1.0);
         fill(profileResidualVsDistance, std::abs(trackDistance), residual, 1.0);
         fill(profileResidualPullVsDistance, std::abs(trackDistance), residualPull, 1.0);
+	double y = unbiasedState.y() - fitnode->measurement().trajectory().beginPoint().y() ;
+	histAverageTimeResidualVsY[histIndex]->fill( y, drifttimeResidual ) ;
       }
 
       fill(histDeltaToF, measurement->deltaTimeOfFlight(), 1.0);
