@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-03-18 - Neal Gauvin
+ - Bug #64490 fixed in RecVertices2Particles
+
 !========================== DisplVertices v6r3 2010-03-17 ===================
 ! 2010-03-15 - Neal Gauvin
  - Bug fixed in DisplVertices

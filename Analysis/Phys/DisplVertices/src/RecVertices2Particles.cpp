@@ -192,7 +192,6 @@ StatusCode RecVertices2Particles::initialize() {
   if( msgLevel(MSG::DEBUG) )
     debug() << "==> Execute the RecVertices2Particles algorithm, event "
 	    << m_nEvents << endmsg;
-  Tuple tuple = nTuple("DisplVertices"); //defines a tuple to save infos
 
   //Check track and Particle content
   //PrintTrackandParticles();
@@ -204,8 +203,8 @@ StatusCode RecVertices2Particles::initialize() {
       Particles* BL = get<Particles>( m_BLLoc );      
       m_BeamLine = *(BL->begin());
       if( msgLevel(MSG::DEBUG) )
-	debug()<<"Beam line position "<< m_BeamLine->referencePoint()
-	       <<" direction " << m_BeamLine->momentum() << endmsg;
+        debug()<<"Beam line position "<< m_BeamLine->referencePoint()
+               <<" direction " << m_BeamLine->momentum() << endmsg;
     } else {
       warning()<<"No Beam line found at "<< m_BLLoc << endmsg;
       return StatusCode::SUCCESS;
@@ -300,12 +299,11 @@ StatusCode RecVertices2Particles::initialize() {
   plot( size, "NbofPreys", 0, 20 );
 
   //Save Preys infos in tuple
-  if( m_SaveTuple ) 
+  if( m_SaveTuple ){
+    Tuple tuple = nTuple("DisplVertices"); //defines a tuple to save infos
     if( SavePreysTuple( tuple, RecParts ).isFailure() )
       warning()<<"Impossible to fill tuple with candidate infos"<<endmsg;
-    
-    
-
+  }
 
   //Save Preys from Desktop to the TES.
   desktop()->saveDesktop() ;
