@@ -4,8 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-----------------------------------------------------------------------------
 
+!========================== HltDAQ v1r4 2010-03-18 ===========================
 ! 2010-03-03 - Tomasz Skwarnicki
- - add check of RawBank magic pattern in HltDec/Sel/VertexReportsDecoder,HltRawBankMonitor
+ - add check of RawBank magic pattern in HltDec/Sel/VertexReportsDecoder,
+   HltRawBankMonitor
 
 !========================== HltDAQ v1r3 2010-01-21 ===========================
 ! 2010-01-07 - V. Gligorov
