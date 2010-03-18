@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.50 2010-03-03 14:57:20 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.51 2010-03-18 19:10:54 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -632,6 +632,12 @@ protected:
   
   /// Reference to ParticlePropertySvc
   mutable const LHCb::IParticlePropertySvc* m_ppSvc;
+
+protected:
+
+  /// Get the best related PV from the local relations table. Return 0 if 
+  /// nothing is there. Does not invoke any calculations.
+  const LHCb::VertexBase* getStoredBestPV(const LHCb::Particle* particle) const;
 
 private:
 

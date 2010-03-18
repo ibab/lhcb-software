@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.71 2010-03-03 14:57:20 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.72 2010-03-18 19:10:54 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -407,7 +407,7 @@ StatusCode DVAlgorithm::writeEmptyContainerIfNeeded()
 // ============================================================================
 const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p) const
 {
-  //  always() << "ATTENTION! called calculateRelatedPV!" << endmsg;
+
   if (msgLevel(MSG::VERBOSE)) verbose() << "DVAlgorithm::calculateRelatedPV" << endmsg;
   const IRelatedPVFinder* finder = this->relatedPVFinder();
   const LHCb::RecVertex::Container* PVs = this->primaryVertices();
@@ -502,6 +502,20 @@ const LHCb::VertexBase* DVAlgorithm::_getRelatedPV(const LHCb::Particle* part) c
     const Particle2Vertex::Table::Range range = desktop()->particle2Vertices(part);
     return DaVinci::bestVertexBase(range);
   }
+  
+}
+// ============================================================================
+const LHCb::VertexBase* DVAlgorithm::getStoredBestPV(const LHCb::Particle* particle) const
+{
+  if ( hasStoredRelatedPV(particle) ) {
+    std::cout <<"FOUND STORED PV" << std::endl;
+    const Particle2Vertex::Table::Range range = desktop()->particle2Vertices(particle);
+    return DaVinci::bestVertexBase(range);
+  } else {
+    std::cout <<"FOUND NO STORED PV" << std::endl;
+    return 0;
+  }
+  
   
 }
 // ============================================================================
