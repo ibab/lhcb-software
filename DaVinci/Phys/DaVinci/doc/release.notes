@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.415 2010-03-17 17:18:28 pkoppenb Exp $
+! $Id: release.notes,v 1.416 2010-03-18 09:44:11 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -9,7 +9,11 @@
 !
 !-----------------------------------------------------------------------------
 
-!========================== DaVinci v25r2p1 2010-03-17 =======================
+!========================== DaVinci v25r2p1 2010-03-17 =====================
+! 2010-03-18 - Patrick Koppenburg
+ - Change the default values of DDDBTag amd CondDBTag from "deafult" to ""
+ - This allows direct use of LHCbApp().DDDBTag, etc
+
 !========================== DaVinci v25r2 2010-03-08 =======================
 
 ! 2010-03-08 - Patrick Koppenburg
