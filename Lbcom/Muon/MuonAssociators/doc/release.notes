@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.27 2010-03-02 09:51:26 asatta Exp $
+! $Id: release.notes,v 1.28 2010-03-18 14:29:04 cattanem Exp $
 ! Package     : MuonAssociators
 ! Responsible : Alessia Satta
 !---------------------------------------------------------------------------
+
+!==================== MuonAssociators v3r3 2010-03-18 ======================
 ! 2010-03-02 - Alessia Satta
  - changes in MuonPad2MCTool 
 
