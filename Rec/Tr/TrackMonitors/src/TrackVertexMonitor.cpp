@@ -62,6 +62,7 @@ private:
   AIDA::IHistogram1D* m_twoprongMass ;
   AIDA::IHistogram1D* m_twoprongDoca ;
   AIDA::IHistogram1D* m_twoprongDocaPull ;
+  AIDA::IHistogram1D* m_twoprongDecaylength ;
   AIDA::IProfile1D* m_twoprongDocaVsEta ; 
   AIDA::IProfile1D* m_twoprongDocaVsPhi ;
 
@@ -120,9 +121,10 @@ StatusCode TrackVertexMonitor::initialize()
   m_trackLongitudinalIPVsEta = bookProfile1D("fast track longitudinal IP vs eta",2.0,5.0,m_nprbins) ;
 
   // impact parameter and vertex chisquare of the two highest Pt tracks
-  m_twoprongMass      = book1D("twoprong mass",0,20*Gaudi::Units::GeV) ;
+  m_twoprongMass      = book1D("twoprong mass (GeV)",0,10) ;
   m_twoprongDoca      = book1D("twoprong doca",-m_ipmax,m_ipmax) ;
   m_twoprongDocaPull  = book1D("twoprong doca pull",-5,5) ;
+  m_twoprongDecaylength = book1D("twoprong decaylength",-5,5) ;
   m_twoprongDocaVsEta = bookProfile1D("twoprong doca vs vs eta",2.0,5.0,m_nprbins) ;
   m_twoprongDocaVsPhi = bookProfile1D("twoprong doca vs phi",-Gaudi::Units::pi,Gaudi::Units::pi,m_nprbins) ;
 
@@ -229,16 +231,16 @@ StatusCode TrackVertexMonitor::execute()
     // chisquare
     plot( pv->chi2() / pv->nDoF(), "PV chisquare per dof",0,20) ;
     // position
-    if(fabs(pv->position().x()) > 0.00001 && fabs(pv->position().y()) > 0.00001 ){   // crap hack for vertices at exactly 0
+    if(std::abs(pv->position().x()) > 0.00001 && std::abs(pv->position().y()) > 0.00001 ){   // crap hack for vertices at exactly 0
             //info() << "pvx " << pv->position().x() << endmsg;
             plot( pv->position().x(), "PV x position",-m_rpvmax,m_rpvmax) ;
             plot( pv->position().y(), "PV y position",-m_rpvmax,m_rpvmax) ;
             plot( pv->position().z(), "PV z position", m_zpvmin,m_zpvmax) ;
     }
 
-    if( fabs( pv->position().y() ) < m_rpvmax ) 
+    if( std::abs( pv->position().y() ) < m_rpvmax ) 
       profile1D( pv->position().z(), pv->position().y(),"PV y versus z",m_zpvmin,m_zpvmax,m_nprbins) ;
-    if( fabs( pv->position().x() ) < m_rpvmax ) 
+    if( std::abs( pv->position().x() ) < m_rpvmax ) 
       profile1D( pv->position().z(), pv->position().x(),"PV x versus z",m_zpvmin,m_zpvmax,m_nprbins) ;
     
     // refit the primary vertex with only the long tracks
@@ -277,9 +279,9 @@ StatusCode TrackVertexMonitor::execute()
 	plot( dx.x(), "PV left-right delta x",-0.1,0.1) ;
 	plot( dx.y(), "PV left-right delta y",-0.1,0.1) ;
 	plot( dx.z(), "PV left-right delta z",-1,1) ;
-	if( fabs( dx.y() ) < m_ipmax ) 
+	if( std::abs( dx.y() ) < m_ipmax ) 
 	  profile1D( pv->position().z(), dx.y(),"PV left-right delta y versus z",m_zpvmin,m_zpvmax,m_nprbins) ;
-	if( fabs( dx.x() ) < m_ipmax ) 
+	if( std::abs( dx.x() ) < m_ipmax ) 
 	  profile1D( pv->position().z(), dx.x(),"PV left-right delta x versus z",m_zpvmin,m_zpvmax,m_nprbins) ;
 	
 	// draw the pull of the difference
@@ -306,9 +308,9 @@ StatusCode TrackVertexMonitor::execute()
 	plot( dx.x(), "PV forward-backward delta x",-m_ipmax,m_ipmax) ;
 	plot( dx.y(), "PV forward-backward delta y",-m_ipmax,m_ipmax) ;
 	plot( dx.z(), "PV forward-backward delta z",-m_dzmax,m_dzmax) ;
-	if( fabs( dx.y() ) < m_ipmax ) 
+	if( std::abs( dx.y() ) < m_ipmax ) 
 	  profile1D( pv->position().z(), dx.y(),"PV forward-backward delta y versus z",m_zpvmin,m_zpvmax,m_nprbins) ;
-	if( fabs( dx.x() ) < m_ipmax ) 
+	if( std::abs( dx.x() ) < m_ipmax ) 
 	  profile1D( pv->position().z(), dx.x(),"PV forward-backward delta x versus z",m_zpvmin,m_zpvmax,m_nprbins) ;
 	
 	// draw the pull of the difference
@@ -327,7 +329,7 @@ StatusCode TrackVertexMonitor::execute()
     
     // do something with IP of highest momentum track, as function of phi and eta
     // first sort tracks by type and IP
-    if( goodlongtracks.size()>=2 && tracks.size()>=4 ) {
+    if( goodlongtracks.size()>=2 && tracks.size()>=7 ) {
       using namespace boost::lambda;
       std::sort(goodlongtracks.begin(), goodlongtracks.end(), 
 		bind(&LHCb::State::pt,bind(&LHCb::Track::firstState,*_1)) <
@@ -370,29 +372,40 @@ StatusCode TrackVertexMonitor::execute()
 	m_trackTransverseIP->fill(iptrans ) ;
 	m_trackLongitudinalIP->fill(iplong ) ;
 	// apply a cut for the profiles
-	if( fabs(iptrans) < m_trackTransverseIP->axis().upperEdge() &&
-	    fabs(iplong) < m_trackLongitudinalIP->axis().upperEdge() ) {
+	if( std::abs(iptrans) < m_trackTransverseIP->axis().upperEdge() &&
+	    std::abs(iplong) < m_trackLongitudinalIP->axis().upperEdge() ) {
 	  m_trackTransverseIPVsEta->fill(eta,iptrans) ;
 	  m_trackTransverseIPVsPhi->fill(phi,iptrans) ;
 	  m_trackLongitudinalIPVsEta->fill(eta,iplong) ;
 	  m_trackLongitudinalIPVsPhi->fill(phi,iplong) ;
 	}
       
-	// compute doca of two tracks
-	Gaudi::XYZVector dx3 = firsttrack->firstState().position() - secondtrack->firstState().position() ;
-	Gaudi::XYZVector n3  = firsttrack->firstState().slopes().Cross( secondtrack->firstState().slopes() ) ;
-	double doca = dx3.Dot(n3) / n3.R() ;
-	m_twoprongMass->fill(std::sqrt(highestmass2)) ;
-	m_twoprongDoca->fill(doca) ;
-	if( fabs(doca) < m_twoprongDoca->axis().upperEdge() ) {
-	  m_twoprongDocaVsEta->fill(eta,doca) ;
-	  m_twoprongDocaVsPhi->fill(phi,doca) ;
-	}
-	// the easiest way to compute the pull is with a vertex fit
-	LHCb::TwoProngVertex* twoprong = m_vertexer->fit(firsttrack->firstState(),secondtrack->firstState()) ;
-	if(twoprong) {
-	  m_twoprongDocaPull->fill(std::sqrt(twoprong->chi2()) * (doca>0 ? 1 : -1)) ;
-	  delete twoprong ;
+	// The two-track cuts we only make for relatively heavy objects
+	double mass = std::sqrt(highestmass2) ;
+	m_twoprongMass->fill(mass / Gaudi::Units::GeV ) ;
+	if( mass > 1*Gaudi::Units::GeV ) {
+	  // compute doca of two tracks
+	  Gaudi::XYZVector dx3 = firsttrack->firstState().position() - secondtrack->firstState().position() ;
+	  Gaudi::XYZVector n3  = firsttrack->firstState().slopes().Cross( secondtrack->firstState().slopes() ) ;
+	  double doca = dx3.Dot(n3) / n3.R() ;
+	  m_twoprongDoca->fill(doca) ;
+	  if( std::abs(doca) < m_twoprongDoca->axis().upperEdge() ) {
+	    m_twoprongDocaVsEta->fill(eta,doca) ;
+	    m_twoprongDocaVsPhi->fill(phi,doca) ;
+	  }
+	  // the easiest way to compute the pull is with a vertex fit
+	  LHCb::TwoProngVertex* twoprong = m_vertexer->fit(firsttrack->firstState(),secondtrack->firstState()) ;
+	  if(twoprong) {
+	    m_twoprongDocaPull->fill(std::sqrt(twoprong->chi2()) * (doca>0 ? 1 : -1)) ;
+	    
+	    // also compute the decay length. to compute a proper pull
+	    // here we need to move some code from TrackV0Finder to
+	    // TrackVertexer.
+	    Gaudi::XYZVector dir = twoprong->momentum(0,0).Vect().Unit() ;
+	    double decaylength = dir.Dot( twoprong->position() - restvertex->position() ) ;
+	    m_twoprongDecaylength->fill( decaylength ) ;
+	    delete twoprong ;
+	  }
 	}
       }
 
