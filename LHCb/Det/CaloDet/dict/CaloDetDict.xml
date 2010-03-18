@@ -7,16 +7,16 @@
   <class    name    = "CaloPin"             />
   <class    name    = "CaloLed"             />
   
-  <class    name = "std::vector<const DeSubCalorimeter*>"    />
-  <class    name = "std::vector<const DeSubSubCalorimeter*>" /> 
+  <class    name    = "std::vector<const DeSubCalorimeter*>"    />
+  <class    name    = "std::vector<const DeSubSubCalorimeter*>" /> 
 
-  <class    name = "std::vector<CaloLed>"    /> 
-  <class    name = "std::vector<CardParam>"  /> 
+  <class    name    = "std::vector<CaloLed>"    /> 
+  <class    name    = "std::vector<CardParam>"  /> 
 
-  <class    name = "CaloVector<CellParam>"  />
-  <class    name = "CaloVector<CaloPin>"    />
-  <class    name = "std::vector<CellParam>" />
-  <class    name = "std::vector<CaloPin>"   />
+  <class    pattern = "CaloVector<CellParam*>"  />
+  <class    patetrn = "CaloVector<CaloPin*>"    />
+  <class    name    = "std::vector<CellParam>" />
+  <class    name    = "std::vector<CaloPin>"   />
 
 
   <variable pattern = "LHCb::DeCalorimeterLocation::*" />
