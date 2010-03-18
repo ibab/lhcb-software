@@ -88,7 +88,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                     , MeasureTime = True)
 
         # LumiLow lines must be flagged - do not flag the traditional method, would interfere
-        if postfix == 'Low':
+        if postfix.startswith('Low'):
             lumiCountSequence.Members.append( LumiFlagMethod( seqCountName+'FlagMethod'
                                                               , CounterName='Method'
                                                               , ValueName='L0RateMethod'
