@@ -1,4 +1,4 @@
-// $Id: CaloVector.h,v 1.8 2010-03-18 12:38:31 ibelyaev Exp $ 
+// $Id: CaloVector.h,v 1.9 2010-03-18 13:52:39 ibelyaev Exp $ 
 // ============================================================================
 #ifndef     CALOKERNEL_CALOVECTOR_H
 #define     CALOKERNEL_CALOVECTOR_H 1 
@@ -163,6 +163,12 @@ public:
   /// sequential access to content container 
   reverse_iterator       rend  ()       { return Vector::rend   (); }
   
+public:
+  // ==========================================================================
+  /// access to container (useful in python for iteration)
+  inline const Content& at ( const size_t i ) const 
+  { return Vector::at ( i ) ; }
+  // ==========================================================================
 protected:
 
   /// get default value 

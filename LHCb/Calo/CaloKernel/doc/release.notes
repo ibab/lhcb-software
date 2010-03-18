@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.50 2010-03-18 12:38:31 ibelyaev Exp $
+! $Id: release.notes,v 1.51 2010-03-18 13:52:39 ibelyaev Exp $
 ! =============================================================================
 ! Package     : CaloKernel
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -6,6 +6,10 @@
 ! The package contains the general Calo Kernel classes and utilities,
 ! which are essentially independent from Detector and Event models
 ! =============================================================================
+
+! 2010-03-18 - Vanya Belyaev
+
+ - add method CaloVector::at that allows much faster iteration in python
 
 ! 2010-03-18 - Vanya Belyaev
 
