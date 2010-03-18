@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.199 2010-03-02 16:36:49 odescham Exp $
+! $Id: release.notes,v 1.200 2010-03-18 14:24:03 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================== L0DU v10r4 2010-03-17 =========================
 ! 2010-03-01 Olivier Deschamps
-  - L0ProcessorDecoder/L0DUEmulatorTool : no longer return Failure when processor data is missing. Process anyway with NULL-input (+lot of warnings)
+  - L0ProcessorDecoder/L0DUEmulatorTool : no longer return Failure when processor
+    data is missing. Process anyway with NULL-input (+lot of warnings)
 
 ! 2010-02-25 Olivier Deschamps
   - L0Filter : improve L0Filtering (TCK-dependent orChannels)
