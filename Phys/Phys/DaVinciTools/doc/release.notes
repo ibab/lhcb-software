@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.526 2010-03-17 12:48:02 jpalac Exp $
+! $Id: release.notes,v 1.527 2010-03-18 19:15:25 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-03-18 - Juan Palacios
+ - src/PhysDesktop.cpp
+  . No longer get secondary vertices from TES. Get them from endVertex() of
+    each input particle.
+ - src/FilterDesktop.cpp
+  . No longer store Vertices container. These are accessible from the particles.
+  . Take charge of shallow cloning of particles, and their best PV relations.
 
 ! 2010-03-17 - Juan Palacios
  - src/FilterDesktop.cpp
