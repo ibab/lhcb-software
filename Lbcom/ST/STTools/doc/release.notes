@@ -2,6 +2,10 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+!=========================== STTools v3r18 2010-03-18 =========================
+! 2010-03-15 S.Menzemer
+ - Tuning of measurement uncertainties
+
 !=========================== STTools v3r17 2010-03-01 =========================
 ! 2010-02-26 M Needham
  - Change default of STRndmChannelIDSelector to kill no clusters
