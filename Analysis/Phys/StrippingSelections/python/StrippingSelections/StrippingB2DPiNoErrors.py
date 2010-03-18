@@ -173,7 +173,7 @@ SubDNoErrors.IgnoreFilterPassed = True
 SubDNoErrors.Members += [StrippingSelD0NoErrors]
 SubDNoErrors.Members += [StrippingSelD2hhhNoErrors]
 SubDNoErrors.Members += [StripSelD2KPiPi0NoErrors]
-SubDNoErrors.Members += [StrippingSelD2hhhNoErrors]
+SubDNoErrors.Members += [StrippingSelD2hhhhNoErrors]
 SubDNoErrors.Members += [StrippingSelD2kshhNoErrors]
 ########################################################################
 B2DXStrippingSelNoErrors = CombineParticles("B2DXStrippingSelNoErrors")
