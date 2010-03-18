@@ -10,7 +10,7 @@ from os import environ
 import GaudiKernel.SystemOfUnits as Units
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
-from Configurables import DaVinci, CombineParticles
+from Configurables import CombineParticles
 import CommonParticles.StdNoPIDsPions
 import CommonParticles.StdNoPIDsProtons
 import CommonParticles.StdNoPIDsDownPions
