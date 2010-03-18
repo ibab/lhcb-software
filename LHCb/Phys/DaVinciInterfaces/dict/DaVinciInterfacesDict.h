@@ -1,4 +1,4 @@
-// $Id: DaVinciInterfacesDict.h,v 1.9 2010-02-20 21:18:50 cattanem Exp $
+// $Id: DaVinciInterfacesDict.h,v 1.10 2010-03-18 19:02:27 jpalac Exp $
 #ifndef DICT_DAVINCIINTERFACESDICT_H 
 #define DICT_DAVINCIINTERFACESDICT_H 1
 
@@ -51,6 +51,7 @@
 #include "Kernel/IRelatedPVFinder.h"
 #include "Kernel/ISecondaryVertexTool.h"
 #include "Kernel/ITagger.h"
+#include "Kernel/ITrackIsolation.h"
 #include "Kernel/ITriggerSelectionTisTos.h"
 #include "Kernel/ITriggerTisTos.h"
 #include "Kernel/IVertexFit.h"
