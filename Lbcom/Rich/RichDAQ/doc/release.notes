@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v3r26p1 2010-03-18 =======================
 ! 2010-03-02 - Chris Jones
  - Add check on Rawbank magic pattern to detect general data corruption issues
 
