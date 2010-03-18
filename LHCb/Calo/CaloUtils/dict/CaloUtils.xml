@@ -1,7 +1,7 @@
 <!-- 
-     * $Id: CaloUtils.xml,v 1.4 2010-01-14 17:39:39 vegorych Exp $ 
+     * $Id: CaloUtils.xml,v 1.5 2010-03-18 13:58:42 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
      * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for 
@@ -32,8 +32,10 @@
   <class    name = "std::vector<const LHCb::CaloDigit*>" />
   <class    name = "std::set<LHCb::CaloCellID>"          />
   <class    name = "std::set<const LHCb::CaloDigit*>"    />
-
-
+  
+  <class pattern = "CaloVector<LHCb::CaloDigit*>"  /> 
+  <class pattern = "CaloVector<LHCb::CaloAdc*>"    /> 
+  
   <exclusion>
 
     <class pattern="LHCb::CaloMomentum::CaloPositions"/>

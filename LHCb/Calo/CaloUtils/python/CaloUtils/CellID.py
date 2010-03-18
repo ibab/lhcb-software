@@ -11,18 +11,18 @@ Helper module to performs some decorations for LHCb::CaloCellID object
 
 """
 # =============================================================================
-__author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
+__date__    = " 2009-09-28 "  
+__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ "
 # =============================================================================
 __all__     = () 
 # =============================================================================
 
 from GaudiPython.Bindings import gbl as cpp
 
-LHCb         = cpp.LHCb
-std          = cpp.std 
-CaloCellCode = cpp.CaloCellCode
-
+LHCb                = cpp.LHCb
+std                 = cpp.std 
+CaloCellCode        = cpp.CaloCellCode
 
 # =============================================================================
 ## Get the cellID from the string
@@ -142,8 +142,44 @@ LHCb.CaloDigit.Set     = _SET2
 LHCb.CaloDigit.Vector  = _VCT2
 
 
+# =============================================================================
+## iterator over CaloVector 
+def __calovector_iter__ ( self ) :
+    """
+    Iterator over Calo Vector
+    
+    >>> calovector = ...                ## get the vector
+    
+    >>> for i in calovector : print i   ## iterate over its content
+    
+    """
+    _size = self.size()
+    _indx = 0 
+    while _indx < _size :
+        yield self.at (  _indx )
+        _indx += 1
+
+## ============================================================================
+## decorate calo-vector 
+for t in ( 'CellParam'        ,
+           'LHCb::CaloDigit'  ,
+           'LHCb::CaloDigit*' ,
+           'LHCb::CaloAdc'    ) : 
+    vct =  cpp.CaloVector ( t , LHCb.CaloCellID )
+    vct.__iter__ = __calovector_iter__
+    
+
+# =============================================================================
 if '__main__' == __name__ :
-    print __doc__ , __author__ , __version__
+
+    ## make printout of the own documentations 
+    print '*'*120
+    print                      __doc__
+    print ' Author  : %s ' %   __author__    
+    print ' Version : %s ' %   __version__
+    print ' Date    : %s ' %   __date__
+    print '*'*120  
+
 
     cell1 = LHCb.CaloCellID(24312)
     

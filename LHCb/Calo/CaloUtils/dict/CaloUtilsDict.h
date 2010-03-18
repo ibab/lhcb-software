@@ -1,6 +1,6 @@
-// $Id: CaloUtilsDict.h,v 1.4 2010-01-14 17:39:40 vegorych Exp $
+// $Id: CaloUtilsDict.h,v 1.5 2010-03-18 13:58:42 ibelyaev Exp $
 // ============================================================================
-// CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 #ifndef CALOUTILS_CALOUTILSDICT_H 
 #define CALOUTILS_CALOUTILSDICT_H 1
@@ -14,6 +14,11 @@
 #include "CaloUtils/CaloCellIDAsProperty.h"
 #include "CaloUtils/CaloUtils.h"
 #include "CaloUtils/ICaloElectron.h"
+// ============================================================================
+// DigiEvent 
+// ============================================================================
+#include "Event/CaloAdc.h"
+#include "Event/CaloDigit.h"
 // ============================================================================
 // Stefan Roiser's trick to allow compilation on Win32
 // ============================================================================
@@ -32,6 +37,10 @@ namespace
     LHCb::CaloCellID::Set    m_2 ;
     LHCb::CaloDigit::Vector  m_3 ;
     LHCb::CaloDigit::Set     m_4 ;    
+    
+    CaloVector<LHCb::CaloDigit>  m_5 ;
+    CaloVector<LHCb::CaloDigit*> m_6 ;
+    CaloVector<LHCb::CaloAdc>    m_7 ;
   } ;
   //===========================================================================
 }

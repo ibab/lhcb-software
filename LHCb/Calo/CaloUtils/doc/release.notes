@@ -1,7 +1,21 @@
-! $Id: release.notes,v 1.152 2010-03-17 14:05:28 cattanem Exp $
+! $Id: release.notes,v 1.153 2010-03-18 13:58:42 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2010-03-18 - Vanya Belyaev
+
+ - CaloUtils.xml
+
+     add dictionaries for CaloVectors...
+
+ - CaloUtils/CellID.py
+
+     add the python iteration for related CaloVector-classes 
+
+ - cmt/requirements 
+
+     version increment to v8r13 
 
 !========================== CaloUtils v8r12 2010-03-17 ========================
 ! 2010-03-13

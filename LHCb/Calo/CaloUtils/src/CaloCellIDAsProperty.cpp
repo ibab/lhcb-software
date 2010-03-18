@@ -1,4 +1,4 @@
-// $Id: CaloCellIDAsProperty.cpp,v 1.3 2009-11-28 19:12:40 ibelyaev Exp $
+// $Id: CaloCellIDAsProperty.cpp,v 1.4 2010-03-18 13:58:42 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -114,7 +114,7 @@ namespace Gaudi
         {   
           result = 
             ( !( str_p("LHCb.CaloCellID") | "CaloCellID" )
-              >> '(' 
+              >> '('
               >>
               ( max_limit_d(4u) [ uint_p [ boost::bind(&CCIDGrammar::matchCalo1 , &cell , _1) ] ] | 
                 calo                     [ boost::bind(&CCIDGrammar::matchCalo2 , &cell , _1) ] )
