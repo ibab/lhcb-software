@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-03-18 - Jaap Panman
+ - replace reference stdout for unittest 2 (minor change)
+
 !========================== LumiAlgs v3r3 2010-02-15 =========================
 ! 2010-02-14 - Jaap Panman
  - replace reference stdout for unittests 3, 4, 5 (LumiLow FSRs)
