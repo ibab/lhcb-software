@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.86 2010-02-15 15:15:34 cattanem Exp $
+! $Id: release.notes,v 1.87 2010-03-18 13:56:26 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+!========================== CaloTools v5r16 2010-03-18 =========================
+! 2010-03-08 - Olivier Deschamps
+	- CaloHypoToCalo: Implement new virtual method _setProperty
 
 !========================== CaloTools v5r15 2010-02-15 =========================
 ! 2010-02-13 - Olivier Deschamps
