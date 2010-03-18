@@ -87,7 +87,7 @@ use L0MuonKernel          v9r1    L0      # Julien Cogan
 use ProcessorKernel       v6r0    L0      # Julien Cogan
 
 use MuonDAQ               v4r8    Muon    # Alessia Satta
-use MuonInterfaces        v1r0    Muon    # Alessia Satta
+use MuonInterfaces        v1r0p1  Muon    # Alessia Satta
 
 # L1/Raw buffer encoding and decoding
 use DAQSys                v6r0    DAQ     # Marco Cattaneo
