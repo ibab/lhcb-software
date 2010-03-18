@@ -4,6 +4,7 @@
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
 
+!======================= RichPIDMerge v2r8 2010-03-19 ======================
 ! 2010-03-05 - Chris Jones
  - Various changes to support the configuration of multiple reconstruction 
    sequences in the same application. Needed to support neccessary changes in 
