@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+2010-03-18 M. Needham
+- New early data tuning
+
 !======================= TsaAlgorithms v3r16 2010-02-24====================
 ! 2010-02-17 Roel Aaij
  - fixed memory leak in TTGenericTracking::execute

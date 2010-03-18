@@ -5,7 +5,7 @@ from Configurables import ( Tf__Tsa__Seed, Tf__Tsa__SeedTrackCnv,
                             Tf__Tsa__ITStereoSearch, Tf__Tsa__OTStereoSearch,
                             Tf__Tsa__TStationHitManager, Tf__Tsa__SeedTrackCnvTool,
                             Tf__Tsa__StubFind, Tf__Tsa__StubExtender,
-                            Tf__Tsa__SeedAddHits, Tf__Tsa__Likelihood
+                            Tf__Tsa__SeedAddHits, Tf__Tsa__Likelihood,Tf__Tsa__StubLinker, Tf__Tsa__StubExtender
                            )
 
 Tf__Tsa__SeedTrackCnv( "TsaSeedTrackCnv").outputLocation = "Rec/Track/Seed"
@@ -27,6 +27,7 @@ tsaSeed.addTool(Tf__Tsa__ITStereoSearch(), name="stereoS1")
 tsaSeed.addTool(Tf__Tsa__ITStereoSearch(), name="stereoS2")
 tsaSeed.addTool(Tf__Tsa__OTStereoSearch(), name="stereoS3")
 tsaSeed.addTool(Tf__Tsa__OTStereoSearch(), name="stereoS4")       
+
 
 tsaSeed.xSearchS0.sector = 0
 tsaSeed.xSearchS1.sector = 1
@@ -59,7 +60,8 @@ tsaSeed.stereoS4.OnlyUnusedHits = OnlyUnusedHits
 
 tsaSeed.addTool(Tf__Tsa__SeedAddHits, name="SeedAddHits")
 tsaSeed.SeedAddHits.OnlyUnusedHits = OnlyUnusedHits
-
+tsaSeed.addTool(Tf__Tsa__StubLinker, name = "stubLinker")
+tsaSeed.addTool(Tf__Tsa__StubExtender, "stubExtender")
 
 if TrackSys().fieldOff():
     Tf__Tsa__SeedTrackCnv( "TsaSeedTrackCnv").addTool( Tf__Tsa__SeedTrackCnvTool("SeedTrackCnvTool"))
@@ -124,4 +126,50 @@ if TrackSys().noDrifttimes():
 if  TrackSys().earlyData():
     tsaSeed.addTool(Tf__Tsa__Likelihood(), name = "likelihood")
     tsaSeed.likelihood.LikCut = -40
+    tsaSeed.likelihood.outlierCut = 4.0
+    tsaSeed.likelihood.OTEff = 0.88
     Tf__Tsa__SeedTrackCnv("TsaSeedTrackCnv").LikCut = -40
+    tsaSeed.xSearchS0.outlierCut = 4.0
+    tsaSeed.xSearchS1.outlierCut = 4.0
+    tsaSeed.xSearchS2.outlierCut = 4.0
+    tsaSeed.xSearchS3.outlierCut = 4.0
+    tsaSeed.xSearchS4.outlierCut = 4.0
+    tsaSeed.stereoS0.outlierCut = 4.0
+    tsaSeed.stereoS1.outlierCut = 4.0
+    tsaSeed.stereoS2.outlierCut = 4.0
+    tsaSeed.stereoS3.outlierCut = 4.0
+    tsaSeed.stereoS4.outlierCut = 4.0
+    tsaSeed.xSearchS0.deltaX = 0.5
+    tsaSeed.xSearchS1.deltaX = 0.5
+    tsaSeed.xSearchS2.deltaX = 0.5
+    tsaSeed.xSearchS3.deltaX = 1.0
+    tsaSeed.xSearchS4.deltaX = 1.0
+    tsaSeed.stereoS0.syCut = 0.009
+    tsaSeed.stereoS1.syCut = 0.009
+    tsaSeed.stereoS2.syCut = 0.009
+    tsaSeed.stereoS3.syCut = 0.09
+    tsaSeed.stereoS4.syCut = 0.09
+    tsaSeed.stereoS3.yTol2 = 8.9
+    tsaSeed.stereoS4.yTol2 = 8.9
+    tsaSeed.stereoS3.maxDriftRadius = 3.
+    tsaSeed.xSearchS3.maxDriftRadius = 3.
+    tsaSeed.stereoS4.maxDriftRadius = 3.
+    tsaSeed.xSearchS4.maxDriftRadius = 3.
+    tsaSeed.SeedAddHits.dCut = 0.5
+    tsaSeed.SeedAddHits.outlierCutParabola = 4.0
+    tsaSeed.SeedAddHits.outlierCutLine = 4.0
+    tsaSeed.stubLinker.outlierCutParabola = 4.0
+    tsaSeed.stubLinker.outlierCutLine = 4.0
+    tsaSeed.stubExtender.outlierCutParabola = 4.0
+    tsaSeed.stubExtender.outlierCutLine = 4.0
+    tsaSeed.stubExtender.dxCut = 1.0
+    tsaSeed.stubExtender.dyCut = 40.
+    
+    
+    
+
+
+    
+
+    
+    
