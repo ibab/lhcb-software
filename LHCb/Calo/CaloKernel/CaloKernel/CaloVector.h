@@ -1,19 +1,24 @@
-// $Id: CaloVector.h,v 1.7 2008-10-28 15:25:55 cattanem Exp $ 
+// $Id: CaloVector.h,v 1.8 2010-03-18 12:38:31 ibelyaev Exp $ 
 // ============================================================================
 #ifndef     CALOKERNEL_CALOVECTOR_H
 #define     CALOKERNEL_CALOVECTOR_H 1 
 // ============================================================================
 // from STL 
+// ============================================================================
 #include <vector> 
+// ============================================================================
 // from Gaudi 
+// ============================================================================
 #include "GaudiKernel/Kernel.h"     
 #include "GaudiKernel/StatusCode.h" 
+// ============================================================================
+// Boost 
+#include "boost/call_traits.hpp"
+// ============================================================================
 // forward declaration
 namespace LHCb {
   class CaloCellID;                  
 }
-
-
 /** @class CaloVector CaloVector.h CaloKernel/CaloVector.h 
  *  
  *  A dedicated vector for Calo information accessed by CellID.
@@ -27,7 +32,7 @@ namespace LHCb {
  *  @date XX/XX/XX 
  */
 
-template <class CONTENT, class INDEX   = const LHCb::CaloCellID&  >
+template <class CONTENT, class INDEX_ = LHCb::CaloCellID>
 class CaloVector : private std::vector<CONTENT> 
 {
 public:
@@ -41,6 +46,9 @@ public:
   typedef typename Vector::reverse_iterator       reverse_iterator       ;
   typedef typename Vector::const_reverse_iterator const_reverse_iterator ;
   typedef std::vector<int>                        Indices                ;
+  
+  /// type for the argument 
+  typedef typename boost::call_traits<const INDEX_>::param_type INDEX ;
   
 public: 
   

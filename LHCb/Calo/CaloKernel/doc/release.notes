@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.49 2010-03-17 14:02:40 cattanem Exp $
+! $Id: release.notes,v 1.50 2010-03-18 12:38:31 ibelyaev Exp $
 ! =============================================================================
 ! Package     : CaloKernel
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -6,6 +6,18 @@
 ! The package contains the general Calo Kernel classes and utilities,
 ! which are essentially independent from Detector and Event models
 ! =============================================================================
+
+! 2010-03-18 - Vanya Belyaev
+
+ - CaloKernel/CaloVector.h 
+
+   Change *the formal* signature of default agrument to allow 
+   the normal usage in Python, otherwise the class is not avialble.
+   (Is it "Feature" of Reflex?). *The actual* signature  IS THE SAME.
+
+ - cmt/requirements 
+
+     verision increment to v6r3 
 
 !======================= CaloKernel v6r2 2010-03-17 ===========================
 ! 2010-03-08 - Olivier Deschamps
