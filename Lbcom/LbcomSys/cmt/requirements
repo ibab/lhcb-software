@@ -1,5 +1,5 @@
 package LbcomSys
-version v8r3
+version v9r0
 
 branches doc cmt tests
 
@@ -12,23 +12,23 @@ use Associators       v3r7    Associators # Matt Needham
 
 # Calorimeter
 use CaloAssociators   v6r10   Calo      # Olivier Deschamps
-use CaloTools         v5r15   Calo      # Olivier Deschamps
+use CaloTools         v5r16   Calo      # Olivier Deschamps
 
 # DAQ
-use DAQMonitors       v1r1    DAQ       # In SVN. Olivier Deschamps
+use DAQMonitors       v1r2    DAQ       # In SVN. Olivier Deschamps
 
 # HLT
 use HltDAQ            v1r3    Hlt       # Tomasz Skwarnicki
 
 # L0 trigger simulation
-use L0Calo            v11r0   L0        # Olivier Deschamps, Patrick Robbe
-use L0DU              v10r3   L0        # Olivier Deschamps   
-use L0Muon            v9r0    L0        # Andrei Tsarogorodtsev, Julien Cogan
-use L0MuonMonitor     v1r5    L0        # Julien Cogan
-use PuVeto            v7r7    L0        # Serena Oggero
+use L0Calo            v11r1   L0        # Olivier Deschamps, Patrick Robbe
+use L0DU              v10r4   L0        # Olivier Deschamps   
+use L0Muon            v9r1    L0        # Andrei Tsarogorodtsev, Julien Cogan
+use L0MuonMonitor     v2r0    L0        # Julien Cogan
+use PuVeto            v7r7p1  L0        # Serena Oggero
 
 # Muon
-use MuonAssociators   v3r2    Muon      # Alessia Satta
+use MuonAssociators   v3r3    Muon      # Alessia Satta
 
 # Outer tracker
 use OTAssociators     v4r4    OT        # Alexandr Kozlinskiy
@@ -36,10 +36,10 @@ use OTMonitor         v3r2p1  OT        # Wouter Hulsbergen
 
 # Rich
 use RichAlgorithms    v1r2    Rich      # Chris Jones
-use RichDAQ           v3r26   Rich      # Chris Jones
+use RichDAQ           v3r26p1 Rich      # Chris Jones
 use RichMCMonitors    v1r7p2  Rich      # Chris Jones
 use RichMCTools       v3r13   Rich      # Chris Jones
-use RichTools         v2r29   Rich      # Chris Jones
+use RichTools         v2r29p1 Rich      # Chris Jones
 
 # Silicon detectors
 use SiTools           v1r7p1  Si        # Matt Needham
@@ -50,17 +50,17 @@ use STAssociators     v1r6    ST        # Jeroen van Tilburg, Matt Needham
 use STCheckers        v2r14   ST        # Jeroen van Tilburg, Matt Needham
 use STDAQ             v3r21   ST        # Jeroen van Tilburg, Matt Needham
 use STMonitors        v2r5    ST        # Mark Tobin
-use STTools           v3r16   ST        # Jeroen van Tilburg, Matt Needham
+use STTools           v3r18   ST        # Jeroen van Tilburg, Matt Needham
 
 # Velo
-use VeloAlgorithms    v5r1    Velo      # Tomasz Szumlak
+use VeloAlgorithms    v5r2    Velo      # Tomasz Szumlak
 use VeloAssociators   v2r4    Velo      # Tomasz Szumlak
-use VeloDAQ           v4r12   Velo      # Kurt Rinnert
-use VeloSimulation    v3r6p1  Velo      # Tomasz Szumlak
+use VeloDAQ           v4r13   Velo      # Kurt Rinnert
+use VeloSimulation    v3r7    Velo      # Tomasz Szumlak
 use VeloTools         v3r4    Velo      # Tomasz Szumlak
 
 # VeloPix
-use VeloPixDAQ        v1r0    VeloPix  # Marcin Kucharczyk
+use VeloPixDAQ        v1r1    VeloPix  # Marcin Kucharczyk
 
 # Declare this as a container package
 apply_pattern container_package
