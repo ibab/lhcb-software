@@ -39,6 +39,8 @@ private:
 
   IHistogram1D* m_dxH1[3] ;
   IHistogram1D* m_dyH1[3] ;
+  IHistogram1D* m_zH1[3] ;
+  IHistogram1D* m_eOverPH1[3] ;
   IProfile1D* m_dyVsYPr ;
   IProfile1D* m_dyVsXPr ;
   IProfile1D* m_dyVsTyPr ;
@@ -108,36 +110,35 @@ StatusCode TrackCaloMatchMonitor::initialize()
   }
 
   setHistoTopDir("Track/") ;
+  char systitle[3][128] = { "outer","middle","inner"} ;
   char histitle[128] ;
-  sprintf(histitle,"x%s - xTRK (outer)",m_caloName.c_str()) ;
-  m_dxH1[0] = book1D("dx_out",histitle,-200,200) ;
-  sprintf(histitle,"x%s - xTRK (middle)",m_caloName.c_str()) ;
-  m_dxH1[1] = book1D("dx_mid",histitle,-200,200) ;
-  sprintf(histitle,"x%s - xTRK (inner)",m_caloName.c_str()) ;
-  m_dxH1[2] = book1D("dx_inn",histitle,-200,200) ;
-  
-  sprintf(histitle,"y%s - yTRK (outer)",m_caloName.c_str()) ;
-  m_dyH1[0] = book1D("dy_out",histitle,-200,200) ;
-  sprintf(histitle,"y%s - yTRK (middle)",m_caloName.c_str()) ;
-  m_dyH1[1] = book1D("dy_mid",histitle,-200,200) ;
-  sprintf(histitle,"y%s - yTRK (inner)",m_caloName.c_str()) ;
-  m_dyH1[2] = book1D("dy_inn",histitle,-200,200) ;
-  
+  for(int i=0; i<3; ++i) {
+    sprintf(histitle,"x%s - xTRK (%s)",m_caloName.c_str(),systitle[i]) ;
+    m_dxH1[i] = book1D(histitle,-200,200) ;
+    sprintf(histitle,"y%s - yTRK (%s)",m_caloName.c_str(),systitle[i]) ;
+    m_dyH1[i] = book1D(histitle,-200,200) ;
+    sprintf(histitle,"zMatch %s (%s)",m_caloName.c_str(),systitle[i]) ;
+    m_zH1[i] = book1D(histitle,m_geometricZ - 400, m_geometricZ + 400 ) ;
+    sprintf(histitle,"E over P %s (%s)",m_caloName.c_str(),systitle[i]) ;
+    m_eOverPH1[i] = book1D(histitle,-2,2) ;
+  }
+
   m_dxVsXPr = bookProfile1D("dxVsX","dx versus x",-3500,3500) ;
   m_dxVsYPr = bookProfile1D("dxVsY","dx versus y",-3500,3500) ;
-  m_dxVsTxPr = bookProfile1D("dxVsTx","dx versus tx",-1,1) ;
-  m_dxVsTyPr = bookProfile1D("dxVsTy","dx versus ty",-1,1) ;
+  m_dxVsTxPr = bookProfile1D("dxVsTx","dx versus tx",-0.6,0.6) ;
+  m_dxVsTyPr = bookProfile1D("dxVsTy","dx versus ty",-0.3,0.3) ;
   
   m_dyVsXPr = bookProfile1D("dyVsX","dy versus x",-3500,3500) ;
   m_dyVsYPr = bookProfile1D("dyVsY","dy versus y",-3500,3500) ;
-  m_dyVsTxPr = bookProfile1D("dyVsTx","dy versus tx",-1,1) ;
-  m_dyVsTyPr = bookProfile1D("dyVsTy","dy versus ty",-1,1) ;
+  m_dyVsTxPr = bookProfile1D("dyVsTx","dy versus tx",-0.6,0.6) ;
+  m_dyVsTyPr = bookProfile1D("dyVsTy","dy versus ty",-0.3,0.3) ;
   
   debug() << "CaloDet: center = " 
 	  << m_caloDet->geometry()->toGlobal(Gaudi::XYZPoint()) 
 	  << " zoffset: " << m_caloDet->zOffset()
+	  << " geometric Z: " << m_geometricZ
 	  << " zsize:   " << m_caloDet->zSize() << endreq ;
-
+  
   return sc;
 }
 
@@ -189,7 +190,7 @@ StatusCode TrackCaloMatchMonitor::execute()
       const LHCb::State* state = &(track->closestState(m_geometricZ)) ;
       BOOST_FOREACH( const MyCaloPosition& cluster, calopositions) {
 	//state = &(track->closestState(pos.z())) ;
-	double dz = cluster.pos.z() -state->z() ;
+	double dz = cluster.pos.z() - state->z() ;
 	double xtrack = state->x() + state->tx() * dz ;
 	double ytrack = state->y() + state->ty() * dz ;
 	double dx = cluster.pos.x() - xtrack ;
@@ -197,6 +198,12 @@ StatusCode TrackCaloMatchMonitor::execute()
 	if( std::abs(dy)<200 && std::abs(dx)<200 ) {
 	  m_dxH1[cluster.cell.area()]->fill( dx ) ;
 	  m_dyH1[cluster.cell.area()]->fill( dy ) ;
+	  m_eOverPH1[cluster.cell.area()]->fill( cluster.pos.e() * state->qOverP() ) ;
+	  // compute the z-coordinate for which sqrt(dx^2+dy^2) is minimal
+	  double tx = state->tx() ;
+	  double ty = state->ty() ;
+	  double ddz = ( tx*dx + ty*dy ) / (tx*tx+ty*ty) ;
+	  m_zH1[cluster.cell.area()]->fill( cluster.pos.z() + ddz ) ;
 	  if( std::abs(dy)<200 && std::abs(dx)<100 ) {
 	    m_dxVsXPr->fill( xtrack,dx ) ;
 	    m_dxVsYPr->fill( ytrack,dx ) ;
