@@ -4,6 +4,12 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-03-01 - Wouter Hulsbergen
+ - TrackCaloMatchMonitor: added histograms, adjusted limits, use always geometric Z
+ - TrackMonitor: added profile histograms for average chisquare versus momentum
+ - TrackVertexMonitor: added minimum mass requirement for two-prong histograms; added decaylegth histogram
+ - OTTrackMonitor: added histogram for time-res versus position along wire
+
 ! 2010-03-01 - Piotr Morawski
  - added algorithm for measuring resolution of PV without MC Truth
 
