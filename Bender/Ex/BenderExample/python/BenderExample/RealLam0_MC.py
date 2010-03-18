@@ -337,7 +337,7 @@ if '__main__' == __name__ :
         catalogs = [
         'xmlcatalog_file:local.xml'            ,
         'xmlcatalog_file:$BENDEREXAMPLEROOT/options/Sim04Reco03-XDST.xml' ,
-        'xmlcatalog_file:$BENDEREXAMPLEROOT/options/BenderExample/Sim04Reco03-DST.xml' 
+        'xmlcatalog_file:$BENDEREXAMPLEROOT/options/Sim04Reco03-DST.xml' 
         ] 
         )
             
