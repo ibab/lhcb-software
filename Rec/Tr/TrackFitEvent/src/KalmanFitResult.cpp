@@ -85,6 +85,8 @@ namespace LHCb
 	  break;
 	case Measurement::Unknown:
 	  break ;
+	case Measurement::VeloPixLite:
+	  break ;
 	}
       }
     }

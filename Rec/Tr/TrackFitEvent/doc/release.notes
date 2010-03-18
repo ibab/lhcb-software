@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2010-03-18 - Victor Coco
+ - added velopix switch case in KalmanFitResult 
+
 !========================== TrackFitEvent v4r4 2010-02-15 ====================
 
 ! 2010-02-14 Wouter Hulsbergen
