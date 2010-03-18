@@ -4,11 +4,11 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !--------------------------------------------------------------------------
 
+!=========================  VeloPixDAQ v1r1 2010-03-18 =====================
 ! 2010-03-01 - Victor Coco
  - Add VeloPixRawBankToPartialCluster to have partial decoding of the
    VeloPixCluster: get central ChannelID + LiteCluster.
 	 Add sorting of the FastClusterContainer in VeloPixRawBankToLiteCluster
-
 
 !=========================  VeloPixDAQ v1r0 2010-01-25 =====================
 ! 2010-01-25 Marcin Kucharczyk
