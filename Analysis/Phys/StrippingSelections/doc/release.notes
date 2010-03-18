@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-03-18 - Jacopo Nardulli
+ - Adding a Loose B2DX selection
+
 ! 2010-03-18 - Patrick Koppenburg
  - Restore DisplVertices lines
 
