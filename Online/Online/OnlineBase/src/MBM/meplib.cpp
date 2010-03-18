@@ -225,7 +225,22 @@ int mep_scan(MEPID dsc, int loop_delay)  {
       RTL::DoubleLinkedQueue<EVENT> que(bm->evDesc, -EVENT_next_off);
       for(EVENT* e=que.get(); e; e = que.get() )  {
         e->isValid();
-        if ( e->umask0.mask_or(e->umask2,e->held_mask) == mask_value )  {
+	if ( e->ev_type == EVENT_TYPE_ERROR )   {
+          int* evadd  = (int*)(bm->buffer_add+e->ev_add);
+          MEPEVENT* m = (MEPEVENT*)evadd;
+	  if ( id->errCB ) {
+	    try {
+	      (*id->errCB)(id->cbParam,m,e->ev_size);
+	    }
+	    catch(...) {
+	      ::lib_rtl_output(LIB_RTL_ERROR,"Failed to call ERROR callback on MEP processing ERROR\n");
+	    }
+	  }
+	  ::lib_rtl_output(LIB_RTL_ERROR,"MEP release after MEPRX Error MEP@ %08X id:%d Pattern:%08X\n",
+			   m->refCount,m,m->evID,m->magic);
+	  _mbm_del_event(bm, e, e->ev_size);               // de-allocate event slot/space
+	}
+        else if ( e->umask0.mask_or(e->umask2,e->held_mask) == mask_value )  {
           int* evadd  = (int*)(bm->buffer_add+e->ev_add);
           //MEP_SINGLE_EVT* sevt = (MEP_SINGLE_EVT*)evadd;
           //MEPEVENT* m = (MEPEVENT*)(id->mepStart + sevt->begin);

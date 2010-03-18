@@ -1,4 +1,4 @@
-// $Id: OnlineBaseEvtSelector.cpp,v 1.8 2009-12-03 19:01:02 frankb Exp $
+// $Id: OnlineBaseEvtSelector.cpp,v 1.9 2010-03-18 12:36:41 niko Exp $
 //====================================================================
 //  OnlineBaseEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -114,7 +114,6 @@ StatusCode OnlineBaseEvtSelector::start()    {
 
 // IService implementation: event selector override: stop service
 StatusCode OnlineBaseEvtSelector::stop()    {
-  undeclareAll();
   return OnlineService::stop();
 }
 
