@@ -127,15 +127,6 @@ if 0 > ROOT.gROOT.LoadMacro ( selector ) :
     raise RunTimeError, "Unable to LoadMacro '%s'" % selector  
 
 
-def fakeNum ( i , j ) :
-    """
-    Define 'fake' zone 
-    """
-    z   = sqrt ( (i-31.5)**2 + (j-31.5)**2 )
-    z  -= 5
-    z   = abs ( z )
-    return int ( z / 10 )
-
 ## ROOT 'selector' for filling the histograms
 class FillPi0( ROOT.TPySelectorFix  ):
     """
@@ -149,7 +140,8 @@ class FillPi0( ROOT.TPySelectorFix  ):
     def __init__ ( self                         ,
                    histos   = Kali.HistoMap  () ,
                    lambdas  = Kali.LambdaMap () ,
-                   cellFunc = lambda s : s      ) :
+                   cellFunc = lambda s : s      ,
+                   betas    = [ 8.3 , 8.8 , 9.5 ] ) :
         
         ROOT.TPySelectorFix.__init__ ( self , None , self ) ## initialize the base 
         self._histos  = copy.deepcopy ( histos  ) ## the histogram map
@@ -161,7 +153,9 @@ class FillPi0( ROOT.TPySelectorFix  ):
         self._inner    = self._histos [ Kali.InnerZone  ]
         self._middle   = self._histos [ Kali.MiddleZone ]
         self._outer    = self._histos [ Kali.OuterZone  ]
-        self._cellFunc = cellFunc 
+        self._cellFunc = cellFunc
+        self._betas    = copy.deepcopy ( betas )
+
         self._print('__init__')
         
     def _print ( self , phase ) :
@@ -172,9 +166,9 @@ class FillPi0( ROOT.TPySelectorFix  ):
             len ( self._histos.entries() ) ,
             self._global.entries()
             )
-        
+
     ## get all coefficients 
-    def lambdas ( self ) :
+    def lambdas  ( self ) :
         return copy.deepcopy ( self._lambdas ) 
 
     ## get all histograms 
@@ -206,6 +200,9 @@ class FillPi0( ROOT.TPySelectorFix  ):
         ic1.setCalo ( 2 )
         ic2.setCalo ( 2 )
 
+        area1 = ic1.area()
+        area2 = ic2.area()
+        
         #
         # "massage" cell-ID, e.g. group them
         # 
@@ -224,14 +221,20 @@ class FillPi0( ROOT.TPySelectorFix  ):
         hs1  = self._histos  [ ic1 ].histos()        
         ## get the histograms and for the first cell 
         hs2  = self._histos  [ ic2 ].histos()  
+        
+        hc1  = self._histos  [ ic1 ].counters()        
+        hc2  = self._histos  [ ic2 ].counters()        
 
         ## get 'per-area' histos
-        iz1 = CellID ( ic1.calo() , ic1.area() , 0 , 0 )
-        iz2 = CellID ( ic2.calo() , ic2.area() , 0 , 0 )
-        hz1  = self._histos  [ iz1 ].histos() ## global 'per-zone' histos
-        hz2  = self._histos  [ iz2 ].histos() ## global 'per-zone' histos
+        iz1 = CellID ( ic1.calo() , area1 , 0 , 0 )
+        iz2 = CellID ( ic2.calo() , area2 , 0 , 0 )
+        hz1  = self._histos  [ iz1 ].histos   () ## global 'per-zone' histos
+        hz2  = self._histos  [ iz2 ].histos   () ## global 'per-zone' histos
+        cz1  = self._histos  [ iz1 ].counters () ## global 'per-zone' histos
+        cz2  = self._histos  [ iz2 ].counters () ## global 'per-zone' histos
         ## everything 
-        hgl  = self._global.histos()          ## global histos 
+        hgl  = self._global.histos   ()          ## global histos 
+        cgl  = self._global.counters ()          ## global counters
         
         ## 
         
@@ -241,6 +244,30 @@ class FillPi0( ROOT.TPySelectorFix  ):
 
         background = 1 == bamboo.bkg
         
+        if ok2 :
+            corrMass  = bamboo.m12
+            factor2   = self._betas[area2] * bamboo.prs2/bamboo.g2E
+            corrMass *= sqrt ( lam1 )
+            corrMass *= sqrt ( lam2 + ( 1 - lam2 ) * factor2 )
+            if abs ( corrMass - 135. ) < 20 :
+                hc2[0]   += factor2
+                cz2[0]   += factor2
+                cgl[0]   += factor2
+                
+        elif ok3 :
+            corrMass  = bamboo.m12
+            factor1   = self._betas[area1] * bamboo.prs1/bamboo.g1E
+            factor2   = self._betas[area2] * bamboo.prs2/bamboo.g2E
+            corrMass *= sqrt ( lam1 + ( 1 - lam1 ) * factor1 )
+            corrMass *= sqrt ( lam2 + ( 1 - lam2 ) * factor2 ) 
+            if abs ( corrMass - 135. ) < 20 :
+                hc1[1]   += factor1 
+                cz1[1]   += factor1
+                cgl[1]   += factor1                
+                hc2[1]   += factor2
+                cz2[1]   += factor2
+                cgl[1]   += factor2                
+                
         if not background :
 
             if   ok1 : 
@@ -249,11 +276,11 @@ class FillPi0( ROOT.TPySelectorFix  ):
                 hz1 [ 0 ].Fill ( corrMass )
                 hz2 [ 0 ].Fill ( corrMass )
                 hgl [ 0 ].Fill ( corrMass )
-            elif ok2 : 
+            elif ok2 :
                 hs1 [ 1 ].Fill ( corrMass )
                 hz1 [ 1 ].Fill ( corrMass )
                 hgl [ 1 ].Fill ( corrMass )
-            elif ok3 : 
+            elif ok3 :
                 hs1 [ 2 ].Fill ( corrMass )
                 hs2 [ 2 ].Fill ( corrMass )
                 hz1 [ 2 ].Fill ( corrMass )
@@ -286,5 +313,3 @@ class FillPi0( ROOT.TPySelectorFix  ):
     def SlaveTerminate ( self       ) : self._print ( 'SlaveTerminate' )
     def Terminate      ( self       ) : self._print ( 'Terminate'      )
 
-
-    

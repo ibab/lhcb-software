@@ -1,9 +1,46 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Configuration.py,v 1.13 2010-02-25 15:01:13 ibelyaev Exp $
+# $Id: Configuration.py,v 1.14 2010-03-18 11:14:23 ibelyaev Exp $
 # =============================================================================
 # @file  KaliCalo/Configuration.py
-# The basic configuration for Calorimeetr Calibrations 
+#
+# The basic configuration for Calorimeter Calibration
+#
+# The application produces:
+# 
+#  - ROOT NTuple for analysis
+#  - 'femto-DST' output, suibale for fast reprocessing 
+#  - monitoring histograms
+#
+# The usage is fairly trivial:
+#
+#    # configure the application:
+#
+#    from Gaudi.Configuration import * 
+#    from Configurables       import KaliPi0Conf
+#
+#    KaliPi0Conf (
+#    FirstPass = True    ,  ## set for the first pass on DST
+#    EvtMax    = 10000      ## number of events to process
+#    )
+#
+#    # define input data :
+#    EventSelector(
+#    Input = [ .. ] 
+#    )
+#
+# Or one can rely on helper functions:
+#
+#     from KaliPi0.Configuration import firstPass, secondPass  
+#
+#
+#     kali = firstPass ( EvtMax = 1000 )
+#
+#     # define input data :
+#     EventSelector(
+#     Input = [ .. ] 
+#     )
+#
 # @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # @date   2009-09-28
 # =============================================================================
@@ -33,14 +70,28 @@ The usage is fairly trivial:
     Input = [ .. ] 
     )
 
+Or one can rely on helper functions:
+
+     from KaliPi0.Configuration import firstPass, secondPass  
+
+     kali = firstPass ( EvtMax = 1000 )
+
+     # define input data :
+     EventSelector(
+     Input = [ .. ] 
+     )
+
 """
 # =============================================================================
-__author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $"
+__author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
+__date__    = " 2009-09-28 "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $ "
 # =============================================================================
 # the only one  "vizible" symbol 
 __all__  = (
     'KaliPi0Conf' ,                         ## the only one vizible symbol
+    'firstPass'   , ## helper symbol to create the preconfigured application
+    'secondPass'    ## helper symbol to create the preconfigured application
     )
 # =============================================================================
 from Gaudi.Configuration      import *
@@ -132,6 +183,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         ## CaloReco Flags:
         , 'UseTracks'           : True  ## Use Tracks for the first pass ?
         , 'UseSpd'              : True  ## Use Spd as neutrality criteria ?
+        , 'UsePrs'              : False ## Use Prs for photon selection ?
         , 'ForceDigits'         : False ## Force Digits witgh Cluster Recontruction
         ## IO-related 
         , 'NTuple'              : 'KaliPi0_Tuples.root' ## The output NTuple-file
@@ -140,8 +192,6 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         ## forwarded to DaVinci & other configurables 
         , 'EvtMax'              :  -1    ## Number of events to run (DaVinci)             
         , 'DataType'            : '2009' ## Data type               (DaVinci)
-        , 'Hlt'                 : False  ## Hlt type                (DaVinci)
-        , 'Hlt'                 : False  ## Hlt type                (DaVinci)
         , 'Simulation'          : False  ## Simulation              (DaVinci) 
         , 'MeasureTime'         : True   ## Measure the time for sequencers
         , 'OutputLevel'         : INFO   ## The global output level
@@ -162,6 +212,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         ## CaloReco flags 
         , 'UseTracks'           : """ Use Tracks for the first pass ? """
         , 'UseSpd'              : """ Use Spd as neutrality criteria ? """
+        , 'UsePrs'              : """ Use Prs for photon selection ? """
         , 'ForceDigits'         : """ Force Digits witgh Cluster Recontruction """
         ## IO-related 
         , 'NTuple'              : """ The output NTuple-file """ 
@@ -170,7 +221,6 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         ## DaVinci & Co configuration: 
         , 'EvtMax'              : """ Number of events to run (DaVinci) """
         , 'DataType'            : """ Data type               (DaVinci) """
-        , 'Hlt'                 : """ Hlt                     (DaVinci) """
         , 'Simulation'          : """ Simulation              (DaVinci) """
         , 'MeasureTime'         : """ Measure the time for sequencers """
         , 'OutputLevel'         : """ The global output level """
@@ -194,6 +244,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
                 EnableRecoOnDemand = True  ,
                 UseTracks          = True  ,        ## Use Tracks For First Pass
                 UseSpd             = self.getProp ( 'UseSpd'      ) ,
+                UsePrs             = self.getProp ( 'UsePrs'      ) ,
                 ForceDigits        = self.getProp ( 'ForceDigits' ) ,
                 MeasureTime        = self.getProp ( 'MeasureTime' ) ,
                 OutputLevel        = self.getProp ( 'OutputLevel' ) )
@@ -204,6 +255,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
                 EnableRecoOnDemand = True  ,
                 UseTracks          = False ,         ## do not use tracks!
                 UseSpd             = self.getProp ( 'UseSpd'      ) ,
+                UsePrs             = self.getProp ( 'UsePrs'      ) ,
                 ForceDigits        = self.getProp ( 'ForceDigits' ) ,
                 MeasureTime        = self.getProp ( 'MeasureTime' ) ,
                 OutputLevel        = self.getProp ( 'OutputLevel' ) )
@@ -213,7 +265,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             MeasureTime        = self.getProp ( 'MeasureTime' ) ,
             OutputLevel        = self.getProp ( 'OutputLevel' ) )
 
-
+        
     ## 2. (Optional) CaloDigit (mis)calibration
     def misCali ( self ) :
         """
@@ -234,7 +286,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             from Configurables import Kali__MisCalibrateCalo
             alg = Kali__MisCalibrateCalo (
                 "KaliPrs" ,
-                Coefficients = self.getProp('PrsCoefficients' ) )
+                Coefficients = self.getProp( 'PrsCoefficients' ) )
             lst += [ alg ]
         #
         return lst 
@@ -482,7 +534,6 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             DataType       = self.getProp ( 'DataType'   ) ,
             Simulation     = self.getProp ( 'Simulation' ) ,
             EvtMax         = self.getProp ( 'EvtMax'     ) ,
-            Hlt            = self.getProp ( 'Hlt'        ) ,
             PrintFreq      = self.getProp ( 'PrintFreq'  ) ,
             EnableUnpack   = unPack 
             ) 
@@ -507,6 +558,56 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         from Configurables import DataOnDemandSvc
         dod = DataOnDemandSvc  ( Dump = True )
 
+
+## =============================================================================
+## define "typical" first pass configuration  
+def firstPass ( **args ) :
+    """
+    Define ``typical'' first pass configuration
+
+    Usage:
+    
+    >>> kali = firstPass ( ..... )
+    
+    """
+    kali = KaliPi0Conf (
+        FirstPass  = True ,
+        UseTracks  = args.get ( 'UseTracks'  , True  ) ,
+        UseSpd     = args.get ( 'UseSpd'     , True  ) ,
+        UsePrs     = args.get ( 'UsePrs'     , False ) ,
+        Mirror     = args.get ( 'Mirror'     , True  ) , 
+        Histograms = args.get ( 'Histograms' , True  ) ,
+        **args 
+        )
+    
+    return kali
+    
+## =============================================================================
+## define "typical" second pass configuration  
+def secondPass ( **args ) :
+    """
+    Define ``typical'' second pass configuration
+    
+    Usage:
+    
+    >>> kali = firstPass ( ..... )
+    
+    """
+    
+    kali = KaliPi0Conf (
+        FirstPass  = False ,
+        UseTracks  = args.get ( 'UseTracks'  , False ) ,
+        UseSpd     = args.get ( 'UseSpd'     , False ) ,
+        UsePrs     = args.get ( 'UsePrs'     , False ) ,
+        Mirror     = args.get ( 'Mirror'     , True  ) , 
+        Histograms = args.get ( 'Histograms' , True  ) ,
+        **args 
+        )
+    
+    return kali
+    
+
+    
 
 # =============================================================================
 ## Reset DV-init sequence. IMPORTANT: It saves a lot of CPU time!!!
@@ -537,10 +638,15 @@ def _KaliAtExit_ () :
 import atexit
 atexit.register ( _KaliAtExit_ )
 
+# =============================================================================
 if '__main__' == __name__ :
-    print __author__
-    print __version__
-    print __doc__
+    
+    print '*'*120
+    print                      __doc__
+    print ' Author  : %s ' %   __author__    
+    print ' Version : %s ' %   __version__
+    print ' Date    : %s ' %   __date__
+    print '*'*120  
     
 # =============================================================================
 # The END 

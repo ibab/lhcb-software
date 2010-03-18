@@ -1,4 +1,4 @@
-// $Id: Pi0.cpp,v 1.12 2010-03-12 12:12:57 apuignav Exp $
+// $Id: Pi0.cpp,v 1.13 2010-03-18 11:14:23 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -356,10 +356,13 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
       std::swap ( prs1e , prs2e ) ; 
     }
     
-    if ( good && 0 != m_h1                                         ) { m_h1 -> fill ( m12 ) ; }
-    if ( good && 0 != m_h2 && prs2e < 10 * MeV                     ) { m_h2 -> fill ( m12 ) ; }
-    if ( good && 0 != m_h3 && prs1e < 10 * MeV && prs2e > 10 * MeV ) { m_h3 -> fill ( m12 ) ; }
-    if ( good && 0 != m_h4 &&                     prs1e > 10 * MeV ) { m_h4 -> fill ( m12 ) ; }
+    if ( good && m12 < 250 * MeV ) 
+    {
+      if ( 0 != m_h1                                         ) { m_h1 -> fill ( m12 ) ; }
+      if ( 0 != m_h2 && prs2e < 10 * MeV                     ) { m_h2 -> fill ( m12 ) ; }
+      if ( 0 != m_h3 && prs1e < 10 * MeV && prs2e > 10 * MeV ) { m_h3 -> fill ( m12 ) ; }
+      if ( 0 != m_h4 &&                     prs1e > 10 * MeV ) { m_h4 -> fill ( m12 ) ; }
+    }
     
     const LHCb::CaloHypo* hypo1 = hypo ( g1 )  ;
     if ( 0 == hypo1 ) { continue ; }

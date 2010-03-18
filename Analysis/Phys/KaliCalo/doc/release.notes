@@ -1,11 +1,28 @@
-! $Id: release.notes,v 1.34 2010-03-12 12:12:57 apuignav Exp $ 
+! $Id: release.notes,v 1.35 2010-03-18 11:14:23 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.34 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.35 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
+
+! 2010-03-18 - Vanya Belyaev
+
+ - many minor fixes and developmemts for real data 
+
+ - cmt/requirements 
+
+     version increment to v4r1 
+
+
+! 2010-03-16 - Vanya Belyaev
+
+ - add the helper functions firstPass & secondPass
+
+   that returns already precionfigured instances of KaliPi0conf 
+
+ - improve a little bit the fitting procedure 
 
 ! 2010-03-12 - Albert Puig
 

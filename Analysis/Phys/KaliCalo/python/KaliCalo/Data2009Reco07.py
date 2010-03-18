@@ -62,4 +62,4 @@ EventSelector().Input   = [
 "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005842/0000/00005842_00000195_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
 "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005842/0000/00005842_00000196_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
 "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/DST/00005842/0000/00005842_00000197_1.dst?svcClass=lhcbmdst&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"]
-FileCatalog().Catalogs = [ 'xmlcatalog_file:reco07.xml' ]
+##FileCatalog().Catalogs = [ 'xmlcatalog_file:reco07.xml' ]

@@ -1,4 +1,4 @@
-// $Id: MisCalibrateCalo.cpp,v 1.7 2010-02-25 15:01:13 ibelyaev Exp $
+// $Id: MisCalibrateCalo.cpp,v 1.8 2010-03-18 11:14:23 ibelyaev Exp $
 // =============================================================================
 // Include files 
 // =============================================================================
@@ -104,8 +104,8 @@ namespace Kali
   public:
     // =========================================================================
     /// property type 
-    typedef std::map<int,double>   PMap ;                       // property type 
-    //  typedef std::map<LHCb::CaloCellID,double>   PMap ;          // property type 
+    // typedef std::map<int,double>   PMap ;                    // property type 
+    typedef std::map<LHCb::CaloCellID,double>   PMap ;          // property type 
     /// the actual table of calibration coefficents 
     typedef GaudiUtils::HashMap<LHCb::CaloCellID,double> Table ;
     // =========================================================================
@@ -124,6 +124,9 @@ namespace Kali
     std::string m_caloName ;                          // the name of calorimeter 
     /// property: { int : double } 
     PMap        m_pmap     ;                       // property: { int : double } 
+    // =========================================================================
+  private:
+    // =========================================================================
     /// actual table { cell : double } 
     Table       m_table    ;                   // actual table { cell : double } 
     // =========================================================================
@@ -174,8 +177,8 @@ Kali::MisCalibrateCalo::MisCalibrateCalo
     ( "Calorimeter"   , m_caloName  ,
       "Calorimeter to be used"      ) ;
   declareProperty 
-    ( "Coefficients"  , m_pmap      ,
-      "Map of (mis)calibrtaion coefficients" ) 
+    ( "Coefficients"  , m_pmap ,
+      "Map of (mis)calibration coefficients" ) 
     -> declareUpdateHandler(&Kali::MisCalibrateCalo::handleMap , this ) ;
 }
 // =============================================================================

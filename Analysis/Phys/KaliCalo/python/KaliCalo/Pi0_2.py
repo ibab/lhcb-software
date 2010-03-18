@@ -14,7 +14,7 @@ A script for iterative (pi0->gamma gamma) ECAL calibration (primary iterations)
 
 Run:
 
-> python Pi0.py
+> python Pi0_2.py
 
 niter is the desired number of iterations (10 by default)
 alam   is the dictionary of the calibration coefficients, cell IDs are used as
@@ -23,17 +23,21 @@ pi0mas is the dictionary of the pi0 mass histograms, cell IDs are used as the
        dictionary keys
 """
 # =============================================================================
-import ROOT
+__author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
+__date__    = " 2010-02-?? "
+__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
+# =============================================================================
+import ROOT, math 
 c1 = ROOT.TCanvas()
 
-import Kali , math 
+import KaliCalo.Kali as Kali 
 
 def fillHistos ( tree                          ,
                  histomap  = Kali.HistoMap  () ,
                  lambdamap = Kali.LambdaMap () ,
                  cellFunc  = lambda s : s      ) :
     
-    from Pi0FillHistos import FillPi0
+    from KaliCalo.Pi0FillHistos import FillPi0
     selector = FillPi0 ( histomap  ,
                          lambdamap ,
                          cellFunc  )
@@ -51,7 +55,7 @@ def fillHistos ( tree                          ,
 
 def  analyse ( histomap , lambdamap ) :
 
-    import Pi0HistoFit as Fit 
+    import KaliCalo.Pi0HistoFit as Fit 
 
     ## get 'All-Ecal' histoigrams 
     hA = histomap [ Kali.EcalZone   ].histos()
@@ -67,10 +71,9 @@ def  analyse ( histomap , lambdamap ) :
     hO = histomap  [ Kali.OuterZone  ].histos() 
     
     ## fit them!!
-    Fit.fitHistoSet ( hI , hA )
-    Fit.fitHistoSet ( hM , hA )
-    Fit.fitHistoSet ( hO , hA )
-
+    print 'FitInner  : ' , Fit.fitHistoSet ( hI , hA , True )
+    print 'FitMiddle : ' , Fit.fitHistoSet ( hM , hA , True )
+    print 'FitOuter  : ' , Fit.fitHistoSet ( hO , hA , True )
     
     keys = histomap.keys()
     keys.sort()
@@ -78,11 +81,10 @@ def  analyse ( histomap , lambdamap ) :
     for key in Kali.Zones  :
         keys.remove ( key     )
         keys.insert ( 0 , key ) 
-        
+
     for key in keys :
 
-
-        if min ( histomap[key].entries() ) < 50 : 
+        if min ( histomap[key].entries() ) < 30 : 
             print ' too low statistics for key', key
             continue
         
@@ -100,34 +102,59 @@ def  analyse ( histomap , lambdamap ) :
             else :
                 result = Fit.fitHistoSet ( hs , hA )
                 
-        if   0 == result[0] :  ## use the sample with no Prs 
-            r = Fit.getPi0Params( hs[0] )
-        elif 0 == result[1] :  ## use the sample with only 1 Prs 
-            r = Fit.getPi0Params( hs[1] )
-        elif 0 == result[2] :  ## use the sample with two Prs 
-            r = Fit.getPi0Params( hs[2] )
+        if   0 <= result[0] :  ## use the sample with no Prs 
+            r = Fit.getPi0Params ( hs[0] )
+        elif 0 <= result[1] :  ## use the sample with only 1 Prs 
+            r = Fit.getPi0Params ( hs[1] )
+        elif 0 <= result[2] :  ## use the sample with two Prs 
+            r = Fit.getPi0Params ( hs[2] )
         else :
-            continue
+            print ' no reliable fits for ',key
+            continue 
+            ##r = Fit.getPi0Params( hs[2] )
+        
+        hc     = histomap[key].kappas() 
+        
+##         mass = r[1]
 
-        r = Fit.getPi0Params( hs[2] )
-
-        lams = lambdas[key]
-        corr = 1.0 - (r[1]-135.0)/r[1]
-        lam  = corr*lams[-1] 
-        lams.append ( lam )
-
+##         lams = lambdas[key]
+##         corr = 135.0/mass 
+##         lam  = corr*lams[-1] 
+##         lams.append ( lam.value() )
+        
         r0 = Fit.getPi0Params ( hs[0] )
         r1 = Fit.getPi0Params ( hs[1] )
         r2 = Fit.getPi0Params ( hs[2] )
-                
-        print  ( " %9.5g %9.5g %9.5g" % ( r0[1] , r1[1] , r2[1] ) ,  
-                 " %9.5g %9.5g %9.5g" % ( r0[0] , r1[0] , r2[0] ) ,
-                 " %9g %9g %9g"       % ( hs[0].GetEntries() ,
-                                          hs[1].GetEntries() ,
-                                          hs[2].GetEntries() ) , result , key ) , lam  
+
+        alpha = 1.0
         
+        deltam = r0[1]-135.0 
+        corr1  = 1.0 - alpha*deltam/r0[1]  
 
+        deltam = r1[1]-135.0 
+        corr2  = 1.0 - alpha*deltam/r1[1]  
+        
+        kappa  = hc[1]
+        deltam = r2[1]-135.0 
+        corr3  = 1.0 - alpha*deltam/r2[1]/(1.0-kappa)
+        
+        lams = lambdas[key]
 
+        corr = corr1
+        if not 0.0001 < corr.error() <= 0.01  : corr = corr.mean ( corr2 )
+        if not 0.0001 < corr.error() <= 0.01  : corr = corr.mean ( corr3 )
+
+        print 'corr: ' , corr1, corr2, corr3, corr 
+            
+        lam  = corr*lams[-1]
+        lams.append ( lam.value() )
+        
+        print ' MASS: %20s %20s %20s ' % ( r0[1] , r1[1] , r2[1] ) , key, corr , [  '%.3f' % l for l in lambdas[key] ] 
+        
+    
+# =============================================================================
+
+## Define 'fake' cell (useful) for grouping 
 def fakeCell ( c ) :
     """
     Define 'fake' cell (useful) for grouping 
@@ -147,6 +174,14 @@ def fakeCell ( c ) :
 # =============================================================================
 if '__main__' == __name__ :
     
+    ## make printout of the own documentations 
+    print '*'*120
+    print                      __doc__
+    print ' Author  : %s ' %   __author__    
+    print ' Version : %s ' %   __version__
+    print ' Date    : %s ' %   __date__
+    print '*'*120  
+    
     f=ROOT.TFile ( "KaliPi0_Tuples.root" )
     
     bamboo = f.Get ("KaliPi0/Pi0-Tuple" )
@@ -156,7 +191,8 @@ if '__main__' == __name__ :
     analyse ( histos , lambdas )
     
     ## iterate ?
-    for n in range  ( 0 , 5 ) :
+    for n in range  ( 0 , 12 ) :
+    ##for n in range  ( 0 , 0 ) :
         
         print ' ITERATION : ', n
         histos, lambdas = fillHistos (
@@ -168,11 +204,16 @@ if '__main__' == __name__ :
         
         analyse ( histos , lambdas )
 
-    lams = lambdas.lambdas()
+        lams = lambdas.lambdas()
 
-    print 'Calibration Coefficients '
-    for key in lams :
-        print ' %-25s %9.4g ' % ( key , lams[key] )
+        print 'Calibration Coefficients '
+        keys = lams.keys()
+        keys.sort() 
+        for key in Kali.Zones  :
+            keys.remove ( key     )
+            keys.insert ( 0 , key ) 
+        for key in keys :
+            print ' %-25s %9.4g  ' % ( key , lams[key] ) , [ ' %.3f ' % l for l in lambdas[key] ]
         
         
 # =============================================================================

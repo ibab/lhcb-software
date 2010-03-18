@@ -1,5 +1,19 @@
 #!/usr/bin/env python
 # ======================================================================
+## @file KaliCalo.Kali.py
+#  Set of useful utilities & classes
+#       for ``iterative pi0'' Ecal calibration
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 210-03-17
+# ======================================================================
+"""
+Set of useful utilities & classes
+for ``iterative pi0'' Ecal calibration
+"""
+# ======================================================================
+__author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
+__date__    = " 2010-03-17 "
+__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $ " 
 # ======================================================================
 import ROOT
 from GaudiPython.Bindings import gbl as cpp
@@ -21,6 +35,9 @@ Zones      = (
     EcalZone 
     )
 
+Counter    = cpp.StatEntity
+VE         = cpp.Gaudi.Math.ValueWithError
+
 ## Helper class to hold the histogams associated with the given CellID
 class Histos(object):
     """
@@ -28,8 +45,12 @@ class Histos(object):
     
     """
     def __init__ ( self , cellID ) :
-        self._cellID = cellID 
-        self._histos = self._make_histos_ ( cellID )
+        self._cellID   = cellID 
+        self._histos   = self._make_histos_ ( cellID )
+        self._counters = [
+            Counter () , ## beta*Eprs/(Egamma-beta*Eprs) for LG case 
+            Counter ()   ## beta*Eprs/(Egamma-beta*Eprs) for GG case 
+            ]
         
     ## get the list of booked histograms 
     def histos  ( self      )  :
@@ -38,6 +59,24 @@ class Histos(object):
         """
         return self._histos
     
+    ## get the list of booked counters 
+    def counters   ( self  )  :
+        """
+        get the list of booked counters
+        """
+        return self._counters 
+    
+    ## get beta*Eprs/Egamma factors 
+    def kappas ( self ) :
+        """
+        Get beta*Eprs/Egamma factors
+        """
+        c0 = self._counters[0]  ## beta*Eprs/Egamma for LG case 
+        c1 = self._counters[1]  ## beta*Eprs/Egamma for GG case
+        
+        return ( VE ( c0.flagMean() , c0.flagMeanErr() ** 2 ) ,
+                 VE ( c1.flagMean() , c1.flagMeanErr() ** 2 ) ) 
+                 
     ## get the booked histogram     
     def histo   ( self , ID )  :
         """
@@ -55,14 +94,17 @@ class Histos(object):
     
     ## reset all histograms 
     def reset   ( self ) :
+        """
+        reset all histograms
+        """
         for h in self._histos : h.Reset()
         
-    ## get the list with numebr of entries for the histograms 
+    ## get the list with numbers of entries for the histograms 
     def entries ( self ) :
         """
         get the list with the number of entries for the histograms 
         """
-        return [ h.GetEntries() for h in self._histos ] 
+        return [ int ( h.GetEntries() ) for h in self._histos ] 
     
     ## book all nesesary histograms 
     def _make_histos_ ( self , cellID ) :
@@ -111,7 +153,7 @@ class HistoMap(object) :
     ## constructor 
     def __init__ ( self , *args ) :
         """
-        Constructir, empty histogram map 
+        Constructor, empty histogram map 
         """
         self._histos = {}
 
@@ -259,3 +301,6 @@ class LambdaMap(object) :
         return len ( self._lambdas )
     
     
+# =============================================================================
+# The END 
+# =============================================================================
