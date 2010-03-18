@@ -1,8 +1,19 @@
-! $Id: release.notes,v 1.113 2010-02-24 15:21:59 cattanem Exp $ 
+! $Id: release.notes,v 1.114 2010-03-18 12:40:32 ibelyaev Exp $ 
 ! =============================================================================
 ! Package         : CaloDet   
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+! 2010-03-18 - Vanya Belyaev
+
+ - dict/CaloDet.xml
+   - add few more classes into dictionary: CaloLed, CaloPin,
+   - add CaloVector into dictionary 
+   - fix the name of pattern for variables  
+
+ - cmt/requirements 
+
+     version increment to v10r5 
 
 !======================== CaloDet v10r4 2010-02-24 ============================
 ! 2010-02-17 Olivier Deschamps

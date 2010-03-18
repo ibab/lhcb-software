@@ -1,7 +1,23 @@
 <lcgdict>
-  <class name="DeCalorimeter"    />
-  <class name="DeSubCalorimeter" />
-  <class name="CellParam"        />
-  <class name="CardParam"        />
-  <variable pattern="DeCalorimeterLocation::*" />
+  <class    name    = "DeCalorimeter"       />
+  <class    name    = "DeSubCalorimeter"    />
+  <class    name    = "DeSubSubCalorimeter" />
+  <class    name    = "CellParam"           />
+  <class    name    = "CardParam"           />
+  <class    name    = "CaloPin"             />
+  <class    name    = "CaloLed"             />
+  
+  <class    name = "std::vector<const DeSubCalorimeter*>"    />
+  <class    name = "std::vector<const DeSubSubCalorimeter*>" /> 
+
+  <class    name = "std::vector<CaloLed>"    /> 
+  <class    name = "std::vector<CardParam>"  /> 
+
+  <class    name = "CaloVector<CellParam>"  />
+  <class    name = "CaloVector<CaloPin>"    />
+  <class    name = "std::vector<CellParam>" />
+  <class    name = "std::vector<CaloPin>"   />
+
+
+  <variable pattern = "LHCb::DeCalorimeterLocation::*" />
 </lcgdict>
