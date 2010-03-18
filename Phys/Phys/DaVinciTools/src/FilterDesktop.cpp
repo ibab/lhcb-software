@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.18 2010-03-17 12:47:44 jpalac Exp $
+// $Id: FilterDesktop.cpp,v 1.19 2010-03-18 19:16:00 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -320,12 +320,6 @@ protected:
       LHCb::Particle::Container* dummy = new LHCb::Particle::Container;
       put(dummy, loc + "/Particles");
     }
-    if (!exist<LHCb::Vertex::Container>(loc+"/Vertices") ) {
-      if (msgLevel(MSG::DEBUG)) debug() << "Saving empty container at " 
-                                        << loc + "/Vertices"<< endmsg ;
-      LHCb::Vertex::Container* dummy = new LHCb::Vertex::Container;
-      put(dummy, loc + "/Vertices");
-    }
     return StatusCode::SUCCESS;
   }
   // ==========================================================================
@@ -417,6 +411,11 @@ private:
   /// assignement operator is disabled 
   FilterDesktop& operator=( const FilterDesktop& ) ;        // no assignement
   // ==========================================================================
+  /// Get the related PV of particle and relate it to clone.
+  void cloneP2PVRelation(const LHCb::Particle* particle,
+                         const LHCb::Particle* clone,
+                         Particle2Vertex::Table* table) const;
+  // ==========================================================================
 private:
   // ==========================================================================
   /// LoKi/Bender "hybrid" factory name 
@@ -499,8 +498,8 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
 
   LHCb::Particle::Container* accepted = new LHCb::Particle::Container;
   put(accepted, desktop()->getOutputLocation()+"/Particles");
-  LHCb::Vertex::Container* vertices = new LHCb::Vertex::Container;
-  put(vertices, desktop()->getOutputLocation()+"/Vertices");
+  Particle2Vertex::Table* table = new Particle2Vertex::Table;
+  put(table, desktop()->getOutputLocation()+"/Particle2VertexRelations");
   //
   StatEntity& cnt = counter ( "efficiency" ) ;
   //
@@ -516,17 +515,11 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
     //
     LHCb::Particle* clone = p->clone();
     if (clone) {
-      accepted->insert ( clone ) ;
-      if (clone->endVertex() ) {
-        LHCb::Vertex* clonedVertex = (clone->endVertex())->clone();
-        clone->setEndVertex(clonedVertex);
-        vertices->insert( clonedVertex ); 
-      }
+      accepted->insert( clone ) ;
+      cloneP2PVRelation(p, clone, table) ;
     }
-    
-    //
   }
-
+  
   if (msgLevel(MSG::DEBUG)) debug() << "Saved " << accepted->size()
                                     << " Particles in " 
                                     << desktop()->getOutputLocation()+"/Particles" << endmsg ;
@@ -550,6 +543,16 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
   counter ( "#passed" ) += accepted->size() ;
   //
   return StatusCode::SUCCESS;
+}
+// ============================================================================
+void FilterDesktop::cloneP2PVRelation(const LHCb::Particle* particle,
+                                      const LHCb::Particle* clone,
+                                      Particle2Vertex::Table* table) const 
+{
+  const LHCb::VertexBase* bestPV = getStoredBestPV(particle);
+  if ( 0!= bestPV ) {
+    table->relate(clone, bestPV);
+  }
 }
 // ============================================================================
 /// the factory 
