@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-03-18 - Patrick Koppenburg
+ - Restore DisplVertices lines
+
 !========================== StrippingSelections v1r18 2010-03-17 ===================
 ! 2010-03-18 - Patrick Koppenburg
  - Remove DaVinci inclusion in V0Geo. Fixes #64503
