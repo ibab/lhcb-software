@@ -6,6 +6,22 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2010-03-18 - Vanya Belyaev
+
+ - ValueWithError 
+
+    add helper function for evalaution of "fraction" a/(a+b) 
+    add "asymmetry" (a-b)/(a+b) 
+    add possibility to define the printout format 
+    add function to evaluate binomina-efficiency 
+
+    add these functionality into the dictionary 
+
+ - cmt/requirements
+
+    version increment to v3r17 
+
+
 !========================= LHCbMath v3r16 2010-02-12 =========================
 ! 2010-02-09 - Vanya BELYAEV 
  - LHCbMath/EigenSystem.h(.icpp)

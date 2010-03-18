@@ -1,4 +1,4 @@
-// $Id: ValueWithError.h,v 1.4 2009-09-13 18:58:07 ibelyaev Exp $
+// $Id: ValueWithError.h,v 1.5 2010-03-18 18:26:00 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_ERRORS_H 
 #define LHCBMATH_ERRORS_H 1
@@ -126,6 +126,29 @@ namespace Gaudi
       /// get chi2 distance 
       double chi2 ( const double          right ) const ;
       // ======================================================================
+    public:
+      // ======================================================================
+      /** evaluate the "fraction" \f$  \frac{a}{a+b} \f$ 
+       *  @param  b the parameter "b" for the fraction 
+       *  @return a/(a+b) 
+       */
+      ValueWithError frac ( const ValueWithError& b ) const ;
+      /** evaluate the "fraction" \f$  \frac{a}{a+b} \f$ 
+       *  @param  b the parameter "b" for the fraction 
+       *  @return a/(a+b) 
+       */
+      ValueWithError frac ( const double          b ) const ;
+      /** evaluate the "asymmetry" \f$  \frac{a-b}{a+b} \f$ 
+       *  @param  b the parameter "b" for the fraction 
+       *  @return (a-b)/(a+b) 
+       */
+      ValueWithError asym ( const ValueWithError& b ) const ;
+      /** evaluate the "asymmetry" \f$  \frac{a-b}{a+b} \f$ 
+       *  @param  b the parameter "b" for the fraction 
+       *  @return (a-b)/(a+b) 
+       */
+      ValueWithError asym ( const double          b ) const ;
+      // ======================================================================
     public: // helper functions for Python:
       // ======================================================================
       ///    a + right 
@@ -152,13 +175,21 @@ namespace Gaudi
       ValueWithError __div__  ( const double          right ) const ;
       ///        right / a   
       ValueWithError __rdiv__ ( const double          right ) const ;
+      ///       abs ( a )   
+      ValueWithError __abs__  () const ;
       // ======================================================================
     public:
       // ======================================================================
       /// printout 
-      std::ostream& fillStream ( std::ostream& s ) const ;          // printout 
+      std::ostream& fillStream ( std::ostream& s  ) const ;          // printout 
+      /// printout using format 
+      std::ostream& fillStream 
+      ( std::ostream&      s    , 
+        const std::string& fmt  ) const ;          // printout 
       /// conversion to the string 
-      std::string   toString   () const ;           // conversion to the string 
+      std::string   toString   ( ) const ;
+      /// conversion to the string using format 
+      std::string   toString   ( const std::string& fmt ) const ;
       // ======================================================================
     private:
       // ======================================================================
@@ -242,6 +273,41 @@ namespace Gaudi
     inline double chi2
     ( const double          b ,
       const ValueWithError& a ) { return a.chi2 ( b ) ; }
+    // ========================================================================
+    /// evaluate the "fraction"  a/(a+b)
+    inline ValueWithError frac 
+    ( const ValueWithError& a , 
+      const ValueWithError& b ) { return a.frac ( b ) ; }
+    /// evaluate the "fraction"  a/(a+b)
+    inline ValueWithError frac 
+    ( const ValueWithError& a , 
+      const double          b ) { return a.frac ( b ) ; }
+    /// evaluate the "fraction"  a/(a+b)
+    inline ValueWithError frac 
+    ( const double          a , 
+      const ValueWithError& b ) { return frac ( ValueWithError ( a ) , b ) ; }
+    // ========================================================================
+    /// evaluate the "asymmetry"  (a-b)/(a+b)
+    inline ValueWithError asym 
+    ( const ValueWithError& a , 
+      const ValueWithError& b ) { return a.asym ( b ) ; }
+    /// evaluate the "asymmetry"  (a-b)/(a+b)
+    inline ValueWithError asym 
+    ( const ValueWithError& a , 
+      const double          b ) { return a.asym ( b ) ; }
+    /// evaluate the "asymmetry"  (a-b)/(a+b)
+    inline ValueWithError asym 
+    ( const double          a , 
+      const ValueWithError& b ) { return asym ( ValueWithError ( a ) , b ) ; }
+    // ========================================================================
+    /** evaluate the binomial efficiency for Bernulli scheme 
+     *  @param n (INPUT) number of 'success' 
+     *  @param N (INPUT) total number 
+     *  @return the binomial efficiency 
+     */
+    ValueWithError binomEff   
+    ( const size_t n , 
+      const size_t N ) ;
     // ========================================================================
   } //                                             end of namespace Gaudi::Math 
   // ==========================================================================

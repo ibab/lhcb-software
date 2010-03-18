@@ -1,4 +1,4 @@
-// $Id: ValueWithError.cpp,v 1.4 2009-09-13 18:58:07 ibelyaev Exp $
+// $Id: ValueWithError.cpp,v 1.5 2010-03-18 18:26:01 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -16,6 +16,10 @@
 // local
 // ============================================================================
 #include "LHCbMath/ValueWithError.h"
+// ============================================================================
+// Boost 
+// ============================================================================
+#include "boost/format.hpp"
 // ============================================================================
 /** @file 
  *  Implementation file for class Gaudi::Math::ValueWithError
@@ -157,6 +161,22 @@ std::ostream&
 Gaudi::Math::ValueWithError::fillStream ( std::ostream& s ) const 
 { return s << "( " << m_value << " +- " << error() << " )" ; }
 // ============================================================================
+// printout using format 
+// ============================================================================
+std::ostream& 
+Gaudi::Math::ValueWithError::fillStream 
+( std::ostream&      s   , 
+  const std::string& fmt ) const 
+{
+  using namespace boost::io ;
+  //
+  boost::format printer ( fmt) ;
+  printer.exceptions ( all_error_bits ^ ( too_many_args_bit | too_few_args_bit ) ) ;
+  printer % value () % error () ;
+  //
+  return s << printer ;
+}
+// ============================================================================
 // conversion to string
 // ============================================================================
 std::string Gaudi::Math::ValueWithError::toString   () const 
@@ -165,9 +185,19 @@ std::string Gaudi::Math::ValueWithError::toString   () const
   fillStream ( s ) ;
   return s.str() ;
 }
-// =============================================================================
+// ============================================================================
+// conversion to the string using format 
+// ============================================================================
+std::string Gaudi::Math::ValueWithError::toString   
+( const std::string& fmt ) const 
+{
+  std::ostringstream s ;
+  fillStream ( s , fmt ) ;
+  return s.str() ;
+}
+// ============================================================================
 // evaluate the mean of a and b 
-// =============================================================================
+// ============================================================================
 Gaudi::Math::ValueWithError 
 Gaudi::Math::ValueWithError::mean 
 ( const Gaudi::Math::ValueWithError& b ) const
@@ -202,6 +232,72 @@ double Gaudi::Math::ValueWithError::chi2 ( const double b ) const
   const double diff = value() - b ;  
   return diff*diff/cov2() ;
 }
+// ============================================================================
+/*  evaluate the "fraction" \f$  \frac{a}{a+b} \f$ 
+ *  @param  b the parameter "b" for the fraction 
+ *  @return a/(a+b) 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::ValueWithError::frac 
+( const Gaudi::Math::ValueWithError& b ) const 
+{
+  const double r  = value() / ( value() + b.value() ) ;
+  //
+  const double s  = value() + b.value() ;
+  const double s2 = s  * s  ;
+  const double s4 = s2 * s2 ;
+  const double c2 =
+    std::fabs (   cov2 () ) * b.value () * b.value () +
+    std::fabs ( b.cov2 () ) *   value () *   value () ;
+  //
+  return ValueWithError 
+    ( r , 0 <= cov2() && 0 <= b.cov2() ? c2/s4 : -1.0 * c2 / s4 ) ;
+  //
+}
+// ============================================================================
+/*  evaluate the "fraction" \f$  \frac{a}{a+b} \f$ 
+ *  @param  b the parameter "b" for the fraction 
+ *  @return a/(a+b) 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::ValueWithError::frac ( const double  b ) const 
+{ return frac ( ValueWithError ( b ) ) ; }
+// ============================================================================
+/*  evaluate the "asymmetry" \f$  \frac{a-b}{a+b} \f$ 
+ *  @param  b the parameter "b" for the fraction 
+ *  @return (a-b)/(a+b) 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::ValueWithError::asym
+( const Gaudi::Math::ValueWithError& b ) const 
+{
+  //
+  const double r  = ( value() - b.value() ) / ( value() + b.value() ) ;
+  //
+  const double s  = value() + b.value() ;
+  const double s2 = s  * s  ;
+  const double s4 = s2 * s2 ;
+  //
+  const double c2 =
+    4 * std::fabs (   cov2 () ) * b.value () * b.value () +
+    4 * std::fabs ( b.cov2 () ) *   value () *   value () ;
+  //
+  return ValueWithError 
+    ( r , 0 <= cov2() && 0 <= b.cov2() ? c2/s4 : -1.0 * c2 / s4 ) ;
+  //
+}
+// ============================================================================
+/*  evaluate the "asymmetry" \f$  \frac{a-b}{a+b} \f$ 
+ *  @param  b the parameter "b" for the fraction 
+ *  @return (a-b)/(a+b) 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::ValueWithError::asym ( const double  b ) const 
+{ return asym ( ValueWithError ( b ) ) ; }
 // =============================================================================
 // for easy pythonization
 // =============================================================================
@@ -274,6 +370,36 @@ Gaudi::Math::ValueWithError::__rdiv__ ( const double right ) const
 {
   ValueWithError tmp ( right ) ;
   return tmp /= (*this) ;
+}
+// ============================================================================
+// abs(a) 
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__abs__ () const 
+{ return ValueWithError ( std::fabs( value() ) , cov2() ) ; }
+// ============================================================================
+
+// ============================================================================
+/* evaluate the binomial efficiency for Bernulli scheme with
+ *  @param n (INPUT) number of 'success' 
+ *  @param N (INPUT) total number 
+ *  @return the binomial efficiency 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::binomEff   
+( const size_t n , 
+  const size_t N ) 
+{
+  if  ( n >  N ) { return binomEff       ( N , n ) ; }
+  if  ( 0 == N ) { return ValueWithError ( 1 , 1 ) ; }
+  //
+  const long n1 = 0 == n ? 1 :     n ;
+  const long n2 = n == N ? 1 : N - n ;
+  //
+  const double eff = double ( n     ) / N         ;
+  const double c2  = double ( n1*n2 ) / N / N / N ;
+  //
+  return Gaudi::Math::ValueWithError  ( eff , c2 ) ;  
 }
 // ============================================================================
 

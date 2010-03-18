@@ -1,4 +1,4 @@
-// $Id: LHCbMathDict.h,v 1.8 2009-09-12 19:29:26 ibelyaev Exp $
+// $Id: LHCbMathDict.h,v 1.9 2010-03-18 18:26:00 ibelyaev Exp $
 #ifndef DICT_LHCBMATHDICT_H 
 #define DICT_LHCBMATHDICT_H 1
 
@@ -23,8 +23,10 @@
 
 namespace Gaudi
 {
+  // ==========================================================================
   namespace Math 
   {
+    // ========================================================================
     template <typename aPoint, typename aLine, typename aPlane>
     struct GF
     {
@@ -114,17 +116,87 @@ namespace Gaudi
 
     };
     typedef GF<XYZPoint, XYZLine, Plane3D> XYZGeomFun;
-  }
-  
-}
-
+    
+    // ========================================================================
+    class Functions 
+    {
+    public:
+      // ====================================================================== 
+      /// evaluate the mean of a and b 
+      static ValueWithError mean
+      ( const ValueWithError& a , 
+        const ValueWithError& b ) { return a.mean ( b ) ; }
+      // =====================================================================-
+      /// evaluate chi2 
+      static double chi2
+      ( const ValueWithError& a , 
+        const ValueWithError& b ) { return a.chi2 ( b ) ; }
+      /// evaluate chi2 
+      static  double chi2
+      ( const ValueWithError& a , 
+        const double          b ) { return a.chi2 ( b ) ; }
+      /// evaluate chi2 
+      static double chi2
+      ( const double          b ,
+        const ValueWithError& a ) { return a.chi2 ( b ) ; }
+      // ======================================================================
+      /// evaluate the "fraction"  a/(a+b)
+      static ValueWithError frac 
+      ( const ValueWithError& a , 
+        const ValueWithError& b ) { return a.frac ( b ) ; }
+      /// evaluate the "fraction"  a/(a+b)
+      static ValueWithError frac 
+      ( const ValueWithError& a , 
+        const double          b ) { return a.frac ( b ) ; }
+      /// evaluate the "fraction"  a/(a+b)
+      static ValueWithError frac 
+      ( const double          a , 
+        const ValueWithError& b ) { return frac ( ValueWithError ( a ) , b ) ; }
+      /// evaluate the "fraction"  a/(a+b)
+      static ValueWithError frac 
+      ( const double          a , 
+        const double          b ) { return frac ( ValueWithError ( a ) , b ) ; }
+      // ======================================================================
+      /// evaluate the "asymmetry"  (a-b)/(a+b)
+      static ValueWithError asym 
+      ( const ValueWithError& a , 
+        const ValueWithError& b ) { return a.asym ( b ) ; }
+      /// evaluate the "asymmetry"  (a-b)/(a+b)
+      static ValueWithError asym 
+      ( const ValueWithError& a , 
+        const double          b ) { return a.asym ( b ) ; }
+      /// evaluate the "asymmetry"  (a-b)/(a+b)
+      static ValueWithError asym 
+      ( const double          a , 
+        const ValueWithError& b ) { return asym ( ValueWithError ( a ) , b ) ; }
+      /// evaluate the "asymmetry"  (a-b)/(a+b)
+      static ValueWithError asym 
+      ( const double          a , 
+        const double          b ) { return asym ( ValueWithError ( a ) , b ) ; }
+      // ======================================================================
+      /** evaluate the binomial efficiency for Bernulli scheme 
+       *  @param n (INPUT) number of 'success' 
+       *  @param N (INPUT) total number 
+       *  @return the binomial efficiency 
+       */
+      static ValueWithError binomEff   
+      ( const size_t n , 
+        const size_t N ) 
+      { return Gaudi::Math::binomEff ( n , N ) ; }
+      // ========================================================================
+    } ;
+    // ========================================================================
+  } //                                             end of namespace Gaudi::Math 
+  // ==========================================================================
+} //                                                     end of namespace Gaudi 
+// ============================================================================
 namespace
 {
-
+  // ==========================================================================
   struct __Instantiations
   {
     __Instantiations();
-
+    
 #ifndef WIN32 // FIXME: Does not compile on Windows
     Gaudi::Math::XYZLine       __lineXYZ;
     Gaudi::Math::Polar3DLine   __linePolar3D;
@@ -141,10 +213,13 @@ namespace
     Gaudi::Math::MD5       __mathMD5;
     std::vector<Gaudi::Math::MD5>       __stdvector_mathMD5;
     std::list<Gaudi::Math::MD5>       __stdlist_mathMD5;
-
+    //
+    Gaudi::Math::SVectorWithError<2,double> __sv2 ;
     Gaudi::Math::SVectorWithError<3,double> __sv3 ;
     Gaudi::Math::SVectorWithError<4,double> __sv4 ;
-    
+    Gaudi::Math::SVectorWithError<5,double> __sv5 ;
+    //
+    std::vector<Gaudi::Math::ValueWithError>  _dver ;
   };
 }
 

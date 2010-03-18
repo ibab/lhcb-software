@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Types.py,v 1.2 2009-10-22 12:26:54 ibelyaev Exp $
+# $Id: Types.py,v 1.3 2010-03-18 18:26:01 ibelyaev Exp $
 # =============================================================================
 ## @file
 #
@@ -68,8 +68,9 @@ Simple file to provide 'easy' access in python for the basic ROOT::Math classes
 
 """
 # =============================================================================
-__author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
+__date__    = " 2009-09-12 "
+__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
 # =============================================================================
 __all__     = ()  ## nothing to be imported !
 # =============================================================================
@@ -147,11 +148,14 @@ if not hasattr ( Gaudi.Math , 'SymMatrix4x4' ) :
 if not hasattr ( Gaudi.Math , 'XYZLine' ) :
     Gaudi.Math.XYZLine = cpp.Gaudi.Math.Line(Gaudi.XYZPoint,Gaudi.XYZVector)
 
+if not hasattr ( Gaudi.Math , 'SVector2WithError' ) :
+    Gaudi.Math.SVector2WithError = cpp.Gaudi.Math.SVectorWithError(2,'double')
 if not hasattr ( Gaudi.Math , 'SVector3WithError' ) :
     Gaudi.Math.SVector3WithError = cpp.Gaudi.Math.SVectorWithError(3,'double')
-    
 if not hasattr ( Gaudi.Math , 'SVector4WithError' ) :
     Gaudi.Math.SVector4WithError = cpp.Gaudi.Math.SVectorWithError(4,'double')
+if not hasattr ( Gaudi.Math , 'SVector5WithError' ) :
+    Gaudi.Math.SVector5WithError = cpp.Gaudi.Math.SVectorWithError(5,'double')
 
 if not hasattr ( Gaudi      , 'XYZLine' ) :
     Gaudi.XYZLine     = Gaudi.Math.XYZLine
@@ -159,6 +163,14 @@ if not hasattr ( Gaudi      , 'Line3D'  ) :
     Gaudi.Line3D      = Gaudi.Math.XYZLine
 if not hasattr ( Gaudi.Math , 'Line3D'  ) :
     Gaudi.Math.Line3D = Gaudi.Math.XYZLine
+
+
+if not hasattr ( Gaudi.Math , 'frac' ) :
+    Gaudi.Math.frac     = Gaudi.Math.Functions.frac
+if not hasattr ( Gaudi.Math , 'asym' ) :
+    Gaudi.Math.asym     = Gaudi.Math.Functions.asym
+if not hasattr ( Gaudi.Math , 'binomEff' ) :
+    Gaudi.Math.binomEff = Gaudi.Math.Functions.binomEff 
 
 ## ============================================================================
 ## some useful decoration:
@@ -681,12 +693,24 @@ if not hasattr ( Gaudi.XYZLine , 'parallel' ) :
 
 # =============================================================================
 if '__main__' == __name__ :
-    print __doc__
-    print __author__
-    print __version__
-    print dir ()
-    
-    
+
+    ## make printout of the own documentations 
+    print '*'*120
+    print                      __doc__
+    print ' Author  : %s ' %   __author__    
+    print ' Version : %s ' %   __version__
+    print ' Date    : %s ' %   __date__
+    print '*'*120  
+
+    _v = [ l for l in dir(Gaudi     ) if 0 != l.find('__') ]
+    print ' dir(Gaudi)      : '
+    _v.sort() 
+    for v in _v : print v
+    _v = [ l for l in dir(Gaudi.Math) if 0 != l.find('__') ]
+    print ' dir(Gaudi.Math) : '
+    _v.sort() 
+    for v in _v : print v
+         
 # =============================================================================
 # The  END 
 # =============================================================================

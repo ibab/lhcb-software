@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: test.py,v 1.2 2009-10-22 12:26:54 ibelyaev Exp $
+# $Id: test.py,v 1.3 2010-03-18 18:26:01 ibelyaev Exp $
 # =============================================================================
 ## @file
 #  Test-file for various "with error" objects
@@ -12,9 +12,7 @@
 #  @date 2009-09-12
 # =============================================================================
 
-
 import LHCbMath.Types
-
 
 from GaudiPython.Bindings import gbl as cpp
 
@@ -33,7 +31,6 @@ lv1 = Gaudi.LorentzVector (2,1,0,3)
 l1  = Gaudi.Math.XYZLine ( p1 , v1 )
 
 pl1  = Gaudi.Plane3D ( 1, 1, 1, 0 )
-
 
 
 print '3D-point       (x,y,z)           :', p1
@@ -95,7 +92,9 @@ print ' point : closestPointParam  : ', pnt1 .closestPointParam ( line1 )
 print ' line  : parallel           : ', line1.parallel  (line2)
 
 
-
+print ' Binomial eff: 3/4   : ' , Gaudi.Math.binomEff  ( 3 ,   4 ) 
+print ' Binomial eff: 1/100 : ' , Gaudi.Math.binomEff  ( 1 , 100 ) 
+print ' Binomial eff: 1/100 : ' , Gaudi.Math.binomEff  ( 1 , 100 ).toString( "( %.3f +- %.3f )") 
 
 # =============================================================================
 # The  END 

@@ -3,31 +3,39 @@
 <!--- Author  : Juan PALACIOS -->
 <!--- Created : 2008-06-20 -->
 <lcgdict>
-  <class name = "Gaudi::Math::XYZLine"/>
-  <class name = "Gaudi::Math::Polar3DLine"/>
-  <class name = "Gaudi::Math::RhoEtaPhiLine"/>
-  <class name = "Gaudi::Math::RhoZPhiLine"/>
-  <class name = "Gaudi::Math::XYZLineF"/>
-  <class name = "Gaudi::Math::Polar3DLineF"/>
-  <class name = "Gaudi::Math::RhoEtaPhiLineF"/>
-  <class name = "Gaudi::Math::RhoZPhiLineF"/>
-  <class name = "Gaudi::Math::XYZGeomFun"/>
-  <class name = "Gaudi::Math::MD5"/>
-  <class name = "std::vector<Gaudi::Math::MD5>"/>
-  <class name = "std::list<Gaudi::Math::MD5>"/>
-  <class name = "Gaudi::Math::ValueWithError"    />
-  <class name = "Gaudi::Math::Point3DWithError"  />
-  <class name = "Gaudi::Math::Vector3DWithError" />
-  <class name = "Gaudi::Math::LorentzVectorWithError" />
+  <class name    = "Gaudi::Math::XYZLine"/>
+  <class name    = "Gaudi::Math::Polar3DLine"/>
+  <class name    = "Gaudi::Math::RhoEtaPhiLine"/>
+  <class name    = "Gaudi::Math::RhoZPhiLine"/>
+  <class name    = "Gaudi::Math::XYZLineF"/>
+  <class name    = "Gaudi::Math::Polar3DLineF"/>
+  <class name    = "Gaudi::Math::RhoEtaPhiLineF"/>
+  <class name    = "Gaudi::Math::RhoZPhiLineF"/>
+  <class name    = "Gaudi::Math::XYZGeomFun"/>
+  <class name    = "Gaudi::Math::MD5"/>
+  <class name    = "std::vector<Gaudi::Math::MD5>"/>
+  <class name    = "std::list<Gaudi::Math::MD5>"/>
+  <class name    = "Gaudi::Math::ValueWithError"    />
+  <class name    = "Gaudi::Math::Point3DWithError"  />
+  <class name    = "Gaudi::Math::Vector3DWithError" />
+  <class name    = "Gaudi::Math::LorentzVectorWithError" />
+  <class name    = "Gaudi::Math::Functions"         />
   <class pattern = "Gaudi::Math::SVectorWithError*" />
+  <class name    = "std::vector<Gaudi::Math::ValueWithError>" />
 
 <exclusion>
-  <class name = "ROOT::Math::SVector&lt;double,3&gt;"     />
+  <class name = "ROOT::Math::SVector&lt;double,2&gt;"     />
   <class name = "ROOT::Math::SVector&lt;double,4&gt;"     />
+  <class name = "ROOT::Math::SVector&lt;double,3&gt;"     />
+  <class name = "ROOT::Math::SVector&lt;double,5&gt;"     />
+  <class name = "Gaudi::Math::SVectorWithError&lt;2,double&gt;::Value"       />
+  <class name = "Gaudi::Math::SVectorWithError&lt;2,double&gt;::Covariance"  />
   <class name = "Gaudi::Math::SVectorWithError&lt;3,double&gt;::Value"       />
   <class name = "Gaudi::Math::SVectorWithError&lt;3,double&gt;::Covariance"  />
   <class name = "Gaudi::Math::SVectorWithError&lt;4,double&gt;::Value"       />
   <class name = "Gaudi::Math::SVectorWithError&lt;4,double&gt;::Covariance"  />
+  <class name = "Gaudi::Math::SVectorWithError&lt;5,double&gt;::Value"       />
+  <class name = "Gaudi::Math::SVectorWithError&lt;5,double&gt;::Covariance"  />
 </exclusion> 
 
 
