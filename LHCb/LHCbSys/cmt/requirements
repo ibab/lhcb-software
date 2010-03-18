@@ -95,7 +95,7 @@ use OTDAQ                 v7r7    OT      # Wouter Hulsbergen
 use SiDAQ                 v2r1    Si      # Matt Needham
 
 # Other stuff
-use DaVinciInterfaces     v2r1p1  Phys    # Juan Palacios
+use DaVinciInterfaces     v2r2    Phys    # Juan Palacios
 use DaVinciTypes          v1r1    Phys    # Juan Palacios
 use HepMCBack             v1r1   Gen     # Gloria Corti, Patrick Robbe
 use LinkerInstances       v3r5    Event   # Thomas Ruf
