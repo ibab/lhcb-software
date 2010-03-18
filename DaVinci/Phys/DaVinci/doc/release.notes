@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.416 2010-03-18 09:44:11 pkoppenb Exp $
+! $Id: release.notes,v 1.417 2010-03-18 10:24:51 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -13,6 +13,8 @@
 ! 2010-03-18 - Patrick Koppenburg
  - Change the default values of DDDBTag amd CondDBTag from "deafult" to ""
  - This allows direct use of LHCbApp().DDDBTag, etc
+ - For DC06 and MC09, "default" is passed to LHCbApp() (backward compatible)
+   For nay other data one MUST give the appropriate tags.
 
 !========================== DaVinci v25r2 2010-03-08 =======================
 
