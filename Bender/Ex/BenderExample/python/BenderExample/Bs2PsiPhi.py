@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PsiPhi.py,v 1.13 2010-03-14 17:05:03 ibelyaev Exp $ 
+# $Id: Bs2PsiPhi.py,v 1.14 2010-03-18 11:04:41 ibelyaev Exp $ 
 # =============================================================================
 ## @file BEnderExample/Bs2PsiPhi.py
 #  The simple Bender-based example for Bs-> Jpsi phi selection
@@ -43,7 +43,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = "2006-10-12"
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $ "
 # =============================================================================
 ## import everything from bender 
 from Bender.All                import *
@@ -254,6 +254,7 @@ def configure ( datafiles , catalogs = [] ) :
     
     ## create local algorithm:
     alg = Bs2PsiPhi(
+        'PsiPhi'              , 
         ## print histos 
         HistoPrint = True     ,
         ## N-tuple LUN 
