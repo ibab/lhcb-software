@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.101 2010-03-16 13:57:38 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.102 2010-03-18 19:15:43 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -361,7 +361,7 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
     verbose() << "Saving "<< pToSave.size() << " Particles to TES " << endmsg;
   }
   
-  LHCb::Particles* particlesToSave = new LHCb::Particles();
+  LHCb::Particles* particlesToSave = new LHCb::Particle::Container();
   const std::string location( m_outputLocn+"/Particles");
   put(particlesToSave,location);
 
@@ -409,6 +409,8 @@ void PhysDesktop::saveVertices(const LHCb::Vertex::ConstVector& vToSave) const
   if (msgLevel(MSG::VERBOSE)) {
     verbose() << "Saving "<< vToSave.size() << " Vertices to TES " << endmsg;
   }
+
+  if (vToSave.empty()) return;
 
   LHCb::Vertices* verticesToSave = new LHCb::Vertices();
 
@@ -658,37 +660,17 @@ StatusCode PhysDesktop::getParticles(){
     for( LHCb::Particle::Range::const_iterator icand = parts.begin(); 
          icand != parts.end(); icand++ ) {
       m_parts.push_back(*icand);
+      const LHCb::Vertex* endVtx = (*icand)->endVertex();
+      if (endVtx) m_secVerts.push_back(endVtx);
     }
     
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Number of Particles after adding "
-                                          << location << " = " << m_parts.size() << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Number of Particles, Veritces after adding "
+                                          << *iloc << " = " << m_parts.size() 
+                                          << ", " << m_secVerts.size() << endmsg;
     
     
-    // Retrieve the vertices:
-    location = (*iloc)+"/Vertices";
-    
-    if ( ! exist<LHCb::Vertex::Selection>( location ) &&
-         ! exist<LHCb::Vertex::Container>( location )    ) { 
-      Info("No vertices at location "+location
-           +((rootInTES().size()>0)?(" under "+rootInTES()):"") );
-      continue ; 
-    } 
-    
-    LHCb::Vertex::Range verts = get<LHCb::Vertex::Range>( location );
-    
-    if( verts.empty() ) {
-      if (msgLevel(MSG::VERBOSE)) verbose() << "No vertices retrieved from " << location << endmsg;
-    } else {  
-      if (msgLevel(MSG::VERBOSE)) verbose() << "    Number of vertices retrieved from "
-                                            << location << " = " << verts.size() << endmsg;
-      for( LHCb::Vertex::Range::const_iterator ivert = verts.begin();
-           ivert != verts.end(); ++ivert ) {
-        m_secVerts.push_back(*ivert);
-      }
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Number of vertices after adding "
-                                            << location << " = " << m_secVerts.size() << endmsg;
-    }
   }
+
   if (msgLevel(MSG::VERBOSE)) {
     verbose() << "    Total number of particles " << m_parts.size() << endmsg;
     verbose() << "    Total number of secondary vertices " << m_secVerts.size() << endmsg;
