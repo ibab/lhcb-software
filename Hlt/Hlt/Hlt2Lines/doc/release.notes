@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.132 2010-03-17 22:30:20 gligorov Exp $
+$Id: release.notes,v 1.133 2010-03-18 14:05:07 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -9,6 +9,8 @@ $Id: release.notes,v 1.132 2010-03-17 22:30:20 gligorov Exp $
 !
 !-----------------------------------------------------------------------------
 
+! 2020-03-18 - Johannes Albrecht
+ - update phi selection in Hlt2ExpressLines.py
 
 ! 2010-03-17 - V. Gligorov
  - Continuing work on Savannah tasks #12691,13784.
