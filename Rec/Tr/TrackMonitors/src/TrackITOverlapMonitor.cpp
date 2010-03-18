@@ -53,7 +53,7 @@ namespace {
       resh1 = parent.book1D(tracktype + "/" + boxtype + "/hitres", boxtype + " dx", -5,5,100) ;
       hotresh1 = parent.book1D(tracktype + "/" + boxtype + "/hotres", boxtype + " dx", -5,5,100) ;
       dyh1 = parent.book1D(tracktype + "/" + boxtype + "/y", 
-			   boxtype + " y position wrt to sensor edge", -50,350,400) ;
+			   boxtype + " y position wrt to sensor edge", -50,250,300) ;
     }
   } ;
 }
@@ -98,6 +98,7 @@ private:
   ToolHandle<Tf::IITHitCreator> m_ithitcreator ;
   std::string m_trackLocation ;
   double m_maxDistance ;
+  double m_maxTolY ;
   double m_maxTrackError ;
 } ;
 
@@ -111,7 +112,8 @@ TrackITOverlapMonitor::TrackITOverlapMonitor( const std::string& name,
     m_maxDistance(10.* Gaudi::Units::mm ),
     m_maxTrackError(1.0 * Gaudi::Units::mm )
 {
-  declareProperty("TrackLocation", m_trackLocation = LHCb::TrackLocation::Default  );
+  declareProperty("TrackLocation", m_trackLocation = LHCb::TrackLocation::Default  ); 
+  declareProperty("MaxTolY", m_maxTolY = 50.0 ) ; 
 }
 
 TrackITOverlapMonitor::~TrackITOverlapMonitor() {}
@@ -198,52 +200,64 @@ StatusCode TrackITOverlapMonitor::execute()
 	    // here we could significantly speed up things by first
 	    // testing that the track goes through the region.
 
-	    // create a reference state for this region using the tracktraj
 	    double regionz = 0.5*(region->zmin() + region->zmax() ) ;
-	    LHCb::State refstate = tracktraj.stateVector( regionz ) ;
-
+	    LHCb::State refstate = tracktraj.state( regionz ) ;
 	    // make sure the track is reasonably well known
 	    if( refstate.covariance()(0,0) < m_maxTrackError * m_maxTrackError ) {
-
-	      Gaudi::XYZPointF trkpoint(refstate.x(),refstate.y(),refstate.z()) ;
-	      Gaudi::XYZVectorF trkdir(refstate.tx(),refstate.ty(),1) ;
+	      
+	      double statex = refstate.x() + (regionz - refstate.z())*refstate.tx() ;
+	      double statey = refstate.y() + (regionz - refstate.z())*refstate.ty() ;
+	      double tolx = 10*m_maxDistance/region->cosT() ;
+	      double toly = m_maxTolY ;
+	      
+	      if( region->isXCompatible( statex, tolx ) &&
+		  region->isYCompatible( statey, toly ) ) {
+		
+		// most efficient: use local x-coordinate. hope this works:-)
+		double localx = region->xLocal( statex, statey ) ;
+		Tf::STHitRange thesehits = m_ithitcreator->hitsLocalXRange( istation, ilayer, iregion, 
+									    localx -  tolx,
+									    localx +  tolx) ;
+		Gaudi::XYZPointF trkpoint(refstate.x(),refstate.y(),refstate.z()) ;
+		Gaudi::XYZVectorF trkdir(refstate.tx(),refstate.ty(),1) ;
 	    
-	      // now loop over all hits
-	      BOOST_FOREACH( const Tf::STHit* hit, region->hits() ) {
-		double ytrk = refstate.y() + ( hit->zMid() - refstate.z() ) * refstate.ty() ;
-		// this window is a bit large
-		if( hit->isYCompatible(ytrk,50) ) {
-		  // Juan still has something odd here, so I'll just compute it myself then ...
-		  //double distance = Gaudi::Math::distance( trkline, **ihit ) ;
-		  Gaudi::XYZPointF hitpoint = hit->beginPoint() ;
-		  Gaudi::XYZVectorF hitdir = hit->direction() ;
-		  Gaudi::XYZVectorF projectiondir = hitdir.Cross( trkdir ).Unit() ;
-		  Gaudi::XYZVectorF delta = hitpoint-trkpoint ;
-		  double distance = delta.Dot(projectiondir) ;
-		  if ( std::abs(distance) < m_maxDistance ) {
-		    LHCb::STChannelID stid = hit->lhcbID().stID() ;
-		    DeltaHistogrammer* histos = getHistogrammer( stid.station()-1,
-								 stid.detRegion()-1,
-								 tracktype ) ;
-		    // unbias if necessary
-		    bool isOnTrack = track->isOnTrack( hit->lhcbID() ) ;
-		    if( isOnTrack ) {
-		      // find the corresponding node and unbias the distance
-		      for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin(); 
-			   inode != nodes.end(); ++inode)
-			if( (*inode)->type() == LHCb::Node::HitOnTrack &&
-			    (*inode)->measurement().lhcbID() ==  hit->lhcbID() ) {
-			  distance *=  (*inode)->errMeasure2() / (*inode)->errResidual2() ;
-			  break ;
-			}
+		// now loop over all hits
+		BOOST_FOREACH( const Tf::STHit* hit, thesehits ) {
+		  double ytrk = refstate.y() + ( hit->zMid() - refstate.z() ) * refstate.ty() ;
+		  // this window is a bit large
+		  if( hit->isYCompatible(ytrk,m_maxTolY) ) {
+		    // Juan still has something odd here, so I'll just compute it myself then ...
+		    //double distance = Gaudi::Math::distance( trkline, **ihit ) ;
+		    Gaudi::XYZPointF hitpoint = hit->beginPoint() ;
+		    Gaudi::XYZVectorF hitdir = hit->direction() ;
+		    Gaudi::XYZVectorF projectiondir = hitdir.Cross( trkdir ).Unit() ;
+		    Gaudi::XYZVectorF delta = hitpoint-trkpoint ;
+		    double distance = delta.Dot(projectiondir) ;
+		    if ( std::abs(distance) < m_maxDistance ) {
+		      LHCb::STChannelID stid = hit->lhcbID().stID() ;
+		      DeltaHistogrammer* histos = getHistogrammer( stid.station()-1,
+								   stid.detRegion()-1,
+								   tracktype ) ;
+		      // unbias if necessary
+		      bool isOnTrack = track->isOnTrack( hit->lhcbID() ) ;
+		      if( isOnTrack ) {
+			// find the corresponding node and unbias the distance
+			for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin(); 
+			     inode != nodes.end(); ++inode)
+			  if( (*inode)->type() == LHCb::Node::HitOnTrack &&
+			      (*inode)->measurement().lhcbID() ==  hit->lhcbID() ) {
+			    distance *=  (*inode)->errMeasure2() / (*inode)->errResidual2() ;
+			    break ;
+			  }
+		      }
+		      // make sure all contributions get the same
+		      // sign. (some IT layers are rotated)
+		      int sign = hit->yBegin() < hit->yEnd() ? 1 : -1 ;
+		      histos->resh1->fill( sign * distance ) ;
+		      histos->dyh1->fill( ytrk - std::min(hit->yBegin(),hit->yEnd()) ) ;
+		      if( isOnTrack ) histos->hotresh1->fill( sign * distance ) ;
+		      ++numcompatible ;
 		    }
-		    // make sure all contributions get the same
-		    // sign. (some IT layers are rotated)
-		    int sign = hit->yBegin() < hit->yEnd() ? 1 : -1 ;
-		    histos->resh1->fill( sign * distance ) ;
-		    histos->dyh1->fill( ytrk - std::min(hit->yBegin(),hit->yEnd()) ) ;
-		    if( isOnTrack ) histos->hotresh1->fill( sign * distance ) ;
-		    ++numcompatible ;
 		  }
 		}
 	      }
