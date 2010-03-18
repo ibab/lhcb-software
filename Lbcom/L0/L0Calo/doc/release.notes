@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.154 2010-03-02 10:04:18 robbep Exp $
+! $Id: release.notes,v 1.155 2010-03-18 14:22:45 cattanem Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
 
+!========================= L0Calo v11r1 2010-03-18 ========================
 ! 2010-03-02 - Patrick Robbe
  - L0CaloCandidatesFromRaw.cpp: protect against missing magic pattern in 
    RAW banks. In this case, do not decode the bank.
