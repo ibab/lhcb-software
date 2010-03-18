@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.36 2010-03-11 08:11:25 jucogan Exp $
+! $Id: release.notes,v 1.37 2010-03-18 14:27:12 cattanem Exp $
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
 !--------------------------------------------------------------------------
+
+!========================== L0MuonMonitor v2r0 2010-03-18 =================
+! 2010-03-18 - Marco Cattaneo
+ - Remove obsolete file L0MuonMonitor_dll.cpp
 
 ! 2010-03-11 - Julien Cogan
  - fix compilation errors on Windows (again)
