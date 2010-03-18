@@ -1,11 +1,16 @@
-$Id: release.notes,v 1.81 2010-03-17 22:31:06 gligorov Exp $
+$Id: release.notes,v 1.82 2010-03-18 14:40:33 fdettori Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
-
+! 2010-03-18 - F. Dettori
+ - Added BiKalmanFittedProtons and BiKalmanFittedDownProtons 
+   to TrackFittedBasicParticles.py
+ - Added Lambda.py file for standard Lambdas based on unfitted 
+   and fitted tracks (long and downstream)
+   
 ! 2010-03-17 - V. Gligorov
  - Continuing work on Savannah tasks #12691,13784.
    Update shared praticles to follow movement of code from HltLine to
