@@ -1,3 +1,5 @@
+Generation.MinimumBias.ProductionTool = "Pythia8Production" ;
+
 Generation.MinimumBias.Pythia8Production.Commands = {
   "Beam Settings" ,
   "skip" ,
