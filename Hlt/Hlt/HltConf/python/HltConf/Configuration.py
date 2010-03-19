@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.168 2010-03-19 12:46:39 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.169 2010-03-19 12:47:26 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -241,9 +241,17 @@ class HltConf(LHCbConfigurableUser):
         HltVertexReportsMaker().Context = "HLT"
         ## do not write out the candidates for the vertices we store 
         from Configurables import HltSelReportsMaker
-        HltSelReportsMaker().SelectionMaxCandidates.update( dict( [ (i,0) for i in vertices if i.endswith('Decision') ] ) )
-        veto = [ 'TES:Trig/L0/FullCalo' ,   'TES:Trig/L0/MuonCtrl'
-               , 'TES:Hlt/Vertex/ASidePV3D','TES:Hlt/Vertex/CSidePV3D' , 'TES:Hlt/Track/Long', 'TES:Hlt/Track/Forward',   'TES:Hlt/Track/RZVelo',    'TES:Hlt/Track/Velo'
+	HltSelReportsMaker().SelectionMaxCandidates.update( dict( [ (i,0) for i in vertices if i.endswith('Decision') ] ) )
+        # We are in a post-config action so Hlt2 has already been called and has set the properties
+        # of the unfitted tracking. Therefore it is safe to use it this way
+	# What we are doing is to let the SelReportsMaker know where the "trackified" muonID objects
+	# live directly from the tracking in question and the "rule" for computing their location
+	# TODO: fix all other locations from tracking
+	# TODO: fis SelReports for fitted muons!  
+        from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+	HltSelReportsMaker().HltMuonTrackLocation = Hlt2UnfittedForwardTracking()._trackifiedMuonIDLocation()
+	veto = [ 'TES:Trig/L0/FullCalo' ,   'TES:Trig/L0/MuonCtrl'
+               , 'TES:Hlt/Vertex/ASidePV3D','TES:Hlt/Vertex/CSidePV3D' , 'TES:Hlt2/Track/Unfitted/Forward', 'TES:Hlt2/Track/Forward',   'TES:Hlt/Track/RZVelo',    'TES:Hlt2/Track/Velo'
                , 'TES:Hlt/Vertex/PV2D' 
                , 'TES:Hlt/Track/MuonSegmentForL0Single'
                , 'RZVeloBW'
@@ -518,7 +526,7 @@ class HltConf(LHCbConfigurableUser):
         if self.getProp( 'RequireL0ForEndSequence') :
             from Configurables import LoKi__L0Filter    as L0Filter
             from HltLine.HltDecodeRaw import DecodeL0DU
-            L0accept = Sequence(name='HltEndSequenceFilter', Members = DecodeL0DU.members() + [ L0Filter( 'L0Pass', Code = "L0_DECISION" )])
+            L0accept = Sequence(name='HltEndSequenceFilter', Members = DecodeL0DU.members() + [ L0Filter( 'L0Pass', Code = "L0_DECISION_PHYSICS" )])
             EndMembers.insert(1,  L0accept )  # after routing bits
 ##################################################################################
     def __apply_configuration__(self):
