@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================== HltSettings v1r11p1 2010-03-19 ===================
+! 2010-03-19 - Gerhard Raven
+ - remove Hlt1ODINPhysics from Physics_MinBiasL0_PassThroughHlt_Feb10
+
 !========================== HltSettings v1r11 2010-03-11 ===================
 ! 2010-03-11 - Patrick Koppenburg
  - Task #14409 : Physics_320Vis_300L0_10Hlt1_PassThroughHlt2_Feb10 added

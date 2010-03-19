@@ -135,7 +135,7 @@ class Physics_MinBiasL0_PassThroughHlt_Feb10 :
         """
         Returns a list of active lines
         """
-        return [ 'Hlt1ODINPhysics',        'Hlt1ODINTechnical', 'Hlt1Tell1Error'
+        return [ 'Hlt1ODINTechnical', 'Hlt1Tell1Error'
                , 'Hlt1L0Any'
                , 'Hlt1L0SPD', 'Hlt1L0CALO', 'Hlt1L0MUON,minbias', 'Hlt1L0PU', 'Hlt1L0SPD40', 'Hlt1L0PU20'
                , 'Hlt1L0Electron', 'Hlt1L0Photon', 'Hlt1L0Hadron'
