@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.52 2010-03-15 11:37:28 asatta Exp $
+! $Id: release.notes,v 1.53 2010-03-19 00:05:29 rlambert Exp $
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : Alessia Satta Alessia.Sattaft@cern.ch
 ! =============================================================================
 
+!======================== MuonTools v5r2 2010-03-19 =========================
 ! 2010-03-15 - Alessia Satta
  - Varius changes in Muon FastHWTool.cpp to allow compilation on windows
 
