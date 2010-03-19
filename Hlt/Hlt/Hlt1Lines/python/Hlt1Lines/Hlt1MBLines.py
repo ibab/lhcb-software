@@ -11,6 +11,9 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
     __slots__ = { 'MiniBiasL0Channels'     : ['CALO'] #'Hadron'
                 , 'BXTypes'                : ['NoBeam', 'BeamCrossing','Beam1','Beam2']
                 , 'MaxNoBiasRate'          : 100.
+                #, 'Postscale'              : { 'Hlt1MBMicro.*R500' : 'RATE(500)' 
+                #                             , 'Hlt1MBMicro.*P1000' : 0.001 
+                #                             }
                 }
 
     def __create_nobias_line__(self ):
@@ -57,6 +60,10 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
         self.__create_minibias_line__()
         self.__create_nobias_line__()
 
-        from HltTracking.HltReco import MinimalRZVelo, Hlt1Seeding
-        self.__create_microbias_line__('RZVelo',MinimalRZVelo)
-        self.__create_microbias_line__('TStation',Hlt1Seeding)
+        from HltLine.HltReco import MinimalRZVelo, Hlt1Seeding
+        rz = self.__create_microbias_line__('RZVelo',MinimalRZVelo)
+        ts = self.__create_microbias_line__('TStation',Hlt1Seeding)
+        #for i in [ rz, ts ] :
+        #    i.clone( i.name() + 'R500',  postscale = self.postscale )
+        #    i.clone( i.name() + 'P1000',  postscale = self.postscale )
+
