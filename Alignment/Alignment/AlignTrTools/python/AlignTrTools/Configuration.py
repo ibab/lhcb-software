@@ -15,9 +15,16 @@ __author__= "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 class AlignTrTools( LHCbConfigurableUser ):
 
      __slots__ = {
-            "Tools" 		 : [] # list of various tools 
-	  , "Constraints" 	 : [] # list of constraints
-          , "Degrees_of_Freedom" : [0, 0, 0, 0, 0, 0] # degrees of freedom to align
+            "Tools" 		 	: [] # list of various tools 
+	  , "Constraints" 	 	: [] # list of constraints
+          , "Degrees_of_Freedom" 	: [0, 0, 0, 0, 0, 0] # degrees of freedom to align
+          , "nTrackModelParameters" 	: 4 # nof of parameters of track model
+          , "initial_residual_cut"  	: 100.0 # 1st outlier rejection
+          , "Chi2Scale"           	: -1   # value = -1 : no chi2 cut
+          , "minChi2"               	: 10    # value = -1 : no chi2 cut
+          , "Outlier"             	: 4     # max outlier value for MP track fit
+          , "Sim"                   	: False
+
           }
      
      
@@ -30,6 +37,12 @@ class AlignTrTools( LHCbConfigurableUser ):
  		self.TAConfigure()
  		TAConfig().Constrain_OT = self.getProp("Constraints")
                 TAConfig().Degrees_of_Freedom = self.getProp("Degrees_of_Freedom")
+		TAConfig().nTrackModelParameters = self.getProp("nTrackModelParameters")
+		TAConfig().initial_residual_cut = self.getProp("initial_residual_cut")
+		TAConfig().Chi2Scale = self.getProp("Chi2Scale")
+		TAConfig().minChi2 = self.getProp("minChi2")
+		TAConfig().Outlier = self.getProp("Outlier")
+		TAConfig().Sim       = self.getProp("Sim")
                 print "TAConfig degrees of freedom = ", TAConfig().getProp("Degrees_of_Freedom")
              if tool  == "ATrackSelector":
 		self.TrackSelection()

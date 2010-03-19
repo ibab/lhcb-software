@@ -4,6 +4,10 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+
+! 2010-03-19 - Johan Blouw
+ - Added a few variables to the __slots__ to accomodate the configuration of TAConfig.
+
 ! 2010-03-17 - Johan Blouw
  - modifed Configuration.py so that it does not rely anymore on 
    python files in the option directory.
