@@ -1,4 +1,4 @@
-// $Id: TrackMonitorBase.h,v 1.2 2008-07-10 10:34:13 wouter Exp $
+// $Id: TrackMonitorBase.h,v 1.3 2010-03-19 14:10:38 wouter Exp $
 #ifndef TRACKMONITORBASE_H
 #define TRACKMONITORBASE_H 1
  
@@ -79,6 +79,9 @@ class TrackMonitorBase : public GaudiHistoAlg {
   *  @return all string
   */ 
   const std::string& all() const;
+
+ protected:
+  void setSplitByType(bool b) { m_splitByType = b ; }
 
  private:
 
