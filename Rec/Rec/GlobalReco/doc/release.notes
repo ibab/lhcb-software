@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r32 2010-03-19 ======================
 ! 2010-03-15 - Chris Jones
  - Turn back on adding the RICH, CALO and CombinedDLLs to the ProtoParticles, 
    as it has proved to cause a few problems downstream, for instance in the
