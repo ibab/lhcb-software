@@ -146,7 +146,7 @@ StatusCode DecodePileUpData::decode() {
     nzsBinDecoder.ignore();
     debug() << " decode() : NZS bank decoded " << endmsg;
   }
-  else info() << " NZS bank empty " << endmsg;
+  else Info(" NZS bank empty ");
 
   // ZS PU decode
   const std::vector<LHCb::RawBank*> banks = m_rawEvent->banks(LHCb::RawBank::L0PU); 
@@ -156,7 +156,7 @@ StatusCode DecodePileUpData::decode() {
     binDecoder.ignore();
     debug() << " decode() : ZS bank decoded " << endmsg;
   }
-  else info() << " ZS bank empty " << endmsg;
+  else Info(" ZS bank empty ");
 
   return ( StatusCode::SUCCESS ); 
 }

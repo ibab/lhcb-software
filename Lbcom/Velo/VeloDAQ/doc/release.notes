@@ -3,6 +3,10 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2010-03-19 - Serena Oggero
+ - DecodePileUpData : changed info() messages to Info() for non existing PU
+   banks
+
 !=========================  VeloDAQ v4r13 2010-03-18 ======================
 ! 2010-03-17 - Kurt Rinnert
  - ZS banks are no longer decoded when the TELL1 has set the error flag
