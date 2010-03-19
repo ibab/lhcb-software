@@ -23,5 +23,8 @@ target = argv[2]
 if not cpManifest(manifest,target) :
     # in case of dev, try without the 'dev' postfix
     if manifest.endswith('dev') :
-	manifest = manifest.rstrip('dev')
-	cpManifest(manifest,target)
+        manifest = manifest.rstrip('dev')
+        cpManifest(manifest,target)
+    if manifest.endswith('p1') :
+        manifest = manifest.rstrip('p1')
+        cpManifest(manifest,target)
