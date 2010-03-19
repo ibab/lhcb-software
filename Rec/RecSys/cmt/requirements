@@ -49,7 +49,7 @@ use TrackSys             v4r31   Tf   # Stephanie Hansmann-Menzemer
 use TsaAlgorithms        v3r17   Tf   # Matt Needham
 
 # Tr packages: Track Fit & Pattern Reco Validation with MonteCarlo
-use PatChecker           v3r6    Tr   # Olivier Callot, David Hutchcroft
+use PatChecker           v3r7    Tr   # Olivier Callot, David Hutchcroft
 use PatFitParams         v4r0    Tr   # Olivier Callot
 use TrackAssociators     v2r7    Tr   # Eduardo Rodrigues, Edwin Bos
 use TrackCheckers        v4r10   Tr   # Eduardo Rodrigues
