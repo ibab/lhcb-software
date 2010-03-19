@@ -68,8 +68,8 @@ class AlignTrTools( LHCbConfigurableUser ):
 	TAConfig().Chi_sq_factor        = 10.0;   #startfctr in Centipede/Millepede-->x*3sigma of chi2/ndf function
 	TAConfig().initial_residual_cut = 100.0;  #1st outlier rejection
 	TAConfig().n_l_stdev            = 3.0;
-	TAConfig().myChi2Scale          = -1;    # value = -1 : no chi2 cut
-	TAConfig().myOutlier            = 10; #4;
+	TAConfig().Chi2Scale          = -1;    # value = -1 : no chi2 cut
+	TAConfig().Outlier            = 10; #4;
 	TAConfig().residual_cut         = 116.0; #not used...
 	TAConfig().OT_system   		= False;
 	TAConfig().OT_layer    		= False;

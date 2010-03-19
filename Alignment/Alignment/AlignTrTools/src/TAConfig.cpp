@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.33 2010-03-17 16:42:02 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.34 2010-03-19 14:24:48 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -99,7 +99,7 @@ TAConfig::TAConfig( const std::string& type,
   declareProperty("residual_cut", m_residual_cut = 20.0 );
   declareProperty("initial_residual_cut", m_ini_residual_cut = 10.0 );
   declareProperty("n_l_stdev", m_nstd = 10 );
-  declareProperty("myChi2Scale", m_chi2Scale = 1000 );
+  declareProperty("Chi2Scale", m_chi2Scale = 1000 );
   declareProperty("minChi2", m_minChi2= 1000 );
   declareProperty("Velo_left_modules", m_VELOmap_l);
   declareProperty("Velo_right_modules",m_VELOmap_r);
@@ -135,8 +135,7 @@ TAConfig::TAConfig( const std::string& type,
   declareProperty("IT_alignment_condition_location", m_itCond = "");
   declareProperty("TT_alignment_condition_location", m_ttCond = "");
   declareProperty("OT_alignment_condition_location", m_otCond = "");
-  declareProperty("myChi2Scale",m_scale=100); 
-  declareProperty("myOutlier",m_outlier=100); 
+  declareProperty("Outlier",m_outlier=100); 
   declareProperty("ConstrainMovement",m_OTConstrainMove); 
   declareProperty("Sim",m_Simulation = false); 
   debug() << "Millepede tool " << m_CentipedeTool << endreq;
