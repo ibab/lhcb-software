@@ -4,10 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
-! 2010-03-019 - Wouter Hulsbergen
+=========================== TrackFitEvent v4r5 2010-03-19 ====================
+! 2010-03-19 - Wouter Hulsbergen
  - added ChiSquare::prob
 
-=========================== TrackFitEvent v4r5 2010-03-19 ====================
 ! 2010-03-18 - Victor Coco
  - added velopix switch case in KalmanFitResult 
 
