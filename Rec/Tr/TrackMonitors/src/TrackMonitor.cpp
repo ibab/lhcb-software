@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.25 2010-03-18 11:46:32 wouter Exp $
+// $Id: TrackMonitor.cpp,v 1.26 2010-03-19 15:19:30 wouter Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -102,8 +102,8 @@ StatusCode TrackMonitor::execute()
       
       tMap[type]+= 1;
       fillHistograms(**iterT,type);
-      plot((*iterT)->type(),2, "type" ,-0.5, 10.5, 11);
-      plot((*iterT)->history(),"history" ,-0.5, 10.5, 11);
+      plot((*iterT)->type(),2, "track type" ,-0.5, 10.5, 11);
+      plot((*iterT)->history(),"history" ,"track history",-0.5, 10.5, 11);
     }
   } // iterT
 
@@ -143,6 +143,7 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   plot(track.chi2PerDoF(),type+"/3","chi2/ndof",0,20);
   plot(track.nLHCbIDs(),type+"/4","#nLHCbIDs", -0.5, 60.5, 61);
   plot(track.pseudoRapidity(),type+"/7", "eta", 0.95 , 6.05, 50);
+  plot(track.phi(),type+"/8", "phi",-M_PI,M_PI,50) ;
   plot(track.nDoF(),type+"/ndof","ndof",-0.5,50.5,51);
   plot(track.flag(),type+"/flag","flag",-0.5,255.5,256) ;
   plot(track.history(),type+"/history","history",-0.5,20.5,21) ;
