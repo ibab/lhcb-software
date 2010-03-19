@@ -4,6 +4,9 @@ Package Coordinator : Johan Blouw
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+! 2010-03-19 Johan Blouw
+ - renamed 2009-MPede.py to Millepede.py and modified a few other python options for the M'pede style alignment.
+
 ! 2010-03-17 Johan Blouw
  - modified Escher Configuration.py so that the configuration of the millepede style alignment
    is done where the packages & their tools reside (i.e. in TAlignment and AlignTrTools respectively)

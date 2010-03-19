@@ -5,8 +5,7 @@
 # uncomment to use.
 #from Configurables import ( CondDB, CondDBAccessSvc )
 #otCalib = CondDBAccessSvc( 'OTCalib' )
-#otCalib.ConnectionString ='sqlite_file:/work/blouw/NEWER/Alignment_v4r5/Alignment/Escher/db/LHCBCOND.db/LHCBCOND'
-#otCalib.DefaultTAG = "OT_3"
+#otCalib.ConnectionString ='sqlite_file:/data/work/DataBases/Collision09_OT_QuarterT0s_071209.db/LHCBCOND'
 #CondDB().addLayer( otCalib )
 #
 #from Configurables import UpdateManagerSvc
@@ -18,30 +17,55 @@
 #alignCond.ConnectionString = 'sqlite_file:' + aligndb + '/LHCBCOND'
 #CondDB().addLayer( alignCond )
 
-from Configurables import ( LHCbApp, Escher, TrackSys, ATrackSelector, TStation, TrackMonitor, OTTrackMonitor )
+from Configurables import ( TrackSys, GaudiSequencer, Escher, TAlignment, TStation, ATrackSelector, TrackMonitor, OTTrackMonitor )
 
-Escher().Detectors = ["OT"]
-Escher().EvtMax = 100
+
+TrackSys.TrackPatRecAlgorithms = ["PatSeed"]
+GaudiSequencer("RecoRICHSeq").Enable = False
+GaudiSequencer("RecoVELOSeq").Enable = False
+GaudiSequencer("RecoTTSeq").Enable = False
+GaudiSequencer("RecoITSeq").Enable = True
+
+TAlignment().WriteCondSubDetList = ["OT"]
+Escher().EvtMax = 1000
 Escher().PrintFreq = 1000
 Escher().AlignmentLevel = "layers"
 Escher().Millepede = True
 Escher().Kalman = False
 Escher().Incident = "GlobalMPedeFit"
-Escher().TrackContainer = "Rec/Track/Seed"
 
-
-OTTrackMonitor().TrackLocation = "Event/Alignment/OTTracks"
-TrackMonitor().TracksInContainer = "Event/Alignment/OTTracks"
-
-
-ATrackSelector().MinPCut = 0.0 # value is in MeV
+ATrackSelector().UniformCutOff = 4
+#ATrackSelector().UniformCutOff = 9
+ATrackSelector().MinEnergyCut = 0.0
+#ATrackSelector().MinEnergyCut = 0.0
+ATrackSelector().MinPCut = 0.0
 ATrackSelector().MinPtCut = 0.0
 ATrackSelector().MinChi2Cut = 0.0
-ATrackSelector().MaxChi2Cut = 15.0 # chi2perdof
+ATrackSelector().MaxChi2Cut = 15.0
 ATrackSelector().Charge = 0
-ATrackSelector().MaxPCut = -1 # value = -1 -> no p info available (Boff)
+ATrackSelector().MaxPCut = -1
 ATrackSelector().MaxPtCut = -1
 ATrackSelector().MinITHitCut    = 0
 ATrackSelector().MinOTHitCut = 15
 ATrackSelector().MinTTHitCut = 0
-ATrackSelector().MinEnergyCut = 0.0
+#ATrackSelector().YCutMin_at_T1 = -2500.0
+#ATrackSelector().YCutMax_at_T1 = -830.0
+ATrackSelector().OutputLevel = 1
+
+from Configurables import TStation
+TStation().OutputLevel = 3
+TStation().InputContainer = "Rec/Track/Seed"
+#TStation().InputContainer = "Rec/Track/Best"
+
+TrackSys().ExpertTracking += ["noDrifttimes"]
+
+from Configurables import (CountingPrescaler, ProcessPhase )
+Escher().MainSequence = [ CountingPrescaler("EscherPrescaler")
+                        , "ProcessPhase/Init"
+                        , "ProcessPhase/Reco"
+                        , GaudiSequencer("AlignSequence")
+                        , "ProcessPhase/Moni" ]
+OTTrackMonitor().TrackLocation = "Event/Alignment/OTTracks"
+TrackMonitor().TracksInContainer = "Event/Alignment/OTTracks"
+
+
