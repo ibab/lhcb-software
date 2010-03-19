@@ -43,6 +43,13 @@
       </method>
 	
       <method
+        type = 'double'
+        name = 'prob'
+        desc = 'return chisquare upper tail probability if ndof>0. returns zero otherwise.'
+        const = 'TRUE'>
+      </method>
+
+      <method
 	type = 'LHCb::ChiSquare&amp;'
 	name = 'operator+='
 	desc = 'addition operator' >
