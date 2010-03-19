@@ -1,4 +1,4 @@
-// $Id: TTTrackMonitor.h,v 1.2 2009-07-20 11:17:31 mneedham Exp $
+// $Id: TTTrackMonitor.h,v 1.3 2010-03-19 14:12:07 wouter Exp $
 #ifndef TTTRACKMONITOR_H
 #define TTTRACKMONITOR_H 1
  
@@ -39,7 +39,8 @@ class TTTrackMonitor : public TrackMonitorBase {
 
 
   void fillHistograms(const LHCb::Track& track, 
-                      const std::vector<LHCb::LHCbID>& itIDs) const ;
+                      const std::vector<LHCb::LHCbID>& itIDs,
+		      const std::string& type) const ;
 
   unsigned int histoBin(const LHCb::STChannelID& chan) const;
 
