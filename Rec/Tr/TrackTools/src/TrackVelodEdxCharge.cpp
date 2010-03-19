@@ -5,7 +5,7 @@
  * Implementation file for tool TrackVelodEdxCharge
  *
  * CVS Log :-
- * $Id: TrackVelodEdxCharge.cpp,v 1.7 2010-03-17 12:24:09 dhcroft Exp $
+ * $Id: TrackVelodEdxCharge.cpp,v 1.8 2010-03-19 18:15:00 dhcroft Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 18/07/2006
@@ -33,9 +33,9 @@ TrackVelodEdxCharge::TrackVelodEdxCharge(const std::string& type,
   // tool interface
   declareInterface<ITrackVelodEdxCharge>(this);
   // job options
-  // normalised to 2009 beam data 
-  declareProperty( "Normalisation", m_Normalisation = 35.6 );
+  declareProperty( "Normalisation", m_Normalisation = 47.1 );
   declareProperty( "Ratio",         m_Ratio         = 0.6  );
+  declareProperty( "UseConditions", m_useConditions  = true );
 }
 
 TrackVelodEdxCharge::~TrackVelodEdxCharge(){
@@ -43,14 +43,29 @@ TrackVelodEdxCharge::~TrackVelodEdxCharge(){
 
 StatusCode TrackVelodEdxCharge::initialize()
 {
-  const StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
+
+  if( !existDet<DataObject>(detSvc(),"Conditions/ParticleID/Velo/VelodEdx") ){
+    Warning("VELO dE/dx parameters not in conditions DB", 
+            StatusCode::SUCCESS).ignore();
+    m_useConditions = false;
+  }
+  if( !m_useConditions ){
+    Warning("Using VELO dE/dx parameters from options not conditions", 
+            StatusCode::SUCCESS).ignore();
+  }else{
+    registerCondition("Conditions/ParticleID/Velo/dEdx",m_dEdx,
+                      &TrackVelodEdxCharge::i_cachedEdx);
+    sc = runUpdate();
+    if(!sc) return sc;
+  }
 
   info() << "VELO dE/dx charge parameters :"
          << " normalisation = " << m_Normalisation
          << " ratio = " << m_Ratio <<endreq;
 
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 StatusCode TrackVelodEdxCharge::nTracks( const LHCb::Track * track,
@@ -105,5 +120,11 @@ StatusCode TrackVelodEdxCharge::nTracks( const LHCb::Track * track,
   }
 
   // if we get here, all is OK
+  return StatusCode::SUCCESS;
+}
+
+StatusCode TrackVelodEdxCharge::i_cachedEdx(){
+  m_Normalisation = m_dEdx->param<double>("Normalisation");
+  m_Ratio = m_dEdx->param<double>("Ratio");
   return StatusCode::SUCCESS;
 }

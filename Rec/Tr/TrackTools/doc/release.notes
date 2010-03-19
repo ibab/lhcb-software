@@ -4,6 +4,12 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2010-03-19 - David Hutchcroft
+ - Made dEdx parameters TrackVelodEdxCharge load from a condition in
+   SIMCOND/LHCBCOND
+ - Reset default used if condition is missing to MC09 setting for consistency 
+   with existing MC
+
 !======================== TrackTools v3r28 2010-03-19 ======================
 ! 2010-03-17 - David Hutchcroft
  - retune dEdx in velo to match 2009 data and improve Doxygen comments for 
