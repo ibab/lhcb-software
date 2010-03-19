@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.432 2010-03-17 22:32:24 gligorov Exp $ 
+! $Id: release.notes,v 1.433 2010-03-19 12:46:39 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -30,6 +30,11 @@
  - Follow continued reorganization of Hlt tracking by asking Hlt2.py
    to spell out explicitly the "vanilla" tracking scenario (forward
    tracks, no fitting, no RICH, no seeding) when being configured. 
+
+
+!========================== HltConf v6r5p1 2010-03-19 ===================
+! 2010-03-19 - Gerhard Raven
+ - define routing bit 48 : "HLT_PASS_SUBSTR('Hlt1BeamGas')"
 
 
 !========================== HltConf v6r5 2010-03-11 ===================
