@@ -37,8 +37,10 @@ private:
   DeCalorimeter* m_caloDet ;
   double m_geometricZ ;
 
-  IHistogram1D* m_dxH1[3] ;
-  IHistogram1D* m_dyH1[3] ;
+  IHistogram1D* m_dxASideH1[3] ;
+  IHistogram1D* m_dyASideH1[3] ;
+  IHistogram1D* m_dxCSideH1[3] ;
+  IHistogram1D* m_dyCSideH1[3] ;
   IHistogram1D* m_zH1[3] ;
   IHistogram1D* m_eOverPH1[3] ;
   IProfile1D* m_dyVsYPr ;
@@ -113,13 +115,17 @@ StatusCode TrackCaloMatchMonitor::initialize()
   char systitle[3][128] = { "outer","middle","inner"} ;
   char histitle[128] ;
   for(int i=0; i<3; ++i) {
-    sprintf(histitle,"x%s - xTRK (%s)",m_caloName.c_str(),systitle[i]) ;
-    m_dxH1[i] = book1D(histitle,-200,200) ;
-    sprintf(histitle,"y%s - yTRK (%s)",m_caloName.c_str(),systitle[i]) ;
-    m_dyH1[i] = book1D(histitle,-200,200) ;
-    sprintf(histitle,"zMatch %s (%s)",m_caloName.c_str(),systitle[i]) ;
+    sprintf(histitle,"x%s - xTRK (%s A-side)",m_caloName.c_str(),systitle[i]) ;
+    m_dxASideH1[i] = book1D(histitle,-200,200) ;
+    sprintf(histitle,"y%s - yTRK (%s A-side)",m_caloName.c_str(),systitle[i]) ;
+    m_dyASideH1[i] = book1D(histitle,-200,200) ;
+    sprintf(histitle,"x%s - xTRK (%s C-side)",m_caloName.c_str(),systitle[i]) ;
+    m_dxCSideH1[i] = book1D(histitle,-200,200) ;
+    sprintf(histitle,"y%s - yTRK (%s C-side)",m_caloName.c_str(),systitle[i]) ;
+    m_dyCSideH1[i] = book1D(histitle,-200,200) ;
+    sprintf(histitle,"zMatch (%s)",systitle[i]) ;
     m_zH1[i] = book1D(histitle,m_geometricZ - 400, m_geometricZ + 400 ) ;
-    sprintf(histitle,"E over P %s (%s)",m_caloName.c_str(),systitle[i]) ;
+    sprintf(histitle,"E over P (%s)",systitle[i]) ;
     m_eOverPH1[i] = book1D(histitle,-2,2) ;
   }
 
@@ -196,8 +202,13 @@ StatusCode TrackCaloMatchMonitor::execute()
 	double dx = cluster.pos.x() - xtrack ;
 	double dy = cluster.pos.y() - ytrack ;
 	if( std::abs(dy)<200 && std::abs(dx)<200 ) {
-	  m_dxH1[cluster.cell.area()]->fill( dx ) ;
-	  m_dyH1[cluster.cell.area()]->fill( dy ) ;
+	  if( xtrack > 0 ) {
+	    m_dxASideH1[cluster.cell.area()]->fill( dx ) ;
+	    m_dyASideH1[cluster.cell.area()]->fill( dy ) ;
+	  } else {
+	    m_dxCSideH1[cluster.cell.area()]->fill( dx ) ;
+	    m_dyCSideH1[cluster.cell.area()]->fill( dy ) ;
+	  }
 	  m_eOverPH1[cluster.cell.area()]->fill( cluster.pos.e() * state->qOverP() ) ;
 	  // compute the z-coordinate for which sqrt(dx^2+dy^2) is minimal
 	  double tx = state->tx() ;
