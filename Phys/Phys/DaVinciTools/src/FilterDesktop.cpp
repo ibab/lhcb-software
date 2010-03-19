@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.19 2010-03-18 19:16:00 jpalac Exp $
+// $Id: FilterDesktop.cpp,v 1.20 2010-03-19 16:07:11 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -42,8 +42,9 @@ using namespace LoKi ;
 // ============================================================================
 /** @class FilterDesktop 
  *  LoKi/Bender "Hybrid" (re)implementation of simple algorithm with 
- *  filters the input particles ("FilterDesktop"). Stores pointers to the 
- *  selected input particles, as defined by InputLocations.
+ *  filters the input particles ("FilterDesktop"). Stores shallow clones 
+ *  of the selected input particles and theis end vertices, as defined by 
+ *  InputLocations.
  *
  *  The important properties (in addtion to the base class' properties)
  *    - "Factory"   : the type/name of LoKi/Bender 'hybrid' factory
@@ -309,20 +310,6 @@ public:
   /// general flag to switch on/off the monitoring
   bool monitor() const { return m_monitor ; }
   // ==========================================================================
-protected:
-  StatusCode writeEmptyContainerIfNeeded() 
-  {
-    const std::string& loc = desktop()->getOutputLocation();
-
-    if (!exist<LHCb::Particle::Container>(loc + "/Particles") ) {  
-      if (msgLevel(MSG::DEBUG)) debug() << "Saving empty container at " 
-                                        << loc + "/Particles"<< endmsg ;
-      LHCb::Particle::Container* dummy = new LHCb::Particle::Container;
-      put(dummy, loc + "/Particles");
-    }
-    return StatusCode::SUCCESS;
-  }
-  // ==========================================================================
 private:
   // ==========================================================================
   /// construct the preambulo string 
@@ -496,10 +483,13 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
     { return Error ( "Error from Input Plots tool", sc ) ; }
   }
 
+  const std::string& outputLocation = desktop()->getOutputLocation();
   LHCb::Particle::Container* accepted = new LHCb::Particle::Container;
-  put(accepted, desktop()->getOutputLocation()+"/Particles");
+  put(accepted, outputLocation+"/Particles");
+  LHCb::Vertex::Container* vertices = new LHCb::Vertex::Container;
+  put(vertices, outputLocation+"/Vertices");
   Particle2Vertex::Table* table = new Particle2Vertex::Table;
-  put(table, desktop()->getOutputLocation()+"/Particle2VertexRelations");
+  put(table, outputLocation+"/Particle2VertexRelations");
   //
   StatEntity& cnt = counter ( "efficiency" ) ;
   //
@@ -517,13 +507,20 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
     if (clone) {
       accepted->insert( clone ) ;
       cloneP2PVRelation(p, clone, table) ;
+      const LHCb::Vertex* endVtx = p->endVertex();
+      if (endVtx) {
+        LHCb::Vertex* cloneVtx = endVtx->clone();
+        vertices->insert(cloneVtx);
+      }
     }
   }
   
-  if (msgLevel(MSG::DEBUG)) debug() << "Saved " << accepted->size()
-                                    << " Particles in " 
-                                    << desktop()->getOutputLocation()+"/Particles" << endmsg ;
-
+  if (msgLevel(MSG::DEBUG)) {
+    debug() << "Saved " << accepted->size()
+            << " Particles in " 
+            << outputLocation+"/Particles" << endmsg ;
+  }
+  
   // make the final plots 
    if ( produceHistos () && 0 != m_outputPlots ) 
    {
