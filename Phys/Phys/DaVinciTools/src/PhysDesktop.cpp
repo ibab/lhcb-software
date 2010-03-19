@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.102 2010-03-18 19:15:43 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.103 2010-03-19 13:54:02 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -410,13 +410,13 @@ void PhysDesktop::saveVertices(const LHCb::Vertex::ConstVector& vToSave) const
     verbose() << "Saving "<< vToSave.size() << " Vertices to TES " << endmsg;
   }
 
-  if (vToSave.empty()) return;
-
   LHCb::Vertices* verticesToSave = new LHCb::Vertices();
 
   const std::string location(m_outputLocn+"/Vertices");
 
   put(verticesToSave,location);
+
+  if (vToSave.empty()) return;
 
   for( v_iter iver = vToSave.begin(); iver != vToSave.end(); iver++ ) {
     // Check if this was already in a Gaudi container (hence in TES)
@@ -643,9 +643,8 @@ StatusCode PhysDesktop::getParticles(){
 
   for( std::vector<std::string>::iterator iloc = m_inputLocations.begin();
        iloc != m_inputLocations.end(); iloc++ ) {
-
     // Retrieve the particles:
-    std::string location = (*iloc)+"/Particles";
+    const std::string location = (*iloc)+"/Particles";
     if ( ! exist<LHCb::Particle::Selection>( location ) &&
          ! exist<LHCb::Particle::Container>( location )    ) { 
       Info("No particles at location "+location
@@ -726,29 +725,26 @@ StatusCode PhysDesktop::getInputRelations(std::vector<std::string>::const_iterat
 //=============================================================================
 StatusCode PhysDesktop::writeEmptyContainerIfNeeded(){
 
-  StatusCode sc = StatusCode::SUCCESS;
-
-  if (! exist<LHCb::Particle::Container>(m_outputLocn+"/Particles") &&
-      ! exist<LHCb::Particle::Selection>(m_outputLocn+"/Particles")    ) {  
+  const std::string particleLocation( m_outputLocn+"/Particles");
+  if (! exist<LHCb::Particle::Container>(particleLocation) &&
+      ! exist<LHCb::Particle::Selection>(particleLocation)    ) {  
     if (msgLevel(MSG::DEBUG)) debug() << "Saving empty container at " 
-                                      << m_outputLocn+ "/Particles"<< endmsg ;
-    saveParticles(LHCb::Particle::ConstVector());
+                                      << particleLocation << endmsg ;
+    
+    LHCb::Particle::Container* dummy = new LHCb::Particle::Container();
+    put(dummy, particleLocation);
   }
   
-  if  (sc.isFailure() ) return sc;
-  
-  if (! exist<LHCb::Vertex::Container>(m_outputLocn+"/Vertices") &&
-      ! exist<LHCb::Vertex::Selection>(m_outputLocn+"/Vertices")    )  {  
+  const std::string vertexLocation( m_outputLocn+"/Vertices");
+  if (! exist<LHCb::Vertex::Container>(vertexLocation) &&
+      ! exist<LHCb::Vertex::Selection>(vertexLocation)    )  {  
     if (msgLevel(MSG::DEBUG)) debug() << "Saving empty container at " 
-                                      << m_outputLocn+ "/Vertices"<< endmsg ;
-    saveVertices(LHCb::Vertex::ConstVector());
-  }
-
-  if  (sc.isSuccess() ) {
-    if (msgLevel(MSG::DEBUG)) debug() << "Saved empty containers at " << m_outputLocn << endmsg ;
+                                      << vertexLocation << endmsg ;
+    LHCb::Vertex::Container* dummy = new LHCb::Vertex::Container();
+    put(dummy, vertexLocation);
   }
   
-  return sc ;
+  return StatusCode::SUCCESS;
 }
 //=============================================================================
 const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part) const {
