@@ -8,7 +8,7 @@
 ##
 from Gaudi.Configuration import *
 from Hlt2SharedParticles.BasicParticles import NoCutsPions, NoCutsProtons
-from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions, BiKalmanFittedDownPions, BiKalmanFittedDownProtons, BiKalmanFittedDownProtons
+from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions, BiKalmanFittedDownPions, BiKalmanFittedProtons, BiKalmanFittedDownProtons
 from Configurables import CombineParticles
 from HltLine.HltLine import bindMembers, Hlt2Member
 
@@ -61,6 +61,6 @@ Hlt2SharedLambdaDDTrackFitted = Hlt2Member( CombineParticles, "LambdaDDTrackFitt
 LambdaLL            = bindMembers( "SharedLambdaLL",            [ NoCutsPions, NoCutsProtons, Hlt2SharedLambdaLL ] )
 LambdaLLTrackFitted = bindMembers( "SharedLambdaLLTrackFitted", [ BiKalmanFittedPions, BiKalmanFittedProtons, Hlt2SharedLambdaLL ] )
 #LambdaDD            = bindMembers( "SharedLambdaDD",            [ NoCutsPions, NoCutsProtons, Hlt2SharedLambdaDD ] )
-LambdaDDTrackFitted = bindMembers( "SharedLambdaDDTrackFitted", [ BiKalmanFittedPions, BiKalmanFittedProtons, Hlt2SharedLambdaDD ] )
+LambdaDDTrackFitted = bindMembers( "SharedLambdaDDTrackFitted", [ BiKalmanFittedDownPions, BiKalmanFittedDownProtons, Hlt2SharedLambdaDD ] )
 
 

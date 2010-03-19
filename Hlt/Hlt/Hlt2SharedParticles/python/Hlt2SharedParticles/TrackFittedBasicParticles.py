@@ -92,8 +92,8 @@ Hlt2BiKalmanFittedKaons.TrackSelector.TrackTypes 	= ["Long"]
 #
 Hlt2BiKalmanFittedProtons 				= NoPIDsParticleMaker("Hlt2BiKalmanFittedProtons")
 Hlt2BiKalmanFittedProtons.addTool(TrackSelector)
-Hlt2BiKalmanFittedProtons.Particle 			=  "protons"
-Hlt2BiKalmanFittedProtons.Input 				=  BiKalmanFittedChargedProtoMaker.outputSelection()
+Hlt2BiKalmanFittedProtons.Particle 			=  "proton"
+Hlt2BiKalmanFittedProtons.Input 			=  BiKalmanFittedChargedProtoMaker.outputSelection()
 Hlt2BiKalmanFittedProtons.TrackSelector.TrackTypes 	= ["Long"]
 ##########################################################################
 #

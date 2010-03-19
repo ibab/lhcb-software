@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2ExpressLines.py,v 1.14 2010-03-18 14:03:58 albrecht Exp $
+# $Id: Hlt2ExpressLines.py,v 1.15 2010-03-19 02:59:31 gligorov Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt2 Lines for the express stream
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Johannes Albrecht albrecht@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -248,10 +248,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                , MotherCut = "(ADMASS('phi(1020)') < %(ExPhiMassWin)d*MeV)"\
                                " & (DOCAMAX < %(ExPhiDOCAMax)d*mm)"\
 			       " & (MIPCHI2DV(PRIMARY) > %(ExPhiMIPCHI2DV)d)"%  self.getProps()
-                               , DaughtersCuts = {"K+":"(PT>%(ExPhiKPt)d*MeV)"\
-                                                  " & (P>%(ExPhiKP)d*MeV)"\
-						  " & (MIPCHI2DV(PRIMARY) > %(ExPhiKMIPCHI2DV)d)"%  self.getProps(),
-			       			  "K-":"(PT>%(ExPhiKPt)d*MeV)"\
+                              , DaughtersCuts = {"K+":"(PT>%(ExPhiKPt)d*MeV)"\
                                                   " & (P>%(ExPhiKP)d*MeV)"\
 						  " & (MIPCHI2DV(PRIMARY) > %(ExPhiKMIPCHI2DV)d)"%  self.getProps()}
                                )#
@@ -273,7 +270,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       
       line = Hlt2Line('ExpressDs2PhiPi'
                       , prescale = self.prescale 
-                      , algos = [ PV3D, NoCutsPions, NoCutsKaons, PhiCombine, DsCombine]
+                      , algos = [ PV3D(), NoCutsPions, NoCutsKaons, PhiCombine, DsCombine]
                       , postscale = self.postscale
                       )
 
