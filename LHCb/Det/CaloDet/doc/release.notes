@@ -1,21 +1,20 @@
-! $Id: release.notes,v 1.115 2010-03-18 13:56:16 ibelyaev Exp $ 
+! $Id: release.notes,v 1.116 2010-03-19 22:22:54 cattanem Exp $ 
 ! =============================================================================
 ! Package         : CaloDet   
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!======================== CaloDet v10r5 2010-03-19 ============================
 ! 2010-03-18 - Vanya Belyaev
  - minor fix in signature 
 
 ! 2010-03-18 - Vanya Belyaev
-
  - dict/CaloDet.xml
    - add few more classes into dictionary: CaloLed, CaloPin,
    - add CaloVector into dictionary 
    - fix the name of pattern for variables  
 
  - cmt/requirements 
-
      version increment to v10r5 
 
 !======================== CaloDet v10r4 2010-02-24 ============================
