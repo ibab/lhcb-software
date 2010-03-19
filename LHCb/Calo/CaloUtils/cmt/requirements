@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.69 2010-03-18 13:58:42 ibelyaev Exp $
+# $Id: requirements,v 1.70 2010-03-19 22:27:38 cattanem Exp $
 # =============================================================================
 # Created    : 02/11/2001
 # Author     : Vanya BELYAEV belyaev@lapp.in2p3.fr 
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
 # =============================================================================
 package             CaloUtils
-version             v8r13
+version             v8r12
 
 # ================= structure =================================================
 branches            cmt doc src python CaloUtils 
