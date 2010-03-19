@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.72 2010-03-18 19:10:54 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.73 2010-03-19 15:52:49 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -508,11 +508,9 @@ const LHCb::VertexBase* DVAlgorithm::_getRelatedPV(const LHCb::Particle* part) c
 const LHCb::VertexBase* DVAlgorithm::getStoredBestPV(const LHCb::Particle* particle) const
 {
   if ( hasStoredRelatedPV(particle) ) {
-    std::cout <<"FOUND STORED PV" << std::endl;
     const Particle2Vertex::Table::Range range = desktop()->particle2Vertices(particle);
     return DaVinci::bestVertexBase(range);
   } else {
-    std::cout <<"FOUND NO STORED PV" << std::endl;
     return 0;
   }
   
