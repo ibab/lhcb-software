@@ -1,4 +1,4 @@
-// $Id: ITTrackMonitor.cpp,v 1.8 2009-11-11 12:21:27 mneedham Exp $
+// $Id: ITTrackMonitor.cpp,v 1.9 2010-03-19 15:12:37 wouter Exp $
 // Include files 
 #include "ITTrackMonitor.h"
 
@@ -43,7 +43,8 @@ TrackMonitorBase( name , pSvcLocator ){
   declareProperty("splitByITType", m_splitByITType = true); 
   declareProperty("plotsByLayer", m_plotsByLayer = true);
   declareProperty("minNumITHits", m_minNumITHits = 6u); 
-  declareProperty("InputData" , m_clusterLocation = STClusterLocation::ITClusters); 
+  declareProperty("InputData" , m_clusterLocation = STClusterLocation::ITClusters);
+  setSplitByType(false) ;
 }
 
 //=============================================================================
@@ -70,29 +71,19 @@ StatusCode ITTrackMonitor::initialize()
 //=============================================================================
 StatusCode ITTrackMonitor::execute()
 {
-  
   // get the input data
-  if (!exist<LHCb::Tracks>(inputContainer())) 
-    return Warning( inputContainer()+" not found", StatusCode::SUCCESS, 0);
-  LHCb::Tracks* tracks = get<LHCb::Tracks>(inputContainer());
+  LHCb::Track::Range tracks = get<LHCb::Track::Range>(inputContainer());
 
   // locate the cluster container
   const LHCb::STClusters* clusters = get<LHCb::STClusters>(m_clusterLocation);
 
   std::map<std::string, unsigned int> tMap;
-  std::string type = "";
-
- 
-  // # number of tracks
-  plot(tracks->size(),1, "# tracks", 0, 500, 100 );
   
   // tmp container for ids
   std::vector<unsigned int> usedIDs; usedIDs.reserve(clusters->size());
 
   // histograms per track
-  LHCb::Tracks::const_iterator iterT = tracks->begin();
-  
-  for (; iterT != tracks->end(); ++iterT){
+  for ( LHCb::Track::Range::const_iterator iterT = tracks.begin(); iterT != tracks.end(); ++iterT) {
     if (selector((*iterT)->type())->accept(**iterT) == true){
 
       // find the IT hits on the track 
@@ -102,7 +93,7 @@ StatusCode ITTrackMonitor::execute()
 
       if (ids.size() < m_minNumITHits) continue;
 
-      type = all() ;
+      std::string type ;
       if( splitByType() ) {
 	type = LHCb::Track::TypesToString((*iterT)->type());
 	if( (*iterT)->checkFlag( LHCb::Track::Backward ) ) type += "Backward" ;
@@ -125,7 +116,7 @@ StatusCode ITTrackMonitor::execute()
   if (clusters->size() > 0u) {
     std::sort(usedIDs.begin(), usedIDs.end());
     std::unique(usedIDs.begin(), usedIDs.end());
-    plot(usedIDs.size()/(double)clusters->size(), "fraction used", 0., 1., 200);
+    plot(usedIDs.size()/(double)clusters->size(), "fraction of used hits", 0., 1., 50);
   }
 
   return StatusCode::SUCCESS;
@@ -139,7 +130,8 @@ void ITTrackMonitor::fillHistograms(const LHCb::Track& track,
 
   std::string ittype = type;
   if (splitByITType() == true){
-    ittype += "/"+ITCategory(itIds);
+    if( !ittype.empty() ) ittype += "/" ;
+    ittype += ITCategory(itIds);
   }
 
   // plots we should always make...
@@ -180,33 +172,52 @@ void ITTrackMonitor::fillHistograms(const LHCb::Track& track,
       const STChannelID chan = hit->lhcbID().stID();
       plot(fNode->unbiasedResidual(),ittype+"/unbiasedResidual","unbiasedResidual",  -2., 2., 200 );
       plot(fNode->residual(),ittype+"/biasedResidual","biasedResidual",  -2., 2., 200 );
-      // make plots per layer
-      if (m_plotsByLayer == true){
-	const std::string layerName = ITNames().LayerToString(chan);
-	const std::string stationName = ITNames().StationToString(chan);
-        plot(fNode->unbiasedResidual(),ittype+"/unbiasedResidual"+layerName,"unbiasedResidual"+layerName,  -2., 2., 200 );
-        plot(fNode->residual(),ittype+"/biasedResidual"+layerName,"biasedResidual"+layerName,  -2., 2., 200 );
-        plot(fNode->unbiasedResidual(),ittype+"/unbiasedResidual"+stationName+layerName,"unbiasedResidual"+stationName+layerName,  -2., 2., 200 );
-        plot(fNode->residual(),ittype+"/biasedResidual"+stationName+layerName,"biasedResidual"+stationName+layerName,  -2., 2., 200 );
-      }      
 
-      // 2D plots in full detail mode
-     
-     const unsigned int bin = chan.station()*100 + chan.layer()*10 + chan.sector(); 
-     const std::string boxName = ITNames().BoxToString(chan);
-     plot2D(bin, fNode->unbiasedResidual() , ittype+"/unbiasedResSector"+boxName ,
-               "unbiasedResSector"+boxName  , 99.5, 400.5, -2., 2.,301 , 200  );
-     plot2D(bin, fNode->residual() , ittype+"/biasedResSector"+boxName , 
-               "/biasedResSector"+boxName  , 99.5, 400.5, -2., 2.,301 , 200  );
-
-     const double signalToNoise = hit->totalCharge()/hit->sector().noise(chan);
-     plot2D(bin, signalToNoise,ittype+"/SNSector"+boxName ,"SNSector"+boxName  , 99.5, 400.5, -0.25, 100.25, 301, 201);
-     plot2D(bin, hit->totalCharge(),ittype+"/CSector"+boxName ,"CSector"+boxName  , 99.5, 400.5, -0.5, 200.5,301,201 );
-     
+      if(fullDetail()) {
+	// make plots per layer
+	if (m_plotsByLayer == true){
+	  const std::string layerName = ITNames().LayerToString(chan);
+	  const std::string stationName = ITNames().StationToString(chan);
+	  plot(fNode->unbiasedResidual(),ittype+"/unbiasedResidual"+layerName,"unbiasedResidual"+layerName,  -2., 2., 200 );
+	  plot(fNode->residual(),ittype+"/biasedResidual"+layerName,"biasedResidual"+layerName,  -2., 2., 200 );
+	  plot(fNode->unbiasedResidual(),ittype+"/unbiasedResidual"+stationName+layerName,"unbiasedResidual"+stationName+layerName,  -2., 2., 200 );
+	  plot(fNode->residual(),ittype+"/biasedResidual"+stationName+layerName,"biasedResidual"+stationName+layerName,  -2., 2., 200 );
+	}      
+	
+	// 2D plots in full detail mode
+	if(fullDetail()) {
+	  const unsigned int bin = chan.station()*100 + chan.layer()*10 + chan.sector(); 
+	  const std::string boxName = ITNames().BoxToString(chan);
+	  plot2D(bin, fNode->unbiasedResidual() , ittype+"/unbiasedResSector"+boxName ,
+		 "unbiasedResSector"+boxName  , 99.5, 400.5, -2., 2.,301 , 200  );
+	  plot2D(bin, fNode->residual() , ittype+"/biasedResSector"+boxName , 
+		 "/biasedResSector"+boxName  , 99.5, 400.5, -2., 2.,301 , 200  );
+	  
+	  double noise = hit->sector().noise(chan);
+	  if(noise>0) {
+	    const double signalToNoise = hit->totalCharge()/noise;
+	    plot2D(bin, signalToNoise,ittype+"/SNSector"+boxName ,"SNSector"+boxName  , 99.5, 400.5, -0.25, 100.25, 301, 201);
+	    plot2D(bin, hit->totalCharge(),ittype+"/CSector"+boxName ,"CSector"+boxName  , 99.5, 400.5, -0.5, 200.5,301,201 );
+	  }
+	}
+      }
+      
 
       // get the measurement and plot ST related quantities
       plot(hit->totalCharge(),ittype+"/charge", "clusters charge", 0., 200., 100);
       plot(hit->size(), ittype+"/size",  "cluster size", -0.5, 10.5, 11);
+
+      // get the measurement and plot ST related quantities
+      const std::string stationName = ITNames().StationToString(chan);
+      plot(hit->totalCharge(),stationName + "/charge", "clusters charge", 0., 200., 100);
+      plot(hit->size(), stationName + "/size",  "cluster size", -0.5, 10.5, 11);
+      
+      // for this one we actually need the component perpendicular to B field.
+      Gaudi::XYZVector dir = fNode->state().slopes() ;
+      profile1D(dir.x() , hit->size(), stationName + "/cluster size vs tx", "cluster size vs tx", -0.3, 0.3 ) ;
+      profile1D(std::sqrt( dir.x() * dir.x() + dir.y() * dir.y() )/ dir.z(),
+		hit->totalCharge(), stationName + "/cluster charge vs slope", "cluster charge vs local slope",0,0.4) ;
+      
       if (hit->highThreshold() ) ++nHigh;
       measVector.push_back(hit);
 
