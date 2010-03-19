@@ -63,7 +63,8 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         
         # debugging options
         debugOPL = self.getProp('OutputLevel')
-	from HltTracking.HltPVs  import PV2D
+        from HltLine.HltReco import PV2D
+
         # define reco scaler
         recoScaler = Scaler( 'LumiRecoScaler' ,  AcceptFraction = 1 if self.getProp('EnableReco') else 0 )  
 
@@ -88,7 +89,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                     , MeasureTime = True)
 
         # LumiLow lines must be flagged - do not flag the traditional method, would interfere
-        if postfix.startswith('Low'):
+        if postfix.find('Low') > -1  :
             lumiCountSequence.Members.append( LumiFlagMethod( seqCountName+'FlagMethod'
                                                               , CounterName='Method'
                                                               , ValueName='L0RateMethod'
@@ -111,7 +112,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                     print '# DEBUG   : Hlt1LumiLines::HistoMaker:', postfix, key, threshold, bins
                 
         lumiRecoSequence.Members.append( Sequence('LumiTrackRecoSequence' ,
-                                                   Members = [  recoScaler ] + PV2D().members(),
+                                                   Members = [  recoScaler ] + PV2D.members(),
                                                    MeasureTime = True ) ) 
 
         # filter to get backward tracks (make sure it always passes by wrapping inside a sequence)
@@ -225,8 +226,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         # LumiTrigger lines
         self.__create_lumi_line__()
         # PhysicsTrigger lines
-        map( self.__create_lumi_low_line__, ['NoBeam', 'BeamCrossing','Beam1','Beam2'] )
-
-
-
-        
+        lines = map( self.__create_lumi_low_line__, ['NoBeam', 'BeamCrossing','Beam1','Beam2'] )
+        #for i in lines :
+        #    i.clone( i.name()+'P1000', ODIN = '(%s) & ODIN_PRESCALE(0.001)' % i._ODIN )
+        #    i.clone( i.name()+'R100',  ODIN = 'scale(%s,RATE(100,False))'   % i._ODIN )
