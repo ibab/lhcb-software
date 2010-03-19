@@ -1,10 +1,21 @@
-! $Id: release.notes,v 1.44 2010-03-18 11:04:41 ibelyaev Exp $
+! $Id: release.notes,v 1.45 2010-03-19 12:52:56 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : collection of examples to run Bender - 
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
+
+! 2010-03-19 - Vanya Belyaev
+
+ - BenderExample/RealPi0_fmDST.py:
+
+      new example to read fmDST 
+
+ - BenderExample/RealPi0_RE.py:
+
+      new example to recalibrate Ecal/Prs data using private data base 
+
 
 ! 2010-03-18 - Vanya Belyaev
 
