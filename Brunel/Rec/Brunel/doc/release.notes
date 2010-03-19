@@ -3,9 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2010-03-15 - Chris Jones
- - Add cleaning of PID information from charged ProtoParticles before saving
-   to (r)DSTs.
+
+- Changes to Configurable
+  . Add cleaning of PID information from charged ProtoParticles before saving
+    to (r)DSTs.
 
 - Changes to tests
    . Pick up histogram setting options from AppConfig
@@ -28,6 +29,14 @@ Purpose: LHCb reconstruction program
    . PatVeloTT pattern recognition bug fix (PatVeloTT v3r11)
    . Verbosity changes in bankKiller (DAQUtils v1r2)
    . New default LHCbCond tag for 2009 and 2010 data (DDDB v1r29)
+   . Add Muon, Rich PID and combined DLL to ProtoParticle (for monitoring) and
+     remove again before writing out (GlobalReco v6r32, Brunel)
+   . Additional track monitoring histograms (TrackMonitors v1r22)
+   . New Velo dEdx normalisation
+   . New early data tuning for Seed tracks (TsaAlgorithms v3r17)
+   . Update of ST measurement uncertainty tuning (Tracksys v4r31)
+   . Use detailed Bethe Bloch dE/dx tool as default in fit
+     (TrackExtrapolators v2r26)
 
 </PRE><H1><A NAME=v36r2>2010-02-26 Brunel v36r2</A></H1><PRE>
  - Changes to Configurable: 
