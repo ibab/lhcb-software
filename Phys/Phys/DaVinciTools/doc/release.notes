@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.527 2010-03-18 19:15:25 jpalac Exp $
+! $Id: release.notes,v 1.528 2010-03-19 13:54:14 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2010-03-19 - Juan Palacios
+ - src/PhysDesktop.cpp
+  . Fix DataOnDemand related problem.
 
 ! 2010-03-18 - Juan Palacios
  - src/PhysDesktop.cpp
