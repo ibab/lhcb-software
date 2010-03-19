@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== PatVeloTT v3r11 2010-03-19 ======================
 ! 2010-03-13 - Mariusz Witek
 - Bug fix in pattern recognition (found by Adam Webber). 
   Too many TT hits assigned to VeloTT track and passed to track fit.
