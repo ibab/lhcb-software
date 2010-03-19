@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-03-18 - Neal Gauvin
+ - cosmethic changes in RecVertices2Particles and DisplVertices
+
+! 2010-03-18 - Neal Gauvin
  - Bug #64490 fixed in RecVertices2Particles
 
 !========================== DisplVertices v6r3 2010-03-17 ===================

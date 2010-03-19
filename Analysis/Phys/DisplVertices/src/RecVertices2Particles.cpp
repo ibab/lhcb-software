@@ -29,7 +29,6 @@ RecVertices2Particles::RecVertices2Particles( const std::string& name,
                 ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
     , m_vFit(0)
-    , m_nEvents(0)
     , pi(3.1415926)
 {
   declareProperty("SaveTuple", m_SaveTuple = false );//save prey infos in Tuple
@@ -188,10 +187,10 @@ StatusCode RecVertices2Particles::initialize() {
  StatusCode RecVertices2Particles::execute() {
 
   setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
-  ++m_nEvents;
+  ++counter("Processed evt nb");
   if( msgLevel(MSG::DEBUG) )
     debug() << "==> Execute the RecVertices2Particles algorithm, event "
-	    << m_nEvents << endmsg;
+	    << counter("Processed evt nb") << endmsg;
 
   //Check track and Particle content
   //PrintTrackandParticles();

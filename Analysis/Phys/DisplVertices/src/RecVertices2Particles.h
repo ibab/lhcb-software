@@ -18,7 +18,7 @@
 
 /** @class RecVertices2Particles RecVertices2Particles.h
  *  
- *  @Version 6r2
+ *  @Version 6r3
  *  @author Neal Gauvin
  *  @date   12 janvier 2010
  */
@@ -85,7 +85,6 @@ private:
   LHCb::ParticleID m_PreyID;  ///< ID of this particle
   int    m_PreyPID ;          ///< PID of the prey (for MC and Gen use)
 
-  int    m_nEvents ;          ///< event nb being processed
   const double pi ;
 
   int    m_nTracks ;          ///< Min # of tracks at reconstructed vertex

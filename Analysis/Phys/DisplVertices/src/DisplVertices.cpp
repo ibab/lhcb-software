@@ -54,19 +54,10 @@ DisplVertices::DisplVertices( const std::string& name,
     , m_pLinker()
     , m_vFit(0)
     , m_tisTos(0)
-    , m_nEvents(0)
     , pi(3.1415926)
-    , m_purity(0.)
     , m_maxunpure(0.1)
     , m_minmixed(0.7)
     , m_maxmixed(0.95)
-    , m_a1(0)
-    , m_a2(0)
-    , m_a3(0)
-    , m_nbassfromaPrey(0)
-    , m_nPreys(0)
-    , m_nMother(0)
-    , m_RecbleMCPrey(0)
     , PV(0)
     , MCPV(0)
     , m_PreyID(0)
@@ -274,10 +265,10 @@ StatusCode DisplVertices::initialize() {
 //=============================================================================
 StatusCode DisplVertices::execute(){
 
-  ++m_nEvents;
+  ++counter("Processed evt nb");
   if( msgLevel( MSG::DEBUG ) )
-    debug() << "==> Execute the DisplVertices algorithm, event "<< m_nEvents 
-            << endmsg;
+    debug() << "==> Execute the DisplVertices algorithm, event "
+            << counter("Processed evt nb") << endmsg;
   setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
 
   //------------------Some Studies------------------
@@ -439,7 +430,7 @@ StatusCode DisplVertices::execute(){
     return StatusCode::SUCCESS;
   }
   setFilterPassed(true); 
-  m_nPreys += Cands.size();
+  counter("Nb of candidates") += Cands.size();
 
   if( msgLevel( MSG::DEBUG ) )
     debug() << "Nb of " << m_Prey <<" candidates "<< Cands.size() << endmsg;
@@ -506,28 +497,30 @@ StatusCode DisplVertices::finalize() {
   info()<<"-------------------------------------------------------"<< endreq;
   info()<<"              DisplVertices Statistics                 "<< endreq;
   info()<<"-------------------------------------------------------"<< endreq;
-  info()<<"Number of reconstructed "<< m_Prey <<" : " << m_nPreys << endreq;
+  info()<<"Number of reconstructed "<< m_Prey <<"               : " 
+        << counter("Nb of candidates").flag() << endreq;
   if( m_MC ){
-    double nrec = 100.*m_nPreys/m_RecbleMCPrey ;
-    info()<<"Percentage of reconstructed "<< m_Prey <<" : " << nrec << endreq;
-    double nt = m_nbassfromaPrey/m_nPreys ; 
-    info()<<"Nb of ass. MC tracks of "<< m_Prey <<" : " << nt << endreq;
-    double pur = m_purity/m_nPreys ;
-    double a1 = 100.*m_a1/m_nPreys;
-    double a2 = 100.*m_a2/m_nPreys;
-    double a3 = 100.*m_a3/m_nPreys;
-    info()<<"Average purity of reconstructed "<< m_Prey <<" : "<< pur <<endreq;
+    info()<<"Percentage of reconstructed "<< m_Prey <<"           : " 
+          << 100.*counter("RecbleMCPrey").flagMean() << endreq;
+    info()<<"Nb of ass. MC tracks of "<< m_Prey <<"               : " 
+          << counter("NbassfromaPrey").flagMean() <<" +- "
+          << counter("NbassfromaPrey").flagMeanErr() << endreq;
+    info()<<"Average purity of reconstructed "<< m_Prey <<"       : "
+          << counter("purity").flagMean() <<" +- " 
+          << counter("purity").flagMeanErr() <<endreq;
     info()<<"Pure "<< m_Prey <<"    (purity > "<< m_maxmixed 
-	  << ")               :" << a1 <<"%"<< endmsg;
+          << ")               :" << 100.*counter("p1").flagMean() <<"%"<< endmsg;
     info()<<"Mixed "<< m_Prey <<"   ( "<< m_minmixed <<" < purity < "
-	  << m_maxmixed << ")        :" << a2 <<"%"<< endmsg;
-    info()<<"Unpure "<< m_Prey <<"  (purity < "
-	  << m_maxunpure << ")                :" << a3 
+          << m_maxmixed << ")        :" << 100.*counter("p2").flagMean() 
           <<"%"<< endmsg;
+    info()<<"Unpure "<< m_Prey <<"  (purity < "
+          << m_maxunpure << ")                :" 
+          << 100.*counter("p3").flagMean() <<"%"<< endmsg;
   }
   info()<<"-------------------------------------------------------"<< endreq;
 
-  info()<<"Number of reconstructed Mother : " << m_nMother << endreq;
+  info()<<"Number of reconstructed Mother : " 
+        << counter("Nb of mothers").flag() << endreq;
 
   if (NULL!=m_pLinker) delete m_pLinker ; 
 
@@ -1692,11 +1685,12 @@ bool DisplVertices::GetMCPrey( const Particle * p ){
 
   //if only interessted in the prey, uncomment foll. lines
   //if( purity < m_minmixed) return StatusCode::SUCCESS; 
-  m_purity = m_purity + purity;
-  m_nbassfromaPrey += nbassfromaPrey;
-  if( purity < m_maxunpure ) ++m_a3;
-  if( purity > m_minmixed && purity < m_maxmixed ) ++m_a2;
-  if( purity > m_maxmixed ) ++m_a1;
+  counter("purity") += purity;
+  counter("NbassfromaPrey") += nbassfromaPrey;
+  if( purity < m_maxunpure ){ ++counter("p3"); } else { counter("p3") += 0; }
+  if( purity > m_minmixed && purity < m_maxmixed ){ ++counter("p2"); } 
+  else { counter("p2") += 0; }
+  if( purity > m_maxmixed ){ ++counter("p1"); } else { counter("p1") += 0; }
 
   m_purities.push_back( purity );
   if( msgLevel( MSG::DEBUG ) )
@@ -1839,7 +1833,10 @@ void  DisplVertices::GetMCStable( const MCVertex* V, string type ){
 	    << dgt <<" reconstructible ? "<< recoble << endmsg;
 
   if(type=="MCPrey"){
-    if( recoble ) ++m_RecbleMCPrey;
+    if( recoble ){ ++counter("RecbleMCPrey"); } 
+    else { counter("RecbleMCPrey") += 0; }
+    
+    
     plot( dgt, type+"NbofTracks", 0, 30);
     plot( mass, type+"Mass", 0, 70);
   }
@@ -3333,7 +3330,7 @@ StatusCode DisplVertices::fillHeader( Tuple& tuple ){
 //============================================================================
 StatusCode DisplVertices::ReconstructMother( Particle::ConstVector & Cands ){
 
-  ++m_nMother;
+  ++counter("Nb of mothers");
   Gaudi::LorentzVector Mother; 
   Mother = (Cands.at(0)->momentum())+(Cands.at(1)->momentum());
   debug()<< m_MotherPrey <<" momentum " << Mother 

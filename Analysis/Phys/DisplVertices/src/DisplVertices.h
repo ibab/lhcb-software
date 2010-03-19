@@ -198,13 +198,6 @@ private:
   double m_maxunpure ;
   double m_minmixed ;
   double m_maxmixed ;
-  double m_a1 ;               //pure prey
-  double m_a2 ;               //mixed prey
-  double m_a3 ;               //totally unpure prey
-  double m_nbassfromaPrey;    // nb of true MC tracks in neut
-  int    m_nPreys ;           // nb of reconstructed preys.
-  int    m_nMother ;           // nb of reconstructed higgses
-  int    m_RecbleMCPrey ;
   // cuts
   double m_PreyMinMass ;      ///< Minimum reconstructed mass
   double m_PreyMaxMass ;      ///< Maximum reconstructed mass
