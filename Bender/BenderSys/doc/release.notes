@@ -1,10 +1,27 @@
 <PRE>
-! $Id: release.notes,v 1.34 2010-03-14 17:16:53 ibelyaev Exp $ 
+! $Id: release.notes,v 1.35 2010-03-19 14:41:36 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : BenderSys
 ! Responsible : Vanya BELYAEV  vanya@nikhef.nl
 ! Purpose     : Easy/interactive python-based LHCb physics analysis
 ! -----------------------------------------------------------------------------
+</PRE>
+
+<H1>
+<A NAME=v14r0p1>2010-04-19 Bender v14r0p1 based on the DaVinci v25r2p1 </A>
+</H1>	
+
+<PRE>		
+The version based on DaVinci v25r2p1. 
+It also picks up the updated Ex/BenderExample v14r1, with new ``pi0-related'' exmaples:
+
+<li> processing the Ecal+Prs calibrated femto-DST data for 2k+9 collisions </li>
+<li> processing the 2k+9 collison data with ``on-flight'' re-calibration of Ecal+Prs</li>
+
+The calibration constants for Ecal/Prs:
+<li> Prs-constants have been kindly provided by Olivier Deschams</li>
+<li> Ecal-constants have been obained using Kali project</li>
+
 </PRE>
 
 <H1>
