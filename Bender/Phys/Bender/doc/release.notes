@@ -1,8 +1,8 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.49 2010-03-14 17:08:34 ibelyaev Exp $
+! $Id: release.notes,v 1.50 2010-03-19 14:37:07 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.49 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.50 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -10,7 +10,11 @@
 ! -----------------------------------------------------------------------------
 
 
-! ==================== Phys/Bender v14r0 2010-03-14 ===========================
+! ==================== Phys/Bender v14r0p1 2010-03-18 =========================
+
+	use new version of DaVinci v25r2p1 
+
+! ==================== Phys/Bender v14r0   2010-03-14 =========================
 
 ! 2010-03-14 - Vanya Belyaev
 
