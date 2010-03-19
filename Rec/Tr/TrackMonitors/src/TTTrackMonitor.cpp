@@ -1,4 +1,4 @@
-// $Id: TTTrackMonitor.cpp,v 1.7 2010-03-19 14:12:07 wouter Exp $
+// $Id: TTTrackMonitor.cpp,v 1.8 2010-03-19 15:11:13 wouter Exp $
 // Include files 
 #include "TTTrackMonitor.h"
 
@@ -70,11 +70,8 @@ StatusCode TTTrackMonitor::initialize()
 //=============================================================================
 StatusCode TTTrackMonitor::execute()
 {
-  
   // get the input data
-  if (!exist<LHCb::Tracks>(inputContainer())) 
-    return Warning(inputContainer()+" not found", StatusCode::SUCCESS, 0);    
-  LHCb::Tracks* tracks = get<LHCb::Tracks>(inputContainer());
+  LHCb::Track::Range tracks = get<LHCb::Track::Range>(inputContainer());
   
   // locate the cluster container
   const LHCb::STClusters* clusters = get<LHCb::STClusters>(m_clusterLocation);
@@ -86,9 +83,7 @@ StatusCode TTTrackMonitor::execute()
   std::vector<unsigned int> usedIDs; usedIDs.reserve(clusters->size());
 
   // histograms per track
-  LHCb::Tracks::const_iterator iterT = tracks->begin();
-  
-  for (; iterT != tracks->end(); ++iterT){
+  for (LHCb::Track::Range::const_iterator iterT = tracks.begin(); iterT != tracks.end(); ++iterT) {
     if (selector((*iterT)->type())->accept(**iterT) == true){
 
       // find the IT hits on the track 
