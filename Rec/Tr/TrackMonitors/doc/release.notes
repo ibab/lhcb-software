@@ -4,6 +4,15 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2010-03-19 - Wouter Hulsbergen
+ - TrackCaloMatchMonitor: split A and C side
+ - TrackMonitor: add phi
+ - TTTrackMonitor: add overlap residuals (Christophe); add clustersize versus angle; hide 2D behind fullDetailt flag
+ - ITTrackMonitor: add clustersize versus angle; hide 2D behind fullDetailt flag
+ - TrackMuonMatchMonitor: remove cut on ROI; reduce use of extrapolator
+ - ConfiguredTrackMonitors: add algorithms; remove most algorithms for ONLINE
+ - bug fix: TrackMuonMatchMonitor was _modifying_ a state on the track
+
 !========================== TrackMonitors v1r22 2010-03-19 ==================
 ! 2010-03-01 - Wouter Hulsbergen
  - TrackCaloMatchMonitor: added histograms, adjusted limits, use always geometric Z
