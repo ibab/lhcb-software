@@ -47,7 +47,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         from Configurables import FilterDesktop,CombineParticles
         from Hlt2SharedParticles.GoodParticles import GoodPions, GoodKaons
         from Configurables import HltANNSvc
-        from Hlt2SharedParticles.V0 import KsDDFit
+	from Hlt2SharedParticles.Ks import KsDD 
 	from HltTracking.HltPVs import PV3D
 
         ###################################################################
@@ -209,12 +209,12 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
 
         FilterKsDD = Hlt2Member( FilterDesktop
                                  , 'FilterKsDD'
-                                 , InputLocations = [KsDDFit]
+                                 , InputLocations = [KsDD]
                                  , Code =  excode
                                  )
         
         DXTFInputParticles = bindMembers( 'DXTFInputParticles', [ lclTFInputParticles, FilterDXTFParticles ] )
-        KS0DXTFInputParticles = bindMembers( 'KS0DXTFInputParticles', [ KsDDFit, FilterKsDD ] )
+        KS0DXTFInputParticles = bindMembers( 'KS0DXTFInputParticles', [ KsDD, FilterKsDD ] )
         
         ################################################################
         # Function to configure post-track-fit common particle combinations

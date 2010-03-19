@@ -1,4 +1,4 @@
-# $Id: Hlt2B2JpsiXLines.py,v 1.18 2010-03-17 22:29:47 gligorov Exp $
+# $Id: Hlt2B2JpsiXLines.py,v 1.19 2010-03-19 02:59:19 gligorov Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -331,8 +331,8 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         from HltTracking.HltPVs import PV3D
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
-        from Hlt2SharedParticles.V0 import KsDD
-        from Configurables import GaudiSequencer,  FilterDesktop
+        from Hlt2SharedParticles.Ks import KsDD
+	from Configurables import GaudiSequencer,  FilterDesktop
         from Configurables import CombineParticles
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2JpsiMuMuKsDDBiasedDecision" : 50330 } )
 
@@ -368,8 +368,8 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         from HltTracking.HltPVs import PV3D
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
-        from Hlt2SharedParticles.V0 import KsDD
-        from Configurables import GaudiSequencer, FilterDesktop
+        from Hlt2SharedParticles.Ks import KsDD
+	from Configurables import GaudiSequencer, FilterDesktop
         from Configurables import CombineParticles
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2JpsiMuMuKsDDUnbiasedDecision" : 50350 } )
 

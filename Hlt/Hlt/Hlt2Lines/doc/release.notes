@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.133 2010-03-18 14:05:07 albrecht Exp $
+$Id: release.notes,v 1.134 2010-03-19 03:00:56 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,11 @@ $Id: release.notes,v 1.133 2010-03-18 14:05:07 albrecht Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2010-03-19 - V. Gligorov
+ - Continuing work on Savannah tasks #12691,13784. 
+   Update the B2DX and JPsiX lines to use the fitted K shorts offered in
+   Ks.py and not the K shorts made by the HLT K short package.
 
 ! 2020-03-18 - Johannes Albrecht
  - update phi selection in Hlt2ExpressLines.py
