@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.175 2010-03-12 23:44:49 odescham Exp $
+! $Id: release.notes,v 1.176 2010-03-19 00:03:41 rlambert Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
@@ -6,6 +6,7 @@
 ! -----------------------------------------------------------------------------
 
 
+!========================== CaloReco v5r4  2010-03-19 =========================
 ! 2010-03-13 - Olivier Deschamps
  - CaloSharedCellAlg : fix non-reproducible processing (additional sort -> small impact on processing time)
 
