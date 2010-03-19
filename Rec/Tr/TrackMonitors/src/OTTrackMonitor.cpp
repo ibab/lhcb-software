@@ -251,9 +251,8 @@ StatusCode OTTrackMonitor::initialize()
     -0.5, 1.0 * NumUniqueOtis - 0.5, NumUniqueOtis);
   histOtisHotOccupancy = book("otisHotOccupancy", "number of HOTs per otis",
     -0.5, 1.0 * NumUniqueOtis - 0.5, NumUniqueOtis);
-
-  histAverageTimeResidual = book("avtimeres", "average time residual on track",
-    -10, 10);
+  
+  histAverageTimeResidual = book("avtimeres", "track t0", -10, 10);
   histAverageTimeResidualVsMomentum = book2D("avtimeresvsmom", "average time residual versus momentum",
     0, 20, 40, -5, 5, 50) ;
   histDeltaToF = book("deltaToF", "delta time of flight",
