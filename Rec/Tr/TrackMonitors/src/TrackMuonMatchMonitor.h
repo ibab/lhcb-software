@@ -1,4 +1,4 @@
-// $Id: TrackMuonMatchMonitor.h,v 1.2 2010-02-10 11:14:30 svecchi Exp $
+// $Id: TrackMuonMatchMonitor.h,v 1.3 2010-03-19 15:17:52 wouter Exp $
 #ifndef TRACKMUONMATCHMONITOR_H 
 #define TRACKMUONMATCHMONITOR_H 1
 
@@ -26,10 +26,6 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-  static const int nREGIONS = 4;
-  AIDA::IHistogram1D  *m_resx_a[nREGIONS], *m_resy_a[nREGIONS], *m_resx_c[nREGIONS], *m_resy_c[nREGIONS];
-  
-  
 protected:
 
 private:
@@ -44,9 +40,14 @@ private:
   std::string           m_nExtrapolator;
   
 
-  double                m_zM1, m_MAXsizeX, m_MAXsizeY;
-  int                   m_iMS;
-  double                m_nFOI;
+  double m_zM1, m_MAXsizeX, m_MAXsizeY;
+  int    m_iMS;
+  double m_maxErrX ;
+  double m_maxErrY ;
+
+  static const int nREGIONS = 4;
+  AIDA::IHistogram1D  *m_resx_a[nREGIONS], *m_resy_a[nREGIONS], *m_resx_c[nREGIONS], *m_resy_c[nREGIONS];
+  double m_hisxmax[nREGIONS] ;
 
 };
 #endif // TRACKMUONMATCHMONITOR_H 

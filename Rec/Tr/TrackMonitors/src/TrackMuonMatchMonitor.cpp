@@ -1,4 +1,4 @@
-// $Id: TrackMuonMatchMonitor.cpp,v 1.2 2010-02-10 11:14:30 svecchi Exp $
+// $Id: TrackMuonMatchMonitor.cpp,v 1.3 2010-03-19 15:17:52 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -17,6 +17,8 @@
 #include "AIDA/IHistogram1D.h"
 
 #include <boost/lexical_cast.hpp>
+#include <boost/foreach.hpp>
+
 // local
 #include "TrackMuonMatchMonitor.h"
 using namespace LHCb;
@@ -41,7 +43,8 @@ TrackMuonMatchMonitor::TrackMuonMatchMonitor( const std::string& name,
   declareProperty( "TracksLocation"     , m_tTracksLocation      = TrackLocation::Default     );
   declareProperty( "Extrapolator"       , m_nExtrapolator        = "TrackLinearExtrapolator"  );
   declareProperty( "WhichStation"       , m_iMS =0);
-  declareProperty( "nFOI"               , m_nFOI =6.);
+  declareProperty( "MaxErrX", m_maxErrX = 5 * Gaudi::Units::mm) ;
+  declareProperty( "MaxErrY", m_maxErrY = 20 * Gaudi::Units::mm) ;
 }
 //=============================================================================
 // Destructor
@@ -63,7 +66,6 @@ StatusCode TrackMuonMatchMonitor::initialize() {
   m_MAXsizeX = m_muonDet->getOuterX(m_iMS);
   m_MAXsizeY = m_muonDet->getOuterY(m_iMS);
   
-
   std::string name;
   setHistoTopDir("Track/") ;
   for (int iR=0; iR<nREGIONS; ++iR){
@@ -79,7 +81,7 @@ StatusCode TrackMuonMatchMonitor::initialize() {
     m_resx_c[iR] = book1D( name, name, min, max, nbin );
     name = "resY_CSide_M1R"+ boost::lexical_cast<std::string>(iR+1);
     m_resy_c[iR] = book1D( name, name, min, max, nbin );
-  
+    m_hisxmax[iR] = max ;
   }
   
 
@@ -92,16 +94,10 @@ StatusCode TrackMuonMatchMonitor::initialize() {
 StatusCode TrackMuonMatchMonitor::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-  const Tracks*       tTracks = NULL; 
+  LHCb::Track::Range tTracks = get<LHCb::Track::Range>( m_tTracksLocation );
+  if (tTracks.size()==0)   return StatusCode::SUCCESS;
   
-  if ( ! exist<LHCb::Tracks>( m_tTracksLocation )) { 
-    debug()<<" Container "<<m_tTracksLocation<<" doesn't exist"<<endmsg;
-    return StatusCode::SUCCESS;
-  }
-  tTracks = get<Tracks>( m_tTracksLocation );
-  if (tTracks->size()==0)   return StatusCode::SUCCESS;
-
-  LHCb::MuonCoords* coords = NULL;
+  const LHCb::MuonCoords* coords = NULL;
   
   if ( ! exist<LHCb::MuonCoords>("Raw/Muon/Coords")) { 
     debug()<<" Container Raw/Muon/Coords doesn't exist"<<endmsg;
@@ -113,79 +109,51 @@ StatusCode TrackMuonMatchMonitor::execute() {
     return StatusCode::SUCCESS;    
   }
   
-    
-  debug()<<" Found "<<tTracks->size() << " tracks in the container "<<endmsg;
-  for ( Tracks::const_iterator t = tTracks->begin(), tEnd = tTracks->end(); t != tEnd; ++t ) {
-    if((*t)->chi2PerDoF()>5              || 
-       (*t)->p() < 1 * Gaudi::Units::GeV || 
-       (*t)->type() ==LHCb::Track::Velo  ||    
-       (*t)->type() ==LHCb::Track::VeloR || 
-       (*t)->type() ==LHCb::Track::Upstream) continue;
+  debug()<<" Found "<<tTracks.size() << " tracks in the container "<<endmsg;
+  BOOST_FOREACH( const LHCb::Track* track, tTracks) {
+    if( track->hasT() &&
+	track->chi2PerDoF() <5 &&
+	track->p() > 1 * Gaudi::Units::GeV ) {
 
-    /// Get the T state closest to this z
-    State* tState = &(*t)->closestState( m_zM1 );
-
-    double guessX = tState->x() +  tState->tx() *(m_zM1 - tState->z());
-    double guessY = tState->y() +  tState->ty() *(m_zM1 - tState->z());
-
-    if(fabs(guessX) > m_MAXsizeX || fabs(guessY) > m_MAXsizeY  ) continue;
-
-    debug()<< " Track guessed coordinates ("<< guessX<<","<<guessY<<") track Type"<<(*t)->type()<<" p()"<<(*t)->p()<<endmsg;
-
-    StatusCode sc = m_extrapolator->propagate( *tState, m_zM1 , LHCb::ParticleID(13)  );
-    if ( !sc.isSuccess() ) {
-      Warning( "Could not propagate Track state on M1"   , StatusCode::FAILURE, 5 );
-      debug()<< " Error in the extrapolation of Track "<< (*t)->type()<<" p="<<(*t)->p()<<
-        " chi2norm=" <<(*t)->chi2PerDoF()<<endmsg; 
-      continue;
-    }
-    
-    double x_fit = tState->x();
-    double y_fit = tState->y();
-
-    double d2x_fit = tState->errX2();
-    double d2y_fit = tState->errY2();
-
-    int noKFOI(0);
-    
-    for(LHCb::MuonCoords::iterator ihT = coords->begin(); ihT != coords->end() ; ihT++ ) { // loop on all the hits
-      if ( m_iMS == int((*ihT)->key().station()) ) { // only the Chosen station
-
-        double x_hit,dx_hit,y_hit,dy_hit,z_hit,dz_hit;
-        StatusCode sc = m_muonDet->Tile2XYZ((*ihT)->key(),x_hit,dx_hit,y_hit,dy_hit,z_hit,dz_hit);
-        if ( !sc.isSuccess() ) continue;
-        
-        double deltaX = fabs( x_fit - x_hit ) / ( sqrt( d2x_fit + pow(dx_hit,2)) );
-        double deltaY = fabs( y_fit - y_hit ) / ( sqrt( d2y_fit + pow(dy_hit,2)) );          
-        
-        if ( deltaX < m_nFOI && deltaY < m_nFOI ) {
-          
-          debug()<<" Going to extrapolate to "<<z_hit<<" State "<<*tState<<endmsg;
-          
-          sc = m_extrapolator->propagate( *tState, z_hit,  LHCb::ParticleID(13)  );          
-          if( sc.isSuccess() ) {
-            
-            AIDA::IHistogram1D *tempx, *tempy;
-            
-            tempx = x_hit > 0 ? m_resx_a[ (*ihT)->key().region() ] : m_resx_c[ (*ihT)->key().region() ];
-            tempy = x_hit > 0 ? m_resy_a[ (*ihT)->key().region() ] : m_resy_c[ (*ihT)->key().region() ];	  	  
-            
-            tempx->fill( tState->x() - x_hit );  // X residuals on the same Z as the hit
-            tempy->fill( tState->y() - y_hit );  // Y residuals on the same Z as the hit
-
-            noKFOI ++; // Number of hits in the right FOI
-          } else {
-            debug()<< " Error in the extrapolation of Track "<< (*t)->type()<<" p="<<(*t)->p()<<
-              " chi2norm=" <<(*t)->chi2PerDoF()<<endmsg; 
-          }
-        } // end select the station
-      } // end of loop on all  hits
+      State stateAtM1 ;
+      StatusCode sc = m_extrapolator->propagate( *track, m_zM1, stateAtM1 ) ;
       
-      debug()<<" found a track "<<x_fit<<" "<<y_fit<<" n. Hits in FOI ="<<noKFOI<<endmsg;
+      if(sc.isSuccess() &&
+	 std::abs(stateAtM1.x()) < m_MAXsizeX && std::abs(stateAtM1.y()) < m_MAXsizeY &&
+	 std::sqrt(stateAtM1.errX2()) < m_maxErrX && std::sqrt(stateAtM1.errY2()) < m_maxErrY ) {
+	
+	for(LHCb::MuonCoords::const_iterator ihT = coords->begin(); ihT != coords->end() ; ++ihT ) { // loop on all the hits
+	  if ( m_iMS == int((*ihT)->key().station()) ) { // only the Chosen station
+	    
+	    int region = (*ihT)->key().region() ;
+
+	    double x_hit,dx_hit,y_hit,dy_hit,z_hit,dz_hit;
+	    StatusCode sc = m_muonDet->Tile2XYZ((*ihT)->key(),x_hit,dx_hit,y_hit,dy_hit,z_hit,dz_hit);
+	    if(sc.isSuccess()) {
+	      
+	      double deltaZ = z_hit - stateAtM1.z() ;
+	      double deltaX = x_hit - (stateAtM1.x() + stateAtM1.tx() * deltaZ) ;
+	      double deltaY = y_hit - (stateAtM1.y() + stateAtM1.ty() * deltaZ) ;
+	      
+	      if( std::abs(deltaX) < m_hisxmax[region] &&
+		  std::abs(deltaY) < m_hisxmax[region] ) {
+
+		AIDA::IHistogram1D *tempx, *tempy;
+		
+		tempx = x_hit > 0 ? m_resx_a[ region ] : m_resx_c[ region ];
+		tempy = x_hit > 0 ? m_resy_a[ region ] : m_resy_c[ region ];	  	  
+		
+		tempx->fill( deltaX );  // X residuals on the same Z as the hit
+		tempy->fill( deltaY );  // Y residuals on the same Z as the hit
+		
+	      } 
+	    }
+	  }
+	}
+      }
     }
-    
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
