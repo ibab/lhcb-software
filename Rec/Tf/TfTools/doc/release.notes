@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!============================ TfTools v1r12 2010-03-19 ========================
 ! 2010-03-16 - Marco Cattaneo
  - Remove obsolete file TfTools_dll.cpp
 
