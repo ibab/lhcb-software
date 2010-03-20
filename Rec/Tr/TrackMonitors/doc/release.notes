@@ -4,6 +4,12 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+
+!========================== TrackMonitors v1r22 2010-03-20 ==================
+! 2010-03-20 - Rob Lambert
+ - Wouter also changed TTTrackMonitor.cpp to fill rms residual 
+   instead of unbiased residual
+
 ! 2010-03-19 - Wouter Hulsbergen
  - TrackCaloMatchMonitor: split A and C side
  - TrackMonitor: add phi
@@ -13,7 +19,6 @@
  - ConfiguredTrackMonitors: add algorithms; remove most algorithms for ONLINE
  - bug fix: TrackMuonMatchMonitor was _modifying_ a state on the track
 
-!========================== TrackMonitors v1r22 2010-03-19 ==================
 ! 2010-03-01 - Wouter Hulsbergen
  - TrackCaloMatchMonitor: added histograms, adjusted limits, use always geometric Z
  - TrackMonitor: added profile histograms for average chisquare versus momentum
