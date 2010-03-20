@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.cpp,v 1.21 2009-06-19 13:19:27 robbep Exp $
+// $Id: EvtGenDecay.cpp,v 1.22 2010-03-20 23:39:01 robbep Exp $
 // Header file
 #include "EvtGenDecay.h"
 
@@ -42,6 +42,7 @@
 #include "EvtGenModels/EvtModelRegExtras.hh"
 
 #include "Generators/StreamForGenerator.h"
+#include "Generators/IProductionTool.h"
 
 // Calls to FORTRAN routines
 #ifdef WIN32
@@ -200,6 +201,28 @@ StatusCode EvtGenDecay::initialize( ) {
   
   // Initialize Pythia
   EvtPythia::pythiaInit( 0 ) ;
+
+  // Need to reinitialize Pythia with the LHCb interface to be
+  // sure that the Pythia settings are correct in EvtGen (in 
+  // case Pythia is not the main production generator)
+  // obtain the Production Tool
+  IProductionTool * pythiaTool = 
+    tool< IProductionTool >( "PythiaProduction" , this ) ;
+
+  // update the particle properties of Pythia
+  IParticlePropertySvc * ppSvc( 0 ) ;
+  try { ppSvc = 
+      svc< IParticlePropertySvc > ( "ParticlePropertySvc" , true ) ; }
+  catch ( const GaudiException & exc ) {
+    Exception( "Cannot open ParticlePropertySvc" , exc ) ;
+  }
+  IParticlePropertySvc::const_iterator iter ;
+  for ( iter = ppSvc -> begin() ; iter != ppSvc -> end() ; ++iter )
+    if ( ! pythiaTool -> isSpecialParticle( *iter ) ) 
+      pythiaTool -> updateParticleProperties( *iter ) ;
+
+  release( pythiaTool ) ;
+  release( ppSvc ) ;
 
   debug() << "EvtGenDecay initialized" << endmsg ;
   

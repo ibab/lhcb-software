@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.161 2009-12-17 20:37:32 silviam Exp $
+! $Id: release.notes,v 1.162 2010-03-20 23:39:01 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2010-03-21 - Patrick Robbe
+ - EvtGenDecay.cpp: force Pythia LHCb interface to be initialized to be sure
+   that Pythia is using the correct LHCb settings, even if Pythia is not used
+   as production generator
 
 !====================== Generators v10r6 2009-12-17 ==========================
 ! 2009-12-03 - Patrick Robbe
