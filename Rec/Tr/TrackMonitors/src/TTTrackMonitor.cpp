@@ -1,4 +1,4 @@
-// $Id: TTTrackMonitor.cpp,v 1.8 2010-03-19 15:11:13 wouter Exp $
+// $Id: TTTrackMonitor.cpp,v 1.9 2010-03-20 06:40:44 wouter Exp $
 // Include files 
 #include "TTTrackMonitor.h"
 
@@ -253,8 +253,8 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
 	AIDA::IHistogram1D* residualh1 = 
 	  book1D(prefix + "Residuals in overlaps",
 		 std::string("Residuals in overlaps in ") + layname[ilay] ,-0.5, 0.5 ,50);
-	residualh1->fill( firstresidual ) ;
-	residualh1->fill( secondresidual ) ;
+	residualh1->fill( firstresidual * std::sqrt(firstnode->errMeasure2()/firstnode->errResidual2())) ;
+	residualh1->fill( secondresidual * std::sqrt(secondnode->errMeasure2()/secondnode->errResidual2())) ;
 
 	// this needs to be fixed: can we somehow can a consecutive ladder ID?
 	size_t sectorID = ttUniqueSectorID( firstnode->measurement().lhcbID().stID()) ;
