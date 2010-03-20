@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.134 2010-03-19 03:00:56 gligorov Exp $
+$Id: release.notes,v 1.135 2010-03-20 11:36:02 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,8 @@ $Id: release.notes,v 1.134 2010-03-19 03:00:56 gligorov Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+! 2020-03-18 - Johannes Albrecht
+ - update slots in Hlt2ExpressLines.py
 
 ! 2010-03-19 - V. Gligorov
  - Continuing work on Savannah tasks #12691,13784. 
