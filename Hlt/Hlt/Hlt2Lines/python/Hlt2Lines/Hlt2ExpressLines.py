@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2ExpressLines.py,v 1.15 2010-03-19 02:59:31 gligorov Exp $
+# $Id: Hlt2ExpressLines.py,v 1.16 2010-03-20 11:35:03 albrecht Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt2 Lines for the express stream
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Johannes Albrecht albrecht@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -76,6 +76,16 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
 	       , 'ExDsPiPt'                :  300 # MeV
                , 'ExDsPiP'                 : 1000 # MeV
                , 'ExDsPiMIPCHI2DV'         :  12.18 #log(2.5) = 12.18
+               , 'ExHaloMinTot'            :  20 
+               , 'ExHaloMaxTot'            : 5000 
+               , 'ExHaloMinRSlice'         :  10 
+               , 'ExHaloMinCell'           :  10
+               , 'ExHaloMaxCell'           :  100
+               , 'ExHaloMaxDiffCell'       :  -1
+               , 'ExHaloMaxSensor'         :  25 
+               , 'ExHaloOverlaps'          :  False
+               , 'ExHaloBigCell'           :  False
+               , 'ExHaloMinOverlap'        :  3
                }  
    
    def __apply_configuration__(self):
@@ -285,7 +295,18 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       Hlt2Line('ExpressBeamHalo'
                ,prescale = self.prescale
                , algos = [ DecodeVELO
-                           , PatVeloAlignTrackFilter('Hlt2ExpressBeamHaloDecision') 
+                           , PatVeloAlignTrackFilter('Hlt2ExpressBeamHaloDecision'
+                                                     , MinTot = self.getProp('ExHaloMinTot')  
+                                                     , MaxTot = self.getProp('ExHaloMaxTot')  
+                                                     , MinRSlice = self.getProp('ExHaloMinRSlice')  
+                                                     , MinCell = self.getProp('ExHaloMinCell') 
+                                                     , MaxCell = self.getProp('ExHaloMaxCell') 
+                                                     , MaxDiffCell = self.getProp('ExHaloMaxDiffCell') 
+                                                     , MaxSensor = self.getProp('ExHaloMaxSensor')  
+                                                     , Overlaps = self.getProp('ExHaloOverlaps') 
+                                                     , BigCell = self.getProp('ExHaloBigCell') 
+                                                     , MinOverlap = self.getProp('ExHaloMinOverlap')
+                                                     ) 
                            ]
                , postscale = self.postscale
                )
