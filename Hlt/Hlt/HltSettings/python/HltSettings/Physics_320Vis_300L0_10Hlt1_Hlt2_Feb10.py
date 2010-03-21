@@ -91,6 +91,8 @@ class Physics_320Vis_300L0_10Hlt1_Hlt2_Feb10( Physics_320Vis_300L0_10Hlt1_Feb10 
                        'Hlt2DiMuonDY2',
                        'Hlt2DiMuonDY3',
                        'Hlt2DiMuonDY4',
+                       'Hlt2BiasedDiMuonSimple',
+                       'Hlt2BiasedDiMuonRefined',
                        'Hlt2BiasedDiMuonMass',
                        'Hlt2BiasedDiMuonIP'] )
 ##

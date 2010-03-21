@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-03-21 - Leandro de Paula
+ - Including 2 Hlt1Muon Lines and Correcting the name of Hlt2BiasedDimuon 
+   line.
+
 !========================== HltSettings v1r11p1 2010-03-19 ===================
 ! 2010-03-19 - Gerhard Raven
  - remove Hlt1ODINPhysics from Physics_MinBiasL0_PassThroughHlt_Feb10

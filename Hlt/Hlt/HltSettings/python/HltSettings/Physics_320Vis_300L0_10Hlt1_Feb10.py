@@ -146,6 +146,7 @@ class Physics_320Vis_300L0_10Hlt1_Feb10 :
                , 'Hlt1DiMuonNoIPL0Di',  'Hlt1DiMuonNoPVL0Di', 'Hlt1DiMuonIPCL0Di'
                , 'Hlt1DiMuonNoIP2L0',   'Hlt1DiMuonNoPV2L0',  'Hlt1DiMuonIPC2L0'
                , 'Hlt1DiMuonNoIPL0Seg' , 'Hlt1DiMuonNoPVL0Seg', 'Hlt1DiMuonIPCL0Seg'
+               , 'Hlt1SingleMuonNoVeloL0', 'Hlt1DiMuonNoVeloL0'
                , 'Hlt1MuTrack', 'Hlt1MuTrack4JPsi'
                #'Hlt1MuTrackFitMu',
                , 'Hlt1SingleElectronNoIP', 'Hlt1SingleElectronWithIP'
