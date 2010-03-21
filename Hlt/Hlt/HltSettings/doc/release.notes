@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-03-21 - Johannes Albrecht
+ - follow changes tagged as albrecht_20100321 in HLtConf
+
 ! 2010-03-21 - Leandro de Paula
  - Including 2 Hlt1Muon Lines and Correcting the name of Hlt2BiasedDimuon 
    line.
