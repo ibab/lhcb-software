@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.433 2010-03-19 12:46:39 graven Exp $ 
+! $Id: release.notes,v 1.434 2010-03-21 07:52:46 albrecht Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2010-03-21 - Johannes Albrecht
+ - Configuration.py: change stripped end sequence to be more flexible
 
 ! 2010-03-17 - V. Gligorov
  - Continuing work on Savannah tasks #12691,13784.
