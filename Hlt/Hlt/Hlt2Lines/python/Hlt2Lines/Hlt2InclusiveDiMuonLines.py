@@ -24,7 +24,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
     
     __slots__ = {  'Prescale'                  : {  'Hlt2UnbiasedDiMuon'         :  0.05
                                                     ,'Hlt2DiMuonUnbiasedJPsiLow' :  0.25
-                                                    ,'Hlt2BiasedDiMuonRobust'    :  0.01  
+                                                    ,'Hlt2BiasedDiMuonSimple'    :  0.01  
                                                     ,'Hlt2BiasedDiMuonRefined'   :  0.01
                                                     ,'Hlt2BiasedDiMuonIP'        :  0.5
                                                     ,'Hlt2DiMuonDY1'             :  0.01
@@ -252,7 +252,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         Two selections try to reduce the rate without significan drop in signal efficiency.
         At nominal conditions they should be prescaled:
 
-        5) Robust Biased DiMuon: do not cut on variable errors  
+        5) Simple Biased DiMuon: first step of DiMuon selection
         6) Refined Biased DiMuon: use all variables
 
         and
@@ -260,7 +260,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         7) High Mass Biased DiMuon selection 
         8) Biased DiMuon selection with high IP cuts
         '''
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedDiMuonRobustDecision"  : 50040 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedDiMuonSimpleDecision"  : 50040 } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedDiMuonRefinedDecision" : 50041 } )
         
         
@@ -283,21 +283,21 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
            sequence definitions for biased DiMuon Lines
         '''
-        RobustDiMuon = Hlt2Member( FilterDesktop
-                                   , "RobustDiMuon"          
+        SimpleDiMuon = Hlt2Member( FilterDesktop
+                                   , "SimpleDiMuon"          
                                    , InputLocations = [ DiMuon ]
                                    , Code = MuPtCut +"&"+ MassCut +"&"+ MuIPCut +"&"+ LTimeCut
                                  )
         RefinedDiMuon = Hlt2Member( FilterDesktop
                                     , "RefinedDiMuon"          
-                                    , InputLocations = [ RobustDiMuon ]
+                                    , InputLocations = [ SimpleDiMuon ]
                                     , Code = IPChi2Cut +"&"+ VertexChi2Cut +"&"+ PVDistChi2Cut
                                   )
         #--------------------------------------------
         '''
             robust biased DiMuon 
         '''
-        line = Hlt2Line('BiasedDiMuonRobust'
+        line = Hlt2Line('BiasedDiMuonSimple'
                         , prescale = self.prescale 
                         , algos = [ PV3D(), DiMuon, RobustDiMuon ]
                         , postscale = self.postscale
@@ -319,7 +319,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line.clone( 'BiasedDiMuonMass'
                     , prescale = self.prescale 
-                    , RobustDiMuon = {"Code" : MuPtCut +"&"+ MassTCut +"&"+ MuIPCut +"&"+ LTimeTCut }
+                    , SimpleDiMuon = {"Code" : MuPtCut +"&"+ MassTCut +"&"+ MuIPCut +"&"+ LTimeTCut }
                     , postscale = self.postscale
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedDiMuonMassDecision"    : 50042 } )
@@ -331,7 +331,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line.clone( 'BiasedDiMuonIP'
                     , prescale = self.prescale
-                    , RobustDiMuon = {"Code" : MuPtCut +"&"+ MassLCut +"&"+ MuTIPCut +"&"+ LTimeCut }
+                    , SimpleDiMuon = {"Code" : MuPtCut +"&"+ MassLCut +"&"+ MuTIPCut +"&"+ LTimeCut }
                     , RefinedDiMuon = {"Code" : TIPChi2Cut +"&"+ VertexChi2Cut +"&"+ PVDistTChi2Cut }
                     , postscale = self.postscale
                     )
