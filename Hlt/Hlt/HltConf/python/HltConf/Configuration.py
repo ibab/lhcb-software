@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.169 2010-03-19 12:47:26 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.170 2010-03-21 07:51:23 albrecht Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -489,15 +489,16 @@ class HltConf(LHCbConfigurableUser):
         from Configurables       import DeterministicPrescaler as Prescale
         
         sets = self.settings()
-        if sets and hasattr(sets,'StripEndSequence') and getattr(sets,'StripEndSequence') :
+        if sets and hasattr(sets, 'StripEndSequence') and getattr(sets,'StripEndSequence'):
             log.warning('### Setting requests stripped down HltEndSequence ###')
+            strip = getattr(sets,'StripEndSequence')
             #  TODO: check not explicitly set if so, provide warning....
-            self.EnableHltGlobalMonitor = False
-            self.EnableHltL0GlobalMonitor = False # TODO: allow it to be switch on / off...
-            self.EnableHltSelReports    = False
-            self.EnableHltVtxReports    = False
-            self.EnableLumiEventWriting = False
-            
+            self.EnableHltGlobalMonitor = True if 'EnableHltGlobalMonitor' in strip else False
+            self.EnableHltL0GlobalMonitor = True if 'EnableHltL0GlobalMonitor' in strip else False
+            self.EnableHltSelReports    = True if 'EnableHltSelReports' in strip else False
+            self.EnableHltVtxReports    = True if 'EnableHltVtxReports' in strip else False
+            self.EnableLumiEventWriting = True if 'EnableLumiEventWriting' in strip else False
+                        
         # note: the following is a list and not a dict, as we depend on the order of iterating through it!!!
         from Configurables import Hlt__Line as Line
         _list = ( ( "EnableHltRoutingBits"   , [ HltRoutingBitsWriter ] )
