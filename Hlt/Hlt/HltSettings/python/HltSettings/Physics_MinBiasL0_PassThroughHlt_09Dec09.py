@@ -7,11 +7,7 @@ class Physics_MinBiasL0_PassThroughHlt_09Dec09 :
     @author P.Koppenburg, G. Raven
     @date 2009-08-11
     """
-    
-    
-    def __init__(self) :
-        self.StripEndSequence = False
-
+   
     def HltType(self) :
         return 'Physics_MinBiasL0_PassThroughHlt_09Dec09'
 
