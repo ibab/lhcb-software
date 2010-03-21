@@ -10,7 +10,7 @@ class Commissioning_PassThrough :
     
     
     def __init__(self) :
-        self.StripEndSequence = True
+        self.StripEndSequence = ['']
 
     def HltType(self) :
         return 'PassThrough'
