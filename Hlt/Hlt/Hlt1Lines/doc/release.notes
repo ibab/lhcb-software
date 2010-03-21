@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.151 2010-03-19 14:14:02 graven Exp $
+! $Id: release.notes,v 1.152 2010-03-21 01:35:11 depaula Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -10,14 +10,9 @@
 !
 !-----------------------------------------------------------------------------
 
-
-! 2010-03-17 - V. Gligorov
- - Continuing work on Savannah tasks #12691,13784.
-   Fix naming convention in Hlt1BeamGasLines, update lines to follow move of
-   packages from HltLine to HltTracking. 
-
-! 2010-03-15 - V. Gligorov
- - Implement change in LoKi Hybrid filters from L0_DECISION to L0_DECISION_PHYSICS. 
+! 2010-03-21 - L. de Paula
+ - Including 2 new Hl1MuonLines for Single and DiMuon using only Muons and
+   Tracking Station informations
 
 ! 2010-03-11 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691. Remove Hlt2 containers
@@ -35,13 +30,6 @@
 ! 2010-02-24 - V. Gligorov
  - Follow progress of Savannah tasks 13784 and 12691 by updating Hlt1 lines
    to get their primary vertices from HltPVs.py and not HltReco.py 
-
-!========================== Hlt1Lines v2r3p2 2010-03-19 ===================
-! 2010-03-18 - J. Panman
- - small fix to Hlt1LumiLines (broken by merging LumiLines)
-! 2010-03-17 - Roel Aaij
- - Updated Hlt1BeamGasLines to use a per line instance of PatVeloRHitManager and
-   DefaultVeloRHitManager. This fixes interference with HltRecoRZVelo.
 
 !========================== Hlt1Lines v2r3p1 2010-03-15 ===================
 ! 2010-03-15 - Gerhard Raven
@@ -160,7 +148,7 @@
 ! 2010-01-30 - Gerhard Raven
  - comment out Hlt1LumiLow for time being (needs newer LHCb release)
 
-! 2010-01-29 - J. Panman
+! 2010-01-29 - L. Panman
  - add Hlt1LumiLow* lines in Hlt1LumiLines
 
 ! 2010-01-28 - G. Raven
