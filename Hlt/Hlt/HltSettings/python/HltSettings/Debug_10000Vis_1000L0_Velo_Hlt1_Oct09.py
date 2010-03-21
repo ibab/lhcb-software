@@ -12,7 +12,7 @@ class Debug_10000Vis_1000L0_Velo_Hlt1_Oct09 :
     """
 
     def __init__(self) :
-        self.StripEndSequence = True
+        self.StripEndSequence = ['']
 
     def verifyType(self,ref) :
         # verify self.ActiveLines is still consistent with
