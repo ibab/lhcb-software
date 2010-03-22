@@ -4,6 +4,7 @@
 
 // local
 #include "HPDBoundaryFcn.h"
+#include <assert.h>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HPDBoundaryFcn

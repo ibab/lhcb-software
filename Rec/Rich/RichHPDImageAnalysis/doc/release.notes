@@ -4,6 +4,9 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2010-03-22 - Thomas Blake
+ - Fixed problem with HPDBoundaryFcn namespace and added <assert.h>
+
 ! 2010-03-22 - Thomas BLAKE
  - Added python scripts for simple analysis tests
 
