@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.180 2010-03-17 17:31:52 cattanem Exp $ 
+! $Id: release.notes,v 1.181 2010-03-22 16:03:17 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,6 +15,16 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! 2010-03-22 - Vanya Belyaev
+
+ - LoKiCore/DataUtils.py
+
+    few helper utilities for Bender 
+
+ - cmt/requirements 
+    
+     verison increment to v9r13 
+   
 ! =========================== LoKiCore v9r12 2010-03-17 =======================
 ! 2010-03-15 - Vanya Belyaev
 
