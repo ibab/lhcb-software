@@ -4,6 +4,7 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v38r4 2010-03-22 ============================
 ! 2010-03-22 - Silvia Miglioranzi
  - Added options to steer different settings for the Physics Lists:
    - G4PL_LHEP_EmStd.py
