@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.152 2010-03-21 01:35:11 depaula Exp $
+! $Id: release.notes,v 1.153 2010-03-22 13:40:15 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -30,6 +30,11 @@
 ! 2010-02-24 - V. Gligorov
  - Follow progress of Savannah tasks 13784 and 12691 by updating Hlt1 lines
    to get their primary vertices from HltPVs.py and not HltReco.py 
+
+! 2010-03-22 - Gerhard Raven
+ - max rate limits in Hlt1MBNoBiasLine and Hlt1LumiLine prime numbers
+   to avoid getting them in sync. With limits of 997 Hz and 97 Hz 
+   respectively, this should become a 1% effect instead of a 100% one...
 
 !========================== Hlt1Lines v2r3p1 2010-03-15 ===================
 ! 2010-03-15 - Gerhard Raven
