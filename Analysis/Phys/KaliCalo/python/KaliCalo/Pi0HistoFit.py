@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Pi0HistoFit.py,v 1.4 2010-03-18 11:14:23 ibelyaev Exp $ 
+# $Id: Pi0HistoFit.py,v 1.5 2010-03-22 18:24:00 ibelyaev Exp $ 
 # =============================================================================
 """
 A module for fitting the histograms with pi0-mass
@@ -9,7 +9,7 @@ A module for fitting the histograms with pi0-mass
 # =============================================================================
 __author__  = " ??? "
 __date__    = " 2009-12-?? "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ "
 # =============================================================================
 from ROOT  import TH1F, TF1
 from math  import sqrt, pi,exp
@@ -167,7 +167,7 @@ _curve0 =   0.000
 
 _good_l   = 120 
 _good_r   = 150 
-_weight_s = 0.3
+_weight_s = 0.4
 _weight_b = 1.0 - _weight_s
 
 ## ============================================================================
@@ -197,13 +197,60 @@ def getPi0Params ( histo ) :
              VE ( _func.GetParameter ( 4 ) , _func.GetParError ( 4 ) ** 2 ) , 
              VE ( _func.GetParameter ( 5 ) , _func.GetParError ( 5 ) ** 2 ) )
 
+# =============================================================================
+## get the histo integral 
+def sumHisto ( histo , iL = -2**64 , iH = 2**64 ) :
+    """
+    Get the histo integral
+    """
+    sum  = 0 
+    for iB in range ( 1 , min ( iH + 1 , histo.GetNbinsX() + 1 ) ) :
+        if iL <= iB <= iH :
+            sum += histo.GetBinContent( iB )
+    return sum 
+
+# ==============================================================================
+## get fraction of bins with 'small' content 
+def smallBins ( histo , limit = 9 , low = -1.e+100 , high = 1.e+100 )  :
+    """
+    get fractions of bins with 'small' content
+    """
+    n0 = 0
+    nb = 0
+    nbins = histo.GetNbinsX() 
+    for iB in range ( 1 , nbins + 1 ) :
+        c = histo.GetBinContent ( iB )
+        v = histo.GetBinCenter  ( iB ) 
+        if not low <= v <= high : continue 
+        nb +=1 
+        if c < limit :
+            n0 += 1
+
+    nb = max ( nb , 1 ) 
+    return float(n0)/nb
+
+
+# =============================================================================
+# get ``signal-to-backgrund'' ratio
+def s2b ( histo , r = 2.5 ) :
+    """
+    get ``signal-to-background'' ratio in +-2.5 sigma interga
+    """
+    par = getPi0Params ( histo )
+    m = par[1].value()
+    s = par[2].value()
+    r = abs ( r ) 
+    iL     = histo.FindBin ( m - r * s )
+    iR     = histo.FindBin ( m + r * s )
+    return par[0]/(par[3]*(iR-iL))
+    
 ## ============================================================================
 ## pre-fit background histogram 
 def _preFitBkg ( func , histo , background = None , options = ''  ) :
     """
     pre-fit background histogram
     """
-    
+
     if not hasattr ( histo , 'Fit' ) :
         if hasattr ( histo , 'toROOT' ) :
             histo = histo.toROOT()
@@ -213,7 +260,10 @@ def _preFitBkg ( func , histo , background = None , options = ''  ) :
         if hasattr ( background , 'toROOT' ) :
             background = background.toROOT()
             return _preFitBkg  ( func , histo , background )
-        
+
+    opts = '0QSL'    
+    if 0.10 > smallBins ( histo ) : opts = opts.replace('L','')
+    
     entries = histo.GetEntries()
     
     func.FixParameter ( 0 , 0       )
@@ -226,7 +276,7 @@ def _preFitBkg ( func , histo , background = None , options = ''  ) :
     ##
     slope0 = _slope0
     curve0 = _curve0 
-    if background :
+    if background and 50 < sumHisto ( background ) : 
         b = getPi0Params ( background )
         slope0 = b[4].value()
         curve0 = b[5].value()
@@ -245,15 +295,19 @@ def _preFitBkg ( func , histo , background = None , options = ''  ) :
                       histo.GetBinContent ( iR ) ) 
     ##
     func.SetParameter ( 3 , backg0 )
-    st = histo.Fit( func, '0QLS','',_low,_high)
+    st = histo.Fit( func, opts ,'',_low,_high)
     if 0 != st.Status() :
         func.FixParameter ( 5 , curve0 ) 
         func.SetParameter ( 3 , backg0 )
-        st = histo.Fit( func, '0QLS','',_low,_high)
+        par3 = func.GetParameter ( 3 ) 
+        if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+        st = histo.Fit( func, opts ,'',_low,_high)
         if 0 != st.Status() :
             func.FixParameter ( 4 , slope0 ) 
             func.SetParameter ( 3 , backg0 )
-            st = histo.Fit ( func, '0QLS','',_low,_high )        
+            par3 = func.GetParameter ( 3 ) 
+            if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+            st = histo.Fit ( func, opts ,'',_low,_high )        
             if 0 != st.Status() :
                 pars = getPi0Params  ( histo )
                 print 'BACKGROUND: backg =%20s slope=%20s curve=%20s %8d %25s ' % (
@@ -265,7 +319,9 @@ def _preFitBkg ( func , histo , background = None , options = ''  ) :
                     )
                 
     if options :
-        st = histo.Fit ( func, 'LS' + options ,'',_low,_high )
+        par3 = func.GetParameter ( 3 ) 
+        if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+        st = histo.Fit ( func, opts.replace('0','').replace('Q','') + options ,'',_low,_high )
         
     ##
     func.ReleaseParameter(3)
@@ -273,18 +329,6 @@ def _preFitBkg ( func , histo , background = None , options = ''  ) :
     func.ReleaseParameter(5)
         
     return  0 == st.Status()
-
-# =============================================================================
-## get the histo integral 
-def sumHisto ( histo , iL , iH ) :
-    """
-    Get the histo integral
-    """
-    sum  = 0 
-    for iB in range ( 1 , min ( iH + 1 , histo.GetNbinsX() + 1 ) ) :
-        if iL <= iB <= iH :
-            sum += histo.GetBinContent( iB )
-    return sum 
 
 # =============================================================================
 ## pre-fit background histogram 
@@ -341,25 +385,41 @@ def _preFitSignal ( func              ,
     num0  = sumHisto ( histo , iL , iR ) - backg0 * ( iR - iL + 1 ) 
     num0  = abs ( num0 )
 
+    opts = '0QSL'    
+    if 0.10 > smallBins ( histo ) : opts = opts.replace('L','')
+
     slope0 = _slope0 
     curve0 = _curve0
 
-    if signal and background : 
+    if signal and background :
+
         s = getPi0Params ( signal     )
         b = getPi0Params ( background )
-        num0    = s[0].value()
+        
         mass0   = s[1].value()
         sigma0  = s[2].value()
-        slope0  = ( _weight_s * s[4] + _weight_b * b[4] ) . value()  
-        curve0  = ( _weight_s * s[5] + _weight_b * b[5] ) . value()  
-    elif signal :
+        
+        s4 = VE ( s[4] ) 
+        b4 = VE ( b[4] ) 
+        s4.setCovariance ( s4.cov2() / ( _weight_s**2 ) )
+        b4.setCovariance ( b4.cov2() / ( _weight_b**2 ) )        
+        slope0  = s4.mean(b4).value()
+        
+        s5 = VE ( s[5] ) 
+        b5 = VE ( b[5] ) 
+        s5.setCovariance ( s5.cov2() / ( _weight_s**2 ) )
+        b5.setCovariance ( b5.cov2() / ( _weight_b**2 ) )
+        curve0  = s5.mean(b5).value()
+        
+    elif signal and 50 < sumHisto ( signal ) :
+        
         s = getPi0Params( signal )
-        num0    = s[0] . value ()
         mass0   = s[1] . value ()
         sigma0  = s[2] . value ()
         slope0  = s[4] . value ()
-        curve0  = s[5] . value ()  
-    elif  background :
+        curve0  = s[5] . value ()
+        
+    elif  background and 50 < sumHisto ( background ) :
         b = getPi0Params ( background )
         slope0  = b[4] . value () 
         curve0  = b[5] . value () 
@@ -372,21 +432,33 @@ def _preFitSignal ( func              ,
     func.FixParameter ( 2 , sigma0 )
     func.FixParameter ( 4 , slope0 )
     func.FixParameter ( 5 , curve0 )
-    st = histo.Fit ( func, '0QLS','', _low , _high )
+    st = histo.Fit ( func, opts ,'', _low , _high )
     ## 2. Release signal parameter 
     func.ReleaseParameter ( 1 )
     func.ReleaseParameter ( 2 )
-    st = histo.Fit ( func, '0QLS','', _low , _high )
+    par0 = func.GetParameter ( 0 ) 
+    if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+    par3 = func.GetParameter ( 3 ) 
+    if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+    st = histo.Fit ( func, opts ,'', _low , _high )
     if 0 != st.Status() :
         func.FixParameter ( 2 , sigma0 )
-        st = histo.Fit ( func, '0QLS','', _low , _high )
+        par0 = func.GetParameter ( 0 ) 
+        if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+        par3 = func.GetParameter ( 3 ) 
+        if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+        st = histo.Fit ( func, opts ,'', _low , _high )
     ##
     par1 = func.GetParameter ( 1 )
     if   par1 < mass0 - 2 * sigma0 :
         func.SetParameter ( 1 , mass0 - 2*sigma0 )    
     elif par1 > mass0 + 2 * sigma0 :
         func.SetParameter ( 1 , mass0 + 2*sigma0 )
-    st = histo.Fit ( func, '0QLS','', _low , _high )
+    par0 = func.GetParameter ( 0 ) 
+    if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+    par3 = func.GetParameter ( 3 ) 
+    if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+    st = histo.Fit ( func, opts ,'', _low , _high )
     ##
     par0 = func.GetParameter ( 0 ) 
     if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) ) 
@@ -394,22 +466,34 @@ def _preFitSignal ( func              ,
     mass1  = func.GetParameter ( 1 )
     sigma1 = func.GetParameter ( 2 )
     ## adjustment 
-    mass1  = min ( mass1 , mass0 + 2  * sigma0 ) 
-    mass1  = max ( mass1 , mass0 - 2  * sigma0 ) 
+    mass1  = min ( mass1  , mass0 + 2  * sigma0 ) 
+    mass1  = max ( mass1  , mass0 - 2  * sigma0 ) 
     sigma1 = min ( sigma1 ,   2  * sigma0 ) 
-    sigma1 = max ( sigma1 , 0.2  * sigma0 ) 
+    sigma1 = max ( sigma1 , 0.5  * sigma0 ) 
     ##
     func.FixParameter ( 1 , mass1  )
     func.FixParameter ( 2 , sigma1 )
     func.ReleaseParameter ( 4 ) 
     func.ReleaseParameter ( 5 ) 
-    st = histo.Fit ( func, '0QLS','', _low , _high )
+    par0 = func.GetParameter ( 0 ) 
+    if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+    par3 = func.GetParameter ( 3 ) 
+    if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+    st = histo.Fit ( func, opts ,'', _low , _high )
     if 0 != st.Status() :
         func.FixParameter ( 5 , curve0 )
-        st = histo.Fit ( func, '0QLS','', _low , _high )
+        par0 = func.GetParameter ( 0 ) 
+        if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+        par3 = func.GetParameter ( 3 ) 
+        if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+        st = histo.Fit ( func, opts ,'', _low , _high )
         if 0 != st.Status() :
             func.FixParameter ( 4 , slope0 )
-            st = histo.Fit ( func, '0QLS','', _low , _high )
+            par0 = func.GetParameter ( 0 ) 
+            if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+            par3 = func.GetParameter ( 3 ) 
+            if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+            st = histo.Fit ( func, opts ,'', _low , _high )
     ##
     slope1 =  func.GetParameter ( 4 )
     curve1 =  func.GetParameter ( 5 )
@@ -418,40 +502,105 @@ def _preFitSignal ( func              ,
     func.ReleaseParameter ( 2 )
     func.FixParameter ( 4 , slope1 )
     func.FixParameter ( 5 , curve1  )
+    par0 = func.GetParameter ( 0 ) 
+    if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+    par3 = func.GetParameter ( 3 ) 
+    if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
     ## 4 fit it!
-    st = histo.Fit ( func, '0QLS','', _low , _high )
+    st = histo.Fit ( func, opts ,'', _low , _high )
     
     if 0 == st.Status() :
         func.ReleaseParameter ( 4 )
         func.ReleaseParameter ( 5 )
-        st = histo.Fit ( func, '0QLS','', _low , _high )
+        par0 = func.GetParameter ( 0 ) 
+        if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+        par3 = func.GetParameter ( 3 ) 
+        if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+        st = histo.Fit ( func, opts ,'', _low , _high )
         if 0 != st.Status() :
             func.FixParameter ( 5 , curve1 )
-            st = histo.Fit ( func, '0QLS','', _low , _high )
+            par0 = func.GetParameter ( 0 ) 
+            if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+            par3 = func.GetParameter ( 3 ) 
+            if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+            st = histo.Fit ( func, opts ,'', _low , _high )
             if 0 != st.Status() :
                 func.FixParameter ( 4 , slope1 )
-                st = histo.Fit ( func, '0QLS','', _low , _high )
+                par0 = func.GetParameter ( 0 ) 
+                if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+                par3 = func.GetParameter ( 3 ) 
+                if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+                st = histo.Fit ( func, opts ,'', _low , _high )
+
+    ## adjustment (1) 
+    sigma1 = func.GetParameter ( 2 )    
+    if   sigma1 >  2.0 * sigma0 :
+        func.SetParameter( 2 , sigma0 )
+        par0 = func.GetParameter ( 0 ) 
+        if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+        par3 = func.GetParameter ( 3 ) 
+        if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+        st = histo.Fit ( func, opts ,'', _low , _high )
+    elif sigma1 <  0.5 * sigma0 :
+        func.SetParameter( 2 , sigma0 )
+        par0 = func.GetParameter ( 0 ) 
+        if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+        par3 = func.GetParameter ( 3 ) 
+        if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+        st = histo.Fit ( func, opts ,'', _low , _high )
+
+    mass1  = func.GetParameter ( 1 )
+    if   mass1 > mass0 + 2 * sigma0 :
+        func.SetParameter( 1 , mass0 )
+        par0 = func.GetParameter ( 0 ) 
+        if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+        par3 = func.GetParameter ( 3 ) 
+        if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+        st = histo.Fit ( func, opts,'', _low , _high )
+    elif mass1 < mass0 - 2 * sigma0 :
+        func.SetParameter( 1 , mass0 )
+        par0 = func.GetParameter ( 0 ) 
+        if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+        par3 = func.GetParameter ( 3 ) 
+        if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+        st = histo.Fit ( func, opts,'', _low , _high )
 
     ## adjustment
     sigma1 = func.GetParameter ( 2 )
-    if   sigma1 >  2.0 * sigma0 :
-        sigma1 = min ( sigma1 ,   2  * sigma0 ) 
+    if   sigma1 >  1.5 * sigma0 :
+        sigma1 = min ( sigma1 ,  1.5  * sigma0 ) 
         func.FixParameter( 2 , sigma1 )
-        st = histo.Fit ( func, '0QLS','', _low , _high )
+        par0 = func.GetParameter ( 0 ) 
+        if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+        par3 = func.GetParameter ( 3 ) 
+        if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+        st = histo.Fit ( func, opts ,'', _low , _high )
     elif sigma1 <  0.5 * sigma0 :
-        sigma1 = max ( sigma1 , 0.2  * sigma0 ) 
+        sigma1 = max ( sigma1 , 0.5  * sigma0 ) 
         func.FixParameter( 2 , sigma1 )
-        st = histo.Fit ( func, '0QLS','', _low , _high )
+        par0 = func.GetParameter ( 0 ) 
+        if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+        par3 = func.GetParameter ( 3 ) 
+        if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+        st = histo.Fit ( func, opts ,'', _low , _high )
         
     mass1  = func.GetParameter ( 1 )
     if   mass1 > mass0 + 2 * sigma0 :
         mass1  = min ( mass1 , mass0 + 2  * sigma0 ) 
         func.FixParameter( 1 , mass1 )
-        st = histo.Fit ( func, '0QLS','', _low , _high )
+        par0 = func.GetParameter ( 0 ) 
+        if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+        par3 = func.GetParameter ( 3 ) 
+        if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+        st = histo.Fit ( func, opts,'', _low , _high )
     elif mass1 < mass0 - 2 * sigma0 :
         mass1  = max ( mass1 , mass0 - 2  * sigma0 ) 
         func.FixParameter( 1 , mass1 )
-        st = histo.Fit ( func, '0QLS','', _low , _high )
+        par0 = func.GetParameter ( 0 ) 
+        if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+        par3 = func.GetParameter ( 3 ) 
+        if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+        st = histo.Fit ( func, opts,'', _low , _high )
     
     par0 = func.GetParameter ( 0 ) 
     if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
@@ -463,23 +612,39 @@ def _preFitSignal ( func              ,
         func.SetParameter ( 2 , sigma1 )
         func.FixParameter ( 4 , slope1 )
         func.FixParameter ( 5 , curve1 )
-        st = histo.Fit ( func, '0QLS','', _low , _high )
+        par0 = func.GetParameter ( 0 ) 
+        if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+        par3 = func.GetParameter ( 3 ) 
+        if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+        st = histo.Fit ( func, opts ,'', _low , _high )
         
     ##
     if 0 != st.Status() :
         func.FixParameter ( 5 , curve1 ) 
         func.SetParameter ( 1 , mass0  ) 
         func.SetParameter ( 2 , sigma0 ) 
-        st = histo.Fit ( func, '0QLS','', _low , _high )
+        par0 = func.GetParameter ( 0 ) 
+        if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+        par3 = func.GetParameter ( 3 ) 
+        if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+        st = histo.Fit ( func, opts ,'', _low , _high )
         if  0 != st.Status() :
             func.FixParameter ( 4 , slope1 ) 
             func.SetParameter ( 1 , mass0  ) 
             func.SetParameter ( 2 , sigma0 ) 
-            st = histo.Fit ( func, '0QLS','', _low , _high )
+            par0 = func.GetParameter ( 0 ) 
+            if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+            par3 = func.GetParameter ( 3 ) 
+            if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+            st = histo.Fit ( func, opts ,'', _low , _high )
             if 0 != st.Status() :                
                 func.SetParameter ( 1 , mass0  ) 
                 func.FixParameter ( 2 , sigma0 ) 
-                st = histo.Fit ( func, '0QLS','', _low , _high )
+                par0 = func.GetParameter ( 0 ) 
+                if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+                par3 = func.GetParameter ( 3 ) 
+                if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+                st = histo.Fit ( func, opts ,'', _low , _high )
                 if 0 != st.Status () : 
                     pars = getPi0Params  ( histo )
                     print 'SIGNAL    : signal=%20s mass =%20s sigma=%20s backg=%20s %8d %25s ' % (
@@ -491,7 +656,12 @@ def _preFitSignal ( func              ,
                         histo.GetName  () 
                         )
                 
-    if options : st = histo.Fit ( func, 'LS' + options ,'', _low , _high )
+    if options :
+        par0 = func.GetParameter ( 0 ) 
+        if 0 > par0 : func.SetParameter( 0 , abs ( par0 ) )
+        par3 = func.GetParameter ( 3 ) 
+        if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
+        st = histo.Fit ( func, opts.replace('0','').replace('Q','') + options ,'', _low , _high )
                 
     return  0 == st.Status()
 

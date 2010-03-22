@@ -7,6 +7,8 @@ A module for creating and filling the histograms
 from ROOT import TPySelector, TH1F
 from math import sqrt
 
+from GaudiKernel.SystemOfUnits import MeV 
+
 # ========================== some global variables =========================
 #== histograms and coefficients
 FilledHistos={}                        # array of the pi0mass histograms
@@ -117,8 +119,8 @@ def HiCreate(alam, FilledHistos, index):
 
 
 import copy 
-import Kali
 import ROOT 
+import KaliCalo.Kali as Kali
 CellID = Kali.CellID 
 
 ## use Wim Lavrijsen's trick: 
@@ -126,7 +128,7 @@ selector = '$KALICALOROOT/root/TPySelectorFix.C+'
 if 0 > ROOT.gROOT.LoadMacro ( selector ) : 
     raise RunTimeError, "Unable to LoadMacro '%s'" % selector  
 
-
+# =============================================================================
 ## ROOT 'selector' for filling the histograms
 class FillPi0( ROOT.TPySelectorFix  ):
     """
@@ -137,43 +139,43 @@ class FillPi0( ROOT.TPySelectorFix  ):
     #  @param histos   the map of histograms
     #  @param lambdas  the map of calibration coefficients
     #  @param cellFunc the function used for grouping the cells
-    def __init__ ( self                         ,
-                   histos   = Kali.HistoMap  () ,
-                   lambdas  = Kali.LambdaMap () ,
-                   cellFunc = lambda s : s      ,
-                   betas    = [ 8.3 , 8.8 , 9.5 ] ) :
+    def __init__ ( self                           ,
+                   histos   = Kali.HistoMap  ()   ,
+                   lambdas  = Kali.LambdaMap ()   ,
+                   cellFunc = lambda s : s        ,
+                   betas    = [ 8.3 , 8.8 , 9.5 ] ,
+                   Unit     = MeV                 ) :  
         
         ROOT.TPySelectorFix.__init__ ( self , None , self ) ## initialize the base 
-        self._histos  = copy.deepcopy ( histos  ) ## the histogram map
-        self._lambdas = copy.deepcopy ( lambdas ) ## the map of coefficients
+        self._histos  = histos  ## the histogram map
+        self._lambdas = lambdas ## the map of coefficients
 
-        self._histos.reset()
-        
-        self._global   = self._histos [ Kali.EcalZone   ]
-        self._inner    = self._histos [ Kali.InnerZone  ]
-        self._middle   = self._histos [ Kali.MiddleZone ]
-        self._outer    = self._histos [ Kali.OuterZone  ]
-        self._cellFunc = cellFunc
-        self._betas    = copy.deepcopy ( betas )
-
+        self._global    = self._histos [ Kali.EcalZone   ]
+        self._inner     = self._histos [ Kali.InnerZone  ]
+        self._middle    = self._histos [ Kali.MiddleZone ]
+        self._outer     = self._histos [ Kali.OuterZone  ]
+        self._cellFunc  = cellFunc
+        self._betas     = copy.deepcopy ( betas )
+        self._Unit      = Unit
+        self._frequency = 0 
         self._print('__init__')
         
     def _print ( self , phase ) :
-        print 'py: Phase(%-19s) : %9d %9d %9d %s' % (
+        print 'py: Phase(%-16s) : %9d %9d %9d %s' % (
             phase                          ,
             len ( self._histos           ) ,
             len ( self._lambdas          ) ,
-            len ( self._histos.entries() ) ,
+            self._histos.entries()         ,
             self._global.entries()
             )
 
     ## get all coefficients 
     def lambdas  ( self ) :
-        return copy.deepcopy ( self._lambdas ) 
+        return self._lambdas 
 
     ## get all histograms 
     def histos  ( self ) :
-        return copy.deepcopy ( self._histos ) 
+        return self._histos  
 
     ## the major method: processing of the tree
     def Process( self, entry ):
@@ -185,11 +187,18 @@ class FillPi0( ROOT.TPySelectorFix  ):
         
         # == for more convenience
         bamboo=self.fChain
-
+        if not self._frequency :
+            entries  = bamboo.GetEntries()
+            entries  = int ( entries /  50000.0 ) * 1000
+            entries  = max ( entries , 50000 ) 
+            self._frequency = entries
+            
         # == printout
-        if 0 == entry % 10000 : self._print ( 'Process %d ' % entry )
-
-        
+        if 0 == entry % self._frequency:
+            self._print ( 'Process %d' % entry )
+            
+        ## 3x3 spd ?? 
+        ## if bamboo.spd1 and bamboo.spd2 : return 1
         if bamboo.spd1 or bamboo.spd2 : return 1
         
         # == cell (category) number
@@ -214,7 +223,7 @@ class FillPi0( ROOT.TPySelectorFix  ):
         lam2 = self._lambdas [ ic2 ] [ -1 ] ## the last one is relevant here 
 
         # == caculating the corrected mass
-        corrMass = bamboo.m12 * sqrt( lam1 * lam2 )
+        corrMass = bamboo.m12 * sqrt( lam1 * lam2 ) * self._Unit
         if not 0 < corrMass < 250 : return 1                ## RETURN
 
         ## get the histograms for the first cell 
@@ -237,15 +246,20 @@ class FillPi0( ROOT.TPySelectorFix  ):
         cgl  = self._global.counters ()          ## global counters
         
         ## 
+
+        ok1 = False 
+        ok2 = False 
+        ok3 = False
         
-        ok1 = max ( bamboo.prs1 , bamboo.prs2 ) < 10
-        ok2 = bamboo.prs1 < 10 and bamboo.prs2  > 10 
-        ok3 = min ( bamboo.prs1 , bamboo.prs2 ) > 10
+        if   max ( bamboo.prs1 , bamboo.prs2 ) * self._Unit < 10 : ok1 = True 
+        elif min ( bamboo.prs1 , bamboo.prs2 ) * self._Unit > 10 : ok3 = True
+        else:
+            ok2 = True 
 
         background = 1 == bamboo.bkg
         
         if ok2 :
-            corrMass  = bamboo.m12
+            corrMass  = bamboo.m12 * self._Unit
             factor2   = self._betas[area2] * bamboo.prs2/bamboo.g2E
             corrMass *= sqrt ( lam1 )
             corrMass *= sqrt ( lam2 + ( 1 - lam2 ) * factor2 )
@@ -255,7 +269,7 @@ class FillPi0( ROOT.TPySelectorFix  ):
                 cgl[0]   += factor2
                 
         elif ok3 :
-            corrMass  = bamboo.m12
+            corrMass  = bamboo.m12 * self._Unit
             factor1   = self._betas[area1] * bamboo.prs1/bamboo.g1E
             factor2   = self._betas[area2] * bamboo.prs2/bamboo.g2E
             corrMass *= sqrt ( lam1 + ( 1 - lam1 ) * factor1 )
@@ -267,7 +281,7 @@ class FillPi0( ROOT.TPySelectorFix  ):
                 hc2[1]   += factor2
                 cz2[1]   += factor2
                 cgl[1]   += factor2                
-                
+
         if not background :
 
             if   ok1 : 
@@ -313,3 +327,94 @@ class FillPi0( ROOT.TPySelectorFix  ):
     def SlaveTerminate ( self       ) : self._print ( 'SlaveTerminate' )
     def Terminate      ( self       ) : self._print ( 'Terminate'      )
 
+
+## ============================================================================
+## fill the histograms from the tree 
+def fillHistos ( tree                          ,
+                 histomap  = Kali.HistoMap  () ,
+                 lambdamap = Kali.LambdaMap () ,
+                 cellFunc  = lambda s : s      ,
+                 Unit      = MeV               ) :  
+    """
+    Fill the historgams from the tree 
+    """
+    
+    selector = FillPi0 ( histomap    ,
+                         lambdamap   ,
+                         cellFunc    ,
+                         Unit = Unit )  
+
+    print '#entries in tree: %10d ' % tree.GetEntries() 
+    ## tree.Process ( selector , '' , 500000 )
+    tree.Process ( selector )
+    
+    lambdas = selector.lambdas ()
+    histos  = selector.histos  ()
+    
+    print ' histos  : ', len ( histos  ) , histos.entries() 
+    print ' lambdas : ', len ( lambdas )
+    
+    return ( histos , lambdas )  
+
+
+# =============================================================================
+## fill data base with histos and lambdas 
+def fillDataBase (
+    lambdas                           , 
+    file_names                        ,
+    tree_name   = "KaliPi0/Pi0-Tuple" ,
+    dbase_name  = 'kali_db'           ,
+    cellFunc    = lambda s : s        ,
+    Unit        = MeV                 ) :
+
+    """
+    Fill data base with histos and lambdas
+    """
+
+    if issubclass ( type ( file_names ) , str ) :
+        file_names = [ file_names ]
+
+    histos   = Kali.HistoMap ()
+
+    import sets
+    badfiles = sets.Set() 
+
+    print 'FILL-0'
+    
+    for file_name in file_names :
+        
+        print 'FILL-1'
+        f = Kali.RootFile ( file_name , safe = False )
+        print 'FILL-2'
+        if not f.isOK () :
+            badfiles.add ( file_name )
+            continue 
+        print 'FILL-3'
+        
+        ## get the tree 
+        tree = f.Get( tree_name )
+        if not tree       :
+            raise NameError("Unable to get  ROOT TTree('%s')" % tree_name )
+    
+        print 'Tree has %10d entries, %s/%s ' %  ( long ( tree.GetEntries () ) ,
+                                                   tree.GetName    () ,
+                                                   f.GetName       () )
+    
+        ## fill the histograms 
+        histos,lambdas = fillHistos ( tree      ,
+                                      histos    ,
+                                      lambdas   ,
+                                      cellFunc  ,
+                                      Unit      )
+
+        del f 
+            
+    ## update data base
+    histos.save ( dbase_name ) 
+    
+    return (histos,lambdas,badfiles) 
+    
+             
+# =============================================================================
+# The END 
+# =============================================================================

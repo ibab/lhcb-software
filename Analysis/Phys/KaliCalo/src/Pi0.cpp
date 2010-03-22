@@ -1,4 +1,4 @@
-// $Id: Pi0.cpp,v 1.13 2010-03-18 11:14:23 ibelyaev Exp $
+// $Id: Pi0.cpp,v 1.14 2010-03-22 18:24:01 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -301,8 +301,12 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
   LHCb::CaloDataFunctor::DigitFromCalo spd ( "Spd" ) ;
   LHCb::CaloDataFunctor::DigitFromCalo prs ( "Prs" ) ;
   
+  const double ptCut_Pi0   = cutValue ( "PtPi0"   ) ;
+  const double ptCut_Gamma = cutValue ( "PtGamma" ) ;
+  const double spdCut      = cutValue ( "SpdCut"  ) ;
+  
   // get all photons with 
-  Range gamma = select ( "g" , ( "gamma" == ID ) && ( PT > 300 * MeV ) ) ;
+  Range gamma = select ( "g" , ( "gamma" == ID ) && ( PT > ptCut_Gamma ) ) ;
   
   counter("#gamma") += gamma.size() ;
   
@@ -336,16 +340,16 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     p1.SetPy ( -p1.Py() ) ;
     const Gaudi::LorentzVector fake = ( p1 + mom2 ) ;
     
-    const bool good    =             ( m12      < 350 * MeV && p12.Pt()  > 800 * MeV ) ;
-    bool       goodBkg = m_mirror && ( fake.M() < 350 * MeV && fake.Pt() > 800 * MeV ) ;
+    const bool good    =             ( m12      < 350 * MeV && p12.Pt()  > ptCut_Pi0 ) ;
+    bool       goodBkg = m_mirror && ( fake.M() < 350 * MeV && fake.Pt() > ptCut_Pi0 ) ;
     
     if ( (!good)  && (!goodBkg) ) { continue ; }   // CONTINUE!!!
     
     double spd1e = seedEnergyFrom ( g1 , spd ) ;    
-    if ( 0 < spd1e ) { continue ; }
+    if ( spdCut < spd1e ) { continue ; }
     
     double spd2e = seedEnergyFrom ( g2 , spd ) ;
-    if ( 0 < spd2e ) { continue ; }
+    if ( spdCut < spd2e ) { continue ; }
     
     // order the photons according energy in preshower
     double prs1e = energyFrom ( g1 , prs ) ;
@@ -354,6 +358,7 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     {
       std::swap ( g1    , g2    ) ;
       std::swap ( prs1e , prs2e ) ; 
+      std::swap ( spd1e , spd2e ) ; 
     }
     
     if ( good && m12 < 250 * MeV ) 
@@ -369,10 +374,12 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     const LHCb::CaloHypo* hypo2 = hypo ( g2 )  ;
     if ( 0 == hypo2 ) { continue ; }
     
-    Gaudi::XYZPoint point1( hypo1->position()->x() , hypo1->position()->y() , hypo1->position()->z() );
+    Gaudi::XYZPoint point1 ( hypo1->position()->x() ,
+                             hypo1->position()->y() , 
+                             hypo1->position()->z() );
     
-    const double spd1e3x3 = caloEnergy4Photon ( mom1 ) ;
-    const double spd2e3x3 = caloEnergy4Photon ( mom2 ) ;
+    const double spd1e3x3 = caloEnergy4Photon ( g1 -> momentum () ) ;
+    const double spd2e3x3 = caloEnergy4Photon ( g2 -> momentum () ) ;
     
     const LHCb::CaloCellID cell1 = cellID( g1 ) ;
     const LHCb::CaloCellID cell2 = cellID( g2 ) ;    
@@ -380,12 +387,16 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     // fill N-tuples
     if  ( good ) 
     { 
-      Gaudi::XYZPoint point2( hypo2->position()->x() , hypo2->position()->y() , hypo2->position()->z() );
+      const LHCb::CaloPosition* p2 = hypo2->position() ;
+      const Gaudi::XYZPoint point2 ( p2 -> x () ,
+                                     p2 -> y () , 
+                                     p2 -> z () );
       fillTuple( tuple , mom1 , mom2 , p12 , prs1e , prs2e , spd1e3x3 , spd2e3x3 , cell1 , cell2 , point1 , point2 , 0 ) ;
     }
     if ( goodBkg ) 
     {
-      Gaudi::XYZPoint point2Sym( -hypo2->position()->x() , -hypo2->position()->y() , hypo2->position()->z() );
+      const LHCb::CaloPosition* p2 = hypo2->position() ;
+      const Gaudi::XYZPoint point2Sym ( - p2 -> x () , - p2 -> y () , p2 -> z () );
       fillTuple( tuple , mom1 , mom2 , fake , prs1e , prs2e , spd1e3x3 , spd2e3x3 , cell1 , cell2 , point1 , point2Sym , 1 ) ;
     }
     

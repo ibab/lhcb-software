@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Configuration.py,v 1.14 2010-03-18 11:14:23 ibelyaev Exp $
+# $Id: Configuration.py,v 1.15 2010-03-22 18:24:00 ibelyaev Exp $
 # =============================================================================
 # @file  KaliCalo/Configuration.py
 #
@@ -85,7 +85,7 @@ Or one can rely on helper functions:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2009-09-28 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $ "
 # =============================================================================
 # the only one  "vizible" symbol 
 __all__  = (
@@ -94,9 +94,9 @@ __all__  = (
     'secondPass'    ## helper symbol to create the preconfigured application
     )
 # =============================================================================
-from Gaudi.Configuration      import *
-from LHCbKernel.Configuration import *
-
+from Gaudi.Configuration       import *
+from LHCbKernel.Configuration  import *
+from GaudiKernel.SystemOfUnits import MeV 
 import logging
 
 _log = logging.getLogger('KaliCalo')
@@ -180,6 +180,10 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         , 'Mirror'              : False ## Use Albert's trick for combinatorial background evaluation
         , 'Histograms'          : False ## Create monitoring histograms
         , 'RecoAll'             : False ## Global Recontruction ?
+        ## ``Physics''
+        , 'PtGamma'             : 300 * MeV ## Pt-cut for photons 
+        , 'PtPi0'               : 800 * MeV ## Pt-cut for pi0  
+        , 'SpdCut'              : 0.1 * MeV ## Spd-cuts for photons 
         ## CaloReco Flags:
         , 'UseTracks'           : True  ## Use Tracks for the first pass ?
         , 'UseSpd'              : True  ## Use Spd as neutrality criteria ?
@@ -209,6 +213,10 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         , 'Mirror'              : """ Use Albert's trick for combinatorial background evaluation """ 
         , 'Histograms'          : """ Activate monitoring histograms creation """
         , 'RecoAll'             : """ Global Reconstruction? """ 
+        ## ``Physics''
+        , 'PtGamma'             : """ Pt-cut for photons """
+        , 'PtPi0'               : """ Pt-cut for pi0 """ 
+        , 'SpdCut'              : """ Spd-cuts for photons """ 
         ## CaloReco flags 
         , 'UseTracks'           : """ Use Tracks for the first pass ? """
         , 'UseSpd'              : """ Use Spd as neutrality criteria ? """
@@ -340,9 +348,15 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         """
         The configuration for Kali-Pi0 algorithm
         """
-        from Configurables import Kali__Pi0, PhysDesktop        
+        from Configurables import Kali__Pi0, PhysDesktop
+        
         kali = Kali__Pi0 (
             "KaliPi0"                                       ,
+            ## specific cuts :
+            Cuts = { 'PtGamma' : self.getProp ( 'PtGamma' ) ,
+                     'PtPi0'   : self.getProp ( 'PtPi0'   ) ,
+                     'SpdCut'  : self.getProp ( 'SpdCut'  ) } ,
+            ## general configuration 
             NTupleLUN      = "KALIPI0"                      ,
             HistoPrint     = True                           ,
             NTuplePrint    = True                           ,

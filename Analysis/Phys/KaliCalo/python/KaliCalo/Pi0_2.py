@@ -25,135 +25,19 @@ pi0mas is the dictionary of the pi0 mass histograms, cell IDs are used as the
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-02-?? "
-__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
 # =============================================================================
 import ROOT, math 
 c1 = ROOT.TCanvas()
 
-import KaliCalo.Kali as Kali 
+import KaliCalo.Kali        as Kali 
+import KaliCalo.ZipShelve   as ZipShelve 
 
-def fillHistos ( tree                          ,
-                 histomap  = Kali.HistoMap  () ,
-                 lambdamap = Kali.LambdaMap () ,
-                 cellFunc  = lambda s : s      ) :
+from KaliCalo.Pi0FillHistos import fillHistos
+from KaliCalo.Analyse       import analyse
+
     
-    from KaliCalo.Pi0FillHistos import FillPi0
-    selector = FillPi0 ( histomap  ,
-                         lambdamap ,
-                         cellFunc  )
-    
-    bamboo.Process( selector )
-
-    lambdas = selector.lambdas ()
-    histos  = selector.histos  ()
-    
-    print ' histos  : ', len ( histos  )
-    print ' lambdas : ', len ( lambdas )
-    
-    return ( histos , lambdas )  
-
-
-def  analyse ( histomap , lambdamap ) :
-
-    import KaliCalo.Pi0HistoFit as Fit 
-
-    ## get 'All-Ecal' histoigrams 
-    hA = histomap [ Kali.EcalZone   ].histos()
-
-    ## (pre) fit them! 
-    Fit.preFitHistoSet ( hA )
-    
-    ## inner area 
-    hI = histomap  [ Kali.InnerZone  ].histos()
-    ## middle area 
-    hM = histomap  [ Kali.MiddleZone ].histos()
-    ## outer area 
-    hO = histomap  [ Kali.OuterZone  ].histos() 
-    
-    ## fit them!!
-    print 'FitInner  : ' , Fit.fitHistoSet ( hI , hA , True )
-    print 'FitMiddle : ' , Fit.fitHistoSet ( hM , hA , True )
-    print 'FitOuter  : ' , Fit.fitHistoSet ( hO , hA , True )
-    
-    keys = histomap.keys()
-    keys.sort()
-    
-    for key in Kali.Zones  :
-        keys.remove ( key     )
-        keys.insert ( 0 , key ) 
-
-    for key in keys :
-
-        if min ( histomap[key].entries() ) < 30 : 
-            print ' too low statistics for key', key
-            continue
-        
-        hs     = histomap[key].histos() 
-        result = (0,0,0)
-        
-        if not key in Kali.Zones :
-            
-            if   key.area() == Kali.InnerZone.area() : 
-                result = Fit.fitHistoSet ( hs , hI )
-            elif key.area() == Kali.MiddleZone.area() : 
-                result = Fit.fitHistoSet ( hs , hM )
-            elif key.area() == Kali.OuterZone.area() : 
-                result = Fit.fitHistoSet ( hs , hO )
-            else :
-                result = Fit.fitHistoSet ( hs , hA )
-                
-        if   0 <= result[0] :  ## use the sample with no Prs 
-            r = Fit.getPi0Params ( hs[0] )
-        elif 0 <= result[1] :  ## use the sample with only 1 Prs 
-            r = Fit.getPi0Params ( hs[1] )
-        elif 0 <= result[2] :  ## use the sample with two Prs 
-            r = Fit.getPi0Params ( hs[2] )
-        else :
-            print ' no reliable fits for ',key
-            continue 
-            ##r = Fit.getPi0Params( hs[2] )
-        
-        hc     = histomap[key].kappas() 
-        
-##         mass = r[1]
-
-##         lams = lambdas[key]
-##         corr = 135.0/mass 
-##         lam  = corr*lams[-1] 
-##         lams.append ( lam.value() )
-        
-        r0 = Fit.getPi0Params ( hs[0] )
-        r1 = Fit.getPi0Params ( hs[1] )
-        r2 = Fit.getPi0Params ( hs[2] )
-
-        alpha = 1.0
-        
-        deltam = r0[1]-135.0 
-        corr1  = 1.0 - alpha*deltam/r0[1]  
-
-        deltam = r1[1]-135.0 
-        corr2  = 1.0 - alpha*deltam/r1[1]  
-        
-        kappa  = hc[1]
-        deltam = r2[1]-135.0 
-        corr3  = 1.0 - alpha*deltam/r2[1]/(1.0-kappa)
-        
-        lams = lambdas[key]
-
-        corr = corr1
-        if not 0.0001 < corr.error() <= 0.01  : corr = corr.mean ( corr2 )
-        if not 0.0001 < corr.error() <= 0.01  : corr = corr.mean ( corr3 )
-
-        print 'corr: ' , corr1, corr2, corr3, corr 
-            
-        lam  = corr*lams[-1]
-        lams.append ( lam.value() )
-        
-        print ' MASS: %20s %20s %20s ' % ( r0[1] , r1[1] , r2[1] ) , key, corr , [  '%.3f' % l for l in lambdas[key] ] 
-        
-    
-# =============================================================================
-
+# =============================================================================    
 ## Define 'fake' cell (useful) for grouping 
 def fakeCell ( c ) :
     """
@@ -171,6 +55,23 @@ def fakeCell ( c ) :
     
     return nc 
 
+
+# =============================================================================
+def buildTable ( lams  ,
+                 cells ,
+                 func  ) :
+
+    results = {}
+    for cell in cells :
+        newCell = Kali.CellID ( func ( cell ) )
+        if lams.has_key ( newCell ) :
+            results [ cell ] = lams [ newCell ]
+            
+    return results 
+    
+# =============================================================================
+
+
 # =============================================================================
 if '__main__' == __name__ :
     
@@ -180,29 +81,37 @@ if '__main__' == __name__ :
     print ' Author  : %s ' %   __author__    
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
-    print '*'*120  
+    print '*'*120
+
     
-    f=ROOT.TFile ( "KaliPi0_Tuples.root" )
+    fname      = "KaliPi0_Tuples_2k+9-Loose.root" 
+
+    f    = ROOT.TFile( fname )
+    tree = f.Get ("KaliPi0/Pi0-Tuple" )
     
-    bamboo = f.Get ("KaliPi0/Pi0-Tuple" )
-    
-    histos, lambdas = fillHistos ( bamboo , cellFunc = fakeCell )
+    histos, lambdas = fillHistos ( tree , cellFunc = fakeCell )
     
     analyse ( histos , lambdas )
-    
+
+    import shelve
+
+    bad = []
+    low = [] 
     ## iterate ?
-    for n in range  ( 0 , 12 ) :
+    for n in range  ( 0 , 10 ) :
     ##for n in range  ( 0 , 0 ) :
         
         print ' ITERATION : ', n
+        histos.reset() 
         histos, lambdas = fillHistos (
-            bamboo   ,
+            tree     , 
             histos   ,
             lambdas  ,
             fakeCell 
             )
         
-        analyse ( histos , lambdas )
+        bad, low = analyse ( histos , lambdas )
+        print " Bad/low cells: %d/%d " % ( len ( bad ) , len ( low ) )  
 
         lams = lambdas.lambdas()
 
@@ -210,12 +119,52 @@ if '__main__' == __name__ :
         keys = lams.keys()
         keys.sort() 
         for key in Kali.Zones  :
-            keys.remove ( key     )
-            keys.insert ( 0 , key ) 
+            if key in keys : 
+                keys.remove ( key     )
+                keys.insert ( 0 , key )
+            
         for key in keys :
+            if key in Kali.Zones :
+                hs     = histomap[key].histos() 
+                r0 = Fit.getPi0Params ( hs[0] )
+                r1 = Fit.getPi0Params ( hs[1] )
+                r2 = Fit.getPi0Params ( hs[2] )
+                print ' MASS : %.20s %.20s %.20s ' % ( r0[1] , r1[1] , r2[1] ) , key 
+                print ' SIGMA: %.20s %.20s %.20s ' % ( r0[2] , r1[2] , r2[2] ) , key 
+                print ' NUM0 : %.20s %.20s %.20s ' % ( r0[0] , r1[0] , r2[0] ) , key
+                print ' S/B  : %.20s %.20s %.20s ' % ( r0[0] / r0[3] ,
+                                                       r1[0] / r1[3] ,
+                                                       r2[0] / r2[3] ) , key
+                continue
+            
             print ' %-25s %9.4g  ' % ( key , lams[key] ) , [ ' %.3f ' % l for l in lambdas[key] ]
-        
-        
+
+
+
+    dbase_name = 'Ecal_2k+9-Loose-details-zdb' 
+    histos.save  ( dbase_name )
+    lambdas.save ( dbase_name )
+    
+    
+    
+    celldb = shelve.open ( 'cells_db', 'r' )
+    cells  = celldb['AllCells']
+    
+    lams   = lambdas.lambdas()
+    map    = buildTable ( lams     ,
+                          cells    ,
+                          fakeCell )         
+    prsdbase = ZipShelve.open ('prs-2k+9_zdb') 
+    prs = prsdbase['Prs-2k+9']
+    
+    dbase_r_name = 'Ecal_2k+9-Loose-results-zdb'
+    dbase = ZipShelve.open ( dbase_r_name )
+    dbase [ 'Ecal'   ] = map
+    dbase [ 'Prs'    ] = prs
+    dbase ['BadCells'] = bad
+    dbase ['LowCells'] = low
+    
+    
 # =============================================================================
 # The END 
 # =============================================================================
