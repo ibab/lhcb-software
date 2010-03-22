@@ -1,4 +1,4 @@
-// $Id: LumiIntegrateFSR.h,v 1.3 2010-01-04 16:31:22 panmanj Exp $
+// $Id: LumiIntegrateFSR.h,v 1.4 2010-03-22 12:17:43 panmanj Exp $
 #ifndef LUMIINTEGRATEFSR_H 
 #define LUMIINTEGRATEFSR_H 1
 
@@ -8,6 +8,7 @@
 
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IDataManagerSvc.h"
+#include "GaudiKernel/StatEntity.h"
 
 // event model
 #include "Event/LumiFSR.h"
@@ -42,6 +43,7 @@ protected:
   virtual std::string fileID();       ///< get the fileID
   virtual std::vector< std::string > navigate(std::string rootname, std::string tag); 
   virtual void explore(IRegistry* pObj, std::string tag, std::vector< std::string >& a);
+  virtual void add_to_xml();          ///< add counters to xmlfile at Algorithm finalization
 
 protected:
   /// Reference to run records data service

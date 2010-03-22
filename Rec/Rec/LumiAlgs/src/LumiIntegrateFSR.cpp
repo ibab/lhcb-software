@@ -1,4 +1,4 @@
-// $Id: LumiIntegrateFSR.cpp,v 1.5 2010-01-04 16:31:22 panmanj Exp $
+// $Id: LumiIntegrateFSR.cpp,v 1.6 2010-03-22 12:17:43 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -6,6 +6,7 @@
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/IDataManagerSvc.h"
+#include "GaudiKernel/StatEntity.h"
 
 // event model
 #include "Event/RawEvent.h"
@@ -145,7 +146,32 @@ StatusCode LumiIntegrateFSR::finalize() {
   // use tool to get summary for this file
   info() << "integrated normalization: " << m_integratorTool->integral( ) << endmsg;
 
+  // declare statEntities for xml output
+  add_to_xml();
+
   return GaudiAlgorithm::finalize();  // must be called after all other actions
+}
+
+//=============================================================================
+void LumiIntegrateFSR::add_to_xml() {
+
+  // declare statEntities for xml output
+  LHCb::LumiIntegral::ValuePair defValue ( -1, 0 );
+  for ( int key = 0; key < LHCb::LumiCounters::LastGlobal; key++ ) {
+    if ( m_integratorTool->integral().hasInfo(key) ) {
+      LHCb::LumiIntegral::ValuePair value = m_integratorTool->integral().info( key, defValue );
+      std::string counterName = LHCb::LumiCounters::counterKeyToString( key );
+      if ( value.first != -1 ) {
+	info() << "counter " << counterName << ": " << key << " " << value.first << " " << value.second << endmsg;
+	StatEntity statEntity( value.first, value.second, value.second, 0, 0 );
+	if ( m_counterSummarySvc != NULL ) {
+	  m_counterSummarySvc->addCounter(name(), counterName, statEntity, 
+					  Gaudi::CounterSummary::SaveAlwaysStatEntity);
+	  debug() << "declared counter: " << key << endmsg;
+	}
+      }
+    }
+  }
 }
 
 //=============================================================================

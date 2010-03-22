@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-03-22 - Jaap Panman
+ - LumiIntegrateFSR: add counters to xml summary at finalize()
+
 !========================== LumiAlgs v3r4 2010-03-19 =========================
 ! 2010-03-18 - Jaap Panman
  - replace reference stdout for unittest 2 (minor change)
