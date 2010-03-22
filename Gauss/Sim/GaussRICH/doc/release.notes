@@ -3,7 +3,12 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
-
+! 2010-03-19  - Sajan Easo
+ - Added the capability to use C3F8 as the Rich1gas radiator. These changes are
+   backward compatible. The changes are in the monotoring and identifying the radiator number.
+   The radiator number is same as that for C4F10. Hence one can use this for both
+   C4F10 and C3F8 as the Rich1gas. The files modified:   RichG4GaussPathNames.h, RichG4MatRadIdentifier.cpp
+   RichG4CherenkovAnalysis.cpp,RichG4InputMon.cpp
 !========================= GaussRICH v10r0 2009-11-04 =========================
 ! 2009-10-23 - Chris Jones
  - Some minor fixes to better support spillover locations
