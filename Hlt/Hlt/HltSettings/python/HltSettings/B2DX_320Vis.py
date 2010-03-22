@@ -41,7 +41,21 @@ class B2DX_320Vis :
             'Hlt2B2D2hhKstarReq3BodyWithKsBroadMW',
             'Hlt2B2D2hhKstarReq3BodyWithoutKsBroadMW',
             'Hlt2B2D2hhKstarReq4BodyWithKsBroadMW',
-            'Hlt2B2D2hhKstarReq4BodyWithoutKsBroadMW'
+            'Hlt2B2D2hhKstarReq4BodyWithoutKsBroadMW',
+            'Hlt2B2D2XRobust3Body',
+            'Hlt2B2D2XRobust4Body',
+            'Hlt2B2D2hhBachelorWithKsSignal',
+            'Hlt2B2D2hhBachelorWithoutKsSignal',
+            'Hlt2B2D2hhhBachelorWithKsSignal',
+            'Hlt2B2D2hhhBachelorWithoutKsSignal',
+            'Hlt2B2D2hhKstarWithKsSignal',
+            'Hlt2B2D2hhKstarWithoutKsSignal',
+            'Hlt2B2D2hhBachelorWithKsBroadMW',
+            'Hlt2B2D2hhBachelorWithoutKsBroadMW',
+            'Hlt2B2D2hhhBachelorWithKsBroadMW',
+            'Hlt2B2D2hhhBachelorWithoutKsBroadMW',
+            'Hlt2B2D2hhKstarWithKsBroadMW',
+            'Hlt2B2D2hhKstarWithoutKsBroadMW'
             ]
         
         return lines

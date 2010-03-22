@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2010-03-22 - Jacopo Nardulli
+ - Adding monitoring lines to the B2DX lines
+
 ! 2010-03-21 - Johannes Albrecht
  - follow changes tagged as albrecht_20100321 in HLtConf
 
