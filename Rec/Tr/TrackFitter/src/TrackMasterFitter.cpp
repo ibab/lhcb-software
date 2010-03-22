@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.85 2010-02-23 15:48:19 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.86 2010-03-22 13:57:27 rlambert Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -145,7 +145,7 @@ StatusCode TrackMasterFitter::initialize()
   
   m_debugLevel   = msgLevel( MSG::DEBUG ) || msgLevel( MSG::VERBOSE ) ;  
 
-  info() << " " << endmsg
+  if(m_debugLevel) debug() << " " << endmsg
          << "============ TrackMasterFitter Settings ===========" << endmsg
          << ((m_upstream) ? " Upstream fit" : " Downstream fit") << endmsg 
          << " Number of fit iterations: " << m_numFitIter << endmsg
@@ -153,8 +153,7 @@ StatusCode TrackMasterFitter::initialize()
          << " at chi2 > " << m_chi2Outliers << endmsg
          << " State z positions at: " << endmsg
          << ((m_stateAtBeamLine) ? " beam line," : "") << " first/last measurement"
-	 << (m_addDefaultRefNodes ? ", default reference positions" : "" ) ;
-  info() << endmsg
+	 << (m_addDefaultRefNodes ? ", default reference positions" : "" )  << endmsg
          << "==================================================" << endmsg;
   
   return StatusCode::SUCCESS;

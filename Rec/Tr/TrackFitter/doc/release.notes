@@ -5,7 +5,7 @@
 
 ! 2010-03-22 - Rob Lambert
  - Fixes for windows warnings savannah 64668
- - Supressed info messages to debug in initialize
+ - TrackMasterFitter: Supressed info messages to debug in initialize
 
 !=========================== TrackFitter v2r45 2010-02-24=================
 ! 2010-02-26 - Wouter Hulsbergen
