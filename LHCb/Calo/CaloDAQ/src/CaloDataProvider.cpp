@@ -167,11 +167,11 @@ const CaloVector<LHCb::CaloDigit>& CaloDataProvider::digits(int source,bool clea
 //========== 
 //  Get data
 //==========
-double CaloDataProvider::digit (LHCb::CaloCellID id){
+double CaloDataProvider::digit (LHCb::CaloCellID id,double def){
   if( m_getRaw )getBanks();
   if( 0 >  m_digits.index(id) ){
-    int temp = adc(id);
-    if( 0 == temp && 0 >  m_adcs.index(id) ) return 0.; // 0-suppressed data or non-valid CellID
+    int temp = adc(id,-256);
+    if( -256 == temp && 0 >  m_adcs.index(id) ) return def; // 0-suppressed data or non-valid CellID
     double e = ( double(temp) - m_pedShift ) * m_calo->cellGain( id );
     LHCb::CaloDigit dig(id,e);
     m_digits.addEntry( dig , id);
@@ -180,11 +180,11 @@ double CaloDataProvider::digit (LHCb::CaloCellID id){
   return m_digits[id].e();
 }
 //-------------------------------------------------------
-int CaloDataProvider::adc (LHCb::CaloCellID id){
+int CaloDataProvider::adc (LHCb::CaloCellID id, int def){
   if( m_getRaw )getBanks();
   bool ok=true;
   if( 0 >  m_adcs.index(id) )ok = decodeCell( id );
-  if( 0 >  m_adcs.index(id) )return 0;// 0-suppressed data or non-valid CellID
+  if( 0 >  m_adcs.index(id) )return def;// 0-suppressed data or non-valid CellID
   return m_adcs[id].adc();
 }
 

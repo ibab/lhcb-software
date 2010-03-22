@@ -1,4 +1,4 @@
-// $Id: CaloDataProviderFromTES.cpp,v 1.10 2009-10-28 10:31:20 odescham Exp $
+// $Id: CaloDataProviderFromTES.cpp,v 1.11 2010-03-22 17:01:24 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -172,36 +172,36 @@ void CaloDataProviderFromTES::cleanData(int feb ) {
   }
 }
 //---------
-double CaloDataProviderFromTES::digit (LHCb::CaloCellID id){
-    if(m_getRaw)getBanks();
-  if( fromDigit() ){
-    if( NULL == m_digCont )return 0. ;
-    LHCb::CaloDigit* digit = m_digCont->object( id );
-    if( NULL == digit )return 0.;
-    return digit->e();
-  }else if( fromAdc() ){
-    if( NULL == m_adcCont )return 0. ;
-    LHCb::CaloAdc* adc = m_adcCont->object( id );
-    if( NULL == adc )return 0.;
-    return ( (double) adc->adc() - m_pedShift ) * m_calo->cellGain( id );
-  }
-  return 0.;
-}
-//---------
-int CaloDataProviderFromTES::adc (LHCb::CaloCellID id){
+double CaloDataProviderFromTES::digit (LHCb::CaloCellID id, double def){
   if(m_getRaw)getBanks();
   if( fromDigit() ){
-    if( NULL == m_digCont )return 0 ;
+    if( NULL == m_digCont )return def ;
     LHCb::CaloDigit* digit = m_digCont->object( id );
-    if( NULL == digit )return 0;
+    if( NULL == digit )return def;
+    return digit->e();
+  }else if( fromAdc() ){
+    if( NULL == m_adcCont )return def ;
+    LHCb::CaloAdc* adc = m_adcCont->object( id );
+    if( NULL == adc )return def;
+    return ( (double) adc->adc() - m_pedShift ) * m_calo->cellGain( id );
+  }
+  return def;
+}
+//---------
+int CaloDataProviderFromTES::adc (LHCb::CaloCellID id,int def){
+  if(m_getRaw)getBanks();
+  if( fromDigit() ){
+    if( NULL == m_digCont )return def ;
+    LHCb::CaloDigit* digit = m_digCont->object( id );
+    if( NULL == digit )return def;
     return (int) (digit->e() / m_calo->cellGain( id ) + m_pedShift);
   }else if(  fromAdc() ){
-    if( NULL == m_adcCont )return 0 ;
+    if( NULL == m_adcCont )return def ;
     LHCb::CaloAdc* adc = m_adcCont->object( id );
-    if( NULL == adc )return 0;
+    if( NULL == adc )return def;
     return adc->adc();
   }
-  return 0;
+  return def;
 }
 //---------
 

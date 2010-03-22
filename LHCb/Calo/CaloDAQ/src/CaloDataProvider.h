@@ -28,8 +28,8 @@ public:
   virtual StatusCode finalize();
   void clear();
   void cleanData(int feb);
-  int    adc(LHCb::CaloCellID id);
-  double digit(LHCb::CaloCellID id);
+  int    adc(LHCb::CaloCellID id, int def = 0);
+  double digit(LHCb::CaloCellID id, double def = 0.);
   unsigned int nTell1s(){return m_tell1s;};
   const CaloVector<LHCb::CaloAdc>& adcs(int source=-1,bool clean=true);
   const CaloVector<LHCb::CaloAdc>& adcs(std::vector<int> source,bool clean=true);

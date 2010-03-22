@@ -1,4 +1,4 @@
-// $Id: CaloDataProviderFromTES.h,v 1.7 2009-10-27 10:11:26 odescham Exp $
+// $Id: CaloDataProviderFromTES.h,v 1.8 2010-03-22 17:01:24 odescham Exp $
 #ifndef CALODATAPROVIDERFROMTES_H  
 #define CALODATAPROVIDERFROMTES_H 1 
 
@@ -38,8 +38,8 @@ public:
   }
   // =========================================================================
   
-  int    adc(LHCb::CaloCellID id);
-  double digit(LHCb::CaloCellID id);
+  int    adc(LHCb::CaloCellID id,int def=0);
+  double digit(LHCb::CaloCellID id,double def=0.);
   const CaloVector<LHCb::CaloAdc>& adcs(int source=-1,bool clean=true);
   const CaloVector<LHCb::CaloDigit>& digits(int source=-1,bool clean=true);
   const CaloVector<LHCb::CaloAdc>& adcs(std::vector<int> sources,bool clean=true);
