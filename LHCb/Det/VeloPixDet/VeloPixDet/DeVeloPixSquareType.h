@@ -1,4 +1,4 @@
-// $Id: DeVeloPixSquareType.h,v 1.8 2009-12-03 15:05:18 cocov Exp $
+// $Id: DeVeloPixSquareType.h,v 1.9 2010-03-22 08:58:08 cocov Exp $
 #ifndef VELOPIXDET_DEVELOPIXSQUARETYPE_H 
 #define VELOPIXDET_DEVELOPIXSQUARETYPE_H 1
 
@@ -148,7 +148,7 @@ public:
     }
   }
 
-  /// Return the x,y position of the pixel + fraction                  
+  /// Return the x,y position of the pixel + fraction  
   inline pixelCoord xyOfPixel(unsigned long pixel, pixelCoord fraction) const {
     int chipNum =( pixel & m_ChipMask) >> m_PixelBit  ;
     int pix =  pixel & m_PixelMask ;
@@ -162,8 +162,8 @@ public:
       // 180 deg rotation so pixel become 255-x and stating from 
       long pixnew = ((255 - ((pix & m_PixelHPMask) >> m_PixelLPBit))<< m_PixelLPBit) | (255 - (pix & m_PixelLPMask) );
       return std::make_pair(
-                            m_xyChips[chipNum].first + chipLength() - 
-                            (m_xyPixels[pixnew].first + (fraction.first - 0.5)*m_PixelsSize[pixnew].first) ,
+                            m_xyChips[chipNum].first + chipLength()+interChipDist()/2 - 
+                            (m_xyPixels[pixnew].first  + (fraction.first - 0.5)*m_PixelsSize[pixnew].first),
                             m_xyChips[chipNum].second + chipWidth() - 
                             (m_xyPixels[pixnew].second + (fraction.second - 0.5)*m_PixelsSize[pixnew].second)
                             );
@@ -171,7 +171,7 @@ public:
   }
 
 
-  /// Return the x,y,z position of the pixel + fraction in local coordinates      
+  /// Return the x,y,z position of the pixel + fraction in local coordinates
   inline Gaudi::XYZPoint xyzOfPixel(unsigned long pixel, pixelCoord fraction) const {
     int chipNum =( pixel & m_ChipMask) >> m_PixelBit  ;
     int pix =  pixel & m_PixelMask ;
@@ -183,11 +183,11 @@ public:
                             );      
     }
     else{
-      // 180 deg rotation so pixel become 255-x and stating from 
+      // 180 deg rotation so pixel become 255-x and stating from
       long pixnew = ((255 - ((pix & m_PixelHPMask) >> m_PixelLPBit))<< m_PixelLPBit) | (255 - (pix & m_PixelLPMask) );
       return Gaudi::XYZPoint(
-                            m_xyChips[chipNum].first + chipLength() - 
-                            (m_xyPixels[pixnew].first + (fraction.first - 0.5)*m_PixelsSize[pixnew].first) ,
+                            m_xyChips[chipNum].first + chipLength()+interChipDist()/2 - 
+                            (m_xyPixels[pixnew].first  + (fraction.first - 0.5)*m_PixelsSize[pixnew].first),
                             m_xyChips[chipNum].second + chipWidth() - 
                             (m_xyPixels[pixnew].second + (fraction.second - 0.5)*m_PixelsSize[pixnew].second),
                             m_ladders[m_ChipsInLadder[chipNum]].ReferencePoint().z()
@@ -210,7 +210,7 @@ public:
       // 180 deg rotation so pixel become 255-x and stating from 
       long pixnew = ((255 - ((pix & m_PixelHPMask) >> m_PixelLPBit))<< m_PixelLPBit) | (255 - (pix & m_PixelLPMask) );
       return Gaudi::XYZPoint(
-                            m_xyChips[chipNum].first + chipLength() - m_xyPixels[pixnew].first ,
+                            m_xyChips[chipNum].first + chipLength()+interChipDist()/2 - m_xyPixels[pixnew].first ,
                             m_xyChips[chipNum].second + chipWidth() - m_xyPixels[pixnew].second,
                             m_ladders[m_ChipsInLadder[chipNum]].ReferencePoint().z()
                             );

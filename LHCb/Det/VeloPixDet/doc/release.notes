@@ -4,6 +4,10 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+! 2010-03-22 - Victor Coco
+ - bug fix in DeVeloPixSquareType (interdistChip/2 missing in x position caluclation
+ for outer chips).
+
 !========================== VeloPixDet v1r3 2009-12-11 =======================
 ! 2009-12-11 - Marco Cattaneo
  - Remove obsolete file VeloPixDet_dll.cpp
