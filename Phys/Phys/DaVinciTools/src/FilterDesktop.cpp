@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.21 2010-03-22 11:49:57 jpalac Exp $
+// $Id: FilterDesktop.cpp,v 1.22 2010-03-22 13:57:22 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -319,6 +319,21 @@ public:
   /// general flag to switch on/off the monitoring
   bool monitor() const { return m_monitor ; }
   // ==========================================================================
+protected:
+  StatusCode writeEmptyContainerIfNeeded() 
+  {
+
+    const std::string& loc = desktop()->getOutputLocation();
+    if (msgLevel(MSG::DEBUG)) debug() << "Saving empty containers at " 
+                                      << loc << endmsg ;
+
+    m_cloneFilteredParticles ? writeEmptyKeyedContainers(loc) : writeEmptySharedContainers(loc);
+    return StatusCode::SUCCESS;    
+  }
+  // ==========================================================================
+private:
+
+  // ==========================================================================
 private:
   // ==========================================================================
   /// construct the preambulo string 
@@ -411,6 +426,14 @@ private:
   void cloneP2PVRelation(const LHCb::Particle* particle,
                          const LHCb::Particle* clone,
                          Particle2Vertex::Table* table) const;
+  //
+  /// Get the clone the relation of a particle and a PV into table.
+  void cloneP2PVRelation(const LHCb::Particle* particle,
+                         Particle2Vertex::Table* table) const;
+  /// Write empty container if selection fails.
+  void writeEmptyKeyedContainers(const std::string& loc) const;
+  /// Write empty container if selection fails.
+  void writeEmptySharedContainers(const std::string& loc) const;
   ///
   const LHCb::Particle::Range filterAndCopyParticles(const LHCb::Particle::ConstVector& particles) const;
 
@@ -570,11 +593,13 @@ const LHCb::Particle::Range FilterDesktop::filterAndCopyParticles(const LHCb::Pa
 // ============================================================================
 const LHCb::Particle::Range FilterDesktop::filterParticles(const LHCb::Particle::ConstVector& particles) const
 {
-
+  const std::string& outputLocation = desktop()->getOutputLocation();  
   LHCb::Particle::Selection* accepted = new LHCb::Particle::Selection;
-  put(accepted, desktop()->getOutputLocation()+"/Particles");
+  put(accepted, outputLocation+"/Particles");
   LHCb::Vertex::Selection* vertices = new LHCb::Vertex::Selection;
-  put(vertices, desktop()->getOutputLocation()+"/Vertices");
+  put(vertices, outputLocation+"/Vertices");
+  Particle2Vertex::Table* table = new Particle2Vertex::Table;
+  put(table, outputLocation+"/Particle2VertexRelations");
   //
   StatEntity& cnt = counter ( "efficiency" ) ;
   //
@@ -588,7 +613,9 @@ const LHCb::Particle::Range FilterDesktop::filterParticles(const LHCb::Particle:
     cnt += decision ;
     if  ( !decision ) { continue ; }                       // CONTINUE
     accepted->push_back ( p ) ;
-    vertices->push_back( p->endVertex() );
+    const LHCb::Vertex* endVtx = p->endVertex();
+    if (endVtx) vertices->push_back( p->endVertex() );
+    cloneP2PVRelation(p, table) ;
   }
   
   return LHCb::Particle::ConstVector(accepted->begin(), accepted->end());
@@ -603,6 +630,43 @@ void FilterDesktop::cloneP2PVRelation(const LHCb::Particle* particle,
   if ( 0!= bestPV ) {
     table->relate(clone, bestPV);
   }
+}
+// ============================================================================
+void FilterDesktop::cloneP2PVRelation(const LHCb::Particle* particle,
+                                       Particle2Vertex::Table* table) const 
+{
+  const LHCb::VertexBase* bestPV = getStoredBestPV(particle);
+  if ( 0!= bestPV ) {
+    table->relate(particle, bestPV);
+  }
+}
+// ============================================================================
+void FilterDesktop::writeEmptyKeyedContainers(const std::string& loc) const
+{
+
+  if (!exist<LHCb::Particle::Container>(loc + "/Particles") ) {  
+    LHCb::Particle::Container* dummy = new LHCb::Particle::Container;
+    put(dummy, loc + "/Particles");
+  }
+  if (!exist<LHCb::Vertex::Container>(loc+"/Vertices") ) {  
+    LHCb::Vertex::Container* dummy = new LHCb::Vertex::Container;
+    put(dummy, loc + "/Vertices");
+  }
+
+}
+// ============================================================================
+void FilterDesktop::writeEmptySharedContainers(const std::string& loc) const
+{
+
+  if (!exist<LHCb::Particle::Selection>(loc + "/Particles") ) {  
+    LHCb::Particle::Selection* dummy = new LHCb::Particle::Selection;
+    put(dummy, loc + "/Particles");
+  }
+  if (!exist<LHCb::Vertex::Selection>(loc+"/Vertices") ) {  
+    LHCb::Vertex::Selection* dummy = new LHCb::Vertex::Selection;
+    put(dummy, loc + "/Vertices");
+  }
+
 }
 // ============================================================================
 /// the factory 
