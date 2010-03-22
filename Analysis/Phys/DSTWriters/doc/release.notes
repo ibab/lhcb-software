@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.15 2010-03-08 11:22:04 jpalac Exp $
+!$Id: release.notes,v 1.16 2010-03-22 15:34:47 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! 2010-03-22 - Juan Palacios
+ - cmt/requirements
+  . Increase to v1r4
+ - python/DSTWriters/MicroDSTWriter.py
+ - python/DSTWriters/microdstelements.py
+  . Set CloneFilteredParticles of algorithms in sequence to True.
 
 ! ======================== DSTWriters v1r3 2010-03-08 ========================
 
