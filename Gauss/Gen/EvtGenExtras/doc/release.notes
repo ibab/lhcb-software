@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 
 
+!======================= EvtGenExtras v2r3 2010-03-22 ========================
 ! 2010-02-24 - Nikolai Nikitin
  - Improved the MS model for the simulation of the CP-effects in the rare
    semileptonic decays. Fixed a typo in the totally antisymmetric tensor.
