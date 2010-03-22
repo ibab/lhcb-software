@@ -69,6 +69,12 @@ class _copyParticleTrees(CopyWithBranch) :
             cloner.addTool(ParticleCloner, name="ParticleCloner")
             cloner.ParticleCloner.ICloneProtoParticle="NONE"
         self.setOutputPrefix(cloner)
+        try :
+            sel.algorithm().CloneFilteredParticles = True
+            print 'Set CloneFilteredParticles of', sel.algorithm().name(), ' to True'
+        except :
+            pass
+        
         return [cloner]
 
 def _copyP2PVRelations(sel, name, locations) :

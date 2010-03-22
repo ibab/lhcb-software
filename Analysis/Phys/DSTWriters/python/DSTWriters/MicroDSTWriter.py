@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.5 2010-02-16 17:28:06 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.6 2010-03-22 15:29:44 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -84,6 +84,12 @@ class MicroDSTWriter(BaseDSTWriter) :
                                    VertexCloner,
                                    ParticleCloner,
                                    ProtoParticleCloner )
+        particleSelector = sel.algorithm()
+        try :
+            particleSelector.CloneFilteredParticles = True
+            print 'Set CloneFilteredParticles of', particleSelector.name(), ' to True'
+        except :
+            pass
         cloner = CopyParticles(self._personaliseName(sel,
                                                      'CopyParticles'))
         cloner.InputLocations = self.dataLocations(sel,"Particles")
