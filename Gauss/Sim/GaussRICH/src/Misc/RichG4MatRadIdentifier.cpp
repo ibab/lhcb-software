@@ -61,7 +61,7 @@ void RichG4MatRadIdentifier::InitializeRichG4MatRadIdentifier()
       n_mat++;
       m_RichG4MatIndexRadNum[curMatIndex] = Rich1AgelGenericCkvRadiatorNum;
 
-    }else if(curMatName == C4F10MaterialName ) {
+    }else if(curMatName == C4F10MaterialName || curMatName == C3F8MaterialName ) {
       n_mat++;
       m_RichG4MatIndexRadNum[curMatIndex] =  Rich1C4F10CkvRadiatorNum;
     
@@ -245,7 +245,7 @@ void RichG4MatRadIdentifier::InitializeRichCkvMatMaxNumPhot(std::vector<G4int>  
                  (curMatName == AgelTile14MaterialName) ||  
                  (curMatName == AgelTile15MaterialName) ) {
              m_RichG4CkvMaxPhotPerStep[curMatIndex] =  aAgelLim;
-    }else if ( curMatName == C4F10MaterialName ) {
+    }else if ( curMatName == C4F10MaterialName || curMatName == C3F8MaterialName ) {
              m_RichG4CkvMaxPhotPerStep[curMatIndex] = aC4f10Lim;
 
 

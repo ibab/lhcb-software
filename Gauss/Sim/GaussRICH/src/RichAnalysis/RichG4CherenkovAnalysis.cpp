@@ -93,7 +93,7 @@ void RichG4CherenkovAnalysis1(const G4Step& aStep, G4double CosThCkv,
     }
 
     if(pPreVolNameC4F10 == LogVolC4F10NameAnalysis &&
-       pPreVolMatNameC4F10 == C4F10MaterialName &&
+       ( ( pPreVolMatNameC4F10 == C4F10MaterialName)||( pPreVolMatNameC4F10 == C3F8MaterialName)  ) &&
        prePos.z() >= C4F10ZBeginAnalysis &&
        prePos.z() <=  C4F10ZEndAnalysis ) {
       SmartDataPtr<IHistogram1D>hCkvC4F10Rich1(CurrentHistoSvc,"RICHG4HISTOSET1/20");
