@@ -543,7 +543,7 @@ StatusCode TrackSeedFind::findSeeds() {
 	if (m_debug) ++(debugloops[0]);
          if ( m_verbose )
            verbose() << " x1 ambig " << hitX1.x() << " " << ambi << endreq;
-         ambigX1=ambi;
+         ambigX1=(bool) ambi;
          hitX1.setAmbiguity(ambigX1);
          x1=hitX1.x(ambigX1);
          z1=hitX1.z();
@@ -574,7 +574,7 @@ StatusCode TrackSeedFind::findSeeds() {
             int ambi3=0;
             if (hitX3.isIT()) ambi3=1;
             for (; ambi3<2; ++ambi3) {
-               ambigX3=ambi3;
+               ambigX3=(bool) ambi3;
 	       hitX3.setAmbiguity(ambigX3);
                if (m_debug) ++(debugloops[1]);
 // here, check whether we have already had the current combination of
