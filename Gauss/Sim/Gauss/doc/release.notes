@@ -4,6 +4,14 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2010-03-22 - Silvia Miglioranzi
+ - Added options to steer different settings for the Physics Lists:
+   - G4PL_LHEP_EmStd.py
+   - G4PL_LHEP_EmOpt3.py
+   - G4PL_QGSP.py
+   - G4PL_QGSP_BERT.py
+   - G4PL_FTFP_BERT.py
+
 ! 2010-03-08 - Silvia Miglioranzi
  - Modified the Configurable "PhysicsList". Previously only 'LHEP' 
    and 'QGSP' options were used to steer the entire PhysicsList. 
