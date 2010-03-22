@@ -17,12 +17,12 @@ def appendCondDBOveride( file, det, hpd, x0, y0 ):
     """
     Append x0, y0 silicon sensor offset for HPD 'hpd' in RICH 'det' to CondDB overide file
     """
-    conddbpath = '/Conditions/Alignment/Rich' + str(det)
+    conddbpath = 'Conditions/Alignment/Rich' + str(det)
     hpdpath = '/HPD' + str(hpd) + '_Align'
-    poscond = 'double_v dPosXYZ ' + str(x0) + ' ' + str(y0) + ' 0.0' 
-    rotcond = 'double_v dRotXYZ 0.0 0.0 0.0'
-    pivcond = 'double_v pivotXYZ 0.0 0.0 0.0'
-    file.write( '\n UpdateManagerSvc().CondiditionsOverride += [ \n'
+    poscond = 'double_v dPosXYZ = ' + str(x0) + ' ' + str(y0) + ' 0.0' 
+    rotcond = 'double_v dRotXYZ = 0.0 0.0 0.0'
+    pivcond = 'double_v pivotXYZ = 0.0 0.0 0.0'
+    file.write( '\n UpdateManagerSvc().ConditionsOverride += [ \n'
                 '\t "' + conddbpath + hpdpath + ' := ' +
                 poscond + '; ' +
                 rotcond + '; ' +
@@ -35,7 +35,7 @@ def produceCondDBOverideFromXML( xmlfilelist, condbfilename ):
     """
     counterdict = countersFromXMLFileList( xmlfilelist )
     file = open( condbfilename, 'w' )
-    file.write('from Gaudi.Configuration import * \n\n')
+    file.write('from Configurables import UpdateManagerSvc \n\n')
     for hpd in range(0,484):
         (isvalid, x0,y0) =  hpdLocalOffset( hpd, counterdict )
         if isvalid:
