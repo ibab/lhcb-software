@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.8 2010-03-22 15:34:26 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.9 2010-03-22 15:36:01 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -88,8 +88,8 @@ class MicroDSTWriter(BaseDSTWriter) :
             try :
                 alg.CloneFilteredParticles = True
                 print 'Set CloneFilteredParticles of', alg.name(), ' to True'
-        except :
-            pass
+            except :
+                pass
         
         cloner = CopyParticles(self._personaliseName(sel,
                                                      'CopyParticles'))

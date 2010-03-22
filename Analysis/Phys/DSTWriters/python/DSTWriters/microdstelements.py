@@ -74,8 +74,8 @@ class _copyParticleTrees(CopyWithBranch) :
             try :
                 alg.CloneFilteredParticles = True
                 print 'Set CloneFilteredParticles of', alg.name(), ' to True'
-        except :
-            pass
+            except :
+                pass
         
         return [cloner]
 
