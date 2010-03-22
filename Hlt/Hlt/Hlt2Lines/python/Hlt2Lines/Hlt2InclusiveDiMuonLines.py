@@ -295,11 +295,11 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                                   )
         #--------------------------------------------
         '''
-            robust biased DiMuon 
+            simple biased DiMuon 
         '''
         line = Hlt2Line('BiasedDiMuonSimple'
                         , prescale = self.prescale 
-                        , algos = [ PV3D(), DiMuon, RobustDiMuon ]
+                        , algos = [ PV3D(), DiMuon, DiMuonSimple ]
                         , postscale = self.postscale
                         )
 
@@ -309,7 +309,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line = Hlt2Line('BiasedDiMuonRefined'
                         , prescale = self.prescale 
-                        , algos = [ PV3D(), DiMuon, RobustDiMuon, RefinedDiMuon ]
+                        , algos = [ PV3D(), DiMuon, DiMuonSimple, RefinedDiMuon ]
                         , postscale = self.postscale
                         )
 

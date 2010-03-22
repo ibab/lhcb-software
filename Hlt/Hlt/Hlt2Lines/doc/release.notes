@@ -1,4 +1,3 @@
-$Id: release.notes,v 1.137 2010-03-22 11:16:16 jnardull Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -11,6 +10,9 @@ $Id: release.notes,v 1.137 2010-03-22 11:16:16 jnardull Exp $
 
 2010-03-22 - Jacopo Nardulli
  - Remove hard-coded values of pre/post scales in the B2DX lines
+
+2010-03-21 - L. de Paula
+ - Another correction in Hlt2InclusiveDiMuonLines
 
 2010-03-21 - L. de Paula
  - Small correction in a Hlt2BiasedDiMuonLine
