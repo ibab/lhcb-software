@@ -1,4 +1,4 @@
-// $Id: TrackEventFitter.cpp,v 1.22 2009-11-22 09:03:33 wouter Exp $
+// $Id: TrackEventFitter.cpp,v 1.23 2010-03-22 02:41:37 rlambert Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -178,7 +178,7 @@ StatusCode TrackEventFitter::finalize() {
   float perf = 0.;
   double nTracks = counter("nTracks").flag();
   if ( nTracks > 1e-3 )
-    perf = 100.0*counter("nFitted").flag() / nTracks;
+    perf = (float) 100.0*counter("nFitted").flag() / nTracks;
 
   info() << "  Fitting performance   : "
          << format( " %7.2f %%", perf ) << endmsg;
