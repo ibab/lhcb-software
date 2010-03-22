@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2010-03-22 - Rob Lambert
+ - Supress output to debug in initialize
+
 !====================== TrackProjectors v2r27 2010-02-15 =====================
 ! 2010-02-14 Wouter Hulsbergen
  - improvements in OTProjector 

@@ -107,9 +107,12 @@ StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
 StatusCode TrajOTProjector::initialize()
 {
   StatusCode sc = TrackProjector::initialize();
-  info() << "Use drifttime           = " << m_useDriftTime << endreq ;
-  info() << "Fit drifttime residuals = " << m_fitDriftTime << endreq ;
-  info() << "Prefit strategy = " << m_prefitStrategy << endreq ;
+  if(msgLevel(MSG::DEBUG)) debug() << "Use drifttime           = " 
+                                   << m_useDriftTime << endreq 
+                                   << "Fit drifttime residuals = " 
+                                   << m_fitDriftTime << endreq 
+                                   << "Prefit strategy = " 
+                                   << m_prefitStrategy << endreq ;
   return sc;
 }
 
