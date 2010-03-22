@@ -5,6 +5,9 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+! 2010-03-22 - Chris Jones
+ - Add new RICH package RichHPDImageAnalysis
+
 </PRE><H1><A NAME=v9r0>2010-03-20 RecSys v9r0</A></H1><PRE>
 This version uses Gaudi v21r8 and LHCb v30r0
 
