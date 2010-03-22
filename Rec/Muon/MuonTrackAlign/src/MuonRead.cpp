@@ -1,4 +1,4 @@
-// $Id: MuonRead.cpp,v 1.8 2009-10-09 07:32:34 wouter Exp $
+// $Id: MuonRead.cpp,v 1.9 2010-03-22 01:20:06 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -250,11 +250,11 @@ StatusCode MuonRead::execute() {
             if ((*iMc)->midPoint().z()>18000 && (*iMc)->midPoint().z()<20000) iMS=4;
             if (iMS<0||iMS>4) continue;
         
-            x_hit[iMS] += (*iMc)->midPoint().x();
-            y_hit[iMS] += (*iMc)->midPoint().y();
-            z_hit[iMS] += (*iMc)->midPoint().z();
-            tx_hit[iMS] = (*iMc)->dxdz(); 
-            ty_hit[iMS] = (*iMc)->dydz();
+            x_hit[iMS] += (float) (*iMc)->midPoint().x();
+            y_hit[iMS] += (float) (*iMc)->midPoint().y();
+            z_hit[iMS] += (float) (*iMc)->midPoint().z();
+            tx_hit[iMS] = (float) (*iMc)->dxdz(); 
+            ty_hit[iMS] = (float) (*iMc)->dydz();
             
             counter[iMS]++;
           }

@@ -1,6 +1,6 @@
 ////////// Brunel v32r7 ///////////////
 
-// $Id: AlignMuonRec.cpp,v 1.10 2008-09-28 10:01:50 smenzeme Exp $
+// $Id: AlignMuonRec.cpp,v 1.11 2010-03-22 01:20:06 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -366,9 +366,9 @@ StatusCode AlignMuonRec::execute() {
 	m_hitM->fill(ista+1,vpoint.size());
 	for(std::vector<AlignMuonPoint>::const_iterator iV=vpoint.begin(); iV != vpoint.end(); iV++) {
 	  
-	  xm=(*iV).x();       
-	  ym=(*iV).y();
-	  zm=(*iV).z();
+	  xm=(float)(*iV).x();       
+	  ym=(float)(*iV).y();
+	  zm=(float)(*iV).z();
 	  
 	  LHCb::State temp;
 	  temp.setZ(zm);
@@ -492,15 +492,15 @@ StatusCode AlignMuonRec::muonSearch() {
           
     if(CT_flag==false) continue; //remove if you want to consider also XTalk pad as new seed
     
-    float M5x = (*itM5m).x();
-    float M5y = (*itM5m).y();
+    float M5x = (float)(*itM5m).x();
+    float M5y = (float)(*itM5m).y();
     float n = 1;
     
     for( itM5n = itM5m+1; itM5n < Points[4].end(); itM5n++){
       if(fabs((*itM5m).x()-(*itM5n).x())<0.55*(PADsizeX[(*itM5m).tile().region()]+PADsizeX[(*itM5n).tile().region()])
          && fabs((*itM5m).y()-(*itM5n).y())<0.55*(PADsizeY[(*itM5m).tile().region()]+PADsizeY[(*itM5n).tile().region()])){
-	M5x+=(*itM5n).x();
-	M5y+=(*itM5n).y();
+	M5x+=(float)(*itM5n).x();
+	M5y+=(float)(*itM5n).y();
 	n++;
         CT_Points[4].push_back(*itM5n);
 	CT_M5points.push_back(*itM5n); 

@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.22 2009-10-20 15:13:32 cattanem Exp $
+! $Id: release.notes,v 1.23 2010-03-22 01:20:06 rlambert Exp $
 ! Package     : MuonTrackAlign
 ! Responsible : Alessia Satta
 ! Purpose     : Track reconstruction for Muon Alignment purposes
 !---------------------------------------------------------------------
+
+! 2010-03-22 - Rob Lambert
+ - Fixes for windows warnings about casting to floats savannah 64668
 
 !=================== MuonTrackAlign v1r8 2009-10-20 ==================
 ! 2009-10-20 - Marco Cattaneo
