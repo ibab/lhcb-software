@@ -342,7 +342,7 @@ StatusCode CalibrateIP::execute() {
     m_Beam->SetIPPosition( mx, my, mz );
 
     //transform back into LHCb frame
-    if( m_local ){
+    if( m_local && context() == "Info" ){
       info()<<"Average interaction point position in the Velo frame : "
             << m_Beam->GetIPPosition() << endmsg;
       m_Beam->MoveToFrame( m_toGlobalFrame );
@@ -366,16 +366,18 @@ StatusCode CalibrateIP::execute() {
     }   
   
     //Print out !
-    info()<<"Average interaction point position : "<< m_Beam->PrintIP() 
-          <<" done on "<< m_nbpv <<" primary vertices."<< endmsg;
-    info()<<"Covariance matrix of the interaction point "
-          <<"position distribution : "<< endmsg;
-    if ( msgLevel(MSG::DEBUG) ) cout<< Cov <<endl;
-    info()<<"X eigenvector "<< m_Beam->GetXEigenVector() 
-          <<" Y eigenvector "<< m_Beam->GetYEigenVector() 
-          <<" Z eigenvector "<< m_Beam->GetZEigenVector() <<endmsg;
-    info()<<"Eigenvalues "<< eigval << endmsg;
-
+    if( context() == "Info" ){
+      info()<<"Average interaction point position : "<< m_Beam->PrintIP() 
+            <<" done on "<< m_nbpv <<" primary vertices."<< endmsg;
+      info()<<"Covariance matrix of the interaction point "
+            <<"position distribution : "<< endmsg;
+      if ( msgLevel(MSG::DEBUG) ) cout<< Cov <<endl;
+      info()<<"X eigenvector "<< m_Beam->GetXEigenVector() 
+            <<" Y eigenvector "<< m_Beam->GetYEigenVector() 
+            <<" Z eigenvector "<< m_Beam->GetZEigenVector() <<endmsg;
+      info()<<"Eigenvalues "<< eigval << endmsg;
+    }
+    
   }
 
   //anyway...

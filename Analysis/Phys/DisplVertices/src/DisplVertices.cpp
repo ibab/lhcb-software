@@ -179,54 +179,57 @@ StatusCode DisplVertices::initialize() {
   }
   if( m_PurityMin < 1.1 ) m_MC = true;
 
-  info() << "--------------------------------------------------------"<<endmsg;
-  info() << "DisplVertices will select " << m_Prey 
-	 << " candidates (ID=" << m_PreyID.pid() <<") ";
-  if(m_MC){ 
-    info() << "with theoretical mass of " << Prey->mass()/GeV 
-	   <<" GeV"; }
-  info() << ". Selection Cuts are : " << endmsg;
-  info() << "Min nb of desired candidates : "<< m_NbCands<< endmsg;
-  info() << m_Prey <<" minimum mass " 
-	 << m_PreyMinMass/Gaudi::Units::GeV <<" GeV" << endmsg;
-  info() << m_Prey <<" maximum mass " 
-	 << m_PreyMaxMass/Gaudi::Units::GeV <<" GeV" << endmsg;
-  info() << "Minimum number of tracks at the reconstructed vertex of "
-	 << m_nTracks <<" tracks."<< endmsg ;
-  info() << "Max distance of the vertices "<< m_DistMax <<" mm" << endmsg;
-  info() << "Max chi2/ndof of a vertex "<< m_MaxChi2OvNDoF << endmsg;
-  info() << "Min sum of daughters's pT "<< m_SumPt << endmsg;
-  if( m_MuonpT )
-    info()<<"At least one muon with pT > "<< m_MuonpT << endmsg;
-  if( m_RemFromRFFoil )
-    info()<<"Not in RF-Foil region"<< endmsg ;
-  if( m_RemVtxFromDet == 1 )
-    info()<<"Not in detector material"<< endmsg;
-  if( m_RemVtxFromDet == 2 )
-    info()<<"Not closer than " << m_DetDist 
-          <<"mm from detector material along momentum"<< endmsg;
-  if( m_RemVtxFromDet == 3 || m_RemVtxFromDet == 4 )
-    info()<<"Not closer than " << m_DetDist 
-	  <<"*PosCovMatric from detector material"<< endmsg;
-  if( m_RemVtxFromDet == 4 )
-    info()<<"("<< m_DetDist+3 <<" when in RF-Foil region)"<< endmsg;
-  info()<< "The radial displacement is ";
-  if( m_RCut == "FromUpstreamPV" ){
-    info() << "computed with respect to the upstream PV of PV3D." << endmsg;
-  } else if( m_RCut == "FromBeamLine" ){
-    info() << "computed with respect to the beam line given at " 
-	   << m_BLLoc << endmsg;
-  } else {
-    info() << "computed with respect to (0,0,z) in the global LHCb frame" 
-	    << endmsg;
-    info()<< "THIS OPTION SHOULD NOT BE USED ON REAL DATA !!" 
-	   << endmsg;
+  if( context() == "Info" ){
+    info()<<"--------------------------------------------------------"<<endmsg;
+    info() << "DisplVertices will select " << m_Prey 
+           << " candidates (ID=" << m_PreyID.pid() <<") ";
+    if(m_MC){ 
+      info() << "with theoretical mass of " << Prey->mass()/GeV 
+             <<" GeV"; }
+    info() << ". Selection Cuts are : " << endmsg;
+    info() << "Min nb of desired candidates : "<< m_NbCands<< endmsg;
+    info() << m_Prey <<" minimum mass " 
+           << m_PreyMinMass/Gaudi::Units::GeV <<" GeV" << endmsg;
+    info() << m_Prey <<" maximum mass " 
+           << m_PreyMaxMass/Gaudi::Units::GeV <<" GeV" << endmsg;
+    info() << "Minimum number of tracks at the reconstructed vertex of "
+           << m_nTracks <<" tracks."<< endmsg ;
+    info() << "Max distance of the vertices "<< m_DistMax <<" mm" << endmsg;
+    info() << "Max chi2/ndof of a vertex "<< m_MaxChi2OvNDoF << endmsg;
+    info() << "Min sum of daughters's pT "<< m_SumPt << endmsg;
+    if( m_MuonpT )
+      info()<<"At least one muon with pT > "<< m_MuonpT << endmsg;
+    if( m_RemFromRFFoil )
+      info()<<"Not in RF-Foil region"<< endmsg ;
+    if( m_RemVtxFromDet == 1 )
+      info()<<"Not in detector material"<< endmsg;
+    if( m_RemVtxFromDet == 2 )
+      info()<<"Not closer than " << m_DetDist 
+            <<"mm from detector material along momentum"<< endmsg;
+    if( m_RemVtxFromDet == 3 || m_RemVtxFromDet == 4 )
+      info()<<"Not closer than " << m_DetDist 
+            <<"*PosCovMatric from detector material"<< endmsg;
+    if( m_RemVtxFromDet == 4 )
+      info()<<"("<< m_DetDist+3 <<" when in RF-Foil region)"<< endmsg;
+    info()<< "The radial displacement is ";
+    if( m_RCut == "FromUpstreamPV" ){
+      info() << "computed with respect to the upstream PV of PV3D." << endmsg;
+    } else if( m_RCut == "FromBeamLine" ){
+      info() << "computed with respect to the beam line given at " 
+             << m_BLLoc << endmsg;
+    } else {
+      info() << "computed with respect to (0,0,z) in the global LHCb frame" 
+             << endmsg;
+      info()<< "THIS OPTION SHOULD NOT BE USED ON REAL DATA !!" 
+            << endmsg;
+    }
+    info() <<"Min R    : " << m_RMin/mm <<" mm"<< endmsg ;
+    info() <<"Max R    : " << m_RMax/mm <<" mm"<< endmsg ;
+    //info() << "DisplVertices will also try to reconstruct "<< m_MotherPrey 
+    // <<" into two "<< m_Prey <<" decay."<< endmsg;
+    info()<<"--------------------------------------------------------"<<endmsg;
   }
-  info() <<"Min R    : " << m_RMin/mm <<" mm"<< endmsg ;
-  info() <<"Max R    : " << m_RMax/mm <<" mm"<< endmsg ;
-  //info() << "DisplVertices will also try to reconstruct "<< m_MotherPrey 
-	// <<" into two "<< m_Prey <<" decay."<< endmsg;
-  info() << "--------------------------------------------------------"<<endmsg;
+  
 
   //Initialize the beam line
   if( m_RCut !="FromBeamLine" )  m_BeamLine = new Particle();
@@ -499,6 +502,8 @@ StatusCode DisplVertices::finalize() {
   info()<<"-------------------------------------------------------"<< endreq;
   info()<<"Number of reconstructed "<< m_Prey <<"               : " 
         << counter("Nb of candidates").flag() << endreq;
+  info()<<"Number of reconstructed Mother             : " 
+        << counter("Nb of mothers").flag() << endreq;
   if( m_MC ){
     info()<<"Percentage of reconstructed "<< m_Prey <<"           : " 
           << 100.*counter("RecbleMCPrey").flagMean() << endreq;
@@ -519,8 +524,7 @@ StatusCode DisplVertices::finalize() {
   }
   info()<<"-------------------------------------------------------"<< endreq;
 
-  info()<<"Number of reconstructed Mother : " 
-        << counter("Nb of mothers").flag() << endreq;
+
 
   if (NULL!=m_pLinker) delete m_pLinker ; 
 

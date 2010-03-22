@@ -88,47 +88,50 @@ StatusCode RecVertices2Particles::initialize() {
     m_RemFromRFFoil = false;
   }
 
-  info() << "--------------------------------------------------------"<<endmsg;
-  info() <<"RecVertices2Particles takes every RecVertex from "
-	 << m_RVLocation <<" and turns them into Particles if they satisfies "
-	 <<"the following criterias :"<< endmsg ;
-  info() <<"RecVertex has no backward tracks"<< endmsg ;
-  if(!m_KeepLowestZ) 
-    info() <<"RecVertex has not the lowest z position (PV)"<< endmsg;
-  if( m_RemFromRFFoil )
-    info()<<"Remove RecVertex if in RF-Foil region"<< endmsg ;
-  if( m_RemVtxFromDet == 1 )
-    info()<<"Remove RecVertex if in detector material"<< endmsg;
-  if( m_RemVtxFromDet == 2 )
-    info()<<"Remove RecVertex if closer than " << m_DetDist 
-          <<"mm from detector material along momentum"<< endmsg;
-  if( m_RemVtxFromDet == 3 || m_RemVtxFromDet == 4 )
-    info()<<"Remove RecVertex if closer than " << m_DetDist 
-	  <<"*PosCovMatric from detector material"<< endmsg;
-  if( m_RemVtxFromDet == 4 )
-    info()<<"("<< m_DetDist+3 <<" when in RF-Foil region)"<< endmsg;
-  info() <<"Reconstructed Mass of the RecVertex"<< endmsg;
-  info() <<"Min Mass : " << m_PreyMinMass/GeV <<" GeV"<< endmsg;
-  info() <<"Max Mass : " << m_PreyMaxMass/GeV <<" GeV"<< endmsg;
-  info() <<"Minimum number of tracks at the RecVertex : "
-	 << m_nTracks <<" tracks."<< endmsg;
-  info()<< "The radial displacement is ";
-  if( m_RCut == "FromUpstreamPV" ){
-    info() << "computed with respect to the upstream PV of PV3D." << endmsg;
-  } else if( m_RCut == "FromBeamLine" ){
-    info() << "computed with respect to the beam line given at " 
-	   << m_BLLoc << endmsg;
-  } else {
-    info() << "computed with respect to (0,0,z) in the global LHCb frame" 
-	    << endmsg;
-    info()<< "THIS OPTION SHOULD NOT BE USED ON REAL DATA !!" 
-	   << endmsg;
+  if( context() == "Info" ){
+    info()<<"--------------------------------------------------------"<<endmsg;
+    info()<<"RecVertices2Particles takes every RecVertex from "
+          << m_RVLocation <<" and turns them into Particles if they satisfies "
+          <<"the following criterias :"<< endmsg ;
+    info()<<"RecVertex has no backward tracks"<< endmsg ;
+    if(!m_KeepLowestZ) 
+      info()<<"RecVertex has not the lowest z position (PV)"<< endmsg;
+    if( m_RemFromRFFoil )
+      info()<<"Remove RecVertex if in RF-Foil region"<< endmsg ;
+    if( m_RemVtxFromDet == 1 )
+      info()<<"Remove RecVertex if in detector material"<< endmsg;
+    if( m_RemVtxFromDet == 2 )
+      info()<<"Remove RecVertex if closer than " << m_DetDist 
+            <<"mm from detector material along momentum"<< endmsg;
+    if( m_RemVtxFromDet == 3 || m_RemVtxFromDet == 4 )
+      info()<<"Remove RecVertex if closer than " << m_DetDist 
+            <<"*PosCovMatric from detector material"<< endmsg;
+    if( m_RemVtxFromDet == 4 )
+      info()<<"("<< m_DetDist+3 <<" when in RF-Foil region)"<< endmsg;
+    info()<<"Reconstructed Mass of the RecVertex"<< endmsg;
+    info()<<"Min Mass : " << m_PreyMinMass/GeV <<" GeV"<< endmsg;
+    info()<<"Max Mass : " << m_PreyMaxMass/GeV <<" GeV"<< endmsg;
+    info()<<"Minimum number of tracks at the RecVertex : "
+          << m_nTracks <<" tracks."<< endmsg;
+    info()<< "The radial displacement is ";
+    if( m_RCut == "FromUpstreamPV" ){
+      info()<< "computed with respect to the upstream PV of PV3D." << endmsg;
+    } else if( m_RCut == "FromBeamLine" ){
+      info()<< "computed with respect to the beam line given at " 
+            << m_BLLoc << endmsg;
+    } else {
+      info()<< "computed with respect to (0,0,z) in the global LHCb frame" 
+            << endmsg;
+      info()<< "THIS OPTION SHOULD NOT BE USED ON REAL DATA !!" 
+            << endmsg;
+    }
+    info()<<"Min R    : " << m_RMin/mm <<" mm"<< endmsg ;
+    info()<<"Max R    : " << m_RMax/mm <<" mm"<< endmsg ;
+    info()<<"Particles will be made with "<< m_Prey <<" id" << endmsg ;
+    info()<<"Vertex fitter used : "<< m_Fitter << endmsg ;
+    info()<<"--------------------------------------------------------"<<endmsg;
   }
-  info() <<"Min R    : " << m_RMin/mm <<" mm"<< endmsg ;
-  info() <<"Max R    : " << m_RMax/mm <<" mm"<< endmsg ;
-  info() <<"Particles will be made with "<< m_Prey <<" id" << endmsg ;
-  info() <<"Vertex fitter used : "<< m_Fitter << endmsg ;
-  info() << "--------------------------------------------------------"<<endmsg;
+  
 
   //Initialize Vertex Fitter
   if( m_Fitter != "none" ){

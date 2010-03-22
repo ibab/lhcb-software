@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2010-03-22 - Neal Gauvin
+ - remove any print out in initialize() for default
+
 ! 2010-03-18 - Neal Gauvin
  - cosmethic changes in RecVertices2Particles and DisplVertices
 
