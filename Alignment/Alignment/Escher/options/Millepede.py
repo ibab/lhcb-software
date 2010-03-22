@@ -50,7 +50,7 @@ ATrackSelector().MinOTHitCut = 15
 ATrackSelector().MinTTHitCut = 0
 #ATrackSelector().YCutMin_at_T1 = -2500.0
 #ATrackSelector().YCutMax_at_T1 = -830.0
-ATrackSelector().OutputLevel = 1
+ATrackSelector().OutputLevel = 3
 
 from Configurables import TStation
 TStation().OutputLevel = 3
