@@ -111,7 +111,7 @@ StatusCode SpdMonitor::execute()
     const CaloNeighbors& neigh = m_detSpd->zsupNeighborCells(cell);    
     for (CaloNeighbors::const_iterator neighIt = neigh.begin(); neighIt != neigh.end(); neighIt++){
       CaloCellID neighCell = (*neighIt);
-      float value = 1./float(m_neighN[cell]);
+      float value = (float) 1./float(m_neighN[cell]);
       if ( doHisto("2") ) fillCalo2D( "2", neighCell , value );  
       //hFill1( neighCell, "4", cell.index(), value );
     }

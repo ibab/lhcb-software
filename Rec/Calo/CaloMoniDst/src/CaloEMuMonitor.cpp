@@ -1,4 +1,4 @@
-// $Id: CaloEMuMonitor.cpp,v 1.7 2010-01-30 21:30:27 dgolubko Exp $
+// $Id: CaloEMuMonitor.cpp,v 1.8 2010-03-22 02:14:41 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -438,11 +438,11 @@ void CaloEMuMonitor::fillUncutHistograms(const LHCb::ProtoParticle* proto)
   if ( track->type() != LHCb::Track::Downstream &&
        track->type() != LHCb::Track::Long          ) return;
 
-  m_var->prse = proto->info(LHCb::ProtoParticle::CaloPrsE,  -1 * Gaudi::Units::GeV);
-  m_var->ecale= proto->info(LHCb::ProtoParticle::CaloEcalE, -1 * Gaudi::Units::GeV);
-  m_var->hcale= proto->info(LHCb::ProtoParticle::CaloHcalE, -1 * Gaudi::Units::GeV);
+  m_var->prse = (float) proto->info(LHCb::ProtoParticle::CaloPrsE,  -1 * Gaudi::Units::GeV);
+  m_var->ecale= (float) proto->info(LHCb::ProtoParticle::CaloEcalE, -1 * Gaudi::Units::GeV);
+  m_var->hcale= (float) proto->info(LHCb::ProtoParticle::CaloHcalE, -1 * Gaudi::Units::GeV);
 
-  m_var->ismuon = (bool) proto->muonPID()
+  m_var->ismuon = (bool) (proto->muonPID()!=NULL)
     ? ( m_muonLoose ? proto->muonPID()->IsMuonLoose() : proto->muonPID()->IsMuon() )
     : false;
 
@@ -455,7 +455,7 @@ void CaloEMuMonitor::fillUncutHistograms(const LHCb::ProtoParticle* proto)
     if ( sc.isFailure() ) error() << "Track extrapolation to z =" << m_zShowerMaxEcal << " failed!" << endmsg;
     else{
       const LHCb::CaloCellID hypoCell = m_calo->Cell( pos );
-      m_var->ecalx    = pos.x();
+      m_var->ecalx    = (float) pos.x();
       m_var->ecalarea = hypoCell.area();
     }
   }
@@ -467,7 +467,7 @@ void CaloEMuMonitor::fillUncutHistograms(const LHCb::ProtoParticle* proto)
     if ( sc.isFailure() ) error() << "Track extrapolation to z =" << m_zMiddleHcal << " failed!" << endmsg;
     else{
       const LHCb::CaloCellID hypoCell = m_hcal->Cell( pos );
-      m_var->hcalx    = pos.x();
+      m_var->hcalx    = (float) pos.x();
       m_var->hcalarea = hypoCell.area();
     }
   }
@@ -482,13 +482,13 @@ void CaloEMuMonitor::fillUncutHistograms(const LHCb::ProtoParticle* proto)
   }
 
 
-  m_var->p        = track->p();
+  m_var->p        = (float) track->p();
   m_var->eoverp   =-1.;
   m_var->e_hypo   =-10000.;
 
 
   if ( m_electron ){
-    m_var->e_hypo = m_electron->position()->e();
+    m_var->e_hypo = (float) m_electron->position()->e();
     m_var->eoverp = m_var->e_hypo/m_var->p;
   }
 
@@ -529,7 +529,7 @@ bool CaloEMuMonitor::acceptMu(const LHCb::ProtoParticle *proto) const
   if ( !proto->info( LHCb::ProtoParticle::InAccEcal, false )     ) return false;
   if ( !proto->info( LHCb::ProtoParticle::InAccHcal, false )     ) return false;
 
-  bool ismuon = (bool) proto->muonPID()
+  bool ismuon = (bool) (proto->muonPID()!=NULL)
     ? ( m_muonLoose ? proto->muonPID()->IsMuonLoose() : proto->muonPID()->IsMuon() )
     : false;
   if ( !ismuon ) return false;
@@ -547,10 +547,10 @@ bool CaloEMuMonitor::acceptE(const LHCb::ProtoParticle *proto) const
   //e.g.:  "pt>0.5&&inecal==1&&(hcale<=0||hcale>0&&inhcal==1&&hcale<1000.)&&rdlle>4"
   if ( !proto->info( LHCb::ProtoParticle::InAccEcal, false )    ) return false;
 
-  float rdlle = proto->info( LHCb::ProtoParticle::RichDLLe, -9999.);
+  float rdlle = (float) proto->info( LHCb::ProtoParticle::RichDLLe, -9999.);
   if ( rdlle < m_RichDLLe ) return false;
 
-  float hcale = proto->info(LHCb::ProtoParticle::CaloHcalE, -1 * Gaudi::Units::GeV);
+  float hcale = (float) proto->info(LHCb::ProtoParticle::CaloHcalE, -1 * Gaudi::Units::GeV);
   bool  inhcal= (bool) proto->info( LHCb::ProtoParticle::InAccHcal, false );
   if ( inhcal && hcale > m_maxEHcalE ) return false;
 
@@ -690,8 +690,8 @@ void CaloEMuMonitor::fillMVar(const LHCb::ProtoParticle *proto)
   if ( !track ) return;
 
   // track momentum
-  m_var->p     = track->p();
-  m_var->pt    = track->pt();
+  m_var->p     = (float) track->p();
+  m_var->pt    = (float) track->pt();
   // track type
   m_var->ttype = track->type();
 
@@ -714,22 +714,22 @@ void CaloEMuMonitor::fillMVar(const LHCb::ProtoParticle *proto)
 
 
   if ( m_electron ){
-    m_var->e_hypo = m_electron->position()->e();
+    m_var->e_hypo = (float) m_electron->position()->e();
     m_var->eoverp = m_var->e_hypo/m_var->p;
     m_var->cov_hypo = m_electron->position()->covariance()(LHCb::CaloPosition::E, LHCb::CaloPosition::E);  // (2,2)
 
     if ( track->hasStateAt( LHCb::State::ECalShowerMax ) ){
       const LHCb::State *state_ecal = track->stateAt( LHCb::State::ECalShowerMax ) ;
-      m_var->cov_track               = state_ecal->errP2();
-      m_var->p_state                 = state_ecal->p();
+      m_var->cov_track               = (float) state_ecal->errP2();
+      m_var->p_state                 = (float) state_ecal->p();
     }else{
       LHCb::State state = track->closestState(m_plane);
       Gaudi::XYZPoint inPlane(m_plane.ProjectOntoPlane(state.position()));
 
       StatusCode sc = m_ext->propagate( *track, inPlane.z(), state, LHCb::ParticleID(211));
       if ( sc ){
-        m_var->cov_track = state.errP2();
-        m_var->p_state   = state.p();
+        m_var->cov_track = (float) state.errP2();
+        m_var->p_state   = (float) state.p();
       }
     }
 
@@ -738,7 +738,7 @@ void CaloEMuMonitor::fillMVar(const LHCb::ProtoParticle *proto)
   }
 
   // 3D chi2 for Track and Calo matching (equivalent to CaloElectronMatch)
-  m_var->chi2e = proto->info( LHCb::ProtoParticle::CaloEcalChi2 , -999.);
+  m_var->chi2e = (float) proto->info( LHCb::ProtoParticle::CaloEcalChi2 , -999.);
   if (m_var->chi2e > 9999.) m_var->chi2e = 9999.;
   m_var->tanhe = tanh( m_var->chi2e / m_chi2eNorm );
 
@@ -750,46 +750,46 @@ void CaloEMuMonitor::fillMVar(const LHCb::ProtoParticle *proto)
   m_var->inprs = (bool) proto->info( LHCb::ProtoParticle::InAccPrs,  false );
 
   // Ecal/Hcal/Prs-based DLL for electron-ID
-  m_var->epide = proto->info( LHCb::ProtoParticle::EcalPIDe, -99. );
-  m_var->hpide = proto->info( LHCb::ProtoParticle::HcalPIDe, -99. );
-  m_var->ppide = proto->info( LHCb::ProtoParticle::PrsPIDe,  -99. );
+  m_var->epide = (float) proto->info( LHCb::ProtoParticle::EcalPIDe, -99. );
+  m_var->hpide = (float) proto->info( LHCb::ProtoParticle::HcalPIDe, -99. );
+  m_var->ppide = (float) proto->info( LHCb::ProtoParticle::PrsPIDe,  -99. );
 
   // Ecal/Hcal-based DLL for muon-ID
-  m_var->epidm = proto->info( LHCb::ProtoParticle::EcalPIDmu , -99. );
-  m_var->hpidm = proto->info( LHCb::ProtoParticle::HcalPIDmu , -99. );
+  m_var->epidm = (float) proto->info( LHCb::ProtoParticle::EcalPIDmu , -99. );
+  m_var->hpidm = (float) proto->info( LHCb::ProtoParticle::HcalPIDmu , -99. );
 
   // 3D chi2 for Track/CaloHypo(Brem)
-  m_var->chi2b = proto->info( LHCb::ProtoParticle::CaloBremChi2 , -1);
+  m_var->chi2b = (float) proto->info( LHCb::ProtoParticle::CaloBremChi2 , -1);
 
   // 3D chi2 for Track/CaloHypo(e) matching
   // -999. coresponds to 10000. for chi21, chi2e, chi23
-  m_var->chi23d= proto->info(LHCb::ProtoParticle::CaloElectronMatch, -999.);
+  m_var->chi23d= (float) proto->info(LHCb::ProtoParticle::CaloElectronMatch, -999.);
   // 2D chi2 for Track/CaloCluster matching (neutral)
-  m_var->chi2d = proto->info(LHCb::ProtoParticle::CaloTrMatch,       -999.);
+  m_var->chi2d = (float) proto->info(LHCb::ProtoParticle::CaloTrMatch,       -999.);
 
   // Prs/Ecal energy deposit, Spd hit
-  m_var->spdd = proto->info(LHCb::ProtoParticle::CaloChargedSpd,  -10.);
-  m_var->prsd = proto->info(LHCb::ProtoParticle::CaloChargedPrs,  -10.);
-  m_var->ecalc= proto->info(LHCb::ProtoParticle::CaloChargedEcal, -10.);
+  m_var->spdd = (float) proto->info(LHCb::ProtoParticle::CaloChargedSpd,  -10.);
+  m_var->prsd = (float) proto->info(LHCb::ProtoParticle::CaloChargedPrs,  -10.);
+  m_var->ecalc= (float) proto->info(LHCb::ProtoParticle::CaloChargedEcal, -10.);
 
   // digits or energy associated to CaloHypo (charged)
-  m_var->spde = proto->info(LHCb::ProtoParticle::CaloSpdE,  -1 * Gaudi::Units::GeV);
-  m_var->prse = proto->info(LHCb::ProtoParticle::CaloPrsE,  -1 * Gaudi::Units::GeV);
-  m_var->ecale= proto->info(LHCb::ProtoParticle::CaloEcalE, -1 * Gaudi::Units::GeV);
-  m_var->hcale= proto->info(LHCb::ProtoParticle::CaloHcalE, -1 * Gaudi::Units::GeV);
+  m_var->spde = (float) proto->info(LHCb::ProtoParticle::CaloSpdE,  -1 * Gaudi::Units::GeV);
+  m_var->prse = (float) proto->info(LHCb::ProtoParticle::CaloPrsE,  -1 * Gaudi::Units::GeV);
+  m_var->ecale= (float) proto->info(LHCb::ProtoParticle::CaloEcalE, -1 * Gaudi::Units::GeV);
+  m_var->hcale= (float) proto->info(LHCb::ProtoParticle::CaloHcalE, -1 * Gaudi::Units::GeV);
 
 
-  m_var->epull    = (m_var->cov_track > 0 && m_var->cov_hypo > 0)
-                     ? (proto->track()->p() - m_var->e_hypo)/sqrt(m_var->cov_track+m_var->cov_hypo) : -9999.;
+  m_var->epull    = (float) ((m_var->cov_track > 0 && m_var->cov_hypo > 0)
+                     ? (proto->track()->p() - m_var->e_hypo)/sqrt(m_var->cov_track+m_var->cov_hypo) : -9999.);
 
   m_var->h_ndigit = m_electron ? (int) m_electron->digits().size() : -1;
   m_var->p_rel_err= (m_var->cov_track > 0 && m_var->p      > 0) ? sqrt(m_var->cov_track)/m_var->p      : -1;
   m_var->e_rel_err= (m_var->cov_hypo  > 0 && m_var->e_hypo > 0) ? sqrt(m_var->cov_hypo )/m_var->e_hypo : -1;
 
   // fill the PID-related fields before applying selections
-  m_var->rdlle  = proto->info( LHCb::ProtoParticle::RichDLLe, -9999.);
-  m_var->rdllmu = proto->info( LHCb::ProtoParticle::RichDLLmu , -9999.);
-  m_var->ismuon = (bool) proto->muonPID()
+  m_var->rdlle  = (float) proto->info( LHCb::ProtoParticle::RichDLLe, -9999.);
+  m_var->rdllmu = (float) proto->info( LHCb::ProtoParticle::RichDLLmu , -9999.);
+  m_var->ismuon = (bool) (proto->muonPID()!=NULL)
     ? ( m_muonLoose ? proto->muonPID()->IsMuonLoose() : proto->muonPID()->IsMuon() )
     : false;
 
@@ -803,7 +803,7 @@ void CaloEMuMonitor::fillMVar(const LHCb::ProtoParticle *proto)
     if ( sc.isFailure() ) error() << "Track extrapolation to z =" << m_zShowerMaxEcal << " failed!" << endmsg;
     else{
       const LHCb::CaloCellID hypoCell = m_calo->Cell( pos );
-      m_var->ecalx    = pos.x();
+      m_var->ecalx    = (float) pos.x();
       m_var->ecalarea = hypoCell.area();
     }
   }
@@ -815,7 +815,7 @@ void CaloEMuMonitor::fillMVar(const LHCb::ProtoParticle *proto)
     if ( sc.isFailure() ) error() << "Track extrapolation to z =" << m_zMiddleHcal << " failed!" << endmsg;
     else{
       const LHCb::CaloCellID hypoCell = m_hcal->Cell( pos );
-      m_var->hcalx    = pos.x();
+      m_var->hcalx    = (float) pos.x();
       m_var->hcalarea = hypoCell.area();
     }
   }
@@ -890,8 +890,8 @@ double CaloEMuMonitor::RefPar::diffMean()
   if (meanErr() < 0) return 0;
   tmp_msg.clear();
 
-  float val = histo->mean();
-  float err = Gaudi::Utils::HistoStats::meanErr(histo);
+  float val = (float) histo->mean();
+  float err = (float) Gaudi::Utils::HistoStats::meanErr(histo);
 
   sig = fabs(val - mean()) / sqrt(std::pow(err,2) + std::pow(meanErr(),2)); 
   ndof ++;
@@ -936,8 +936,8 @@ double CaloEMuMonitor::RefPar::diffRms()
   tmp_msg.clear();
 
   std::ostringstream stream;
-  float val = histo->rms();
-  float err = Gaudi::Utils::HistoStats::rmsErr(histo);
+  float val = (float) histo->rms();
+  float err = (float) Gaudi::Utils::HistoStats::rmsErr(histo);
 
   sig = fabs(val - rms()) / sqrt(std::pow(err,2) + std::pow(rmsErr(),2)); 
   ndof ++;
