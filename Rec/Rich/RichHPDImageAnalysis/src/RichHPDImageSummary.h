@@ -60,9 +60,6 @@ namespace Rich
       /// Fraction of average pixel value used to define image boundary
       double m_cutFraction ;
       
-      /// Flag for histogram production  
-      bool m_bookHistos;
-      
       /// Display Smart ID warnings
       bool m_displayWarnings ;
       

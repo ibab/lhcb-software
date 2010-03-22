@@ -43,7 +43,7 @@ namespace Rich
       : RichRecHistoAlgBase( name , pSvcLocator ) ,  
         m_nEvt( 0 )
     {
-      declareProperty( "MakeHistos" , m_bookHistos = true );
+      setProperty( "StatPrint", false );
       declareProperty( "DisplaySmartIDWarnings" , m_displayWarnings = false );
       declareProperty( "CutThreshold" , m_cutFraction = 0.1 );
     }
@@ -88,7 +88,7 @@ namespace Rich
     
     TH2D* RichHPDImageSummary::create2D( const std::string& name )
     {
-      if ( m_bookHistos ){
+      if ( produceHistos() ){
         IHistogram2D* hist = book2D(name,name,-0.5,31.5,32, -0.5,31.5,32) ;
         return Gaudi::Utils::Aida2ROOT::aida2root( hist );
       }
@@ -226,7 +226,7 @@ namespace Rich
         summaryINFO( m_iter->first, m_iter->second );
       }
       
-      if ( !m_bookHistos ){  
+      if ( !(produceHistos()) ){  
         for ( m_iter = m_histo.begin() ; m_iter != m_histo.end() ; ++m_iter ){
           delete m_iter->second;
         }
