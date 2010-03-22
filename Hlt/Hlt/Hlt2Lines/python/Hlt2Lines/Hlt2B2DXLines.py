@@ -21,23 +21,51 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
     __slots__ = { 'ComRobAllTrkPtLL'        : 200        # in MeV
                   , 'ComRobAllTrkPLL'         : 2000       # in MeV
                   , 'ComRobAllTrkPVIPLL'      : 0.125       # in mm
-                  , 'ComRobPairMinDocaUL'     : 0.05       # in mm
+                  , 'ComRobPairMinDocaUL'     : 0.2       # in mm
                   , 'ComRobPairMaxDocaUL'     : 1          # in mm
-                  , 'ComRobTrkMaxPtLL'        : 1000       # in MeV
-                  , 'ComRobVtxPVDispLL'       : 2.0        # in mm
+                  , 'ComRobTrkMaxPtLL'        : 1500       # in MeV
+                  , 'ComRobVtxPVDispLL'       : 0.0        # in mm
                   , 'ComRobVtxPVRDispLL'      : 0.2        # in mm
                   , 'ComRobUseGEC'            : True       # do or do not 
                   , 'ComRobGEC'               : 120        # max number of tracks
                   , 'ComTFAllTrkPtLL'         : 200        # in MeV
                   , 'ComTFAllTrkPLL'          : 2000       # in MeV
-                  , 'ComTFAllTrkPVIPChi2LL'   : 9          # unitless
+                  , 'ComTFAllTrkPVIPChi2LL'   : 4          # unitless
                   , 'ComTFAllTrkChi2UL'       : 10         # unitless
-                  , 'ComTFPairMinDocaUL'      : 0.05       # in mm
+                  , 'ComTFPairMinDocaUL'      : 0.2        # in mm
                   , 'ComTFPairMaxDocaUL'      : 1          # in mm
-                  , 'ComTFTrkMaxPtLL'         : 1000       # in MeV
-                  , 'ComTFVtxPVDispChi2LL'    : 196        # unitless
-                  , 'ComTFVtxPVDDispChi2LL'   : 121        # for the D: unitless
-                  , 'RobustCoplanUL'          : 0.5        # in mm
+                  , 'ComTFTrkMaxPtLL'         : 1500       # in MeV
+                  , 'ComTFVtxPVDispChi2LL'    : 225        # unitless
+                  , 'ComTFVtxPVDDispChi2LL'   : 196        # for the D: unitless
+                  , 'RobustCoplanUL'          : 1.0        # in mm
+                  , 'Prescale'                : {'Hlt2B2D2hhBachelorReq3BodyWithKsBroadMW' : 0.01 # These are the broad MW lines 
+                                                 , 'Hlt2B2D2hhBachelorReq4BodyWithKsBroadMW' : 0.01
+                                                 , 'Hlt2B2D2hhhBachelorReq3BodyWithKsBroadMW' : 0.01
+                                                 , 'Hlt2B2D2hhhBachelorReq4BodyWithKsBroadMW' : 0.01
+                                                 , 'Hlt2B2D2hhKstarReq3BodyWithKsBroadMW': 0.01
+                                                 , 'Hlt2B2D2hhKstarReq4BodyWithKsBroadMW': 0.01
+                                                 , 'Hlt2B2D2hhBachelorReq3BodyWithoutKsBroadMW' : 0.01
+                                                 , 'Hlt2B2D2hhBachelorReq4BodyWithoutKsBroadMW' : 0.01
+                                                 , 'Hlt2B2D2hhhBachelorReq3BodyWithoutKsBroadMW' : 0.01
+                                                 , 'Hlt2B2D2hhhBachelorReq4BodyWithoutKsBroadMW' : 0.01
+                                                 , 'Hlt2B2D2hhKstarReq3BodyWithoutKsBroadMW': 0.01
+                                                 , 'Hlt2B2D2hhKstarReq4BodyWithoutKsBroadMW': 0.01
+                                                 , 'Hlt2B2D2XRobust3Body' : 0.001 # Robust stage monitoring lines
+                                                 , 'Hlt2B2D2XRobust4Body' : 0.001
+                                                 }
+                  , 'Postscale'               : {'Hlt2B2D2hhBachelorWithKsSignal' : 0.001 # Post TF stage monitoring lines
+                                                 , 'Hlt2B2D2hhhBachelorWithKsSignal' : 0.001
+                                                 , 'Hlt2B2D2hhKstarWithKsSignal' : 0.001
+                                                 , 'Hlt2B2D2hhBachelorWithoutKsSignal' : 0.001 
+                                                 , 'Hlt2B2D2hhhBachelorWithoutKsSignal' : 0.001
+                                                 , 'Hlt2B2D2hhKstarWithoutKsSignal' : 0.001
+                                                 , 'Hlt2B2D2hhBachelorWithKsBroadMW' : 0.001 
+                                                 , 'Hlt2B2D2hhhBachelorWithKsBroadMW' : 0.001
+                                                 , 'Hlt2B2D2hhKstarWithKsBroadMW' : 0.001
+                                                 , 'Hlt2B2D2hhBachelorWithoutKsBroadMW' : 0.001 
+                                                 , 'Hlt2B2D2hhhBachelorWithoutKsBroadMW' : 0.001
+                                                 , 'Hlt2B2D2hhKstarWithoutKsBroadMW' : 0.001
+                                                 }
                   }
 
     def __apply_configuration__(self) :
@@ -413,34 +441,36 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarReq4BodyWithoutKsBroadMWDecision" : 52410 } )
 
         #Robust monitoring Lines
-        line = Hlt2Line('B2D2XRobust3Body', prescale = self.prescale , algos = [ Robust3BodySeq], postscale = 0.001)
+        line = Hlt2Line('B2D2XRobust3Body', prescale = self.prescale , algos = [ Robust3BodySeq], postscale = self.postscale)
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2XRobust3BodyDecision" : 52420 } )
-        line = Hlt2Line('B2D2XRobust4Body', prescale = self.prescale , algos = [ Robust4BodySeq], postscale = 0.001)
+        line = Hlt2Line('B2D2XRobust4Body', prescale = self.prescale , algos = [ Robust4BodySeq], postscale = self.postscale)
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2XRobust4BodyDecision" : 52430 } )
 
 
         # Post TF monitoring lines
-        line = Hlt2Line('B2D2hhBachelorReq3BodyWithKsSignal', prescale = 0.001 , algos = [ B2D2hhBachelorWithKsSeqSignalFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhBachelorReq3BodyWithKsSignalDecision" : 52500 } )
-        line = Hlt2Line('B2D2hhhBachelorReq3BodyWithKsSignal', prescale = 0.001 , algos = [ B2D2hhhBachelorWithKsSeqSignalFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorReq3BodyWithKsSignalDecision" : 52510 } )
-        line = Hlt2Line('B2D2hhKstarReq3BodyWithKsSignal', prescale = 0.001 , algos = [ B2D2hhKstarPhiWithKsSeqSignalFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarReq3BodyWithKsSignalDecision" : 52520 } )
-        line = Hlt2Line('B2D2hhBachelorReq3BodyWithoutKsSignal', prescale = 0.001 , algos = [ B2D2hhBachelorWithoutKsSeqSignalFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhBachelorReq3BodyWithoutKsSignalDecision" : 52530 } )
-        line = Hlt2Line('B2D2hhhBachelorReq3BodyWithoutKsSignal', prescale = 0.001 , algos = [ B2D2hhhBachelorWithoutKsSeqSignalFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorReq3BodyWithoutKsSignalDecision" : 52540 } )
-        line = Hlt2Line('B2D2hhKstarReq3BodyWithoutKsSignal', prescale = 0.001 , algos = [ B2D2hhKstarPhiWithoutKsSeqSignalFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarReq3BodyWithoutKsSignalDecision" : 52550 } )
-        line = Hlt2Line('B2D2hhBachelorReq3BodyWithKsBroadMW', prescale = 0.001 , algos = [ B2D2hhBachelorWithKsSeqMWFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhBachelorReq3BodyWithKsBroadMWDecision" : 52560 } )
-        line = Hlt2Line('B2D2hhhBachelorReq3BodyWithKsBroadMW', prescale = 0.001 , algos = [ B2D2hhhBachelorWithKsSeqMWFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorReq3BodyWithKsBroadMWDecision" : 52570 } )
-        line = Hlt2Line('B2D2hhKstarReq3BodyWithKsBroadMW', prescale = 0.001 , algos = [ B2D2hhKstarPhiWithKsSeqMWFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarReq3BodyWithKsBroadMWDecision" : 52580 } )
-        line = Hlt2Line('B2D2hhBachelorReq3BodyWithoutKsBroadMW', prescale = 0.001 , algos = [ B2D2hhBachelorWithoutKsSeqMWFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhBachelorReq3BodyWithoutKsBroadMWDecision" : 52590 } )
-        line = Hlt2Line('B2D2hhhBachelorReq3BodyWithoutKsBroadMW', prescale = 0.001 , algos = [ B2D2hhhBachelorWithoutKsSeqMWFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorReq3BodyWithoutKsBroadMWDecision" : 52600 } )
-        line = Hlt2Line('B2D2hhKstarReq3BodyWithoutKsBroadMW', prescale = 0.001 , algos = [ B2D2hhKstarPhiWithoutKsSeqMWFilter], postscale = self.postscale)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarReq3BodyWithoutKsBroadMWDecision" : 52610 } )
+        line = Hlt2Line('B2D2hhBachelorWithKsSignal', prescale = self.prescale , algos = [ B2D2hhBachelorWithKsSeqSignalFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhBachelorWithKsSignalDecision" : 52500 } )
+        line = Hlt2Line('B2D2hhhBachelorWithKsSignal', prescale = self.prescale , algos = [ B2D2hhhBachelorWithKsSeqSignalFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorWithKsSignalDecision" : 52510 } )
+        line = Hlt2Line('B2D2hhKstarWithKsSignal', prescale = self.prescale , algos = [ B2D2hhKstarPhiWithKsSeqSignalFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarWithKsSignalDecision" : 52520 } )
+        line = Hlt2Line('B2D2hhBachelorWithoutKsSignal', prescale = self.prescale , algos = [ B2D2hhBachelorWithoutKsSeqSignalFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhBachelorWithoutKsSignalDecision" : 52530 } )
+        line = Hlt2Line('B2D2hhhBachelorWithoutKsSignal', prescale = self.prescale , algos = [ B2D2hhhBachelorWithoutKsSeqSignalFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorWithoutKsSignalDecision" : 52540 } )
+        line = Hlt2Line('B2D2hhKstarWithoutKsSignal', prescale = self.prescale , algos = [ B2D2hhKstarPhiWithoutKsSeqSignalFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarWithoutKsSignalDecision" : 52550 } )
+        line = Hlt2Line('B2D2hhBachelorWithKsBroadMW', prescale = self.prescale , algos = [ B2D2hhBachelorWithKsSeqMWFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhBachelorWithKsBroadMWDecision" : 52560 } )
+        line = Hlt2Line('B2D2hhhBachelorWithKsBroadMW', prescale = self.prescale , algos = [ B2D2hhhBachelorWithKsSeqMWFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorWithKsBroadMWDecision" : 52570 } )
+        line = Hlt2Line('B2D2hhKstarWithKsBroadMW', prescale = self.prescale , algos = [ B2D2hhKstarPhiWithKsSeqMWFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarWithKsBroadMWDecision" : 52580 } )
+        line = Hlt2Line('B2D2hhBachelorWithoutKsBroadMW', prescale = self.prescale , algos = [ B2D2hhBachelorWithoutKsSeqMWFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhBachelorWithoutKsBroadMWDecision" : 52590 } )
+        line = Hlt2Line('B2D2hhhBachelorWithoutKsBroadMW', prescale = self.prescale , algos = [ B2D2hhhBachelorWithoutKsSeqMWFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhhBachelorWithoutKsBroadMWDecision" : 52600 } )
+        line = Hlt2Line('B2D2hhKstarWithoutKsBroadMW', prescale = self.prescale , algos = [ B2D2hhKstarPhiWithoutKsSeqMWFilter], postscale = self.postscale)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarWithoutKsBroadMWDecision" : 52610 } )
+
+
