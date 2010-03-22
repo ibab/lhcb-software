@@ -8,14 +8,79 @@
 !
 !-----------------------------------------------------------------------------
 
-2010-03-22 - Jacopo Nardulli
+! 2010-03-22 - Jacopo Nardulli
  - Remove hard-coded values of pre/post scales in the B2DX lines
 
-2010-03-21 - L. de Paula
+! 2010-03-21 - L. de Paula
  - Another correction in Hlt2InclusiveDiMuonLines
 
-2010-03-21 - L. de Paula
+! 2010-03-21 - L. de Paula
  - Small correction in a Hlt2BiasedDiMuonLine
+
+! 2020-03-18 - Johannes Albrecht
+ - update slots in Hlt2ExpressLines.py
+   
+! 2010-03-19 - V. Gligorov
+ - Continuing work on Savannah tasks #12691,13784.
+   Update the B2DX and JPsiX lines to use the fitted K shorts offered in
+   Ks.py and not the K shorts made by the HLT K short package.
+ 
+! 2020-03-18 - Johannes Albrecht
+ - update phi selection in Hlt2ExpressLines.py
+ 
+! 2010-03-17 - V. Gligorov
+ - Continuing work on Savannah tasks #12691,13784.
+   Update lines to follow move of reconstruction from HltLine to
+   HltTracking.
+   
+! 2010-03-11 - V. Gligorov
+ - Continuing work on Savannah tasks 13784 and 12691. Follow changes
+   in HltLine, Hlt2SharedParticles.
+
+! 2010-03-09 - J. Nardulli
+ - Working on Savannah task 14212 for the B2DX lines.
+   Cut values as by the talk given by P. Spradlin on 20/11/2009
+   Configuration is reduction factor 50/no Topo 4 bodies 
+   Added the post-TF monitoring lines.
+
+! 2010-03-07 - V. Gligorov 
+ - Continuing work on Savannah tasks 13784 and 12691. Remove obsolete
+   import of TopoTFInputParticles
+ 
+! 2010-03-04 - Gerhard Raven
+ - fix typo in Hlt2Forward
+
+! 2010-03-02 - V. Gligorov
+ - Continuing work on Savannah tasks 13784 and 12691. Minor changes
+   to follow developments in HltLine and Hlt2SharedParticles.
+ 
+! 2010-02-26 - V. Gligorov
+ - Continuing work on Savannah tasks 13784 and 12691. Minor changes
+   to follow developments in HltLine and Hlt2SharedParticles, in
+   particular continuing with the removal of hardcoded track containers.
+
+! 2010-02-24 - V. Gligorov
+ - Contine the reorganization of Hlt tracking, see Savannah 13784, 12691
+   for details. Minor changes to follow developments in HltLine and
+   Hlt2SharedParticles. 
+ 
+! 2010-02-22 - V. Gligorov
+ - Contine the reorganization of Hlt tracking, see Savannah 13784, 12691
+   for details. Major changes in this round
+   . All Hlt2Lines which specifically asked for primary vertices
+     now pick them up from HltPVs, not HltReco.
+   . Remove hardcoded track location in topological/charm/b2dx trigger
+     line global event cuts. The correct container is now automatically picked
+     up by asking the Hlt2 reconstruction for it.
+   . Remove hardcoded location of hlt2 velo tracks in the displaced
+     vertex lines, this is also now picked up by asking the Hlt2
+     reconstruction for it.
+
+! 2010-02-19 - Francesco Dettori
+ - Addition of the file Hlt2Dst2PiD02xx.py
+         Trigger for D*-> D0(-> mu mu) pi  channel and similars
+         For reference on these trigger lines see:
+   http://indico.cern.ch/conferenceDisplay.py?confId=82193
 
 !========================== Hlt2Lines v2r4 2010-02-17 ===================
 ! 2010-02-18 - V. Gligorov
