@@ -1,4 +1,4 @@
-// $Id: VeloOccupancyMonitor.cpp,v 1.10 2010-02-18 21:32:15 erodrigu Exp $
+// $Id: VeloOccupancyMonitor.cpp,v 1.11 2010-03-22 02:54:41 rlambert Exp $
 // Include files 
 // -------------
 
@@ -322,7 +322,7 @@ void Velo::VeloOccupancyMonitor::monitorOccupancy() {
     unsigned int chipChannel   = veloSensor -> StripToChipChannel( stripNumber ); // 0 -> 2047
 
     for(unsigned int isRight=0;isRight<2;isRight++){
-      if(isRight != veloSensor->isRight()) continue;
+      if(bool(isRight) != veloSensor->isRight()) continue;
       m_nClusters[isRight]++;
     }
 

@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitorNT.cpp,v 1.4 2010-02-10 14:26:22 szumlat Exp $
+// $Id: VeloTrackMonitorNT.cpp,v 1.5 2010-03-22 02:54:41 rlambert Exp $
 // Include files 
 
 
@@ -94,7 +94,8 @@ StatusCode Velo::VeloTrackMonitorNT::execute()
     if( msgLevel(MSG::DEBUG) ) debug()<< "Run "     << odin->runNumber()
             << ", Event " << odin->eventNumber() << endmsg;
     m_runodin=odin->runNumber();
-    m_eventodin= odin->eventNumber();
+    //long long unsigned -> long unsigned... hope this is OK!
+    m_eventodin= (long unsigned int) odin->eventNumber();
     m_bunchid= odin->bunchId();
     
   } else {
@@ -180,7 +181,7 @@ void Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track)
         //for ( it = trackIDs.begin(); it != trackIDs.end(); it++ ) {
         //LHCb::VeloCluster *cluster;
         //cluster = (LHCb::VeloCluster*)m_rawClusters->containedObject( (it)->channelID() ); 
-        adcpertrack+=cluster->totalCharge();
+        adcpertrack+=(float) cluster->totalCharge();
       } 
     }
     if (nVeloHits>0)
@@ -356,7 +357,7 @@ void Velo::VeloTrackMonitorNT::FillVeloTrNtuple(const LHCb::Track& track)
       LHCb::VeloChannelID chan  = nodeID.veloID();
       int sensorID = chan.sensor();
       const DeVeloSensor* sensor = m_veloDet->sensor( cluster->firstChannel().sensor() );
-      m_adcpertrack+=cluster->totalCharge();
+      m_adcpertrack+=(float) cluster->totalCharge();
       if (sensor->isLeft()) 
         m_sideLeft=1;
       else

@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitorNT.h,v 1.2 2010-02-10 14:26:22 szumlat Exp $
+// $Id: VeloTrackMonitorNT.h,v 1.3 2010-03-22 02:54:41 rlambert Exp $
 #ifndef VELOTRACKMONITORNT_H 
 #define VELOTRACKMONITORNT_H 1
 
@@ -51,7 +51,7 @@ namespace Velo
     LHCb::VeloClusters* m_rawClusters;
     const DeVelo* m_veloDet ;
     int m_runodin;
-    int m_eventodin;
+    long unsigned int m_eventodin;
     int m_bunchid;
 
     IVeloExpectation* m_expectTool;
