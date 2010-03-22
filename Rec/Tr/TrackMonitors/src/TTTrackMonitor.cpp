@@ -1,4 +1,4 @@
-// $Id: TTTrackMonitor.cpp,v 1.9 2010-03-20 06:40:44 wouter Exp $
+// $Id: TTTrackMonitor.cpp,v 1.10 2010-03-22 09:41:09 wouter Exp $
 // Include files 
 #include "TTTrackMonitor.h"
 
@@ -173,14 +173,17 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
       unsigned int uniquelayer = (chan.station()-1)*2 + chan.layer()-1 ;
       nodesByTTLayer[uniquelayer].push_back( fNode ) ;
 
+      const std::string layerName = TTNames().UniqueLayerToString(chan);
       const STMeasurement* hit = dynamic_cast<const STMeasurement*>(&fNode->measurement());
       plot(fNode->unbiasedResidual(),"unbiasedResidual","unbiasedResidual",  -2., 2., 200 );
       plot(fNode->residual(),"biasedResidual","biasedResidual",  -2., 2., 200 );
+      // rms unbiased residual. that's the one you want to look at.
+      double residual = fNode->residual() * std::sqrt(fNode->errMeasure2()/fNode->errResidual2()) ;
+      plot(residual, layerName + "/Residual","Residual (rms unbiased)",-0.5,0.5,100) ;
 
       // 2D plots in full detail mode
       if( fullDetail() ) {
 	const unsigned int bin = histoBin(chan);
-	const std::string layerName = TTNames().UniqueLayerToString(chan);
 	plot2D(bin, fNode->unbiasedResidual() , "unbiasedResSector"+layerName ,
 	       "unbiasedResSector"+layerName  , 99.5, 500.5, -2., 2.,401 , 200  );
 	plot2D(bin, fNode->residual() , "biasedResSector"+layerName , 
@@ -217,9 +220,8 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
   plot(gm, "generalized mean","generalized mean charge",  0., 100, 200);
 
   // make overlap histograms
-
-  const char layname[4][128] = { "TTaX","TTaU","TTbV","TTbX" } ;
   for(size_t ilay=0; ilay<4; ++ilay) {
+    const char layname[4][128] = { "TTaX","TTaU","TTbV","TTbX" } ;
     std::string prefix = std::string(layname[ilay]) + "/" ;
     if( !type.empty() ) prefix.insert(0,type + "/") ;
     plot( nodesByTTLayer[ilay].size(), prefix + "Number of hits", "Number of hits",
@@ -248,13 +250,13 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
 	  firstnode->measurement().detectorElement()->geometry()->toLocal( firstnode->state().slopes() ) ;
 	double localTx  = localdir.x()/localdir.z() ;
 	diff *= std::sqrt( 1+localTx*localTx) ;
-	
-	plot( diff, prefix + "Overlap residual",std::string("Overlap residuals in ") + layname[ilay] , -1.0, 1.0 ,50);
-	AIDA::IHistogram1D* residualh1 = 
-	  book1D(prefix + "Residuals in overlaps",
-		 std::string("Residuals in overlaps in ") + layname[ilay] ,-0.5, 0.5 ,50);
-	residualh1->fill( firstresidual * std::sqrt(firstnode->errMeasure2()/firstnode->errResidual2())) ;
-	residualh1->fill( secondresidual * std::sqrt(secondnode->errMeasure2()/secondnode->errResidual2())) ;
+
+	const std::string layerName = TTNames().UniqueLayerToString(firstnode->measurement().lhcbID().stID());
+	plot( diff, prefix + "Overlap residual",std::string("Overlap residuals in ") + layerName, -1.0, 1.0 ,100);
+	plot( firstresidual * std::sqrt(firstnode->errMeasure2()/firstnode->errResidual2()),
+	      prefix + "Residuals in overlaps (left)", "Residuals in overlaps (left)", -0.5, 0.5, 100) ;
+	plot( secondresidual * std::sqrt(secondnode->errMeasure2()/secondnode->errResidual2()),
+	      prefix + "Residuals in overlaps (right)", "Residuals in overlaps (right)", -0.5, 0.5, 100) ;
 
 	// this needs to be fixed: can we somehow can a consecutive ladder ID?
 	size_t sectorID = ttUniqueSectorID( firstnode->measurement().lhcbID().stID()) ;
