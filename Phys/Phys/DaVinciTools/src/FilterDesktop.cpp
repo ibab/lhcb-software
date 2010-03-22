@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.20 2010-03-19 16:07:11 jpalac Exp $
+// $Id: FilterDesktop.cpp,v 1.21 2010-03-22 11:49:57 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -7,6 +7,7 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/StatEntity.h"
 #include "GaudiKernel/IAlgContextSvc.h"
+
 // ============================================================================
 // DaVinci Kernel
 // ============================================================================
@@ -22,6 +23,7 @@
 // ============================================================================
 #include "boost/algorithm/string.hpp"
 // ============================================================================
+#include "GaudiAlg/GetData.h"
 namespace 
 {
   // ==========================================================================
@@ -41,15 +43,16 @@ namespace
 using namespace LoKi ;
 // ============================================================================
 /** @class FilterDesktop 
- *  LoKi/Bender "Hybrid" (re)implementation of simple algorithm with 
- *  filters the input particles ("FilterDesktop"). Stores shallow clones 
- *  of the selected input particles and theis end vertices, as defined by 
- *  InputLocations.
+ *  LoKi/Bender "Hybrid" (re)implementation of simple algorithm wich 
+ *  filters the input particles ("FilterDesktop"). Stores either copies of
+ *  pointers or shallow clones of the selected input particles and theis end vertices, as defined by 
+ *  InputLocations, depending on the value of CloneFilteredParticles.
  *
  *  The important properties (in addtion to the base class' properties)
  *    - "Factory"   : the type/name of LoKi/Bender 'hybrid' factory
  *    - "Preambulo" : the preambulo, to be used for Bender/Python script
  *    - "Code"      : the actual Bender/Python code 
+ *    - "CloneFilteredParticles" : Shallow-clone selected Particles into KeyedContainers. Needed for DST writing. Default: false.
  *    - "InputPlotsTool"   : the type/name of PlotTool for 'input' particles 
  *    - "InputPlotsPath"   : THS path for 'input' plots 
  *    - "OutputPlotsTool"  : the type/name of PlotTool for 'output' particles 
@@ -203,7 +206,8 @@ protected:
     , m_outputPlotsPath  ( "O" + name  )
       // update?
     , m_to_be_updated1   ( true ) 
-    , m_to_be_updated2   ( true ) 
+    , m_to_be_updated2   ( true )
+    , m_cloneFilteredParticles (false) 
   {
     // the factory 
     declareProperty 
@@ -267,6 +271,11 @@ protected:
         m_postMonitorCode  , 
         "The code used for (post)monitoring of output particles" )
       -> declareUpdateHandler ( &FilterDesktop::updateHandler1 , this ) ;
+
+    // cloning of selected particles and secondary vertices
+    declareProperty ("CloneFilteredParticles",
+                     m_cloneFilteredParticles,
+                     "Clone filtered particles and env vertices into KeyedContainers");
 
     // 
     StatusCode sc = setProperty ( "HistoProduce" , false ) ;
@@ -402,6 +411,11 @@ private:
   void cloneP2PVRelation(const LHCb::Particle* particle,
                          const LHCb::Particle* clone,
                          Particle2Vertex::Table* table) const;
+  ///
+  const LHCb::Particle::Range filterAndCopyParticles(const LHCb::Particle::ConstVector& particles) const;
+
+  ///
+  const LHCb::Particle::Range filterParticles(const LHCb::Particle::ConstVector& particles) const;
   // ==========================================================================
 private:
   // ==========================================================================
@@ -449,6 +463,8 @@ private:
   /// the flag to indicate the nesessity of update 
   bool m_to_be_updated2 ; // the flag to indicate the nesessity of update 
   // ==========================================================================
+  ///
+  bool m_cloneFilteredParticles; //< Output KeyedContainer with clones of filtered particles.
 };
 // ============================================================================
 // the most interesting method 
@@ -483,6 +499,33 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
     { return Error ( "Error from Input Plots tool", sc ) ; }
   }
 
+  const LHCb::Particle::Range accepted = 
+    m_cloneFilteredParticles ? filterAndCopyParticles(particles) : filterParticles(particles);
+
+  // make the final plots 
+   if ( produceHistos () && 0 != m_outputPlots ) 
+   {
+     StatusCode sc = m_outputPlots -> fillPlots ( LHCb::Particle::ConstVector(accepted.begin(), accepted.end()) ) ;
+     if ( sc.isFailure () ) 
+     { return Error ( "Error from Output Plots tool", sc ) ; }
+   }
+  
+  // monitor output (if required) 
+  if ( monitor() && !m_postMonitorCode.empty() ) 
+  { m_postMonitor ( particles ) ; }
+
+  /// make the filter decision
+  setFilterPassed ( !accepted.empty() );
+  // some statistics 
+  counter ( "#input"  ) += particles.size() ;
+  counter ( "#passed" ) += accepted.size() ;
+  //
+  return StatusCode::SUCCESS;
+}
+// ============================================================================
+const LHCb::Particle::Range FilterDesktop::filterAndCopyParticles(const LHCb::Particle::ConstVector& particles) const
+{
+  
   const std::string& outputLocation = desktop()->getOutputLocation();
   LHCb::Particle::Container* accepted = new LHCb::Particle::Container;
   put(accepted, outputLocation+"/Particles");
@@ -514,32 +557,42 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
       }
     }
   }
-  
+
   if (msgLevel(MSG::DEBUG)) {
     debug() << "Saved " << accepted->size()
             << " Particles in " 
             << outputLocation+"/Particles" << endmsg ;
   }
-  
-  // make the final plots 
-   if ( produceHistos () && 0 != m_outputPlots ) 
-   {
-     StatusCode sc = m_outputPlots -> fillPlots ( LHCb::Particle::ConstVector(accepted->begin(), accepted->end()) ) ;
-     if ( sc.isFailure () ) 
-     { return Error ( "Error from Output Plots tool", sc ) ; }
-   }
-  
-  // monitor output (if required) 
-  if ( monitor() && !m_postMonitorCode.empty() ) 
-  { m_postMonitor ( particles ) ; }
 
-  /// make the filter decision
-  setFilterPassed ( !accepted->empty() );
-  // some statistics 
-  counter ( "#input"  ) += particles.size() ;
-  counter ( "#passed" ) += accepted->size() ;
+  return LHCb::Particle::ConstVector(accepted->begin(), accepted->end());
+  
+}
+// ============================================================================
+const LHCb::Particle::Range FilterDesktop::filterParticles(const LHCb::Particle::ConstVector& particles) const
+{
+
+  LHCb::Particle::Selection* accepted = new LHCb::Particle::Selection;
+  put(accepted, desktop()->getOutputLocation()+"/Particles");
+  LHCb::Vertex::Selection* vertices = new LHCb::Vertex::Selection;
+  put(vertices, desktop()->getOutputLocation()+"/Vertices");
   //
-  return StatusCode::SUCCESS;
+  StatEntity& cnt = counter ( "efficiency" ) ;
+  //
+  for ( LHCb::Particle::ConstVector::const_iterator ip = particles.begin() ; 
+        particles.end() != ip ; ++ip )
+  {
+    const LHCb::Particle* p = *ip ;
+    // satisfy the criteria ? 
+    const bool decision = m_cut ( p ) ;
+    // some statistics 
+    cnt += decision ;
+    if  ( !decision ) { continue ; }                       // CONTINUE
+    accepted->push_back ( p ) ;
+    vertices->push_back( p->endVertex() );
+  }
+  
+  return LHCb::Particle::ConstVector(accepted->begin(), accepted->end());
+
 }
 // ============================================================================
 void FilterDesktop::cloneP2PVRelation(const LHCb::Particle* particle,
