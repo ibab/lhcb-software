@@ -1,4 +1,4 @@
-// $Id: MuonClusterTool.cpp,v 1.2 2010-02-16 13:54:09 rlambert Exp $
+// $Id: MuonClusterTool.cpp,v 1.3 2010-03-22 02:31:18 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -273,20 +273,20 @@ StatusCode MuonClusterTool::SaveOutput(std::string output)
            double x,y,z;                   
            m_muonDetector->Tile2XYZ(mytile,x,dx,y,dy,z,dz);
         if(totcoord==1){
-          xmin=x-dx;
-          ymin=y-dy;
-          zmin=z-dz;
-          xmax=x+dx;
-          ymax=y+dy;
-          zmax=z+dz;
+          xmin=(float) x-dx;
+          ymin=(float) y-dy;
+          zmin=(float) z-dz;
+          xmax=(float) x+dx;
+          ymax=(float) y+dy;
+          zmax=(float) z+dz;
           
         }else{
-          if(xmin>x-dx)xmin=x-dx;
-          if(ymin>y-dy)ymin=y-dy;
-          if(zmin>z-dz)zmin=z-dz;
-          if(xmax<x+dx)xmax=x+dx;
-          if(ymax<y+dy)ymax=y+dy;
-          if(zmax<z+dz)zmax=z+dz;
+          if(xmin>x-dx)xmin=(float) x-dx;
+          if(ymin>y-dy)ymin=(float) y-dy;
+          if(zmin>z-dz)zmin=(float) z-dz;
+          if(xmax<x+dx)xmax=(float) x+dx;
+          if(ymax<y+dy)ymax=(float) y+dy;
+          if(zmax<z+dz)zmax=(float) z+dz;
           
         }
         

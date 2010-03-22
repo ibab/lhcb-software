@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.53 2010-03-19 00:05:29 rlambert Exp $
+! $Id: release.notes,v 1.54 2010-03-22 02:31:18 rlambert Exp $
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : Alessia Satta Alessia.Sattaft@cern.ch
 ! =============================================================================
+
+! 2010-03-22 - Rob Lambert
+ - Fixes for windows warnings savannah 64668
 
 !======================== MuonTools v5r2 2010-03-19 =========================
 ! 2010-03-15 - Alessia Satta
