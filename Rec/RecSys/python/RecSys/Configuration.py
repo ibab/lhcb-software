@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.29 2010-03-12 13:53:49 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.30 2010-03-22 02:44:15 polye Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
             
 from LHCbKernel.Configuration import *
@@ -252,7 +252,7 @@ class RecMoniConf(LHCbConfigurableUser):
             from MuonPIDChecker import ConfigureMuonPIDChecker as mmuon
             mydata =  self.getProp("DataType")
             mymonitconf = mmuon.ConfigureMuonPIDChecker(data = mydata)
-            mymonitconf.configure(mc = False, expertck = self.expertHistos())
+            mymonitconf.configure(UseMC = False, HistosLevel = self.getProp("Histograms")) 
 
         if "ST" in moniSeq :
             from Configurables import ST__STClusterMonitor, GaudiSequencer

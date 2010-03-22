@@ -18,6 +18,8 @@ This version uses Gaudi v21r8 and LHCb v30r0
  . Configuration changes needed to adapt to the RICH changes to support
    multiple reconstruction configurations in the same job.
  . Added tests to instantiate all configurables
+ . Configuration changes needed to adapt to the MuonPIDChecker changes
+   to support the additional levels in the slot Histograms (EP)
 
 - Updates for configurables:
   Rich/RichENNRingFinder v1r2, Rich/RichGlobalPID v3r11,
