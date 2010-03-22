@@ -33,13 +33,15 @@ class RichRecQCConf(RichConfigurableUser):
                            "PhotonMonitoring", "TracklessRingAngles",
                            "TracklessRingPeakSearch",
                            "AlignmentMonitoring", "HPDIFBMonitoring",
+                           "HPDImageShifts",
                            "RichPixelPositions", "HPDHitPlots",
                            "RichTrackGeometry","RichGhostTracks",
                            "RichCKThetaResolution","RichTrackResolution",
                            "RichPhotonSignal","RichTrackCKResolutions",
                            "RichPhotonGeometry","PhotonRecoEfficiency",
                            "RichPhotonTrajectory","RichStereoFitterTests",
-                           "RichRayTracingTests","RichDataObjectChecks","RichRecoTiming" ]
+                           "RichRayTracingTests","RichDataObjectChecks",
+                           "RichRecoTiming" ]
 
     ## Added monitors
     __added_monitors__ = [ ]
@@ -58,6 +60,7 @@ class RichRecQCConf(RichConfigurableUser):
                                             "PhotonMonitoring", "TracklessRingAngles",
                                             "TracklessRingPeakSearch",
                                             "AlignmentMonitoring", "HPDIFBMonitoring",
+                                            "HPDImageShifts",
                                             "RichPixelPositions", "HPDHitPlots",
                                             "RichTrackGeometry","RichGhostTracks",
                                             "RichCKThetaResolution","RichTrackResolution",
@@ -70,11 +73,13 @@ class RichRecQCConf(RichConfigurableUser):
                                             "HotPixelFinder", "PidMonitoring",
                                             "PixelMonitoring", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
+                                            "HPDImageShifts",
                                             "AlignmentMonitoring", "HPDIFBMonitoring" ],
                        "OfflineExpress" : [ "L1SizeMonitoring", "DBConsistencyCheck",
                                             "HotPixelFinder", "PidMonitoring",
                                             "PixelMonitoring", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
+                                            "HPDImageShifts",
                                             "AlignmentMonitoring", "HPDIFBMonitoring" ],
                        "Online"         : [ "DBConsistencyCheck",
                                             "PhotonMonitoring", "TracklessRingAngles",
@@ -315,6 +320,10 @@ class RichRecQCConf(RichConfigurableUser):
         if "HPDIFBMonitoring" in monitors :
             self.ionfeedbackMoni(self.newSeq(sequence,"RichHPDIonFeedback"))
 
+        # HPD Image shifts
+        if "HPDImageShifts" in monitors :
+            self.hpdImageShifts(self.newSeq(sequence,"RichHPDImageShifts"))
+
         # Expert Monitoring
         if self.getProp("Histograms") == "Expert" :
             self.expertMonitoring( self.newSeq(sequence,"RichExpertChecks") )
@@ -447,7 +456,16 @@ class RichRecQCConf(RichConfigurableUser):
         RichIFBMon.WantIFB               = True
         RichIFBMon.WantHitmaps           = False
         RichIFBMon.WantQuickHitmap       = False
-        sequence.Members      += [RichIFBMon]        
+        sequence.Members      += [RichIFBMon]
+
+    ## HPD image shift monitoring
+    def hpdImageShifts(self,sequence):
+        from Configurables import Rich__Mon__RichHPDImageSummary
+        imageSummary = Rich__Mon__RichHPDImageSummary("RichHPDImageSummary")
+        imageSummary.HistoProduce = False
+        imageSummary.StatEntityList +=  [ ".*HPD.*" ]
+        imageSummary.StatEntityList +=  [ ".*EventTime.*" ]
+        sequence.Members += [imageSummary]
 
     ## Expert monitoring options
     def expertMonitoring(self,sequence):
