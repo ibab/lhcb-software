@@ -4,6 +4,7 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussMonitor v6r6 2010-03-22 =========================
 ! 2010-02-24 - Patrick Robbe
  - src/GenMonitorAlg.cpp, src/GeneratorAnalysis.cpp: protect against particle
    without production vertex (Pythia8).

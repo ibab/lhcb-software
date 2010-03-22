@@ -4,6 +4,7 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia8 v2r1 2010-03-22 =========================
 ! 2010-03-21 - Patrick Robbe
  - options/Pythia8.py: "default" Pythia8 options
 

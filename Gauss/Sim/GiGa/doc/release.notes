@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.138 2010-03-08 17:59:26 silviam Exp $
+! $Id: release.notes,v 1.139 2010-03-22 18:58:41 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GiGa
 ! Responsible : Gloria CORTI, Vanya BELYAEV
@@ -6,6 +6,7 @@
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
 
+!======================= GiGa v19r8 2010-03-22 ===============================
 ! 2010-03-08 - Silvia Miglioranzi
  - Modified GiGaExtPhysics to set the verbose level of the Physics constructor 
    as the tool verbose level.
@@ -20,7 +21,6 @@
    previous implementation.
 
 !======================= GiGa v19r7 2010-01-21 ===============================
-
 ! 2010-01-13 - Marco Cattaneo
  - Follow Gaudi fix #61116: GaudiCommon::Exception now returns void
 

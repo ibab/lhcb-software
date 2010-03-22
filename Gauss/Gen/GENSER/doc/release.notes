@@ -4,6 +4,7 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v6r2 2010-03-22 ===========================
 ! 2010-03-09 - Patrick Robbe
  - pythia6/xsectionPsiStar.F: fix bug in return value of the function which
    was undefined

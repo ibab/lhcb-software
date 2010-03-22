@@ -4,16 +4,17 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussPhysics v6r5 2010-03-22 =========================
 ! 2010-03-08 - Silvia Miglioranzi
-- Added more GiGaExtPhysicsExtender specializations to GaussPhysics_load.cpp.
+ - Added more GiGaExtPhysicsExtender specializations to GaussPhysics_load.cpp.
 
 ! 2010-02-26 - Marco Clemencic
  - Removed aliases in GaussPhysics_load.cpp for backward compatibility.
 
 ! 2010-02-25 - Marco Clemencic
  - Added some examples of GiGaExtPhysicsExtender specializations to
-   GaussPhysics_load.cpp. And modified the declaration of the tools to use aliases.
-   (needs GiGa > v19r7)
+   GaussPhysics_load.cpp. And modified the declaration of the tools to use 
+   aliases. (needs GiGa > v19r7)
 
 !====================== GaussPhysics v6r4 2009-11-03 =========================
 ! 2009-10-20- Marcin Kucharczyk
