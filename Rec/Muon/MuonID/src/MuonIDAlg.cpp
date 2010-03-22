@@ -434,14 +434,14 @@ StatusCode MuonIDAlg::initialize() {
       debug()  << "==> FOIfactor:" << m_foifactor << endmsg;
       
       //flag to introduce weights in IsMuon/IsMuonLoose:
-      m_weightFlag = Weight_flag->param<int>("Weight_flag");
+      m_weightFlag = (bool) Weight_flag->param<int>("Weight_flag");
       debug()  << "==> Weight_flag:" << m_weightFlag << endmsg;
       debug()  << endmsg;
       
       double dllFlag  = (bool)DLL_flag->param<int>("DLL_flag");
       if(dllFlag != m_dllFlag) warning() << "Initialise: OverrideDB=false but dllFlag in options cards (=" 
         << m_dllFlag << ") not equal dllFlag in database (="  << dllFlag << "). Using database value" << endmsg;
-      m_dllFlag = dllFlag;
+      m_dllFlag = (float) dllFlag;
       debug()  << "==> DLL_flag:" << std::boolalpha << m_dllFlag << endmsg;
       
       // Muon ParticleID Conditions for DLL_flag = 1 from database

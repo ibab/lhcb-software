@@ -2,6 +2,10 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !-----------------------------------------------------------------------------
 
+! 2010-03-22 - Rob Lambert
+ - Noticed a possible bug in MuonIDAlg, bug 64670
+ - Fixed windows warnings 64668
+
 !======================== MuonID v7r7p1 2010-02-24 ===========================
 ! 2010-02-24 - Rob Lambert
  - dummy release to fix requirements file
