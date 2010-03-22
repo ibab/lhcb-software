@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.50 2010-03-15 13:40:02 jpalac Exp $
+!$Id: release.notes,v 1.51 2010-03-22 17:04:37 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-03-22 - Anton Poluektov
+ - python/StrippingConf/StrippingLine.py
+   Allow ConjugateNeutralPID to make a StrippingMember (diff by Mat Charles)
 
 ! 2010-03-15 - Juan Palacios
  - cmt/requirements

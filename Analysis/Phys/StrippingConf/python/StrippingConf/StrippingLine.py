@@ -213,9 +213,9 @@ class StrippingMember ( object ) :
                    tools = [] ,   
                    **Args     ) :
 
-        from Configurables import FilterDesktop, CombineParticles
+        from Configurables import FilterDesktop, CombineParticles, ConjugateNeutralPID 
 
-        if Type not in [ FilterDesktop, CombineParticles ] :
+        if Type not in [ FilterDesktop, CombineParticles, ConjugateNeutralPID ] :
             raise AttributeError, "The type  %s is not known for StrippingMember"%Type
         for key in Args :
             if  key not in Type.__slots__  :
