@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RealPi0_Re.py,v 1.1 2010-03-19 12:52:56 ibelyaev Exp $
+# $Id: RealPi0_Re.py,v 1.2 2010-03-22 18:33:19 ibelyaev Exp $
 # =============================================================================
 # @file BenderExampele/RealPi0.py
 #
@@ -55,7 +55,7 @@ with the campain of Dr.O.Callot et al.:
 # ============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2009-11-25 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
 # ============================================================================
 ## import all needed stuff:
 import ROOT                           ## needed to produce/visualize the histograms
@@ -97,16 +97,35 @@ def configure ( datafiles , catalogs = [] ) :
         ## 
         )
 
-    ## apply calibration coefficients to Ecal+Prs 
-    import shelve
-    db_location = '/afs/cern.ch/lhcb/group/calo/ecal/vol10/ECAL-2k+9/'
-    dbase = shelve.open( db_location + 'Ecal_2k+10_Mar_18_db','r')
-    ecal = dbase['Ecal-2k+9']
-    prs  = dbase['Prs-2k+9' ]
 
-    for c in prs  : print c , prs [c]
-    for c in ecal : print c , ecal[c]
+    ## apply calibration coefficients to Ecal+Prs 
+    import KaliCalo.Kali      as Kali
+    import KaliCalo.ZipShelve as ZipShelve 
+    db_location = '/afs/cern.ch/lhcb/group/calo/ecal/vol10/ECAL-2k+9/'
+    dbase = ZipShelve.open( db_location + 'Ecal_2k+9-Loose-results-zdb','r')
+    ecal = dbase['Ecal']
+    prs  = dbase['Prs' ]
+
+    cnt1 = Kali.Counter() 
+    cnt2 = Kali.Counter() 
+    for c in prs  :
+        cnt1 += prs[c]
+        print c , prs [c]
+    for c in ecal :
+        cnt2 += ecal[c]
+        print c , ecal[c]
+        
+    print 'PRS_coefficients  : MEAN ( %.3f+-%.3f) '         % ( cnt1.flagMean    ()  ,
+                                                                cnt1.flagMeanErr ()  )  
+    print 'PRS_coefficients  : Min/Max/RMS %.3f/%.3f/%.3f ' % ( cnt1.flagMin () ,
+                                                                cnt1.flagMax () ,
+                                                                cnt1.flagRMS () )
     
+    print 'ECAL_coefficients : MEAN ( %.3f+-%.3f) '         % ( cnt2.flagMean    ()  ,
+                                                                cnt2.flagMeanErr ()  )  
+    print 'ECAL_coefficients : Min/Max/RMS %.3f/%.3f/%.3f ' % ( cnt2.flagMin () ,
+                                                                cnt2.flagMax () ,
+                                                                cnt2.flagRMS () ) 
     from Configurables import Kali__MisCalibrateCalo
     davinci.UserAlgorithms += [
         Kali__MisCalibrateCalo ( 'KaliPrs'  , Coefficients = prs  ) ,
