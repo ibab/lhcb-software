@@ -365,7 +365,7 @@ StatusCode MuonIDAlg::initialize() {
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) { return sc; }
   
-  info()   << "MuonIDAlg v7r7" << endmsg;
+  info()   << "MuonIDAlg v7r8" << endmsg;
 
     info()  << "==> Initialise: Input tracks in: " << m_TracksPath << endmsg;
     info()  << "                Output MuonPID in: " << m_MuonPIDsPath<< endmsg;  
@@ -438,11 +438,11 @@ StatusCode MuonIDAlg::initialize() {
       debug()  << "==> Weight_flag:" << m_weightFlag << endmsg;
       debug()  << endmsg;
       
-      double dllFlag  = (bool)DLL_flag->param<int>("DLL_flag");
+      int dllFlag  = DLL_flag->param<int>("DLL_flag");
       if(dllFlag != m_dllFlag) warning() << "Initialise: OverrideDB=false but dllFlag in options cards (=" 
         << m_dllFlag << ") not equal dllFlag in database (="  << dllFlag << "). Using database value" << endmsg;
-      m_dllFlag = (float) dllFlag;
-      debug()  << "==> DLL_flag:" << std::boolalpha << m_dllFlag << endmsg;
+      m_dllFlag = dllFlag;
+      debug()  << "==> DLL_flag:" << m_dllFlag << endmsg;
       
       // Muon ParticleID Conditions for DLL_flag = 1 from database
       Condition * nMupBins;

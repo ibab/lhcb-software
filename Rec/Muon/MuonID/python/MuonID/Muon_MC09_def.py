@@ -81,10 +81,6 @@ YFOIParameter3 = [0.03, 0.02, 0.00, 0.09,
 #//-----------------------------------------------------------------
 #// Parameters of the Landau functions for old DLL
 #//-----------------------------------------------------------------
-if DLL_flag == 0 :
-    print "# MuonID WARNING: old DLL parameters not tuned for DATA=%s,VERSION=%s. Loading values for DC06" %(DATA,VERSION)
-else :
-    print "# MuonID WARNING: new DLL parameters not tuned for DATA=%s,VERSION=%s. Loading values for DC06" %(DATA,VERSION)
 distMuon  = [0.311, 1.349, 0.524, 0.0020, 17., 10.6, 0.04, 4.1, 1.64]
 distPion  = [11., -12., 0.2029, -0.026, 0.06, 0.59, 0.008, -29., 41.]
 
@@ -250,7 +246,7 @@ MupBinsR3 = [ 6000., 10000., 20000., 30000.]
 MupBinsR4 = [ 6000.,  8000., 10000., 15000.]
 
 # Load parameters for DLL_flag=3: mapping of dist2 with hyperbolic tangent
-# Tuning for DC06 data. With foifactor=1.2 OK for 2009 data
+# Tuning for DC06 data.
 
 from MuonID import tanh_DC06
 from tanh_DC06 import *

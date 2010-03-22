@@ -138,7 +138,7 @@ private:
   
   // GL&SF: 
   bool m_weightFlag;// flag to introduce weights in IsMuon/IsMuonLoose
-  float m_dllFlag;  // flag to discriminate among the different DLLs
+  int m_dllFlag;  // flag to discriminate among the different DLLs
   
   /// GL&SF: Calculate weights:
   void P_weights(const double& p, bool *w);

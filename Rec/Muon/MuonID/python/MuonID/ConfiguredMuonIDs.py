@@ -24,14 +24,14 @@ class ConfiguredMuonIDs():
     initialization for the class. Use as input data type (DC06,MC08,etc) and version of it if necessary.
     """
     self.debug=debug
-    if self.debug: print "# CONFIGUREDMUONIDs v7r7"
+    if self.debug: print "# CONFIGUREDMUONIDs v7r8"
     if self.debug: print "# INITIALIZING"
 
     self.specialData=specialData
     if self.debug: print "# SPECIAL DATA=",self.specialData
     
     ## from datatype and version look for module with data. Store extra modules in case desired does not exist
-    mod=[data+"_"+version,data+"_def","MC09_def"]
+    mod=[data+"_"+version,data+"_def","2009_def"]
     mod = map(lambda x: "Muon_"+x,mod)
 
     if self.debug: print "# \tmods -> ",mod

@@ -2,6 +2,11 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !-----------------------------------------------------------------------------
 
+! 2010-03-22 - Helder Lopes
+ - Fixed bug 64670
+ - Changed default data type in configuration files to 2009
+ - Supressed some printouts
+
 ! 2010-03-22 - Rob Lambert
  - Noticed a possible bug in MuonIDAlg, bug 64670
  - Fixed windows warnings 64668
