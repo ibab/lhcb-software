@@ -69,9 +69,11 @@ class _copyParticleTrees(CopyWithBranch) :
             cloner.addTool(ParticleCloner, name="ParticleCloner")
             cloner.ParticleCloner.ICloneProtoParticle="NONE"
         self.setOutputPrefix(cloner)
-        try :
-            sel.algorithm().CloneFilteredParticles = True
-            print 'Set CloneFilteredParticles of', sel.algorithm().name(), ' to True'
+
+        for alg in sel.algos :
+            try :
+                alg.CloneFilteredParticles = True
+                print 'Set CloneFilteredParticles of', alg.name(), ' to True'
         except :
             pass
         
