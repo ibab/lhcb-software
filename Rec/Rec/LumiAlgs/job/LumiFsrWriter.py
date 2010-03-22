@@ -9,6 +9,10 @@
 import os
 from Gaudi.Configuration import *
 
+#--- switch on xml summary
+from Configurables import LHCbApp
+LHCbApp().XMLSummary = 'summary.xml'
+
 #--- determine application to run
 from LumiAlgs.LumiFsrWriterConf import LumiFsrWriterConf as LumiFsrWriter
 
