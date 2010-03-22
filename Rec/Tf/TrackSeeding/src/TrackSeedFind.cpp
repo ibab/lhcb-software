@@ -1187,7 +1187,7 @@ StatusCode TrackSeedFind::findSeeds() {
 			      continue; // ends both the yambi loop and the T3Y loop, goes to next y1 hit if it differs at least 50 cm from this candidate. If not, we keep 
 			   } else { // chi2 is OK;
 			      // check, if there are sufficient x-hits on the track
-			      xFitNotDone = (newcand.xSkipped()-skipped.size()); // if this is 0, then no hits are removed and fit is done for this X1-X3 combination. Accept all y-candidates for this X1X3 combination hereon
+			      xFitNotDone = (bool)(newcand.xSkipped()-skipped.size()); // if this is 0, then no hits are removed and fit is done for this X1-X3 combination. Accept all y-candidates for this X1X3 combination hereon
 			      if (xFitNotDone) { // hits removed
 			         newcand.xHits(xhits);
 			         int nX1=0;
