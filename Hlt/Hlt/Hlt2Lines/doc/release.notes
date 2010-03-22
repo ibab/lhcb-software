@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-03-22 - L. de Paula
+ - Correction in Hlt2InclusiveDiMuonLines
+
 ! 2010-03-22 - Jacopo Nardulli
  - Remove hard-coded values of pre/post scales in the B2DX lines
 
