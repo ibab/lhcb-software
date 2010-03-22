@@ -126,6 +126,9 @@ namespace Rich
     /// refractive index RMS values
     std::vector<double> m_refRMS;
 
+    /// Flag to say if we are in HLT mode or not
+    bool m_hltMode;
+
   };
 
 }

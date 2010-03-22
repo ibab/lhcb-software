@@ -4,6 +4,11 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2010-03-22 - Chris Jones
+ - Minor update to Rich::TabulatedRefractiveIndex to correctly use the HLT
+   or Offline refractive indices from RichDet depending on if the tool is
+   in an HLT or Offline context.
+
 !=========================== RichTools v2r29p1 2010-03-18 ====================
 ! 2010-03-02 - Chris Jones
  - Add support "Below Threshold" Particle ID type.

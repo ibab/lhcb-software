@@ -30,7 +30,8 @@ TabulatedRefractiveIndex ( const std::string& type,
     m_riches     ( Rich::NRiches ),
     m_detParams  ( NULL ),
     m_deRads     ( Rich::NRadiatorTypes    ),
-    m_refRMS     ( Rich::NRadiatorTypes, 0 )
+    m_refRMS     ( Rich::NRadiatorTypes, 0 ),
+    m_hltMode    ( false                   )
 {
   // interface
   declareInterface<IRefractiveIndex>(this);
@@ -69,6 +70,9 @@ StatusCode Rich::TabulatedRefractiveIndex::initialize()
   updMgrSvc()->registerCondition( this,
                                   DeRichLocations::Rich2Gas,
                                   &TabulatedRefractiveIndex::updateRich2GasRefIndex );
+
+  // HLT mode or not ?
+  m_hltMode = contextContains("HLT");
 
   // force first updates
   sc = updMgrSvc()->update(this);
@@ -152,7 +156,7 @@ refractiveIndex ( const RichRadIntersection::Vector & intersections,
         iR != intersections.end(); ++iR )
   {
     const double pLength = (*iR).pathLength();
-    refIndex += pLength * (*iR).radiator()->refractiveIndex(energy);
+    refIndex += pLength * (*iR).radiator()->refractiveIndex(energy,m_hltMode);
     totPathL += pLength;
   }
   return ( totPathL>0 ? refIndex/totPathL : refIndex );
@@ -170,7 +174,7 @@ refractiveIndex ( const RichRadIntersection::Vector & intersections ) const
   {
     const double energy = m_detParams->meanPhotonEnergy((*iR).radiator()->radiatorID());
     const double pLength = (*iR).pathLength();
-    refIndex += pLength * (*iR).radiator()->refractiveIndex(energy);
+    refIndex += pLength * (*iR).radiator()->refractiveIndex(energy,m_hltMode);
     totPathL += pLength;
   }
   return ( totPathL>0 ? refIndex/totPathL : refIndex );
