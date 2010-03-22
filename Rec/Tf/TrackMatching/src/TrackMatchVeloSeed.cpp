@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.18 2010-01-05 09:54:00 wouter Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.19 2010-03-22 02:35:29 rlambert Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -324,9 +324,9 @@ StatusCode TrackMatchVeloSeed::matchTracks( VeloCandidates& veloTracks,
           ++cand_counter;
 
           if(cand_counter == 1){
-            cand1stchi2   = (*iall)->chi2();
+            cand1stchi2   = (float) (*iall)->chi2();
           }else if(cand_counter == 2){
-            cand2ndchi2   = (*iall)->chi2();
+            cand2ndchi2   = (float) (*iall)->chi2();
           }
         }
       }/*end loop over matchVector*/
