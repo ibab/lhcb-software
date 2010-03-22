@@ -44,51 +44,53 @@ class ConfigureMuonPIDChecker():
     self.info.DEBUG = debug
     self.initializeAll = True 
    
-  def configure(self,name="MuonPID",mc=True,expertck=True):
+  def configure(self,name="MuonPID",UseMC=True,HistosLevel="OfflineFull" ):
     """
     configure the MuonPIDchecker algorithm
     """
 
     if self.debug: print "CONFIGURING MUONPIDCHECKER"
 
+
     ## check if input is already an instance or this must be created
     ext = "Checker"
-    if (not mc): ext = "Monitor"
-    myalg = MuonPIDChecker(name+ext)
+    if (not UseMC): ext = "Monitor"
 
-    myalg.HistoTopDir = "Muon/"
-    myalg.IsMuonFlag  = 0
-    myalg.DLLFlag   = 1  
-    myalg.DLLCut = 1.20
-    myalg.ProbCut1 = 0.90
-    myalg.ProbCut2 = 0.80
-    myalg.DLLlower = -1.0
-    myalg.DLLupper = 6.0
-    myalg.DLLnbins = 35 
-    myalg.NSHCut = 1
-    myalg.RunningMC = mc
-    myalg.ExpertCheck = expertck
-    myalg.MuonTrackLocation = 'Rec/Track/Muon'
-    myalg.HistoDir = name+"/"+ext
-    myalg.RefEff1IM   = self.info.RefEff1IM
-    myalg.RefEff1IML  = self.info.RefEff1IML
-    myalg.RefEff1DLL  = self.info.RefEff1DLL
-    myalg.RefEff1NSH  = self.info.RefEff1NSH
-    myalg.RefdEff1IM  = self.info.RefdEff1IM
-    myalg.RefdEff1IML = self.info.RefdEff1IML
-    myalg.RefdEff1DLL = self.info.RefdEff1DLL
-    myalg.RefdEff1NSH = self.info.RefdEff1NSH
-    myalg.RefEff2IM   = self.info.RefEff2IM
-    myalg.RefEff2IML  = self.info.RefEff2IML
-    myalg.RefEff2DLL  = self.info.RefEff2DLL
-    myalg.RefEff2NSH  = self.info.RefEff2NSH
-    myalg.RefdEff2IM  = self.info.RefdEff2IM
-    myalg.RefdEff2IML = self.info.RefdEff2IML
-    myalg.RefdEff2DLL = self.info.RefdEff2DLL
-    myalg.RefdEff2NSH = self.info.RefdEff2DLL
+    myalg1 = MuonPIDChecker(name+ext+"Long")
+    myalg1.HistoTopDir = "Muon/"
+    myalg1.RunningMC = UseMC 
+    myalg1.TrackType = 0 
+    myalg1.MonitorCutValues= self.info.MonitorCutValues 
+    myalg1.HistoDir = name+"/"+ext+"Long"
+    
+    if (HistosLevel == "Expert"): 
+      myalg1.HistosOutput = 4 
+      # Configure and additional instance to look at Downstream tracks
+      myalg2 = MuonPIDChecker(name+ext+"Down")
+      myalg2.HistoTopDir = "Muon/"
+      myalg2.RunningMC = UseMC 
+      myalg2.HistosOutput = 1 
+      myalg2.TrackType = 1 
+      myalg2.MonitorCutValues= self.info.MonitorCutValues 
+      myalg2.HistoDir = name+"/"+ext+"Down"
+      myalg2.HistosOutput = 4 
+      if (UseMC):
+	GaudiSequencer("CheckMUONSeq").Members += [ "MuonPIDChecker/"+name+ext+"Down" ]
+      else:
+	GaudiSequencer("MoniMUONSeq").Members += [ "MuonPIDChecker/"+name+ext+"Down" ]
 
-    if (mc):
-      GaudiSequencer("CheckMUONSeq").Members += [ "MuonPIDChecker/"+name+ext ]
     else:
-      GaudiSequencer("MoniMUONSeq").Members += [ "MuonPIDChecker/"+name+ext ]
 
+      if (HistosLevel == "OfflineFull"): 
+	myalg1.HistosOutput = 3 
+      if (HistosLevel == "OfflineExpress"): 
+	myalg1.HistosOutput = 2 
+      if (HistosLevel == "Online"): 
+	myalg1.HistosOutput = 1 
+      if (HistosLevel == "None"): 
+	myalg1.HistosOutput = 0 
+
+    if (UseMC):
+      GaudiSequencer("CheckMUONSeq").Members += [ "MuonPIDChecker/"+name+ext+"Long" ]
+    else:
+      GaudiSequencer("MoniMUONSeq").Members += [ "MuonPIDChecker/"+name+ext+"Long" ]
