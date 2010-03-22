@@ -6,6 +6,13 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2010-03-22 - Vanya Belyaev
+
+ - LHCbMath/Types.py 
+    add symbols from Gaudi::TrackMatrix and the rest of 
+    SMatrix/SVector classes mentioned in 
+      ( cd $LHCBRELEASES/LHCB/LHCB_v29r2/Event/ ;  grep XXX */Event/*.h ) 
+
 ! 2010-03-18 - Vanya Belyaev
 
  - ValueWithError 

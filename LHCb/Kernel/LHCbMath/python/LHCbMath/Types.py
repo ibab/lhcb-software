@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Types.py,v 1.3 2010-03-18 18:26:01 ibelyaev Exp $
+# $Id: Types.py,v 1.4 2010-03-22 14:08:19 ibelyaev Exp $
 # =============================================================================
 ## @file
 #
@@ -70,7 +70,7 @@ Simple file to provide 'easy' access in python for the basic ROOT::Math classes
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2009-09-12 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ "
 # =============================================================================
 __all__     = ()  ## nothing to be imported !
 # =============================================================================
@@ -94,25 +94,16 @@ if not hasattr ( Gaudi , 'LorentzVector' ) :
 if not hasattr ( Gaudi      , 'Plane3D'  ) :
     Gaudi.Plane3D       = _RM.Plane3D
 
-if not hasattr ( Gaudi.Math , 'XYZPoint'       ) :
-    Gaudi.Math.XYZPoint       = Gaudi.XYZPoint
-if not hasattr ( Gaudi.Math , 'XYZVector'      ) :
-    Gaudi.Math.XYZVector      = Gaudi.XYZVector
-if not hasattr ( Gaudi.Math , 'LorentzVector'  ) :
-    Gaudi.Math.LorentzVector  = Gaudi.LorentzVector    
-if not hasattr ( Gaudi.Math , 'Plane3D'        ) :
-    Gaudi.Math.Plane3D  = Gaudi.Plane3D  
+if not hasattr ( Gaudi.Math , 'XYZPoint'       ) : Gaudi.Math.XYZPoint       = Gaudi.XYZPoint
+if not hasattr ( Gaudi.Math , 'XYZVector'      ) : Gaudi.Math.XYZVector      = Gaudi.XYZVector
+if not hasattr ( Gaudi.Math , 'LorentzVector'  ) : Gaudi.Math.LorentzVector  = Gaudi.LorentzVector    
+if not hasattr ( Gaudi.Math , 'Plane3D'        ) : Gaudi.Math.Plane3D  = Gaudi.Plane3D  
 
+if not hasattr ( Gaudi      , 'Point3D'        ) : Gaudi.Point3D            = Gaudi.XYZPoint
+if not hasattr ( Gaudi.Math , 'Point3D'        ) : Gaudi.Math.Point3D       = Gaudi.XYZPoint
 
-if not hasattr ( Gaudi      , 'Point3D'       ) :
-    Gaudi.Point3D            = Gaudi.XYZPoint
-if not hasattr ( Gaudi.Math , 'Point3D'       ) :
-    Gaudi.Math.Point3D       = Gaudi.XYZPoint
-
-if not hasattr ( Gaudi      , 'Vector3D'      ) :
-    Gaudi.Vector3D           = Gaudi.XYZVector
-if not hasattr ( Gaudi.Math , 'Vector3D'      ) :
-    Gaudi.Math.Vector3D      = Gaudi.XYZVector
+if not hasattr ( Gaudi      , 'Vector3D'       ) : Gaudi.Vector3D           = Gaudi.XYZVector
+if not hasattr ( Gaudi.Math , 'Vector3D'       ) : Gaudi.Math.Vector3D      = Gaudi.XYZVector
 
     
 if not hasattr ( Gaudi , 'Vector2' )  :
@@ -129,19 +120,53 @@ if not hasattr ( Gaudi.Math , 'Vector3' ) : Gaudi.Math.Vector3 = Gaudi.Vector3
 if not hasattr ( Gaudi.Math , 'Vector4' ) : Gaudi.Math.Vector4 = Gaudi.Vector4 
 if not hasattr ( Gaudi.Math , 'Vector5' ) : Gaudi.Math.Vector5 = Gaudi.Vector5 
 
+if not hasattr ( Gaudi , 'SymMatrix2x2' ) :
+    Gaudi.SymMatrix2x2 = _RM.SMatrix('double,2,2,ROOT::Math::MatRepSym<double,2>')
 if not hasattr ( Gaudi , 'SymMatrix3x3' ) :
-    Gaudi.SymMatrix3x3 = _RM.SMatrix('double,3,3,ROOT::Math::MatRepSym<double,3>')
-    
+    Gaudi.SymMatrix3x3 = _RM.SMatrix('double,3,3,ROOT::Math::MatRepSym<double,3>')    
 if not hasattr ( Gaudi , 'SymMatrix4x4' ) :
     Gaudi.SymMatrix4x4 = _RM.SMatrix('double,4,4,ROOT::Math::MatRepSym<double,4>')
+if not hasattr ( Gaudi , 'SymMatrix5x5' ) :
+    Gaudi.SymMatrix5x5 = _RM.SMatrix('double,5,5,ROOT::Math::MatRepSym<double,5>')
+if not hasattr ( Gaudi , 'SymMatrix6x6' ) :
+    Gaudi.SymMatrix6x6 = _RM.SMatrix('double,6,6,ROOT::Math::MatRepSym<double,6>')
+## LHCb::Particle
+if not hasattr ( Gaudi , 'SymMatrix7x7' ) :
+    Gaudi.SymMatrix7x7 = _RM.SMatrix('double,7,7,ROOT::Math::MatRepSym<double,7>')
+## LHCb:TwoProngVertex
+if not hasattr ( Gaudi , 'SymMatrix9x9' ) :
+    Gaudi.SymMatrix9x9 = _RM.SMatrix('double,9,9,ROOT::Math::MatRepSym<double,9>')
 
 
-if not hasattr ( Gaudi.Math , 'SymMatrix3x3' ) :
-    Gaudi.Math.SymMatrix3x3 = Gaudi.SymMatrix3x3 
+if not hasattr ( Gaudi.Math , 'SymMatrix2x2' ) : Gaudi.Math.SymMatrix3x3 = Gaudi.SymMatrix2x2 
+if not hasattr ( Gaudi.Math , 'SymMatrix3x3' ) : Gaudi.Math.SymMatrix3x3 = Gaudi.SymMatrix3x3 
+if not hasattr ( Gaudi.Math , 'SymMatrix4x4' ) : Gaudi.Math.SymMatrix4x4 = Gaudi.SymMatrix4x4
+if not hasattr ( Gaudi.Math , 'SymMatrix5x5' ) : Gaudi.Math.SymMatrix5x5 = Gaudi.SymMatrix5x5 
+if not hasattr ( Gaudi.Math , 'SymMatrix6x6' ) : Gaudi.Math.SymMatrix5x5 = Gaudi.SymMatrix6x6 
+if not hasattr ( Gaudi.Math , 'SymMatrix7x7' ) : Gaudi.Math.SymMatrix5x5 = Gaudi.SymMatrix7x7 
+if not hasattr ( Gaudi.Math , 'SymMatrix9x9' ) : Gaudi.Math.SymMatrix5x5 = Gaudi.SymMatrix9x9 
 
-if not hasattr ( Gaudi.Math , 'SymMatrix4x4' ) :
-    Gaudi.Math.SymMatrix4x4 = Gaudi.SymMatrix4x4 
-    
+#
+# specific matrices for 'tracks'
+#
+
+if not hasattr ( Gaudi      , 'Matrix5x5'      ) : Gaudi.Matrix5x5             = _RM.SMatrix('double,5,5')
+if not hasattr ( Gaudi      , 'TrackMatrix'    ) : Gaudi.TrackMatrix           = Gaudi.Matrix5x5 
+if not hasattr ( Gaudi.Math , 'Matrix5x5'      ) : Gaudi.Math.Matrix5x5        = Gaudi.Matrix5x5 
+if not hasattr ( Gaudi.Math , 'TrackMatrix'    ) : Gaudi.Math.TrackMatrix      = Gaudi.TrackMatrix 
+
+if not hasattr ( Gaudi      , 'TrackSymMatrix' ) : Gaudi.TrackSymMatrix        = Gaudi.SymMatrix5x5
+if not hasattr ( Gaudi.Math , 'TrackSymMatrix' ) : Gaudi.Math.TrackSymMatrix   = Gaudi.TrackSymMatrix 
+
+if not hasattr ( Gaudi      , 'TrackVector'    ) : Gaudi.TrackVector           = Gaudi.Vector5 
+if not hasattr ( Gaudi.Math , 'TrackVector'    ) : Gaudi.Math.TrackVector      = Gaudi.TrackVector
+
+#
+# matrix from LHCb::Particle
+#
+if not hasattr ( Gaudi      , 'Matrix4x3'      ) : Gaudi.Matrix4x3             = _RM.SMatrix('double,4,3')
+if not hasattr ( Gaudi.Math , 'Matrix4x3'      ) : Gaudi.Math.Matrix4x3        = Gaudi.Matrix4x3
+
     
 ## Gaudi::Math
         
@@ -157,12 +182,9 @@ if not hasattr ( Gaudi.Math , 'SVector4WithError' ) :
 if not hasattr ( Gaudi.Math , 'SVector5WithError' ) :
     Gaudi.Math.SVector5WithError = cpp.Gaudi.Math.SVectorWithError(5,'double')
 
-if not hasattr ( Gaudi      , 'XYZLine' ) :
-    Gaudi.XYZLine     = Gaudi.Math.XYZLine
-if not hasattr ( Gaudi      , 'Line3D'  ) :
-    Gaudi.Line3D      = Gaudi.Math.XYZLine
-if not hasattr ( Gaudi.Math , 'Line3D'  ) :
-    Gaudi.Math.Line3D = Gaudi.Math.XYZLine
+if not hasattr ( Gaudi      , 'XYZLine' ) : Gaudi.XYZLine     = Gaudi.Math.XYZLine
+if not hasattr ( Gaudi      , 'Line3D'  ) : Gaudi.Line3D      = Gaudi.Math.XYZLine
+if not hasattr ( Gaudi.Math , 'Line3D'  ) : Gaudi.Math.Line3D = Gaudi.Math.XYZLine
 
 
 if not hasattr ( Gaudi.Math , 'frac' ) :
