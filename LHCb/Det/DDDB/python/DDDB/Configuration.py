@@ -118,7 +118,7 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"], "head-20100119")
-        self.__set_tag__(["LHCBCOND"], "head-20100303")
+        self.__set_tag__(["LHCBCOND"], "head-20100321")
     
     def __2009_conf__(self):
         """
@@ -126,8 +126,8 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"], "head-20100119")
-        self.__set_tag__(["LHCBCOND"], "head-20100303")
-        self.__set_tag__(["SIMCOND"], "sim-20100119-vc-md100")
+        self.__set_tag__(["LHCBCOND"], "head-20100321")
+        self.__set_tag__(["SIMCOND"], "MC-20100321-vc15mm-md100")
     
     def __2008_conf__(self):
         """

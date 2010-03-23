@@ -4,7 +4,13 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
-!========================== DDDB v1r29 2010-03-17 ============================
+!========================== DDDB v1r29 2010-03-23 ============================
+! 2010-03-23 - Marco Cattaneo
+ - Changed default tag for 2009 and 2010 data:
+   . head-20100321         for LHCBCOND
+ - Changed default tag for 2009 MC:
+   . MC-20100321-vc15mm-md100 for SIMCOND
+
 ! 2010-03-15 - Marco Cattaneo
  - Changed default tag for 2009 and 2010 data:
    . head-20100303         for LHCBCOND
