@@ -15,7 +15,6 @@ use HltDisplVertices    v1r5p1  Hlt   # Neil Gauvin
 use HltEcalAlley        v2r3p1  Hlt   # Mariusz Witek
 use HltGlobalMonitor    v3r2    Hlt   # Bruno de Paula
 use HltHidValley        v1r2p4  Hlt   # Marcin Kucharczyk
-use HltKshort           v2r2    Hlt   # Jaap Panman
 use HltL0Conf           v2r13p1 Hlt   # Johannes Albrecht
 use HltL0MuonConf       v3r7p2  Hlt   # Alessia Satta/Sandra Amato
 use HltLine             v3r2    Hlt   # Vanya Belyaev, Gerhard Raven
