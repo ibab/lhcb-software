@@ -1,4 +1,4 @@
-// $Id: ITTrackMonitor.cpp,v 1.9 2010-03-19 15:12:37 wouter Exp $
+// $Id: ITTrackMonitor.cpp,v 1.10 2010-03-23 10:16:41 wouter Exp $
 // Include files 
 #include "ITTrackMonitor.h"
 
@@ -144,6 +144,8 @@ void ITTrackMonitor::fillHistograms(const LHCb::Track& track,
   // track parameters at some reference z
   LHCb::State aState;
   StatusCode sc = extrapolator()->propagate(track, m_refZ,aState );
+  if( sc.isFailure() ) return ;
+
   plot2D(aState.x()/Gaudi::Units::cm,
          aState.y()/Gaudi::Units::cm, type+"/xy", "x vs y", 
            -m_xMax,m_xMax, -m_yMax, m_yMax, 50, 50);

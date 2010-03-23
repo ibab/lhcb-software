@@ -130,7 +130,7 @@ StatusCode TrackITOverlapMonitor::initialize() {
 
 StatusCode TrackITOverlapMonitor::finalize() 
 {
-  m_ithitcreator.release() ;
+  m_ithitcreator.release().ignore() ;
   return GaudiHistoAlg::finalize();
 }
 
