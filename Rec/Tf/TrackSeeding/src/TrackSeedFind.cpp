@@ -543,7 +543,7 @@ StatusCode TrackSeedFind::findSeeds() {
 	if (m_debug) ++(debugloops[0]);
          if ( m_verbose )
            verbose() << " x1 ambig " << hitX1.x() << " " << ambi << endreq;
-         ambigX1=(bool) ambi;
+         ambigX1=(ambi!=0);
          hitX1.setAmbiguity(ambigX1);
          x1=hitX1.x(ambigX1);
          z1=hitX1.z();
@@ -574,7 +574,7 @@ StatusCode TrackSeedFind::findSeeds() {
             int ambi3=0;
             if (hitX3.isIT()) ambi3=1;
             for (; ambi3<2; ++ambi3) {
-               ambigX3=(bool) ambi3;
+               ambigX3=(ambi3!=0);
 	       hitX3.setAmbiguity(ambigX3);
                if (m_debug) ++(debugloops[1]);
 // here, check whether we have already had the current combination of
@@ -1067,7 +1067,7 @@ StatusCode TrackSeedFind::findSeeds() {
                         if (ylocal>ymax) continue;
                         if ((ylocal-ystart)/(zlocal-zstart)-ystart/zstart > m_YSlopDev + 0.005) continue; // the extra 5 millirad is for the resolution in the hit: a hit resolution of 0.5 mm gives about 5 mrad uncertainty in y 
                         if (m_debug) ++debugloops[14];
-                        yhit.setAmbiguity((bool) yambi);
+                        yhit.setAmbiguity(yambi!=0);
 			int addY1=1;
 			if (Y1cands[indexY1].isIT()) ++addY1;
 			int addY3=1;
@@ -1187,7 +1187,7 @@ StatusCode TrackSeedFind::findSeeds() {
 			      continue; // ends both the yambi loop and the T3Y loop, goes to next y1 hit if it differs at least 50 cm from this candidate. If not, we keep 
 			   } else { // chi2 is OK;
 			      // check, if there are sufficient x-hits on the track
-			      xFitNotDone = (bool)(newcand.xSkipped()-skipped.size()); // if this is 0, then no hits are removed and fit is done for this X1-X3 combination. Accept all y-candidates for this X1X3 combination hereon
+			      xFitNotDone = ((newcand.xSkipped()-skipped.size())!=0); // if this is 0, then no hits are removed and fit is done for this X1-X3 combination. Accept all y-candidates for this X1X3 combination hereon
 			      if (xFitNotDone) { // hits removed
 			         newcand.xHits(xhits);
 			         int nX1=0;
@@ -1361,7 +1361,7 @@ StatusCode TrackSeedFind::findSeeds() {
          double y=ypars[1]+ypars[3]*(z-ypars[0]);
 	 for (int ambi=0; ambi<2; ++ambi) {
 	    if (hit.isIT()) ++ambi;
-	    bool hitambig=(bool) ambi;
+	    bool hitambig=(ambi!=0);
             hit.setAmbiguity(hitambig);
             double x=hit.x(hitambig,y);
             double xproj = xpars[1]+(z-xpars[0])*xpars[3]+extraX2;
