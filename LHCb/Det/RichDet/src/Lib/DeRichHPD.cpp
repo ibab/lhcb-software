@@ -451,7 +451,6 @@ StatusCode DeRichHPD::updateDemagProperties()
     }
   }
 
-
   return sc;
 }
 
@@ -483,14 +482,14 @@ StatusCode DeRichHPD::fillHpdDemagTable(unsigned int field)
     error() << "coeff_sim.size()<8"<<endmsg;
     return StatusCode::FAILURE;
   }
-  const double r_a0 = coeff_sim.at(0);
-  const double r_a1 = coeff_sim.at(1);
-  const double r_a2 = coeff_sim.at(2);
-  const double r_a3 = coeff_sim.at(3);
-  const double phi_a0 = coeff_sim.at(4);
-  const double phi_a1 = coeff_sim.at(5);
-  const double phi_a2 = coeff_sim.at(6);
-  const double phi_a3 = coeff_sim.at(7);
+  const double& r_a0   = coeff_sim.at(0);
+  const double& r_a1   = coeff_sim.at(1);
+  const double& r_a2   = coeff_sim.at(2);
+  const double& r_a3   = coeff_sim.at(3);
+  const double& phi_a0 = coeff_sim.at(4);
+  const double& phi_a1 = coeff_sim.at(5);
+  const double& phi_a2 = coeff_sim.at(6);
+  const double& phi_a3 = coeff_sim.at(7);
   double BLong = 0;
   //if (m_UseRandomBField && m_UseBFieldTestMap)
   //{
@@ -506,7 +505,7 @@ StatusCode DeRichHPD::fillHpdDemagTable(unsigned int field)
   for ( int i = 0; i < totbins+1; ++i ) {
 
     double r_anode = 0, phi_anode = 0;
-    double r_cathode = m_activeRadius/totbins *i;
+    const double r_cathode = m_activeRadius/totbins * (double)i;
 
     if( m_UseBFieldTestMap ) {
 
@@ -516,14 +515,18 @@ StatusCode DeRichHPD::fillHpdDemagTable(unsigned int field)
 
     } else { //evaluate distorsions from condDB parameters
 
+      // cache for speed
+      const double rCathode2 = r_cathode * r_cathode ;
+      const double rCathode3 = rCathode2 * r_cathode ;
+
       r_anode   = r_a0
-        + r_a1 * r_cathode
-        + r_a2 * r_cathode * r_cathode
-        + r_a3 * r_cathode * r_cathode * r_cathode;
+        + ( r_a1 * r_cathode )
+        + ( r_a2 * rCathode2 )
+        + ( r_a3 * rCathode3 );
       phi_anode = phi_a0
-        + phi_a1 * r_cathode
-        + phi_a2 * r_cathode * r_cathode
-        + phi_a3 * r_cathode * r_cathode * r_cathode;
+        + ( phi_a1 * r_cathode )
+        + ( phi_a2 * rCathode2 )
+        + ( phi_a3 * rCathode3 );
     }
 
     simTable.push_back( TabulatedProperty::Entry( r_anode, phi_anode ) );
@@ -551,24 +554,24 @@ StatusCode DeRichHPD::fillHpdMagTable( unsigned int field )
   tableR.clear();
   tablePhi.clear();
 
-  if(coeff_rec.size() < 8)
+  if ( coeff_rec.size() < 8 )
   {
     error() << "coeff_rec.size()<8"<<endmsg;
     return StatusCode::FAILURE;
   }
-  const double r_a0 = coeff_rec.at(0);
-  const double r_a1 = coeff_rec.at(1);
-  const double r_a2 = coeff_rec.at(2);
-  const double r_a3 = coeff_rec.at(3);
-  const double phi_a0 = coeff_rec.at(4);
-  const double phi_a1 = coeff_rec.at(5);
-  const double phi_a2 = coeff_rec.at(6);
-  const double phi_a3 = coeff_rec.at(7);
+  const double& r_a0   = coeff_rec.at(0);
+  const double& r_a1   = coeff_rec.at(1);
+  const double& r_a2   = coeff_rec.at(2);
+  const double& r_a3   = coeff_rec.at(3);
+  const double& phi_a0 = coeff_rec.at(4);
+  const double& phi_a1 = coeff_rec.at(5);
+  const double& phi_a2 = coeff_rec.at(6);
+  const double& phi_a3 = coeff_rec.at(7);
 
   // Reconstruction from anode->cathode
   for ( int i = 0; i < totbins+1; ++i ) {
 
-    double r_anode = std::min(m_siliconHalfLengthX,m_siliconHalfLengthY)/totbins*i;
+    const double r_anode = std::min(m_siliconHalfLengthX,m_siliconHalfLengthY)/totbins * (double)i;
     double r_cathode = 0, phi_cathode = 0;
 
     if( m_UseBFieldTestMap ) {
@@ -578,14 +581,19 @@ StatusCode DeRichHPD::fillHpdMagTable( unsigned int field )
 
     } else { //evaluate distorsions from condDB parameters
 
+      // cache square and cube for speed
+      const double rAnode2 = r_anode * r_anode ;
+      const double rAnode3 = rAnode2 * r_anode ;
+
       r_cathode   = r_a0
-        + r_a1 * r_anode
-        + r_a2 * r_anode * r_anode
-        + r_a3 * r_anode * r_anode * r_anode;
+        + ( r_a1 * r_anode )
+        + ( r_a2 * rAnode2 )
+        + ( r_a3 * rAnode3 );
+
       phi_cathode = phi_a0
-        + phi_a1 * r_anode
-        + phi_a2 * r_anode * r_anode
-        + phi_a3 * r_anode * r_anode * r_anode;
+        + ( phi_a1 * r_anode )
+        + ( phi_a2 * rAnode2 )
+        + ( phi_a3 * rAnode3 );
     }
 
     tableR[ r_anode ]   = r_cathode;
@@ -622,8 +630,8 @@ StatusCode DeRichHPD::magnifyToGlobal( Gaudi::XYZPoint& detectPoint,
       // To go from the anode to the cathode solve: d1*Rc^2 - d0*Rc - Ra = 0
       // The difference is that Ra is now positive.
       // Chose the solution with the minus sign
-      (m_deMagFactor[0] - sqrt(gsl_pow_2( m_deMagFactor[0] ) -
-                               4*m_deMagFactor[1]*rAnode))/(2*m_deMagFactor[1] ) );
+      (m_deMagFactor[0] - std::sqrt(gsl_pow_2( m_deMagFactor[0] ) -
+                                    4*m_deMagFactor[1]*rAnode))/(2*m_deMagFactor[1] ) );
 
 
   // check if this point could have come from the photoCathode
@@ -663,7 +671,7 @@ StatusCode DeRichHPD::magnifyToGlobal( Gaudi::XYZPoint& detectPoint,
 
   const double winRadiusSq = ( photoCathodeSide ? m_winInRsq :m_winOutRsq );
   if ( winRadiusSq < XsqPlusYsq ) return StatusCode::FAILURE;
-  const double zWindow = sqrt(winRadiusSq - XsqPlusYsq);
+  const double zWindow = std::sqrt(winRadiusSq - XsqPlusYsq);
 
   detectPoint = m_fromWindowToGlobal * Gaudi::XYZPoint(xWindow,yWindow,zWindow);
 

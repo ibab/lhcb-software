@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2010-03-23 - Chris Jones
+ - Minor speed improvements to DeRichHPD when updating for T/P condition changes.
+
 !======================== RichDet v14r0 2010-03-17 ===========================
 ! 2010-03-09 - Antonis Papanestis
  - Allow the use of different demagnification parameters for positive and 
