@@ -5,6 +5,9 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+! 2010-03-19 - Anton Poluektov
+ - Released StrippingReport algorithm to show the statistics of stripping selections. 
+
 !======================== StrippngAlgs v1r0 2010-02-22 ========================
 
 ! 2010-02-19 - Juan Palacios
