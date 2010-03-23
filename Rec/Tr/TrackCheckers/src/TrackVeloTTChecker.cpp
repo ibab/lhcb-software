@@ -1,4 +1,4 @@
-// $Id: TrackVeloTTChecker.cpp,v 1.10 2010-03-23 07:28:41 rlambert Exp $
+// $Id: TrackVeloTTChecker.cpp,v 1.11 2010-03-23 07:42:26 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -221,11 +221,11 @@ StatusCode TrackVeloTTChecker::execute() {
       }
       NTcsthmcVelo.push_back( (float) result );
       NTqmcVelo.push_back( (float) mcPartVelo->particleID().threeCharge() );
-      NTidmcVelo.push_back( (float) mcPartVelo->particleID().pid() );
-      NTnmchit1.push_back( (float) nmchalf1 );
-      NTnmchit2.push_back( (float) nmchalf2 );
-      NTnmchit1b.push_back( (float) nmchalf1b );
-      NTnmchit2b.push_back( (float) nmchalf2b );
+      NTidmcVelo.push_back( mcPartVelo->particleID().pid() );
+      NTnmchit1.push_back( nmchalf1 );
+      NTnmchit2.push_back( nmchalf2 );
+      NTnmchit1b.push_back( nmchalf1b );
+      NTnmchit2b.push_back( nmchalf2b );
     } else {
       NTkeyVelo.push_back( 0 );
       NTpmcVelo.push_back( -10. );
@@ -241,11 +241,11 @@ StatusCode TrackVeloTTChecker::execute() {
     if( matched ) {
       NTrecons.push_back( 1 );
       // was calculated from the closest state to z=0 in the past!
-      NTpdet.push_back( matchedTr->p() / Gaudi::Units::GeV );
-      NTptdet.push_back( matchedTr->pt() / Gaudi::Units::GeV );
-      NTqdet.push_back( matchedTr->charge() );
-      NTqfit.push_back( matchedTr->charge() ); // seems redundant with qdet!
-      NTchi2tt.push_back( matchedTr->chi2() );
+      NTpdet.push_back( float(matchedTr->p() / Gaudi::Units::GeV) );
+      NTptdet.push_back( float(matchedTr->pt() / Gaudi::Units::GeV) );
+      NTqdet.push_back( (float) matchedTr->charge() );
+      NTqfit.push_back( (float) matchedTr->charge() ); // seems redundant with qdet!
+      NTchi2tt.push_back( (float) matchedTr->chi2() );
       NTndf.push_back( nMeas-5 );
       NTnTrueDigi.push_back( ngoodTT );
       NTnAllDigi.push_back( nTTall );
