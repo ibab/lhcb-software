@@ -11,7 +11,7 @@
 ##
 # =============================================================================
 __author__  = "V. Gligorov vladimir.gligorov@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -58,19 +58,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
 #
 #############################################################################################
     __used_configurables__ = 	[ 	(CaloProcessor	,	None), 
-					(RichRecSysConf	,	None),
-					# Now we need to define some more instances of the CaloProcessor
-					# The problem is that we want to redo the CALO processing
-					# only when we make some new tracks, not when we just refit
-					# the tracks or change some other options. Therefore
-					# we need, in addition to the "dynamic" instance of the 
-					# CaloProcessor defined above, which will be different for
-					# each instance of the Hlt2Tracking, some "static" instances 
-					# which do not change and depend only on the possible track
-					# types. 
-					(CaloProcessor	,	"Hlt2ForwardTrackCaloProcessor"   ),
-					(CaloProcessor	,	"Hlt2DownstreamTrackCaloProcessor"),
-					(CaloProcessor	,	"Hlt2LongTrackCaloProcessor"      )
+					(RichRecSysConf	,	None)
 					# This next part defines all the Hlt2 Lines since they 
 					# configured after the tracking. This means that each
 					# Hlt2Lines configurable MUST be a singleton AND this
@@ -102,6 +90,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
         , "DoSeeding"                  		: False
         , "DoFastFit"				: False 
         , "DoCloneKilling"			: False
+	, "MakeNeutrals"			: False
+	, "RichHypos"				: ["pion","kaon"]
+	, "RichRadiators"			: ["Rich1Gas","Rich2Gas"]
 	# TODO : make these variables, not slots 	
 	, "__hlt2ChargedCaloProtosSeq__"	: 0
 	, "__hlt2ChargedHadronProtosSeq__" 	: 0
@@ -269,7 +260,10 @@ class Hlt2Tracking(LHCbConfigurableUser):
         log.warning('## INFO Clone Killing? = '   + str(self.getProp("DoCloneKilling"   )))
         log.warning('## INFO Use RICH? = '  	  + str(self.getProp("UseRICHForHadrons")))
         log.warning('## INFO Use CALO? = '  	  + str(self.getProp("UseCALOForHadrons")))	 
-        log.warning('############################################################'	  )
+        log.warning('## INFO Make Neutrals? = '   + str(self.getProp("MakeNeutrals"     )))
+	log.warning('## INFO Rich hypos = '       + str(self.getProp("RichHypos"	)))
+	log.warning('## INFO Rich radiators = '   + str(self.getProp("RichRadiators"	)))
+	log.warning('############################################################'	  )
 	#
         # First of all check that I have been called with a sensible set of options
         #
@@ -309,8 +303,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
         self.setProp("__hlt2ChargedHadronProtosSeq__",	self.__hlt2ChargedHadronProtos())
         self.setProp("__hlt2MuonProtosSeq__",		self.__hlt2MuonProtos()		)
         self.setProp("__hlt2NeutralProtosSeq__",	self.__hlt2NeutralProtos()	)
-
-	#print self.__used_instances__
 #############################################################################################
 #############################################################################################
 #
@@ -377,7 +369,10 @@ class Hlt2Tracking(LHCbConfigurableUser):
         return self.__hltBasePIDLocation() + "/" + HltRICHIDSuffix
     #
     def __caloIDLocation(self) :
-        return self.__hltBasePIDLocation() + "/" + HltCALOIDSuffix
+        caloBase =  self.__hltBasePIDLocation() + "/" + HltCALOIDSuffix + "/"
+	if (self.getProp("MakeNeutrals")) : caloBase += "Neutrals"
+	else : caloBase += "Charged"
+        return caloBase
     #
     # The prefixes for the various tools and algorithms used
     #
@@ -695,6 +690,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         richConf.InitTracks		= True
         richConf.InitPhotons		= True
         richConf.TracklessRingAlgs	= []
+	richConf.Particles 		= self.getProp("RichHypos")
+	richConf.Radiators		= self.getProp("RichRadiators")
 	# Set the sequence to run the RICH PID in
         richConf.setProp("RecoSequencer",richSeq)
 	# The input location of the tracks
@@ -1027,8 +1024,14 @@ class Hlt2Tracking(LHCbConfigurableUser):
         # protoparticles here! 
         myCALOProcessor.CaloReco 	= True 
         myCALOProcessor.CaloPIDs 	= True
-        myCALOProcessor.SkipNeutrals	= False
-        myCALOProcessor.SkipCharged 	= False
+        #
+	# Check if we are making neutrals or not
+	#
+	myCALOProcessor.SkipNeutrals    = True
+        myCALOProcessor.SkipCharged     = False
+	if (self.getProp("MakeNeutrals") == True): 
+		myCALOProcessor.SkipNeutrals	= False
+        	myCALOProcessor.SkipCharged 	= True
 
 	# The sequences are given the track and protoparticle locations when initializing 
 	myPIDSeq 	= myCALOProcessor.caloSequence(		[tracks.outputSelection()]								)

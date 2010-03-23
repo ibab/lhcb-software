@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.99 2010-03-17 22:40:45 gligorov Exp $
+!$Id: release.notes,v 1.100 2010-03-23 22:43:37 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2010-03-23 - V. Gligorov
+ - Continuing work on Savannah tasks #12691,13784.
+   Split the neutral reconstruction into charged and neutral parts,
+   so that lines which need electrons do not make photons, and that we
+   don't ID electrons when making photons. Add a tracking configuration
+   for making neutrals. 
 
 ! 2010-03-17 - V. Gligorov
  - Continuing work on Savannah tasks #12691,13784.

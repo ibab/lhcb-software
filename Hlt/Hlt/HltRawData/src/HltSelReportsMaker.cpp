@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.cpp,v 1.22 2010-01-30 17:58:01 graven Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.23 2010-03-23 22:40:11 gligorov Exp $
 // #define DEBUGCODE
 // Include files 
 #include "boost/algorithm/string/replace.hpp"
@@ -66,8 +66,7 @@ HltSelReportsMaker::HltSelReportsMaker( const std::string& name,
 
   declareProperty("OutputHltSelReportsLocation",
     m_outputHltSelReportsLocation= LHCb::HltSelReportsLocation::Default);  
-  declareProperty("HltMuonTrackLocation",
-                  m_HltMuonTracksLocation =  LHCb::TrackLocation::HltMuon);
+  declareProperty("MuonIDSuffix", m_muonIDSuffix = "");
   declareProperty("InputHltDecReportsLocation",
     m_inputHltDecReportsLocation= LHCb::HltDecReportsLocation::Default);  
 
@@ -993,6 +992,18 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle* o
         if( muid!=0 && object->particleID().abspid()==13 ){
           if( muid->IsMuon() ){
             if( !m_HLTmuonTracks ){ 
+	      //Now we need to derive the muon segment container from
+	      //the track container
+	      m_HltMuonTracksLocation = "";
+	      if (track->parent()) {
+	        const DataObject* obj = track->parent() ;
+		if ( 0 != obj ){
+                  const IRegistry* reg = obj->registry() ;
+                  if ( 0 != reg ){
+                    m_HltMuonTracksLocation = reg->identifier() + m_muonIDSuffix;
+                  }
+                }
+	      }
               if( exist<LHCb::Tracks>(m_HltMuonTracksLocation) ){
                 m_HLTmuonTracks = get<LHCb::Tracks>(m_HltMuonTracksLocation);
               } else {

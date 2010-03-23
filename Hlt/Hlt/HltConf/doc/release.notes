@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.434 2010-03-21 07:52:46 albrecht Exp $ 
+! $Id: release.notes,v 1.435 2010-03-23 22:39:14 gligorov Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-03-23 - V. Gligorov
+ - Continuing work on Savannah tasks #12691,13784.
+   . Update configuration of SelReports to correctly save Muon
+     stubs for both forward and match mun tracks in HltConf.py
+   . Update track associators in Hlt2.py
+   . Add new types of reconstruction to Hlt2.py
+
 ! 2010-03-21 - Johannes Albrecht
  - Configuration.py: change stripped end sequence to be more flexible
 

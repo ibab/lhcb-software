@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.h,v 1.11 2009-12-25 22:14:41 graven Exp $
+// $Id: HltSelReportsMaker.h,v 1.12 2010-03-23 22:40:11 gligorov Exp $
 #ifndef HLTSELREPORTSMAKER_H 
 #define HLTSELREPORTSMAKER_H 1
 
@@ -115,7 +115,8 @@ private:
   /// location of output Hlt Summary
   StringProperty m_outputHltSelReportsLocation;
 
-  /// location of HLT muon-track-stubs 
+  /// location of HLT muon-track-stubs
+  std::string m_muonIDSuffix; 
   StringProperty m_HltMuonTracksLocation;
   /// pointer to container of the HLT muon-track-stubs
   LHCb::Tracks* m_HLTmuonTracks;
