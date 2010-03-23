@@ -47,7 +47,7 @@ def hpdPositionFromCondDB( hpd ):
         return (False,0,0)
     zero = GaudiPython.gbl.Math.XYZPoint()
     offset = sisensor.geometry().ownMatrix()*zero
-    return (True,offset.x(),offset.y())
+    return (True, -offset.x(), -offset.y())
 
 
 def drawImageDeltaPos( xmlfilelist ):

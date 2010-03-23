@@ -46,9 +46,9 @@ namespace Rich
       return m_hist->Integral();
     }
     
-    void HPDBoundaryFcn::findBoundary() 
+    int HPDBoundaryFcn::findBoundary() 
     {
-      if ( NULL == m_hist ) return ;
+      if ( NULL == m_hist ) return 0 ;
       m_boundary.clear() ;
       
       int nbins  = m_hist->GetNbinsX()*m_hist->GetNbinsY();
@@ -80,7 +80,8 @@ namespace Rich
         }
       }
       
-      return ;
+      int boundaryPixels = (int) m_boundary.size() ;
+      return boundaryPixels ;
     }
     
     bool HPDBoundaryFcn::hasNeighbour( const TH2* hist, 

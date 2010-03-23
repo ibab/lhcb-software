@@ -51,6 +51,17 @@ namespace Rich
       
       /// Retrieve ODIN gps time and update counters
       StatusCode timeInformation() ;      
+
+      /// Calculate the local x position from a col nr in pixels
+      double localXFromPixels( const double col ) const ;
+
+      /// Calculate the local y position from a row nr in pixels
+      double localYFromPixels( const double row ) const ;
+      
+      /// Check if existing CondDB value is valid
+      bool existingCondDBIsValid( const unsigned int ID, 
+                                  const double x0, 
+                                  const double y0 ) const ;
       
     private:
       
@@ -63,6 +74,11 @@ namespace Rich
       /// Display Smart ID warnings
       bool m_displayWarnings ;
       
+      /// Minimum number of hits required in HPD
+      int m_minOccupancy ;
+
+      /// Minimum number of pixels needed to define HPD edge
+      int m_minBoundary ;
       
       /// Pointer to Rich Sys Detector Element
       const DeRichSystem * m_RichSys;
@@ -75,7 +91,20 @@ namespace Rich
 
       /// Iterator over map of HPD CopyNr and Histogram pointers
       std::map< unsigned int , TH2D* >::iterator  m_iter;
-
+      
+      /// Pixel size in mm 
+      double m_pixelsize ;
+      
+      /// Silicon size in mm
+      double m_siliconx ;
+      double m_silicony ;
+      
+      /// Flag for comparison against existing CondDB value
+      bool m_compareCondDB;
+      
+      /// Maximum allowed movement before triggering the update
+      double m_maxMovement;
+      
     };
   } // namespae Mon
 } // namespace Rich 

@@ -28,7 +28,7 @@ namespace Rich {
       virtual double Up() const{  return m_errDef; }
       void setErrDef( const double def ){ m_errDef = def; }
       
-      void findBoundary() ;
+      int findBoundary() ;
       double nPixels() const ;
       
       virtual ~HPDBoundaryFcn( ); ///< Destructor

@@ -4,6 +4,10 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2010-03-23 - Thomas BLAKE
+ - Add check on existing CondDB value and protection against low occupancy
+
+
 ! 2010-03-22 - Thomas Blake
  - Fixed problem with HPDBoundaryFcn namespace and added <assert.h>
 

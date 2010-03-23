@@ -11,6 +11,12 @@ def xpixelstomm( col ):
 def ypixelstomm( row ):
     return 0.5*silicony - row*pixelsize - 0.5*pixelsize 
 
+def xmmtopixels( x0 ):
+    return (x0 + 0.5*siliconx - 0.5*pixelsize)/pixelsize
+
+def ymmtopixels( y0 ):
+    return (0.5*silicony - y0 - 0.5*pixelsize)/pixelsize
+
 def countersFromXMLFileList( filelist ):
     """
     Return dictionary of counters from list of XML input files
@@ -23,24 +29,38 @@ def counterFromDict( countername, counterdict ):
     """
     Return average, error and entries from the dict of counters 
     """
-    treevalues = counterdict[countername]
-    treearr = treevalues.value()
-    if None == treevalues:
+    if countername  in counterdict:
+        treevalues = counterdict[countername]
+        treearr = treevalues.value()
+        if 0 == treearr[1]:
+            return (False, 0, 0, 0)
+        else:
+            return (True, treearr[0],treearr[1], treearr[2])
+    else:
         return (False, 0, 0, 0)
-    elif 0 == treearr[1]:
-        return (False, 0, 0, 0)
-    return (True, treearr[0],treearr[1], treearr[2])
+       
 
-
+def hpdLocalOffset( hpd, counterdict ):
+    """
+    Get the local offset of the HPD in mm
+    """
+    algstr = 'RichHPDImageSummary/RICH_HPD_' + str(hpd)
+    xarr = counterFromDict(algstr+'_XOffset',counterdict)
+    yarr = counterFromDict(algstr+'_YOffset',counterdict)
+    if xarr[0] and yarr[0]:
+        return ( True, xarr[1]/xarr[2],yarr[1]/yarr[2] )
+    else:
+        return ( False,0,0 )
+    
 def hpdCentreInPixels( hpd, counterdict ):
     """
     Get the centre of the HPD in pixels from the dictionary 
     """
-    algstr = 'RichHPDImageSummary/RICH_HPD_' + str(hpd)
-    colarr = counterFromDict(algstr+'_AvCol',counterdict)
-    rowarr = counterFromDict(algstr+'_AvRow',counterdict)
-    if colarr[0] and rowarr[0]:
-        return (True,colarr[1]/colarr[2],rowarr[1]/rowarr[2])
+    isvalid, x0, y0 = hpdLocalOffset( hpd, counterdict )
+    if isvalid:
+        col0 = xmmtopixels( -x0 )
+        row0 = ymmtopixels( -y0 )
+        return (isvalid, col0, row0)
     else:
         return (False,0,0)
 
@@ -49,23 +69,12 @@ def hpdRadiusInPixels( hpd, counterdict ):
     Get the HPD PC image in pixels from the dictionary
     """
     algstr = 'RichHPDImageSummary/RICH_HPD_' + str(hpd)
-    radarr = counterFromDict(algstr+'_AvRad',counterdict)
+    radarr = counterFromDict(algstr+'_Radius',counterdict)
     if radarr[0]:
-        return (radarr[1]/radarr[2])
+        return (radarr[1]/(radarr[2]*pixelsize))
     else:
         return 0
     
-def hpdLocalOffset( hpd, counterdict ):
-    """
-    Get the local offset of the HPD in mm
-    """
-    isvalid, col0, row0 = hpdCentreInPixels( hpd, counterdict )
-    if not isvalid:
-        return (isvalid, col0, row0) 
-    else:
-        x0 = xpixelstomm(col0)
-        y0 = ypixelstomm(row0)
-        return (isvalid, -x0, -y0)
     
 def intervalOfValidity( counterdict ):
     """

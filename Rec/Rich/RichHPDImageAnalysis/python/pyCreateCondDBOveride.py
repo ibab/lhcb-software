@@ -18,7 +18,7 @@ def appendCondDBOveride( file, det, hpd, x0, y0 ):
     Append x0, y0 silicon sensor offset for HPD 'hpd' in RICH 'det' to CondDB overide file
     """
     conddbpath = 'Conditions/Alignment/Rich' + str(det)
-    hpdpath = '/HPD' + str(hpd) + '_Align'
+    hpdpath = '/SiSensor' + str(hpd) + '_Align'
     poscond = 'double_v dPosXYZ = ' + str(x0) + ' ' + str(y0) + ' 0.0' 
     rotcond = 'double_v dRotXYZ = 0.0 0.0 0.0'
     pivcond = 'double_v pivotXYZ = 0.0 0.0 0.0'
