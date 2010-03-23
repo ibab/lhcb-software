@@ -165,10 +165,26 @@ Purpose: LHCb Simulation program
    GaussPhysics_load.cpp. And modified the declaration of the tools to use
    aliases. (needs GiGa > v19r7)
 
+!========================= GaussRICH v10r1 2010-03-23 =========================
+! 2010-03-19  - Sajan Easo
+ - Added the capability to use C3F8 as the Rich1gas radiator. These changes are
+   backward compatible. The changes are in the monotoring and identifying the
+    radiator number.
+   The radiator number is same as that for C4F10. Hence one can use this for
+   both C4F10 and C3F8 as the Rich1gas.
+   The files modified:   RichG4GaussPathNames.h, RichG4MatRadIdentifier.cpp
+   RichG4CherenkovAnalysis.cpp,RichG4InputMon.cpp
+
 !====================== GaussMonitor v6r6 2010-03-22 =========================
 ! 2010-02-24 - Patrick Robbe
  - src/GenMonitorAlg.cpp, src/GeneratorAnalysis.cpp: protect against particle
    without production vertex (Pythia8).
+
+!======================= BlsMoniSim v1r1 2010-02-06 ==========================
+! 2010-02-06 - Vadim Talanov
+ - Minor correction of sizes for local variables in BlsHitChecker.h
+  - Additional check on the multimap size in BlsHitChecker.cpp
+  - Removed local CondDB tag from BlsSim.py
 
 !=============================================================================
 </PRE><H1><A NAME="v38r3">2010-02-05 - GaussSys v38r3</A></H1><PRE>
