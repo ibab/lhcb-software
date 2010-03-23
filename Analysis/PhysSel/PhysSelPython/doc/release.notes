@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.48 2010-03-08 11:28:42 jpalac Exp $
+!$Id: release.notes,v 1.49 2010-03-23 11:08:42 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2010-03-23 - Juan Palacios
+ -  cmt/requirements
+  . Use LCG pytools to get py.test.
+  . Remove LHCbKernel dependency.
+  . Increase version to v5r1.
 
 !==================== PhysSel/PhysSelPython v5r0 2010-03-08 ================
 
