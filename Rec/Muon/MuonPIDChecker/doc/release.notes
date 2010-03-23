@@ -2,6 +2,11 @@
 ! Responsible : E. Polycarpo, M. Gandelman
 !----------------------------------------------------------------------------
 
+!2010-03-23 - Alessio Sarti [on behalf of erica]
+ - Fixed the vector declaration causing windows crash.
+ - Enlarged the char[ def from 13 to 20 to be safe [Erica will change that soon to
+use strings instead!]
+
 !2010-03-21 - Erica Polycarpo 
  - Change configurable to take into account different levels of Histograms slot
  - Reorganize the code to make it cleaner

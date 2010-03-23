@@ -1,4 +1,4 @@
-// $Id: MuonPIDChecker.cpp,v 1.22 2010-03-22 02:54:25 polye Exp $
+// $Id: MuonPIDChecker.cpp,v 1.23 2010-03-23 15:08:06 asarti Exp $
 // Include files 
 #include <cmath>
 #include <iomanip>
@@ -203,7 +203,7 @@ StatusCode MuonPIDChecker::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
   if (0<m_ntotTr[1]) {
-    double rate[m_nMonitorCuts], rateError[m_nMonitorCuts];
+    std::vector<double> rate(m_nMonitorCuts), rateError(m_nMonitorCuts);
     std::vector<std::string> CutName; 
     CutName.push_back("IsMuonLoose         = "); 
     CutName.push_back("IsMuon              = "); 
@@ -489,13 +489,13 @@ void MuonPIDChecker::fillIMLPlots(int level) {
   if (level>1){
     plot1D( m_TrNShared, "hNShared_IML"  , " NShared for PS Tracks ", -0.5 , 5.5, 6 );
     plot1D( m_TrDist2, "hDist2_IML", "Muon Dist for IML candidates", 0., 600., 100); 
-    char hname1[13];
+    char hname1[20];
     char htitle1[48];
     sprintf ( hname1, "hDist2_IML_R%d",m_TrRegionM2);
     sprintf ( htitle1, "Muon Dist for IML candidates at R%d",m_TrRegionM2);
     plot1D( m_TrDist2, hname1 , htitle1 , 0., 600., 100); 
 
-    char hname2[14];
+    char hname2[20];
     char htitle2[48];
     plot1D( exp(m_TrMuonLhd), "hProbMu_IML", "Muon Probability for IML candidates", -0.1, 1.1, 60);
     sprintf ( hname2, "hProbMu_IML_R%d",m_TrRegionM2);
@@ -519,7 +519,7 @@ void MuonPIDChecker::fillIMLPlots(int level) {
   if (level>3){
     profile1D( std::abs(m_Trp0), exp(m_TrMuonLhd), "hProbMuvsP_IML", "Mean Muon Prob vs p for IML tracks", 0.,100.,100);
     profile1D( std::abs(m_Trp0), exp(m_TrNMuonLhd), "hNProbMuvsP_IML", "Mean non-Muon Prob vs P for IML tracks ", 0.,100.,100);
-    char hname[12];
+    char hname[20];
     char htitle[48];
     sprintf ( hname, "hDLL_IML_R%d",m_TrRegionM2);
     sprintf ( htitle, "Muon DLL for IML candidates at R%d",m_TrRegionM2);
@@ -540,7 +540,7 @@ void MuonPIDChecker::fillIMPlots(int level) {
     plot1D( m_TrRegionM2, "hIMRegion", "MS Region for IM tracks",0.5,4.5,4); 
     plot1D( m_TrNShared, "hNShared_IM"  , " NShared for PS Tracks ", -0.5 , 5.5, 6 );
     plot1D( m_TrDist2, "hDist2_IM", "Muon Dist for IM candidates", 0., 600., 100); 
-    char hname[16];
+    char hname[20];
     char htitle[48];
     sprintf ( hname, "hDist2_IM_R%d",m_TrRegionM2);
     sprintf ( htitle, "Muon Dist for IM candidates at R%d",m_TrRegionM2);
@@ -564,7 +564,7 @@ void MuonPIDChecker::fillIMPlots(int level) {
   if (level>3){
     profile1D( std::abs(m_Trp0), exp(m_TrMuonLhd), "hProbMuvsP_IM", "Mean Muon Prob vs p for IM tracks", 0.,100.,100);
     profile1D( std::abs(m_Trp0), exp(m_TrNMuonLhd), "hNProbMuvsP_IM", "Mean non-Muon Prob vs P for IM tracks ", 0.,100.,100);
-    char hname[12];
+    char hname[20];
     char htitle[48];
     sprintf ( hname, "hDLL_IM_R%d",m_TrRegionM2);
     sprintf ( htitle, "Muon DLL for IM candidates at R%d",m_TrRegionM2);
@@ -576,7 +576,7 @@ void MuonPIDChecker::fillIMPlots(int level) {
 //  Fill Plots for Hit Multiplicities    
 //====================================================================
 void MuonPIDChecker::fillHitMultPlots(int level) {
-  char hname[16], htitle[48];
+  char hname[20], htitle[48];
 
   if (level>2){
     std::vector<unsigned int>  nhitsfoiS(m_NStation);    
