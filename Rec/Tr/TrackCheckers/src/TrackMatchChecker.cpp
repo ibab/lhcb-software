@@ -1,4 +1,4 @@
-// $Id: TrackMatchChecker.cpp,v 1.7 2009-10-08 14:49:57 wouter Exp $
+// $Id: TrackMatchChecker.cpp,v 1.8 2010-03-23 07:28:41 rlambert Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -327,8 +327,8 @@ StatusCode TrackMatchChecker::matchMCTracks( )
     if ( sc.isFailure() ) continue;
     
     // fill mc ntuple
-    m_mcChi2.push_back( chi2 );
-    m_mcTrueMomentum.push_back( mcpart->p() );
+    m_mcChi2.push_back( (float) chi2 );
+    m_mcTrueMomentum.push_back(  (float) mcpart->p() );
     m_mcElectron.push_back( mcpart->particleID().isLepton() );
 
     // Count TT clusters
@@ -463,11 +463,11 @@ StatusCode TrackMatchChecker::monitor( )
       StatusCode sc = m_stateCreator->createState(mcpartSeed,matchZ,trueState);
       if ( sc.isSuccess() ) {
         TrackVector trueVec = trueState.stateVector();
-        m_xTrue.push_back( trueVec[0] );
-        m_yTrue.push_back( trueVec[1] );
-        m_txTrue.push_back( trueVec[2] );
-        m_tyTrue.push_back( trueVec[3] );
-        m_pTrue.push_back( 1./fabs(trueVec[4]) );
+        m_xTrue.push_back(  (float) trueVec[0] );
+        m_yTrue.push_back(  (float) trueVec[1] );
+        m_txTrue.push_back(  (float) trueVec[2] );
+        m_tyTrue.push_back(  (float) trueVec[3] );
+        m_pTrue.push_back(  (float) 1./fabs(trueVec[4]) );
       } else {
         m_xTrue.push_back( 0.0 );
         m_yTrue.push_back( 0.0 );
@@ -479,11 +479,11 @@ StatusCode TrackMatchChecker::monitor( )
     if ( goodMatch ) m_numGood++;
 
     m_goodMatch.push_back( goodMatch );
-    m_chi2Match.push_back( chi2 );
-    m_matchZPos.push_back( matchZ );
+    m_chi2Match.push_back( (float)  chi2 );
+    m_matchZPos.push_back(  (float) matchZ );
     m_numOfHitsVelo.push_back( veloTrack->nMeasurements() );
     m_numOfHitsSeed.push_back( seedTrack->nMeasurements() );
-    m_zPosLastVeloHit.push_back( lastVeloZPos );
+    m_zPosLastVeloHit.push_back(  (float) lastVeloZPos );
     
     // loop over TT clusters
     int purity = 0;
@@ -529,14 +529,14 @@ StatusCode TrackMatchChecker::monitor( )
       m_purityTT.push_back( (float) purity / (float) nClus );
     }
 
-    m_xVelo.push_back( veloVector[0] );
-    m_yVelo.push_back( veloVector[1] );
-    m_txVelo.push_back( veloVector[2] );
-    m_tyVelo.push_back( veloVector[3] );
-    m_eXVelo.push_back( sqrt(veloCov(0,0)) );
-    m_eYVelo.push_back( sqrt(veloCov(1,1)) );
-    m_eTxVelo.push_back( sqrt(veloCov(2,2)) );
-    m_eTyVelo.push_back( sqrt(veloCov(3,3)) );
+    m_xVelo.push_back(  (float) veloVector[0] );
+    m_yVelo.push_back(  (float) veloVector[1] );
+    m_txVelo.push_back(  (float) veloVector[2] );
+    m_tyVelo.push_back(  (float) veloVector[3] );
+    m_eXVelo.push_back(  (float) sqrt(veloCov(0,0)) );
+    m_eYVelo.push_back(  (float) sqrt(veloCov(1,1)) );
+    m_eTxVelo.push_back(  (float) sqrt(veloCov(2,2)) );
+    m_eTyVelo.push_back(  (float) sqrt(veloCov(3,3)) );
     if ( veloVector.Dim() < 5 ) {
       m_momentumVelo.push_back( 0.0 );
       m_eMomentumVelo.push_back( 0.0 );

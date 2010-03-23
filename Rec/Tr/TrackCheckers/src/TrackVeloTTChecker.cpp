@@ -1,4 +1,4 @@
-// $Id: TrackVeloTTChecker.cpp,v 1.9 2009-10-08 14:49:57 wouter Exp $
+// $Id: TrackVeloTTChecker.cpp,v 1.10 2010-03-23 07:28:41 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -209,23 +209,23 @@ StatusCode TrackVeloTTChecker::execute() {
     }
 
     NTisFwd.push_back( isFwd );
-    NTzVeloCenter.push_back( zcenter );
+    NTzVeloCenter.push_back( (float) zcenter );
 
     if( mcPartVelo ) {
       NTkeyVelo.push_back( mcPartVelo->key() );
-      NTpmcVelo.push_back( mcPartVelo->momentum().rho()/1000. );
-      NTptmcVelo.push_back( mcPartVelo->pt()/1000. );
+      NTpmcVelo.push_back( (float) mcPartVelo->momentum().rho()/1000. );
+      NTptmcVelo.push_back( (float) mcPartVelo->pt()/1000. );
       double result = 0.;
       if( mcPartVelo->momentum().mag() != 0. ) {
         result = mcPartVelo->momentum().Z() / mcPartVelo->momentum().mag();
       }
-      NTcsthmcVelo.push_back( result );
-      NTqmcVelo.push_back( mcPartVelo->particleID().threeCharge() );
-      NTidmcVelo.push_back( mcPartVelo->particleID().pid() );
-      NTnmchit1.push_back( nmchalf1 );
-      NTnmchit2.push_back( nmchalf2 );
-      NTnmchit1b.push_back( nmchalf1b );
-      NTnmchit2b.push_back( nmchalf2b );
+      NTcsthmcVelo.push_back( (float) result );
+      NTqmcVelo.push_back( (float) mcPartVelo->particleID().threeCharge() );
+      NTidmcVelo.push_back( (float) mcPartVelo->particleID().pid() );
+      NTnmchit1.push_back( (float) nmchalf1 );
+      NTnmchit2.push_back( (float) nmchalf2 );
+      NTnmchit1b.push_back( (float) nmchalf1b );
+      NTnmchit2b.push_back( (float) nmchalf2b );
     } else {
       NTkeyVelo.push_back( 0 );
       NTpmcVelo.push_back( -10. );

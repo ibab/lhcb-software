@@ -4,6 +4,9 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+! 2010-03-23 - Rob Lambert
+ - Fixed some windows warnings, noticed bug in TrackEffChecker
+
 !======================= TrackCheckers v4r10 2009-11-16 =======================
 ! 2009-11-11 Kostyantyn Holubyev
  - Added class TrackOccupChecker for the studies of the occupancies in IT, OT,
