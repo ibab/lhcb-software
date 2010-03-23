@@ -1,4 +1,4 @@
-// $Id: CaloEMuMonitor.cpp,v 1.8 2010-03-22 02:14:41 rlambert Exp $
+// $Id: CaloEMuMonitor.cpp,v 1.9 2010-03-23 07:01:03 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -551,7 +551,7 @@ bool CaloEMuMonitor::acceptE(const LHCb::ProtoParticle *proto) const
   if ( rdlle < m_RichDLLe ) return false;
 
   float hcale = (float) proto->info(LHCb::ProtoParticle::CaloHcalE, -1 * Gaudi::Units::GeV);
-  bool  inhcal= (bool) proto->info( LHCb::ProtoParticle::InAccHcal, false );
+  bool  inhcal= (bool) proto->info( LHCb::ProtoParticle::InAccHcal, double(false) );
   if ( inhcal && hcale > m_maxEHcalE ) return false;
 
   return true;
@@ -716,7 +716,7 @@ void CaloEMuMonitor::fillMVar(const LHCb::ProtoParticle *proto)
   if ( m_electron ){
     m_var->e_hypo = (float) m_electron->position()->e();
     m_var->eoverp = m_var->e_hypo/m_var->p;
-    m_var->cov_hypo = m_electron->position()->covariance()(LHCb::CaloPosition::E, LHCb::CaloPosition::E);  // (2,2)
+    m_var->cov_hypo =(float) m_electron->position()->covariance()(LHCb::CaloPosition::E, LHCb::CaloPosition::E);  // (2,2)
 
     if ( track->hasStateAt( LHCb::State::ECalShowerMax ) ){
       const LHCb::State *state_ecal = track->stateAt( LHCb::State::ECalShowerMax ) ;
@@ -744,10 +744,10 @@ void CaloEMuMonitor::fillMVar(const LHCb::ProtoParticle *proto)
 
 
   // Acceptance flag for Prs/Ecal/Hcal/Brem
-  m_var->inecal= (bool) proto->info( LHCb::ProtoParticle::InAccEcal, false );
-  m_var->inhcal= (bool) proto->info( LHCb::ProtoParticle::InAccHcal, false );
-  m_var->inbrem= (bool) proto->info( LHCb::ProtoParticle::InAccBrem, false );
-  m_var->inprs = (bool) proto->info( LHCb::ProtoParticle::InAccPrs,  false );
+  m_var->inecal= (bool) proto->info( LHCb::ProtoParticle::InAccEcal, double(false) );
+  m_var->inhcal= (bool) proto->info( LHCb::ProtoParticle::InAccHcal, double(false) );
+  m_var->inbrem= (bool) proto->info( LHCb::ProtoParticle::InAccBrem, double(false) );
+  m_var->inprs = (bool) proto->info( LHCb::ProtoParticle::InAccPrs,  double(false) );
 
   // Ecal/Hcal/Prs-based DLL for electron-ID
   m_var->epide = (float) proto->info( LHCb::ProtoParticle::EcalPIDe, -99. );

@@ -282,7 +282,7 @@ StatusCode CaloPhotonChecker::finalize()
   info() << "     Et(GeV)        | Efficiency |   Purity   "<<endmsg;
   info() << "----------------------------------------------"<<endmsg;
   for (int i=0; i<m_nbinpt ; ++i){
-    float pt=(float) m_ptmin+float(i)*(m_ptmax-m_ptmin)/float(m_nbinpt);
+    float pt=float( m_ptmin+float(i)*(m_ptmax-m_ptmin)/float(m_nbinpt));
     float eff=(m_mc_g[i]>0) ? float(m_rec_sig[i])/float(m_mc_g[i]) : (0.F);
     float pur=(m_rec_sig[i]+m_rec_bkg[i]>0) ?
           float(m_rec_sig[i])/float(m_rec_sig[i]+m_rec_bkg[i]) : (0.F) ;

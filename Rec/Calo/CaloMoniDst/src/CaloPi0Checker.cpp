@@ -1,4 +1,4 @@
-// $Id: CaloPi0Checker.cpp,v 1.5 2009-03-05 15:52:51 odescham Exp $
+// $Id: CaloPi0Checker.cpp,v 1.6 2010-03-23 07:01:03 rlambert Exp $
 
 // ============================================================================
 // Include files
@@ -89,7 +89,7 @@ protected:
    */
   CaloPi0Checker( const std::string &name, ISvcLocator *pSvcLocator )
     : CaloMoniAlg( name, pSvcLocator )
-    , m_cut( 50 * Gaudi::Units::perCent )
+    , m_cut( (float) 50 * Gaudi::Units::perCent )
     , m_calo( DeCalorimeterLocation::Ecal )
     , m_pi0Name( "pi0" )
     , m_pi0ID( 0 ){ 
