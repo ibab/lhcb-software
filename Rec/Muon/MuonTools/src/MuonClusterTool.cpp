@@ -1,4 +1,4 @@
-// $Id: MuonClusterTool.cpp,v 1.3 2010-03-22 02:31:18 rlambert Exp $
+// $Id: MuonClusterTool.cpp,v 1.4 2010-03-23 07:37:34 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -93,7 +93,7 @@ StatusCode  MuonClusterTool::initClusterVector(LHCb::MuonCoords* coords)
     double xp,dx,yp,dy,zp,dz;
     MuonTileID tile((*i)->key());
     StatusCode sc =  m_muonDetector->Tile2XYZ(tile,xp,dx,yp,dy,zp,dz);
-    MuonCluster*  clust=new MuonCluster((*i),xp,dx,yp,dy,zp,dz);
+    MuonCluster*  clust=new MuonCluster((*i),(float) xp,(float) dx,(float) yp,(float) dy,(float) zp,(float) dz);
     std::pair<MuonCluster*,int> pippo(clust,0);
     debug()<<tile<<endreq;
     
@@ -273,20 +273,20 @@ StatusCode MuonClusterTool::SaveOutput(std::string output)
            double x,y,z;                   
            m_muonDetector->Tile2XYZ(mytile,x,dx,y,dy,z,dz);
         if(totcoord==1){
-          xmin=(float) x-dx;
-          ymin=(float) y-dy;
-          zmin=(float) z-dz;
-          xmax=(float) x+dx;
-          ymax=(float) y+dy;
-          zmax=(float) z+dz;
+          xmin=float(x-dx);
+          ymin=float(y-dy);
+          zmin=float(z-dz);
+          xmax=float(x+dx);
+          ymax=float(y+dy);
+          zmax=float(z+dz);
           
         }else{
-          if(xmin>x-dx)xmin=(float) x-dx;
-          if(ymin>y-dy)ymin=(float) y-dy;
-          if(zmin>z-dz)zmin=(float) z-dz;
-          if(xmax<x+dx)xmax=(float) x+dx;
-          if(ymax<y+dy)ymax=(float) y+dy;
-          if(zmax<z+dz)zmax=(float) z+dz;
+          if(xmin>x-dx)xmin=float(x-dx);
+          if(ymin>y-dy)ymin=float(y-dy);
+          if(zmin>z-dz)zmin=float(z-dz);
+          if(xmax<x+dx)xmax=float(x+dx);
+          if(ymax<y+dy)ymax=float(y+dy);
+          if(zmax<z+dz)zmax=float(z+dz);
           
         }
         
