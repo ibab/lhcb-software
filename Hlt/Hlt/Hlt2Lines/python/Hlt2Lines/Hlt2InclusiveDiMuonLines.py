@@ -319,7 +319,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line.clone( 'BiasedDiMuonMass'
                     , prescale = self.prescale 
-                    , DiMuonSimple = {"Code" : MuPtCut +"&"+ MassTCut +"&"+ MuIPCut +"&"+ LTimeTCut }
+                    , SimpleDiMuon = {"Code" : MuPtCut +"&"+ MassTCut +"&"+ MuIPCut +"&"+ LTimeTCut }
                     , postscale = self.postscale
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2BiasedDiMuonMassDecision"    : 50042 } )
@@ -331,7 +331,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line.clone( 'BiasedDiMuonIP'
                     , prescale = self.prescale
-                    , DiMuonSimple = {"Code" : MuPtCut +"&"+ MassLCut +"&"+ MuTIPCut +"&"+ LTimeCut }
+                    , SimpleDiMuon = {"Code" : MuPtCut +"&"+ MassLCut +"&"+ MuTIPCut +"&"+ LTimeCut }
                     , RefinedDiMuon = {"Code" : TIPChi2Cut +"&"+ VertexChi2Cut +"&"+ PVDistTChi2Cut }
                     , postscale = self.postscale
                     )
