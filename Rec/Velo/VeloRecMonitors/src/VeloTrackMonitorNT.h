@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitorNT.h,v 1.3 2010-03-22 02:54:41 rlambert Exp $
+// $Id: VeloTrackMonitorNT.h,v 1.4 2010-03-23 13:19:00 szumlat Exp $
 #ifndef VELOTRACKMONITORNT_H 
 #define VELOTRACKMONITORNT_H 1
 
@@ -6,7 +6,13 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "TrackInterfaces/IVeloClusterPosition.h"
+#include "Event/MCHit.h"
 
+// Linker
+#include "Linker/LinkerTool.h"
+
+// Kernel
+#include "Kernel/VeloChannelID.h"
 
 /** @class VeloTrackMonitorNT
  * 
@@ -23,6 +29,7 @@ namespace Velo
   class VeloTrackMonitorNT : public GaudiTupleAlg {
                                                                              
   public:
+
     typedef IVeloClusterPosition::Direction Direction;
                                                                              
     /** Standard construtor */
@@ -37,24 +44,36 @@ namespace Velo
     /** Algorithm initialize */
     virtual StatusCode initialize();
 
+    // associators
+    typedef LinkerTool<LHCb::VeloCluster, LHCb::MCHit> AsctTool;
+    typedef AsctTool::DirectType Table;
+    typedef Table::Range Range;
+    typedef Table::iterator iterator;
+
   private:
+
     void FillVeloEvNtuple(LHCb::Tracks* tracks);
-    void FillVeloClNtuple(const LHCb::Track& track);
+    StatusCode FillVeloClNtuple(const LHCb::Track& track);
     void FillVeloTrNtuple(const LHCb::Track& track);
   
   private:
+
     std::string m_tracksInContainer;    ///< Input Tracks container location
     bool m_clntuple;
     bool m_trntuple;
     bool m_evntuple;
-    std::string m_allString;  
+    bool m_runWithMC;
+    std::string m_allString; 
+    std::string m_clusterLoc;
+    std::string m_asctLocation; 
     LHCb::VeloClusters* m_rawClusters;
     const DeVelo* m_veloDet ;
     int m_runodin;
     long unsigned int m_eventodin;
     int m_bunchid;
-
     IVeloExpectation* m_expectTool;
+    IVeloClusterPosition* m_clusterTool;
+    const Table* m_asctTable;
 
   protected:
 
@@ -67,6 +86,8 @@ namespace Velo
                                   const DeVeloSensor* sensor) const;
     double angleOfInsertion(const Direction& localSlopes,
                             Gaudi::XYZVector& parallel2Track) const;
+    const LHCb::MCHit* getAssocMCHit(const LHCb::VeloCluster* clus) const;
+    LHCb::VeloChannelID weightedMean(const LHCb::VeloCluster* cluster, double& isp);
 
   };
 

@@ -3,6 +3,8 @@
 ! Responsible : VELO monitoring group
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
+! 2010-03-23 - Tomasz Szumlak
+ - updates in VeloTrackMonitorNT algorithm
 
 ! 2010-03-22 - Rob Lambert
  - Fixes for windows warnings savannah 64668

@@ -23,6 +23,7 @@ use  TrackEvent      v*   Event
 use  L0Event         v*   Event
 use  HltEvent        v*   Event
 use  TrackFitEvent   v*   Tr
+use  LinkerEvent     v*   Event
 
 include_path      none
 
