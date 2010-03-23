@@ -1,4 +1,4 @@
-// $Id: STDumpADCs.cpp,v 1.1 2010-03-10 14:41:23 mtobin Exp $
+// $Id: STDumpADCs.cpp,v 1.2 2010-03-23 09:19:35 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -51,7 +51,7 @@ ST::STDumpADCs::~STDumpADCs() {
 // Initialization
 //=============================================================================
 StatusCode ST::STDumpADCs::initialize() {
-  StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
+  StatusCode sc = ST::TupleAlgBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiTupleAlg
   debug() << "==> Initialize" << endmsg;
   debug() << "Reading ADC values from " << m_dataLocation << endmsg;
@@ -111,7 +111,7 @@ StatusCode ST::STDumpADCs::execute() {
     tuple->farray("channels", m_channelNumbers, "channel", 3072 );
     tuple->write();
 
-  }
+  } // end of exist condition
   //debug() << "Found " << data->size() << " boards." << endmsg;
   return StatusCode::SUCCESS;
 }
@@ -123,5 +123,5 @@ StatusCode ST::STDumpADCs::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  return GaudiTupleAlg::finalize();  // must be called after all other actions
+  return ST::TupleAlgBase::finalize();  // must be called after all other actions
 }

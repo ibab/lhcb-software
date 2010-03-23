@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.h,v 1.11 2010-03-11 09:27:28 mtobin Exp $
+// $Id: STClusterMonitor.h,v 1.12 2010-03-23 09:19:35 mtobin Exp $
 #ifndef STCLUSTERMONITOR_H 
 #define STCLUSTERMONITOR_H 1
 
@@ -91,6 +91,7 @@ namespace ST
 
     /// Cuts on the data quality
     unsigned int m_minNClusters; ///< Cut on minimum number of clusters in the event
+    unsigned int m_maxNClusters; ///< Cut on maximum number of clusters in the event
     double m_chargeCut;///< Cut on charge
     double m_minMPVCharge;///< Minimum charge for calculation on MPV
     

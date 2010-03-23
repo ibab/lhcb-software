@@ -1,4 +1,4 @@
-// $Id: STDumpADCs.h,v 1.1 2010-03-10 14:41:23 mtobin Exp $
+// $Id: STDumpADCs.h,v 1.2 2010-03-23 09:19:35 mtobin Exp $
 #ifndef STDUMPADCS_H 
 #define STDUMPADCS_H 1
 
@@ -8,7 +8,12 @@
 
 /** @class STDumpADCs STDumpADCs.h
  *  
- *
+ *  Dumps the ADC values for each TELL1 into a tuple
+ *  ADC values can be accessed/scanned event by event using:
+ * 
+ *  TTree* adcs=(TTree*)gDirectory->Get("AlgName/ADCs");
+ *  adcs->Draw("TELL34:channels","","",1,1)
+ *  
  *  @author Mark TOBIN
  *  @date   2006-06-12
  */

@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.23 2010-03-11 09:27:28 mtobin Exp $
+// $Id: STClusterMonitor.cpp,v 1.24 2010-03-23 09:19:35 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -81,6 +81,7 @@ ST::STClusterMonitor::STClusterMonitor( const std::string& name,
   /// Some data quality cuts
   declareProperty("ChargeCut", m_chargeCut=0);//< charge on the cluster
   declareProperty("MinTotalClusters", m_minNClusters=0);/// cuts on the total number of clusters in the event
+  declareProperty("MaxTotalClusters", m_maxNClusters=10000000);/// cuts on the total number of clusters in the event
   declareProperty("MinMPVCharge",m_minMPVCharge=8.);//< Cut on the charge of the cluster when calculating MPV
 
   /// Reset rate for histograms/accumulators
@@ -152,7 +153,7 @@ StatusCode ST::STClusterMonitor::execute() {
   // code goes here  
   monitorClusters();
 
-  // this is where any histograms/couters are reset
+  // this is where any histograms/counters are reset
   if(m_resetRate > 0 && counter("Number of events").nEntries()%m_resetRate == 0) {
     if(m_hitMaps) fillMPVMap();
     resetAccumulators();
@@ -182,13 +183,11 @@ void ST::STClusterMonitor::monitorClusters() {
   if(exist<LHCb::STClusters>(m_clusterLocation)){
     m_nClustersPerTELL1.resize(m_nTELL1s,0);
     LHCb::STClusters* clusters = get<LHCb::STClusters>(m_clusterLocation);
-    LHCb::STClusters::const_iterator itClus;
 
     const unsigned int nClusters = clusters->size();
-    if(m_debug) debug() << "Number of clusters in " << m_clusterLocation 
-                        << " is " << nClusters << endmsg;
+    if(m_debug) debug() << "Number of clusters in " << m_clusterLocation << " is " << nClusters << endmsg;
 
-    if(nClusters < m_minNClusters) return;
+    if(nClusters < m_minNClusters || nClusters > m_maxNClusters) return;
 
     m_1d_nClusters->fill(nClusters);
     if(100  < nClusters) {
@@ -196,7 +195,8 @@ void ST::STClusterMonitor::monitorClusters() {
     }
 
     // Loop over clusters
-    for(itClus = clusters->begin(); itClus != clusters->end(); ++itClus) {
+    LHCb::STClusters::const_iterator itClus = clusters->begin();
+    for(; itClus != clusters->end(); ++itClus) {
       const LHCb::STCluster* cluster = (*itClus);
       fillHistograms(cluster);
       if(m_hitMaps) fillHitMaps(cluster);
