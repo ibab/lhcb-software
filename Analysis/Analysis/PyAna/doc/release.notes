@@ -11,3 +11,5 @@
    Contains also py.tests in tests directory. To run:
    cd tests
    py.test
+
+   The package is subject to the Lesser GPL, see COPYING and COPYING.LESSER.
