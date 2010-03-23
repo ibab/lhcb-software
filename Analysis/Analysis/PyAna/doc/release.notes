@@ -1,0 +1,13 @@
+!-----------------------------------------------------------------------------
+! Package     : Analysis/PyAna
+! Responsible : Juan Palacios
+! Purpose     : Pure python ntuple and histogram classes and helper code.
+!-----------------------------------------------------------------------------
+
+! 2010-03-23 - Juan Palacios
+ - First import to SVN. Contains modules:
+   * pyhistogram
+   * pyntuple
+   Contains also py.tests in tests directory. To run:
+   cd tests
+   py.test

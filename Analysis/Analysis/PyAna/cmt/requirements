@@ -1,0 +1,19 @@
+#
+#============================================================================
+# Created    : 2010-03-23
+# Maintainer : Juan PALACIOS
+#============================================================================
+package           PyAna
+version           v1r0
+#============================================================================
+branches          cmt doc python tests
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use   GaudiPolicy    v*
+use   Python         v*    LCG_Interfaces -no_auto_imports
+use   pytools        v*    LCG_Interfaces -no_auto_imports
+#============================================================================
+apply_pattern install_python_modules
+#============================================================================
