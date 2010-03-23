@@ -5,6 +5,11 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+! 2010-03-23 - Juan Palacios
+ - cmt/requirements
+  . Use LCG pytools to get py.test.
+  . Increase version to v1r1.
+
 !======================== SelPy v1r0 2010-01-26 ==============================
 
 ! 2010-02-25 - Juan Palacios
