@@ -1,10 +1,11 @@
 #include "GaudiKernel/AlgFactory.h" 
-//#include "GaudiKernel/ToolHandle.h"
+#include "GaudiKernel/ToolHandle.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "Event/Track.h"
 #include "Event/State.h"
 #include "Event/CaloCluster.h"
 #include "Event/CaloPosition.h"
+#include "TrackInterfaces/ITrackExtrapolator.h"
 #include "CaloDet/DeCalorimeter.h"
 #include <boost/foreach.hpp>
 
@@ -32,10 +33,12 @@ private:
   bool m_useClusters ;
   bool m_useGeometricZ ;
   bool m_requireTHits ;
+  double m_clusterZCorrection ;
   std::string m_clusterLocation;
   std::string m_caloDigitLocation;
   DeCalorimeter* m_caloDet ;
   double m_geometricZ ;
+  ToolHandle<ITrackExtrapolator> m_extrapolator ;
 
   IHistogram1D* m_dxASideH1[3] ;
   IHistogram1D* m_dyASideH1[3] ;
@@ -62,13 +65,16 @@ DECLARE_ALGORITHM_FACTORY( TrackCaloMatchMonitor );
 //=============================================================================
 TrackCaloMatchMonitor::TrackCaloMatchMonitor( const std::string& name,
 					ISvcLocator* pSvcLocator)
-  : GaudiHistoAlg( name , pSvcLocator )
+  : GaudiHistoAlg( name , pSvcLocator ),
+    m_extrapolator("TrackMasterExtrapolator",this)
 {
   declareProperty( "TrackLocation", m_trackLocation = LHCb::TrackLocation::Default  );
   declareProperty( "CaloSystem", m_caloName = "Ecal") ;
   declareProperty( "UseClusters", m_useClusters = true ) ;
   declareProperty( "UseGeometricZ", m_useGeometricZ = true ) ; // this you need for cosmics (MIPs)
+  declareProperty( "ClusterZCorrection", m_clusterZCorrection = 0) ;
   declareProperty( "RequireTHits",m_requireTHits = true ) ; // this you need for cosmics (MIPs)
+  declareProperty( "Extrapolator", m_extrapolator) ;
   //declareProperty( "ClusterContainer", m_clusterLocation = LHCb::CaloClusterLocation::Ecal ) ;
   //declareProperty( "CaloDigitContainer", m_caloDigitsLocation = LHCb::CaloDigitLocation::Ecal ) ;
 }
@@ -88,6 +94,12 @@ StatusCode TrackCaloMatchMonitor::initialize()
 {
   StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;             // error printed already by GaudiAlgorithm
+  sc = m_extrapolator.retrieve() ;
+  if ( sc.isFailure() ) {
+    error() << "Could not retrieve extrapolator" << endreq ;
+    return sc;
+  }
+
   if(m_caloName == "Ecal") {
     m_caloDet = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
     if( m_useClusters ) m_clusterLocation = LHCb::CaloClusterLocation::Ecal ;
@@ -193,12 +205,15 @@ StatusCode TrackCaloMatchMonitor::execute()
   LHCb::Track::Range trackcontainer = get<LHCb::Track::Range>( m_trackLocation ) ;
   BOOST_FOREACH( const LHCb::Track* track, trackcontainer) 
     if( !m_requireTHits || track->hasT() ) {
-      const LHCb::State* state = &(track->closestState(m_geometricZ)) ;
+      const LHCb::State& closest = track->closestState( m_geometricZ  );
+      LHCb::StateVector state = LHCb::StateVector( closest.stateVector(), closest.z()) ;
+      m_extrapolator->propagate( state, m_geometricZ ) ;
+
       BOOST_FOREACH( const MyCaloPosition& cluster, calopositions) {
 	//state = &(track->closestState(pos.z())) ;
-	double dz = cluster.pos.z() - state->z() ;
-	double xtrack = state->x() + state->tx() * dz ;
-	double ytrack = state->y() + state->ty() * dz ;
+	double dz = cluster.pos.z() + m_clusterZCorrection - state.z() ;
+	double xtrack = state.x() + state.tx() * dz ;
+	double ytrack = state.y() + state.ty() * dz ;
 	double dx = cluster.pos.x() - xtrack ;
 	double dy = cluster.pos.y() - ytrack ;
 	if( std::abs(dy)<200 && std::abs(dx)<200 ) {
@@ -209,21 +224,21 @@ StatusCode TrackCaloMatchMonitor::execute()
 	    m_dxCSideH1[cluster.cell.area()]->fill( dx ) ;
 	    m_dyCSideH1[cluster.cell.area()]->fill( dy ) ;
 	  }
-	  m_eOverPH1[cluster.cell.area()]->fill( cluster.pos.e() * state->qOverP() ) ;
+	  m_eOverPH1[cluster.cell.area()]->fill( cluster.pos.e() * state.qOverP() ) ;
 	  // compute the z-coordinate for which sqrt(dx^2+dy^2) is minimal
-	  double tx = state->tx() ;
-	  double ty = state->ty() ;
+	  double tx = state.tx() ;
+	  double ty = state.ty() ;
 	  double ddz = ( tx*dx + ty*dy ) / (tx*tx+ty*ty) ;
 	  m_zH1[cluster.cell.area()]->fill( cluster.pos.z() + ddz ) ;
 	  if( std::abs(dy)<200 && std::abs(dx)<100 ) {
 	    m_dxVsXPr->fill( xtrack,dx ) ;
 	    m_dxVsYPr->fill( ytrack,dx ) ;
-	    m_dxVsTxPr->fill( state->tx(),dx ) ;
-	    m_dxVsTyPr->fill( state->ty(),dx ) ;
+	    m_dxVsTxPr->fill( state.tx(),dx ) ;
+	    m_dxVsTyPr->fill( state.ty(),dx ) ;
 	    m_dyVsXPr->fill( xtrack,dy ) ;
 	    m_dyVsYPr->fill( ytrack,dy ) ;
-	    m_dyVsTxPr->fill( state->tx(),dy ) ;
-	    m_dyVsTyPr->fill( state->ty(),dy ) ;
+	    m_dyVsTxPr->fill( state.tx(),dy ) ;
+	    m_dyVsTyPr->fill( state.ty(),dy ) ;
 	  }
 	}
       }
