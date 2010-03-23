@@ -6,9 +6,9 @@ Test suite for histogram.axis class.
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
 import sys
-sys.path.append('../python/PyAna')
+sys.path.append('../python')
 
-from pyhistogram.histogram import Axis
+from PyAna.pyhistogram.histogram import Axis
 
 def test_instantiate_axis() :
     ax = Axis(100, -50, 50, "My first axis")
@@ -61,3 +61,35 @@ def test_compare_to_Nonsense() :
     assert ax0 != 1
     assert ax0 !=5.0
     assert ax0 != []
+
+if '__main__' == __name__ :
+
+    import sys
+
+    test_names = filter(lambda k : k.count('test_') > 0, locals().keys())
+
+    __tests = filter( lambda x : x[0] in test_names, locals().items())
+    
+
+    message = ''
+    summary = '\n'
+    length = len(sorted(test_names,
+                        cmp = lambda x,y : cmp(len(y),len(x)))[0]) +2
+    
+    for test in __tests :
+        try :
+            test[1]()
+            message = 'PASS'
+        except :
+            message = "FAIL"
+        summary += test[0].ljust(length) + ':' + message.rjust(10) + '\n'
+
+    if summary.count('FAIL') > 0 :
+        message = 'FAIL'
+        wr = sys.stderr.write
+    else :
+        message = 'PASS'
+        wr = sys.stdout.write
+
+    summary += 'Global'.ljust(length) + ':' + message.rjust(10) + '\n\n'
+    wr(summary)

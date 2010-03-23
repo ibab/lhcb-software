@@ -5,10 +5,10 @@ __author__ = 'Juan Palacios <juan.palacios@nikhef.nl>'
 __version__ = '1.0'
 
 import sys
-sys.path.append('../python/PyAna')
+sys.path.append('../python')
 
-from pyntuple.ntuple import NTuple
-from pyntuple.write import gzip_save, save
+from PyAna.pyntuple.ntuple import NTuple
+from PyAna.pyntuple.write import gzip_save, save
 
 def reference_ntuple() :
     nt = NTuple('x', 'sin', 'cos')
@@ -38,6 +38,7 @@ def test_compressed_pickle() :
     gzip_save(nt, 'test_compressed_pickle.ntp')
 
 def test_compressed_unpickle() :
+    test_compressed_pickle()
     import gzip
     ntuplefile = gzip.open('test_compressed_pickle.ntp', 'rb')
     import pickle
@@ -47,3 +48,35 @@ def test_compressed_unpickle() :
     assert nt.column('sin') == ref_nt.column('sin')
     assert nt.column('cos') == ref_nt.column('cos')
 
+
+if '__main__' == __name__ :
+
+    import sys
+
+    test_names = filter(lambda k : k.count('test_') > 0, locals().keys())
+
+    __tests = filter( lambda x : x[0] in test_names, locals().items())
+    
+
+    message = ''
+    summary = '\n'
+    length = len(sorted(test_names,
+                        cmp = lambda x,y : cmp(len(y),len(x)))[0]) +2
+    
+    for test in __tests :
+        try :
+            test[1]()
+            message = 'PASS'
+        except :
+            message = "FAIL"
+        summary += test[0].ljust(length) + ':' + message.rjust(10) + '\n'
+
+    if summary.count('FAIL') > 0 :
+        message = 'FAIL'
+        wr = sys.stderr.write
+    else :
+        message = 'PASS'
+        wr = sys.stdout.write
+
+    summary += 'Global'.ljust(length) + ':' + message.rjust(10) + '\n\n'
+    wr(summary)
