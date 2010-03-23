@@ -10,14 +10,14 @@ from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
 from Configurables import PhotonMaker, ResolvedPi0Maker, MergedPi0Maker
 from GaudiKernel.SystemOfUnits import MeV
-from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
-
-Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
+#
+from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTrackingForNeutrals
+Hlt2UnfittedForwardTrackingForNeutrals = Hlt2UnfittedForwardTrackingForNeutrals()
 ##########################################################################
 #
 # Neutral protoparticles
 #
-neutralProtos = Hlt2UnfittedForwardTracking.hlt2NeutralProtos()
+neutralProtos = Hlt2UnfittedForwardTrackingForNeutrals.hlt2NeutralProtos()
 ##########################################################################
 # Make the pi0
 #

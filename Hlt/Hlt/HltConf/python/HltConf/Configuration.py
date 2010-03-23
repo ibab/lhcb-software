@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.170 2010-03-21 07:51:23 albrecht Exp $"
+__version__ = "$Id: Configuration.py,v 1.171 2010-03-23 22:27:04 gligorov Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -246,10 +246,13 @@ class HltConf(LHCbConfigurableUser):
         # of the unfitted tracking. Therefore it is safe to use it this way
 	# What we are doing is to let the SelReportsMaker know where the "trackified" muonID objects
 	# live directly from the tracking in question and the "rule" for computing their location
-	# TODO: fix all other locations from tracking
-	# TODO: fis SelReports for fitted muons!  
-        from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
-	HltSelReportsMaker().HltMuonTrackLocation = Hlt2UnfittedForwardTracking()._trackifiedMuonIDLocation()
+	# TODO: fix locations from tracking!!!!!
+	from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+	Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
+	# We need to get the "extra" piece of the Muon stubs location compared to the track location
+	trackLoc	= Hlt2UnfittedForwardTracking.hlt2PrepareTracks().outputSelection()
+	muonStubLoc	= Hlt2UnfittedForwardTracking._trackifiedMuonIDLocation() 	 
+	HltSelReportsMaker().MuonIDSuffix = "/" + muonStubLoc.strip(trackLoc)
 	veto = [ 'TES:Trig/L0/FullCalo' ,   'TES:Trig/L0/MuonCtrl'
                , 'TES:Hlt/Vertex/ASidePV3D','TES:Hlt/Vertex/CSidePV3D' , 'TES:Hlt2/Track/Unfitted/Forward', 'TES:Hlt2/Track/Forward',   'TES:Hlt/Track/RZVelo',    'TES:Hlt2/Track/Velo'
                , 'TES:Hlt/Vertex/PV2D' 

@@ -1,9 +1,15 @@
-$Id: release.notes,v 1.82 2010-03-18 14:40:33 fdettori Exp $
+$Id: release.notes,v 1.83 2010-03-23 22:26:34 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2010-03-23 - V. Gligorov
+ - Continuing work on Savannah tasks #12691,13784.
+   . Remove obsolete V0.py options, now superseeded by Ks.py and Lambda.py.
+   . Update photon makers to use a dedicated tracking configuration.
+   . Remove track selector cut on track type in Basic/TrackFittedParticles 
 
 ! 2010-03-18 - F. Dettori
  - Added BiKalmanFittedProtons and BiKalmanFittedDownProtons 

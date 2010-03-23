@@ -54,76 +54,60 @@ BiKalmanFittedMuonProtoMaker 			= Hlt2BiKalmanFittedRICHForwardTracking.hlt2Muon
 #
 Hlt2BiKalmanFittedMuons 				= CombinedParticleMaker("Hlt2BiKalmanFittedMuons")
 Hlt2BiKalmanFittedMuons.addTool(ProtoParticleMUONFilter('Muon'))
-Hlt2BiKalmanFittedMuons.addTool(TrackSelector)
 Hlt2BiKalmanFittedMuons.Input 				=  BiKalmanFittedMuonProtoMaker.outputSelection()
 Hlt2BiKalmanFittedMuons.Particle 			= "muon"
 Hlt2BiKalmanFittedMuons.Muon.Selection 			= ["RequiresDet='MUON'"]
-Hlt2BiKalmanFittedMuons.TrackSelector.TrackTypes 	= ["Long"]
 ##########################################################################
 #
 # Make the pions
 #
 Hlt2BiKalmanFittedPions 				= NoPIDsParticleMaker("Hlt2BiKalmanFittedPions")
-Hlt2BiKalmanFittedPions.addTool(TrackSelector)
 Hlt2BiKalmanFittedPions.Particle 			=  "pion"
 Hlt2BiKalmanFittedPions.Input 				=  BiKalmanFittedChargedProtoMaker.outputSelection()
-Hlt2BiKalmanFittedPions.TrackSelector.TrackTypes 	= ["Long"]
 ##########################################################################
 #
 # Make the downstream pions
 #
 Hlt2BiKalmanFittedDownPions 				= NoPIDsParticleMaker("Hlt2BiKalmanFittedDownPions")
-Hlt2BiKalmanFittedDownPions.addTool(TrackSelector)
 Hlt2BiKalmanFittedDownPions.Particle 			=  "pion"
 Hlt2BiKalmanFittedDownPions.Input 			=  BiKalmanFittedChargedDownProtoMaker.outputSelection()
-Hlt2BiKalmanFittedDownPions.TrackSelector.TrackTypes 	= ["Downstream"]
 ##########################################################################
 #
 # Make the kaons
 #
 Hlt2BiKalmanFittedKaons 				= NoPIDsParticleMaker("Hlt2BiKalmanFittedKaons")
-Hlt2BiKalmanFittedKaons.addTool(TrackSelector)
 Hlt2BiKalmanFittedKaons.Particle 			=  "kaon"
 Hlt2BiKalmanFittedKaons.Input 				=  BiKalmanFittedChargedProtoMaker.outputSelection()
-Hlt2BiKalmanFittedKaons.TrackSelector.TrackTypes 	= ["Long"]
 ##########################################################################
 #
 # Make the protons
 #
 Hlt2BiKalmanFittedProtons 				= NoPIDsParticleMaker("Hlt2BiKalmanFittedProtons")
-Hlt2BiKalmanFittedProtons.addTool(TrackSelector)
 Hlt2BiKalmanFittedProtons.Particle 			=  "proton"
 Hlt2BiKalmanFittedProtons.Input 			=  BiKalmanFittedChargedProtoMaker.outputSelection()
-Hlt2BiKalmanFittedProtons.TrackSelector.TrackTypes 	= ["Long"]
 ##########################################################################
 #
 # Make the downstream protons
 #
 Hlt2BiKalmanFittedDownProtons 				= NoPIDsParticleMaker("Hlt2BiKalmanFittedDownProtons")
-Hlt2BiKalmanFittedDownProtons.addTool(TrackSelector)
 Hlt2BiKalmanFittedDownProtons.Particle 			=  "proton"
 Hlt2BiKalmanFittedDownProtons.Input 			=  BiKalmanFittedChargedDownProtoMaker.outputSelection()
-Hlt2BiKalmanFittedDownProtons.TrackSelector.TrackTypes 	= ["Downstream"]
 ##########################################################################
 #
 # Make the Rich kaons 
 #
 Hlt2BiKalmanFittedRichKaons 				= CombinedParticleMaker("Hlt2BiKalmanFittedRichKaons")
-Hlt2BiKalmanFittedRichKaons.addTool(TrackSelector)
 Hlt2BiKalmanFittedRichKaons.Particle 			=  "kaon"
 Hlt2BiKalmanFittedRichKaons.Input 			= BiKalmanFittedChargedRICHHadronProtoMaker.outputSelection() 
-Hlt2BiKalmanFittedRichKaons.TrackSelector.TrackTypes 	= ["Long"]
 ##########################################################################
 #
 # Make the electrons
 #
 Hlt2BiKalmanFittedElectrons 				= CombinedParticleMaker("Hlt2BiKalmanFittedElectrons")
 Hlt2BiKalmanFittedElectrons.addTool(ProtoParticleCALOFilter('Electron'))
-Hlt2BiKalmanFittedElectrons.addTool(TrackSelector)
 Hlt2BiKalmanFittedElectrons.Particle 			=  "electron"
 Hlt2BiKalmanFittedElectrons.Input 			=  BiKalmanFittedChargedCaloProtoMaker.outputSelection()
 Hlt2BiKalmanFittedElectrons.Electron.Selection 		= ["RequiresDet='CALO' CombDLL(e-pi)>'-2.0'"]
-Hlt2BiKalmanFittedElectrons.TrackSelector.TrackTypes 	= ["Long"]
 ##########################################################################
 #
 # define exported symbols -- these are for available

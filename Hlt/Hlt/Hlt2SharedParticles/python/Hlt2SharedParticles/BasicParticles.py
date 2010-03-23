@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.21 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
@@ -24,6 +24,9 @@ from GaudiKernel.SystemOfUnits import MeV
 #
 from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
 Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
+#
+from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTrackingForNeutrals
+Hlt2UnfittedForwardTrackingForNeutrals = Hlt2UnfittedForwardTrackingForNeutrals()
 ##########################################################################
 #
 # Charged protoparticles -> pulls all the pid
@@ -35,7 +38,7 @@ hadronProtos = Hlt2UnfittedForwardTracking.hlt2ChargedHadronProtos( )
 #
 # Neutral protoparticles
 #
-neutralProtos = Hlt2UnfittedForwardTracking.hlt2NeutralProtos()
+neutralProtos = Hlt2UnfittedForwardTrackingForNeutrals.hlt2NeutralProtos()
 ##########################################################################
 # Make the pions
 #
@@ -61,8 +64,6 @@ Hlt2Muons = CombinedParticleMaker("Hlt2Muons")
 Hlt2Muons.Particle = "muon" 
 Hlt2Muons.addTool(ProtoParticleMUONFilter('Muon'))
 Hlt2Muons.Muon.Selection = ["RequiresDet='MUON' IsMuon=True" ]
-Hlt2Muons.addTool(TrackSelector)
-Hlt2Muons.TrackSelector.TrackTypes = ["Long"] 
 Hlt2Muons.Input =  muonProtos.outputSelection()
 Hlt2Muons.WriteP2PVRelations = False
 ##########################################################################
