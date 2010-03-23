@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.171 2010-03-08 13:31:26 jpalac Exp $
+# $Id: requirements,v 1.172 2010-03-23 15:31:50 jpalac Exp $
 package AnalysisSys
 version v4r2
 
@@ -34,6 +34,7 @@ use  DisplVertices              v6r2     Phys   # Neal Gauvin
 #
 use PhysSelPython               v5r0     PhysSel
 use AnalysisPython              v1r5     Phys
+use PyAna                       v1r0     Analysis
 #
 # Stripping
 #
