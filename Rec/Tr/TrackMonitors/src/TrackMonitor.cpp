@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.26 2010-03-19 15:19:30 wouter Exp $
+// $Id: TrackMonitor.cpp,v 1.27 2010-03-23 12:44:52 wouter Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -382,4 +382,21 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
 	type+"/NumVeloHoles", "Number of missing velo layers", -0.5,10.5,11) ;
   plot( hitpattern.numTHoles(), 
 	type+"/NumTHoles", "Number of missing T layers", -0.5,10.5,11) ;
+
+  std::bitset<LHCb::HitPattern::NumT> it = hitpattern.it() ;
+  for(size_t ilay=0; ilay<LHCb::HitPattern::NumT; ++ilay)
+    profile1D( double(ilay), it.test(ilay),type+"/HitITLayers", "Hits per IT layer", -0.5,11.5,12) ;
+  
+  std::bitset<LHCb::HitPattern::NumT> ot = hitpattern.ot() ;
+  for(size_t ilay=0; ilay<LHCb::HitPattern::NumT; ++ilay)
+    profile1D( double(ilay), ot.test(ilay),type+"/HitOTLayers", "Hits per OT layer", -0.5,11.5,12) ;
+  
+  std::bitset<LHCb::HitPattern::NumTT> tt = hitpattern.tt() ;
+  for(size_t ilay=0; ilay<LHCb::HitPattern::NumTT; ++ilay)
+    profile1D( double(ilay),tt.test(ilay),type+"/HitTTLayers", "Hits per TT layer", -0.5,3.5,4) ;
+  
+  std::bitset<LHCb::HitPattern::NumVelo> velo = hitpattern.velo() ;
+  for(size_t ilay=0; ilay<LHCb::HitPattern::NumVelo; ++ilay)
+    profile1D( double(ilay),velo.test(ilay),type+"/HitVeloLayers", "Hits per Velo layer", -0.5,22.5,23) ;
+  
 }
