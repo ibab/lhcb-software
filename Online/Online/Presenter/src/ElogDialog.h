@@ -23,6 +23,8 @@ public:
   ElogDialog(PresenterMainFrame* gui, int width, int height);
   virtual ~ElogDialog();
   
+  void setProblemDatabase( std::string& title );
+  
   void setParameters( std::string& logbook, std::string& username, std::string& system, 
                       std::string& subject, std::string& message, int& isOK );
   
@@ -42,12 +44,15 @@ private:
   std::string* m_subject;
   std::string* m_message;
   int*         m_isOK;
+  std::string* m_title;
+  int          m_hasProblem;
 
   TGTextEntry        *m_logbookTextEntry;
   TGTextEntry        *m_usernameTextEntry;
   TGTextEntry        *m_systemTextEntry;
   TGTextEntry        *m_subjectTextEntry;
   TGTextEdit         *m_messageTextEntry;
+  TGTextEntry        *m_titleTextEntry;
 
   TGComboBox *m_logbookListBox ;
 

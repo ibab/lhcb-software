@@ -1,4 +1,4 @@
-// $Id: ShiftDB.cpp,v 1.2 2010-03-18 20:17:47 robbep Exp $
+// $Id: ShiftDB.cpp,v 1.3 2010-03-23 12:51:41 ocallot Exp $
 // Include files
 
 // local
@@ -131,15 +131,35 @@ std::string ShiftDB::getCurrentDataManager( ) {
 
   int slot = 0 ;
 
-  if ( now.time_of_day().hours() <= 7 ) {
+  if ( now.time_of_day().hours() < 7 ) {
     now_day = now.date() - boost::gregorian::date_duration( 1 ) ;
     slot = 2 ;
-  } else if ( now.time_of_day().hours() <= 15 ) slot = 0 ;
-  else if ( now.time_of_day().hours() <= 23 ) slot = 1 ;
+  } else if ( now.time_of_day().hours() < 15 ) slot = 0 ;
+  else if ( now.time_of_day().hours() < 23 ) slot = 1 ;
   else slot = 2 ;
 
   std::map< std::string , std::vector< std::string > > shifters ;
   readWebFile( &now_day ) ;
 
   return getShifter( "Data Manager" , slot ) ;
+}
+//=============================================================================
+// Name of DQ piquet
+//=============================================================================
+std::string ShiftDB::getDQPiquet( ) {
+
+  boost::posix_time::ptime now = 
+    boost::posix_time::second_clock::local_time() ;
+  boost::gregorian::date now_day = now.date() ;
+
+  int slot = 0 ;
+
+  if ( now.time_of_day().hours() < 7 ) {
+    now_day = now.date() - boost::gregorian::date_duration( 1 ) ;
+  }
+
+  std::map< std::string , std::vector< std::string > > shifters ;
+  readWebFile( &now_day ) ;
+
+  return getShifter( "DQ Piquet" , slot ) ;
 }

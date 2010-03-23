@@ -1,4 +1,4 @@
-// $Id: Elog.h,v 1.2 2010-02-09 07:07:39 ocallot Exp $
+// $Id: Elog.h,v 1.3 2010-03-23 12:51:41 ocallot Exp $
 #ifndef ELOG_H 
 #define ELOG_H 1
 
@@ -40,13 +40,14 @@ public:
   }
 
   int    submit( std::string text );
+
+  void   url_encode(char *ps, int size);
  
 protected:
   void   base64_encode(unsigned char *s, unsigned char *d, int size);
   size_t strlcpy(char *dst, const char *src, size_t size);
   void   do_crypt( const char *s, char *d, int size);
   void   stou(char *str);
-  void   url_encode(char *ps, int size);
   int    elog_connect( );
 private:
   std::string m_hostname;

@@ -82,6 +82,7 @@
 #include "Elog.h"
 #include "ElogDialog.h"
 #include "ShiftDB.h"
+#include "ProblemDB.h"
 
 using namespace pres;
 using namespace std;
@@ -105,6 +106,7 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_initHeight(height),
   m_verbosity(Silent),
   m_logBookConfig(""),  
+  m_pbdbConfig(""),  
   m_historyMode(s_timeInterval),
   m_resumePageRefreshAfterLoading(false),
   m_loadingPage(false),
@@ -163,8 +165,10 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   gStyle->SetOptStat("emrou"); // nemr emrou
 
   gStyle->SetFrameFillColor(10);
-
-
+  //== Added 16/03/2010: Make the stat box transparent
+  gStyle->SetStatStyle(0);
+  //== Added 17/03/2010: Make Calo plot nicer.
+  gStyle->SetPaintTextFormat("3.0f");
   // only one presenter session allowed
   if (gPresenter) { return; }
 
@@ -797,10 +801,9 @@ void PresenterMainFrame::buildGUI()
                                              kVerticalFrame | kFixedWidth |
                                              kLHintsExpandX);
                                              
-      TGVSplitter* leftVerticalSplitter = new TGVSplitter(m_mainHorizontalFrame,2, 2);
+    TGVSplitter* leftVerticalSplitter = new TGVSplitter(m_mainHorizontalFrame, 4, 4);
       leftVerticalSplitter->SetFrame(m_leftMiscFrame, true);
-                                             
-  
+
       m_databasePagesDock = new TGDockableFrame(m_leftMiscFrame);
       m_databasePagesDock->SetWindowName("Database Page Browser");
       m_databasePagesDock->EnableUndock(true);
@@ -967,8 +970,7 @@ void PresenterMainFrame::buildGUI()
                                                                   kLHintsExpandY,
                                                                   0, 0, 0, 0));
   // -------------------------
-  
-    m_pageDock = new TGDockableFrame(m_mainHorizontalFrame);
+    m_pageDock = new TGDockableFrame(m_mainHorizontalFrame, -1, kVerticalFrame | kFixedWidth );
     m_pageDock->SetWindowName("LHCb Presenter Page");
     m_pageDock->EnableUndock(true);
     m_pageDock->EnableHide(false);
@@ -978,9 +980,9 @@ void PresenterMainFrame::buildGUI()
     m_pageDock->Connect("Undocked()", "PresenterMainFrame",
                         this, "disablePageUndocking()");
     // centralFrame
-    TGVerticalFrame* centralPageFrame = new TGVerticalFrame(m_pageDock,
-                                                            600, 494,
-                                                            kVerticalFrame);
+    TGVerticalFrame* centralPageFrame = new TGVerticalFrame( m_pageDock,
+                                                             600, 494,
+                                                             kVerticalFrame | kFixedHeight );
     m_pageDock->AddFrame(centralPageFrame,
                          new TGLayoutHints(kLHintsLeft | kLHintsTop |
                                            kLHintsExpandX | kLHintsExpandY,
@@ -1012,87 +1014,38 @@ void PresenterMainFrame::buildGUI()
                                                                   kLHintsExpandY,
                                                                   0, 0, 0, 0));
 
-  // Info dock
-    m_mainCanvasInfoDock = new TGDockableFrame(centralPageFrame);
-  //  m_pageDock->SetWindowName("LHCb Presenter Page");
-    m_mainCanvasInfoDock->SetWindowName("LHCb Presenter Information");
-
+    //== Page comments window (should move with the splitter, should also change size but doesn't.
     int commentSize = 120;
-  
-    m_mainCanvasInfoDock->EnableUndock(true);
-    m_mainCanvasInfoDock->EnableHide(true);
-    m_mainCanvasInfoDock->Resize(600, commentSize+10);
-  
-   
-    TGGroupFrame* mainCanvasInfoGroupFrame = new TGGroupFrame(m_mainCanvasInfoDock,
-                                                             TGString("Page Comments"),
-                                                             kVerticalFrame );
-    m_mainCanvasInfoDock->AddFrame(mainCanvasInfoGroupFrame,
-                               new TGLayoutHints(kLHintsTop |
-                                                 kLHintsExpandX,
-                                                 0, 0, 0, 0));
-  
-  //  TGCanvas* fCanvas652 = new TGCanvas(mainCanvasInfoGroupFrame, 220, 243);
-    
-  
-    centralPageFrame->AddFrame(m_mainCanvasInfoDock,
-                               new TGLayoutHints(kLHintsRight |
-                                                 kLHintsTop |
-                                                 kLHintsExpandX,
-                                                 0, 0, 0, 0));
-  
-  
-  
-  
-  
-  //    TGTab* fTab515 = new TGTab(m_mainCanvasInfoDock, 600, 90);
-      // container of "Page Description"
-  //    TGCompositeFrame* fCompositeFrame518;
-  //    fCompositeFrame518 = fTab515->AddTab("Page Description");
-  //    fCompositeFrame518->SetLayoutManager(new TGVerticalLayout(fCompositeFrame518));
-  //    fCompositeFrame518->SetLayoutBroken(true);
-  //    TGTextEdit* fTextEdit523 = new TGTextEdit(fCompositeFrame518, 600, 80);
-  
-  //   TGTextEdit *fTextEdit515 = new TGTextEdit(fMainFrame648,486,62);
-  //   fTextEdit515->LoadFile("TxtEdit515");
-  //   fMainFrame648->AddFrame(fTextEdit515, new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX,2,2,2,2));
-  //   fTextEdit515->MoveResize(2,2,486,62);
-  
-  
-      m_pageDescriptionView = new TGTextView(mainCanvasInfoGroupFrame, 600, commentSize);
-      //fTextEdit523->LoadFile("TxtEdit523");
-      mainCanvasInfoGroupFrame->AddFrame(m_pageDescriptionView, new TGLayoutHints( kLHintsLeft | kLHintsTop | 
-                                                                                   kLHintsExpandX | kLHintsExpandY,2,2,2,2));
-  //    fTextEdit523->Layout();
-                                                                   
-  //    fTextEdit523->MoveResize(2, 2, 600, 80);
-      // container of "Tab2"
-  //    TGCompositeFrame* fCompositeFrame520;
-  //    fCompositeFrame520 = fTab515->AddTab("Message Log");
-  //    //fCompositeFrame520->SetLayoutManager(new TGVerticalLayout(fCompositeFrame520));
-  //    fCompositeFrame520->SetLayoutBroken(true);
-  //    TGTextEdit* fTextEdit542 = new TGTextEdit(fCompositeFrame520, 400, 95);
-  //    //fTextEdit542->LoadFile("TxtEdit542");
-  //    fCompositeFrame520->AddFrame(fTextEdit542,
-  //                                 new TGLayoutHints(kLHintsLeft |
-  //                                                   kLHintsBottom |
-  //                                                   kLHintsExpandX,
-  //                                                   2, 2, 2, 2));
-  //    //fTextEdit542->MoveResize(0, 0, 290, 77);
-  //    fTab515->SetTab(1);
-  //    fTab515->Resize(fTab515->GetDefaultSize());
-  //    m_mainCanvasInfoDock->AddFrame(fTab515, new TGLayoutHints(kLHintsRight |
-  //                                                              kLHintsTop |
-  //                                                              kLHintsExpandX,
-  //                                                              2, 2, 2, 2));
-      //fTab515->MoveResize(64, 40, 296, 104);
+    TGGroupFrame* mainCanvasInfoGroupFrame = new TGGroupFrame( centralPageFrame,
+                                                               TGString("Page Comments"),
+                                                               kVerticalFrame | kFixedWidth );
+    mainCanvasInfoGroupFrame->Resize(600, commentSize+10);
+    centralPageFrame->AddFrame( mainCanvasInfoGroupFrame,
+                                new TGLayoutHints( kLHintsBottom |
+                                                   kLHintsExpandX,
+                                                   0, 0, 0, 0) );
+
+    //== Page comments view
+    m_pageDescriptionView = new TGTextView( mainCanvasInfoGroupFrame, 
+                                              600, commentSize);
+    mainCanvasInfoGroupFrame->AddFrame(m_pageDescriptionView, new TGLayoutHints( kLHintsLeft | kLHintsTop | 
+                                                                                 kLHintsExpandX,
+                                                                                 2,2,2,2));
+    //== splitter, to adjust the size of the page comment
+    m_horizontalSplitter = new TGHSplitter( centralPageFrame,  4, 4 );
+    m_horizontalSplitter->SetFrame( centralPageFrame, true);
+    centralPageFrame->AddFrame( m_horizontalSplitter,
+                                new TGLayoutHints( kLHintsBottom | kLHintsExpandX));
+
+
+    //====================
   
     m_rightMiscFrame = new TGVerticalFrame(m_mainHorizontalFrame, 220, 494,
                                            kVerticalFrame | kFixedWidth |
                                            kLHintsExpandX);
   //                                         | kLHintsExpandX); // kFixedWidth
   
-      m_rightVerticalSplitter = new TGVSplitter(m_mainHorizontalFrame, 2, 2);
+    m_rightVerticalSplitter = new TGVSplitter(m_mainHorizontalFrame, 4, 4);
       m_rightVerticalSplitter->SetFrame(m_rightMiscFrame, false);
   
       m_dimBrowserDock = new TGDockableFrame(m_rightMiscFrame);
@@ -1395,7 +1348,7 @@ void PresenterMainFrame::CloseWindow()
 void PresenterMainFrame::dockAllFrames()
 {
   m_pageDock->DockContainer();
-//  m_mainCanvasInfoDock->DockContainer();
+  //m_mainCanvasInfoDock->DockContainer();
   m_toolBarDock->DockContainer();
   m_menuDock->DockContainer();
   m_databaseHistogramsDock->DockContainer();
@@ -1639,8 +1592,7 @@ void PresenterMainFrame::handleCommand(Command cmd)
       break;
   }
 }
-void PresenterMainFrame::setVerbosity(const pres::MsgLevel & verbosity)
-{
+void PresenterMainFrame::setVerbosity(const pres::MsgLevel & verbosity) {
   m_verbosity = verbosity;
   if (Silent == m_verbosity) {
     gErrorIgnoreLevel = 1001;
@@ -1648,9 +1600,12 @@ void PresenterMainFrame::setVerbosity(const pres::MsgLevel & verbosity)
   if (0 != m_archive) { m_archive->setVerbosity(m_verbosity); }
 }
 
-void PresenterMainFrame::setLogbookConfig(const std::string & logBookConfig)
-{
+void PresenterMainFrame::setLogbookConfig(const std::string & logBookConfig) {
   m_logBookConfig = logBookConfig;
+}
+
+void PresenterMainFrame::setPbdbConfig(const std::string & pbdbConfig) {
+  m_pbdbConfig = pbdbConfig;
 }
 
 void PresenterMainFrame::setDatabaseMode(const DatabaseMode & databaseMode) {
@@ -1915,6 +1870,7 @@ void PresenterMainFrame::reportToLog()
     std::string system   = m_currentPartition;;
     std::string subject  = "";
     std::string message  = "See attached plot.";
+    std::string title    = "";
     int         isOK     = 0;
 
     //== In LHCb partition, get the Data Manager name, extract the system from the SHIFTS page and remove subject
@@ -1923,11 +1879,16 @@ void PresenterMainFrame::reportToLog()
       ShiftDB shiftdb ;
       username =  shiftdb.getCurrentDataManager().c_str();
       if ( "/Shift/" == m_currentPageName.substr(0, 7) ) {
-        system = m_currentPageName.substr( 7 );
-        system = system.substr( 0, system.find( ':' ));
+        system   = m_currentPageName.substr( 7 );
+        system   = system.substr( 0, system.find( ':' ));
+      } else if ( "/DataQuality/" == m_currentPageName.substr(0, 13) ) {
+        username =  shiftdb.getDQPiquet().c_str();
+        system   = m_currentPageName.substr( 13 );
+        system   = system.substr( 0, system.find( ':' ));
       }
       subject = "-none-";
-    }    
+      if ( !m_pbdbConfig.empty() )  elogDialog->setProblemDatabase( title );
+    }
 
     elogDialog->setParameters( logbook, username, system, subject, message, isOK );
     
@@ -1949,8 +1910,28 @@ void PresenterMainFrame::reportToLog()
       int number = myElog.submit( message );
       std::cout << "=== produced entry " << number << std::endl;
       char statusMessage[100];
+      char linkText[100];
+      sprintf( linkText, "http://lblogbook.cern.ch/%s/%d", logbook.c_str(), number );
       sprintf( statusMessage, "Entry %d created in logbook %s", number, logbook.c_str() );
       m_mainStatusBar->SetText( statusMessage, 2);
+ 
+      std::string message = "Created ELOG entry ";
+      message = message + std::string( linkText );
+       
+      if ( "" != title ) {
+        ProblemDB myProblem( m_pbdbConfig );
+        std::string link( linkText );
+        int stat = myProblem.post( system, username, title, message, link );
+        std::cout << "Status = " << stat << " entry " << myProblem.getReference() << std::endl;
+        if ( 1 == stat ) {
+          message = message + "\r\nCreated Problem Database entry " + myProblem.getReference();
+        } else {
+          message = message + "\r\n FAILED to create the problem database entry, see log file";
+        }
+      }
+
+      new TGMsgBox( fClient->GetRoot(), this, "Elog and ProblemDatabase result", 
+                    message.c_str(), kMBIconExclamation, kMBOk, &m_msgBoxReturnCode );
     } else {
       std::string statusMessage = "No logbook entry created";
       m_mainStatusBar->SetText( statusMessage.c_str(), 2);
@@ -2080,11 +2061,6 @@ void PresenterMainFrame::loginToHistogramDB()
   if (Batch != m_presenterMode) {
     fClient->WaitFor(new LoginDialog(this, 350, 310, m_databaseMode,
                                      m_knownDatabases, m_knownDbCredentials));
-  
-    //  histoDBFilterComboBox->HideFrame();
-  //  reconfigureGUI();
-  //  refreshPagesDBListTree();
-  //  refreshHistoDBListTree();
   
     reconfigureGUI();
     removeHistogramsFromPage();
@@ -2249,7 +2225,7 @@ void PresenterMainFrame::listHistogramsFromHistogramDB(TGListTree* listView,
   if (isConnectedToHistogramDB() && 0 != listView) {
     try {
       listView->UnmapWindow();
-gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
+      gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
 
       m_treeNode = listView->GetFirstItem();
 //      m_treeNode->SetPictures(m_databaseSourceIcon, m_databaseSourceIcon);
@@ -2569,7 +2545,6 @@ void PresenterMainFrame::listRootHistogramsFrom(TDirectory* rootFile,
       if (key->IsFolder()) {
          rootFile->cd(key->GetName());
          TDirectory *subdirectory = gDirectory;
-//         std::string pathName = taskName + s_slash + key->GetName();
          std::string pathName = taskName + s_slash + key->GetName();
          listRootHistogramsFrom(subdirectory, histogramList, histogramTypes,
                                 pathName, savesetType);

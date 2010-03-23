@@ -134,6 +134,7 @@ int main(int argc, char* argv[])
       ("databases,DB", value<std::string>()->default_value(s_histdb),"known databases")
       ("database-credentials,DBC", value<std::string>()->default_value(s_histReaderPair),"database credentials")
       ("logbook-settings,L", value<std::string>(), "logbook configuration")
+      ("problem-settings,L", value<std::string>(), "Problem Database configuration")
       ("hide-alarm-list,A", value<bool>(), "hide alarm list")
       ("config-file,C", value<std::string>(), "configuration file")
       ("key-file,K", value<std::string>(), "TCK list file")
@@ -304,6 +305,10 @@ int main(int argc, char* argv[])
     
     if (startupSettings.count("logbook-settings")) {
       presenterMainFrame.setLogbookConfig(startupSettings["logbook-settings"].as<std::string>());
+    }
+
+    if (startupSettings.count("problem-settings")) {
+      presenterMainFrame.setPbdbConfig(startupSettings["problem-settings"].as<std::string>());
     }
 
     if (startupSettings.count("hide-alarm-list") &&

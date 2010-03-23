@@ -4,6 +4,17 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v1r0 2010-03-23 =============
+! 2010-03-23 - Olivier Callot
+ - Fix a bug in ShiftDB to get the shift start time.
+ - New file ProblemDB to store entries in the Problem Database. 
+ - Upgraded the ElogDialog to retrieve the information for the Problem database
+ - popup window to confirm th eproper posting in the logbook (and problem database)
+ - PROBLEM: The system name for the problem database (and Elog) is extracted from
+   the page name. If this is not one known system, it fails. Informed CALO people
+   that they shoudl use ECAL/HCAL/PRS/SPD and rebuild their pages accordingly.
+ - Page comment window can be masked. I want it to be resizeable, but didn't manage
+
 ! 2010-03-18 - Patrick Robbe
  - ShiftDB.cpp: retrieve names of people on shift calling scripts via
    the shiftdb web interface, instead of direct OCCI calles

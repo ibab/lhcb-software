@@ -1,5 +1,5 @@
 package Presenter
-version v0r24
+version v1r0
 
 branches cmt doc src test
 
@@ -54,7 +54,7 @@ application presenter " $(PRESENTERROOT)/$(tag)/dict/*.cpp ParallelWait.cpp \
                                      DbRootHist.cpp HistogramIdentifier.cpp \
                                      Elog.cpp ElogDialog.cpp \
                                      ReferencePicker.cpp IntervalPicker.cpp \
-                                     ShiftDB.cpp \
+                                     ShiftDB.cpp ProblemDB.cpp \
                                      LoginDialog.cpp HistoPropDialog.cpp Archive.cpp \
                                      DatabasePagePathDialog.cpp MonRateRace.cpp \
                                      PresenterMainFrame.cpp presenter.cpp "
