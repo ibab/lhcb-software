@@ -13,7 +13,7 @@ for ``iterative pi0'' Ecal calibration
 # ======================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-17 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $ " 
+__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $ " 
 # ======================================================================
 import ROOT
 from GaudiPython.Bindings import gbl as cpp
@@ -23,10 +23,14 @@ import CaloUtils.CellID
 
 CellID     = LHCb.CaloCellID
 
-EcalZone   = CellID ( 'Ecal' , 'PinArea', 0 , 0 )
-InnerZone  = CellID ( 'Ecal' , 'Inner'  , 0 , 0 )
-MiddleZone = CellID ( 'Ecal' , 'Middle' , 0 , 0 )
-OuterZone  = CellID ( 'Ecal' , 'Outer'  , 0 , 0 )
+## the whole Ecal 
+EcalZone   = CellID ( 'Ecal' , 'PinArea', 1 , 1 ) ## the whole Ecal 
+## inner  zone only 
+InnerZone  = CellID ( 'Ecal' , 'Inner'  , 0 , 0 ) ## inner  zone only 
+## middle zone only 
+MiddleZone = CellID ( 'Ecal' , 'Middle' , 0 , 0 ) ## middle zone only 
+## Outer  zone only 
+OuterZone  = CellID ( 'Ecal' , 'Outer'  , 0 , 0 ) ## Outer  zone only 
 
 Zones      = (
     OuterZone  ,
@@ -202,24 +206,29 @@ class HistoMap(object) :
         dbase.close() 
 
         
-    ## update the histograms form data base 
-    def updateFromDB ( self , dbasename , prefix = '' ) :
+    ## update the histograms form database/databases
+    def updateFromDB ( self , dbasenames , prefix = '' ) :
         """
         Update the histograms form data base
         """
-        import KaliCalo.ZipShelve as ZipShelve 
-        dbase = ZipShelve.open  ( dbasename , 'r' )
-        for key in dbase :
-            pattern = prefix + 'Histo '
-            if 0 != key.find ( pattern )            : continue
-            o = dbase[key]
-            if not issubclass ( type(o)  , Histos ) : continue
-            if self._histos.has_key ( o.cellID() ) :
-                self._histos [ o.cellID() ] += o
-            else :                
-                self._histos [ o.cellID() ]  = o
-
-        dbase.close() 
+        if issubclass ( type ( dbasenames ) , str ) :
+            dbasenames = [ dbasenames ]
+            
+        import KaliCalo.ZipShelve as ZipShelve
+        
+        for dbasename in dbasenames : 
+            dbase = ZipShelve.open  ( dbasename , 'r' )
+            for key in dbase :
+                pattern = prefix + 'Histo '
+                if 0 != key.find ( pattern )            : continue
+                o = dbase[key]
+                if not issubclass ( type(o)  , Histos ) : continue
+                if self._histos.has_key ( o.cellID() ) :
+                    self._histos [ o.cellID() ] += o
+                else :                
+                    self._histos [ o.cellID() ]  = o
+            dbase.close()
+            
         return len ( self )
         
         
@@ -415,149 +424,6 @@ class LambdaMap(object) :
         """
         return len ( self._lambdas )
 
-
-# =============================================================================
-## @class RootFile
-#  "SmartOpen for ROOT files"
-class RootFile  ( object ) :
-
-    ## constructor from filename 
-    def __init__ ( self , filename , opts = 'READ' , safe = True )  :
-        
-        self._file   = None
-        self._remove = False 
-        
-        ## test various LFN patterns 
-        for lfn in ( 'LFN:'        ,
-                     '/lhcb/user/' ,
-                     '/lhcb/data/' ,
-                     '/lhcb/MC/'   ) :
-
-            print ' I am here 1 '
-            pos = filename.find ( lfn )
-            if 0 != pos : continue
-
-            print ' I am here 2 '
-            
-            import os
-            name = filename.split('/')[-1]
-            try :
-                os.remove ( name )
-            except :
-                pass
-
-            print ' I am here 3 '
-            
-            try :
-                print ' I am here 3.1 '
-                import DIRAC
-                print ' I am here 3.2 '
-                from DIRAC.Interfaces.API.Dirac import Dirac
-                print ' I am here 3.3 '
-            except ImportError :
-                print 'Unable to import/use DIRAC'
-                continue
-            
-            print ' I am here 4 '
-            
-            import tempfile
-            tmpdir = tempfile.mkdtemp()
-            
-            print ' I am here 4.1'
-            
-            dirac = Dirac()
-            
-            print ' I am here 4.5 '
-            
-            result = dirac.getFile (
-                lfn         = filename ,
-                destDir     = tmpdir   ,
-                printOutput = True     )
-            
-            print ' I am here 5 '
-            
-            if not result['OK'] :
-                os.rmdir ( tmpdir )
-                raise NameError ( "Unable to pick up LFN '%s'" % filename )
-            
-            print ' I am here 6 '
-
-            tmpfil = tempfile.mktemp( suffix = '.root' )            
-            os.rename ( tmpdir + os.sep + name , tmpfil )
-            os.rmdir  ( tmpdir )
-            
-            print ' I am here 7 '
-            
-            self._file = ROOT.TFile( tmpfil , opts )
-            self._remove = True
-            
-            print ' I am here 8 '
-
-            break  
-
-            
-        if not self._file : 
-            ## castor?  
-            if 0 == filename.find ( '/castor' ) :
-                filename = 'castor:' + filename
-            self._file   = ROOT.TFile().Open ( filename , opts  )
-            self._remove = False 
-                                             
-        if safe and not self.isOK () :
-            raise NameError('Unable to open properly %s ' % filename )
-            
-
-    ## ok ?
-    def isOK ( self ) :
-        """
-        Ok?
-        """
-        return True if self._file and self._file.IsOpen() else False
-    
-    ## get something from the file 
-    def Get    ( self , what ) :
-        """
-        Get something from the file
-        """
-        if not self.isOK() : return None 
-        return self._file.Get ( what )
-
-    ## get the name 
-    def GetName ( self ) :
-        """
-        get the name
-        """
-        if not self.isOK() : return None 
-        return self._file.GetName() 
-        
-    ## close root file 
-    def close ( self ) :
-
-        fname = None
-        if self._file :
-            try : 
-                fname = self._file.GetName() 
-                if self._file and self._file.IsOpen()  :
-                    print 'Close ROOT File '
-                    ROOT.gROOT.GetListOfFiles().Remove ( self._file ) 
-                    self._file.Close('R')
-                del self._file
-            except : pass 
-
-        self._file = None
-        if fname and self._remove :
-            import os
-            try :
-                print 'Delete ROOT file '
-                os.remove ( fname )
-            except:
-                pass
-
-    def Close   ( self ) : return self.close () 
-    ## 
-    def __del__ ( self ) : return self.close () 
-
-            
             
             
 # =============================================================================

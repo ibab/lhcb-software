@@ -11,11 +11,27 @@ The main ``analyse'' for Kali
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyev@itep.ru "
 __date__    = " 2010-03-20 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
 # =============================================================================
-
+__all__     = (
+    "analyse" ,
+    )
+# =============================================================================
 import KaliCalo.Kali        as Kali
 import KaliCalo.Pi0HistoFit as Fit 
+import random
+
+# =============================================================================
+## get the histograms fomr data base (databases)
+def  getHistosFromDB ( dbases ) :
+    """
+    Get the histograms fomr data base (databases)
+    """
+    if issubclass ( type ( dbases ) , Kali.HistoMap ) : return dbases
+    histos = Kali.HistoMap()
+    histos.updatefromDB ( dbases )
+    return histos
+
 
 # =============================================================================
 ## Analyse the histograms 
@@ -23,11 +39,8 @@ def  analyse ( histomap , lambdamap ) :
     """
     Analyse the histograms 
     """
-    if issubclass ( type ( histomap ) , str ) :
-        
-        histos  = Kali.HistoMap()
-        print ' Read DBASE ' ,  histos.read ( histomap )
-        histomap = histos
+    histos = getHistosFromDB ( histomap )
+    
                    
     ## get 'All-Ecal' histoigrams 
     hA = histomap [ Kali.EcalZone   ].histos()
@@ -102,16 +115,8 @@ def  analyse ( histomap , lambdamap ) :
             ## print ' no reliable fits for ',key
             badCells.add ( key ) 
             continue 
-            ##r = Fit.getPi0Params( hs[2] )
         
         hc     = histomap[key].kappas() 
-        
-##         mass = r[1]
-
-##         lams = lambdas[key]
-##         corr = 135.0/mass 
-##         lam  = corr*lams[-1] 
-##         lams.append ( lam.value() )
         
         r0 = Fit.getPi0Params ( hs[0] )
         r1 = Fit.getPi0Params ( hs[1] )
@@ -154,18 +159,16 @@ def  analyse ( histomap , lambdamap ) :
         
         lam  = corr*lams[-1]
         lams.append ( lam.value() )
-
-        if len ( histomap ) - 4 < 25 :  
+        
+        mx = 40.0 / len( histomap ) 
+        if random.uniform(0,1.0) < mx :
             print ' NUM0: %.20s %.20s %.20s ' % ( r0[0] , r1[0] , r2[0] ) , key
-        if len ( histomap ) - 4 < 55 :              
             print ' MASS: %.20s %.20s %.20s ' % ( r0[1] , r1[1] , r2[1] ) , key, corr , [  '%.3f' % l for l in lambdamap[key] ] 
-
-
-    ##print " Bad Cells: " , len( badCells) , badCells
-    ##print " Low Cells: " , len( lowCells) , lowCells
+                        
     return (badCells,lowCells)  
 
 
+    
 # =============================================================================
 # The END 
 # =============================================================================

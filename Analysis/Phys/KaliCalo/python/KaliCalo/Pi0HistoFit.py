@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Pi0HistoFit.py,v 1.5 2010-03-22 18:24:00 ibelyaev Exp $ 
+# $Id: Pi0HistoFit.py,v 1.6 2010-03-23 17:22:24 ibelyaev Exp $ 
 # =============================================================================
 """
 A module for fitting the histograms with pi0-mass
@@ -9,7 +9,7 @@ A module for fitting the histograms with pi0-mass
 # =============================================================================
 __author__  = " ??? "
 __date__    = " 2009-12-?? "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ "
 # =============================================================================
 from ROOT  import TH1F, TF1
 from math  import sqrt, pi,exp
@@ -317,16 +317,18 @@ def _preFitBkg ( func , histo , background = None , options = ''  ) :
                     int ( histo.GetEntries ( ) ) , 
                     histo.GetName  () 
                     )
-                
     if options :
         par3 = func.GetParameter ( 3 ) 
         if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
         st = histo.Fit ( func, opts.replace('0','').replace('Q','') + options ,'',_low,_high )
         
+    
     ##
     func.ReleaseParameter(3)
     func.ReleaseParameter(4) 
     func.ReleaseParameter(5)
+    
+    histo.GetFunction( func.GetName() ).ResetBit( 1<<9 )
         
     return  0 == st.Status()
 
@@ -662,7 +664,9 @@ def _preFitSignal ( func              ,
         par3 = func.GetParameter ( 3 ) 
         if 0 > par3 : func.SetParameter( 3 , abs ( par3 ) )
         st = histo.Fit ( func, opts.replace('0','').replace('Q','') + options ,'', _low , _high )
-                
+
+    histo.GetFunction( func.GetName() ).ResetBit( 1<<9 )
+
     return  0 == st.Status()
 
 # =============================================================================

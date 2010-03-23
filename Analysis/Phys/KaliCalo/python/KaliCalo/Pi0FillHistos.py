@@ -120,7 +120,7 @@ def HiCreate(alam, FilledHistos, index):
 
 import copy 
 import ROOT 
-import KaliCalo.Kali as Kali
+import KaliCalo.Kali  as Kali
 CellID = Kali.CellID 
 
 ## use Wim Lavrijsen's trick: 
@@ -189,7 +189,7 @@ class FillPi0( ROOT.TPySelectorFix  ):
         bamboo=self.fChain
         if not self._frequency :
             entries  = bamboo.GetEntries()
-            entries  = int ( entries /  50000.0 ) * 1000
+            entries  = int ( entries /  50.0 / 10000.0 ) * 10000
             entries  = max ( entries , 50000 ) 
             self._frequency = entries
             
@@ -363,7 +363,7 @@ def fillDataBase (
     lambdas                           , 
     file_names                        ,
     tree_name   = "KaliPi0/Pi0-Tuple" ,
-    dbase_name  = 'kali_db'           ,
+    dbase_name  = 'kali_zdb'          ,
     cellFunc    = lambda s : s        ,
     Unit        = MeV                 ) :
 
@@ -379,18 +379,15 @@ def fillDataBase (
     import sets
     badfiles = sets.Set() 
 
-    print 'FILL-0'
-    
     for file_name in file_names :
         
-        print 'FILL-1'
-        f = Kali.RootFile ( file_name , safe = False )
-        print 'FILL-2'
-        if not f.isOK () :
-            badfiles.add ( file_name )
-            continue 
-        print 'FILL-3'
+        from  KaliCalo.Utils import RootFile 
+        f = RootFile ( file_name , safe = False )
         
+        if not f.isOK () :
+            badfiles.add  ( file_name )
+            continue 
+
         ## get the tree 
         tree = f.Get( tree_name )
         if not tree       :
@@ -406,7 +403,7 @@ def fillDataBase (
                                       lambdas   ,
                                       cellFunc  ,
                                       Unit      )
-
+        
         del f 
             
     ## update data base
