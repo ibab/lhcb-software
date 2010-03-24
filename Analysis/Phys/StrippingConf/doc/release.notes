@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.51 2010-03-22 17:04:37 poluekt Exp $
+!$Id: release.notes,v 1.52 2010-03-24 11:07:37 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2010-03-24 - Anton Poluektov 
+ - Added StrippingLine.filterMembers() and StrippingStream.filterMembers() functions
+   to get the flat list of all filter algorithms (CombineParticles, FilterDesktops etc.)
+ - Removed support for HLT-like (dictionary of cuts) settings for configurable selections. 
+   Settings can be applied in plain python in a more transparent way. 
 
 ! 2010-03-22 - Anton Poluektov
  - python/StrippingConf/StrippingLine.py

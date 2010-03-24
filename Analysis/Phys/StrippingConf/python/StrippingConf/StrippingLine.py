@@ -439,6 +439,21 @@ class StrippingLine(object):
         print self._configurable
         return self._configurable
 
+    def filterMembers( self ) : 
+	_members = GaudiSequencer( filterName ( self.subname(), 'Stripping' ) ).Members
+	
+	while True : 
+	    _foundSequencer = False
+	    _flattenedMembers = []
+	    for i in _members : 
+		if GaudiSequencer is type(i) : 
+		    _flattenedMembers += [ i.Members ] 
+		    _foundSequencer = True
+		else : 
+		    _flattenedMembers += [ i ]
+	    _members = _flattenedMembers
+	    if not _foundSequencer : break
+	return _members
 
     def subname   ( self ) :
         """ 'Sub-name' of the Stripping line  """ 

@@ -22,8 +22,7 @@ class StrippingConf ( object ) :
                   TES = False,
                   TESPrefix = 'Strip', 
                   HDRLocation = 'Phys/DecReports', 
-                  Streams = [], 
-                  Settings = None ) :
+                  Streams = [] ) :
         
         log.info("Initialising StrippingConf "+ name)
         if name == "" :
@@ -34,7 +33,6 @@ class StrippingConf ( object ) :
         self._streams = []
         self._streamSequencers = []
         self._sequence = None
-        self._settings = Settings
         self._hdrLocation = HDRLocation
         self._tesPrefix = TESPrefix
         for stream in Streams :
@@ -78,7 +76,7 @@ class StrippingConf ( object ) :
         for stream in self._streams : 
             streamName = stream.sequence().name()
             _selections.append(streamName)
-            for line in stream.lines() :
+            for line in stream.lines :
                 _selections.append(line.name())
         return _selections
 
@@ -97,8 +95,7 @@ class StrippingConf ( object ) :
         log.info(self._name+ " appending stream "+ stream.name())
 	stream.createConfigurables( TES = self.TES, 
 				    TESPrefix = self._tesPrefix, 
-				    HDRLocation = self._hdrLocation, 
-				    Settings = self._settings)
+				    HDRLocation = self._hdrLocation )
 	self._streams.append(stream)
         self._appendSequencer(stream)
         
