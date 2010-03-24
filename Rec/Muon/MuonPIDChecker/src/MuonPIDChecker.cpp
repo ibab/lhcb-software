@@ -1,4 +1,4 @@
-// $Id: MuonPIDChecker.cpp,v 1.23 2010-03-23 15:08:06 asarti Exp $
+// $Id: MuonPIDChecker.cpp,v 1.24 2010-03-24 08:31:58 cattanem Exp $
 // Include files 
 #include <cmath>
 #include <iomanip>
@@ -296,7 +296,7 @@ int MuonPIDChecker::findTrackRegion(const int sta){
 //=====================================================================
 //  Reset Track Variables  
 //====================================================================
-void MuonPIDChecker::MuonPIDChecker::resetTrInfo() {
+void MuonPIDChecker::resetTrInfo() {
     // reset info about tracks
     m_Trp0 = -10000.;
     m_TrpT = -10000.;

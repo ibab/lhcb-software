@@ -2,6 +2,9 @@
 ! Responsible : E. Polycarpo, M. Gandelman
 !----------------------------------------------------------------------------
 
+! 2010-03-24 - Marco Cattaneo
+ - Another fix for Windows
+
 !2010-03-23 - Alessio Sarti [on behalf of erica]
  - Fixed the vector declaration causing windows crash.
  - Enlarged the char[ def from 13 to 20 to be safe [Erica will change that soon to
