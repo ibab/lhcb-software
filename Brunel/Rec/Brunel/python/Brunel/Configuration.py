@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.122 2010-03-15 17:39:00 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.123 2010-03-24 17:30:35 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -502,7 +502,7 @@ class Brunel(LHCbConfigurableUser):
             from MuonPIDChecker import ConfigureMuonPIDChecker as cmuon
             mydata =  self.getProp("DataType")
             mycheckconf = cmuon.ConfigureMuonPIDChecker(data = mydata)
-            mycheckconf.configure(mc = True, expertck = expert)
+            mycheckconf.configure(UseMC = True, HistosLevel = self.getProp("Histograms"))
 
         if "RICH" in checkSeq :
             # Unpacking RICH summaries

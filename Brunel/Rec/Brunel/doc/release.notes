@@ -6,6 +6,7 @@ Purpose: LHCb reconstruction program
 - Changes to Configurable
   . Add cleaning of PID information from charged ProtoParticles before saving
     to (r)DSTs.
+  . Follow changes in MuonPIDChecker configurable
 
 - Changes to tests
    . Pick up histogram setting options from AppConfig

@@ -8,9 +8,10 @@ run = 56721  # Run taken September 9th 2009, Boole data from spring 2009
 files = 10
 Brunel().EvtMax = 1000
 
-# Use default simulation database tags 
 Brunel().Simulation = True
-Brunel().DataType = "2009"
+Brunel().DataType   = "2009"
+# use last velo closed SIMCOND tag
+Brunel().CondDBtag  = "sim-20100202-vc-md100"
 
 # Make sure Brunel is configured for MDF data
 if Brunel().getProp("InputType").upper() == "MDF":
