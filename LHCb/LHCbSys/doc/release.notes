@@ -5,8 +5,228 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-! 2010-03-04 - Rob Lambert
- - added tests for configurables
+</PRE><H1><A NAME=v30r0>2010-03-25 LHCbSys v30r0</A></H1><PRE>
+This version uses Gaudi v21r8 and LCG_58b
+
+- Packages modified: CaloDAQ v4r19, CaloInterfaces v7r18, CaloKernel v6r2,
+    CaloUtils v8r12, DAQUtils v1r2, MDF v3r23, CaloDet v10r5, DDDB v1r29,
+    DetCond v12r11, MuonDet v9r2, RichDet v14r0, STDet v4r18, DAQEvent v9r1,
+    DigiEvent v2r16, L0Event v18r3, PackedEvent v4r1, PhysEvent v11r12,
+    RecEvent v2r27, TrackEvent v5r4, GaudiConf v13r4p2, LHCbAlgs v2r34,
+    LHCbKernel v11r12, MCInterfaces v1r11, Relations v5r9p1, L0Interfaces v1r7,
+    L0MuonKernel v9r1, MuonDAQ v4r8, MuonInterfaces v1r0p1, OTDAQ v7r7,
+    DaVinciInterfaces v2r2, LoKiCore v9r12, LoKiHlt v2r8, LoKiNumbers v8r5,
+    RichKernel v7r32, RichRecBase v3r28, CondDBUI v3r3, XmlTools v6r3p1,
+    TfKernel v2r16, TrackInterfaces v4r11
+
+- In LHCbSys:
+  . Added tests for configurables
+
+- In CaloDAQ v4r19
+  . Protect against bad bank->MagicPattern + fill ReadouStatus
+
+- In CaloInterfaces v7r18
+  . ICaloHypo2Calo : new virtual method _setProperty() 
+
+- In CaloKernel v6r2
+  . CaloKernel/CaloVector.h 
+    o Change formal signature of default argument to allow normal usage in Python
+      otherwise the class is not available. The actual signature unchanged.
+    o Add method CaloVector::at that allows much faster iteration in python
+  . CaloKernel/ConfUtils.py
+    o getAlgo() / onDemand() : flexible context-dependent instance naming + 
+                               TES paths (not longer Offline/Hlt only)
+    o update hltContext()
+
+- In CaloUtils v8r12
+  . CaloUtils.xml : Add dictionaries for CaloVectors
+  . CaloUtils/CellID.py : add python iteration for related CaloVector-classes 
+  . CaloAlgUtils : track location is either 'offline' or 'hlt' depending on
+        context by default CaloReco Configurable to apply specific location
+  . CaloAlgUtils/Calo2Track : improvements in generic context-dependent TES
+                              locations  
+  . CaloTrackAlg : accept unknown fitted status if hltContext(context())
+
+- In DAQUtils v1r2
+  . bankKiller: 
+    o Bug fix: when a bank name with  typo was given it killed the last bank
+    o Add doxygen comments
+    o Reduce verbosity (Warning...) 
+
+- In MDF v3r23
+  . Fix bug in TAE event decoding, where every 0xFFFF*Packing_factor events
+    the TAE events were not correctly placed in the TES
+
+- In CaloDet v10r5
+  . minor fix in signature 
+  . dict/CaloDet.xml
+    o add few more classes into dictionary: CaloLed, CaloPin,
+    o add CaloVector into dictionary 
+    o fix the name of pattern for variables  
+
+- In DDDB v1r29 (needs SQLDDDB v5r23)
+  . Changed default tag for 2009 and 2010 data:
+    o head-20100321         for LHCBCOND
+  . Changed default tag for 2009 MC:
+    o MC-20100321-vc15mm-md100 for SIMCOND
+
+- In DetCond v12r11
+  . Changes to the CondDB configurable:
+    o In the online environment (Online == True) the IgnoreHeartBeat property is
+      defaulted to True
+    o Added the property HeartBeatCondition to set the location of the heart-beat
+      condition
+    o Fixed a problem for the usage of Oracle in the PIT.
+  . Removed the dependency on rx (obsolete).
+
+- In MuonDet v9r2
+  . Fix Windows compilation warning
+  . Replace all endreq by endmsg
+  . Improve coords - strips matching (MuonDAQHelper)
+
+- In RichDet v14r0
+  . Allow the use of different demagnification parameters for positive and 
+    negative magnetic field
+
+- In STDet v4r18
+  . Bug fix in noise update methods [local cache not updated] 
+
+- In DAQEvent v9r1
+  . RawBankReadoutStatus : Add BadMagicPattern status
+
+- In DigiEvent v2r16
+  . Update container location for VeloPixCluster 
+
+- In L0Event v18r3
+  . Add dictionaries needed for L0DUConfig and L0DUReport persistency
+  . Fix Windows compilation warning in L0DUReport.xml
+  . L0CaloCandidate, L0MuonCandidate
+    add typedef T::Selection and T::Range (needed for Hlt) 
+
+- In PackedEvent v4r1
+  . Update RichPID packing to support the Below Threshold DLLs
+
+- In PhysEvent v11r12
+  . Change definitions of T:Range form Range_<...> to NamedRange_<...>
+
+- In RecEvent v2r27
+  . Add a new method to ProtoParticle to convert an extra info string into
+    the corresponding enum
+  . Add enums for TrackP and TrackPt
+  . Add enums for future combined PID probability vales
+  . RecVertex,TwoProngVertex,CValoHypo,CaloCluster
+      add T::Selection & T::Range    (for "blind" access to data)
+  . Add Rich Below Threshold DLL values
+
+- In TrackEvent v5r4
+  . Added enum value related to VeloPix in Track and Measurement
+
+- In GaudiConf v13r4p2
+  . Update RichPID packing version to 1
+
+- In LHCbAlgs v2r34
+  . Added check of the Magic Pattern in the ODIN bank decoding
+    (ODINCodecBaseTool::i_decode).
+  . Optimize DeterministicPrescaler a bit more...
+
+- In LHCbKernel v11r12
+  . Add PixelPositionInfo class to deal with 2D position
+  . Extend number of RICH ParticleID types to 6, including a new "Below
+    Threshold" type.
+
+- In MCInterfaces v1r11
+  . Changes in IMuonPad2MCTool interface
+
+- In Relations v5r9p1
+  . remove Relations.cpp: empty file that causes warnings for Win32 platform
+
+- In L0Interfaces v1r7
+  . Add a new tool interface to get L0Muon overflow of candidates
+  . Add 2 new interfaces
+    o IL0MuonInputTool : tool to get l0muon logical channels or pads
+    o IL0MuonOLErrorTool : tool to get the list of optical links in error in 
+                           input of the l0muon trigger  
+
+- In L0MuonKernel v9r1
+  . Add 2 bits in the hardware error word of ProcCand and CtrlCand data to
+    flag L0_B_Id and L0EventNumber inconsistency
+  . Change convention for the CtrlCand hardware error word to match the one
+    of ProcCand (swap J & K)
+
+- In MuonDAQ v4r8
+  . In requirements, remove hack for Gaudi v21r1 to link dictionary on Windows
+  . Add protection (magic pattern)
+
+- In MuonInterfaces v1r0p1
+  . Small fix in MuonTrack.cpp
+
+- In OTDAQ v7r7
+  . Added check for RawBank::magic in OTRawBankDecoder
+
+- In DaVinciInterfaces v2r2
+  . Kernel/ITrackIsolation.h: new interface of the Track Isolation tools
+
+- In LoKiCore v9r12
+  . resurrect the access to doxygen documentation:
+  . provide new functions for automatic building of documentations
+      from LoKiCore.decorators import getSymbols, buildDoc 
+  . python/LoKiCore/decorators.py : fix a bug 
+  . Add the helper function in_list
+  . Decorate properly equality and non-equality
+  . re-code the lines for creation of STL-containers form python lists
+
+- In LoKiHlt v2r8
+  . Major change in L0_(SUM)DECISION, following the changes in LHCb::L0DUReport
+    from now both L0_DECISION and L0_DUMDECISION are *types* 
+    new predefined instances have been introduced:
+    L0_DECISION_PHYSICS      
+    L0_DECISION_BEAM1 
+    L0_DECISION_BEAM2 
+    L0_SUMDECISION_PHYSICS 
+    L0_SUMDECISION_BEAM1 
+    L0_SUMDECISION_BEAM2 
+  . new symbols:
+    o  ODIN_EVTNUMBER      LoKi::Odin::EvtNumber 
+       Simple predicate to check the run/event numbers
+       To simplify the construction of lists, the helper functions "odin_events"
+       and "odin_runs" have been introduced
+    o  ODIN_RUNEVTNUMBER      LoKi::Odin::RunEvtNumber 
+       Simple predicate to check the run/event numbers
+       To simplify the construction of lists, the helper function "odin_runevts"
+       has been introduced
+
+- In LoKiNumbers v8r5
+  . use new comparisons & functions of LoKiCore 
+
+- In RichKernel v7r32
+  . Some fixes for missing items in the python dictionary
+  . Various changes to C++ and python to support the configuration of
+    multiple reconstruction sequences in the same application.
+
+- In RichRecBase v3r28
+  . Various changes to C++ and python to support the configuration of
+    multiple reconstruction sequences in the same application.
+  . Supress the warning message from the pixel creator base class about
+    empty HPD data blocks to give 0 instances during running, and instead to
+    just summarise the number during finalise.
+
+- In CondDBUI v3r3
+  . Modified the Python module CondDBUI to require PyCool at run-time only for
+    the functions that really need it.
+    It allows to use the other utilities (like the tag filters) without PyCool.
+  . Fixed the bug in database diffing and merging procedures to correctly process
+    cases with multiple payloads. 
+
+- In XmlTools v6r3p1
+  . Remove obsolete file XmlTools_dll.cpp
+  . Put back dictionary IXmlParserSvc on Windows, has been excluded in 2007
+    because at the time it broke gccxml...
+
+- In TfKernel v2r16
+  . add setXAtYEq0 method to the LineHit class
+
+- In TrackInterfaces v4r11
+  . Add IVeloPixClusterPosition tool interface.
 
 </PRE><H1><A NAME=v29r2>2010-02-25 LHCbSys v29r2</A></H1><PRE>
 This version uses Gaudi v21r7p1 and LCG_58a
