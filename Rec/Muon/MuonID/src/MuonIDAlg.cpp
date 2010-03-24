@@ -434,7 +434,7 @@ StatusCode MuonIDAlg::initialize() {
       debug()  << "==> FOIfactor:" << m_foifactor << endmsg;
       
       //flag to introduce weights in IsMuon/IsMuonLoose:
-      m_weightFlag = (bool) Weight_flag->param<int>("Weight_flag");
+      m_weightFlag = ( (Weight_flag->param<int>("Weight_flag"))!=0 );
       debug()  << "==> Weight_flag:" << m_weightFlag << endmsg;
       debug()  << endmsg;
       

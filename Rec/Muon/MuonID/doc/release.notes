@@ -2,6 +2,9 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !-----------------------------------------------------------------------------
 
+! 2010-03-24 - Rob Lambert
+ - Fixed another windows warning
+
 ! 2010-03-22 - Helder Lopes
  - Fixed bug 64670
  - Changed default data type in configuration files to 2009
