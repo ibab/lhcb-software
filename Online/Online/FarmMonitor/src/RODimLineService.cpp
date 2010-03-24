@@ -1,4 +1,4 @@
-// $Id: RODimLineService.cpp,v 1.1 2009-04-03 09:16:40 ocallot Exp $
+// $Id: RODimLineService.cpp,v 1.2 2010-03-24 07:44:00 ocallot Exp $
 // Include files
 
 // local
@@ -13,12 +13,13 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RODimLineService::RODimLineService( std::string part, int nb ) {
+RODimLineService::RODimLineService( std::string part, int nb, std::string ext ) {
   m_part = part;
   m_dimBuffer.number = nb;
   char serviceName[100];
-  sprintf( serviceName, "FarmMonitor/%s/Line%02d", part.c_str(), nb );
-  char* format="I:1;C:12;I:11";
+  std::string tmp = part + ext;
+  sprintf( serviceName, "FarmMonitor/%s/Line%02d", tmp.c_str(), nb );
+  char format[30]="I:1;C:24;I:11";
   m_service = new DimService( serviceName, format, (void*) &m_dimBuffer, 100 );
 }
 //=============================================================================

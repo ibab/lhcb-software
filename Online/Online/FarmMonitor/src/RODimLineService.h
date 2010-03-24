@@ -1,4 +1,4 @@
-// $Id: RODimLineService.h,v 1.1 2009-04-03 09:16:40 ocallot Exp $
+// $Id: RODimLineService.h,v 1.2 2010-03-24 07:44:00 ocallot Exp $
 #ifndef RODIMLINESERVICE_H 
 #define RODIMLINESERVICE_H 1
 
@@ -16,7 +16,7 @@
 class RODimLineService {
 public: 
   /// Standard constructor
-  RODimLineService( std::string part, int nb ); 
+  RODimLineService( std::string part, int nb, std::string ext = "" ); 
 
   virtual ~RODimLineService( ); ///< Destructor
 
@@ -31,7 +31,7 @@ private:
   DimService* m_service;
   struct dimBuffer {
     int number;
-    char name[12];
+    char name[24];
     int mep;
     int evt;
     int con;

@@ -1,4 +1,4 @@
-// $Id: ROFarmMonitor.h,v 1.1 2009-04-03 09:16:40 ocallot Exp $
+// $Id: ROFarmMonitor.h,v 1.2 2010-03-24 07:44:00 ocallot Exp $
 #ifndef ROFARMMONITOR_H
 #define ROFARMMONITOR_H 1
 
@@ -48,6 +48,7 @@ public:
     DimInfo*    dimHltNodes;
     DimInfo*    dimCalibNodes;
     std::vector<RODimLineService*> lineServices;
+    std::vector<RODimLineService*> moniServices;
     std::vector<RODimFsmService*>  fsmServices;
     std::vector<RONodeCounter>     prevCounters;
     PartitionDesc( std::string a ) {

@@ -1,4 +1,4 @@
-// $Id: ROFarmMonitor.cpp,v 1.1 2009-04-03 09:16:40 ocallot Exp $
+// $Id: ROFarmMonitor.cpp,v 1.2 2010-03-24 07:44:00 ocallot Exp $
 // Include files
 // C++ include files
 #include <netdb.h>
@@ -24,7 +24,8 @@ typedef ROMon::Node::Tasks         Tasks;
 #define EVT_BUFFER   'E'
 #define SND_BUFFER   'S'
 
-#define MAXLINE 38
+#define MAXLINE 53
+#define MAXTASK 60
 //-----------------------------------------------------------------------------
 // Implementation file for class : ROFarmMonitor
 //
@@ -86,7 +87,7 @@ void ROFarmMonitor::initialize ( ) {
     PartitionDesc* myPart = new PartitionDesc( part );
     myPart->dimPartitionID = new DimInfo( service, 0, this );
 
-    char* empty = "/n";
+    char* empty(0);
     myService = "RunInfo/"+part+"/HLTnodeList";
     myPart->dimHltNodes = new DimInfo( myService.c_str(), empty, this );
 
@@ -98,6 +99,13 @@ void ROFarmMonitor::initialize ( ) {
       RODimLineService* dim = new RODimLineService( part, kk );
       myPart->lineServices.push_back( dim );
     }
+
+    //-- Create counters, just with the number, 0 to MAXTASK-1
+    for ( int kk = 0; MAXTASK >= kk ; ++kk ) {
+      RODimLineService* dim = new RODimLineService( part, kk, "_TASK" );
+      myPart->moniServices.push_back( dim );
+    }
+
     //-- Create counters, just with the number, 0 to 19
     for ( int ll = 0; 20 >= ll ; ++ll ) {
       RODimFsmService* dim = new RODimFsmService( part, ll );
@@ -244,7 +252,7 @@ void ROFarmMonitor::update( )   {
   m_lastTime = now;
   if ( 1 < m_print ) std::cout << "dt " << dt << std::endl;  
 
-  char* fmt = " %-12s   Mep%10d Evt%10d (Con%10d) Snd%10d (Acc%10d) Tsk%5d \n";
+  const char* fmt = " %-12s   Mep%10d Evt%10d (Con%10d) Snd%10d (Acc%10d) Tsk%5d \n";
 
   for ( std::vector<PartitionDesc*>::iterator itP = m_partitions.begin(); 
         m_partitions.end() != itP; ++itP ) {
@@ -266,14 +274,15 @@ void ROFarmMonitor::update( )   {
     
     RONodeCounter sumHlt( "Total HLT" );
     RONodeCounter sumCal( "Calibration" );
-    RONodeCounter sumMon( "Monit" );
-    RONodeCounter sumRec( "Reco" );
+    RONodeCounter sumMon( "Total Monit" );
+    RONodeCounter sumRec( "Total Reco" );
     std::vector<RONodeCounter> hltCounters;
     std::vector<RONodeCounter> calCounters;
     std::vector<RONodeCounter> monCounters;
     std::vector<RONodeCounter> recCounters;
 
     std::vector<RONodeCounter> prevCounters = (*itP)->prevCounters;
+    unsigned int lPrefx = (*itP)->name.length()+7;  // task name prefixed by partition + _MONA08
     
     for ( std::vector<Descriptor*>::iterator itD = m_datas.begin(); m_datas.end() != itD; ++itD ) {
       const ROMon::Nodeset* ns = (*itD)->data<const ROMon::Nodeset>();
@@ -291,37 +300,32 @@ void ROFarmMonitor::update( )   {
           if ( !isHlt && !isCalib && !isMoni && ! isReco ) continue;
           if ( 1 < m_print ) std::cout << "Part " << (*itP)->name << " node " << (*n).name << std::endl;
 
-          RONodeCounter cntr( (*n).name );          
-          const Buffers& buffs = *(*n).buffers();
-          for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
-            const Clients& clients = (*ib).clients;
-            char b = (*ib).name[0];
-            if ( isMoni || isReco ) {
-              if ( 0 != eventBuffer.compare( (*ib).name ) ) continue;
-            }
-            
-            if ( 1 < m_print ) std::cout << "  Buffer " << (*ib).name << " prod " << (*ib).ctrl.tot_produced << std::endl;
+          double newTime = double( (*n).time -1236100000 ) + double( (*n).millitm ) * 0.001;
+          if ( 2 < m_print ) std::cout << "   Update time " << newTime << std::endl;
 
-            switch (b) {
-            case MEP_BUFFER : cntr.updateMep( (*ib).ctrl.tot_produced );  break;
-            case EVT_BUFFER : cntr.updateEvt( (*ib).ctrl.tot_produced );  break;
-            case SND_BUFFER : cntr.updateSnd( (*ib).ctrl.tot_produced );  break;
-            default: break;
-            }
-            for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-              int  pID = (*ic).partitionID;
-              if ( myPartID != pID ) continue;
-              if ( 1 < m_print ) {
-                printf( "   Node %s  Buffer %s  Task %s Events %d  Part %4x\n", 
-                        (*n).name, (*ib).name, (*ic).name, (*ic).events, pID );
+          if ( isHlt || isCalib ) {
+            
+            RONodeCounter cntr( (*n).name );          
+            const Buffers& buffs = *(*n).buffers();
+            for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
+              const Clients& clients = (*ib).clients;
+              char b = (*ib).name[0];
+              
+              if ( 1 < m_print ) std::cout << "  Buffer " << (*ib).name << " prod " << (*ib).ctrl.tot_produced << std::endl;
+              
+              switch (b) {
+              case MEP_BUFFER : cntr.updateMep( (*ib).ctrl.tot_produced );  break;
+              case EVT_BUFFER : cntr.updateEvt( (*ib).ctrl.tot_produced );  break;
+              case SND_BUFFER : cntr.updateSnd( (*ib).ctrl.tot_produced );  break;
+              default: break;
               }
-              if ( isMoni || isReco ) {              // only consumers, except the receiver
-                std::string taskName( (*ic).name );
-                if ( std::string::npos == taskName.find( "_RCV" ) ) {  // all tasks but the receiver
-                  cntr.updateCon( (*ic).events );
-                  cntr.updateTsk( 1 );
+              for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
+                int  pID = (*ic).partitionID;
+                if ( myPartID != pID ) continue;
+                if ( 1 < m_print ) {
+                  printf( "   Node %s  Buffer %s  Task %s Events %d  Part %4x\n", 
+                          (*n).name, (*ib).name, (*ic).name, (*ic).events, pID );
                 }
-              } else {                // Count according to task type in HLT/Calib
                 char* p = strchr((*ic).name,'_');
                 if ( p ) {
                   switch(*(++p)) {
@@ -341,8 +345,62 @@ void ROFarmMonitor::update( )   {
                 }
               }
             }
+            if ( 0 < cntr.tsk() ) {
+              if ( 0 < m_print ) {
+                printf( fmt, (*n).name,  cntr.mep(), cntr.evt(), cntr.con(), cntr.snd(), cntr.acc(), cntr.tsk() );
+              }
+              //== Compute rates
+              std::vector<RONodeCounter>::iterator itN;
+              for ( itN = prevCounters.begin(); prevCounters.end() != itN; ++itN ) {
+                if ( (*itN).name() == cntr.name() ) cntr.increment( *itN, newTime );
+              }
+              
+              if ( isHlt ) {
+                sumHlt.sum( cntr );
+                hltCounters.push_back( cntr );
+              } else if ( isCalib ) {
+                sumCal.sum( cntr );
+                calCounters.push_back( cntr );
+              }
+            }
+          } else {
+            const Buffers& buffs = *(*n).buffers();
+            for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
+              const Clients& clients = (*ib).clients;
+              if ( 0 != eventBuffer.compare( (*ib).name ) ) continue;
+              
+              if ( 1 < m_print ) std::cout << "  Buffer " << (*ib).name << " prod " << (*ib).ctrl.tot_produced << std::endl;
+              
+              for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
+                int  pID = (*ic).partitionID;
+                if ( myPartID != pID ) continue;
+                if ( 1 < m_print ) {
+                  printf( "   Node %s  Buffer %s  Task %s Events %d  Part %4x\n", 
+                          (*n).name, (*ib).name, (*ic).name, (*ic).events, pID );
+                }
+                if ( isMoni || isReco ) {              // only consumers, except the receiver
+                  std::string taskName( (*ic).name );
+                  if ( std::string::npos == taskName.find( "_RCV" ) ) {  // all tasks but the receiver  
+                    RONodeCounter cntr( taskName.substr( lPrefx ).c_str() );          
+                    cntr.updateCon( (*ic).events );
+                    cntr.updateTsk( 1 );
+                    std::vector<RONodeCounter>::iterator itN;
+                    for ( itN = prevCounters.begin(); prevCounters.end() != itN; ++itN ) {
+                      if ( (*itN).name() == cntr.name() ) cntr.increment( *itN, newTime );
+                    }
+                    if ( isMoni ) {
+                      sumMon.sum( cntr );
+                      monCounters.push_back( cntr );
+                    } else if ( isReco ) {
+                      sumRec.sum( cntr );
+                      recCounters.push_back( cntr );
+                    }
+                  }
+                }
+              }
+            }
           }
-
+          
           //== Count tasks, assign them to a proper vector.
           const Tasks& tasks = *(*n).tasks();
           for( Tasks::const_iterator it=tasks.begin(); it!= tasks.end(); it = tasks.next(it))  {
@@ -367,33 +425,6 @@ void ROFarmMonitor::update( )   {
               errorTasks.push_back( &(*it) );
             } else {
               otherTasks.push_back( &(*it) );
-            }
-          }          
-
-          if ( 0 < cntr.tsk() ) {
-            if ( 0 < m_print ) {
-              printf( fmt, (*n).name,  cntr.mep(), cntr.evt(), cntr.con(), cntr.snd(), cntr.acc(), cntr.tsk() );
-            }
-            //== Compute rates
-            double newTime = double( (*n).time -1236100000 ) + double( (*n).millitm ) * 0.001;
-            if ( 2 < m_print ) std::cout << "   Update time " << newTime << std::endl;
-            std::vector<RONodeCounter>::iterator itN;
-            for ( itN = prevCounters.begin(); prevCounters.end() != itN; ++itN ) {
-              if ( (*itN).name() == cntr.name() ) cntr.increment( *itN, newTime );
-            }
-
-            if ( isHlt ) {
-              sumHlt.sum( cntr );
-              hltCounters.push_back( cntr );
-            } else if ( isCalib ) {
-              sumCal.sum( cntr );
-              calCounters.push_back( cntr );
-            } else if ( isMoni ) {
-              sumMon.sum( cntr );
-              monCounters.push_back( cntr );
-            } else if ( isReco ) {
-              sumRec.sum( cntr );
-              recCounters.push_back( cntr );
             }
           }
         }
@@ -443,22 +474,6 @@ void ROFarmMonitor::update( )   {
       hltCounters = farmCounters;
     }
 
-    //== If too many lines, compress: by farm row
-    if ( MAXLINE-2 < hltCounters.size() ) {
-      if ( 2 < m_print ) std::cout << "Compress by row " << std::endl;
-      std::vector<RONodeCounter> farmCounters;
-      std::string farmName = "        ";
-      for ( itN = hltCounters.begin(); hltCounters.end() != itN; ++itN ) {
-        if ( (*itN).name().substr(0,4) != farmName.substr(4) ) {
-          farmName = "Row "+(*itN).name().substr(0,4);
-          RONodeCounter farm( farmName.c_str() );
-          farmCounters.push_back( farm );
-        }
-        farmCounters.back().sum( *itN);
-      }
-      hltCounters = farmCounters;
-    }
-
     if ( 2 < m_print ) std::cout << "Update services " << std::endl;
     
     for ( itN = hltCounters.begin(); hltCounters.end() != itN; ++itN ) {
@@ -466,29 +481,28 @@ void ROFarmMonitor::update( )   {
     }
     if ( 0 < sumCal.tsk() ) {
       if ( (*itP)->lineServices.end() != itS ) (*itS++)->update( blank );
-      //      if ( (*itP)->lineServices.end() != itS ) (*itS++)->update( sumCal );
       for ( itN = calCounters.begin(); calCounters.end() != itN; ++itN ) {
         if ( (*itP)->lineServices.end() != itS ) (*itS++)->update( *itN );
       }
     }
+    while ( (*itP)->lineServices.end() != itS ) (*itS++)->update( blank );
 
+    itS = (*itP)->moniServices.begin();
     if ( 0 < sumMon.tsk() ) {
-      if ( (*itP)->lineServices.end() != itS ) (*itS++)->update( blank );
-      if ( (*itP)->lineServices.end() != itS ) (*itS++)->update( sumMon );
+      if ( (*itP)->moniServices.end() != itS ) (*itS++)->update( sumMon );
       for ( itN = monCounters.begin(); monCounters.end() != itN; ++itN ) {
-        if ( (*itP)->lineServices.end() != itS ) (*itS++)->update( *itN );
+        if ( (*itP)->moniServices.end() != itS ) (*itS++)->update( *itN );
       }
     }
 
     if ( 0 < sumRec.tsk() ) {
-      if ( (*itP)->lineServices.end() != itS ) (*itS++)->update( blank );
-      if ( (*itP)->lineServices.end() != itS ) (*itS++)->update( sumRec );
-      //for ( itN = recCounters.begin(); recCounters.end() != itN; ++itN ) {
-      //  if ( (*itP)->lineServices.end() != itS ) (*itS++)->update( *itN );
-      //}
+      if ( (*itP)->moniServices.end() != itS ) (*itS++)->update( blank );
+      if ( (*itP)->moniServices.end() != itS ) (*itS++)->update( sumRec );
+      for ( itN = recCounters.begin(); recCounters.end() != itN; ++itN ) {
+        if ( (*itP)->moniServices.end() != itS ) (*itS++)->update( *itN );
+      }
     }
-    while ( (*itP)->lineServices.end() != itS ) (*itS++)->update( blank );
-
+    while ( (*itP)->moniServices.end() != itS ) (*itS++)->update( blank );
     //=============================================================
     //== Update the services for Tasks
     //=============================================================
