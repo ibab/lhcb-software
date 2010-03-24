@@ -56,6 +56,7 @@ private:
   std::string m_nodeName;
   bool m_monitoringFarm;
   bool m_finalizing;
+  bool m_firstsave;
   
   std::string m_tmpPart;
   std::vector<std::string> m_partName;

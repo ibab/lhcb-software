@@ -57,6 +57,7 @@ private:
   std::map<std::string, bool, std::less<std::string> > m_serverMap;
   std::set<std::string> m_serviceSet;
   
+  
 protected:
   
   std::map<std::string, std::pair<DimServiceMonObject*, MonObject*>, std::less<std::string> > m_dimSrv;

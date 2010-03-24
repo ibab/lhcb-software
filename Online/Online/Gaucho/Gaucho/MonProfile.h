@@ -78,9 +78,7 @@ public:
   std::string sTitle;
 
   bool bBinLabelX;
-  bool baxisLabelX;
-  bool baxisLabelY;
-  
+
   double *binSum;
   //double *binErr;
   double *binEntries;
@@ -101,8 +99,6 @@ public:
 
   bool isLoaded;
   bool objectCreated;
-  std::string m_axisLabelX;
-  std::string m_axisLabelY;
   /**********/
   
 private:
