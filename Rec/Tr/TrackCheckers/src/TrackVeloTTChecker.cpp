@@ -1,4 +1,4 @@
-// $Id: TrackVeloTTChecker.cpp,v 1.11 2010-03-23 07:42:26 rlambert Exp $
+// $Id: TrackVeloTTChecker.cpp,v 1.12 2010-03-24 12:10:01 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -213,8 +213,8 @@ StatusCode TrackVeloTTChecker::execute() {
 
     if( mcPartVelo ) {
       NTkeyVelo.push_back( mcPartVelo->key() );
-      NTpmcVelo.push_back( (float) mcPartVelo->momentum().rho()/1000. );
-      NTptmcVelo.push_back( (float) mcPartVelo->pt()/1000. );
+      NTpmcVelo.push_back( float(mcPartVelo->momentum().rho()/1000.) );
+      NTptmcVelo.push_back( float(mcPartVelo->pt()/1000.) );
       double result = 0.;
       if( mcPartVelo->momentum().mag() != 0. ) {
         result = mcPartVelo->momentum().Z() / mcPartVelo->momentum().mag();

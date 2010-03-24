@@ -1,4 +1,4 @@
-// $Id: TrackMatchChecker.cpp,v 1.8 2010-03-23 07:28:41 rlambert Exp $
+// $Id: TrackMatchChecker.cpp,v 1.9 2010-03-24 12:10:01 rlambert Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -463,11 +463,11 @@ StatusCode TrackMatchChecker::monitor( )
       StatusCode sc = m_stateCreator->createState(mcpartSeed,matchZ,trueState);
       if ( sc.isSuccess() ) {
         TrackVector trueVec = trueState.stateVector();
-        m_xTrue.push_back(  (float) trueVec[0] );
-        m_yTrue.push_back(  (float) trueVec[1] );
-        m_txTrue.push_back(  (float) trueVec[2] );
-        m_tyTrue.push_back(  (float) trueVec[3] );
-        m_pTrue.push_back(  (float) 1./fabs(trueVec[4]) );
+        m_xTrue.push_back(  float(trueVec[0]) );
+        m_yTrue.push_back(  float(trueVec[1]) );
+        m_txTrue.push_back( float(trueVec[2]) );
+        m_tyTrue.push_back( float(trueVec[3]) );
+        m_pTrue.push_back(  float(1./fabs(trueVec[4])) );
       } else {
         m_xTrue.push_back( 0.0 );
         m_yTrue.push_back( 0.0 );
@@ -546,20 +546,20 @@ StatusCode TrackMatchChecker::monitor( )
       m_eMomentumVelo.push_back( sqrt(veloCov(4,4)) / pow(veloVector[4],2) );
     }
 
-    m_xSeed.push_back( seedVector[0] );
-    m_xRich2.push_back( (seedTrack->closestState(9450.).stateVector())[0] );
-    m_ySeed.push_back( seedVector[1] );
-    m_yRich2.push_back( (seedTrack->closestState(9450.).stateVector())[1] );
-    m_txSeed.push_back( seedVector[2] );
-    m_txRich2.push_back( (seedTrack->closestState(9450.).stateVector())[2] );
-    m_tySeed.push_back( seedVector[3] );
-    m_tyRich2.push_back( (seedTrack->closestState(9450.).stateVector())[3] );
-    m_momentumSeed.push_back( ptkick );
-    m_eXSeed.push_back( sqrt(seedCov(0,0)) );
-    m_eYSeed.push_back( sqrt(seedCov(1,1)) );
-    m_eTxSeed.push_back( sqrt(seedCov(2,2)) );
-    m_eTySeed.push_back( sqrt(seedCov(3,3)) );
-    m_eMomentumSeed.push_back( sqrt(fabs(seedCov(4,4))) / pow(seedVector[4],2));
+    m_xSeed.push_back( (float) seedVector[0] );
+    m_xRich2.push_back( (float) (seedTrack->closestState(9450.).stateVector())[0] );
+    m_ySeed.push_back( (float) seedVector[1] );
+    m_yRich2.push_back( (float) (seedTrack->closestState(9450.).stateVector())[1] );
+    m_txSeed.push_back( (float) seedVector[2] );
+    m_txRich2.push_back( (float) (seedTrack->closestState(9450.).stateVector())[2] );
+    m_tySeed.push_back( (float) seedVector[3] );
+    m_tyRich2.push_back( (float) (seedTrack->closestState(9450.).stateVector())[3] );
+    m_momentumSeed.push_back( (float) ptkick );
+    m_eXSeed.push_back( (float) sqrt(seedCov(0,0)) );
+    m_eYSeed.push_back( (float) sqrt(seedCov(1,1)) );
+    m_eTxSeed.push_back( (float) sqrt(seedCov(2,2)) );
+    m_eTySeed.push_back( (float) sqrt(seedCov(3,3)) );
+    m_eMomentumSeed.push_back( float(sqrt(fabs(seedCov(4,4))) / pow(seedVector[4],2)) );
     ++m_numMatches;
   }
 

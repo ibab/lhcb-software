@@ -4,6 +4,10 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+! 2010-03-24 - Rob Lambert
+ - More windows fixes
+ - Fixed bug in TrackEffChecker
+
 ! 2010-03-23 - Rob Lambert
  - Fixed some windows warnings, noticed bug in TrackEffChecker
 
