@@ -1,4 +1,4 @@
-// $Id: AlignMuonTrack.h,v 1.2 2010-03-22 01:20:06 rlambert Exp $
+// $Id: AlignMuonTrack.h,v 1.3 2010-03-24 13:24:37 rlambert Exp $
 #ifndef ALIGNMUONTRACK_H 
 #define ALIGNMUONTRACK_H 1
 
@@ -53,7 +53,7 @@ public:
   
   float slopeX(int stationFirst,int stationSecond){
     return 
-      (m_points[stationFirst][0].x()-m_points[stationSecond][0].x())/(m_points[stationFirst][0].z()-m_points[stationSecond][0].z());
+      float((m_points[stationFirst][0].x()-m_points[stationSecond][0].x())/(m_points[stationFirst][0].z()-m_points[stationSecond][0].z()));
   };
   float slopeY(int stationFirst,int stationSecond){
     return 
