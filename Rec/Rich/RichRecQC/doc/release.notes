@@ -4,13 +4,13 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r38 2010-03-24 ========================
 ! 2010-03-22 - Chris Jones
  - Add new HPD image shifts monitor from Tom Blake to default RICH monitoring
    sequence. Produces a summary of the HPD image shift in the form on conuter
    objects and thus requires the XML SUmmary file to be activated in order
    to be useful (runs fine without it, just doesn't do anything).
 
-!======================= RichRecQC v2r38 2010-03-19 ========================
 ! 2010-03-05 - Chris Jones
  - Various changes to support the configuration of multiple reconstruction 
    sequences in the same application. Needed to support neccessary changes in 
