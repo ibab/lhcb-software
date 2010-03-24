@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.31 2010-02-23 15:42:50 wouter Exp $
+// $Id: TrackMasterFitter.h,v 1.32 2010-03-24 12:50:15 rlambert Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -89,7 +89,9 @@ private:
   StatusCode updateTransport( LHCb::Track& track ) const ;
 
   ITrackExtrapolator* extrapolator( LHCb::Track::Types tracktype ) const {
-    return tracktype == (LHCb::Track::Velo || LHCb::Track::VeloR) ? m_veloExtrapolator : m_extrapolator ;
+    if(tracktype == LHCb::Track::Velo || 
+       tracktype == LHCb::Track::VeloR  ) return m_veloExtrapolator;
+    return m_extrapolator;
   }
 
   //! check that this was a prefit iteration
