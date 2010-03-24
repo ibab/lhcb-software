@@ -1,3 +1,4 @@
+from __future__ import division
 """
 Classes and helper functions for histogramming data.
 
@@ -20,8 +21,6 @@ Subject to the Lesser GNU Public License - see < http://www.gnu.org/licenses/lgp
 
 __author__ = 'Juan Palacios <juan.palacios@nikhef.nl>'
 __version__ = '1.0'
-
-from __future__ import division
 
 import copy
 import histostats as _stats
