@@ -4,6 +4,7 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+!======================= VeloRecMonitors v2r7p1 2010-03-24 ====================
 ! 2010-03-24 - Rob Lambert
  - more windows warning fixes
 
@@ -13,7 +14,6 @@
 ! 2010-03-22 - Rob Lambert
  - Fixes for windows warnings savannah 64668
 
-!======================= VeloRecMonitors v2r7p1 2010-03-20 ====================
 ! 2010-03-15 - James Mylroie-Smith
  - in VeloExpertClusterMonitor reduced binning of plots
 
