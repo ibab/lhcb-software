@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.76 2010-03-22 02:14:41 rlambert Exp $ 
+! $Id: release.notes,v 1.77 2010-03-24 11:57:31 rlambert Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+!========================== CaloMoniDst v4r5 2010-03-19 =======================
 ! 2010-03-22 - Rob Lambert
  - Fixed some windows warnings savannah 64668
 
-!========================== CaloMoniDst v4r5 2010-03-19 =======================
 ! 2010-03-08 - Olivier Deschamps
   - adapt CaloPhotonChecker to change in CaloPIDs
   
