@@ -4,11 +4,12 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v1r0 2010-03-24 =============
+
 ! 2010-03-24 - Giacomo Graziani
  - fix long-standing problem on first load of some pages in online mode (improved dim service lookup)
  - implement history by run number, using run-aggregated savesets. Trend plots by run are also supported
 
-!============ Presenter v1r0 2010-03-23 =============
 ! 2010-03-23 - Olivier Callot
  - Fix a bug in ShiftDB to get the shift start time.
  - New file ProblemDB to store entries in the Problem Database. 
