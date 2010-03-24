@@ -3,13 +3,6 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2010-03-21 - Rob Lambert
- - Added three new tests, fixedfile-brunel2009-*, for reprocessing 2009 data
-   . fixeddb: with some arbitrary database
-   . globaldb: with the latest database global tags
-   . localdb: with the latest database local and global tags
-
-
 - Changes to Configurable
   . Add cleaning of PID information from charged ProtoParticles before saving
     to (r)DSTs.
@@ -17,6 +10,10 @@ Purpose: LHCb reconstruction program
 - Changes to tests
    . Pick up histogram setting options from AppConfig
    . Exclude Rich refractive index updates from comparisons wih reference
+   . Added three new tests, fixedfile-brunel2009-*, for reprocessing 2009 data
+     o fixeddb: with some arbitrary database
+     o globaldb: with the latest database global tags
+     o localdb: with the latest database local and global tags
 
 - Changes to references to reflect changes in Brunel v36r3 output:
    . Printout APE values from STOfflinePositionTool (STTools v3r17)
@@ -37,13 +34,15 @@ Purpose: LHCb reconstruction program
    . New default LHCbCond tag for 2009 and 2010 data (DDDB v1r29)
    . Add Muon, Rich PID and combined DLL to ProtoParticle (for monitoring) and
      remove again before writing out (GlobalReco v6r32, Brunel)
-   . Additional track monitoring histograms (TrackMonitors v1r22)
-   . New default Velo dEdx normalisation (TrackTools v3r28) (N.B. default is
-     wrong for any simulation done with Boole <= v21r0)
+   . Additional track monitoring histograms, disable most histograms in Online
+     (TrackMonitors v1r22)
    . New early data tuning for Seed tracks (TsaAlgorithms v3r17)
    . Update of ST measurement uncertainty tuning (Tracksys v4r31)
    . Use detailed Bethe Bloch dE/dx tool as default in fit
      (TrackExtrapolators v2r26)
+   . Made Velo dEdx parameters in TrackVelodEdxCharge load from conditions
+     (TrackTools v3r28) - new normalisation in SQLDDDB v5r23
+   . Cleanups in MuonPIDChecker (MuonPIDChecker v5r0)
 
 </PRE><H1><A NAME=v36r2>2010-02-26 Brunel v36r2</A></H1><PRE>
  - Changes to Configurable: 
