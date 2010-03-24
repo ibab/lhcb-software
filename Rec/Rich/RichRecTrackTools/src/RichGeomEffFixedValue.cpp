@@ -144,7 +144,7 @@ GeomEffFixedValue::geomEfficiencyScat ( LHCb::RichRecSegment * segment,
     float eff = 0;
     if ( segment->trackSegment().radiator() == Rich::Aerogel ) 
     {
-      eff = ( m_ckAngle->avgCherenkovTheta(segment,id) > 0 ? m_fixedScatValue : 0.0f );
+      eff = float( m_ckAngle->avgCherenkovTheta(segment,id) > 0 ? m_fixedScatValue : 0.0f );
     }
 
     // Assign this efficiency to all hypotheses
