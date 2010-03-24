@@ -5,7 +5,11 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
-!===================== Tools/CondDBUI v3r3 2010-03-17 =========================
+!===================== Tools/CondDBUI v3r3 2010-03-24 =========================
+! 2010-03-24 - Illya Shapoval
+ - Removed pyqt_compat dependency which was the reason for CondDBBrowser 
+   segfaults when working with the Oracle Online partition.  
+
 ! 2010-03-16 - Marco Clemencic
  - Modified the Python module CondDBUI to require PyCool at run-time only for
    the functions that really need it.

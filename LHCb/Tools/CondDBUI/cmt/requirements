@@ -34,7 +34,6 @@ apply_tag    NEEDS_COOL_FACTORY
 use XercesC v* LCG_Interfaces -no_auto_imports
 
 use pyqt v* LCG_Interfaces -no_auto_imports
-use pyqt_compat v* LCG_Interfaces -no_auto_imports
 
 # ====================================================================
 # Install scripts and modules
