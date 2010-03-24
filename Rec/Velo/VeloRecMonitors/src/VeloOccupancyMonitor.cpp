@@ -1,4 +1,4 @@
-// $Id: VeloOccupancyMonitor.cpp,v 1.12 2010-03-24 12:19:25 rlambert Exp $
+// $Id: VeloOccupancyMonitor.cpp,v 1.13 2010-03-24 14:16:51 krinnert Exp $
 // Include files 
 // -------------
 
@@ -56,7 +56,6 @@ Velo::VeloOccupancyMonitor::VeloOccupancyMonitor( const std::string& name,
   declareProperty( "VeloClusterLocation", m_clusterCont = LHCb::VeloClusterLocation::Default );
   declareProperty( "OccupancyResetFrequency", m_occupancyResetFreq=10000 );
   declareProperty( "UseOdin", m_useOdin = true );
-
 }
 
 //=============================================================================
@@ -150,6 +149,9 @@ StatusCode Velo::VeloOccupancyMonitor::initialize() {
   m_histOccSpectAll = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccSpectAll", "Occupancy Spectrum", -0.5, 100.5, 202)); 
   m_histOccSpectLow = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccSpectMaxLow", "Occupancy Spectrum", -0.5, 20.5, 210));
   m_histAvrgSensor  = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccAvrgSens", "Avrg. Occupancy vs. Sensor", -0.5, 131.5, 132));
+  m_histAvrgSensor  = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccAvrgSens", "Avrg. Occupancy vs. Sensor", -0.5, 131.5, 132));
+  m_histAvrgSensorPO1   = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccAvrgSensPO1", "Avrg. Occupancy vs. Sensor, 1 powered", -0.5, 131.5, 132));
+  m_histAvrgSensorPO11  = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccAvrgSensPO11", "Avrg. Occupancy vs. Sensor, 11 powered", -0.5, 131.5, 132));
 
   return StatusCode::SUCCESS;
 }
@@ -367,7 +369,20 @@ void Velo::VeloOccupancyMonitor::monitorOccupancy() {
   for ( unsigned int s=0;  s<m_stripOccupancyHistPerSensor.size(); ++s ) {
     TH1D* h = m_stripOccupancyHistPerSensor[s];
     if ( 0 != h ) {
-      m_histAvrgSensor->SetBinContent(s + 1, h->Integral()/h->GetNbinsX());
+      double avrgOcc =  h->Integral()/h->GetNbinsX();
+      m_histAvrgSensor->SetBinContent(s + 1, avrgOcc);
+      // power on step 1, 1 station ( 2 modules ) powered. also included in step 2.
+      if ( 0 == s || 1 == s || 64 == s || 65 == s ) {
+        m_histAvrgSensorPO1->SetBinContent(s + 1, avrgOcc);
+        m_histAvrgSensorPO11->SetBinContent(s + 1, avrgOcc);
+      }
+      // power on step 2, 11 station ( 22 modules ) powered
+      if (   ( 2  <= s && 9  >= s )
+          || ( 66 <= s && 73 >= s )
+          || ( 20 <= s && 31 >= s )
+          || ( 84 <= s && 95 >= s ) ) {
+        m_histAvrgSensorPO11->SetBinContent(s + 1, avrgOcc);
+      }
     }
   }
 

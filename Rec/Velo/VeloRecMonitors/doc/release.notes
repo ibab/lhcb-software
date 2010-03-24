@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2010-03-24 - Kurt Rinnert
+ - added power-on specific plots to occupancy monitor
+
 !======================= VeloRecMonitors v2r7p1 2010-03-24 ====================
 ! 2010-03-24 - Rob Lambert
  - more windows warning fixes
@@ -51,7 +54,7 @@
  - in VeloTrackMonitor: 
    - Fix bug in MisMatch histogram
    - Update the residual evaluation using the new method for the extrapolation 
-	   to the sensor plane
+      to the sensor plane
 
 ! 2010-02-01 - Michael Alexander
  - VeloIPResolutionMonitor:
@@ -66,8 +69,8 @@
 ! 2009-12-08 - Michael Alexander
  - VeloIPResolutionMonitor:
   - Removal of features that are no longer required
-	- Added ntupling option
-	- Changed some default options
+   - Added ntupling option
+   - Changed some default options
 
 ! 2009-12-04 - Eduardo Rodrigues
  - irrelevant file VeloLumiRegionMon_HltInit.opts removed
