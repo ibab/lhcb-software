@@ -1,4 +1,4 @@
-// $Id: ROFarmMonitor.cpp,v 1.2 2010-03-24 07:44:00 ocallot Exp $
+// $Id: ROFarmMonitor.cpp,v 1.3 2010-03-24 08:37:59 ocallot Exp $
 // Include files
 // C++ include files
 #include <netdb.h>
@@ -85,14 +85,17 @@ void ROFarmMonitor::initialize ( ) {
     std::string part = myService.substr(  myService.find( "/" )+1 );
     part = part.substr( 0, part.find("/") );
     PartitionDesc* myPart = new PartitionDesc( part );
+
+    if ( 1 < m_print ) std::cout << "Connect to service " << service << std::endl;
     myPart->dimPartitionID = new DimInfo( service, 0, this );
 
-    char* empty(0);
     myService = "RunInfo/"+part+"/HLTnodeList";
-    myPart->dimHltNodes = new DimInfo( myService.c_str(), empty, this );
+    if ( 1 < m_print ) std::cout << "Connect to service " << myService << std::endl;
+    myPart->dimHltNodes = new DimInfo( myService.c_str(), 0, this );
 
     myService = "RunInfo/"+part+"/CALIBnodeList";
-    myPart->dimCalibNodes = new DimInfo( myService.c_str(), empty, this );
+    if ( 1 < m_print ) std::cout << "Connect to service " << myService << std::endl;
+    myPart->dimCalibNodes = new DimInfo( myService.c_str(), 0, this );
 
     //-- Create counters, just with the number, 0 to MAXLINE-1
     for ( int kk = 0; MAXLINE >= kk ; ++kk ) {
