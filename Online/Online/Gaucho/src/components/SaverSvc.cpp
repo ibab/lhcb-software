@@ -36,6 +36,7 @@ SaverSvc::SaverSvc(const std::string& name, ISvcLocator* ploc) : Service(name, p
   m_enablePostEvents = true;
   m_finalizing = false;
   m_runNb=0;
+  m_firstsave = true;
 }
 
 SaverSvc::~SaverSvc() {}
@@ -188,12 +189,12 @@ StatusCode SaverSvc::initialize() {
 
   
   msg << MSG::DEBUG << "Finishing the initialize method." << endreq;
+
   return StatusCode::SUCCESS;
 }
 
 void SaverSvc::handle(const Event&  ev) {
   MsgStream msg(msgSvc(), name());
-
    
   std::vector<ProcessMgr *>::iterator it;
   int i=0;
@@ -210,9 +211,13 @@ void SaverSvc::handle(const Event&  ev) {
     //update run number for next timer save
     //processMgr->getrunNumber(true);
   }
-  if(s_startTimer == ev.type) {
+  if(s_startTimer == ev.type) { 
     ProcessMgr* processMgr = (ProcessMgr*) ev.data;
-    processMgr->dimTimerProcess()->start(m_refreshTime);
+    if (m_firstsave == true) {
+       processMgr->dimTimerProcess()->start(120);
+       }
+    else {
+       processMgr->dimTimerProcess()->start(m_refreshTime);}   
   }
   else if(s_stopTimer == ev.type) {
    ProcessMgr* processMgr = (ProcessMgr*) ev.data;
@@ -312,9 +317,10 @@ StatusCode SaverSvc::save(ProcessMgr* processMgr) {
 
  
     if (!m_finalizing) { processMgr->setrunNumber(m_runNbSvc);
-        if (m_runNb == 0) m_runNb=m_runNbSvc->getRunNb() ;
-    }
-    // msg << MSG::INFO << "saving histograms in "<< *fileName << " runnb " << m_runNb << endreq;     
+           }
+   if (m_runNb == 0) m_runNb=m_runNbSvc->getRunNb() ;
+
+     msg << MSG::INFO << "saving histograms in "<< *fileName << " runnb " << m_runNb << endreq;     
      //if the runnumber is 0 here, try to get it 
     //when the runnumber changes we should stop and restart the dim timer
     //only save if the runnumber !=0
@@ -328,11 +334,12 @@ StatusCode SaverSvc::save(ProcessMgr* processMgr) {
              processMgr->dimTimerProcess()->start(m_refreshTime);
           }	  
        }   
-       else processMgr->write();     
+       else processMgr->write();   
+       m_firstsave=false;  
        msg << MSG::INFO << "Finished saving histograms in file "<< *fileName << endreq;
     }
     else {
-       msg << MSG::DEBUG << "Runnumber unknown. Can't save "<< m_runNb << endreq;    
+       msg << MSG::INFO << "Runnumber unknown. Can't save "<< m_runNb << endreq;    
     } 
   return StatusCode::SUCCESS;
 }

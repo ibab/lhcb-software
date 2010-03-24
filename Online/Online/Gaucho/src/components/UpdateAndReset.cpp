@@ -279,8 +279,9 @@ StatusCode UpdateAndReset::finalize() {
 //  msg << MSG::DEBUG << "finalizing...." << endreq;
   if ( 1 == m_saveHistograms ) {
      //calling finalize - don't need to reset, they probably don't exist anymore
+     //reset, as jobs in EFF are kept alive
      m_eorNumber=m_runNumber;
-     manageTESHistos(false, false, true, true);
+     manageTESHistos(false, true, true, true);
   }
   else {
     updateData(false,false);
@@ -438,7 +439,7 @@ double UpdateAndReset::offsetToBoundary(int cycleNumber, ulonglong time, bool in
   }*/
 }
 
-void UpdateAndReset::updateData(bool isRunNumberChanged, bool /* isFromTimerHandler */) {
+void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler) {
   MsgStream msg( msgSvc(), name() );
   ulonglong currentTime = GauchoTimer::currentTime();
 //  msg << MSG::INFO << "************Updating data " << (currentTime - m_timeStart) << " microseconds after start **********" << endreq;  msg << MSG::DEBUG << "m_runNumber        = " << m_runNumber << endreq;
