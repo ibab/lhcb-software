@@ -1,4 +1,4 @@
-// $Id: CaloEMuMonitor.cpp,v 1.9 2010-03-23 07:01:03 rlambert Exp $
+// $Id: CaloEMuMonitor.cpp,v 1.10 2010-03-24 11:56:30 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -551,7 +551,7 @@ bool CaloEMuMonitor::acceptE(const LHCb::ProtoParticle *proto) const
   if ( rdlle < m_RichDLLe ) return false;
 
   float hcale = (float) proto->info(LHCb::ProtoParticle::CaloHcalE, -1 * Gaudi::Units::GeV);
-  bool  inhcal= (bool) proto->info( LHCb::ProtoParticle::InAccHcal, double(false) );
+  bool  inhcal= (proto->info( LHCb::ProtoParticle::InAccHcal, double(false) )!=0);
   if ( inhcal && hcale > m_maxEHcalE ) return false;
 
   return true;
@@ -744,10 +744,10 @@ void CaloEMuMonitor::fillMVar(const LHCb::ProtoParticle *proto)
 
 
   // Acceptance flag for Prs/Ecal/Hcal/Brem
-  m_var->inecal= (bool) proto->info( LHCb::ProtoParticle::InAccEcal, double(false) );
-  m_var->inhcal= (bool) proto->info( LHCb::ProtoParticle::InAccHcal, double(false) );
-  m_var->inbrem= (bool) proto->info( LHCb::ProtoParticle::InAccBrem, double(false) );
-  m_var->inprs = (bool) proto->info( LHCb::ProtoParticle::InAccPrs,  double(false) );
+  m_var->inecal= (proto->info( LHCb::ProtoParticle::InAccEcal, double(false) )!=0.);
+  m_var->inhcal= (proto->info( LHCb::ProtoParticle::InAccHcal, double(false) )!=0.);
+  m_var->inbrem= (proto->info( LHCb::ProtoParticle::InAccBrem, double(false) )!=0.);
+  m_var->inprs = (proto->info( LHCb::ProtoParticle::InAccPrs,  double(false) )!=0.);
 
   // Ecal/Hcal/Prs-based DLL for electron-ID
   m_var->epide = (float) proto->info( LHCb::ProtoParticle::EcalPIDe, -99. );

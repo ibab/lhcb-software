@@ -1,4 +1,4 @@
-// $Id: CaloPi0Checker.cpp,v 1.6 2010-03-23 07:01:03 rlambert Exp $
+// $Id: CaloPi0Checker.cpp,v 1.7 2010-03-24 11:56:30 rlambert Exp $
 
 // ============================================================================
 // Include files
@@ -89,7 +89,7 @@ protected:
    */
   CaloPi0Checker( const std::string &name, ISvcLocator *pSvcLocator )
     : CaloMoniAlg( name, pSvcLocator )
-    , m_cut( (float) 50 * Gaudi::Units::perCent )
+    , m_cut( float(50 * Gaudi::Units::perCent) )
     , m_calo( DeCalorimeterLocation::Ecal )
     , m_pi0Name( "pi0" )
     , m_pi0ID( 0 ){ 
@@ -181,7 +181,7 @@ StatusCode CaloPi0Checker::execute(){
         std::find_if( clusters2.begin(), clusters2.end(), m_calo );
       if ( clusters2.end() == cluster2 ) continue;
       // get all MCtruth information for this cluster
-      const float cut2 = (*cluster2)->e() * m_cut;
+      const float cut2 = (float)((*cluster2)->e() * m_cut);
       const Range range2 = table->relations( *cluster2, cut2, true );
 
       // double loop for search the common ancestor
