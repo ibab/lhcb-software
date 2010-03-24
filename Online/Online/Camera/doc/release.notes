@@ -4,7 +4,7 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
-=============== v1r15 ===============
+=============== v1r16 ===============
 
 ! 2010-03-24 - Nicola Mangiafave
 - Bug fix of automatic  message rate setting and changed version to v1r16.
