@@ -1,4 +1,4 @@
-// $Id: TsaOTXSearch.cpp,v 1.7 2010-01-19 13:24:23 smenzeme Exp $
+// $Id: TsaOTXSearch.cpp,v 1.8 2010-03-24 12:11:35 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -35,7 +35,7 @@ OTXSearch::OTXSearch(const std::string& type,
   declareProperty("xsCut", m_xsCut = 0.7);
   declareProperty("x0Cut", m_x0Cut = 4500.);
   declareProperty("sx2Cut",m_sx2Cut = 0.8);
-  declareProperty("dthCut", m_dthCut = 0.7);
+  declareProperty("dthCut", m_dthCut = 0.70);
   declareProperty("tdCut",m_tdCut = 0.75);
   declareProperty("win", m_win = 10.0);
   declareProperty("win2",m_win2 = 6.0);
