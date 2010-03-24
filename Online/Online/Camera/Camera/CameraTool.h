@@ -1,4 +1,4 @@
-// $Id: CameraTool.h,v 1.9 2010-03-03 08:42:46 nmangiaf Exp $
+// $Id: CameraTool.h,v 1.10 2010-03-24 17:08:10 nmangiaf Exp $
 #ifndef CAMERATOOL_H
 #define CAMERATOOL_H 1
 
@@ -76,7 +76,24 @@ public:
   int SetCameraToPVSSConfig(bool sendMessagesToPVSS = true, 
                             MessageLevel warning_PVSS = ICameraTool::WARNING, 
                             MessageLevel error_PVSS = ICameraTool::ERROR);
-  
+    /*!
+   * Sends a message both to Camera and to PVSS.
+   * Sends to Camera all the information that has been added via Append functions since the last SendAndClear.
+   * The first three parameters refer to Camera, the last three refer to PVSS
+   * \param  c_l Message level. 1,2,3 represent info, warning, error messages respectively. 
+   * \param  c_who Used to identify the sender of the message. Typically set to the name of the
+   *           submitting algorithm.
+   * \param  c_what One line message summary to send, briefly describing reason for the message.
+   * \param  p_l Message level. 4,5 represent warning_PVSS and error_PVSS messages respectively. 
+   *           The message is sent to PVSS regardless m_SendMessagesToPVSS.
+   * \param  p_who Used to identify the sender of the message. Typically set to the name of the
+   *           submitting algorithm.
+   * \param  p_what One line message summary to send, briefly describing reason for the message.
+   * \return int Returns 1.
+   */
+   int SendAndClear(MessageLevel c_l,const std::string& c_who,const std::string& c_what, 
+                    MessageLevel p_l,const std::string& p_who,const std::string& p_what);
+
   /*!
    * Sends a message both to Camera and to PVSS.
    * Sends to Camera all the information that has been added via Append functions since the last SendAndClear.
@@ -95,7 +112,25 @@ public:
    */
    int SendAndClear(MessageLevel c_l,const std::string& c_who,const std::string& c_what, 
                     MessageLevel p_l,const std::string& p_who,const std::string& p_what, 
-                    int messagePeriod = 0);
+                    int messagePeriod);
+
+  /*!
+   * Sends a message both to Camera and to PVSS. It additionally sends to Camera a time stamp.
+   * Sends to Camera all the information that has been added via Append functions since the last SendAndClear.
+   * The first three parameters refer to Camera, the last three refer to PVSS
+   * \param  c_l Message level. 1,2,3 represent info, warning, error messages respectively. 
+   * \param  c_who Used to identify the sender of the message. Typically set to the name of the
+   *           submitting algorithm.
+   * \param  c_what One line message summary to send, briefly describing reason for the message.
+   * \param  p_l Message level. 4,5 represent warning_PVSS and error_PVSS messages respectively. 
+   *           The message is sent to PVSS regardless m_SendMessagesToPVSS.
+   * \param  p_who Used to identify the sender of the message. Typically set to the name of the
+   *           submitting algorithm.
+   * \param  p_what One line message summary to send, briefly describing reason for the message.
+   * \return int Returns 1.
+   */
+  int SendAndClearTS(MessageLevel c_l,const std::string& c_who,const std::string& c_what, 
+                     MessageLevel p_l,const std::string& p_who,const std::string& p_what);
 
   /*!
    * Sends a message both to Camera and to PVSS. It additionally sends to Camera a time stamp.
@@ -115,7 +150,21 @@ public:
    */
   int SendAndClearTS(MessageLevel c_l,const std::string& c_who,const std::string& c_what, 
                      MessageLevel p_l,const std::string& p_who,const std::string& p_what, 
-                     int messagePeriod = 0);
+                     int messagePeriod);
+
+  /*!
+   * Sends all the information that has been added via Append functions since the last SendAndClear.
+   * \param  o_l Message level. 1,2,3,4,5 represent info, warning, error, warning_PVSS and error_PVSS
+   *         messages respectively. The message is always sent at least to Camera. If l = 2 or 3 
+   *         the message is sent to PVSS only if m_SendMessagesToPVSS == true. If l = 4 or 5 
+   *         the message is sent to PVSS.
+   * \param  o_who Used to identify the sender of the message. Typically set to the name of the
+   *           submitting algorithm.
+   * \param  o_what One line message summary to send, briefly describing reason for the message.
+   * \return int Returns 1.
+   */
+  int SendAndClear(MessageLevel o_l,const std::string& o_who,const std::string& o_what);
+
   /*!
    * Sends all the information that has been added via Append functions since the last SendAndClear.
    * \param  o_l Message level. 1,2,3,4,5 represent info, warning, error, warning_PVSS and error_PVSS
@@ -129,8 +178,22 @@ public:
    * \return int Returns 1.
    */
   int SendAndClear(MessageLevel o_l,const std::string& o_who,const std::string& o_what, 
-                   int messagePeriod = 0);
-  
+                   int messagePeriod);
+ 
+  /*!
+   * Wrapper for the SendAndClear function, it additionally sends a time stamp with the message.
+   *
+   * \param  l Message level. 1,2,3,4,5 represent info, warning, error, warning_PVSS and error_PVSS
+   *         messages respectively. The message is always sent at least to Camera. If l = 2 or 3 
+   *         the message is sent to PVSS only if  m_SendMessagesToPVSS == true. If l = 4 or 5 
+   *         the message is sent to PVSS.
+   * \param  who Used to identify the sender of the message. Typically set to the name of the
+   *           submitting algorithm.
+   * \param  what One line message summary to send, briefly describing reason for the message.
+   * \return int Returns 1.
+   */
+  int SendAndClearTS(MessageLevel l,const std::string& who,const std::string& what);
+ 
   /*!
    * Wrapper for the SendAndClear function, it additionally sends a time stamp with the message.
    *
@@ -145,7 +208,7 @@ public:
    * \return int Returns 1.
    */
   int SendAndClearTS(MessageLevel l,const std::string& who,const std::string& what, 
-                     int messagePeriod = 0);
+                     int messagePeriod);
 
   /*!
    * Adds a ROOT 2D histogram of doubles to be sent by CAMERA.

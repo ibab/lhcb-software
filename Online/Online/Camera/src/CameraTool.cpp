@@ -1,4 +1,4 @@
-// $Id: CameraTool.cpp,v 1.14 2010-03-03 08:42:47 nmangiaf Exp $
+// $Id: CameraTool.cpp,v 1.15 2010-03-24 17:08:10 nmangiaf Exp $
 // Include files
 
 // local
@@ -442,6 +442,11 @@ bool CameraTool::MessageRateCheck(MessageLevel l, std::string who, std::string w
 
 //=============================================================================
 int CameraTool::SendAndClear(MessageLevel c_l,const std::string& c_who,const std::string& c_what, 
+                             MessageLevel p_l,const std::string& p_who,const std::string& p_what){
+  return SendAndClear(c_l, c_who, c_what, p_l, p_who, p_what,0);
+}
+
+int CameraTool::SendAndClear(MessageLevel c_l,const std::string& c_who,const std::string& c_what, 
                              MessageLevel p_l,const std::string& p_who,const std::string& p_what,
                              int messagePeriod){
 
@@ -455,6 +460,12 @@ int CameraTool::SendAndClear(MessageLevel c_l,const std::string& c_who,const std
 
 //=============================================================================
 int CameraTool::SendAndClearTS(MessageLevel c_l,const std::string& c_who,const std::string& c_what, 
+                             MessageLevel p_l,const std::string& p_who,const std::string& p_what){
+  return SendAndClearTS(c_l, c_who, c_what, p_l, p_who, p_what,0);
+}
+
+
+int CameraTool::SendAndClearTS(MessageLevel c_l,const std::string& c_who,const std::string& c_what, 
                                MessageLevel p_l,const std::string& p_who,const std::string& p_what,
                                int messagePeriod){
   
@@ -467,6 +478,11 @@ int CameraTool::SendAndClearTS(MessageLevel c_l,const std::string& c_who,const s
 }
 
 //=============================================================================
+int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std::string& o_what)
+{
+  return SendAndClear(o_l, o_who, o_what, 0);
+}
+
 
 int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std::string& o_what, 
                              int messagePeriod)
@@ -488,7 +504,7 @@ int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std
   int SizewiseMessagePeriod = (int) ( (( m_out.entries() + m_lastHistoNum * m_HistoToEntries)  * 5) / m_MaxTextEntries);
   if ( SizewiseMessagePeriod > messagePeriod ){
     std::ostringstream attachMsg;
-    attachMsg << "CAMERA INFORMATION: the message period has been downscaled from " 
+    attachMsg << "CAMERA INFORMATION: the message period has been scaled from " 
               << messagePeriod <<" to "<<SizewiseMessagePeriod
               << " seconds, since the message size is too large.";
     Append("TEXT",attachMsg.str().c_str());
@@ -588,6 +604,11 @@ int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std
   return 1;
 }
 
+//=============================================================================
+int CameraTool::SendAndClearTS(MessageLevel l,const std::string& who,const std::string& what)
+{
+  return  SendAndClearTS(l,who,what,0);
+}
 
 int CameraTool::SendAndClearTS(MessageLevel l,const std::string& who,const std::string& what, 
                                int messagePeriod)
