@@ -351,6 +351,7 @@ public:
   std::string global_timePoint;
   std::string global_pastDuration;
   std::string global_stepSize;
+  bool global_historyByRun;
 
   std::vector<DbRootHist*>  dbHistosOnPage;
   //    std::vector<DbRootHist*>::iterator  dbHistosOnPageIt;

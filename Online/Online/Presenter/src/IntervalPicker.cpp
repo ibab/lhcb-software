@@ -19,7 +19,8 @@ IntervalPicker::IntervalPicker(PresenterMainFrame* mainFrame) :
   TGTransientFrame(gClient->GetRoot(), mainFrame),
   m_mainFrame(mainFrame),
   m_archive(mainFrame->archive()),
-  m_verbosity(mainFrame->verbosity())
+  m_verbosity(mainFrame->verbosity()),
+  m_startRun(0), m_endRun(0)
 {
   Connect("CloseWindow()", "IntervalPicker", this, "DontCallClose()");
   SetCleanup(kDeepCleanup);
@@ -370,8 +371,9 @@ void IntervalPicker::build()
   fGroupFrame911->MoveResize(2, 249, 384, 62);
 
   // container of "Tab2"  
-  m_runFillTabCompositeFrame = m_mainTab->AddTab("Run/Fill");
-//  m_mainTab->SetEnabled(1, false);
+  //m_runFillTabCompositeFrame = m_mainTab->AddTab("Run/Fill");
+  m_runFillTabCompositeFrame = m_mainTab->AddTab("Run");
+  //  m_mainTab->SetEnabled(1, false);
   m_runFillTabCompositeFrame->SetLayoutManager(new TGVerticalLayout(m_runFillTabCompositeFrame));
   m_runFillTabCompositeFrame->SetLayoutBroken(kTRUE);
 
@@ -379,92 +381,93 @@ void IntervalPicker::build()
                                                            267, 98,
                                                            kVerticalFrame);
 
-  TGHorizontalFrame *fHorizontalFrame767 = new TGHorizontalFrame(fVerticalFrame766,
-                                                                 157, 30,
-                                                                 kHorizontalFrame);
-  m_lastRunRadioButton = new TGRadioButton(fHorizontalFrame767, "Last");
-  fHorizontalFrame767->AddFrame(m_lastRunRadioButton,
-                                new TGLayoutHints(kLHintsLeft |
-                                                  kLHintsCenterY,
-                                                  2, 2, 2, 2));
-  m_lastRunRadioButton->Connect("Toggled(Bool_t)", "IntervalPicker",
-                        this, "lastRunRadioButtonToggled(Bool_t)");
+  // TGHorizontalFrame *fHorizontalFrame767 = new TGHorizontalFrame(fVerticalFrame766,
+//                                                                  157, 30,
+//                                                                  kHorizontalFrame);
+//   m_lastRunRadioButton = new TGRadioButton(fHorizontalFrame767, "Last");
+//   fHorizontalFrame767->AddFrame(m_lastRunRadioButton,
+//                                 new TGLayoutHints(kLHintsLeft |
+//                                                   kLHintsCenterY,
+//                                                   2, 2, 2, 2));
+//   m_lastRunRadioButton->Connect("Toggled(Bool_t)", "IntervalPicker",
+//                         this, "lastRunRadioButtonToggled(Bool_t)");
 
-  TGHorizontalFrame *fHorizontalFrame769 = new TGHorizontalFrame(fHorizontalFrame767,
-                                                                 104, 26,
-                                                                 kHorizontalFrame);
-  m_lastRunNumberEntry = new TGNumberEntry(fHorizontalFrame769,
-                                                     1,6,-1,
-                                                     TGNumberFormat::kNESInteger,
-                                                     TGNumberFormat::kNEAPositive);
-  fHorizontalFrame769->AddFrame(m_lastRunNumberEntry,
-                                new TGLayoutHints(kLHintsLeft |
-                                                  kLHintsBottom,
-                                                  2, 2, 2, 2));
-  m_lastRunLabel = new TGLabel(fHorizontalFrame769, "run(s)");
-  m_lastRunLabel->SetTextJustify(36);
-  fHorizontalFrame769->AddFrame(m_lastRunLabel,
-                                new TGLayoutHints(kLHintsLeft |
-                                                  kLHintsTop |
-                                                  kLHintsCenterY,
-                                                  2, 2, 2, 2));
+//   TGHorizontalFrame *fHorizontalFrame769 = new TGHorizontalFrame(fHorizontalFrame767,
+//                                                                  104, 26,
+//                                                                  kHorizontalFrame);
+//   m_lastRunNumberEntry = new TGNumberEntry(fHorizontalFrame769,
+//                                                      1,6,-1,
+//                                                      TGNumberFormat::kNESInteger,
+//                                                      TGNumberFormat::kNEAPositive);
+//   fHorizontalFrame769->AddFrame(m_lastRunNumberEntry,
+//                                 new TGLayoutHints(kLHintsLeft |
+//                                                   kLHintsBottom,
+//                                                   2, 2, 2, 2));
+//   m_lastRunLabel = new TGLabel(fHorizontalFrame769, "run(s)");
+//   m_lastRunLabel->SetTextJustify(36);
+//   fHorizontalFrame769->AddFrame(m_lastRunLabel,
+//                                 new TGLayoutHints(kLHintsLeft |
+//                                                   kLHintsTop |
+//                                                   kLHintsCenterY,
+//                                                   2, 2, 2, 2));
 
-  fHorizontalFrame767->AddFrame(fHorizontalFrame769,
-                                new TGLayoutHints(kLHintsLeft |
-                                                  kLHintsCenterX |
-                                                  kLHintsBottom,
-                                                  2, 2, 2, 2));
+//   fHorizontalFrame767->AddFrame(fHorizontalFrame769,
+//                                 new TGLayoutHints(kLHintsLeft |
+//                                                   kLHintsCenterX |
+//                                                   kLHintsBottom,
+//                                                   2, 2, 2, 2));
 
-  fVerticalFrame766->AddFrame(fHorizontalFrame767,
-                              new TGLayoutHints(kLHintsLeft |
-                                                kLHintsTop,
-                                                2, 2, 2, 2));
+//   fVerticalFrame766->AddFrame(fHorizontalFrame767,
+//                               new TGLayoutHints(kLHintsLeft |
+//                                                 kLHintsTop,
+//                                                 2, 2, 2, 2));
 
-  TGHorizontalFrame *fHorizontalFrame775 = new TGHorizontalFrame(fVerticalFrame766,
-                                                                 151, 30,
-                                                                 kHorizontalFrame);
-  m_lastFillRadioButton = new TGRadioButton(fHorizontalFrame775, "Last");
-  fHorizontalFrame775->AddFrame(m_lastFillRadioButton,
-                                new TGLayoutHints(kLHintsLeft |
-                                                  kLHintsCenterY,
-                                                  2, 2, 2, 2));
-  m_lastFillRadioButton->Connect("Toggled(Bool_t)", "IntervalPicker",
-                        this, "lastFillRadioButtonToggled(Bool_t)");
+  // TGHorizontalFrame *fHorizontalFrame775 = new TGHorizontalFrame(fVerticalFrame766,
+//                                                                  151, 30,
+//                                                                  kHorizontalFrame);
+//   m_lastFillRadioButton = new TGRadioButton(fHorizontalFrame775, "Last");
+//   fHorizontalFrame775->AddFrame(m_lastFillRadioButton,
+//                                 new TGLayoutHints(kLHintsLeft |
+//                                                   kLHintsCenterY,
+//                                                   2, 2, 2, 2));
+//   m_lastFillRadioButton->Connect("Toggled(Bool_t)", "IntervalPicker",
+//                         this, "lastFillRadioButtonToggled(Bool_t)");
 
-  TGHorizontalFrame *fHorizontalFrame777 = new TGHorizontalFrame(fHorizontalFrame775,
-                                                                 98, 26,
-                                                                 kHorizontalFrame);
-  m_lastFillNumberEntry = new TGNumberEntry(fHorizontalFrame777,
-                                             1,6,-1,
-                                             TGNumberFormat::kNESInteger,
-                                             TGNumberFormat::kNEAPositive);
-  fHorizontalFrame777->AddFrame(m_lastFillNumberEntry,
-                                new TGLayoutHints(kLHintsLeft |
-                                                  kLHintsBottom,
-                                                  2, 2, 2, 2));
-  m_lastFillLabel = new TGLabel(fHorizontalFrame777, "fill(s)");
-  m_lastFillLabel->SetTextJustify(36);
-  fHorizontalFrame777->AddFrame(m_lastFillLabel, new TGLayoutHints(kLHintsLeft |
-                                                             kLHintsTop |
-                                                             kLHintsCenterY,
-                                                             2, 2, 2, 2));
+//   TGHorizontalFrame *fHorizontalFrame777 = new TGHorizontalFrame(fHorizontalFrame775,
+//                                                                  98, 26,
+//                                                                  kHorizontalFrame);
+//   m_lastFillNumberEntry = new TGNumberEntry(fHorizontalFrame777,
+//                                              1,6,-1,
+//                                              TGNumberFormat::kNESInteger,
+//                                              TGNumberFormat::kNEAPositive);
+//   fHorizontalFrame777->AddFrame(m_lastFillNumberEntry,
+//                                 new TGLayoutHints(kLHintsLeft |
+//                                                   kLHintsBottom,
+//                                                   2, 2, 2, 2));
+//   m_lastFillLabel = new TGLabel(fHorizontalFrame777, "fill(s)");
+//   m_lastFillLabel->SetTextJustify(36);
+//   fHorizontalFrame777->AddFrame(m_lastFillLabel, new TGLayoutHints(kLHintsLeft |
+//                                                              kLHintsTop |
+//                                                              kLHintsCenterY,
+//                                                              2, 2, 2, 2));
 
-  fHorizontalFrame775->AddFrame(fHorizontalFrame777,
-                                new TGLayoutHints(kLHintsLeft |
-                                                  kLHintsCenterX |
-                                                  kLHintsBottom,
-                                                  2, 2, 2, 2));
+//   fHorizontalFrame775->AddFrame(fHorizontalFrame777,
+//                                 new TGLayoutHints(kLHintsLeft |
+//                                                   kLHintsCenterX |
+//                                                   kLHintsBottom,
+//                                                   2, 2, 2, 2));
 
-  fVerticalFrame766->AddFrame(fHorizontalFrame775,
-                              new TGLayoutHints(kLHintsLeft | 
-                                                kLHintsTop,
-                                                2, 2, 2, 2));
+//   fVerticalFrame766->AddFrame(fHorizontalFrame775,
+//                               new TGLayoutHints(kLHintsLeft | 
+//                                                 kLHintsTop,
+//                                                 2, 2, 2, 2));
 
   TGHorizontalFrame *fHorizontalFrame783 = new TGHorizontalFrame(fVerticalFrame766,
                                                                  263, 26,
                                                                  kHorizontalFrame);
   m_runFillIntervalRadioButton = new TGRadioButton(fHorizontalFrame783,
                                                    "From");
+  m_runFillIntervalRadioButton->SetState(kButtonDown);    
   m_runFillIntervalRadioButton->Connect("Toggled(Bool_t)", "IntervalPicker",
                           this, "runFillIntervalRadioButtonToggled(Bool_t)");                                                   
   fHorizontalFrame783->AddFrame(m_runFillIntervalRadioButton,
@@ -523,55 +526,55 @@ void IntervalPicker::build()
   fVerticalFrame766->MoveResize(2, 2, 267, 98);
 
   // "Set navigation step size" group frame
-  TGGroupFrame *fGroupFrame1084 = new TGGroupFrame(m_runFillTabCompositeFrame,
-                                                   "Set navigation step size");
+  // TGGroupFrame *fGroupFrame1084 = new TGGroupFrame(m_runFillTabCompositeFrame,
+//                                                    "Set navigation step size");
 
-  TGHorizontalFrame *fHorizontalFrame1444 = new TGHorizontalFrame(fGroupFrame1084,
-                                                                  152, 26,
-                                                                  kHorizontalFrame);
-  m_runFillStepSizeNumberEntry = new TGNumberEntry(fHorizontalFrame1444,
-                                                  1, 9, -1,
-                                                  TGNumberFormat::kNESInteger,
-                                                  TGNumberFormat::kNEAPositive);
-  fHorizontalFrame1444->AddFrame(m_runFillStepSizeNumberEntry,
-                                 new TGLayoutHints(kLHintsLeft |
-                                                   kLHintsCenterX |
-                                                   kLHintsTop |
-                                                   kLHintsCenterY,
-                                                   2, 2, 2, 2));
+//   TGHorizontalFrame *fHorizontalFrame1444 = new TGHorizontalFrame(fGroupFrame1084,
+//                                                                   152, 26,
+//                                                                   kHorizontalFrame);
+//   m_runFillStepSizeNumberEntry = new TGNumberEntry(fHorizontalFrame1444,
+//                                                   1, 9, -1,
+//                                                   TGNumberFormat::kNESInteger,
+//                                                   TGNumberFormat::kNEAPositive);
+//   fHorizontalFrame1444->AddFrame(m_runFillStepSizeNumberEntry,
+//                                  new TGLayoutHints(kLHintsLeft |
+//                                                    kLHintsCenterX |
+//                                                    kLHintsTop |
+//                                                    kLHintsCenterY,
+//                                                    2, 2, 2, 2));
 
-  // combo box
-  m_runFillStepSizeComboBox = new TGComboBox(fHorizontalFrame1444, -1,
-                                             kHorizontalFrame |
-                                             kSunkenFrame |
-                                             kDoubleBorder |
-                                             kOwnBackground);
-  m_runFillStepSizeComboBox->AddEntry("run(s)", 1);
-//  fComboBox1449->AddEntry("fill(s)", 2);
-  m_runFillStepSizeComboBox->Resize(64, 22);
-  m_runFillStepSizeComboBox->Select(1);
-  m_runFillStepSizeComboBox->SetEnabled(false);
-  fHorizontalFrame1444->AddFrame(m_runFillStepSizeComboBox,
-                                 new TGLayoutHints(kLHintsLeft |
-                                                   kLHintsCenterX |
-                                                   kLHintsTop |
-                                                   kLHintsCenterY,
-                                                   2, 2, 2, 2));
+//   // combo box
+//   m_runFillStepSizeComboBox = new TGComboBox(fHorizontalFrame1444, -1,
+//                                              kHorizontalFrame |
+//                                              kSunkenFrame |
+//                                              kDoubleBorder |
+//                                              kOwnBackground);
+//   m_runFillStepSizeComboBox->AddEntry("run(s)", 1);
+// //  fComboBox1449->AddEntry("fill(s)", 2);
+//   m_runFillStepSizeComboBox->Resize(64, 22);
+//   m_runFillStepSizeComboBox->Select(1);
+//   m_runFillStepSizeComboBox->SetEnabled(false);
+//   fHorizontalFrame1444->AddFrame(m_runFillStepSizeComboBox,
+//                                  new TGLayoutHints(kLHintsLeft |
+//                                                    kLHintsCenterX |
+//                                                    kLHintsTop |
+//                                                    kLHintsCenterY,
+//                                                    2, 2, 2, 2));
 
-  fGroupFrame1084->AddFrame(fHorizontalFrame1444,
-                            new TGLayoutHints(kLHintsLeft |
-                                              kLHintsCenterX |
-                                              kLHintsCenterY |
-                                              kLHintsBottom,
-                                              2, 2, 2, 2));
+//   fGroupFrame1084->AddFrame(fHorizontalFrame1444,
+//                             new TGLayoutHints(kLHintsLeft |
+//                                               kLHintsCenterX |
+//                                               kLHintsCenterY |
+//                                               kLHintsBottom,
+//                                               2, 2, 2, 2));
 
-  fGroupFrame1084->SetLayoutManager(new TGVerticalLayout(fGroupFrame1084));
-  fGroupFrame1084->Resize(384, 62);
-  m_runFillTabCompositeFrame->AddFrame(fGroupFrame1084,
-                               new TGLayoutHints(kLHintsLeft |
-                                                 kLHintsBottom |
-                                                 kLHintsExpandX,2, 2, 2, 2));
-  fGroupFrame1084->MoveResize(2, 249, 384, 62);
+//   fGroupFrame1084->SetLayoutManager(new TGVerticalLayout(fGroupFrame1084));
+//   fGroupFrame1084->Resize(384, 62);
+//   m_runFillTabCompositeFrame->AddFrame(fGroupFrame1084,
+//                                new TGLayoutHints(kLHintsLeft |
+//                                                  kLHintsBottom |
+//                                                  kLHintsExpandX,2, 2, 2, 2));
+//   fGroupFrame1084->MoveResize(2, 249, 384, 62);
 
 //  fTab660->SetTab(1);
 
@@ -650,10 +653,10 @@ void IntervalPicker::timeIntervalRadioButtonToggled(bool on)
 void IntervalPicker::lastRunRadioButtonToggled(bool on)
 {
   if (on) {
-    m_lastFillRadioButton->SetDown(true);
-    m_lastFillRadioButton->SetOn(false);
-    m_lastFillLabel->Disable(true);
-    m_lastFillNumberEntry->SetState(false);
+    // m_lastFillRadioButton->SetDown(true);
+//     m_lastFillRadioButton->SetOn(false);
+//     m_lastFillLabel->Disable(true);
+//     m_lastFillNumberEntry->SetState(false);
     
     m_runFillIntervalRadioButton->SetDown(true);
     m_runFillIntervalRadioButton->SetOn(false);
@@ -662,10 +665,10 @@ void IntervalPicker::lastRunRadioButtonToggled(bool on)
     m_runFillIntervalToNumberEntry->SetState(false);
     m_runFillIntervalComboBox->SetEnabled(false);
     
-    m_lastRunRadioButton->SetDown(false);
-    m_lastRunRadioButton->SetOn(true);
-    m_lastRunLabel->Disable(false);
-    m_lastRunNumberEntry->SetState(false);
+    //m_lastRunRadioButton->SetDown(false);
+    //m_lastRunRadioButton->SetOn(true);
+    //m_lastRunLabel->Disable(false);
+    //m_lastRunNumberEntry->SetState(false);
   }
 }
 void IntervalPicker::lastFillRadioButtonToggled(bool on)
@@ -677,21 +680,21 @@ void IntervalPicker::lastFillRadioButtonToggled(bool on)
 void IntervalPicker::runFillIntervalRadioButtonToggled(bool on)
 {
   if (on) {
-    m_lastRunRadioButton->SetDown(true);
-    m_lastRunRadioButton->SetOn(false);
-    m_lastRunLabel->Disable(true);
-    m_lastRunNumberEntry->SetState(false);
+    //m_lastRunRadioButton->SetDown(true);
+    //m_lastRunRadioButton->SetOn(false);
+    //m_lastRunLabel->Disable(true);
+    //m_lastRunNumberEntry->SetState(false);
     
-    m_lastFillRadioButton->SetDown(true);
-    m_lastFillRadioButton->SetOn(false);
-    m_lastFillLabel->Disable(true);
-    m_lastFillNumberEntry->SetState(false);
+    // m_lastFillRadioButton->SetDown(true);
+//     m_lastFillRadioButton->SetOn(false);
+//     m_lastFillLabel->Disable(true);
+//     m_lastFillNumberEntry->SetState(false);
     
     m_runFillIntervalRadioButton->SetDown(false);
     m_runFillIntervalRadioButton->SetOn(true);
-    m_runFillIntervalToLabel->Disable(true);
+    m_runFillIntervalToLabel->Disable(false);
     m_runFillIntervalFromNumberEntry->SetState(true);
-    m_runFillIntervalToNumberEntry->SetState(false);
+    m_runFillIntervalToNumberEntry->SetState(true);
     m_runFillIntervalComboBox->SetEnabled(true);
   }
 }
@@ -713,7 +716,7 @@ void IntervalPicker::ok()
   
   if (0 == m_mainTab->GetCurrent()) {
     m_mainFrame->setHistoryMode(s_timeInterval);
-        
+    m_mainFrame->global_historyByRun = false;
     Int_t year, month, day, hour, min, sec;
     
     if (m_lastMinutesRadioButton->IsDown()) {
@@ -762,8 +765,17 @@ void IntervalPicker::ok()
     m_mainFrame->loadSelectedPageFromDB(m_mainFrame->global_timePoint,
                                         m_mainFrame->global_pastDuration);
   } else if (1 == m_mainTab->GetCurrent()) {
-//    std::cout << "run/fill" << std::endl;
-//  m_mainFrame->setHistoryMode(s_runInterval);
+    if (m_runFillIntervalRadioButton->IsDown()) {
+      m_mainFrame->global_historyByRun = true;
+      m_endRun = m_runFillIntervalToNumberEntry->GetIntNumber();
+      std::stringstream endRun;
+      endRun << m_endRun;
+      m_mainFrame->global_timePoint = endRun.str();
+      m_startRun = m_runFillIntervalFromNumberEntry->GetIntNumber();
+      std::stringstream runDuration;
+      runDuration << (m_endRun - m_startRun);
+      m_mainFrame->global_pastDuration = runDuration.str();
+    }
   }
 }
 

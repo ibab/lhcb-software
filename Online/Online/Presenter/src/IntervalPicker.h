@@ -36,6 +36,10 @@ public:
   const char* startTimeString();
   const char* endTimeString();
 
+  int startRun() {return m_startRun;}
+  int endRun() {return m_endRun;}
+
+
 private:
   PresenterMainFrame* m_mainFrame;
   Archive*  m_archive;
@@ -81,6 +85,8 @@ private:
   TGComboBox*         m_runFillStepSizeComboBox;
   TGNumberEntry*      m_runFillStepSizeNumberEntry;
   TGCompositeFrame*   m_runFillTabCompositeFrame;
+  int m_startRun;
+  int m_endRun;
 
 ClassDef(IntervalPicker, 0) 
 };

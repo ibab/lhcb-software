@@ -102,6 +102,7 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   global_timePoint("20081126T160921"),
   global_pastDuration("00:05:00"),
   global_stepSize("00:15:00"),
+  global_historyByRun(false),
   m_initWidth(width),
   m_initHeight(height),
   m_verbosity(Silent),
@@ -4258,12 +4259,20 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
         m_message = m_savesetFileName;
       } else {
         rw_timePoint = global_timePoint;
-        rw_pastDuration = global_pastDuration;        
-        m_message = Form("History from %s to %s",
-                         m_intervalPicker->startTimeString(),
-                         m_intervalPicker->endTimeString());
+        rw_pastDuration = global_pastDuration;  
+        if (global_historyByRun) {
+          m_message = Form("History from run %d to %d",
+                           m_intervalPicker->startRun(),
+                           m_intervalPicker->endRun());
+        }
+        else {
+          m_message = Form("History from %s to %s",
+                           m_intervalPicker->startTimeString(),
+                           m_intervalPicker->endTimeString());
+        }
       }
       if (m_verbosity >= Verbose) {
+        std::cout << m_message << std::endl;
         std::cout << "Navigation step size " << global_stepSize << std::endl;
       }
       m_mainStatusBar->SetText(m_message.c_str(), 2);

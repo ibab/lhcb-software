@@ -142,7 +142,8 @@ namespace pres
   static const std::string s_setSwitch("_$");
   static const std::string s_underscore("_");
   static const std::string s_slash("/"); // also for DB folders...
-  
+  static const std::string s_byRunDir("ByRun");  
+
 // Move to OMAMessage:
   static const std::string s_ALARM("ALARM");
   static const std::string s_WARNING("WARNING");

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include <algorithm>
 
 #include "Archive.h"
@@ -21,6 +22,19 @@ using namespace std;
 using namespace boost::filesystem;
 using namespace boost::posix_time;
 using namespace boost::gregorian;
+
+namespace ArchiveSpace {
+  bool datecomp(path pfirst, path psecond) {
+    TObjArray* fileDateMatchGroup = 0;
+    fileDateMatchGroup = s_fileDateRegexp.MatchS(pfirst.leaf());
+    ptime firstTime = from_iso_string((((TObjString *)fileDateMatchGroup->At(3))->GetString()).Data());
+    fileDateMatchGroup = s_fileDateRegexp.MatchS(psecond.leaf());
+    ptime secondTime = from_iso_string((((TObjString *)fileDateMatchGroup->At(3))->GetString()).Data());
+    return (firstTime < secondTime);
+  }
+  const int maxRunInterval = 1000;
+};
+
 
 Archive::Archive(PresenterMainFrame* gui,
                  const std::string & savesetPath,
@@ -92,7 +106,14 @@ void Archive::fillHistogram(DbRootHist* histogram,
     histogram->beRegularHisto();
     std::vector<path> foundRootFiles;
     std::vector<path> goodRootFiles;
-    if (s_startupFile == timePoint) {
+
+    if(m_mainFrame->global_historyByRun) {
+      // timePoint and duration are run numbers
+      foundRootFiles = findSavesetsByRun(histogram->taskName(),
+                                         timePoint,
+                                         pastDuration);
+    }
+    else if (s_startupFile == timePoint) {
       singleSaveset = true;
       path filePath(pastDuration);
       if (s_rootFileExtension == extension(filePath) ) {
@@ -109,6 +130,12 @@ void Archive::fillHistogram(DbRootHist* histogram,
                                     pastDuration);
     } 
     if (!foundRootFiles.empty()) {
+      if(m_mainFrame->global_historyByRun) {
+        sort (foundRootFiles.begin(), foundRootFiles.end());
+      }
+      else {
+        sort (foundRootFiles.begin(), foundRootFiles.end(), ArchiveSpace::datecomp);
+      }
       if (m_verbosity >= Verbose) {
         std::cout << "Merging " << foundRootFiles.size() <<
                      " file(s)" << std::endl;
@@ -157,8 +184,8 @@ void Archive::fillHistogram(DbRootHist* histogram,
                                list->GetSize(), 0.5,  list->GetSize() +0.5);
           newh->Sumw2();
           for (int i=0 ; i<list->GetSize(); i++) {
-            newh->SetBinContent(list->GetSize()-i, ((TH1*)list->At(i))->GetMean() );
-            newh->SetBinError(list->GetSize()-i, ((TH1*)list->At(i))->GetMeanError() );
+            newh->SetBinContent(i+1, ((TH1*)list->At(i))->GetMean() );
+            newh->SetBinError(i+1, ((TH1*)list->At(i))->GetMeanError() );
           }
           setHistoryLabels(newh, goodRootFiles);
           delete (histogram->rootHistogram);
@@ -493,6 +520,80 @@ std::vector<path> Archive::findSavesets(const std::string & taskname,
   return foundRootFiles;
 }
 
+
+std::vector<path> Archive::findSavesetsByRun(const std::string & taskname,
+                                             const std::string & string_endRun,
+                                             const std::string & string_runDuration)
+{
+  std::vector<path> foundRootFiles;  
+  std::istringstream iendRun(string_endRun);
+  std::istringstream irunDuration(string_runDuration);
+  int startRun,endRun;
+  std::string partition(m_mainFrame->currentPartition());
+
+  iendRun >> endRun;
+  irunDuration >> startRun; startRun=endRun-startRun;
+  if (endRun < startRun) {
+    if (m_verbosity >= Silent) {
+      std::cout << "Invalid run interval "<<startRun << " - "<<endRun
+                << "  converted to "<<endRun << " - "<<endRun<< std::endl;
+    }
+    startRun = endRun;
+  }
+  if ((endRun - startRun) > ArchiveSpace::maxRunInterval) {
+    if (m_verbosity >= Silent) {
+      std::cout << "Too large interval "<<startRun << " - "<<endRun
+                << "  converted to "<<endRun-ArchiveSpace::maxRunInterval 
+                << " - "<<endRun<< std::endl;
+    }
+    startRun = endRun-ArchiveSpace::maxRunInterval;
+  }
+  
+  if (m_verbosity >= Verbose) {
+    std::cout << "Archive::findSavesetsByRun: task " << taskname
+              << " startRun " << startRun
+              << " endRun " << endRun << std::endl;
+  }
+
+  std::string aggrSvsPath = m_savesetPath.string() + s_slash + s_byRunDir + s_slash + taskname;
+  
+
+  int th = startRun / 1000 * 1000;
+  
+  while (th < endRun) {
+    int dth = th / 10000 * 10000;
+    std::stringstream  dirLocation;
+    dirLocation << aggrSvsPath << s_slash << dth << s_slash << th;
+    path runPath(dirLocation.str());
+    directory_iterator end_itr;
+    if (m_verbosity >= Verbose) {
+      cout << "inspecting folder: " << dirLocation.str() << endl;
+    }
+    if (exists(runPath)) {
+      for (directory_iterator itr(runPath); itr != end_itr; ++itr) {
+        if (is_regular(itr->path()) &&
+            s_rootFileExtension == extension(itr->path()) ) {
+          TObjArray* fileRunMatchGroup = 0;
+          fileRunMatchGroup = s_fileRunRegexp.MatchS((itr->path()).leaf());
+          if (fileRunMatchGroup->GetSize() > 2) {
+            std::istringstream icurRun((((TObjString *)(fileRunMatchGroup->At(2)))->GetString()).Data());
+            int curRun;
+            icurRun >> curRun;
+            if (curRun >=  startRun && curRun <= endRun) {
+              foundRootFiles.push_back(itr->path());
+              if (m_verbosity >= Verbose) {
+                cout << "using file: " << (itr->path()).leaf() << endl;
+              }
+            }
+          }
+        }
+      }
+    } // end loop on directory containing up to 1000 runs, step by 1000 runs
+    th += 1000;
+  }
+  return foundRootFiles;
+}
+
 void Archive::saveAsReferenceHistogram(DbRootHist* histogram)
 {
   path referenceFilePath(m_referencePath/histogram->taskName());
@@ -554,28 +655,43 @@ void Archive::setHistoryLabels(TH1* h, std::vector<boost::filesystem::path>& roo
     return;
   }
   int bin=0,lastbin=-100;
-  std::string ts("20020131T235959");
-  ptime lastTime(from_iso_string(ts));
-  time_duration maxdelta= hours(1); 
   int maxnbinUnlabeled = n/4;
-  
-  std::vector<path>::const_iterator rootFilesIt = rootFiles.end();
-  while ( rootFilesIt > rootFiles.begin() ) {
-    rootFilesIt--;
-    bin++;
-    TObjArray* fileDateMatchGroup = 0;
-    fileDateMatchGroup = s_fileDateRegexp.MatchS((*rootFilesIt).leaf());
-    ptime fileTime = from_iso_string((((TObjString *)fileDateMatchGroup->At(3))->GetString()).Data());
-    time_duration delta = (fileTime-lastTime);
-    if ( delta > maxdelta || 
-         (bin-lastbin) > maxnbinUnlabeled ) { // add a label
-      h->GetXaxis()->SetBinLabel(bin, Form("%d/%d %02d:%02d", 
-                                           (int) (fileTime.date().day()),
-                                           (int) (fileTime.date().month()),
-                                           (int) (fileTime.time_of_day().hours()),
-                                           (int) (fileTime.time_of_day().minutes()) ) );
-      lastTime = fileTime;
-      lastbin = bin;
+  if(m_mainFrame->global_historyByRun) {
+    int lastrun=0,run;
+    for (std::vector<path>::const_iterator rootFilesIt = rootFiles.begin(); rootFilesIt != rootFiles.end(); rootFilesIt++ ) {
+      bin++;
+      TObjArray* fileRunMatchGroup = s_fileRunRegexp.MatchS((*rootFilesIt).leaf());
+      std::istringstream irun((((TObjString *)fileRunMatchGroup->At(2))->GetString()).Data());
+      irun >> run;
+      if ( (run-lastrun) > (bin-lastbin) || 
+           (bin-lastbin) > maxnbinUnlabeled ) { // add a label
+        h->GetXaxis()->SetBinLabel(bin, 
+                                   (((TObjString *)fileRunMatchGroup->At(2))->GetString()).Data() );
+        lastrun = run;
+        lastbin = bin;
+      }
+    }
+  }
+  else {
+    std::string ts("20020131T235959");
+    ptime lastTime(from_iso_string(ts));
+    time_duration maxdelta= hours(1); 
+    for (std::vector<path>::const_iterator rootFilesIt = rootFiles.begin(); rootFilesIt != rootFiles.end(); rootFilesIt++ ) {
+      bin++;
+      TObjArray* fileDateMatchGroup = 0;
+      fileDateMatchGroup = s_fileDateRegexp.MatchS((*rootFilesIt).leaf());
+      ptime fileTime = from_iso_string((((TObjString *)fileDateMatchGroup->At(3))->GetString()).Data());
+      time_duration delta = (fileTime-lastTime);
+      if ( delta > maxdelta || 
+           (bin-lastbin) > maxnbinUnlabeled ) { // add a label
+        h->GetXaxis()->SetBinLabel(bin, Form("%d/%d %02d:%02d", 
+                                             (int) (fileTime.date().day()),
+                                             (int) (fileTime.date().month()),
+                                             (int) (fileTime.time_of_day().hours()),
+                                             (int) (fileTime.time_of_day().minutes()) ) );
+        lastTime = fileTime;
+        lastbin = bin;
+      }
     }
   }
 

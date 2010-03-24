@@ -547,6 +547,20 @@ void DbRootHist::initHistogram()
     // cannot get sources from DIM
     if (m_dimBrowser && (m_retryInit > 0)) {
       std::string newName =assembleCurrentDimServiceName();
+
+      // std::string newName("");
+//       int dimQueries=5;
+//       while (newName.empty() && dimQueries>0) {
+//         newName=assembleCurrentDimServiceName();
+//         dimQueries--;
+//         if(newName.empty()) {
+//           gSystem->Sleep(m_waitTime);
+//           if (m_verbosity >= Verbose) {
+//             std::cout << "assembleCurrentDimServiceName() failed for "
+//                       << m_identifier << " on try #"<<5-dimQueries<<std::endl;
+//           }
+//         }
+//       }
       if (m_verbosity >= Verbose) {
         std::cout << "DB DIM field invalid, retrying init using "
                   << newName << std::endl;
@@ -1178,9 +1192,20 @@ void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
       pad->SetLogy(0);
       fopt=.16;
       pad->SetBottomMargin(fopt);
-      rootHistogram->GetXaxis()->SetTitle("time");
-      fopt=1.6;
-      rootHistogram->GetXaxis()->SetTitleOffset(fopt);
+      bool histByRun=false;
+      if(m_presenterApp) {
+        histByRun=m_presenterApp->global_historyByRun;
+      }
+      if (histByRun) {
+        rootHistogram->GetXaxis()->SetTitle("run");
+        fopt=1.2;
+        rootHistogram->GetXaxis()->SetTitleOffset(fopt);
+      }
+      else {
+        rootHistogram->GetXaxis()->SetTitle("time");
+        fopt=1.6;
+        rootHistogram->GetXaxis()->SetTitleOffset(fopt);
+      }
       std::string ylab="Average";
       if (m_onlineHistogram->getDisplayOption("LABEL_X", &sopt)) {
         ylab = ylab + " (" + sopt + ")";
@@ -1693,6 +1718,7 @@ std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
   char *dimService; 
   char *dimFormat;
   int dimType;
+  bool dsnFound=false;
   std::string dimServiceName("");
   std::string dimServiceNameQueryBegining("");
 
@@ -1700,7 +1726,7 @@ std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
       !m_partition.empty()) {
     dimServiceNameQueryBegining = dimServiceType + s_slash +
                                   m_partition +
-                                  s_underscore + s_DimWildcard;
+                                  s_underscore + s_DimWildcard + m_onlineHistogram->rootName();
   } else if (s_CNT == dimServiceType &&
              !m_partition.empty() ) {
     dimServiceNameQueryBegining = m_partition + s_underscore + m_taskName + s_DimWildcard;    
@@ -1729,6 +1755,10 @@ std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
     }
       if (botherDimBrowser) {
         int numberOfServices = m_dimBrowser->getServices(dimServiceNameQueryBegining.c_str());
+        if (m_verbosity >= Verbose) {
+          std::cout << "findDimServiceName quering DimBrowser for " << dimServiceNameQueryBegining << std::endl;
+          std::cout << "    -> found "<<numberOfServices<<" services"<<std::endl;
+        }
         while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) {
           std::string dimServiceCandidate(dimService);
           TString dimServiceTS(dimServiceCandidate);
@@ -1736,21 +1766,29 @@ std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
             HistogramIdentifier histogramCandidate = HistogramIdentifier(dimServiceCandidate);
             if (0 == (histogramCandidate.histogramIdentifier().compare(m_onlineHistogram->identifier()))) {          
               dimServiceName = dimServiceCandidate;              
+              if (m_verbosity >= Verbose) {
+                std::cout << "findDimServiceName found compatible dim service " << dimServiceCandidate  << std::endl;
+              }
+              dsnFound=true;
               break;
-            } else {
-          std::string* deadTaskName = new std::string(taskName); // memleak?
-          m_tasksNotRunning->push_back(deadTaskName);
-          if (m_verbosity >= Verbose) {
-            std::cout << std::endl << "NOT found: " << dimService << std::endl;
-            }
+            } // else {
+//               if (m_verbosity >= Verbose) {
+//                 std::cout << "findDimServiceName found a dead task : " << taskName  << std::endl;
+//                 std::cout << " dead tasks are now : " << m_tasksNotRunning->size()  << std::endl;
+//               }
+//               std::string* deadTaskName = new std::string(taskName); // memleak?
+//               m_tasksNotRunning->push_back(deadTaskName);
+//               if (m_verbosity >= Verbose) {
+//                 std::cout << std::endl << "NOT found: " << dimService << std::endl;
+//               }
+//             }
           }
         }
-      }
-      if (0 == numberOfServices) {
-          std::string* deadTaskName = new std::string(taskName);
-          m_tasksNotRunning->push_back(deadTaskName);
+      if (!dsnFound) {
+        //std::string* deadTaskName = new std::string(taskName);
+        // m_tasksNotRunning->push_back(deadTaskName);
           if (m_verbosity >= Verbose) {
-            std::cout << std::endl << "No partition for: " << dimService << std::endl;
+            std::cout << std::endl << "No compatible dim service found for: " << m_onlineHistogram->identifier() << std::endl;
           }
       }      
     }

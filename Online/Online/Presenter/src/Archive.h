@@ -70,6 +70,9 @@ private:
   std::vector<boost::filesystem::path> findSavesets(const std::string & taskname,
                                                     const std::string & endTimeIsoString,
                                                     const std::string & durationTimeString);
+  std::vector<boost::filesystem::path> findSavesetsByRun(const std::string & taskname,
+                                                         const std::string & endTimeIsoString,
+                                                         const std::string & durationTimeString);
   void setHistoryLabels(TH1* h, 
                         std::vector<boost::filesystem::path>& foundRootFiles);
 
