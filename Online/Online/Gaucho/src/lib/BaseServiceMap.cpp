@@ -22,7 +22,6 @@ BaseServiceMap::BaseServiceMap(ProcessMgr *processMgr):
   m_name("BaseServiceMap"),
   m_processMgr(processMgr)
 {
-
 }
 
 BaseServiceMap::~BaseServiceMap() {

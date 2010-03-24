@@ -18,31 +18,36 @@ DimServiceMonObject::~DimServiceMonObject() {
 
 void DimServiceMonObject::updateService(bool endOfRun) {
   MsgStream msg(msgSvc(), name());
-//  if (endOfRun) msg << MSG::INFO << "setting end of run " << endOfRun << endreq;
-  m_monObject->setEndOfRun(endOfRun);
-  setDataFromMonObject();
+  if (m_monObject !=0) {
+     m_monObject->setEndOfRun(endOfRun);
+     setDataFromMonObject();
+  }
+  else  msg << MSG::WARNING << "Unable to updateService from DimServiceMonObject. " << endreq;     
 }
 
 void DimServiceMonObject::setDataFromMonObject() {
-  std::stringstream os;
-  boost::archive::binary_oarchive oa(os);
-  try {
-    m_monObject->save(oa, m_monObject->version());
-    this->DimService::setData((void*)os.str().data(),os.str().length());
-    this->DimService::updateService();
+  MsgStream msg(msgSvc(), name());
+  if (m_monObject !=0) {
+     std::stringstream os;
+     boost::archive::binary_oarchive oa(os);
+     try {
+       m_monObject->save(oa, m_monObject->version());
+       this->DimService::setData((void*)os.str().data(),os.str().length());
+       this->DimService::updateService();
+     }
+     catch (...) {
+       msg << MSG::WARNING << "Unable to setdata from DimServiceMonObject. " << endreq;
+       try {
+         Misc::printSerializedString(os.str().data(),os.str().size());
+       }
+       catch (const std::exception &ex){
+         msg << MSG::WARNING << "std::exception: " << ex.what() << endreq;
+       }
+       catch (...){
+         msg << MSG::WARNING << "unrecognized exception. "<< endreq;
+      }
+    }
   }
-  catch (...) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::WARNING << "Unable to setdata from DimServiceMonObject. " << endreq;
-    try {
-      Misc::printSerializedString(os.str().data(),os.str().size());
-    }
-    catch (const std::exception &ex){
-      msg << MSG::WARNING << "std::exception: " << ex.what() << endreq;
-    }
-    catch (...){
-      msg << MSG::WARNING << "unrecognized exception. "<< endreq;
-    }
-  }
+  else  msg << MSG::WARNING << "Unable to setdata from DimServiceMonObject. " << endreq;
 }
 
