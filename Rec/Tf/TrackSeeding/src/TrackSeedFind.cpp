@@ -965,7 +965,7 @@ StatusCode TrackSeedFind::findSeeds() {
                      if ((ylocal<ymaxloc) && (ylocal>yminloc)) {
                      
 // found a correct Y-hit 
-                        yhit.setAmbiguity((bool) yambi);
+                        yhit.setAmbiguity(yambi!=0);
                         y1vec.push_back(ylocal);
                         y1zvec.push_back(zlocal);
                         y1error.push_back((fitpars[2]+yhit.error())/sinminstereo); // as error, I add linearly the uncertainty in the x-fit.
