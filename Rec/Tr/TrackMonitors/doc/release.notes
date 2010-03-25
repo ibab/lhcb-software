@@ -4,12 +4,12 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+!========================== TrackMonitors v1r22 2010-03-20 ==================
 ! 2010-03-23 - Wouter Hulsbergen
  - split residuals in overlap regions in left and right in TTTrackMonitor
  - fixed untested statuscodes in TrackITOverlapMonitor and ITTrackMonitor
  - added histograms with 'hit' layers to TrackMonitor
 
-!========================== TrackMonitors v1r22 2010-03-20 ==================
 ! 2010-03-20 - Rob Lambert
  - Wouter also changed TTTrackMonitor.cpp to fill rms residual 
    instead of unbiased residual
