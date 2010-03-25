@@ -68,7 +68,7 @@ This version uses Gaudi v21r8 and LCG_58b
   . Changed default tag for 2009 and 2010 data:
     o head-20100325         for LHCBCOND
   . Changed default tag for 2009 MC:
-    o MC-20100325-vc15mm-md100 for SIMCOND
+    o MC-20100321-vc15mm-md100 for SIMCOND
 
 - In DetCond v12r11
   . Changes to the CondDB configurable:
