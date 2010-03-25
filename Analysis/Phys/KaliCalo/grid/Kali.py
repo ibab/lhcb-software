@@ -2,6 +2,7 @@
 # =============================================================================
 # =============================================================================
 
+import os
 
 print 'Hello!!!'
 
@@ -30,12 +31,14 @@ if '__main__' == __name__ :
     lambdas = Kali.LambdaMap()
     
     histos, lambdas , badfiles = fillDataBase (
-        lambdas                 ,
-        pfns                    , 
-        dbase_name = 'kali_zdb' , 
+        lambdas                   ,
+        pfns                      , 
+        dbase_name = 'kali_db.gz' , 
         Unit = GeV 
         )
 
+    os.system ( " ls -al " )
+    
 
 # =============================================================================
 # The END 
