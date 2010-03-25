@@ -1,4 +1,3 @@
-
 //----------------------------------------------------------------------------
 /** @file DeRichGasRadiator.cpp
  *
@@ -187,6 +186,7 @@ StatusCode DeRichGasRadiator::updateProperties ( )
 //=========================================================================
 //  calcSellmeirRefIndex
 //=========================================================================
+
 StatusCode DeRichGasRadiator::calcSellmeirRefIndex (const std::vector<double>& momVect,
                                                     const TabulatedProperty* tabProp,
                                                     SmartRef<Condition> gasParamCond ) const
@@ -229,31 +229,65 @@ StatusCode DeRichGasRadiator::calcSellmeirRefIndex (const std::vector<double>& m
   const double SellLorGasFac = param<double>("SellmeirLorenzFact");
   const double RhoEffectiveSellDefault = param<double>("RhoEffectiveSellParam");
   const double GasMolWeight   = param<double>("GasMolWeightParam");
+  const bool isC3F8Medium = ( material()->name().find("C3F08") != std::string::npos ) ? true : false;
+
+  
+  double AParam =0.0;
+  double AMultParam=0.0;
+  double EphyZSq =0.0;
+  double MomConvWave=0.0;
+  if(isC3F8Medium ) {
+   AParam = param<double>("C3F8SellMeirAFactor");
+   AMultParam = param<double>("C3F8SellMeirAMultiplicationFactor");
+   MomConvWave = param<double> ("PhotonMomentumWaveLengthConvFact"  );
+   const double aWaveZero= param<double> ("C3F8SellMeirLambdaZeroFactor" );
+
+   
+   if(aWaveZero != 0.0) {
+     EphyZSq =  ( MomConvWave / aWaveZero ) * ( MomConvWave / aWaveZero );
+   }   
+  }
+  
   double GasRhoCur( 0.0 );
 
   if ( material()->name().find("C4F10") != std::string::npos ) {
     const double RefTemperature = param<double>("C4F10ReferenceTemp");
     GasRhoCur = RhoEffectiveSellDefault*(curPressure/Gaudi::Units::STP_Pressure)*
       ( RefTemperature/curTemp );
-  }
-  else {
+  }else if ( isC3F8Medium  ) {
+    GasRhoCur = (curPressure/Gaudi::Units::STP_Pressure)*
+                (Gaudi::Units::STP_Temperature/curTemp);    
+    
+  }else {
+    
+  
     GasRhoCur = RhoEffectiveSellDefault*(curPressure/Gaudi::Units::STP_Pressure)*
       (Gaudi::Units::STP_Temperature/curTemp);
   }
-
+  
   // calculate ref index
   for ( unsigned int ibin = 0; ibin<momVect.size(); ++ibin )
   {
     const double epho = momVect[ibin]/Gaudi::Units::eV;
-    const double pfe  = (SellF1/( (SellE1* SellE1) - (epho * epho) ) )+
+    double nMinus1=0.0;
+    
+    if( isC3F8Medium ) {
+      nMinus1 = 
+      scaleFactor * (AParam* AMultParam *MomConvWave*  MomConvWave *  GasRhoCur)/(EphyZSq - (epho*epho));
+    }else {
+      const double pfe  = (SellF1/( (SellE1* SellE1) - (epho * epho) ) )+
       (SellF2/( (SellE2*SellE2) - (epho * epho) ));
-    const double cpfe = SellLorGasFac * (GasRhoCur / GasMolWeight ) * pfe;
-    const double nMinus1 = scaleFactor * (sqrt((1.0+2*cpfe)/(1.0-cpfe)) - 1.0);
+      const double cpfe = SellLorGasFac * (GasRhoCur / GasMolWeight ) * pfe;
+      nMinus1 = scaleFactor * (sqrt((1.0+2*cpfe)/(1.0-cpfe)) - 1.0);
+    }
+    
+   
     const double curRindex = 1.0+nMinus1;
+    
     aTable.push_back( TabulatedProperty::Entry(epho*Gaudi::Units::eV,curRindex));
   }
 
-  debug() << "Table in TabulatedProperty " << tabProp->name()
+   debug() << "Table in TabulatedProperty " << tabProp->name()
           << " updated with " << momVect.size() << " bins" << endmsg;
 
   return StatusCode::SUCCESS;
