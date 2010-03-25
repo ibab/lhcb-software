@@ -1,4 +1,4 @@
-// $Id: IMuonHitDecode.h,v 1.2 2010-02-13 11:16:33 ggiacomo Exp $
+// $Id: IMuonHitDecode.h,v 1.3 2010-03-25 16:58:33 ggiacomo Exp $
 #ifndef MUONMONITOR_IMUONHITDECODE_H 
 #define MUONMONITOR_IMUONHITDECODE_H 1
 
@@ -29,7 +29,10 @@ public:
 
   // main methods
   virtual StatusCode decodeRawData() = 0;      
+  /// list of decoded hits
   virtual const std::vector<MuonLogHit*>* hits() = 0;
+  /// list of fake hits (unconnected channels)
+  virtual const std::vector<MuonLogHit*>* fakehits() = 0;
 
   virtual float tdc2ns(float TDCtime) {
     return  (float) ( (TDCtime - 7.5) * 25. / 16.)  ;
