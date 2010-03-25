@@ -1,4 +1,4 @@
-// $Id: ShiftDB.cpp,v 1.3 2010-03-23 12:51:41 ocallot Exp $
+// $Id: ShiftDB.cpp,v 1.4 2010-03-25 14:41:49 ocallot Exp $
 // Include files
 
 // local
@@ -130,12 +130,16 @@ std::string ShiftDB::getCurrentDataManager( ) {
   boost::gregorian::date now_day = now.date() ;
 
   int slot = 0 ;
+  int hour = now.time_of_day().hours();
+  if ( now.time_of_day().minutes() >= 30 ) hour++;
 
-  if ( now.time_of_day().hours() < 7 ) {
+  //== shift change at 6:30, 14:30, 22:30
+
+  if ( hour < 7 ) {
     now_day = now.date() - boost::gregorian::date_duration( 1 ) ;
     slot = 2 ;
-  } else if ( now.time_of_day().hours() < 15 ) slot = 0 ;
-  else if ( now.time_of_day().hours() < 23 ) slot = 1 ;
+  } else if ( hour < 15 ) slot = 0 ;
+  else if ( hour < 23 ) slot = 1 ;
   else slot = 2 ;
 
   std::map< std::string , std::vector< std::string > > shifters ;
