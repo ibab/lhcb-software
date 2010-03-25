@@ -1,9 +1,13 @@
-$Id: release.notes,v 1.85 2010-03-25 18:50:25 gligorov Exp $
+$Id: release.notes,v 1.86 2010-03-25 21:43:52 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2010-03-25 - Gerhard Raven
+ - set WriteP2PVRelations to False for ParticleMakers to avoid accessing a PV
+   which may or may not be present...
 
 ! 2010-03-25 - V. Gligorov
  - Continuing work on Savannah tasks #12691,13784.
