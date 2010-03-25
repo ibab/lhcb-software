@@ -1,13 +1,14 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.9 2010-03-22 15:36:01 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.10 2010-03-25 08:24:38 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 
 from BaseDSTWriter import BaseDSTWriter
+from dstwriterutils import ConfigurableList
 
 class MicroDSTWriter(BaseDSTWriter) :
     __slots__ = { "CopyParticles"        : True
@@ -84,7 +85,9 @@ class MicroDSTWriter(BaseDSTWriter) :
                                    VertexCloner,
                                    ParticleCloner,
                                    ProtoParticleCloner )
-        for alg in sel.algos :
+        
+        confList = ConfigurableList(sel)
+        for alg in confList.flatList() :
             try :
                 alg.CloneFilteredParticles = True
                 print 'Set CloneFilteredParticles of', alg.name(), ' to True'

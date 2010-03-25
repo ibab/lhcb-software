@@ -70,13 +70,14 @@ class _copyParticleTrees(CopyWithBranch) :
             cloner.ParticleCloner.ICloneProtoParticle="NONE"
         self.setOutputPrefix(cloner)
 
-        for alg in sel.algos :
+        confList = ConfigurableList(sel)
+        for alg in confList.flatList() :
             try :
                 alg.CloneFilteredParticles = True
                 print 'Set CloneFilteredParticles of', alg.name(), ' to True'
             except :
                 pass
-        
+
         return [cloner]
 
 def _copyP2PVRelations(sel, name, locations) :
