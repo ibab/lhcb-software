@@ -4,7 +4,18 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!========================= Gauss v38r4 2010-03-22 ============================
+!========================= Gauss v38r4 2010-03-25 ============================
+! 2010-03-25 - Gloria CORTI
+ - Set beam parameters of EvtGenDecay for Pythia as set in Configurable. 
+   This is not strictly necessary as it is only used when Pythia is not chosen 
+   as production engine but it avoids confusion because the values are now 
+   always printed in the log file.
+   . Configurable.py
+ - Put latest tags for simulation for 2009 data and for development (i.e. for
+   2010 data)
+   . Gauss-MC-2009.py
+   . Gauss-DEV.py
+
 ! 2010-03-22 - Silvia Miglioranzi
  - Added options to steer different settings for the Physics Lists:
    - G4PL_LHEP_EmStd.py
