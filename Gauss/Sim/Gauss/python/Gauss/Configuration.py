@@ -1,7 +1,7 @@
 """
 High level configuration tools for Gauss
 """
-__version__ = "$Id: Configuration.py,v 1.28 2010-03-08 17:37:20 silviam Exp $"
+__version__ = "$Id: Configuration.py,v 1.29 2010-03-25 18:20:05 gcorti Exp $"
 __author__  = "Gloria Corti <Gloria.Corti@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -982,6 +982,19 @@ class Gauss(LHCbConfigurableUser):
         emittance = self.getProp("BeamEmittance")
         betaStar  = self.getProp("BeamBetaStar")
 
+        # Initialization in EvtGenTool always there to make sure even when
+        # Pythia is not used as production engine it is initialize with the
+        # LHCb settings
+        tsvc = ToolSvc()
+        tsvc.addTool(EvtGenDecay,name="EvtGenDecay")
+        tsvc.EvtGenDecay.addTool(PythiaProduction,name="PythiaProduction")
+        tsvc.EvtGenDecay.PythiaProduction.addTool(CollidingBeams,
+                                                 name="CollidingBeams")
+        tsvc.EvtGenDecay.PythiaProduction.CollidingBeams.BeamMomentum = beamMom
+        tsvc.EvtGenDecay.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = angle
+        tsvc.EvtGenDecay.PythiaProduction.CollidingBeams.Emittance = emittance
+        tsvc.EvtGenDecay.PythiaProduction.CollidingBeams.BetaStar = betaStar
+        
         # for Minimum bias, including those of spill-over events
         for slot in CrossingSlots:
             gen = Generation("Generation"+slot)        
@@ -1093,7 +1106,7 @@ class Gauss(LHCbConfigurableUser):
         txtP = "hijinginit efrm "+str(pInGeV)
         gen_t0.MinimumBias.addTool(HijingProduction,name="HijingProduction")
         gen_t0.MinimumBias.HijingProduction.Commands += [ txtP ]
-    
+
 
     ## end of functions to set beam paramters and propagate them
     ##########################################################################
