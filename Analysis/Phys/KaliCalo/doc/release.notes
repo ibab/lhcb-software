@@ -1,11 +1,17 @@
-! $Id: release.notes,v 1.36 2010-03-22 18:24:00 ibelyaev Exp $ 
+! $Id: release.notes,v 1.37 2010-03-25 11:03:54 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.36 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.37 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
+
+! 2010-03-25 - Vanya Belyaev
+ - there are serious problmems on Grid with LoadMAcro( "xxx.C++" ) 
+  thus: 
+   - remove root/*
+   - add dictionary
 
 ! 2010-03-19 - Vanya Belyaev
 

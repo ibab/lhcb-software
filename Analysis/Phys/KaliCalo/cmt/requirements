@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.13 2010-03-18 11:14:23 ibelyaev Exp $ 
+# $Id: requirements,v 1.14 2010-03-25 11:03:54 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.13 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.14 $
 # ============================================================================
 # Created    : 2005-05-31
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -21,7 +21,17 @@ use                LoKiAlgo    v* Phys
 use                GaudiPython v* 
 
 # ================ constituents ==============================================
-library            KaliCalo    ../src/*.cpp 
+library            KaliCalo     ../src/*.cpp 
+
+# ================ Produce LCG dictionary =====================================
+apply_pattern      reflex_dictionary                                     \
+                   dictionary=KaliCalo                                   \
+                   headerfiles=$(KALICALOROOT)/dict/KaliCaloDict.h       \
+                   selectionfile=$(KALICALOROOT)/dict/KaliCalo.xml       \
+                   options=" -U__MINGW32__ "
+
+macro_append ROOT_linkopts " -lPyROOT" \
+             target-winxp  " libPyROOT.lib " 
 
 # ================ standard pattern ==========================================
 apply_pattern      install_python_modules

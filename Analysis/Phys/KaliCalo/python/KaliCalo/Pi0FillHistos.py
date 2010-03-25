@@ -122,15 +122,18 @@ import copy
 import ROOT 
 import KaliCalo.Kali  as Kali
 CellID = Kali.CellID 
+from GaudiPython.Bindings import gbl as cpp
+
 
 ## use Wim Lavrijsen's trick: 
-selector = '$KALICALOROOT/root/TPySelectorFix.C+' 
-if 0 > ROOT.gROOT.LoadMacro ( selector ) : 
-    raise RunTimeError, "Unable to LoadMacro '%s'" % selector  
+##selector = '$KALICALOROOT/root/TPySelectorFix.C' 
+##if 0 > ROOT.gROOT.LoadMacro ( selector ) : 
+##    raise RunTimeError, "Unable to LoadMacro '%s'" % selector  
+Kali.TPySelectorFix = cpp.Kali_TPySelectorFix
 
 # =============================================================================
 ## ROOT 'selector' for filling the histograms
-class FillPi0( ROOT.TPySelectorFix  ):
+class FillPi0( Kali.TPySelectorFix  ):
     """
     ROOT selector for filling the histograms
     """
@@ -146,7 +149,7 @@ class FillPi0( ROOT.TPySelectorFix  ):
                    betas    = [ 8.3 , 8.8 , 9.5 ] ,
                    Unit     = MeV                 ) :  
         
-        ROOT.TPySelectorFix.__init__ ( self , None , self ) ## initialize the base 
+        Kali.TPySelectorFix.__init__ ( self , None , self ) ## initialize the base 
         self._histos  = histos  ## the histogram map
         self._lambdas = lambdas ## the map of coefficients
 

@@ -1,4 +1,7 @@
-// $Id: TPySelectorFix.C,v 1.1 2009-10-31 16:59:12 ibelyaev Exp $
+// $Id: KaliCaloDict.h,v 1.1 2010-03-25 11:03:54 ibelyaev Exp $
+// ============================================================================
+#ifndef KALI_KALICALODICT_H 
+#define KALI_KALICALODICT_H 1
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -6,23 +9,22 @@
 // ============================================================================
 #include "TPySelector.h"
 // ============================================================================
-/** @file
+/** @class TPySelectorFix 
  *  The temporary fix to allow the "normal" usage of instances of 
  *  TPySelector-derived classes 
- *
- *  The fix has been kindly provided by Wim Lavrijsen
- *
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date 2009-10-25
+ * The fix has been kindly provided by Wim Lavrijsen
  */
-// ============================================================================
-class TPySelectorFix : public TPySelector 
+class Kali_TPySelectorFix : public TPySelector 
 {
   // ==========================================================================
 public:
   // ==========================================================================
+  ClassDef(Kali_TPySelectorFix, 1) ;
+  // ==========================================================================
+public:
+  // ==========================================================================
   /// constructor 
-  TPySelectorFix 
+  Kali_TPySelectorFix 
   ( TTree*    tree = 0 , 
     PyObject* self = 0 ) 
     : TPySelector ( tree, self ) {}
@@ -31,6 +33,5 @@ public:
 // ============================================================================
 // The END 
 // ============================================================================
-
-
-
+#endif // KALI_KALICALODICT_H
+// ============================================================================

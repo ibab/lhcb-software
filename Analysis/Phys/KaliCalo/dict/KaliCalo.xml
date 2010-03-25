@@ -1,0 +1,17 @@
+<!-- 
+     * $Id: KaliCalo.xml,v 1.1 2010-03-25 11:03:54 ibelyaev Exp $ 
+     * ========================================================================
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+     * ======================================================================== 
+     * @file
+     * The seleciton file to build Reflex dictionaries for Phys/KaliCalo package
+     * @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     * @date 2010-03-25
+     * ========================================================================
+-->
+
+<lcgdict>
+
+  <class name = "Kali_TPySelectorFix" />
+
+</lcgdict> 
