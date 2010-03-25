@@ -66,9 +66,9 @@ This version uses Gaudi v21r8 and LCG_58b
 
 - In DDDB v1r29 (needs SQLDDDB v5r23)
   . Changed default tag for 2009 and 2010 data:
-    o head-20100321         for LHCBCOND
+    o head-20100325         for LHCBCOND
   . Changed default tag for 2009 MC:
-    o MC-20100321-vc15mm-md100 for SIMCOND
+    o MC-20100325-vc15mm-md100 for SIMCOND
 
 - In DetCond v12r11
   . Changes to the CondDB configurable:
@@ -211,6 +211,8 @@ This version uses Gaudi v21r8 and LCG_58b
     just summarise the number during finalise.
 
 - In CondDBUI v3r3
+  . Removed pyqt_compat dependency which was the reason for CondDBBrowser 
+    segfaults when working with the Oracle Online partition.  
   . Modified the Python module CondDBUI to require PyCool at run-time only for
     the functions that really need it.
     It allows to use the other utilities (like the tag filters) without PyCool.
