@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.16 2010-03-22 15:34:47 jpalac Exp $
+!$Id: release.notes,v 1.17 2010-03-25 08:25:01 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
+
+! 2010-03-25 - Juan Palacios
+ - python/DSTWriters/MicroDSTWriter.py, microdstelements.py
+  . Use new StrippingStream.filterMembers() to get list of configurables.
+ - added python/DSTWriters/dstwriterutils.py with class returning flat list of configurables for different selection sequence types. Needed due to divergent interface between types.
 
 ! 2010-03-22 - Juan Palacios
  - cmt/requirements
