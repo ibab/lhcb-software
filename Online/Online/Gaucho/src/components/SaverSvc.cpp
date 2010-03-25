@@ -319,7 +319,6 @@ StatusCode SaverSvc::save(ProcessMgr* processMgr) {
     if (!m_finalizing) { processMgr->setrunNumber(m_runNbSvc);
         if (m_runNb == 0) m_runNb=m_runNbSvc->getRunNb() ;
            }
-   if (m_runNb == 0) m_runNb=999 ;
 
      msg << MSG::INFO << "saving histograms in "<< *fileName << " runnb " << m_runNb << endreq;     
      //if the runnumber is 0 here, try to get it 
