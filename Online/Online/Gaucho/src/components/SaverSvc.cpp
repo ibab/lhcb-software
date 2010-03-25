@@ -318,12 +318,8 @@ StatusCode SaverSvc::save(ProcessMgr* processMgr) {
  
     if (!m_finalizing) { processMgr->setrunNumber(m_runNbSvc);
         if (m_runNb == 0) m_runNb=m_runNbSvc->getRunNb() ;
-           }
-
-     msg << MSG::INFO << "saving histograms in "<< *fileName << " runnb " << m_runNb << endreq;     
-     //if the runnumber is 0 here, try to get it 
-    //when the runnumber changes we should stop and restart the dim timer
-    //only save if the runnumber !=0
+    }
+    //if the runnumber is unknown => no events, we don't save
     if (m_runNb!=0) {
        if (processMgr->getrunNumber(false)!=0) {
           processMgr->dimTimerProcess()->stop();
