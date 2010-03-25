@@ -8,6 +8,22 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-03-25 - Jibo He
+ - Add the following lines in Hlt2B2JpsiXLines.py:
+	 'Hlt2Bc2JpsiMuX',
+   'Hlt2Bc2JpsiMuXSignal',
+   'Hlt2Bc2JpsiH',
+   'Hlt2Bc2JpsiHDetached',
+   'Hlt2Bc2JpsiHPrescaled'
+
+   Lines doubled for TrackFitted:
+   'Hlt2TFBc2JpsiMuX',
+   'Hlt2TFBc2JpsiMuXSignal',
+   'Hlt2TFBc2JpsiH',
+   'Hlt2TFBc2JpsiHDetached',
+   'Hlt2TFBc2JpsiHPrescaled'
+
+
 ! 2010-03-22 - L. de Paula
  - Correction in Hlt2InclusiveDiMuonLines
 
