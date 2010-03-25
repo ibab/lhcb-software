@@ -1,4 +1,4 @@
-// $Id: MuonHitDecode.h,v 1.11 2010-02-19 14:53:44 ggiacomo Exp $
+// $Id: MuonHitDecode.h,v 1.12 2010-03-25 17:00:56 ggiacomo Exp $
 #ifndef LIB_MUONHITDECODE_H 
 #define LIB_MUONHITDECODE_H 1
 
@@ -22,8 +22,11 @@ public:
   virtual const std::vector<MuonLogHit*>* hits()
   { 
     if (! m_hitsDecoded) decodeRawData();
-    return (const std::vector<MuonLogHit*>*) (&m_hits);}
-
+    return (const std::vector<MuonLogHit*>*) (&m_hits);
+  }
+  virtual const std::vector<MuonLogHit*>* fakehits() {
+    return (const std::vector<MuonLogHit*>*) (&m_fakehits);
+  }
   // specific for Online Monitoring, not implemented here (just avoid compil. warnings)
   virtual int banksSize(LHCb::RawBank::BankType bankType, std::vector<int> &sizes)
   { return 0* (bankType == bankType) * sizes.size();}
@@ -89,6 +92,7 @@ private:
   DeMuonDetector* m_muonDetector;
   std::vector<std::pair<LHCb::MuonTileID,unsigned int> >  m_tilesAndTDC;
   std::vector<MuonLogHit*> m_hits;
+  std::vector<MuonLogHit*> m_fakehits;
   bool m_hitsDecoded;
   std::string nullstring;
 };

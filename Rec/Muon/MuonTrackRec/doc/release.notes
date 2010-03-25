@@ -9,6 +9,9 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+! 2010-03-25 - GG
+- add MuonHitDecode::fakehits() method
+
 !======================== MuonTrackRec v3r1 2010-03-20 ======================
 ! 2010-03-17 - GG
  - put LHCbIDs into Tracks also when assuming cosmic tracks
