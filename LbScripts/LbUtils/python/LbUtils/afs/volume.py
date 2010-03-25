@@ -7,7 +7,7 @@ class HasNoMountPoint(Exception):
     pass
 
 class IsNotaMountPoint(Exception):
-    """ Exception for directories which are not moint points """
+    """ Exception for directories which are not mount points """
     pass
 
 class MountPoint(Directory):

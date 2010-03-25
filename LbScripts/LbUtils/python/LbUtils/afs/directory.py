@@ -13,7 +13,7 @@ class NotInAFS(Exception):
 
 class Directory(object):
     def __init__(self, dirpath):
-        self._name = dirpath
+        self._name = os.path.realpath(dirpath)
         self._id = self.getID()
     def name(self):
         return self._name
@@ -50,7 +50,7 @@ class Directory(object):
         """ Check if the directory is a mount point """
         exp = re.compile("is\s+a\s+mount\s+point")
         notexp = re.compile("is\s+not\s+a\s+mount\s+point")
-        p = Popen(["fs","lsmount",self._name], stdout=PIPE, stderr=STDOUT)
+        p = Popen(["fs","lsmount", self._name], stdout=PIPE, stderr=STDOUT)
         for line in p.stdout.xreadlines() :
             if exp.search(line):
                 return True

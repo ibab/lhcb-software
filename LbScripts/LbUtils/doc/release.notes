@@ -1,3 +1,8 @@
+2010-03-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/afs/directory.py: fixed the call to "fs lsmount" which was not accepting
+	"." as a valid directory.
+
 2010-03-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/Tar.py: added a check on the existence of the directories
