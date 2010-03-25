@@ -3,6 +3,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2010-03-25 - Gerhard Raven
+ - fix use of Ranges
+
 ! 2010-03-06 - Gerhard Raven
  - add support for Ranges
 

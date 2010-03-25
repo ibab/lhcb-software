@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.49 2010-03-16 13:26:54 graven Exp $
+// $Id: HltAlgorithm.h,v 1.50 2010-03-25 19:17:47 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -26,10 +26,14 @@ struct fill_from_range {
         typedef typename T::candidate_type::Range range_type;
         range_type obj = parent.get<range_type>( parent.evtSvc(), selection->id().str() );
         //TODO: make HltSelection work with const objects...
-        selection->insert( selection->end()
-                         , boost::make_transform_iterator( obj.begin(),  boost::lambda::ll_const_cast<typename T::candidate_type*>(boost::lambda::_1) )
-                         , boost::make_transform_iterator( obj.end(),    boost::lambda::ll_const_cast<typename T::candidate_type*>(boost::lambda::_1) )
-                         );
+        selection->reserve( obj.size() );
+        for (typename range_type::iterator i=obj.begin();i!=obj.end();++i) {
+            selection->push_back( const_cast<typename T::candidate_type*>( *i ) );
+        }
+        //selection->insert( selection->end()
+                         //, boost::make_transform_iterator( obj.begin(),  boost::lambda::ll_const_cast<typename T::candidate_type*>(boost::lambda::_1) )
+                         //, boost::make_transform_iterator( obj.end(),    boost::lambda::ll_const_cast<typename T::candidate_type*>(boost::lambda::_1) )
+                         //);
         selection->setDecision( !selection->empty() ); // force it processed...
         return StatusCode::SUCCESS;
       }
@@ -208,7 +212,7 @@ private:
       const T *selection() const { return m_selection; }
 
       StatusCode execute() {
-          typedef typename boost::mpl::if_< has_selection<T>
+          typedef typename boost::mpl::if_< has_selection<typename T::candidate_type>
                               , fill_from_range<T>
                               , fill_from_container<T>
                               >::type impl_t;
