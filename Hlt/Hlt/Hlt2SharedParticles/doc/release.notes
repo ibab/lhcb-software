@@ -1,9 +1,13 @@
-$Id: release.notes,v 1.83 2010-03-23 22:26:34 gligorov Exp $
+$Id: release.notes,v 1.84 2010-03-25 17:25:07 jhe Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2010-03-25 - Jibo He
+ - TrackFittedDiMuon.py added, just a copy of DiMuon.py by replacing 
+   "Muons" with "BiKalmanFittedMuons", cuts untouched.
 
 ! 2010-03-23 - V. Gligorov
  - Continuing work on Savannah tasks #12691,13784.
