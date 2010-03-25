@@ -192,9 +192,9 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line.clone( 'DiMuonDY1'
                     , prescale = self.prescale 
-                    , Filter = { 'Code': "(MM>"+str(self.getProp('DY1MinMass'))+"*MeV) "\
-                                 " & (MM<"+str(self.getProp('DY1MaxMass'))+"*MeV) "\
-                                 "& (PT>"+str(self.getProp('DYPt'))+"*MeV) " }
+                    , Filter = { 'Code': "  (MM>%(DY1MinMass)s*MeV) "\
+                                         "& (MM<%(DY1MaxMass)s*MeV) "\
+                                         "& (PT>%(DYPt)s*MeV) " % self.getProps() }
                     , postscale = self.postscale
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonDY1Decision":   50206 } )
@@ -205,9 +205,9 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line.clone( 'DiMuonDY2'
                     , prescale = self.prescale 
-                    , Filter = { 'Code': "(MM>"+str(self.getProp('DY2MinMass'))+"*MeV) "\
-                                 " & (MM<"+str(self.getProp('DY2MaxMass'))+"*MeV) "\
-                                 "& (PT>"+str(self.getProp('DYPt'))+"*MeV) " }
+                    , Filter = { 'Code': "  (MM>%(DY2MinMass)s*MeV) "\
+                                         "& (MM<%(DY2MaxMass)s*MeV) "\
+                                         "& (PT>%(DYPt)s*MeV) " % self.getProps() }
                     , postscale = self.postscale
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonDY2Decision":   50207 } )
@@ -219,9 +219,9 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line.clone( 'DiMuonDY3'
                     , prescale = self.prescale 
-                    , Filter = { 'Code': "(MM>"+str(self.getProp('DY3MinMass'))+"*MeV) "\
-                                 " & (MM<"+str(self.getProp('DY3MaxMass'))+"*MeV) "\
-                                 "& (PT>"+str(self.getProp('DYPt'))+"*MeV) " }
+                    , Filter = { 'Code': "  (MM>%(DY3MinMass)s*MeV) "\
+                                         "& (MM<%(DY3MaxMass)s*MeV) "\
+                                         "& (PT>%(DYPt)s*MeV) " % self.getProps() }
                     , postscale = self.postscale
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonDY3Decision":   50208 } )
@@ -232,9 +232,9 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line.clone( 'DiMuonDY4'
                     , prescale = self.prescale 
-                    , Filter = { 'Code': "(MM>"+str(self.getProp('DY4MinMass'))+"*MeV) "\
-                                 " & (MM<"+str(self.getProp('DY4MaxMass'))+"*MeV) "\
-                                 "& (PT>"+str(self.getProp('DYPt'))+"*MeV) " }
+                    , Filter = { 'Code': "  (MM>%(DY4MinMass)s*MeV) "\
+                                         "& (MM<%(DY4MaxMass)s*MeV) "\
+                                         "& (PT>%(DYPt)s*MeV) " % self.getProps() }
                     , postscale = self.postscale
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonDY4Decision":   50209 } )
@@ -268,17 +268,17 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
            cut definitions for biased DiMuon Lines
         '''
         MuPtCut = "( MAXTREE(ABSID=='mu+',PT)>%(BiasedSingleMuonPt)s*MeV)" % self.getProps()
-        MassCut = "(MM>%(BiasedMass)s*MeV)" % self.getProps()
+        MassCut  = "(MM>%(BiasedMass)s*MeV)" % self.getProps()
         MassLCut = "(MM>%(BiasedLMass)s*MeV)" % self.getProps()
         MassTCut = "(MM>%(BiasedTMass)s*MeV)" % self.getProps()
-        MuIPCut = "(2==NINTREE((ABSID=='mu+') & (MIPDV(PRIMARY)>%(BiasedSingleMuonIP)s*mm)))" % self.getProps()
+        MuIPCut  = "(2==NINTREE((ABSID=='mu+') & (MIPDV(PRIMARY)>%(BiasedSingleMuonIP)s*mm)))" % self.getProps()
         MuTIPCut = "(2==NINTREE((ABSID=='mu+') & (MIPDV(PRIMARY)>%(BiasedSingleMuonTIP)s*mm)))" % self.getProps()
-        LTimeCut = "(BPVLTIME('PropertimeFitter/properTime:PUBLIC')>%(BiasedLTime)s*ps)" % self.getProps()
+        LTimeCut  = "(BPVLTIME('PropertimeFitter/properTime:PUBLIC')>%(BiasedLTime)s*ps)" % self.getProps()
         LTimeTCut = "(BPVLTIME('PropertimeFitter/properTime:PUBLIC')>%(BiasedLTimeT)s*ps)" % self.getProps()
-        IPChi2Cut = "( MAXTREE(ABSID=='mu+',MIPCHI2DV(PRIMARY))>%(BiasedSingleIPChi2)s)" % self.getProps()
+        IPChi2Cut  = "( MAXTREE(ABSID=='mu+',MIPCHI2DV(PRIMARY))>%(BiasedSingleIPChi2)s)" % self.getProps()
         TIPChi2Cut = "( MAXTREE(ABSID=='mu+',MIPCHI2DV(PRIMARY))>%(BiasedSingleIPTChi2)s)" % self.getProps()
         VertexChi2Cut = "(VFASPF(VCHI2/VDOF)<%(BiasedVertexChi2)s)" % self.getProps()
-        PVDistChi2Cut = "(BPVVDCHI2>%(BiasedPVDistanceChi2)s)" % self.getProps()
+        PVDistChi2Cut  = "(BPVVDCHI2>%(BiasedPVDistanceChi2)s)" % self.getProps()
         PVDistTChi2Cut = "(BPVVDCHI2>%(BiasedPVDistanceTChi2)s)" % self.getProps()
         '''
            sequence definitions for biased DiMuon Lines
