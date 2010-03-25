@@ -5,7 +5,7 @@
  * Implementation file for tool TrackVelodEdxCharge
  *
  * CVS Log :-
- * $Id: TrackVelodEdxCharge.cpp,v 1.8 2010-03-19 18:15:00 dhcroft Exp $
+ * $Id: TrackVelodEdxCharge.cpp,v 1.9 2010-03-25 09:22:10 dhcroft Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 18/07/2006
@@ -55,7 +55,7 @@ StatusCode TrackVelodEdxCharge::initialize()
     Warning("Using VELO dE/dx parameters from options not conditions", 
             StatusCode::SUCCESS).ignore();
   }else{
-    registerCondition("Conditions/ParticleID/Velo/dEdx",m_dEdx,
+    registerCondition("Conditions/ParticleID/Velo/VelodEdx",m_dEdx,
                       &TrackVelodEdxCharge::i_cachedEdx);
     sc = runUpdate();
     if(!sc) return sc;
@@ -122,9 +122,12 @@ StatusCode TrackVelodEdxCharge::nTracks( const LHCb::Track * track,
   // if we get here, all is OK
   return StatusCode::SUCCESS;
 }
-
 StatusCode TrackVelodEdxCharge::i_cachedEdx(){
   m_Normalisation = m_dEdx->param<double>("Normalisation");
   m_Ratio = m_dEdx->param<double>("Ratio");
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "i_cachedEdx : Normalisation " << m_Normalisation
+            << " Ratio " << m_Ratio << endmsg;
+  
   return StatusCode::SUCCESS;
 }
