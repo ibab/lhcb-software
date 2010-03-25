@@ -348,8 +348,8 @@ def fillHistos ( tree                          ,
                          Unit = Unit )  
 
     print '#entries in tree: %10d ' % tree.GetEntries() 
-    ## tree.Process ( selector , '' , 500000 )
-    tree.Process ( selector )
+    tree.Process ( selector , '' , 500000 )
+    ## tree.Process ( selector )
     
     lambdas = selector.lambdas ()
     histos  = selector.histos  ()
@@ -366,7 +366,7 @@ def fillDataBase (
     lambdas                           , 
     file_names                        ,
     tree_name   = "KaliPi0/Pi0-Tuple" ,
-    dbase_name  = 'kali_zdb'          ,
+    dbase_name  = 'kali_db.gz'        ,
     cellFunc    = lambda s : s        ,
     Unit        = MeV                 ) :
 

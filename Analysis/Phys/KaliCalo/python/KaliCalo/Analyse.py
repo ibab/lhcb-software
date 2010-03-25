@@ -11,7 +11,7 @@ The main ``analyse'' for Kali
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyev@itep.ru "
 __date__    = " 2010-03-20 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
 # =============================================================================
 __all__     = (
     "analyse" ,
@@ -29,7 +29,7 @@ def  getHistosFromDB ( dbases ) :
     """
     if issubclass ( type ( dbases ) , Kali.HistoMap ) : return dbases
     histos = Kali.HistoMap()
-    histos.updatefromDB ( dbases )
+    histos.updateFromDB ( dbases )
     return histos
 
 
@@ -39,9 +39,8 @@ def  analyse ( histomap , lambdamap ) :
     """
     Analyse the histograms 
     """
-    histos = getHistosFromDB ( histomap )
-    
-                   
+    histomap = getHistosFromDB ( histomap )
+                       
     ## get 'All-Ecal' histoigrams 
     hA = histomap [ Kali.EcalZone   ].histos()
 
@@ -51,7 +50,7 @@ def  analyse ( histomap , lambdamap ) :
     ## inner area 
     hI = histomap  [ Kali.InnerZone  ].histos()
     ## middle area 
-    hM = histomap  [ Kali.MiddleZone ].histos()
+    hM = histomap [ Kali.MiddleZone ].histos()
     ## outer area 
     hO = histomap  [ Kali.OuterZone  ].histos() 
 
@@ -160,8 +159,8 @@ def  analyse ( histomap , lambdamap ) :
         lam  = corr*lams[-1]
         lams.append ( lam.value() )
         
-        mx = 40.0 / len( histomap ) 
-        if random.uniform(0,1.0) < mx :
+        mx = 100.0 / len( histomap ) 
+        if random.uniform( 0 , 1.0 ) < mx :
             print ' NUM0: %.20s %.20s %.20s ' % ( r0[0] , r1[0] , r2[0] ) , key
             print ' MASS: %.20s %.20s %.20s ' % ( r0[1] , r1[1] , r2[1] ) , key, corr , [  '%.3f' % l for l in lambdamap[key] ] 
                         

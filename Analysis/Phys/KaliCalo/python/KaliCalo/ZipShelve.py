@@ -20,9 +20,11 @@ except ImportError:
     from  StringIO import StringIO
 
 
+import os
 import zlib        ## use zlib to compress dbfile
 import shelve      ## 
-
+import os
+        
 # =============================================================================
 ## Zipped-version of ``shelve''-database     
 class ZipShelf(shelve.Shelf):
@@ -37,6 +39,20 @@ class ZipShelf(shelve.Shelf):
         compress  = zlib.Z_BEST_COMPRESSION    ,
         writeback = False                      ) :
 
+        self.gzip          = False 
+        self.filename      = filename
+
+        if filename.rfind ( '.gz' ) + 3 == len ( filename ) :
+            if os.path.exists ( filename ) :
+                size1 = os.path.getsize ( filename ) 
+                os.system ( 'gunzip %s ' % filename )                
+                size2 = os.path.getsize ( filename[:-3] )
+                print "GZIP uncompression %s: %.1f%%" %  ( filename , (size2*100.0)/size1 ) 
+                
+            filename      = filename[:-3]
+            self.gzip     = True 
+            self.filename = filename
+            
         import anydbm
         shelve.Shelf.__init__ (
             self                            ,
@@ -46,38 +62,54 @@ class ZipShelf(shelve.Shelf):
         
         self.compresslevel = compress
 
-        ## ``get-and-uncompress-item'' form dbase 
-        def __getitem__(self, key):
-            """
-            ``get-and-uncompress-item'' form dbase 
-            """
-            try:
-                value = self.cache[key]
-            except KeyError:
-                f = StringIO(zlib.decompress(self.dict[key]))
-                value = Unpickler(f).load()
-                if self.writeback:
-                    self.cache[key] = value
-            return value
+    ## cloze and gzip (if needed)
+    def close ( self ) :
+        """
+        Close the file (and gzip it if required) 
+        """
+        shelve.Shelf.close ( self )
+        if self.gzip and os.path.exists ( self.filename ) :
+            size1 = os.path.getsize( self.filename )
+            os.system ( 'gzip %s ' % self.filename )
+            size2 = os.path.getsize( self.filename + '.gz' )
+            print 'GZIP compression %s: %.1f%%' % ( self.filename, (size2*100.0)/size1 ) 
+        
+# =============================================================================
+## ``get-and-uncompress-item'' from dbase 
+def _zip_getitem (self, key):
+    """
+    ``get-and-uncompress-item'' from dbase 
+    """
+    try:
+        value = self.cache[key]
+    except KeyError:
+        f = StringIO(zlib.decompress(self.dict[key]))
+        value = Unpickler(f).load()
+        if self.writeback:
+            self.cache[key] = value
+    return value
 
-      ## ``set-and-compress-item'' to dbase 
-        def __setitem__(self, key, value):
-            """
-            ``set-and-compress-item'' to dbase 
-            """
-            if self.writeback:
-                self.cache[key] = value
-            f = StringIO()
-            p = Pickler(f, self._protocol)
-            p.dump(value)
-            self.dict[key] = zlib.compress( f.getvalue(), self.compresslevel)
+# =============================================================================
+## ``set-and-compress-item'' to dbase 
+def _zip_setitem ( self , key , value ) :
+    """
+    ``set-and-compress-item'' to dbase 
+    """
+    if self.writeback:
+        self.cache[key] = value
+    f = StringIO()
+    p = Pickler(f, self._protocol)
+    p.dump(value)
+    self.dict[key] = zlib.compress( f.getvalue(), self.compresslevel)
 
-            
+
+ZipShelf.__getitem__ = _zip_getitem
+ZipShelf.__setitem__ = _zip_setitem
 
 def open ( filename                                   ,
            flag          = 'c'                        ,
            protocol      = HIGHEST_PROTOCOL           ,
-           compresslevel = zlib.Z_DEFAULT_COMPRESSION , 
+           compresslevel = zlib.Z_BEST_COMPRESSION    , 
            writeback     = False                      ) : 
     """
     Open a persistent dictionary for reading and writing.

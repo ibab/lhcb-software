@@ -13,7 +13,7 @@ for ``iterative pi0'' Ecal calibration
 # ======================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-17 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $ " 
+__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $ " 
 # ======================================================================
 import ROOT
 from GaudiPython.Bindings import gbl as cpp
@@ -194,22 +194,23 @@ class HistoMap(object) :
         return _hs
 
     ## Save histograms to data base 
-    def save ( self , dbasename , prefix = '' ) :
+    def save ( self , dbasename , prefix = '' , **args ) :
         """
         Save histograms to data base 
         """
         import KaliCalo.ZipShelve as ZipShelve 
-        dbase = ZipShelve.open  ( dbasename )
+        dbase = ZipShelve.open  ( dbasename , **args )
         for key in self : 
             pattern = prefix + 'Histo '
             dbase [ pattern + str(key) ] = self [ key ]
-        dbase.close() 
-
+        dbase.close()
+        ## 
+        return len ( self ) , self.entries() 
         
     ## update the histograms form database/databases
-    def updateFromDB ( self , dbasenames , prefix = '' ) :
+    def updateFromDB ( self , dbasenames , prefix = '' , **args ) :
         """
-        Update the histograms form data base
+        Update the histograms from (zipped) data base
         """
         if issubclass ( type ( dbasenames ) , str ) :
             dbasenames = [ dbasenames ]
@@ -217,7 +218,7 @@ class HistoMap(object) :
         import KaliCalo.ZipShelve as ZipShelve
         
         for dbasename in dbasenames : 
-            dbase = ZipShelve.open  ( dbasename , 'r' )
+            dbase = ZipShelve.open  ( dbasename , 'r' , **args )
             for key in dbase :
                 pattern = prefix + 'Histo '
                 if 0 != key.find ( pattern )            : continue
@@ -229,29 +230,19 @@ class HistoMap(object) :
                     self._histos [ o.cellID() ]  = o
             dbase.close()
             
-        return len ( self )
-        
+        return len ( self ) , self.entries() 
         
     ## read the histograms from zipped data base 
-    def read ( self , dbasename , prefix = '' ) :
+    def read ( self , dbases , prefix = '' ) :
         """
-        Read the histograms from zipped data base
+        Read the histograms from zipped data base(s)
         """
         ## reset all histos 
         self._histos = {}
-        ## 
-        import KaliCalo.ZipShelve as ZipShelve 
-        dbase = ZipShelve.open  ( dbasename , 'r' )
-        for key in dbase :
-            pattern = prefix + 'Histo '
-            if 0 != key.find ( pattern )            : continue
-            o = dbase[key]
-            if not issubclass ( type(o)  , Histos ) : continue
-            self._histos [ o.cellID() ] = o
-
-        dbase.close() 
-        return len ( self )
+        ##
+        return self.updateFromDB ( dbases , prefix )
     
+    ## delete the entry form the map
     def __delitem__ ( self , cellID ) :
         """
         Delete the entry form the map
@@ -277,7 +268,9 @@ class HistoMap(object) :
 
     ## update with another histogram set
     def __iadd__ ( self , other ) :
-        
+        """
+        Update with another histogram set
+        """
         for key in other._histos :
             
             if not self._histos.has_key ( key ) :
@@ -359,27 +352,28 @@ class LambdaMap(object) :
             del self._lambdas[ cellID ]
 
     ## Save lambdas to data base 
-    def save ( self , dbasename , prefix = '' ) :
+    def save ( self , dbasename , prefix = '' , **args ) :
         """
         Save histograms to data base 
         """
         import KaliCalo.ZipShelve as ZipShelve 
-        dbase = ZipShelve.open  ( dbasename )
+        dbase = ZipShelve.open  ( dbasename , **args )
         for key in self : 
             pattern = prefix + 'Lambdas '
             dbase [ pattern + str(key) ] = ( key , self [ key ] )
         dbase.close()
+        return len ( self )
         
     ## read the histograms from zipped data base 
-    def read ( self , dbasename , prefix = '' ) :
+    def read ( self , dbasename , prefix = ''  , **args ) :
         """
         Read the histograms from zipped data base
         """
         ## reset all histos 
         self._lambdas = {}
         ## 
-        import KaliCalo.ZipShelve as ZipShelve 
-        dbase = ZipShelve.open  ( dbasename , 'r' )
+        import KaliCalo.ZipShelve as ZipShelve
+        dbase = ZipShelve.open  ( dbasename , 'r' , **args )
         for key in dbase :
             pattern = prefix + 'Lambdas '
             if 0 != key.find ( pattern )            : continue
@@ -388,7 +382,6 @@ class LambdaMap(object) :
 
         dbase.close() 
         return len ( self )
-
     
     ## iteration 
     def __iter__    ( self ) :
@@ -413,6 +406,18 @@ class LambdaMap(object) :
             if 1.0 == lams[ -1 ] : continue 
             _ls [ key ] = self._lambdas[key][-1]
         return _ls
+    
+    ## get the mean+-rms value for correction coefficients:
+    def mean        ( self ) :
+        """
+        get the mean value for correction coefficients
+        Attention: missing keys do nto contribute! 
+        """
+        cnt = Counter()
+        for key in  self._lambdas :
+            lam = self._lambdas[key][-1]
+            cnt += lam
+        return VE ( cnt.flag() , cnt.flagRMS() ) 
 
     ## Get the number of items/keys 
     def __len__     ( self ) :

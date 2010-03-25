@@ -20,7 +20,7 @@ Run:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-20 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
 # =============================================================================
 import ROOT, math 
 c1 = ROOT.TCanvas()
@@ -92,48 +92,49 @@ if '__main__' == __name__ :
     for niter in range ( 0 , 1 ) :
         
         histos, lambdas , badfiles = fillDataBase (
-            lambdas                 ,
-            files[:2]               , 
-            dbase_name = 'kali_zdb' , 
+            lambdas                   ,
+            files[:2]                 , 
+            dbase_name = 'kali_db.gz' , 
             Unit = GeV 
             )
         
         if badfiles : print ' Bad files: ', badfiles 
         
-        bad,low =  analyse ( histos , lambdas )
+##         ## bad,low =  analyse ( histos , lambdas )
+##         bad,low = [], [] ## analyse ( histos , lambdas )
         
-        if bad      : print 'Bad cells           ', len(bad) 
-        if low      : print 'Low occupancy cells ', len(low) 
+##         if bad      : print 'Bad cells           ', len(bad) 
+##         if low      : print 'Low occupancy cells ', len(low) 
 
-        lams = lambdas.lambdas()
+##         lams = lambdas.lambdas()
         
-        print 'Calibration Coefficients '
-        keys = lams.keys()
-        keys.sort() 
-        for key in Kali.Zones  :
-            if key in keys : 
-                keys.remove ( key     )
-                keys.insert ( 0 , key )
-        for key in keys :
-            if key in Kali.Zones :
-                hs     = histomap[key].histos() 
-                r0 = Fit.getPi0Params ( hs[0] )
-                r1 = Fit.getPi0Params ( hs[1] )
-                r2 = Fit.getPi0Params ( hs[2] )
-                print ' MASS : %.20s %.20s %.20s ' % ( r0[1] , r1[1] , r2[1] ) , key 
-                print ' SIGMA: %.20s %.20s %.20s ' % ( r0[2] , r1[2] , r2[2] ) , key 
-                print ' NUM0 : %.20s %.20s %.20s ' % ( r0[0] , r1[0] , r2[0] ) , key
-                print ' S/B  : %.20s %.20s %.20s ' % ( r0[0] / r0[3] ,
-                                                       r1[0] / r1[3] ,
-                                                       r2[0] / r2[3] ) , key
-                continue
+##         print 'Calibration Coefficients '
+##         keys = lams.keys()
+##         keys.sort() 
+##         for key in Kali.Zones  :
+##             if key in keys : 
+##                 keys.remove ( key     )
+##                 keys.insert ( 0 , key )
+##         for key in keys :
+##             if key in Kali.Zones :
+##                 hs     = histomap[key].histos() 
+##                 r0 = Fit.getPi0Params ( hs[0] )
+##                 r1 = Fit.getPi0Params ( hs[1] )
+##                 r2 = Fit.getPi0Params ( hs[2] )
+##                 print ' MASS : %.20s %.20s %.20s ' % ( r0[1] , r1[1] , r2[1] ) , key 
+##                 print ' SIGMA: %.20s %.20s %.20s ' % ( r0[2] , r1[2] , r2[2] ) , key 
+##                 print ' NUM0 : %.20s %.20s %.20s ' % ( r0[0] , r1[0] , r2[0] ) , key
+##                 print ' S/B  : %.20s %.20s %.20s ' % ( r0[0] / r0[3] ,
+##                                                        r1[0] / r1[3] ,
+##                                                        r2[0] / r2[3] ) , key
+##                 continue
             
-            print ' %-25s %9.4g  ' % ( key , lams[key] ) , [ ' %.3f ' % l for l in lambdas[key] ]
+##             print ' %-25s %9.4g  ' % ( key , lams[key] ) , [ ' %.3f ' % l for l in lambdas[key] ]
 
         
-        dbase = ZipShelve.open ( dbase_results_1 )
-        dbase [ 'Ecal'] = lambdas
-        dbase.close()
+##        dbase = ZipShelve.open ( dbase_results_1 )
+##        dbase [ 'Ecal'] = lambdas
+##        dbase.close()
 
         
 # =============================================================================
