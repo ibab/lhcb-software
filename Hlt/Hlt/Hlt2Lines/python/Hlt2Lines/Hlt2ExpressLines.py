@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2ExpressLines.py,v 1.16 2010-03-20 11:35:03 albrecht Exp $
+# $Id: Hlt2ExpressLines.py,v 1.17 2010-03-25 18:46:24 gligorov Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt2 Lines for the express stream
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Johannes Albrecht albrecht@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.17 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -60,16 +60,16 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                , 'ExKSNu1'                 :    2   
                , 'ExKSMassWinWide'         :  150   # MeV
                , 'ExKSMassWin'             :  100   # MeV
-               , 'ExPhiMassWinWide'        :   50 # MeV
-               , 'ExPhiMassWin'            :   30 # MeV
-               , 'ExPhiDOCAMax'		   :  0.135 # mm
-	       , 'ExPhiMIPCHI2DV'          :  12.18 #log(2.5) = 12.18
+               , 'ExPhiMassWinWide'        :   70 # MeV
+               , 'ExPhiMassWin'            :   50 # MeV
+               , 'ExPhiDOCAMax'		   :  10. # mm
+	       , 'ExPhiMIPCHI2DV'          :  2.18 #log(2.5) = 12.18
                , 'ExPhiKPt'                :  300 # MeV
                , 'ExPhiKP'                 : 1000 # MeV
                , 'ExPhiKMIPCHI2DV'         :  1.0
 	       , 'ExDsMassWinWide'         :  100 # MeV
                , 'ExDsMassWin'             :   50 # MeV
-               , 'ExDsBPVDIRA'             :    0.9999
+               , 'ExDsBPVDIRA'             :    0.999
                , 'ExDsVCHI2'               :   12.18 #log(2.5) = 12.18
 	       , 'ExDsMIPCHI2DV'	   :   12.18 #log(2.5) = 12.18
                , 'ExDsMIPDV'               :  0.05
@@ -124,11 +124,9 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       from StrippingMuIDCalib.py
 
       '''
-      from Hlt2SharedParticles.BasicParticles import Muons, NoCutsPions
+      from Hlt2SharedParticles.TagAndProbeParticles import TagAndProbeMuons, TagAndProbePions
       from Configurables import CombineParticles
       from HltTracking.HltPVs import PV3D
-      from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
-      Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()	     
  
      ############################
       # Prompt Jpsi tag-and-probe
@@ -160,12 +158,10 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       child1cuts = tag1cuts + " & " + probe2cuts
       
       child2cuts = tag2cuts + " & " + probe1cuts
-      
      
-      
       JPsiCombine = Hlt2Member( CombineParticles
                                 , 'JPsiCombine'
-                                , InputLocations = [ NoCutsPions, Muons ]
+                                , InputLocations = [ TagAndProbePions, TagAndProbeMuons ]
                                 , DecayDescriptor = '[J/psi(1S) -> mu+ pi-]cc'
                                 , DaughtersCuts = { 'mu+' : cocut ,
                                                     'pi-' : cocut }
@@ -174,12 +170,10 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                 " & (VFASPF(VCHI2/VDOF)<%(ExJPsiTPVChi2)d)"%  self.getProps()
                                 )
 
-      caloProtos = Hlt2UnfittedForwardTracking.hlt2ChargedHadronProtos()
-      
       line = Hlt2Line('ExpressJPsiTagProbe'
                       , prescale = self.prescale
                       , HLT = "HLT_PASS_RE('Hlt1.*SingleMuon.*Decision')"
-                      , algos = [ PV3D(), caloProtos, Muons, NoCutsPions, JPsiCombine ]
+                      , algos = [ PV3D(), TagAndProbeMuons, TagAndProbePions, JPsiCombine ]
                       , postscale = self.postscale
                       )
       

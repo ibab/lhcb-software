@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-03-25 - V. Gligorov
+ - Fix the tag-and-probe muon lines in Hlt2ExpressLines so
+   that they work again.
+
 ! 2010-03-25 - Jibo He
  - Add the following lines in Hlt2B2JpsiXLines.py:
 	 'Hlt2Bc2JpsiMuX',
