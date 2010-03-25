@@ -6,8 +6,101 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-! 2010-03-04 - Rob Lambert
- - Added tests to instantiate configurables
+</PRE><H1><A NAME=v9r0>2010-03-25 LbcomSys v9r0</A></H1><PRE>
+This version uses Gaudi v21r8 and LHCb v30r0
+
+- Packages modified: CaloTools v5r16, DAQMonitors v1r2, HltDAQ v1r4,
+    L0Calo v11r1, L0DU v10r4, L0Muon v9r1, L0MuonMonitor v2r0, PuVeto v7r7p1,
+    MuonAssociators v3r3, RichDAQ v3r26p1, RichTools v2r29p1, STMonitors v2r6,
+    STTools v3r18, VeloAlgorithms v5r2, VeloDAQ v4r13, VeloSimulation v3r7,
+    VeloPixDAQ v1r1
+
+- In LbcomSys v9r0
+  . Added tests to instantiate configurables
+
+- In CaloTools v5r16
+	. CaloHypoToCalo: Implement new virtual method _setProperty
+
+- In DAQMonitors v1r2
+  . RawBankReadoutStatusMonitor : fix missing bin for last status item ('Unknown')
+
+- In HltDAQ v1r4
+  . Add check of RawBank magic pattern in HltDec/Sel/VertexReportsDecoder,
+    HltRawBankMonitor
+
+- In L0Calo v11r1
+  . L0CaloCandidatesFromRaw.cpp: protect against missing magic pattern in 
+    RAW banks. In this case, do not decode the bank.
+
+- In L0DU v10r4
+  . L0ProcessorDecoder/L0DUEmulatorTool : no longer return Failure when processor
+    data is missing. Process anyway with NULL-input (+lot of warnings)
+  . L0Filter : improve L0Filtering (TCK-dependent orChannels)
+
+- In L0Muon v9r1
+  . Change in CondDB (L0MuonAlg), use new condition (SoftFOI) 
+  . Add implementation of L0MuonOverflowTool, L0MuonOLErrorTool, L0MuonInputTool
+  . Better handling of TAE event (L0MuonCandidatesFromRaw & L0MuonAlg)
+  . L0MuonOutputs : add protection against wrong magic pattern in RAW banks. 
+
+- In L0MuonMonitor v2r0
+  . Remove obsolete file L0MuonMonitor_dll.cpp
+  . Add dependency to L0/L0Muon (requirements)
+  . Add new algorithms : L0MuonMonitorProcessing, L0MuonMonitorInput,
+    L0MuonMonitorError, L0MuonMonitorData, L0MuonMonitorCandidates
+  . L0MuonOnlineMonitor : improvements + bug fixe (get odin info only for 
+    central time slice)
+  . L0MuonMuonComp : new output format, imporve handling of pdm
+  . L0MuonAlgComparison : implement a light mode if Online property is set
+  . L0MuonMonitorBase : 
+	  o new helper functions : getL0MuonPads, olsErrorSummary, activeTS
+    o new properties : Prescale & Online
+
+- In PuVeto v7r7p1
+  . PuVetoAlg: bug fix for backward compatibility (no bank-size check on 
+    older bank version 1) + magic number check
+
+- In MuonAssociators v3r3
+  . changes in MuonPad2MCTool 
+
+- In RichDAQ v3r26p1
+  . Add check on Rawbank magic pattern to detect general data corruption issues
+
+- In RichTools v2r29p1
+  . Add support "Below Threshold" Particle ID type.
+
+- In STMonitors v2r6
+  . Added new 2d histogram to normalise MPV map as profile2d is not supported by
+    the MonitorSvc yet.
+  . Changed MPV map histogram to 2D profile.
+  . add algorithm to dump ADCs to an ntuple.
+  . Improved STDQSummaryAlg's text output and added column for RunDate
+
+- In STTools v3r18
+  . Tuning of measurement uncertainties
+
+- In VeloAlgorithms v5r2
+  . Change electrons per ADC to 601 (was 442) to match VeloSim changes
+  . Reduce Warning/Error messages to debug if there is a sensor with no 
+    MCVeloFEs, does happen now with VeloSim optimisation
+
+- In VeloDAQ v4r13
+  . ZS banks are no longer decoded when the TELL1 has set the error flag
+  . Add protection against corrupted banks in Velo decoders
+
+- In VeloSimulation v3r7
+  . Changed simulation to match 2009 collision data and TELL1 style cluster 
+    maker, gain is lower 601 ADC per electron instead of 442 and smaller noise
+  . Added an optimisation to only make isolated MCVeloFEs if they could start a
+    cluster, still use inclusion threshold for FEs next to an FE with signal
+  . Change timing curve to match data from tests on the cold detector
+  . Fix simulation of NZS data to generate gaussian noise not gaussian tail
+    noise
+
+- In VeloPixDAQ v1r1
+  . Add VeloPixRawBankToPartialCluster to have partial decoding of the
+    VeloPixCluster: get central ChannelID + LiteCluster.
+	. Add sorting of the FastClusterContainer in VeloPixRawBankToLiteCluster
 
 </PRE><H1><A NAME=v8r3>2010-02-25 LbcomSys v8r3</A></H1><PRE>
 This version uses Gaudi v21r7p1 and LHCb v29r2
