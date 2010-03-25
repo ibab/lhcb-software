@@ -1,0 +1,31 @@
+package RecoUpgrade
+version v1r0
+
+branches cmt src doc options python
+
+use     TfKernel        v*      Tf
+use     LinkerEvent     v*      Event
+use     PhysEvent       v*      Event
+use     MCEvent         v*      Event
+use     DigiEvent       v*      Event
+use     DAQEvent        v*      Event
+use     MCInterfaces    v*      Kernel
+
+use     VeloPixDet      v*      Det
+use     TrackFitEvent      v*     Tr
+
+
+use  VeloPixDet     v*       Det
+use  GaudiAlg       v*
+use  GaudiKernel     v*
+
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library           RecoUpgrade   ../src/*.cpp 
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=RecoUpgrade

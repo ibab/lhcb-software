@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Rec/RecoUpgrade
+! Responsible : Victor Coco
+! Purpose     : Package for the reconstruction in upgraded detector classes
+!-----------------------------------------------------------------------------
+
+! 2010-03-22 - Victor Coco
+ - Creation of the package, most of the classes are still in developpment
+
