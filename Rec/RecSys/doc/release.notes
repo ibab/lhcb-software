@@ -11,9 +11,13 @@ This version uses Gaudi v21r8 and LHCb v30r0
 
 - A few non-critical patches to improve 2009 data processing.
 
+- Critical bug fixed in TrackMasterFitter, savannah 64808
+  . The veloExtrapolator (straight lines) was not used for VeloR tracks, now it is (correctly) used
+  . This could cause changes if any users are specifically interested in those tracks
+
 - Major update to configurables across REC, using the new gaudi functionality
-  ConfigurableUsers can now be named, and identified by that name.
-  This new framework is neccessary for the HLT2
+  . ConfigurableUsers can now be named, and identified by that name.
+  . This new framework is neccessary for the HLT2
 
 - Minor updates to supress hundreds of wanings in windows compiler
 
@@ -93,6 +97,7 @@ This version uses Gaudi v21r8 and LHCb v30r0
 
 - In Tf/TrackFitter v2r46:
   . fixed bug in TrackMasterFitter, savannah 64808
+  . this was a critical bug, affecting VeloR tracks
 
 - In Tf/TrackSys v4r31:
   . add ST error tuning for the fit (only for early data)
