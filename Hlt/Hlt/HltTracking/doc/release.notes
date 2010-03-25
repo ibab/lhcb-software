@@ -1,9 +1,25 @@
-!$Id: release.notes,v 1.100 2010-03-23 22:43:37 gligorov Exp $
+!$Id: release.notes,v 1.101 2010-03-25 18:59:15 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2010-03-25 - V. Gligorov
+ - Continuing work on Savannah tasks #12691,13784.
+   . Add the ability to CALO ID Muons, needed for Tag-and-Probe
+   . Add the ability to control the RICH radiators and particle
+     hypotheses used in the reconstruction.
+   . Add safety checks to make sure that tracking/pid configurations
+     only get used for their intended purpose, e.g. that if someone
+     configured an instance to make RICH-ID protons they cannot then
+     use it to make pi0s.
+   . Add genuine NoPIDs ProtoParticles, which are not overwritten with
+     PID information by other tools.   
+   . Remove the options UseRICH and UseCALO and replace them with methods
+     to get RICH-IDd and CALO-IDd protoparticles.
+   . Remove the option to both RICH and CALO ID charged hadrons. 
+   . Fix assorted bugs.   
 
 ! 2010-03-23 - V. Gligorov
  - Continuing work on Savannah tasks #12691,13784.
