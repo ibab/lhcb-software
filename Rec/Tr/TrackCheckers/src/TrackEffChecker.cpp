@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.cpp,v 1.21 2010-03-24 12:10:01 rlambert Exp $
+// $Id: TrackEffChecker.cpp,v 1.22 2010-03-25 05:18:42 rlambert Exp $
 // Include files 
 #include "TrackEffChecker.h"
 
@@ -427,6 +427,8 @@ void TrackEffChecker::plots(const std::string& type,
   if (track->history() != LHCb::Track::PatVeloR && 
       track->history() != LHCb::Track::PatVeloGeneric &&
       track->history() != LHCb::Track::PatVeloGeneral &&
+      track->type() != LHCb::Track::Velo &&
+      track->type() != LHCb::Track::VeloR &&
       track->history() != LHCb::Track::PatVeloOpen){
     plot(track->pt()/Gaudi::Units::GeV,type+"/pt","pt", 0., 10., 100);
     plot(track->p()/Gaudi::Units::GeV,type+"/p","p", 0., 50., 25);

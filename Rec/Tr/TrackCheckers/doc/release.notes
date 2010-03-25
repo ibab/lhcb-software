@@ -4,6 +4,11 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+! 2010-03-25 - Rob Lambert
+ - Bug in TrackEffChecker, savannah 64727
+   . fills some infinite P/Pt tracks
+   . modified to now check the type() before filling
+
 !======================= TrackCheckers v4r10p1 2010-03-24 =====================
 ! 2010-03-24 - Rob Lambert
  - More windows fixes
