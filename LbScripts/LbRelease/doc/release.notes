@@ -1,3 +1,8 @@
+2010-03-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/LHCbDoc.py: Added an executable python module to
+	produce the documentation of consistent sets of LHCb projects.
+
 2010-03-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/rcs.py: use a default message when tagging packages in
