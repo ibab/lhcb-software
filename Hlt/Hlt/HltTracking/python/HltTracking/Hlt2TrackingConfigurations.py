@@ -9,109 +9,102 @@ from HltTrackNames import Hlt2LongTracksName, HltUniDirectionalKalmanFitSuffix
 #
 # Define all the instances of Hlt2Tracking
 #
-# The  vanilla  configuration, no track fitting, no RICH
-# PID, no seeding, no CALO PID for charged hadrons 
+# The  vanilla  configuration, no track fitting or seeding
 #
 def Hlt2UnfittedForwardTracking() :
-	return Hlt2Tracking("Hlt2UnfittedForwardTracking", 			Prefix 			= Hlt2TracksPrefix, 
-										FastFitType 		= HltUnfittedTracksSuffix,
-										Hlt2Tracks		= Hlt2ForwardTracksName,
-										DoFastFit		= False,
-										UseRICHForHadrons	= False,
-										UseCALOForHadrons	= False,
-										DoSeeding		= False,
-										DoCloneKilling		= False,
-										MakeNeutrals		= False
+ 	return Hlt2Tracking("Hlt2UnfittedForwardTracking", 			 Prefix			= Hlt2TracksPrefix, 
+										 FastFitType 		= HltUnfittedTracksSuffix,
+										 Hlt2Tracks		= Hlt2ForwardTracksName,
+										 DoFastFit		= False,
+										 DoSeeding		= False
 									)
 #
-# With unidirectional track fitting, no RICH PID, no seeding,
-# no CALO PID for charged hadrons 
+# With unidirectional track fitting, no seeding
 #
 def Hlt2UniKalmanFittedForwardTracking() :
         return Hlt2Tracking("Hlt2UniKalmanFittedForwardTracking",	 	 Prefix                 = Hlt2TracksPrefix,
                                                                                  FastFitType            = HltUniDirectionalKalmanFitSuffix,
                                                                                  Hlt2Tracks             = Hlt2ForwardTracksName,
                                                                                  DoFastFit              = True,
-                                                                                 UseRICHForHadrons      = False,
-                                                                                 UseCALOForHadrons      = False,
-                                                                                 DoSeeding              = False,
-                                                                                 DoCloneKilling         = False,
-                                                                                 MakeNeutrals           = False
+                                                                                 DoSeeding              = False
                                                                         )
 #
-# With seeding, no track fitting, no RICH
-# PID, no CALO PID for charged hadrons 
+# With bidirectional track fitting, no seeding
+#
+def Hlt2BiKalmanFittedForwardTracking() :
+        return Hlt2Tracking("Hlt2BiKalmanFittedForwardTracking",                 Prefix                 = Hlt2TracksPrefix,
+                                                                                 FastFitType            = HltBiDirectionalKalmanFitSuffix,
+                                                                                 Hlt2Tracks             = Hlt2ForwardTracksName,
+                                                                                 DoFastFit              = True,
+                                                                                 DoSeeding              = False
+                                                                        )
+#
+# With seeding, no track fitting
 #
 def Hlt2UnfittedLongTracking() :
         return Hlt2Tracking("Hlt2UnfittedLongTracking",              	       	 Prefix                 = Hlt2TracksPrefix,
                                                                                  FastFitType            = HltUnfittedTracksSuffix,
                                                                                  Hlt2Tracks             = Hlt2LongTracksName,
                                                                                  DoFastFit              = False,
-                                                                                 UseRICHForHadrons      = False,
-                                                                                 UseCALOForHadrons      = False,
                                                                                  DoSeeding              = True,
-                                                                                 DoCloneKilling         = False,
-                                                                                 MakeNeutrals           = False
+                                                                                 DoCloneKilling         = True
                                                                         )
 #
-# With track fitting and RICH PID, but no seeding
-# and no CALO PID for charged hadrons
+# With seeding and track fitting
 #
-def Hlt2BiKalmanFittedRICHForwardTracking() :
-	return Hlt2Tracking("Hlt2BiKalmanFittedRICHForwardTracking",    	 Prefix                 = Hlt2TracksPrefix,
-                                                                        	 FastFitType            = HltBiDirectionalKalmanFitSuffix,
-                                                                        	 Hlt2Tracks             = Hlt2ForwardTracksName,
-                                                                        	 DoFastFit              = True,
-                                                                        	 UseRICHForHadrons      = True,
-                                                                        	 UseCALOForHadrons      = False,
-                                                                        	 DoSeeding              = False,
-                                                                        	 DoCloneKilling         = False,
-                                                                                 MakeNeutrals           = False
-                                                                	)
+def Hlt2BiKalmanFittedLongTracking() :
+        return Hlt2Tracking("Hlt2BiKalmanFittedLongTracking",                    Prefix                 = Hlt2TracksPrefix,
+                                                                                 FastFitType            = HltBiDirectionalKalmanFitSuffix,
+                                                                                 Hlt2Tracks             = Hlt2LongTracksName,
+                                                                                 DoFastFit              = True,
+                                                                                 DoSeeding              = True,
+                                                                                 DoCloneKilling         = True
+                                                                        )
 #
-# Now for the Downstream tracks, but no track fit. RICH and CALO PID
-# information off, makes downstream tracks ONLY
+# Now for the Downstream tracks, but no track fit. 
 #
 def Hlt2UnfittedDownstreamTracking() :
 	return Hlt2Tracking("Hlt2UnfittedDownstreamTracking",		         Prefix                 = Hlt2TracksPrefix,
                                                                                  FastFitType            = HltUnfittedTracksSuffix,
                                                                                  Hlt2Tracks             = Hlt2DownstreamTracksName,
                                                                                  DoFastFit              = False,
-                                                                                 UseRICHForHadrons      = False,
-                                                                                 UseCALOForHadrons      = False,
-                                                                                 DoSeeding              = True,
-                                                                                 DoCloneKilling         = False,
-                                                                                 MakeNeutrals           = False
+                                                                                 DoSeeding              = True
                                                                         )
 #
 # Now the Downstream tracks with the bidirectional Kalman fit.
-# RICH and CALO PID information off, makes downstream tracks ONLY
 #
 def Hlt2BiKalmanFittedDownstreamTracking() :
 	return Hlt2Tracking("Hlt2BiKalmanFittedDownstreamTracking",	         Prefix                 = Hlt2TracksPrefix,
                                                                                  FastFitType            = HltBiDirectionalKalmanFitSuffix,
                                                                                  Hlt2Tracks             = Hlt2DownstreamTracksName,
                                                                                  DoFastFit              = True,
-                                                                                 UseRICHForHadrons      = False,
-                                                                                 UseCALOForHadrons      = False,
-                                                                                 DoSeeding              = True,
-                                                                                 DoCloneKilling         = False,
-                                                                                 MakeNeutrals           = False
+                                                                                 DoSeeding              = True
                                                                         )
 #
 # Now the instance which we will use in order to make the neutral
 # protoparticles.
 #
 def Hlt2UnfittedForwardTrackingForNeutrals() :
-        return Hlt2Tracking("Hlt2UnfittedForwardTrackingForNeutrals",           Prefix                  = Hlt2TracksPrefix,
-                                                                                FastFitType             = HltUnfittedTracksSuffix,
-                                                                                Hlt2Tracks              = Hlt2ForwardTracksName,
-                                                                                DoFastFit               = False,
-                                                                                UseRICHForHadrons       = False,
-                                                                                UseCALOForHadrons       = False,
-                                                                                DoSeeding               = False,
-                                                                                DoCloneKilling          = False,
-                                                                                MakeNeutrals            = True
+        return Hlt2Tracking("Hlt2UnfittedForwardTrackingForNeutrals",            Prefix                  = Hlt2TracksPrefix,
+                                                                                 FastFitType             = HltUnfittedTracksSuffix,
+                                                                                 Hlt2Tracks              = Hlt2ForwardTracksName,
+                                                                                 DoFastFit               = False,
+                                                                                 DoSeeding               = False,
+                                                                                 DoCloneKilling          = False,
+                                                                                 MakeNeutrals            = True
+                                                                        )
+#
+# With track fitting and RICH PID for 3 hypotheses (kaon-proton-pion), but no seeding
+#
+def Hlt2BiKalmanFittedRichForProtonsForwardTracking() :
+        return Hlt2Tracking("Hlt2BiKalmanFittedRichForProtonsForwardTracking",   Prefix                 = Hlt2TracksPrefix,
+                                                                                 FastFitType            = HltBiDirectionalKalmanFitSuffix,
+                                                                                 Hlt2Tracks             = Hlt2ForwardTracksName,
+                                                                                 DoFastFit              = True,
+                                                                                 DoSeeding              = False,
+                                                                                 DoCloneKilling         = False,
+                                                                                 MakeNeutrals           = False,
+                                                                                 RichHypos              = ["pion","kaon","proton"]
                                                                         )
 #
 def setDataTypeForTracking(trackingInstance, dataType):

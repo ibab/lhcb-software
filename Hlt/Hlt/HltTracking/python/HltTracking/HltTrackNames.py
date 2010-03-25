@@ -76,10 +76,22 @@ Hlt2NeutralProtoParticleSuffix 		= "Neutrals"
 # overwrite each other!
 # 
 HltSharedPIDPrefix			= "PID"
+HltNoPIDSuffix				= "NoPID"
 HltMuonIDSuffix				= "Muon"
 HltRICHIDSuffix				= "RICH"
 HltCALOIDSuffix				= "CALO"
-#  
+#
+# The default RICH options
+#
+HltRichDefaultHypos			= ["pion","kaon"]
+HltRichDefaultRadiators			= ["Rich1Gas","Rich2Gas"] 
+# And the subdirectories. These are necessary so that different algorithms
+# using e.g. different options for the RICH reco (radiators, hypotheses) 
+# don't clash with each other 
+#
+HltCaloProtosSuffix			= "WithCaloID"
+HltMuonProtosSuffix			= "WithMuonID"
+HltRichProtosSuffix			= "WithRichID"
 ########################################################################
 # The rules for generating track and proto particle containers
 # These rules apply to HLT2 TODO: add rule for HLT1 usable from Hlt1Units
@@ -127,9 +139,17 @@ __all__ = (
 		Hlt2NeutralProtoParticleSuffix,
 		#	
 		HltSharedPIDPrefix,
+		HltNoPIDSuffix, 
 		HltMuonIDSuffix,   
 		HltRICHIDSuffix,   
 		HltCALOIDSuffix,
+		#
+		HltRichDefaultHypos,
+		HltRichDefaultRadiators,
+		#
+		HltCaloProtosSuffix,               
+		HltMuonProtosSuffix,                     
+		HltRichProtosSuffix,                   
 		#
 		# The functions
 		#
