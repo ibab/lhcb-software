@@ -300,7 +300,7 @@ class Doc(object):
             # make the link to the doc directory in the common one
             doclinkdir = os.path.join(self.root, self._docCollDir)
             if not os.path.isdir(doclinkdir):
-                _log.debug("Create directory %s", doclinkdir)
+                _log.debug("Creating directory %s", doclinkdir)
                 os.makedirs(doclinkdir)
             doclink = os.path.join(doclinkdir,
                                    "%s_%s" % (project, version))
@@ -311,7 +311,7 @@ class Doc(object):
                     os.remove(doclink)
                     os.symlink(os.path.join("..", self.name), doclink)
             else:
-                _log.info("Create link %s to %s", doclink, self.name)
+                _log.info("Creating link %s to %s", doclink, self.name)
                 os.symlink(os.path.join("..", self.name), doclink)
             
     
@@ -406,7 +406,11 @@ class Doc(object):
         doxycfg["EXTRACT_LOCAL_CLASSES"] = True
     
         # write the output file
-        open(os.path.join(self.path, "DoxyFile.cfg"), "w").write(str(doxycfg))
+        confdir = os.path.join(self.path, "conf")
+        if not os.path.isdir(confdir):
+            _log.debug("Creating directory %s", confdir)
+            os.makedirs(confdir) 
+        open(os.path.join(confdir, "DoxyFile.cfg"), "w").write(str(doxycfg))
 
     def build(self):
         """
@@ -419,8 +423,9 @@ class Doc(object):
             _log.warning("Old documentation moved to %s", old)
             os.rename(self.output, old)
         _log.info("Running doxygen")
-        # @todo build the documentation in a temporary directory
-        proc = Popen(["doxygen", "DoxyFile.cfg"], cwd = self.path, stdin = PIPE)
+        # @todo: build the documentation in a temporary directory
+        proc = Popen(["doxygen", os.path.join("conf", "DoxyFile.cfg")],
+                     cwd = self.path, stdin = PIPE)
         proc.stdin.write("r\n") # make latex enter \nonstopmode on the first error
         return proc.wait()
 
@@ -438,7 +443,7 @@ def allDocs(root = None):
 #--- Application logic
 def main():
     from optparse import OptionParser
-    parser = OptionParser(usage = "%prog [options] project version")
+    parser = OptionParser(usage = "%prog [options] project version [project version ...]")
     parser.add_option("--verbose", action = "store_true",
                       help = "Print more messages")
     parser.add_option("--debug", action = "store_true",
@@ -449,10 +454,11 @@ def main():
                       help = "Do not run doxygen")
     
     opts, args = parser.parse_args()
-    if len(args) != 2:
+    if not args or (len(args)%2 != 0):
         parser.error("Wrong number of arguments")
-    project = args[0].upper()
-    version = args[1]
+    projects = set()
+    for i in range(0, len(args), 2):
+        projects.add((args[i].upper(), args[i + 1]))
     
     log_level = logging.WARNING
     if opts.verbose:
@@ -463,42 +469,62 @@ def main():
     
     docs = allDocs(opts.root)
     
-    # check if the project is already known
-    for d in docs:
-        if d.getVersion(project) == version:
-            _log.warning("Project %s %s is already in %s", project, version, d.name)
-            return
-
-    # Get all the dependencies of the project
-    deps = _getProjDeps(project, version)
-    # get the candidates, i.e. the doc directories that can include the requested
-    # project with its dependencies
-    candidates = [ d for d in docs
-                   if d.canHost(project, version, deps) ]
-    if not candidates:
-        # no candidates available, create a new doc dir
-        _log.debug("Create new doc dir")
-        doc = Doc()
-    elif len(candidates) == 1:
-        # only one candidate, use it
-        doc = candidates[0]
-        _log.debug("Using %s", doc.name)
-    else:
-        # more than one candidate
-        _log.error("More than one candidate doc dir: %s",
-                   ", ".join([d.name for d in candidates]))
-        return
-    # First add the dependencies (not yet there)
-    for p, v in deps:
-        if doc.getVersion(p) is None:
-            doc.add(p, v)
-    # Then add the project
-    doc.add(project, version)
-    if opts.no_build:
-        # if we should not run doxygen, at least generate the doxygen file
-        doc._generateDoxyFile()
-    else:
-        doc.build()
+    # keep only projects that are not already known
+    def projectNotKnown(pv):
+        project, version = pv
+        for d in docs:
+            if d.getVersion(project) == version:
+                _log.info("Project %s %s is already in %s", project, version, d.name)
+                return False
+        return True
+    projects = set(filter(projectNotKnown, projects))
+    
+    # list to keep track of the projects that have been added as
+    # dependencies of others
+    projects_added = set()
+    def makeDoc(pv):
+        if pv in projects_added:
+            return None
+        project, version = pv
+        # Get all the dependencies of the project
+        deps = _getProjDeps(project, version)
+        # get the candidates, i.e. the doc directories that can include the requested
+        # project with its dependencies
+        candidates = [ d for d in docs
+                       if d.canHost(project, version, deps) ]
+        if not candidates:
+            # no candidates available, create a new doc dir
+            _log.debug("Creating new doc dir")
+            doc = Doc()
+        elif len(candidates) == 1:
+            # only one candidate, use it
+            doc = candidates[0]
+            _log.debug("Using %s", doc.name)
+        else:
+            # more than one candidate
+            #_log.error("More than one candidate doc dir: %s",
+            #           ", ".join([d.name for d in candidates]))
+            return None
+        # First add the dependencies (not yet there)
+        for p, v in deps:
+            if doc.getVersion(p) is None:
+                doc.add(p, v)
+        projects_added.update(deps)
+        # Then add the project
+        doc.add(project, version)
+        projects_added.add(pv)
+        return doc
+    docs_to_build = set(map(makeDoc, projects))
+    
+    for doc in docs_to_build:
+        if opts.no_build:
+            # if we should not run doxygen, at least generate the doxygen file
+            doc._generateDoxyFile()
+        else:
+            doc.build()
+    projects -= projects_added
+    if projects:
+        _log.warning("Projects not added: %s", list(projects)) 
 
 if __name__ == '__main__':
     main()
