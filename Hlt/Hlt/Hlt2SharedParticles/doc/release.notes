@@ -1,9 +1,16 @@
-$Id: release.notes,v 1.84 2010-03-25 17:25:07 jhe Exp $
+$Id: release.notes,v 1.85 2010-03-25 18:50:25 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2010-03-25 - V. Gligorov
+ - Continuing work on Savannah tasks #12691,13784.
+   . Add TagAndProbeParticles in order to allow the tag and probe
+     line in Hlt2ExpressLines to work again.
+   . Update the basic and track fitted particles to follow changes
+     in Hlt2Tracking.
 
 ! 2010-03-25 - Jibo He
  - TrackFittedDiMuon.py added, just a copy of DiMuon.py by replacing 

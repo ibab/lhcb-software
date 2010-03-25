@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.435 2010-03-23 22:39:14 gligorov Exp $ 
+! $Id: release.notes,v 1.436 2010-03-25 18:53:18 gligorov Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-03-25 - V. Gligorov
+ - Continuing work on Savannah tasks #12691,13784.
+   . Remove the swimming lines from Hlt1 as they are obsolete
+     and soon to be cvs rm-ed anyway.
+   . Update the known tracking configurations in Hlt2. 
 
 ! 2010-03-23 - V. Gligorov
  - Continuing work on Savannah tasks #12691,13784.

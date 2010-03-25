@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.21 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.22 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
@@ -20,7 +20,7 @@ from GaudiKernel.SystemOfUnits import MeV
 #
 # These are all based on unfitted tracks
 # No RICH info can be added until the fast-fit is done
-# For particles with RICH info see TFBasicParticles
+# For particles with RICH info see TrackFittedBasicParticles
 #
 from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
 Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
@@ -31,14 +31,14 @@ Hlt2UnfittedForwardTrackingForNeutrals = Hlt2UnfittedForwardTrackingForNeutrals(
 #
 # Charged protoparticles -> pulls all the pid
 #
-caloProtos = Hlt2UnfittedForwardTracking.hlt2ChargedCaloProtos( )
-muonProtos = Hlt2UnfittedForwardTracking.hlt2MuonProtos( )
-hadronProtos = Hlt2UnfittedForwardTracking.hlt2ChargedHadronProtos( )
+caloProtos 	= Hlt2UnfittedForwardTracking.hlt2ChargedCaloProtos( )
+muonProtos 	= Hlt2UnfittedForwardTracking.hlt2ChargedMuonProtos( )
+hadronProtos 	= Hlt2UnfittedForwardTracking.hlt2ChargedNoPIDsProtos( )
 ##########################################################################
 #
 # Neutral protoparticles
 #
-neutralProtos = Hlt2UnfittedForwardTrackingForNeutrals.hlt2NeutralProtos()
+neutralProtos 	= Hlt2UnfittedForwardTrackingForNeutrals.hlt2NeutralProtos()
 ##########################################################################
 # Make the pions
 #
@@ -56,7 +56,6 @@ Hlt2NoCutsKaons.Particle =  "kaon"
 #
 Hlt2NoCutsProtons = Hlt2NoCutsPions.clone("Hlt2NoCutsProtons")
 Hlt2NoCutsProtons.Particle =  "proton" 
-
 ##########################################################################
 # Make the Muons
 #

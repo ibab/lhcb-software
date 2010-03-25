@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.54 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.55 $"
 # =============================================================================
 import types
 from Gaudi.Configuration import *
@@ -33,11 +33,13 @@ from Hlt2Lines.Hlt2diphotonDiMuonLines  import Hlt2diphotonDiMuonLinesConf
 from HltTracking.Hlt2Tracking import Hlt2Tracking
 #
 from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking 
-from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedRICHForwardTracking
 from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedDownstreamTracking
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
 from HltTracking.Hlt2TrackingConfigurations import Hlt2UniKalmanFittedForwardTracking 
+from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
 from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedLongTracking 
+from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedLongTracking 
+from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedRichForProtonsForwardTracking
 from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTrackingForNeutrals 
 from HltTracking.Hlt2TrackingConfigurations import setDataTypeForTracking
 # Define what categories stand for
@@ -45,14 +47,16 @@ from HltTracking.Hlt2TrackingConfigurations import setDataTypeForTracking
 
 
 class Hlt2Conf(LHCbConfigurableUser):
-    __used_configurables__ = [ (Hlt2Tracking 	, "Hlt2UnfittedForwardTracking"			)
-			     , (Hlt2Tracking	, "Hlt2BiKalmanFittedRICHForwardTracking"	)
-			     , (Hlt2Tracking	, "Hlt2UnfittedDownstreamTracking"		)
-			     , (Hlt2Tracking	, "Hlt2BiKalmanFittedDownstreamTracking"	) 
-			     , (Hlt2Tracking	, "Hlt2BiKalmanFittedForwardTracking"		)
-			     , (Hlt2Tracking	, "Hlt2UniKalmanFittedForwardTracking"		)
-			     , (Hlt2Tracking	, "Hlt2UnfittedLongTracking"			)
-			     , (Hlt2Tracking	, "Hlt2UnfittedForwardTrackingForNeutrals"	)	 
+    __used_configurables__ = [ (Hlt2Tracking 	, "Hlt2UnfittedForwardTracking"				)
+			     , (Hlt2Tracking    , "Hlt2BiKalmanFittedRichForProtonsForwardTracking"     )	
+			     , (Hlt2Tracking	, "Hlt2UnfittedDownstreamTracking"			)
+			     , (Hlt2Tracking	, "Hlt2BiKalmanFittedDownstreamTracking"		) 
+			     , (Hlt2Tracking	, "Hlt2BiKalmanFittedForwardTracking"			)
+			     , (Hlt2Tracking	, "Hlt2UniKalmanFittedForwardTracking"			)
+			     , (Hlt2Tracking    , "Hlt2BiKalmanFittedForwardTracking"                   )
+                             , (Hlt2Tracking    , "Hlt2BiKalmanFittedLongTracking"                      )
+			     , (Hlt2Tracking	, "Hlt2UnfittedLongTracking"				)
+			     , (Hlt2Tracking	, "Hlt2UnfittedForwardTrackingForNeutrals"		)		 
 			     , Hlt2TopologicalLinesConf
                              , Hlt2B2DXLinesConf 
                              , Hlt2CharmLinesConf
@@ -109,13 +113,16 @@ class Hlt2Conf(LHCbConfigurableUser):
 
 	definedTrackings = []
 	# Pass the data type to the various tracking configurations
-	definedTrackings	+= [	Hlt2UnfittedForwardTracking()		]
-	definedTrackings	+= [	Hlt2BiKalmanFittedRICHForwardTracking()	]
-	definedTrackings	+= [	Hlt2UnfittedDownstreamTracking()	]
-	definedTrackings	+= [	Hlt2BiKalmanFittedDownstreamTracking()	]
-	definedTrackings	+= [	Hlt2UniKalmanFittedForwardTracking()	]
-	definedTrackings	+= [	Hlt2UnfittedLongTracking()		]
-	definedTrackings	+= [	Hlt2UnfittedForwardTrackingForNeutrals()]
+	definedTrackings	+= [	Hlt2UnfittedForwardTracking()				]
+	definedTrackings	+= [	Hlt2UnfittedDownstreamTracking()			]
+	definedTrackings	+= [	Hlt2BiKalmanFittedDownstreamTracking()			]
+	definedTrackings	+= [	Hlt2UniKalmanFittedForwardTracking()			]
+	definedTrackings	+= [	Hlt2UnfittedLongTracking()				]
+	definedTrackings	+= [	Hlt2UnfittedForwardTrackingForNeutrals()		]
+	definedTrackings        += [	Hlt2BiKalmanFittedForwardTracking()			]
+	definedTrackings        += [	Hlt2BiKalmanFittedLongTracking()			] 
+	definedTrackings        += [	Hlt2BiKalmanFittedRichForProtonsForwardTracking()	]
+
 
         # And now we have to, for each of the configurables we just created, 
 	# tell it the data type and tell it to use all the Hlt2 lines...

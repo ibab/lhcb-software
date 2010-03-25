@@ -16,8 +16,10 @@ from Configurables import PhotonMaker, PhotonMakerAlg
 from Configurables import ProtoParticleCALOFilter, ProtoParticleMUONFilter
 from GaudiKernel.SystemOfUnits import MeV
 #
-from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedRICHForwardTracking
-Hlt2BiKalmanFittedRICHForwardTracking 	= Hlt2BiKalmanFittedRICHForwardTracking()
+# Forward fitted
+#
+from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+Hlt2BiKalmanFittedForwardTracking   = Hlt2BiKalmanFittedForwardTracking()
 #
 # Now the downstream tracking
 #
@@ -29,25 +31,25 @@ Hlt2BiKalmanFittedDownstreamTracking 	= Hlt2BiKalmanFittedDownstreamTracking()
 # 
 ##########################################################################
 #
-# Charged protoparticles, no RICH
+# Charged hadron protoparticles, no Rich
 #
-BiKalmanFittedChargedProtoMaker 		= Hlt2BiKalmanFittedRICHForwardTracking.hlt2ChargedProtos()
+BiKalmanFittedChargedProtoMaker 		= Hlt2BiKalmanFittedForwardTracking.hlt2ChargedNoPIDsProtos()
 #
-# Downstream protoparticles, no RICH
+# Downstream hadron protoparticles, no Rich
 #
-BiKalmanFittedChargedDownProtoMaker		= Hlt2BiKalmanFittedDownstreamTracking.hlt2ChargedProtos()
+BiKalmanFittedChargedDownProtoMaker		= Hlt2BiKalmanFittedDownstreamTracking.hlt2ChargedNoPIDsProtos()
 #
-# hadrons with the RICH
+# hadrons with the Rich
 #
-BiKalmanFittedChargedRICHHadronProtoMaker 	= Hlt2BiKalmanFittedRICHForwardTracking.hlt2ChargedHadronProtos()
+BiKalmanFittedChargedRichHadronProtoMaker 	= Hlt2BiKalmanFittedForwardTracking.hlt2ChargedRichProtos()
 #
 # electrons
 #
-BiKalmanFittedChargedCaloProtoMaker 		= Hlt2BiKalmanFittedRICHForwardTracking.hlt2ChargedCaloProtos()
+BiKalmanFittedChargedCaloProtoMaker 		= Hlt2BiKalmanFittedForwardTracking.hlt2ChargedCaloProtos()
 #
 # Muons  
 #
-BiKalmanFittedMuonProtoMaker 			= Hlt2BiKalmanFittedRICHForwardTracking.hlt2MuonProtos()
+BiKalmanFittedMuonProtoMaker 			= Hlt2BiKalmanFittedForwardTracking.hlt2ChargedMuonProtos()
 ##########################################################################
 #
 # Make the Muons
@@ -56,7 +58,7 @@ Hlt2BiKalmanFittedMuons 				= CombinedParticleMaker("Hlt2BiKalmanFittedMuons")
 Hlt2BiKalmanFittedMuons.addTool(ProtoParticleMUONFilter('Muon'))
 Hlt2BiKalmanFittedMuons.Input 				=  BiKalmanFittedMuonProtoMaker.outputSelection()
 Hlt2BiKalmanFittedMuons.Particle 			= "muon"
-Hlt2BiKalmanFittedMuons.Muon.Selection 			= ["RequiresDet='MUON'"]
+Hlt2BiKalmanFittedMuons.Muon.Selection 			= ["RequiresDet='MUON' IsMuon=True"]
 ##########################################################################
 #
 # Make the pions
@@ -98,7 +100,7 @@ Hlt2BiKalmanFittedDownProtons.Input 			=  BiKalmanFittedChargedDownProtoMaker.ou
 #
 Hlt2BiKalmanFittedRichKaons 				= CombinedParticleMaker("Hlt2BiKalmanFittedRichKaons")
 Hlt2BiKalmanFittedRichKaons.Particle 			=  "kaon"
-Hlt2BiKalmanFittedRichKaons.Input 			= BiKalmanFittedChargedRICHHadronProtoMaker.outputSelection() 
+Hlt2BiKalmanFittedRichKaons.Input 			= BiKalmanFittedChargedRichHadronProtoMaker.outputSelection() 
 ##########################################################################
 #
 # Make the electrons
@@ -134,4 +136,4 @@ BiKalmanFittedProtons       = bindMembers( None, [ BiKalmanFittedChargedProtoMak
 BiKalmanFittedDownProtons   = bindMembers( None, [ BiKalmanFittedChargedDownProtoMaker          , Hlt2BiKalmanFittedDownProtons ] )
 BiKalmanFittedMuons         = bindMembers( None, [ BiKalmanFittedMuonProtoMaker			, Hlt2BiKalmanFittedMuons 	] )
 BiKalmanFittedElectrons     = bindMembers( None, [ BiKalmanFittedChargedCaloProtoMaker		, Hlt2BiKalmanFittedElectrons 	] ) 
-BiKalmanFittedRichKaons     = bindMembers( None, [ BiKalmanFittedChargedRICHHadronProtoMaker	, Hlt2BiKalmanFittedRichKaons 	] ) 
+BiKalmanFittedRichKaons     = bindMembers( None, [ BiKalmanFittedChargedRichHadronProtoMaker	, Hlt2BiKalmanFittedRichKaons 	] ) 
