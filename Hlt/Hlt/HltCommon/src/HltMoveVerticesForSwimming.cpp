@@ -1,4 +1,4 @@
-// $Id: HltMoveVerticesForSwimming.cpp,v 1.8 2010-01-08 12:40:24 gligorov Exp $
+// $Id: HltMoveVerticesForSwimming.cpp,v 1.9 2010-03-25 02:44:25 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -27,16 +27,20 @@ HltMoveVerticesForSwimming::HltMoveVerticesForSwimming( const std::string& name,
   : HltAlgorithm ( name , pSvcLocator )
   , m_selections(*this)
 {
-  declareProperty("Blifetime", m_bLifetime = -999999.0);
-  declareProperty("SwimmingDistance", m_swimmingDistance = 1.0);
-  declareProperty("bMomentum_X" , m_bMom_X = 0.098);
-  declareProperty("bMomentum_Y" , m_bMom_Y = 0.098);
-  declareProperty("bMomentum_Z" , m_bMom_Z = 0.98);
-  declareProperty("bVertex_X" , m_bVert_X = 0.1);
-  declareProperty("bVertex_Y" , m_bVert_Y = 0.1);
-  declareProperty("bVertex_Z" , m_bVert_Z = 1.0);
-  declareProperty("bMass",m_bMass = 5279.);
-
+  declareProperty("Blifetime", 		m_bLifetime		= -999999.0	);
+  declareProperty("SwimmingDistance", 	m_swimmingDistance	= 1.0		);
+  declareProperty("bMomentum_X", 	m_bMom_X		= 1000.		);
+  declareProperty("bMomentum_Y", 	m_bMom_Y		= 1000.		);
+  declareProperty("bMomentum_Z", 	m_bMom_Z		= 10000.	);
+  declareProperty("bVertex_X",		m_bVert_X		= 0.1		);
+  declareProperty("bVertex_Y", 		m_bVert_Y		= 0.1		);
+  declareProperty("bVertex_Z", 		m_bVert_Z		= 1.0		);
+  declareProperty("bMass",		m_bMass			= 5279.		);
+  declareProperty("bEnergy",		m_bE			= 11400.	);
+  declareProperty("bPID",		m_bPID			= 531		);
+  declareProperty("bCovMatrix",		m_bCovMatrix		= boost::assign::list_of((unsigned int) 0));
+  
+  declareProperty("ToolName", m_toolName = "PropertimeFitter" );
   m_selections.declareProperties();
 }
 
@@ -55,6 +59,12 @@ StatusCode HltMoveVerticesForSwimming::initialize() {
 
   m_selections.retrieveSelections();
   m_selections.registerSelection();
+
+  m_fit = tool<ILifetimeFitter>( m_toolName, this );
+  if( !m_fit ){
+    Error("Unable to retrieve the ILifetimeFitter tool");
+    return StatusCode::FAILURE;
+  }
 
   return sc;
 }
@@ -137,7 +147,7 @@ double HltMoveVerticesForSwimming::move_PVs(){
   debug() << "Y coordinate " << bestVertex->position().Y() << endmsg;
   debug() << "Z coordinate " << bestVertex->position().Z() << endmsg;
 
-  newVertPos = bestVertex->position() + m_swimmingDistance*m_bDirection; 
+  newVertPos = bestVertex->position() + m_swimmingDistance*(m_bDirection.Unit()); 
   bestVertex->setPosition(newVertPos); //@FIXME @TODO should NOT modify input vertex
 
   debug() << "The moved vertex is at " << bestVertex << endmsg;
@@ -147,17 +157,38 @@ double HltMoveVerticesForSwimming::move_PVs(){
 
   m_selections.output()->push_back( const_cast<LHCb::RecVertex*>(bestVertex));
 
-  double m_bMom = sqrt(pow(m_bMom_X,2) + pow(m_bMom_Y,2) + pow(m_bMom_Z,2)); 
+  //Make our dummy particle for the lifetime fit
+  LHCb::ParticleID* 	Pid	= new LHCb::ParticleID(m_bPID);
+  LHCb::Particle* 	P	= new LHCb::Particle(*Pid);	 
+  //Give it a vertex, momentum, etc.
+  P->setReferencePoint(m_bVertexPosition);
 
-  templifetime = 1000.*m_bMass*sqrt(	(m_bVertexPosition - 
-		       			 bestVertex->position()
-		      			).Mag2()
-		     		   )/(300.*m_bMom); //get proper lifetime in ps
+  Gaudi::LorentzVector BLmom;
+  BLmom.SetPx(m_bMom_X);
+  BLmom.SetPy(m_bMom_Y);
+  BLmom.SetPz(m_bMom_Z);
+  BLmom.SetE(m_bE);
 
-  if (m_bVertexPosition.Z() < bestVertex->position().Z()) {
-  //Negative lifetime if B behind the moved vertex
-  	templifetime *= - 1;
+  P->setMomentum(BLmom);
+
+  Gaudi::SymMatrix7x7 CovB;
+  CovB.SetElements(m_bCovMatrix.begin(), m_bCovMatrix.end()); 
+
+  P->setPosCovMatrix(CovB.Sub<Gaudi::SymMatrix3x3>(0,0));
+  P->setMomCovMatrix(CovB.Sub<Gaudi::SymMatrix4x4>(3,3)); 
+  P->setPosMomCovMatrix(CovB.Sub<Gaudi::Matrix4x3>(3,0));
+
+  double pt   = -100;
+  double ept  = -100;
+  double chi2 = -100;
+  StatusCode sc =  m_fit->fit ( *bestVertex, *P , pt, ept, chi2 );
+
+  if (!sc) {  
+    warning() << "The lifetime fit failed!!" << endmsg; 
+    return templifetime;
   } 
+
+  templifetime = pt;
 
   debug() << "With lifetime " << templifetime << endmsg;
   return templifetime;
