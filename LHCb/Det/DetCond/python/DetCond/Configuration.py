@@ -35,6 +35,7 @@ class CondDB(ConfigurableUser):
                   "Online"      : False,
                   "IgnoreHeartBeat": False,
                   "HeartBeatCondition" : "/Conditions/Online/LHCb/Tick",
+                  "UseLatestTags" : [],
                   }
     _propertyDocDct = { 
                        'Tags' : """ Dictionary of tags (partition:tag) to use for the COOL databases """,
@@ -50,6 +51,7 @@ class CondDB(ConfigurableUser):
                        'Online' : """ Flag to activate configuration options specific for the Online environment """,
                        'IgnoreHeartBeat' : """ Do not set the HeartBeatCondition for the Online partition """,
                        'HeartBeatCondition' : """ Location of the heart-beat condition in the database """,
+                       "UseLatestTags" : """ List of the form [DataType, OnlyGlobalTags = False] to turn on the usage of the latest tags """,
                        }
     LAYER = 0
     ALTERNATIVE = 1
@@ -96,7 +98,7 @@ class CondDB(ConfigurableUser):
         elif type(accessSvc) not in __CondDBReaders__: # Check for supported types
             raise TypeError("'%s' not supported as CondDBReader"%accessSvc.__class__.__name__)
         return accessSvc
-        
+
     def addLayer(self, accessSvc = None, connStr = None, dbFile = None, dbName = None):
         """
         Add the given CondDBReader as a layer on top of the existing configuration.
@@ -107,7 +109,6 @@ class CondDB(ConfigurableUser):
         # Check the arguments and/or prepare a valid access svc 
         accessSvc = self._checkOverrideArgs(accessSvc, connStr, dbFile, dbName)
         self.Overrides.append((self.LAYER, accessSvc))
-    
     def _addLayer(self, accessSvc):
         cnvSvc = allConfigurables["CondDBCnvSvc"]
         
@@ -140,7 +141,7 @@ class CondDB(ConfigurableUser):
         # Check the arguments and/or prepare a valid access svc 
         accessSvc = self._checkOverrideArgs(accessSvc, connStr, dbFile, dbName)
         self.Overrides.append((self.ALTERNATIVE, accessSvc, path))
-        
+
     def _addAlternative(self, accessSvc, path):
         cnvSvc = allConfigurables["CondDBCnvSvc"]
         
@@ -160,6 +161,35 @@ class CondDB(ConfigurableUser):
                                                       MainAccessSvc = originalReader,
                                                       Alternatives = { path: accessSvc }
                                                       )
+
+    def useLatestTags(self, DataType, OnlyGlobalTags = False):
+        self.UseLatestTags = [DataType, OnlyGlobalTags]
+        
+    def _useLatestTags(self, DataType, OnlyGlobalTags = False):
+        """
+        Configure the conditions database to use the latest local tags on top of the latest global tag for a given data type.
+        """
+        # Check arguments
+        if type(OnlyGlobalTags) is not bool:
+            raise RuntimeError("The value of 'OnlyGlobalTags' flag must be boolean. '%s' is not." % DataType)
+        
+        # Check if the latest tags should be set for simulation or not
+        from CondDBUI.Admin.TagsFilter import last_gt_lts
+        if not self.getProp("Simulation"):
+            partitions = ["DDDB", "LHCBCOND"]
+        else:
+            partitions = ["DDDB", "SIMCOND"]
+        
+        # Set the latest tags
+        for partition in partitions:
+            tags = last_gt_lts(partition, DataType)
+            if not tags:
+                raise RuntimeError("Cannot find tags for partition '%s', data type '%s'" % (partition, DataType))
+            gt, lts = tags
+            self.Tags[partition] = gt
+        if not OnlyGlobalTags:
+                self.LocalTags[partition] = lts
+
     def __make_sqlite_local_copy__(self, accsvc, local_dir = None, force_copy = None):
         if isinstance(accsvc, str):
             # convert the string in an actual configurable instance
@@ -232,8 +262,8 @@ class CondDB(ConfigurableUser):
             # use the same conversion service replacing its content 
             reader = accsvc.getProp("CondDBReader")
             accsvc.CondDBReader = self.__make_sqlite_local_copy__(reader, local_dir)
-        return newaccsvc
-        
+        return newaccsvc                  
+
     def __apply_configuration__(self):
         """
         Converts the high-level information passed as properties into low-level configuration.
@@ -253,6 +283,22 @@ class CondDB(ConfigurableUser):
         #########################################################################
         # Access to ConditionsDB
         ##########################################################################
+        
+        # Set the usage of the latest global tag and (optionaly) all local tags on top of it
+        if self.getProp("UseLatestTags"):
+            if not (self.getProp("Tags") or self.getProp("LocalTags")):
+                use_latest = self.getProp("UseLatestTags")
+                useLatestLength = len(use_latest)
+                if useLatestLength == 1:
+                    self._useLatestTags(use_latest[0])
+                elif useLatestLength == 2:
+                    self._useLatestTags(use_latest[0],use_latest[1])
+                else:
+                    raise RuntimeError("UseLatestTags property (list) takes not more than 2 elements." % useLatestLength)
+            else:
+                raise RuntimeError("'Tags' and 'LocalTags' properties can't be set together with 'UseLatestTags' property.")
+                
+        
         conns = self.getProp("PartitionConnectionString")
         tags = self.getProp("Tags")
         # DB partitions
@@ -352,20 +398,6 @@ class CondDB(ConfigurableUser):
         from Configurables       import CondDBEntityResolver
         VFSSvc().FileAccessTools.append(CondDBEntityResolver())
 
-    def useLatestTags(self, DataType, OnlyGlobalTags = False):
-        """
-        Configure the conditions database to use the latest local tags on top of the latest global tag for a given data type.
-        """
-        from CondDBUI.Admin.TagsFilter import last_gt_lts
-        for partition in ["DDDB", "LHCBCOND"]:
-            tags = last_gt_lts(partition, DataType)
-            if not tags:
-                raise RuntimeError("Cannot find tags for partition %s, data type %s" % (partition, DataType))
-            gt, lts = tags
-            self.Tags[partition] = gt
-	    if not OnlyGlobalTags:
-                self.LocalTags[partition] = lts
-
 
 # Exported symbols
 __all__ = [ "addCondDBLayer", "addCondDBAlternative", "useCondDBLogger",
@@ -391,7 +423,7 @@ def _assertConfig(funcname):
     """
     if "CondDBCnvSvc" not in allConfigurables:
         raise RuntimeError("You cannot call '%s' before the standard CondDB configuration"%funcname)
-     
+
 def addCondDBLayer(accessSvc):
     """
     Add the given CondDBReader as a layer on top of the existing configuration.
@@ -445,7 +477,7 @@ def _timegm(t):
 
 def defConnStrFunc(ym_tuple):
     return "sqlite_file:$SQLITEDBPATH/ONLINE-%04d%02d.db/ONLINE" % ym_tuple
-    
+
 def configureOnlineSnapshots(start = None, end = None, connStrFunc = None):
     if connStrFunc is None:
         connStrFunc = defConnStrFunc

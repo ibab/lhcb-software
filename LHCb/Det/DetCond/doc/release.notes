@@ -4,6 +4,12 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2010-03-26 - Illya Shapoval
+ - Added new CondDB().UseLatestTags = [DataType,OnlyGlobalTags=False] property.
+   Previous  CondDB().useLatestTags(DataType,OnlyGlobalTags=False) method is 
+   preserved. Now it is possible to set the latest tags also for the simulation 
+   case.
+
 !===================== Det/DetCond v12r11 2010-03-17 =========================
 ! 2010-03-17 - Marco Clemencic
  - Changes to the CondDB configurable
