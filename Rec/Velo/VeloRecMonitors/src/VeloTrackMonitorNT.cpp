@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitorNT.cpp,v 1.6 2010-03-23 13:19:00 szumlat Exp $
+// $Id: VeloTrackMonitorNT.cpp,v 1.7 2010-03-26 10:26:52 szumlat Exp $
 // Include files 
 
 
@@ -285,9 +285,9 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track)
             globalDir_mc=std::make_pair(slx_mc, sly_mc);
             IVeloClusterPosition::toolInfo fullInfo_mc;
             fullInfo_mc=m_clusterTool->position(clus, midPoint, globalDir_mc);
-            err_mc=fullInfo_mc.fractionalError*(pitch_mc/Gaudi::Units::micrometer);
+            err_mc=fullInfo_mc.fractionalError;
             Gaudi::XYZVector global3dDir_mc=Gaudi::XYZVector(slx_mc, sly_mc, 1.);
-            localDirection_mc=localTrackDirection(global3dDir, phiDet);
+            localDirection_mc=localTrackDirection(global3dDir_mc, phiDet);
             projAngle_mc=projAnglePhi(localDirection_mc, phiDet, centreStrip);
             auto_ptr<Trajectory> traj=phiDet->trajectory(cluCentChann, fracPos);
             Gaudi::XYZPoint localBeg=phiDet->globalToLocal(traj->beginPoint());
@@ -340,7 +340,6 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track)
             toolInfo=m_clusterTool->position(clus);
             fracPosTool=toolInfo.fractionalPosition;
             fracPos=clus->interStripFraction();
-            //VeloChannelID wCentChann=weightedMean(clus, isp);
             double offset=0.;
             StatusCode channelStat;
             VeloChannelID entryChann;
@@ -352,9 +351,9 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track)
             globalDir_mc=std::make_pair(slx_mc, sly_mc);
             IVeloClusterPosition::toolInfo fullInfo_mc;
             fullInfo_mc=m_clusterTool->position(clus, midPoint, globalDir_mc);
-            err_mc=fullInfo_mc.fractionalError*(pitch_mc/Gaudi::Units::micrometer);
+            err_mc=fullInfo_mc.fractionalError;
             Gaudi::XYZVector global3dDir_mc=Gaudi::XYZVector(slx_mc, sly_mc, 1.);
-            localDirection_mc=localTrackDirection(global3dDir, rDet);
+            localDirection_mc=localTrackDirection(global3dDir_mc, rDet);
             projAngle_mc=projAngleR(localDirection_mc, localMidPoint);
             r_clu=rDet->rOfStrip(cluCentChann.strip(), fracPos);
             r_hit=rDet->rOfStrip(entryChann.strip(), offset);
@@ -417,10 +416,10 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track)
         tuple->column( "pntphi",pntphi);
         tuple->column( "projectedAngle", projAngle);
         if(m_runWithMC){
-          tuple->column("reso_mc", reso_mc/Gaudi::Units::micrometer);
+          tuple->column("reso_mc", reso_mc);
           tuple->column("fracPos", fracPos);
           tuple->column("fracPosTool", fracPosTool);
-          tuple->column("pitch_mc", pitch_mc/Gaudi::Units::micrometer);
+          tuple->column("pitch_mc", pitch_mc);
           tuple->column("slx_mc", slx_mc);
           tuple->column("sly_mc", sly_mc);
           tuple->column("projectedAngle_mc", projAngle_mc);
