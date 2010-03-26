@@ -1,9 +1,13 @@
-$Id: release.notes,v 1.86 2010-03-25 21:43:52 graven Exp $
+$Id: release.notes,v 1.87 2010-03-26 12:57:30 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2010-03-26 - V. Gligorov
+ - Remove Rich Kaons from Basic particles
+ - Add Rich protons to TrackFittedBasicParticles
 
 ! 2010-03-25 - Gerhard Raven
  - set WriteP2PVRelations to False for ParticleMakers to avoid accessing a PV
