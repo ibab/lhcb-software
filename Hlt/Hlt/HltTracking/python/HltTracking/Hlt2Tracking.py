@@ -11,7 +11,7 @@
 ##
 # =============================================================================
 __author__  = "V. Gligorov vladimir.gligorov@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -646,6 +646,16 @@ class Hlt2Tracking(LHCbConfigurableUser):
 	sequenceToReturn += [doRICHReco]
 	sequenceToReturn += [richDLL]
 
+	#
+	# The combined DLL is needed for cutting on later
+	# 
+	from Configurables import ChargedProtoCombineDLLsAlg
+        combine_name                    = self.__pidAlgosAndToolsPrefix()+"RichCombDLLs"
+        combine                         = ChargedProtoCombineDLLsAlg(combine_name)
+        combine.ProtoParticleLocation   = chargedProtosOutputLocation
+
+	sequenceToReturn += [combine]
+	
 	from HltLine.HltLine import bindMembers
 	# Build the bindMembers 
 	bm_name         = self.__pidAlgosAndToolsPrefix()+"ChargedRichProtosSeq"
