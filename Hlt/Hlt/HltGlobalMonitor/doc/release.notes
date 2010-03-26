@@ -1,8 +1,12 @@
-!$Id: release.notes,v 1.65 2010-03-11 22:12:46 graven Exp $
+!$Id: release.notes,v 1.66 2010-03-26 14:03:45 albrecht Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
+
+! 2010-03-26 - Johannes Albrecht
+- HltL0GlobalMonitor: small changes to display disabled channles as such and
+  add ODIN beam info
 
 !========================== HltGlobalMonitor v3r2 2010-03-11 ===================
 ! 1020-03-11 - Johannes Albrecht
