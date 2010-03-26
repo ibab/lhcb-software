@@ -4,14 +4,14 @@
 __author__ = "Marco Clemencic"
 
 import os, re
-
 from subprocess import Popen, PIPE
-
 from stat import ST_SIZE
+from LbUtils.afs.directory import isAFSDir, isMountPoint
 
 import logging
 _log = logging.getLogger(__name__)
 
+#--- Filesystem utils
 def _diskUsage(root):
     """
     Compute the size of a subtree.
@@ -26,6 +26,42 @@ def _diskUsage(root):
             size += os.stat(os.path.join(dirpath, f))[ST_SIZE]
     return size
 
+
+def _which(cmd, path = None):
+    """
+    Locate a file in the path.
+    """
+    if path is None:
+        path = os.environ["PATH"]
+    if type(path) is str:
+        path = path.split(os.path.pathsep)
+    for p in path:
+        if cmd in os.listdir(p):
+            return p
+    return None 
+
+_has_AFS = bool(_which("afs_admin"))
+
+def _makedocdir(path):
+    """
+    Create the directory path.
+    If the parent directory is an AFS volume, a volume is created.
+    
+    @return: True if the value was created, False if it is only a normal directory  
+    """
+    parent = os.path.dirname(path)
+    if _has_AFS and isAFSDir(parent) and isMountPoint(parent):
+        # create the volume
+        from LbUtils.afs.volume import createVolume
+        volume_name = "q.lhcb.%s" % os.path.basename(path)
+        createVolume(path, volume_name, quota = 1000000, group = "z5")
+        return True
+    else:
+        # use the standard system calls
+        os.makedirs(path)
+        return False
+
+#--- Doxygen class
 class DoxyFileCfg(object):
     """
     Dictionary-like class to simplify the generation of doxygen configuration
@@ -123,16 +159,9 @@ def _cmt_show_projects(root):
     Run "cmt show projects" in the project rooted in the specified directory
     and return the output.
     """
-    old = os.getcwd()
-    retval = ""
-    try:
-        cmt = os.path.join(root, "cmt")
-        _log.debug("'cmt show projects' in %s", cmt)
-        os.environ["PWD"] = cmt
-        retval = Popen(["cmt","show","projects"], cwd = cmt, stdout = PIPE).communicate()[0]
-    finally:
-        os.environ["PWD"] = old
-    return retval
+    cmt = os.path.join(root, "cmt")
+    _log.debug("'cmt show projects' in %s", cmt)
+    return Popen(["cmt","show","projects"], cwd = cmt, stdout = PIPE).communicate()[0]
 
 def _getProjDeps(project, version, exclude = None):
     """
@@ -173,7 +202,6 @@ def _getProjDepsX(project, version, exclude = None):
                     to_process.append(b)
     return deps
 
-
 #--- Documentation class
 class Doc(object):
     """
@@ -206,6 +234,8 @@ class Doc(object):
         if name:
             self.name = name
         else: # if the name is not specified, create a new one
+            self._log = _log # temporarily use the main logger
+            self._log.debug("New documentation dir requested")
             # get all doc names
             docs = self._allDocNames()
             if not docs:
@@ -220,7 +250,10 @@ class Doc(object):
                     # this happens when the latest is "DOC_000000"
                     n = 1
             self.name = self._namePattern % n
-            _log.debug("Automatic directory name %s", self.name)
+            self._log.debug("Automatic directory name %s", self.name)
+        
+        # get our logger instance 
+        self._log = logging.getLogger(self.name)
         
         # full path to the directory of the object
         self.path = os.path.join(self.root, self.name)
@@ -231,23 +264,25 @@ class Doc(object):
         # projects in the directory
         self.projects = {}
         if not os.path.isdir(self.path):
-            _log.info("Creating directory %s", self.path)
-            os.makedirs(self.path)
+            self._log.info("Creating directory %s", self.path)
+            self.isAfsVolume = _makedocdir(self.path)
         else:
-            _log.debug("Listing projects in %s", self.path)
+            self._log.debug("Listing projects in %s", self.path)
             for l in os.listdir(self.path):
                 if os.path.islink(os.path.join(self.path, l)):
                     p, v = l.split("_")
                     self.projects[p.upper()] = v # ensure that we use upper case names
-            _log.debug("Found %d projects: %s", len(self.projects),
-                       " ,".join(map(str, self.projects.items())))
+            self._log.debug("Found %d projects: %s", len(self.projects),
+                            " ,".join(map(str, self.projects.items())))
+            self.isAfsVolume = _has_AFS and isAFSDir(self.path) and isMountPoint(self.path)
     
     def _allDocNames(self):
         """
         Get all doc names in the same top-level directory as this one
         (including it).
         """
-        docs = filter(os.path.isdir,
+        self._log.debug("Looking for documentation directories in %s", self.root)
+        docs = filter(lambda d: os.path.isdir(os.path.join(self.root, d)),
                       filter(self._nameRegexp.match,
                              os.listdir(self.root)))
         docs.sort()
@@ -289,7 +324,7 @@ class Doc(object):
             # @todo: check if the version is the same as the contained one
             raise ValueError("Project %s already in %s" % (project, self.name))
         else:
-            _log.debug("Adding project %s %s", project, version)
+            self._log.debug("Adding project %s %s", project, version)
             # make link to the root directory of the project in the doc dir 
             root = _projRoot(project, version)
             if not root:
@@ -300,18 +335,18 @@ class Doc(object):
             # make the link to the doc directory in the common one
             doclinkdir = os.path.join(self.root, self._docCollDir)
             if not os.path.isdir(doclinkdir):
-                _log.debug("Creating directory %s", doclinkdir)
+                self._log.debug("Creating directory %s", doclinkdir)
                 os.makedirs(doclinkdir)
             doclink = os.path.join(doclinkdir,
                                    "%s_%s" % (project, version))
             if os.path.exists(doclink):
                 old = os.path.basename(os.readlink(doclink))
                 if old < self.name:
-                    _log.info("Moving link %s from %s to %s", doclink, old, self.name)
+                    self._log.info("Moving link %s from %s to %s", doclink, old, self.name)
                     os.remove(doclink)
                     os.symlink(os.path.join("..", self.name), doclink)
             else:
-                _log.info("Creating link %s to %s", doclink, self.name)
+                self._log.info("Creating link %s to %s", doclink, self.name)
                 os.symlink(os.path.join("..", self.name), doclink)
             
     
@@ -319,7 +354,7 @@ class Doc(object):
         """
         Generate the doxygen configuration file for the current doc directory.
         """
-        _log.info("Generate DoxyFile.cfg")
+        self._log.info("Generate DoxyFile.cfg")
         doxycfg = DoxyFileCfg([("PROJECT_NAME", "LHCb Software"),
                                ('OUTPUT_DIRECTORY', self.output),
                                ('GENERATE_TAGFILE', 'LHCbSoft.tag'),
@@ -405,10 +440,49 @@ class Doc(object):
         doxycfg["EXTRACT_STATIC"]        = True
         doxycfg["EXTRACT_LOCAL_CLASSES"] = True
     
+        # get externals versions (used for the tag files)
+        gaudipath = os.path.join(self.path, "GAUDI_%s" % self.getVersion("GAUDI"), "GaudiRelease", "cmt")
+        if os.path.isdir(gaudipath): # we use Gaudi as entry point, if it is not there, no external versions
+            gaudipath = os.path.join(self.path, "GAUDI_%s" % self.getVersion("GAUDI"), "GaudiRelease", "cmt")
+            config_versions = Popen(["cmt", "show", "macros", "_config_version"],
+                                    cwd = gaudipath, stdout = PIPE).communicate()[0]
+            # Translate the cmt output
+            #  LCG_config_version='55b'
+            #  COOL_config_version='COOL_2_6_0'
+            #  CORAL_config_version='CORAL_2_1_0'
+            #  POOL_config_version='POOL_2_8_1'
+            # into a dictionary
+            #  { 'LCG': '55b',
+            #    'COOL': 'COOL_2_6_0',
+            #    'CORAL': 'CORAL_2_1_0',
+            #    'POOL': 'POOL_2_8_1' }
+            config_versions = dict([ (k.replace("_config_version", ""), v.strip("'"))
+                                     for k, v in [ l.split("=") for l in config_versions.splitlines() ] ])
+        else:
+            config_versions = {}
+
+        # add tags
+        doxycfg["TAGFILES"] = []
+        # libstdc++
+        tagline = os.path.join(os.environ["LCG_release_area"],
+                               os.path.pardir, os.path.pardir,
+                               "external", "gcc", "4.3.2",
+                               "doc", "libstdc++.tag")
+        tagline = os.path.normpath(tagline) + "=http://gcc.gnu.org/onlinedocs/libstdc++/libstdc++-html-USERS-4.3"
+        doxycfg["TAGFILES"].append(tagline)
+        # add tag entries for the Application Area projects 
+        for aa_project in ["ROOT", "CORAL", "COOL", "POOL"]:
+            if aa_project in config_versions:
+                tagline = os.path.join(os.environ["LCG_release_area"], aa_project,
+                                       config_versions[aa_project], "doc", "doxygen",
+                                       "html", aa_project + "_reference_tags.xml")
+                tagline += "=http://lcgapp.cern.ch/doxygen/%s/%s/doxygen/html" % (aa_project, config_versions[aa_project])
+                doxycfg["TAGFILES"].append(tagline)
+        
         # write the output file
         confdir = os.path.join(self.path, "conf")
         if not os.path.isdir(confdir):
-            _log.debug("Creating directory %s", confdir)
+            self._log.debug("Creating directory %s", confdir)
             os.makedirs(confdir) 
         open(os.path.join(confdir, "DoxyFile.cfg"), "w").write(str(doxycfg))
 
@@ -420,14 +494,45 @@ class Doc(object):
         old = None
         if os.path.isdir(self.output):
             old = self.output + ".bk"
-            _log.warning("Old documentation moved to %s", old)
+            self._log.warning("Old documentation moved to %s", old)
             os.rename(self.output, old)
-        _log.info("Running doxygen")
+        self._log.info("Running doxygen")
         # @todo: build the documentation in a temporary directory
-        proc = Popen(["doxygen", os.path.join("conf", "DoxyFile.cfg")],
+        # modify the doxygen file to use a temporary directory
+        import getpass, tempfile, shutil
+        username = getpass.getuser()
+        tempdirs = filter(os.path.isdir,
+                          [os.path.join(os.path.sep, "build", "tmp"),
+                           os.path.join(os.path.sep, "build", username, "tmp"),
+                           os.path.join(os.path.sep, "build", username)])
+        if tempdirs:
+            tempdir = tempfile.mkdtemp("doxygen", dir = tempdirs[0])
+        else:
+            tempdir = tempfile.mkdtemp("doxygen")
+        shutil.copyfile(os.path.join(self.path, "conf", "DoxyFile.cfg"),
+                        os.path.join(self.path, "conf", "DoxyFileTmp.cfg"))
+        open(os.path.join(self.path, "conf", "DoxyFileTmp.cfg"), "a").write("OUTPUT_DIRECTORY = %s\n" % tempdir)
+        proc = Popen(["doxygen", os.path.join("conf", "DoxyFileTmp.cfg")],
                      cwd = self.path, stdin = PIPE)
         proc.stdin.write("r\n") # make latex enter \nonstopmode on the first error
-        return proc.wait()
+        retcode = proc.wait()
+        if retcode != 0:
+            raise RuntimeError("Doxygen failed with error %d in %s" % (retcode, tempdir))
+        if self.isAfsVolume:
+            usage = _diskUsage(tempdir) / 1024
+            output = Popen(["fs", "lq", self.path], stdout = PIPE).communicate()[0].splitlines()[-1].split()
+            quota = int(output)[1]
+            used = int(output)[2]
+            if quota < (1.1 * (used + usage)):
+                output = Popen(["afs_admin", "sq", self.path, int(1.1 * (used + usage))], stdout = PIPE).wait()
+        shutil.copytree(tempdir, self.output)
+        if self.isAfsVolume:
+            # Give read access to everybody
+            self._log("Give read access (recursively) to %s", self.path)
+            for dirpath, _, _ in os.walk(self.path):
+                Popen(["fs", "setacl", "-dir", dirpath, "-acl", "system:anyuser", "rl"]).wait()
+        shutil.rmtree(tempdir)
+        os.remove(os.path.join(self.path, "conf", "DoxyFileTmp.cfg"))
 
 def allDocs(root = None):
     """
@@ -441,6 +546,74 @@ def allDocs(root = None):
     return docs
 
 #--- Application logic
+def makeDocs(projects, root = None, no_build = False):
+    if "PWD" in os.environ:
+        # This is needed because PWD is not updated by Popen and cmt gets confused
+        # if it is set
+        del os.environ["PWD"]
+
+    docs = allDocs(root)
+    
+    # keep only projects that are not already known
+    def projectNotKnown(pv):
+        project, version = pv
+        for d in docs:
+            if d.getVersion(project) == version:
+                _log.info("Project %s %s is already in %s", project, version, d.name)
+                return False
+        return True
+    projects = set(filter(projectNotKnown, projects))
+    
+    # list to keep track of the projects that have been added as
+    # dependencies of others
+    projects_added = set()
+    def makeDoc(pv):
+        if pv in projects_added:
+            return None
+        project, version = pv
+        # Get all the dependencies of the project
+        # @todo: deps do not include LCGCMT but actually it must be included and treated in a different way:
+        #        - the link should not be used in the documentation
+        #        - projects that do not depend on LCGCMT (like LbScripts) should not join any existing doc 
+        deps = _getProjDeps(project, version)
+        # get the candidates, i.e. the doc directories that can include the requested
+        # project with its dependencies
+        candidates = [ d for d in docs
+                       if d.canHost(project, version, deps) ]
+        if not candidates:
+            # no candidates available, create a new doc dir
+            _log.debug("Creating new doc dir")
+            doc = Doc(root = root)
+        elif len(candidates) == 1:
+            # only one candidate, use it
+            doc = candidates[0]
+            _log.debug("Using %s", doc.name)
+        else:
+            # more than one candidate
+            _log.warning("More than one candidate doc dir: %s",
+                         ", ".join([d.name for d in candidates]))
+            return None
+        # First add the dependencies (not yet there)
+        for p, v in deps:
+            if doc.getVersion(p) is None:
+                doc.add(p, v)
+        projects_added.update(deps)
+        # Then add the project
+        doc.add(project, version)
+        projects_added.add(pv)
+        return doc
+    docs_to_build = set(map(makeDoc, projects))
+    
+    for doc in filter(None, docs_to_build):
+        if no_build:
+            # if we should not run doxygen, at least generate the doxygen configuration
+            doc._generateDoxyFile()
+        else:
+            doc.build()
+    projects -= projects_added
+    if projects:
+        _log.warning("Projects not added: %s", list(projects)) 
+
 def main():
     from optparse import OptionParser
     parser = OptionParser(usage = "%prog [options] project version [project version ...]")
@@ -467,64 +640,8 @@ def main():
         log_level = logging.DEBUG
     logging.basicConfig(level = log_level)
     
-    docs = allDocs(opts.root)
-    
-    # keep only projects that are not already known
-    def projectNotKnown(pv):
-        project, version = pv
-        for d in docs:
-            if d.getVersion(project) == version:
-                _log.info("Project %s %s is already in %s", project, version, d.name)
-                return False
-        return True
-    projects = set(filter(projectNotKnown, projects))
-    
-    # list to keep track of the projects that have been added as
-    # dependencies of others
-    projects_added = set()
-    def makeDoc(pv):
-        if pv in projects_added:
-            return None
-        project, version = pv
-        # Get all the dependencies of the project
-        deps = _getProjDeps(project, version)
-        # get the candidates, i.e. the doc directories that can include the requested
-        # project with its dependencies
-        candidates = [ d for d in docs
-                       if d.canHost(project, version, deps) ]
-        if not candidates:
-            # no candidates available, create a new doc dir
-            _log.debug("Creating new doc dir")
-            doc = Doc()
-        elif len(candidates) == 1:
-            # only one candidate, use it
-            doc = candidates[0]
-            _log.debug("Using %s", doc.name)
-        else:
-            # more than one candidate
-            #_log.error("More than one candidate doc dir: %s",
-            #           ", ".join([d.name for d in candidates]))
-            return None
-        # First add the dependencies (not yet there)
-        for p, v in deps:
-            if doc.getVersion(p) is None:
-                doc.add(p, v)
-        projects_added.update(deps)
-        # Then add the project
-        doc.add(project, version)
-        projects_added.add(pv)
-        return doc
-    docs_to_build = set(map(makeDoc, projects))
-    
-    for doc in docs_to_build:
-        if opts.no_build:
-            # if we should not run doxygen, at least generate the doxygen file
-            doc._generateDoxyFile()
-        else:
-            doc.build()
-    projects -= projects_added
-    if projects:
-        _log.warning("Projects not added: %s", list(projects)) 
+    # Main function
+    makeDocs(projects, opts.root, opts.no_build)
 
 if __name__ == '__main__':
     main()
