@@ -1,3 +1,9 @@
+2010-03-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbUtils/afs/volume.py: added function createVolume
+	* python/LbUtils/Temporary.py: added class TempDir2, a slightly different
+	version of TempDir
+
 2010-03-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/afs/directory.py: fixed the call to "fs lsmount" which was not accepting

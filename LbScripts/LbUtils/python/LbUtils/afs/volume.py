@@ -1,6 +1,7 @@
 """ module for AFS volume creation """
 
 from LbUtils.afs.directory import Directory
+from subprocess import Popen, PIPE
 
 class HasNoMountPoint(Exception):
     """ Exception for volume without any mount point """
@@ -41,4 +42,33 @@ class Volume(object):
             raise HasNoMountPoint, "Volume %s has not mount point" % self._name
         else:
             pass
-            
+
+
+def createVolume(path, volume_name, quota = None, user = None, group = None):
+    """
+    Create an AFS volume in the specified path with the specified name.
+    
+    @param path: directory where to create the volume
+    @param volume_name: name to use for the volume
+    @param quota: initial quota, if specified
+    @param group: group whose librarians will have access
+    
+    @return: Volume instance
+    """
+    if not user:
+        import getpass
+        user = getpass.getuser()
+    
+    # create the new volume
+    cmd = ["afs_admin", "create", "-u", user]
+    if quota:
+        cmd += ["-q", str(quota)]
+        
+    proc = Popen(cmd + [path, volume_name])
+    if proc.wait() != 0:
+        raise IOError, "Could not create volume %s in %s" % (volume_name, path)
+    
+    if group:
+        # give write access to librarians
+        Popen(["fs", "setacl", path, group + ':librarians', "all"]).wait()
+    return Directory(path)

@@ -40,6 +40,40 @@ class TempDir(object):
         return self._name
 
 
+class TempDir2(object):
+    """Class to create a temporary directory."""
+    def __init__(self, suffix="", prefix="tmp", dir=None, keep_var="KEEPTEMPDIR"):
+        """Constructor.
+        
+        'keep_var' is used to define which environment variable will prevent the
+        deletion of the directory.
+        
+        The other arguments are the same as tempfile.mkdtemp.
+        """
+        self._keep_var = keep_var 
+        self._name = mkdtemp(suffix, prefix, dir)
+
+    def getName(self):
+        """Returns the name of the temporary directory"""
+        return self._name
+    
+    def __str__(self):
+        """Convert to string."""
+        return self.getName()
+
+    def __del__(self):
+        """Destructor.
+        
+        Remove the temporary directory.
+        """
+        if self._name:
+            if self._keep_var in os.environ:
+                import logging
+                logging.info("%s set: I do not remove the temporary directory '%s'",
+                             self._keep_var, self._name)
+                return
+            rmtree(self._name)
+
 class TempFile:
     """ class to create a temporary file """
     def __init__(self):
