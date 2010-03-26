@@ -1,4 +1,4 @@
-// $Id: TrackPrepareVelo.h,v 1.4 2007-03-21 09:25:14 cattanem Exp $
+// $id: TrackPrepareVelo.h,v 1.4 2007/03/21 09:25:14 cattanem Exp $
 #ifndef _TrackPrepareVelo_H_
 #define _TrackPrepareVelo_H_
 
@@ -30,15 +30,18 @@ public:
 
 private:
 
+  /// see if the track was used as an ancestor to one in bestCont
   bool used(const LHCb::Track* aTrack, const LHCb::Tracks* bestCont) const;
+  /// set the states on the track with the required q/p
   void prepare(LHCb::Track* aTrack, const int i) const;
 
-  bool m_ignoreBest;
+  bool m_ignoreBest;           ///< set by making m_bestLocation==""
 
-  std::string m_inputLocation;
-  std::string m_outputLocation;
-  std::string m_bestLocation;
-  double      m_ptVelo;
+  std::string m_inputLocation; ///< input TES location 
+  std::string m_outputLocation;///< output TES location 
+  std::string m_bestLocation;  ///< location to look for tracks already used and skip here
+  double      m_ptVelo;        ///< pT to assign to tracks
+  bool        m_reverseCharge; ///< Reverse the even=- odd=+ assigned charge
 
 };
 

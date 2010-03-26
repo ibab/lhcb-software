@@ -1,4 +1,4 @@
-// $Id: TrackPrepareVelo.cpp,v 1.12 2007-03-22 10:39:06 dhcroft Exp $
+// $Id: TrackPrepareVelo.cpp,v 1.13 2010-03-26 20:23:27 dhcroft Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -29,6 +29,8 @@ TrackPrepareVelo::TrackPrepareVelo(const std::string& name,
   declareProperty( "outputLocation", m_outputLocation = "/Event/Rec/Track/PreparedVelo");
   declareProperty( "bestLocation", m_bestLocation = TrackLocation::Default);
   declareProperty( "ptVelo", m_ptVelo = 400.*MeV);
+  declareProperty( "reverseCharge", m_reverseCharge = false );
+
 }
 
 TrackPrepareVelo::~TrackPrepareVelo()
@@ -47,8 +49,8 @@ StatusCode TrackPrepareVelo::execute(){
   Tracks* bestCont = 0 ;
   if ( !m_ignoreBest ) bestCont = get<Tracks>(m_bestLocation);
   Tracks* outCont = new Tracks();
-  
-  // loop 
+
+  // loop
   unsigned int i = 0;
   Tracks::const_iterator iterT = inCont->begin();
   for (; iterT != inCont->end(); ++iterT, ++i){
@@ -57,12 +59,13 @@ StatusCode TrackPrepareVelo::execute(){
     if ( takeTrack == false){
       Track* aTrack = (*iterT)->clone();
       int charge = 0;
-      i % 2  == 0 ? charge = -1 : charge = 1;   
+      i % 2  == 0 ? charge = -1 : charge = 1;
+      if( m_reverseCharge ) charge *= -1; // flip charge assignment if requested
       prepare(aTrack, charge );
       outCont->insert(aTrack);
     }
   } // iterT
-    
+
   put(outCont,m_outputLocation);
 
   return StatusCode::SUCCESS;
