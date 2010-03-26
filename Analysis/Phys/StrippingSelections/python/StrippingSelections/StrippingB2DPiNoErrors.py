@@ -113,7 +113,7 @@ SubXNoErrors.Members += [StrippingBachelorNoErrors]
 # All possible D decays starting from the D->hh
 StrippingSelD0NoErrors = CombineParticles("StrippingSelD0NoErrors")
 StrippingSelD0NoErrors.InputLocations = ["StdNoPIDsKaons", "StdNoPIDsPions"]
-StrippingSelD0NoErrors.DecayDescriptors = ["[D0 -> K- pi+]cc","[D0 -> pi- pi+]cc","[D0 -> K- K+]cc","[D0 -> K+ pi-]cc"]
+StrippingSelD0NoErrors.DecayDescriptors = ["[D0 -> K- pi+]cc","[D0 -> pi- pi+]cc","[D0 -> K- K+]cc","[D0 -> K+ pi-]cc","[D0 -> K+ pi+]cc","[D0 -> K- pi-]cc"]
 StrippingSelD0NoErrors.DaughtersCuts =  { "K+"        : Daughtercut,"pi+"        : Daughtercut }
 StrippingSelD0NoErrors.CombinationCut = Dcombcut
 StrippingSelD0NoErrors.MotherCut = Dcut

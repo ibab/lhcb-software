@@ -5,6 +5,9 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-03-26 - Jacopo Nardulli
+ - Adding wrong charge combinations in the D->hh selection in the B2DX lines
+
 ! 2010-03-18 - Jacopo Nardulli
  - Adding a Loose B2DX selection
 
