@@ -163,10 +163,9 @@ def _cmt_show_projects(root):
     _log.debug("'cmt show projects' in %s", cmt)
     return Popen(["cmt","show","projects"], cwd = cmt, stdout = PIPE).communicate()[0]
 
-def _getProjDeps(project, version, exclude = None):
+def _getProjDeps(project, version):
     """
-    Get all the dependencies of a project, excluding the projects in the list
-    passed as exclude (by default ["LCGCMT"]).
+    Get all the dependencies of a project.
     
     @param project: name of the project
     @param version: version of the project
@@ -174,8 +173,6 @@ def _getProjDeps(project, version, exclude = None):
     
     @return: list of pairs (project, version)
     """
-    if exclude is None:
-        exclude = ["LCGCMT"] # ignore LCGCMT
     pr = _projRoot(project, version)
     if not pr:
         raise ValueError("Project %s %s does not exist" % (project, version))
@@ -183,23 +180,20 @@ def _getProjDeps(project, version, exclude = None):
                  for l in [ l.strip().split()
                             for l in
                             _cmt_show_projects(pr).splitlines()[1:] ]
-                 if l and l[1] != "(in" and l[0] not in exclude ])
+                 if l and l[1] != "(in" ])
 
 from LbUtils.CMT.Project import Project
-def _getProjDepsX(project, version, exclude = None):
-    if exclude is None:
-        exclude = ["LCGCMT"] # ignore LCGCMT
+def _getProjDepsX(project, version):
     deps = set()
     to_process = [Project(_projRoot(project, version))]
     while to_process:
         proj = to_process.pop()
         for b in proj.base(cmtprojectpath = os.environ["LHCBPROJECTPATH"]):
-            if b.name() not in exclude:
-                v = b.version()
-                if v:
-                    v = v.split("_")[1]
-                    deps.add((b.name(), v))
-                    to_process.append(b)
+            v = b.version()
+            if v:
+                v = v.split("_")[1]
+                deps.add((b.name(), v))
+                to_process.append(b)
     return deps
 
 #--- Documentation class
@@ -275,6 +269,9 @@ class Doc(object):
             self._log.debug("Found %d projects: %s", len(self.projects),
                             " ,".join(map(str, self.projects.items())))
             self.isAfsVolume = _has_AFS and isAFSDir(self.path) and isMountPoint(self.path)
+        
+        # flag saying if the directory has already been built or not
+        self.toBeBuilt = not os.path.isdir(self.output)
     
     def _allDocNames(self):
         """
@@ -348,7 +345,8 @@ class Doc(object):
             else:
                 self._log.info("Creating link %s to %s", doclink, self.name)
                 os.symlink(os.path.join("..", self.name), doclink)
-            
+            #self._log.debug("Mark the directory as to be built")
+            self.toBeBuilt = True
     
     def _generateDoxyFile(self):
         """
@@ -361,7 +359,8 @@ class Doc(object):
                                ('CREATE_SUBDIRS', True),
                                ])
         doxycfg['INPUT'] = [ "%s_%s" % item
-                             for item in self.projects.items() ]
+                             for item in self.projects.items()
+                             if item[0] not in ["LCGCMT"] ] # avoid some projects
         
         doxycfg['GENERATE_HTML']       = True
         doxycfg['GENERATE_TODOLIST']   = True
@@ -533,6 +532,21 @@ class Doc(object):
                 Popen(["fs", "setacl", "-dir", dirpath, "-acl", "system:anyuser", "rl"]).wait()
         shutil.rmtree(tempdir)
         os.remove(os.path.join(self.path, "conf", "DoxyFileTmp.cfg"))
+        # Mark as built
+        self.toBeBuilt = False
+        
+    def __len__(self):
+        """
+        Returns the number of projects hosted.
+        """
+        return len(self.projects)
+    
+    def __cmp__(self, other):
+        """
+        Comparison operator.
+        """
+        return cmp((len(self), self.name), (len(other), other.name))
+
 
 def allDocs(root = None):
     """
@@ -567,15 +581,16 @@ def makeDocs(projects, root = None, no_build = False):
     # list to keep track of the projects that have been added as
     # dependencies of others
     projects_added = set()
-    def makeDoc(pv):
-        if pv in projects_added:
-            return None
-        project, version = pv
+    for project, version in projects:
+        if (project, version) in projects_added:
+            continue
         # Get all the dependencies of the project
-        # @todo: deps do not include LCGCMT but actually it must be included and treated in a different way:
-        #        - the link should not be used in the documentation
-        #        - projects that do not depend on LCGCMT (like LbScripts) should not join any existing doc 
+        # @todo: projects that do not depend on LCGCMT (like LbScripts) should not join any existing doc 
         deps = _getProjDeps(project, version)
+        if not deps: # ignore projects without dependencies
+            _log.info("Ignoring %s %s, no dependencies", project, version)
+            projects_added.add((project, version))
+            continue
         # get the candidates, i.e. the doc directories that can include the requested
         # project with its dependencies
         candidates = [ d for d in docs
@@ -584,15 +599,20 @@ def makeDocs(projects, root = None, no_build = False):
             # no candidates available, create a new doc dir
             _log.debug("Creating new doc dir")
             doc = Doc(root = root)
+            docs.append(doc) # add the new doc to the list of known docs
         elif len(candidates) == 1:
             # only one candidate, use it
             doc = candidates[0]
             _log.debug("Using %s", doc.name)
         else:
             # more than one candidate
-            _log.warning("More than one candidate doc dir: %s",
+            _log.warning("More than one candidate doc dir for %s %s: %s",
+                         project, version,
                          ", ".join([d.name for d in candidates]))
-            return None
+            # select the best candidate
+            candidates.sort()
+            doc = candidates[-1]
+            _log.warning("Using %s", doc.name)
         # First add the dependencies (not yet there)
         for p, v in deps:
             if doc.getVersion(p) is None:
@@ -600,11 +620,10 @@ def makeDocs(projects, root = None, no_build = False):
         projects_added.update(deps)
         # Then add the project
         doc.add(project, version)
-        projects_added.add(pv)
-        return doc
-    docs_to_build = set(map(makeDoc, projects))
+        projects_added.add((project, version))
     
-    for doc in filter(None, docs_to_build):
+    # Build all the documentations marked as to be built
+    for doc in filter(lambda d: d.toBeBuilt, docs):
         if no_build:
             # if we should not run doxygen, at least generate the doxygen configuration
             doc._generateDoxyFile()
