@@ -59,17 +59,16 @@
 # |-CheckEnabled = False
 # \----- (End of User RecMoniConf/RecMoniConf) -------------------------------------------------------
 # WARNING: ConfiguredMuonIDs: Not available info for DATA=2010,VERSION=def. Loading default
-# MuonID WARNING: new DLL parameters not tuned for DATA=MC09,VERSION=def. Loading values for DC06
-# ConfiguredMuonIDs: Loaded configuration info M_MC09_def
+# ConfiguredMuonIDs: Loaded configuration info M_2009_def
 # DstWriter.ItemList=['/Event/Rec/Header#1', '/Event/Rec/Status#1', '/Event/pRec/Track/Best#1', '/Event/pRec/Rich/PIDs#1', '/Event/pRec/Muon/MuonPID#1', '/Event/pRec/Calo/Electrons#1', '/Event/pRec/Calo/Photons#1', '/Event/pRec/Calo/MergedPi0s#1', '/Event/pRec/Calo/SplitPhotons#1', '/Event/pRec/ProtoP/Charged#1', '/Event/pRec/ProtoP/Neutrals#1', '/Event/pRec/Vertex/Primary#1', '/Event/pRec/Vertex/V0#1', '/Event/pRec/Track/Muon#1', '/Event/DAQ/RawEvent#1']
 # DstWriter.OptItemList=['/Event/Phys/Selections#1']
 # No Writer defined for DIGI
 # WARNING: Using default tag head-20100119 for partition DDDB
-# WARNING: Using default tag head-20100303 for partition LHCBCOND
+# WARNING: Using default tag head-20100325 for partition LHCBCOND
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v36r2
-                                          running on lxbuild156.cern.ch on Fri Mar 19 09:49:51 2010
+                                          running on lxbuild156.cern.ch on Fri Mar 26 15:50:51 2010
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -127,7 +126,7 @@ COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
 DDDB                 INFO Using TAG "head-20100119"
 LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND             INFO Using TAG "head-20100303"
+LHCBCOND             INFO Using TAG "head-20100325"
 PrsSpdFillRawBu...   INFO Data coding type 2
 RemovePrsPacked...SUCCESS bankKiller : all banks of type 'PrsPacked' will be removed.
 EcalBanksHandler     INFO Member list: CheckCaloBank/EcalCheckBanks, CaloZSupAlg/EcalADCs, CaloTriggerAdcsFromRawAlg/EcalTrigFromRaw, CaloFillRawBuffer/EcalFillRawBuffer, bankKiller/RemoveEcalPackedBanks, with context 'Offline'
@@ -161,29 +160,17 @@ MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/softwar
 MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c2.vs.down.cdf
 MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c3.vs.down.cdf
 MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c4.vs.down.cdf
-MagneticFieldSvc     INFO Map scaled by factor 1.59769e-06 with polarity -1
+MagneticFieldSvc     INFO Map scaled by factor 0.999994 with polarity -1
 TrackForwardFitSeq   INFO Member list: TrackStateInitAlg/InitForwardFit, TrackEventFitter/FitForward, with context 'Offline'
-MagneticFieldSvc     INFO Map scaled by factor 1.59769e-06 with polarity -1
+MagneticFieldSvc     INFO Map scaled by factor 0.999994 with polarity -1
 ToolSvc.PatTTMa...   INFO Start generation of VeloTT Bdl LUTs
 ToolSvc.PatTTMa...   INFO Generation of VeloTT Bdl LUTs finished
 ToolSvc.PatTTMa...   INFO Start generation of VeloTT deflection LUTs
 ToolSvc.PatTTMa...   INFO Generation of VeloTT deflection LUTs finished
-ToolSvc.PatTTMa...   INFO  No B field detected.
-ToolSvc.TrajOTP...   INFO Use drifttime           = 1
-ToolSvc.TrajOTP...   INFO Fit drifttime residuals = 0
-ToolSvc.TrajOTP...   INFO Prefit strategy = 2
 ToolSvc.STOffli...   INFO APE set to 0
 ToolSvc.STOffli...   INFO Error Vec 0.196 0.147 0.177 0.037
 ToolSvc.ITClust...   INFO APE set to 0
 ToolSvc.ITClust...   INFO Error Vec 0.189 0.117 0.166 0.037
-FitForward.Fitter    INFO
-FitForward.Fitter    INFO ============ TrackMasterFitter Settings ===========
-FitForward.Fitter    INFO  Upstream fit
-FitForward.Fitter    INFO  Number of fit iterations: 10
-FitForward.Fitter    INFO  Max 2 outliers removed with outliers at chi2 > 9
-FitForward.Fitter    INFO  State z positions at:
-FitForward.Fitter    INFO  beam line, first/last measurement, default reference positions
-FitForward.Fitter    INFO ==================================================
 FitForward           INFO
 FitForward           INFO =========== FitForward Settings ============
 FitForward           INFO   Tracks input container   : Rec/Track/Forward
@@ -196,14 +183,6 @@ ToolSvc.TsaData...   INFO Max OT cluster size     = 5
 ToolSvc.TsaData...   INFO Max OT module occupancy = 0.4
 ToolSvc.TsaData...   INFO Max ST sector occupancy = 48
 TrackSeedFitSeq      INFO Member list: TrackStateInitAlg/InitSeedFit, TrackEventFitter/FitSeedForMatch, with context 'Offline'
-FitSeedForMatch...   INFO
-FitSeedForMatch...   INFO ============ TrackMasterFitter Settings ===========
-FitSeedForMatch...   INFO  Upstream fit
-FitSeedForMatch...   INFO  Number of fit iterations: 10
-FitSeedForMatch...   INFO  Max 2 outliers removed with outliers at chi2 > 9
-FitSeedForMatch...   INFO  State z positions at:
-FitSeedForMatch...   INFO  beam line, first/last measurement, default reference positions
-FitSeedForMatch...   INFO ==================================================
 FitSeedForMatch      INFO
 FitSeedForMatch      INFO =========== FitSeedForMatch Settings ============
 FitSeedForMatch      INFO   Tracks input container   : Rec/Track/Seed
@@ -214,14 +193,6 @@ FitSeedForMatch      INFO
 TrackMatchPatSeq     INFO Member list: TrackMatchVeloSeed/TrackMatch, with context 'Offline'
 ToolSvc.TrackHe...   INFO ExtrapolatorID=5
 TrackMatchFitSeq     INFO Member list: TrackStateInitAlg/InitMatchFit, TrackEventFitter/FitMatch, with context 'Offline'
-FitMatch.Fitter      INFO
-FitMatch.Fitter      INFO ============ TrackMasterFitter Settings ===========
-FitMatch.Fitter      INFO  Upstream fit
-FitMatch.Fitter      INFO  Number of fit iterations: 10
-FitMatch.Fitter      INFO  Max 2 outliers removed with outliers at chi2 > 9
-FitMatch.Fitter      INFO  State z positions at:
-FitMatch.Fitter      INFO  beam line, first/last measurement, default reference positions
-FitMatch.Fitter      INFO ==================================================
 FitMatch             INFO
 FitMatch             INFO =========== FitMatch Settings ============
 FitMatch             INFO   Tracks input container   : Rec/Track/Match
@@ -246,14 +217,6 @@ PatDownstream        INFO ========================================
 PatDownstream        INFO zMagnetParams 5376.8 -3895.12 309.877 85527.9
 PatDownstream        INFO momentumParams 1148.65 961.786 5326.81
 TrackDownstream...   INFO Member list: TrackStateInitAlg/InitDownstreamFit, TrackEventFitter/FitDownstream, with context 'Offline'
-FitDownstream.F...   INFO
-FitDownstream.F...   INFO ============ TrackMasterFitter Settings ===========
-FitDownstream.F...   INFO  Upstream fit
-FitDownstream.F...   INFO  Number of fit iterations: 10
-FitDownstream.F...   INFO  Max 2 outliers removed with outliers at chi2 > 9
-FitDownstream.F...   INFO  State z positions at:
-FitDownstream.F...   INFO  beam line, first/last measurement, default reference positions
-FitDownstream.F...   INFO ==================================================
 FitDownstream        INFO
 FitDownstream        INFO =========== FitDownstream Settings ============
 FitDownstream        INFO   Tracks input container   : Rec/Track/Downstream
@@ -262,25 +225,9 @@ FitDownstream        INFO   Fitter name              : FitDownstream.Fitter
 FitDownstream        INFO ==================================================
 FitDownstream        INFO
 TrackVeloTTPatSeq    INFO Member list: PatVeloTT, with context 'Offline'
-PatVeloTT.Fitter     INFO
-PatVeloTT.Fitter     INFO ============ TrackMasterFitter Settings ===========
-PatVeloTT.Fitter     INFO  Upstream fit
-PatVeloTT.Fitter     INFO  Number of fit iterations: 1
-PatVeloTT.Fitter     INFO  Max 1 outliers removed with outliers at chi2 > 9
-PatVeloTT.Fitter     INFO  State z positions at:
-PatVeloTT.Fitter     INFO  first/last measurement, default reference positions
-PatVeloTT.Fitter     INFO ==================================================
 PatVeloTT            INFO  InputTracksName    = Rec/Track/Velo
 PatVeloTT            INFO  OutputTracksName   = Rec/Track/VeloTT
 TrackVeloTTFitSeq    INFO Member list: TrackStateInitAlg/InitVeloTTFit, TrackEventFitter/FitVeloTT, with context 'Offline'
-FitVeloTT.Fitter     INFO
-FitVeloTT.Fitter     INFO ============ TrackMasterFitter Settings ===========
-FitVeloTT.Fitter     INFO  Upstream fit
-FitVeloTT.Fitter     INFO  Number of fit iterations: 10
-FitVeloTT.Fitter     INFO  Max 2 outliers removed with outliers at chi2 > 9
-FitVeloTT.Fitter     INFO  State z positions at:
-FitVeloTT.Fitter     INFO  beam line, first/last measurement, default reference positions
-FitVeloTT.Fitter     INFO ==================================================
 FitVeloTT            INFO
 FitVeloTT            INFO =========== FitVeloTT Settings ============
 FitVeloTT            INFO   Tracks input container   : Rec/Track/VeloTT
@@ -289,14 +236,6 @@ FitVeloTT            INFO   Fitter name              : FitVeloTT.Fitter
 FitVeloTT            INFO ==================================================
 FitVeloTT            INFO
 TrackSeedRefitSeq    INFO Member list: TrackStateInitAlg/InitSeedRefit, TrackEventFitter/RefitSeed, with context 'Offline'
-RefitSeed.Fitter     INFO
-RefitSeed.Fitter     INFO ============ TrackMasterFitter Settings ===========
-RefitSeed.Fitter     INFO  Upstream fit
-RefitSeed.Fitter     INFO  Number of fit iterations: 10
-RefitSeed.Fitter     INFO  Max 2 outliers removed with outliers at chi2 > 9
-RefitSeed.Fitter     INFO  State z positions at:
-RefitSeed.Fitter     INFO  beam line, first/last measurement, default reference positions
-RefitSeed.Fitter     INFO ==================================================
 RefitSeed            INFO
 RefitSeed            INFO =========== RefitSeed Settings ============
 RefitSeed            INFO   Tracks input container   : Rec/Track/Seed
@@ -317,14 +256,6 @@ TrackEventClone...   INFO CompareInSameContainerForwardUpstream : False
 TrackEventClone...   INFO =======================================================
 TrackEventClone...   INFO
 TrackVeloFitSeq      INFO Member list: TrackPrepareVelo, TrackEventFitter/FitVelo, TrackContainerCopy/CopyVelo, with context 'Offline'
-FitVelo.Fitter       INFO
-FitVelo.Fitter       INFO ============ TrackMasterFitter Settings ===========
-FitVelo.Fitter       INFO  Upstream fit
-FitVelo.Fitter       INFO  Number of fit iterations: 10
-FitVelo.Fitter       INFO  Max 2 outliers removed with outliers at chi2 > 9
-FitVelo.Fitter       INFO  State z positions at:
-FitVelo.Fitter       INFO  beam line, first/last measurement, default reference positions
-FitVelo.Fitter       INFO ==================================================
 FitVelo              INFO
 FitVelo              INFO =========== FitVelo Settings ============
 FitVelo              INFO   Tracks input container   : Rec/Track/PreparedVelo
@@ -347,8 +278,8 @@ DeRichSystem         INFO Update triggered for HPD numbering maps
 DeRichSystem         INFO Built mappings for  7 L1 and 196 HPDs in Rich1
 DeRichSystem         INFO Built mappings for  8 L1 and 288 HPDs in Rich2
 DecodeRawRichOf...   INFO Will only decode Raw Buffer -> No RichDigits produced
-Rich1/Rich1Gas       INFO Refractive index update triggered : Pressure = 0.974154 bar Temperature = 293.315 K
-Rich2/Rich2Gas       INFO Refractive index update triggered : Pressure = 0.973312 bar Temperature = 294.016 K
+Rich1/Rich1Gas       INFO Refractive index update triggered : Pressure = 0.971259 bar Temperature = 293.634 K
+Rich2/Rich2Gas       INFO Refractive index update triggered : Pressure = 0.970262 bar Temperature = 294.603 K
 ToolSvc.Offline...   INFO # ray tracing attempts before bailout = [50, 50, 50]
 ToolSvc.Offline...   INFO Particle types considered = [electron, muon, pion, kaon, proton, below_threshold]
 ToolSvc.Offline...   INFO Particle types considered = [electron, muon, pion, kaon, proton, below_threshold]
@@ -507,18 +438,10 @@ HcalPIDmu            INFO init with CondDB, m_conditionName = Conditions/Particl
 NeutralPIDs          INFO Member list: CaloPhotonIdAlg/PhotonID, CaloPhotonIdAlg/MergedID, CaloPhotonIdAlg/PhotonFromMergedID, with context 'Offline'
 RecoMUONSeq          INFO Member list: MuonRec, GaudiSequencer/MuonIDSeq, with context 'Offline'
 MuonIDSeq            INFO Member list: MuonIDAlg, with context 'Offline'
-MuonIDAlg            INFO MuonIDAlg v7r7
+MuonIDAlg            INFO MuonIDAlg v7r8
 MuonIDAlg            INFO ==> Initialise: Input tracks in: Rec/Track/Best
 MuonIDAlg            INFO                 Output MuonPID in: Rec/Muon/MuonPID
 MuonIDAlg            INFO  dllFlag=1 -----> DLL  new (binned-integrated method)
-MuonIDAlg.myMuI...   INFO
-MuonIDAlg.myMuI...   INFO ============ TrackMasterFitter Settings ===========
-MuonIDAlg.myMuI...   INFO  Downstream fit
-MuonIDAlg.myMuI...   INFO  Number of fit iterations: 1
-MuonIDAlg.myMuI...   INFO  Max 0 outliers removed with outliers at chi2 > 9
-MuonIDAlg.myMuI...   INFO  State z positions at:
-MuonIDAlg.myMuI...   INFO  first/last measurement
-MuonIDAlg.myMuI...   INFO ==================================================
 RecoPROTOSeq         INFO Member list: GaudiSequencer/ChargedProtoParticles, GaudiSequencer/NeutralProtoParticles, with context 'Offline'
 ChargedProtoPar...   INFO Member list: ChargedProtoParticleMaker/ChargedProtoPMaker, ChargedProtoParticleAddEcalInfo/ChargedProtoPAddEcal, ChargedProtoParticleAddBremInfo/ChargedProtoPAddBrem, ChargedProtoParticleAddHcalInfo/ChargedProtoPAddHcal, ChargedProtoParticleAddPrsInfo/ChargedProtoPAddPrs, ChargedProtoParticleAddSpdInfo/ChargedProtoPAddSpd, ChargedProtoParticleAddVeloInfo/ChargedProtoPAddVeloDEDX, ChargedProtoParticleAddRichInfo/ChargedProtoPAddRich, ChargedProtoParticleAddMuonInfo/ChargedProtoPAddMuon, ChargedProtoCombineDLLsAlg/ChargedProtoPCombDLLs, with context 'Offline'
 ChargedProtoPAd...   INFO VELO dE/dx charge parameters : normalisation = 35.6 ratio = 0.6
@@ -538,7 +461,7 @@ CaloEFlowMoni        INFO Member list: CaloEFlowAlg/EcalEFlowMon, with context '
 CaloClustersMoni     INFO Member list: CaloClusterMonitor/EcalClusterMon, with context 'Offline'
 CaloHyposMoni        INFO Member list: CaloHypoMonitor/ElectronMon, CaloHypoMonitor/PhotonMon, CaloHypoMonitor/SplitPhotonMon, CaloHypoMonitor/MergedPi0Mon, with context 'Offline'
 CaloPIDsMoni         INFO Member list: CaloClusterMatchMonitor/PhotonMatchMon, CaloHypoMatchMonitor/ElectronMatchMon, CaloHypoMatchMonitor/BremMatchMon, CaloEMuMonitor/CaloPIDMon, with context 'Offline'
-MoniRICHSeq          INFO Member list: GaudiSequencer/RichRawMoni, GaudiSequencer/RichPixelMoni, GaudiSequencer/RichTrackMoni, GaudiSequencer/RichRecoMoni, GaudiSequencer/RichPIDMoni, GaudiSequencer/RichENNTracklessRingsMoni, GaudiSequencer/RichMirrAlignMoni, GaudiSequencer/RichHPDIonFeedback, with context 'Offline'
+MoniRICHSeq          INFO Member list: GaudiSequencer/RichRawMoni, GaudiSequencer/RichPixelMoni, GaudiSequencer/RichTrackMoni, GaudiSequencer/RichRecoMoni, GaudiSequencer/RichPIDMoni, GaudiSequencer/RichENNTracklessRingsMoni, GaudiSequencer/RichMirrAlignMoni, GaudiSequencer/RichHPDIonFeedback, GaudiSequencer/RichHPDImageShifts, with context 'Offline'
 RichRawMoni          INFO Member list: Rich::DAQ::RawDataSize/RichRawDataSize, Rich::DAQ::DataDBCheck/RichRawDataDBCheck, Rich::HPDAnalysisAlg/RichHotPixels, with context 'Offline'
 RichHotPixels        INFO Loading HPD Analysis tools : [RichHotPixelFinder]
 RichPixelMoni        INFO Member list: Rich::Rec::MC::PixelQC/RichRecPixelQC, Rich::Rec::PixelClusterMoni/RichRecPixelClusters, with context 'Offline'
@@ -592,12 +515,11 @@ RichAlignMoniR2...   INFO Track Selection : [Match, Forward]
 RichAlignMoniR2...   INFO  Match       : P = 1.00e+01->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
 RichAlignMoniR2...   INFO  Forward     : P = 1.00e+01->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : Likelihood = -1.00e+02->1.80e+308 : CloneCut = -1.00e+10->1.80e+308 : GhostProb = -1.80e+308->9.90e-01
 RichHPDIonFeedback   INFO Member list: Rich::Mon::HPDIonFeedbackMoni/RichHPDIFBMoni, with context 'Offline'
-MoniMUONSeq          INFO Member list: MuonPIDChecker/MuonPIDMonitor, with context 'Offline'
-MuonPIDMonitor       INFO initialize:: ======> Monitor Performance of IsMuonLoose
-MuonPIDMonitor       INFO initialize:: ======> Monitor Performance of (binned+integrated) DLL
+RichHPDImageShifts   INFO Member list: Rich::Mon::RichHPDImageSummary/RichHPDImageSummary, with context 'Offline'
+MoniMUONSeq          INFO Member list: MuonPIDChecker/MuonPIDMonitorLong, with context 'Offline'
 MoniVELOSeq          INFO Member list: Velo::VeloClusterMonitor/VeloClusterMonitor, Velo::VeloTrackMonitor/VeloTrackMonitor, with context 'Offline'
-MoniTrSeq            INFO Member list: TrackMonitor, TrackVertexMonitor, TrackFitMatchMonitor, TrackV0Monitor, TrackDiMuonMonitor, TrackAlignMonitor, TrackCaloMatchMonitor/TrackEcalMatchMonitor, TrackCaloMatchMonitor/TrackSpdMatchMonitor, TrackCaloMatchMonitor/TrackPrsMatchMonitor, TrackMuonMatchMonitor, with context 'Offline'
-MoniOTSeq            INFO Member list: OTTrackMonitor, OTHitEfficiencyMonitor, OTTimeMonitor, with context 'Offline'
+MoniTrSeq            INFO Member list: TrackMonitor, TrackDiMuonMonitor, TrackVertexMonitor, TrackV0Monitor, TrackFitMatchMonitor, TrackAlignMonitor, TrackITOverlapMonitor, TTTrackMonitor, ITTrackMonitor, TrackCaloMatchMonitor/TrackEcalMatchMonitor, TrackCaloMatchMonitor/TrackSpdMatchMonitor, TrackCaloMatchMonitor/TrackPrsMatchMonitor, TrackMuonMatchMonitor, with context 'Offline'
+MoniOTSeq            INFO Member list: OTTimeMonitor, OTTrackMonitor, OTHitEfficiencyMonitor, with context 'Offline'
 MoniSTSeq            INFO Member list: ST::STClusterMonitor/TTClusterMonitor, ST::STClusterMonitor/ITClusterMonitor, with context 'Offline'
 MoniPROTOSeq         INFO Member list: ChargedProtoParticleMoni/ChargedProtoPMoni, with context 'Offline'
 Output               INFO Member list: GaudiSequencer/OutputDSTSeq, with context 'Offline'
@@ -734,39 +656,24 @@ ENNRingMoniIsol...SUCCESS Booked 12 Histogram(s) : 1D=12
 RichAlignMoniR1   SUCCESS Booked 13 Histogram(s) : 1D=3 2D=10
 RichAlignMoniR2   SUCCESS Booked 13 Histogram(s) : 1D=3 2D=10
 RichHPDIFBMoni    SUCCESS Booked 487 Histogram(s) : 1D=487
-MuonPIDMonitor       INFO ------------------------Total MuonPID Efficiencies (%)----------------------
-MuonPIDMonitor       INFO ----------------------------------------------------------------------------
-MuonPIDMonitor       INFO  Particle   :  These Events  :               Reference values
-MuonPIDMonitor       INFO                              :        J/PsiKs        -       bb inclusive
-MuonPIDMonitor       INFO ----------------------------------------------------------------------------
-MuonPIDMonitor       INFO ---------------------            IsMuonLoose           ---------------------
-MuonPIDMonitor       INFO ----------------------------------------------------------------------------
-MuonPIDMonitor       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   ( 13.62 +-  0.02)     :   (  9.40 +-  0.01)
-MuonPIDMonitor       INFO ----------------------------------------------------------------------------
-MuonPIDMonitor       INFO --------------------               IsMuon               --------------------
-MuonPIDMonitor       INFO ----------------------------------------------------------------------------
-MuonPIDMonitor       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   ( 10.19 +-  0.02)     :   (  5.76 +-  0.01)
-MuonPIDMonitor       INFO ----------------------------------------------------------------------------
-MuonPIDMonitor       INFO ----------------   DLL performance for DLLCut= 1.2   --------------
-MuonPIDMonitor       INFO ----------------------------------------------------------------------------
-MuonPIDMonitor       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   (  7.99 +-  0.02)     :   (  3.33 +-  0.01)
-MuonPIDMonitor       INFO ----------------------------------------------------------------------------
-MuonPIDMonitor       INFO ------------------------      nShared performance    -----------------------
-MuonPIDMonitor       INFO ----------------------------------------------------------------------------
-MuonPIDMonitor       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   (  8.25 +-  0.02)     :   (  3.79 +-  0.01)
-MuonPIDMonitor       INFO ----------------------------------------------------------------------------
+MuonPIDMonitorLong   INFO ----------------------------------------------------------------
+MuonPIDMonitorLong   INFO Total Number of Tracks analysed: 0
+MuonPIDMonitorLong   INFO Total Number of PreSelected Tracks: 0
+MuonPIDMonitorLong   INFO Total Number of IsMuonLoose Candidates: 0
+MuonPIDMonitorLong   INFO Total Number of IsMuon Candidates: 0
+MuonPIDMonitorLong   INFO ----------------------------------------------------------------
 VeloClusterMonitorSUCCESS Booked 14 Histogram(s) : 1D=11 2D=3
 VeloTrackMonitor  SUCCESS Booked 112 Histogram(s) : 1D=19 1DProf=93
 TrackVertexMonitorSUCCESS Booked 12 Histogram(s) : 1D=6 1DProf=6
 TrackAlignMonitor    INFO Number of elements in jacobian map: 0
 TrackAlignMonitor SUCCESS Booked 27 Histogram(s) : 1D=18 1DProf=9
-TrackEcalMatchM...SUCCESS Booked 20 Histogram(s) : 1D=12 1DProf=8
-TrackSpdMatchMo...SUCCESS Booked 20 Histogram(s) : 1D=12 1DProf=8
-TrackPrsMatchMo...SUCCESS Booked 20 Histogram(s) : 1D=12 1DProf=8
+TrackEcalMatchM...SUCCESS Booked 26 Histogram(s) : 1D=18 1DProf=8
+TrackSpdMatchMo...SUCCESS Booked 26 Histogram(s) : 1D=18 1DProf=8
+TrackPrsMatchMo...SUCCESS Booked 26 Histogram(s) : 1D=18 1DProf=8
 TrackMuonMatchM...SUCCESS Booked 16 Histogram(s) : 1D=16
+OTTimeMonitor     SUCCESS Booked 9 Histogram(s) : 1D=8 1DProf=1
 OTTrackMonitor    SUCCESS Booked 66 Histogram(s) : 1D=46 2D=7 1DProf=13
 OTHitEfficiency...SUCCESS Booked 65 Histogram(s) : 1D=9 2D=9 1DProf=47
-OTTimeMonitor     SUCCESS Booked 9 Histogram(s) : 1D=8 1DProf=1
 TTClusterMonitor  SUCCESS Booked 11 Histogram(s) : 1D=8 2D=3
 ITClusterMonitor  SUCCESS Booked 7 Histogram(s) : 1D=4 2D=3
 ChargedProtoPMoni    INFO ====================================================================================================================================================
@@ -1090,26 +997,31 @@ TimingAuditor.T...   INFO       RichAlignMoniR1         |     0.000 |     0.000 
 TimingAuditor.T...   INFO       RichAlignMoniR2         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      RichHPDIonFeedback       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RichHPDIFBMoni          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      RichHPDImageShifts       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       RichHPDImageSummary     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     MoniMUONSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      MuonPIDMonitor           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      MuonPIDMonitorLong       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     MoniVELOSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      VeloClusterMonitor       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      VeloTrackMonitor         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     MoniTrSeq                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackMonitor             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      TrackVertexMonitor       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      TrackFitMatchMonitor     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      TrackV0Monitor           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackDiMuonMonitor       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      TrackVertexMonitor       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      TrackV0Monitor           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      TrackFitMatchMonitor     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackAlignMonitor        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      TrackITOverlapMonitor    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      TTTrackMonitor           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      ITTrackMonitor           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackEcalMatchMonitor    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackSpdMatchMonitor     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackPrsMatchMonitor     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackMuonMatchMonitor    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     MoniOTSeq                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      OTTimeMonitor            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      OTTrackMonitor           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      OTHitEfficiencyMonitor   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      OTTimeMonitor            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     MoniSTSeq                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TTClusterMonitor         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      ITClusterMonitor         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
