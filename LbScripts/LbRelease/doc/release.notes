@@ -1,3 +1,8 @@
+2010-03-26  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/LHCbNightlies.py: first import. LHCb Nightlies builder
+	mechanism now in one Python module which is an extension to LCG Nightlies.
+
 2010-03-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/LHCbDoc.py: Support for AFS, fixes and improvements
@@ -15,8 +20,8 @@
 2010-03-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/checkTar: New file.
-	* cmt/requirements: 
-	* python/LbRelease/TarBall.py: 
+	* cmt/requirements:
+	* python/LbRelease/TarBall.py:
 	  - added the guessing of the version if it was not provided
 	  - fixed the tarball location by using proj.TarBallDir.
 	  - added the support for data packages.
