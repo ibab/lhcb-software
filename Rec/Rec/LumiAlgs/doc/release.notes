@@ -4,6 +4,11 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2010-03-26 - Rob Lambert
+ - Added PropagateFSRs algorithm
+   . Collects all filename->GUID releations
+   . Should also collect all FSRs and then write tree in Finalize
+
 !========================== LumiAlgs v3r4 2010-03-24 =========================
 ! 2010-03-22 - Jaap Panman
  - LumiIntegrateFSR: add counters to xml summary at finalize()
