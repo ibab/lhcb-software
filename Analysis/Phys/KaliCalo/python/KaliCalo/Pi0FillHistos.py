@@ -190,6 +190,7 @@ class FillPi0( Kali.TPySelectorFix  ):
         
         # == for more convenience
         bamboo=self.fChain
+        
         if not self._frequency :
             entries  = bamboo.GetEntries()
             entries  = int ( entries /  50.0 / 10000.0 ) * 10000

@@ -39,26 +39,52 @@ class ZipShelf(shelve.Shelf):
         compress  = zlib.Z_BEST_COMPRESSION    ,
         writeback = False                      ) :
 
-        self.gzip          = False 
-        self.filename      = filename
+        self.__gzip          = False 
+        self.__filename      = filename
+        self.__remove        = False
+        self.__tmpdir        = None 
 
         if filename.rfind ( '.gz' ) + 3 == len ( filename ) :
-            if os.path.exists ( filename ) :
+            
+            if os.path.exists ( filename ) and 'r' == flag :
+                ## copy into temprary location and unsip 
+                import tempfile, popen2 
+                tmpdir = tempfile.mkdtemp()
+                name = filename.split(os.sep)[-1]                
+                command = ' cp %s %s && cd %s && gunzip %s '
+                command = command % ( filename ,
+                                      tmpdir   ,
+                                      tmpdir   ,
+                                      name     ) 
+                cout,cin,cerr = popen2.popen3( command )
+                for line in cerr : print ' STDERR: ' , line
+                for line in cout : print ' STDOUT: ' , line
+                filename        = tmpdir + os.sep + name
+                self.__tmpdir   = tmpdir
+                self.__filename = filename[:-3]
+                self.__remove   = True
+            elif os.path.exists ( filename ) and 'r' != flag :
+                ## unzip in place 
                 size1 = os.path.getsize ( filename ) 
                 os.system ( 'gunzip %s ' % filename )                
                 size2 = os.path.getsize ( filename[:-3] )
                 print "GZIP uncompression %s: %.1f%%" %  ( filename , (size2*100.0)/size1 ) 
-                
-            filename      = filename[:-3]
-            self.gzip     = True 
-            self.filename = filename
-            
+                filename        = filename[:-3]
+                self.__gzip     = True 
+                self.__filename = filename
+                self.__remove   = False
+            else : 
+                ## 
+                filename        = filename[:-3]
+                self.__gzip     = True 
+                self.__filename = filename
+
         import anydbm
         shelve.Shelf.__init__ (
-            self                            ,
-            anydbm.open ( filename , flag ) ,
-            protocol                        ,
-            writeback                       )
+            self                                   ,
+            anydbm.open ( self.__filename , flag ) ,
+            protocol                               ,
+            writeback                              )
         
         self.compresslevel = compress
 
@@ -68,11 +94,19 @@ class ZipShelf(shelve.Shelf):
         Close the file (and gzip it if required) 
         """
         shelve.Shelf.close ( self )
-        if self.gzip and os.path.exists ( self.filename ) :
-            size1 = os.path.getsize( self.filename )
-            os.system ( 'gzip %s ' % self.filename )
-            size2 = os.path.getsize( self.filename + '.gz' )
-            print 'GZIP compression %s: %.1f%%' % ( self.filename, (size2*100.0)/size1 ) 
+        ##
+        if self.__remove and os.path.exists ( self.__filename ) :
+            print 'REMOVE: ', self.__filename 
+            os.remove ( self.__filename )
+            if self.__tmpdir and os.path.exists ( self.__tmpdir ) :
+                print 'REMOVE: ', self.__tmpdir 
+                os.rmdir ( self.__tmpdir )
+        ##
+        if self.__gzip and os.path.exists ( self.__filename ) :
+            size1 = os.path.getsize( self.__filename )
+            os.system ( 'gzip -9 %s ' % self.__filename )
+            size2 = os.path.getsize( self.__filename + '.gz' )
+            print 'GZIP compression %s: %.1f%%' % ( self.__filename, (size2*100.0)/size1 ) 
         
 # =============================================================================
 ## ``get-and-uncompress-item'' from dbase 

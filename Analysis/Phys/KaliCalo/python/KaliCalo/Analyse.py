@@ -11,7 +11,7 @@ The main ``analyse'' for Kali
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyev@itep.ru "
 __date__    = " 2010-03-20 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ "
 # =============================================================================
 __all__     = (
     "analyse" ,
@@ -48,11 +48,11 @@ def  analyse ( histomap , lambdamap ) :
     Fit.preFitHistoSet ( hA )
 
     ## inner area 
-    hI = histomap  [ Kali.InnerZone  ].histos()
+    hI = histomap [ Kali.InnerZone  ].histos()
     ## middle area 
     hM = histomap [ Kali.MiddleZone ].histos()
     ## outer area 
-    hO = histomap  [ Kali.OuterZone  ].histos() 
+    hO = histomap [ Kali.OuterZone  ].histos() 
 
     ## fit them!!
     print 'FitInner  : ' , Fit.fitHistoSet ( hI , hA , True )
@@ -69,9 +69,13 @@ def  analyse ( histomap , lambdamap ) :
 
     badCells = sets.Set()
     lowCells = sets.Set()
-    
+
+    ikey  = 0
+    nFits = 0
+    iCnt  = Kali.Counter() 
     for key in keys :
 
+        ikey += 1 
         if min ( histomap[key].entries() ) < 30 : 
             ## print ' too low statistics for key', key
             lowCells.add  ( key ) 
@@ -86,12 +90,12 @@ def  analyse ( histomap , lambdamap ) :
             r1 = Fit.getPi0Params ( hs[1] )
             r2 = Fit.getPi0Params ( hs[2] )
             
-            print ' MASS : %.20s %.20s %.20s ' % ( r0[1] , r1[1] , r2[1] ) , key 
-            print ' SIGMA: %.20s %.20s %.20s ' % ( r0[2] , r1[2] , r2[2] ) , key 
-            print ' NUM0 : %.20s %.20s %.20s ' % ( r0[0] , r1[0] , r2[0] ) , key
-            print ' S/B  : %.20s %.20s %.20s ' % ( Fit.s2b ( hs[0] ) ,
-                                                   Fit.s2b ( hs[1] ) ,
-                                                   Fit.s2b ( hs[2] ) ) , key
+            print ' MASS : %-20.20s %-20.20s %-20.20s ' % ( r0[1] , r1[1] , r2[1] ) , key 
+            print ' SIGMA: %-20.20s %-20.20s %-20.20s ' % ( r0[2] , r1[2] , r2[2] ) , key 
+            print ' NUM0 : %-20.20s %-20.20s %-20.20s ' % ( r0[0] , r1[0] , r2[0] ) , key
+            print ' S/B  : %-20.20s %-20.20s %-20.20s ' % ( Fit.s2b ( hs[0] ) ,
+                                                            Fit.s2b ( hs[1] ) ,
+                                                            Fit.s2b ( hs[2] ) ) , key
             print '  '
             continue 
         
@@ -114,6 +118,8 @@ def  analyse ( histomap , lambdamap ) :
             ## print ' no reliable fits for ',key
             badCells.add ( key ) 
             continue 
+
+        iCnt  += result[-1] 
         
         hc     = histomap[key].kappas() 
         
@@ -121,7 +127,7 @@ def  analyse ( histomap , lambdamap ) :
         r1 = Fit.getPi0Params ( hs[1] )
         r2 = Fit.getPi0Params ( hs[2] )
 
-        alpha = 1.0
+        alpha = 1.5
         
         deltam = r0[1]-135.0 
         corr1  = 1.0 - alpha*deltam/r0[1]  
@@ -158,12 +164,21 @@ def  analyse ( histomap , lambdamap ) :
         
         lam  = corr*lams[-1]
         lams.append ( lam.value() )
+
+        nFits = Kali.VE( iCnt.flagMean() , iCnt.flagRMS() )
+
+        print ' KEY   :' , key , ikey , len ( histomap ) , result , iCnt.flag() , nFits 
         
-        mx = 100.0 / len( histomap ) 
+        mx = 600.0 / len ( histomap )
         if random.uniform( 0 , 1.0 ) < mx :
-            print ' NUM0: %.20s %.20s %.20s ' % ( r0[0] , r1[0] , r2[0] ) , key
-            print ' MASS: %.20s %.20s %.20s ' % ( r0[1] , r1[1] , r2[1] ) , key, corr , [  '%.3f' % l for l in lambdamap[key] ] 
-                        
+            print ' KEY   :' , key , ikey , len ( histomap ) , result , iCnt.flag() , nFits 
+            print ' NUM0  : %-20.20s %-20.20s %-20.20s ' % ( r0[0] , r1[0] , r2[0] ) 
+            print ' MASS  : %-20.20s %-20.20s %-20.20s ' % ( r0[1] , r1[1] , r2[1] ) , corr , [  '%.3f' % l for l in lambdamap[key] ] 
+            print ' SIGMA : %-20.20s %-20.20s %-20.20s ' % ( r0[2] , r1[2] , r2[2] ) 
+            print ' S/B   : %-20.20s %-20.20s %-20.20s ' % ( Fit.s2b ( hs[0] ) ,
+                                                             Fit.s2b ( hs[1] ) ,
+                                                             Fit.s2b ( hs[2] ) ) 
+            
     return (badCells,lowCells)  
 
 

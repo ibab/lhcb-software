@@ -13,7 +13,7 @@ for ``iterative pi0'' Ecal calibration
 # ======================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-17 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $ " 
+__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $ " 
 # ======================================================================
 import ROOT
 from GaudiPython.Bindings import gbl as cpp
@@ -41,6 +41,12 @@ Zones      = (
 
 Counter    = cpp.StatEntity
 VE         = cpp.Gaudi.Math.ValueWithError
+
+def _ve_str_ ( self , fmt = '( %.2f +- %.2f )' ) :
+    return fmt % ( self.value() , self.error() )
+
+VE.__str__  = _ve_str_
+VE.__repr__ = _ve_str_
 
 # =============================================================================
 ## Helper class to hold the histogams associated with the given CellID
@@ -113,7 +119,9 @@ class Histos(object):
 
     ## add another set of histograms 
     def __iadd__  ( self , other ) :
-        if self.cellID() != other.cellID() :
+        
+        if self.cellID().index() != other.cellID().index() :
+            print self.cellID() , other.cellID()
             raise TypeError(" *= Mismatch in CellID"   )
         if len ( self.histos   () ) != len ( other.histos   () ) :
             raise TypeError(" *= Mismatch in Histos"   )
@@ -124,6 +132,8 @@ class Histos(object):
             self._histos[ i ].Add ( other._histos[ i ] )
         for i in range ( 0 , len ( self.counters() ) ) :
             self._counters[ i ] += ( other._counters [ i ] )
+
+        return self 
 
     ## book all nesesary histograms 
     def _make_histos_ ( self , cellID ) :
@@ -217,19 +227,20 @@ class HistoMap(object) :
             
         import KaliCalo.ZipShelve as ZipShelve
         
-        for dbasename in dbasenames : 
-            dbase = ZipShelve.open  ( dbasename , 'r' , **args )
+        for dbasename in dbasenames :
+            dbase = ZipShelve.open  ( dbasename , 'r' , **args )                    
             for key in dbase :
                 pattern = prefix + 'Histo '
                 if 0 != key.find ( pattern )            : continue
                 o = dbase[key]
                 if not issubclass ( type(o)  , Histos ) : continue
-                if self._histos.has_key ( o.cellID() ) :
+                
+                if self._histos.has_key ( o.cellID() ) : 
                     self._histos [ o.cellID() ] += o
-                else :                
+                else :                 
                     self._histos [ o.cellID() ]  = o
             dbase.close()
-            
+
         return len ( self ) , self.entries() 
         
     ## read the histograms from zipped data base 
@@ -277,7 +288,8 @@ class HistoMap(object) :
                 self._histos [ key ]  = other._histos[ key ]
             else :
                 self._histos [ key ] += other._histos[ key ]
-
+                
+        return self 
     
     ## Get the number of items/keys 
     def __len__     ( self ) :
@@ -309,8 +321,32 @@ class HistoMap(object) :
         get the total number of entries for the histograms 
         """
         lst =  [ sum ( self._histos[k].entries() ) for k in self._histos ]
-        return sum ( lst ) 
+        return sum ( lst )
 
+    ## get the dictionary with number of entries in histograms 
+    def getEntries ( self , index ) :
+        """
+        Get the dictionary with number of entries in histograms
+        """
+        _entries = {}
+        for key in self :
+            h = self._histos[key].histos()[index]
+            _entries[ key ] = h.GetEntries() 
+        return _entries 
+
+    ## get the fit-parameters 
+    def getFits ( self , index ) :
+        """
+        Get the fit-parameters         
+        """
+        _fits = {}
+        from KaliCalo.Pi0HistoFit import getPi0Params as _getPi0Par
+        for key in self :
+            h = self._histos[key].histos()[index]
+            pars =  _getPi0Par ( h )  
+            if pars[-1] : _fits [ key ] = pars 
+        return _fits
+        
 # =============================================================================    
 ## Helper class to hold the map of { cellID : lambdas }
 class LambdaMap(object) :
