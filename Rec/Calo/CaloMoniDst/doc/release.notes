@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.77 2010-03-24 11:57:31 rlambert Exp $ 
+! $Id: release.notes,v 1.78 2010-03-26 02:02:43 dgolubko Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+! 2010-03-26 - Dmitry GOLUBKOV
+ - CaloEMuPIDMon.{h,cpp}: a new simplified PID monitoring algorithm
+ - Monitor.py: added CaloEMuPIDMon{Uncut,Soft,Hard} to the monitoring sequence
+ - CaloPIDsMonitor.opts: added CaloEMuPIDMon to the CaloPIDsMon sequence (?)
+ - cmt/requirements: version increment to v4r6
 
 !========================== CaloMoniDst v4r5 2010-03-19 =======================
 ! 2010-03-22 - Rob Lambert

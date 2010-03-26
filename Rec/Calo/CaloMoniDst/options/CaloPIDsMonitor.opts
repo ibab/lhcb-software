@@ -1,7 +1,8 @@
 CaloPIDsMon.Members  += { "CaloClusterMatchMonitor/PhotonMatchMon"
                           ,"CaloHypoMatchMonitor/ElectronMatchMon"     
                           ,"CaloHypoMatchMonitor/BremMatchMon"
-                          ,"CaloEMuMonitor/CaloPIDMon"}; 
+                          ,"CaloEMuMonitor/CaloPIDMon"
+                          ,"CaloEMuPIDMon/CaloEMuPIDMon"}; 
 // Monitoring of matching relation tables
 //PhotonMatchMon.Input    =   "Rec/Calo/ClusterMatch";
 //PhotonMatchMon.Inputs   = { "Rec/Calo/EcalClusters" };

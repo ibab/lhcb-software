@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Monitor.py,v 1.3 2010-03-08 01:38:28 odescham Exp $
+# $Id: Monitor.py,v 1.4 2010-03-26 02:02:43 dgolubko Exp $
 # =============================================================================
 ## The major building blocks of Calorimeter Monitoring
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,7 +11,7 @@ The major building blocks of Calorimeter Monitoring
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
     'digitsMoni'     , 
@@ -239,7 +239,8 @@ def pidsMoni ( context ) :
     
     from Configurables import ( CaloClusterMatchMonitor ,
                                 CaloHypoMatchMonitor    ,
-                                CaloEMuMonitor          ) 
+                                CaloEMuMonitor          ,
+                                CaloEMuPIDMon           ) 
     
     alg = getAlgo ( GaudiSequencer ,
                     'CaloPIDsMoni' ,
@@ -258,6 +259,18 @@ def pidsMoni ( context ) :
                      'CaloPIDMon'             ,
                      context                  )
 
+    alg5 = getAlgo ( CaloEMuPIDMon            ,
+                     'CaloEMuPIDMonUncut'     ,
+                     context                  )
+
+    alg6 = getAlgo ( CaloEMuPIDMon            ,
+                     'CaloEMuPIDMonSoft'      ,
+                     context                  )
+
+    alg7 = getAlgo ( CaloEMuPIDMon            ,
+                     'CaloEMuPIDMonHard'      ,
+                     context                  )
+
     ## Delegate I/O to CaloAlgUtils
 #    alg1.Input  =   'Rec/Calo/ClusterMatch'
 #    alg1.Inputs = [ 'Rec/Calo/EcalClusters' ]    
@@ -265,9 +278,16 @@ def pidsMoni ( context ) :
 #    alg2.Inputs = [ 'Rec/Calo/Electrons'    ]    
 #    alg3.Input  =   'Rec/Calo/BremMatch'
 #    alg3.Inputs = [ 'Rec/Calo/Photons'      ]
-    
-    
-    alg.Members = [ alg1 , alg2 , alg3 , alg4 ]
+
+    alg5.uncut     = True
+    alg5.SplitSides= True
+
+    alg7.pTmin     = 500.
+    alg7.RichDLLe  = 4.
+    alg7.maxEHcalE = 1000.
+    alg7.minPrsE   =-1.e10
+
+    alg.Members = [ alg1 , alg2 , alg3 , alg4 , alg5, alg6, alg7 ]
     
 
     setTheProperty ( alg , 'Context' , context )
