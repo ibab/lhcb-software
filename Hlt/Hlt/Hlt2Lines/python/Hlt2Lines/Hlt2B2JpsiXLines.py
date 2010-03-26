@@ -1,4 +1,4 @@
-# $Id: Hlt2B2JpsiXLines.py,v 1.20 2010-03-25 17:15:31 jhe Exp $
+# $Id: Hlt2B2JpsiXLines.py,v 1.21 2010-03-26 23:03:26 jhe Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -18,11 +18,16 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                    ,'Hlt2Bd2JpsiMuMuKsDDBiased' : 1.
                                    ,'Hlt2Bd2JpsiMuMuKsDDUnbiased' : 1.
                                    ,'Hlt2B2JpsiX_MuMu' : 1.
-                                   ,'Hlt2Bc2JpsiMuX'       : 1.  # may be scaled
+                                   ,'Hlt2Bc2JpsiMuX'       : 1.  # In case too high rates, may be scaled
                                    ,'Hlt2Bc2JpsiMuXSignal' : 1.  # signal
                                    ,'Hlt2Bc2JpsiH'         : 1.
                                    ,'Hlt2Bc2JpsiHDetached' : 1.
-                                   ,'Hlt2Bc2JpsiHPrescaled': 1. 
+                                   ,'Hlt2Bc2JpsiHPrescaled': 0.5  # may be scaled 
+                                   ,'Hlt2TFBc2JpsiMuX'       : 1.  # In case too high rates, may be scaled
+                                   ,'Hlt2TFBc2JpsiMuXSignal' : 1.  # signal
+                                   ,'Hlt2TFBc2JpsiH'         : 1.
+                                   ,'Hlt2TFBc2JpsiHDetached' : 1.
+                                   ,'Hlt2TFBc2JpsiHPrescaled': 0.5  # may be scaled                                   
                                     }
                  ,'Postscale'   : { 'Hlt2Bs2JpsiPhiPrescaled' : 0.1
                                    ,'Hlt2Bs2JpsiPhiDetached' : 1.
@@ -37,11 +42,16 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                    ,'Hlt2Bd2JpsiMuMuKsDDBiased' : 1.
                                    ,'Hlt2Bd2JpsiMuMuKsDDUnbiased' : 1.
                                    ,'Hlt2B2JpsiX_MuMu' : 1.
-                                   ,'Hlt2Bc2JpsiMuX'       : 1.  # may be scaled
+                                   ,'Hlt2Bc2JpsiMuX'       : 1.  # In case too high rates, may be scaled
                                    ,'Hlt2Bc2JpsiMuXSignal' : 1.  # signal
                                    ,'Hlt2Bc2JpsiH'         : 1.  
                                    ,'Hlt2Bc2JpsiHDetached' : 1.
-                                   ,'Hlt2Bc2JpsiHPrescaled': 1.  
+                                   ,'Hlt2Bc2JpsiHPrescaled': 1.  #  may be scaled
+                                   ,'Hlt2TFBc2JpsiMuX'       : 1.  # In case too high rates, may be scaled
+                                   ,'Hlt2TFBc2JpsiMuXSignal' : 1.  # signal
+                                   ,'Hlt2TFBc2JpsiH'         : 1.
+                                   ,'Hlt2TFBc2JpsiHDetached' : 1.  
+                                   ,'Hlt2TFBc2JpsiHPrescaled': 1.  # may be scaled 
                                     }
                  ,'HltANNSvcID'  : {
                                     'Bc2JpsiMuX'           : 54010
@@ -95,10 +105,10 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                  , 'TFBc2JpsiMuX_BcVtxCHI2'           :   25.  # adimentional
                  , 'TFBc2JpsiMuX_BcPT'                :    0.  # MeV, May incrase up to 5000 MeV if needed
                  , 'TFBc2JpsiMuX_JpsiMassWindow'      :  250.  # MeV, about 10 sigma, may decread to 200
-                 , 'TFBc2JpsiMuX_JpsiTightMassWindow' :  120.  # MeV, at least 3 sigma (30 MeV for Bc)
+                 , 'TFBc2JpsiMuX_JpsiTightMassWindow' :  100.  # MeV, at least 3 sigma (30 MeV for Bc)
                  , 'TFBc2JpsiMuX_JpsiVtxCHI2'         :   25.  # adimentional
                  , 'TFBc2JpsiMuX_MuonJpsiPT'          : 1000.  # MeV
-                 , 'TFBc2JpsiMuX_MuonBcPT'            : 1500.  # MeV
+                 , 'TFBc2JpsiMuX_MuonBcPT'            : 1200.  # MeV
                  , 'TFBc2JpsiMuX_TrackCHI2DOF'        :   25.  # adimentional
                  # TrackFitted Bc->Jpsi(MuMu)H
                  , 'TFBc2JpsiH_BcMassWindow'        :  400.   # MeV, Mass window for Bc 
@@ -106,8 +116,8 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                  , 'TFBc2JpsiH_BcPT'                :    0.   # MeV, May incrase up to 5000 MeV if needed
                  , 'TFBc2JpsiH_JpsiMassWindow'      :  100.   # MeV, at least 3 sigma (30 MeV for Bc)
                  , 'TFBc2JpsiH_JpsiVtxCHI2'         :   25.   # adimentional
-                 , 'TFBc2JpsiH_MuonJpsiPT'          : 1000.   # MeV 
-                 , 'TFBc2JpsiH_PionPT'              : 1500.   # MeV
+                 , 'TFBc2JpsiH_MuonJpsiPT'          :  800.   # MeV 
+                 , 'TFBc2JpsiH_PionPT'              : 1200.   # MeV
                  # TrackFitted Bc->Jpsi(MuMu)H Prescaled and Detached (as TFBc2JpsiHPD)
                  , 'TFBc2JpsiHPD_BcMassWindow'        :  400.   # MeV, Mass window for Bc 
                  , 'TFBc2JpsiHPD_BcVtxCHI2'           :   25.   # adimentional

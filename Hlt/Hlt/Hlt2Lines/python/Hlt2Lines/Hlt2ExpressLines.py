@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2ExpressLines.py,v 1.19 2010-03-26 22:27:17 gligorov Exp $
+# $Id: Hlt2ExpressLines.py,v 1.20 2010-03-26 23:03:26 jhe Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt2 Lines for the express stream
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Johannes Albrecht albrecht@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.19 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -341,18 +341,18 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                   , "D02KPiCombine"
                                   , DecayDescriptor = "[ D0 -> K- pi+ ]cc"
                                   , InputLocations = [NoCutsKaons, NoCutsPions]
-                                  , CombinationCut = "(ADAMASS('D0')<%(ExD0MassWinWide)d*MeV)"%  self.getProps()
-                                  , MotherCut = "(ADMASS('D0') < %(ExD0MassWin)d*MeV)"\
-                                  " & (VFASPF(VCHI2/VDOF) < %(ExD0VCHI2)d)"\
+                                  , CombinationCut = "(ADAMASS('D0')<%(ExD0MassWinWide)s*MeV)"%  self.getProps()
+                                  , MotherCut = "(ADMASS('D0') < %(ExD0MassWin)s*MeV)"\
+                                  " & (VFASPF(VCHI2/VDOF) < %(ExD0VCHI2)s)"\
                                   " & (PT > %(ExD0Pt)d*GeV)"\
-                                  " & (BPVDIRA > %(ExD0BPVDIRA)d)"\
-                                  " & (BPVVDCHI2 > %(ExD0BPVVDCHI2)d)"%  self.getProps()
+                                  " & (BPVDIRA > %(ExD0BPVDIRA)s)"\
+                                  " & (BPVVDCHI2 > %(ExD0BPVVDCHI2)s)"%  self.getProps()
                                   , DaughtersCuts = { "K-"  :  "(P>%(ExD0KP)d*MeV)"\
                                                       " & (PT>%(ExD0KPt)d*MeV)"\
-                                                      " & (MIPCHI2DV(PRIMARY)>%(ExD0KIPChi2)d) "%  self.getProps(),
-                                                      "pi+"  :  "(P>%(ExD0PiP)d*MeV)"\
+                                                      " & (MIPCHI2DV(PRIMARY)>%(ExD0KIPChi2)s) "%  self.getProps(),
+                                                      "pi+"  :  "(P>%(ExD0PiP)s*MeV)"\
                                                       " & (PT>%(ExD0PiPt)d*MeV)"\
-                                                      " & (MIPCHI2DV(PRIMARY)>%(ExD0PiIPChi2)d) "%  self.getProps()
+                                                      " & (MIPCHI2DV(PRIMARY)>%(ExD0PiIPChi2)s) "%  self.getProps()
                                                       }
                                   
                                   )
@@ -361,13 +361,13 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                  , "DStarCombine"
                                  , DecayDescriptor = "[ D*(2010)+ -> D0 pi+ ]cc"
                                  , InputLocations = [NoCutsPions, D02KPiCombine]
-                                 , CombinationCut = "(ADAMASS('D*(2010)+')<%(ExDStarMassWinWide)d*MeV)"%  self.getProps()
-                                 , MotherCut = "(ADMASS('D*(2010)+')<%(ExDStarMassWin)d*MeV)"\
-                                 " & (PT > %(ExDStarPt)d*GeV)"\
-                                 " & (VFASPF(VCHI2/VDOF) < %(ExDStarVCHI2)d)"\
-                                 " & (M-MAXTREE('D0'==ABSID,M)< %(ExDStarMassDiff)d)"%  self.getProps()
-                                 , DaughtersCuts = {"pi+":"(PT>%(ExDStarPiPt)d*MeV)"\
-                                                    " & (MIPCHI2DV(PRIMARY)>%(ExDStarPiIPChi2)d) "%  self.getProps()
+                                 , CombinationCut = "(ADAMASS('D*(2010)+')<%(ExDStarMassWinWide)s*MeV)"%  self.getProps()
+                                 , MotherCut = "(ADMASS('D*(2010)+')<%(ExDStarMassWin)s*MeV)"\
+                                 " & (PT > %(ExDStarPt)s*GeV)"\
+                                 " & (VFASPF(VCHI2/VDOF) < %(ExDStarVCHI2)s)"\
+                                 " & (M-MAXTREE('D0'==ABSID,M)< %(ExDStarMassDiff)s)"%  self.getProps()
+                                 , DaughtersCuts = {"pi+":"(PT>%(ExDStarPiPt)s*MeV)"\
+                                                    " & (MIPCHI2DV(PRIMARY)>%(ExDStarPiIPChi2)s) "%  self.getProps()
                                                     }
                                  )
 
