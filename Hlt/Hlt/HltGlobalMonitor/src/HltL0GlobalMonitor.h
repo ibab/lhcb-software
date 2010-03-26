@@ -2,6 +2,7 @@
 #define HLTL0GLOBALMONITOR_H 1
 
 #include "Event/L0DUReport.h"
+#include "Event/ODIN.h"
 
 #include "boost/function.hpp" 
 
@@ -11,11 +12,14 @@
 /** @class HltL0GlobalMonitor HltL0GlobalMonitor.h
  *
  *  functionality:
- *        monitor the global Hlt results
- *        make histograms with Hlt diagnostics info
+ *        monitor the L0 decisions seen by Hlt 
  *
- *  @author Arthur Maciel
- *  @date   2003-03-06
+ *
+ *  @author Johannes Albrecht
+ *  @date   2010-03-24 
+ *
+ *  original version from Arthur Maciel (2003)
+ *
  */
 
 class HltL0GlobalMonitor : public HltBaseAlg {
@@ -37,6 +41,7 @@ private:
        if (t == 0 && this->msgLevel(MSG::WARNING) ) Warning( " could not retrieve "  + location,StatusCode::SUCCESS,10) ;
        return t;
   };
+  std::string m_ODINLocation;
   std::string m_L0DUReportLocation;
 
   AIDA::IHistogram1D* m_L0Input;

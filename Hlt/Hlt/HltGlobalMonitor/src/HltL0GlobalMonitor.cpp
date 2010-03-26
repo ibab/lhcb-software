@@ -1,4 +1,4 @@
-// $Id: HltL0GlobalMonitor.cpp,v 1.1 2010-03-11 15:53:23 albrecht Exp $
+// $Id: HltL0GlobalMonitor.cpp,v 1.2 2010-03-26 14:01:20 albrecht Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -53,7 +53,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltL0GlobalMonitor
 //
-// 2007-05-16 : Bruno Souza de Paula
+// 2010-03-24 : Johannes Albrecht
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -71,6 +71,7 @@ HltL0GlobalMonitor::HltL0GlobalMonitor( const std::string& name,
   , m_events(0)
   , m_lastL0TCK(0)
 {
+  declareProperty("ODIN",              m_ODINLocation = LHCb::ODINLocation::Default);
   declareProperty("L0DUReport",        m_L0DUReportLocation = LHCb::L0DUReportLocation::Default);
   }
 //=============================================================================
@@ -85,7 +86,7 @@ StatusCode HltL0GlobalMonitor::initialize() {
   StatusCode sc = HltBaseAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  m_L0Input         = book1D("L0 channel",-0.5,18.5,19);
+  m_L0Input         = book1D("L0 channel",-0.5,20.5,21);
   // this code may break when the enums are no longer directly exposing the hardware
  
 
@@ -118,20 +119,43 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
   counter("L0Accept") += l0du->decision();
   counter("L0Forced") += l0du->forceBit();
 
-  if (!l0du->decision()) return;
-
   LHCb::L0DUChannel::Map channels = l0du->configuration()->channels();
-  for(LHCb::L0DUChannel::Map::iterator i = channels.begin();i!=channels.end();++i){
-      fill( m_L0Input, i->second->id(), l0du->channelDecision( i->second->id() ) );
-  }
 
+  //define the bin labels
   unsigned int L0TCK = l0du->tck();
   if (L0TCK != m_lastL0TCK && m_L0Input!=0) {
       std::vector< std::pair<unsigned, std::string> > labels;
       for(LHCb::L0DUChannel::Map::iterator i = channels.begin();i!=channels.end();++i){
-        labels.push_back(std::make_pair( i->second->id(), i->first ));
+	
+	std::string name=i->first;
+	if( i->second->decisionType() == LHCb::L0DUDecision::Disable ){
+	  name="disabled | "+name;
+	}
+	labels.push_back(std::make_pair( i->second->id(),name  ));
       }
+      labels.push_back(std::make_pair( 18, "B1gas * ODIN BE"));
+      labels.push_back(std::make_pair( 19, "B2gas * ODIN EB"));
       setBinLabels( m_L0Input, labels );
       m_lastL0TCK = L0TCK;
   }
+  
+  if (!l0du->decision()) return;
+  
+  LHCb::ODIN* odin = fetch<LHCb::ODIN>( LHCb::ODINLocation::Default);
+  if (odin == 0) return;
+
+  //fill the histogram containing the l0 channels
+  for(LHCb::L0DUChannel::Map::iterator i = channels.begin();i!=channels.end();++i){
+      fill( m_L0Input, i->second->id(), l0du->channelDecision( i->second->id() ) );
+
+      if(i->second->id()==16 
+	 && odin->bunchCrossingType() == LHCb::ODIN::Beam1 )
+	fill( m_L0Input, 18, l0du->channelDecision( i->second->id() ) );
+
+      if(i->second->id()==17 
+	 && odin->bunchCrossingType() == LHCb::ODIN::Beam2 )
+	fill( m_L0Input, 19, l0du->channelDecision( i->second->id() ) );
+
+  }
+
 };
