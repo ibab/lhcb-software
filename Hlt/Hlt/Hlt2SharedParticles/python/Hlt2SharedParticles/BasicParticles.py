@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.22 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.23 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
@@ -94,7 +94,7 @@ Hlt2Photons.PhotonMaker.PtCut = 200.* MeV
 # from Hlt2SharedParticles.BasicParticles import Muons
 #
 
-__all__ = ( 'NoCutsPions', 'NoCutsKaons', 'NoCutsProtons', 'Muons', 'RichPIDsKaons', 'Electrons', 'Photons' )
+__all__ = ( 'NoCutsPions', 'NoCutsKaons', 'NoCutsProtons', 'Muons', 'Electrons', 'Photons' )
 
 NoCutsPions   = bindMembers( None, [ hadronProtos	, 	Hlt2NoCutsPions 	] )
 NoCutsKaons   = bindMembers( None, [ hadronProtos	, 	Hlt2NoCutsKaons 	] )
