@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-03-27 - Jibo He
+ - Hlt2InclusiveDiProtonLines.py added for charmonium -> p pbar (2.8 - 3.9 GeV).
+	Rates will be presented in Trigger & Stripping meeting of 29 March 2010: 
+	http://indico.cern.ch/conferenceDisplay.py?confId=82199
+
 ! 2010-03-26 - Jibo He
  - Hlt2B2JpsiXLines.py
    Added the missing Prescale and Postscale for TF2Bc2JpsiX lines in slot.
