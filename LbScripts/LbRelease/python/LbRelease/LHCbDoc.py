@@ -520,8 +520,8 @@ class Doc(object):
         if self.isAfsVolume:
             usage = _diskUsage(tempdir) / 1024
             output = Popen(["fs", "lq", self.path], stdout = PIPE).communicate()[0].splitlines()[-1].split()
-            quota = int(output)[1]
-            used = int(output)[2]
+            quota = int(output[1])
+            used = int(output[2])
             if quota < (1.1 * (used + usage)):
                 output = Popen(["afs_admin", "sq", self.path, int(1.1 * (used + usage))], stdout = PIPE).wait()
         shutil.copytree(tempdir, self.output)
