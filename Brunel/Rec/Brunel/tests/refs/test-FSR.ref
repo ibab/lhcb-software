@@ -1,5 +1,5 @@
 # --> Including file '/build/cattanem/Brunel_HEAD/Rec/Brunel/tests/options/test-FSR.py'
-# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r7p1/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r8/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
 # EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
@@ -20,7 +20,7 @@
 # PoolRootEvtCnvSvc.EnableIncident      =    1;
 # PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
 # PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
-# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r7p1/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r8/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # <-- End of file '/build/cattanem/Brunel_HEAD/Rec/Brunel/tests/options/test-FSR.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
@@ -45,13 +45,13 @@
 # |-BXTypes           = ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2']
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0xa1aa10>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0xa1f020>  (default: None)
 # |-InputType         = 'DST'  (default: 'MDF')
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # applying configuration of DDDBConf
 # WARNING: Using default tag head-20100119 for partition DDDB
-# WARNING: Using default tag head-20100202 for partition LHCBCOND
-# WARNING: Using default tag sim-20100119-vc-md100 for partition SIMCOND
+# WARNING: Using default tag head-20100325 for partition LHCBCOND
+# WARNING: Using default tag MC-20100321-vc15mm-md100 for partition SIMCOND
 # /***** User DDDBConf/DDDBConf **********************************************************************
 # |-DataType   = '2009'
 # |-DbRoot     = 'conddb:/lhcb.xml'
@@ -69,6 +69,7 @@
 # |-DisableLFC                = False
 # |-Simulation                = False
 # |-SQLiteLocalCopiesDir      = ''
+# |-HeartBeatCondition        = '/Conditions/Online/LHCb/Tick'
 # |-Online                    = False
 # |-UseOracle                 = False
 # |-LogFile                   = ''
@@ -77,8 +78,8 @@
 ApplicationMgr      DEBUG Getting my own properties
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v35r11
-                                          running on lxbuild156.cern.ch on Wed Feb 17 15:59:23 2010
+                                                   Welcome to Brunel version v36r2
+                                          running on lxbuild156.cern.ch on Fri Mar 26 08:50:55 2010
 ====================================================================================================================================
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service EvtDataSvc/EventDataSvc
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service DetDataSvc/DetectorDataSvc
@@ -247,7 +248,8 @@ RndmGenSvc.Engine   DEBUG Service base class initialized successfully
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.89 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.76 times the speed of a 2.8 GHz Xeon.
+LumiSequence        DEBUG The tool of type 'SequencerTimerTool' has been added with the name 'ToolSvc.SequencerTimerTool'
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 EventAccount      VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
@@ -402,6 +404,7 @@ ToolSvc.OdinTim...  DEBUG Property ['Name': Value] =  'AuditInitialize':False
 ToolSvc.OdinTim...  DEBUG Property ['Name': Value] =  'AuditTools':False
 ToolSvc.OdinTim...  DEBUG Property ['Name': Value] =  'OutputLevel':1
 ToolSvc.OdinTim...  DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+createODIN          DEBUG The tool of type 'OdinTimeDecoder' has been added with the name 'ToolSvc.OdinTimeDecoder'
 TouchLumiFSR        DEBUG Property update for OutputLevel : new value = 1
 TouchLumiFSR        DEBUG Property update for OutputLevel : new value = 1
 TouchLumiFSR      VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
@@ -484,6 +487,7 @@ ToolSvc.LumiInt...  DEBUG Property ['Name': Value] =  'AuditInitialize':False
 ToolSvc.LumiInt...  DEBUG Property ['Name': Value] =  'AuditTools':False
 ToolSvc.LumiInt...  DEBUG Property ['Name': Value] =  'OutputLevel':1
 ToolSvc.LumiInt...  DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+TouchLumiFSR        DEBUG The tool of type 'LumiIntegrator' has been added with the name 'ToolSvc.LumiIntegrator'
 EventDataSvc        DEBUG Service base class initialized successfully
 EventDataSvc      VERBOSE ServiceLocatorHelper::service: found service IncidentSvc
 EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
@@ -3833,6 +3837,7 @@ EventAccount        DEBUG Releasing service 'IncidentSvc'
 createODIN          DEBUG Finalize base class GaudiAlgorithm
 createODIN          DEBUG Tools to release : ToolSvc.OdinTimeDecoder
 createODIN          DEBUG Releasing tool 'ToolSvc.OdinTimeDecoder'
+createODIN          DEBUG The tool 'ToolSvc.OdinTimeDecoder' of type 'OdinTimeDecoder' is released
 createODIN          DEBUG Services to release :
 TouchLumiFSR        DEBUG ==> Finalize
 TouchLumiFSR         INFO number of files seen: 1
@@ -3841,11 +3846,13 @@ TouchLumiFSR         INFO integrated normalization: {  runs : 56721  files : rfi
 TouchLumiFSR        DEBUG Finalize base class GaudiAlgorithm
 TouchLumiFSR        DEBUG Tools to release : ToolSvc.LumiIntegrator
 TouchLumiFSR        DEBUG Releasing tool 'ToolSvc.LumiIntegrator'
+TouchLumiFSR        DEBUG The tool 'ToolSvc.LumiIntegrator' of type 'LumiIntegrator' is released
 TouchLumiFSR        DEBUG Services to release :
 LumiSequence        DEBUG ==> Finalize
 LumiSequence        DEBUG Finalize base class GaudiAlgorithm
 LumiSequence        DEBUG Tools to release : ToolSvc.SequencerTimerTool
 LumiSequence        DEBUG Releasing tool 'ToolSvc.SequencerTimerTool'
+LumiSequence        DEBUG The tool 'ToolSvc.SequencerTimerTool' of type 'SequencerTimerTool' is released
 LumiSequence        DEBUG Services to release :
 IncidentSvc         DEBUG Removing [AbortEvent] listener '<unknown>'
 EventLoopMgr         INFO Histograms converted successfully according to request.
@@ -3883,13 +3890,13 @@ ToolSvc.OdinTim...  DEBUG Releasing service 'EventDataSvc'
 ToolSvc.OdinTim...  DEBUG Releasing service 'IncidentSvc'
 ToolSvc             DEBUG   Performing finalization of ToolSvc.SequencerTimerTool (refCount 1)
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.89 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.76 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiSequence                  |     1.443 |     2.343 |    0.754      35.6 |      97 |     0.227 |
-ToolSvc.Sequenc...   INFO   EventAccount                |     0.000 |     0.003 |    0.002       0.0 |      97 |     0.000 |
-ToolSvc.Sequenc...   INFO   createODIN                  |     1.288 |     2.167 |    0.671      31.7 |      97 |     0.210 |
-ToolSvc.Sequenc...   INFO   TouchLumiFSR                |     0.134 |     0.152 |    0.065       3.8 |      97 |     0.015 |
+ToolSvc.Sequenc...   INFO LumiSequence                  |     1.670 |    10.323 |    0.750     648.2 |      97 |     1.001 |
+ToolSvc.Sequenc...   INFO   EventAccount                |     0.010 |     0.003 |    0.002       0.0 |      97 |     0.000 |
+ToolSvc.Sequenc...   INFO   createODIN                  |     1.546 |    10.181 |    0.652     643.9 |      97 |     0.988 |
+ToolSvc.Sequenc...   INFO   TouchLumiFSR                |     0.103 |     0.123 |    0.068       4.1 |      97 |     0.012 |
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...  DEBUG  ==> Finalize the base class GaudiTool
 ToolSvc.Sequenc...  DEBUG Tools to release :
@@ -3913,7 +3920,7 @@ ToolSvc           VERBOSE   Delaying   deletion of ToolSvc.OdinTimeDecoder.ODIND
 ToolSvc             DEBUG   Performing deletion of ToolSvc.OdinTimeDecoder.ODINDecodeTool
 ServiceManager      DEBUG Finalizing service DetectorPersistencySvc
 ServiceManager      DEBUG Finalizing service IncidentSvc
-IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0.106852(+-1.86645)/0/36.994[ms] Total:0.041993[s]
+IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0.145018(+-2.57109)/0/50.992[ms] Total:0.056992[s]
 ServiceManager      DEBUG Finalizing service AppMgrRunable
 ServiceManager      DEBUG Finalizing service FileRecordCnvSvc
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.

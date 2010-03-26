@@ -35,8 +35,8 @@ Purpose: LHCb reconstruction program
    . New default LHCbCond tag for 2009 and 2010 data (DDDB v1r29)
    . Add Muon, Rich PID and combined DLL to ProtoParticle (for monitoring) and
      remove again before writing out (GlobalReco v6r32, Brunel)
-   . Additional track monitoring histograms, disable most histograms in Online
-     (TrackMonitors v1r22)
+   . Additional track monitoring histograms, disable most histograms in Online,
+     move some histograms to Expert (TrackMonitors v1r22)
    . New early data tuning for Seed tracks (TsaAlgorithms v3r17)
    . Update of ST measurement uncertainty tuning (Tracksys v4r31)
    . Use detailed Bethe Bloch dE/dx tool as default in fit
@@ -44,6 +44,11 @@ Purpose: LHCb reconstruction program
    . Made Velo dEdx parameters in TrackVelodEdxCharge load from conditions
      (TrackTools v3r28) - new normalisation in SQLDDDB v5r23
    . Cleanups in MuonPIDChecker (MuonPIDChecker v5r0)
+   . Less verbosity in TrackMasterFitter initialisation (TrackFitter v2r46)
+   . Less verbosity in TrajOTProjector initialisation (TrackProjectors v2r27p1)
+   . Fixed bug 64670, changed default data type in configuration files to 2009
+     (MuonID v7r8)
+   . Add RichHPDImageShifts monitoring sequence (RichRecQC v2r38)
 
 </PRE><H1><A NAME=v36r2>2010-02-26 Brunel v36r2</A></H1><PRE>
  - Changes to Configurable: 
