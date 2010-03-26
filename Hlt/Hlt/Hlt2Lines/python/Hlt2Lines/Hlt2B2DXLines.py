@@ -303,22 +303,18 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                                        , inputSeq = [ DXTFInputParticles, TF2BodyWithoutKs ]
                                        , decayDesc =[ "D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-","D*(2010)+ -> K*(892)0 K+", "D*(2010)+ -> K*(892)0 K-"]
                                        )
-        
-         
+
         # Filter the combinations
         ###################################################################
         def TFFilter(name, inputSeq, extracode = None) :
-            codestr = " ALL "
-            if extracode :
-                codestr = codestr + '&' + extracode
+             if extracode :
                 filter = Hlt2Member( FilterDesktop
                                      , 'TFFilter'
                                      , InputLocations = inputSeq
-                                     , Code = codestr
+                                     , Code = extracode
                                      )
-                filterSeq = bindMembers( name, inputSeq + [ filter ] )
-                return filterSeq
-            
+                return bindMembers( name, inputSeq + [ filter ] )
+
         # Main 2 and 3 body charm post-track-fit combinations
         D2TF2BodyWithKsSeq = TFFilter('D2TF2BodyWithKsSeq'
                                       ,[TF2BodyWithKs]
