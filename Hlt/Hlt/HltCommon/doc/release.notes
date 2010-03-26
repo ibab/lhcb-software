@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-03-26 - Gerhard Raven
+ - add MooreInit
+
 ! 2010-03-25 - V. Gligorov
  - Change HltMoveVErticesForSwimming to use the lifetime fitter for calculating
    the new lifetime after each swimming step.
