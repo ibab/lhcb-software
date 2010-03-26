@@ -112,19 +112,25 @@ Hlt2BiKalmanFittedDownProtons.WriteP2PVRelations 	=  False
 ##########################################################################
 #
 # Make the Rich kaons 
+# Note: we set the DLL cut manually to -99999 to avoid the default of 2 specified in the ProtoP filter base class 
 #
-Hlt2BiKalmanFittedRichKaons 				= CombinedParticleMaker("Hlt2BiKalmanFittedRichKaons")
+Hlt2BiKalmanFittedRichKaons 				=  CombinedParticleMaker("Hlt2BiKalmanFittedRichKaons")
+Hlt2BiKalmanFittedRichKaons.addTool(ProtoParticleCALOFilter('Kaon'))
 Hlt2BiKalmanFittedRichKaons.Particle 			=  "kaon"
-Hlt2BiKalmanFittedRichKaons.Input 			= BiKalmanFittedChargedRichHadronProtoMaker.outputSelection()
+Hlt2BiKalmanFittedRichKaons.Input 			=  BiKalmanFittedChargedRichHadronProtoMaker.outputSelection()
 Hlt2BiKalmanFittedRichKaons.WriteP2PVRelations  	=  False
+Hlt2BiKalmanFittedRichKaons.Kaon.Selection		=  ["RequiresDet='RICH'"]
 ##########################################################################
 #
 # Make the Rich protons 
+# Note: we set the DLL cut manually to -99999 to avoid the default of 2 specified in the ProtoP filter base class
 #
 Hlt2BiKalmanFittedRichProtons                           = CombinedParticleMaker("Hlt2BiKalmanFittedRichProtons")
+Hlt2BiKalmanFittedRichProtons.addTool(ProtoParticleCALOFilter('Proton'))
 Hlt2BiKalmanFittedRichProtons.Particle                  =  "proton"
 Hlt2BiKalmanFittedRichProtons.Input                     = BiKalmanFittedChargedRichForProtonsHadronProtoMaker.outputSelection()
 Hlt2BiKalmanFittedRichProtons.WriteP2PVRelations 	=  False
+Hlt2BiKalmanFittedRichProtons.Proton.Selection		= ["RequiresDet='RICH'"]
 ########################################################################
 #
 # Make the electrons
