@@ -52,8 +52,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                                                  , 'Hlt2B2D2hhKstarReq4BodyWithoutKsBroadMW': 0.01
                                                  , 'Hlt2B2D2XRobust3Body' : 0.001 # Robust stage monitoring lines
                                                  , 'Hlt2B2D2XRobust4Body' : 0.001
-                                                 }
-                  , 'Postscale'               : {'Hlt2B2D2hhBachelorWithKsSignal' : 0.001 # Post TF stage monitoring lines
+                                                 , 'Hlt2B2D2hhBachelorWithKsSignal' : 0.001 # Post TF stage monitoring lines
                                                  , 'Hlt2B2D2hhhBachelorWithKsSignal' : 0.001
                                                  , 'Hlt2B2D2hhKstarWithKsSignal' : 0.001
                                                  , 'Hlt2B2D2hhBachelorWithoutKsSignal' : 0.001 
@@ -184,7 +183,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         # filter the 3 and 4 body combinations
         #####################################################
         def RobustFilter(name, inputSeq, extracode = None) :
-            codestr = "(M>4000*MeV)" % self.getProps()
+            codestr = "(M>4000*MeV)" 
             if extracode :
                 codestr = codestr + '&' + extracode
             filter = Hlt2Member( FilterDesktop
@@ -227,14 +226,14 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         # Sequences for new combinatorics with Ks candidates.
         # DX 2-body combinations with a Ks.
         ###################################################################
+        excode = " ALL "
         
-        excode = "(PT>0*MeV)"
         FilterDXTFParticles = Hlt2Member( FilterDesktop
                                           , 'FilterDXTFParticles'
                                           , InputLocations = [lclTFInputParticles]
-                                          , Code =  excode
-                                          )
-
+                                          , Code = excode
+                                          ) 
+   
         FilterKsDD = Hlt2Member( FilterDesktop
                                  , 'FilterKsDD'
                                  , InputLocations = [KsDD]
@@ -309,7 +308,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         # Filter the combinations
         ###################################################################
         def TFFilter(name, inputSeq, extracode = None) :
-            codestr = "(PT>0*MeV)" % self.getProps()
+            codestr = " ALL "
             if extracode :
                 codestr = codestr + '&' + extracode
                 filter = Hlt2Member( FilterDesktop
@@ -324,12 +323,15 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         D2TF2BodyWithKsSeq = TFFilter('D2TF2BodyWithKsSeq'
                                       ,[TF2BodyWithKs]
                                       , extracode = '(BPVVDCHI2> %(ComTFVtxPVDDispChi2LL)s )' % self.getProps() )
+
         D2TF2BodyWithoutKsSeq = TFFilter('D2TF2BodyWithoutKsSeq'
                                          ,[TF2BodyWithoutKs]
                                          , extracode = '(BPVVDCHI2> %(ComTFVtxPVDDispChi2LL)s ) & (SUMQ == 0)' % self.getProps() )
+
         D2TF3BodyWithKsSeq = TFFilter('D2TF3BodyWithKsSeq'
                                       , [TF3BodyWithKs]
                                       , extracode = '(BPVVDCHI2> %(ComTFVtxPVDDispChi2LL)s )' % self.getProps())
+
         D2TF3BodyWithoutKsSeq = TFFilter('D2TF3BodyWithoutKsSeq'
                                          , [TF3BodyWithoutKs]
                                          , extracode = '(BPVVDCHI2> %(ComTFVtxPVDDispChi2LL)s )' % self.getProps())

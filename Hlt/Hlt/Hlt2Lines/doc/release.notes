@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-03-26 - J. Nardulli
+ - Fix dummy cuts as "PT >0" in the B2DX lines
+   Change the B2DX post TF monitoring lines from being post-scaled at 0.001 to be pre-scaled at 0.001.
+
 ! 2010-03-25 - V. Gligorov
  - Fix the tag-and-probe muon lines in Hlt2ExpressLines so
    that they work again.
