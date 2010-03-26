@@ -5,6 +5,11 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-03-26 - Mat Charles
+ - Rewrite of StrippingDstarD2KShh: it is now a Configurable and uses
+   StrippingMembers to make lines. The cuts themselves should be
+   essentially unchanged.
+
 ! 2010-03-26 - Jacopo Nardulli
  - Adding wrong charge combinations in the D->hh selection in the B2DX lines
 

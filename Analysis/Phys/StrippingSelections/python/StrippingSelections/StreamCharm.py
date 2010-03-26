@@ -18,6 +18,7 @@ from StrippingSelections import StrippingDstar_D2KPiPi0
 from StrippingSelections import StrippingD2hhNoPID
 
 from StrippingSelections.StrippingDstarPromptWithD02HH import StrippingDstarPromptWithD02HHConf
+from StrippingSelections.StrippingDstarD2KShh          import StrippingDstarD2KShhConf
 
 
 stream = StrippingStream("Charm")
@@ -48,18 +49,6 @@ stream.appendLines( [
         , StrippingD2hhh.lineD2KKP_A_NoPID_Sig
         , StrippingD2hhh.lineD2KKP_A_NoPID_Bkg
         , StrippingD2hhh.lineD2HHH
-	, StrippingDstarD2KShh.line1
-	, StrippingDstarD2KShh.line2
-	, StrippingDstarD2KShh.line3
-	, StrippingDstarD2KShh.line4
-	, StrippingDstarD2KShh.line5
-	, StrippingDstarD2KShh.line6
-	, StrippingDstarD2KShh.line7
-	, StrippingDstarD2KShh.line8
-	, StrippingDstarD2KShh.line9
-	, StrippingDstarD2KShh.line10
-	, StrippingDstarD2KShh.line11
-	, StrippingDstarD2KShh.line12
 	, StrippingDstarD2KShhRobust.line1 
 	, StrippingDstarD2KShhRobust.line2 
 	, StrippingDstarD2KShhRobust.line3 
@@ -79,3 +68,5 @@ stream.appendLines( [
         , StrippingD2hhNoPID.line
     ] )
 stream.appendLines( StrippingDstarPromptWithD02HHConf().lines() )
+stream.appendLines( StrippingDstarD2KShhConf().MakeLines() )
+
