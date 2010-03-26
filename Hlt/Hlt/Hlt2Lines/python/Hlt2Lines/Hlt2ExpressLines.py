@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2ExpressLines.py,v 1.17 2010-03-25 18:46:24 gligorov Exp $
+# $Id: Hlt2ExpressLines.py,v 1.18 2010-03-26 18:06:58 powell Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt2 Lines for the express stream
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Johannes Albrecht albrecht@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.17 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.18 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -25,14 +25,16 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                , 'Hlt2ExpressKS'          : 1.
                                , 'Hlt2ExpressDs2PhiPi'    : 1.
                                , 'Hlt2ExpressBeamHalo'    : 1.
-                               }
+                               , 'Hlt2ExpressDStar2D0Pi'  : 1.
+                                 }
                , 'Postscale' : { 'Hlt2ExpressJPsi'        : 'RATE(5)'
                                , 'Hlt2ExpressJPsiTagProbe': 'RATE(5)'
                                , 'Hlt2ExpressLambda'      : 'RATE(1)'
                                , 'Hlt2ExpressKS'          : 'RATE(1)'
                                , 'Hlt2ExpressDs2PhiPi'    : 'RATE(1)'
                                , 'Hlt2ExpressBeamHalo'    : 'RATE(1)'
-                               }
+                               , 'Hlt2ExpressDStar2D0Pi'  : 'RATE(1)'
+                                 }
                , 'ExJPsiMassWindow'        :  120   # MeV
                , 'ExJPsiPt'                : 1000   # MeV
                , 'ExJPsiMuPt'              :  500   # MeV
@@ -86,6 +88,25 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                , 'ExHaloOverlaps'          :  False
                , 'ExHaloBigCell'           :  False
                , 'ExHaloMinOverlap'        :  3
+               , 'ExD0MassWinWide'         :  100   # MeV
+               , 'ExD0MassWin'             :   50   # MeV
+               , 'ExD0VCHI2'               :   10 
+               , 'ExD0Pt'                  : 1000   # MeV
+               , 'ExD0BPVDIRA'             : 0.9999
+               , 'ExD0BPVVDCHI2'           :   12
+               , 'ExD0KP'                  : 2000   # MeV
+               , 'ExD0KPt'                 :  400   # MeV
+               , 'ExD0KIPChi2'             :    6
+               , 'ExD0PiP'                 : 2000   # MeV
+               , 'ExD0PiPt'                :  400   # MeV
+               , 'ExD0PiIPChi2'            :    6
+               , 'ExDStarMassWinWide'      :  100   # MeV
+               , 'ExDStarMassWin'          :   50   # MeV
+               , 'ExDStarPt'               : 2200   # MeV
+               , 'ExDStarVCHI2'            :   15
+               , 'ExDStarMassDiff'         :155.5   # MeV
+               , 'ExDStarPiPt'             : 110    # MeV
+               , 'ExDStarPiIPChi2'         :   2
                }  
    
    def __apply_configuration__(self):
@@ -306,6 +327,57 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                )
       
       #--------------------------------------------      
+      '''
+      D* no PID
+
+      From RichPIDQC/DstarToDzeroPi.py
+
+      '''
+      from Hlt2SharedParticles.BasicParticles import NoCutsKaons, NoCutsPions
+      from Configurables import CombineParticles
+      from HltLine.HltReco import PV3D
+      
+      D02KPiCombine = Hlt2Member( CombineParticles
+                                  , "D02KPiCombine"
+                                  , DecayDescriptor = "[ D0 -> K- pi+ ]cc"
+                                  , InputLocations = [NoCutsKaons, NoCutsPions]
+                                  , CombinationCut = "(ADAMASS('D0')<%(ExD0MassWinWide)d*MeV)"%  self.getProps()
+                                  , MotherCut = "(ADMASS('D0') < %(ExD0MassWin)d*MeV)"\
+                                  " & (VFASPF(VCHI2/VDOF) < %(ExD0VCHI2)d)"\
+                                  " & (PT > %(ExD0Pt)d*GeV)"\
+                                  " & (BPVDIRA > %(ExBPVD0DIRA)d)"\
+                                  " & (BPVVDCHI2 > %(ExD0BPVVDCHI2)d)"%  self.getProps()
+                                  , DaughtersCuts = { "K-"  :  "(P>%(ExD0KP)d*MeV)"\
+                                                      " & (PT>%(ExD0KPt)d*MeV)"\
+                                                      " & (MIPCHI2DV(PRIMARY)>%(ExD0KIPChi2)d) "%  self.getProps(),
+                                                      "pi+"  :  "(P>%(ExD0PiP)d*MeV)"\
+                                                      " & (PT>%(ExD0PiPt)d*MeV)"\
+                                                      " & (MIPCHI2DV(PRIMARY)>%(ExD0PiIPChi2)d) "%  self.getProps()
+                                                      }
+                                  
+                                  )
+
+      DStarCombine = Hlt2Member( CombineParticles
+                                 , "DStarCombine"
+                                 , DecayDescriptor = "[ D*(2010)+ -> D0 pi+ ]cc"
+                                 , InputLocations = [NoCutsPions, D02KPiCombine]
+                                 , CombinationCut = "(ADAMASS('D*(2010)+')<%(ExDStarMassWinWide)d*MeV)"%  self.getProps()
+                                 , MotherCut = "(ADMASS('D*(2010)+')<%(ExDStarMassWin)d*MeV)"\
+                                 " & (PT > %(ExDStarPt)d*GeV)"\
+                                 " & (VFASPF(VCHI2/VDOF) < %(ExDStarVCHI2)d)"\
+                                 " & (M-MAXTREE('D0'==ABSID,M)< %(ExDStarMassDiff))"%  self.getProps()
+                                 , DaughtersCuts = {"pi+":"(PT>%(ExDStarPiPt)d*MeV)"\
+                                                    " & (MIPCHI2DV(PRIMARY)>%(ExDStarPiIPChi2)d) "%  self.getProps()
+                                                    }
+                                 )
+
+      line = Hlt2Line('ExpressDStar2D0Pi'
+                      , prescale = self.prescale 
+                      , algos = [ PV3D, NoCutsPions, NoCutsKaons, D0Combine, DStarCombine]
+                      , postscale = self.postscale
+                      ) 
+      
+      #--------------------------------------------                      
       
       
       HltANNSvc().Hlt2SelectionID.update( { "Hlt2ExpressJPsiDecision"   : 50090
@@ -314,5 +386,6 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                             ,'Hlt2ExpressKSDecision' : 50093
                                             , 'Hlt2ExpressDs2PhiPiDecision' : 50094
                                             ,"Hlt2ExpressBeamHaloDecision"     : 50095
+                                            ,'Hlt2ExpressDStar2D0PiDecision' : 50096
                                             } )
 

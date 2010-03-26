@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-03-26 - A. Powell
+ - Hlt2ExpressLines.py: Added D* selection
+
 ! 2010-03-26 - J.Nardulli
  - Modifications to the definition of the TFFilter in the B2DX lines.
 
