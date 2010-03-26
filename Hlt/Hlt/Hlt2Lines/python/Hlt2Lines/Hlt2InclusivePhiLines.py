@@ -120,18 +120,22 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
 
         # Filter on RICH info
         TfKaonRichPidTf = "INGENERATION(('K+'==ABSID) & (PIDK > "+str(self.getProp('TFKaonRichPID'))+"), 1)"
-        Hlt2InclusivePhiRich = Hlt2Member( FilterDesktop
-                                           , "RichCombine"
-                                           , InputLocations = [Hlt2InclusivePhiTF]
-                                           , Code = TfKaonRichPidTf
+        Hlt2InclusivePhiRich 	= Hlt2Member( CombineParticles
+                                         , "RichCombine"
+                                         , DecayDescriptors = decayDesc
+                                         , DaughtersCuts = { "K+" : TfKaonPtCut+" & "+TfKaonIpsCut }
+                                         , CombinationCut = TfPhiMassCut
+                                         , MotherCut = TfPhiVchi2Cut+" & "+TfPhiPtCut + " & " + TfKaonRichPidTf
+                                         , InputLocations  = [ BiKalmanFittedRichKaons ]
+                                         )
+        Hlt2InclusivePhiRichSB 	= Hlt2Member( CombineParticles
+                                           , "RichCombineSB"
+                                           , DecayDescriptors = decayDesc
+                                           , DaughtersCuts = { "K+" : TfKaonPtCut+" & "+TfKaonIpsCut }
+                                           , CombinationCut = TfPhiMassCutSB
+                                           , MotherCut = TfPhiVchi2Cut+" & "+TfPhiPtCut+" & "+TfKaonRichPidTf
+                                           , InputLocations  = [ BiKalmanFittedRichKaons ]
                                            )
-        Hlt2InclusivePhiRichSB = Hlt2Member( FilterDesktop
-                                             , "RichCombineSB"
-                                             , InputLocations = [Hlt2InclusivePhiTFSB]
-                                             , Code = TfKaonRichPidTf
-                                           )
-        
-
         ############################################################################
         #    Inclusive Phi complete line
         ############################################################################

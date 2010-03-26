@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-03-26 - V. Gligorov
+ - Update the inclusive phi lines to be compatible with the new
+   reconstruction framework. See Savannah #12691 for details. 
+
 ! 2010-03-26 - A. Powell
  - Hlt2ExpressLines.py: Added D* selection
 
