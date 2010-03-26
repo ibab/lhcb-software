@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+
+! 2010-03-26 - Gerhard Raven
+ - add Commissioning_Beamgas setting
+
 ! 2010-03-22 - Jacopo Nardulli
  - Adding monitoring lines to the B2DX lines
 
