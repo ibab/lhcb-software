@@ -1,6 +1,6 @@
 project PHYS
 
-use LHCB	LHCB_HEAD
+use LHCB	LHCB_v30r0
 
 build_strategy	with_installarea
 setup_strategy	root
