@@ -1,4 +1,4 @@
-// $Id: HltSelection.h,v 1.16 2010-03-06 15:21:13 graven Exp $
+// $Id: HltSelection.h,v 1.17 2010-03-27 21:59:41 graven Exp $
 #ifndef HLTBASE_HLTSELECTION_H 
 #define HLTBASE_HLTSELECTION_H 1
 
@@ -65,6 +65,9 @@ namespace Hlt
     bool m_error;     // did an error occur during processing?
   };
 
+  //TODO: can we use Gaudi::Range instead of having an std::vector<T*> ???
+  //      or do we get in trouble with 'insert' and 'erase'? Can we do
+  //      that external to a selection?
   template <typename T>
   class TSelection : public Selection {
   public:

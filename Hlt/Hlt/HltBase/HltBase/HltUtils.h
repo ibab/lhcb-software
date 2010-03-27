@@ -22,8 +22,13 @@ namespace Hlt {
                      const LHCb::Track* rhs ) const {
         double ptl = lhs->pt();
         double ptr = rhs->pt();
-        return (ptl == ptr) ? (lhs->key() > rhs->key())
-                            : (ptl > ptr) ;
+        // make sure we are stable under interchange of lhs and rhs,
+        // in case that the value of pt is identical by checking the
+        // 'key' in that case. And in case the key is identical, we
+        // assume the tracks are identical, and hence the order does
+        // not matter (I _hope_ -- better use stable_sort than sort ;-)
+        return (ptl != ptr) ?  (ptl > ptr) 
+                            :  (lhs->key() > rhs->key());
 }
   };
   /* It fills the vertex using the 2 tracks
@@ -90,7 +95,7 @@ namespace HltUtils
                       const LHCb::Track& track2);
 
   inline double FC(const LHCb::RecVertex& svtx, 
-            const LHCb::RecVertex& pvtx )
+                   const LHCb::RecVertex& pvtx )
   {
     const LHCb::Track& t1 = *(svtx.tracks()[0]);
     const LHCb::Track& t2 = *(svtx.tracks()[1]);
