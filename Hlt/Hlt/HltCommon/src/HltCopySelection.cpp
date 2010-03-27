@@ -1,4 +1,4 @@
-// $Id: HltCopySelection.cpp,v 1.5 2009-08-27 14:42:09 graven Exp $
+// $Id: HltCopySelection.cpp,v 1.6 2010-03-27 16:29:17 graven Exp $
 // Include files 
 #include <algorithm>
 #include <iterator>
@@ -65,9 +65,10 @@ template <typename T>
 StatusCode 
 HltCopySelection<T>::execute() {
   counter("#input")  +=  m_selection.template input<1>()->size();
-  std::copy( m_selection.template input<1>()->begin(), 
-             m_selection.template input<1>()->end(), 
-             std::back_inserter(*m_selection.output()) );
+  m_selection.output()->insert( m_selection.output()->end()
+                              , m_selection.template input<1>()->begin()
+                              , m_selection.template input<1>()->end()
+                              );
   setFilterPassed( !m_selection.output()->empty() );
   return StatusCode::SUCCESS;
 }

@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.28 2010-02-17 11:03:07 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.29 2010-03-27 16:29:17 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -40,7 +40,7 @@ DECLARE_SERVICE_FACTORY( PropertyConfigSvc );
 
 namespace {
 
-    class property2jos {
+    class property2jos  {
          public:
             property2jos(IJobOptionsSvc* jos,const string& name, ostream* os=0) :
                 m_jos(jos),m_name(name),m_properties(jos->getProperties(name)),m_out(os) { assert(m_jos!=0); }

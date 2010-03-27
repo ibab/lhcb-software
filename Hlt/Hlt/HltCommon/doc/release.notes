@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2010-03-27 - Gerhard Raven
+ - use std::vector::insert instead of std::copy
+
 ! 2010-03-26 - Gerhard Raven
  - add MooreInit
 
