@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.105 2010-03-27 20:02:33 graven Exp $
+!$Id: release.notes,v 1.106 2010-03-27 22:04:50 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
@@ -7,6 +7,7 @@
 
 ! 2010-03-27 - Gerhard Raven
  - Hlt2Tracking.py: replace mix of tabs and spaces with spaces
+ - HltVertexUpgrade: less casting...
 
 ! 2010-03-27 - V. Gligorov
  - Create a list of recognized track fit types which work with

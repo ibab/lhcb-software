@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.cpp,v 1.21 2010-03-11 11:45:26 gligorov Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.22 2010-03-27 22:04:50 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -56,7 +56,7 @@ StatusCode HltVertexUpgrade::initialize() {
   m_selections.registerSelection();
   
   m_tool = tool<ITrackUpgrade>("HltTrackUpgradeTool",this);
-  if (!m_tool) fatal() << " not able to retrieve upgrade track tool " << endreq;
+  if (!m_tool) fatal() << " not able to retrieve upgrade track tool " << endmsg;
   sc = m_tool->setReco(m_recoName);
   
  if (produceHistos()){
@@ -78,48 +78,51 @@ StatusCode HltVertexUpgrade::execute() {
 
   StatusCode sc = StatusCode::SUCCESS;
 
-  RecVertices* overtices = 
-    getOrCreate<RecVertices,RecVertices>(m_TESOutputVerticesName);
+  RecVertices* overtices = getOrCreate<RecVertices,RecVertices>(m_TESOutputVerticesName);
 
-  verbose()<<"Trying vertex upgrade "<<m_recoName<<endreq;
+  verbose()<<"Trying vertex upgrade "<<m_recoName<<endmsg;
 
   const Hlt::VertexSelection *input = m_selections.input<1>();
   for (Hlt::VertexSelection::const_iterator it=input->begin(); it!=input->end(); ++it) {
-    RecVertex& vseed = *(*it);
-    const SmartRefVector<Track>& otracks = vseed.tracks();
-    Track& seed1 = (Track&) *(*otracks.begin());
-    Track& seed2 = (Track&) *(*(otracks.begin()+1));
-    debug() << " -- updating vertex -- " << endreq;
+    RecVertex* vseed = *it;
+    const SmartRefVector<Track>& otracks = vseed->tracks();
+    const Track* seed1 =  *otracks.begin();     assert(otracks.begin()!=otracks.end());
+    const Track* seed2 =  *(otracks.begin()+1); assert((otracks.begin()+1)!=otracks.end());
+    debug() << " -- updating vertex -- " << endmsg;
     if (msgLevel(MSG::DEBUG)) {
-      printInfo(" seed1 ", seed1);
-      printInfo(" seed2 ", seed2);
+      printInfo(" seed1 ", *seed1);
+      printInfo(" seed2 ", *seed2);
     }
     std::vector<LHCb::Track*> tracks1, tracks2;
-    debug() << " calling update for track1" << endreq;
-    sc = m_tool->upgrade(seed1,tracks1);
-    if (sc.isFailure()) return sc;
-    debug() << " calling update for track2" << endreq;
-    sc = m_tool->upgrade(seed2,tracks2);
-    if (sc.isFailure()) return sc;
+    debug() << " calling update for track1" << endmsg;
+    sc = m_tool->upgrade(const_cast<Track&>(*seed1),tracks1);
+    if (sc.isFailure()) {
+        always() << "Failed to update track!" << endmsg;
+        return sc;
+    }
+    debug() << " calling update for track2" << endmsg;
+    sc = m_tool->upgrade(const_cast<Track&>(*seed2),tracks2);
+    if (sc.isFailure()) { 
+        always() << "Failed to update track!" << endmsg;
+        return sc;
+    }
     if (tracks1.empty() || tracks2.empty() ) continue;
-    debug() << " creating a vertex " << endreq;
+    debug() << " creating a vertex " << endmsg;
    
     for (std::vector<Track*>::iterator t1 = tracks1.begin();
          t1 != tracks1.end(); ++t1) {
-      Track& track1 = *(*t1);
       for (std::vector<Track*>::iterator t2 = tracks2.begin();
            t2 != tracks2.end(); ++t2) {
-        Track& track2 = *(*t2);
         RecVertex* sv = new RecVertex();
-        _makeVertex(track1,track2,*sv);
-        sv->setExtraInfo(vseed.extraInfo());
         overtices->insert(sv);
+        _makeVertex(**t1,**t2,*sv);
+        sv->setExtraInfo(vseed->extraInfo());
         m_selections.output()->push_back(sv);
-        debug() << " created vertex " << endreq;
+        debug() << " created vertex " << endmsg;
         if (msgLevel(MSG::DEBUG)) printInfo(" vertex ",*sv);
         // TODO - wait till RecVertex is done
         // if (m_transferExtraInfo)
-        //   sv->setExtraInfo( vseed.extraInfo() );
+        //   sv->setExtraInfo( vseed->extraInfo() );
       }
     }
 
@@ -142,8 +145,7 @@ StatusCode HltVertexUpgrade::execute() {
 
   }
 
-  debug()<<"Upgrade vertices succesful"<<endreq;
-
+  debug()<<"Upgrade vertices succesful"<<endmsg;
   return sc;
 }
 
