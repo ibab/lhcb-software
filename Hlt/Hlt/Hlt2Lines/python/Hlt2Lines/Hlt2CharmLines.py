@@ -1,7 +1,7 @@
-## $Id: Hlt2CharmLines.py,v 1.10 2010-03-17 22:29:47 gligorov Exp $
+## $Id: Hlt2CharmLines.py,v 1.11 2010-03-27 22:07:33 graven Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-03-17 22:29:47 $'
-__version__ = '$Revision: 1.10 $'
+__date__    = '$Date: 2010-03-27 22:07:33 $'
+__version__ = '$Revision: 1.11 $'
 
 ## ######################################################################
 ## Defines a configurable to define and configure Hlt2 lines for selecting
@@ -254,13 +254,12 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         for i in [ 'LoKiTrigger.decorators' ] :
             if i not in modules : modules.append(i)
 
-	from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
-        Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
-
+        from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+        tracks = Hlt2UnfittedForwardTracking().hlt2PrepareTracks()
         Hlt2TopoKillTooManyInTrkAlg = VoidFilter('Hlt2TopoKillTooManyInTrkAlg'
-                                              , Code = "TrSOURCE('"+(Hlt2UnfittedForwardTracking.hlt2PrepareTracks()).outputSelection()+"') >> (TrSIZE < %(ComRobGEC)s )" % self.getProps()
-                                              )
-        Hlt2TopoKillTooManyInTrk = bindMembers( None, [ Hlt2UnfittedForwardTracking.hlt2PrepareTracks(), Hlt2TopoKillTooManyInTrkAlg ] )
+                                                , Code = "CONTAINS('"+tracks.outputSelection()+"') < %(ComRobGEC)s" % self.getProps()
+                                                )
+        Hlt2TopoKillTooManyInTrk = bindMembers( None, [ tracks, Hlt2TopoKillTooManyInTrkAlg ] )
 
         return Hlt2TopoKillTooManyInTrk
     # }
@@ -343,17 +342,16 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         charm2Body = self.robustCombine(  name = 'Charm2Body'
                                   , inputSeq = [ lclRobInputKaons, lclRobInputPions ]
-                                  #, decayDesc = ["K*(892)0 -> pi+ pi-", "K*(892)0 -> K+ K-", "K*(892)0 -> K+ pi-", "K*(892)0 -> pi+ K-" ]
                                   , decayDesc = [ "K*(892)0 -> pi+ pi+"
-                                                  , "K*(892)0 -> pi+ pi-"
-                                                  , "K*(892)0 -> pi- pi-"
-                                                  , "K*(892)0 -> K+ K+"
-                                                  , "K*(892)0 -> K+ K-"
-                                                  , "K*(892)0 -> K- K-"
-                                                  , "K*(892)0 -> K+ pi-"
-                                                  , "K*(892)0 -> pi+ K-"
-                                                  , "K*(892)0 -> K+ pi+"
-                                                  , "K*(892)0 -> K- pi-" ]
+                                                , "K*(892)0 -> pi+ pi-"
+                                                , "K*(892)0 -> pi- pi-"
+                                                , "K*(892)0 -> K+ K+"
+                                                , "K*(892)0 -> K+ K-"
+                                                , "K*(892)0 -> K- K-"
+                                                , "K*(892)0 -> K+ pi-"
+                                                , "K*(892)0 -> pi+ K-"
+                                                , "K*(892)0 -> K+ pi+"
+                                                , "K*(892)0 -> K- pi-" ]
                                   , extracuts = { 'CombinationCut' : "(AMINDOCA('LoKi::TrgDistanceCalculator')< %(ComRobPairMinDocaUL)s )" % self.getProps() }
                                   )
 

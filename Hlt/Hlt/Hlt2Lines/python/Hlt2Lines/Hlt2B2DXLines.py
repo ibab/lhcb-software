@@ -74,8 +74,8 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         from Configurables import FilterDesktop,CombineParticles
         from Hlt2SharedParticles.GoodParticles import GoodPions, GoodKaons
         from Configurables import HltANNSvc
-	from Hlt2SharedParticles.Ks import KsDD 
-	from HltTracking.HltPVs import PV3D
+        from Hlt2SharedParticles.Ks import KsDD 
+        from HltTracking.HltPVs import PV3D
 
         ###################################################################
         # Absorb the shared particle reconstruction into this configurable.
@@ -88,17 +88,17 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
         modules =  CoreFactory('CoreFactory').Modules
         
-	from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
-	Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
-	
+        from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+        Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
 
-	for i in [ 'LoKiTrigger.decorators' ] :
+
+        for i in [ 'LoKiTrigger.decorators' ] :
             if i not in modules : modules.append(i)
             
-            Hlt2KillTooManyDXIPFilter = VoidFilter('Hlt2KillTooManyDXIP'
-                                             , Code = "TrSOURCE('"+(Hlt2UnfittedForwardTracking.hlt2PrepareTracks()).outputSelection()+"') >> (TrSIZE < %(ComRobGEC)s )" % self.getProps()
-                                             )
-            Hlt2KillTooManyDXIP = bindMembers( None, [Hlt2UnfittedForwardTracking.hlt2PrepareTracks(), Hlt2KillTooManyDXIPFilter])
+        Hlt2KillTooManyDXIPFilter = VoidFilter('Hlt2KillTooManyDXIP'
+                                              , Code = "CONTAINS('"+(Hlt2UnfittedForwardTracking.hlt2PrepareTracks()).outputSelection()+"') < %(ComRobGEC)s" % self.getProps()
+                                              )
+        Hlt2KillTooManyDXIP = bindMembers( None, [Hlt2UnfittedForwardTracking.hlt2PrepareTracks(), Hlt2KillTooManyDXIPFilter])
             
         ###################################################################
         # Construct a combined sequence for the input particles to the robust
@@ -184,16 +184,14 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         #####################################################
         def RobustFilter(name, inputSeq, extracode = None) :
             codestr = "(M>4000*MeV)" 
-            if extracode :
-                codestr = codestr + '&' + extracode
+            if extracode : codestr = codestr + '&' + extracode
             filter = Hlt2Member( FilterDesktop
                                  , 'DXRobustFilter'
                                  , InputLocations = inputSeq
                                  , Code = codestr
                                  )
-	    #explicitly require the primary vertex as we are paranoid
-            filterSeq = bindMembers(name, inputSeq + [ filter ])
-            return filterSeq
+            #explicitly require the primary vertex as we are paranoid
+            return bindMembers(name, inputSeq + [ filter ])
             
         Robust3BodySeq = RobustFilter('Robust3BodySeq', [Robust3Body])
         Robust4BodySeq = RobustFilter('Robust4BodySeq', [Robust4Body])

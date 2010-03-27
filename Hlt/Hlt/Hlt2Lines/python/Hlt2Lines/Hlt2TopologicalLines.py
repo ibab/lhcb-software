@@ -1,7 +1,7 @@
-## $Id: Hlt2TopologicalLines.py,v 1.35 2010-03-17 22:29:47 gligorov Exp $
+## $Id: Hlt2TopologicalLines.py,v 1.36 2010-03-27 22:07:33 graven Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-03-17 22:29:47 $'
-__version__ = '$Revision: 1.35 $'
+__date__    = '$Date: 2010-03-27 22:07:33 $'
+__version__ = '$Revision: 1.36 $'
 
 ###
 #
@@ -290,7 +290,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
 
         Hlt2TopoKillTooManyInTrkAlg = VoidFilter('Hlt2TopoKillTooManyInTrkAlg'
-                                              , Code = "TrSOURCE('"+(Hlt2UnfittedForwardTracking.hlt2PrepareTracks()).outputSelection()+"') >> (TrSIZE < %(ComRobGEC)s )" % self.getProps()
+                                              , Code = "CONTAINS('"+(Hlt2UnfittedForwardTracking.hlt2PrepareTracks()).outputSelection()+"') < %(ComRobGEC)s" % self.getProps()
                                               )
         Hlt2TopoKillTooManyInTrk = bindMembers( None, [ Hlt2UnfittedForwardTracking.hlt2PrepareTracks(), Hlt2TopoKillTooManyInTrkAlg ] )
 

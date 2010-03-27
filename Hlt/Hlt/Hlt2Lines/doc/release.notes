@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-03-27 - Gerhard Raven
+ - replace  TrSOURCE >> TrSIZE with equivalent CONTAINS, which invokes less 
+   virtual functions
+
 ! 2010-03-27 - V. Gligorov
  - Fix prescale in inclusive phi lines (see https://savannah.cern.ch/bugs/?65002)
  - Fix GeV/MeV typo in Express lines

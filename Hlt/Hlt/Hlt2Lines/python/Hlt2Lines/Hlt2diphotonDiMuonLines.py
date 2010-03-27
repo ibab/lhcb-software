@@ -11,12 +11,8 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
 class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
     
-    __slots__ = {  'Prescale'                  : {  'Hlt2diphotonDiMuon'      :  1.0
-                                                                                                  
-                                                    }
-                                
-                   
-                   }
+    __slots__ = {  'Prescale'                  : {  'Hlt2diphotonDiMuon'      :  1.0 }
+                }
     
 
     def __apply_configuration__(self) :
@@ -25,7 +21,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.BasicParticles import Muons
         # Get the muon tracks straight from the HLT reconstruction
         # TODO: check that this does what it is supposed to do
-	from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+        from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
         from Configurables import CombineParticles, FilterDesktop, NumberOfTracksFilter
 
         #-------------------------------------------
@@ -36,10 +32,9 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         #--------------------------------------------
         
         FilterNumMuons = NumberOfTracksFilter("FilterNumMuons")
-        FilterNumMuons.MinTracks = 2
+        FilterNumMuons.MinTracks = 2  
         FilterNumMuons.MaxTracks = 2  
         FilterNumMuons.TrackLocations  = [ Hlt2UnfittedForwardTracking()._trackifiedMuonIDLocation() ]
-        FilterNumMuons.OutputLevel = INFO                     
 
        #------------------------------------------------
         
@@ -57,6 +52,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         
         line = Hlt2Line( 'diphotonDiMuon'
                        , prescale = self.prescale
+### TODO: where is the input to FilterNumMuons???
                        , algos = [ FilterNumMuons, Muons, Filter ]
                        , postscale = self.postscale
                        )
