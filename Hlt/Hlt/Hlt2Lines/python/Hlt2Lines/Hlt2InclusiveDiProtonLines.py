@@ -103,7 +103,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                                     , DaughtersCuts = { "p+" : TFProtonCut+" & "+TFRichProtonPID }
                                     , CombinationCut = TFCombCut
                                     , MotherCut = TFMomCut
-                                    , InputLocations = [ BiKalmanFittedProtons ]
+                                    , InputLocations = [ BiKalmanFittedRichProtons ]
                                 )
 
         #------------------------------------
@@ -143,6 +143,4 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                                     , TFCombine
                                     ]
                         , postscale = self.postscale
-                        )        
-        
-        
+                        )       
