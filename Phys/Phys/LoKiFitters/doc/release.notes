@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.30 2010-03-27 12:12:07 graven Exp $ 
+! $Id: release.notes,v 1.31 2010-03-27 16:01:56 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiFitters
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -6,6 +6,11 @@
 ! -----------------------------------------------------------------------------
 
 !========================== LoKiFitters v2r4p1 2010-03-27 ===================
+! 2010-03-27 - Gerhard Raven
+ - suppress print out of 'There is no convergency-III' warnings, but keep
+   the counter at the end of job.
+ - explicitly ignore unchecked StatusCodes
+
 ! 2010-03-16 - Vanya Belyaev
 
  - DistanceCalculator.cpp, TrgDistanceCalculator.cpp

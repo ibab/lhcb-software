@@ -1,4 +1,4 @@
-// $Id: DistanceCalculator.cpp,v 1.6 2010-03-16 12:31:27 ibelyaev Exp $
+// $Id: DistanceCalculator.cpp,v 1.7 2010-03-27 16:02:01 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -684,7 +684,7 @@ StatusCode LoKi::DistanceCalculator::_distance
         vertex.position() + impact   ,   // new Z 
         m_particle1                  ) ; // the result
     if ( sc.isFailure() ) 
-    { Warning ( "Error from ParticleTransporter(ip_1), ignore" , sc ) ; }
+    { Warning ( "Error from ParticleTransporter(ip_1), ignore" , sc ).ignore() ; }
     else 
     { good = &m_particle1 ; } // the properly transported particle 
     
@@ -699,7 +699,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   
   // check for  the convergency
   if ( deltaZ >= m_deltaZ )
-  { Warning ( "There is no convergency-I", NoConvergency ) ; }
+  { Warning ( "There is no convergency-I", NoConvergency ).ignore() ; }
   
   // evaluate chi2 (if needed) 
   if ( 0 != chi2 ) 
@@ -714,7 +714,7 @@ StatusCode LoKi::DistanceCalculator::_distance
           vertex.position() + impact   ,   // new Z 
           m_particle1                  ) ; // the result 
       if ( sc.isFailure() ) 
-      { Warning ( "Error from ParticleTransporter(chi2_1), ignore" , sc ) ; }
+      { Warning ( "Error from ParticleTransporter(chi2_1), ignore" , sc ).ignore() ; }
       else 
       { good = &m_particle1 ; } // the properly transported particle    
     }
@@ -769,7 +769,7 @@ StatusCode LoKi::DistanceCalculator::_distance
         point + impact   ,   // new Z 
         m_particle1      ) ; // the result 
     if ( sc.isFailure() ) 
-    { Warning ( "Error from ParticleTransporter(ip_2), ignore" , sc ) ; }
+    { Warning ( "Error from ParticleTransporter(ip_2), ignore" , sc ).ignore() ; }
     else 
     { good = &m_particle1 ; } // the properly transported particle 
     
@@ -787,7 +787,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   
   // check for  the convergency
   if ( deltaZ >= m_deltaZ )
-  { Warning ( "There is no convergency-II", NoConvergency ) ; }
+  { Warning ( "There is no convergency-II", NoConvergency ).ignore() ; }
   
   // evaluate the chi2 (if needed) 
   if ( 0 != chi2 ) 
@@ -802,7 +802,7 @@ StatusCode LoKi::DistanceCalculator::_distance
           point + impact               ,   // new Z 
           m_particle1                  ) ; // the result 
       if ( sc.isFailure() ) 
-      { Warning ( "Error from ParticleTransporter(chi2_2), ignore" , sc ) ; }
+      { Warning ( "Error from ParticleTransporter(chi2_2), ignore" , sc ).ignore() ; }
       else 
       { good = &m_particle1 ; } // the properly transported particle 
     }
@@ -854,7 +854,7 @@ StatusCode LoKi::DistanceCalculator::_distance
         point1      ,    // where to transport 
         m_particle1 )  ; // destination 
     if ( sc.isFailure() ) 
-    { Warning ( "distance(III):Error from ParticleTransporter, ignore" , sc ) ; }
+    { Warning ( "distance(III):Error from ParticleTransporter, ignore" , sc ).ignore() ; }
     else { good1 = &m_particle1 ; } // the properly transported particles:
     
     // transport the second particle into new positions:
@@ -863,7 +863,7 @@ StatusCode LoKi::DistanceCalculator::_distance
         point2      ,    // where to transport 
         m_particle2 )  ; // destination 
     if ( sc.isFailure() ) 
-    { Warning ( "distance(III):Error from ParticleTransporter, ignore" , sc ) ; }
+    { Warning ( "distance(III):Error from ParticleTransporter, ignore" , sc ).ignore() ; }
     else { good2 = &m_particle2 ; } // the properly transported particles:
     
     // make new (improved) evaluation of the distance:
@@ -879,7 +879,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   
   // check for  the convergency
   if ( dz >= m_deltaZ )
-  { Warning ( "There is no convergency-III", NoConvergency ) ; }
+  { Warning ( "There is no convergency-III", NoConvergency,0 ).ignore() ; }
   
   // evaluate the distance 
   dist = ( point1 - point2 ) . R () ;
@@ -907,7 +907,7 @@ StatusCode LoKi::DistanceCalculator::_distance
     sc = LoKi::KalmanFilter::seed ( m_entries , x , ci , 1.e-4 ) ;
     if ( sc.isFailure() ) 
     { 
-      Warning ( "distance(III): error from KalmanFilter::seed" , sc ) ; 
+      Warning ( "distance(III): error from KalmanFilter::seed" , sc ).ignore() ; 
       // set manually the seed to be equal to the middle position 
       Gaudi::Math::geo2LA ( point1 + 0.5 * ( point2 - point1 ) , x ) ;
       // set the gain matrix to be "small enought" 
@@ -966,7 +966,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   sc = LoKi::Fitters::path0 ( primary , *good , decay , path ) ;
   if ( sc.isFailure() ) 
   {
-    Warning ( "distance(IV):Error code from LoKi::Fitters::path0" , sc ) ;
+    Warning ( "distance(IV):Error code from LoKi::Fitters::path0" , sc ).ignore() ;
     path = 0 ;
   }
   
@@ -988,7 +988,7 @@ StatusCode LoKi::DistanceCalculator::_distance
     if ( sc.isFailure() ) 
     {
       // reset  to the initial expansion point and reiterate 
-      Warning ( "distance(IV): error from path_step" , sc ) ;
+      Warning ( "distance(IV): error from path_step" , sc ).ignore() ;
       momentum   = good     -> momentum       () ;
       decvertex  = good     -> referencePoint () ;
       primvertex = primary  .  position       () ;
@@ -1012,7 +1012,7 @@ StatusCode LoKi::DistanceCalculator::_distance
     }  
   }
   
-  Warning ( "There is no convergency-IV" , NoConvergency ) ;
+  Warning ( "There is no convergency-IV" , NoConvergency ).ignore() ;
   // get the error in "path" 
   error = ::sqrt ( m_fitter.m_Vvar ) ;
   //
@@ -1084,7 +1084,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   else 
   {
     *error = -1 ;
-    Warning ( "distance(V):The negative covarinace, return error=-1" ) ;    
+    Warning ( "distance(V):The negative covarinace, return error=-1" ).ignore() ;    
   }
   //
   return StatusCode::SUCCESS ;                                       // RETURN
