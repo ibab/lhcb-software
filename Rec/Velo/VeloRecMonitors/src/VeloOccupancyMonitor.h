@@ -1,4 +1,4 @@
-// $Id: VeloOccupancyMonitor.h,v 1.7 2010-03-24 14:16:51 krinnert Exp $
+// $Id: VeloOccupancyMonitor.h,v 1.8 2010-03-27 19:49:24 krinnert Exp $
 #ifndef VELORECMONITORS_VELOOCCUPANCYMONITOR_H 
 #define VELORECMONITORS_VELOOCCUPANCYMONITOR_H 1
 
@@ -21,6 +21,7 @@
 
 // from LHCb
 #include "Event/ODIN.h"
+#include "Hist1D.h"
 
 /** @class VeloOccupancyMonitor VeloOccupancyMonitor.h
  *  
@@ -64,13 +65,17 @@ namespace Velo
     
     TH1D* m_histOccSpectAll;
     TH1D* m_histOccSpectLow;
+    Velo::Hist1D* m_fastHistOccSpectAll;
+    Velo::Hist1D* m_fastHistOccSpectLow;
     TH1D* m_histAvrgSensor;
     TH1D* m_histAvrgSensorPO1;
     TH1D* m_histAvrgSensorPO11;
     std::vector< TH1D* > m_stripOccupancyHistPerSensor;
     std::vector< TH1D* > m_channelOccupancyHistPerSensor;
     std::vector< IProfile1D* > h_veloOccVsBunchId;
-    
+   
+    std::vector<Velo::Hist1D*> m_occupancies; 
+    std::vector<Velo::Hist1D*> m_occupanciesCh; 
 
     unsigned int m_occupancyDenom;
     double m_nstrips;

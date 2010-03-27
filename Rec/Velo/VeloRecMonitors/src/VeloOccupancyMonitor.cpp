@@ -1,9 +1,10 @@
-// $Id: VeloOccupancyMonitor.cpp,v 1.13 2010-03-24 14:16:51 krinnert Exp $
+// $Id: VeloOccupancyMonitor.cpp,v 1.14 2010-03-27 19:49:24 krinnert Exp $
 // Include files 
 // -------------
 
 #include <string>
 #include <fstream>
+#include <algorithm>
 
 #ifndef WIN32
 #include <sys/types.h>
@@ -61,7 +62,8 @@ Velo::VeloOccupancyMonitor::VeloOccupancyMonitor( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-Velo::VeloOccupancyMonitor::~VeloOccupancyMonitor() {} 
+Velo::VeloOccupancyMonitor::~VeloOccupancyMonitor() {
+} 
 
 //=============================================================================
 // Initialization
@@ -109,7 +111,8 @@ StatusCode Velo::VeloOccupancyMonitor::initialize() {
     }
   }
 
-
+  m_occupancies.resize(maxSensNum+1,0);
+  m_occupanciesCh.resize(maxSensNum+1,0);
   m_stripOccupancyHistPerSensor.resize(maxSensNum+1,0);
   m_channelOccupancyHistPerSensor.resize(maxSensNum+1,0);
   h_veloOccVsBunchId.resize(2);
@@ -137,6 +140,7 @@ StatusCode Velo::VeloOccupancyMonitor::initialize() {
     std::string title = fmtTitle.str() + m_pvssTell1Names->pvssName(s) + ") " + m_tae;
 
     m_stripOccupancyHistPerSensor[s] = Gaudi::Utils::Aida2ROOT::aida2root(book1D(fmtName.str(), title, -0.5, 2047.5, 2048)); 
+    m_occupancies[s] = new Velo::Hist1D(m_stripOccupancyHistPerSensor[s]);
 
     boost::format fmtNameCh ( "OccPerChannelSens%d" ) ;
     fmtNameCh % s;
@@ -145,9 +149,12 @@ StatusCode Velo::VeloOccupancyMonitor::initialize() {
     std::string titleCh = fmtTitleCh.str() + m_pvssTell1Names->pvssName(s) + ") " + m_tae;
 
     m_channelOccupancyHistPerSensor[s] = Gaudi::Utils::Aida2ROOT::aida2root(book1D(fmtNameCh.str(), titleCh, -0.5, 2047.5, 2048)); 
+    m_occupanciesCh[s] = new Velo::Hist1D(m_channelOccupancyHistPerSensor[s]);
   }
   m_histOccSpectAll = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccSpectAll", "Occupancy Spectrum", -0.5, 100.5, 202)); 
   m_histOccSpectLow = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccSpectMaxLow", "Occupancy Spectrum", -0.5, 20.5, 210));
+  m_fastHistOccSpectAll = new Velo::Hist1D(m_histOccSpectAll);
+  m_fastHistOccSpectLow = new Velo::Hist1D(m_histOccSpectLow);
   m_histAvrgSensor  = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccAvrgSens", "Avrg. Occupancy vs. Sensor", -0.5, 131.5, 132));
   m_histAvrgSensor  = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccAvrgSens", "Avrg. Occupancy vs. Sensor", -0.5, 131.5, 132));
   m_histAvrgSensorPO1   = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccAvrgSensPO1", "Avrg. Occupancy vs. Sensor, 1 powered", -0.5, 131.5, 132));
@@ -169,19 +176,16 @@ StatusCode Velo::VeloOccupancyMonitor::execute() {
         si != m_veloDet->sensorsEnd();
         ++si ) {
       unsigned int s = (*si)->sensorNumber();
-      m_stripOccupancyHistPerSensor[s]->Reset();
-      m_channelOccupancyHistPerSensor[s]->Reset();
+      m_occupancies[s]->reset();  
     }
-    m_histOccSpectAll->Reset();
-    m_histOccSpectLow->Reset();
   } else {
     ++m_occupancyDenom;
+    double scale = (m_occupancyDenom-1.0)/m_occupancyDenom;
     for ( std::vector<DeVeloSensor*>::const_iterator si = m_veloDet->sensorsBegin();
         si != m_veloDet->sensorsEnd();
         ++si ) {
       unsigned int s = (*si)->sensorNumber();
-      m_stripOccupancyHistPerSensor[s]->Scale((m_occupancyDenom-1.0)/m_occupancyDenom); 
-      m_channelOccupancyHistPerSensor[s]->Scale((m_occupancyDenom-1.0)/m_occupancyDenom); 
+      m_occupancies[s]->scale(scale);
     }
   }
 
@@ -255,6 +259,16 @@ StatusCode Velo::VeloOccupancyMonitor::finalize() {
   }
 #endif // !WIN32
   
+  delete m_fastHistOccSpectAll;
+  delete m_fastHistOccSpectLow;
+
+  while ( ! m_occupancies.empty() ) {
+    delete m_occupancies.back();
+    m_occupancies.pop_back();
+    delete m_occupanciesCh.back();
+    m_occupanciesCh.pop_back();
+  }
+
   return VeloMonitorBase::finalize(); // must be called after all other actions
 }
 
@@ -331,13 +345,11 @@ void Velo::VeloOccupancyMonitor::monitorOccupancy() {
 
     // Produce occupancy plots
     // -----------------------
-    TH1D* occHist = 0;
-    TH1D* occHistCh = 0;
-    occHist = m_stripOccupancyHistPerSensor[sensorNumber];
-    occHistCh = m_channelOccupancyHistPerSensor[sensorNumber];
-    double occ = occHist->GetBinContent(stripNumber+1)/100.0+(1.0/m_occupancyDenom);
-    occHist->SetBinContent(stripNumber+1,occ*100.0);
-    occHistCh->SetBinContent(chipChannel+1,occ*100.0); 
+    double occ = m_occupancies[sensorNumber]->getBinContent(stripNumber+1)/100.0+(1.0/m_occupancyDenom); 
+    Velo::Hist1D* occHist = m_occupancies[sensorNumber];
+    Velo::Hist1D* occHistCh = m_occupanciesCh[sensorNumber];
+    occHist->setBinContent(stripNumber+1,occ*100.0);
+    occHistCh->setBinContent(chipChannel+1,occ*100.0);
   }//end clusters loop
 
 
@@ -357,19 +369,24 @@ void Velo::VeloOccupancyMonitor::monitorOccupancy() {
       si != m_veloDet->sensorsEnd();
       ++si ) {
     unsigned int sens = (*si)->sensorNumber();
-    for ( unsigned int strip=1; strip<2049; ++strip) {
-      double occ = m_stripOccupancyHistPerSensor[sens]->GetBinContent(strip); 
-      m_histOccSpectAll->Fill(occ);
+    for ( unsigned int strip=0; strip<2048; ++strip) {
+      double occ = m_occupancies[sens]->getBinContent(strip+1);
+      m_fastHistOccSpectAll->fillFast(occ);
       if ( occ <= 20.0 ) {
-        m_histOccSpectLow->Fill(occ);
+        m_fastHistOccSpectLow->fillFast(occ);
       }
     }
+    // sync number of entries here to avoid separate loop
+    m_occupancies[sens]->updateEntries(); 
+    m_occupanciesCh[sens]->updateEntries(); 
   }
+  m_fastHistOccSpectAll->updateEntries();
+  m_fastHistOccSpectLow->updateEntries();
 
-  for ( unsigned int s=0;  s<m_stripOccupancyHistPerSensor.size(); ++s ) {
-    TH1D* h = m_stripOccupancyHistPerSensor[s];
-    if ( 0 != h ) {
-      double avrgOcc =  h->Integral()/h->GetNbinsX();
+  for ( unsigned int s=0;  s<m_occupancies.size(); ++s ) {
+    Velo::Hist1D* occs = m_occupancies[s];
+    if ( 0 != occs ) {
+      double avrgOcc =  occs->integral()/2048.0;
       m_histAvrgSensor->SetBinContent(s + 1, avrgOcc);
       // power on step 1, 1 station ( 2 modules ) powered. also included in step 2.
       if ( 0 == s || 1 == s || 64 == s || 65 == s ) {
