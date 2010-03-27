@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2ExpressLines.py,v 1.20 2010-03-26 23:03:26 jhe Exp $
+# $Id: Hlt2ExpressLines.py,v 1.21 2010-03-27 13:23:54 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt2 Lines for the express stream
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Johannes Albrecht albrecht@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.21 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -126,9 +126,9 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       
       filter = Hlt2Member(   FilterDesktop 
                              , "Filter"
-                             , Code = "(ADMASS('J/psi(1S)')<%(ExJPsiMassWindow)d*MeV)"\
-                             " & (PT>%(ExJPsiPt)d*MeV)"\
-                             " & (MINTREE('mu-'==ABSID,PT)>%(ExJPsiMuPt)d*MeV) " %  self.getProps() 
+                             , Code = "(ADMASS('J/psi(1S)')<%(ExJPsiMassWindow)s*MeV)"\
+                             " & (PT>%(ExJPsiPt)s*MeV)"\
+                             " & (MINTREE('mu-'==ABSID,PT)>%(ExJPsiMuPt)s*MeV) " %  self.getProps() 
                              , InputLocations  = [ DiMuon ]
                              , InputPrimaryVertices = "None"
                              , UseP2PVRelations = False
@@ -155,26 +155,26 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       
       # common cut
       cocut = "(0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1))"\
-      " & (P>%(ExJPsiTPCoP)d*MeV) &(PT>%(ExJPsiTPCoPt)d*MeV)"%  self.getProps()
+      " & (P>%(ExJPsiTPCoP)s*MeV) &(PT>%(ExJPsiTPCoPt)s*MeV)"%  self.getProps()
       
       #Tag and probe cuts:
       #   TAG::  P>6Gev and Pt>1.5 GeV
       #   PROBE:: Ecal (-10,1000) and Hcal (1000,4000) energy filtered
-      tag1cuts = "  (CHILDCUT((P>%(ExJPsiTPTagP)d*MeV),1))"\
-                 " & (CHILDCUT((PT>%(ExJPsiTPTagPt)d*MeV),1)) "%  self.getProps()
-      tag2cuts = "  (CHILDCUT((P>%(ExJPsiTPTagP)d*MeV),2))"\
-                 " & (CHILDCUT((PT>%(ExJPsiTPTagPt)d*MeV),2)) "%  self.getProps()
+      tag1cuts = "  (CHILDCUT((P>%(ExJPsiTPTagP)s*MeV),1))"\
+                 " & (CHILDCUT((PT>%(ExJPsiTPTagPt)s*MeV),1)) "%  self.getProps()
+      tag2cuts = "  (CHILDCUT((P>%(ExJPsiTPTagP)s*MeV),2))"\
+                 " & (CHILDCUT((PT>%(ExJPsiTPTagPt)s*MeV),2)) "%  self.getProps()
       
       probe2cuts = " ( "\
-      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloEcalE,-10000)<%(ExJPsiTPMaxEcalE)d*MeV),2)) &"\
-      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloHcalE,-10000)<%(ExJPsiTPMaxHcalE)d*MeV),2)) &"\
-      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloEcalE,-10000)>%(ExJPsiTPMinEcalE)d*MeV),2)) &"\
-      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloHcalE,-10000)>%(ExJPsiTPMinHcalE)d*MeV),2)) ) "%  self.getProps()
+      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloEcalE,-10000)<%(ExJPsiTPMaxEcalE)s*MeV),2)) &"\
+      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloHcalE,-10000)<%(ExJPsiTPMaxHcalE)s*MeV),2)) &"\
+      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloEcalE,-10000)>%(ExJPsiTPMinEcalE)s*MeV),2)) &"\
+      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloHcalE,-10000)>%(ExJPsiTPMinHcalE)s*MeV),2)) ) "%  self.getProps()
       probe1cuts = " ( "\
-      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloEcalE,-10000)<%(ExJPsiTPMaxEcalE)d*MeV),1)) &"\
-      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloHcalE,-10000)<%(ExJPsiTPMaxHcalE)d*MeV),1)) &"\
-      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloEcalE,-10000)>%(ExJPsiTPMinEcalE)d*MeV),1)) &"\
-      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloHcalE,-10000)>%(ExJPsiTPMinHcalE)d*MeV),1)) ) "%  self.getProps()
+      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloEcalE,-10000)<%(ExJPsiTPMaxEcalE)s*MeV),1)) &"\
+      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloHcalE,-10000)<%(ExJPsiTPMaxHcalE)s*MeV),1)) &"\
+      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloEcalE,-10000)>%(ExJPsiTPMinEcalE)s*MeV),1)) &"\
+      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloHcalE,-10000)>%(ExJPsiTPMinHcalE)s*MeV),1)) ) "%  self.getProps()
       
       child1cuts = tag1cuts + " & " + probe2cuts
       
@@ -186,9 +186,9 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                 , DecayDescriptor = '[J/psi(1S) -> mu+ pi-]cc'
                                 , DaughtersCuts = { 'mu+' : cocut ,
                                                     'pi-' : cocut }
-                                , CombinationCut = "(ADAMASS('J/psi(1S)')<%(ExJPsiTPMassWindow)d*MeV)"%  self.getProps()
+                                , CombinationCut = "(ADAMASS('J/psi(1S)')<%(ExJPsiTPMassWindow)s*MeV)"%  self.getProps()
                                 , MotherCut = "( " + child1cuts + " | " + child2cuts + " ) "\
-                                " & (VFASPF(VCHI2/VDOF)<%(ExJPsiTPVChi2)d)"%  self.getProps()
+                                " & (VFASPF(VCHI2/VDOF)<%(ExJPsiTPVChi2)s)"%  self.getProps()
                                 )
 
       line = Hlt2Line('ExpressJPsiTagProbe'
@@ -211,17 +211,17 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                   , "LambdaCombine"
                                   , DecayDescriptor = "[Lambda0 -> p+ pi-]cc"
                                   , InputLocations = [NoCutsPions,NoCutsProtons ]
-                                  , CombinationCut = "(ADAMASS('Lambda0')<%(ExLambdaMassWinWide)d*MeV)"%  self.getProps()
-                                  , MotherCut = "(ADMASS('Lambda0')<%(ExLambdaMassWin)d*MeV)"\
-                                  " & (%(ExLambdaMinDz)d*mm<BPVVDZ)"\
-                                  " & (%(ExLambdaMaxDz)d*mm>BPVVDZ)"\
-                                  " & (BPVDIRA>%(ExLambdaDira)d) "%  self.getProps()
-                                  , DaughtersCuts = { "p+"  :  "(P>%(ExLambdaPP)d*MeV)"\
-                                                      " & (PT>%(ExLambdaPPt)d*MeV)"\
-                                                      " & (MIPCHI2DV(PRIMARY)>%(ExLambdaPIPChi2)d) "%  self.getProps(),
-                                                      "pi-"  :  "(P>%(ExLambdaPiP)d*MeV)"\
-                                                      " & (PT>%(ExLambdaPiPt)d*MeV)"\
-                                                      " & (MIPCHI2DV(PRIMARY)>%(ExLambdaPiIPChi2)d) "%  self.getProps(),
+                                  , CombinationCut = "(ADAMASS('Lambda0')<%(ExLambdaMassWinWide)s*MeV)"%  self.getProps()
+                                  , MotherCut = "(ADMASS('Lambda0')<%(ExLambdaMassWin)s*MeV)"\
+                                  " & (%(ExLambdaMinDz)s*mm<BPVVDZ)"\
+                                  " & (%(ExLambdaMaxDz)s*mm>BPVVDZ)"\
+                                  " & (BPVDIRA>%(ExLambdaDira)s) "%  self.getProps()
+                                  , DaughtersCuts = { "p+"  :  "(P>%(ExLambdaPP)s*MeV)"\
+                                                      " & (PT>%(ExLambdaPPt)s*MeV)"\
+                                                      " & (MIPCHI2DV(PRIMARY)>%(ExLambdaPIPChi2)s) "%  self.getProps(),
+                                                      "pi-"  :  "(P>%(ExLambdaPiP)s*MeV)"\
+                                                      " & (PT>%(ExLambdaPiPt)s*MeV)"\
+                                                      " & (MIPCHI2DV(PRIMARY)>%(ExLambdaPiIPChi2)s) "%  self.getProps(),
                                                       }
                                   )
       
@@ -242,10 +242,10 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                               , "KsCombine"
                               , DecayDescriptor = "[KS0 -> pi+ pi-]cc"
                               , InputLocations = [NoCutsPions]
-                              , CombinationCut = "(ADAMASS('KS0') < %(ExKSMassWinWide)d*MeV)"%  self.getProps()
-                              , MotherCut = "(ADMASS('KS0') < %(ExKSMassWin)d*MeV)"\
+                              , CombinationCut = "(ADAMASS('KS0') < %(ExKSMassWinWide)s*MeV)"%  self.getProps()
+                              , MotherCut = "(ADMASS('KS0') < %(ExKSMassWin)s*MeV)"\
                               " & (log((CHILD(MIPDV(PRIMARY), 1)) * (CHILD(MIPDV(PRIMARY), 2) )"\
-                              " / (MIPDV(PRIMARY) ) )  > %(ExKSNu1)d*mm )"%  self.getProps()
+                              " / (MIPDV(PRIMARY) ) )  > %(ExKSNu1)s*mm )"%  self.getProps()
                               )
       
       line = Hlt2Line('ExpressKS'
@@ -269,28 +269,28 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                , "PhiCombine"
                                , DecayDescriptor = "phi(1020) -> K+ K-"
                                , InputLocations = [NoCutsKaons]
-                               , CombinationCut = "(ADAMASS('phi(1020)')<%(ExPhiMassWinWide)d*MeV)"%  self.getProps()
-                               , MotherCut = "(ADMASS('phi(1020)') < %(ExPhiMassWin)d*MeV)"\
-                               " & (DOCAMAX < %(ExPhiDOCAMax)d*mm)"\
-			       " & (MIPCHI2DV(PRIMARY) > %(ExPhiMIPCHI2DV)d)"%  self.getProps()
-                              , DaughtersCuts = {"K+":"(PT>%(ExPhiKPt)d*MeV)"\
-                                                  " & (P>%(ExPhiKP)d*MeV)"\
-						  " & (MIPCHI2DV(PRIMARY) > %(ExPhiKMIPCHI2DV)d)"%  self.getProps()}
+                               , CombinationCut = "(ADAMASS('phi(1020)')<%(ExPhiMassWinWide)s*MeV)"%  self.getProps()
+                               , MotherCut = "(ADMASS('phi(1020)') < %(ExPhiMassWin)s*MeV)"\
+                               " & (DOCAMAX < %(ExPhiDOCAMax)s*mm)"\
+			       " & (MIPCHI2DV(PRIMARY) > %(ExPhiMIPCHI2DV)s)"%  self.getProps()
+                              , DaughtersCuts = {"K+":"(PT>%(ExPhiKPt)s*MeV)"\
+                                                  " & (P>%(ExPhiKP)s*MeV)"\
+						  " & (MIPCHI2DV(PRIMARY) > %(ExPhiKMIPCHI2DV)s)"%  self.getProps()}
                                )#
 
       DsCombine = Hlt2Member( CombineParticles
                               , "DsCombine"
                               , DecayDescriptor = "[D_s+ -> pi+ phi(1020)]cc"
                               , InputLocations = [NoCutsPions, PhiCombine]
-                              , CombinationCut = "(ADAMASS('D_s+')<%(ExDsMassWinWide)d*MeV)"%  self.getProps()
-                              , MotherCut = "(ADMASS('D_s+')<%(ExDsMassWin)d*MeV)"\
-                              " & (BPVDIRA > %(ExDsBPVDIRA)d)"\
-                              " & (VFASPF(VCHI2) < %(ExDsVCHI2)d)"\
-			      " & (MIPCHI2DV(PRIMARY) < %(ExDsMIPCHI2DV)d)"\
-			      " & (MIPDV(PRIMARY) < %(ExDsMIPDV)d)"%  self.getProps()
-                              , DaughtersCuts = {"pi+":"(PT > %(ExDsPiPt)d*MeV)"\
-                                                 " & (P > %(ExDsPiP)d*MeV)"\
-						 " & (MIPCHI2DV(PRIMARY) > %(ExDsPiMIPCHI2DV)d)"%  self.getProps()}
+                              , CombinationCut = "(ADAMASS('D_s+')<%(ExDsMassWinWide)s*MeV)"%  self.getProps()
+                              , MotherCut = "(ADMASS('D_s+')<%(ExDsMassWin)s*MeV)"\
+                              " & (BPVDIRA > %(ExDsBPVDIRA)s)"\
+                              " & (VFASPF(VCHI2) < %(ExDsVCHI2)s)"\
+			      " & (MIPCHI2DV(PRIMARY) < %(ExDsMIPCHI2DV)s)"\
+			      " & (MIPDV(PRIMARY) < %(ExDsMIPDV)s)"%  self.getProps()
+                              , DaughtersCuts = {"pi+":"(PT > %(ExDsPiPt)s*MeV)"\
+                                                 " & (P > %(ExDsPiP)s*MeV)"\
+						 " & (MIPCHI2DV(PRIMARY) > %(ExDsPiMIPCHI2DV)s)"%  self.getProps()}
                               )
       
       line = Hlt2Line('ExpressDs2PhiPi'

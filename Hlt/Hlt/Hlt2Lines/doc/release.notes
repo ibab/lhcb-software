@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-03-27 - Gerhard Raven
+ - replace %()d with %()d (see https://savannah.cern.ch/bugs/?64997)
+
 ! 2010-03-27 - Jibo He
  - Hlt2InclusiveDiProtonLines.py added for charmonium -> p pbar (2.8 - 3.9 GeV).
 	Rates will be presented in Trigger & Stripping meeting of 29 March 2010: 
