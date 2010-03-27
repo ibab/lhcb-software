@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.102 2010-03-26 19:22:03 gligorov Exp $
+!$Id: release.notes,v 1.103 2010-03-27 00:02:30 jhe Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2010-03-27 - Jibo He
+ - Hlt2Tracking.py
+   . Add Hlt2InclusiveDiProtonLines
 
 ! 2010-03-26 - V. Gligorov
  - Add a combined DLL for Rich protos.
