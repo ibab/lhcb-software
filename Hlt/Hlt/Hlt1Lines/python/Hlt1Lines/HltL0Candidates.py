@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.17 2010-03-04 22:42:34 graven Exp $
+# $Id: HltL0Candidates.py,v 1.18 2010-03-27 22:23:20 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -40,35 +40,33 @@ from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
 
 
-### TODO: for a given channel name, pick up the conditions; 
-### next, pick up the conditions, and see whether the corresponding 'data' is in _dataWithoutCandidates
-### and if only those, skip making candidates (as there are no candidates for those data...
-
-_dataCandidates = { 'Spd(Mult)'    : False 
-                  , 'PUHits(Mult)' : False
-                  , 'Sum(Et)'      : False
-                  , 'Electron(Et)' : True
-                  , 'Photon(Et)'   : True
-                  , 'Hadron(Et)'   : True
-                  , 'Muon1(Pt)'    : True
-                  , 'Muon2(Pt)'    : True
-                  , 'DiMuon(Pt)'   : True
-                  , 'LocalPi0(Et)' : True
-                  , 'GlobalPi0(Et)': True
-                  }
 
 # utilities to pack and unpack L0 conditions into Condition property...
 # given the 'Conditions' property of an L0DUCOnfig tool instance, 
 # return a pythonized table of settings
 # i.e. the inverse of 'genItems'
 def _parseL0settings( settings ) :
-    return  [ _parseL0setting(i) for i in settings ]
+    d = {}
+    for s in  [ _parseL0setting(i) for i in settings ] :
+        d[s['name']] = s
+    return d
 def _parseL0setting( setting ) :
     p = re.compile('([^ ]+) *= *\[(.+)\]')
     val = {}
     for s in setting :
         m = p.match(s)
-        val[m.group(1)]=m.group(2)
+        key = m.group(1) 
+        value = m.group(2)
+        # adapt to ideosyncracies
+        if key == 'rate=' : key = 'rate'
+        if key == 'conditions' :
+            value = '[%s]'%value # put back the []
+            # make it a list of conditions which are ANDed
+            if '&&' in value : value = value.split('&&')
+            else             : value = [ value ]
+            #  and get rid of the [] again...
+            value =  [ re.sub('\[(.*)\]',r'\1',i.strip()) for i in value ]
+        val.update( { key : value } )
     return val
 
 def _name(i) : 
@@ -79,47 +77,61 @@ def _muon( channel ) :
     from Configurables import HltL0MuonCandidates,L0MuonCandidatesFromRaw
     name = _name(channel)
     #note: explicitly set the OutputSelection so we can pick it up downstream...
-    # return { channel : HltL0MuonCandidates(name, L0Channel = channel, OutputSelection = name) }
     return { channel : bindMembers(None, [ DecodeL0MUON,HltL0MuonCandidates(name, L0Channel = channel, OutputSelection = name)]) }
 
-def _calo( channel ) :
+def _calo( channel , calomaker ) :
     from HltLine.HltDecodeRaw import DecodeL0CALO
     from Configurables import HltL0CaloCandidates
-    from Configurables import HadronSeedTool, ElectronSeedTool
     name = _name(channel)
-    ### TODO: this should be triggerd by the 'type' and NOT by channel
-    ###       maybe every L0CaloCandidates instance should be configured with 'all' makers
-    _calomaker = {  'Hadron'      : HadronSeedTool
-                 ,  'Electron'    : ElectronSeedTool
-                 ,  'Photon'      : ElectronSeedTool
-                 ,  'LocalPi0'    : ElectronSeedTool
-                 }
     #note: explicitly set the OutputSelection so we can pick it up downstream...
-    # x = { channel:                               HltL0CaloCandidates(name, L0Channel = channel, OutputSelection = name) }
     x = { channel: bindMembers(None,[ DecodeL0CALO,HltL0CaloCandidates(name, L0Channel = channel, OutputSelection = name) ]) }
-    c = channel.lstrip('All')
-    if c in _calomaker :
-        HltL0CaloCandidates(name).addTool(_calomaker[c],name='CaloMakerTool')
-        HltL0CaloCandidates(name).CaloMakerTool = _calomaker[c].__name__
+    HltL0CaloCandidates(name).addTool(calomaker,name='CaloMakerTool')
+    HltL0CaloCandidates(name).CaloMakerTool = calomaker.__name__
     return x
 
 def _converter( channel ) :
-    # TODO: check the conditions of the channel, and dispatch based on that
-    #       so that we become agnostic to the actual names...
-    if channel.upper().find('MUON') != -1 : return _muon(channel)
-    if channel in [ 'SPD','PU','SPD40','PU20','PU40','B1gas','B2gas' ] : return { channel : None }
-    return _calo(channel)
+    from Configurables import ElectronSeedTool, HadronSeedTool
+    typeMapper =      { 'Hadron'       : lambda x : _calo( x, HadronSeedTool )
+                      , 'Electron'     : lambda x : _calo( x, ElectronSeedTool )
+                      , 'Photon'       : lambda x : _calo( x, ElectronSeedTool )
+                      , 'LocalPi0'     : lambda x : _calo( x, ElectronSeedTool )
+                      , 'GlobalPi0'    : lambda x : _calo( x, ElectronSeedTool)
+                      , 'Muon'         : lambda x : _muon( x)
+                      }
+    conditionMapper = { 'Electron(Et)' : 'Electron'
+                      , 'Photon(Et)'   : 'Photon'
+                      , 'GlobalPi0(Et)': 'GlobalPi0'
+                      , 'LocalPi0(Et)' : 'LocalPi0'
+                      , 'Hadron(Et)'   : 'Hadron'
+                      , 'Muon1(Pt)'    : 'Muon'
+                      , 'Muon2(Pt)'    : 'Muon'
+                      , 'DiMuon(Pt)'   : 'Muon'
+                      }
+    if 'All' in channel : return typeMapper[ channel.lstrip('All') ](channel)
+    conditionTypes = set()
+    # TODO: go recursive, and substitute channels which act as conditions with their own conditions
+    for i in _l0Channels[channel]['conditions'] :
+        if i in _l0Conditions : 
+            conditionData =  _l0Conditions[i]['data']
+            if conditionData in conditionMapper : 
+                conditionTypes.update( [ conditionMapper[conditionData]  ])
+    if not conditionTypes :         return { channel : None }
+    elif len(conditionTypes) == 1 : return typeMapper[conditionTypes.pop()](channel)
+    else :                          raise RuntimeError('cannot handle cuts on multiple types. Help!')
 
 def _parseMask( mask ) :
-    mask = mask.upper()
-    if mask in [ '0','0X0','000'           ] : return 'Disable'
-    if mask in [ '1','0X1','001','PHYSICS' ] : return 'Physics'
-    if mask in [ '2','0X2','010','BEAM1'   ] : return 'Beam1'
-    if mask in [ '3','0X3','011'           ] : return 'Physics+Beam1'
-    if mask in [ '4','0X4','100','BEAM2'   ] : return 'Beam2'
-    if mask in [ '5','0X5','101'           ] : return 'Physics+Beam2'
-    if mask in [ '6','0X6','110'           ] : return 'Beam1+Beam2'
-    if mask in [ '7','0X7','111'           ] : return 'Physics+Beam1+Beam2'
+    # keys are  GaudiPython.gbl.LHCb.L0DUDecision.Name[i]
+    map =  { 'Disable'             : [ '0','0X0','000'           ]
+           , 'Physics'             : [ '1','0X1','001','PHYSICS' ]
+           , 'Beam1'               : [ '2','0X2','010','BEAM1'   ]
+           , 'Physics+Beam1'       : [ '3','0X3','011'           ]
+           , 'Beam2'               : [ '4','0X4','100','BEAM2'   ]
+           , 'Physics+Beam2'       : [ '5','0X5','101'           ]
+           , 'Beam1+Beam2'         : [ '6','0X6','110'           ]
+           , 'Physics+Beam1+Beam2' : [ '7','0X7','111'           ]
+           }
+    for (i,j) in map.iteritems() :
+          if mask.upper() in j : return i
     return None
 
 
@@ -140,10 +152,10 @@ def _updateL0Config( L0TCK, singleL0Configuration ) :
     return single
 
 
-global _dict,_l0Channels, _l0Masks
+global _dict,_l0Channels, _l0Conditions
 _dict       = None
 _l0Channels = None
-_l0Masks    = None
+_l0Conditions = None
 
 ########################################## public visible part of this module...
 ### setupL0Channels _must_ be called before L0Channels, convertL0Candidates or HltL0Candidates is
@@ -158,25 +170,25 @@ def decodeL0Channels( L0TCK , skipDisabled = True, forceSingleL0Configuration = 
     if 'ToolSvc.L0DUConfig.TCK_%s'%L0TCK not in allConfigurables :
         raise KeyError('requested L0DUConfigProvider for TCK %s is not known'%L0TCK)
     l0config = _updateL0Config( L0TCK, forceSingleL0Configuration )
-    channels = _parseL0settings( l0config.Channels )
+    global _l0Channels,_l0Conditions
+    if _l0Channels or _l0Conditions : raise RunTimeError('HltL0Candidates already initialized -- 2nd call to decodeL0Channels...')
 
-    print '# decoded L0 channels for L0TCK=%s: %s'%(L0TCK, channels)
-    global _l0Masks
-    if _l0Masks : raise RunTimeError('HltL0Candidates already initialized -- 2nd call to decodeL0Channels...')
-    _l0Masks = {}
-    for i in channels :
-        _l0Masks[i['name']] = _parseMask(i['MASK'])  if 'MASK' in i else None
+    _l0Channels   = _parseL0settings( l0config.Channels )
+    _l0Conditions = _parseL0settings( l0config.Conditions )
+
+    print '# decoded L0 channels for L0TCK=%s: %s'%(L0TCK, [ i for i in _l0Channels.iterkeys()])
     def _hasBeenDisabled( d ) :
         if 'DISABLE' in d and d['DISABLE'].upper().find('TRUE') != -1 : return True # old style
         if 'MASK'    in d and _parseMask(d['MASK']) == 'Disable' : return True    
         return False
-    return [ i['name'] for i in channels if ( not skipDisabled or not _hasBeenDisabled(i)) ]
+    return [ i for i in _l0Channels.iterkeys() if ( not skipDisabled or not _hasBeenDisabled(_l0Channels[i])) ]
 
 
 def L0Mask( channel ) :
-    global _dict,_l0Masks
+    global _dict,_l0Channels
     if channel not in _dict.keys() : raise KeyError('Unknown L0 channel requested: %s -- check that this channel is included in requested L0 configuration...'%channel)
-    return _l0Masks[channel]
+    x = _l0Channels[ channel ] 
+    return _parseMask(x['MASK']) if 'MASK' in x else None
 
 
 ### From Olivier Deschamps:
@@ -194,23 +206,18 @@ def L0Mask2ODINPredicate( mask ) :
                  }
     return _predicate[mask]
 
-def setupL0Channels( channels ) :
+def setupL0Channels( ) :
     global _l0Channels,_dict
-    if _dict or _l0Channels  : raise RunTimeError('HltL0Candidates already initialized -- 2nd call to setupL0Channels...')
-    _l0Channels = channels
-    #if not _l0Channels:
-    #    _l0Channels = [ 'Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
-
-    print '# recognized L0 channels: ' + str(_l0Channels)
+    if _dict  : raise RunTimeError('HltL0Candidates already initialized -- 2nd call to setupL0Channels...')
     # the types are basically hardwired and are thus not likely to change...
     _l0Types = [ 'Muon','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
     _dict = dict()
-    for i in _l0Channels + [ 'All' + j for j in _l0Types ] : _dict.update( _converter( i ) )
+    for i in [ j for j in _l0Channels.iterkeys() ] + [ 'All' + j for j in _l0Types ] : _dict.update( _converter( i ) )
 
 def L0Channels() :
     global _l0Channels
-    if _l0Channels == None : raise RunTimeError('HltL0Candidates not initialized -- no call to setupL0Channels...')
-    return _l0Channels
+    if _l0Channels == None : raise RunTimeError('HltL0Candidates not initialized -- no call to decodeL0Channels...')
+    return _l0Channels.iterkeys()
 
 def convertL0Candidates(channel) :
     global _dict

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.153 2010-03-22 13:40:15 graven Exp $
+! $Id: release.notes,v 1.154 2010-03-27 22:23:20 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -9,6 +9,8 @@
 ! for the production. Commit them AS WELL in branch production200912. 
 !
 !-----------------------------------------------------------------------------
+! 2010-03-27 - Gerhard Raven
+ - further automation in HltL0Candidates
 
 ! 2010-03-21 - L. de Paula
  - Including 2 new Hl1MuonLines for Single and DiMuon using only Muons and
