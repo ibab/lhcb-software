@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.530 2010-03-22 13:59:13 jpalac Exp $
+! $Id: release.notes,v 1.531 2010-03-27 12:09:39 graven Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
+!========================== DaVinciTools v21r0 2010-03-27 ===================
 ! 2010-03-22 - Juan Palacios
  - src/FilterDesktop.cpp
   . Add property CloneFilteredParticles (default false). Swutches between 
