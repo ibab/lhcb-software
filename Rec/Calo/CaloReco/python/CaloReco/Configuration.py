@@ -9,7 +9,7 @@ Configurable for Calorimeter Reconstruction
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $"
 # =============================================================================
 __all__ = (
     'HltCaloRecoConf'     ,
@@ -121,13 +121,13 @@ class CaloRecoConf(LHCbConfigurableUser):
         
         """
         from CaloDAQ.CaloDigits import caloDigits
-        
-        CaloDigitConf ( 
-            Context = 'Offline' , # self.getProp ('Context'           ) ,
-            OutputLevel          = self.getProp ('OutputLevel'       ) ,
-            EnableDigitsOnDemand = self.getProp ('EnableRecoOnDemand') ,
-            CreateADCs           = self.getProp ('CreateADCs'        ) )
-        
+       
+	myCaloDigitConf = CaloDigitConf(self._instanceName(CaloDigitConf))
+	myCaloDigitConf.Context 		= "Offline"
+	myCaloDigitConf.OutputLevel 		= self.getProp ('OutputLevel'       )
+	myCaloDigitConf.EnableDigitsOnDemand 	= self.getProp ('EnableRecoOnDemand')
+	myCaloDigitConf.CreateADCs		= self.getProp ('CreateADCs'        ) 
+
         return caloDigits (
             'Offline'                        ,  
             #self.getProp ('Context'           ) ,
@@ -361,7 +361,8 @@ class CaloProcessor( CaloRecoConf ):
     ## used configurables 
     __used_configurables__ = (
         (CaloPIDsConf,None ),
-        )
+        (CaloDigitConf,None )
+	)
 
 
     ## Configure recontruction of Calo Charged  PIDs (copy-past from CaloPIDs)
@@ -378,15 +379,14 @@ class CaloProcessor( CaloRecoConf ):
             _elocs.append( l )
 
             
-        CaloPIDsConf(            
-            Context            = self.getProp ('Context'       ) ,
-            EnablePIDsOnDemand = self.getProp ('EnableOnDemand') ,
-            MeasureTime        = self.getProp ('MeasureTime'   ) ,
-            TrackLocations     = _elocs ,
-            SkipNeutrals       = self.getProp('SkipNeutrals'),
-            SkipCharged        = self.getProp('SkipCharged')
-            )        
-        
+        myCaloPIDsConf = CaloPIDsConf(self._instanceName(CaloPIDsConf))
+        myCaloPIDsConf.Context = self.getProp ('Context'       )
+	myCaloPIDsConf.EnablePIDsOnDemand = self.getProp ('EnableOnDemand')
+	myCaloPIDsConf.MeasureTime = self.getProp ('MeasureTime'   )
+	myCaloPIDsConf.TrackLocations = _elocs
+	myCaloPIDsConf.SkipNeutrals = self.getProp('SkipNeutrals')
+	myCaloPIDsConf.SkipCharged  = self.getProp('SkipCharged')            
+
         cmp = caloPIDs ( self.getProp( 'Context'            )  ,
                          self.getProp( 'EnableOnDemand' )  ,
                          _elocs,
@@ -498,7 +498,7 @@ class CaloProcessor( CaloRecoConf ):
         # CaloReco sequence
         recoSeq = getAlgo( GaudiSequencer , "CaloRecoSeq" , context ) 
         recList = self.getProp ( 'RecList')         
-        if 'Digits'     in recList : addAlgs ( recoSeq , self.digits     () ) 
+	if 'Digits'     in recList : addAlgs ( recoSeq , self.digits     () ) 
         if 'Clusters'   in recList : addAlgs ( recoSeq , self.clusters   () ) 
         if not skipNeutrals :
             if 'Photons'    in recList : addAlgs ( recoSeq , self.photons    () )
