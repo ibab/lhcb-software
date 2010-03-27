@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.62 2010-03-12 12:49:58 albrecht Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.63 2010-03-27 20:07:53 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -76,16 +76,13 @@ HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
   , m_virtmem(0)
   , m_gpstimesec(0)
   , m_time_ref(0)
-  , m_scanevents(0)
   , m_totaltime(0)
   , m_totalmem(0)
-  , m_events(0)
 {
   declareProperty("ODIN",              m_ODINLocation = LHCb::ODINLocation::Default);
   declareProperty("HltDecReports",     m_HltDecReportsLocation = LHCb::HltDecReportsLocation::Default);
   declareProperty("Hlt1Decisions",     m_Hlt1Lines );
   declareProperty("Hlt2Decisions",     m_Hlt2Lines );
-  declareProperty("ScanEvents",        m_scanevents = 1 );
   declareProperty("TotalMemory",       m_totalmem   = 3000 );
   declareProperty("TimeSize",          m_timeSize = 120 );   // number of minutes of history (half an hour)
   declareProperty("TimeInterval",      m_timeInterval = 1 ); // binwidth in minutes 
@@ -250,11 +247,9 @@ StatusCode HltGlobalMonitor::execute() {
   monitorODIN(odin);
   monitorHLT1(hlt);
   monitorHLT2(hlt);
-  
-  if(  (m_events)%m_scanevents ==0) monitorMemory();
+  monitorMemory();
   
   counter("#events")++;
-  m_events++;
 
   return StatusCode::SUCCESS;
   
@@ -301,11 +296,6 @@ void HltGlobalMonitor::monitorHLT1(const LHCb::HltDecReports* hlt) {
       }
     }
   }
-
-  // for (unsigned i=0; i<m_DecToGroup1.size();i++) {
-//     *m_hlt1AlleyRates[i] += ( nAccAlley[i] > 0 );
-//     //fill(m_hlt1Alley,i,(nAccAlley[i]>0));
-//   }
 
   for (size_t i = 0; i<reps.size();++i) {
     bool accept = (reps[i].second->decision()!=0);
@@ -354,11 +344,6 @@ void HltGlobalMonitor::monitorHLT2(const LHCb::HltDecReports* hlt) {
       }
     }
   }
-  //   for (unsigned i=0; i<m_DecToGroup2.size();i++) {
-//      *m_hlt2AlleyRates[i] += ( nAccAlley[i] > 0 );
-//      //    fill(m_hlt2Alley,i,(nAccAlley[i]>0));
-//   } 
-
 
   for (size_t i = 0; i<reps.size();++i) {
     bool accept = reps[i].second->decision();

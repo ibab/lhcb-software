@@ -83,7 +83,6 @@ private:
   int m_scanevents;
   int m_totaltime;
   int m_totalmem;
-  int m_events;
 
 };
 #endif // HLTGLOBALMONITOR_H
