@@ -3,6 +3,13 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v9r2>2010-03-27 Phys v9r3 </A></H1><PRE>
+
+###############################################################################
+#                                 PHYS v9r3                                   #
+###############################################################################
+
+- Based on LHCb v30r0 and Gaudi v21r8
 
 </PRE><H1><A NAME=v9r2>2010-02-26 Phys v9r2 </A></H1><PRE>
 
