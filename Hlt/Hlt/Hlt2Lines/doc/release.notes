@@ -8,12 +8,17 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-03-27 - V. Gligorov
+ - Fix prescale in inclusive phi lines (see https://savannah.cern.ch/bugs/?65002)
+ - Fix GeV/MeV typo in Express lines
+ - Replace an additional %()d with %()s (see https://savannah.cern.ch/bugs/?64997) 
+
 ! 2010-03-27 - Jibo He
  - Hlt2InclusiveDiProtonLines.py
    . Fixed the bug of wrong input location of the final stage.
 
 ! 2010-03-27 - Gerhard Raven
- - replace %()d with %()d (see https://savannah.cern.ch/bugs/?64997)
+ - replace %()d with %()s (see https://savannah.cern.ch/bugs/?64997)
 
 ! 2010-03-27 - Jibo He
  - Hlt2InclusiveDiProtonLines.py added for charmonium -> p pbar (2.8 - 3.9 GeV).

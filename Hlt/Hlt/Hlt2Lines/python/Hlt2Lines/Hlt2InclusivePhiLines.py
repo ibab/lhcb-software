@@ -32,12 +32,12 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                   ,'Prescale'           : {'Hlt2IncPhiSidebands'  : 0.1
                                           ,'Hlt2IncPhi'           : 1.0
                                           ,'Hlt2IncPhiRobust'     : 0.001
-                                          ,'Hlt2IncPhiTF'         : 0.001
+                                          ,'Hlt2IncPhiTrackFit'         : 0.001
                                           }
                   ,'Postscale'          : {'Hlt2IncPhiSidebands'  : 1.0
                                           ,'Hlt2IncPhi'           : 1.0
                                           ,'Hlt2IncPhiRobust'     : 1.0
-                                          ,'Hlt2IncPhiTF'         : 1.0
+                                          ,'Hlt2IncPhiTrackFit'         : 1.0
                                           }
                   ,'HltANNSvcID'        : {'IncPhi'           : 50000
                                           ,'IncPhiSidebands'  : 50003

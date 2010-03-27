@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2ExpressLines.py,v 1.21 2010-03-27 13:23:54 graven Exp $
+# $Id: Hlt2ExpressLines.py,v 1.22 2010-03-27 16:28:19 gligorov Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt2 Lines for the express stream
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Johannes Albrecht albrecht@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.21 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.22 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -344,14 +344,14 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                   , CombinationCut = "(ADAMASS('D0')<%(ExD0MassWinWide)s*MeV)"%  self.getProps()
                                   , MotherCut = "(ADMASS('D0') < %(ExD0MassWin)s*MeV)"\
                                   " & (VFASPF(VCHI2/VDOF) < %(ExD0VCHI2)s)"\
-                                  " & (PT > %(ExD0Pt)d*GeV)"\
+                                  " & (PT > %(ExD0Pt)s*MeV)"\
                                   " & (BPVDIRA > %(ExD0BPVDIRA)s)"\
                                   " & (BPVVDCHI2 > %(ExD0BPVVDCHI2)s)"%  self.getProps()
-                                  , DaughtersCuts = { "K-"  :  "(P>%(ExD0KP)d*MeV)"\
-                                                      " & (PT>%(ExD0KPt)d*MeV)"\
+                                  , DaughtersCuts = { "K-"  :  "(P>%(ExD0KP)s*MeV)"\
+                                                      " & (PT>%(ExD0KPt)s*MeV)"\
                                                       " & (MIPCHI2DV(PRIMARY)>%(ExD0KIPChi2)s) "%  self.getProps(),
                                                       "pi+"  :  "(P>%(ExD0PiP)s*MeV)"\
-                                                      " & (PT>%(ExD0PiPt)d*MeV)"\
+                                                      " & (PT>%(ExD0PiPt)s*MeV)"\
                                                       " & (MIPCHI2DV(PRIMARY)>%(ExD0PiIPChi2)s) "%  self.getProps()
                                                       }
                                   
@@ -363,7 +363,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                  , InputLocations = [NoCutsPions, D02KPiCombine]
                                  , CombinationCut = "(ADAMASS('D*(2010)+')<%(ExDStarMassWinWide)s*MeV)"%  self.getProps()
                                  , MotherCut = "(ADMASS('D*(2010)+')<%(ExDStarMassWin)s*MeV)"\
-                                 " & (PT > %(ExDStarPt)s*GeV)"\
+                                 " & (PT > %(ExDStarPt)s*MeV)"\
                                  " & (VFASPF(VCHI2/VDOF) < %(ExDStarVCHI2)s)"\
                                  " & (M-MAXTREE('D0'==ABSID,M)< %(ExDStarMassDiff)s)"%  self.getProps()
                                  , DaughtersCuts = {"pi+":"(PT>%(ExDStarPiPt)s*MeV)"\
