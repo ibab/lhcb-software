@@ -1,9 +1,10 @@
-!$Id: release.notes,v 1.342 2010-03-18 19:10:36 jpalac Exp $
+!$Id: release.notes,v 1.343 2010-03-27 12:04:51 graven Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v8r6 2010-03-27 =====================
 ! 2010-03-18 - Juan Palacios
  - DVAlgorithm
   . Add protected method getStoredBestPV to fetch a best PV from the relations
