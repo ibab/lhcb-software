@@ -1,4 +1,4 @@
-// $Id: HltTrackFit.cpp,v 1.1 2008-11-03 08:10:36 albrecht Exp $
+// $Id: HltTrackFit.cpp,v 1.2 2010-03-27 20:06:23 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -57,22 +57,21 @@ StatusCode HltTrackFit::tracksFromTrack(
 		std::vector<LHCb::Track*>& tracks )
 {
   
-  LHCb::Track* tr = seed.clone();
+  std::auto_ptr<LHCb::Track> tr( seed.clone() );
   
   StatusCode sc = StatusCode::SUCCESS;
   //fit the track only if it hasn't been fitted before ..
-  if(tr->checkFitHistory( LHCb::Track::FitUnknown) ){
-    
+  if(tr->checkFitHistory(LHCb::Track::FitUnknown) ){
     sc = m_fit->fit(*tr,LHCb::ParticleID(m_pid));
-    if( sc.isFailure() ) return StatusCode::FAILURE;
+    if( sc.isFailure() ) {
+        warning() << "fit failed" << endmsg;
+        return StatusCode::FAILURE;
+    }
     //FIXME this should be done inside the fit, but it isn't .. 
     tr->setFitHistory(LHCb::Track::StdKalman);
-    
   }
   
-  tracks.push_back(tr);
-  
-  
+  tracks.push_back(tr.release());
   return sc;
 }
 
