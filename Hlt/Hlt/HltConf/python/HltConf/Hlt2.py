@@ -6,27 +6,28 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.55 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.56 $"
 # =============================================================================
 import types
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import GaudiSequencer as Sequence
-from Hlt2Lines.Hlt2B2DXLines            import Hlt2B2DXLinesConf
-from Hlt2Lines.Hlt2B2JpsiXLines         import Hlt2B2JpsiXLinesConf
-from Hlt2Lines.Hlt2B2PhiXLines          import Hlt2B2PhiXLinesConf
-from Hlt2Lines.Hlt2InclusiveDiMuonLines import Hlt2InclusiveDiMuonLinesConf
-from Hlt2Lines.Hlt2InclusiveMuonLines   import Hlt2InclusiveMuonLinesConf
-from Hlt2Lines.Hlt2InclusivePhiLines    import Hlt2InclusivePhiLinesConf
-from Hlt2Lines.Hlt2TopologicalLines     import Hlt2TopologicalLinesConf
-from Hlt2Lines.Hlt2B2XGammaLines        import Hlt2B2XGammaLinesConf
-from Hlt2Lines.Hlt2B2HHLines            import Hlt2B2HHLinesConf
-from Hlt2Lines.Hlt2B2LLXLines           import Hlt2B2LLXLinesConf
-from Hlt2Lines.Hlt2CharmLines           import Hlt2CharmLinesConf
-from Hlt2Lines.Hlt2DisplVerticesLines   import Hlt2DisplVerticesLinesConf
-from Hlt2Lines.Hlt2CommissioningLines   import Hlt2CommissioningLinesConf
-from Hlt2Lines.Hlt2ExpressLines         import Hlt2ExpressLinesConf
-from Hlt2Lines.Hlt2diphotonDiMuonLines  import Hlt2diphotonDiMuonLinesConf
+from Hlt2Lines.Hlt2B2DXLines              import Hlt2B2DXLinesConf
+from Hlt2Lines.Hlt2B2JpsiXLines           import Hlt2B2JpsiXLinesConf
+from Hlt2Lines.Hlt2B2PhiXLines            import Hlt2B2PhiXLinesConf
+from Hlt2Lines.Hlt2InclusiveDiMuonLines   import Hlt2InclusiveDiMuonLinesConf
+from Hlt2Lines.Hlt2InclusiveMuonLines     import Hlt2InclusiveMuonLinesConf
+from Hlt2Lines.Hlt2InclusivePhiLines      import Hlt2InclusivePhiLinesConf
+from Hlt2Lines.Hlt2TopologicalLines       import Hlt2TopologicalLinesConf
+from Hlt2Lines.Hlt2B2XGammaLines          import Hlt2B2XGammaLinesConf
+from Hlt2Lines.Hlt2B2HHLines              import Hlt2B2HHLinesConf
+from Hlt2Lines.Hlt2B2LLXLines             import Hlt2B2LLXLinesConf
+from Hlt2Lines.Hlt2CharmLines             import Hlt2CharmLinesConf
+from Hlt2Lines.Hlt2DisplVerticesLines     import Hlt2DisplVerticesLinesConf
+from Hlt2Lines.Hlt2CommissioningLines     import Hlt2CommissioningLinesConf
+from Hlt2Lines.Hlt2ExpressLines           import Hlt2ExpressLinesConf
+from Hlt2Lines.Hlt2diphotonDiMuonLines    import Hlt2diphotonDiMuonLinesConf
+from Hlt2Lines.Hlt2InclusiveDiProtonLines import Hlt2InclusiveDiProtonLinesConf
 #
 # The tracking configurations
 #
@@ -71,7 +72,8 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2DisplVerticesLinesConf
                              , Hlt2CommissioningLinesConf
                              , Hlt2ExpressLinesConf
-                             , Hlt2diphotonDiMuonLinesConf  
+                             , Hlt2diphotonDiMuonLinesConf
+                             , Hlt2InclusiveDiProtonLinesConf
                              ]
     __slots__ = {
            "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...

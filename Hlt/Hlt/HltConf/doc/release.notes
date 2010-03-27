@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.436 2010-03-25 18:53:18 gligorov Exp $ 
+! $Id: release.notes,v 1.437 2010-03-27 00:01:27 jhe Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-03-27 - Jibo He
+ - Hlt2.py
+   . Add Hlt2InclusiveDiProtonLines
 
 ! 2010-03-25 - V. Gligorov
  - Continuing work on Savannah tasks #12691,13784.
