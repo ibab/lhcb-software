@@ -4,6 +4,11 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2010-03-27 - Illya Shapoval
+ - CondDB configurable is tuned to override all default and user tags settings 
+   by the latest tags for defined DataType if the 'UseLatestTags' property is 
+   set (before an exception was thrown if found multiple definitions). 
+
 ! 2010-03-26 - Illya Shapoval
  - Added new CondDB().UseLatestTags = [DataType,OnlyGlobalTags=False] property.
    Previous  CondDB().useLatestTags(DataType,OnlyGlobalTags=False) method is 

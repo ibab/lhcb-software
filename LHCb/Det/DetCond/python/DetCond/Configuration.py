@@ -187,8 +187,8 @@ class CondDB(ConfigurableUser):
                 raise RuntimeError("Cannot find tags for partition '%s', data type '%s'" % (partition, DataType))
             gt, lts = tags
             self.Tags[partition] = gt
-        if not OnlyGlobalTags:
-                self.LocalTags[partition] = lts
+            if not OnlyGlobalTags:
+                if lts: self.LocalTags[partition] = lts
 
     def __make_sqlite_local_copy__(self, accsvc, local_dir = None, force_copy = None):
         if isinstance(accsvc, str):
@@ -286,19 +286,22 @@ class CondDB(ConfigurableUser):
         
         # Set the usage of the latest global tag and (optionaly) all local tags on top of it
         if self.getProp("UseLatestTags"):
-            if not (self.getProp("Tags") or self.getProp("LocalTags")):
-                use_latest = self.getProp("UseLatestTags")
-                useLatestLength = len(use_latest)
-                if useLatestLength == 1:
-                    self._useLatestTags(use_latest[0])
-                elif useLatestLength == 2:
-                    self._useLatestTags(use_latest[0],use_latest[1])
-                else:
-                    raise RuntimeError("UseLatestTags property (list) takes not more than 2 elements." % useLatestLength)
+            use_latest = self.getProp("UseLatestTags")
+            useLatestLength = len(use_latest)
+            if self.getProp("Tags") or self.getProp("LocalTags"):
+                # reset tags properties before setting the latest tags
+                self.Tags = {}
+                self.LocalTags = {}
+                log.warning("'UseLatestTags' property was set: the usage of the latest \
+tags for '%s' data type will be forced!" % use_latest[0]) 
+            if useLatestLength == 1:
+                self._useLatestTags(use_latest[0])
+            elif useLatestLength == 2:
+                self._useLatestTags(use_latest[0],use_latest[1])
             else:
-                raise RuntimeError("'Tags' and 'LocalTags' properties can't be set together with 'UseLatestTags' property.")
+                raise RuntimeError("Wrong 'UseLatestTags' property. Should be: ['DataType', \
+OnlyGlobalTag = bool_flag].")
                 
-        
         conns = self.getProp("PartitionConnectionString")
         tags = self.getProp("Tags")
         # DB partitions
@@ -315,8 +318,8 @@ class CondDB(ConfigurableUser):
             # Override tags
             if p in tags and p != "ONLINE":
                 partition[p].DefaultTAG = tags[p]
-                del tags[p]
-            
+                del tags[p]    
+        
         if conns:
             log.warning("Cannot override the connection strings of the partitions %r", conns.keys()) 
         if tags:
