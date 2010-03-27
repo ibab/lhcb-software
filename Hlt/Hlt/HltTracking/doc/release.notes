@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.104 2010-03-27 16:31:38 gligorov Exp $
+!$Id: release.notes,v 1.105 2010-03-27 20:02:33 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2010-03-27 - Gerhard Raven
+ - Hlt2Tracking.py: replace mix of tabs and spaces with spaces
 
 ! 2010-03-27 - V. Gligorov
  - Create a list of recognized track fit types which work with

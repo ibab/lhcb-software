@@ -11,7 +11,7 @@
 ##
 # =============================================================================
 __author__  = "V. Gligorov vladimir.gligorov@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -61,58 +61,57 @@ class Hlt2Tracking(LHCbConfigurableUser):
     # First of all the dependencies and the slots
     #
     #############################################################################################
-    __used_configurables__ = 	[ 	(CaloProcessor	,	None), 
-					(RichRecSysConf	,	None)
-					# This next part defines all the Hlt2 Lines since they 
-					# configured after the tracking. This means that each
-					# Hlt2Lines configurable MUST be a singleton AND this
-					# list must be EXACTLY the same as the one in 
-					# $HLTCONFROOT/python/HltConf/Hlt2.py 
-					, Hlt2TopologicalLinesConf
-	                             	, Hlt2B2DXLinesConf
-        	                     	, Hlt2CharmLinesConf
-                	             	, Hlt2InclusiveDiMuonLinesConf
-                        	     	, Hlt2InclusiveMuonLinesConf
-	                             	, Hlt2InclusivePhiLinesConf
-        	                     	, Hlt2B2JpsiXLinesConf
-                	             	, Hlt2B2PhiXLinesConf
-                        	     	, Hlt2B2XGammaLinesConf
-	                             	, Hlt2B2HHLinesConf
-        	                     	, Hlt2B2LLXLinesConf                         
-                	             	, Hlt2DisplVerticesLinesConf
-                        	     	, Hlt2CommissioningLinesConf
-	                             	, Hlt2ExpressLinesConf
-        	                     	, Hlt2diphotonDiMuonLinesConf
-                                        , Hlt2InclusiveDiProtonLinesConf
-				]
-    __slots__ = {
-          "DataType"                   		: '2009' # datatype  2009, MC09, DC06...
-        , "Hlt2Tracks"                 		: Hlt2ForwardTracksName
-        , "Prefix"                     		: HltSharedTracksPrefix 
-        , "FastFitType"                		: HltUnfittedTracksSuffix
-	, "DoFastFit"                           : False
-        , "DoSeeding"                  		: False
-        , "DoCloneKilling"			: False
-	, "MakeNeutrals"			: False
-	, "RichHypos"				: HltRichDefaultHypos
-	, "RichRadiators"			: HltRichDefaultRadiators
-	# TODO : make these variables, not slots 
-	, "__hlt2ChargedNoPIDsProtosSeq__"      : 0	
-	, "__hlt2ChargedCaloProtosSeq__"	: 0
-	, "__hlt2ChargedRichProtosSeq__" 	: 0
-	, "__hlt2ChargedMuonProtosSeq__"	: 0
-	, "__hlt2ChargedMuonWithCaloProtosSeq__": 0
-	, "__hlt2NeutralProtosSeq__"		: 0
-	, "__hlt2VeloTrackingSeq__"		: 0
-	, "__hlt2ForwardTrackingSeq__"		: 0
-	, "__hlt2SeedTrackingSeq__"		: 0
-	, "__hlt2MatchTrackingSeq__"		: 0
-	, "__hlt2DownstreamTrackingSeq__"	: 0
-	, "__hlt2PrepareTracksSeq__"		: 0
-	, "__hlt2MuonIDSeq__"			: 0
-	, "__hlt2RICHIDSeq__"			: 0
-	, "__hlt2CALOIDSeq__"			: 0
-        }
+    __used_configurables__ = [ (CaloProcessor   ,   None)
+                             , (RichRecSysConf  ,   None)
+                             # This next part defines all the Hlt2 Lines since they 
+                             # configured after the tracking. This means that each
+                             # Hlt2Lines configurable MUST be a singleton AND this
+                             # list must be EXACTLY the same as the one in 
+                             # $HLTCONFROOT/python/HltConf/Hlt2.py 
+                             , Hlt2TopologicalLinesConf
+                             , Hlt2B2DXLinesConf
+                             , Hlt2CharmLinesConf
+                             , Hlt2InclusiveDiMuonLinesConf
+                             , Hlt2InclusiveMuonLinesConf
+                             , Hlt2InclusivePhiLinesConf
+                             , Hlt2B2JpsiXLinesConf
+                             , Hlt2B2PhiXLinesConf
+                             , Hlt2B2XGammaLinesConf
+                             , Hlt2B2HHLinesConf
+                             , Hlt2B2LLXLinesConf                         
+                             , Hlt2DisplVerticesLinesConf
+                             , Hlt2CommissioningLinesConf
+                             , Hlt2ExpressLinesConf
+                             , Hlt2diphotonDiMuonLinesConf
+                             , Hlt2InclusiveDiProtonLinesConf
+                             ]
+    __slots__ = { "DataType"                        : '2009' # datatype  2009, MC09, DC06...
+                , "Hlt2Tracks"                      : Hlt2ForwardTracksName
+                , "Prefix"                          : HltSharedTracksPrefix 
+                , "FastFitType"                 	: HltUnfittedTracksSuffix
+                , "DoFastFit"                       : False
+                , "DoSeeding"                     	: False
+                , "DoCloneKilling"                  : False
+                , "MakeNeutrals"                    : False
+                , "RichHypos"                       : HltRichDefaultHypos
+                , "RichRadiators"                   : HltRichDefaultRadiators
+                # TODO : make these variables, not slots 
+                , "__hlt2ChargedNoPIDsProtosSeq__"  : 0
+                , "__hlt2ChargedCaloProtosSeq__"    : 0
+                , "__hlt2ChargedRichProtosSeq__"    : 0
+                , "__hlt2ChargedMuonProtosSeq__"    : 0
+                , "__hlt2ChargedMuonWithCaloProtosSeq__": 0
+                , "__hlt2NeutralProtosSeq__"        : 0
+                , "__hlt2VeloTrackingSeq__"         : 0
+                , "__hlt2ForwardTrackingSeq__"      : 0
+                , "__hlt2SeedTrackingSeq__"         : 0
+                , "__hlt2MatchTrackingSeq__"        : 0
+                , "__hlt2DownstreamTrackingSeq__"   : 0
+                , "__hlt2PrepareTracksSeq__"        : 0
+                , "__hlt2MuonIDSeq__"               : 0
+                , "__hlt2RICHIDSeq__"               : 0
+                , "__hlt2CALOIDSeq__"               : 0
+                }
     #############################################################################################
     #############################################################################################
     #
@@ -145,7 +144,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         """
         Charged protoparticles using RICH (=pions,protons,kaons)
         """
-        return self.getProp("__hlt2ChargedRichProtosSeq__")	
+        return self.getProp("__hlt2ChargedRichProtosSeq__")
     #############################################################################################
     #
     # Charged ProtoParticles with Muon ID
@@ -255,9 +254,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
     #
     def hlt2PrepareTracks(self):
         """
-	The staged fast fit
-	"""
-	return self.getProp("__hlt2PrepareTracksSeq__")
+        The staged fast fit
+        """
+        return self.getProp("__hlt2PrepareTracksSeq__")
     #############################################################################################
     #############################################################################################
     #
@@ -267,62 +266,69 @@ class Hlt2Tracking(LHCbConfigurableUser):
     #############################################################################################
     #############################################################################################
     def __apply_configuration__(self) :
-        log.warning('############################################################'	 	)
-        log.warning('## INFO You have configured an instance of the Hlt2 tracking'	 	)
-        log.warning('## INFO ----------------------------------------------------'	 	)	
-        log.warning('## INFO The data type is '		+ str(self.getProp("DataType"	      )))
-        log.warning('## INFO Tracks to make are '	+ str(self.getProp("Hlt2Tracks"       )))
-        log.warning('## INFO The prefix is '   		+ str(self.getProp("Prefix"           )))
-        log.warning('## INFO The fit type is ' 		+ str(self.getProp("FastFitType"      )))
-        log.warning('## INFO Fast Fit? = '		+ str(self.getProp("DoFastFit"        )))
-        log.warning('## INFO Seeding? = '      		+ str(self.getProp("DoSeeding"        )))
-        log.warning('## INFO Clone Killing? = '		+ str(self.getProp("DoCloneKilling"   )))
-        log.warning('## INFO Make Neutrals ? = '	+ str(self.getProp("MakeNeutrals"     )))
-	log.warning('## INFO Rich hypos = '     	+ str(self.getProp("RichHypos"        )))
-	log.warning('## INFO Rich radiators = ' 	+ str(self.getProp("RichRadiators"    )))
-	log.warning('############################################################'	 	)
-	#
+        log.warning('############################################################')
+        log.warning('## INFO You have configured an instance of the Hlt2 tracking')
+        log.warning('## INFO ----------------------------------------------------')
+        log.warning('## INFO The data type is '     + str(self.getProp("DataType"       )))
+        log.warning('## INFO Tracks to make are '   + str(self.getProp("Hlt2Tracks"     )))
+        log.warning('## INFO The prefix is '        + str(self.getProp("Prefix"         )))
+        log.warning('## INFO The fit type is '      + str(self.getProp("FastFitType"    )))
+        log.warning('## INFO Fast Fit? = '          + str(self.getProp("DoFastFit"      )))
+        log.warning('## INFO Seeding? = '           + str(self.getProp("DoSeeding"      )))
+        log.warning('## INFO Clone Killing? = '     + str(self.getProp("DoCloneKilling" )))
+        log.warning('## INFO Make Neutrals ? = '    + str(self.getProp("MakeNeutrals"   )))
+        log.warning('## INFO Rich hypos = '         + str(self.getProp("RichHypos"      )))
+        log.warning('## INFO Rich radiators = '     + str(self.getProp("RichRadiators"  )))
+        log.warning('############################################################')
+        #
         # First of all check that I have been called with a sensible set of options
         #
-	outputOfHlt2Tracking = self.__shortTrackLocation()
+        outputOfHlt2Tracking = self.__shortTrackLocation()
         if (outputOfHlt2Tracking == 'Unknown') :
             self.__fatalErrorUnknownTrackType()
             return []
-	#
-	if (self.getProp("FastFitType") not in Hlt2TrackingRecognizedFitTypes) :
-    	    self.__fatalErrorUnknownTrackFitType()
+        #
+        if (self.getProp("FastFitType") not in Hlt2TrackingRecognizedFitTypes) :
+            self.__fatalErrorUnknownTrackFitType()
             return []
-	#
-	# The base tracking sequences
-	#
-	self.setProp(		"__hlt2VeloTrackingSeq__"		,
-			         self.__hlt2VeloTracking()       	)
+        #
+        # The base tracking sequences
+        #
+        self.setProp( "__hlt2VeloTrackingSeq__"
+                    ,  self.__hlt2VeloTracking()
+                    )
 
-        self.setProp(		"__hlt2ForwardTrackingSeq__"		,
-			      	self.__hlt2ForwardTracking()    	)
+        self.setProp( "__hlt2ForwardTrackingSeq__"
+                    , self.__hlt2ForwardTracking()
+                    )
 
-        self.setProp(		"__hlt2SeedTrackingSeq__"		,
-			         self.__hlt2SeedTracking()       	)
+        self.setProp( "__hlt2SeedTrackingSeq__"
+                    , self.__hlt2SeedTracking()
+                    )
 
-        self.setProp(		"__hlt2MatchTrackingSeq__"		,
-			        self.__hlt2MatchTracking()      	)
+        self.setProp( "__hlt2MatchTrackingSeq__"
+                    , self.__hlt2MatchTracking()
+                    )
 
-        self.setProp(		"__hlt2DownstreamTrackingSeq__"		,
-				self.__hlt2DownstreamTracking() 	)
-	#
-	# The full tracking sequence whose output is used to make the protoparticles
-	# Also runs the fast fit, or inserts the error parametrization based on the track PT,
-	# depending on the options given to the code.
-	#
-	self.setProp(		"__hlt2PrepareTracksSeq__"		,
-				self.__hlt2StagedFastFit()      	)
-	#
-	# If MakeNeutrals is set we only allow the user to make photons/pi0s
-	# This requires tracking but other options are ignored! 
-	#
-	if not self.getProp("MakeNeutrals") :
-	    self.setProp(	"__hlt2ChargedNoPIDsProtosSeq__"	,  		
-				self.__hlt2ChargedNoPIDsProtos()	)
+        self.setProp( "__hlt2DownstreamTrackingSeq__"
+                    , self.__hlt2DownstreamTracking()
+                    )
+        #
+        # The full tracking sequence whose output is used to make the protoparticles
+        # Also runs the fast fit, or inserts the error parametrization based on the track PT,
+        # depending on the options given to the code.
+        #
+        self.setProp( "__hlt2PrepareTracksSeq__"
+                    , self.__hlt2StagedFastFit()
+                    )
+        #
+        # If MakeNeutrals is set we only allow the user to make photons/pi0s
+        # This requires tracking but other options are ignored! 
+        #
+        if not self.getProp("MakeNeutrals") :
+            self.setProp( "__hlt2ChargedNoPIDsProtosSeq__"	
+                        , self.__hlt2ChargedNoPIDsProtos()
+                        )
 	    #
 	    # If something special is being done for the RICH then we only fill the
 	    # RICH sequences, to prevent the RICH and CALO clashing. In other words, we
@@ -367,7 +373,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
 	    #
 	    # Just create the CALO ID and the neutral protos sequence
 	    # 
-	    self.setProp(	"__hlt2CALOIDSeq__"			,
+	    self.setProp(	"__hlt2CALOIDSeq__"		,
 	               		self.__hlt2CALOID()             	)
 	    self.setProp(	"__hlt2NeutralProtosSeq__"		,
 	        		self.__hlt2NeutralProtos()      	)
@@ -392,11 +398,11 @@ class Hlt2Tracking(LHCbConfigurableUser):
             if self.getProp("DoSeeding") :
                 return Hlt2LongTracksName
             else : 
-		self.__warningAskLongGetForward()	
+                self.__warningAskLongGetForward()
                 return Hlt2ForwardTracksName
         elif (self.getProp("Hlt2Tracks") == Hlt2ForwardTracksName) :
             if self.getProp("DoSeeding") :
-		self.__warningAskForwardGetLong()
+                self.__warningAskForwardGetLong()
                 return Hlt2LongTracksName
             else :
                 return Hlt2ForwardTracksName
@@ -408,19 +414,19 @@ class Hlt2Tracking(LHCbConfigurableUser):
     # HltTrackNames.py  
     # 
     def __trackLocation(self):
-	thisTrackLocation 	= self.getProp("FastFitType") + "/" + self.__shortTrackLocation()
+        thisTrackLocation 	= self.getProp("FastFitType") + "/" + self.__shortTrackLocation()
         return _baseTrackLocation(self.getProp("Prefix"), thisTrackLocation)
     ## For protos, the format is e.g. Hlt2/ProtoP/Unfitted/Charged/Forward #   
     def __protosLocation(self,protosType):
-	thisProtosLocation	= self.getProp("FastFitType") + "/" + self.__shortTrackLocation() + "/" + protosType
+        thisProtosLocation = self.getProp("FastFitType") + "/" + self.__shortTrackLocation() + "/" + protosType
         return _baseProtoPLocation(self.getProp("Prefix"), thisProtosLocation)
     #
     # The hadron protos need subdirectories depending on the type of PID requested
     #
     def __chargedRichProtosSuffix(self):
         baseSuffix = HltRichProtosSuffix+"/"
-	baseSuffix += HltRICHIDSuffix + "/" + self.__richIDSuffix()
-	return baseSuffix
+        baseSuffix += HltRICHIDSuffix + "/" + self.__richIDSuffix()
+        return baseSuffix
  
     #
     # The trackified Muon ID location
@@ -445,19 +451,19 @@ class Hlt2Tracking(LHCbConfigurableUser):
         return self.__hltBasePIDLocation() + "/" + HltRICHIDSuffix + "/" + self.__richIDSuffix()
     #
     def __richIDSuffix(self) :
-	baseSuffix = ""
-	for hypo in self.getProp("RichHypos") :
+        baseSuffix = ""
+        for hypo in self.getProp("RichHypos") :
             baseSuffix += hypo
-	baseSuffix += "/"
-	for radiator in self.getProp("RichRadiators") :
-	    baseSuffix += radiator
-	return baseSuffix
+        baseSuffix += "/"
+        for radiator in self.getProp("RichRadiators") :
+            baseSuffix += radiator
+        return baseSuffix
     #
     def __caloIDLocation(self) :
         caloBase =  self.__hltBasePIDLocation() + "/" + HltCALOIDSuffix + "/"
-	if (self.getProp("MakeNeutrals")) : caloBase += Hlt2NeutralProtoParticleSuffix
-	else : caloBase += Hlt2ChargedProtoParticleSuffix
-	return caloBase
+        if (self.getProp("MakeNeutrals")) : caloBase += Hlt2NeutralProtoParticleSuffix
+        else : caloBase += Hlt2ChargedProtoParticleSuffix
+        return caloBase
     #
     # The prefixes for the various tools and algorithms used
     #
@@ -468,7 +474,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         return self.getProp("Prefix") + self.getProp("FastFitType") + self.__shortTrackLocation()
     #
     def __pidAlgosAndToolsPrefix(self) :
-	return self.name()
+        return self.name()
     # Explicitly tell users about the new long/forward naming convention: long tracks are the
     # forward+match tracks (seeding required), forward tracks are just PatForward, no seeding.
     # Since we are not bastards, if someone asks for forward tracks and turns the seeding on we
@@ -476,8 +482,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
     # happened.
     #
     def __warningAskForwardGetLong(self) :
-	log.warning( '##################################################################################')
-	log.warning( '## WARNING You asked for Forward tracks with seeding on. I will assume that you   ')
+        log.warning( '##################################################################################')
+        log.warning( '## WARNING You asked for Forward tracks with seeding on. I will assume that you   ')
         log.warning( '## WARNING would like both forward and match tracks, and I will put the combined  ')
         log.warning( '## WARNING output of these into the long track container. You can still retrieve  ')
         log.warning( '## WARNING the forward tracks alone by asking for the forward track container.    ')
@@ -499,7 +505,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         log.fatal( '##################################################################################')
     #
     def __fatalErrorUnknownTrackFitType(self) :
-	log.fatal( '################################################################################')
+        log.fatal( '################################################################################')
         log.fatal( '## FATAL You specified an unknown fit type %s for the Hlt2 Reconstruction' % self.getProp("FastFitType") )
         log.fatal( '## FATAL I will now die, you need to make Hlt2Tracking aware of this fit type!  ')
         log.fatal( '################################################################################')
@@ -524,15 +530,15 @@ class Hlt2Tracking(LHCbConfigurableUser):
         # Fill the sequence
         myCALOProcessorChargedSeq 	= self.__getCALOSeq("Charged")
 
-	chargedProtosOutputLocation = myCALOProcessorChargedSeq.outputSelection()
+        chargedProtosOutputLocation = myCALOProcessorChargedSeq.outputSelection()
 
-	# For the charged we need a combined DLL
+        # For the charged we need a combined DLL
         from Configurables import ChargedProtoCombineDLLsAlg
         combine_name                    = self.__pidAlgosAndToolsPrefix()+"ChargedCaloProtoPCombDLLs"
         combine                         = ChargedProtoCombineDLLsAlg(combine_name)
         combine.ProtoParticleLocation   = chargedProtosOutputLocation
         
-	from HltLine.HltLine import bindMembers
+        from HltLine.HltLine import bindMembers
         # Build the bindMembers 
         bm_name         = self.__pidAlgosAndToolsPrefix()+"ChargedCaloProtosSeq"
         bm_members      = [ myCALOProcessorChargedSeq, combine ]
@@ -551,27 +557,27 @@ class Hlt2Tracking(LHCbConfigurableUser):
         # and add the CALO ID to them
         myCALOProcessorChargedSeq       = self.__getCALOSeq("Charged")
 
-	from Configurables import ChargedProtoParticleAddMuonInfo
-	
-	# Now add the muon information 
-	# TODO : can I do this without overwriting?
-	chargedProtosOutputLocation = myCALOProcessorChargedSeq.outputSelection()
+        from Configurables import ChargedProtoParticleAddMuonInfo
 
-	muon_name                       = self.__pidAlgosAndToolsPrefix()+"MwCDLL"
+        # Now add the muon information 
+        # TODO : can I do this without overwriting?
+        chargedProtosOutputLocation = myCALOProcessorChargedSeq.outputSelection()
+
+        muon_name                       = self.__pidAlgosAndToolsPrefix()+"MwCDLL"
         muon                            = ChargedProtoParticleAddMuonInfo(muon_name)
         muon.ProtoParticleLocation      = chargedProtosOutputLocation    
 
-	# The muon ID
-	muonID                          = self.__hlt2MuonID()
+        # The muon ID
+        muonID                          = self.__hlt2MuonID()
         muon.InputMuonPIDLocation       = muonID.outputSelection()
 
-	# For the charged we need a combined DLL
+        # For the charged we need a combined DLL
         from Configurables import ChargedProtoCombineDLLsAlg
         combine_name                    = self.__pidAlgosAndToolsPrefix()+"MwCCombDLLs"
         combine                         = ChargedProtoCombineDLLsAlg(combine_name)
         combine.ProtoParticleLocation   = chargedProtosOutputLocation
 
-	from HltLine.HltLine import bindMembers
+        from HltLine.HltLine import bindMembers
         # Build the bindMembers 
         bm_name         = self.__pidAlgosAndToolsPrefix()+"MwCSeq"
         bm_members      = [ myCALOProcessorChargedSeq, muonID, muon, combine ]
@@ -594,23 +600,23 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #The different add PID algorithms
         #
         # The charged protoparticles and their output location
-        chargedProtos 			= self.__hlt2ChargedProtos(HltMuonProtosSuffix)
+        chargedProtos                   = self.__hlt2ChargedProtos(HltMuonProtosSuffix)
         chargedProtosOutputLocation 	= chargedProtos.outputSelection()
         #
-        muon_name			= self.__pidAlgosAndToolsPrefix()+"ChargedProtoPAddMuon"
-        muon 				= ChargedProtoParticleAddMuonInfo(muon_name)
-        muon.ProtoParticleLocation 	= chargedProtosOutputLocation
+        muon_name           = self.__pidAlgosAndToolsPrefix()+"ChargedProtoPAddMuon"
+        muon                = ChargedProtoParticleAddMuonInfo(muon_name)
+        muon.ProtoParticleLocation  = chargedProtosOutputLocation
         # Get the MuonID from the MuonID sequence
-        muonID 				= self.__hlt2MuonID()
-        muon.InputMuonPIDLocation 	= muonID.outputSelection()
+        muonID                      = self.__hlt2MuonID()
+        muon.InputMuonPIDLocation   = muonID.outputSelection()
     
         from HltLine.HltLine import bindMembers
-	# Build the bindMembers 
+        # Build the bindMembers 
         bm_name         = self.__pidAlgosAndToolsPrefix()+"ChargedMuonProtosSeq" 
         bm_members      = [ muonID, chargedProtos, muon ]
         bm_output       = chargedProtosOutputLocation
 
-   	return bindMembers(bm_name, bm_members).setOutputSelection(bm_output) 
+        return bindMembers(bm_name, bm_members).setOutputSelection(bm_output) 
     #########################################################################################
     #
     # Charged hadron ProtoParticles
@@ -627,45 +633,45 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #The different add PID algorithms
         #
         # The charged protoparticles and their output location
-	#
-        chargedProtos 			= self.__hlt2ChargedProtos(self.__chargedRichProtosSuffix())
-        chargedProtosOutputLocation 	= chargedProtos.outputSelection()
         #
-	# Now set up the RICH sequence 
-	#
-	doRICHReco 			= self.__hlt2RICHID()
-	#
-	# Add the RICH info to the DLL
-	#	
-	richDLL_name			= self.__pidAlgosAndToolsPrefix()+"ChargedHadronProtoPAddRich"
-	richDLL 			= ChargedProtoParticleAddRichInfo(richDLL_name)
-	richDLL.InputRichPIDLocation	= doRICHReco.outputSelection()
-        richDLL.ProtoParticleLocation	= chargedProtosOutputLocation
-	#
-	# What are we returning?
-	#
-	sequenceToReturn = []
+        chargedProtos                   = self.__hlt2ChargedProtos(self.__chargedRichProtosSuffix())
+        chargedProtosOutputLocation     = chargedProtos.outputSelection()
+        #
+        # Now set up the RICH sequence 
+        #
+        doRICHReco              = self.__hlt2RICHID()
+        #
+        # Add the RICH info to the DLL
+        #
+        richDLL_name            = self.__pidAlgosAndToolsPrefix()+"ChargedHadronProtoPAddRich"
+        richDLL                 = ChargedProtoParticleAddRichInfo(richDLL_name)
+        richDLL.InputRichPIDLocation    = doRICHReco.outputSelection()
+        richDLL.ProtoParticleLocation   = chargedProtosOutputLocation
+        #
+        # What are we returning?
+        #
+        sequenceToReturn = []
         sequenceToReturn += [chargedProtos]
-	sequenceToReturn += [doRICHReco]
-	sequenceToReturn += [richDLL]
+        sequenceToReturn += [doRICHReco]
+        sequenceToReturn += [richDLL]
 
-	#
-	# The combined DLL is needed for cutting on later
-	# 
-	from Configurables import ChargedProtoCombineDLLsAlg
+        #
+        # The combined DLL is needed for cutting on later
+        # 
+        from Configurables import ChargedProtoCombineDLLsAlg
         combine_name                    = self.__pidAlgosAndToolsPrefix()+"RichCombDLLs"
         combine                         = ChargedProtoCombineDLLsAlg(combine_name)
         combine.ProtoParticleLocation   = chargedProtosOutputLocation
 
-	sequenceToReturn += [combine]
-	
-	from HltLine.HltLine import bindMembers
-	# Build the bindMembers 
-	bm_name         = self.__pidAlgosAndToolsPrefix()+"ChargedRichProtosSeq"
-	bm_members      = sequenceToReturn
-	bm_output       = chargedProtosOutputLocation
+        sequenceToReturn += [combine]
 
-	return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
+        from HltLine.HltLine import bindMembers
+        # Build the bindMembers 
+        bm_name         = self.__pidAlgosAndToolsPrefix()+"ChargedRichProtosSeq"
+        bm_members      = sequenceToReturn
+        bm_output       = chargedProtosOutputLocation
+
+        return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
     #########################################################################################
     #
     # Charged ProtoParticles
@@ -678,17 +684,17 @@ class Hlt2Tracking(LHCbConfigurableUser):
         """
         from Configurables import ChargedProtoParticleMaker
         
-        chargedProtosOutputLocation	= self.__protosLocation(Hlt2ChargedProtoParticleSuffix) + "/" + outputLocation
+        chargedProtosOutputLocation = self.__protosLocation(Hlt2ChargedProtoParticleSuffix) + "/" + outputLocation
     
-	charged_name			= self.__pidAlgosAndToolsPrefix()+outputLocation.replace("/","")+'ChargedProtoPAlg'
-        charged 			= ChargedProtoParticleMaker(charged_name)
+        charged_name = self.__pidAlgosAndToolsPrefix()+outputLocation.replace("/","")+'ChargedProtoPAlg'
+        charged      = ChargedProtoParticleMaker(charged_name)
 
         # Need to allow for fitted tracks
         # This is now done inside the staged fast fit based on the fastFitType passed
-        tracks 				= self.__hlt2StagedFastFit()
-        charged.InputTrackLocation 	= [tracks.outputSelection()]
+        tracks                      = self.__hlt2StagedFastFit()
+        charged.InputTrackLocation  = [tracks.outputSelection()]
         
-	charged.OutputProtoParticleLocation = chargedProtosOutputLocation
+        charged.OutputProtoParticleLocation = chargedProtosOutputLocation
     
         from HltLine.HltLine import bindMembers
         # Build the bindMembers        
@@ -707,8 +713,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         Requires caloID 
         """
 
-	# the sequence to run
-        myCALOProcessorNeutralSeq 	= self.__getCALOSeq("Neutral")
+        # the sequence to run
+        myCALOProcessorNeutralSeq  = self.__getCALOSeq("Neutral")
 
         return myCALOProcessorNeutralSeq 
     #########################################################################################
@@ -720,24 +726,24 @@ class Hlt2Tracking(LHCbConfigurableUser):
         Muon ID options 
         Requires tracks
         """
-	    
+   
         from MuonID import ConfiguredMuonIDs
         from Configurables import MuonRec, MuonIDAlg
 
-	
-        cm 					= ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"))
-	HltMuonIDAlg_name			= self.__pidAlgosAndToolsPrefix()+"MuonIDAlg"
-        HltMuonIDAlg 				= cm.configureMuonIDAlg(HltMuonIDAlg_name)
+
+        cm                  = ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"))
+        HltMuonIDAlg_name   = self.__pidAlgosAndToolsPrefix()+"MuonIDAlg"
+        HltMuonIDAlg        = cm.configureMuonIDAlg(HltMuonIDAlg_name)
         #The tracks to use
-        tracks					= self.__hlt2StagedFastFit()
+        tracks              = self.__hlt2StagedFastFit()
         #Enforce naming conventions
-        HltMuonIDAlg.TrackLocation		= tracks.outputSelection() 
-        HltMuonIDAlg.MuonIDLocation		= self.__muonIDLocation() #output 
-        HltMuonIDAlg.MuonTrackLocation		= self._trackifiedMuonIDLocation() 
-        HltMuonIDAlg.MuonTrackLocationAll	= self._trackifiedAllMuonIDLocation() 
+        HltMuonIDAlg.TrackLocation          = tracks.outputSelection() 
+        HltMuonIDAlg.MuonIDLocation         = self.__muonIDLocation() #output 
+        HltMuonIDAlg.MuonTrackLocation      = self._trackifiedMuonIDLocation() 
+        HltMuonIDAlg.MuonTrackLocationAll   = self._trackifiedAllMuonIDLocation() 
         # CRJ : Disable FindQuality in HLT since it increases CPU time for MuonID by
         #       a factor 3-4
-        HltMuonIDAlg.FindQuality		= False
+        HltMuonIDAlg.FindQuality            = False
         
         from HltLine.HltLine import bindMembers
         # Build the bindMembers        
@@ -755,8 +761,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         Calo ID
         Does calo reconstruction and Calo ID
         """
-	# the sequence to run
-	myCALOProcessorPIDSeq	= self.__getCALOSeq("PID")
+        # the sequence to run
+        myCALOProcessorPIDSeq   = self.__getCALOSeq("PID")
 
         return myCALOProcessorPIDSeq 
     #########################################################################################
@@ -764,38 +770,38 @@ class Hlt2Tracking(LHCbConfigurableUser):
     # RICH ID
     #   
     def __hlt2RICHID(self) :
-	"""
-	Set up the sequence for doing the RICH PID on the tracks
-	"""
+        """
+        Set up the sequence for doing the RICH PID on the tracks
+        """
         from HltLine.HltLine import bindMembers
-	from Configurables import RichRecSysConf
-	#configure the rich reco
-	# first give it a nice name, in this case constructed 
-	# from the name of our configurable and the RichRecoSys...
-	richSeqName			= self._instanceName(RichRecSysConf) 
-        richSeq				= GaudiSequencer(richSeqName+"Seq")
-        richSeq.MeasureTime		= True
+        from Configurables import RichRecSysConf
+        #configure the rich reco
+        # first give it a nice name, in this case constructed 
+        # from the name of our configurable and the RichRecoSys...
+        richSeqName         = self._instanceName(RichRecSysConf) 
+        richSeq             = GaudiSequencer(richSeqName+"Seq")
+        richSeq.MeasureTime = True
         # The RICH COnfigurable 
         # note, the context MUST contain the string HLT
         # in whatever case
-	richConf			= RichRecSysConf(richSeqName)
-	richConf.Context		= richSeqName
-	richConf.RichPIDLocation	= self.__richIDLocation()
-	richConf.PidConfig              = "FastGlobal"
-	richConf.CheckProcStatus	= False
-	richConf.InitPixels		= True
-        richConf.InitTracks		= True
-        richConf.InitPhotons		= True
-        richConf.TracklessRingAlgs	= []
-	richConf.Particles 		= self.getProp("RichHypos")
-	richConf.Radiators		= self.getProp("RichRadiators")
-	# Set the sequence to run the RICH PID in
+        richConf            = RichRecSysConf(richSeqName)
+        richConf.Context    = richSeqName
+        richConf.RichPIDLocation    = self.__richIDLocation()
+        richConf.PidConfig          = "FastGlobal"
+        richConf.CheckProcStatus    = False
+        richConf.InitPixels         = True
+        richConf.InitTracks         = True
+        richConf.InitPhotons        = True
+        richConf.TracklessRingAlgs  = []
+        richConf.Particles          = self.getProp("RichHypos")
+        richConf.Radiators          = self.getProp("RichRadiators")
+        # Set the sequence to run the RICH PID in
         richConf.setProp("RecoSequencer",richSeq)
-	# The input location of the tracks
-	tracks				= self.__hlt2StagedFastFit()
-	richConf.trackConfig().InputTracksLocation = tracks.outputSelection()
-	
-	from HltLine.HltLine import bindMembers
+        # The input location of the tracks
+        tracks                      = self.__hlt2StagedFastFit()
+        richConf.trackConfig().InputTracksLocation = tracks.outputSelection()
+
+        from HltLine.HltLine import bindMembers
         # Build the bindMembers        
         bm_name         = self.__pidAlgosAndToolsPrefix()+"RICHIDSeq"
         bm_members      = [tracks, richSeq]
@@ -816,32 +822,32 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from HltLine.HltLine import bindMembers
 
         #Make the original tracks in case this has not been run already
-        tracks					= self.__hlt2Tracking()
+        tracks                  = self.__hlt2Tracking()
         #And my output location is?
-        hlt2StagedFastFitOutputLocation		= self.__trackLocation()
+        hlt2StagedFastFitOutputLocation = self.__trackLocation()
         # Second check: have I actually been asked to fit the tracks?
         # If not, just return the unfitted tracks copied into the container specified by
         # the fast-fit type field
         if (not self.getProp("DoFastFit")) :
-    	    from Configurables import CreateFastTrackCollection
-	    #
+            from Configurables import CreateFastTrackCollection
+            #
             # Hacking of errors
             #
             # Do not insert errors for downstream tacks as these would be meaningless
-	    bm_members      = [tracks]
+            bm_members      = [tracks]
             if (self.getProp("Hlt2Tracks") <> Hlt2DownstreamTracksName) :
                 from Configurables import HltInsertTrackErrParam
-                HltInsertTrackErrParam_name          	=  self.__trackfitAlgosAndToolsPrefix()+"InsertTrackErrParam"
-                HltInsertTrackErrParam               	=  HltInsertTrackErrParam(HltInsertTrackErrParam_name)
-                HltInsertTrackErrParam.InputLocation 	=  tracks.outputSelection()
-                bm_members				+= [HltInsertTrackErrParam]
+                HltInsertTrackErrParam_name                 =  self.__trackfitAlgosAndToolsPrefix()+"InsertTrackErrParam"
+                HltInsertTrackErrParam                      =  HltInsertTrackErrParam(HltInsertTrackErrParam_name)
+                HltInsertTrackErrParam.InputLocation        =  tracks.outputSelection()
+                bm_members                                  += [HltInsertTrackErrParam]
             #### CreateFastTrackCollection
             # this can only be done ONCE per long track output
             recoCopy = CreateFastTrackCollection( self.__trackfitAlgosAndToolsPrefix()+'TrackCopyNF'
-                    				, InputLocations = [tracks.outputSelection()]
-                    				, OutputLocation = hlt2StagedFastFitOutputLocation
-                    				, SlowContainer  = True)
-	    # Build the bindMembers        
+                                                , InputLocations = [tracks.outputSelection()]
+                                                , OutputLocation = hlt2StagedFastFitOutputLocation
+                                                , SlowContainer  = True)
+            # Build the bindMembers        
             bm_name         = self.__trackfitAlgosAndToolsPrefix()+"NoFastFitSeq" 
             bm_members      = bm_members + [recoCopy]
             bm_output       = hlt2StagedFastFitOutputLocation
@@ -849,28 +855,29 @@ class Hlt2Tracking(LHCbConfigurableUser):
             return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
     
         from Configurables import TrackEventFitter, TrackMasterFitter
-	Hlt2StagedFastFit_name			= self.__trackfitAlgosAndToolsPrefix()+'StagedFastFit'
-        Hlt2StagedFastFit			= TrackEventFitter(Hlt2StagedFastFit_name)
+        Hlt2StagedFastFit_name      = self.__trackfitAlgosAndToolsPrefix()+'StagedFastFit'
+        Hlt2StagedFastFit           = TrackEventFitter(Hlt2StagedFastFit_name)
         Hlt2StagedFastFit.TracksInContainer	= tracks.outputSelection() 
-        Hlt2StagedFastFit.TracksOutContainer	= hlt2StagedFastFitOutputLocation  
+        Hlt2StagedFastFit.TracksOutContainer    = hlt2StagedFastFitOutputLocation  
         
-	Hlt2StagedFastFitSeq_name               = Hlt2StagedFastFit_name+'Seq'
+        Hlt2StagedFastFitSeq_name               = Hlt2StagedFastFit_name+'Seq'
         Hlt2StagedFastFitSeq                    = GaudiSequencer(Hlt2StagedFastFitSeq_name)
-        Hlt2StagedFastFitSeq.Members		= [ Hlt2StagedFastFit ]
+        Hlt2StagedFastFitSeq.Members            = [ Hlt2StagedFastFit ]
       
-	Hlt2StagedFastFit.addTool(TrackMasterFitter, name = 'Fitter')
-	from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
+        Hlt2StagedFastFit.addTool(TrackMasterFitter, name = 'Fitter')
+        from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
         fitter = ConfiguredFastFitter( getattr(Hlt2StagedFastFit,'Fitter'))
-	
-	if (self.getProp("FastFitType") == HltUniDirectionalKalmanFitSuffix) :
-		fitter.NodeFitter.BiDirectionalFit      = False
+
+        ## FIXME: this should be done by calling ConfiguredFastFitter with the right arguments...
+        if (self.getProp("FastFitType") == HltUniDirectionalKalmanFitSuffix) :
+                fitter.NodeFitter.BiDirectionalFit      = False
                 fitter.NodeFitter.Smooth                = False
-	if (self.getProp("FastFitType") == HltBiDirectionalKalmanFitSuffix) :
-		fitter.NodeFitter.BiDirectionalFit	= True
-        	fitter.NodeFitter.Smooth		= True
-        	fitter.AddDefaultReferenceNodes		= True    # says Wouter
+        if (self.getProp("FastFitType") == HltBiDirectionalKalmanFitSuffix) :
+                fitter.NodeFitter.BiDirectionalFit	= True
+                fitter.NodeFitter.Smooth        = True
+                fitter.AddDefaultReferenceNodes = True    # says Wouter
         
-	# Build the bindMembers        
+        # Build the bindMembers        
         bm_name         = self.__trackfitAlgosAndToolsPrefix()+"FastFitSeq"
         bm_members      = [tracks, Hlt2StagedFastFitSeq]
         bm_output       = hlt2StagedFastFitOutputLocation
@@ -884,56 +891,56 @@ class Hlt2Tracking(LHCbConfigurableUser):
         """
         Track reconstruction
         """
-	from HltLine.HltLine import bindMembers    
+        from HltLine.HltLine import bindMembers    
         #
         # Some "inevitable" special stuff here
         # If we ask for long tracks and no seeding, the final output will be
         # the forward tracking, otherwise the final output is the long 
         # (forward + match) tracking.
         #
-        hlt2TrackingOutput		= _baseTrackLocation(self.getProp("Prefix"),self.__shortTrackLocation())
+        hlt2TrackingOutput      = _baseTrackLocation(self.getProp("Prefix"),self.__shortTrackLocation())
         
-	# The clone killing
+        # The clone killing
         from Configurables import TrackEventCloneKiller, TrackCloneFinder
         cloneKiller = TrackEventCloneKiller( self.__trackingAlgosAndToolsPrefix()+'FastCloneKiller'
-                    			   , TracksInContainers 	= [hlt2TrackingOutput]
-                    			   , SkipSameContainerTracks 	= False
-                    			   , CopyTracks 		= False)
+                                           , TracksInContainers         = [hlt2TrackingOutput]
+                                           , SkipSameContainerTracks    = False
+                                           , CopyTracks                 = False)
         cloneKiller.addTool(TrackCloneFinder, name = 'CloneFinderTool')
         cloneKiller.CloneFinderTool.RestrictedSearch = True
         
-	# Finally make the sequence
+        # Finally make the sequence
         # The sequence called depends on the track type, so far we recognise two track types
         # for Long tracks the options doSeeding, doCloneKilling, etc. are meaningful
         # for SeedTT tracks the seeding is mandatory and the CloneKilling is irrelevant 
         # This part gets done in either case
         trackRecoSequence = []
         if (self.__shortTrackLocation() == Hlt2LongTracksName) :
-	    # Do the forward, seeding + matching
-    	    trackRecoSequence		=	[self.__hlt2ForwardTracking()]
-	    trackRecoSequence		+=	[self.__hlt2MatchTracking()]
-	    # The copy sequence, which merges the forward and
+            # Do the forward, seeding + matching
+            trackRecoSequence		=	[self.__hlt2ForwardTracking()]
+            trackRecoSequence		+=	[self.__hlt2MatchTracking()]
+            # The copy sequence, which merges the forward and
             # match tracks into the long track container
             hlt2TracksToMergeIntoLong	=	[]
-	    hlt2TracksToMergeIntoLong	+=	[ self.__hlt2ForwardTracking().outputSelection()]
-	    hlt2TracksToMergeIntoLong   +=	[ self.__hlt2MatchTracking().outputSelection()  ]
+            hlt2TracksToMergeIntoLong	+=	[ self.__hlt2ForwardTracking().outputSelection()]
+            hlt2TracksToMergeIntoLong   +=	[ self.__hlt2MatchTracking().outputSelection()  ]
             from Configurables import CreateFastTrackCollection
             #### CreateFastTrackCollection
             recoCopy = CreateFastTrackCollection(self.__trackingAlgosAndToolsPrefix()+'TrackCopy'
                                                , InputLocations = hlt2TracksToMergeIntoLong
                                                , OutputLocation = hlt2TrackingOutput
                                                , SlowContainer 	= True) 
-	    ##############################
-	    trackRecoSequence		+= 	[recoCopy]
-	elif (self.__shortTrackLocation() == Hlt2ForwardTracksName) :
-	    trackRecoSequence		= 	[self.__hlt2ForwardTracking()]
-	elif (self.__shortTrackLocation() == Hlt2DownstreamTracksName ) :
-    	    trackRecoSequence 		=	[self.__hlt2DownstreamTracking()]
-	# Do the clone killing if required 
+            ##############################
+            trackRecoSequence		+= 	[recoCopy]
+        elif (self.__shortTrackLocation() == Hlt2ForwardTracksName) :
+            trackRecoSequence		= 	[self.__hlt2ForwardTracking()]
+        elif (self.__shortTrackLocation() == Hlt2DownstreamTracksName ) :
+            trackRecoSequence 		=	[self.__hlt2DownstreamTracking()]
+        # Do the clone killing if required 
         if self.getProp("DoCloneKilling") : 
             trackRecoSequence		+=      [cloneKiller]
 
-	# Build the bindMembers        
+        # Build the bindMembers        
         bm_name         = self.__trackingAlgosAndToolsPrefix()+"TrackingSeq"
         bm_members      = trackRecoSequence
         bm_output       = hlt2TrackingOutput
@@ -948,8 +955,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         Velo track reconstruction for Hlt2
         """
         from Configurables 	import Tf__PatVeloSpaceTracking
-	from Configurables      import Tf__PatVeloGeneralTracking
-	from Configurables      import Tf__PatVeloSpaceTool
+        from Configurables      import Tf__PatVeloGeneralTracking
+        from Configurables      import Tf__PatVeloSpaceTool
         #From HltReco we just get the shared stuff between Hlt1 and Hlt2
         from HltReco		import MinimalRZVelo
         from HltLine.HltLine	import bindMembers 
@@ -966,7 +973,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         recoVeloGeneral		 = Tf__PatVeloGeneralTracking(self.getProp("Prefix")+'RecoVeloGeneral'
                                        	, OutputTracksLocation = veloTracksOutputLocation )
    
-	# Build the bindMembers        
+        # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"VeloTracking"
         bm_members      = MinimalRZVelo.members() + [recoVelo,recoVeloGeneral]
         bm_output       = veloTracksOutputLocation
@@ -981,7 +988,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         Forward track reconstruction for Hlt2
         """
         from Configurables	import PatForward
-	from Configurables      import PatForwardTool
+        from Configurables      import PatForwardTool
     	from HltLine.HltLine	import bindMembers
     
         forwardTrackOutputLocation = _baseTrackLocation(self.getProp("Prefix"),Hlt2ForwardTracksName) 
@@ -994,7 +1001,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         recoForward.addTool(PatForwardTool, name='PatForwardTool')
         recoForward.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
 
-	# Build the bindMembers        
+        # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"ForwardTracking"
         bm_members      = self.__hlt2VeloTracking().members() + self.__hlt2TrackerDecoding().members() + [recoForward]
         bm_output       = forwardTrackOutputLocation
@@ -1011,11 +1018,11 @@ class Hlt2Tracking(LHCbConfigurableUser):
         """
         from Configurables	import PatSeeding
         from Configurables      import PatSeedingTool
-    	from HltLine.HltLine	import bindMembers
+        from HltLine.HltLine	import bindMembers
 
-	# We depend on the forward tracking
-	fwdtracks = self.__hlt2ForwardTracking()
-	# Now our output location 
+        # We depend on the forward tracking
+        fwdtracks = self.__hlt2ForwardTracking()
+        # Now our output location 
         seedTrackOutputLocation	= _baseTrackLocation(self.getProp("Prefix"),Hlt2SeedingTracksName)
     
         #### Seeding 
@@ -1025,7 +1032,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         recoSeeding.PatSeedingTool.ForwardCloneMergeSeg = True
         recoSeeding.PatSeedingTool.InputTracksName	= fwdtracks.outputSelection()
    
-	# Build the bindMembers        
+        # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"SeedTracking" 
         bm_members      = self.__hlt2TrackerDecoding().members() + [recoSeeding]
         bm_output       = seedTrackOutputLocation
@@ -1040,7 +1047,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         Forward track reconstruction for Hlt2 using seeding
         """
         from Configurables	import PatMatch
-    	from HltLine.HltLine	import bindMembers
+        from HltLine.HltLine	import bindMembers
     
         matchTrackOutputLocation = _baseTrackLocation(self.getProp("Prefix"),Hlt2MatchTracksName)
  
@@ -1050,7 +1057,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                          		, SeedInput = self.__hlt2SeedTracking().outputSelection()
                                 	, MatchOutput = matchTrackOutputLocation)
    
-	# Build the bindMembers        
+        # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"MatchTracking"
         bm_members      = self.__hlt2VeloTracking().members() + self.__hlt2SeedTracking().members() + [recoMatch]
         bm_output       = matchTrackOutputLocation
@@ -1065,7 +1072,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         Downstream track reconstruction for Hlt2 using seeding
         """
         from Configurables	import PatDownstream
-    	from HltLine.HltLine	import bindMembers
+        from HltLine.HltLine	import bindMembers
     
         downstreamTrackOutputLocation	= _baseTrackLocation(self.getProp("Prefix"),Hlt2DownstreamTracksName)
     
@@ -1078,7 +1085,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         PatDownstream.RemoveUsed	= True
         PatDownstream.RemoveAll		= True
    
-	# Build the bindMembers        
+        # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"DownstreamTracking" 
         bm_members      = self.__hlt2SeedTracking().members() + [PatDownstream]
         bm_output       = downstreamTrackOutputLocation
@@ -1094,25 +1101,25 @@ class Hlt2Tracking(LHCbConfigurableUser):
         """
         from HltLine.HltDecodeRaw 	import DecodeTT, DecodeIT
         from HltLine.HltLine		import bindMembers
-	return bindMembers(self.getProp("Prefix")+"DecodeSTSeq", DecodeTT.members() + DecodeIT.members())
+        return bindMembers(self.getProp("Prefix")+"DecodeSTSeq", DecodeTT.members() + DecodeIT.members())
     #########################################################################################
     #
     # Helper function to set up the CALO processor and return the correct sequence 
     #
     def __getCALOSeq(self,mode):
-	"""
-	Defines the CALO processor and, depending on the mode,
-	returns the PID, charged proto, or neutral proto sequences 
-	"""
-	tracks 				= self.__hlt2StagedFastFit()
-	chargedProtos 			= self.__hlt2ChargedProtos(HltCaloProtosSuffix)       
-	chargedProtosOutputLocation     = chargedProtos.outputSelection()
-	neutralProtosOutputLocation	= self.__protosLocation(Hlt2NeutralProtoParticleSuffix)
+        """
+        Defines the CALO processor and, depending on the mode,
+        returns the PID, charged proto, or neutral proto sequences 
+        """
+        tracks 				= self.__hlt2StagedFastFit()
+        chargedProtos 			= self.__hlt2ChargedProtos(HltCaloProtosSuffix)       
+        chargedProtosOutputLocation     = chargedProtos.outputSelection()
+        neutralProtosOutputLocation	= self.__protosLocation(Hlt2NeutralProtoParticleSuffix)
  
         outputCALOPID			= self.__caloIDLocation()
         
         from Configurables	import CaloProcessor
-	from HltLine.HltLine	import bindMembers
+        from HltLine.HltLine	import bindMembers
 
         caloProcessorName 		= self._instanceName(CaloProcessor)   
  
@@ -1123,37 +1130,34 @@ class Hlt2Tracking(LHCbConfigurableUser):
         myCALOProcessor.CaloReco 	= True 
         myCALOProcessor.CaloPIDs 	= True
         #
-	# Check if we are making neutrals or not
-	#
-	myCALOProcessor.SkipNeutrals    = True
+        # Check if we are making neutrals or not
+        #
+        myCALOProcessor.SkipNeutrals    = True
         myCALOProcessor.SkipCharged     = False
-	if (self.getProp("MakeNeutrals") == True): 
-		myCALOProcessor.SkipNeutrals	= False
-        	myCALOProcessor.SkipCharged 	= True
+        if (self.getProp("MakeNeutrals") == True): 
+            myCALOProcessor.SkipNeutrals	= False
+            myCALOProcessor.SkipCharged 	= True
 
-	# The sequences are given the track and protoparticle locations when initializing 
-	myPIDSeq 	= myCALOProcessor.caloSequence(		[tracks.outputSelection()]					)
-	myChargedSeq 	= myCALOProcessor.chargedProtoSequence(	[tracks.outputSelection()],	chargedProtosOutputLocation	)
-	myNeutralSeq 	= myCALOProcessor.neutralProtoSequence(	[tracks.outputSelection()],	neutralProtosOutputLocation	)
+        # The sequences are given the track and protoparticle locations when initializing 
+        myPIDSeq 	= myCALOProcessor.caloSequence(		[tracks.outputSelection()]					)
+        myChargedSeq 	= myCALOProcessor.chargedProtoSequence(	[tracks.outputSelection()],	chargedProtosOutputLocation	)
+        myNeutralSeq 	= myCALOProcessor.neutralProtoSequence(	[tracks.outputSelection()],	neutralProtosOutputLocation	)
 
-	bm_name = self.__pidAlgosAndToolsPrefix()
-	if ( mode == "PID" ) :
-		bm_name         += "CALOPIDSeq"
-        	bm_members      = [tracks, myPIDSeq]
-        	bm_output       = outputCALOPID
-
-        	return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
+        bm_name = self.__pidAlgosAndToolsPrefix()
+        if ( mode == "PID" ) :
+            bm_name         += "CALOPIDSeq"
+            bm_members      = [tracks, myPIDSeq]
+            bm_output       = outputCALOPID
+            return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
 	
-	if ( mode == "Neutral" ) :
-		bm_name         += "CaloNeutralSeq"
-                bm_members      = [tracks, myPIDSeq, myNeutralSeq]
-                bm_output       = myCALOProcessor.NeutralProtoLocation
-                
-                return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
+        if ( mode == "Neutral" ) :
+            bm_name         += "CaloNeutralSeq"
+            bm_members      = [tracks, myPIDSeq, myNeutralSeq]
+            bm_output       = myCALOProcessor.NeutralProtoLocation
+            return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
 	
-	if ( mode == "Charged" ) :
-		bm_name         += "CaloChargedSeq"
-                bm_members      = [tracks, myPIDSeq, chargedProtos, myChargedSeq]
-                bm_output       = chargedProtosOutputLocation
-                
-                return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
+        if ( mode == "Charged" ) :
+            bm_name         += "CaloChargedSeq"
+            bm_members      = [tracks, myPIDSeq, chargedProtos, myChargedSeq]
+            bm_output       = chargedProtosOutputLocation
+            return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
