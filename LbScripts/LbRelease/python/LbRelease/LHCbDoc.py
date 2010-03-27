@@ -490,11 +490,6 @@ class Doc(object):
         Build the actual doxygen documentation.
         """
         self._generateDoxyFile()
-        old = None
-        if os.path.isdir(self.output):
-            old = self.output + ".bk"
-            self._log.warning("Old documentation moved to %s", old)
-            os.rename(self.output, old)
         self._log.info("Running doxygen")
         # @todo: build the documentation in a temporary directory
         # modify the doxygen file to use a temporary directory
@@ -508,6 +503,7 @@ class Doc(object):
             tempdir = tempfile.mkdtemp("doxygen", dir = tempdirs[0])
         else:
             tempdir = tempfile.mkdtemp("doxygen")
+        # use a temporary configuration file to generate the output in a temporary directory
         shutil.copyfile(os.path.join(self.path, "conf", "DoxyFile.cfg"),
                         os.path.join(self.path, "conf", "DoxyFileTmp.cfg"))
         open(os.path.join(self.path, "conf", "DoxyFileTmp.cfg"), "a").write("OUTPUT_DIRECTORY = %s\n" % tempdir)
@@ -517,19 +513,32 @@ class Doc(object):
         retcode = proc.wait()
         if retcode != 0:
             raise RuntimeError("Doxygen failed with error %d in %s" % (retcode, tempdir))
+        if os.path.exists(self.output + ".bk"):
+            # Remove old backups before copying the new documentation
+            shutil.rmtree(self.output + ".bk")
         if self.isAfsVolume:
             usage = _diskUsage(tempdir) / 1024
             output = Popen(["fs", "lq", self.path], stdout = PIPE).communicate()[0].splitlines()[-1].split()
             quota = int(output[1])
             used = int(output[2])
             if quota < (1.1 * (used + usage)):
-                output = Popen(["afs_admin", "sq", self.path, int(1.1 * (used + usage))], stdout = PIPE).wait()
-        shutil.copytree(tempdir, self.output)
+                output = Popen(["afs_admin", "sq", self.path, str(int(1.1 * (used + usage)))], stdout = PIPE).wait()
+        # copy the documentation from the temporary directory to the final place with a temporary name
+        shutil.copytree(tempdir, self.output + ".new")
         if self.isAfsVolume:
             # Give read access to everybody
             self._log("Give read access (recursively) to %s", self.path)
             for dirpath, _, _ in os.walk(self.path):
                 Popen(["fs", "setacl", "-dir", dirpath, "-acl", "system:anyuser", "rl"]).wait()
+        # Swap the old and the new documentation (avoid that the users see an incomplete doc)
+        # @todo: it should be done for the tag file too
+        # Move away the old documentation
+        if os.path.isdir(self.output):
+            old = self.output + ".bk"
+            self._log.warning("Old documentation moved to %s", old)
+            os.rename(self.output, old)
+        # rename the new documentation
+        os.rename(self.output + ".new", self.output)
         shutil.rmtree(tempdir)
         os.remove(os.path.join(self.path, "conf", "DoxyFileTmp.cfg"))
         # Mark as built
