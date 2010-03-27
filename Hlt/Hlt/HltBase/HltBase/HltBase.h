@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.26 2010-01-07 14:02:53 graven Exp $
+// $Id: HltBase.h,v 1.27 2010-03-27 22:08:30 graven Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
@@ -84,9 +84,9 @@ protected:
   void printInfo(const std::string& title,
                  const GaudiUtils::VectorMap<int,double>& info);
 
-  IANNSvc&     annSvc() const;
+  IANNSvc&        annSvc() const;
   Hlt::IRegister* regSvc() const ;
-  Hlt::IData* hltSvc() const ;
+  Hlt::IData*     hltSvc() const ;
 
 
   // returns the ID of the extraInfo by name
