@@ -59,6 +59,9 @@ Hlt2TrackingRecognizedFitTypes		= [	HltUnfittedTracksSuffix,
 						HltUniDirectionalKalmanFitSuffix
 					  ]
 #
+Hlt2TrackingRecognizedFitTypesForRichID = [	HltBiDirectionalKalmanFitSuffix
+					  ]	
+#
 ########################################################################
 # ProtoParticles
 ########################################################################
@@ -134,6 +137,7 @@ __all__ = (
 		#
 		Hlt2TrackingRecognizedTrackTypes,
 		Hlt2TrackingRecognizedFitTypes, 
+		Hlt2TrackingRecognizedFitTypesForRichID,
 		#
 		Hlt2ChargedProtoParticleSuffix, 
 		Hlt2NeutralProtoParticleSuffix,

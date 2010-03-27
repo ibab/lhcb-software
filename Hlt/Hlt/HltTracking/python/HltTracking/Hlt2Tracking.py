@@ -11,7 +11,7 @@
 ##
 # =============================================================================
 __author__  = "V. Gligorov vladimir.gligorov@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -30,6 +30,7 @@ from HltTrackNames import HltUnfittedTracksSuffix, HltUniDirectionalKalmanFitSuf
 from HltTrackNames import HltGlobalTrackLocation                
 from HltTrackNames import Hlt2ChargedProtoParticleSuffix, Hlt2NeutralProtoParticleSuffix  
 from HltTrackNames import HltRichDefaultHypos, HltRichDefaultRadiators
+from HltTrackNames import Hlt2TrackingRecognizedFitTypesForRichID 
 
 from Configurables import CaloProcessor, RichRecSysConf
 
@@ -353,7 +354,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
  	    #
  	    # The RICH needs fitted tracks!
        	    #
-       	    if (self.getProp("FastFitType") <> HltUnfittedTracksSuffix) :
+       	    if (self.getProp("FastFitType") in Hlt2TrackingRecognizedFitTypesForRichID) :
 		#
 		# Define the RICH ID and the RICH protos
 		#
