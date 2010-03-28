@@ -1,9 +1,10 @@
-!$Id: release.notes,v 1.67 2010-03-27 20:07:53 graven Exp $
+!$Id: release.notes,v 1.68 2010-03-28 20:14:16 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+!========================== HltGlobalMonitor v3r2p1 2010-03-28 ===================
 ! 2010-03-27 - Gerhard Raven
  - remove dead code
 
