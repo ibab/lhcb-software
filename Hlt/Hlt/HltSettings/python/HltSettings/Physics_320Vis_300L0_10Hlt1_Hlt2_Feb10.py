@@ -24,7 +24,7 @@ class Physics_320Vis_300L0_10Hlt1_Hlt2_Feb10( Physics_320Vis_300L0_10Hlt1_Feb10 
         # lower prescales
         from Hlt2Lines.Hlt2CommissioningLines import Hlt2CommissioningLinesConf
         d.update( {Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 0.0001 # changed
-                                                               , 'Hlt2Forward'      : 0. # first needs a check that /Hlt/Track/Long actually exists..
+                                                               , 'Hlt2Forward'      : 0.0001 
                                                                , 'Hlt2DebugEvent'   : 0.0001
                                                 }              }
                    })
@@ -38,6 +38,7 @@ class Physics_320Vis_300L0_10Hlt1_Hlt2_Feb10( Physics_320Vis_300L0_10Hlt1_Feb10 
         """
         # return [ 'Hlt2PassThrough', 'Hlt2Transparent','Hlt2Forward','Hlt2DebugEvent']
         list = Physics_320Vis_300L0_10Hlt1_Feb10.ActiveHlt2Lines(self)
+        if 'Hlt2Forward' not in list : list.extend('Hlt2Forward')
         list.extend( self.ExplicitHlt2Lines() )
         return list
         

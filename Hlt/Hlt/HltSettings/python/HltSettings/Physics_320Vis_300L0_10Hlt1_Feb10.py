@@ -110,7 +110,7 @@ class Physics_320Vis_300L0_10Hlt1_Feb10 :
                                                 , 'Postscale' : { 'Hlt1Tell1Error' : 'RATE(1)' }
                                                 }
                  , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 1.
-                                                               , 'Hlt2Forward'      : 0. # first needs a check that /Hlt/Track/Long actually exists..
+                                                               , 'Hlt2Forward'      : 0.0001
                                                                , 'Hlt2DebugEvent'   : 0.0001
                                                                }              }
                  
@@ -120,8 +120,7 @@ class Physics_320Vis_300L0_10Hlt1_Feb10 :
         """
         Returns a list of active lines
         """
-        # return [ 'Hlt2PassThrough', 'Hlt2Transparent','Hlt2Forward','Hlt2DebugEvent']
-        return [ 'Hlt2PassThrough', 'Hlt2Transparent','Hlt2DebugEvent']
+        return [ 'Hlt2PassThrough', 'Hlt2Transparent','Hlt2Forward','Hlt2DebugEvent']
 
         
     def ActiveHlt1Lines(self) :
