@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.56 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.57 $"
 # =============================================================================
 import types
 from Gaudi.Configuration import *
@@ -48,17 +48,17 @@ from HltTracking.Hlt2TrackingConfigurations import setDataTypeForTracking
 
 
 class Hlt2Conf(LHCbConfigurableUser):
-    __used_configurables__ = [ (Hlt2Tracking 	, "Hlt2UnfittedForwardTracking"				)
-			     , (Hlt2Tracking    , "Hlt2BiKalmanFittedRichForProtonsForwardTracking"     )	
-			     , (Hlt2Tracking	, "Hlt2UnfittedDownstreamTracking"			)
-			     , (Hlt2Tracking	, "Hlt2BiKalmanFittedDownstreamTracking"		) 
-			     , (Hlt2Tracking	, "Hlt2BiKalmanFittedForwardTracking"			)
-			     , (Hlt2Tracking	, "Hlt2UniKalmanFittedForwardTracking"			)
-			     , (Hlt2Tracking    , "Hlt2BiKalmanFittedForwardTracking"                   )
-                             , (Hlt2Tracking    , "Hlt2BiKalmanFittedLongTracking"                      )
-			     , (Hlt2Tracking	, "Hlt2UnfittedLongTracking"				)
-			     , (Hlt2Tracking	, "Hlt2UnfittedForwardTrackingForNeutrals"		)		 
-			     , Hlt2TopologicalLinesConf
+    __used_configurables__ = [ (Hlt2Tracking, "Hlt2UnfittedForwardTracking")
+                             , (Hlt2Tracking, "Hlt2BiKalmanFittedRichForProtonsForwardTracking")
+                             , (Hlt2Tracking, "Hlt2UnfittedDownstreamTracking")
+                             , (Hlt2Tracking, "Hlt2BiKalmanFittedDownstreamTracking") 
+                             , (Hlt2Tracking, "Hlt2BiKalmanFittedForwardTracking")
+                             , (Hlt2Tracking, "Hlt2UniKalmanFittedForwardTracking")
+                             , (Hlt2Tracking, "Hlt2BiKalmanFittedForwardTracking")
+                             , (Hlt2Tracking, "Hlt2BiKalmanFittedLongTracking")
+                             , (Hlt2Tracking, "Hlt2UnfittedLongTracking")
+                             , (Hlt2Tracking, "Hlt2UnfittedForwardTrackingForNeutrals")
+                             , Hlt2TopologicalLinesConf
                              , Hlt2B2DXLinesConf 
                              , Hlt2CharmLinesConf
                              , Hlt2InclusiveDiMuonLinesConf
@@ -100,9 +100,9 @@ class Hlt2Conf(LHCbConfigurableUser):
         #
         from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
         for i in self.__used_configurables__ :
-	    # Time for some python magic
-	    if type(i) is tuple : # if we are dealing with a named instance in the used configurables
-		i, i_name = i # copy what is done in GaudiKernel/Configurable.py 
+            # Time for some python magic
+            if type(i) is tuple : # if we are dealing with a named instance in the used configurables
+            i, i_name = i # copy what is done in GaudiKernel/Configurable.py 
             if not issubclass(i,HltLinesConfigurableUser) : continue
             from ThresholdUtils import setThresholds
             setThresholds(ThresholdSettings,i)
@@ -113,25 +113,25 @@ class Hlt2Conf(LHCbConfigurableUser):
 #
     def configureReconstruction(self):
 
-	definedTrackings = []
-	# Pass the data type to the various tracking configurations
-	definedTrackings	+= [	Hlt2UnfittedForwardTracking()				]
-	definedTrackings	+= [	Hlt2UnfittedDownstreamTracking()			]
-	definedTrackings	+= [	Hlt2BiKalmanFittedDownstreamTracking()			]
-	definedTrackings	+= [	Hlt2UniKalmanFittedForwardTracking()			]
-	definedTrackings	+= [	Hlt2UnfittedLongTracking()				]
-	definedTrackings	+= [	Hlt2UnfittedForwardTrackingForNeutrals()		]
-	definedTrackings        += [	Hlt2BiKalmanFittedForwardTracking()			]
-	definedTrackings        += [	Hlt2BiKalmanFittedLongTracking()			] 
-	definedTrackings        += [	Hlt2BiKalmanFittedRichForProtonsForwardTracking()	]
+    definedTrackings = []
+    # Pass the data type to the various tracking configurations
+    definedTrackings    += [	Hlt2UnfittedForwardTracking()				]
+    definedTrackings	+= [	Hlt2UnfittedDownstreamTracking()			]
+    definedTrackings	+= [	Hlt2BiKalmanFittedDownstreamTracking()			]
+    definedTrackings	+= [	Hlt2UniKalmanFittedForwardTracking()			]
+    definedTrackings	+= [	Hlt2UnfittedLongTracking()				]
+    definedTrackings	+= [	Hlt2UnfittedForwardTrackingForNeutrals()		]
+    definedTrackings        += [	Hlt2BiKalmanFittedForwardTracking()			]
+    definedTrackings        += [	Hlt2BiKalmanFittedLongTracking()			] 
+    definedTrackings        += [	Hlt2BiKalmanFittedRichForProtonsForwardTracking()	]
 
 
-        # And now we have to, for each of the configurables we just created, 
-	# tell it the data type and tell it to use all the Hlt2 lines...
-	from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
-	from Gaudi.Configuration import ConfigurableUser
-	for thistracking in definedTrackings :
-		setDataTypeForTracking(thistracking,self.getProp("DataType"))
+    # And now we have to, for each of the configurables we just created, 
+    # tell it the data type and tell it to use all the Hlt2 lines...
+    from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
+    from Gaudi.Configuration import ConfigurableUser
+    for thistracking in definedTrackings :
+        setDataTypeForTracking(thistracking,self.getProp("DataType"))
 ###################################################################################
 #
 # MC
@@ -142,14 +142,14 @@ class Hlt2Conf(LHCbConfigurableUser):
         """
         from Configurables import DataOnDemandSvc, TrackAssociator
 
-	# TODO: fix hardcoding!
+        # TODO: fix hardcoding!
 
-	forwardTracks 	= "Hlt2/Track/Unfitted/Forward"
-	muonTracks	= "Hlt2/Track/Unfitted/Forward/PID/MuonSegments"
-	downTracks	= "Hlt2/Track/Unfitted/SeedTT"  
-	fittedTracks	= "Hlt2/Track/BiKalmanFitted/Forward"
+        forwardTracks 	= "Hlt2/Track/Unfitted/Forward"
+        muonTracks	= "Hlt2/Track/Unfitted/Forward/PID/MuonSegments"
+        downTracks	= "Hlt2/Track/Unfitted/SeedTT"  
+        fittedTracks	= "Hlt2/Track/BiKalmanFitted/Forward"
 
-	TrackAssociator("HltTrackAssociator").TracksInContainer	= forwardTracks 
+        TrackAssociator("HltTrackAssociator").TracksInContainer	= forwardTracks 
         TrackAssociator("HltMuonAssociator").TracksInContainer	= muonTracks
         TrackAssociator("HltSeedAssociator").TracksInContainer	= downTracks
         TrackAssociator("HltTFAssociator").TracksInContainer	= fittedTracks
@@ -163,9 +163,8 @@ class Hlt2Conf(LHCbConfigurableUser):
         from Configurables import CaloClusterMCTruth, ChargedPP2MC
         DataOnDemandSvc().AlgMap['/Event/Relations/Hlt2/ProtoP/Unfitted/Forward/Charged' ] = ChargedPP2MC()
         
-	# TODO: fix MC truth for neutrals, broken right now
-
-	#DataOnDemandSvc().AlgMap['/Event/Relations/Hlt/Calo/Clusters' ] = CaloClusterMCTruth("CaloClusterMCTruthForHlt", Context = 'Hlt')
+        # TODO: fix MC truth for neutrals, broken right now
+        #DataOnDemandSvc().AlgMap['/Event/Relations/Hlt/Calo/Clusters' ] = CaloClusterMCTruth("CaloClusterMCTruthForHlt", Context = 'Hlt')
         
 ###################################################################################
 #
