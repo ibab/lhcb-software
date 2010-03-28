@@ -1,10 +1,11 @@
-!$Id: release.notes,v 1.45 2010-03-02 11:22:51 gligorov Exp $
+!$Id: release.notes,v 1.46 2010-03-28 20:18:14 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltL0MuonConf
 ! Responsible : Alessia Satta
 ! Purpose     : Matching of Muon object (L0 or Muon segment) to T station
 !-----------------------------------------------------------------------------
 
+!========================== HltL0MuonConf v3r8   2010-03-28 ===================
 ! 2010-03-02 - V. Gligorov
  - Follow developments in Savannah tasks 13784/12691. Change Hlt/Tracks
    to Hlt1/Track to obey naming convention in HLT.

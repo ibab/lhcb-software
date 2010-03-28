@@ -1,6 +1,6 @@
-#$Id: requirements,v 1.18 2009-12-23 15:05:58 graven Exp $
+#$Id: requirements,v 1.19 2010-03-28 20:18:14 graven Exp $
 package		HltL0MuonConf
-version 	v3r7p2
+version 	v3r8
 
 # ================ structure =============================================
 branches	src cmt doc options
