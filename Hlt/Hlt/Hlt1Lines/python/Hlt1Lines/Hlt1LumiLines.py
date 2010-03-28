@@ -25,11 +25,14 @@ def _createCounter( counterKind, seqName, seq, enableNonL0Counters ) :
           from HltLine.HltDecodeRaw import DecodeL0DU
           if [ i for i in DecodeL0DU.members() if i not in seq.Members ] :
               seq.Members +=  DecodeL0DU.members() 
-          seq.Members.append( LumiFromL0DU( seqName+name
-                                          , InputSelection='Trig/L0/L0DUReport'
-                                          , CounterName=name
-                                          , ValueName=value
-                                          , OutputContainer='Hlt/LumiSummary' ) )
+          alg = LumiFromL0DU(  seqName + 'L0DU' )
+          if alg not in seq.Members :
+               alg.InputSelection='Trig/L0/L0DUReport'
+               alg.OutputContainer='Hlt/LumiSummary' 
+               seq.Members += [ alg ]
+          if name in alg.CounterMap :
+              raise KeyError('Key %s already present'%name)
+          alg.CounterMap.update( { name : value } ) 
         return _fun
     return lambda name, inputSel : seq.Members.append( counterKind( seqName + name
                                                      , InputSelection = inputSel
