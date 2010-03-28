@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.96 2010-03-17 22:39:41 gligorov Exp $
+! $Id: release.notes,v 1.97 2010-03-28 20:19:21 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+!========================== HltLine v4r0  2010-03-28 ===================
 ! 2010-03-17 - V. Gligorov
  - Continuing work on Savannah tasks #12691,13784.
    Move reconstruciton code to HltTracking, including 
