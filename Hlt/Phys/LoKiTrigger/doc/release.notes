@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.67 2010-03-10 23:20:48 gligorov Exp $
+! $Id: release.notes,v 1.68 2010-03-28 20:28:44 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiTrigger v9r9 2010-03-28 ===================
 ! 2010-03-11 - V. Gligorov
  - Continuing work on Savannah tasks 13784 and 12691. Change vertex naming
    conventions in VxMaker,Upgrade to Hlt1/Vertex
