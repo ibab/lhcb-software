@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2010-03-28 - Rob Lambert
+ - Edited global/local db to follow new CondDB configurable
+
 </PRE><H1><A NAME=v37r0>2010-03-29 Brunel v37r0</A></H1><PRE>
 - Changes to Configurable
   . Add cleaning of PID information from charged ProtoParticles before saving

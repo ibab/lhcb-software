@@ -6,8 +6,9 @@
   <argument name="args"><set>
     <text>$BRUNELROOT/tests/options/testBrunel-defaults.py</text>
     <text>$BRUNELOPTS/2009-Collisions.py</text>
+    <text>$BRUNELROOT/tests/options/db-global-2009.py</text>
     <text>--option</text>
-    <text>from Configurables import (OutputStream, Brunel); Brunel().EvtMax=100; OutputStream("DstWriter").Output = "DATAFILE='PFN:Brunel-2009-fixed.dst' TYP='POOL_ROOTTREE' OPT='REC'"; from Configurables import CondDB, DDDBConf; dataType="2009"; DDDBConf(DataType=dataType); CondDB(IgnoreHeartBeat=True); CondDB().useLatestTags(DataType=dataType, OnlyGlobalTags=True); </text>
+    <text>from Configurables import (OutputStream, Brunel); Brunel().EvtMax=100; OutputStream("DstWriter").Output = "DATAFILE='PFN:Brunel-2009-fixed.dst' TYP='POOL_ROOTTREE' OPT='REC'";</text>
   </set></argument>
   <argument name="timeout"><integer>3000</integer></argument>
   <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
