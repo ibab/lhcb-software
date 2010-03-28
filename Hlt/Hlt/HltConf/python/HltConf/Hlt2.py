@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.58 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.59 $"
 # =============================================================================
 import types
 from Gaudi.Configuration import *
@@ -112,24 +112,24 @@ class Hlt2Conf(LHCbConfigurableUser):
 #
     def configureReconstruction(self):
 
-    definedTrackings = [ Hlt2UnfittedForwardTracking()
-                       , Hlt2UnfittedDownstreamTracking()
-                       , Hlt2BiKalmanFittedDownstreamTracking()
-                       , Hlt2UniKalmanFittedForwardTracking()
-                       , Hlt2UnfittedLongTracking()
-                       , Hlt2UnfittedForwardTrackingForNeutrals()
-                       , Hlt2BiKalmanFittedForwardTracking()
-                       , Hlt2BiKalmanFittedLongTracking() 
-                       , Hlt2BiKalmanFittedRichForProtonsForwardTracking() 
-                       ]
+        definedTrackings = [ Hlt2UnfittedForwardTracking()
+                           , Hlt2UnfittedDownstreamTracking()
+                           , Hlt2BiKalmanFittedDownstreamTracking()
+                           , Hlt2UniKalmanFittedForwardTracking()
+                           , Hlt2UnfittedLongTracking()
+                           , Hlt2UnfittedForwardTrackingForNeutrals()
+                           , Hlt2BiKalmanFittedForwardTracking()
+                           , Hlt2BiKalmanFittedLongTracking() 
+                           , Hlt2BiKalmanFittedRichForProtonsForwardTracking() 
+                           ]
 
 
-    # And now we have to, for each of the configurables we just created, 
-    # tell it the data type and tell it to use all the Hlt2 lines...
-    from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
-    from Gaudi.Configuration import ConfigurableUser
-    for thistracking in definedTrackings :
-        setDataTypeForTracking(thistracking,self.getProp("DataType"))
+        # And now we have to, for each of the configurables we just created, 
+        # tell it the data type and tell it to use all the Hlt2 lines...
+        from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
+        from Gaudi.Configuration import ConfigurableUser
+        for thistracking in definedTrackings :
+            setDataTypeForTracking(thistracking,self.getProp("DataType"))
 ###################################################################################
 #
 # MC
