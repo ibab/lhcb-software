@@ -1,10 +1,11 @@
-!$Id: release.notes,v 1.63 2010-03-23 22:41:54 gligorov Exp $
+!$Id: release.notes,v 1.64 2010-03-28 20:22:35 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+!========================== HltRawData v2r5 2010-03-28 ===================
 ! 2010-03-23 - V. Gligorov
  - Adapt HltSelReportsMaker to take into account the possibility of having
    to save both forward and match muon tracks in the same event. Their muon
