@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.171 2010-03-23 22:27:04 gligorov Exp $"
+__version__ = "$Id: Configuration.py,v 1.172 2010-03-28 12:08:58 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -59,15 +59,15 @@ class HltConf(LHCbConfigurableUser):
         """
         Define L0 channels
         """
-        channels = [ ]
         if L0TCK :
             log.warning( '###############################################################')
             log.warning( '## WARNING HLT will assume input data contains L0 TCK %s ##' % L0TCK )
             log.warning( '###############################################################')
             from Hlt1Lines.HltL0Candidates import decodeL0Channels
-            channels = decodeL0Channels( L0TCK 
-                                       , skipDisabled               = self.getProp('SkipDisabledL0Channels')
-                                       , forceSingleL0Configuration = self.getProp('ForceSingleL0Configuration') )
+            decodeL0Channels( L0TCK 
+                            , skipDisabled               = self.getProp('SkipDisabledL0Channels')
+                            , forceSingleL0Configuration = self.getProp('ForceSingleL0Configuration') 
+                            )
         else :
             log.warning( '##################################################################################################')
             log.warning( '## WARNING You did not inform the HLT configuration what L0 Configuration is used for the input ##')
@@ -75,7 +75,7 @@ class HltConf(LHCbConfigurableUser):
             log.warning( '## WARNING Please make sure you know what you are doing!!                                       ##' )
             log.warning( '##################################################################################################')
         from Hlt1Lines.HltL0Candidates import setupL0Channels
-        setupL0Channels( channels ) 
+        setupL0Channels() 
 
 ##################################################################################
     def settings(self) :
