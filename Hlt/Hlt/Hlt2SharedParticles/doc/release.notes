@@ -1,10 +1,11 @@
-$Id: release.notes,v 1.88 2010-03-26 19:17:34 gligorov Exp $
+$Id: release.notes,v 1.89 2010-03-28 20:01:58 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2SharedParticles v4r0 2010-03-28 ===================
 ! 2010-03-26 - V. Gligorov
  - Explicitly turn off the default DLL cuts in the Rich kaons and protons.
    See Savannah task #12691 for details.
