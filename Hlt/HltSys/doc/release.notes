@@ -5,6 +5,10 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v10r0>2010-03-28 HltSys v10r0</A></H1><PRE>
+ - major change to the configuration of PID & reco in Hlt2
+ - based on LHCb v30r0, Gaudi v21r8
+
 </PRE><H1><A NAME=v9r2p1>2010-03-12 HltSys v9r2p1</A></H1><PRE>
  - minor changes wrt. v9r2, final (?) tweaks before datataking
 

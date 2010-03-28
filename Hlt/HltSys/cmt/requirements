@@ -1,39 +1,36 @@
 package HltSys
-version v9r2p1
+version v10r0
 
 branches cmt doc 
 
-use Hlt1Lines           v2r3    Hlt   # Gerhard Raven
-use Hlt2Lines           v2r4    Hlt   # Patrick Koppenburg, Vava Gligorov, Gerhard Raven
-use Hlt2SharedParticles v3r2    Hlt   # Patrick Koppenburg, Gerhard Raven
-use HltBase             v8r1    Hlt   # Gerhard Raven
-use HltBeamGasAlley     v2r3    Hlt   # Plamen Hopchev
-use HltCommon           v5r19   Hlt   # Gerhard Raven
-use HltConf             v6r5    Hlt   # Vanya Belyaev, Gerhard Raven
+use Hlt1Lines           v3r0    Hlt   # Gerhard Raven
+use Hlt2Lines           v3r0    Hlt   # Patrick Koppenburg, Vava Gligorov, Gerhard Raven
+use Hlt2SharedParticles v4r0    Hlt   # Patrick Koppenburg, Gerhard Raven
+use HltBase             v8r1p1  Hlt   # Gerhard Raven
+use HltBeamGasAlley     v2r3p1  Hlt   # Plamen Hopchev
+use HltCommon           v5r20   Hlt   # Gerhard Raven
+use HltConf             v7r0    Hlt   # Vanya Belyaev, Gerhard Raven
 use HltCosmics          v1r0p2  Hlt   # Stephan Nies
-use HltDisplVertices    v1r5p1  Hlt   # Neil Gauvin
-use HltEcalAlley        v2r3p1  Hlt   # Mariusz Witek
-use HltGlobalMonitor    v3r2    Hlt   # Bruno de Paula
+use HltDisplVertices    v2r0    Hlt   # Neil Gauvin
+use HltEcalAlley        v3r0    Hlt   # Mariusz Witek
+use HltGlobalMonitor    v3r2p1  Hlt   # Bruno de Paula
 use HltHidValley        v1r2p4  Hlt   # Marcin Kucharczyk
-use HltL0Conf           v2r13p1 Hlt   # Johannes Albrecht
-use HltL0MuonConf       v3r7p2  Hlt   # Alessia Satta/Sandra Amato
-use HltLine             v3r2    Hlt   # Vanya Belyaev, Gerhard Raven
-use HltLuminosity       v2r15   Hlt   # Jaap Panman
+use HltL0Conf           v2r13p2 Hlt   # Johannes Albrecht
+use HltL0MuonConf       v3r8    Hlt   # Alessia Satta/Sandra Amato
+use HltLine             v4r0    Hlt   # Vanya Belyaev, Gerhard Raven
+use HltLuminosity       v2r16   Hlt   # Jaap Panman
 use HltMuonAlley        v3r0p1  Hlt   # Sandra Amato
-use HltMuon             v3r5p4  Hlt   # Alessia Satta
-use HltRawData          v2r4    Hlt   # Tomasz Skwarnicki
+use HltMuon             v3r6    Hlt   # Alessia Satta
+use HltRawData          v2r5    Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v1r12   Hlt   # Jose Angel Hernando-Morata
 use HltSelChecker       v10r3   Hlt   # Patrick Koppenburg
-use HltSettings         v1r11   Hlt   # Parick Koppenburg, Gerhard Raven
-use HltTracking         v4r4p2  Hlt   # Jose Angel Hernando-Morata
+use HltSettings         v1r12   Hlt   # Parick Koppenburg, Gerhard Raven
+use HltTracking         v5r0    Hlt   # Jose Angel Hernando-Morata
 use TCKPresenter        v1r1p1  Hlt   # Klaus Neumann / Stephan Nies
-use TCKUtils            v1r6p3  Hlt   # Gerhard Raven
+use TCKUtils            v1r6p4  Hlt   # Gerhard Raven
 use Fidel               v1r3p4  Phys  # Sara Furcas
-use LoKiTrigger         v9r8    Phys  # Vanya Belyaev
+use LoKiTrigger         v9r9    Phys  # Vanya Belyaev
 use TisTosTobbing       v4r1    Phys  # Tomasz Skwarnicki
-
-
-
 
 # Declare this as a container package
 apply_pattern container_package
