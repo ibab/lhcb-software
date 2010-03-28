@@ -1,4 +1,4 @@
-// $Id: LumiCountHltTracks.cpp,v 1.11 2009-12-24 14:13:20 graven Exp $
+// $Id: LumiCountHltTracks.cpp,v 1.12 2010-03-28 12:48:59 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -33,6 +33,7 @@ LumiCountHltTracks::LumiCountHltTracks( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : HltBaseAlg ( name , pSvcLocator )
 {
+    //TODO: support a map of selction <-> counter 
   declareProperty( "InputSelection" ,      m_InputSelectionName);
   declareProperty( "CounterName"    ,      m_CounterName);
   declareProperty( "OutputContainer",      m_OutputContainerName = LHCb::HltLumiSummaryLocation::Default );
@@ -86,8 +87,8 @@ StatusCode LumiCountHltTracks::initialize() {
 StatusCode LumiCountHltTracks::execute() {
 
   // load the track objects
-  int nCounter =  m_input->size(); //TODO: only do this at initialize, and cache...
-  debug() << "There are " << nCounter << " tracks in " << m_InputSelectionName <<  endreq ;
+  int nCounter =  m_input->size();
+  if (msgLevel(MSG::DEBUG)) debug() << "There are " << nCounter << " tracks in " << m_InputSelectionName <<  endreq ;
 
   // get container
   LHCb::HltLumiSummary* sums = getOrCreate<HltLumiSummary,HltLumiSummary>(m_OutputContainerName);

@@ -1,14 +1,10 @@
-// $Id: LumiFromL0DU.h,v 1.3 2008-09-24 14:15:35 panmanj Exp $
+// $Id: LumiFromL0DU.h,v 1.4 2010-03-28 12:48:59 graven Exp $
 #ifndef LUMIFROML0DU_H 
 #define LUMIFROML0DU_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-// from LHCB
-#include "Event/L0DUReport.h"
-// Interfaces
-#include "L0Interfaces/IL0DUFromRawTool.h"
 
 /** @class LumiFromL0DU LumiFromL0DU.h
  *  
@@ -25,22 +21,13 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
+private:
   std::string m_InputSelectionName;
   std::string m_OutputContainerName;
 
-  const LHCb::L0DUReport* m_L0DUReport;
-  std::string m_fromRawTool;
-  IL0DUFromRawTool* m_fromRaw;
-
-  std::string m_ValueName;
-  std::string m_CounterName;
-  int m_Counter;
-
-
-private:
+  std::map<std::string,std::string> m_CounterValueProperty;
+  std::vector<std::pair<int,std::string> > m_CounterValue;
 
 };
 #endif // LUMIFROML0DU_H

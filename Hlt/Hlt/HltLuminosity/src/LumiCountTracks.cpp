@@ -1,4 +1,4 @@
-// $Id: LumiCountTracks.cpp,v 1.9 2009-11-26 10:53:14 panmanj Exp $
+// $Id: LumiCountTracks.cpp,v 1.10 2010-03-28 12:48:59 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -77,19 +77,18 @@ StatusCode LumiCountTracks::execute() {
   // load the track objects
   int nCounter =  0;
   if ( !exist<LHCb::Tracks>(m_InputSelectionName) ){
-    debug() << m_InputSelectionName << " not found" << endmsg ;
+    if (msgLevel(MSG::DEBUG)) debug() << m_InputSelectionName << " not found" << endmsg ;
   } else {
     // get the container
     m_InputContainer = get<LHCb::Tracks>(m_InputSelectionName);
     if ( !m_InputContainer ) { 
-      err() << "Could not find location " 
-	    <<  m_InputSelectionName << endreq;
+      err() << "Could not find location " <<  m_InputSelectionName << endmsg;
       return StatusCode::FAILURE ;
     }
     nCounter = m_InputContainer->size() ;
-    verbose() << "found " << nCounter << " tracks." << endreq ;
+    verbose() << "found " << nCounter << " tracks." << endmsg ;
   }
-  debug() << "There are " << nCounter << " tracks in " << m_InputSelectionName <<  endreq ;
+  debug() << "There are " << nCounter << " tracks in " << m_InputSelectionName <<  endmsg ;
 
 
   // get container

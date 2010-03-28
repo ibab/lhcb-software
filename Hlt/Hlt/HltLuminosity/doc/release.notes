@@ -4,6 +4,10 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2010-03-28 - Gerhard Raven
+ - LumiFromL0DU now takes a map of L0DU observables -> lumi counters, and
+   can thus do multiple observables in one shot
+
 !========================== HltLuminosity v2r15 2010-02-17 ===================
 ! 2010-01-29 - Jaap Panman
  - add LumiFlagMethod: creates "counter" holding 0 (LumiTrigger); 1 (L0 count)
