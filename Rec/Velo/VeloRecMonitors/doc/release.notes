@@ -3,6 +3,9 @@
 ! Responsible : VELO monitoring group
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
+! 2010-03-28 - Kurt Rinnert
+ - removed accidental double booking of histogram in occupancy monitor
+
 ! 2010-03-27 - Kurt Rinnert
  - introduced wrapper for ROOT histograms. Speeds up histogram operation
    between a factor of 10 - 1000, depending on circumstances.
