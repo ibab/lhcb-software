@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.72 2010-03-19 12:46:39 graven Exp $ 
+# $Id: requirements,v 1.73 2010-03-28 20:09:59 graven Exp $ 
 # =============================================================================
 # The helper package for configuration of Hlt(1)
 # =============================================================================
 package HltConf
-version v6r5p1
+version v7r0
 
 # =============================================================================
 # ======= the actual dependencies =============================================
@@ -12,6 +12,7 @@ use       Python      v* LCG_Interfaces
 use       HltLine     v*  Hlt
 use       Hlt1Lines   v*  Hlt
 use       Hlt2Lines   v*  Hlt
+use       HltTracking v* Hlt
 use       Hlt2SharedParticles v* Hlt
 use       HltSettings v* Hlt
 
