@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.155 2010-03-28 12:50:05 graven Exp $
+! $Id: release.notes,v 1.156 2010-03-28 19:58:47 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -9,6 +9,7 @@
 ! for the production. Commit them AS WELL in branch production200912. 
 !
 !-----------------------------------------------------------------------------
+!========================== Hlt1Lines v3r0 2010-03-28 ===================
 ! 2010-03-28 - Gerhard Raven
  - follow changes to  LumiFromL0DU 
 

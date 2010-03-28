@@ -8,6 +8,7 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2Lines v3r0 2010-03-28 ===================
 ! 2010-03-27 - Gerhard Raven
  - replace  TrSOURCE >> TrSIZE with equivalent CONTAINS, which invokes less 
    virtual functions
