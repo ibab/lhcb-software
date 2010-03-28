@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 
 
+!========================== HltDisplVertices v2r0 2010-03-28 ===================
 ! 2010-03-17 - V. Gligorov
  - Continuing work on Savannah tasks #12691,13784.
    Follow movement of code from HltLine to HltTracking.
