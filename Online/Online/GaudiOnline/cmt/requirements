@@ -2,6 +2,7 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           GaudiOnline 
+version           v2r41
 #============================================================================
 branches          cmt doc src GaudiOnline 
 # dependency list
