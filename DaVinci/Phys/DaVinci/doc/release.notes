@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.417 2010-03-18 10:24:51 pkoppenb Exp $
+! $Id: release.notes,v 1.418 2010-03-28 14:29:54 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2010-03-28 - V. Gligorov
+ - Fix propagation of overruled L0 TCK; see Savannah bug 65012.
 
 !========================== DaVinci v25r2p1 2010-03-17 =====================
 ! 2010-03-18 - Patrick Koppenburg

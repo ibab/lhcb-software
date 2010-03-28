@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.95 2010-03-18 10:24:51 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.96 2010-03-28 14:28:46 gligorov Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -296,7 +296,12 @@ class DaVinci(LHCbConfigurableUser) :
                 L0Conf().setProp( "TCK", L0TCK )
                 log.info("Will run L0 with TCK "+L0TCK)
             else :
-                log.info("L0 TCK has not been set by DaVinci. Assume it's set otherwise.")
+                if ( self.getProp("OverruleL0TCK") ):
+                    L0TCK = self.getProp("OverruleL0TCK")
+                    L0Conf().setProp( "TCK", L0TCK )
+                    log.info("Will run L0 with TCK "+L0TCK)
+                else :
+                    log.info("L0 TCK has not been set by DaVinci. Assume it's set otherwise.")
         
 ################################################################################
 # @todo Stolen from Brunel. Could be common to all apps?
