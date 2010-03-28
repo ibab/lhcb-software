@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.57 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.58 $"
 # =============================================================================
 import types
 from Gaudi.Configuration import *
@@ -75,11 +75,10 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2diphotonDiMuonLinesConf
                              , Hlt2InclusiveDiProtonLinesConf
                              ]
-    __slots__ = {
-           "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
-         , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
-         , "WithMC"                     : False 
-         }
+    __slots__ = { "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
+                , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
+                , "WithMC"                     : False 
+                }
 
 ###################################################################################
 #
@@ -102,7 +101,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         for i in self.__used_configurables__ :
             # Time for some python magic
             if type(i) is tuple : # if we are dealing with a named instance in the used configurables
-            i, i_name = i # copy what is done in GaudiKernel/Configurable.py 
+                i, i_name = i # copy what is done in GaudiKernel/Configurable.py 
             if not issubclass(i,HltLinesConfigurableUser) : continue
             from ThresholdUtils import setThresholds
             setThresholds(ThresholdSettings,i)
@@ -113,17 +112,16 @@ class Hlt2Conf(LHCbConfigurableUser):
 #
     def configureReconstruction(self):
 
-    definedTrackings = []
-    # Pass the data type to the various tracking configurations
-    definedTrackings    += [	Hlt2UnfittedForwardTracking()				]
-    definedTrackings	+= [	Hlt2UnfittedDownstreamTracking()			]
-    definedTrackings	+= [	Hlt2BiKalmanFittedDownstreamTracking()			]
-    definedTrackings	+= [	Hlt2UniKalmanFittedForwardTracking()			]
-    definedTrackings	+= [	Hlt2UnfittedLongTracking()				]
-    definedTrackings	+= [	Hlt2UnfittedForwardTrackingForNeutrals()		]
-    definedTrackings        += [	Hlt2BiKalmanFittedForwardTracking()			]
-    definedTrackings        += [	Hlt2BiKalmanFittedLongTracking()			] 
-    definedTrackings        += [	Hlt2BiKalmanFittedRichForProtonsForwardTracking()	]
+    definedTrackings = [ Hlt2UnfittedForwardTracking()
+                       , Hlt2UnfittedDownstreamTracking()
+                       , Hlt2BiKalmanFittedDownstreamTracking()
+                       , Hlt2UniKalmanFittedForwardTracking()
+                       , Hlt2UnfittedLongTracking()
+                       , Hlt2UnfittedForwardTrackingForNeutrals()
+                       , Hlt2BiKalmanFittedForwardTracking()
+                       , Hlt2BiKalmanFittedLongTracking() 
+                       , Hlt2BiKalmanFittedRichForProtonsForwardTracking() 
+                       ]
 
 
     # And now we have to, for each of the configurables we just created, 
@@ -143,22 +141,14 @@ class Hlt2Conf(LHCbConfigurableUser):
         from Configurables import DataOnDemandSvc, TrackAssociator
 
         # TODO: fix hardcoding!
+        m  = { "HltTrackAssociator": "Hlt2/Track/Unfitted/Forward"
+             , "HltMuonAssociator": "Hlt2/Track/Unfitted/Forward/PID/MuonSegments"
+             , "HltSeedAssociator": "Hlt2/Track/Unfitted/SeedTT"  
+             , "HltTFAssociator": "Hlt2/Track/BiKalmanFitted/Forward" }
 
-        forwardTracks 	= "Hlt2/Track/Unfitted/Forward"
-        muonTracks	= "Hlt2/Track/Unfitted/Forward/PID/MuonSegments"
-        downTracks	= "Hlt2/Track/Unfitted/SeedTT"  
-        fittedTracks	= "Hlt2/Track/BiKalmanFitted/Forward"
+        for (i,j) in m.iteritems() :
+              DataOnDemandSvc().AlgMap.update( { 'Link/'+j : TrackAssociator(i, TracksInContainer = j ).getFullName() } )
 
-        TrackAssociator("HltTrackAssociator").TracksInContainer	= forwardTracks 
-        TrackAssociator("HltMuonAssociator").TracksInContainer	= muonTracks
-        TrackAssociator("HltSeedAssociator").TracksInContainer	= downTracks
-        TrackAssociator("HltTFAssociator").TracksInContainer	= fittedTracks
-	
-        DataOnDemandSvc().AlgMap.update(  { 'Link/'+forwardTracks 	: 'TrackAssociator/HltTrackAssociator'
-                                          , 'Link/'+muonTracks		: 'TrackAssociator/HltMuonAssociator'
-                                          , 'Link/'+downTracks		: 'TrackAssociator/HltSeedAssociator'
-                                          , 'Link/'+fittedTracks	: 'TrackAssociator/HltTFAssociator'
-                                          } )
 
         from Configurables import CaloClusterMCTruth, ChargedPP2MC
         DataOnDemandSvc().AlgMap['/Event/Relations/Hlt2/ProtoP/Unfitted/Forward/Charged' ] = ChargedPP2MC()
