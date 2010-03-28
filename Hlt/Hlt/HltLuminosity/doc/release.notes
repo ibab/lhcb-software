@@ -4,6 +4,7 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+!========================== HltLuminosity v2r16 2010-03-28 ===================
 ! 2010-03-28 - Gerhard Raven
  - LumiFromL0DU now takes a map of L0DU observables -> lumi counters, and
    can thus do multiple observables in one shot
