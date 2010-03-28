@@ -4,6 +4,7 @@
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
 
+!========================== HltMuon v3r6 2010-03-28 ===================
 ! 2010-03-02 - V. Gligorov
  - Follow developments in Savannah tasks 13784/12691. Change Hlt/Tracks
    to Hlt1/Track to obey naming convention in HLT. 
