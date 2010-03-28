@@ -1,4 +1,4 @@
-// $Id: FileLogger.h,v 1.3 2008-05-27 16:50:40 frankb Exp $
+// $Id: FileLogger.h,v 1.4 2010-03-28 06:08:20 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/FileLogger.h,v 1.3 2008-05-27 16:50:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/FileLogger.h,v 1.4 2010-03-28 06:08:20 frankb Exp $
 #ifndef ROLOGGER_FILELOGGER_H
 #define ROLOGGER_FILELOGGER_H
 
@@ -44,6 +44,8 @@ namespace ROLogger {
     PartitionListener* m_listener;
     /// Output directory
     std::string        m_outdir;
+    /// Flag to use time-stamp for file name
+    bool               m_useTimeForName;
     /// Parameter buffer
     char               m_msgSeverity[16];
     /// Buffer to store HT farm content

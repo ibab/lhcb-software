@@ -4,14 +4,28 @@
 <POOLFILECATALOG>
 
 
-  <File ID="10000000-6BB3-DE11-9269-001EC9AD0A4E">
+  <File ID="10000001-6BB3-DE11-9269-001EC9AD0A4E">
     <physical>
-      <pfn filetype="MDF" name="file:///castorfs/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/57916/057916_0000000015.raw"/>
+      <pfn filetype="MDF" name="file:///daqarea/lhcb/data/2010/RAW/FULL/FEST/FEST/67185/067185_0000000001.raw"/>
     </physical>      
     <logical/>
   </File>
 
-  <File ID="00000000-6BB3-DE11-9269-001EC9AD0A4E">
+  <File ID="10000002-6BB3-DE11-9269-001EC9AD0A4E">
+    <physical>
+      <pfn filetype="MDF" name="file:///daqarea/lhcb/data/2010/RAW/FULL/FEST/FEST/67185/067185_0000000002.raw"/>
+    </physical>      
+    <logical/>
+  </File>
+
+   <File ID="10000003-6BB3-DE11-9269-001EC9AD0A4E">
+    <physical>
+      <pfn filetype="MDF" name="file:///daqarea/lhcb/data/2010/RAW/FULL/FEST/FEST/67185/067185_0000000003.raw"/>
+    </physical>      
+    <logical/>
+  </File>
+
+ <File ID="00000000-6BB3-DE11-9269-001EC9AD0A4E">
     <physical>
       <pfn filetype="MDF" name="file:///home/frankm/data/fakedata_000.mdf"/>
     </physical>      

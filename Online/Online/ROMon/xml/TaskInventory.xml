@@ -288,6 +288,19 @@
   <Project name="REC&lt;NODE&gt;"/>
 </NodeType>
 
+<NodeType name="HLTControlHLT">
+  <TaskList name="FMC"/>
+  <TaskList name="StandardHLT"/>
+  <TaskList name="ControlsPC"/>
+  <Task name="LogGaudi"/>
+  <Task name="LogGaudiSumSrv"/>
+  <Task name="LogRecoSumSrv"/>
+  <Task name="LogPVSS"/>
+  <Task name="LogPVSSSrv"/>
+  <ConnectionList name="ControlsPC"/>
+  <Project name="&lt;NODE&gt;"/>
+</NodeType>
+
 <NodeType name="HLTWorker">
   <TaskList name="FMC"/>
   <TaskList name="StandardHLT"/>
@@ -361,11 +374,15 @@
 
 <NodeType name="PublisherNode">
   <TaskList name="FMC"/>
+  <TaskList name="ControlsPC"/>
   <Task name="TANServ"/>
+  <Task name="ROcollect"/>
   <Task name="FarmMon_0"/>
   <Task name="FarmStomp"/>
   <Task name="StatusStomp"/>
   <Task name="OrbitedSrv"/>
+  <Task name="ElogPublish"/>
+  <Task name="ElogExtract"/>
 <!--
   <Task name="RICH_ErrorLog_0"/>
   <Task name="CALO_ErrorLog_0"/>

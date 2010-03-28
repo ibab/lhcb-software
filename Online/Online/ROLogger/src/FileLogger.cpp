@@ -1,4 +1,4 @@
-// $Id: FileLogger.cpp,v 1.12 2009-06-03 11:44:28 frankb Exp $
+// $Id: FileLogger.cpp,v 1.13 2010-03-28 06:08:20 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.12 2009-06-03 11:44:28 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.13 2010-03-28 06:08:20 frankb Exp $
 
 #include "ROLogger/FileLogger.h"
 
@@ -54,13 +54,17 @@ static void closeUPI() {
 }
 
 /// Standard constructor
-FileLogger::FileLogger(int argc, char** argv) : MessageLogger(3,true,false), m_connected(false)
+FileLogger::FileLogger(int argc, char** argv) 
+  : MessageLogger(3,true,false), m_useTimeForName(true), m_connected(false)
 {
+  bool not_use_time = false;
   string partition, title;
   RTL::CLI cli(argc, argv, help_fun);
   cli.getopt("partition",1,partition);
   cli.getopt("logdir",1,m_outdir);
   cli.getopt("severity",1,m_severity);
+  not_use_time = cli.getopt("notime",1) != 0;
+  if ( not_use_time ) m_useTimeForName = false;
   if ( partition.empty() ) {
     ::lib_rtl_output(LIB_RTL_INFO,"You have to supply a partition name to display its data.");
     ::lib_rtl_sleep(3000);
@@ -114,7 +118,10 @@ FILE* FileLogger::openOutput() {
   time_t tim = ::time(0);
   tm* now = ::localtime(&tim);
   ::strftime(tmbuff,sizeof(tmbuff),"%Y.%m.%d.log",now);
-  sprintf(txt,"%s_%s",m_outdir.c_str(),tmbuff);
+  if ( m_useTimeForName )
+    ::sprintf(txt,"%s_%s",m_outdir.c_str(),tmbuff);
+  else
+    ::sprintf(txt,"%s.log",m_outdir.c_str());
   if ( m_output ) ::fclose(m_output);
   if ( ::stat64Func(txt,&st) == 0 ) {
     ::lib_rtl_output(LIB_RTL_INFO,"The output file: %s  exists already. Reconnecting.....",txt);

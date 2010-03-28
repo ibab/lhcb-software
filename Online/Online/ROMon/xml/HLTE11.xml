@@ -12,7 +12,7 @@
    <Node name="hlte1109"   type="HLTWorker"/>
    <Node name="hlte1110"   type="HLTWorker"/>
    <Node name="hlte1111"   type="HLTWorker"/>
-   <Node name="hlte11"   type="HLTControl"/>
+   <Node name="hlte11"   type="HLTControlHLT"/>
   </NodeList>
 </TaskInventory>
 

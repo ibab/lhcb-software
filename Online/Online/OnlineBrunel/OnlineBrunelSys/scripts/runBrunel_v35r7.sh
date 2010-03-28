@@ -17,7 +17,7 @@ export DIM_DNS_NODE=${4}
 export ONLINETASKS=/group/online/dataflow/templates
 ###export SQLITEDBPATH=/dev/shm/SQL
 
-echo "[INFO] +++ Starting BRUNEL ${UTGID} of class ${TASKCLASS} ${TASK_TYPE} with DNS:${DIM_DNS_NODE}"
+echo "[INFO] +++ Starting BRUNEL ${UTGID} of class ${TASKCLASS} ${TASK_TYPE} with DNS:${DIM_DNS_NODE} Version:${BRUNELROOT}"
 exec -a ${UTGID} \
     $GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so OnlineTask \
     -msgsvc=LHCb::FmcMessageSvc \

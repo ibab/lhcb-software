@@ -3,10 +3,10 @@
 
      @author M.Frank
 """
-__version__ = "$Id: BrunelOnline.py,v 1.20 2010-03-03 15:08:46 frankb Exp $"
+__version__ = "$Id: BrunelOnline.py,v 1.21 2010-03-28 06:09:57 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
-import os
+import os, sys
 import Configurables as Configs
 import Gaudi.Configuration as Gaudi
 import GaudiKernel
@@ -49,6 +49,7 @@ def packDST(self,items):
 
   seq.Members += [ packer, dstUpdate, mergeDst ]
   print 'Warning: Packing of TES DST data .... commissioned....'
+  sys.stdout.flush()
 
 #============================================================================================================
 def serializeDST(self,items):
@@ -68,6 +69,7 @@ def serializeDST(self,items):
   seq = Gaudi.GaudiSequencer("WriteMDFSeq")
   seq.Members = [ serial, mergeDst ]
   print 'Warning: Serialization of TES DST data .... commissioned....'
+  sys.stdout.flush()
 
 #============================================================================================================
 def patchBrunel(true_online_version):
@@ -78,20 +80,25 @@ def patchBrunel(true_online_version):
   """
   import GaudiConf.DstConf
   import Brunel.Configuration
-  from Configurables import DstConf, Serialisation, HistogramPersistencySvc, EventLoopMgr
+  from Configurables import CondDB, DstConf, Serialisation, HistogramPersistencySvc, EventLoopMgr
 
   brunel = Brunel.Configuration.Brunel()
   EventLoopMgr().OutputLevel = 0
-  brunel.DDDBtag   = "head-20090112"
-  brunel.CondDBtag = "sim-20090112"
+  brunel.DDDBtag   = "head-20091120"
+  brunel.CondDBtag = "head-20100303"
+  brunel.CondDBtag = "head-20100222"
+
+  conddb = CondDB()
+  conddb.IgnoreHeartBeat = True
+
   brunel.WriteFSR  = False # This crashes Jaap's stuff
-  brunel.Simulation = True
   brunel.Histograms = 'Online'
+  print '[WARN] Running brunel with histogram settings:Online'
+  sys.stdout.flush()
   
   if true_online_version:
     brunel.OutputLevel    = 4
     brunel.PrintFreq      = -1
-    brunel.Histograms     = 'None'
     
   if processingType == 'Reprocessing':
     GaudiConf.DstConf.DstConf._doWriteMDF = packDST
