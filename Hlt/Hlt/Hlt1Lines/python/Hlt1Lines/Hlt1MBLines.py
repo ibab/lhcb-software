@@ -34,12 +34,12 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
                , prescale = self.prescale
                , ODIN = '(ODIN_TRGTYP == LHCb.ODIN.LumiTrigger)'
                , algos = [ tracking
-                           , Member( 'Hlt::TrackFilter','All'
-                                     , Code = [ 'TrALL' ]
-                                     , InputSelection = 'TES:%s' % tracking.outputSelection()
-                                     , OutputSelection = '%Decision'
-                                     ) 
-                           ]
+                         , Member( 'Hlt::TrackFilter','All'
+                                 , Code = [ 'TrALL' ]
+                                 , InputSelection = 'TES:%s' % tracking.outputSelection()
+                                 , OutputSelection = '%Decision'
+                                 ) 
+                         ]
                , postscale = self.postscale
                ) 
 
