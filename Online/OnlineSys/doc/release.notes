@@ -4,7 +4,29 @@
 ! Responsible : Markus Frank
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+</PRE>
 
+<H1><A NAME=v4r36>2010-02-20 OnlineSys v4r38</A></H1>
+<PRE>
+   Based in Gaudi v21r8.
+   New tags for online packages are:
+   MDF               v3r23    DAQ
+   DAQEvent          v9r1     Event
+   GaudiObjDesc      v11r10p1
+   Camera            v1r16    Online
+   DIM               v19r8p3  Online
+   Gaucho            v6r24    Online
+   GaudiOnline       v2r41    Online
+   InsertDB          v1r8     Online
+   OnlineBase        v1r3     Online
+   OnlineKernel      v2r2     Online
+   OnlineTasks       v1r31    Online
+   Presenter         v1r0     Online
+   RawBankSizes      v2r6     Online
+   ROMon             v1r22    Online
+   ROLogger          v0r18    Online
+   UPI               v1r18    Online
+</PRE>
 
 </PRE><H1><A NAME=v4r36>2010-02-20 OnlineSys v4r37</A></H1><PRE>
    Fixes for Camera, DIM, Gaucho, GaudiOnline, InsertDB, OMAlib, OnlineHistDB,

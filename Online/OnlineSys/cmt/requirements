@@ -1,15 +1,15 @@
 package OnlineSys
-version v4r36
+version v4r38
 
 branches cmt doc
  
 #=======================================================
 # Overrides from LHCB
 #=======================================================
-use MDF               v3r22p1  DAQ
+use MDF               v3r23    DAQ
 use MDF_ROOT          v1r2     DAQ
-use DAQEvent          v9r0     Event
-use GaudiObjDesc      v11r10
+use DAQEvent          v9r1     Event
+use GaudiObjDesc      v11r10p1
 #=======================================================
 # LHCb Online packages
 #=======================================================
@@ -33,7 +33,7 @@ use GaudiUPI          v1r12    Online
 use HistDBPython      v1r5     Online
 use InsertDB          v1r8     Online
 use MBMDump           v1r14    Online
-use OMAlib            v2r14    Online
+use OMAlib            v2r13    Online
 #Obsolete: use OnlineDummyReader v1r4     Online
 use OnlineHistDB      v6r4     Online
 use OnlineBase        v1r3     Online
