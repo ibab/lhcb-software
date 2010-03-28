@@ -20,32 +20,32 @@ use GaudiObjDesc      v11r10
 
 use Camera            v1r16    Online
 use CondDBServer      v1r4     Online
-use DIM               v19r8p2  Online
+use DIM               v19r8p3  Online
 use ExampleGaucho     v3r3     Online
 # Does not work on WIN32
 # use FarmMonitor     v1r0     Online
-use Gaucho            v6r23    Online
-use GaudiOnline       v2r40    Online
+use Gaucho            v6r24    Online
+use GaudiOnline       v2r41    Online
 use GaudiSerialize    v0r7     Online
 use GaudiUPI          v1r12    Online
 #use Hugin            v1r6     Online
 #Obsolete: use HPDMonitor        v1r6     Online
 use HistDBPython      v1r5     Online
-use InsertDB          v1r7     Online
+use InsertDB          v1r8     Online
 use MBMDump           v1r14    Online
-use OMAlib            v2r13    Online
+use OMAlib            v2r14    Online
 #Obsolete: use OnlineDummyReader v1r4     Online
 use OnlineHistDB      v6r4     Online
-use OnlineBase        v1r2     Online
-use OnlineKernel      v2r1     Online
+use OnlineBase        v1r3     Online
+use OnlineKernel      v2r2     Online
 use OnlineTools       v1r2     Online
-use OnlineTasks       v1r30    Online
+use OnlineTasks       v1r31    Online
 use Presenter         v1r0     Online
 use PyDIM             v2r9     Online
 use RawBankSizes      v2r6     Online
-use ROMon             v1r21    Online
-use ROLogger          v0r17    Online
-use UPI               v1r17    Online
+use ROMon             v1r22    Online
+use ROLogger          v0r18    Online
+use UPI               v1r18    Online
 use UPIR              v1r2     Online
 #Obsolete: use Viewer            v1r5     Online
 use Writer            v1r25    Online

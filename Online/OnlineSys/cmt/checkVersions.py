@@ -76,7 +76,7 @@ for line in lines:
       for n in new:
         if n.find('cvs diff: tag')==0:
 	  idx = n.find('not in file')
-	  print prefix,'New file:     ',pkg+n[idx+len('not in file '):-1]
+	  print prefix,'New file:     ',pkg+os.sep+n[idx+len('not in file '):-1]
           changes = 1
         elif n.find('no longer exists') > 0:
 	  print prefix,'File removed: ',pkg+n.split(' ')[2]
