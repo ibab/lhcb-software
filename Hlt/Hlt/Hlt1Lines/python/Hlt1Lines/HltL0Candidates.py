@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.18 2010-03-27 22:23:20 graven Exp $
+# $Id: HltL0Candidates.py,v 1.19 2010-03-28 09:17:04 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -171,7 +171,7 @@ def decodeL0Channels( L0TCK , skipDisabled = True, forceSingleL0Configuration = 
         raise KeyError('requested L0DUConfigProvider for TCK %s is not known'%L0TCK)
     l0config = _updateL0Config( L0TCK, forceSingleL0Configuration )
     global _l0Channels,_l0Conditions
-    if _l0Channels or _l0Conditions : raise RunTimeError('HltL0Candidates already initialized -- 2nd call to decodeL0Channels...')
+    if _l0Channels or _l0Conditions : raise RuntimeError('HltL0Candidates already initialized -- 2nd call to decodeL0Channels...')
 
     _l0Channels   = _parseL0settings( l0config.Channels )
     _l0Conditions = _parseL0settings( l0config.Conditions )
@@ -208,7 +208,7 @@ def L0Mask2ODINPredicate( mask ) :
 
 def setupL0Channels( ) :
     global _l0Channels,_dict
-    if _dict  : raise RunTimeError('HltL0Candidates already initialized -- 2nd call to setupL0Channels...')
+    if _dict  : raise RuntimeError('HltL0Candidates already initialized -- 2nd call to setupL0Channels...')
     # the types are basically hardwired and are thus not likely to change...
     _l0Types = [ 'Muon','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
     _dict = dict()
@@ -216,17 +216,17 @@ def setupL0Channels( ) :
 
 def L0Channels() :
     global _l0Channels
-    if _l0Channels == None : raise RunTimeError('HltL0Candidates not initialized -- no call to decodeL0Channels...')
+    if _l0Channels == None : raise RuntimeError('HltL0Candidates not initialized -- no call to decodeL0Channels...')
     return _l0Channels.iterkeys()
 
 def convertL0Candidates(channel) :
     global _dict
-    if not _dict : raise RunTimeError('HltL0Candidates not initialized -- no call to setupL0Channels...')
+    if not _dict : raise RuntimeError('HltL0Candidates not initialized -- no call to setupL0Channels...')
     if channel not in _dict.keys() : raise KeyError('Unknown L0 candidates requested: %s -- check that this channel is included in requested L0 configuration...'%channel)
     return _dict[channel]
 
 def HltL0Candidates(channel) :
     global _dict
-    if not _dict : raise RunTimeError('HltL0Candidates not initialized -- no call to setupL0Channels...')
+    if not _dict : raise RuntimeError('HltL0Candidates not initialized -- no call to setupL0Channels...')
     if channel not in _dict.keys() : raise KeyError('Unknown L0 candidates requested: %s -- check that this channel is included in requested L0 configuration...'%channel)
     return _name(channel)
