@@ -1,5 +1,9 @@
 2010-03-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v3r1
+
+2010-03-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* python/LbRelease/TarBall.py: added recursive creation of tarballs
 	* scripts/buildTar: idem
 

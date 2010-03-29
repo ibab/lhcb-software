@@ -1,6 +1,9 @@
 2010-03-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* cmt/requirements: 
+	* cmt/requirements: release of version v3r1
+	
+2010-03-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+	
 	* python/LbLegacy/install_project.py: added support for "latest data link". It creates a link to
 	the version directory of a data package called "v99r9"
 	* scripts/makedoc: fixed the parsing of messages prefixed with the CMTMSGPREFIX
