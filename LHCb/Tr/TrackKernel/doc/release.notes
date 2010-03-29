@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2010-03-29 - Wouter Hulsbergen
+ - add copy constructor and assignment operator to trackstatevertex.
+ - add TrackPredicates
+
 !========================== TrackKernel v1r2 2009-11-28 ===================
 ! 2009-11-24 - Wouter Hulsbergen
  - added method to get (biased) chi2 contribution of single track in TrackStateVertex
