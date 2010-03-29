@@ -1,5 +1,24 @@
 2010-01-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* release of version v5r1:
+	
+	- SetupProject ignores version of Dirac above v4r*. Use LHCbDirac instead (Marco Cl.).
+	- Fix MacOSX Leopard CMTCONFIG detection.
+	- LbConfiguration.Platform: added DiracPlatfrom method to the NativeMachine class. It detects also 
+	the glibc version.
+	- scripts/tag_package: new simple script to tag a package independently of the repository (Marco Cl.).
+	- scripts/cmpPackageWithTrunk: new simple script to check if a checked out package is different 
+	from the HEAD of the trunk. It process both CVS and Subversion hosted packages and can check 
+	all the packages in a directory without the need for "cmt broadcast" (Marco Cl.).
+	- install_project.py: added the possibility to call a post install script. This
+	script must be a python script and is located in the container package usually 
+	at <Project>Sys/cmt/PostInstall.py.
+	- install_project.py: added support for "latest data link". It creates a link to
+	the version directory of a data package called "v99r9". The explicit "--latest-data-link" has 
+	to be provided on the command line.
+	
+2010-01-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* cmt/requirements: release of version v5r0. Summary of the main changes. Please
 	look at the package release.notes files for details and credits. 
 	- added a new script genProjectSetup that generates the setup script for 
