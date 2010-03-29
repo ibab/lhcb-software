@@ -14,9 +14,10 @@ MessageSvc().Format = "% F%30W%S%7W%R%T %0W%M"
 #
 
 from StrippingSelections.Streams import allStreams
+from StrippingSelections.Streams import StreamBhadron
 from StrippingConf.Configuration import StrippingConf
 
-sc = StrippingConf( Streams = allStreams )
+sc = StrippingConf( Streams = [ StreamBhadron.stream ] )
 
 print sc
 
@@ -35,7 +36,7 @@ tag.TupleToolSelResults.Selections = sc.selections()  # Add the list of strippin
 
 from Configurables import StrippingReport
 
-sr = StrippingReport(Selections = sc.selections());
+sr = StrippingReport(Selections = sc.selections() );
 
 # Configure DaVinci
 
@@ -45,7 +46,7 @@ DaVinci().appendToMainSequence( [ sc.sequence() ] )   # Append the stripping sel
 DaVinci().appendToMainSequence( [ tag ] )             # Append the TagCreator to DaVinci
 DaVinci().appendToMainSequence( [ sr ] )              # Append the StrippingReport algoritm to DaVinci
 
-DaVinci().EvtMax = 100                          # Number of events
+DaVinci().EvtMax = 10000                          # Number of events
 
 DaVinci().ETCFile = "etc.root"                 # ETC file name
 DaVinci().HistogramFile = "hist.root"
