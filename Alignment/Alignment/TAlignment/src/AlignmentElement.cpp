@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.28 2010-02-09 12:48:17 wouter Exp $
+// $Id: AlignmentElement.cpp,v 1.29 2010-03-29 14:52:55 wouter Exp $
 // Include files
 
 // from STD
@@ -18,7 +18,6 @@
 #include "DetDesc/3DTransformationFunctions.h"
 #include "DetDesc/GlobalToLocalDelta.h"
 #include "DetDesc/AlignmentCondition.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 
 // from BOOST
 #include "boost/regex.hpp"
@@ -154,29 +153,10 @@ void AlignmentElement::initAlignmentFrame() {
       m_alignmentFrame = m_elements.front()->geometry()->toGlobalMatrix() ;
     else {
       // if there is more than one element, we'll use the center of
-      // gravity for the translation, and the 'parent' frame for the
-      // rotation. (think about OT modules.)
-
-      // identify the parent name from the base name
-      size_t ipos = m_basename.find_last_of('/') ;
-      std::string parentpath = 
-	ipos == std::string::npos ? m_basename : m_basename.substr(0,ipos ) ;
-      //std::cout << "PARENT NAME IS: " << parentpath << std::endl ;
-      // now we can get that parent from the datasvc:
-      IDataProviderSvc* detsvc = DetDesc::services()->detSvc();
-      DataObject* dataobj(0) ;
-      detsvc->retrieveObject(parentpath, dataobj).ignore() ;
-      const IDetectorElement* parentelement = dynamic_cast<const IDetectorElement*>(dataobj) ;
-      if( parentelement ) {
-	ROOT::Math::Rotation3D  rotation =  parentelement->geometry()->toGlobalMatrix().Rotation() ;
-	m_alignmentFrame = Gaudi::Transform3D(averageR) * rotation ;
-	//std::cout << "rotation of PARENT: " << rotation << std::endl ;
-	//std::cout << "rotation of first daughter: " 
-	//	  << m_elements.front()->geometry()->toGlobalMatrix().Rotation() << std::endl ; 
-      } else {
-	//std::cout << "FAILED TO RETRIEVE PARENT! " << std::endl ;
-	m_alignmentFrame = Gaudi::Transform3D(averageR) ;
-      }
+      // gravity for the translation, and the frame of the first
+      // element for the rotation.
+      ROOT::Math::Rotation3D rotation =  m_elements.front()->geometry()->toGlobalMatrix().Rotation() ;
+      m_alignmentFrame = Gaudi::Transform3D(averageR) * rotation ;
     }
   } else {
     m_alignmentFrame = Gaudi::Transform3D(averageR) ;
