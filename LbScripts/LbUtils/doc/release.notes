@@ -1,3 +1,12 @@
+2010-03-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/afs/volume.py: fixed typo in exception message.
+	* python/LbUtils/CMT/__init__.py: pushed the walk function into the CMT main module.
+	* python/LbUtils/CMT/Common.py: added function to identify CMT messages.
+	* python/LbUtils/CMT/Package.py: fix for the new version of CMT
+	* python/LbUtils/CMT/Project.py: idem
+	* python/LbUtils/Tar.py: fixed function to have only one return location
+
 2010-03-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbUtils/afs/volume.py: added function createVolume

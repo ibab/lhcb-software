@@ -1,7 +1,7 @@
 """ module for AFS volume creation """
 
 from LbUtils.afs.directory import Directory
-from subprocess import Popen, PIPE
+from subprocess import Popen
 
 class HasNoMountPoint(Exception):
     """ Exception for volume without any mount point """
@@ -39,7 +39,7 @@ class Volume(object):
         self._mtpoints += MountPoint(dirname)
     def update(self):
         if len(self._mtpoints) == 0:
-            raise HasNoMountPoint, "Volume %s has not mount point" % self._name
+            raise HasNoMountPoint, "Volume %s has no mount point" % self._name
         else:
             pass
 

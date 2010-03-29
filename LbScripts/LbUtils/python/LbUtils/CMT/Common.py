@@ -86,7 +86,25 @@ def addCMTTag(tag, environ):
     else :
         environ["CMTEXTRATAGS"] = tag
         
+def isCMTMessage(line, extra=None):
+    ismsg = False
+    msg_prefixes = []
+    if os.environ.has_key("CMTMSGPREFIX") :
+        cpref = os.environ["CMTMSGPREFIX"]
+        if cpref :
+            msg_prefixes.append(cpref)
+    msg_prefixes.append("#CMT--->")
+    msg_prefixes.append("#CMT>")
+    for p in msg_prefixes :
+        s = p
+        if extra :
+            s += extra
+        if line.find(s) != -1 :
+            ismsg = True
+            break 
+    return ismsg
         
-        
+def isCMTWarning(line):
+    return isCMTMessage(line, " Warning:")
 
         

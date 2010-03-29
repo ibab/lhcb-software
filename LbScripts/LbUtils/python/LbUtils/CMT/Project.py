@@ -2,6 +2,7 @@
 # local import
 from Package import Package, getPackagesFromDir
 from Common import doesDirMatchNameAndVersion, isDirSelected, setCMTPathEnv
+from Common import isCMTWarning
 
 # package imports
 from LbUtils import Env
@@ -73,50 +74,23 @@ class Project(object):
     def name(self):
         log = logging.getLogger()
         if self._name is None:
-            wdir = self.fullLocation()
-            os.chdir(wdir)
             env = Env.getDefaultEnv()
+            wdir = os.path.join(self.fullLocation(), "cmt")
+            if not os.path.exists(wdir) : # special case for CMTUSERCONTEXT
+                wdir = self.fullLocation()
+            os.chdir(wdir)
             env["PWD"] = wdir
-            p = Popen(["cmt", "show", "macro_value", "project"], stdout=PIPE, stderr=PIPE, close_fds=True)
-            for line in p.stdout:
-                self._name = line[:-1]
+            p = Popen(["cmt", "show", "projects"], stdout=PIPE, stderr=PIPE, close_fds=True)
+            line = p.stdout.readline()[:-1]
+            self._name = line.split()[0]
             for line in p.stderr:
-                if line.startswith("#CMT> Warning:") and line.find("not found") != -1 :
+                if isCMTWarning(line) and line.find("not found") != -1 :
                     log.debug(line[:-1])
                 else : 
                     log.warning(line[:-1])
             retcode = os.waitpid(p.pid, 0)[1]
-            log.debug("return code of 'cmt show macro_value project' in %s is %s", wdir, retcode)
-            if retcode != 0: 
-                # for local packages: one has to go in the "cmt" directory
-                wdir = os.path.join(self.fullLocation(), "cmt" )
-                os.chdir(wdir)
-                env["PWD"] = wdir
-                p = Popen(["cmt", "show", "macro_value", "project"], stdout=PIPE, stderr=PIPE, close_fds=True)
-                for line in p.stdout:
-                    self._name = line[:-1]
-                for line in p.stderr:
-                    if line.startswith("#CMT> Warning:") and line.find("not found") != -1 :
-                        log.debug(line[:-1])
-                    else : 
-                        log.warning(line[:-1])
-                retcode = os.waitpid(p.pid, 0)[1]
-                log.debug("return code of 'cmt show macro_value project' in %s is %s", wdir, retcode)
-                if retcode != 0 :
-                    log.warning("No macro 'project' found - using 'cmt show project' in %s " % wdir)
-                    # fallback on "cmt show project" if it fails. Geant4 is one example
-                    p = Popen(["cmt", "show", "projects"], stdout=PIPE, stderr=PIPE, close_fds=True)
-                    line = p.stdout.readline()[:-1]
-                    self._name = line.split()[0]
-                    for line in p.stderr:
-                        if line.startswith("#CMT> Warning:") and line.find("not found") != -1 :
-                            log.debug(line[:-1])
-                        else : 
-                            log.warning(line[:-1])
-                    retcode = os.waitpid(p.pid, 0)[1]
-                    log.debug("return code of 'cmt show projects' in %s is %s", wdir, retcode)
-                    if retcode != 0 :
-                        log.warning("return code of 'cmt show projects' in %s is %s", wdir, retcode)
+            if retcode != 0 :
+                log.warning("return code of 'cmt show projects' in %s is %s", wdir, retcode)
         return self._name
 
     def projectFile(self):
@@ -163,6 +137,8 @@ class Project(object):
             self._baselist = Set()
             log = logging.getLogger()
             wdir = os.path.join(self.fullLocation(),"cmt")
+            if not os.path.exists(wdir) :
+                wdir = self.fullLocation()
             os.chdir(wdir)
             env = Env.getDefaultEnv()
             env["PWD"] = wdir
@@ -182,7 +158,6 @@ class Project(object):
             for line in p.stderr:
                 log.debug(line[:-1])
             retcode = os.waitpid(p.pid, 0)[1]
-            log.debug("return code of 'cmt show projects' in %s is %s", wdir, retcode)
         return self._baselist
     
     def overrideBaseProject(self, other, cmtpath=None, cmtprojectpath=None):
@@ -353,8 +328,9 @@ class Project(object):
             if not self._extpaklist.has_key(indx) :
                 self._extpaklist[indx] = self.binaryExternalPackages(cmtpath, cmtprojectpath, b)
         if not self._extpaklist.has_key((cmtpath, cmtprojectpath, "default")) :
-            self._extpaklist[(cmtpath, cmtprojectpath, "default")] = self.binaryExternalPackages(cmtpath, cmtprojectpath)
-        return self._extpaklist
+            indx = cmtpath, cmtprojectpath, "default"
+            self._extpaklist[indx] = self.binaryExternalPackages(cmtpath, cmtprojectpath)
+        return self._extpaklist[indx]
 
     def allExternalPackages(self):
         return self._allextpaklist
@@ -382,11 +358,12 @@ class Project(object):
             tmplist.append("%s %s" % (p.name(), p.version()) )
         summary += ", ".join(tmplist) + "\n"
         if not dependent :
-            summary += "Built configurations : "
             tmplist = []
             for b in self.binaryList() :
                 tmplist.append("%s" % b )
-            summary += ", ".join(tmplist) + "\n"
+            if tmplist :
+                summary += "Built configurations : "
+                summary += ", ".join(tmplist) + "\n"
             tmpacksum = ""
             if showpackages :
                 tmpacksum += "Contained packages:\n"

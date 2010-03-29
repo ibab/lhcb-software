@@ -198,6 +198,10 @@ def updateTarBallFromFilter(srcdirs, filename, pathfilter=None,
 def createTarBallFromFilter(srcdirs, filename, pathfilter=None, 
                             prefix=None, dereference=False, update=False):
     log = logging.getLogger()
+    if update :
+        log.info("Updating %s with %s" % (filename, ", ".join(srcdirs)) )
+    else :
+        log.info("Creating %s with %s" % (filename, ", ".join(srcdirs)) )        
     status = 0
     if not update :
         tarf, lock = openTar(filename, tar_mode="w")
@@ -209,15 +213,17 @@ def createTarBallFromFilter(srcdirs, filename, pathfilter=None,
                 break
         if not srcexist :
             os.remove(filename)
-            return 1
-        for dirname in srcdirs :
-            for fullo, relo in listTarBallObjects(dirname, pathfilter, prefix) :
-                keep_tar = True
-                tarf.add(fullo, relo, recursive=False)
-        closeTar(tarf, lock, filename)
-        if not keep_tar :
-            log.warning("%s file is empty. Removing it." % filename)
-            os.remove(filename)
+            status = 1 # status=1 means that the src directories do not exist
+        else :
+            for dirname in srcdirs :
+                for fullo, relo in listTarBallObjects(dirname, pathfilter, prefix) :
+                    keep_tar = True
+                    tarf.add(fullo, relo, recursive=False)
+            closeTar(tarf, lock, filename)
+            if not keep_tar :
+                log.warning("%s file is empty. Removing it." % filename)
+                os.remove(filename)
+                status = 2 # status=2 means that the tarball was empty
     else :
         status = updateTarBallFromFilter(srcdirs, filename, pathfilter, prefix, dereference)
     return status

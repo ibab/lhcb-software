@@ -1,6 +1,8 @@
 # local imports
 from Common import setCMTPathEnv, doesDirMatchNameAndVersion, isDirSelected
-from Common import addCMTTag
+from Common import addCMTTag, isCMTWarning
+
+
 
 # package imports
 from LbUtils import Env
@@ -51,6 +53,9 @@ class Package(object):
     def fullLocation(self):
         return self._fulllocation
     def parentProject(self):
+        if not self._parentproject :
+            from Project import Project#IGNORE:E1102
+            self._parentproject = Project(self.parentProjectPath())
         return self._parentproject
     def parentProjectPath(self):
         log = logging.getLogger()
@@ -73,7 +78,7 @@ class Package(object):
 #                        words = line.split()
 #                        self._parentprojectpath = os.path.realpath(words[-2].replace(")",""))
                 for line in p.stderr:
-                    if line.startswith("#CMT> Warning:") and line.find("not found") != -1 :
+                    if isCMTWarning(line) and line.find("not found") != -1 :
                         log.debug(line[:-1])
                     else : 
                         log.warning(line[:-1])
@@ -94,7 +99,7 @@ class Package(object):
             for line in p.stdout:
                 self._version = line[:-1]
             for line in p.stderr:
-                if line.startswith("#CMT> Warning:") and line.find("not found") != -1 :
+                if isCMTWarning(line) and line.find("not found") != -1 :
                     log.debug(line[:-1])
                 else : 
                     log.warning(line[:-1])
@@ -141,13 +146,18 @@ class Package(object):
             for line in p.stdout:
                 self._corename = line[:-1]
             for line in p.stderr:
-                if line.startswith("#CMT> Warning:") and line.find("not found") != -1 :
+                if isCMTWarning(line) and line.find("not found") != -1 :
                     log.debug(line[:-1])
                 else : 
                     log.warning(line[:-1])
             retcode = os.waitpid(p.pid, 0)[1]
             if retcode != 0:
                 log.warning("return code of 'cmt show macro_value package' in %s is %s", wdir, retcode)
+            if self._corename == self.realVersion() :
+                if self.hasVersionDirectory() :
+                    self._corename = self.location().split(os.sep)[-2]                    
+                else :
+                    self._corename = self.location().split(os.sep)[-1]
         return self._corename
     
     def name(self):
@@ -223,7 +233,7 @@ class Package(object):
                         self._constituents[binary].add(c)
                         self._allconstituents.add(c)
             for line in p.stderr:
-                if line.startswith("#CMT> Warning:") and line.find("not found") != -1 :
+                if isCMTWarning(line) and line.find("not found") != -1 :
                     log.debug(line[:-1])
                 else : 
                     log.warning(line[:-1])
@@ -311,7 +321,7 @@ class Package(object):
                         else :
                             packagelist.add(self.__class__(thepack, parentprojectpath=parentprojectpath))
             for line in p.stderr:
-                if line.startswith("#CMT> Warning:") and line.find("not found") != -1 :
+                if isCMTWarning(line) and line.find("not found") != -1 :
                     log.debug(line[:-1])
                 else : 
                     log.warning(line[:-1])
@@ -393,8 +403,9 @@ class Package(object):
             if not self._extpaklist.has_key(indx) :
                 self._extpaklist[indx] = self.binaryExternalPackages(cmtpath, cmtprojectpath, b)
         if not self._extpaklist.has_key((cmtpath, cmtprojectpath, "default")) :
-            self._extpaklist[(cmtpath, cmtprojectpath, "default")] = self.binaryExternalPackages(cmtpath, cmtprojectpath)
-        return self._extpaklist
+            indx = cmtpath, cmtprojectpath, "default"
+            self._extpaklist[indx] = self.binaryExternalPackages(cmtpath, cmtprojectpath)
+        return self._extpaklist[indx]
 
         
 def hasRequirementsFile(dirpath):
@@ -456,7 +467,6 @@ def getPackagesFromDir(directory, name=None, version=None, casesense=True, selec
                         tobeadded = True
                 if tobeadded :
                     paklist.add(tmpack)
-                    log.debug("Found package at %s" % root)
                 dirs[:] = [] # don't visit anything else: a CMT package cannot contains another one.
             else :
                 if 'CVS' in dirs:
@@ -464,7 +474,7 @@ def getPackagesFromDir(directory, name=None, version=None, casesense=True, selec
     except OSError, msg:
         log.warning("Cannot open path %s" % msg)
 
-    log.info("Found %s packages in %s" % (len(paklist), directory))
+    log.debug("Found %s packages in %s" % (len(paklist), directory))
 
     return paklist
 
