@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.124 2010-03-29 14:49:42 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.125 2010-03-29 19:58:48 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -572,15 +572,15 @@ class Brunel(LHCbConfigurableUser):
     def __apply_configuration__(self):
         
         GaudiKernel.ProcessJobOptions.PrintOff()
-        self.setOtherProps(RecSysConf(),["Histograms","SpecialData","Context",
-                                         "OutputType","DataType"])
-        self.setOtherProps(RecMoniConf(),["Histograms","Context","DataType"])
-        if self.isPropertySet("RecoSequence") :
-            self.setOtherProp(RecSysConf(),"RecoSequence")
         self.defineGeometry()
         self.defineEvents()
         self.defineOptions()
         self.defineMonitors()
+        self.setOtherProps(RecSysConf(),["Histograms","SpecialData","Context",
+                                         "OutputType","DataType","Simulation"])
+        self.setOtherProps(RecMoniConf(),["Histograms","Context","DataType"])
+        if self.isPropertySet("RecoSequence") :
+            self.setOtherProp(RecSysConf(),"RecoSequence")
         GaudiKernel.ProcessJobOptions.PrintOn()
         log.info( self )
         log.info( RecSysConf() )

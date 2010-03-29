@@ -5,6 +5,7 @@ Purpose: LHCb reconstruction program
 
 ! 2010-03-29 - Chris Jones
  - Use named instance of RichRecQCConf (Same as in RecSys)
+ - Propagate "Simulation" property to RecSys (for use by RichRecSysConf)
 
 ! 2010-03-28 - Rob Lambert
  - Edited global/local db to follow new CondDB configurable
