@@ -3,13 +3,14 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.123 2010-03-24 17:30:35 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.124 2010-03-29 14:49:42 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
-from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys, RecMoniConf,
-                            GaudiSequencer, RichRecQCConf, DstConf, LumiAlgsConf, L0Conf, GlobalRecoChecks )
+from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
+                            RecMoniConf,GaudiSequencer, RichRecQCConf, DstConf,
+                            LumiAlgsConf, L0Conf, GlobalRecoChecks )
 
 ## @class Brunel
 #  Configurable for Brunel application
@@ -17,9 +18,14 @@ from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
 #  @date   15/08/2008
 class Brunel(LHCbConfigurableUser):
 
+    ## Name used for RICH Monitoring configurable
+    richMoniConfName = "OfflineRichMoni"
+
     ## Possible used Configurables
-    __used_configurables__ = [ TrackSys, RecSysConf, RecMoniConf, RichRecQCConf,
-                               LHCbApp, DstConf, LumiAlgsConf, L0Conf, GlobalRecoChecks ]
+    __used_configurables__ = [ TrackSys, RecSysConf, RecMoniConf,
+                               (RichRecQCConf,richMoniConfName),
+                               LHCbApp, DstConf, LumiAlgsConf, L0Conf,
+                               GlobalRecoChecks ]
 
     ## Default init sequences
     DefaultInitSequence     = ["Reproc", "Brunel"]
@@ -510,10 +516,10 @@ class Brunel(LHCbConfigurableUser):
             unp = DataPacking__Unpack_LHCb__MCRichDigitSummaryPacker_("MCRichDigitSummaryUnpack")
             from Configurables import GaudiSequencer
             GaudiSequencer("MCLinksUnpackSeq").Members += [unp]
-
-            self.setOtherProps(RichRecQCConf(), ["Histograms","Context","OutputLevel",
-                                                 "DataType","WithMC"] )
-            RichRecQCConf().setProp("MoniSequencer", GaudiSequencer("CheckRICHSeq"))
+            richMoniConf = RichRecQCConf(self.richMoniConfName)
+            self.setOtherProps(richMoniConf, ["Histograms","Context","OutputLevel",
+                                              "DataType","WithMC"] )
+            richMoniConf.setProp("MoniSequencer", GaudiSequencer("CheckRICHSeq"))
 
         if expert:
             # Data on Demand for MCParticle to MCHit association, needed by ST, IT, OT, Tr, Muon
