@@ -1,3 +1,8 @@
+2010-03-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Package.py: added support for HTMLDir extraction
+	* python/LbConfiguration/Project.py: idem
+
 2010-03-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Platform.py: added DiracPlatfrom method to the NativeMachine class.

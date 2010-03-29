@@ -82,6 +82,8 @@ class PackageConf(object):
         return tbname
     def TarBallDir(self):
         return os.path.join(self.DistLocation(), self._project.upper())
+    def HTMLDir(self):
+        return os.path.join(self.DistLocation(), "html")
     def releasePrefix(self, version=None):
         prefix = None
         if self.hat() :

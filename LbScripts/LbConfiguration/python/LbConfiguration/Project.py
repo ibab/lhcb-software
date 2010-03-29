@@ -50,6 +50,8 @@ class ProjectBaseConf(object):
         return self._dist_loc
     def TarBallDir(self):
         return os.path.join(self.DistLocation(), self.NAME())
+    def HTMLDir(self):
+        return os.path.join(self.DistLocation(), "html")
     def __str__(self):
         """ return string representation for printing """
         rep = ""
