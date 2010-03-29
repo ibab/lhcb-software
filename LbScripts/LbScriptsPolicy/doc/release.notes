@@ -1,3 +1,7 @@
+2010-03-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v2r8
+
 2010-02-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/StripPath.{csh,sh,bat}: Fortified the StripPath wrappers. Now checks the return
