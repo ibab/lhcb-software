@@ -1,5 +1,9 @@
 2010-03-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v2r1
+
+2010-03-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* python/LbUtils/afs/volume.py: fixed typo in exception message.
 	* python/LbUtils/CMT/__init__.py: pushed the walk function into the CMT main module.
 	* python/LbUtils/CMT/Common.py: added function to identify CMT messages.
