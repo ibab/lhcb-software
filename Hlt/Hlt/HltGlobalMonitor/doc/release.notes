@@ -1,8 +1,12 @@
-!$Id: release.notes,v 1.68 2010-03-28 20:14:16 graven Exp $
+!$Id: release.notes,v 1.69 2010-03-29 14:47:17 albrecht Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
+
+
+! 2010-03-29 - Johannes Albrecht
+ - HltL0GlobalMonitor: cosmetic changes to title and add L0 global
 
 !========================== HltGlobalMonitor v3r2p1 2010-03-28 ===================
 ! 2010-03-27 - Gerhard Raven
