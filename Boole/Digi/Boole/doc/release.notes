@@ -3,6 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v21r1>2010-03-30 Boole v21r1</A></H1></PRE>
  - Changes to references to reflect changes in Boole v21r1 output:
    . New tuning of noise and gain in Velo, to match 2009 data
      (VeloSimulation v3r8, VeloAlgorithms v5r2)
