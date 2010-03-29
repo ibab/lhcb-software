@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2010-03-29 - Chris Jones
+ - Add "Simulation" slot to Configurables.
+ - Disable "EarlyData" tweeks for simulated data
+
 !====================== RichRecSys v3r27 2010-03-19 ==========================
 ! 2010-03-09 - Chris Jones
  - Add option to set the RichPID version

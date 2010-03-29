@@ -22,7 +22,8 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
         "Context"       : "Offline" # The context within which to run
        ,"Radiators"     : [] # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
        ,"SelectionMode" : "Tight"
-       ,"SpecialData"   : [] 
+       ,"SpecialData"   : []
+       ,"Simulation"    : False         # Simulated data
        ,"OutputLevel"   : INFO # The output level to set all algorithms and tools to use
         }
 
@@ -39,8 +40,9 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
 
         # First data options. To be removed eventually...
         if "earlyData" in self.getProp("SpecialData") :
-            if not self.isPropertySet("SelectionMode") :
-                self.setProp("SelectionMode","Loose")
+            if not self.getProp("Simulation") :
+                if not self.isPropertySet("SelectionMode") :
+                    self.setProp("SelectionMode","Loose")
                 self.richTools().photonReco().CKThetaQuartzRefractCorrections = [ -0.004,0,0 ]
 
         # Context

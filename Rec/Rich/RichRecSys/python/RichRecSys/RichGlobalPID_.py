@@ -29,20 +29,21 @@ class RichGlobalPIDConfig(RichConfigurableUser):
     
     ## The default options
     __slots__ = {
-        "Context":  "Offline",
-        "Mode": "Full",
-        "InitAlgorithms": True,
-        "InitTools": True,
-        "NIterations": 0,
-        "MaxUsedPixels": 12000,
-        "FinalDLLCheck": [ False, True, True, True ],
-        "TrackFreezeOutDLL":    None,
-        "TrackForceChangeDLL":  None,
-        "LikelihoodThreshold":  None,
-        "MaxTrackChangesPerIt": None,
-        "MinSignalForNoLLCalc": None
-       ,"PidSequencer" : None     # The sequencer to add the RICH reconstruction algorithms to
-       ,"OutputLevel"   : INFO    # The output level to set all algorithms and tools to use
+        "Context"                 : "Offline",
+        "Mode"                    : "Full",
+        "Radiators"               : [], # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
+        "InitAlgorithms"          : True,
+        "InitTools"               : True,
+        "NIterations"             : 0,
+        "MaxUsedPixels"           : 12000,
+        "FinalDLLCheck"           : [ False, True, True, True ],
+        "TrackFreezeOutDLL"       : None,
+        "TrackForceChangeDLL"     : None,
+        "LikelihoodThreshold"     : None,
+        "MaxTrackChangesPerIt"    : None,
+        "MinSignalForNoLLCalc"    : None
+       ,"PidSequencer"            : None # The sequencer to add the RICH reconstruction algorithms to
+       ,"OutputLevel"             : INFO # The output level to set all algorithms and tools to use
         }
 
     ## Initialize 

@@ -50,13 +50,14 @@ class RichRecSysConf(RichConfigurableUser):
        ,"InitPixels":      True   # Run an initialisation algorithm to create the pixels
        ,"InitTracks":      True   # Run an initialisation algorithm to create the tracks
        ,"InitPhotons":     True   # Run an initialisation algorithm to create the photons
-       ,"TracklessRingAlgs": ["ENN"]  # Run the given Trackless ring finding algorithms
+       ,"TracklessRingAlgs": ["ENN"] # Run the given Trackless ring finding algorithms
        ,"CheckProcStatus": True   # Check the status of the ProcStatus object
        ,"PidConfig": "FullGlobal" # The PID algorithm configuration
        ,"MakeSummaryObjects": False # Make the reconstruction summary TES data objects
        ,"HpdRandomBackgroundProb" : -1.0 # If positive, will add additional random background to the data at the given pixel percentage
-       ,"SpecialData"  : []       # Various special data processing options. See KnownSpecialData in RecSys for all options
+       ,"SpecialData"   : []       # Various special data processing options. See KnownSpecialData in RecSys for all options
        ,"RecoSequencer" : None    # The sequencer to add the RICH reconstruction algorithms to
+       ,"Simulation"    : False         # Simulated data
        ,"OutputLevel"   : INFO    # The output level to set all algorithms and tools to use
        ,"RichPIDLocation" : ""    # Output RichPID Location
        ,"PIDVersion"      : 1     # Default PID version
@@ -68,9 +69,9 @@ class RichRecSysConf(RichConfigurableUser):
         # default values
         self.setRichDefault("Particles","Offline",["electron","muon","pion","kaon",
                                                    "proton","belowThreshold"])
-        self.setRichDefault("Particles","HLT",    ["pion","kaon"])
-        self.setRichDefault("Radiators","Offline",[ "Aerogel", "Rich1Gas", "Rich2Gas" ])
-        self.setRichDefault("Radiators","HLT",    [ "Aerogel", "Rich1Gas", "Rich2Gas" ])
+        self.setRichDefault("Particles","HLT",    ["pion","kaon"] )
+        self.setRichDefault("Radiators","Offline", ["Aerogel","Rich1Gas","Rich2Gas"] )
+        self.setRichDefault("Radiators","HLT",     ["Aerogel","Rich1Gas","Rich2Gas"] )
 
     ## Shortcut to the cosmics option
     def cosmics(self) : return "cosmics" in self.getProp("SpecialData")
@@ -264,6 +265,7 @@ class RichRecSysConf(RichConfigurableUser):
             else:
                 raise RuntimeError("ERROR : Unknown PID config '%s'"%pidConf)
 
+            pidConf.setProp("Radiators",self.usedRadiators())
             self.setOtherProps(pidConf,["Context","OutputLevel"])
             
             self.printInfo(pidConf)
@@ -308,7 +310,7 @@ class RichRecSysConf(RichConfigurableUser):
         # Photons
         photConf = self.photonConfig()
         photConf.setProp("Radiators",self.usedRadiators())
-        self.setOtherProps(photConf,["OutputLevel","SpecialData","Context"])
+        self.setOtherProps(photConf,["OutputLevel","SpecialData","Context","Simulation"])
 
         #--------------------------------------------------------------------
 
@@ -363,7 +365,6 @@ class RichRecSysConf(RichConfigurableUser):
             elif self.getProp("OutputLevel") == VERBOSE :
                 msgSvc.setVerbose += dets
 
-
         # Print Config
         self.printInfo(tkConf)
         self.printInfo(pixConf)
@@ -372,4 +373,3 @@ class RichRecSysConf(RichConfigurableUser):
         self.printInfo(self.richTools())
                
         #--------------------------------------------------------------------
-
