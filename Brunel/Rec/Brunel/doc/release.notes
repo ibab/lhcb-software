@@ -3,9 +3,6 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2010-03-28 - Rob Lambert
- - Edited global/local db to follow new CondDB configurable
-
 </PRE><H1><A NAME=v37r0>2010-03-29 Brunel v37r0</A></H1><PRE>
 - Changes to Configurable
   . Add cleaning of PID information from charged ProtoParticles before saving
@@ -14,11 +11,14 @@ Purpose: LHCb reconstruction program
 
 - Changes to tests
    . Pick up histogram setting options from AppConfig
-   . Exclude Rich refractive index updates from comparisons wih reference
    . Added three new tests, fixedfile-brunel2009-*, for reprocessing 2009 data
      o fixeddb: with some arbitrary database
      o globaldb: with the latest database global tags
      o localdb: with the latest database local and global tags
+   . Update exclusions from comparisons with reference to exclude also:
+     o Rich refractive index updates on Online DB
+     o LHCBCOND connection strings for local tags (needed for new localdb test)
+     o Warnings about total memory of event exceeding 3*sigma
 
 - Changes to references to reflect changes in Brunel v36r3 output:
    . Printout APE values from STOfflinePositionTool (STTools v3r17)
