@@ -1,15 +1,15 @@
-! $Id: release.notes,v 1.439 2010-03-29 13:09:20 gligorov Exp $ 
+! $Id: release.notes,v 1.440 2010-03-29 13:45:35 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v7r0 2010-03-28 ===================
 ! 2010-03-29 - V. Gligorov
  - In case of an empty Hlt2, make sure the Hlt post-config action
    does not bomb by passing a "default" muon location to the SelReportsMaker.
 
-!========================== HltConf v7r0 2010-03-28 ===================
 ! 2010-03-27 - Jibo He
  - Hlt2.py
    . Add Hlt2InclusiveDiProtonLines
