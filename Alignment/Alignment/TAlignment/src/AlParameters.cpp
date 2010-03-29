@@ -39,7 +39,7 @@ AlParameters::AlParameters(const Vector& parameters, const Covariance& covarianc
   }
 }
 
-AlParameters::AlParameters(double parameters[6], DofMask mask)
+AlParameters::AlParameters(const double parameters[6], DofMask mask)
   : m_mask(mask), m_parameters(dim()), m_covariance(dim())
 {
   for( unsigned int i = 0u; i < dim(); ++i) 
