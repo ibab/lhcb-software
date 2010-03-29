@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.19 2010-03-28 09:17:04 graven Exp $
+# $Id: HltL0Candidates.py,v 1.20 2010-03-29 12:41:39 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -212,11 +212,18 @@ def setupL0Channels( ) :
     # the types are basically hardwired and are thus not likely to change...
     _l0Types = [ 'Muon','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
     _dict = dict()
-    for i in [ j for j in _l0Channels.iterkeys() ] + [ 'All' + j for j in _l0Types ] : _dict.update( _converter( i ) )
+    if not _l0Channels : 
+         log.warning('HLT does not know about any L0 Channels.')
+         log.warning('This is most likely because you have not specified (to the HLT) what L0 configuration you want to use.')
+         log.warning('Either specify a ThresholdSettings, or an explicit L0TCK')
+         log.warning('Continuing with an empty list of L0 Channels')
+         log.warning('This implies that Hlt lines which explicitly use an L0 channel will NOT be configured')
+         _l0Channels = {}
+    for i in [ j for j in L0Channels() ] + [ 'All' + j for j in _l0Types ] : _dict.update( _converter( i ) )
 
 def L0Channels() :
     global _l0Channels
-    if _l0Channels == None : raise RuntimeError('HltL0Candidates not initialized -- no call to decodeL0Channels...')
+    if _l0Channels == None : raise RuntimeError('HltL0Candidates not initialized -- no call to setupL0Channels...')
     return _l0Channels.iterkeys()
 
 def convertL0Candidates(channel) :
