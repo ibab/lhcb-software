@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.30 2010-03-22 02:44:15 polye Exp $"
+__version__ = "$Id: Configuration.py,v 1.31 2010-03-29 20:03:13 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
             
 from LHCbKernel.Configuration import *
@@ -52,6 +52,7 @@ class RecSysConf(LHCbConfigurableUser):
        ,"OutputType"   : ""            # some sequences are different for RDST
        ,"DataType"     : ""            # Type of data, propagated from application
        ,"OutputLevel"  : INFO          # The printout level to use
+       ,"Simulation"   : False         # Simulated data
         }
 
     def expertHistos(self): return self.getProp("Histograms") == "Expert"
@@ -106,22 +107,23 @@ class RecSysConf(LHCbConfigurableUser):
 
         # RICH
         if "RICH" in recoSeq:
-            
+
+            # The main sequence
             seq = GaudiSequencer("RecoRICHSeq")
             # Create the top level Conf object and set some general options
             richConf = RichRecSysConf(self.richRecConfName)
-            self.setOtherProps(richConf,["SpecialData","Context","OutputLevel"])
+            self.setOtherProps(richConf,["SpecialData","Context","OutputLevel","Simulation"])
             # Set the sequencer the RICH reco algs should be added to
             richConf.RecoSequencer = seq
-            # Input Tracks (would be better to not hard code this. Get from TrackSys ??)
+            # Input Tracks (would be better to not hard code this. Get from TrackSys() or DstConf())
             richConf.trackConfig().InputTracksLocation = "Rec/Track/Best"
-            # Output PID Location
+            # Output PID Location (Same again. maybe get this location from DstConf() 
             richConf.RichPIDLocation = "Rec/Rich/PIDs"
             # Printout
             import GaudiKernel.ProcessJobOptions
             GaudiKernel.ProcessJobOptions.PrintOn()
             log.debug(richConf)
-            GaudiKernel.ProcessJobOptions.PrintOff()     
+            GaudiKernel.ProcessJobOptions.PrintOff()
             
         # CALO
         if "CALO" in recoSeq:
