@@ -38,7 +38,7 @@ use VeloPixAlgorithms   v1r0    VeloPix  # Marcin Kucharczyk
 use VeloPixAssociators  v1r1    VeloPix  # Marcin Kucharczyk
 
 # Packages from other projects updated temporarily in this release
-use STTools v3r17 ST
+
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
