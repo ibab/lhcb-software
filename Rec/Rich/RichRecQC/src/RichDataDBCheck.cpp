@@ -4,9 +4,6 @@
  *
  *  Implementation file for monitor : Rich::DAQ::DataDBCheck
  *
- *  CVS Log :-
- *  $Id: RichDataDBCheck.cpp,v 1.7 2009-09-01 16:09:32 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
  */
@@ -76,22 +73,22 @@ StatusCode DataDBCheck::execute()
   for ( Rich::DAQ::L1Map::const_iterator iL1Map = l1Map.begin();
         iL1Map != l1Map.end(); ++iL1Map )
   {
-    const Rich::DAQ::Level1HardwareID l1HardID = iL1Map->first;
-    const Rich::DAQ::IngressMap & ingressMap  = iL1Map->second;
+    const Rich::DAQ::Level1HardwareID & l1HardID = iL1Map->first;
+    const Rich::DAQ::IngressMap & ingressMap     = iL1Map->second;
     for ( Rich::DAQ::IngressMap::const_iterator iIngressMap = ingressMap.begin();
           iIngressMap != ingressMap.end(); ++iIngressMap )
     {
-      const Rich::DAQ::L1IngressID   l1IngressID = iIngressMap->first;
+      //const Rich::DAQ::L1IngressID & l1IngressID = iIngressMap->first;
       const Rich::DAQ::IngressInfo & ingressInfo = iIngressMap->second;
       const Rich::DAQ::HPDMap & hpdMap = ingressInfo.hpdData();
       for ( Rich::DAQ::HPDMap::const_iterator iHPDMap = hpdMap.begin();
             iHPDMap != hpdMap.end(); ++iHPDMap )
       {
-        const Rich::DAQ::Level1Input l1Input         = iHPDMap->first;
+        const Rich::DAQ::Level1Input & l1Input       = iHPDMap->first;
         const Rich::DAQ::HPDInfo & hpdInfo           = iHPDMap->second;
         const LHCb::RichSmartID  & hpdID             = hpdInfo.hpdID();
         const Rich::DAQ::HPDInfo::Header & hpdHeader = hpdInfo.header();
-        const Rich::DAQ::Level0ID l0ID               = hpdInfo.header().l0ID();      
+        const Rich::DAQ::Level0ID l0ID               = hpdHeader.l0ID();      
 
         // Only do the DB check on valid data
         if ( hpdHeader.inhibit() || !hpdID.isValid() ) continue;
@@ -106,19 +103,25 @@ StatusCode DataDBCheck::execute()
           const Rich::DAQ::Level0ID         db_l0ID     = m_RichSys->level0ID(hpdID);
 
           // compare to that in the data itself
-          compare( "Level1HardwareID", l0ID, l1HardID,                db_l1HardID );
-          compare( "Level1Input",      l0ID, l1Input,                 db_l1Input  );
-          compare( "Level0ID",         l0ID, hpdInfo.header().l0ID(), db_l0ID     );
+          compare( "Level1HardwareID", hpdID, l0ID, l1HardID,   db_l1HardID );
+          compare( "Level1Input",      hpdID, l0ID, l1Input,    db_l1Input  );
+          compare( "Level0ID",         hpdID, l0ID, l0ID,       db_l0ID     );
 
           // Is this L0ID already in the map... If so this is an error.
           L0IDInfoCount::const_iterator iID = l0Count.find(l0ID);
           if ( iID != l0Count.end() )
           {
+            // Additional info for the warning message
+            const Rich::DAQ::Level1HardwareID l1ID = m_RichSys->level1HardwareID(hpdID);
+            const Rich::DetectorType          rich = m_RichSys->richDetector(l1ID);
+            // Construct and send the warning
             std::ostringstream mess;
-            mess << "HPD L0ID " << l0ID << " appears twice in the data. [ L1HardwareID=" << iID->second.l1HardID
+            mess << "HPD L0ID " << l0ID << " appears twice in the data. [ RICH=" << rich
+                 << " L1ID=" << l1ID
+                 << " L1HardwareID=" << iID->second.l1HardID
                  << " Input=" <<  iID->second.l1Input
                  << " ] and [ L1HardwareID=" <<  l1HardID << " Input=" << l1Input << "]";
-            Error( mess.str(), StatusCode::FAILURE, m_nErrorMess );
+            Warning( mess.str(), StatusCode::FAILURE, m_nErrorMess ).ignore();
           }
           else
           {

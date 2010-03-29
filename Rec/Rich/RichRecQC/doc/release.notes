@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-03-29 - Chris Jones
+ - Downgrade DB mis-match messages from ERROR to WARNING
+ - Add RICH and L1 ID to DB check messages
+
 !======================= RichRecQC v2r38 2010-03-24 ========================
 ! 2010-03-22 - Chris Jones
  - Add new HPD image shifts monitor from Tom Blake to default RICH monitoring
