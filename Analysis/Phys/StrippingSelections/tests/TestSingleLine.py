@@ -13,10 +13,15 @@ MessageSvc().Format = "% F%30W%S%7W%R%T %0W%M"
 # Stripping job configuration
 #
 
-from StrippingSelections.Streams import allStreams
+from StrippingConf.StrippingStream import StrippingStream
+from StrippingSelections import StrippingBu2hhh
+
+stream = StrippingStream("Test")
+stream.appendLines( [ StrippingBu2hhh.line ] ) 
+
 from StrippingConf.Configuration import StrippingConf
 
-sc = StrippingConf( Streams = allStreams )
+sc = StrippingConf( Streams = [ stream ] )
 
 print sc
 
@@ -45,7 +50,7 @@ DaVinci().appendToMainSequence( [ sc.sequence() ] )   # Append the stripping sel
 DaVinci().appendToMainSequence( [ tag ] )             # Append the TagCreator to DaVinci
 DaVinci().appendToMainSequence( [ sr ] )              # Append the StrippingReport algoritm to DaVinci
 
-DaVinci().EvtMax = 100                          # Number of events
+DaVinci().EvtMax = 100                         # Number of events
 
 DaVinci().ETCFile = "etc.root"                 # ETC file name
 DaVinci().HistogramFile = "hist.root"

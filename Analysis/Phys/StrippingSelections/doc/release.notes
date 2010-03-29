@@ -5,6 +5,12 @@ Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-03-29 - Anton Poluektov 
+ - Updated test script tests/TestStrippingETC.py - added StrippingReport algorithms 
+   for monitoring of selections. 
+ - Added tests/TestSingleLine.py - an example of testing single selection line
+   Also uses StrippingReport for monitoring
+
 ! 2010-03-26 - Mat Charles
  - Rewrite of StrippingDstarD2KShh: it is now a Configurable and uses
    StrippingMembers to make lines. The cuts themselves should be
