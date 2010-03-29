@@ -3,6 +3,10 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2010-03-29 - Wouter Hulsbergen
+ - added IT sensor survey
+ - added TT modules (rather than half modules) to Alignables.py
+
 ! 2010-03-17 - Johan Blouw
  - fix small bug in GAlign (where new track slope is calculated
  - removed code which was commented (and hence not used anymore)
