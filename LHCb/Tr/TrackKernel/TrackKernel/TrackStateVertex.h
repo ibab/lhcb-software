@@ -30,14 +30,21 @@ namespace LHCb
     enum FitStatus { FitSuccess, FitFailure, UnFitted } ;
 
     /// Sets minimal data content for useable vertex. The rest we do with setters.
-    TrackStateVertex() ;
-    
-    /// Construct vertex from set of states
+    TrackStateVertex() ;    
+
+    /// Construct vertex from set of states. also fits the vertex.
     TrackStateVertex(const std::vector<const LHCb::State*>& states, double maxdchisq=0.01, size_t maxiterations=10) ;
-    ///
+
+    /// Copy constructor
+    TrackStateVertex(const TrackStateVertex& vertex) ;
+
+    /// Destructor
     ~TrackStateVertex() ;
-    
-    ///
+
+    /// assignment
+    TrackStateVertex& operator=(const TrackStateVertex& vertex) ;
+
+    /// add a track. invalidates any existing fit. (call 'fit' afterwards)
     void addTrack( const LHCb::State& state ) ;
     
     /// fit a single iteration. returns the delta-chisquare.

@@ -194,6 +194,37 @@ namespace LHCb
   {
     std::for_each(m_tracks.begin(),m_tracks.end(),TrackFunctor::deleteObject()) ; 
   }
+
+  TrackStateVertex&
+  TrackStateVertex::operator=(const TrackStateVertex& rhs)
+  {
+    m_pos       = rhs.m_pos;
+    m_poscov    = rhs.m_poscov ;
+    m_mommomcov = rhs.m_mommomcov ;
+    m_fitStatus = rhs.m_fitStatus ;
+    m_chi2      = rhs.m_chi2 ;
+    // first delete any existing tracks
+    if( ! m_tracks.empty() ) {
+      std::for_each(m_tracks.begin(),m_tracks.end(),TrackFunctor::deleteObject()) ; 
+      m_tracks.clear() ;
+    }
+    const size_t N = rhs.m_tracks.size();
+    m_tracks.resize( N ) ;
+    for(size_t i=0; i<N; ++i) m_tracks[i] = new VertexTrack(*(rhs.m_tracks[i])) ;
+    return *this ;
+  }
+  
+  TrackStateVertex::TrackStateVertex(const TrackStateVertex& rhs)
+    : m_pos(rhs.m_pos),
+      m_poscov(rhs.m_poscov),
+      m_mommomcov(rhs.m_mommomcov),
+      m_fitStatus(rhs.m_fitStatus),
+      m_chi2(rhs.m_chi2)
+  {
+    const size_t N = rhs.m_tracks.size();
+    m_tracks.resize( N ) ;
+    for(size_t i=0; i<N; ++i) m_tracks[i] = new VertexTrack(*(rhs.m_tracks[i])) ;
+  }
   
   TrackStateVertex::TrackStateVertex()
     : m_fitStatus(UnFitted), m_chi2(-1)
