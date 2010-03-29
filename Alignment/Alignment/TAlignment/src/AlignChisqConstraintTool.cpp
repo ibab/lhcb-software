@@ -14,25 +14,11 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>
 #include <boost/assign/list_of.hpp>
-
+#include <boost/foreach.hpp>
 
 namespace Al
 {
 
-  /* helper class */
-  namespace {
-    struct SurveyDictionaryEntry
-    {
-      SurveyDictionaryEntry() {
-        err[0] = err[1] = err[2] = err[3] = err[4] = err[5] = -1 ;
-        par[0] = par[1] = par[2] = par[3] = par[4] = par[5] = 0 ;
-      }
-      std::string name ;
-      double par[6] ;
-      double err[6] ;
-    } ;
-  }
-  
   class AlignChisqConstraintTool : public GaudiTool,
                                    virtual public IAlignChisqConstraintTool
   {
@@ -63,7 +49,7 @@ namespace Al
     typedef std::map<std::string, SurveyData> XmlData ;
     XmlData m_xmldata ;
     typedef std::map<std::string, SurveyData> ConstraintData ;
-    ConstraintData m_constraints ;
+    mutable ConstraintData m_constraints ;
     std::vector< std::string > m_constraintNames ;
     std::vector< std::string > m_xmlUncertainties ;
   } ;
@@ -392,7 +378,8 @@ namespace Al
     for( ConstraintData::const_iterator it = m_constraints.begin() ;
          it != m_constraints.end() && !rc; ++it ) 
       // match the name of the alignable, or, if there is only one element, match the name of the condition
-      if( match(elementname,it->first ) || 
+      if( elementname == it->first || 
+	  match(elementname,it->first ) || 
           (condname.size()>0 && match(condname, it->first) ) )
         rc = &(it->second) ;
 
@@ -407,6 +394,48 @@ namespace Al
       } else {
         debug() << "Cannot find condition \"" << cond->name() << "\" for alignable "
                 << element.name() << " in survey dictionary." << endreq ;
+      }
+    }
+
+    if( rc==0 ) {
+      // let's see if we can match all daughters to entries in the
+      // survey database.  this is really quite tricky. it looks of
+      // course a lot like what happens in AlignmentElement.
+
+      Gaudi::Transform3D frame = element.alignmentFrame() ;
+      Gaudi::Transform3D frameInv = frame.Inverse() ;
+      double par[6] = {0,0,0,0,0,0} ;
+      double err[6] = {0,0,0,0,0,0} ;
+      size_t numfound(0) ;
+      BOOST_FOREACH( const DetectorElement* ielem, element.detelements() )
+	if( (geom=ielem->geometry()) &&(cond=geom->alignmentCondition()) ) {
+	  condname = cond->name().substr( 1, cond->name().size()-1 ) ;
+	  XmlData::const_iterator it = m_xmldata.find( condname ) ;
+	  if( it != m_xmldata.end() ) {
+	    Gaudi::Transform3D localDelta = AlParameters(it->second.par,AlDofMask(AlParameters::NumPars)).transform() ;
+	    const Gaudi::Transform3D& global = (ielem->geometry())->toGlobalMatrix();
+	    Gaudi::Transform3D localDeltaInGlobal = global * localDelta * global.Inverse() ;
+	    // now transform it into the alignment frame
+	    Gaudi::Transform3D alignDeltaMatrix = frameInv * localDeltaInGlobal * frame;
+	    std::vector<double> translations(3,0.0), rotations(3,0.0);
+	    DetDesc::getZYXTransformParameters(alignDeltaMatrix, translations, rotations);//, it->pivot());
+	    for(size_t i=0; i<3; ++i) {
+	      par[i]   += translations[i] ;
+	      par[i+3] += rotations[i] ;
+	    }
+	    for(size_t i=0; i<6; ++i) err[i] += it->second.err[i] ;
+	    ++numfound ;
+	  }
+	}
+      if( numfound == element.detelements().size() ) {
+	Al::IAlignChisqConstraintTool::SurveyData& newentry = m_constraints[ elementname ] ;
+	newentry.name = elementname ;
+	for(size_t i=0; i<6; ++i) {
+	  newentry.par[i] = par[i] / numfound ;
+	  newentry.err[i] = err[i] / numfound ;
+	}
+	warning() << "Constructing average survey for element: " << elementname << endreq ;
+	rc = &newentry ;
       }
     }
     
