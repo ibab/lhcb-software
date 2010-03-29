@@ -1181,12 +1181,12 @@ void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
     // TPaveStats is obtained after a pad->Draw(), but note that changing OptStat
     // doesn't resize the Pave.. thus it's better to set the global stat options also 
     // before drawing
-    
-    TPaveStats* stats =  (TPaveStats*)rootHistogram->GetListOfFunctions()->FindObject("stats");
 
     if (m_historyTrendPlotMode) { // special settings for trend mode
       rootHistogram->SetDrawOption("E1");
       rootHistogram->SetStats(0);
+      TPaveStats* stats =  (TPaveStats*)rootHistogram->GetListOfFunctions()->FindObject("stats");
+
       if (stats) stats->Delete();
       pad->SetLogx(0);
       pad->SetLogy(0);
@@ -1215,8 +1215,12 @@ void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
     else { // normal case
       m_onlineHistogram->getDisplayOption("STATS", &iopt);
       if (0 != iopt) {
+        if ( 1 == iopt ) iopt = 1110;  // remove name in the default mask
+        gStyle->SetOptStat( iopt );
+        
+        TPaveStats* stats =  (TPaveStats*)rootHistogram->GetListOfFunctions()->FindObject("stats");
+
         if (stats) {
-          stats->SetOptStat(iopt);
           double x1=stats->GetX1NDC();
           double x2=stats->GetX2NDC();
           double y1=stats->GetY1NDC();
@@ -1242,6 +1246,7 @@ void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
           m_statpave = (TPave*)stats->Clone(); // memleak?
         }
       } else {
+        gStyle->SetOptStat( 0 );
         rootHistogram->SetStats(false);
       }
       // title pave

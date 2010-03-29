@@ -4,7 +4,12 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
-!============ Presenter v1r0 2010-03-24 =============
+!============ Presenter v1r0 2010-03-29 =============
+! 2010-03-29 - Olivier Callot
+ - Made the stat box transparent. Draw it only once -> smaller if single line
+   Use the stat window size options in the database if needed.
+ - When using the default stat option '1', it is replaced by '1110', i.e. 
+   remove the name of the histo
 
 ! 2010-03-24 - Giacomo Graziani
  - fix long-standing problem on first load of some pages in online mode (improved dim service lookup)

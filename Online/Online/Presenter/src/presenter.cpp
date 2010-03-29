@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
   pres::MsgLevel messageLevelCli;
   std::string histdir("./");
 
-  int windowWidth(1000);
+  int windowWidth(1200);
   int windowHeight(600);
 
   const char* histdirEnv = getenv(s_histdir.c_str());

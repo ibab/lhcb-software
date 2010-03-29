@@ -165,6 +165,8 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   gStyle->SetOptStat("emrou"); // nemr emrou
 
   gStyle->SetFrameFillColor(10);
+  gStyle->SetStatStyle(0);
+  
   //== Added 17/03/2010: Make Calo plot nicer.
   gStyle->SetPaintTextFormat("3.0f");
   // only one presenter session allowed
