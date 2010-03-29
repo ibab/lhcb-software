@@ -1,3 +1,8 @@
+2010-03-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbRelease/TarBall.py: added recursive creation of tarballs
+	* scripts/buildTar: idem
+
 2010-03-26  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/LHCbNightlies.py: first import. LHCb Nightlies builder

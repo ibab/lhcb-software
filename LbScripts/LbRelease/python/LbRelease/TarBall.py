@@ -1,11 +1,11 @@
 """
 Generic Tar Ball module
 """
-from LbConfiguration.Project import getProject, isProject
-from LbConfiguration.Package import getPackage, isPackage
-from LbConfiguration.Platform import pathBinaryMatch, pathSharedMatch
-from LbConfiguration.Platform import binary_list
-from LbConfiguration.Version import getVersionsFromDir
+from LbConfiguration import Platform
+from LbConfiguration import Version
+from LbConfiguration import Project
+from LbConfiguration import Package
+from LbUtils import CMT
 from LbUtils.Tar import createTarBallFromFilter
 from LbUtils.Temporary import TempDir
 from LbUtils.File import createMD5File, checkMD5Info
@@ -14,9 +14,13 @@ from fnmatch import fnmatch
 
 import logging
 
-import os, sys
+import os
 import tarfile
 import shutil
+
+class EmptyTarBallException(Exception): pass
+class EmptySourceDirsException(Exception): pass
+class TarBallExistException(Exception): pass
 
 class TarBall(object):
     def __init__(self, name, srcloc=None):
@@ -30,7 +34,6 @@ class TarBall(object):
         if not self._destLoc:
             self._destLoc = os.path.abspath(os.getcwd())
         self._tmpdir = TempDir(self._name)
-        print self._tmpdir
     def setName(self, name):
         self._name = name
     def getName(self):
@@ -84,13 +87,13 @@ def projectFilter(path, cmtconfig=None):
             return False
     
     if cmtconfig :
-        return pathBinaryMatch(path, cmtconfig)
+        return Platform.pathBinaryMatch(path, cmtconfig)
     else :
-        return pathSharedMatch(path)
+        return Platform.pathSharedMatch(path)
 
 def generateMD5(project, version, cmtconfig=None, input_dir=None):
     log = logging.getLogger()
-    prj_conf = getProject(project)
+    prj_conf = Project.getProject(project)
     if not input_dir :
         input_dir = prj_conf.TarBallDir()
     filename = os.path.join(input_dir, prj_conf.tarBallName(version, cmtconfig, full=True))
@@ -108,7 +111,7 @@ def generateMD5(project, version, cmtconfig=None, input_dir=None):
 
 def generateDataMD5(project, version, input_dir=None):
     log = logging.getLogger()
-    prj_conf = getPackage(project)
+    prj_conf = Package.getPackage(project)
     if not input_dir :
         input_dir = prj_conf.TarBallDir()
     filename = os.path.join(input_dir, prj_conf.tarBallName(version, full=True))
@@ -125,18 +128,108 @@ def generateDataMD5(project, version, input_dir=None):
         log.warning("The file %s doesn't exist. Skipping md5 creation." % filename)
 
 
+def generateHTML(project, version, cmtconfig=None, top_dir=None, output_dir=None):
+    log = logging.getLogger()
+    prj_conf = Project.getProject(project)
+    if not top_dir :
+        top_dir = prj_conf.ReleaseArea()
+    if not output_dir :
+        output_dir = prj_conf.HTMLDir()
+        tb_dir = prj_conf.TarBallDir()
+    else :
+        tb_dir = output_dir
+    if not version :
+        pattern = "%s_*" % prj_conf.NAME()
+        maindir = os.path.join(top_dir, prj_conf.NAME())
+        version = str(Version.getVersionsFromDir(maindir, pattern, reverse=True)[0])
+        log.debug("Guessed version for %s is %s" % (prj_conf.Name(), version))
+    filename = os.path.join(tb_dir, prj_conf.tarBallName(version, cmtconfig, full=True))
+    if os.path.exists(filename) :
+        print getTarDependencies(project, version, 
+                                 cmtconfig, top_dir, 
+                                 project_only=False, full=True)
+#    prefix = prj_conf.releasePrefix(version)
+#    prj_path = os.path.join(top_dir, prefix)
+#    prj = CMT.Project(prj_path)
+#    cmtprojectpath = os.environ["LHCBRELEASES"]
+#    if os.environ["GAUDISOFT"] != cmtprojectpath :
+#        cmtprojectpath = os.pathsep.join([cmtprojectpath, os.environ["GAUDISOFT"]])
+#    cmtprojectpath = os.pathsep.join([cmtprojectpath, os.environ["LCG_release_area"]])
+#    for p in  prj.externalPackages(cmtprojectpath=cmtprojectpath) :
+#        parprj = p.parentProjectPath()
+#        print p.name(), parprj.name(), parprj.version()
+#    for data in CMT.walk(top=prj, cmtprojectpath=cmtprojectpath) :
+#        print "%s\t\t%s\t\t@\t\t%s" % (data[0].name(), data[0].version(), data[0].fullLocation())
+
+def generateDataHTML(package, version, top_dir=None, output_dir=None) :
+    log = logging.getLogger()
+    pkg_conf = Package.getPackage(package)
+    if not top_dir :
+        top_dir = pkg_conf.ReleaseArea()
+    if not output_dir :
+        output_dir = pkg_conf.HTMLDir()
+    if not version :
+        maindir = os.path.join(top_dir, pkg_conf.releasePrefix())
+        version = str(Version.getVersionsFromDir(maindir, pattern=None, reverse=True)[0])
+        log.debug("Guessed version for %s is %s" % (pkg_conf.Name(), version))
+    prefix = pkg_conf.releasePrefix(version)
+    pkg_path = os.path.join(top_dir, prefix)
+    pkg = CMT.Package(pkg_path)
+    
+def generateTar(project, version=None, cmtconfig=None, 
+                top_dir=None, output_dir=None, overwrite=False,
+                update=False, md5=True, html=True):
+    log = logging.getLogger()
+    prj_conf = Project.getProject(project)
+    status = 0
+    if not top_dir :
+        top_dir = prj_conf.ReleaseArea()
+    if not output_dir :
+        output_dir = prj_conf.TarBallDir()
+    if not version :
+        pattern = "%s_*" % prj_conf.NAME()
+        maindir = os.path.join(top_dir, prj_conf.NAME())
+        version = str(Version.getVersionsFromDir(maindir, pattern, reverse=True)[0])
+        log.debug("Guessed version for %s is %s" % (prj_conf.Name(), version))
+    prefix = prj_conf.releasePrefix(version)
+    srcdirs = [os.path.join(top_dir, prefix)]
+    log.debug("="*100)
+    filename = os.path.join(output_dir, prj_conf.tarBallName(version, cmtconfig, full=True))
+    if os.path.exists(filename) and not (overwrite or update) :
+        log.info("The file %s already exists. Skipping." % filename)
+        status = 2
+    else :
+        if overwrite :
+            os.remove(filename)
+        if cmtconfig :
+            pathfilter = lambda x : projectFilter(x, cmtconfig)
+        else :
+            pathfilter = projectFilter
+        prefix = prj_conf.releasePrefix(version)
+        status = createTarBallFromFilter(srcdirs, filename, pathfilter,
+                                prefix=prefix, dereference=False, update=update)
+        if status != 0 :
+            if status == 1 :
+                log.fatal("The source directories do not exist")
+        else :
+            if md5 :
+                generateMD5(project, version, cmtconfig, output_dir)
+            if html :
+                generateHTML(project, version, cmtconfig, top_dir, output_dir)
+    return status
+
 def generateDataTar(package, version=None, top_dir=None, 
                     output_dir=None, overwrite=False, 
                     md5=True, html=True):
     log = logging.getLogger()
-    pkg_conf = getPackage(package)
+    pkg_conf = Package.getPackage(package)
     if not top_dir :
         top_dir = pkg_conf.ReleaseArea()
     if not output_dir :
         output_dir = pkg_conf.TarBallDir()
     if not version :
         maindir = os.path.join(top_dir, pkg_conf.releasePrefix())
-        version = str(getVersionsFromDir(maindir, pattern=None, reverse=True)[0])
+        version = str(Version.getVersionsFromDir(maindir, pattern=None, reverse=True)[0])
         log.debug("Guessed version for %s is %s" % (pkg_conf.Name(), version))
     prefix = pkg_conf.releasePrefix(version)
     srcdirs = [os.path.join(top_dir, prefix)]
@@ -144,66 +237,121 @@ def generateDataTar(package, version=None, top_dir=None,
     filename = os.path.join(output_dir, pkg_conf.tarBallName(version, full=True))
     pathfilter = projectFilter
     if os.path.exists(filename) and not overwrite :
-        sys.exit("The file %s already exists. Please remove it first." % filename)
+        log.info("The file %s already exists. Skipping." % filename)
+        status = 2
     else :
-        log.info("Creating %s with %s" % (filename, ", ".join(srcdirs)) )        
-    status = createTarBallFromFilter(srcdirs, filename, pathfilter,
-                                     prefix=prefix, dereference=pkg_conf.dereferenceTar(), 
-                                     update=False)
-    if status == 1 :
-        log.fatal("The source directories do not exist")
-        return status
-    if md5 :
-        generateDataMD5(package, version, output_dir)
+        status = createTarBallFromFilter(srcdirs, filename, pathfilter,
+                                         prefix=prefix, dereference=pkg_conf.dereferenceTar(), 
+                                         update=False)
+        if status == 1 :
+            log.fatal("The source directories do not exist")
+            return status
+        if md5 :
+            generateDataMD5(package, version, output_dir)
+        if html :
+            generateDataHTML(package, version, top_dir, output_dir)
     return status
 
-def generateTar(project, version=None, cmtconfig=None, 
-                top_dir=None, output_dir=None, overwrite=False,
-                update=False, md5=True, html=True):
+def getParentProjects(project, version=None, cmtconfig=None, top_dir=None):
     log = logging.getLogger()
-    prj_conf = getProject(project)
-    if not top_dir :
-        top_dir = prj_conf.ReleaseArea()
-    if not output_dir :
-        output_dir = prj_conf.TarBallDir()
-    if not version :
-        pattern = "%s_*" % prj_conf.tarBallName()
-        maindir = os.path.join(top_dir, prj_conf.NAME())
-        version = str(getVersionsFromDir(maindir, pattern, reverse=True)[0])
-        log.debug("Guessed version for %s is %s" % (prj_conf.Name(), version))
-    prefix = prj_conf.releasePrefix(version)
-    srcdirs = [os.path.join(top_dir, prefix)]
-    log.debug("="*100)
-    filename = os.path.join(output_dir, prj_conf.tarBallName(version, cmtconfig, full=True))
-    if os.path.exists(filename) and not (overwrite or update) :
-        sys.exit("The file %s already exists. Please remove it first." % filename)
-    if cmtconfig :
-        pathfilter = lambda x : projectFilter(x, cmtconfig)
-    else :
-        pathfilter = projectFilter
-    prefix = prj_conf.releasePrefix(version)
-    if update :
-        log.info("Updating %s with %s" % (filename, ", ".join(srcdirs)) )
-    else :
-        log.info("Creating %s with %s" % (filename, ", ".join(srcdirs)) )        
-    status = createTarBallFromFilter(srcdirs, filename, pathfilter,
-                            prefix=prefix, dereference=False, update=update)
-    if status == 1 :
-        log.fatal("The source directories do not exist")
-        return status
-    if md5 :
-        generateMD5(project, version, cmtconfig, output_dir)
-    return status
+    if Project.isProject(project) :
+        pcfg = Project.getProject(project)
+        if not top_dir :
+            top_dir = pcfg.ReleaseArea()
+        if not version :
+            pattern = "%s_*" % pcfg.NAME()
+            maindir = os.path.join(top_dir, pcfg.NAME())
+            version = str(Version.getVersionsFromDir(maindir, pattern, reverse=True)[0])
+            log.debug("Guessed version for %s is %s" % (pcfg.Name(), version))
+    elif Package.isPackage(project) :
+        pcfg = Package.getPackage(project)
+        if not top_dir :
+            top_dir = pcfg.ReleaseArea()
+        if not version :
+            maindir = os.path.join(top_dir, pcfg.releasePrefix())
+            version = str(Version.getVersionsFromDir(maindir, pattern=None, reverse=True)[0])
+            log.debug("Guessed version for %s is %s" % (pcfg.Name(), version))
+    prj_dict = getTarDependencies(project, version, cmtconfig, 
+                                  top_dir, project_only=False, full=False)
+    par_dict = {}
+    fulllist = [ x.upper() for x in Project.project_names ]
+    fulllist += [ x.upper() for x in Package.package_names ]
+    for p in prj_dict.keys() :
+        if not prj_dict[p] :
+            continue
+        if p.upper() not in fulllist :
+            continue
+        par_dict[p] = prj_dict[p]
+    return par_dict
+
+def getTarDependencies(project, version=None, cmtconfig=None, top_dir=None,
+                       project_only=False, full=True):
+    prj_dict = {}
+    log = logging.getLogger()
+    cmtprojectpath = os.environ["CMTPROJECTPATH"]
+    if Project.isProject(project) :
+        pcfg = Project.getProject(project)
+        if not top_dir :
+            top_dir = pcfg.ReleaseArea()
+        if not version :
+            pattern = "%s_*" % pcfg.NAME()
+            maindir = os.path.join(top_dir, pcfg.NAME())
+            version = str(Version.getVersionsFromDir(maindir, pattern, reverse=True)[0])
+            log.debug("Guessed version for %s is %s" % (pcfg.Name(), version))
+        prefix = pcfg.releasePrefix(version)
+        ppath = os.path.join(top_dir, prefix)
+        prj = CMT.Project(ppath)
+        if not full :
+            for p in prj.base(cmtprojectpath=cmtprojectpath) :
+                prj_dict[p.name()] = p.version()
+        else :
+            for data in CMT.walk(top=prj, cmtprojectpath=cmtprojectpath) :
+                prj_dict[data[0].name()] = data[0].version()
+        for p in prj_dict.keys() :
+            if p == "LCGCMT" :
+                if prj_dict[p] :
+                    prj_dict[p] = prj_dict[p].split("_")[1]
+            elif p == "CMTUSERCONTEXT" :
+                del prj_dict[p]
+                continue
+            elif p.upper() == project.upper() :
+                del prj_dict[p]
+                continue                
+            else :
+                ver = Version.extractVersion(prj_dict[p])
+                if ver :
+                    prj_dict[p] = ver.name()
+        if not project_only :
+            has_dataproj = False
+            for p in Package.project_names :
+                if p in prj_dict.keys() :
+                    has_dataproj = True
+                    break
+            if has_dataproj :
+                for p in  prj.externalPackages(cmtprojectpath=cmtprojectpath) :
+                    parprj = p.parentProject()
+                    if parprj.name() in Package.project_names :
+                        prj_dict[p.coreName()] = p.version()
+    elif Package.isPackage(project) :
+        pcfg = Package.getPackage(project)
+        if not top_dir :
+            top_dir = pcfg.ReleaseArea()
+        if not version :
+            maindir = os.path.join(top_dir, pcfg.releasePrefix())
+            version = str(Version.getVersionsFromDir(maindir, pattern=None, reverse=True)[0])
+            log.debug("Guessed version for %s is %s" % (pcfg.Name(), version))
+            prefix = pcfg.releasePrefix(version)
+    return prj_dict
 
 def buildTar(project, version=None, cmtconfig=None, 
              top_dir=None, output_dir=None, 
              overwrite=False, overwrite_shared=False, update=False,
-             md5=True, html=True):
+             md5=True, html=True, recursive=False):
     log = logging.getLogger()
     status = 0
-    if isProject(project) :
+    if Project.isProject(project) :
         log.debug("%s is a software project" % project)
-        prj_conf = getProject(project)
+        prj_conf = Project.getProject(project)
         if not top_dir :
             top_dir = prj_conf.ReleaseArea()
         if not output_dir :
@@ -211,42 +359,53 @@ def buildTar(project, version=None, cmtconfig=None,
         if not version :
             pattern = "%s_*" % prj_conf.NAME()
             maindir = os.path.join(top_dir, prj_conf.NAME())
-            version = str(getVersionsFromDir(maindir, pattern, reverse=True)[0])
+            version = str(Version.getVersionsFromDir(maindir, pattern, reverse=True)[0])
             log.debug("Guessed version for %s is %s" % (prj_conf.Name(), version))
         if not cmtconfig :
-            cmtconfig = binary_list
+            fixed_cmtconfig = False
+            cmtconfig = Platform.binary_list
             if overwrite :
                 overwrite_shared = True
+        else :
+            fixed_cmtconfig = True
+        update_shared = False
         for c in cmtconfig :
             status = generateTar(project, version, c, top_dir, output_dir, 
                                  overwrite, update, md5, html)
             if status == 1 :
                 return status
-        if overwrite_shared :
-            status = generateTar(project, version, cmtconfig=None, 
-                                 top_dir=top_dir, output_dir=output_dir, 
-                                 overwrite=True, update=True, md5=md5, html=html)
-        else :
-            status = generateTar(project, version, cmtconfig=None, 
-                                 top_dir=top_dir, output_dir=output_dir, 
-                                 overwrite=False, update=True, md5=md5, html=html)
-    elif isPackage(project) :
+            if status != 2 :
+                update_shared = True
+        if update_shared :
+            if overwrite_shared :
+                status = generateTar(project, version, cmtconfig=None, 
+                                     top_dir=top_dir, output_dir=output_dir, 
+                                     overwrite=True, update=True, md5=md5, html=html)
+            else :
+                status = generateTar(project, version, cmtconfig=None, 
+                                     top_dir=top_dir, output_dir=output_dir, 
+                                     overwrite=False, update=True, md5=md5, html=html)
+    elif Package.isPackage(project) :
         log.debug("%s is a data package" % project)
         status = generateDataTar(project, version, top_dir, output_dir, overwrite, md5, html)
     else :
         log.fatal("%s is neither a software project nor a data package")
         status = 1
+    if recursive :
+        par_prj = getParentProjects(project, version, None, top_dir)
+        for p in par_prj.keys() :
+            status = buildTar(p, par_prj[p], cmtconfig, top_dir, output_dir, overwrite, overwrite_shared, update, md5, html, recursive)
     return status
 
 def checkDataMD5(package, version=None, input_dir=None):
     log = logging.getLogger()
-    pkg_conf = getPackage(package)
+    pkg_conf = Package.getPackage(package)
     good = False
     if not input_dir :
         input_dir = pkg_conf.TarBallDir()
     if not version :
         pattern = "%s_*" % pkg_conf.tarBallName()
-        version = str(getVersionsFromDir(input_dir, pattern, reverse=True)[0])
+        version = str(Version.getVersionsFromDir(input_dir, pattern, reverse=True)[0])
         log.debug("Guessed version for %s is %s" % (pkg_conf.Name(), version))
     filename = os.path.join(input_dir, pkg_conf.tarBallName(version, full=True))
     if os.path.exists(filename) :
@@ -271,13 +430,13 @@ def checkDataMD5(package, version=None, input_dir=None):
 
 def checkMD5(project, version=None, cmtconfig=None, input_dir=None):
     log = logging.getLogger()
-    prj_conf = getProject(project)
+    prj_conf = Project.getProject(project)
     good = False
     if not input_dir :
         input_dir = prj_conf.TarBallDir()
     if not version :
         pattern = "%s_*" % prj_conf.NAME()
-        version = str(getVersionsFromDir(input_dir, pattern, reverse=True)[0])
+        version = str(Version.getVersionsFromDir(input_dir, pattern, reverse=True)[0])
         log.debug("Guessed version for %s is %s" % (prj_conf.Name(), version))
     filename = os.path.join(input_dir, prj_conf.tarBallName(version, cmtconfig, full=True))
     if os.path.exists(filename) :
@@ -303,17 +462,17 @@ def checkTar(project, version=None, cmtconfig=None, input_dir=None,
              keep_going=False):
     log = logging.getLogger()
     good = True
-    if isProject(project) :
+    if Project.isProject(project) :
         log.debug("%s is a software project" % project)
-        prj_conf = getProject(project)
+        prj_conf = Project.getProject(project)
         if not input_dir :
             input_dir = prj_conf.TarBallDir()
         if not version :
             pattern = "%s_*" % prj_conf.NAME()
-            version = str(getVersionsFromDir(input_dir, pattern, reverse=True)[0])
+            version = str(Version.getVersionsFromDir(input_dir, pattern, reverse=True)[0])
             log.debug("Guessed version for %s is %s" % (prj_conf.Name(), version))
         if not cmtconfig :
-            cmtconfig = binary_list
+            cmtconfig = Platform.binary_list
     
         for c in cmtconfig :
             log.debug("="*100)
@@ -324,7 +483,7 @@ def checkTar(project, version=None, cmtconfig=None, input_dir=None,
                     return good
         log.debug("="*100)
         status = checkMD5(project, version, None, input_dir)
-    elif isPackage(project) :
+    elif Package.isPackage(project) :
         log.debug("%s is a data package" % project)
         status = checkDataMD5(project, version, input_dir)
     else :
