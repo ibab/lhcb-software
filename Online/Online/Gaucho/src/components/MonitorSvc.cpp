@@ -82,10 +82,13 @@ MonitorSvc::~MonitorSvc() {
 // @param ppvUnknown Pointer to Location for interface pointer
 StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
   if(IMonitorSvc::interfaceID().versionMatch(riid)) {
-    *ppvIF = dynamic_cast<IMonitorSvc*> (this);
+    *ppvIF = (IMonitorSvc*)this;
   } 
+  else if (IUpdateableIF::interfaceID().versionMatch(riid)) {
+    *ppvIF = (IUpdateableIF*)this;
+  }
   else if (IGauchoMonitorSvc::interfaceID().versionMatch(riid)) {
-    *ppvIF = dynamic_cast<IGauchoMonitorSvc*> (this);
+    *ppvIF = (IGauchoMonitorSvc*)this;
   }
   else {
     return Service::queryInterface(riid, ppvIF);
@@ -750,6 +753,12 @@ void MonitorSvc::undeclareAll( const IInterface* owner)
       undeclareAll( m_InfoNamesMapIt->first );
   }
   undeclareAll(this);
+}
+
+StatusCode MonitorSvc::update(int endOfRun)  
+{
+  updateAll(endOfRun!=0,0);
+  return StatusCode::SUCCESS;
 }
 
 void MonitorSvc::updateAll( bool endOfRun, const IInterface* owner)

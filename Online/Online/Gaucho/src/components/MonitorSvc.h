@@ -3,6 +3,7 @@
 
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IMonitorSvc.h"
+#include "GaudiKernel/IUpdateable.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
 #include "GaudiKernel/StatEntity.h"
 #include <string>
@@ -34,7 +35,11 @@ Algorithm.Property and returns the value of the property.
 @author Juan Otalora Goicochea 2007/11/20: MonObjects
 */
 
-class MonitorSvc : public Service, virtual public IMonitorSvc, virtual public IGauchoMonitorSvc {
+class MonitorSvc : public Service, 
+                   virtual public IMonitorSvc, 
+	           virtual public IGauchoMonitorSvc,
+	           virtual public IUpdateableIF
+{
 public:
   MonitorSvc(const std::string& name, ISvcLocator* sl);
   virtual ~MonitorSvc();
@@ -103,6 +108,12 @@ public:
       @param owner Owner identifier of the monitoring information
   */
   void updateAll( bool endOfRun , const IInterface* owner = 0) ;
+
+  /** Update all monitoring information
+      @param owner Owner identifier of the monitoring information
+  */
+  virtual StatusCode update(int endOfRun);
+
   //void resetHistos( const IInterface* owner = 0 ) ;
   //void resetHistos(bool saveHistos);
 
