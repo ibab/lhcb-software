@@ -1,4 +1,4 @@
-// $Id: OMACheckDeadBins.cpp,v 1.3 2010-01-26 14:25:37 ggiacomo Exp $
+// $Id: OMACheckDeadBins.cpp,v 1.4 2010-03-29 14:41:48 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TF1.h>
@@ -19,6 +19,9 @@ OMACheckDeadBins::OMACheckDeadBins(OMAlib* Env) :
   m_doc = "Check for empty bins indicating a dead something. ";
   m_doc += "The expected content of each bin is taken from the reference histogram (UseRef=1, default) ";
   m_doc += "or using the average entries per bin (UseRef=0)."; 
+
+  m_minEntries=1000;
+  m_minEntriesPerBin=100;
 }
 
 void OMACheckDeadBins::exec(TH1 &Histo,

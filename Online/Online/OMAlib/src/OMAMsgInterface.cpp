@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.30 2010-03-15 18:00:50 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.31 2010-03-29 14:41:48 ggiacomo Exp $
 #include <cstring>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
@@ -118,9 +118,13 @@ void OMAMsgInterface::refreshMessageList(std::string& TaskName) {
   std::vector<OMAMessage*>::iterator iM = m_MessageStore.begin();
   while( iM != m_MessageStore.end() ) {
     bool kept=true;
+    std::cout << "message in store :";
+    (*iM)->dump();
+    std::cout << "is confirmed? " << (*iM)->confirmed()<<std::endl;
     if(TaskName == (*iM)->taskName() || TaskName == "any") {
       if( false == (*iM)->confirmed()) {
         kept=false;
+        std::cout << "lowering"<<std::endl;
         lowerAlarm( (**iM) );
         unpublishMessage(*iM);
         if (m_histDB) {
