@@ -31,10 +31,13 @@
 
 #-----------------------------------------------------------------------------
 
-import sys, os, getopt, time, commands, fnmatch
-import re
 from LbLegacy.install_project import calculateMD5
 from LbConfiguration.Platform import isBinaryDbg, getBinaryOpt
+
+from LbUtils.CMT.Common import isCMTMessage
+
+import sys, os, getopt, time, commands, fnmatch
+import re
 
 script_version = '091013'
 
@@ -246,7 +249,7 @@ def make_tar(pname, pversion, binary=''):
     os.environ['CMTPATH'] = _get_runtime_cmtpath(os.path.join(here, maindir, 'cmt', 'project.cmt'))
 
     status, value = commands.getstatusoutput('cmt show set_value CMTPATH')
-    if value.find('#CMT>') != -1:
+    if isCMTMessage(value) :
         CMTPATH = value.split('\n')[1]
     else:
         CMTPATH = value
@@ -345,8 +348,8 @@ def make_tar(pname, pversion, binary=''):
             os.chdir(os.path.join(maindir, packSys, pversion, 'cmt'))
         if os.environ.has_key('CMTPROJECTPATH'):
             status, value = commands.getstatusoutput('cmt show macro_value GENSERVERSION')
-            if value.find('#CMT>') != -1:
-                GENSER_version = 'GENSER_' + value.split('\n')[1]
+            if isCMTMessage(value) :
+                GENSER_version = 'GENSER_' + value.split('\n')[1]                
             else:
                 GENSER_version = 'GENSER_' + value
         else:

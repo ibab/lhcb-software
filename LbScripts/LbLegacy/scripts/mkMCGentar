@@ -8,8 +8,12 @@
  - 081013 - Fixed non-versioned packages projects
 """
 #------------------------------------------------------------------------------
-import sys, os, getopt, time, shutil, commands
+
 from LbLegacy.install_project import calculateMD5
+
+from LbUtils.CMT.Common import isCMTMessage
+
+import sys, os, getopt, time, shutil, commands
 version = '081013'
 #---------------------------------------------------------------------------
 def usage() :
@@ -54,7 +58,7 @@ def get_native_versions(native_version):
     os.chdir(Sys_dir)
 
     status,value = commands.getstatusoutput('cmt sh macro_value GENSERVERSION')
-    if value.find('#CMT>') != -1:
+    if isCMTMessage(value) :
         GENSERVERSION = value.split('\n')[1]
     else:
         GENSERVERSION = value
@@ -115,7 +119,7 @@ def get_tar_files(packages_versions,binary_dir):
                     str = 'tar --extract --ungzip --file '+file+' '+key_value+'/share/PDFsets/cteq6l.LHpdf'+' '+key_value+'/share/PDFsets/cteq6ll.LHpdf'
                     rc = os.system(str)
                     if rc != 0 :
-                        str = 'tar --extract --ungzip --file '+file+' '+key_value+'/share/lhapdf/PDFsets/cteq6l.LHpdf'+' '+key_value+'/share/lhapdg/PDFsets/cteq6ll.LHpdf'
+                        str = 'tar --extract --ungzip --file '+file+' '+key_value+'/share/lhapdf/PDFsets/cteq6l.LHpdf'+' '+key_value+'/share/lhapdf/PDFsets/cteq6ll.LHpdf'
                         rc = os.system(str)
                     if rc != 0 :
                         os.remove(file)

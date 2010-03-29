@@ -2,6 +2,7 @@ package LbLegacy
 version v3r0
 
 use LbScriptsPolicy v*
+use LbUtils v*
 
 apply_pattern python_alias script=mkproject
 apply_pattern python_alias script=mkvolume

@@ -14,7 +14,7 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from shutil import rmtree
 
-script_version = '100210'
+script_version = '100329'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v5r0"
@@ -71,6 +71,7 @@ overwrite_mode = False
 fix_perm = True
 show_compatible_configs = False
 install_binary = False
+latest_data_link = False
 
 #----------------------------------------------------------------------------------
 
@@ -973,18 +974,47 @@ def getProjectTar(tar_list, already_present_list=None):
                             if fix_perm :
                                 changePermissions(os.path.join('EXTRAPACKAGES', f), recursive=True)
                             shutil.rmtree(extradir, ignore_errors=True)
-                    try :
-                        from LbConfiguration.Project import getProject
-                        prj = getProject(pack_ver[0])
-                        if prj :
-                            cmtcontainer = os.path.join(pack_ver[3], prj.SteeringPackage(), "cmt")
-                            postinstallscr = os.path.join(cmtcontainer, "PostInstall.py")
-                            if os.path.exists(os.path.join(postinstallscr)) :
-                                registerPostInstallCommand(pack_ver[0], 
-                                                           "python %s" % postinstallscr,
-                                                           cmtcontainer)
-                    except ImportError:
-                        pass
+                if latest_data_link and (pack_ver[3].find('DBASE') != -1 or pack_ver[3].find('PARAM') != -1):
+                    # create link to the latest version "v99r9" if requested
+                    f = os.path.join(pack_ver[0], pack_ver[1])
+                    extradir = None
+                    if pack_ver[3].find('DBASE') != -1 :
+                        extradir = 'DBASE'
+                    elif pack_ver[3].find('PARAM') != -1 :
+                        extradir = 'PARAM'
+                    exdir = os.path.join('EXTRAPACKAGES', f)
+                    regul_dir = os.path.join(extradir, f)
+                    if os.path.exists(regul_dir) :
+                        tg_dir = regul_dir
+                    else :
+                        tg_dir = exdir
+                    if os.path.isdir(tg_dir) :
+                        tdir = os.path.dirname(tg_dir)
+                        ltg = os.path.join(tdir, "v99r9")
+                        if os.path.islink(ltg) or os.path.isfile(ltg):
+                            os.remove(ltg)
+                        elif os.path.isdir(ltg) :
+                            shutil.rmtree(ltg, ignore_errors=True)
+                        if sys.platform == "win32" :
+                            shutil.copytree(tg_dir, ltg)
+                        else :
+                            os.symlink(pack_ver[1], ltg)
+                    
+                    
+                try :
+                    from LbConfiguration.Project import getProject, ProjectConfException
+                    prj = getProject(pack_ver[0])
+                    if prj :
+                        cmtcontainer = os.path.join(pack_ver[3], prj.SteeringPackage(), "cmt")
+                        postinstallscr = os.path.join(cmtcontainer, "PostInstall.py")
+                        if os.path.exists(os.path.join(postinstallscr)) :
+                            registerPostInstallCommand(pack_ver[0], 
+                                                       "python %s" % postinstallscr,
+                                                       cmtcontainer)
+                except ImportError:
+                    pass
+                except ProjectConfException:
+                    pass
                 if pack_ver[0] == "LBSCRIPTS" :
                     genlogscript = os.path.join(pack_ver[3], "InstallArea", "scripts", "generateLogin")
                     log.debug("Running: %s --without-python --no-cache -m %s --login-version=%s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
@@ -1908,6 +1938,7 @@ def parseArgs():
     global show_compatible_configs
     global install_binary
     global compat_version
+    global latest_data_link
 
 
 
@@ -1927,7 +1958,7 @@ def parseArgs():
              'project=', 'cmtversion=', 'nocheck',
              'retry=', 'grid=', 'setup-script=', 'check', 'overwrite',
              'compatversion=', 'retrytime=', 'nofixperm', 'version',
-             'compatible-configs'])
+             'compatible-configs', "latest-data-link"])
 
     except getopt.GetoptError, err:
         print str(err)
@@ -1954,6 +1985,8 @@ def parseArgs():
             cmtversion = value
         if key == '--compatversion':
             compat_version = value
+        if key == '--latest-data-link' :
+            latest_data_link = True
         if key in ('-v'):
             pversion = value
             print "Obsolete option. Please use the new syntax."
