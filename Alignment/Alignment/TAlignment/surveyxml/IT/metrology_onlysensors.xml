@@ -365,6 +365,7 @@
 <condition classID="6" name="ITT3BottomLayerX1Ladder1Sector_Sensor1"><paramVector name="dPosXYZ" type="double">0 0 0</paramVector><paramVector name="dRotXYZ" type="double">0 0 0</paramVector></condition>
 <condition classID="6" name="ITT3BottomLayerX1Ladder2Sector_Sensor1"><paramVector name="dPosXYZ" type="double">0 0 0</paramVector><paramVector name="dRotXYZ" type="double">0 0 0</paramVector></condition>
 <condition classID="6" name="ITT3BottomLayerX1Ladder3Sector_Sensor1"><paramVector name="dPosXYZ" type="double">0 0 0</paramVector><paramVector name="dRotXYZ" type="double">0 0 0</paramVector></condition>
+<condition classID="6" name="ITT3BottomLayerX1Ladder4Sector_Sensor1"><paramVector name="dPosXYZ" type="double">0 0 0</paramVector><paramVector name="dRotXYZ" type="double">0 0 0</paramVector></condition>
 <condition classID="6" name="ITT3BottomLayerX1Ladder5Sector_Sensor1"><paramVector name="dPosXYZ" type="double">0 0 0</paramVector><paramVector name="dRotXYZ" type="double">0 0 0</paramVector></condition>
 <condition classID="6" name="ITT3BottomLayerX1Ladder6Sector_Sensor1"><paramVector name="dPosXYZ" type="double">0 0 0</paramVector><paramVector name="dRotXYZ" type="double">0 0 0</paramVector></condition>
 <condition classID="6" name="ITT3BottomLayerX1Ladder7Sector_Sensor1"><paramVector name="dPosXYZ" type="double">0 0 0</paramVector><paramVector name="dRotXYZ" type="double">0 0 0</paramVector></condition>
