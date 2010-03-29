@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.78 2010-03-26 02:02:43 dgolubko Exp $ 
+! $Id: release.notes,v 1.79 2010-03-29 21:49:45 dgolubko Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+! 2010-03-29 - Dmitry Golubkov
+ - CaloMoniDstConf : introduced Histograms slot and passed it to pidsMoni(),
+   test the value of Histograms in CaloMoniDstConf.checkConfiguration()
+ - Monitor.py : add 'CaloEMuMonitor/CaloPIDMon' to the monitoring sequence only
+     if Histograms in ['OfflineFull', 'Expert']
 
 ! 2010-03-26 - Dmitry GOLUBKOV
  - CaloEMuPIDMon.{h,cpp}: a new simplified PID monitoring algorithm

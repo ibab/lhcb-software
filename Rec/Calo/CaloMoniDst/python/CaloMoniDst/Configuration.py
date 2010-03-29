@@ -9,7 +9,7 @@ Confurable for Calorimeter Monitoring
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 __all__  = (
     'CaloMoniDstConf',
@@ -60,15 +60,21 @@ class CaloMoniDstConf(LHCbConfigurableUser):
                                    'Protos'   ,
                                    'PIDs'     
                                    ] ##
+        ##
+        , 'Histograms'         : 'OfflineFull' # Default Histograms level
         }
-    
+
+    ## Default Histogram set
+    __known_histograms__ = [ "None", "Online", "OfflineExpress", "OfflineFull", "Expert" ]
+
+ 
     ## configure monitoring of Digits
     def digits   ( self ) :
         """
         Configure monitoring of Digits
         
         """
-        cmp = digitsMoni   ( self.Context  )
+        cmp = digitsMoni   ( self.Context )
         ##
         return cmp
 
@@ -124,8 +130,8 @@ class CaloMoniDstConf(LHCbConfigurableUser):
         """
         Configure PIDs monitoring
         """
-        cmp = pidsMoni ( self.Context )
-        
+        cmp = pidsMoni ( self.Context, self.getProp("Histograms") )
+      
         return cmp
     
     
@@ -134,8 +140,10 @@ class CaloMoniDstConf(LHCbConfigurableUser):
         """
         Check the configuration
         """
-        pass
-           
+
+        if self.getProp( 'Histograms' ) not in self.__known_histograms__:
+            raise RuntimeError("Unknown Histograms option '%s'" % self.getProp( 'Histograms' ))
+ 
     ## Calorimeter Monitoring Configuration
     def applyConf ( self ) :
         """

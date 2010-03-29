@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Monitor.py,v 1.4 2010-03-26 02:02:43 dgolubko Exp $
+# $Id: Monitor.py,v 1.5 2010-03-29 21:49:45 dgolubko Exp $
 # =============================================================================
 ## The major building blocks of Calorimeter Monitoring
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,7 +11,7 @@ The major building blocks of Calorimeter Monitoring
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
 # =============================================================================
 __all__ = (
     'digitsMoni'     , 
@@ -232,7 +232,7 @@ def protosMoni ( context ) :
 
 # =============================================================================
 ## define CaloPIDs monitoring
-def pidsMoni ( context ) :
+def pidsMoni ( context, Histograms ) :
     """
     Define CaloPIDs monitoring
     """
@@ -287,8 +287,14 @@ def pidsMoni ( context ) :
     alg7.maxEHcalE = 1000.
     alg7.minPrsE   =-1.e10
 
-    alg.Members = [ alg1 , alg2 , alg3 , alg4 , alg5, alg6, alg7 ]
-    
+    alg.Members = [ alg1 , alg2 , alg3 ,        alg5, alg6, alg7 ]
+
+    if Histograms in [ 'Expert', 'OfflineFull' ] :
+        alg.Members += [ alg4 ]
+
+        if Histograms == 'Expert' :
+            alg4.ExtraHistograms = True
+
 
     setTheProperty ( alg , 'Context' , context )
     
