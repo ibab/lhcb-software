@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.31 2010-03-29 20:03:13 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.32 2010-03-29 21:50:46 dgolubko Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
             
 from LHCbKernel.Configuration import *
@@ -235,6 +235,7 @@ class RecMoniConf(LHCbConfigurableUser):
             caloMoni = CaloMoniDstConf( Sequence    = seq,
                                         OutputLevel = self.getProp('OutputLevel'),
                                         Context = 'Offline' )
+            self.setOtherProps(caloMoni,["Histograms"])
 
         if "VELO" in moniSeq :
             from Configurables import GaudiSequencer
