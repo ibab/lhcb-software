@@ -6,6 +6,8 @@ Purpose	: collection of alignment algorithms
 ! 2010-03-29 - Wouter Hulsbergen
  - added IT sensor survey
  - added TT modules (rather than half modules) to Alignables.py
+ - changed definition of alignment frame for alignables with more than one element
+ - add to chi2constrainttool functionality to take average of daughter survey (for TT modules)
 
 ! 2010-03-17 - Johan Blouw
  - fix small bug in GAlign (where new track slope is calculated
