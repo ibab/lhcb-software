@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.90 2010-03-08 18:24:44 garnierj Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.91 2010-03-29 11:59:09 frankb Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -23,6 +23,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/IUpdateable.h"
 #include "GaudiOnline/MEPRxSvc.h"
 #include "GaudiOnline/MEPHdr.h"
 #include "GaudiOnline/MEPRxSys.h"
@@ -748,7 +749,10 @@ StatusCode MEPRxSvc::run() {
       
       static int ncrh = 1;
       if (m_ebState != RUNNING) {
-        //m_monSvc->updateAll(false);
+	SmartIF<IUpdateableIF> upda(m_monSvc);
+	if ( upda ) {
+	  upda->update(0).ignore();
+	}
         for(RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w)
           forceEvent(w);
         log << MSG::DEBUG << "Exiting from receive loop" << endmsg;
