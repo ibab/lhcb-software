@@ -8,6 +8,15 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-03-29 - P. Spradlin
+ - Hlt2TopologicalLines.py, Hlt2CharmLines.py, and Hlt2B2DXLines.py
+   Modification to the filter on the number of tracks in an event (aliases GEC,
+   KillTooManyIPFilter, etc.) so that the filter is always present in the
+   sequence regardless of the properties.  The presence of the filter in 
+   the line sequences is no longer conditional on the property ComRobUseGEC.
+   Setting ComRobUseGEC to False will configure the filter as pass-all rather
+   than omitting it.
+
 !========================== Hlt2Lines v3r0 2010-03-28 ===================
 ! 2010-03-27 - Gerhard Raven
  - replace  TrSOURCE >> TrSIZE with equivalent CONTAINS, which invokes less 

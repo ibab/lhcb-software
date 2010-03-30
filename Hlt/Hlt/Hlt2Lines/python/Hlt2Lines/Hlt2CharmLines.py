@@ -1,7 +1,7 @@
-## $Id: Hlt2CharmLines.py,v 1.11 2010-03-27 22:07:33 graven Exp $
+## $Id: Hlt2CharmLines.py,v 1.12 2010-03-30 11:26:19 spradlin Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-03-27 22:07:33 $'
-__version__ = '$Revision: 1.11 $'
+__date__    = '$Date: 2010-03-30 11:26:19 $'
+__version__ = '$Revision: 1.12 $'
 
 ## ######################################################################
 ## Defines a configurable to define and configure Hlt2 lines for selecting
@@ -78,10 +78,8 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
 
         lclAlgos = []
         ## Prepend a filter on the number of tracks, if required.
-        if self.getProp('ComRobUseGEC') : # {
-            Hlt2TopoKillTooManyInTrk = self.seqGEC()
-            lclAlgos = [ Hlt2TopoKillTooManyInTrk ]
-        # }
+        Hlt2CharmKillTooManyInTrk = self.seqGEC()
+        lclAlgos = [ Hlt2CharmKillTooManyInTrk ]
         lclAlgos.extend(algos)
 
         line = Hlt2Line(lineName
@@ -255,20 +253,28 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
             if i not in modules : modules.append(i)
 
         from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
-        tracks = Hlt2UnfittedForwardTracking().hlt2PrepareTracks()
-        Hlt2TopoKillTooManyInTrkAlg = VoidFilter('Hlt2TopoKillTooManyInTrkAlg'
-                                                , Code = "CONTAINS('"+tracks.outputSelection()+"') < %(ComRobGEC)s" % self.getProps()
-                                                )
-        Hlt2TopoKillTooManyInTrk = bindMembers( None, [ tracks, Hlt2TopoKillTooManyInTrkAlg ] )
+        Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
 
-        return Hlt2TopoKillTooManyInTrk
+        tracks = Hlt2UnfittedForwardTracking.hlt2PrepareTracks()
+
+        filtCode = "CONTAINS('"+tracks.outputSelection()+"') > -1"
+        if self.getProp('ComRobUseGEC') : # {
+            filtCode = "CONTAINS('"+tracks.outputSelection()+"') < %(ComRobGEC)s" % self.getProps()
+        # }
+            
+        Hlt2CharmKillTooManyInTrkAlg = VoidFilter('Hlt2CharmKillTooManyInTrkAlg'
+                                                 , Code = filtCode
+                                                )
+        Hlt2CharmKillTooManyInTrk = bindMembers( None, [ tracks, Hlt2CharmKillTooManyInTrkAlg ] )
+
+        return Hlt2CharmKillTooManyInTrk
     # }
 
 
     def robInPartFilter(self, name, inputSeq) : # {
         """
         # Function to configure a filter for the input particles of the
-        #   robust stages of the topological.  It lashes the new FilterDesktop
+        #   robust stages of the charm lines.  It lashes the new FilterDesktop
         #   to a bindMembers with its antecedents.
         # The argument inputSeq should be a list of bindMember sequences that
         #   produces the particles to filter.
@@ -296,8 +302,8 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
     def tfInPartFilter(self, name, inputContainers) : # {
         """
         # Function to configure a filter for the input particles of the
-        #   robust stages of the topological.  It lashes the new FilterDesktop
-        #   to a bindMembers with its antecedents.
+        #   post-track-fit stages of the charm lines.  It lashes the new
+        #   FilterDesktop to a bindMembers with its antecedents.
         # The argument inputContainer should be 
         #   a list of bindMember sequences that produces the particles
         #   to filter.
@@ -330,8 +336,8 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         ## Filter the input particles.
         ###################################################################
         from Hlt2SharedParticles.GoodParticles import GoodPions, GoodKaons
-        lclRobInputKaons = self.robInPartFilter('TopoInputKaons', [ GoodKaons ])
-        lclRobInputPions = self.robInPartFilter('TopoInputPions', [ GoodPions ])
+        lclRobInputKaons = self.robInPartFilter('CharmInputKaons', [ GoodKaons ])
+        lclRobInputPions = self.robInPartFilter('CharmInputPions', [ GoodPions ])
 
 
         ###################################################################
@@ -395,8 +401,8 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
         ## Filter post-track fit input particles.
         ###################################################################
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons, BiKalmanFittedPions
-        lclTFInputKaons = self.tfInPartFilter('TopoTFInputKaons', [ BiKalmanFittedKaons] )
-        lclTFInputPions = self.tfInPartFilter('TopoTFInputPions', [ BiKalmanFittedPions] )
+        lclTFInputKaons = self.tfInPartFilter('CharmTFInputKaons', [ BiKalmanFittedKaons] )
+        lclTFInputPions = self.tfInPartFilter('CharmTFInputPions', [ BiKalmanFittedPions] )
 
 
         ###################################################################

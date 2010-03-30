@@ -90,15 +90,20 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         
         from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
         Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
-
+        tracks = Hlt2UnfittedForwardTracking.hlt2PrepareTracks()
 
         for i in [ 'LoKiTrigger.decorators' ] :
             if i not in modules : modules.append(i)
+
+        filtCode = "CONTAINS('"+tracks.outputSelection()+"') > -1"
+        if self.getProp('ComRobUseGEC') : # {
+            filtCode = "CONTAINS('"+tracks.outputSelection()+"') < %(ComRobGEC)s" % self.getProps()
+        # }
             
         Hlt2KillTooManyDXIPFilter = VoidFilter('Hlt2KillTooManyDXIP'
-                                              , Code = "CONTAINS('"+(Hlt2UnfittedForwardTracking.hlt2PrepareTracks()).outputSelection()+"') < %(ComRobGEC)s" % self.getProps()
+                                               , Code = filtCode
                                               )
-        Hlt2KillTooManyDXIP = bindMembers( None, [Hlt2UnfittedForwardTracking.hlt2PrepareTracks(), Hlt2KillTooManyDXIPFilter])
+        Hlt2KillTooManyDXIP = bindMembers( None, [tracks, Hlt2KillTooManyDXIPFilter])
             
         ###################################################################
         # Construct a combined sequence for the input particles to the robust
@@ -114,10 +119,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                              , InputLocations = [GoodKaons]
                              , Code = daugcuts
                              )
-        if self.getProp('ComRobUseGEC') :
-            lclInputParticles = bindMembers( 'DXInputParticles', [ Hlt2KillTooManyDXIP, GoodKaons, PV3D(), filter ] )
-        else :
-            lclInputParticles = bindMembers( 'DXInputParticles', [GoodKaons, PV3D(), filter ] )
+        lclInputParticles = bindMembers( 'DXInputParticles', [ Hlt2KillTooManyDXIP, GoodKaons, PV3D(), filter ] )
                 
                 
                 

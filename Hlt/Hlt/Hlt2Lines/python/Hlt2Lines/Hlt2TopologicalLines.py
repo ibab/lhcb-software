@@ -1,7 +1,7 @@
-## $Id: Hlt2TopologicalLines.py,v 1.36 2010-03-27 22:07:33 graven Exp $
+## $Id: Hlt2TopologicalLines.py,v 1.37 2010-03-30 11:26:19 spradlin Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-03-27 22:07:33 $'
-__version__ = '$Revision: 1.36 $'
+__date__    = '$Date: 2010-03-30 11:26:19 $'
+__version__ = '$Revision: 1.37 $'
 
 ###
 #
@@ -110,11 +110,9 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Line
 
         lclAlgos = []
-        ## Prepend a filter on the number of tracks, if required.
-        if self.getProp('ComRobUseGEC') : # {
-            Hlt2TopoKillTooManyInTrk = self.seqGEC()
-            lclAlgos = [ Hlt2TopoKillTooManyInTrk ]
-        # }
+        ## Prepend a filter on the number of tracks
+        Hlt2TopoKillTooManyInTrk = self.seqGEC()
+        lclAlgos = [ Hlt2TopoKillTooManyInTrk ]
         lclAlgos.extend(algos)
 
         line = Hlt2Line(lineName
@@ -286,13 +284,21 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         for i in [ 'LoKiTrigger.decorators' ] :
             if i not in modules : modules.append(i)
 
-	from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
+        from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
         Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
 
+        tracks = Hlt2UnfittedForwardTracking.hlt2PrepareTracks()
+
+        ## By default, configure as a pass-all filter with similar code.
+        filtCode = "CONTAINS('"+tracks.outputSelection()+"') > -1"
+        if self.getProp('ComRobUseGEC') : # {
+            filtCode = "CONTAINS('"+tracks.outputSelection()+"') < %(ComRobGEC)s" % self.getProps()
+        # }
+            
         Hlt2TopoKillTooManyInTrkAlg = VoidFilter('Hlt2TopoKillTooManyInTrkAlg'
-                                              , Code = "CONTAINS('"+(Hlt2UnfittedForwardTracking.hlt2PrepareTracks()).outputSelection()+"') < %(ComRobGEC)s" % self.getProps()
-                                              )
-        Hlt2TopoKillTooManyInTrk = bindMembers( None, [ Hlt2UnfittedForwardTracking.hlt2PrepareTracks(), Hlt2TopoKillTooManyInTrkAlg ] )
+                                                 , Code = filtCode
+                                                )
+        Hlt2TopoKillTooManyInTrk = bindMembers( None, [ tracks, Hlt2TopoKillTooManyInTrkAlg ] )
 
         return Hlt2TopoKillTooManyInTrk
     # }
