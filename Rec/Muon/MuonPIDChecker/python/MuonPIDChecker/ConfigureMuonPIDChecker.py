@@ -63,7 +63,7 @@ class ConfigureMuonPIDChecker():
     myalg1.MonitorCutValues= self.info.MonitorCutValues 
     myalg1.HistoDir = name+"/"+ext+"Long"
     
-    if (HistosLevel == "Expert"): 
+    if (HistosLevel == "Expert" or HistosLevel == "OfflineFull"): 
       myalg1.HistosOutput = 4 
       # Configure and additional instance to look at Downstream tracks
       myalg2 = MuonPIDChecker(name+ext+"Down")
@@ -74,6 +74,9 @@ class ConfigureMuonPIDChecker():
       myalg2.MonitorCutValues= self.info.MonitorCutValues 
       myalg2.HistoDir = name+"/"+ext+"Down"
       myalg2.HistosOutput = 4 
+      if (HistosLevel == "OfflineFull"): 
+	myalg1.HistosOutput = 3 
+	myalg2.HistosOutput = 3 
       if (UseMC):
 	GaudiSequencer("CheckMUONSeq").Members += [ "MuonPIDChecker/"+name+ext+"Down" ]
       else:
@@ -81,8 +84,6 @@ class ConfigureMuonPIDChecker():
 
     else:
 
-      if (HistosLevel == "OfflineFull"): 
-	myalg1.HistosOutput = 3 
       if (HistosLevel == "OfflineExpress"): 
 	myalg1.HistosOutput = 2 
       if (HistosLevel == "Online"): 

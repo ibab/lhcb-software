@@ -1,6 +1,9 @@
 ! Package     : MuonPIDChecker
-! Responsible : E. Polycarpo, M. Gandelman
+! Responsible : E. Polycarpo, H. Lopes    
 !----------------------------------------------------------------------------
+
+! 2010-03-30 - Erica Polycarpo 
+ - change configurable to look at Downstream tracks also in OfflineFull mode
 
 !====================== MuonPIDChecker v5r0 2010-03-24 ======================
 ! 2010-03-24 - Marco Cattaneo
