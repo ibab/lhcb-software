@@ -3,6 +3,42 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v21r1>2010-03-30 Boole v21r1</A></H1><PRE>
+This version uses projects Gaudi v21r8, LHCb v30r0, Lbcom v9r0
+ and SQLDDDB v5r23, ParamFiles v8r2, FieldMap v5r3, L0TCK v3r1, AppConfig v3r*
+
+Production version for 2009 simulation and for tuning of 2010 simulation. 
+Output needs Brunel v35r8 or later, Brunel v36r0 if decoding L0DU bank
+Needs SQLDDDB v5r23 or later with SIMCOND tags from *-20100321*
+
+ - New tuning
+   . New tuning of Velo digitization (see <a href="http://indico.cern.ch/materialDisplay.py?contribId=2&materialId=slides&confId=82516">talk</a> at PPM on 2010-03-29):
+     o Changed simulation to match 2009 collision data and TELL1 style cluster 
+       maker, gain is lower 601 ADC per electron instead of 442 and smaller noise
+     o Added an optimisation to only make isolated MCVeloFEs if they could start
+       a cluster, still use inclusion threshold for FEs next to an FE with signal
+     o Change timing curve to match data from tests on the cold detector
+     o Fix simulation of NZS data to generate gaussian noise not gaussian tail
+       noise
+     o New niose per strip values to match 2009 data (SIMCOND tags *-20100321*)
+       (VeloSimulation v3r8, VeloAlgorithms v5r2, SQLDDDB v5r23)
+   . New noise values, cluster thresholds and dead strip maps in IT and TT to
+     match 2009 data (SQLDDDB v5r23 with SIMCOND tags from *-20100321*)
+
+ - Changes to configuration
+   . L0MuonAlg now obtains FOI from CondDB (SoftFOI condition) 
+     (L0Muon v9r1, SQLDDDB v5r23 with SIMCOND tags from *-20100321*)
+
+ - Bug fixes
+   . Bug fix in noise update methods [local cache not updated] (STDet v4r18)
+   . Now handles SIGXCPU signal, stopping gracefully if LSF time limit exceeded
+     (GaudiSvc v18r8, patch #3875)
+
+ - Monitoring changes
+   . Change some ST monitor histograms (STMonitors v2r6) 
+   . Reduce Warning/Error messages to debug if there is a sensor with no 
+     MCVeloFEs
+
 </PRE><H1><A NAME=v21r0>2010-03-02 Boole v21r0</A></H1><PRE>
 This version uses projects Gaudi v21r7p1, LHCb v29r2, Lbcom v8r3
  and SQLDDDB v5r20, ParamFiles v8r2, FieldMap v5r3, L0TCK v3r1, AppConfig v3r*
