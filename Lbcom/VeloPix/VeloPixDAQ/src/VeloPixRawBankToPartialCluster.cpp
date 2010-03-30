@@ -1,4 +1,4 @@
-// $Id: VeloPixRawBankToPartialCluster.cpp,v 1.1 2010-03-01 10:51:28 cocov Exp $
+// $Id: VeloPixRawBankToPartialCluster.cpp,v 1.2 2010-03-30 08:20:40 cocov Exp $
 // Include files:
 // GSL
 #include "gsl/gsl_math.h"
@@ -39,7 +39,7 @@ VeloPixRawBankToPartialCluster::VeloPixRawBankToPartialCluster(const std::string
   declareProperty("RawEventLocation", m_rawEventLocation =
                   LHCb::RawEventLocation::Default);
   declareProperty("ClusterLocation", m_clusterLocation = 
-                  "VeloPix/MinimalClustersFromRaw");
+                  LHCb::VeloPixClusterLocation::VeloPixClusterLocation);
 }
 
 //=============================================================================
@@ -90,6 +90,7 @@ StatusCode VeloPixRawBankToPartialCluster::execute() {
 StatusCode VeloPixRawBankToPartialCluster::decodeRawBanks(RawEvent* rawEvt,
                      VeloPixCluster::Container* clusCont) const
 {
+  
   const std::vector<RawBank*>& tBanks = rawEvt->banks(LHCb::RawBank::VeloPix);
   if(tBanks.size() == 0) {
     Warning("No VeloPix RawBanks found");
@@ -113,7 +114,21 @@ StatusCode VeloPixRawBankToPartialCluster::decodeRawBanks(RawEvent* rawEvt,
                                                             decoderCluster.posBegin();
     VeloPixRawBankDecoder<VeloPixPatternWord>::pos_iterator iterPat =
                                                             decoderPattern.posBegin();
+    std::vector<int> testDouybleId;
     for(;iterClu != decoderCluster.posEnd(); ++iterClu) {
+      // Test that the channel ID was not duplicated (should be the case but there might be a bug in digitization
+      // producing it)
+      int pixelClu = (*iterClu).pixel();
+      bool isUsed = false;
+      for (std::vector<int>::iterator itInt = testDouybleId.begin() ;  itInt!= testDouybleId.end() ; ++itInt){
+        if(pixelClu==(*itInt))isUsed=true;
+      }
+      if (isUsed){
+        if (iterPat != decoderPattern.posEnd()) ++iterPat;
+        Warning("Duplicated channelID there should be a bug in the digitization of VeloPix");
+        continue;
+      }
+      testDouybleId.push_back(pixelClu);
       createPartialCluster(sensor,*iterClu,*iterPat,clusCont);
       if (iterPat != decoderPattern.posEnd()) ++iterPat;
     }
@@ -134,25 +149,24 @@ void VeloPixRawBankToPartialCluster::createPartialCluster(
 {
   LHCb::VeloPixChannelID achan;
   achan.setSensor(sensor);
+
   achan.setPixel(aWord.pixel());
   std::pair<unsigned int,unsigned int> xyFract;
   xyFract.first  = aWord.xFract();
   xyFract.second = aWord.yFract();
   const VeloPixLiteCluster newLiteCluster(achan,aWord.totValue(),xyFract,
-                                      aWord.hasIsLong());    
+                                      aWord.hasIsLong()); 
   LHCb::VeloPixChannelID achan_central;
   achan_central.setSensor(sensor);
   achan_central.setPixel( aPattern.pixel());
-  // achan_central.set();
 
   const std::vector< std::pair< LHCb::VeloPixChannelID, int > >  vectorCHID;
 
   VeloPixCluster* newCluster = new VeloPixCluster(newLiteCluster,vectorCHID);
-  //newCluster.setLCluster(newLiteCluster);
+
   clusCont->insert(newCluster,achan_central);
-  //if (achan_central.pixel() == 23 )always()<<"found the 23 "<<newLiteCluster.channelID().pixel()<<" "<<achan_central.channelID()<<endmsg;
   
-  if (newLiteCluster.channelID().pixel()!=newCluster->channelID().pixel())info()<<"Barycenter channelID different from central channelID"<<endmsg;
+  if (achan_central.pixel()!=achan.pixel())info()<<"Barycenter channelID different from central channelID"<<endmsg;
   return;
 }
 
