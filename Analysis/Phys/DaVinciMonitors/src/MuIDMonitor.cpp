@@ -702,6 +702,11 @@ StatusCode MuIDMonitor::get_closest(const LHCb::MuonPID *pMuid, double *closest_
 
 
   const LHCb::Track * muTrack = pMuid->muonTrack();
+  if(muTrack==NULL) 
+  {
+    return Warning("Mu Track is Null",StatusCode::Failure, 1).ignore();
+  }
+  
 
   std::vector<LHCb::LHCbID> mucoords = muTrack->lhcbIDs(); 
   std::vector<LHCb::LHCbID>::iterator iCoord; 
@@ -739,7 +744,7 @@ StatusCode MuIDMonitor::get_closest(const LHCb::MuonPID *pMuid, double *closest_
           closest_x[station]  = (x - m_trackX[station]) / dx;
           closest_y[station]  = (y - m_trackY[station]) / dy;
           closest_region[station] = region;
-	  m_occupancy[station]++;
+          m_occupancy[station]++;
         }//Fdist
       }//foi
     }//station

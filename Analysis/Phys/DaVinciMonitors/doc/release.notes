@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2010-03-30 - Rob Lambert
+ - Protect possible segfault in MuIDMonitor.cpp seen in the offline-processing
+
 !========================== DaVinciMonitors v1r9 2010-03-17 ===================
 ! 2010-03-17 - Patrick Koppenburg
  - Make it work using a postConfigAction
