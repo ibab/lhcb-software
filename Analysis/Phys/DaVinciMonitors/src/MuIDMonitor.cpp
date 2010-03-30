@@ -704,7 +704,7 @@ StatusCode MuIDMonitor::get_closest(const LHCb::MuonPID *pMuid, double *closest_
   const LHCb::Track * muTrack = pMuid->muonTrack();
   if(muTrack==NULL) 
   {
-    return Warning("Mu Track is Null",StatusCode::Failure, 1).ignore();
+    return Warning("Mu Track is Null",StatusCode::FAILURE, 1);
   }
   
 
