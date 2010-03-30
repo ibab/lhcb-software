@@ -1,0 +1,22 @@
+package RecoUpgradeMC
+version v1r0
+
+branches cmt src doc options python
+
+
+use     LinkerEvent     v*    Event
+use     TrackFitEvent   v*    Tr
+
+use     VeloPixDet      v*    Det
+
+
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library           RecoUpgradeMC   ../src/*.cpp 
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=RecoUpgradeMC
