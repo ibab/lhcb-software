@@ -5,6 +5,9 @@ import GaudiKernel.ProcessJobOptions
 from TrackSys.Configuration import *
 from GaudiKernel.SystemOfUnits import mm
 
+from TrackFitter.ConfiguredFitters import *
+
+
 from Configurables import ( ProcessPhase, MagneticFieldSvc,
                             DecodeVeloRawBuffer,
                             VeloPixRawBankToLiteCluster,VeloPixRawBankToPartialCluster,
@@ -23,8 +26,23 @@ from Configurables import ( ProcessPhase, MagneticFieldSvc,
                             TrackEventCloneKiller, TrackPrepareVelo,
                             TrackAddLikelihood, TrackLikelihood, TrackAddNNGhostId, Tf__OTHitCreator,
                             TrackBuildCloneTable, TrackCloneCleaner, AlignMuonRec,
-                            TrackEraseExtraInfo, PatMatch
+                            TrackEraseExtraInfo, PatMatch, VeloPixLiteMeasurementProvider
                            )
+def ConfiguredFitVeloPix( Name = "FitVeloPix",
+                       TracksInContainer = "Rec/Track/PreparedVeloPix"):
+    # note that we ignore curvatue in velo. in the end that seems the
+    # most sensible thing to do.
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer,
+                                        FieldOff = True,
+                                        SimplifiedGeometry = False,
+                                        NoDriftTimes       = None,
+                                        KalmanSmoother     = True,
+                                        LiteClusters = True,
+                                        ApplyMaterialCorrections = True,
+                                        StateAtBeamLine = False,
+                                        MaxNumberOutliers = 3)
+    return eventfitter
+
 
 ## Start TransportSvc, needed by track fit
 ApplicationMgr().ExtSvc.append("TransportSvc")
@@ -100,7 +118,7 @@ if "VeloPix" in trackAlgs :
         
    from Configurables import DataPacking__Unpack_LHCb__MCVeloPixHitPacker_
    GaudiSequencer("RecoVELOPIXSeq").Members += [PatLHCbIDUp2MCParticle("PatLHCbID2MCParticleVeloPix"),
-                                                #DataPacking__Unpack_LHCb__MCVeloPixHitPacker_("UnpackMCVeloPixHits"),
+                                                DataPacking__Unpack_LHCb__MCVeloPixHitPacker_("UnpackMCVeloPixHits"),
                                                 CheatedVeloPixPat("CheatedPatVeloPixTracking")]
    patLHCbID2MCP = PatLHCbIDUp2MCParticle("PatLHCbID2MCParticleVeloPix")
    patLHCbID2MCP.LinkVELO = False
@@ -109,7 +127,7 @@ if "VeloPix" in trackAlgs :
    patLHCbID2MCP.LinkOT = False
    patLHCbID2MCP.LinkVELOPIX = True
    cheatPat = CheatedVeloPixPat("CheatedPatVeloPixTracking")
-   cheatPat.MinimalMCHitForTrack = 3
+   cheatPat.MinimalMCHitForTrack = 2
 
 ## Special OT decoder for cosmics to merge spills.
 if TrackSys().cosmics():
@@ -314,7 +332,13 @@ if "VeloPix" in trackAlgs :
    TrackPrepareVelo("TrackPrepareVeloPix").outputLocation = "/Event/Rec/Track/PreparedVeloPix"
 
    ## Fit the velo tracks
-   GaudiSequencer("TrackVeloPixFitSeq").Members += [ ConfiguredFit("FitVeloPix","Rec/Track/PreparedVeloPix") ]
+   fitter = ConfiguredFitVeloPix("FitVeloPix","Rec/Track/PreparedVeloPix")
+   fitter.Fitter.MeasProvider.VeloPixProvider = VeloPixLiteMeasurementProvider()
+   fitter.Fitter.MeasProvider.IgnoreVelo = True
+   fitter.Fitter.MeasProvider.IgnoreVeloPix = False
+   GaudiSequencer("TrackVeloPixFitSeq").Members += [fitter]
+   
+   ##   ConfiguredFit("FitVeloPix","Rec/Track/PreparedVeloPix") ]
    ## copy the velo tracks to the "best" container (except in RDST case)
    if TrackSys().getProp( "OutputType" ).upper() != "RDST":
       from Configurables import TrackContainerCopy
