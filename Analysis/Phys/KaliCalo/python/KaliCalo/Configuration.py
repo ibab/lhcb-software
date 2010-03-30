@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Configuration.py,v 1.15 2010-03-22 18:24:00 ibelyaev Exp $
+# $Id: Configuration.py,v 1.16 2010-03-30 15:40:58 ibelyaev Exp $
 # =============================================================================
 # @file  KaliCalo/Configuration.py
 #
@@ -85,7 +85,7 @@ Or one can rely on helper functions:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2009-09-28 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $ "
 # =============================================================================
 # the only one  "vizible" symbol 
 __all__  = (
@@ -252,7 +252,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
                 EnableRecoOnDemand = True  ,
                 UseTracks          = True  ,        ## Use Tracks For First Pass
                 UseSpd             = self.getProp ( 'UseSpd'      ) ,
-                UsePrs             = self.getProp ( 'UsePrs'      ) ,
+                ## UsePrs             = self.getProp ( 'UsePrs'      ) ,
                 ForceDigits        = self.getProp ( 'ForceDigits' ) ,
                 MeasureTime        = self.getProp ( 'MeasureTime' ) ,
                 OutputLevel        = self.getProp ( 'OutputLevel' ) )
@@ -263,7 +263,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
                 EnableRecoOnDemand = True  ,
                 UseTracks          = False ,         ## do not use tracks!
                 UseSpd             = self.getProp ( 'UseSpd'      ) ,
-                UsePrs             = self.getProp ( 'UsePrs'      ) ,
+                ##UsePrs             = self.getProp ( 'UsePrs'      ) ,
                 ForceDigits        = self.getProp ( 'ForceDigits' ) ,
                 MeasureTime        = self.getProp ( 'MeasureTime' ) ,
                 OutputLevel        = self.getProp ( 'OutputLevel' ) )

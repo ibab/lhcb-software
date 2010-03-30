@@ -340,7 +340,7 @@ def fillHistos ( tree                          ,
                  cellFunc  = lambda s : s      ,
                  Unit      = MeV               ) :  
     """
-    Fill the historgams from the tree 
+    Fill the histograms from the tree 
     """
     
     selector = FillPi0 ( histomap    ,
@@ -349,7 +349,7 @@ def fillHistos ( tree                          ,
                          Unit = Unit )  
 
     print '#entries in tree: %10d ' % tree.GetEntries() 
-    ## tree.Process ( selector , '' , 500000 )
+    ##tree.Process ( selector , '' , 60000 )
     tree.Process ( selector )
     
     lambdas = selector.lambdas ()
@@ -409,9 +409,9 @@ def fillDataBase (
                                       Unit      )
         
         del f 
-            
+        
     ## update data base
-    histos.save ( dbase_name ) 
+    if dbase_name: histos.save ( dbase_name ) 
     
     return (histos,lambdas,badfiles) 
     

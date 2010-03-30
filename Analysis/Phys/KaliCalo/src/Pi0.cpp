@@ -1,4 +1,4 @@
-// $Id: Pi0.cpp,v 1.14 2010-03-22 18:24:01 ibelyaev Exp $
+// $Id: Pi0.cpp,v 1.15 2010-03-30 15:40:59 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,6 +29,10 @@
 // DeCalorimeter
 // ============================================================================
 #include "CaloDet/DeCalorimeter.h"
+// ============================================================================
+// LHCbMath
+// ============================================================================
+#include "LHCbMath/LHCbMath.h"
 // ============================================================================
 namespace Kali 
 {
@@ -213,35 +217,54 @@ void Kali::Pi0::fillTuple
   const Gaudi::XYZPoint&      point2 ,
   const int                   bkg    )
 {
-    
-    // fill N-tuple
-    tuple -> column ( "p0"   , p12      ) ;
-    tuple -> column ( "g1"   , p1       ) ;
-    tuple -> column ( "g2"   , p2       ) ;
-    
-    tuple -> column ( "pt"   , p12.Pt() ) ;
-    tuple -> column ( "pt1"  , p1.Pt()  ) ;
-    tuple -> column ( "pt2"  , p2.Pt()  ) ;
-    
-    tuple -> column ( "prs1" , prs1e ) ;
-    tuple -> column ( "prs2" , prs2e ) ;
-    
-    tuple -> column ( "spd1" , spd1e ) ;
-    tuple -> column ( "spd2" , spd2e ) ;
-    
-    tuple -> column ( "ind1" , cell1.index() ) ;
-    tuple -> column ( "ind2" , cell2.index() ) ;
-    
-    tuple -> column ( "m12"  , p12.M()        ) ;
-    tuple -> column ( "bkg"  , bkg , 0 , 2    ) ;
-    
-    Gaudi::XYZVector vec = point2 - point1 ;
-    double cSize = m_ecal->cellSize( cell1 ) ;
-    if( m_ecal->cellSize( cell2 ) >  cSize ) cSize = m_ecal->cellSize( cell2 ) ;
-    double dist = (cSize > 0) ? vec.Rho() / cSize : 0 ;
-    tuple -> column ( "dist" , dist ) ;
-
-    tuple -> write () ;
+  
+  using Gaudi::Units::GeV ;
+  
+  // fill N-tuple
+  tuple -> column ( "m12"  , p12.M()  ) ;
+  
+  tuple -> column ( "p0"   , p12      ) ;
+  tuple -> column ( "g1"   , p1       ) ;
+  tuple -> column ( "g2"   , p2       ) ;  
+  
+  tuple -> column ( "prs1" , prs1e    ) ;
+  tuple -> column ( "prs2" , prs2e    ) ;
+  
+  // here 1 MeV precision is OK for us...
+  const unsigned int ipt  = 
+    LHCb::Math::round ( std::max ( 0.0 , std::min ( p12.Pt() , 5 * GeV ) ) ) ;
+  const unsigned int ipt1 = 
+    LHCb::Math::round ( std::max ( 0.0 , std::min ( p1 .Pt() , 5 * GeV ) ) ) ;
+  const unsigned int ipt2 =
+    LHCb::Math::round ( std::max ( 0.0 , std::min ( p2 .Pt() , 5 * GeV ) ) ) ;
+  //
+  tuple -> column ( "pt"   , ipt  ) ;
+  tuple -> column ( "pt1"  , ipt1 ) ;
+  tuple -> column ( "pt2"  , ipt2 ) ;
+  
+  const unsigned short _indx1 = cell1.index() ;
+  const unsigned short _indx2 = cell2.index() ;    
+  
+  tuple -> column ( "ind1" , _indx1 ) ;
+  tuple -> column ( "ind2" , _indx2 ) ;
+  
+  const int ispd1 = 
+    LHCb::Math::round ( std::max ( 0.0 , std::min ( 5 * spd1e , 30.0 ) ) ) ;
+  const int ispd2 = 
+    LHCb::Math::round ( std::max ( 0.0 , std::min ( 5 * spd2e , 30.0 ) ) ) ;  
+  //
+  tuple -> column ( "spd1" , ispd1 , 0 , 31 ) ;
+  tuple -> column ( "spd2" , ispd2 , 0 , 31 ) ;
+  
+  tuple -> column ( "bkg"  , bkg , 0 , 2    ) ;
+  
+  Gaudi::XYZVector vec = point2 - point1 ;
+  double cSize = std::max (  m_ecal->cellSize ( cell1 ) ,
+                             m_ecal->cellSize ( cell2 ) ) ;
+  double dist = ( cSize > 0) ? vec.Rho() / cSize : 0 ;
+  tuple -> column ( "dist" , dist ) ;
+  
+  tuple -> write () ;
 }
 // ============================================================================
 // Photon CaloDigitEnergy
@@ -312,6 +335,8 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
   
   Tuple tuple = nTuple ( "Pi0-Tuple" ) ;
   
+  const bool make_tuples = produceNTuples() ;
+  
   LHCb::CaloDigit::Set digits ;
   
   typedef std::set<const LHCb::Particle*> Photons ;
@@ -332,24 +357,21 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     // trick with "mirror-background" by Albert Puig
     
     // invert the first photon :
-    const Gaudi::LorentzVector mom1 = g1->momentum() ;
-    const Gaudi::LorentzVector mom2 = g2->momentum() ;
+    Gaudi::LorentzVector _p1 = g1->momentum() ;
+    _p1.SetPx ( -_p1.Px () ) ;
+    _p1.SetPy ( -_p1.Py () ) ;
+    const Gaudi::LorentzVector fake = ( _p1 + g2->momentum() ) ;
     
-    Gaudi::LorentzVector p1 = g1->momentum() ;
-    p1.SetPx ( -p1.Px() ) ;
-    p1.SetPy ( -p1.Py() ) ;
-    const Gaudi::LorentzVector fake = ( p1 + mom2 ) ;
-    
-    const bool good    =             ( m12      < 350 * MeV && p12.Pt()  > ptCut_Pi0 ) ;
-    bool       goodBkg = m_mirror && ( fake.M() < 350 * MeV && fake.Pt() > ptCut_Pi0 ) ;
+    const bool good    =             ( m12      < 320 * MeV && p12.Pt () > ptCut_Pi0 ) ;
+    bool       goodBkg = m_mirror && ( fake.M() < 320 * MeV && fake.Pt() > ptCut_Pi0 ) ;
     
     if ( (!good)  && (!goodBkg) ) { continue ; }   // CONTINUE!!!
     
     double spd1e = seedEnergyFrom ( g1 , spd ) ;    
-    if ( spdCut < spd1e ) { continue ; }
+    if ( 0 < spd1e ) { continue ; }
     
     double spd2e = seedEnergyFrom ( g2 , spd ) ;
-    if ( spdCut < spd2e ) { continue ; }
+    if ( 0 < spd2e ) { continue ; }
     
     // order the photons according energy in preshower
     double prs1e = energyFrom ( g1 , prs ) ;
@@ -361,6 +383,25 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
       std::swap ( spd1e , spd2e ) ; 
     }
     
+    const LHCb::CaloHypo* hypo1 = hypo ( g1 )  ;
+    if ( 0 == hypo1 ) { continue ; }
+    const LHCb::CaloHypo* hypo2 = hypo ( g2 )  ;
+    if ( 0 == hypo2 ) { continue ; }
+
+    const Gaudi::LorentzVector mom1 = g1->momentum() ;
+    const Gaudi::LorentzVector mom2 = g2->momentum() ;
+    
+    Gaudi::XYZPoint point1 ( hypo1->position()->x() ,
+                             hypo1->position()->y() , 
+                             hypo1->position()->z() );
+    
+    const double spd1e3x3 = caloEnergy4Photon ( g1 -> momentum () ) ;
+    const double spd2e3x3 = caloEnergy4Photon ( g2 -> momentum () ) ;
+    
+    /// apply cut on 3x3 SPD 
+    if ( spdCut < spd1e3x3 ) { continue ; }
+    if ( spdCut < spd2e3x3 ) { continue ; }
+
     if ( good && m12 < 250 * MeV ) 
     {
       if ( 0 != m_h1                                         ) { m_h1 -> fill ( m12 ) ; }
@@ -369,17 +410,11 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
       if ( 0 != m_h4 &&                     prs1e > 10 * MeV ) { m_h4 -> fill ( m12 ) ; }
     }
     
-    const LHCb::CaloHypo* hypo1 = hypo ( g1 )  ;
-    if ( 0 == hypo1 ) { continue ; }
-    const LHCb::CaloHypo* hypo2 = hypo ( g2 )  ;
-    if ( 0 == hypo2 ) { continue ; }
+    // finally save good photons: 
+    photons.insert  ( g1 ) ;
+    photons.insert  ( g2 ) ;
     
-    Gaudi::XYZPoint point1 ( hypo1->position()->x() ,
-                             hypo1->position()->y() , 
-                             hypo1->position()->z() );
-    
-    const double spd1e3x3 = caloEnergy4Photon ( g1 -> momentum () ) ;
-    const double spd2e3x3 = caloEnergy4Photon ( g2 -> momentum () ) ;
+    if  ( !make_tuples ) { continue ; }
     
     const LHCb::CaloCellID cell1 = cellID( g1 ) ;
     const LHCb::CaloCellID cell2 = cellID( g2 ) ;    
@@ -400,9 +435,6 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
       fillTuple( tuple , mom1 , mom2 , fake , prs1e , prs2e , spd1e3x3 , spd2e3x3 , cell1 , cell2 , point1 , point2Sym , 1 ) ;
     }
     
-    // finally save good photons: 
-    photons.insert  ( g1 ) ;
-    photons.insert  ( g2 ) ;
     //
   }
   

@@ -13,7 +13,7 @@ for ``iterative pi0'' Ecal calibration
 # ======================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-17 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $ " 
+__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $ "
 # ======================================================================
 import ROOT
 from GaudiPython.Bindings import gbl as cpp
@@ -42,7 +42,7 @@ Zones      = (
 Counter    = cpp.StatEntity
 VE         = cpp.Gaudi.Math.ValueWithError
 
-def _ve_str_ ( self , fmt = '( %.2f +- %.2f )' ) :
+def _ve_str_ ( self , fmt = '( %.3g +- %.3g )' ) :
     return fmt % ( self.value() , self.error() )
 
 VE.__str__  = _ve_str_
@@ -135,6 +135,13 @@ class Histos(object):
 
         return self 
 
+    ## get the histogram by index 
+    def __getitem__ ( self , index ) :
+        """
+        get the histogram by index
+        """
+        return self._histos[ index ]
+    
     ## book all nesesary histograms 
     def _make_histos_ ( self , cellID ) :
         """
@@ -160,11 +167,13 @@ class Histos(object):
         id  = id.replace ( '(','' )
         id  = id.replace ( ')','' )
         id  = id.replace ( "'",'' )
+        id  = id.replace ( '"','' )
         id  = id.replace ( ' ','' )
         id  = id.replace ( ',','_')
         id += suffix
         
-        h = ROOT.TH1D(
+        ## h = ROOT.TH1D(
+        h = ROOT.TH1F (
             id                      , ## the name 
             str(cellID)+'__'+suffix , ## the title 
             250                     , ## bins 
@@ -203,6 +212,14 @@ class HistoMap(object) :
             _hs = self._histos[ cellID ]
         return _hs
 
+    ## insert the histos 
+    def insert ( self , histos ) :
+        """
+        insert the histos
+        """
+        self._histos[ histos.cellID() ] = histos 
+            
+        
     ## Save histograms to data base 
     def save ( self , dbasename , prefix = '' , **args ) :
         """
@@ -226,7 +243,7 @@ class HistoMap(object) :
             dbasenames = [ dbasenames ]
             
         import KaliCalo.ZipShelve as ZipShelve
-        
+
         for dbasename in dbasenames :
             dbase = ZipShelve.open  ( dbasename , 'r' , **args )                    
             for key in dbase :
@@ -343,9 +360,26 @@ class HistoMap(object) :
         from KaliCalo.Pi0HistoFit import getPi0Params as _getPi0Par
         for key in self :
             h = self._histos[key].histos()[index]
-            pars =  _getPi0Par ( h )  
-            if pars[-1] : _fits [ key ] = pars 
+            pars =  _getPi0Par ( h )
+            if pars : _fits [ key ] = pars 
         return _fits
+
+    ## split histograms into groups (e.g. for parallel processing)
+    def split ( self , num = 60 ) :
+         """
+         split histograms into groups (e.g. for parallel processins
+         """
+         result = []
+         group  = []
+         for key in self :
+             if len ( group ) == num :
+                 result.append ( group )
+                 group = []
+             group.append ( self[key] )
+             
+         return result 
+                 
+        
         
 # =============================================================================    
 ## Helper class to hold the map of { cellID : lambdas }
@@ -466,7 +500,19 @@ class LambdaMap(object) :
         return len ( self._lambdas )
 
             
-            
+# =============================================================================
+if '__main__' == __name__ :
+    
+    ## make printout of the own documentations 
+    print '*'*120
+    print                      __doc__
+    print ' Author  : %s ' %   __author__    
+    print ' Version : %s ' %   __version__
+    print ' Date    : %s ' %   __date__
+    print ' dir(%s) : %s ' % ( __name__    , dir() )
+    print '*'*120  
+
+          
 # =============================================================================
 # The END 
 # =============================================================================
