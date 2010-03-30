@@ -4,6 +4,9 @@
 ! Purpose     : Package for the reconstruction in upgraded detector classes
 !-----------------------------------------------------------------------------
 
+! 2010-03-30 - Victor Coco
+ - Modification of the content (all MC related goes to Rec/RecoUpgradeMC) + update of the linear fit in PatVeloPixFitLHCbIDs
+
 ! 2010-03-22 - Victor Coco
  - Creation of the package, most of the classes are still in developpment
 

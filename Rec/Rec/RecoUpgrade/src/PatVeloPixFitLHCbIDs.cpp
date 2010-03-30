@@ -37,9 +37,11 @@ Tf::PatVeloPixFitLHCbIDs::PatVeloPixFitLHCbIDs( const std::string& type,
     m_sx = 0;
     m_sy = 0;
     m_sz = 0;
+    m_sx2 = 0;
+    m_sy2 = 0;
+    m_sz2 = 0;
     m_sxz = 0;
     m_syz = 0;
-    m_sz2 = 0;
     m_slopeX = 0;
     m_slopeY = 0;
     m_interceptX = 0;
@@ -69,9 +71,11 @@ StatusCode Tf::PatVeloPixFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID)
   m_sx = 0;
   m_sy = 0;
   m_sz = 0;
+  m_sx2 = 0;
+  m_sy2 = 0;
+  m_sz2 = 0;
   m_sxz = 0;
   m_syz = 0;
-  m_sz2 = 0;
   m_slopeX = 0;
   m_slopeY = 0;
   m_interceptX = 0;
@@ -118,48 +122,82 @@ StatusCode Tf::PatVeloPixFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID)
       if (backFlag) DeltaZ = -DeltaZ;
       w = 1. / DeltaZ;
     }
-    m_s0   = m_s0   + w;
-    m_s02  = m_s02  + w * w;
-    m_sx  = m_sx  + w * x;
-    m_sy  = m_sy  + w * y;
-    m_sz  = m_sz  + w * z;
-    m_sxz = m_sxz +  w * x * z;
-    m_syz = m_syz +  w * y * z;
-    m_sx2 = m_sx2 +  w * x * x;
-    m_sy2 = m_sy2 +  w * y * y;
-    m_sz2 = m_sz2 + w * w * y * y;
+
+        m_s0  = m_s0  + w;
+        m_sx  = m_sx  + w * x;
+        m_sy  = m_sy  + w * y;
+        m_sz  = m_sz  + w * z;
+        m_sxz = m_sxz + w * x * z;
+        m_syz = m_syz + w * y * z;
+        m_sz2 = m_sz2 + w * z * z;
+
   }//end of loop over lhcbids
+
+   //calculate slopes, intercept and errors
+   double denom = ( m_sz2 * m_s0 - m_sz * m_sz );
+   m_slopeX = ( m_sxz * m_s0  - m_sx  * m_sz ) / denom;
+   m_slopeY = ( m_syz * m_s0  - m_sy  * m_sz ) / denom;
+   m_interceptX  = ( m_sx  * m_sz2 - m_sxz * m_sz ) / denom;
+   m_interceptY  = ( m_sy  * m_sz2 - m_syz * m_sz ) / denom;
+   m_meanZ    = m_sz / m_s0;
+   m_errorSlopX = m_s0 / denom;
+   m_errorSlopY = m_s0 / denom;
+
+// //     m_s0   = m_s0   + w;
+// //     m_s02  = m_s02  + w * w;
+// //     m_sx  = m_sx  + w * x;
+// //     m_sy  = m_sy  + w * y;
+// //     m_sz  = m_sz  + w * z;
+// //     m_sxz = m_sxz +  w * x * z;
+// //     m_syz = m_syz +  w * y * z;
+// //     m_sx2 = m_sx2 +  w * x * x;
+// //     m_sy2 = m_sy2 +  w * y * y;
+// //     m_sz2 = m_sz2 + w * w * y * y;
+//     m_sx = m_sx  +  x;
+//     m_sy = m_sy  +  y;
+//     m_sz = m_sz  +  z;
+//     m_sx2 = m_sx2 + x * x;
+//     m_sy2 = m_sy2 + y * y;
+//     m_sz2 = m_sz2 + z * z;
+//     m_sxz = m_sxz +  w * x * z;
+//     m_syz = m_syz +  w * y * z;
+//   }//end of loop over lhcbids
 
 
    //calculate slopes, intercept and errors
   
-  m_slopeX = m_sxz/m_sx2;//m_sz/m_s0 - m_interceptX * m_sx/m_s0 ;
-  m_slopeY = m_syz/m_sy2;//m_sz/m_s0 - m_interceptY * m_sy/m_s0 ;
+   //m_slopeX =  (m_sxz - m_sx*m_sz/thePoints.size())/(m_sx2-m_sx*m_sx/thePoints.size());//m_sxz/m_sx2;//m_sz/m_s0 - m_interceptX * m_sx/m_s0 ; 
+  // m_slopeY =  (m_syz - m_sy*m_sz/thePoints.size())/(m_sy2-m_sy*m_sy/thePoints.size()); // m_syz/m_sy2;//m_sz/m_s0 - m_interceptY * m_sy/m_s0 ;
 
-  m_interceptX = m_sz/m_s0 - m_sxz/m_sx2 * m_sx/m_s0;
-  m_interceptY = m_sz/m_s0 - m_syz/m_sy2 * m_sy/m_s0;
+   // m_interceptX = m_sz/thePoints.size() - m_slopeX*m_sx/thePoints.size();
+   // m_interceptY = m_sz/thePoints.size() - m_slopeY*m_sy/thePoints.size();
 
   double epsX(0.);
   double epsY(0.);
   
-  std::vector<Gaudi::XYZPoint>::const_iterator iPoint;
-  for ( iPoint = thePoints.begin() ; iPoint != thePoints.end() ; ++iPoint){
-    const Gaudi::XYZPoint pointP = (*iPoint); 
-    double w = 1.;
-    double z = pointP.z();
-    double DeltaZ = z - theFirstPixPoint.z();
-    // Check that it is not the first point
-    if ( fabs(DeltaZ) > 1e-6 ){
-      if (backFlag) DeltaZ = -DeltaZ;
-      w = 1. / DeltaZ;
-    }
-    epsX += pow(sqrt(w)*(pointP.z()-m_slopeX*pointP.x()-m_interceptX),2);
-    epsY += pow(sqrt(w)*(pointP.z()-m_slopeY*pointP.y()-m_interceptY),2);
-  }
+//   std::vector<Gaudi::XYZPoint>::const_iterator iPoint;
+//   for ( iPoint = thePoints.begin() ; iPoint != thePoints.end() ; ++iPoint){
+//     const Gaudi::XYZPoint pointP = (*iPoint); 
+//     double w = 1.;
+//     double z = pointP.z();
+//     double DeltaZ = z - theFirstPixPoint.z();
+//     // Check that it is not the first point
+//     if ( fabs(DeltaZ) > 1e-6 ){
+//       if (backFlag) DeltaZ = -DeltaZ;
+//       w = 1. / DeltaZ;
+//     }
+//     epsX += pow(sqrt(w)*(pointP.z()-m_slopeX*pointP.x()-m_interceptX),2);
+//     epsY += pow(sqrt(w)*(pointP.z()-m_slopeY*pointP.y()-m_interceptY),2);
+//   }
   
-
-  m_errorSlopX = m_s02 * epsX / (m_sx2*m_s0*m_s0 - m_s02*m_sx*m_sx); // 1/(n-2) what to do with weights???
-  m_errorSlopY = m_s02 * epsY / (m_sy2*m_s0*m_s0 - m_s02*m_sy*m_sy) ;
+  epsX = 1/thePoints.size()/(thePoints.size()-2)*(thePoints.size()*m_sz2-m_sz*m_sz-m_slopeX*m_slopeX*(m_sx2-m_sx*m_sx));
+  epsY = 1/thePoints.size()/(thePoints.size()-2)*(thePoints.size()*m_sz2-m_sz*m_sz-m_slopeY*m_slopeY*(m_sy2-m_sy*m_sy));
+  //  m_errorSlopX=thePoints.size()*epsX*epsX/(thePoints.size()*m_sx2-m_sx*m_sx);
+  //  m_errorSlopY=thePoints.size()*epsY*epsY/(thePoints.size()*m_sy2-m_sy*m_sy);
+  
+  
+  // m_errorSlopX = m_s02 * epsX / (m_sx2*m_s0*m_s0 - m_s02*m_sx*m_sx); // 1/(n-2) what to do with weights???
+//m_errorSlopY = m_s02 * epsY / (m_sy2*m_s0*m_s0 - m_s02*m_sy*m_sy) ;
 
    //update the states
   const std::vector< LHCb::State * > states = track.states();
