@@ -6,6 +6,7 @@
 
 ! 2010-03-30 - Rob Lambert
  - Protect possible segfault in MuIDMonitor.cpp seen in the offline-processing
+ - Add MuIDMonitor.py only if it is run on a DST
 
 !========================== DaVinciMonitors v1r9 2010-03-17 ===================
 ! 2010-03-17 - Patrick Koppenburg
