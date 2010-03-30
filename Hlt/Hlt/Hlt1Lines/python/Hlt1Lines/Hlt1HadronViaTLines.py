@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.17 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.18 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -60,12 +60,11 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
         # confirmed track
         #------------------------
         def confirmation(type=""):
- 	    prefix = 'HadronViaTConfirmation'+type
-
+            prefix = 'HadronViaTConfirmation'+type
             if (self.getProp('L0Channel') == 'CALO') : 
-	      candidates = 'AllHadron'
+	            candidates = 'AllHadron'
             else :
-	      candidates = self.getProp('L0Channel')
+	            candidates = self.getProp('L0Channel')
 
             L0candidates = "Hlt1L0"+candidates+"Decision"
             
@@ -78,36 +77,37 @@ class Hlt1HadronViaTLinesConf(HltLinesConfigurableUser) :
             from HltLine.HltDecodeRaw import DecodeIT,DecodeTT
             from Configurables import PatConfirmTool, PatSeedingTool,L0ConfirmWithT,HltTrackUpgradeTool
 
- 	    l0 = bindMembers(prefix, [ convertL0Candidates(candidates)
-						 , Member('TF','L0HadronViaT'
-                                                 , FilterDescriptor = ["L0ET,>,%s"%self.getProp("HadViaT_ETCut")]
-                                                 )]) 
+            l0 = bindMembers(prefix, [ convertL0Candidates(candidates)
+                                     , Member('TF','L0HadronViaT'
+                                                  , FilterDescriptor = ["L0ET,>,%s"%self.getProp("HadViaT_ETCut")]
+                                             )
+                                     ]) 
 	
             #Define the tool which actually makes the forward tracks
             #from the L0 confirmed objects
             Hlt1HadronViaTTUTConf = Member ( 'TU', 
-                                               'TConf',  
-                                               tools = [Tool(type = HltTrackUpgradeTool, 
-                                                             name = 'HltTrackUpgradeTool',
-                                                             tools=[Tool(type = L0ConfirmWithT, 
-					      				 name='THadronConf',
+                                             'TConf',  
+                                             tools = [Tool( type = HltTrackUpgradeTool, 
+                                                            name = 'HltTrackUpgradeTool',
+                                                            tools=[Tool( type = L0ConfirmWithT, 
+					      				                                 name='THadronConf',
                                                                          tools = [ Tool( type = PatConfirmTool, 
-											 name = 'PatConfirmTool',
-               										 tools = [ Tool( type = PatSeedingTool,
-                                                                                                         name = 'PatSeedingTool',
-                                                                                                         zMagnet = 0
+											                                            name = 'PatConfirmTool',
+               										                                    tools = [ Tool( type = PatSeedingTool,
+                                                                                                        name = 'PatSeedingTool',
+                                                                                                        zMagnet = 0
                                                                                                        )
-      												 ],
-                                                                                         nSigmaX = 3,
-                                                                                         nSigmaY = 3,
-                                                                                         nSigmaTx = 3,
-                                                                                         nSigmaTy = 3,
+      												                                            ],
+                                                                                         nSigmaX = 4,
+                                                                                         nSigmaY = 4,
+                                                                                         nSigmaTx = 4,
+                                                                                         nSigmaTy = 4,
                                                                                          restrictSearch = True,
                                                                                          debugMode = False 
                                                                                        )
                                                                                  ],
                                                                          particleType = 1,
-									 trackingTool='PatConfirmTool'
+									                                     trackingTool='PatConfirmTool'
                                                                         )
                                                                    ]
                                                             )

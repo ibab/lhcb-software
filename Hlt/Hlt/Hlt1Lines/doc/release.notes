@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.157 2010-03-29 12:41:39 graven Exp $
+! $Id: release.notes,v 1.158 2010-03-30 15:34:18 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -9,6 +9,11 @@
 ! for the production. Commit them AS WELL in branch production200912. 
 !
 !-----------------------------------------------------------------------------
+
+! 2010-03-30 - V. Gligorov
+ - Correct the formatting in the Hlt1 HadronViaT lines and enlarge the search
+   windows from 3 to 4 sigma. 
+
 !========================== Hlt1Lines v3r0 2010-03-29 ===================
 ! 2010-03-29 - Gerhard Raven
  - deal slightly different with the case of no specified L0 configurations:
