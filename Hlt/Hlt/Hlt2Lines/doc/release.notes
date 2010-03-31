@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-03-31 - Gerhard Raven
+ - update Hlt2Transparent definition
+
 ! 2010-03-29 - P. Spradlin
  - Hlt2TopologicalLines.py, Hlt2CharmLines.py, and Hlt2B2DXLines.py
    Modification to the filter on the number of tracks in an event (aliases GEC,
@@ -325,7 +328,7 @@
  - Adding the robust Hlt2B2DX Lines 
 
 ! 2009-11-16 - Gerhard Raven
- - Hlt2Transparant was not yet updated for the change in name of the
+ - Hlt2Transparent was not yet updated for the change in name of the
    ODIN Hlt1 lines; now it is...
 
 !========================== Hlt2Lines v1r10 2009-11-13 ===================
