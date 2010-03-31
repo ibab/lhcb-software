@@ -3,11 +3,94 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-! 2010-03-04 - Rob Lambert
- - improved validation of configurables test
+</PRE><H1><A NAME=v37r0>2010-03-31 Brunel v37r0</A></H1><PRE>
+This version uses projects Gaudi v21r8, LHCb v30r0, Lbcom v9r0, Rec v9r0
+ and SQLDDDB v5r23, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
 
-! 2010-02-26 - Rob Lambert
- - Added configurables.qmt to instantiate all configurables
+This is a production version for 2009 data reprocessing
+
+Output requires DaVinci v25r0 or later if saving packed DST, DaVinci v24r5p1
+or later otherwise
+
+ - Changes to configuration
+   . Major update to configurables using the new Gaudi v21r8 functionality,
+     for use in Hlt2. Transparent for Brunel
+   . Changed default data type in configuration files to 2009 (MuonID v7r8)
+   . Velo dEdx parameters in TrackVelodEdxCharge now loaded from conditions
+     (TrackTools v3r28, SQLDDDB v5r23)
+   . Enable CondDB by default in CaloID2DLL (CaloPIDs v5r5)
+   . Add NeutralPIDs Calo PID sequence (CaloPIDs v5r5)
+   . Modification to structure of PV fit tools (PatPV v3r14)
+   . In the online environment (Online == True) the condDB().IgnoreHeartBeat
+     property is defaulted to True ( DetCond v12r11)
+   . Changed default tag for 2009 and 2010 data (DDDB v1r29, needs SQLDDDB v5r23)
+     o head-20100325         for LHCBCOND
+
+ - Persistency change
+   . RichPID also supports Below Threshold DLLs. RichPID packing version 
+     updated to 1. 
+     (PackedEvent v4r1, RecEvent v2r27, GaudiConf v13r4p2, LHCbKernel v11r12)
+
+ - New functionality
+   . Add support for the RICH BelowThreshold DLL values
+     (Rich packages, GlobalReco v6r32)
+
+ - New tuning
+   . Changed default data type in configuration files to 2009 (MuonID v7r8)
+   . New early data tuning for seed tracks (TsaAlgorithms v3r18)
+   . Retune dEdx in velo to match 2009 data (TrackTools v3r28, SQLDDDB v5r23)
+   . Update of ST measurement uncertainty tuning for early data 
+     (TrackSys v4r31, STTools v3r18)
+   . Use detailed Bethe Bloch dE/dx tool as default in fit
+     (TrackExtrapolators v2r26)
+
+ - Bug fixes
+   . Now handles SIGXCPU signal, stopping gracefully if LSF time limit exceeded
+     (GaudiSvc v18r8, patch #3875)
+   . Fix bug 64608 in TrackMasterFitter: the veloExtrapolator (straight lines)
+     was not used for VeloR tracks (TrackFitter v2r46)
+   . Fixed bug 64670 (MuonID v7r8)
+   . Fix non-reproducible processing in CaloSharedCellAlg (CaloReco v5r4)
+   . PatVeloTT pattern recognition bug fix (PatVeloTT v3r11)
+   . Fixed small bug in PrimaryVertexChecker (PatChecker v3r7)
+   . Fix bug 64727 in TrackEffChecker (TrackCheckers v4r10p1)
+   . Fix in PVVeryLoose.py (PatPV v3r14)
+   . Check for valid magic pattern when decoding RawBanks (HltDAQ v1r4, 
+     L0Calo v11r1, L0Muon v9r1, PUVeto v7r7p1, RichDAQ v3r26p1, VeloDAQ v4r13,
+     CaloDAQ v4r19, LHCbAlgs v2r24, MuonDAQ v4r8, OTDAQ v7r7)
+   . Bug fix in noise update methods [local cache not updated] (STDet v4r18)
+   . Small fix in MuonTrack.cpp (MuonInterfaces v1r0p1)
+
+ - Monitoring changes
+   . ProtoParticles now have RICH, CALO and CombinedDLLs added, for use in 
+     monitoring phase, removed before saving DST (GlobalReco v6r32)
+   . Reduced binning of several plots (VeloRecMonitors v2r7p1)
+   . Printout APE values from STOfflinePositionTool (STTools v3r17)
+   . Suppress warning message about empty HPD data blocks
+     (RichRecBase v3r27p1)
+   . Minor changes to Rich monitoring output (RichRecQC v2r37p1)
+   . Changes to Calo monitoring (add ProtoElectronMon, remove 
+     EcalSplitClusterMon, less verbose initialization) (CaloMoniDst v4r4)
+   . Verbosity changes in bankKiller (DAQUtils v1r2)
+   . Additional track monitoring histograms, disable most histograms in Online,
+     move some histograms to Expert (TrackMonitors v1r22)
+   . Cleanups in MuonPIDChecker (MuonPIDChecker v5r0)
+   . Less verbosity in TrackMasterFitter initialisation (TrackFitter v2r46)
+   . Less verbosity in TrajOTProjector initialisation (TrackProjectors v2r27p1)
+   . Add RichHPDImageShifts monitoring sequence (RichRecQC v2r38)
+
+ - Changes to tests
+   . Pick up histogram setting options from AppConfig
+   . Added three new tests, fixedfile-brunel2009-*, for reprocessing 2009 data
+     o fixeddb: with some arbitrary database
+     o globaldb: with the latest database global tags
+     o localdb: with the latest database local and global tags
+   . Update exclusions from comparisons with reference to exclude also:
+     o Rich refractive index updates on Online DB
+     o LHCBCOND connection strings for local tags (needed for new localdb test)
+     o Warnings about total memory of event exceeding 3*sigma
+   . In BrunelSys tests:
+     o Added configurables.qmt to instantiate all configurables
 
 </PRE><H1><A NAME=v36r2>2010-02-26 Brunel v36r2</A></H1><PRE>
 This version uses projects Gaudi v21r7p1, LHCb v29r2, Lbcom v8r3, Rec v8r2
