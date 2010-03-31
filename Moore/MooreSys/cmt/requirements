@@ -9,6 +9,8 @@ branches doc cmt
 
 use  Moore              v9r0     Hlt
 
+use CaloReco            v5r4p1  Calo
+
 
 # Declare this as a container package
 apply_pattern container_package
