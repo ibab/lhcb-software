@@ -140,7 +140,7 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
         os.mkdir(PACK)
     maindir = os.path.join(PACK, PACK + '_' + pversion)
 
-# set packSys: container package 
+# set packSys: container package
     packSys = projconf.SteeringPackage()
 
 # get binary names from CMT
@@ -395,7 +395,7 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
             if ncores > 1 :
                 str += " -j %s -l %s" % (ncores, nproc)
         str += " all_groups"
-        str += +' "'
+        str += ' "'
         log.info(' str= %s ' % (str))
         rc, output = commands.getstatusoutput(str)
         print output
@@ -588,10 +588,10 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
 # set symlinks in PACK to PACK_v
         try :
             os.chdir(os.path.join(rel_dir, PACK))
-            if os.path.islink('doc') : 
+            if os.path.islink('doc') :
                 os.remove('doc')
             os.symlink(os.path.join(PACK + '_' + pversion, 'doc'), 'doc')
-            if os.path.islink('requirements') : 
+            if os.path.islink('requirements') :
                 os.remove('requirements')
             os.symlink(os.path.join(PACK + '_' + pversion, 'requirements'), 'requirements')
         except OSError :
@@ -599,13 +599,13 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
             rw_rel_dir = rel_dir.replace(os.sep+"cern.ch"+os.sep, os.sep+".cern.ch"+os.sep)
             os.chdir(os.path.join(rw_rel_dir, PACK))
             log.warning("Trying to create the top links in %s" % os.path.join(rw_rel_dir, PACK))
-            if os.path.islink('doc') : 
+            if os.path.islink('doc') :
                 os.remove('doc')
             os.symlink(os.path.join(PACK + '_' + pversion, 'doc'), 'doc')
-            if os.path.islink('requirements') : 
+            if os.path.islink('requirements') :
                 os.remove('requirements')
             os.symlink(os.path.join(PACK + '_' + pversion, 'requirements'), 'requirements')
-            
+
 
 #-----------------------------------------------------------------------------------
 if __name__ == "__main__":
