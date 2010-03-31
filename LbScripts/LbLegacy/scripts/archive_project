@@ -9,8 +9,8 @@
 # Modify : 050705 - remove all tar files and html files
 #        : 060526 - remove these files with /bin/rm -i
 #                   fix a bug in the rm command which removes ${VERSION}*
-#        : 060530 - fix bugs introduced in the previous fix" 
-#        : 071009 - added the clean up of the md5 files" 
+#        : 060530 - fix bugs introduced in the previous fix"
+#        : 071009 - added the clean up of the md5 files"
 #-----------------------------------------------------------------------
 #
 set here = $PWD
@@ -47,7 +47,7 @@ if ($1 == "-h") then
    echo "           a tar file will NOT be saved onto /castor/"
    echo "           the GAUSS_v12r0 volume will be deleted"
    echo "           the GaussEnv/v12r0 directory removed"
-   echo ""          
+   echo ""
    goto exec_end
 endif
 #
@@ -104,7 +104,7 @@ if ($action == "archive") then
    if ($status == 1) then
      echo " error during rfcp - exit"
      echo " if no rfcp command - restart the script from another PC"
-     
+
      goto exec_end
    endif
 endif
@@ -147,10 +147,15 @@ if ( -d  ${LHCBDOC}/${project}/releases/${version} ) then
   python scripts/remrel.py ${project} ${version}
 endif
 
+#remove the GRID entry if necessary
+echo "If you want to remove the GRID entry, please do :"
+echo "dirac-lhcb-remove-software $PACKAGE $VERSION"
+echo " "
+
 # send a mail
 echo " ${rel_dir}/$PACKAGE/$VERSION is ${action}d and ${rel_dir}/${package}Env/${version} is removed" > /tmp/$$
 if (${group} == "z5" ) mail -s "${rel_dir}/$PACKAGE/$VERSION $action" joel.closier@cern.ch,marco.cattaneo@cern.ch,hubert.degaudenzi@cern.ch < /tmp/$$
-rm -f /tmp/$$ 
+rm -f /tmp/$$
 rm -f /tmp/${VERSION}.tar.gz
 
 #============================================================================
