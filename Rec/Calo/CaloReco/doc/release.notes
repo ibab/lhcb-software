@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.177 2010-03-27 16:34:33 gligorov Exp $
+! $Id: release.notes,v 1.178 2010-03-31 07:18:03 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!========================== CaloReco v5r4p1  2010-03-31 =========================
 ! 2010-03-27 - V. Gligorov
   - Fix incorrect configuration of CaloPIDsConf and CaloDigitsConf in Configuration.py
     Please see (https://savannah.cern.ch/task/index.php?12691) for details 

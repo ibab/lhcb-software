@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.76 2010-03-09 07:40:31 cattanem Exp $
+# $Id: requirements,v 1.77 2010-03-31 07:18:03 graven Exp $
 # =============================================================================
 package            CaloReco
-version            v5r4
+version            v5r4p1
 
 # ================ structure ==================================================
 branches           cmt doc src options 
