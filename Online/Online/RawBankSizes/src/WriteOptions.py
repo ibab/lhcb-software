@@ -1,5 +1,9 @@
 import os
-f=open("/tmp/banks.in","r")
+if os.name == "posix":
+  f=open("/tmp/banks.in","r")
+else:
+  f=open(os.environ['TMP']+"\\banks.in","r")
+
 aaaa = os.getenv("RAWBANKSIZESROOT")
 #print aaaa
 g=open(aaaa+"/options/RawSize_HistParams.opts","r+")

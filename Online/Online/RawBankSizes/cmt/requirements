@@ -1,5 +1,5 @@
 package RawBankSizes
-version v2r6
+version v2r7
 branches cmt doc src
 use GaudiKernel v*
 use GaudiSvc v*
