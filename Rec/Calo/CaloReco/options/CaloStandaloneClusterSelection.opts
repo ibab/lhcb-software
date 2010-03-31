@@ -19,6 +19,7 @@ ElectronRec.SelectionTools  +=  {
   "CaloSelectClusterWithPrs/EcalClusterWithPrs",  
   "CaloSelectChargedClusterWithSpd/EcalClusterWithSpd"
 };
+ElectronRec.EcalClusterWithPrs.MinEnergy = 10*MeV ;
 //ElectronRec.ElectronClusterSelect.MinEnergy = 0;
 //ElectronRec.ElectronClusterSelect.MaxDigits = 99;
 
