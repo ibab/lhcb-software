@@ -2,6 +2,11 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+!========================== Moore v9r0 2009-03-31 ===================
+! 2010-03-31 - Gerhard Raven
+ - version of top of HLT_v10r0
+ - remove time out catcher, add MooreInit to seed random numbers
+
 !========================== Moore v8r8p1 2009-03-19 ===================
 ! 2010-03-19 - Gerhard Raven
  - include some patches 
