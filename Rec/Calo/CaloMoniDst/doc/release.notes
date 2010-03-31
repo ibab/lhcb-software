@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.80 2010-03-31 14:42:51 odescham Exp $ 
+! $Id: release.notes,v 1.81 2010-03-31 19:54:44 dgolubko Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+! 2010-03-31 - Dmitry Golubkov
+  - following Vanya's suggestion remove completely CaloEMuMonitor, CaloEMuChecker
 
 ! 2010-03-31 - Olivier Deschamps
   - fix typo in CaloPi0Monitor.cpp

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Monitor.py,v 1.5 2010-03-29 21:49:45 dgolubko Exp $
+# $Id: Monitor.py,v 1.6 2010-03-31 19:54:47 dgolubko Exp $
 # =============================================================================
 ## The major building blocks of Calorimeter Monitoring
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,7 +11,7 @@ The major building blocks of Calorimeter Monitoring
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $"
 # =============================================================================
 __all__ = (
     'digitsMoni'     , 
@@ -239,7 +239,6 @@ def pidsMoni ( context, Histograms ) :
     
     from Configurables import ( CaloClusterMatchMonitor ,
                                 CaloHypoMatchMonitor    ,
-                                CaloEMuMonitor          ,
                                 CaloEMuPIDMon           ) 
     
     alg = getAlgo ( GaudiSequencer ,
@@ -254,9 +253,6 @@ def pidsMoni ( context, Histograms ) :
                      context                  )
     alg3 = getAlgo ( CaloHypoMatchMonitor     ,
                      'BremMatchMon'           ,
-                     context                  )
-    alg4 = getAlgo ( CaloEMuMonitor           ,
-                     'CaloPIDMon'             ,
                      context                  )
 
     alg5 = getAlgo ( CaloEMuPIDMon            ,
@@ -288,12 +284,6 @@ def pidsMoni ( context, Histograms ) :
     alg7.minPrsE   =-1.e10
 
     alg.Members = [ alg1 , alg2 , alg3 ,        alg5, alg6, alg7 ]
-
-    if Histograms in [ 'Expert', 'OfflineFull' ] :
-        alg.Members += [ alg4 ]
-
-        if Histograms == 'Expert' :
-            alg4.ExtraHistograms = True
 
 
     setTheProperty ( alg , 'Context' , context )
