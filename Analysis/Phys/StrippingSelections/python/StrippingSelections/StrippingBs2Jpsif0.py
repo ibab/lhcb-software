@@ -1,11 +1,10 @@
-# $Id: StrippingBs2Jpsif0.py,v 1.3 2010-02-02 09:14:27 gcowan Exp $
 
 __author__ = ['Liming Zhang']
-__date__ = '28/01/2010'
-__version__ = '$Revision: 1.3 $'
+__date__ = '24/03/2010'
+__version__ = '$Revision: 1.4 $'
 
 '''
-Bs->Jpsif0 lifetime biased stripping selection using LoKi::Hybrid and
+Bs0->Jpsif0 + JpsiKstbar lifetime biased stripping selection using LoKi::Hybrid and
 python configurables. PV refitting is done. Implements the nominal and 
 loose lifetime unbiased stripping selections.
 '''
@@ -14,6 +13,7 @@ from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter	
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
+from CommonParticles.StdVeryLooseDetachedKstar import StdVeryLooseDetachedKst2Kpi
 
 class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
     """
@@ -44,9 +44,13 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
 		,	"BsVCHI2Loose" 	        : 10.0	# adimensional
 		,       "BsDIRALoose"           : 0.99  # adimensional
                 ,       "BsDIRA"                : 0.999 # adimensional
-                ,       "BsFDLoose"             : 0.8   # mm
+                ,       "BsFDLoose"             : 0.0   # mm
                 ,       "BsFD"                  : 1.5   # mm
+                ,       "KstMassWin"            : 300.0 # MeV
                  }
+
+    _Jpsi2MuMuSelection = None
+
     def nominal_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine('Bs2Jpsif0Line', prescale = 1., algos = [self._nominal_line_sequence()]) 
@@ -54,12 +58,20 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
     def loose_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
 	return StrippingLine('Bs2Jpsif0LooseLine', prescale = 1, algos = [self._loose_line_sequence()])   
-
+	
+    def nominalKst_line( self ):
+        from StrippingConf.StrippingLine import StrippingLine
+        return StrippingLine('Bs2JpsiKstLine', prescale = 1., algos = [self._nominalKst_line_sequence()])
+                                           
     def _nominal_line_sequence( self ):
         return SelectionSequence('SeqBs2Jpsif0', TopSelection = self._Bs2Jpsif0())
 
     def _loose_line_sequence( self ):
         return SelectionSequence("SeqBs2Jpsif0Loose", TopSelection = self._Bs2Jpsif0Loose())
+
+    def _nominalKst_line_sequence( self ):
+        return SelectionSequence('SeqBs2JpsiKst', TopSelection = self._Bs2JpsiKst())
+
             
     def _Jpsi2MuMuLoose( self ):
 	StdVeryLooseJpsi2MuMu = DataOnDemand("StdVeryLooseJpsi2MuMu", "StdVeryLooseJpsi2MuMu")
@@ -74,17 +86,18 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
 	return Jpsi
     
     def _Jpsi2MuMu( self ):
-	StdLooseJpsi2MuMu = DataOnDemand("StdLooseJpsi2MuMu", "StdLooseJpsi2MuMu")
-	_JpsiFilter = FilterDesktop("JpsiFilterForBs2Jpsif0")
-	_JpsiFilter.Code = "  (MAXTREE('mu+'==ABSID, TRCHI2DOF) < %(MuonTRCHI2)s)" \
+	if (StrippingBs2Jpsif0Conf._Jpsi2MuMuSelection == None) : 
+	    StdLooseJpsi2MuMu = DataOnDemand("StdLooseJpsi2MuMu", "StdLooseJpsi2MuMu")
+	    _JpsiFilter = FilterDesktop("JpsiFilterForBs2Jpsif0")
+	    _JpsiFilter.Code = "  (MAXTREE('mu+'==ABSID, TRCHI2DOF) < %(MuonTRCHI2)s)" \
                            "& (MINTREE('mu+'==ABSID, PIDmu) > %(MuonPIDmu)s)" \
         	           "& (ADMASS('J/psi(1S)') < %(JpsiMassWin)s *MeV)" \
         	           "& (VFASPF(VCHI2/VDOF) < %(JpsiVCHI2)s)" % self.getProps()
 
-	Jpsi = Selection("Jpsi2MuMuForBs2Jpsif0",
+	    StrippingBs2Jpsif0Conf._Jpsi2MuMuSelection = Selection("Jpsi2MuMuForBs2Jpsif0",
 			Algorithm = _JpsiFilter,
 			RequiredSelections = [StdLooseJpsi2MuMu])
-	return Jpsi
+	return StrippingBs2Jpsif0Conf._Jpsi2MuMuSelection
 
  
     def _f02PiPiLoose( self ):
@@ -94,7 +107,7 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
         _f0.CombinationCut = "ADAMASS('f_0(980)') < %(f0MassWin)s *MeV" % self.getProps()
         _f0.DaughtersCuts = { "pi+" : "  (MIPDV(PRIMARY) > %(PionMINIPLoose)s *mm )" \
                                       "& (TRCHI2DOF < %(PionTRCHI2Loose)s)" % self.getProps() }
-        _f0.MotherCut = "(SUMTREE(PT, ABSID=='pi+') > %(f0SUMPT)s *MeV)" % self.getProps()
+        _f0.MotherCut = "(SUMTREE(PT, ABSID=='pi+') > %(f0SUMPT)s *MeV) & (VFASPF(VCHI2/VDOF) < %(f0VCHI2)s)" % self.getProps()
 
 	f0 =  Selection ("f02PiPiForBs2Jpsif0Loose",
                  Algorithm = _f0,
@@ -110,7 +123,7 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
                                       "& (MIPCHI2DV(PRIMARY)> %(PionMINIPCHI2)s)" \
                                       "& (PIDK < %(PionPIDK)s) & (PIDmu < %(PionPIDmu)s)" \
                                       "& (TRCHI2DOF < %(PionTRCHI2)s)" % self.getProps() }
-        _f0.MotherCut = "(SUMTREE(PT, ABSID=='pi+') > %(f0SUMPT)s *MeV)" % self.getProps()
+        _f0.MotherCut = "(SUMTREE(PT, ABSID=='pi+') > %(f0SUMPT)s *MeV) & (VFASPF(VCHI2/VDOF) < %(f0VCHI2)s)" % self.getProps()
 
 	f0 =  Selection ("f02PiPiForBs2Jpsif0",
                  Algorithm = _f0,
@@ -156,6 +169,40 @@ class StrippingBs2Jpsif0Conf(LHCbConfigurableUser):
                  	Algorithm = _Bs,
                  	RequiredSelections = [f0, Jpsi])
 	return Bs
+
+    def _Kst2Kpi( self ):
+        StdVeryLooseDetachedKst2Kpi = DataOnDemand("StdVeryLooseDetachedKst2Kpi", "StdVeryLooseDetachedKst2Kpi")
+	_KstFilter = FilterDesktop("KstFilterForBs2JpsiKst")
+	_KstFilter.Code = "  (INTREE( ('K+'==ABSID) &  (TRCHI2DOF < %(PionTRCHI2)s)))" \
+                            "& (INTREE( ('pi+'==ABSID) & (TRCHI2DOF < %(PionTRCHI2)s) & (PIDK< %(PionPIDK)s)))" \
+                            "& (ADMASS('K*(892)0') < %(KstMassWin)s *MeV)" \
+                            "& (VFASPF(VCHI2/VDOF) < %(f0VCHI2)s)" \
+                            "& (SUMTREE(PT, ((ABSID=='pi+') | (ABSID=='K+'))) > %(f0SUMPT)s *MeV)" % self.getProps()
+	Kst = Selection("KstFilterForBs2JpsiKst",
+                          Algorithm = _KstFilter,
+			RequiredSelections = [StdVeryLooseDetachedKst2Kpi])
+	return Kst
+    
+    def _Bs2JpsiKst( self ):
+	Jpsi = self._Jpsi2MuMu()
+	Kst = self._Kst2Kpi()
+	_Bs = CombineParticles("Bs2JpsiKst")
+      	_Bs.DecayDescriptor = "[B_s~0 -> J/psi(1S) K*(892)0]cc"
+        _Bs.CombinationCut = "ADAMASS('B_s0') < %(BsMassWin)s *MeV" % self.getProps()
+        _Bs.MotherCut = "  (VFASPF(VCHI2/VDOF) < %(BsVCHI2)s)" \
+                        "& (BPVDIRA > %(BsDIRA)s)" \
+                        "& (BPVVD > %(BsFD)s *mm)" % self.getProps()
+        _Bs.ReFitPVs = True
+	# Set the OfflineVertexFitter to keep the 4 tracks 
+	_Bs.addTool( OfflineVertexFitter() )
+	_Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+	#_Bs.OfflineVertexFitter.useResonanceVertex = False
+        _Bs.OfflineVertexFitter.applyDauMassConstraint = True
+	Bs = Selection("SelBs2JpsiKst",
+                 	Algorithm = _Bs,
+                 	RequiredSelections = [Kst, Jpsi])
+	return Bs
+
 
 	
     def getProps(self) :
