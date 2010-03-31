@@ -95,6 +95,7 @@ StatusCode AdaptivePVReFitter::reFit(LHCb::VertexBase* PV) const {
   for( SmartRefVector<LHCb::Track>::iterator trIt = pvtracks.begin();
        pvtracks.end() != trIt; trIt++) {
     LHCb::Track* track = *trIt;
+    if(!track) continue;
     PVFitTrack aFitTrack;
     aFitTrack.setTrack(track);
     fittracks.push_back(aFitTrack);
