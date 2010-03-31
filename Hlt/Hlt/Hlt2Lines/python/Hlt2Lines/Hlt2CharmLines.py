@@ -1,7 +1,7 @@
-## $Id: Hlt2CharmLines.py,v 1.12 2010-03-30 11:26:19 spradlin Exp $
+## $Id: Hlt2CharmLines.py,v 1.13 2010-03-31 17:39:27 spradlin Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-03-30 11:26:19 $'
-__version__ = '$Revision: 1.12 $'
+__date__    = '$Date: 2010-03-31 17:39:27 $'
+__version__ = '$Revision: 1.13 $'
 
 ## ######################################################################
 ## Defines a configurable to define and configure Hlt2 lines for selecting
@@ -253,9 +253,7 @@ class Hlt2CharmLinesConf(HltLinesConfigurableUser) :
             if i not in modules : modules.append(i)
 
         from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
-        Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
-
-        tracks = Hlt2UnfittedForwardTracking.hlt2PrepareTracks()
+        tracks = Hlt2UnfittedForwardTracking().hlt2PrepareTracks()
 
         filtCode = "CONTAINS('"+tracks.outputSelection()+"') > -1"
         if self.getProp('ComRobUseGEC') : # {

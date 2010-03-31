@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-03-31 - P. Spradlin
+ - Hlt2TopologicalLines.py, Hlt2CharmLines.py, and Hlt2B2DXLines.py
+   Slightly modified the implementation of my previous change because i was
+   a little unhappy with it.
+
 ! 2010-03-31 - Gerhard Raven
  - update Hlt2Transparent definition
 

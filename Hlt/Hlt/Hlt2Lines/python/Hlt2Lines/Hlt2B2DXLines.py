@@ -89,8 +89,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         modules =  CoreFactory('CoreFactory').Modules
         
         from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
-        Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
-        tracks = Hlt2UnfittedForwardTracking.hlt2PrepareTracks()
+        tracks = Hlt2UnfittedForwardTracking().hlt2PrepareTracks()
 
         for i in [ 'LoKiTrigger.decorators' ] :
             if i not in modules : modules.append(i)

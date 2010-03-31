@@ -1,7 +1,7 @@
-## $Id: Hlt2TopologicalLines.py,v 1.37 2010-03-30 11:26:19 spradlin Exp $
+## $Id: Hlt2TopologicalLines.py,v 1.38 2010-03-31 17:39:27 spradlin Exp $
 __author__  = 'Patrick Spradlin'
-__date__    = '$Date: 2010-03-30 11:26:19 $'
-__version__ = '$Revision: 1.37 $'
+__date__    = '$Date: 2010-03-31 17:39:27 $'
+__version__ = '$Revision: 1.38 $'
 
 ###
 #
@@ -285,9 +285,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
             if i not in modules : modules.append(i)
 
         from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
-        Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
-
-        tracks = Hlt2UnfittedForwardTracking.hlt2PrepareTracks()
+        tracks = Hlt2UnfittedForwardTracking().hlt2PrepareTracks()
 
         ## By default, configure as a pass-all filter with similar code.
         filtCode = "CONTAINS('"+tracks.outputSelection()+"') > -1"
