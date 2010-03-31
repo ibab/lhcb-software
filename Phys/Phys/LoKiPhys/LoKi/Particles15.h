@@ -1,4 +1,4 @@
-// $Id: Particles15.h,v 1.6 2007-11-28 14:39:29 ibelyaev Exp $
+// $Id: Particles15.h,v 1.7 2010-03-31 15:19:56 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES15_H 
 #define LOKI_PARTICLES15_H 1
@@ -48,10 +48,11 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
+      // ======================================================================
+      /// constructor from the filter name 
+      Filter ( const std::string&      filter ) ;
       /// constructor from the filter 
-      Filter ( const IFilterCriterion* filter );
-      /// copy constructor 
-      Filter ( const Filter& right ) ;
+      Filter ( const IFilterCriterion* filter ) ;
       /// MANDATORY: virtual destructor
       virtual ~Filter() ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -60,16 +61,22 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
-      // default constructor is disabled
-      Filter () ;
+      // ======================================================================
+      /// default constructor is disabled
+      Filter () ;                            // default constructor is disabled
+      // ======================================================================
     private:
-      // the tool itself 
-      LoKi::Interface<IFilterCriterion> m_filter ; ///< the tool itself 
+      // ======================================================================
+      /// the tool itself 
+      LoKi::Interface<IFilterCriterion> m_filter ; // the tool itself 
+      // ======================================================================
     } ;
     // ========================================================================    
-  } // end of namespace LoKi::Particles
-} // end of namespace LoKi
+  } //                                         end of namespace LoKi::Particles
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

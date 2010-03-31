@@ -1,6 +1,17 @@
-// $Id: Particles15.cpp,v 1.6 2007-11-28 14:39:30 ibelyaev Exp $
+// $Id: Particles15.cpp,v 1.7 2010-03-31 15:19:56 ibelyaev Exp $
 // ============================================================================
 // Include files 
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/IAlgContextSvc.h"
+#include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/SmartIF.h"
+// ============================================================================
+// GaudiAlg 
+// ============================================================================
+#include "GaudiAlg/GetAlgs.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
@@ -26,21 +37,45 @@
  *  @date 2006-03-20
  */
 // ============================================================================
+// constructor from the filter name 
+// ============================================================================
+LoKi::Particles::Filter::Filter
+( const std::string& filter ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
+  , m_filter ()
+{
+  // 1. get from the context 
+  LoKi::ILoKiSvc* loki  = lokiSvc() ;
+  //
+  SmartIF<IAlgContextSvc> context ( loki ) ;
+  GaudiAlgorithm* alg = Gaudi::Utils::getGaudiAlg ( context ) ;
+  if ( 0 != alg ) 
+  { m_filter = alg->tool<IFilterCriterion> ( filter , alg , true ) ; }
+  else 
+  { 
+    /// 2. use tool service 
+    SmartIF<IToolSvc> tsvc ( loki ) ;
+    if ( ! ( ! tsvc ) ) 
+    {
+      IFilterCriterion* _fltr  = 0 ;
+      const IInterface* parent = 0 ;
+      StatusCode sc = tsvc->retrieveTool 
+        ( filter , _fltr , parent , true ) ;
+      Assert ( sc.isSuccess() , "Unable to retrieve the tool " + filter , sc ) ;
+      Assert ( 0 != _fltr     , "Unable to retrieve the tool " + filter      ) ;
+      m_filter = _fltr ;
+    }
+  }
+  //
+  Assert ( m_filter.validPointer() , "Unable to locate tool " + filter ) ;
+} 
+// ============================================================================
 // constructor from the filter 
 // ============================================================================
 LoKi::Particles::Filter::Filter
 ( const IFilterCriterion* filter ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
   , m_filter ( filter )
-{} 
-// ============================================================================
-// copy constructor 
-// ============================================================================
-LoKi::Particles::Filter::Filter
-( const LoKi::Particles::Filter& right ) 
-  : LoKi::AuxFunBase                       ( right ) 
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Predicate ( right ) 
-  , m_filter ( right.m_filter )
 {} 
 // ============================================================================
 // MANDATORY: virtual destructor
@@ -63,13 +98,13 @@ LoKi::Particles::Filter::operator()
     Error ( "Invalid argument, return 'false'");
     return false ;                                                 // RETURN 
   }
-  if ( !m_filter.validPointer() ) 
+  if ( !m_filter ) 
   {
     Error ( "Invalid tool: IFilterCriterion* points to NULL, return 'false'");
     return false ;                                                 // RETURN 
   }
   // use tool
-  return m_filter->isSatisfied( p ) ;
+  return m_filter->isSatisfied ( p ) ;
 } 
 // ============================================================================
 // OPTIONAL: the specific printout

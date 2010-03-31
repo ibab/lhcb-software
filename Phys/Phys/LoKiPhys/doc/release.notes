@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.132 2010-02-26 19:55:38 jpalac Exp $ 
+! $Id: release.notes,v 1.133 2010-03-31 15:19:56 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2010-03-31 - Vanya Belyaev
+
+ - fix for LoKi::Particle::Filter 
+
+ - cmt/requirements 
+
+    version increment to v8r15 
 
 ! ========================== LoKiPhys v8r14 2010-02-26 ========================
 
