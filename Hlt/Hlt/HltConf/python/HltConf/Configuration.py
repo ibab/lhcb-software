@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.173 2010-03-29 13:08:17 gligorov Exp $"
+__version__ = "$Id: Configuration.py,v 1.174 2010-03-31 21:39:56 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -27,6 +27,7 @@ class HltConf(LHCbConfigurableUser):
                 , "Verbose"                        : False      # print the generated Hlt sequence
                 , "HistogrammingLevel"             : 'None'     # or 'Line'
                 , "ThresholdSettings"              : ''         #  select a predefined set of settings, eg. 'Effective_Nominal'
+                , "EnableMonitoring"               : False      # enable embedded monitoring in FilterDesktop/CombineParticles
                 , "EnableHltGlobalMonitor"         : True
                 , "EnableHltL0GlobalMonitor"       : True
                 , "EnableHltDecReports"            : True
@@ -381,6 +382,20 @@ class HltConf(LHCbConfigurableUser):
                                  )
 
 
+        def _recurse(c,fun) :
+            fun(c)
+            for p in [ 'Members','Filter0','Filter1' ] :
+                if not hasattr(c,p) : continue
+                x = getattr(c,p)
+                if list is not type(x) : x = [ x ]
+                for i in x : _recurse(i,fun)
+
+        def _enableMonitoring(c) :
+            print 'checking %s' % c.name()
+            if c.getType() in ['FilterDesktop','CombineParticles' ] : 
+                c.Monitor = True
+                print 'set %s.Monitor = True' % c.name()
+
         def _disableHistograms(c,filter = lambda x : True) :
             if 'HistoProduce' in c.getDefaultProperties() and filter(c):
                 c.HistoProduce = False
@@ -396,7 +411,9 @@ class HltConf(LHCbConfigurableUser):
             for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable(), lambda x: x.getType()!='Hlt::Line' ) 
         elif self.getProp('HistogrammingLevel') == 'NotLine' : 
             for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable(), lambda x: x.getType()=='Hlt::Line' )
-            
+        if self.getProp('EnableMonitoring') :
+            for i in hlt1Lines()+hlt2Lines() : _recurse( i.configurable(),_enableMonitoring )
+
 
 ##################################################################################
     def postConfigAction(self) : 

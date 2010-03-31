@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.440 2010-03-29 13:45:35 graven Exp $ 
+! $Id: release.notes,v 1.441 2010-03-31 21:39:56 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2010-03-31 - Gerhard Raven
+ - add EnableMonitoring slot, which switches on the Monitor property
+   of all FilterDesktop and CombineParticles instances
 
 !========================== HltConf v7r0 2010-03-28 ===================
 ! 2010-03-29 - V. Gligorov
