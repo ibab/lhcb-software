@@ -1,6 +1,6 @@
-// $Id: CaloPi0Monitor.cpp,v 1.16 2010-03-08 01:38:28 odescham Exp $
+// $Id: CaloPi0Monitor.cpp,v 1.17 2010-03-31 14:42:53 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.17 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -72,8 +72,8 @@ protected:
     declareProperty( "PhotonPrsFilterMin", m_prsPhoton = 10*Gaudi::Units::MeV);
 
     m_multMax = 150;
-    addToInputs( LHCb::CaloAlgUtils::CaloHypoLocation("Photon",context() ) );
-    setInputData( LHCb::CaloAlgUtils::CaloHypoLocation("Photon",context() ) );
+    addToInputs( LHCb::CaloAlgUtils::CaloHypoLocation("Photons",context() ) );
+    setInputData( LHCb::CaloAlgUtils::CaloHypoLocation("Photons",context() ) );
   }
   /// destructor (virtual and protected)
   virtual ~CaloPi0Monitor() {}
