@@ -69,7 +69,7 @@ namespace LHCb {
        */
       FailoverMonitor(std::string & serverAddr, int serverPort, Connection *conn, MsgStream *log);
 
-      virtual ~FailoverMonitor() { delete m_log; }
+      virtual ~FailoverMonitor();
 
       /**
        * Starts the failover thread.

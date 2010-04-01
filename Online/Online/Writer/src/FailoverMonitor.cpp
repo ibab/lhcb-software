@@ -57,6 +57,13 @@ FailoverMonitor::FailoverMonitor(std::string &serverAddr, int serverPort,
   m_currState = m_nodeStates.begin();
 }
 
+FailoverMonitor::~FailoverMonitor() {
+    delete m_log; 
+    shutdown(m_sockFd, SHUT_RDWR);
+    close(m_sockFd);
+    
+}
+
 /**
  * Makes a connection to a specified address, and obtains a list of
  * addresses from it.
