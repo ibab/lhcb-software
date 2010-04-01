@@ -139,36 +139,16 @@ StatusCode CherenkovResMoni::execute()
       const double thetaRec  = photon->geomPhoton().CherenkovTheta();
       const double ckExpPull = ( expCKres>0 ? (thetaRec-expCKang)/expCKres : -999 );
 
-      // MC photon
-      const LHCb::MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(photon);
-      if ( mcPhot )
+      // Is this a true photon ?
+      const LHCb::MCParticle * photonParent = m_richRecMCTruth->trueCherenkovPhoton(photon);
+      if ( photonParent )
       {
-        // MC Cherenkov angles
-        const double thetaMC  = mcPhot->cherenkovTheta();
-        const double delCK    = thetaRec-thetaMC;
+
         // diffs and pulls
-        const double trueCKerr  = fabs(thetaMC-expCKang);
         const double recoCKerr  = fabs(thetaRec-expCKang);
-        const double ckTruePull = ( expCKres>0 ? (thetaRec-thetaMC)/expCKres : -999 );
 
         richHisto1D( hid(rad,mcType,"recoCKang"), "Reconstructed CK angle | MC true photons",
                      minCkTheta[rad], maxCkTheta[rad], nBins1D() )->fill(thetaRec);
-        richHisto1D( hid(rad,mcType,"mcCKang"), "MC CK angle | MC true photons",
-                     minCkTheta[rad], maxCkTheta[rad], nBins1D() )->fill(thetaMC);
-        richProfile1D( hid(rad,mcType,"calCKresVdelCKtheta"),
-                       "Calculated CKres V Rec-True CKtheta | MC true photons",
-                       0, ckResMax[rad], nBins1D() )->fill(delCK, expCKres);
-        richProfile1D( hid(rad,mcType,"calCKresVtrueCKtheta"),
-                       "Rec-True CKtheta V true CK angle | MC true photons",
-                       minCkTheta[rad], maxCkTheta[rad], nBins1D() )->fill(expCKang,delCK);
-
-        richHisto1D( hid(rad,mcType,"mcckres"),
-                     "fabs(Theta MC - Exp CK theta) | MC true photons",
-                     0, ckResMax[rad], nBins1D() )->fill(trueCKerr);
-
-        richProfile1D( hid(rad,mcType,"ckresVmcres"),
-                       "fabs(Theta MC - Exp CK theta) V Calculated CKres | MC true photons",
-                       0, ckResMax[rad], nBins1D() )->fill(expCKres,trueCKerr);
         richProfile1D( hid(rad,mcType,"diffckVckang"),
                        "fabs(Rec-Exp) CKtheta V CKtheta | MC true photons",
                        minCkTheta[rad], maxCkTheta[rad], nBins1D() )->fill(expCKang,recoCKerr);
@@ -178,40 +158,64 @@ StatusCode CherenkovResMoni::execute()
 
         if ( expCKres>0 )
         {
-          richHisto1D( hid(rad,mcType,"ckPullMC"), "(Rec-MC)/Res CKtheta | MC true photons",
-                       -5, 5, nBins1D() )->fill(ckTruePull);
           richHisto1D( hid(rad,mcType,"ckPullExp"), "(Rec-Exp)/Res CKtheta | MC true photons",
                        -5, 5, nBins1D() )->fill(ckExpPull);
-
-
-          richProfile1D( hid(rad,mcType,"ckPullMCVt"),
-                         "(Rec-MC)/Res CKtheta V CKtheta | MC true photons",
-                         minCkTheta[rad], maxCkTheta[rad], nBins1D() )->fill(thetaRec,ckTruePull);
           richProfile1D( hid(rad,mcType,"ckPullExpVt"),
                          "(Rec-Exp)/Res CKtheta V CKtheta | MC true photons",
                          minCkTheta[rad], maxCkTheta[rad], nBins1D() )->fill(thetaRec,ckExpPull);
-
-          richProfile1D( hid(rad,mcType,"ckPullMCVp"),
-                         "(Rec-MC)/Res CKtheta V ptot | MC true photons",
-                         1*GeV, 100*GeV, nBins1D() )->fill(ptot,ckTruePull);
           richProfile1D( hid(rad,mcType,"ckPullExpVp"),
                          "(Rec-Exp)/Res CKtheta V ptot | MC true photons",
                          1*GeV, 100*GeV, nBins1D() )->fill(ptot,ckExpPull);
-
-
-          richProfile1D( hid(rad,mcType,"fabsckPullMCVt"),
-                         "fabs(Rec-MC)/Res CKtheta V CKtheta | MC true photons",
-                         minCkTheta[rad], maxCkTheta[rad], nBins1D() )->fill(thetaRec,fabs(ckTruePull));
           richProfile1D( hid(rad,mcType,"fabsckPullExpVt"),
                          "fabs(Rec-Exp)/Res CKtheta V CKtheta | MC true photons",
                          minCkTheta[rad], maxCkTheta[rad], nBins1D() )->fill(thetaRec,fabs(ckExpPull));
-
-          richProfile1D( hid(rad,mcType,"fabsckPullMCVp"),
-                         "fabs(Rec-MC)/Res CKtheta V ptot | MC true photons",
-                         1*GeV, 100*GeV, nBins1D() )->fill(ptot,fabs(ckTruePull));
           richProfile1D( hid(rad,mcType,"fabsckPullExpVp"),
                          "fabs(Rec-Exp)/Res CKtheta V ptot | MC true photons",
                          1*GeV, 100*GeV, nBins1D() )->fill(ptot,fabs(ckExpPull));
+        }
+
+        // Get MC photon
+        const LHCb::MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(photon);
+        if ( mcPhot )
+        {
+          // MC Cherenkov angles
+          const double thetaMC    = mcPhot->cherenkovTheta();
+          const double delCK      = thetaRec-thetaMC;
+          const double trueCKerr  = fabs(thetaMC-expCKang);
+          const double ckTruePull = ( expCKres>0 ? (thetaRec-thetaMC)/expCKres : -999 );
+
+          richHisto1D( hid(rad,mcType,"mcCKang"), "MC CK angle | MC true photons",
+                       minCkTheta[rad], maxCkTheta[rad], nBins1D() )->fill(thetaMC);
+          richProfile1D( hid(rad,mcType,"calCKresVdelCKtheta"),
+                         "Calculated CKres V Rec-True CKtheta | MC true photons",
+                         0, ckResMax[rad], nBins1D() )->fill(delCK, expCKres);
+          richProfile1D( hid(rad,mcType,"calCKresVtrueCKtheta"),
+                         "Rec-True CKtheta V true CK angle | MC true photons",
+                         minCkTheta[rad], maxCkTheta[rad], nBins1D() )->fill(expCKang,delCK);
+          richHisto1D( hid(rad,mcType,"mcckres"),
+                       "fabs(Theta MC - Exp CK theta) | MC true photons",
+                       0, ckResMax[rad], nBins1D() )->fill(trueCKerr);
+          richProfile1D( hid(rad,mcType,"ckresVmcres"),
+                         "fabs(Theta MC - Exp CK theta) V Calculated CKres | MC true photons",
+                         0, ckResMax[rad], nBins1D() )->fill(expCKres,trueCKerr);
+
+          if ( expCKres>0 )
+          {
+            richHisto1D( hid(rad,mcType,"ckPullMC"), "(Rec-MC)/Res CKtheta | MC true photons",
+                         -5, 5, nBins1D() )->fill(ckTruePull);
+            richProfile1D( hid(rad,mcType,"ckPullMCVt"),
+                           "(Rec-MC)/Res CKtheta V CKtheta | MC true photons",
+                           minCkTheta[rad], maxCkTheta[rad], nBins1D() )->fill(thetaRec,ckTruePull);
+            richProfile1D( hid(rad,mcType,"ckPullMCVp"),
+                           "(Rec-MC)/Res CKtheta V ptot | MC true photons",
+                           1*GeV, 100*GeV, nBins1D() )->fill(ptot,ckTruePull);
+            richProfile1D( hid(rad,mcType,"fabsckPullMCVt"),
+                           "fabs(Rec-MC)/Res CKtheta V CKtheta | MC true photons",
+                           minCkTheta[rad], maxCkTheta[rad], nBins1D() )->fill(thetaRec,fabs(ckTruePull));
+            richProfile1D( hid(rad,mcType,"fabsckPullMCVp"),
+                           "fabs(Rec-MC)/Res CKtheta V ptot | MC true photons",
+                           1*GeV, 100*GeV, nBins1D() )->fill(ptot,fabs(ckTruePull));
+          }
 
         }
 
