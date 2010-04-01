@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2010-04-01 - Gerhard Raven
+ - add some monitoring histograms to Hlt2ExpressLines
+
 ! 2010-03-31 - P. Spradlin
  - Hlt2TopologicalLines.py, Hlt2CharmLines.py, and Hlt2B2DXLines.py
    Slightly modified the implementation of my previous change because i was

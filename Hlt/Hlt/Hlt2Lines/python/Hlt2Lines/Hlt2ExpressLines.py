@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2ExpressLines.py,v 1.22 2010-03-27 16:28:19 gligorov Exp $
+# $Id: Hlt2ExpressLines.py,v 1.23 2010-04-01 19:18:43 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt2 Lines for the express stream
@@ -11,11 +11,13 @@
 """
 # =============================================================================
 __author__  = "Johannes Albrecht albrecht@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.22 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.23 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
 
+def __monitor__ ( variable ,  label , center , window, id =None, nbins = 100 ) :
+      return "process ( monitor( %s,  Gaudi.Histo1DDef( '%s', %s , %s, %s), '%s' ) ) >> ~EMPTY " % (variable, label, center-window,center+window, nbins, id if id else variable )
 
 class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
    
@@ -109,6 +111,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                , 'ExDStarPiIPChi2'         :   2
                }  
    
+
    def __apply_configuration__(self):
       from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
       from HltTracking.HltPVs import PV3D
@@ -126,12 +129,14 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       
       filter = Hlt2Member(   FilterDesktop 
                              , "Filter"
-                             , Code = "(ADMASS('J/psi(1S)')<%(ExJPsiMassWindow)s*MeV)"\
+                             , Code = " (ADMASS('J/psi(1S)')<%(ExJPsiMassWindow)s*MeV)"\
                              " & (PT>%(ExJPsiPt)s*MeV)"\
                              " & (MINTREE('mu-'==ABSID,PT)>%(ExJPsiMuPt)s*MeV) " %  self.getProps() 
                              , InputLocations  = [ DiMuon ]
                              , InputPrimaryVertices = "None"
                              , UseP2PVRelations = False
+                             , PreMonitor  =  __monitor__( "M","M(#mu#mu)",3097,self.getProp("ExJPsiMassWindow"),'M_in',nbins=201) 
+                             , PostMonitor =  __monitor__( "M","M(#mu#mu)",3097,self.getProp("ExJPsiMassWindow"),'M_out',nbins=201)
                              )
       
       line = Hlt2Line('ExpressJPsi'
@@ -223,6 +228,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                                       " & (PT>%(ExLambdaPiPt)s*MeV)"\
                                                       " & (MIPCHI2DV(PRIMARY)>%(ExLambdaPiIPChi2)s) "%  self.getProps(),
                                                       }
+                                  , MotherMonitor  =  __monitor__("M", "M(p#pi)",1116,self.getProp("ExLambdaMassWin"))
                                   )
       
       line = Hlt2Line('ExpressLambda'
@@ -240,12 +246,13 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
 
       KsCombine = Hlt2Member( CombineParticles
                               , "KsCombine"
-                              , DecayDescriptor = "[KS0 -> pi+ pi-]cc"
+                              , DecayDescriptor = "KS0 -> pi+ pi-"
                               , InputLocations = [NoCutsPions]
                               , CombinationCut = "(ADAMASS('KS0') < %(ExKSMassWinWide)s*MeV)"%  self.getProps()
                               , MotherCut = "(ADMASS('KS0') < %(ExKSMassWin)s*MeV)"\
                               " & (log((CHILD(MIPDV(PRIMARY), 1)) * (CHILD(MIPDV(PRIMARY), 2) )"\
                               " / (MIPDV(PRIMARY) ) )  > %(ExKSNu1)s*mm )"%  self.getProps()
+                              , MotherMonitor  =  __monitor__("M", "M(#pi#pi)",498,self.getProp("ExKSMassWin"))
                               )
       
       line = Hlt2Line('ExpressKS'
@@ -276,7 +283,8 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                               , DaughtersCuts = {"K+":"(PT>%(ExPhiKPt)s*MeV)"\
                                                   " & (P>%(ExPhiKP)s*MeV)"\
 						  " & (MIPCHI2DV(PRIMARY) > %(ExPhiKMIPCHI2DV)s)"%  self.getProps()}
-                               )#
+                             , MotherMonitor  =  __monitor__("M", "M(KK)",1020,self.getProp("ExPhiMassWin"))
+                             )
 
       DsCombine = Hlt2Member( CombineParticles
                               , "DsCombine"
@@ -291,6 +299,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                               , DaughtersCuts = {"pi+":"(PT > %(ExDsPiPt)s*MeV)"\
                                                  " & (P > %(ExDsPiP)s*MeV)"\
 						 " & (MIPCHI2DV(PRIMARY) > %(ExDsPiMIPCHI2DV)s)"%  self.getProps()}
+                              , MotherMonitor  =  __monitor__( "M","M(#phi#pi)",1968,self.getProp("ExDsMassWin"))
                               )
       
       line = Hlt2Line('ExpressDs2PhiPi'
@@ -354,7 +363,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                                       " & (PT>%(ExD0PiPt)s*MeV)"\
                                                       " & (MIPCHI2DV(PRIMARY)>%(ExD0PiIPChi2)s) "%  self.getProps()
                                                       }
-                                  
+                                  , MotherMonitor  =  __monitor__("M", "M(K#pi)",1865,self.getProp("ExD0MassWin"))
                                   )
 
       DStarCombine = Hlt2Member( CombineParticles
@@ -369,6 +378,8 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                  , DaughtersCuts = {"pi+":"(PT>%(ExDStarPiPt)s*MeV)"\
                                                     " & (MIPCHI2DV(PRIMARY)>%(ExDStarPiIPChi2)s) "%  self.getProps()
                                                     }
+                                 , MotherMonitor  =  __monitor__("M", "M(D0#pi)",2010,self.getProp("ExDStarMassWin"))
+                                 #                  "process ( monitor( M-MAXTREE('D0'=ABSID,M), Gaudi.Histo1DDef( '#Delta M',120,200),'DM') ) >> ~EMPTY "
                                  )
 
       line = Hlt2Line('ExpressDStar2D0Pi'
@@ -380,12 +391,12 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       #--------------------------------------------                      
       
       
-      HltANNSvc().Hlt2SelectionID.update( { "Hlt2ExpressJPsiDecision"   : 50090
-                                            ,'Hlt2ExpressJPsiTagProbeDecision' : 50091
-                                            ,'Hlt2ExpressLambdaDecision' : 50092
-                                            ,'Hlt2ExpressKSDecision' : 50093
-                                            , 'Hlt2ExpressDs2PhiPiDecision' : 50094
-                                            ,"Hlt2ExpressBeamHaloDecision"     : 50095
-                                            ,'Hlt2ExpressDStar2D0PiDecision' : 50096
-                                            } )
+      HltANNSvc().Hlt2SelectionID.update( { 'Hlt2ExpressJPsiDecision'         : 50090
+                                          , 'Hlt2ExpressJPsiTagProbeDecision' : 50091
+                                          , 'Hlt2ExpressLambdaDecision'       : 50092
+                                          , 'Hlt2ExpressKSDecision'           : 50093
+                                          , 'Hlt2ExpressDs2PhiPiDecision'     : 50094
+                                          , 'Hlt2ExpressBeamHaloDecision'     : 50095
+                                          , 'Hlt2ExpressDStar2D0PiDecision'   : 50096
+                                          } )
 
