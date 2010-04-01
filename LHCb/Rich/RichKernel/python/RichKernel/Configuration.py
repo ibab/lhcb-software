@@ -142,7 +142,7 @@ class RichTools(RichConfigurableUser):
         self.setRichDefaults( "TrackSelectorType",   { "Offline" : "Reco",         "HLT" : "Reco" } )
         self.setRichDefaults( "TrSegMakerType",      { "Offline" : "Detailed",     "HLT" : "Detailed" } )
         self.setRichDefaults( "GeomEffType",         { "Offline" : "CKMassRing",   "HLT" : "CKMassRing" } )
-        self.setRichDefaults( "CkResType",           { "Offline" : "Binned",       "HLT" : "Binned" } )
+        self.setRichDefaults( "CkResType",           { "Offline" : "Functional",   "HLT" : "Functional" } )
         self.setRichDefaults( "SignalDetEffType",    { "Offline" : "Tabulated",    "HLT" : "NominalTabulated" } )
                
     ## @brief Make an instance of the given configurable and configure this
