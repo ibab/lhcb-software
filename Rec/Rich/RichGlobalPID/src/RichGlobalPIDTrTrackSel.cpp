@@ -128,11 +128,6 @@ StatusCode TrackSel::execute()
   const StatusCode sc = eventInit();
   if ( sc.isFailure() ) return sc;
 
-  // turn all tracks 'off'
-  //for ( LHCb::RichRecTracks::iterator track = richTracks()->begin();
-  //      track != richTracks()->end(); ++track ) 
-  //{ (*track)->setInUse( false ); }
-
   // Iterate over all RichRecTracks and choose those to use
   for ( LHCb::RichRecTracks::iterator track = richTracks()->begin();
         track != richTracks()->end(); ++track ) 
@@ -174,10 +169,6 @@ StatusCode TrackSel::execute()
 
     // Set quality
     pidTrack->setTrQuality( quality );
-
-    // only make one track
-    //Warning("Only PID'ing ONE track");
-    //break;
 
   } // track loop
 
