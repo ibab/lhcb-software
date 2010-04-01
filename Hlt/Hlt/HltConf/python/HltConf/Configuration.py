@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.174 2010-03-31 21:39:56 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.175 2010-04-01 19:19:50 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -394,7 +394,7 @@ class HltConf(LHCbConfigurableUser):
             print 'checking %s' % c.name()
             if c.getType() in ['FilterDesktop','CombineParticles' ] : 
                 c.Monitor = True
-                print 'set %s.Monitor = True' % c.name()
+                c.HistoProduce = True
 
         def _disableHistograms(c,filter = lambda x : True) :
             if 'HistoProduce' in c.getDefaultProperties() and filter(c):
