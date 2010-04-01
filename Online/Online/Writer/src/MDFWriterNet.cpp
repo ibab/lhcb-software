@@ -646,14 +646,13 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
   // count event
   m_currFile->incEvents();
   ++m_TotEvts;
-  
+
   // check type of event
   if( checkForPhysEvent(data, len)) {
       m_currFile->incPhysEvents();
   }
 
   incTriggerType(data, len);
-
  
   // after every MB send statistics
   if (m_mq_available && totalBytesWritten % 1048576 < len) {
