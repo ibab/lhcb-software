@@ -42,17 +42,11 @@ use OnlineTools       v1r2     Online
 use OnlineTasks       v1r31    Online
 use Presenter         v1r0     Online
 use PyDIM             v2r9     Online
-<<<<<<< requirements
 use RawBankSizes      v2r7     Online
-use ROMon             v1r21    Online
-use ROLogger          v0r17    Online
-use UPI               v1r17    Online
-=======
 use RawBankSizes      v2r6     Online
 use ROMon             v1r22    Online
 use ROLogger          v0r18    Online
 use UPI               v1r18    Online
->>>>>>> 1.198
 use UPIR              v1r2     Online
 #Obsolete: use Viewer            v1r5     Online
 use Writer            v1r25    Online
