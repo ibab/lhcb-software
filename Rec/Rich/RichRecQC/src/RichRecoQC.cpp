@@ -37,6 +37,8 @@ RecoQC::RecoQC( const std::string& name,
     m_truePhotCount     ( Rich::NRadiatorTypes, 0 ),
     m_nSegs             ( Rich::NRadiatorTypes, 0 )
 {
+  using namespace boost::assign;
+
   // Declare job options
 
   // min beta
@@ -45,11 +47,11 @@ RecoQC::RecoQC( const std::string& name,
 
   // Ch Theta Rec histogram limits: low, high -> aerogel, C4F10, CF4
   declareProperty( "ChThetaRecHistoLimitMin",
-                   m_ckThetaMin = boost::assign::list_of(0.100)(0.030)(0.010) );
+                   m_ckThetaMin = list_of(0.100)(0.030)(0.010) );
   declareProperty( "ChThetaRecHistoLimitMax",
-                   m_ckThetaMax = boost::assign::list_of(0.325)(0.065)(0.036) );
+                   m_ckThetaMax = list_of(0.325)(0.065)(0.036) );
   declareProperty( "CKResHistoRange",
-                   m_ckResRange = boost::assign::list_of(0.012)(0.006)(0.004) );
+                   m_ckResRange = list_of(0.012)(0.006)(0.004) );
 
   setProperty( "NBins2DHistos", 100 );
 }
@@ -82,28 +84,31 @@ StatusCode RecoQC::prebookHistograms()
         rad != Rich::radiators().end(); ++rad )
   {
     richHisto1D( HID("ckResAllStereoRefit",*rad),
-                 "Rec-Exp Cktheta : All photons : Stereographic Refit",
+                 "Rec-Exp Cktheta | All photons | Stereographic Refit",
                  -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D() );
     richHisto1D( HID("ckResAllStereoRefitIsolated",*rad),
-                 "Rec-Exp Cktheta : All photons : Stereographic Refit : Isolated Tracks",
+                 "Rec-Exp Cktheta | All photons | Stereographic Refit | Isolated Tracks",
                  -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D() );
-    richHisto1D( HID("thetaRec",*rad), "Reconstructed Ch Theta : All photons",
+    richHisto1D( HID("thetaRec",*rad), "Reconstructed Ch Theta | All photons",
                  m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D() );
-    richHisto1D( HID("thetaExpect",*rad), "Expected Ch Theta : All Tracks",
+    richHisto1D( HID("thetaExpect",*rad), "Expected Ch Theta | All Tracks",
                  m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D() );
-    richHisto1D( HID("phiRec",*rad), "Reconstructed Ch Phi : All photons",
+    richHisto1D( HID("phiRec",*rad), "Reconstructed Ch Phi | All photons",
                  0.0, 2.0*Gaudi::Units::pi, nBins1D() );
-    richHisto1D( HID("ckResAll",*rad), "Rec-Exp Cktheta : All photons",
+    richHisto1D( HID("ckResAll",*rad), "Rec-Exp Cktheta | All photons",
                  -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D() );
-    richHisto1D( HID("thetaRecIsolated",*rad),"Reconstructed Ch Theta : All photons : Isolated Tracks",
+    richHisto1D( HID("thetaRecIsolated",*rad),"Reconstructed Ch Theta | All photons | Isolated Tracks",
                  m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D() );
-    richHisto1D( HID("ckResAllIsolated",*rad),"Rec-Exp Cktheta : All photons : Isolated Tracks",
+    richHisto1D( HID("ckResAllIsolated",*rad),"Rec-Exp Cktheta | All photons | Isolated Tracks",
                  -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D() );
-    richHisto1D( HID("totalPhotons",*rad),"Photon Yield : All Tracks",
+    richHisto1D( HID("totalPhotons",*rad),"Photon Yield | All Tracks",
                  -0.5, 50.5, 51 );
-    richHisto1D( HID("totalPhotonsIsolated",*rad),"Photon Yield : Isolated Tracks",
+    richHisto1D( HID("totalPhotonsIsolated",*rad),"Photon Yield | Isolated Tracks",
                  -0.5, 50.5, 51 );
-
+    richHisto1D( HID("ckPull",*rad), "(Rec-Exp)/Res CKtheta",
+                 -4, 4, nBins1D() );
+    //richProfile1D( HID("ckPullVtheta",*rad), "(Rec-Exp)/Res CKtheta Versus CKtheta",
+    //               m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D() );
   }
 
   return StatusCode::SUCCESS;
@@ -224,6 +229,14 @@ StatusCode RecoQC::execute()
         richHisto1D(HID("ckResAllIsolated",rad))->fill(deltaTheta);
       }
 
+      // CK theta Pull plots
+      const double ckPull = ( resExpTrue>0 ? deltaTheta/resExpTrue : -999 );
+      if ( resExpTrue>0 )
+      {
+        richHisto1D( HID("ckPull",rad) ) -> fill( ckPull );
+        //richProfile1D( HID("ckPullVtheta",rad) ) -> fill( thetaRec, ckPull );
+      }
+      
       // MC based plots
       if ( mcTrackOK && mcRICHOK )
       {
@@ -234,19 +247,22 @@ StatusCode RecoQC::execute()
           ++truePhotons;
           avRecTrueTheta += thetaRec;
           // resolution plot
-          richHisto1D ( HID("ckResTrue",rad), "Rec-Exp Cktheta : MC true photons",
+          richHisto1D ( HID("ckResTrue",rad), "Rec-Exp Cktheta | MC true photons",
                         -m_ckResRange[rad], m_ckResRange[rad], nBins1D() ) -> fill( deltaTheta );
           if ( resExpTrue>0 )
           {
-            // pull plot
-            const double ckPull = deltaTheta/resExpTrue;
-            richHisto1D ( HID("ckPull",rad), "(Rec-Exp)/Res Cktheta",
+            // pull plots
+            richHisto1D ( HID("ckPullTrue",rad), "(Rec-Exp)/Res Cktheta | MC true photons",
                           -4, 4, nBins1D() ) -> fill( ckPull );
+            //richProfile1D( HID("ckPullVthetaTrue",rad), 
+            //               "(Rec-Exp)/Res CKtheta Versus CKtheta | MC true photons",
+            //               m_ckThetaMin[rad], m_ckThetaMax[rad], nBins1D() ) 
+            //  -> fill( thetaRec, ckPull );
           }
         }
         else // fake photon
         {
-          richHisto1D( HID("ckResFake",rad), "Rec-Exp Cktheta : MC fake photons",
+          richHisto1D( HID("ckResFake",rad), "Rec-Exp Cktheta | MC fake photons",
                        -m_ckResRange[rad], m_ckResRange[rad], nBins1D() ) -> fill( deltaTheta );
         }
       } // MC is available
