@@ -8,7 +8,7 @@ int main(int /* argc */, char** /* argv */)
 #ifdef WIN32
   fname = getenv("TMP");
   fname += "\\banks.in";
-  FILE *f = fopen(fname.c_str());
+  FILE *f = fopen(fname.c_str(),"w");
 #else
   fname = "/tmp";
   fname += "/banks.in";
