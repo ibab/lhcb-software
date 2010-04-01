@@ -1,4 +1,4 @@
-// $Id: HltL0GlobalMonitor.cpp,v 1.3 2010-03-29 14:45:10 albrecht Exp $
+// $Id: HltL0GlobalMonitor.cpp,v 1.4 2010-04-01 17:06:25 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -149,6 +149,12 @@ StatusCode HltL0GlobalMonitor::execute() {
 //==============================================================================
 void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
   if (l0du == 0) return;
+
+  if (!l0du->valid()) { 
+      return;
+  }
+
+
 
   counter("L0Accept") += l0du->decision();
   counter("L0Forced") += l0du->forceBit();

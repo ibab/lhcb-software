@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.69 2010-03-29 14:47:17 albrecht Exp $
+!$Id: release.notes,v 1.70 2010-04-01 17:06:25 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+
+! 2010-04-01 - Gerhard Raven
+ - check L0DUReport is valid before using it (needed to be able
+   to run on nanofied lumi events)
 
 ! 2010-03-29 - Johannes Albrecht
  - HltL0GlobalMonitor: cosmetic changes to title and add L0 global
