@@ -227,8 +227,15 @@ StatusCode MEPInjector::initBuffers() {
     /// Makes buffers and attaches to them.
     for(std::vector<std::string>::iterator iteNames = m_BufferNames.begin(); iteNames != m_BufferNames.end(); ++iteNames) {
 
-        if(strcmp(iteNames->c_str(),PERA) != 0 && strcmp(iteNames->c_str(),PERB) !=0 && strcmp(iteNames->c_str(),LUMI) != 0 && strcmp(iteNames->c_str(),RAND) != 0 ) {
-            msgLog << MSG::ERROR << WHERE << "Invalid buffer manager name: " << *iteNames << ", please use PERA (trg 4) or PERB (trg 5), LUMI (trg 1) or RAND (trg 3)." << endmsg;
+        if(strcmp(iteNames->c_str(),TRG0) !=0 &&
+           strcmp(iteNames->c_str(),TRG1) !=0 && 
+           strcmp(iteNames->c_str(),TRG2) !=0 && 
+           strcmp(iteNames->c_str(),TRG3) !=0 &&
+           strcmp(iteNames->c_str(),TRG4) !=0 &&
+           strcmp(iteNames->c_str(),TRG5) !=0 &&
+           strcmp(iteNames->c_str(),TRG6) !=0 &&
+           strcmp(iteNames->c_str(),TRG7) !=0 ) {
+            msgLog << MSG::ERROR << WHERE << "Invalid buffer manager name: " << *iteNames << ", please use TRG[0-7]" <<endmsg ;
             msgLog << MSG::ERROR << WHERE << "Trying to continue with other configured buffers." << endmsg;
             iteToDelete.push_back(iteNames);
             continue;
@@ -764,7 +771,28 @@ StatusCode MEPInjector::getEvent(int nbEv) {
         else {
             /// Select the input buffer according to the TFC trigger type.
             msgLog << MSG::DEBUG << WHERE << "Online Trigger Type: " << ori->triggerType << endmsg; 
+
+            std::stringstream sstr;
+            std::string bufname;
+            sstr << "TRG" << ori->triggerType;
+            bufname = sstr.str(); 
+//            if(sprintf(bufname, "TRG%d", (int) (0xfff & ori->triggerType))!=1) {
+//                msgLog << MSG::WARNING << "Unknown trigger type: "<< ori->triggerType << ", buffername =" << bufname << endmsg;
+//                return StatusCode::FAILURE;
+//            }
+
+            std::map<std::string, BMID>::iterator ite = m_EventBuffers.find(bufname);
+            if(ite == m_EventBuffers.end()) {
+                msgLog << MSG::WARNING << "Trigger not implemented: "<< ori->triggerType << ", buffer name: " << bufname << ", using first buffer as default."<< endmsg;
+                bmid = m_EventBuffers.begin()->second;
+            }
+            else
+                bmid = ite->second;
+            
+/*
             switch(ori->triggerType) {
+
+
                     // Static "map" not very elegant but easier to implement and to control via job options 
                 case 1 : //LUMI
                         msgLog << MSG::DEBUG << WHERE << "Trigger Type 1: LUMI event selected" << endmsg;
@@ -779,14 +807,14 @@ StatusCode MEPInjector::getEvent(int nbEv) {
                         bmid = m_EventBuffers[PERB];
                         break;
                 case 6 : //TIMI, don't know what it is, process it like PERA
-                        msgLog << MSG::WARNING << WHERE << "Trigger Type 6: Not implemented. Fallback to PERA buffer" << endmsg;
+                        msgLog << MSG::DEBUG << WHERE << "Trigger Type 6: Not implemented. Fallback to PERA buffer" << endmsg;
                 case 7 : //CALX, don't know what it is, process it like PERA
-                        msgLog << MSG::WARNING << WHERE << "Trigger Type 7: Not implemented. Fallback to PERA buffer" << endmsg;
+                        msgLog << MSG::DEBUG << WHERE << "Trigger Type 7: Not implemented. Fallback to PERA buffer" << endmsg;
                 case 0 : //PHYS, should not be seen, process it like PERA (periodic A)
-                        msgLog << MSG::WARNING << WHERE << "Trigger Type 0: Not implemented. Fallback to PERA buffer" << endmsg;
+                        msgLog << MSG::DEBUG << WHERE << "Trigger Type 0: Not implemented. Fallback to PERA buffer" << endmsg;
                       
                 case 2 : //AUXI, should not be seen, process it like PERA
-                        msgLog << MSG::WARNING << WHERE << "Trigger Type 2: Not implemented. Fallback to PERA buffer" << endmsg;
+                        msgLog << MSG::DEBUG << WHERE << "Trigger Type 2: Not implemented. Fallback to PERA buffer" << endmsg;
                 case 4 : //PERA
                         msgLog << MSG::DEBUG << WHERE << "Trigger Type 4: PERA event selected" << endmsg;
                         bmid = m_EventBuffers[PERA];
@@ -794,7 +822,8 @@ StatusCode MEPInjector::getEvent(int nbEv) {
 
                 default : msgLog << MSG::ERROR << WHERE << "Odin trigger type decoding error" << endmsg;
                         return StatusCode::FAILURE;
-            } 
+            }
+*/ 
         }
 
         /// Checks if the buffer is not empty before to try to get an event from it.
@@ -941,7 +970,7 @@ StatusCode MEPInjector::processEvent(char *curEvt, unsigned int curEvtSize) {
             /// Get the Tell1 IP address.
             tell1id = getTell1IP(hdr->type(), hdr->sourceID());
 	    if (tell1id == 0) { 
-                msgLog << MSG::INFO<<"Problem finding Tell1 IP: Unknown source "<<hdr->sourceID()<<" or type "<<RawBank::typeName(hdr->type()) << ", execution continue "<<endmsg; 
+                msgLog << MSG::DEBUG<<"Problem finding Tell1 IP: Unknown source "<<hdr->sourceID()<<" or type "<<RawBank::typeName(hdr->type()) << ", execution continue "<<endmsg; 
 	        continue;
 	    }
 

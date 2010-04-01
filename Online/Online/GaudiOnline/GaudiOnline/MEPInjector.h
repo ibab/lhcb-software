@@ -58,7 +58,7 @@ namespace LHCb {
 
 #define TWOMB 2097152
 #define MEP_REQ_TTL     10
-
+/*
 #define LUMI "LUMI"
 #define PHYS "PHYS"
 #define PERA "PERA"
@@ -68,6 +68,16 @@ namespace LHCb {
 #define TIMI "TIMI"
 #define CALX "CALX"
 #define UNKN "UNKN"
+*/
+
+#define TRG0 "TRG0"
+#define TRG1 "TRG1"
+#define TRG2 "TRG2"
+#define TRG3 "TRG3"
+#define TRG4 "TRG4"
+#define TRG5 "TRG5"
+#define TRG6 "TRG6"
+#define TRG7 "TRG7"
 
  /** @class MEPInjector MEPInjector.cpp
   *  Creates and injects MEPs from MDF files. 
