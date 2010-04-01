@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: TreeTask.py,v 1.1 2010-03-30 15:40:59 ibelyaev Exp $
+# $Id: TreeTask.py,v 1.2 2010-04-01 09:04:40 ibelyaev Exp $
 # =============================================================================
 ## @file KaliKalo/TreeTask.py
 #  The helper class for parallel filling of histograms  using GaudiPython.Parallel
@@ -14,7 +14,7 @@ The helper class for parallel filling of historgams using GaudiPython.Parallel
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-28 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $ "
 __all__     = (
     "TreeTask"   ,
     )
@@ -59,7 +59,7 @@ class TreeTask ( Parallel.Task ) :
         """
         print 'FillTask : Start parallel processing (local)'
         import sets 
-        self.output = ( sets.Set() , sets.Set() ) 
+        self.output = [ None , sets.Set() ]
                         
     ## local initialization 
     def initializeRemote ( self ) :
@@ -79,19 +79,28 @@ class TreeTask ( Parallel.Task ) :
         import tempfile
         
         if self._tmpdir : 
-            dbase_name = tempfile.mktemp ( dir = self._tmpdir , suffix = '_zdb.gz' )
+            dbase_name = tempfile.mktemp ( dir    = self._tmpdir ,
+                                           prefix = 'tmp_'    ,
+                                           suffix = '_zdb.gz' )
         else :
-            dbase_name = tempfile.mktemp (                      suffix = '_zdb.gz' )
-            
+            dbase_name = tempfile.mktemp ( prefix = 'tmp_'    ,
+                                           suffix = '_zdb.gz' )
+
+        badfiles = []
+        
         histos, lambdas, badfiles = Fill.fillDataBase (
             self._lambdas               ,
             files                       ,
             dbase_name = dbase_name     ,
             Unit       = self._Unit     )
         
-        self.output[0].add ( dbase_name )
-        for b in badfiles : self.output[1].add (  b )
+        self.output[0] = dbase_name 
+        for b in badfiles :
+            self.output[1].add (  b )
 
+        if hasattr ( self , 'histos' ) :
+            print 'I have HISTOS attribute!!!' , len ( self.histos ) , self.histos.entries() 
+            
         print 'End of processing ', files  
 
     ## finalization of the task 
@@ -106,17 +115,29 @@ class TreeTask ( Parallel.Task ) :
         """
         merge the results form the different processes
         """
-        print " Merge results ", result 
-
-        for f in result[0] : self.output[0].add ( f ) 
+        import os 
+        print " Merge results (1)", result
+        if not hasattr ( self , 'histos' ) :
+            self.histos = Kali.HistoMap()        
+            ##self.histos = ' I am histos '
+        if os.path.exists ( result[0] ) :
+            print 'READ DBASE:', result[0] 
+            self.histos.read( result[0] )
+            print 'REMOVE DBASE:', result[0] 
+            os.remove ( result[0] )
+        else :
+            print 'NON_EXISTING PATH', result[0] 
+        print " Merge results (3)", result 
         for f in result[1] : self.output[1].add ( f ) 
-        
+        print " Merge results (3)", result 
+            
     def _resetOutput ( self ) :
 
-        print 'I am reset output '
-        self.output[0].clear() 
+        print 'I am reset output (1)'
         self.output[1].clear() 
+        print 'I am reset output (2)'
 
+__managers = [] 
 # ==============================================================================
 ## perform the parallel fill for the histograms 
 def __fill_p_Histos ( lambdas                   ,
@@ -127,7 +148,7 @@ def __fill_p_Histos ( lambdas                   ,
     """
     Perform the ``parallel'' fill for the histograms 
     """
-
+    
     tmpdir = None
     if ppservers :
         import os 
@@ -144,18 +165,23 @@ def __fill_p_Histos ( lambdas                   ,
         
     status = wm.process ( task , file_names ) 
 
-    tmpdbases, badfiles = task.output 
+    print 'WorkManager: AFTER PROCESS (1) ', hasattr ( task , 'histos' )
 
-    histomap = Kali.HistoMap()
-    histomap.read ( tmpdbases )
+    histomap  = task.histos
+    badfiles  = task.output[1] 
+
+    print 'WorkManager: AFTER PROCESS (2.0) ', hasattr ( task , 'histos' )
+
+    ##__managers.append ( wm ) 
     
-    for f in tmpdbases :
-        import os
-        if os.path.exists ( f ) : os.remove ( f ) 
+    print 'WorkManager: AFTER PROCESS (2) ', hasattr ( task , 'histos' )
 
     if dbase_name :
-        histomap.save ( dbase_name )
-    
+        print 'Save histos in ', dbase_name 
+        ## histomap.save ( dbase_name )
+
+    print 'WorkManager: AFTER PROCESS (3) ', hasattr ( task , 'histos' )
+
     return histomap,badfiles 
 
 # ==============================================================================

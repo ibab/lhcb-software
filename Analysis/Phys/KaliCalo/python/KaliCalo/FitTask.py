@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: FitTask.py,v 1.1 2010-03-30 15:40:58 ibelyaev Exp $
+# $Id: FitTask.py,v 1.2 2010-04-01 09:04:40 ibelyaev Exp $
 # =============================================================================
 ## @file KaliKalo/FitTask.py
 #  The helper class for parallel fitting using GaudiPython.Parallel
@@ -14,7 +14,7 @@ The helper class for parallel fitting using GaudiPython.Parallel
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-27 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $ "
 __all__     = (
     "FitTask"   ,
     "fitHistos"
@@ -72,7 +72,13 @@ class FitTask ( Parallel.Task ) :
         Local initialization
         """
         print 'FitTask : Start parallel processing (remote)'
-        return Parallel.Task.initializeRemote ( self ) 
+        return Parallel.Task.initializeRemote ( self )
+    
+    def _resetOutput ( self ) :
+
+        print 'I am reset output (1)'
+        self.output ={}
+        print 'I am reset output (2)'
         
     ## process the list of histo sets 
     def process  ( self , histos ) :
@@ -115,7 +121,7 @@ class FitTask ( Parallel.Task ) :
         """ 
         self.output.update ( result ) 
 
-
+__managers = []
 # ==============================================================================
 ## perform the fit for the histograms 
 def __fit_p_Histos ( histomap          ,
@@ -133,6 +139,8 @@ def __fit_p_Histos ( histomap          ,
     status = wm.process ( task , histomap.split() ) 
     
     print ' STATUS : ' , status, len( task.output )
+
+    ## __managers.append( wm )
     
     for key in task.output :
         histomap.insert ( task.output[key] )

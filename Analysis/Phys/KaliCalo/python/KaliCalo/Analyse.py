@@ -11,7 +11,7 @@ The main ``analyse'' for Kali
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyev@itep.ru "
 __date__    = " 2010-03-20 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ "
 # =============================================================================
 __all__     = (
     "analyse" ,
@@ -128,7 +128,7 @@ def  analyse ( histomap          ,
                 mass   = mass.mean ( m     )
 
         dm = abs  ( mass.value() - 135 ) 
-        if r1 and dm > 10 or  not 0.00001 < corr.error() <= 0.01 :
+        if r1 and ( dm > 10 or  not 0.00001 < corr.error() <= 0.01 ) :
             m      = r1[1]
             deltam = r1[1]-135.0 
             corr2  = 1.0 - alpha*deltam/r1[1]
@@ -137,7 +137,7 @@ def  analyse ( histomap          ,
                 mass   = mass.mean ( m     )
                 
         dm = abs  ( mass.value() - 135 ) 
-        if r2 and dm > 10 or  not 0.00001 < corr.error() <= 0.01 :
+        if r2 and ( dm > 10 or  not 0.00001 < corr.error() <= 0.01 ) :
             m      = r2[1]
             deltam = r2[1]-135.0 
             hc     = hs.kappas() 

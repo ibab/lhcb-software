@@ -37,13 +37,15 @@ class ZipShelf(shelve.Shelf):
         flag      = 'c'                        , 
         protocol  = HIGHEST_PROTOCOL           , 
         compress  = zlib.Z_BEST_COMPRESSION    ,
-        writeback = False                      ) :
+        writeback = False                      ,
+        silent    = False                      ) :
 
         self.__gzip          = False 
         self.__filename      = filename
         self.__remove        = False
         self.__tmpdir        = None 
-
+        self.__silent        = silent
+        
         if filename.rfind ( '.gz' ) + 3 == len ( filename ) :
             
             if os.path.exists ( filename ) and 'r' == flag :
@@ -55,20 +57,38 @@ class ZipShelf(shelve.Shelf):
                 command = command % ( filename ,
                                       tmpdir   ,
                                       tmpdir   ,
-                                      name     ) 
+                                      name     )
+                print 'before popen2-1'
                 cout,cin,cerr = popen2.popen3( command )
                 for line in cerr : print ' STDERR: ' , line
                 for line in cout : print ' STDOUT: ' , line
-                filename        = tmpdir + os.sep + name
+                filename_       = tmpdir + os.sep + name[:-3]
+                if not os.path.exists ( filename_ ) :
+                    raise TypeError ( "Unable to gunzip properly:" + filename )
+                if not self.__silent : 
+                    size1 = os.path.getsize ( filename  ) 
+                    size2 = os.path.getsize ( filename_ )
+                    print "GZIP uncompression %s: %.1f%%" %  ( filename , (size2*100.0)/size1 ) 
+                filename        = filename_ 
                 self.__tmpdir   = tmpdir
-                self.__filename = filename[:-3]
+                self.__filename = filename_
                 self.__remove   = True
             elif os.path.exists ( filename ) and 'r' != flag :
-                ## unzip in place 
-                size1 = os.path.getsize ( filename ) 
-                os.system ( 'gunzip %s ' % filename )                
-                size2 = os.path.getsize ( filename[:-3] )
-                print "GZIP uncompression %s: %.1f%%" %  ( filename , (size2*100.0)/size1 ) 
+                ## unzip in place
+                command = 'gunzip %s ' % filename
+                import popen2 
+                print 'before popen2-2'
+                cout,cin,cerr = popen2.popen3( command )
+                for line in cerr : print ' STDERR: ' , line
+                for line in cout : print ' STDOUT: ' , line
+                cout.close()
+                cerr.close()
+                if not os.path.exists ( filename[:-3] ) :
+                    raise TypeError ( "Unable to gunzip properly:" + filename )
+                if not self.__silent : 
+                    size1 = os.path.getsize ( filename ) 
+                    size2 = os.path.getsize ( filename[:-3] )
+                    print "GZIP uncompression %s: %.1f%%" %  ( filename , (size2*100.0)/size1 ) 
                 filename        = filename[:-3]
                 self.__gzip     = True 
                 self.__filename = filename
@@ -96,17 +116,25 @@ class ZipShelf(shelve.Shelf):
         shelve.Shelf.close ( self )
         ##
         if self.__remove and os.path.exists ( self.__filename ) :
-            print 'REMOVE: ', self.__filename 
+            if not self.__silent : print 'REMOVE: ', self.__filename 
             os.remove ( self.__filename )
             if self.__tmpdir and os.path.exists ( self.__tmpdir ) :
-                print 'REMOVE: ', self.__tmpdir 
+                if not self.__silent : print 'REMOVE: ', self.__tmpdir 
                 os.rmdir ( self.__tmpdir )
         ##
         if self.__gzip and os.path.exists ( self.__filename ) :
             size1 = os.path.getsize( self.__filename )
-            os.system ( 'gzip -9 %s ' % self.__filename )
+            command = 'gzip -9 %s ' % self.__filename
+            import popen2
+            print 'before popen2-3'
+            cout,cin,cerr = popen2.popen3( command )
+            for line in cerr : print ' STDERR: ' , line
+            for line in cout : print ' STDOUT: ' , line
+            cout.close()
+            cerr.close()
             size2 = os.path.getsize( self.__filename + '.gz' )
-            print 'GZIP compression %s: %.1f%%' % ( self.__filename, (size2*100.0)/size1 ) 
+            if not self.__silent : 
+                print 'GZIP compression %s: %.1f%%' % ( self.__filename, (size2*100.0)/size1 ) 
         
 # =============================================================================
 ## ``get-and-uncompress-item'' from dbase 

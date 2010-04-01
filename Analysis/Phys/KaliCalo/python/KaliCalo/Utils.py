@@ -13,7 +13,7 @@ Set of useful utilities for Kali framework
 # =============================================================================
 __author__   = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__     = " 2010-03-23 "
-__version__  = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
+__version__  = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
 __all__      = (
     "RootFile"          ,
     "POOLCatalogParser"
@@ -188,7 +188,7 @@ class RootFile  ( object ) :
             try : 
                 fname = self._file.GetName() 
                 if self._file and self._file.IsOpen()  :
-                    print 'Close ROOT File '
+                    print 'Close ROOT File ', self._file.GetName() 
                     ROOT.gROOT.GetListOfFiles().Remove ( self._file ) 
                     self._file.Close('R')
                 del self._file
@@ -196,7 +196,7 @@ class RootFile  ( object ) :
 
         self._file = None
         if fname and self._remove :
-            print 'Delete ROOT file '
+            print 'Delete ROOT file ', fname 
             try: 
                 os.remove ( fname )
             except :
