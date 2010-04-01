@@ -66,7 +66,7 @@ sleep 2
 #
 # The following 2 processes are essential
 $MINITERM EvtProd@${HOST}   -e "export UTGID=${HOST}/EvtProd  ; ${gaudi_exe} -opt=$GAUDIONLINEROOT/options/MEPConverter.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
-$MINITERM EvtHolder@${HOST} -e "export UTGID=${HOST}/EvtHolder ; ${gaudi_exe} -opt=$GAUDIONLINEROOT/options/MEPHolder.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
+#$MINITERM EvtHolder@${HOST} -e "export UTGID=${HOST}/EvtHolder ; ${gaudi_exe} -opt=$GAUDIONLINEROOT/options/MEPHolder.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
 #
 # At least one Consumer is needed - for example the (dummy) Moore process
 #
