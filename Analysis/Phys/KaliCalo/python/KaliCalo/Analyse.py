@@ -11,7 +11,7 @@ The main ``analyse'' for Kali
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyev@itep.ru "
 __date__    = " 2010-03-20 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ "
 # =============================================================================
 __all__     = (
     "analyse" ,
@@ -38,19 +38,17 @@ def  getHistosFromDB ( dbases ) :
 def  analyse ( histomap          ,
                lambdamap         ,
                fitted    = False , 
-               parallel  = True  ,
-               ppservers = []    ) :    
+               manager   = None  ) :    
     """
     Analyse the histograms 
     """
     histomap = getHistosFromDB ( histomap )
     
     if not fitted :
-        from   KaliCalo.FitTask import fitHistos
-        histomap = fitHistos (
+        import KaliCalo.FitTask as Task 
+        histomap = Task.fitHistos (
             histomap  ,
-            parallel  ,
-            ppservers )                 
+            manager   )                 
 
     keys = histomap.keys()    
     keys.sort()

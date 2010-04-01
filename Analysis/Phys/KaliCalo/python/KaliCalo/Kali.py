@@ -13,7 +13,7 @@ for ``iterative pi0'' Ecal calibration
 # ======================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-17 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $ "
 # ======================================================================
 import ROOT
 from GaudiPython.Bindings import gbl as cpp
@@ -48,6 +48,14 @@ def _ve_str_ ( self , fmt = '( %.3g +- %.3g )' ) :
 VE.__str__  = _ve_str_
 VE.__repr__ = _ve_str_
 
+# =============================================================================
+## the simplest 'cell-func'
+class SameCell(object) :
+    """
+    The simplest 'cell-func'
+    """
+    def __call__ ( self , cell ) : return CellID ( cell ) 
+    
 # =============================================================================
 ## Helper class to hold the histogams associated with the given CellID
 class Histos(object):
@@ -369,6 +377,8 @@ class HistoMap(object) :
          """
          split histograms into groups (e.g. for parallel processins
          """
+         if num > len ( self ) : return self.split ( num/ 2 )
+         ##
          result = []
          group  = []
          for key in self :

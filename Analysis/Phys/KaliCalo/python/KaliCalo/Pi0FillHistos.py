@@ -145,7 +145,7 @@ class FillPi0( Kali.TPySelectorFix  ):
     def __init__ ( self                           ,
                    histos   = Kali.HistoMap  ()   ,
                    lambdas  = Kali.LambdaMap ()   ,
-                   cellFunc = lambda s : s        ,
+                   cellFunc = Kali.SameCell  ()   ,
                    betas    = [ 8.3 , 8.8 , 9.5 ] ,
                    Unit     = MeV                 ) :  
         
@@ -349,7 +349,7 @@ def fillHistos ( tree                          ,
                          Unit = Unit )  
 
     print '#entries in tree: %10d ' % tree.GetEntries() 
-    ##tree.Process ( selector , '' , 60000 )
+    ##tree.Process ( selector , '' , 50000 )
     tree.Process ( selector )
     
     lambdas = selector.lambdas ()
@@ -411,7 +411,9 @@ def fillDataBase (
         del f 
         
     ## update data base
-    if dbase_name: histos.save ( dbase_name ) 
+    if dbase_name:
+        print 'Save Histos to DB:', dbase_name 
+        histos.save ( dbase_name ) 
     
     return (histos,lambdas,badfiles) 
     

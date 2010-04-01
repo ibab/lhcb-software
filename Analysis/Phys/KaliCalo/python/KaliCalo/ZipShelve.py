@@ -23,7 +23,6 @@ except ImportError:
 import os
 import zlib        ## use zlib to compress dbfile
 import shelve      ## 
-import os
         
 # =============================================================================
 ## Zipped-version of ``shelve''-database     
@@ -43,26 +42,16 @@ class ZipShelf(shelve.Shelf):
         self.__gzip          = False 
         self.__filename      = filename
         self.__remove        = False
-        self.__tmpdir        = None 
         self.__silent        = silent
-        
+
+        if not self.__silent :
+            print 'ZipShelve: ', filename
+            
         if filename.rfind ( '.gz' ) + 3 == len ( filename ) :
             
             if os.path.exists ( filename ) and 'r' == flag :
-                ## copy into temprary location and unsip 
-                import tempfile, popen2 
-                tmpdir = tempfile.mkdtemp()
-                name = filename.split(os.sep)[-1]                
-                command = ' cp %s %s && cd %s && gunzip %s '
-                command = command % ( filename ,
-                                      tmpdir   ,
-                                      tmpdir   ,
-                                      name     )
-                print 'before popen2-1'
-                cout,cin,cerr = popen2.popen3( command )
-                for line in cerr : print ' STDERR: ' , line
-                for line in cout : print ' STDOUT: ' , line
-                filename_       = tmpdir + os.sep + name[:-3]
+                ## copy into temporary location and unzip 
+                filename_ = self.__gunzip ( filename ) 
                 if not os.path.exists ( filename_ ) :
                     raise TypeError ( "Unable to gunzip properly:" + filename )
                 if not self.__silent : 
@@ -70,28 +59,27 @@ class ZipShelf(shelve.Shelf):
                     size2 = os.path.getsize ( filename_ )
                     print "GZIP uncompression %s: %.1f%%" %  ( filename , (size2*100.0)/size1 ) 
                 filename        = filename_ 
-                self.__tmpdir   = tmpdir
                 self.__filename = filename_
                 self.__remove   = True
             elif os.path.exists ( filename ) and 'r' != flag :
                 ## unzip in place
-                command = 'gunzip %s ' % filename
-                import popen2 
-                print 'before popen2-2'
+                filename_     = filename[:-3]
+                import popen2
+                # remove existing file (if needed) 
+                if os.path.exists ( filename_ ) : os.remove ( filename_ )                
+                command = 'gunzip -f %s ' % filename
                 cout,cin,cerr = popen2.popen3( command )
                 for line in cerr : print ' STDERR: ' , line
                 for line in cout : print ' STDOUT: ' , line
-                cout.close()
-                cerr.close()
-                if not os.path.exists ( filename[:-3] ) :
+                if not os.path.exists ( filename_ ) :
                     raise TypeError ( "Unable to gunzip properly:" + filename )
                 if not self.__silent : 
-                    size1 = os.path.getsize ( filename ) 
-                    size2 = os.path.getsize ( filename[:-3] )
-                    print "GZIP uncompression %s: %.1f%%" %  ( filename , (size2*100.0)/size1 ) 
-                filename        = filename[:-3]
+                    size1 = os.path.getsize ( filename  ) 
+                    size2 = os.path.getsize ( filename_ )
+                    print "GZIP uncompression %s: %.1f%%" %  ( filename , (size2*100.0)/size1 )
+                filename        = filename_ 
                 self.__gzip     = True 
-                self.__filename = filename
+                self.__filename = filename_
                 self.__remove   = False
             else : 
                 ## 
@@ -107,6 +95,7 @@ class ZipShelf(shelve.Shelf):
             writeback                              )
         
         self.compresslevel = compress
+        
 
     ## cloze and gzip (if needed)
     def close ( self ) :
@@ -116,26 +105,46 @@ class ZipShelf(shelve.Shelf):
         shelve.Shelf.close ( self )
         ##
         if self.__remove and os.path.exists ( self.__filename ) :
-            if not self.__silent : print 'REMOVE: ', self.__filename 
+            if not self.__silent : print 'REMOVE: ', self.__filename
             os.remove ( self.__filename )
-            if self.__tmpdir and os.path.exists ( self.__tmpdir ) :
-                if not self.__silent : print 'REMOVE: ', self.__tmpdir 
-                os.rmdir ( self.__tmpdir )
         ##
         if self.__gzip and os.path.exists ( self.__filename ) :
             size1 = os.path.getsize( self.__filename )
-            command = 'gzip -9 %s ' % self.__filename
+            command = 'gzip -f -9 %s ' % self.__filename
             import popen2
-            print 'before popen2-3'
+            # remove gzipped file (if exist)
+            if os.path.exists ( self.__filename + '.gz' ) :
+                os.remove ( self.__filename + '.gz' )
+            # gzip the file 
             cout,cin,cerr = popen2.popen3( command )
             for line in cerr : print ' STDERR: ' , line
             for line in cout : print ' STDOUT: ' , line
-            cout.close()
-            cerr.close()
+            if not os.path.exists ( self.__filename + '.gz' ) :
+                print 'Unable to compress the file ', self.__filename   
             size2 = os.path.getsize( self.__filename + '.gz' )
             if not self.__silent : 
-                print 'GZIP compression %s: %.1f%%' % ( self.__filename, (size2*100.0)/size1 ) 
-        
+                print 'GZIP compression %s: %.1f%%' % ( self.__filename, (size2*100.0)/size1 )
+
+    ## gunzip the file 
+    def __gunzip ( self , filein ) :
+        """
+        Gunzip the file
+        """
+        if not os.path.exists  ( filein  ) :
+            raise NameError ( "GUNZIP: non existing file: " + filein ) 
+        import gzip 
+        fin  = gzip.open ( filein  , 'r' )
+        import tempfile 
+        fd,fileout = tempfile.mkstemp ( prefix = 'tmp_' , suffix = '_zdb' )
+        fout = file ( fileout , 'w' )
+        ##
+        try : 
+            for all in fin : fout.write ( all )
+        finally: 
+            fout.close()
+            fin .close()
+        return fileout
+    
 # =============================================================================
 ## ``get-and-uncompress-item'' from dbase 
 def _zip_getitem (self, key):
@@ -172,7 +181,8 @@ def open ( filename                                   ,
            flag          = 'c'                        ,
            protocol      = HIGHEST_PROTOCOL           ,
            compresslevel = zlib.Z_BEST_COMPRESSION    , 
-           writeback     = False                      ) : 
+           writeback     = False                      ,
+           silent        = True                       ) : 
     """
     Open a persistent dictionary for reading and writing.
     
@@ -190,7 +200,8 @@ def open ( filename                                   ,
                       flag          ,
                       protocol      ,
                       compresslevel ,
-                      writeback     )
+                      writeback     ,
+                      silent        )
 
 # =============================================================================
 # The END 

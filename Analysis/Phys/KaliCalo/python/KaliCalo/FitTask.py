@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: FitTask.py,v 1.2 2010-04-01 09:04:40 ibelyaev Exp $
+# $Id: FitTask.py,v 1.3 2010-04-01 16:04:10 ibelyaev Exp $
 # =============================================================================
 ## @file KaliKalo/FitTask.py
 #  The helper class for parallel fitting using GaudiPython.Parallel
@@ -14,7 +14,7 @@ The helper class for parallel fitting using GaudiPython.Parallel
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-27 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $ "
 __all__     = (
     "FitTask"   ,
     "fitHistos"
@@ -75,10 +75,7 @@ class FitTask ( Parallel.Task ) :
         return Parallel.Task.initializeRemote ( self )
     
     def _resetOutput ( self ) :
-
-        print 'I am reset output (1)'
         self.output ={}
-        print 'I am reset output (2)'
         
     ## process the list of histo sets 
     def process  ( self , histos ) :
@@ -105,14 +102,15 @@ class FitTask ( Parallel.Task ) :
                 result = Fit.fitHistoSet ( histoset , self.__all    )
 
             self.output [ key ] = histoset
-        print 'End of processing ', len(self.output) 
+            
+        print 'FitTask: End of processing ', len(self.output) 
 
     ## finalization of the task 
     def finalize ( self ) :
         """
         Finalization of the task
         """
-        print 'FitTask.finalize TOTAL: ' , len(self.output)
+        print 'FitTask: finalize TOTAL: ' , len(self.output)
 
     ## merge the result form the different processes 
     def _mergeResults ( self, result ) :
@@ -121,26 +119,23 @@ class FitTask ( Parallel.Task ) :
         """ 
         self.output.update ( result ) 
 
-__managers = []
 # ==============================================================================
 ## perform the fit for the histograms 
-def __fit_p_Histos ( histomap          ,
-                     ppservers = []    ) :
+def __fit_p_Histos ( histomap ,
+                     manager  ) :
     """
     Perform the ``parallel'' fit for the histograms 
     """
     task = FitTask ( histomap ) 
-    
-    from GaudiPython.Parallel import WorkManager
-    
-    if ppservers : wm = WorkManager ( ppservers = ppservers )
-    else         : wm = WorkManager ()
-    
-    status = wm.process ( task , histomap.split() ) 
-    
-    print ' STATUS : ' , status, len( task.output )
 
-    ## __managers.append( wm )
+    data = histomap.split( 5 )
+    
+    print ' FIT-BEFORE : ' ,  len ( data  )
+    
+    status = manager.process ( task , data ) 
+    
+    print ' FIT-STATUS : ' , status, len( task.output )
+
     
     for key in task.output :
         histomap.insert ( task.output[key] )
@@ -196,18 +191,17 @@ def __fit_s_Histos ( histomap ) :
 # ==============================================================================
 ## perform the fit for the histograms 
 def fitHistos ( histomap          ,
-                parallel  = True  ,
-                ppservers = []    ) :
+                manager   = None  ) :
     """
     perform the paralell fit for the histograms
     """
 
-    if parallel :
-        histomap = __fit_p_Histos ( histomap , ppservers )
+    if manager :
+        histomap = __fit_p_Histos ( histomap , manager )
     else :
         histomap = __fit_s_Histos ( histomap )
 
-    print ' #histos : ', len(histomap)
+    print ' #fitHistos: ', len(histomap)
     
     return histomap 
 
