@@ -3,6 +3,12 @@
 ! Responsible : VELO monitoring group
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
+! 2010-04-01 - Kurt Rinnert
+ - in online options: reduced TAE spread for cluster monitor to +- 2 and for
+   occupancy monitor to +- 1. Together with previous performance improvements
+   this brings the VEloDAQMon task to > 100 Hz in default running conditions. 
+   The TAE sampling monitor still sees all +-7 TAE, if present.
+
 ! 2010-03-28 - Kurt Rinnert
  - removed accidental double booking of histogram in occupancy monitor
 
